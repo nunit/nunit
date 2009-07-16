@@ -1,0 +1,8 @@
+build
+obj
+Constraints
+Syntax
+*.suo
+solutions/vs2008/bin
+solutions/vs2005/bin
+GeneratedAssemblyInfo.cs

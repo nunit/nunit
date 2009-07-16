@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.framework.tests", "tests\nunit.framework.tests.csproj", "{F6410C35-1348-46EA-BB1C-D8866C31458E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.framework", "framework\nunit.framework.csproj", "{816F2E66-2A25-4513-B5FA-8ECB4A5647CD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F6410C35-1348-46EA-BB1C-D8866C31458E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F6410C35-1348-46EA-BB1C-D8866C31458E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F6410C35-1348-46EA-BB1C-D8866C31458E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F6410C35-1348-46EA-BB1C-D8866C31458E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{816F2E66-2A25-4513-B5FA-8ECB4A5647CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{816F2E66-2A25-4513-B5FA-8ECB4A5647CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{816F2E66-2A25-4513-B5FA-8ECB4A5647CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{816F2E66-2A25-4513-B5FA-8ECB4A5647CD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
