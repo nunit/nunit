@@ -6,3 +6,7 @@ Syntax
 solutions/vs2008/bin
 solutions/vs2005/bin
 GeneratedAssemblyInfo.cs
+nunit.framework.xml
+*.user
+*.db
+bin
