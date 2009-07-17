@@ -64,7 +64,7 @@
   <!-- Additional internal properties are set in the include file -->
   <include buildfile="nunit.common.include"/>
 
-  <include buildfile="local.settings.include" failonerror="false"/>
+  <!--<include buildfile="local.settings.include" failonerror="false"/> -->
 
 <!-- ***************************************************************** -->
 <!-- ***          Targets that set the build configuration         *** -->
@@ -170,7 +170,7 @@
     <exec program="GenSyntax.exe"
       managed="true"
       basedir="${project.tools.dir}/bin"
-      workingdir="${project.src.dir}/NUnitFramework/framework"
+      workingdir="${project.src.dir}/framework"
       commandline="SyntaxElements.txt"/>
 
   </target>
