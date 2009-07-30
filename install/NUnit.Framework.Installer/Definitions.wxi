@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include>
+    <!-- Most of the definitions will be passed by the build script. -->
+    <?define NominalVersion="3.0"?>
+    <?define ProductVersion="3.0.0"?>
+    <?define SourceFolder="..\..\build\"?>
+</Include>
