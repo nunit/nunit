@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<Fragment>
+        <UI Id="NUnitUI_Framework">
+            <UIRef Id="WixUI_Mondo"/>
+
+            <DialogRef Id="InstallOptionsDlg"/>
+
+            <Publish Dialog="CustomizeDlg" Control="Next" Event="NewDialog" Value="InstallOptionsDlg">1</Publish>
+            <Publish Dialog="InstallOptionsDlg" Control="Back" Event="NewDialog" Value="CustomizeDlg">1</Publish>
+            <Publish Dialog="InstallOptionsDlg" Control="Next" Event="NewDialog" Value="VerifyReadyDlg">1</Publish>
+            <Publish Dialog="VerifyReadyDlg" Control="Back" Event="NewDialog" Value="InstallOptionsDlg" Order="1">WixUI_InstallMode = "InstallCustom"</Publish>
+            <Publish Dialog="VerifyReadyDlg" Control="Back" Event="NewDialog" Value="InstallOptionsDlg" Order="3">WixUI_InstallMode = "Change"</Publish>
+        </UI>
+	</Fragment>
+</Wix>

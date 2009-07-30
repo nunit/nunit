@@ -5,20 +5,32 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
 
     <Fragment>
-        
+
         <DirectoryRef Id="FrameworkFolder">
             <Directory Id="FrameworkNet20Folder" Name="net-2.0">
-                
-                <Component Id="nunit.framework.dll_net2.0" Guid="eee247ab-5d00-45c5-bfa5-23e0aec1cf7d">
+                <Component Id="nunit.framework.dll_net2.0_dir" Guid="eee247ab-5d00-45c5-bfa5-23e0aec1cf7d">
+                    <Condition>NOT INSTALLINGAC</Condition>
 
-                    <File Id="nunit.framework.dll_net2.0" 
-                          DiskId="1" 
-                          KeyPath="yes" 
+                    <File Id="nunit.framework.dll_net2.0_dir"
+                          DiskId="1"
+                          KeyPath="yes"
+                          Assembly="no"
                           Source="$(var.SourceFolder)net\2.0\release\nunit.framework.dll"/>
 
                 </Component>
 
-                <Component Id="AssemblyReferenceFolder_2.0" DiskId="1" Guid="87667d1d-8542-41f7-99f2-b3900324d05a">
+                <Component Id="nunit.framework.dll_net2.0_gac" Guid="725537ca-3e8f-4bab-9166-da4d5e91fa5f">
+                    <Condition>INSTALLINGAC</Condition>
+
+                    <File Id="nunit.framework.dll_net2.0_gac"
+                          DiskId="1"
+                          KeyPath="yes"
+                          Assembly=".net"
+                          Source="$(var.SourceFolder)net\2.0\release\nunit.framework.dll"/>
+
+                </Component>
+
+                <Component Id="AssemblyReferenceFolder_2.0" Guid="87667d1d-8542-41f7-99f2-b3900324d05a">
                     <RegistryKey Id="R__Assemblies_2.0"
                                  Action="createAndRemoveOnUninstall"
                                  Root="HKLM"
@@ -27,7 +39,6 @@
                         <RegistryValue Id="R__Assemblies_2.0_Default" Action="write" Type="string" Value="[FrameworkNet20Folder]"/>
                     </RegistryKey>
                 </Component>
-
             </Directory>
         </DirectoryRef>
 
@@ -35,7 +46,8 @@
 
         <Feature Id="FrameworkNet20" Title="NUnit Framework for .NET 2.0" AllowAdvertise="no" Display="expand" InstallDefault="local" Level="0" TypicalDefault="install">
             <Condition Level="1">NETFRAMEWORK20SDKDIR OR REMOVE</Condition>
-            <ComponentRef Id="nunit.framework.dll_net2.0"/>
+            <ComponentRef Id="nunit.framework.dll_net2.0_dir"/>
+            <ComponentRef Id="nunit.framework.dll_net2.0_gac"/>
             <ComponentRef Id="AssemblyReferenceFolder_2.0"/>
         </Feature>
         

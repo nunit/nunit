@@ -39,7 +39,7 @@
         </Feature>
 
         <WixVariable Id="WixUILicenseRtf" Value="..\License.rtf"/>
-        <UIRef Id="WixUI_Mondo"/>
+        <UIRef Id="NUnitUI_Framework"/>
 
         <Media Id="1" Cabinet="nunit.cab" EmbedCab="yes" />
 
