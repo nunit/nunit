@@ -451,7 +451,7 @@ namespace NUnit.Framework
         /// <param name="message">The message that will be displayed on failure</param>
         static public void That(ref bool actual, IResolveConstraint expression, string message)
         {
-            Assert.That(ref actual, constraint.Resolve(), message, null);
+            Assert.That(ref actual, expression.Resolve(), message, null);
         }
 
         /// <summary>
