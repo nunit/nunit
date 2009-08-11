@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?include Definitions.wxi ?>
+
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	
+    <Product Id="80da6878-5da5-4862-a29f-ff4a96714e59"
+             UpgradeCode="f3163e2e-9d31-4757-90b4-80d38759ea9a"
+             Name="NUnit Framework $(var.NominalVersion)"
+             Version="$(var.ProductVersion)"
+             Manufacturer="nunit.org"
+             Language="1033">
+        
+		<Package InstallerVersion="200" Compressed="yes" InstallPrivileges="elevated" />
+        
+        <!-- Properties for the Add/Remove Programs List -->
+        <Property Id="ARPCONTACT" Value="Charlie Poole"/>
+        <Property Id="ARPHELPLINK" Value="http://groups.google.com/group/nunit-discuss"/>
+        <Property Id="ARPREADME" Value="http://nunit.org/?p=releaseNotes&amp;r=2.5"/>
+        <Property Id="ARPURLINFOABOUT" Value="NUnit is a unit testing framework for all .NET languages"/>
+        <Property Id="ARPURLUPDATEINFO" Value="http://nunit.org"/>
+
+		<Directory Id="TARGETDIR" Name="SourceDir">
+			<Directory Id="ProgramFilesFolder">
+				<Directory Id="INSTALLDIR" Name="NUnit">
+                    <Directory Id="FrameworkRootFolder" Name="Framework">
+                        <Directory Id="FrameworkFolder" Name="$(var.NominalVersion)"/>
+                    </Directory>
+				</Directory>
+			</Directory>
+		</Directory>
+
+        <Feature Id="TopLevelFeature"
+                 Title="NUnit Framework $(var.NominalVersion)"
+                 Level="1"
+                 Display="expand"
+                 Description="Install the NUnit Framework with all selected components">
+
+            <FeatureRef Id="FrameworkNet11"/>
+            <FeatureRef Id="FrameworkNet20"/>
+        </Feature>
+
+        <WixVariable Id="WixUILicenseRtf" Value="..\License.rtf"/>
+        <UIRef Id="NUnitUI_Framework"/>
+
+        <Media Id="1" Cabinet="nunit.cab" EmbedCab="yes" />
+
+    </Product>
+    
+</Wix>

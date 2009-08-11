@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?include Definitions.wxi ?>
+
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    
+    <Fragment>
+
+        <DirectoryRef Id="FrameworkFolder">
+            <Directory Id="FrameworkNet11Folder" Name="net-1.1">
+                <Component Id="nunit.framework.dll_net1.1_dir" Guid="9b19e04a-32f7-42de-812a-93988c581e5b">
+                    <Condition>NOT INSTALLINGAC</Condition>
+
+                    <File Id="nunit.framework.dll_net1.1_dir"
+                          DiskId="1"
+                          KeyPath="yes"
+                          Assembly="no"
+                          Source="$(var.SourceFolder)net\1.1\release\nunit.framework.dll"/>
+
+                </Component>
+
+                <Component Id="nunit.framework.dll_net1.1_gac" Guid="4fac4e20-d135-4ff2-b595-4116f7be192c">
+                    <Condition>INSTALLINGAC</Condition>
+
+                    <File Id="nunit.framework.dll_net1.1_gac"
+                          DiskId="1"
+                          KeyPath="yes"
+                          Assembly=".net"
+                          Source="$(var.SourceFolder)net\1.1\release\nunit.framework.dll"/>
+
+                </Component>
+
+                <Component Id="AssemblyReferenceFolder_1.1" Guid="8fa8f040-2de4-4192-82e2-a5c6f3f0f082">
+                    <RegistryKey Id="R__Assemblies_1.1" Root="HKLM"
+                                 Key="Software\Microsoft\.NETFramework\AssemblyFolders\NUnit [ProductVersion]"
+                                 Action="createAndRemoveOnUninstall">
+
+                        <RegistryValue Id="R__Assemblies_1.1_Default" Action="write" Type="string" Value="[FrameworkNet11Folder]"/>
+                    </RegistryKey>
+                </Component>
+            </Directory>
+        </DirectoryRef>
+
+        <PropertyRef Id="NETFRAMEWORK11SDKDIR"/>
+
+        <Feature Id="FrameworkNet11" Title="NUnit Framework for .NET 1.1" AllowAdvertise="no" Display="expand" InstallDefault="local" Level="0" TypicalDefault="install">
+            <Condition Level="1">NETFRAMEWORK11SDKDIR OR REMOVE</Condition>
+            <ComponentRef Id="nunit.framework.dll_net1.1_dir"/>
+            <ComponentRef Id="nunit.framework.dll_net1.1_gac"/>
+            <ComponentRef Id="AssemblyReferenceFolder_1.1"/>
+        </Feature>
+
+    </Fragment>
+
+</Wix>
