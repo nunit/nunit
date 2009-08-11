@@ -24,6 +24,10 @@
 using System;
 using System.Reflection;
 
+//
+// Supplementary attributes (to those in CommonAssemblyInfo)
+//
+
 [assembly: CLSCompliant(true)]
 
 // We sign this way in order to compile on .NET 1.x
