@@ -109,10 +109,9 @@
       </nowarn>
       <sources basedir=".">
         <patternset refid="source-files"/>
-        <include name="../../GeneratedAssemblyInfo.cs" />
+        <include name="../CommonAssemblyInfo.cs" />
       </sources>
     </csc>
-
 
   </target>
 
