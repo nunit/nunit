@@ -85,7 +85,7 @@
         define="${build.defines}">
       <sources>
         <patternset refid="source-files"/>
-        <include name="../../GeneratedAssemblyInfo.cs"/>
+        <include name="../CommonAssemblyInfo.cs"/>
       </sources>
       <resources prefix="NUnit.Framework.Tests">
         <patternset refid="resource-files"/>

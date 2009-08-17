@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "NUnit.Framework.Installer", "NUnit.Framework.Installer\NUnit.Framework.Installer.wixproj", "{B4F15755-C6EF-4864-A58E-E6384CFA73BA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B4F15755-C6EF-4864-A58E-E6384CFA73BA}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{B4F15755-C6EF-4864-A58E-E6384CFA73BA}.Debug|Any CPU.Build.0 = Debug|x86
+		{B4F15755-C6EF-4864-A58E-E6384CFA73BA}.Debug|x86.ActiveCfg = Debug|x86
+		{B4F15755-C6EF-4864-A58E-E6384CFA73BA}.Debug|x86.Build.0 = Debug|x86
+		{B4F15755-C6EF-4864-A58E-E6384CFA73BA}.Release|Any CPU.ActiveCfg = Release|x86
+		{B4F15755-C6EF-4864-A58E-E6384CFA73BA}.Release|x86.ActiveCfg = Release|x86
+		{B4F15755-C6EF-4864-A58E-E6384CFA73BA}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
