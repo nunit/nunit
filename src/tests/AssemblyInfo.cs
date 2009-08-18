@@ -29,12 +29,9 @@ using System.Reflection;
 // set of attributes. Change these source values to modify the information
 // associated with an assembly. 
 //
-// NOTE: This file is only used in the Visual Studio builds. For the NAnt builds,
-// an alternate file is generated and used.
-//
 [assembly: AssemblyCompany("NUnit.org")]
 [assembly: AssemblyProduct("NUnit")]
-[assembly: AssemblyCopyright("Copyright (C) 2002-2009 Charlie Poole.\r\nCopyright (C) 2002-2004 James W. Newkirk, Michael C. Two, Alexei A. Vorontsov.\r\nCopyright (C) 2000-2002 Philip Craig.\r\nAll Rights Reserved.")]
+[assembly: AssemblyCopyright("Copyright (C) 2009 Charlie Poole")]
 [assembly: AssemblyTrademark("NUnit is a trademark of NUnit.org")]
 
 //
