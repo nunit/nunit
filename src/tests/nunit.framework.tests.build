@@ -99,7 +99,7 @@
   </target>
 
   <target name="package">
-    <copy todir="${package.src.dir}/NUnitFramework/tests">
+    <copy todir="${package.src.dir}/tests">
       <fileset>
         <patternset refid="source-files"/>
         <patternset refid="resource-files"/>

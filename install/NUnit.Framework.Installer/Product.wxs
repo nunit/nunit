@@ -40,7 +40,8 @@
             <FeatureRef Id="FrameworkNet20"/>
         </Feature>
 
-        <WixVariable Id="WixUILicenseRtf" Value="..\License.rtf"/>
+        <!-- The following line causes an error in the NAnt build     -->
+        <!--<WixVariable Id="WixUILicenseRtf" Value="..\License.rtf"/>-->
         <UIRef Id="NUnitUI_Framework"/>
 
         <Media Id="1" Cabinet="nunit.cab" EmbedCab="yes" />
