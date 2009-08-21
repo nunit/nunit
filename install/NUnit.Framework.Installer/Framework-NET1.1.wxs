@@ -30,6 +30,24 @@
 
                 </Component>
 
+                <Component Id="nunit.framework.tests.dll_net1.1" Guid="4c3d2d31-f468-4bd2-832f-19f3e500f24a">
+                    <File Id="nunit.framework.tests.dll_net1.1"
+                          DiskId="1"
+                          KeyPath="yes"
+                          Assembly="no"
+                          Source="$(var.SourceFolder)net\1.1\release\nunit.framework.tests.dll"/>
+
+                </Component>
+
+                <Component Id="nunit.framework.xml_net1.1" Guid="a657bbb7-48fd-49de-b0c9-79d143645d16">
+
+                    <File Id="nunit.framework.xml_net1.1"
+                          DiskId="1"
+                          KeyPath="yes"
+                          Source="$(var.SourceFolder)net\1.1\release\nunit.framework.xml"/>
+
+                </Component>
+
                 <Component Id="AssemblyReferenceFolder_1.1" Guid="8fa8f040-2de4-4192-82e2-a5c6f3f0f082">
                     <RegistryKey Id="R__Assemblies_1.1" Root="HKLM"
                                  Key="Software\Microsoft\.NETFramework\AssemblyFolders\NUnit [ProductVersion]"
@@ -47,6 +65,8 @@
             <Condition Level="1">NETFRAMEWORK11SDKDIR OR REMOVE</Condition>
             <ComponentRef Id="nunit.framework.dll_net1.1_dir"/>
             <ComponentRef Id="nunit.framework.dll_net1.1_gac"/>
+            <ComponentRef Id="nunit.framework.tests.dll_net1.1"/>
+            <ComponentRef Id="nunit.framework.xml_net1.1"/>
             <ComponentRef Id="AssemblyReferenceFolder_1.1"/>
         </Feature>
 

@@ -30,6 +30,24 @@
 
                 </Component>
 
+                <Component Id="nunit.framework.tests.dll_net2.0" Guid="4f40f59f-07de-47e6-a3ed-b4a1b71ef93a">
+                    <File Id="nunit.framework.tests.dll_net2.0"
+                          DiskId="1"
+                          KeyPath="yes"
+                          Assembly="no"
+                          Source="$(var.SourceFolder)net\2.0\release\nunit.framework.tests.dll"/>
+
+                </Component>
+
+                <Component Id="nunit.framework.xml_net2.0" Guid="79cb5e96-68f4-4002-aa04-eebc494bba89">
+
+                    <File Id="nunit.framework.xml_net2.0"
+                          DiskId="1"
+                          KeyPath="yes"
+                          Source="$(var.SourceFolder)net\2.0\release\nunit.framework.xml"/>
+
+                </Component>
+
                 <Component Id="AssemblyReferenceFolder_2.0" Guid="87667d1d-8542-41f7-99f2-b3900324d05a">
                     <RegistryKey Id="R__Assemblies_2.0"
                                  Action="createAndRemoveOnUninstall"
@@ -48,6 +66,8 @@
             <Condition Level="1">NETFRAMEWORK20SDKDIR OR REMOVE</Condition>
             <ComponentRef Id="nunit.framework.dll_net2.0_dir"/>
             <ComponentRef Id="nunit.framework.dll_net2.0_gac"/>
+            <ComponentRef Id="nunit.framework.tests.dll_net2.0"/>
+            <ComponentRef Id="nunit.framework.xml_net2.0"/>
             <ComponentRef Id="AssemblyReferenceFolder_2.0"/>
         </Feature>
         
