@@ -10,3 +10,4 @@ nunit.framework.xml
 *.user
 *.db
 bin
+package
