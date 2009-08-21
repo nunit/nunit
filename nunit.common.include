@@ -35,12 +35,7 @@
     value="${path::combine(project.base.dir,'lib')}"/>
   <property name="project.install.dir"
     value="${path::combine(project.base.dir, 'install')}"/>
-<!--
-  <property name="nunit.console.dir"
-    value="${environment::get-variable('NUNITX_DIR')}"
-    if="${environment::variable-exists('NUNITX_DIR')}"/>
-  <echo>NUnit Directory:  ${nunit.console.dir}</echo>
--->
+
 
 <!-- ***************************************************************** -->
 <!-- *********         Define Packaging Directories          ********* -->
@@ -98,6 +93,47 @@
   <call target="set-${default.runtime}-runtime-config" />
 
   <call target="set-default-package-config" />
+
+<!-- ***************************************************************** -->
+<!-- *********   Define directories for external tools    ************ -->
+<!-- ***************************************************************** -->
+
+  <!-- Test for variable set by WiX install --> 
+  <if test="${environment::variable-exists('WIX')}">
+    <property name="wix.dir"
+      value="${environment::get-variable('WIX')}/bin"/>
+  </if>
+
+<!-- ***************************************************************** -->
+<!-- In the optional local.settings.include file, installations may    -->
+<!-- set properties to the location of external tools. Properties      -->
+<!-- nunit.dir, partcover.dir and wix.dir are used by the script to    -->
+<!-- locate the corresponding tools if set.                            -->
+<!--                                                                   -->
+<!-- NOTE: We use a separate installation of NUnit 2.5 to run tests    -->
+<!-- temporarily until the NUnit 3.0 framework is self-testing.        -->
+<!-- ***************************************************************** -->
+  <include buildfile="local.settings.include" failonerror="false"/>
+
+<!-- ***************************************************************** -->
+<!-- In place of local.settings.include, or to override its settings,  -->
+<!-- users may set environment variables NUNIT_DIR, PARTCOVER_DIR or   -->
+<!-- WIX_DIR to the location of the corresponding tools.               -->
+<!-- ***************************************************************** -->
+  <if test="${environment::variable-exists('NUNIT_DIR')}">
+    <property name="nunit.dir"
+      value="${environment::get-variable('NUNIT_DIR')}"/>
+  </if>
+
+  <if test="${environment::variable-exists('PARTCOVER_DIR')}">
+    <property name="partcover.dir"
+      value="${environment::get-variable('PARTCOVER_DIR')}"/>
+  </if>
+
+  <if test="${environment::variable-exists('WIX_DIR')}">
+    <property name="wix.dir"
+      value="${environment::get-variable('WIX_DIR')}"/>
+  </if>
 
 <!-- ***************************************************************** -->
 <!-- ********* Targets for setting the build configuration *********** -->
