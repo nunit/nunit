@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<project name="NUnit">
+
+  <property name="nunit.dir"
+    value="C:\Program Files\NUnit 2.5.2" />
+
+  <property name="partcover.dir"
+    value="D:\DevTools\PartCover" />
+
+</project>
