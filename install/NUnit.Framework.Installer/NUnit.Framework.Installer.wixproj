@@ -13,7 +13,9 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
-    <DefineConstants>Debug</DefineConstants>
+    <DefineConstants>ProductVersion=2.9.1;NominalVersion=2.9.1;InstallImage=..\..\package\NUnit-2.9.1</DefineConstants>
+    <WixVariables>
+    </WixVariables>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <OutputPath>bin\$(Configuration)\</OutputPath>
@@ -33,9 +35,6 @@
     <WixExtension Include="WixNetFxExtension">
       <HintPath>$(WixExtDir)\WixNetFxExtension.dll</HintPath>
     </WixExtension>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Definitions.wxi" />
   </ItemGroup>
   <Import Project="$(WixTargetsPath)" />
   <!--

@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?include Definitions.wxi ?>
-
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
 	
     <Product Id="80da6878-5da5-4862-a29f-ff4a96714e59"
@@ -24,7 +22,10 @@
 			<Directory Id="ProgramFilesFolder">
 				<Directory Id="INSTALLDIR" Name="NUnit">
                     <Directory Id="FrameworkRootFolder" Name="Framework">
-                        <Directory Id="FrameworkFolder" Name="$(var.NominalVersion)"/>
+                      <Directory Id="FrameworkFolder" Name="$(var.NominalVersion)">
+                        <Directory Id="FrameworkBinFolder" Name="bin"/>
+                        <Directory Id="FrameworkDocFolder" Name="doc"/>
+                      </Directory>
                     </Directory>
 				</Directory>
 			</Directory>
@@ -40,8 +41,7 @@
             <FeatureRef Id="FrameworkNet20"/>
         </Feature>
 
-        <!-- The following line causes an error in the NAnt build     -->
-        <!--<WixVariable Id="WixUILicenseRtf" Value="..\License.rtf"/>-->
+        <WixVariable Id="WixUILicenseRtf" Value="..\License.rtf"/>
         <UIRef Id="NUnitUI_Framework"/>
 
         <Media Id="1" Cabinet="nunit.cab" EmbedCab="yes" />

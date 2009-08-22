@@ -1,61 +1,59 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?include Definitions.wxi ?>
-
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
     
     <Fragment>
 
-        <DirectoryRef Id="FrameworkFolder">
+        <DirectoryRef Id="FrameworkBinFolder" FileSource="$(var.InstallImage)/bin">
             <Directory Id="FrameworkNet11Folder" Name="net-1.1">
-                <Component Id="nunit.framework.dll_net1.1_dir" Guid="9b19e04a-32f7-42de-812a-93988c581e5b">
-                    <Condition>NOT INSTALLINGAC</Condition>
+              <Component Id="nunit.framework.dll_net1.1_dir" Guid="9b19e04a-32f7-42de-812a-93988c581e5b">
+                <Condition>NOT INSTALLINGAC</Condition>
 
-                    <File Id="nunit.framework.dll_net1.1_dir"
-                          DiskId="1"
-                          KeyPath="yes"
-                          Assembly="no"
-                          Source="$(var.SourceFolder)net\1.1\release\nunit.framework.dll"/>
+                <File Id="nunit.framework.dll_net1.1_dir"
+                      DiskId="1"
+                      KeyPath="yes"
+                      Assembly="no"
+                      Name="nunit.framework.dll"/>
 
-                </Component>
+              </Component>
 
-                <Component Id="nunit.framework.dll_net1.1_gac" Guid="4fac4e20-d135-4ff2-b595-4116f7be192c">
-                    <Condition>INSTALLINGAC</Condition>
+              <Component Id="nunit.framework.dll_net1.1_gac" Guid="4fac4e20-d135-4ff2-b595-4116f7be192c">
+                <Condition>INSTALLINGAC</Condition>
 
-                    <File Id="nunit.framework.dll_net1.1_gac"
-                          DiskId="1"
-                          KeyPath="yes"
-                          Assembly=".net"
-                          Source="$(var.SourceFolder)net\1.1\release\nunit.framework.dll"/>
+                <File Id="nunit.framework.dll_net1.1_gac"
+                      DiskId="1"
+                      KeyPath="yes"
+                      Assembly=".net"
+                      Name="nunit.framework.dll"/>
 
-                </Component>
+              </Component>
 
-                <Component Id="nunit.framework.tests.dll_net1.1" Guid="4c3d2d31-f468-4bd2-832f-19f3e500f24a">
-                    <File Id="nunit.framework.tests.dll_net1.1"
-                          DiskId="1"
-                          KeyPath="yes"
-                          Assembly="no"
-                          Source="$(var.SourceFolder)net\1.1\release\nunit.framework.tests.dll"/>
+              <Component Id="nunit.framework.tests.dll_net1.1" Guid="4c3d2d31-f468-4bd2-832f-19f3e500f24a">
+                <File Id="nunit.framework.tests.dll_net1.1"
+                      DiskId="1"
+                      KeyPath="yes"
+                      Assembly="no"
+                      Name="nunit.framework.tests.dll"/>
 
-                </Component>
+              </Component>
 
-                <Component Id="nunit.framework.xml_net1.1" Guid="a657bbb7-48fd-49de-b0c9-79d143645d16">
+              <Component Id="nunit.framework.xml_net1.1" Guid="a657bbb7-48fd-49de-b0c9-79d143645d16">
 
-                    <File Id="nunit.framework.xml_net1.1"
-                          DiskId="1"
-                          KeyPath="yes"
-                          Source="$(var.SourceFolder)net\1.1\release\nunit.framework.xml"/>
+                <File Id="nunit.framework.xml_net1.1"
+                      DiskId="1"
+                      KeyPath="yes"
+                      Name="nunit.framework.xml"/>
 
-                </Component>
+              </Component>
 
-                <Component Id="AssemblyReferenceFolder_1.1" Guid="8fa8f040-2de4-4192-82e2-a5c6f3f0f082">
-                    <RegistryKey Id="R__Assemblies_1.1" Root="HKLM"
-                                 Key="Software\Microsoft\.NETFramework\AssemblyFolders\NUnit [ProductVersion]"
-                                 Action="createAndRemoveOnUninstall">
+              <Component Id="AssemblyReferenceFolder_1.1" Guid="8fa8f040-2de4-4192-82e2-a5c6f3f0f082">
+                <RegistryKey Id="R__Assemblies_1.1" Root="HKLM"
+                             Key="Software\Microsoft\.NETFramework\AssemblyFolders\NUnit [ProductVersion]"
+                             Action="createAndRemoveOnUninstall">
 
-                        <RegistryValue Id="R__Assemblies_1.1_Default" Action="write" Type="string" Value="[FrameworkNet11Folder]"/>
-                    </RegistryKey>
-                </Component>
+                  <RegistryValue Id="R__Assemblies_1.1_Default" Action="write" Type="string" Value="[FrameworkNet11Folder]"/>
+                </RegistryKey>
+              </Component>
             </Directory>
         </DirectoryRef>
 
