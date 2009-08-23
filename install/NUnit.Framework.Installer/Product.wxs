@@ -40,7 +40,7 @@
             <FeatureRef Id="FrameworkNet20"/>
         </Feature>
 
-        <WixVariable Id="WixUILicenseRtf" Value="..\License.rtf"/>
+        <WixVariable Id="WixUILicenseRtf" Value="License.rtf"/>
         <UIRef Id="NUnitUI_Framework"/>
 
         <Media Id="1" Cabinet="nunit.cab" EmbedCab="yes" />
