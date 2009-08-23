@@ -65,9 +65,18 @@ namespace NUnit.Framework.Constraints
                 throw new ArgumentException(
                     string.Format("The actual value must be a TestDelegate but was {0}",actual.GetType().Name), "actual");
 
-            this.caughtException = Catch.Exception(code);
+            this.caughtException = null;
 
-            if (caughtException == null)
+            try
+            {
+                code();
+            }
+            catch (Exception ex)
+            {
+                this.caughtException = ex;
+            }
+
+            if (this.caughtException == null)
                 return false;
 
             return baseConstraint == null || baseConstraint.Matches(caughtException);
@@ -150,10 +159,19 @@ namespace NUnit.Framework.Constraints
 			if (code == null)
 				throw new ArgumentException("The actual value must be a TestDelegate", "actual");
 
-			this.caughtException = Catch.Exception(code);
+            this.caughtException = null;
 
-			return caughtException == null;
-		}
+            try
+            {
+                code();
+            }
+            catch (Exception ex)
+            {
+                this.caughtException = ex;
+            }
+
+            return this.caughtException == null;
+        }
 
         /// <summary>
         /// Write the constraint description to a MessageWriter
