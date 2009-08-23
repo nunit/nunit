@@ -45,7 +45,6 @@
         <include name="AssertionHelper.cs"/>
         <include name="Assume.cs"/>
         <include name="CategoryAttribute.cs"/>
-        <include name="Catch.cs"/>
         <include name="CollectionAssert.cs"/>
         <include name="DatapointAttributes.cs"/>
         <include name="DescriptionAttribute.cs"/>

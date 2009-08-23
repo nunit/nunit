@@ -524,7 +524,7 @@ namespace NUnit.Framework
         }
         #endregion
 
-        #region Throws and DoesNotThrow
+        #region Throws, Catch and DoesNotThrow
 
         #region Throws
         /// <summary>
@@ -536,7 +536,17 @@ namespace NUnit.Framework
         /// <param name="args">Arguments to be used in formatting the message</param>
         public static Exception Throws(IResolveConstraint expression, TestDelegate code, string message, params object[] args)
         {
-            Exception caughtException = Catch.Exception(code);
+            Exception caughtException = null;
+
+            try
+            {
+                code();
+            }
+            catch (Exception ex)
+            {
+                caughtException = ex;
+            }
+
             Assert.That(caughtException, expression, message, args);
 
             return caughtException;
@@ -631,6 +641,117 @@ namespace NUnit.Framework
         public static T Throws<T>(TestDelegate code) where T : Exception
         {
             return Throws<T>(code, string.Empty, null);
+        }
+#endif
+        #endregion
+
+        #region Catch
+        /// <summary>
+        /// Verifies that a delegate throws an exception when called
+        /// and returns it.
+        /// </summary>
+        /// <param name="code">A TestDelegate</param>
+        /// <param name="message">The message that will be displayed on failure</param>
+        /// <param name="args">Arguments to be used in formatting the message</param>
+        public static Exception Catch(TestDelegate code, string message, params object[] args)
+        {
+            return Throws(new InstanceOfTypeConstraint(typeof(Exception)), code, message, args);
+        }
+
+        /// <summary>
+        /// Verifies that a delegate throws an exception when called
+        /// and returns it.
+        /// </summary>
+        /// <param name="code">A TestDelegate</param>
+        /// <param name="message">The message that will be displayed on failure</param>
+        public static Exception Catch(TestDelegate code, string message)
+        {
+            return Throws(new InstanceOfTypeConstraint(typeof(Exception)), code, message);
+        }
+
+        /// <summary>
+        /// Verifies that a delegate throws an exception when called
+        /// and returns it.
+        /// </summary>
+        /// <param name="code">A TestDelegate</param>
+        public static Exception Catch(TestDelegate code)
+        {
+            return Throws(new InstanceOfTypeConstraint(typeof(Exception)), code);
+        }
+
+        /// <summary>
+        /// Verifies that a delegate throws an exception of a certain Type
+        /// or one derived from it when called and returns it.
+        /// </summary>
+        /// <param name="expectedExceptionType">The expected Exception Type</param>
+        /// <param name="code">A TestDelegate</param>
+        /// <param name="message">The message that will be displayed on failure</param>
+        /// <param name="args">Arguments to be used in formatting the message</param>
+        public static Exception Catch(Type expectedExceptionType, TestDelegate code, string message, params object[] args)
+        {
+            return Throws(new InstanceOfTypeConstraint(expectedExceptionType), code, message, args);
+        }
+
+        /// <summary>
+        /// Verifies that a delegate throws an exception of a certain Type
+        /// or one derived from it when called and returns it.
+        /// </summary>
+        /// <param name="expectedExceptionType">The expected Exception Type</param>
+        /// <param name="code">A TestDelegate</param>
+        /// <param name="message">The message that will be displayed on failure</param>
+        public static Exception Catch(Type expectedExceptionType, TestDelegate code, string message)
+        {
+            return Throws(new InstanceOfTypeConstraint(expectedExceptionType), code, message);
+        }
+
+        /// <summary>
+        /// Verifies that a delegate throws an exception of a certain Type
+        /// or one derived from it when called and returns it.
+        /// </summary>
+        /// <param name="expectedExceptionType">The expected Exception Type</param>
+        /// <param name="code">A TestDelegate</param>
+        public static Exception Catch(Type expectedExceptionType, TestDelegate code)
+        {
+            return Throws(new InstanceOfTypeConstraint(expectedExceptionType), code);
+        }
+        #endregion
+
+        #region Catch<T>
+#if NET_2_0
+        /// <summary>
+        /// Verifies that a delegate throws an exception of a certain Type
+        /// or one derived from it when called and returns it.
+        /// </summary>
+        /// <param name="expectedExceptionType">The expected Exception Type</param>
+        /// <param name="code">A TestDelegate</param>
+        /// <param name="message">The message that will be displayed on failure</param>
+        /// <param name="args">Arguments to be used in formatting the message</param>
+        public static Exception Catch<T>(TestDelegate code, string message, params object[] args)
+        {
+            return Throws(new InstanceOfTypeConstraint(typeof(T)), code, message, args);
+        }
+
+        /// <summary>
+        /// Verifies that a delegate throws an exception of a certain Type
+        /// or one derived from it when called and returns it.
+        /// </summary>
+        /// <param name="expectedExceptionType">The expected Exception Type</param>
+        /// <param name="code">A TestDelegate</param>
+        /// <param name="message">The message that will be displayed on failure</param>
+        public static Exception Catch<T>(TestDelegate code, string message)
+        {
+            return Throws(new InstanceOfTypeConstraint(typeof(T)), code, message);
+        }
+
+        /// <summary>
+        /// Verifies that a delegate throws an exception of a certain Type
+        /// or one derived from it when called and returns it.
+        /// </summary>
+        /// <param name="expectedExceptionType">The expected Exception Type</param>
+        /// <param name="code">A TestDelegate</param>
+        public static Exception Catch<T>(TestDelegate code)
+        {
+            return Throws(new InstanceOfTypeConstraint(typeof(T)), code);
         }
 #endif
         #endregion
