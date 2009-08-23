@@ -61,9 +61,6 @@
     <Compile Include="..\..\..\src\framework\Assume.cs">
       <Link>Assume.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Catch.cs">
-      <Link>Catch.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\src\framework\CategoryAttribute.cs">
       <Link>CategoryAttribute.cs</Link>
     </Compile>
@@ -261,6 +258,9 @@
     </Compile>
     <Compile Include="..\..\..\src\framework\SetCultureAttribute.cs">
       <Link>SetCultureAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\SetUICultureAttribute.cs">
+      <Link>SetUICultureAttribute.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\SetUpAttribute.cs">
       <Link>SetUpAttribute.cs</Link>

@@ -68,5 +68,17 @@ namespace NUnit.Framework
         /// Gets the description of the test
         /// </summary>
         string Description { get; }
+
+        /// <summary>
+        /// Gets a value indicating whether this <see cref="ITestCaseData"/> is ignored.
+        /// </summary>
+        /// <value><c>true</c> if ignored; otherwise, <c>false</c>.</value>
+        bool Ignored { get; }
+
+        /// <summary>
+        /// Gets the ignore reason.
+        /// </summary>
+        /// <value>The ignore reason.</value>
+        string IgnoreReason { get; }
     }
 }
