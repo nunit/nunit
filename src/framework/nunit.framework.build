@@ -74,6 +74,7 @@
     <include name="RepeatAttribute.cs"/>
     <include name="RequiredAddinAttribute.cs"/>
         <include name="SetCultureAttribute.cs"/>
+        <include name="SetUICultureAttribute.cs"/>
         <include name="SetUpAttribute.cs"/>
         <include name="SetUpFixtureAttribute.cs"/>
         <include name="SpecialValue.cs"/>

@@ -262,6 +262,9 @@
     <Compile Include="..\..\..\src\framework\SetCultureAttribute.cs">
       <Link>SetCultureAttribute.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\framework\SetUICultureAttribute.cs">
+      <Link>SetUICultureAttribute.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\framework\SetUpAttribute.cs">
       <Link>SetUpAttribute.cs</Link>
     </Compile>
