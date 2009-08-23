@@ -27,17 +27,18 @@ using System.Threading;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// Marks a test with a timeout value in milliseconds. The
-    /// test will be run in a separate thread and cancelled if
-    /// the timeout is exceeded.
+    /// WUsed on a method, marks the test with a timeout value in milliseconds. 
+    /// The test will be run in a separate thread and is cancelled if the timeout 
+    /// is exceeded. Used on a method or assembly, sets the default timeout 
+    /// for all contained test methods.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class | AttributeTargets.Assembly, AllowMultiple = false)]
     public class TimeoutAttribute : PropertyAttribute
     {
         /// <summary>
         /// Construct a TimeoutAttribute given a time in milliseconds
         /// </summary>
-        /// <param name="timeout"></param>
+        /// <param name="timeout">The timeout value in milliseconds</param>
         public TimeoutAttribute(int timeout)
             : base(timeout) { }
     }

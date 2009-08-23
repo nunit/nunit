@@ -42,6 +42,8 @@ namespace NUnit.Framework
         private MessageMatch matchType;
         private string description;
         private string testName;
+        private bool isIgnored;
+        private string ignoreReason;
 
         /// <summary>
         /// Construct a TestCaseAttribute with a list of arguments.
@@ -169,6 +171,38 @@ namespace NUnit.Framework
         {
             get { return testName; }
             set { testName = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the ignored status of the test
+        /// </summary>
+        public bool Ignore
+        {
+            get { return isIgnored; }
+            set { isIgnored = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the ignored status of the test
+        /// </summary>
+        public bool Ignored
+        {
+            get { return isIgnored; }
+            set { isIgnored = value; }
+        }
+
+        /// <summary>
+        /// Gets the ignore reason.
+        /// </summary>
+        /// <value>The ignore reason.</value>
+        public string IgnoreReason
+        {
+            get { return ignoreReason; }
+            set
+            {
+                ignoreReason = value;
+                isIgnored = ignoreReason != null && ignoreReason != string.Empty;
+            }
         }
     }
 }

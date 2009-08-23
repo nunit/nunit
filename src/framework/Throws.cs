@@ -53,6 +53,54 @@ namespace NUnit.Framework
         
         #endregion
         
+        #region InnerException
+        
+        /// <summary>
+        /// Creates a constraint specifying an exception with a given InnerException
+        /// </summary>
+        public static ResolvableConstraintExpression InnerException
+        {
+            get { return Exception.InnerException; }
+        }
+        
+        #endregion
+        
+        #region TargetInvocationException
+        
+        /// <summary>
+        /// Creates a constraint specifying an expected TargetInvocationException
+        /// </summary>
+        public static ExactTypeConstraint TargetInvocationException
+        {
+            get { return TypeOf(typeof(System.Reflection.TargetInvocationException)); }
+        }
+        
+        #endregion
+        
+        #region ArgumentException
+        
+        /// <summary>
+        /// Creates a constraint specifying an expected TargetInvocationException
+        /// </summary>
+        public static ExactTypeConstraint ArgumentException
+        {
+            get { return TypeOf(typeof(System.ArgumentException)); }
+        }
+        
+        #endregion
+        
+        #region InvalidOperationException
+        
+        /// <summary>
+        /// Creates a constraint specifying an expected TargetInvocationException
+        /// </summary>
+        public static ExactTypeConstraint InvalidOperationException
+        {
+            get { return TypeOf(typeof(System.InvalidOperationException)); }
+        }
+        
+        #endregion
+        
         #region Nothing
         
         /// <summary>
