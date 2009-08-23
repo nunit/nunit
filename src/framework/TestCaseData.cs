@@ -80,6 +80,17 @@ namespace NUnit.Framework
         /// to tests without requiring the class to change.
         /// </summary>
         private IDictionary properties;
+
+        /// <summary>
+        /// If true, indicates that the test case is to be ignored
+        /// </summary>
+        bool isIgnored;
+
+        /// <summary>
+        /// The reason for ignoring a test case
+        /// </summary>
+        string ignoreReason;
+
         #endregion
 
         #region Constructors
@@ -89,7 +100,7 @@ namespace NUnit.Framework
         /// <param name="args">The arguments.</param>
         public TestCaseData(params object[] args)
         {
-            if (arguments == null)
+            if (args == null)
                 this.arguments = new object[] { null };
             else
                 this.arguments = args;
@@ -173,6 +184,24 @@ namespace NUnit.Framework
         public string Description
         {
             get { return description; }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether this <see cref="ITestCaseData"/> is ignored.
+        /// </summary>
+        /// <value><c>true</c> if ignored; otherwise, <c>false</c>.</value>
+        public bool Ignored
+        {
+            get { return isIgnored; }
+        }
+
+        /// <summary>
+        /// Gets the ignore reason.
+        /// </summary>
+        /// <value>The ignore reason.</value>
+        public string IgnoreReason
+        {
+            get { return ignoreReason; }
         }
         #endregion
 
@@ -307,6 +336,28 @@ namespace NUnit.Framework
         public TestCaseData SetProperty(string propName, double propValue)
         {
             this.Properties.Add(propName, propValue);
+            return this;
+        }
+
+        /// <summary>
+        /// Ignores this TestCase.
+        /// </summary>
+        /// <returns></returns>
+        public TestCaseData Ignore()
+        {
+            isIgnored = true;
+            return this;
+        }
+
+        /// <summary>
+        /// Ignores this TestCase, specifying the reason.
+        /// </summary>
+        /// <param name="reason">The reason.</param>
+        /// <returns></returns>
+        public TestCaseData Ignore(string reason)
+        {
+            isIgnored = true;
+            ignoreReason = reason;
             return this;
         }
         #endregion

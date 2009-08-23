@@ -36,6 +36,9 @@ namespace NUnit.Framework
 		private string description;
 
         private object[] arguments;
+        private bool isIgnored;
+        private string ignoreReason;
+
 #if NET_2_0
         private Type[] typeArgs;
         private bool argsSeparated;
@@ -80,6 +83,30 @@ namespace NUnit.Framework
                     SeparateArgs();
 #endif
                 return arguments; 
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this <see cref="TestFixtureAttribute"/> should be ignored.
+        /// </summary>
+        /// <value><c>true</c> if ignore; otherwise, <c>false</c>.</value>
+        public bool Ignore
+        {
+            get { return isIgnored; }
+            set { isIgnored = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the ignore reason. May set Ignored as a side effect.
+        /// </summary>
+        /// <value>The ignore reason.</value>
+        public string IgnoreReason
+        {
+            get { return ignoreReason; }
+            set
+            {
+                ignoreReason = value;
+                isIgnored = ignoreReason != null && ignoreReason != string.Empty;
             }
         }
 
