@@ -23,22 +23,13 @@
   <!-- Project name - used as a prefix for packages -->
   <property name="project.name" value="NUnit"/>
 
-  <!-- NUnit Base Package Version - First three digits -->
-  <property name="base.package.version" value="2.9.1"/>
+  <!-- NUnit Package Version - Three digits -->
+  <property name="package.version" value="2.9.1"/>
 
   <!-- Nominal version used for install directory and program
        files menu. Normally the same as the package version, 
        but may differ when we are in alpha or beta. -->
   <property name="nominal.version" value="2.9.1" />
-
-  <!-- Determine todays build number -->
-  <property name="temp.now" value="${datetime::now()}"/>
-  <property name="temp.yr" value="${datetime::get-year(temp.now)-2000}"/>
-  <property name="temp.day" value="${string::pad-left(datetime::get-day-of-year(temp.now),3,'0')}"/>
-  <property name="package.build.number" value="${temp.yr}${temp.day}"/>
-
-  <!-- NUnit full package version -->
-  <property name="package.version" value="${base.package.version}.${package.build.number}"/>
 
   <!-- Package Configuration (Release, Alpha, Beta, etc.) -->
   <property name="package.configuration" value=""/>
@@ -255,8 +246,6 @@ file or set the PARTCOVER_DIR environment variable.
 
     <property name="partcover.commandline" 
       value='--target="${nunit.console.dir}/nunit-console.exe" --target-args="${nunit.commandline}" --include=[nunit.framework]* --output=TestCoverage-${nant.settings.currentframework}.xml'/>
-
-    <echo message="PartCover ${partcover.commandline}"/>
 
     <exec basedir="${partcover.dir}"
           workingdir="${current.build.dir}" 
@@ -486,11 +475,11 @@ to the correct location.
       if="${package.config==default.package.config}"/>
 
     <candle out="${work.dir}/" exedir="${wix.dir}">
-      <!--<defines>
+      <defines>
         <define name="ProductVersion" value="${package.version}" />
         <define name="NominalVersion" value="${nominal.version}" />
         <define name="InstallImage" value="package\NUnit-${package.version}" />
-      </defines>-->
+      </defines>
       <sources basedir="${project.install.dir}">
         <include name="**/*.wxs" />
       </sources>
@@ -498,7 +487,8 @@ to the correct location.
 
     <light exedir="${wix.dir}"
       out="${project.package.dir}/${msi.file.name}" 
-      extensions="WixUIExtension;WixNetFxExtension" >
+      extensions="WixUIExtension;WixNetFxExtension">
+      <arg line="-b ${project.install.dir}\NUnit.Framework.Installer"/>
       <sources>
         <include name="${work.dir}/*.wixobj" />
         <include name="${wix.dir}/wixui.wixlib" />
@@ -682,23 +672,12 @@ to the correct location.
 
     <mkdir dir="${package.solutions.dir}" />
 
-    <copy todir="${package.solutions.dir}/vs2005">
-      <fileset basedir="${project.solutions.dir}/vs2005">
-        <include name="nunit.sln"/>
-        <include name="NUnitTests.nunit"/>
-        <include name="NUnitTests.config"/>
-        <include name="nunit.snk"/>
-        <include name="**/*.csproj"/>
-      </fileset>
-    </copy>
-
-    <copy todir="${package.solutions.dir}/vs2008">
-      <fileset basedir="${project.solutions.dir}/vs2008">
-        <include name="nunit.sln"/>
-        <include name="NUnitTests.nunit"/>
-        <include name="NUnitTests.config"/>
-        <include name="nunit.snk"/>
-        <include name="**/*.csproj"/>
+    <copy todir="${package.solutions.dir}">
+      <fileset basedir="${project.solutions.dir}">
+        <include name="**/NUnitFramework.sln"/>
+        <include name="**/framework/nunit.snk"/>
+        <include name="**/framework/nunit.framework.csproj"/>
+        <include name="**/tests/nunit.framework.tests.csproj"/>
       </fileset>
     </copy>
 
