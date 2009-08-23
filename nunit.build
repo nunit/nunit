@@ -672,23 +672,12 @@ to the correct location.
 
     <mkdir dir="${package.solutions.dir}" />
 
-    <copy todir="${package.solutions.dir}/vs2005">
-      <fileset basedir="${project.solutions.dir}/vs2005">
-        <include name="nunit.sln"/>
-        <include name="NUnitTests.nunit"/>
-        <include name="NUnitTests.config"/>
-        <include name="nunit.snk"/>
-        <include name="**/*.csproj"/>
-      </fileset>
-    </copy>
-
-    <copy todir="${package.solutions.dir}/vs2008">
-      <fileset basedir="${project.solutions.dir}/vs2008">
-        <include name="nunit.sln"/>
-        <include name="NUnitTests.nunit"/>
-        <include name="NUnitTests.config"/>
-        <include name="nunit.snk"/>
-        <include name="**/*.csproj"/>
+    <copy todir="${package.solutions.dir}">
+      <fileset basedir="${project.solutions.dir}">
+        <include name="**/NUnitFramework.sln"/>
+        <include name="**/framework/nunit.snk"/>
+        <include name="**/framework/nunit.framework.csproj"/>
+        <include name="**/tests/nunit.framework.tests.csproj"/>
       </fileset>
     </copy>
 
