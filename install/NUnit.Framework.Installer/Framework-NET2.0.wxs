@@ -61,8 +61,9 @@
         <PropertyRef Id="NETFRAMEWORK20SDKDIR"/>
 
         <Feature Id="FrameworkNet20" Title="NUnit Framework for .NET 2.0" AllowAdvertise="no" Display="expand" InstallDefault="local" Level="0" TypicalDefault="install">
-            <Condition Level="1">NETFRAMEWORK20SDKDIR OR REMOVE</Condition>
-            <ComponentRef Id="nunit.framework.dll_net2.0_dir"/>
+          <Condition Level="1">NETFRAMEWORK20SDKDIR</Condition>
+          <Condition Level="10">NOT NETFRAMEWORK20SDKDIR</Condition>
+          <ComponentRef Id="nunit.framework.dll_net2.0_dir"/>
             <ComponentRef Id="nunit.framework.dll_net2.0_gac"/>
             <ComponentRef Id="nunit.framework.tests.dll_net2.0"/>
             <ComponentRef Id="nunit.framework.xml_net2.0"/>

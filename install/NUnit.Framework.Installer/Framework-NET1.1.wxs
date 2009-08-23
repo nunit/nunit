@@ -60,8 +60,9 @@
         <PropertyRef Id="NETFRAMEWORK11SDKDIR"/>
 
         <Feature Id="FrameworkNet11" Title="NUnit Framework for .NET 1.1" AllowAdvertise="no" Display="expand" InstallDefault="local" Level="0" TypicalDefault="install">
-            <Condition Level="1">NETFRAMEWORK11SDKDIR OR REMOVE</Condition>
-            <ComponentRef Id="nunit.framework.dll_net1.1_dir"/>
+          <Condition Level="1">NETFRAMEWORK11SDKDIR</Condition>
+          <Condition Level="10">NOT NETFRAMEWORK11SDKDIR</Condition>
+          <ComponentRef Id="nunit.framework.dll_net1.1_dir"/>
             <ComponentRef Id="nunit.framework.dll_net1.1_gac"/>
             <ComponentRef Id="nunit.framework.tests.dll_net1.1"/>
             <ComponentRef Id="nunit.framework.xml_net1.1"/>

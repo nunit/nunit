@@ -33,7 +33,8 @@
                  Title="NUnit Framework $(var.NominalVersion)"
                  Level="1"
                  Display="expand"
-                 Description="Install the NUnit Framework with all selected components">
+                 Description="Install the NUnit Framework with all selected components"
+                 ConfigurableDirectory="INSTALLDIR">
 
             <FeatureRef Id="FrameworkNet11"/>
             <FeatureRef Id="FrameworkNet20"/>
