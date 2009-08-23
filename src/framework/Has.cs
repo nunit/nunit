@@ -149,6 +149,19 @@ namespace NUnit.Framework
         
         #endregion
         
+        #region InnerException
+        
+        /// <summary>
+        /// Returns a new ConstraintExpression, which will apply the following
+        /// constraint to the InnerException property of the object being tested.
+        /// </summary>
+        public static ResolvableConstraintExpression InnerException
+        {
+            get { return Property("InnerException"); }
+        }
+        
+        #endregion
+        
         #region Attribute
         
         /// <summary>

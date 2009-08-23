@@ -161,6 +161,15 @@ Gen: ConstraintFactory.Message=>Has.Message
 Gen: ConstraintExpression.Message=>Property("Message")
 %
 /// <summary>
+/// Returns a new ConstraintExpression, which will apply the following
+/// constraint to the InnerException property of the object being tested.
+/// </summary>
+Type: ResolvableConstraintExpression
+Gen: Has.InnerException=>Property("InnerException")
+Gen: ConstraintFactory.InnerException=>Has.InnerException
+Gen: ConstraintExpression.InnerException=>Property("InnerException")
+%
+/// <summary>
 /// Returns a new AttributeConstraint checking for the
 /// presence of a particular attribute on an object.
 /// </summary>
@@ -177,6 +186,30 @@ Gen: ConstraintExpression.Attribute<T>()=>Attribute(typeof(T))
 /// </summary>
 Type: ResolvableConstraintExpression
 Gen: Throws.Exception=>new ConstraintExpression().Append(new ThrowsOperator())
+%
+/// <summary>
+/// Creates a constraint specifying an exception with a given InnerException
+/// </summary>
+Type: ResolvableConstraintExpression
+Gen: Throws.InnerException=> Exception.InnerException
+%
+/// <summary>
+/// Creates a constraint specifying an expected TargetInvocationException
+/// </summary>
+Type: ExactTypeConstraint
+Gen: Throws.TargetInvocationException=>TypeOf(typeof(System.Reflection.TargetInvocationException))
+%
+/// <summary>
+/// Creates a constraint specifying an expected TargetInvocationException
+/// </summary>
+Type: ExactTypeConstraint
+Gen: Throws.ArgumentException=>TypeOf(typeof(System.ArgumentException))
+%
+/// <summary>
+/// Creates a constraint specifying an expected TargetInvocationException
+/// </summary>
+Type: ExactTypeConstraint
+Gen: Throws.InvalidOperationException=>TypeOf(typeof(System.InvalidOperationException))
 %
 /// <summary>
 /// Creates a constraint specifying that no exception is thrown
