@@ -20,13 +20,11 @@
 
 		<Directory Id="TARGETDIR" Name="SourceDir">
 			<Directory Id="ProgramFilesFolder">
-				<Directory Id="INSTALLDIR" Name="NUnit">
-                    <Directory Id="FrameworkRootFolder" Name="Framework">
-                      <Directory Id="FrameworkFolder" Name="$(var.NominalVersion)">
+				<Directory Id="NUnitFolder" Name="NUnit">
+                      <Directory Id="INSTALLDIR" Name="NUnit Framework $(var.NominalVersion)">
                         <Directory Id="FrameworkBinFolder" Name="bin"/>
                         <Directory Id="FrameworkDocFolder" Name="doc"/>
                       </Directory>
-                    </Directory>
 				</Directory>
 			</Directory>
 		</Directory>
