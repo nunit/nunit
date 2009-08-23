@@ -53,6 +53,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\..\src\CommonAssemblyInfo.cs">
+      <Link>CommonAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\tests\ArrayEqualsFailureMessageFixture.cs">
       <Link>ArrayEqualsFailureMessageFixture.cs</Link>
     </Compile>
@@ -61,9 +64,6 @@
     </Compile>
     <Compile Include="..\..\..\src\tests\ArrayNotEqualFixture.cs">
       <Link>ArrayNotEqualFixture.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\tests\AssemblyInfo.cs">
-      <Link>AssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\tests\AssertThrowsTests.cs">
       <Link>AssertThrowsTests.cs</Link>
