@@ -395,7 +395,7 @@ namespace NUnit.Framework
         /// <param name="expression">A Constraint to be applied</param>
         static public void That<T>(ref T actual, IResolveConstraint expression)
         {
-            Assert.That(ref actual, expression.Resolve(), null, null);
+            Assert.That(ref actual, expression, null, null);
         }
 
         /// <summary>
@@ -407,7 +407,7 @@ namespace NUnit.Framework
         /// <param name="message">The message that will be displayed on failure</param>
         static public void That<T>(ref T actual, IResolveConstraint expression, string message)
         {
-            Assert.That(ref actual, expression.Resolve(), message, null);
+            Assert.That(ref actual, expression, message, null);
         }
 
         /// <summary>
@@ -435,11 +435,11 @@ namespace NUnit.Framework
         /// Apply a constraint to a referenced boolean, succeeding if the constraint
         /// is satisfied and throwing an assertion exception on failure.
         /// </summary>
-        /// <param name="constraint">A Constraint to be applied</param>
         /// <param name="actual">The actual value to test</param>
-        static public void That(ref bool actual, IResolveConstraint constraint)
+        /// <param name="expression">A Constraint to be applied</param>
+        static public void That(ref bool actual, IResolveConstraint expression)
         {
-            Assert.That(ref actual, constraint.Resolve(), null, null);
+            Assert.That(ref actual, expression, null, null);
         }
 
         /// <summary>
@@ -451,7 +451,7 @@ namespace NUnit.Framework
         /// <param name="message">The message that will be displayed on failure</param>
         static public void That(ref bool actual, IResolveConstraint expression, string message)
         {
-            Assert.That(ref actual, expression.Resolve(), message, null);
+            Assert.That(ref actual, expression, message, null);
         }
 
         /// <summary>

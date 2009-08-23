@@ -116,7 +116,7 @@
   </target>
 
   <target name="package">
-    <copy todir="${package.src.dir}/NUnitFramework/framework">
+    <copy todir="${package.src.dir}/framework">
       <fileset>
         <patternset refid="source-files"/>
         <include name="nunit.framework.build"/>
