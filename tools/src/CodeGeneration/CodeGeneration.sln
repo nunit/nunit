@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GenSyntax", "GenSyntax.csproj", "{8DCF8441-9BCC-46FC-B878-C65CE3C565A1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GenSyntax", "GenSyntax\GenSyntax.csproj", "{8DCF8441-9BCC-46FC-B878-C65CE3C565A1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GenSyntax.Tests", "tests\GenSyntax.Tests.csproj", "{695EDA21-AE36-414B-9F5F-EE06CECC1ED0}"
 EndProject

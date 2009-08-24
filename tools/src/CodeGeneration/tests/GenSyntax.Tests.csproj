@@ -43,7 +43,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\GenSyntax.csproj">
+    <ProjectReference Include="..\GenSyntax\GenSyntax.csproj">
       <Project>{8DCF8441-9BCC-46FC-B878-C65CE3C565A1}</Project>
       <Name>GenSyntax</Name>
     </ProjectReference>

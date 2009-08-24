@@ -37,10 +37,10 @@
         output="${build.dir}/GenSyntax.exe"
         debug="${debug}" 
         define="${defines}">
-      <sources basedir=".">
+      <sources basedir="GenSyntax">
         <patternset refid="source-files"/>
       </sources>
-      <resources prefix="GenSyntax.Templates">
+      <resources basedir="GenSyntax" prefix="GenSyntax.Templates">
         <patternset refid="resource-files"/>
       </resources>
     </csc>
