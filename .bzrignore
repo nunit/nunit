@@ -11,3 +11,5 @@ nunit.framework.xml
 *.db
 bin
 package
+StyleCop.Cache
+*.StyleCop
