@@ -54,9 +54,9 @@ namespace NUnit.Framework.CodeGeneration
             }
 
             Assembly assembly = GetType().Assembly;
-            Stream stream = assembly.GetManifestResourceStream("GenSyntax.Templates." + className + ".template.cs");
+            Stream stream = assembly.GetManifestResourceStream("NUnit.Framework.CodeGeneration.Templates." + className + ".template.cs");
             if (stream == null)
-                stream = assembly.GetManifestResourceStream("GenSyntax.Templates.Default.template.cs");
+                stream = assembly.GetManifestResourceStream("NUnit.Framework.CodeGeneration.Templates.Default.template.cs");
 
             this.template = new StreamReader(stream);
         }
@@ -69,7 +69,7 @@ namespace NUnit.Framework.CodeGeneration
 
             WriteFileHeader(writer);
 
-            foreach (Stanza stanza in SyntaxInfo.Instance)
+            foreach (CodeGenSpec stanza in SyntaxInfo.Instance)
             {
                 stanza.Generate(writer, this.className, isStatic);
             }

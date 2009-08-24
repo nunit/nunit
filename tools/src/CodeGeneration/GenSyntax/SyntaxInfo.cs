@@ -28,7 +28,7 @@ using System.Text;
 
 namespace NUnit.Framework.CodeGeneration
 {
-    class SyntaxInfo : List<Stanza>
+    class SyntaxInfo : List<CodeGenSpec>
     {
         private static SyntaxInfo instance = new SyntaxInfo();
 
@@ -43,8 +43,7 @@ namespace NUnit.Framework.CodeGeneration
 
             while (!input.EndOfStream)
             {
-                Stanza stanza = Stanza.Read(input);
-                this.Add(stanza);
+                this.Add(new CodeGenSpec(Stanza.Read(input)));
             }
         }
 
@@ -56,7 +55,7 @@ namespace NUnit.Framework.CodeGeneration
                 if (defaults == null)
                 {
                     defaults = new List<string>();
-                    foreach (Stanza stanza in this)
+                    foreach (CodeGenSpec stanza in this)
                         foreach (string option in stanza.Defaults)
                             defaults.Add(option);
                 }

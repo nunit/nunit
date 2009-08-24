@@ -27,7 +27,7 @@ using System.Text;
 
 namespace NUnit.Framework.CodeGeneration
 {
-    public class GenSpec
+    public class CodeGenItem
     {
         private string fullSpec;
 
@@ -38,7 +38,7 @@ namespace NUnit.Framework.CodeGeneration
         private string attributes;
         private string rightPart;
 
-        public GenSpec(string spec)
+        public CodeGenItem(string spec)
         {
             this.fullSpec = spec;
 
@@ -76,7 +76,7 @@ namespace NUnit.Framework.CodeGeneration
             }
         }
 
-        public string SpecType
+        public string ItemType
         {
             get { return this.specType; }
         }

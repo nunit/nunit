@@ -100,8 +100,9 @@
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="GenSpec.cs" />
+    <Compile Include="CodeGenItem.cs" />
     <Compile Include="CodeGenerator.cs" />
+    <Compile Include="CodeGenSpec.cs" />
     <Compile Include="Program.cs">
       <SubType>Code</SubType>
     </Compile>
