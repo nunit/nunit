@@ -1,9 +1,32 @@
-﻿using System;
+﻿// ***********************************************************************
+// Copyright (c) 2009 Charlie Poole
+//
+// Permission is hereby granted, free of charge, to any person obtaining
+// a copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to
+// permit persons to whom the Software is furnished to do so, subject to
+// the following conditions:
+// 
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+// ***********************************************************************
+
+using System;
 using System.IO;
 using System.Collections.Generic;
 using System.CodeDom.Compiler;
 
-namespace GenSyntax
+namespace NUnit.Framework.CodeGeneration
 {
     class Stanza
     {
@@ -51,12 +74,10 @@ namespace GenSyntax
                     this.typeName = line.Substring(5).Trim();
                 else if (line.StartsWith("///"))
                     this.comments.Add(line);
-                else if (line.StartsWith("Gen:") || line.StartsWith("Assert:"))
-                    AddSyntaxElement(line, typeName == "void");
+                else if (line.StartsWith("Gen:"))
+                    AddSyntaxElement(line);
                 else if (line.StartsWith("Gen3:"))
                     AddStandardSyntaxElements(line.Substring(5).Trim());
-                //else if (line.StartsWith("Assert:"))
-                //    ProcessAssert(line.Substring(7).Trim());
                 else if (line.StartsWith("Default:"))
                     this.defaults.Add(line.Substring(8).Trim());
                 else
@@ -64,9 +85,9 @@ namespace GenSyntax
             }
         }
 
-        private void AddSyntaxElement(string line, bool isVoid)
+        private void AddSyntaxElement(string line)
         {
-            this.genSpecs.Add(new GenSpec(line, typeName == "void"));
+            this.genSpecs.Add(new GenSpec(line));
         }
 
         private void AddStandardSyntaxElements(string element)
