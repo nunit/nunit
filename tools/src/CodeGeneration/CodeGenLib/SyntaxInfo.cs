@@ -28,7 +28,7 @@ using System.Text;
 
 namespace NUnit.Framework.CodeGeneration
 {
-    class SyntaxInfo : List<CodeGenSpec>
+    public class SyntaxInfo : List<CodeGenSpec>
     {
         private static SyntaxInfo instance = new SyntaxInfo();
 

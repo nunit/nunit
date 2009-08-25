@@ -54,6 +54,7 @@ namespace NUnit.Framework.CodeGeneration
             }
 
             Assembly assembly = GetType().Assembly;
+
             Stream stream = assembly.GetManifestResourceStream("NUnit.Framework.CodeGeneration.Templates." + className + ".template.cs");
             if (stream == null)
                 stream = assembly.GetManifestResourceStream("NUnit.Framework.CodeGeneration.Templates.Default.template.cs");
