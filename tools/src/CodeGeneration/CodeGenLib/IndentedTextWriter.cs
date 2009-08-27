@@ -22,39 +22,67 @@
 // ***********************************************************************
 
 using System;
-using System.IO;
 using System.Collections.Generic;
+using System.IO;
 
 namespace NUnit.Framework.CodeGeneration
 {
-    public class Stanza : List<string>
+    public class IndentedTextWriter : CodeWriter
     {
-        public static Stanza Read(TextReader rdr)
+        private TextWriter writer;
+        private string prefix;
+        private Stack<string> prefixes = new Stack<string>();
+
+        public IndentedTextWriter(TextWriter writer)
         {
-            Stanza stanza = new Stanza();
-            string line = rdr.ReadLine();
-
-            while (line != null && line != "%")
-            {
-                if (!line.StartsWith("#"))
-                    stanza.AddLine(line);
-
-                line = rdr.ReadLine();
-            }
-
-            return stanza;
+            this.writer = writer;
         }
 
-        private void AddLine(string line)
+        public override void PushIndent(string indent)
         {
-            int count = this.Count;
-
-            if (char.IsWhiteSpace(line[0]) && count > 0)
-                this[count - 1] += line.Trim();
-            else
-                this.Add(line);
+            prefixes.Push(prefix);
+            prefix = prefix + indent;
         }
 
-        private Stanza() { }
+        public override void PopIndent()
+        {
+            prefix = prefixes.Pop();
+        }
+
+        public override System.Text.Encoding Encoding
+        {
+            get { return writer.Encoding; }
+        }
+
+        public override void Write(string value)
+        {
+            writer.Write(value);
+        }
+
+        public override void WriteLine(string value)
+        {
+            writer.Write(prefix);
+            writer.WriteLine(value);
+        }
+
+        public override void WriteLine()
+        {
+            writer.WriteLine();
+        }
+
+        public override void Flush()
+        {
+            writer.Flush();
+        }
+
+        public override void Close()
+        {
+            writer.Close();
+        }
+
+        public override void WriteLineNoTabs(string value)
+        {
+            writer.WriteLine(value);
+        }
     }
 }

@@ -24,13 +24,12 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
-using System.CodeDom.Compiler;
 
 namespace NUnit.Framework.CodeGeneration
 {
     public class CodeGenSpec
     {
-        private Stanza stanza = new Stanza();
+        private Stanza stanza;
 
         private string typeName = "void";
         private List<string> comments = new List<string>();
@@ -38,6 +37,8 @@ namespace NUnit.Framework.CodeGeneration
         private List<string> defaults = new List<string>();
 
         private string currentRegion;
+
+        private static readonly string INDENT = "    ";
 
         public CodeGenSpec(Stanza stanza)
         {
@@ -56,7 +57,7 @@ namespace NUnit.Framework.CodeGeneration
                 else if (line.StartsWith("Gen:"))
                     AddSyntaxElement(line);
                 else if (line.StartsWith("Gen3:"))
-                    AddStandardSyntaxElements(line.Substring(5).Trim());
+                    AddStandardSyntaxElements(line);
                 else if (line.StartsWith("Default:"))
                     this.defaults.Add(line.Substring(8).Trim());
                 else
@@ -71,45 +72,28 @@ namespace NUnit.Framework.CodeGeneration
 
         private void AddStandardSyntaxElements(string element)
         {
-            int arrow = element.IndexOf("=>");
-            if (arrow < 0) IssueFormatError(element);
-            string leftside = element.Substring(0, arrow);
-            string rightside = element.Substring(arrow + 2);
+            CodeGenItem genSpec = new CodeGenItem("Gen: " + element.Substring(5).Trim());
 
-            string fullname = leftside;
-            string attributes = "";
-            int rbrack = leftside.LastIndexOf("]");
-            if (rbrack > 0)
-            {
-                attributes = leftside.Substring(0, rbrack + 1);
-                fullname = leftside.Substring(rbrack + 1);
-            }
-
-            string constraint = rightside;
+            string constraint = genSpec.RightPart;
             if (constraint.StartsWith("return "))
                 constraint = constraint.Substring(7);
             if (constraint.StartsWith("new "))
                 constraint = constraint.Substring(4);
 
-            int dot = fullname.IndexOf('.');
-            if (dot < 0) IssueFormatError(element);
-            string name = fullname.Substring(dot + 1);
-
             this.typeName = constraint.Substring(0, constraint.IndexOf("("));
+
+            this.genSpecs.Add(genSpec);
             this.genSpecs.Add(new CodeGenItem(
-                "Gen: " + leftside + "=>" + rightside));
+                "Gen: " + genSpec.Attributes + "ConstraintFactory." + genSpec.MethodName + "=>" + genSpec.RightPart));
             this.genSpecs.Add(new CodeGenItem(
-                "Gen: " + attributes + "ConstraintFactory." + name + "=>" + rightside));
-            this.genSpecs.Add(new CodeGenItem(
-                "Gen: " + attributes + "ConstraintExpression." + name + "=>(" + typeName + ")this.Append(" + rightside + ")"));
+                "Gen: " + genSpec.Attributes + "ConstraintExpression." + genSpec.MethodName + "=>(" + typeName + ")this.Append(" + genSpec.RightPart + ")"));
         }
 
         private void IssueFormatError(string line)
         {
             throw new ArgumentException("Invalid line in spec file" + Environment.NewLine + line);
         }
-
-        public void Generate(IndentedTextWriter writer, string className, bool isStatic)
+        public void Generate(CodeWriter writer, string className, bool isStatic)
         {
             foreach (CodeGenItem spec in genSpecs)
             {
@@ -149,13 +133,13 @@ namespace NUnit.Framework.CodeGeneration
             }
         }
 
-        private void GenerateMethod(IndentedTextWriter writer, bool isStatic, CodeGenItem spec)
+        private void GenerateMethod(CodeWriter writer, bool isStatic, CodeGenItem spec)
         {
             WriteComments(writer);
             WriteMethodDefinition(writer, isStatic, spec);
         }
 
-        private void WriteMethodDefinition(IndentedTextWriter writer, bool isStatic, CodeGenItem spec)
+        private void WriteMethodDefinition(CodeWriter writer, bool isStatic, CodeGenItem spec)
         {
             if (spec.Attributes != null)
                 writer.WriteLine(spec.Attributes);
@@ -165,24 +149,24 @@ namespace NUnit.Framework.CodeGeneration
             else
                 writer.WriteLine("public {0} {1}", typeName, spec.MethodName);
             writer.WriteLine("{");
-            writer.Indent++;
+            writer.PushIndent(INDENT);
             writer.WriteLine(spec.IsProperty
                     ? "get { return " + spec.RightPart + "; }"
                     : typeName == "void"
                         ? spec.RightPart + ";"
                         : "return " + spec.RightPart + ";");
-            writer.Indent--;
+            writer.PopIndent();
             writer.WriteLine("}");
             writer.WriteLine();
         }
 
-        private void WriteComments(IndentedTextWriter writer)
+        private void WriteComments(CodeWriter writer)
         {
             foreach (string comment in comments)
                 writer.WriteLine(comment);
         }
 
-        private void GenerateAssertOverloads(IndentedTextWriter writer, bool isStatic, CodeGenItem spec)
+        private void GenerateAssertOverloads(CodeWriter writer, bool isStatic, CodeGenItem spec)
         {
             if (!spec.LeftPart.EndsWith(")") || !spec.RightPart.EndsWith(")"))
                 IssueFormatError(spec.ToString());

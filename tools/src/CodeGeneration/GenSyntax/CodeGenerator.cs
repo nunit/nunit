@@ -35,44 +35,39 @@ namespace NUnit.Framework.CodeGeneration
     class CodeGenerator
     {
         private string className;
-        private string fileName;
+
         private StreamReader template;
+        
         private bool isStatic;
 
-        public CodeGenerator(string option)
+        public CodeGenerator(string className) : this( className, null ) { }
+
+        public CodeGenerator(string className, string targetName)
         {
-            int eq = option.IndexOf('=');
-            if (eq > 0)
-            {
-                this.className = option.Substring(0, eq);
-                this.fileName = option.Substring(eq + 1);
-            }
-            else
-            {
-                this.className = option;
-                this.fileName = className + ".cs";
-            }
+            this.className = className;
+            string templateName = className + ".template.cs";
 
             Assembly assembly = GetType().Assembly;
-
-            Stream stream = assembly.GetManifestResourceStream("NUnit.Framework.CodeGeneration.Templates." + className + ".template.cs");
+#if TEST
+            Stream stream = new FileStream(Path.Combine("Templates", templateName), FileMode.Open);
+            if (stream == null)
+                stream = new FileStream(Path.Combine("Templates", "Default.template.cs"), FileMode.Open);
+#else
+            Stream stream = assembly.GetManifestResourceStream("NUnit.Framework.CodeGeneration.Templates." + templateName);
             if (stream == null)
                 stream = assembly.GetManifestResourceStream("NUnit.Framework.CodeGeneration.Templates.Default.template.cs");
+#endif
 
             this.template = new StreamReader(stream);
         }
 
-        public void GenerateClass()
+        public void GenerateClass(CodeWriter writer)
         {
-            IndentedTextWriter writer = new IndentedTextWriter(new StreamWriter(this.fileName));
-
-            Console.WriteLine("Generating " + this.fileName);
-
             WriteFileHeader(writer);
 
-            foreach (CodeGenSpec stanza in SyntaxInfo.Instance)
+            foreach (CodeGenSpec spec in SyntaxInfo.Instance)
             {
-                stanza.Generate(writer, this.className, isStatic);
+                spec.Generate(writer, this.className, isStatic);
             }
 
             WriteFileTrailer(writer);
@@ -80,7 +75,7 @@ namespace NUnit.Framework.CodeGeneration
             writer.Close();
         }
 
-        private void WriteFileHeader(IndentedTextWriter writer)
+        private void WriteFileHeader(CodeWriter writer)
         {
             string[] argList = Environment.GetCommandLineArgs();
             argList[0] = Path.GetFileName(argList[0]);
@@ -98,12 +93,12 @@ namespace NUnit.Framework.CodeGeneration
             if( line != null && line.IndexOf("$$STATIC$$") >= 0)
                 this.isStatic = true;
 
-            writer.Indent += 2;
+            writer.PushIndent("        ");
         }
 
-        private void WriteFileTrailer(IndentedTextWriter writer)
+        private void WriteFileTrailer(CodeWriter writer)
         {
-            writer.Indent -= 2;
+            writer.PopIndent();
 
             while (!template.EndOfStream)
                 writer.WriteLine(template.ReadLine());

@@ -338,4 +338,7 @@
     <Reference Include="System" />
     <Reference Include="System.XML" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="XMLFile1.xml" />
+  </ItemGroup>
 </Project>

@@ -55,8 +55,26 @@ namespace NUnit.Framework.CodeGeneration
 
                     foreach (string option in GenOptions)
                     {
-                        CodeGenerator generator = new CodeGenerator(option);
-                        generator.GenerateClass();
+                        string className, targetName;
+                        int eq = option.IndexOf('=');
+                        if (eq > 0)
+                        {
+                            className = option.Substring(0, eq);
+                            targetName = option.Substring(eq + 1);
+                        }
+                        else
+                        {
+                            className = option;
+                            targetName = className + ".cs";
+                        }
+                        
+                        CodeGenerator generator = new CodeGenerator( className, targetName );
+
+                        CodeWriter writer = new IndentedTextWriter(new StreamWriter(targetName));
+
+                        Console.WriteLine("Generating " + targetName);
+
+                        generator.GenerateClass(writer);
                     }
                 }
                 else

@@ -8,9 +8,9 @@
     <ProjectGuid>{695EDA21-AE36-414B-9F5F-EE06CECC1ED0}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>GenSyntax.Tests</RootNamespace>
-    <AssemblyName>tests</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <RootNamespace>NUnit.Framework.CodeGeneration</RootNamespace>
+    <AssemblyName>CodeGenerationTests</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkSubset>
     </TargetFrameworkSubset>
@@ -35,15 +35,14 @@
   <ItemGroup>
     <Reference Include="nunit.framework, Version=2.5.0.9122, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL" />
     <Reference Include="System" />
-    <Reference Include="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="CodeGenItemTests.cs" />
+    <Compile Include="IndentedTextWriterTests.cs" />
+    <Compile Include="StanzaTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CodeGenLib\CodeGenLib.csproj">

@@ -22,39 +22,15 @@
 // ***********************************************************************
 
 using System;
-using System.IO;
-using System.Collections.Generic;
 
 namespace NUnit.Framework.CodeGeneration
 {
-    public class Stanza : List<string>
+    public abstract class CodeWriter : System.IO.TextWriter
     {
-        public static Stanza Read(TextReader rdr)
-        {
-            Stanza stanza = new Stanza();
-            string line = rdr.ReadLine();
+        public abstract void PushIndent(string indent);
 
-            while (line != null && line != "%")
-            {
-                if (!line.StartsWith("#"))
-                    stanza.AddLine(line);
+        public abstract void PopIndent();
 
-                line = rdr.ReadLine();
-            }
-
-            return stanza;
-        }
-
-        private void AddLine(string line)
-        {
-            int count = this.Count;
-
-            if (char.IsWhiteSpace(line[0]) && count > 0)
-                this[count - 1] += line.Trim();
-            else
-                this.Add(line);
-        }
-
-        private Stanza() { }
+        public abstract void WriteLineNoTabs(string value);
     }
 }
