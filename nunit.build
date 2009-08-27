@@ -723,7 +723,7 @@ to the correct location.
   <target name="build-tools"
       description="Build tools used in building NUnit">
 
-    <nant target="build" buildfile="tools/src/GenSyntax/GenSyntax.build"/>
+    <nant target="GenSyntax" buildfile="tools/src/CodeGeneration/CodeGeneration.build"/>
 
   </target>
 
