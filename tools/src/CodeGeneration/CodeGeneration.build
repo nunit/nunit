@@ -56,7 +56,7 @@
         <include name="CodeGenerator.cs"/>
         <include name="Program.cs"/>
       </sources>
-      <resources basedir="GenSyntax" prefix="GenSyntax.Templates">
+      <resources basedir="GenSyntax" prefix="NUnit.Framework.CodeGeneration.Templates">
         <include name="Templates/*.cs"/>
       </resources>
       <references>
@@ -82,7 +82,7 @@
       </sources>
       <references>
         <include name="${build.dir}/CodeGenLib.dll"/>
-        <include name="NUnit.Framework.dll"/>
+        <include name="../../../build/net/2.0/release/NUnit.Framework.dll"/>
       </references>
     </csc>
 
