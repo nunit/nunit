@@ -29,26 +29,10 @@ namespace NUnit.Framework
 	/// Attribute used to provide descriptive text about a 
 	/// test case or fixture.
 	/// </summary>
-	[AttributeUsage(AttributeTargets.Class|AttributeTargets.Method|AttributeTargets.Assembly, AllowMultiple=false)]
-	public class DescriptionAttribute : Attribute
-	{
-		string description;
+    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class | AttributeTargets.Assembly, AllowMultiple = false)]
+    public sealed class DescriptionAttribute : PropertyAttribute
+    {
+        public DescriptionAttribute(string description) : base(description) { }
+    }
 
-		/// <summary>
-		/// Construct the attribute
-		/// </summary>
-		/// <param name="description">Text describing the test</param>
-		public DescriptionAttribute(string description)
-		{
-			this.description=description;
-		}
-
-		/// <summary>
-		/// Gets the test description
-		/// </summary>
-		public string Description
-		{
-			get { return description; }
-		}
-	}
 }
