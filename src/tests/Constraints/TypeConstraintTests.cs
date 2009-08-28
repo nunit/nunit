@@ -153,7 +153,7 @@ namespace NUnit.Framework.Constraints.Tests
         {
             Assert.That(
                 System.Reflection.MethodInfo.GetCurrentMethod(),
-                Has.Attribute(typeof(DescriptionAttribute)).Property("Description").EqualTo("my description"));
+                Has.Attribute(typeof(DescriptionAttribute)).Property("Properties").Property("Keys").Contains("Description"));
         }
     }
 }
