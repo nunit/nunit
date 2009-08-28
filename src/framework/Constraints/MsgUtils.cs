@@ -127,7 +127,7 @@ namespace NUnit.Framework.Constraints
                         case '\x0085':
                         case '\x2028':
                         case '\x2029':
-                            sb.AppendFormat("\\x{0:X4}", (int)c);
+                            sb.Append(string.Format("\\x{0:X4}", (int)c));
                             break;
 
                         default:
