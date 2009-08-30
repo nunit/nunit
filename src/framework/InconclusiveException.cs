@@ -24,8 +24,9 @@
 namespace NUnit.Framework
 {
     using System;
+#if !NETCF
     using System.Runtime.Serialization;
-
+#endif
     /// <summary>
     /// Thrown when a test executes inconclusively.
     /// </summary>
@@ -48,6 +49,7 @@ namespace NUnit.Framework
             base(message, inner)
         { }
 
+#if !NETCF
         /// <summary>
         /// Serialization Constructor
         /// </summary>
@@ -55,6 +57,6 @@ namespace NUnit.Framework
             StreamingContext context)
             : base(info, context)
         { }
-
+#endif
     }
 }
