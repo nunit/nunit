@@ -333,4 +333,9 @@
   <ItemGroup>
     <None Include="nunit.snk" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\..\..\src\framework\SyntaxElements.txt">
+      <Link>SyntaxElements.txt</Link>
+    </Content>
+  </ItemGroup>
 </Project>

@@ -339,6 +339,9 @@
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="..\..\..\src\framework\SyntaxElements.txt">
+      <Link>SyntaxElements.txt</Link>
+    </Content>
     <Content Include="XMLFile1.xml" />
   </ItemGroup>
 </Project>
