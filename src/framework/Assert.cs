@@ -802,7 +802,7 @@ namespace NUnit.Framework
         #endregion
 
         #region True
-        
+
         /// <summary>
         /// Asserts that a condition is true. If the condition is false the method throws
         /// an <see cref="AssertionException"/>.
@@ -814,7 +814,6 @@ namespace NUnit.Framework
         {
             Assert.That(condition, Is.True ,message, args);
         }
-        
         /// <summary>
         /// Asserts that a condition is true. If the condition is false the method throws
         /// an <see cref="AssertionException"/>.
@@ -825,7 +824,6 @@ namespace NUnit.Framework
         {
             Assert.That(condition, Is.True ,message, null);
         }
-        
         /// <summary>
         /// Asserts that a condition is true. If the condition is false the method throws
         /// an <see cref="AssertionException"/>.
@@ -835,7 +833,7 @@ namespace NUnit.Framework
         {
             Assert.That(condition, Is.True ,null, null);
         }
-        
+
         /// <summary>
         /// Asserts that a condition is true. If the condition is false the method throws
         /// an <see cref="AssertionException"/>.
@@ -847,7 +845,6 @@ namespace NUnit.Framework
         {
             Assert.That(condition, Is.True ,message, args);
         }
-        
         /// <summary>
         /// Asserts that a condition is true. If the condition is false the method throws
         /// an <see cref="AssertionException"/>.
@@ -858,7 +855,6 @@ namespace NUnit.Framework
         {
             Assert.That(condition, Is.True ,message, null);
         }
-        
         /// <summary>
         /// Asserts that a condition is true. If the condition is false the method throws
         /// an <see cref="AssertionException"/>.
@@ -868,11 +864,11 @@ namespace NUnit.Framework
         {
             Assert.That(condition, Is.True ,null, null);
         }
-        
+
         #endregion
-        
+
         #region False
-        
+
         /// <summary>
         /// Asserts that a condition is false. If the condition is true the method throws
         /// an <see cref="AssertionException"/>.
@@ -884,7 +880,6 @@ namespace NUnit.Framework
         {
             Assert.That(condition, Is.False ,message, args);
         }
-        
         /// <summary>
         /// Asserts that a condition is false. If the condition is true the method throws
         /// an <see cref="AssertionException"/>.
@@ -895,7 +890,6 @@ namespace NUnit.Framework
         {
             Assert.That(condition, Is.False ,message, null);
         }
-        
         /// <summary>
         /// Asserts that a condition is false. If the condition is true the method throws
         /// an <see cref="AssertionException"/>.
@@ -905,7 +899,7 @@ namespace NUnit.Framework
         {
             Assert.That(condition, Is.False ,null, null);
         }
-        
+
         /// <summary>
         /// Asserts that a condition is false. If the condition is true the method throws
         /// an <see cref="AssertionException"/>.
@@ -917,7 +911,6 @@ namespace NUnit.Framework
         {
             Assert.That(condition, Is.False ,message, args);
         }
-        
         /// <summary>
         /// Asserts that a condition is false. If the condition is true the method throws
         /// an <see cref="AssertionException"/>.
@@ -928,7 +921,6 @@ namespace NUnit.Framework
         {
             Assert.That(condition, Is.False ,message, null);
         }
-        
         /// <summary>
         /// Asserts that a condition is false. If the condition is true the method throws
         /// an <see cref="AssertionException"/>.
@@ -938,11 +930,11 @@ namespace NUnit.Framework
         {
             Assert.That(condition, Is.False ,null, null);
         }
-        
+
         #endregion
-        
+
         #region NotNull
-        
+
         /// <summary>
         /// Verifies that the object that is passed in is not equal to <code>null</code>
         /// If the object is <code>null</code> then an <see cref="AssertionException"/>
@@ -955,7 +947,6 @@ namespace NUnit.Framework
         {
             Assert.That(anObject, Is.Not.Null ,message, args);
         }
-        
         /// <summary>
         /// Verifies that the object that is passed in is not equal to <code>null</code>
         /// If the object is <code>null</code> then an <see cref="AssertionException"/>
@@ -967,7 +958,6 @@ namespace NUnit.Framework
         {
             Assert.That(anObject, Is.Not.Null ,message, null);
         }
-        
         /// <summary>
         /// Verifies that the object that is passed in is not equal to <code>null</code>
         /// If the object is <code>null</code> then an <see cref="AssertionException"/>
@@ -978,7 +968,7 @@ namespace NUnit.Framework
         {
             Assert.That(anObject, Is.Not.Null ,null, null);
         }
-        
+
         /// <summary>
         /// Verifies that the object that is passed in is not equal to <code>null</code>
         /// If the object is <code>null</code> then an <see cref="AssertionException"/>
@@ -991,7 +981,6 @@ namespace NUnit.Framework
         {
             Assert.That(anObject, Is.Not.Null ,message, args);
         }
-        
         /// <summary>
         /// Verifies that the object that is passed in is not equal to <code>null</code>
         /// If the object is <code>null</code> then an <see cref="AssertionException"/>
@@ -1003,7 +992,6 @@ namespace NUnit.Framework
         {
             Assert.That(anObject, Is.Not.Null ,message, null);
         }
-        
         /// <summary>
         /// Verifies that the object that is passed in is not equal to <code>null</code>
         /// If the object is <code>null</code> then an <see cref="AssertionException"/>
@@ -1014,11 +1002,11 @@ namespace NUnit.Framework
         {
             Assert.That(anObject, Is.Not.Null ,null, null);
         }
-        
+
         #endregion
-        
+
         #region Null
-        
+
         /// <summary>
         /// Verifies that the object that is passed in is equal to <code>null</code>
         /// If the object is not <code>null</code> then an <see cref="AssertionException"/>
@@ -1031,7 +1019,6 @@ namespace NUnit.Framework
         {
             Assert.That(anObject, Is.Null ,message, args);
         }
-        
         /// <summary>
         /// Verifies that the object that is passed in is equal to <code>null</code>
         /// If the object is not <code>null</code> then an <see cref="AssertionException"/>
@@ -1043,7 +1030,6 @@ namespace NUnit.Framework
         {
             Assert.That(anObject, Is.Null ,message, null);
         }
-        
         /// <summary>
         /// Verifies that the object that is passed in is equal to <code>null</code>
         /// If the object is not <code>null</code> then an <see cref="AssertionException"/>
@@ -1054,7 +1040,7 @@ namespace NUnit.Framework
         {
             Assert.That(anObject, Is.Null ,null, null);
         }
-        
+
         /// <summary>
         /// Verifies that the object that is passed in is equal to <code>null</code>
         /// If the object is not <code>null</code> then an <see cref="AssertionException"/>
@@ -1067,7 +1053,6 @@ namespace NUnit.Framework
         {
             Assert.That(anObject, Is.Null ,message, args);
         }
-        
         /// <summary>
         /// Verifies that the object that is passed in is equal to <code>null</code>
         /// If the object is not <code>null</code> then an <see cref="AssertionException"/>
@@ -1079,7 +1064,6 @@ namespace NUnit.Framework
         {
             Assert.That(anObject, Is.Null ,message, null);
         }
-        
         /// <summary>
         /// Verifies that the object that is passed in is equal to <code>null</code>
         /// If the object is not <code>null</code> then an <see cref="AssertionException"/>
@@ -1090,11 +1074,11 @@ namespace NUnit.Framework
         {
             Assert.That(anObject, Is.Null ,null, null);
         }
-        
+
         #endregion
-        
+
         #region IsNaN
-        
+
         /// <summary>
         /// Verifies that the double that is passed in is an <code>NaN</code> value.
         /// If the object is not <code>NaN</code> then an <see cref="AssertionException"/>
@@ -1107,7 +1091,6 @@ namespace NUnit.Framework
         {
             Assert.That(aDouble, Is.NaN ,message, args);
         }
-        
         /// <summary>
         /// Verifies that the double that is passed in is an <code>NaN</code> value.
         /// If the object is not <code>NaN</code> then an <see cref="AssertionException"/>
@@ -1119,7 +1102,6 @@ namespace NUnit.Framework
         {
             Assert.That(aDouble, Is.NaN ,message, null);
         }
-        
         /// <summary>
         /// Verifies that the double that is passed in is an <code>NaN</code> value.
         /// If the object is not <code>NaN</code> then an <see cref="AssertionException"/>
@@ -1130,7 +1112,7 @@ namespace NUnit.Framework
         {
             Assert.That(aDouble, Is.NaN ,null, null);
         }
-        
+
 #if NET_2_0
         /// <summary>
         /// Verifies that the double that is passed in is an <code>NaN</code> value.
@@ -1144,7 +1126,6 @@ namespace NUnit.Framework
         {
             Assert.That(aDouble, Is.NaN ,message, args);
         }
-        
         /// <summary>
         /// Verifies that the double that is passed in is an <code>NaN</code> value.
         /// If the object is not <code>NaN</code> then an <see cref="AssertionException"/>
@@ -1156,7 +1137,6 @@ namespace NUnit.Framework
         {
             Assert.That(aDouble, Is.NaN ,message, null);
         }
-        
         /// <summary>
         /// Verifies that the double that is passed in is an <code>NaN</code> value.
         /// If the object is not <code>NaN</code> then an <see cref="AssertionException"/>
@@ -1167,12 +1147,12 @@ namespace NUnit.Framework
         {
             Assert.That(aDouble, Is.NaN ,null, null);
         }
-        
 #endif
+
         #endregion
-        
+
         #region IsEmpty
-        
+
         /// <summary>
         /// Assert that a string is empty - that is equal to string.Empty
         /// </summary>
@@ -1183,7 +1163,6 @@ namespace NUnit.Framework
         {
             Assert.That(aString, new EmptyStringConstraint() ,message, args);
         }
-        
         /// <summary>
         /// Assert that a string is empty - that is equal to string.Empty
         /// </summary>
@@ -1193,7 +1172,6 @@ namespace NUnit.Framework
         {
             Assert.That(aString, new EmptyStringConstraint() ,message, null);
         }
-        
         /// <summary>
         /// Assert that a string is empty - that is equal to string.Empty
         /// </summary>
@@ -1202,11 +1180,11 @@ namespace NUnit.Framework
         {
             Assert.That(aString, new EmptyStringConstraint() ,null, null);
         }
-        
+
         #endregion
-        
+
         #region IsEmpty
-        
+
         /// <summary>
         /// Assert that an array, list or other collection is empty
         /// </summary>
@@ -1217,7 +1195,6 @@ namespace NUnit.Framework
         {
             Assert.That(collection, new EmptyCollectionConstraint() ,message, args);
         }
-        
         /// <summary>
         /// Assert that an array, list or other collection is empty
         /// </summary>
@@ -1227,7 +1204,6 @@ namespace NUnit.Framework
         {
             Assert.That(collection, new EmptyCollectionConstraint() ,message, null);
         }
-        
         /// <summary>
         /// Assert that an array, list or other collection is empty
         /// </summary>
@@ -1236,11 +1212,11 @@ namespace NUnit.Framework
         {
             Assert.That(collection, new EmptyCollectionConstraint() ,null, null);
         }
-        
+
         #endregion
-        
+
         #region IsNotEmpty
-        
+
         /// <summary>
         /// Assert that a string is not empty - that is not equal to string.Empty
         /// </summary>
@@ -1251,7 +1227,6 @@ namespace NUnit.Framework
         {
             Assert.That(aString, Is.Not.Empty ,message, args);
         }
-        
         /// <summary>
         /// Assert that a string is not empty - that is not equal to string.Empty
         /// </summary>
@@ -1261,7 +1236,6 @@ namespace NUnit.Framework
         {
             Assert.That(aString, Is.Not.Empty ,message, null);
         }
-        
         /// <summary>
         /// Assert that a string is not empty - that is not equal to string.Empty
         /// </summary>
@@ -1270,11 +1244,11 @@ namespace NUnit.Framework
         {
             Assert.That(aString, Is.Not.Empty ,null, null);
         }
-        
+
         #endregion
-        
+
         #region IsNotEmpty
-        
+
         /// <summary>
         /// Assert that an array, list or other collection is not empty
         /// </summary>
@@ -1285,7 +1259,6 @@ namespace NUnit.Framework
         {
             Assert.That(collection, Is.Not.Empty ,message, args);
         }
-        
         /// <summary>
         /// Assert that an array, list or other collection is not empty
         /// </summary>
@@ -1295,7 +1268,6 @@ namespace NUnit.Framework
         {
             Assert.That(collection, Is.Not.Empty ,message, null);
         }
-        
         /// <summary>
         /// Assert that an array, list or other collection is not empty
         /// </summary>
@@ -1304,11 +1276,11 @@ namespace NUnit.Framework
         {
             Assert.That(collection, Is.Not.Empty ,null, null);
         }
-        
+
         #endregion
-        
+
         #region IsNullOrEmpty
-        
+
         /// <summary>
         /// Assert that a string is either null or equal to string.Empty
         /// </summary>
@@ -1319,7 +1291,6 @@ namespace NUnit.Framework
         {
             Assert.That(aString, new NullOrEmptyStringConstraint() ,message, args);
         }
-        
         /// <summary>
         /// Assert that a string is either null or equal to string.Empty
         /// </summary>
@@ -1329,7 +1300,6 @@ namespace NUnit.Framework
         {
             Assert.That(aString, new NullOrEmptyStringConstraint() ,message, null);
         }
-        
         /// <summary>
         /// Assert that a string is either null or equal to string.Empty
         /// </summary>
@@ -1338,11 +1308,11 @@ namespace NUnit.Framework
         {
             Assert.That(aString, new NullOrEmptyStringConstraint() ,null, null);
         }
-        
+
         #endregion
-        
+
         #region IsNotNullOrEmpty
-        
+
         /// <summary>
         /// Assert that a string is not null or empty
         /// </summary>
@@ -1353,7 +1323,6 @@ namespace NUnit.Framework
         {
             Assert.That(aString, new NotConstraint( new NullOrEmptyStringConstraint()) ,message, args);
         }
-        
         /// <summary>
         /// Assert that a string is not null or empty
         /// </summary>
@@ -1363,7 +1332,6 @@ namespace NUnit.Framework
         {
             Assert.That(aString, new NotConstraint( new NullOrEmptyStringConstraint()) ,message, null);
         }
-        
         /// <summary>
         /// Assert that a string is not null or empty
         /// </summary>
@@ -1372,11 +1340,11 @@ namespace NUnit.Framework
         {
             Assert.That(aString, new NotConstraint( new NullOrEmptyStringConstraint()) ,null, null);
         }
-        
+
         #endregion
-        
+
         #region IsAssignableFrom
-        
+
         /// <summary>
         /// Asserts that an object may be assigned a  value of a given Type.
         /// </summary>
@@ -1388,7 +1356,6 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.AssignableFrom(expected) ,message, args);
         }
-        
         /// <summary>
         /// Asserts that an object may be assigned a  value of a given Type.
         /// </summary>
@@ -1399,7 +1366,6 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.AssignableFrom(expected) ,message, null);
         }
-        
         /// <summary>
         /// Asserts that an object may be assigned a  value of a given Type.
         /// </summary>
@@ -1409,11 +1375,11 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.AssignableFrom(expected) ,null, null);
         }
-        
+
         #endregion
-        
+
         #region IsAssignableFrom<T>
-        
+
 #if NET_2_0
         /// <summary>
         /// Asserts that an object may be assigned a  value of a given Type.
@@ -1426,7 +1392,6 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.AssignableFrom(typeof(T)) ,message, args);
         }
-        
         /// <summary>
         /// Asserts that an object may be assigned a  value of a given Type.
         /// </summary>
@@ -1437,7 +1402,6 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.AssignableFrom(typeof(T)) ,message, null);
         }
-        
         /// <summary>
         /// Asserts that an object may be assigned a  value of a given Type.
         /// </summary>
@@ -1447,12 +1411,12 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.AssignableFrom(typeof(T)) ,null, null);
         }
-        
 #endif
+
         #endregion
-        
+
         #region IsNotAssignableFrom
-        
+
         /// <summary>
         /// Asserts that an object may not be assigned a  value of a given Type.
         /// </summary>
@@ -1464,7 +1428,6 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.Not.AssignableFrom(expected) ,message, args);
         }
-        
         /// <summary>
         /// Asserts that an object may not be assigned a  value of a given Type.
         /// </summary>
@@ -1475,7 +1438,6 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.Not.AssignableFrom(expected) ,message, null);
         }
-        
         /// <summary>
         /// Asserts that an object may not be assigned a  value of a given Type.
         /// </summary>
@@ -1485,11 +1447,11 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.Not.AssignableFrom(expected) ,null, null);
         }
-        
+
         #endregion
-        
+
         #region IsNotAssignableFrom<T>
-        
+
 #if NET_2_0
         /// <summary>
         /// Asserts that an object may not be assigned a  value of a given Type.
@@ -1502,7 +1464,6 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.Not.AssignableFrom(typeof(T)) ,message, args);
         }
-        
         /// <summary>
         /// Asserts that an object may not be assigned a  value of a given Type.
         /// </summary>
@@ -1513,7 +1474,6 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.Not.AssignableFrom(typeof(T)) ,message, null);
         }
-        
         /// <summary>
         /// Asserts that an object may not be assigned a  value of a given Type.
         /// </summary>
@@ -1523,12 +1483,12 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.Not.AssignableFrom(typeof(T)) ,null, null);
         }
-        
 #endif
+
         #endregion
-        
+
         #region IsInstanceOf
-        
+
         /// <summary>
         /// Asserts that an object is an instance of a given type.
         /// </summary>
@@ -1540,7 +1500,6 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.InstanceOf(expected) ,message, args);
         }
-        
         /// <summary>
         /// Asserts that an object is an instance of a given type.
         /// </summary>
@@ -1551,7 +1510,6 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.InstanceOf(expected) ,message, null);
         }
-        
         /// <summary>
         /// Asserts that an object is an instance of a given type.
         /// </summary>
@@ -1561,7 +1519,7 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.InstanceOf(expected) ,null, null);
         }
-        
+
         /// <summary>
         /// Asserts that an object is an instance of a given type.
         /// </summary>
@@ -1574,7 +1532,6 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.InstanceOf(expected) ,message, args);
         }
-        
         /// <summary>
         /// Asserts that an object is an instance of a given type.
         /// </summary>
@@ -1586,7 +1543,6 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.InstanceOf(expected) ,message, null);
         }
-        
         /// <summary>
         /// Asserts that an object is an instance of a given type.
         /// </summary>
@@ -1597,11 +1553,11 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.InstanceOf(expected) ,null, null);
         }
-        
+
         #endregion
-        
+
         #region IsInstanceOf<T>
-        
+
 #if NET_2_0
         /// <summary>
         /// Asserts that an object is an instance of a given type.
@@ -1614,7 +1570,6 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.InstanceOf(typeof(T)) ,message, args);
         }
-        
         /// <summary>
         /// Asserts that an object is an instance of a given type.
         /// </summary>
@@ -1625,7 +1580,6 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.InstanceOf(typeof(T)) ,message, null);
         }
-        
         /// <summary>
         /// Asserts that an object is an instance of a given type.
         /// </summary>
@@ -1635,12 +1589,12 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.InstanceOf(typeof(T)) ,null, null);
         }
-        
 #endif
+
         #endregion
-        
+
         #region IsNotInstanceOf
-        
+
         /// <summary>
         /// Asserts that an object is not an instance of a given type.
         /// </summary>
@@ -1652,7 +1606,6 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.Not.InstanceOf(expected) ,message, args);
         }
-        
         /// <summary>
         /// Asserts that an object is not an instance of a given type.
         /// </summary>
@@ -1663,7 +1616,6 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.Not.InstanceOf(expected) ,message, null);
         }
-        
         /// <summary>
         /// Asserts that an object is not an instance of a given type.
         /// </summary>
@@ -1673,7 +1625,7 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.Not.InstanceOf(expected) ,null, null);
         }
-        
+
         /// <summary>
         /// Asserts that an object is not an instance of a given type.
         /// </summary>
@@ -1686,7 +1638,6 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.Not.InstanceOf(expected) ,message, args);
         }
-        
         /// <summary>
         /// Asserts that an object is not an instance of a given type.
         /// </summary>
@@ -1698,7 +1649,6 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.Not.InstanceOf(expected) ,message, null);
         }
-        
         /// <summary>
         /// Asserts that an object is not an instance of a given type.
         /// </summary>
@@ -1709,11 +1659,11 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.Not.InstanceOf(expected) ,null, null);
         }
-        
+
         #endregion
-        
+
         #region IsNotInstanceOf<T>
-        
+
 #if NET_2_0
         /// <summary>
         /// Asserts that an object is not an instance of a given type.
@@ -1726,7 +1676,6 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.Not.InstanceOf(typeof(T)) ,message, args);
         }
-        
         /// <summary>
         /// Asserts that an object is not an instance of a given type.
         /// </summary>
@@ -1737,7 +1686,6 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.Not.InstanceOf(typeof(T)) ,message, null);
         }
-        
         /// <summary>
         /// Asserts that an object is not an instance of a given type.
         /// </summary>
@@ -1747,12 +1695,12 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.Not.InstanceOf(typeof(T)) ,null, null);
         }
-        
 #endif
+
         #endregion
-        
+
         #region AreEqual
-        
+
         /// <summary>
         /// Verifies that two values are equal. If they are not, then an 
         /// <see cref="AssertionException"/> is thrown.
@@ -1765,7 +1713,6 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.EqualTo(expected) ,message, args);
         }
-        
         /// <summary>
         /// Verifies that two values are equal. If they are not, then an 
         /// <see cref="AssertionException"/> is thrown.
@@ -1777,7 +1724,6 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.EqualTo(expected) ,message, null);
         }
-        
         /// <summary>
         /// Verifies that two values are equal. If they are not, then an 
         /// <see cref="AssertionException"/> is thrown.
@@ -1788,7 +1734,7 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.EqualTo(expected) ,null, null);
         }
-        
+
         /// <summary>
         /// Verifies that two values are equal. If they are not, then an 
         /// <see cref="AssertionException"/> is thrown.
@@ -1801,7 +1747,6 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.EqualTo(expected) ,message, args);
         }
-        
         /// <summary>
         /// Verifies that two values are equal. If they are not, then an 
         /// <see cref="AssertionException"/> is thrown.
@@ -1813,7 +1758,6 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.EqualTo(expected) ,message, null);
         }
-        
         /// <summary>
         /// Verifies that two values are equal. If they are not, then an 
         /// <see cref="AssertionException"/> is thrown.
@@ -1824,7 +1768,7 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.EqualTo(expected) ,null, null);
         }
-        
+
         /// <summary>
         /// Verifies that two values are equal. If they are not, then an 
         /// <see cref="AssertionException"/> is thrown.
@@ -1838,7 +1782,6 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.EqualTo(expected) ,message, args);
         }
-        
         /// <summary>
         /// Verifies that two values are equal. If they are not, then an 
         /// <see cref="AssertionException"/> is thrown.
@@ -1851,7 +1794,6 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.EqualTo(expected) ,message, null);
         }
-        
         /// <summary>
         /// Verifies that two values are equal. If they are not, then an 
         /// <see cref="AssertionException"/> is thrown.
@@ -1863,7 +1805,7 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.EqualTo(expected) ,null, null);
         }
-        
+
         /// <summary>
         /// Verifies that two values are equal. If they are not, then an 
         /// <see cref="AssertionException"/> is thrown.
@@ -1877,7 +1819,6 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.EqualTo(expected) ,message, args);
         }
-        
         /// <summary>
         /// Verifies that two values are equal. If they are not, then an 
         /// <see cref="AssertionException"/> is thrown.
@@ -1890,7 +1831,6 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.EqualTo(expected) ,message, null);
         }
-        
         /// <summary>
         /// Verifies that two values are equal. If they are not, then an 
         /// <see cref="AssertionException"/> is thrown.
@@ -1902,7 +1842,7 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.EqualTo(expected) ,null, null);
         }
-        
+
         /// <summary>
         /// Verifies that two values are equal. If they are not, then an 
         /// <see cref="AssertionException"/> is thrown.
@@ -1915,7 +1855,6 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.EqualTo(expected) ,message, args);
         }
-        
         /// <summary>
         /// Verifies that two values are equal. If they are not, then an 
         /// <see cref="AssertionException"/> is thrown.
@@ -1927,7 +1866,6 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.EqualTo(expected) ,message, null);
         }
-        
         /// <summary>
         /// Verifies that two values are equal. If they are not, then an 
         /// <see cref="AssertionException"/> is thrown.
@@ -1938,11 +1876,11 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.EqualTo(expected) ,null, null);
         }
-        
+
         #endregion
-        
+
         #region AreEqual
-        
+
         /// <summary>
         /// Verifies that two doubles are equal considering a delta. If the
         /// expected value is infinity then the delta value is ignored. If 
@@ -1959,7 +1897,6 @@ namespace NUnit.Framework
         {
             AssertDoublesAreEqual(expected, actual, delta ,message, args);
         }
-        
         /// <summary>
         /// Verifies that two doubles are equal considering a delta. If the
         /// expected value is infinity then the delta value is ignored. If 
@@ -1975,7 +1912,6 @@ namespace NUnit.Framework
         {
             AssertDoublesAreEqual(expected, actual, delta ,message, null);
         }
-        
         /// <summary>
         /// Verifies that two doubles are equal considering a delta. If the
         /// expected value is infinity then the delta value is ignored. If 
@@ -1990,7 +1926,7 @@ namespace NUnit.Framework
         {
             AssertDoublesAreEqual(expected, actual, delta ,null, null);
         }
-        
+
 #if NET_2_0
         /// <summary>
         /// Verifies that two doubles are equal considering a delta. If the
@@ -2008,7 +1944,6 @@ namespace NUnit.Framework
         {
             AssertDoublesAreEqual(expected, (double)actual, delta ,message, args);
         }
-        
         /// <summary>
         /// Verifies that two doubles are equal considering a delta. If the
         /// expected value is infinity then the delta value is ignored. If 
@@ -2024,7 +1959,6 @@ namespace NUnit.Framework
         {
             AssertDoublesAreEqual(expected, (double)actual, delta ,message, null);
         }
-        
         /// <summary>
         /// Verifies that two doubles are equal considering a delta. If the
         /// expected value is infinity then the delta value is ignored. If 
@@ -2039,12 +1973,12 @@ namespace NUnit.Framework
         {
             AssertDoublesAreEqual(expected, (double)actual, delta ,null, null);
         }
-        
 #endif
+
         #endregion
-        
+
         #region AreEqual
-        
+
         /// <summary>
         /// Verifies that two objects are equal.  Two objects are considered
         /// equal if both are null, or if both have the same value. NUnit
@@ -2059,7 +1993,6 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.EqualTo(expected) ,message, args);
         }
-        
         /// <summary>
         /// Verifies that two objects are equal.  Two objects are considered
         /// equal if both are null, or if both have the same value. NUnit
@@ -2073,7 +2006,6 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.EqualTo(expected) ,message, null);
         }
-        
         /// <summary>
         /// Verifies that two objects are equal.  Two objects are considered
         /// equal if both are null, or if both have the same value. NUnit
@@ -2086,11 +2018,11 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.EqualTo(expected) ,null, null);
         }
-        
+
         #endregion
-        
+
         #region AreNotEqual
-        
+
         /// <summary>
         /// Verifies that two values are not equal. If they are equal, then an 
         /// <see cref="AssertionException"/> is thrown.
@@ -2103,7 +2035,6 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.Not.EqualTo(expected) ,message, args);
         }
-        
         /// <summary>
         /// Verifies that two values are not equal. If they are equal, then an 
         /// <see cref="AssertionException"/> is thrown.
@@ -2115,7 +2046,6 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.Not.EqualTo(expected) ,message, null);
         }
-        
         /// <summary>
         /// Verifies that two values are not equal. If they are equal, then an 
         /// <see cref="AssertionException"/> is thrown.
@@ -2126,7 +2056,7 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.Not.EqualTo(expected) ,null, null);
         }
-        
+
         /// <summary>
         /// Verifies that two values are not equal. If they are equal, then an 
         /// <see cref="AssertionException"/> is thrown.
@@ -2139,7 +2069,6 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.Not.EqualTo(expected) ,message, args);
         }
-        
         /// <summary>
         /// Verifies that two values are not equal. If they are equal, then an 
         /// <see cref="AssertionException"/> is thrown.
@@ -2151,7 +2080,6 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.Not.EqualTo(expected) ,message, null);
         }
-        
         /// <summary>
         /// Verifies that two values are not equal. If they are equal, then an 
         /// <see cref="AssertionException"/> is thrown.
@@ -2162,7 +2090,7 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.Not.EqualTo(expected) ,null, null);
         }
-        
+
         /// <summary>
         /// Verifies that two values are not equal. If they are equal, then an 
         /// <see cref="AssertionException"/> is thrown.
@@ -2176,7 +2104,6 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.Not.EqualTo(expected) ,message, args);
         }
-        
         /// <summary>
         /// Verifies that two values are not equal. If they are equal, then an 
         /// <see cref="AssertionException"/> is thrown.
@@ -2189,7 +2116,6 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.Not.EqualTo(expected) ,message, null);
         }
-        
         /// <summary>
         /// Verifies that two values are not equal. If they are equal, then an 
         /// <see cref="AssertionException"/> is thrown.
@@ -2201,7 +2127,7 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.Not.EqualTo(expected) ,null, null);
         }
-        
+
         /// <summary>
         /// Verifies that two values are not equal. If they are equal, then an 
         /// <see cref="AssertionException"/> is thrown.
@@ -2215,7 +2141,6 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.Not.EqualTo(expected) ,message, args);
         }
-        
         /// <summary>
         /// Verifies that two values are not equal. If they are equal, then an 
         /// <see cref="AssertionException"/> is thrown.
@@ -2228,7 +2153,6 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.Not.EqualTo(expected) ,message, null);
         }
-        
         /// <summary>
         /// Verifies that two values are not equal. If they are equal, then an 
         /// <see cref="AssertionException"/> is thrown.
@@ -2240,7 +2164,7 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.Not.EqualTo(expected) ,null, null);
         }
-        
+
         /// <summary>
         /// Verifies that two values are not equal. If they are equal, then an 
         /// <see cref="AssertionException"/> is thrown.
@@ -2253,7 +2177,6 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.Not.EqualTo(expected) ,message, args);
         }
-        
         /// <summary>
         /// Verifies that two values are not equal. If they are equal, then an 
         /// <see cref="AssertionException"/> is thrown.
@@ -2265,7 +2188,6 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.Not.EqualTo(expected) ,message, null);
         }
-        
         /// <summary>
         /// Verifies that two values are not equal. If they are equal, then an 
         /// <see cref="AssertionException"/> is thrown.
@@ -2276,7 +2198,7 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.Not.EqualTo(expected) ,null, null);
         }
-        
+
         /// <summary>
         /// Verifies that two values are not equal. If they are equal, then an 
         /// <see cref="AssertionException"/> is thrown.
@@ -2289,7 +2211,6 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.Not.EqualTo(expected) ,message, args);
         }
-        
         /// <summary>
         /// Verifies that two values are not equal. If they are equal, then an 
         /// <see cref="AssertionException"/> is thrown.
@@ -2301,7 +2222,6 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.Not.EqualTo(expected) ,message, null);
         }
-        
         /// <summary>
         /// Verifies that two values are not equal. If they are equal, then an 
         /// <see cref="AssertionException"/> is thrown.
@@ -2312,7 +2232,7 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.Not.EqualTo(expected) ,null, null);
         }
-        
+
         /// <summary>
         /// Verifies that two values are not equal. If they are equal, then an 
         /// <see cref="AssertionException"/> is thrown.
@@ -2325,7 +2245,6 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.Not.EqualTo(expected) ,message, args);
         }
-        
         /// <summary>
         /// Verifies that two values are not equal. If they are equal, then an 
         /// <see cref="AssertionException"/> is thrown.
@@ -2337,7 +2256,6 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.Not.EqualTo(expected) ,message, null);
         }
-        
         /// <summary>
         /// Verifies that two values are not equal. If they are equal, then an 
         /// <see cref="AssertionException"/> is thrown.
@@ -2348,11 +2266,11 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.Not.EqualTo(expected) ,null, null);
         }
-        
+
         #endregion
-        
+
         #region AreNotEqual
-        
+
         /// <summary>
         /// Verifies that two objects are not equal.  Two objects are considered
         /// equal if both are null, or if both have the same value. NUnit
@@ -2367,7 +2285,6 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.Not.EqualTo(expected) ,message, args);
         }
-        
         /// <summary>
         /// Verifies that two objects are not equal.  Two objects are considered
         /// equal if both are null, or if both have the same value. NUnit
@@ -2381,7 +2298,6 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.Not.EqualTo(expected) ,message, null);
         }
-        
         /// <summary>
         /// Verifies that two objects are not equal.  Two objects are considered
         /// equal if both are null, or if both have the same value. NUnit
@@ -2394,11 +2310,11 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.Not.EqualTo(expected) ,null, null);
         }
-        
+
         #endregion
-        
+
         #region AreSame
-        
+
         /// <summary>
         /// Asserts that two objects refer to the same object. If they
         /// are not the same an <see cref="AssertionException"/> is thrown.
@@ -2411,7 +2327,6 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.SameAs(expected) ,message, args);
         }
-        
         /// <summary>
         /// Asserts that two objects refer to the same object. If they
         /// are not the same an <see cref="AssertionException"/> is thrown.
@@ -2423,7 +2338,6 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.SameAs(expected) ,message, null);
         }
-        
         /// <summary>
         /// Asserts that two objects refer to the same object. If they
         /// are not the same an <see cref="AssertionException"/> is thrown.
@@ -2434,11 +2348,11 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.SameAs(expected) ,null, null);
         }
-        
+
         #endregion
-        
+
         #region AreNotSame
-        
+
         /// <summary>
         /// Asserts that two objects do not refer to the same object. If they
         /// are the same an <see cref="AssertionException"/> is thrown.
@@ -2451,7 +2365,6 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.Not.SameAs(expected) ,message, args);
         }
-        
         /// <summary>
         /// Asserts that two objects do not refer to the same object. If they
         /// are the same an <see cref="AssertionException"/> is thrown.
@@ -2463,7 +2376,6 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.Not.SameAs(expected) ,message, null);
         }
-        
         /// <summary>
         /// Asserts that two objects do not refer to the same object. If they
         /// are the same an <see cref="AssertionException"/> is thrown.
@@ -2474,11 +2386,11 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.Not.SameAs(expected) ,null, null);
         }
-        
+
         #endregion
-        
+
         #region Greater
-        
+
         /// <summary>
         /// Verifies that the first value is greater than the second
         /// value. If it is not, then an
@@ -2492,7 +2404,6 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.GreaterThan(arg2) ,message, args);
         }
-        
         /// <summary>
         /// Verifies that the first value is greater than the second
         /// value. If it is not, then an
@@ -2505,7 +2416,6 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.GreaterThan(arg2) ,message, null);
         }
-        
         /// <summary>
         /// Verifies that the first value is greater than the second
         /// value. If it is not, then an
@@ -2517,7 +2427,7 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.GreaterThan(arg2) ,null, null);
         }
-        
+
         /// <summary>
         /// Verifies that the first value is greater than the second
         /// value. If it is not, then an
@@ -2532,7 +2442,6 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.GreaterThan(arg2) ,message, args);
         }
-        
         /// <summary>
         /// Verifies that the first value is greater than the second
         /// value. If it is not, then an
@@ -2546,7 +2455,6 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.GreaterThan(arg2) ,message, null);
         }
-        
         /// <summary>
         /// Verifies that the first value is greater than the second
         /// value. If it is not, then an
@@ -2559,7 +2467,7 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.GreaterThan(arg2) ,null, null);
         }
-        
+
         /// <summary>
         /// Verifies that the first value is greater than the second
         /// value. If it is not, then an
@@ -2573,7 +2481,6 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.GreaterThan(arg2) ,message, args);
         }
-        
         /// <summary>
         /// Verifies that the first value is greater than the second
         /// value. If it is not, then an
@@ -2586,7 +2493,6 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.GreaterThan(arg2) ,message, null);
         }
-        
         /// <summary>
         /// Verifies that the first value is greater than the second
         /// value. If it is not, then an
@@ -2598,7 +2504,7 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.GreaterThan(arg2) ,null, null);
         }
-        
+
         /// <summary>
         /// Verifies that the first value is greater than the second
         /// value. If it is not, then an
@@ -2613,7 +2519,6 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.GreaterThan(arg2) ,message, args);
         }
-        
         /// <summary>
         /// Verifies that the first value is greater than the second
         /// value. If it is not, then an
@@ -2627,7 +2532,6 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.GreaterThan(arg2) ,message, null);
         }
-        
         /// <summary>
         /// Verifies that the first value is greater than the second
         /// value. If it is not, then an
@@ -2640,7 +2544,7 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.GreaterThan(arg2) ,null, null);
         }
-        
+
         /// <summary>
         /// Verifies that the first value is greater than the second
         /// value. If it is not, then an
@@ -2654,7 +2558,6 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.GreaterThan(arg2) ,message, args);
         }
-        
         /// <summary>
         /// Verifies that the first value is greater than the second
         /// value. If it is not, then an
@@ -2667,7 +2570,6 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.GreaterThan(arg2) ,message, null);
         }
-        
         /// <summary>
         /// Verifies that the first value is greater than the second
         /// value. If it is not, then an
@@ -2679,7 +2581,7 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.GreaterThan(arg2) ,null, null);
         }
-        
+
         /// <summary>
         /// Verifies that the first value is greater than the second
         /// value. If it is not, then an
@@ -2693,7 +2595,6 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.GreaterThan(arg2) ,message, args);
         }
-        
         /// <summary>
         /// Verifies that the first value is greater than the second
         /// value. If it is not, then an
@@ -2706,7 +2607,6 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.GreaterThan(arg2) ,message, null);
         }
-        
         /// <summary>
         /// Verifies that the first value is greater than the second
         /// value. If it is not, then an
@@ -2718,7 +2618,7 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.GreaterThan(arg2) ,null, null);
         }
-        
+
         /// <summary>
         /// Verifies that the first value is greater than the second
         /// value. If it is not, then an
@@ -2732,7 +2632,6 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.GreaterThan(arg2) ,message, args);
         }
-        
         /// <summary>
         /// Verifies that the first value is greater than the second
         /// value. If it is not, then an
@@ -2745,7 +2644,6 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.GreaterThan(arg2) ,message, null);
         }
-        
         /// <summary>
         /// Verifies that the first value is greater than the second
         /// value. If it is not, then an
@@ -2757,7 +2655,7 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.GreaterThan(arg2) ,null, null);
         }
-        
+
         /// <summary>
         /// Verifies that the first value is greater than the second
         /// value. If it is not, then an
@@ -2771,7 +2669,6 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.GreaterThan(arg2) ,message, args);
         }
-        
         /// <summary>
         /// Verifies that the first value is greater than the second
         /// value. If it is not, then an
@@ -2784,7 +2681,6 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.GreaterThan(arg2) ,message, null);
         }
-        
         /// <summary>
         /// Verifies that the first value is greater than the second
         /// value. If it is not, then an
@@ -2796,11 +2692,11 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.GreaterThan(arg2) ,null, null);
         }
-        
+
         #endregion
-        
+
         #region Less
-        
+
         /// <summary>
         /// Verifies that the first value is less than the second
         /// value. If it is not, then an
@@ -2814,7 +2710,6 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.LessThan(arg2) ,message, args);
         }
-        
         /// <summary>
         /// Verifies that the first value is less than the second
         /// value. If it is not, then an
@@ -2827,7 +2722,6 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.LessThan(arg2) ,message, null);
         }
-        
         /// <summary>
         /// Verifies that the first value is less than the second
         /// value. If it is not, then an
@@ -2839,7 +2733,7 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.LessThan(arg2) ,null, null);
         }
-        
+
         /// <summary>
         /// Verifies that the first value is less than the second
         /// value. If it is not, then an
@@ -2854,7 +2748,6 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.LessThan(arg2) ,message, args);
         }
-        
         /// <summary>
         /// Verifies that the first value is less than the second
         /// value. If it is not, then an
@@ -2868,7 +2761,6 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.LessThan(arg2) ,message, null);
         }
-        
         /// <summary>
         /// Verifies that the first value is less than the second
         /// value. If it is not, then an
@@ -2881,7 +2773,7 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.LessThan(arg2) ,null, null);
         }
-        
+
         /// <summary>
         /// Verifies that the first value is less than the second
         /// value. If it is not, then an
@@ -2895,7 +2787,6 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.LessThan(arg2) ,message, args);
         }
-        
         /// <summary>
         /// Verifies that the first value is less than the second
         /// value. If it is not, then an
@@ -2908,7 +2799,6 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.LessThan(arg2) ,message, null);
         }
-        
         /// <summary>
         /// Verifies that the first value is less than the second
         /// value. If it is not, then an
@@ -2920,7 +2810,7 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.LessThan(arg2) ,null, null);
         }
-        
+
         /// <summary>
         /// Verifies that the first value is less than the second
         /// value. If it is not, then an
@@ -2935,7 +2825,6 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.LessThan(arg2) ,message, args);
         }
-        
         /// <summary>
         /// Verifies that the first value is less than the second
         /// value. If it is not, then an
@@ -2949,7 +2838,6 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.LessThan(arg2) ,message, null);
         }
-        
         /// <summary>
         /// Verifies that the first value is less than the second
         /// value. If it is not, then an
@@ -2962,7 +2850,7 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.LessThan(arg2) ,null, null);
         }
-        
+
         /// <summary>
         /// Verifies that the first value is less than the second
         /// value. If it is not, then an
@@ -2976,7 +2864,6 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.LessThan(arg2) ,message, args);
         }
-        
         /// <summary>
         /// Verifies that the first value is less than the second
         /// value. If it is not, then an
@@ -2989,7 +2876,6 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.LessThan(arg2) ,message, null);
         }
-        
         /// <summary>
         /// Verifies that the first value is less than the second
         /// value. If it is not, then an
@@ -3001,7 +2887,7 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.LessThan(arg2) ,null, null);
         }
-        
+
         /// <summary>
         /// Verifies that the first value is less than the second
         /// value. If it is not, then an
@@ -3015,7 +2901,6 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.LessThan(arg2) ,message, args);
         }
-        
         /// <summary>
         /// Verifies that the first value is less than the second
         /// value. If it is not, then an
@@ -3028,7 +2913,6 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.LessThan(arg2) ,message, null);
         }
-        
         /// <summary>
         /// Verifies that the first value is less than the second
         /// value. If it is not, then an
@@ -3040,7 +2924,7 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.LessThan(arg2) ,null, null);
         }
-        
+
         /// <summary>
         /// Verifies that the first value is less than the second
         /// value. If it is not, then an
@@ -3054,7 +2938,6 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.LessThan(arg2) ,message, args);
         }
-        
         /// <summary>
         /// Verifies that the first value is less than the second
         /// value. If it is not, then an
@@ -3067,7 +2950,6 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.LessThan(arg2) ,message, null);
         }
-        
         /// <summary>
         /// Verifies that the first value is less than the second
         /// value. If it is not, then an
@@ -3079,7 +2961,7 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.LessThan(arg2) ,null, null);
         }
-        
+
         /// <summary>
         /// Verifies that the first value is less than the second
         /// value. If it is not, then an
@@ -3093,7 +2975,6 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.LessThan(arg2) ,message, args);
         }
-        
         /// <summary>
         /// Verifies that the first value is less than the second
         /// value. If it is not, then an
@@ -3106,7 +2987,6 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.LessThan(arg2) ,message, null);
         }
-        
         /// <summary>
         /// Verifies that the first value is less than the second
         /// value. If it is not, then an
@@ -3118,11 +2998,11 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.LessThan(arg2) ,null, null);
         }
-        
+
         #endregion
-        
+
         #region GreaterOrEqual
-        
+
         /// <summary>
         /// Verifies that the first value is greater than or equal tothe second
         /// value. If it is not, then an
@@ -3136,7 +3016,6 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.GreaterThanOrEqualTo(arg2) ,message, args);
         }
-        
         /// <summary>
         /// Verifies that the first value is greater than or equal tothe second
         /// value. If it is not, then an
@@ -3149,7 +3028,6 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.GreaterThanOrEqualTo(arg2) ,message, null);
         }
-        
         /// <summary>
         /// Verifies that the first value is greater than or equal tothe second
         /// value. If it is not, then an
@@ -3161,7 +3039,7 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.GreaterThanOrEqualTo(arg2) ,null, null);
         }
-        
+
         /// <summary>
         /// Verifies that the first value is greater than or equal tothe second
         /// value. If it is not, then an
@@ -3176,7 +3054,6 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.GreaterThanOrEqualTo(arg2) ,message, args);
         }
-        
         /// <summary>
         /// Verifies that the first value is greater than or equal tothe second
         /// value. If it is not, then an
@@ -3190,7 +3067,6 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.GreaterThanOrEqualTo(arg2) ,message, null);
         }
-        
         /// <summary>
         /// Verifies that the first value is greater than or equal tothe second
         /// value. If it is not, then an
@@ -3203,7 +3079,7 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.GreaterThanOrEqualTo(arg2) ,null, null);
         }
-        
+
         /// <summary>
         /// Verifies that the first value is greater than or equal tothe second
         /// value. If it is not, then an
@@ -3217,7 +3093,6 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.GreaterThanOrEqualTo(arg2) ,message, args);
         }
-        
         /// <summary>
         /// Verifies that the first value is greater than or equal tothe second
         /// value. If it is not, then an
@@ -3230,7 +3105,6 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.GreaterThanOrEqualTo(arg2) ,message, null);
         }
-        
         /// <summary>
         /// Verifies that the first value is greater than or equal tothe second
         /// value. If it is not, then an
@@ -3242,7 +3116,7 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.GreaterThanOrEqualTo(arg2) ,null, null);
         }
-        
+
         /// <summary>
         /// Verifies that the first value is greater than or equal tothe second
         /// value. If it is not, then an
@@ -3257,7 +3131,6 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.GreaterThanOrEqualTo(arg2) ,message, args);
         }
-        
         /// <summary>
         /// Verifies that the first value is greater than or equal tothe second
         /// value. If it is not, then an
@@ -3271,7 +3144,6 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.GreaterThanOrEqualTo(arg2) ,message, null);
         }
-        
         /// <summary>
         /// Verifies that the first value is greater than or equal tothe second
         /// value. If it is not, then an
@@ -3284,7 +3156,7 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.GreaterThanOrEqualTo(arg2) ,null, null);
         }
-        
+
         /// <summary>
         /// Verifies that the first value is greater than or equal tothe second
         /// value. If it is not, then an
@@ -3298,7 +3170,6 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.GreaterThanOrEqualTo(arg2) ,message, args);
         }
-        
         /// <summary>
         /// Verifies that the first value is greater than or equal tothe second
         /// value. If it is not, then an
@@ -3311,7 +3182,6 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.GreaterThanOrEqualTo(arg2) ,message, null);
         }
-        
         /// <summary>
         /// Verifies that the first value is greater than or equal tothe second
         /// value. If it is not, then an
@@ -3323,7 +3193,7 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.GreaterThanOrEqualTo(arg2) ,null, null);
         }
-        
+
         /// <summary>
         /// Verifies that the first value is greater than or equal tothe second
         /// value. If it is not, then an
@@ -3337,7 +3207,6 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.GreaterThanOrEqualTo(arg2) ,message, args);
         }
-        
         /// <summary>
         /// Verifies that the first value is greater than or equal tothe second
         /// value. If it is not, then an
@@ -3350,7 +3219,6 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.GreaterThanOrEqualTo(arg2) ,message, null);
         }
-        
         /// <summary>
         /// Verifies that the first value is greater than or equal tothe second
         /// value. If it is not, then an
@@ -3362,7 +3230,7 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.GreaterThanOrEqualTo(arg2) ,null, null);
         }
-        
+
         /// <summary>
         /// Verifies that the first value is greater than or equal tothe second
         /// value. If it is not, then an
@@ -3376,7 +3244,6 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.GreaterThanOrEqualTo(arg2) ,message, args);
         }
-        
         /// <summary>
         /// Verifies that the first value is greater than or equal tothe second
         /// value. If it is not, then an
@@ -3389,7 +3256,6 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.GreaterThanOrEqualTo(arg2) ,message, null);
         }
-        
         /// <summary>
         /// Verifies that the first value is greater than or equal tothe second
         /// value. If it is not, then an
@@ -3401,7 +3267,7 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.GreaterThanOrEqualTo(arg2) ,null, null);
         }
-        
+
         /// <summary>
         /// Verifies that the first value is greater than or equal tothe second
         /// value. If it is not, then an
@@ -3415,7 +3281,6 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.GreaterThanOrEqualTo(arg2) ,message, args);
         }
-        
         /// <summary>
         /// Verifies that the first value is greater than or equal tothe second
         /// value. If it is not, then an
@@ -3428,7 +3293,6 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.GreaterThanOrEqualTo(arg2) ,message, null);
         }
-        
         /// <summary>
         /// Verifies that the first value is greater than or equal tothe second
         /// value. If it is not, then an
@@ -3440,11 +3304,11 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.GreaterThanOrEqualTo(arg2) ,null, null);
         }
-        
+
         #endregion
-        
+
         #region LessOrEqual
-        
+
         /// <summary>
         /// Verifies that the first value is less than or equal to the second
         /// value. If it is not, then an
@@ -3458,7 +3322,6 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.LessThanOrEqualTo(arg2) ,message, args);
         }
-        
         /// <summary>
         /// Verifies that the first value is less than or equal to the second
         /// value. If it is not, then an
@@ -3471,7 +3334,6 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.LessThanOrEqualTo(arg2) ,message, null);
         }
-        
         /// <summary>
         /// Verifies that the first value is less than or equal to the second
         /// value. If it is not, then an
@@ -3483,7 +3345,7 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.LessThanOrEqualTo(arg2) ,null, null);
         }
-        
+
         /// <summary>
         /// Verifies that the first value is less than or equal to the second
         /// value. If it is not, then an
@@ -3498,7 +3360,6 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.LessThanOrEqualTo(arg2) ,message, args);
         }
-        
         /// <summary>
         /// Verifies that the first value is less than or equal to the second
         /// value. If it is not, then an
@@ -3512,7 +3373,6 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.LessThanOrEqualTo(arg2) ,message, null);
         }
-        
         /// <summary>
         /// Verifies that the first value is less than or equal to the second
         /// value. If it is not, then an
@@ -3525,7 +3385,7 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.LessThanOrEqualTo(arg2) ,null, null);
         }
-        
+
         /// <summary>
         /// Verifies that the first value is less than or equal to the second
         /// value. If it is not, then an
@@ -3539,7 +3399,6 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.LessThanOrEqualTo(arg2) ,message, args);
         }
-        
         /// <summary>
         /// Verifies that the first value is less than or equal to the second
         /// value. If it is not, then an
@@ -3552,7 +3411,6 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.LessThanOrEqualTo(arg2) ,message, null);
         }
-        
         /// <summary>
         /// Verifies that the first value is less than or equal to the second
         /// value. If it is not, then an
@@ -3564,7 +3422,7 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.LessThanOrEqualTo(arg2) ,null, null);
         }
-        
+
         /// <summary>
         /// Verifies that the first value is less than or equal to the second
         /// value. If it is not, then an
@@ -3579,7 +3437,6 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.LessThanOrEqualTo(arg2) ,message, args);
         }
-        
         /// <summary>
         /// Verifies that the first value is less than or equal to the second
         /// value. If it is not, then an
@@ -3593,7 +3450,6 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.LessThanOrEqualTo(arg2) ,message, null);
         }
-        
         /// <summary>
         /// Verifies that the first value is less than or equal to the second
         /// value. If it is not, then an
@@ -3606,7 +3462,7 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.LessThanOrEqualTo(arg2) ,null, null);
         }
-        
+
         /// <summary>
         /// Verifies that the first value is less than or equal to the second
         /// value. If it is not, then an
@@ -3620,7 +3476,6 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.LessThanOrEqualTo(arg2) ,message, args);
         }
-        
         /// <summary>
         /// Verifies that the first value is less than or equal to the second
         /// value. If it is not, then an
@@ -3633,7 +3488,6 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.LessThanOrEqualTo(arg2) ,message, null);
         }
-        
         /// <summary>
         /// Verifies that the first value is less than or equal to the second
         /// value. If it is not, then an
@@ -3645,7 +3499,7 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.LessThanOrEqualTo(arg2) ,null, null);
         }
-        
+
         /// <summary>
         /// Verifies that the first value is less than or equal to the second
         /// value. If it is not, then an
@@ -3659,7 +3513,6 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.LessThanOrEqualTo(arg2) ,message, args);
         }
-        
         /// <summary>
         /// Verifies that the first value is less than or equal to the second
         /// value. If it is not, then an
@@ -3672,7 +3525,6 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.LessThanOrEqualTo(arg2) ,message, null);
         }
-        
         /// <summary>
         /// Verifies that the first value is less than or equal to the second
         /// value. If it is not, then an
@@ -3684,7 +3536,7 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.LessThanOrEqualTo(arg2) ,null, null);
         }
-        
+
         /// <summary>
         /// Verifies that the first value is less than or equal to the second
         /// value. If it is not, then an
@@ -3698,7 +3550,6 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.LessThanOrEqualTo(arg2) ,message, args);
         }
-        
         /// <summary>
         /// Verifies that the first value is less than or equal to the second
         /// value. If it is not, then an
@@ -3711,7 +3562,6 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.LessThanOrEqualTo(arg2) ,message, null);
         }
-        
         /// <summary>
         /// Verifies that the first value is less than or equal to the second
         /// value. If it is not, then an
@@ -3723,7 +3573,7 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.LessThanOrEqualTo(arg2) ,null, null);
         }
-        
+
         /// <summary>
         /// Verifies that the first value is less than or equal to the second
         /// value. If it is not, then an
@@ -3737,7 +3587,6 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.LessThanOrEqualTo(arg2) ,message, args);
         }
-        
         /// <summary>
         /// Verifies that the first value is less than or equal to the second
         /// value. If it is not, then an
@@ -3750,7 +3599,6 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.LessThanOrEqualTo(arg2) ,message, null);
         }
-        
         /// <summary>
         /// Verifies that the first value is less than or equal to the second
         /// value. If it is not, then an
@@ -3762,11 +3610,11 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.LessThanOrEqualTo(arg2) ,null, null);
         }
-        
+
         #endregion
-        
+
         #region Contains
-        
+
         /// <summary>
         /// Asserts that an object is contained in a list.
         /// </summary>
@@ -3778,7 +3626,6 @@ namespace NUnit.Framework
         {
             Assert.That(actual, new CollectionContainsConstraint(expected) ,message, args);
         }
-        
         /// <summary>
         /// Asserts that an object is contained in a list.
         /// </summary>
@@ -3789,7 +3636,6 @@ namespace NUnit.Framework
         {
             Assert.That(actual, new CollectionContainsConstraint(expected) ,message, null);
         }
-        
         /// <summary>
         /// Asserts that an object is contained in a list.
         /// </summary>
@@ -3799,8 +3645,8 @@ namespace NUnit.Framework
         {
             Assert.That(actual, new CollectionContainsConstraint(expected) ,null, null);
         }
-        
+
         #endregion
-        
+
     }
 }

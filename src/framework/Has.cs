@@ -42,7 +42,7 @@ namespace NUnit.Framework
     public class Has
     {
         #region No
-        
+
         /// <summary>
         /// Returns a ConstraintExpression that negates any
         /// following constraint.
@@ -51,11 +51,11 @@ namespace NUnit.Framework
         {
             get { return new ConstraintExpression().Not; }
         }
-        
+
         #endregion
-        
+
         #region All
-        
+
         /// <summary>
         /// Returns a ConstraintExpression, which will apply
         /// the following constraint to all members of a collection,
@@ -65,11 +65,11 @@ namespace NUnit.Framework
         {
             get { return new ConstraintExpression().All; }
         }
-        
+
         #endregion
-        
+
         #region Some
-        
+
         /// <summary>
         /// Returns a ConstraintExpression, which will apply
         /// the following constraint to all members of a collection,
@@ -79,11 +79,11 @@ namespace NUnit.Framework
         {
             get { return new ConstraintExpression().Some; }
         }
-        
+
         #endregion
-        
+
         #region None
-        
+
         /// <summary>
         /// Returns a ConstraintExpression, which will apply
         /// the following constraint to all members of a collection,
@@ -93,11 +93,11 @@ namespace NUnit.Framework
         {
             get { return new ConstraintExpression().None; }
         }
-        
+
         #endregion
-        
+
         #region Property
-        
+
         /// <summary>
         /// Returns a new PropertyConstraintExpression, which will either
         /// test for the existence of the named property on the object
@@ -107,11 +107,11 @@ namespace NUnit.Framework
         {
             return new ConstraintExpression().Property(name);
         }
-        
+
         #endregion
-        
+
         #region Length
-        
+
         /// <summary>
         /// Returns a new ConstraintExpression, which will apply the following
         /// constraint to the Length property of the object being tested.
@@ -120,11 +120,11 @@ namespace NUnit.Framework
         {
             get { return Property("Length"); }
         }
-        
+
         #endregion
-        
+
         #region Count
-        
+
         /// <summary>
         /// Returns a new ConstraintExpression, which will apply the following
         /// constraint to the Count property of the object being tested.
@@ -133,11 +133,11 @@ namespace NUnit.Framework
         {
             get { return Property("Count"); }
         }
-        
+
         #endregion
-        
+
         #region Message
-        
+
         /// <summary>
         /// Returns a new ConstraintExpression, which will apply the following
         /// constraint to the Message property of the object being tested.
@@ -146,11 +146,11 @@ namespace NUnit.Framework
         {
             get { return Property("Message"); }
         }
-        
+
         #endregion
-        
+
         #region InnerException
-        
+
         /// <summary>
         /// Returns a new ConstraintExpression, which will apply the following
         /// constraint to the InnerException property of the object being tested.
@@ -159,11 +159,11 @@ namespace NUnit.Framework
         {
             get { return Property("InnerException"); }
         }
-        
+
         #endregion
-        
+
         #region Attribute
-        
+
         /// <summary>
         /// Returns a new AttributeConstraint checking for the
         /// presence of a particular attribute on an object.
@@ -172,7 +172,7 @@ namespace NUnit.Framework
         {
             return new ConstraintExpression().Attribute(expectedType);
         }
-        
+
 #if NET_2_0
         /// <summary>
         /// Returns a new AttributeConstraint checking for the
@@ -182,12 +182,12 @@ namespace NUnit.Framework
         {
             return Attribute(typeof(T));
         }
-        
 #endif
+
         #endregion
-        
+
         #region Member
-        
+
         /// <summary>
         /// Returns a new CollectionContainsConstraint checking for the
         /// presence of a particular object in the collection.
@@ -196,8 +196,8 @@ namespace NUnit.Framework
         {
             return new CollectionContainsConstraint(expected);
         }
-        
+
         #endregion
-        
+
     }
 }
