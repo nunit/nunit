@@ -24,8 +24,10 @@
 namespace NUnit.Framework 
 {
 	using System;
+#if !NETCF
 	using System.Runtime.Serialization;
-	
+#endif
+
 	/// <summary>
 	/// Thrown when an assertion failed.
 	/// </summary>
@@ -44,12 +46,13 @@ namespace NUnit.Framework
 			base(message, inner) 
 		{}
 
+#if !NETCF
 		/// <summary>
 		/// Serialization Constructor
 		/// </summary>
 		protected IgnoreException(SerializationInfo info, 
 			StreamingContext context) : base(info,context)
 		{}
-
+#endif
 	}
 }

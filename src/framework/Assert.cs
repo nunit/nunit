@@ -86,6 +86,7 @@ namespace NUnit.Framework
 
         #region Equals and ReferenceEquals
 
+#if !NETCF
         /// <summary>
         /// The Equals method throws an AssertionException. This is done 
         /// to make sure there is no mistake by calling this function.
@@ -95,8 +96,7 @@ namespace NUnit.Framework
         [EditorBrowsable(EditorBrowsableState.Never)]
         public static new bool Equals(object a, object b)
         {
-            // TODO: This should probably be InvalidOperationException
-            throw new AssertionException("Assert.Equals should not be used for Assertions");
+            throw new InvalidOperationException("Assert.Equals should not be used for Assertions");
         }
 
         /// <summary>
@@ -108,29 +108,10 @@ namespace NUnit.Framework
         /// <param name="b"></param>
         public static new void ReferenceEquals(object a, object b)
         {
-            throw new AssertionException("Assert.ReferenceEquals should not be used for Assertions");
+            throw new InvalidOperationException("Assert.ReferenceEquals should not be used for Assertions");
         }
+#endif
 
-        #endregion
-
-        #region Helper Methods
-        /// <summary>
-        /// Helper for Assert.AreEqual(double expected, double actual, ...)
-        /// allowing code generation to work consistently.
-        /// </summary>
-        /// <param name="expected">The expected value</param>
-        /// <param name="actual">The actual value</param>
-        /// <param name="delta">The maximum acceptable difference between the
-        /// the expected and the actual</param>
-        /// <param name="message">The message to display in case of failure</param>
-        /// <param name="args">Array of objects to be used in formatting the message</param>
-        protected static void AssertDoublesAreEqual(double expected, double actual, double delta, string message, object[] args)
-        {
-            if (double.IsNaN(expected) || double.IsInfinity(expected))
-                Assert.That(actual, Is.EqualTo(expected), message, args);
-            else
-                Assert.That(actual, Is.EqualTo(expected).Within(delta), message, args);
-        }
         #endregion
 
         #region Utility Asserts
@@ -179,37 +160,28 @@ namespace NUnit.Framework
         #region Fail
 
         /// <summary>
-        /// Throws an <see cref="AssertionException"/> with the message and arguments 
-        /// that are passed in. This is used by the other Assert functions. 
+        /// Throw an assertion exception with a message and optional arguments
         /// </summary>
-        /// <param name="message">The message to initialize the <see cref="AssertionException"/> with.</param>
-        /// <param name="args">Arguments to be used in formatting the message</param>
-        static public void Fail(string message, params object[] args)
+        /// <param name="message">The message, possibly with format placeholders</param>
+        /// <param name="args">Arguments used in formatting the string</param>
+        public static void Fail(string message, params object[] args)
         {
-            if (message == null) message = string.Empty;
+            throw new AssertionException(FormatMessage(message, args));
+        }
+
+        /// <summary>
+        /// Formats a message with any user-supplied arguments.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <param name="args">The args.</param>
+        private static string FormatMessage(string message, params object[] args)
+        {
+            if (message == null)
+                return string.Empty;
             else if (args != null && args.Length > 0)
-                message = string.Format(message, args);
-
-            throw new AssertionException(message);
-        }
-
-        /// <summary>
-        /// Throws an <see cref="AssertionException"/> with the message that is 
-        /// passed in. This is used by the other Assert functions. 
-        /// </summary>
-        /// <param name="message">The message to initialize the <see cref="AssertionException"/> with.</param>
-        static public void Fail(string message)
-        {
-            Assert.Fail(message, null);
-        }
-
-        /// <summary>
-        /// Throws an <see cref="AssertionException"/>. 
-        /// This is used by the other Assert functions. 
-        /// </summary>
-        static public void Fail()
-        {
-            Assert.Fail(string.Empty, null);
+                return string.Format(message, args);
+            else
+                return message;
         }
 
         #endregion
@@ -3648,5 +3620,25 @@ namespace NUnit.Framework
 
         #endregion
 
+
+        #region Helper Methods
+        /// <summary>
+        /// Helper for Assert.AreEqual(double expected, double actual, ...)
+        /// allowing code generation to work consistently.
+        /// </summary>
+        /// <param name="expected">The expected value</param>
+        /// <param name="actual">The actual value</param>
+        /// <param name="delta">The maximum acceptable difference between the
+        /// the expected and the actual</param>
+        /// <param name="message">The message to display in case of failure</param>
+        /// <param name="args">Array of objects to be used in formatting the message</param>
+        protected static void AssertDoublesAreEqual(double expected, double actual, double delta, string message, object[] args)
+        {
+            if (double.IsNaN(expected) || double.IsInfinity(expected))
+                Assert.That(actual, Is.EqualTo(expected), message, args);
+            else
+                Assert.That(actual, Is.EqualTo(expected).Within(delta), message, args);
+        }
+        #endregion
     }
 }
