@@ -42,7 +42,7 @@ namespace NUnit.Framework
     public class Throws
     {
         #region Exception
-        
+
         /// <summary>
         /// Creates a constraint specifying an expected exception
         /// </summary>
@@ -50,11 +50,11 @@ namespace NUnit.Framework
         {
             get { return new ConstraintExpression().Append(new ThrowsOperator()); }
         }
-        
+
         #endregion
-        
+
         #region InnerException
-        
+
         /// <summary>
         /// Creates a constraint specifying an exception with a given InnerException
         /// </summary>
@@ -62,11 +62,11 @@ namespace NUnit.Framework
         {
             get { return Exception.InnerException; }
         }
-        
+
         #endregion
-        
+
         #region TargetInvocationException
-        
+
         /// <summary>
         /// Creates a constraint specifying an expected TargetInvocationException
         /// </summary>
@@ -74,11 +74,11 @@ namespace NUnit.Framework
         {
             get { return TypeOf(typeof(System.Reflection.TargetInvocationException)); }
         }
-        
+
         #endregion
-        
+
         #region ArgumentException
-        
+
         /// <summary>
         /// Creates a constraint specifying an expected TargetInvocationException
         /// </summary>
@@ -86,11 +86,11 @@ namespace NUnit.Framework
         {
             get { return TypeOf(typeof(System.ArgumentException)); }
         }
-        
+
         #endregion
-        
+
         #region InvalidOperationException
-        
+
         /// <summary>
         /// Creates a constraint specifying an expected TargetInvocationException
         /// </summary>
@@ -98,11 +98,11 @@ namespace NUnit.Framework
         {
             get { return TypeOf(typeof(System.InvalidOperationException)); }
         }
-        
+
         #endregion
-        
+
         #region Nothing
-        
+
         /// <summary>
         /// Creates a constraint specifying that no exception is thrown
         /// </summary>
@@ -110,11 +110,11 @@ namespace NUnit.Framework
         {
             get { return new ThrowsNothingConstraint(); }
         }
-        
+
         #endregion
-        
+
         #region TypeOf
-        
+
         /// <summary>
         /// Creates a constraint specifying the exact type of exception expected
         /// </summary>
@@ -122,7 +122,7 @@ namespace NUnit.Framework
         {
             return Exception.TypeOf(expectedType);
         }
-        
+
 #if NET_2_0
         /// <summary>
         /// Creates a constraint specifying the exact type of exception expected
@@ -131,12 +131,12 @@ namespace NUnit.Framework
         {
             return TypeOf(typeof(T));
         }
-        
 #endif
+
         #endregion
-        
+
         #region InstanceOf
-        
+
         /// <summary>
         /// Creates a constraint specifying the type of exception expected
         /// </summary>
@@ -144,7 +144,7 @@ namespace NUnit.Framework
         {
             return Exception.InstanceOf(expectedType);
         }
-        
+
 #if NET_2_0
         /// <summary>
         /// Creates a constraint specifying the type of exception expected
@@ -153,9 +153,9 @@ namespace NUnit.Framework
         {
             return InstanceOf(typeof(T));
         }
-        
 #endif
+
         #endregion
-        
+
     }
 }

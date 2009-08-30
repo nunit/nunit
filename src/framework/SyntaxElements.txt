@@ -53,6 +53,11 @@
 #   the stanza. All methods generated from a stanza use
 #   the same comment. 
 #
+# Prefix 'Cond:' may appear once in each stanza and
+#   gives an expression that will be used with #if to include
+#   or exclude code from the entire stanza from the build.
+#   For example: 'Cond: !NETCF'
+#
 # Prefix 'Type:' may appear once in each stanza and indicates
 #   the return type of the methods defined in the stanza. If
 #   it is not specified, all methods default to 'void'.
@@ -305,11 +310,13 @@ Gen3: Is.Unique=>new UniqueItemsConstraint()
 /// <summary>
 /// Returns a constraint that tests whether an object graph is serializable in binary format.
 /// </summary>
+Cond: !NETCF
 Gen3: Is.BinarySerializable=>new BinarySerializableConstraint()
 %
 /// <summary>
 /// Returns a constraint that tests whether an object graph is serializable in xml format.
 /// </summary>
+Cond: !NETCF_1_0
 Gen3: Is.XmlSerializable=>new XmlSerializableConstraint()
 %
 #
@@ -475,6 +482,7 @@ Gen: ConstraintFactory.DoesNotEndWith(string expected)=>new ConstraintExpression
 /// Returns a constraint that succeeds if the actual
 /// value matches the Regex pattern supplied as an argument.
 /// </summary>
+Cond: !NETCF
 Gen: [Obsolete("Use Is.StringMatching")]Text.Matches(string pattern)=>new RegexConstraint(pattern)
 Gen: ConstraintFactory.Matches(string pattern)=>new RegexConstraint(pattern)
 Gen: ConstraintExpression.Matches(string pattern)=>(RegexConstraint)this.Append(new RegexConstraint(pattern))
