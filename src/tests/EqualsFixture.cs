@@ -150,14 +150,14 @@ namespace NUnit.Framework.Tests
 			Assert.AreEqual(float.PositiveInfinity, float.NegativeInfinity, (float)0.0);
 		}
 
-		[Test,ExpectedException(typeof(AssertionException))]
+		[Test,ExpectedException(typeof(InvalidOperationException))]
 		public void EqualsThrowsException()
 		{
 			object o = new object();
 			Assert.Equals(o, o);
 		}
 
-		[Test,ExpectedException(typeof(AssertionException))]
+		[Test,ExpectedException(typeof(InvalidOperationException))]
 		public void ReferenceEqualsThrowsException()
 		{
 			object o = new object();
