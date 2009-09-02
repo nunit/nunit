@@ -348,6 +348,8 @@ namespace NUnit.Framework.Constraints
         #endregion
 
         #region After Modifier
+
+#if !NUNITLITE
         /// <summary>
         /// Returns a DelayedConstraint with the specified delay time.
         /// </summary>
@@ -374,6 +376,8 @@ namespace NUnit.Framework.Constraints
                 delayInMilliseconds,
                 pollingInterval);
         }
+
+#endif
         #endregion
 
         #region IResolveConstraint Members

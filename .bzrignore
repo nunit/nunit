@@ -1,10 +1,12 @@
 build
 obj
-Constraints
-Syntax
 *.suo
 solutions/vs2008/bin
+solutions/vs2008/framework/Framework
+solutions/vs2008/tests/Framework
 solutions/vs2005/bin
+solutions/vs2005/framework/Framework
+solutions/vs2005/tests/Framework
 GeneratedAssemblyInfo.cs
 nunit.framework.xml
 *.user

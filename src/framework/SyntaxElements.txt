@@ -96,13 +96,13 @@
 #
 # Define default classes to be generated:
 #
-Default: Is
-Default: Has
-Default: Text
-Default: Throws
-Default: ConstraintFactory=Constraints/ConstraintFactory.cs
-Default: ConstraintExpression=Constraints/ConstraintExpression.cs
-Default: Assert
+Default: Is=Framework/Is.cs
+Default: Has=Framework/Has.cs
+Default: Text=Framework/Text.cs
+Default: Throws=Framework/Throws.cs
+Default: ConstraintFactory=Framework/Constraints/ConstraintFactory.cs
+Default: ConstraintExpression=Framework/Constraints/ConstraintExpression.cs
+Default: Assert=Framework/Assert.cs
 %
 #
 # Prefix Operators
