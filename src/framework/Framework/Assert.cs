@@ -160,28 +160,37 @@ namespace NUnit.Framework
         #region Fail
 
         /// <summary>
-        /// Throw an assertion exception with a message and optional arguments
+        /// Throws an <see cref="AssertionException"/> with the message and arguments 
+        /// that are passed in. This is used by the other Assert functions. 
         /// </summary>
-        /// <param name="message">The message, possibly with format placeholders</param>
-        /// <param name="args">Arguments used in formatting the string</param>
-        public static void Fail(string message, params object[] args)
+        /// <param name="message">The message to initialize the <see cref="AssertionException"/> with.</param>
+        /// <param name="args">Arguments to be used in formatting the message</param>
+        static public void Fail(string message, params object[] args)
         {
-            throw new AssertionException(FormatMessage(message, args));
+            if (message == null) message = string.Empty;
+            else if (args != null && args.Length > 0)
+                message = string.Format(message, args);
+
+            throw new AssertionException(message);
         }
 
         /// <summary>
-        /// Formats a message with any user-supplied arguments.
+        /// Throws an <see cref="AssertionException"/> with the message that is 
+        /// passed in. This is used by the other Assert functions. 
         /// </summary>
-        /// <param name="message">The message.</param>
-        /// <param name="args">The args.</param>
-        private static string FormatMessage(string message, params object[] args)
+        /// <param name="message">The message to initialize the <see cref="AssertionException"/> with.</param>
+        static public void Fail(string message)
         {
-            if (message == null)
-                return string.Empty;
-            else if (args != null && args.Length > 0)
-                return string.Format(message, args);
-            else
-                return message;
+            Assert.Fail(message, null);
+        }
+
+        /// <summary>
+        /// Throws an <see cref="AssertionException"/>. 
+        /// This is used by the other Assert functions. 
+        /// </summary>
+        static public void Fail()
+        {
+            Assert.Fail(string.Empty, null);
         }
 
         #endregion

@@ -703,42 +703,6 @@ namespace NUnit.Framework.Tests
 
         #endregion
     }
-
-	public class TestComparer : IComparer
-	{
-        public bool Called = false;
-        
-        #region IComparer Members
-		public int Compare(object x, object y)
-		{
-            Called = true;
-
-			if ( x == null && y == null )
-				return 0;
-
-			if ( x == null || y == null )
-				return -1;
-
-			if (x.Equals(y))
-				return 0;
-
-			return -1;
-		}
-		#endregion
-	}
-
-	public class AlwaysEqualComparer : IComparer
-	{
-        public bool Called = false;
-
-		int IComparer.Compare(object x, object y)
-		{
-            Called = true;
-
-			// This comparer ALWAYS returns zero (equal)!
-			return 0;
-		}
-	}
 }
 
 

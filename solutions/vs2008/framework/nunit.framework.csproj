@@ -8,7 +8,7 @@
     <ProjectGuid>{12B66B03-90F1-4992-BD33-BDF3C69AE49E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NUnit.Framework</RootNamespace>
+    <RootNamespace>NUnit</RootNamespace>
     <AssemblyName>nunit.framework</AssemblyName>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -57,281 +57,281 @@
     <Compile Include="..\..\..\src\framework\AssemblyInfo.cs">
       <Link>AssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Assert.cs">
-      <Link>Assert.cs</Link>
+    <Compile Include="..\..\..\src\framework\Framework\Assert.cs">
+      <Link>NewFolder1\Assert.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\AssertionException.cs">
-      <Link>AssertionException.cs</Link>
+    <Compile Include="..\..\..\src\framework\Framework\AssertionException.cs">
+      <Link>NewFolder1\AssertionException.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\AssertionHelper.cs">
-      <Link>AssertionHelper.cs</Link>
+    <Compile Include="..\..\..\src\framework\Framework\AssertionHelper.cs">
+      <Link>NewFolder1\AssertionHelper.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Assume.cs">
-      <Link>Assume.cs</Link>
+    <Compile Include="..\..\..\src\framework\Framework\Assume.cs">
+      <Link>NewFolder1\Assume.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\CategoryAttribute.cs">
-      <Link>CategoryAttribute.cs</Link>
+    <Compile Include="..\..\..\src\framework\Framework\CategoryAttribute.cs">
+      <Link>NewFolder1\CategoryAttribute.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\CollectionAssert.cs">
-      <Link>CollectionAssert.cs</Link>
+    <Compile Include="..\..\..\src\framework\Framework\CollectionAssert.cs">
+      <Link>NewFolder1\CollectionAssert.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\AttributeConstraints.cs">
+    <Compile Include="..\..\..\src\framework\Framework\Constraints\AttributeConstraints.cs">
       <Link>Constraints\AttributeConstraints.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\BasicConstraints.cs">
+    <Compile Include="..\..\..\src\framework\Framework\Constraints\BasicConstraints.cs">
       <Link>Constraints\BasicConstraints.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\BinaryOperations.cs">
+    <Compile Include="..\..\..\src\framework\Framework\Constraints\BinaryOperations.cs">
       <Link>Constraints\BinaryOperations.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\CollectionConstraints.cs">
+    <Compile Include="..\..\..\src\framework\Framework\Constraints\CollectionConstraints.cs">
       <Link>Constraints\CollectionConstraints.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\ComparisonAdapter.cs">
+    <Compile Include="..\..\..\src\framework\Framework\Constraints\ComparisonAdapter.cs">
       <Link>Constraints\ComparisonAdapter.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\ComparisonConstraints.cs">
+    <Compile Include="..\..\..\src\framework\Framework\Constraints\ComparisonConstraints.cs">
       <Link>Constraints\ComparisonConstraints.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\Constraint.cs">
+    <Compile Include="..\..\..\src\framework\Framework\Constraints\Constraint.cs">
       <Link>Constraints\Constraint.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\ConstraintBuilder.cs">
+    <Compile Include="..\..\..\src\framework\Framework\Constraints\ConstraintBuilder.cs">
       <Link>Constraints\ConstraintBuilder.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\ConstraintExpression.cs">
+    <Compile Include="..\..\..\src\framework\Framework\Constraints\ConstraintExpression.cs">
       <Link>Constraints\ConstraintExpression.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\ConstraintExpressionBase.cs">
+    <Compile Include="..\..\..\src\framework\Framework\Constraints\ConstraintExpressionBase.cs">
       <Link>Constraints\ConstraintExpressionBase.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\ConstraintFactory.cs">
+    <Compile Include="..\..\..\src\framework\Framework\Constraints\ConstraintFactory.cs">
       <Link>Constraints\ConstraintFactory.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\ConstraintOperators.cs">
+    <Compile Include="..\..\..\src\framework\Framework\Constraints\ConstraintOperators.cs">
       <Link>Constraints\ConstraintOperators.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\ContainsConstraint.cs">
+    <Compile Include="..\..\..\src\framework\Framework\Constraints\ContainsConstraint.cs">
       <Link>Constraints\ContainsConstraint.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\DelayedConstraint.cs">
+    <Compile Include="..\..\..\src\framework\Framework\Constraints\DelayedConstraint.cs">
       <Link>Constraints\DelayedConstraint.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\DirectoryConstraints.cs">
+    <Compile Include="..\..\..\src\framework\Framework\Constraints\DirectoryConstraints.cs">
       <Link>Constraints\DirectoryConstraints.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\EmptyConstraint.cs">
+    <Compile Include="..\..\..\src\framework\Framework\Constraints\EmptyConstraint.cs">
       <Link>Constraints\EmptyConstraint.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\EqualConstraint.cs">
+    <Compile Include="..\..\..\src\framework\Framework\Constraints\EqualConstraint.cs">
       <Link>Constraints\EqualConstraint.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\EqualityAdapter.cs">
+    <Compile Include="..\..\..\src\framework\Framework\Constraints\EqualityAdapter.cs">
       <Link>Constraints\EqualityAdapter.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\FloatingPointNumerics.cs">
+    <Compile Include="..\..\..\src\framework\Framework\Constraints\FloatingPointNumerics.cs">
       <Link>Constraints\FloatingPointNumerics.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\IResolveConstraint.cs">
+    <Compile Include="..\..\..\src\framework\Framework\Constraints\IResolveConstraint.cs">
       <Link>Constraints\IResolveConstraint.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\MessageWriter.cs">
+    <Compile Include="..\..\..\src\framework\Framework\Constraints\MessageWriter.cs">
       <Link>Constraints\MessageWriter.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\MsgUtils.cs">
+    <Compile Include="..\..\..\src\framework\Framework\Constraints\MsgUtils.cs">
       <Link>Constraints\MsgUtils.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\Numerics.cs">
+    <Compile Include="..\..\..\src\framework\Framework\Constraints\Numerics.cs">
       <Link>Constraints\Numerics.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\NUnitComparer.cs">
+    <Compile Include="..\..\..\src\framework\Framework\Constraints\NUnitComparer.cs">
       <Link>Constraints\NUnitComparer.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\NUnitEqualityComparer.cs">
+    <Compile Include="..\..\..\src\framework\Framework\Constraints\NUnitEqualityComparer.cs">
       <Link>Constraints\NUnitEqualityComparer.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\PathConstraints.cs">
+    <Compile Include="..\..\..\src\framework\Framework\Constraints\PathConstraints.cs">
       <Link>Constraints\PathConstraints.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\PredicateConstraint.cs">
+    <Compile Include="..\..\..\src\framework\Framework\Constraints\PredicateConstraint.cs">
       <Link>Constraints\PredicateConstraint.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\PrefixConstraints.cs">
+    <Compile Include="..\..\..\src\framework\Framework\Constraints\PrefixConstraints.cs">
       <Link>Constraints\PrefixConstraints.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\PropertyConstraint.cs">
+    <Compile Include="..\..\..\src\framework\Framework\Constraints\PropertyConstraint.cs">
       <Link>Constraints\PropertyConstraint.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\RangeConstraint.cs">
+    <Compile Include="..\..\..\src\framework\Framework\Constraints\RangeConstraint.cs">
       <Link>Constraints\RangeConstraint.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\ResolvableConstraintExpression.cs">
+    <Compile Include="..\..\..\src\framework\Framework\Constraints\ResolvableConstraintExpression.cs">
       <Link>Constraints\ResolvableConstraintExpression.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\SameAsConstraint.cs">
+    <Compile Include="..\..\..\src\framework\Framework\Constraints\SameAsConstraint.cs">
       <Link>Constraints\SameAsConstraint.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\SerializableConstraints.cs">
+    <Compile Include="..\..\..\src\framework\Framework\Constraints\SerializableConstraints.cs">
       <Link>Constraints\SerializableConstraints.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\StringConstraints.cs">
+    <Compile Include="..\..\..\src\framework\Framework\Constraints\StringConstraints.cs">
       <Link>Constraints\StringConstraints.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\ThrowsConstraint.cs">
+    <Compile Include="..\..\..\src\framework\Framework\Constraints\ThrowsConstraint.cs">
       <Link>Constraints\ThrowsConstraint.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\Tolerance.cs">
+    <Compile Include="..\..\..\src\framework\Framework\Constraints\Tolerance.cs">
       <Link>Constraints\Tolerance.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\TypeConstraints.cs">
+    <Compile Include="..\..\..\src\framework\Framework\Constraints\TypeConstraints.cs">
       <Link>Constraints\TypeConstraints.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\DatapointAttributes.cs">
-      <Link>DatapointAttributes.cs</Link>
+    <Compile Include="..\..\..\src\framework\Framework\DatapointAttributes.cs">
+      <Link>NewFolder1\DatapointAttributes.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\DescriptionAttribute.cs">
-      <Link>DescriptionAttribute.cs</Link>
+    <Compile Include="..\..\..\src\framework\Framework\DescriptionAttribute.cs">
+      <Link>NewFolder1\DescriptionAttribute.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\DirectoryAssert.cs">
-      <Link>DirectoryAssert.cs</Link>
+    <Compile Include="..\..\..\src\framework\Framework\DirectoryAssert.cs">
+      <Link>NewFolder1\DirectoryAssert.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\ExpectedExceptionAttribute.cs">
-      <Link>ExpectedExceptionAttribute.cs</Link>
+    <Compile Include="..\..\..\src\framework\Framework\ExpectedExceptionAttribute.cs">
+      <Link>NewFolder1\ExpectedExceptionAttribute.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\ExplicitAttribute.cs">
-      <Link>ExplicitAttribute.cs</Link>
+    <Compile Include="..\..\..\src\framework\Framework\ExplicitAttribute.cs">
+      <Link>NewFolder1\ExplicitAttribute.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\FileAssert.cs">
-      <Link>FileAssert.cs</Link>
+    <Compile Include="..\..\..\src\framework\Framework\FileAssert.cs">
+      <Link>NewFolder1\FileAssert.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\GlobalSettings.cs">
-      <Link>GlobalSettings.cs</Link>
+    <Compile Include="..\..\..\src\framework\Framework\GlobalSettings.cs">
+      <Link>NewFolder1\GlobalSettings.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Has.cs">
-      <Link>Has.cs</Link>
+    <Compile Include="..\..\..\src\framework\Framework\Has.cs">
+      <Link>NewFolder1\Has.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\IExpectException.cs">
-      <Link>IExpectException.cs</Link>
+    <Compile Include="..\..\..\src\framework\Framework\IExpectException.cs">
+      <Link>NewFolder1\IExpectException.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\IgnoreAttribute.cs">
-      <Link>IgnoreAttribute.cs</Link>
+    <Compile Include="..\..\..\src\framework\Framework\IgnoreAttribute.cs">
+      <Link>NewFolder1\IgnoreAttribute.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\IgnoreException.cs">
-      <Link>IgnoreException.cs</Link>
+    <Compile Include="..\..\..\src\framework\Framework\IgnoreException.cs">
+      <Link>NewFolder1\IgnoreException.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\IncludeExcludeAttributes.cs">
-      <Link>IncludeExcludeAttributes.cs</Link>
+    <Compile Include="..\..\..\src\framework\Framework\IncludeExcludeAttributes.cs">
+      <Link>NewFolder1\IncludeExcludeAttributes.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\InconclusiveException.cs">
-      <Link>InconclusiveException.cs</Link>
+    <Compile Include="..\..\..\src\framework\Framework\InconclusiveException.cs">
+      <Link>NewFolder1\InconclusiveException.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Is.cs">
-      <Link>Is.cs</Link>
+    <Compile Include="..\..\..\src\framework\Framework\Is.cs">
+      <Link>NewFolder1\Is.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\ITestCaseData.cs">
-      <Link>ITestCaseData.cs</Link>
+    <Compile Include="..\..\..\src\framework\Framework\ITestCaseData.cs">
+      <Link>NewFolder1\ITestCaseData.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Iz.cs">
-      <Link>Iz.cs</Link>
+    <Compile Include="..\..\..\src\framework\Framework\Iz.cs">
+      <Link>NewFolder1\Iz.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\JoinTypeAttributes.cs">
-      <Link>JoinTypeAttributes.cs</Link>
+    <Compile Include="..\..\..\src\framework\Framework\JoinTypeAttributes.cs">
+      <Link>NewFolder1\JoinTypeAttributes.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\List.cs">
-      <Link>List.cs</Link>
+    <Compile Include="..\..\..\src\framework\Framework\List.cs">
+      <Link>NewFolder1\List.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\ListMapper.cs">
-      <Link>ListMapper.cs</Link>
+    <Compile Include="..\..\..\src\framework\Framework\ListMapper.cs">
+      <Link>NewFolder1\ListMapper.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\MaxTimeAttribute.cs">
-      <Link>MaxTimeAttribute.cs</Link>
+    <Compile Include="..\..\..\src\framework\Framework\MaxTimeAttribute.cs">
+      <Link>NewFolder1\MaxTimeAttribute.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\PropertyAttribute.cs">
-      <Link>PropertyAttribute.cs</Link>
+    <Compile Include="..\..\..\src\framework\Framework\PropertyAttribute.cs">
+      <Link>NewFolder1\PropertyAttribute.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\RandomAttribute.cs">
-      <Link>RandomAttribute.cs</Link>
+    <Compile Include="..\..\..\src\framework\Framework\RandomAttribute.cs">
+      <Link>NewFolder1\RandomAttribute.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Randomizer.cs">
-      <Link>Randomizer.cs</Link>
+    <Compile Include="..\..\..\src\framework\Framework\Randomizer.cs">
+      <Link>NewFolder1\Randomizer.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\RangeAttribute.cs">
-      <Link>RangeAttribute.cs</Link>
+    <Compile Include="..\..\..\src\framework\Framework\RangeAttribute.cs">
+      <Link>NewFolder1\RangeAttribute.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\RepeatAttribute.cs">
-      <Link>RepeatAttribute.cs</Link>
+    <Compile Include="..\..\..\src\framework\Framework\RepeatAttribute.cs">
+      <Link>NewFolder1\RepeatAttribute.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\RequiredAddinAttribute.cs">
-      <Link>RequiredAddinAttribute.cs</Link>
+    <Compile Include="..\..\..\src\framework\Framework\RequiredAddinAttribute.cs">
+      <Link>NewFolder1\RequiredAddinAttribute.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\SetCultureAttribute.cs">
-      <Link>SetCultureAttribute.cs</Link>
+    <Compile Include="..\..\..\src\framework\Framework\SetCultureAttribute.cs">
+      <Link>NewFolder1\SetCultureAttribute.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\SetUICultureAttribute.cs">
-      <Link>SetUICultureAttribute.cs</Link>
+    <Compile Include="..\..\..\src\framework\Framework\SetUICultureAttribute.cs">
+      <Link>NewFolder1\SetUICultureAttribute.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\SetUpAttribute.cs">
-      <Link>SetUpAttribute.cs</Link>
+    <Compile Include="..\..\..\src\framework\Framework\SetUpAttribute.cs">
+      <Link>NewFolder1\SetUpAttribute.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\SetUpFixtureAttribute.cs">
-      <Link>SetUpFixtureAttribute.cs</Link>
+    <Compile Include="..\..\..\src\framework\Framework\SetUpFixtureAttribute.cs">
+      <Link>NewFolder1\SetUpFixtureAttribute.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\SpecialValue.cs">
-      <Link>SpecialValue.cs</Link>
+    <Compile Include="..\..\..\src\framework\Framework\SpecialValue.cs">
+      <Link>NewFolder1\SpecialValue.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\StringAssert.cs">
-      <Link>StringAssert.cs</Link>
+    <Compile Include="..\..\..\src\framework\Framework\StringAssert.cs">
+      <Link>NewFolder1\StringAssert.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\SuccessException.cs">
-      <Link>SuccessException.cs</Link>
+    <Compile Include="..\..\..\src\framework\Framework\SuccessException.cs">
+      <Link>NewFolder1\SuccessException.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\SuiteAttribute.cs">
-      <Link>SuiteAttribute.cs</Link>
+    <Compile Include="..\..\..\src\framework\Framework\SuiteAttribute.cs">
+      <Link>NewFolder1\SuiteAttribute.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\TearDownAttribute.cs">
-      <Link>TearDownAttribute.cs</Link>
+    <Compile Include="..\..\..\src\framework\Framework\TearDownAttribute.cs">
+      <Link>NewFolder1\TearDownAttribute.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\TestAttribute.cs">
-      <Link>TestAttribute.cs</Link>
+    <Compile Include="..\..\..\src\framework\Framework\TestAttribute.cs">
+      <Link>NewFolder1\TestAttribute.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\TestCaseAttribute.cs">
-      <Link>TestCaseAttribute.cs</Link>
+    <Compile Include="..\..\..\src\framework\Framework\TestCaseAttribute.cs">
+      <Link>NewFolder1\TestCaseAttribute.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\TestCaseData.cs">
-      <Link>TestCaseData.cs</Link>
+    <Compile Include="..\..\..\src\framework\Framework\TestCaseData.cs">
+      <Link>NewFolder1\TestCaseData.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\TestCaseSourceAttribute.cs">
-      <Link>TestCaseSourceAttribute.cs</Link>
+    <Compile Include="..\..\..\src\framework\Framework\TestCaseSourceAttribute.cs">
+      <Link>NewFolder1\TestCaseSourceAttribute.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\TestFixtureAttribute.cs">
-      <Link>TestFixtureAttribute.cs</Link>
+    <Compile Include="..\..\..\src\framework\Framework\TestFixtureAttribute.cs">
+      <Link>NewFolder1\TestFixtureAttribute.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\TestFixtureSetUpAttribute.cs">
-      <Link>TestFixtureSetUpAttribute.cs</Link>
+    <Compile Include="..\..\..\src\framework\Framework\TestFixtureSetUpAttribute.cs">
+      <Link>NewFolder1\TestFixtureSetUpAttribute.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\TestFixtureTearDownAttribute.cs">
-      <Link>TestFixtureTearDownAttribute.cs</Link>
+    <Compile Include="..\..\..\src\framework\Framework\TestFixtureTearDownAttribute.cs">
+      <Link>NewFolder1\TestFixtureTearDownAttribute.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Text.cs">
-      <Link>Text.cs</Link>
+    <Compile Include="..\..\..\src\framework\Framework\Text.cs">
+      <Link>NewFolder1\Text.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\TextMessageWriter.cs">
-      <Link>TextMessageWriter.cs</Link>
+    <Compile Include="..\..\..\src\framework\Framework\TextMessageWriter.cs">
+      <Link>NewFolder1\TextMessageWriter.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\TheoryAttribute.cs">
-      <Link>TheoryAttribute.cs</Link>
+    <Compile Include="..\..\..\src\framework\Framework\TheoryAttribute.cs">
+      <Link>NewFolder1\TheoryAttribute.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\ThreadingAttributes.cs">
-      <Link>ThreadingAttributes.cs</Link>
+    <Compile Include="..\..\..\src\framework\Framework\ThreadingAttributes.cs">
+      <Link>NewFolder1\ThreadingAttributes.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Throws.cs">
-      <Link>Throws.cs</Link>
+    <Compile Include="..\..\..\src\framework\Framework\Throws.cs">
+      <Link>NewFolder1\Throws.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\ValuesAttribute.cs">
-      <Link>ValuesAttribute.cs</Link>
+    <Compile Include="..\..\..\src\framework\Framework\ValuesAttribute.cs">
+      <Link>NewFolder1\ValuesAttribute.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\ValueSourceAttribute.cs">
-      <Link>ValueSourceAttribute.cs</Link>
+    <Compile Include="..\..\..\src\framework\Framework\ValueSourceAttribute.cs">
+      <Link>NewFolder1\ValueSourceAttribute.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -340,8 +340,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\..\..\src\framework\SyntaxElements.txt">
-      <Link>SyntaxElements.txt</Link>
+      <Link>NewFolder1\SyntaxElements.txt</Link>
     </Content>
-    <Content Include="XMLFile1.xml" />
   </ItemGroup>
 </Project>
