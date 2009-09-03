@@ -32,7 +32,7 @@ namespace NUnit.Framework.Tests
 		[Test]
 		public void ExactType()
 		{
-			Expect( "Hello", TypeOf( typeof(System.String) ) );
+			Assert.That( "Hello", Is.TypeOf( typeof(System.String) ) );
 		}
 
 		[Test,ExpectedException(typeof(AssertionException))]
@@ -41,7 +41,7 @@ namespace NUnit.Framework.Tests
 			expectedMessage =
 				"  Expected: <System.Int32>" + Environment.NewLine +
 				"  But was:  <System.String>" + Environment.NewLine;
-			Expect( "Hello", TypeOf( typeof(System.Int32) ) );
+			Assert.That( "Hello", Is.TypeOf( typeof(System.Int32) ) );
 		}
 
 		[Test]
@@ -50,7 +50,7 @@ namespace NUnit.Framework.Tests
             ApplicationException ex = new ApplicationException();
 
 			Assert.IsInstanceOf(typeof(System.Exception), ex );
-            Expect( ex, InstanceOf(typeof(Exception)));
+            Assert.That( ex, Is.InstanceOf(typeof(Exception)));
 #if NET_2_0
             Assert.IsInstanceOf<Exception>( ex );
 #endif
@@ -62,14 +62,14 @@ namespace NUnit.Framework.Tests
 			expectedMessage =
 				"  Expected: instance of <System.Int32>" + System.Environment.NewLine + 
 				"  But was:  <System.String>" + System.Environment.NewLine;
-			Expect( "abc123", InstanceOf( typeof(System.Int32) ) );
+			Assert.That( "abc123", Is.InstanceOf( typeof(System.Int32) ) );
 		}
 
 		[Test]
 		public void IsNotInstanceOf()
 		{
 			Assert.IsNotInstanceOf(typeof(System.Int32), "abc123" );
-			Expect( "abc123", Not.InstanceOf(typeof(System.Int32)) );
+			Assert.That( "abc123", Is.Not.InstanceOf(typeof(System.Int32)) );
 #if NET_2_0
 			Assert.IsNotInstanceOf<System.Int32>("abc123");
 #endif
@@ -90,7 +90,7 @@ namespace NUnit.Framework.Tests
             int[] array10 = new int[10];
 
             Assert.IsAssignableFrom(typeof(int[]), array10);
-            Expect(array10, AssignableFrom(typeof(int[])));
+            Assert.That(array10, Is.AssignableFrom(typeof(int[])));
 #if NET_2_0
             Assert.IsAssignableFrom<int[]>(array10);
 #endif
@@ -105,7 +105,7 @@ namespace NUnit.Framework.Tests
 			expectedMessage =
 				"  Expected: assignable from <System.Int32[,]>" + System.Environment.NewLine + 
 				"  But was:  <System.Int32[]>" + System.Environment.NewLine;
-			Expect( array10, AssignableFrom( array2.GetType() ) );
+			Assert.That( array10, Is.AssignableFrom( array2.GetType() ) );
 		}
 
 		[Test()]
@@ -114,7 +114,7 @@ namespace NUnit.Framework.Tests
 			int [] array10 = new int [10];
 
 			Assert.IsNotAssignableFrom( typeof(int[,] ),array10);
-			Expect( array10, Not.AssignableFrom( typeof(int[,] ) ) );
+			Assert.That( array10, Is.Not.AssignableFrom( typeof(int[,] ) ) );
 #if NET_2_0
 			Assert.IsNotAssignableFrom<int[,]>(array10);
 #endif
@@ -129,7 +129,7 @@ namespace NUnit.Framework.Tests
 			expectedMessage =
 				"  Expected: not assignable from <System.Int32[]>" + System.Environment.NewLine + 
 				"  But was:  <System.Int32[]>" + System.Environment.NewLine;
-			Expect( array10, Not.AssignableFrom( array2.GetType() ) );
+			Assert.That( array10, Is.Not.AssignableFrom( array2.GetType() ) );
 		}
 	}
 }

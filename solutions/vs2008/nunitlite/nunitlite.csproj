@@ -5,17 +5,13 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{12B66B03-90F1-4992-BD33-BDF3C69AE49E}</ProjectGuid>
+    <ProjectGuid>{0BFA7F0A-BC15-40A5-863A-FA9B55AE2FD3}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NUnit</RootNamespace>
-    <AssemblyName>nunit.framework</AssemblyName>
+    <AssemblyName>nunitlite</AssemblyName>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <StartupObject>
-    </StartupObject>
-    <SignAssembly>false</SignAssembly>
-    <AssemblyOriginatorKeyFile>nunit.snk</AssemblyOriginatorKeyFile>
     <TargetFrameworkSubset>
     </TargetFrameworkSubset>
   </PropertyGroup>
@@ -24,31 +20,23 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;NET_2_0;CSHARP_3_0</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NET_2_0;CSHARP_3_0;NUNITLITE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\bin\Debug\nunit.framework.XML</DocumentationFile>
-    <NoWarn>1699</NoWarn>
+    <DocumentationFile>..\bin\Debug\nunitlite.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\bin\Release\</OutputPath>
-    <DefineConstants>TRACE;NET_2_0;CSHARP_3_0</DefineConstants>
+    <DefineConstants>TRACE;NET_2_0;CSHARP_3_0;NUNITLITE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\bin\Release\nunit.framework.XML</DocumentationFile>
+    <DocumentationFile>..\bin\Release\nunitlite.XML</DocumentationFile>
   </PropertyGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
   <ItemGroup>
-    <None Include="nunit.snk" />
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\..\src\CommonAssemblyInfo.cs">
@@ -65,15 +53,6 @@
     </Compile>
     <Compile Include="..\..\..\src\framework\Framework\AssertionHelper.cs">
       <Link>Framework\AssertionHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Framework\Assume.cs">
-      <Link>Framework\Assume.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Framework\CategoryAttribute.cs">
-      <Link>Framework\CategoryAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Framework\CollectionAssert.cs">
-      <Link>Framework\CollectionAssert.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Framework\Constraints\AttributeConstraints.cs">
       <Link>Framework\Constraints\AttributeConstraints.cs</Link>
@@ -114,12 +93,6 @@
     <Compile Include="..\..\..\src\framework\Framework\Constraints\ContainsConstraint.cs">
       <Link>Framework\Constraints\ContainsConstraint.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Framework\Constraints\DelayedConstraint.cs">
-      <Link>Framework\Constraints\DelayedConstraint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Framework\Constraints\DirectoryConstraints.cs">
-      <Link>Framework\Constraints\DirectoryConstraints.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\src\framework\Framework\Constraints\EmptyConstraint.cs">
       <Link>Framework\Constraints\EmptyConstraint.cs</Link>
     </Compile>
@@ -150,12 +123,6 @@
     <Compile Include="..\..\..\src\framework\Framework\Constraints\NUnitEqualityComparer.cs">
       <Link>Framework\Constraints\NUnitEqualityComparer.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Framework\Constraints\PathConstraints.cs">
-      <Link>Framework\Constraints\PathConstraints.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Framework\Constraints\PredicateConstraint.cs">
-      <Link>Framework\Constraints\PredicateConstraint.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\src\framework\Framework\Constraints\PrefixConstraints.cs">
       <Link>Framework\Constraints\PrefixConstraints.cs</Link>
     </Compile>
@@ -171,9 +138,6 @@
     <Compile Include="..\..\..\src\framework\Framework\Constraints\SameAsConstraint.cs">
       <Link>Framework\Constraints\SameAsConstraint.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Framework\Constraints\SerializableConstraints.cs">
-      <Link>Framework\Constraints\SerializableConstraints.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\src\framework\Framework\Constraints\StringConstraints.cs">
       <Link>Framework\Constraints\StringConstraints.cs</Link>
     </Compile>
@@ -186,23 +150,11 @@
     <Compile Include="..\..\..\src\framework\Framework\Constraints\TypeConstraints.cs">
       <Link>Framework\Constraints\TypeConstraints.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Framework\DatapointAttributes.cs">
-      <Link>Framework\DatapointAttributes.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\src\framework\Framework\DescriptionAttribute.cs">
       <Link>Framework\DescriptionAttribute.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Framework\DirectoryAssert.cs">
-      <Link>Framework\DirectoryAssert.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\src\framework\Framework\ExpectedExceptionAttribute.cs">
       <Link>Framework\ExpectedExceptionAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Framework\ExplicitAttribute.cs">
-      <Link>Framework\ExplicitAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Framework\FileAssert.cs">
-      <Link>Framework\FileAssert.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Framework\GlobalSettings.cs">
       <Link>Framework\GlobalSettings.cs</Link>
@@ -216,77 +168,26 @@
     <Compile Include="..\..\..\src\framework\Framework\IgnoreAttribute.cs">
       <Link>Framework\IgnoreAttribute.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Framework\IgnoreException.cs">
-      <Link>Framework\IgnoreException.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Framework\IncludeExcludeAttributes.cs">
-      <Link>Framework\IncludeExcludeAttributes.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Framework\InconclusiveException.cs">
-      <Link>Framework\InconclusiveException.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\src\framework\Framework\Is.cs">
       <Link>Framework\Is.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Framework\ITestCaseData.cs">
       <Link>Framework\ITestCaseData.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Framework\Iz.cs">
-      <Link>Framework\Iz.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\src\framework\Framework\JoinTypeAttributes.cs">
       <Link>Framework\JoinTypeAttributes.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Framework\List.cs">
-      <Link>Framework\List.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Framework\ListMapper.cs">
       <Link>Framework\ListMapper.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Framework\MaxTimeAttribute.cs">
-      <Link>Framework\MaxTimeAttribute.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\src\framework\Framework\PropertyAttribute.cs">
       <Link>Framework\PropertyAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Framework\RandomAttribute.cs">
-      <Link>Framework\RandomAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Framework\Randomizer.cs">
-      <Link>Framework\Randomizer.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Framework\RangeAttribute.cs">
-      <Link>Framework\RangeAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Framework\RepeatAttribute.cs">
-      <Link>Framework\RepeatAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Framework\RequiredAddinAttribute.cs">
-      <Link>Framework\RequiredAddinAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Framework\SetCultureAttribute.cs">
-      <Link>Framework\SetCultureAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Framework\SetUICultureAttribute.cs">
-      <Link>Framework\SetUICultureAttribute.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Framework\SetUpAttribute.cs">
       <Link>Framework\SetUpAttribute.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Framework\SetUpFixtureAttribute.cs">
-      <Link>Framework\SetUpFixtureAttribute.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\src\framework\Framework\SpecialValue.cs">
       <Link>Framework\SpecialValue.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Framework\StringAssert.cs">
-      <Link>Framework\StringAssert.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Framework\SuccessException.cs">
-      <Link>Framework\SuccessException.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Framework\SuiteAttribute.cs">
-      <Link>Framework\SuiteAttribute.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Framework\TearDownAttribute.cs">
       <Link>Framework\TearDownAttribute.cs</Link>
@@ -297,50 +198,36 @@
     <Compile Include="..\..\..\src\framework\Framework\TestCaseAttribute.cs">
       <Link>Framework\TestCaseAttribute.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Framework\TestCaseData.cs">
-      <Link>Framework\TestCaseData.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\src\framework\Framework\TestCaseSourceAttribute.cs">
       <Link>Framework\TestCaseSourceAttribute.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Framework\TestFixtureAttribute.cs">
       <Link>Framework\TestFixtureAttribute.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Framework\TestFixtureSetUpAttribute.cs">
-      <Link>Framework\TestFixtureSetUpAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Framework\TestFixtureTearDownAttribute.cs">
-      <Link>Framework\TestFixtureTearDownAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Framework\Text.cs">
-      <Link>Framework\Text.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\src\framework\Framework\TextMessageWriter.cs">
       <Link>Framework\TextMessageWriter.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Framework\TheoryAttribute.cs">
-      <Link>Framework\TheoryAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Framework\ThreadingAttributes.cs">
-      <Link>Framework\ThreadingAttributes.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Framework\Throws.cs">
-      <Link>Framework\Throws.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Framework\ValuesAttribute.cs">
-      <Link>Framework\ValuesAttribute.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\src\framework\Framework\ValueSourceAttribute.cs">
-      <Link>Framework\ValueSourceAttribute.cs</Link>
+      <Link>Framework\Constraints\ValueSourceAttribute.cs</Link>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\..\..\src\framework\SyntaxElements.txt">
       <Link>SyntaxElements.txt</Link>
     </Content>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="nunit.snk" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
 </Project>

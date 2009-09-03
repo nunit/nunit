@@ -118,6 +118,7 @@ namespace NUnit.Framework
 
         #region Pass
 
+#if !NUNITLITE
         /// <summary>
         /// Throws a <see cref="SuccessException"/> with the message and arguments 
         /// that are passed in. This allows a test to be cut short, with a result
@@ -154,7 +155,7 @@ namespace NUnit.Framework
         {
             Assert.Pass(string.Empty, null);
         }
-
+#endif
         #endregion
 
         #region Fail
@@ -197,6 +198,7 @@ namespace NUnit.Framework
 
         #region Ignore
 
+#if !NUNITLITE
         /// <summary>
         /// Throws an <see cref="IgnoreException"/> with the message and arguments 
         /// that are passed in.  This causes the test to be reported as ignored.
@@ -230,10 +232,13 @@ namespace NUnit.Framework
         {
             Assert.Ignore(string.Empty, null);
         }
+#endif
 
         #endregion
 
         #region InConclusive
+
+#if !NUNITLITE
         /// <summary>
         /// Throws an <see cref="InconclusiveException"/> with the message and arguments 
         /// that are passed in.  This causes the test to be reported as inconclusive.
@@ -267,6 +272,7 @@ namespace NUnit.Framework
         {
             Assert.Inconclusive(string.Empty, null);
         }
+#endif
 
         #endregion
 

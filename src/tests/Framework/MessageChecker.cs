@@ -30,7 +30,7 @@ namespace NUnit.Framework.Tests
 	/// that check for an expected message in the exception
 	/// handler.
 	/// </summary>
-	public abstract class MessageChecker : AssertionHelper, IExpectException
+	public abstract class MessageChecker : IExpectException
 	{
 		protected string expectedMessage;
 

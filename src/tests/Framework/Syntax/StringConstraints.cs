@@ -44,7 +44,7 @@ namespace NUnit.Framework.Syntax
         public void SetUp()
         {
             parseTree = @"<substring ""X"">";
-            staticSyntax = Text.Contains("X");
+            staticSyntax = Is.StringContaining("X");
             inheritedSyntax = Helper().ContainsSubstring("X");
             builderSyntax = Builder().ContainsSubstring("X");
         }
@@ -81,7 +81,7 @@ namespace NUnit.Framework.Syntax
         public void SetUp()
         {
             parseTree = @"<startswith ""X"">";
-            staticSyntax = Text.StartsWith("X");
+            staticSyntax = Is.StringStarting("X");
             inheritedSyntax = Helper().StartsWith("X");
             builderSyntax = Builder().StartsWith("X");
         }
@@ -118,7 +118,7 @@ namespace NUnit.Framework.Syntax
         public void SetUp()
         {
             parseTree = @"<endswith ""X"">";
-            staticSyntax = Text.EndsWith("X");
+            staticSyntax = Is.StringEnding("X");
             inheritedSyntax = Helper().EndsWith("X");
             builderSyntax = Builder().EndsWith("X");
         }
@@ -155,7 +155,7 @@ namespace NUnit.Framework.Syntax
         public void SetUp()
         {
             parseTree = @"<regex ""X"">";
-            staticSyntax = Text.Matches("X");
+            staticSyntax = Is.StringMatching("X");
             inheritedSyntax = Helper().Matches("X");
             builderSyntax = Builder().Matches("X");
         }

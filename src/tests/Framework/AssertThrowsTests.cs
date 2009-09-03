@@ -58,7 +58,7 @@ namespace NUnit.Framework.Tests
                 new TestDelegate(TestDelegates.ThrowsArgumentException)) as ArgumentException;
 
             Assert.IsNotNull(ex, "No ArgumentException thrown");
-            Assert.That(ex.Message, StartsWith("myMessage"));
+            Assert.That(ex.Message, Is.StringStarting("myMessage"));
             Assert.That(ex.ParamName, Is.EqualTo("myParam"));
 
 #if NET_2_0
@@ -66,20 +66,20 @@ namespace NUnit.Framework.Tests
                 delegate { throw new ArgumentException("myMessage", "myParam"); }) as ArgumentException;
 
             Assert.IsNotNull(ex, "No ArgumentException thrown");
-            Assert.That(ex.Message, StartsWith("myMessage"));
+            Assert.That(ex.Message, Is.StringStarting("myMessage"));
             Assert.That(ex.ParamName, Is.EqualTo("myParam"));
 
 			ex = Assert.Throws(typeof(ArgumentException), 
                 delegate { throw new ArgumentException("myMessage", "myParam"); } ) as ArgumentException;
 
             Assert.IsNotNull(ex, "No ArgumentException thrown");
-            Assert.That(ex.Message, StartsWith("myMessage"));
+            Assert.That(ex.Message, Is.StringStarting("myMessage"));
             Assert.That(ex.ParamName, Is.EqualTo("myParam"));
 
             ex = Assert.Throws<ArgumentException>(TestDelegates.ThrowsArgumentException) as ArgumentException;
 
             Assert.IsNotNull(ex, "No ArgumentException thrown");
-            Assert.That(ex.Message, StartsWith("myMessage"));
+            Assert.That(ex.Message, Is.StringStarting("myMessage"));
             Assert.That(ex.ParamName, Is.EqualTo("myParam"));
 #endif
 		}

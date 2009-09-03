@@ -257,6 +257,8 @@ namespace NUnit.Framework.Constraints.Tests
     #endregion
 
     #region CollectionOrdered
+
+#if !NUNITLITE
     [TestFixture]
     public class CollectionOrderedTests : MessageChecker
     {
@@ -508,5 +510,7 @@ namespace NUnit.Framework.Constraints.Tests
             }
         }
     }
+#endif
+
     #endregion
 }

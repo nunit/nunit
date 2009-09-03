@@ -118,6 +118,7 @@ namespace NUnit.Framework
 
         #region Pass
 
+#if !NUNITLITE
         /// <summary>
         /// Throws a <see cref="SuccessException"/> with the message and arguments 
         /// that are passed in. This allows a test to be cut short, with a result
@@ -154,7 +155,7 @@ namespace NUnit.Framework
         {
             Assert.Pass(string.Empty, null);
         }
-
+#endif
         #endregion
 
         #region Fail
@@ -197,6 +198,7 @@ namespace NUnit.Framework
 
         #region Ignore
 
+#if !NUNITLITE
         /// <summary>
         /// Throws an <see cref="IgnoreException"/> with the message and arguments 
         /// that are passed in.  This causes the test to be reported as ignored.
@@ -230,10 +232,13 @@ namespace NUnit.Framework
         {
             Assert.Ignore(string.Empty, null);
         }
+#endif
 
         #endregion
 
         #region InConclusive
+
+#if !NUNITLITE
         /// <summary>
         /// Throws an <see cref="InconclusiveException"/> with the message and arguments 
         /// that are passed in.  This causes the test to be reported as inconclusive.
@@ -267,6 +272,7 @@ namespace NUnit.Framework
         {
             Assert.Inconclusive(string.Empty, null);
         }
+#endif
 
         #endregion
 
@@ -1060,6 +1066,7 @@ namespace NUnit.Framework
 
         #region IsNaN
 
+#if !NUNITLITE
         /// <summary>
         /// Verifies that the double that is passed in is an <code>NaN</code> value.
         /// If the object is not <code>NaN</code> then an <see cref="AssertionException"/>
@@ -1129,11 +1136,13 @@ namespace NUnit.Framework
             Assert.That(aDouble, Is.NaN ,null, null);
         }
 #endif
+#endif
 
         #endregion
 
         #region IsEmpty
 
+#if !NUNITLITE
         /// <summary>
         /// Assert that a string is empty - that is equal to string.Empty
         /// </summary>
@@ -1161,11 +1170,13 @@ namespace NUnit.Framework
         {
             Assert.That(aString, new EmptyStringConstraint() ,null, null);
         }
+#endif
 
         #endregion
 
         #region IsEmpty
 
+#if !NUNITLITE
         /// <summary>
         /// Assert that an array, list or other collection is empty
         /// </summary>
@@ -1193,11 +1204,13 @@ namespace NUnit.Framework
         {
             Assert.That(collection, new EmptyCollectionConstraint() ,null, null);
         }
+#endif
 
         #endregion
 
         #region IsNotEmpty
 
+#if !NUNITLITE
         /// <summary>
         /// Assert that a string is not empty - that is not equal to string.Empty
         /// </summary>
@@ -1225,11 +1238,13 @@ namespace NUnit.Framework
         {
             Assert.That(aString, Is.Not.Empty ,null, null);
         }
+#endif
 
         #endregion
 
         #region IsNotEmpty
 
+#if !NUNITLITE
         /// <summary>
         /// Assert that an array, list or other collection is not empty
         /// </summary>
@@ -1257,11 +1272,13 @@ namespace NUnit.Framework
         {
             Assert.That(collection, Is.Not.Empty ,null, null);
         }
+#endif
 
         #endregion
 
         #region IsNullOrEmpty
 
+#if !NUNITLITE
         /// <summary>
         /// Assert that a string is either null or equal to string.Empty
         /// </summary>
@@ -1289,11 +1306,13 @@ namespace NUnit.Framework
         {
             Assert.That(aString, new NullOrEmptyStringConstraint() ,null, null);
         }
+#endif
 
         #endregion
 
         #region IsNotNullOrEmpty
 
+#if !NUNITLITE
         /// <summary>
         /// Assert that a string is not null or empty
         /// </summary>
@@ -1321,11 +1340,13 @@ namespace NUnit.Framework
         {
             Assert.That(aString, new NotConstraint( new NullOrEmptyStringConstraint()) ,null, null);
         }
+#endif
 
         #endregion
 
         #region IsAssignableFrom
 
+#if !NUNITLITE
         /// <summary>
         /// Asserts that an object may be assigned a  value of a given Type.
         /// </summary>
@@ -1356,11 +1377,13 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.AssignableFrom(expected) ,null, null);
         }
+#endif
 
         #endregion
 
         #region IsAssignableFrom<T>
 
+#if !NUNITLITE
 #if NET_2_0
         /// <summary>
         /// Asserts that an object may be assigned a  value of a given Type.
@@ -1393,11 +1416,13 @@ namespace NUnit.Framework
             Assert.That(actual, Is.AssignableFrom(typeof(T)) ,null, null);
         }
 #endif
+#endif
 
         #endregion
 
         #region IsNotAssignableFrom
 
+#if !NUNITLITE
         /// <summary>
         /// Asserts that an object may not be assigned a  value of a given Type.
         /// </summary>
@@ -1428,11 +1453,13 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.Not.AssignableFrom(expected) ,null, null);
         }
+#endif
 
         #endregion
 
         #region IsNotAssignableFrom<T>
 
+#if !NUNITLITE
 #if NET_2_0
         /// <summary>
         /// Asserts that an object may not be assigned a  value of a given Type.
@@ -1465,11 +1492,13 @@ namespace NUnit.Framework
             Assert.That(actual, Is.Not.AssignableFrom(typeof(T)) ,null, null);
         }
 #endif
+#endif
 
         #endregion
 
         #region IsInstanceOf
 
+#if !NUNITLITE
         /// <summary>
         /// Asserts that an object is an instance of a given type.
         /// </summary>
@@ -1534,11 +1563,13 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.InstanceOf(expected) ,null, null);
         }
+#endif
 
         #endregion
 
         #region IsInstanceOf<T>
 
+#if !NUNITLITE
 #if NET_2_0
         /// <summary>
         /// Asserts that an object is an instance of a given type.
@@ -1571,11 +1602,13 @@ namespace NUnit.Framework
             Assert.That(actual, Is.InstanceOf(typeof(T)) ,null, null);
         }
 #endif
+#endif
 
         #endregion
 
         #region IsNotInstanceOf
 
+#if !NUNITLITE
         /// <summary>
         /// Asserts that an object is not an instance of a given type.
         /// </summary>
@@ -1640,11 +1673,13 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.Not.InstanceOf(expected) ,null, null);
         }
+#endif
 
         #endregion
 
         #region IsNotInstanceOf<T>
 
+#if !NUNITLITE
 #if NET_2_0
         /// <summary>
         /// Asserts that an object is not an instance of a given type.
@@ -1676,6 +1711,7 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.Not.InstanceOf(typeof(T)) ,null, null);
         }
+#endif
 #endif
 
         #endregion
@@ -2372,6 +2408,7 @@ namespace NUnit.Framework
 
         #region Greater
 
+#if !NUNITLITE
         /// <summary>
         /// Verifies that the first value is greater than the second
         /// value. If it is not, then an
@@ -2673,11 +2710,13 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.GreaterThan(arg2) ,null, null);
         }
+#endif
 
         #endregion
 
         #region Less
 
+#if !NUNITLITE
         /// <summary>
         /// Verifies that the first value is less than the second
         /// value. If it is not, then an
@@ -2979,11 +3018,13 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.LessThan(arg2) ,null, null);
         }
+#endif
 
         #endregion
 
         #region GreaterOrEqual
 
+#if !NUNITLITE
         /// <summary>
         /// Verifies that the first value is greater than or equal tothe second
         /// value. If it is not, then an
@@ -3285,11 +3326,13 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.GreaterThanOrEqualTo(arg2) ,null, null);
         }
+#endif
 
         #endregion
 
         #region LessOrEqual
 
+#if !NUNITLITE
         /// <summary>
         /// Verifies that the first value is less than or equal to the second
         /// value. If it is not, then an
@@ -3591,11 +3634,13 @@ namespace NUnit.Framework
         {
             Assert.That(arg1, Is.LessThanOrEqualTo(arg2) ,null, null);
         }
+#endif
 
         #endregion
 
         #region Contains
 
+#if !NUNITLITE
         /// <summary>
         /// Asserts that an object is contained in a list.
         /// </summary>
@@ -3626,6 +3671,7 @@ namespace NUnit.Framework
         {
             Assert.That(actual, new CollectionContainsConstraint(expected) ,null, null);
         }
+#endif
 
         #endregion
 
