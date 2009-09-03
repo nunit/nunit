@@ -176,6 +176,7 @@ namespace NUnit.Framework.Constraints
 
         #region InnerException
 
+#if !NUNITLITE
         /// <summary>
         /// Returns a new ConstraintExpression, which will apply the following
         /// constraint to the InnerException property of the object being tested.
@@ -184,6 +185,7 @@ namespace NUnit.Framework.Constraints
         {
             get { return Property("InnerException"); }
         }
+#endif
 
         #endregion
 
@@ -225,6 +227,7 @@ namespace NUnit.Framework.Constraints
 
         #region Matches
 
+#if !NUNITLITE
         /// <summary>
         /// Returns the constraint provided as an argument - used to allow custom
         /// custom constraints to easily participate in the syntax.
@@ -243,6 +246,7 @@ namespace NUnit.Framework.Constraints
         {
             return this.Append(new PredicateConstraint<T>(predicate));
         }
+#endif
 #endif
 
         #endregion
@@ -322,7 +326,7 @@ namespace NUnit.Framework.Constraints
 
         #region BinarySerializable
 
-#if !NETCF
+#if !NUNITLITE
         /// <summary>
         /// Returns a constraint that tests whether an object graph is serializable in binary format.
         /// </summary>
@@ -336,7 +340,7 @@ namespace NUnit.Framework.Constraints
 
         #region XmlSerializable
 
-#if !NETCF_1_0
+#if !NUNITLITE
         /// <summary>
         /// Returns a constraint that tests whether an object graph is serializable in xml format.
         /// </summary>
@@ -730,6 +734,7 @@ namespace NUnit.Framework.Constraints
 
         #region SamePath
 
+#if !NUNITLITE
         /// <summary>
         /// Returns a constraint that tests whether the path provided 
         /// is the same as an expected path after canonicalization.
@@ -738,11 +743,13 @@ namespace NUnit.Framework.Constraints
         {
             return (SamePathConstraint)this.Append(new SamePathConstraint(expected));
         }
+#endif
 
         #endregion
 
         #region SamePathOrUnder
 
+#if !NUNITLITE
         /// <summary>
         /// Returns a constraint that tests whether the path provided 
         /// is the same path or under an expected path after canonicalization.
@@ -751,11 +758,13 @@ namespace NUnit.Framework.Constraints
         {
             return (SamePathOrUnderConstraint)this.Append(new SamePathOrUnderConstraint(expected));
         }
+#endif
 
         #endregion
 
         #region InRange
 
+#if !NUNITLITE
         /// <summary>
         /// Returns a constraint that tests whether the actual value falls 
         /// within a specified range.
@@ -764,6 +773,7 @@ namespace NUnit.Framework.Constraints
         {
             return (RangeConstraint)this.Append(new RangeConstraint(from, to));
         }
+#endif
 
         #endregion
 

@@ -159,6 +159,7 @@ namespace NUnit.Framework.Constraints
 
         #region InnerException
 
+#if !NUNITLITE
         /// <summary>
         /// Returns a new ConstraintExpression, which will apply the following
         /// constraint to the InnerException property of the object being tested.
@@ -167,6 +168,7 @@ namespace NUnit.Framework.Constraints
         {
             get { return Has.InnerException; }
         }
+#endif
 
         #endregion
 
@@ -269,7 +271,7 @@ namespace NUnit.Framework.Constraints
 
         #region BinarySerializable
 
-#if !NETCF
+#if !NUNITLITE
         /// <summary>
         /// Returns a constraint that tests whether an object graph is serializable in binary format.
         /// </summary>
@@ -283,7 +285,7 @@ namespace NUnit.Framework.Constraints
 
         #region XmlSerializable
 
-#if !NETCF_1_0
+#if !NUNITLITE
         /// <summary>
         /// Returns a constraint that tests whether an object graph is serializable in xml format.
         /// </summary>
@@ -716,6 +718,7 @@ namespace NUnit.Framework.Constraints
 
         #region DoesNotMatch
 
+#if !NUNITLITE
         /// <summary>
         /// Returns a constraint that fails if the actual
         /// value matches the pattern supplied as an argument.
@@ -724,11 +727,13 @@ namespace NUnit.Framework.Constraints
         {
             return new ConstraintExpression().Not.Matches(pattern);
         }
+#endif
 
         #endregion
 
         #region SamePath
 
+#if !NUNITLITE
         /// <summary>
         /// Returns a constraint that tests whether the path provided 
         /// is the same as an expected path after canonicalization.
@@ -737,11 +742,13 @@ namespace NUnit.Framework.Constraints
         {
             return new SamePathConstraint(expected);
         }
+#endif
 
         #endregion
 
         #region SamePathOrUnder
 
+#if !NUNITLITE
         /// <summary>
         /// Returns a constraint that tests whether the path provided 
         /// is the same path or under an expected path after canonicalization.
@@ -750,11 +757,13 @@ namespace NUnit.Framework.Constraints
         {
             return new SamePathOrUnderConstraint(expected);
         }
+#endif
 
         #endregion
 
         #region InRange
 
+#if !NUNITLITE
         /// <summary>
         /// Returns a constraint that tests whether the actual value falls 
         /// within a specified range.
@@ -763,6 +772,7 @@ namespace NUnit.Framework.Constraints
         {
             return new RangeConstraint(from, to);
         }
+#endif
 
         #endregion
 
