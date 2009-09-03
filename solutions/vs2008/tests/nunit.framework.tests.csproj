@@ -92,6 +92,9 @@
     <Compile Include="..\..\..\src\tests\Framework\Constraints\BasicConstraintTests.cs">
       <Link>Framework\Constraints\BasicConstraintTests.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\tests\Framework\Constraints\BinarySerializableTest.cs">
+      <Link>Framework\Constraints\BinarySerializableTest.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\tests\Framework\Constraints\CollectionConstraintTests.cs">
       <Link>Framework\Constraints\CollectionConstraintTests.cs</Link>
     </Compile>
@@ -133,9 +136,6 @@
     </Compile>
     <Compile Include="..\..\..\src\tests\Framework\Constraints\SameAsTest.cs">
       <Link>Framework\Constraints\SameAsTest.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\tests\Framework\Constraints\SerializableConstraintTest.cs">
-      <Link>Framework\Constraints\SerializableConstraintTest.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\tests\Framework\Constraints\StringConstraintTests.cs">
       <Link>Framework\Constraints\StringConstraintTests.cs</Link>
@@ -262,6 +262,9 @@
     </Compile>
     <Compile Include="..\..\..\src\tests\Framework\ValuesAttributeTests.cs">
       <Link>Framework\ValuesAttributeTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\Framework\Constraints\XmlSeriazliableTest.cs">
+      <Link>Framework\Constraints\XmlSeriazliableTest.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup>

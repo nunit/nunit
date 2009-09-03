@@ -171,9 +171,6 @@
     <Compile Include="..\..\..\src\framework\Framework\Constraints\SameAsConstraint.cs">
       <Link>Framework\Constraints\SameAsConstraint.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Framework\Constraints\SerializableConstraints.cs">
-      <Link>Framework\Constraints\SerializableConstraints.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\src\framework\Framework\Constraints\StringConstraints.cs">
       <Link>Framework\Constraints\StringConstraints.cs</Link>
     </Compile>
@@ -185,6 +182,9 @@
     </Compile>
     <Compile Include="..\..\..\src\framework\Framework\Constraints\TypeConstraints.cs">
       <Link>Framework\Constraints\TypeConstraints.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Framework\Constraints\XmlSerializableConstraint.cs">
+      <Link>Framework\Constraints\XmlSerializableConstraint.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Framework\DatapointAttributes.cs">
       <Link>Framework\DatapointAttributes.cs</Link>
@@ -332,6 +332,9 @@
     </Compile>
     <Compile Include="..\..\..\src\framework\Framework\ValueSourceAttribute.cs">
       <Link>Framework\ValueSourceAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Framework\Constraints\BinarySerializableConstraint.cs">
+      <Link>Framework\Constraints\BinarySerializableConstraint.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup>
