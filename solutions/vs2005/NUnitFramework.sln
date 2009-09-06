@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunitlite.tests", "nunitlit
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunitlite_CF", "nunitlite_CF\nunitlite_CF.csproj", "{00A9536F-1A68-47B9-ADC5-A1224DFEA9AF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunitlite_CF.tests", "nunitlite_CF.tests\nunitlite_CF.tests.csproj", "{7291E7BB-EB32-4B5E-BB6E-25C7CC978D8B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +39,12 @@ Global
 		{00A9536F-1A68-47B9-ADC5-A1224DFEA9AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{00A9536F-1A68-47B9-ADC5-A1224DFEA9AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{00A9536F-1A68-47B9-ADC5-A1224DFEA9AF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7291E7BB-EB32-4B5E-BB6E-25C7CC978D8B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7291E7BB-EB32-4B5E-BB6E-25C7CC978D8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7291E7BB-EB32-4B5E-BB6E-25C7CC978D8B}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{7291E7BB-EB32-4B5E-BB6E-25C7CC978D8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7291E7BB-EB32-4B5E-BB6E-25C7CC978D8B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7291E7BB-EB32-4B5E-BB6E-25C7CC978D8B}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
