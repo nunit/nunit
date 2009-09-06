@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunitlite.tests", "nunitlit
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NUnitLiteTests", "NUnitLiteTests\NUnitLiteTests.csproj", "{F57C72F6-080C-45ED-813A-92158FC09221}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunitlite_CF", "nunitlite_CF\nunitlite_CF.csproj", "{C430888A-2ED0-498F-938E-9D37E6571CE2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +39,10 @@ Global
 		{F57C72F6-080C-45ED-813A-92158FC09221}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F57C72F6-080C-45ED-813A-92158FC09221}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F57C72F6-080C-45ED-813A-92158FC09221}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C430888A-2ED0-498F-938E-9D37E6571CE2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C430888A-2ED0-498F-938E-9D37E6571CE2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C430888A-2ED0-498F-938E-9D37E6571CE2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C430888A-2ED0-498F-938E-9D37E6571CE2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

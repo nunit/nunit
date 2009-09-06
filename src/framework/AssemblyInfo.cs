@@ -32,5 +32,5 @@ using System.Reflection;
 
 // We sign this way in order to compile on .NET 1.x
 [assembly: AssemblyDelaySign(false)]
-[assembly: AssemblyKeyFile("../../nunit.snk")]
+[assembly: AssemblyKeyFile("../../../nunit.snk")]
 [assembly: AssemblyKeyName("")]
