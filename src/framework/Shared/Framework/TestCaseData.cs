@@ -37,10 +37,7 @@ namespace NUnit.Framework
     /// Note: Instance modifiers are getters that return
     /// the same instance after modifying it's state.
     /// </summary>
-    public class TestCaseData
-#if !NUNITLITE
-        : ITestCaseData
-#endif
+    public class TestCaseData : ITestCaseData
     {
         #region Constants
         //private static readonly string DESCRIPTION = "_DESCRIPTION";

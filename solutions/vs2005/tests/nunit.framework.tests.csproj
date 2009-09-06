@@ -42,12 +42,6 @@
     <Compile Include="..\..\..\src\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Framework\Constraints\BinarySerializableConstraint.cs">
-      <Link>Framework\Constraints\BinarySerializableConstraint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Framework\Constraints\XmlSerializableConstraint.cs">
-      <Link>Framework\Constraints\XmlSerializableConstraint.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\src\tests\Framework\AlwaysEqualComparer.cs">
       <Link>Framework\AlwaysEqualComparer.cs</Link>
     </Compile>
