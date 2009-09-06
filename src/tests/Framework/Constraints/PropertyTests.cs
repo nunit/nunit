@@ -21,11 +21,17 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+// TODO: Remove conditional code
 using System;
 
 namespace NUnit.Framework.Constraints.Tests
 {
-    public class PropertyExistsTest : ConstraintTestBaseWithExceptionTests
+    public class PropertyExistsTest
+#if NUNITLITE
+ : ConstraintTestBase
+#else
+        : ConstraintTestBaseWithExceptionTests
+#endif
     {
         [SetUp]
         public void SetUp()
@@ -37,17 +43,24 @@ namespace NUnit.Framework.Constraints.Tests
 
         static object[] SuccessData = new object[] { new int[0], "hello", typeof(Array) };
 
-        static object[] FailureData = new object[] { 42, new System.Collections.ArrayList(), typeof(Int32) };
-
-        static string[] ActualValues = new string[] { "<System.Int32>", "<System.Collections.ArrayList>", "<System.Int32>" };
-
+        static object[] FailureData = new object[] { 
+            new TestCaseData( 42, "<System.Int32>" ),
+            new TestCaseData( new System.Collections.ArrayList(), "<System.Collections.ArrayList>" ),
+            new TestCaseData( typeof(Int32), "<System.Int32>" ) };
+#if !NUNITLITE
         static object[] InvalidData = new TestCaseData[] 
         { 
             new TestCaseData(null).Throws(typeof(ArgumentNullException))
         };
+#endif
     }
 
-    public class PropertyTest : ConstraintTestBaseWithExceptionTests
+    public class PropertyTest
+#if NUNITLITE
+        : ConstraintTestBase
+#else
+        : ConstraintTestBaseWithExceptionTests
+#endif
     {
         [SetUp]
         public void SetUp()
@@ -59,15 +72,16 @@ namespace NUnit.Framework.Constraints.Tests
 
         static object[] SuccessData = new object[] { new int[5], "hello" };
 
-        static object[] FailureData = new object[] { new int[3], "goodbye" };
-
-        static string[] ActualValues = new string[] { "3", "7" };
-
+        static object[] FailureData = new object[] { 
+            new TestCaseData( new int[3], "3" ),
+            new TestCaseData( "goodbye", "7" ) };
+#if !NUNITLITE
         static object[] InvalidData = new object[] 
         { 
             new TestCaseData(null).Throws(typeof(ArgumentNullException)),
             new TestCaseData(42).Throws(typeof(ArgumentException)), 
             new TestCaseData(new System.Collections.ArrayList()).Throws(typeof(ArgumentException))
         };
+#endif
     }
 }

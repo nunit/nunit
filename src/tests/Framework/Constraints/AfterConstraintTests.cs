@@ -43,8 +43,10 @@ namespace NUnit.Framework.Constraints.Tests
 		}
 
         object[] SuccessData = new object[] { true };
-        object[] FailureData = new object[] { false, 0, null };
-		string[] ActualValues = new string[] { "False", "0", "null" };
+        object[] FailureData = new object[] { 
+            new TestCaseData( false, "False" ),
+            new TestCaseData( 0, "0" ),
+            new TestCaseData( null, "null" ) };
 
 		object[] InvalidData = new object[] { InvalidDelegate };
 

@@ -50,15 +50,9 @@ namespace NUnit.Framework.Constraints.Tests
             };
         object[] FailureData = new object[] 
             { 
-                123,
-                @"C:\folder2\file.tmp",
-                @"C:\folder1\.\folder2\..\file.temp"
-            };
-        string[] ActualValues = new string[] 
-            { 
-                "123",
-                "\"C:\\folder2\\file.tmp\"",
-                "\"C:\\folder1\\.\\folder2\\..\\file.temp\""
+                new TestCaseData( 123, "123" ),
+                new TestCaseData( @"C:\folder2\file.tmp", "\"C:\\folder2\\file.tmp\"" ),
+                new TestCaseData( @"C:\folder1\.\folder2\..\file.temp", "\"C:\\folder1\\.\\folder2\\..\\file.temp\"" )
             };
     }
 
@@ -83,19 +77,11 @@ namespace NUnit.Framework.Constraints.Tests
             };
         object[] FailureData = new object[] 
             { 
-                123,
-                @"/folder2/file.tmp",
-                @"/folder1/./folder2/../file.temp",
-                @"/Folder1/File.TMP",
-                @"/FOLDER1/./folder2/../File.TMP",
-            };
-        string[] ActualValues = new string[] 
-            { 
-                "123",
-                "\"/folder2/file.tmp\"",
-                "\"/folder1/./folder2/../file.temp\"",
-                "\"/Folder1/File.TMP\"",
-                "\"/FOLDER1/./folder2/../File.TMP\"",
+                new TestCaseData( 123, "123" ),
+                new TestCaseData( @"/folder2/file.tmp", "\"/folder2/file.tmp\"" ),
+                new TestCaseData( @"/folder1/./folder2/../file.temp", "\"/folder1/./folder2/../file.temp\"" ),
+                new TestCaseData( @"/Folder1/File.TMP", "\"/Folder1/File.TMP\"" ),
+                new TestCaseData( @"/FOLDER1/./folder2/../File.TMP", "\"/FOLDER1/./folder2/../File.TMP\"" )
             };
     }
 
@@ -126,15 +112,9 @@ namespace NUnit.Framework.Constraints.Tests
             };
         object[] FailureData = new object[]
             {
-                123,
-                @"C:\folder1\folder3",
-                @"C:\folder1\.\folder2\..\file.temp"
-            };
-        string[] ActualValues = new string[]
-            {
-                "123",
-                "\"C:\\folder1\\folder3\"",
-                "\"C:\\folder1\\.\\folder2\\..\\file.temp\""
+                new TestCaseData( 123, "123" ),
+                new TestCaseData( @"C:\folder1\folder3", "\"C:\\folder1\\folder3\"" ),
+                new TestCaseData( @"C:\folder1\.\folder2\..\file.temp", "\"C:\\folder1\\.\\folder2\\..\\file.temp\"" )
             };
     }
 
@@ -162,23 +142,13 @@ namespace NUnit.Framework.Constraints.Tests
             };
         object[] FailureData = new object[]
             {
-                123,
-                "/Folder1/Folder2",
-                "/FOLDER1/./junk/../Folder2",
-                "/FOLDER1/./junk/../Folder2/temp/../Folder3",
-                "/folder1/folder3",
-                "/folder1/./folder2/../folder3",
-				"/folder1"
-            };
-        string[] ActualValues = new string[]
-            {
-                "123",
-                "\"/Folder1/Folder2\"",
-                "\"/FOLDER1/./junk/../Folder2\"",
-                "\"/FOLDER1/./junk/../Folder2/temp/../Folder3\"",
-                "\"/folder1/folder3\"",
-                "\"/folder1/./folder2/../folder3\"",
-				"\"/folder1\""
+                new TestCaseData( 123, "123" ),
+                new TestCaseData( "/Folder1/Folder2", "\"/Folder1/Folder2\"" ),
+                new TestCaseData( "/FOLDER1/./junk/../Folder2", "\"/FOLDER1/./junk/../Folder2\"" ),
+                new TestCaseData( "/FOLDER1/./junk/../Folder2/temp/../Folder3", "\"/FOLDER1/./junk/../Folder2/temp/../Folder3\"" ),
+                new TestCaseData( "/folder1/folder3", "\"/folder1/folder3\"" ),
+                new TestCaseData( "/folder1/./folder2/../folder3", "\"/folder1/./folder2/../folder3\"" ),
+				new TestCaseData( "/folder1", "\"/folder1\"" )
             };
     }
 }

@@ -45,14 +45,14 @@ namespace NUnit.Framework
         object[] Arguments { get; }
 
         /// <summary>
-        /// Gets the expected result
-        /// </summary>
-        object Result { get; }
-
-        /// <summary>
         ///  Gets the expected exception Type
         /// </summary>
         Type ExpectedException { get; }
+
+        /// <summary>
+        /// Gets the expected result
+        /// </summary>
+        object Result { get; }
 
         /// <summary>
         /// Gets the FullName of the expected exception
@@ -80,5 +80,5 @@ namespace NUnit.Framework
         /// </summary>
         /// <value>The ignore reason.</value>
         string IgnoreReason { get; }
-    }
+        }
 }

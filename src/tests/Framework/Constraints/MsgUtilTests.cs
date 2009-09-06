@@ -21,6 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+// TODO: Remove NUNITLITE conditions
+
 namespace NUnit.Framework.Constraints.Tests
 {
 	/// <summary>
@@ -52,17 +54,19 @@ namespace NUnit.Framework.Constraints.Tests
         [TestCase("\b", "\\b")]
         [TestCase("\f", "\\f")]
         [TestCase("\v", "\\v")]
-        // New Line
+#if !NUNITLITE
         [TestCase("\x0085", "\\x0085", Description = "Next line character")]
         [TestCase("\x2028", "\\x2028", Description = "Line separator character")]
         [TestCase("\x2029", "\\x2029", Description = "Paragraph separator character")]
+#endif
         public void EscapeControlCharsTest(string input, string expected)
 		{
-            Assert.AreEqual( expected, MsgUtils.EscapeControlChars(input) );
+            Assert.That( MsgUtils.EscapeControlChars(input), Is.EqualTo(expected) );
 		}
 
         private const string s52 = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
+#if !NUNITLITE
         [TestCase(s52, 52, 0, s52, TestName="NoClippingNeeded")]
         [TestCase(s52, 29, 0, "abcdefghijklmnopqrstuvwxyz...", TestName="ClipAtEnd")]
         [TestCase(s52, 29, 26, "...ABCDEFGHIJKLMNOPQRSTUVWXYZ", TestName="ClipAtStart")]
@@ -71,8 +75,9 @@ namespace NUnit.Framework.Constraints.Tests
         {
             System.Console.WriteLine("input=  \"{0}\"", input);
             System.Console.WriteLine("result= \"{0}\"", result);
-            Assert.AreEqual(result, MsgUtils.ClipString(input, max, start));
+            Assert.That(MsgUtils.ClipString(input, max, start), Is.EqualTo(result));
         }
+#endif
 
         //[TestCase('\0')]
         //[TestCase('\r')]
@@ -86,14 +91,14 @@ namespace NUnit.Framework.Constraints.Tests
             string eClip = s52;
             string aClip = "abcde";
             MsgUtils.ClipExpectedAndActual(ref eClip, ref aClip, 52, 5);
-            Assert.AreEqual(s52, eClip);
-            Assert.AreEqual("abcde", aClip);
+            Assert.That(eClip, Is.EqualTo(s52));
+            Assert.That(aClip, Is.EqualTo("abcde"));
 
             eClip = s52;
             aClip = "abcdefghijklmno?qrstuvwxyz";
             MsgUtils.ClipExpectedAndActual(ref eClip, ref aClip, 52, 15);
-            Assert.AreEqual(s52, eClip);
-            Assert.AreEqual("abcdefghijklmno?qrstuvwxyz", aClip);
+            Assert.That(eClip, Is.EqualTo(s52));
+            Assert.That(aClip, Is.EqualTo("abcdefghijklmno?qrstuvwxyz"));
         }
 
         [Test]
@@ -102,7 +107,7 @@ namespace NUnit.Framework.Constraints.Tests
             string s1 = s52;
             string s2 = s52.Replace('Z', '?');
             MsgUtils.ClipExpectedAndActual(ref s1, ref s2, 29, 51);
-            Assert.AreEqual("...ABCDEFGHIJKLMNOPQRSTUVWXYZ", s1);
+            Assert.That(s1, Is.EqualTo("...ABCDEFGHIJKLMNOPQRSTUVWXYZ"));
         }
 
         [Test]
@@ -111,14 +116,14 @@ namespace NUnit.Framework.Constraints.Tests
             string s1 = s52;
             string s2 = "abcdefghij";
             MsgUtils.ClipExpectedAndActual(ref s1, ref s2, 29, 10);
-            Assert.AreEqual("abcdefghijklmnopqrstuvwxyz...", s1);
-            Assert.AreEqual("abcdefghij", s2);
+            Assert.That(s1, Is.EqualTo("abcdefghijklmnopqrstuvwxyz..."));
+            Assert.That(s2, Is.EqualTo("abcdefghij"));
 
             s1 = s52;
             s2 = "abcdefghijklmno?qrstuvwxyz";
             MsgUtils.ClipExpectedAndActual(ref s1, ref s2, 25, 15);
-            Assert.AreEqual("...efghijklmnopqrstuvw...", s1);
-            Assert.AreEqual("...efghijklmno?qrstuvwxyz", s2);
+            Assert.That(s1, Is.EqualTo("...efghijklmnopqrstuvw..."));
+            Assert.That(s2, Is.EqualTo("...efghijklmno?qrstuvwxyz"));
         }
 	}
 }

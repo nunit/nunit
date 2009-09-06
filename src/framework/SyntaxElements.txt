@@ -214,7 +214,6 @@ Gen: ConstraintExpression.Attribute<T>()=>Attribute(typeof(T))
 /// Creates a constraint specifying an expected exception
 /// </summary>
 Type: ResolvableConstraintExpression
-Cond: !NUNITLITE
 Gen: Throws.Exception=>new ConstraintExpression().Append(new ThrowsOperator())
 %
 /// <summary>
@@ -249,14 +248,12 @@ Gen: Throws.InvalidOperationException=>TypeOf(typeof(System.InvalidOperationExce
 /// Creates a constraint specifying that no exception is thrown
 /// </summary>
 Type: ThrowsNothingConstraint
-Cond: !NUNITLITE
 Gen: Throws.Nothing=>new ThrowsNothingConstraint()
 %
 /// <summary>
 /// Creates a constraint specifying the exact type of exception expected
 /// </summary>
 Type: ExactTypeConstraint
-Cond: !NUNITLITE
 Gen: Throws.TypeOf(Type expectedType)=>Exception.TypeOf(expectedType)
 Gen: Throws.TypeOf<T>()=>TypeOf(typeof(T))
 %
@@ -264,7 +261,6 @@ Gen: Throws.TypeOf<T>()=>TypeOf(typeof(T))
 /// Creates a constraint specifying the type of exception expected
 /// </summary>
 Type: InstanceOfTypeConstraint
-Cond: !NUNITLITE
 Gen: Throws.InstanceOf(Type expectedType)=>Exception.InstanceOf(expectedType)
 Gen: Throws.InstanceOf<T>()=>InstanceOf(typeof(T))
 %
@@ -529,14 +525,12 @@ Gen3: Is.SamePathOrUnder(string expected)=>new SamePathOrUnderConstraint(expecte
 /// Returns a constraint that tests whether the actual value falls 
 /// within a specified range.
 /// </summary>
-Cond: !NUNITLITE
 Gen3: Is.InRange(IComparable from, IComparable to)=>new RangeConstraint(from, to)
 %
 /// <summary>
 /// Returns a constraint that tests whether the actual value falls 
 /// within a specified range.
 /// </summary>
-Cond: !NUNITLITE
 #Gen3: Is.InRange<T>(T from, T to) where T : IComparable=>new RangeConstraint<T>(from, to)
 %
 #

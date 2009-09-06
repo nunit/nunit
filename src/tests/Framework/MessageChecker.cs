@@ -43,7 +43,7 @@ namespace NUnit.Framework.Tests
 		public void HandleException( Exception ex )
 		{
 			if ( expectedMessage != null )
-				Assert.AreEqual( expectedMessage, ex.Message );
+				Assert.That( ex.Message, Is.EqualTo(expectedMessage) );
 		}
 	}
 }

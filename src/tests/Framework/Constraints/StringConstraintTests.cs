@@ -38,9 +38,12 @@ namespace NUnit.Framework.Constraints.Tests
 
         object[] SuccessData = new object[] { "hello", "hello there", "I said hello", "say hello to fred" };
         
-        object[] FailureData = new object[] { "goodbye", "HELLO", "What the hell?", string.Empty, null };
-
-        string[] ActualValues = new string[] { "\"goodbye\"", "\"HELLO\"", "\"What the hell?\"", "<string.Empty>", "null" }; 
+        object[] FailureData = new object[] { 
+            new TestCaseData( "goodbye", "\"goodbye\"" ), 
+            new TestCaseData( "HELLO", "\"HELLO\"" ),
+            new TestCaseData( "What the hell?", "\"What the hell?\"" ),
+            new TestCaseData( string.Empty, "<string.Empty>" ),
+            new TestCaseData( null, "null" ) };
 
         public void HandleException(Exception ex)
         {
@@ -63,9 +66,11 @@ namespace NUnit.Framework.Constraints.Tests
 
         object[] SuccessData = new object[] { "Hello", "HellO there", "I said HELLO", "say hello to fred" };
         
-        object[] FailureData = new object[] { "goodbye", "What the hell?", string.Empty, null };
-
-        string[] ActualValues = new string[] { "\"goodbye\"", "\"What the hell?\"", "<string.Empty>", "null" };
+        object[] FailureData = new object[] {
+            new TestCaseData( "goodbye", "\"goodbye\"" ), 
+            new TestCaseData( "What the hell?", "\"What the hell?\"" ),
+            new TestCaseData( string.Empty, "<string.Empty>" ),
+            new TestCaseData( null, "null" ) };
     }
 
     [TestFixture]
@@ -81,9 +86,13 @@ namespace NUnit.Framework.Constraints.Tests
 
         object[] SuccessData = new object[] { "hello", "hello there" };
 
-        object[] FailureData = new object[] { "goodbye", "HELLO THERE", "I said hello", "say hello to fred", string.Empty, null };
-
-        string[] ActualValues = new string[] { "\"goodbye\"", "\"HELLO THERE\"", "\"I said hello\"", "\"say hello to fred\"", "<string.Empty>", "null" };
+        object[] FailureData = new object[] {
+            new TestCaseData( "goodbye", "\"goodbye\"" ), 
+            new TestCaseData( "HELLO THERE", "\"HELLO THERE\"" ),
+            new TestCaseData( "I said hello", "\"I said hello\"" ),
+            new TestCaseData( "say hello to Fred", "\"say hello to Fred\"" ),
+            new TestCaseData( string.Empty, "<string.Empty>" ),
+            new TestCaseData( null , "null" ) };
     }
 
     [TestFixture]
@@ -99,9 +108,13 @@ namespace NUnit.Framework.Constraints.Tests
 
         object[] SuccessData = new object[] { "Hello", "HELLO there" };
             
-        object[] FailureData = new object[] { "goodbye", "What the hell?", "I said hello", "say Hello to fred", string.Empty, null };
-
-        string[] ActualValues = new string[] { "\"goodbye\"", "\"What the hell?\"", "\"I said hello\"", "\"say Hello to fred\"", "<string.Empty>", "null" };
+        object[] FailureData = new object[] {
+            new TestCaseData( "goodbye", "\"goodbye\"" ), 
+            new TestCaseData( "What the hell?", "\"What the hell?\"" ),
+            new TestCaseData( "I said hello", "\"I said hello\"" ),
+            new TestCaseData( "say hello to Fred", "\"say hello to Fred\"" ),
+            new TestCaseData( string.Empty, "<string.Empty>" ),
+            new TestCaseData( null , "null" ) };
     }
 
     [TestFixture]
@@ -117,9 +130,12 @@ namespace NUnit.Framework.Constraints.Tests
 
         object[] SuccessData = new object[] { "hello", "I said hello" };
             
-        object[] FailureData = new object[] { "goodbye", "What the hell?", "hello there", "say hello to fred", string.Empty, null };
-
-        string[] ActualValues = new string[] { "\"goodbye\"", "\"What the hell?\"", "\"hello there\"", "\"say hello to fred\"", "<string.Empty>", "null" };
+        object[] FailureData = new object[] {
+            new TestCaseData( "goodbye", "\"goodbye\"" ), 
+            new TestCaseData( "hello there", "\"hello there\"" ),
+            new TestCaseData( "say hello to Fred", "\"say hello to Fred\"" ),
+            new TestCaseData( string.Empty, "<string.Empty>" ),
+            new TestCaseData( null , "null" ) };
     }
 
     [TestFixture]
@@ -135,9 +151,13 @@ namespace NUnit.Framework.Constraints.Tests
 
         object[] SuccessData = new object[] { "HELLO", "I said Hello" };
             
-        object[] FailureData = new object[] { "goodbye", "What the hell?", "hello there", "say hello to fred", string.Empty, null };
-
-        string[] ActualValues = new string[] { "\"goodbye\"", "\"What the hell?\"", "\"hello there\"", "\"say hello to fred\"", "<string.Empty>", "null" };
+        object[] FailureData = new object[] {
+            new TestCaseData( "goodbye", "\"goodbye\"" ), 
+            new TestCaseData( "What the hell?", "\"What the hell?\"" ),
+            new TestCaseData( "hello there", "\"hello there\"" ),
+            new TestCaseData( "say hello to Fred", "\"say hello to Fred\"" ),
+            new TestCaseData( string.Empty, "<string.Empty>" ),
+            new TestCaseData( null , "null" ) };
     }
 
     //[TestFixture]
@@ -153,6 +173,7 @@ namespace NUnit.Framework.Constraints.Tests
     //    object[] SuccessData = new object[] { "hello world!", "Hello World!", "HELLO world!" };
             
     //    object[] FailureData = new object[] { "goodbye", "Hello Friends!", string.Empty, null };
+
 
     //    string[] ActualValues = new string[] { "\"goodbye\"", "\"Hello Friends!\"", "<string.Empty>", "null" };
     //}

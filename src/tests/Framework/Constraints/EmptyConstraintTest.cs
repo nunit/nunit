@@ -49,14 +49,8 @@ namespace NUnit.Framework.Constraints.Tests
 
         static object[] FailureData = new object[]
         {
-            "Hello",
-            new object[] { 1, 2, 3 }
-        };
-
-        static string[] ActualValues = new string[]
-        {
-            "\"Hello\"",
-            "< 1, 2, 3 >"
+            new TestCaseData( "Hello", "\"Hello\"" ),
+            new TestCaseData( new object[] { 1, 2, 3 }, "< 1, 2, 3 >" )
         };
 
         static object[] InvalidData = new object[]
@@ -85,12 +79,7 @@ namespace NUnit.Framework.Constraints.Tests
 
         static object[] FailureData = new object[]
         {
-            "Hello"
-        };
-
-        static string[] ActualValues = new string[]
-        {
-            "\"Hello\""
+            new TestCaseData( "Hello", "\"Hello\"" )
         };
 
         static object[] InvalidData = new object[]

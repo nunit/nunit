@@ -764,7 +764,6 @@ namespace NUnit.Framework.Constraints
 
         #region InRange
 
-#if !NUNITLITE
         /// <summary>
         /// Returns a constraint that tests whether the actual value falls 
         /// within a specified range.
@@ -773,7 +772,6 @@ namespace NUnit.Framework.Constraints
         {
             return (RangeConstraint)this.Append(new RangeConstraint(from, to));
         }
-#endif
 
         #endregion
 

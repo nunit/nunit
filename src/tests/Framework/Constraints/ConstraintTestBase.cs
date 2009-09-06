@@ -36,13 +36,13 @@ namespace NUnit.Framework.Constraints.Tests
         {
             TextMessageWriter writer = new TextMessageWriter();
             theConstraint.WriteDescriptionTo(writer);
-            Assert.AreEqual(expectedDescription, writer.ToString());
+            Assert.That(expectedDescription == writer.ToString());
         }
 
         [Test]
         public void ProvidesProperStringRepresentation()
         {
-            Assert.AreEqual(stringRepresentation, theConstraint.ToString());
+            Assert.That(stringRepresentation == theConstraint.ToString());
         }
     }
 
@@ -55,23 +55,15 @@ namespace NUnit.Framework.Constraints.Tests
         }
 
         [Test, TestCaseSource("FailureData")]
-        public void FailsWithBadValues(object badValue)
+        public void FailsWithBadValues(object badValue, string message)
         {
             Assert.IsFalse(theConstraint.Matches(badValue));
-        }
 
-        [Test, Sequential]
-        public void ProvidesProperFailureMessage(
-            [ValueSource("FailureData")] object badValue,
-            [ValueSource("ActualValues")] string message)
-        {
-            theConstraint.Matches(badValue);
             TextMessageWriter writer = new TextMessageWriter();
             theConstraint.WriteMessageTo(writer);
-            Assert.AreEqual(
+            Assert.That( writer.ToString(), Is.EqualTo(
                 TextMessageWriter.Pfx_Expected + expectedDescription + Environment.NewLine +
-                TextMessageWriter.Pfx_Actual + message + Environment.NewLine,
-                writer.ToString());
+                TextMessageWriter.Pfx_Actual + message + Environment.NewLine ));
         }
     }
 

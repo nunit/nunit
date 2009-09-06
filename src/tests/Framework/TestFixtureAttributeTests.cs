@@ -54,7 +54,7 @@ namespace NUnit.Framework.Tests
         }
 
 #if NET_2_0
-        [Test, Category("Generics")]
+        [Test]
         public void ConstructWithJustTypeArgs()
         {
             TestFixtureAttribute attr = new TestFixtureAttribute(typeArgs);
@@ -62,7 +62,7 @@ namespace NUnit.Framework.Tests
             Assert.That(attr.TypeArgs, Is.EqualTo(typeArgs));
         }
 
-        [Test, Category("Generics")]
+        [Test]
         public void ConstructWithNoArgumentsAndSetTypeArgs()
         {
             TestFixtureAttribute attr = new TestFixtureAttribute();
@@ -71,7 +71,7 @@ namespace NUnit.Framework.Tests
             Assert.That(attr.TypeArgs, Is.EqualTo(typeArgs));
         }
 
-        [Test, Category("Generics")]
+        [Test]
         public void ConstructWithFixtureArgsAndSetTypeArgs()
         {
             TestFixtureAttribute attr = new TestFixtureAttribute(fixtureArgs);
@@ -80,7 +80,7 @@ namespace NUnit.Framework.Tests
             Assert.That(attr.TypeArgs, Is.EqualTo(typeArgs));
         }
 
-        [Test, Category("Generics")]
+        [Test]
         public void ConstructWithCombinedArgs()
         {
             TestFixtureAttribute attr = new TestFixtureAttribute(combinedArgs);
