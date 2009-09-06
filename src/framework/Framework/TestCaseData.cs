@@ -25,6 +25,7 @@ using System;
 using System.Collections;
 using System.Collections.Specialized;
 
+// TODO: Remove conditional code
 namespace NUnit.Framework
 {
     /// <summary>
@@ -36,7 +37,10 @@ namespace NUnit.Framework
     /// Note: Instance modifiers are getters that return
     /// the same instance after modifying it's state.
     /// </summary>
-    public class TestCaseData : ITestCaseData
+    public class TestCaseData
+#if !NUNITLITE
+        : ITestCaseData
+#endif
     {
         #region Constants
         //private static readonly string DESCRIPTION = "_DESCRIPTION";
@@ -50,6 +54,7 @@ namespace NUnit.Framework
         /// </summary>
         private object[] arguments;
 
+#if !NUNITLITE
         /// <summary>
         /// The expected result to be returned
         /// </summary>
@@ -90,7 +95,7 @@ namespace NUnit.Framework
         /// The reason for ignoring a test case
         /// </summary>
         string ignoreReason;
-
+#endif
         #endregion
 
         #region Constructors
@@ -146,6 +151,7 @@ namespace NUnit.Framework
             get { return arguments; }
         }
 
+#if !NUNITLITE
         /// <summary>
         /// Gets the expected result
         /// </summary>
@@ -203,8 +209,10 @@ namespace NUnit.Framework
         {
             get { return ignoreReason; }
         }
+#endif
         #endregion
 
+#if !NUNITLITE
         #region Additional Public Properties
         /// <summary>
         /// Gets a list of categories associated with this test.
@@ -361,5 +369,6 @@ namespace NUnit.Framework
             return this;
         }
         #endregion
+#endif
     }
 }

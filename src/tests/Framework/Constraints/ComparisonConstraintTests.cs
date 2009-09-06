@@ -118,9 +118,7 @@ namespace NUnit.Framework.Constraints.Tests
 
         object[] SuccessData = new object[] { 6, 5.001 };
 
-        object[] FailureData = new object[] { 4, 5 };
-
-        string[] ActualValues = new string[] { "4", "5" };
+        object[] FailureData = new object[] { new object[] { 4, "4" }, new object[] { 5, "5" } };
 
         object[] InvalidData = new object[] { null, "xxx" };
 
@@ -158,9 +156,7 @@ namespace NUnit.Framework.Constraints.Tests
 
         object[] SuccessData = new object[] { 6, 5 };
 
-        object[] FailureData = new object[] { 4 };
-
-        string[] ActualValues = new string[] { "4" };
+        object[] FailureData = new object[] { new object[] { 4, "4" } };
 
         object[] InvalidData = new object[] { null, "xxx" };
 
@@ -198,9 +194,7 @@ namespace NUnit.Framework.Constraints.Tests
 
         object[] SuccessData = new object[] { 4, 4.999 };
 
-        object[] FailureData = new object[] { 6, 5 };
-
-        string[] ActualValues = new string[] { "6", "5" };
+        object[] FailureData = new object[] { new object[] { 6, "6" }, new object[] { 5, "5" } };
 
         object[] InvalidData = new object[] { null, "xxx" };
 
@@ -238,9 +232,7 @@ namespace NUnit.Framework.Constraints.Tests
 
         object[] SuccessData = new object[] { 4, 5 };
 
-        object[] FailureData = new object[] { 6 };
-
-        string[] ActualValues = new string[] { "6" };
+        object[] FailureData = new object[] { new object[] { 6, "6" } };
 
         object[] InvalidData = new object[] { null, "xxx" };
 
@@ -280,9 +272,7 @@ namespace NUnit.Framework.Constraints.Tests
 
         object[] SuccessData = new object[] { 5, 23, 42 };
 
-        object[] FailureData = new object[] { 4, 43 };
-
-        string[] ActualValues = new string[] { "4", "43" };
+        object[] FailureData = new object[] { new object[] { 4, "4" },  new object[] { 43, "43" } };
 
         object[] InvalidData = new object[] { null, "xxx" };
 

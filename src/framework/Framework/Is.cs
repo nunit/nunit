@@ -506,7 +506,6 @@ namespace NUnit.Framework
 
         #region InRange
 
-#if !NUNITLITE
         /// <summary>
         /// Returns a constraint that tests whether the actual value falls 
         /// within a specified range.
@@ -515,7 +514,6 @@ namespace NUnit.Framework
         {
             return new RangeConstraint(from, to);
         }
-#endif
 
         #endregion
 

@@ -39,8 +39,9 @@ namespace NUnit.Framework.Constraints.Tests
 
         static object[] SuccessData = new object[] { obj1 };
 
-        static object[] FailureData = new object[] { obj2, 3, "Hello" };
-
-        static string[] ActualValues = new string[] { "<System.Object>", "3", "\"Hello\"" };
+        static object[] FailureData = new object[] { 
+            new TestCaseData( obj2, "<System.Object>" ),
+            new TestCaseData( 3, "3" ),
+            new TestCaseData( "Hello", "\"Hello\"" ) };
     }
 }

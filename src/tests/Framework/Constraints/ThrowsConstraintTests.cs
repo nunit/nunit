@@ -45,16 +45,9 @@ namespace NUnit.Framework.Constraints.Tests
 
         static object[] FailureData = new object[]
         {
-            new TestDelegate( TestDelegates.ThrowsApplicationException ),
-            new TestDelegate( TestDelegates.ThrowsNothing ),
-            new TestDelegate( TestDelegates.ThrowsSystemException )
-        };
-
-        static string[] ActualValues = new string[]
-        {
-            "<System.ApplicationException>",
-            "no exception thrown",
-            "<System.Exception>"
+            new TestCaseData( new TestDelegate( TestDelegates.ThrowsApplicationException ), "<System.ApplicationException>" ),
+            new TestCaseData( new TestDelegate( TestDelegates.ThrowsNothing ), "no exception thrown" ),
+            new TestCaseData( new TestDelegate( TestDelegates.ThrowsSystemException ), "<System.Exception>" )
         };
     }
 
@@ -78,16 +71,9 @@ namespace NUnit.Framework.Constraints.Tests
 
         static object[] FailureData = new object[]
         {
-            new TestDelegate( TestDelegates.ThrowsArgumentException ),
-            new TestDelegate( TestDelegates.ThrowsNothing ),
-            new TestDelegate( TestDelegates.ThrowsSystemException )
-        };
-
-        static string[] ActualValues = new string[]
-        {
-            "<System.ArgumentException>",
-            "no exception thrown",
-            "<System.Exception>"
+            new TestCaseData( new TestDelegate( TestDelegates.ThrowsArgumentException ), "<System.ArgumentException>" ),
+            new TestCaseData( new TestDelegate( TestDelegates.ThrowsNothing ), "no exception thrown" ),
+            new TestCaseData( new TestDelegate( TestDelegates.ThrowsSystemException ), "<System.Exception>" )
         };
     }
 
@@ -111,16 +97,9 @@ namespace NUnit.Framework.Constraints.Tests
 
         static object[] FailureData = new object[]
         {
-            new TestDelegate( TestDelegates.ThrowsApplicationException ),
-            new TestDelegate( TestDelegates.ThrowsNothing ),
-            new TestDelegate( TestDelegates.ThrowsSystemException )
-        };
-
-        static string[] ActualValues = new string[]
-        {
-            "<System.ApplicationException>",
-            "no exception thrown",
-            "<System.Exception>"
+            new TestCaseData( new TestDelegate( TestDelegates.ThrowsApplicationException ), "<System.ApplicationException>" ),
+            new TestCaseData( new TestDelegate( TestDelegates.ThrowsNothing ), "no exception thrown" ),
+            new TestCaseData( new TestDelegate( TestDelegates.ThrowsSystemException ), "<System.Exception>" )
         };
     }
 }

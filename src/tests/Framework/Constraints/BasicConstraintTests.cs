@@ -39,10 +39,8 @@ namespace NUnit.Framework.Constraints.Tests
         }
         
         object[] SuccessData = new object[] { null };
-        
-        object[] FailureData = new object[] { "hello" };
 
-        string[] ActualValues = new string[] { "\"hello\"" };
+        object[] FailureData = new object[] { new object[] { "hello", "\"hello\"" } };
     }
 
     [TestFixture]
@@ -58,9 +56,9 @@ namespace NUnit.Framework.Constraints.Tests
         
         object[] SuccessData = new object[] { true, 2+2==4 };
         
-        object[] FailureData = new object[] { null, "hello", false, 2+2==5 };
-
-        string[] ActualValues = new string[] { "null", "\"hello\"", "False", "False" };
+        object[] FailureData = new object[] { 
+            new object[] { null, "null" }, new object[] { "hello", "\"hello\"" },
+            new object[] { false, "False"}, new object[] { 2+2==5, "False" } };
     }
 
     [TestFixture]
@@ -76,9 +74,11 @@ namespace NUnit.Framework.Constraints.Tests
 
         object[] SuccessData = new object[] { false, 2 + 2 == 5 };
 
-        object[] FailureData = new object[] { null, "hello", true, 2+2==4 };
-
-        string[] ActualValues = new string[] { "null", "\"hello\"", "True", "True" };
+        object[] FailureData = new object[] { 
+            new TestCaseData( null, "null" ),
+            new TestCaseData( "hello", "\"hello\"" ),
+            new TestCaseData( true, "True" ),
+            new TestCaseData( 2+2==4, "True" )};
     }
 
     [TestFixture]
@@ -94,11 +94,13 @@ namespace NUnit.Framework.Constraints.Tests
         
         object[] SuccessData = new object[] { double.NaN, float.NaN };
 
-        object[] FailureData = new object[] { null, "hello", 42, 
-            double.PositiveInfinity, double.NegativeInfinity,
-            float.PositiveInfinity, float.NegativeInfinity };
-
-        string[] ActualValues = new string[] { "null", "\"hello\"", "42", 
-            "Infinity", "-Infinity", "Infinity", "-Infinity" };
+        object[] FailureData = new object[] { 
+            new TestCaseData( null, "null" ),
+            new TestCaseData( "hello", "\"hello\"" ),
+            new TestCaseData( 42, "42" ), 
+            new TestCaseData( double.PositiveInfinity, "Infinity" ),
+            new TestCaseData( double.NegativeInfinity, "-Infinity" ),
+            new TestCaseData( float.PositiveInfinity, "Infinity" ),
+            new TestCaseData( float.NegativeInfinity, "-Infinity" ) };
     }
 }

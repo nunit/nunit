@@ -324,6 +324,9 @@
     <Compile Include="..\..\..\src\framework\Framework\ThreadingAttributes.cs">
       <Link>Framework\ThreadingAttributes.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\framework\Framework\Constraints\BinarySerializableConstraint.cs">
+      <Link>Framework\Constraints\BinarySerializableConstraint.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\framework\Framework\Throws.cs">
       <Link>Framework\Throws.cs</Link>
     </Compile>
@@ -332,9 +335,6 @@
     </Compile>
     <Compile Include="..\..\..\src\framework\Framework\ValueSourceAttribute.cs">
       <Link>Framework\ValueSourceAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Framework\Constraints\BinarySerializableConstraint.cs">
-      <Link>Framework\Constraints\BinarySerializableConstraint.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup>

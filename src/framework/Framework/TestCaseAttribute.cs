@@ -32,18 +32,23 @@ namespace NUnit.Framework
     /// and provide them with their arguments.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
-    public class TestCaseAttribute : Attribute, ITestCaseData
+    public class TestCaseAttribute : Attribute
+#if !NUNITLITE
+        , ITestCaseData
+#endif
     {
         private object[] arguments;
-        private object result;
+#if !NUNITLITE
         private Type expectedExceptionType;
         private string expectedExceptionName;
         private string expectedMessage;
         private MessageMatch matchType;
+        private object result;
         private string description;
         private string testName;
         private bool isIgnored;
         private string ignoreReason;
+#endif
 
         /// <summary>
         /// Construct a TestCaseAttribute with a list of arguments.
@@ -96,6 +101,7 @@ namespace NUnit.Framework
             get { return arguments; }
         }
 
+#if !NUNITLITE
         /// <summary>
         /// Gets or sets the expected result.
         /// </summary>
@@ -204,5 +210,6 @@ namespace NUnit.Framework
                 isIgnored = ignoreReason != null && ignoreReason != string.Empty;
             }
         }
+#endif
     }
 }

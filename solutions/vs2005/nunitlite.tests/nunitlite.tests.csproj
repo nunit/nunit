@@ -1,0 +1,166 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{0FE72EDD-8CDF-4AEA-9F5E-C0621839F44F}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>nunitlite.tests</RootNamespace>
+    <AssemblyName>nunitlite.tests</AssemblyName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;NET_2_0;NUNITLITE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\bin\Release\</OutputPath>
+    <DefineConstants>TRACE;NET_2_0;NUNITLITE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\..\src\CommonAssemblyInfo.cs">
+      <Link>CommonAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\Framework\AlwaysEqualComparer.cs">
+      <Link>Framework\AlwaysEqualComparer.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\Framework\ArrayEqualsFailureMessageFixture.cs">
+      <Link>Framework\ArrayEqualsFailureMessageFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\Framework\ArrayEqualsFixture.cs">
+      <Link>Framework\ArrayEqualsFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\Framework\ArrayNotEqualFixture.cs">
+      <Link>Framework\ArrayNotEqualFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\Framework\CollectionAdapter.cs">
+      <Link>Framework\CollectionAdapter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\Framework\Constraints\AndTest.cs">
+      <Link>Framework\Constraints\AndTest.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\Framework\Constraints\BasicConstraintTests.cs">
+      <Link>Framework\Constraints\BasicConstraintTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\Framework\Constraints\BinarySerializableTest.cs">
+      <Link>Framework\Constraints\BinarySerializableTest.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\Framework\Constraints\CollectionConstraintTests.cs">
+      <Link>Framework\Constraints\CollectionConstraintTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\Framework\Constraints\ComparerTests.cs">
+      <Link>Framework\Constraints\ComparerTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\Framework\Constraints\ComparisonConstraintTests.cs">
+      <Link>Framework\Constraints\ComparisonConstraintTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\Framework\Constraints\ConstraintTestBase.cs">
+      <Link>Framework\Constraints\ConstraintTestBase.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\Framework\Constraints\EmptyConstraintTest.cs">
+      <Link>Framework\Constraints\EmptyConstraintTest.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\Framework\Constraints\EqualTest.cs">
+      <Link>Framework\Constraints\EqualTest.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\Framework\Constraints\FloatingPointNumericsTest.cs">
+      <Link>Framework\Constraints\FloatingPointNumericsTest.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\Framework\Constraints\MsgUtilTests.cs">
+      <Link>Framework\Constraints\MsgUtilTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\Framework\Constraints\NotTest.cs">
+      <Link>Framework\Constraints\NotTest.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\Framework\Constraints\NumericsTest.cs">
+      <Link>Framework\Constraints\NumericsTest.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\Framework\Constraints\OrTest.cs">
+      <Link>Framework\Constraints\OrTest.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\Framework\Constraints\PathConstraintTests.cs">
+      <Link>Framework\Constraints\PathConstraintTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\Framework\Constraints\PropertyTests.cs">
+      <Link>Framework\Constraints\PropertyTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\Framework\Constraints\SameAsTest.cs">
+      <Link>Framework\Constraints\SameAsTest.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\Framework\Constraints\StringConstraintTests.cs">
+      <Link>Framework\Constraints\StringConstraintTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\Framework\Constraints\ThrowsConstraintTests.cs">
+      <Link>Framework\Constraints\ThrowsConstraintTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\Framework\Constraints\TypeConstraintTests.cs">
+      <Link>Framework\Constraints\TypeConstraintTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\Framework\Constraints\XmlSeriazliableTest.cs">
+      <Link>Framework\Constraints\XmlSeriazliableTest.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\Framework\MessageChecker.cs">
+      <Link>Framework\MessageChecker.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\Framework\TestDelegates.cs">
+      <Link>Framework\TestDelegates.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\Framework\TestFixtureAttributeTests.cs">
+      <Link>Framework\TestFixtureAttributeTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\Framework\TextMessageWriterTests.cs">
+      <Link>Framework\TextMessageWriterTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\Program.cs">
+      <Link>Program.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\..\..\src\tests\TestImage1.jpg">
+      <Link>TestImage1.jpg</Link>
+    </Content>
+    <Content Include="..\..\..\src\tests\TestImage2.jpg">
+      <Link>TestImage2.jpg</Link>
+    </Content>
+    <Content Include="..\..\..\src\tests\TestText1.txt">
+      <Link>TestText1.txt</Link>
+    </Content>
+    <Content Include="..\..\..\src\tests\TestText2.txt">
+      <Link>TestText2.txt</Link>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\nunitlite\nunitlite.csproj">
+      <Project>{83A1B699-7177-4C00-BAAC-83A82571DC23}</Project>
+      <Name>nunitlite</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Framework\Syntax\" />
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -36,9 +36,7 @@ namespace NUnit.Framework.Constraints.Tests
 
 		object[] SuccessData = new object[] { 99, 42 };
 
-		object[] FailureData = new object[] { 37 };
-
-		string[] ActualValues = new string[] { "37" };
+		object[] FailureData = new object[] { new object[] { 37, "37" } };
 
 		[Test]
         public void CanCombineTestsWithOrOperator()

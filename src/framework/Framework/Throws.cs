@@ -43,7 +43,6 @@ namespace NUnit.Framework
     {
         #region Exception
 
-#if !NUNITLITE
         /// <summary>
         /// Creates a constraint specifying an expected exception
         /// </summary>
@@ -51,7 +50,6 @@ namespace NUnit.Framework
         {
             get { return new ConstraintExpression().Append(new ThrowsOperator()); }
         }
-#endif
 
         #endregion
 
@@ -113,7 +111,6 @@ namespace NUnit.Framework
 
         #region Nothing
 
-#if !NUNITLITE
         /// <summary>
         /// Creates a constraint specifying that no exception is thrown
         /// </summary>
@@ -121,13 +118,11 @@ namespace NUnit.Framework
         {
             get { return new ThrowsNothingConstraint(); }
         }
-#endif
 
         #endregion
 
         #region TypeOf
 
-#if !NUNITLITE
         /// <summary>
         /// Creates a constraint specifying the exact type of exception expected
         /// </summary>
@@ -145,13 +140,11 @@ namespace NUnit.Framework
             return TypeOf(typeof(T));
         }
 #endif
-#endif
 
         #endregion
 
         #region InstanceOf
 
-#if !NUNITLITE
         /// <summary>
         /// Creates a constraint specifying the type of exception expected
         /// </summary>
@@ -168,7 +161,6 @@ namespace NUnit.Framework
         {
             return InstanceOf(typeof(T));
         }
-#endif
 #endif
 
         #endregion

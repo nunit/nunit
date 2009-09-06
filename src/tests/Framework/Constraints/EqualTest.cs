@@ -44,9 +44,12 @@ namespace NUnit.Framework.Constraints.Tests
 
         object[] SuccessData = new object[] { 4, 4.0f, 4.0d, 4.0000m };
             
-        object[] FailureData = new object[] { 5, null, "Hello", double.NaN, double.PositiveInfinity };
-
-        string[] ActualValues = new string[] { "5", "null", "\"Hello\"", "NaN", "Infinity" };
+        object[] FailureData = new object[] { 
+            new TestCaseData( 5, "5" ), 
+            new TestCaseData( null, "null" ),
+            new TestCaseData( "Hello", "\"Hello\"" ),
+            new TestCaseData( double.NaN, "NaN" ),
+            new TestCaseData( double.PositiveInfinity, "Infinity" ) };
 
         [TestCase(double.NaN)]
         [TestCase(double.PositiveInfinity)]

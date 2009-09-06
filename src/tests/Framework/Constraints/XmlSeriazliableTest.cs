@@ -43,13 +43,17 @@ namespace NUnit.Framework.Constraints.Tests
         object[] SuccessData = new object[] { 1, "a", new ArrayList() };
 
 #if NET_2_0
-        object[] FailureData = new object[] { new Dictionary<string, string>(), new InternalClass(), new InternalWithSerializableAttributeClass() };
-        string[] ActualValues = new string[] { "<Dictionary`2>", "<InternalClass>", "<InternalWithSerializableAttributeClass>" };
+        object[] FailureData = new object[] { 
+            new TestCaseData( new Dictionary<string, string>(), "<Dictionary`2>" ),
+            new TestCaseData( new InternalClass(), "<InternalClass>" ),
+            new TestCaseData( new InternalWithSerializableAttributeClass(), "<InternalWithSerializableAttributeClass>" )
+        };
 #else
-		object[] FailureData = new object[] { new InternalClass(), new InternalWithSerializableAttributeClass() };
-		string[] ActualValues = new string[] { "<InternalClass>", "<InternalWithSerializableAttributeClass>" };
+		object[] FailureData = new object[] { 
+            new TestCaseData( new InternalClass(), "<InternalClass>" ),
+            new TestCaseData( new InternalWithSerializableAttributeClass(), "<InternalWithSerializableAttributeClass>" )
+        };
 #endif
-
 
         object[] InvalidData = new object[] { null };
     }

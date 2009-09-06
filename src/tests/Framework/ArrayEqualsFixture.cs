@@ -36,7 +36,7 @@ namespace NUnit.Framework.Tests
 		public void ArrayIsEqualToItself()
 		{
 			string[] array = { "one", "two", "three" };
-			Assert.AreSame( array, array );
+			Assert.That( array, Is.SameAs(array) );
 			Assert.AreEqual( array, array );
             Expect(array, EqualTo(array));
 		}

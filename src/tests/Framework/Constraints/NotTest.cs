@@ -38,9 +38,7 @@ namespace NUnit.Framework.Constraints.Tests
 
         object[] SuccessData = new object[] { 42, "Hello" };
             
-        object[] FailureData = new object [] { null };
-
-        string[] ActualValues = new string[] { "null" };
+        object[] FailureData = new object [] { new object[] { null, "null" } };
 
         [Test, ExpectedException(typeof(AssertionException), ExpectedMessage = "ignoring case", MatchType = MessageMatch.Contains)]
         public void NotHonorsIgnoreCaseUsingConstructors()

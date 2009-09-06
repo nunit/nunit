@@ -36,13 +36,10 @@ namespace NUnit.Framework.Constraints.Tests
 
         object[] SuccessData = new object[] { new D1() };
         
-        object[] FailureData = new object[] { new B(), new D2() };
-
-        string[] ActualValues = new string[]
-            {
-                "<NUnit.Framework.Constraints.Tests.B>",
-                "<NUnit.Framework.Constraints.Tests.D2>"
-            };
+        object[] FailureData = new object[] { 
+            new TestCaseData( new B(), "<NUnit.Framework.Constraints.Tests.B>" ),
+            new TestCaseData( new D2(), "<NUnit.Framework.Constraints.Tests.D2>" )
+        };
     }
 
     [TestFixture]
@@ -58,12 +55,9 @@ namespace NUnit.Framework.Constraints.Tests
 
         object[] SuccessData = new object[] { new D1(), new D2() };
 
-        object[] FailureData = new object[] { new B() };
-
-        string[] ActualValues = new string[]
-            {
-                "<NUnit.Framework.Constraints.Tests.B>"
-            };
+        object[] FailureData = new object[] { 
+            new TestCaseData( new B(), "<NUnit.Framework.Constraints.Tests.B>" ) 
+        };
     }
 
     [TestFixture]
@@ -79,12 +73,8 @@ namespace NUnit.Framework.Constraints.Tests
 
         object[] SuccessData = new object[] { new D1(), new B() };
             
-        object[] FailureData = new object[] { new D2() };
-
-        string[] ActualValues = new string[]
-            {
-                "<NUnit.Framework.Constraints.Tests.D2>"
-            };
+        object[] FailureData = new object[] { 
+            new TestCaseData( new D2(), "<NUnit.Framework.Constraints.Tests.D2>" ) };
     }
 
     [TestFixture]
@@ -100,12 +90,8 @@ namespace NUnit.Framework.Constraints.Tests
         
         object[] SuccessData = new object[] { new D1(), new D2() };
             
-        object[] FailureData = new object[] { new B() };
-
-        string[] ActualValues = new string[]
-            {
-                "<NUnit.Framework.Constraints.Tests.B>"
-            };
+        object[] FailureData = new object[] { 
+            new TestCaseData( new B(), "<NUnit.Framework.Constraints.Tests.B>" ) };
     }
 
     class B { }
@@ -127,12 +113,8 @@ namespace NUnit.Framework.Constraints.Tests
 
         object[] SuccessData = new object[] { typeof(AttributeExistsConstraintTest) };
             
-        object[] FailureData = new object[] { typeof(D2) };
-
-        string[] ActualValues = new string[]
-            {
-                "<NUnit.Framework.Constraints.Tests.D2>"
-            };
+        object[] FailureData = new object[] { 
+            new TestCaseData( typeof(D2), "<NUnit.Framework.Constraints.Tests.D2>" ) };
 
         [Test, ExpectedException(typeof(System.ArgumentException))]
         public void NonAttributeThrowsException()

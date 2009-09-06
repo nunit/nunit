@@ -1,0 +1,295 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{83A1B699-7177-4C00-BAAC-83A82571DC23}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>nunitlite</RootNamespace>
+    <AssemblyName>nunitlite</AssemblyName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;NET_2_0;NUNITLITE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>..\bin\Debug\nunitlite.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\bin\Release\</OutputPath>
+    <DefineConstants>TRACE;NET_2_0;NUNITLITE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>..\bin\Release\nunitlite.XML</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\..\src\CommonAssemblyInfo.cs">
+      <Link>CommonAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\AssemblyInfo.cs">
+      <Link>AssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Framework\Assert.cs">
+      <Link>Framework\Assert.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Framework\AssertionException.cs">
+      <Link>Framework\AssertionException.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Framework\AssertionHelper.cs">
+      <Link>Framework\AssertionHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Framework\Constraints\AttributeConstraints.cs">
+      <Link>Framework\Constraints\AttributeConstraints.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Framework\Constraints\BasicConstraints.cs">
+      <Link>Framework\Constraints\BasicConstraints.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Framework\Constraints\BinaryOperations.cs">
+      <Link>Framework\Constraints\BinaryOperations.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Framework\Constraints\BinarySerializableConstraint.cs">
+      <Link>Framework\Constraints\BinarySerializableConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Framework\Constraints\CollectionConstraints.cs">
+      <Link>Framework\Constraints\CollectionConstraints.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Framework\Constraints\ComparisonAdapter.cs">
+      <Link>Framework\Constraints\ComparisonAdapter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Framework\Constraints\ComparisonConstraints.cs">
+      <Link>Framework\Constraints\ComparisonConstraints.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Framework\Constraints\Constraint.cs">
+      <Link>Framework\Constraints\Constraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Framework\Constraints\ConstraintBuilder.cs">
+      <Link>Framework\Constraints\ConstraintBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Framework\Constraints\ConstraintExpression.cs">
+      <Link>Framework\Constraints\ConstraintExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Framework\Constraints\ConstraintExpressionBase.cs">
+      <Link>Framework\Constraints\ConstraintExpressionBase.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Framework\Constraints\ConstraintFactory.cs">
+      <Link>Framework\Constraints\ConstraintFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Framework\Constraints\ConstraintOperators.cs">
+      <Link>Framework\Constraints\ConstraintOperators.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Framework\Constraints\ContainsConstraint.cs">
+      <Link>Framework\Constraints\ContainsConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Framework\Constraints\EmptyConstraint.cs">
+      <Link>Framework\Constraints\EmptyConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Framework\Constraints\EqualConstraint.cs">
+      <Link>Framework\Constraints\EqualConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Framework\Constraints\EqualityAdapter.cs">
+      <Link>Framework\Constraints\EqualityAdapter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Framework\Constraints\FloatingPointNumerics.cs">
+      <Link>Framework\Constraints\FloatingPointNumerics.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Framework\Constraints\IResolveConstraint.cs">
+      <Link>Framework\Constraints\IResolveConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Framework\Constraints\MessageWriter.cs">
+      <Link>Framework\Constraints\MessageWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Framework\Constraints\MsgUtils.cs">
+      <Link>Framework\Constraints\MsgUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Framework\Constraints\Numerics.cs">
+      <Link>Framework\Constraints\Numerics.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Framework\Constraints\NUnitComparer.cs">
+      <Link>Framework\Constraints\NUnitComparer.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Framework\Constraints\NUnitEqualityComparer.cs">
+      <Link>Framework\Constraints\NUnitEqualityComparer.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Framework\Constraints\PathConstraints.cs">
+      <Link>Framework\Constraints\PathConstraints.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Framework\Constraints\PrefixConstraints.cs">
+      <Link>Framework\Constraints\PrefixConstraints.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Framework\Constraints\PropertyConstraint.cs">
+      <Link>Framework\Constraints\PropertyConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Framework\Constraints\RangeConstraint.cs">
+      <Link>Framework\Constraints\RangeConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Framework\Constraints\ResolvableConstraintExpression.cs">
+      <Link>Framework\Constraints\ResolvableConstraintExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Framework\Constraints\SameAsConstraint.cs">
+      <Link>Framework\Constraints\SameAsConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Framework\Constraints\StringConstraints.cs">
+      <Link>Framework\Constraints\StringConstraints.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Framework\Constraints\ThrowsConstraint.cs">
+      <Link>Framework\Constraints\ThrowsConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Framework\Constraints\Tolerance.cs">
+      <Link>Framework\Constraints\Tolerance.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Framework\Constraints\TypeConstraints.cs">
+      <Link>Framework\Constraints\TypeConstraints.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Framework\Constraints\XmlSerializableConstraint.cs">
+      <Link>Framework\Constraints\XmlSerializableConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Framework\Contains.cs">
+      <Link>Framework\Contains.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Framework\DescriptionAttribute.cs">
+      <Link>Framework\DescriptionAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Framework\ExpectedExceptionAttribute.cs">
+      <Link>Framework\ExpectedExceptionAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Framework\GlobalSettings.cs">
+      <Link>Framework\GlobalSettings.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Framework\Has.cs">
+      <Link>Framework\Has.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Framework\IExpectException.cs">
+      <Link>Framework\IExpectException.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Framework\IgnoreAttribute.cs">
+      <Link>Framework\IgnoreAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Framework\Is.cs">
+      <Link>Framework\Is.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Framework\ListMapper.cs">
+      <Link>Framework\ListMapper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Framework\PropertyAttribute.cs">
+      <Link>Framework\PropertyAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Framework\SetUpAttribute.cs">
+      <Link>Framework\SetUpAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Framework\SpecialValue.cs">
+      <Link>Framework\SpecialValue.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Framework\TearDownAttribute.cs">
+      <Link>Framework\TearDownAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Framework\TestAttribute.cs">
+      <Link>Framework\TestAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Framework\TestCaseAttribute.cs">
+      <Link>Framework\TestCaseAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Framework\TestCaseData.cs">
+      <Link>Framework\TestCaseData.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Framework\TestCaseSourceAttribute.cs">
+      <Link>Framework\TestCaseSourceAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Framework\TestFixtureAttribute.cs">
+      <Link>Framework\TestFixtureAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Framework\TextMessageWriter.cs">
+      <Link>Framework\TextMessageWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Framework\Throws.cs">
+      <Link>Framework\Throws.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnitLite\Env.cs">
+      <Link>NUnitLite\Env.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnitLite\ITest.cs">
+      <Link>NUnitLite\ITest.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnitLite\NullListener.cs">
+      <Link>NUnitLite\NullListener.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnitLite\NUnitLiteException.cs">
+      <Link>NUnitLite\NUnitLiteException.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnitLite\Reflect.cs">
+      <Link>NUnitLite\Reflect.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnitLite\Runner\CommandLineOptions.cs">
+      <Link>NUnitLite\Runner\CommandLineOptions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnitLite\Runner\ConsoleWriter.cs">
+      <Link>NUnitLite\Runner\ConsoleWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnitLite\Runner\DebugWriter.cs">
+      <Link>NUnitLite\Runner\DebugWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnitLite\Runner\ResultSummary.cs">
+      <Link>NUnitLite\Runner\ResultSummary.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnitLite\Runner\TcpWriter.cs">
+      <Link>NUnitLite\Runner\TcpWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnitLite\Runner\TestCaseBuilder.cs">
+      <Link>NUnitLite\Runner\TestCaseBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnitLite\Runner\TestFixtureBuilder.cs">
+      <Link>NUnitLite\Runner\TestFixtureBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnitLite\Runner\TestLoader.cs">
+      <Link>NUnitLite\Runner\TestLoader.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnitLite\Runner\TestRunner.cs">
+      <Link>NUnitLite\Runner\TestRunner.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnitLite\Runner\TextUI.cs">
+      <Link>NUnitLite\Runner\TextUI.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnitLite\StackFilter.cs">
+      <Link>NUnitLite\StackFilter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnitLite\TestCase.cs">
+      <Link>NUnitLite\TestCase.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnitLite\TestListener.cs">
+      <Link>NUnitLite\TestListener.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnitLite\TestResult.cs">
+      <Link>NUnitLite\TestResult.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnitLite\TestSuite.cs">
+      <Link>NUnitLite\TestSuite.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\..\..\src\framework\SyntaxElements.txt">
+      <Link>SyntaxElements.txt</Link>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
