@@ -118,6 +118,33 @@
     <Compile Include="..\..\..\src\tests\Framework\MessageChecker.cs">
       <Link>Framework\MessageChecker.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\tests\Framework\Syntax\CollectionTests.cs">
+      <Link>Framework\Syntax\CollectionTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\Framework\Syntax\ComparisonTests.cs">
+      <Link>Framework\Syntax\ComparisonTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\Framework\Syntax\EqualityTests.cs">
+      <Link>Framework\Syntax\EqualityTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\Framework\Syntax\OperatorOverrides.cs">
+      <Link>Framework\Syntax\OperatorOverrides.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\Framework\Syntax\OperatorTests.cs">
+      <Link>Framework\Syntax\OperatorTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\Framework\Syntax\SimpleConstraints.cs">
+      <Link>Framework\Syntax\SimpleConstraints.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\Framework\Syntax\StringConstraints.cs">
+      <Link>Framework\Syntax\StringConstraints.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\Framework\Syntax\SyntaxTest.cs">
+      <Link>Framework\Syntax\SyntaxTest.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\Framework\Syntax\TypeConstraints.cs">
+      <Link>Framework\Syntax\TypeConstraints.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\tests\Framework\TestDelegates.cs">
       <Link>Framework\TestDelegates.cs</Link>
     </Compile>
@@ -152,7 +179,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Framework\Syntax\" />
     <Folder Include="Properties\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
