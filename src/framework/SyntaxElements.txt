@@ -96,13 +96,13 @@
 #
 # Define default classes to be generated:
 #
-Default: Is=Framework/Is.cs
-Default: Has=Framework/Has.cs
-Default: Text=Framework/Text.cs
-Default: Throws=Framework/Throws.cs
-Default: ConstraintFactory=Framework/Constraints/ConstraintFactory.cs
-Default: ConstraintExpression=Framework/Constraints/ConstraintExpression.cs
-Default: Assert=Framework/Assert.cs
+Default: Is=Shared/Framework/Is.cs
+Default: Has=Shared/Framework/Has.cs
+Default: Text=Shared/Framework/Text.cs
+Default: Throws=Shared/Framework/Throws.cs
+Default: ConstraintFactory=Shared/Framework/Constraints/ConstraintFactory.cs
+Default: ConstraintExpression=Shared/Framework/Constraints/ConstraintExpression.cs
+Default: Assert=Shared/Framework/Assert.cs
 %
 #
 # Prefix Operators
@@ -316,15 +316,13 @@ Gen3: Is.Unique=>new UniqueItemsConstraint()
 /// <summary>
 /// Returns a constraint that tests whether an object graph is serializable in binary format.
 /// </summary>
-#Cond: !NETCF
-Cond: !NUNITLITE
+Cond: !NETCF
 Gen3: Is.BinarySerializable=>new BinarySerializableConstraint()
 %
 /// <summary>
 /// Returns a constraint that tests whether an object graph is serializable in xml format.
 /// </summary>
-#Cond: !NETCF_1_0
-Cond: !NUNITLITE
+Cond: !NETCF_1_0
 Gen3: Is.XmlSerializable=>new XmlSerializableConstraint()
 %
 #
@@ -508,14 +506,12 @@ Gen: ConstraintFactory.DoesNotMatch(string pattern)=>new ConstraintExpression().
 /// Returns a constraint that tests whether the path provided 
 /// is the same as an expected path after canonicalization.
 /// </summary>
-Cond: !NUNITLITE
 Gen3: Is.SamePath(string expected)=>new SamePathConstraint(expected)
 %
 /// <summary>
 /// Returns a constraint that tests whether the path provided 
 /// is the same path or under an expected path after canonicalization.
 /// </summary>
-Cond: !NUNITLITE
 Gen3: Is.SamePathOrUnder(string expected)=>new SamePathOrUnderConstraint(expected)
 %
 #

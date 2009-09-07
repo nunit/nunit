@@ -143,7 +143,7 @@ namespace NUnit.Framework
 
         #region BinarySerializable
 
-#if !NUNITLITE
+#if !NETCF
         /// <summary>
         /// Returns a constraint that tests whether an object graph is serializable in binary format.
         /// </summary>
@@ -157,7 +157,7 @@ namespace NUnit.Framework
 
         #region XmlSerializable
 
-#if !NUNITLITE
+#if !NETCF_1_0
         /// <summary>
         /// Returns a constraint that tests whether an object graph is serializable in xml format.
         /// </summary>
@@ -476,7 +476,6 @@ namespace NUnit.Framework
 
         #region SamePath
 
-#if !NUNITLITE
         /// <summary>
         /// Returns a constraint that tests whether the path provided 
         /// is the same as an expected path after canonicalization.
@@ -485,13 +484,11 @@ namespace NUnit.Framework
         {
             return new SamePathConstraint(expected);
         }
-#endif
 
         #endregion
 
         #region SamePathOrUnder
 
-#if !NUNITLITE
         /// <summary>
         /// Returns a constraint that tests whether the path provided 
         /// is the same path or under an expected path after canonicalization.
@@ -500,7 +497,6 @@ namespace NUnit.Framework
         {
             return new SamePathOrUnderConstraint(expected);
         }
-#endif
 
         #endregion
 
