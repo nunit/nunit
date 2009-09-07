@@ -157,7 +157,7 @@
     <Compile Include="..\..\..\src\framework\Shared\Framework\Constraints\EmptyConstraint.cs">
       <Link>Shared\Framework\Constraints\EmptyConstraint.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framew rk\Shared\Framework\Constraints\EqualConstraint.cs">
+    <Compile Include="..\..\..\src\framework\Shared\Framework\Constraints\EqualConstraint.cs">
       <Link>Shared\Framework\Constraints\EqualConstraint.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Shared\Framework\Constraints\EqualityAdapter.cs">

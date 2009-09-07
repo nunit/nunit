@@ -228,7 +228,7 @@
     <Compile Include="..\..\..\src\framework\Shared\Framework\Constraints\TypeConstraints.cs">
       <Link>Shared\Framework\Constraints\TypeConstraints.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\frame ork\Shared\Framework\Constraints\XmlSerializableConstraint.cs">
+    <Compile Include="..\..\..\src\framework\Shared\Framework\Constraints\XmlSerializableConstraint.cs">
       <Link>Shared\Framework\Constraints\XmlSerializableConstraint.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Shared\Framework\DescriptionAttribute.cs">
