@@ -227,7 +227,7 @@
     </Compile>
     <Compile Include="..\..\..\src\framework\Shared\Framework\Constraints\Numerics.cs">
       <Link>Shared\Framework\Constraints\Numerics.cs</Link>
-    </ ompile>
+    </Compile>
     <Compile Include="..\..\..\src\framework\Shared\Framework\Constraints\NUnitComparer.cs">
       <Link>Shared\Framework\Constraints\NUnitComparer.cs</Link>
     </Compile>
@@ -299,7 +299,7 @@
     </Compile>
     <Compile Include="..\..\..\src\framework\Shared\Framework\SetUpAttribute.cs">
       <Link>Shared\Framework\SetUpAttribute.cs</Link>
-    </Comp le>
+    </Compile>
     <Compile Include="..\..\..\src\framework\Shared\Framework\SpecialValue.cs">
       <Link>Shared\Framework\SpecialValue.cs</Link>
     </Compile>

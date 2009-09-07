@@ -153,7 +153,7 @@
     <Compile Include="..\..\..\src\tests\Framework\Syntax\ThrowsTests.cs">
       <Link>Shared\Framework\Syntax\ThrowsTests.cs</Link>
     </Compile>
-    <Compile Include="..\..\.. src\tests\Framework\Syntax\TypeConstraints.cs">
+    <Compile Include="..\..\..\src\tests\Framework\Syntax\TypeConstraints.cs">
       <Link>Shared\Framework\Syntax\TypeConstraints.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\tests\Framework\TestComparer.cs">
