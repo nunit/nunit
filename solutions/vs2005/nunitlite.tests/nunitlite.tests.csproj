@@ -1,4 +1,4 @@
-﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -6,7 +6,6 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{0FE72EDD-8CDF-4AEA-9F5E-C0621839F44F}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>nunitlite.tests</RootNamespace>
     <AssemblyName>nunitlite.tests</AssemblyName>
   </PropertyGroup>
@@ -154,7 +153,7 @@
     <Compile Include="..\..\..\src\tests\Framework\Syntax\ThrowsTests.cs">
       <Link>Shared\Framework\Syntax\ThrowsTests.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\tests\Framework\Syntax\TypeConstraints.cs">
+    <Compile Include="..\..\.. src\tests\Framework\Syntax\TypeConstraints.cs">
       <Link>Shared\Framework\Syntax\TypeConstraints.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\tests\Framework\TestComparer.cs">

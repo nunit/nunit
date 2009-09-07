@@ -1,4 +1,4 @@
-﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -6,7 +6,6 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{83A1B699-7177-4C00-BAAC-83A82571DC23}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>nunitlite</RootNamespace>
     <AssemblyName>nunitlite</AssemblyName>
   </PropertyGroup>
@@ -158,7 +157,7 @@
     <Compile Include="..\..\..\src\framework\Shared\Framework\Constraints\EmptyConstraint.cs">
       <Link>Shared\Framework\Constraints\EmptyConstraint.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Shared\Framework\Constraints\EqualConstraint.cs">
+    <Compile Include="..\..\..\src\framew rk\Shared\Framework\Constraints\EqualConstraint.cs">
       <Link>Shared\Framework\Constraints\EqualConstraint.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Shared\Framework\Constraints\EqualityAdapter.cs">
