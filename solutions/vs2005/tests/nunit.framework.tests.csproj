@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -7,7 +7,6 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{F6410C35-1348-46EA-BB1C-D8866C31458E}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NUnit.Framework.Tests</RootNamespace>
     <AssemblyName>nunit.framework.tests</AssemblyName>
     <StartupObject>

@@ -1,4 +1,4 @@
-﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -6,7 +6,6 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{00A9536F-1A68-47B9-ADC5-A1224DFEA9AF}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NUnitLite</RootNamespace>
     <AssemblyName>nunitlite</AssemblyName>
     <ProjectTypeGuids>{4D628B5B-2FBC-4AA6-8C16-197242AEB884};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -161,7 +160,7 @@
       <Link>Shared\Framework\Constraints\ConstraintExpressionBase.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Shared\Framework\Constraints\ConstraintFactory.cs">
-      <Link>Shared\Framework\Constraints\ConstraintFactory.cs</Link>
+      <Link>Shared\Framework\Constra nts\ConstraintFactory.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Shared\Framework\Constraints\ConstraintOperators.cs">
       <Link>Shared\Framework\Constraints\ConstraintOperators.cs</Link>
@@ -229,7 +228,7 @@
     <Compile Include="..\..\..\src\framework\Shared\Framework\Constraints\TypeConstraints.cs">
       <Link>Shared\Framework\Constraints\TypeConstraints.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Shared\Framework\Constraints\XmlSerializableConstraint.cs">
+    <Compile Include="..\..\..\src\frame ork\Shared\Framework\Constraints\XmlSerializableConstraint.cs">
       <Link>Shared\Framework\Constraints\XmlSerializableConstraint.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Shared\Framework\DescriptionAttribute.cs">
