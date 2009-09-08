@@ -21,6 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#if !NETCF
 using System;
 using System.Collections;
 
@@ -44,3 +45,4 @@ namespace NUnit.Framework.Constraints.Tests
         object[] InvalidData = new object[] { null };
     }
 }
+#endif

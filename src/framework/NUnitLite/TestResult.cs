@@ -137,7 +137,7 @@ namespace NUnitLite
                 if (this.message == null || this.message == string.Empty)
                     this.message = message;
                 else
-                    this.message = this.message + NUnitLite.Env.NewLine + message;
+                    this.message = this.message + Env.NewLine + message;
             }
 
         public void Error(string message)
@@ -146,7 +146,7 @@ namespace NUnitLite
             if (this.message == null || this.message == string.Empty)
                 this.message = message;
             else
-                this.message = this.message + NUnitLite.Env.NewLine + message;
+                this.message = this.message + Env.NewLine + message;
         }
 
 #if !NETCF_1_0

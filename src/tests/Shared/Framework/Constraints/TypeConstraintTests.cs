@@ -126,7 +126,7 @@ namespace NUnit.Framework.Constraints.Tests
         public void AttributeExistsOnMethodInfo()
         {
             Assert.That(
-                System.Reflection.MethodInfo.GetCurrentMethod(),
+                GetType().GetMethod("AttributeExistsOnMethodInfo"),
                 new AttributeExistsConstraint(typeof(TestAttribute)));
         }
 
@@ -134,7 +134,7 @@ namespace NUnit.Framework.Constraints.Tests
         public void AttributeTestPropertyValueOnMethodInfo()
         {
             Assert.That(
-                System.Reflection.MethodInfo.GetCurrentMethod(),
+                GetType().GetMethod("AttributeTestPropertyValueOnMethodInfo"),
                 Has.Attribute(typeof(DescriptionAttribute)).Property("Properties").Property("Keys").Contains("Description"));
         }
     }

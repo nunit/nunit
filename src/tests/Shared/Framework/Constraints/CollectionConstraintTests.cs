@@ -46,8 +46,8 @@ namespace NUnit.Framework.Constraints.Tests
         {
             object[] c = new object[] { 1, "hello", null, 3 };
             expectedMessage = 
-				TextMessageWriter.Pfx_Expected + "all items not null" + Environment.NewLine +
-                TextMessageWriter.Pfx_Actual + "< 1, \"hello\", null, 3 >" + Environment.NewLine;
+				TextMessageWriter.Pfx_Expected + "all items not null" + NL +
+                TextMessageWriter.Pfx_Actual + "< 1, \"hello\", null, 3 >" + NL;
             Assert.That(c, new AllItemsConstraint(new NotConstraint(new EqualConstraint(null))));
         }
 
@@ -86,8 +86,8 @@ namespace NUnit.Framework.Constraints.Tests
         {
             int[] c = new int[] { 12, 27, 19, 32, 107, 99, 26 };
             expectedMessage = 
-                TextMessageWriter.Pfx_Expected + "all items in range (10,100)" + Environment.NewLine +
-                TextMessageWriter.Pfx_Actual   + "< 12, 27, 19, 32, 107, 99, 26 >" + Environment.NewLine;
+                TextMessageWriter.Pfx_Expected + "all items in range (10,100)" + NL +
+                TextMessageWriter.Pfx_Actual   + "< 12, 27, 19, 32, 107, 99, 26 >" + NL;
             Assert.That(c, new AllItemsConstraint(new RangeConstraint(10, 100)));
         }
 
@@ -103,8 +103,8 @@ namespace NUnit.Framework.Constraints.Tests
         {
             object[] c = new object[] { 'a', "b", 'c' };
             expectedMessage = 
-                TextMessageWriter.Pfx_Expected + "all items instance of <System.Char>" + Environment.NewLine +
-                TextMessageWriter.Pfx_Actual   + "< 'a', \"b\", 'c' >" + Environment.NewLine;
+                TextMessageWriter.Pfx_Expected + "all items instance of <System.Char>" + NL +
+                TextMessageWriter.Pfx_Actual   + "< 'a', \"b\", 'c' >" + NL;
             Assert.That(c, new AllItemsConstraint(new InstanceOfTypeConstraint(typeof(char))));
         }
     }
@@ -314,8 +314,8 @@ namespace NUnit.Framework.Constraints.Tests
             al.Add("y");
 
             expectedMessage =
-                "  Expected: collection ordered" + Environment.NewLine +
-                "  But was:  < \"x\", \"z\", \"y\" >" + Environment.NewLine;
+                "  Expected: collection ordered" + NL +
+                "  But was:  < \"x\", \"z\", \"y\" >" + NL;
 
             Assert.That(al, Is.Ordered);
         }

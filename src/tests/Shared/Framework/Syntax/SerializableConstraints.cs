@@ -23,6 +23,7 @@
 
 namespace NUnit.Framework.Syntax
 {
+#if !NETCF
     [TestFixture]
     public class BinarySerializableTest : SyntaxTest
     {
@@ -35,7 +36,9 @@ namespace NUnit.Framework.Syntax
             builderSyntax = Builder().BinarySerializable;
         }
     }
+#endif
 
+#if !NETCF_1_0
     [TestFixture]
     public class XmlSerializableTest : SyntaxTest
     {
@@ -48,4 +51,5 @@ namespace NUnit.Framework.Syntax
             builderSyntax = Builder().XmlSerializable;
         }
     }
+#endif
 }

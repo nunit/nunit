@@ -136,6 +136,7 @@ namespace NUnit.Framework.Syntax
         }
     }
 
+#if !NETCF
     public class RegexTest : SyntaxTest
     {
         [SetUp]
@@ -172,4 +173,5 @@ namespace NUnit.Framework.Syntax
             builderSyntax = Builder().Matches("X").IgnoreCase;
         }
     }
+#endif
 }
