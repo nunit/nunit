@@ -1,4 +1,4 @@
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -40,8 +40,8 @@
     <Compile Include="..\..\..\src\framework\AssemblyInfo.cs">
       <Link>AssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\NUnitLite\Env.cs">
-      <Link>NUnitLite\Env.cs</Link>
+    <Compile Include="..\..\..\src\framework\Env.cs">
+      <Link>Env.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\NUnitLite\Framework\Contains.cs">
       <Link>NUnitLite\Framework\Contains.cs</Link>

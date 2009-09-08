@@ -57,13 +57,15 @@ namespace NUnit.Framework.Constraints.Tests
         [Test, TestCaseSource("FailureData")]
         public void FailsWithBadValues(object badValue, string message)
         {
+            string NL = NUnitLite.Env.NewLine;
+
             Assert.IsFalse(theConstraint.Matches(badValue));
 
             TextMessageWriter writer = new TextMessageWriter();
             theConstraint.WriteMessageTo(writer);
             Assert.That( writer.ToString(), Is.EqualTo(
-                TextMessageWriter.Pfx_Expected + expectedDescription + Environment.NewLine +
-                TextMessageWriter.Pfx_Actual + message + Environment.NewLine ));
+                TextMessageWriter.Pfx_Expected + expectedDescription + NL +
+                TextMessageWriter.Pfx_Actual + message + NL ));
         }
     }
 

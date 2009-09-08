@@ -30,6 +30,8 @@ namespace NUnit.Framework.Tests
     [TestFixture]
     public class TextMessageWriterTests : AssertionHelper
     {
+        private static readonly string NL = NUnitLite.Env.NewLine;
+
         private TextMessageWriter writer;
 
 		[SetUp]
@@ -136,9 +138,9 @@ namespace NUnit.Framework.Tests
             writer.DisplayStringDifferences(s72, "abcde", 5, false, true);
             string message = writer.ToString();
             Expect(message, EqualTo(
-                TextMessageWriter.Pfx_Expected + Q(exp) + Environment.NewLine +
-                TextMessageWriter.Pfx_Actual + Q("abcde") + Environment.NewLine +
-                "  ----------------^" + Environment.NewLine));
+                TextMessageWriter.Pfx_Expected + Q(exp) + NL +
+                TextMessageWriter.Pfx_Actual + Q("abcde") + NL +
+                "  ----------------^" + NL));
         }
 
         [Test]
@@ -149,9 +151,9 @@ namespace NUnit.Framework.Tests
             writer.DisplayStringDifferences(s72, "abcde", 5, false, false);
             string message = writer.ToString();
             Expect(message, EqualTo(
-                TextMessageWriter.Pfx_Expected + Q(s72) + Environment.NewLine +
-                TextMessageWriter.Pfx_Actual + Q("abcde") + Environment.NewLine +
-                "  ----------------^" + Environment.NewLine));
+                TextMessageWriter.Pfx_Expected + Q(s72) + NL +
+                TextMessageWriter.Pfx_Actual + Q("abcde") + NL +
+                "  ----------------^" + NL));
         }
 
         private string Q(string s)
