@@ -41,12 +41,12 @@
   <property name="project.name" value="NUnit"/>
 
   <!-- NUnit Package Version - Three digits -->
-  <property name="package.version" value="2.9.1"/>
+  <property name="package.version" value="2.9.2"/>
 
   <!-- Nominal version used for install directory and program
        files menu. Normally the same as the package version, 
        but may differ when we are in alpha or beta. -->
-  <property name="nominal.version" value="2.9.1" />
+  <property name="nominal.version" value="2.9.2" />
 
   <!-- Package Configuration (Release, Alpha, Beta, etc.) -->
   <property name="package.configuration" value=""/>
