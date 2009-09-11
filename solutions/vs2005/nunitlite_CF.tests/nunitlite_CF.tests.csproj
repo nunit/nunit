@@ -131,8 +131,8 @@
     <Compile Include="..\..\..\src\tests\Shared\Framework\Constraints\TypeConstraintTests.cs">
       <Link>Shared\Framework\Constraints\TypeConstraintTests.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\tests\Shared\Framework\Constraints\XmlSeriazliableTest.cs">
-      <Link>Shared\Framework\Constraints\XmlSeriazliableTest.cs</Link>
+    <Compile Include="..\..\..\src\tests\Shared\Framework\Constraints\XmlSerializableTest.cs">
+      <Link>Shared\Framework\Constraints\XmlSerializableTest.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\tests\Shared\Framework\MessageChecker.cs">
       <Link>Shared\Framework\MessageChecker.cs</Link>

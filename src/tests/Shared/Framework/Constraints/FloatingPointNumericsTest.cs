@@ -21,6 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#if !NETCF_1_0
+
 using System;
 using System.IO;
 using System.Drawing;
@@ -122,3 +124,4 @@ namespace NUnit.Framework.Constraints.Tests
 
   }
 }
+#endif

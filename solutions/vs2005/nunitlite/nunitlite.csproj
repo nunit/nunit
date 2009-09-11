@@ -8,6 +8,8 @@
     <OutputType>Library</OutputType>
     <RootNamespace>nunitlite</RootNamespace>
     <AssemblyName>nunitlite</AssemblyName>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>nunit.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -282,6 +284,9 @@
     <Content Include="..\..\..\src\framework\SyntaxElements.txt">
       <Link>SyntaxElements.txt</Link>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="nunit.snk" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
