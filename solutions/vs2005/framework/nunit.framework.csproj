@@ -11,7 +11,7 @@
     <AssemblyName>nunit.framework</AssemblyName>
     <StartupObject>
     </StartupObject>
-    <SignAssembly>false</SignAssembly>
+    <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>nunit.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -163,7 +163,7 @@
       <Link>Shared\Framework\AssertionException.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Shared\Framework\AssertionHelper.cs">
-      <Link>Shared\Fra ework\AssertionHelper.cs</Link>
+      <Link>Shared\Framework\AssertionHelper.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Shared\Framework\Constraints\AttributeConstraints.cs">
       <Link>Shared\Framework\Constraints\AttributeConstraints.cs</Link>

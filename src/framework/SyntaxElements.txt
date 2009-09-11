@@ -98,7 +98,7 @@
 #
 Default: Is=Shared/Framework/Is.cs
 Default: Has=Shared/Framework/Has.cs
-Default: Text=Shared/Framework/Text.cs
+Default: Text=NUnit/Framework/Text.cs
 Default: Throws=Shared/Framework/Throws.cs
 Default: ConstraintFactory=Shared/Framework/Constraints/ConstraintFactory.cs
 Default: ConstraintExpression=Shared/Framework/Constraints/ConstraintExpression.cs

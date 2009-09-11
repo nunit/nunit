@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <project name="NUnitFramework" default="build" basedir=".">
 
+<!--
   <patternset id="source-files">
     <include name="AssemblyInfo.cs"/>
     <include name="Framework/Assert.cs"/>
@@ -96,21 +97,56 @@
     <include name="Framework/Constraints/Tolerance.cs"/>
     <include name="Framework/Constraints/TypeConstraints.cs"/>
   </patternset>
+-->
 
-  <target name="build">
+  <target name="build" depends="nunit,nunitlite"/>
+
+  <target name="nunit">
 
     <csc target="library"
         output="${current.build.dir}/nunit.framework.dll"
         doc="${current.build.dir}/nunit.framework.xml"
         debug="${build.debug}" 
-        define="${build.defines}">
+        define="${build.defines}"
+        keyfile="../../nunit.snk">
       <nowarn>
         <warning number="1699" if="${runtime.version=='2.0'}"/>
       </nowarn>
       <sources basedir=".">
-        <patternset refid="source-files"/>
+        <!--<patternset refid="source-files"/>-->
         <include name="../CommonAssemblyInfo.cs" />
+        <include name="AssemblyInfo.cs"/>
+        <include name="Env.cs"/>
+        <include name="Shared/**/*.cs"/>
+        <include name="NUnit/**/*.cs"/>
       </sources>
+    </csc>
+
+  </target>
+
+  <target name="nunitlite">
+
+    <csc target="library"
+        output="${current.build.dir}/nunitlite.dll"
+        doc="${current.build.dir}/nunitlite.xml"
+        debug="${build.debug}" 
+        define="${build.defines};NUNITLITE">
+      <nowarn>
+        <warning number="1699" if="${runtime.version=='2.0'}"/>
+      </nowarn>
+      <sources basedir=".">
+        <!--<patternset refid="source-files"/>-->
+        <include name="../CommonAssemblyInfo.cs" />
+        <include name="AssemblyInfo.cs"/>
+        <include name="Env.cs"/>
+        <include name="Shared/**/*.cs"/>
+        <include name="NUnitLite/**/*.cs"/>
+      </sources>
+      <references basedir="${current.build.dir}">
+        <include name="mscorlib.dll"/>
+        <include name="System.dll"/>
+        <include name="System.Xml.dll"/>
+      </references>
     </csc>
 
   </target>
@@ -118,9 +154,11 @@
   <target name="package">
     <copy todir="${package.src.dir}/framework">
       <fileset>
-        <patternset refid="source-files"/>
+        <!--<patternset refid="source-files"/>-->
         <include name="nunit.framework.build"/>
         <include name="SyntaxElements.txt"/>
+        <include name="Shared/**/*.cs"/>
+        <include name="NUnit/**/*.cs"/>
       </fileset>
     </copy>
   </target>

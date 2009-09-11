@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <project name="NUnitFrameworkTests" default="build" basedir=".">
 
+<!--
   <patternset id="source-files">
     <include name="Framework/AlwaysEqualComparer.cs"/>
     <include name="Framework/ArrayEqualsFailureMessageFixture.cs"/>
@@ -72,6 +73,7 @@
     <include name="Framework/Syntax/ThrowsTests.cs"/>
     <include name="Framework/Syntax/TypeConstraints.cs"/>
   </patternset>
+  -->
 
   <patternset id="resource-files">
         <include name="TestImage1.jpg"/>
@@ -80,14 +82,16 @@
         <include name="TestText2.txt"/>
   </patternset>
 
-  <target name="build">
+  <target name="nunit">
     <csc target="library" 
         output="${current.build.dir}/nunit.framework.tests.dll"
         debug="${build.debug}" 
         define="${build.defines}">
       <sources>
-        <patternset refid="source-files"/>
+        <!--<patternset refid="source-files"/>-->
         <include name="../CommonAssemblyInfo.cs"/>
+        <include name="NUnit/**/*.cs"/>
+        <include name="Shared/**/*.cs"/>
       </sources>
       <resources prefix="NUnit.Framework.Tests">
         <patternset refid="resource-files"/>
@@ -100,10 +104,37 @@
     </csc>
   </target>
 
+  <target name="nunitlite">
+    <csc target="exe" 
+        output="${current.build.dir}/nunitlite.tests.exe"
+        debug="${build.debug}" 
+        define="${build.defines};NUNITLITE">
+      <sources>
+        <!--<patternset refid="source-files"/>-->
+        <include name="../CommonAssemblyInfo.cs"/>
+        <include name="Program.cs"/>
+        <include name="NUnitLite/**/*.cs"/>
+        <include name="Shared/**/*.cs"/>
+      </sources>
+      <resources prefix="NUnit.Framework.Tests">
+        <patternset refid="resource-files"/>
+      </resources>
+      <references basedir="${current.build.dir}">
+        <include name="nunitlite.dll"/>
+        <include name="mscorlib.dll"/>
+        <include name="System.dll"/>
+        <include name="System.Xml.dll"/>
+        <include name="System.Data.dll"/>
+        <include name="System.Drawing.dll"/>
+      </references>
+    </csc>
+  </target>
+
   <target name="package">
     <copy todir="${package.src.dir}/tests">
       <fileset>
-        <patternset refid="source-files"/>
+        <!--<patternset refid="source-files"/>-->
+        <include name="**/*.cs"/>
         <patternset refid="resource-files"/>
         <include name="nunit.framework.tests.build"/>
       </fileset>

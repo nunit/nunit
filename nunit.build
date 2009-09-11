@@ -6,13 +6,30 @@
 * This script is used to build the NUnit Framework for any supported     *
 * runtime that is installed on the system. If you are unsure about which *
 * runtimes are avaiable use the list-runtimes or dump-settings target.   *
+* At least one of the supported runtimes and sdk must be installed.      *
 *                                                                        *
-* At least one of the supported runtimes and sdk must be installed. To   *
-* run the test coverage target, NCover is required. In order to build    *
-* the msi, WiX 3.0 and the WiX tasks for NAnt are required and you must  *
-* be running on Windows.                                                 *
+* Dependencies:                                                          *                                         
 *                                                                        *
-* The script requires the NAnt 0.86 beta 1 release or a later version.   *
+*   The script requires the NAnt 0.86 beta 1 release or a later version. *
+*                                                                        *
+*   To build the windows installer, you must be running on Windows.      *
+*   WiX 3.0 and the WiX tasks for NAnt are required. For a standard WiX  *
+*   install, the script should be able to find WiX automatically. If     *
+*   this doesn't work, you should set the environment variable WIX       *
+*   or the poperty 'wix.dir' to the path where WiX is installed.         *
+*                                                                        *
+*   Although NUnitLite tests may be run standalone, tests of the full    *
+*   framework must be executed under NUnit 2.5.2. Set the property       *
+*   'nunit.dir' to the path where NUnit is installed. Later releases     *
+*   will be self-testing and will eliminate the need for NUnit 2.5.2.    *
+*                                                                        *
+*   PartCover is required in addition to NUnit 2.5.2 in order to run     *
+*   the 'test-coverage' target. Set the property 'partcover.dir to the   *
+*   directory path where Partcover is installed.                         *
+*                                                                        *
+* NOTE: You may set any of the properties mentioned above either at the  *
+* command line using the NANT -D option or by creating a file called     *
+* 'local.settings.include' and using property elements.                  *
 **************************************************************************
 </description>
 
@@ -43,7 +60,7 @@
          The first .NET and Mono frameworks found are the
          respective net and mono defaults. -->
   <property name="supported.frameworks" 
-    value="net-2.0,net-1.1,net-1.0,mono-2.0,mono-1.0"/>
+    value="net-2.0,net-1.1,net-1.0,mono-2.0,mono-1.0,netcf-1.0,netcf-2.0"/>
 
   <!-- Packages we normally create -->
   <!--<property name="standard.packages" value="std,mono" />-->
@@ -82,6 +99,12 @@
       
   <target name="net-2.0" depends="set-net-2.0-runtime-config"
     description="Set runtime to .NET 2.0 for commands that follow"/>
+      
+  <target name="netcf-1.0" depends="set-netcf-1.0-runtime-config"
+    description="Set runtime to CF 1.0 for commands that follow"/>
+      
+  <target name="netcf-2.0" depends="set-netcf-2.0-runtime-config"
+    description="Set runtime to CF 2.0 for commands that follow"/>
       
   <target name="mono" depends="set-default-mono-runtime-config"
     description="Set runtime to default Mono version"/>
@@ -145,27 +168,9 @@
 <!-- ***              Targets that perform builds                  *** -->
 <!-- ***************************************************************** -->
 
-  <target name="all" depends="build-framework,build-tests"
-    description="Build all targets using current runtime and config"/>
+  <target name="build-all"
+    description="Build everything, for all supported runtimes">
 
-  <target name="build" depends="build-framework,build-tests"
-    description="Build all targets using current runtime and config"/>
-
-  <target name="build-framework" depends="gen-syntax, make-build-dir">
-
-    <nant target="build" buildfile="src/framework/nunit.framework.build"/>
-
-  </target>
-
-  <target name="build-tests" depends="build-framework">
-
-    <nant target="build" buildfile="src/tests/nunit.framework.tests.build"/>
-
-  </target>
-
-  <!-- Build current config for all available runtimes -->
-  <target name="build-all-runtimes"
-      description="Build current config for all available runtimes">
 
     <foreach item="String" delim="," 
         property="framework" in="${installed.frameworks}">
@@ -177,12 +182,44 @@
 
   </target>
 
+  <target name="build"
+    description="Build everything, for current runtime and config">
+
+    <call target="nunit" unless="${runtime.platform=='netcf'}"/>
+    <call target="nunitlite"/>
+
+  </target>
+
+  <target name="nunit" depends="gen-syntax, make-build-dir">
+
+    <fail if="${runtime.platform=='netcf'}"
+      message="The full NUnit framework may not be built for netcf"/>
+
+    <nant target="nunit" buildfile="src/framework/nunit.framework.build"/>
+    <nant target="nunit" buildfile="src/tests/nunit.framework.tests.build"/>
+
+  </target>
+
+  <target name="nunitlite" depends="gen-syntax,make-build-dir">
+
+    <nant target="nunitlite" buildfile="src/framework/nunit.framework.build"/>
+    <nant target="nunitlite" buildfile="src/tests/nunit.framework.tests.build"/>
+
+  </target>
+
 <!-- ***************************************************************** -->
 <!-- ***                 Targets for running tests                 *** -->
 <!-- ***************************************************************** -->
 
   <target name="test" depends="build,run-test"
     description="Build and run tests for selected config and runtime"/>
+
+  <target name="run-test">
+
+    <call target="nunit-test" unless="${runtime.platform=='netcf'}"/>
+    <call target="nunitlite-test"/>
+
+  </target>
 
   <target name="init-test" depends="set-build-dir">
 
@@ -213,11 +250,10 @@ NUNIT_DIR environment variable.
 
   </target>
 
-  <target name="run-test" depends="init-test">
+  <target name="nunit-test" depends="init-test">
 
     <echo message="*"/>
-    <echo message="* Testing ${runtime.config} ${build.config} build"/>
-    <echo message="*    Running under ${nant.settings.currentframework}"/>
+    <echo message="* Testing the nunit.framework ${runtime.config} ${build.config} build"/>
     <echo message="*"/>
 
     <!-- We use exec rather than the nunit2 task because we are testing
@@ -228,6 +264,18 @@ NUNIT_DIR environment variable.
 	  program="nunit-console.exe" 
           managed="strict"
 	  commandline="${nunit.commandline}" />
+
+  </target>
+
+  <target name="nunitlite-test" depends="init-test">
+
+    <echo message="*"/>
+    <echo message="* Testing the NUnitLite ${runtime.config} ${build.config} build"/>
+    <echo message="*"/>
+
+    <exec basedir="${current.build.dir}"
+	  program="nunitlite.tests.exe" 
+          managed="strict" />
 
   </target>
 
@@ -266,66 +314,6 @@ file or set the PARTCOVER_DIR environment variable.
 
     </foreach>
 
-  </target>
-
-  <target name="test-each-runtime" depends="build"
-      description="Run tests for the current build under each runtime">
-
-    <foreach item="String" delim=","
-        property="framework" in="${supported.test.platforms}">
-
-      <if test="${framework::exists( framework )}">
-        <property name="nant.settings.currentframework"
-            value="${framework}" />
-        <call target="run-test" failonerror="false" />
-      </if>
-
-    </foreach>
-
-    <property name="nant.settings.currentframework" value="${runtime.config}" />
-
-    <echo message="*" />
-    <echo message="* Restored runtime to ${nant.settings.currentframework}" />
-    <echo message="*" />
-
-  </target>
-
-<!--
-  <target name="test-under-net-1.0">
-    <if test="${framework::exists('net-1.0')}">
-      <property name="nant.settings.currentframework" value="net-1.0"/>
-      <call target="run-test"/>
-      <property name="nant.settings.currentframework" value="${runtime.config}" />
-    </if>
-  </target>
-
-  <target name="test-all-under-each"
-      description="Build all runtimes and test the builds under each runtime.">
-
-    <call target="set-release-build-config"/>
-
-    <foreach item="String" delim="," 
-        property="framework" in="${installed.frameworks}">
-
-      <call target="set-${framework}-runtime-config"/>
-      <call target="test-each-runtime" failonerror="false"/>
-
-    </foreach>
-
-  </target>
--->
-
-  <target name="nunit2-test" depends="build"
-    description="Run tests for a build using the nunit2 task">
-
-    <echo message="*"/>
-    <echo message="* Starting ${runtime.config} ${build.config} test run"/>
-    <echo message="*"/>
-
-    <nunit2>
-      <formatter type="Plain"/>
-      <test assemblyname="${current.build.dir}/nunit.framework.tests.dll"/>
-    </nunit2>
   </target>
 
   <target name="gui-test" depends="build,init-test"
@@ -452,8 +440,8 @@ file or set the PARTCOVER_DIR environment variable.
     <fail message="MSI can only be built on the Win32 platform" 
       unless="${platform::is-win32()}"/>
 
-    <fail message="MSI can only be built for a Win32 runtime" 
-      unless="${build.win32}"/>
+    <fail message="MSI can only be built for a Microsoft runtime" 
+      unless="${runtime.platform=='net'}"/>
 
     <fail unless="${property::exists('wix.dir')}">
 Unable to locate your WiX installation. Installing WiX normally sets

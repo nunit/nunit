@@ -130,6 +130,7 @@ namespace NUnit.Framework.Constraints.Tests
             Assert.That(list, new CollectionContainsConstraint(item));
         }
 
+#if !NETCF_1_0
         [Test]
         public void CanTestContentsOfSortedList()
         {
@@ -141,6 +142,7 @@ namespace NUnit.Framework.Constraints.Tests
             Assert.That(list.Values, new CollectionContainsConstraint(item));
             Assert.That(list.Keys, new CollectionContainsConstraint("b"));
         }
+#endif
 
 		[Test]
 		public void CanTestContentsOfCollectionNotImplementingIList()

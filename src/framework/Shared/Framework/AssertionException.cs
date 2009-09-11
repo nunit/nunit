@@ -31,8 +31,9 @@ namespace NUnit.Framework
 	/// <summary>
 	/// Thrown when an assertion failed.
 	/// </summary>
-	/// 
+#if !NETCF_1_0
 	[Serializable]
+#endif
 	public class AssertionException : System.Exception
 	{
 		/// <param name="message">The error message that explains 

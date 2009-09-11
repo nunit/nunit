@@ -21,6 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#if !NETCF_1_0
+
 using System;
 using System.Collections;
 #if NET_2_0
@@ -65,3 +67,4 @@ namespace NUnit.Framework.Constraints.Tests
     internal class InternalWithSerializableAttributeClass
     { }
 }
+#endif
