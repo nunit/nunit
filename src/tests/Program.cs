@@ -35,21 +35,19 @@ namespace NUnitLite.Tests
         //      writer.Close();
         static void Main(string[] args)
         {
-#if PocketPC || WindowsCE || NETCF
-#if NETCF_1_0
-            string myDocs = @"\My Documents";
-#else
-            string myDocs = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
-#endif
-            string path = System.IO.Path.Combine(myDocs, "TestResult.txt");
-            System.IO.TextWriter writer = new System.IO.StreamWriter(path);
-            new TextUI(writer).Execute(args);
-            writer.Close();
-//            new TcpUI("ppp_peer", 9000).Execute(args);
-#else
-            //            new TcpUI("ferrari", 9000).Execute(args);
-            new ConsoleUI().Execute(args);
-#endif
+            if (Environment.OSVersion.Platform == PlatformID.WinCE)
+            {
+                string path = System.IO.Path.Combine(Env.DocumentFolder, "TestResult.txt");
+                System.IO.TextWriter writer = new System.IO.StreamWriter(path);
+                new TextUI(writer).Execute(args);
+                writer.Close();
+                //            new TcpUI("ppp_peer", 9000).Execute(args);
+            }
+            else
+            {
+                //            new TcpUI("ferrari", 9000).Execute(args);
+                new ConsoleUI().Execute(args);
+            }
         }
     }
 }

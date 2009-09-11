@@ -33,8 +33,10 @@ namespace NUnitLite
         // these binaries are not yet currently portable.
 #if PocketPC || WindowsCE || NETCF
         public static readonly string NewLine = "\r\n";
+        public static string DocumentFolder = @"\My Documents";
 #else
         public static readonly string NewLine = Environment.NewLine;
+        public static string DocumentFolder = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
 #endif
     }
 }
