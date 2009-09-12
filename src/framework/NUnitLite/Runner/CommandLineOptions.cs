@@ -10,72 +10,95 @@ using System.Collections;
 
 namespace NUnitLite.Runner
 {
+    /// <summary>
+    /// The CommandLineOptions class parses and holds the values of
+    /// any options entered at the command line.
+    /// </summary>
     public class CommandLineOptions
     {
         private string optionChars;
+
+        private bool wait = false;
+        private bool nologo = false;
+        private bool listprops = false;
+        private bool help = false;
+
+        private ArrayList tests = new ArrayList();
 
         bool error = false;
 
         ArrayList invalidOptions = new ArrayList();
         ArrayList parameters = new ArrayList();
 
-        private bool wait = false;
+        /// <summary>
+        /// Gets a value indicating whether the 'wait' option was used.
+        /// </summary>
         public bool Wait
         {
             get { return wait; }
         }
 
-        private bool nologo = false;
+        /// <summary>
+        /// Gets a value indicating whether the 'nologo' option was used.
+        /// </summary>
         public bool Nologo
         {
             get { return nologo; }
         }
 
-        private bool listprops = false;
+        /// <summary>
+        /// Gets a value indicating whether the 'listprops' option was used.
+        /// </summary>
         public bool ListProperties
         {
             get { return listprops; }
         }
 
-        private bool verbose = false;
-        public bool Verbose
-        {
-            get { return verbose; }
-        }
-
-        private bool dumpTree = false;
-        public bool DumpTree
-        {
-            get { return dumpTree; }
-        }
-
-        private bool help = false;
+        /// <summary>
+        /// Gets a value indicating whether the 'help' option was used.
+        /// </summary>
         public bool Help
         {
             get { return help; }
         }
 
-        private ArrayList tests = new ArrayList();
+        /// <summary>
+        /// Gets a list of all tests specified on the command line
+        /// </summary>
         public string[] Tests
         {
             get { return (string[])tests.ToArray(typeof(string)); }
         }
 
+        /// <summary>
+        /// Gets the test count
+        /// </summary>
         public int TestCount
         {
             get { return tests.Count; }
         }
 
+        /// <summary>
+        /// Construct a CommandLineOptions object using default option chars
+        /// </summary>
         public CommandLineOptions()
         {
             this.optionChars = System.IO.Path.DirectorySeparatorChar == '/' ? "-" : "/-";
         }
 
+        /// <summary>
+        /// Construct a CommandLineOptions object using specified option chars
+        /// </summary>
+        /// <param name="optionChars"></param>
         public CommandLineOptions(string optionChars)
         {
             this.optionChars = optionChars;
         }
 
+        /// <summary>
+        /// Parse command arguments and initialize option settings accordingly
+        /// </summary>
+        /// <param name="args">The argument list</param>
         public void Parse(params string[] args)
         {
             foreach( string arg in args )
@@ -87,6 +110,9 @@ namespace NUnitLite.Runner
             }
         }
 
+        /// <summary>
+        ///  Gets the parameters provided on the commandline
+        /// </summary>
         public string[] Parameters
         {
             get { return (string[])parameters.ToArray( typeof(string) ); }
@@ -120,12 +146,6 @@ namespace NUnitLite.Runner
                 case "test":
                     tests.Add(val);
                     break;
-                case "verbose":
-                    verbose = true;
-                    break;
-                case "tree":
-                    dumpTree = true;
-                    break;
                 default:
                     error = true;
                     invalidOptions.Add(opt);
@@ -138,11 +158,19 @@ namespace NUnitLite.Runner
             parameters.Add(param);
         }
 
+        /// <summary>
+        /// Gets a value indicating whether there was an error in parsing the options.
+        /// </summary>
+        /// <value><c>true</c> if error; otherwise, <c>false</c>.</value>
         public bool Error
         {
             get { return error; }
         }
 
+        /// <summary>
+        /// Gets the error message.
+        /// </summary>
+        /// <value>The error message.</value>
         public string ErrorMessage
         {
             get 
@@ -154,6 +182,10 @@ namespace NUnitLite.Runner
             }
         }
 
+        /// <summary>
+        /// Gets the help text.
+        /// </summary>
+        /// <value>The help text.</value>
         public string HelpText
         {
             get

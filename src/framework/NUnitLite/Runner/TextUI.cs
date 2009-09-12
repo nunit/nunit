@@ -22,6 +22,9 @@ namespace NUnitLite.Runner
     /// </summary>
     public class ConsoleUI : TextUI
     {
+        /// <summary>
+        /// Construct an instance of ConsoleUI
+        /// </summary>
 #if NETCF_1_0
         public ConsoleUI() : base(ConsoleWriter.Out) { }
 #else
@@ -37,6 +40,10 @@ namespace NUnitLite.Runner
     /// </summary>
     public class FileUI : TextUI
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FileUI"/> class.
+        /// </summary>
+        /// <param name="path">The path.</param>
         public FileUI(string path) : base(new StreamWriter(path)) { }
     }
 
@@ -48,15 +55,33 @@ namespace NUnitLite.Runner
     /// </summary>
     public class DebugUI : TextUI
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DebugUI"/> class.
+        /// </summary>
         public DebugUI() : base(DebugWriter.Out) { }
     }
 
+    /// <summary>
+    /// A version of TextUI that writes to a TcpWriter
+    /// </summary>
     public class TcpUI : TextUI
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TcpUI"/> class.
+        /// </summary>
+        /// <param name="hostName">Name of the host.</param>
+        /// <param name="port">The port.</param>
         public TcpUI(string hostName, int port) : base( new TcpWriter(hostName, port) ) { }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TcpUI"/> class.
+        /// </summary>
+        /// <param name="hostName">Name of the host.</param>
         public TcpUI(string hostName) : this(hostName, 9000) { }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TcpUI"/> class.
+        /// </summary>
         public TcpUI() : this("localhost", 9000) { }
     }
 
@@ -67,7 +92,7 @@ namespace NUnitLite.Runner
     /// Call it from your Main like this:
     ///   new TextUI(textWriter).Execute(args);
     /// </summary>
-    public class TextUI : TestListener
+    public class TextUI
     {
         private CommandLineOptions options;
         private int reportCount = 0;
@@ -79,6 +104,10 @@ namespace NUnitLite.Runner
         private TestRunner runner = new TestRunner();
 
         #region Constructors
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TextUI"/> class.
+        /// </summary>
+        /// <param name="writer">The TextWriter to use.</param>
         public TextUI(TextWriter writer)
         {
             this.writer = writer;
@@ -112,19 +141,13 @@ namespace NUnitLite.Runner
                     if (assemblies.Count == 0)
                         assemblies.Add(callingAssembly);
 
-                    if (options.Verbose)
-                        runner.AddListener( this );
-
                     foreach (Assembly assembly in assemblies)
                     {
                         ITest suite = options.TestCount == 0
                             ? TestLoader.Load(assembly)
                             : TestLoader.Load(assembly, options.Tests);
 
-                        if (options.DumpTree)
-                            DumpTree((TestSuite)suite);
-                        else
-                            ReportResults( runner.Run(suite) );
+                        ReportResults( runner.Run(suite) );
                     }
                 }
                 catch (TestRunnerException ex)
@@ -150,36 +173,29 @@ namespace NUnitLite.Runner
             }
         }
 
-        public void DumpTree(TestSuite suite)
-        {
-            suite.Sort();
-            DumpTree(suite, "");
-        }
-
-        private void DumpTree(ITest test, string prefix)
-        {
-            writer.Write(prefix);
-            writer.WriteLine(test.Name);
-
-            TestSuite suite = test as TestSuite;
-            if (suite != null)
-            {
-                prefix += "  ";
-                foreach (ITest child in suite.Tests)
-                    DumpTree(child, prefix);
-            }
-        }
-
+        /// <summary>
+        /// Runs all tests in the specified assembly.
+        /// </summary>
+        /// <param name="assembly">The assembly.</param>
         public void Run(Assembly assembly)
         {
             ReportResults( runner.Run(assembly) );
         }
 
+        /// <summary>
+        /// Runs selected tests in the specified assembly.
+        /// </summary>
+        /// <param name="assembly">The assembly.</param>
+        /// <param name="tests">The tests.</param>
         public void Run(Assembly assembly, string[] tests)
         {
             ReportResults( runner.Run(assembly, tests) );
         }
 
+        /// <summary>
+        /// Reports the results.
+        /// </summary>
+        /// <param name="result">The result.</param>
         private void ReportResults( TestResult result )
         {
             ResultSummary summary = new ResultSummary(result);
@@ -292,22 +308,6 @@ namespace NUnitLite.Runner
             foreach (DictionaryEntry entry in test.Properties)
                 writer.WriteLine("  {0}: {1}", entry.Key, entry.Value);            
         }
-        #endregion
-
-        #region TestListener Members
-
-        public void TestStarted(ITest test)
-        {
-            if (options.Verbose)
-                writer.WriteLine(test.Name);
-        }
-
-        public void TestFinished(TestResult result)
-        {
-            //if (options.Verbose)
-            //    writer.WriteLine("*****");
-        }
-
         #endregion
     }
 }

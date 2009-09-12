@@ -25,10 +25,21 @@ using System;
 
 namespace NUnitLite
 {
+    /// <summary>
+    /// NullListener is a TestListener that takes no action
+    /// </summary>
     public class NullListener : TestListener
     {
+        /// <summary>
+        /// Handles the TestStarted event.
+        /// </summary>
+        /// <param name="test">The test that just started.</param>
         public void TestStarted(ITest test) { }
 
+        /// <summary>
+        /// Handles the TestFinished event
+        /// </summary>
+        /// <param name="result">The result of the test that just finished.</param>
         public void TestFinished(TestResult result) { }
     }
 }

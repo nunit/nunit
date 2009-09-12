@@ -711,7 +711,6 @@ namespace NUnit.Framework
         /// Verifies that a delegate throws an exception of a certain Type
         /// or one derived from it when called and returns it.
         /// </summary>
-        /// <param name="expectedExceptionType">The expected Exception Type</param>
         /// <param name="code">A TestDelegate</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
@@ -724,7 +723,6 @@ namespace NUnit.Framework
         /// Verifies that a delegate throws an exception of a certain Type
         /// or one derived from it when called and returns it.
         /// </summary>
-        /// <param name="expectedExceptionType">The expected Exception Type</param>
         /// <param name="code">A TestDelegate</param>
         /// <param name="message">The message that will be displayed on failure</param>
         public static Exception Catch<T>(TestDelegate code, string message)
@@ -736,7 +734,6 @@ namespace NUnit.Framework
         /// Verifies that a delegate throws an exception of a certain Type
         /// or one derived from it when called and returns it.
         /// </summary>
-        /// <param name="expectedExceptionType">The expected Exception Type</param>
         /// <param name="code">A TestDelegate</param>
         public static Exception Catch<T>(TestDelegate code)
         {

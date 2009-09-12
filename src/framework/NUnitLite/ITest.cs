@@ -39,14 +39,14 @@ namespace NUnitLite
         /// </summary>
         Runnable,
 
-        /// <summary>
-        /// The test can only be run explicitly
-        /// </summary>
+        ///// <summary>
+        ///// The test can only be run explicitly
+        ///// </summary>
         //Explicit,
 
-        /// <summary>
-        /// The test has been skipped
-        /// </summary>
+        ///// <summary>
+        ///// The test has been skipped
+        ///// </summary>
         //Skipped,
 
         /// <summary>
@@ -54,24 +54,64 @@ namespace NUnitLite
         /// </summary>
         Ignored
 
-        /// <summary>
-        /// The test has been executed
-        /// </summary>
+        ///// <summary>
+        ///// The test has been executed
+        ///// </summary>
         //Executed
     }
 
-    public interface ITest : System.IComparable
+    /// <summary>
+    /// Interface representing a test
+    /// </summary>
+    public interface ITest
     {
+        /// <summary>
+        /// Gets the name of the test.
+        /// </summary>
+        /// <value>The name.</value>
         string Name { get; }
+
+        /// <summary>
+        /// Gets the full name of the test.
+        /// </summary>
+        /// <value>The full name.</value>
         string FullName { get; }
 
+        /// <summary>
+        /// Gets or sets the run state of the test.
+        /// </summary>
+        /// <value>The state of the run.</value>
         RunState RunState { get; set; }
+
+        /// <summary>
+        /// Gets or sets the ignore reason.
+        /// </summary>
+        /// <value>The ignore reason.</value>
         string IgnoreReason { get; set; }
+
+        /// <summary>
+        /// Gets the test case count.
+        /// </summary>
+        /// <value>The test case count.</value>
         int TestCaseCount { get; }
 
+        /// <summary>
+        /// Gets the properties of the test.
+        /// </summary>
+        /// <value>The properties dictionary.</value>
         System.Collections.IDictionary Properties { get; }
 
+        /// <summary>
+        /// Runs this test.
+        /// </summary>
+        /// <returns>A TestResult</returns>
         TestResult Run();
+
+        /// <summary>
+        /// Runs this test
+        /// </summary>
+        /// <param name="listener">A TestListener to handle test events</param>
+        /// <returns>A TestResult</returns>
         TestResult Run(TestListener listener);
     }
 }

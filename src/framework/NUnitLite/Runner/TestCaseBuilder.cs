@@ -5,8 +5,18 @@ using NUnit.Framework;
 
 namespace NUnitLite.Runner
 {
+    /// <summary>
+    /// Static class used to build test cases.
+    /// </summary>
     public class TestCaseBuilder
     {
+        /// <summary>
+        /// Determines whether the specified method is a test method.
+        /// </summary>
+        /// <param name="method">The method to examine.</param>
+        /// <returns>
+        /// 	<c>true</c> if the specified method is a test method; otherwise, <c>false</c>.
+        /// </returns>
         public static bool IsTestMethod(MethodInfo method)
         {
             return Reflect.HasAttribute(method, typeof(TestAttribute))
@@ -14,6 +24,11 @@ namespace NUnitLite.Runner
                 || Reflect.HasAttribute(method, typeof(TestCaseSourceAttribute));
         }
 
+        /// <summary>
+        /// Builds a test from a specified method
+        /// </summary>
+        /// <param name="method">The method.</param>
+        /// <returns></returns>
         public static ITest BuildFrom(MethodInfo method)
         {
             IList testdata = GetTestCaseData(method);

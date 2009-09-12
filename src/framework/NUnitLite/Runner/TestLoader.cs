@@ -10,6 +10,9 @@ using NUnit.Framework;
 
 namespace NUnitLite.Runner
 {
+    /// <summary>
+    /// Static class used to load tests from an assembly
+    /// </summary>
     public class TestLoader
     {
         /// <summary>
@@ -51,6 +54,7 @@ namespace NUnitLite.Runner
         /// <summary>
         /// Loads a test suite containing multiple tests from an assembly
         /// </summary>
+        /// <param name="assembly">The assembly containing the tests</param>
         /// <param name="tests">String array containing the names of the test classes to load</param>
         /// <returns>A suite containing all the tests</returns>
         public static ITest Load(Assembly assembly, string[] tests)
