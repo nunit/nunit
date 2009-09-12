@@ -40,9 +40,9 @@ namespace NUnit.Framework
     public class TestCaseData : ITestCaseData
     {
         #region Constants
-        //private static readonly string DESCRIPTION = "_DESCRIPTION";
-        //private static readonly string IGNOREREASON = "_IGNOREREASON";
+#if !NUNITLITE
         private static readonly string CATEGORIES = "_CATEGORIES";
+#endif
         #endregion
 
         #region Instance Fields

@@ -28,6 +28,9 @@ using NUnit.Framework;
 
 namespace NUnitLite
 {
+    /// <summary>
+    /// TestCase represents a single executable test
+    /// </summary>
     public class TestCase : ITest
     {
         #region Instance Variables
@@ -49,16 +52,29 @@ namespace NUnitLite
         #endregion
 
         #region Constructors
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TestCase"/> class.
+        /// </summary>
+        /// <param name="name">The name of the test.</param>
         public TestCase(string name)
         {
             this.name = this.fullName = name;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TestCase"/> class.
+        /// </summary>
+        /// <param name="method">The method implementing this test case.</param>
         public TestCase(MethodInfo method)
         {
             Initialize(method, null, null);
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TestCase"/> class.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <param name="fixture">The fixture.</param>
         public TestCase(string name, object fixture)
         {
             Initialize(fixture.GetType().GetMethod(name), fixture, null);
@@ -112,6 +128,11 @@ namespace NUnitLite
             }
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TestCase"/> class.
+        /// </summary>
+        /// <param name="method">The method implementing the test case.</param>
+        /// <param name="args">The args to be used in calling the method.</param>
         public TestCase(MethodInfo method, object[] args)
         {
             Initialize(method, null, args);
@@ -119,28 +140,48 @@ namespace NUnitLite
         #endregion
 
         #region Properties
+        /// <summary>
+        /// Gets the name of the test.
+        /// </summary>
+        /// <value>The name.</value>
         public string Name
         {
             get { return name; }
         }
 
+        /// <summary>
+        /// Gets the full name of the test.
+        /// </summary>
+        /// <value>The full name.</value>
         public string FullName
         {
             get { return fullName; }
         }
 
+        /// <summary>
+        /// Gets or sets the run state of the test.
+        /// </summary>
+        /// <value>The state of the run.</value>
         public RunState RunState
         {
             get { return runState; }
             set { runState = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the ignore reason.
+        /// </summary>
+        /// <value>The ignore reason.</value>
         public string IgnoreReason
         {
             get { return ignoreReason; }
             set { ignoreReason = value; }
         }
 
+        /// <summary>
+        /// Gets the properties of the test.
+        /// </summary>
+        /// <value>The properties dictionary.</value>
         public System.Collections.IDictionary Properties
         {
             get 
@@ -159,6 +200,10 @@ namespace NUnitLite
             }
         }
 
+        /// <summary>
+        /// Gets the test case count.
+        /// </summary>
+        /// <value>The test case count.</value>
         public int TestCaseCount
         {
             get { return 1; }
@@ -166,11 +211,20 @@ namespace NUnitLite
         #endregion
 
         #region Public Methods
+        /// <summary>
+        /// Runs this test.
+        /// </summary>
+        /// <returns>A TestResult</returns>
         public TestResult Run()
         {
             return Run( new NullListener() );
         }
 
+        /// <summary>
+        /// Runs this test
+        /// </summary>
+        /// <param name="listener">A TestListener to handle test events</param>
+        /// <returns>A TestResult</returns>
         public TestResult Run(TestListener listener)
         {
             listener.TestStarted(this);
@@ -185,6 +239,9 @@ namespace NUnitLite
         #endregion
 
         #region Protected Methods
+        /// <summary>
+        /// Performs SetUp for the test.
+        /// </summary>
         protected virtual void SetUp() 
         {
             if (setup != null)
@@ -194,6 +251,9 @@ namespace NUnitLite
             }
         }
 
+        /// <summary>
+        /// Performs TearDown for the test.
+        /// </summary>
         protected virtual void TearDown() 
         {
             if (teardown != null)
@@ -203,6 +263,11 @@ namespace NUnitLite
             }
         }
 
+        /// <summary>
+        /// Runs the test and handles any exceptions.
+        /// </summary>
+        /// <param name="result">The result.</param>
+        /// <param name="listener">The listener.</param>
         protected virtual void Run(TestResult result, TestListener listener)
         {
             IgnoreAttribute ignore = (IgnoreAttribute)Reflect.GetAttribute(method, typeof(IgnoreAttribute));
@@ -234,6 +299,9 @@ namespace NUnitLite
             }
         }
 
+        /// <summary>
+        /// Runs SetUp, invokes the test and runs TearDown.
+        /// </summary>
         protected void RunBare()
         {
             SetUp();
@@ -247,6 +315,9 @@ namespace NUnitLite
             }
         }
 
+        /// <summary>
+        /// Runs the test.
+        /// </summary>
         protected virtual void RunTest()
         {
             try
@@ -260,6 +331,11 @@ namespace NUnitLite
             }
         }
 
+        /// <summary>
+        /// Invokes a method on the test fixture.
+        /// </summary>
+        /// <param name="method">The method.</param>
+        /// <param name="args">The args.</param>
         protected void InvokeMethod(MethodInfo method, params object[] args)
         {
             Reflect.InvokeMethod(method, this.fixture, args);
@@ -267,7 +343,16 @@ namespace NUnitLite
         #endregion
 
         #region Private Methods       
-        public bool HasValidSignature(MethodInfo method, object[] args)
+        /// <summary>
+        /// Determines whether the method has a valid signature and sets
+        /// the RunState to NotRunnable if it does not.
+        /// </summary>
+        /// <param name="method">The method.</param>
+        /// <param name="args">The args.</param>
+        /// <returns>
+        /// 	<c>true</c> if the signature is valid; otherwise, <c>false</c>.
+        /// </returns>
+        private bool HasValidSignature(MethodInfo method, object[] args)
         {
             if (method.ReturnType != typeof(void))
             {
@@ -354,18 +439,5 @@ namespace NUnitLite
             return handler;
         }
         #endregion
-
-        #region IComparable Members
-
-        public int CompareTo(object obj)
-        {
-            ITest other = obj as ITest;
-            if (other == null)
-                return -1;
-
-            return this.Name.CompareTo(other.Name);
-        }
-
-         #endregion
     }
 }

@@ -18,6 +18,9 @@ namespace NUnitLite.Runner
         public TestRunnerException(string message) : base(message) { }
     }
 
+    /// <summary>
+    /// The TestRunner class knows how to execute tests
+    /// </summary>
     public class TestRunner : TestListener
     {
         private IList listeners = new ArrayList();
@@ -35,6 +38,7 @@ namespace NUnitLite.Runner
         /// <summary>
         /// Runs a set of tests specified by name
         /// </summary>
+        /// <param name="assembly">The assembly containing the tests</param>
         /// <param name="tests">Array of test names to be run</param>
         /// <returns>TestResult representing the result of the run</returns>
         public virtual TestResult Run(Assembly assembly, string[] tests)

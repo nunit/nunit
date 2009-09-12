@@ -23,9 +23,22 @@
 
 namespace NUnitLite
 {
+    /// <summary>
+    /// The TestListener interface allows a client program to take action
+    /// when a test starts or finishes.
+    /// </summary>
     public interface TestListener
     {
+        /// <summary>
+        /// Handles the TestStarted event.
+        /// </summary>
+        /// <param name="test">The test that just started.</param>
         void TestStarted(ITest test);
+
+        /// <summary>
+        /// Handles the TestFinished event
+        /// </summary>
+        /// <param name="result">The result of the test that just finished.</param>
         void TestFinished(TestResult result);
     }
 }

@@ -27,9 +27,16 @@ using NUnit.Framework;
 
 namespace NUnitLite
 {
+    /// <summary>
+    /// Static class that performs common reflection operations
+    /// </summary>
     public class Reflect
     {
         #region Types
+        /// <summary>
+        /// An zero-length Type array - not provided by System.Type
+        /// for all CLR versioons we support.
+        /// </summary>
         public static readonly Type[] EmptyTypes = new Type[0];
 
         /// <summary>
@@ -79,12 +86,27 @@ namespace NUnitLite
         #endregion
 
         #region Methods
+        /// <summary>
+        /// Gets the MethodInfo for a named method.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <param name="name">The methd name.</param>
+        /// <param name="argTypes">The arg types.</param>
+        /// <returns>A MethodInfo</returns>
         public static MethodInfo GetMethod(Type type, string name, params Type[] argTypes)
         {
             if (argTypes == null) argTypes = Reflect.EmptyTypes;
             return type.GetMethod(name, argTypes);
         }
 
+        /// <summary>
+        /// Gets a method.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <param name="name">The name.</param>
+        /// <param name="flags">The flags.</param>
+        /// <param name="argTypes">The arg types.</param>
+        /// <returns></returns>
         public static MethodInfo GetMethod(Type type, string name, BindingFlags flags, params Type[] argTypes)
         {
             if (argTypes == null) argTypes = Reflect.EmptyTypes;
@@ -97,6 +119,7 @@ namespace NUnitLite
         /// </summary>
         /// <param name="method">A MethodInfo for the method to be invoked</param>
         /// <param name="fixture">The object on which to invoke the method</param>
+        /// <param name="args">Arguments to be passed to the method</param>
         public static void InvokeMethod(MethodInfo method, object fixture, params object[] args)
         {
             if (method != null)
@@ -117,17 +140,37 @@ namespace NUnitLite
         #endregion
 
         #region Construction
+        /// <summary>
+        /// Determines whether the specified type has a constructor that takes the specified arg types.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <param name="argTypes">The arg types.</param>
+        /// <returns>
+        /// 	<c>true</c> if the specified type has such a constructor; otherwise, <c>false</c>.
+        /// </returns>
         public static bool HasConstructor(Type type, params Type[] argTypes)
         {
             return GetConstructor(type, argTypes) != null;
         }
 
+        /// <summary>
+        /// Gets the constructor for a type that takes the specified arg types.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <param name="argTypes">The arg types.</param>
+        /// <returns></returns>
         public static ConstructorInfo GetConstructor(Type type, params Type[] argTypes)
         {
             if (argTypes == null) argTypes = Reflect.EmptyTypes;
             return type.GetConstructor(argTypes);
         }
 
+        /// <summary>
+        /// Constructs the specified type.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <param name="args">The args.</param>
+        /// <returns></returns>
         public static object Construct(Type type, params object[] args)
         {
             Type[] argTypes;
@@ -148,11 +191,25 @@ namespace NUnitLite
         #endregion
 
         #region Attributes
+        /// <summary>
+        /// Determines whether the specified member has a given attribute.
+        /// </summary>
+        /// <param name="member">The member.</param>
+        /// <param name="attr">The attribute type.</param>
+        /// <returns>
+        /// 	<c>true</c> if the specified member has attribute; otherwise, <c>false</c>.
+        /// </returns>
         public static bool HasAttribute(MemberInfo member, Type attr)
         {
             return member.GetCustomAttributes(attr, true).Length > 0;
         }
 
+        /// <summary>
+        /// Gets an attribute of a specified type.
+        /// </summary>
+        /// <param name="member">The member.</param>
+        /// <param name="attrType">Type of the attr.</param>
+        /// <returns></returns>
         public static Attribute GetAttribute(MemberInfo member, Type attrType)
         {
             object[] attrs = member.GetCustomAttributes(attrType, false);
@@ -161,6 +218,11 @@ namespace NUnitLite
         #endregion
 
         #region Properties
+        /// <summary>
+        /// Gets the suite property.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <returns></returns>
         public static PropertyInfo GetSuiteProperty(Type type)
         {
             return type.GetProperty("Suite", typeof(ITest), Reflect.EmptyTypes);

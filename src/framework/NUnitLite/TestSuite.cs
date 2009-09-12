@@ -28,7 +28,10 @@ using NUnit.Framework;
 
 namespace NUnitLite
 {
-    public class TestSuite : ITest, IComparable
+    /// <summary>
+    /// TestSuite represents a collection of tests
+    /// </summary>
+    public class TestSuite : ITest
     {
         #region Instance Variables
         private string name;
@@ -43,11 +46,19 @@ namespace NUnitLite
         #endregion
 
         #region Constructors
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TestSuite"/> class.
+        /// </summary>
+        /// <param name="name">The name of the suite.</param>
         public TestSuite(string name)
         {
             this.name = name;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TestSuite"/> class.
+        /// </summary>
+        /// <param name="type">The type used to create the suite.</param>
         public TestSuite(Type type)
         {
             this.name = type.Name;
@@ -56,33 +67,57 @@ namespace NUnitLite
         #endregion
 
         #region Properties
+        /// <summary>
+        /// Gets the name of the suite.
+        /// </summary>
+        /// <value>The name.</value>
         public string Name
         {
             get { return name; }
         }
 
+        /// <summary>
+        /// Gets the full name of the suite.
+        /// </summary>
+        /// <value>The full name.</value>
         public string FullName
         {
             get { return fullName; }
         }
 
+        /// <summary>
+        /// Gets or sets the run state of the suite.
+        /// </summary>
+        /// <value>The run state.</value>
         public RunState RunState
         {
             get { return runState; }
             set { runState = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the ignore reason.
+        /// </summary>
+        /// <value>The ignore reason.</value>
         public string IgnoreReason
         {
             get { return ignoreReason; }
             set { ignoreReason = value; }
         }
 
+        /// <summary>
+        /// Gets the properties collection for this suite.
+        /// </summary>
+        /// <value>The properties.</value>
         public IDictionary Properties
         {
             get { return properties; }
         }
 
+        /// <summary>
+        /// Gets the test case count.
+        /// </summary>
+        /// <value>The test case count.</value>
         public int TestCaseCount
         {
             get
@@ -94,6 +129,10 @@ namespace NUnitLite
             }
         }
 
+        /// <summary>
+        /// Gets the tests.
+        /// </summary>
+        /// <value>The tests.</value>
         public IList Tests
         {
             get { return tests; }
@@ -101,11 +140,20 @@ namespace NUnitLite
         #endregion
 
         #region Public Methods
+        /// <summary>
+        /// Runs the suite.
+        /// </summary>
+        /// <returns>A TestResult</returns>
         public TestResult Run()
         {
             return Run(new NullListener());
         }
 
+        /// <summary>
+        /// Runs this test
+        /// </summary>
+        /// <param name="listener">A TestListener to handle test events</param>
+        /// <returns>A TestResult</returns>
         public TestResult Run(TestListener listener)
         {
             int count = 0, failures = 0, errors = 0;
@@ -154,34 +202,14 @@ namespace NUnitLite
             return result;
         }
 
+        /// <summary>
+        /// Adds the test.
+        /// </summary>
+        /// <param name="test">The test.</param>
         public void AddTest(ITest test)
         {
             tests.Add(test);
         }
-
-        public void Sort()
-        {
-            tests.Sort();
-            foreach (ITest test in tests)
-            {
-                TestSuite suite = test as TestSuite;
-                if (suite != null)
-                    suite.Sort();
-            }
-        }
-        #endregion
-
-        #region IComparable Members
-
-        public int CompareTo(object obj)
-        {
-            ITest other = obj as ITest;
-            if (other == null)
-                return -1;
-
-            return this.Name.CompareTo(other.Name);
-        }
-
         #endregion
     }
 }

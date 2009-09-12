@@ -32,6 +32,10 @@ namespace NUnit.Framework
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class | AttributeTargets.Assembly, AllowMultiple = false)]
     public sealed class DescriptionAttribute : PropertyAttribute
     {
+        /// <summary>
+        /// Construct a description Attribute
+        /// </summary>
+        /// <param name="description">The text of the description</param>
         public DescriptionAttribute(string description) : base(description) { }
     }
 

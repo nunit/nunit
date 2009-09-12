@@ -26,16 +26,30 @@ using System.Text;
 
 namespace NUnitLite
 {
+    /// <summary>
+    /// Env is a static class that provides some of the features of
+    /// System.Environment that are not available under all runtimes
+    /// </summary>
     public class Env
     {
         // Define NewLine to be used for this system
         // NOTE: Since this is done at compile time for .NET CF,
         // these binaries are not yet currently portable.
+        /// <summary>
+        /// The newline sequence in the current environmemt.
+        /// </summary>
 #if PocketPC || WindowsCE || NETCF
         public static readonly string NewLine = "\r\n";
-        public static string DocumentFolder = @"\My Documents";
 #else
         public static readonly string NewLine = Environment.NewLine;
+#endif
+
+        /// <summary>
+        /// Path to the 'My Documents' folder
+        /// </summary>
+#if NETCF_1_0
+        public static string DocumentFolder = @"\My Documents";
+#else
         public static string DocumentFolder = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
 #endif
     }

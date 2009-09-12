@@ -5,8 +5,18 @@ using NUnit.Framework;
 
 namespace NUnitLite.Runner
 {
+    /// <summary>
+    /// Static class used to create test fixtures from Types
+    /// </summary>
     public class TestFixtureBuilder
     {
+        /// <summary>
+        /// Determines whether this instance can build a fixture from the specified type.
+        /// </summary>
+        /// <param name="type">The type to use as a fixture</param>
+        /// <returns>
+        /// 	<c>true</c> if this instance can build from the specified type; otherwise, <c>false</c>.
+        /// </returns>
         public static bool CanBuildFrom(Type type)
         {
             if (Reflect.HasAttribute(type, typeof(TestFixtureAttribute)))
@@ -28,6 +38,11 @@ namespace NUnitLite.Runner
             return false;
         }
 
+        /// <summary>
+        /// Builds a fixture from the specified Type.
+        /// </summary>
+        /// <param name="type">The type to use as a fixture.</param>
+        /// <returns></returns>
         public static TestSuite BuildFrom(Type type)
         {
             TestSuite suite = new TestSuite(type);

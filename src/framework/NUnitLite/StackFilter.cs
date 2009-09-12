@@ -9,8 +9,16 @@ using System.IO;
 
 namespace NUnit.Framework
 {
+    /// <summary>
+    /// Static class used to filter stack entries before they are displayed
+    /// </summary>
     public class StackFilter
     {
+        /// <summary>
+        /// Filter a raw stack trace
+        /// </summary>
+        /// <param name="rawTrace">The original trace</param>
+        /// <returns>The filtered trace</returns>
         public static string Filter(string rawTrace)
         {
             if (rawTrace == null) return null;
