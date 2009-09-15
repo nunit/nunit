@@ -299,7 +299,7 @@
   
   <target name="set-std-package-config">
     <property name="package.config" value="std"/>
-    <property name="package.runtimes" value="net-1.1+net-2.0"/>
+    <property name="package.runtimes" value="net-1.1+net-2.0+netcf-1.0+netcf-2.0"/>
     <property name="create.msi" value="true"/>
   </target>
 
