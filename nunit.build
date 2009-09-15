@@ -440,8 +440,8 @@ file or set the PARTCOVER_DIR environment variable.
     <fail message="MSI can only be built on the Win32 platform" 
       unless="${platform::is-win32()}"/>
 
-    <fail message="MSI can only be built for a Microsoft runtime" 
-      unless="${runtime.platform=='net'}"/>
+    <!--<fail message="MSI can only be built for a Microsoft runtime" 
+      unless="${runtime.platform=='net'}"/>-->
 
     <fail unless="${property::exists('wix.dir')}">
 Unable to locate your WiX installation. Installing WiX normally sets
@@ -574,8 +574,10 @@ to the correct location.
     <copy todir="${package.bin.dir}/${runtime.config}">
       <fileset basedir="${current.build.dir}">
         <include name="*.dll"/>
+        <include name="*.exe"/>
         <include name="*.pdb"/>
         <include name="nunit.framework.xml"/>
+        <include name="nunitlite.xml"/>
       </fileset>
     </copy>
 
