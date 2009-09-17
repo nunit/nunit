@@ -4,10 +4,10 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.50727</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{7291E7BB-EB32-4B5E-BB6E-25C7CC978D8B}</ProjectGuid>
+    <ProjectGuid>{0FE72EDD-8CDF-4AEA-9F5E-C0621839F44F}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>nunitlite_CF.tests</RootNamespace>
-    <AssemblyName>nunitlite_CF.tests</AssemblyName>
+    <RootNamespace>NUnitLite.Tests</RootNamespace>
+    <AssemblyName>nunitlite.tests</AssemblyName>
     <ProjectTypeGuids>{4D628B5B-2FBC-4AA6-8C16-197242AEB884};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <PlatformFamilyName>WindowsCE</PlatformFamilyName>
     <PlatformID>E2BECB1F-8C8C-41ba-B736-9BE7D946A398</PlatformID>
@@ -21,7 +21,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\bin\Debug\</OutputPath>
     <DefineConstants>TRACE;DEBUG;WindowsCE;NETCF;NUNITLITE</DefineConstants>
     <NoStdLib>true</NoStdLib>
     <NoConfig>true</NoConfig>
@@ -33,7 +33,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>..\bin\Release\</OutputPath>
     <DefineConstants>TRACE;$(PlatformFamilyName)</DefineConstants>
     <NoStdLib>true</NoStdLib>
     <NoConfig>true</NoConfig>
@@ -204,9 +204,9 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\nunitlite_CF\nunitlite_CF.csproj">
-      <Project>{00A9536F-1A68-47B9-ADC5-A1224DFEA9AF}</Project>
-      <Name>nunitlite_CF</Name>
+    <ProjectReference Include="..\nunitlite\nunitlite.csproj">
+      <Project>{83A1B699-7177-4C00-BAAC-83A82571DC23}</Project>
+      <Name>nunitlite</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
