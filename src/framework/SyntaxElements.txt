@@ -485,7 +485,7 @@ Gen: ConstraintFactory.DoesNotEndWith(string expected)=>new ConstraintExpression
 %
 /// <summary>
 /// Returns a constraint that succeeds if the actual
-/// value matches the Regex pattern supplied as an argument.
+/// value matches the regular expression supplied as an argument.
 /// </summary>
 Cond: !NETCF
 Gen: [Obsolete("Use Is.StringMatching")]Text.Matches(string pattern)=>new RegexConstraint(pattern)
