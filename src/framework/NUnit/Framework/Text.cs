@@ -130,7 +130,7 @@ namespace NUnit.Framework
 #if !NETCF
         /// <summary>
         /// Returns a constraint that succeeds if the actual
-        /// value matches the Regex pattern supplied as an argument.
+        /// value matches the regular expression supplied as an argument.
         /// </summary>
         [Obsolete("Use Is.StringMatching")]
         public static RegexConstraint Matches(string pattern)
