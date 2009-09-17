@@ -63,7 +63,7 @@ namespace NUnit.Framework.Syntax
 		}
 	}
 
-#if NET_2_0
+#if CLR_2_0
     public abstract class AfterSyntaxTests
     {
         protected bool flag;

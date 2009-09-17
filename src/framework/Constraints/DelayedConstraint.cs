@@ -96,7 +96,7 @@ namespace NUnit.Framework.Constraints
 			return baseConstraint.Matches(actual);
         }
 
-#if NET_2_0
+#if CLR_2_0
         /// <summary>
         /// Test whether the constraint is satisfied by a given reference.
         /// Overridden to wait for the specified delay period before

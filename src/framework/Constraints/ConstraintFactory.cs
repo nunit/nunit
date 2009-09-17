@@ -41,531 +41,531 @@ namespace NUnit.Framework.Constraints
     public class ConstraintFactory
     {
         #region Not
-        
+
         /// <summary>
         /// Returns a ConstraintExpression that negates any
         /// following constraint.
         /// </summary>
-        public ConstraintExpression Not
+public ConstraintExpression Not
         {
             get { return Is.Not; }
         }
-        
+
         /// <summary>
         /// Returns a ConstraintExpression that negates any
         /// following constraint.
         /// </summary>
-        public ConstraintExpression No
+public ConstraintExpression No
         {
             get { return Has.No; }
         }
-        
+
         #endregion
-        
+
         #region All
-        
+
         /// <summary>
         /// Returns a ConstraintExpression, which will apply
         /// the following constraint to all members of a collection,
         /// succeeding if all of them succeed.
         /// </summary>
-        public ConstraintExpression All
+public ConstraintExpression All
         {
             get { return Is.All; }
         }
-        
+
         #endregion
-        
+
         #region Some
-        
+
         /// <summary>
         /// Returns a ConstraintExpression, which will apply
         /// the following constraint to all members of a collection,
         /// succeeding if at least one of them succeeds.
         /// </summary>
-        public ConstraintExpression Some
+public ConstraintExpression Some
         {
             get { return Has.Some; }
         }
-        
+
         #endregion
-        
+
         #region None
-        
+
         /// <summary>
         /// Returns a ConstraintExpression, which will apply
         /// the following constraint to all members of a collection,
         /// succeeding if all of them fail.
         /// </summary>
-        public ConstraintExpression None
+public ConstraintExpression None
         {
             get { return Has.None; }
         }
-        
+
         #endregion
-        
+
         #region Property
-        
+
         /// <summary>
         /// Returns a new PropertyConstraintExpression, which will either
         /// test for the existence of the named property on the object
         /// being tested or apply any following constraint to that property.
         /// </summary>
-        public ResolvableConstraintExpression Property(string name)
+public ResolvableConstraintExpression Property(string name)
         {
             return Has.Property(name);
         }
-        
+
         #endregion
-        
+
         #region Length
-        
+
         /// <summary>
         /// Returns a new ConstraintExpression, which will apply the following
         /// constraint to the Length property of the object being tested.
         /// </summary>
-        public ResolvableConstraintExpression Length
+public ResolvableConstraintExpression Length
         {
             get { return Has.Length; }
         }
-        
+
         #endregion
-        
+
         #region Count
-        
+
         /// <summary>
         /// Returns a new ConstraintExpression, which will apply the following
         /// constraint to the Count property of the object being tested.
         /// </summary>
-        public ResolvableConstraintExpression Count
+public ResolvableConstraintExpression Count
         {
             get { return Has.Count; }
         }
-        
+
         #endregion
-        
+
         #region Message
-        
+
         /// <summary>
         /// Returns a new ConstraintExpression, which will apply the following
         /// constraint to the Message property of the object being tested.
         /// </summary>
-        public ResolvableConstraintExpression Message
+public ResolvableConstraintExpression Message
         {
             get { return Has.Message; }
         }
-        
+
         #endregion
-        
+
         #region InnerException
-        
+
         /// <summary>
         /// Returns a new ConstraintExpression, which will apply the following
         /// constraint to the InnerException property of the object being tested.
         /// </summary>
-        public ResolvableConstraintExpression InnerException
+public ResolvableConstraintExpression InnerException
         {
             get { return Has.InnerException; }
         }
-        
+
         #endregion
-        
+
         #region Attribute
-        
+
         /// <summary>
         /// Returns a new AttributeConstraint checking for the
         /// presence of a particular attribute on an object.
         /// </summary>
-        public ResolvableConstraintExpression Attribute(Type expectedType)
+public ResolvableConstraintExpression Attribute(Type expectedType)
         {
             return Has.Attribute(expectedType);
         }
-        
-#if NET_2_0
+
+#if CLR_2_0
         /// <summary>
         /// Returns a new AttributeConstraint checking for the
         /// presence of a particular attribute on an object.
         /// </summary>
-        public ResolvableConstraintExpression Attribute<T>()
+public ResolvableConstraintExpression Attribute<T>()
         {
             return Attribute(typeof(T));
         }
-        
+
 #endif
         #endregion
-        
+
         #region Null
-        
+
         /// <summary>
         /// Returns a constraint that tests for null
         /// </summary>
-        public NullConstraint Null
+public NullConstraint Null
         {
             get { return new NullConstraint(); }
         }
-        
+
         #endregion
-        
+
         #region True
-        
+
         /// <summary>
         /// Returns a constraint that tests for True
         /// </summary>
-        public TrueConstraint True
+public TrueConstraint True
         {
             get { return new TrueConstraint(); }
         }
-        
+
         #endregion
-        
+
         #region False
-        
+
         /// <summary>
         /// Returns a constraint that tests for False
         /// </summary>
-        public FalseConstraint False
+public FalseConstraint False
         {
             get { return new FalseConstraint(); }
         }
-        
+
         #endregion
-        
+
         #region NaN
-        
+
         /// <summary>
         /// Returns a constraint that tests for NaN
         /// </summary>
-        public NaNConstraint NaN
+public NaNConstraint NaN
         {
             get { return new NaNConstraint(); }
         }
-        
+
         #endregion
-        
+
         #region Empty
-        
+
         /// <summary>
         /// Returns a constraint that tests for empty
         /// </summary>
-        public EmptyConstraint Empty
+public EmptyConstraint Empty
         {
             get { return new EmptyConstraint(); }
         }
-        
+
         #endregion
-        
+
         #region Unique
-        
+
         /// <summary>
         /// Returns a constraint that tests whether a collection 
         /// contains all unique items.
         /// </summary>
-        public UniqueItemsConstraint Unique
+public UniqueItemsConstraint Unique
         {
             get { return new UniqueItemsConstraint(); }
         }
-        
+
         #endregion
-        
+
         #region BinarySerializable
-        
+
         /// <summary>
         /// Returns a constraint that tests whether an object graph is serializable in binary format.
         /// </summary>
-        public BinarySerializableConstraint BinarySerializable
+public BinarySerializableConstraint BinarySerializable
         {
             get { return new BinarySerializableConstraint(); }
         }
-        
+
         #endregion
-        
+
         #region XmlSerializable
-        
+
         /// <summary>
         /// Returns a constraint that tests whether an object graph is serializable in xml format.
         /// </summary>
-        public XmlSerializableConstraint XmlSerializable
+public XmlSerializableConstraint XmlSerializable
         {
             get { return new XmlSerializableConstraint(); }
         }
-        
+
         #endregion
-        
+
         #region EqualTo
-        
+
         /// <summary>
         /// Returns a constraint that tests two items for equality
         /// </summary>
-        public EqualConstraint EqualTo(object expected)
+public EqualConstraint EqualTo(object expected)
         {
             return new EqualConstraint(expected);
         }
-        
+
         #endregion
-        
+
         #region SameAs
-        
+
         /// <summary>
         /// Returns a constraint that tests that two references are the same object
         /// </summary>
-        public SameAsConstraint SameAs(object expected)
+public SameAsConstraint SameAs(object expected)
         {
             return new SameAsConstraint(expected);
         }
-        
+
         #endregion
-        
+
         #region GreaterThan
-        
+
         /// <summary>
         /// Returns a constraint that tests whether the
         /// actual value is greater than the suppled argument
         /// </summary>
-        public GreaterThanConstraint GreaterThan(object expected)
+public GreaterThanConstraint GreaterThan(object expected)
         {
             return new GreaterThanConstraint(expected);
         }
-        
+
         #endregion
-        
+
         #region GreaterThanOrEqualTo
-        
+
         /// <summary>
         /// Returns a constraint that tests whether the
         /// actual value is greater than or equal to the suppled argument
         /// </summary>
-        public GreaterThanOrEqualConstraint GreaterThanOrEqualTo(object expected)
+public GreaterThanOrEqualConstraint GreaterThanOrEqualTo(object expected)
         {
             return new GreaterThanOrEqualConstraint(expected);
         }
-        
+
         /// <summary>
         /// Returns a constraint that tests whether the
         /// actual value is greater than or equal to the suppled argument
         /// </summary>
-        public GreaterThanOrEqualConstraint AtLeast(object expected)
+public GreaterThanOrEqualConstraint AtLeast(object expected)
         {
             return new GreaterThanOrEqualConstraint(expected);
         }
-        
+
         #endregion
-        
+
         #region LessThan
-        
+
         /// <summary>
         /// Returns a constraint that tests whether the
         /// actual value is less than the suppled argument
         /// </summary>
-        public LessThanConstraint LessThan(object expected)
+public LessThanConstraint LessThan(object expected)
         {
             return new LessThanConstraint(expected);
         }
-        
+
         #endregion
-        
+
         #region LessThanOrEqualTo
-        
+
         /// <summary>
         /// Returns a constraint that tests whether the
         /// actual value is less than or equal to the suppled argument
         /// </summary>
-        public LessThanOrEqualConstraint LessThanOrEqualTo(object expected)
+public LessThanOrEqualConstraint LessThanOrEqualTo(object expected)
         {
             return new LessThanOrEqualConstraint(expected);
         }
-        
+
         /// <summary>
         /// Returns a constraint that tests whether the
         /// actual value is less than or equal to the suppled argument
         /// </summary>
-        public LessThanOrEqualConstraint AtMost(object expected)
+public LessThanOrEqualConstraint AtMost(object expected)
         {
             return new LessThanOrEqualConstraint(expected);
         }
-        
+
         #endregion
-        
+
         #region TypeOf
-        
+
         /// <summary>
         /// Returns a constraint that tests whether the actual
         /// value is of the exact type supplied as an argument.
         /// </summary>
-        public ExactTypeConstraint TypeOf(Type expectedType)
+public ExactTypeConstraint TypeOf(Type expectedType)
         {
             return new ExactTypeConstraint(expectedType);
         }
-        
-#if NET_2_0
+
+#if CLR_2_0
         /// <summary>
         /// Returns a constraint that tests whether the actual
         /// value is of the exact type supplied as an argument.
         /// </summary>
-        public ExactTypeConstraint TypeOf<T>()
+public ExactTypeConstraint TypeOf<T>()
         {
             return new ExactTypeConstraint(typeof(T));
         }
-        
+
 #endif
         #endregion
-        
+
         #region InstanceOf
-        
+
         /// <summary>
         /// Returns a constraint that tests whether the actual value
         /// is of the type supplied as an argument or a derived type.
         /// </summary>
-        public InstanceOfTypeConstraint InstanceOf(Type expectedType)
+public InstanceOfTypeConstraint InstanceOf(Type expectedType)
         {
             return new InstanceOfTypeConstraint(expectedType);
         }
-        
-#if NET_2_0
+
+#if CLR_2_0
         /// <summary>
         /// Returns a constraint that tests whether the actual value
         /// is of the type supplied as an argument or a derived type.
         /// </summary>
-        public InstanceOfTypeConstraint InstanceOf<T>()
+public InstanceOfTypeConstraint InstanceOf<T>()
         {
             return new InstanceOfTypeConstraint(typeof(T));
         }
-        
+
 #endif
         /// <summary>
         /// Returns a constraint that tests whether the actual value
         /// is of the type supplied as an argument or a derived type.
         /// </summary>
         [Obsolete("Use InstanceOf(expectedType)")]
-        public InstanceOfTypeConstraint InstanceOfType(Type expectedType)
+public InstanceOfTypeConstraint InstanceOfType(Type expectedType)
         {
             return new InstanceOfTypeConstraint(expectedType);
         }
-        
-#if NET_2_0
+
+#if CLR_2_0
         /// <summary>
         /// Returns a constraint that tests whether the actual value
         /// is of the type supplied as an argument or a derived type.
         /// </summary>
         [Obsolete("Use InstanceOf<T>()")]
-        public InstanceOfTypeConstraint InstanceOfType<T>()
+public InstanceOfTypeConstraint InstanceOfType<T>()
         {
             return new InstanceOfTypeConstraint(typeof(T));
         }
-        
+
 #endif
         #endregion
-        
+
         #region AssignableFrom
-        
+
         /// <summary>
         /// Returns a constraint that tests whether the actual value
         /// is assignable from the type supplied as an argument.
         /// </summary>
-        public AssignableFromConstraint AssignableFrom(Type expectedType)
+public AssignableFromConstraint AssignableFrom(Type expectedType)
         {
             return new AssignableFromConstraint(expectedType);
         }
-        
-#if NET_2_0
+
+#if CLR_2_0
         /// <summary>
         /// Returns a constraint that tests whether the actual value
         /// is assignable from the type supplied as an argument.
         /// </summary>
-        public AssignableFromConstraint AssignableFrom<T>()
+public AssignableFromConstraint AssignableFrom<T>()
         {
             return new AssignableFromConstraint(typeof(T));
         }
-        
+
 #endif
         #endregion
-        
+
         #region AssignableTo
-        
+
         /// <summary>
         /// Returns a constraint that tests whether the actual value
         /// is assignable from the type supplied as an argument.
         /// </summary>
-        public AssignableToConstraint AssignableTo(Type expectedType)
+public AssignableToConstraint AssignableTo(Type expectedType)
         {
             return new AssignableToConstraint(expectedType);
         }
-        
-#if NET_2_0
+
+#if CLR_2_0
         /// <summary>
         /// Returns a constraint that tests whether the actual value
         /// is assignable from the type supplied as an argument.
         /// </summary>
-        public AssignableToConstraint AssignableTo<T>()
+public AssignableToConstraint AssignableTo<T>()
         {
             return new AssignableToConstraint(typeof(T));
         }
-        
+
 #endif
         #endregion
-        
+
         #region EquivalentTo
-        
+
         /// <summary>
         /// Returns a constraint that tests whether the actual value
         /// is a collection containing the same elements as the 
         /// collection supplied as an argument.
         /// </summary>
-        public CollectionEquivalentConstraint EquivalentTo(IEnumerable expected)
+public CollectionEquivalentConstraint EquivalentTo(IEnumerable expected)
         {
             return new CollectionEquivalentConstraint(expected);
         }
-        
+
         #endregion
-        
+
         #region SubsetOf
-        
+
         /// <summary>
         /// Returns a constraint that tests whether the actual value
         /// is a subset of the collection supplied as an argument.
         /// </summary>
-        public CollectionSubsetConstraint SubsetOf(IEnumerable expected)
+public CollectionSubsetConstraint SubsetOf(IEnumerable expected)
         {
             return new CollectionSubsetConstraint(expected);
         }
-        
+
         #endregion
-        
+
         #region Ordered
-        
+
         /// <summary>
         /// Returns a constraint that tests whether a collection is ordered
         /// </summary>
-        public CollectionOrderedConstraint Ordered
+public CollectionOrderedConstraint Ordered
         {
             get { return new CollectionOrderedConstraint(); }
         }
-        
+
         #endregion
-        
+
         #region Member
-        
+
         /// <summary>
         /// Returns a new CollectionContainsConstraint checking for the
         /// presence of a particular object in the collection.
         /// </summary>
-        public CollectionContainsConstraint Member(object expected)
+public CollectionContainsConstraint Member(object expected)
         {
             return new CollectionContainsConstraint(expected);
         }
-        
+
         /// <summary>
         /// Returns a new CollectionContainsConstraint checking for the
         /// presence of a particular object in the collection.
         /// </summary>
-        public CollectionContainsConstraint Contains(object expected)
+public CollectionContainsConstraint Contains(object expected)
         {
             return new CollectionContainsConstraint(expected);
         }
-        
+
         #endregion
-        
+
         #region Contains
-        
+
         /// <summary>
         /// Returns a new ContainsConstraint. This constraint
         /// will, in turn, make use of the appropriate second-level
@@ -574,191 +574,191 @@ namespace NUnit.Framework.Constraints
         /// since any other type implies that we are looking for a 
         /// collection member.
         /// </summary>
-        public ContainsConstraint Contains(string expected)
+public ContainsConstraint Contains(string expected)
         {
             return new ContainsConstraint(expected);
         }
-        
+
         #endregion
-        
+
         #region StringContaining
-        
+
         /// <summary>
         /// Returns a constraint that succeeds if the actual
         /// value contains the substring supplied as an argument.
         /// </summary>
-        public SubstringConstraint StringContaining(string expected)
+public SubstringConstraint StringContaining(string expected)
         {
             return new SubstringConstraint(expected);
         }
-        
+
         /// <summary>
         /// Returns a constraint that succeeds if the actual
         /// value contains the substring supplied as an argument.
         /// </summary>
-        public SubstringConstraint ContainsSubstring(string expected)
+public SubstringConstraint ContainsSubstring(string expected)
         {
             return new SubstringConstraint(expected);
         }
-        
+
         #endregion
-        
+
         #region DoesNotContain
-        
+
         /// <summary>
         /// Returns a constraint that fails if the actual
         /// value contains the substring supplied as an argument.
         /// </summary>
-        public SubstringConstraint DoesNotContain(string expected)
+public SubstringConstraint DoesNotContain(string expected)
         {
             return new ConstraintExpression().Not.ContainsSubstring(expected);
         }
-        
+
         #endregion
-        
+
         #region StartsWith
-        
+
         /// <summary>
         /// Returns a constraint that succeeds if the actual
         /// value starts with the substring supplied as an argument.
         /// </summary>
-        public StartsWithConstraint StartsWith(string expected)
+public StartsWithConstraint StartsWith(string expected)
         {
             return new StartsWithConstraint(expected);
         }
-        
+
         /// <summary>
         /// Returns a constraint that succeeds if the actual
         /// value starts with the substring supplied as an argument.
         /// </summary>
-        public StartsWithConstraint StringStarting(string expected)
+public StartsWithConstraint StringStarting(string expected)
         {
             return new StartsWithConstraint(expected);
         }
-        
+
         #endregion
-        
+
         #region DoesNotStartWith
-        
+
         /// <summary>
         /// Returns a constraint that fails if the actual
         /// value starts with the substring supplied as an argument.
         /// </summary>
-        public StartsWithConstraint DoesNotStartWith(string expected)
+public StartsWithConstraint DoesNotStartWith(string expected)
         {
             return new ConstraintExpression().Not.StartsWith(expected);
         }
-        
+
         #endregion
-        
+
         #region EndsWith
-        
+
         /// <summary>
         /// Returns a constraint that succeeds if the actual
         /// value ends with the substring supplied as an argument.
         /// </summary>
-        public EndsWithConstraint EndsWith(string expected)
+public EndsWithConstraint EndsWith(string expected)
         {
             return new EndsWithConstraint(expected);
         }
-        
+
         /// <summary>
         /// Returns a constraint that succeeds if the actual
         /// value ends with the substring supplied as an argument.
         /// </summary>
-        public EndsWithConstraint StringEnding(string expected)
+public EndsWithConstraint StringEnding(string expected)
         {
             return new EndsWithConstraint(expected);
         }
-        
+
         #endregion
-        
+
         #region DoesNotEndWith
-        
+
         /// <summary>
         /// Returns a constraint that fails if the actual
         /// value ends with the substring supplied as an argument.
         /// </summary>
-        public EndsWithConstraint DoesNotEndWith(string expected)
+public EndsWithConstraint DoesNotEndWith(string expected)
         {
             return new ConstraintExpression().Not.EndsWith(expected);
         }
-        
+
         #endregion
-        
+
         #region Matches
-        
+
         /// <summary>
         /// Returns a constraint that succeeds if the actual
         /// value matches the Regex pattern supplied as an argument.
         /// </summary>
-        public RegexConstraint Matches(string pattern)
+public RegexConstraint Matches(string pattern)
         {
             return new RegexConstraint(pattern);
         }
-        
+
         /// <summary>
         /// Returns a constraint that succeeds if the actual
         /// value matches the Regex pattern supplied as an argument.
         /// </summary>
-        public RegexConstraint StringMatching(string pattern)
+public RegexConstraint StringMatching(string pattern)
         {
             return new RegexConstraint(pattern);
         }
-        
+
         #endregion
-        
+
         #region DoesNotMatch
-        
+
         /// <summary>
         /// Returns a constraint that fails if the actual
         /// value matches the pattern supplied as an argument.
         /// </summary>
-        public RegexConstraint DoesNotMatch(string pattern)
+public RegexConstraint DoesNotMatch(string pattern)
         {
             return new ConstraintExpression().Not.Matches(pattern);
         }
-        
+
         #endregion
-        
+
         #region SamePath
-        
+
         /// <summary>
         /// Returns a constraint that tests whether the path provided 
         /// is the same as an expected path after canonicalization.
         /// </summary>
-        public SamePathConstraint SamePath(string expected)
+public SamePathConstraint SamePath(string expected)
         {
             return new SamePathConstraint(expected);
         }
-        
+
         #endregion
-        
+
         #region SamePathOrUnder
-        
+
         /// <summary>
         /// Returns a constraint that tests whether the path provided 
         /// is the same path or under an expected path after canonicalization.
         /// </summary>
-        public SamePathOrUnderConstraint SamePathOrUnder(string expected)
+public SamePathOrUnderConstraint SamePathOrUnder(string expected)
         {
             return new SamePathOrUnderConstraint(expected);
         }
-        
+
         #endregion
-        
+
         #region InRange
-        
+
         /// <summary>
         /// Returns a constraint that tests whether the actual value falls 
         /// within a specified range.
         /// </summary>
-        public RangeConstraint InRange(IComparable from, IComparable to)
+public RangeConstraint InRange(IComparable from, IComparable to)
         {
             return new RangeConstraint(from, to);
         }
-        
+
         #endregion
-        
+
     }
 }

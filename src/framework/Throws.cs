@@ -42,120 +42,120 @@ namespace NUnit.Framework
     public class Throws
     {
         #region Exception
-        
+
         /// <summary>
         /// Creates a constraint specifying an expected exception
         /// </summary>
-        public static ResolvableConstraintExpression Exception
+public static ResolvableConstraintExpression Exception
         {
             get { return new ConstraintExpression().Append(new ThrowsOperator()); }
         }
-        
+
         #endregion
-        
+
         #region InnerException
-        
+
         /// <summary>
         /// Creates a constraint specifying an exception with a given InnerException
         /// </summary>
-        public static ResolvableConstraintExpression InnerException
+public static ResolvableConstraintExpression InnerException
         {
             get { return Exception.InnerException; }
         }
-        
+
         #endregion
-        
+
         #region TargetInvocationException
-        
+
         /// <summary>
         /// Creates a constraint specifying an expected TargetInvocationException
         /// </summary>
-        public static ExactTypeConstraint TargetInvocationException
+public static ExactTypeConstraint TargetInvocationException
         {
             get { return TypeOf(typeof(System.Reflection.TargetInvocationException)); }
         }
-        
+
         #endregion
-        
+
         #region ArgumentException
-        
+
         /// <summary>
         /// Creates a constraint specifying an expected TargetInvocationException
         /// </summary>
-        public static ExactTypeConstraint ArgumentException
+public static ExactTypeConstraint ArgumentException
         {
             get { return TypeOf(typeof(System.ArgumentException)); }
         }
-        
+
         #endregion
-        
+
         #region InvalidOperationException
-        
+
         /// <summary>
         /// Creates a constraint specifying an expected TargetInvocationException
         /// </summary>
-        public static ExactTypeConstraint InvalidOperationException
+public static ExactTypeConstraint InvalidOperationException
         {
             get { return TypeOf(typeof(System.InvalidOperationException)); }
         }
-        
+
         #endregion
-        
+
         #region Nothing
-        
+
         /// <summary>
         /// Creates a constraint specifying that no exception is thrown
         /// </summary>
-        public static ThrowsNothingConstraint Nothing
+public static ThrowsNothingConstraint Nothing
         {
             get { return new ThrowsNothingConstraint(); }
         }
-        
+
         #endregion
-        
+
         #region TypeOf
-        
+
         /// <summary>
         /// Creates a constraint specifying the exact type of exception expected
         /// </summary>
-        public static ExactTypeConstraint TypeOf(Type expectedType)
+public static ExactTypeConstraint TypeOf(Type expectedType)
         {
             return Exception.TypeOf(expectedType);
         }
-        
-#if NET_2_0
+
+#if CLR_2_0
         /// <summary>
         /// Creates a constraint specifying the exact type of exception expected
         /// </summary>
-        public static ExactTypeConstraint TypeOf<T>()
+public static ExactTypeConstraint TypeOf<T>()
         {
             return TypeOf(typeof(T));
         }
-        
+
 #endif
         #endregion
-        
+
         #region InstanceOf
-        
+
         /// <summary>
         /// Creates a constraint specifying the type of exception expected
         /// </summary>
-        public static InstanceOfTypeConstraint InstanceOf(Type expectedType)
+public static InstanceOfTypeConstraint InstanceOf(Type expectedType)
         {
             return Exception.InstanceOf(expectedType);
         }
-        
-#if NET_2_0
+
+#if CLR_2_0
         /// <summary>
         /// Creates a constraint specifying the type of exception expected
         /// </summary>
-        public static InstanceOfTypeConstraint InstanceOf<T>()
+public static InstanceOfTypeConstraint InstanceOf<T>()
         {
             return InstanceOf(typeof(T));
         }
-        
+
 #endif
         #endregion
-        
+
     }
 }

@@ -23,7 +23,7 @@
 
 using System;
 using System.Collections;
-#if NET_2_0
+#if CLR_2_0
 using System.Collections.Generic;
 #endif
 
@@ -62,7 +62,7 @@ namespace NUnit.Framework.Constraints.Tests
 
         object[] SuccessData = new object[] { 1, "a", new ArrayList() };
 
-#if NET_2_0
+#if CLR_2_0
 		object[] FailureData = new object[] { new Dictionary<string, string>(), new InternalClass(), new InternalWithSerializableAttributeClass() };
         string[] ActualValues = new string[] { "<Dictionary`2>", "<InternalClass>", "<InternalWithSerializableAttributeClass>" };
 #else

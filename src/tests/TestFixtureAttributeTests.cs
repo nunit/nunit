@@ -28,7 +28,7 @@ namespace NUnit.Framework.Tests
     public class TestFixtureAttributeTests
     {
         static object[] fixtureArgs = new object[] { 10, 20, "Charlie" };
-#if NET_2_0
+#if CLR_2_0
         static Type[] typeArgs = new Type[] { typeof(int), typeof(string) };
         static object[] combinedArgs = new object[] { typeof(int), typeof(string), 10, 20, "Charlie" };
 #endif
@@ -38,7 +38,7 @@ namespace NUnit.Framework.Tests
         {
             TestFixtureAttribute attr = new TestFixtureAttribute();
             Assert.That(attr.Arguments.Length == 0);
-#if NET_2_0
+#if CLR_2_0
             Assert.That(attr.TypeArgs.Length == 0);
 #endif
         }
@@ -48,12 +48,12 @@ namespace NUnit.Framework.Tests
         {
             TestFixtureAttribute attr = new TestFixtureAttribute(fixtureArgs);
             Assert.That(attr.Arguments, Is.EqualTo( fixtureArgs ) );
-#if NET_2_0
+#if CLR_2_0
             Assert.That(attr.TypeArgs.Length == 0 );
 #endif
         }
 
-#if NET_2_0
+#if CLR_2_0
         [Test, Category("Generics")]
         public void ConstructWithJustTypeArgs()
         {
