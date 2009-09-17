@@ -82,7 +82,7 @@ namespace NUnit.Framework.Constraints
             return baseConstraint == null || baseConstraint.Matches(caughtException);
         }
 
-#if NET_2_0
+#if CLR_2_0
         /// <summary>
         /// Converts an ActualValueDelegate to a TestDelegate
         /// before calling the primary overload.

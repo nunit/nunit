@@ -116,7 +116,7 @@ namespace NUnit.Framework.Syntax
         }
     }
 
-#if NET_2_0
+#if CLR_2_0
     [TestFixture]
     public class ExactTypeTest_Generic : SyntaxTest
     {

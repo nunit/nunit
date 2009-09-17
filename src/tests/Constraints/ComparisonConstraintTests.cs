@@ -23,7 +23,7 @@
 
 using System;
 using System.Collections;
-#if NET_2_0
+#if CLR_2_0
 using System.Collections.Generic;
 #endif
 
@@ -53,7 +53,7 @@ namespace NUnit.Framework.Constraints.Tests
             }
         }
 
-#if NET_2_0
+#if CLR_2_0
         [Test]
         public void UsesProvidedComparerOfT()
         {
@@ -92,7 +92,7 @@ namespace NUnit.Framework.Constraints.Tests
             }
         }
 
-#if CSHARP_3_0
+#if NET_3_5 || MONO_3_5
         [Test]
         public void UsesProvidedLambda()
         {
@@ -132,7 +132,7 @@ namespace NUnit.Framework.Constraints.Tests
             Assert.That(actual, Is.GreaterThan(expected));
         }
 
-#if NET_2_0
+#if CLR_2_0
         [Test]
         public void CanCompareIComparablesOfT()
         {
@@ -172,7 +172,7 @@ namespace NUnit.Framework.Constraints.Tests
             Assert.That(actual, Is.GreaterThanOrEqualTo(expected));
         }
 
-#if NET_2_0
+#if CLR_2_0
         [Test]
         public void CanCompareIComparablesOfT()
         {
@@ -212,7 +212,7 @@ namespace NUnit.Framework.Constraints.Tests
             Assert.That(actual, Is.LessThan(expected));
         }
 
-#if NET_2_0
+#if CLR_2_0
         [Test]
         public void CanCompareIComparablesOfT()
         {
@@ -252,7 +252,7 @@ namespace NUnit.Framework.Constraints.Tests
             Assert.That(actual, Is.LessThanOrEqualTo(expected));
         }
 
-#if NET_2_0
+#if CLR_2_0
         [Test]
         public void CanCompareIComparablesOfT()
         {
@@ -305,7 +305,7 @@ namespace NUnit.Framework.Constraints.Tests
             }
         }
 
-#if NET_2_0
+#if CLR_2_0
         [Test]
         public void UsesProvidedComparerOfT()
         {
@@ -344,7 +344,7 @@ namespace NUnit.Framework.Constraints.Tests
             }
         }
 
-#if CSHARP_3_0
+#if NET_3_5 || MONO_3_5
         [Test]
         public void UsesProvidedLambda()
         {
@@ -376,7 +376,7 @@ namespace NUnit.Framework.Constraints.Tests
         }
     }
 
-#if NET_2_0
+#if CLR_2_0
     class ClassWithIComparableOfT : IComparable<ClassWithIComparableOfT>
     {
         private int val;

@@ -157,7 +157,7 @@ namespace NUnit.Framework
         #endregion
 
         #region ref Object
-#if NET_2_0
+#if CLR_2_0
         /// <summary>
         /// Apply a constraint to a referenced value, succeeding if the constraint
         /// is satisfied and throwing an InconclusiveException on failure.

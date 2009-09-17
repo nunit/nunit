@@ -53,7 +53,7 @@ namespace NUnit.Framework.Syntax
             Assert.That(constraint.Resolve().ToString(), Is.EqualTo("<all <and <custom> <another>>>")); 
         }
 
-#if NET_2_0
+#if CLR_2_0
         [Test]
         public void CanMatchPredicate()
         {
@@ -67,7 +67,7 @@ namespace NUnit.Framework.Syntax
             return (num & 1) == 0;
         }
 
-#if CSHARP_3_0
+#if NET_3_5 || MONO_3_5
         [Test]
         public void CanMatchLambda()
         {
