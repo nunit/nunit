@@ -5,7 +5,7 @@
     <ProductVersion>3.0</ProductVersion>
     <ProjectGuid>{b4f15755-c6ef-4864-a58e-e6384cfa73ba}</ProjectGuid>
     <SchemaVersion>2.0</SchemaVersion>
-    <OutputName>nunit.framework-2.9.1</OutputName>
+    <OutputName>nunit.framework-2.9.2</OutputName>
     <OutputType>Package</OutputType>
     <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' AND '$(MSBuildExtensionsPath32)' != '' ">$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.0\Wix.targets</WixTargetsPath>
     <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' ">$(MSBuildExtensionsPath)\Microsoft\WiX\v3.0\Wix.targets</WixTargetsPath>
@@ -13,7 +13,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
-    <DefineConstants>ProductVersion=2.9.1;NominalVersion=2.9.1;InstallImage=..\..\package\NUnit-2.9.1</DefineConstants>
+    <DefineConstants>ProductVersion=2.9.2;NominalVersion=2.9.2;InstallImage=..\..\package\NUnit-2.9.2</DefineConstants>
     <WixVariables>
     </WixVariables>
   </PropertyGroup>

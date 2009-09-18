@@ -86,6 +86,7 @@ namespace NUnit.Framework
 
         #region Equals and ReferenceEquals
 
+#if !NETCF
         /// <summary>
         /// The Equals method throws an AssertionException. This is done 
         /// to make sure there is no mistake by calling this function.
@@ -95,8 +96,7 @@ namespace NUnit.Framework
         [EditorBrowsable(EditorBrowsableState.Never)]
         public static new bool Equals(object a, object b)
         {
-            // TODO: This should probably be InvalidOperationException
-            throw new AssertionException("Assert.Equals should not be used for Assertions");
+            throw new InvalidOperationException("Assert.Equals should not be used for Assertions");
         }
 
         /// <summary>
@@ -108,35 +108,17 @@ namespace NUnit.Framework
         /// <param name="b"></param>
         public static new void ReferenceEquals(object a, object b)
         {
-            throw new AssertionException("Assert.ReferenceEquals should not be used for Assertions");
+            throw new InvalidOperationException("Assert.ReferenceEquals should not be used for Assertions");
         }
+#endif
 
-        #endregion
-
-        #region Helper Methods
-        /// <summary>
-        /// Helper for Assert.AreEqual(double expected, double actual, ...)
-        /// allowing code generation to work consistently.
-        /// </summary>
-        /// <param name="expected">The expected value</param>
-        /// <param name="actual">The actual value</param>
-        /// <param name="delta">The maximum acceptable difference between the
-        /// the expected and the actual</param>
-        /// <param name="message">The message to display in case of failure</param>
-        /// <param name="args">Array of objects to be used in formatting the message</param>
-        protected static void AssertDoublesAreEqual(double expected, double actual, double delta, string message, object[] args)
-        {
-            if (double.IsNaN(expected) || double.IsInfinity(expected))
-                Assert.That(actual, Is.EqualTo(expected), message, args);
-            else
-                Assert.That(actual, Is.EqualTo(expected).Within(delta), message, args);
-        }
         #endregion
 
         #region Utility Asserts
 
         #region Pass
 
+#if !NUNITLITE
         /// <summary>
         /// Throws a <see cref="SuccessException"/> with the message and arguments 
         /// that are passed in. This allows a test to be cut short, with a result
@@ -173,7 +155,7 @@ namespace NUnit.Framework
         {
             Assert.Pass(string.Empty, null);
         }
-
+#endif
         #endregion
 
         #region Fail
@@ -216,6 +198,7 @@ namespace NUnit.Framework
 
         #region Ignore
 
+#if !NUNITLITE
         /// <summary>
         /// Throws an <see cref="IgnoreException"/> with the message and arguments 
         /// that are passed in.  This causes the test to be reported as ignored.
@@ -249,10 +232,13 @@ namespace NUnit.Framework
         {
             Assert.Ignore(string.Empty, null);
         }
+#endif
 
         #endregion
 
         #region InConclusive
+
+#if !NUNITLITE
         /// <summary>
         /// Throws an <see cref="InconclusiveException"/> with the message and arguments 
         /// that are passed in.  This causes the test to be reported as inconclusive.
@@ -286,6 +272,7 @@ namespace NUnit.Framework
         {
             Assert.Inconclusive(string.Empty, null);
         }
+#endif
 
         #endregion
 
@@ -340,6 +327,7 @@ namespace NUnit.Framework
         #endregion
 
         #region ActualValueDelegate
+#if !NUNITLITE
         /// <summary>
         /// Apply a constraint to an actual value, succeeding if the constraint
         /// is satisfied and throwing an assertion exception on failure.
@@ -383,6 +371,7 @@ namespace NUnit.Framework
                 throw new AssertionException(writer.ToString());
             }
         }
+#endif
         #endregion
 
         #region ref Object
@@ -722,7 +711,6 @@ namespace NUnit.Framework
         /// Verifies that a delegate throws an exception of a certain Type
         /// or one derived from it when called and returns it.
         /// </summary>
-        /// <param name="expectedExceptionType">The expected Exception Type</param>
         /// <param name="code">A TestDelegate</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
@@ -735,7 +723,6 @@ namespace NUnit.Framework
         /// Verifies that a delegate throws an exception of a certain Type
         /// or one derived from it when called and returns it.
         /// </summary>
-        /// <param name="expectedExceptionType">The expected Exception Type</param>
         /// <param name="code">A TestDelegate</param>
         /// <param name="message">The message that will be displayed on failure</param>
         public static Exception Catch<T>(TestDelegate code, string message)
@@ -747,7 +734,6 @@ namespace NUnit.Framework
         /// Verifies that a delegate throws an exception of a certain Type
         /// or one derived from it when called and returns it.
         /// </summary>
-        /// <param name="expectedExceptionType">The expected Exception Type</param>
         /// <param name="code">A TestDelegate</param>
         public static Exception Catch<T>(TestDelegate code)
         {
@@ -802,5 +788,25 @@ namespace NUnit.Framework
         #endregion
 
         // $$GENERATE$$ $$STATIC$$
+
+        #region Helper Methods
+        /// <summary>
+        /// Helper for Assert.AreEqual(double expected, double actual, ...)
+        /// allowing code generation to work consistently.
+        /// </summary>
+        /// <param name="expected">The expected value</param>
+        /// <param name="actual">The actual value</param>
+        /// <param name="delta">The maximum acceptable difference between the
+        /// the expected and the actual</param>
+        /// <param name="message">The message to display in case of failure</param>
+        /// <param name="args">Array of objects to be used in formatting the message</param>
+        protected static void AssertDoublesAreEqual(double expected, double actual, double delta, string message, object[] args)
+        {
+            if (double.IsNaN(expected) || double.IsInfinity(expected))
+                Assert.That(actual, Is.EqualTo(expected), message, args);
+            else
+                Assert.That(actual, Is.EqualTo(expected).Within(delta), message, args);
+        }
+        #endregion
     }
 }

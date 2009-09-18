@@ -189,12 +189,7 @@
     <property name="runtime.version" value="1.0"/>
     <property name="runtime.config" value="net-1.0"/>
     <property name="runtime.defines" value="MSNET,NET_1_0,CLR_1_0"/>
-    <property name="runtime.testproj" value="NUnitTests.v1.nunit"/>
-    <property name="build.mono" value="false"/>
-    <property name="build.win32" value="true"/>
     <property name="nant.settings.currentframework" value="net-1.0"/>
-    <property name="supported.test.platforms" 
-      value="net-1.0,net-1.1,net-2.0,net-3.5,mono-1.0,mono-2.0"/>
   </target>
 	
   <target name="set-net-1.1-runtime-config">
@@ -205,12 +200,7 @@
     <property name="runtime.version" value="1.1"/>
     <property name="runtime.config" value="net-1.1"/>
     <property name="runtime.defines" value="MSNET,NET_1_1,CLR_1_1"/>
-    <property name="runtime.testproj" value="NUnitTests.v1.nunit"/>
-    <property name="build.mono" value="false"/>
-    <property name="build.win32" value="true"/>
     <property name="nant.settings.currentframework" value="net-1.1"/>
-    <property name="supported.test.platforms"
-      value="net-1.0,net-1.1,net-2.0,mono-1.0,mono-2.0"/>
   </target>
 	
   <target name="set-net-2.0-runtime-config">
@@ -221,11 +211,7 @@
     <property name="runtime.version" value="2.0"/>
     <property name="runtime.config" value="net-2.0"/>
     <property name="runtime.defines" value="MSNET,NET_2_0,CLR_2_0"/>
-    <property name="runtime.testproj" value="NUnitTests.v2.nunit"/>
-    <property name="build.mono" value="false"/>
-    <property name="build.win32" value="true"/>
     <property name="nant.settings.currentframework" value="net-2.0"/>
-    <property name="supported.test.platforms" value="net-2.0,mono-2.0"/>
   </target>
    
   <target name="set-net-3.0-runtime-config">
@@ -236,11 +222,7 @@
     <property name="runtime.version" value="3.0"/>
     <property name="runtime.config" value="net-3.0"/>
     <property name="runtime.defines" value="MSNET,NET_3_0,CLR_2_0"/>
-    <property name="runtime.testproj" value="NUnitTests.v2.nunit"/>
-    <property name="build.mono" value="false"/>
-    <property name="build.win32" value="true"/>
     <property name="nant.settings.currentframework" value="net-3.0"/>
-    <property name="supported.test.platforms" value="net-2.0,mono-2.0"/>
   </target>
 	
   <target name="set-net-3.5-runtime-config">
@@ -251,13 +233,31 @@
     <property name="runtime.version" value="3.5"/>
     <property name="runtime.config" value="net-3.5"/>
     <property name="runtime.defines" value="MSNET,NET_3_5,CLR_2_0"/>
-    <property name="runtime.testproj" value="NUnitTests.v2.nunit"/>
-    <property name="build.mono" value="false"/>
-    <property name="build.win32" value="true"/>
     <property name="nant.settings.currentframework" value="net-3.5"/>
-    <property name="supported.test.platforms" value="net-2.0,mono-2.0"/>
   </target>
  	
+  <target name="set-netcf-1.0-runtime-config">
+    <fail unless="${framework::exists('netcf-1.0') and framework::sdk-exists('netcf-1.0')}"
+      message="The NETCF 1.0 SDK is not configured or not installed"/>
+
+    <property name="runtime.platform" value="netcf"/>
+    <property name="runtime.version" value="1.0"/>
+    <property name="runtime.config" value="netcf-1.0"/>
+    <property name="runtime.defines" value="NETCF,NETCF_1_0"/>
+    <property name="nant.settings.currentframework" value="netcf-1.0"/>
+  </target>
+
+  <target name="set-netcf-2.0-runtime-config">
+    <fail unless="${framework::exists('netcf-2.0') and framework::sdk-exists('netcf-2.0')}"
+      message="The NETCF 2.0 SDK is not configured or not installed"/>
+
+    <property name="runtime.platform" value="netcf"/>
+    <property name="runtime.version" value="2.0"/>
+    <property name="runtime.config" value="netcf-2.0"/>
+    <property name="runtime.defines" value="NETCF,NETCF_2_0"/>
+    <property name="nant.settings.currentframework" value="netcf-2.0"/>
+  </target>
+
   <target name="set-mono-1.0-runtime-config">
     <fail unless="${framework::exists('mono-1.0') and framework::sdk-exists('mono-1.0')}"
       message="The Mono 1.0 SDK is not configured or not installed"/>
@@ -267,11 +267,7 @@
     <property name="runtime.config" value="mono-1.0"/>
     <property name="runtime.defines" value="MONO,MONO_1_0,CLR_1_1"/>
     <property name="runtime.testproj" value="NUnitTests.v1.nunit"/>
-    <property name="build.mono" value="true"/>
-    <property name="build.win32" value="false"/>
     <property name="nant.settings.currentframework" value="mono-1.0"/>
-    <property name="supported.test.platforms"
-      value="mono-1.0,mono-2.0,net-1.0,net-1.1,net-2.0"/>
   </target>
 
   <target name="set-mono-2.0-runtime-config">
@@ -282,11 +278,7 @@
     <property name="runtime.version" value="2.0"/>
     <property name="runtime.config" value="mono-2.0"/>
     <property name="runtime.defines" value="MONO,MONO_2_0,CLR_2_0"/>
-    <property name="build.mono" value="true"/>
-    <property name="runtime.testproj" value="NUnitTests.v2.nunit"/>
-    <property name="build.win32" value="false"/>
     <property name="nant.settings.currentframework" value="mono-2.0"/>
-    <property name="supported.test.platforms" value="mono-2.0,net-2.0"/>
   </target>
 
   <target name="set-mono-3.5-runtime-config">
@@ -297,11 +289,7 @@
     <property name="runtime.version" value="3.5"/>
     <property name="runtime.config" value="mono-3.5"/>
     <property name="runtime.defines" value="MONO,MONO_3_5,CLR_2_0"/>
-    <property name="build.mono" value="true"/>
-    <property name="runtime.testproj" value="NUnitTests.v2.nunit"/>
-    <property name="build.win32" value="false"/>
     <property name="nant.settings.currentframework" value="mono-3.5"/>
-    <property name="supported.test.platforms" value="mono-3.5,net-3.5"/>
   </target>
 
 <!-- ***************************************************************** -->
@@ -318,7 +306,7 @@
   
   <target name="set-std-package-config">
     <property name="package.config" value="std"/>
-    <property name="package.runtimes" value="net-1.1+net-2.0"/>
+    <property name="package.runtimes" value="net-1.1+net-2.0+netcf-1.0+netcf-2.0"/>
     <property name="create.msi" value="true"/>
   </target>
 
@@ -391,9 +379,6 @@
     <echo>  Runtime:   ${runtime.config}</echo>
     <echo>  Build Dir: ${current.build.dir}</echo>
     <echo>  Defines:   ${build.defines}</echo>
-    <echo></echo>
-    <echo>Test Platforms for Current Build</echo>
-    <echo>  Supported: ${supported.test.platforms}</echo>
     <echo></echo>
     <echo>Packaging</echo>
     <echo>  Name:      ${package.name}</echo>
