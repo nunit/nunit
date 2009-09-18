@@ -85,22 +85,7 @@ namespace NUnitLite
             this.method = method;
             this.args = args;
 
-            this.name = method.Name;
-            if (args != null && args.Length > 0)
-            {
-                this.name += "(";
-                int count = 0;
-                foreach (object arg in args)
-                {
-                    if (count++ > 0)
-                        this.name += ",";
-                    if (arg == null)
-                        this.name += "null";
-                    else
-                        this.name += arg.ToString();
-                }
-                this.name += ")";
-            }
+            this.name = MethodHelper.GetDisplayName(method, args);
 
             this.fullName = method.ReflectedType.FullName + "." + this.name;
             this.fixture = fixture;
