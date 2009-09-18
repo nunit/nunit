@@ -47,9 +47,8 @@ namespace NUnit.Framework.Constraints.Tests
         [TestCase("\t", "\\t")]
         [TestCase("\t\n", "\\t\\n")]
         [TestCase("\\r\\n", "\\\\r\\\\n")]
-#if !MONO
-        [TestCase("\0", "\\0")]
-#endif
+        // TODO: Figure out why this fails in Mono
+        //[TestCase("\0", "\\0")]
         [TestCase("\a", "\\a")]
         [TestCase("\b", "\\b")]
         [TestCase("\f", "\\f")]
@@ -63,6 +62,12 @@ namespace NUnit.Framework.Constraints.Tests
 		{
             Assert.That( MsgUtils.EscapeControlChars(input), Is.EqualTo(expected) );
 		}
+
+        [Test]
+        public void EscapeNullCharInString()
+        {
+            Assert.That(MsgUtils.EscapeControlChars("\0"), Is.EqualTo("\\0"));
+        }
 
         private const string s52 = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
