@@ -49,7 +49,9 @@ namespace NUnitLite.Runner
 
             object[] attrs = method.GetCustomAttributes(typeof(TestCaseAttribute), false);
             foreach (TestCaseAttribute attr in attrs)
+            {
                 data.Add(attr.Arguments);
+            }
 
             attrs = method.GetCustomAttributes(typeof(TestCaseSourceAttribute), false);
             foreach (TestCaseSourceAttribute attr in attrs)
