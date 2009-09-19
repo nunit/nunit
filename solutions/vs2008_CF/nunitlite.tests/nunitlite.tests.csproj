@@ -13,7 +13,7 @@
     <PlatformFamilyName>PocketPC</PlatformFamilyName>
     <PlatformID>3C41C503-53EF-4c2a-8DD4-A8217CAD115E</PlatformID>
     <OSVersion>4.20</OSVersion>
-    <DeployDirSuffix>nunitlite_CF.tests</DeployDirSuffix>
+    <DeployDirSuffix>nunitlite</DeployDirSuffix>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <NativePlatformName>Pocket PC 2003</NativePlatformName>
     <FormFactorID>
