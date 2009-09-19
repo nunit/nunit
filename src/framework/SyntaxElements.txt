@@ -53,6 +53,11 @@
 #   the stanza. All methods generated from a stanza use
 #   the same comment. 
 #
+# Prefix 'Cond:' may appear once in each stanza and
+#   gives an expression that will be used with #if to include
+#   or exclude code from the entire stanza from the build.
+#   For example: 'Cond: !NETCF'
+#
 # Prefix 'Type:' may appear once in each stanza and indicates
 #   the return type of the methods defined in the stanza. If
 #   it is not specified, all methods default to 'void'.
@@ -91,13 +96,13 @@
 #
 # Define default classes to be generated:
 #
-Default: Is
-Default: Has
-Default: Text
-Default: Throws
-Default: ConstraintFactory=Constraints/ConstraintFactory.cs
-Default: ConstraintExpression=Constraints/ConstraintExpression.cs
-Default: Assert
+Default: Is=Shared/Framework/Is.cs
+Default: Has=Shared/Framework/Has.cs
+Default: Text=NUnit/Framework/Text.cs
+Default: Throws=Shared/Framework/Throws.cs
+Default: ConstraintFactory=Shared/Framework/Constraints/ConstraintFactory.cs
+Default: ConstraintExpression=Shared/Framework/Constraints/ConstraintExpression.cs
+Default: Assert=Shared/Framework/Assert.cs
 %
 #
 # Prefix Operators
@@ -188,6 +193,7 @@ Gen: ConstraintExpression.Message=>Property("Message")
 /// constraint to the InnerException property of the object being tested.
 /// </summary>
 Type: ResolvableConstraintExpression
+Cond: !NUNITLITE
 Gen: Has.InnerException=>Property("InnerException")
 Gen: ConstraintFactory.InnerException=>Has.InnerException
 Gen: ConstraintExpression.InnerException=>Property("InnerException")
@@ -214,24 +220,28 @@ Gen: Throws.Exception=>new ConstraintExpression().Append(new ThrowsOperator())
 /// Creates a constraint specifying an exception with a given InnerException
 /// </summary>
 Type: ResolvableConstraintExpression
+Cond: !NUNITLITE
 Gen: Throws.InnerException=> Exception.InnerException
 %
 /// <summary>
 /// Creates a constraint specifying an expected TargetInvocationException
 /// </summary>
 Type: ExactTypeConstraint
+Cond: !NUNITLITE
 Gen: Throws.TargetInvocationException=>TypeOf(typeof(System.Reflection.TargetInvocationException))
 %
 /// <summary>
 /// Creates a constraint specifying an expected TargetInvocationException
 /// </summary>
 Type: ExactTypeConstraint
+Cond: !NUNITLITE
 Gen: Throws.ArgumentException=>TypeOf(typeof(System.ArgumentException))
 %
 /// <summary>
 /// Creates a constraint specifying an expected TargetInvocationException
 /// </summary>
 Type: ExactTypeConstraint
+Cond: !NUNITLITE
 Gen: Throws.InvalidOperationException=>TypeOf(typeof(System.InvalidOperationException))
 %
 /// <summary>
@@ -265,6 +275,7 @@ Gen: ConstraintExpression.With=>this.Append(new WithOperator())
 /// custom constraints to easily participate in the syntax.
 /// </summary>
 Type: Constraint
+Cond: !NUNITLITE
 Gen: ConstraintExpression.Matches(Constraint constraint)=>this.Append(constraint)
 Gen: ConstraintExpression.Matches<T>(Predicate<T> predicate)=>this.Append(new PredicateConstraint<T>(predicate))
 %
@@ -305,11 +316,13 @@ Gen3: Is.Unique=>new UniqueItemsConstraint()
 /// <summary>
 /// Returns a constraint that tests whether an object graph is serializable in binary format.
 /// </summary>
+Cond: !NETCF
 Gen3: Is.BinarySerializable=>new BinarySerializableConstraint()
 %
 /// <summary>
 /// Returns a constraint that tests whether an object graph is serializable in xml format.
 /// </summary>
+Cond: !NETCF_1_0
 Gen3: Is.XmlSerializable=>new XmlSerializableConstraint()
 %
 #
@@ -441,7 +454,6 @@ Gen: ConstraintFactory.DoesNotContain(string expected)=>new ConstraintExpression
 /// Returns a constraint that succeeds if the actual
 /// value starts with the substring supplied as an argument.
 /// </summary>
-Gen: [Obsolete("Use Is.StringStarting")]Text.StartsWith(string expected)=>new StartsWithConstraint(expected)
 Gen: ConstraintFactory.StartsWith(string expected)=>new StartsWithConstraint(expected)
 Gen: ConstraintExpression.StartsWith(string expected)=>(StartsWithConstraint)this.Append(new StartsWithConstraint(expected))
 Gen3: Is.StringStarting(string expected)=>new StartsWithConstraint(expected)
@@ -473,8 +485,9 @@ Gen: ConstraintFactory.DoesNotEndWith(string expected)=>new ConstraintExpression
 %
 /// <summary>
 /// Returns a constraint that succeeds if the actual
-/// value matches the Regex pattern supplied as an argument.
+/// value matches the regular expression supplied as an argument.
 /// </summary>
+Cond: !NETCF
 Gen: [Obsolete("Use Is.StringMatching")]Text.Matches(string pattern)=>new RegexConstraint(pattern)
 Gen: ConstraintFactory.Matches(string pattern)=>new RegexConstraint(pattern)
 Gen: ConstraintExpression.Matches(string pattern)=>(RegexConstraint)this.Append(new RegexConstraint(pattern))
@@ -485,6 +498,7 @@ Gen3: Is.StringMatching(string pattern)=>new RegexConstraint(pattern)
 /// value matches the pattern supplied as an argument.
 /// </summary>
 Type: RegexConstraint
+Cond: !NUNITLITE
 Gen: [Obsolete]Text.DoesNotMatch(string pattern)=>new ConstraintExpression().Not.Matches(pattern)
 Gen: ConstraintFactory.DoesNotMatch(string pattern)=>new ConstraintExpression().Not.Matches(pattern)
 %
@@ -558,6 +572,7 @@ Gen: Assert.IsNull(object anObject)=>Assert.That(anObject, Is.Null)
 /// is thrown.
 /// </summary>
 /// <param name="aDouble">The value that is to be tested</param>
+Cond: !NUNITLITE
 Gen: Assert.IsNaN(double aDouble)=>Assert.That(aDouble, Is.NaN)
 Gen: Assert.IsNaN(double? aDouble)=>Assert.That(aDouble, Is.NaN)
 %
@@ -565,36 +580,42 @@ Gen: Assert.IsNaN(double? aDouble)=>Assert.That(aDouble, Is.NaN)
 /// Assert that a string is empty - that is equal to string.Empty
 /// </summary>
 /// <param name="aString">The string to be tested</param>
+Cond: !NUNITLITE
 Gen: Assert.IsEmpty(string aString)=>Assert.That(aString, new EmptyStringConstraint())
 %
 /// <summary>
 /// Assert that an array, list or other collection is empty
 /// </summary>
 /// <param name="collection">An array, list or other collection implementing ICollection</param>
+Cond: !NUNITLITE
 Gen: Assert.IsEmpty(ICollection collection)=>Assert.That(collection, new EmptyCollectionConstraint())
 %
 /// <summary>
 /// Assert that a string is not empty - that is not equal to string.Empty
 /// </summary>
 /// <param name="aString">The string to be tested</param>
+Cond: !NUNITLITE
 Gen: Assert.IsNotEmpty(string aString)=>Assert.That(aString, Is.Not.Empty)
 %
 /// <summary>
 /// Assert that an array, list or other collection is not empty
 /// </summary>
 /// <param name="collection">An array, list or other collection implementing ICollection</param>
+Cond: !NUNITLITE
 Gen: Assert.IsNotEmpty(ICollection collection)=>Assert.That(collection, Is.Not.Empty)
 %
 /// <summary>
 /// Assert that a string is either null or equal to string.Empty
 /// </summary>
 /// <param name="aString">The string to be tested</param>
+Cond: !NUNITLITE
 Gen: Assert.IsNullOrEmpty(string aString)=>Assert.That(aString, new NullOrEmptyStringConstraint())
 %
 /// <summary>
 /// Assert that a string is not null or empty
 /// </summary>
 /// <param name="aString">The string to be tested</param>
+Cond: !NUNITLITE
 Gen: Assert.IsNotNullOrEmpty(string aString)=>Assert.That(aString, new NotConstraint( new NullOrEmptyStringConstraint()))
 %
 /// <summary>
@@ -602,6 +623,7 @@ Gen: Assert.IsNotNullOrEmpty(string aString)=>Assert.That(aString, new NotConstr
 /// </summary>
 /// <param name="expected">The expected Type.</param>
 /// <param name="actual">The object under examination</param>
+Cond: !NUNITLITE
 Gen: Assert.IsAssignableFrom(Type expected, object actual)=>Assert.That(actual, Is.AssignableFrom(expected))
 %
 /// <summary>
@@ -609,6 +631,7 @@ Gen: Assert.IsAssignableFrom(Type expected, object actual)=>Assert.That(actual, 
 /// </summary>
 /// <typeparam name="T">The expected Type.</typeparam>
 /// <param name="actual">The object under examination</param>
+Cond: !NUNITLITE
 Gen: Assert.IsAssignableFrom<T>(object actual)=>Assert.That(actual, Is.AssignableFrom(typeof(T)))
 %
 /// <summary>
@@ -616,6 +639,7 @@ Gen: Assert.IsAssignableFrom<T>(object actual)=>Assert.That(actual, Is.Assignabl
 /// </summary>
 /// <param name="expected">The expected Type.</param>
 /// <param name="actual">The object under examination</param>
+Cond: !NUNITLITE
 Gen: Assert.IsNotAssignableFrom(Type expected, object actual)=>Assert.That(actual, Is.Not.AssignableFrom(expected))
 %
 /// <summary>
@@ -623,6 +647,7 @@ Gen: Assert.IsNotAssignableFrom(Type expected, object actual)=>Assert.That(actua
 /// </summary>
 /// <typeparam name="T">The expected Type.</typeparam>
 /// <param name="actual">The object under examination</param>
+Cond: !NUNITLITE
 Gen: Assert.IsNotAssignableFrom<T>(object actual)=>Assert.That(actual, Is.Not.AssignableFrom(typeof(T)))
 %
 /// <summary>
@@ -630,6 +655,7 @@ Gen: Assert.IsNotAssignableFrom<T>(object actual)=>Assert.That(actual, Is.Not.As
 /// </summary>
 /// <param name="expected">The expected Type</param>
 /// <param name="actual">The object being examined</param>
+Cond: !NUNITLITE
 Gen: Assert.IsInstanceOf(Type expected, object actual)=>Assert.That(actual, Is.InstanceOf(expected))
 Gen: [Obsolete]Assert.IsInstanceOfType(Type expected, object actual)=>Assert.That(actual, Is.InstanceOf(expected))
 %
@@ -638,6 +664,7 @@ Gen: [Obsolete]Assert.IsInstanceOfType(Type expected, object actual)=>Assert.Tha
 /// </summary>
 /// <typeparam name="T">The expected Type</typeparam>
 /// <param name="actual">The object being examined</param>
+Cond: !NUNITLITE
 Gen: Assert.IsInstanceOf<T>(object actual)=>Assert.That(actual, Is.InstanceOf(typeof(T)))
 %
 /// <summary>
@@ -645,6 +672,7 @@ Gen: Assert.IsInstanceOf<T>(object actual)=>Assert.That(actual, Is.InstanceOf(ty
 /// </summary>
 /// <param name="expected">The expected Type</param>
 /// <param name="actual">The object being examined</param>
+Cond: !NUNITLITE
 Gen: Assert.IsNotInstanceOf(Type expected, object actual)=>Assert.That(actual, Is.Not.InstanceOf(expected))
 Gen: [Obsolete]Assert.IsNotInstanceOfType(Type expected, object actual)=>Assert.That(actual, Is.Not.InstanceOf(expected))
 %
@@ -653,6 +681,7 @@ Gen: [Obsolete]Assert.IsNotInstanceOfType(Type expected, object actual)=>Assert.
 /// </summary>
 /// <typeparam name="T">The expected Type</typeparam>
 /// <param name="actual">The object being examined</param>
+Cond: !NUNITLITE
 Gen: Assert.IsNotInstanceOf<T>(object actual)=>Assert.That(actual, Is.Not.InstanceOf(typeof(T)))
 %
 /// <summary>
@@ -737,6 +766,7 @@ Gen: Assert.AreNotSame(object expected, object actual)=>Assert.That(actual, Is.N
 /// </summary>
 /// <param name="arg1">The first value, expected to be greater</param>
 /// <param name="arg2">The second value, expected to be less</param>
+Cond: !NUNITLITE
 Gen: Assert.Greater(int arg1, int arg2)=>Assert.That(arg1, Is.GreaterThan(arg2))
 Gen: [CLSCompliant(false)]Assert.Greater(uint arg1, uint arg2)=>Assert.That(arg1, Is.GreaterThan(arg2))
 Gen: Assert.Greater(long arg1, long arg2)=>Assert.That(arg1, Is.GreaterThan(arg2))
@@ -753,6 +783,7 @@ Gen: Assert.Greater(IComparable arg1, IComparable arg2)=>Assert.That(arg1, Is.Gr
 /// </summary>
 /// <param name="arg1">The first value, expected to be less</param>
 /// <param name="arg2">The second value, expected to be greater</param>
+Cond: !NUNITLITE
 Gen: Assert.Less(int arg1, int arg2)=>Assert.That(arg1, Is.LessThan(arg2))
 Gen: [CLSCompliant(false)]Assert.Less(uint arg1, uint arg2)=>Assert.That(arg1, Is.LessThan(arg2))
 Gen: Assert.Less(long arg1, long arg2)=>Assert.That(arg1, Is.LessThan(arg2))
@@ -769,6 +800,7 @@ Gen: Assert.Less(IComparable arg1, IComparable arg2)=>Assert.That(arg1, Is.LessT
 /// </summary>
 /// <param name="arg1">The first value, expected to be greater</param>
 /// <param name="arg2">The second value, expected to be less</param>
+Cond: !NUNITLITE
 Gen: Assert.GreaterOrEqual(int arg1, int arg2)=>Assert.That(arg1, Is.GreaterThanOrEqualTo(arg2))
 Gen: [CLSCompliant(false)]Assert.GreaterOrEqual(uint arg1, uint arg2)=>Assert.That(arg1, Is.GreaterThanOrEqualTo(arg2))
 Gen: Assert.GreaterOrEqual(long arg1, long arg2)=>Assert.That(arg1, Is.GreaterThanOrEqualTo(arg2))
@@ -785,6 +817,7 @@ Gen: Assert.GreaterOrEqual(IComparable arg1, IComparable arg2)=>Assert.That(arg1
 /// </summary>
 /// <param name="arg1">The first value, expected to be less</param>
 /// <param name="arg2">The second value, expected to be greater</param>
+Cond: !NUNITLITE
 Gen: Assert.LessOrEqual(int arg1, int arg2)=>Assert.That(arg1, Is.LessThanOrEqualTo(arg2))
 Gen: [CLSCompliant(false)]Assert.LessOrEqual(uint arg1, uint arg2)=>Assert.That(arg1, Is.LessThanOrEqualTo(arg2))
 Gen: Assert.LessOrEqual(long arg1, long arg2)=>Assert.That(arg1, Is.LessThanOrEqualTo(arg2))
@@ -799,5 +832,6 @@ Gen: Assert.LessOrEqual(IComparable arg1, IComparable arg2)=>Assert.That(arg1, I
 /// </summary>
 /// <param name="expected">The expected object</param>
 /// <param name="actual">The list to be examined</param>
+Cond: !NUNITLITE
 Gen: Assert.Contains(object expected, ICollection actual)=>Assert.That(actual, new CollectionContainsConstraint(expected))
 %

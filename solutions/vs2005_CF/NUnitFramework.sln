@@ -1,0 +1,27 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunitlite", "nunitlite\nunitlite.csproj", "{83A1B699-7177-4C00-BAAC-83A82571DC23}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunitlite.tests", "nunitlite.tests\nunitlite.tests.csproj", "{0FE72EDD-8CDF-4AEA-9F5E-C0621839F44F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{83A1B699-7177-4C00-BAAC-83A82571DC23}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83A1B699-7177-4C00-BAAC-83A82571DC23}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83A1B699-7177-4C00-BAAC-83A82571DC23}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83A1B699-7177-4C00-BAAC-83A82571DC23}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0FE72EDD-8CDF-4AEA-9F5E-C0621839F44F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0FE72EDD-8CDF-4AEA-9F5E-C0621839F44F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0FE72EDD-8CDF-4AEA-9F5E-C0621839F44F}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{0FE72EDD-8CDF-4AEA-9F5E-C0621839F44F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0FE72EDD-8CDF-4AEA-9F5E-C0621839F44F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
