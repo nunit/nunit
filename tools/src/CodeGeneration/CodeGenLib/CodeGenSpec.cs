@@ -35,6 +35,7 @@ namespace NUnit.Framework.CodeGeneration
         private List<string> comments = new List<string>();
         private List<CodeGenItem> genSpecs = new List<CodeGenItem>();
         private List<string> defaults = new List<string>();
+        private string condition;
 
         private string currentRegion;
 
@@ -60,6 +61,8 @@ namespace NUnit.Framework.CodeGeneration
                     AddStandardSyntaxElements(line);
                 else if (line.StartsWith("Default:"))
                     this.defaults.Add(line.Substring(8).Trim());
+                else if (line.StartsWith("Cond:"))
+                    this.condition = line.Substring(5).Trim();
                 else
                     IssueFormatError(line);
             }
@@ -95,6 +98,8 @@ namespace NUnit.Framework.CodeGeneration
         }
         public void Generate(CodeWriter writer, string className, bool isStatic)
         {
+            bool needBlankLine = false;
+
             foreach (CodeGenItem spec in genSpecs)
             {
                 if (spec.ClassName == className)
@@ -110,6 +115,14 @@ namespace NUnit.Framework.CodeGeneration
 
                         writer.WriteLine("#region " + currentRegion);
                         writer.WriteLine();
+                        if (condition != null)
+                            writer.WriteLineNoTabs("#if " + condition);
+                    }
+
+                    if (needBlankLine)
+                    {
+                        writer.WriteLine();
+                        needBlankLine = false;
                     }
 
                     if (spec.IsGeneric)
@@ -122,11 +135,17 @@ namespace NUnit.Framework.CodeGeneration
 
                     if (spec.IsGeneric)
                         writer.WriteLineNoTabs("#endif");
+
+                    needBlankLine = true;
                 }
             }
 
             if (currentRegion != null)
             {
+                if (condition != null)
+                    writer.WriteLineNoTabs("#endif");
+
+                writer.WriteLine();
                 writer.WriteLine("#endregion");
                 writer.WriteLine();
                 currentRegion = null;
@@ -157,7 +176,7 @@ namespace NUnit.Framework.CodeGeneration
                         : "return " + spec.RightPart + ";");
             writer.PopIndent();
             writer.WriteLine("}");
-            writer.WriteLine();
+            //writer.WriteLine();
         }
 
         private void WriteComments(CodeWriter writer)
