@@ -382,7 +382,7 @@ namespace NUnit.Framework.Constraints.Tests
             }
         }
 
-#if NET_3_5 || MONO_3_5
+#if NET_3_5 || MONO_3_5 || NETCF_3_5
         [Test]
         public void UsesProvidedLambda_IntArgs()
         {
