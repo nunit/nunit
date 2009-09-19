@@ -69,6 +69,9 @@
     <Compile Include="..\..\..\src\framework\NUnitLite\Runner\DebugWriter.cs">
       <Link>NUnitLite\Runner\DebugWriter.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\framework\NUnitLite\Runner\MethodHelper.cs">
+      <Link>NUnitLite\Runner\MethodHelper.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\framework\NUnitLite\Runner\ResultSummary.cs">
       <Link>NUnitLite\Runner\ResultSummary.cs</Link>
     </Compile>
