@@ -50,9 +50,6 @@ namespace NUnit.Framework.CodeGeneration
                 {
                     SyntaxInfo.Instance.Load(InputReader);
 
-                    if (GenOptions.Count == 0)
-                        GenOptions = SyntaxInfo.Instance.Defaults;
-
                     foreach (string option in GenOptions)
                     {
                         string className, targetName;
@@ -106,6 +103,8 @@ namespace NUnit.Framework.CodeGeneration
 
             if (InputFile == null) throw new CommandLineError("No input file provided");
 
+            if (GenOptions.Count == 0) throw new CommandLineError("At least one -gen option must be specified");
+
             InputReader = new StreamReader(InputFile);
 
             return true;
@@ -127,12 +126,11 @@ namespace NUnit.Framework.CodeGeneration
 
         static void Usage()
         {
-            Console.Error.WriteLine("Usage: GenSyntax <input_file> [ [ [-gen:<class_name>[=<file_name>] ] ...]");
+            Console.Error.WriteLine("Usage: GenSyntax <input_file> -gen:<class_name>[=<file_name>]...");
             Console.Error.WriteLine();
-            Console.Error.WriteLine("The <input_file> is required. If any -gen options are given, only the code");
-            Console.Error.WriteLine("for the specified classes are generated. If <file_name> is not specified,");
-            Console.Error.WriteLine("it defaults to the <class_name> with a .cs extension. If no -gen options");
-            Console.Error.WriteLine("are used, Default entries specified in the input file are generated.");
+            Console.Error.WriteLine("The <input_file> is required. At least one -gen option must be specified.");
+            Console.Error.WriteLine("If <file_name> is not specified with a -gen option, it defaults to the");
+            Console.Error.WriteLine("<class_name> with a .cs extension.");
             Console.Error.WriteLine();
             Console.Error.WriteLine("Syntax for entries in the input file are described in the file");
             Console.Error.WriteLine("SyntaxElements.txt, which is distributed with the NUnit source.");

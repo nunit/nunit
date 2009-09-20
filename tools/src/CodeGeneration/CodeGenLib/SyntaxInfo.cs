@@ -46,22 +46,5 @@ namespace NUnit.Framework.CodeGeneration
                 this.Add(new CodeGenSpec(Stanza.Read(input)));
             }
         }
-
-        private List<string> defaults;
-        public List<string> Defaults
-        {
-            get
-            {
-                if (defaults == null)
-                {
-                    defaults = new List<string>();
-                    foreach (CodeGenSpec stanza in this)
-                        foreach (string option in stanza.Defaults)
-                            defaults.Add(option);
-                }
-
-                return defaults;
-            }
-        }
     }
 }

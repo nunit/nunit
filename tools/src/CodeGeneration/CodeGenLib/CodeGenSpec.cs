@@ -34,7 +34,6 @@ namespace NUnit.Framework.CodeGeneration
         private string typeName = "void";
         private List<string> comments = new List<string>();
         private List<CodeGenItem> genSpecs = new List<CodeGenItem>();
-        private List<string> defaults = new List<string>();
         private string condition;
 
         private string currentRegion;
@@ -59,8 +58,6 @@ namespace NUnit.Framework.CodeGeneration
                     AddSyntaxElement(line);
                 else if (line.StartsWith("Gen3:"))
                     AddStandardSyntaxElements(line);
-                else if (line.StartsWith("Default:"))
-                    this.defaults.Add(line.Substring(8).Trim());
                 else if (line.StartsWith("Cond:"))
                     this.condition = line.Substring(5).Trim();
                 else
@@ -209,11 +206,6 @@ namespace NUnit.Framework.CodeGeneration
                 "Gen: " + leftPart + ")=>" + rightPart + " ,null, null)");
             WriteComments(writer);
             WriteMethodDefinition(writer, isStatic, spec3);
-        }
-
-        public List<string> Defaults
-        {
-            get { return defaults; }
         }
     }
 }
