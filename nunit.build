@@ -60,7 +60,7 @@
          The first .NET and Mono frameworks found are the
          respective net and mono defaults. -->
   <property name="supported.frameworks" 
-    value="net-2.0,net-1.1,net-1.0,mono-2.0,mono-1.0,netcf-1.0,netcf-2.0"/>
+    value="net-3.5,net-2.0,net-1.1,net-1.0,mono-3.5,mono-2.0,mono-1.0,netcf-3.5,netcf-2.0,netcf-1.0"/>
 
   <!-- Packages we normally create -->
   <!--<property name="standard.packages" value="std,mono" />-->
@@ -100,11 +100,17 @@
   <target name="net-2.0" depends="set-net-2.0-runtime-config"
     description="Set runtime to .NET 2.0 for commands that follow"/>
       
+  <target name="net-3.5" depends="set-net-3.5-runtime-config"
+    description="Set runtime to .NET 3.5 for commands that follow"/>
+
   <target name="netcf-1.0" depends="set-netcf-1.0-runtime-config"
     description="Set runtime to CF 1.0 for commands that follow"/>
       
   <target name="netcf-2.0" depends="set-netcf-2.0-runtime-config"
     description="Set runtime to CF 2.0 for commands that follow"/>
+      
+  <target name="netcf-3.5" depends="set-netcf-3.5-runtime-config"
+    description="Set runtime to CF 3.5 for commands that follow"/>
       
   <target name="mono" depends="set-default-mono-runtime-config"
     description="Set runtime to default Mono version"/>
@@ -114,6 +120,9 @@
   
   <target name="mono-2.0" depends="set-mono-2.0-runtime-config"
     description="Set runtime to Mono 2.0 for commands that follow"/>
+
+  <target name="mono-3.5" depends="set-mono-3.5-runtime-config"
+    description="Set runtime to Mono 3.5 for commands that follow"/>
 
 <!-- ***************************************************************** -->
 <!-- ***             Targets that clean directories                *** -->
@@ -233,11 +242,11 @@ NUNIT_DIR environment variable.
 
     <property name="nunit.console.dir"
       value="${nunit.dir}/bin/net-2.0"
-      if="${runtime.version=='2.0'}"/>
+      if="${runtime.version>='2.0'}"/>
 
     <property name="nunit.console.dir"
       value="${nunit.dir}/bin/net-1.1"
-      unless="${runtime.version=='2.0'}"/>
+      unless="${runtime.version>='2.0'}"/>
 
     <property name="result.file" 
       value="TestResult-${nant.settings.currentframework}"/>
@@ -316,17 +325,39 @@ file or set the PARTCOVER_DIR environment variable.
 
   </target>
 
-  <target name="gui-test" depends="build,init-test"
-    description="Run tests for a build using gui runner">
+  <target name="gui-test" depends="build,run-gui-test"
+    description="Run tests for a build using gui runner"/>
+
+  <target name="run-gui-test">
+
+    <call target="nunit-gui-test" unless="${runtime.platform=='netcf'}"/>
+    <call target="nunitlite-gui-test"/>
+
+  </target>
+
+  <target name="nunit-gui-test" depends="init-test">
 
     <echo message="*"/>
-    <echo message="* Starting ${runtime.config} ${build.config} gui test run"/>
+    <echo message="* Testing the nunit.framework ${runtime.config} ${build.config} build"/>
     <echo message="*"/>
 
     <exec basedir="${nunit.dir}/bin/net-2.0" 
       workingdir="${current.build.dir}" 
       program="nunit.exe" 
       commandline="nunit.framework.tests.dll -run"/>
+
+  </target>
+
+  <target name="nunitlite-gui-test" depends="init-test">
+
+    <echo message="*"/>
+    <echo message="* Testing the NUnitite ${runtime.config} ${build.config} build"/>
+    <echo message="*"/>
+
+    <exec basedir="${nunit.dir}/bin/net-2.0" 
+      workingdir="${current.build.dir}" 
+      program="nunit.exe" 
+      commandline="nunitlite.tests.exe -run"/>
 
   </target>
 

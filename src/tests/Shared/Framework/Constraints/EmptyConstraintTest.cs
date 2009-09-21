@@ -42,7 +42,7 @@ namespace NUnit.Framework.Constraints.Tests
             string.Empty,
             new object[0],
             new ArrayList(),
-#if NET_2_0
+#if CLR_2_0
             new System.Collections.Generic.List<int>()
 #endif  
         };

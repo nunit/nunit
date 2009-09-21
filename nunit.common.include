@@ -188,8 +188,7 @@
     <property name="runtime.platform" value="net"/>
     <property name="runtime.version" value="1.0"/>
     <property name="runtime.config" value="net-1.0"/>
-    <property name="runtime.defines" value="MSNET,NET_1_0"/>
-    <property name="runtime.testproj" value="NUnitTests.v1.nunit"/>
+    <property name="runtime.defines" value="MSNET,NET_1_0,CLR_1_0"/>
     <property name="nant.settings.currentframework" value="net-1.0"/>
   </target>
 	
@@ -200,7 +199,7 @@
     <property name="runtime.platform" value="net"/>
     <property name="runtime.version" value="1.1"/>
     <property name="runtime.config" value="net-1.1"/>
-    <property name="runtime.defines" value="MSNET,NET_1_1"/>
+    <property name="runtime.defines" value="MSNET,NET_1_1,CLR_1_1"/>
     <property name="nant.settings.currentframework" value="net-1.1"/>
   </target>
 	
@@ -211,11 +210,10 @@
     <property name="runtime.platform" value="net"/>
     <property name="runtime.version" value="2.0"/>
     <property name="runtime.config" value="net-2.0"/>
-    <property name="runtime.defines" value="MSNET,NET_2_0"/>
+    <property name="runtime.defines" value="MSNET,NET_2_0,CLR_2_0"/>
     <property name="nant.settings.currentframework" value="net-2.0"/>
   </target>
    
-<!--     
   <target name="set-net-3.0-runtime-config">
     <fail unless="${framework::exists('net-3.0') and framework::sdk-exists('net-3.0')}"
       message="The .NET 3.0 SDK is not configured or not installed"/>
@@ -223,7 +221,7 @@
     <property name="runtime.platform" value="net"/>
     <property name="runtime.version" value="3.0"/>
     <property name="runtime.config" value="net-3.0"/>
-    <property name="runtime.defines" value="MSNET,NET_3_0"/>
+    <property name="runtime.defines" value="MSNET,NET_3_0,CLR_2_0"/>
     <property name="nant.settings.currentframework" value="net-3.0"/>
   </target>
 	
@@ -234,10 +232,9 @@
     <property name="runtime.platform" value="net"/>
     <property name="runtime.version" value="3.5"/>
     <property name="runtime.config" value="net-3.5"/>
-    <property name="runtime.defines" value="MSNET,NET_3_5"/>
+    <property name="runtime.defines" value="MSNET,NET_3_5,CLR_2_0"/>
     <property name="nant.settings.currentframework" value="net-3.5"/>
   </target>
- -->
  	
   <target name="set-netcf-1.0-runtime-config">
     <fail unless="${framework::exists('netcf-1.0') and framework::sdk-exists('netcf-1.0')}"
@@ -257,8 +254,19 @@
     <property name="runtime.platform" value="netcf"/>
     <property name="runtime.version" value="2.0"/>
     <property name="runtime.config" value="netcf-2.0"/>
-    <property name="runtime.defines" value="NETCF,NETCF_2_0"/>
+    <property name="runtime.defines" value="NETCF,NETCF_2_0,CLR_2_0"/>
     <property name="nant.settings.currentframework" value="netcf-2.0"/>
+  </target>
+
+  <target name="set-netcf-3.5-runtime-config">
+    <fail unless="${framework::exists('netcf-3.5') and framework::sdk-exists('netcf-3.5')}"
+      message="The NETCF 3.5 SDK is not configured or not installed"/>
+
+    <property name="runtime.platform" value="netcf"/>
+    <property name="runtime.version" value="3.5"/>
+    <property name="runtime.config" value="netcf-3.5"/>
+    <property name="runtime.defines" value="NETCF,NETCF_3_5,CLR_2_0"/>
+    <property name="nant.settings.currentframework" value="netcf-3.5"/>
   </target>
 
   <target name="set-mono-1.0-runtime-config">
@@ -268,7 +276,7 @@
     <property name="runtime.platform" value="mono"/>
     <property name="runtime.version" value="1.0"/>
     <property name="runtime.config" value="mono-1.0"/>
-    <property name="runtime.defines" value="MONO,NET_1_1"/>
+    <property name="runtime.defines" value="MONO,MONO_1_0,CLR_1_1"/>
     <property name="runtime.testproj" value="NUnitTests.v1.nunit"/>
     <property name="nant.settings.currentframework" value="mono-1.0"/>
   </target>
@@ -280,9 +288,19 @@
     <property name="runtime.platform" value="mono"/>
     <property name="runtime.version" value="2.0"/>
     <property name="runtime.config" value="mono-2.0"/>
-    <property name="runtime.defines" value="MONO,NET_2_0"/>
-    <property name="runtime.testproj" value="NUnitTests.v2.nunit"/>
+    <property name="runtime.defines" value="MONO,MONO_2_0,CLR_2_0"/>
     <property name="nant.settings.currentframework" value="mono-2.0"/>
+  </target>
+
+  <target name="set-mono-3.5-runtime-config">
+    <fail unless="${framework::exists('mono-3.5') and framework::sdk-exists('mono-3.5')}"
+      message="The Mono 3.5 SDK is not configured or not installed"/>
+
+    <property name="runtime.platform" value="mono"/>
+    <property name="runtime.version" value="3.5"/>
+    <property name="runtime.config" value="mono-3.5"/>
+    <property name="runtime.defines" value="MONO,MONO_3_5,CLR_2_0"/>
+    <property name="nant.settings.currentframework" value="mono-3.5"/>
   </target>
 
 <!-- ***************************************************************** -->

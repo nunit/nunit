@@ -24,7 +24,7 @@
 using System;
 using System.IO;
 using System.Collections;
-#if NET_2_0
+#if CLR_2_0
 using System.Collections.Generic;
 #endif
 
