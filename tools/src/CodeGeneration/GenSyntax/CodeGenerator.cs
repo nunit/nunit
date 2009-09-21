@@ -23,9 +23,7 @@
 
 using System;
 using System.IO;
-using System.Reflection;
 using System.Collections.Generic;
-using System.CodeDom.Compiler;
 
 namespace NUnit.Framework.CodeGeneration
 {
@@ -40,23 +38,11 @@ namespace NUnit.Framework.CodeGeneration
         
         private bool isStatic;
 
-        public CodeGenerator(string className) : this( className, null ) { }
-
-        public CodeGenerator(string className, string targetName)
+        public CodeGenerator(string className, string templateName)
         {
             this.className = className;
-            string templateName = className + ".template.cs";
 
-            Assembly assembly = GetType().Assembly;
-#if TEST
-            Stream stream = new FileStream(Path.Combine("Templates", templateName), FileMode.Open);
-            if (stream == null)
-                stream = new FileStream(Path.Combine("Templates", "Default.template.cs"), FileMode.Open);
-#else
-            Stream stream = assembly.GetManifestResourceStream("NUnit.Framework.CodeGeneration.Templates." + templateName);
-            if (stream == null)
-                stream = assembly.GetManifestResourceStream("NUnit.Framework.CodeGeneration.Templates.Default.template.cs");
-#endif
+            Stream stream = new FileStream(templateName, FileMode.Open);
 
             this.template = new StreamReader(stream);
         }
