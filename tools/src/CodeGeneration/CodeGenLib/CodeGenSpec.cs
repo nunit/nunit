@@ -126,7 +126,7 @@ namespace NUnit.Framework.CodeGeneration
                     }
 
                     if (spec.IsGeneric)
-                        writer.WriteLineNoTabs("#if NET_2_0");
+                        writer.WriteLineNoTabs("#if CLR_2_0");
 
                     if (spec.ClassName == "Assert")
                         GenerateAssertOverloads(writer, isStatic, spec);

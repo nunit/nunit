@@ -24,7 +24,7 @@
 using System;
 using System.Collections;
 using System.Reflection;
-#if NET_2_0
+#if CLR_2_0
 using System.Collections.Generic;
 #endif
 
@@ -54,7 +54,7 @@ namespace NUnit.Framework.Constraints
             return new ComparerAdapter(comparer);
         }
 
-#if NET_2_0
+#if CLR_2_0
         /// <summary>
         /// Returns a ComparisonAdapter that wraps an IComparer&lt;T&gt;
         /// </summary>
@@ -109,7 +109,7 @@ namespace NUnit.Framework.Constraints
             }
         }
 
-#if NET_2_0
+#if CLR_2_0
         /// <summary>
         /// ComparisonAdapter&lt;T&gt; extends ComparisonAdapter and
         /// allows use of an IComparer&lt;T&gt; or Comparison&lt;T&gt;

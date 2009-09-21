@@ -375,7 +375,7 @@ namespace NUnit.Framework
         #endregion
 
         #region ref Object
-#if NET_2_0
+#if CLR_2_0
         /// <summary>
         /// Apply a constraint to a referenced value, succeeding if the constraint
         /// is satisfied and throwing an assertion exception on failure.
@@ -598,7 +598,7 @@ namespace NUnit.Framework
         #endregion
 
         #region Throws<T>
-#if NET_2_0
+#if CLR_2_0
         /// <summary>
         /// Verifies that a delegate throws a particular exception when called.
         /// </summary>
@@ -706,7 +706,7 @@ namespace NUnit.Framework
         #endregion
 
         #region Catch<T>
-#if NET_2_0
+#if CLR_2_0
         /// <summary>
         /// Verifies that a delegate throws an exception of a certain Type
         /// or one derived from it when called and returns it.
