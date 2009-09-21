@@ -161,14 +161,14 @@
       basedir="${project.tools.dir}/bin"
       workingdir="${project.src.dir}/framework">
 
-      <arg value="SyntaxElements.txt"/>
-      <arg value="-gen:Is=Shared/Framework/Is.cs"/>
-      <arg value="-gen:Has=Shared/Framework/Has.cs"/>
-      <arg value="-gen:Text=NUnit/Framework/Text.cs"/>
-      <arg value="-gen:Throws=Shared/Framework/Throws.cs"/>
-      <arg value="-gen:ConstraintFactory=Shared/Framework/Constraints/ConstraintFactory.cs"/>
-      <arg value="-gen:ConstraintExpression=Shared/Framework/Constraints/ConstraintExpression.cs"/>
-      <arg value="-gen:Assert=Shared/Framework/Assert.cs"/>
+      <arg value="-syntax:SyntaxElements.txt"/>
+      <arg value="Shared/Framework/Is.cs"/>
+      <arg value="Shared/Framework/Has.cs"/>
+      <arg value="NUnit/Framework/Text.cs"/>
+      <arg value="Shared/Framework/Throws.cs"/>
+      <arg value="Shared/Framework/Constraints/ConstraintFactory.cs"/>
+      <arg value="Shared/Framework/Constraints/ConstraintExpression.cs"/>
+      <arg value="Shared/Framework/Assert.cs"/>
 
     </exec>
 
