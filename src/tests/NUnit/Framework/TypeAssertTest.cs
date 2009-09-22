@@ -51,7 +51,7 @@ namespace NUnit.Framework.Tests
 
 			Assert.IsInstanceOf(typeof(System.Exception), ex );
             Assert.That( ex, Is.InstanceOf(typeof(Exception)));
-#if NET_2_0
+#if CLR_2_0
             Assert.IsInstanceOf<Exception>( ex );
 #endif
 		}
@@ -70,7 +70,7 @@ namespace NUnit.Framework.Tests
 		{
 			Assert.IsNotInstanceOf(typeof(System.Int32), "abc123" );
 			Assert.That( "abc123", Is.Not.InstanceOf(typeof(System.Int32)) );
-#if NET_2_0
+#if CLR_2_0
 			Assert.IsNotInstanceOf<System.Int32>("abc123");
 #endif
 		}
@@ -91,7 +91,7 @@ namespace NUnit.Framework.Tests
 
             Assert.IsAssignableFrom(typeof(int[]), array10);
             Assert.That(array10, Is.AssignableFrom(typeof(int[])));
-#if NET_2_0
+#if CLR_2_0
             Assert.IsAssignableFrom<int[]>(array10);
 #endif
         }
@@ -115,7 +115,7 @@ namespace NUnit.Framework.Tests
 
 			Assert.IsNotAssignableFrom( typeof(int[,] ),array10);
 			Assert.That( array10, Is.Not.AssignableFrom( typeof(int[,] ) ) );
-#if NET_2_0
+#if CLR_2_0
 			Assert.IsNotAssignableFrom<int[,]>(array10);
 #endif
 		}

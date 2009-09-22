@@ -212,7 +212,7 @@ namespace NUnit.Framework.Tests
 			CollectionAssert.AreEqual(array1, array2, new AlwaysEqualComparer());
 		}
 
-#if NET_2_0
+#if CLR_2_0
         [Test]
         public void AreEqual_UsingIterator()
         {
