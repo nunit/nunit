@@ -25,7 +25,7 @@ using System;
 using System.IO;
 using System.Drawing;
 using System.Collections;
-#if NET_2_0
+#if CLR_2_0
 using System.Collections.Generic;
 #endif
 
@@ -295,7 +295,7 @@ namespace NUnit.Framework.Constraints.Tests
             }
         }
 
-#if NET_2_0
+#if CLR_2_0
         [Test]
         public void UsesProvidedEqualityComparer()
         {
@@ -382,7 +382,7 @@ namespace NUnit.Framework.Constraints.Tests
             }
         }
 
-#if CSHARP_3_0
+#if NET_3_5 || MONO_3_5 || NETCF_3_5
         [Test]
         public void UsesProvidedLambda_IntArgs()
         {
@@ -497,7 +497,7 @@ namespace NUnit.Framework.Constraints.Tests
             }
         }
 
-#if NET_2_0
+#if CLR_2_0
         [Test]
         public void TestPropertyWithPrivateSetter()
         {

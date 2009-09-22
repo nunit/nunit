@@ -23,7 +23,7 @@
 
 using System;
 using System.Collections;
-#if NET_2_0
+#if CLR_2_0
 using System.Collections.Generic;
 #endif
 
@@ -49,7 +49,7 @@ namespace NUnit.Framework.Constraints
             return new ComparisonAdapterAdapter(ComparisonAdapter.For(comparer));
         }
 
-#if NET_2_0
+#if CLR_2_0
         /// <summary>
         /// Returns an EqualityAdapter that wraps an IEqualityComparer.
         /// </summary>
