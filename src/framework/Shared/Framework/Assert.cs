@@ -375,7 +375,7 @@ namespace NUnit.Framework
         #endregion
 
         #region ref Object
-#if NET_2_0
+#if CLR_2_0
         /// <summary>
         /// Apply a constraint to a referenced value, succeeding if the constraint
         /// is satisfied and throwing an assertion exception on failure.
@@ -598,7 +598,7 @@ namespace NUnit.Framework
         #endregion
 
         #region Throws<T>
-#if NET_2_0
+#if CLR_2_0
         /// <summary>
         /// Verifies that a delegate throws a particular exception when called.
         /// </summary>
@@ -706,7 +706,7 @@ namespace NUnit.Framework
         #endregion
 
         #region Catch<T>
-#if NET_2_0
+#if CLR_2_0
         /// <summary>
         /// Verifies that a delegate throws an exception of a certain Type
         /// or one derived from it when called and returns it.
@@ -1100,7 +1100,7 @@ public static void IsNaN(double aDouble)
             Assert.That(aDouble, Is.NaN ,null, null);
         }
 
-#if NET_2_0
+#if CLR_2_0
         /// <summary>
         /// Verifies that the double that is passed in is an <code>NaN</code> value.
         /// If the object is not <code>NaN</code> then an <see cref="AssertionException"/>
@@ -1383,7 +1383,7 @@ public static void IsAssignableFrom(Type expected, object actual)
         #region IsAssignableFrom<T>
 
 #if !NUNITLITE
-#if NET_2_0
+#if CLR_2_0
         /// <summary>
         /// Asserts that an object may be assigned a  value of a given Type.
         /// </summary>
@@ -1459,7 +1459,7 @@ public static void IsNotAssignableFrom(Type expected, object actual)
         #region IsNotAssignableFrom<T>
 
 #if !NUNITLITE
-#if NET_2_0
+#if CLR_2_0
         /// <summary>
         /// Asserts that an object may not be assigned a  value of a given Type.
         /// </summary>
@@ -1569,7 +1569,7 @@ public static void IsInstanceOfType(Type expected, object actual)
         #region IsInstanceOf<T>
 
 #if !NUNITLITE
-#if NET_2_0
+#if CLR_2_0
         /// <summary>
         /// Asserts that an object is an instance of a given type.
         /// </summary>
@@ -1679,7 +1679,7 @@ public static void IsNotInstanceOfType(Type expected, object actual)
         #region IsNotInstanceOf<T>
 
 #if !NUNITLITE
-#if NET_2_0
+#if CLR_2_0
         /// <summary>
         /// Asserts that an object is not an instance of a given type.
         /// </summary>
@@ -1943,7 +1943,7 @@ public static void AreEqual(double expected, double actual, double delta)
             AssertDoublesAreEqual(expected, actual, delta ,null, null);
         }
 
-#if NET_2_0
+#if CLR_2_0
         /// <summary>
         /// Verifies that two doubles are equal considering a delta. If the
         /// expected value is infinity then the delta value is ignored. If 

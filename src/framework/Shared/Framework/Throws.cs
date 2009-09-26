@@ -131,7 +131,7 @@ public static ExactTypeConstraint TypeOf(Type expectedType)
             return Exception.TypeOf(expectedType);
         }
 
-#if NET_2_0
+#if CLR_2_0
         /// <summary>
         /// Creates a constraint specifying the exact type of exception expected
         /// </summary>
@@ -153,7 +153,7 @@ public static InstanceOfTypeConstraint InstanceOf(Type expectedType)
             return Exception.InstanceOf(expectedType);
         }
 
-#if NET_2_0
+#if CLR_2_0
         /// <summary>
         /// Creates a constraint specifying the type of exception expected
         /// </summary>

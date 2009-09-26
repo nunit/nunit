@@ -35,7 +35,7 @@ namespace NUnitLite
         {
             StringBuilder sb = new StringBuilder(method.Name);
 
-#if NET_2_0
+#if CLR_2_0
             if (method.IsGenericMethod)
             {
                 sb.Append("<");
