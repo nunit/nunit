@@ -175,7 +175,7 @@ public static ResolvableConstraintExpression Attribute(Type expectedType)
             return new ConstraintExpression().Attribute(expectedType);
         }
 
-#if NET_2_0
+#if CLR_2_0
         /// <summary>
         /// Returns a new AttributeConstraint checking for the
         /// presence of a particular attribute on an object.

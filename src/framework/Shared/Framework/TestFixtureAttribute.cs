@@ -39,7 +39,7 @@ namespace NUnit.Framework
         private bool isIgnored;
         private string ignoreReason;
 
-#if NET_2_0
+#if CLR_2_0
         private Type[] typeArgs;
         private bool argsSeparated;
 #endif
@@ -78,7 +78,7 @@ namespace NUnit.Framework
         {
             get 
             {
-#if NET_2_0
+#if CLR_2_0
                 if (!argsSeparated)
                     SeparateArgs();
 #endif
@@ -110,7 +110,7 @@ namespace NUnit.Framework
             }
         }
 
-#if NET_2_0
+#if CLR_2_0
         /// <summary>
         /// Get or set the type arguments. If not set
         /// explicitly, any leading arguments that are

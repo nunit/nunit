@@ -274,7 +274,7 @@ public static ExactTypeConstraint TypeOf(Type expectedType)
             return new ExactTypeConstraint(expectedType);
         }
 
-#if NET_2_0
+#if CLR_2_0
         /// <summary>
         /// Returns a constraint that tests whether the actual
         /// value is of the exact type supplied as an argument.
@@ -298,7 +298,7 @@ public static InstanceOfTypeConstraint InstanceOf(Type expectedType)
             return new InstanceOfTypeConstraint(expectedType);
         }
 
-#if NET_2_0
+#if CLR_2_0
         /// <summary>
         /// Returns a constraint that tests whether the actual value
         /// is of the type supplied as an argument or a derived type.
@@ -319,7 +319,7 @@ public static InstanceOfTypeConstraint InstanceOfType(Type expectedType)
             return new InstanceOfTypeConstraint(expectedType);
         }
 
-#if NET_2_0
+#if CLR_2_0
         /// <summary>
         /// Returns a constraint that tests whether the actual value
         /// is of the type supplied as an argument or a derived type.
@@ -344,7 +344,7 @@ public static AssignableFromConstraint AssignableFrom(Type expectedType)
             return new AssignableFromConstraint(expectedType);
         }
 
-#if NET_2_0
+#if CLR_2_0
         /// <summary>
         /// Returns a constraint that tests whether the actual value
         /// is assignable from the type supplied as an argument.
@@ -368,7 +368,7 @@ public static AssignableToConstraint AssignableTo(Type expectedType)
             return new AssignableToConstraint(expectedType);
         }
 
-#if NET_2_0
+#if CLR_2_0
         /// <summary>
         /// Returns a constraint that tests whether the actual value
         /// is assignable from the type supplied as an argument.
