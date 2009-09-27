@@ -54,11 +54,9 @@
       <sources basedir="GenSyntax">
         <include name="AssemblyInfo.cs"/>
         <include name="CodeGenerator.cs"/>
+        <include name="Options.cs"/>
         <include name="Program.cs"/>
       </sources>
-      <resources basedir="GenSyntax" prefix="NUnit.Framework.CodeGeneration.Templates">
-        <include name="Templates/*.cs"/>
-      </resources>
       <references>
         <include name="${build.dir}/CodeGenLib.dll"/>
       </references>

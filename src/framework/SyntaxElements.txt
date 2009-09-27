@@ -28,9 +28,8 @@
 # consistently.
 #
 # The file is organized in stanzas, seperated by a line containing
-# only a percent sign (%) in the first column. By convention, the
-# first stanza consists only of defaults, while the remaining
-# stanzas generate code for one or more classes.
+# only a percent sign (%) in the first column. Each stanza contains
+# information used to generate code for one or more classes.
 #
 # Within a stanza, individual lines are recognized by a prefix
 # and lines not starting with a recognized prefix will cause an 
@@ -42,10 +41,6 @@
 # 
 # Prefix '#' introduces a comment. Use an otherwise blank line 
 #   starting with '#' for spacing, if desired.
-#
-# Prefix 'Default:' indicates a default option using the same
-#   format as the -gen option on the commandline. Defaults are
-#   only used if no -gen options are provided.
 #
 # Prefix '///' introduces a comment to be included in the
 #   generated source code. Each stanza contains a single block
@@ -93,17 +88,6 @@
 # of use of each prefix.
 #
 #
-#
-# Define default classes to be generated:
-#
-Default: Is=Shared/Framework/Is.cs
-Default: Has=Shared/Framework/Has.cs
-Default: Text=NUnit/Framework/Text.cs
-Default: Throws=Shared/Framework/Throws.cs
-Default: ConstraintFactory=Shared/Framework/Constraints/ConstraintFactory.cs
-Default: ConstraintExpression=Shared/Framework/Constraints/ConstraintExpression.cs
-Default: Assert=Shared/Framework/Assert.cs
-%
 #
 # Prefix Operators
 #
