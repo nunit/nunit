@@ -282,6 +282,27 @@
     <Compile Include="..\..\..\src\framework\Shared\Framework\Throws.cs">
       <Link>Shared\Framework\Throws.cs</Link>
     </Compile>
+    <None Include="..\..\..\src\framework\Templates\Assert.template.cs">
+      <Link>Templates\Assert.template.cs</Link>
+    </None>
+    <None Include="..\..\..\src\framework\Templates\ConstraintExpression.template.cs">
+      <Link>Templates\ConstraintExpression.template.cs</Link>
+    </None>
+    <None Include="..\..\..\src\framework\Templates\ConstraintFactory.template.cs">
+      <Link>Templates\ConstraintFactory.template.cs</Link>
+    </None>
+    <None Include="..\..\..\src\framework\Templates\Has.template.cs">
+      <Link>Templates\Has.template.cs</Link>
+    </None>
+    <None Include="..\..\..\src\framework\Templates\Is.template.cs">
+      <Link>Templates\Is.template.cs</Link>
+    </None>
+    <None Include="..\..\..\src\framework\Templates\Text.template.cs">
+      <Link>Templates\Text.template.cs</Link>
+    </None>
+    <None Include="..\..\..\src\framework\Templates\Throws.template.cs">
+      <Link>Templates\Throws.template.cs</Link>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\..\..\src\framework\SyntaxElements.txt">
