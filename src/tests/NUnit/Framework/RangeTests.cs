@@ -41,10 +41,9 @@ namespace NUnit.Framework.Tests
 		[Test]
 		public void InRangeFails()
 		{
-			string expectedMessage =
-@"  Expected: in range (5,10)
-  But was:  12
-";
+			string expectedMessage = string.Format("  Expected: in range (5,10){0}  But was:  12{0}",
+                    Environment.NewLine);
+
 			Assert.That(
 				new TestDelegate( FailingInRangeMethod ),
 				Throws.TypeOf(typeof(AssertionException)).With.Message.EqualTo(expectedMessage));
@@ -65,10 +64,9 @@ namespace NUnit.Framework.Tests
 		[Test]
 		public void NotInRangeFails()
 		{
-			string expectedMessage =
-@"  Expected: not in range (5,10)
-  But was:  7
-";
+			string expectedMessage = string.Format("  Expected: not in range (5,10){0}  But was:  7{0}",
+                    Environment.NewLine);
+
 			Assert.That(
 				new TestDelegate(FailingNotInRangeMethod),
 				Throws.TypeOf(typeof(AssertionException)).With.Message.EqualTo(expectedMessage));
