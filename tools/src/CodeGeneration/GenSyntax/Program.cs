@@ -24,6 +24,7 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
+using NDesk.Options;
 
 namespace NUnit.Framework.CodeGeneration
 {
@@ -32,115 +33,107 @@ namespace NUnit.Framework.CodeGeneration
 	/// </summary>
 	class Program
 	{
-        static string InputFile;
-        static List<string> GenOptions = new List<string>();
-
-        static StreamReader InputReader;
-        static List<StreamWriter> OutputWriters = new List<StreamWriter>();
-
-		/// <summary>
+        /// <summary>
 		/// The main entry point for the application.
 		/// </summary>
 		[STAThread]
 		static void Main(string[] args)
 		{
+            bool showHelp = false;
+            List<string> targets = new List<string>();
+            string syntaxFile = null;
+            string templateDir = null;
+            StreamReader inputReader;
+
+            OptionSet options = new OptionSet() {
+                { "f|syntax=", "The {PATH} to the syntax definition file.\nDefault: SyntaxElements.txt.", v => syntaxFile = v },
+                { "t|templates=", "The {PATH} to the template directory.\nDefault: ./Templates", v => templateDir = v },
+                { "h|?|help", "Display this message and exit.", v => showHelp = v != null },
+                { "<>", v => {
+                    if (v.StartsWith("-") || v.StartsWith("/") && Path.DirectorySeparatorChar != '/')
+                        Error("Invalid option: " + v);
+                    else
+                        targets.Add(v); }
+                }
+            };
+
             try
             {
-                if (ProcessArgs(args))
-                {
-                    SyntaxInfo.Instance.Load(InputReader);
-
-                    if (GenOptions.Count == 0)
-                        GenOptions = SyntaxInfo.Instance.Defaults;
-
-                    foreach (string option in GenOptions)
-                    {
-                        string className, targetName;
-                        int eq = option.IndexOf('=');
-                        if (eq > 0)
-                        {
-                            className = option.Substring(0, eq);
-                            targetName = option.Substring(eq + 1);
-                        }
-                        else
-                        {
-                            className = option;
-                            targetName = className + ".cs";
-                        }
-                        
-                        CodeGenerator generator = new CodeGenerator( className, targetName );
-
-                        CodeWriter writer = new IndentedTextWriter(new StreamWriter(targetName));
-
-                        Console.WriteLine("Generating " + targetName);
-
-                        generator.GenerateClass(writer);
-                    }
-                }
-                else
-                    Usage();
+                options.Parse(args);
             }
-            catch (CommandLineError ex)
+            catch(OptionException ex)
             {
                 Error(ex.Message);
+                return;
+            }
+
+            if (showHelp)
+            {
+                ShowHelp(options);
+                return;
+            }
+
+            if (syntaxFile == null) 
+                syntaxFile = "SyntaxElements.txt";
+            if (templateDir == null)
+                templateDir = "Templates";
+
+            if (targets.Count == 0)
+            {
+                Error("At least one target must be specified");
+                return;
+            }
+
+            try
+            {
+                inputReader = new StreamReader(syntaxFile);
+
+                SyntaxInfo.Instance.Load(inputReader);
+
+                foreach (string targetName in targets)
+                {
+                    string className = Path.GetFileNameWithoutExtension(targetName);
+                    string templateName = Path.Combine("Templates", className + ".template.cs");
+
+                    CodeGenerator generator = new CodeGenerator(className, templateName);
+
+                    CodeWriter writer = new IndentedTextWriter(new StreamWriter(targetName));
+
+                    Console.WriteLine("Generating " + targetName);
+
+                    generator.GenerateClass(writer);
+                }
             }
             catch (FileNotFoundException ex)
             {
                 Error(ex.Message);
             }
-		}
-
-        static bool ProcessArgs(string[] args)
-        {
-            foreach (string arg in args)
+            catch (Exception ex)
             {
-                if (arg == "-help")
-                    return false;
-                else if (arg.StartsWith("-gen:"))
-                    GenOptions.Add(arg.Substring(5));
-                else if (InputFile == null)
-                    InputFile = arg;
-                else
-                    throw new CommandLineError(string.Format("Unknown option: {0}", arg));
+                Error(ex.ToString());
             }
-
-            if (InputFile == null) throw new CommandLineError("No input file provided");
-
-            InputReader = new StreamReader(InputFile);
-
-            return true;
         }
 
-        static void Help()
+        static void ShowHelp(OptionSet options)
         {
-            Console.Error.WriteLine("Generates C# code for NUnit syntax elements");
+            Console.Error.WriteLine("Usage: GenSyntax [OPTION...] TARGET...");
             Console.Error.WriteLine();
-            Usage();
+            Console.Error.WriteLine("Generates C# code for one or more target classes. The content of each");
+            Console.Error.WriteLine("output file is controlled by an individual template and a common syntax");
+            Console.Error.WriteLine("definition file.");
+            Console.Error.WriteLine();
+            Console.Error.WriteLine("Templates are stored in a separate templates directory and are named");
+            Console.Error.WriteLine("according the target file for which they are used. For example, the");
+            Console.Error.WriteLine("template for file CLASS.cs is CLASS.template.cs.");
+            Console.Error.WriteLine();
+            Console.Error.WriteLine("Options:");
+            options.WriteOptionDescriptions(Console.Error);
         }
 
         static void Error(string message)
         {
-            Console.Error.WriteLine(message);
-            Console.Error.WriteLine();
-            Usage();
-        }
-
-        static void Usage()
-        {
-            Console.Error.WriteLine("Usage: GenSyntax <input_file> [ [ [-gen:<class_name>[=<file_name>] ] ...]");
-            Console.Error.WriteLine();
-            Console.Error.WriteLine("The <input_file> is required. If any -gen options are given, only the code");
-            Console.Error.WriteLine("for the specified classes are generated. If <file_name> is not specified,");
-            Console.Error.WriteLine("it defaults to the <class_name> with a .cs extension. If no -gen options");
-            Console.Error.WriteLine("are used, Default entries specified in the input file are generated.");
-            Console.Error.WriteLine();
-            Console.Error.WriteLine("Syntax for entries in the input file are described in the file");
-            Console.Error.WriteLine("SyntaxElements.txt, which is distributed with the NUnit source.");
+            Console.Error.WriteLine("GenSyntax: {0}", message);
+            Console.Error.WriteLine("Try 'GenSyntax --help' for more information");
         }
 	}
-
-    class CommandLineError : Exception
-    {
-        public CommandLineError(string message) : base(message) { }
-    }
 }
