@@ -51,6 +51,225 @@
     <Compile Include="..\..\..\src\framework\Env.cs">
       <Link>Env.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\AssemblyHelper.cs">
+      <Link>NUnit\Core\AssemblyHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\AssemblyReader.cs">
+      <Link>NUnit\Core\AssemblyReader.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\Builders\CombinatorialStrategy.cs">
+      <Link>NUnit\Core\Builders\CombinatorialStrategy.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\Builders\CombinatorialTestCaseProvider.cs">
+      <Link>NUnit\Core\Builders\CombinatorialTestCaseProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\Builders\CombiningStrategy.cs">
+      <Link>NUnit\Core\Builders\CombiningStrategy.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\Builders\DatapointProvider.cs">
+      <Link>NUnit\Core\Builders\DatapointProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\Builders\InlineDataPointProvider.cs">
+      <Link>NUnit\Core\Builders\InlineDataPointProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\Builders\LegacySuiteBuilder.cs">
+      <Link>NUnit\Core\Builders\LegacySuiteBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\Builders\NUnitTestCaseBuilder.cs">
+      <Link>NUnit\Core\Builders\NUnitTestCaseBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\Builders\NUnitTestFixtureBuilder.cs">
+      <Link>NUnit\Core\Builders\NUnitTestFixtureBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\Builders\PairwiseStrategy.cs">
+      <Link>NUnit\Core\Builders\PairwiseStrategy.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\Builders\ProviderCache.cs">
+      <Link>NUnit\Core\Builders\ProviderCache.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\Builders\ProviderInfo.cs">
+      <Link>NUnit\Core\Builders\ProviderInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\Builders\SequentialStrategy.cs">
+      <Link>NUnit\Core\Builders\SequentialStrategy.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\Builders\SetUpFixtureBuilder.cs">
+      <Link>NUnit\Core\Builders\SetUpFixtureBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\Builders\TestAssemblyBuilder.cs">
+      <Link>NUnit\Core\Builders\TestAssemblyBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\Builders\TestCaseParameterProvider.cs">
+      <Link>NUnit\Core\Builders\TestCaseParameterProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\Builders\TestCaseSourceProvider.cs">
+      <Link>NUnit\Core\Builders\TestCaseSourceProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\Builders\ValueSourceProvider.cs">
+      <Link>NUnit\Core\Builders\ValueSourceProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\CoreExtensions.cs">
+      <Link>NUnit\Core\CoreExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\CultureDetector.cs">
+      <Link>NUnit\Core\CultureDetector.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\DirectorySwapper.cs">
+      <Link>NUnit\Core\DirectorySwapper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\EventListenerTextWriter.cs">
+      <Link>NUnit\Core\EventListenerTextWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\EventPump.cs">
+      <Link>NUnit\Core\EventPump.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\EventQueue.cs">
+      <Link>NUnit\Core\EventQueue.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\ExpectedExceptionProcessor.cs">
+      <Link>NUnit\Core\ExpectedExceptionProcessor.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\Extensibility\DataPointProviders.cs">
+      <Link>NUnit\Core\Extensibility\DataPointProviders.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\Extensibility\EventListenerCollection.cs">
+      <Link>NUnit\Core\Extensibility\EventListenerCollection.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\Extensibility\ExtensionHost.cs">
+      <Link>NUnit\Core\Extensibility\ExtensionHost.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\Extensibility\ExtensionPoint.cs">
+      <Link>NUnit\Core\Extensibility\ExtensionPoint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\Extensibility\ExtensionsCollection.cs">
+      <Link>NUnit\Core\Extensibility\ExtensionsCollection.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\Extensibility\FrameworkRegistry.cs">
+      <Link>NUnit\Core\Extensibility\FrameworkRegistry.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\Extensibility\SuiteBuilderCollection.cs">
+      <Link>NUnit\Core\Extensibility\SuiteBuilderCollection.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\Extensibility\TestCaseBuilderCollection.cs">
+      <Link>NUnit\Core\Extensibility\TestCaseBuilderCollection.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\Extensibility\TestCaseProviders.cs">
+      <Link>NUnit\Core\Extensibility\TestCaseProviders.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\Extensibility\TestDecoratorCollection.cs">
+      <Link>NUnit\Core\Extensibility\TestDecoratorCollection.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\InternalTrace.cs">
+      <Link>NUnit\Core\InternalTrace.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\InternalTraceWriter.cs">
+      <Link>NUnit\Core\InternalTraceWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\InvalidTestFixtureException.cs">
+      <Link>NUnit\Core\InvalidTestFixtureException.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\LegacySuite.cs">
+      <Link>NUnit\Core\LegacySuite.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\Log4NetCapture.cs">
+      <Link>NUnit\Core\Log4NetCapture.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\LogCapture.cs">
+      <Link>NUnit\Core\LogCapture.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\Logger.cs">
+      <Link>NUnit\Core\Logger.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\MethodHelper.cs">
+      <Link>NUnit\Core\MethodHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\NamespaceTreeBuilder.cs">
+      <Link>NUnit\Core\NamespaceTreeBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\NullListener.cs">
+      <Link>NUnit\Core\NullListener.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\NUnitConfiguration.cs">
+      <Link>NUnit\Core\NUnitConfiguration.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\NUnitException.cs">
+      <Link>NUnit\Core\NUnitException.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\NUnitFramework.cs">
+      <Link>NUnit\Core\NUnitFramework.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\NUnitTestFixture.cs">
+      <Link>NUnit\Core\NUnitTestFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\NUnitTestMethod.cs">
+      <Link>NUnit\Core\NUnitTestMethod.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\ParameterizedTestMethodSuite.cs">
+      <Link>NUnit\Core\ParameterizedTestMethodSuite.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\PlatformHelper.cs">
+      <Link>NUnit\Core\PlatformHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\ProxyTestRunner.cs">
+      <Link>NUnit\Core\ProxyTestRunner.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\QueuingEventListener.cs">
+      <Link>NUnit\Core\QueuingEventListener.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\Reflect.cs">
+      <Link>NUnit\Core\Reflect.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\RemoteTestRunner.cs">
+      <Link>NUnit\Core\RemoteTestRunner.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\SetUpFixture.cs">
+      <Link>NUnit\Core\SetUpFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\SimpleTestRunner.cs">
+      <Link>NUnit\Core\SimpleTestRunner.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\SuiteBuilderAttribute.cs">
+      <Link>NUnit\Core\SuiteBuilderAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\TestCaseBuilderAttribute.cs">
+      <Link>NUnit\Core\TestCaseBuilderAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\TestContext.cs">
+      <Link>NUnit\Core\TestContext.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\TestDecoratorAttribute.cs">
+      <Link>NUnit\Core\TestDecoratorAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\TestFixture.cs">
+      <Link>NUnit\Core\TestFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\TestFixtureBuilder.cs">
+      <Link>NUnit\Core\TestFixtureBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\TestMethod.cs">
+      <Link>NUnit\Core\TestMethod.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\TestRunnerThread.cs">
+      <Link>NUnit\Core\TestRunnerThread.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\TestSuite.cs">
+      <Link>NUnit\Core\TestSuite.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\TestSuiteBuilder.cs">
+      <Link>NUnit\Core\TestSuiteBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\TestThread.cs">
+      <Link>NUnit\Core\TestThread.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\TextCapture.cs">
+      <Link>NUnit\Core\TextCapture.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\ThreadedTestRunner.cs">
+      <Link>NUnit\Core\ThreadedTestRunner.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\TypeHelper.cs">
+      <Link>NUnit\Core\TypeHelper.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\framework\NUnit\Framework\Assume.cs">
       <Link>NUnit\Framework\Assume.cs</Link>
     </Compile>
@@ -354,6 +573,7 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
@@ -363,5 +583,11 @@
     <Content Include="..\..\..\src\framework\SyntaxElements.txt">
       <Link>SyntaxElements.txt</Link>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\nunit.interfaces\nunit.interfaces.csproj">
+      <Project>{C5FFA3A5-6A0C-44AD-B23F-9A8424136C7B}</Project>
+      <Name>nunit.interfaces</Name>
+    </ProjectReference>
   </ItemGroup>
 </Project>

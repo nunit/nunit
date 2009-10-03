@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<project name="TestRunner" default="build" basedir=".">
+
+  <target name="build">
+
+    <csc target="exe"
+        output="${current.build.dir}/TestRunner.exe"
+        debug="${build.debug}" 
+        define="${build.defines}">
+<!--      <nowarn>
+        <warning number="1699" if="${runtime.version=='2.0'}"/>
+      </nowarn>-->
+      <sources basedir=".">
+<!--        <include name="../CommonAssemblyInfo.cs" /> -->
+        <include name="*.cs"/>
+      </sources>
+      <references basedir="${current.build.dir}">
+        <include name="nunit.interfaces.dll"/>
+        <include name="nunit.framework.dll"/>
+      </references>
+    </csc>
+
+  </target>
+
+  <target name="package">
+    <copy todir="${package.src.dir}/framework">
+      <fileset>
+        <include name="nunit.framework.build"/>
+        <include name="*.cs"/>
+      </fileset>
+    </copy>
+  </target>
+
+</project>

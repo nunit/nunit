@@ -5,12 +5,16 @@ solutions/vs2005/framework/**/*
 solutions/vs2005/tests/**/*
 solutions/vs2005/nunitlite/**/*
 solutions/vs2005/nunitlite.tests/**/*
+solutions/vs2005/nunit.interfaces/**/*
+solutions/vs2005/TestRunner/**/*
 solutions/vs2005_CF/nunitlite/**/*
 solutions/vs2005_CF/nunitlite.tests/**/*
 solutions/vs2008/framework/**/*
 solutions/vs2008/tests/**/*
 solutions/vs2008/nunitlite/**/*
 solutions/vs2008/nunitlite.tests/**/*
+solutions/vs2008/nunit.interfaces/**/*
+solutions/vs2008/TestRunner/**/*
 solutions/vs2008_CF/nunitlite/**/*
 solutions/vs2008_CF/nunitlite.tests/**/*
 GeneratedAssemblyInfo.cs

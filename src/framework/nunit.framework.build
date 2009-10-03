@@ -120,6 +120,9 @@
         <include name="Shared/**/*.cs"/>
         <include name="NUnit/**/*.cs"/>
       </sources>
+      <references basedir="${current.build.dir}">
+        <include name="nunit.interfaces.dll"/>
+      </references>
     </csc>
 
   </target>

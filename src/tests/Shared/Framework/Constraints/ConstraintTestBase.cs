@@ -57,7 +57,7 @@ namespace NUnit.Framework.Constraints.Tests
         [Test, TestCaseSource("FailureData")]
         public void FailsWithBadValues(object badValue, string message)
         {
-            string NL = NUnitLite.Env.NewLine;
+            string NL = Env.NewLine;
 
             Assert.IsFalse(theConstraint.Matches(badValue));
 
