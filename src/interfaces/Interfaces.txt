@@ -4,3 +4,5 @@
   * The RunStartedEvent takes a TestName as its first argument rather than a string
   
 * The ITestFilter interface is eliminated - use TestListener abstract class instead
+
+* OSPlatform is removed. It's now in the core only.
