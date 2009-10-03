@@ -150,6 +150,9 @@
     <Compile Include="..\..\..\src\framework\NUnit\Core\Extensibility\FrameworkRegistry.cs">
       <Link>NUnit\Core\Extensibility\FrameworkRegistry.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\Extensibility\ParameterSet.cs">
+      <Link>NUnit\Core\Extensibility\ParameterSet.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\framework\NUnit\Core\Extensibility\SuiteBuilderCollection.cs">
       <Link>NUnit\Core\Extensibility\SuiteBuilderCollection.cs</Link>
     </Compile>
