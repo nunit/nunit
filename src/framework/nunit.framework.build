@@ -121,6 +121,7 @@
         <include name="NUnit/**/*.cs"/>
       </sources>
       <references basedir="${current.build.dir}">
+        <include name="System.Configuration.dll"/>
         <include name="nunit.interfaces.dll"/>
       </references>
     </csc>
