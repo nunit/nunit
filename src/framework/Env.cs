@@ -24,7 +24,7 @@
 using System;
 using System.Text;
 
-namespace NUnitLite
+namespace NUnit
 {
     /// <summary>
     /// Env is a static class that provides some of the features of

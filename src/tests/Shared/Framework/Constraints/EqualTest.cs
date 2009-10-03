@@ -447,7 +447,7 @@ namespace NUnit.Framework.Constraints.Tests
 
         public void HandleException(Exception ex)
         {
-            string NL = NUnitLite.Env.NewLine;
+            string NL = NUnit.Env.NewLine;
 
             StringReader rdr = new StringReader(ex.Message);
             /* skip */ rdr.ReadLine();

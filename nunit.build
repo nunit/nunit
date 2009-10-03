@@ -214,8 +214,10 @@
     <fail if="${runtime.platform=='netcf'}"
       message="The full NUnit framework may not be built for netcf"/>
 
+    <nant target="build" buildfile="src/interfaces/nunit.interfaces.build"/>
     <nant target="nunit" buildfile="src/framework/nunit.framework.build"/>
     <nant target="nunit" buildfile="src/tests/nunit.framework.tests.build"/>
+    <nant target="build" buildfile="src/TestRunner/TestRunner.build"/>
 
   </target>
 
@@ -264,8 +266,11 @@ NUNIT_DIR environment variable.
     <property name="nunit.options" value="" 
       unless="${property::exists('nunit.options')}"/>
 
+    <!--<property name="nunit.commandline"
+      value="nunit.framework.tests.dll ${nunit.options} -xml:${result.file}.xml"/>-->
+
     <property name="nunit.commandline"
-      value="nunit.framework.tests.dll ${nunit.options} -xml:${result.file}.xml"/>
+      value="nunit.framework.tests.dll ${nunit.options}"/>
 
   </target>
 
@@ -278,11 +283,17 @@ NUNIT_DIR environment variable.
     <!-- We use exec rather than the nunit2 task because we are testing
          a new build of NUnit which is likely not to be included in the Nant build -->
 
-    <exec basedir="${nunit.console.dir}"
+    <!--<exec basedir="${nunit.console.dir}"
           workingdir="${current.build.dir}" 
 	  program="nunit-console.exe" 
           managed="strict"
-	  commandline="${nunit.commandline}" />
+	  commandline="${nunit.commandline}" />-->
+
+    <exec basedir="${current.build.dir}"
+          workingdir="${current.build.dir}"
+          program="TestRunner.exe"
+          managed="strict"
+          commandline="${nunit.commandline}" />
 
   </target>
 
