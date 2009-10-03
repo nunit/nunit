@@ -213,6 +213,9 @@
     <Compile Include="..\..\..\src\framework\NUnit\Core\NUnitTestMethod.cs">
       <Link>NUnit\Core\NUnitTestMethod.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\OSPlatform.cs">
+      <Link>NUnit\Core\OSPlatform.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\framework\NUnit\Core\ParameterizedTestMethodSuite.cs">
       <Link>NUnit\Core\ParameterizedTestMethodSuite.cs</Link>
     </Compile>
