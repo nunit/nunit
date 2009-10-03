@@ -81,9 +81,6 @@
     <Compile Include="..\..\..\src\interfaces\Core\Extensibility\NUnitAddinAttribute.cs">
       <Link>Core\Extensibility\NUnitAddinAttribute.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\interfaces\Core\Extensibility\ParameterSet.cs">
-      <Link>Core\Extensibility\ParameterSet.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\src\interfaces\Core\Extensibility\TestFramework.cs">
       <Link>Core\Extensibility\TestFramework.cs</Link>
     </Compile>

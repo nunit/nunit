@@ -5,4 +5,4 @@
   
 * The ITestFilter interface is eliminated - use TestListener abstract class instead
 
-* OSPlatform is removed. It's now in the core only.
+* OSPlatform and ParameterSet have been moved to nunit.framework.
