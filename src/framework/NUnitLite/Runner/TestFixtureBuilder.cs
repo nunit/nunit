@@ -42,7 +42,7 @@ namespace NUnitLite.Runner
         /// </returns>
         public static bool CanBuildFrom(Type type)
         {
-            if (Reflect.HasAttribute(type, typeof(TestFixtureAttribute)))
+            if (type.IsDefined(typeof(TestFixtureAttribute), true))
                 return true;
 
             if (!type.IsPublic && !type.IsNestedPublic)
@@ -53,8 +53,8 @@ namespace NUnitLite.Runner
 
             foreach (MethodInfo method in type.GetMethods())
             {
-                if (Reflect.HasAttribute(method, typeof(TestAttribute)) ||
-                    Reflect.HasAttribute(method, typeof(TestCaseAttribute)))
+                if (method.IsDefined(typeof(TestAttribute), true) ||
+                    method.IsDefined(typeof(TestCaseAttribute), true))
                         return true;
             }
 

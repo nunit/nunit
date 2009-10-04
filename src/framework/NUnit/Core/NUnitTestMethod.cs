@@ -23,6 +23,7 @@
 
 using System;
 using System.Reflection;
+using NUnit.Framework;
 
 namespace NUnit.Core
 {
@@ -48,7 +49,7 @@ namespace NUnit.Core
 		{
 			base.Run(testResult);
 
-			testResult.AssertCount = NUnitFramework.Assert.GetAssertCount();
+			testResult.AssertCount = Assert.Counter;
 		}
         #endregion
 	}

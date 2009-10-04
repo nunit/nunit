@@ -340,7 +340,7 @@ namespace NUnit.Core
 			object result = Reflect.InvokeMethod( this.method, fixture, this.arguments );
 
             if (this.expectedResult != null)
-                NUnitFramework.Assert.AreEqual(expectedResult, result);
+                NUnit.Framework.Assert.AreEqual(expectedResult, result);
 
             testResult.Success();
         }

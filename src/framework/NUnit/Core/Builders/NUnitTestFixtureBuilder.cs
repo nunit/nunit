@@ -26,6 +26,7 @@ using System.Collections;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Text;
+using NUnit.Framework;
 
 namespace NUnit.Core.Builders
 {
@@ -54,7 +55,7 @@ namespace NUnit.Core.Builders
 		/// <returns>True if the fixture can be built, false if not</returns>
 		public bool CanBuildFrom(Type type)
 		{
-			return Reflect.HasAttribute( type, NUnitFramework.TestFixtureAttribute, true ) ||
+			return type.IsDefined(typeof(TestFixtureAttribute), true ) ||
                    ( type.IsPublic || type.IsNestedPublic ) && 
                    ( !type.IsAbstract || type.IsSealed ) &&
                    ( Reflect.HasMethodWithAttribute(type, NUnitFramework.TestAttribute, true) ||
@@ -69,7 +70,8 @@ namespace NUnit.Core.Builders
 		/// <returns></returns>
 		public Test BuildFrom(Type type)
 		{
-            Attribute[] attrs = Reflect.GetAttributes(type, NUnitFramework.TestFixtureAttribute, false);
+            TestFixtureAttribute[] attrs = 
+                (TestFixtureAttribute[])type.GetCustomAttributes(typeof(TestFixtureAttribute), false);
 
 #if CLR_2_0
             if (type.IsGenericType)
@@ -81,7 +83,7 @@ namespace NUnit.Core.Builders
                 case 0:
                     return BuildSingleFixture(type, null);
                 case 1:
-                    object[] args = (object[])Reflect.GetPropertyValue(attrs[0], "Arguments");
+                    object[] args = (object[])attrs[0].Arguments;
                     return args == null || args.Length == 0
                         ? BuildSingleFixture(type, attrs[0])
                         : BuildMultipleFixtures(type, attrs);
@@ -92,27 +94,27 @@ namespace NUnit.Core.Builders
 		#endregion
 
 		#region Helper Methods
-        private Test BuildMultipleFixtures(Type type, Attribute[] attrs)
+        private Test BuildMultipleFixtures(Type type, TestFixtureAttribute[] attrs)
         {
             TestSuite suite = new TestSuite(type.Namespace, TypeHelper.GetDisplayName(type));
 
-            foreach (Attribute attr in attrs)
+            foreach (TestFixtureAttribute attr in attrs)
                 suite.Add(BuildSingleFixture(type, attr));
 
             return suite;
         }
 
-        private Test BuildSingleFixture(Type type, Attribute attr)
+        private Test BuildSingleFixture(Type type, TestFixtureAttribute attr)
         {
             object[] arguments = null;
 
             if (attr != null)
             {
-                arguments = (object[])Reflect.GetPropertyValue(attr, "Arguments");
+                arguments = (object[])attr.Arguments;
 #if CLR_2_0
                 if (type.ContainsGenericParameters)
                 {
-                    Type[] typeArgs = (Type[])Reflect.GetPropertyValue(attr, "TypeArgs");
+                    Type[] typeArgs = (Type[])attr.TypeArgs;
                     if( typeArgs.Length > 0 || 
                         TypeHelper.CanDeduceTypeArgsFromArgs(type, arguments, ref typeArgs))
                     {
@@ -129,11 +131,10 @@ namespace NUnit.Core.Builders
 
             if (fixture.RunState == RunState.Runnable && attr != null)
             {
-                object objIgnore = Reflect.GetPropertyValue(attr, "Ignore");
-                if (objIgnore != null && (bool)objIgnore == true)
+                if (attr.Ignore)
                 {
                     fixture.RunState = RunState.Ignored;
-                    fixture.IgnoreReason = (string)Reflect.GetPropertyValue(attr, "IgnoreReason");
+                    fixture.IgnoreReason = attr.IgnoreReason;
                 }
             }
 

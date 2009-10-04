@@ -51,14 +51,14 @@ namespace NUnit.Core
         {
             base.DoOneTimeSetUp(suiteResult);
 
-			suiteResult.AssertCount = NUnitFramework.Assert.GetAssertCount(); ;
+			suiteResult.AssertCount = NUnit.Framework.Assert.Counter; ;
         }
 
         protected override void DoOneTimeTearDown(TestResult suiteResult)
         {
             base.DoOneTimeTearDown(suiteResult);
 
-			suiteResult.AssertCount += NUnitFramework.Assert.GetAssertCount();
+			suiteResult.AssertCount += NUnit.Framework.Assert.Counter;
         }
     }
 }

@@ -78,10 +78,10 @@ namespace NUnit.Core.Builders
             for (int i = 0; i < parameters.Length; i++)
                 sources[i] = dataPointProvider.GetDataFor(parameters[i], suite);
 
-            if (Reflect.HasAttribute(method, SequentialAttribute, false))
+            if (method.IsDefined(typeof(NUnit.Framework.SequentialAttribute), false))
                 return new SequentialStrategy(sources);
 
-            if (Reflect.HasAttribute(method, PairwiseAttribute, false) &&
+            if (method.IsDefined(typeof(NUnit.Framework.PairwiseAttribute), false) &&
                 method.GetParameters().Length > 2)
                     return new PairwiseStrategy(sources);
 

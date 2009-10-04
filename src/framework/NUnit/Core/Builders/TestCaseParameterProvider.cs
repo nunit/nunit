@@ -25,6 +25,7 @@ using System;
 using System.Collections;
 using System.Reflection;
 using System.Text;
+using NUnit.Framework;
 using NUnit.Core.Extensibility;
 
 namespace NUnit.Core.Builders
@@ -38,7 +39,7 @@ namespace NUnit.Core.Builders
         /// <returns>True if any cases are available, otherwise false.</returns>
         public bool HasTestCasesFor(MethodInfo method)
         {
-            return Reflect.HasAttribute(method, NUnitFramework.TestCaseAttribute, false);
+            return method.IsDefined(typeof(TestCaseAttribute), false);
         }
 
         /// <summary>

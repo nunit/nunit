@@ -191,18 +191,18 @@ namespace NUnitLite
         #endregion
 
         #region Attributes
-        /// <summary>
-        /// Determines whether the specified member has a given attribute.
-        /// </summary>
-        /// <param name="member">The member.</param>
-        /// <param name="attr">The attribute type.</param>
-        /// <returns>
-        /// 	<c>true</c> if the specified member has attribute; otherwise, <c>false</c>.
-        /// </returns>
-        public static bool HasAttribute(MemberInfo member, Type attr)
-        {
-            return member.GetCustomAttributes(attr, true).Length > 0;
-        }
+        ///// <summary>
+        ///// Determines whether the specified member has a given attribute.
+        ///// </summary>
+        ///// <param name="member">The member.</param>
+        ///// <param name="attr">The attribute type.</param>
+        ///// <returns>
+        ///// 	<c>true</c> if the specified member has attribute; otherwise, <c>false</c>.
+        ///// </returns>
+        //public static bool HasAttribute(MemberInfo member, Type attr)
+        //{
+        //    return member.IsDefined(attr, true);
+        //}
 
         /// <summary>
         /// Gets an attribute of a specified type.
@@ -218,15 +218,15 @@ namespace NUnitLite
         #endregion
 
         #region Properties
-        /// <summary>
-        /// Gets the suite property.
-        /// </summary>
-        /// <param name="type">The type.</param>
-        /// <returns></returns>
-        public static PropertyInfo GetSuiteProperty(Type type)
-        {
-            return type.GetProperty("Suite", typeof(ITest), Reflect.EmptyTypes);
-        }
+        ///// <summary>
+        ///// Gets the suite property.
+        ///// </summary>
+        ///// <param name="type">The type.</param>
+        ///// <returns></returns>
+        //public static PropertyInfo GetSuiteProperty(Type type)
+        //{
+        //    return type.GetProperty("Suite", typeof(ITest), Reflect.EmptyTypes);
+        //}
         #endregion
     }
 }

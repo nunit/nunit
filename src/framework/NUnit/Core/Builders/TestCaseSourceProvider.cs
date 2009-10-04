@@ -25,6 +25,7 @@ using System;
 using System.Collections;
 using System.Reflection;
 using NUnit.Core.Extensibility;
+using NUnit.Framework;
 
 namespace NUnit.Core.Builders
 {
@@ -34,11 +35,6 @@ namespace NUnit.Core.Builders
     /// </summary>
     public class TestCaseSourceProvider : ITestCaseProvider2
     {
-        #region Constants
-        public const string SourceTypeProperty = "SourceType";
-        public const string SourceNameProperty = "SourceName";
-        #endregion
-
         #region ITestCaseProvider Members
 
         /// <summary>
@@ -48,7 +44,7 @@ namespace NUnit.Core.Builders
         /// <returns>True if any cases are available, otherwise false.</returns>
         public bool HasTestCasesFor(MethodInfo method)
         {
-            return Reflect.HasAttribute(method, NUnitFramework.TestCaseSourceAttribute, false);
+            return method.IsDefined(typeof(TestCaseSourceAttribute), false);
         }
 
         /// <summary>
@@ -101,10 +97,10 @@ namespace NUnit.Core.Builders
             ArrayList sources = new ArrayList();
             TestFixture parentSuite = parent as TestFixture;
 
-            foreach (Attribute sourceAttr in Reflect.GetAttributes(method, NUnitFramework.TestCaseSourceAttribute, false))
+            foreach (TestCaseSourceAttribute sourceAttr in method.GetCustomAttributes(typeof(TestCaseSourceAttribute), false))
             {
-                Type sourceType = Reflect.GetPropertyValue(sourceAttr, SourceTypeProperty) as Type;
-                string sourceName = Reflect.GetPropertyValue(sourceAttr, SourceNameProperty) as string;
+                Type sourceType = sourceAttr.SourceType;
+                string sourceName = sourceAttr.SourceName;
 
                 if (sourceType == null)
                 {
