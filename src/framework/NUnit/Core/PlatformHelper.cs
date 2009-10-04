@@ -22,7 +22,7 @@
 // ***********************************************************************
 
 using System;
-using System.Reflection;
+using NUnit.Framework;
 
 namespace NUnit.Core
 {
@@ -88,16 +88,10 @@ namespace NUnit.Core
 		/// </summary>
 		/// <param name="platformAttribute">The attribute to examine</param>
 		/// <returns></returns>
-		public bool IsPlatformSupported( Attribute platformAttribute )
+		public bool IsPlatformSupported( PlatformAttribute platformAttribute )
 		{
-			//Use reflection to avoid dependency on a particular framework version
-			string include = (string)Reflect.GetPropertyValue( 
-				platformAttribute, "Include", 
-				BindingFlags.Public | BindingFlags.Instance );
-
-			string exclude = (string)Reflect.GetPropertyValue(
-				platformAttribute, "Exclude", 
-				BindingFlags.Public | BindingFlags.Instance );
+            string include = platformAttribute.Include;
+            string exclude = platformAttribute.Exclude;
 
 			try
 			{

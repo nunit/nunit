@@ -105,10 +105,10 @@ namespace NUnitLite
 
             foreach (MethodInfo m in method.ReflectedType.GetMethods())
             {
-                if (Reflect.HasAttribute(m, typeof(SetUpAttribute)))
+                if (m.IsDefined(typeof(SetUpAttribute), true))
                     this.setup = m;
 
-                if (Reflect.HasAttribute(m, typeof(TearDownAttribute)))
+                if (m.IsDefined(typeof(TearDownAttribute), true))
                     this.teardown = m;
             }
         }

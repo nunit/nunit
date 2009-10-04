@@ -24,6 +24,7 @@
 using System;
 using System.Reflection;
 using System.Globalization;
+using NUnit.Framework;
 
 namespace NUnit.Core
 {
@@ -70,18 +71,12 @@ namespace NUnit.Core
 		/// Tests to determine if the current culture is supported
 		/// based on a culture attribute.
 		/// </summary>
-		/// <param name="platformAttribute">The attribute to examine</param>
+		/// <param name="cultureAttribute">The attribute to examine</param>
 		/// <returns></returns>
-		public bool IsCultureSupported( Attribute cultureAttribute )
+		public bool IsCultureSupported( CultureAttribute cultureAttribute )
 		{
-			//Use reflection to avoid dependency on a particular framework version
-			string include = (string)Reflect.GetPropertyValue( 
-				cultureAttribute, "Include", 
-				BindingFlags.Public | BindingFlags.Instance );
-
-			string exclude = (string)Reflect.GetPropertyValue(
-				cultureAttribute, "Exclude", 
-				BindingFlags.Public | BindingFlags.Instance );
+            string include = cultureAttribute.Include;
+            string exclude = cultureAttribute.Exclude;
 
 			try
 			{
@@ -110,7 +105,7 @@ namespace NUnit.Core
 		/// Test to determine if the a particular culture or comma-
 		/// delimited set of cultures is in use.
 		/// </summary>
-		/// <param name="platform">Name of the culture or comma-separated list of culture names</param>
+		/// <param name="culture">Name of the culture or comma-separated list of culture names</param>
 		/// <returns>True if the culture is in use on the system</returns>
 		public bool IsCultureSupported( string culture )
 		{

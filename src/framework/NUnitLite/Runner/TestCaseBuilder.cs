@@ -42,9 +42,9 @@ namespace NUnitLite.Runner
         /// </returns>
         public static bool IsTestMethod(MethodInfo method)
         {
-            return Reflect.HasAttribute(method, typeof(TestAttribute))
-                || Reflect.HasAttribute(method, typeof(TestCaseAttribute))
-                || Reflect.HasAttribute(method, typeof(TestCaseSourceAttribute));
+            return method.IsDefined(typeof(TestAttribute), true)
+                || method.IsDefined(typeof(TestCaseAttribute), true)
+                || method.IsDefined(typeof(TestCaseSourceAttribute), true);
         }
 
         /// <summary>

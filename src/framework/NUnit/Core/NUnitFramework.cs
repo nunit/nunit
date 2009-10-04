@@ -27,6 +27,7 @@ using System.Collections;
 using System.Collections.Specialized;
 using System.Diagnostics;
 using NUnit.Core.Extensibility;
+using NUnit.Framework;
 
 namespace NUnit.Core
 {
@@ -134,29 +135,6 @@ namespace NUnit.Core
         }
         #endregion
 
-        #region Get Special Properties of Attributes
-
-        #region IgnoreReason
-        public static string GetIgnoreReason( System.Attribute attribute )
-		{
-            return Reflect.GetPropertyValue(attribute, PropertyNames.Reason) as string;
-		}
-		#endregion
-
-		#region Description
-		/// <summary>
-		/// Method to return the description from an source
-		/// </summary>
-		/// <param name="source">The source to check</param>
-		/// <returns>The description, if any, or null</returns>
-		public static string GetDescription(System.Attribute attribute)
-		{
-            return Reflect.GetPropertyValue(attribute, PropertyNames.Description) as string;
-		}
-		#endregion
-
-		#endregion
-
 		#region ApplyCommonAttributes
         /// <summary>
         /// Modify a newly constructed test based on a type or method by 
@@ -196,75 +174,84 @@ namespace NUnit.Core
 				string attributeName = attributeType.FullName;
                 bool isValid = test.RunState != RunState.NotRunnable;
 
-                switch (attributeName)
+                if (attribute is TestFixtureAttribute)
                 {
-					case TestFixtureAttribute:
-					case TestAttribute:
-						if ( test.Description == null )
-							test.Description = GetDescription( attribute );
-						break;
-					case DescriptionAttribute:
-						test.Description = GetDescription( attribute );
-						break;
-					case ExplicitAttribute:
-                        if (isValid)
-                        {
-                            test.RunState = RunState.Explicit;
-                            test.IgnoreReason = GetIgnoreReason(attribute);
-                        }
-                        break;
-                    case IgnoreAttribute:
-                        if (isValid)
-                        {
-                            test.RunState = RunState.Ignored;
-                            test.IgnoreReason = GetIgnoreReason(attribute);
-                        }
-                        break;
-                    case PlatformAttribute:
-                        PlatformHelper pHelper = new PlatformHelper();
-                        if (isValid && !pHelper.IsPlatformSupported(attribute))
-                        {
-                            test.RunState = RunState.Skipped;
-                            test.IgnoreReason = GetIgnoreReason(attribute);
-							if ( test.IgnoreReason == null )
-								test.IgnoreReason = pHelper.Reason;
-                        }
-                        break;
-					case CultureAttribute:
-						CultureDetector cultureDetector = new CultureDetector();
-						if (isValid && !cultureDetector.IsCultureSupported(attribute))
-						{
-							test.RunState = RunState.Skipped;
-							test.IgnoreReason = cultureDetector.Reason;
-						}
-						break;
-                    case RequiredAddinAttribute:
-                        string required = (string)Reflect.GetPropertyValue(attribute, PropertyNames.RequiredAddin);
-                        if (!IsAddinAvailable(required))
-                        {
-                            test.RunState = RunState.NotRunnable;
-                            test.IgnoreReason = string.Format("Required addin {0} not available", required);
-                        }
-                        break;
-                    case "System.STAThreadAttribute":
-                        test.Properties.Add("APARTMENT_STATE", System.Threading.ApartmentState.STA);
-                        break;
-                    case "System.MTAThreadAttribute":
-                        test.Properties.Add("APARTMENT_STATE", System.Threading.ApartmentState.MTA);
-                        break;
-                    default:
-						if ( Reflect.InheritsFrom( attributeType, CategoryAttribute ) )
-						{	
-							test.Categories.Add( Reflect.GetPropertyValue( attribute, PropertyNames.CategoryName ) );
-						}
-						else if ( Reflect.InheritsFrom( attributeType, PropertyAttribute ) )
-						{
-							IDictionary props = (IDictionary)Reflect.GetPropertyValue( attribute, PropertyNames.Properties );
-							if ( props != null )
-                                foreach( DictionaryEntry entry in props )
-                                    test.Properties.Add(entry.Key, entry.Value);
-						}
-						break;
+                    if (test.Description == null)
+                        test.Description = ((TestFixtureAttribute)attribute).Description;
+                }
+                else if (attribute is TestAttribute)
+                {
+                    if (test.Description == null)
+                        test.Description = ((TestAttribute)attribute).Description;
+                }
+                //else if (attribute is DescriptionAttribute)
+                //{
+                //    test.Description = ((DescriptionAttribute)attribute).Description;
+                //}
+                else if (attribute is ExplicitAttribute)
+                {
+                    if (isValid)
+                    {
+                        test.RunState = RunState.Explicit;
+                        test.IgnoreReason = ((ExplicitAttribute)attribute).Reason;
+                    }
+                }
+                else if (attribute is IgnoreAttribute)
+                {
+                    if (isValid)
+                    {
+                        test.RunState = RunState.Ignored;
+                        test.IgnoreReason = ((ExplicitAttribute)attribute).Reason;
+                    }
+                }
+                else if (attribute is PlatformAttribute)
+                {
+                    PlatformHelper pHelper = new PlatformHelper();
+                    PlatformAttribute platformAttribute = (PlatformAttribute)attribute;
+                    if (isValid && !pHelper.IsPlatformSupported(platformAttribute))
+                    {
+                        test.RunState = RunState.Skipped;
+                        test.IgnoreReason = platformAttribute.Reason;
+                        if (test.IgnoreReason == null)
+                            test.IgnoreReason = pHelper.Reason;
+                    }
+                }
+                else if (attribute is CultureAttribute)
+                {
+                    CultureDetector cultureDetector = new CultureDetector();
+                    if (isValid && !cultureDetector.IsCultureSupported((CultureAttribute)attribute))
+                    {
+                        test.RunState = RunState.Skipped;
+                        test.IgnoreReason = cultureDetector.Reason;
+                    }
+                }
+                else if (attribute is RequiredAddinAttribute)
+                {
+                    string required = ((RequiredAddinAttribute)attribute).RequiredAddin;
+                    if (!IsAddinAvailable(required))
+                    {
+                        test.RunState = RunState.NotRunnable;
+                        test.IgnoreReason = string.Format("Required addin {0} not available", required);
+                    }
+                }
+                else if (attribute is System.STAThreadAttribute)
+                {
+                    test.Properties.Add("APARTMENT_STATE", System.Threading.ApartmentState.STA);
+                }
+                else if (attribute is System.MTAThreadAttribute)
+                {
+                    test.Properties.Add("APARTMENT_STATE", System.Threading.ApartmentState.MTA);
+                }
+                else if (attribute is CategoryAttribute)
+                {
+                    test.Categories.Add(((CategoryAttribute)attribute).Name);
+                }
+                else if (attribute is PropertyAttribute)
+                {
+                    IDictionary props = ((PropertyAttribute)attribute).Properties;
+                    if (props != null)
+                        foreach (DictionaryEntry entry in props)
+                            test.Properties.Add(entry.Key, entry.Value);
                 }
             }
         }
@@ -275,15 +262,15 @@ namespace NUnit.Core
         /// Modify a newly constructed test by checking for ExpectedExceptionAttribute
         /// and setting properties on the test accordingly.
         /// </summary>
-        /// <param name="attributes">An array of attributes possibly including NUnit attributes
-        /// <param name="test">The test to which the attributes apply</param>
+        /// <param name="method">The method being processed, possibly annotated with an ExpectedExceptionAttribute</param>
+        /// <param name="testMethod">The test to which the attributes apply</param>
         public static void ApplyExpectedExceptionAttribute(MethodInfo method, TestMethod testMethod)
         {
-            Attribute attribute = Reflect.GetAttribute(
-                method, NUnitFramework.ExpectedExceptionAttribute, false);
+            ExpectedExceptionAttribute[] attributes = 
+                (ExpectedExceptionAttribute[])method.GetCustomAttributes(typeof(ExpectedExceptionAttribute), false);
 
-            if (attribute != null)
-                testMethod.ExceptionProcessor = new ExpectedExceptionProcessor(testMethod, attribute);
+            if (attributes != null && attributes.Length > 0)
+                testMethod.ExceptionProcessor = new ExpectedExceptionProcessor(testMethod, attributes[0]);
         }
 
         #endregion
@@ -291,7 +278,7 @@ namespace NUnit.Core
         #region IsSuiteBuilder
         public static bool IsSuiteBuilder( Type type )
 		{
-			return Reflect.HasAttribute( type, SuiteBuilderAttribute, false )
+			return type.IsDefined(typeof(SuiteBuilderAttribute), false )
 				&& Reflect.HasInterface( type, SuiteBuilderInterface );
 		}
 		#endregion
@@ -299,7 +286,7 @@ namespace NUnit.Core
 		#region IsTestCaseBuilder
 		public static bool IsTestCaseBuilder( Type type )
 		{
-			return Reflect.HasAttribute( type, TestCaseBuilderAttributeName, false )
+			return type.IsDefined(typeof(TestCaseBuilderAttribute), false )
 				&& Reflect.HasInterface( type, TestCaseBuilderInterfaceName );
 		}
 		#endregion
@@ -307,7 +294,7 @@ namespace NUnit.Core
 		#region IsTestDecorator
 		public static bool IsTestDecorator( Type type )
 		{
-			return Reflect.HasAttribute( type, TestDecoratorAttributeName, false )
+			return type.IsDefined(typeof(TestDecoratorAttribute), false )
 				&& Reflect.HasInterface( type, TestDecoratorInterfaceName );
 		}
 		#endregion
@@ -321,95 +308,6 @@ namespace NUnit.Core
 
             return false;
         }
-        #endregion
-
-        #region Framework Assert Access
-
-        /// <summary>
-        /// NUnitFramework.Assert is a nested class that implements
-        /// a few of the framework operations by reflection, 
-        /// using whatever framework version is available.
-        /// </summary>
-        public class Assert
-        {
-            #region Properties
-            private static Type assertType;
-            private static Type AssertType
-            {
-                get
-                {
-                    if (assertType == null && FrameworkAssembly != null)
-                        assertType = FrameworkAssembly.GetType(NUnitFramework.AssertType);
-
-                    return assertType;
-                }
-            }
-
-            private static MethodInfo areEqualMethod;
-            private static MethodInfo AreEqualMethod
-            {
-                get
-                {
-                    if (areEqualMethod == null && AssertType != null)
-                        areEqualMethod = AssertType.GetMethod(
-                            "AreEqual", 
-                            BindingFlags.Static | BindingFlags.Public, 
-                            null, 
-                            new Type[] { typeof(object), typeof(object) },
-                            null );
-
-                    return areEqualMethod;
-                }
-            }
-
-            private static PropertyInfo counterProperty;
-            private static PropertyInfo CounterProperty
-            {
-                get
-                {
-                    if (counterProperty == null && AssertType != null)
-                        counterProperty = Reflect.GetNamedProperty(
-                            AssertType,
-                            "Counter",
-                            BindingFlags.Public | BindingFlags.Static);
-
-                    return counterProperty;
-                }
-            }
-            #endregion
-
-            /// <summary>
-            /// Invoke Assert.AreEqual by reflection
-            /// </summary>
-            /// <param name="expected">The expected value</param>
-            /// <param name="actual">The actual value</param>
-            public static void AreEqual(object expected, object actual)
-            {
-                if (AreEqualMethod != null)
-                    try
-                    {
-                        AreEqualMethod.Invoke(null, new object[] { expected, actual });
-                    }
-                    catch (TargetInvocationException e)
-                    {
-                        Exception inner = e.InnerException;
-                        throw new NUnitException("Rethrown", inner);
-                    }
-            }
-
-            /// <summary>
-            /// Get the assertion counter. It clears itself automatically
-            /// on each call.
-            /// </summary>
-            /// <returns>Count of number of asserts since last call</returns>
-            public static int GetAssertCount()
-            {
-                return CounterProperty == null
-                    ? 0
-                    : (int)CounterProperty.GetValue(null, new object[0]);
-            }
-        }
-
         #endregion
 
         #region GetResultState

@@ -290,4 +290,7 @@
       <Link>TestText2.txt</Link>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="NUnit\Core\" />
+  </ItemGroup>
 </Project>

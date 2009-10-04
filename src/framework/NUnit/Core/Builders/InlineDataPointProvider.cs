@@ -38,9 +38,10 @@ namespace NUnit.Core.Builders
 
         public bool HasDataFor(ParameterInfo parameter)
         {
-            return Reflect.HasAttribute(parameter, ParameterDataAttribute, false);
+            return parameter.IsDefined(typeof(NUnit.Framework.ParameterDataAttribute), false);
         }
-                public IEnumerable GetDataFor(ParameterInfo parameter)
+        
+        public IEnumerable GetDataFor(ParameterInfo parameter)
         {
             Attribute attr = Reflect.GetAttribute(parameter, ParameterDataAttribute, false);
             if (attr == null) return null;

@@ -25,6 +25,7 @@ using System;
 using System.Reflection;
 using System.Collections;
 using NUnit.Core.Extensibility;
+using NUnit.Framework;
 
 namespace NUnit.Core.Builders
 {
@@ -49,7 +50,7 @@ namespace NUnit.Core.Builders
         /// <returns>True if any data is available, otherwise false.</returns>
         public bool HasDataFor(ParameterInfo parameter)
         {
-            return Reflect.HasAttribute(parameter, SourcesAttribute, false);
+            return parameter.IsDefined(typeof(ValueSourceAttribute), false);
         }
 
         /// <summary>
@@ -106,10 +107,10 @@ namespace NUnit.Core.Builders
             ArrayList sources = new ArrayList();
             TestFixture parentSuite = parent as TestFixture;
 
-            foreach (Attribute sourceAttr in Reflect.GetAttributes(parameter, SourcesAttribute, false))
+            foreach (ValueSourceAttribute sourceAttr in parameter.GetCustomAttributes(typeof(ValueSourceAttribute), false))
             {
-                Type sourceType = Reflect.GetPropertyValue(sourceAttr, SourceTypeProperty) as Type;
-                string sourceName = Reflect.GetPropertyValue(sourceAttr, SourceNameProperty) as string;
+                Type sourceType = sourceAttr.SourceType;
+                string sourceName = sourceAttr.SourceName;
 
                 if (sourceType != null)
                     sources.Add(new ProviderReference(sourceType, sourceName));

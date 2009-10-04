@@ -105,7 +105,7 @@ namespace NUnitLite.Runner
         /// <returns>A test constructed from the type</returns>
         public static ITest LoadAsSuite(Type type)
         {
-            PropertyInfo suiteProperty = Reflect.GetSuiteProperty(type);
+            PropertyInfo suiteProperty = type.GetProperty("Suite", typeof(ITest), Reflect.EmptyTypes);
             if (suiteProperty != null)
                 return (ITest)suiteProperty.GetValue(null, Reflect.EmptyTypes);
 

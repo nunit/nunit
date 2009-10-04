@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using NUnit.Framework;
 
 namespace NUnit.Core.Builders
 {
@@ -47,7 +48,7 @@ namespace NUnit.Core.Builders
 
 		public bool CanBuildFrom(Type type)
 		{
-			return Reflect.HasAttribute( type, NUnitFramework.SetUpFixtureAttribute, false );
+			return type.IsDefined(typeof(SetUpFixtureAttribute), false );
 		}
 		#endregion
 

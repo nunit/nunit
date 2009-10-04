@@ -52,20 +52,20 @@ namespace NUnit.Core
 
         #region Attributes 
 
-		/// <summary>
-		/// Check presence of attribute of a given type on a member.
-		/// </summary>
-		/// <param name="member">The member to examine</param>
-		/// <param name="attrName">The FullName of the attribute type to look for</param>
-		/// <param name="inherit">True to include inherited attributes</param>
-		/// <returns>True if the attribute is present</returns>
-		public static bool HasAttribute( ICustomAttributeProvider member, string attrName, bool inherit )
-		{
-			foreach( Attribute attribute in GetAttributes( member, inherit ) )
-				if ( IsInstanceOfType( attrName, attribute ) )
-					return true;
-			return false;
-		}
+        /// <summary>
+        /// Check presence of attribute with a given name on a member.
+        /// </summary>
+        /// <param name="member">The member to examine</param>
+        /// <param name="attrName">The FullName of the attribute type to look for</param>
+        /// <param name="inherit">True to include inherited attributes</param>
+        /// <returns>True if the attribute is present</returns>
+        private static bool HasAttribute(ICustomAttributeProvider member, string attrName, bool inherit)
+        {
+            foreach (Attribute attribute in GetAttributes(member, inherit))
+                if (IsInstanceOfType(attrName, attribute))
+                    return true;
+            return false;
+        }
 
         /// <summary>
         /// Get attribute of a given type on a member. If multiple attributes

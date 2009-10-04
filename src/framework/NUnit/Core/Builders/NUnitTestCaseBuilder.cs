@@ -23,6 +23,7 @@
 
 using System;
 using System.Reflection;
+using NUnit.Framework;
 using NUnit.Core.Extensibility;
 
 namespace NUnit.Core.Builders
@@ -64,15 +65,15 @@ namespace NUnit.Core.Builders
         /// <returns>True if the builder can create a test case from this method</returns>
         public bool CanBuildFrom(MethodInfo method)
         {
-            return Reflect.HasAttribute(method, NUnitFramework.TestAttribute, false)
-                || Reflect.HasAttribute(method, NUnitFramework.TestCaseAttribute, false)
-                || Reflect.HasAttribute(method, NUnitFramework.TestCaseSourceAttribute, false)
-                || Reflect.HasAttribute(method, NUnitFramework.TheoryAttribute, false)
+            return method.IsDefined(typeof(TestAttribute), false)
+                || method.IsDefined(typeof(TestCaseAttribute), false)
+                || method.IsDefined(typeof(TestCaseSourceAttribute), false)
+                || method.IsDefined(typeof(TheoryAttribute), false)
                 || allowOldStyleTests && method.Name.ToLower().StartsWith("test")
-                && !Reflect.HasAttribute(method, NUnitFramework.SetUpAttribute, true)
-                && !Reflect.HasAttribute(method, NUnitFramework.TearDownAttribute, true)
-                && !Reflect.HasAttribute(method, NUnitFramework.FixtureSetUpAttribute, true)
-                && !Reflect.HasAttribute(method, NUnitFramework.FixtureTearDownAttribute, true);
+                && !method.IsDefined(typeof(SetUpAttribute), true)
+                && !method.IsDefined(typeof(TearDownAttribute), true)
+                && !method.IsDefined(typeof(TestFixtureSetUpAttribute), true)
+                && !method.IsDefined(typeof(TestFixtureTearDownAttribute), true);
         }
 
 		/// <summary>
