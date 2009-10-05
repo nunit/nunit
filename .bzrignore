@@ -25,3 +25,4 @@ bin
 package
 StyleCop.Cache
 *.StyleCop
+local.settings.include
