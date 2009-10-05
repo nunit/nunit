@@ -125,6 +125,11 @@
       value="${environment::get-variable('NUNIT_DIR')}"/>
   </if>
 
+  <if test="${environment::variable-exists('NCOVER_DIR')}">
+    <property name="ncover.dir"
+      value="${environment::get-variable('NCOVER_DIR')}"/>
+  </if>
+
   <if test="${environment::variable-exists('PARTCOVER_DIR')}">
     <property name="partcover.dir"
       value="${environment::get-variable('PARTCOVER_DIR')}"/>
