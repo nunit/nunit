@@ -42,6 +42,9 @@
     <Compile Include="..\..\..\src\test-assembly\AssertFailFixture.cs">
       <Link>AssertFailFixture.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\test-assembly\AssertIgnoreData.cs">
+      <Link>AssertIgnoreData.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\test-assembly\AttributeInheritanceData.cs">
       <Link>AttributeInheritanceData.cs</Link>
     </Compile>
@@ -53,6 +56,12 @@
     </Compile>
     <Compile Include="..\..\..\src\test-assembly\DescriptionFixture.cs">
       <Link>DescriptionFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\test-assembly\ExpectedExceptionData.cs">
+      <Link>ExpectedExceptionData.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\test-assembly\FixtureSetUpTearDownData.cs">
+      <Link>FixtureSetUpTearDownData.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\test-assembly\TestCaseAttributeFixture.cs">
       <Link>TestCaseAttributeFixture.cs</Link>
