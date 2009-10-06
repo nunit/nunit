@@ -62,6 +62,9 @@
     <Compile Include="..\..\..\src\tests\Shared\Framework\ArrayNotEqualFixture.cs">
       <Link>Shared\Framework\ArrayNotEqualFixture.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\tests\Shared\Framework\AssertTests\AssertFailTests.cs">
+      <Link>Shared\Framework\AssertTests\AssertFailTests.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\tests\Shared\Framework\CollectionAdapter.cs">
       <Link>Shared\Framework\CollectionAdapter.cs</Link>
     </Compile>

@@ -51,10 +51,45 @@
       <Project>{12B66B03-90F1-4992-BD33-BDF3C69AE49E}</Project>
       <Name>nunit.framework</Name>
     </ProjectReference>
+    <ProjectReference Include="..\nunit.interfaces\nunit.interfaces.csproj">
+      <Project>{43D2F73E-0076-4A1F-8BC0-579EB0142519}</Project>
+      <Name>nunit.interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\test-assembly\test-assembly.csproj">
+      <Project>{15B64946-4989-4873-915C-3E181772FA03}</Project>
+      <Name>test-assembly</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\..\src\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\NUnit\Core\AssemblyReaderTests.cs">
+      <Link>NUnit\Core\AssemblyReaderTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\NUnit\Core\AssertPassTests.cs">
+      <Link>NUnit\Core\AssertPassTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\NUnit\Core\AttributeInheritanceTests.cs">
+      <Link>NUnit\Core\AttributeInheritanceTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\NUnit\Core\DescriptionTests.cs">
+      <Link>NUnit\Core\DescriptionTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\NUnit\Core\TestCaseAttributeTests.cs">
+      <Link>NUnit\Core\TestCaseAttributeTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\NUnit\Core\TestMethodSignatureTests.cs">
+      <Link>NUnit\Core\TestMethodSignatureTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\NUnit\Core\UnexpectedExceptionTests.cs">
+      <Link>NUnit\Core\UnexpectedExceptionTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\NUnit\Framework\AssertTests\AssertInconclusiveTests.cs">
+      <Link>NUnit\Framework\AssertTests\AssertInconclusiveTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\NUnit\Framework\AssertTests\AssertPassTests.cs">
+      <Link>NUnit\Framework\AssertTests\AssertPassTests.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\tests\NUnit\Framework\AssertThrowsTests.cs">
       <Link>NUnit\Framework\AssertThrowsTests.cs</Link>
@@ -145,6 +180,9 @@
     </Compile>
     <Compile Include="..\..\..\src\tests\Shared\Framework\ArrayNotEqualFixture.cs">
       <Link>Shared\Framework\ArrayNotEqualFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\Shared\Framework\AssertTests\AssertFailTests.cs">
+      <Link>Shared\Framework\AssertTests\AssertFailTests.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\tests\Shared\Framework\CollectionAdapter.cs">
       <Link>Shared\Framework\CollectionAdapter.cs</Link>
@@ -266,6 +304,21 @@
     <Compile Include="..\..\..\src\tests\Shared\Framework\TextMessageWriterTests.cs">
       <Link>Shared\Framework\TextMessageWriterTests.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\tests\NUnit\Core\AssertInconclusiveTests.cs">
+      <Link>NUnit\Core\AssertInconclusiveTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\NUnit\Core\AssertFailTests.cs">
+      <Link>NUnit\Core\AssertFailTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\NUnit\TestUtilities\TestAssert.cs">
+      <Link>NUnit\TestUtilities\TestAssert.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\NUnit\TestUtilities\TestBuilder.cs">
+      <Link>NUnit\TestUtilities\TestBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\NUnit\TestUtilities\TestFinder.cs">
+      <Link>NUnit\TestUtilities\TestFinder.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -289,8 +342,5 @@
     <EmbeddedResource Include="..\..\..\src\tests\TestText2.txt">
       <Link>TestText2.txt</Link>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="NUnit\Core\" />
   </ItemGroup>
 </Project>
