@@ -18,7 +18,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NET_3_5;CLR_2_0</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -26,7 +26,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>TRACE;NET_3_5;CLR_2_0</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -42,8 +42,14 @@
     <Compile Include="..\..\..\src\test-assembly\AssertFailFixture.cs">
       <Link>AssertFailFixture.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\test-assembly\AttributeInheritanceFixture.cs">
-      <Link>AttributeInheritanceFixture.cs</Link>
+    <Compile Include="..\..\..\src\test-assembly\AttributeInheritanceData.cs">
+      <Link>AttributeInheritanceData.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\test-assembly\CategoryAttributeData.cs">
+      <Link>CategoryAttributeData.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\test-assembly\CultureAttributeData.cs">
+      <Link>CultureAttributeData.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\test-assembly\DescriptionFixture.cs">
       <Link>DescriptionFixture.cs</Link>
@@ -51,14 +57,35 @@
     <Compile Include="..\..\..\src\test-assembly\TestCaseAttributeFixture.cs">
       <Link>TestCaseAttributeFixture.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\test-assembly\TestCaseSourceAttributeFixture.cs">
+      <Link>TestCaseSourceAttributeFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\test-assembly\TestFixtureBuilderData.cs">
+      <Link>TestFixtureBuilderData.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\test-assembly\TestFixtureData.cs">
+      <Link>TestFixtureData.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\test-assembly\TestFixtureExtensionData.cs">
+      <Link>TestFixtureExtensionData.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\test-assembly\TestMethodSignatureFixture.cs">
       <Link>TestMethodSignatureFixture.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\test-assembly\AssemblyInfo.cs">
       <Link>AssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\test-assembly\TheoryFixture.cs">
+      <Link>TheoryFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\test-assembly\ThreadingFixture.cs">
+      <Link>ThreadingFixture.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\test-assembly\UnexpectedExceptionFixture.cs">
       <Link>UnexpectedExceptionFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\test-assembly\UnhandledExceptions.cs">
+      <Link>UnhandledExceptions.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup>

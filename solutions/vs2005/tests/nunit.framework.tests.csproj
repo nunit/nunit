@@ -56,17 +56,59 @@
     <Compile Include="..\..\..\src\tests\NUnit\Core\AttributeInheritanceTests.cs">
       <Link>NUnit\Core\AttributeInheritanceTests.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\tests\NUnit\Core\CallContextTests.cs">
+      <Link>NUnit\Core\CallContextTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\NUnit\Core\CategoryAttributeTests.cs">
+      <Link>NUnit\Core\CategoryAttributeTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\NUnit\Core\CombinatorialTests.cs">
+      <Link>NUnit\Core\CombinatorialTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\NUnit\Core\CoreExtensionsTests.cs">
+      <Link>NUnit\Core\CoreExtensionsTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\NUnit\Core\CultureSettingAndDetectionTests.cs">
+      <Link>NUnit\Core\CultureSettingAndDetectionTests.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\tests\NUnit\Core\DescriptionTests.cs">
       <Link>NUnit\Core\DescriptionTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\NUnit\Core\DirectorySwapperTests.cs">
+      <Link>NUnit\Core\DirectorySwapperTests.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\tests\NUnit\Core\TestCaseAttributeTests.cs">
       <Link>NUnit\Core\TestCaseAttributeTests.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\tests\NUnit\Core\TestCaseSourceTests.cs">
+      <Link>NUnit\Core\TestCaseSourceTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\NUnit\Core\TestFixtureTests.cs">
+      <Link>NUnit\Core\TestFixtureTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\NUnit\Core\TestFrameworkTests.cs">
+      <Link>NUnit\Core\TestFrameworkTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\NUnit\Core\TestIDTests.cs">
+      <Link>NUnit\Core\TestIDTests.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\tests\NUnit\Core\TestMethodSignatureTests.cs">
       <Link>NUnit\Core\TestMethodSignatureTests.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\tests\NUnit\Core\TestNameTests.cs">
+      <Link>NUnit\Core\TestNameTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\NUnit\Core\TheoryTests.cs">
+      <Link>NUnit\Core\TheoryTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\NUnit\Core\ThreadingTests.cs">
+      <Link>NUnit\Core\ThreadingTests.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\tests\NUnit\Core\UnexpectedExceptionTests.cs">
       <Link>NUnit\Core\UnexpectedExceptionTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\NUnit\Core\UnhandledExceptionTests.cs">
+      <Link>NUnit\Core\UnhandledExceptionTests.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\tests\NUnit\Framework\AssertTests\AssertInconclusiveTests.cs">
       <Link>NUnit\Framework\AssertTests\AssertInconclusiveTests.cs</Link>
@@ -151,6 +193,9 @@
     </Compile>
     <Compile Include="..\..\..\src\tests\NUnit\Framework\ValuesAttributeTests.cs">
       <Link>NUnit\Framework\ValuesAttributeTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\NUnit\TestUtilities\ResultSummary.cs">
+      <Link>NUnit\TestUtilities\ResultSummary.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\tests\NUnit\TestUtilities\TestAssert.cs">
       <Link>NUnit\TestUtilities\TestAssert.cs</Link>

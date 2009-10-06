@@ -6,7 +6,7 @@
 using System;
 using NUnit.Framework;
 
-namespace NUnit.TestData
+namespace NUnit.TestData.TestMethodSignatureFixture
 {
 	[TestFixture]
 	public class TestMethodSignatureFixture

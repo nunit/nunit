@@ -85,6 +85,20 @@ namespace NUnit.Framework
 
         #endregion
 
+        #region StartsWith
+
+        /// <summary>
+        /// Returns a constraint that succeeds if the actual
+        /// value starts with the substring supplied as an argument.
+        /// </summary>
+        [Obsolete("Use Is.StringStarting")]
+        public static StartsWithConstraint StartsWith(string expected)
+        {
+            return new StartsWithConstraint(expected);
+        }
+
+        #endregion
+
         #region DoesNotStartWith
 
         /// <summary>

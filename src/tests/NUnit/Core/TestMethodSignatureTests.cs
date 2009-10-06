@@ -7,7 +7,7 @@
 using System;
 using System.Collections;
 using NUnit.Framework;
-using NUnit.TestData;
+using NUnit.TestData.TestMethodSignatureFixture;
 using NUnit.TestUtilities;
 
 namespace NUnit.Core.Tests
@@ -127,8 +127,8 @@ namespace NUnit.Core.Tests
 			Assert.That( test.RunState, Is.EqualTo( RunState.Runnable ) );
             TestResult result = test.Run(NullListener.NULL, TestFilter.Empty);
 			Assert.That( result.ResultState, Is.EqualTo(ResultState.Success) );
-            //ResultSummarizer summary = new ResultSummarizer(result);
-            //Assert.That(summary.TestsRun, Is.EqualTo(3));
+            ResultSummary summary = new ResultSummary(result);
+            Assert.That(summary.TestsRun, Is.EqualTo(3));
 		}
 
         [Test]
@@ -157,30 +157,30 @@ namespace NUnit.Core.Tests
             Assert.That(fullNames, Has.Member(fullName + "(12,4,3)"));
         }
 
-        //[Test]
-        //public void RunningTestsThroughFixtureGivesCorrectResults()
-        //{
-        //    TestResult result = fixture.Run(NullListener.NULL, TestFilter.Empty);
-        //    ResultSummarizer summary = new ResultSummarizer( result );
+        [Test]
+        public void RunningTestsThroughFixtureGivesCorrectResults()
+        {
+            TestResult result = fixture.Run(NullListener.NULL, TestFilter.Empty);
+            ResultSummary summary = new ResultSummary(result);
 
-        //    Assert.That( 
-        //        summary.ResultCount, 
-        //        Is.EqualTo( TestMethodSignatureFixture.Tests ) );
-        //    Assert.That( 
-        //        summary.TestsRun, 
-        //        Is.EqualTo( TestMethodSignatureFixture.Runnable ) );
-        //    Assert.That( 
-        //        summary.NotRunnable, 
-        //        Is.EqualTo( TestMethodSignatureFixture.NotRunnable ) );
-        //    Assert.That(
-        //        summary.Errors,
-        //        Is.EqualTo(TestMethodSignatureFixture.Errors));
-        //    Assert.That(
-        //        summary.Failures,
-        //        Is.EqualTo(TestMethodSignatureFixture.Failures));
-        //    Assert.That( 
-        //        summary.TestsNotRun, 
-        //        Is.EqualTo( TestMethodSignatureFixture.NotRunnable ) );
-        //}
+            Assert.That(
+                summary.ResultCount,
+                Is.EqualTo(TestMethodSignatureFixture.Tests));
+            Assert.That(
+                summary.TestsRun,
+                Is.EqualTo(TestMethodSignatureFixture.Runnable));
+            Assert.That(
+                summary.NotRunnable,
+                Is.EqualTo(TestMethodSignatureFixture.NotRunnable));
+            Assert.That(
+                summary.Errors,
+                Is.EqualTo(TestMethodSignatureFixture.Errors));
+            Assert.That(
+                summary.Failures,
+                Is.EqualTo(TestMethodSignatureFixture.Failures));
+            Assert.That(
+                summary.TestsNotRun,
+                Is.EqualTo(TestMethodSignatureFixture.NotRunnable));
+        }
     }
 }

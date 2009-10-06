@@ -6,7 +6,7 @@
 
 using System;
 using NUnit.Framework;
-using NUnit.TestData;
+using NUnit.TestData.AttributeInheritanceData;
 using NUnit.TestUtilities;
 
 namespace NUnit.Core.Tests

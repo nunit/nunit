@@ -438,6 +438,7 @@ Gen: ConstraintFactory.DoesNotContain(string expected)=>new ConstraintExpression
 /// Returns a constraint that succeeds if the actual
 /// value starts with the substring supplied as an argument.
 /// </summary>
+Gen: [Obsolete("Use Is.StringStarting")]Text.StartsWith(string expected)=>new StartsWithConstraint(expected)
 Gen: ConstraintFactory.StartsWith(string expected)=>new StartsWithConstraint(expected)
 Gen: ConstraintExpression.StartsWith(string expected)=>(StartsWithConstraint)this.Append(new StartsWithConstraint(expected))
 Gen3: Is.StringStarting(string expected)=>new StartsWithConstraint(expected)
