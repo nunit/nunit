@@ -7,7 +7,7 @@
 using System;
 using NUnit.Framework;
 
-namespace NUnit.TestData
+namespace NUnit.TestData.DescriptionFixture
 {
 	[TestFixture(Description = "Fixture Description")]
 	public class DescriptionFixture

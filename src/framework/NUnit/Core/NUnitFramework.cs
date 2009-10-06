@@ -201,7 +201,7 @@ namespace NUnit.Core
                     if (isValid)
                     {
                         test.RunState = RunState.Ignored;
-                        test.IgnoreReason = ((ExplicitAttribute)attribute).Reason;
+                        test.IgnoreReason = ((IgnoreAttribute)attribute).Reason;
                     }
                 }
                 else if (attribute is PlatformAttribute)

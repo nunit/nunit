@@ -24,7 +24,7 @@
 using System;
 using NUnit.Framework;
 using NUnit.Core.Builders;
-using NUnit.TestData;
+using NUnit.TestData.AssertFailFixture;
 using NUnit.TestUtilities;
 
 namespace NUnit.Core.Tests

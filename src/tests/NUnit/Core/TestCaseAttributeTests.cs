@@ -23,7 +23,7 @@
 
 using System;
 using NUnit.Framework;
-using NUnit.TestData;
+using NUnit.TestData.TestCaseAttributeFixture;
 using NUnit.TestUtilities;
 using System.Collections;
 
@@ -149,7 +149,7 @@ namespace NUnit.Core.Tests
             Test test = (Test)TestBuilder.MakeTestCase(
                 typeof(TestCaseAttributeFixture), "MethodHasTestNameSpecified").Tests[0];
             Assert.AreEqual("XYZ", test.TestName.Name);
-            Assert.AreEqual("NUnit.TestData.TestCaseAttributeFixture.XYZ", test.TestName.FullName);
+            Assert.AreEqual("NUnit.TestData.TestCaseAttributeFixture.TestCaseAttributeFixture.XYZ", test.TestName.FullName);
         }
 
         [Test]
@@ -208,10 +208,10 @@ namespace NUnit.Core.Tests
                 typeof(TestCaseAttributeFixture), "MethodWithIgnoredTestCases");
             TestResult result = test.Run(NullListener.NULL, TestFilter.Empty);
 
-            //ResultSummarizer summary = new ResultSummarizer(result);
-            //Assert.AreEqual(3, summary.ResultCount);
-            //Assert.AreEqual(2, summary.Ignored);
-            //Assert.That(result.Results, Has.Some.Message.EqualTo("Don't Run Me!"));
+            ResultSummary summary = new ResultSummary(result);
+            Assert.AreEqual(3, summary.ResultCount);
+            Assert.AreEqual(2, summary.Ignored);
+            Assert.That(result.Results, Has.Some.Message.EqualTo("Don't Run Me!"));
         }
     }
 }

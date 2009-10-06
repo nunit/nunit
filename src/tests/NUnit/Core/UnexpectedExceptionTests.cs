@@ -24,7 +24,7 @@
 using System;
 using NUnit.Framework;
 using NUnit.Core.Builders;
-using NUnit.TestData;
+using NUnit.TestData.UnexpectedExceptionFixture;
 using NUnit.TestUtilities;
 
 namespace NUnit.Core.Tests
@@ -54,7 +54,7 @@ namespace NUnit.Core.Tests
                 "ThrowsWithBadStackTrace");
 
             Assert.AreEqual(ResultState.Error, result.ResultState);
-            Assert.AreEqual("NUnit.TestData.ExceptionWithBadStackTrace : thrown by me", result.Message);
+            Assert.AreEqual("NUnit.TestData.UnexpectedExceptionFixture.ExceptionWithBadStackTrace : thrown by me", result.Message);
             Assert.AreEqual("No stack trace available", result.StackTrace);
         }
 
@@ -66,7 +66,7 @@ namespace NUnit.Core.Tests
                 "ThrowsCustomException");
 
             Assert.AreEqual(ResultState.Error, result.ResultState);
-            Assert.AreEqual("NUnit.TestData.CustomException : message", result.Message);
+            Assert.AreEqual("NUnit.TestData.UnexpectedExceptionFixture.CustomException : message", result.Message);
         }
     }
 }

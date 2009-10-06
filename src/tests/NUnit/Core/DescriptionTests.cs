@@ -8,7 +8,7 @@ using System.Reflection;
 using System.Collections;
 using NUnit.Framework;
 using NUnit.Core.Builders;
-using NUnit.TestData;
+using NUnit.TestData.DescriptionFixture;
 using NUnit.TestUtilities;
 
 namespace NUnit.Core.Tests

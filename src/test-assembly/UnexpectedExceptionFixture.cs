@@ -7,7 +7,7 @@
 using System;
 using NUnit.Framework;
 
-namespace NUnit.TestData
+namespace NUnit.TestData.UnexpectedExceptionFixture
 {
     [TestFixture]
     public class UnexpectedExceptionFixture
