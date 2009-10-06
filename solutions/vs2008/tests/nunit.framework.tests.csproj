@@ -67,6 +67,9 @@
     <Compile Include="..\..\..\src\tests\NUnit\Core\AssemblyReaderTests.cs">
       <Link>NUnit\Core\AssemblyReaderTests.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\tests\NUnit\Core\AssertIgnoreTests.cs">
+      <Link>NUnit\Core\AssertIgnoreTests.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\tests\NUnit\Core\AssertPassTests.cs">
       <Link>NUnit\Core\AssertPassTests.cs</Link>
     </Compile>
@@ -93,6 +96,21 @@
     </Compile>
     <Compile Include="..\..\..\src\tests\NUnit\Core\DirectorySwapperTests.cs">
       <Link>NUnit\Core\DirectorySwapperTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\NUnit\Core\EventQueueTests.cs">
+      <Link>NUnit\Core\EventQueueTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\NUnit\Core\ExpectedExceptionTests.cs">
+      <Link>NUnit\Core\ExpectedExceptionTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\NUnit\Core\FixtureSetUpTearDownTests.cs">
+      <Link>NUnit\Core\FixtureSetUpTearDownTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\NUnit\Core\GenericTestFixtureTests.cs">
+      <Link>NUnit\Core\GenericTestFixtureTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\NUnit\Core\GenericTestMethodTests.cs">
+      <Link>NUnit\Core\GenericTestMethodTests.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\tests\NUnit\Core\TestCaseAttributeTests.cs">
       <Link>NUnit\Core\TestCaseAttributeTests.cs</Link>
