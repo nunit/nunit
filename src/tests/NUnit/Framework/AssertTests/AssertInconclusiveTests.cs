@@ -1,5 +1,5 @@
-// ***********************************************************************
-// Copyright (c) 2007 Charlie Poole
+﻿// ***********************************************************************
+// Copyright (c) 2009 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -23,20 +23,27 @@
 
 using System;
 
-namespace NUnit.Framework
+namespace NUnit.Framework.AssertTests
 {
-	/// <summary>
-	/// Attribute used to provide descriptive text about a 
-	/// test case or fixture.
-	/// </summary>
-    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class | AttributeTargets.Assembly, AllowMultiple = false)]
-    public sealed class DescriptionAttribute : PropertyAttribute
+    [TestFixture]
+    public class AssertInconclusiveTests
     {
-        /// <summary>
-        /// Construct a description Attribute
-        /// </summary>
-        /// <param name="description">The text of the description</param>
-        public DescriptionAttribute(string description) : base("_DESCRIPTION", description) { }
-    }
+        [Test, ExpectedException(typeof(InconclusiveException))]
+        public void ThrowsInconclusiveException()
+        {
+            Assert.Inconclusive();
+        }
 
+        [Test, ExpectedException(typeof(InconclusiveException), ExpectedMessage = "MESSAGE")]
+        public void ThrowsInconclusiveExceptionWithMessage()
+        {
+            Assert.Inconclusive("MESSAGE");
+        }
+
+        [Test, ExpectedException(typeof(InconclusiveException), ExpectedMessage = "MESSAGE: 2+2=4")]
+        public void ThrowsInconclusiveExceptionWithMessageAndArgs()
+        {
+            Assert.Inconclusive("MESSAGE: {0}+{1}={2}", 2, 2, 4);
+        }
+    }
 }
