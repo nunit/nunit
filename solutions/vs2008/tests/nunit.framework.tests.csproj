@@ -112,6 +112,42 @@
     <Compile Include="..\..\..\src\tests\NUnit\Core\GenericTestMethodTests.cs">
       <Link>NUnit\Core\GenericTestMethodTests.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\tests\NUnit\Core\LegacySuiteTests.cs">
+      <Link>NUnit\Core\LegacySuiteTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\NUnit\Core\MaxTimeTests.cs">
+      <Link>NUnit\Core\MaxTimeTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\NUnit\Core\PairwiseTests.cs">
+      <Link>NUnit\Core\PairwiseTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\NUnit\Core\ParameterizedTestFixtureTests.cs">
+      <Link>NUnit\Core\ParameterizedTestFixtureTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\NUnit\Core\PlatformDetectionTests.cs">
+      <Link>NUnit\Core\PlatformDetectionTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\NUnit\Core\PropertyAttributeTests.cs">
+      <Link>NUnit\Core\PropertyAttributeTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\NUnit\Core\RepeatedTestTests.cs">
+      <Link>NUnit\Core\RepeatedTestTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\NUnit\Core\RuntimeFrameworkTests.cs">
+      <Link>NUnit\Core\RuntimeFrameworkTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\NUnit\Core\SetCultureAttributeTests.cs">
+      <Link>NUnit\Core\SetCultureAttributeTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\NUnit\Core\SetUpFixtureTests.cs">
+      <Link>NUnit\Core\SetUpFixtureTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\NUnit\Core\SetUpTest.cs">
+      <Link>NUnit\Core\SetUpTest.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\NUnit\Core\SuiteBuilderTests.cs">
+      <Link>NUnit\Core\SuiteBuilderTests.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\tests\NUnit\Core\TestCaseAttributeTests.cs">
       <Link>NUnit\Core\TestCaseAttributeTests.cs</Link>
     </Compile>

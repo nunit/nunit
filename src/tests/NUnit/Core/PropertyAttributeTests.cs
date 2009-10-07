@@ -22,54 +22,49 @@
 // ***********************************************************************
 
 using System;
-using System.Collections;
+using NUnit.Framework;
+using NUnit.TestUtilities;
+using NUnit.TestData.PropertyAttributeTests;
 
-namespace NUnit.Core.Filters
+namespace NUnit.Core.Tests
 {
-	/// <summary>
-	/// Summary description for NameFilter.
-	/// </summary>
-	/// 
-	[Serializable]
-	public class NameFilter : TestFilter
+	[TestFixture]
+	public class PropertyAttributeTests
 	{
-		private ArrayList testNames = new ArrayList();
+		TestSuite fixture;
 
-		/// <summary>
-		/// Construct an empty NameFilter
-		/// </summary>
-		public NameFilter() { }
-
-		/// <summary>
-		/// Construct a NameFilter for a single TestName
-		/// </summary>
-		/// <param name="testName"></param>
-		public NameFilter( TestName testName )
+		[SetUp]
+		public void CreateFixture()
 		{
-			testNames.Add( testName );
+			fixture = TestBuilder.MakeFixture( typeof( FixtureWithProperties ) );
 		}
 
-		/// <summary>
-		/// Add a TestName to a NameFilter
-		/// </summary>
-		/// <param name="testName"></param>
-		public void Add( TestName testName )
+		[Test]
+		public void PropertyWithStringValue()
 		{
-			testNames.Add( testName );
+			Test test1 = (Test)fixture.Tests[0];
+			Assert.AreEqual( "Charlie", test1.Properties["user"] );
 		}
 
-		/// <summary>
-		/// Check if a test matches the filter
-		/// </summary>
-		/// <param name="test">The test to match</param>
-		/// <returns>True if it matches, false if not</returns>
-		public override bool Match( ITest test )
+		[Test]
+		public void PropertiesWithNumericValues()
 		{
-			foreach( TestName testName in testNames )
-				if ( test.TestName == testName )
-					return true;
+			Test test2 = (Test)fixture.Tests[1];
+			Assert.AreEqual( 10.0, test2.Properties["X"] );
+			Assert.AreEqual( 17.0, test2.Properties["Y"] );
+		}
 
-			return false;
+		[Test]
+		public void PropertyWorksOnFixtures()
+		{
+			Assert.AreEqual( "SomeClass", fixture.Properties["ClassUnderTest"] );
+		}
+
+		[Test]
+		public void CanDeriveFromPropertyAttribute()
+		{
+			Test test3 = (Test)fixture.Tests[2];
+			Assert.AreEqual( 5, test3.Properties["Priority"] );
 		}
 	}
 }
