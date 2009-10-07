@@ -106,11 +106,23 @@
     <Compile Include="..\..\..\src\tests\NUnit\Core\FixtureSetUpTearDownTests.cs">
       <Link>NUnit\Core\FixtureSetUpTearDownTests.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\tests\NUnit\Core\GenericTestFixtureTests.cs">
-      <Link>NUnit\Core\GenericTestFixtureTests.cs</Link>
+    <Compile Include="..\..\..\src\tests\NUnit\Core\Generic\DeduceTypeArgsFromArgs.cs">
+      <Link>NUnit\Core\Generic\DeduceTypeArgsFromArgs.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\tests\NUnit\Core\GenericTestMethodTests.cs">
-      <Link>NUnit\Core\GenericTestMethodTests.cs</Link>
+    <Compile Include="..\..\..\src\tests\NUnit\Core\Generic\GenericTestFixtureTests.cs">
+      <Link>NUnit\Core\Generic\GenericTestFixtureTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\NUnit\Core\Generic\GenericTestMethodTests.cs">
+      <Link>NUnit\Core\Generic\GenericTestMethodTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\NUnit\Core\Generic\SimpleGenericFixture.cs">
+      <Link>NUnit\Core\Generic\SimpleGenericFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\NUnit\Core\Generic\SimpleGenericMethods.cs">
+      <Link>NUnit\Core\Generic\SimpleGenericMethods.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\NUnit\Core\Generic\TypeParameterUsedWithTestMethod.cs">
+      <Link>NUnit\Core\Generic\TypeParameterUsedWithTestMethod.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\tests\NUnit\Core\LegacySuiteTests.cs">
       <Link>NUnit\Core\LegacySuiteTests.cs</Link>

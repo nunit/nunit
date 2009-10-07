@@ -21,12 +21,11 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if CLR_2_0
 using System;
 using System.Collections.Generic;
 using NUnit.Framework;
 
-namespace NUnit.Core.Tests
+namespace NUnit.Core.Tests.Generic
 {
     [TestFixture]
     class GenericTestMethodTests
@@ -65,4 +64,3 @@ namespace NUnit.Core.Tests
         }
     }
 }
-#endif
