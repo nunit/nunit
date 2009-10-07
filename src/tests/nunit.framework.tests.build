@@ -18,6 +18,7 @@
         <include name="../CommonAssemblyInfo.cs"/>
         <include name="NUnit/**/*.cs"/>
         <include name="Shared/**/*.cs"/>
+        <exclude name="NUnit.Core.Generic\*" unless="${runtime.version>='2.0'}"/>
       </sources>
       <resources prefix="NUnit.Framework.Tests">
         <patternset refid="resource-files"/>

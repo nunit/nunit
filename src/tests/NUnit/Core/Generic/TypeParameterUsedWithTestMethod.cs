@@ -1,4 +1,4 @@
-// ***********************************************************************
+﻿// ***********************************************************************
 // Copyright (c) 2009 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -21,32 +21,14 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if CLR_2_0
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Text;
 using NUnit.Framework;
 
-namespace NUnit.Core.Tests
+namespace NUnit.Core.Tests.Generic
 {
-    [TestFixture(typeof(List<int>))]
-    [TestFixture(typeof(ArrayList))]
-    public class GenericTestFixture_IList<T> where T : IList, new()
-    {
-        [Test]
-        public void TestCollectionCount()
-        {
-            IList list = new T();
-            list.Add(1);
-            list.Add(2);
-            list.Add(3);
-            Assert.AreEqual(3, list.Count);
-        }
-    }
-
+    [Category("Generics")]
     [TestFixture(typeof(double))]
-    public class GenericTestFixture_Numeric<T>
+    public class TypeParameterUsedWithTestMethod<T>
     {
         [TestCase(5)]
         [TestCase(1.23)]
@@ -56,4 +38,3 @@ namespace NUnit.Core.Tests
         }
     }
 }
-#endif

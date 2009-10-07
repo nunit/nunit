@@ -89,7 +89,7 @@ namespace NUnit.Core.Tests
             Assert.That(x * y, Is.EqualTo(answer));
         }
 
-#if NET_2_0
+#if CLR_2_0
         IEnumerable GenerateData()
         {
             for(int i = 1; i <= answer; i++)
