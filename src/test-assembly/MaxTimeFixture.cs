@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2007 Charlie Poole
+// Copyright (c) 2008 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -22,54 +22,39 @@
 // ***********************************************************************
 
 using System;
-using System.Collections;
+using NUnit.Framework;
 
-namespace NUnit.Core.Filters
+namespace NUnit.TestData
 {
-	/// <summary>
-	/// Summary description for NameFilter.
-	/// </summary>
-	/// 
-	[Serializable]
-	public class NameFilter : TestFilter
-	{
-		private ArrayList testNames = new ArrayList();
+    [TestFixture]
+    public class MaxTimeFixture
+    {
+        [Test, MaxTime(1)]
+        public void MaxTimeExceeded()
+        {
+            System.Threading.Thread.Sleep(20);
+        }
+    }
 
-		/// <summary>
-		/// Construct an empty NameFilter
-		/// </summary>
-		public NameFilter() { }
+    [TestFixture]
+    public class MaxTimeFixtureWithFailure
+    {
+        [Test, MaxTime(1)]
+        public void MaxTimeExceeded()
+        {
+            System.Threading.Thread.Sleep(20);
+            Assert.Fail("Intentional Failure");
+        }
+    }
 
-		/// <summary>
-		/// Construct a NameFilter for a single TestName
-		/// </summary>
-		/// <param name="testName"></param>
-		public NameFilter( TestName testName )
-		{
-			testNames.Add( testName );
-		}
-
-		/// <summary>
-		/// Add a TestName to a NameFilter
-		/// </summary>
-		/// <param name="testName"></param>
-		public void Add( TestName testName )
-		{
-			testNames.Add( testName );
-		}
-
-		/// <summary>
-		/// Check if a test matches the filter
-		/// </summary>
-		/// <param name="test">The test to match</param>
-		/// <returns>True if it matches, false if not</returns>
-		public override bool Match( ITest test )
-		{
-			foreach( TestName testName in testNames )
-				if ( test.TestName == testName )
-					return true;
-
-			return false;
-		}
-	}
+    [TestFixture]
+    public class MaxTimeFixtureWithError
+    {
+        [Test, MaxTime(1)]
+        public void MaxTimeExceeded()
+        {
+            System.Threading.Thread.Sleep(20);
+            throw new Exception("Exception message");
+        }
+    }
 }

@@ -1,5 +1,5 @@
-// ***********************************************************************
-// Copyright (c) 2009 Charlie Poole
+﻿// ***********************************************************************
+// Copyright (c) 2008 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,48 +21,44 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if CLR_2_0
 using System;
-using System.Collections.Generic;
 using NUnit.Framework;
 
 namespace NUnit.Core.Tests
 {
     [TestFixture]
-    class GenericTestMethodTests
+    public class RuntimeFrameworkTests
     {
-        [TestCase(5, 2, "ABC")]
-        [TestCase(5.0, 2.0, "ABC")]
-        [TestCase(5, 2.0, "ABC")]
-        [TestCase(5.0, 2L, "ABC")]
-        public void GenericTestMethodWithOneTypeParameter<T>(T x, T y, string label)
+        static RuntimeType currentRuntime = 
+            Type.GetType("Mono.Runtime", false) != null ? RuntimeType.Mono : RuntimeType.Net;
+
+        [Test]
+        public void CanGetCurrentFramework()
         {
-            Assert.AreEqual(5, x);
-            Assert.AreEqual(2, y);
-            Assert.AreEqual("ABC", label);
+            RuntimeFramework framework = RuntimeFramework.CurrentFramework;
+
+            Assert.That(framework.Runtime, Is.EqualTo(currentRuntime));
+            Assert.That(framework.Version, Is.EqualTo(Environment.Version));
         }
 
-        [TestCase(5, 2, "ABC")]
-        [TestCase(5.0, 2.0, "ABC")]
-        [TestCase(5, 2.0, "ABC")]
-        [TestCase(5.0, 2L, "ABC")]
-        public void GenericTestMethodWithTwoTypeParameters<T1, T2>(T1 x, T2 y, string label)
+        [Test]
+        public void CurrentFrameworkMustBeAvailable()
         {
-            Assert.AreEqual(5, x);
-            Assert.AreEqual(2, y);
-            Assert.AreEqual("ABC", label);
+            Assert.That(RuntimeFramework.IsAvailable(RuntimeFramework.CurrentFramework));
         }
 
-        [TestCase(5, 2, "ABC")]
-        [TestCase(5.0, 2.0, "ABC")]
-        [TestCase(5, 2.0, "ABC")]
-        [TestCase(5.0, 2L, "ABC")]
-        public void GenericTestMethodWithTwoTypeParameters_Reversed<T1, T2>(T2 x, T1 y, string label)
+        [Test]
+        public void CanListAvailableFrameworks()
         {
-            Assert.AreEqual(5, x);
-            Assert.AreEqual(2, y);
-            Assert.AreEqual("ABC", label);
+            RuntimeFramework[] available = RuntimeFramework.AvailableFrameworks;
+            Assert.That(available, Has.Length.GreaterThan(0) );
+            bool foundCurrent = false;
+            foreach (RuntimeFramework framework in available)
+            {
+                Console.WriteLine("Available: {0}", framework.DisplayName);
+                foundCurrent |= RuntimeFramework.CurrentFramework.Matches(framework);
+            }
+            Assert.That(foundCurrent, "CurrentFramework not listed");
         }
     }
 }
-#endif

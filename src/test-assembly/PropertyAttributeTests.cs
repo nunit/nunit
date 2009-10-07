@@ -22,54 +22,26 @@
 // ***********************************************************************
 
 using System;
-using System.Collections;
+using NUnit.Framework;
 
-namespace NUnit.Core.Filters
+namespace NUnit.TestData.PropertyAttributeTests
 {
-	/// <summary>
-	/// Summary description for NameFilter.
-	/// </summary>
-	/// 
-	[Serializable]
-	public class NameFilter : TestFilter
+	[TestFixture, Property("ClassUnderTest","SomeClass" )]
+	public class FixtureWithProperties
 	{
-		private ArrayList testNames = new ArrayList();
+		[Test, Property("user","Charlie")]
+		public void Test1() { }
 
-		/// <summary>
-		/// Construct an empty NameFilter
-		/// </summary>
-		public NameFilter() { }
+		[Test, Property("X",10.0), Property("Y",17.0)]
+		public void Test2() { }
 
-		/// <summary>
-		/// Construct a NameFilter for a single TestName
-		/// </summary>
-		/// <param name="testName"></param>
-		public NameFilter( TestName testName )
-		{
-			testNames.Add( testName );
-		}
+		[Test, Priority(5)]
+		public void Test3() { }
+	}
 
-		/// <summary>
-		/// Add a TestName to a NameFilter
-		/// </summary>
-		/// <param name="testName"></param>
-		public void Add( TestName testName )
-		{
-			testNames.Add( testName );
-		}
-
-		/// <summary>
-		/// Check if a test matches the filter
-		/// </summary>
-		/// <param name="test">The test to match</param>
-		/// <returns>True if it matches, false if not</returns>
-		public override bool Match( ITest test )
-		{
-			foreach( TestName testName in testNames )
-				if ( test.TestName == testName )
-					return true;
-
-			return false;
-		}
+	[AttributeUsage(AttributeTargets.Method, AllowMultiple=false)]
+	public class PriorityAttribute : PropertyAttribute
+	{
+		public PriorityAttribute( int level ) : base( level ) { }
 	}
 }

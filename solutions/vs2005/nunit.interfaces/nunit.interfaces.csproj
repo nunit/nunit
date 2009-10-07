@@ -91,6 +91,24 @@
     <Compile Include="..\..\..\src\interfaces\Core\Extensibility\TestFramework.cs">
       <Link>Core\Extensibility\TestFramework.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\interfaces\Core\Filters\AndFilter.cs">
+      <Link>Core\Filters\AndFilter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\interfaces\Core\Filters\CategoryFilter.cs">
+      <Link>Core\Filters\CategoryFilter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\interfaces\Core\Filters\NameFilter.cs">
+      <Link>Core\Filters\NameFilter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\interfaces\Core\Filters\NotFilter.cs">
+      <Link>Core\Filters\NotFilter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\interfaces\Core\Filters\OrFilter.cs">
+      <Link>Core\Filters\OrFilter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\interfaces\Core\Filters\SimpleNameFilter.cs">
+      <Link>Core\Filters\SimpleNameFilter.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\interfaces\Core\IService.cs">
       <Link>Core\IService.cs</Link>
     </Compile>

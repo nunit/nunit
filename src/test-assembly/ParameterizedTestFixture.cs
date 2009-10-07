@@ -1,5 +1,5 @@
-// ***********************************************************************
-// Copyright (c) 2007 Charlie Poole
+﻿// ***********************************************************************
+// Copyright (c) 2009 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -24,61 +24,20 @@
 using System;
 using NUnit.Framework;
 
-namespace NUnit.TestData.AssertIgnoreData
+namespace NUnit.TestData
 {
-	[TestFixture]
-	public class IgnoredTestCaseFixture
-	{
+    [TestFixture(1)]
+    [TestFixture(2)]
+    public class ParameterizedTestFixture
+    {
         [Test]
-        public void CallsIgnore()
+        public void MethodWithoutParams()
         {
-            Assert.Ignore("Ignore me");
         }
 
-        [Test, ExpectedException(typeof(InvalidOperationException))]
-        public void CallsIgnoreWithExpectedException()
+        [TestCase(10,20)]
+        public void MethodWithParams(int x, int y)
         {
-            Assert.Ignore("Ignore me");
         }
     }
-
-	[TestFixture]
-	public class IgnoredTestSuiteFixture
-	{
-		[TestFixtureSetUp]
-		public void FixtureSetUp()
-		{
-			Assert.Ignore("Ignore this fixture");
-		}
-
-		[Test]
-		public void ATest()
-		{
-		}
-
-		[Test]
-		public void AnotherTest()
-		{
-		}
-	}
-
-	[TestFixture]
-	public class IgnoreInSetUpFixture
-	{
-		[SetUp]
-		public void SetUp()
-		{
-			Assert.Ignore( "Ignore this test" );
-		}
-
-		[Test]
-		public void Test1()
-		{
-		}
-
-		[Test]
-		public void Test2()
-		{
-		}
-	}
 }
