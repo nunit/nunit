@@ -219,7 +219,7 @@
     <nant target="nunit" buildfile="src/framework/nunit.framework.build"/>
     <nant target="build" buildfile="src/test-assembly/test-assembly.build"/>
     <nant target="nunit" buildfile="src/tests/nunit.framework.tests.build"/>
-    <nant target="build" buildfile="src/TestRunner/TestRunner.build"/>
+    <nant target="build" buildfile="src/runner/TestRunner.build"/>
 
   </target>
 
