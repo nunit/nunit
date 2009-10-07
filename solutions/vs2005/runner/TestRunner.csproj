@@ -33,23 +33,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\..\src\TestRunner\AssemblyInfo.cs">
-      <Link>AssemblyInfo.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\TestRunner\CommandLineOptions.cs">
-      <Link>CommandLineOptions.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\TestRunner\Program.cs">
-      <Link>Program.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\TestRunner\ResultSummary.cs">
-      <Link>ResultSummary.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\TestRunner\StackTraceFilter.cs">
-      <Link>StackTraceFilter.cs</Link>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\framework\nunit.framework.csproj">
       <Project>{816F2E66-2A25-4513-B5FA-8ECB4A5647CD}</Project>
       <Name>nunit.framework</Name>
@@ -58,6 +41,23 @@
       <Project>{C5FFA3A5-6A0C-44AD-B23F-9A8424136C7B}</Project>
       <Name>nunit.interfaces</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\..\src\runner\AssemblyInfo.cs">
+      <Link>AssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\runner\CommandLineOptions.cs">
+      <Link>CommandLineOptions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\runner\Program.cs">
+      <Link>Program.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\runner\ResultSummary.cs">
+      <Link>ResultSummary.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\runner\StackTraceFilter.cs">
+      <Link>StackTraceFilter.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />

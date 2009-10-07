@@ -45,23 +45,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\..\src\TestRunner\CommandLineOptions.cs">
-      <Link>CommandLineOptions.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\TestRunner\Program.cs">
-      <Link>Program.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\TestRunner\AssemblyInfo.cs">
-      <Link>AssemblyInfo.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\TestRunner\ResultSummary.cs">
-      <Link>ResultSummary.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\TestRunner\StackTraceFilter.cs">
-      <Link>StackTraceFilter.cs</Link>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\framework\nunit.framework.csproj">
       <Project>{12B66B03-90F1-4992-BD33-BDF3C69AE49E}</Project>
       <Name>nunit.framework</Name>
@@ -70,6 +53,23 @@
       <Project>{43D2F73E-0076-4A1F-8BC0-579EB0142519}</Project>
       <Name>nunit.interfaces</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\..\src\runner\AssemblyInfo.cs">
+      <Link>AssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\runner\CommandLineOptions.cs">
+      <Link>CommandLineOptions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\runner\Program.cs">
+      <Link>Program.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\runner\ResultSummary.cs">
+      <Link>ResultSummary.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\runner\StackTraceFilter.cs">
+      <Link>StackTraceFilter.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
