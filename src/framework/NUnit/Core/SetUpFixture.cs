@@ -43,8 +43,8 @@ namespace NUnit.Core
             if (index > 0)
                 this.TestName.Name = this.TestName.Name.Substring(index + 1);
             
-			this.fixtureSetUpMethods = Reflect.GetMethodsWithAttribute( type, NUnitFramework.SetUpAttribute, true );
-			this.fixtureTearDownMethods = Reflect.GetMethodsWithAttribute( type, NUnitFramework.TearDownAttribute, true );
+			this.fixtureSetUpMethods = Reflect.GetMethodsWithAttribute( type, typeof(NUnit.Framework.SetUpAttribute), true );
+			this.fixtureTearDownMethods = Reflect.GetMethodsWithAttribute( type, typeof(NUnit.Framework.TearDownAttribute), true );
 		}
 		#endregion
 

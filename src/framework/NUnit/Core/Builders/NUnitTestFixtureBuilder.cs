@@ -58,9 +58,9 @@ namespace NUnit.Core.Builders
 			return type.IsDefined(typeof(TestFixtureAttribute), true ) ||
                    ( type.IsPublic || type.IsNestedPublic ) && 
                    ( !type.IsAbstract || type.IsSealed ) &&
-                   ( Reflect.HasMethodWithAttribute(type, NUnitFramework.TestAttribute, true) ||
-                     Reflect.HasMethodWithAttribute(type, NUnitFramework.TestCaseAttribute, true) ||
-                     Reflect.HasMethodWithAttribute(type, NUnitFramework.TheoryAttribute, true) );
+                   ( Reflect.HasMethodWithAttribute(type, typeof(NUnit.Framework.TestAttribute), true) ||
+                     Reflect.HasMethodWithAttribute(type, typeof(NUnit.Framework.TestCaseAttribute), true) ||
+                     Reflect.HasMethodWithAttribute(type, typeof(NUnit.Framework.TheoryAttribute), true) );
 		}
 
 		/// <summary>
@@ -255,10 +255,10 @@ namespace NUnit.Core.Builders
             }
 #endif
 
-            return NUnitFramework.CheckSetUpTearDownMethods(fixtureType, NUnitFramework.SetUpAttribute, ref reason)
-                && NUnitFramework.CheckSetUpTearDownMethods(fixtureType, NUnitFramework.TearDownAttribute, ref reason)
-                && NUnitFramework.CheckSetUpTearDownMethods(fixtureType, NUnitFramework.FixtureSetUpAttribute, ref reason)
-                && NUnitFramework.CheckSetUpTearDownMethods(fixtureType, NUnitFramework.FixtureTearDownAttribute, ref reason);
+            return NUnitFramework.CheckSetUpTearDownMethods(fixtureType, typeof(NUnit.Framework.SetUpAttribute), ref reason)
+                && NUnitFramework.CheckSetUpTearDownMethods(fixtureType, typeof(NUnit.Framework.TearDownAttribute), ref reason)
+                && NUnitFramework.CheckSetUpTearDownMethods(fixtureType, typeof(NUnit.Framework.TestFixtureSetUpAttribute), ref reason)
+                && NUnitFramework.CheckSetUpTearDownMethods(fixtureType, typeof(NUnit.Framework.TestFixtureTearDownAttribute), ref reason);
         }
 		#endregion
 	}

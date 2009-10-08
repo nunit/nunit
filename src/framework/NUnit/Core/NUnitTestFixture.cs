@@ -23,6 +23,7 @@
 
 using System;
 using System.Reflection;
+using NUnit.Framework;
 
 namespace NUnit.Core
 {
@@ -38,27 +39,27 @@ namespace NUnit.Core
             : base(fixtureType, arguments)
         {
             this.fixtureSetUpMethods =
-                Reflect.GetMethodsWithAttribute(fixtureType, NUnitFramework.FixtureSetUpAttribute, true);
+                Reflect.GetMethodsWithAttribute(fixtureType, typeof(TestFixtureSetUpAttribute), true);
             this.fixtureTearDownMethods =
-                Reflect.GetMethodsWithAttribute(fixtureType, NUnitFramework.FixtureTearDownAttribute, true);
+                Reflect.GetMethodsWithAttribute(fixtureType, typeof(TestFixtureTearDownAttribute), true);
             this.setUpMethods = 
-                Reflect.GetMethodsWithAttribute(this.FixtureType, NUnitFramework.SetUpAttribute, true);
+                Reflect.GetMethodsWithAttribute(this.FixtureType, typeof(SetUpAttribute), true);
             this.tearDownMethods = 
-                Reflect.GetMethodsWithAttribute(this.FixtureType, NUnitFramework.TearDownAttribute, true);
+                Reflect.GetMethodsWithAttribute(this.FixtureType, typeof(TearDownAttribute), true);
         }
 
         protected override void DoOneTimeSetUp(TestResult suiteResult)
         {
             base.DoOneTimeSetUp(suiteResult);
 
-			suiteResult.AssertCount = NUnit.Framework.Assert.Counter; ;
+			suiteResult.AssertCount = Assert.Counter; ;
         }
 
         protected override void DoOneTimeTearDown(TestResult suiteResult)
         {
             base.DoOneTimeTearDown(suiteResult);
 
-			suiteResult.AssertCount += NUnit.Framework.Assert.Counter;
+			suiteResult.AssertCount += Assert.Counter;
         }
     }
 }

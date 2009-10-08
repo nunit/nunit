@@ -105,19 +105,19 @@ namespace NUnit.Core.Builders
                 return false;
             }
 
-            if (!NUnitFramework.CheckSetUpTearDownMethods(type, NUnitFramework.FixtureSetUpAttribute, ref reason) )
+            if (!NUnitFramework.CheckSetUpTearDownMethods(type, typeof(NUnit.Framework.TestFixtureSetUpAttribute), ref reason) )
                 return false;
             
-            if (!NUnitFramework.CheckSetUpTearDownMethods(type, NUnitFramework.FixtureTearDownAttribute, ref reason))
+            if (!NUnitFramework.CheckSetUpTearDownMethods(type, typeof(NUnit.Framework.TestFixtureTearDownAttribute), ref reason))
                 return false;
 
-            if (Reflect.HasMethodWithAttribute(type, NUnitFramework.SetUpAttribute, true))
+            if (Reflect.HasMethodWithAttribute(type, typeof(NUnit.Framework.SetUpAttribute), true))
             {
                 reason = "SetUp method not allowed on a legacy suite";
                 return false;
             }
 
-            if (Reflect.HasMethodWithAttribute(type, NUnitFramework.TearDownAttribute, true))
+            if (Reflect.HasMethodWithAttribute(type, typeof(NUnit.Framework.TearDownAttribute), true))
             {
                 reason = "TearDown method not allowed on a legacy suite";
                 return false;
@@ -131,7 +131,7 @@ namespace NUnit.Core.Builders
             //if (testClass == null)
             //    return null;
 
-            return Reflect.GetPropertyWithAttribute(testClass, NUnitFramework.SuiteAttribute);
+            return Reflect.GetPropertyWithAttribute(testClass, typeof(NUnit.Framework.SuiteAttribute));
         }
         #endregion
     }

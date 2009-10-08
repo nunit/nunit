@@ -66,39 +66,37 @@ namespace NUnit.Core
                     return true;
             return false;
         }
+        private static bool HasAttribute(ICustomAttributeProvider member, Type attributeType, bool inherit)
+        {
+            return member.IsDefined(attributeType, inherit);
+        }
 
         /// <summary>
         /// Get attribute of a given type on a member. If multiple attributes
         /// of a type are present, the first one found is returned.
         /// </summary>
         /// <param name="member">The member to examine</param>
-        /// <param name="attrName">The FullName of the attribute type to look for</param>
+        /// <param name="attributeType">The attribute Type to look for</param>
         /// <param name="inherit">True to include inherited attributes</param>
         /// <returns>The attribute or null</returns>
-        public static System.Attribute GetAttribute(ICustomAttributeProvider member, string attrName, bool inherit)
+        public static System.Attribute GetAttribute(ICustomAttributeProvider member, Type attributeType, bool inherit)
         {
-            foreach (Attribute attribute in GetAttributes( member, inherit ) )
-                if ( IsInstanceOfType( attrName, attribute ) )
-                    return attribute;
-            return null;
+            object[] attrs = member.GetCustomAttributes(attributeType, inherit);
+            return attrs.Length > 0 ? (Attribute)attrs[0] : null;
         }
 
         /// <summary>
 		/// Get all attributes of a given type on a member.
 		/// </summary>
 		/// <param name="member">The member to examine</param>
-		/// <param name="attrName">The FullName of the attribute type to look for</param>
+		/// <param name="attribueType">The attribute Type to look for</param>
 		/// <param name="inherit">True to include inherited attributes</param>
 		/// <returns>The attribute or null</returns>
         public static System.Attribute[] GetAttributes(
-            ICustomAttributeProvider member, string attrName, bool inherit)
-		{
-			ArrayList result = new ArrayList();
-			foreach( Attribute attribute in GetAttributes( member, inherit ) )
-				if ( IsInstanceOfType( attrName, attribute ) )
-					result.Add( attribute );
-			return (System.Attribute[])result.ToArray( typeof( System.Attribute ) );
-		}
+            ICustomAttributeProvider member, Type attributeType, bool inherit)
+        {
+            return (System.Attribute[])member.GetCustomAttributes(attributeType, inherit);
+        }
 
         /// <summary>
         /// Get all attributes on a member.
@@ -109,10 +107,10 @@ namespace NUnit.Core
         public static System.Attribute[] GetAttributes(
             ICustomAttributeProvider member, bool inherit)
         {
-            Hashtable attributeCache = inherit ? allAttributes : topAttributes;
+            //Hashtable attributeCache = inherit ? allAttributes : topAttributes;
 
-            if (attributeCache.Contains(member))
-                return attributeCache[member] as Attribute[];
+            //if (attributeCache.Contains(member))
+            //    return attributeCache[member] as Attribute[];
 
             object[] attributes = member.GetCustomAttributes(inherit);
             System.Attribute[] result = new System.Attribute[attributes.Length];
@@ -120,7 +118,7 @@ namespace NUnit.Core
             foreach (Attribute attribute in attributes)
                 result[n++] = attribute;
 
-            attributeCache[member] = result;
+            //attributeCache[member] = result;
 
             return result;
         }
@@ -135,13 +133,20 @@ namespace NUnit.Core
 		/// <param name="fixtureType">The type to examine</param>
 		/// <param name="interfaceName">The FullName of the interface to check for</param>
 		/// <returns>True if the interface is implemented by the type</returns>
-		public static bool HasInterface( Type fixtureType, string interfaceName )
-		{
-			foreach( Type type in fixtureType.GetInterfaces() )
-				if ( type.FullName == interfaceName )
-						return true;
-			return false;
-		}
+        public static bool HasInterface(Type fixtureType, string interfaceName)
+        {
+            foreach (Type type in fixtureType.GetInterfaces())
+                if (type.FullName == interfaceName)
+                    return true;
+            return false;
+        }
+        public static bool HasInterface(Type fixtureType, Type interfaceType)
+        {
+            foreach (Type type in fixtureType.GetInterfaces())
+                if (type == interfaceType)
+                    return true;
+            return false;
+        }
 
 		#endregion
 
@@ -201,15 +206,15 @@ namespace NUnit.Core
         /// particular attribute. The array is order with base methods first.
         /// </summary>
         /// <param name="fixtureType">The type to examine</param>
-        /// <param name="attributeName">The FullName of the attribute to look for</param>
+        /// <param name="attributeType">The attribute Type to look for</param>
         /// <returns>The array of methods found</returns>
-        public static MethodInfo[] GetMethodsWithAttribute(Type fixtureType, string attributeName, bool inherit)
+        public static MethodInfo[] GetMethodsWithAttribute(Type fixtureType, Type attributeType, bool inherit)
         {
             ArrayList list = new ArrayList();
 
             foreach (MethodInfo method in GetMethods(fixtureType))
             {
-                if (HasAttribute(method, attributeName, inherit))
+                if (HasAttribute(method, attributeType, inherit))
                     list.Add(method);
             }
 
@@ -257,13 +262,13 @@ namespace NUnit.Core
         /// a particular attribute. 
         /// </summary>
         /// <param name="fixtureType">The type to examine</param>
-        /// <param name="attributeName">The FullName of the attribute to look for</param>
+        /// <param name="attributeType">The attribute Type to look for</param>
         /// <returns>True if found, otherwise false</returns>
-        public static bool HasMethodWithAttribute(Type fixtureType, string attributeName, bool inherit)
+        public static bool HasMethodWithAttribute(Type fixtureType, Type attributeType, bool inherit)
         {
             foreach (MethodInfo method in GetMethods( fixtureType ))
             {
-                if (HasAttribute(method, attributeName, inherit))
+                if (HasAttribute(method, attributeType, inherit))
                     return true;
             }
 
@@ -331,18 +336,18 @@ namespace NUnit.Core
 		/// In the case of multiple methods, the first one found is returned.
 		/// </summary>
 		/// <param name="fixtureType">The type to examine</param>
-		/// <param name="attributeName">The FullName of the attribute to look for</param>
+		/// <param name="attributeType">The attribute Type to look for</param>
 		/// <returns>A PropertyInfo or null</returns>
-		public static PropertyInfo GetPropertyWithAttribute( Type fixtureType, string attributeName )
-		{
-			foreach(PropertyInfo property in fixtureType.GetProperties( AllMembers ) )
-			{
-				if( HasAttribute( property, attributeName, true ) ) 
-					return property;
-			}
+        public static PropertyInfo GetPropertyWithAttribute(Type fixtureType, Type attributeType)
+        {
+            foreach (PropertyInfo property in fixtureType.GetProperties(AllMembers))
+            {
+                if (HasAttribute(property, attributeType, true))
+                    return property;
+            }
 
-			return null;
-		}
+            return null;
+        }
 
 		/// <summary>
 		/// Examine a type and get a property with a particular name.

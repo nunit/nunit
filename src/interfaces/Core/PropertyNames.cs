@@ -56,13 +56,5 @@ namespace NUnit.Core
         public static readonly string Properties = "Properties";
         /// <summary>Categories of the test</summary>
         public static readonly string Categories = "Categories";
-        /// <summary>Name of a category</summary>
-        public static readonly string CategoryName = "Name";
-        /// <summary>Reason for not running a test</summary>
-        public static readonly string Reason = "Reason";
-        /// <summary>Flag indicating excluded test should be marked as Ignored</summary>
-        public static readonly string IgnoreExcluded = "IgnoreExcluded";
-        /// <summary>Name of an addin that must be present to run a test</summary>
-        public static readonly string RequiredAddin = "RequiredAddin";
     }
 }
