@@ -26,21 +26,6 @@ namespace NUnit.Framework
     using System;
 
     /// <summary>
-    /// Enumeration indicating how the expected message parameter is to be used
-    /// </summary>
-    public enum MessageMatch
-    {
-        /// Expect an exact match
-        Exact,
-        /// Expect a message containing the parameter string
-        Contains,
-        /// Match the regular expression provided as a parameter
-        Regex,
-        /// Expect a message that starts with the parameter string
-        StartsWith
-    }
-
-    /// <summary>
     /// ExpectedExceptionAttribute
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]

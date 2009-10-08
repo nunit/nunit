@@ -25,6 +25,7 @@ using System;
 using System.Collections;
 using System.Collections.Specialized;
 using System.Reflection;
+using NUnit.Framework;
 
 namespace NUnit.Core.Extensibility
 {
@@ -33,7 +34,7 @@ namespace NUnit.Core.Extensibility
     /// other selected parameters needed for constructing
     /// a parameterized test case.
     /// </summary>
-    public class ParameterSet : NUnit.Framework.ITestCaseData
+    public class ParameterSet : ITestCaseData
     {
         #region Constants
         private static readonly string DESCRIPTION = "_DESCRIPTION";
@@ -48,7 +49,7 @@ namespace NUnit.Core.Extensibility
         private System.Type expectedExceptionType;
         private string expectedExceptionName;
         private string expectedMessage;
-        private string matchType;
+        private MessageMatch matchType;
         private object result;
         private string testName;
         private string ignoreReason;
@@ -128,7 +129,7 @@ namespace NUnit.Core.Extensibility
         /// <summary>
         ///  Gets or sets the type of match to be performed on the expected message
         /// </summary>
-        public string MatchType
+        public MessageMatch MatchType
         {
             get { return matchType; }
             set { matchType = value; }
@@ -238,6 +239,26 @@ namespace NUnit.Core.Extensibility
         {
             this.runState = RunState.Runnable;
         }
+
+        /// <summary>
+        /// Construct a ParameterSet from an object implementing ITestCaseData
+        /// </summary>
+        /// <param name="data"></param>
+        public ParameterSet(ITestCaseData data)
+        {
+            this.runState = RunState.Runnable;
+            this.arguments = data.Arguments;
+            this.expectedExceptionType = data.ExpectedException;
+            this.expectedExceptionName = data.ExpectedExceptionName;
+            this.expectedMessage = data.ExpectedMessage;
+            this.matchType = data.MatchType;
+            this.result = data.Result;
+            this.Description = data.Description;
+            this.TestName = data.TestName;
+            this.Ignored = data.Ignored;
+            this.IgnoreReason = data.IgnoreReason;
+        }
+
         #endregion
 
         #region Static Methods
@@ -258,9 +279,10 @@ namespace NUnit.Core.Extensibility
             else
                 parms.ExpectedExceptionName = GetParm(source, PropertyNames.ExpectedExceptionName) as string;
             parms.ExpectedMessage = GetParm(source, PropertyNames.ExpectedMessage) as string;
-            object matchEnum = GetParm(source, PropertyNames.MatchType);
-            if ( matchEnum != null )
-                parms.MatchType = matchEnum.ToString();
+            parms.MatchType = (MessageMatch)GetParm(source, PropertyNames.MatchType);
+            //object matchEnum = GetParm(source, PropertyNames.MatchType);
+            //if ( matchEnum != null )
+            //    parms.MatchType = matchEnum.ToString();
             parms.Result = GetParm(source, PropertyNames.Result);
             parms.Description = GetParm(source, PropertyNames.Description) as string;
             parms.TestName = GetParm(source, PropertyNames.TestName) as string;
