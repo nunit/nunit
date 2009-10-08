@@ -43,7 +43,7 @@ namespace NUnit.Core.Builders
         
         public IEnumerable GetDataFor(ParameterInfo parameter)
         {
-            Attribute attr = Reflect.GetAttribute(parameter, ParameterDataAttribute, false);
+            Attribute attr = Reflect.GetAttribute(parameter, typeof(NUnit.Framework.ParameterDataAttribute), false);
             if (attr == null) return null;
 
             MethodInfo getData = attr.GetType().GetMethod(

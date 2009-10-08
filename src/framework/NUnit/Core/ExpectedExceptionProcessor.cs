@@ -236,7 +236,7 @@ namespace NUnit.Core
 
         private static MethodInfo GetDefaultExceptionHandler(Type fixtureType)
         {
-            return Reflect.HasInterface(fixtureType, NUnitFramework.ExpectExceptionInterface)
+            return Reflect.HasInterface(fixtureType, typeof(NUnit.Framework.IExpectException))
                 ? GetExceptionHandler(fixtureType, "HandleException")
                 : null;
         }

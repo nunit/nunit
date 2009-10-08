@@ -312,20 +312,17 @@ namespace NUnit.Core
                     if (ex is NUnitException || ex is System.Reflection.TargetInvocationException)
                         ex = ex.InnerException;
 
-                    if (IsIgnoreException(ex))
+                    if (ex is NUnit.Framework.IgnoreException)
                     {
                         this.RunState = RunState.Ignored;
                         suiteResult.Ignore(ex.Message);
                         suiteResult.StackTrace = ex.StackTrace;
                         this.IgnoreReason = ex.Message;
                     }
-                    else 
-                    {
-                        if (IsAssertException(ex))
-                            suiteResult.Failure(ex.Message, ex.StackTrace, FailureSite.SetUp);
-                        else
-                            suiteResult.Error(ex, FailureSite.SetUp);
-                    }
+                    else if (ex is NUnit.Framework.AssertionException)
+                        suiteResult.Failure(ex.Message, ex.StackTrace, FailureSite.SetUp);
+                    else
+                        suiteResult.Error(ex, FailureSite.SetUp);
                 }
             }
         }
@@ -375,16 +372,6 @@ namespace NUnit.Core
             }
         }
 
-        protected virtual bool IsAssertException(Exception ex)
-        {
-            return ex.GetType().FullName == NUnitFramework.AssertException;
-        }
-
-        protected virtual bool IsIgnoreException(Exception ex)
-        {
-            return ex.GetType().FullName == NUnitFramework.IgnoreException;
-        }
-        
         #endregion
 
         #region Helper Methods

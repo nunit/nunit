@@ -39,62 +39,6 @@ namespace NUnit.Core
 	/// </summary>
 	public class NUnitFramework
 	{
-        #region Constants
-
-		#region Attribute Names
-		// NOTE: Attributes used in switch statements must be const
-
-        // Attributes that apply to Assemblies, Classes and Methods
-        public const string IgnoreAttribute = "NUnit.Framework.IgnoreAttribute";
-		public const string PlatformAttribute = "NUnit.Framework.PlatformAttribute";
-		public const string CultureAttribute = "NUnit.Framework.CultureAttribute";
-		public const string ExplicitAttribute = "NUnit.Framework.ExplicitAttribute";
-        public const string CategoryAttribute = "NUnit.Framework.CategoryAttribute";
-        public const string PropertyAttribute = "NUnit.Framework.PropertyAttribute";
-		public const string DescriptionAttribute = "NUnit.Framework.DescriptionAttribute";
-        public const string RequiredAddinAttribute = "NUnit.Framework.RequiredAddinAttribute";
-
-        // Attributes that apply only to Classes
-        public const string TestFixtureAttribute = "NUnit.Framework.TestFixtureAttribute";
-        public const string SetUpFixtureAttribute = "NUnit.Framework.SetUpFixtureAttribute";
-
-        // Attributes that apply only to Methods
-        public const string TestAttribute = "NUnit.Framework.TestAttribute";
-        public const string TestCaseAttribute = "NUnit.Framework.TestCaseAttribute";
-        public const string TestCaseSourceAttribute = "NUnit.Framework.TestCaseSourceAttribute";
-        public const string TheoryAttribute = "NUnit.Framework.TheoryAttribute";
-        public static readonly string SetUpAttribute = "NUnit.Framework.SetUpAttribute";
-        public static readonly string TearDownAttribute = "NUnit.Framework.TearDownAttribute";
-        public static readonly string FixtureSetUpAttribute = "NUnit.Framework.TestFixtureSetUpAttribute";
-        public static readonly string FixtureTearDownAttribute = "NUnit.Framework.TestFixtureTearDownAttribute";
-        public static readonly string ExpectedExceptionAttribute = "NUnit.Framework.ExpectedExceptionAttribute";
-
-        // Attributes that apply only to Properties
-        public static readonly string SuiteAttribute = "NUnit.Framework.SuiteAttribute";
-        #endregion
-
-        #region Other Framework Types
-        public static readonly string AssertException = "NUnit.Framework.AssertionException";
-        public static readonly string IgnoreException = "NUnit.Framework.IgnoreException";
-        public static readonly string InconclusiveException = "NUnit.Framework.InconclusiveException";
-        public static readonly string SuccessException = "NUnit.Framework.SuccessException";
-        public static readonly string AssertType = "NUnit.Framework.Assert";
-		public static readonly string ExpectExceptionInterface = "NUnit.Framework.IExpectException";
-        #endregion
-
-        #region Core Types
-        public static readonly string SuiteBuilderAttribute = typeof(SuiteBuilderAttribute).FullName;
-        public static readonly string SuiteBuilderInterface = typeof(ISuiteBuilder).FullName;
-
-        public static readonly string TestCaseBuilderAttributeName = typeof(TestCaseBuilderAttribute).FullName;
-        public static readonly string TestCaseBuilderInterfaceName = typeof(ITestCaseBuilder).FullName;
-
-        public static readonly string TestDecoratorAttributeName = typeof(TestDecoratorAttribute).FullName;
-        public static readonly string TestDecoratorInterfaceName = typeof(ITestDecorator).FullName;
-        #endregion
-
-        #endregion
-
         #region Properties
         private static Assembly frameworkAssembly;
         private static bool frameworkAssemblyInitialized;
@@ -119,9 +63,9 @@ namespace NUnit.Core
         #endregion
 
         #region Check SetUp and TearDown methods
-        public static bool CheckSetUpTearDownMethods(Type fixtureType, string attributeName, ref string reason)
+        public static bool CheckSetUpTearDownMethods(Type fixtureType, Type attributeType, ref string reason)
         {
-            foreach( MethodInfo theMethod in Reflect.GetMethodsWithAttribute(fixtureType, attributeName, true ))
+            foreach( MethodInfo theMethod in Reflect.GetMethodsWithAttribute(fixtureType, attributeType, true ))
                 if ( theMethod.IsAbstract ||
                      !theMethod.IsPublic && !theMethod.IsFamily ||
                      theMethod.GetParameters().Length > 0 ||
@@ -279,23 +223,23 @@ namespace NUnit.Core
         public static bool IsSuiteBuilder( Type type )
 		{
 			return type.IsDefined(typeof(SuiteBuilderAttribute), false )
-				&& Reflect.HasInterface( type, SuiteBuilderInterface );
+				&& Reflect.HasInterface( type, typeof(ISuiteBuilder) );
 		}
 		#endregion
 
 		#region IsTestCaseBuilder
 		public static bool IsTestCaseBuilder( Type type )
 		{
-			return type.IsDefined(typeof(TestCaseBuilderAttribute), false )
-				&& Reflect.HasInterface( type, TestCaseBuilderInterfaceName );
+            return type.IsDefined(typeof(TestCaseBuilderAttribute), false)
+				&& Reflect.HasInterface( type, typeof( ITestCaseBuilder ) );
 		}
 		#endregion
 
 		#region IsTestDecorator
 		public static bool IsTestDecorator( Type type )
 		{
-			return type.IsDefined(typeof(TestDecoratorAttribute), false )
-				&& Reflect.HasInterface( type, TestDecoratorInterfaceName );
+            return type.IsDefined(typeof(TestDecoratorAttribute), false)
+				&& Reflect.HasInterface( type, typeof(ITestDecorator) );
 		}
 		#endregion
 
@@ -323,21 +267,19 @@ namespace NUnit.Core
             if (ex is System.Threading.ThreadAbortException)
                 return ResultState.Cancelled;
 
-            string name = ex.GetType().FullName;
-
-            if (name == NUnitFramework.AssertException)
+            if (ex is AssertionException)
                 return ResultState.Failure;
-            else
-                if (name == NUnitFramework.IgnoreException)
-                    return ResultState.Ignored;
-                else
-                    if (name == NUnitFramework.InconclusiveException)
-                        return ResultState.Inconclusive;
-                    else
-                        if (name == NUnitFramework.SuccessException)
-                            return ResultState.Success;
-                        else
-                            return ResultState.Error;
+ 
+            if (ex is IgnoreException)
+                return ResultState.Ignored;
+
+            if (ex is InconclusiveException)
+                return ResultState.Inconclusive;
+
+            if (ex is SuccessException)
+                return ResultState.Success;
+
+            return ResultState.Error;
         }
         #endregion
     }
