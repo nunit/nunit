@@ -50,7 +50,7 @@ namespace NUnit.Framework
         /// succeeding if all of them succeed.
         /// </summary>
         [Obsolete("Use Is.All")]
-public static ConstraintExpression All
+        public static ConstraintExpression All
         {
             get { return new ConstraintExpression().All; }
         }
@@ -64,7 +64,7 @@ public static ConstraintExpression All
         /// value contains the substring supplied as an argument.
         /// </summary>
         [Obsolete("Use Is.StringContaining")]
-public static SubstringConstraint Contains(string expected)
+        public static SubstringConstraint Contains(string expected)
         {
             return new SubstringConstraint(expected);
         }
@@ -78,7 +78,7 @@ public static SubstringConstraint Contains(string expected)
         /// value contains the substring supplied as an argument.
         /// </summary>
         [Obsolete("Use Is.Not.StringContaining")]
-public static SubstringConstraint DoesNotContain(string expected)
+        public static SubstringConstraint DoesNotContain(string expected)
         {
             return new ConstraintExpression().Not.ContainsSubstring(expected);
         }
@@ -92,7 +92,7 @@ public static SubstringConstraint DoesNotContain(string expected)
         /// value starts with the substring supplied as an argument.
         /// </summary>
         [Obsolete("Use Is.StringStarting")]
-public static StartsWithConstraint StartsWith(string expected)
+        public static StartsWithConstraint StartsWith(string expected)
         {
             return new StartsWithConstraint(expected);
         }
@@ -105,7 +105,7 @@ public static StartsWithConstraint StartsWith(string expected)
         /// Returns a constraint that fails if the actual
         /// value starts with the substring supplied as an argument.
         /// </summary>
-public static StartsWithConstraint DoesNotStartWith(string expected)
+        public static StartsWithConstraint DoesNotStartWith(string expected)
         {
             return new ConstraintExpression().Not.StartsWith(expected);
         }
@@ -119,7 +119,7 @@ public static StartsWithConstraint DoesNotStartWith(string expected)
         /// value ends with the substring supplied as an argument.
         /// </summary>
         [Obsolete("Use Is.StringEnding")]
-public static EndsWithConstraint EndsWith(string expected)
+        public static EndsWithConstraint EndsWith(string expected)
         {
             return new EndsWithConstraint(expected);
         }
@@ -132,7 +132,7 @@ public static EndsWithConstraint EndsWith(string expected)
         /// Returns a constraint that fails if the actual
         /// value ends with the substring supplied as an argument.
         /// </summary>
-public static EndsWithConstraint DoesNotEndWith(string expected)
+        public static EndsWithConstraint DoesNotEndWith(string expected)
         {
             return new ConstraintExpression().Not.EndsWith(expected);
         }
@@ -147,7 +147,7 @@ public static EndsWithConstraint DoesNotEndWith(string expected)
         /// value matches the regular expression supplied as an argument.
         /// </summary>
         [Obsolete("Use Is.StringMatching")]
-public static RegexConstraint Matches(string pattern)
+        public static RegexConstraint Matches(string pattern)
         {
             return new RegexConstraint(pattern);
         }
@@ -163,7 +163,7 @@ public static RegexConstraint Matches(string pattern)
         /// value matches the pattern supplied as an argument.
         /// </summary>
         [Obsolete]
-public static RegexConstraint DoesNotMatch(string pattern)
+        public static RegexConstraint DoesNotMatch(string pattern)
         {
             return new ConstraintExpression().Not.Matches(pattern);
         }

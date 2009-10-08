@@ -145,6 +145,7 @@
         <include name="Env.cs"/>
         <include name="Shared/**/*.cs"/>
         <include name="NUnitLite/**/*.cs"/>
+        <include name="../interfaces/Framework/**/*.cs"/>
       </sources>
       <references basedir="${current.build.dir}">
         <include name="mscorlib.dll"/>

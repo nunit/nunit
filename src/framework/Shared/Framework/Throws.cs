@@ -46,7 +46,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Creates a constraint specifying an expected exception
         /// </summary>
-public static ResolvableConstraintExpression Exception
+        public static ResolvableConstraintExpression Exception
         {
             get { return new ConstraintExpression().Append(new ThrowsOperator()); }
         }
@@ -59,7 +59,7 @@ public static ResolvableConstraintExpression Exception
         /// <summary>
         /// Creates a constraint specifying an exception with a given InnerException
         /// </summary>
-public static ResolvableConstraintExpression InnerException
+        public static ResolvableConstraintExpression InnerException
         {
             get { return Exception.InnerException; }
         }
@@ -73,7 +73,7 @@ public static ResolvableConstraintExpression InnerException
         /// <summary>
         /// Creates a constraint specifying an expected TargetInvocationException
         /// </summary>
-public static ExactTypeConstraint TargetInvocationException
+        public static ExactTypeConstraint TargetInvocationException
         {
             get { return TypeOf(typeof(System.Reflection.TargetInvocationException)); }
         }
@@ -87,7 +87,7 @@ public static ExactTypeConstraint TargetInvocationException
         /// <summary>
         /// Creates a constraint specifying an expected TargetInvocationException
         /// </summary>
-public static ExactTypeConstraint ArgumentException
+        public static ExactTypeConstraint ArgumentException
         {
             get { return TypeOf(typeof(System.ArgumentException)); }
         }
@@ -101,7 +101,7 @@ public static ExactTypeConstraint ArgumentException
         /// <summary>
         /// Creates a constraint specifying an expected TargetInvocationException
         /// </summary>
-public static ExactTypeConstraint InvalidOperationException
+        public static ExactTypeConstraint InvalidOperationException
         {
             get { return TypeOf(typeof(System.InvalidOperationException)); }
         }
@@ -114,7 +114,7 @@ public static ExactTypeConstraint InvalidOperationException
         /// <summary>
         /// Creates a constraint specifying that no exception is thrown
         /// </summary>
-public static ThrowsNothingConstraint Nothing
+        public static ThrowsNothingConstraint Nothing
         {
             get { return new ThrowsNothingConstraint(); }
         }
@@ -126,7 +126,7 @@ public static ThrowsNothingConstraint Nothing
         /// <summary>
         /// Creates a constraint specifying the exact type of exception expected
         /// </summary>
-public static ExactTypeConstraint TypeOf(Type expectedType)
+        public static ExactTypeConstraint TypeOf(Type expectedType)
         {
             return Exception.TypeOf(expectedType);
         }
@@ -135,7 +135,7 @@ public static ExactTypeConstraint TypeOf(Type expectedType)
         /// <summary>
         /// Creates a constraint specifying the exact type of exception expected
         /// </summary>
-public static ExactTypeConstraint TypeOf<T>()
+        public static ExactTypeConstraint TypeOf<T>()
         {
             return TypeOf(typeof(T));
         }
@@ -148,7 +148,7 @@ public static ExactTypeConstraint TypeOf<T>()
         /// <summary>
         /// Creates a constraint specifying the type of exception expected
         /// </summary>
-public static InstanceOfTypeConstraint InstanceOf(Type expectedType)
+        public static InstanceOfTypeConstraint InstanceOf(Type expectedType)
         {
             return Exception.InstanceOf(expectedType);
         }
@@ -157,7 +157,7 @@ public static InstanceOfTypeConstraint InstanceOf(Type expectedType)
         /// <summary>
         /// Creates a constraint specifying the type of exception expected
         /// </summary>
-public static InstanceOfTypeConstraint InstanceOf<T>()
+        public static InstanceOfTypeConstraint InstanceOf<T>()
         {
             return InstanceOf(typeof(T));
         }

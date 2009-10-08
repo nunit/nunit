@@ -324,9 +324,6 @@
     <Compile Include="..\..\..\src\framework\NUnit\Framework\InconclusiveException.cs">
       <Link>NUnit\Framework\InconclusiveException.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Shared\Framework\ITestCaseData.cs">
-      <Link>Shared\Framework\ITestCaseData.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\src\framework\NUnit\Framework\Iz.cs">
       <Link>NUnit\Framework\Iz.cs</Link>
     </Compile>

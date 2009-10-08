@@ -796,7 +796,7 @@ namespace NUnit.Framework
         /// <param name="condition">The evaluated condition</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-public static void True(bool condition, string message, params object[] args)
+        public static void True(bool condition, string message, params object[] args)
         {
             Assert.That(condition, Is.True ,message, args);
         }
@@ -806,7 +806,7 @@ public static void True(bool condition, string message, params object[] args)
         /// </summary>
         /// <param name="condition">The evaluated condition</param>
         /// <param name="message">The message to display in case of failure</param>
-public static void True(bool condition, string message)
+        public static void True(bool condition, string message)
         {
             Assert.That(condition, Is.True ,message, null);
         }
@@ -815,7 +815,7 @@ public static void True(bool condition, string message)
         /// an <see cref="AssertionException"/>.
         /// </summary>
         /// <param name="condition">The evaluated condition</param>
-public static void True(bool condition)
+        public static void True(bool condition)
         {
             Assert.That(condition, Is.True ,null, null);
         }
@@ -827,7 +827,7 @@ public static void True(bool condition)
         /// <param name="condition">The evaluated condition</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-public static void IsTrue(bool condition, string message, params object[] args)
+        public static void IsTrue(bool condition, string message, params object[] args)
         {
             Assert.That(condition, Is.True ,message, args);
         }
@@ -837,7 +837,7 @@ public static void IsTrue(bool condition, string message, params object[] args)
         /// </summary>
         /// <param name="condition">The evaluated condition</param>
         /// <param name="message">The message to display in case of failure</param>
-public static void IsTrue(bool condition, string message)
+        public static void IsTrue(bool condition, string message)
         {
             Assert.That(condition, Is.True ,message, null);
         }
@@ -846,7 +846,7 @@ public static void IsTrue(bool condition, string message)
         /// an <see cref="AssertionException"/>.
         /// </summary>
         /// <param name="condition">The evaluated condition</param>
-public static void IsTrue(bool condition)
+        public static void IsTrue(bool condition)
         {
             Assert.That(condition, Is.True ,null, null);
         }
@@ -862,7 +862,7 @@ public static void IsTrue(bool condition)
         /// <param name="condition">The evaluated condition</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-public static void False(bool condition, string message, params object[] args)
+        public static void False(bool condition, string message, params object[] args)
         {
             Assert.That(condition, Is.False ,message, args);
         }
@@ -872,7 +872,7 @@ public static void False(bool condition, string message, params object[] args)
         /// </summary> 
         /// <param name="condition">The evaluated condition</param>
         /// <param name="message">The message to display in case of failure</param>
-public static void False(bool condition, string message)
+        public static void False(bool condition, string message)
         {
             Assert.That(condition, Is.False ,message, null);
         }
@@ -881,7 +881,7 @@ public static void False(bool condition, string message)
         /// an <see cref="AssertionException"/>.
         /// </summary> 
         /// <param name="condition">The evaluated condition</param>
-public static void False(bool condition)
+        public static void False(bool condition)
         {
             Assert.That(condition, Is.False ,null, null);
         }
@@ -893,7 +893,7 @@ public static void False(bool condition)
         /// <param name="condition">The evaluated condition</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-public static void IsFalse(bool condition, string message, params object[] args)
+        public static void IsFalse(bool condition, string message, params object[] args)
         {
             Assert.That(condition, Is.False ,message, args);
         }
@@ -903,7 +903,7 @@ public static void IsFalse(bool condition, string message, params object[] args)
         /// </summary> 
         /// <param name="condition">The evaluated condition</param>
         /// <param name="message">The message to display in case of failure</param>
-public static void IsFalse(bool condition, string message)
+        public static void IsFalse(bool condition, string message)
         {
             Assert.That(condition, Is.False ,message, null);
         }
@@ -912,7 +912,7 @@ public static void IsFalse(bool condition, string message)
         /// an <see cref="AssertionException"/>.
         /// </summary> 
         /// <param name="condition">The evaluated condition</param>
-public static void IsFalse(bool condition)
+        public static void IsFalse(bool condition)
         {
             Assert.That(condition, Is.False ,null, null);
         }
@@ -929,7 +929,7 @@ public static void IsFalse(bool condition)
         /// <param name="anObject">The object that is to be tested</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-public static void NotNull(object anObject, string message, params object[] args)
+        public static void NotNull(object anObject, string message, params object[] args)
         {
             Assert.That(anObject, Is.Not.Null ,message, args);
         }
@@ -940,7 +940,7 @@ public static void NotNull(object anObject, string message, params object[] args
         /// </summary>
         /// <param name="anObject">The object that is to be tested</param>
         /// <param name="message">The message to display in case of failure</param>
-public static void NotNull(object anObject, string message)
+        public static void NotNull(object anObject, string message)
         {
             Assert.That(anObject, Is.Not.Null ,message, null);
         }
@@ -950,7 +950,7 @@ public static void NotNull(object anObject, string message)
         /// is thrown.
         /// </summary>
         /// <param name="anObject">The object that is to be tested</param>
-public static void NotNull(object anObject)
+        public static void NotNull(object anObject)
         {
             Assert.That(anObject, Is.Not.Null ,null, null);
         }
@@ -963,7 +963,7 @@ public static void NotNull(object anObject)
         /// <param name="anObject">The object that is to be tested</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-public static void IsNotNull(object anObject, string message, params object[] args)
+        public static void IsNotNull(object anObject, string message, params object[] args)
         {
             Assert.That(anObject, Is.Not.Null ,message, args);
         }
@@ -974,7 +974,7 @@ public static void IsNotNull(object anObject, string message, params object[] ar
         /// </summary>
         /// <param name="anObject">The object that is to be tested</param>
         /// <param name="message">The message to display in case of failure</param>
-public static void IsNotNull(object anObject, string message)
+        public static void IsNotNull(object anObject, string message)
         {
             Assert.That(anObject, Is.Not.Null ,message, null);
         }
@@ -984,7 +984,7 @@ public static void IsNotNull(object anObject, string message)
         /// is thrown.
         /// </summary>
         /// <param name="anObject">The object that is to be tested</param>
-public static void IsNotNull(object anObject)
+        public static void IsNotNull(object anObject)
         {
             Assert.That(anObject, Is.Not.Null ,null, null);
         }
@@ -1001,7 +1001,7 @@ public static void IsNotNull(object anObject)
         /// <param name="anObject">The object that is to be tested</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-public static void Null(object anObject, string message, params object[] args)
+        public static void Null(object anObject, string message, params object[] args)
         {
             Assert.That(anObject, Is.Null ,message, args);
         }
@@ -1012,7 +1012,7 @@ public static void Null(object anObject, string message, params object[] args)
         /// </summary>
         /// <param name="anObject">The object that is to be tested</param>
         /// <param name="message">The message to display in case of failure</param>
-public static void Null(object anObject, string message)
+        public static void Null(object anObject, string message)
         {
             Assert.That(anObject, Is.Null ,message, null);
         }
@@ -1022,7 +1022,7 @@ public static void Null(object anObject, string message)
         /// is thrown.
         /// </summary>
         /// <param name="anObject">The object that is to be tested</param>
-public static void Null(object anObject)
+        public static void Null(object anObject)
         {
             Assert.That(anObject, Is.Null ,null, null);
         }
@@ -1035,7 +1035,7 @@ public static void Null(object anObject)
         /// <param name="anObject">The object that is to be tested</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-public static void IsNull(object anObject, string message, params object[] args)
+        public static void IsNull(object anObject, string message, params object[] args)
         {
             Assert.That(anObject, Is.Null ,message, args);
         }
@@ -1046,7 +1046,7 @@ public static void IsNull(object anObject, string message, params object[] args)
         /// </summary>
         /// <param name="anObject">The object that is to be tested</param>
         /// <param name="message">The message to display in case of failure</param>
-public static void IsNull(object anObject, string message)
+        public static void IsNull(object anObject, string message)
         {
             Assert.That(anObject, Is.Null ,message, null);
         }
@@ -1056,7 +1056,7 @@ public static void IsNull(object anObject, string message)
         /// is thrown.
         /// </summary>
         /// <param name="anObject">The object that is to be tested</param>
-public static void IsNull(object anObject)
+        public static void IsNull(object anObject)
         {
             Assert.That(anObject, Is.Null ,null, null);
         }
@@ -1074,7 +1074,7 @@ public static void IsNull(object anObject)
         /// <param name="aDouble">The value that is to be tested</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-public static void IsNaN(double aDouble, string message, params object[] args)
+        public static void IsNaN(double aDouble, string message, params object[] args)
         {
             Assert.That(aDouble, Is.NaN ,message, args);
         }
@@ -1085,7 +1085,7 @@ public static void IsNaN(double aDouble, string message, params object[] args)
         /// </summary>
         /// <param name="aDouble">The value that is to be tested</param>
         /// <param name="message">The message to display in case of failure</param>
-public static void IsNaN(double aDouble, string message)
+        public static void IsNaN(double aDouble, string message)
         {
             Assert.That(aDouble, Is.NaN ,message, null);
         }
@@ -1095,7 +1095,7 @@ public static void IsNaN(double aDouble, string message)
         /// is thrown.
         /// </summary>
         /// <param name="aDouble">The value that is to be tested</param>
-public static void IsNaN(double aDouble)
+        public static void IsNaN(double aDouble)
         {
             Assert.That(aDouble, Is.NaN ,null, null);
         }
@@ -1109,7 +1109,7 @@ public static void IsNaN(double aDouble)
         /// <param name="aDouble">The value that is to be tested</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-public static void IsNaN(double? aDouble, string message, params object[] args)
+        public static void IsNaN(double? aDouble, string message, params object[] args)
         {
             Assert.That(aDouble, Is.NaN ,message, args);
         }
@@ -1120,7 +1120,7 @@ public static void IsNaN(double? aDouble, string message, params object[] args)
         /// </summary>
         /// <param name="aDouble">The value that is to be tested</param>
         /// <param name="message">The message to display in case of failure</param>
-public static void IsNaN(double? aDouble, string message)
+        public static void IsNaN(double? aDouble, string message)
         {
             Assert.That(aDouble, Is.NaN ,message, null);
         }
@@ -1130,7 +1130,7 @@ public static void IsNaN(double? aDouble, string message)
         /// is thrown.
         /// </summary>
         /// <param name="aDouble">The value that is to be tested</param>
-public static void IsNaN(double? aDouble)
+        public static void IsNaN(double? aDouble)
         {
             Assert.That(aDouble, Is.NaN ,null, null);
         }
@@ -1148,7 +1148,7 @@ public static void IsNaN(double? aDouble)
         /// <param name="aString">The string to be tested</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-public static void IsEmpty(string aString, string message, params object[] args)
+        public static void IsEmpty(string aString, string message, params object[] args)
         {
             Assert.That(aString, new EmptyStringConstraint() ,message, args);
         }
@@ -1157,7 +1157,7 @@ public static void IsEmpty(string aString, string message, params object[] args)
         /// </summary>
         /// <param name="aString">The string to be tested</param>
         /// <param name="message">The message to display in case of failure</param>
-public static void IsEmpty(string aString, string message)
+        public static void IsEmpty(string aString, string message)
         {
             Assert.That(aString, new EmptyStringConstraint() ,message, null);
         }
@@ -1165,7 +1165,7 @@ public static void IsEmpty(string aString, string message)
         /// Assert that a string is empty - that is equal to string.Empty
         /// </summary>
         /// <param name="aString">The string to be tested</param>
-public static void IsEmpty(string aString)
+        public static void IsEmpty(string aString)
         {
             Assert.That(aString, new EmptyStringConstraint() ,null, null);
         }
@@ -1182,7 +1182,7 @@ public static void IsEmpty(string aString)
         /// <param name="collection">An array, list or other collection implementing ICollection</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-public static void IsEmpty(ICollection collection, string message, params object[] args)
+        public static void IsEmpty(ICollection collection, string message, params object[] args)
         {
             Assert.That(collection, new EmptyCollectionConstraint() ,message, args);
         }
@@ -1191,7 +1191,7 @@ public static void IsEmpty(ICollection collection, string message, params object
         /// </summary>
         /// <param name="collection">An array, list or other collection implementing ICollection</param>
         /// <param name="message">The message to display in case of failure</param>
-public static void IsEmpty(ICollection collection, string message)
+        public static void IsEmpty(ICollection collection, string message)
         {
             Assert.That(collection, new EmptyCollectionConstraint() ,message, null);
         }
@@ -1199,7 +1199,7 @@ public static void IsEmpty(ICollection collection, string message)
         /// Assert that an array, list or other collection is empty
         /// </summary>
         /// <param name="collection">An array, list or other collection implementing ICollection</param>
-public static void IsEmpty(ICollection collection)
+        public static void IsEmpty(ICollection collection)
         {
             Assert.That(collection, new EmptyCollectionConstraint() ,null, null);
         }
@@ -1216,7 +1216,7 @@ public static void IsEmpty(ICollection collection)
         /// <param name="aString">The string to be tested</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-public static void IsNotEmpty(string aString, string message, params object[] args)
+        public static void IsNotEmpty(string aString, string message, params object[] args)
         {
             Assert.That(aString, Is.Not.Empty ,message, args);
         }
@@ -1225,7 +1225,7 @@ public static void IsNotEmpty(string aString, string message, params object[] ar
         /// </summary>
         /// <param name="aString">The string to be tested</param>
         /// <param name="message">The message to display in case of failure</param>
-public static void IsNotEmpty(string aString, string message)
+        public static void IsNotEmpty(string aString, string message)
         {
             Assert.That(aString, Is.Not.Empty ,message, null);
         }
@@ -1233,7 +1233,7 @@ public static void IsNotEmpty(string aString, string message)
         /// Assert that a string is not empty - that is not equal to string.Empty
         /// </summary>
         /// <param name="aString">The string to be tested</param>
-public static void IsNotEmpty(string aString)
+        public static void IsNotEmpty(string aString)
         {
             Assert.That(aString, Is.Not.Empty ,null, null);
         }
@@ -1250,7 +1250,7 @@ public static void IsNotEmpty(string aString)
         /// <param name="collection">An array, list or other collection implementing ICollection</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-public static void IsNotEmpty(ICollection collection, string message, params object[] args)
+        public static void IsNotEmpty(ICollection collection, string message, params object[] args)
         {
             Assert.That(collection, Is.Not.Empty ,message, args);
         }
@@ -1259,7 +1259,7 @@ public static void IsNotEmpty(ICollection collection, string message, params obj
         /// </summary>
         /// <param name="collection">An array, list or other collection implementing ICollection</param>
         /// <param name="message">The message to display in case of failure</param>
-public static void IsNotEmpty(ICollection collection, string message)
+        public static void IsNotEmpty(ICollection collection, string message)
         {
             Assert.That(collection, Is.Not.Empty ,message, null);
         }
@@ -1267,7 +1267,7 @@ public static void IsNotEmpty(ICollection collection, string message)
         /// Assert that an array, list or other collection is not empty
         /// </summary>
         /// <param name="collection">An array, list or other collection implementing ICollection</param>
-public static void IsNotEmpty(ICollection collection)
+        public static void IsNotEmpty(ICollection collection)
         {
             Assert.That(collection, Is.Not.Empty ,null, null);
         }
@@ -1284,7 +1284,7 @@ public static void IsNotEmpty(ICollection collection)
         /// <param name="aString">The string to be tested</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-public static void IsNullOrEmpty(string aString, string message, params object[] args)
+        public static void IsNullOrEmpty(string aString, string message, params object[] args)
         {
             Assert.That(aString, new NullOrEmptyStringConstraint() ,message, args);
         }
@@ -1293,7 +1293,7 @@ public static void IsNullOrEmpty(string aString, string message, params object[]
         /// </summary>
         /// <param name="aString">The string to be tested</param>
         /// <param name="message">The message to display in case of failure</param>
-public static void IsNullOrEmpty(string aString, string message)
+        public static void IsNullOrEmpty(string aString, string message)
         {
             Assert.That(aString, new NullOrEmptyStringConstraint() ,message, null);
         }
@@ -1301,7 +1301,7 @@ public static void IsNullOrEmpty(string aString, string message)
         /// Assert that a string is either null or equal to string.Empty
         /// </summary>
         /// <param name="aString">The string to be tested</param>
-public static void IsNullOrEmpty(string aString)
+        public static void IsNullOrEmpty(string aString)
         {
             Assert.That(aString, new NullOrEmptyStringConstraint() ,null, null);
         }
@@ -1318,7 +1318,7 @@ public static void IsNullOrEmpty(string aString)
         /// <param name="aString">The string to be tested</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-public static void IsNotNullOrEmpty(string aString, string message, params object[] args)
+        public static void IsNotNullOrEmpty(string aString, string message, params object[] args)
         {
             Assert.That(aString, new NotConstraint( new NullOrEmptyStringConstraint()) ,message, args);
         }
@@ -1327,7 +1327,7 @@ public static void IsNotNullOrEmpty(string aString, string message, params objec
         /// </summary>
         /// <param name="aString">The string to be tested</param>
         /// <param name="message">The message to display in case of failure</param>
-public static void IsNotNullOrEmpty(string aString, string message)
+        public static void IsNotNullOrEmpty(string aString, string message)
         {
             Assert.That(aString, new NotConstraint( new NullOrEmptyStringConstraint()) ,message, null);
         }
@@ -1335,7 +1335,7 @@ public static void IsNotNullOrEmpty(string aString, string message)
         /// Assert that a string is not null or empty
         /// </summary>
         /// <param name="aString">The string to be tested</param>
-public static void IsNotNullOrEmpty(string aString)
+        public static void IsNotNullOrEmpty(string aString)
         {
             Assert.That(aString, new NotConstraint( new NullOrEmptyStringConstraint()) ,null, null);
         }
@@ -1353,7 +1353,7 @@ public static void IsNotNullOrEmpty(string aString)
         /// <param name="actual">The object under examination</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-public static void IsAssignableFrom(Type expected, object actual, string message, params object[] args)
+        public static void IsAssignableFrom(Type expected, object actual, string message, params object[] args)
         {
             Assert.That(actual, Is.AssignableFrom(expected) ,message, args);
         }
@@ -1363,7 +1363,7 @@ public static void IsAssignableFrom(Type expected, object actual, string message
         /// <param name="expected">The expected Type.</param>
         /// <param name="actual">The object under examination</param>
         /// <param name="message">The message to display in case of failure</param>
-public static void IsAssignableFrom(Type expected, object actual, string message)
+        public static void IsAssignableFrom(Type expected, object actual, string message)
         {
             Assert.That(actual, Is.AssignableFrom(expected) ,message, null);
         }
@@ -1372,7 +1372,7 @@ public static void IsAssignableFrom(Type expected, object actual, string message
         /// </summary>
         /// <param name="expected">The expected Type.</param>
         /// <param name="actual">The object under examination</param>
-public static void IsAssignableFrom(Type expected, object actual)
+        public static void IsAssignableFrom(Type expected, object actual)
         {
             Assert.That(actual, Is.AssignableFrom(expected) ,null, null);
         }
@@ -1391,7 +1391,7 @@ public static void IsAssignableFrom(Type expected, object actual)
         /// <param name="actual">The object under examination</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-public static void IsAssignableFrom<T>(object actual, string message, params object[] args)
+        public static void IsAssignableFrom<T>(object actual, string message, params object[] args)
         {
             Assert.That(actual, Is.AssignableFrom(typeof(T)) ,message, args);
         }
@@ -1401,7 +1401,7 @@ public static void IsAssignableFrom<T>(object actual, string message, params obj
         /// <typeparam name="T">The expected Type.</typeparam>
         /// <param name="actual">The object under examination</param>
         /// <param name="message">The message to display in case of failure</param>
-public static void IsAssignableFrom<T>(object actual, string message)
+        public static void IsAssignableFrom<T>(object actual, string message)
         {
             Assert.That(actual, Is.AssignableFrom(typeof(T)) ,message, null);
         }
@@ -1410,7 +1410,7 @@ public static void IsAssignableFrom<T>(object actual, string message)
         /// </summary>
         /// <typeparam name="T">The expected Type.</typeparam>
         /// <param name="actual">The object under examination</param>
-public static void IsAssignableFrom<T>(object actual)
+        public static void IsAssignableFrom<T>(object actual)
         {
             Assert.That(actual, Is.AssignableFrom(typeof(T)) ,null, null);
         }
@@ -1429,7 +1429,7 @@ public static void IsAssignableFrom<T>(object actual)
         /// <param name="actual">The object under examination</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-public static void IsNotAssignableFrom(Type expected, object actual, string message, params object[] args)
+        public static void IsNotAssignableFrom(Type expected, object actual, string message, params object[] args)
         {
             Assert.That(actual, Is.Not.AssignableFrom(expected) ,message, args);
         }
@@ -1439,7 +1439,7 @@ public static void IsNotAssignableFrom(Type expected, object actual, string mess
         /// <param name="expected">The expected Type.</param>
         /// <param name="actual">The object under examination</param>
         /// <param name="message">The message to display in case of failure</param>
-public static void IsNotAssignableFrom(Type expected, object actual, string message)
+        public static void IsNotAssignableFrom(Type expected, object actual, string message)
         {
             Assert.That(actual, Is.Not.AssignableFrom(expected) ,message, null);
         }
@@ -1448,7 +1448,7 @@ public static void IsNotAssignableFrom(Type expected, object actual, string mess
         /// </summary>
         /// <param name="expected">The expected Type.</param>
         /// <param name="actual">The object under examination</param>
-public static void IsNotAssignableFrom(Type expected, object actual)
+        public static void IsNotAssignableFrom(Type expected, object actual)
         {
             Assert.That(actual, Is.Not.AssignableFrom(expected) ,null, null);
         }
@@ -1467,7 +1467,7 @@ public static void IsNotAssignableFrom(Type expected, object actual)
         /// <param name="actual">The object under examination</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-public static void IsNotAssignableFrom<T>(object actual, string message, params object[] args)
+        public static void IsNotAssignableFrom<T>(object actual, string message, params object[] args)
         {
             Assert.That(actual, Is.Not.AssignableFrom(typeof(T)) ,message, args);
         }
@@ -1477,7 +1477,7 @@ public static void IsNotAssignableFrom<T>(object actual, string message, params 
         /// <typeparam name="T">The expected Type.</typeparam>
         /// <param name="actual">The object under examination</param>
         /// <param name="message">The message to display in case of failure</param>
-public static void IsNotAssignableFrom<T>(object actual, string message)
+        public static void IsNotAssignableFrom<T>(object actual, string message)
         {
             Assert.That(actual, Is.Not.AssignableFrom(typeof(T)) ,message, null);
         }
@@ -1486,7 +1486,7 @@ public static void IsNotAssignableFrom<T>(object actual, string message)
         /// </summary>
         /// <typeparam name="T">The expected Type.</typeparam>
         /// <param name="actual">The object under examination</param>
-public static void IsNotAssignableFrom<T>(object actual)
+        public static void IsNotAssignableFrom<T>(object actual)
         {
             Assert.That(actual, Is.Not.AssignableFrom(typeof(T)) ,null, null);
         }
@@ -1505,7 +1505,7 @@ public static void IsNotAssignableFrom<T>(object actual)
         /// <param name="actual">The object being examined</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-public static void IsInstanceOf(Type expected, object actual, string message, params object[] args)
+        public static void IsInstanceOf(Type expected, object actual, string message, params object[] args)
         {
             Assert.That(actual, Is.InstanceOf(expected) ,message, args);
         }
@@ -1515,7 +1515,7 @@ public static void IsInstanceOf(Type expected, object actual, string message, pa
         /// <param name="expected">The expected Type</param>
         /// <param name="actual">The object being examined</param>
         /// <param name="message">The message to display in case of failure</param>
-public static void IsInstanceOf(Type expected, object actual, string message)
+        public static void IsInstanceOf(Type expected, object actual, string message)
         {
             Assert.That(actual, Is.InstanceOf(expected) ,message, null);
         }
@@ -1524,7 +1524,7 @@ public static void IsInstanceOf(Type expected, object actual, string message)
         /// </summary>
         /// <param name="expected">The expected Type</param>
         /// <param name="actual">The object being examined</param>
-public static void IsInstanceOf(Type expected, object actual)
+        public static void IsInstanceOf(Type expected, object actual)
         {
             Assert.That(actual, Is.InstanceOf(expected) ,null, null);
         }
@@ -1537,7 +1537,7 @@ public static void IsInstanceOf(Type expected, object actual)
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
         [Obsolete]
-public static void IsInstanceOfType(Type expected, object actual, string message, params object[] args)
+        public static void IsInstanceOfType(Type expected, object actual, string message, params object[] args)
         {
             Assert.That(actual, Is.InstanceOf(expected) ,message, args);
         }
@@ -1548,7 +1548,7 @@ public static void IsInstanceOfType(Type expected, object actual, string message
         /// <param name="actual">The object being examined</param>
         /// <param name="message">The message to display in case of failure</param>
         [Obsolete]
-public static void IsInstanceOfType(Type expected, object actual, string message)
+        public static void IsInstanceOfType(Type expected, object actual, string message)
         {
             Assert.That(actual, Is.InstanceOf(expected) ,message, null);
         }
@@ -1558,7 +1558,7 @@ public static void IsInstanceOfType(Type expected, object actual, string message
         /// <param name="expected">The expected Type</param>
         /// <param name="actual">The object being examined</param>
         [Obsolete]
-public static void IsInstanceOfType(Type expected, object actual)
+        public static void IsInstanceOfType(Type expected, object actual)
         {
             Assert.That(actual, Is.InstanceOf(expected) ,null, null);
         }
@@ -1577,7 +1577,7 @@ public static void IsInstanceOfType(Type expected, object actual)
         /// <param name="actual">The object being examined</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-public static void IsInstanceOf<T>(object actual, string message, params object[] args)
+        public static void IsInstanceOf<T>(object actual, string message, params object[] args)
         {
             Assert.That(actual, Is.InstanceOf(typeof(T)) ,message, args);
         }
@@ -1587,7 +1587,7 @@ public static void IsInstanceOf<T>(object actual, string message, params object[
         /// <typeparam name="T">The expected Type</typeparam>
         /// <param name="actual">The object being examined</param>
         /// <param name="message">The message to display in case of failure</param>
-public static void IsInstanceOf<T>(object actual, string message)
+        public static void IsInstanceOf<T>(object actual, string message)
         {
             Assert.That(actual, Is.InstanceOf(typeof(T)) ,message, null);
         }
@@ -1596,7 +1596,7 @@ public static void IsInstanceOf<T>(object actual, string message)
         /// </summary>
         /// <typeparam name="T">The expected Type</typeparam>
         /// <param name="actual">The object being examined</param>
-public static void IsInstanceOf<T>(object actual)
+        public static void IsInstanceOf<T>(object actual)
         {
             Assert.That(actual, Is.InstanceOf(typeof(T)) ,null, null);
         }
@@ -1615,7 +1615,7 @@ public static void IsInstanceOf<T>(object actual)
         /// <param name="actual">The object being examined</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-public static void IsNotInstanceOf(Type expected, object actual, string message, params object[] args)
+        public static void IsNotInstanceOf(Type expected, object actual, string message, params object[] args)
         {
             Assert.That(actual, Is.Not.InstanceOf(expected) ,message, args);
         }
@@ -1625,7 +1625,7 @@ public static void IsNotInstanceOf(Type expected, object actual, string message,
         /// <param name="expected">The expected Type</param>
         /// <param name="actual">The object being examined</param>
         /// <param name="message">The message to display in case of failure</param>
-public static void IsNotInstanceOf(Type expected, object actual, string message)
+        public static void IsNotInstanceOf(Type expected, object actual, string message)
         {
             Assert.That(actual, Is.Not.InstanceOf(expected) ,message, null);
         }
@@ -1634,7 +1634,7 @@ public static void IsNotInstanceOf(Type expected, object actual, string message)
         /// </summary>
         /// <param name="expected">The expected Type</param>
         /// <param name="actual">The object being examined</param>
-public static void IsNotInstanceOf(Type expected, object actual)
+        public static void IsNotInstanceOf(Type expected, object actual)
         {
             Assert.That(actual, Is.Not.InstanceOf(expected) ,null, null);
         }
@@ -1647,7 +1647,7 @@ public static void IsNotInstanceOf(Type expected, object actual)
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
         [Obsolete]
-public static void IsNotInstanceOfType(Type expected, object actual, string message, params object[] args)
+        public static void IsNotInstanceOfType(Type expected, object actual, string message, params object[] args)
         {
             Assert.That(actual, Is.Not.InstanceOf(expected) ,message, args);
         }
@@ -1658,7 +1658,7 @@ public static void IsNotInstanceOfType(Type expected, object actual, string mess
         /// <param name="actual">The object being examined</param>
         /// <param name="message">The message to display in case of failure</param>
         [Obsolete]
-public static void IsNotInstanceOfType(Type expected, object actual, string message)
+        public static void IsNotInstanceOfType(Type expected, object actual, string message)
         {
             Assert.That(actual, Is.Not.InstanceOf(expected) ,message, null);
         }
@@ -1668,7 +1668,7 @@ public static void IsNotInstanceOfType(Type expected, object actual, string mess
         /// <param name="expected">The expected Type</param>
         /// <param name="actual">The object being examined</param>
         [Obsolete]
-public static void IsNotInstanceOfType(Type expected, object actual)
+        public static void IsNotInstanceOfType(Type expected, object actual)
         {
             Assert.That(actual, Is.Not.InstanceOf(expected) ,null, null);
         }
@@ -1687,7 +1687,7 @@ public static void IsNotInstanceOfType(Type expected, object actual)
         /// <param name="actual">The object being examined</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-public static void IsNotInstanceOf<T>(object actual, string message, params object[] args)
+        public static void IsNotInstanceOf<T>(object actual, string message, params object[] args)
         {
             Assert.That(actual, Is.Not.InstanceOf(typeof(T)) ,message, args);
         }
@@ -1697,7 +1697,7 @@ public static void IsNotInstanceOf<T>(object actual, string message, params obje
         /// <typeparam name="T">The expected Type</typeparam>
         /// <param name="actual">The object being examined</param>
         /// <param name="message">The message to display in case of failure</param>
-public static void IsNotInstanceOf<T>(object actual, string message)
+        public static void IsNotInstanceOf<T>(object actual, string message)
         {
             Assert.That(actual, Is.Not.InstanceOf(typeof(T)) ,message, null);
         }
@@ -1706,7 +1706,7 @@ public static void IsNotInstanceOf<T>(object actual, string message)
         /// </summary>
         /// <typeparam name="T">The expected Type</typeparam>
         /// <param name="actual">The object being examined</param>
-public static void IsNotInstanceOf<T>(object actual)
+        public static void IsNotInstanceOf<T>(object actual)
         {
             Assert.That(actual, Is.Not.InstanceOf(typeof(T)) ,null, null);
         }
@@ -1725,7 +1725,7 @@ public static void IsNotInstanceOf<T>(object actual)
         /// <param name="actual">The actual value</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-public static void AreEqual(int expected, int actual, string message, params object[] args)
+        public static void AreEqual(int expected, int actual, string message, params object[] args)
         {
             Assert.That(actual, Is.EqualTo(expected) ,message, args);
         }
@@ -1736,7 +1736,7 @@ public static void AreEqual(int expected, int actual, string message, params obj
         /// <param name="expected">The expected value</param>
         /// <param name="actual">The actual value</param>
         /// <param name="message">The message to display in case of failure</param>
-public static void AreEqual(int expected, int actual, string message)
+        public static void AreEqual(int expected, int actual, string message)
         {
             Assert.That(actual, Is.EqualTo(expected) ,message, null);
         }
@@ -1746,7 +1746,7 @@ public static void AreEqual(int expected, int actual, string message)
         /// </summary>
         /// <param name="expected">The expected value</param>
         /// <param name="actual">The actual value</param>
-public static void AreEqual(int expected, int actual)
+        public static void AreEqual(int expected, int actual)
         {
             Assert.That(actual, Is.EqualTo(expected) ,null, null);
         }
@@ -1759,7 +1759,7 @@ public static void AreEqual(int expected, int actual)
         /// <param name="actual">The actual value</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-public static void AreEqual(long expected, long actual, string message, params object[] args)
+        public static void AreEqual(long expected, long actual, string message, params object[] args)
         {
             Assert.That(actual, Is.EqualTo(expected) ,message, args);
         }
@@ -1770,7 +1770,7 @@ public static void AreEqual(long expected, long actual, string message, params o
         /// <param name="expected">The expected value</param>
         /// <param name="actual">The actual value</param>
         /// <param name="message">The message to display in case of failure</param>
-public static void AreEqual(long expected, long actual, string message)
+        public static void AreEqual(long expected, long actual, string message)
         {
             Assert.That(actual, Is.EqualTo(expected) ,message, null);
         }
@@ -1780,44 +1780,7 @@ public static void AreEqual(long expected, long actual, string message)
         /// </summary>
         /// <param name="expected">The expected value</param>
         /// <param name="actual">The actual value</param>
-public static void AreEqual(long expected, long actual)
-        {
-            Assert.That(actual, Is.EqualTo(expected) ,null, null);
-        }
-
-        /// <summary>
-        /// Verifies that two values are equal. If they are not, then an 
-        /// <see cref="AssertionException"/> is thrown.
-        /// </summary>
-        /// <param name="expected">The expected value</param>
-        /// <param name="actual">The actual value</param>
-        /// <param name="message">The message to display in case of failure</param>
-        /// <param name="args">Array of objects to be used in formatting the message</param>
-        [CLSCompliant(false)]
-public static void AreEqual(uint expected, uint actual, string message, params object[] args)
-        {
-            Assert.That(actual, Is.EqualTo(expected) ,message, args);
-        }
-        /// <summary>
-        /// Verifies that two values are equal. If they are not, then an 
-        /// <see cref="AssertionException"/> is thrown.
-        /// </summary>
-        /// <param name="expected">The expected value</param>
-        /// <param name="actual">The actual value</param>
-        /// <param name="message">The message to display in case of failure</param>
-        [CLSCompliant(false)]
-public static void AreEqual(uint expected, uint actual, string message)
-        {
-            Assert.That(actual, Is.EqualTo(expected) ,message, null);
-        }
-        /// <summary>
-        /// Verifies that two values are equal. If they are not, then an 
-        /// <see cref="AssertionException"/> is thrown.
-        /// </summary>
-        /// <param name="expected">The expected value</param>
-        /// <param name="actual">The actual value</param>
-        [CLSCompliant(false)]
-public static void AreEqual(uint expected, uint actual)
+        public static void AreEqual(long expected, long actual)
         {
             Assert.That(actual, Is.EqualTo(expected) ,null, null);
         }
@@ -1831,7 +1794,7 @@ public static void AreEqual(uint expected, uint actual)
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
         [CLSCompliant(false)]
-public static void AreEqual(ulong expected, ulong actual, string message, params object[] args)
+        public static void AreEqual(uint expected, uint actual, string message, params object[] args)
         {
             Assert.That(actual, Is.EqualTo(expected) ,message, args);
         }
@@ -1843,7 +1806,7 @@ public static void AreEqual(ulong expected, ulong actual, string message, params
         /// <param name="actual">The actual value</param>
         /// <param name="message">The message to display in case of failure</param>
         [CLSCompliant(false)]
-public static void AreEqual(ulong expected, ulong actual, string message)
+        public static void AreEqual(uint expected, uint actual, string message)
         {
             Assert.That(actual, Is.EqualTo(expected) ,message, null);
         }
@@ -1854,7 +1817,7 @@ public static void AreEqual(ulong expected, ulong actual, string message)
         /// <param name="expected">The expected value</param>
         /// <param name="actual">The actual value</param>
         [CLSCompliant(false)]
-public static void AreEqual(ulong expected, ulong actual)
+        public static void AreEqual(uint expected, uint actual)
         {
             Assert.That(actual, Is.EqualTo(expected) ,null, null);
         }
@@ -1867,7 +1830,8 @@ public static void AreEqual(ulong expected, ulong actual)
         /// <param name="actual">The actual value</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-public static void AreEqual(decimal expected, decimal actual, string message, params object[] args)
+        [CLSCompliant(false)]
+        public static void AreEqual(ulong expected, ulong actual, string message, params object[] args)
         {
             Assert.That(actual, Is.EqualTo(expected) ,message, args);
         }
@@ -1878,7 +1842,8 @@ public static void AreEqual(decimal expected, decimal actual, string message, pa
         /// <param name="expected">The expected value</param>
         /// <param name="actual">The actual value</param>
         /// <param name="message">The message to display in case of failure</param>
-public static void AreEqual(decimal expected, decimal actual, string message)
+        [CLSCompliant(false)]
+        public static void AreEqual(ulong expected, ulong actual, string message)
         {
             Assert.That(actual, Is.EqualTo(expected) ,message, null);
         }
@@ -1888,7 +1853,42 @@ public static void AreEqual(decimal expected, decimal actual, string message)
         /// </summary>
         /// <param name="expected">The expected value</param>
         /// <param name="actual">The actual value</param>
-public static void AreEqual(decimal expected, decimal actual)
+        [CLSCompliant(false)]
+        public static void AreEqual(ulong expected, ulong actual)
+        {
+            Assert.That(actual, Is.EqualTo(expected) ,null, null);
+        }
+
+        /// <summary>
+        /// Verifies that two values are equal. If they are not, then an 
+        /// <see cref="AssertionException"/> is thrown.
+        /// </summary>
+        /// <param name="expected">The expected value</param>
+        /// <param name="actual">The actual value</param>
+        /// <param name="message">The message to display in case of failure</param>
+        /// <param name="args">Array of objects to be used in formatting the message</param>
+        public static void AreEqual(decimal expected, decimal actual, string message, params object[] args)
+        {
+            Assert.That(actual, Is.EqualTo(expected) ,message, args);
+        }
+        /// <summary>
+        /// Verifies that two values are equal. If they are not, then an 
+        /// <see cref="AssertionException"/> is thrown.
+        /// </summary>
+        /// <param name="expected">The expected value</param>
+        /// <param name="actual">The actual value</param>
+        /// <param name="message">The message to display in case of failure</param>
+        public static void AreEqual(decimal expected, decimal actual, string message)
+        {
+            Assert.That(actual, Is.EqualTo(expected) ,message, null);
+        }
+        /// <summary>
+        /// Verifies that two values are equal. If they are not, then an 
+        /// <see cref="AssertionException"/> is thrown.
+        /// </summary>
+        /// <param name="expected">The expected value</param>
+        /// <param name="actual">The actual value</param>
+        public static void AreEqual(decimal expected, decimal actual)
         {
             Assert.That(actual, Is.EqualTo(expected) ,null, null);
         }
@@ -1909,7 +1909,7 @@ public static void AreEqual(decimal expected, decimal actual)
         /// the expected and the actual</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-public static void AreEqual(double expected, double actual, double delta, string message, params object[] args)
+        public static void AreEqual(double expected, double actual, double delta, string message, params object[] args)
         {
             AssertDoublesAreEqual(expected, actual, delta ,message, args);
         }
@@ -1924,7 +1924,7 @@ public static void AreEqual(double expected, double actual, double delta, string
         /// <param name="delta">The maximum acceptable difference between the
         /// the expected and the actual</param>
         /// <param name="message">The message to display in case of failure</param>
-public static void AreEqual(double expected, double actual, double delta, string message)
+        public static void AreEqual(double expected, double actual, double delta, string message)
         {
             AssertDoublesAreEqual(expected, actual, delta ,message, null);
         }
@@ -1938,7 +1938,7 @@ public static void AreEqual(double expected, double actual, double delta, string
         /// <param name="actual">The actual value</param>
         /// <param name="delta">The maximum acceptable difference between the
         /// the expected and the actual</param>
-public static void AreEqual(double expected, double actual, double delta)
+        public static void AreEqual(double expected, double actual, double delta)
         {
             AssertDoublesAreEqual(expected, actual, delta ,null, null);
         }
@@ -1956,7 +1956,7 @@ public static void AreEqual(double expected, double actual, double delta)
         /// the expected and the actual</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-public static void AreEqual(double expected, double? actual, double delta, string message, params object[] args)
+        public static void AreEqual(double expected, double? actual, double delta, string message, params object[] args)
         {
             AssertDoublesAreEqual(expected, (double)actual, delta ,message, args);
         }
@@ -1971,7 +1971,7 @@ public static void AreEqual(double expected, double? actual, double delta, strin
         /// <param name="delta">The maximum acceptable difference between the
         /// the expected and the actual</param>
         /// <param name="message">The message to display in case of failure</param>
-public static void AreEqual(double expected, double? actual, double delta, string message)
+        public static void AreEqual(double expected, double? actual, double delta, string message)
         {
             AssertDoublesAreEqual(expected, (double)actual, delta ,message, null);
         }
@@ -1985,7 +1985,7 @@ public static void AreEqual(double expected, double? actual, double delta, strin
         /// <param name="actual">The actual value</param>
         /// <param name="delta">The maximum acceptable difference between the
         /// the expected and the actual</param>
-public static void AreEqual(double expected, double? actual, double delta)
+        public static void AreEqual(double expected, double? actual, double delta)
         {
             AssertDoublesAreEqual(expected, (double)actual, delta ,null, null);
         }
@@ -2005,7 +2005,7 @@ public static void AreEqual(double expected, double? actual, double delta)
         /// <param name="actual">The actual value</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-public static void AreEqual(object expected, object actual, string message, params object[] args)
+        public static void AreEqual(object expected, object actual, string message, params object[] args)
         {
             Assert.That(actual, Is.EqualTo(expected) ,message, args);
         }
@@ -2018,7 +2018,7 @@ public static void AreEqual(object expected, object actual, string message, para
         /// <param name="expected">The value that is expected</param>
         /// <param name="actual">The actual value</param>
         /// <param name="message">The message to display in case of failure</param>
-public static void AreEqual(object expected, object actual, string message)
+        public static void AreEqual(object expected, object actual, string message)
         {
             Assert.That(actual, Is.EqualTo(expected) ,message, null);
         }
@@ -2030,7 +2030,7 @@ public static void AreEqual(object expected, object actual, string message)
         /// </summary>
         /// <param name="expected">The value that is expected</param>
         /// <param name="actual">The actual value</param>
-public static void AreEqual(object expected, object actual)
+        public static void AreEqual(object expected, object actual)
         {
             Assert.That(actual, Is.EqualTo(expected) ,null, null);
         }
@@ -2047,7 +2047,7 @@ public static void AreEqual(object expected, object actual)
         /// <param name="actual">The actual value</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-public static void AreNotEqual(int expected, int actual, string message, params object[] args)
+        public static void AreNotEqual(int expected, int actual, string message, params object[] args)
         {
             Assert.That(actual, Is.Not.EqualTo(expected) ,message, args);
         }
@@ -2058,7 +2058,7 @@ public static void AreNotEqual(int expected, int actual, string message, params 
         /// <param name="expected">The expected value</param>
         /// <param name="actual">The actual value</param>
         /// <param name="message">The message to display in case of failure</param>
-public static void AreNotEqual(int expected, int actual, string message)
+        public static void AreNotEqual(int expected, int actual, string message)
         {
             Assert.That(actual, Is.Not.EqualTo(expected) ,message, null);
         }
@@ -2068,7 +2068,7 @@ public static void AreNotEqual(int expected, int actual, string message)
         /// </summary>
         /// <param name="expected">The expected value</param>
         /// <param name="actual">The actual value</param>
-public static void AreNotEqual(int expected, int actual)
+        public static void AreNotEqual(int expected, int actual)
         {
             Assert.That(actual, Is.Not.EqualTo(expected) ,null, null);
         }
@@ -2081,7 +2081,7 @@ public static void AreNotEqual(int expected, int actual)
         /// <param name="actual">The actual value</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-public static void AreNotEqual(long expected, long actual, string message, params object[] args)
+        public static void AreNotEqual(long expected, long actual, string message, params object[] args)
         {
             Assert.That(actual, Is.Not.EqualTo(expected) ,message, args);
         }
@@ -2092,7 +2092,7 @@ public static void AreNotEqual(long expected, long actual, string message, param
         /// <param name="expected">The expected value</param>
         /// <param name="actual">The actual value</param>
         /// <param name="message">The message to display in case of failure</param>
-public static void AreNotEqual(long expected, long actual, string message)
+        public static void AreNotEqual(long expected, long actual, string message)
         {
             Assert.That(actual, Is.Not.EqualTo(expected) ,message, null);
         }
@@ -2102,44 +2102,7 @@ public static void AreNotEqual(long expected, long actual, string message)
         /// </summary>
         /// <param name="expected">The expected value</param>
         /// <param name="actual">The actual value</param>
-public static void AreNotEqual(long expected, long actual)
-        {
-            Assert.That(actual, Is.Not.EqualTo(expected) ,null, null);
-        }
-
-        /// <summary>
-        /// Verifies that two values are not equal. If they are equal, then an 
-        /// <see cref="AssertionException"/> is thrown.
-        /// </summary>
-        /// <param name="expected">The expected value</param>
-        /// <param name="actual">The actual value</param>
-        /// <param name="message">The message to display in case of failure</param>
-        /// <param name="args">Array of objects to be used in formatting the message</param>
-        [CLSCompliant(false)]
-public static void AreNotEqual(uint expected, uint actual, string message, params object[] args)
-        {
-            Assert.That(actual, Is.Not.EqualTo(expected) ,message, args);
-        }
-        /// <summary>
-        /// Verifies that two values are not equal. If they are equal, then an 
-        /// <see cref="AssertionException"/> is thrown.
-        /// </summary>
-        /// <param name="expected">The expected value</param>
-        /// <param name="actual">The actual value</param>
-        /// <param name="message">The message to display in case of failure</param>
-        [CLSCompliant(false)]
-public static void AreNotEqual(uint expected, uint actual, string message)
-        {
-            Assert.That(actual, Is.Not.EqualTo(expected) ,message, null);
-        }
-        /// <summary>
-        /// Verifies that two values are not equal. If they are equal, then an 
-        /// <see cref="AssertionException"/> is thrown.
-        /// </summary>
-        /// <param name="expected">The expected value</param>
-        /// <param name="actual">The actual value</param>
-        [CLSCompliant(false)]
-public static void AreNotEqual(uint expected, uint actual)
+        public static void AreNotEqual(long expected, long actual)
         {
             Assert.That(actual, Is.Not.EqualTo(expected) ,null, null);
         }
@@ -2153,7 +2116,7 @@ public static void AreNotEqual(uint expected, uint actual)
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
         [CLSCompliant(false)]
-public static void AreNotEqual(ulong expected, ulong actual, string message, params object[] args)
+        public static void AreNotEqual(uint expected, uint actual, string message, params object[] args)
         {
             Assert.That(actual, Is.Not.EqualTo(expected) ,message, args);
         }
@@ -2165,7 +2128,7 @@ public static void AreNotEqual(ulong expected, ulong actual, string message, par
         /// <param name="actual">The actual value</param>
         /// <param name="message">The message to display in case of failure</param>
         [CLSCompliant(false)]
-public static void AreNotEqual(ulong expected, ulong actual, string message)
+        public static void AreNotEqual(uint expected, uint actual, string message)
         {
             Assert.That(actual, Is.Not.EqualTo(expected) ,message, null);
         }
@@ -2176,7 +2139,7 @@ public static void AreNotEqual(ulong expected, ulong actual, string message)
         /// <param name="expected">The expected value</param>
         /// <param name="actual">The actual value</param>
         [CLSCompliant(false)]
-public static void AreNotEqual(ulong expected, ulong actual)
+        public static void AreNotEqual(uint expected, uint actual)
         {
             Assert.That(actual, Is.Not.EqualTo(expected) ,null, null);
         }
@@ -2189,7 +2152,8 @@ public static void AreNotEqual(ulong expected, ulong actual)
         /// <param name="actual">The actual value</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-public static void AreNotEqual(decimal expected, decimal actual, string message, params object[] args)
+        [CLSCompliant(false)]
+        public static void AreNotEqual(ulong expected, ulong actual, string message, params object[] args)
         {
             Assert.That(actual, Is.Not.EqualTo(expected) ,message, args);
         }
@@ -2200,7 +2164,8 @@ public static void AreNotEqual(decimal expected, decimal actual, string message,
         /// <param name="expected">The expected value</param>
         /// <param name="actual">The actual value</param>
         /// <param name="message">The message to display in case of failure</param>
-public static void AreNotEqual(decimal expected, decimal actual, string message)
+        [CLSCompliant(false)]
+        public static void AreNotEqual(ulong expected, ulong actual, string message)
         {
             Assert.That(actual, Is.Not.EqualTo(expected) ,message, null);
         }
@@ -2210,7 +2175,8 @@ public static void AreNotEqual(decimal expected, decimal actual, string message)
         /// </summary>
         /// <param name="expected">The expected value</param>
         /// <param name="actual">The actual value</param>
-public static void AreNotEqual(decimal expected, decimal actual)
+        [CLSCompliant(false)]
+        public static void AreNotEqual(ulong expected, ulong actual)
         {
             Assert.That(actual, Is.Not.EqualTo(expected) ,null, null);
         }
@@ -2223,7 +2189,7 @@ public static void AreNotEqual(decimal expected, decimal actual)
         /// <param name="actual">The actual value</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-public static void AreNotEqual(float expected, float actual, string message, params object[] args)
+        public static void AreNotEqual(decimal expected, decimal actual, string message, params object[] args)
         {
             Assert.That(actual, Is.Not.EqualTo(expected) ,message, args);
         }
@@ -2234,7 +2200,7 @@ public static void AreNotEqual(float expected, float actual, string message, par
         /// <param name="expected">The expected value</param>
         /// <param name="actual">The actual value</param>
         /// <param name="message">The message to display in case of failure</param>
-public static void AreNotEqual(float expected, float actual, string message)
+        public static void AreNotEqual(decimal expected, decimal actual, string message)
         {
             Assert.That(actual, Is.Not.EqualTo(expected) ,message, null);
         }
@@ -2244,7 +2210,7 @@ public static void AreNotEqual(float expected, float actual, string message)
         /// </summary>
         /// <param name="expected">The expected value</param>
         /// <param name="actual">The actual value</param>
-public static void AreNotEqual(float expected, float actual)
+        public static void AreNotEqual(decimal expected, decimal actual)
         {
             Assert.That(actual, Is.Not.EqualTo(expected) ,null, null);
         }
@@ -2257,7 +2223,7 @@ public static void AreNotEqual(float expected, float actual)
         /// <param name="actual">The actual value</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-public static void AreNotEqual(double expected, double actual, string message, params object[] args)
+        public static void AreNotEqual(float expected, float actual, string message, params object[] args)
         {
             Assert.That(actual, Is.Not.EqualTo(expected) ,message, args);
         }
@@ -2268,7 +2234,7 @@ public static void AreNotEqual(double expected, double actual, string message, p
         /// <param name="expected">The expected value</param>
         /// <param name="actual">The actual value</param>
         /// <param name="message">The message to display in case of failure</param>
-public static void AreNotEqual(double expected, double actual, string message)
+        public static void AreNotEqual(float expected, float actual, string message)
         {
             Assert.That(actual, Is.Not.EqualTo(expected) ,message, null);
         }
@@ -2278,7 +2244,41 @@ public static void AreNotEqual(double expected, double actual, string message)
         /// </summary>
         /// <param name="expected">The expected value</param>
         /// <param name="actual">The actual value</param>
-public static void AreNotEqual(double expected, double actual)
+        public static void AreNotEqual(float expected, float actual)
+        {
+            Assert.That(actual, Is.Not.EqualTo(expected) ,null, null);
+        }
+
+        /// <summary>
+        /// Verifies that two values are not equal. If they are equal, then an 
+        /// <see cref="AssertionException"/> is thrown.
+        /// </summary>
+        /// <param name="expected">The expected value</param>
+        /// <param name="actual">The actual value</param>
+        /// <param name="message">The message to display in case of failure</param>
+        /// <param name="args">Array of objects to be used in formatting the message</param>
+        public static void AreNotEqual(double expected, double actual, string message, params object[] args)
+        {
+            Assert.That(actual, Is.Not.EqualTo(expected) ,message, args);
+        }
+        /// <summary>
+        /// Verifies that two values are not equal. If they are equal, then an 
+        /// <see cref="AssertionException"/> is thrown.
+        /// </summary>
+        /// <param name="expected">The expected value</param>
+        /// <param name="actual">The actual value</param>
+        /// <param name="message">The message to display in case of failure</param>
+        public static void AreNotEqual(double expected, double actual, string message)
+        {
+            Assert.That(actual, Is.Not.EqualTo(expected) ,message, null);
+        }
+        /// <summary>
+        /// Verifies that two values are not equal. If they are equal, then an 
+        /// <see cref="AssertionException"/> is thrown.
+        /// </summary>
+        /// <param name="expected">The expected value</param>
+        /// <param name="actual">The actual value</param>
+        public static void AreNotEqual(double expected, double actual)
         {
             Assert.That(actual, Is.Not.EqualTo(expected) ,null, null);
         }
@@ -2297,7 +2297,7 @@ public static void AreNotEqual(double expected, double actual)
         /// <param name="actual">The actual value</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-public static void AreNotEqual(object expected, object actual, string message, params object[] args)
+        public static void AreNotEqual(object expected, object actual, string message, params object[] args)
         {
             Assert.That(actual, Is.Not.EqualTo(expected) ,message, args);
         }
@@ -2310,7 +2310,7 @@ public static void AreNotEqual(object expected, object actual, string message, p
         /// <param name="expected">The value that is expected</param>
         /// <param name="actual">The actual value</param>
         /// <param name="message">The message to display in case of failure</param>
-public static void AreNotEqual(object expected, object actual, string message)
+        public static void AreNotEqual(object expected, object actual, string message)
         {
             Assert.That(actual, Is.Not.EqualTo(expected) ,message, null);
         }
@@ -2322,7 +2322,7 @@ public static void AreNotEqual(object expected, object actual, string message)
         /// </summary>
         /// <param name="expected">The value that is expected</param>
         /// <param name="actual">The actual value</param>
-public static void AreNotEqual(object expected, object actual)
+        public static void AreNotEqual(object expected, object actual)
         {
             Assert.That(actual, Is.Not.EqualTo(expected) ,null, null);
         }
@@ -2339,7 +2339,7 @@ public static void AreNotEqual(object expected, object actual)
         /// <param name="actual">The actual object</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-public static void AreSame(object expected, object actual, string message, params object[] args)
+        public static void AreSame(object expected, object actual, string message, params object[] args)
         {
             Assert.That(actual, Is.SameAs(expected) ,message, args);
         }
@@ -2350,7 +2350,7 @@ public static void AreSame(object expected, object actual, string message, param
         /// <param name="expected">The expected object</param>
         /// <param name="actual">The actual object</param>
         /// <param name="message">The message to display in case of failure</param>
-public static void AreSame(object expected, object actual, string message)
+        public static void AreSame(object expected, object actual, string message)
         {
             Assert.That(actual, Is.SameAs(expected) ,message, null);
         }
@@ -2360,7 +2360,7 @@ public static void AreSame(object expected, object actual, string message)
         /// </summary>
         /// <param name="expected">The expected object</param>
         /// <param name="actual">The actual object</param>
-public static void AreSame(object expected, object actual)
+        public static void AreSame(object expected, object actual)
         {
             Assert.That(actual, Is.SameAs(expected) ,null, null);
         }
@@ -2377,7 +2377,7 @@ public static void AreSame(object expected, object actual)
         /// <param name="actual">The actual object</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-public static void AreNotSame(object expected, object actual, string message, params object[] args)
+        public static void AreNotSame(object expected, object actual, string message, params object[] args)
         {
             Assert.That(actual, Is.Not.SameAs(expected) ,message, args);
         }
@@ -2388,7 +2388,7 @@ public static void AreNotSame(object expected, object actual, string message, pa
         /// <param name="expected">The expected object</param>
         /// <param name="actual">The actual object</param>
         /// <param name="message">The message to display in case of failure</param>
-public static void AreNotSame(object expected, object actual, string message)
+        public static void AreNotSame(object expected, object actual, string message)
         {
             Assert.That(actual, Is.Not.SameAs(expected) ,message, null);
         }
@@ -2398,7 +2398,7 @@ public static void AreNotSame(object expected, object actual, string message)
         /// </summary>
         /// <param name="expected">The expected object</param>
         /// <param name="actual">The actual object</param>
-public static void AreNotSame(object expected, object actual)
+        public static void AreNotSame(object expected, object actual)
         {
             Assert.That(actual, Is.Not.SameAs(expected) ,null, null);
         }
@@ -2417,7 +2417,7 @@ public static void AreNotSame(object expected, object actual)
         /// <param name="arg2">The second value, expected to be less</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-public static void Greater(int arg1, int arg2, string message, params object[] args)
+        public static void Greater(int arg1, int arg2, string message, params object[] args)
         {
             Assert.That(arg1, Is.GreaterThan(arg2) ,message, args);
         }
@@ -2429,7 +2429,7 @@ public static void Greater(int arg1, int arg2, string message, params object[] a
         /// <param name="arg1">The first value, expected to be greater</param>
         /// <param name="arg2">The second value, expected to be less</param>
         /// <param name="message">The message to display in case of failure</param>
-public static void Greater(int arg1, int arg2, string message)
+        public static void Greater(int arg1, int arg2, string message)
         {
             Assert.That(arg1, Is.GreaterThan(arg2) ,message, null);
         }
@@ -2440,7 +2440,7 @@ public static void Greater(int arg1, int arg2, string message)
         /// </summary>
         /// <param name="arg1">The first value, expected to be greater</param>
         /// <param name="arg2">The second value, expected to be less</param>
-public static void Greater(int arg1, int arg2)
+        public static void Greater(int arg1, int arg2)
         {
             Assert.That(arg1, Is.GreaterThan(arg2) ,null, null);
         }
@@ -2455,7 +2455,7 @@ public static void Greater(int arg1, int arg2)
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
         [CLSCompliant(false)]
-public static void Greater(uint arg1, uint arg2, string message, params object[] args)
+        public static void Greater(uint arg1, uint arg2, string message, params object[] args)
         {
             Assert.That(arg1, Is.GreaterThan(arg2) ,message, args);
         }
@@ -2468,7 +2468,7 @@ public static void Greater(uint arg1, uint arg2, string message, params object[]
         /// <param name="arg2">The second value, expected to be less</param>
         /// <param name="message">The message to display in case of failure</param>
         [CLSCompliant(false)]
-public static void Greater(uint arg1, uint arg2, string message)
+        public static void Greater(uint arg1, uint arg2, string message)
         {
             Assert.That(arg1, Is.GreaterThan(arg2) ,message, null);
         }
@@ -2480,7 +2480,7 @@ public static void Greater(uint arg1, uint arg2, string message)
         /// <param name="arg1">The first value, expected to be greater</param>
         /// <param name="arg2">The second value, expected to be less</param>
         [CLSCompliant(false)]
-public static void Greater(uint arg1, uint arg2)
+        public static void Greater(uint arg1, uint arg2)
         {
             Assert.That(arg1, Is.GreaterThan(arg2) ,null, null);
         }
@@ -2494,7 +2494,7 @@ public static void Greater(uint arg1, uint arg2)
         /// <param name="arg2">The second value, expected to be less</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-public static void Greater(long arg1, long arg2, string message, params object[] args)
+        public static void Greater(long arg1, long arg2, string message, params object[] args)
         {
             Assert.That(arg1, Is.GreaterThan(arg2) ,message, args);
         }
@@ -2506,7 +2506,7 @@ public static void Greater(long arg1, long arg2, string message, params object[]
         /// <param name="arg1">The first value, expected to be greater</param>
         /// <param name="arg2">The second value, expected to be less</param>
         /// <param name="message">The message to display in case of failure</param>
-public static void Greater(long arg1, long arg2, string message)
+        public static void Greater(long arg1, long arg2, string message)
         {
             Assert.That(arg1, Is.GreaterThan(arg2) ,message, null);
         }
@@ -2517,7 +2517,7 @@ public static void Greater(long arg1, long arg2, string message)
         /// </summary>
         /// <param name="arg1">The first value, expected to be greater</param>
         /// <param name="arg2">The second value, expected to be less</param>
-public static void Greater(long arg1, long arg2)
+        public static void Greater(long arg1, long arg2)
         {
             Assert.That(arg1, Is.GreaterThan(arg2) ,null, null);
         }
@@ -2532,7 +2532,7 @@ public static void Greater(long arg1, long arg2)
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
         [CLSCompliant(false)]
-public static void Greater(ulong arg1, ulong arg2, string message, params object[] args)
+        public static void Greater(ulong arg1, ulong arg2, string message, params object[] args)
         {
             Assert.That(arg1, Is.GreaterThan(arg2) ,message, args);
         }
@@ -2545,7 +2545,7 @@ public static void Greater(ulong arg1, ulong arg2, string message, params object
         /// <param name="arg2">The second value, expected to be less</param>
         /// <param name="message">The message to display in case of failure</param>
         [CLSCompliant(false)]
-public static void Greater(ulong arg1, ulong arg2, string message)
+        public static void Greater(ulong arg1, ulong arg2, string message)
         {
             Assert.That(arg1, Is.GreaterThan(arg2) ,message, null);
         }
@@ -2557,7 +2557,7 @@ public static void Greater(ulong arg1, ulong arg2, string message)
         /// <param name="arg1">The first value, expected to be greater</param>
         /// <param name="arg2">The second value, expected to be less</param>
         [CLSCompliant(false)]
-public static void Greater(ulong arg1, ulong arg2)
+        public static void Greater(ulong arg1, ulong arg2)
         {
             Assert.That(arg1, Is.GreaterThan(arg2) ,null, null);
         }
@@ -2571,7 +2571,7 @@ public static void Greater(ulong arg1, ulong arg2)
         /// <param name="arg2">The second value, expected to be less</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-public static void Greater(decimal arg1, decimal arg2, string message, params object[] args)
+        public static void Greater(decimal arg1, decimal arg2, string message, params object[] args)
         {
             Assert.That(arg1, Is.GreaterThan(arg2) ,message, args);
         }
@@ -2583,7 +2583,7 @@ public static void Greater(decimal arg1, decimal arg2, string message, params ob
         /// <param name="arg1">The first value, expected to be greater</param>
         /// <param name="arg2">The second value, expected to be less</param>
         /// <param name="message">The message to display in case of failure</param>
-public static void Greater(decimal arg1, decimal arg2, string message)
+        public static void Greater(decimal arg1, decimal arg2, string message)
         {
             Assert.That(arg1, Is.GreaterThan(arg2) ,message, null);
         }
@@ -2594,7 +2594,7 @@ public static void Greater(decimal arg1, decimal arg2, string message)
         /// </summary>
         /// <param name="arg1">The first value, expected to be greater</param>
         /// <param name="arg2">The second value, expected to be less</param>
-public static void Greater(decimal arg1, decimal arg2)
+        public static void Greater(decimal arg1, decimal arg2)
         {
             Assert.That(arg1, Is.GreaterThan(arg2) ,null, null);
         }
@@ -2608,7 +2608,7 @@ public static void Greater(decimal arg1, decimal arg2)
         /// <param name="arg2">The second value, expected to be less</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-public static void Greater(double arg1, double arg2, string message, params object[] args)
+        public static void Greater(double arg1, double arg2, string message, params object[] args)
         {
             Assert.That(arg1, Is.GreaterThan(arg2) ,message, args);
         }
@@ -2620,7 +2620,7 @@ public static void Greater(double arg1, double arg2, string message, params obje
         /// <param name="arg1">The first value, expected to be greater</param>
         /// <param name="arg2">The second value, expected to be less</param>
         /// <param name="message">The message to display in case of failure</param>
-public static void Greater(double arg1, double arg2, string message)
+        public static void Greater(double arg1, double arg2, string message)
         {
             Assert.That(arg1, Is.GreaterThan(arg2) ,message, null);
         }
@@ -2631,7 +2631,7 @@ public static void Greater(double arg1, double arg2, string message)
         /// </summary>
         /// <param name="arg1">The first value, expected to be greater</param>
         /// <param name="arg2">The second value, expected to be less</param>
-public static void Greater(double arg1, double arg2)
+        public static void Greater(double arg1, double arg2)
         {
             Assert.That(arg1, Is.GreaterThan(arg2) ,null, null);
         }
@@ -2645,7 +2645,7 @@ public static void Greater(double arg1, double arg2)
         /// <param name="arg2">The second value, expected to be less</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-public static void Greater(float arg1, float arg2, string message, params object[] args)
+        public static void Greater(float arg1, float arg2, string message, params object[] args)
         {
             Assert.That(arg1, Is.GreaterThan(arg2) ,message, args);
         }
@@ -2657,7 +2657,7 @@ public static void Greater(float arg1, float arg2, string message, params object
         /// <param name="arg1">The first value, expected to be greater</param>
         /// <param name="arg2">The second value, expected to be less</param>
         /// <param name="message">The message to display in case of failure</param>
-public static void Greater(float arg1, float arg2, string message)
+        public static void Greater(float arg1, float arg2, string message)
         {
             Assert.That(arg1, Is.GreaterThan(arg2) ,message, null);
         }
@@ -2668,7 +2668,7 @@ public static void Greater(float arg1, float arg2, string message)
         /// </summary>
         /// <param name="arg1">The first value, expected to be greater</param>
         /// <param name="arg2">The second value, expected to be less</param>
-public static void Greater(float arg1, float arg2)
+        public static void Greater(float arg1, float arg2)
         {
             Assert.That(arg1, Is.GreaterThan(arg2) ,null, null);
         }
@@ -2682,7 +2682,7 @@ public static void Greater(float arg1, float arg2)
         /// <param name="arg2">The second value, expected to be less</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-public static void Greater(IComparable arg1, IComparable arg2, string message, params object[] args)
+        public static void Greater(IComparable arg1, IComparable arg2, string message, params object[] args)
         {
             Assert.That(arg1, Is.GreaterThan(arg2) ,message, args);
         }
@@ -2694,7 +2694,7 @@ public static void Greater(IComparable arg1, IComparable arg2, string message, p
         /// <param name="arg1">The first value, expected to be greater</param>
         /// <param name="arg2">The second value, expected to be less</param>
         /// <param name="message">The message to display in case of failure</param>
-public static void Greater(IComparable arg1, IComparable arg2, string message)
+        public static void Greater(IComparable arg1, IComparable arg2, string message)
         {
             Assert.That(arg1, Is.GreaterThan(arg2) ,message, null);
         }
@@ -2705,7 +2705,7 @@ public static void Greater(IComparable arg1, IComparable arg2, string message)
         /// </summary>
         /// <param name="arg1">The first value, expected to be greater</param>
         /// <param name="arg2">The second value, expected to be less</param>
-public static void Greater(IComparable arg1, IComparable arg2)
+        public static void Greater(IComparable arg1, IComparable arg2)
         {
             Assert.That(arg1, Is.GreaterThan(arg2) ,null, null);
         }
@@ -2725,7 +2725,7 @@ public static void Greater(IComparable arg1, IComparable arg2)
         /// <param name="arg2">The second value, expected to be greater</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-public static void Less(int arg1, int arg2, string message, params object[] args)
+        public static void Less(int arg1, int arg2, string message, params object[] args)
         {
             Assert.That(arg1, Is.LessThan(arg2) ,message, args);
         }
@@ -2737,7 +2737,7 @@ public static void Less(int arg1, int arg2, string message, params object[] args
         /// <param name="arg1">The first value, expected to be less</param>
         /// <param name="arg2">The second value, expected to be greater</param>
         /// <param name="message">The message to display in case of failure</param>
-public static void Less(int arg1, int arg2, string message)
+        public static void Less(int arg1, int arg2, string message)
         {
             Assert.That(arg1, Is.LessThan(arg2) ,message, null);
         }
@@ -2748,7 +2748,7 @@ public static void Less(int arg1, int arg2, string message)
         /// </summary>
         /// <param name="arg1">The first value, expected to be less</param>
         /// <param name="arg2">The second value, expected to be greater</param>
-public static void Less(int arg1, int arg2)
+        public static void Less(int arg1, int arg2)
         {
             Assert.That(arg1, Is.LessThan(arg2) ,null, null);
         }
@@ -2763,7 +2763,7 @@ public static void Less(int arg1, int arg2)
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
         [CLSCompliant(false)]
-public static void Less(uint arg1, uint arg2, string message, params object[] args)
+        public static void Less(uint arg1, uint arg2, string message, params object[] args)
         {
             Assert.That(arg1, Is.LessThan(arg2) ,message, args);
         }
@@ -2776,7 +2776,7 @@ public static void Less(uint arg1, uint arg2, string message, params object[] ar
         /// <param name="arg2">The second value, expected to be greater</param>
         /// <param name="message">The message to display in case of failure</param>
         [CLSCompliant(false)]
-public static void Less(uint arg1, uint arg2, string message)
+        public static void Less(uint arg1, uint arg2, string message)
         {
             Assert.That(arg1, Is.LessThan(arg2) ,message, null);
         }
@@ -2788,7 +2788,7 @@ public static void Less(uint arg1, uint arg2, string message)
         /// <param name="arg1">The first value, expected to be less</param>
         /// <param name="arg2">The second value, expected to be greater</param>
         [CLSCompliant(false)]
-public static void Less(uint arg1, uint arg2)
+        public static void Less(uint arg1, uint arg2)
         {
             Assert.That(arg1, Is.LessThan(arg2) ,null, null);
         }
@@ -2802,7 +2802,7 @@ public static void Less(uint arg1, uint arg2)
         /// <param name="arg2">The second value, expected to be greater</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-public static void Less(long arg1, long arg2, string message, params object[] args)
+        public static void Less(long arg1, long arg2, string message, params object[] args)
         {
             Assert.That(arg1, Is.LessThan(arg2) ,message, args);
         }
@@ -2814,7 +2814,7 @@ public static void Less(long arg1, long arg2, string message, params object[] ar
         /// <param name="arg1">The first value, expected to be less</param>
         /// <param name="arg2">The second value, expected to be greater</param>
         /// <param name="message">The message to display in case of failure</param>
-public static void Less(long arg1, long arg2, string message)
+        public static void Less(long arg1, long arg2, string message)
         {
             Assert.That(arg1, Is.LessThan(arg2) ,message, null);
         }
@@ -2825,7 +2825,7 @@ public static void Less(long arg1, long arg2, string message)
         /// </summary>
         /// <param name="arg1">The first value, expected to be less</param>
         /// <param name="arg2">The second value, expected to be greater</param>
-public static void Less(long arg1, long arg2)
+        public static void Less(long arg1, long arg2)
         {
             Assert.That(arg1, Is.LessThan(arg2) ,null, null);
         }
@@ -2840,7 +2840,7 @@ public static void Less(long arg1, long arg2)
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
         [CLSCompliant(false)]
-public static void Less(ulong arg1, ulong arg2, string message, params object[] args)
+        public static void Less(ulong arg1, ulong arg2, string message, params object[] args)
         {
             Assert.That(arg1, Is.LessThan(arg2) ,message, args);
         }
@@ -2853,7 +2853,7 @@ public static void Less(ulong arg1, ulong arg2, string message, params object[] 
         /// <param name="arg2">The second value, expected to be greater</param>
         /// <param name="message">The message to display in case of failure</param>
         [CLSCompliant(false)]
-public static void Less(ulong arg1, ulong arg2, string message)
+        public static void Less(ulong arg1, ulong arg2, string message)
         {
             Assert.That(arg1, Is.LessThan(arg2) ,message, null);
         }
@@ -2865,7 +2865,7 @@ public static void Less(ulong arg1, ulong arg2, string message)
         /// <param name="arg1">The first value, expected to be less</param>
         /// <param name="arg2">The second value, expected to be greater</param>
         [CLSCompliant(false)]
-public static void Less(ulong arg1, ulong arg2)
+        public static void Less(ulong arg1, ulong arg2)
         {
             Assert.That(arg1, Is.LessThan(arg2) ,null, null);
         }
@@ -2879,7 +2879,7 @@ public static void Less(ulong arg1, ulong arg2)
         /// <param name="arg2">The second value, expected to be greater</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-public static void Less(decimal arg1, decimal arg2, string message, params object[] args)
+        public static void Less(decimal arg1, decimal arg2, string message, params object[] args)
         {
             Assert.That(arg1, Is.LessThan(arg2) ,message, args);
         }
@@ -2891,7 +2891,7 @@ public static void Less(decimal arg1, decimal arg2, string message, params objec
         /// <param name="arg1">The first value, expected to be less</param>
         /// <param name="arg2">The second value, expected to be greater</param>
         /// <param name="message">The message to display in case of failure</param>
-public static void Less(decimal arg1, decimal arg2, string message)
+        public static void Less(decimal arg1, decimal arg2, string message)
         {
             Assert.That(arg1, Is.LessThan(arg2) ,message, null);
         }
@@ -2902,7 +2902,7 @@ public static void Less(decimal arg1, decimal arg2, string message)
         /// </summary>
         /// <param name="arg1">The first value, expected to be less</param>
         /// <param name="arg2">The second value, expected to be greater</param>
-public static void Less(decimal arg1, decimal arg2)
+        public static void Less(decimal arg1, decimal arg2)
         {
             Assert.That(arg1, Is.LessThan(arg2) ,null, null);
         }
@@ -2916,7 +2916,7 @@ public static void Less(decimal arg1, decimal arg2)
         /// <param name="arg2">The second value, expected to be greater</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-public static void Less(double arg1, double arg2, string message, params object[] args)
+        public static void Less(double arg1, double arg2, string message, params object[] args)
         {
             Assert.That(arg1, Is.LessThan(arg2) ,message, args);
         }
@@ -2928,7 +2928,7 @@ public static void Less(double arg1, double arg2, string message, params object[
         /// <param name="arg1">The first value, expected to be less</param>
         /// <param name="arg2">The second value, expected to be greater</param>
         /// <param name="message">The message to display in case of failure</param>
-public static void Less(double arg1, double arg2, string message)
+        public static void Less(double arg1, double arg2, string message)
         {
             Assert.That(arg1, Is.LessThan(arg2) ,message, null);
         }
@@ -2939,7 +2939,7 @@ public static void Less(double arg1, double arg2, string message)
         /// </summary>
         /// <param name="arg1">The first value, expected to be less</param>
         /// <param name="arg2">The second value, expected to be greater</param>
-public static void Less(double arg1, double arg2)
+        public static void Less(double arg1, double arg2)
         {
             Assert.That(arg1, Is.LessThan(arg2) ,null, null);
         }
@@ -2953,7 +2953,7 @@ public static void Less(double arg1, double arg2)
         /// <param name="arg2">The second value, expected to be greater</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-public static void Less(float arg1, float arg2, string message, params object[] args)
+        public static void Less(float arg1, float arg2, string message, params object[] args)
         {
             Assert.That(arg1, Is.LessThan(arg2) ,message, args);
         }
@@ -2965,7 +2965,7 @@ public static void Less(float arg1, float arg2, string message, params object[] 
         /// <param name="arg1">The first value, expected to be less</param>
         /// <param name="arg2">The second value, expected to be greater</param>
         /// <param name="message">The message to display in case of failure</param>
-public static void Less(float arg1, float arg2, string message)
+        public static void Less(float arg1, float arg2, string message)
         {
             Assert.That(arg1, Is.LessThan(arg2) ,message, null);
         }
@@ -2976,7 +2976,7 @@ public static void Less(float arg1, float arg2, string message)
         /// </summary>
         /// <param name="arg1">The first value, expected to be less</param>
         /// <param name="arg2">The second value, expected to be greater</param>
-public static void Less(float arg1, float arg2)
+        public static void Less(float arg1, float arg2)
         {
             Assert.That(arg1, Is.LessThan(arg2) ,null, null);
         }
@@ -2990,7 +2990,7 @@ public static void Less(float arg1, float arg2)
         /// <param name="arg2">The second value, expected to be greater</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-public static void Less(IComparable arg1, IComparable arg2, string message, params object[] args)
+        public static void Less(IComparable arg1, IComparable arg2, string message, params object[] args)
         {
             Assert.That(arg1, Is.LessThan(arg2) ,message, args);
         }
@@ -3002,7 +3002,7 @@ public static void Less(IComparable arg1, IComparable arg2, string message, para
         /// <param name="arg1">The first value, expected to be less</param>
         /// <param name="arg2">The second value, expected to be greater</param>
         /// <param name="message">The message to display in case of failure</param>
-public static void Less(IComparable arg1, IComparable arg2, string message)
+        public static void Less(IComparable arg1, IComparable arg2, string message)
         {
             Assert.That(arg1, Is.LessThan(arg2) ,message, null);
         }
@@ -3013,7 +3013,7 @@ public static void Less(IComparable arg1, IComparable arg2, string message)
         /// </summary>
         /// <param name="arg1">The first value, expected to be less</param>
         /// <param name="arg2">The second value, expected to be greater</param>
-public static void Less(IComparable arg1, IComparable arg2)
+        public static void Less(IComparable arg1, IComparable arg2)
         {
             Assert.That(arg1, Is.LessThan(arg2) ,null, null);
         }
@@ -3033,7 +3033,7 @@ public static void Less(IComparable arg1, IComparable arg2)
         /// <param name="arg2">The second value, expected to be less</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-public static void GreaterOrEqual(int arg1, int arg2, string message, params object[] args)
+        public static void GreaterOrEqual(int arg1, int arg2, string message, params object[] args)
         {
             Assert.That(arg1, Is.GreaterThanOrEqualTo(arg2) ,message, args);
         }
@@ -3045,7 +3045,7 @@ public static void GreaterOrEqual(int arg1, int arg2, string message, params obj
         /// <param name="arg1">The first value, expected to be greater</param>
         /// <param name="arg2">The second value, expected to be less</param>
         /// <param name="message">The message to display in case of failure</param>
-public static void GreaterOrEqual(int arg1, int arg2, string message)
+        public static void GreaterOrEqual(int arg1, int arg2, string message)
         {
             Assert.That(arg1, Is.GreaterThanOrEqualTo(arg2) ,message, null);
         }
@@ -3056,7 +3056,7 @@ public static void GreaterOrEqual(int arg1, int arg2, string message)
         /// </summary>
         /// <param name="arg1">The first value, expected to be greater</param>
         /// <param name="arg2">The second value, expected to be less</param>
-public static void GreaterOrEqual(int arg1, int arg2)
+        public static void GreaterOrEqual(int arg1, int arg2)
         {
             Assert.That(arg1, Is.GreaterThanOrEqualTo(arg2) ,null, null);
         }
@@ -3071,7 +3071,7 @@ public static void GreaterOrEqual(int arg1, int arg2)
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
         [CLSCompliant(false)]
-public static void GreaterOrEqual(uint arg1, uint arg2, string message, params object[] args)
+        public static void GreaterOrEqual(uint arg1, uint arg2, string message, params object[] args)
         {
             Assert.That(arg1, Is.GreaterThanOrEqualTo(arg2) ,message, args);
         }
@@ -3084,7 +3084,7 @@ public static void GreaterOrEqual(uint arg1, uint arg2, string message, params o
         /// <param name="arg2">The second value, expected to be less</param>
         /// <param name="message">The message to display in case of failure</param>
         [CLSCompliant(false)]
-public static void GreaterOrEqual(uint arg1, uint arg2, string message)
+        public static void GreaterOrEqual(uint arg1, uint arg2, string message)
         {
             Assert.That(arg1, Is.GreaterThanOrEqualTo(arg2) ,message, null);
         }
@@ -3096,7 +3096,7 @@ public static void GreaterOrEqual(uint arg1, uint arg2, string message)
         /// <param name="arg1">The first value, expected to be greater</param>
         /// <param name="arg2">The second value, expected to be less</param>
         [CLSCompliant(false)]
-public static void GreaterOrEqual(uint arg1, uint arg2)
+        public static void GreaterOrEqual(uint arg1, uint arg2)
         {
             Assert.That(arg1, Is.GreaterThanOrEqualTo(arg2) ,null, null);
         }
@@ -3110,7 +3110,7 @@ public static void GreaterOrEqual(uint arg1, uint arg2)
         /// <param name="arg2">The second value, expected to be less</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-public static void GreaterOrEqual(long arg1, long arg2, string message, params object[] args)
+        public static void GreaterOrEqual(long arg1, long arg2, string message, params object[] args)
         {
             Assert.That(arg1, Is.GreaterThanOrEqualTo(arg2) ,message, args);
         }
@@ -3122,7 +3122,7 @@ public static void GreaterOrEqual(long arg1, long arg2, string message, params o
         /// <param name="arg1">The first value, expected to be greater</param>
         /// <param name="arg2">The second value, expected to be less</param>
         /// <param name="message">The message to display in case of failure</param>
-public static void GreaterOrEqual(long arg1, long arg2, string message)
+        public static void GreaterOrEqual(long arg1, long arg2, string message)
         {
             Assert.That(arg1, Is.GreaterThanOrEqualTo(arg2) ,message, null);
         }
@@ -3133,7 +3133,7 @@ public static void GreaterOrEqual(long arg1, long arg2, string message)
         /// </summary>
         /// <param name="arg1">The first value, expected to be greater</param>
         /// <param name="arg2">The second value, expected to be less</param>
-public static void GreaterOrEqual(long arg1, long arg2)
+        public static void GreaterOrEqual(long arg1, long arg2)
         {
             Assert.That(arg1, Is.GreaterThanOrEqualTo(arg2) ,null, null);
         }
@@ -3148,7 +3148,7 @@ public static void GreaterOrEqual(long arg1, long arg2)
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
         [CLSCompliant(false)]
-public static void GreaterOrEqual(ulong arg1, ulong arg2, string message, params object[] args)
+        public static void GreaterOrEqual(ulong arg1, ulong arg2, string message, params object[] args)
         {
             Assert.That(arg1, Is.GreaterThanOrEqualTo(arg2) ,message, args);
         }
@@ -3161,7 +3161,7 @@ public static void GreaterOrEqual(ulong arg1, ulong arg2, string message, params
         /// <param name="arg2">The second value, expected to be less</param>
         /// <param name="message">The message to display in case of failure</param>
         [CLSCompliant(false)]
-public static void GreaterOrEqual(ulong arg1, ulong arg2, string message)
+        public static void GreaterOrEqual(ulong arg1, ulong arg2, string message)
         {
             Assert.That(arg1, Is.GreaterThanOrEqualTo(arg2) ,message, null);
         }
@@ -3173,7 +3173,7 @@ public static void GreaterOrEqual(ulong arg1, ulong arg2, string message)
         /// <param name="arg1">The first value, expected to be greater</param>
         /// <param name="arg2">The second value, expected to be less</param>
         [CLSCompliant(false)]
-public static void GreaterOrEqual(ulong arg1, ulong arg2)
+        public static void GreaterOrEqual(ulong arg1, ulong arg2)
         {
             Assert.That(arg1, Is.GreaterThanOrEqualTo(arg2) ,null, null);
         }
@@ -3187,7 +3187,7 @@ public static void GreaterOrEqual(ulong arg1, ulong arg2)
         /// <param name="arg2">The second value, expected to be less</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-public static void GreaterOrEqual(decimal arg1, decimal arg2, string message, params object[] args)
+        public static void GreaterOrEqual(decimal arg1, decimal arg2, string message, params object[] args)
         {
             Assert.That(arg1, Is.GreaterThanOrEqualTo(arg2) ,message, args);
         }
@@ -3199,7 +3199,7 @@ public static void GreaterOrEqual(decimal arg1, decimal arg2, string message, pa
         /// <param name="arg1">The first value, expected to be greater</param>
         /// <param name="arg2">The second value, expected to be less</param>
         /// <param name="message">The message to display in case of failure</param>
-public static void GreaterOrEqual(decimal arg1, decimal arg2, string message)
+        public static void GreaterOrEqual(decimal arg1, decimal arg2, string message)
         {
             Assert.That(arg1, Is.GreaterThanOrEqualTo(arg2) ,message, null);
         }
@@ -3210,7 +3210,7 @@ public static void GreaterOrEqual(decimal arg1, decimal arg2, string message)
         /// </summary>
         /// <param name="arg1">The first value, expected to be greater</param>
         /// <param name="arg2">The second value, expected to be less</param>
-public static void GreaterOrEqual(decimal arg1, decimal arg2)
+        public static void GreaterOrEqual(decimal arg1, decimal arg2)
         {
             Assert.That(arg1, Is.GreaterThanOrEqualTo(arg2) ,null, null);
         }
@@ -3224,7 +3224,7 @@ public static void GreaterOrEqual(decimal arg1, decimal arg2)
         /// <param name="arg2">The second value, expected to be less</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-public static void GreaterOrEqual(double arg1, double arg2, string message, params object[] args)
+        public static void GreaterOrEqual(double arg1, double arg2, string message, params object[] args)
         {
             Assert.That(arg1, Is.GreaterThanOrEqualTo(arg2) ,message, args);
         }
@@ -3236,7 +3236,7 @@ public static void GreaterOrEqual(double arg1, double arg2, string message, para
         /// <param name="arg1">The first value, expected to be greater</param>
         /// <param name="arg2">The second value, expected to be less</param>
         /// <param name="message">The message to display in case of failure</param>
-public static void GreaterOrEqual(double arg1, double arg2, string message)
+        public static void GreaterOrEqual(double arg1, double arg2, string message)
         {
             Assert.That(arg1, Is.GreaterThanOrEqualTo(arg2) ,message, null);
         }
@@ -3247,7 +3247,7 @@ public static void GreaterOrEqual(double arg1, double arg2, string message)
         /// </summary>
         /// <param name="arg1">The first value, expected to be greater</param>
         /// <param name="arg2">The second value, expected to be less</param>
-public static void GreaterOrEqual(double arg1, double arg2)
+        public static void GreaterOrEqual(double arg1, double arg2)
         {
             Assert.That(arg1, Is.GreaterThanOrEqualTo(arg2) ,null, null);
         }
@@ -3261,7 +3261,7 @@ public static void GreaterOrEqual(double arg1, double arg2)
         /// <param name="arg2">The second value, expected to be less</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-public static void GreaterOrEqual(float arg1, float arg2, string message, params object[] args)
+        public static void GreaterOrEqual(float arg1, float arg2, string message, params object[] args)
         {
             Assert.That(arg1, Is.GreaterThanOrEqualTo(arg2) ,message, args);
         }
@@ -3273,7 +3273,7 @@ public static void GreaterOrEqual(float arg1, float arg2, string message, params
         /// <param name="arg1">The first value, expected to be greater</param>
         /// <param name="arg2">The second value, expected to be less</param>
         /// <param name="message">The message to display in case of failure</param>
-public static void GreaterOrEqual(float arg1, float arg2, string message)
+        public static void GreaterOrEqual(float arg1, float arg2, string message)
         {
             Assert.That(arg1, Is.GreaterThanOrEqualTo(arg2) ,message, null);
         }
@@ -3284,7 +3284,7 @@ public static void GreaterOrEqual(float arg1, float arg2, string message)
         /// </summary>
         /// <param name="arg1">The first value, expected to be greater</param>
         /// <param name="arg2">The second value, expected to be less</param>
-public static void GreaterOrEqual(float arg1, float arg2)
+        public static void GreaterOrEqual(float arg1, float arg2)
         {
             Assert.That(arg1, Is.GreaterThanOrEqualTo(arg2) ,null, null);
         }
@@ -3298,7 +3298,7 @@ public static void GreaterOrEqual(float arg1, float arg2)
         /// <param name="arg2">The second value, expected to be less</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-public static void GreaterOrEqual(IComparable arg1, IComparable arg2, string message, params object[] args)
+        public static void GreaterOrEqual(IComparable arg1, IComparable arg2, string message, params object[] args)
         {
             Assert.That(arg1, Is.GreaterThanOrEqualTo(arg2) ,message, args);
         }
@@ -3310,7 +3310,7 @@ public static void GreaterOrEqual(IComparable arg1, IComparable arg2, string mes
         /// <param name="arg1">The first value, expected to be greater</param>
         /// <param name="arg2">The second value, expected to be less</param>
         /// <param name="message">The message to display in case of failure</param>
-public static void GreaterOrEqual(IComparable arg1, IComparable arg2, string message)
+        public static void GreaterOrEqual(IComparable arg1, IComparable arg2, string message)
         {
             Assert.That(arg1, Is.GreaterThanOrEqualTo(arg2) ,message, null);
         }
@@ -3321,7 +3321,7 @@ public static void GreaterOrEqual(IComparable arg1, IComparable arg2, string mes
         /// </summary>
         /// <param name="arg1">The first value, expected to be greater</param>
         /// <param name="arg2">The second value, expected to be less</param>
-public static void GreaterOrEqual(IComparable arg1, IComparable arg2)
+        public static void GreaterOrEqual(IComparable arg1, IComparable arg2)
         {
             Assert.That(arg1, Is.GreaterThanOrEqualTo(arg2) ,null, null);
         }
@@ -3341,7 +3341,7 @@ public static void GreaterOrEqual(IComparable arg1, IComparable arg2)
         /// <param name="arg2">The second value, expected to be greater</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-public static void LessOrEqual(int arg1, int arg2, string message, params object[] args)
+        public static void LessOrEqual(int arg1, int arg2, string message, params object[] args)
         {
             Assert.That(arg1, Is.LessThanOrEqualTo(arg2) ,message, args);
         }
@@ -3353,7 +3353,7 @@ public static void LessOrEqual(int arg1, int arg2, string message, params object
         /// <param name="arg1">The first value, expected to be less</param>
         /// <param name="arg2">The second value, expected to be greater</param>
         /// <param name="message">The message to display in case of failure</param>
-public static void LessOrEqual(int arg1, int arg2, string message)
+        public static void LessOrEqual(int arg1, int arg2, string message)
         {
             Assert.That(arg1, Is.LessThanOrEqualTo(arg2) ,message, null);
         }
@@ -3364,7 +3364,7 @@ public static void LessOrEqual(int arg1, int arg2, string message)
         /// </summary>
         /// <param name="arg1">The first value, expected to be less</param>
         /// <param name="arg2">The second value, expected to be greater</param>
-public static void LessOrEqual(int arg1, int arg2)
+        public static void LessOrEqual(int arg1, int arg2)
         {
             Assert.That(arg1, Is.LessThanOrEqualTo(arg2) ,null, null);
         }
@@ -3379,7 +3379,7 @@ public static void LessOrEqual(int arg1, int arg2)
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
         [CLSCompliant(false)]
-public static void LessOrEqual(uint arg1, uint arg2, string message, params object[] args)
+        public static void LessOrEqual(uint arg1, uint arg2, string message, params object[] args)
         {
             Assert.That(arg1, Is.LessThanOrEqualTo(arg2) ,message, args);
         }
@@ -3392,7 +3392,7 @@ public static void LessOrEqual(uint arg1, uint arg2, string message, params obje
         /// <param name="arg2">The second value, expected to be greater</param>
         /// <param name="message">The message to display in case of failure</param>
         [CLSCompliant(false)]
-public static void LessOrEqual(uint arg1, uint arg2, string message)
+        public static void LessOrEqual(uint arg1, uint arg2, string message)
         {
             Assert.That(arg1, Is.LessThanOrEqualTo(arg2) ,message, null);
         }
@@ -3404,7 +3404,7 @@ public static void LessOrEqual(uint arg1, uint arg2, string message)
         /// <param name="arg1">The first value, expected to be less</param>
         /// <param name="arg2">The second value, expected to be greater</param>
         [CLSCompliant(false)]
-public static void LessOrEqual(uint arg1, uint arg2)
+        public static void LessOrEqual(uint arg1, uint arg2)
         {
             Assert.That(arg1, Is.LessThanOrEqualTo(arg2) ,null, null);
         }
@@ -3418,7 +3418,7 @@ public static void LessOrEqual(uint arg1, uint arg2)
         /// <param name="arg2">The second value, expected to be greater</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-public static void LessOrEqual(long arg1, long arg2, string message, params object[] args)
+        public static void LessOrEqual(long arg1, long arg2, string message, params object[] args)
         {
             Assert.That(arg1, Is.LessThanOrEqualTo(arg2) ,message, args);
         }
@@ -3430,7 +3430,7 @@ public static void LessOrEqual(long arg1, long arg2, string message, params obje
         /// <param name="arg1">The first value, expected to be less</param>
         /// <param name="arg2">The second value, expected to be greater</param>
         /// <param name="message">The message to display in case of failure</param>
-public static void LessOrEqual(long arg1, long arg2, string message)
+        public static void LessOrEqual(long arg1, long arg2, string message)
         {
             Assert.That(arg1, Is.LessThanOrEqualTo(arg2) ,message, null);
         }
@@ -3441,7 +3441,7 @@ public static void LessOrEqual(long arg1, long arg2, string message)
         /// </summary>
         /// <param name="arg1">The first value, expected to be less</param>
         /// <param name="arg2">The second value, expected to be greater</param>
-public static void LessOrEqual(long arg1, long arg2)
+        public static void LessOrEqual(long arg1, long arg2)
         {
             Assert.That(arg1, Is.LessThanOrEqualTo(arg2) ,null, null);
         }
@@ -3456,7 +3456,7 @@ public static void LessOrEqual(long arg1, long arg2)
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
         [CLSCompliant(false)]
-public static void LessOrEqual(ulong arg1, ulong arg2, string message, params object[] args)
+        public static void LessOrEqual(ulong arg1, ulong arg2, string message, params object[] args)
         {
             Assert.That(arg1, Is.LessThanOrEqualTo(arg2) ,message, args);
         }
@@ -3469,7 +3469,7 @@ public static void LessOrEqual(ulong arg1, ulong arg2, string message, params ob
         /// <param name="arg2">The second value, expected to be greater</param>
         /// <param name="message">The message to display in case of failure</param>
         [CLSCompliant(false)]
-public static void LessOrEqual(ulong arg1, ulong arg2, string message)
+        public static void LessOrEqual(ulong arg1, ulong arg2, string message)
         {
             Assert.That(arg1, Is.LessThanOrEqualTo(arg2) ,message, null);
         }
@@ -3481,7 +3481,7 @@ public static void LessOrEqual(ulong arg1, ulong arg2, string message)
         /// <param name="arg1">The first value, expected to be less</param>
         /// <param name="arg2">The second value, expected to be greater</param>
         [CLSCompliant(false)]
-public static void LessOrEqual(ulong arg1, ulong arg2)
+        public static void LessOrEqual(ulong arg1, ulong arg2)
         {
             Assert.That(arg1, Is.LessThanOrEqualTo(arg2) ,null, null);
         }
@@ -3495,7 +3495,7 @@ public static void LessOrEqual(ulong arg1, ulong arg2)
         /// <param name="arg2">The second value, expected to be greater</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-public static void LessOrEqual(decimal arg1, decimal arg2, string message, params object[] args)
+        public static void LessOrEqual(decimal arg1, decimal arg2, string message, params object[] args)
         {
             Assert.That(arg1, Is.LessThanOrEqualTo(arg2) ,message, args);
         }
@@ -3507,7 +3507,7 @@ public static void LessOrEqual(decimal arg1, decimal arg2, string message, param
         /// <param name="arg1">The first value, expected to be less</param>
         /// <param name="arg2">The second value, expected to be greater</param>
         /// <param name="message">The message to display in case of failure</param>
-public static void LessOrEqual(decimal arg1, decimal arg2, string message)
+        public static void LessOrEqual(decimal arg1, decimal arg2, string message)
         {
             Assert.That(arg1, Is.LessThanOrEqualTo(arg2) ,message, null);
         }
@@ -3518,7 +3518,7 @@ public static void LessOrEqual(decimal arg1, decimal arg2, string message)
         /// </summary>
         /// <param name="arg1">The first value, expected to be less</param>
         /// <param name="arg2">The second value, expected to be greater</param>
-public static void LessOrEqual(decimal arg1, decimal arg2)
+        public static void LessOrEqual(decimal arg1, decimal arg2)
         {
             Assert.That(arg1, Is.LessThanOrEqualTo(arg2) ,null, null);
         }
@@ -3532,7 +3532,7 @@ public static void LessOrEqual(decimal arg1, decimal arg2)
         /// <param name="arg2">The second value, expected to be greater</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-public static void LessOrEqual(double arg1, double arg2, string message, params object[] args)
+        public static void LessOrEqual(double arg1, double arg2, string message, params object[] args)
         {
             Assert.That(arg1, Is.LessThanOrEqualTo(arg2) ,message, args);
         }
@@ -3544,7 +3544,7 @@ public static void LessOrEqual(double arg1, double arg2, string message, params 
         /// <param name="arg1">The first value, expected to be less</param>
         /// <param name="arg2">The second value, expected to be greater</param>
         /// <param name="message">The message to display in case of failure</param>
-public static void LessOrEqual(double arg1, double arg2, string message)
+        public static void LessOrEqual(double arg1, double arg2, string message)
         {
             Assert.That(arg1, Is.LessThanOrEqualTo(arg2) ,message, null);
         }
@@ -3555,7 +3555,7 @@ public static void LessOrEqual(double arg1, double arg2, string message)
         /// </summary>
         /// <param name="arg1">The first value, expected to be less</param>
         /// <param name="arg2">The second value, expected to be greater</param>
-public static void LessOrEqual(double arg1, double arg2)
+        public static void LessOrEqual(double arg1, double arg2)
         {
             Assert.That(arg1, Is.LessThanOrEqualTo(arg2) ,null, null);
         }
@@ -3569,7 +3569,7 @@ public static void LessOrEqual(double arg1, double arg2)
         /// <param name="arg2">The second value, expected to be greater</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-public static void LessOrEqual(float arg1, float arg2, string message, params object[] args)
+        public static void LessOrEqual(float arg1, float arg2, string message, params object[] args)
         {
             Assert.That(arg1, Is.LessThanOrEqualTo(arg2) ,message, args);
         }
@@ -3581,7 +3581,7 @@ public static void LessOrEqual(float arg1, float arg2, string message, params ob
         /// <param name="arg1">The first value, expected to be less</param>
         /// <param name="arg2">The second value, expected to be greater</param>
         /// <param name="message">The message to display in case of failure</param>
-public static void LessOrEqual(float arg1, float arg2, string message)
+        public static void LessOrEqual(float arg1, float arg2, string message)
         {
             Assert.That(arg1, Is.LessThanOrEqualTo(arg2) ,message, null);
         }
@@ -3592,7 +3592,7 @@ public static void LessOrEqual(float arg1, float arg2, string message)
         /// </summary>
         /// <param name="arg1">The first value, expected to be less</param>
         /// <param name="arg2">The second value, expected to be greater</param>
-public static void LessOrEqual(float arg1, float arg2)
+        public static void LessOrEqual(float arg1, float arg2)
         {
             Assert.That(arg1, Is.LessThanOrEqualTo(arg2) ,null, null);
         }
@@ -3606,7 +3606,7 @@ public static void LessOrEqual(float arg1, float arg2)
         /// <param name="arg2">The second value, expected to be greater</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-public static void LessOrEqual(IComparable arg1, IComparable arg2, string message, params object[] args)
+        public static void LessOrEqual(IComparable arg1, IComparable arg2, string message, params object[] args)
         {
             Assert.That(arg1, Is.LessThanOrEqualTo(arg2) ,message, args);
         }
@@ -3618,7 +3618,7 @@ public static void LessOrEqual(IComparable arg1, IComparable arg2, string messag
         /// <param name="arg1">The first value, expected to be less</param>
         /// <param name="arg2">The second value, expected to be greater</param>
         /// <param name="message">The message to display in case of failure</param>
-public static void LessOrEqual(IComparable arg1, IComparable arg2, string message)
+        public static void LessOrEqual(IComparable arg1, IComparable arg2, string message)
         {
             Assert.That(arg1, Is.LessThanOrEqualTo(arg2) ,message, null);
         }
@@ -3629,7 +3629,7 @@ public static void LessOrEqual(IComparable arg1, IComparable arg2, string messag
         /// </summary>
         /// <param name="arg1">The first value, expected to be less</param>
         /// <param name="arg2">The second value, expected to be greater</param>
-public static void LessOrEqual(IComparable arg1, IComparable arg2)
+        public static void LessOrEqual(IComparable arg1, IComparable arg2)
         {
             Assert.That(arg1, Is.LessThanOrEqualTo(arg2) ,null, null);
         }
@@ -3647,7 +3647,7 @@ public static void LessOrEqual(IComparable arg1, IComparable arg2)
         /// <param name="actual">The list to be examined</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-public static void Contains(object expected, ICollection actual, string message, params object[] args)
+        public static void Contains(object expected, ICollection actual, string message, params object[] args)
         {
             Assert.That(actual, new CollectionContainsConstraint(expected) ,message, args);
         }
@@ -3657,7 +3657,7 @@ public static void Contains(object expected, ICollection actual, string message,
         /// <param name="expected">The expected object</param>
         /// <param name="actual">The list to be examined</param>
         /// <param name="message">The message to display in case of failure</param>
-public static void Contains(object expected, ICollection actual, string message)
+        public static void Contains(object expected, ICollection actual, string message)
         {
             Assert.That(actual, new CollectionContainsConstraint(expected) ,message, null);
         }
@@ -3666,7 +3666,7 @@ public static void Contains(object expected, ICollection actual, string message)
         /// </summary>
         /// <param name="expected">The expected object</param>
         /// <param name="actual">The list to be examined</param>
-public static void Contains(object expected, ICollection actual)
+        public static void Contains(object expected, ICollection actual)
         {
             Assert.That(actual, new CollectionContainsConstraint(expected) ,null, null);
         }

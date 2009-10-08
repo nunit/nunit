@@ -15,7 +15,7 @@
       <sources basedir=".">
 <!--        <include name="../CommonAssemblyInfo.cs" /> -->
         <include name="AssemblyInfo.cs"/>
-        <include name="../framework/Shared/Framework/ITestCaseData.cs"/>
+        <include name="Framework/**/*.cs"/>
         <include name="Core/**/*.cs"/>
       </sources>
     </csc>
