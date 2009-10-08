@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project name="NUnitFramework" default="build" basedir=".">
+<project name="NUnitInterfaces" default="build" basedir=".">
 
   <target name="build">
 
@@ -9,9 +9,9 @@
         debug="${build.debug}" 
         define="${build.defines}"
         keyfile="../../nunit.snk">
-<!--      <nowarn>
+      <nowarn>
         <warning number="1699" if="${runtime.version=='2.0'}"/>
-      </nowarn>-->
+      </nowarn>
       <sources basedir=".">
 <!--        <include name="../CommonAssemblyInfo.cs" /> -->
         <include name="AssemblyInfo.cs"/>

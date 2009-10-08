@@ -9,7 +9,9 @@
         <include name="TestText2.txt"/>
   </patternset>
 
-  <target name="nunit">
+  <target name="build" depends="build-nunit,build-nunitlite"/>
+
+  <target name="build-nunit">
     <csc target="library" 
         output="${current.build.dir}/nunit.framework.tests.dll"
         debug="${build.debug}" 
@@ -35,7 +37,7 @@
     </csc>
   </target>
 
-  <target name="nunitlite">
+  <target name="build-nunitlite">
     <csc target="exe" 
         output="${current.build.dir}/nunitlite.tests.exe"
         debug="${build.debug}" 

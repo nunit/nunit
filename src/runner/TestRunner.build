@@ -7,11 +7,7 @@
         output="${current.build.dir}/TestRunner.exe"
         debug="${build.debug}" 
         define="${build.defines}">
-<!--      <nowarn>
-        <warning number="1699" if="${runtime.version=='2.0'}"/>
-      </nowarn>-->
       <sources basedir=".">
-<!--        <include name="../CommonAssemblyInfo.cs" /> -->
         <include name="*.cs"/>
       </sources>
       <references basedir="${current.build.dir}">
