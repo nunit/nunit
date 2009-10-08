@@ -63,7 +63,7 @@ namespace NUnit.Framework.Constraints
         /// Returns a ConstraintExpression that negates any
         /// following constraint.
         /// </summary>
-public ConstraintExpression Not
+        public ConstraintExpression Not
         {
             get { return this.Append(new NotOperator()); }
         }
@@ -72,7 +72,7 @@ public ConstraintExpression Not
         /// Returns a ConstraintExpression that negates any
         /// following constraint.
         /// </summary>
-public ConstraintExpression No
+        public ConstraintExpression No
         {
             get { return this.Append(new NotOperator()); }
         }
@@ -86,7 +86,7 @@ public ConstraintExpression No
         /// the following constraint to all members of a collection,
         /// succeeding if all of them succeed.
         /// </summary>
-public ConstraintExpression All
+        public ConstraintExpression All
         {
             get { return this.Append(new AllOperator()); }
         }
@@ -100,7 +100,7 @@ public ConstraintExpression All
         /// the following constraint to all members of a collection,
         /// succeeding if at least one of them succeeds.
         /// </summary>
-public ConstraintExpression Some
+        public ConstraintExpression Some
         {
             get { return this.Append(new SomeOperator()); }
         }
@@ -114,7 +114,7 @@ public ConstraintExpression Some
         /// the following constraint to all members of a collection,
         /// succeeding if all of them fail.
         /// </summary>
-public ConstraintExpression None
+        public ConstraintExpression None
         {
             get { return this.Append(new NoneOperator()); }
         }
@@ -128,7 +128,7 @@ public ConstraintExpression None
         /// test for the existence of the named property on the object
         /// being tested or apply any following constraint to that property.
         /// </summary>
-public ResolvableConstraintExpression Property(string name)
+        public ResolvableConstraintExpression Property(string name)
         {
             return this.Append(new PropOperator(name));
         }
@@ -141,7 +141,7 @@ public ResolvableConstraintExpression Property(string name)
         /// Returns a new ConstraintExpression, which will apply the following
         /// constraint to the Length property of the object being tested.
         /// </summary>
-public ResolvableConstraintExpression Length
+        public ResolvableConstraintExpression Length
         {
             get { return Property("Length"); }
         }
@@ -154,7 +154,7 @@ public ResolvableConstraintExpression Length
         /// Returns a new ConstraintExpression, which will apply the following
         /// constraint to the Count property of the object being tested.
         /// </summary>
-public ResolvableConstraintExpression Count
+        public ResolvableConstraintExpression Count
         {
             get { return Property("Count"); }
         }
@@ -167,7 +167,7 @@ public ResolvableConstraintExpression Count
         /// Returns a new ConstraintExpression, which will apply the following
         /// constraint to the Message property of the object being tested.
         /// </summary>
-public ResolvableConstraintExpression Message
+        public ResolvableConstraintExpression Message
         {
             get { return Property("Message"); }
         }
@@ -181,7 +181,7 @@ public ResolvableConstraintExpression Message
         /// Returns a new ConstraintExpression, which will apply the following
         /// constraint to the InnerException property of the object being tested.
         /// </summary>
-public ResolvableConstraintExpression InnerException
+        public ResolvableConstraintExpression InnerException
         {
             get { return Property("InnerException"); }
         }
@@ -195,7 +195,7 @@ public ResolvableConstraintExpression InnerException
         /// Returns a new AttributeConstraint checking for the
         /// presence of a particular attribute on an object.
         /// </summary>
-public ResolvableConstraintExpression Attribute(Type expectedType)
+        public ResolvableConstraintExpression Attribute(Type expectedType)
         {
             return this.Append(new AttributeOperator(expectedType));
         }
@@ -205,7 +205,7 @@ public ResolvableConstraintExpression Attribute(Type expectedType)
         /// Returns a new AttributeConstraint checking for the
         /// presence of a particular attribute on an object.
         /// </summary>
-public ResolvableConstraintExpression Attribute<T>()
+        public ResolvableConstraintExpression Attribute<T>()
         {
             return Attribute(typeof(T));
         }
@@ -218,7 +218,7 @@ public ResolvableConstraintExpression Attribute<T>()
         /// <summary>
         /// With is currently a NOP - reserved for future use.
         /// </summary>
-public ConstraintExpression With
+        public ConstraintExpression With
         {
             get { return this.Append(new WithOperator()); }
         }
@@ -232,7 +232,7 @@ public ConstraintExpression With
         /// Returns the constraint provided as an argument - used to allow custom
         /// custom constraints to easily participate in the syntax.
         /// </summary>
-public Constraint Matches(Constraint constraint)
+        public Constraint Matches(Constraint constraint)
         {
             return this.Append(constraint);
         }
@@ -242,7 +242,7 @@ public Constraint Matches(Constraint constraint)
         /// Returns the constraint provided as an argument - used to allow custom
         /// custom constraints to easily participate in the syntax.
         /// </summary>
-public Constraint Matches<T>(Predicate<T> predicate)
+        public Constraint Matches<T>(Predicate<T> predicate)
         {
             return this.Append(new PredicateConstraint<T>(predicate));
         }
@@ -256,7 +256,7 @@ public Constraint Matches<T>(Predicate<T> predicate)
         /// <summary>
         /// Returns a constraint that tests for null
         /// </summary>
-public NullConstraint Null
+        public NullConstraint Null
         {
             get { return (NullConstraint)this.Append(new NullConstraint()); }
         }
@@ -268,7 +268,7 @@ public NullConstraint Null
         /// <summary>
         /// Returns a constraint that tests for True
         /// </summary>
-public TrueConstraint True
+        public TrueConstraint True
         {
             get { return (TrueConstraint)this.Append(new TrueConstraint()); }
         }
@@ -280,7 +280,7 @@ public TrueConstraint True
         /// <summary>
         /// Returns a constraint that tests for False
         /// </summary>
-public FalseConstraint False
+        public FalseConstraint False
         {
             get { return (FalseConstraint)this.Append(new FalseConstraint()); }
         }
@@ -292,7 +292,7 @@ public FalseConstraint False
         /// <summary>
         /// Returns a constraint that tests for NaN
         /// </summary>
-public NaNConstraint NaN
+        public NaNConstraint NaN
         {
             get { return (NaNConstraint)this.Append(new NaNConstraint()); }
         }
@@ -304,7 +304,7 @@ public NaNConstraint NaN
         /// <summary>
         /// Returns a constraint that tests for empty
         /// </summary>
-public EmptyConstraint Empty
+        public EmptyConstraint Empty
         {
             get { return (EmptyConstraint)this.Append(new EmptyConstraint()); }
         }
@@ -317,7 +317,7 @@ public EmptyConstraint Empty
         /// Returns a constraint that tests whether a collection 
         /// contains all unique items.
         /// </summary>
-public UniqueItemsConstraint Unique
+        public UniqueItemsConstraint Unique
         {
             get { return (UniqueItemsConstraint)this.Append(new UniqueItemsConstraint()); }
         }
@@ -330,7 +330,7 @@ public UniqueItemsConstraint Unique
         /// <summary>
         /// Returns a constraint that tests whether an object graph is serializable in binary format.
         /// </summary>
-public BinarySerializableConstraint BinarySerializable
+        public BinarySerializableConstraint BinarySerializable
         {
             get { return (BinarySerializableConstraint)this.Append(new BinarySerializableConstraint()); }
         }
@@ -344,7 +344,7 @@ public BinarySerializableConstraint BinarySerializable
         /// <summary>
         /// Returns a constraint that tests whether an object graph is serializable in xml format.
         /// </summary>
-public XmlSerializableConstraint XmlSerializable
+        public XmlSerializableConstraint XmlSerializable
         {
             get { return (XmlSerializableConstraint)this.Append(new XmlSerializableConstraint()); }
         }
@@ -357,7 +357,7 @@ public XmlSerializableConstraint XmlSerializable
         /// <summary>
         /// Returns a constraint that tests two items for equality
         /// </summary>
-public EqualConstraint EqualTo(object expected)
+        public EqualConstraint EqualTo(object expected)
         {
             return (EqualConstraint)this.Append(new EqualConstraint(expected));
         }
@@ -369,7 +369,7 @@ public EqualConstraint EqualTo(object expected)
         /// <summary>
         /// Returns a constraint that tests that two references are the same object
         /// </summary>
-public SameAsConstraint SameAs(object expected)
+        public SameAsConstraint SameAs(object expected)
         {
             return (SameAsConstraint)this.Append(new SameAsConstraint(expected));
         }
@@ -382,7 +382,7 @@ public SameAsConstraint SameAs(object expected)
         /// Returns a constraint that tests whether the
         /// actual value is greater than the suppled argument
         /// </summary>
-public GreaterThanConstraint GreaterThan(object expected)
+        public GreaterThanConstraint GreaterThan(object expected)
         {
             return (GreaterThanConstraint)this.Append(new GreaterThanConstraint(expected));
         }
@@ -395,7 +395,7 @@ public GreaterThanConstraint GreaterThan(object expected)
         /// Returns a constraint that tests whether the
         /// actual value is greater than or equal to the suppled argument
         /// </summary>
-public GreaterThanOrEqualConstraint GreaterThanOrEqualTo(object expected)
+        public GreaterThanOrEqualConstraint GreaterThanOrEqualTo(object expected)
         {
             return (GreaterThanOrEqualConstraint)this.Append(new GreaterThanOrEqualConstraint(expected));
         }
@@ -404,7 +404,7 @@ public GreaterThanOrEqualConstraint GreaterThanOrEqualTo(object expected)
         /// Returns a constraint that tests whether the
         /// actual value is greater than or equal to the suppled argument
         /// </summary>
-public GreaterThanOrEqualConstraint AtLeast(object expected)
+        public GreaterThanOrEqualConstraint AtLeast(object expected)
         {
             return (GreaterThanOrEqualConstraint)this.Append(new GreaterThanOrEqualConstraint(expected));
         }
@@ -417,7 +417,7 @@ public GreaterThanOrEqualConstraint AtLeast(object expected)
         /// Returns a constraint that tests whether the
         /// actual value is less than the suppled argument
         /// </summary>
-public LessThanConstraint LessThan(object expected)
+        public LessThanConstraint LessThan(object expected)
         {
             return (LessThanConstraint)this.Append(new LessThanConstraint(expected));
         }
@@ -430,7 +430,7 @@ public LessThanConstraint LessThan(object expected)
         /// Returns a constraint that tests whether the
         /// actual value is less than or equal to the suppled argument
         /// </summary>
-public LessThanOrEqualConstraint LessThanOrEqualTo(object expected)
+        public LessThanOrEqualConstraint LessThanOrEqualTo(object expected)
         {
             return (LessThanOrEqualConstraint)this.Append(new LessThanOrEqualConstraint(expected));
         }
@@ -439,7 +439,7 @@ public LessThanOrEqualConstraint LessThanOrEqualTo(object expected)
         /// Returns a constraint that tests whether the
         /// actual value is less than or equal to the suppled argument
         /// </summary>
-public LessThanOrEqualConstraint AtMost(object expected)
+        public LessThanOrEqualConstraint AtMost(object expected)
         {
             return (LessThanOrEqualConstraint)this.Append(new LessThanOrEqualConstraint(expected));
         }
@@ -452,7 +452,7 @@ public LessThanOrEqualConstraint AtMost(object expected)
         /// Returns a constraint that tests whether the actual
         /// value is of the exact type supplied as an argument.
         /// </summary>
-public ExactTypeConstraint TypeOf(Type expectedType)
+        public ExactTypeConstraint TypeOf(Type expectedType)
         {
             return (ExactTypeConstraint)this.Append(new ExactTypeConstraint(expectedType));
         }
@@ -462,7 +462,7 @@ public ExactTypeConstraint TypeOf(Type expectedType)
         /// Returns a constraint that tests whether the actual
         /// value is of the exact type supplied as an argument.
         /// </summary>
-public ExactTypeConstraint TypeOf<T>()
+        public ExactTypeConstraint TypeOf<T>()
         {
             return (ExactTypeConstraint)this.Append(new ExactTypeConstraint(typeof(T)));
         }
@@ -476,7 +476,7 @@ public ExactTypeConstraint TypeOf<T>()
         /// Returns a constraint that tests whether the actual value
         /// is of the type supplied as an argument or a derived type.
         /// </summary>
-public InstanceOfTypeConstraint InstanceOf(Type expectedType)
+        public InstanceOfTypeConstraint InstanceOf(Type expectedType)
         {
             return (InstanceOfTypeConstraint)this.Append(new InstanceOfTypeConstraint(expectedType));
         }
@@ -486,7 +486,7 @@ public InstanceOfTypeConstraint InstanceOf(Type expectedType)
         /// Returns a constraint that tests whether the actual value
         /// is of the type supplied as an argument or a derived type.
         /// </summary>
-public InstanceOfTypeConstraint InstanceOf<T>()
+        public InstanceOfTypeConstraint InstanceOf<T>()
         {
             return (InstanceOfTypeConstraint)this.Append(new InstanceOfTypeConstraint(typeof(T)));
         }
@@ -497,7 +497,7 @@ public InstanceOfTypeConstraint InstanceOf<T>()
         /// is of the type supplied as an argument or a derived type.
         /// </summary>
         [Obsolete("Use InstanceOf(expectedType)")]
-public InstanceOfTypeConstraint InstanceOfType(Type expectedType)
+        public InstanceOfTypeConstraint InstanceOfType(Type expectedType)
         {
             return (InstanceOfTypeConstraint)this.Append(new InstanceOfTypeConstraint(expectedType));
         }
@@ -508,7 +508,7 @@ public InstanceOfTypeConstraint InstanceOfType(Type expectedType)
         /// is of the type supplied as an argument or a derived type.
         /// </summary>
         [Obsolete("Use InstanceOf<T>()")]
-public InstanceOfTypeConstraint InstanceOfType<T>()
+        public InstanceOfTypeConstraint InstanceOfType<T>()
         {
             return (InstanceOfTypeConstraint)this.Append(new InstanceOfTypeConstraint(typeof(T)));
         }
@@ -522,7 +522,7 @@ public InstanceOfTypeConstraint InstanceOfType<T>()
         /// Returns a constraint that tests whether the actual value
         /// is assignable from the type supplied as an argument.
         /// </summary>
-public AssignableFromConstraint AssignableFrom(Type expectedType)
+        public AssignableFromConstraint AssignableFrom(Type expectedType)
         {
             return (AssignableFromConstraint)this.Append(new AssignableFromConstraint(expectedType));
         }
@@ -532,7 +532,7 @@ public AssignableFromConstraint AssignableFrom(Type expectedType)
         /// Returns a constraint that tests whether the actual value
         /// is assignable from the type supplied as an argument.
         /// </summary>
-public AssignableFromConstraint AssignableFrom<T>()
+        public AssignableFromConstraint AssignableFrom<T>()
         {
             return (AssignableFromConstraint)this.Append(new AssignableFromConstraint(typeof(T)));
         }
@@ -546,7 +546,7 @@ public AssignableFromConstraint AssignableFrom<T>()
         /// Returns a constraint that tests whether the actual value
         /// is assignable from the type supplied as an argument.
         /// </summary>
-public AssignableToConstraint AssignableTo(Type expectedType)
+        public AssignableToConstraint AssignableTo(Type expectedType)
         {
             return (AssignableToConstraint)this.Append(new AssignableToConstraint(expectedType));
         }
@@ -556,7 +556,7 @@ public AssignableToConstraint AssignableTo(Type expectedType)
         /// Returns a constraint that tests whether the actual value
         /// is assignable from the type supplied as an argument.
         /// </summary>
-public AssignableToConstraint AssignableTo<T>()
+        public AssignableToConstraint AssignableTo<T>()
         {
             return (AssignableToConstraint)this.Append(new AssignableToConstraint(typeof(T)));
         }
@@ -571,7 +571,7 @@ public AssignableToConstraint AssignableTo<T>()
         /// is a collection containing the same elements as the 
         /// collection supplied as an argument.
         /// </summary>
-public CollectionEquivalentConstraint EquivalentTo(IEnumerable expected)
+        public CollectionEquivalentConstraint EquivalentTo(IEnumerable expected)
         {
             return (CollectionEquivalentConstraint)this.Append(new CollectionEquivalentConstraint(expected));
         }
@@ -584,7 +584,7 @@ public CollectionEquivalentConstraint EquivalentTo(IEnumerable expected)
         /// Returns a constraint that tests whether the actual value
         /// is a subset of the collection supplied as an argument.
         /// </summary>
-public CollectionSubsetConstraint SubsetOf(IEnumerable expected)
+        public CollectionSubsetConstraint SubsetOf(IEnumerable expected)
         {
             return (CollectionSubsetConstraint)this.Append(new CollectionSubsetConstraint(expected));
         }
@@ -596,7 +596,7 @@ public CollectionSubsetConstraint SubsetOf(IEnumerable expected)
         /// <summary>
         /// Returns a constraint that tests whether a collection is ordered
         /// </summary>
-public CollectionOrderedConstraint Ordered
+        public CollectionOrderedConstraint Ordered
         {
             get { return (CollectionOrderedConstraint)this.Append(new CollectionOrderedConstraint()); }
         }
@@ -609,7 +609,7 @@ public CollectionOrderedConstraint Ordered
         /// Returns a new CollectionContainsConstraint checking for the
         /// presence of a particular object in the collection.
         /// </summary>
-public CollectionContainsConstraint Member(object expected)
+        public CollectionContainsConstraint Member(object expected)
         {
             return (CollectionContainsConstraint)this.Append(new CollectionContainsConstraint(expected));
         }
@@ -618,7 +618,7 @@ public CollectionContainsConstraint Member(object expected)
         /// Returns a new CollectionContainsConstraint checking for the
         /// presence of a particular object in the collection.
         /// </summary>
-public CollectionContainsConstraint Contains(object expected)
+        public CollectionContainsConstraint Contains(object expected)
         {
             return (CollectionContainsConstraint)this.Append(new CollectionContainsConstraint(expected));
         }
@@ -635,7 +635,7 @@ public CollectionContainsConstraint Contains(object expected)
         /// since any other type implies that we are looking for a 
         /// collection member.
         /// </summary>
-public ContainsConstraint Contains(string expected)
+        public ContainsConstraint Contains(string expected)
         {
             return (ContainsConstraint)this.Append(new ContainsConstraint(expected));
         }
@@ -648,7 +648,7 @@ public ContainsConstraint Contains(string expected)
         /// Returns a constraint that succeeds if the actual
         /// value contains the substring supplied as an argument.
         /// </summary>
-public SubstringConstraint StringContaining(string expected)
+        public SubstringConstraint StringContaining(string expected)
         {
             return (SubstringConstraint)this.Append(new SubstringConstraint(expected));
         }
@@ -657,7 +657,7 @@ public SubstringConstraint StringContaining(string expected)
         /// Returns a constraint that succeeds if the actual
         /// value contains the substring supplied as an argument.
         /// </summary>
-public SubstringConstraint ContainsSubstring(string expected)
+        public SubstringConstraint ContainsSubstring(string expected)
         {
             return (SubstringConstraint)this.Append(new SubstringConstraint(expected));
         }
@@ -670,7 +670,7 @@ public SubstringConstraint ContainsSubstring(string expected)
         /// Returns a constraint that succeeds if the actual
         /// value starts with the substring supplied as an argument.
         /// </summary>
-public StartsWithConstraint StartsWith(string expected)
+        public StartsWithConstraint StartsWith(string expected)
         {
             return (StartsWithConstraint)this.Append(new StartsWithConstraint(expected));
         }
@@ -679,7 +679,7 @@ public StartsWithConstraint StartsWith(string expected)
         /// Returns a constraint that succeeds if the actual
         /// value starts with the substring supplied as an argument.
         /// </summary>
-public StartsWithConstraint StringStarting(string expected)
+        public StartsWithConstraint StringStarting(string expected)
         {
             return (StartsWithConstraint)this.Append(new StartsWithConstraint(expected));
         }
@@ -692,7 +692,7 @@ public StartsWithConstraint StringStarting(string expected)
         /// Returns a constraint that succeeds if the actual
         /// value ends with the substring supplied as an argument.
         /// </summary>
-public EndsWithConstraint EndsWith(string expected)
+        public EndsWithConstraint EndsWith(string expected)
         {
             return (EndsWithConstraint)this.Append(new EndsWithConstraint(expected));
         }
@@ -701,7 +701,7 @@ public EndsWithConstraint EndsWith(string expected)
         /// Returns a constraint that succeeds if the actual
         /// value ends with the substring supplied as an argument.
         /// </summary>
-public EndsWithConstraint StringEnding(string expected)
+        public EndsWithConstraint StringEnding(string expected)
         {
             return (EndsWithConstraint)this.Append(new EndsWithConstraint(expected));
         }
@@ -715,7 +715,7 @@ public EndsWithConstraint StringEnding(string expected)
         /// Returns a constraint that succeeds if the actual
         /// value matches the regular expression supplied as an argument.
         /// </summary>
-public RegexConstraint Matches(string pattern)
+        public RegexConstraint Matches(string pattern)
         {
             return (RegexConstraint)this.Append(new RegexConstraint(pattern));
         }
@@ -724,7 +724,7 @@ public RegexConstraint Matches(string pattern)
         /// Returns a constraint that succeeds if the actual
         /// value matches the regular expression supplied as an argument.
         /// </summary>
-public RegexConstraint StringMatching(string pattern)
+        public RegexConstraint StringMatching(string pattern)
         {
             return (RegexConstraint)this.Append(new RegexConstraint(pattern));
         }
@@ -738,7 +738,7 @@ public RegexConstraint StringMatching(string pattern)
         /// Returns a constraint that tests whether the path provided 
         /// is the same as an expected path after canonicalization.
         /// </summary>
-public SamePathConstraint SamePath(string expected)
+        public SamePathConstraint SamePath(string expected)
         {
             return (SamePathConstraint)this.Append(new SamePathConstraint(expected));
         }
@@ -751,7 +751,7 @@ public SamePathConstraint SamePath(string expected)
         /// Returns a constraint that tests whether the path provided 
         /// is the same path or under an expected path after canonicalization.
         /// </summary>
-public SamePathOrUnderConstraint SamePathOrUnder(string expected)
+        public SamePathOrUnderConstraint SamePathOrUnder(string expected)
         {
             return (SamePathOrUnderConstraint)this.Append(new SamePathOrUnderConstraint(expected));
         }
@@ -764,7 +764,7 @@ public SamePathOrUnderConstraint SamePathOrUnder(string expected)
         /// Returns a constraint that tests whether the actual value falls 
         /// within a specified range.
         /// </summary>
-public RangeConstraint InRange(IComparable from, IComparable to)
+        public RangeConstraint InRange(IComparable from, IComparable to)
         {
             return (RangeConstraint)this.Append(new RangeConstraint(from, to));
         }

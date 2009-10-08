@@ -38,9 +38,6 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\..\src\framework\Shared\Framework\ITestCaseData.cs">
-      <Link>Core\ITestCaseData.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\src\interfaces\Core\Extensibility\Addin.cs">
       <Link>Core\Extensibility\Addin.cs</Link>
     </Compile>
@@ -160,6 +157,9 @@
     </Compile>
     <Compile Include="..\..\..\src\interfaces\AssemblyInfo.cs">
       <Link>AssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\interfaces\Framework\ITestCaseData.cs">
+      <Link>Framework\ITestCaseData.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup>
