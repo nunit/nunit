@@ -205,28 +205,28 @@
   <target name="build"
     description="Build everything, for current runtime and config">
 
-    <call target="nunit" unless="${runtime.platform=='netcf'}"/>
-    <call target="nunitlite"/>
+    <call target="build-nunit" unless="${runtime.platform=='netcf'}"/>
+    <call target="build-nunitlite"/>
 
   </target>
 
-  <target name="nunit" depends="gen-syntax, make-build-dir">
+  <target name="build-nunit" depends="gen-syntax, make-build-dir">
 
     <fail if="${runtime.platform=='netcf'}"
       message="The full NUnit framework may not be built for netcf"/>
 
     <nant target="build" buildfile="src/interfaces/nunit.interfaces.build"/>
-    <nant target="nunit" buildfile="src/framework/nunit.framework.build"/>
+    <nant target="build-nunit" buildfile="src/framework/nunit.framework.build"/>
     <nant target="build" buildfile="src/test-assembly/test-assembly.build"/>
-    <nant target="nunit" buildfile="src/tests/nunit.framework.tests.build"/>
+    <nant target="build-nunit" buildfile="src/tests/nunit.framework.tests.build"/>
     <nant target="build" buildfile="src/runner/TestRunner.build"/>
 
   </target>
 
-  <target name="nunitlite" depends="gen-syntax,make-build-dir">
+  <target name="build-nunitlite" depends="gen-syntax,make-build-dir">
 
-    <nant target="nunitlite" buildfile="src/framework/nunit.framework.build"/>
-    <nant target="nunitlite" buildfile="src/tests/nunit.framework.tests.build"/>
+    <nant target="build-nunitlite" buildfile="src/framework/nunit.framework.build"/>
+    <nant target="build-nunitlite" buildfile="src/tests/nunit.framework.tests.build"/>
 
   </target>
 
