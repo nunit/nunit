@@ -6,3 +6,5 @@
 * The ITestFilter interface is eliminated - use TestListener abstract class instead
 
 * OSPlatform and ParameterSet have been moved to nunit.framework.
+
+* ITestCaseData interface and MessageMatch enum moved to nunit.interfaces.

@@ -282,6 +282,9 @@
     <Compile Include="..\..\..\src\interfaces\Framework\ITestCaseData.cs">
       <Link>Interfaces\Framework\ITestCaseData.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\interfaces\Framework\MessageMatch.cs">
+      <Link>Interfaces\Framework\MessageMatch.cs</Link>
+    </Compile>
     <None Include="..\..\..\src\framework\Templates\Assert.template.cs">
       <Link>Templates\Assert.template.cs</Link>
     </None>
