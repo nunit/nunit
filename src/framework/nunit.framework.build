@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <project name="NUnitFramework" default="build" basedir=".">
 
-  <target name="build" depends="nunit,nunitlite"/>
+  <target name="build" depends="build-nunit,build-nunitlite"/>
 
   <target name="build-nunit">
 
