@@ -23,6 +23,9 @@
 
 using System;
 using System.Collections;
+#if CLR_2_0
+using System.Collections.Generic;
+#endif
 using System.Reflection;
 using System.Text;
 using NUnit.Framework;
@@ -50,20 +53,24 @@ namespace NUnit.Core.Builders
         /// <returns></returns>
         public IEnumerable GetTestCasesFor(MethodInfo method)
         {
+#if CLR_2_0
+            List<ParameterSet> list = new List<ParameterSet>();
+#else
 			ArrayList list = new ArrayList();
+#endif
 
-            Attribute[] attrs = Reflect.GetAttributes(method, typeof(TestCaseAttribute), false);
+            TestCaseAttribute[] attrs = (TestCaseAttribute[])Reflect.GetAttributes(method, typeof(TestCaseAttribute), false);
 
             ParameterInfo[] parameters = method.GetParameters();
             int argsNeeded = parameters.Length;
 
-            foreach (Attribute attr in attrs)
+            foreach (TestCaseAttribute attr in attrs)
             {
                 ParameterSet parms;
 
                 try
                 {
-                    parms = ParameterSet.FromDataSource(attr);
+                    parms = new ParameterSet(attr);
 
                     //if (method.GetParameters().Length == 1 && method.GetParameters()[0].ParameterType == typeof(object[]))
                     //    parms.Arguments = new object[]{parms.Arguments};
@@ -109,8 +116,7 @@ namespace NUnit.Core.Builders
                 if (arg == null)
                     continue;
 
-                if (arg.GetType().FullName == "NUnit.Framework.SpecialValue" &&
-                    arg.ToString() == "Null" )
+                if (arg is SpecialValue && (SpecialValue)arg == SpecialValue.Null)
                 {
                     arglist[i] = null;
                     continue;

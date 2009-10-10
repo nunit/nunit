@@ -132,8 +132,8 @@ namespace NUnit.Core.Builders
 
                 if (parms == null)
                 {
-                    if (source.GetType().GetInterface("NUnit.Framework.ITestCaseData") != null)
-                        parms = ParameterSet.FromDataSource(source);
+                    if (source is ITestCaseData)
+                        parms = new ParameterSet((ITestCaseData)source);
                     else
                     {
                         parms = new ParameterSet();
@@ -173,6 +173,7 @@ namespace NUnit.Core.Builders
         /// or as one of a set of test cases under a ParameterizedTestMethodSuite.
         /// </summary>
         /// <param name="method">The MethodInfo from which to construct the TestMethod</param>
+        /// <param name="parentSuite">The suite or fixture to which the new test will be added</param>
         /// <param name="parms">The ParameterSet to be used, or null</param>
         /// <returns></returns>
         public static NUnitTestMethod BuildSingleTestMethod(MethodInfo method, Test parentSuite, ParameterSet parms)
