@@ -59,9 +59,6 @@
     <Compile Include="..\..\..\src\framework\Env.cs">
       <Link>Env.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\NUnitLite\Framework\Contains.cs">
-      <Link>NUnitLite\Framework\Contains.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\src\framework\NUnitLite\ITest.cs">
       <Link>NUnitLite\ITest.cs</Link>
     </Compile>
@@ -235,6 +232,9 @@
     </Compile>
     <Compile Include="..\..\..\src\framework\Shared\Framework\Constraints\XmlSerializableConstraint.cs">
       <Link>Shared\Framework\Constraints\XmlSerializableConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Shared\Framework\Contains.cs">
+      <Link>Shared\Framework\Contains.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Shared\Framework\DescriptionAttribute.cs">
       <Link>Shared\Framework\DescriptionAttribute.cs</Link>
