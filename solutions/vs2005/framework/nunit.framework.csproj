@@ -270,6 +270,9 @@
     <Compile Include="..\..\..\src\framework\Shared\Framework\Constraints\XmlSerializableConstraint.cs">
       <Link>Shared\Framework\Constraints\XmlSerializableConstraint.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\framework\Shared\Framework\Contains.cs">
+      <Link>Shared\Framework\Contains.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\framework\Shared\Framework\DescriptionAttribute.cs">
       <Link>Shared\Framework\DescriptionAttribute.cs</Link>
     </Compile>
