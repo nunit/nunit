@@ -78,7 +78,7 @@ namespace NUnit.Core.Extensibility
         /// </summary>
         public string NotRunReason
         {
-            get { return (string) Properties[IGNOREREASON]; }
+            get { return (string)Properties[IGNOREREASON]; }
         }
 
         /// <summary>
@@ -122,8 +122,8 @@ namespace NUnit.Core.Extensibility
         /// </summary>
         public string ExpectedMessage
         {
-        	get { return expectedMessage; }
-        	set { expectedMessage = value; }
+            get { return expectedMessage; }
+            set { expectedMessage = value; }
         }
 
         /// <summary>
@@ -150,8 +150,8 @@ namespace NUnit.Core.Extensibility
         /// </summary>
         public string Description
         {
-            get { return (string) Properties[DESCRIPTION]; }
-            set 
+            get { return (string)Properties[DESCRIPTION]; }
+            set
             {
                 if (value != null)
                     Properties[DESCRIPTION] = value;
@@ -257,76 +257,6 @@ namespace NUnit.Core.Extensibility
             this.TestName = data.TestName;
             this.Ignored = data.Ignored;
             this.IgnoreReason = data.IgnoreReason;
-        }
-
-        #endregion
-
-        #region Static Methods
-        /// <summary>
-        /// Constructs a ParameterSet from another object, accessing properties 
-        /// by reflection. The object must expose at least an Arguments property
-        /// in order for the test to be runnable.
-        /// </summary>
-        /// <param name="source"></param>
-        public static ParameterSet FromDataSource(object source)
-        {
-            ParameterSet parms = new ParameterSet();
-
-            parms.Arguments = GetParm(source, PropertyNames.Arguments) as object[];
-            parms.ExpectedException = GetParm(source, PropertyNames.ExpectedException) as Type;
-            if (parms.ExpectedException != null)
-                parms.ExpectedExceptionName = parms.ExpectedException.FullName;
-            else
-                parms.ExpectedExceptionName = GetParm(source, PropertyNames.ExpectedExceptionName) as string;
-            parms.ExpectedMessage = GetParm(source, PropertyNames.ExpectedMessage) as string;
-            parms.MatchType = (MessageMatch)GetParm(source, PropertyNames.MatchType);
-            //object matchEnum = GetParm(source, PropertyNames.MatchType);
-            //if ( matchEnum != null )
-            //    parms.MatchType = matchEnum.ToString();
-            parms.Result = GetParm(source, PropertyNames.Result);
-            parms.Description = GetParm(source, PropertyNames.Description) as string;
-            parms.TestName = GetParm(source, PropertyNames.TestName) as string;
-
-            object objIgnore = GetParm(source, PropertyNames.Ignored);
-            if ( objIgnore != null )
-                parms.Ignored = (bool)objIgnore;
-            parms.IgnoreReason = GetParm(source, PropertyNames.IgnoreReason) as string;
-
-            // Some sources may also implement Properties and/or Categories
-            bool gotCategories = false;
-            IDictionary props = GetParm(source, PropertyNames.Properties) as IDictionary;
-            if ( props != null )
-                foreach (string key in props.Keys)
-                {
-                    parms.Properties.Add(key, props[key]);
-                    if (key == CATEGORIES) gotCategories = true;
-                }
-
-            // Some sources implement Categories. They may have been
-            // provided as properties or they may be separate.
-            if (!gotCategories)
-            {
-                IList categories = GetParm(source, PropertyNames.Categories) as IList;
-                if (categories != null && props[CATEGORIES] == null)
-                    foreach (string cat in categories)
-                        categories.Add(cat);
-            }
-
-            return parms;
-        }
-
-        private static object GetParm(object source, string name)
-        {
-            Type type = source.GetType();
-            PropertyInfo prop = type.GetProperty(name, BindingFlags.Instance | BindingFlags.Public | BindingFlags.GetProperty);
-            if (prop != null)
-                return prop.GetValue(source, null);
-
-            FieldInfo field = type.GetField(name, BindingFlags.Instance | BindingFlags.Public | BindingFlags.GetField);
-            if (field != null)
-                return field.GetValue(source);
-
-            return null;
         }
         #endregion
     }

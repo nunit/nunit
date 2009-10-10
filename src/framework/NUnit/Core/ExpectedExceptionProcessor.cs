@@ -24,6 +24,7 @@
 using System;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using NUnit.Framework;
 
 namespace NUnit.Core
 {
@@ -58,7 +59,7 @@ namespace NUnit.Core
         /// <summary>
         /// A string indicating how to match the expected message
         /// </summary>
-        internal string matchType;
+        internal MessageMatch matchType;
 
         /// <summary>
         /// A string containing any user message specified for the expected exception
@@ -72,17 +73,17 @@ namespace NUnit.Core
             this.testMethod = testMethod;
         }
 
-        public ExpectedExceptionProcessor(TestMethod testMethod, object source)
+        public ExpectedExceptionProcessor(TestMethod testMethod, ExpectedExceptionAttribute source)
         {
             this.testMethod = testMethod;
 
-            this.expectedExceptionType = GetExceptionType(source);
-            this.expectedExceptionName = GetExceptionName(source);
-            this.expectedMessage = GetExpectedMessage(source);
-            this.matchType = GetMatchType(source);
-            this.userMessage = GetUserMessage(source);
+            this.expectedExceptionType = source.ExpectedException;
+            this.expectedExceptionName = source.ExpectedExceptionName;
+            this.expectedMessage = source.ExpectedMessage;
+            this.matchType = source.MatchType;
+            this.userMessage = source.UserMessage;
 
-            string handlerName = GetHandler(source);
+            string handlerName = source.Handler;
             if (handlerName == null)
                 this.exceptionHandler = GetDefaultExceptionHandler(testMethod.FixtureType);
             else
@@ -97,6 +98,18 @@ namespace NUnit.Core
                         "The specified exception handler {0} was not found", handlerName);
                 }
             }
+        }
+
+        public ExpectedExceptionProcessor(TestMethod testMethod, Extensibility.ParameterSet source)
+        {
+            this.testMethod = testMethod;
+
+            this.expectedExceptionType = source.ExpectedException;
+            this.expectedExceptionName = source.ExpectedExceptionName;
+            this.expectedMessage = source.ExpectedMessage;
+            this.matchType = source.MatchType;
+
+            this.exceptionHandler = GetDefaultExceptionHandler(testMethod.FixtureType);
         }
         #endregion
 
@@ -163,14 +176,14 @@ namespace NUnit.Core
 
             switch (matchType)
             {
-                case "Exact":
+                case MessageMatch.Exact:
                 default:
                     return expectedMessage.Equals(exception.Message);
-                case "Contains":
+                case MessageMatch.Contains:
                     return exception.Message.IndexOf(expectedMessage) >= 0;
-                case "Regex":
+                case MessageMatch.Regex:
                     return Regex.IsMatch(exception.Message, expectedMessage);
-                case "StartsWith":
+                case MessageMatch.StartsWith:
                     return exception.Message.StartsWith(expectedMessage);
             }
         }
@@ -195,16 +208,16 @@ namespace NUnit.Core
             switch (matchType)
             {
                 default:
-                case "Exact":
+                case MessageMatch.Exact:
                     expectedText = "Expected: ";
                     break;
-                case "Contains":
+                case MessageMatch.Contains:
                     expectedText = "Expected message containing: ";
                     break;
-                case "Regex":
+                case MessageMatch.Regex:
                     expectedText = "Expected message matching: ";
                     break;
-                case "StartsWith":
+                case MessageMatch.StartsWith:
                     expectedText = "Expected message starting: ";
                     break;
             }
@@ -236,7 +249,7 @@ namespace NUnit.Core
 
         private static MethodInfo GetDefaultExceptionHandler(Type fixtureType)
         {
-            return Reflect.HasInterface(fixtureType, typeof(NUnit.Framework.IExpectException))
+            return Reflect.HasInterface(fixtureType, typeof(IExpectException))
                 ? GetExceptionHandler(fixtureType, "HandleException")
                 : null;
         }
@@ -247,37 +260,6 @@ namespace NUnit.Core
                 fixtureType,
                 name,
                 new string[] { "System.Exception" });
-        }
-
-        private static string GetHandler(object source)
-        {
-            return Reflect.GetPropertyValue(source, "Handler") as string;
-        }
-
-        private static Type GetExceptionType(object source)
-        {
-            return Reflect.GetPropertyValue(source, PropertyNames.ExpectedException) as Type;
-        }
-
-        private static string GetExceptionName(object source)
-        {
-            return Reflect.GetPropertyValue(source, PropertyNames.ExpectedExceptionName) as string;
-        }
-
-        private static string GetExpectedMessage(object source)
-        {
-            return Reflect.GetPropertyValue(source, PropertyNames.ExpectedMessage) as string;
-        }
-
-        private static string GetMatchType(object source)
-        {
-            object matchEnum = Reflect.GetPropertyValue(source, "MatchType");
-            return matchEnum != null ? matchEnum.ToString() : null;
-        }
-
-        private static string GetUserMessage(object source)
-        {
-            return Reflect.GetPropertyValue(source, "UserMessage") as string;
         }
         #endregion
     }

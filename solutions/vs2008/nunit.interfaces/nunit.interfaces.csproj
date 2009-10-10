@@ -112,9 +112,6 @@
     <Compile Include="..\..\..\src\interfaces\Core\ITestListener.cs">
       <Link>Core\ITestListener.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\interfaces\Core\PropertyNames.cs">
-      <Link>Core\PropertyNames.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\src\interfaces\Core\ResultState.cs">
       <Link>Core\ResultState.cs</Link>
     </Compile>
