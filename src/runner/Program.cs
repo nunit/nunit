@@ -50,6 +50,8 @@ namespace NUnit.TestRunner
                 Console.Write(options.HelpText);
             else if (options.Error)
                 Console.WriteLine(options.ErrorMessage);
+            else if (options.Parameters.Length == 0)
+                Console.WriteLine("No Test assembly was specified");
             else
             {
                 try
@@ -67,7 +69,9 @@ namespace NUnit.TestRunner
                         TextWriter savedOut = Console.Out;
                         TextWriter savedError = Console.Error;
 
-                        TestResult result = runner.Run(NullListener.NULL, TestFilter.Empty);
+                        TestEventListener listener = new TestEventListener(options, Console.Out);
+
+                        TestResult result = runner.Run(listener, TestFilter.Empty);
 
                         Console.SetOut(savedOut);
                         Console.SetError(savedError);
@@ -75,25 +79,25 @@ namespace NUnit.TestRunner
                         ReportResults(result);
                     }
 
-                        //Console.WriteLine("{0} references:", name);
-                        //Assembly assembly = Assembly.Load(name);
-                        //Assembly frameworkAssembly = null;
-                        //foreach (AssemblyName aname in assembly.GetReferencedAssemblies())
-                        //    if (aname.Name == "nunit.framework")
-                        //    {
-                        //        frameworkAssembly = Assembly.Load(aname);
-                        //        break;
-                        //    }
+                    //Console.WriteLine("{0} references:", name);
+                    //Assembly assembly = Assembly.Load(name);
+                    //Assembly frameworkAssembly = null;
+                    //foreach (AssemblyName aname in assembly.GetReferencedAssemblies())
+                    //    if (aname.Name == "nunit.framework")
+                    //    {
+                    //        frameworkAssembly = Assembly.Load(aname);
+                    //        break;
+                    //    }
 
-                        //if( frameworkAssembly != null)
-                        //    Console.WriteLine("    " + frameworkAssembly.FullName);
+                    //if( frameworkAssembly != null)
+                    //    Console.WriteLine("    " + frameworkAssembly.FullName);
 
-                        //Type type = frameworkAssembly.GetType("NUnit.Framework.Assert");
-                        //if (type != null)
-                        //    Console.WriteLine("Found " + type.FullName);
-                        
-                        //assemblies.Add(Assembly.Load(name));
-                        //TestLoader.Load(Assembly.Load(name));
+                    //Type type = frameworkAssembly.GetType("NUnit.Framework.Assert");
+                    //if (type != null)
+                    //    Console.WriteLine("Found " + type.FullName);
+
+                    //assemblies.Add(Assembly.Load(name));
+                    //TestLoader.Load(Assembly.Load(name));
                 }
                 catch (FileNotFoundException ex)
                 {
@@ -111,6 +115,8 @@ namespace NUnit.TestRunner
                         Console.ReadLine();
                     }
                 }
+
+                Console.WriteLine("Done!");
             }
         }
 
@@ -161,7 +167,7 @@ namespace NUnit.TestRunner
                 "     Not run: {0}, Invalid: {1}, Ignored: {2}, Skipped: {3}",
                 summary.TestsNotRun, summary.NotRunnable, summary.Ignored, summary.Skipped);
             Console.WriteLine(
-                "Elapsed time: {0} seconds", summary.Time);
+                "        Time: {0} seconds", summary.Time);
             Console.WriteLine();
         }
 

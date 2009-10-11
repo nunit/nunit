@@ -38,6 +38,7 @@ namespace NUnit.TestRunner
         private bool wait = false;
         private bool nologo = false;
         private bool help = false;
+        private bool labels = false;
 
         private ArrayList tests = new ArrayList();
 
@@ -68,6 +69,14 @@ namespace NUnit.TestRunner
         public bool Help
         {
             get { return help; }
+        }
+
+        /// <summary>
+        /// Gets the value of the labels option
+        /// </summary>
+        public bool Labels
+        {
+            get { return labels; }
         }
 
         /// <summary>
@@ -150,6 +159,9 @@ namespace NUnit.TestRunner
                     break;
                 case "test":
                     tests.Add(val);
+                    break;
+                case "labels":
+                    labels = true;
                     break;
                 default:
                     error = true;
