@@ -29,6 +29,7 @@ using NUnit.TestUtilities;
 
 namespace NUnit.Core.Tests
 {
+    //[Platform(Exclude = "Mono", Reason = "Runner hangs at end when these are run")]
     public class ThreadingTests
     {
         Thread parentThread;
@@ -62,6 +63,7 @@ namespace NUnit.Core.Tests
         }
 
         [Test]
+        [Platform(Exclude = "Mono", Reason = "Runner hangs at end when this is run")]
         public void TestWithInfiniteLoopTimesOut()
         {
             TestResult result = TestBuilder.RunTestCase(
@@ -129,6 +131,7 @@ namespace NUnit.Core.Tests
         }
 
         [Test]
+        [Platform(Exclude = "Mono", Reason = "Runner hangs at end when this is run")]
         public void TimeoutCanBeSetOnTestFixture()
         {
             TestResult result = TestBuilder.RunTestFixture(typeof(ThreadingFixtureWithTimeout));
