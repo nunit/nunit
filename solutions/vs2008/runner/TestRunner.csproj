@@ -70,6 +70,9 @@
     <Compile Include="..\..\..\src\runner\StackTraceFilter.cs">
       <Link>StackTraceFilter.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\runner\TestEventListener.cs">
+      <Link>TestEventListener.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
