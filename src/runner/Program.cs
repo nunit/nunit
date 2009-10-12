@@ -78,26 +78,6 @@ namespace NUnit.TestRunner
 
                         ReportResults(result);
                     }
-
-                    //Console.WriteLine("{0} references:", name);
-                    //Assembly assembly = Assembly.Load(name);
-                    //Assembly frameworkAssembly = null;
-                    //foreach (AssemblyName aname in assembly.GetReferencedAssemblies())
-                    //    if (aname.Name == "nunit.framework")
-                    //    {
-                    //        frameworkAssembly = Assembly.Load(aname);
-                    //        break;
-                    //    }
-
-                    //if( frameworkAssembly != null)
-                    //    Console.WriteLine("    " + frameworkAssembly.FullName);
-
-                    //Type type = frameworkAssembly.GetType("NUnit.Framework.Assert");
-                    //if (type != null)
-                    //    Console.WriteLine("Found " + type.FullName);
-
-                    //assemblies.Add(Assembly.Load(name));
-                    //TestLoader.Load(Assembly.Load(name));
                 }
                 catch (FileNotFoundException ex)
                 {
@@ -115,8 +95,6 @@ namespace NUnit.TestRunner
                         Console.ReadLine();
                     }
                 }
-
-                Console.WriteLine("Done!");
             }
         }
 
