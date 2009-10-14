@@ -163,6 +163,7 @@
     <Compile Include="..\..\..\src\interfaces\Framework\MessageMatch.cs">
       <Link>Framework\MessageMatch.cs</Link>
     </Compile>
+    <Compile Include="Framework\NUnitAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\..\..\src\interfaces\Interfaces.txt">
