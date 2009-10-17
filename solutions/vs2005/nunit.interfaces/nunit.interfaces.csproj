@@ -157,12 +157,6 @@
     <Compile Include="..\..\..\src\interfaces\Core\TestRunner.cs">
       <Link>Core\TestRunner.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\interfaces\Framework\ITestCaseData.cs">
-      <Link>Framework\ITestCaseData.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\interfaces\Framework\MessageMatch.cs">
-      <Link>Framework\MessageMatch.cs</Link>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="nunit.snk" />
