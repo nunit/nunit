@@ -519,8 +519,14 @@
     <Compile Include="..\..\..\src\framework\Shared\Framework\Is.cs">
       <Link>Shared\Framework\Is.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\framework\Shared\Framework\ITestCaseData.cs">
+      <Link>Shared\ITestCaseData.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\framework\Shared\Framework\ListMapper.cs">
       <Link>Shared\Framework\ListMapper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Shared\Framework\MessageMatch.cs">
+      <Link>Shared\MessageMatch.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Shared\Framework\PropertyAttribute.cs">
       <Link>Shared\Framework\PropertyAttribute.cs</Link>
