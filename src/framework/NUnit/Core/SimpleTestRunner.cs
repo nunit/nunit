@@ -90,7 +90,7 @@ namespace NUnit.Core
 			get { return runnerID; }
 		}
 
-		public IList AssemblyInfo
+		public TestAssemblyInfo[] AssemblyInfo
 		{
 			get { return builder.AssemblyInfo; }
 		}
