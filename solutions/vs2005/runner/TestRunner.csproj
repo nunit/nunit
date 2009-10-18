@@ -49,8 +49,14 @@
     <Compile Include="..\..\..\src\runner\CommandLineOptions.cs">
       <Link>CommandLineOptions.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\runner\ConsoleRunner.cs">
+      <Link>ConsoleRunner.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\runner\Program.cs">
       <Link>Program.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\runner\ResultReporter.cs">
+      <Link>ResultReporter.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\runner\ResultSummary.cs">
       <Link>ResultSummary.cs</Link>
