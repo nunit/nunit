@@ -69,6 +69,12 @@
     <Compile Include="..\..\..\src\runner\TestEventListener.cs">
       <Link>TestEventListener.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\runner\ConsoleRunner.cs">
+      <Link>ConsoleRunner.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\runner\ResultReporter.cs">
+      <Link>ResultReporter.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
