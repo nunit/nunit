@@ -25,7 +25,7 @@ using System;
 using System.Text;
 using System.Collections;
 
-namespace NUnit.TestRunner
+namespace NUnit.AdhocTestRunner
 {
     /// <summary>
     /// The CommandLineOptions class parses and holds the values of

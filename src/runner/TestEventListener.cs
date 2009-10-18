@@ -25,7 +25,7 @@ using System;
 using System.IO;
 using NUnit.Core;
 
-namespace NUnit.TestRunner
+namespace NUnit.AdhocTestRunner
 {
     class TestEventListener : ITestListener
     {

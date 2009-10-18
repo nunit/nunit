@@ -26,10 +26,10 @@ using System.Reflection;
 using System.IO;
 using NUnit.Core;
 
-namespace NUnit.TestRunner
+namespace NUnit.AdhocTestRunner
 {
     /// <summary>
-    /// NUnit.TestRunner is an adoc runner used in testing the framework.
+    /// AdhocTestRunner is an adoc runner used in testing the framework.
     /// It is based partly on the NUnitLite embedded runner but is not 
     /// is only available in the source code for use by developers and
     /// is not distributed as part of NUnit.
@@ -56,7 +56,7 @@ namespace NUnit.TestRunner
             {
                 try
                 {
-                    NUnit.Core.TestRunner runner = new RemoteTestRunner();
+                    TestRunner runner = (TestRunner)Activator.CreateInstance("nunit.framework", "NUnit.Core.RemoteTestRunner").Unwrap();
 
                     TestPackage package = new TestPackage("Top Level Suite", options.Parameters);
                     package.Settings["AutoNamespaceSuites"] = false;
