@@ -7,4 +7,4 @@
 
 * OSPlatform and ParameterSet have been moved to nunit.framework.
 
-* ITestCaseData interface and MessageMatch enum moved to nunit.interfaces.
+* AssemblyInfo now returns an array

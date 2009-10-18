@@ -21,19 +21,15 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using NUnit.Core.Builders;
+using System.Collections;
+
 namespace NUnit.Core
 {
-	using NUnit.Core.Builders;
-	using System.Collections;
-	using System.Reflection;
-
 	/// <summary>
-	/// This is the master suite builder for NUnit. It builds a test suite from
-	/// one or more assemblies using a list of internal and external suite builders 
-	/// to create fixtures from the qualified types in each assembly. It implements
-	/// the ISuiteBuilder interface itself, allowing it to be used by other classes
-	/// for queries and suite construction.
-	/// </summary>D:\Dev\NUnit\nunit20\src\NUnitFramework\core\TestBuilderAttribute.cs
+	/// TestSuiteBuilder builds a test suite from one or more assemblies 
+    /// specified in a TestPackage.
+	/// </summary>
 	public class TestSuiteBuilder
 	{
 		#region Instance Variables
@@ -43,31 +39,24 @@ namespace NUnit.Core
 		#endregion
 
 		#region Properties
-		public IList Assemblies
-		{
-			get 
-			{
-				ArrayList assemblies = new ArrayList();
-				foreach( TestAssemblyBuilder builder in builders )
-					assemblies.Add( builder.Assembly );
-				return assemblies; 
-			}
-		}
-
-		public IList AssemblyInfo
+        /// <summary>
+        /// Gets information about all loaded assemblies
+        /// </summary>
+		public TestAssemblyInfo[] AssemblyInfo
 		{
 			get
 			{
-				ArrayList info = new ArrayList();
+                TestAssemblyInfo[] info = new TestAssemblyInfo[builders.Count];
+                int index = 0;
 				foreach( TestAssemblyBuilder builder in this.builders )
-					info.Add( builder.AssemblyInfo );
+					info[index++] = builder.AssemblyInfo;
 
 				return info;
 			}
 		}
 		#endregion
 
-		#region Build Methods
+		#region Build Method
 		/// <summary>
 		/// Build a suite based on a TestPackage
 		/// </summary>
@@ -79,8 +68,6 @@ namespace NUnit.Core
 			bool mergeAssemblies = package.GetSetting( "MergeAssemblies", false );
             TestContext.TestCaseTimeout = package.GetSetting("DefaultTimeout", 0);
 
-			if ( package.IsSingleAssembly )
-				return BuildSingleAssembly( package );
 			string targetAssemblyName = null;
 			if( package.TestName != null && package.Assemblies.Contains( package.TestName ) )
 			{
@@ -100,7 +87,7 @@ namespace NUnit.Core
 					TestAssemblyBuilder builder = new TestAssemblyBuilder();
 					builders.Add( builder );
 
-					Test testAssembly =  builder.Build( assemblyName, package.TestName, autoNamespaceSuites && !mergeAssemblies );
+					TestSuite testAssembly =  builder.Build( assemblyName, package.TestName, autoNamespaceSuites && !mergeAssemblies );
 
 					if ( testAssembly != null )
 					{
@@ -127,22 +114,10 @@ namespace NUnit.Core
             if (rootSuite.Tests.Count == 0)
 				return null;
 
+            if (package.IsSingleAssembly)
+                return (TestSuite)rootSuite.Tests[0];
+
 			return rootSuite;
-		}
-
-		private TestSuite BuildSingleAssembly( TestPackage package )
-		{
-			TestAssemblyBuilder builder = new TestAssemblyBuilder();
-			builders.Clear();
-			builders.Add( builder );
-
-			TestSuite suite = (TestSuite)builder.Build( 
-				package.FullName, 
-				package.TestName, package.GetSetting( "AutoNamespaceSuites", true ) );
-
-            ProviderCache.Clear();
-
-            return suite;
 		}
 		#endregion
 	}

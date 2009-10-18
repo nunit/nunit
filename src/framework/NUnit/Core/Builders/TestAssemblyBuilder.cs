@@ -30,7 +30,8 @@ using NUnit.Core.Extensibility;
 namespace NUnit.Core.Builders
 {
 	/// <summary>
-	/// Class that builds a TestSuite from an assembly
+	/// TestAssemblyBuilder loads a single assembly and builds a TestSuite
+    /// containing test fixtures present in the assembly.
 	/// </summary>
 	public class TestAssemblyBuilder
 	{
@@ -53,11 +54,9 @@ namespace NUnit.Core.Builders
 		#endregion
 
 		#region Properties
-		public Assembly Assembly
-		{
-			get { return assembly; }
-		}
-
+        /// <summary>
+        /// Gets information about the loaded assembly
+        /// </summary>
 		public TestAssemblyInfo AssemblyInfo
 		{
 			get 
@@ -87,12 +86,19 @@ namespace NUnit.Core.Builders
 
 		#endregion
 
-		#region Build Methods
-		public Test Build( string assemblyName, string testName, bool autoSuites )
+		#region Build Method
+        /// <summary>
+        /// Loads the specified assembly and returns a TestSuite containing
+        /// test fixtures found in the assembly. If fixtureName is null, then
+        /// all fixtures are loaded. Otherwise only the specified fixture or
+        /// namespace is loaded. 
+        /// </summary>
+        /// <param name="assemblyName">Name of the assembly to load</param>
+        /// <param name="fixtureName">Name of the fixture or of a namespace to load</param>
+        /// <param name="autoSuites">If true, automatic namespace suites are created</param>
+        /// <returns></returns>
+		public TestSuite Build( string assemblyName, string fixtureName, bool autoSuites )
 		{
-			if ( testName == null || testName == string.Empty )
-				return Build( assemblyName, autoSuites );
-
             // Change currentDirectory in case assembly references unmanaged dlls
             // and so that any addins are able to access the directory easily.
             using (new DirectorySwapper(Path.GetDirectoryName(assemblyName)))
@@ -102,87 +108,20 @@ namespace NUnit.Core.Builders
 
                 // If provided test name is actually the name of
                 // a type, we handle it specially
-                Type testType = assembly.GetType(testName);
-                if (testType != null)
-                    return Build(assemblyName, testType, autoSuites);
+                if (fixtureName != null && fixtureName != string.Empty)
+                {
+                    Type testType = assembly.GetType(fixtureName);
+                    if (testType != null)
+                        return BuildFromFixtureType(assemblyName, testType, autoSuites);
+                }
 
-                // Assume that testName is a namespace and get all fixtures in it
-                IList fixtures = GetFixtures(assembly, testName);
+                IList fixtures = GetFixtures(assembly, fixtureName);
                 if (fixtures.Count > 0)
                     return BuildTestAssembly(assemblyName, fixtures, autoSuites);
 
                 return null;
             }
 		}
-
-		public TestSuite Build( string assemblyName, bool autoSuites )
-		{
-            // Change currentDirectory in case assembly references unmanaged dlls
-            // and so that any addins are able to access the directory easily.
-            using (new DirectorySwapper(Path.GetDirectoryName(assemblyName)))
-            {
-                this.assembly = Load(assemblyName);
-                if (this.assembly == null) return null;
-
-                IList fixtures = GetFixtures(assembly, null);
-                return BuildTestAssembly(assemblyName, fixtures, autoSuites);
-            }
-		}
-
-		private Test Build( string assemblyName, Type testType, bool autoSuites )
-		{
-			// TODO: This is the only situation in which we currently
-			// recognize and load legacy suites. We need to determine 
-			// whether to allow them in more places.
-			if ( legacySuiteBuilder.CanBuildFrom( testType ) )
-				return legacySuiteBuilder.BuildFrom( testType );
-			else if ( TestFixtureBuilder.CanBuildFrom( testType ) )
-				return BuildTestAssembly( assemblyName,
-					new Test[] { TestFixtureBuilder.BuildFrom( testType ) }, autoSuites );
-			return null;
-		}
-
-		private TestSuite BuildTestAssembly( string assemblyName, IList fixtures, bool autoSuites )
-		{
-			TestSuite testAssembly = new TestSuite( assemblyName );
-
-			if ( autoSuites )
-			{
-				NamespaceTreeBuilder treeBuilder = 
-					new NamespaceTreeBuilder( testAssembly );
-				treeBuilder.Add( fixtures );
-                testAssembly = treeBuilder.RootSuite;
-			}
-			else 
-			foreach( TestSuite fixture in fixtures )
-			{
-				if ( fixture is SetUpFixture )
-				{
-					fixture.RunState = RunState.NotRunnable;
-					fixture.IgnoreReason = "SetUpFixture cannot be used when loading tests as a flat list of fixtures";
-				}
-
-				testAssembly.Add( fixture );
-			}
-
-			if ( fixtures.Count == 0 )
-			{
-				testAssembly.RunState = RunState.NotRunnable;
-				testAssembly.IgnoreReason = "Has no TestFixtures";
-			}
-			
-            NUnitFramework.ApplyCommonAttributes( assembly, testAssembly );
-
-            testAssembly.Properties["_PID"] = System.Diagnostics.Process.GetCurrentProcess().Id;
-            testAssembly.Properties["_APPDOMAIN"] = AppDomain.CurrentDomain.FriendlyName;
-
-
-			// TODO: Make this an option? Add Option to sort assemblies as well?
-			testAssembly.Sort();
-
-			return testAssembly;
-		}
-
 		#endregion
 
 		#region Helper Methods
@@ -215,7 +154,7 @@ namespace NUnit.Core.Builders
 			IList testTypes = GetCandidateFixtureTypes( assembly, ns );
 
             log.Debug("Found {0} classes to examine", testTypes.Count);
-#if CLR_2_0
+#if LOAD_TIMING
             System.Diagnostics.Stopwatch timer = new System.Diagnostics.Stopwatch();
             timer.Start();
 #endif
@@ -226,7 +165,7 @@ namespace NUnit.Core.Builders
 					fixtures.Add( TestFixtureBuilder.BuildFrom( testType ) );
 			}
 
-#if CLR_2_0
+#if LOAD_TIMING
             log.Debug("Found {0} fixtures in {1} seconds", fixtures.Count, timer.Elapsed);
 #else
             log.Debug("Found {0} fixtures", fixtures.Count);
@@ -251,6 +190,60 @@ namespace NUnit.Core.Builders
 
 			return result;
 		}
-		#endregion
-	}
+
+        private TestSuite BuildFromFixtureType(string assemblyName, Type testType, bool autoSuites)
+        {
+            // TODO: This is the only situation in which we currently
+            // recognize and load legacy suites. We need to determine 
+            // whether to allow them in more places.
+            if (legacySuiteBuilder.CanBuildFrom(testType))
+                return (TestSuite)legacySuiteBuilder.BuildFrom(testType);
+            else if (TestFixtureBuilder.CanBuildFrom(testType))
+                return BuildTestAssembly(assemblyName,
+                    new Test[] { TestFixtureBuilder.BuildFrom(testType) }, autoSuites);
+            return null;
+        }
+
+        private TestSuite BuildTestAssembly(string assemblyName, IList fixtures, bool autoSuites)
+        {
+            TestSuite testAssembly = new TestSuite(assemblyName);
+
+            if (autoSuites)
+            {
+                NamespaceTreeBuilder treeBuilder =
+                    new NamespaceTreeBuilder(testAssembly);
+                treeBuilder.Add(fixtures);
+                testAssembly = treeBuilder.RootSuite;
+            }
+            else
+                foreach (TestSuite fixture in fixtures)
+                {
+                    if (fixture is SetUpFixture)
+                    {
+                        fixture.RunState = RunState.NotRunnable;
+                        fixture.IgnoreReason = "SetUpFixture cannot be used when loading tests as a flat list of fixtures";
+                    }
+
+                    testAssembly.Add(fixture);
+                }
+
+            if (fixtures.Count == 0)
+            {
+                testAssembly.RunState = RunState.NotRunnable;
+                testAssembly.IgnoreReason = "Has no TestFixtures";
+            }
+
+            NUnitFramework.ApplyCommonAttributes(assembly, testAssembly);
+
+            testAssembly.Properties["_PID"] = System.Diagnostics.Process.GetCurrentProcess().Id;
+            testAssembly.Properties["_APPDOMAIN"] = AppDomain.CurrentDomain.FriendlyName;
+
+
+            // TODO: Make this an option? Add Option to sort assemblies as well?
+            testAssembly.Sort();
+
+            return testAssembly;
+        }
+        #endregion
+    }
 }

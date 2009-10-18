@@ -80,7 +80,7 @@ namespace NUnit.Core
 		/// <summary>
 		/// Returns information about loaded assemblies
 		/// </summary>
-		IList AssemblyInfo
+		TestAssemblyInfo[] AssemblyInfo
 		{
 			get;
 		}
