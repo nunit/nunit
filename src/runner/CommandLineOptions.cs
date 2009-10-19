@@ -33,12 +33,11 @@ namespace NUnit.AdhocTestRunner
     /// </summary>
     public class CommandLineOptions
     {
-        private string optionChars;
-
         private bool wait = false;
         private bool nologo = false;
         private bool help = false;
         private bool labels = false;
+        private bool useappdomain = false;
 
         private ArrayList tests = new ArrayList();
 
@@ -80,6 +79,15 @@ namespace NUnit.AdhocTestRunner
         }
 
         /// <summary>
+        /// Gets value indicating whether a separate AppDomain 
+        /// should be used to run tests.
+        /// </summary>
+        public bool UseAppDomain
+        {
+            get { return useappdomain; }
+        }
+
+        /// <summary>
         /// Gets a list of all tests specified on the command line
         /// </summary>
         public string[] Tests
@@ -96,23 +104,6 @@ namespace NUnit.AdhocTestRunner
         }
 
         /// <summary>
-        /// Construct a CommandLineOptions object using default option chars
-        /// </summary>
-        public CommandLineOptions()
-        {
-            this.optionChars = System.IO.Path.DirectorySeparatorChar == '/' ? "-" : "/-";
-        }
-
-        /// <summary>
-        /// Construct a CommandLineOptions object using specified option chars
-        /// </summary>
-        /// <param name="optionChars"></param>
-        public CommandLineOptions(string optionChars)
-        {
-            this.optionChars = optionChars;
-        }
-
-        /// <summary>
         /// Parse command arguments and initialize option settings accordingly
         /// </summary>
         /// <param name="args">The argument list</param>
@@ -120,7 +111,7 @@ namespace NUnit.AdhocTestRunner
         {
             foreach (string arg in args)
             {
-                if (optionChars.IndexOf(arg[0]) >= 0)
+                if (arg[0] == '-')
                     ProcessOption(arg);
                 else
                     ProcessParameter(arg);
@@ -148,20 +139,28 @@ namespace NUnit.AdhocTestRunner
 
             switch (opt.Substring(1))
             {
+                case "w":
                 case "wait":
                     wait = true;
                     break;
                 case "nologo":
                     nologo = true;
                     break;
+                case "h":
                 case "help":
                     help = true;
                     break;
+                case "t":
                 case "test":
                     tests.Add(val);
                     break;
+                case "l":
                 case "labels":
                     labels = true;
+                    break;
+                case "a":
+                case "appdomain":
+                    useappdomain = true;
                     break;
                 default:
                     error = true;
@@ -219,13 +218,13 @@ namespace NUnit.AdhocTestRunner
                 sb.Append("or on the probing path. If no assemblies are provided, tests in the" + NL);
                 sb.Append("executing assembly itself are run." + NL + NL);
                 sb.Append("Options:" + NL);
-                sb.Append("  -test:testname  Provides the name of a test to run. This option may be" + NL);
-                sb.Append("                  repeated. If no test names are given, all tests are run." + NL + NL);
-                sb.Append("  -help           Displays this help" + NL + NL);
-                sb.Append("  -nologo         Suppresses display of the initial message" + NL + NL);
-                sb.Append("  -wait           Waits for a key press before exiting" + NL + NL);
-                if (System.IO.Path.DirectorySeparatorChar != '/')
-                    sb.Append("On Windows, options may be prefixed by a '/' character if desired" + NL + NL);
+                sb.Append("  -t[est]:testname  Provides the name of a test to run. This option may be" + NL);
+                sb.Append("                    repeated. If no test names are given, all tests are run." + NL + NL);
+                sb.Append("  -h[elp]           Displays this help" + NL + NL);
+                sb.Append("  -nologo           Suppresses display of the initial message" + NL + NL);
+                sb.Append("  -w[ait]           Waits for a key press before exiting" + NL + NL);
+                sb.Append("  -l[abels]         Display name of each test as it is run" + NL + NL);
+                sb.Append("  -a[ppdomain]      Run tests in a separate AppDomain" + NL + NL);
                 sb.Append("Options that take values may use an equal sign or a colon" + NL);
                 sb.Append("to separate the option from its value." + NL + NL);
 

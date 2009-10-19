@@ -220,7 +220,7 @@
     <nant target="build-nunit" buildfile="src/framework/nunit.framework.build"/>
     <nant target="build" buildfile="src/test-assembly/test-assembly.build"/>
     <nant target="build-nunit" buildfile="src/tests/nunit.framework.tests.build"/>
-    <nant target="build" buildfile="src/runner/TestRunner.build"/>
+    <nant target="build" buildfile="src/runner/test-runner.build"/>
 
   </target>
 
@@ -294,7 +294,7 @@ NUNIT_DIR environment variable.
 
     <exec basedir="${current.build.dir}"
           workingdir="${current.build.dir}"
-          program="TestRunner.exe"
+          program="test-runner.exe"
           managed="strict"
           commandline="${nunit.commandline}" />
 
@@ -345,7 +345,7 @@ file or set the NCOVER_DIR environment variable.
     </fail>
 
     <property name="ncover.commandline"
-      value="TestRunner.exe ${nunit.commandline} //a nunit.framework //x TestCoverage-${nant.settings.currentframework}.xml"/>
+      value="test-runner.exe ${nunit.commandline} //a nunit.framework //x TestCoverage-${nant.settings.currentframework}.xml"/>
 
     <exec basedir="${ncover.dir}"
           workingdir="${current.build.dir}" 
@@ -364,7 +364,7 @@ file or set the PARTCOVER_DIR environment variable.
     </fail>
 
     <property name="partcover.commandline"
-      value='--target TestRunner.exe --target-args "${nunit.commandline}" --include [nunit.framework]* --output TestCoverage-${nant.settings.currentframework}.xml'/>
+      value='--target test-runner.exe --target-args "${nunit.commandline}" --include [nunit.framework]* --output TestCoverage-${nant.settings.currentframework}.xml'/>
 
     <exec basedir="${partcover.dir}"
           workingdir="${current.build.dir}" 

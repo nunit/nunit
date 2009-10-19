@@ -27,7 +27,7 @@ using NUnit.Core;
 
 namespace NUnit.AdhocTestRunner
 {
-    class TestEventListener : ITestListener
+    class TestEventListener : MarshalByRefObject, ITestListener
     {
         CommandLineOptions options;
         TextWriter outWriter;
