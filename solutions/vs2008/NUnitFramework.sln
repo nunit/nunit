@@ -13,7 +13,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.interfaces", "nunit.i
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "test-assembly", "test-assembly\test-assembly.csproj", "{15B64946-4989-4873-915C-3E181772FA03}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestRunner", "runner\TestRunner.csproj", "{126DBBB4-1731-4E0D-8937-4F2FAADCA0EF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "test-runner", "runner\test-runner.csproj", "{126DBBB4-1731-4E0D-8937-4F2FAADCA0EF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -49,7 +49,11 @@ namespace NUnit.AdhocTestRunner
             if (options.Help)
                 Console.Write(options.HelpText);
             else if (options.Error)
+            {
                 Console.WriteLine(options.ErrorMessage);
+                Console.WriteLine("Try test-runner --help for more info");
+                Console.WriteLine();
+            }
             else if (options.Parameters.Length == 0)
                 Console.WriteLine("No Test assembly was specified");
             else
@@ -69,12 +73,6 @@ namespace NUnit.AdhocTestRunner
 
             Console.WriteLine(String.Format("{0} version {1}", productAttr.Product, version.ToString(3)));
             Console.WriteLine(copyrightAttr.Copyright);
-            Console.WriteLine();
-
-            string clrPlatform = Type.GetType("Mono.Runtime", false) == null ? ".NET" : "Mono";
-            Console.WriteLine("Runtime Environment -");
-            Console.WriteLine("    OS Version: {0}", Environment.OSVersion);
-            Console.WriteLine("  {0} Version: {1}", clrPlatform, Environment.Version);
             Console.WriteLine();
         }
     }

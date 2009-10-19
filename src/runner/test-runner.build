@@ -4,7 +4,7 @@
   <target name="build">
 
     <csc target="exe"
-        output="${current.build.dir}/TestRunner.exe"
+        output="${current.build.dir}/test-runner.exe"
         debug="${build.debug}" 
         define="${build.defines}">
       <sources basedir=".">
@@ -12,7 +12,6 @@
       </sources>
       <references basedir="${current.build.dir}">
         <include name="nunit.interfaces.dll"/>
-        <include name="nunit.framework.dll"/>
       </references>
     </csc>
 
@@ -21,7 +20,7 @@
   <target name="package">
     <copy todir="${package.src.dir}/framework">
       <fileset>
-        <include name="nunit.framework.build"/>
+        <include name="test-runner.build"/>
         <include name="*.cs"/>
       </fileset>
     </copy>

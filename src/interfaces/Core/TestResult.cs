@@ -86,7 +86,7 @@ namespace NUnit.Core
 		/// <param name="test">The test to be used</param>
 		public TestResult(ITest test)
 		{
-			this.test = test;
+			this.test = new TestInfo(test);
 			this.message = test.IgnoreReason;
 		}
 
