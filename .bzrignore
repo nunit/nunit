@@ -19,6 +19,13 @@ solutions/vs2008/test-assembly/**/*
 solutions/vs2008/runner/**/*
 solutions/vs2008_CF/nunitlite/**/*
 solutions/vs2008_CF/nunitlite.tests/**/*
+solutions/vs2010/nunit.framework/**/*
+solutions/vs2010/nunit.framework.tests/**/*
+solutions/vs2010/nunitlite/**/*
+solutions/vs2010/nunitlite.tests/**/*
+solutions/vs2010/nunit.interfaces/**/*
+solutions/vs2010/test-assembly/**/*
+solutions/vs2010/test-runner/**/*
 GeneratedAssemblyInfo.cs
 nunit.framework.xml
 *.user
