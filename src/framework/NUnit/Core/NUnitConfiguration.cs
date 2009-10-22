@@ -45,15 +45,7 @@ namespace NUnit.Core
         {
             try
             {
-                NameValueCollection settings = GetConfigSection("NUnit/TestCaseBuilder");
-                if (settings != null)
-                {
-                    string oldStyle = settings["OldStyleTestCases"];
-                    if (oldStyle != null)
-                            allowOldStyleTests = Boolean.Parse(oldStyle);
-                }
-
-                settings = GetConfigSection("NUnit/TestRunner");
+                NameValueCollection settings = GetConfigSection("NUnit/TestRunner");
                 if (settings != null)
                 {
                     string apartment = settings["ApartmentState"];
@@ -86,14 +78,6 @@ namespace NUnit.Core
         #endregion
 
         #region Public Properties
-
-        #region AllowOldStyleTests
-        private static bool allowOldStyleTests = false;
-        public static bool AllowOldStyleTests
-        {
-            get { return allowOldStyleTests; }
-        }
-        #endregion
 
         #region ThreadPriority
         private static ThreadPriority threadPriority = ThreadPriority.Normal;
