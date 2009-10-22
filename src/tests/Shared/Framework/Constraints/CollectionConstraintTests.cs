@@ -157,7 +157,7 @@ namespace NUnit.Framework.Constraints.Tests
             Assert.That(new string[] { "Hello", "World" }, 
                 new CollectionContainsConstraint("WORLD").IgnoreCase);
         }
-#if NET_3_5 || MONO_3_5 || NETCF_3_5
+#if NET_3_5 || MONO_3_5 || NETCF_3_5 || NET_4_0
         [Test]
         public void UsingIsHonored()
         {
@@ -243,7 +243,7 @@ namespace NUnit.Framework.Constraints.Tests
             Assert.That(new CollectionEquivalentConstraint(set1).IgnoreCase.Matches(set2));
         }
 
-#if NET_3_5 || MONO_3_5 || NETCF_3_5
+#if NET_3_5 || MONO_3_5 || NETCF_3_5 || NET_4_0
         [Test]
         public void EquivalentHonorsUsing()
         {
@@ -436,7 +436,7 @@ namespace NUnit.Framework.Constraints.Tests
             }
         }
 
-#if NET_3_5 || MONO_3_5 || NETCF_3_5
+#if NET_3_5 || MONO_3_5 || NETCF_3_5 || NET_4_0
         [Test]
         public void UsesProvidedLambda()
         {
