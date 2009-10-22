@@ -42,16 +42,11 @@ namespace NUnit.Core.Builders
     /// </summary>
     public class NUnitTestCaseBuilder : ITestCaseBuilder2
 	{
-        private readonly bool allowOldStyleTests = NUnitConfiguration.AllowOldStyleTests;
-
         #region ITestCaseBuilder Methods
         /// <summary>
         /// Determines if the method can be used to build an NUnit test
         /// test method of some kind. The method must normally be marked
-        /// with an identifying attriute for this to be true. If the test
-        /// config file sets AllowOldStyleTests to true, then any method beginning 
-        /// "test..." (case-insensitive) is treated as a test unless 
-        /// it is also marked as a setup or teardown method.
+        /// with an identifying attriute for this to be true.
         /// 
         /// Note that this method does not check that the signature
         /// of the method for validity. If we did that here, any
@@ -68,12 +63,7 @@ namespace NUnit.Core.Builders
             return method.IsDefined(typeof(TestAttribute), false)
                 || method.IsDefined(typeof(TestCaseAttribute), false)
                 || method.IsDefined(typeof(TestCaseSourceAttribute), false)
-                || method.IsDefined(typeof(TheoryAttribute), false)
-                || allowOldStyleTests && method.Name.ToLower().StartsWith("test")
-                && !method.IsDefined(typeof(SetUpAttribute), true)
-                && !method.IsDefined(typeof(TearDownAttribute), true)
-                && !method.IsDefined(typeof(TestFixtureSetUpAttribute), true)
-                && !method.IsDefined(typeof(TestFixtureTearDownAttribute), true);
+                || method.IsDefined(typeof(TheoryAttribute), false);
         }
 
 		/// <summary>
