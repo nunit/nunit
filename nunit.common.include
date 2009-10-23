@@ -241,6 +241,17 @@
     <property name="nant.settings.currentframework" value="net-3.5"/>
   </target>
  	
+  <target name="set-net-4.0-runtime-config">
+    <fail unless="${framework::exists('net-4.0') and framework::sdk-exists('net-4.0')}"
+      message="The .NET 4.0 SDK is not configured or not installed"/>
+
+    <property name="runtime.platform" value="net"/>
+    <property name="runtime.version" value="4.0"/>
+    <property name="runtime.config" value="net-4.0"/>
+    <property name="runtime.defines" value="MSNET,NET_4_0,CLR_2_0"/>
+    <property name="nant.settings.currentframework" value="net-4.0"/>
+  </target>
+ 	
   <target name="set-netcf-1.0-runtime-config">
     <fail unless="${framework::exists('netcf-1.0') and framework::sdk-exists('netcf-1.0')}"
       message="The NETCF 1.0 SDK is not configured or not installed"/>
