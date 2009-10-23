@@ -61,7 +61,7 @@
          The first .NET and Mono frameworks found are the
          respective net and mono defaults. -->
   <property name="supported.frameworks" 
-    value="net-3.5,net-2.0,net-1.1,net-1.0,mono-3.5,mono-2.0,mono-1.0,netcf-3.5,netcf-2.0,netcf-1.0"/>
+    value="net-3.5,net-2.0,net-1.1,net-4.0,net-1.0,mono-3.5,mono-2.0,mono-1.0,netcf-3.5,netcf-2.0,netcf-1.0"/>
 
   <!-- Packages we normally create -->
   <!--<property name="standard.packages" value="std,mono" />-->
@@ -103,6 +103,9 @@
       
   <target name="net-3.5" depends="set-net-3.5-runtime-config"
     description="Set runtime to .NET 3.5 for commands that follow"/>
+
+  <target name="net-4.0" depends="set-net-4.0-runtime-config"
+    description="Set runtime to .NET 4.0 for commands that follow"/>
 
   <target name="netcf-1.0" depends="set-netcf-1.0-runtime-config"
     description="Set runtime to CF 1.0 for commands that follow"/>
