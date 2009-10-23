@@ -7,7 +7,7 @@
         <DirectoryRef Id="FrameworkBinFolder" FileSource="$(var.InstallImage)/bin">
             <Directory Id="FrameworkNet11Folder" Name="net-1.1">
               <Component Id="nunit.framework.dll_net1.1_dir" Guid="9b19e04a-32f7-42de-812a-93988c581e5b">
-                <Condition>NOT INSTALLINGAC</Condition>
+                <!--<Condition>NOT INSTALLINGAC</Condition>-->
 
                 <File Id="nunit.framework.dll_net1.1_dir"
                       DiskId="1"
@@ -17,6 +17,7 @@
 
               </Component>
 
+              <!--
               <Component Id="nunit.framework.dll_net1.1_gac" Guid="4fac4e20-d135-4ff2-b595-4116f7be192c">
                 <Condition>INSTALLINGAC</Condition>
 
@@ -27,6 +28,16 @@
                       Name="nunit.framework.dll"/>
 
               </Component>
+              -->
+
+              <Component Id="nunit.interfaces.dll_net1.1" Guid="AEB6FE3E-C71C-4a99-931C-D0ABA08F8491">
+                <File Id="nunit.interfaces.dll_net1.1"
+                      DiskId="1"
+                      KeyPath="yes"
+                      Assembly="no"
+                      Name="nunit.interfaces.dll"/>
+
+              </Component>
 
               <Component Id="nunit.framework.tests.dll_net1.1" Guid="4c3d2d31-f468-4bd2-832f-19f3e500f24a">
                 <File Id="nunit.framework.tests.dll_net1.1"
@@ -34,6 +45,15 @@
                       KeyPath="yes"
                       Assembly="no"
                       Name="nunit.framework.tests.dll"/>
+
+              </Component>
+
+              <Component Id="test_assembly.dll_net1.1" Guid="141B9AB8-1AE2-4ef0-8AD4-2214B8C85044">
+                <File Id="test_assembly.dll_net1.1"
+                      DiskId="1"
+                      KeyPath="yes"
+                      Assembly="no"
+                      Name="test-assembly.dll"/>
 
               </Component>
 
@@ -63,10 +83,12 @@
           <Condition Level="1">NETFRAMEWORK11SDKDIR</Condition>
           <Condition Level="10">NOT NETFRAMEWORK11SDKDIR</Condition>
           <ComponentRef Id="nunit.framework.dll_net1.1_dir"/>
-            <ComponentRef Id="nunit.framework.dll_net1.1_gac"/>
-            <ComponentRef Id="nunit.framework.tests.dll_net1.1"/>
-            <ComponentRef Id="nunit.framework.xml_net1.1"/>
-            <ComponentRef Id="AssemblyReferenceFolder_1.1"/>
+          <!--<ComponentRef Id="nunit.framework.dll_net1.1_gac"/>-->
+          <ComponentRef Id="nunit.framework.tests.dll_net1.1"/>
+          <ComponentRef Id="test_assembly.dll_net1.1"/>
+          <ComponentRef Id="nunit.interfaces.dll_net1.1"/>
+          <ComponentRef Id="nunit.framework.xml_net1.1"/>
+          <ComponentRef Id="AssemblyReferenceFolder_1.1"/>
         </Feature>
 
     </Fragment>

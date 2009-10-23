@@ -38,12 +38,15 @@
 
             <FeatureRef Id="FrameworkNet11"/>
             <FeatureRef Id="FrameworkNet20"/>
+            <FeatureRef Id="FrameworkNet35"/>
+            <FeatureRef Id="FrameworkNet40"/>
         </Feature>
 
         <WixVariable Id="WixUILicenseRtf" Value="License.rtf"/>
-        <UIRef Id="NUnitUI_Framework"/>
+        <!--<UIRef Id="NUnitUI_Framework"/>-->
+        <UIRef Id="WixUI_FeatureTree"/>
 
-        <Media Id="1" Cabinet="nunit.cab" EmbedCab="yes" />
+      <Media Id="1" Cabinet="nunit.cab" EmbedCab="yes" />
 
     </Product>
     

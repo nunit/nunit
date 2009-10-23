@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+
+    <Fragment>
+
+        <DirectoryRef Id="FrameworkBinFolder" FileSource="$(var.InstallImage)\bin">
+            <Directory Id="FrameworkNet35Folder" Name="net-3.5">
+              <Component Id="nunit.framework.dll_net3.5_dir" Guid="6073E873-0FD3-4ede-99C3-BBB41D00F613">
+
+                <File Id="nunit.framework.dll_net3.5_dir"
+                      DiskId="1"
+                      KeyPath="yes"
+                      Assembly="no"
+                      Name="nunit.framework.dll"/>
+
+              </Component>
+
+              <Component Id="nunit.interfaces.dll_net3.5" Guid="CE217813-9059-4265-8FDF-8206D0FBB4D5">
+                <File Id="nunit.interfaces.dll_net3.5"
+                      DiskId="1"
+                      KeyPath="yes"
+                      Assembly="no"
+                      Name="nunit.interfaces.dll"/>
+
+              </Component>
+
+              <Component Id="nunit.framework.tests.dll_net3.5" Guid="954367C9-167E-42cc-B06F-E20102B74D3F">
+                <File Id="nunit.framework.tests.dll_net3.5"
+                      DiskId="1"
+                      KeyPath="yes"
+                      Assembly="no"
+                      Name="nunit.framework.tests.dll"/>
+
+              </Component>
+
+              <Component Id="test_assembly.dll_net3.5" Guid="7A5B4211-1D26-42b5-8CD5-4263C33F7EB4">
+                <File Id="test_assembly.dll_net3.5"
+                      DiskId="1"
+                      KeyPath="yes"
+                      Assembly="no"
+                      Name="test-assembly.dll"/>
+
+              </Component>
+
+              <Component Id="nunit.framework.xml_net3.5" Guid="5C675A1A-673E-454a-991C-4DBBADA58908">
+
+                <File Id="nunit.framework.xml_net3.5"
+                      DiskId="1"
+                      KeyPath="yes"
+                      Name="nunit.framework.xml"/>
+
+              </Component>
+
+              <Component Id="AssemblyReferenceFolder_3.5" Guid="42341366-30F5-44bf-A6F5-7171DA9AE41E">
+                <RegistryKey Id="R__Assemblies_3.5"
+                             Action="createAndRemoveOnUninstall"
+                             Root="HKLM"
+                             Key="Software\Microsoft\.NETFramework\v2.0.50727\AssemblyFoldersEx\NUnit [ProductVersion]">
+
+                  <RegistryValue Id="R__Assemblies_3.5_Default" Action="write" Type="string" Value="[FrameworkNet35Folder]"/>
+                </RegistryKey>
+              </Component>
+            </Directory>
+        </DirectoryRef>
+
+        <PropertyRef Id="NETFRAMEWORK35"/>
+
+        <Feature Id="FrameworkNet35" Title="NUnit Framework for .NET 3.5" AllowAdvertise="no" Display="expand" InstallDefault="local" Level="0" TypicalDefault="install">
+          <Condition Level="1">NETFRAMEWORK35</Condition>
+          <Condition Level="10">NOT NETFRAMEWORK35</Condition>
+          <ComponentRef Id="nunit.framework.dll_net3.5_dir"/>
+          <ComponentRef Id="nunit.interfaces.dll_net3.5"/>
+          <ComponentRef Id="nunit.framework.tests.dll_net3.5"/>
+          <ComponentRef Id="test_assembly.dll_net3.5"/>
+          <ComponentRef Id="nunit.framework.xml_net3.5"/>
+          <ComponentRef Id="AssemblyReferenceFolder_3.5"/>
+        </Feature>
+        
+	</Fragment>
+
+</Wix>
