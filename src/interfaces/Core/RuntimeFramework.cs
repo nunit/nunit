@@ -113,8 +113,9 @@ namespace NUnit.Core
             {
                 ArrayList frameworks = new ArrayList();
 
-                foreach (RuntimeFramework framework in GetAvailableFrameworks(RuntimeType.Net))
-                    frameworks.Add(framework);
+		if (Environment.OSVersion.Platform == PlatformID.Win32NT)
+	            foreach (RuntimeFramework framework in GetAvailableFrameworks(RuntimeType.Net))
+                        frameworks.Add(framework);
 
                 foreach (RuntimeFramework framework in GetAvailableFrameworks(RuntimeType.Mono))
                     frameworks.Add(framework);
