@@ -186,6 +186,9 @@
 
     </exec>
 
+    <!-- Ensure we only do this once per session -->
+    <property name="generated.syntax" value="YES"/>
+
   </target>
 
 <!-- ***************************************************************** -->
@@ -214,10 +217,15 @@
 
   </target>
 
-  <target name="build-nunit" depends="gen-syntax, make-build-dir">
+  <target name="build-nunit" depends="make-build-dir">
 
     <fail if="${runtime.platform=='netcf'}"
       message="The full NUnit framework may not be built for netcf"/>
+
+    <call target="build-tools"
+      unless="${property::exists('built.tools')}"/>
+    <call target="gen-syntax" 
+      unless="${property::exists('generated.syntax')}"/>
 
     <nant target="build" buildfile="src/interfaces/nunit.interfaces.build"/>
     <nant target="build-nunit" buildfile="src/framework/nunit.framework.build"/>
@@ -227,7 +235,12 @@
 
   </target>
 
-  <target name="build-nunitlite" depends="gen-syntax,make-build-dir">
+  <target name="build-nunitlite" depends="make-build-dir">
+
+    <call target="build-tools"
+      unless="${property::exists('built.tools')}"/>
+    <call target="gen-syntax" 
+      unless="${property::exists('generated.syntax')}"/>
 
     <nant target="build-nunitlite" buildfile="src/framework/nunit.framework.build"/>
     <nant target="build-nunitlite" buildfile="src/tests/nunit.framework.tests.build"/>
@@ -794,7 +807,7 @@ to the correct location.
   <target name="clean-tools"
       description="Remove binaries of tools used to build NUnit (DANGEROUS!)">
 
-    <nant target="clean" buildfile="tools/src/GenSyntax/GenSyntax.build"/>
+    <nant target="clean" buildfile="tools/src/CodeGeneration/CodeGeneration.build"/>
 
   </target>
 
@@ -802,6 +815,9 @@ to the correct location.
       description="Build tools used in building NUnit">
 
     <nant target="GenSyntax" buildfile="tools/src/CodeGeneration/CodeGeneration.build"/>
+
+    <!-- Ensure we only do this once per session -->
+    <property name="built.tools" value="YES"/>
 
   </target>
 
