@@ -61,7 +61,7 @@
          The first .NET and Mono frameworks found are the
          respective net and mono defaults. -->
   <property name="supported.frameworks" 
-    value="net-3.5,net-2.0,net-1.1,net-1.0,mono-3.5,mono-2.0,mono-1.0,netcf-3.5,netcf-2.0,netcf-1.0"/>
+    value="net-3.5,net-2.0,net-1.1,net-4.0,net-1.0,mono-3.5,mono-2.0,mono-1.0,netcf-3.5,netcf-2.0,netcf-1.0"/>
 
   <!-- Packages we normally create -->
   <!--<property name="standard.packages" value="std,mono" />-->
@@ -103,6 +103,9 @@
       
   <target name="net-3.5" depends="set-net-3.5-runtime-config"
     description="Set runtime to .NET 3.5 for commands that follow"/>
+
+  <target name="net-4.0" depends="set-net-4.0-runtime-config"
+    description="Set runtime to .NET 4.0 for commands that follow"/>
 
   <target name="netcf-1.0" depends="set-netcf-1.0-runtime-config"
     description="Set runtime to CF 1.0 for commands that follow"/>
@@ -167,7 +170,7 @@
     description="Generate code for the fluent constraint builder interface">
 
     <exec program="GenSyntax.exe"
-      managed="true"
+      useruntimeengine="true"
       basedir="${project.tools.dir}/bin"
       workingdir="${project.src.dir}/framework">
 
@@ -247,22 +250,6 @@
 
   <target name="init-test" depends="set-build-dir">
 
-    <fail unless="${property::exists('nunit.dir')}">
-Unable to locate your NUnit installation. Because NUnit 3.0 has
-not yet reached a stage where it can run its own tests, you must
-set property 'nunit.dir' to a directory where NUnit 2.5 or higher
-is installed in your 'local.settings.include' file or set the 
-NUNIT_DIR environment variable.
-    </fail>
-
-    <property name="nunit.console.dir"
-      value="${nunit.dir}/bin/net-2.0"
-      if="${runtime.version>='2.0'}"/>
-
-    <property name="nunit.console.dir"
-      value="${nunit.dir}/bin/net-1.1"
-      unless="${runtime.version>='2.0'}"/>
-
     <property name="result.file" 
       value="TestResult-${nant.settings.currentframework}"/>
 
@@ -289,13 +276,13 @@ NUNIT_DIR environment variable.
     <!--<exec basedir="${nunit.console.dir}"
           workingdir="${current.build.dir}" 
 	  program="nunit-console.exe" 
-          managed="strict"
+          useruntimeengine="true"
 	  commandline="${nunit.commandline}" />-->
 
     <exec basedir="${current.build.dir}"
           workingdir="${current.build.dir}"
           program="test-runner.exe"
-          managed="strict"
+          useruntimeengine="true"
           commandline="${nunit.commandline}" />
 
   </target>
@@ -308,7 +295,7 @@ NUNIT_DIR environment variable.
 
     <exec basedir="${current.build.dir}"
 	  program="nunitlite.tests.exe" 
-          managed="strict" />
+          useruntimeengine="true" />
 
   </target>
 
@@ -350,7 +337,7 @@ file or set the NCOVER_DIR environment variable.
     <exec basedir="${ncover.dir}"
           workingdir="${current.build.dir}" 
 	  program="NCover.Console.exe" 
-          managed="strict"
+          useruntimeengine="true"
 	  commandline="${ncover.commandline}" />
 
   </target>
@@ -369,7 +356,7 @@ file or set the PARTCOVER_DIR environment variable.
     <exec basedir="${partcover.dir}"
           workingdir="${current.build.dir}" 
 	  program="PartCover.exe" 
-          managed="strict"
+          useruntimeengine="true"
 	  commandline="${partcover.commandline}" />
 
   </target>
@@ -391,6 +378,14 @@ file or set the PARTCOVER_DIR environment variable.
     description="Run tests for a build using gui runner"/>
 
   <target name="run-gui-test">
+
+    <fail unless="${property::exists('nunit.dir')}">
+Unable to locate your NUnit installation. Because NUnit 3.0 has
+not yet reached a stage where it can run its own tests, you must
+set property 'nunit.dir' to a directory where NUnit 2.5 or higher
+is installed in your 'local.settings.include' file or set the 
+NUNIT_DIR environment variable.
+    </fail>
 
     <call target="nunit-gui-test" unless="${runtime.platform=='netcf'}"/>
     <call target="nunitlite-gui-test"/>
