@@ -1,0 +1,160 @@
+// ***********************************************************************
+// Copyright (c) 2007 Charlie Poole
+//
+// Permission is hereby granted, free of charge, to any person obtaining
+// a copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to
+// permit persons to whom the Software is furnished to do so, subject to
+// the following conditions:
+// 
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+// ***********************************************************************
+
+using System;
+using System.Collections;
+using System.Reflection;
+using System.Diagnostics;
+using System.IO;
+using System.Text;
+
+namespace NUnit.Core
+{
+	/// <summary>
+	/// TestAssemblyInfo holds information about a loaded test assembly
+	/// </summary>
+	[Serializable]
+	public class TestAssemblyInfo
+	{
+		private string assemblyName;
+        private Version imageRuntimeVersion;
+        private RuntimeFramework runnerRuntimeFramework;
+        private int processId;
+        private string moduleName;
+        private string domainName;
+        private string appBase;
+        private string binPath;
+        private string configFile;
+        private IList testFrameworks;
+
+        /// <summary>
+        /// Constructs a TestAssemblyInfo
+        /// </summary>
+        /// <param name="assemblyName">The name of the assembly</param>
+        /// <param name="imageRuntimeVersion">The version of the runtime for which the assembly was built</param>
+        /// <param name="runnerRuntimeFramework">The runtime framework under which the assembly is loaded</param>
+        /// <param name="testFrameworks">A list of test framework useds by the assembly</param>
+		public TestAssemblyInfo( string assemblyName, Version imageRuntimeVersion, RuntimeFramework runnerRuntimeFramework, IList testFrameworks )
+		{
+			this.assemblyName = assemblyName;
+            this.imageRuntimeVersion = imageRuntimeVersion;
+            this.runnerRuntimeFramework = runnerRuntimeFramework;
+            this.testFrameworks = testFrameworks;
+            Process p = Process.GetCurrentProcess();
+            this.processId = p.Id;
+            this.moduleName = p.MainModule.ModuleName;
+            this.domainName = AppDomain.CurrentDomain.FriendlyName;
+            this.appBase = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
+            this.configFile = AppDomain.CurrentDomain.SetupInformation.ConfigurationFile;
+            this.binPath = AppDomain.CurrentDomain.SetupInformation.PrivateBinPath;
+		}
+
+        /// <summary>
+        /// Gets the name of the assembly
+        /// </summary>
+		public string Name
+		{
+			get { return assemblyName; }
+		}
+
+        /// <summary>
+        /// Gets the runtime version for which the assembly was built
+        /// </summary>
+        public Version ImageRuntimeVersion
+        {
+            get { return imageRuntimeVersion; }
+        }
+
+        /// <summary>
+        /// Gets the runtime framework under which the assembly is loaded
+        /// </summary>
+        public RuntimeFramework RunnerRuntimeFramework
+        {
+            get { return runnerRuntimeFramework; }
+        }
+
+        /// <summary>
+        /// Gets the runtime version under which the assembly is loaded
+        /// </summary>
+        public Version RunnerRuntimeVersion
+        {
+            get { return runnerRuntimeFramework.Version; }
+        }
+
+        /// <summary>
+        /// The Id of the process in which the assembly is loaded
+        /// </summary>
+        public int ProcessId
+        {
+            get { return processId; }
+        }
+
+        /// <summary>
+        /// The friendly name of the AppDomain in which the assembly is loaded
+        /// </summary>
+        public string DomainName
+        {
+            get { return domainName; }
+        }
+
+        /// <summary>
+        /// The Application Base of the AppDomain in which the assembly is loaded
+        /// </summary>
+        public string ApplicationBase
+        {
+            get { return appBase; }
+        }
+
+        /// <summary>
+        /// The PrivateBinPath of the AppDomain in which the assembly is loaded
+        /// </summary>
+        public string PrivateBinPath
+        {
+            get { return binPath; }
+        }
+
+        /// <summary>
+        /// The ConfigurationFile of the AppDomain in which the assembly is loaded
+        /// </summary>
+        public string ConfigurationFile
+        {
+            get { return configFile; }
+        }
+
+        /// <summary>
+        /// The name of the main module of the process in which the assembly is loaded 
+        /// </summary>
+        public string ModuleName
+        {
+            get { return moduleName; }
+        }
+
+        /// <summary>
+        /// Gets a list of testframeworks referenced by the assembly
+        /// </summary>
+		public IList TestFrameworks
+		{
+			get { return testFrameworks; }
+		}
+    }
+}

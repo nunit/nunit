@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<project name="TestRunner" default="build" basedir=".">
+
+  <target name="build">
+
+    <csc target="exe"
+        output="${current.build.dir}/test-runner.exe"
+        debug="${build.debug}" 
+        define="${build.defines}">
+      <sources basedir=".">
+        <include name="*.cs"/>
+      </sources>
+      <references basedir="${current.build.dir}">
+        <include name="nunit.interfaces.dll"/>
+      </references>
+    </csc>
+
+  </target>
+
+  <target name="package">
+    <copy todir="${package.src.dir}/framework">
+      <fileset>
+        <include name="test-runner.build"/>
+        <include name="*.cs"/>
+      </fileset>
+    </copy>
+  </target>
+
+</project>

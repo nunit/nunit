@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<project name="NUnitInterfaces" default="build" basedir=".">
+
+  <target name="build">
+
+    <csc target="library"
+        output="${current.build.dir}/nunit.interfaces.dll"
+        doc="${current.build.dir}/nunit.interfaces.xml"
+        debug="${build.debug}" 
+        define="${build.defines}"
+        keyfile="../../nunit.snk">
+      <nowarn>
+        <warning number="1699" if="${runtime.version=='2.0'}"/>
+      </nowarn>
+      <sources basedir=".">
+<!--        <include name="../CommonAssemblyInfo.cs" /> -->
+        <include name="AssemblyInfo.cs"/>
+        <include name="Framework/**/*.cs"/>
+        <include name="Core/**/*.cs"/>
+      </sources>
+    </csc>
+
+  </target>
+
+  <target name="package">
+    <copy todir="${package.src.dir}/framework">
+      <fileset>
+        <include name="nunit.framework.build"/>
+        <include name="AssemblyIno.cs"/>
+        <include name="Interfaces.txt"/>
+        <include name="Core/**/*.cs"/>
+      </fileset>
+    </copy>
+  </target>
+
+</project>

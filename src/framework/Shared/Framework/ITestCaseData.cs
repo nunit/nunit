@@ -46,19 +46,29 @@ namespace NUnit.Framework
 
 #if !NUNITLITE
         /// <summary>
-        ///  Gets the expected exception Type
-        /// </summary>
-        Type ExpectedException { get; }
-
-        /// <summary>
         /// Gets the expected result
         /// </summary>
         object Result { get; }
 
         /// <summary>
+        ///  Gets the expected exception Type
+        /// </summary>
+        Type ExpectedException { get; }
+
+        /// <summary>
         /// Gets the FullName of the expected exception
         /// </summary>
         string ExpectedExceptionName { get; }
+
+        /// <summary>
+        /// Gets  the expected message of the expected exception
+        /// </summary>
+        string ExpectedMessage { get; }
+
+        /// <summary>
+        ///  Gets the type of match to be performed on the expected message
+        /// </summary>
+        MessageMatch MatchType { get; }
 
         /// <summary>
         /// Gets the name to be used for the test

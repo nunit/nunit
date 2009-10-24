@@ -16,20 +16,21 @@
 *   WiX 3.0 and the WiX tasks for NAnt are required. For a standard WiX  *
 *   install, the script should be able to find WiX automatically. If     *
 *   this doesn't work, you should set the environment variable WIX       *
-*   or the poperty 'wix.dir' to the path where WiX is installed.         *
+*   or the property 'wix.dir' to the path where WiX is installed.        *
 *                                                                        *
-*   Although NUnitLite tests may be run standalone, tests of the full    *
-*   framework must be executed under NUnit 2.5.2. Set the property       *
-*   'nunit.dir' to the path where NUnit is installed. Later releases     *
-*   will be self-testing and will eliminate the need for NUnit 2.5.2.    *
+*   Running the tests in the NUnit Gui requires NUnit 2.5.2. Set the     *
+*   property 'nunit.dir' or the NUNIT_DIR environment variable to the    *
+*   path where NUnit 2.5.2 is installed.                                 *
 *                                                                        *
-*   PartCover is required in addition to NUnit 2.5.2 in order to run     *
-*   the 'test-coverage' target. Set the property 'partcover.dir to the   *
-*   directory path where Partcover is installed.                         *
+*   Either NCover or PartCover is required to run the 'test-coverage'    *
+*   target. Set one of the properties 'ncover.dir' or 'partcover.dir'    *
+*   to the directory path where the program is installed or set the      *
+*   NCOVER_DIR or PARTCOVER_DIR environment variables to the same path.  *
 *                                                                        *
 * NOTE: You may set any of the properties mentioned above either at the  *
 * command line using the NANT -D option or by creating a file called     *
-* 'local.settings.include' and using property elements.                  *
+* 'local.settings.include' and using property elements. Environment      *
+* variable settings take precedence over any property values.            *
 **************************************************************************
 </description>
 
@@ -60,7 +61,7 @@
          The first .NET and Mono frameworks found are the
          respective net and mono defaults. -->
   <property name="supported.frameworks" 
-    value="net-3.5,net-2.0,net-1.1,net-1.0,mono-3.5,mono-2.0,mono-1.0,netcf-3.5,netcf-2.0,netcf-1.0"/>
+    value="net-3.5,net-2.0,net-1.1,net-4.0,net-1.0,mono-3.5,mono-2.0,mono-1.0,netcf-3.5,netcf-2.0,netcf-1.0"/>
 
   <!-- Packages we normally create -->
   <!--<property name="standard.packages" value="std,mono" />-->
@@ -102,6 +103,9 @@
       
   <target name="net-3.5" depends="set-net-3.5-runtime-config"
     description="Set runtime to .NET 3.5 for commands that follow"/>
+
+  <target name="net-4.0" depends="set-net-4.0-runtime-config"
+    description="Set runtime to .NET 4.0 for commands that follow"/>
 
   <target name="netcf-1.0" depends="set-netcf-1.0-runtime-config"
     description="Set runtime to CF 1.0 for commands that follow"/>
@@ -166,13 +170,14 @@
     description="Generate code for the fluent constraint builder interface">
 
     <exec program="GenSyntax.exe"
-      managed="true"
+      useruntimeengine="true"
       basedir="${project.tools.dir}/bin"
       workingdir="${project.src.dir}/framework">
 
       <arg value="-syntax:SyntaxElements.txt"/>
       <arg value="Shared/Framework/Is.cs"/>
       <arg value="Shared/Framework/Has.cs"/>
+      <arg value="Shared/Framework/Contains.cs"/>
       <arg value="NUnit/Framework/Text.cs"/>
       <arg value="Shared/Framework/Throws.cs"/>
       <arg value="Shared/Framework/Constraints/ConstraintFactory.cs"/>
@@ -204,25 +209,28 @@
   <target name="build"
     description="Build everything, for current runtime and config">
 
-    <call target="nunit" unless="${runtime.platform=='netcf'}"/>
-    <call target="nunitlite"/>
+    <call target="build-nunit" unless="${runtime.platform=='netcf'}"/>
+    <call target="build-nunitlite"/>
 
   </target>
 
-  <target name="nunit" depends="gen-syntax, make-build-dir">
+  <target name="build-nunit" depends="gen-syntax, make-build-dir">
 
     <fail if="${runtime.platform=='netcf'}"
       message="The full NUnit framework may not be built for netcf"/>
 
-    <nant target="nunit" buildfile="src/framework/nunit.framework.build"/>
-    <nant target="nunit" buildfile="src/tests/nunit.framework.tests.build"/>
+    <nant target="build" buildfile="src/interfaces/nunit.interfaces.build"/>
+    <nant target="build-nunit" buildfile="src/framework/nunit.framework.build"/>
+    <nant target="build" buildfile="src/test-assembly/test-assembly.build"/>
+    <nant target="build-nunit" buildfile="src/tests/nunit.framework.tests.build"/>
+    <nant target="build" buildfile="src/runner/test-runner.build"/>
 
   </target>
 
-  <target name="nunitlite" depends="gen-syntax,make-build-dir">
+  <target name="build-nunitlite" depends="gen-syntax,make-build-dir">
 
-    <nant target="nunitlite" buildfile="src/framework/nunit.framework.build"/>
-    <nant target="nunitlite" buildfile="src/tests/nunit.framework.tests.build"/>
+    <nant target="build-nunitlite" buildfile="src/framework/nunit.framework.build"/>
+    <nant target="build-nunitlite" buildfile="src/tests/nunit.framework.tests.build"/>
 
   </target>
 
@@ -242,30 +250,17 @@
 
   <target name="init-test" depends="set-build-dir">
 
-    <fail unless="${property::exists('nunit.dir')}">
-Unable to locate your NUnit installation. Because NUnit 3.0 has
-not yet reached a stage where it can run its own tests, you must
-set property 'nunit.dir' to a directory where NUnit 2.5 or higher
-is installed in your 'local.settings.include' file or set the 
-NUNIT_DIR environment variable.
-    </fail>
-
-    <property name="nunit.console.dir"
-      value="${nunit.dir}/bin/net-2.0"
-      if="${runtime.version>='2.0'}"/>
-
-    <property name="nunit.console.dir"
-      value="${nunit.dir}/bin/net-1.1"
-      unless="${runtime.version>='2.0'}"/>
-
     <property name="result.file" 
       value="TestResult-${nant.settings.currentframework}"/>
 
     <property name="nunit.options" value="" 
       unless="${property::exists('nunit.options')}"/>
 
+    <!--<property name="nunit.commandline"
+      value="nunit.framework.tests.dll ${nunit.options} -xml:${result.file}.xml"/>-->
+
     <property name="nunit.commandline"
-      value="nunit.framework.tests.dll ${nunit.options} -xml:${result.file}.xml"/>
+      value="nunit.framework.tests.dll ${nunit.options}"/>
 
   </target>
 
@@ -278,11 +273,17 @@ NUNIT_DIR environment variable.
     <!-- We use exec rather than the nunit2 task because we are testing
          a new build of NUnit which is likely not to be included in the Nant build -->
 
-    <exec basedir="${nunit.console.dir}"
+    <!--<exec basedir="${nunit.console.dir}"
           workingdir="${current.build.dir}" 
 	  program="nunit-console.exe" 
-          managed="strict"
-	  commandline="${nunit.commandline}" />
+          useruntimeengine="true"
+	  commandline="${nunit.commandline}" />-->
+
+    <exec basedir="${current.build.dir}"
+          workingdir="${current.build.dir}"
+          program="test-runner.exe"
+          useruntimeengine="true"
+          commandline="${nunit.commandline}" />
 
   </target>
 
@@ -294,16 +295,54 @@ NUNIT_DIR environment variable.
 
     <exec basedir="${current.build.dir}"
 	  program="nunitlite.tests.exe" 
-          managed="strict" />
+          useruntimeengine="true" />
 
   </target>
 
-  <target name="test-coverage" depends="build,init-test"
+  <target name="test-coverage" depends="build"
     description="Run tests under PartCover to get coverage results">
 
     <echo message="*"/>
     <echo message="* Starting ${runtime.config} ${build.config} test coverage run"/>
     <echo message="*"/>
+
+    <fail unless="${property::exists('ncover.dir') or property::exists('partcover.dir')}">
+Unable to locate either NCover or PartCover, one of which is needed for
+test coverage. Edit your 'local.settings.include' file to set property
+'ncover.dir' or 'partcover.dir' to the directory where the program is 
+installed. Alternatively, you may set the NCOVER_DIR or PARTCOVER_DIR 
+environment variable.
+    </fail>
+
+    <call target="run-ncover" 
+      if="${property::exists('ncover.dir')}"/>
+
+    <call target="run-partcover" 
+      if="${property::exists('partcover.dir')}"
+      unless="${property::exists('ncover.dir')}"/>
+
+  </target>
+
+  <target name="run-ncover" depends="init-test">
+
+    <fail unless="${property::exists('ncover.dir')}">
+Unable to locate your NCover installation. Set property 'ncover.dir'
+to the directory where it is installed in your 'local.settings.include'
+file or set the NCOVER_DIR environment variable.
+    </fail>
+
+    <property name="ncover.commandline"
+      value="test-runner.exe ${nunit.commandline} //a nunit.framework //x TestCoverage-${nant.settings.currentframework}.xml"/>
+
+    <exec basedir="${ncover.dir}"
+          workingdir="${current.build.dir}" 
+	  program="NCover.Console.exe" 
+          useruntimeengine="true"
+	  commandline="${ncover.commandline}" />
+
+  </target>
+
+  <target name="run-partcover" depends="init-test">
 
     <fail unless="${property::exists('partcover.dir')}">
 Unable to locate your PartCover installation. Set property 'partcover.dir'
@@ -311,13 +350,13 @@ to the directory where it is installed in your 'local.settings.include'
 file or set the PARTCOVER_DIR environment variable.
     </fail>
 
-    <property name="partcover.commandline" 
-      value='--target="${nunit.console.dir}/nunit-console.exe" --target-args="${nunit.commandline}" --include=[nunit.framework]* --output=TestCoverage-${nant.settings.currentframework}.xml'/>
+    <property name="partcover.commandline"
+      value='--target test-runner.exe --target-args "${nunit.commandline}" --include [nunit.framework]* --output TestCoverage-${nant.settings.currentframework}.xml'/>
 
     <exec basedir="${partcover.dir}"
           workingdir="${current.build.dir}" 
 	  program="PartCover.exe" 
-          managed="strict"
+          useruntimeengine="true"
 	  commandline="${partcover.commandline}" />
 
   </target>
@@ -339,6 +378,14 @@ file or set the PARTCOVER_DIR environment variable.
     description="Run tests for a build using gui runner"/>
 
   <target name="run-gui-test">
+
+    <fail unless="${property::exists('nunit.dir')}">
+Unable to locate your NUnit installation. Because NUnit 3.0 has
+not yet reached a stage where it can run its own tests, you must
+set property 'nunit.dir' to a directory where NUnit 2.5 or higher
+is installed in your 'local.settings.include' file or set the 
+NUNIT_DIR environment variable.
+    </fail>
 
     <call target="nunit-gui-test" unless="${runtime.platform=='netcf'}"/>
     <call target="nunitlite-gui-test"/>

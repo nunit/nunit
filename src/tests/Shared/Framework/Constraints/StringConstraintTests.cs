@@ -47,7 +47,7 @@ namespace NUnit.Framework.Constraints.Tests
 
         public void HandleException(Exception ex)
         {
-            string NL = NUnitLite.Env.NewLine;
+            string NL = Env.NewLine;
 
             Assert.That(ex.Message, new EqualConstraint(
                 TextMessageWriter.Pfx_Expected + "String containing \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa...\"" + NL +

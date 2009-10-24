@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+
+    <Fragment>
+
+        <DirectoryRef Id="FrameworkBinFolder" FileSource="$(var.InstallImage)\bin">
+            <Directory Id="FrameworkNet40Folder" Name="net-4.0">
+              <Component Id="nunit.framework.dll_net4.0_dir" Guid="01EBA9EE-496F-4467-94D1-AC92A818E20C">
+
+                <File Id="nunit.framework.dll_net4.0_dir"
+                      DiskId="1"
+                      KeyPath="yes"
+                      Assembly="no"
+                      Name="nunit.framework.dll"/>
+
+              </Component>
+
+              <Component Id="nunit.interfaces.dll_net4.0" Guid="{90B1F17E-6682-43c3-8CFA-FDF5FDBD26D3}">
+                <File Id="nunit.interfaces.dll_net4.0"
+                      DiskId="1"
+                      KeyPath="yes"
+                      Assembly="no"
+                      Name="nunit.interfaces.dll"/>
+
+              </Component>
+
+              <Component Id="nunit.framework.tests.dll_net4.0" Guid="095E8BC6-1613-4dc9-8C9D-300CA80C7737">
+                <File Id="nunit.framework.tests.dll_net4.0"
+                      DiskId="1"
+                      KeyPath="yes"
+                      Assembly="no"
+                      Name="nunit.framework.tests.dll"/>
+
+              </Component>
+
+              <Component Id="test_assembly.dll_net4.0" Guid="87FF7DC8-F078-4619-B6B1-4164A160FDD1">
+                <File Id="test_assembly.dll_net4.0"
+                      DiskId="1"
+                      KeyPath="yes"
+                      Assembly="no"
+                      Name="test-assembly.dll"/>
+
+              </Component>
+
+              <Component Id="nunit.framework.xml_net4.0" Guid="FAF70AD1-B669-4f24-B53B-35FBDF25EAFC">
+
+                <File Id="nunit.framework.xml_net4.0"
+                      DiskId="1"
+                      KeyPath="yes"
+                      Name="nunit.framework.xml"/>
+
+              </Component>
+
+              <Component Id="AssemblyReferenceFolder_4.0" Guid="F3D6D955-13C8-4b72-BAB1-7417E13E2BCE">
+                <RegistryKey Id="R__Assemblies_4.0"
+                             Action="createAndRemoveOnUninstall"
+                             Root="HKLM"
+                             Key="Software\Microsoft\.NETFramework\v4.0.210006\AssemblyFoldersEx\NUnit [ProductVersion]">
+
+                  <RegistryValue Id="R__Assemblies_4.0_Default" Action="write" Type="string" Value="[FrameworkNet40Folder]"/>
+                </RegistryKey>
+              </Component>
+            </Directory>
+        </DirectoryRef>
+
+      <Property Id="FRAMEWORK40BETA1">
+        <RegistrySearch Id='Framework40Beta1Registry' Type='raw' Root='HKLM'
+                        Key='Software\Microsoft\.NETFramework\policy\v4.0' Name='20506' />
+      </Property>
+
+      <Property Id="FRAMEWORK40BETA2">
+        <RegistrySearch Id='Framework40Beta2Registry' Type='raw' Root='HKLM'
+                        Key='Software\Microsoft\.NETFramework\policy\v4.0' Name='21006' />
+      </Property>
+
+      <Feature Id="FrameworkNet40" Title="NUnit Framework for .NET 4.0" AllowAdvertise="no" Display="expand" InstallDefault="local" Level="0" TypicalDefault="install">
+          <Condition Level="1">FRAMEWORK40BETA1 OR FRAMEWORK40BETA2</Condition>
+          <Condition Level="10">NOT (FRAMEWORK40BETA1 OR FRAMEWORK40BETA2)</Condition>
+          <ComponentRef Id="nunit.framework.dll_net4.0_dir"/>
+          <ComponentRef Id="nunit.interfaces.dll_net4.0"/>
+          <ComponentRef Id="nunit.framework.tests.dll_net4.0"/>
+          <ComponentRef Id="test_assembly.dll_net4.0"/>
+          <ComponentRef Id="nunit.framework.xml_net4.0"/>
+          <ComponentRef Id="AssemblyReferenceFolder_4.0"/>
+        </Feature>
+        
+	</Fragment>
+
+</Wix>

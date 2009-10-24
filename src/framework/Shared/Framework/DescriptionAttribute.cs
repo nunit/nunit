@@ -36,7 +36,7 @@ namespace NUnit.Framework
         /// Construct a description Attribute
         /// </summary>
         /// <param name="description">The text of the description</param>
-        public DescriptionAttribute(string description) : base(description) { }
+        public DescriptionAttribute(string description) : base("_DESCRIPTION", description) { }
     }
 
 }

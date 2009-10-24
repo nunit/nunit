@@ -67,7 +67,7 @@ namespace NUnit.Framework.Syntax
             return (num & 1) == 0;
         }
 
-#if NET_3_5 || MONO_3_5
+#if NET_3_5 || MONO_3_5 || NET_4_0
         [Test]
         public void CanMatchLambda()
         {
