@@ -1,107 +1,9 @@
 <?xml version="1.0"?>
 <project name="NUnitFramework" default="build" basedir=".">
 
-<!--
-  <patternset id="source-files">
-    <include name="AssemblyInfo.cs"/>
-    <include name="Framework/Assert.cs"/>
-    <include name="Framework/AssertionException.cs"/>
-    <include name="Framework/AssertionHelper.cs"/>
-    <include name="Framework/Assume.cs"/>
-    <include name="Framework/CategoryAttribute.cs"/>
-    <include name="Framework/CollectionAssert.cs"/>
-    <include name="Framework/DatapointAttributes.cs"/>
-    <include name="Framework/DescriptionAttribute.cs"/>
-    <include name="Framework/DirectoryAssert.cs"/>
-    <include name="Framework/ExpectedExceptionAttribute.cs"/>
-    <include name="Framework/ExplicitAttribute.cs"/>
-    <include name="Framework/FileAssert.cs"/>
-    <include name="Framework/GlobalSettings.cs"/>
-    <include name="Framework/Has.cs"/>
-    <include name="Framework/IExpectException.cs"/>
-    <include name="Framework/IgnoreAttribute.cs"/>
-    <include name="Framework/IgnoreException.cs"/>
-    <include name="Framework/IncludeExcludeAttributes.cs"/>
-    <include name="Framework/InconclusiveException.cs"/>
-    <include name="Framework/Is.cs"/>
-    <include name="Framework/Iz.cs"/>
-    <include name="Framework/ITestCaseData.cs"/>
-    <include name="Framework/JoinTypeAttributes.cs"/>
-    <include name="Framework/List.cs"/>
-    <include name="Framework/ListMapper.cs"/>
-    <include name="Framework/MaxTimeAttribute.cs"/>
-    <include name="Framework/PropertyAttribute.cs"/>
-    <include name="Framework/RandomAttribute.cs"/>
-    <include name="Framework/Randomizer.cs"/>
-    <include name="Framework/RangeAttribute.cs"/>
-    <include name="Framework/RepeatAttribute.cs"/>
-    <include name="Framework/RequiredAddinAttribute.cs"/>
-    <include name="Framework/SetCultureAttribute.cs"/>
-    <include name="Framework/SetUICultureAttribute.cs"/>
-    <include name="Framework/SetUpAttribute.cs"/>
-    <include name="Framework/SetUpFixtureAttribute.cs"/>
-    <include name="Framework/SpecialValue.cs"/>
-    <include name="Framework/StringAssert.cs"/>
-    <include name="Framework/SuccessException.cs"/>
-    <include name="Framework/SuiteAttribute.cs"/>
-    <include name="Framework/TearDownAttribute.cs"/>
-    <include name="Framework/TestAttribute.cs"/>
-    <include name="Framework/TestCaseAttribute.cs"/>
-    <include name="Framework/TestCaseData.cs"/>
-    <include name="Framework/TestCaseSourceAttribute.cs"/>
-    <include name="Framework/TestFixtureAttribute.cs"/>
-    <include name="Framework/TestFixtureSetUpAttribute.cs"/>
-    <include name="Framework/TestFixtureTearDownAttribute.cs"/>
-    <include name="Framework/Text.cs"/>
-    <include name="Framework/TextMessageWriter.cs"/>
-    <include name="Framework/TheoryAttribute.cs"/>
-    <include name="Framework/ThreadingAttributes.cs"/>
-    <include name="Framework/Throws.cs"/>
-    <include name="Framework/ValuesAttribute.cs"/>
-    <include name="Framework/ValueSourceAttribute.cs"/>
-    <include name="Framework/Constraints/AttributeConstraints.cs"/>
-    <include name="Framework/Constraints/BasicConstraints.cs"/>
-    <include name="Framework/Constraints/BinaryOperations.cs"/>
-    <include name="Framework/Constraints/CollectionConstraints.cs"/>
-    <include name="Framework/Constraints/ComparisonAdapter.cs"/>
-    <include name="Framework/Constraints/ComparisonConstraints.cs"/>
-    <include name="Framework/Constraints/Constraint.cs"/>
-    <include name="Framework/Constraints/ConstraintBuilder.cs"/>
-    <include name="Framework/Constraints/ConstraintExpression.cs"/>
-    <include name="Framework/Constraints/ConstraintExpressionBase.cs"/>
-    <include name="Framework/Constraints/ConstraintFactory.cs"/>
-    <include name="Framework/Constraints/ConstraintOperators.cs"/>
-    <include name="Framework/Constraints/ContainsConstraint.cs"/>
-    <include name="Framework/Constraints/DelayedConstraint.cs"/>
-    <include name="Framework/Constraints/DirectoryConstraints.cs"/>
-    <include name="Framework/Constraints/EmptyConstraint.cs"/>
-    <include name="Framework/Constraints/EqualConstraint.cs"/>
-    <include name="Framework/Constraints/EqualityAdapter.cs"/>
-    <include name="Framework/Constraints/FloatingPointNumerics.cs"/>
-    <include name="Framework/Constraints/IResolveConstraint.cs"/>
-    <include name="Framework/Constraints/MessageWriter.cs"/>
-    <include name="Framework/Constraints/MsgUtils.cs"/>
-    <include name="Framework/Constraints/Numerics.cs"/>
-    <include name="Framework/Constraints/NUnitComparer.cs"/>
-    <include name="Framework/Constraints/NUnitEqualityComparer.cs"/>
-    <include name="Framework/Constraints/PathConstraints.cs"/>
-    <include name="Framework/Constraints/PredicateConstraint.cs"/>
-    <include name="Framework/Constraints/PrefixConstraints.cs"/>
-    <include name="Framework/Constraints/PropertyConstraint.cs"/>
-    <include name="Framework/Constraints/RangeConstraint.cs"/>
-    <include name="Framework/Constraints/ResolvableConstraintExpression.cs"/>
-    <include name="Framework/Constraints/SameAsConstraint.cs"/>
-    <include name="Framework/Constraints/SerializableConstraints.cs"/>
-    <include name="Framework/Constraints/StringConstraints.cs"/>
-    <include name="Framework/Constraints/ThrowsConstraint.cs"/>
-    <include name="Framework/Constraints/Tolerance.cs"/>
-    <include name="Framework/Constraints/TypeConstraints.cs"/>
-  </patternset>
--->
+  <target name="build" depends="build-nunit,build-nunitlite"/>
 
-  <target name="build" depends="nunit,nunitlite"/>
-
-  <target name="nunit">
+  <target name="build-nunit">
 
     <csc target="library"
         output="${current.build.dir}/nunit.framework.dll"
@@ -120,11 +22,15 @@
         <include name="Shared/**/*.cs"/>
         <include name="NUnit/**/*.cs"/>
       </sources>
+      <references basedir="${current.build.dir}">
+        <include name="System.Configuration.dll"/>
+        <include name="nunit.interfaces.dll"/>
+      </references>
     </csc>
 
   </target>
 
-  <target name="nunitlite">
+  <target name="build-nunitlite">
 
     <csc target="library"
         output="${current.build.dir}/nunitlite.dll"
@@ -132,7 +38,7 @@
         debug="${build.debug}" 
         define="${build.defines};NUNITLITE">
       <nowarn>
-        <warning number="1699" if="${runtime.version=='2.0'}"/>
+        <warning number="1699" if="${runtime.version>='2.0'}"/>
       </nowarn>
       <sources basedir=".">
         <!--<patternset refid="source-files"/>-->
@@ -141,6 +47,7 @@
         <include name="Env.cs"/>
         <include name="Shared/**/*.cs"/>
         <include name="NUnitLite/**/*.cs"/>
+        <include name="../interfaces/Framework/**/*.cs"/>
       </sources>
       <references basedir="${current.build.dir}">
         <include name="mscorlib.dll"/>

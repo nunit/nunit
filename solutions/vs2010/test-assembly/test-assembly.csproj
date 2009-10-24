@@ -1,0 +1,143 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{3A0FAD44-A336-43D4-90D9-A5206EB6F02E}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>NUnit.TestData</RootNamespace>
+    <AssemblyName>test-assembly</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;CLR_2_0;NET_4_0</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..bin\Release\</OutputPath>
+    <DefineConstants>TRACE;CLR_2_0;NET_4_0</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\..\src\test-assembly\AssemblyInfo.cs">
+      <Link>AssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\test-assembly\AssertFailFixture.cs">
+      <Link>AssertFailFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\test-assembly\AssertIgnoreData.cs">
+      <Link>AssertIgnoreData.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\test-assembly\AttributeInheritanceData.cs">
+      <Link>AttributeInheritanceData.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\test-assembly\CategoryAttributeData.cs">
+      <Link>CategoryAttributeData.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\test-assembly\CultureAttributeData.cs">
+      <Link>CultureAttributeData.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\test-assembly\DescriptionFixture.cs">
+      <Link>DescriptionFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\test-assembly\ExpectedExceptionData.cs">
+      <Link>ExpectedExceptionData.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\test-assembly\FixtureSetUpTearDownData.cs">
+      <Link>FixtureSetUpTearDownData.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\test-assembly\LegacySuiteData.cs">
+      <Link>LegacySuiteData.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\test-assembly\MaxTimeFixture.cs">
+      <Link>MaxTimeFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\test-assembly\ParameterizedTestFixture.cs">
+      <Link>ParameterizedTestFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\test-assembly\PropertyAttributeTests.cs">
+      <Link>PropertyAttributeTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\test-assembly\RepeatedTestFixture.cs">
+      <Link>RepeatedTestFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\test-assembly\SetupFixtureTests.cs">
+      <Link>SetupFixtureTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\test-assembly\SetUpTest.cs">
+      <Link>SetUpTest.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\test-assembly\TestCaseAttributeFixture.cs">
+      <Link>TestCaseAttributeFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\test-assembly\TestCaseSourceAttributeFixture.cs">
+      <Link>TestCaseSourceAttributeFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\test-assembly\TestFixtureBuilderData.cs">
+      <Link>TestFixtureBuilderData.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\test-assembly\TestFixtureData.cs">
+      <Link>TestFixtureData.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\test-assembly\TestFixtureExtensionData.cs">
+      <Link>TestFixtureExtensionData.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\test-assembly\TestMethodSignatureFixture.cs">
+      <Link>TestMethodSignatureFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\test-assembly\TheoryFixture.cs">
+      <Link>TheoryFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\test-assembly\ThreadingFixture.cs">
+      <Link>ThreadingFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\test-assembly\UnexpectedExceptionFixture.cs">
+      <Link>UnexpectedExceptionFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\test-assembly\UnhandledExceptions.cs">
+      <Link>UnhandledExceptions.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\nunit.framework\nunit.framework.csproj">
+      <Project>{F55F0FC4-E9B8-4D3C-B499-2FBB1E7C1D09}</Project>
+      <Name>nunit.framework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\nunit.interfaces\nunit.interfaces.csproj">
+      <Project>{B6B95A07-D079-413D-BF06-E07984332F50}</Project>
+      <Name>nunit.interfaces</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

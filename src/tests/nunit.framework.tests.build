@@ -1,110 +1,38 @@
 <?xml version="1.0"?>
 <project name="NUnitFrameworkTests" default="build" basedir=".">
 
-<!--
-  <patternset id="source-files">
-    <include name="Framework/AlwaysEqualComparer.cs"/>
-    <include name="Framework/ArrayEqualsFailureMessageFixture.cs"/>
-    <include name="Framework/ArrayEqualsFixture.cs"/>
-    <include name="Framework/ArrayNotEqualFixture.cs"/>
-    <include name="Framework/AssertThrowsTests.cs"/>
-    <include name="Framework/AssumeThatTests.cs"/>
-    <include name="Framework/CollectionAssertTest.cs"/>
-    <include name="Framework/CollectionAdapter.cs"/>
-    <include name="Framework/ConditionAssertTests.cs"/>
-    <include name="Framework/DirectoryAssertTests.cs"/>
-    <include name="Framework/EqualsFixture.cs"/>
-    <include name="Framework/FileAssertTests.cs"/>
-    <include name="Framework/GreaterEqualFixture.cs"/>
-    <include name="Framework/GreaterFixture.cs"/>
-    <include name="Framework/LessEqualFixture.cs"/>
-    <include name="Framework/LessFixture.cs"/>
-    <include name="Framework/ListContentsTests.cs"/>
-    <include name="Framework/MessageChecker.cs"/>
-    <include name="Framework/NotEqualFixture.cs"/>
-    <include name="Framework/NotSameFixture.cs"/>
-    <include name="Framework/NullableTypesTests.cs"/>
-    <include name="Framework/RandomizerTests.cs"/>
-    <include name="Framework/RangeTests.cs"/>
-    <include name="Framework/SameFixture.cs"/>
-    <include name="Framework/StringAssertTests.cs"/>
-    <include name="Framework/TestComparer.cs"/>
-    <include name="Framework/TestDelegates.cs"/>
-    <include name="Framework/TestFixtureAttributeTests.cs"/>
-    <include name="Framework/TextMessageWriterTests.cs"/>
-    <include name="Framework/TypeAssertTest.cs"/>
-    <include name="Framework/ValuesAttributeTests.cs"/>
-    <include name="Framework/Constraints/AfterConstraintTests.cs"/>
-    <include name="Framework/Constraints/AndTest.cs"/>
-    <include name="Framework/Constraints/BasicConstraintTests.cs"/>
-    <include name="Framework/Constraints/CollectionConstraintTests.cs"/>
-    <include name="Framework/Constraints/ComparerTests.cs"/>
-    <include name="Framework/Constraints/ComparisonConstraintTests.cs"/>
-    <include name="Framework/Constraints/ConstraintTestBase.cs"/>
-    <include name="Framework/Constraints/EmptyConstraintTest.cs"/>
-    <include name="Framework/Constraints/EqualTest.cs"/>
-    <include name="Framework/Constraints/FloatingPointNumericsTest.cs"/>
-    <include name="Framework/Constraints/MsgUtilTests.cs"/>
-    <include name="Framework/Constraints/NotTest.cs"/>
-    <include name="Framework/Constraints/NumericsTest.cs"/>
-    <include name="Framework/Constraints/OrTest.cs"/>
-    <include name="Framework/Constraints/PathConstraintTests.cs"/>
-    <include name="Framework/Constraints/PropertyTests.cs"/>
-    <include name="Framework/Constraints/SameAsTest.cs"/>
-    <include name="Framework/Constraints/SerializableConstraintTest.cs"/>
-    <include name="Framework/Constraints/StringConstraintTests.cs"/>
-    <include name="Framework/Constraints/ThrowsConstraintTests.cs"/>
-    <include name="Framework/Constraints/TypeConstraintTests.cs"/>
-    <include name="Framework/Syntax/AfterTests.cs"/>
-    <include name="Framework/Syntax/ArbitraryConstraintMatching.cs"/>
-    <include name="Framework/Syntax/CollectionTests.cs"/>
-    <include name="Framework/Syntax/ComparisonTests.cs"/>
-    <include name="Framework/Syntax/EqualityTests.cs"/>
-    <include name="Framework/Syntax/InvalidCodeTests.cs"/>
-    <include name="Framework/Syntax/OperatorOverrides.cs"/>
-    <include name="Framework/Syntax/OperatorTests.cs"/>
-    <include name="Framework/Syntax/PathConstraintTests.cs"/>
-    <include name="Framework/Syntax/PropertyTests.cs"/>
-    <include name="Framework/Syntax/SerializableConstraints.cs"/>
-    <include name="Framework/Syntax/SimpleConstraints.cs"/>
-    <include name="Framework/Syntax/StringConstraints.cs"/>
-    <include name="Framework/Syntax/SyntaxTest.cs"/>
-    <include name="Framework/Syntax/TestCompiler.cs"/>
-    <include name="Framework/Syntax/ThrowsTests.cs"/>
-    <include name="Framework/Syntax/TypeConstraints.cs"/>
-  </patternset>
-  -->
+  <target name="build" depends="build-nunit,build-nunitlite"/>
 
-  <patternset id="resource-files">
-        <include name="TestImage1.jpg"/>
-        <include name="TestImage2.jpg"/>
-        <include name="TestText1.txt"/>
-        <include name="TestText2.txt"/>
-  </patternset>
-
-  <target name="nunit">
+  <target name="build-nunit">
     <csc target="library" 
         output="${current.build.dir}/nunit.framework.tests.dll"
         debug="${build.debug}" 
         define="${build.defines}">
       <sources>
-        <!--<patternset refid="source-files"/>-->
         <include name="../CommonAssemblyInfo.cs"/>
-        <include name="NUnit/**/*.cs"/>
-        <include name="Shared/**/*.cs"/>
+        <include name="NUnit/Framework/**/*.cs"/>
+        <include name="NUnit/Core/*.cs"/>
+        <include name="NUnit/Core/Generic/*.cs" if="${runtime.version>='2.0'}"/>
+        <include name="NUnit/TestUtilities/*.cs"/>
+        <include name="Shared/Framework/**/*.cs"/>
       </sources>
       <resources prefix="NUnit.Framework.Tests">
-        <patternset refid="resource-files"/>
+        <include name="TestImage1.jpg"/>
+        <include name="TestImage2.jpg"/>
+        <include name="TestText1.txt"/>
+        <include name="TestText2.txt"/>
       </resources>
-      <references>
-        <include name="${current.build.dir}/nunit.framework.dll"/>
+      <references basedir="${current.build.dir}">
+        <include name="nunit.framework.dll"/>
+        <include name="nunit.interfaces.dll"/>
+        <include name="test-assembly.dll"/>
         <include name="System.Data.dll"/>
         <include name="System.Drawing.dll"/>
       </references>
     </csc>
   </target>
 
-  <target name="nunitlite">
+  <target name="build-nunitlite">
     <csc target="exe" 
         output="${current.build.dir}/nunitlite.tests.exe"
         debug="${build.debug}" 
@@ -117,7 +45,10 @@
         <include name="Shared/**/*.cs"/>
       </sources>
       <resources prefix="NUnit.Framework.Tests">
-        <patternset refid="resource-files"/>
+        <include name="TestImage1.jpg"/>
+        <include name="TestImage2.jpg"/>
+        <include name="TestText1.txt"/>
+        <include name="TestText2.txt"/>
       </resources>
       <references basedir="${current.build.dir}">
         <include name="nunitlite.dll"/>
@@ -135,7 +66,10 @@
       <fileset>
         <!--<patternset refid="source-files"/>-->
         <include name="**/*.cs"/>
-        <patternset refid="resource-files"/>
+        <include name="TestImage1.jpg"/>
+        <include name="TestImage2.jpg"/>
+        <include name="TestText1.txt"/>
+        <include name="TestText2.txt"/>
         <include name="nunit.framework.tests.build"/>
       </fileset>
     </copy>

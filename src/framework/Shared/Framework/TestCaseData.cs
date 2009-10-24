@@ -67,6 +67,9 @@ namespace NUnit.Framework
         /// </summary>
         private string expectedExceptionName;
 
+        private string expectedMessage;
+        private MessageMatch matchType;
+
         /// <summary>
         /// The name to be used for the test
         /// </summary>
@@ -171,6 +174,23 @@ namespace NUnit.Framework
         public string ExpectedExceptionName
         {
             get { return expectedExceptionName; }
+        }
+
+        /// <summary>
+        /// Gets or sets the expected message of the expected exception
+        /// </summary>
+        /// <value>The expected message of the exception.</value>
+        public string ExpectedMessage
+        {
+            get { return expectedMessage; }
+        }
+
+        /// <summary>
+        ///  Gets or sets the type of match to be performed on the expected message
+        /// </summary>
+        public MessageMatch MatchType
+        {
+            get { return matchType; }
         }
 
         /// <summary>

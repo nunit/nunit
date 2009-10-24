@@ -61,25 +61,13 @@ namespace NUnitLite
         /// <summary>
         /// Check to see if a type implements an interface.
         /// </summary>
-        /// <param name="type">The type to examine</param>
+        /// <param name="fixtureType">The type to examine</param>
         /// <param name="interfaceType">The interface type to check for</param>
         /// <returns>True if the interface is implemented by the type</returns>
-        public static bool HasInterface(Type type, Type interfaceType)
-        {
-            // NOTE: IsAssignableForm fails so we look for the name
-            return HasInterface( type, interfaceType.FullName );
-        }
-
-        /// <summary>
-        /// Check to see if a type implements a named interface.
-        /// </summary>
-        /// <param name="fixtureType">The type to examine</param>
-        /// <param name="interfaceName">The FullName of the interface to check for</param>
-        /// <returns>True if the interface is implemented by the type</returns>
-        public static bool HasInterface(Type fixtureType, string interfaceName)
+        public static bool HasInterface(Type fixtureType, Type interfaceType)
         {
             foreach (Type type in fixtureType.GetInterfaces())
-                if (type.FullName == interfaceName)
+                if ( type == interfaceType)
                     return true;
             return false;
         }
@@ -191,18 +179,18 @@ namespace NUnitLite
         #endregion
 
         #region Attributes
-        /// <summary>
-        /// Determines whether the specified member has a given attribute.
-        /// </summary>
-        /// <param name="member">The member.</param>
-        /// <param name="attr">The attribute type.</param>
-        /// <returns>
-        /// 	<c>true</c> if the specified member has attribute; otherwise, <c>false</c>.
-        /// </returns>
-        public static bool HasAttribute(MemberInfo member, Type attr)
-        {
-            return member.GetCustomAttributes(attr, true).Length > 0;
-        }
+        ///// <summary>
+        ///// Determines whether the specified member has a given attribute.
+        ///// </summary>
+        ///// <param name="member">The member.</param>
+        ///// <param name="attr">The attribute type.</param>
+        ///// <returns>
+        ///// 	<c>true</c> if the specified member has attribute; otherwise, <c>false</c>.
+        ///// </returns>
+        //public static bool HasAttribute(MemberInfo member, Type attr)
+        //{
+        //    return member.IsDefined(attr, true);
+        //}
 
         /// <summary>
         /// Gets an attribute of a specified type.
@@ -218,15 +206,15 @@ namespace NUnitLite
         #endregion
 
         #region Properties
-        /// <summary>
-        /// Gets the suite property.
-        /// </summary>
-        /// <param name="type">The type.</param>
-        /// <returns></returns>
-        public static PropertyInfo GetSuiteProperty(Type type)
-        {
-            return type.GetProperty("Suite", typeof(ITest), Reflect.EmptyTypes);
-        }
+        ///// <summary>
+        ///// Gets the suite property.
+        ///// </summary>
+        ///// <param name="type">The type.</param>
+        ///// <returns></returns>
+        //public static PropertyInfo GetSuiteProperty(Type type)
+        //{
+        //    return type.GetProperty("Suite", typeof(ITest), Reflect.EmptyTypes);
+        //}
         #endregion
     }
 }

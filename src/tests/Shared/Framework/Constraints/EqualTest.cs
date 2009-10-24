@@ -382,7 +382,7 @@ namespace NUnit.Framework.Constraints.Tests
             }
         }
 
-#if NET_3_5 || MONO_3_5 || NETCF_3_5
+#if NET_3_5 || MONO_3_5 || NETCF_3_5 || NET_4_0
         [Test]
         public void UsesProvidedLambda_IntArgs()
         {
@@ -447,7 +447,7 @@ namespace NUnit.Framework.Constraints.Tests
 
         public void HandleException(Exception ex)
         {
-            string NL = NUnitLite.Env.NewLine;
+            string NL = NUnit.Env.NewLine;
 
             StringReader rdr = new StringReader(ex.Message);
             /* skip */ rdr.ReadLine();
