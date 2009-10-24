@@ -1,14 +1,6 @@
 <?xml version="1.0"?>
 <project name="NUnitFrameworkTests" default="build" basedir=".">
 
-
-  <patternset id="resource-files">
-        <include name="TestImage1.jpg"/>
-        <include name="TestImage2.jpg"/>
-        <include name="TestText1.txt"/>
-        <include name="TestText2.txt"/>
-  </patternset>
-
   <target name="build" depends="build-nunit,build-nunitlite"/>
 
   <target name="build-nunit">
@@ -25,7 +17,10 @@
         <include name="Shared/Framework/**/*.cs"/>
       </sources>
       <resources prefix="NUnit.Framework.Tests">
-        <patternset refid="resource-files"/>
+        <include name="TestImage1.jpg"/>
+        <include name="TestImage2.jpg"/>
+        <include name="TestText1.txt"/>
+        <include name="TestText2.txt"/>
       </resources>
       <references basedir="${current.build.dir}">
         <include name="nunit.framework.dll"/>
@@ -50,7 +45,10 @@
         <include name="Shared/**/*.cs"/>
       </sources>
       <resources prefix="NUnit.Framework.Tests">
-        <patternset refid="resource-files"/>
+        <include name="TestImage1.jpg"/>
+        <include name="TestImage2.jpg"/>
+        <include name="TestText1.txt"/>
+        <include name="TestText2.txt"/>
       </resources>
       <references basedir="${current.build.dir}">
         <include name="nunitlite.dll"/>
@@ -68,7 +66,10 @@
       <fileset>
         <!--<patternset refid="source-files"/>-->
         <include name="**/*.cs"/>
-        <patternset refid="resource-files"/>
+        <include name="TestImage1.jpg"/>
+        <include name="TestImage2.jpg"/>
+        <include name="TestText1.txt"/>
+        <include name="TestText2.txt"/>
         <include name="nunit.framework.tests.build"/>
       </fileset>
     </copy>

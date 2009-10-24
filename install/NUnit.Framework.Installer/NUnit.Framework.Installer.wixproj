@@ -24,6 +24,8 @@
   <ItemGroup>
     <Compile Include="Framework-NET1.1.wxs" />
     <Compile Include="Framework-NET2.0.wxs" />
+    <Compile Include="Framework-NET3.5.wxs" />
+    <Compile Include="Framework-NET4.0.wxs" />
     <Compile Include="InstallOptionsDlg.wxs" />
     <Compile Include="Product.wxs" />
     <Compile Include="UserInterface.wxs" />
