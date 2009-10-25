@@ -64,8 +64,11 @@
         <!--<patternset refid="source-files"/>-->
         <include name="nunit.framework.build"/>
         <include name="SyntaxElements.txt"/>
+        <include name="*.cs"/>
         <include name="Shared/**/*.cs"/>
         <include name="NUnit/**/*.cs"/>
+        <include name="NUnitLite/**/*.cs"/>
+        <include name="Templates/*.cs"/>
       </fileset>
     </copy>
   </target>

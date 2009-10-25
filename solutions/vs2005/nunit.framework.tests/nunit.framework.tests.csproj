@@ -1,44 +1,35 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
+    <ProductVersion>8.0.50727</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{EA9871E3-9972-4476-821E-3961C28125E8}</ProjectGuid>
+    <ProjectGuid>{F6410C35-1348-46EA-BB1C-D8866C31458E}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NUnit.Framework.Tests</RootNamespace>
     <AssemblyName>nunit.framework.tests</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
     <StartupObject>
     </StartupObject>
-    <TargetFrameworkSubset>
-    </TargetFrameworkSubset>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;NET_3_5;CLR_2_0</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NET_2_0;CLR_2_0</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>
-    </DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\bin\Release\</OutputPath>
-    <DefineConstants>TRACE;NET_3_5;CLR_2_0</DefineConstants>
+    <DefineConstants>TRACE;NET_2_0;CLR_2_0</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>
-    </DocumentationFile>
   </PropertyGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
@@ -47,28 +38,17 @@
   </Target>
   -->
   <ItemGroup>
-    <ProjectReference Include="..\framework\nunit.framework.csproj">
-      <Project>{12B66B03-90F1-4992-BD33-BDF3C69AE49E}</Project>
-      <Name>nunit.framework</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\nunit.interfaces\nunit.interfaces.csproj">
-      <Project>{43D2F73E-0076-4A1F-8BC0-579EB0142519}</Project>
-      <Name>nunit.interfaces</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\test-assembly\test-assembly.csproj">
-      <Project>{15B64946-4989-4873-915C-3E181772FA03}</Project>
-      <Name>test-assembly</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="..\..\..\src\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\tests\NUnit\Core\AssemblyReaderTests.cs">
       <Link>NUnit\Core\AssemblyReaderTests.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\tests\NUnit\Core\AssertIgnoreTests.cs">
-      <Link>NUnit\Core\AssertIgnoreTests.cs</Link>
+    <Compile Include="..\..\..\src\tests\NUnit\Core\AssertFailTests.cs">
+      <Link>NUnit\Core\AssertFailTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\NUnit\Core\AssertInconclusiveTests.cs">
+      <Link>NUnit\Core\AssertInconclusiveTests.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\tests\NUnit\Core\AssertPassTests.cs">
       <Link>NUnit\Core\AssertPassTests.cs</Link>
@@ -286,6 +266,15 @@
     <Compile Include="..\..\..\src\tests\NUnit\TestUtilities\ResultSummary.cs">
       <Link>NUnit\TestUtilities\ResultSummary.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\tests\NUnit\TestUtilities\TestAssert.cs">
+      <Link>NUnit\TestUtilities\TestAssert.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\NUnit\TestUtilities\TestBuilder.cs">
+      <Link>NUnit\TestUtilities\TestBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\NUnit\TestUtilities\TestFinder.cs">
+      <Link>NUnit\TestUtilities\TestFinder.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\tests\Shared\Framework\AlwaysEqualComparer.cs">
       <Link>Shared\Framework\AlwaysEqualComparer.cs</Link>
     </Compile>
@@ -365,7 +354,7 @@
       <Link>Shared\Framework\Constraints\TypeConstraintTests.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\tests\Shared\Framework\Constraints\XmlSerializableTest.cs">
-      <Link>Shared\Framework\Constraints\XmlSerializableTest.cs</Link>
+      <Link>Shared\Framework\Constraints\XmlSeriazliableTest.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\tests\Shared\Framework\MessageChecker.cs">
       <Link>Shared\Framework\MessageChecker.cs</Link>
@@ -421,27 +410,9 @@
     <Compile Include="..\..\..\src\tests\Shared\Framework\TextMessageWriterTests.cs">
       <Link>Shared\Framework\TextMessageWriterTests.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\tests\NUnit\Core\AssertInconclusiveTests.cs">
-      <Link>NUnit\Core\AssertInconclusiveTests.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\tests\NUnit\Core\AssertFailTests.cs">
-      <Link>NUnit\Core\AssertFailTests.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\tests\NUnit\TestUtilities\TestAssert.cs">
-      <Link>NUnit\TestUtilities\TestAssert.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\tests\NUnit\TestUtilities\TestBuilder.cs">
-      <Link>NUnit\TestUtilities\TestBuilder.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\tests\NUnit\TestUtilities\TestFinder.cs">
-      <Link>NUnit\TestUtilities\TestFinder.cs</Link>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.XML" />
@@ -459,5 +430,19 @@
     <EmbeddedResource Include="..\..\..\src\tests\TestText2.txt">
       <Link>TestText2.txt</Link>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\nunit.framework\nunit.framework.csproj">
+      <Project>{816F2E66-2A25-4513-B5FA-8ECB4A5647CD}</Project>
+      <Name>nunit.framework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\nunit.interfaces\nunit.interfaces.csproj">
+      <Project>{C5FFA3A5-6A0C-44AD-B23F-9A8424136C7B}</Project>
+      <Name>nunit.interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\test-assembly\test-assembly.csproj">
+      <Project>{E8B2744E-AF16-4451-A9E9-2F669AAB4E45}</Project>
+      <Name>test-assembly</Name>
+    </ProjectReference>
   </ItemGroup>
 </Project>

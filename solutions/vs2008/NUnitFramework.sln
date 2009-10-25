@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.framework", "framework\nunit.framework.csproj", "{12B66B03-90F1-4992-BD33-BDF3C69AE49E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.framework", "nunit.framework\nunit.framework.csproj", "{12B66B03-90F1-4992-BD33-BDF3C69AE49E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.framework.tests", "tests\nunit.framework.tests.csproj", "{EA9871E3-9972-4476-821E-3961C28125E8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.framework.tests", "nunit.framework.tests\nunit.framework.tests.csproj", "{EA9871E3-9972-4476-821E-3961C28125E8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunitlite", "nunitlite\nunitlite.csproj", "{0BFA7F0A-BC15-40A5-863A-FA9B55AE2FD3}"
 EndProject
@@ -13,7 +13,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.interfaces", "nunit.i
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "test-assembly", "test-assembly\test-assembly.csproj", "{15B64946-4989-4873-915C-3E181772FA03}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "test-runner", "runner\test-runner.csproj", "{126DBBB4-1731-4E0D-8937-4F2FAADCA0EF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "test-runner", "test-runner\test-runner.csproj", "{126DBBB4-1731-4E0D-8937-4F2FAADCA0EF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
