@@ -33,7 +33,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\framework\nunit.framework.csproj">
+    <ProjectReference Include="..\nunit.framework\nunit.framework.csproj">
       <Project>{816F2E66-2A25-4513-B5FA-8ECB4A5647CD}</Project>
       <Name>nunit.framework</Name>
     </ProjectReference>
