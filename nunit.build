@@ -820,7 +820,7 @@ to the correct location.
   <target name="build-tools"
       description="Build tools used in building NUnit">
 
-    <nant target="build" buildfile="tools/src/CodeGeneration/CodeGeneration.build"/>
+    <nant target="GenSyntax" buildfile="tools/src/CodeGeneration/CodeGeneration.build"/>
 
     <!-- Ensure we only do this once per session -->
     <property name="built.tools" value="YES"/>
