@@ -598,7 +598,7 @@ to the correct location.
     <call target="copy-src"/>
     <call target="copy-tools" />
 
-    <copy file="license.txt" todir="${package.working.dir}" />
+    <copy file="LICENSE.txt" todir="${package.working.dir}" />
 
     <zip  ziplevel="9"
         zipfile="${project.package.dir}/${package.name}-src.zip">
