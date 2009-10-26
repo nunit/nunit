@@ -18,7 +18,7 @@
   </target>
 
   <target name="package">
-    <copy todir="${package.src.dir}/framework">
+    <copy todir="${package.src.dir}/runner">
       <fileset>
         <include name="test-runner.build"/>
         <include name="*.cs"/>

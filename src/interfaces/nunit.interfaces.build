@@ -13,7 +13,6 @@
         <warning number="1699" if="${runtime.version=='2.0'}"/>
       </nowarn>
       <sources basedir=".">
-<!--        <include name="../CommonAssemblyInfo.cs" /> -->
         <include name="AssemblyInfo.cs"/>
         <include name="Framework/**/*.cs"/>
         <include name="Core/**/*.cs"/>
@@ -23,10 +22,10 @@
   </target>
 
   <target name="package">
-    <copy todir="${package.src.dir}/framework">
+    <copy todir="${package.src.dir}/interfaces">
       <fileset>
-        <include name="nunit.framework.build"/>
-        <include name="AssemblyIno.cs"/>
+        <include name="nunit.interfaces.build"/>
+        <include name="AssemblyInfo.cs"/>
         <include name="Interfaces.txt"/>
         <include name="Core/**/*.cs"/>
       </fileset>

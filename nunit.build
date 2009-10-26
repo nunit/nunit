@@ -42,12 +42,12 @@
   <property name="project.name" value="NUnit"/>
 
   <!-- NUnit Package Version - Three digits -->
-  <property name="package.version" value="2.9.2"/>
+  <property name="package.version" value="2.9.3"/>
 
   <!-- Nominal version used for install directory and program
        files menu. Normally the same as the package version, 
        but may differ when we are in alpha or beta. -->
-  <property name="nominal.version" value="2.9.2" />
+  <property name="nominal.version" value="2.9.3" />
 
   <!-- Package Configuration (Release, Alpha, Beta, etc.) -->
   <property name="package.configuration" value=""/>
@@ -186,6 +186,9 @@
 
     </exec>
 
+    <!-- Ensure we only do this once per session -->
+    <property name="generated.syntax" value="YES"/>
+
   </target>
 
 <!-- ***************************************************************** -->
@@ -214,10 +217,15 @@
 
   </target>
 
-  <target name="build-nunit" depends="gen-syntax, make-build-dir">
+  <target name="build-nunit" depends="make-build-dir">
 
     <fail if="${runtime.platform=='netcf'}"
       message="The full NUnit framework may not be built for netcf"/>
+
+    <call target="build-tools"
+      unless="${property::exists('built.tools')}"/>
+    <call target="gen-syntax" 
+      unless="${property::exists('generated.syntax')}"/>
 
     <nant target="build" buildfile="src/interfaces/nunit.interfaces.build"/>
     <nant target="build-nunit" buildfile="src/framework/nunit.framework.build"/>
@@ -227,7 +235,12 @@
 
   </target>
 
-  <target name="build-nunitlite" depends="gen-syntax,make-build-dir">
+  <target name="build-nunitlite" depends="make-build-dir">
+
+    <call target="build-tools"
+      unless="${property::exists('built.tools')}"/>
+    <call target="gen-syntax" 
+      unless="${property::exists('generated.syntax')}"/>
 
     <nant target="build-nunitlite" buildfile="src/framework/nunit.framework.build"/>
     <nant target="build-nunitlite" buildfile="src/tests/nunit.framework.tests.build"/>
@@ -585,7 +598,7 @@ to the correct location.
     <call target="copy-src"/>
     <call target="copy-tools" />
 
-    <copy file="license.txt" todir="${package.working.dir}" />
+    <copy file="LICENSE.txt" todir="${package.working.dir}" />
 
     <zip  ziplevel="9"
         zipfile="${project.package.dir}/${package.name}-src.zip">
@@ -736,11 +749,11 @@ to the correct location.
         <include name="nunit.common.include"/>
         <include name="nunit.snk"/>
         <include name="src/CommonAssemblyInfo.cs"/>
-        <include name="install/license.rtf"/>
         <include name="install/NUnit.Installer.sln"/>
         <include name="install/NUnit.Framework.Installer/*.wixproj"/>
         <include name="install/NUnit.Framework.Installer/*.wxs"/>
         <include name="install/NUnit.Framework.Installer/*.wxi"/>
+        <include name="install/NUnit.Framework.Installer/License.rtf"/>
       </fileset>
     </copy>
 
@@ -753,9 +766,16 @@ to the correct location.
     <copy todir="${package.solutions.dir}">
       <fileset basedir="${project.solutions.dir}">
         <include name="**/NUnitFramework.sln"/>
-        <include name="**/framework/nunit.snk"/>
-        <include name="**/framework/nunit.framework.csproj"/>
-        <include name="**/tests/nunit.framework.tests.csproj"/>
+        <include name="**/nunit.framework/nunit.snk"/>
+        <include name="**/nunit.framework/nunit.framework.csproj"/>
+        <include name="**/nunit.interfaces/nunit.snk"/>
+        <include name="**/nunit.interfaces/nunit.interfaces.csproj"/>
+        <include name="**/nunit.framework.tests/nunit.framework.tests.csproj"/>
+        <include name="**/nunitlite/nunit.snk"/>
+        <include name="**/nunitlite/nunitlite.csproj"/>
+        <include name="**/nunitlite.tests/nunitlite.tests.csproj"/>
+        <include name="**/test-assembly/test-assembly.csproj"/>
+        <include name="**/test-runner/test-runner.csproj"/>
       </fileset>
     </copy>
 
@@ -772,12 +792,11 @@ to the correct location.
     <copy todir="${package.tools.dir}">
       <fileset basedir="${project.tools.dir}">
         <include name="bin/GenSyntax.exe"/>
-        <include name="src/Gensyntax/GenSyntax.build"/>
-        <include name="src/Gensyntax/GenSyntax.csproj"/>
-        <include name="src/Gensyntax/GenSyntax.sln"/>
-        <include name="src/Gensyntax/App.ico"/>
-        <include name="src/GenSyntax/*.cs"/>
-        <include name="src/Gensyntax/Templates/*.cs"/>
+        <include name="src/CodeGeneration/CodeGeneration.sln"/>
+        <include name="src/CodeGeneration/CodeGeneration.build"/>
+        <include name="src/CodeGeneration/**/*.csproj"/>
+        <include name="src/CodeGeneration/**/*.cs"/>
+        <include name="src/CodeGeneration/GenSyntax/App.ico"/>
       </fileset>
     </copy>
 
@@ -794,7 +813,7 @@ to the correct location.
   <target name="clean-tools"
       description="Remove binaries of tools used to build NUnit (DANGEROUS!)">
 
-    <nant target="clean" buildfile="tools/src/GenSyntax/GenSyntax.build"/>
+    <nant target="clean" buildfile="tools/src/CodeGeneration/CodeGeneration.build"/>
 
   </target>
 
@@ -802,6 +821,9 @@ to the correct location.
       description="Build tools used in building NUnit">
 
     <nant target="GenSyntax" buildfile="tools/src/CodeGeneration/CodeGeneration.build"/>
+
+    <!-- Ensure we only do this once per session -->
+    <property name="built.tools" value="YES"/>
 
   </target>
 
@@ -813,8 +835,14 @@ to the correct location.
 
     <!-- Framework -->
     <include name="framework/nunit.framework.build" />
+    <!-- Interfaces -->
+    <include name="interfaces/nunit.interfaces.build" />
     <!-- Framework Tests -->
     <include name="tests/nunit.framework.tests.build" />
+    <!-- Test Data -->
+    <include name="test-assembly/test-assembly.build" />
+    <!-- Test Runner -->
+    <include name="runner/test-runner.build" />
 
   </fileset>
 
