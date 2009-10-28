@@ -87,7 +87,7 @@ namespace NUnit.Framework
         /// <param name="message">The message that will be displayed on failure</param>
         static public void That(object actual, IResolveConstraint expression, string message)
         {
-            Assert.That(actual, expression, message, null);
+            Assume.That(actual, expression, message, null);
         }
 
         /// <summary>
