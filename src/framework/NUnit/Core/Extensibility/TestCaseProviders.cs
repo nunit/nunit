@@ -54,7 +54,7 @@ namespace NUnit.Core.Extensibility
         /// <returns></returns>
         public IEnumerable GetTestCasesFor(MethodInfo method)
         {
-            ArrayList testcases = new ArrayList();
+            ObjectList testcases = new ObjectList();
 
             foreach (ITestCaseProvider provider in Extensions)
                 try
@@ -111,7 +111,7 @@ namespace NUnit.Core.Extensibility
         /// <returns></returns>
         public IEnumerable GetTestCasesFor(MethodInfo method, Test suite)
         {
-            ArrayList testcases = new ArrayList();
+            ObjectList testcases = new ObjectList();
 
             foreach (ITestCaseProvider provider in Extensions)
                 try

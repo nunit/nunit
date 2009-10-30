@@ -79,7 +79,7 @@ namespace NUnit.Core.Builders
         /// <returns></returns>
         public IEnumerable GetTestCasesFor(MethodInfo method, Test parentSuite)
         {
-            ArrayList parameterList = new ArrayList();
+            ObjectList parameterList = new ObjectList();
 
             foreach (ProviderReference info in GetSourcesFor(method, parentSuite))
             {
@@ -92,9 +92,9 @@ namespace NUnit.Core.Builders
         #endregion
 
         #region Helper Methods
-        private static IList GetSourcesFor(MethodInfo method, Test parent)
+        private static ProviderList GetSourcesFor(MethodInfo method, Test parent)
         {
-            ArrayList sources = new ArrayList();
+            ProviderList sources = new ProviderList();
             TestFixture parentSuite = parent as TestFixture;
 
             foreach (TestCaseSourceAttribute sourceAttr in method.GetCustomAttributes(typeof(TestCaseSourceAttribute), false))

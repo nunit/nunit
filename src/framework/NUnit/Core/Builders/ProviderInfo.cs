@@ -105,4 +105,10 @@ namespace NUnit.Core.Builders
             return providerObject;
         }
     }
+
+#if CLR_2_0
+    class ProviderList : System.Collections.Generic.List<ProviderReference> { }
+#else
+    class ProviderList : ArrayList { }
+#endif
 }

@@ -59,7 +59,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         private EqualityAdapter externalComparer;
 
-        private ArrayList failurePoints;
+        private FailurePointList failurePoints;
 
         private static readonly int BUFFER_SIZE = 4096;
         #endregion
@@ -129,7 +129,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public bool ObjectsEqual(object x, object y)
         {
-            this.failurePoints = new ArrayList();
+            this.failurePoints = new FailurePointList();
 
             if (x == null && y == null)
                 return true;
@@ -314,6 +314,14 @@ namespace NUnit.Framework.Constraints
 
             return true;
         }
+        #endregion
+
+        #region Nested FailurePointList class
+#if CLR_2_0
+        private class FailurePointList : System.Collections.Generic.List<long> { }
+#else
+        private class FailurePointList : ArrayList { }
+#endif
         #endregion
     }
 }

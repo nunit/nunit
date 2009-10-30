@@ -17,8 +17,7 @@
       <sources basedir=".">
         <!--<patternset refid="source-files"/>-->
         <include name="../CommonAssemblyInfo.cs" />
-        <include name="AssemblyInfo.cs"/>
-        <include name="Env.cs"/>
+        <include name="*.cs"/>
         <include name="Shared/**/*.cs"/>
         <include name="NUnit/**/*.cs"/>
       </sources>
@@ -43,8 +42,7 @@
       <sources basedir=".">
         <!--<patternset refid="source-files"/>-->
         <include name="../CommonAssemblyInfo.cs" />
-        <include name="AssemblyInfo.cs"/>
-        <include name="Env.cs"/>
+        <include name="*.cs"/>
         <include name="Shared/**/*.cs"/>
         <include name="NUnitLite/**/*.cs"/>
         <include name="../interfaces/Framework/**/*.cs"/>

@@ -114,7 +114,7 @@ namespace NUnitLite.Runner
         private CommandLineOptions options;
         private int reportCount = 0;
 
-        private ArrayList assemblies = new ArrayList();
+        private NUnit.ObjectList assemblies = new NUnit.ObjectList();
 
         private TextWriter writer;
 

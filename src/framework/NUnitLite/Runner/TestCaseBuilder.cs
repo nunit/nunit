@@ -25,6 +25,7 @@ using System;
 using System.Collections;
 using System.Reflection;
 using NUnit.Framework;
+using ObjectList = NUnit.ObjectList;
 
 namespace NUnitLite.Runner
 {
@@ -68,7 +69,7 @@ namespace NUnitLite.Runner
 
         private static IList GetTestCaseData(MethodInfo method)
         {
-            ArrayList data = new ArrayList();
+            ObjectList data = new ObjectList();
 
             object[] attrs = method.GetCustomAttributes(typeof(TestCaseAttribute), false);
             foreach (TestCaseAttribute attr in attrs)

@@ -89,31 +89,32 @@ namespace NUnit.Framework.Constraints
 		/// <returns>The path in standardized form</returns>
 		protected string Canonicalize( string path )
 		{
-			ArrayList parts = new ArrayList( path.Split( DirectorySeparatorChars ) );
+			string[] parts = path.Split( DirectorySeparatorChars );
 
-			for( int index = 0; index < parts.Count; )
+            int count = 0;
+            bool shifting = false;
+			foreach( string part in parts )
 			{
-				string part = (string)parts[index];
-		
 				switch( part )
 				{
 					case ".":
-						parts.RemoveAt( index );
+                        shifting = true;
 						break;
 				
 					case "..":
-						parts.RemoveAt( index );
-						if ( index > 0 )
-							parts.RemoveAt( --index );
+                        shifting = true;
+						if ( count > 0 )
+                            --count;
 						break;
 					default:
-						index++;
+                        if (shifting)
+                            parts[count] = part;
+                        ++count;
 						break;
 				}
 			}
 	
-			return String.Join( Path.DirectorySeparatorChar.ToString(), 
-				(string[])parts.ToArray( typeof( string ) ) );
+			return String.Join( Path.DirectorySeparatorChar.ToString(), parts, 0, count );
 		}
 
 		/// <summary>

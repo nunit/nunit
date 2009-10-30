@@ -24,6 +24,7 @@
 using System;
 using System.Collections;
 using NUnit.Framework;
+using ObjectList = NUnit.ObjectList;
 
 namespace NUnitLite
 {
@@ -65,7 +66,7 @@ namespace NUnitLite
         private string stackTrace;
 #endif
 
-        private ArrayList results;
+        private ObjectList results;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TestResult"/> class.
@@ -103,7 +104,7 @@ namespace NUnitLite
             get 
             {
                 if (results == null)
-                    results = new ArrayList();
+                    results = new ObjectList();
 
                 return results;
             }
@@ -176,7 +177,7 @@ namespace NUnitLite
         public void AddResult(TestResult result)
         {
             if (results == null)
-                results = new ArrayList();
+                results = new ObjectList();
 
             results.Add(result);
 

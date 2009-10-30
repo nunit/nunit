@@ -34,7 +34,7 @@ namespace NUnit.Core.Builders
 
         public override IEnumerable GetTestCases()
         {
-			ArrayList testCases = new ArrayList();
+			ArgumentsCollection testCases = new ArgumentsCollection();
 
             for (; ; )
             {

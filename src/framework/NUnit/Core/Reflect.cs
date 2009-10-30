@@ -50,7 +50,7 @@ namespace NUnit.Core
         private static Hashtable allAttributes = new Hashtable();
         private static Hashtable methodCache = new Hashtable();
 
-        #region Attributes 
+        #region Attributes
 
         /// <summary>
         /// Check presence of attribute with a given name on a member.

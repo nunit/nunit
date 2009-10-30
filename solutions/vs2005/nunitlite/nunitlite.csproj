@@ -42,6 +42,9 @@
     <Compile Include="..\..\..\src\framework\AssemblyInfo.cs">
       <Link>AssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\framework\CompatibleCollections.cs">
+      <Link>CompatibleCollections.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\framework\Env.cs">
       <Link>Env.cs</Link>
     </Compile>

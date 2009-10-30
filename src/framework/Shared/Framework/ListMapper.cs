@@ -51,7 +51,7 @@ namespace NUnit.Framework
 		/// <returns></returns>
 		public ICollection Property( string name )
 		{
-			ArrayList propList = new ArrayList();
+			ObjectList propList = new ObjectList();
 			foreach( object item in original )
 			{
 				PropertyInfo property = item.GetType().GetProperty( name, 

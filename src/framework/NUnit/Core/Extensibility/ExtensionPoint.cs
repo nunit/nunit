@@ -122,4 +122,10 @@ namespace NUnit.Core.Extensibility
 		protected abstract bool IsValidExtension(object extension);
 		#endregion
 	}
+
+#if CLR_2_0
+    public class ExtensionPointList : System.Collections.Generic.List<ExtensionPoint> { }
+#else
+    public class ExtensionPointList : ArrayList { }
+#endif
 }

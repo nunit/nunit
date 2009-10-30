@@ -87,7 +87,7 @@ namespace NUnit.Core.Builders
         /// <returns></returns>
         public IEnumerable GetDataFor(ParameterInfo parameter, Test parentSuite)
         {
-            ArrayList parameterList = new ArrayList();
+            ObjectList parameterList = new ObjectList();
 
             foreach (ProviderReference providerRef in GetSourcesFor(parameter, parentSuite))
             {
@@ -102,9 +102,9 @@ namespace NUnit.Core.Builders
         #endregion
 
         #region Helper Methods
-        private static IList GetSourcesFor(ParameterInfo parameter, Test parent)
+        private static ProviderList GetSourcesFor(ParameterInfo parameter, Test parent)
         {
-            ArrayList sources = new ArrayList();
+            ProviderList sources = new ProviderList();
             TestFixture parentSuite = parent as TestFixture;
 
             foreach (ValueSourceAttribute sourceAttr in parameter.GetCustomAttributes(typeof(ValueSourceAttribute), false))
