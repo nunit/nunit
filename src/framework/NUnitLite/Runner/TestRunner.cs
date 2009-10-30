@@ -40,7 +40,7 @@ namespace NUnitLite.Runner
     /// </summary>
     public class TestRunner : TestListener
     {
-        private IList listeners = new ArrayList();
+        private NUnit.ObjectList listeners = new NUnit.ObjectList();
 
         /// <summary>
         /// Runs all tests in the specified assembly.

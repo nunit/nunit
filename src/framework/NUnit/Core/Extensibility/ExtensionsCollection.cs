@@ -31,7 +31,7 @@ namespace NUnit.Core.Extensibility
 		private static readonly int DEFAULT_LEVEL = 0;
 		private static readonly int MAX_LEVELS = 10;
 
-		private ArrayList[] lists;
+		private ObjectList[] lists;
 
 		public ExtensionsCollection() : this(1) {}
 
@@ -42,7 +42,7 @@ namespace NUnit.Core.Extensibility
 			else if ( levels > MAX_LEVELS )
 				levels = MAX_LEVELS;
 
-			lists = new ArrayList[levels];
+			lists = new ObjectList[levels];
 		}
 
 	    public int Levels
@@ -62,7 +62,7 @@ namespace NUnit.Core.Extensibility
 					"Value must be between 0 and " + lists.Length );
 
 			if ( lists[level] == null )
-				lists[level] = new ArrayList();
+				lists[level] = new ObjectList();
 
 			lists[level].Add( extension );
 		}
@@ -82,11 +82,11 @@ namespace NUnit.Core.Extensibility
 
 		public class ExtensionsEnumerator : IEnumerator
 		{
-			private ArrayList[] lists;
+			private ObjectList[] lists;
 			private IEnumerator listEnum;
 			private int currentLevel;
 
-			public ExtensionsEnumerator( ArrayList[] lists )
+			public ExtensionsEnumerator( ObjectList[] lists )
 			{
 				this.lists = lists;
 				Reset();

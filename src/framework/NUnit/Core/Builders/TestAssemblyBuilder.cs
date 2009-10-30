@@ -148,7 +148,7 @@ namespace NUnit.Core.Builders
 
 		private IList GetFixtures( Assembly assembly, string ns )
 		{
-			ArrayList fixtures = new ArrayList();
+			ObjectList fixtures = new ObjectList();
             log.Debug("Examining assembly for test fixtures");
 
 			IList testTypes = GetCandidateFixtureTypes( assembly, ns );
@@ -183,7 +183,7 @@ namespace NUnit.Core.Builders
 
 			string prefix = ns + "." ;
 			
-			ArrayList result = new ArrayList();
+			ObjectList result = new ObjectList();
 			foreach( Type type in types )
 				if ( type.FullName.StartsWith( prefix ) )
 					result.Add( type );

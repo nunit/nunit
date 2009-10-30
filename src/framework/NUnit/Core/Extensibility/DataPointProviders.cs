@@ -58,7 +58,7 @@ namespace NUnit.Core.Extensibility
         /// <returns>An IEnumerable providing the required data</returns>
         public IEnumerable GetDataFor(ParameterInfo parameter)
         {
-            ArrayList list = new ArrayList();
+            ObjectList list = new ObjectList();
 
             foreach (IDataPointProvider provider in Extensions)
                 if (provider.HasDataFor(parameter))
@@ -103,7 +103,7 @@ namespace NUnit.Core.Extensibility
         /// <returns>An IEnumerable providing the required data</returns>
         public IEnumerable GetDataFor(ParameterInfo parameter, Test suite)
         {
-            ArrayList list = new ArrayList();
+            ObjectList list = new ObjectList();
 
             foreach (IDataPointProvider provider in Extensions)
             {

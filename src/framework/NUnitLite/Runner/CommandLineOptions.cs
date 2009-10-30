@@ -24,6 +24,7 @@
 using System;
 using System.Text;
 using System.Collections;
+using StringList = NUnit.StringCollection;
 
 namespace NUnitLite.Runner
 {
@@ -40,12 +41,12 @@ namespace NUnitLite.Runner
         private bool listprops = false;
         private bool help = false;
 
-        private ArrayList tests = new ArrayList();
+        private StringList tests = new StringList();
 
         bool error = false;
 
-        ArrayList invalidOptions = new ArrayList();
-        ArrayList parameters = new ArrayList();
+        StringList invalidOptions = new StringList();
+        StringList parameters = new StringList();
 
         /// <summary>
         /// Gets a value indicating whether the 'wait' option was used.
@@ -84,7 +85,7 @@ namespace NUnitLite.Runner
         /// </summary>
         public string[] Tests
         {
-            get { return (string[])tests.ToArray(typeof(string)); }
+            get { return (string[])tests.ToArray(); }
         }
 
         /// <summary>
@@ -132,7 +133,7 @@ namespace NUnitLite.Runner
         /// </summary>
         public string[] Parameters
         {
-            get { return (string[])parameters.ToArray( typeof(string) ); }
+            get { return (string[])parameters.ToArray(); }
         }
 
         private void ProcessOption(string opt)

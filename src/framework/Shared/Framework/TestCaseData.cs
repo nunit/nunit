@@ -239,7 +239,7 @@ namespace NUnit.Framework
             get
             {
                 if (Properties[CATEGORIES] == null)
-                    Properties[CATEGORIES] = new ArrayList();
+                    Properties[CATEGORIES] = new StringCollection();
 
                 return (IList)Properties[CATEGORIES];
             }

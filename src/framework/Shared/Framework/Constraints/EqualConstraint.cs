@@ -370,8 +370,8 @@ namespace NUnit.Framework.Constraints
                 DisplayStringDifferences(writer, (string)expected, (string)actual);
             else if (expected is ICollection && actual is ICollection)
                 DisplayCollectionDifferences(writer, (ICollection)expected, (ICollection)actual, depth);
-			else if (expected is Stream && actual is Stream)
-				DisplayStreamDifferences(writer, (Stream)expected, (Stream)actual, depth);
+            else if (expected is Stream && actual is Stream)
+                DisplayStreamDifferences(writer, (Stream)expected, (Stream)actual, depth);
             else if (comparer.Tolerance != null)
                 writer.DisplayDifferences(expected, actual, comparer.Tolerance);
             else
@@ -396,10 +396,10 @@ namespace NUnit.Framework.Constraints
 		#region DisplayStreamDifferences
 		private void DisplayStreamDifferences(MessageWriter writer, Stream expected, Stream actual, int depth)
 		{
-			if ( expected.Length == actual.Length )
+            if (expected.Length == actual.Length)
 			{
-				long offset = (long)comparer.FailurePoints[depth];
-				writer.WriteMessageLine(StreamsDiffer_1, expected.Length, offset);
+                long offset = (long)comparer.FailurePoints[depth];
+                writer.WriteMessageLine(StreamsDiffer_1, expected.Length, offset);
 			}
 			else
 				writer.WriteMessageLine(StreamsDiffer_2, expected.Length, actual.Length);
@@ -416,7 +416,7 @@ namespace NUnit.Framework.Constraints
         /// <param name="depth">The depth of this failure in a set of nested collections</param>
         private void DisplayCollectionDifferences(MessageWriter writer, ICollection expected, ICollection actual, int depth)
         {
-            int failurePoint = comparer.FailurePoints.Count > depth ? (int)comparer.FailurePoints[depth] : -1;
+            long failurePoint = comparer.FailurePoints.Count > depth ? (long)comparer.FailurePoints[depth] : -1;
 
             DisplayCollectionTypesAndSizes(writer, expected, actual, depth);
 
@@ -426,18 +426,18 @@ namespace NUnit.Framework.Constraints
 				if (failurePoint < expected.Count && failurePoint < actual.Count)
 					DisplayDifferences(
 						writer,
-						GetValueFromCollection(expected, failurePoint),
-						GetValueFromCollection(actual, failurePoint),
+						GetValueFromCollection(expected, (int)failurePoint),
+						GetValueFromCollection(actual, (int)failurePoint),
 						++depth);
 				else if (expected.Count < actual.Count)
 				{
 					writer.Write( "  Extra:    " );
-					writer.WriteCollectionElements( actual, failurePoint, 3 );
+					writer.WriteCollectionElements( actual, (int)failurePoint, 3 );
 				}
 				else
 				{
 					writer.Write( "  Missing:  " );
-					writer.WriteCollectionElements( expected, failurePoint, 3 );
+					writer.WriteCollectionElements( expected, (int)failurePoint, 3 );
 				}
             }
         }
@@ -477,7 +477,7 @@ namespace NUnit.Framework.Constraints
         /// <param name="actual">The actual array</param>
         /// <param name="failurePoint">Index of the failure point in the underlying collections</param>
 		/// <param name="indent">The indentation level for the message line</param>
-		private void DisplayFailurePoint(MessageWriter writer, ICollection expected, ICollection actual, int failurePoint, int indent)
+		private void DisplayFailurePoint(MessageWriter writer, ICollection expected, ICollection actual, long failurePoint, int indent)
         {
             Array expectedArray = expected as Array;
             Array actualArray = actual as Array;
@@ -492,14 +492,14 @@ namespace NUnit.Framework.Constraints
                     if (expectedArray.GetLength(r) != actualArray.GetLength(r))
                         useOneIndex = false;
 
-            int[] expectedIndices = MsgUtils.GetArrayIndicesFromCollectionIndex(expected, failurePoint);
+            int[] expectedIndices = MsgUtils.GetArrayIndicesFromCollectionIndex(expected, (int)failurePoint);
             if (useOneIndex)
             {
                 writer.WriteMessageLine(indent, ValuesDiffer_1, MsgUtils.GetArrayIndicesAsString(expectedIndices));
             }
             else
             {
-                int[] actualIndices = MsgUtils.GetArrayIndicesFromCollectionIndex(actual, failurePoint);
+                int[] actualIndices = MsgUtils.GetArrayIndicesFromCollectionIndex(actual, (int)failurePoint);
                 writer.WriteMessageLine(indent, ValuesDiffer_2,
                     MsgUtils.GetArrayIndicesAsString(expectedIndices), MsgUtils.GetArrayIndicesAsString(actualIndices));
             }

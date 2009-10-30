@@ -65,7 +65,7 @@ namespace NUnit.Core.Builders
 
         public System.Collections.IEnumerable GetDataFor(System.Reflection.ParameterInfo parameter)
         {
-            ArrayList datapoints = new ArrayList();
+            ObjectList datapoints = new ObjectList();
 
             Type parameterType = parameter.ParameterType;
             MemberInfo method = parameter.Member;

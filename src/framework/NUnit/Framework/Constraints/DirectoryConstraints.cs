@@ -22,7 +22,6 @@
 // ***********************************************************************
 
 using System;
-using System.Collections;
 using System.IO;
 
 namespace NUnit.Framework.Constraints
@@ -130,9 +129,9 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="StartingDirectory">directory to recurse</param>
         /// <returns>list of DirectoryInfo objects from the top level</returns>
-        private ArrayList BuildDirectoryList(DirectoryInfo StartingDirectory)
+        private DirectoryList BuildDirectoryList(DirectoryInfo StartingDirectory)
         {
-            ArrayList alDirectories = new ArrayList();
+            DirectoryList alDirectories = new DirectoryList();
 
             // recurse each directory
             foreach (DirectoryInfo adirectory in StartingDirectory.GetDirectories())
@@ -157,7 +156,7 @@ namespace NUnit.Framework.Constraints
                 return false;
             }
 
-            ArrayList listDirectories = BuildDirectoryList(ParentDirectory);
+            DirectoryList listDirectories = BuildDirectoryList(ParentDirectory);
 
             foreach (DirectoryInfo adirectory in listDirectories)
             {
@@ -182,5 +181,14 @@ namespace NUnit.Framework.Constraints
                 && expected.FullName == actual.FullName
                 && expected.LastAccessTime == actual.LastAccessTime;
         }
+
+        /// <summary>
+        /// Nested class representing a list of DirectoryInfos
+        /// </summary>
+#if CLR_2_0
+        private class DirectoryList : System.Collections.Generic.List<DirectoryInfo> { }
+#else
+        private class DirectoryList : System.Collections.ArrayList { }
+#endif
     }
 }

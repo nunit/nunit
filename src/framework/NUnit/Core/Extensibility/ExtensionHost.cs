@@ -37,7 +37,7 @@ namespace NUnit.Core.Extensibility
 	{
 		#region Protected Fields
 
-	    protected ArrayList extensions;
+        protected ExtensionPointList extensions = new ExtensionPointList();
 
 		protected ExtensionType supportedTypes;
 		#endregion
@@ -45,7 +45,7 @@ namespace NUnit.Core.Extensibility
 		#region IExtensionHost Interface
 		public IExtensionPoint[] ExtensionPoints
 		{
-			get { return (IExtensionPoint[])extensions.ToArray(typeof(IExtensionPoint)); }
+			get { return (IExtensionPoint[])extensions.ToArray(); }
 		}
 
         public IFrameworkRegistry FrameworkRegistry

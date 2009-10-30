@@ -79,7 +79,6 @@ namespace NUnit.Core
             this.testcaseProviders = new TestCaseProviders(this);
             this.dataPointProviders = new DataPointProviders(this);
 
-		    this.extensions = new ArrayList();
 		    extensions.Add(suiteBuilders);
 		    extensions.Add(testBuilders);
 		    extensions.Add(testDecorators);

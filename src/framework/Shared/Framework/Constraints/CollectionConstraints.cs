@@ -206,7 +206,7 @@ namespace NUnit.Framework.Constraints
         protected internal class CollectionTally
         {
             // Internal list used to track occurences
-            private ArrayList list = new ArrayList();
+            private ObjectList list = new ObjectList();
 
             private NUnitEqualityComparer comparer;
 
@@ -309,7 +309,7 @@ namespace NUnit.Framework.Constraints
         /// <returns></returns>
         protected override bool doMatch(IEnumerable actual)
         {
-            ArrayList list = new ArrayList();
+            ObjectList list = new ObjectList();
 
             foreach (object o1 in actual)
             {

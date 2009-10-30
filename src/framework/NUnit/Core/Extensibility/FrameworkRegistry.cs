@@ -70,7 +70,7 @@ namespace NUnit.Core.Extensibility
         /// <returns>A list of AssemblyNames</returns>
         public IList GetReferencedFrameworks(Assembly assembly)
         {
-            ArrayList referencedAssemblies = new ArrayList();
+            AssemblyNameList referencedAssemblies = new AssemblyNameList();
 
             foreach (AssemblyName assemblyRef in assembly.GetReferencedAssemblies())
             {
@@ -86,6 +86,12 @@ namespace NUnit.Core.Extensibility
 
             return referencedAssemblies;
         }
+
+#if CLR_2_0
+        private class AssemblyNameList : System.Collections.Generic.List<AssemblyName> { }
+#else
+        private class AssemblyNameList : ArrayList { }
+#endif
         #endregion
     }
 }

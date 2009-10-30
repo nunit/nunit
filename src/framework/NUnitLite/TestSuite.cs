@@ -42,7 +42,7 @@ namespace NUnitLite
 
         private IDictionary properties = new Hashtable();
 
-        private ArrayList tests = new ArrayList(10);
+        private NUnit.ObjectList tests = new NUnit.ObjectList();
         #endregion
 
         #region Constructors

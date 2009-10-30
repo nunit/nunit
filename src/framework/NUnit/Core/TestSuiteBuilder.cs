@@ -34,7 +34,7 @@ namespace NUnit.Core
 	{
 		#region Instance Variables
 
-		private ArrayList builders = new ArrayList();
+		private ObjectList builders = new ObjectList();
 
 		#endregion
 

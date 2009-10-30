@@ -37,7 +37,7 @@ namespace NUnit.Core.Builders
             IEnumerator[] enumerators = new IEnumerator[Sources.Length];
             int index = -1;
 
-			ArrayList testCases = new ArrayList();
+			ArgumentsCollection testCases = new ArgumentsCollection();
 
             for (; ; )
             {
