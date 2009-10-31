@@ -37,12 +37,7 @@ namespace NUnit.Core
 		/// Hashtable of all test suites we have created to represent namespaces.
 		/// Used to locate namespace parent suites for fixtures.
 		/// </summary>
-#if CLR_2_0
-		System.Collections.Generic.Dictionary<string, TestSuite> namespaceSuites  
-            = new System.Collections.Generic.Dictionary<string, TestSuite>();
-#else
-		Hashtable namespaceSuites  = new Hashtable();
-#endif
+		NamespaceDictionary namespaceSuites  = new NamespaceDictionary();
 
 		/// <summary>
 		/// The root of the test suite being created by this builder.
@@ -154,36 +149,59 @@ namespace NUnit.Core
 
 		#region Helper Method
 
-		private TestSuite BuildFromNameSpace( string nameSpace )
+		private TestSuite BuildFromNameSpace( string ns )
 		{
-			if( nameSpace == null || nameSpace  == "" ) return rootSuite;
-			TestSuite suite = (TestSuite)namespaceSuites[nameSpace];
-			if(suite!=null) return suite;
+			if( ns == null || ns  == "" ) return rootSuite;
+
+            TestSuite suite = namespaceSuites.ContainsKey(ns)
+                ? namespaceSuites[ns]
+                : null;
             
-			int index = nameSpace.LastIndexOf(".");
-			//string prefix = string.Format( "[{0}]" );
+            if (suite != null)
+                return suite;
+
+            int index = ns.LastIndexOf(".");
 			if( index == -1 )
 			{
-				suite = new TestSuite( nameSpace );
+				suite = new TestSuite( ns );
 				if ( rootSuite == null )
 					rootSuite = suite;
 				else
 					rootSuite.Add(suite);
-				namespaceSuites[nameSpace]=suite;
 			}
 			else
 			{
-				string parentNameSpace = nameSpace.Substring( 0,index );
-				TestSuite parent = BuildFromNameSpace( parentNameSpace );
-				string suiteName = nameSpace.Substring( index+1 );
-				suite = new TestSuite( parentNameSpace, suiteName );
+				string parentNamespace = ns.Substring( 0,index );
+				TestSuite parent = BuildFromNameSpace( parentNamespace );
+				string suiteName = ns.Substring( index+1 );
+				suite = new TestSuite( parentNamespace, suiteName );
 				parent.Add( suite );
-				namespaceSuites[nameSpace] = suite;
 			}
 
-			return suite;
+            namespaceSuites[ns] = suite;
+            return suite;
 		}
 
 		#endregion
-	}
+
+        #region NamespaceDictionary Type
+#if CLR_2_0x
+        class NamespaceDictionary : System.Collections.Generic.Dictionary<string, TestSuite> { }
+#else
+        class NamespaceDictionary : DictionaryBase 
+        {
+            public TestSuite this[string key]
+            {
+                get { return (TestSuite)Dictionary[key]; }
+                set { Dictionary[key] = value; }
+            }
+
+            public bool ContainsKey(string key)
+            {
+                return Dictionary.Contains(key);
+            }
+        }
+#endif
+        #endregion
+    }
 }
