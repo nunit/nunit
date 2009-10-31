@@ -38,7 +38,7 @@ namespace NUnit.Core.Extensibility
         /// <summary>
         /// List of FrameworkInfo structs for supported frameworks
         /// </summary>
-        private Hashtable testFrameworks = new Hashtable();
+        private FrameworkDictionary testFrameworks = new FrameworkDictionary();
         #endregion
 
         #region IFrameworkRegistry Members
@@ -89,8 +89,10 @@ namespace NUnit.Core.Extensibility
 
 #if CLR_2_0
         private class AssemblyNameList : System.Collections.Generic.List<AssemblyName> { }
+        private class FrameworkDictionary : System.Collections.Generic.Dictionary<string, TestFramework> { }
 #else
         private class AssemblyNameList : ArrayList { }
+        private class FrameworkDictionary : Hashtable { }
 #endif
         #endregion
     }
