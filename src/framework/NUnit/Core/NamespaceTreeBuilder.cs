@@ -185,10 +185,10 @@ namespace NUnit.Core
 		#endregion
 
         #region NamespaceDictionary Type
-#if CLR_2_0x
+#if CLR_2_0
         class NamespaceDictionary : System.Collections.Generic.Dictionary<string, TestSuite> { }
 #else
-        class NamespaceDictionary : DictionaryBase 
+        class NamespaceDictionary : DictionaryBase
         {
             public TestSuite this[string key]
             {
