@@ -126,7 +126,7 @@ namespace NUnit.Core.Builders
 
 		internal class Tuple
 		{
-			private readonly ArrayList features = new ArrayList();
+			private readonly FeatureList features = new FeatureList();
 
 			public int Count
 			{
@@ -175,7 +175,7 @@ namespace NUnit.Core.Builders
 
 		internal class TupleCollection
 		{
-			private readonly ArrayList tuples = new ArrayList();
+			private readonly TupleList tuples = new TupleList();
 
 			public int Count
 			{
@@ -249,7 +249,7 @@ namespace NUnit.Core.Builders
 
 		internal class TestCaseCollection : IEnumerable
 		{
-			private readonly ArrayList testCases = new ArrayList();
+			private readonly TestCaseList testCases = new TestCaseList();
 
 			public void Add(TestCase testCase)
 			{
@@ -503,7 +503,7 @@ namespace NUnit.Core.Builders
 					{
 						int d = dimensionOrder[i];
 
-						ArrayList bestFeatures = new ArrayList();
+						IntList bestFeatures = new IntList();
 
 						int bestCoverage = this.CountTuplesCovered(test, d, test.Features[d]);
 
@@ -568,7 +568,7 @@ namespace NUnit.Core.Builders
 					immutableDimensions[tuple[i].Dimension] = true;
 				}
 
-				ArrayList mutableDimensions = new ArrayList();
+				IntList mutableDimensions = new IntList();
 
 				for (int i = 0; i < this.dimensions.Length; i++)
 				{
@@ -578,7 +578,7 @@ namespace NUnit.Core.Builders
 					}
 				}
 
-				return (int[])mutableDimensions.ToArray(typeof(int));
+				return (int[])mutableDimensions.ToArray();
 			}
 
 			private int CountTuplesCovered(TestCase test, int dimension, int feature)
@@ -646,12 +646,12 @@ namespace NUnit.Core.Builders
 
 		public override IEnumerable GetTestCases()
 		{
-			ArrayList[] valueSet = CreateValueSet();
+			ObjectList[] valueSet = CreateValueSet();
 			int[] dimensions = CreateDimensions(valueSet);
 
 			IEnumerable pairwiseTestCases = new PairwiseTestCaseGenerator(dimensions).GetTestCases();
 
-			ArrayList testCases = new ArrayList();
+			ArgumentsCollection testCases = new ArgumentsCollection();
 
 			foreach (TestCase pairwiseTestCase in pairwiseTestCases)
 			{
@@ -668,13 +668,13 @@ namespace NUnit.Core.Builders
 			return testCases;
 		}
 
-		private ArrayList[] CreateValueSet()
+		private ObjectList[] CreateValueSet()
 		{
-			ArrayList[] valueSet = new ArrayList[Sources.Length];
+			ObjectList[] valueSet = new ObjectList[Sources.Length];
 
 			for (int i = 0; i < valueSet.Length; i++)
 			{
-				ArrayList values = new ArrayList();
+				ObjectList values = new ObjectList();
 
 				foreach (object value in Sources[i])
 				{
@@ -687,7 +687,7 @@ namespace NUnit.Core.Builders
 			return valueSet;
 		}
 
-		private int[] CreateDimensions(ArrayList[] valueSet)
+		private int[] CreateDimensions(ObjectList[] valueSet)
 		{
 			int[] dimensions = new int[valueSet.Length];
 
@@ -698,5 +698,17 @@ namespace NUnit.Core.Builders
 
 			return dimensions;
 		}
-	}
+
+#if CLR_2_0
+        class FeatureList : System.Collections.Generic.List<FeatureInfo> { }
+        class TupleList : System.Collections.Generic.List<Tuple> { }
+        class IntList : System.Collections.Generic.List<int> { }
+        class TestCaseList : System.Collections.Generic.List<TestCase> { }
+#else
+        class FeatureList : ArrayList { }
+        class TupleList : ArrayList { }
+        class IntList : ArrayList { }
+        class TestCaseList : ArrayList { }
+#endif
+    }
 }
