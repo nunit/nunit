@@ -37,7 +37,12 @@ namespace NUnit.Core
 		/// Hashtable of all test suites we have created to represent namespaces.
 		/// Used to locate namespace parent suites for fixtures.
 		/// </summary>
+#if CLR_2_0
+		System.Collections.Generic.Dictionary<string, TestSuite> namespaceSuites  
+            = new System.Collections.Generic.Dictionary<string, TestSuite>();
+#else
 		Hashtable namespaceSuites  = new Hashtable();
+#endif
 
 		/// <summary>
 		/// The root of the test suite being created by this builder.
