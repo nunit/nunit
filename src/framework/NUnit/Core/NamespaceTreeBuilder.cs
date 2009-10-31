@@ -34,8 +34,8 @@ namespace NUnit.Core
 		#region Instance Variables
 
 		/// <summary>
-		/// Hashtable of all test suites we have created to represent namespaces.
-		/// Used to locate namespace parent suites for fixtures.
+		/// NamespaceDictionary of all test suites we have created to represent 
+        /// namespaces. Used to locate namespace parent suites for fixtures.
 		/// </summary>
 		NamespaceDictionary namespaceSuites  = new NamespaceDictionary();
 
@@ -109,41 +109,12 @@ namespace NUnit.Core
                     parent.Add(fixture);
                 }
 
-                // Update the hashtable
+                // Update the dictionary
                 namespaceSuites[ns] = fixture;
             }
             else
 			    containingSuite.Add( fixture );
 		}
-
-        //public void Add( SetUpFixture fixture )
-        //{
-        //    string ns = fixture.FullName;
-        //    int index = ns.LastIndexOf( '.' );
-        //    ns = index > 0 ? ns.Substring( 0, index ) : string.Empty;
-        //    TestSuite suite = BuildFromNameSpace( ns );
-
-        //    // Make the parent point to this instead
-        //    // TODO: Get rid of this somehow?
-        //    TestSuite parent = suite.Parent;
-        //    if ( parent != null )
-        //    {
-        //        parent.Tests.Remove( suite );
-        //        parent.Add( fixture );
-        //    }
-
-        //    // Add the old suite's children
-        //    foreach( TestSuite child in suite.Tests )
-        //        fixture.Add( child );
-
-        //    if (parent == null && fixture is SetUpFixture)
-        //    {
-        //        suite.Tests.Clear();
-        //        suite.Add(fixture);
-        //    }
-        //    // Update the hashtable
-        //    namespaceSuites[ns] = fixture;
-        //}
 
 		#endregion
 
