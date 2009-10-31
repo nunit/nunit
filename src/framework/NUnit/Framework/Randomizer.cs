@@ -36,7 +36,7 @@ namespace NUnit.Framework
         #region Static Members
         private static Random seedGenerator = new Random();
 
-        private static Hashtable randomizers = new Hashtable();
+        private static RandomizerDictionary randomizers = new RandomizerDictionary();
 
         /// <summary>
         /// Get a random seed for use in creating a randomizer.
@@ -54,12 +54,14 @@ namespace NUnit.Framework
         /// </summary>
         public static Randomizer GetRandomizer(MemberInfo member)
         {
-            Randomizer r = (Randomizer)randomizers[member];
-
-            if ( r == null )
-                randomizers[member] = r = new Randomizer();
-
-            return r;
+            if (randomizers.ContainsKey(member))
+                return (Randomizer)randomizers[member];
+            else
+            {
+                Randomizer r = new Randomizer();
+                randomizers[member] = r;
+                return (Randomizer)r;
+            }
         }
 
 
@@ -130,5 +132,11 @@ namespace NUnit.Framework
             return ivals;
         }
         #endregion
+
+#if CLR_2_0
+        class RandomizerDictionary : System.Collections.Generic.Dictionary<MemberInfo, Randomizer> { }
+#else
+        class RandomizerDictionary : Hashtable { }
+#endif
     }
 }
