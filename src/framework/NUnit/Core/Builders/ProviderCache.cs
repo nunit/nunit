@@ -29,7 +29,7 @@ namespace NUnit.Core.Builders
 {
     class ProviderCache
     {
-        private static IDictionary instances = new Hashtable();
+        private static ProviderDictionary instances = new ProviderDictionary();
 
         public static object GetInstanceOf(Type providerType)
         {
@@ -40,15 +40,19 @@ namespace NUnit.Core.Builders
         {
             CacheEntry entry = new CacheEntry(providerType, providerArgs);
 
-            object instance = instances[entry];
-            return instance == null
-                ? instances[entry] = Reflect.Construct(providerType, providerArgs)
-                : instance;
+            object instance = instances.ContainsKey(entry)
+                ?instances[entry]
+                : null;
+
+            if (instance == null)
+                instances[entry] = instance = Reflect.Construct(providerType, providerArgs);
+
+            return instance;
         }
 
         public static void Clear()
         {
-            foreach (object key in instances.Keys)
+            foreach (CacheEntry key in instances.Keys)
             {
                 IDisposable provider = instances[key] as IDisposable;
                 if (provider != null)
@@ -82,5 +86,17 @@ namespace NUnit.Core.Builders
                 return providerType.GetHashCode();
             }
         }
+
+#if CLR_2_0
+        class ProviderDictionary : System.Collections.Generic.Dictionary<CacheEntry, object> { }
+#else
+        class ProviderDictionary : Hashtable
+        {           
+            public bool ContainsKey(object key)
+            {
+                return Contains(key);
+            }
+        }
+#endif
     }
 }
