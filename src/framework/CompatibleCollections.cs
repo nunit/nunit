@@ -59,13 +59,26 @@ namespace NUnit
 
     /// <summary>
     /// StringCollection represents a collection of strings. It is implemented as a
-    /// List&lt;string&gt; in .NET 2.0 or higher and as an ArrayList otherwise.
+    /// List&lt;string&gt; in .NET 2.0 or higher. In .NET 1.x, we base it on a
+    /// System.Collections.Specialized.StringCollection.
     /// StringCollection does not attempt to be a general replacement for either of
     /// these classes but only implements what is needed within the framework.
     /// </summary>
-#if CLR_2_0
-    class StringCollection : System.Collections.Generic.List<String> { }
+#if CLR_2_0x
+    public class StringCollection : System.Collections.Generic.List<String> { }
 #else
-    class StringCollection : System.Collections.ArrayList { }
+    public class StringCollection : System.Collections.Specialized.StringCollection
+    {
+        public string[] ToArray()
+        {
+            string[] result = new string[this.Count];
+
+            int index = 0;
+            foreach(string s in this)
+                result[index++] = s;
+
+            return result;
+        }
+    }
 #endif
 }
