@@ -41,7 +41,7 @@ namespace NUnit.Core
 		/// <summary>
 		/// Our collection of child tests
 		/// </summary>
-		private ArrayList tests = new ArrayList();
+		private TestCollection tests = new TestCollection();
 
         /// <summary>
         /// The fixture setup methods for this suite
@@ -126,8 +126,9 @@ namespace NUnit.Core
             }
 		}
 
-		public void Sort(IComparer comparer)
-		{
+#if false
+        public void Sort(IComparer comparer)
+        {
 			this.tests.Sort(comparer);
 
 			foreach( Test test in Tests )
@@ -137,6 +138,7 @@ namespace NUnit.Core
 					suite.Sort(comparer);
 			}
 		}
+#endif
 
 		public void Add( Test test ) 
 		{
@@ -497,5 +499,11 @@ namespace NUnit.Core
             }
         }
         #endregion
+
+#if CLR_2_0
+        private class TestCollection : System.Collections.Generic.List<Test> { }
+#else
+        private class TestCollection : ArrayList { }
+#endif
     }
 }
