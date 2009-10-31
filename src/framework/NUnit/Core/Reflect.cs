@@ -199,7 +199,7 @@ namespace NUnit.Core
         /// <returns>The array of methods found</returns>
         public static MethodInfo[] GetMethodsWithAttribute(Type fixtureType, Type attributeType, bool inherit)
         {
-            ArrayList list = new ArrayList();
+            MethodList list = new MethodList();
 
             foreach (MethodInfo method in GetMethods(fixtureType))
             {
@@ -209,7 +209,7 @@ namespace NUnit.Core
 
             list.Sort(new BaseTypesFirstComparer());
 
-            return (MethodInfo[])list.ToArray(typeof(MethodInfo));
+            return (MethodInfo[])list.ToArray();
         }
 
         private static MethodInfo[] GetMethods(Type fixtureType)
@@ -217,11 +217,18 @@ namespace NUnit.Core
             return fixtureType.GetMethods(AllMembers);
         }
 
+#if CLR_2_0
+        private class BaseTypesFirstComparer : System.Collections.Generic.IComparer<MethodInfo>
+#else
         private class BaseTypesFirstComparer : IComparer
+#endif
         {
             #region IComparer Members
-
+#if CLR_2_0
+            public int Compare(MethodInfo x, MethodInfo y)
+#else
             public int Compare(object x, object y)
+#endif
             {
                 MethodInfo m1 = x as MethodInfo;
                 MethodInfo m2 = y as MethodInfo;
@@ -438,6 +445,12 @@ namespace NUnit.Core
 
 		    return null;
 		}
+
+#if CLR_2_0
+        private class MethodList : System.Collections.Generic.List<MethodInfo> { }
+#else
+        private class MethodList : ArrayList { }
+#endif
 
 		#endregion
 
