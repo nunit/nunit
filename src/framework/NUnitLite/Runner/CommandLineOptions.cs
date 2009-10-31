@@ -24,7 +24,7 @@
 using System;
 using System.Text;
 using System.Collections;
-using StringList = NUnit.StringCollection;
+using StringCollection = NUnit.StringCollection;
 
 namespace NUnitLite.Runner
 {
@@ -41,12 +41,12 @@ namespace NUnitLite.Runner
         private bool listprops = false;
         private bool help = false;
 
-        private StringList tests = new StringList();
+        private StringCollection tests = new StringCollection();
 
         bool error = false;
 
-        StringList invalidOptions = new StringList();
-        StringList parameters = new StringList();
+        StringCollection invalidOptions = new StringCollection();
+        StringCollection parameters = new StringCollection();
 
         /// <summary>
         /// Gets a value indicating whether the 'wait' option was used.
