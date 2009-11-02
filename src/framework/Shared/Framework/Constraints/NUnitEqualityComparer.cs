@@ -59,7 +59,10 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         private EqualityAdapter externalComparer;
 
-        private FailurePointList failurePoints;
+        /// <summary>
+        /// List of points at which a failure occured.
+        /// </summary>
+        private ObjectList failurePoints;
 
         private static readonly int BUFFER_SIZE = 4096;
         #endregion
@@ -114,8 +117,14 @@ namespace NUnit.Framework.Constraints
             set { tolerance = value; }
         }
 
+        // TODO: Define some sort of FailurePoint struct or otherwise
+        // eliminate the type-unsafeness of the current approach
+
         /// <summary>
         /// Gets the list of failure points for the last Match performed.
+        /// The list consists of objects to be interpreted by the caller.
+        /// This generally means that the caller may only make use of
+        /// objects it has placed on the list at a particular depthy.
         /// </summary>
         public IList FailurePoints
         {
@@ -129,7 +138,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public bool ObjectsEqual(object x, object y)
         {
-            this.failurePoints = new FailurePointList();
+            this.failurePoints = new ObjectList();
 
             if (x == null && y == null)
                 return true;
@@ -316,12 +325,5 @@ namespace NUnit.Framework.Constraints
         }
         #endregion
 
-        #region Nested FailurePointList class
-#if CLR_2_0
-        private class FailurePointList : System.Collections.Generic.List<long> { }
-#else
-        private class FailurePointList : ArrayList { }
-#endif
-        #endregion
     }
 }

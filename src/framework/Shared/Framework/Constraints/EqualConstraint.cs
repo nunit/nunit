@@ -416,7 +416,7 @@ namespace NUnit.Framework.Constraints
         /// <param name="depth">The depth of this failure in a set of nested collections</param>
         private void DisplayCollectionDifferences(MessageWriter writer, ICollection expected, ICollection actual, int depth)
         {
-            long failurePoint = comparer.FailurePoints.Count > depth ? (long)comparer.FailurePoints[depth] : -1;
+            int failurePoint = comparer.FailurePoints.Count > depth ? (int)comparer.FailurePoints[depth] : -1;
 
             DisplayCollectionTypesAndSizes(writer, expected, actual, depth);
 

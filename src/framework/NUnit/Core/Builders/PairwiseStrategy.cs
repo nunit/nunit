@@ -578,7 +578,7 @@ namespace NUnit.Core.Builders
 					}
 				}
 
-				return (int[])mutableDimensions.ToArray();
+				return mutableDimensions.ToArray();
 			}
 
 			private int CountTuplesCovered(TestCase test, int dimension, int feature)
@@ -702,12 +702,10 @@ namespace NUnit.Core.Builders
 #if CLR_2_0
         class FeatureList : System.Collections.Generic.List<FeatureInfo> { }
         class TupleList : System.Collections.Generic.List<Tuple> { }
-        class IntList : System.Collections.Generic.List<int> { }
         class TestCaseList : System.Collections.Generic.List<TestCase> { }
 #else
         class FeatureList : ArrayList { }
         class TupleList : ArrayList { }
-        class IntList : ArrayList { }
         class TestCaseList : ArrayList { }
 #endif
     }
