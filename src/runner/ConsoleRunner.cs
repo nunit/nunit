@@ -32,6 +32,8 @@ namespace NUnit.AdhocTestRunner
         private static string frameworkAssembly = "nunit.framework";
         private static string runnerTypeName = "NUnit.Core.RemoteTestRunner";
 
+        AppDomain testDomain;
+
         private CommandLineOptions options;
 
         public ConsoleRunner(CommandLineOptions options)
@@ -45,7 +47,11 @@ namespace NUnit.AdhocTestRunner
 
             try
             {
-                TestRunner runner = MakeTestRunner();
+                this.testDomain = options.UseAppDomain
+                    ? CreateDomain(Path.GetDirectoryName(Path.GetFullPath(options.Parameters[0])))
+                    : AppDomain.CurrentDomain;
+
+                TestRunner runner = (TestRunner)CreateObject( runnerTypeName );
                 
                 TestPackage package = new TestPackage("Top Level Suite", options.Parameters);
                 package.Settings["AutoNamespaceSuites"] = false;
@@ -101,19 +107,30 @@ namespace NUnit.AdhocTestRunner
             Console.WriteLine();
         }
 
-        private TestRunner MakeTestRunner()
+        #region Helper Methods
+
+        private static AppDomain CreateDomain(string appBase)
         {
-            if (options.UseAppDomain)
-            {
-                AppDomainSetup setup = new AppDomainSetup();
-                setup.ApplicationBase = Path.GetDirectoryName(options.Parameters[0]);
-                AppDomain domain = AppDomain.CreateDomain("test-domain", null, setup);
-                return (TestRunner)domain.CreateInstanceAndUnwrap(frameworkAssembly, runnerTypeName);
-            }
-            else
-            {
-                return (TestRunner)Activator.CreateInstance(frameworkAssembly, runnerTypeName).Unwrap();
-            }
+            AppDomainSetup setup = new AppDomainSetup();
+            setup.ApplicationBase = appBase;
+            AppDomain domain = AppDomain.CreateDomain("test-domain", null, setup);
+            return domain;
         }
+
+        private object CreateObject(string typeName, params object[] args)
+        {
+            return this.testDomain.CreateInstanceAndUnwrap(
+                frameworkAssembly,
+                typeName,
+                false,
+                0,
+                null,
+                args,
+                null,
+                null,
+                null);
+        }
+
+        #endregion
     }
 }
