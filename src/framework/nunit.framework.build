@@ -23,7 +23,6 @@
       </sources>
       <references basedir="${current.build.dir}">
         <include name="System.Configuration.dll"/>
-        <include name="nunit.interfaces.dll"/>
       </references>
     </csc>
 
@@ -45,7 +44,6 @@
         <include name="*.cs"/>
         <include name="Shared/**/*.cs"/>
         <include name="NUnitLite/**/*.cs"/>
-        <include name="../interfaces/Framework/**/*.cs"/>
       </sources>
       <references basedir="${current.build.dir}">
         <include name="mscorlib.dll"/>

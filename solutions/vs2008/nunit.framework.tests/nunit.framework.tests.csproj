@@ -51,10 +51,6 @@
       <Project>{12B66B03-90F1-4992-BD33-BDF3C69AE49E}</Project>
       <Name>nunit.framework</Name>
     </ProjectReference>
-    <ProjectReference Include="..\nunit.interfaces\nunit.interfaces.csproj">
-      <Project>{43D2F73E-0076-4A1F-8BC0-579EB0142519}</Project>
-      <Name>nunit.interfaces</Name>
-    </ProjectReference>
     <ProjectReference Include="..\test-assembly\test-assembly.csproj">
       <Project>{15B64946-4989-4873-915C-3E181772FA03}</Project>
       <Name>test-assembly</Name>

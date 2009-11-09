@@ -11,7 +11,7 @@
         <include name="*.cs"/>
       </sources>
       <references basedir="${current.build.dir}">
-        <include name="nunit.interfaces.dll"/>
+        <include name="nunit.framework.dll"/>
       </references>
     </csc>
 

@@ -24,7 +24,8 @@
 namespace NUnit.AdhocTestRunner
 {
     using System;
-    using NUnit.Core;
+    using TestResult = NUnit.Core.TestResult;
+    using ResultState = NUnit.Core.ResultState;
 
     /// <summary>
     /// Summary description for ResultSummary.

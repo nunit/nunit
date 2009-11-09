@@ -117,10 +117,6 @@
       <Project>{816F2E66-2A25-4513-B5FA-8ECB4A5647CD}</Project>
       <Name>nunit.framework</Name>
     </ProjectReference>
-    <ProjectReference Include="..\nunit.interfaces\nunit.interfaces.csproj">
-      <Project>{C5FFA3A5-6A0C-44AD-B23F-9A8424136C7B}</Project>
-      <Name>nunit.interfaces</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />

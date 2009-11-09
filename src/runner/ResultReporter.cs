@@ -22,7 +22,8 @@
 // ***********************************************************************
 
 using System;
-using NUnit.Core;
+using TestResult = NUnit.Core.TestResult;
+using FailureSite = NUnit.Core.FailureSite;
 
 namespace NUnit.AdhocTestRunner
 {

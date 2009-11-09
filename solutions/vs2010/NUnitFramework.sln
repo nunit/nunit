@@ -1,8 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.interfaces", "nunit.interfaces\nunit.interfaces.csproj", "{B6B95A07-D079-413D-BF06-E07984332F50}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.framework", "nunit.framework\nunit.framework.csproj", "{F55F0FC4-E9B8-4D3C-B499-2FBB1E7C1D09}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunitlite", "nunitlite\nunitlite.csproj", "{756BF807-B7A1-4BC0-B6AE-61FE0AF30C5B}"
@@ -25,16 +23,6 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{B6B95A07-D079-413D-BF06-E07984332F50}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B6B95A07-D079-413D-BF06-E07984332F50}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B6B95A07-D079-413D-BF06-E07984332F50}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{B6B95A07-D079-413D-BF06-E07984332F50}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{B6B95A07-D079-413D-BF06-E07984332F50}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{B6B95A07-D079-413D-BF06-E07984332F50}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B6B95A07-D079-413D-BF06-E07984332F50}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B6B95A07-D079-413D-BF06-E07984332F50}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{B6B95A07-D079-413D-BF06-E07984332F50}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{B6B95A07-D079-413D-BF06-E07984332F50}.Release|x86.ActiveCfg = Release|Any CPU
 		{F55F0FC4-E9B8-4D3C-B499-2FBB1E7C1D09}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F55F0FC4-E9B8-4D3C-B499-2FBB1E7C1D09}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F55F0FC4-E9B8-4D3C-B499-2FBB1E7C1D09}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
