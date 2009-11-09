@@ -29,11 +29,6 @@ namespace NUnit.AdhocTestRunner
 {
     public class ConsoleRunner
     {
-        private static string frameworkAssembly = "nunit.framework";
-        private static string runnerTypeName = "NUnit.Core.RemoteTestRunner";
-
-        AppDomain testDomain;
-
         private CommandLineOptions options;
 
         public ConsoleRunner(CommandLineOptions options)
@@ -47,31 +42,26 @@ namespace NUnit.AdhocTestRunner
 
             try
             {
-                this.testDomain = options.UseAppDomain
-                    ? CreateDomain(Path.GetDirectoryName(Path.GetFullPath(options.Parameters[0])))
-                    : AppDomain.CurrentDomain;
+                TestDriverWrapper driver = new TestDriverWrapper(options);
 
-                TestRunner runner = (TestRunner)CreateObject( runnerTypeName );
-                
-                TestPackage package = new TestPackage("Top Level Suite", options.Parameters);
-                package.Settings["AutoNamespaceSuites"] = false;
-                package.Settings["MergeAssemblies"] = true;
-
-                if (!runner.Load(package))
-                    Console.WriteLine("Unable to load package");
-                else
+                foreach (string assemblyFilename in options.Parameters)
                 {
-                    TextWriter savedOut = Console.Out;
-                    TextWriter savedError = Console.Error;
+                    if (!driver.Load(assemblyFilename))
+                        Console.WriteLine("Unable to load assembly {0}", assemblyFilename);
+                    else
+                    {
+                        TextWriter savedOut = Console.Out;
+                        TextWriter savedError = Console.Error;
 
-                    TestEventListener listener = new TestEventListener(options, Console.Out);
+                        TestEventListener listener = new TestEventListener(options, Console.Out);
 
-                    TestResult result = runner.Run(listener, TestFilter.Empty);
+                        TestResult result = driver.Run(listener, TestFilter.Empty);
 
-                    Console.SetOut(savedOut);
-                    Console.SetError(savedError);
+                        Console.SetOut(savedOut);
+                        Console.SetError(savedError);
 
-                    new ResultReporter(result).ReportResults();
+                        new ResultReporter(result).ReportResults();
+                    }
                 }
             }
             catch (FileNotFoundException ex)
@@ -106,31 +96,5 @@ namespace NUnit.AdhocTestRunner
                 : "    Use Same AppDomain" );
             Console.WriteLine();
         }
-
-        #region Helper Methods
-
-        private static AppDomain CreateDomain(string appBase)
-        {
-            AppDomainSetup setup = new AppDomainSetup();
-            setup.ApplicationBase = appBase;
-            AppDomain domain = AppDomain.CreateDomain("test-domain", null, setup);
-            return domain;
-        }
-
-        private object CreateObject(string typeName, params object[] args)
-        {
-            return this.testDomain.CreateInstanceAndUnwrap(
-                frameworkAssembly,
-                typeName,
-                false,
-                0,
-                null,
-                args,
-                null,
-                null,
-                null);
-        }
-
-        #endregion
     }
 }

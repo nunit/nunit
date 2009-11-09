@@ -9,8 +9,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunitlite", "nunitlite\nuni
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunitlite.tests", "nunitlite.tests\nunitlite.tests.csproj", "{0B5B1B19-D9D1-4E9C-80EE-37D4F56282C1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.interfaces", "nunit.interfaces\nunit.interfaces.csproj", "{43D2F73E-0076-4A1F-8BC0-579EB0142519}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "test-assembly", "test-assembly\test-assembly.csproj", "{15B64946-4989-4873-915C-3E181772FA03}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "test-runner", "test-runner\test-runner.csproj", "{126DBBB4-1731-4E0D-8937-4F2FAADCA0EF}"
@@ -37,10 +35,6 @@ Global
 		{0B5B1B19-D9D1-4E9C-80EE-37D4F56282C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0B5B1B19-D9D1-4E9C-80EE-37D4F56282C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0B5B1B19-D9D1-4E9C-80EE-37D4F56282C1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{43D2F73E-0076-4A1F-8BC0-579EB0142519}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{43D2F73E-0076-4A1F-8BC0-579EB0142519}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{43D2F73E-0076-4A1F-8BC0-579EB0142519}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{43D2F73E-0076-4A1F-8BC0-579EB0142519}.Release|Any CPU.Build.0 = Release|Any CPU
 		{15B64946-4989-4873-915C-3E181772FA03}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{15B64946-4989-4873-915C-3E181772FA03}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{15B64946-4989-4873-915C-3E181772FA03}.Release|Any CPU.ActiveCfg = Release|Any CPU

@@ -37,10 +37,6 @@
       <Project>{816F2E66-2A25-4513-B5FA-8ECB4A5647CD}</Project>
       <Name>nunit.framework</Name>
     </ProjectReference>
-    <ProjectReference Include="..\nunit.interfaces\nunit.interfaces.csproj">
-      <Project>{C5FFA3A5-6A0C-44AD-B23F-9A8424136C7B}</Project>
-      <Name>nunit.interfaces</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\..\src\runner\AssemblyInfo.cs">
@@ -63,6 +59,9 @@
     </Compile>
     <Compile Include="..\..\..\src\runner\StackTraceFilter.cs">
       <Link>StackTraceFilter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\runner\TestDriverWrapper.cs">
+      <Link>TestDriverWrapper.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\runner\TestEventListener.cs">
       <Link>TestEventListener.cs</Link>

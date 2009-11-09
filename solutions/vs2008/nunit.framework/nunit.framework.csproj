@@ -171,6 +171,120 @@
     <Compile Include="..\..\..\src\framework\NUnit\Core\Extensibility\ExtensionPoint.cs">
       <Link>NUnit\Core\Extensibility\ExtensionPoint.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\Interfaces\Extensibility\Addin.cs">
+      <Link>NUnit\Core\Interfaces\Extensibility\Addin.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\Interfaces\Extensibility\AddinStatus.cs">
+      <Link>NUnit\Core\Interfaces\Extensibility\AddinStatus.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\Interfaces\Extensibility\ExtensionType.cs">
+      <Link>NUnit\Core\Interfaces\Extensibility\ExtensionType.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\Interfaces\Extensibility\IAddin.cs">
+      <Link>NUnit\Core\Interfaces\Extensibility\IAddin.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\Interfaces\Extensibility\IAddinRegistry.cs">
+      <Link>NUnit\Core\Interfaces\Extensibility\IAddinRegistry.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\Interfaces\Extensibility\IDataPointProvider.cs">
+      <Link>NUnit\Core\Interfaces\Extensibility\IDataPointProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\Interfaces\Extensibility\IExtensionHost.cs">
+      <Link>NUnit\Core\Interfaces\Extensibility\IExtensionHost.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\Interfaces\Extensibility\IExtensionPoint.cs">
+      <Link>NUnit\Core\Interfaces\Extensibility\IExtensionPoint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\Interfaces\Extensibility\IFrameworkRegistry.cs">
+      <Link>NUnit\Core\Interfaces\Extensibility\IFrameworkRegistry.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\Interfaces\Extensibility\ISuiteBuilder.cs">
+      <Link>NUnit\Core\Interfaces\Extensibility\ISuiteBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\Interfaces\Extensibility\ITestCaseBuilder.cs">
+      <Link>NUnit\Core\Interfaces\Extensibility\ITestCaseBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\Interfaces\Extensibility\ITestCaseProvider.cs">
+      <Link>NUnit\Core\Interfaces\Extensibility\ITestCaseProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\Interfaces\Extensibility\ITestDecorator.cs">
+      <Link>NUnit\Core\Interfaces\Extensibility\ITestDecorator.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\Interfaces\Extensibility\NUnitAddinAttribute.cs">
+      <Link>NUnit\Core\Interfaces\Extensibility\NUnitAddinAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\Interfaces\Extensibility\TestFramework.cs">
+      <Link>NUnit\Core\Interfaces\Extensibility\TestFramework.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\Interfaces\Filters\AndFilter.cs">
+      <Link>NUnit\Core\Interfaces\Filters\AndFilter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\Interfaces\Filters\CategoryFilter.cs">
+      <Link>NUnit\Core\Interfaces\Filters\CategoryFilter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\Interfaces\Filters\NameFilter.cs">
+      <Link>NUnit\Core\Interfaces\Filters\NameFilter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\Interfaces\Filters\NotFilter.cs">
+      <Link>NUnit\Core\Interfaces\Filters\NotFilter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\Interfaces\Filters\OrFilter.cs">
+      <Link>NUnit\Core\Interfaces\Filters\OrFilter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\Interfaces\Filters\SimpleNameFilter.cs">
+      <Link>NUnit\Core\Interfaces\Filters\SimpleNameFilter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\Interfaces\IService.cs">
+      <Link>NUnit\Core\Interfaces\IService.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\Interfaces\ITest.cs">
+      <Link>NUnit\Core\Interfaces\ITest.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\Interfaces\ITestListener.cs">
+      <Link>NUnit\Core\Interfaces\ITestListener.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\Interfaces\ResultState.cs">
+      <Link>NUnit\Core\Interfaces\ResultState.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\Interfaces\RunState.cs">
+      <Link>NUnit\Core\Interfaces\RunState.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\Interfaces\RuntimeFramework.cs">
+      <Link>NUnit\Core\Interfaces\RuntimeFramework.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\Interfaces\Test.cs">
+      <Link>NUnit\Core\Interfaces\Test.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\Interfaces\TestAssemblyInfo.cs">
+      <Link>NUnit\Core\Interfaces\TestAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\Interfaces\TestFilter.cs">
+      <Link>NUnit\Core\Interfaces\TestFilter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\Interfaces\TestID.cs">
+      <Link>NUnit\Core\Interfaces\TestID.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\Interfaces\TestInfo.cs">
+      <Link>NUnit\Core\Interfaces\TestInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\Interfaces\TestName.cs">
+      <Link>NUnit\Core\Interfaces\TestName.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\Interfaces\TestNode.cs">
+      <Link>NUnit\Core\Interfaces\TestNode.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\Interfaces\TestOutput.cs">
+      <Link>NUnit\Core\Interfaces\TestOutput.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\Interfaces\TestPackage.cs">
+      <Link>NUnit\Core\Interfaces\TestPackage.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\Interfaces\TestResult.cs">
+      <Link>NUnit\Core\Interfaces\TestResult.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\Interfaces\TestRunner.cs">
+      <Link>NUnit\Core\Interfaces\TestRunner.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\framework\NUnit\Core\InternalTrace.cs">
       <Link>NUnit\Core\InternalTrace.cs</Link>
     </Compile>
@@ -573,6 +687,9 @@
     <Compile Include="..\..\..\src\framework\CompatibleCollections.cs">
       <Link>CompatibleCollections.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\TestDriver.cs">
+      <Link>NUnit\Core\TestDriver.cs</Link>
+    </Compile>
     <None Include="..\..\..\src\framework\Templates\Contains.template.cs">
       <Link>Templates\Contains.template.cs</Link>
     </None>
@@ -608,14 +725,11 @@
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="..\..\..\src\framework\NUnit\Core\Interfaces\Interfaces.txt">
+      <Link>NUnit\Core\Interfaces\Interfaces.txt</Link>
+    </Content>
     <Content Include="..\..\..\src\framework\SyntaxElements.txt">
       <Link>SyntaxElements.txt</Link>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\nunit.interfaces\nunit.interfaces.csproj">
-      <Project>{43D2F73E-0076-4A1F-8BC0-579EB0142519}</Project>
-      <Name>nunit.interfaces</Name>
-    </ProjectReference>
   </ItemGroup>
 </Project>

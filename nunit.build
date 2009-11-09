@@ -227,7 +227,6 @@
     <call target="gen-syntax" 
       unless="${property::exists('generated.syntax')}"/>
 
-    <nant target="build" buildfile="src/interfaces/nunit.interfaces.build"/>
     <nant target="build-nunit" buildfile="src/framework/nunit.framework.build"/>
     <nant target="build" buildfile="src/test-assembly/test-assembly.build"/>
     <nant target="build-nunit" buildfile="src/tests/nunit.framework.tests.build"/>
@@ -450,8 +449,6 @@ NUNIT_DIR environment variable.
 
     <copy todir="${samples.bin.dir}"
       file="${path::combine(current.build.dir,'nunit.framework.dll')}" />
-    <copy todir="${samples.bin.dir}"
-      file="${path::combine(current.build.dir,'nunit.core.interfaces.dll')}" />
     <copy todir="${samples.bin.dir}"
       file="${path::combine(current.build.dir,'nunit.core.dll')}" />
 
@@ -768,8 +765,6 @@ to the correct location.
         <include name="**/NUnitFramework.sln"/>
         <include name="**/nunit.framework/nunit.snk"/>
         <include name="**/nunit.framework/nunit.framework.csproj"/>
-        <include name="**/nunit.interfaces/nunit.snk"/>
-        <include name="**/nunit.interfaces/nunit.interfaces.csproj"/>
         <include name="**/nunit.framework.tests/nunit.framework.tests.csproj"/>
         <include name="**/nunitlite/nunit.snk"/>
         <include name="**/nunitlite/nunitlite.csproj"/>
@@ -835,8 +830,6 @@ to the correct location.
 
     <!-- Framework -->
     <include name="framework/nunit.framework.build" />
-    <!-- Interfaces -->
-    <include name="interfaces/nunit.interfaces.build" />
     <!-- Framework Tests -->
     <include name="tests/nunit.framework.tests.build" />
     <!-- Test Data -->

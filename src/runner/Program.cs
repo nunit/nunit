@@ -24,7 +24,6 @@
 using System;
 using System.Reflection;
 using System.IO;
-using NUnit.Core;
 
 namespace NUnit.AdhocTestRunner
 {

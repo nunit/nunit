@@ -449,7 +449,13 @@ namespace NUnit.Core
 #if CLR_2_0
         private class MethodList : System.Collections.Generic.List<MethodInfo> { }
 #else
-        private class MethodList : ArrayList { }
+        private class MethodList : ArrayList 
+        {
+            public MethodInfo[] ToArray()
+            {
+                return (MethodInfo[])ToArray(typeof(MethodInfo));
+            }
+        }
 #endif
 
 		#endregion
