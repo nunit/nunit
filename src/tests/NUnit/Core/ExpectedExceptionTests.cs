@@ -145,7 +145,7 @@ namespace NUnit.Core.Tests
 		{
 			Type fixtureType = typeof(BaseException);
 			Test test = TestBuilder.MakeTestCase( fixtureType, "BaseExceptionTest" );
-            TestResult result = test.Run(NullListener.NULL, TestFilter.Empty);
+            TestResult result = test.Run(TestListener.NULL, TestFilter.Empty);
 			Assert.IsTrue(result.IsFailure, "BaseExceptionTest should have failed");
 			StringAssert.StartsWith(
 				"An unexpected exception type was thrown" + Environment.NewLine +
@@ -159,7 +159,7 @@ namespace NUnit.Core.Tests
 		{
 			Type fixtureType = typeof(DerivedException);
 			Test test = TestBuilder.MakeTestCase( fixtureType, "DerivedExceptionTest" );
-            TestResult result = test.Run(NullListener.NULL, TestFilter.Empty);
+            TestResult result = test.Run(TestListener.NULL, TestFilter.Empty);
 			Assert.IsTrue(result.IsFailure, "DerivedExceptionTest should have failed");
 			StringAssert.StartsWith( 
 				"An unexpected exception type was thrown" + Environment.NewLine +
@@ -173,7 +173,7 @@ namespace NUnit.Core.Tests
         {
             Type fixtureType = typeof(MismatchedException);
             Test test = TestBuilder.MakeTestCase(fixtureType, "MismatchedExceptionType");
-            TestResult result = test.Run(NullListener.NULL, TestFilter.Empty);
+            TestResult result = test.Run(TestListener.NULL, TestFilter.Empty);
             Assert.IsTrue(result.IsFailure, "MismatchedExceptionType should have failed");
             StringAssert.StartsWith(
                 "An unexpected exception type was thrown" + Environment.NewLine +
@@ -187,7 +187,7 @@ namespace NUnit.Core.Tests
         {
             Type fixtureType = typeof(MismatchedException);
             Test test = TestBuilder.MakeTestCase(fixtureType, "MismatchedExceptionTypeAsNamedParameter");
-            TestResult result = test.Run(NullListener.NULL, TestFilter.Empty);
+            TestResult result = test.Run(TestListener.NULL, TestFilter.Empty);
             Assert.IsTrue(result.IsFailure, "MismatchedExceptionType should have failed");
             StringAssert.StartsWith(
                 "An unexpected exception type was thrown" + Environment.NewLine +
@@ -201,7 +201,7 @@ namespace NUnit.Core.Tests
 		{
 			Type fixtureType = typeof(MismatchedException);
 			Test test = TestBuilder.MakeTestCase( fixtureType, "MismatchedExceptionTypeWithUserMessage" );
-            TestResult result = test.Run(NullListener.NULL, TestFilter.Empty);
+            TestResult result = test.Run(TestListener.NULL, TestFilter.Empty);
 			Assert.IsTrue(result.IsFailure, "Test method should have failed");
 			StringAssert.StartsWith(
 				"custom message" + Environment.NewLine +
@@ -216,7 +216,7 @@ namespace NUnit.Core.Tests
 		{
 			Type fixtureType = typeof(MismatchedException);
 			Test test = TestBuilder.MakeTestCase( fixtureType, "MismatchedExceptionName" );
-            TestResult result = test.Run(NullListener.NULL, TestFilter.Empty);
+            TestResult result = test.Run(TestListener.NULL, TestFilter.Empty);
 			Assert.IsTrue(result.IsFailure, "MismatchedExceptionName should have failed");
 			StringAssert.StartsWith(
 				"An unexpected exception type was thrown" + Environment.NewLine +
@@ -230,7 +230,7 @@ namespace NUnit.Core.Tests
 		{
 			Type fixtureType = typeof(MismatchedException);
 			Test test = TestBuilder.MakeTestCase( fixtureType, "MismatchedExceptionNameWithUserMessage" );
-            TestResult result = test.Run(NullListener.NULL, TestFilter.Empty);
+            TestResult result = test.Run(TestListener.NULL, TestFilter.Empty);
 			Assert.IsTrue(result.IsFailure, "Test method should have failed");
 			StringAssert.StartsWith(
 				"custom message" + Environment.NewLine +
@@ -245,7 +245,7 @@ namespace NUnit.Core.Tests
 		{
 			Type fixtureType = typeof(TestThrowsExceptionWithWrongMessage);
 			Test test = TestBuilder.MakeTestCase( fixtureType, "TestThrow" );
-            TestResult result = test.Run(NullListener.NULL, TestFilter.Empty);
+            TestResult result = test.Run(TestListener.NULL, TestFilter.Empty);
 			Assert.IsTrue(result.IsFailure, "TestThrow should have failed");
 			Assert.AreEqual(
 				"The exception message text was incorrect" + Environment.NewLine +
@@ -259,7 +259,7 @@ namespace NUnit.Core.Tests
 		{
 			Type fixtureType = typeof(TestThrowsExceptionWithWrongMessage);
 			Test test = TestBuilder.MakeTestCase( fixtureType, "TestThrowWithUserMessage" );
-            TestResult result = test.Run(NullListener.NULL, TestFilter.Empty);
+            TestResult result = test.Run(TestListener.NULL, TestFilter.Empty);
 			Assert.IsTrue(result.IsFailure, "TestThrow should have failed");
 			Assert.AreEqual(
 				"custom message" + Environment.NewLine +
@@ -274,7 +274,7 @@ namespace NUnit.Core.Tests
 		{
 			Type fixtureType = typeof(TestDoesNotThrowExceptionFixture);
 			Test test = TestBuilder.MakeTestCase( fixtureType, "TestDoesNotThrowUnspecifiedException" );
-            TestResult result = test.Run(NullListener.NULL, TestFilter.Empty);
+            TestResult result = test.Run(TestListener.NULL, TestFilter.Empty);
 			Assert.IsTrue(result.IsFailure, "Test method should have failed");
 			Assert.AreEqual("An Exception was expected", result.Message);
 		}
@@ -284,7 +284,7 @@ namespace NUnit.Core.Tests
 		{
 			Type fixtureType = typeof(TestDoesNotThrowExceptionFixture);
 			Test test = TestBuilder.MakeTestCase( fixtureType, "TestDoesNotThrowUnspecifiedExceptionWithUserMessage" );
-            TestResult result = test.Run(NullListener.NULL, TestFilter.Empty);
+            TestResult result = test.Run(TestListener.NULL, TestFilter.Empty);
 			Assert.IsTrue(result.IsFailure, "Test method should have failed");
 			Assert.AreEqual("custom message" + Environment.NewLine + "An Exception was expected", result.Message);
 		}
@@ -294,7 +294,7 @@ namespace NUnit.Core.Tests
 		{
 			Type fixtureType = typeof(TestDoesNotThrowExceptionFixture);
 			Test test = TestBuilder.MakeTestCase( fixtureType, "TestDoesNotThrowExceptionType" );
-            TestResult result = test.Run(NullListener.NULL, TestFilter.Empty);
+            TestResult result = test.Run(TestListener.NULL, TestFilter.Empty);
 			Assert.IsTrue(result.IsFailure, "Test method should have failed");
 			Assert.AreEqual("System.ArgumentException was expected", result.Message);
 		}
@@ -304,7 +304,7 @@ namespace NUnit.Core.Tests
 		{
 			Type fixtureType = typeof(TestDoesNotThrowExceptionFixture);
 			Test test = TestBuilder.MakeTestCase( fixtureType, "TestDoesNotThrowExceptionTypeWithUserMessage" );
-            TestResult result = test.Run(NullListener.NULL, TestFilter.Empty);
+            TestResult result = test.Run(TestListener.NULL, TestFilter.Empty);
 			Assert.IsTrue(result.IsFailure, "Test method should have failed");
 			Assert.AreEqual("custom message" + Environment.NewLine + "System.ArgumentException was expected", result.Message);
 		}
@@ -314,7 +314,7 @@ namespace NUnit.Core.Tests
 		{
 			Type fixtureType = typeof(TestDoesNotThrowExceptionFixture);
 			Test test = TestBuilder.MakeTestCase( fixtureType, "TestDoesNotThrowExceptionName" );
-            TestResult result = test.Run(NullListener.NULL, TestFilter.Empty);
+            TestResult result = test.Run(TestListener.NULL, TestFilter.Empty);
 			Assert.IsTrue(result.IsFailure, "Test method should have failed");
 			Assert.AreEqual("System.ArgumentException was expected", result.Message);
 		}
@@ -324,7 +324,7 @@ namespace NUnit.Core.Tests
 		{
 			Type fixtureType = typeof(TestDoesNotThrowExceptionFixture);
 			Test test = TestBuilder.MakeTestCase( fixtureType, "TestDoesNotThrowExceptionNameWithUserMessage" );
-            TestResult result = test.Run(NullListener.NULL, TestFilter.Empty);
+            TestResult result = test.Run(TestListener.NULL, TestFilter.Empty);
 			Assert.IsTrue(result.IsFailure, "Test method should have failed");
 			Assert.AreEqual("custom message" + Environment.NewLine + "System.ArgumentException was expected", result.Message);
 		}
@@ -420,7 +420,7 @@ namespace NUnit.Core.Tests
 		{
 			ExceptionHandlerCalledClass fixture = new ExceptionHandlerCalledClass();
 			Test test = TestBuilder.MakeTestCase( fixture, "ThrowsArgumentException_AlternateHandler" );
-            test.Run(NullListener.NULL, TestFilter.Empty);
+            test.Run(TestListener.NULL, TestFilter.Empty);
 			Assert.IsFalse(fixture.HandlerCalled, "Base Handler should not be called" );
 			Assert.IsTrue(fixture.AlternateHandlerCalled, "Alternate Handler should be called" );
 		}
@@ -430,7 +430,7 @@ namespace NUnit.Core.Tests
 		{
 			ExceptionHandlerCalledClass fixture = new ExceptionHandlerCalledClass();
 			Test test = TestBuilder.MakeTestCase( fixture, "ThrowsArgumentException" );
-            test.Run(NullListener.NULL, TestFilter.Empty);
+            test.Run(TestListener.NULL, TestFilter.Empty);
 			Assert.IsTrue(fixture.HandlerCalled, "Base Handler should be called");
 			Assert.IsFalse(fixture.AlternateHandlerCalled, "Alternate Handler should not be called");
 		}
@@ -440,7 +440,7 @@ namespace NUnit.Core.Tests
 		{
 			ExceptionHandlerCalledClass fixture = new ExceptionHandlerCalledClass();
 			Test test = TestBuilder.MakeTestCase( fixture, "ThrowsApplicationException" );
-            test.Run(NullListener.NULL, TestFilter.Empty);
+            test.Run(TestListener.NULL, TestFilter.Empty);
 			Assert.IsFalse( fixture.HandlerCalled, "Base Handler should not be called" );
 			Assert.IsFalse( fixture.AlternateHandlerCalled, "Alternate Handler should not be called" );
 		}
@@ -450,7 +450,7 @@ namespace NUnit.Core.Tests
 		{
 			ExceptionHandlerCalledClass fixture = new ExceptionHandlerCalledClass();
 			Test test = TestBuilder.MakeTestCase( fixture, "ThrowsApplicationException_AlternateHandler" );
-            test.Run(NullListener.NULL, TestFilter.Empty);
+            test.Run(TestListener.NULL, TestFilter.Empty);
 			Assert.IsFalse(fixture.HandlerCalled, "Base Handler should not be called");
 			Assert.IsFalse(fixture.AlternateHandlerCalled, "Alternate Handler should not be called");
 		}

@@ -142,7 +142,7 @@ namespace NUnit.Core.Tests
 		{
 			Test test = TestFinder.Find( "TestMethodWithMultipleTestCases", fixture, false );
 			Assert.That( test.RunState, Is.EqualTo( RunState.Runnable ) );
-            TestResult result = test.Run(NullListener.NULL, TestFilter.Empty);
+            TestResult result = test.Run(TestListener.NULL, TestFilter.Empty);
 			Assert.That( result.ResultState, Is.EqualTo(ResultState.Success) );
             ResultSummary summary = new ResultSummary(result);
             Assert.That(summary.TestsRun, Is.EqualTo(3));
@@ -177,7 +177,7 @@ namespace NUnit.Core.Tests
         [Test]
         public void RunningTestsThroughFixtureGivesCorrectResults()
         {
-            TestResult result = fixture.Run(NullListener.NULL, TestFilter.Empty);
+            TestResult result = fixture.Run(TestListener.NULL, TestFilter.Empty);
             ResultSummary summary = new ResultSummary(result);
 
             Assert.That(

@@ -50,7 +50,7 @@ namespace NUnit.Core.Tests
 			TestPackage package = new TestPackage( testAssembly );
 			package.TestName = nameSpace;
             Test suite = builder.Build( package );
-            return suite.Run(new NullListener(),filter);
+            return suite.Run(TestListener.NULL,filter);
         }
 
         #region Builder

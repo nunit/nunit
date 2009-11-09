@@ -104,6 +104,7 @@ namespace NUnit.Core
 			get { return testRunner == null ? null : testRunner.TestResult; }
 		}
 
+        // TODO: This comment appears to no longer be true
 		/// <summary>
 		/// Protected property copies any settings to the downstream test runner
 		/// when it is set. Derived runners overriding this should call the base

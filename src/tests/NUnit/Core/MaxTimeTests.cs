@@ -43,7 +43,7 @@ namespace NUnit.Core.Tests
         public void MaxTimeExceeded()
         {
             Test test = TestFixtureBuilder.BuildFrom(typeof(MaxTimeFixture));
-            TestResult result = test.Run(NullListener.NULL, TestFilter.Empty);
+            TestResult result = test.Run(TestListener.NULL, TestFilter.Empty);
             Assert.AreEqual(ResultState.Failure, result.ResultState);
             result = (TestResult)result.Results[0];
             StringAssert.IsMatch(@"Elapsed time of \d*ms exceeds maximum of 1ms", result.Message);
@@ -60,7 +60,7 @@ namespace NUnit.Core.Tests
         public void FailureReportHasPriorityOverMaxTime()
 		{
             Test test = TestFixtureBuilder.BuildFrom(typeof(MaxTimeFixtureWithFailure));
-            TestResult result = test.Run(NullListener.NULL, TestFilter.Empty);
+            TestResult result = test.Run(TestListener.NULL, TestFilter.Empty);
             Assert.AreEqual(ResultState.Failure, result.ResultState);
             result = (TestResult)result.Results[0];
             Assert.AreEqual(ResultState.Failure, result.ResultState);
@@ -77,7 +77,7 @@ namespace NUnit.Core.Tests
         public void ErrorReportHasPriorityOverMaxTime()
         {
             Test test = TestFixtureBuilder.BuildFrom(typeof(MaxTimeFixtureWithError));
-            TestResult result = test.Run(NullListener.NULL, TestFilter.Empty);
+            TestResult result = test.Run(TestListener.NULL, TestFilter.Empty);
             Assert.AreEqual(ResultState.Failure, result.ResultState);
             result = (TestResult)result.Results[0];
             Assert.AreEqual(ResultState.Error, result.ResultState);

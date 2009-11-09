@@ -43,7 +43,7 @@ namespace NUnit.Core.Tests
         {
             Type fixtureType = typeof(NUnit.TestData.UnhandledExceptionData.UnhandledExceptions);
             Test test = TestBuilder.MakeTestCase(fixtureType, dummyName);
-            TestResult result = test.Run(NullListener.NULL, TestFilter.Empty);
+            TestResult result = test.Run(TestListener.NULL, TestFilter.Empty);
             if (shouldPass)
                 Assert.IsTrue(result.IsSuccess, "{0} test should have passed", dummyName);
             else
