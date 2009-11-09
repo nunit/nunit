@@ -26,11 +26,13 @@ using System;
 namespace NUnit.Core
 {
 	/// <summary>
-	/// Summary description for NullListener.
+	/// TestListener provides an implementation of ITestListener that
+    /// does nothing.
+    /// in each of the callback methods.
 	/// </summary>
 	/// 
 	[Serializable]
-	public class NullListener : ITestListener
+	public class TestListener : ITestListener
 	{
 		public void RunStarted( TestName testName, int testCount ){ }
 
@@ -50,9 +52,11 @@ namespace NUnit.Core
 
 		public void TestOutput(TestOutput testOutput) {}
 
+        private TestListener() { }
+
 		public static ITestListener NULL
 		{
-			get { return new NullListener();}
+			get { return new TestListener();}
 		}
 	}
 }

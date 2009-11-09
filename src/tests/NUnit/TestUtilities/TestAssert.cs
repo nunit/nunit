@@ -39,7 +39,7 @@ namespace NUnit.TestUtilities
         {
             TestSuite suite = TestBuilder.MakeFixture(type);
             Assert.AreEqual(RunState.Runnable, suite.RunState);
-            TestResult result = suite.Run(NullListener.NULL, TestFilter.Empty);
+            TestResult result = suite.Run(TestListener.NULL, TestFilter.Empty);
             Assert.AreEqual(ResultState.Success, result.ResultState);
         }
 
@@ -52,7 +52,7 @@ namespace NUnit.TestUtilities
         {
             Test test = TestBuilder.MakeTestCase(type, name);
             Assert.That(test.RunState, Is.EqualTo(RunState.Runnable));
-            TestResult result = test.Run(NullListener.NULL, TestFilter.Empty);
+            TestResult result = test.Run(TestListener.NULL, TestFilter.Empty);
             if (result.HasResults)
                 result = (TestResult)result.Results[0];
             Assert.That(result.ResultState, Is.EqualTo(resultState));
@@ -63,7 +63,7 @@ namespace NUnit.TestUtilities
         public static void IsNotRunnable(Test test)
         {
             Assert.AreEqual(RunState.NotRunnable, test.RunState);
-            TestResult result = test.Run(NullListener.NULL, TestFilter.Empty);
+            TestResult result = test.Run(TestListener.NULL, TestFilter.Empty);
             Assert.AreEqual(ResultState.NotRunnable, result.ResultState);
         }
 

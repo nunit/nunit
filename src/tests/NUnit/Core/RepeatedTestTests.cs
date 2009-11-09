@@ -50,7 +50,7 @@ namespace NUnit.Core.Tests
 		{
 			Test suite = TestFixtureBuilder.BuildFrom( fixture );
 			Assert.AreEqual( 1, suite.Tests.Count, "Test case count" );
-            return suite.Run(NullListener.NULL, TestFilter.Empty);
+            return suite.Run(TestListener.NULL, TestFilter.Empty);
 		}
 
 		[Test]

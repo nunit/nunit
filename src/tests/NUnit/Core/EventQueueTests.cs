@@ -114,7 +114,7 @@ namespace NUnit.Core.Tests
         [Test]
         public void StartAndStopPumpOnEmptyQueue()
         {
-            EventPump pump = new EventPump(NullListener.NULL, new EventQueue(), false);
+            EventPump pump = new EventPump(TestListener.NULL, new EventQueue(), false);
             StartPump(pump, 1000);
             Assert.That(pump.PumpState, Is.EqualTo(EventPumpState.Pumping));
             StopPump(pump, 1000);
@@ -125,7 +125,7 @@ namespace NUnit.Core.Tests
         public void PumpAutoStopsOnRunFinished()
         {
             EventQueue q = new EventQueue();
-            EventPump pump = new EventPump(NullListener.NULL, q, true);
+            EventPump pump = new EventPump(TestListener.NULL, q, true);
             Assert.That(pump.PumpState, Is.EqualTo(EventPumpState.Stopped));
             StartPump(pump, 1000);
             Assert.That(pump.PumpState, Is.EqualTo(EventPumpState.Pumping));

@@ -211,7 +211,7 @@ namespace NUnit.Core
                 while (repeatCount-- > 0)
                 {
                     if (RequiresThread || Timeout > 0 || ApartmentState != GetCurrentApartment())
-                        new TestMethodThread(this).Run(testResult, NullListener.NULL, TestFilter.Empty);
+                        new TestMethodThread(this).Run(testResult, TestListener.NULL, TestFilter.Empty);
                     else
                         doRun(testResult);
 

@@ -36,7 +36,7 @@ namespace NUnit.Core.Tests
 		{
 			TestSuite suite = TestBuilder.MakeFixture( fixture.GetType() );
 			suite.Fixture = fixture;
-            return suite.Run(NullListener.NULL, TestFilter.Empty);
+            return suite.Run(TestListener.NULL, TestFilter.Empty);
 		}
 
 		[Test]
@@ -192,7 +192,7 @@ namespace NUnit.Core.Tests
 		public void HandleExceptionInFixtureConstructor()
 		{
 			TestSuite suite = TestBuilder.MakeFixture( typeof( ExceptionInConstructor ) );
-            TestResult result = suite.Run(NullListener.NULL, TestFilter.Empty);
+            TestResult result = suite.Run(TestListener.NULL, TestFilter.Empty);
 
 			// should have one suite and one fixture
 			ResultSummary summ = new ResultSummary(result);
@@ -252,7 +252,7 @@ namespace NUnit.Core.Tests
             suite.Fixture = fixture;
             Test test = (Test)suite.Tests[0];
 
-            suite.Run(NullListener.NULL, new Filters.NameFilter(test.TestName));
+            suite.Run(TestListener.NULL, new Filters.NameFilter(test.TestName));
 
             Assert.AreEqual(1, fixture.setUpCount);
             Assert.AreEqual(1, fixture.tearDownCount);
@@ -268,15 +268,15 @@ namespace NUnit.Core.Tests
 			Test test = (Test)fixtureSuite.Tests[0];
 			suite.Add( fixtureSuite );
 
-            fixtureSuite.Run(NullListener.NULL, TestFilter.Empty);
+            fixtureSuite.Run(TestListener.NULL, TestFilter.Empty);
 			Assert.IsFalse( fixture.setupCalled, "TestFixtureSetUp called running fixture" );
 			Assert.IsFalse( fixture.teardownCalled, "TestFixtureTearDown called running fixture" );
 
-            suite.Run(NullListener.NULL, TestFilter.Empty);
+            suite.Run(TestListener.NULL, TestFilter.Empty);
 			Assert.IsFalse( fixture.setupCalled, "TestFixtureSetUp called running enclosing suite" );
 			Assert.IsFalse( fixture.teardownCalled, "TestFixtureTearDown called running enclosing suite" );
 
-            test.Run(NullListener.NULL, TestFilter.Empty);
+            test.Run(TestListener.NULL, TestFilter.Empty);
 			Assert.IsFalse( fixture.setupCalled, "TestFixtureSetUp called running a test case" );
 			Assert.IsFalse( fixture.teardownCalled, "TestFixtureTearDown called running a test case" );
 		}
