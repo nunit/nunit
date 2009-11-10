@@ -312,9 +312,6 @@
     <Compile Include="..\..\..\src\framework\NUnit\Core\NamespaceTreeBuilder.cs">
       <Link>NUnit\Core\NamespaceTreeBuilder.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\NUnit\Core\NullListener.cs">
-      <Link>NUnit\Core\NullListener.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\src\framework\NUnit\Core\NUnitConfiguration.cs">
       <Link>NUnit\Core\NUnitConfiguration.cs</Link>
     </Compile>
@@ -374,6 +371,9 @@
     </Compile>
     <Compile Include="..\..\..\src\framework\NUnit\Core\TestFixtureBuilder.cs">
       <Link>NUnit\Core\TestFixtureBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Core\TestListener.cs">
+      <Link>NUnit\Core\TestListener.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\NUnit\Core\TestMethod.cs">
       <Link>NUnit\Core\TestMethod.cs</Link>
