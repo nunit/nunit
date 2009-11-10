@@ -78,6 +78,12 @@ namespace NUnit.AdhocTestRunner
         private class CallbackHandler : MarshalByRefObject
         {
             private object result;
+            private TextWriter output;
+
+            public CallbackHandler()
+            {
+                this.output = Console.Out;
+            }
 
             public object Result
             {
@@ -95,8 +101,8 @@ namespace NUnit.AdhocTestRunner
 
                 if (ar.IsCompleted)
                     this.result = state;
-                //else if (state is TestOutput)
-                //    Console.Write(((TestOutput)state).Text);
+                else if (state is TestOutput)
+                    output.Write(((TestOutput)state).Text);
             }
 
             public override object InitializeLifetimeService()
