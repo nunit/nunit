@@ -234,9 +234,6 @@
     <Compile Include="..\..\..\src\framework\NUnit\Core\Interfaces\Filters\SimpleNameFilter.cs">
       <Link>NUnit\Core\Interfaces\Filters\SimpleNameFilter.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\NUnit\Core\Interfaces\IService.cs">
-      <Link>NUnit\Core\Interfaces\IService.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\src\framework\NUnit\Core\Interfaces\ITest.cs">
       <Link>NUnit\Core\Interfaces\ITest.cs</Link>
     </Compile>
@@ -269,9 +266,6 @@
     </Compile>
     <Compile Include="..\..\..\src\framework\NUnit\Core\Interfaces\TestName.cs">
       <Link>NUnit\Core\Interfaces\TestName.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\NUnit\Core\Interfaces\TestNode.cs">
-      <Link>NUnit\Core\Interfaces\TestNode.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\NUnit\Core\Interfaces\TestOutput.cs">
       <Link>NUnit\Core\Interfaces\TestOutput.cs</Link>

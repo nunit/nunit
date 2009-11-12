@@ -42,7 +42,7 @@ namespace NUnit.Core.Tests
         public void InitializeBuilders()
         {
             if (!CoreExtensions.Host.Initialized)
-                CoreExtensions.Host.InitializeService();
+                CoreExtensions.Host.Initialize();
         }
         
         [Test]

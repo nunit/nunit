@@ -76,7 +76,7 @@ namespace NUnit.Core
 
 			// Initialize ExtensionHost if not already done
 			if ( !CoreExtensions.Host.Initialized )
-				CoreExtensions.Host.InitializeService();
+				CoreExtensions.Host.Initialize();
 
 			// Delayed creation of downstream runner allows us to
 			// use a different runner type based on the package
