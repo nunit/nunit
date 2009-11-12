@@ -30,13 +30,13 @@ using TestOutput = NUnit.Core.TestOutput;
 
 namespace NUnit.AdhocTestRunner
 {
-    public class TestDriverWrapper
+    public class FrameworkController
     {
         AppDomain testDomain;
 
-        object driver;
+        object testController;
 
-        public TestDriverWrapper(CommandLineOptions options)
+        public FrameworkController(CommandLineOptions options)
         {
             this.testDomain = options.UseAppDomain
                 ? CreateDomain(Path.GetDirectoryName(Path.GetFullPath(options.Parameters[0])))
@@ -44,14 +44,14 @@ namespace NUnit.AdhocTestRunner
 
             string assemblyName = options.Parameters[0];
 
-            this.driver = CreateObject("NUnit.Core.TestDriver");
+            this.testController = CreateObject("NUnit.Framework.Api.TestController");
 
             //CallbackHandler handler = new CallbackHandler();
 
-            //CreateObject(testDriverTypeName + "+LoadTests", driver, assemblyName, handler.Callback);
+            //CreateObject(testDriverTypeName + "+LoadTests", testController, assemblyName, handler.Callback);
             //Console.WriteLine((bool)handler.Result ? "Loaded assembly" : "Failed to load assembly");
 
-            //CreateObject(testDriverTypeName + "+CountTests", driver, handler.Callback);
+            //CreateObject(testDriverTypeName + "+CountTests", testController, handler.Callback);
             //Console.WriteLine("Counted {0} tests", (int)handler.Result);
         }
 
@@ -59,7 +59,7 @@ namespace NUnit.AdhocTestRunner
         {
             CallbackHandler handler = new CallbackHandler();
 
-            CreateObject("NUnit.Core.TestDriver+LoadTests", driver, assemblyFilename, handler.Callback);
+            CreateObject("NUnit.Framework.Api.TestController+LoadTests", testController, assemblyFilename, handler.Callback);
 
             return (bool)handler.Result;
         }
@@ -68,7 +68,7 @@ namespace NUnit.AdhocTestRunner
         {
             CallbackHandler handler = new CallbackHandler();
 
-            CreateObject("NUnit.Core.TestDriver+RunTests", driver, handler.Callback);
+            CreateObject("NUnit.Framework.Api.TestController+RunTests", testController, handler.Callback);
 
             return (TestResult)handler.Result;
         }

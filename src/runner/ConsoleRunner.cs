@@ -42,7 +42,7 @@ namespace NUnit.AdhocTestRunner
 
             try
             {
-                TestDriverWrapper driver = new TestDriverWrapper(options);
+                FrameworkController driver = new FrameworkController(options);
 
                 foreach (string assemblyFilename in options.Parameters)
                 {
