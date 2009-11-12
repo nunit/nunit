@@ -41,7 +41,7 @@ namespace NUnit.TestUtilities
         static TestBuilder()
         {
             if (!CoreExtensions.Host.Initialized)
-                CoreExtensions.Host.InitializeService();
+                CoreExtensions.Host.Initialize();
         }
 
         public static TestSuite MakeFixture(Type type)

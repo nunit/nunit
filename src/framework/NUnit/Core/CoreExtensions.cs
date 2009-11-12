@@ -36,7 +36,7 @@ namespace NUnit.Core
 	/// It also provides access to the test builders and decorators
 	/// by other parts of the NUnit core.
 	/// </summary>
-	public class CoreExtensions : ExtensionHost, IService
+	public class CoreExtensions : ExtensionHost
 	{
 		static Logger log = InternalTrace.GetLogger("CoreExtensions");
 
@@ -162,7 +162,16 @@ namespace NUnit.Core
 	    #endregion
 
 		#region Public Methods	
-		public void InstallBuiltins()
+
+        public void Initialize()
+        {
+            InstallBuiltins();
+            InstallAddins();
+
+            initialized = true;
+        }
+
+        public void InstallBuiltins()
 		{
 			log.Info( "Installing Builtins" );
 
@@ -256,23 +265,6 @@ namespace NUnit.Core
 
 			return theAddin.Install(this);
 		}
-		#endregion
-
-		#region IService Members
-
-		public void UnloadService()
-		{
-			// TODO:  Add CoreExtensions.UnloadService implementation
-		}
-
-		public void InitializeService()
-		{
-			InstallBuiltins();
-			InstallAddins();
-
-			initialized = true;
-		}
-
 		#endregion
 	}
 }
