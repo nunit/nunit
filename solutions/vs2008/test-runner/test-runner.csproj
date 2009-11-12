@@ -51,6 +51,9 @@
     <Compile Include="..\..\..\src\runner\CommandLineOptions.cs">
       <Link>CommandLineOptions.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\runner\FrameworkController.cs">
+      <Link>FrameworkController.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\runner\Program.cs">
       <Link>Program.cs</Link>
     </Compile>
@@ -68,9 +71,6 @@
     </Compile>
     <Compile Include="..\..\..\src\runner\ResultReporter.cs">
       <Link>ResultReporter.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\runner\TestDriverWrapper.cs">
-      <Link>TestDriverWrapper.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup>

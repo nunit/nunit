@@ -354,9 +354,6 @@
     <Compile Include="..\..\..\src\framework\NUnit\Core\TestDecoratorAttribute.cs">
       <Link>NUnit\Core\TestDecoratorAttribute.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\NUnit\Core\TestDriver.cs">
-      <Link>NUnit\Core\TestDriver.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\src\framework\NUnit\Core\TestFixture.cs">
       <Link>NUnit\Core\TestFixture.cs</Link>
     </Compile>
@@ -389,6 +386,9 @@
     </Compile>
     <Compile Include="..\..\..\src\framework\NUnit\Core\TypeHelper.cs">
       <Link>NUnit\Core\TypeHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Framework\Api\TestController.cs">
+      <Link>NUnit\Framework\Api\TestController.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\NUnit\Framework\Assume.cs">
       <Link>NUnit\Framework\Assume.cs</Link>

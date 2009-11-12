@@ -1,20 +1,20 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
-using NUnit.Core.Builders;
+using NUnit.Core;
 
-namespace NUnit.Core
+namespace NUnit.Framework.Api
 {
-    public class TestDriver : MarshalByRefObject
+    public class TestController : MarshalByRefObject
     {
         private TestRunner runner;
 
-        public TestDriver()
+        public TestController()
         {
             this.runner = new RemoteTestRunner();
         }
 
-        public TestDriver(string runnerType)
+        public TestController(string runnerType)
         {
             if (!CoreExtensions.Host.Initialized)
                 CoreExtensions.Host.Initialize();
@@ -31,7 +31,7 @@ namespace NUnit.Core
 
         /// <summary>
         /// TestControllerHelper is the base class for all helpers
-        /// used to invoke methods on TestDriver. It provides
+        /// used to invoke methods on TestController. It provides
         /// the callback for state reporting.
         /// </summary>
         public abstract class TestControllerHelper : MarshalByRefObject
@@ -56,7 +56,7 @@ namespace NUnit.Core
 
         public class LoadTests : TestControllerHelper
         {
-            public LoadTests(TestDriver driver, string assemblyFilename, AsyncCallback callback) : base(callback)
+            public LoadTests(TestController driver, string assemblyFilename, AsyncCallback callback) : base(callback)
             {
                 Report( driver.runner.Load(new TestPackage(assemblyFilename)), true );
             }
@@ -64,7 +64,7 @@ namespace NUnit.Core
 
         public class CountTests : TestControllerHelper
         {
-            public CountTests(TestDriver driver, AsyncCallback callback) : base(callback)
+            public CountTests(TestController driver, AsyncCallback callback) : base(callback)
             {
                 Report(driver.runner.CountTestCases(TestFilter.Empty), true);
             }
@@ -72,7 +72,7 @@ namespace NUnit.Core
 
         public class RunTests : TestControllerHelper, ITestListener
         {
-            public RunTests(TestDriver driver, AsyncCallback callback)
+            public RunTests(TestController driver, AsyncCallback callback)
                 : base(callback)
             {
                 Report(driver.runner.Run(this, TestFilter.Empty), true);
