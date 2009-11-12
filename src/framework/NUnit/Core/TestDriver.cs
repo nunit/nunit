@@ -5,8 +5,28 @@ using NUnit.Core.Builders;
 
 namespace NUnit.Core
 {
-    public class TestDriver : RemoteTestRunner
+    public class TestDriver : MarshalByRefObject
     {
+        private TestRunner runner;
+
+        public TestDriver()
+        {
+            this.runner = new RemoteTestRunner();
+        }
+
+        public TestDriver(string runnerType)
+        {
+            if (!CoreExtensions.Host.Initialized)
+                CoreExtensions.Host.Initialize();
+
+            this.runner = (TestRunner)Assembly.GetExecutingAssembly().CreateInstance(runnerType);
+        }
+
+        public override object InitializeLifetimeService()
+        {
+            return null;
+        }
+
         #region TestControllerHelper Classes
 
         /// <summary>
@@ -38,7 +58,7 @@ namespace NUnit.Core
         {
             public LoadTests(TestDriver driver, string assemblyFilename, AsyncCallback callback) : base(callback)
             {
-                Report( driver.Load(new TestPackage(assemblyFilename)), true );
+                Report( driver.runner.Load(new TestPackage(assemblyFilename)), true );
             }
         }
 
@@ -46,7 +66,7 @@ namespace NUnit.Core
         {
             public CountTests(TestDriver driver, AsyncCallback callback) : base(callback)
             {
-                Report(driver.CountTestCases(TestFilter.Empty), true);
+                Report(driver.runner.CountTestCases(TestFilter.Empty), true);
             }
         }
 
@@ -55,7 +75,7 @@ namespace NUnit.Core
             public RunTests(TestDriver driver, AsyncCallback callback)
                 : base(callback)
             {
-                Report(driver.Run(this, TestFilter.Empty), true);
+                Report(driver.runner.Run(this, TestFilter.Empty), true);
             }
 
             #region ITestListener Members
