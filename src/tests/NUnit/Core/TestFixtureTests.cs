@@ -24,8 +24,10 @@
 using System;
 using NUnit.Framework;
 using NUnit.Core;
+using NUnit.TestData.FixtureSetUpTearDownData;
 using NUnit.TestUtilities;
 using NUnit.TestData.TestFixtureData;
+using IgnoredFixture = NUnit.TestData.TestFixtureData.IgnoredFixture;
 
 namespace NUnit.Core.Tests
 {
@@ -146,6 +148,12 @@ namespace NUnit.Core.Tests
 		{
             TestAssert.IsRunnable(typeof(MultipleFixtureTearDownAttributes));
 		}
+
+        [Test]
+        public void CanRunTestFixtureWithNoTests()
+        {
+            TestAssert.IsRunnable(typeof(FixtureWithNoTests));
+        }
 
 		#region SetUp Signature
 		[Test] 
