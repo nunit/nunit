@@ -140,12 +140,6 @@ namespace NUnit.Core.Builders
 
             AddTestCases(type);
 
-            if (this.fixture.RunState != RunState.NotRunnable && this.fixture.TestCount == 0)
-            {
-                this.fixture.RunState = RunState.NotRunnable;
-                this.fixture.IgnoreReason = fixture.TestName.Name + " does not have any tests";
-            }
-
             return this.fixture;
         }
 
