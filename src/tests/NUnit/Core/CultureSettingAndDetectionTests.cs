@@ -153,8 +153,11 @@ namespace NUnit.Core.Tests
 		{
 			TestResult result = TestBuilder.RunTestCase( typeof( InvalidCultureFixture ), "InvalidCultureSet" );
 			Assert.AreEqual( ResultState.Error, result.ResultState );
-            //Assert.That( result.Message, Text.StartsWith( "System.ArgumentException" ) );
-            Assert.That( result.Message, Text.Contains("xx-XX").IgnoreCase );
+		    string expectedException = RuntimeFramework.CurrentFramework.Version.Major == 4
+		      ? "System.Globalization.CultureNotFoundException"
+		      : "System.ArgumentException";
+            Assert.That( result.Message, Is.StringStarting(expectedException) );
+            Assert.That( result.Message, Is.StringContaining("xx-XX").IgnoreCase );
 		}
 
 		[TestFixture, SetCulture("en-GB")]

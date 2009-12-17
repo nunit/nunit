@@ -263,7 +263,7 @@ namespace NUnit.Core
 
         public void Run(TestResult suiteResult, ITestListener listener, TestFilter filter)
         {
-           // suiteResult.Success(); // Assume success
+            suiteResult.Success(); // Assume success
             DoOneTimeSetUp(suiteResult);
 
             switch( suiteResult.ResultState )
