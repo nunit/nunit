@@ -44,24 +44,23 @@ namespace NUnit.AdhocTestRunner
             {
                 FrameworkController driver = new FrameworkController(options);
 
-                foreach (string assemblyFilename in options.Parameters)
+                string assemblyFilename = options.Parameters[0];
+
+                if (!driver.Load(assemblyFilename))
+                    Console.WriteLine("Unable to load assembly {0}", assemblyFilename);
+                else
                 {
-                    if (!driver.Load(assemblyFilename))
-                        Console.WriteLine("Unable to load assembly {0}", assemblyFilename);
-                    else
-                    {
-                        TextWriter savedOut = Console.Out;
-                        TextWriter savedError = Console.Error;
+                    TextWriter savedOut = Console.Out;
+                    TextWriter savedError = Console.Error;
 
-                        TestEventListener listener = new TestEventListener(options, Console.Out);
+                    TestEventListener listener = new TestEventListener(options, Console.Out);
 
-                        TestResult result = driver.Run(listener, TestFilter.Empty);
+                    TestResult result = driver.Run(listener, TestFilter.Empty);
 
-                        Console.SetOut(savedOut);
-                        Console.SetError(savedError);
+                    Console.SetOut(savedOut);
+                    Console.SetError(savedError);
 
-                        new ResultReporter(result).ReportResults();
-                    }
+                    new ResultReporter(result).ReportResults();
                 }
             }
             catch (FileNotFoundException ex)

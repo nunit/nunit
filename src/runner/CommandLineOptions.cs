@@ -172,6 +172,8 @@ namespace NUnit.AdhocTestRunner
         private void ProcessParameter(string param)
         {
             parameters.Add(param);
+            if (parameters.Count > 1)
+                error = true;
         }
 
         /// <summary>
@@ -191,10 +193,17 @@ namespace NUnit.AdhocTestRunner
         {
             get
             {
-                StringBuilder sb = new StringBuilder();
-                foreach (string opt in invalidOptions)
-                    sb.Append("Invalid option: " + opt + Environment.NewLine);
-                return sb.ToString();
+                if (invalidOptions.Count > 0)
+                {
+                    StringBuilder sb = new StringBuilder();
+                    foreach (string opt in invalidOptions)
+                        sb.Append("Invalid option: " + opt + Environment.NewLine);
+                    return sb.ToString();
+                }
+                else if (parameters.Count > 1)
+                    return "Only one assembly may be loaded at a time";
+                else
+                    return "Unknown error";
             }
         }
 
