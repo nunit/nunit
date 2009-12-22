@@ -4,6 +4,9 @@ using System.Threading;
 
 namespace NUnit.Framework.Api
 {
+    /// <summary>
+    /// Default implementation of ITestAssemblyRunner
+    /// </summary>
     public class DefaultTestAssemblyRunner : ITestAssemblyRunner
     {
         private ITestAssemblyBuilder builder;
