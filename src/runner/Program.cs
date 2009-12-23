@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2009 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -35,8 +35,6 @@ namespace NUnit.AdhocTestRunner
     /// </summary>
     public class Program
     {
-        static int reportCount;
-
         static void Main(string[] args)
         {
             CommandLineOptions options = new CommandLineOptions();
