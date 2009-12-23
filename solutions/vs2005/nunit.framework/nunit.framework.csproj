@@ -9,8 +9,6 @@
     <OutputType>Library</OutputType>
     <RootNamespace>nunit.framework</RootNamespace>
     <AssemblyName>nunit.framework</AssemblyName>
-    <StartupObject>
-    </StartupObject>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>nunit.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
@@ -387,6 +385,18 @@
     <Compile Include="..\..\..\src\framework\NUnit\Core\TypeHelper.cs">
       <Link>NUnit\Core\TypeHelper.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Framework\Api\DefaultTestAssemblyBuilder.cs">
+      <Link>NUnit\Framework\Api\DefaultTestAssemblyBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Framework\Api\DefaultTestAssemblyRunner.cs">
+      <Link>NUnit\Framework\Api\DefaultTestAssemblyRunner.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Framework\Api\ITestAssemblyBuilder.cs">
+      <Link>NUnit\Framework\Api\ITestAssemblyBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Framework\Api\ITestAssemblyRunner.cs">
+      <Link>NUnit\Framework\Api\ITestAssemblyRunner.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\framework\NUnit\Framework\Api\TestController.cs">
       <Link>NUnit\Framework\Api\TestController.cs</Link>
     </Compile>
@@ -702,8 +712,8 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.configuration" />
-    <Reference Include="System.XML" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <None Include="nunit.snk" />
