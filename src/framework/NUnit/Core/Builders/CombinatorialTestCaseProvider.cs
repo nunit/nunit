@@ -34,9 +34,6 @@ namespace NUnit.Core.Builders
         static IDataPointProvider2 dataPointProvider =
             (IDataPointProvider2)CoreExtensions.Host.GetExtensionPoint("DataPointProviders");
 
-        //static readonly string CombinatorialAttribute = "NUnit.Framework.CombinatorialAttribute";
-        static readonly string PairwiseAttribute = "NUnit.Framework.PairwiseAttribute";
-        static readonly string SequentialAttribute = "NUnit.Framework.SequentialAttribute";
         #endregion
 
         #region ITestCaseProvider Members

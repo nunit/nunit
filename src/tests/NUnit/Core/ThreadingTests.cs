@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2009 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -69,7 +69,7 @@ namespace NUnit.Core.Tests
             TestResult result = TestBuilder.RunTestCase(
                 typeof(ThreadingFixture), "InfiniteLoopWith50msTimeout");
             Assert.That(result.ResultState, Is.EqualTo(ResultState.Failure));
-            Assert.That(result.Message, Text.Contains("50ms"));
+            Assert.That(result.Message, Contains.Substring("50ms"));
         }
 
         [Test, STAThread]
