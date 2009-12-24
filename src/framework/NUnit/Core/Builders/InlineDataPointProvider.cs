@@ -30,8 +30,6 @@ namespace NUnit.Core.Builders
 {
     public class InlineDataPointProvider : IDataPointProvider
     {
-        private static readonly string ParameterDataAttribute = "NUnit.Framework.ParameterDataAttribute";
-
         private static readonly string GetDataMethod = "GetData";
 
         #region IDataPointProvider Members
