@@ -231,9 +231,6 @@
     <Compile Include="..\..\..\src\framework\NUnit\Core\Interfaces\Filters\SimpleNameFilter.cs">
       <Link>NUnit\Core\Interfaces\Filters\SimpleNameFilter.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\NUnit\Core\Interfaces\IService.cs">
-      <Link>NUnit\Core\Interfaces\IService.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\src\framework\NUnit\Core\Interfaces\ITest.cs">
       <Link>NUnit\Core\Interfaces\ITest.cs</Link>
     </Compile>
@@ -266,9 +263,6 @@
     </Compile>
     <Compile Include="..\..\..\src\framework\NUnit\Core\Interfaces\TestName.cs">
       <Link>NUnit\Core\Interfaces\TestName.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\NUnit\Core\Interfaces\TestNode.cs">
-      <Link>NUnit\Core\Interfaces\TestNode.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\NUnit\Core\Interfaces\TestOutput.cs">
       <Link>NUnit\Core\Interfaces\TestOutput.cs</Link>
@@ -363,9 +357,6 @@
     <Compile Include="..\..\..\src\framework\NUnit\Core\TestDecoratorAttribute.cs">
       <Link>NUnit\Core\TestDecoratorAttribute.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\NUnit\Core\TestDriver.cs">
-      <Link>NUnit\Core\TestDriver.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\src\framework\NUnit\Core\TestFixture.cs">
       <Link>NUnit\Core\TestFixture.cs</Link>
     </Compile>
@@ -398,6 +389,21 @@
     </Compile>
     <Compile Include="..\..\..\src\framework\NUnit\Core\TypeHelper.cs">
       <Link>NUnit\Core\TypeHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Framework\Api\DefaultTestAssemblyBuilder.cs">
+      <Link>NUnit\Framework\Api\DefaultTestAssemblyBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Framework\Api\DefaultTestAssemblyRunner.cs">
+      <Link>NUnit\Framework\Api\DefaultTestAssemblyRunner.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Framework\Api\ITestAssemblyBuilder.cs">
+      <Link>NUnit\Framework\Api\ITestAssemblyBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Framework\Api\ITestAssemblyRunner.cs">
+      <Link>NUnit\Framework\Api\ITestAssemblyRunner.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\NUnit\Framework\Api\TestController.cs">
+      <Link>NUnit\Framework\Api\TestController.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\NUnit\Framework\Assume.cs">
       <Link>NUnit\Framework\Assume.cs</Link>
