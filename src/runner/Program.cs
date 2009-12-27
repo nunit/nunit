@@ -48,7 +48,7 @@ namespace NUnit.AdhocTestRunner
             else if (options.Error)
             {
                 Console.WriteLine(options.ErrorMessage);
-                Console.WriteLine("Try test-runner --help for more info");
+                Console.WriteLine("Try test-runner -help for more info");
                 Console.WriteLine();
             }
             else if (options.Parameters.Length == 0)

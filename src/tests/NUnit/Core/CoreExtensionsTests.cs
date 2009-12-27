@@ -76,15 +76,6 @@ namespace NUnit.Core.Tests
 			Assert.AreEqual( typeof( EventListenerCollection ), ep.GetType() );
 		}
 
-		[Test]
-		public void HasTestFrameworkRegistry()
-		{
-			IExtensionPoint ep = host.GetExtensionPoint( "FrameworkRegistry" );
-			Assert.IsNotNull( ep );
-			Assert.AreEqual( "FrameworkRegistry", ep.Name );
-			Assert.AreEqual( typeof( FrameworkRegistry ), ep.GetType() );
-		}
-
         //[Test]
         //public void CanAddDecorator()
         //{
