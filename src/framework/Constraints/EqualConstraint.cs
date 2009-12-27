@@ -258,17 +258,6 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="comparer">The IComparer object to use.</param>
         /// <returns>Self.</returns>
-        [Obsolete("Replace with 'Using'")]
-        public EqualConstraint Comparer(IComparer comparer)
-        {
-            return Using(comparer);
-        }
-
-        /// <summary>
-        /// Flag the constraint to use the supplied IComparer object.
-        /// </summary>
-        /// <param name="comparer">The IComparer object to use.</param>
-        /// <returns>Self.</returns>
         public EqualConstraint Using(IComparer comparer)
         {
             this.comparer.ExternalComparer = EqualityAdapter.For(comparer);
