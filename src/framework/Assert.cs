@@ -1528,40 +1528,6 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.InstanceOf(expected) ,null, null);
         }
-
-        /// <summary>
-        /// Asserts that an object is an instance of a given type.
-        /// </summary>
-        /// <param name="expected">The expected Type</param>
-        /// <param name="actual">The object being examined</param>
-        /// <param name="message">The message to display in case of failure</param>
-        /// <param name="args">Array of objects to be used in formatting the message</param>
-        [Obsolete]
-        public static void IsInstanceOfType(Type expected, object actual, string message, params object[] args)
-        {
-            Assert.That(actual, Is.InstanceOf(expected) ,message, args);
-        }
-        /// <summary>
-        /// Asserts that an object is an instance of a given type.
-        /// </summary>
-        /// <param name="expected">The expected Type</param>
-        /// <param name="actual">The object being examined</param>
-        /// <param name="message">The message to display in case of failure</param>
-        [Obsolete]
-        public static void IsInstanceOfType(Type expected, object actual, string message)
-        {
-            Assert.That(actual, Is.InstanceOf(expected) ,message, null);
-        }
-        /// <summary>
-        /// Asserts that an object is an instance of a given type.
-        /// </summary>
-        /// <param name="expected">The expected Type</param>
-        /// <param name="actual">The object being examined</param>
-        [Obsolete]
-        public static void IsInstanceOfType(Type expected, object actual)
-        {
-            Assert.That(actual, Is.InstanceOf(expected) ,null, null);
-        }
 #endif
 
         #endregion
@@ -1635,40 +1601,6 @@ namespace NUnit.Framework
         /// <param name="expected">The expected Type</param>
         /// <param name="actual">The object being examined</param>
         public static void IsNotInstanceOf(Type expected, object actual)
-        {
-            Assert.That(actual, Is.Not.InstanceOf(expected) ,null, null);
-        }
-
-        /// <summary>
-        /// Asserts that an object is not an instance of a given type.
-        /// </summary>
-        /// <param name="expected">The expected Type</param>
-        /// <param name="actual">The object being examined</param>
-        /// <param name="message">The message to display in case of failure</param>
-        /// <param name="args">Array of objects to be used in formatting the message</param>
-        [Obsolete]
-        public static void IsNotInstanceOfType(Type expected, object actual, string message, params object[] args)
-        {
-            Assert.That(actual, Is.Not.InstanceOf(expected) ,message, args);
-        }
-        /// <summary>
-        /// Asserts that an object is not an instance of a given type.
-        /// </summary>
-        /// <param name="expected">The expected Type</param>
-        /// <param name="actual">The object being examined</param>
-        /// <param name="message">The message to display in case of failure</param>
-        [Obsolete]
-        public static void IsNotInstanceOfType(Type expected, object actual, string message)
-        {
-            Assert.That(actual, Is.Not.InstanceOf(expected) ,message, null);
-        }
-        /// <summary>
-        /// Asserts that an object is not an instance of a given type.
-        /// </summary>
-        /// <param name="expected">The expected Type</param>
-        /// <param name="actual">The object being examined</param>
-        [Obsolete]
-        public static void IsNotInstanceOfType(Type expected, object actual)
         {
             Assert.That(actual, Is.Not.InstanceOf(expected) ,null, null);
         }

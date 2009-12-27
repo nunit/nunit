@@ -360,8 +360,6 @@ Gen3: Is.TypeOf<T>()=>new ExactTypeConstraint(typeof(T))
 /// </summary>
 Gen3: Is.InstanceOf(Type expectedType)=>new InstanceOfTypeConstraint(expectedType)
 Gen3: Is.InstanceOf<T>()=>new InstanceOfTypeConstraint(typeof(T))
-Gen3: [Obsolete("Use InstanceOf(expectedType)")]Is.InstanceOfType(Type expectedType)=>new InstanceOfTypeConstraint(expectedType)
-Gen3: [Obsolete("Use InstanceOf<T>()")]Is.InstanceOfType<T>()=>new InstanceOfTypeConstraint(typeof(T))
 %
 /// <summary>
 /// Returns a constraint that tests whether the actual value
@@ -635,7 +633,6 @@ Gen: Assert.IsNotAssignableFrom<T>(object actual)=>Assert.That(actual, Is.Not.As
 /// <param name="actual">The object being examined</param>
 Cond: !NUNITLITE
 Gen: Assert.IsInstanceOf(Type expected, object actual)=>Assert.That(actual, Is.InstanceOf(expected))
-Gen: [Obsolete]Assert.IsInstanceOfType(Type expected, object actual)=>Assert.That(actual, Is.InstanceOf(expected))
 %
 /// <summary>
 /// Asserts that an object is an instance of a given type.
@@ -652,7 +649,6 @@ Gen: Assert.IsInstanceOf<T>(object actual)=>Assert.That(actual, Is.InstanceOf(ty
 /// <param name="actual">The object being examined</param>
 Cond: !NUNITLITE
 Gen: Assert.IsNotInstanceOf(Type expected, object actual)=>Assert.That(actual, Is.Not.InstanceOf(expected))
-Gen: [Obsolete]Assert.IsNotInstanceOfType(Type expected, object actual)=>Assert.That(actual, Is.Not.InstanceOf(expected))
 %
 /// <summary>
 /// Asserts that an object is not an instance of a given type.
