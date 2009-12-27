@@ -178,7 +178,6 @@
       <arg value="Is.cs"/>
       <arg value="Has.cs"/>
       <arg value="Contains.cs"/>
-      <arg value="Text.cs"/>
       <arg value="Throws.cs"/>
       <arg value="Constraints/ConstraintFactory.cs"/>
       <arg value="Constraints/ConstraintExpression.cs"/>

@@ -622,9 +622,6 @@
     <Compile Include="..\..\..\src\framework\TestCaseData.cs">
       <Link>TestCaseData.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Text.cs">
-      <Link>Text.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\src\framework\Throws.cs">
       <Link>Throws.cs</Link>
     </Compile>
@@ -645,9 +642,6 @@
     </None>
     <None Include="..\..\..\src\framework\Templates\Is.template.cs">
       <Link>Templates\Is.template.cs</Link>
-    </None>
-    <None Include="..\..\..\src\framework\Templates\Text.template.cs">
-      <Link>Templates\Text.template.cs</Link>
     </None>
     <None Include="..\..\..\src\framework\Templates\Throws.template.cs">
       <Link>Templates\Throws.template.cs</Link>

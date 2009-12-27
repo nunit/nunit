@@ -138,7 +138,7 @@ namespace NUnit.Core.Tests
             Assert.That(result.ResultState, Is.EqualTo(ResultState.Failure));
             result = TestFinder.Find("Test2WithInfiniteLoop", result, false);
             Assert.That(result.ResultState, Is.EqualTo(ResultState.Failure));
-            Assert.That(result.Message, Text.Contains("50ms"));
+            Assert.That(result.Message, Contains.Substring("50ms"));
         }
 
         [TestFixture, RequiresSTA]
@@ -167,7 +167,7 @@ namespace NUnit.Core.Tests
             [Test]
             public void RequiresThreadCanBeSetOnTestFixture()
             {
-                Assert.That(Environment.StackTrace, Text.Contains("TestSuiteThread"));
+                Assert.That(Environment.StackTrace, Contains.Substring("TestSuiteThread"));
             }
         }
     }
