@@ -18,8 +18,12 @@
         <!--<patternset refid="source-files"/>-->
         <include name="../CommonAssemblyInfo.cs" />
         <include name="*.cs"/>
-        <include name="Shared/**/*.cs"/>
-        <include name="NUnit/**/*.cs"/>
+        <include name="Api/*.cs"/>
+        <include name="Attributes/*.cs"/>
+        <include name="Constraints/*.cs"/>
+        <include name="Exceptions/*.cs"/>
+        <include name="Extensibility/*.cs"/>
+        <include name="Internal/**/*.cs"/>
       </sources>
       <references basedir="${current.build.dir}">
         <include name="System.Configuration.dll"/>
@@ -42,7 +46,11 @@
         <!--<patternset refid="source-files"/>-->
         <include name="../CommonAssemblyInfo.cs" />
         <include name="*.cs"/>
-        <include name="Shared/**/*.cs"/>
+        <include name="Attributes/*.cs"/>
+        <include name="Constraints/*.cs"/>
+        <include name="Exceptions/*.cs"/>
+        <include name="Internal/Env.cs"/>
+        <include name="Internal/TextMessageWriter.cs"/>
         <include name="NUnitLite/**/*.cs"/>
       </sources>
       <references basedir="${current.build.dir}">

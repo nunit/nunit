@@ -244,19 +244,19 @@ namespace NUnit.Core.Tests
 			Assert.AreEqual(1, fixture.tearDownCount);
 		}
 
-        [Test]
-        public void RunningSingleMethodCallsSetUpAndTearDown()
-        {
-            SetUpAndTearDownFixture fixture = new SetUpAndTearDownFixture();
-            TestSuite suite = TestBuilder.MakeFixture(fixture.GetType());
-            suite.Fixture = fixture;
-            Test test = (Test)suite.Tests[0];
+        //[Test]
+        //public void RunningSingleMethodCallsSetUpAndTearDown()
+        //{
+        //    SetUpAndTearDownFixture fixture = new SetUpAndTearDownFixture();
+        //    TestSuite suite = TestBuilder.MakeFixture(fixture.GetType());
+        //    suite.Fixture = fixture;
+        //    Test test = (Test)suite.Tests[0];
 
-            suite.Run(TestListener.NULL, new Filters.NameFilter(test.TestName));
+        //    suite.Run(TestListener.NULL, new Filters.NameFilter(test.TestName));
 
-            Assert.AreEqual(1, fixture.setUpCount);
-            Assert.AreEqual(1, fixture.tearDownCount);
-        }
+        //    Assert.AreEqual(1, fixture.setUpCount);
+        //    Assert.AreEqual(1, fixture.tearDownCount);
+        //}
 
 		[Test]
 		public void IgnoredFixtureShouldNotCallFixtureSetUpOrTearDown()

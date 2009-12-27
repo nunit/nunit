@@ -175,14 +175,14 @@
       workingdir="${project.src.dir}/framework">
 
       <arg value="-syntax:SyntaxElements.txt"/>
-      <arg value="Shared/Framework/Is.cs"/>
-      <arg value="Shared/Framework/Has.cs"/>
-      <arg value="Shared/Framework/Contains.cs"/>
-      <arg value="NUnit/Framework/Text.cs"/>
-      <arg value="Shared/Framework/Throws.cs"/>
-      <arg value="Shared/Framework/Constraints/ConstraintFactory.cs"/>
-      <arg value="Shared/Framework/Constraints/ConstraintExpression.cs"/>
-      <arg value="Shared/Framework/Assert.cs"/>
+      <arg value="Is.cs"/>
+      <arg value="Has.cs"/>
+      <arg value="Contains.cs"/>
+      <arg value="Text.cs"/>
+      <arg value="Throws.cs"/>
+      <arg value="Constraints/ConstraintFactory.cs"/>
+      <arg value="Constraints/ConstraintExpression.cs"/>
+      <arg value="Assert.cs"/>
 
     </exec>
 
