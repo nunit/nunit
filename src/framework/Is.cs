@@ -309,28 +309,6 @@ namespace NUnit.Framework
         }
 #endif
 
-        /// <summary>
-        /// Returns a constraint that tests whether the actual value
-        /// is of the type supplied as an argument or a derived type.
-        /// </summary>
-        [Obsolete("Use InstanceOf(expectedType)")]
-        public static InstanceOfTypeConstraint InstanceOfType(Type expectedType)
-        {
-            return new InstanceOfTypeConstraint(expectedType);
-        }
-
-#if CLR_2_0
-        /// <summary>
-        /// Returns a constraint that tests whether the actual value
-        /// is of the type supplied as an argument or a derived type.
-        /// </summary>
-        [Obsolete("Use InstanceOf<T>()")]
-        public static InstanceOfTypeConstraint InstanceOfType<T>()
-        {
-            return new InstanceOfTypeConstraint(typeof(T));
-        }
-#endif
-
         #endregion
 
         #region AssignableFrom

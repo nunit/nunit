@@ -51,19 +51,6 @@ namespace NUnit.Framework.Syntax
         }
     }
 
-    [TestFixture, Obsolete]
-    public class InstanceOfTypeTest : SyntaxTest
-    {
-        [SetUp]
-        public void SetUp()
-        {
-            parseTree = "<instanceof System.String>";
-            staticSyntax = Is.InstanceOfType(typeof(string));
-            inheritedSyntax = Helper().InstanceOfType(typeof(string));
-            builderSyntax = Builder().InstanceOfType(typeof(string));
-        }
-    }
-
     [TestFixture]
     public class AssignableFromTest : SyntaxTest
     {
@@ -140,19 +127,6 @@ namespace NUnit.Framework.Syntax
             staticSyntax = Is.InstanceOf<string>();
             inheritedSyntax = Helper().InstanceOf<string>();
             builderSyntax = Builder().InstanceOf<string>();
-        }
-    }
-
-    [TestFixture, Obsolete]
-    public class InstanceOfTypeTest_Generic : SyntaxTest
-    {
-        [SetUp]
-        public void SetUp()
-        {
-            parseTree = "<instanceof System.String>";
-            staticSyntax = Is.InstanceOfType<string>();
-            inheritedSyntax = Helper().InstanceOfType<string>();
-            builderSyntax = Builder().InstanceOfType<string>();
         }
     }
 

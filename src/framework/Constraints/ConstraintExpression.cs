@@ -492,28 +492,6 @@ namespace NUnit.Framework.Constraints
         }
 #endif
 
-        /// <summary>
-        /// Returns a constraint that tests whether the actual value
-        /// is of the type supplied as an argument or a derived type.
-        /// </summary>
-        [Obsolete("Use InstanceOf(expectedType)")]
-        public InstanceOfTypeConstraint InstanceOfType(Type expectedType)
-        {
-            return (InstanceOfTypeConstraint)this.Append(new InstanceOfTypeConstraint(expectedType));
-        }
-
-#if CLR_2_0
-        /// <summary>
-        /// Returns a constraint that tests whether the actual value
-        /// is of the type supplied as an argument or a derived type.
-        /// </summary>
-        [Obsolete("Use InstanceOf<T>()")]
-        public InstanceOfTypeConstraint InstanceOfType<T>()
-        {
-            return (InstanceOfTypeConstraint)this.Append(new InstanceOfTypeConstraint(typeof(T)));
-        }
-#endif
-
         #endregion
 
         #region AssignableFrom
