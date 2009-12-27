@@ -123,6 +123,18 @@ namespace NUnit.Core.Tests
             TestAssert.IsNotRunnable(typeof(AbstractTestFixture));
 		}
 
+        [Test]
+        public void CanRunFixtureDerivedFromAbstractTestFixture()
+        {
+            TestAssert.IsRunnable(typeof(DerivedFromAbstractTestFixture));
+        }
+
+        [Test]
+        public void CanRunFixtureDerivedFromAbstractDerivedTestFixture()
+        {
+            TestAssert.IsRunnable(typeof(DerivedFromAbstractDerivedTestFixture));
+        }
+
 #if CLR_2_0
         [Test]
         public void CanRunStaticFixture()

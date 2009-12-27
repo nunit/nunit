@@ -52,6 +52,9 @@
     <Compile Include="..\..\..\src\runner\ConsoleRunner.cs">
       <Link>ConsoleRunner.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\runner\FrameworkController.cs">
+      <Link>FrameworkController.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\runner\Program.cs">
       <Link>Program.cs</Link>
     </Compile>
@@ -63,9 +66,6 @@
     </Compile>
     <Compile Include="..\..\..\src\runner\StackTraceFilter.cs">
       <Link>StackTraceFilter.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\runner\TestDriverWrapper.cs">
-      <Link>TestDriverWrapper.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\runner\TestEventListener.cs">
       <Link>TestEventListener.cs</Link>
