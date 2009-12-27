@@ -111,7 +111,6 @@ Gen: ConstraintExpression.No=>this.Append(new NotOperator())
 Type: ConstraintExpression
 Gen: Is.All=>new ConstraintExpression().All
 Gen: Has.All=>new ConstraintExpression().All
-Gen: [Obsolete("Use Is.All")]Text.All=>new ConstraintExpression().All
 Gen: ConstraintFactory.All=>Is.All
 Gen: ConstraintExpression.All=>this.Append(new AllOperator())
 %
@@ -423,7 +422,6 @@ Gen: ConstraintExpression.Contains(string expected)=>(ContainsConstraint)this.Ap
 /// </summary>
 Type: SubstringConstraint
 Gen3: Is.StringContaining(string expected)=>new SubstringConstraint(expected)
-Gen: [Obsolete("Use Is.StringContaining")]Text.Contains(string expected)=>new SubstringConstraint(expected)
 Gen: Contains.Substring(string expected)=>new SubstringConstraint(expected);
 Gen: ConstraintFactory.ContainsSubstring(string expected)=>new SubstringConstraint(expected)
 Gen: ConstraintExpression.ContainsSubstring(string expected)=>(SubstringConstraint)this.Append(new SubstringConstraint(expected))
@@ -433,14 +431,12 @@ Gen: ConstraintExpression.ContainsSubstring(string expected)=>(SubstringConstrai
 /// value contains the substring supplied as an argument.
 /// </summary>
 Type: SubstringConstraint
-Gen: [Obsolete("Use Is.Not.StringContaining")]Text.DoesNotContain(string expected)=>new ConstraintExpression().Not.ContainsSubstring(expected)
 Gen: ConstraintFactory.DoesNotContain(string expected)=>new ConstraintExpression().Not.ContainsSubstring(expected)
 %
 /// <summary>
 /// Returns a constraint that succeeds if the actual
 /// value starts with the substring supplied as an argument.
 /// </summary>
-Gen: [Obsolete("Use Is.StringStarting")]Text.StartsWith(string expected)=>new StartsWithConstraint(expected)
 Gen: ConstraintFactory.StartsWith(string expected)=>new StartsWithConstraint(expected)
 Gen: ConstraintExpression.StartsWith(string expected)=>(StartsWithConstraint)this.Append(new StartsWithConstraint(expected))
 Gen3: Is.StringStarting(string expected)=>new StartsWithConstraint(expected)
@@ -450,14 +446,12 @@ Gen3: Is.StringStarting(string expected)=>new StartsWithConstraint(expected)
 /// value starts with the substring supplied as an argument.
 /// </summary>
 Type: StartsWithConstraint
-Gen: Text.DoesNotStartWith(string expected)=>new ConstraintExpression().Not.StartsWith(expected)
 Gen: ConstraintFactory.DoesNotStartWith(string expected)=>new ConstraintExpression().Not.StartsWith(expected)
 %
 /// <summary>
 /// Returns a constraint that succeeds if the actual
 /// value ends with the substring supplied as an argument.
 /// </summary>
-Gen: [Obsolete("Use Is.StringEnding")]Text.EndsWith(string expected)=>new EndsWithConstraint(expected)
 Gen: ConstraintFactory.EndsWith(string expected)=>new EndsWithConstraint(expected)
 Gen: ConstraintExpression.EndsWith(string expected)=>(EndsWithConstraint)this.Append(new EndsWithConstraint(expected))
 Gen3: Is.StringEnding(string expected)=>new EndsWithConstraint(expected)
@@ -467,7 +461,6 @@ Gen3: Is.StringEnding(string expected)=>new EndsWithConstraint(expected)
 /// value ends with the substring supplied as an argument.
 /// </summary>
 Type: EndsWithConstraint
-Gen: Text.DoesNotEndWith(string expected)=>new ConstraintExpression().Not.EndsWith(expected)
 Gen: ConstraintFactory.DoesNotEndWith(string expected)=>new ConstraintExpression().Not.EndsWith(expected)
 %
 /// <summary>
@@ -475,7 +468,6 @@ Gen: ConstraintFactory.DoesNotEndWith(string expected)=>new ConstraintExpression
 /// value matches the regular expression supplied as an argument.
 /// </summary>
 Cond: !NETCF
-Gen: [Obsolete("Use Is.StringMatching")]Text.Matches(string pattern)=>new RegexConstraint(pattern)
 Gen: ConstraintFactory.Matches(string pattern)=>new RegexConstraint(pattern)
 Gen: ConstraintExpression.Matches(string pattern)=>(RegexConstraint)this.Append(new RegexConstraint(pattern))
 Gen3: Is.StringMatching(string pattern)=>new RegexConstraint(pattern)
@@ -486,7 +478,6 @@ Gen3: Is.StringMatching(string pattern)=>new RegexConstraint(pattern)
 /// </summary>
 Type: RegexConstraint
 Cond: !NUNITLITE
-Gen: [Obsolete]Text.DoesNotMatch(string pattern)=>new ConstraintExpression().Not.Matches(pattern)
 Gen: ConstraintFactory.DoesNotMatch(string pattern)=>new ConstraintExpression().Not.Matches(pattern)
 %
 /// <summary>

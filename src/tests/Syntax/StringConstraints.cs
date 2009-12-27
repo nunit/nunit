@@ -37,7 +37,6 @@ namespace NUnit.Framework.Syntax
         }
     }
 
-    [Obsolete]
     public class TextContains : SyntaxTest
     {
         [SetUp]
@@ -74,7 +73,6 @@ namespace NUnit.Framework.Syntax
         }
     }
 
-    [Obsolete]
     public class TextStartsWithTest : SyntaxTest
     {
         [SetUp]
@@ -111,7 +109,6 @@ namespace NUnit.Framework.Syntax
         }
     }
 
-    [Obsolete]
     public class TextEndsWithTest : SyntaxTest
     {
         [SetUp]
@@ -149,7 +146,6 @@ namespace NUnit.Framework.Syntax
         }
     }
 
-    [Obsolete]
     public class TextMatchesTest : SyntaxTest
     {
         [SetUp]
