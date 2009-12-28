@@ -212,4 +212,50 @@ namespace NUnit.TestData.ExpectedExceptionData
 			Assert.Fail( "private message" );
 		}
 	}
+
+    public class ExceptionHandlerCalledClass : IExpectException
+    {
+        public bool HandlerCalled = false;
+        public bool AlternateHandlerCalled = false;
+
+        [Test, ExpectedException(typeof(ArgumentException))]
+        public void ThrowsArgumentException()
+        {
+            throw new ArgumentException();
+        }
+
+        [Test, ExpectedException(typeof(ArgumentException), Handler = "AlternateExceptionHandler")]
+        public void ThrowsArgumentException_AlternateHandler()
+        {
+            throw new ArgumentException();
+        }
+
+        [Test, ExpectedException(typeof(ArgumentException))]
+        public void ThrowsApplicationException()
+        {
+            throw new ApplicationException();
+        }
+
+        [Test, ExpectedException(typeof(ArgumentException), Handler = "AlternateExceptionHandler")]
+        public void ThrowsApplicationException_AlternateHandler()
+        {
+            throw new ApplicationException();
+        }
+
+        [Test, ExpectedException(typeof(ArgumentException), Handler = "DeliberatelyMissingHandler")]
+        public void MethodWithBadHandler()
+        {
+            throw new ArgumentException();
+        }
+
+        public void HandleException(Exception ex)
+        {
+            HandlerCalled = true;
+        }
+
+        public void AlternateExceptionHandler(Exception ex)
+        {
+            AlternateHandlerCalled = true;
+        }
+    }
 }

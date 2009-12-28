@@ -58,24 +58,6 @@ namespace NUnit
 #endif
 
     /// <summary>
-    /// StringCollection represents a collection of strings. It is implemented as a
-    /// List&lt;string&gt; in .NET 2.0 or higher, otherwise as an ArrayList.
-    /// StringCollection does not attempt to be a general replacement for either of
-    /// these classes but only implements what is needed within the framework.
-    /// </summary>
-#if CLR_2_0
-    public class StringCollection : System.Collections.Generic.List<String> { }
-#else
-    public class StringCollection : System.Collections.ArrayList 
-    {
-        public new string[] ToArray()
-        {
-            return (string[])base.ToArray(typeof(string));
-        }
-    }
-#endif
-
-    /// <summary>
     /// IntList represents a collection of ints. It is implemented as a
     /// List&lt;Int32&gt; in .NET 2.0 or higher, otherwise as an ArrayList.
     /// IntList does not attempt to be a general replacement for either of
