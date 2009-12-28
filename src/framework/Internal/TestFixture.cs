@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using NUnit.Framework;
 
 namespace NUnit.Core
 {
@@ -33,9 +34,20 @@ namespace NUnit.Core
 	{
 		#region Constructors
         public TestFixture(Type fixtureType)
-            : base(fixtureType) { }
+            : this(fixtureType, null) { }
+
         public TestFixture(Type fixtureType, object[] arguments)
-            : base(fixtureType, arguments) { }
+            : base(fixtureType, arguments) 
+        {
+            this.fixtureSetUpMethods =
+                Reflect.GetMethodsWithAttribute(fixtureType, typeof(TestFixtureSetUpAttribute), true);
+            this.fixtureTearDownMethods =
+                Reflect.GetMethodsWithAttribute(fixtureType, typeof(TestFixtureTearDownAttribute), true);
+            this.setUpMethods =
+                Reflect.GetMethodsWithAttribute(this.FixtureType, typeof(SetUpAttribute), true);
+            this.tearDownMethods =
+                Reflect.GetMethodsWithAttribute(this.FixtureType, typeof(TearDownAttribute), true);
+        }
         #endregion
 
 		#region TestSuite Overrides
@@ -46,6 +58,20 @@ namespace NUnit.Core
                 return base.Run(listener, filter);
             }
         }
-		#endregion
+
+        protected override void DoOneTimeSetUp(TestResult suiteResult)
+        {
+            base.DoOneTimeSetUp(suiteResult);
+
+            suiteResult.AssertCount = Assert.Counter; ;
+        }
+
+        protected override void DoOneTimeTearDown(TestResult suiteResult)
+        {
+            base.DoOneTimeTearDown(suiteResult);
+
+            suiteResult.AssertCount += Assert.Counter;
+        }
+        #endregion
 	}
 }

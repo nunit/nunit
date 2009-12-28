@@ -538,12 +538,6 @@
     <Compile Include="..\..\..\src\framework\Internal\NUnitFramework.cs">
       <Link>Internal\NUnitFramework.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\NUnitTestFixture.cs">
-      <Link>Internal\NUnitTestFixture.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\NUnitTestMethod.cs">
-      <Link>Internal\NUnitTestMethod.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\src\framework\Internal\OSPlatform.cs">
       <Link>Internal\OSPlatform.cs</Link>
     </Compile>
