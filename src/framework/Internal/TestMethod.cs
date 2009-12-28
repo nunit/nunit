@@ -37,7 +37,7 @@ namespace NUnit.Core
 	/// the Test interface might make it easier to process exceptions
 	/// in an object that aggregates a TestMethod in the future.
 	/// </summary>
-	public abstract class TestMethod : Test
+	public class TestMethod : Test
 	{
         static Logger log = InternalTrace.GetLogger(typeof(TestMethod));
 
@@ -172,6 +172,8 @@ namespace NUnit.Core
                 long stopTime = DateTime.Now.Ticks;
                 double time = ((double)(stopTime - startTime)) / (double)TimeSpan.TicksPerSecond;
                 testResult.Time = time;
+
+                testResult.AssertCount = NUnit.Framework.Assert.Counter;
 
                 listener.TestFinished(testResult);
                 return testResult;

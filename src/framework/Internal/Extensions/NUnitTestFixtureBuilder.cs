@@ -39,7 +39,7 @@ namespace NUnit.Core.Builders
 		/// <summary>
 		/// The NUnitTestFixture being constructed;
 		/// </summary>
-		private NUnitTestFixture fixture;
+		private TestFixture fixture;
 
 	    private Extensibility.ITestCaseBuilder2 testBuilders = CoreExtensions.Host.TestBuilders;
 
@@ -124,7 +124,7 @@ namespace NUnit.Core.Builders
 #endif
             }
 
-            this.fixture = new NUnitTestFixture(type, arguments);
+            this.fixture = new TestFixture(type, arguments);
             CheckTestFixtureIsValid(fixture);
 
             NUnitFramework.ApplyCommonAttributes(type, fixture);

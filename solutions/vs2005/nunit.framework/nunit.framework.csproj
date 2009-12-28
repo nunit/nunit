@@ -532,12 +532,6 @@
     <Compile Include="..\..\..\src\framework\Internal\NUnitFramework.cs">
       <Link>Internal\NUnitFramework.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\NUnitTestFixture.cs">
-      <Link>Internal\NUnitTestFixture.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\NUnitTestMethod.cs">
-      <Link>Internal\NUnitTestMethod.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\src\framework\Internal\OSPlatform.cs">
       <Link>Internal\OSPlatform.cs</Link>
     </Compile>
@@ -612,9 +606,6 @@
     </Compile>
     <Compile Include="..\..\..\src\framework\TestCaseData.cs">
       <Link>TestCaseData.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Text.cs">
-      <Link>Text.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Throws.cs">
       <Link>Throws.cs</Link>

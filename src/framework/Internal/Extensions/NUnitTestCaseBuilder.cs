@@ -166,9 +166,9 @@ namespace NUnit.Core.Builders
         /// <param name="parentSuite">The suite or fixture to which the new test will be added</param>
         /// <param name="parms">The ParameterSet to be used, or null</param>
         /// <returns></returns>
-        public static NUnitTestMethod BuildSingleTestMethod(MethodInfo method, Test parentSuite, ParameterSet parms)
+        public static TestMethod BuildSingleTestMethod(MethodInfo method, Test parentSuite, ParameterSet parms)
         {
-            NUnitTestMethod testMethod = new NUnitTestMethod(method);
+            TestMethod testMethod = new TestMethod(method);
 
             string prefix = method.ReflectedType.FullName;
 
