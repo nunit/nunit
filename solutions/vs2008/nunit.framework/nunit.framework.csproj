@@ -82,9 +82,6 @@
     <Compile Include="..\..\..\src\framework\Api\Test.cs">
       <Link>Api\Test.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Api\TestAssemblyInfo.cs">
-      <Link>Api\TestAssemblyInfo.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\src\framework\Api\TestController.cs">
       <Link>Api\TestController.cs</Link>
     </Compile>
@@ -103,14 +100,8 @@
     <Compile Include="..\..\..\src\framework\Api\TestOutput.cs">
       <Link>Api\TestOutput.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Api\TestPackage.cs">
-      <Link>Api\TestPackage.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\src\framework\Api\TestResult.cs">
       <Link>Api\TestResult.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Api\TestRunner.cs">
-      <Link>Api\TestRunner.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\AssemblyInfo.cs">
       <Link>AssemblyInfo.cs</Link>
