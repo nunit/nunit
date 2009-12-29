@@ -38,7 +38,7 @@ namespace NUnit.Core.Tests
 		public void GoodSignature()
 		{
 			string methodName = "TestVoid";
-			Test fixture = TestFixtureBuilder.BuildFrom( typeof( SignatureTestFixture ) );
+			Test fixture = TestBuilder.MakeFixture( typeof( SignatureTestFixture ) );
 			Test foundTest = TestFinder.Find( methodName, fixture, true );
 			Assert.IsNotNull( foundTest );
 			Assert.AreEqual( RunState.Runnable, foundTest.RunState );
@@ -47,7 +47,7 @@ namespace NUnit.Core.Tests
 		[Test]
 		public void LoadCategories() 
 		{
-			Test fixture = TestFixtureBuilder.BuildFrom( typeof( HasCategories ) );
+			Test fixture = TestBuilder.MakeFixture( typeof( HasCategories ) );
 			Assert.IsNotNull(fixture);
 			Assert.AreEqual(2, fixture.Categories.Count);
 		}
