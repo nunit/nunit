@@ -24,6 +24,7 @@
 using System;
 using NUnit.Framework;
 using NUnit.TestData;
+using NUnit.TestUtilities;
 
 namespace NUnit.Core.Tests
 {
@@ -42,7 +43,7 @@ namespace NUnit.Core.Tests
         [Test]
         public void MaxTimeExceeded()
         {
-            Test test = TestFixtureBuilder.BuildFrom(typeof(MaxTimeFixture));
+            Test test = TestBuilder.MakeFixture(typeof(MaxTimeFixture));
             TestResult result = test.Run(TestListener.NULL, TestFilter.Empty);
             Assert.AreEqual(ResultState.Failure, result.ResultState);
             result = (TestResult)result.Results[0];
@@ -59,7 +60,7 @@ namespace NUnit.Core.Tests
         [Test]
         public void FailureReportHasPriorityOverMaxTime()
 		{
-            Test test = TestFixtureBuilder.BuildFrom(typeof(MaxTimeFixtureWithFailure));
+            Test test = TestBuilder.MakeFixture(typeof(MaxTimeFixtureWithFailure));
             TestResult result = test.Run(TestListener.NULL, TestFilter.Empty);
             Assert.AreEqual(ResultState.Failure, result.ResultState);
             result = (TestResult)result.Results[0];
@@ -76,7 +77,7 @@ namespace NUnit.Core.Tests
         [Test]
         public void ErrorReportHasPriorityOverMaxTime()
         {
-            Test test = TestFixtureBuilder.BuildFrom(typeof(MaxTimeFixtureWithError));
+            Test test = TestBuilder.MakeFixture(typeof(MaxTimeFixtureWithError));
             TestResult result = test.Run(TestListener.NULL, TestFilter.Empty);
             Assert.AreEqual(ResultState.Failure, result.ResultState);
             result = (TestResult)result.Results[0];

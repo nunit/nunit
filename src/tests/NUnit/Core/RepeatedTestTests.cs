@@ -25,6 +25,7 @@ using System;
 using System.Reflection;
 using NUnit.Framework;
 using NUnit.TestData.RepeatedTestFixture;
+using NUnit.TestUtilities;
 
 namespace NUnit.Core.Tests
 {
@@ -48,7 +49,7 @@ namespace NUnit.Core.Tests
 
 		private TestResult RunTestOnFixture( object fixture )
 		{
-			Test suite = TestFixtureBuilder.BuildFrom( fixture );
+			Test suite = TestBuilder.MakeFixture( fixture );
 			Assert.AreEqual( 1, suite.Tests.Count, "Test case count" );
             return suite.Run(TestListener.NULL, TestFilter.Empty);
 		}
@@ -108,7 +109,7 @@ namespace NUnit.Core.Tests
         [Test]
         public void CategoryWorksWithRepeatedTest()
         {
-            Test suite = TestFixtureBuilder.BuildFrom(typeof(RepeatedTestWithCategory));
+            Test suite = TestBuilder.MakeFixture(typeof(RepeatedTestWithCategory));
             Test test = suite.Tests[0] as Test;
             Assert.IsNotNull(test.Categories);
             Assert.AreEqual(1, test.Categories.Count);
