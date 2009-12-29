@@ -44,14 +44,149 @@
     <Compile Include="..\..\..\src\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\tests\AlwaysEqualComparer.cs">
+      <Link>AlwaysEqualComparer.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\ArrayEqualsFailureMessageFixture.cs">
+      <Link>ArrayEqualsFailureMessageFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\ArrayEqualsFixture.cs">
+      <Link>ArrayEqualsFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\ArrayNotEqualFixture.cs">
+      <Link>ArrayNotEqualFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\AssertTests\AssertFailTests.cs">
+      <Link>AssertTests\AssertFailTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\AssertTests\AssertInconclusiveTests.cs">
+      <Link>AssertTests\AssertInconclusiveTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\AssertTests\AssertPassTests.cs">
+      <Link>AssertTests\AssertPassTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\AssertThrowsTests.cs">
+      <Link>AssertThrowsTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\AssumeThatTests.cs">
+      <Link>AssumeThatTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\CollectionAdapter.cs">
+      <Link>CollectionAdapter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\CollectionAssertTest.cs">
+      <Link>CollectionAssertTest.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\ConditionAssertTests.cs">
+      <Link>ConditionAssertTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\Constraints\AfterConstraintTests.cs">
+      <Link>Constraints\AfterConstraintTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\Constraints\AndTest.cs">
+      <Link>Constraints\AndTest.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\Constraints\BasicConstraintTests.cs">
+      <Link>Constraints\BasicConstraintTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\Constraints\BinarySerializableTest.cs">
+      <Link>Constraints\BinarySerializableTest.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\Constraints\CollectionConstraintTests.cs">
+      <Link>Constraints\CollectionConstraintTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\Constraints\ComparerTests.cs">
+      <Link>Constraints\ComparerTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\Constraints\ComparisonConstraintTests.cs">
+      <Link>Constraints\ComparisonConstraintTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\Constraints\ConstraintTestBase.cs">
+      <Link>Constraints\ConstraintTestBase.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\Constraints\EmptyConstraintTest.cs">
+      <Link>Constraints\EmptyConstraintTest.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\Constraints\EqualTest.cs">
+      <Link>Constraints\EqualTest.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\Constraints\FloatingPointNumericsTest.cs">
+      <Link>Constraints\FloatingPointNumericsTest.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\Constraints\MsgUtilTests.cs">
+      <Link>Constraints\MsgUtilTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\Constraints\NotTest.cs">
+      <Link>Constraints\NotTest.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\Constraints\NumericsTest.cs">
+      <Link>Constraints\NumericsTest.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\Constraints\OrTest.cs">
+      <Link>Constraints\OrTest.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\Constraints\PathConstraintTests.cs">
+      <Link>Constraints\PathConstraintTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\Constraints\PropertyTests.cs">
+      <Link>Constraints\PropertyTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\Constraints\SameAsTest.cs">
+      <Link>Constraints\SameAsTest.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\Constraints\StringConstraintTests.cs">
+      <Link>Constraints\StringConstraintTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\Constraints\ThrowsConstraintTests.cs">
+      <Link>Constraints\ThrowsConstraintTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\Constraints\TypeConstraintTests.cs">
+      <Link>Constraints\TypeConstraintTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\Constraints\XmlSerializableTest.cs">
+      <Link>Constraints\XmlSerializableTest.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\DirectoryAssertTests.cs">
+      <Link>DirectoryAssertTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\EqualsFixture.cs">
+      <Link>EqualsFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\FileAssertTests.cs">
+      <Link>FileAssertTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\GreaterEqualFixture.cs">
+      <Link>GreaterEqualFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\GreaterFixture.cs">
+      <Link>GreaterFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\LessEqualFixture.cs">
+      <Link>LessEqualFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\LessFixture.cs">
+      <Link>LessFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\ListContentsTests.cs">
+      <Link>ListContentsTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\MessageChecker.cs">
+      <Link>MessageChecker.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\NotEqualFixture.cs">
+      <Link>NotEqualFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\NotSameFixture.cs">
+      <Link>NotSameFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\NullableTypesTests.cs">
+      <Link>NullableTypesTests.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\tests\NUnit\Core\AssemblyReaderTests.cs">
       <Link>NUnit\Core\AssemblyReaderTests.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\tests\NUnit\Core\AssertFailTests.cs">
       <Link>NUnit\Core\AssertFailTests.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\tests\NUnit\Core\AssertIgnoreTests.cs">
-      <Link>NUnit\Core\AssertIgnoreTests.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\tests\NUnit\Core\AssertInconclusiveTests.cs">
       <Link>NUnit\Core\AssertInconclusiveTests.cs</Link>
@@ -82,9 +217,6 @@
     </Compile>
     <Compile Include="..\..\..\src\tests\NUnit\Core\DirectorySwapperTests.cs">
       <Link>NUnit\Core\DirectorySwapperTests.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\tests\NUnit\Core\EventQueueTests.cs">
-      <Link>NUnit\Core\EventQueueTests.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\tests\NUnit\Core\ExpectedExceptionTests.cs">
       <Link>NUnit\Core\ExpectedExceptionTests.cs</Link>
@@ -137,14 +269,8 @@
     <Compile Include="..\..\..\src\tests\NUnit\Core\SetCultureAttributeTests.cs">
       <Link>NUnit\Core\SetCultureAttributeTests.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\tests\NUnit\Core\SetUpFixtureTests.cs">
-      <Link>NUnit\Core\SetUpFixtureTests.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\src\tests\NUnit\Core\SetUpTest.cs">
       <Link>NUnit\Core\SetUpTest.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\tests\NUnit\Core\SuiteBuilderTests.cs">
-      <Link>NUnit\Core\SuiteBuilderTests.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\tests\NUnit\Core\TestCaseAttributeTests.cs">
       <Link>NUnit\Core\TestCaseAttributeTests.cs</Link>
@@ -155,14 +281,8 @@
     <Compile Include="..\..\..\src\tests\NUnit\Core\TestFixtureBuilderTests.cs">
       <Link>NUnit\Core\TestFixtureBuilderTests.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\tests\NUnit\Core\TestFixtureExtensionTests.cs">
-      <Link>NUnit\Core\TestFixtureExtensionTests.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\src\tests\NUnit\Core\TestFixtureTests.cs">
       <Link>NUnit\Core\TestFixtureTests.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\tests\NUnit\Core\TestFrameworkTests.cs">
-      <Link>NUnit\Core\TestFrameworkTests.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\tests\NUnit\Core\TestIDTests.cs">
       <Link>NUnit\Core\TestIDTests.cs</Link>
@@ -185,236 +305,98 @@
     <Compile Include="..\..\..\src\tests\NUnit\Core\UnhandledExceptionTests.cs">
       <Link>NUnit\Core\UnhandledExceptionTests.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\tests\NUnit\Framework\AssertTests\AssertInconclusiveTests.cs">
-      <Link>NUnit\Framework\AssertTests\AssertInconclusiveTests.cs</Link>
+    <Compile Include="..\..\..\src\tests\RandomizerTests.cs">
+      <Link>RandomizerTests.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\tests\NUnit\Framework\AssertTests\AssertPassTests.cs">
-      <Link>NUnit\Framework\AssertTests\AssertPassTests.cs</Link>
+    <Compile Include="..\..\..\src\tests\RangeTests.cs">
+      <Link>RangeTests.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\tests\NUnit\Framework\AssertThrowsTests.cs">
-      <Link>NUnit\Framework\AssertThrowsTests.cs</Link>
+    <Compile Include="..\..\..\src\tests\SameFixture.cs">
+      <Link>SameFixture.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\tests\NUnit\Framework\AssumeThatTests.cs">
-      <Link>NUnit\Framework\AssumeThatTests.cs</Link>
+    <Compile Include="..\..\..\src\tests\StringAssertTests.cs">
+      <Link>StringAssertTests.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\tests\NUnit\Framework\CollectionAssertTest.cs">
-      <Link>NUnit\Framework\CollectionAssertTest.cs</Link>
+    <Compile Include="..\..\..\src\tests\Syntax\AfterTests.cs">
+      <Link>Syntax\AfterTests.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\tests\NUnit\Framework\ConditionAssertTests.cs">
-      <Link>NUnit\Framework\ConditionAssertTests.cs</Link>
+    <Compile Include="..\..\..\src\tests\Syntax\ArbitraryConstraintMatching.cs">
+      <Link>Syntax\ArbitraryConstraintMatching.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\tests\NUnit\Framework\Constraints\AfterConstraintTests.cs">
-      <Link>NUnit\Framework\Constraints\AfterConstraintTests.cs</Link>
+    <Compile Include="..\..\..\src\tests\Syntax\CollectionTests.cs">
+      <Link>Syntax\CollectionTests.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\tests\NUnit\Framework\DirectoryAssertTests.cs">
-      <Link>NUnit\Framework\DirectoryAssertTests.cs</Link>
+    <Compile Include="..\..\..\src\tests\Syntax\ComparisonTests.cs">
+      <Link>Syntax\ComparisonTests.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\tests\NUnit\Framework\EqualsFixture.cs">
-      <Link>NUnit\Framework\EqualsFixture.cs</Link>
+    <Compile Include="..\..\..\src\tests\Syntax\EqualityTests.cs">
+      <Link>Syntax\EqualityTests.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\tests\NUnit\Framework\FileAssertTests.cs">
-      <Link>NUnit\Framework\FileAssertTests.cs</Link>
+    <Compile Include="..\..\..\src\tests\Syntax\InvalidCodeTests.cs">
+      <Link>Syntax\InvalidCodeTests.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\tests\NUnit\Framework\GreaterEqualFixture.cs">
-      <Link>NUnit\Framework\GreaterEqualFixture.cs</Link>
+    <Compile Include="..\..\..\src\tests\Syntax\OperatorOverrides.cs">
+      <Link>Syntax\OperatorOverrides.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\tests\NUnit\Framework\GreaterFixture.cs">
-      <Link>NUnit\Framework\GreaterFixture.cs</Link>
+    <Compile Include="..\..\..\src\tests\Syntax\OperatorTests.cs">
+      <Link>Syntax\OperatorTests.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\tests\NUnit\Framework\LessEqualFixture.cs">
-      <Link>NUnit\Framework\LessEqualFixture.cs</Link>
+    <Compile Include="..\..\..\src\tests\Syntax\PathConstraintTests.cs">
+      <Link>Syntax\PathConstraintTests.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\tests\NUnit\Framework\LessFixture.cs">
-      <Link>NUnit\Framework\LessFixture.cs</Link>
+    <Compile Include="..\..\..\src\tests\Syntax\PropertyTests.cs">
+      <Link>Syntax\PropertyTests.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\tests\NUnit\Framework\ListContentsTests.cs">
-      <Link>NUnit\Framework\ListContentsTests.cs</Link>
+    <Compile Include="..\..\..\src\tests\Syntax\SerializableConstraints.cs">
+      <Link>Syntax\SerializableConstraints.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\tests\NUnit\Framework\NotEqualFixture.cs">
-      <Link>NUnit\Framework\NotEqualFixture.cs</Link>
+    <Compile Include="..\..\..\src\tests\Syntax\SimpleConstraints.cs">
+      <Link>Syntax\SimpleConstraints.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\tests\NUnit\Framework\NotSameFixture.cs">
-      <Link>NUnit\Framework\NotSameFixture.cs</Link>
+    <Compile Include="..\..\..\src\tests\Syntax\StringConstraints.cs">
+      <Link>Syntax\StringConstraints.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\tests\NUnit\Framework\NullableTypesTests.cs">
-      <Link>NUnit\Framework\NullableTypesTests.cs</Link>
+    <Compile Include="..\..\..\src\tests\Syntax\SyntaxTest.cs">
+      <Link>Syntax\SyntaxTest.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\tests\NUnit\Framework\RandomizerTests.cs">
-      <Link>NUnit\Framework\RandomizerTests.cs</Link>
+    <Compile Include="..\..\..\src\tests\Syntax\TestCompiler.cs">
+      <Link>Syntax\TestCompiler.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\tests\NUnit\Framework\RangeTests.cs">
-      <Link>NUnit\Framework\RangeTests.cs</Link>
+    <Compile Include="..\..\..\src\tests\Syntax\ThrowsTests.cs">
+      <Link>Syntax\ThrowsTests.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\tests\NUnit\Framework\SameFixture.cs">
-      <Link>NUnit\Framework\SameFixture.cs</Link>
+    <Compile Include="..\..\..\src\tests\Syntax\TypeConstraints.cs">
+      <Link>Syntax\TypeConstraints.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\tests\NUnit\Framework\StringAssertTests.cs">
-      <Link>NUnit\Framework\StringAssertTests.cs</Link>
+    <Compile Include="..\..\..\src\tests\TestComparer.cs">
+      <Link>TestComparer.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\tests\NUnit\Framework\Syntax\AfterTests.cs">
-      <Link>NUnit\Framework\Syntax\AfterTests.cs</Link>
+    <Compile Include="..\..\..\src\tests\TestDelegates.cs">
+      <Link>TestDelegates.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\tests\NUnit\Framework\Syntax\ArbitraryConstraintMatching.cs">
-      <Link>NUnit\Framework\Syntax\ArbitraryConstraintMatching.cs</Link>
+    <Compile Include="..\..\..\src\tests\TestFixtureAttributeTests.cs">
+      <Link>TestFixtureAttributeTests.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\tests\NUnit\Framework\Syntax\InvalidCodeTests.cs">
-      <Link>NUnit\Framework\Syntax\InvalidCodeTests.cs</Link>
+    <Compile Include="..\..\..\src\tests\TestUtilities\ResultSummary.cs">
+      <Link>TestUtilities\ResultSummary.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\tests\NUnit\Framework\Syntax\TestCompiler.cs">
-      <Link>NUnit\Framework\Syntax\TestCompiler.cs</Link>
+    <Compile Include="..\..\..\src\tests\TestUtilities\TestAssert.cs">
+      <Link>TestUtilities\TestAssert.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\tests\NUnit\Framework\TypeAssertTest.cs">
-      <Link>NUnit\Framework\TypeAssertTest.cs</Link>
+    <Compile Include="..\..\..\src\tests\TestUtilities\TestBuilder.cs">
+      <Link>TestUtilities\TestBuilder.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\tests\NUnit\Framework\ValuesAttributeTests.cs">
-      <Link>NUnit\Framework\ValuesAttributeTests.cs</Link>
+    <Compile Include="..\..\..\src\tests\TestUtilities\TestFinder.cs">
+      <Link>TestUtilities\TestFinder.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\tests\NUnit\TestUtilities\ResultSummary.cs">
-      <Link>NUnit\TestUtilities\ResultSummary.cs</Link>
+    <Compile Include="..\..\..\src\tests\TextMessageWriterTests.cs">
+      <Link>TextMessageWriterTests.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\tests\NUnit\TestUtilities\TestAssert.cs">
-      <Link>NUnit\TestUtilities\TestAssert.cs</Link>
+    <Compile Include="..\..\..\src\tests\TypeAssertTest.cs">
+      <Link>TypeAssertTest.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\tests\NUnit\TestUtilities\TestBuilder.cs">
-      <Link>NUnit\TestUtilities\TestBuilder.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\tests\NUnit\TestUtilities\TestFinder.cs">
-      <Link>NUnit\TestUtilities\TestFinder.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\tests\Shared\Framework\AlwaysEqualComparer.cs">
-      <Link>Shared\Framework\AlwaysEqualComparer.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\tests\Shared\Framework\ArrayEqualsFailureMessageFixture.cs">
-      <Link>Shared\Framework\ArrayEqualsFailureMessageFixture.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\tests\Shared\Framework\ArrayEqualsFixture.cs">
-      <Link>Shared\Framework\ArrayEqualsFixture.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\tests\Shared\Framework\ArrayNotEqualFixture.cs">
-      <Link>Shared\Framework\ArrayNotEqualFixture.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\tests\Shared\Framework\AssertTests\AssertFailTests.cs">
-      <Link>Shared\Framework\AssertTests\AssertFailTests.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\tests\Shared\Framework\CollectionAdapter.cs">
-      <Link>Shared\Framework\CollectionAdapter.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\tests\Shared\Framework\Constraints\AndTest.cs">
-      <Link>Shared\Framework\Constraints\AndTest.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\tests\Shared\Framework\Constraints\BasicConstraintTests.cs">
-      <Link>Shared\Framework\Constraints\BasicConstraintTests.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\tests\Shared\Framework\Constraints\BinarySerializableTest.cs">
-      <Link>Shared\Framework\Constraints\BinarySerializableTest.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\tests\Shared\Framework\Constraints\CollectionConstraintTests.cs">
-      <Link>Shared\Framework\Constraints\CollectionConstraintTests.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\tests\Shared\Framework\Constraints\ComparerTests.cs">
-      <Link>Shared\Framework\Constraints\ComparerTests.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\tests\Shared\Framework\Constraints\ComparisonConstraintTests.cs">
-      <Link>Shared\Framework\Constraints\ComparisonConstraintTests.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\tests\Shared\Framework\Constraints\ConstraintTestBase.cs">
-      <Link>Shared\Framework\Constraints\ConstraintTestBase.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\tests\Shared\Framework\Constraints\EmptyConstraintTest.cs">
-      <Link>Shared\Framework\Constraints\EmptyConstraintTest.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\tests\Shared\Framework\Constraints\EqualTest.cs">
-      <Link>Shared\Framework\Constraints\EqualTest.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\tests\Shared\Framework\Constraints\FloatingPointNumericsTest.cs">
-      <Link>Shared\Framework\Constraints\FloatingPointNumericsTest.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\tests\Shared\Framework\Constraints\MsgUtilTests.cs">
-      <Link>Shared\Framework\Constraints\MsgUtilTests.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\tests\Shared\Framework\Constraints\NotTest.cs">
-      <Link>Shared\Framework\Constraints\NotTest.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\tests\Shared\Framework\Constraints\NumericsTest.cs">
-      <Link>Shared\Framework\Constraints\NumericsTest.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\tests\Shared\Framework\Constraints\OrTest.cs">
-      <Link>Shared\Framework\Constraints\OrTest.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\tests\Shared\Framework\Constraints\PathConstraintTests.cs">
-      <Link>Shared\Framework\Constraints\PathConstraintTests.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\tests\Shared\Framework\Constraints\PropertyTests.cs">
-      <Link>Shared\Framework\Constraints\PropertyTests.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\tests\Shared\Framework\Constraints\SameAsTest.cs">
-      <Link>Shared\Framework\Constraints\SameAsTest.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\tests\Shared\Framework\Constraints\StringConstraintTests.cs">
-      <Link>Shared\Framework\Constraints\StringConstraintTests.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\tests\Shared\Framework\Constraints\ThrowsConstraintTests.cs">
-      <Link>Shared\Framework\Constraints\ThrowsConstraintTests.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\tests\Shared\Framework\Constraints\TypeConstraintTests.cs">
-      <Link>Shared\Framework\Constraints\TypeConstraintTests.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\tests\Shared\Framework\Constraints\XmlSerializableTest.cs">
-      <Link>Shared\Framework\Constraints\XmlSerializableTest.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\tests\Shared\Framework\MessageChecker.cs">
-      <Link>Shared\Framework\MessageChecker.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\tests\Shared\Framework\Syntax\CollectionTests.cs">
-      <Link>Shared\Framework\Syntax\CollectionTests.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\tests\Shared\Framework\Syntax\ComparisonTests.cs">
-      <Link>Shared\Framework\Syntax\ComparisonTests.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\tests\Shared\Framework\Syntax\EqualityTests.cs">
-      <Link>Shared\Framework\Syntax\EqualityTests.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\tests\Shared\Framework\Syntax\OperatorOverrides.cs">
-      <Link>Shared\Framework\Syntax\OperatorOverrides.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\tests\Shared\Framework\Syntax\OperatorTests.cs">
-      <Link>Shared\Framework\Syntax\OperatorTests.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\tests\Shared\Framework\Syntax\PathConstraintTests.cs">
-      <Link>Shared\Framework\Syntax\PathConstraintTests.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\tests\Shared\Framework\Syntax\PropertyTests.cs">
-      <Link>Shared\Framework\Syntax\PropertyTests.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\tests\Shared\Framework\Syntax\SerializableConstraints.cs">
-      <Link>Shared\Framework\Syntax\SerializableConstraints.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\tests\Shared\Framework\Syntax\SimpleConstraints.cs">
-      <Link>Shared\Framework\Syntax\SimpleConstraints.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\tests\Shared\Framework\Syntax\StringConstraints.cs">
-      <Link>Shared\Framework\Syntax\StringConstraints.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\tests\Shared\Framework\Syntax\SyntaxTest.cs">
-      <Link>Shared\Framework\Syntax\SyntaxTest.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\tests\Shared\Framework\Syntax\ThrowsTests.cs">
-      <Link>Shared\Framework\Syntax\ThrowsTests.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\tests\Shared\Framework\Syntax\TypeConstraints.cs">
-      <Link>Shared\Framework\Syntax\TypeConstraints.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\tests\Shared\Framework\TestComparer.cs">
-      <Link>Shared\Framework\TestComparer.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\tests\Shared\Framework\TestDelegates.cs">
-      <Link>Shared\Framework\TestDelegates.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\tests\Shared\Framework\TestFixtureAttributeTests.cs">
-      <Link>Shared\Framework\TestFixtureAttributeTests.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\tests\Shared\Framework\TextMessageWriterTests.cs">
-      <Link>Shared\Framework\TextMessageWriterTests.cs</Link>
+    <Compile Include="..\..\..\src\tests\ValuesAttributeTests.cs">
+      <Link>ValuesAttributeTests.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup>
