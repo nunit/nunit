@@ -26,6 +26,8 @@ using System.Threading;
 using System.Runtime.Remoting.Messaging;
 using System.Security.Principal;
 using NUnit.Framework;
+using NUnit.TestData.TestFixtureData;
+using NUnit.TestUtilities;
 
 namespace NUnit.Core.Tests
 {
@@ -107,6 +109,20 @@ namespace NUnit.Core.Tests
 		
 			System.Threading.Thread.CurrentPrincipal = principal;
 		}
+
+        [Test]
+        public void ShouldRestoreCurrentPrincipalAfterTestRun()
+        {
+            IPrincipal principal = Thread.CurrentPrincipal;
+
+            TestSuite suite = TestBuilder.MakeFixture( typeof( FixtureThatChangesTheCurrentPrincipal ) );
+            suite.Run(TestListener.NULL, TestFilter.Empty);
+            
+            Assert.That(
+                Thread.CurrentPrincipal,
+                Is.SameAs(principal),
+                "The Thread Principal was not restored after the test was run");
+        }
 	}
 
 	/// <summary>
