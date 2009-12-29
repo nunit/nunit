@@ -47,7 +47,7 @@ namespace NUnit.TestData.AttributeInheritanceData
 	/// <summary>
 	/// Summary description for AttributeInheritance.
 	/// </summary>
-	[Concern(typeof(NUnit.Core.TestRunner))]
+	[Concern(typeof(ClassUnderTest))]
 	public class When_collecting_test_fixtures
 	{
 		[Spec]
@@ -55,4 +55,6 @@ namespace NUnit.TestData.AttributeInheritanceData
 		{
 		}
 	}
+
+    class ClassUnderTest { }
 }
