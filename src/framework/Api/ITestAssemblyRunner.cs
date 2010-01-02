@@ -47,7 +47,7 @@ namespace NUnit.Framework.Api
         /// </summary>
         /// <param name="filter">The filter to apply</param>
         /// <returns>The number of test cases found</returns>
-        int CountTestCases(NUnit.Core.TestFilter filter);
+        int CountTestCases(TestFilter filter);
 
         /// <summary>
         /// Run selected tests and return a test result. The test is run synchronously,
@@ -55,7 +55,7 @@ namespace NUnit.Framework.Api
         /// </summary>
         /// <param name="listener">Interface to receive EventListener notifications.</param>
         /// <param name="filter">The filter to apply when running the tests</param>
-        NUnit.Core.TestResult Run(NUnit.Core.ITestListener listener, NUnit.Core.TestFilter filter);
+        TestResult Run(ITestListener listener, TestFilter filter);
 
         #endregion
     }

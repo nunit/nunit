@@ -23,8 +23,9 @@
 
 using System;
 using System.Threading;
+using NUnit.Framework.Api;
 
-namespace NUnit.Core
+namespace NUnit.Framework.Internal
 {
     /// <summary>
     /// Represents a thread of test execution and runs a test

@@ -26,13 +26,13 @@ using System.Collections;
 #if CLR_2_0
 using System.Collections.Generic;
 #endif
-using NUnit.Framework.Tests;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints.Tests
 {
     #region AllItems
     [TestFixture]
-    public class AllItemsTests : MessageChecker
+    public class AllItemsTests : NUnit.Framework.Assertions.MessageChecker
     {
         [Test]
         public void AllItemsAreNotNull()
@@ -261,7 +261,7 @@ namespace NUnit.Framework.Constraints.Tests
     #region CollectionOrdered
 
     [TestFixture]
-    public class CollectionOrderedTests : MessageChecker
+    public class CollectionOrderedTests : NUnit.Framework.Assertions.MessageChecker
     {
         [Test]
         public void IsOrdered()

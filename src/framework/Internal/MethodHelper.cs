@@ -25,7 +25,7 @@ using System;
 using System.Reflection;
 using System.Text;
 
-namespace NUnit.Core
+namespace NUnit.Framework.Internal
 {
     public class MethodHelper
     {

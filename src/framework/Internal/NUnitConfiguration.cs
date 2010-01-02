@@ -29,7 +29,7 @@ using System.Collections.Specialized;
 using System.Threading;
 using Microsoft.Win32;
 
-namespace NUnit.Core
+namespace NUnit.Framework.Internal
 {
     /// <summary>
     /// Provides static methods for accessing the NUnit config

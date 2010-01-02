@@ -23,11 +23,12 @@
 
 using System;
 using NUnit.Framework;
+using NUnit.Framework.Api;
 using NUnit.Core.Builders;
 using NUnit.TestUtilities;
 using NUnit.TestData.SetUpTest;
 
-namespace NUnit.Core.Tests
+namespace NUnit.Framework.Tests
 {
 	[TestFixture]
 	public class SetUpTest

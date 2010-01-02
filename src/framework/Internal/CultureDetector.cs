@@ -24,9 +24,8 @@
 using System;
 using System.Reflection;
 using System.Globalization;
-using NUnit.Framework;
 
-namespace NUnit.Core
+namespace NUnit.Framework.Internal
 {
 	public class CultureDetector
 	{

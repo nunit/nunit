@@ -29,7 +29,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Threading;
 
-namespace NUnit.Core
+namespace NUnit.Framework.Internal
 {
 	/// <summary>
 	/// Helper class used to save and restore certain static or

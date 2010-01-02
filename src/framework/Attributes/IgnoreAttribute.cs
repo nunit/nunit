@@ -21,17 +21,18 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
+using NUnit.Framework.Api;
+
 namespace NUnit.Framework
 {
-	using System;
-
 	/// <summary>
 	/// Attribute used to mark a test that is to be ignored.
 	/// Ignored tests result in a warning message when the
 	/// tests are run.
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Method|AttributeTargets.Class|AttributeTargets.Assembly, AllowMultiple=false)]
-	public class IgnoreAttribute : Attribute
+	public class IgnoreAttribute : Attribute, ISetRunState
 	{
 		private string reason;
 
@@ -51,14 +52,23 @@ namespace NUnit.Framework
 		public IgnoreAttribute(string reason)
 		{
 			this.reason = reason;
-		}
+        }
+
+        #region ISetRunState members
+
+        public RunState GetRunState()
+        {
+            return RunState.Ignored;
+        }
 
 		/// <summary>
 		/// The reason for ignoring a test
 		/// </summary>
-		public string Reason
+		public string GetReason()
 		{
-			get { return reason; }
-		}
-	}
+			return reason;
+        }
+
+        #endregion
+    }
 }

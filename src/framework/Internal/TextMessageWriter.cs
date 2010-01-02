@@ -26,7 +26,7 @@ using System.Collections;
 using System.Globalization;
 using NUnit.Framework.Constraints;
 
-namespace NUnit.Framework
+namespace NUnit.Framework.Internal
 {
 	/// <summary>
 	/// TextMessageWriter writes constraint descriptions and messages

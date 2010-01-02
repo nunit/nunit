@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Threading;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Api
 {
@@ -10,7 +11,7 @@ namespace NUnit.Framework.Api
     public class DefaultTestAssemblyRunner : ITestAssemblyRunner
     {
         private ITestAssemblyBuilder builder;
-        private NUnit.Core.TestSuite suite;
+        private TestSuite suite;
         private int runnerID;
         private Thread runThread;
 
@@ -47,7 +48,7 @@ namespace NUnit.Framework.Api
         /// </summary>
         /// <param name="filter">The filter to apply</param>
         /// <returns>The number of test cases found</returns>
-        public int CountTestCases(NUnit.Core.TestFilter filter)
+        public int CountTestCases(TestFilter filter)
         {
             return this.suite.CountTestCases(filter);
         }
@@ -59,7 +60,7 @@ namespace NUnit.Framework.Api
         /// <param name="listener">Interface to receive EventListener notifications.</param>
         /// <param name="filter">The filter to apply when running the tests</param>
         /// <returns></returns>
-        public NUnit.Core.TestResult Run(NUnit.Core.ITestListener listener, NUnit.Core.TestFilter filter)
+        public TestResult Run(ITestListener listener, TestFilter filter)
         {
             try
             {

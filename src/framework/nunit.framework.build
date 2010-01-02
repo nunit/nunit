@@ -46,6 +46,8 @@
         <!--<patternset refid="source-files"/>-->
         <include name="../CommonAssemblyInfo.cs" />
         <include name="*.cs"/>
+        <include name="Api/ISetRunState.cs"/>
+        <include name="Api/RunState.cs"/>
         <include name="Attributes/*.cs"/>
         <include name="Constraints/*.cs"/>
         <include name="Exceptions/*.cs"/>

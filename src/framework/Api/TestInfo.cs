@@ -25,7 +25,7 @@ using System;
 using System.Collections;
 using System.Collections.Specialized;
 
-namespace NUnit.Core
+namespace NUnit.Framework.Api
 {
 	/// <summary>
 	/// TestInfo holds common info about a test. It represents only

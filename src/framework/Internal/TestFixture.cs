@@ -22,9 +22,9 @@
 // ***********************************************************************
 
 using System;
-using NUnit.Framework;
+using NUnit.Framework.Api;
 
-namespace NUnit.Core
+namespace NUnit.Framework.Internal
 {
 	/// <summary>
 	/// TestFixture is a surrogate for a user test fixture class,

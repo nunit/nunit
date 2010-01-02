@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.IO;
 using System.Reflection;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Api
 {
@@ -11,7 +12,7 @@ namespace NUnit.Framework.Api
     /// </summary>
     public class DefaultTestAssemblyBuilder : ITestAssemblyBuilder
     {
-        static NUnit.Core.Logger log = NUnit.Core.InternalTrace.GetLogger("TestAssemblyBuilder");
+        static Logger log = InternalTrace.GetLogger("TestAssemblyBuilder");
 
         #region Instance Fields
         /// <summary>
@@ -47,7 +48,7 @@ namespace NUnit.Framework.Api
         /// <returns>
         /// A TestSuite containing the tests found in the assembly
         /// </returns>
-        public NUnit.Core.TestSuite Build(Assembly assembly, string fixtureName)
+        public TestSuite Build(Assembly assembly, string fixtureName)
         {
             throw new NotImplementedException();
         }
@@ -60,11 +61,11 @@ namespace NUnit.Framework.Api
         /// <returns>
         /// A TestSuite containing the tests found in the assembly
         /// </returns>
-        public NUnit.Core.TestSuite Build(string assemblyName, string fixtureName)
+        public TestSuite Build(string assemblyName, string fixtureName)
         {
             // Change currentDirectory in case assembly references unmanaged dlls
             // and so that any addins are able to access the directory easily.
-            using (new NUnit.Core.DirectorySwapper(Path.GetDirectoryName(assemblyName)))
+            using (new DirectorySwapper(Path.GetDirectoryName(assemblyName)))
             {
                 this.assembly = Load(assemblyName);
                 if (assembly == null) return null;
@@ -102,7 +103,7 @@ namespace NUnit.Framework.Api
             assembly = Assembly.Load(Path.GetFileNameWithoutExtension(path));
 
             if (assembly != null)
-                NUnit.Core.CoreExtensions.Host.InstallAdhocExtensions(assembly);
+                CoreExtensions.Host.InstallAdhocExtensions(assembly);
 
             log.Info("Loaded assembly " + assembly.FullName);
 
@@ -124,8 +125,8 @@ namespace NUnit.Framework.Api
 
             foreach (Type testType in testTypes)
             {
-                if (NUnit.Core.TestFixtureBuilder.CanBuildFrom(testType))
-                    fixtures.Add(NUnit.Core.TestFixtureBuilder.BuildFrom(testType));
+                if (TestFixtureBuilder.CanBuildFrom(testType))
+                    fixtures.Add(TestFixtureBuilder.BuildFrom(testType));
             }
 
 #if LOAD_TIMING
@@ -154,35 +155,35 @@ namespace NUnit.Framework.Api
             return result;
         }
 
-        private NUnit.Core.TestSuite BuildFromFixtureType(string assemblyName, Type testType)
+        private TestSuite BuildFromFixtureType(string assemblyName, Type testType)
         {
             // TODO: This is the only situation in which we currently
             // recognize and load legacy suites. We need to determine 
             // whether to allow them in more places.
             if (legacySuiteBuilder.CanBuildFrom(testType))
-                return (NUnit.Core.TestSuite)legacySuiteBuilder.BuildFrom(testType);
-            else if (NUnit.Core.TestFixtureBuilder.CanBuildFrom(testType))
+                return (TestSuite)legacySuiteBuilder.BuildFrom(testType);
+            else if (TestFixtureBuilder.CanBuildFrom(testType))
                 return BuildTestAssembly(assemblyName,
-                    new NUnit.Core.Test[] { NUnit.Core.TestFixtureBuilder.BuildFrom(testType) });
+                    new Test[] { TestFixtureBuilder.BuildFrom(testType) });
             return null;
         }
 
-        private NUnit.Core.TestSuite BuildTestAssembly(string assemblyName, IList fixtures)
+        private TestSuite BuildTestAssembly(string assemblyName, IList fixtures)
         {
-            NUnit.Core.TestSuite testAssembly = new NUnit.Core.TestSuite(assemblyName);
+            TestSuite testAssembly = new TestSuite(assemblyName);
 
-            NUnit.Core.NamespaceTreeBuilder treeBuilder =
-                new NUnit.Core.NamespaceTreeBuilder(testAssembly);
+            NamespaceTreeBuilder treeBuilder =
+                new NamespaceTreeBuilder(testAssembly);
             treeBuilder.Add(fixtures);
             testAssembly = treeBuilder.RootSuite;
 
             if (fixtures.Count == 0)
             {
-                testAssembly.RunState = NUnit.Core.RunState.NotRunnable;
+                testAssembly.RunState = RunState.NotRunnable;
                 testAssembly.IgnoreReason = "Has no TestFixtures";
             }
 
-            NUnit.Core.NUnitFramework.ApplyCommonAttributes(assembly, testAssembly);
+            NUnitFramework.ApplyCommonAttributes(assembly, testAssembly);
 
             testAssembly.Properties["_PID"] = System.Diagnostics.Process.GetCurrentProcess().Id;
             testAssembly.Properties["_APPDOMAIN"] = AppDomain.CurrentDomain.FriendlyName;

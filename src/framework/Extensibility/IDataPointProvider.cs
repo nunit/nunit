@@ -23,6 +23,7 @@
 
 using System.Collections;
 using System.Reflection;
+using NUnit.Framework.Api;
 
 namespace NUnit.Core.Extensibility
 {

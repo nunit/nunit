@@ -21,12 +21,13 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
+using NUnit.Core;
+using NUnit.Framework;
+using NUnit.Framework.Api;
+
 namespace NUnit.AdhocTestRunner
 {
-    using System;
-    using TestResult = NUnit.Core.TestResult;
-    using ResultState = NUnit.Core.ResultState;
-
     /// <summary>
     /// Summary description for ResultSummary.
     /// </summary>

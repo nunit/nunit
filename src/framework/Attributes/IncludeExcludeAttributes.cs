@@ -23,6 +23,9 @@
 
 #if !NUNITLITE
 using System;
+using System.Globalization;
+using NUnit.Framework.Api;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Framework
 {
@@ -35,6 +38,8 @@ namespace NUnit.Framework
 		private string include;
 		private string exclude;
 		private string reason;
+
+        protected bool shouldRun;
 
 		/// <summary>
 		/// Constructor with no included items specified, for use
@@ -87,8 +92,10 @@ namespace NUnit.Framework
 	/// individual method as applying to a particular platform only.
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Class|AttributeTargets.Method|AttributeTargets.Assembly, AllowMultiple=true)]
-	public class PlatformAttribute : IncludeExcludeAttribute
+	public class PlatformAttribute : IncludeExcludeAttribute, ISetRunState
 	{
+        private PlatformHelper platformHelper = new PlatformHelper();
+
 		/// <summary>
 		/// Constructor with no platforms specified, for use
 		/// with named property syntax.
@@ -100,15 +107,36 @@ namespace NUnit.Framework
 		/// </summary>
 		/// <param name="platforms">Comma-deliminted list of platforms</param>
 		public PlatformAttribute( string platforms ) : base( platforms ) { }
-	}
+
+        #region ISetRunState members
+
+        public RunState GetRunState()
+        {
+            return platformHelper.IsPlatformSupported(this)
+                ? RunState.Runnable
+                : RunState.Skipped;
+        }
+
+        public string GetReason()
+        {
+            return Reason != null
+                ? Reason
+                : platformHelper.Reason;
+        }
+
+        #endregion
+    }
 
 	/// <summary>
 	/// CultureAttribute is used to mark a test fixture or an
 	/// individual method as applying to a particular Culture only.
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Class|AttributeTargets.Method|AttributeTargets.Assembly, AllowMultiple=false)]
-	public class CultureAttribute : IncludeExcludeAttribute
+	public class CultureAttribute : IncludeExcludeAttribute, ISetRunState
 	{
+        private CultureDetector cultureDetector = new CultureDetector();
+        private CultureInfo currentCulture = CultureInfo.CurrentCulture;
+
 		/// <summary>
 		/// Constructor with no cultures specified, for use
 		/// with named property syntax.
@@ -120,6 +148,91 @@ namespace NUnit.Framework
 		/// </summary>
 		/// <param name="cultures">Comma-deliminted list of cultures</param>
 		public CultureAttribute( string cultures ) : base( cultures ) { }
-	}
+
+        #region ISetRunState members
+
+        public RunState GetRunState()
+        {
+            return IsCultureSupported()
+                ? RunState.Runnable
+                : RunState.Skipped;
+        }
+
+        public string GetReason()
+        {
+            return Reason;
+        }
+
+        #endregion
+
+        /// <summary>
+        /// Tests to determine if the current culture is supported
+        /// based on the properties of this attribute.
+        /// </summary>
+        /// <returns>True, if the current culture is supported</returns>
+        private bool IsCultureSupported()
+        {
+            try
+            {
+                if (Include != null && !cultureDetector.IsCultureSupported(Include))
+                {
+                    Reason = string.Format("Only supported under culture {0}", Include);
+                    return false;
+                }
+
+                if (Exclude != null && cultureDetector.IsCultureSupported(Exclude))
+                {
+                    Reason = string.Format("Not supported under culture {0}", Exclude);
+                    return false;
+                }
+            }
+            catch (ArgumentException ex)
+            {
+                Reason = string.Format("Invalid culture: {0}", ex.ParamName);
+                return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Test to determine if the a particular culture or comma-
+        /// delimited set of cultures is in use.
+        /// </summary>
+        /// <param name="culture">Name of the culture or comma-separated list of culture names</param>
+        /// <returns>True if the culture is in use on the system</returns>
+        public bool IsCultureSupported(string culture)
+        {
+            culture = culture.Trim();
+
+            if (culture.IndexOf(',') >= 0)
+            {
+                if (IsCultureSupported(culture.Split(new char[] { ',' })))
+                    return true;
+            }
+            else
+            {
+                if (currentCulture.Name == culture || currentCulture.TwoLetterISOLanguageName == culture)
+                    return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Test to determine if one of a collection of culturess
+        /// is being used currently.
+        /// </summary>
+        /// <param name="cultures"></param>
+        /// <returns></returns>
+        public bool IsCultureSupported(string[] cultures)
+        {
+            foreach (string culture in cultures)
+                if (IsCultureSupported(culture))
+                    return true;
+
+            return false;
+        }
+    }
 }
 #endif

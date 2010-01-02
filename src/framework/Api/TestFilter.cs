@@ -23,7 +23,7 @@
 
 using System;
 
-namespace NUnit.Core
+namespace NUnit.Framework.Api
 {
 	/// <summary>
 	/// Interface to be implemented by filters applied to tests.

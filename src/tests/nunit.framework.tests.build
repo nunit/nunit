@@ -11,17 +11,15 @@
       <sources>
         <include name="../CommonAssemblyInfo.cs"/>
         <include name="*.cs"/>
-        <include name="AssertTests/*.cs"/>
+        <include name="Assertions/*.cs"/>
+        <include name="Attributes/*.cs"/>
         <include name="Constraints/*.cs"/>
+        <include name="Internal/*.cs"/>
         <include name="NUnit/Core/*.cs"/>
         <include name="NUnit/Core/Generic/*.cs" if="${runtime.version>='2.0'}"/>
         <include name="Syntax/*.cs"/>
         <include name="TestUtilities/*.cs"/>
         <exclude name="Program.cs"/>
-        <exclude name="NUnit/Core/EventQueueTests.cs"/>
-        <exclude name="NUnit/Core/SuiteBuilderTests.cs"/>
-        <exclude name="NUnit/Core/TestFixtureExtensionTests.cs"/>
-        <exclude name="NUnit/Core/SetUpFixtureTests.cs"/>
       </sources>
       <resources prefix="NUnit.Framework.Tests">
         <include name="TestImage1.jpg"/>
@@ -48,17 +46,17 @@
         <!--<patternset refid="source-files"/>-->
         <include name="../CommonAssemblyInfo.cs"/>
         <include name="AlwaysEqualComparer.cs"/>
-        <include name="ArrayEqualsFailureMessageFixture.cs"/>
-        <include name="ArrayEqualsFixture.cs"/>
-        <include name="ArrayNotEqualFixture.cs"/>
         <include name="CollectionAdapter.cs"/>
-        <include name="MessageChecker.cs"/>
         <include name="Program.cs"/>
         <include name="TestComparer.cs"/>
         <include name="TestDelegates.cs"/>
         <include name="TestFixtureAttributeTests.cs"/>
         <include name="TextMessageWriterTests.cs"/>
-        <include name="AssertTests/AssertFailTests.cs"/>
+        <include name="Assertions/ArrayEqualsFailureMessageFixture.cs"/>
+        <include name="Assertions/ArrayEqualsFixture.cs"/>
+        <include name="Assertions/ArrayNotEqualFixture.cs"/>
+        <include name="Assertions/AssertFailTests.cs"/>
+        <include name="Assertions/MessageChecker.cs"/>
         <include name="Constraints/*.cs"/>
         <include name="Syntax/CollectionTests.cs"/>
         <include name="Syntax/ComparisonTests.cs"/>

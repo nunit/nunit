@@ -24,7 +24,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace NUnit.Core
+namespace NUnit.Framework.Internal
 {
     /// <summary>
     /// OSPlatform represents a particular operating system platform

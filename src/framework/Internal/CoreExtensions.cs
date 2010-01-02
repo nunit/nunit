@@ -27,8 +27,9 @@ using System.Collections;
 using System.Reflection;
 using NUnit.Core.Builders;
 using NUnit.Core.Extensibility;
+using NUnit.Framework.Api;
 
-namespace NUnit.Core
+namespace NUnit.Framework.Internal
 {
 	/// <summary>
 	/// CoreExtensions is a singleton class that groups together all 

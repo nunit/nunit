@@ -24,6 +24,8 @@
 using System;
 using NUnit.Core;
 using NUnit.Framework;
+using NUnit.Framework.Api;
+using NUnit.Framework.Internal;
 
 namespace NUnit.TestUtilities
 {

@@ -28,8 +28,9 @@ using System.Collections.Specialized;
 using System.Diagnostics;
 using NUnit.Core.Extensibility;
 using NUnit.Framework;
+using NUnit.Framework.Api;
 
-namespace NUnit.Core
+namespace NUnit.Framework.Internal
 {
 	/// <summary>
 	/// Static methods that implement aspects of the NUnit framework that cut 
@@ -128,63 +129,14 @@ namespace NUnit.Core
                     if (test.Description == null)
                         test.Description = ((TestAttribute)attribute).Description;
                 }
-                //else if (attribute is DescriptionAttribute)
-                //{
-                //    test.Description = ((DescriptionAttribute)attribute).Description;
-                //}
-                else if (attribute is ExplicitAttribute)
+                else if (attribute is ISetRunState)
                 {
                     if (isValid)
                     {
-                        test.RunState = RunState.Explicit;
-                        test.IgnoreReason = ((ExplicitAttribute)attribute).Reason;
+                        ISetRunState irs = (ISetRunState)attribute;
+                        test.RunState = irs.GetRunState();
+                        test.IgnoreReason = irs.GetReason();
                     }
-                }
-                else if (attribute is IgnoreAttribute)
-                {
-                    if (isValid)
-                    {
-                        test.RunState = RunState.Ignored;
-                        test.IgnoreReason = ((IgnoreAttribute)attribute).Reason;
-                    }
-                }
-                else if (attribute is PlatformAttribute)
-                {
-                    PlatformHelper pHelper = new PlatformHelper();
-                    PlatformAttribute platformAttribute = (PlatformAttribute)attribute;
-                    if (isValid && !pHelper.IsPlatformSupported(platformAttribute))
-                    {
-                        test.RunState = RunState.Skipped;
-                        test.IgnoreReason = platformAttribute.Reason;
-                        if (test.IgnoreReason == null)
-                            test.IgnoreReason = pHelper.Reason;
-                    }
-                }
-                else if (attribute is CultureAttribute)
-                {
-                    CultureDetector cultureDetector = new CultureDetector();
-                    if (isValid && !cultureDetector.IsCultureSupported((CultureAttribute)attribute))
-                    {
-                        test.RunState = RunState.Skipped;
-                        test.IgnoreReason = cultureDetector.Reason;
-                    }
-                }
-                else if (attribute is RequiredAddinAttribute)
-                {
-                    string required = ((RequiredAddinAttribute)attribute).RequiredAddin;
-                    if (!IsAddinAvailable(required))
-                    {
-                        test.RunState = RunState.NotRunnable;
-                        test.IgnoreReason = string.Format("Required addin {0} not available", required);
-                    }
-                }
-                else if (attribute is System.STAThreadAttribute)
-                {
-                    test.Properties.Add("APARTMENT_STATE", System.Threading.ApartmentState.STA);
-                }
-                else if (attribute is System.MTAThreadAttribute)
-                {
-                    test.Properties.Add("APARTMENT_STATE", System.Threading.ApartmentState.MTA);
                 }
                 else if (attribute is CategoryAttribute)
                 {
@@ -217,17 +169,6 @@ namespace NUnit.Core
                 testMethod.ExceptionProcessor = new ExpectedExceptionProcessor(testMethod, attributes[0]);
         }
 
-        #endregion
-
-        #region IsAddinAvailable
-        public static bool IsAddinAvailable(string name)
-        {
-            foreach (Addin addin in CoreExtensions.Host.AddinRegistry.Addins)
-                if (addin.Name == name && addin.Status == AddinStatus.Loaded)
-                    return true;
-
-            return false;
-        }
         #endregion
 
         #region GetResultState

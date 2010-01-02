@@ -23,6 +23,8 @@
 
 #if !NUNITLITE
 using System;
+using NUnit.Framework.Api;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Framework
 {
@@ -33,9 +35,10 @@ namespace NUnit.Framework
     /// as NotRunnable.
     /// </summary>
     [AttributeUsage(AttributeTargets.Assembly,AllowMultiple=true)]
-    public class RequiredAddinAttribute : Attribute
+    public class RequiredAddinAttribute : Attribute, ISetRunState
     {
         private string requiredAddin;
+        private bool isAddinAvailable;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:RequiredAddinAttribute"/> class.
@@ -44,6 +47,11 @@ namespace NUnit.Framework
         public RequiredAddinAttribute(string requiredAddin)
         {
             this.requiredAddin = requiredAddin;
+            this.isAddinAvailable = false;
+
+            foreach (NUnit.Core.Extensibility.Addin addin in CoreExtensions.Host.AddinRegistry.Addins)
+                if (addin.Name == requiredAddin && addin.Status == NUnit.Core.Extensibility.AddinStatus.Loaded)
+                    this.isAddinAvailable = true;
         }
 
         /// <summary>
@@ -54,6 +62,24 @@ namespace NUnit.Framework
         {
             get { return requiredAddin; }
         }
+
+        #region ISetRunState members
+
+        public RunState GetRunState()
+        {
+            return isAddinAvailable 
+                ? RunState.Runnable 
+                : RunState.NotRunnable;
+        }
+
+        public string GetReason()
+        {
+            return isAddinAvailable 
+                ? string.Empty 
+                : string.Format("Required addin {0} not available", requiredAddin);
+        }
+
+        #endregion
     }
 }
 #endif

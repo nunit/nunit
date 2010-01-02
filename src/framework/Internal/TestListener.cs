@@ -22,13 +22,13 @@
 // ***********************************************************************
 
 using System;
+using NUnit.Framework.Api;
 
-namespace NUnit.Core
+namespace NUnit.Framework.Internal
 {
 	/// <summary>
 	/// TestListener provides an implementation of ITestListener that
     /// does nothing.
-    /// in each of the callback methods.
 	/// </summary>
 	/// 
 	[Serializable]

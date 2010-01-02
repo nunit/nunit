@@ -24,6 +24,7 @@
 using System;
 using System.Reflection;
 using System.Collections;
+using NUnit.Framework.Api;
 
 namespace NUnit.Core.Extensibility
 {

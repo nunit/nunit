@@ -37,6 +37,7 @@ namespace NUnitLite.Runner
     public class CommandLineOptions
     {
         private string optionChars;
+        private static string NL = NUnit.Framework.Internal.Env.NewLine;
 
         private bool wait = false;
         private bool nologo = false;
@@ -202,7 +203,7 @@ namespace NUnitLite.Runner
             {
                 StringBuilder sb = new StringBuilder();
                 foreach (string opt in invalidOptions)
-                    sb.Append( "Invalid option: " + opt + NUnit.Env.NewLine );
+                    sb.Append( "Invalid option: " + opt + NL );
                 return sb.ToString();
             }
         }
@@ -216,7 +217,6 @@ namespace NUnitLite.Runner
             get
             {
                 StringBuilder sb = new StringBuilder();
-                string NL = NUnit.Env.NewLine;
 
 #if PocketPC || WindowsCE || NETCF
                 string name = "NUnitLite";

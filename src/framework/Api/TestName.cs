@@ -23,7 +23,7 @@
 
 using System;
 
-namespace NUnit.Core
+namespace NUnit.Framework.Api
 {
 	/// <summary>
 	/// TestName encapsulates all info needed to identify and

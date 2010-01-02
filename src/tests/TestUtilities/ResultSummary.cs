@@ -21,11 +21,13 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-namespace NUnit.TestUtilities
-{
     using System;
     using NUnit.Core;
+    using NUnit.Framework;
+    using NUnit.Framework.Api;
 
+namespace NUnit.TestUtilities
+{
     /// <summary>
     /// Summary description for ResultSummary.
     /// </summary>

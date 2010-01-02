@@ -21,14 +21,15 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-namespace NUnit.Core
-{
-	using System;
-    using System.Threading;
-	using System.Text;
-	using System.Text.RegularExpressions;
-	using System.Reflection;
+using System;
+using System.Threading;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Reflection;
+using NUnit.Framework.Api;
 
+namespace NUnit.Framework.Internal
+{
 	/// <summary>
 	/// The TestMethod class represents a Test implemented as a method.
 	/// 

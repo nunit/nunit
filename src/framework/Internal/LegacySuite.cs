@@ -25,7 +25,7 @@ using System;
 using System.Collections;
 using System.Reflection;
 
-namespace NUnit.Core
+namespace NUnit.Framework.Internal
 {
 	/// <summary>
 	/// Represents a test suite constructed from a type that has a static Suite property

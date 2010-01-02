@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-namespace NUnit.Core 
+namespace NUnit.Framework.Internal 
 {
 	using System;
 	using System.Runtime.Serialization;

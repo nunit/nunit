@@ -23,8 +23,9 @@
 
 using System.Reflection;
 using System.Text;
+using NUnit.Framework.Api;
 
-namespace NUnit.Core
+namespace NUnit.Framework.Internal
 {
     /// <summary>
     /// ParameterizedMethodSuite holds a collection of individual

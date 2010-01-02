@@ -24,7 +24,7 @@
 using System;
 using System.Text;
 
-namespace NUnit
+namespace NUnit.Framework.Internal
 {
     /// <summary>
     /// Env is a static class that provides some of the features of
