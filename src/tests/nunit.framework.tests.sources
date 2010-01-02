@@ -1,0 +1,12 @@
+AlwaysEqualComparer.cs
+CollectionAdapter.cs
+TestComparer.cs
+TestDelegates.cs
+Assertions/*.cs
+Attributes/*.cs
+Constraints/*.cs
+Internal/*.cs
+NUnit/Core/*.cs
+NUnit/Core/Generic/*.cs
+Syntax/*.cs
+TestUtilities/*.cs
