@@ -23,8 +23,9 @@
 
 using System;
 using NUnit.Framework;
+using NUnit.Framework.Api;
 
-namespace NUnit.Core.Tests
+namespace NUnit.Framework.Tests
 {
 	[TestFixture]
 	public class TestIDTests

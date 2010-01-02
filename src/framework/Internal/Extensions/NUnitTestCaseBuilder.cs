@@ -24,6 +24,8 @@
 using System;
 using System.Reflection;
 using NUnit.Framework;
+using NUnit.Framework.Api;
+using NUnit.Framework.Internal;
 using NUnit.Core.Extensibility;
 
 namespace NUnit.Core.Builders

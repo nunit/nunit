@@ -212,7 +212,7 @@ namespace NUnitLite
                 if (this.message == null || this.message == string.Empty)
                     this.message = message;
                 else
-                    this.message = this.message + NUnit.Env.NewLine + message;
+                    this.message = this.message + NUnit.Framework.Internal.Env.NewLine + message;
             }
 
         /// <summary>
@@ -225,7 +225,7 @@ namespace NUnitLite
             if (this.message == null || this.message == string.Empty)
                 this.message = message;
             else
-                this.message = this.message + NUnit.Env.NewLine + message;
+                this.message = this.message + NUnit.Framework.Internal.Env.NewLine + message;
         }
 
 #if !NETCF_1_0

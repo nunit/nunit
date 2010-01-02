@@ -23,13 +23,11 @@
 
 using System;
 using System.IO;
-using TestResult = NUnit.Core.TestResult;
-using TestName = NUnit.Core.TestName;
-using TestOutput = NUnit.Core.TestOutput;
+using NUnit.Framework.Api;
 
 namespace NUnit.AdhocTestRunner
 {
-    class TestEventListener : MarshalByRefObject, NUnit.Core.ITestListener
+    class TestEventListener : MarshalByRefObject, ITestListener
     {
         CommandLineOptions options;
         TextWriter outWriter;

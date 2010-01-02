@@ -40,17 +40,23 @@
     <Compile Include="..\..\..\src\tests\AlwaysEqualComparer.cs">
       <Link>AlwaysEqualComparer.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\tests\ArrayEqualsFailureMessageFixture.cs">
-      <Link>ArrayEqualsFailureMessageFixture.cs</Link>
+    <Compile Include="..\..\..\src\tests\Assertions\ArrayEqualsFailureMessageFixture.cs">
+      <Link>Assertions\ArrayEqualsFailureMessageFixture.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\tests\ArrayEqualsFixture.cs">
-      <Link>ArrayEqualsFixture.cs</Link>
+    <Compile Include="..\..\..\src\tests\Assertions\ArrayEqualsFixture.cs">
+      <Link>Assertions\ArrayEqualsFixture.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\tests\ArrayNotEqualFixture.cs">
-      <Link>ArrayNotEqualFixture.cs</Link>
+    <Compile Include="..\..\..\src\tests\Assertions\ArrayNotEqualFixture.cs">
+      <Link>Assertions\ArrayNotEqualFixture.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\tests\AssertTests\AssertFailTests.cs">
-      <Link>AssertTests\AssertFailTests.cs</Link>
+    <Compile Include="..\..\..\src\tests\Assertions\AssertFailTests.cs">
+      <Link>Assertions\AssertFailTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\Assertions\MessageChecker.cs">
+      <Link>Assertions\MessageChecker.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\Attributes\TestFixtureAttributeTests.cs">
+      <Link>Attributes\TestFixtureAttributeTests.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\tests\CollectionAdapter.cs">
       <Link>CollectionAdapter.cs</Link>
@@ -118,8 +124,8 @@
     <Compile Include="..\..\..\src\tests\Constraints\XmlSerializableTest.cs">
       <Link>Constraints\XmlSerializableTest.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\tests\MessageChecker.cs">
-      <Link>MessageChecker.cs</Link>
+    <Compile Include="..\..\..\src\tests\Internal\TextMessageWriterTests.cs">
+      <Link>Internal\TextMessageWriterTests.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\tests\Program.cs">
       <Link>Program.cs</Link>
@@ -168,12 +174,6 @@
     </Compile>
     <Compile Include="..\..\..\src\tests\TestDelegates.cs">
       <Link>TestDelegates.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\tests\TestFixtureAttributeTests.cs">
-      <Link>TestFixtureAttributeTests.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\tests\TextMessageWriterTests.cs">
-      <Link>TextMessageWriterTests.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup>

@@ -24,7 +24,7 @@
 using System;
 using System.Collections;
 
-namespace NUnit.Framework.Tests
+namespace NUnit.Framework
 {
 	/// <summary>
 	/// ICollectionAdapter is used in testing to wrap an array or

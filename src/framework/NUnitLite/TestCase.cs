@@ -99,7 +99,7 @@ namespace NUnitLite
                 if (ignore != null)
                 {
                     this.runState = RunState.Ignored;
-                    this.ignoreReason = ignore.Reason;
+                    this.ignoreReason = ignore.GetReason();
                 }
             }
 
@@ -259,7 +259,7 @@ namespace NUnitLite
             if (this.RunState == RunState.NotRunnable)
                 result.Failure(this.ignoreReason);
             else if ( ignore != null )
-                result.NotRun(ignore.Reason);
+                result.NotRun(ignore.GetReason());
             else
             {
                 try

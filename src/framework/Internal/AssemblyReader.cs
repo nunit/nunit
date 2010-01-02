@@ -26,7 +26,7 @@ using System.Reflection;
 using System.Text;
 using System.IO;
 
-namespace NUnit.Core
+namespace NUnit.Framework.Internal
 {
 	/// <summary>
 	/// AssemblyReader knows how to find various things in an assembly header

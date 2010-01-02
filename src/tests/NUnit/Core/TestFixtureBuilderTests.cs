@@ -24,11 +24,12 @@
 using System;
 using System.Reflection;
 using NUnit.Framework;
+using NUnit.Framework.Api;
 using NUnit.Core;
 using NUnit.TestUtilities;
 using NUnit.TestData.TestFixtureBuilderData;
 
-namespace NUnit.Core.Tests
+namespace NUnit.Framework.Tests
 {
 	// TODO: Figure out what this is really testing and eliminate if not needed
 	[TestFixture]

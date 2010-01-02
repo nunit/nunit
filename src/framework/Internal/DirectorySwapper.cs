@@ -23,7 +23,7 @@
 
 using System;
 
-namespace NUnit.Core
+namespace NUnit.Framework.Internal
 {
 	/// <summary>
 	/// Utility class that allows changing the current directory 

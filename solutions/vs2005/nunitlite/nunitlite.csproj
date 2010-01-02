@@ -17,7 +17,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;NET_2_0;NUNITLITE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NET_2_0;CLR_2_0;NUNITLITE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>..\bin\Debug\nunitlite.XML</DocumentationFile>
@@ -26,7 +26,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\bin\Release\</OutputPath>
-    <DefineConstants>TRACE;NET_2_0;NUNITLITE</DefineConstants>
+    <DefineConstants>TRACE;NET_2_0;CLR_2_0;NUNITLITE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>..\bin\Release\nunitlite.XML</DocumentationFile>
@@ -39,6 +39,15 @@
   <ItemGroup>
     <Compile Include="..\..\..\src\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Api\ISetRunState.cs">
+      <Link>Api\ISetRunState.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Api\ResultState.cs">
+      <Link>Api\ResultState.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Api\RunState.cs">
+      <Link>Api\RunState.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\AssemblyInfo.cs">
       <Link>AssemblyInfo.cs</Link>

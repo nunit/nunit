@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints.Tests
 {

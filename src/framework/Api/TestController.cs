@@ -25,6 +25,7 @@ using System;
 using System.Collections;
 using System.IO;
 using System.Reflection;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Api
 {
@@ -32,20 +33,35 @@ namespace NUnit.Framework.Api
     {
         private ITestAssemblyBuilder builder;
         private ITestAssemblyRunner runner;
+        private IDictionary options;
 
         #region Constructors
 
         /// <summary>
-        /// Construct a TestController using default runner and builder
+        /// Construct a TestController using default runner, builder and option settings.
         /// </summary>
         public TestController()
         {
-            if (!NUnit.Core.CoreExtensions.Host.Initialized)
-                NUnit.Core.CoreExtensions.Host.Initialize();
+            if (!CoreExtensions.Host.Initialized)
+                CoreExtensions.Host.Initialize();
 
             this.builder = new DefaultTestAssemblyBuilder();
             this.runner = new DefaultTestAssemblyRunner(this.builder);
-        } 
+        }
+
+        /// <summary>
+        /// Construct a TestController passing a dictionary of option settings.
+        /// </summary>
+        public TestController(IDictionary options)
+        {
+            if (!CoreExtensions.Host.Initialized)
+                CoreExtensions.Host.Initialize();
+
+            this.builder = new DefaultTestAssemblyBuilder();
+            this.runner = new DefaultTestAssemblyRunner(this.builder);
+
+            this.options = options;
+        }
 
         /// <summary>
         /// Construct a TestController, specifying the types to be used
@@ -55,8 +71,8 @@ namespace NUnit.Framework.Api
         /// <param name="builderType">The Type of the test builder</param>
         public TestController(string runnerType, string builderType)
         {
-            if (!NUnit.Core.CoreExtensions.Host.Initialized)
-                NUnit.Core.CoreExtensions.Host.Initialize();
+            if (!CoreExtensions.Host.Initialized)
+                CoreExtensions.Host.Initialize();
 
             Assembly myAssembly = Assembly.GetExecutingAssembly();
             this.builder = (ITestAssemblyBuilder)myAssembly.CreateInstance(builderType);
@@ -76,6 +92,11 @@ namespace NUnit.Framework.Api
         public ITestAssemblyRunner Runner
         {
             get { return runner; }
+        }
+
+        public IDictionary Options
+        {
+            get { return options; }
         }
 
         #endregion
@@ -195,7 +216,7 @@ namespace NUnit.Framework.Api
             public CountTestsAction(TestController controller, AsyncCallback callback) 
                 : base(controller, callback)
             {
-                ReportResult(Runner.CountTestCases(NUnit.Core.TestFilter.Empty), true);
+                ReportResult(Runner.CountTestCases(TestFilter.Empty), true);
             }
         }
 
@@ -206,7 +227,7 @@ namespace NUnit.Framework.Api
         /// <summary>
         /// RunTestsAction runs the loaded TestSuite held by the TestController.
         /// </summary>
-        public class RunTestsAction : TestControllerAction, NUnit.Core.ITestListener
+        public class RunTestsAction : TestControllerAction, ITestListener
         {
             /// <summary>
             /// Construct a RunTestsAction and run all tests in the loaded TestSuite.
@@ -216,7 +237,7 @@ namespace NUnit.Framework.Api
             public RunTestsAction(TestController controller, AsyncCallback callback) 
                 : base(controller, callback)
             {
-                ReportResult(Runner.Run(this, NUnit.Core.TestFilter.Empty), true);
+                ReportResult(Runner.Run(this, TestFilter.Empty), true);
             }
 
             /// <summary>
@@ -225,7 +246,7 @@ namespace NUnit.Framework.Api
             /// <param name="controller">A TestController holding the TestSuite to run</param>
             /// <param name="filter">A TestFilter used to determine which tests should be run</param>
             /// <param name="result">A callback used to report results</param>
-            public RunTestsAction(TestController controller, NUnit.Core.TestFilter filter, AsyncCallback callback) 
+            public RunTestsAction(TestController controller, TestFilter filter, AsyncCallback callback) 
                 : base(controller, callback)
             {
                 ReportResult(Runner.Run(this, filter), true);
@@ -233,11 +254,11 @@ namespace NUnit.Framework.Api
 
             #region ITestListener Members
 
-            public void RunStarted(NUnit.Core.TestName testName, int testCount)
+            public void RunStarted(TestName testName, int testCount)
             {
             }
 
-            public void RunFinished(NUnit.Core.TestResult result)
+            public void RunFinished(TestResult result)
             {
             }
 
@@ -245,19 +266,19 @@ namespace NUnit.Framework.Api
             {
             }
 
-            public void TestStarted(NUnit.Core.TestName testName)
+            public void TestStarted(TestName testName)
             {
             }
 
-            public void TestFinished(NUnit.Core.TestResult result)
+            public void TestFinished(TestResult result)
             {
             }
 
-            public void SuiteStarted(NUnit.Core.TestName testName)
+            public void SuiteStarted(TestName testName)
             {
             }
 
-            public void SuiteFinished(NUnit.Core.TestResult result)
+            public void SuiteFinished(TestResult result)
             {
             }
 
@@ -265,7 +286,7 @@ namespace NUnit.Framework.Api
             {
             }
 
-            public void TestOutput(NUnit.Core.TestOutput testOutput)
+            public void TestOutput(TestOutput testOutput)
             {
                 ReportProgress(testOutput);
             }

@@ -26,6 +26,8 @@ using System.Collections;
 using System.Reflection;
 using NUnit.Core.Extensibility;
 using NUnit.Framework;
+using NUnit.Framework.Api;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Core.Builders
 {

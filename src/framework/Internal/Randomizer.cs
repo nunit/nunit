@@ -26,7 +26,7 @@ using System;
 using System.Collections;
 using System.Reflection;
 
-namespace NUnit.Framework
+namespace NUnit.Framework.Internal
 {
     /// <summary>
     /// Randomizer returns a set of random values in a repeatable

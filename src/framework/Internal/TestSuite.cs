@@ -21,15 +21,15 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-namespace NUnit.Core
-{
-	using System;
-    using System.Text;
-    using System.Threading;
-	using System.Collections;
-	using System.Reflection;
-    //using NUnit.Core.Filters;
+using System;
+using System.Text;
+using System.Threading;
+using System.Collections;
+using System.Reflection;
+using NUnit.Framework.Api;
 
+namespace NUnit.Framework.Internal
+{
 	/// <summary>
 	/// Summary description for TestSuite.
 	/// </summary>

@@ -22,14 +22,15 @@
 // ***********************************************************************
 
 using System;
-using NUnit.Framework;
+using NUnit.Framework.Api;
+using NUnit.Framework.Internal;
 using NUnit.Core;
 using NUnit.TestData.FixtureSetUpTearDownData;
 using NUnit.TestUtilities;
 using NUnit.TestData.TestFixtureData;
 using IgnoredFixture = NUnit.TestData.TestFixtureData.IgnoredFixture;
 
-namespace NUnit.Core.Tests
+namespace NUnit.Framework.Tests
 {
 	/// <summary>
 	/// Tests of the NUnitTestFixture class

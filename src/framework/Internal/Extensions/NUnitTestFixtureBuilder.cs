@@ -27,6 +27,8 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Text;
 using NUnit.Framework;
+using NUnit.Framework.Api;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Core.Builders
 {

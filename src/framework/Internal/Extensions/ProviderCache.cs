@@ -24,6 +24,7 @@
 using System;
 using System.Collections;
 using System.Text;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Core.Builders
 {

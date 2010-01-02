@@ -23,7 +23,7 @@
 
 using System.Collections;
 
-namespace NUnit.Core
+namespace NUnit.Framework.Api
 {
 	/// <summary>
 	/// Common interface supported by all representations

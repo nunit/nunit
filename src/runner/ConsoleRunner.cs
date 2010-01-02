@@ -23,7 +23,7 @@
 
 using System;
 using System.IO;
-using NUnit.Core;
+using NUnit.Framework.Api;
 
 namespace NUnit.AdhocTestRunner
 {

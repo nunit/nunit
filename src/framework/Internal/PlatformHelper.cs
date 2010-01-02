@@ -22,9 +22,8 @@
 // ***********************************************************************
 
 using System;
-using NUnit.Framework;
 
-namespace NUnit.Core
+namespace NUnit.Framework.Internal
 {
 	public class PlatformHelper
 	{

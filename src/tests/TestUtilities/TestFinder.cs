@@ -23,7 +23,7 @@
 
 using System;
 using NUnit.Core;
-using NUnit.Framework;
+using NUnit.Framework.Api;
 
 namespace NUnit.TestUtilities
 {

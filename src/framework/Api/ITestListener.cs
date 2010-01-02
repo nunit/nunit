@@ -21,10 +21,10 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-namespace NUnit.Core
-{
-	using System;
+using System;
 
+namespace NUnit.Framework.Api
+{
 	/// <summary>
 	/// The EventListener interface is used within the NUnit core to receive 
 	/// notifications of significant events while a test is being run. These

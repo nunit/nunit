@@ -25,7 +25,7 @@ using System;
 using System.Diagnostics;
 using NUnit.Framework.Internal;
 
-namespace NUnit.Core
+namespace NUnit.Framework.Internal
 {
 	/// <summary>
 	/// Summary description for Logger.

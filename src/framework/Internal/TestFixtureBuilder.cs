@@ -23,8 +23,9 @@
 
 using System;
 using System.Reflection;
+using NUnit.Framework.Api;
 
-namespace NUnit.Core
+namespace NUnit.Framework.Internal
 {
 	/// <summary>
 	/// TestFixtureBuilder contains static methods for building

@@ -23,7 +23,7 @@
 
 using System;
 
-namespace NUnit.Core
+namespace NUnit.Framework.Api
 {
 	/// <summary>
 	/// TestID encapsulates a unique identifier for tests. As

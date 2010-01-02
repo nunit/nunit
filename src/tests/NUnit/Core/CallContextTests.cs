@@ -25,9 +25,8 @@ using System;
 using System.Threading;
 using System.Runtime.Remoting.Messaging;
 using System.Security.Principal;
-using NUnit.Framework;
 
-namespace NUnit.Core.Tests
+namespace NUnit.Framework.Tests
 {
 	// TODO: Make this work for .NET 2.0
 	[TestFixture]

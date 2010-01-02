@@ -24,8 +24,9 @@
 using System;
 using System.IO;
 using System.Reflection;
+using NUnit.Framework.Api;
 
-namespace NUnit.Core
+namespace NUnit.Framework.Internal
 {
 	/// <summary>
 	/// SetUpFixture extends TestSuite and supports

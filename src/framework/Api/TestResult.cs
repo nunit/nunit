@@ -21,12 +21,12 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-namespace NUnit.Core
-{
-	using System;
-	using System.Text;
-	using System.Collections;
+using System;
+using System.Text;
+using System.Collections;
 
+namespace NUnit.Framework.Api
+{
 	/// <summary>
 	/// The TestResult class represents
 	/// the result of a test and is used to
@@ -376,7 +376,7 @@ namespace NUnit.Core
 		/// <param name="failureSite">The site of the failure</param>
 		public void Failure(string message, string stackTrace, FailureSite failureSite )
 		{
-            SetResult( Core.ResultState.Failure, message, stackTrace );
+            SetResult( ResultState.Failure, message, stackTrace );
             this.failureSite = failureSite;
 		}
 

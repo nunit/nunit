@@ -25,8 +25,9 @@ using System;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using NUnit.Framework;
+using NUnit.Framework.Api;
 
-namespace NUnit.Core
+namespace NUnit.Framework.Internal
 {
     public class ExpectedExceptionProcessor
     {
@@ -100,7 +101,7 @@ namespace NUnit.Core
             }
         }
 
-        public ExpectedExceptionProcessor(TestMethod testMethod, Extensibility.ParameterSet source)
+        public ExpectedExceptionProcessor(TestMethod testMethod, NUnit.Core.Extensibility.ParameterSet source)
         {
             this.testMethod = testMethod;
 

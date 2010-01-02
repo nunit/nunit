@@ -54,7 +54,7 @@ namespace NUnitLite.Tests
         {
             if (Environment.OSVersion.Platform == PlatformID.WinCE)
             {
-                string path = System.IO.Path.Combine(NUnit.Env.DocumentFolder, "TestResult.txt");
+                string path = System.IO.Path.Combine(NUnit.Framework.Internal.Env.DocumentFolder, "TestResult.txt");
                 System.IO.TextWriter writer = new System.IO.StreamWriter(path);
                 new TextUI(writer).Execute(args);
                 writer.Close();

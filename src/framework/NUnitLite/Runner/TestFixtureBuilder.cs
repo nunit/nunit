@@ -79,7 +79,7 @@ namespace NUnitLite.Runner
             if (ignore != null)
             {
                 suite.RunState = RunState.Ignored;
-                suite.IgnoreReason = ignore.Reason;
+                suite.IgnoreReason = ignore.GetReason();
             }
 
             if (!Reflect.HasConstructor(type))

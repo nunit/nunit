@@ -23,6 +23,7 @@
 
 #if !NUNITLITE
 using System;
+using NUnit.Framework.Api;
 
 namespace NUnit.Framework
 {
@@ -33,7 +34,7 @@ namespace NUnit.Framework
 	/// run simply because an enclosing suite is run.
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Class|AttributeTargets.Method|AttributeTargets.Assembly, AllowMultiple=false)]
-	public class ExplicitAttribute : Attribute
+	public class ExplicitAttribute : Attribute, ISetRunState
 	{
         private string reason;
 
@@ -54,13 +55,21 @@ namespace NUnit.Framework
             this.reason = reason;
         }
 
+        #region ISetRunState members
+
+        public RunState GetRunState()
+        {
+            return RunState.Explicit;
+        }
         /// <summary>
         /// The reason test is marked explicit
         /// </summary>
-        public string Reason
+        public string GetReason()
         {
-            get { return reason; }
+            return reason;
         }
+
+        #endregion
     }
 }
 #endif

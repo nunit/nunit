@@ -23,9 +23,8 @@
 
 using System;
 using System.Diagnostics;
-using NUnit.Framework.Internal;
 
-namespace NUnit.Core
+namespace NUnit.Framework.Internal
 {
     public class Logger
     {

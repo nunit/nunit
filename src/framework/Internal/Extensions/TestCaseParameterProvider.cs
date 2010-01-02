@@ -28,8 +28,9 @@ using System.Collections.Generic;
 #endif
 using System.Reflection;
 using System.Text;
-using NUnit.Framework;
 using NUnit.Core.Extensibility;
+using NUnit.Framework;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Core.Builders
 {

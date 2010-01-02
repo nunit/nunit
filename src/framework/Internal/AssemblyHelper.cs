@@ -24,7 +24,7 @@
 using System;
 using System.Reflection;
 
-namespace NUnit.Core
+namespace NUnit.Framework.Internal
 {
     public class AssemblyHelper
     {

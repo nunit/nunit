@@ -24,6 +24,9 @@
 using System;
 using System.Collections;
 using System.Reflection;
+using NUnit.Framework;
+using NUnit.Framework.Api;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Core.Builders
 {
@@ -63,7 +66,8 @@ namespace NUnit.Core.Builders
                 suite.RunState = RunState.NotRunnable;
                 suite.IgnoreReason = "Suite property may not be indexed";
             }
-            else if (method.ReturnType.FullName == "NUnit.Core.TestSuite")
+            // TODO: Stop checking for name
+            else if (method.ReturnType.FullName == "NUnit.Framework.Internal.TestSuite")
             {
                 TestSuite s = (TestSuite)suiteProperty.GetValue(null, new Object[0]);
                 foreach (Test test in s.Tests)
@@ -77,7 +81,7 @@ namespace NUnit.Core.Builders
                     if (objType != null && TestFixtureBuilder.CanBuildFrom(objType))
                         suite.Add(TestFixtureBuilder.BuildFrom(objType));
                     else
-                        suite.Add(obj);
+                        suite.Add(TestFixtureBuilder.BuildFrom(obj));
                 }
             }
             else

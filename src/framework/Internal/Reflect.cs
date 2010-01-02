@@ -25,7 +25,7 @@ using System;
 using System.Reflection;
 using System.Collections;
 
-namespace NUnit.Core
+namespace NUnit.Framework.Internal
 {
 	/// <summary>
 	/// Helper methods for inspecting a type by reflection. 

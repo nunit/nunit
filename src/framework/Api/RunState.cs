@@ -21,9 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
-
-namespace NUnit.Core
+namespace NUnit.Framework.Api
 {
 	/// <summary>
 	/// The RunState enum indicates whether a test
@@ -66,12 +64,6 @@ namespace NUnit.Core
         /// Appears on a TestResult in that case or
         /// if the test is dynamically ignored.
         /// </summary>
-		Ignored,
-
-        /// <summary>
-        /// The test has been executed. May only
-        /// appear on a TestResult.
-        /// </summary>
-		Executed
+		Ignored
 	}
 }

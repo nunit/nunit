@@ -24,12 +24,13 @@
 using System;
 using System.Reflection;
 using System.Collections;
-using NUnit.Framework;
+using NUnit.Framework.Api;
 using NUnit.Core.Builders;
 using NUnit.TestData.DescriptionFixture;
 using NUnit.TestUtilities;
+using NUnit.Framework.Internal;
 
-namespace NUnit.Core.Tests
+namespace NUnit.Framework.Tests
 {
 	// TODO: Review to see if we need these tests
 

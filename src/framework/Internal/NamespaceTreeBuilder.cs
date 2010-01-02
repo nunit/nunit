@@ -23,7 +23,7 @@
 
 using System.Collections;
 
-namespace NUnit.Core
+namespace NUnit.Framework.Internal
 {
 	/// <summary>
 	/// Class that can build a tree of automatic namespace

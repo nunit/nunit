@@ -23,12 +23,14 @@
 
 using System;
 using System.Collections;
-using NUnit.Framework;
+using NUnit.Framework.Api;
+using NUnit.Framework.Internal;
 using NUnit.Core;
+using NUnit.Core.Builders;
 using NUnit.TestData;
 using NUnit.TestData.LegacySuiteData;
 
-namespace NUnit.Core.Tests
+namespace NUnit.Framework.Tests
 {
 	/// <summary>
 	/// Summary description for LegacySuiteTests.
@@ -36,7 +38,7 @@ namespace NUnit.Core.Tests
 	[TestFixture]
 	public class LegacySuiteTests
 	{
-        private Builders.LegacySuiteBuilder builder = new Builders.LegacySuiteBuilder();
+        private LegacySuiteBuilder builder = new LegacySuiteBuilder();
 
         [TestFixtureSetUp]
         public void InitializeBuilders()
