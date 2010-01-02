@@ -226,9 +226,9 @@
     <call target="gen-syntax" 
       unless="${property::exists('generated.syntax')}"/>
 
-    <nant target="build-nunit" buildfile="src/framework/nunit.framework.build"/>
+    <nant target="build" buildfile="src/framework/nunit.framework.build"/>
     <nant target="build" buildfile="src/test-assembly/test-assembly.build"/>
-    <nant target="build-nunit" buildfile="src/tests/nunit.framework.tests.build"/>
+    <nant target="build" buildfile="src/tests/nunit.framework.tests.build"/>
     <nant target="build" buildfile="src/runner/test-runner.build"/>
 
   </target>
@@ -240,8 +240,8 @@
     <call target="gen-syntax" 
       unless="${property::exists('generated.syntax')}"/>
 
-    <nant target="build-nunitlite" buildfile="src/framework/nunit.framework.build"/>
-    <nant target="build-nunitlite" buildfile="src/tests/nunit.framework.tests.build"/>
+    <nant target="build" buildfile="src/framework/nunitlite.build"/>
+    <nant target="build" buildfile="src/tests/nunitlite.tests.build"/>
 
   </target>
 

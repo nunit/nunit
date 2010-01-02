@@ -4,20 +4,21 @@
   <target name="build">
 
     <csc target="library"
-        output="${current.build.dir}/nunit.framework.dll"
-        doc="${current.build.dir}/nunit.framework.xml"
+        output="${current.build.dir}/nunitlite.dll"
+        doc="${current.build.dir}/nunitlite.xml"
         debug="${build.debug}" 
-        define="${build.defines}"
-        keyfile="../../nunit.snk">
+        define="${build.defines};NUNITLITE">
       <nowarn>
-        <warning number="1699" if="${runtime.version=='2.0'}"/>
+        <warning number="1699" if="${runtime.version>='2.0'}"/>
       </nowarn>
       <sources basedir=".">
         <include name="../CommonAssemblyInfo.cs" />
-        <includesfile name="nunit.framework.sources"/>
+        <includesfile name="nunitlite.sources"/>
       </sources>
       <references basedir="${current.build.dir}">
-        <include name="System.Configuration.dll"/>
+        <include name="mscorlib.dll"/>
+        <include name="System.dll"/>
+        <include name="System.Xml.dll"/>
       </references>
     </csc>
 
@@ -26,7 +27,7 @@
   <target name="package">
     <copy todir="${package.src.dir}/framework">
       <fileset>
-        <includesfile name="nunit.sources"/>
+        <includesfile name="nunitlite.sources"/>
         <include name="Templates/*.cs"/>
       </fileset>
     </copy>

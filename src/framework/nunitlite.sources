@@ -1,0 +1,9 @@
+*.cs
+Api/ISetRunState.cs
+Api/RunState.cs
+Attributes/*.cs
+Constraints/*.cs
+Exceptions/*.cs
+Internal/Env.cs
+Internal/TextMessageWriter.cs
+NUnitLite/**/*.cs

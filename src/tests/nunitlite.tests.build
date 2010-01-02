@@ -2,14 +2,14 @@
 <project name="NUnitFrameworkTests" default="build" basedir=".">
 
   <target name="build">
-    <csc target="library" 
-        output="${current.build.dir}/nunit.framework.tests.dll"
+    <csc target="exe" 
+        output="${current.build.dir}/nunitlite.tests.exe"
         debug="${build.debug}" 
-        define="${build.defines}">
+        define="${build.defines};NUNITLITE">
       <sources>
         <include name="../CommonAssemblyInfo.cs"/>
-        <includesfile name="nunit.framework.tests.sources"/>
-        <exclude name="NUnit/Core/Generic/*.cs" unless="${runtime.version>='2.0'}"/>
+        <includesfile name="nunitlite.tests.sources"/>
+        <exclude name="Constraints/AfterConstraintTests.cs"/>
       </sources>
       <resources prefix="NUnit.Framework.Tests">
         <include name="TestImage1.jpg"/>
@@ -18,9 +18,10 @@
         <include name="TestText2.txt"/>
       </resources>
       <references basedir="${current.build.dir}">
-        <include name="nunit.framework.dll"/>
-        <include name="nunit.interfaces.dll"/>
-        <include name="test-assembly.dll"/>
+        <include name="nunitlite.dll"/>
+        <include name="mscorlib.dll"/>
+        <include name="System.dll"/>
+        <include name="System.Xml.dll"/>
         <include name="System.Data.dll"/>
         <include name="System.Drawing.dll"/>
       </references>
@@ -30,9 +31,7 @@
   <target name="package">
     <copy todir="${package.src.dir}/tests">
       <fileset>
-        <!--<patternset refid="source-files"/>-->
-        <include name="**/*.cs"/>
-        <includesfile name="nunit.framework.tests.sources"/>
+        <includesfile name="nunitlite.tests.sources"/>
         <include name="TestImage1.jpg"/>
         <include name="TestImage2.jpg"/>
         <include name="TestText1.txt"/>
