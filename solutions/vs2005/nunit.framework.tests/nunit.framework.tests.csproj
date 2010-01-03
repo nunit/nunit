@@ -297,9 +297,6 @@
     <Compile Include="..\..\..\src\tests\NUnit\Core\LegacySuiteTests.cs">
       <Link>NUnit\Core\LegacySuiteTests.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\tests\NUnit\Core\MaxTimeTests.cs">
-      <Link>NUnit\Core\MaxTimeTests.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\src\tests\NUnit\Core\SetUpTest.cs">
       <Link>NUnit\Core\SetUpTest.cs</Link>
     </Compile>
