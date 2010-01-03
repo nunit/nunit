@@ -27,6 +27,7 @@ using System.Configuration;
 using System.IO;
 using System.Diagnostics;
 using System.Globalization;
+using System.Security.Principal;
 using System.Threading;
 
 namespace NUnit.Core
@@ -217,6 +218,11 @@ namespace NUnit.Core
             /// </summary>
             private CultureInfo currentUICulture;
 
+            /// <summary>
+            /// The current Principal.
+            /// </summary>
+		    private IPrincipal currentPrincipal;
+
 			/// <summary>
 			/// Link to a prior saved context
 			/// </summary>
@@ -236,6 +242,7 @@ namespace NUnit.Core
 				this.currentDirectory = Environment.CurrentDirectory;
 				this.currentCulture = CultureInfo.CurrentCulture;
                 this.currentUICulture = CultureInfo.CurrentUICulture;
+			    this.currentPrincipal = Thread.CurrentPrincipal;
 			}
 
 			public ContextHolder( ContextHolder other )
@@ -252,6 +259,7 @@ namespace NUnit.Core
 				this.currentDirectory = Environment.CurrentDirectory;
 				this.currentCulture = CultureInfo.CurrentCulture;
                 this.currentUICulture = CultureInfo.CurrentUICulture;
+			    this.currentPrincipal = Thread.CurrentPrincipal;
 			}
 
 			/// <summary>
@@ -270,6 +278,7 @@ namespace NUnit.Core
 				this.CurrentCulture = prior.CurrentCulture;
                 this.CurrentUICulture = prior.CurrentUICulture;
                 this.TestCaseTimeout = prior.TestCaseTimeout;
+			    this.CurrentPrincipal = prior.CurrentPrincipal;
 			}
 
 			/// <summary>
@@ -412,6 +421,19 @@ namespace NUnit.Core
 					Thread.CurrentThread.CurrentUICulture = currentUICulture;
 				}
 			}
+
+            /// <summary>
+            /// Gets or sets the current <see cref="IPrincipal"/> for the Thread.
+            /// </summary>
+		    public IPrincipal CurrentPrincipal
+		    {
+		        get { return this.currentPrincipal; }
+                set
+                {
+                    this.currentPrincipal = value;
+                    Thread.CurrentPrincipal = this.currentPrincipal;
+                }
+		    }
 
             public int TestCaseTimeout
             {
