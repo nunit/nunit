@@ -23,6 +23,7 @@
 
 using System;
 using NUnit.Framework;
+using NUnit.Framework.Api;
 
 namespace NUnitLite
 {
@@ -95,10 +96,13 @@ namespace NUnitLite
             testCount++;
             switch (result.ResultState)
             {
-                case ResultState.NotRun:
+                case ResultState.Ignored:
+                case ResultState.Skipped:
                     notRunCount++;
                     break;
                 case ResultState.Error:
+                case ResultState.NotRunnable:
+                case ResultState.Cancelled:
                     errorCount++;
                     break;
                 case ResultState.Failure:

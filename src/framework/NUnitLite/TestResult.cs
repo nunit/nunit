@@ -24,33 +24,11 @@
 using System;
 using System.Collections;
 using NUnit.Framework;
+using NUnit.Framework.Api;
 using ObjectList = NUnit.ObjectList;
 
 namespace NUnitLite
 {
-    /// <summary>
-    /// Represents the final result state from running a test
-    /// </summary>
-    public enum ResultState
-    {
-        /// <summary>
-        /// The test was not run
-        /// </summary>
-        NotRun,
-        /// <summary>
-        /// The test passed
-        /// </summary>
-        Success,
-        /// <summary>
-        /// The test failed
-        /// </summary>
-        Failure,
-        /// <summary>
-        /// The test terminated with an error
-        /// </summary>
-        Error
-    }
-
     /// <summary>
     /// TestResult represents the result from running a test
     /// </summary>
@@ -58,7 +36,7 @@ namespace NUnitLite
     {
         private ITest test;
 
-        private ResultState resultState = ResultState.NotRun;
+        private ResultState resultState;
 
         private string message;
 
@@ -116,7 +94,11 @@ namespace NUnitLite
         /// <value><c>true</c> if executed; otherwise, <c>false</c>.</value>
         public bool Executed
         {
-            get { return resultState != ResultState.NotRun; }
+            get { return resultState == ResultState.Success ||
+                         resultState == ResultState.Failure ||
+                         resultState == ResultState.Cancelled ||
+                         resultState == ResultState.Error ||
+                         resultState == ResultState.Inconclusive; }
         }
 
         /// <summary>
@@ -258,9 +240,9 @@ namespace NUnitLite
         /// Marks this instance as not run
         /// </summary>
         /// <param name="message">Message giving the reason the test was not run</param>
-        public void NotRun(string message)
+        public void Ignore(string message)
         {
-            this.resultState = ResultState.NotRun;
+            this.resultState = ResultState.Ignored;
             this.message = message;
         }
 
