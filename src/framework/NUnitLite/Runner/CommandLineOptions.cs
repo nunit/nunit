@@ -150,7 +150,11 @@ namespace NUnitLite.Runner
         /// </summary>
         public string[] Parameters
         {
+#if CLR_2_0
             get { return (string[])parameters.ToArray(); }
+#else
+            get { return (string[])parameters.ToArray(typeof(string)); }
+#endif
         }
 
         private void ProcessOption(string opt)
