@@ -43,6 +43,7 @@ namespace NUnitLite.Runner
         private bool nologo = false;
         private bool listprops = false;
         private bool help = false;
+        private bool full = false;
 
         private bool error = false;
 
@@ -94,6 +95,14 @@ namespace NUnitLite.Runner
         public string[] Tests
         {
             get { return (string[])tests.ToArray(); }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether a full report should be displayed
+        /// </summary>
+        public bool Full
+        {
+            get { return full; }
         }
 
         /// <summary>
@@ -172,6 +181,9 @@ namespace NUnitLite.Runner
                 case "test":
                     tests.Add(val);
                     break;
+                case "full":
+                    full = true;
+                    break;
                 default:
                     error = true;
                     invalidOptions.Add(opt);
@@ -231,11 +243,12 @@ namespace NUnitLite.Runner
                 sb.Append("or on the probing path. If no assemblies are provided, tests in the" + NL);
                 sb.Append("executing assembly itself are run." + NL + NL);
                 sb.Append("Options:" + NL);
-                sb.Append("  -test:testname  Provides the name of a test to run. This option may be" + NL);
+                sb.Append("  -test:testname  (NYI) Provides the name of a test to run. This option may be" + NL);
                 sb.Append("                  repeated. If no test names are given, all tests are run." + NL + NL);
                 sb.Append("  -help           Displays this help" + NL + NL);
                 sb.Append("  -nologo         Suppresses display of the initial message" + NL + NL);
                 sb.Append("  -wait           Waits for a key press before exiting" + NL + NL);
+                sb.Append("  -full           Prints full report of all test results." + NL + NL);
                 if (System.IO.Path.DirectorySeparatorChar != '/')
                     sb.Append("On Windows, options may be prefixed by a '/' character if desired" + NL + NL);
                 sb.Append("Options that take values may use an equal sign or a colon" + NL);

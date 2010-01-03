@@ -225,6 +225,9 @@ namespace NUnitLite.Runner
 
             if (summary.NotRunCount > 0)
                 PrintNotRunReport(result);
+
+            if (options.Full)
+                PrintFullReport(result);
         }
         #endregion
 
@@ -302,13 +305,13 @@ namespace NUnitLite.Runner
         {
             reportCount = 0;
             writer.WriteLine();
-            writer.WriteLine("Errors and Failures:");
+            writer.WriteLine("Tests Not Run:");
             PrintNotRunResults(result);
         }
 
         private void PrintNotRunResults(TestResult result)
         {
-            if (result.Results != null)
+            if (result.Results.Count > 0)
                 foreach (TestResult r in result.Results)
                     PrintNotRunResults(r);
             else if (result.ResultState == ResultState.NotRun)
@@ -324,6 +327,41 @@ namespace NUnitLite.Runner
         {
             foreach (DictionaryEntry entry in test.Properties)
                 writer.WriteLine("  {0}: {1}", entry.Key, entry.Value);            
+        }
+
+        private void PrintFullReport(TestResult result)
+        {
+            writer.WriteLine();
+            writer.WriteLine("All Test Results:");
+            PrintAllResults(result, " ");
+        }
+
+        private void PrintAllResults(TestResult result, string indent)
+        {
+            string status = null;
+            switch (result.ResultState)
+            {
+                case ResultState.Error:
+                    status = "ERROR ";
+                    break;
+                case ResultState.Failure:
+                    status = "FAILED";
+                    break;
+                case ResultState.NotRun:
+                    status = "NOTRUN";
+                    break;
+                case ResultState.Success:
+                    status = "OK    ";
+                    break;
+            }
+
+            writer.Write(status);
+            writer.Write(indent);
+            writer.WriteLine(result.Test.Name);
+
+            if (result.Results.Count > 0)
+                foreach (TestResult r in result.Results)
+                    PrintAllResults(r, indent + "  ");
         }
         #endregion
     }
