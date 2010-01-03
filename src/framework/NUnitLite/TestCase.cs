@@ -25,6 +25,7 @@ using System;
 using System.Reflection;
 using System.Collections;
 using NUnit.Framework;
+using NUnit.Framework.Api;
 
 namespace NUnitLite
 {
@@ -259,7 +260,7 @@ namespace NUnitLite
             if (this.RunState == RunState.NotRunnable)
                 result.Failure(this.ignoreReason);
             else if ( ignore != null )
-                result.NotRun(ignore.GetReason());
+                result.Ignore(ignore.GetReason());
             else
             {
                 try

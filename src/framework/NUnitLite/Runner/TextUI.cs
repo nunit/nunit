@@ -26,6 +26,7 @@ using System.IO;
 using System.Collections;
 using System.Reflection;
 using NUnit.Framework;
+using NUnit.Framework.Api;
 
 namespace NUnitLite.Runner
 {
@@ -314,7 +315,7 @@ namespace NUnitLite.Runner
             if (result.Results.Count > 0)
                 foreach (TestResult r in result.Results)
                     PrintNotRunResults(r);
-            else if (result.ResultState == ResultState.NotRun)
+            else if (!result.Executed)
             {
                 writer.WriteLine();
                 writer.WriteLine("{0}) {1} ({2}) : {3}", ++reportCount, result.Test.Name, result.Test.FullName, result.Message);
@@ -342,13 +343,23 @@ namespace NUnitLite.Runner
             switch (result.ResultState)
             {
                 case ResultState.Error:
+                case ResultState.NotRunnable:
                     status = "ERROR ";
                     break;
                 case ResultState.Failure:
                     status = "FAILED";
                     break;
-                case ResultState.NotRun:
-                    status = "NOTRUN";
+                case ResultState.Cancelled:
+                    status = "CANCEL ";
+                    break;
+                case ResultState.Skipped:
+                    status = "SKIP  ";
+                    break;
+                case ResultState.Ignored:
+                    status = "IGNORE";
+                    break;
+                case ResultState.Inconclusive:
+                    status = "INC   ";
                     break;
                 case ResultState.Success:
                     status = "OK    ";

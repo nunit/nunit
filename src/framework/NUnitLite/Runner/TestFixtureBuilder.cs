@@ -25,6 +25,7 @@ using System;
 using System.Collections;
 using System.Reflection;
 using NUnit.Framework;
+using NUnit.Framework.Api;
 
 namespace NUnitLite.Runner
 {

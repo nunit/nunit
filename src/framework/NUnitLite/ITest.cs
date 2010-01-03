@@ -23,43 +23,6 @@
 
 namespace NUnitLite
 {
-	/// <summary>
-	/// The RunState enum indicates whether a test
-    /// has been or can be executed.
-	/// </summary>
-    public enum RunState
-    {
-        /// <summary>
-        /// The test is not runnable
-        /// </summary>
-        NotRunnable,
-
-        /// <summary>
-        /// The test is runnable
-        /// </summary>
-        Runnable,
-
-        ///// <summary>
-        ///// The test can only be run explicitly
-        ///// </summary>
-        //Explicit,
-
-        ///// <summary>
-        ///// The test has been skipped
-        ///// </summary>
-        //Skipped,
-
-        /// <summary>
-        /// The test has been ignored
-        /// </summary>
-        Ignored
-
-        ///// <summary>
-        ///// The test has been executed
-        ///// </summary>
-        //Executed
-    }
-
     /// <summary>
     /// Interface representing a test
     /// </summary>
@@ -81,7 +44,7 @@ namespace NUnitLite
         /// Gets or sets the run state of the test.
         /// </summary>
         /// <value>The state of the run.</value>
-        RunState RunState { get; set; }
+        NUnit.Framework.Api.RunState RunState { get; set; }
 
         /// <summary>
         /// Gets or sets the ignore reason.
