@@ -53,6 +53,15 @@
     <Compile Include="..\..\..\src\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\framework\Api\ISetRunState.cs">
+      <Link>Api\ISetRunState.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Api\ResultState.cs">
+      <Link>Api\ResultState.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Api\RunState.cs">
+      <Link>Api\RunState.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\framework\AssemblyInfo.cs">
       <Link>AssemblyInfo.cs</Link>
     </Compile>
