@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Security.Principal;
 using NUnit.Framework;
 
 namespace NUnit.TestData.TestFixtureData
@@ -333,4 +334,15 @@ namespace NUnit.TestData.TestFixtureData
 		public void Teardown(int j) { }
 	}
 
+    [TestFixture]
+    public class FixtureThatChangesTheCurrentPrincipal
+    {
+        [Test]
+        public void ChangeCurrentPrincipal()
+        {
+            WindowsIdentity identity = WindowsIdentity.GetCurrent();
+            GenericPrincipal principal = new GenericPrincipal( identity, new string[] { } );
+            System.Threading.Thread.CurrentPrincipal = principal;
+        }
+    }
 }
