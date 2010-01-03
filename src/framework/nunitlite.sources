@@ -1,9 +1,11 @@
 *.cs
 Api/ISetRunState.cs
+Api/ResultState.cs
 Api/RunState.cs
 Attributes/*.cs
 Constraints/*.cs
 Exceptions/*.cs
 Internal/Env.cs
+Internal/MethodHelper.cs
 Internal/TextMessageWriter.cs
 NUnitLite/**/*.cs

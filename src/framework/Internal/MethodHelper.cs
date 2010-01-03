@@ -66,8 +66,12 @@ namespace NUnit.Framework.Internal
         private static string GetDisplayString(object arg)
         {
             string display = arg == null 
-                ? "null" 
-                : Convert.ToString( arg, System.Globalization.CultureInfo.InvariantCulture);
+                ? "null"
+#if NETCF_1_0
+                : Convert.ToString( arg );
+#else
+                : Convert.ToString(arg, System.Globalization.CultureInfo.InvariantCulture);
+#endif
 
             if (arg is double)
             {

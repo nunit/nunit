@@ -230,6 +230,9 @@
     <Compile Include="..\..\..\src\framework\Internal\Env.cs">
       <Link>Internal\Env.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\MethodHelper.cs">
+      <Link>Internal\MethodHelper.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\framework\Internal\TextMessageWriter.cs">
       <Link>Internal\TextMessageWriter.cs</Link>
     </Compile>
@@ -265,9 +268,6 @@
     </Compile>
     <Compile Include="..\..\..\src\framework\NUnitLite\Runner\DebugWriter.cs">
       <Link>NUnitLite\Runner\DebugWriter.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\NUnitLite\Runner\MethodHelper.cs">
-      <Link>NUnitLite\Runner\MethodHelper.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\NUnitLite\Runner\ResultSummary.cs">
       <Link>NUnitLite\Runner\ResultSummary.cs</Link>
