@@ -157,6 +157,9 @@
     <Compile Include="..\..\..\src\tests\Attributes\FixtureSetUpTearDownTests.cs">
       <Link>Attributes\FixtureSetUpTearDownTests.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\tests\Attributes\MaxTimeTests.cs">
+      <Link>Attributes\MaxTimeTests.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\tests\Attributes\PairwiseTests.cs">
       <Link>Attributes\PairwiseTests.cs</Link>
     </Compile>
@@ -312,9 +315,6 @@
     </Compile>
     <Compile Include="..\..\..\src\tests\NUnit\Core\LegacySuiteTests.cs">
       <Link>NUnit\Core\LegacySuiteTests.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\tests\NUnit\Core\MaxTimeTests.cs">
-      <Link>Attributes\MaxTimeTests.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\tests\NUnit\Core\SetUpTest.cs">
       <Link>NUnit\Core\SetUpTest.cs</Link>
