@@ -630,6 +630,7 @@
     <None Include="..\..\..\src\framework\Templates\Throws.template.cs">
       <Link>Templates\Throws.template.cs</Link>
     </None>
+    <None Include="nunit.snk" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
