@@ -26,6 +26,7 @@ using System.Collections;
 using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.Api;
+using NUnit.Framework.Internal;
 
 namespace NUnitLite.Runner
 {
@@ -76,7 +77,7 @@ namespace NUnitLite.Runner
                 foreach( DictionaryEntry entry in attr.Properties )
                     suite.Properties[entry.Key] = entry.Value;
 
-            IgnoreAttribute ignore = (IgnoreAttribute)Reflect.GetAttribute(type, typeof(IgnoreAttribute));
+            IgnoreAttribute ignore = (IgnoreAttribute)Reflect.GetAttribute(type, typeof(IgnoreAttribute),false);
             if (ignore != null)
             {
                 suite.RunState = RunState.Ignored;
