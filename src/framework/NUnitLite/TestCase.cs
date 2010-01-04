@@ -96,7 +96,7 @@ namespace NUnitLite
 
             if (HasValidSignature(method, args))
             {
-                IgnoreAttribute ignore = (IgnoreAttribute)Reflect.GetAttribute(this.method, typeof(IgnoreAttribute));
+                IgnoreAttribute ignore = (IgnoreAttribute)Reflect.GetAttribute(this.method, typeof(IgnoreAttribute), false);
 
                 if (ignore != null)
                 {
@@ -257,7 +257,7 @@ namespace NUnitLite
         /// <param name="listener">The listener.</param>
         protected virtual void Run(TestResult result, TestListener listener)
         {
-            IgnoreAttribute ignore = (IgnoreAttribute)Reflect.GetAttribute(method, typeof(IgnoreAttribute));
+            IgnoreAttribute ignore = (IgnoreAttribute)Reflect.GetAttribute(method, typeof(IgnoreAttribute), false);
             if (this.RunState == RunState.NotRunnable)
                 result.Failure(this.ignoreReason);
             else if ( ignore != null )
@@ -269,7 +269,7 @@ namespace NUnitLite
                     RunBare();
                     result.Success();
                 }
-                catch (NUnitLiteException nex)
+                catch (NUnitException nex)
                 {
                     result.RecordException(nex.InnerException);
                 }
@@ -312,7 +312,7 @@ namespace NUnitLite
                 InvokeMethod( this.method, this.args );
                 ProcessNoException(this.method);
             }
-            catch (NUnitLiteException ex)
+            catch (NUnitException ex)
             {
                 ProcessException(this.method, ex.InnerException);
             }
@@ -384,7 +384,7 @@ namespace NUnitLite
         private static void ProcessNoException(MethodInfo method)
         {
             ExpectedExceptionAttribute exceptionAttribute =
-                (ExpectedExceptionAttribute)Reflect.GetAttribute(method, typeof(ExpectedExceptionAttribute));
+                (ExpectedExceptionAttribute)Reflect.GetAttribute(method, typeof(ExpectedExceptionAttribute), false);
 
             if (exceptionAttribute != null)
                 Assert.Fail("Expected Exception of type <{0}>, but none was thrown", exceptionAttribute.ExpectedException);
@@ -393,10 +393,10 @@ namespace NUnitLite
         private void ProcessException(MethodInfo method, Exception caughtException)
         {
             ExpectedExceptionAttribute exceptionAttribute =
-                (ExpectedExceptionAttribute)Reflect.GetAttribute(method, typeof(ExpectedExceptionAttribute));
+                (ExpectedExceptionAttribute)Reflect.GetAttribute(method, typeof(ExpectedExceptionAttribute), false);
 
             if (exceptionAttribute == null)
-                throw new NUnitLiteException("", caughtException);
+                throw new NUnitException("", caughtException);
 
             Type expectedType = exceptionAttribute.ExpectedException;
             if ( expectedType != null && expectedType != caughtException.GetType() )

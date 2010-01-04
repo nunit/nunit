@@ -24,13 +24,16 @@
 namespace NUnit.Framework.Internal
 {
 	using System;
+#if !NETCF
 	using System.Runtime.Serialization;
+#endif
 
 	/// <summary>
 	/// Summary description for NoTestMethodsException.
 	/// </summary>
-	/// 
+#if !NETCF
 	[Serializable]
+#endif
 	public class InvalidTestFixtureException : ApplicationException
 	{
 		public InvalidTestFixtureException() : base() {}
@@ -41,11 +44,12 @@ namespace NUnit.Framework.Internal
 		public InvalidTestFixtureException(string message, Exception inner) : base(message, inner)
 		{}
 
+#if !NETCF
 		/// <summary>
 		/// Serialization Constructor
 		/// </summary>
 		protected InvalidTestFixtureException(SerializationInfo info, 
 			StreamingContext context) : base(info,context){}
-
+#endif
 	}
 }

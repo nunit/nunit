@@ -46,22 +46,18 @@ namespace NUnit.Framework.Internal
 	{
         private static readonly BindingFlags AllMembers = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static;
 
+        // A zero-length Type array - not provided by System.Type for all CLR versions we support.
+        private static readonly Type[] EmptyTypes = new Type[0];
+
         #region Attributes
 
         /// <summary>
         /// Check presence of attribute with a given name on a member.
         /// </summary>
         /// <param name="member">The member to examine</param>
-        /// <param name="attrName">The FullName of the attribute type to look for</param>
+        /// <param name="attributeType">The Type of the attribute to look for</param>
         /// <param name="inherit">True to include inherited attributes</param>
         /// <returns>True if the attribute is present</returns>
-        private static bool HasAttribute(ICustomAttributeProvider member, string attrName, bool inherit)
-        {
-            foreach (Attribute attribute in GetAttributes(member, inherit))
-                if (IsInstanceOfType(attrName, attribute))
-                    return true;
-            return false;
-        }
         private static bool HasAttribute(ICustomAttributeProvider member, Type attributeType, bool inherit)
         {
             return member.IsDefined(attributeType, inherit);
@@ -120,15 +116,8 @@ namespace NUnit.Framework.Internal
 		/// Check to see if a type implements a named interface.
 		/// </summary>
 		/// <param name="fixtureType">The type to examine</param>
-		/// <param name="interfaceName">The FullName of the interface to check for</param>
+		/// <param name="interfaceType">The Type of the interface to check for</param>
 		/// <returns>True if the interface is implemented by the type</returns>
-        public static bool HasInterface(Type fixtureType, string interfaceName)
-        {
-            foreach (Type type in fixtureType.GetInterfaces())
-                if (type.FullName == interfaceName)
-                    return true;
-            return false;
-        }
         public static bool HasInterface(Type fixtureType, Type interfaceType)
         {
             foreach (Type type in fixtureType.GetInterfaces())
@@ -139,45 +128,29 @@ namespace NUnit.Framework.Internal
 
 		#endregion
 
-		#region Inheritance
-		//SHMARYA: [ 10/12/2005 ]
-		/// <summary>
-		/// Checks to see if a type inherits from a named type. 
-		/// </summary>
-		/// <param name="type">The type to examine</param>
-		/// <param name="parentType">The FullName of the inherited type to look for</param>
-		/// <returns>True if the type inherits from the named type.</returns>
-		public static bool InheritsFrom( Type type, string typeName )
-		{
-			for( Type current = type; current != typeof( object ); current = current.BaseType )
-				if( current.FullName == typeName )
-					return true;
+        #region Get Constructors for a Type
 
-			return false;
-		}
+        /// <summary>
+        /// Determines whether the specified type has a constructor that takes the specified arg types.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <param name="argTypes">The arg types.</param>
+        /// <returns>
+        /// 	<c>true</c> if the specified type has such a constructor; otherwise, <c>false</c>.
+        /// </returns>
+        public static bool HasConstructor(Type type, params Type[] argTypes)
+        {
+            return GetConstructor(type, argTypes) != null;
+        }
 
-		public static bool InheritsFrom( object obj, string typeName )
-		{
-			return InheritsFrom( obj.GetType(), typeName );
-		}
-
-		public static bool IsInstanceOfType( string typeName, Attribute attr )
-		{
-			Type type = attr.GetType();
-			return type.FullName == typeName || InheritsFrom( type, typeName );
-		}
-		#endregion
-
-		#region Get Methods of a type
-
-		/// <summary>
+        /// <summary>
 		/// Find the default constructor on a type
 		/// </summary>
 		/// <param name="fixtureType"></param>
 		/// <returns></returns>
 		public static ConstructorInfo GetConstructor( Type fixtureType )
 		{
-			return fixtureType.GetConstructor( Type.EmptyTypes );
+			return fixtureType.GetConstructor( Reflect.EmptyTypes );
 		}
 
 		/// <summary>
@@ -189,6 +162,37 @@ namespace NUnit.Framework.Internal
 		{
 			return fixtureType.GetConstructor( types );
 		}
+
+        #endregion
+
+        #region Get Methods of a type
+
+        /// <summary>
+        /// Gets the MethodInfo for a named method.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <param name="name">The methd name.</param>
+        /// <param name="argTypes">The arg types.</param>
+        /// <returns>A MethodInfo</returns>
+        public static MethodInfo GetMethod(Type type, string name, params Type[] argTypes)
+        {
+            if (argTypes == null) argTypes = Reflect.EmptyTypes;
+            return type.GetMethod(name, argTypes);
+        }
+
+        /// <summary>
+        /// Gets a method.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <param name="name">The name.</param>
+        /// <param name="flags">The flags.</param>
+        /// <param name="argTypes">The arg types.</param>
+        /// <returns></returns>
+        public static MethodInfo GetMethod(Type type, string name, BindingFlags flags, params Type[] argTypes)
+        {
+            if (argTypes == null) argTypes = Reflect.EmptyTypes;
+            return type.GetMethod(name, flags, null, argTypes, null);
+        }
 
         /// <summary>
         /// Examine a fixture type and return an array of methods having a 
@@ -338,47 +342,9 @@ namespace NUnit.Framework.Internal
 
             return null;
         }
-
-        ///// <summary>
-        ///// Examine a type and get a property with a particular name.
-        ///// In the case of overloads, the first one found is returned.
-        ///// </summary>
-        ///// <param name="type">The type to examine</param>
-        ///// <param name="bindingFlags">BindingFlags to use</param>
-        ///// <returns>A PropertyInfo or null</returns>
-        //public static PropertyInfo GetNamedProperty( Type type, string name, BindingFlags bindingFlags )
-        //{
-        //    return type.GetProperty( name, bindingFlags );
-        //}
-
-        ///// <summary>
-        ///// Get the value of a named property on an object using binding flags of Public and Instance
-        ///// </summary>
-        ///// <param name="obj">The object for which the property value is needed</param>
-        ///// <param name="name">The name of a non-indexed property of the object</param>
-        ///// <returns></returns>
-        //public static object GetPropertyValue( object obj, string name )
-        //{
-        //    return GetPropertyValue( obj, name, BindingFlags.Public | BindingFlags.Instance );
-        //}
-
-        ///// <summary>
-        ///// Get the value of a named property on an object
-        ///// </summary>
-        ///// <param name="obj">The object for which the property value is needed</param>
-        ///// <param name="name">The name of a non-indexed property of the object</param>
-        ///// <param name="bindingFlags">BindingFlags for use in determining which properties are needed</param>param>
-        ///// <returns></returns>
-        //public static object GetPropertyValue( object obj, string name, BindingFlags bindingFlags )
-        //{
-        //    PropertyInfo property = GetNamedProperty( obj.GetType(), name, bindingFlags );
-        //    if ( property != null )
-        //        return property.GetValue( obj, null );
-        //    return null;
-        //}
 		#endregion
 
-		#region Invoke Methods
+        #region Invoke Constructors
 
         /// <summary>
         /// Invoke the default constructor on a Type
@@ -404,13 +370,33 @@ namespace NUnit.Framework.Internal
         {
             if (arguments == null) return Construct(type);
 
-            Type[] argTypes = Type.GetTypeArray(arguments);
+            Type[] argTypes = GetTypeArray(arguments);
             ConstructorInfo ctor = GetConstructor(type, argTypes);
             if (ctor == null)
                 throw new InvalidTestFixtureException(type.FullName + " does not have a suitable constructor");
 
             return ctor.Invoke(arguments);
         }
+
+        /// <summary>
+        /// Returns an array of types from an array of objects.
+        /// Used because the compact framework doesn't support
+        /// Type.GetTypeArray()
+        /// </summary>
+        /// <param name="objects">An array of objects</param>
+        /// <returns>An array of Types</returns>
+        private static Type[] GetTypeArray(object[] objects)
+        {
+            Type[] types = new Type[objects.Length];
+            int index = 0;
+            foreach (object o in objects)
+                types[index++] = o.GetType();
+            return types;
+        }
+
+        #endregion
+
+        #region Invoke Methods
 
         /// <summary>
 		/// Invoke a parameterless method returning void on an object.
@@ -436,11 +422,13 @@ namespace NUnit.Framework.Internal
 				{
 					return method.Invoke( fixture, args );
 				}
-				catch(TargetInvocationException e)
+				catch(Exception e)
 				{
-					Exception inner = e.InnerException;
-					throw new NUnitException("Rethrown",inner);
-				}
+                    if (e is TargetInvocationException)
+                        throw new NUnitException("Rethrown", e.InnerException);
+                    else
+                        throw new NUnitException("Rethrown", e);
+                }
 			}
 
 		    return null;

@@ -221,8 +221,17 @@
     <Compile Include="..\..\..\src\framework\Internal\Env.cs">
       <Link>Internal\Env.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\InvalidTestFixtureException.cs">
+      <Link>Internal\InvalidTestFixtureException.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\framework\Internal\MethodHelper.cs">
       <Link>Internal\MethodHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\NUnitException.cs">
+      <Link>Internal\NUnitException.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\Reflect.cs">
+      <Link>Internal\Reflect.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Internal\TextMessageWriter.cs">
       <Link>Internal\TextMessageWriter.cs</Link>
@@ -244,12 +253,6 @@
     </Compile>
     <Compile Include="..\..\..\src\framework\NUnitLite\NullListener.cs">
       <Link>NUnitLite\NullListener.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\NUnitLite\NUnitLiteException.cs">
-      <Link>NUnitLite\NUnitLiteException.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\NUnitLite\Reflect.cs">
-      <Link>NUnitLite\Reflect.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\NUnitLite\Runner\CommandLineOptions.cs">
       <Link>NUnitLite\Runner\CommandLineOptions.cs</Link>
