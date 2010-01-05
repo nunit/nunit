@@ -162,8 +162,8 @@ namespace NUnit.Framework.Tests
 
             foreach (Test test in suite.Tests)
             {
-                names.Add(test.TestName.Name);
-                fullNames.Add(test.TestName.FullName);
+                names.Add(test.Name);
+                fullNames.Add(test.FullName);
             }
 
             Assert.That(names, Has.Member(name + "(12,3,4)"));

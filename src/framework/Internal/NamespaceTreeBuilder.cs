@@ -78,7 +78,7 @@ namespace NUnit.Framework.Internal
 		public void Add( TestSuite fixture )
 		{
             
-            string ns = fixture.TestName.FullName;
+            string ns = fixture.FullName;
             int index = ns.IndexOf("[");
             if (index >= 0) ns = ns.Substring(0, index);
             index = ns.LastIndexOf( '.' );
@@ -100,7 +100,7 @@ namespace NUnit.Framework.Internal
                 TestSuite parent = (TestSuite)containingSuite.Parent;
                 if (parent == null)
                 {
-                    fixture.TestName.Name = rootSuite.TestName.Name;
+                    fixture.Name = rootSuite.Name;
                     rootSuite = fixture;
                 }
                 else

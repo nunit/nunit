@@ -120,8 +120,8 @@ namespace NUnit.Framework.Internal
 			Assert.AreEqual( RunState.Runnable, fixture.RunState, "Fixture" );
 			foreach( Test test in fixture.Tests )
 			{
-				RunState expected = test.TestName.Name == "FrenchTest" ? RunState.Runnable : RunState.Skipped;
-				Assert.AreEqual( expected, test.RunState, test.TestName.Name );
+				RunState expected = test.Name == "FrenchTest" ? RunState.Runnable : RunState.Skipped;
+				Assert.AreEqual( expected, test.RunState, test.Name );
 			}
 		}
 
@@ -133,8 +133,8 @@ namespace NUnit.Framework.Internal
 			Assert.AreEqual( RunState.Runnable, fixture.RunState, "Fixture" );
 			foreach( Test test in fixture.Tests )
 			{
-				RunState expected = test.TestName.Name.StartsWith( "French" ) ? RunState.Runnable : RunState.Skipped;
-				Assert.AreEqual( expected, test.RunState, test.TestName.Name );
+				RunState expected = test.Name.StartsWith( "French" ) ? RunState.Runnable : RunState.Skipped;
+				Assert.AreEqual( expected, test.RunState, test.Name );
 			}
 		}
 
@@ -145,7 +145,7 @@ namespace NUnit.Framework.Internal
 			TestSuite fixture = TestBuilder.MakeFixture( typeof( FixtureWithCultureAttribute ) );
 			Assert.AreEqual( RunState.Skipped, fixture.RunState, "Fixture" );
 			foreach( Test test in fixture.Tests )
-				Assert.AreEqual( RunState.Skipped, test.RunState, test.TestName.Name );
+				Assert.AreEqual( RunState.Skipped, test.RunState, test.Name );
 		}
 
 		[Test]

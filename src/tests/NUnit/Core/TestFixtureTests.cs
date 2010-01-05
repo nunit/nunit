@@ -42,32 +42,32 @@ namespace NUnit.Framework.Tests
 		public void ConstructFromType()
 		{
 			TestSuite fixture = TestBuilder.MakeFixture( typeof( FixtureWithTestFixtureAttribute ) );
-			Assert.AreEqual( "FixtureWithTestFixtureAttribute", fixture.TestName.Name );
-            Assert.AreEqual("NUnit.TestData.TestFixtureData.FixtureWithTestFixtureAttribute", fixture.TestName.FullName);
+			Assert.AreEqual( "FixtureWithTestFixtureAttribute", fixture.Name );
+            Assert.AreEqual("NUnit.TestData.TestFixtureData.FixtureWithTestFixtureAttribute", fixture.FullName);
 		}
 
 		[Test]
 		public void ConstructFromNestedType()
 		{
 			TestSuite fixture = TestBuilder.MakeFixture( typeof( OuterClass.NestedTestFixture ) );
-			Assert.AreEqual( "OuterClass+NestedTestFixture", fixture.TestName.Name );
-            Assert.AreEqual("NUnit.TestData.TestFixtureData.OuterClass+NestedTestFixture", fixture.TestName.FullName);
+			Assert.AreEqual( "OuterClass+NestedTestFixture", fixture.Name );
+            Assert.AreEqual("NUnit.TestData.TestFixtureData.OuterClass+NestedTestFixture", fixture.FullName);
 		}
 
 		[Test]
 		public void ConstructFromDoublyNestedType()
 		{
 			TestSuite fixture = TestBuilder.MakeFixture( typeof( OuterClass.NestedTestFixture.DoublyNestedTestFixture ) );
-			Assert.AreEqual( "OuterClass+NestedTestFixture+DoublyNestedTestFixture", fixture.TestName.Name );
-            Assert.AreEqual("NUnit.TestData.TestFixtureData.OuterClass+NestedTestFixture+DoublyNestedTestFixture", fixture.TestName.FullName);
+			Assert.AreEqual( "OuterClass+NestedTestFixture+DoublyNestedTestFixture", fixture.Name );
+            Assert.AreEqual("NUnit.TestData.TestFixtureData.OuterClass+NestedTestFixture+DoublyNestedTestFixture", fixture.FullName);
 		}
 
         [Test]
         public void ConstructFromTypeWithoutTestFixtureAttribute()
         {
             TestSuite fixture = TestBuilder.MakeFixture(typeof(FixtureWithoutTestFixtureAttribute));
-            Assert.AreEqual("FixtureWithoutTestFixtureAttribute", fixture.TestName.Name);
-            Assert.AreEqual("NUnit.TestData.TestFixtureData.FixtureWithoutTestFixtureAttribute", fixture.TestName.FullName);
+            Assert.AreEqual("FixtureWithoutTestFixtureAttribute", fixture.Name);
+            Assert.AreEqual("NUnit.TestData.TestFixtureData.FixtureWithoutTestFixtureAttribute", fixture.FullName);
         }
 
 #if CLR_2_0
@@ -75,8 +75,8 @@ namespace NUnit.Framework.Tests
         public void ConstructFromStaticTypeWithoutTestFixtureAttribute()
         {
             TestSuite fixture = TestBuilder.MakeFixture(typeof(StaticFixtureWithoutTestFixtureAttribute));
-            Assert.AreEqual("StaticFixtureWithoutTestFixtureAttribute", fixture.TestName.Name);
-            Assert.AreEqual("NUnit.TestData.TestFixtureData.StaticFixtureWithoutTestFixtureAttribute", fixture.TestName.FullName);
+            Assert.AreEqual("StaticFixtureWithoutTestFixtureAttribute", fixture.Name);
+            Assert.AreEqual("NUnit.TestData.TestFixtureData.StaticFixtureWithoutTestFixtureAttribute", fixture.FullName);
         }
 #endif
 

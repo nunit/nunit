@@ -176,8 +176,8 @@ namespace NUnit.Core.Builders
 
             if (parentSuite != null)
             {
-                prefix = parentSuite.TestName.FullName;
-                testMethod.TestName.FullName = prefix + "." + testMethod.TestName.Name;
+                prefix = parentSuite.FullName;
+                testMethod.FullName = prefix + "." + testMethod.Name;
             }
 
             if (CheckTestMethodSignature(testMethod, parms))
@@ -195,14 +195,14 @@ namespace NUnit.Core.Builders
 
                 if (parms.TestName != null)
                 {
-                    testMethod.TestName.Name = parms.TestName;
-                    testMethod.TestName.FullName = prefix + "." + parms.TestName;
+                    testMethod.Name = parms.TestName;
+                    testMethod.FullName = prefix + "." + parms.TestName;
                 }
                 else if (parms.Arguments != null)
                 {
                     string name = MethodHelper.GetDisplayName(method, parms.Arguments);
-                    testMethod.TestName.Name = name;
-                    testMethod.TestName.FullName = prefix + "." + name;
+                    testMethod.Name = name;
+                    testMethod.FullName = prefix + "." + name;
                 }
 
                 if (parms.Ignored)

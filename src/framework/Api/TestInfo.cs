@@ -45,10 +45,10 @@ namespace NUnit.Framework.Api
 	public class TestInfo : ITest
 	{
 		#region Instance Variables
-		/// <summary>
-		/// TestName that identifies this test
-		/// </summary>
-		private TestName testName;
+
+        private string name;
+        private string fullName;
+        private int id;
 
 		private string testType;
 
@@ -92,9 +92,11 @@ namespace NUnit.Framework.Api
 		/// Construct from an ITest
 		/// </summary>
 		/// <param name="test">Test from which a TestNode is to be constructed</param>
-		public TestInfo( ITest test )
+		public TestInfo( Test test )
 		{
-			this.testName = (TestName)test.TestName.Clone();
+            this.ID = test.ID;
+            this.Name = test.Name;
+            this.FullName = test.FullName;
 			this.testType = test.TestType;
 
             this.runState = test.RunState;
@@ -114,44 +116,36 @@ namespace NUnit.Framework.Api
 			this.testCaseCount = test.TestCount;
 		}
 
-		/// <summary>
-		/// Construct as a parent to multiple tests.
-		/// </summary>
-		/// <param name="testName">The name to use for the new test</param>
-		/// <param name="tests">An array of child tests</param>
-		public TestInfo( TestName testName, ITest[] tests )
-		{
-			this.testName = testName;
-			this.testType = "Test Project";
-
-            this.runState = RunState.Runnable;
-			this.ignoreReason = null;
-			this.description = null;
-			this.isSuite = true;
-
-            if ( tests != null )
-			    foreach( ITest test in tests )
-    				this.testCaseCount += test.TestCount;
-		}
-
-		/// <summary>
-		/// Construct given a test name
-		/// </summary>
-		/// <param name="testName">The TestName for the new test</param>
-		public TestInfo( TestName testName ) : this( testName, null) { }
 		#endregion
 
 		#region Properties
-		/// <summary>
-		/// Gets the completely specified name of the test
-		/// encapsulated in a TestName object.
-		/// </summary>
-		public TestName TestName
-		{
-			get { return testName; }
-		}
 
-		/// <summary>
+        /// <summary>
+        /// Gets or sets the id of the test
+        /// </summary>
+        /// <value></value>
+        public int ID
+        {
+            get { return id; }
+            set { id = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the name of the test
+        /// </summary>
+        public string Name
+        {
+            get { return name; }
+            set { name = value; }
+        }
+
+        public string FullName
+        {
+            get { return fullName; }
+            set { fullName = value; }
+        }
+
+        /// <summary>
 		/// Gets a string representing the kind of test this
 		/// object represents for display purposes.
 		/// </summary>
