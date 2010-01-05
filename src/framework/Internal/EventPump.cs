@@ -21,19 +21,31 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-namespace NUnit.Core
-{
-	using System;
-	using System.Threading;
+using System;
+using System.Threading;
+using NUnit.Framework.Api;
 
+namespace NUnit.Framework.Internal
+{
     /// <summary>
     /// The EventPumpState enum represents the state of an
     /// EventPump.
     /// </summary>
     public enum EventPumpState
     {
+        /// <summary>
+        /// The pump is stopped
+        /// </summary>
         Stopped,
+
+        /// <summary>
+        /// The pump is pumping events with no stop requested
+        /// </summary>
         Pumping,
+
+        /// <summary>
+        /// The pump is pumping events but a stop has been requested
+        /// </summary>
         Stopping
     }
 
@@ -51,7 +63,7 @@ namespace NUnit.Core
 		/// <summary>
 		/// The downstream listener to which we send events
 		/// </summary>
-		ITestListener eventListener;
+		ITestListener listener;
 		
 		/// <summary>
 		/// The queue that holds our events
@@ -69,7 +81,7 @@ namespace NUnit.Core
 		EventPumpState pumpState = EventPumpState.Stopped;
 
 		/// <summary>
-		/// If true, stop after sending RunFinished
+		/// If true, stop after all tests are finished
 		/// </summary>
 		private bool autostop;
 		#endregion
@@ -78,12 +90,12 @@ namespace NUnit.Core
 		/// <summary>
 		/// Constructor
 		/// </summary>
-		/// <param name="eventListener">The EventListener to receive events</param>
+		/// <param name="listener">The EventListener to receive events</param>
 		/// <param name="events">The event queue to pull events from</param>
-		/// <param name="autostop">Set to true to stop pump after RunFinished</param>
+		/// <param name="autostop">Set to true to stop pump after all tests finish</param>
 		public EventPump( ITestListener eventListener, EventQueue events, bool autostop)
 		{
-			this.eventListener = eventListener;
+			this.listener = eventListener;
 			this.events = events;
 			this.autostop = autostop;
 		}
@@ -152,15 +164,22 @@ namespace NUnit.Core
 			Monitor.Enter( events );
             try
             {
+                int pendingTests = 0;
+
                 while (this.events.Count > 0 || pumpState == EventPumpState.Pumping)
                 {
                     while (this.events.Count > 0)
                     {
                         Event e = this.events.Dequeue();
-                        e.Send(this.eventListener);
+                        e.Send(this.listener);
 						e.Send(hostListeners);
-                        if (autostop && e is RunFinishedEvent)
-                            pumpState = EventPumpState.Stopping;
+                        if (autostop)
+                        {
+                            if (e is TestStartedEvent)
+                                pendingTests++;
+                            else if (e is TestFinishedEvent && --pendingTests == 0)
+                                pumpState = EventPumpState.Stopping;
+                        }
                     }
                     // Will be pulsed if there are any events added
                     // or if it's time to stop the pump.

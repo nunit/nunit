@@ -412,6 +412,15 @@
     <Compile Include="..\..\..\src\framework\Internal\Env.cs">
       <Link>Internal\Env.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\EventListenerTextWriter.cs">
+      <Link>Internal\EventListenerTextWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\EventPump.cs">
+      <Link>Internal\EventPump.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\EventQueue.cs">
+      <Link>Internal\EventQueue.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\framework\Internal\ExpectedExceptionProcessor.cs">
       <Link>Internal\ExpectedExceptionProcessor.cs</Link>
     </Compile>
@@ -537,6 +546,9 @@
     </Compile>
     <Compile Include="..\..\..\src\framework\Internal\PlatformHelper.cs">
       <Link>Internal\PlatformHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\QueuingEventListener.cs">
+      <Link>Internal\QueuingEventListener.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Internal\Randomizer.cs">
       <Link>Internal\Randomizer.cs</Link>

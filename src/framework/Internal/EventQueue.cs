@@ -24,62 +24,22 @@
 using System;
 using System.Collections;
 using System.Threading;
+using NUnit.Framework.Api;
 
-namespace NUnit.Core
+namespace NUnit.Framework.Internal
 {
 	#region Individual Event Classes
 
 	/// <summary>
 	/// NUnit.Core.Event is the abstract base for all stored events.
 	/// An Event is the stored representation of a call to the 
-	/// EventListener interface and is used to record such calls
+	/// ITestListener interface and is used to record such calls
 	/// or to queue them for forwarding on another thread or at
 	/// a later time.
 	/// </summary>
 	public abstract class Event
 	{
 		abstract public void Send( ITestListener listener );
-	}
-
-	public class RunStartedEvent : Event
-	{
-		TestName testName;
-		int testCount;
-
-		public RunStartedEvent( TestName testName, int testCount )
-		{
-			this.testName = testName;
-			this.testCount = testCount;
-		}
-
-		public override void Send( ITestListener listener )
-		{
-			listener.RunStarted(testName, testCount);
-		}
-	}
-
-	public class RunFinishedEvent : Event
-	{
-		TestResult result;
-		Exception exception;
-
-		public RunFinishedEvent( TestResult result )
-		{
-			this.result = result;
-		}
-
-		public RunFinishedEvent( Exception exception )
-		{
-			this.exception = exception;
-		}
-
-		public override void Send( ITestListener listener )
-		{
-			if ( this.exception != null )
-				listener.RunFinished( this.exception );
-			else
-				listener.RunFinished( this.result );
-		}
 	}
 
 	public class TestStartedEvent : Event
@@ -109,51 +69,6 @@ namespace NUnit.Core
 		public override void Send( ITestListener listener )
 		{
 			listener.TestFinished( this.result );
-		}
-	}
-
-	public class SuiteStartedEvent : Event
-	{
-		TestName suiteName;
-
-		public SuiteStartedEvent( TestName suiteName )
-		{
-			this.suiteName = suiteName;
-		}
-
-		public override void Send( ITestListener listener )
-		{
-			listener.SuiteStarted( this.suiteName );
-		}
-	}
-
-	public class SuiteFinishedEvent : Event
-	{
-		TestResult result;
-
-		public SuiteFinishedEvent( TestResult result )
-		{
-			this.result = result;
-		}
-
-		public override void Send( ITestListener listener )
-		{
-			listener.SuiteFinished( this.result );
-		}
-	}
-
-	public class UnhandledExceptionEvent : Event
-	{
-		Exception exception;
-
-		public UnhandledExceptionEvent( Exception exception )
-		{
-			this.exception = exception;
-		}
-
-		public override void Send( ITestListener listener )
-		{
-			listener.UnhandledException( this.exception );
 		}
 	}
 

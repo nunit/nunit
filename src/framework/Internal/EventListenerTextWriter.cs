@@ -21,7 +21,9 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-namespace NUnit.Core
+using NUnit.Framework.Api;
+
+namespace NUnit.Framework.Internal
 {
 	using System;
 	using System.IO;
@@ -63,14 +65,14 @@ namespace NUnit.Core
 	/// </summary>
     //public class BufferedEventListenerTextWriter : TextWriter
     //{
-    //    private ITestListener eventListener;
+    //    private ITestListener listener;
     //    private TestOutputType type;
     //    private const int MAX_BUFFER = 1024;
     //    private StringBuilder sb = new StringBuilder( MAX_BUFFER );
 
-    //    public BufferedEventListenerTextWriter( ITestListener eventListener, TestOutputType type )
+    //    public BufferedEventListenerTextWriter( ITestListener listener, TestOutputType type )
     //    {
-    //        this.eventListener = eventListener;
+    //        this.listener = listener;
     //        this.type = type;
     //    }
 
@@ -117,7 +119,7 @@ namespace NUnit.Core
     //            lock( sb )
     //            {
     //                TestOutput output = new TestOutput(sb.ToString(), this.type);
-    //                this.eventListener.TestOutput( output );
+    //                this.listener.TestOutput( output );
     //                sb.Length = 0;
     //            }
     //        }

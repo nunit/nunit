@@ -43,18 +43,6 @@ namespace NUnit.AdhocTestRunner
 
         #region ITestListener Members
 
-        public void RunStarted(TestName testName, int testCount)
-        {
-        }
-
-        public void RunFinished(TestResult result)
-        {
-        }
-
-        public void RunFinished(Exception exception)
-        {
-        }
-
         public void TestStarted(TestName testName)
         {
             level++;
@@ -67,24 +55,6 @@ namespace NUnit.AdhocTestRunner
         {
             level--;
             prefix = new string('>', level);
-        }
-
-        public void SuiteStarted(TestName testName)
-        {
-            level++;
-            prefix = new string('>', level);
-            if(options.Labels)
-                outWriter.WriteLine("{0} {1}", prefix, testName.Name);
-        }
-
-        public void SuiteFinished(TestResult result)
-        {
-            level--;
-            prefix = new string('>', level);
-        }
-
-        public void UnhandledException(Exception exception)
-        {
         }
 
         public void TestOutput(TestOutput testOutput)

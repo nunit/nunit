@@ -28,32 +28,38 @@ namespace NUnit.Framework.Internal
 {
 	/// <summary>
 	/// TestListener provides an implementation of ITestListener that
-    /// does nothing.
+    /// does nothing. It is used only throught its NULL property.
 	/// </summary>
 	/// 
 	[Serializable]
 	public class TestListener : ITestListener
 	{
-		public void RunStarted( TestName testName, int testCount ){ }
-
-		public void RunFinished( TestResult result ) { }
-
-		public void RunFinished( Exception exception ) { }
-
+        /// <summary>
+        /// Called when a test case is starting
+        /// </summary>
+        /// <param name="testName">The name of the test case</param>
 		public void TestStarted(TestName testName){}
-			
+
+        /// <summary>
+        /// Called when a test case has finished
+        /// </summary>
+        /// <param name="result">The result of the test</param>
 		public void TestFinished(TestResult result){}
 
-		public void SuiteStarted(TestName testName){}
-
-		public void SuiteFinished(TestResult result){}
-
-		public void UnhandledException( Exception exception ) {}
-
+        /// <summary>
+        /// Called when the test creates text output.
+        /// </summary>
+        /// <param name="testOutput">A console message</param>
 		public void TestOutput(TestOutput testOutput) {}
 
+        /// <summary>
+        /// Construct a new TestListener - private so it may not be used.
+        /// </summary>
         private TestListener() { }
 
+        /// <summary>
+        /// Get a listener that does nothing
+        /// </summary>
 		public static ITestListener NULL
 		{
 			get { return new TestListener();}

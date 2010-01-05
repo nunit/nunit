@@ -66,7 +66,16 @@ namespace NUnit.Framework.Api
             {
                 this.runThread = Thread.CurrentThread;
 
-                return this.suite.Run(listener, filter);
+                QueuingEventListener queue = new QueuingEventListener();
+
+                TestContext.Out = new EventListenerTextWriter(queue, TestOutputType.Out);
+                TestContext.Error = new EventListenerTextWriter(queue, TestOutputType.Error);
+
+                using (EventPump pump = new EventPump(listener, queue.Events, true))
+                {
+                    pump.Start();
+                    return this.suite.Run(listener, filter);
+                }
             }
             finally
             {
