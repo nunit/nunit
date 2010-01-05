@@ -48,7 +48,7 @@ namespace NUnit.AdhocTestRunner
             level++;
             prefix = new string('>', level);
             if(options.Labels)
-                outWriter.WriteLine("{0} {1}", prefix, test.TestName.Name);
+                outWriter.WriteLine("{0} {1}", prefix, test.Name);
         }
 
         public void TestFinished(TestResult result)

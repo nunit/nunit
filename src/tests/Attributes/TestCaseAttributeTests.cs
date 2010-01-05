@@ -149,8 +149,8 @@ namespace NUnit.Framework.Tests
         {
             Test test = (Test)TestBuilder.MakeTestCase(
                 typeof(TestCaseAttributeFixture), "MethodHasTestNameSpecified").Tests[0];
-            Assert.AreEqual("XYZ", test.TestName.Name);
-            Assert.AreEqual("NUnit.TestData.TestCaseAttributeFixture.TestCaseAttributeFixture.XYZ", test.TestName.FullName);
+            Assert.AreEqual("XYZ", test.Name);
+            Assert.AreEqual("NUnit.TestData.TestCaseAttributeFixture.TestCaseAttributeFixture.XYZ", test.FullName);
         }
 
         [Test]

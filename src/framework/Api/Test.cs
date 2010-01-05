@@ -42,10 +42,16 @@ namespace NUnit.Framework.Api
         #endregion
 
         #region Fields
+
         /// <summary>
-		/// TestName that identifies this test
-		/// </summary>
-		private TestName testName;
+        /// Static value to seed ids. It's started at 1000 so any
+        /// uninitialized ids will stand out.
+        /// </summary>
+        private static int nextID = 1000;
+
+        private int id;
+        private string name;
+        private string fullName;
 
 		/// <summary>
 		/// Indicates whether the test should be executed
@@ -108,10 +114,9 @@ namespace NUnit.Framework.Api
 		/// <param name="name">The name of the test</param>
 		protected Test( string name )
 		{
-			this.testName = new TestName();
-			this.testName.FullName = name;
-			this.testName.Name = name;
-			this.testName.TestID = new TestID();
+			this.fullName = name;
+			this.name = name;
+            this.id = unchecked(nextID++);
 
             this.runState = RunState.Runnable;
 		}
@@ -124,38 +129,12 @@ namespace NUnit.Framework.Api
 		/// <param name="name">The name of the test</param>
 		protected Test( string pathName, string name ) 
 		{ 
-			this.testName = new TestName();
-			this.testName.FullName = pathName == null || pathName == string.Empty 
+			this.fullName = pathName == null || pathName == string.Empty 
 				? name : pathName + "." + name;
-			this.testName.Name = name;
-			this.testName.TestID = new TestID();
+			this.name = name;
+            this.id = unchecked(nextID++);
 
             this.runState = RunState.Runnable;
-		}
-
-		/// <summary>
-		/// Constructs a test given a TestName object
-		/// </summary>
-		/// <param name="testName">The TestName for this test</param>
-		protected Test( TestName testName )
-		{
-			this.testName = testName;
-			
-			this.runState = RunState.Runnable;
-		}
-
-		/// <summary>
-		/// Sets the runner id of a test and optionally its children
-		/// </summary>
-		/// <param name="runnerID">The runner id to be used</param>
-		/// <param name="recursive">True if all children should get the same id</param>
-		public void SetRunnerID( int runnerID, bool recursive )
-		{
-			this.testName.RunnerID = runnerID;
-
-			if ( recursive && this.Tests != null )
-				foreach( Test child in this.Tests )
-					child.SetRunnerID( runnerID, true );
 		}
 
 		#endregion
@@ -163,15 +142,33 @@ namespace NUnit.Framework.Api
 		#region ITest Members
 
         #region Properties
-		/// <summary>
-		/// Gets the TestName of the test
-		/// </summary>
-        public TestName TestName
-		{
-			get { return testName; }
-		}
 
-		/// <summary>
+        /// <summary>
+        /// Gets or sets the id of the test
+        /// </summary>
+        /// <value></value>
+        public int ID
+        {
+            get { return id; }
+            set { id = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the name of the test
+        /// </summary>
+        public string Name
+        {
+            get { return name; }
+            set { name = value; }
+        }
+
+        public string FullName
+        {
+            get { return fullName; }
+            set { fullName = value; }
+        }
+
+        /// <summary>
 		/// Gets a string representing the kind of test
 		/// that this object represents, for use in display.
 		/// </summary>
@@ -357,7 +354,7 @@ namespace NUnit.Framework.Api
 			if ( other == null )
 				return -1;
 
-			return this.TestName.FullName.CompareTo( other.TestName.FullName );
+			return this.FullName.CompareTo( other.FullName );
 		}
 		#endregion
 	}

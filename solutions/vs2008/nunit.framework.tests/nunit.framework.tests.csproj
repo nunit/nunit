@@ -325,14 +325,8 @@
     <Compile Include="..\..\..\src\tests\NUnit\Core\TestFixtureTests.cs">
       <Link>NUnit\Core\TestFixtureTests.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\tests\NUnit\Core\TestIDTests.cs">
-      <Link>NUnit\Core\TestIDTests.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\src\tests\NUnit\Core\TestMethodSignatureTests.cs">
       <Link>NUnit\Core\TestMethodSignatureTests.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\tests\NUnit\Core\TestNameTests.cs">
-      <Link>NUnit\Core\TestNameTests.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\tests\NUnit\Core\UnexpectedExceptionTests.cs">
       <Link>NUnit\Core\UnexpectedExceptionTests.cs</Link>

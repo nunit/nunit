@@ -99,12 +99,12 @@ namespace NUnit.Framework.Internal
             : base(fixtureType.FullName)
         {
             string name = TypeHelper.GetDisplayName(fixtureType, arguments);
-            this.TestName.Name = name;
+            this.Name = name;
             
-            this.TestName.FullName = name;
+            this.FullName = name;
             string nspace = fixtureType.Namespace;
             if (nspace != null && nspace != "")
-                this.TestName.FullName = nspace + "." + name;
+                this.FullName = nspace + "." + name;
             this.fixtureType = fixtureType;
             this.arguments = arguments;
         }

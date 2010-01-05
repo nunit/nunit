@@ -87,7 +87,7 @@ namespace NUnit.Framework.Internal
 			: base( method.ReflectedType.FullName, method.Name ) 
 		{
             if( method.DeclaringType != method.ReflectedType)
-                this.TestName.Name = method.DeclaringType.Name + "." + method.Name;
+                this.Name = method.DeclaringType.Name + "." + method.Name;
 
             this.method = method;
 		}
@@ -145,7 +145,7 @@ namespace NUnit.Framework.Internal
             {
                 TestResult testResult = new TestResult(this);
 
-                log.Debug("Test Starting: " + this.TestName.FullName);
+                log.Debug("Test Starting: " + this.FullName);
                 listener.TestStarted(this);
                 long startTime = DateTime.Now.Ticks;
 

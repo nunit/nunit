@@ -129,8 +129,8 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void TopLevelSuiteIsNamedCorrectly()
         {
-            Assert.That(fixture.TestName.Name, Is.EqualTo("ParameterizedTestFixture"));
-            Assert.That(fixture.TestName.FullName, Is.EqualTo("NUnit.TestData.ParameterizedTestFixture"));
+            Assert.That(fixture.Name, Is.EqualTo("ParameterizedTestFixture"));
+            Assert.That(fixture.FullName, Is.EqualTo("NUnit.TestData.ParameterizedTestFixture"));
         }
 
         [Test]
@@ -146,8 +146,8 @@ namespace NUnit.Framework.Attributes
             ArrayList fullnames = new ArrayList();
             foreach (Test test in fixture.Tests)
             {
-                names.Add(test.TestName.Name);
-                fullnames.Add(test.TestName.FullName);
+                names.Add(test.Name);
+                fullnames.Add(test.FullName);
             }
 
             Assert.That(names, Is.EquivalentTo(new string[] {
@@ -162,7 +162,7 @@ namespace NUnit.Framework.Attributes
             Test instance = (Test)fixture.Tests[0];
             Test method = TestFinder.Find("MethodWithoutParams", instance, false);
             Assert.That(method, Is.Not.Null );
-            Assert.That(method.TestName.FullName, Is.EqualTo(instance.TestName.FullName + ".MethodWithoutParams"));
+            Assert.That(method.FullName, Is.EqualTo(instance.FullName + ".MethodWithoutParams"));
         }
 
         [Test]
@@ -173,8 +173,8 @@ namespace NUnit.Framework.Attributes
             Assert.That(method, Is.Not.Null);
             
             Test testcase = (Test)method.Tests[0];
-            Assert.That(testcase.TestName.Name, Is.EqualTo("MethodWithParams(10,20)"));
-            Assert.That(testcase.TestName.FullName, Is.EqualTo(instance.TestName.FullName + ".MethodWithParams(10,20)"));
+            Assert.That(testcase.Name, Is.EqualTo("MethodWithParams(10,20)"));
+            Assert.That(testcase.FullName, Is.EqualTo(instance.FullName + ".MethodWithParams(10,20)"));
         }
 
         //[Test]

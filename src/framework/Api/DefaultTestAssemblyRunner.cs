@@ -39,7 +39,6 @@ namespace NUnit.Framework.Api
             this.suite = this.builder.Build(assemblyName, null);
             if (suite == null) return false;
 
-            suite.SetRunnerID(this.runnerID, true);
             return true;
         }
 

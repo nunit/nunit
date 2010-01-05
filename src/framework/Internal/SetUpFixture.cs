@@ -37,12 +37,12 @@ namespace NUnit.Framework.Internal
 		#region Constructor
 		public SetUpFixture( Type type ) : base( type )
 		{
-            this.TestName.Name = type.Namespace;
-            if (this.TestName.Name == null)
-                this.TestName.Name = "[default namespace]";
-            int index = TestName.Name.LastIndexOf('.');
+            this.Name = type.Namespace;
+            if (this.Name == null)
+                this.Name = "[default namespace]";
+            int index = this.Name.LastIndexOf('.');
             if (index > 0)
-                this.TestName.Name = this.TestName.Name.Substring(index + 1);
+                this.Name = this.Name.Substring(index + 1);
             
 			this.fixtureSetUpMethods = Reflect.GetMethodsWithAttribute( type, typeof(NUnit.Framework.SetUpAttribute), true );
 			this.fixtureTearDownMethods = Reflect.GetMethodsWithAttribute( type, typeof(NUnit.Framework.TearDownAttribute), true );

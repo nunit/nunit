@@ -88,14 +88,8 @@
     <Compile Include="..\..\..\src\framework\Api\TestFilter.cs">
       <Link>Api\TestFilter.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Api\TestID.cs">
-      <Link>Api\TestID.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\src\framework\Api\TestInfo.cs">
       <Link>Api\TestInfo.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Api\TestName.cs">
-      <Link>Api\TestName.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Api\TestOutput.cs">
       <Link>Api\TestOutput.cs</Link>

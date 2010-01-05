@@ -84,17 +84,12 @@ namespace NUnit.Framework.Api
 		/// Construct a test result given a Test
 		/// </summary>
 		/// <param name="test">The test to be used</param>
-		public TestResult(ITest test)
+		public TestResult(Test test)
 		{
 			this.test = new TestInfo(test);
 			this.message = test.IgnoreReason;
 		}
 
-		/// <summary>
-		/// Construct a TestResult given a TestName
-		/// </summary>
-		/// <param name="testName">A TestName</param>
-        //public TestResult(TestName testName) : this( new Test???( testName ) ) { }
 		#endregion
 
         #region Properties
@@ -136,7 +131,7 @@ namespace NUnit.Framework.Api
 		/// </summary>
 		public virtual string Name
 		{
-			get { return test.TestName.Name; }
+			get { return test.Name; }
 		}
 
 		/// <summary>
@@ -144,7 +139,7 @@ namespace NUnit.Framework.Api
 		/// </summary>
 		public virtual string FullName
 		{
-			get { return test.TestName.FullName; }
+			get { return test.FullName; }
 		}
 
 		/// <summary>

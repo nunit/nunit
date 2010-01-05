@@ -38,7 +38,7 @@ namespace NUnit.TestUtilities
             {
                 foreach (Test child in test.Tests)
                 {
-                    if (child.TestName.Name == name)
+                    if (child.Name == name)
                         return child;
                     if (recursive)
                     {
@@ -58,7 +58,7 @@ namespace NUnit.TestUtilities
             {
                 foreach (TestResult childResult in result.Results)
                 {
-                    if (childResult.Test.TestName.Name == name)
+                    if (childResult.Test.Name == name)
                         return childResult;
 
                     if (recursive)

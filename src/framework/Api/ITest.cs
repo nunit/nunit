@@ -34,11 +34,21 @@ namespace NUnit.Framework.Api
 	public interface ITest
     {
         #region Properties
+
         /// <summary>
-		/// Gets the completely specified name of the test
-		/// encapsulated in a TestName object.
-		/// </summary>
-		TestName TestName { get; }
+        /// Gets or sets the id of the test
+        /// </summary>
+        int ID { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name of the test
+        /// </summary>
+        string Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets the fully qualified name of the test
+        /// </summary>
+        string FullName { get; set; }
 
 		/// <summary>
 		/// Gets a string representing the type of test, e.g.: "Test Case"
