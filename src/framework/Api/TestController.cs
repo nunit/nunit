@@ -254,7 +254,7 @@ namespace NUnit.Framework.Api
 
             #region ITestListener Members
 
-            public void TestStarted(TestName testName)
+            public void TestStarted(ITest test)
             {
             }
 

@@ -40,10 +40,10 @@ namespace NUnit.Core.Extensibility
 
 		#region EventListener Members
 
-		public void TestStarted(TestName testName)
+		public void TestStarted(ITest test)
 		{
 			foreach( ITestListener listener in Extensions )
-				listener.TestStarted( testName );
+				listener.TestStarted( test );
 		}
 
 		public void TestFinished(TestResult result)

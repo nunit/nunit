@@ -43,12 +43,12 @@ namespace NUnit.AdhocTestRunner
 
         #region ITestListener Members
 
-        public void TestStarted(TestName testName)
+        public void TestStarted(ITest test)
         {
             level++;
             prefix = new string('>', level);
             if(options.Labels)
-                outWriter.WriteLine("{0} {1}", prefix, testName.Name);
+                outWriter.WriteLine("{0} {1}", prefix, test.TestName.Name);
         }
 
         public void TestFinished(TestResult result)

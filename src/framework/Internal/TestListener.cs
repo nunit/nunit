@@ -35,10 +35,10 @@ namespace NUnit.Framework.Internal
 	public class TestListener : ITestListener
 	{
         /// <summary>
-        /// Called when a test case is starting
+        /// Called when a test has just started
         /// </summary>
-        /// <param name="testName">The name of the test case</param>
-		public void TestStarted(TestName testName){}
+        /// <param name="test">The test that is starting</param>
+		public void TestStarted(ITest test){}
 
         /// <summary>
         /// Called when a test case has finished
