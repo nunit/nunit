@@ -50,11 +50,6 @@ namespace NUnit.Framework.Api
         /// </summary>
         string FullName { get; set; }
 
-		/// <summary>
-		/// Gets a string representing the type of test, e.g.: "Test Case"
-		/// </summary>
-		string TestType { get; }
-
         /// <summary>
         /// Indicates whether the test can be run using
         /// the RunState enum.
