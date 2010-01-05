@@ -168,16 +168,6 @@ namespace NUnit.Framework.Api
             set { fullName = value; }
         }
 
-        /// <summary>
-		/// Gets a string representing the kind of test
-		/// that this object represents, for use in display.
-		/// </summary>
-        public virtual string TestType
-        {
-            get { return this.GetType().Name; }
-        }
-
-
 		/// <summary>
 		/// Whether or not the test should be run
 		/// </summary>

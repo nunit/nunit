@@ -50,8 +50,6 @@ namespace NUnit.Framework.Api
         private string fullName;
         private int id;
 
-		private string testType;
-
         private RunState runState;
 
 		/// <summary>
@@ -97,7 +95,6 @@ namespace NUnit.Framework.Api
             this.ID = test.ID;
             this.Name = test.Name;
             this.FullName = test.FullName;
-			this.testType = test.TestType;
 
             this.runState = test.RunState;
 			this.ignoreReason = test.IgnoreReason;
@@ -144,15 +141,6 @@ namespace NUnit.Framework.Api
             get { return fullName; }
             set { fullName = value; }
         }
-
-        /// <summary>
-		/// Gets a string representing the kind of test this
-		/// object represents for display purposes.
-		/// </summary>
-		public string TestType
-		{
-			get { return testType; }
-		}
 
 		/// <summary>
 		/// The test description 
