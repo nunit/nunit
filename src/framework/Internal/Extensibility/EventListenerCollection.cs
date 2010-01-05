@@ -39,35 +39,6 @@ namespace NUnit.Core.Extensibility
 		#endregion
 
 		#region EventListener Members
-		public void RunStarted(TestName testName, int testCount)
-		{
-			foreach( ITestListener listener in Extensions )
-				listener.RunStarted( testName, testCount );
-		}
-
-		public void RunFinished(TestResult result)
-		{
-			foreach( ITestListener listener in Extensions )
-				listener.RunFinished( result );
-		}
-
-		public void RunFinished(Exception exception)
-		{
-			foreach( ITestListener listener in Extensions )
-				listener.RunFinished( exception );
-		}
-
-		public void SuiteStarted(TestName testName)
-		{
-			foreach( ITestListener listener in Extensions )
-				listener.SuiteStarted( testName );
-		}
-
-		public void SuiteFinished(TestResult result)
-		{
-			foreach( ITestListener listener in Extensions )
-				listener.SuiteFinished( result );
-		}
 
 		public void TestStarted(TestName testName)
 		{
@@ -79,12 +50,6 @@ namespace NUnit.Core.Extensibility
 		{
 			foreach( ITestListener listener in Extensions )
 				listener.TestFinished( result );
-		}
-
-		public void UnhandledException(Exception exception)
-		{
-			foreach( ITestListener listener in Extensions )
-				listener.UnhandledException( exception );
 		}
 
 		public void TestOutput(TestOutput testOutput)

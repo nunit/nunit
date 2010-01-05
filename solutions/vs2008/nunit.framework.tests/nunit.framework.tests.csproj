@@ -406,6 +406,9 @@
     <Compile Include="..\..\..\src\tests\TestUtilities\TestFinder.cs">
       <Link>TestUtilities\TestFinder.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\tests\Internal\EventQueueTests.cs">
+      <Link>Internal\EventQueueTests.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

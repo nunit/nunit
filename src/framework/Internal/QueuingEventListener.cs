@@ -22,8 +22,9 @@
 // ***********************************************************************
 
 using System;
+using NUnit.Framework.Api;
 
-namespace NUnit.Core
+namespace NUnit.Framework.Internal
 {
 	/// <summary>
 	/// QueuingEventListener uses an EventQueue to store any
@@ -43,34 +44,6 @@ namespace NUnit.Core
 
 		#region EventListener Methods
 		/// <summary>
-		/// Run is starting
-		/// </summary>
-        /// <param name="testName">The TestName of the test being started</param>
-        /// <param name="testCount">The number of test cases to be executed</param>
-        public void RunStarted(TestName testName, int testCount)
-		{
-			events.Enqueue( new RunStartedEvent( testName, testCount ) );
-		}
-
-		/// <summary>
-		/// Run finished successfully
-		/// </summary>
-		/// <param name="results">Array of test results</param>
-		public void RunFinished( TestResult result )
-		{
-			events.Enqueue( new RunFinishedEvent( result ) );
-		}
-
-		/// <summary>
-		/// Run was terminated due to an exception
-		/// </summary>
-		/// <param name="exception">Exception that was thrown</param>
-		public void RunFinished( Exception exception )
-		{
-			events.Enqueue( new RunFinishedEvent( exception ) );
-		}
-
-		/// <summary>
 		/// A single test case is starting
 		/// </summary>
 		/// <param name="testCase">The test case</param>
@@ -86,34 +59,6 @@ namespace NUnit.Core
 		public void TestFinished(TestResult result)
 		{
 			events.Enqueue( new TestFinishedEvent( result ) );
-		}
-
-		/// <summary>
-		/// A suite is starting
-		/// </summary>
-		/// <param name="suite">The suite that is starting</param>
-		public void SuiteStarted(TestName testName)
-		{
-			events.Enqueue( new SuiteStartedEvent( testName ) );
-		}
-
-		/// <summary>
-		/// A suite finished
-		/// </summary>
-		/// <param name="result">Result of the suite</param>
-		public void SuiteFinished(TestResult result)
-		{
-			events.Enqueue( new SuiteFinishedEvent( result ) );
-		}
-
-		/// <summary>
-		/// An unhandled exception occured while running a test,
-		/// but the test was not terminated.
-		/// </summary>
-		/// <param name="exception"></param>
-		public void UnhandledException( Exception exception )
-		{
-			events.Enqueue( new UnhandledExceptionEvent( exception ) );
 		}
 
 		/// <summary>
