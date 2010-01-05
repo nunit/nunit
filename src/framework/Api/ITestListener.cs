@@ -34,13 +34,13 @@ namespace NUnit.Framework.Api
 	public interface ITestListener
 	{
 		/// <summary>
-		/// Called when a test case is starting
+		/// Called when a test has just started
 		/// </summary>
-		/// <param name="testName">The name of the test case</param>
-		void TestStarted(TestName testName);
+		/// <param name="test">The test that is starting</param>
+		void TestStarted(ITest test);
 			
 		/// <summary>
-		/// Called when a test case has finished
+		/// Called when a test has finished
 		/// </summary>
 		/// <param name="result">The result of the test</param>
 		void TestFinished(TestResult result);

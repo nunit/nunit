@@ -227,7 +227,7 @@ namespace NUnit.Framework.Internal
 			{
 				TestResult suiteResult = new TestResult( this );
 
-				listener.TestStarted( this.TestName );
+				listener.TestStarted( this );
 				long startTime = DateTime.Now.Ticks;
 
 				switch (this.RunState)
@@ -450,7 +450,7 @@ namespace NUnit.Framework.Internal
         {
             if (test is TestSuite)
             {
-                listener.TestStarted(test.TestName);
+                listener.TestStarted(test);
                 TestResult result = new TestResult( test );
 				result.SetResult( resultState, ignoreReason, null );
                 MarkTestsNotRun(test.Tests, resultState, ignoreReason, suiteResult, listener, filter);
@@ -459,7 +459,7 @@ namespace NUnit.Framework.Internal
             }
             else
             {
-                listener.TestStarted(test.TestName);
+                listener.TestStarted(test);
                 TestResult result = new TestResult( test );
                 result.SetResult( resultState, ignoreReason, null );
                 suiteResult.AddResult(result);
@@ -480,7 +480,7 @@ namespace NUnit.Framework.Internal
         {
             if (test is TestSuite)
             {
-                listener.TestStarted(test.TestName);
+                listener.TestStarted(test);
                 TestResult result = new TestResult( test );
 				string msg = string.Format( "Parent SetUp failed in {0}", this.FixtureType.Name );
 				result.Failure(msg, null, FailureSite.Parent);
@@ -490,7 +490,7 @@ namespace NUnit.Framework.Internal
             }
             else
             {
-                listener.TestStarted(test.TestName);
+                listener.TestStarted(test);
                 TestResult result = new TestResult( test );
 				string msg = string.Format( "TestFixtureSetUp failed in {0}", this.FixtureType.Name );
 				result.Failure(msg, null, FailureSite.Parent);

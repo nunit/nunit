@@ -146,7 +146,7 @@ namespace NUnit.Framework.Internal
                 TestResult testResult = new TestResult(this);
 
                 log.Debug("Test Starting: " + this.TestName.FullName);
-                listener.TestStarted(this.TestName);
+                listener.TestStarted(this);
                 long startTime = DateTime.Now.Ticks;
 
                 switch (this.RunState)

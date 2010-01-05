@@ -44,12 +44,12 @@ namespace NUnit.Framework.Internal
 
 		#region EventListener Methods
 		/// <summary>
-		/// A single test case is starting
+		/// A test has started
 		/// </summary>
-		/// <param name="testCase">The test case</param>
-		public void TestStarted(TestName testName)
+		/// <param name="test">The test that is starting</param>
+		public void TestStarted(ITest test)
 		{
-			events.Enqueue( new TestStartedEvent( testName ) );
+			events.Enqueue( new TestStartedEvent( test ) );
 		}
 
 		/// <summary>

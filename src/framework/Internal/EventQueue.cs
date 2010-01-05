@@ -44,16 +44,16 @@ namespace NUnit.Framework.Internal
 
 	public class TestStartedEvent : Event
 	{
-		TestName testName;
+		ITest test;
 
-		public TestStartedEvent( TestName testName )
+		public TestStartedEvent( ITest test )
 		{
-			this.testName = testName;
+			this.test = test;
 		}
 
 		public override void Send( ITestListener listener )
 		{
-			listener.TestStarted( this.testName );
+			listener.TestStarted( this.test );
 		}
 	}
 			
