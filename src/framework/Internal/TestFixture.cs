@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Reflection;
 using NUnit.Framework.Api;
 
 namespace NUnit.Framework.Internal
@@ -33,24 +34,55 @@ namespace NUnit.Framework.Internal
 	public class TestFixture : TestSuite
 	{
 		#region Constructors
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TestFixture"/> class.
+        /// </summary>
+        /// <param name="fixtureType">Type of the fixture.</param>
         public TestFixture(Type fixtureType)
             : this(fixtureType, null) { }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TestFixture"/> class.
+        /// </summary>
+        /// <param name="fixtureType">Type of the fixture.</param>
+        /// <param name="arguments">The arguments.</param>
         public TestFixture(Type fixtureType, object[] arguments)
             : base(fixtureType, arguments) 
         {
-            this.fixtureSetUpMethods =
-                Reflect.GetMethodsWithAttribute(fixtureType, typeof(TestFixtureSetUpAttribute), true);
-            this.fixtureTearDownMethods =
-                Reflect.GetMethodsWithAttribute(fixtureType, typeof(TestFixtureTearDownAttribute), true);
-            this.setUpMethods =
-                Reflect.GetMethodsWithAttribute(this.FixtureType, typeof(SetUpAttribute), true);
-            this.tearDownMethods =
-                Reflect.GetMethodsWithAttribute(this.FixtureType, typeof(TearDownAttribute), true);
+            this.fixtureSetUpMethods =      GetSetUpTearDownMethods( typeof(TestFixtureSetUpAttribute) );
+            this.fixtureTearDownMethods =   GetSetUpTearDownMethods( typeof( TestFixtureTearDownAttribute) );
+            this.setUpMethods =             GetSetUpTearDownMethods( typeof(SetUpAttribute) );
+            this.tearDownMethods =          GetSetUpTearDownMethods( typeof(TearDownAttribute) );
+        }
+
+        private MethodInfo[] GetSetUpTearDownMethods(Type attrType)
+        {
+            MethodInfo[] methods = Reflect.GetMethodsWithAttribute(FixtureType, attrType, true);
+
+            foreach ( MethodInfo method in methods )
+                if ( method.IsAbstract ||
+                     !method.IsPublic && !method.IsFamily ||
+                     method.GetParameters().Length > 0 ||
+                     !method.ReturnType.Equals(typeof(void)))
+                {
+                    this.IgnoreReason = string.Format("Invalid signature for SetUp or TearDown method: {0}", method.Name);
+                    this.RunState = RunState.NotRunnable;
+                    break;
+                }
+
+            return methods;
         }
         #endregion
 
 		#region TestSuite Overrides
+
+        /// <summary>
+        /// Runs the suite under a particular filter, sending
+        /// notifications to a listener.
+        /// </summary>
+        /// <param name="listener">An event listener to receive notifications</param>
+        /// <param name="filter">A filter used in running the test</param>
+        /// <returns></returns>
         public override TestResult Run(ITestListener listener, TestFilter filter)
         {
             using ( new DirectorySwapper( AssemblyHelper.GetDirectoryName( FixtureType.Assembly ) ) )
@@ -59,6 +91,10 @@ namespace NUnit.Framework.Internal
             }
         }
 
+        /// <summary>
+        /// Does the one time set up.
+        /// </summary>
+        /// <param name="suiteResult">The suite result.</param>
         protected override void DoOneTimeSetUp(TestResult suiteResult)
         {
             base.DoOneTimeSetUp(suiteResult);
@@ -66,6 +102,10 @@ namespace NUnit.Framework.Internal
             suiteResult.AssertCount = Assert.Counter; ;
         }
 
+        /// <summary>
+        /// Does the one time tear down.
+        /// </summary>
+        /// <param name="suiteResult">The suite result.</param>
         protected override void DoOneTimeTearDown(TestResult suiteResult)
         {
             base.DoOneTimeTearDown(suiteResult);

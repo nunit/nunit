@@ -237,7 +237,7 @@ namespace NUnit.Framework.Api
             public RunTestsAction(TestController controller, AsyncCallback callback) 
                 : base(controller, callback)
             {
-                ReportResult(Runner.Run(this, TestFilter.Empty), true);
+                ReportResult(Runner.Run(this, TestFilter.Empty).ToXml(), true);
             }
 
             /// <summary>

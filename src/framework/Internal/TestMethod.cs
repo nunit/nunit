@@ -312,7 +312,7 @@ namespace NUnit.Framework.Internal
 				if ( ex is NUnitException )
 					ex = ex.InnerException;
 				// TODO: What about ignore exceptions in teardown?
-				testResult.Error( ex,FailureSite.TearDown );
+				testResult.TearDownError( ex );
 			}
 		}
 
@@ -356,7 +356,7 @@ namespace NUnit.Framework.Internal
             if (exception is NUnitException)
                 exception = exception.InnerException;
 
-            testResult.SetResult(NUnitFramework.GetResultState(exception), exception);
+            testResult.SetResult(exception);
 		}
 		#endregion
     }

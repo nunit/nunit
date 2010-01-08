@@ -118,7 +118,6 @@ namespace NUnit.Framework.Attributes
 			TestResult testResult = ((TestResult)result.Results[0]);
 			Assert.IsTrue(testResult.Executed, "Test should have executed");
 			Assert.AreEqual("TestFixtureSetUp failed in MisbehavingFixture", testResult.Message, "TestSuite Message");
-            Assert.AreEqual(FailureSite.Parent, testResult.FailureSite);
 			Assert.AreEqual(testResult.StackTrace, testResult.StackTrace, "Test stackTrace should match TestSuite stackTrace" );
 		}
 
@@ -174,13 +173,12 @@ namespace NUnit.Framework.Attributes
 			fixture.blowUpInTearDown = true;
 			TestResult result = RunTestOnFixture( fixture );
 			Assert.AreEqual(1, result.Results.Count);
-			Assert.IsTrue(result.Executed, "Suite should have executed");
-			Assert.IsTrue(result.IsFailure, "Suite should have failed" );
+            Assert.AreEqual(ResultState.Error, result.ResultState);
 
 			Assert.AreEqual( 1, fixture.setUpCount, "setUpCount" );
 			Assert.AreEqual( 1, fixture.tearDownCount, "tearDownCOunt" );
 
-			Assert.AreEqual("This was thrown from fixture teardown", result.Message);
+			Assert.AreEqual("TearDown : System.Exception : This was thrown from fixture teardown", result.Message);
 			Assert.IsNotNull(result.StackTrace, "StackTrace should not be null");
 
 			// should have one suite and one fixture
@@ -207,7 +205,6 @@ namespace NUnit.Framework.Attributes
 			TestResult testResult = ((TestResult)result.Results[0]);
 			Assert.IsTrue(testResult.Executed, "Testcase should have executed");
 			Assert.AreEqual("TestFixtureSetUp failed in ExceptionInConstructor", testResult.Message, "TestSuite Message");
-            Assert.AreEqual(FailureSite.Parent, testResult.FailureSite);
 			Assert.AreEqual(testResult.StackTrace, testResult.StackTrace, "Test stackTrace should match TestSuite stackTrace" );
 		}
 

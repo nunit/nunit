@@ -108,7 +108,7 @@ namespace NUnit.Core.Builders
         public static Test BuildParameterizedMethodSuite(MethodInfo method, Test parentSuite)
         {
             ParameterizedMethodSuite methodSuite = new ParameterizedMethodSuite(method);
-            NUnitFramework.ApplyCommonAttributes(method, methodSuite);
+            methodSuite.ApplyCommonAttributes(Reflect.GetAttributes(method, false));
 
             foreach (object source in CoreExtensions.Host.TestCaseProviders.GetTestCasesFor(method, parentSuite))
             {
@@ -182,8 +182,13 @@ namespace NUnit.Core.Builders
 
             if (CheckTestMethodSignature(testMethod, parms))
             {
-                NUnitFramework.ApplyCommonAttributes(method, testMethod);
-                NUnitFramework.ApplyExpectedExceptionAttribute(method, testMethod);
+                testMethod.ApplyCommonAttributes(Reflect.GetAttributes(method, false));
+
+                ExpectedExceptionAttribute[] attributes =
+                    (ExpectedExceptionAttribute[])method.GetCustomAttributes(typeof(ExpectedExceptionAttribute), false);
+
+                if (attributes.Length > 0)
+                    testMethod.ExceptionProcessor = new ExpectedExceptionProcessor(testMethod, attributes[0]);
             }
 
             if (parms != null)

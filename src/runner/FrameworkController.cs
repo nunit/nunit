@@ -24,8 +24,7 @@
 using System;
 using System.IO;
 using System.Collections;
-using NUnit.Core;
-using NUnit.Framework.Api;
+using System.Xml;
 
 namespace NUnit.AdhocTestRunner
 {
@@ -58,13 +57,18 @@ namespace NUnit.AdhocTestRunner
             return (bool)handler.Result;
         }
 
-        public TestResult Run(ITestListener listener, TestFilter filter)
+        public XmlNode Run()
         {
             CallbackHandler handler = new CallbackHandler();
 
             CreateObject("NUnit.Framework.Api.TestController+RunTestsAction", testController, handler.Callback);
 
-            return (TestResult)handler.Result;
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml((string)handler.Result);
+
+            XmlNode node = doc.FirstChild;
+            
+            return node;
         }
 
         #region CallbackHandler class
@@ -95,8 +99,8 @@ namespace NUnit.AdhocTestRunner
 
                 if (ar.IsCompleted)
                     this.result = state;
-                else if (state is TestOutput)
-                    output.Write(((TestOutput)state).Text);
+                else
+                    output.Write(state);
             }
 
             public override object InitializeLifetimeService()

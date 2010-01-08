@@ -30,10 +30,9 @@ using NUnit.Framework.Api;
 
 namespace NUnit.Framework.Internal
 {
-	/// <summary>
-	/// Summary description for TestSuite.
-	/// </summary>
-	/// 
+    /// <summary>
+    /// TestSuite represents a composite test, which contains other tests.
+    /// </summary>
 	[Serializable]
 	public class TestSuite : Test
 	{
@@ -86,15 +85,33 @@ namespace NUnit.Framework.Internal
         #endregion
 
 		#region Constructors
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TestSuite"/> class.
+        /// </summary>
+        /// <param name="name">The name of the suite.</param>
 		public TestSuite( string name ) 
 			: base( name ) { }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TestSuite"/> class.
+        /// </summary>
+        /// <param name="parentSuiteName">Name of the parent suite.</param>
+        /// <param name="name">The name of the suite.</param>
 		public TestSuite( string parentSuiteName, string name ) 
 			: base( parentSuiteName, name ) { }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TestSuite"/> class.
+        /// </summary>
+        /// <param name="fixtureType">Type of the fixture.</param>
         public TestSuite(Type fixtureType)
             : this(fixtureType, null) { }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TestSuite"/> class.
+        /// </summary>
+        /// <param name="fixtureType">Type of the fixture.</param>
+        /// <param name="arguments">The arguments.</param>
         public TestSuite(Type fixtureType, object[] arguments)
             : base(fixtureType.FullName)
         {
@@ -111,6 +128,9 @@ namespace NUnit.Framework.Internal
         #endregion
 
 		#region Public Methods
+        /// <summary>
+        /// Sorts tests under this suite.
+        /// </summary>
 		public void Sort()
 		{
             if (!maintainTestOrder)
@@ -127,6 +147,10 @@ namespace NUnit.Framework.Internal
 		}
 
 #if false
+        /// <summary>
+        /// Sorts tests under this suite using the specified comparer.
+        /// </summary>
+        /// <param name="comparer">The comparer.</param>
         public void Sort(IComparer comparer)
         {
 			this.tests.Sort(comparer);
@@ -140,6 +164,10 @@ namespace NUnit.Framework.Internal
 		}
 #endif
 
+        /// <summary>
+        /// Adds a test to the suite.
+        /// </summary>
+        /// <param name="test">The test.</param>
 		public void Add( Test test ) 
 		{
 //			if( test.RunState == RunState.Runnable )
@@ -151,6 +179,10 @@ namespace NUnit.Framework.Internal
 			tests.Add(test);
 		}
 
+        /// <summary>
+        /// Adds a pre-constructed test fixture to the suite.
+        /// </summary>
+        /// <param name="fixture">The fixture.</param>
 		public void Add( object fixture )
 		{
 			Test test = TestFixtureBuilder.BuildFrom( fixture );
@@ -160,16 +192,29 @@ namespace NUnit.Framework.Internal
 		#endregion
 
 		#region Properties
+        /// <summary>
+        /// Gets this test's child tests
+        /// </summary>
+        /// <value></value>
 		public override IList Tests 
 		{
 			get { return tests; }
 		}
 
+        /// <summary>
+        /// Indicates whether this test is a suite
+        /// </summary>
+        /// <value></value>
 		public override bool IsSuite
 		{
 			get { return true; }
 		}
 
+        /// <summary>
+        /// Gets a count of test cases represented by
+        /// or contained under this test.
+        /// </summary>
+        /// <value></value>
 		public override int TestCount
 		{
 			get
@@ -184,22 +229,38 @@ namespace NUnit.Framework.Internal
 			}
 		}
 
+        /// <summary>
+        /// Gets the Type of the fixture used in running this test
+        /// </summary>
+        /// <value></value>
         public override Type FixtureType
         {
             get { return fixtureType; }
         }
 
+        /// <summary>
+        /// Gets or sets a fixture object for running this test
+        /// </summary>
+        /// <value></value>
         public override object Fixture
         {
             get { return fixture; }
             set { fixture = value; }
         }
 
+        /// <summary>
+        /// Gets the set up methods.
+        /// </summary>
+        /// <returns></returns>
         public MethodInfo[] GetSetUpMethods()
         {
             return setUpMethods;
         }
 
+        /// <summary>
+        /// Gets the tear down methods.
+        /// </summary>
+        /// <returns></returns>
         public MethodInfo[] GetTearDownMethods()
         {
             return tearDownMethods;
@@ -207,6 +268,12 @@ namespace NUnit.Framework.Internal
         #endregion
 
 		#region Test Overrides
+        /// <summary>
+        /// Gets a count of test cases that would be run using
+        /// the specified filter.
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns></returns>
 		public override int CountTestCases(TestFilter filter)
 		{
 			int count = 0;
@@ -221,6 +288,13 @@ namespace NUnit.Framework.Internal
 			return count;
 		}
 
+        /// <summary>
+        /// Runs the suite under a particular filter, sending
+        /// notifications to a listener.
+        /// </summary>
+        /// <param name="listener">An event listener to receive notifications</param>
+        /// <param name="filter">A filter used in running the test</param>
+        /// <returns></returns>
 		public override TestResult Run(ITestListener listener, TestFilter filter)
 		{
 			using( new TestContext() )
@@ -261,6 +335,13 @@ namespace NUnit.Framework.Internal
 			}
 		}
 
+        /// <summary>
+        /// Runs the suite under a particular filter, sending
+        /// notifications to a listener.
+        /// </summary>
+        /// <param name="suiteResult">The suite result.</param>
+        /// <param name="listener">The listener.</param>
+        /// <param name="filter">The filter.</param>
         public void Run(TestResult suiteResult, ITestListener listener, TestFilter filter)
         {
             suiteResult.Success(); // Assume success
@@ -287,6 +368,10 @@ namespace NUnit.Framework.Internal
 		#endregion
 
 		#region Virtual Methods
+        /// <summary>
+        /// Does the one time set up.
+        /// </summary>
+        /// <param name="suiteResult">The suite result.</param>
         protected virtual void DoOneTimeSetUp(TestResult suiteResult)
         {
             if (FixtureType != null)
@@ -322,13 +407,16 @@ namespace NUnit.Framework.Internal
                         this.IgnoreReason = ex.Message;
                     }
                     else if (ex is NUnit.Framework.AssertionException)
-                        suiteResult.Failure(ex.Message, ex.StackTrace, FailureSite.SetUp);
+                        suiteResult.Failure(ex.Message, ex.StackTrace);
                     else
-                        suiteResult.Error(ex, FailureSite.SetUp);
+                        suiteResult.Error(ex);
                 }
             }
         }
 
+        /// <summary>
+        /// Creates the user fixture.
+        /// </summary>
 		protected virtual void CreateUserFixture()
 		{
             if (arguments != null && arguments.Length > 0)
@@ -337,6 +425,10 @@ namespace NUnit.Framework.Internal
 			    Fixture = Reflect.Construct(FixtureType);
 		}
 
+        /// <summary>
+        /// Does the one time tear down.
+        /// </summary>
+        /// <param name="suiteResult">The suite result.</param>
         protected virtual void DoOneTimeTearDown(TestResult suiteResult)
         {
             if ( this.Fixture != null)
@@ -360,14 +452,14 @@ namespace NUnit.Framework.Internal
                 catch (Exception ex)
                 {
 					// Error in TestFixtureTearDown or Dispose causes the
-					// suite to be marked as a failure, even if
+					// suite to be marked as a error, even if
 					// all the contained tests passed.
 					NUnitException nex = ex as NUnitException;
 					if (nex != null)
 						ex = nex.InnerException;
 
 
-					suiteResult.Failure(ex.Message, ex.StackTrace, FailureSite.TearDown);
+					suiteResult.TearDownError(ex);
 				}
 
                 this.Fixture = null;
@@ -483,7 +575,7 @@ namespace NUnit.Framework.Internal
                 listener.TestStarted(test);
                 TestResult result = new TestResult( test );
 				string msg = string.Format( "Parent SetUp failed in {0}", this.FixtureType.Name );
-				result.Failure(msg, null, FailureSite.Parent);
+				result.Failure(msg, null);
                 MarkTestsFailed(test.Tests, suiteResult, listener, filter);
                 suiteResult.AddResult(result);
                 listener.TestFinished(result);
@@ -493,7 +585,7 @@ namespace NUnit.Framework.Internal
                 listener.TestStarted(test);
                 TestResult result = new TestResult( test );
 				string msg = string.Format( "TestFixtureSetUp failed in {0}", this.FixtureType.Name );
-				result.Failure(msg, null, FailureSite.Parent);
+				result.Failure(msg, null);
 				suiteResult.AddResult(result);
                 listener.TestFinished(result);
             }
