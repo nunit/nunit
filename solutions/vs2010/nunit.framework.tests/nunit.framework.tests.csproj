@@ -47,6 +47,9 @@
     <Compile Include="..\..\..\src\tests\AlwaysEqualComparer.cs">
       <Link>AlwaysEqualComparer.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\tests\Api\TestResultTests.cs">
+      <Link>Api\TestResultTests.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\tests\Assertions\ArrayEqualsFailureMessageFixture.cs">
       <Link>Assertions\ArrayEqualsFailureMessageFixture.cs</Link>
     </Compile>
@@ -260,6 +263,9 @@
     <Compile Include="..\..\..\src\tests\Internal\DirectorySwapperTests.cs">
       <Link>Internal\DirectorySwapperTests.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\tests\Internal\EventQueueTests.cs">
+      <Link>Internal\EventQueueTests.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\tests\Internal\PlatformDetectionTests.cs">
       <Link>Internal\PlatformDetectionTests.cs</Link>
     </Compile>
@@ -311,14 +317,8 @@
     <Compile Include="..\..\..\src\tests\NUnit\Core\TestFixtureTests.cs">
       <Link>NUnit\Core\TestFixtureTests.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\tests\NUnit\Core\TestIDTests.cs">
-      <Link>NUnit\Core\TestIDTests.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\src\tests\NUnit\Core\TestMethodSignatureTests.cs">
       <Link>NUnit\Core\TestMethodSignatureTests.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\tests\NUnit\Core\TestNameTests.cs">
-      <Link>NUnit\Core\TestNameTests.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\tests\NUnit\Core\UnexpectedExceptionTests.cs">
       <Link>NUnit\Core\UnexpectedExceptionTests.cs</Link>
