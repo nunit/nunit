@@ -66,21 +66,12 @@
     <Compile Include="..\..\..\src\runner\StackTraceFilter.cs">
       <Link>StackTraceFilter.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\runner\TestEventListener.cs">
-      <Link>TestEventListener.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\src\runner\ConsoleRunner.cs">
       <Link>ConsoleRunner.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\runner\ResultReporter.cs">
       <Link>ResultReporter.cs</Link>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\nunit.framework\nunit.framework.csproj">
-      <Project>{12B66B03-90F1-4992-BD33-BDF3C69AE49E}</Project>
-      <Name>nunit.framework</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />

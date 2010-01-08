@@ -141,24 +141,11 @@ namespace NUnit.Framework.Internal
             }
             else
             {
-                switch (NUnitFramework.GetResultState(exception))
-                {
-                    case ResultState.Failure:
-                        testResult.Failure(exception.Message, exception.StackTrace);
-                        break;
-                    case ResultState.Ignored:
-                        testResult.Ignore(exception);
-                        break;
-                    case ResultState.Inconclusive:
-                        testResult.SetResult(ResultState.Inconclusive, exception);
-                        break;
-                    case ResultState.Success:
-                        testResult.Success(exception.Message);
-                        break;
-                    default:
-                        testResult.Failure(WrongTypeMessage(exception), GetStackTrace(exception));
-                        break;
-                }
+                testResult.SetResult(exception);
+
+                // If it shows as an error, change it to a failure due to the wrong type
+                if (testResult.ResultState == ResultState.Error)
+                    testResult.Failure(WrongTypeMessage(exception), GetStackTrace(exception));
             }
 		}
         #endregion

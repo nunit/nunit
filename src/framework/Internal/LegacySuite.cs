@@ -24,6 +24,7 @@
 using System;
 using System.Collections;
 using System.Reflection;
+using NUnit.Framework.Api;
 
 namespace NUnit.Framework.Internal
 {
@@ -32,12 +33,32 @@ namespace NUnit.Framework.Internal
 	/// </summary>
 	public class LegacySuite : TestSuite
 	{
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LegacySuite"/> class.
+        /// </summary>
+        /// <param name="fixtureType">Type of the fixture.</param>
 		public LegacySuite( Type fixtureType ) : base( fixtureType )
 		{
-            this.fixtureSetUpMethods =
-                Reflect.GetMethodsWithAttribute(fixtureType, typeof(NUnit.Framework.TestFixtureSetUpAttribute), true);
-            this.fixtureTearDownMethods =
-                Reflect.GetMethodsWithAttribute(fixtureType, typeof(NUnit.Framework.TestFixtureTearDownAttribute), true);
+            this.fixtureSetUpMethods = GetSetUpTearDownMethods( typeof(NUnit.Framework.TestFixtureSetUpAttribute) );
+            this.fixtureTearDownMethods = GetSetUpTearDownMethods( typeof(NUnit.Framework.TestFixtureTearDownAttribute) );
         }
-	}
+
+        private MethodInfo[] GetSetUpTearDownMethods(Type attrType)
+        {
+            MethodInfo[] methods = Reflect.GetMethodsWithAttribute(FixtureType, attrType, true);
+
+            foreach (MethodInfo method in methods)
+                if (method.IsAbstract ||
+                     !method.IsPublic && !method.IsFamily ||
+                     method.GetParameters().Length > 0 ||
+                     !method.ReturnType.Equals(typeof(void)))
+                {
+                    this.IgnoreReason = string.Format("Invalid signature for SetUp or TearDown method: {0}", method.Name);
+                    this.RunState = RunState.NotRunnable;
+                    break;
+                }
+
+            return methods;
+        }
+    }
 }

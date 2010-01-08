@@ -2,6 +2,7 @@ AlwaysEqualComparer.cs
 CollectionAdapter.cs
 TestComparer.cs
 TestDelegates.cs
+Api/*.cs
 Assertions/*.cs
 Attributes/*.cs
 Constraints/*.cs

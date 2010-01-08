@@ -22,20 +22,18 @@
 // ***********************************************************************
 
 using System;
-using NUnit.Framework;
-using NUnit.Framework.Api;
-
+using System.Xml;
 
 namespace NUnit.AdhocTestRunner
 {
     public class ResultReporter
     {
-        TestResult result;
+        XmlNode result;
         ResultSummary summary;
 
         int reportIndex = 0;
 
-        public ResultReporter(TestResult result)
+        public ResultReporter(XmlNode result)
         {
             this.result = result;
             this.summary = new ResultSummary(result);
@@ -78,24 +76,22 @@ namespace NUnit.AdhocTestRunner
             Console.WriteLine();
         }
 
-        private void WriteErrorsAndFailures(TestResult result)
+        private void WriteErrorsAndFailures(XmlNode result)
         {
-            if (result.Executed)
+            switch (result.Name)
             {
-                if (result.HasResults)
-                {
-                    if ((result.IsFailure || result.IsError) && result.FailureSite == FailureSite.SetUp)
-                        WriteSingleResult(result);
-
-                    foreach (TestResult childResult in result.Results)
+                case "suite":
+                    foreach( XmlNode childResult in result.ChildNodes )
                         WriteErrorsAndFailures(childResult);
-                }
-                else if (result.IsFailure || result.IsError)
-                {
-                    WriteSingleResult(result);
-                }
+                    break;
+                case"test":
+                    string resultState = result.Attributes["result"].Value;
+                    if (resultState == "Failure" || resultState == "Error" || resultState == "Cancelled")
+                        WriteSingleResult(result);
+                    break;
             }
         }
+
 
         public void WriteNotRunReport()
         {
@@ -105,30 +101,51 @@ namespace NUnit.AdhocTestRunner
             Console.WriteLine();
         }
 
-        private void WriteNotRunResults(TestResult result)
+        private void WriteNotRunResults(XmlNode result)
         {
-            if (result.HasResults)
-                foreach (TestResult childResult in result.Results)
-                    WriteNotRunResults(childResult);
-            else if (!result.Executed)
-                WriteSingleResult(result);
+            switch (result.Name)
+            {
+                case "suite":
+                    foreach (XmlNode childResult in result.ChildNodes)
+                        WriteNotRunResults(childResult);
+                    break;
+                case "test":
+                    string resultState = result.Attributes["result"].Value;
+                    if (resultState == "Skipped" || resultState == "Ignored" || resultState == "NotRunnable")
+                        WriteSingleResult(result);
+                    break;
+            }
         }
 
-        private void WriteSingleResult(TestResult result)
+        private void WriteSingleResult(XmlNode result)
         {
-            string status = result.IsFailure || result.IsError
-                ? string.Format("{0} {1}", result.FailureSite, result.ResultState)
-                : result.ResultState.ToString();
+            string status = result.Attributes["result"].Value;
+            string fullName = result.Attributes["fullname"].Value;
 
-            Console.WriteLine("{0}) {1} : {2}", ++reportIndex, status, result.FullName);
+            Console.WriteLine("{0}) {1} : {2}", ++reportIndex, status, fullName);
 
-            if (result.Message != null && result.Message != string.Empty)
-                Console.WriteLine(result.Message);
+            XmlNode failureNode = result.SelectSingleNode("failure");
+            if (failureNode != null)
+            {
+                XmlNode message = failureNode.SelectSingleNode("message");
+                XmlNode stacktrace = failureNode.SelectSingleNode("stacktrace");
 
-            if (result.StackTrace != null && result.StackTrace != string.Empty)
-                Console.WriteLine(result.IsFailure
-                    ? StackTraceFilter.Filter(result.StackTrace)
-                    : result.StackTrace + Environment.NewLine);
+                if (message != null)
+                    Console.WriteLine(message.InnerText);
+
+                if (stacktrace != null)
+                    Console.WriteLine(status == "Failure"
+                        ? StackTraceFilter.Filter(stacktrace.InnerText)
+                        : stacktrace.InnerText + Environment.NewLine);
+                    //Console.WriteLine(stacktrace.InnerText + Environment.NewLine);
+            }
+            else
+            {
+                XmlNode message = result.SelectSingleNode("message");
+
+                if (message != null)
+                    Console.WriteLine(message.InnerText);
+            }
         }
     }
 }

@@ -34,25 +34,47 @@ namespace NUnit.Core.Builders
 	public class SetUpFixtureBuilder : Extensibility.ISuiteBuilder
 	{	
 		#region ISuiteBuilder Members
+        /// <summary>
+        /// Build a TestSuite from type provided.
+        /// </summary>
+        /// <param name="type">The type of the fixture to be used</param>
+        /// <returns>A TestSuite</returns>
 		public Test BuildFrom(Type type)
 		{
 			SetUpFixture fixture = new SetUpFixture( type );
 
-            string reason = null;
-            if (!IsValidFixtureType(type, ref reason))
+            if (fixture.RunState != RunState.NotRunnable)
             {
-                fixture.RunState = RunState.NotRunnable;
-                fixture.IgnoreReason = reason;
+                string reason = null;
+                if (!IsValidFixtureType(type, ref reason))
+                {
+                    fixture.RunState = RunState.NotRunnable;
+                    fixture.IgnoreReason = reason;
+                }
             }
 
             return fixture;
 		}
 
+        /// <summary>
+        /// Examine the type and determine if it is suitable for
+        /// this builder to use in building a TestSuite.
+        /// Note that returning false will cause the type to be ignored
+        /// in loading the tests. If it is desired to load the suite
+        /// but label it as non-runnable, ignored, etc., then this
+        /// method must return true.
+        /// </summary>
+        /// <param name="type">The type of the fixture to be used</param>
+        /// <returns>
+        /// True if the type can be used to build a TestSuite
+        /// </returns>
 		public bool CanBuildFrom(Type type)
 		{
 			return type.IsDefined(typeof(SetUpFixtureAttribute), false );
 		}
 		#endregion
+
+        #region Helper Methods
 
         private bool IsValidFixtureType(Type type, ref string reason)
         {
@@ -68,10 +90,6 @@ namespace NUnit.Core.Builders
                 return false;
             }
 
-            if (!NUnitFramework.CheckSetUpTearDownMethods(type, typeof(NUnit.Framework.SetUpAttribute), ref reason) ||
-                !NUnitFramework.CheckSetUpTearDownMethods(type, typeof(NUnit.Framework.TearDownAttribute), ref reason) )
-                    return false;
-
             if ( Reflect.HasMethodWithAttribute(type, typeof(NUnit.Framework.TestFixtureSetUpAttribute), true) )
             {
                 reason = "TestFixtureSetUp method not allowed on a SetUpFixture";
@@ -86,5 +104,6 @@ namespace NUnit.Core.Builders
 
             return true;
         }
-	}
+        #endregion
+    }
 }

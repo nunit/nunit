@@ -88,9 +88,6 @@
     <Compile Include="..\..\..\src\framework\Api\TestFilter.cs">
       <Link>Api\TestFilter.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Api\TestInfo.cs">
-      <Link>Api\TestInfo.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\src\framework\Api\TestOutput.cs">
       <Link>Api\TestOutput.cs</Link>
     </Compile>
@@ -528,9 +525,6 @@
     </Compile>
     <Compile Include="..\..\..\src\framework\Internal\NUnitException.cs">
       <Link>Internal\NUnitException.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\NUnitFramework.cs">
-      <Link>Internal\NUnitFramework.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Internal\OSPlatform.cs">
       <Link>Internal\OSPlatform.cs</Link>

@@ -22,8 +22,8 @@
 // ***********************************************************************
 
 using System;
+using System.Xml;
 using System.IO;
-using NUnit.Framework.Api;
 
 namespace NUnit.AdhocTestRunner
 {
@@ -53,9 +53,9 @@ namespace NUnit.AdhocTestRunner
                     TextWriter savedOut = Console.Out;
                     TextWriter savedError = Console.Error;
 
-                    TestEventListener listener = new TestEventListener(options, Console.Out);
+                    //TestEventListener listener = new TestEventListener(options, Console.Out);
 
-                    TestResult result = driver.Run(listener, TestFilter.Empty);
+                    XmlNode result = driver.Run();
 
                     Console.SetOut(savedOut);
                     Console.SetError(savedError);

@@ -30,7 +30,7 @@ namespace NUnit.Framework.Api
 	using System.Reflection;
 
 	/// <summary>
-	///		Test Class.
+	/// The Test abstract class represents a test within the framework.
 	/// </summary>
 	public abstract class Test : ITest, IComparable
     {
@@ -162,6 +162,10 @@ namespace NUnit.Framework.Api
             set { name = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the fully qualified name of the test
+        /// </summary>
+        /// <value></value>
         public string FullName
         {
             get { return fullName; }
@@ -347,5 +351,53 @@ namespace NUnit.Framework.Api
 			return this.FullName.CompareTo( other.FullName );
 		}
 		#endregion
+
+        /// <summary>
+        /// Modify a newly constructed test by applying any of NUnit's common
+        /// attributes, based on an input array of attributes. This method checks
+        /// for all attributes, relying on the fact that specific attributes can only
+        /// occur on those constructs on which they are allowed.
+        /// </summary>
+        /// <param name="attributes">An array of attributes possibly including NUnit attributes</param>
+        public void ApplyCommonAttributes(Attribute[] attributes)
+        {
+            foreach (Attribute attribute in attributes)
+            {
+                Type attributeType = attribute.GetType();
+                string attributeName = attributeType.FullName;
+                bool isValid = this.RunState != RunState.NotRunnable;
+
+                if (attribute is TestFixtureAttribute)
+                {
+                    if (this.Description == null)
+                        this.Description = ((TestFixtureAttribute)attribute).Description;
+                }
+                else if (attribute is TestAttribute)
+                {
+                    if (this.Description == null)
+                        this.Description = ((TestAttribute)attribute).Description;
+                }
+                else if (attribute is ISetRunState)
+                {
+                    if (isValid)
+                    {
+                        ISetRunState irs = (ISetRunState)attribute;
+                        this.RunState = irs.GetRunState();
+                        this.IgnoreReason = irs.GetReason();
+                    }
+                }
+                else if (attribute is CategoryAttribute)
+                {
+                    this.Categories.Add(((CategoryAttribute)attribute).Name);
+                }
+                else if (attribute is PropertyAttribute)
+                {
+                    IDictionary props = ((PropertyAttribute)attribute).Properties;
+                    if (props != null)
+                        foreach (DictionaryEntry entry in props)
+                            this.Properties.Add(entry.Key, entry.Value);
+                }
+            }
+        }
 	}
 }

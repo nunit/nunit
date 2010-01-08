@@ -129,7 +129,7 @@ namespace NUnit.Core.Builders
             this.fixture = new TestFixture(type, arguments);
             CheckTestFixtureIsValid(fixture);
 
-            NUnitFramework.ApplyCommonAttributes(type, fixture);
+            fixture.ApplyCommonAttributes(Reflect.GetAttributes(type, false));
 
             if (fixture.RunState == RunState.Runnable && attr != null)
             {
@@ -147,13 +147,9 @@ namespace NUnit.Core.Builders
 
         /// <summary>
 		/// Method to add test cases to the newly constructed fixture.
-		/// The default implementation looks at each candidate method
-		/// and tries to build a test case from it. It will only need
-		/// to be overridden if some other approach, such as reading a 
-		/// datafile is used to generate test cases.
 		/// </summary>
 		/// <param name="fixtureType"></param>
-		protected virtual void AddTestCases( Type fixtureType )
+		private void AddTestCases( Type fixtureType )
 		{
 			IList methods = fixtureType.GetMethods( 
 				BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static );
@@ -197,8 +193,11 @@ namespace NUnit.Core.Builders
         private void CheckTestFixtureIsValid(TestFixture fixture)
         {
             Type fixtureType = fixture.FixtureType;
-
             string reason = null;
+
+            if (fixture.RunState == RunState.NotRunnable)
+                return;
+
             if (!IsValidFixtureType(fixtureType, ref reason))
             {
                 fixture.RunState = RunState.NotRunnable;
@@ -251,10 +250,7 @@ namespace NUnit.Core.Builders
             }
 #endif
 
-            return NUnitFramework.CheckSetUpTearDownMethods(fixtureType, typeof(NUnit.Framework.SetUpAttribute), ref reason)
-                && NUnitFramework.CheckSetUpTearDownMethods(fixtureType, typeof(NUnit.Framework.TearDownAttribute), ref reason)
-                && NUnitFramework.CheckSetUpTearDownMethods(fixtureType, typeof(NUnit.Framework.TestFixtureSetUpAttribute), ref reason)
-                && NUnitFramework.CheckSetUpTearDownMethods(fixtureType, typeof(NUnit.Framework.TestFixtureTearDownAttribute), ref reason);
+            return true;
         }
 		#endregion
 	}

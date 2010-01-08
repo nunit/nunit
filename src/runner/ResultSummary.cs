@@ -22,9 +22,7 @@
 // ***********************************************************************
 
 using System;
-using NUnit.Core;
-using NUnit.Framework;
-using NUnit.Framework.Api;
+using System.Xml;
 
 namespace NUnit.AdhocTestRunner
 {
@@ -48,65 +46,61 @@ namespace NUnit.AdhocTestRunner
 
         public ResultSummary() { }
 
-        public ResultSummary(TestResult result)
+        public ResultSummary(XmlNode result)
         {
+            this.name = result.Attributes["name"].Value;
+            this.time = double.Parse(result.Attributes["time"].Value, System.Globalization.CultureInfo.InvariantCulture);
+
             Summarize(result);
         }
 
-        public ResultSummary(TestResult[] results)
+        private void Summarize(XmlNode result)
         {
-            foreach (TestResult result in results)
-                Summarize(result);
-        }
-
-        public void Summarize(TestResult result)
-        {
-            if (this.name == null)
+            switch (result.Name)
             {
-                this.name = result.Name;
-                this.time = result.Time;
+                case "test":
+                    resultCount++;
+
+                    string resultState = result.Attributes["result"].Value;
+
+                    switch (resultState)
+                    {
+                        case "Success":
+                            successCount++;
+                            testsRun++;
+                            break;
+                        case "Failure":
+                            failureCount++;
+                            testsRun++;
+                            break;
+                        case "Error":
+                        case "Cancelled":
+                            errorCount++;
+                            testsRun++;
+                            break;
+                        case "Inconclusive":
+                            inconclusiveCount++;
+                            testsRun++;
+                            break;
+                        case "NotRunnable":
+                            notRunnable++;
+                            //errorCount++;
+                            break;
+                        case "Ignored":
+                            ignoreCount++;
+                            break;
+                        case "Skipped":
+                        default:
+                            skipCount++;
+                            break;
+                    }
+                    break;
+
+                case "suite":
+                    foreach (XmlNode childResult in result.ChildNodes)
+                        Summarize(childResult);
+                    break;
             }
-
-            if (!result.Test.IsSuite)
-            {
-                resultCount++;
-
-                switch (result.ResultState)
-                {
-                    case ResultState.Success:
-                        successCount++;
-                        testsRun++;
-                        break;
-                    case ResultState.Failure:
-                        failureCount++;
-                        testsRun++;
-                        break;
-                    case ResultState.Error:
-                    case ResultState.Cancelled:
-                        errorCount++;
-                        testsRun++;
-                        break;
-                    case ResultState.Inconclusive:
-                        inconclusiveCount++;
-                        testsRun++;
-                        break;
-                    case ResultState.NotRunnable:
-                        notRunnable++;
-                        //errorCount++;
-                        break;
-                    case ResultState.Ignored:
-                        ignoreCount++;
-                        break;
-                    case ResultState.Skipped:
-                    default:
-                        skipCount++;
-                        break;
-                }
-            }
-
-            if (result.HasResults)
-                foreach (TestResult childResult in result.Results)
-                    Summarize(childResult);
         }
 
         public string Name

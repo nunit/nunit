@@ -57,12 +57,6 @@ namespace NUnit.AdhocTestRunner
         {
             string[] patterns = new string[]
 			{
-				"NUnit.Core.TestCase",
-				"NUnit.Core.ExpectedExceptionTestCase",
-				"NUnit.Core.TemplateTestCase",
-				"NUnit.Core.TestResult",
-				"NUnit.Core.TestSuite",
-				"NUnit.Framework.Assertion", 
 				"NUnit.Framework.Assert" 
 			};
 

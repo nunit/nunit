@@ -6,6 +6,9 @@ Attributes/*.cs
 Constraints/*.cs
 Exceptions/*.cs
 Internal/Env.cs
+Internal/InvalidTestFixtureException.cs
 Internal/MethodHelper.cs
+Internal/NUnitException.cs
+Internal/Reflect.cs
 Internal/TextMessageWriter.cs
 NUnitLite/**/*.cs

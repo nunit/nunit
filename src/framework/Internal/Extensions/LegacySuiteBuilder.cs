@@ -47,15 +47,23 @@ namespace NUnit.Core.Builders
 			return GetSuiteProperty( type ) != null;
 		}
 
+        /// <summary>
+        /// Build a TestSuite from type provided.
+        /// </summary>
+        /// <param name="type">The type of the fixture to be used</param>
+        /// <returns>A TestSuite</returns>
 		public Test BuildFrom( Type type )
 		{
             TestSuite suite = new LegacySuite( type );
 
-            string reason = null;
-            if (!IsValidFixtureType(type, ref reason))
+            if (suite.RunState == RunState.NotRunnable)
             {
-                suite.RunState = RunState.NotRunnable;
-                suite.IgnoreReason = reason;
+                string reason = null;
+                if (!IsValidFixtureType(type, ref reason))
+                {
+                    suite.RunState = RunState.NotRunnable;
+                    suite.IgnoreReason = reason;
+                }
             }
 
             PropertyInfo suiteProperty = GetSuiteProperty(type);
@@ -109,12 +117,6 @@ namespace NUnit.Core.Builders
                 return false;
             }
 
-            if (!NUnitFramework.CheckSetUpTearDownMethods(type, typeof(NUnit.Framework.TestFixtureSetUpAttribute), ref reason) )
-                return false;
-            
-            if (!NUnitFramework.CheckSetUpTearDownMethods(type, typeof(NUnit.Framework.TestFixtureTearDownAttribute), ref reason))
-                return false;
-
             if (Reflect.HasMethodWithAttribute(type, typeof(NUnit.Framework.SetUpAttribute), true))
             {
                 reason = "SetUp method not allowed on a legacy suite";
@@ -130,11 +132,8 @@ namespace NUnit.Core.Builders
             return true;
         }
 
-        public static PropertyInfo GetSuiteProperty(Type testClass)
+        private static PropertyInfo GetSuiteProperty(Type testClass)
         {
-            //if (testClass == null)
-            //    return null;
-
             return Reflect.GetPropertyWithAttribute(testClass, typeof(NUnit.Framework.SuiteAttribute));
         }
         #endregion

@@ -44,12 +44,37 @@ namespace NUnit.Framework.Internal
             if (index > 0)
                 this.Name = this.Name.Substring(index + 1);
             
-			this.fixtureSetUpMethods = Reflect.GetMethodsWithAttribute( type, typeof(NUnit.Framework.SetUpAttribute), true );
-			this.fixtureTearDownMethods = Reflect.GetMethodsWithAttribute( type, typeof(NUnit.Framework.TearDownAttribute), true );
+			this.fixtureSetUpMethods = GetSetUpTearDownMethods( typeof(NUnit.Framework.SetUpAttribute) );
+			this.fixtureTearDownMethods = GetSetUpTearDownMethods( typeof(NUnit.Framework.TearDownAttribute) );
 		}
-		#endregion
+
+        private MethodInfo[] GetSetUpTearDownMethods(Type attrType)
+        {
+            MethodInfo[] methods = Reflect.GetMethodsWithAttribute(FixtureType, attrType, true);
+
+            foreach (MethodInfo method in methods)
+                if (method.IsAbstract ||
+                     !method.IsPublic && !method.IsFamily ||
+                     method.GetParameters().Length > 0 ||
+                     !method.ReturnType.Equals(typeof(void)))
+                {
+                    this.IgnoreReason = string.Format("Invalid signature for SetUp or TearDown method: {0}", method.Name);
+                    this.RunState = RunState.NotRunnable;
+                    break;
+                }
+
+            return methods;
+        }
+        #endregion
 
 		#region TestSuite Overrides
+        /// <summary>
+        /// Runs the suite under a particular filter, sending
+        /// notifications to a listener.
+        /// </summary>
+        /// <param name="listener">An event listener to receive notifications</param>
+        /// <param name="filter">A filter used in running the test</param>
+        /// <returns></returns>
 		public override TestResult Run(ITestListener listener, TestFilter filter)
 		{
 			using ( new DirectorySwapper( AssemblyHelper.GetDirectoryName( FixtureType.Assembly ) ) )

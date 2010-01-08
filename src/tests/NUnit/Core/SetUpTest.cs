@@ -113,8 +113,6 @@ namespace NUnit.Framework.Tests
             Assert.IsTrue(result.HasResults, "Fixture test should have child result.");
             result = (TestResult)result.Results[0];
             Assert.AreEqual(result.ResultState, ResultState.Error, "Test should be in error state");
-            //TODO: below assert fails now, a bug?
-            //Assert.AreEqual(result.FailureSite, FailureSite.SetUp, "Test should be failed at setup site");
             string expected = string.Format("{0} : {1}", e.GetType().FullName, e.Message);
             Assert.AreEqual(expected, result.Message);
         }
@@ -129,7 +127,6 @@ namespace NUnit.Framework.Tests
             Assert.IsTrue(result.HasResults, "Fixture test should have child result.");
             result = (TestResult)result.Results[0];
             Assert.AreEqual(result.ResultState, ResultState.Error, "Test should be in error state");
-            Assert.AreEqual(result.FailureSite, FailureSite.TearDown, "Test should be failed at tear down site");
             string expected = string.Format("TearDown : {0} : {1}", e.GetType().FullName, e.Message);
             Assert.AreEqual(expected, result.Message);
         }

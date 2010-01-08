@@ -24,6 +24,7 @@
 using System;
 using System.Text;
 using System.Collections;
+using System.Xml;
 
 namespace NUnit.Framework.Api
 {
@@ -41,11 +42,6 @@ namespace NUnit.Framework.Api
 		/// Indicates the result of the test
 		/// </summary>
 		private ResultState resultState;
-
-		/// <summary>
-		/// Indicates the location of a failure
-		/// </summary>
-        private FailureSite failureSite;
 
 		/// <summary>
 		/// The elapsed time for executing this test
@@ -84,9 +80,9 @@ namespace NUnit.Framework.Api
 		/// Construct a test result given a Test
 		/// </summary>
 		/// <param name="test">The test to be used</param>
-		public TestResult(Test test)
+		public TestResult(ITest test)
 		{
-			this.test = new TestInfo(test);
+			this.test = test;
 			this.message = test.IgnoreReason;
 		}
 
@@ -101,15 +97,6 @@ namespace NUnit.Framework.Api
         public ResultState ResultState
         {
             get { return resultState; }
-        }
-
-		/// <summary>
-		/// Gets the stage of the test in which a failure
-		/// or error occured.
-		/// </summary>
-        public FailureSite FailureSite
-        {
-            get { return failureSite; }
         }
 
 		/// <summary>
@@ -261,7 +248,7 @@ namespace NUnit.Framework.Api
 		/// <param name="reason">The reason the test was not run</param>
 		public void Ignore(string reason)
 		{
-			Ignore( reason, null );
+			SetResult( ResultState.Ignored, reason, null );
 		}
 
 		/// <summary>
@@ -270,7 +257,7 @@ namespace NUnit.Framework.Api
 		/// <param name="ex">The ignore exception that was thrown</param>
 		public void Ignore( Exception ex )
 		{
-			Ignore( ex.Message, BuildStackTrace( ex ) );
+			SetResult( ResultState.Ignored, ex.Message, BuildStackTrace( ex ) );
 		}
 
 		/// <summary>
@@ -316,41 +303,33 @@ namespace NUnit.Framework.Api
 		/// <param name="resultState">The ResultState to use in the result</param>
 		/// <param name="reason">The reason the test was not run</param>
         /// <param name="stackTrace">Stack trace giving the location of the command</param>
-        /// <param name="failureSite">The location of the failure, if any</param>
-        public void SetResult(ResultState resultState, string reason, string stackTrace, FailureSite failureSite)
+        public void SetResult(ResultState resultState, string reason, string stackTrace)
 		{
 		    this.resultState = resultState;
 			this.message = reason;
 			this.stackTrace = stackTrace;
-            this.failureSite = failureSite;
 		}
 
         /// <summary>
-        /// Set the result of the test
+        /// Set the test result based on the type of exception thrown
         /// </summary>
-        /// <param name="resultState">The ResultState to use in the result</param>
-        /// <param name="reason">The reason the test was not run</param>
-        /// <param name="stackTrace">Stack trace giving the location of the command</param>
-        public void SetResult(ResultState resultState, string reason, string stackTrace)
+        /// <param name="ex">The exception that was thrown</param>
+        public void SetResult(Exception ex)
         {
-            SetResult(resultState, reason, stackTrace, FailureSite.Test);
+            if (ex is System.Threading.ThreadAbortException)
+                SetResult(ResultState.Cancelled, "Test cancelled by user", ex.StackTrace);
+            else if (ex is AssertionException)
+                SetResult(ResultState.Failure, ex.Message, ex.StackTrace);
+            else if (ex is IgnoreException)
+                SetResult(ResultState.Ignored, ex.Message, ex.StackTrace);
+            else if (ex is InconclusiveException)
+                SetResult(ResultState.Inconclusive, ex.Message, ex.StackTrace);
+            else if (ex is SuccessException)
+                SetResult(ResultState.Success, ex.Message, ex.StackTrace);
+            else
+                SetResult(ResultState.Error, BuildMessage(ex), BuildStackTrace(ex));
         }
 
-        /// <summary>
-        /// Set the result of the test.
-        /// </summary>
-        /// <param name="resultState">The ResultState to use in the result</param>
-        /// <param name="ex">The exception that caused this result</param>
-        public void SetResult(ResultState resultState, Exception ex)
-        {
-            if (resultState == ResultState.Cancelled)
-                SetResult(resultState, "Test cancelled by user", BuildStackTrace(ex));
-            else if ( resultState == ResultState.Error )
-                SetResult( resultState, BuildMessage(ex), BuildStackTrace(ex));
-            else
-                SetResult( resultState, ex.Message, ex. StackTrace );
-        }
-   
         /// <summary>
 		/// Mark the test as a failure due to an
 		/// assertion having failed.
@@ -359,21 +338,8 @@ namespace NUnit.Framework.Api
 		/// <param name="stackTrace">Stack trace giving the location of the failure</param>
 		public void Failure(string message, string stackTrace)
         {
-            Failure(message, stackTrace, FailureSite.Test);
+            SetResult(ResultState.Failure, message, stackTrace);
         }
-
-		/// <summary>
-		/// Mark the test as a failure due to an
-		/// assertion having failed.
-		/// </summary>
-		/// <param name="message">Message to display</param>
-		/// <param name="stackTrace">Stack trace giving the location of the failure</param>
-		/// <param name="failureSite">The site of the failure</param>
-		public void Failure(string message, string stackTrace, FailureSite failureSite )
-		{
-            SetResult( ResultState.Failure, message, stackTrace );
-            this.failureSite = failureSite;
-		}
 
 		/// <summary>
 		/// Marks the result as an error due to an exception thrown
@@ -382,33 +348,31 @@ namespace NUnit.Framework.Api
 		/// <param name="exception">The exception that was caught</param>
         public void Error(Exception exception)
         {
-            Error(exception, FailureSite.Test);
+            string message = BuildMessage(exception);
+            string stackTrace = BuildStackTrace(exception);
+
+            SetResult(ResultState.Error, message, stackTrace);
         }
 
 		/// <summary>
 		/// Marks the result as an error due to an exception thrown
-		/// from the indicated FailureSite.
+		/// in the TearDown phase.
 		/// </summary>
 		/// <param name="exception">The exception that was caught</param>
-		/// <param name="failureSite">The site from which it was thrown</param>
-		public void Error( Exception exception, FailureSite failureSite )
+		public void TearDownError( Exception exception )
 		{
             string message = BuildMessage(exception);
             string stackTrace = BuildStackTrace(exception);
 
-            if (failureSite == FailureSite.TearDown)
-            {
-                message = "TearDown : " + message;
-                stackTrace = "--TearDown" + Environment.NewLine + stackTrace;
+            message = "TearDown : " + message;
+            stackTrace = "--TearDown" + Environment.NewLine + stackTrace;
 
-                if (this.message != null)
-                    message = this.message + Environment.NewLine + message;
-                if (this.stackTrace != null)
-                    stackTrace = this.stackTrace + Environment.NewLine + stackTrace;
-            }
+            if (this.message != null)
+                message = this.message + Environment.NewLine + message;
+            if (this.stackTrace != null)
+                stackTrace = this.stackTrace + Environment.NewLine + stackTrace;
 
-            SetResult( ResultState.Error, message, stackTrace );
-            this.failureSite = failureSite;
+            SetResult(ResultState.Error, message, stackTrace);
         }
 
 		/// <summary>
@@ -427,22 +391,64 @@ namespace NUnit.Framework.Api
                 case ResultState.Failure:
                 case ResultState.Error:
                     if (!this.IsFailure && !this.IsError)
-                        this.Failure("Child test failed", null, FailureSite.Child);
+                        this.Failure("Child test failed", null);
                     break;
                 case ResultState.Success:
                     if (this.ResultState == ResultState.Inconclusive)
                         this.Success();
                     break;
                 case ResultState.Cancelled:
-                    this.SetResult(ResultState.Cancelled, result.Message, null, FailureSite.Child);
+                    this.SetResult(ResultState.Cancelled, result.Message, null);
                     break;
             }
 		}
-		#endregion
 
-		#region Exception Helpers
+        public string ToXml()
+        {
+            System.IO.StringWriter buffer = new System.IO.StringWriter();
+            XmlTextWriter xml = new XmlTextWriter(buffer);
 
-		private static string BuildMessage(Exception exception)
+            if (this.Test.IsSuite)
+                xml.WriteStartElement("suite");
+            else
+                xml.WriteStartElement("test");
+
+            xml.WriteAttributeString("name", this.Name);
+            xml.WriteAttributeString("fullname", this.FullName);
+            xml.WriteAttributeString("result", this.ResultState.ToString());
+            xml.WriteAttributeString("time", string.Format("0.000", this.Time, System.Globalization.CultureInfo.InvariantCulture));
+
+            if (this.IsFailure || this.IsError )
+            {
+                xml.WriteStartElement("failure");
+
+                if (this.Message != null)
+                    xml.WriteElementString("message", this.Message);
+
+                if (this.StackTrace != null)
+                    xml.WriteElementString("stacktrace", this.StackTrace);
+
+                xml.WriteEndElement();
+            }
+            else if (!this.Executed)
+            {
+                xml.WriteElementString("message", this.Message);
+            }
+
+            if (this.HasResults)
+                foreach (TestResult childResult in Results)
+                    xml.WriteRaw(childResult.ToXml());
+
+            xml.WriteEndElement();
+           
+            return buffer.ToString();
+        }
+
+        #endregion
+
+        #region Exception Helpers
+
+        private static string BuildMessage(Exception exception)
 		{
 			StringBuilder sb = new StringBuilder();
 			sb.AppendFormat( "{0} : {1}", exception.GetType().ToString(), exception.Message );

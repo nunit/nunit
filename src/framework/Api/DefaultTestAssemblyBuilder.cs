@@ -183,7 +183,7 @@ namespace NUnit.Framework.Api
                 testAssembly.IgnoreReason = "Has no TestFixtures";
             }
 
-            NUnitFramework.ApplyCommonAttributes(assembly, testAssembly);
+            testAssembly.ApplyCommonAttributes(Reflect.GetAttributes(assembly, false));
 
             testAssembly.Properties["_PID"] = System.Diagnostics.Process.GetCurrentProcess().Id;
             testAssembly.Properties["_APPDOMAIN"] = AppDomain.CurrentDomain.FriendlyName;
