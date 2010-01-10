@@ -80,11 +80,11 @@ namespace NUnit.AdhocTestRunner
         {
             switch (result.Name)
             {
-                case "suite":
+                case "test-suite":
                     foreach( XmlNode childResult in result.ChildNodes )
                         WriteErrorsAndFailures(childResult);
                     break;
-                case"test":
+                case"test-case":
                     string resultState = result.Attributes["result"].Value;
                     if (resultState == "Failure" || resultState == "Error" || resultState == "Cancelled")
                         WriteSingleResult(result);
@@ -105,11 +105,11 @@ namespace NUnit.AdhocTestRunner
         {
             switch (result.Name)
             {
-                case "suite":
+                case "test-suite":
                     foreach (XmlNode childResult in result.ChildNodes)
                         WriteNotRunResults(childResult);
                     break;
-                case "test":
+                case "test-case":
                     string resultState = result.Attributes["result"].Value;
                     if (resultState == "Skipped" || resultState == "Ignored" || resultState == "NotRunnable")
                         WriteSingleResult(result);
@@ -139,9 +139,11 @@ namespace NUnit.AdhocTestRunner
                         : stacktrace.InnerText + Environment.NewLine);
                     //Console.WriteLine(stacktrace.InnerText + Environment.NewLine);
             }
-            else
+
+            XmlNode reasonNode = result.SelectSingleNode("reason");
+            if (reasonNode != null)
             {
-                XmlNode message = result.SelectSingleNode("message");
+                XmlNode message = reasonNode.SelectSingleNode("message");
 
                 if (message != null)
                     Console.WriteLine(message.InnerText);
