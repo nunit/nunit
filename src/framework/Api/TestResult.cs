@@ -408,40 +408,59 @@ namespace NUnit.Framework.Api
             System.IO.StringWriter buffer = new System.IO.StringWriter();
             XmlTextWriter xml = new XmlTextWriter(buffer);
 
+            WriteXml(xml);
+           
+            return buffer.ToString();
+        }
+
+        private void WriteXml(XmlTextWriter xml)
+        {
             if (this.Test.IsSuite)
-                xml.WriteStartElement("suite");
+                xml.WriteStartElement("test-suite");
             else
-                xml.WriteStartElement("test");
+                xml.WriteStartElement("test-case");
 
             xml.WriteAttributeString("name", this.Name);
             xml.WriteAttributeString("fullname", this.FullName);
             xml.WriteAttributeString("result", this.ResultState.ToString());
             xml.WriteAttributeString("time", string.Format("0.000", this.Time, System.Globalization.CultureInfo.InvariantCulture));
 
-            if (this.IsFailure || this.IsError )
+            if (this.IsFailure || this.IsError)
             {
-                xml.WriteStartElement("failure");
-
-                if (this.Message != null)
-                    xml.WriteElementString("message", this.Message);
-
-                if (this.StackTrace != null)
-                    xml.WriteElementString("stacktrace", this.StackTrace);
-
-                xml.WriteEndElement();
+                WriteFailureElement(xml);
             }
             else if (!this.Executed)
             {
-                xml.WriteElementString("message", this.Message);
+                WriteReasonElement(xml);
             }
 
             if (this.HasResults)
                 foreach (TestResult childResult in Results)
-                    xml.WriteRaw(childResult.ToXml());
+                    childResult.WriteXml(xml);
 
             xml.WriteEndElement();
-           
-            return buffer.ToString();
+        }
+
+        private void WriteReasonElement(XmlTextWriter xml)
+        {
+            xml.WriteStartElement("reason");
+
+            xml.WriteElementString("message", this.Message);
+
+            xml.WriteEndElement();
+        }
+
+        private void WriteFailureElement(XmlTextWriter xml)
+        {
+            xml.WriteStartElement("failure");
+
+            if (this.Message != null)
+                xml.WriteElementString("message", this.Message);
+
+            if (this.StackTrace != null)
+                xml.WriteElementString("stacktrace", this.StackTrace);
+
+            xml.WriteEndElement();
         }
 
         #endregion

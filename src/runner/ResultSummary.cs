@@ -58,7 +58,7 @@ namespace NUnit.AdhocTestRunner
         {
             switch (result.Name)
             {
-                case "test":
+                case "test-case":
                     resultCount++;
 
                     string resultState = result.Attributes["result"].Value;
@@ -96,7 +96,7 @@ namespace NUnit.AdhocTestRunner
                     }
                     break;
 
-                case "suite":
+                case "test-suite":
                     foreach (XmlNode childResult in result.ChildNodes)
                         Summarize(childResult);
                     break;

@@ -86,6 +86,8 @@ namespace NUnit.Framework.Internal
 		public TestMethod( MethodInfo method ) 
 			: base( method.ReflectedType.FullName, method.Name ) 
 		{
+            // Disambiguate call to base class methods
+            // TODO: This should not be here - it's a presentation issue
             if( method.DeclaringType != method.ReflectedType)
                 this.Name = method.DeclaringType.Name + "." + method.Name;
 
