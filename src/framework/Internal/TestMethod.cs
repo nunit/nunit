@@ -74,6 +74,11 @@ namespace NUnit.Framework.Internal
 	    internal object expectedResult;
 
         /// <summary>
+        /// Indicated whether the method has an expected result.
+        /// </summary>
+	    internal bool hasExpectedResult;
+
+        /// <summary>
         /// The fixture object, if it has been created
         /// </summary>
         private object fixture;
@@ -344,7 +349,7 @@ namespace NUnit.Framework.Internal
 
 			object result = Reflect.InvokeMethod( this.method, fixture, this.arguments );
 
-            if (this.expectedResult != null)
+            if (this.hasExpectedResult)
                 NUnit.Framework.Assert.AreEqual(expectedResult, result);
 
             testResult.Success();
