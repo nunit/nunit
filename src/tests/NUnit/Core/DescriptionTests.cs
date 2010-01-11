@@ -54,20 +54,6 @@ namespace NUnit.Framework.Tests
         }
 
         [Test]
-        public void DescriptionInResult()
-        {
-            TestSuite suite = new TestSuite("Mock Fixture");
-            suite.Add(TestBuilder.MakeFixture(typeof(DescriptionFixture)));
-            TestResult result = suite.Run(TestListener.NULL, TestFilter.Empty);
-
-            TestResult caseResult = TestFinder.Find("Method", result, true);
-            Assert.AreEqual("Test Description", caseResult.Description);
-
-            caseResult = TestFinder.Find("NoDescriptionMethod", result, true);
-            Assert.IsNull(caseResult.Description);
-        }
-
-        [Test]
 		public void NoDescription()
 		{
 			Test testCase = TestBuilder.MakeTestCase( FixtureType, "NoDescriptionMethod" );
@@ -86,33 +72,11 @@ namespace NUnit.Framework.Tests
 			Assert.AreEqual("Fixture Description", mockFixtureSuite.Description);
 		}
 
-		[Test]
-		public void FixtureDescriptionInResult()
-		{
-			TestSuite suite = new TestSuite("Mock Fixture");
-			suite.Add( TestBuilder.MakeFixture( typeof( DescriptionFixture ) ) );
-            TestResult result = suite.Run(TestListener.NULL, TestFilter.Empty);
-
-		    TestResult fixtureResult = TestFinder.Find("DescriptionFixture", result, true);
-            Assert.AreEqual("Fixture Description", fixtureResult.Description);
-		}
-
         [Test]
         public void SeparateDescriptionAttribute()
         {
             Test testCase = TestBuilder.MakeTestCase(FixtureType, "SeparateDescriptionMethod");
             Assert.AreEqual("Separate Description", testCase.Description);
-        }
-
-        [Test]
-        public void SeparateDescriptionInResult()
-        {
-            TestSuite suite = new TestSuite("Mock Fixture");
-            suite.Add(TestBuilder.MakeFixture(typeof(DescriptionFixture)));
-            TestResult result = suite.Run(TestListener.NULL, TestFilter.Empty);
-
-            TestResult caseResult = TestFinder.Find("SeparateDescriptionMethod", result, true);
-            Assert.AreEqual("Separate Description", caseResult.Description);
         }
     }
 }

@@ -81,9 +81,6 @@
     <Compile Include="..\..\..\src\framework\Api\TestController.cs">
       <Link>Api\TestController.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Api\TestFilter.cs">
-      <Link>Api\TestFilter.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\src\framework\Api\TestOutput.cs">
       <Link>Api\TestOutput.cs</Link>
     </Compile>

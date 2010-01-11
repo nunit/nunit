@@ -49,7 +49,7 @@ namespace NUnit.Framework.Internal
         /// <param name="listener"></param>
         /// <param name="filter"></param>
         /// <returns></returns>
-        public override TestResult Run(ITestListener listener, TestFilter filter)
+        public override TestResult Run(ITestListener listener)
         {
             if (this.Parent != null)
             {
@@ -64,7 +64,7 @@ namespace NUnit.Framework.Internal
 
             // DYNAMIC: Get the parameters, and add the methods here.
             
-            return base.Run(listener, filter);
+            return base.Run(listener);
         }
 
         /// <summary>

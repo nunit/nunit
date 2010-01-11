@@ -78,7 +78,7 @@ namespace NUnit.Framework.Tests
 			Test test = (Test)TestBuilder.MakeTestCase(
 				typeof(TestCaseAttributeFixture), "MethodCausesConversionOverflow").Tests[0];
 			Assert.AreEqual(RunState.Runnable, test.RunState);
-            TestResult result = test.Run(TestListener.NULL, TestFilter.Empty);
+            TestResult result = test.Run(TestListener.NULL);
             Assert.AreEqual(ResultState.Error, result.ResultState);
 		}
 
@@ -158,7 +158,7 @@ namespace NUnit.Framework.Tests
         {
             Test test = (Test)TestBuilder.MakeTestCase(
                 typeof(TestCaseAttributeFixture), "MethodThrowsExpectedException").Tests[0];
-            TestResult result = test.Run(TestListener.NULL, TestFilter.Empty);
+            TestResult result = test.Run(TestListener.NULL);
             Assert.AreEqual(ResultState.Success, result.ResultState);
         }
 
@@ -167,7 +167,7 @@ namespace NUnit.Framework.Tests
         {
             Test test = (Test)TestBuilder.MakeTestCase(
                 typeof(TestCaseAttributeFixture), "MethodThrowsWrongException").Tests[0];
-            TestResult result = test.Run(TestListener.NULL, TestFilter.Empty);
+            TestResult result = test.Run(TestListener.NULL);
             Assert.AreEqual(ResultState.Failure, result.ResultState);
             StringAssert.StartsWith("An unexpected exception type was thrown", result.Message);
         }
@@ -177,7 +177,7 @@ namespace NUnit.Framework.Tests
         {
             Test test = (Test)TestBuilder.MakeTestCase(
                 typeof(TestCaseAttributeFixture), "MethodThrowsExpectedExceptionWithWrongMessage").Tests[0];
-            TestResult result = test.Run(TestListener.NULL, TestFilter.Empty);
+            TestResult result = test.Run(TestListener.NULL);
             Assert.AreEqual(ResultState.Failure, result.ResultState);
             StringAssert.StartsWith("The exception message text was incorrect", result.Message);
         }
@@ -187,7 +187,7 @@ namespace NUnit.Framework.Tests
         {
             Test test = (Test)TestBuilder.MakeTestCase(
                 typeof(TestCaseAttributeFixture), "MethodThrowsNoException").Tests[0];
-            TestResult result = test.Run(TestListener.NULL, TestFilter.Empty);
+            TestResult result = test.Run(TestListener.NULL);
             Assert.AreEqual(ResultState.Failure, result.ResultState);
             Assert.AreEqual("System.ArgumentNullException was expected", result.Message);
         }
@@ -197,7 +197,7 @@ namespace NUnit.Framework.Tests
         {
             Test test = (Test)TestBuilder.MakeTestCase(
                 typeof(TestCaseAttributeFixture), "MethodCallsIgnore").Tests[0];
-            TestResult result = test.Run(TestListener.NULL, TestFilter.Empty);
+            TestResult result = test.Run(TestListener.NULL);
             Assert.AreEqual(ResultState.Ignored, result.ResultState);
             Assert.AreEqual("Ignore this", result.Message);
         }
@@ -207,7 +207,7 @@ namespace NUnit.Framework.Tests
         {
             Test test = TestBuilder.MakeTestCase(
                 typeof(TestCaseAttributeFixture), "MethodWithIgnoredTestCases");
-            TestResult result = test.Run(TestListener.NULL, TestFilter.Empty);
+            TestResult result = test.Run(TestListener.NULL);
 
             ResultSummary summary = new ResultSummary(result);
             Assert.AreEqual(3, summary.ResultCount);

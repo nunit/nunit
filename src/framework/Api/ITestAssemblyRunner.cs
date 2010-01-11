@@ -42,20 +42,19 @@ namespace NUnit.Framework.Api
         /// <returns>True if the load was successful</returns>
         bool Load(string assemblyName);
 
-        /// <summary>
-        /// Count Test Cases using a filter
-        /// </summary>
-        /// <param name="filter">The filter to apply</param>
-        /// <returns>The number of test cases found</returns>
-        int CountTestCases(TestFilter filter);
+        ///// <summary>
+        ///// Count Test Cases using a filter
+        ///// </summary>
+        ///// <param name="filter">The filter to apply</param>
+        ///// <returns>The number of test cases found</returns>
+        //int CountTestCases(TestFilter filter);
 
         /// <summary>
         /// Run selected tests and return a test result. The test is run synchronously,
         /// and the listener interface is notified as it progresses.
         /// </summary>
         /// <param name="listener">Interface to receive ITestListener notifications.</param>
-        /// <param name="filter">The filter to apply when running the tests</param>
-        TestResult Run(ITestListener listener, TestFilter filter);
+        TestResult Run(ITestListener listener);
 
         #endregion
     }

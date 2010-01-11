@@ -59,7 +59,7 @@ namespace NUnit.Framework.Assertions
 		{
             Type fixtureType = typeof(IgnoredTestCaseFixture);
             Test test = TestBuilder.MakeTestCase(fixtureType, "CallsIgnore");
-            TestResult result = test.Run(TestListener.NULL, TestFilter.Empty);
+            TestResult result = test.Run(TestListener.NULL);
             Assert.IsFalse(result.Executed, "Test should not run");
             Assert.AreEqual("Ignore me", result.Message);
         }
@@ -69,7 +69,7 @@ namespace NUnit.Framework.Assertions
         {
             Type fixtureType = typeof(IgnoredTestCaseFixture);
             Test test = TestBuilder.MakeTestCase(fixtureType, "CallsIgnoreWithExpectedException");
-            TestResult result = test.Run(TestListener.NULL, TestFilter.Empty);
+            TestResult result = test.Run(TestListener.NULL);
             Assert.IsFalse(result.Executed, "Test should not run");
             Assert.AreEqual("Ignore me", result.Message);
         }
@@ -80,7 +80,7 @@ namespace NUnit.Framework.Assertions
 			//IgnoredTestSuiteFixture testFixture = new IgnoredTestSuiteFixture();
 			TestSuite suite = new TestSuite("IgnoredTestFixture");
 			suite.Add( TestBuilder.MakeFixture( typeof( IgnoredTestSuiteFixture ) ) );
-            TestResult result = suite.Run(TestListener.NULL, TestFilter.Empty);
+            TestResult result = suite.Run(TestListener.NULL);
 
 			TestResult fixtureResult = (TestResult)result.Results[0];
 			Assert.IsFalse( fixtureResult.Executed, "Fixture should not have been executed" );
@@ -93,7 +93,7 @@ namespace NUnit.Framework.Assertions
 		public void IgnoreWorksFromSetUp()
 		{
 			TestSuite testFixture = TestBuilder.MakeFixture( typeof( IgnoreInSetUpFixture ) );
-            TestResult fixtureResult = testFixture.Run(TestListener.NULL, TestFilter.Empty);
+            TestResult fixtureResult = testFixture.Run(TestListener.NULL);
 
 			Assert.IsTrue( fixtureResult.Executed, "Fixture should have been executed" );
 			
