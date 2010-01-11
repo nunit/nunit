@@ -141,7 +141,7 @@ namespace NUnit.Framework.Internal
         #endregion
 
 		#region Run Methods
-        public override TestResult Run(ITestListener listener, TestFilter filter)
+        public override TestResult Run(ITestListener listener)
         {
             using (new TestContext())
             {
@@ -216,7 +216,7 @@ namespace NUnit.Framework.Internal
                 while (repeatCount-- > 0)
                 {
                     if (RequiresThread || Timeout > 0 || ApartmentState != GetCurrentApartment())
-                        new TestMethodThread(this).Run(testResult, TestListener.NULL, TestFilter.Empty);
+                        new TestMethodThread(this).Run(testResult, TestListener.NULL);
                     else
                         doRun(testResult);
 

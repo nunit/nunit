@@ -59,7 +59,7 @@ namespace NUnit.Framework.Api
 		private string stackTrace;
 
 		/// <summary>
-		/// Message giving the reason for failure
+		/// Message giving the reason for failure, error or skipping the test
 		/// </summary>
 		private string message;
 
@@ -160,14 +160,6 @@ namespace NUnit.Framework.Api
 	    {
             get { return resultState == ResultState.Error;  }   
 	    }
-
-		/// <summary>
-		/// Gets a description associated with the test
-		/// </summary>
-        public string Description
-        {
-            get { return test.Description; }
-        }
 
 		/// <summary>
 		/// Gets the elapsed time for running the test

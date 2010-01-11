@@ -42,24 +42,23 @@ namespace NUnit.Framework.Api
             return true;
         }
 
-        /// <summary>
-        /// Count Test Cases using a filter
-        /// </summary>
-        /// <param name="filter">The filter to apply</param>
-        /// <returns>The number of test cases found</returns>
-        public int CountTestCases(TestFilter filter)
-        {
-            return this.suite.CountTestCases(filter);
-        }
+        ///// <summary>
+        ///// Count Test Cases using a filter
+        ///// </summary>
+        ///// <param name="filter">The filter to apply</param>
+        ///// <returns>The number of test cases found</returns>
+        //public int CountTestCases(TestFilter filter)
+        //{
+        //    return this.suite.CountTestCases(filter);
+        //}
 
         /// <summary>
         /// Run selected tests and return a test result. The test is run synchronously,
         /// and the listener interface is notified as it progresses.
         /// </summary>
         /// <param name="listener">Interface to receive EventListener notifications.</param>
-        /// <param name="filter">The filter to apply when running the tests</param>
         /// <returns></returns>
-        public TestResult Run(ITestListener listener, TestFilter filter)
+        public TestResult Run(ITestListener listener)
         {
             try
             {
@@ -73,7 +72,7 @@ namespace NUnit.Framework.Api
                 using (EventPump pump = new EventPump(listener, queue.Events, true))
                 {
                     pump.Start();
-                    return this.suite.Run(listener, filter);
+                    return this.suite.Run(listener);
                 }
             }
             finally

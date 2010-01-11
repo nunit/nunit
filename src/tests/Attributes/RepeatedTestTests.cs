@@ -52,7 +52,7 @@ namespace NUnit.Framework.Attributes
 		{
 			Test suite = TestBuilder.MakeFixture( fixture );
 			Assert.AreEqual( 1, suite.Tests.Count, "Test case count" );
-            return suite.Run(TestListener.NULL, TestFilter.Empty);
+            return suite.Run(TestListener.NULL);
 		}
 
 		[Test]

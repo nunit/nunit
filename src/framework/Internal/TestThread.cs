@@ -54,8 +54,6 @@ namespace NUnit.Framework.Internal
 
         protected ITestListener listener;
 
-        protected TestFilter filter;
-
         /// <summary>
         /// Unexpected exception thrown by test thread
         /// </summary>
@@ -101,12 +99,11 @@ namespace NUnit.Framework.Internal
         /// part of the pubic interface, but it would require some
         /// restructuring of the Test hierarchy.
         /// </summary>
-        public void Run(TestResult testResult, ITestListener listener, TestFilter filter)
+        public void Run(TestResult testResult, ITestListener listener)
         {
             this.thrownException = null;
             this.testResult = testResult;
             this.listener = listener;
-            this.filter = filter;
 
             log.Debug("Starting TestThread");
             thread.Start();
@@ -189,7 +186,7 @@ namespace NUnit.Framework.Internal
 
         protected override void RunTest()
         {
-            suite.Run(testResult, listener, filter);
+            suite.Run(testResult, listener);
         }
     }
 }

@@ -206,19 +206,19 @@ namespace NUnit.Framework.Api
         /// CountTestsAction counts the number of test cases in the loaded TestSuite
         /// held by the TestController.
         /// </summary>
-        public class CountTestsAction : TestControllerAction
-        {
-            /// <summary>
-            /// Construct a CountsTestAction and perform the count of test cases.
-            /// </summary>
-            /// <param name="controller">A TestController holding the TestSuite whose cases are to be counted</param>
-            /// <param name="callback">An AsyncCallback for reporting the count</param>
-            public CountTestsAction(TestController controller, AsyncCallback callback) 
-                : base(controller, callback)
-            {
-                ReportResult(Runner.CountTestCases(TestFilter.Empty), true);
-            }
-        }
+        //public class CountTestsAction : TestControllerAction
+        //{
+        //    /// <summary>
+        //    /// Construct a CountsTestAction and perform the count of test cases.
+        //    /// </summary>
+        //    /// <param name="controller">A TestController holding the TestSuite whose cases are to be counted</param>
+        //    /// <param name="callback">An AsyncCallback for reporting the count</param>
+        //    public CountTestsAction(TestController controller, AsyncCallback callback) 
+        //        : base(controller, callback)
+        //    {
+        //        ReportResult(Runner.CountTestCases(TestFilter.Empty), true);
+        //    }
+        //}
 
         #endregion
 
@@ -237,20 +237,20 @@ namespace NUnit.Framework.Api
             public RunTestsAction(TestController controller, AsyncCallback callback) 
                 : base(controller, callback)
             {
-                ReportResult(Runner.Run(this, TestFilter.Empty).ToXml(), true);
+                ReportResult(Runner.Run(this).ToXml(), true);
             }
 
-            /// <summary>
-            /// Construct a RunTestsAction and run tests in the loaded TestSuite that pass the supplied filter
-            /// </summary>
-            /// <param name="controller">A TestController holding the TestSuite to run</param>
-            /// <param name="filter">A TestFilter used to determine which tests should be run</param>
-            /// <param name="result">A callback used to report results</param>
-            public RunTestsAction(TestController controller, TestFilter filter, AsyncCallback callback) 
-                : base(controller, callback)
-            {
-                ReportResult(Runner.Run(this, filter), true);
-            }
+            ///// <summary>
+            ///// Construct a RunTestsAction and run tests in the loaded TestSuite that pass the supplied filter
+            ///// </summary>
+            ///// <param name="controller">A TestController holding the TestSuite to run</param>
+            ///// <param name="filter">A TestFilter used to determine which tests should be run</param>
+            ///// <param name="result">A callback used to report results</param>
+            //public RunTestsAction(TestController controller, TestFilter filter, AsyncCallback callback) 
+            //    : base(controller, callback)
+            //{
+            //    ReportResult(Runner.Run(this, filter), true);
+            //}
 
             #region ITestListener Members
 

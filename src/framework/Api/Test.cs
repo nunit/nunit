@@ -309,28 +309,27 @@ namespace NUnit.Framework.Api
         #endregion
 
         #region Methods
-		/// <summary>
-		/// Gets a count of test cases that would be run using
-		/// the specified filter.
-		/// </summary>
-		/// <param name="filter"></param>
-		/// <returns></returns>
-        public virtual int CountTestCases(TestFilter filter)
-        {
-            if (filter.Pass(this))
-                return 1;
+        ///// <summary>
+        ///// Gets a count of test cases that would be run using
+        ///// the specified filter.
+        ///// </summary>
+        ///// <param name="filter"></param>
+        ///// <returns></returns>
+        //public virtual int CountTestCases(TestFilter filter)
+        //{
+        //    if (filter.Pass(this))
+        //        return 1;
 
-            return 0;
-        }
+        //    return 0;
+        //}
 
         /// <summary>
         /// Runs the test under a particular filter, sending
         /// notifications to a listener.
         /// </summary>
         /// <param name="listener">An event listener to receive notifications</param>
-        /// <param name="filter">A filter used in running the test</param>
         /// <returns></returns>
-        public abstract TestResult Run(ITestListener listener, TestFilter filter);
+        public abstract TestResult Run(ITestListener listener);
         #endregion
 
         #endregion

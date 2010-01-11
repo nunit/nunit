@@ -43,12 +43,12 @@ namespace NUnit.Framework.Api
         /// <summary>
         /// Gets or sets the name of the test
         /// </summary>
-        string Name { get; set; }
+        string Name { get; }
 
         /// <summary>
         /// Gets or sets the fully qualified name of the test
         /// </summary>
-        string FullName { get; set; }
+        string FullName { get; }
 
         /// <summary>
         /// Indicates whether the test can be run using
@@ -67,17 +67,7 @@ namespace NUnit.Framework.Api
 		int TestCount { get; }
 
 		/// <summary>
-		/// Categories available for this test
-		/// </summary>
-		IList Categories { get; }
-
-		/// <summary>
-		/// Return the description field. 
-		/// </summary>
-		string Description { get; set; }
-
-		/// <summary>
-		/// Return additional properties of the test
+		/// Gets the properties of the test
 		/// </summary>
 		IDictionary Properties { get; }
 
@@ -99,14 +89,14 @@ namespace NUnit.Framework.Api
         #endregion
 
         #region Methods
-		/// <summary>
-		/// Count the test cases that pass a filter. The
-		/// result should match those that would execute
-		/// when passing the same filter to Run.
-		/// </summary>
-		/// <param name="filter">The filter to apply</param>
-		/// <returns>The count of test cases</returns>
-        int CountTestCases(TestFilter filter);
+        ///// <summary>
+        ///// Count the test cases that pass a filter. The
+        ///// result should match those that would execute
+        ///// when passing the same filter to Run.
+        ///// </summary>
+        ///// <param name="filter">The filter to apply</param>
+        ///// <returns>The count of test cases</returns>
+        //int CountTestCases(TestFilter filter);
         #endregion
     }
 }
