@@ -136,6 +136,12 @@ namespace NUnit.Framework.Tests
             Assert.AreEqual("b", array[1]);
         }
 
+        [TestCase(Result = null)]
+        public object ResultCanBeNull()
+        {
+            return null;
+        }
+
         [Test]
         public void CanSpecifyDescription()
         {
