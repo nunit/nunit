@@ -41,7 +41,7 @@ namespace NUnit.Framework.Tests
 		public void InheritedTestAttributeIsRecognized()
 		{
 			Test fixture = TestBuilder.MakeFixture( typeof( When_collecting_test_fixtures ) );
-			Assert.AreEqual( 1, fixture.TestCount );
+			Assert.AreEqual( 1, fixture.TestCaseCount );
 		}
     }
 }

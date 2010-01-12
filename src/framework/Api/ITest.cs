@@ -60,11 +60,11 @@ namespace NUnit.Framework.Api
 		/// Reason for not running the test, if applicable
 		/// </summary>
 		string IgnoreReason { get; set; }
-		
-		/// <summary>
-		/// Count of the test cases ( 1 if this is a test case )
-		/// </summary>
-		int TestCount { get; }
+
+        /// <summary>
+        /// Count of the test cases ( 1 if this is a test case )
+        /// </summary>
+		int TestCaseCount { get; }
 
 		/// <summary>
 		/// Gets the properties of the test

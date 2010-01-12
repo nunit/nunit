@@ -50,7 +50,7 @@ namespace NUnit.Framework.Tests
         {
             Test test = TestBuilder.MakeTestCase(fixtureType, "TheoryWithArgumentsAndDatapoints");
             TestAssert.IsRunnable(test);
-            Assert.That(test.TestCount, Is.EqualTo(9));
+            Assert.That(test.TestCaseCount, Is.EqualTo(9));
         }
 
         [Theory]
@@ -95,7 +95,7 @@ namespace NUnit.Framework.Tests
         public void SimpleTestIgnoresDataPoints()
         {
             Test test = TestBuilder.MakeTestCase(fixtureType, "TestWithArguments");
-            Assert.That(test.TestCount, Is.EqualTo(2));
+            Assert.That(test.TestCaseCount, Is.EqualTo(2));
         }
 
         public class SqrtTests
