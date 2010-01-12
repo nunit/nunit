@@ -155,7 +155,7 @@ namespace NUnit.Framework.Tests
             string name = "TestMethodWithMultipleTestCases";
             string fullName = typeof (TestMethodSignatureFixture).FullName + "." + name;
             TestSuite suite = (TestSuite)TestFinder.Find(name, fixture, false);
-            Assert.That(suite.TestCount, Is.EqualTo(3));
+            Assert.That(suite.TestCaseCount, Is.EqualTo(3));
 
             ArrayList names = new ArrayList();
             ArrayList fullNames = new ArrayList();

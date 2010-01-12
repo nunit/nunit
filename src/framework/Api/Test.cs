@@ -200,7 +200,7 @@ namespace NUnit.Framework.Api
 		/// Gets a count of test cases represented by
 		/// or contained under this test.
 		/// </summary>
-		public virtual int TestCount 
+		public virtual int TestCaseCount 
 		{ 
 			get { return 1; } 
 		}

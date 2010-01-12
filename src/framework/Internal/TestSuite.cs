@@ -215,7 +215,7 @@ namespace NUnit.Framework.Internal
         /// or contained under this test.
         /// </summary>
         /// <value></value>
-		public override int TestCount
+		public override int TestCaseCount
 		{
 			get
 			{
@@ -223,7 +223,7 @@ namespace NUnit.Framework.Internal
 
 				foreach(Test test in Tests)
 				{
-					count += test.TestCount;
+					count += test.TestCaseCount;
 				}
 				return count;
 			}
