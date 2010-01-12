@@ -257,11 +257,11 @@ namespace NUnit.Framework.Api
 		}
 
 		/// <summary>
-		/// Indicates whether this test is a suite
+		/// Indicates whether this test is a test case
 		/// </summary>
-        public virtual bool IsSuite
+        public abstract bool IsTestCase
         {
-            get { return false; }
+            get;
         }
 
 

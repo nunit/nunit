@@ -138,6 +138,11 @@ namespace NUnit.Framework.Internal
             get { return builderException; }
             set { builderException = value; }
         }
+
+        public override bool IsTestCase
+        {
+            get { return true; }
+        }
         #endregion
 
 		#region Run Methods

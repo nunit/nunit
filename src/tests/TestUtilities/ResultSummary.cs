@@ -67,7 +67,7 @@ namespace NUnit.TestUtilities
                 this.time = result.Time;
             }
 
-            if (!result.Test.IsSuite)
+            if (result.Test.IsTestCase)
             {
                 resultCount++;
 
