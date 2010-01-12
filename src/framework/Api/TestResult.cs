@@ -407,10 +407,10 @@ namespace NUnit.Framework.Api
 
         private void WriteXml(XmlTextWriter xml)
         {
-            if (this.Test.IsSuite)
-                xml.WriteStartElement("test-suite");
-            else
+            if (this.Test.IsTestCase)
                 xml.WriteStartElement("test-case");
+            else
+                xml.WriteStartElement("test-suite");
 
             xml.WriteAttributeString("name", this.Name);
             xml.WriteAttributeString("fullname", this.FullName);

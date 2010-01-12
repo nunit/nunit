@@ -205,9 +205,9 @@ namespace NUnit.Framework.Internal
         /// Indicates whether this test is a suite
         /// </summary>
         /// <value></value>
-		public override bool IsSuite
+		public override bool IsTestCase
 		{
-			get { return true; }
+			get { return false; }
 		}
 
         /// <summary>
