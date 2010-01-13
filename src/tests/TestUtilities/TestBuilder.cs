@@ -58,6 +58,11 @@ namespace NUnit.TestUtilities
             return suite;
         }
 
+        public static TestSuite MakeParameterizedMethodSuite(Type type, string methodName)
+        {
+            return (TestSuite)MakeTestCase(type, methodName);
+        }
+
         public static Test MakeTestCase(Type type, string methodName)
         {
             MethodInfo method = Reflect.GetNamedMethod(type, methodName);

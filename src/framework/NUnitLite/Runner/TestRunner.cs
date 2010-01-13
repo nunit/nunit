@@ -25,7 +25,7 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Collections;
-using NUnit.Framework;
+using NUnit.Framework.Api;
 
 namespace NUnitLite.Runner
 {
@@ -70,7 +70,11 @@ namespace NUnitLite.Runner
         /// <param name="test">The test.</param>
         public virtual TestResult Run(ITest test)
         {
-            return test.Run(this);
+            // TODO: Temporary
+            if (test is TestCase)
+                return ((TestCase)test).Run(this);
+            else
+                return ((TestSuite)test).Run(this);
         }
 
         /// <summary>

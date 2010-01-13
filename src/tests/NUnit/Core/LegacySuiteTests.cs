@@ -50,7 +50,7 @@ namespace NUnit.Framework.Tests
         [Test]
         public void SuiteReturningTestSuite()
         {
-            Test suite = builder.BuildFrom(typeof(LegacySuiteReturningTestSuite));
+            TestSuite suite = (TestSuite)builder.BuildFrom(typeof(LegacySuiteReturningTestSuite));
             Assert.AreEqual(RunState.Runnable, suite.RunState);
             Assert.AreEqual(3, suite.Tests.Count);
             Assert.AreEqual(5, suite.TestCaseCount);
@@ -59,7 +59,7 @@ namespace NUnit.Framework.Tests
         [Test]
         public void SuiteReturningFixtures()
         {
-            Test suite = builder.BuildFrom(typeof(LegacySuiteReturningFixtures));
+            TestSuite suite = (TestSuite)builder.BuildFrom(typeof(LegacySuiteReturningFixtures));
             Assert.AreEqual(RunState.Runnable, suite.RunState);
             Assert.AreEqual(3, suite.Tests.Count);
             Assert.AreEqual(5, suite.TestCaseCount);
@@ -68,7 +68,7 @@ namespace NUnit.Framework.Tests
         [Test]
         public void SuiteReturningTypes()
         {
-            Test suite = builder.BuildFrom(typeof(LegacySuiteReturningTypes));
+            TestSuite suite = (TestSuite)builder.BuildFrom(typeof(LegacySuiteReturningTypes));
             Assert.AreEqual(RunState.Runnable, suite.RunState);
             Assert.AreEqual(3, suite.Tests.Count);
             Assert.AreEqual(5, suite.TestCaseCount);

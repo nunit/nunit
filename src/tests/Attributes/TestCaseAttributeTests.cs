@@ -75,7 +75,7 @@ namespace NUnit.Framework.Tests
         [Test]
 		public void ConversionOverflowGivesError()
 		{
-			Test test = (Test)TestBuilder.MakeTestCase(
+			Test test = (Test)TestBuilder.MakeParameterizedMethodSuite(
 				typeof(TestCaseAttributeFixture), "MethodCausesConversionOverflow").Tests[0];
 			Assert.AreEqual(RunState.Runnable, test.RunState);
             TestResult result = test.Run(TestListener.NULL);
@@ -139,7 +139,7 @@ namespace NUnit.Framework.Tests
         [Test]
         public void CanSpecifyDescription()
         {
-			Test test = (Test)TestBuilder.MakeTestCase(
+			Test test = (Test)TestBuilder.MakeParameterizedMethodSuite(
 				typeof(TestCaseAttributeFixture), "MethodHasDescriptionSpecified").Tests[0];
 			Assert.AreEqual("My Description", test.Description);
 		}
@@ -147,7 +147,7 @@ namespace NUnit.Framework.Tests
         [Test]
         public void CanSpecifyTestName()
         {
-            Test test = (Test)TestBuilder.MakeTestCase(
+            Test test = (Test)TestBuilder.MakeParameterizedMethodSuite(
                 typeof(TestCaseAttributeFixture), "MethodHasTestNameSpecified").Tests[0];
             Assert.AreEqual("XYZ", test.Name);
             Assert.AreEqual("NUnit.TestData.TestCaseAttributeFixture.TestCaseAttributeFixture.XYZ", test.FullName);
@@ -156,7 +156,7 @@ namespace NUnit.Framework.Tests
         [Test]
         public void CanSpecifyExpectedException()
         {
-            Test test = (Test)TestBuilder.MakeTestCase(
+            Test test = (Test)TestBuilder.MakeParameterizedMethodSuite(
                 typeof(TestCaseAttributeFixture), "MethodThrowsExpectedException").Tests[0];
             TestResult result = test.Run(TestListener.NULL);
             Assert.AreEqual(ResultState.Success, result.ResultState);
@@ -165,7 +165,7 @@ namespace NUnit.Framework.Tests
         [Test]
         public void CanSpecifyExpectedException_WrongException()
         {
-            Test test = (Test)TestBuilder.MakeTestCase(
+            Test test = (Test)TestBuilder.MakeParameterizedMethodSuite(
                 typeof(TestCaseAttributeFixture), "MethodThrowsWrongException").Tests[0];
             TestResult result = test.Run(TestListener.NULL);
             Assert.AreEqual(ResultState.Failure, result.ResultState);
@@ -175,7 +175,7 @@ namespace NUnit.Framework.Tests
         [Test]
         public void CanSpecifyExpectedException_WrongMessage()
         {
-            Test test = (Test)TestBuilder.MakeTestCase(
+            Test test = (Test)TestBuilder.MakeParameterizedMethodSuite(
                 typeof(TestCaseAttributeFixture), "MethodThrowsExpectedExceptionWithWrongMessage").Tests[0];
             TestResult result = test.Run(TestListener.NULL);
             Assert.AreEqual(ResultState.Failure, result.ResultState);
@@ -185,7 +185,7 @@ namespace NUnit.Framework.Tests
         [Test]
         public void CanSpecifyExpectedException_NoneThrown()
         {
-            Test test = (Test)TestBuilder.MakeTestCase(
+            Test test = (Test)TestBuilder.MakeParameterizedMethodSuite(
                 typeof(TestCaseAttributeFixture), "MethodThrowsNoException").Tests[0];
             TestResult result = test.Run(TestListener.NULL);
             Assert.AreEqual(ResultState.Failure, result.ResultState);
@@ -195,7 +195,7 @@ namespace NUnit.Framework.Tests
         [Test]
         public void IgnoreTakesPrecedenceOverExpectedException()
         {
-            Test test = (Test)TestBuilder.MakeTestCase(
+            Test test = (Test)TestBuilder.MakeParameterizedMethodSuite(
                 typeof(TestCaseAttributeFixture), "MethodCallsIgnore").Tests[0];
             TestResult result = test.Run(TestListener.NULL);
             Assert.AreEqual(ResultState.Ignored, result.ResultState);

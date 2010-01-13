@@ -196,7 +196,7 @@ namespace NUnit.Framework.Internal
         /// Gets this test's child tests
         /// </summary>
         /// <value></value>
-		public override IList Tests 
+		public IList Tests 
 		{
 			get { return tests; }
 		}
@@ -350,7 +350,10 @@ namespace NUnit.Framework.Internal
             {
                 case ResultState.Failure:
                 case ResultState.Error:
-                    MarkTestsFailed(Tests, suiteResult, listener);
+                    string msg = this is SetUpFixture
+                        ? string.Format("Parent SetUp failed in {0}", this.FixtureType.Name)
+                        : string.Format("TestFixtureSetUp failed in {0}", this.FixtureType.Name);
+                    MarkTestsFailed(Tests, msg, suiteResult, listener);
                     break;
                 default:
                     try
@@ -539,55 +542,39 @@ namespace NUnit.Framework.Internal
         private void MarkTestNotRun(
             Test test, ResultState resultState, string ignoreReason, TestResult suiteResult, ITestListener listener)
         {
-            if (test is TestSuite)
-            {
-                listener.TestStarted(test);
-                TestResult result = new TestResult( test );
-				result.SetResult( resultState, ignoreReason, null );
-                MarkTestsNotRun(test.Tests, resultState, ignoreReason, suiteResult, listener);
-                suiteResult.AddResult(result);
-                listener.TestFinished(result);
-            }
-            else
-            {
-                listener.TestStarted(test);
-                TestResult result = new TestResult( test );
-                result.SetResult( resultState, ignoreReason, null );
-                suiteResult.AddResult(result);
-                listener.TestFinished(result);
-            }
+            listener.TestStarted(test);
+            TestResult result = new TestResult(test);
+            
+            TestSuite suite = test as TestSuite;
+            if (suite != null)
+                MarkTestsNotRun(suite.Tests, resultState, ignoreReason, suiteResult, listener);
+
+            result.SetResult(resultState, ignoreReason, null);
+            suiteResult.AddResult(result);
+            listener.TestFinished(result);
         }
 
         private void MarkTestsFailed(
-            IList tests, TestResult suiteResult, ITestListener listener)
+            IList tests, string msg, TestResult suiteResult, ITestListener listener)
         {
             foreach (Test test in ArrayList.Synchronized(tests))
                 if (test.RunState != RunState.Explicit)
-                    MarkTestFailed(test, suiteResult, listener);
+                    MarkTestFailed(test, msg, suiteResult, listener);
         }
 
         private void MarkTestFailed(
-            Test test, TestResult suiteResult, ITestListener listener)
+            Test test, string msg, TestResult suiteResult, ITestListener listener)
         {
-            if (test is TestSuite)
-            {
-                listener.TestStarted(test);
-                TestResult result = new TestResult( test );
-				string msg = string.Format( "Parent SetUp failed in {0}", this.FixtureType.Name );
-				result.Failure(msg, null);
-                MarkTestsFailed(test.Tests, suiteResult, listener);
-                suiteResult.AddResult(result);
-                listener.TestFinished(result);
-            }
-            else
-            {
-                listener.TestStarted(test);
-                TestResult result = new TestResult( test );
-				string msg = string.Format( "TestFixtureSetUp failed in {0}", this.FixtureType.Name );
-				result.Failure(msg, null);
-				suiteResult.AddResult(result);
-                listener.TestFinished(result);
-            }
+            listener.TestStarted(test);
+            TestResult result = new TestResult(test);
+
+            TestSuite suite = test as TestSuite;
+            if (suite != null)
+                MarkTestsFailed(suite.Tests, msg, suiteResult, listener);
+
+            result.Failure(msg, null);
+            suiteResult.AddResult(result);
+            listener.TestFinished(result);
         }
         #endregion
 

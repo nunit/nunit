@@ -22,7 +22,7 @@
 // ***********************************************************************
 
 using System.Reflection;
-using NUnit.Framework.Api;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Core.Extensibility
 {

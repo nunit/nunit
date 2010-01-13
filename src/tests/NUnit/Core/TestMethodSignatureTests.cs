@@ -34,7 +34,7 @@ namespace NUnit.Framework.Tests
 	public class TestMethodSignatureTests
 	{
         private static Type fixtureType = typeof(TestMethodSignatureFixture);
-		private Test fixture;
+		private TestSuite fixture;
 
 		[SetUp]
 		public void CreateFixture()

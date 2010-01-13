@@ -25,6 +25,7 @@ using System;
 using System.Collections;
 using NUnit.Framework;
 using NUnit.Framework.Api;
+using NUnit.Framework.Internal;
 using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Attributes
@@ -117,7 +118,7 @@ namespace NUnit.Framework.Attributes
 
     public class ParameterizedTestFixtureNamingTests
     {
-        Test fixture;
+        TestSuite fixture;
         Test[] instances;
 
         [SetUp]
@@ -159,7 +160,7 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void MethodWithoutParamsIsNamedCorrectly()
         {
-            Test instance = (Test)fixture.Tests[0];
+            TestSuite instance = (TestSuite)fixture.Tests[0];
             Test method = TestFinder.Find("MethodWithoutParams", instance, false);
             Assert.That(method, Is.Not.Null );
             Assert.That(method.FullName, Is.EqualTo(instance.FullName + ".MethodWithoutParams"));
@@ -168,8 +169,8 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void MethodWithParamsIsNamedCorrectly()
         {
-            Test instance = (Test)fixture.Tests[0];
-            Test method = TestFinder.Find("MethodWithParams", instance, false);
+            TestSuite instance = (TestSuite)fixture.Tests[0];
+            TestSuite method = (TestSuite)TestFinder.Find("MethodWithParams", instance, false);
             Assert.That(method, Is.Not.Null);
             
             Test testcase = (Test)method.Tests[0];

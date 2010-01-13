@@ -161,7 +161,7 @@ namespace NUnit.Framework.Tests
         [Test]
         public void CanSpecifyExpectedException()
         {
-            Test test = (Test)TestBuilder.MakeTestCase(
+            Test test = (Test)TestBuilder.MakeParameterizedMethodSuite(
                 typeof(TestCaseSourceAttributeFixture), "MethodThrowsExpectedException").Tests[0];
             TestResult result = test.Run(TestListener.NULL);
             Assert.AreEqual(ResultState.Success, result.ResultState);
@@ -170,7 +170,7 @@ namespace NUnit.Framework.Tests
         [Test]
         public void CanSpecifyExpectedException_WrongException()
         {
-            Test test = (Test)TestBuilder.MakeTestCase(
+            Test test = (Test)TestBuilder.MakeParameterizedMethodSuite(
                 typeof(TestCaseSourceAttributeFixture), "MethodThrowsWrongException").Tests[0];
             TestResult result = test.Run(TestListener.NULL);
             Assert.AreEqual(ResultState.Failure, result.ResultState);
@@ -180,7 +180,7 @@ namespace NUnit.Framework.Tests
         [Test]
         public void CanSpecifyExpectedException_NoneThrown()
         {
-            Test test = (Test)TestBuilder.MakeTestCase(
+            Test test = (Test)TestBuilder.MakeParameterizedMethodSuite(
                 typeof(TestCaseSourceAttributeFixture), "MethodThrowsNoException").Tests[0];
             TestResult result = test.Run(TestListener.NULL);
             Assert.AreEqual(ResultState.Failure, result.ResultState);
@@ -190,7 +190,7 @@ namespace NUnit.Framework.Tests
         [Test]
         public void IgnoreTakesPrecedenceOverExpectedException()
         {
-            Test test = (Test)TestBuilder.MakeTestCase(
+            Test test = (Test)TestBuilder.MakeParameterizedMethodSuite(
                 typeof(TestCaseSourceAttributeFixture), "MethodCallsIgnore").Tests[0];
             TestResult result = test.Run(TestListener.NULL);
             Assert.AreEqual(ResultState.Ignored, result.ResultState);
@@ -213,7 +213,7 @@ namespace NUnit.Framework.Tests
         [Test]
         public void HandlesExceptionInTestCaseSource()
         {
-            Test test = (Test)TestBuilder.MakeTestCase(
+            Test test = (Test)TestBuilder.MakeParameterizedMethodSuite(
                 typeof(TestCaseSourceAttributeFixture), "MethodWithSourceThrowingException").Tests[0];
             Assert.AreEqual(RunState.NotRunnable, test.RunState);
             TestResult result = test.Run(TestListener.NULL);

@@ -24,25 +24,27 @@
 using System;
 using NUnit.Core;
 using NUnit.Framework.Api;
+using NUnit.Framework.Internal;
 
 namespace NUnit.TestUtilities
 {
     /// <summary>
-    /// Utility class used to locate tests by name in a test tree
+    /// Utility class used to locate tests by name in a test suite
     /// </summary>
     public class TestFinder
     {
-        public static Test Find(string name, Test test, bool recursive)
+        public static Test Find(string name, TestSuite suite, bool recursive)
         {
-            if (test.Tests != null)
+            foreach (Test child in suite.Tests)
             {
-                foreach (Test child in test.Tests)
+                if (child.Name == name)
+                    return child;
+                if (recursive)
                 {
-                    if (child.Name == name)
-                        return child;
-                    if (recursive)
+                    TestSuite childSuite = child as TestSuite;
+                    if (childSuite != null)
                     {
-                        Test grandchild = Find(name, child, true);
+                        Test grandchild = Find(name, childSuite, true);
                         if (grandchild != null)
                             return grandchild;
                     }

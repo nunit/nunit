@@ -21,14 +21,15 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-namespace NUnit.Framework.Api
-{
-	using System;
-	using System.Collections;
-	using System.Collections.Specialized;
-    using System.Threading;
-	using System.Reflection;
+using System;
+using System.Collections;
+using System.Collections.Specialized;
+using System.Threading;
+using System.Reflection;
+using NUnit.Framework.Api;
 
+namespace NUnit.Framework.Internal
+{
 	/// <summary>
 	/// The Test abstract class represents a test within the framework.
 	/// </summary>
@@ -264,15 +265,6 @@ namespace NUnit.Framework.Api
             get;
         }
 
-
-		/// <summary>
-		/// Gets the parent test of this test
-		/// </summary>
-		ITest ITest.Parent 
-		{
-			get { return parent; }
-		}
-
 		/// <summary>
 		/// Gets the parent as a Test object.
 		/// Used by the core to set the parent.
@@ -282,14 +274,6 @@ namespace NUnit.Framework.Api
 			get { return parent; }
 			set { parent = value; }
 		}
-
-		/// <summary>
-		/// Gets this test's child tests
-		/// </summary>
-		public virtual IList Tests 
-        {
-            get { return null; } 
-        }
 
 		/// <summary>
 		/// Gets the Type of the fixture used in running this test
