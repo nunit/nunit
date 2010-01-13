@@ -401,17 +401,14 @@ namespace NUnit.Framework.Internal
                     if (ex is NUnitException || ex is System.Reflection.TargetInvocationException)
                         ex = ex.InnerException;
 
+                    suiteResult.RecordException(ex);
+
+                    // TODO: Is this needed?
                     if (ex is NUnit.Framework.IgnoreException)
                     {
                         this.RunState = RunState.Ignored;
-                        suiteResult.Ignore(ex.Message);
-                        suiteResult.StackTrace = ex.StackTrace;
                         this.IgnoreReason = ex.Message;
                     }
-                    else if (ex is NUnit.Framework.AssertionException)
-                        suiteResult.Failure(ex.Message, ex.StackTrace);
-                    else
-                        suiteResult.Error(ex);
                 }
             }
         }
@@ -572,7 +569,7 @@ namespace NUnit.Framework.Internal
             if (suite != null)
                 MarkTestsFailed(suite.Tests, msg, suiteResult, listener);
 
-            result.Failure(msg, null);
+            result.Failure(msg);
             suiteResult.AddResult(result);
             listener.TestFinished(result);
         }

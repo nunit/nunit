@@ -115,7 +115,7 @@ namespace NUnit.Framework.Internal
             {
                 thread.Abort();
                 //thread.Join();
-                testResult.Failure(string.Format("Test exceeded Timeout value of {0}ms", Timeout), null);
+                testResult.Failure(string.Format("Test exceeded Timeout value of {0}ms", Timeout));
             }
 
             // Handle any exception communicated back from the thread, ie. from proc!

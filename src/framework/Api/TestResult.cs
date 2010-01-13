@@ -24,6 +24,7 @@
 using System;
 using System.Text;
 using System.Collections;
+using System.Globalization;
 using System.Xml;
 
 namespace NUnit.Framework.Api
@@ -33,8 +34,6 @@ namespace NUnit.Framework.Api
 	/// the result of a test and is used to
 	/// communicate results across AppDomains.
 	/// </summary>
-	/// 
-	[Serializable]
 	public class TestResult
 	{
 		#region Fields
@@ -53,10 +52,12 @@ namespace NUnit.Framework.Api
 		/// </summary>
 		private readonly ITest test;
 
+#if !NETCF_1_0
 		/// <summary>
 		/// The stacktrace at the point of failure
 		/// </summary>
 		private string stackTrace;
+#endif
 
 		/// <summary>
 		/// Message giving the reason for failure, error or skipping the test
@@ -108,6 +109,7 @@ namespace NUnit.Framework.Api
             {
                 return resultState == ResultState.Success ||
                        resultState == ResultState.Failure ||
+                       resultState == ResultState.Cancelled ||
                        resultState == ResultState.Error ||
                        resultState == ResultState.Inconclusive;
             }
@@ -179,6 +181,7 @@ namespace NUnit.Framework.Api
             get { return message; }
         }
 
+#if !NETCF_1_0
 		/// <summary>
 		/// Gets any stacktrace associated with an
 		/// error or failure.
@@ -188,6 +191,7 @@ namespace NUnit.Framework.Api
             get { return stackTrace; }
             set { stackTrace = value; }
         }
+#endif
 
 		/// <summary>
 		/// Gets or sets the count of asserts executed
@@ -223,7 +227,7 @@ namespace NUnit.Framework.Api
         /// </summary>
         public void Success()
         {
-            SetResult( ResultState.Success, null, null );
+            SetResult( ResultState.Success, null );
         }
 
         /// <summary>
@@ -231,7 +235,7 @@ namespace NUnit.Framework.Api
         /// </summary>
         public void Success( string message )
         {
-            SetResult( ResultState.Success, message, null );
+            SetResult( ResultState.Success, message );
         }
 
         /// <summary>
@@ -240,26 +244,7 @@ namespace NUnit.Framework.Api
 		/// <param name="reason">The reason the test was not run</param>
 		public void Ignore(string reason)
 		{
-			SetResult( ResultState.Ignored, reason, null );
-		}
-
-		/// <summary>
-		/// Mark the test as ignored.
-		/// </summary>
-		/// <param name="ex">The ignore exception that was thrown</param>
-		public void Ignore( Exception ex )
-		{
-			SetResult( ResultState.Ignored, ex.Message, BuildStackTrace( ex ) );
-		}
-
-		/// <summary>
-		/// Mark the test as ignored.
-		/// </summary>
-		/// <param name="reason">The reason the test was not run</param>
-		/// <param name="stackTrace">Stack trace giving the location of the command</param>
-		public void Ignore(string reason, string stackTrace)
-		{
-			SetResult( ResultState.Ignored, reason, stackTrace );
+			SetResult( ResultState.Ignored, reason );
 		}
 
 		/// <summary>
@@ -268,7 +253,7 @@ namespace NUnit.Framework.Api
 		/// <param name="reason">The reason the test was not run</param>
         public void Skip(string reason)
         {
-            SetResult(ResultState.Skipped, reason, null);
+            SetResult(ResultState.Skipped, reason);
         }
 
         /// <summary>
@@ -277,7 +262,7 @@ namespace NUnit.Framework.Api
         /// <param name="reason">The reason the test is invalid</param>
         public void Invalid( string reason )
         {
-            SetResult( ResultState.NotRunnable, reason, null );
+            SetResult( ResultState.NotRunnable, reason );
         }
 
         /// <summary>
@@ -286,52 +271,96 @@ namespace NUnit.Framework.Api
         /// <param name="ex">The exception thrown by the builder or an addin</param>
         public void Invalid(Exception ex)
         {
+#if !NETCF_1_0
             SetResult(ResultState.NotRunnable, BuildMessage( ex ), BuildStackTrace(ex));
+#else
+            SetResult(ResultState.NotRunnable, BuildMessage( ex ));
+#endif
         }
 
-	    /// <summary>
-		/// Set the result of the test
-		/// </summary>
-		/// <param name="resultState">The ResultState to use in the result</param>
-		/// <param name="reason">The reason the test was not run</param>
+        /// <summary>
+        /// Set the result of the test
+        /// </summary>
+        /// <param name="resultState">The ResultState to use in the result</param>
+        /// <param name="reason">The reason the test was not run</param>
+        public void SetResult(ResultState resultState, string reason)
+        {
+            this.resultState = resultState;
+            this.message = reason;
+        }
+
+#if !NETCF_1_0
+        /// <summary>
+        /// Set the result of the test
+        /// </summary>
+        /// <param name="resultState">The ResultState to use in the result</param>
+        /// <param name="reason">The reason the test was not run</param>
         /// <param name="stackTrace">Stack trace giving the location of the command</param>
         public void SetResult(ResultState resultState, string reason, string stackTrace)
-		{
-		    this.resultState = resultState;
-			this.message = reason;
-			this.stackTrace = stackTrace;
-		}
+        {
+            this.resultState = resultState;
+            this.message = reason;
+            this.stackTrace = stackTrace;
+        }
+#endif
 
         /// <summary>
         /// Set the test result based on the type of exception thrown
         /// </summary>
         /// <param name="ex">The exception that was thrown</param>
-        public void SetResult(Exception ex)
+        public void RecordException(Exception ex)
         {
+#if !NETCF_1_0
             if (ex is System.Threading.ThreadAbortException)
                 SetResult(ResultState.Cancelled, "Test cancelled by user", ex.StackTrace);
             else if (ex is AssertionException)
                 SetResult(ResultState.Failure, ex.Message, ex.StackTrace);
+#if !NUNITLITE
             else if (ex is IgnoreException)
                 SetResult(ResultState.Ignored, ex.Message, ex.StackTrace);
             else if (ex is InconclusiveException)
                 SetResult(ResultState.Inconclusive, ex.Message, ex.StackTrace);
             else if (ex is SuccessException)
                 SetResult(ResultState.Success, ex.Message, ex.StackTrace);
+#endif
             else
                 SetResult(ResultState.Error, BuildMessage(ex), BuildStackTrace(ex));
+#else
+            if (ex is AssertionException)
+                SetResult(ResultState.Failure, ex.Message);
+#if !NUNITLITE
+            else if (ex is IgnoreException)
+                SetResult(ResultState.Ignored, ex.Message);
+            else if (ex is InconclusiveException)
+                SetResult(ResultState.Inconclusive, ex.Message);
+            else if (ex is SuccessException)
+                SetResult(ResultState.Success, ex.Message);
+#endif
+            else
+                SetResult(ResultState.Error, BuildMessage(ex));
+#endif
         }
 
         /// <summary>
-		/// Mark the test as a failure due to an
-		/// assertion having failed.
-		/// </summary>
-		/// <param name="message">Message to display</param>
-		/// <param name="stackTrace">Stack trace giving the location of the failure</param>
-		public void Failure(string message, string stackTrace)
+        /// Mark the test as a failure due to an assertion having failed.
+        /// </summary>
+        /// <param name="message">Message to display</param>
+        public void Failure(string message)
+        {
+            SetResult(ResultState.Failure, message);
+        }
+
+#if !NETCF_1_0
+        /// <summary>
+        /// Mark the test as a failure due to an assertion having failed.
+        /// </summary>
+        /// <param name="message">Message to display</param>
+        /// <param name="stackTrace">Stack trace giving the location of the failure</param>
+        public void Failure(string message, string stackTrace)
         {
             SetResult(ResultState.Failure, message, stackTrace);
         }
+#endif
 
 		/// <summary>
 		/// Marks the result as an error due to an exception thrown
@@ -341,9 +370,11 @@ namespace NUnit.Framework.Api
         public void Error(Exception exception)
         {
             string message = BuildMessage(exception);
-            string stackTrace = BuildStackTrace(exception);
-
-            SetResult(ResultState.Error, message, stackTrace);
+#if !NETCF_1_0
+            SetResult(ResultState.Error, message, BuildStackTrace(exception));
+#else
+            SetResult(ResultState.Error, message);
+#endif
         }
 
 		/// <summary>
@@ -353,18 +384,19 @@ namespace NUnit.Framework.Api
 		/// <param name="exception">The exception that was caught</param>
 		public void TearDownError( Exception exception )
 		{
-            string message = BuildMessage(exception);
-            string stackTrace = BuildStackTrace(exception);
-
-            message = "TearDown : " + message;
-            stackTrace = "--TearDown" + Environment.NewLine + stackTrace;
-
+            string message = "TearDown : " + BuildMessage(exception);
             if (this.message != null)
-                message = this.message + Environment.NewLine + message;
+                message = this.message + NUnit.Framework.Internal.Env.NewLine + message;
+
+#if !NETCF_1_0
+            string stackTrace = "--TearDown" + NUnit.Framework.Internal.Env.NewLine + BuildStackTrace(exception);
             if (this.stackTrace != null)
-                stackTrace = this.stackTrace + Environment.NewLine + stackTrace;
+                stackTrace = this.stackTrace + NUnit.Framework.Internal.Env.NewLine + stackTrace;
 
             SetResult(ResultState.Error, message, stackTrace);
+#else
+            SetResult(ResultState.Error, message);
+#endif
         }
 
 		/// <summary>
@@ -383,14 +415,14 @@ namespace NUnit.Framework.Api
                 case ResultState.Failure:
                 case ResultState.Error:
                     if (!this.IsFailure && !this.IsError)
-                        this.Failure("Child test failed", null);
+                        this.Failure("Child test failed");
                     break;
                 case ResultState.Success:
                     if (this.ResultState == ResultState.Inconclusive)
                         this.Success();
                     break;
                 case ResultState.Cancelled:
-                    this.SetResult(ResultState.Cancelled, result.Message, null);
+                    this.SetResult(ResultState.Cancelled, result.Message);
                     break;
             }
 		}
@@ -448,10 +480,10 @@ namespace NUnit.Framework.Api
 
             if (this.Message != null)
                 xml.WriteElementString("message", this.Message);
-
+#if !NETCF_1_0
             if (this.StackTrace != null)
                 xml.WriteElementString("stacktrace", this.StackTrace);
-
+#endif
             xml.WriteEndElement();
         }
 
@@ -462,19 +494,20 @@ namespace NUnit.Framework.Api
         private static string BuildMessage(Exception exception)
 		{
 			StringBuilder sb = new StringBuilder();
-			sb.AppendFormat( "{0} : {1}", exception.GetType().ToString(), exception.Message );
+			sb.AppendFormat( CultureInfo.CurrentCulture, "{0} : {1}", exception.GetType().ToString(), exception.Message );
 
 			Exception inner = exception.InnerException;
 			while( inner != null )
 			{
-				sb.Append( Environment.NewLine );
-				sb.AppendFormat( "  ----> {0} : {1}", inner.GetType().ToString(), inner.Message );
+				sb.Append( NUnit.Framework.Internal.Env.NewLine );
+				sb.AppendFormat( CultureInfo.CurrentCulture, "  ----> {0} : {1}", inner.GetType().ToString(), inner.Message );
 				inner = inner.InnerException;
 			}
 
 			return sb.ToString();
 		}
-		
+
+#if !NETCF_1_0
 		private static string BuildStackTrace(Exception exception)
 		{
             StringBuilder sb = new StringBuilder( GetStackTrace( exception ) );
@@ -482,10 +515,10 @@ namespace NUnit.Framework.Api
             Exception inner = exception.InnerException;
             while( inner != null )
             {
-                sb.Append( Environment.NewLine );
+                sb.Append( NUnit.Framework.Internal.Env.NewLine );
                 sb.Append( "--" );
                 sb.Append( inner.GetType().Name );
-                sb.Append( Environment.NewLine );
+                sb.Append( NUnit.Framework.Internal.Env.NewLine );
                 sb.Append( GetStackTrace( inner ) );
 
                 inner = inner.InnerException;
@@ -505,6 +538,7 @@ namespace NUnit.Framework.Api
 				return "No stack trace available";
 			}
 		}
+#endif
 
 		#endregion
 	}
