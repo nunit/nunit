@@ -33,7 +33,7 @@ namespace NUnit.Framework.Assertions
 	public abstract class MessageChecker : IExpectException
 	{
 		protected string expectedMessage;
-        protected readonly string NL = NUnit.Framework.Internal.Env.NewLine;
+        protected readonly string NL = NUnit.Env.NewLine;
 
 		[SetUp]
 		public void SetUp()

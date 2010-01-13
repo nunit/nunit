@@ -312,6 +312,9 @@
     <Compile Include="..\..\..\src\framework\DirectoryAssert.cs">
       <Link>DirectoryAssert.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\framework\Env.cs">
+      <Link>Env.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\framework\Exceptions\AssertionException.cs">
       <Link>Exceptions\AssertionException.cs</Link>
     </Compile>
@@ -392,9 +395,6 @@
     </Compile>
     <Compile Include="..\..\..\src\framework\Internal\DirectorySwapper.cs">
       <Link>Internal\DirectorySwapper.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Env.cs">
-      <Link>Internal\Env.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Internal\EventListenerTextWriter.cs">
       <Link>Internal\EventListenerTextWriter.cs</Link>

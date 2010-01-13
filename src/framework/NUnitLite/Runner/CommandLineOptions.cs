@@ -37,7 +37,7 @@ namespace NUnitLite.Runner
     public class CommandLineOptions
     {
         private string optionChars;
-        private static string NL = NUnit.Framework.Internal.Env.NewLine;
+        private static string NL = NUnit.Env.NewLine;
 
         private bool wait = false;
         private bool nologo = false;

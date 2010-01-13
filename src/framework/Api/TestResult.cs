@@ -386,12 +386,12 @@ namespace NUnit.Framework.Api
 		{
             string message = "TearDown : " + BuildMessage(exception);
             if (this.message != null)
-                message = this.message + NUnit.Framework.Internal.Env.NewLine + message;
+                message = this.message + NUnit.Env.NewLine + message;
 
 #if !NETCF_1_0
-            string stackTrace = "--TearDown" + NUnit.Framework.Internal.Env.NewLine + BuildStackTrace(exception);
+            string stackTrace = "--TearDown" + NUnit.Env.NewLine + BuildStackTrace(exception);
             if (this.stackTrace != null)
-                stackTrace = this.stackTrace + NUnit.Framework.Internal.Env.NewLine + stackTrace;
+                stackTrace = this.stackTrace + NUnit.Env.NewLine + stackTrace;
 
             SetResult(ResultState.Error, message, stackTrace);
 #else
@@ -499,7 +499,7 @@ namespace NUnit.Framework.Api
 			Exception inner = exception.InnerException;
 			while( inner != null )
 			{
-				sb.Append( NUnit.Framework.Internal.Env.NewLine );
+				sb.Append( NUnit.Env.NewLine );
 				sb.AppendFormat( CultureInfo.CurrentCulture, "  ----> {0} : {1}", inner.GetType().ToString(), inner.Message );
 				inner = inner.InnerException;
 			}
@@ -515,10 +515,10 @@ namespace NUnit.Framework.Api
             Exception inner = exception.InnerException;
             while( inner != null )
             {
-                sb.Append( NUnit.Framework.Internal.Env.NewLine );
+                sb.Append( NUnit.Env.NewLine );
                 sb.Append( "--" );
                 sb.Append( inner.GetType().Name );
-                sb.Append( NUnit.Framework.Internal.Env.NewLine );
+                sb.Append( NUnit.Env.NewLine );
                 sb.Append( GetStackTrace( inner ) );
 
                 inner = inner.InnerException;
