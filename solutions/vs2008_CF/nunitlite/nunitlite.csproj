@@ -302,9 +302,6 @@
     <Compile Include="..\..\..\src\framework\NUnitLite\Runner\TextUI.cs">
       <Link>NUnitLite\Runner\TextUI.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\NUnitLite\StackFilter.cs">
-      <Link>NUnitLite\StackFilter.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\src\framework\NUnitLite\TestCase.cs">
       <Link>NUnitLite\TestCase.cs</Link>
     </Compile>
