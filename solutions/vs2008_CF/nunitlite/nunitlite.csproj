@@ -62,11 +62,17 @@
     <Compile Include="..\..\..\src\framework\Api\ITest.cs">
       <Link>Api\ITest.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\framework\Api\ITestListener.cs">
+      <Link>Api\ITestListener.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\framework\Api\ResultState.cs">
       <Link>Api\ResultState.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Api\RunState.cs">
       <Link>Api\RunState.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Api\TestOutput.cs">
+      <Link>Api\TestOutput.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Api\TestResult.cs">
       <Link>Api\TestResult.cs</Link>
@@ -248,6 +254,9 @@
     <Compile Include="..\..\..\src\framework\Internal\Reflect.cs">
       <Link>Internal\Reflect.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\TestListener.cs">
+      <Link>Internal\TestListener.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\framework\Internal\TextMessageWriter.cs">
       <Link>Internal\TextMessageWriter.cs</Link>
     </Compile>
@@ -262,9 +271,6 @@
     </Compile>
     <Compile Include="..\..\..\src\framework\MessageMatch.cs">
       <Link>MessageMatch.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\NUnitLite\NullListener.cs">
-      <Link>NUnitLite\NullListener.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\NUnitLite\Runner\CommandLineOptions.cs">
       <Link>NUnitLite\Runner\CommandLineOptions.cs</Link>
@@ -301,9 +307,6 @@
     </Compile>
     <Compile Include="..\..\..\src\framework\NUnitLite\TestCase.cs">
       <Link>NUnitLite\TestCase.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\NUnitLite\TestListener.cs">
-      <Link>NUnitLite\TestListener.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\NUnitLite\TestSuite.cs">
       <Link>NUnitLite\TestSuite.cs</Link>

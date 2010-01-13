@@ -26,6 +26,7 @@ using System.Collections;
 using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.Api;
+using NUnit.Framework.Internal;
 
 namespace NUnitLite
 {
@@ -167,7 +168,7 @@ namespace NUnitLite
         /// <returns>A TestResult</returns>
         public TestResult Run()
         {
-            return Run(new NullListener());
+            return Run(TestListener.NULL);
         }
 
         /// <summary>
@@ -175,7 +176,7 @@ namespace NUnitLite
         /// </summary>
         /// <param name="listener">A TestListener to handle test events</param>
         /// <returns>A TestResult</returns>
-        public TestResult Run(TestListener listener)
+        public TestResult Run(ITestListener listener)
         {
             int count = 0, failures = 0, errors = 0;
             listener.TestStarted(this);

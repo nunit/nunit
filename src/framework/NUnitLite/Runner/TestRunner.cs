@@ -38,7 +38,7 @@ namespace NUnitLite.Runner
     /// <summary>
     /// The TestRunner class knows how to execute tests
     /// </summary>
-    public class TestRunner : TestListener
+    public class TestRunner : ITestListener
     {
         private NUnit.ObjectList listeners = new NUnit.ObjectList();
 
@@ -81,7 +81,7 @@ namespace NUnitLite.Runner
         /// Adds a listener to the TestRunner.
         /// </summary>
         /// <param name="listener">The listener.</param>
-        public void AddListener(TestListener listener)
+        public void AddListener(ITestListener listener)
         {
             listeners.Add(listener);
         }
@@ -90,7 +90,7 @@ namespace NUnitLite.Runner
         /// Removes a listener from the TestRunner.
         /// </summary>
         /// <param name="listener">The listener.</param>
-        public void RemoveListener(TestListener listener)
+        public void RemoveListener(ITestListener listener)
         {
             listeners.Remove(listener);
         }
@@ -101,7 +101,7 @@ namespace NUnitLite.Runner
         /// <param name="test">The test that just started.</param>
         public void TestStarted(ITest test)
         {
-            foreach (TestListener listener in listeners)
+            foreach (ITestListener listener in listeners)
                 listener.TestStarted(test);
         }
 
@@ -111,8 +111,18 @@ namespace NUnitLite.Runner
         /// <param name="result">The result of the test that just finished.</param>
         public void TestFinished(TestResult result)
         {
-            foreach (TestListener listener in listeners)
+            foreach (ITestListener listener in listeners)
                 listener.TestFinished(result);
+        }
+
+        /// <summary>
+        /// Forwards the TestOutput event to all listeners.
+        /// </summary>
+        /// <param name="result">The result of the test that just finished.</param>
+        public void TestOutput(TestOutput testOutput)
+        {
+            foreach (ITestListener listener in listeners)
+                listener.TestOutput(testOutput);
         }
     }
 }
