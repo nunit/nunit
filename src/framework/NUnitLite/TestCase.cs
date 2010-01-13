@@ -279,7 +279,7 @@ namespace NUnitLite
         {
             IgnoreAttribute ignore = (IgnoreAttribute)Reflect.GetAttribute(method, typeof(IgnoreAttribute), false);
             if (this.RunState == RunState.NotRunnable)
-                result.Failure(this.ignoreReason);
+                result.Invalid(this.ignoreReason);
             else if ( ignore != null )
                 result.Ignore(ignore.GetReason());
             else

@@ -287,8 +287,7 @@ namespace NUnit.Framework.Internal
                     if (maxTime > 0 && elapsedTime > maxTime)
                         testResult.Failure(
                             string.Format("Elapsed time of {0}ms exceeds maximum of {1}ms",
-                                elapsedTime, maxTime),
-                            null);
+                                elapsedTime, maxTime));
                 }
 			}
 		}
@@ -363,7 +362,7 @@ namespace NUnit.Framework.Internal
             if (exception is NUnitException)
                 exception = exception.InnerException;
 
-            testResult.SetResult(exception);
+            testResult.RecordException(exception);
 		}
 		#endregion
     }

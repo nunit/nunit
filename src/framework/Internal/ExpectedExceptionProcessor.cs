@@ -117,7 +117,7 @@ namespace NUnit.Framework.Internal
         #region Public Methods
         public void ProcessNoException(TestResult testResult)
         {
-            testResult.Failure(NoExceptionMessage(), null);
+            testResult.Failure(NoExceptionMessage());
         }
 
         public void ProcessException(Exception exception, TestResult testResult)
@@ -141,7 +141,7 @@ namespace NUnit.Framework.Internal
             }
             else
             {
-                testResult.SetResult(exception);
+                testResult.RecordException(exception);
 
                 // If it shows as an error, change it to a failure due to the wrong type
                 if (testResult.ResultState == ResultState.Error)

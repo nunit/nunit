@@ -184,7 +184,7 @@ namespace NUnitLite
             switch (this.RunState)
             {
                 case RunState.NotRunnable:
-                    result.Error(this.IgnoreReason);
+                    result.Invalid(this.IgnoreReason);
                     break;
 
                 case RunState.Ignored:

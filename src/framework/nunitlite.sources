@@ -3,6 +3,7 @@ Api/ISetRunState.cs
 Api/ITest.cs
 Api/ResultState.cs
 Api/RunState.cs
+Api/TestResult.cs
 Attributes/*.cs
 Constraints/*.cs
 Exceptions/*.cs

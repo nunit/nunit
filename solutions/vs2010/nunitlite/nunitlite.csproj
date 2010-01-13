@@ -59,6 +59,9 @@
     <Compile Include="..\..\..\src\framework\Api\RunState.cs">
       <Link>Api\RunState.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\framework\Api\TestResult.cs">
+      <Link>Api\TestResult.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\framework\AssemblyInfo.cs">
       <Link>AssemblyInfo.cs</Link>
     </Compile>
@@ -292,9 +295,6 @@
     </Compile>
     <Compile Include="..\..\..\src\framework\NUnitLite\TestListener.cs">
       <Link>NUnitLite\TestListener.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\NUnitLite\TestResult.cs">
-      <Link>NUnitLite\TestResult.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\NUnitLite\TestSuite.cs">
       <Link>NUnitLite\TestSuite.cs</Link>
