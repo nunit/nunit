@@ -50,7 +50,7 @@ namespace NUnit.Framework.Attributes
 
 		private TestResult RunTestOnFixture( object fixture )
 		{
-			Test suite = TestBuilder.MakeFixture( fixture );
+			TestSuite suite = TestBuilder.MakeFixture( fixture );
 			Assert.AreEqual( 1, suite.Tests.Count, "Test case count" );
             return suite.Run(TestListener.NULL);
 		}
@@ -110,7 +110,7 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void CategoryWorksWithRepeatedTest()
         {
-            Test suite = TestBuilder.MakeFixture(typeof(RepeatedTestWithCategory));
+            TestSuite suite = TestBuilder.MakeFixture(typeof(RepeatedTestWithCategory));
             Test test = suite.Tests[0] as Test;
             Assert.IsNotNull(test.Categories);
             Assert.AreEqual(1, test.Categories.Count);

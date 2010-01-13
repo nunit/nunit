@@ -50,6 +50,9 @@
     <Compile Include="..\..\..\src\framework\Api\ISetRunState.cs">
       <Link>Api\ISetRunState.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\framework\Api\ITest.cs">
+      <Link>Api\ITest.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\framework\Api\ResultState.cs">
       <Link>Api\ResultState.cs</Link>
     </Compile>
@@ -247,9 +250,6 @@
     </Compile>
     <Compile Include="..\..\..\src\framework\MessageMatch.cs">
       <Link>MessageMatch.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\NUnitLite\ITest.cs">
-      <Link>NUnitLite\ITest.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\NUnitLite\NullListener.cs">
       <Link>NUnitLite\NullListener.cs</Link>

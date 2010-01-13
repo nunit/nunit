@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using NUnit.Framework.Api;
 
 namespace NUnitLite
 {

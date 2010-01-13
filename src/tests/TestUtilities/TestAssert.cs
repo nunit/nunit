@@ -81,7 +81,7 @@ namespace NUnit.TestUtilities
 
         public static void ChildNotRunnable(Type type, string name)
         {
-            IsNotRunnable((Test)TestBuilder.MakeTestCase(type, name).Tests[0]);
+            IsNotRunnable((Test)TestBuilder.MakeParameterizedMethodSuite(type, name).Tests[0]);
         }
         #endregion
 

@@ -25,6 +25,7 @@ using System;
 using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.Api;
+using NUnit.Framework.Internal;
 using NUnit.Core;
 using NUnit.TestUtilities;
 using NUnit.TestData.TestFixtureBuilderData;
@@ -39,7 +40,7 @@ namespace NUnit.Framework.Tests
 		public void GoodSignature()
 		{
 			string methodName = "TestVoid";
-			Test fixture = TestBuilder.MakeFixture( typeof( SignatureTestFixture ) );
+			TestSuite fixture = TestBuilder.MakeFixture( typeof( SignatureTestFixture ) );
 			Test foundTest = TestFinder.Find( methodName, fixture, true );
 			Assert.IsNotNull( foundTest );
 			Assert.AreEqual( RunState.Runnable, foundTest.RunState );

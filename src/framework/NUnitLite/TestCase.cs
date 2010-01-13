@@ -36,6 +36,7 @@ namespace NUnitLite
     public class TestCase : ITest
     {
         #region Instance Variables
+        private int id;
         private string name;
         private string fullName;
 
@@ -127,6 +128,17 @@ namespace NUnitLite
         #endregion
 
         #region Properties
+
+        /// <summary>
+        /// Gets or sets the id of the test
+        /// </summary>
+        /// <value></value>
+        public int ID
+        {
+            get { return id; }
+            set { id = value; }
+        }
+
         /// <summary>
         /// Gets the name of the test.
         /// </summary>
@@ -185,6 +197,14 @@ namespace NUnitLite
 
                 return properties; 
             }
+        }
+
+        /// <summary>
+        /// True if this is a test case
+        /// </summary>
+        public bool IsTestCase
+        {
+            get { return true; }
         }
 
         /// <summary>

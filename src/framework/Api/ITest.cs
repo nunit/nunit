@@ -76,16 +76,6 @@ namespace NUnit.Framework.Api
         /// </summary>
         bool IsTestCase { get; }
 
-        /// <summary>
-        ///  Gets the parent test of this test
-        /// </summary>
-        ITest Parent { get;  }
-
-        /// <summary>
-		/// For a test suite, the child tests or suites
-		/// Null if this is not a test suite
-		/// </summary>
-		IList Tests { get; }
         #endregion
 
         #region Methods

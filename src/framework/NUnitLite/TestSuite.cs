@@ -35,6 +35,7 @@ namespace NUnitLite
     public class TestSuite : ITest
     {
         #region Instance Variables
+        private int id;
         private string name;
         private string fullName;
 
@@ -68,6 +69,17 @@ namespace NUnitLite
         #endregion
 
         #region Properties
+
+        /// <summary>
+        /// Gets or sets the id of the test
+        /// </summary>
+        /// <value></value>
+        public int ID
+        {
+            get { return id; }
+            set { id = value; }
+        }
+
         /// <summary>
         /// Gets the name of the suite.
         /// </summary>
@@ -131,6 +143,14 @@ namespace NUnitLite
         }
 
         /// <summary>
+        /// True if this is a test case
+        /// </summary>
+        public bool IsTestCase
+        {
+            get { return false; }
+        }
+
+        /// <summary>
         /// Gets the tests.
         /// </summary>
         /// <value>The tests.</value>
@@ -175,7 +195,10 @@ namespace NUnitLite
                     foreach (ITest test in tests)
                     {
                         ++count;
-                        TestResult r = test.Run(listener);
+                        // TODO: Temporary
+                        TestResult r = test is TestCase
+                            ? ((TestCase)test).Run(listener)
+                            : ((TestSuite)test).Run(listener);
                         result.AddResult(r);
                         switch (r.ResultState)
                         {

@@ -22,7 +22,7 @@
 // ***********************************************************************
 
 using System;
-using NUnit.Framework.Api;
+using NUnit.Framework.Internal;
 using NUnit.TestData.AttributeInheritanceData;
 using NUnit.TestUtilities;
 

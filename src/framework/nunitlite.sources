@@ -1,5 +1,6 @@
 *.cs
 Api/ISetRunState.cs
+Api/ITest.cs
 Api/ResultState.cs
 Api/RunState.cs
 Attributes/*.cs
