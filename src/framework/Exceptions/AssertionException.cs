@@ -24,9 +24,6 @@
 namespace NUnit.Framework 
 {
 	using System;
-#if !NETCF
-	using System.Runtime.Serialization;
-#endif
 	
 	/// <summary>
 	/// Thrown when an assertion failed.
@@ -53,8 +50,8 @@ namespace NUnit.Framework
 		/// <summary>
 		/// Serialization Constructor
 		/// </summary>
-		protected AssertionException(SerializationInfo info, 
-			StreamingContext context) : base(info,context)
+		protected AssertionException(System.Runtime.Serialization.SerializationInfo info, 
+			System.Runtime.Serialization.StreamingContext context) : base(info,context)
 		{}
 #endif
 	}

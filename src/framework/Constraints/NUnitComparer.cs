@@ -25,9 +25,6 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Collections;
-#if CLR_2_0
-using System.Collections.Generic;
-#endif
 
 namespace NUnit.Framework.Constraints
 {

@@ -24,6 +24,9 @@
 using System;
 using System.Reflection;
 using System.Collections;
+#if CLR_2_0
+using System.Collections.Generic;
+#endif
 
 namespace NUnit.Framework.Internal
 {
@@ -50,18 +53,6 @@ namespace NUnit.Framework.Internal
         private static readonly Type[] EmptyTypes = new Type[0];
 
         #region Attributes
-
-        /// <summary>
-        /// Check presence of attribute with a given name on a member.
-        /// </summary>
-        /// <param name="member">The member to examine</param>
-        /// <param name="attributeType">The Type of the attribute to look for</param>
-        /// <param name="inherit">True to include inherited attributes</param>
-        /// <returns>True if the attribute is present</returns>
-        private static bool HasAttribute(ICustomAttributeProvider member, Type attributeType, bool inherit)
-        {
-            return member.IsDefined(attributeType, inherit);
-        }
 
         /// <summary>
         /// Get attribute of a given type on a member. If multiple attributes
@@ -203,11 +194,15 @@ namespace NUnit.Framework.Internal
         /// <returns>The array of methods found</returns>
         public static MethodInfo[] GetMethodsWithAttribute(Type fixtureType, Type attributeType, bool inherit)
         {
-            MethodList list = new MethodList();
+#if CLR_2_0
+            List<MethodInfo> list = new List<MethodInfo>();
+#else
+            ArrayList list = new ArrayList();
+#endif
 
             foreach (MethodInfo method in GetMethods(fixtureType))
             {
-                if (HasAttribute(method, attributeType, inherit))
+                if (method.IsDefined(attributeType, inherit))
                     list.Add(method);
             }
 
@@ -262,7 +257,7 @@ namespace NUnit.Framework.Internal
         {
             foreach (MethodInfo method in GetMethods( fixtureType ))
             {
-                if (HasAttribute(method, attributeType, inherit))
+                if (method.IsDefined(attributeType, inherit))
                     return true;
             }
 
@@ -336,7 +331,7 @@ namespace NUnit.Framework.Internal
         {
             foreach (PropertyInfo property in fixtureType.GetProperties(AllMembers))
             {
-                if (HasAttribute(property, attributeType, true))
+                if (property.IsDefined(attributeType, true))
                     return property;
             }
 
@@ -433,18 +428,6 @@ namespace NUnit.Framework.Internal
 
 		    return null;
 		}
-
-#if CLR_2_0
-        private class MethodList : System.Collections.Generic.List<MethodInfo> { }
-#else
-        private class MethodList : ArrayList 
-        {
-            public MethodInfo[] ToArray()
-            {
-                return (MethodInfo[])ToArray(typeof(MethodInfo));
-            }
-        }
-#endif
 
 		#endregion
 
