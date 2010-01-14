@@ -25,8 +25,10 @@ using System;
 using System.Reflection;
 using NUnit.Framework.Api;
 using NUnit.Framework.Internal;
+#if !NUNITLITE
 using NUnit.TestData.AssertIgnoreData;
 using NUnit.TestUtilities;
+#endif
 
 namespace NUnit.Framework.Assertions
 {
@@ -54,6 +56,7 @@ namespace NUnit.Framework.Assertions
             Assert.Ignore("MESSAGE: {0}+{1}={2}", 2, 2, 4);
         }
 
+#if !NUNITLITE
 		[Test]
 		public void IgnoreWorksForTestCase()
 		{
@@ -100,6 +103,7 @@ namespace NUnit.Framework.Assertions
 			foreach( TestResult testResult in fixtureResult.Results )
 				Assert.IsFalse( testResult.Executed, "Test case should not have been executed" );
 		}
+#endif
 
 		[Test]
 		public void IgnoreWithUserMessage()

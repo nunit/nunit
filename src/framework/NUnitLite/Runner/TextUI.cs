@@ -286,7 +286,7 @@ namespace NUnitLite.Runner
 
         private void PrintErrorResults(TestResult result)
         {
-            if (result.Results.Count > 0)
+            if (result.HasResults)
                 foreach (TestResult r in result.Results)
                     PrintErrorResults(r);
             else if (result.IsError || result.IsFailure)
