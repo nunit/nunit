@@ -29,7 +29,9 @@ namespace NUnit.Framework.Api
     /// The TestOutput class holds a unit of output from 
     /// a test to either stdOut or stdErr
     /// </summary>
-	[Serializable]
+#if !NETCF_1_0
+    [Serializable]
+#endif
 	public class TestOutput
 	{
 		string text;

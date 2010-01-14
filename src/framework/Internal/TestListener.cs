@@ -30,8 +30,6 @@ namespace NUnit.Framework.Internal
 	/// TestListener provides an implementation of ITestListener that
     /// does nothing. It is used only throught its NULL property.
 	/// </summary>
-	/// 
-	[Serializable]
 	public class TestListener : ITestListener
 	{
         /// <summary>

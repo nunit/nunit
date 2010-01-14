@@ -24,14 +24,13 @@
 namespace NUnit.Framework
 {
     using System;
-#if !NETCF
-    using System.Runtime.Serialization;
-#endif
+
     /// <summary>
     /// Thrown when a test executes inconclusively.
     /// </summary>
-    /// 
+#if !NETCF_1_0
     [Serializable]
+#endif
     public class InconclusiveException : System.Exception
     {
         /// <param name="message">The error message that explains 
@@ -53,8 +52,8 @@ namespace NUnit.Framework
         /// <summary>
         /// Serialization Constructor
         /// </summary>
-        protected InconclusiveException(SerializationInfo info,
-            StreamingContext context)
+        protected InconclusiveException(System.Runtime.Serialization.SerializationInfo info,
+            System.Runtime.Serialization.StreamingContext context)
             : base(info, context)
         { }
 #endif

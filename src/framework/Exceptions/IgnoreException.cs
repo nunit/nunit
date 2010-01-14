@@ -24,14 +24,13 @@
 namespace NUnit.Framework 
 {
 	using System;
-#if !NETCF
-	using System.Runtime.Serialization;
-#endif
 
 	/// <summary>
 	/// Thrown when an assertion failed.
 	/// </summary>
+#if !NETCF_1_0
 	[Serializable]
+#endif
 	public class IgnoreException : System.Exception
 	{
 		/// <param name="message"></param>
@@ -50,8 +49,8 @@ namespace NUnit.Framework
 		/// <summary>
 		/// Serialization Constructor
 		/// </summary>
-		protected IgnoreException(SerializationInfo info, 
-			StreamingContext context) : base(info,context)
+		protected IgnoreException(System.Runtime.Serialization.SerializationInfo info, 
+			System.Runtime.Serialization.StreamingContext context) : base(info,context)
 		{}
 #endif
 	}
