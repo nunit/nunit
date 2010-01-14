@@ -470,7 +470,7 @@ Gen3: Is.StringMatching(string pattern)=>new RegexConstraint(pattern)
 /// value matches the pattern supplied as an argument.
 /// </summary>
 Type: RegexConstraint
-Cond: !NUNITLITE
+Cond: !NETCF
 Gen: ConstraintFactory.DoesNotMatch(string pattern)=>new ConstraintExpression().Not.Matches(pattern)
 %
 /// <summary>

@@ -694,7 +694,7 @@ namespace NUnit.Framework.Constraints
 
         #region DoesNotMatch
 
-#if !NUNITLITE
+#if !NETCF
         /// <summary>
         /// Returns a constraint that fails if the actual
         /// value matches the pattern supplied as an argument.
