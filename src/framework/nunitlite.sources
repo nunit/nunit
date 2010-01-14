@@ -16,8 +16,10 @@ TestCaseData.cs
 Throws.cs
 Api/ISetRunState.cs
 Api/ITest.cs
+Api/ITestListener.cs
 Api/ResultState.cs
 Api/RunState.cs
+Api/TestOutput.cs
 Api/TestResult.cs
 Attributes/*.cs
 Constraints/*.cs
@@ -26,5 +28,6 @@ Internal/InvalidTestFixtureException.cs
 Internal/MethodHelper.cs
 Internal/NUnitException.cs
 Internal/Reflect.cs
+Internal/TestListener.cs
 Internal/TextMessageWriter.cs
 NUnitLite/**/*.cs

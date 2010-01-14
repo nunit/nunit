@@ -233,6 +233,15 @@
     <Compile Include="..\..\..\src\framework\Exceptions\AssertionException.cs">
       <Link>Exceptions\AssertionException.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\framework\Exceptions\IgnoreException.cs">
+      <Link>Exceptions\IgnoreException.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Exceptions\InconclusiveException.cs">
+      <Link>Exceptions\InconclusiveException.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Exceptions\SuccessException.cs">
+      <Link>Exceptions\SuccessException.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\framework\GlobalSettings.cs">
       <Link>GlobalSettings.cs</Link>
     </Compile>

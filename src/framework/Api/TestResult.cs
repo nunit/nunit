@@ -315,27 +315,23 @@ namespace NUnit.Framework.Api
                 SetResult(ResultState.Cancelled, "Test cancelled by user", ex.StackTrace);
             else if (ex is AssertionException)
                 SetResult(ResultState.Failure, ex.Message, ex.StackTrace);
-#if !NUNITLITE
             else if (ex is IgnoreException)
                 SetResult(ResultState.Ignored, ex.Message, ex.StackTrace);
             else if (ex is InconclusiveException)
                 SetResult(ResultState.Inconclusive, ex.Message, ex.StackTrace);
             else if (ex is SuccessException)
                 SetResult(ResultState.Success, ex.Message, ex.StackTrace);
-#endif
             else
                 SetResult(ResultState.Error, BuildMessage(ex), BuildStackTrace(ex));
 #else
             if (ex is AssertionException)
                 SetResult(ResultState.Failure, ex.Message);
-#if !NUNITLITE
             else if (ex is IgnoreException)
                 SetResult(ResultState.Ignored, ex.Message);
             else if (ex is InconclusiveException)
                 SetResult(ResultState.Inconclusive, ex.Message);
             else if (ex is SuccessException)
                 SetResult(ResultState.Success, ex.Message);
-#endif
             else
                 SetResult(ResultState.Error, BuildMessage(ex));
 #endif

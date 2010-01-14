@@ -52,6 +52,15 @@
     <Compile Include="..\..\..\src\tests\Assertions\AssertFailTests.cs">
       <Link>Assertions\AssertFailTests.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\tests\Assertions\AssertIgnoreTests.cs">
+      <Link>Assertions\AssertIgnoreTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\Assertions\AssertInconclusiveTests.cs">
+      <Link>Assertions\AssertInconclusiveTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\Assertions\AssertPassTests.cs">
+      <Link>Assertions\AssertPassTests.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\tests\Assertions\MessageChecker.cs">
       <Link>Assertions\MessageChecker.cs</Link>
     </Compile>

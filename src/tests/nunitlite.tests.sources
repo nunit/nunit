@@ -7,6 +7,9 @@ Assertions/ArrayEqualsFailureMessageFixture.cs
 Assertions/ArrayEqualsFixture.cs
 Assertions/ArrayNotEqualFixture.cs
 Assertions/AssertFailTests.cs
+Assertions/AssertIgnoreTests.cs
+Assertions/AssertInconclusiveTests.cs
+Assertions/AssertPassTests.cs
 Assertions/MessageChecker.cs
 Attributes/TestFixtureAttributeTests.cs
 Constraints/*.cs
