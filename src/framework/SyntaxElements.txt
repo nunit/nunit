@@ -176,7 +176,6 @@ Gen: ConstraintExpression.Message=>Property("Message")
 /// constraint to the InnerException property of the object being tested.
 /// </summary>
 Type: ResolvableConstraintExpression
-Cond: !NUNITLITE
 Gen: Has.InnerException=>Property("InnerException")
 Gen: ConstraintFactory.InnerException=>Has.InnerException
 Gen: ConstraintExpression.InnerException=>Property("InnerException")
@@ -203,28 +202,24 @@ Gen: Throws.Exception=>new ConstraintExpression().Append(new ThrowsOperator())
 /// Creates a constraint specifying an exception with a given InnerException
 /// </summary>
 Type: ResolvableConstraintExpression
-Cond: !NUNITLITE
 Gen: Throws.InnerException=> Exception.InnerException
 %
 /// <summary>
 /// Creates a constraint specifying an expected TargetInvocationException
 /// </summary>
 Type: ExactTypeConstraint
-Cond: !NUNITLITE
 Gen: Throws.TargetInvocationException=>TypeOf(typeof(System.Reflection.TargetInvocationException))
 %
 /// <summary>
 /// Creates a constraint specifying an expected TargetInvocationException
 /// </summary>
 Type: ExactTypeConstraint
-Cond: !NUNITLITE
 Gen: Throws.ArgumentException=>TypeOf(typeof(System.ArgumentException))
 %
 /// <summary>
 /// Creates a constraint specifying an expected TargetInvocationException
 /// </summary>
 Type: ExactTypeConstraint
-Cond: !NUNITLITE
 Gen: Throws.InvalidOperationException=>TypeOf(typeof(System.InvalidOperationException))
 %
 /// <summary>

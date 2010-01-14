@@ -55,7 +55,6 @@ namespace NUnit.Framework
 
         #region InnerException
 
-#if !NUNITLITE
         /// <summary>
         /// Creates a constraint specifying an exception with a given InnerException
         /// </summary>
@@ -63,13 +62,11 @@ namespace NUnit.Framework
         {
             get { return Exception.InnerException; }
         }
-#endif
 
         #endregion
 
         #region TargetInvocationException
 
-#if !NUNITLITE
         /// <summary>
         /// Creates a constraint specifying an expected TargetInvocationException
         /// </summary>
@@ -77,13 +74,11 @@ namespace NUnit.Framework
         {
             get { return TypeOf(typeof(System.Reflection.TargetInvocationException)); }
         }
-#endif
 
         #endregion
 
         #region ArgumentException
 
-#if !NUNITLITE
         /// <summary>
         /// Creates a constraint specifying an expected TargetInvocationException
         /// </summary>
@@ -91,13 +86,11 @@ namespace NUnit.Framework
         {
             get { return TypeOf(typeof(System.ArgumentException)); }
         }
-#endif
 
         #endregion
 
         #region InvalidOperationException
 
-#if !NUNITLITE
         /// <summary>
         /// Creates a constraint specifying an expected TargetInvocationException
         /// </summary>
@@ -105,7 +98,6 @@ namespace NUnit.Framework
         {
             get { return TypeOf(typeof(System.InvalidOperationException)); }
         }
-#endif
 
         #endregion
 
