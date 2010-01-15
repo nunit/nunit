@@ -27,6 +27,7 @@ using System.Collections;
 using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.Api;
+using NUnit.Framework.Internal;
 
 namespace NUnitLite.Runner
 {
@@ -161,7 +162,7 @@ namespace NUnitLite.Runner
 
                     foreach (Assembly assembly in assemblies)
                     {
-                        ITest suite = options.TestCount == 0
+                        Test suite = options.TestCount == 0
                             ? TestLoader.Load(assembly)
                             : TestLoader.Load(assembly, options.Tests);
 
@@ -312,7 +313,7 @@ namespace NUnitLite.Runner
 
         private void PrintNotRunResults(TestResult result)
         {
-            if (result.Results.Count > 0)
+            if (result.HasResults)
                 foreach (TestResult r in result.Results)
                     PrintNotRunResults(r);
             else if (!result.Executed)
@@ -370,7 +371,7 @@ namespace NUnitLite.Runner
             writer.Write(indent);
             writer.WriteLine(result.Test.Name);
 
-            if (result.Results.Count > 0)
+            if (result.HasResults)
                 foreach (TestResult r in result.Results)
                     PrintAllResults(r, indent + "  ");
         }

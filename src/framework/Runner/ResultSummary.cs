@@ -84,33 +84,33 @@ namespace NUnitLite
 
         private void Visit(TestResult result)
         {
-            if (result.Test is TestSuite)
+            if (result.Test.IsTestCase)
             {
-                if (result.Results != null)
-                    foreach (TestResult r in result.Results)
-                        Visit(r);
+                testCount++;
+                switch (result.ResultState)
+                {
+                    case ResultState.Ignored:
+                    case ResultState.Skipped:
+                        notRunCount++;
+                        break;
+                    case ResultState.Error:
+                    case ResultState.NotRunnable:
+                    case ResultState.Cancelled:
+                        errorCount++;
+                        break;
+                    case ResultState.Failure:
+                        failureCount++;
+                        break;
+                    default:
+                        break;
+                }
+
                 return;
             }
- 
-            // We only count non-suites
-            testCount++;
-            switch (result.ResultState)
-            {
-                case ResultState.Ignored:
-                case ResultState.Skipped:
-                    notRunCount++;
-                    break;
-                case ResultState.Error:
-                case ResultState.NotRunnable:
-                case ResultState.Cancelled:
-                    errorCount++;
-                    break;
-                case ResultState.Failure:
-                    failureCount++;
-                    break;
-                default:
-                    break;
-            }
+
+            if (result.Results != null)
+                foreach (TestResult r in result.Results)
+                    Visit(r);
         }
     }
 }

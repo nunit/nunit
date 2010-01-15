@@ -73,6 +73,7 @@ namespace NUnit.Framework.Internal
 		#endregion
 
         #region Properties
+#if !NUNITLITE
         /// <summary>
         /// Return true if the test requires a thread
         /// </summary>
@@ -105,6 +106,7 @@ namespace NUnit.Framework.Internal
             return Thread.CurrentThread.ApartmentState;
 #endif
         }
+#endif
         #endregion
 
         #region Construction

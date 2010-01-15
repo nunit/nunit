@@ -208,7 +208,11 @@ namespace NUnit.Framework.Internal
 
             list.Sort(new BaseTypesFirstComparer());
 
+#if CLR_2_0
             return (MethodInfo[])list.ToArray();
+#else
+            return (MethodInfo[])list.ToArray(typeof(MethodInfo));
+#endif
         }
 
         private static MethodInfo[] GetMethods(Type fixtureType)

@@ -40,8 +40,6 @@ namespace NUnit.Framework.Internal
 	/// </summary>
 	public class TestMethod : Test
 	{
-        static Logger log = InternalTrace.GetLogger(typeof(TestMethod));
-
 		#region Fields
 		/// <summary>
 		/// The test method
@@ -123,6 +121,7 @@ namespace NUnit.Framework.Internal
             set { fixture = value; }
         }
 
+#if !NUNITLITE
         public int Timeout
         {
             get
@@ -132,6 +131,7 @@ namespace NUnit.Framework.Internal
                     : TestContext.TestCaseTimeout;
             }
         }
+#endif
 
         public Exception BuilderException
         {
@@ -148,11 +148,10 @@ namespace NUnit.Framework.Internal
 		#region Run Methods
         public override TestResult Run(ITestListener listener)
         {
-            using (new TestContext())
-            {
+            //using (new TestContext())
+            //{
                 TestResult testResult = new TestResult(this);
 
-                log.Debug("Test Starting: " + this.FullName);
                 listener.TestStarted(this);
                 long startTime = DateTime.Now.Ticks;
 
@@ -185,11 +184,14 @@ namespace NUnit.Framework.Internal
 
                 listener.TestFinished(testResult);
                 return testResult;
-            }
+            //}
         }
         
         public virtual void Run(TestResult testResult)
 		{
+#if !NUNITLITE
+            TestContext context = new TestContext();
+#endif
             try
             {
                 if (this.Parent != null)
@@ -207,6 +209,7 @@ namespace NUnit.Framework.Internal
                 if (Fixture == null && !method.IsStatic)
                     Fixture = Reflect.Construct(this.FixtureType);
 
+#if !NUNITLITE
                 if (this.Properties["_SETCULTURE"] != null)
                     TestContext.CurrentCulture =
                         new System.Globalization.CultureInfo((string)Properties["_SETCULTURE"]);
@@ -214,15 +217,18 @@ namespace NUnit.Framework.Internal
                 if (this.Properties["_SETUICULTURE"] != null)
                     TestContext.CurrentUICulture =
                         new System.Globalization.CultureInfo((string)Properties["_SETUICULTURE"]);
+#endif
 
                 int repeatCount = this.Properties.Contains("Repeat")
                     ? (int)this.Properties["Repeat"] : 1;
 
                 while (repeatCount-- > 0)
                 {
+#if !NUNITLITE
                     if (RequiresThread || Timeout > 0 || ApartmentState != GetCurrentApartment())
                         new TestMethodThread(this).Run(testResult, TestListener.NULL);
                     else
+#endif
                         doRun(testResult);
 
                     if (testResult.ResultState == ResultState.Failure ||
@@ -236,14 +242,19 @@ namespace NUnit.Framework.Internal
             }
             catch (Exception ex)
             {
+#if !NETCF
                 if (ex is ThreadAbortException)
                     Thread.ResetAbort();
+#endif
 
                 RecordException(ex, testResult);
             }
             finally
             {
                 Fixture = null;
+#if !NUNITLITE
+                context.Dispose();
+#endif
             }
 		}
 
@@ -265,8 +276,10 @@ namespace NUnit.Framework.Internal
 			}
 			catch(Exception ex)
 			{
+#if !NETCF
                 if (ex is ThreadAbortException)
                     Thread.ResetAbort();
+#endif
 
                 RecordException(ex, testResult);
 			}
@@ -332,8 +345,10 @@ namespace NUnit.Framework.Internal
             }
             catch (Exception ex)
             {
+#if !NETCF
                 if (ex is ThreadAbortException)
                     Thread.ResetAbort();
+#endif
 
                 if (exceptionProcessor == null)
                     RecordException(ex, testResult);

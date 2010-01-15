@@ -39,14 +39,14 @@ namespace NUnitLite.Runner
         /// </summary>
         /// <param name="assembly">The assembly to be loaded</param>
         /// <returns>A Test containing all fixtures found</returns>
-        public static ITest Load(Assembly assembly)
+        public static Test Load(Assembly assembly)
         {
             TestSuite suite = new TestSuite(assembly.GetName().Name);
 
             foreach (Type type in assembly.GetTypes())
             {
                 if (TestFixtureBuilder.CanBuildFrom(type))
-                    suite.AddTest(TestFixtureBuilder.BuildFrom(type));
+                    suite.Add(TestFixtureBuilder.BuildFrom(type));
             }
 
             return suite;
@@ -58,7 +58,7 @@ namespace NUnitLite.Runner
         /// <param name="assembly">The assembly</param>
         /// <param name="className">The name of the test fixture class</param>
         /// <returns>A test representing the named fixture</returns>
-        public static ITest Load(Assembly assembly, string className)
+        public static Test Load(Assembly assembly, string className)
         {
             Type type = assembly.GetType(className);
             if (type == null && className.IndexOf(',') == -1)
@@ -76,11 +76,11 @@ namespace NUnitLite.Runner
         /// <param name="assembly">The assembly containing the tests</param>
         /// <param name="tests">String array containing the names of the test classes to load</param>
         /// <returns>A suite containing all the tests</returns>
-        public static ITest Load(Assembly assembly, string[] tests)
+        public static Test Load(Assembly assembly, string[] tests)
         {
             TestSuite suite = new TestSuite("Test Fixtures");
             foreach (string name in tests)
-                suite.AddTest(TestLoader.Load(assembly, name));
+                suite.Add(TestLoader.Load(assembly, name));
 
             return suite;
         }
@@ -91,9 +91,9 @@ namespace NUnitLite.Runner
         /// </summary>
         /// <param name="type">The type to be loaded</param>
         /// <returns>A test constructed on that type</returns>
-        public static ITest Load(Type type)
+        public static Test Load(Type type)
         {
-            ITest test = TestLoader.LoadAsSuite(type);
+            Test test = TestLoader.LoadAsSuite(type);
             if (test == null)
                 test = new TestSuite(type);
 
@@ -105,12 +105,12 @@ namespace NUnitLite.Runner
         /// </summary>
         /// <param name="type">The type to load</param>
         /// <returns>A test constructed from the type</returns>
-        public static ITest LoadAsSuite(Type type)
+        public static Test LoadAsSuite(Type type)
         {
             Type[] empty = new Type[0];
             PropertyInfo suiteProperty = type.GetProperty("Suite", typeof(ITest), empty);
             if (suiteProperty != null)
-                return (ITest)suiteProperty.GetValue(null, empty);
+                return (Test)suiteProperty.GetValue(null, empty);
 
             return null;
         }

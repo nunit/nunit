@@ -55,17 +55,18 @@ namespace NUnitLite.Runner
         /// </summary>
         /// <param name="method">The method.</param>
         /// <returns></returns>
-        public static ITest BuildFrom(MethodInfo method)
+        public static Test BuildFrom(MethodInfo method)
         {
             IList testdata = GetTestCaseData(method);
-            
-            if (testdata.Count == 0)
-                return new TestCase(method);
 
-            TestSuite testcases = new TestSuite(method.Name);
+            if (testdata.Count == 0)
+                return BuildTestMethod(method, null);
+
+            ParameterizedMethodSuite testcases = new ParameterizedMethodSuite(method);
 
             foreach (object[] args in testdata)
-                testcases.AddTest(new TestCase(method, args));
+                testcases.Add(BuildTestMethod(method, args));
+
             return testcases;
         }
 
@@ -127,6 +128,72 @@ namespace NUnitLite.Runner
             }
 
             return data;
+        }
+
+        private static Test BuildTestMethod(MethodInfo method, object[] args)
+        {
+            TestMethod testMethod = new TestMethod(method);
+
+            testMethod.arguments = args;
+
+            if (HasValidSignature(testMethod, method, args))
+            {
+                testMethod.ApplyCommonAttributes(Reflect.GetAttributes(method, false));
+
+                ExpectedExceptionAttribute[] attributes =
+                    (ExpectedExceptionAttribute[])method.GetCustomAttributes(typeof(ExpectedExceptionAttribute), false);
+
+                if (attributes.Length > 0)
+                    testMethod.ExceptionProcessor = new ExpectedExceptionProcessor(testMethod, attributes[0]);
+            }
+
+            return testMethod;
+        }
+
+        /// <summary>
+        /// Determines whether the method has a valid signature and sets
+        /// the RunState to NotRunnable if it does not.
+        /// </summary>
+        /// <param name="test">The test method being checked</param>
+        /// <param name="method">The method.</param>
+        /// <param name="args">The args.</param>
+        /// <returns>
+        /// 	<c>true</c> if the signature is valid; otherwise, <c>false</c>.
+        /// </returns>
+        private static bool HasValidSignature(TestMethod test, MethodInfo method, object[] args)
+        {
+            if (method.ReturnType != typeof(void))
+            {
+                test.RunState = RunState.NotRunnable;
+                test.IgnoreReason = "A TestMethod must return void";
+                return false;
+            }
+
+            int argsNeeded = method.GetParameters().Length;
+            int argsPassed = args == null ? 0 : args.Length;
+
+            if (argsNeeded == 0 && argsPassed > 0)
+            {
+                test.RunState = RunState.NotRunnable;
+                test.IgnoreReason = "Arguments may not be specified for a method with no parameters";
+                return false;
+            }
+
+            if (argsNeeded > 0 && argsPassed == 0)
+            {
+                test.RunState = RunState.NotRunnable;
+                test.IgnoreReason = "No arguments provided for a method requiring them";
+                return false;
+            }
+
+            if (argsNeeded != argsPassed)
+            {
+                test.RunState = RunState.NotRunnable;
+                test.IgnoreReason = string.Format("Expected {0} arguments, but received {1}", argsNeeded, argsPassed);
+                return false;
+            }
+
+            return true;
         }
     }
 }

@@ -33,7 +33,6 @@ namespace NUnit.Framework.Internal
     /// <summary>
     /// TestSuite represents a composite test, which contains other tests.
     /// </summary>
-	[Serializable]
 	public class TestSuite : Test
 	{
 		#region Fields
@@ -179,6 +178,7 @@ namespace NUnit.Framework.Internal
 			tests.Add(test);
 		}
 
+#if !NUNITLITE
         /// <summary>
         /// Adds a pre-constructed test fixture to the suite.
         /// </summary>
@@ -189,6 +189,8 @@ namespace NUnit.Framework.Internal
 			if ( test != null )
 				Add( test );
 		}
+#endif
+
 		#endregion
 
 		#region Properties
@@ -296,42 +298,41 @@ namespace NUnit.Framework.Internal
         /// <returns></returns>
 		public override TestResult Run(ITestListener listener)
 		{
-			using( new TestContext() )
+			TestResult suiteResult = new TestResult( this );
+
+			listener.TestStarted( this );
+			long startTime = DateTime.Now.Ticks;
+
+			switch (this.RunState)
 			{
-				TestResult suiteResult = new TestResult( this );
+				case RunState.Runnable:
+				case RunState.Explicit:
+#if !NUNITLITE
+                    if (RequiresThread || ApartmentState != GetCurrentApartment())
+                        new TestSuiteThread(this).Run(suiteResult, listener);
+                    else
+#endif
+                        Run(suiteResult, listener);
+					break;
 
-				listener.TestStarted( this );
-				long startTime = DateTime.Now.Ticks;
-
-				switch (this.RunState)
-				{
-					case RunState.Runnable:
-					case RunState.Explicit:
-                        if (RequiresThread || ApartmentState != GetCurrentApartment())
-                            new TestSuiteThread(this).Run(suiteResult, listener);
-                        else
-                            Run(suiteResult, listener);
-						break;
-
-					default:
-                    case RunState.Skipped:
-				        SkipAllTests(suiteResult, listener);
-                        break;
-                    case RunState.NotRunnable:
-                        MarkAllTestsInvalid( suiteResult, listener);
-                        break;
-                    case RunState.Ignored:
-                        IgnoreAllTests(suiteResult, listener);
-                        break;
-				}
-
-				long stopTime = DateTime.Now.Ticks;
-				double time = ((double)(stopTime - startTime)) / (double)TimeSpan.TicksPerSecond;
-				suiteResult.Time = time;
-
-				listener.TestFinished(suiteResult);
-				return suiteResult;
+				default:
+                case RunState.Skipped:
+			        SkipAllTests(suiteResult, listener);
+                    break;
+                case RunState.NotRunnable:
+                    MarkAllTestsInvalid( suiteResult, listener);
+                    break;
+                case RunState.Ignored:
+                    IgnoreAllTests(suiteResult, listener);
+                    break;
 			}
+
+			long stopTime = DateTime.Now.Ticks;
+			double time = ((double)(stopTime - startTime)) / (double)TimeSpan.TicksPerSecond;
+			suiteResult.Time = time;
+
+			listener.TestFinished(suiteResult);
+			return suiteResult;
 		}
 
         /// <summary>
@@ -343,28 +344,42 @@ namespace NUnit.Framework.Internal
         /// <param name="filter">The filter.</param>
         public void Run(TestResult suiteResult, ITestListener listener)
         {
-            suiteResult.Success(); // Assume success
-            DoOneTimeSetUp(suiteResult);
-
-            switch( suiteResult.ResultState )
+#if !NUNITLITE
+            TestContext context = new TestContext();
+#endif
+            try
             {
-                case ResultState.Failure:
-                case ResultState.Error:
-                    string msg = this is SetUpFixture
-                        ? string.Format("Parent SetUp failed in {0}", this.FixtureType.Name)
-                        : string.Format("TestFixtureSetUp failed in {0}", this.FixtureType.Name);
-                    MarkTestsFailed(Tests, msg, suiteResult, listener);
-                    break;
-                default:
-                    try
-                    {
-                        RunAllTests(suiteResult, listener);
-                    }
-                    finally
-                    {
-                        DoOneTimeTearDown(suiteResult);
-                    }
-                    break;
+                suiteResult.Success(); // Assume success
+                DoOneTimeSetUp(suiteResult);
+
+                switch (suiteResult.ResultState)
+                {
+                    case ResultState.Failure:
+                    case ResultState.Error:
+                        string msg = string.Format("TestFixtureSetUp failed in {0}", this.FixtureType.Name);
+#if !NUNITLITE
+                    if (this is SetUpFixture)
+                        msg = string.Format("Parent SetUp failed in {0}", this.FixtureType.Name);
+#endif
+                        MarkTestsFailed(this.tests, msg, suiteResult, listener);
+                        break;
+                    default:
+                        try
+                        {
+                            RunAllTests(suiteResult, listener);
+                        }
+                        finally
+                        {
+                            DoOneTimeTearDown(suiteResult);
+                        }
+                        break;
+                }
+            }
+            finally
+            {
+#if !NUNITLITE
+                context.Dispose();
+#endif
             }
         }
 		#endregion
@@ -384,6 +399,7 @@ namespace NUnit.Framework.Internal
 					if (Fixture == null && !IsStaticClass( FixtureType ) )
 						CreateUserFixture();
 
+#if !NUNITLITE
                     if (this.Properties["_SETCULTURE"] != null)
                         TestContext.CurrentCulture =
                             new System.Globalization.CultureInfo((string)Properties["_SETCULTURE"]);
@@ -391,6 +407,7 @@ namespace NUnit.Framework.Internal
                     if (this.Properties["_SETUICULTURE"] != null)
                         TestContext.CurrentUICulture =
                             new System.Globalization.CultureInfo((string)Properties["_SETUICULTURE"]);
+#endif
 
                     if (this.fixtureSetUpMethods != null)
                         foreach( MethodInfo fixtureSetUp in fixtureSetUpMethods )
@@ -477,10 +494,12 @@ namespace NUnit.Framework.Internal
         private void RunAllTests(
 			TestResult suiteResult, ITestListener listener )
 		{
+#if !NUNITLITE
             if (Properties.Contains("Timeout"))
                 TestContext.TestCaseTimeout = (int)Properties["Timeout"];
+#endif
 
-            foreach (Test test in ArrayList.Synchronized(Tests))
+            foreach (Test test in ArrayList.Synchronized(tests))
             {
                 if (test.RunState != RunState.Explicit)
                 {
@@ -511,23 +530,23 @@ namespace NUnit.Framework.Internal
         private void SkipAllTests(TestResult suiteResult, ITestListener listener)
         {
             suiteResult.Skip(this.IgnoreReason);
-            MarkTestsNotRun(this.Tests, ResultState.Skipped, this.IgnoreReason, suiteResult, listener);
+            MarkTestsNotRun(this.tests, ResultState.Skipped, this.IgnoreReason, suiteResult, listener);
         }
 
         private void IgnoreAllTests(TestResult suiteResult, ITestListener listener)
         {
             suiteResult.Ignore(this.IgnoreReason);
-            MarkTestsNotRun(this.Tests, ResultState.Ignored, this.IgnoreReason, suiteResult, listener);
+            MarkTestsNotRun(this.tests, ResultState.Ignored, this.IgnoreReason, suiteResult, listener);
         }
 
         private void MarkAllTestsInvalid(TestResult suiteResult, ITestListener listener)
         {
             suiteResult.Invalid(this.IgnoreReason);
-            MarkTestsNotRun(this.Tests, ResultState.NotRunnable, this.IgnoreReason, suiteResult, listener);
+            MarkTestsNotRun(this.tests, ResultState.NotRunnable, this.IgnoreReason, suiteResult, listener);
         }
        
         private void MarkTestsNotRun(
-            IList tests, ResultState resultState, string ignoreReason, TestResult suiteResult, ITestListener listener)
+            TestCollection tests, ResultState resultState, string ignoreReason, TestResult suiteResult, ITestListener listener)
         {
             foreach (Test test in ArrayList.Synchronized(tests))
             {
@@ -544,15 +563,15 @@ namespace NUnit.Framework.Internal
             
             TestSuite suite = test as TestSuite;
             if (suite != null)
-                MarkTestsNotRun(suite.Tests, resultState, ignoreReason, suiteResult, listener);
+                MarkTestsNotRun(suite.tests, resultState, ignoreReason, suiteResult, listener);
 
-            result.SetResult(resultState, ignoreReason, null);
+            result.SetResult(resultState, ignoreReason);
             suiteResult.AddResult(result);
             listener.TestFinished(result);
         }
 
         private void MarkTestsFailed(
-            IList tests, string msg, TestResult suiteResult, ITestListener listener)
+            TestCollection tests, string msg, TestResult suiteResult, ITestListener listener)
         {
             foreach (Test test in ArrayList.Synchronized(tests))
                 if (test.RunState != RunState.Explicit)
@@ -567,7 +586,7 @@ namespace NUnit.Framework.Internal
 
             TestSuite suite = test as TestSuite;
             if (suite != null)
-                MarkTestsFailed(suite.Tests, msg, suiteResult, listener);
+                MarkTestsFailed(suite.tests, msg, suiteResult, listener);
 
             result.Failure(msg);
             suiteResult.AddResult(result);
@@ -575,7 +594,7 @@ namespace NUnit.Framework.Internal
         }
         #endregion
 
-#if CLR_2_0
+#if CLR_2_0 && !NETCF
         private class TestCollection : System.Collections.Generic.List<Test> { }
 #else
         private class TestCollection : ArrayList { }

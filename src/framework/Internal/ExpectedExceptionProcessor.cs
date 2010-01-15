@@ -101,6 +101,7 @@ namespace NUnit.Framework.Internal
             }
         }
 
+#if !NUNITLITE
         public ExpectedExceptionProcessor(TestMethod testMethod, NUnit.Core.Extensibility.ParameterSet source)
         {
             this.testMethod = testMethod;
@@ -112,6 +113,8 @@ namespace NUnit.Framework.Internal
 
             this.exceptionHandler = GetDefaultExceptionHandler(testMethod.FixtureType);
         }
+#endif
+
         #endregion
 
         #region Public Methods
@@ -136,7 +139,11 @@ namespace NUnit.Framework.Internal
                 }
                 else
                 {
+#if NETCF_1_0
+                    testResult.Failure(WrongTextMessage(exception));
+#else
                     testResult.Failure(WrongTextMessage(exception), GetStackTrace(exception));
+#endif
                 }
             }
             else
@@ -145,7 +152,11 @@ namespace NUnit.Framework.Internal
 
                 // If it shows as an error, change it to a failure due to the wrong type
                 if (testResult.ResultState == ResultState.Error)
+#if NETCF_1_0
+                    testResult.Failure(WrongTypeMessage(exception));
+#else
                     testResult.Failure(WrongTypeMessage(exception), GetStackTrace(exception));
+#endif
             }
 		}
         #endregion
@@ -185,8 +196,8 @@ namespace NUnit.Framework.Internal
         private string WrongTypeMessage(Exception exception)
         {
             return CombineWithUserMessage(
-                "An unexpected exception type was thrown" + Environment.NewLine +
-                "Expected: " + expectedExceptionName + Environment.NewLine +
+                "An unexpected exception type was thrown" + Env.NewLine +
+                "Expected: " + expectedExceptionName + Env.NewLine +
                 " but was: " + exception.GetType().FullName + " : " + exception.Message);
         }
 
@@ -211,8 +222,8 @@ namespace NUnit.Framework.Internal
             }
 
             return CombineWithUserMessage(
-                "The exception message text was incorrect" + Environment.NewLine +
-                expectedText + expectedMessage + Environment.NewLine +
+                "The exception message text was incorrect" + Env.NewLine +
+                expectedText + expectedMessage + Env.NewLine +
                 " but was: " + exception.Message);
         }
 
@@ -220,9 +231,10 @@ namespace NUnit.Framework.Internal
         {
             if (userMessage == null)
                 return message;
-            return userMessage + Environment.NewLine + message;
+            return userMessage + Env.NewLine + message;
         }
 
+#if !NETCF_1_0
         private string GetStackTrace(Exception exception)
         {
             try
@@ -234,6 +246,7 @@ namespace NUnit.Framework.Internal
                 return "No stack trace available";
             }
         }
+#endif
 
         private static MethodInfo GetDefaultExceptionHandler(Type fixtureType)
         {
