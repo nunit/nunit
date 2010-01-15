@@ -43,6 +43,7 @@ namespace NUnit.Framework.Internal
                 {
                     defaultThreshold = "Error";
 
+#if !NUNITLITE
                     NameValueCollection settings = (NameValueCollection)
 #if CLR_2_0
                         ConfigurationManager.GetSection("NUnit/TestRunner");
@@ -56,6 +57,7 @@ namespace NUnit.Framework.Internal
                         if (level != null)
                             defaultThreshold = level;
                     }
+#endif
                 }
 
                 return defaultThreshold;

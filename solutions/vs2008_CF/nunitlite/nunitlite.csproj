@@ -86,6 +86,9 @@
     <Compile Include="..\..\..\src\framework\AssertionHelper.cs">
       <Link>AssertionHelper.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\framework\Attributes\CategoryAttribute.cs">
+      <Link>Attributes\CategoryAttribute.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\framework\Attributes\DescriptionAttribute.cs">
       <Link>Attributes\DescriptionAttribute.cs</Link>
     </Compile>
@@ -251,6 +254,9 @@
     <Compile Include="..\..\..\src\framework\IExpectException.cs">
       <Link>IExpectException.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\ExpectedExceptionProcessor.cs">
+      <Link>Internal\ExpectedExceptionProcessor.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\framework\Internal\InvalidTestFixtureException.cs">
       <Link>Internal\InvalidTestFixtureException.cs</Link>
     </Compile>
@@ -260,14 +266,35 @@
     <Compile Include="..\..\..\src\framework\Internal\NUnitException.cs">
       <Link>Internal\NUnitException.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\ParameterizedMethodSuite.cs">
+      <Link>Internal\ParameterizedMethodSuite.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\framework\Internal\Reflect.cs">
       <Link>Internal\Reflect.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\Test.cs">
+      <Link>Internal\Test.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\TestContext.cs">
+      <Link>Internal\TestContext.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\TestFixture.cs">
+      <Link>Internal\TestFixture.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Internal\TestListener.cs">
       <Link>Internal\TestListener.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\TestMethod.cs">
+      <Link>Internal\TestMethod.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\TestSuite.cs">
+      <Link>Internal\TestSuite.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\framework\Internal\TextMessageWriter.cs">
       <Link>Internal\TextMessageWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\TypeHelper.cs">
+      <Link>Internal\TypeHelper.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Is.cs">
       <Link>Is.cs</Link>
@@ -281,41 +308,35 @@
     <Compile Include="..\..\..\src\framework\MessageMatch.cs">
       <Link>MessageMatch.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\NUnitLite\Runner\CommandLineOptions.cs">
-      <Link>NUnitLite\Runner\CommandLineOptions.cs</Link>
+    <Compile Include="..\..\..\src\framework\Runner\CommandLineOptions.cs">
+      <Link>Runner\CommandLineOptions.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\NUnitLite\Runner\ConsoleWriter.cs">
-      <Link>NUnitLite\Runner\ConsoleWriter.cs</Link>
+    <Compile Include="..\..\..\src\framework\Runner\ConsoleWriter.cs">
+      <Link>Runner\ConsoleWriter.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\NUnitLite\Runner\DebugWriter.cs">
-      <Link>NUnitLite\Runner\DebugWriter.cs</Link>
+    <Compile Include="..\..\..\src\framework\Runner\DebugWriter.cs">
+      <Link>Runner\DebugWriter.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\NUnitLite\Runner\ResultSummary.cs">
-      <Link>NUnitLite\Runner\ResultSummary.cs</Link>
+    <Compile Include="..\..\..\src\framework\Runner\ResultSummary.cs">
+      <Link>Runner\ResultSummary.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\NUnitLite\Runner\TcpWriter.cs">
-      <Link>NUnitLite\Runner\TcpWriter.cs</Link>
+    <Compile Include="..\..\..\src\framework\Runner\TcpWriter.cs">
+      <Link>Runner\TcpWriter.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\NUnitLite\Runner\TestCaseBuilder.cs">
-      <Link>NUnitLite\Runner\TestCaseBuilder.cs</Link>
+    <Compile Include="..\..\..\src\framework\Runner\TestCaseBuilder.cs">
+      <Link>Runner\TestCaseBuilder.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\NUnitLite\Runner\TestFixtureBuilder.cs">
-      <Link>NUnitLite\Runner\TestFixtureBuilder.cs</Link>
+    <Compile Include="..\..\..\src\framework\Runner\TestFixtureBuilder.cs">
+      <Link>Runner\TestFixtureBuilder.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\NUnitLite\Runner\TestLoader.cs">
-      <Link>NUnitLite\Runner\TestLoader.cs</Link>
+    <Compile Include="..\..\..\src\framework\Runner\TestLoader.cs">
+      <Link>Runner\TestLoader.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\NUnitLite\Runner\TestRunner.cs">
-      <Link>NUnitLite\Runner\TestRunner.cs</Link>
+    <Compile Include="..\..\..\src\framework\Runner\TestRunner.cs">
+      <Link>Runner\TestRunner.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\NUnitLite\Runner\TextUI.cs">
-      <Link>NUnitLite\Runner\TextUI.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\NUnitLite\TestCase.cs">
-      <Link>NUnitLite\TestCase.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\NUnitLite\TestSuite.cs">
-      <Link>NUnitLite\TestSuite.cs</Link>
+    <Compile Include="..\..\..\src\framework\Runner\TextUI.cs">
+      <Link>Runner\TextUI.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\SpecialValue.cs">
       <Link>SpecialValue.cs</Link>

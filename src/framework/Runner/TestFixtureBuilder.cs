@@ -70,19 +70,21 @@ namespace NUnitLite.Runner
         /// <returns></returns>
         public static TestSuite BuildFrom(Type type)
         {
-            TestSuite suite = new TestSuite(type);
+            TestFixture suite = new TestFixture(type);
 
-            object[] attrs = type.GetCustomAttributes( typeof(PropertyAttribute), true);
-            foreach (PropertyAttribute attr in attrs)
-                foreach( DictionaryEntry entry in attr.Properties )
-                    suite.Properties[entry.Key] = entry.Value;
+            suite.ApplyCommonAttributes(Reflect.GetAttributes(type, false));
 
-            IgnoreAttribute ignore = (IgnoreAttribute)Reflect.GetAttribute(type, typeof(IgnoreAttribute),false);
-            if (ignore != null)
-            {
-                suite.RunState = RunState.Ignored;
-                suite.IgnoreReason = ignore.GetReason();
-            }
+            //object[] attrs = type.GetCustomAttributes(typeof(PropertyAttribute), true);
+            //foreach (PropertyAttribute attr in attrs)
+            //    foreach( DictionaryEntry entry in attr.Properties )
+            //        suite.Properties[entry.Key] = entry.Value;
+
+            //IgnoreAttribute ignore = (IgnoreAttribute)Reflect.GetAttribute(type, typeof(IgnoreAttribute), false);
+            //if (ignore != null)
+            //{
+            //    suite.RunState = RunState.Ignored;
+            //    suite.IgnoreReason = ignore.GetReason();
+            //}
 
             if (!Reflect.HasConstructor(type))
             {
@@ -94,7 +96,7 @@ namespace NUnitLite.Runner
             foreach (MethodInfo method in type.GetMethods())
             {
                 if (TestCaseBuilder.IsTestMethod(method))
-                    suite.AddTest(TestCaseBuilder.BuildFrom(method));
+                    suite.Add(TestCaseBuilder.BuildFrom(method));
             }
 
             return suite;
