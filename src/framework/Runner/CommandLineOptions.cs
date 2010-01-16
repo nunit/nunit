@@ -247,7 +247,7 @@ namespace NUnitLite.Runner
                 sb.Append("or on the probing path. If no assemblies are provided, tests in the" + NL);
                 sb.Append("executing assembly itself are run." + NL + NL);
                 sb.Append("Options:" + NL);
-                sb.Append("  -test:testname  (NYI) Provides the name of a test to run. This option may be" + NL);
+                sb.Append("  -test:testname  Provides the name of a test to run. This option may be" + NL);
                 sb.Append("                  repeated. If no test names are given, all tests are run." + NL + NL);
                 sb.Append("  -help           Displays this help" + NL + NL);
                 sb.Append("  -nologo         Suppresses display of the initial message" + NL + NL);
