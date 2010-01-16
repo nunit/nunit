@@ -508,9 +508,6 @@
     <Compile Include="..\..\..\src\framework\Internal\NamespaceTreeBuilder.cs">
       <Link>Internal\NamespaceTreeBuilder.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\NUnitConfiguration.cs">
-      <Link>Internal\NUnitConfiguration.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\src\framework\Internal\NUnitException.cs">
       <Link>Internal\NUnitException.cs</Link>
     </Compile>
