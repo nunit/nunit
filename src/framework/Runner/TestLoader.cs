@@ -61,8 +61,8 @@ namespace NUnitLite.Runner
         public static Test Load(Assembly assembly, string className)
         {
             Type type = assembly.GetType(className);
-            if (type == null && className.IndexOf(',') == -1)
-                type = Type.GetType(className + "," + assembly.GetName().Name);
+            //if (type == null && className.IndexOf(',') == -1)
+            //    type = Type.GetType(className + "," + assembly.GetName().Name);
 
             if (type == null)
                 throw new TestRunnerException("Unable to load class " + className);
@@ -95,7 +95,7 @@ namespace NUnitLite.Runner
         {
             Test test = TestLoader.LoadAsSuite(type);
             if (test == null)
-                test = new TestSuite(type);
+                test = TestFixtureBuilder.BuildFrom(type);
 
             return test;
         }
