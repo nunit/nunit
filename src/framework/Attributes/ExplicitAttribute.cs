@@ -34,7 +34,7 @@ namespace NUnit.Framework
 	/// run simply because an enclosing suite is run.
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Class|AttributeTargets.Method|AttributeTargets.Assembly, AllowMultiple=false)]
-	public class ExplicitAttribute : Attribute, ISetRunState
+	public class ExplicitAttribute : Attribute, IApplyToTest
 	{
         private string reason;
 
@@ -57,16 +57,13 @@ namespace NUnit.Framework
 
         #region ISetRunState members
 
-        public RunState GetRunState()
+        public void ApplyToTest(ITest test)
         {
-            return RunState.Explicit;
-        }
-        /// <summary>
-        /// The reason test is marked explicit
-        /// </summary>
-        public string GetReason()
-        {
-            return reason;
+            if (test.RunState != RunState.NotRunnable)
+            {
+                test.RunState = RunState.Explicit;
+                test.IgnoreReason = reason;
+            }
         }
 
         #endregion

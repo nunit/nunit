@@ -26,6 +26,9 @@ using System.Collections;
 
 namespace NUnit.Core.Extensibility
 {
+    /// <summary>
+    /// ExtensionsCollection holds multiple extensions of a common type.
+    /// </summary>
 	public class ExtensionsCollection : IEnumerable
 	{
 		private static readonly int DEFAULT_LEVEL = 0;

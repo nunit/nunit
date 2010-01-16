@@ -12,17 +12,17 @@ namespace NUnit.Framework.Api
     {
         private ITestAssemblyBuilder builder;
         private TestSuite suite;
-        private int runnerID;
         private Thread runThread;
 
         #region Constructors
 
-        public DefaultTestAssemblyRunner(ITestAssemblyBuilder builder) : this(builder, 0) { }
-
-        public DefaultTestAssemblyRunner(ITestAssemblyBuilder builder, int runnerID)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DefaultTestAssemblyRunner"/> class.
+        /// </summary>
+        /// <param name="builder">The builder.</param>
+        public DefaultTestAssemblyRunner(ITestAssemblyBuilder builder)
         {
             this.builder = builder;
-            this.runnerID = runnerID;
         }
 
         #endregion

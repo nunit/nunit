@@ -24,6 +24,7 @@
 using System;
 using System.Collections;
 using System.Collections.Specialized;
+using NUnit.Framework.Api;
 
 namespace NUnit.Framework
 {
@@ -31,7 +32,7 @@ namespace NUnit.Framework
 	/// PropertyAttribute is used to attach information to a test as a name/value pair..
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Class|AttributeTargets.Method|AttributeTargets.Assembly, AllowMultiple=true)]
-	public class PropertyAttribute : Attribute
+	public class PropertyAttribute : Attribute, IApplyToTest
 	{
         private IDictionary properties = new ListDictionary();
 
@@ -94,5 +95,19 @@ namespace NUnit.Framework
         {
             get { return properties; }
         }
+
+        #region IApplyToTest Members
+
+        /// <summary>
+        /// Modifies a test by adding properties to it.
+        /// </summary>
+        /// <param name="test">The test to modify</param>
+        public void ApplyToTest(ITest test)
+        {
+            foreach (DictionaryEntry entry in Properties)
+                test.Properties.Add(entry.Key, entry.Value);
+        }
+
+        #endregion
     }
 }

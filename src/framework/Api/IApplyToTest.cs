@@ -25,10 +25,16 @@ using System;
 
 namespace NUnit.Framework.Api
 {
-    public interface ISetRunState
+    /// <summary>
+    /// The IApplyToTest interface is implemented by self-applying
+    /// attributes that modify the state of a test in some way.
+    /// </summary>
+    public interface IApplyToTest
     {
-        RunState GetRunState();
-
-        string GetReason();
+        /// <summary>
+        /// Modifies a test as defined for the specific attribute.
+        /// </summary>
+        /// <param name="test">The test to modify</param>
+        void ApplyToTest(ITest test);
     }
 }

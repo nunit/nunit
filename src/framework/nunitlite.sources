@@ -14,7 +14,7 @@ MessageMatch.cs
 SpecialValue.cs
 TestCaseData.cs
 Throws.cs
-Api/ISetRunState.cs
+Api/IApplyToTest.cs
 Api/ITest.cs
 Api/ITestListener.cs
 Api/ResultState.cs

@@ -56,6 +56,11 @@ namespace NUnit.Framework.Api
         /// </summary>
 		RunState RunState { get; set; }
 
+        /// <summary>
+        ///  Description for the test;
+        /// </summary>
+        string Description { get; set; }
+
 		/// <summary>
 		/// Reason for not running the test, if applicable
 		/// </summary>
@@ -72,21 +77,15 @@ namespace NUnit.Framework.Api
 		IDictionary Properties { get; }
 
         /// <summary>
+        /// Gets the categories of the test
+        /// </summary>
+        IList Categories { get; }
+
+        /// <summary>
         /// True if this is a test case
         /// </summary>
         bool IsTestCase { get; }
 
-        #endregion
-
-        #region Methods
-        ///// <summary>
-        ///// Count the test cases that pass a filter. The
-        ///// result should match those that would execute
-        ///// when passing the same filter to Run.
-        ///// </summary>
-        ///// <param name="filter">The filter to apply</param>
-        ///// <returns>The count of test cases</returns>
-        //int CountTestCases(TestFilter filter);
         #endregion
     }
 }

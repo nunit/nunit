@@ -49,8 +49,8 @@
     <Compile Include="..\..\..\src\framework\Api\DefaultTestAssemblyRunner.cs">
       <Link>Api\DefaultTestAssemblyRunner.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Api\ISetRunState.cs">
-      <Link>Api\ISetRunState.cs</Link>
+    <Compile Include="..\..\..\src\framework\Api\IApplyToTest.cs">
+      <Link>Api\IApplyToTest.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Api\ITest.cs">
       <Link>Api\ITest.cs</Link>
