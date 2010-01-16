@@ -25,6 +25,10 @@ using System;
 
 namespace NUnit.Framework.Internal
 {
+    /// <summary>
+    /// PlatformHelper class is used by the PlatformAttribute class to 
+    /// determine whether a platform is supported.
+    /// </summary>
 	public class PlatformHelper
 	{
 		private OSPlatform os;

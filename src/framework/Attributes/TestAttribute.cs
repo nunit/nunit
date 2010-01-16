@@ -24,6 +24,7 @@
 namespace NUnit.Framework
 {
 	using System;
+    using NUnit.Framework.Api;
 
 	/// <summary>
 	/// Adding this attribute to a method within a <seealso cref="TestFixtureAttribute"/> 
@@ -47,7 +48,7 @@ namespace NUnit.Framework
 	/// </example>
 	/// 
 	[AttributeUsage(AttributeTargets.Method, AllowMultiple=false)]
-	public class TestAttribute : Attribute
+	public class TestAttribute : Attribute, IApplyToTest
 	{
 		private string description;
 
@@ -59,5 +60,19 @@ namespace NUnit.Framework
 			get { return description; }
 			set { description = value; }
 		}
-	}
+
+        #region IApplyToTest Members
+
+        /// <summary>
+        /// Modifies a test by adding a description, if not already set.
+        /// </summary>
+        /// <param name="test">The test to modify</param>
+        public void ApplyToTest(ITest test)
+        {
+            if (!test.Properties.Contains("_DESCRIPTION") && description != null)
+                test.Properties["_DESCRIPTION"] = description;
+        }
+
+        #endregion
+    }
 }

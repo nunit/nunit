@@ -92,7 +92,7 @@ namespace NUnit.Framework
 	/// individual method as applying to a particular platform only.
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Class|AttributeTargets.Method|AttributeTargets.Assembly, AllowMultiple=true)]
-	public class PlatformAttribute : IncludeExcludeAttribute, ISetRunState
+	public class PlatformAttribute : IncludeExcludeAttribute, IApplyToTest
 	{
         private PlatformHelper platformHelper = new PlatformHelper();
 
@@ -110,18 +110,13 @@ namespace NUnit.Framework
 
         #region ISetRunState members
 
-        public RunState GetRunState()
+        public void ApplyToTest(ITest test)
         {
-            return platformHelper.IsPlatformSupported(this)
-                ? RunState.Runnable
-                : RunState.Skipped;
-        }
-
-        public string GetReason()
-        {
-            return Reason != null
-                ? Reason
-                : platformHelper.Reason;
+            if (test.RunState != RunState.NotRunnable && !platformHelper.IsPlatformSupported(this))
+            {
+                test.RunState = RunState.Skipped;
+                test.IgnoreReason = platformHelper.Reason;
+            }
         }
 
         #endregion
@@ -132,7 +127,7 @@ namespace NUnit.Framework
 	/// individual method as applying to a particular Culture only.
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Class|AttributeTargets.Method|AttributeTargets.Assembly, AllowMultiple=false)]
-	public class CultureAttribute : IncludeExcludeAttribute, ISetRunState
+	public class CultureAttribute : IncludeExcludeAttribute, IApplyToTest
 	{
         private CultureDetector cultureDetector = new CultureDetector();
         private CultureInfo currentCulture = CultureInfo.CurrentCulture;
@@ -151,16 +146,13 @@ namespace NUnit.Framework
 
         #region ISetRunState members
 
-        public RunState GetRunState()
+        public void ApplyToTest(ITest test)
         {
-            return IsCultureSupported()
-                ? RunState.Runnable
-                : RunState.Skipped;
-        }
-
-        public string GetReason()
-        {
-            return Reason;
+            if (test.RunState != RunState.NotRunnable && !IsCultureSupported())
+            {
+                test.RunState = RunState.Skipped;
+                test.IgnoreReason = Reason;
+            }
         }
 
         #endregion

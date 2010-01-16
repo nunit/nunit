@@ -32,7 +32,7 @@ namespace NUnit.Framework
 	/// tests are run.
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Method|AttributeTargets.Class|AttributeTargets.Assembly, AllowMultiple=false)]
-	public class IgnoreAttribute : Attribute, ISetRunState
+	public class IgnoreAttribute : Attribute, IApplyToTest
 	{
 		private string reason;
 
@@ -56,17 +56,13 @@ namespace NUnit.Framework
 
         #region ISetRunState members
 
-        public RunState GetRunState()
+        public void ApplyToTest(ITest test)
         {
-            return RunState.Ignored;
-        }
-
-		/// <summary>
-		/// The reason for ignoring a test
-		/// </summary>
-		public string GetReason()
-		{
-			return reason;
+            if (test.RunState != RunState.NotRunnable)
+            {
+                test.RunState = RunState.Ignored;
+                test.IgnoreReason = reason;
+            }
         }
 
         #endregion

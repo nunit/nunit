@@ -35,7 +35,7 @@ namespace NUnit.Framework
     /// as NotRunnable.
     /// </summary>
     [AttributeUsage(AttributeTargets.Assembly,AllowMultiple=true)]
-    public class RequiredAddinAttribute : Attribute, ISetRunState
+    public class RequiredAddinAttribute : Attribute, IApplyToTest
     {
         private string requiredAddin;
         private bool isAddinAvailable;
@@ -65,18 +65,13 @@ namespace NUnit.Framework
 
         #region ISetRunState members
 
-        public RunState GetRunState()
+        public void ApplyToTest(ITest test)
         {
-            return isAddinAvailable 
-                ? RunState.Runnable 
-                : RunState.NotRunnable;
-        }
-
-        public string GetReason()
-        {
-            return isAddinAvailable 
-                ? string.Empty 
-                : string.Format("Required addin {0} not available", requiredAddin);
+            if (test.RunState != RunState.NotRunnable && !isAddinAvailable)
+            {
+                test.RunState = RunState.NotRunnable;
+                test.IgnoreReason = string.Format("Required addin {0} not available", requiredAddin);
+            }
         }
 
         #endregion

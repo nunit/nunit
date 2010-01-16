@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using NUnit.Framework.Api;
 
 namespace NUnit.Framework
 {
@@ -29,7 +30,7 @@ namespace NUnit.Framework
 	/// Attribute used to apply a category to a test
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Class|AttributeTargets.Method|AttributeTargets.Assembly, AllowMultiple=true)]
-	public class CategoryAttribute : Attribute
+	public class CategoryAttribute : Attribute, IApplyToTest
 	{
 		/// <summary>
 		/// The name of the category
@@ -63,5 +64,14 @@ namespace NUnit.Framework
 		{
 			get { return categoryName; }
 		}
-	}
+
+        #region IApplyToTest Members
+
+        public void ApplyToTest(ITest test)
+        {
+            test.Categories.Add(this.Name);
+        }
+
+        #endregion
+    }
 }

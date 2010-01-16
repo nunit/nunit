@@ -348,39 +348,10 @@ namespace NUnit.Framework.Internal
         {
             foreach (Attribute attribute in attributes)
             {
-                Type attributeType = attribute.GetType();
-                string attributeName = attributeType.FullName;
-                bool isValid = this.RunState != RunState.NotRunnable;
-
-                if (attribute is TestFixtureAttribute)
+                IApplyToTest iApply = attribute as IApplyToTest;
+                if (iApply != null)
                 {
-                    if (this.Description == null)
-                        this.Description = ((TestFixtureAttribute)attribute).Description;
-                }
-                else if (attribute is TestAttribute)
-                {
-                    if (this.Description == null)
-                        this.Description = ((TestAttribute)attribute).Description;
-                }
-                else if (attribute is ISetRunState)
-                {
-                    if (isValid)
-                    {
-                        ISetRunState irs = (ISetRunState)attribute;
-                        this.RunState = irs.GetRunState();
-                        this.IgnoreReason = irs.GetReason();
-                    }
-                }
-                else if (attribute is CategoryAttribute)
-                {
-                    this.Categories.Add(((CategoryAttribute)attribute).Name);
-                }
-                else if (attribute is PropertyAttribute)
-                {
-                    IDictionary props = ((PropertyAttribute)attribute).Properties;
-                    if (props != null)
-                        foreach (DictionaryEntry entry in props)
-                            this.Properties.Add(entry.Key, entry.Value);
+                    iApply.ApplyToTest(this);
                 }
             }
         }

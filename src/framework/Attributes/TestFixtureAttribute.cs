@@ -21,17 +21,18 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
+using NUnit.Framework.Api;
+
 namespace NUnit.Framework
 {
-	using System;
-
 	/// <example>
 	/// [TestFixture]
 	/// public class ExampleClass 
 	/// {}
 	/// </example>
 	[AttributeUsage(AttributeTargets.Class, AllowMultiple=true, Inherited=true)]
-	public class TestFixtureAttribute : Attribute
+	public class TestFixtureAttribute : Attribute, IApplyToTest
 	{
 		private string description;
 
@@ -39,7 +40,7 @@ namespace NUnit.Framework
         private bool isIgnored;
         private string ignoreReason;
 
-#if CLR_2_0
+#if CLR_2_0 && !NUNITLITE
         private Type[] typeArgs;
         private bool argsSeparated;
 #endif
@@ -78,7 +79,7 @@ namespace NUnit.Framework
         {
             get 
             {
-#if CLR_2_0
+#if CLR_2_0 && !NUNITLITE
                 if (!argsSeparated)
                     SeparateArgs();
 #endif
@@ -110,7 +111,7 @@ namespace NUnit.Framework
             }
         }
 
-#if CLR_2_0
+#if CLR_2_0 && !NUNITLITE
         /// <summary>
         /// Get or set the type arguments. If not set
         /// explicitly, any leading arguments that are
@@ -160,5 +161,19 @@ namespace NUnit.Framework
             argsSeparated = true;
         }
 #endif
-	}
+
+        #region IApplyToTest Members
+
+        /// <summary>
+        /// Modifies a test by adding a description, if not already set.
+        /// </summary>
+        /// <param name="test">The test to modify</param>
+        public void ApplyToTest(ITest test)
+        {
+            if (!test.Properties.Contains("_DESCRIPTION") && description != null)
+                test.Properties["_DESCRIPTION"] = description;
+        }
+
+        #endregion
+    }
 }
