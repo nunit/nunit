@@ -55,7 +55,7 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void AssertFailWorks()
         {
-            TestResult result = TestBuilder.RunTestCase(
+            ITestResult result = TestBuilder.RunTestCase(
                 typeof(AssertFailFixture),
                 "CallAssertFail");
 
@@ -65,7 +65,7 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void AssertFailWorksWithMessage()
         {
-            TestResult result = TestBuilder.RunTestCase(
+            ITestResult result = TestBuilder.RunTestCase(
                 typeof(AssertFailFixture),
                 "CallAssertFailWithMessage");
 
@@ -76,7 +76,7 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void AssertFailWorksWithMessageAndArgs()
         {
-            TestResult result = TestBuilder.RunTestCase(
+            ITestResult result = TestBuilder.RunTestCase(
                 typeof(AssertFailFixture),
                 "CallAssertFailWithMessageAndArgs");
 

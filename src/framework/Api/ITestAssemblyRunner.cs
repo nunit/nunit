@@ -40,7 +40,7 @@ namespace NUnit.Framework.Api
         /// </summary>
         /// <param name="assemblyName">File name of the assembly to load</param>
         /// <returns>True if the load was successful</returns>
-        bool Load(string assemblyName);
+        bool Load(string assemblyName, System.Collections.IDictionary options);
 
         ///// <summary>
         ///// Count Test Cases using a filter
@@ -54,7 +54,7 @@ namespace NUnit.Framework.Api
         /// and the listener interface is notified as it progresses.
         /// </summary>
         /// <param name="listener">Interface to receive ITestListener notifications.</param>
-        TestResult Run(ITestListener listener);
+        ITestResult Run(ITestListener listener);
 
         #endregion
     }

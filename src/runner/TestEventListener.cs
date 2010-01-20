@@ -51,7 +51,7 @@ namespace NUnit.AdhocTestRunner
                 outWriter.WriteLine("{0} {1}", prefix, test.Name);
         }
 
-        public void TestFinished(TestResult result)
+        public void TestFinished(ITestResult result)
         {
             level--;
             prefix = new string('>', level);

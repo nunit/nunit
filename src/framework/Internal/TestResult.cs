@@ -26,15 +26,14 @@ using System.Text;
 using System.Collections;
 using System.Globalization;
 using System.Xml;
+using NUnit.Framework.Api;
 
-namespace NUnit.Framework.Api
+namespace NUnit.Framework.Internal
 {
-	/// <summary>
-	/// The TestResult class represents
-	/// the result of a test and is used to
-	/// communicate results across AppDomains.
-	/// </summary>
-	public class TestResult
+    /// <summary>
+    /// The TestResult class represents the result of a test.
+    /// </summary>
+    public class TestResult : ITestResult
 	{
 		#region Fields
 		/// <summary>
@@ -91,10 +90,10 @@ namespace NUnit.Framework.Api
 
         #region Properties
 
-		/// <summary>
-		/// Gets the ResultState of the test result, which 
-		/// indicates the success or failure of the test.
-		/// </summary>
+        /// <summary>
+        /// Gets the ResultState of the test result, which 
+        /// indicates the success or failure of the test.
+        /// </summary>
         public ResultState ResultState
         {
             get { return resultState; }
@@ -115,28 +114,26 @@ namespace NUnit.Framework.Api
             }
         }
 
-		/// <summary>
-		/// Gets the name of the test result
-		/// </summary>
-		public virtual string Name
+        /// <summary>
+        /// Gets the name of the test result
+        /// </summary>
+        public virtual string Name
 		{
 			get { return test.Name; }
 		}
 
-		/// <summary>
-		/// Gets the full name of the test result
-		/// </summary>
-		public virtual string FullName
+        /// <summary>
+        /// Gets the full name of the test result
+        /// </summary>
+        public virtual string FullName
 		{
 			get { return test.FullName; }
 		}
 
-		/// <summary>
-		/// Gets the test associated with this result
-		/// </summary>
-        public ITest Test
+
+        public bool IsTestCase
         {
-            get { return test; }
+            get { return test.IsTestCase; }
         }
 
 		/// <summary>
@@ -163,53 +160,45 @@ namespace NUnit.Framework.Api
             get { return resultState == ResultState.Error;  }   
 	    }
 
-		/// <summary>
-		/// Gets the elapsed time for running the test
-		/// </summary>
+        /// <summary>
+        /// Gets or sets the elapsed time for running the test
+        /// </summary>
         public double Time
         {
             get { return time; }
             set { time = value; }
         }
 
-		/// <summary>
-		/// Gets the message associated with a test
-		/// failure or with not running the test
-		/// </summary>
+        /// <summary>
+        /// Gets the message associated with a test
+        /// failure or with not running the test
+        /// </summary>
         public string Message
         {
             get { return message; }
         }
 
 #if !NETCF_1_0
-		/// <summary>
-		/// Gets any stacktrace associated with an
-		/// error or failure.
-		/// </summary>
+        /// <summary>
+        /// Gets any stacktrace associated with an
+        /// error or failure. Not available in
+        /// the Compact Framework 1.0.
+        /// </summary>
         public virtual string StackTrace
         {
             get { return stackTrace; }
-            set { stackTrace = value; }
         }
 #endif
 
-		/// <summary>
-		/// Gets or sets the count of asserts executed
-		/// when running the test.
-		/// </summary>
+        /// <summary>
+        /// Gets or sets the count of asserts executed
+        /// when running the test.
+        /// </summary>
         public int AssertCount
         {
             get { return assertCount; }
             set { assertCount = value; }
         }
-
-        /// <summary>
-        /// Return true if this result has any child results
-        /// </summary>
-	    public bool HasResults
-	    {
-            get { return results != null && results.Count > 0; }    
-	    }
 
 		/// <summary>
 		/// Gets a list of the child results of this TestResult
@@ -423,66 +412,95 @@ namespace NUnit.Framework.Api
             }
 		}
 
-        public string ToXml()
+        /// <summary>
+        /// Returns the Xml representation of the result.
+        /// </summary>
+        /// <param name="recursive">If true, descendant results are included</param>
+        /// <returns>An XmlNode representing the result</returns>
+        public XmlNode ToXml(bool recursive)
         {
-            System.IO.StringWriter buffer = new System.IO.StringWriter();
-            XmlTextWriter xml = new XmlTextWriter(buffer);
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml("<dummy/>");
+            XmlNode topNode = doc.FirstChild;
 
-            WriteXml(xml);
-           
-            return buffer.ToString();
+            AddToXml(topNode, recursive);
+
+            return topNode.FirstChild;
         }
 
-        private void WriteXml(XmlTextWriter xml)
+        private void AddToXml(XmlNode parent, bool recursive)
         {
-            if (this.Test.IsTestCase)
-                xml.WriteStartElement("test-case");
-            else
-                xml.WriteStartElement("test-suite");
+            XmlDocument doc = parent.OwnerDocument;
 
-            xml.WriteAttributeString("name", this.Name);
-            xml.WriteAttributeString("fullname", this.FullName);
-            xml.WriteAttributeString("result", this.ResultState.ToString());
-            xml.WriteAttributeString("time", string.Format("0.000", this.Time, System.Globalization.CultureInfo.InvariantCulture));
+            XmlNode node = doc.CreateElement(
+                this.IsTestCase
+                    ? "test-case"
+                    : "test-suite");
+            parent.AppendChild(node);
+
+            XmlAttribute attr = doc.CreateAttribute("name");
+            attr.Value = this.Name;
+            node.Attributes.Append(attr);
+            attr = doc.CreateAttribute("fullname");
+            attr.Value = this.FullName;
+            node.Attributes.Append(attr);
+            attr = doc.CreateAttribute("result");
+            attr.Value = this.ResultState.ToString();
+            node.Attributes.Append(attr);
+            attr = doc.CreateAttribute("time");
+            attr.Value = string.Format("0.000", this.Time, System.Globalization.CultureInfo.InvariantCulture);
+            node.Attributes.Append(attr);
 
             if (this.IsFailure || this.IsError)
             {
-                WriteFailureElement(xml);
+                AddFailureElement(node);
             }
             else if (!this.Executed)
             {
-                WriteReasonElement(xml);
+                AddReasonElement(node);
             }
 
-            if (this.HasResults)
+            if (recursive && this.Results != null)
                 foreach (TestResult childResult in Results)
-                    childResult.WriteXml(xml);
-
-            xml.WriteEndElement();
+                    childResult.AddToXml(node, recursive);
         }
 
-        private void WriteReasonElement(XmlTextWriter xml)
+        private void AddReasonElement(XmlNode targetNode)
         {
-            xml.WriteStartElement("reason");
+            XmlDocument doc = targetNode.OwnerDocument;
 
-            xml.WriteElementString("message", this.Message);
+            XmlNode reasonNode = doc.CreateElement("reason");
+            targetNode.AppendChild(reasonNode);
 
-            xml.WriteEndElement();
+            XmlNode messageNode = doc.CreateElement("message");
+            messageNode.AppendChild(doc.CreateCDataSection(this.Message));
+            reasonNode.AppendChild(messageNode);
         }
 
-        private void WriteFailureElement(XmlTextWriter xml)
+        private void AddFailureElement(XmlNode targetNode)
         {
-            xml.WriteStartElement("failure");
+            XmlDocument doc = targetNode.OwnerDocument;
+
+            XmlNode failureNode = doc.CreateElement("failure");
+            targetNode.AppendChild(failureNode);
 
             if (this.Message != null)
-                xml.WriteElementString("message", this.Message);
+            {
+                XmlNode messageNode = doc.CreateElement("message");
+                messageNode.AppendChild(doc.CreateCDataSection(this.Message));
+                failureNode.AppendChild(messageNode);
+            }
+
 #if !NETCF_1_0
             if (this.StackTrace != null)
-                xml.WriteElementString("stacktrace", this.StackTrace);
+            {
+                XmlNode stackNode = doc.CreateElement("stack-trace");
+                stackNode.AppendChild(doc.CreateCDataSection(this.StackTrace));
+                failureNode.AppendChild(stackNode);
+            }
 #endif
-            xml.WriteEndElement();
         }
-
+        
         #endregion
 
         #region Exception Helpers

@@ -48,18 +48,18 @@ namespace NUnit.TestUtilities
 
         public ResultSummary() { }
 
-        public ResultSummary(TestResult result)
+        public ResultSummary(ITestResult result)
         {
             Summarize(result);
         }
 
-        public ResultSummary(TestResult[] results)
+        public ResultSummary(ITestResult[] results)
         {
-            foreach (TestResult result in results)
+            foreach (ITestResult result in results)
                 Summarize(result);
         }
 
-        public void Summarize(TestResult result)
+        public void Summarize(ITestResult result)
         {
             if (this.name == null)
             {
@@ -67,7 +67,7 @@ namespace NUnit.TestUtilities
                 this.time = result.Time;
             }
 
-            if (result.Test.IsTestCase)
+            if (result.IsTestCase)
             {
                 resultCount++;
 
@@ -104,8 +104,8 @@ namespace NUnit.TestUtilities
                 }
             }
 
-            if (result.HasResults)
-                foreach (TestResult childResult in result.Results)
+            if (result.Results != null)
+                foreach (ITestResult childResult in result.Results)
                     Summarize(childResult);
         }
 

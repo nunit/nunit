@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Collections;
 using System.Xml;
 using System.IO;
 
@@ -29,11 +30,11 @@ namespace NUnit.AdhocTestRunner
 {
     public class ConsoleRunner
     {
-        private CommandLineOptions options;
+        private CommandLineOptions commandlineOptions;
 
-        public ConsoleRunner(CommandLineOptions options)
+        public ConsoleRunner(CommandLineOptions commandlineOptions)
         {
-            this.options = options;
+            this.commandlineOptions = commandlineOptions;
         }
 
         public void Execute()
@@ -42,12 +43,27 @@ namespace NUnit.AdhocTestRunner
 
             try
             {
-                FrameworkController driver = new FrameworkController(options);
+                IDictionary loadOptions = new Hashtable();
+                if (commandlineOptions.Load.Count > 0)
+                    loadOptions["LOAD"] = commandlineOptions.Load;
 
-                string assemblyFilename = options.Parameters[0];
+                AppDomain testDomain = AppDomain.CurrentDomain;
+                if (commandlineOptions.UseAppDomain)
+                    testDomain = CreateDomain(
+                        Path.GetDirectoryName(Path.GetFullPath(commandlineOptions.Parameters[0])));
 
-                if (!driver.Load(assemblyFilename))
-                    Console.WriteLine("Unable to load assembly {0}", assemblyFilename);
+                FrameworkController driver = new FrameworkController(testDomain);
+
+                string assemblyFilename = commandlineOptions.Parameters[0];
+
+                if (!driver.Load(assemblyFilename, loadOptions))
+                {
+                    Console.WriteLine( 
+                        commandlineOptions.Load.Count > 0
+                            ? "Specifed tests not found in assembly {0}"
+                            : "No tests found in assembly {0}", 
+                        assemblyFilename);
+                }
                 else
                 {
                     TextWriter savedOut = Console.Out;
@@ -60,25 +76,40 @@ namespace NUnit.AdhocTestRunner
                     Console.SetOut(savedOut);
                     Console.SetError(savedError);
 
+                    XmlNode xmlResult = result as XmlNode;
+                    XmlTextWriter writer = new XmlTextWriter("TestResult.Xml", System.Text.Encoding.UTF8);
+                    xmlResult.WriteTo(writer);
+                    writer.Close();
+
                     new ResultReporter(result).ReportResults();
                 }
             }
-            catch (FileNotFoundException ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
+                if (ex is System.Reflection.TargetInvocationException)
+                    ex = ex.InnerException;
+
+                if (ex is FileNotFoundException)
+                    Console.WriteLine(ex.Message);
+                else
+                    Console.WriteLine(ex.ToString());
             }
             finally
             {
-                if (options.Wait)
+                if (commandlineOptions.Wait)
                 {
                     Console.WriteLine("Press Enter key to continue . . .");
                     Console.ReadLine();
                 }
             }
+        }
+
+        private static AppDomain CreateDomain(string appBase)
+        {
+            AppDomainSetup setup = new AppDomainSetup();
+            setup.ApplicationBase = appBase;
+            AppDomain domain = AppDomain.CreateDomain("test-domain", null, setup);
+            return domain;
         }
 
         private void WriteRunInfo()
@@ -90,7 +121,7 @@ namespace NUnit.AdhocTestRunner
             Console.WriteLine();
 
             Console.WriteLine("Options -");
-            Console.WriteLine( options.UseAppDomain
+            Console.WriteLine( commandlineOptions.UseAppDomain
                 ? "    Use Separate AppDomain"
                 : "    Use Same AppDomain" );
             Console.WriteLine();

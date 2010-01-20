@@ -17,6 +17,7 @@ Throws.cs
 Api/IApplyToTest.cs
 Api/ITest.cs
 Api/ITestListener.cs
+Api/ITestResult.cs
 Api/ResultState.cs
 Api/RunState.cs
 Api/TestOutput.cs

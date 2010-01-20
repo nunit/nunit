@@ -54,9 +54,9 @@ namespace NUnit.TestUtilities
         {
             Test test = TestBuilder.MakeTestCase(type, name);
             Assert.That(test.RunState, Is.EqualTo(RunState.Runnable));
-            TestResult result = test.Run(TestListener.NULL);
-            if (result.HasResults)
-                result = (TestResult)result.Results[0];
+            ITestResult result = test.Run(TestListener.NULL);
+            if (result.Results != null)
+                result = (ITestResult)result.Results[0];
             Assert.That(result.ResultState, Is.EqualTo(resultState));
         }
         #endregion

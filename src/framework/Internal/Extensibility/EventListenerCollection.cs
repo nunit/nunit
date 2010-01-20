@@ -24,6 +24,7 @@
 using System;
 using System.Collections;
 using NUnit.Framework.Api;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Core.Extensibility
 {
@@ -46,7 +47,7 @@ namespace NUnit.Core.Extensibility
 				listener.TestStarted( test );
 		}
 
-		public void TestFinished(TestResult result)
+		public void TestFinished(ITestResult result)
 		{
 			foreach( ITestListener listener in Extensions )
 				listener.TestFinished( result );

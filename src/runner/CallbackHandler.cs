@@ -1,5 +1,5 @@
-// ***********************************************************************
-// Copyright (c) 2009 Charlie Poole
+﻿// ***********************************************************************
+// Copyright (c) 2010 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -23,32 +23,39 @@
 
 using System;
 
-namespace NUnit.Framework.Api
+namespace NUnit.AdhocTestRunner
 {
-	/// <summary>
-	/// The ITestListener interface is used internally to receive 
-	/// notifications of significant events while a test is being 
-    /// run. The events are propogated to clients by means of an
-    /// AsyncCallback. NUnit extensions may also monitor these events.
-	/// </summary>
-	public interface ITestListener
-	{
-		/// <summary>
-		/// Called when a test has just started
-		/// </summary>
-		/// <param name="test">The test that is starting</param>
-		void TestStarted(ITest test);
-			
-		/// <summary>
-		/// Called when a test has finished
-		/// </summary>
-		/// <param name="result">The result of the test</param>
-		void TestFinished(ITestResult result);
+    public class CallbackHandler : MarshalByRefObject
+    {
+        private object result;
 
-		/// <summary>
-		/// Called when the test creates text output.
-		/// </summary>
-		/// <param name="testOutput">A console message</param>
-		void TestOutput(TestOutput testOutput);
-	}
+        public object Result
+        {
+            get { return result; }
+        }
+
+        public AsyncCallback Callback
+        {
+            get { return new AsyncCallback(CallbackMethod); }
+        }
+
+        private void CallbackMethod(IAsyncResult ar)
+        {
+            object state = ar.AsyncState;
+
+            if (ar.IsCompleted)
+                this.result = state;
+            else
+                ReportProgress(state);
+        }
+
+        public virtual void ReportProgress(object state)
+        {
+        }
+
+        public override object InitializeLifetimeService()
+        {
+            return null;
+        }
+    }
 }

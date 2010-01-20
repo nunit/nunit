@@ -54,18 +54,18 @@ namespace NUnit.TestUtilities
             return null;
         }
 
-        public static TestResult Find(string name, TestResult result, bool recursive)
+        public static ITestResult Find(string name, ITestResult result, bool recursive)
         {
-            if (result.HasResults)
+            if (result.Results != null)
             {
                 foreach (TestResult childResult in result.Results)
                 {
-                    if (childResult.Test.Name == name)
+                    if (childResult.Name == name)
                         return childResult;
 
                     if (recursive)
                     {
-                        TestResult r = Find(name, childResult, true);
+                        ITestResult r = Find(name, childResult, true);
                         if (r != null)
                             return r;
                     }

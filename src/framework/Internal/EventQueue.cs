@@ -59,9 +59,9 @@ namespace NUnit.Framework.Internal
 			
 	public class TestFinishedEvent : Event
 	{
-		TestResult result;
+		ITestResult result;
 
-		public TestFinishedEvent( TestResult result )
+		public TestFinishedEvent( ITestResult result )
 		{
 			this.result = result;
 		}

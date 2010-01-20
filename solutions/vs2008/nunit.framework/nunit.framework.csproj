@@ -52,12 +52,6 @@
     <Compile Include="..\..\..\src\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Api\DefaultTestAssemblyBuilder.cs">
-      <Link>Api\DefaultTestAssemblyBuilder.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Api\DefaultTestAssemblyRunner.cs">
-      <Link>Api\DefaultTestAssemblyRunner.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\src\framework\Api\IApplyToTest.cs">
       <Link>Api\IApplyToTest.cs</Link>
     </Compile>
@@ -84,9 +78,6 @@
     </Compile>
     <Compile Include="..\..\..\src\framework\Api\TestOutput.cs">
       <Link>Api\TestOutput.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Api\TestResult.cs">
-      <Link>Api\TestResult.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\AssemblyInfo.cs">
       <Link>AssemblyInfo.cs</Link>
@@ -394,6 +385,12 @@
     <Compile Include="..\..\..\src\framework\Internal\CultureDetector.cs">
       <Link>Internal\CultureDetector.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\DefaultTestAssemblyBuilder.cs">
+      <Link>Internal\DefaultTestAssemblyBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\DefaultTestAssemblyRunner.cs">
+      <Link>Internal\DefaultTestAssemblyRunner.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\framework\Internal\DirectorySwapper.cs">
       <Link>Internal\DirectorySwapper.cs</Link>
     </Compile>
@@ -559,6 +556,9 @@
     <Compile Include="..\..\..\src\framework\Internal\TestMethod.cs">
       <Link>Internal\TestMethod.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\TestResult.cs">
+      <Link>Internal\TestResult.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\framework\Internal\TestSuite.cs">
       <Link>Internal\TestSuite.cs</Link>
     </Compile>
@@ -606,6 +606,15 @@
     </Compile>
     <Compile Include="..\..\..\src\framework\Throws.cs">
       <Link>Throws.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\AsyncResult.cs">
+      <Link>Internal\AsyncResult.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\TestProgressReporter.cs">
+      <Link>Internal\TestProgressReporter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Api\ITestResult.cs">
+      <Link>Api\ITestResult.cs</Link>
     </Compile>
     <None Include="..\..\..\src\framework\Templates\Contains.template.cs">
       <Link>Templates\Contains.template.cs</Link>

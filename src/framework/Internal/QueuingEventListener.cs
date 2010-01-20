@@ -56,7 +56,7 @@ namespace NUnit.Framework.Internal
 		/// A test case finished
 		/// </summary>
 		/// <param name="result">Result of the test case</param>
-		public void TestFinished(TestResult result)
+		public void TestFinished(ITestResult result)
 		{
 			events.Enqueue( new TestFinishedEvent( result ) );
 		}

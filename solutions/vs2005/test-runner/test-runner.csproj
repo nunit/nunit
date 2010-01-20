@@ -45,6 +45,9 @@
     <Compile Include="..\..\..\src\runner\AssemblyInfo.cs">
       <Link>AssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\runner\CallbackHandler.cs">
+      <Link>CallbackHandler.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\runner\CommandLineOptions.cs">
       <Link>CommandLineOptions.cs</Link>
     </Compile>
@@ -63,11 +66,11 @@
     <Compile Include="..\..\..\src\runner\ResultSummary.cs">
       <Link>ResultSummary.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\runner\RunTestsCallbackHandler.cs">
+      <Link>RunTestsCallbackHandler.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\runner\StackTraceFilter.cs">
       <Link>StackTraceFilter.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\runner\TestEventListener.cs">
-      <Link>TestEventListener.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup>

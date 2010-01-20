@@ -41,7 +41,7 @@ namespace NUnitLite
         /// Initializes a new instance of the <see cref="ResultSummary"/> class.
         /// </summary>
         /// <param name="result">The result.</param>
-        public ResultSummary(TestResult result)
+        public ResultSummary(ITestResult result)
         {
             Visit(result);
         }
@@ -82,9 +82,9 @@ namespace NUnitLite
             get { return notRunCount; }
         }
 
-        private void Visit(TestResult result)
+        private void Visit(ITestResult result)
         {
-            if (result.Test.IsTestCase)
+            if (result.IsTestCase)
             {
                 testCount++;
                 switch (result.ResultState)
@@ -109,7 +109,7 @@ namespace NUnitLite
             }
 
             if (result.Results != null)
-                foreach (TestResult r in result.Results)
+                foreach (ITestResult r in result.Results)
                     Visit(r);
         }
     }

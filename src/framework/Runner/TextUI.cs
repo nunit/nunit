@@ -215,7 +215,7 @@ namespace NUnitLite.Runner
         /// Reports the results.
         /// </summary>
         /// <param name="result">The result.</param>
-        private void ReportResults( TestResult result )
+        private void ReportResults( ITestResult result )
         {
             ResultSummary summary = new ResultSummary(result);
 
@@ -277,7 +277,7 @@ namespace NUnitLite.Runner
             writer.WriteLine();
         }
 
-        private void PrintErrorReport(TestResult result)
+        private void PrintErrorReport(ITestResult result)
         {
             reportCount = 0;
             writer.WriteLine();
@@ -285,17 +285,17 @@ namespace NUnitLite.Runner
             PrintErrorResults(result);
         }
 
-        private void PrintErrorResults(TestResult result)
+        private void PrintErrorResults(ITestResult result)
         {
-            if (result.HasResults)
-                foreach (TestResult r in result.Results)
+            if (result.Results != null)
+                foreach (ITestResult r in result.Results)
                     PrintErrorResults(r);
-            else if (result.IsError || result.IsFailure)
+            else if (result.ResultState == ResultState.Error || result.ResultState == ResultState.Failure)
             {
                 writer.WriteLine();
-                writer.WriteLine("{0}) {1} ({2})", ++reportCount, result.Test.Name, result.Test.FullName);
-                if (options.ListProperties)
-                    PrintTestProperties(result.Test);
+                writer.WriteLine("{0}) {1} ({2})", ++reportCount, result.Name, result.FullName);
+                //if (options.ListProperties)
+                //    PrintTestProperties(result.Test);
                 writer.WriteLine(result.Message);
 #if !NETCF_1_0
                 writer.WriteLine(result.StackTrace);
@@ -303,7 +303,7 @@ namespace NUnitLite.Runner
             }
         }
 
-        private void PrintNotRunReport(TestResult result)
+        private void PrintNotRunReport(ITestResult result)
         {
             reportCount = 0;
             writer.WriteLine();
@@ -311,17 +311,17 @@ namespace NUnitLite.Runner
             PrintNotRunResults(result);
         }
 
-        private void PrintNotRunResults(TestResult result)
+        private void PrintNotRunResults(ITestResult result)
         {
-            if (result.HasResults)
-                foreach (TestResult r in result.Results)
+            if (result.Results != null)
+                foreach (ITestResult r in result.Results)
                     PrintNotRunResults(r);
-            else if (!result.Executed)
+            else if (result.ResultState == ResultState.Ignored || result.ResultState == ResultState.NotRunnable || result.ResultState == ResultState.Skipped)
             {
                 writer.WriteLine();
-                writer.WriteLine("{0}) {1} ({2}) : {3}", ++reportCount, result.Test.Name, result.Test.FullName, result.Message);
-                if (options.ListProperties)
-                    PrintTestProperties(result.Test);
+                writer.WriteLine("{0}) {1} ({2}) : {3}", ++reportCount, result.Name, result.FullName, result.Message);
+                //if (options.ListProperties)
+                //    PrintTestProperties(result.Test);
             }
         }
 
@@ -331,14 +331,14 @@ namespace NUnitLite.Runner
                 writer.WriteLine("  {0}: {1}", entry.Key, entry.Value);            
         }
 
-        private void PrintFullReport(TestResult result)
+        private void PrintFullReport(ITestResult result)
         {
             writer.WriteLine();
             writer.WriteLine("All Test Results:");
             PrintAllResults(result, " ");
         }
 
-        private void PrintAllResults(TestResult result, string indent)
+        private void PrintAllResults(ITestResult result, string indent)
         {
             string status = null;
             switch (result.ResultState)
@@ -369,10 +369,10 @@ namespace NUnitLite.Runner
 
             writer.Write(status);
             writer.Write(indent);
-            writer.WriteLine(result.Test.Name);
+            writer.WriteLine(result.Name);
 
-            if (result.HasResults)
-                foreach (TestResult r in result.Results)
+            if (result.Results != null)
+                foreach (ITestResult r in result.Results)
                     PrintAllResults(r, indent + "  ");
         }
         #endregion
