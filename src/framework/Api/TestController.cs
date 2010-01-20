@@ -33,12 +33,11 @@ namespace NUnit.Framework.Api
     {
         private ITestAssemblyBuilder builder;
         private ITestAssemblyRunner runner;
-        private IDictionary options;
 
         #region Constructors
 
         /// <summary>
-        /// Construct a TestController using default runner, builder and option settings.
+        /// Construct a TestController using the default builder and runner.
         /// </summary>
         public TestController()
         {
@@ -47,20 +46,6 @@ namespace NUnit.Framework.Api
 
             this.builder = new DefaultTestAssemblyBuilder();
             this.runner = new DefaultTestAssemblyRunner(this.builder);
-        }
-
-        /// <summary>
-        /// Construct a TestController passing a dictionary of option settings.
-        /// </summary>
-        public TestController(IDictionary options)
-        {
-            if (!CoreExtensions.Host.Initialized)
-                CoreExtensions.Host.Initialize();
-
-            this.builder = new DefaultTestAssemblyBuilder();
-            this.runner = new DefaultTestAssemblyRunner(this.builder);
-
-            this.options = options;
         }
 
         /// <summary>
@@ -94,11 +79,6 @@ namespace NUnit.Framework.Api
             get { return runner; }
         }
 
-        public IDictionary Options
-        {
-            get { return options; }
-        }
-
         #endregion
 
         #region InitializeLifetimeService
@@ -124,7 +104,6 @@ namespace NUnit.Framework.Api
         public abstract class TestControllerAction : MarshalByRefObject
         {
             private TestController controller;
-            private ITestAssemblyRunner runner;
             private AsyncCallback callback;
 
             /// <summary>
@@ -135,26 +114,7 @@ namespace NUnit.Framework.Api
             protected TestControllerAction(TestController controller, AsyncCallback callback)
             {
                 this.controller = controller;
-                this.runner = controller.Runner;
                 this.callback = callback;
-            }
-
-            /// <summary>
-            /// Gets the runner.
-            /// </summary>
-            /// <value>The runner.</value>
-            protected ITestAssemblyRunner Runner
-            {
-                get { return this.runner; }
-            }
-
-            /// <summary>
-            /// Reports the progress.
-            /// </summary>
-            /// <param name="progress">The progress.</param>
-            public void ReportProgress(object progress)
-            {
-                callback(new ProgressReport(progress));
             }
 
             /// <summary>
@@ -162,7 +122,7 @@ namespace NUnit.Framework.Api
             /// </summary>
             /// <param name="result">The result.</param>
             /// <param name="synchronous">if set to <c>true</c> [synchronous].</param>
-            public void ReportResult(object result, bool synchronous)
+            protected void ReportResult(object result, bool synchronous)
             {
                 callback(new FinalResult(result, synchronous));
             }
@@ -190,11 +150,12 @@ namespace NUnit.Framework.Api
             /// </summary>
             /// <param name="controller">The controller.</param>
             /// <param name="assemblyFilename">The assembly filename.</param>
+            /// <param name="loadOptions">Options controlling how the tests are loaded</param>
             /// <param name="callback">The callback.</param>
-            public LoadTestsAction(TestController controller, string assemblyFilename, AsyncCallback callback) 
+            public LoadTestsAction(TestController controller, string assemblyFilename, IDictionary loadOptions, AsyncCallback callback) 
                 : base(controller, callback)
             {
-                ReportResult(Runner.Load(assemblyFilename), true);
+                ReportResult(controller.Runner.Load(assemblyFilename, loadOptions), true);
             }
         }
 
@@ -227,7 +188,7 @@ namespace NUnit.Framework.Api
         /// <summary>
         /// RunTestsAction runs the loaded TestSuite held by the TestController.
         /// </summary>
-        public class RunTestsAction : TestControllerAction, ITestListener
+        public class RunTestsAction : TestControllerAction
         {
             /// <summary>
             /// Construct a RunTestsAction and run all tests in the loaded TestSuite.
@@ -237,7 +198,8 @@ namespace NUnit.Framework.Api
             public RunTestsAction(TestController controller, AsyncCallback callback) 
                 : base(controller, callback)
             {
-                ReportResult(Runner.Run(this).ToXml(), true);
+                ITestResult result = controller.Runner.Run(new TestProgressReporter(callback));
+                ReportResult(result.ToXml(true), true);
             }
 
             ///// <summary>
@@ -251,105 +213,9 @@ namespace NUnit.Framework.Api
             //{
             //    ReportResult(Runner.Run(this, filter), true);
             //}
-
-            #region ITestListener Members
-
-            public void TestStarted(ITest test)
-            {
-            }
-
-            public void TestFinished(TestResult result)
-            {
-            }
-
-            public void TestOutput(TestOutput testOutput)
-            {
-                ReportProgress(testOutput);
-            }
-
-            #endregion
         }
 
         #endregion
-
-        #endregion
-
-        #region Nested Classes for use with Callbacks
-
-        /// <summary>
-        /// AsyncResult is the abstract base for all callback classes
-        /// used with the framework.
-        /// </summary>
-        [Serializable]
-        public abstract class AsyncResult : IAsyncResult
-        {
-            private object state;
-            private bool synchronous;
-            private bool isCompleted;
-
-            /// <summary>
-            /// Initializes a new instance of the <see cref="AsyncResult"/> class.
-            /// </summary>
-            /// <param name="state">The state of the result.</param>
-            /// <param name="isCompleted">if set to <c>true</c> [is completed].</param>
-            /// <param name="synchronous">if set to <c>true</c> [synchronous].</param>
-            public AsyncResult(object state, bool isCompleted, bool synchronous)
-            {
-                this.state = state;
-                this.isCompleted = isCompleted;
-                this.synchronous = synchronous;
-            }
-
-            #region IAsyncResult Members
-
-            /// <summary>
-            /// Gets the result of an operation.
-            /// </summary>
-            /// <value></value>
-            /// <returns>The result state.</returns>
-            public object AsyncState
-            {
-                get { return state; }
-            }
-
-            /// <summary>
-            /// Gets a <see cref="T:System.Threading.WaitHandle"/> that is used to wait for an asynchronous operation to complete.
-            /// </summary>
-            /// <returns>A WaitHandle</returns>
-            public System.Threading.WaitHandle AsyncWaitHandle
-            {
-                get { throw new NotImplementedException(); }
-            }
-
-            /// <summary>
-            /// Gets a value that indicates whether the asynchronous operation completed synchronously.
-            /// </summary>
-            /// <returns>true if the operation completed synchronously; otherwise, false.
-            /// </returns>
-            public bool CompletedSynchronously
-            {
-                get { return synchronous; }
-            }
-
-            public bool IsCompleted
-            {
-                get { return isCompleted; }
-            }
-
-            #endregion
-        }
-
-        [Serializable]
-        public class FinalResult : AsyncResult
-        {
-            public FinalResult(object state, bool synchronous) : base(state, true, synchronous) { }
-        }
-
-        [Serializable]
-        public class ProgressReport : AsyncResult
-        {
-            public ProgressReport(object report) : base(report, false, false) { }
-        }
 
         #endregion
     }

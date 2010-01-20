@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Collections;
 using System.Xml;
@@ -38,88 +39,36 @@ namespace NUnit.AdhocTestRunner
 
         object testController;
 
-        public FrameworkController(CommandLineOptions options)
+        public FrameworkController(AppDomain testDomain)
         {
-            this.testDomain = options.UseAppDomain
-                ? CreateDomain(Path.GetDirectoryName(Path.GetFullPath(options.Parameters[0])))
-                : AppDomain.CurrentDomain;
-
+            this.testDomain = testDomain;
             this.testController = CreateObject("NUnit.Framework.Api.TestController");
         }
 
-        public bool Load(string assemblyFileName)
+        public bool Load(string assemblyFileName, IDictionary options)
         {
             CallbackHandler handler = new CallbackHandler();
 
             CreateObject("NUnit.Framework.Api.TestController+LoadTestsAction", 
-                testController, assemblyFileName, handler.Callback);
+                testController, assemblyFileName, options, handler.Callback);
+
+            Debug.Assert(handler.Result is bool, "Returned result was not a bool");
 
             return (bool)handler.Result;
         }
 
         public XmlNode Run()
         {
-            CallbackHandler handler = new CallbackHandler();
+            CallbackHandler handler = new RunTestsCallbackHandler();
 
             CreateObject("NUnit.Framework.Api.TestController+RunTestsAction", testController, handler.Callback);
 
-            XmlDocument doc = new XmlDocument();
-            doc.LoadXml((string)handler.Result);
+            Debug.Assert(handler.Result is XmlNode, "Returned result was not an XmlNode");
 
-            XmlNode node = doc.FirstChild;
-            
-            return node;
+            return handler.Result as XmlNode;
         }
-
-        #region CallbackHandler class
-
-        private class CallbackHandler : MarshalByRefObject
-        {
-            private object result;
-            private TextWriter output;
-
-            public CallbackHandler()
-            {
-                this.output = Console.Out;
-            }
-
-            public object Result
-            {
-                get { return result; }
-            }
-
-            public AsyncCallback Callback
-            {
-                get { return new AsyncCallback(CallbackMethod); }
-            }
-
-            private void CallbackMethod(IAsyncResult ar)
-            {
-                object state = ar.AsyncState;
-
-                if (ar.IsCompleted)
-                    this.result = state;
-                else
-                    output.Write(state);
-            }
-
-            public override object InitializeLifetimeService()
-            {
-                return null;
-            }
-        }
-
-        #endregion
 
         #region Helper Methods
-
-        private static AppDomain CreateDomain(string appBase)
-        {
-            AppDomainSetup setup = new AppDomainSetup();
-            setup.ApplicationBase = appBase;
-            AppDomain domain = AppDomain.CreateDomain("test-domain", null, setup);
-            return domain;
-        }
 
         private object CreateObject(string typeName, params object[] args)
         {

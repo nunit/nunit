@@ -80,14 +80,15 @@ namespace NUnit.AdhocTestRunner
         {
             switch (result.Name)
             {
-                case "test-suite":
-                    foreach( XmlNode childResult in result.ChildNodes )
-                        WriteErrorsAndFailures(childResult);
-                    break;
                 case"test-case":
                     string resultState = result.Attributes["result"].Value;
                     if (resultState == "Failure" || resultState == "Error" || resultState == "Cancelled")
                         WriteSingleResult(result);
+                    break;
+                case "test-suite":
+                case "test-fixture":
+                    foreach (XmlNode childResult in result.ChildNodes)
+                        WriteErrorsAndFailures(childResult);
                     break;
             }
         }
@@ -106,6 +107,7 @@ namespace NUnit.AdhocTestRunner
             switch (result.Name)
             {
                 case "test-suite":
+                case "test-fixture":
                     foreach (XmlNode childResult in result.ChildNodes)
                         WriteNotRunResults(childResult);
                     break;

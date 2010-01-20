@@ -48,11 +48,8 @@ namespace NUnit.Framework.Api
             SetResultState();
             suiteResult.AddResult(testResult);
 
-            XmlDocument doc = new XmlDocument();
-            doc.LoadXml(testResult.ToXml());
-            testNode = doc.FirstChild;
-            doc.LoadXml(suiteResult.ToXml());
-            suiteNode = doc.FirstChild;
+            testNode = testResult.ToXml(true);
+            suiteNode = suiteResult.ToXml(true);
         }
 
         [Test]
@@ -204,7 +201,7 @@ namespace NUnit.Framework.Api
             Assert.NotNull(reason);
             Assert.NotNull(reason.SelectSingleNode("message"));
             Assert.AreEqual("because", reason.SelectSingleNode("message").InnerText);
-            Assert.Null(reason.SelectSingleNode("stacktrace"));
+            Assert.Null(reason.SelectSingleNode("stack-trace"));
         }
 
         [Test]
@@ -248,14 +245,14 @@ namespace NUnit.Framework.Api
         {
             Assert.AreEqual("Failure", testNode.Attributes["result"].Value);
             XmlNode failureNode = testNode.SelectSingleNode("failure");
-            Assert.NotNull(failureNode, "No failure element found");
+            Assert.NotNull(failureNode, "No <failure> element found");
 
             XmlNode messageNode = failureNode.SelectSingleNode("message");
-            Assert.NotNull(messageNode, "No message element found");
+            Assert.NotNull(messageNode, "No <message> element found");
             Assert.AreEqual("message", messageNode.InnerText);
 
-            XmlNode stacktraceNode = failureNode.SelectSingleNode("stacktrace");
-            Assert.NotNull(stacktraceNode, "No stacktrace element found");
+            XmlNode stacktraceNode = failureNode.SelectSingleNode("stack-trace");
+            Assert.NotNull(stacktraceNode, "No <stack-trace> element found");
             Assert.AreEqual("stack trace", stacktraceNode.InnerText);
         }
 
@@ -264,14 +261,14 @@ namespace NUnit.Framework.Api
         {
             Assert.AreEqual("Failure", suiteNode.Attributes["result"].Value);
             XmlNode failureNode = suiteNode.SelectSingleNode("failure");
-            Assert.NotNull(failureNode, "No failure element found");
+            Assert.NotNull(failureNode, "No <failure> element found");
 
             XmlNode messageNode = failureNode.SelectSingleNode("message");
-            Assert.NotNull(messageNode, "No message element found");
+            Assert.NotNull(messageNode, "No <message> element found");
             Assert.AreEqual("Child test failed", messageNode.InnerText);
 
             XmlNode stacktraceNode = failureNode.SelectSingleNode("stacktrace");
-            Assert.Null(stacktraceNode, "There should be no stacktrace");
+            Assert.Null(stacktraceNode, "Unexpected <stack-trace> element found");
         }
 
         [Test]

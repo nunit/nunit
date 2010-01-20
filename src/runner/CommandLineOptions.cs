@@ -45,11 +45,13 @@ namespace NUnit.AdhocTestRunner
         private bool error = false;
 
 #if CLR_2_0
-        private List<string> tests = new List<string>();
+        private List<string> loadList = new List<string>();
+        private List<string> runList = new List<string>();
         private List<string> invalidOptions = new List<string>();
         private List<string> parameters = new List<string>();
 #else
-        private ArrayList tests = new ArrayList();
+        private ArrayList loadList = new ArrayList();
+        private ArrayList runList = new ArrayList();
         private ArrayList invalidOptions = new ArrayList();
         private ArrayList parameters = new ArrayList();
 #endif
@@ -96,23 +98,19 @@ namespace NUnit.AdhocTestRunner
         }
 
         /// <summary>
-        /// Gets a list of all tests specified on the command line
+        /// Gets a list of all tests to be loaded
         /// </summary>
-        public string[] Tests
+        public IList Load
         {
-#if CLR_2_0
-            get { return tests.ToArray(); }
-#else
-            get { return (string[])tests.ToArray(typeof(string)); }
-#endif
+            get { return loadList; }
         }
 
         /// <summary>
-        /// Gets the test count
+        /// Gets a list of all tests to be run
         /// </summary>
-        public int TestCount
+        public IList Run
         {
-            get { return tests.Count; }
+            get { return runList; }
         }
 
         /// <summary>
@@ -166,9 +164,12 @@ namespace NUnit.AdhocTestRunner
                 case "help":
                     help = true;
                     break;
-                case "t":
-                case "test":
-                    tests.Add(val);
+                case "load":
+                    loadList.Add(val);
+                    break;
+                case "r":
+                case "run":
+                    runList.Add(val);
                     break;
                 case "l":
                 case "labels":
@@ -243,12 +244,14 @@ namespace NUnit.AdhocTestRunner
                 sb.Append("or on the probing path. If no assemblies are provided, tests in the" + NL);
                 sb.Append("executing assembly itself are run." + NL + NL);
                 sb.Append("Options:" + NL);
-                sb.Append("  -t[est]:testname  Provides the name of a test to run. This option may be" + NL);
-                sb.Append("                    repeated. If no test names are given, all tests are run." + NL + NL);
+                sb.Append("  -f[ixture]:name   Provides the name of a test to load. This option may be" + NL);
+                sb.Append("                    repeated. If no test names are given, all tests are loaded." + NL + NL);
+                sb.Append("  -r[un]:name       Provides the name of a test to run. This option may be" + NL);
+                sb.Append("                    repeated. If no test names are given, all loaded tests are run." + NL + NL);
                 sb.Append("  -h[elp]           Displays this help" + NL + NL);
                 sb.Append("  -nologo           Suppresses display of the initial message" + NL + NL);
                 sb.Append("  -w[ait]           Waits for a key press before exiting" + NL + NL);
-                sb.Append("  -l[abels]         Display name of each test as it is run" + NL + NL);
+                sb.Append("  -l[abels]       Display name of each test as it is run" + NL + NL);
                 sb.Append("  -a[ppdomain]      Run tests in a separate AppDomain" + NL + NL);
                 sb.Append("Options that take values may use an equal sign or a colon" + NL);
                 sb.Append("to separate the option from its value." + NL + NL);

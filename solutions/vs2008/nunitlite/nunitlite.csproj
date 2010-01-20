@@ -52,6 +52,9 @@
     <Compile Include="..\..\..\src\framework\Api\ITestListener.cs">
       <Link>Api\ITestListener.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\framework\Api\ITestResult.cs">
+      <Link>Api\ITestResult.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\framework\Api\ResultState.cs">
       <Link>Api\ResultState.cs</Link>
     </Compile>
@@ -60,9 +63,6 @@
     </Compile>
     <Compile Include="..\..\..\src\framework\Api\TestOutput.cs">
       <Link>Api\TestOutput.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Api\TestResult.cs">
-      <Link>Api\TestResult.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\AssemblyInfo.cs">
       <Link>AssemblyInfo.cs</Link>
@@ -270,6 +270,9 @@
     </Compile>
     <Compile Include="..\..\..\src\framework\Internal\TestMethod.cs">
       <Link>Internal\TestMethod.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\TestResult.cs">
+      <Link>Internal\TestResult.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Internal\TestSuite.cs">
       <Link>Internal\TestSuite.cs</Link>

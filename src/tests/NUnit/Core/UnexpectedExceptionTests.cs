@@ -39,7 +39,7 @@ namespace NUnit.Framework.Tests
             string expectedMessage = 
                 "System.Exception : Outer Exception" + Environment.NewLine + "  ----> System.Exception : Inner Exception";
 
-            TestResult result = TestBuilder.RunTestCase(
+            ITestResult result = TestBuilder.RunTestCase(
                 typeof(UnexpectedExceptionFixture), 
                 "ThrowsWithInnerException");
 
@@ -50,7 +50,7 @@ namespace NUnit.Framework.Tests
         [Test]
         public void BadStackTraceIsHandled()
         {
-            TestResult result = TestBuilder.RunTestCase(
+            ITestResult result = TestBuilder.RunTestCase(
                 typeof(UnexpectedExceptionFixture), 
                 "ThrowsWithBadStackTrace");
 
@@ -62,7 +62,7 @@ namespace NUnit.Framework.Tests
         [Test]
         public void CustomExceptionIsHandled()
         {
-            TestResult result = TestBuilder.RunTestCase(
+            ITestResult result = TestBuilder.RunTestCase(
                 typeof(UnexpectedExceptionFixture), 
                 "ThrowsCustomException");
 

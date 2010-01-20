@@ -47,8 +47,8 @@ namespace NUnitLite.Runner
         /// Runs all tests in the specified assembly.
         /// </summary>
         /// <param name="assembly">The assembly for which tests are to be run.</param>
-        /// <returns>TestResult representing the result of the run</returns>
-        public virtual TestResult Run(Assembly assembly)
+        /// <returns>ITestResult representing the result of the run</returns>
+        public virtual ITestResult Run(Assembly assembly)
         {
             return Run( TestLoader.Load(assembly) );
         }
@@ -59,7 +59,7 @@ namespace NUnitLite.Runner
         /// <param name="assembly">The assembly containing the tests</param>
         /// <param name="tests">Array of test names to be run</param>
         /// <returns>TestResult representing the result of the run</returns>
-        public virtual TestResult Run(Assembly assembly, string[] tests)
+        public virtual ITestResult Run(Assembly assembly, string[] tests)
         {
             return Run( TestLoader.Load( assembly, tests ) );
         }
@@ -69,7 +69,7 @@ namespace NUnitLite.Runner
         /// Runs the specified test.
         /// </summary>
         /// <param name="test">The test.</param>
-        public TestResult Run(Test test)
+        public ITestResult Run(Test test)
         {
             return test.Run(this);
         }
@@ -106,7 +106,7 @@ namespace NUnitLite.Runner
         /// Forwards the TestFinished event to all listeners.
         /// </summary>
         /// <param name="result">The result of the test that just finished.</param>
-        public void TestFinished(TestResult result)
+        public void TestFinished(ITestResult result)
         {
             foreach (ITestListener listener in listeners)
                 listener.TestFinished(result);

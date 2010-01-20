@@ -97,6 +97,7 @@ namespace NUnit.AdhocTestRunner
                     break;
 
                 case "test-suite":
+                case "test-fixture":
                     foreach (XmlNode childResult in result.ChildNodes)
                         Summarize(childResult);
                     break;

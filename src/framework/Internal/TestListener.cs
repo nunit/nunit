@@ -42,7 +42,7 @@ namespace NUnit.Framework.Internal
         /// Called when a test case has finished
         /// </summary>
         /// <param name="result">The result of the test</param>
-		public void TestFinished(TestResult result){}
+		public void TestFinished(ITestResult result){}
 
         /// <summary>
         /// Called when the test creates text output.

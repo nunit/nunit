@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Threading;
-using NUnit.Framework.Internal;
+using NUnit.Framework.Api;
 
-namespace NUnit.Framework.Api
+namespace NUnit.Framework.Internal
 {
     /// <summary>
     /// Default implementation of ITestAssemblyRunner
@@ -33,10 +33,11 @@ namespace NUnit.Framework.Api
         /// Loads the tests found in an Assembly
         /// </summary>
         /// <param name="assemblyName">File name of the assembly to load</param>
+        /// <param name="options">Dictionary of option settings for loading the assembly</param>
         /// <returns>True if the load was successful</returns>
-        public bool Load(string assemblyName)
+        public bool Load(string assemblyName, IDictionary options)
         {
-            this.suite = this.builder.Build(assemblyName, null);
+            this.suite = this.builder.Build(assemblyName, options);
             if (suite == null) return false;
 
             return true;
@@ -58,7 +59,7 @@ namespace NUnit.Framework.Api
         /// </summary>
         /// <param name="listener">Interface to receive EventListener notifications.</param>
         /// <returns></returns>
-        public TestResult Run(ITestListener listener)
+        public ITestResult Run(ITestListener listener)
         {
             try
             {

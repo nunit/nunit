@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Collections;
 using System.Reflection;
 using NUnit.Framework.Internal;
 
@@ -34,20 +35,22 @@ namespace NUnit.Framework.Api
     /// </summary>
     public interface ITestAssemblyBuilder
     {
+        // TODO: Remove use of TestSuite after tests are not self-running
+
         /// <summary>
         /// Build a suite of tests from a provided assembly
         /// </summary>
         /// <param name="assembly">The assembly from which tests are to be built</param>
-        /// <param name="fixtureName">The name of a fixture to load, or null</param>
+        /// <param name="options">A dictionary of options to use in building the suite</param>
         /// <returns>A TestSuite containing the tests found in the assembly</returns>
-        TestSuite Build(Assembly assembly, string fixtureName);
+        TestSuite Build(Assembly assembly, IDictionary options);
 
         /// <summary>
         /// Build a suite of tests given the filename of an assembly
         /// </summary>
         /// <param name="assemblyName">The filename of the assembly from which tests are to be built</param>
-        /// <param name="fixtureName">The name of a fixture to load, or null</param>
+        /// <param name="options">A dictionary of options to use in building the suite</param>
         /// <returns>A TestSuite containing the tests found in the assembly</returns>
-        TestSuite Build(string assemblyName, string fixtureName);
+        TestSuite Build(string assemblyName, IDictionary options);
     }
 }

@@ -2,9 +2,9 @@ using System;
 using System.Collections;
 using System.IO;
 using System.Reflection;
-using NUnit.Framework.Internal;
+using NUnit.Framework.Api;
 
-namespace NUnit.Framework.Api
+namespace NUnit.Framework.Internal
 {
     /// <summary>
     /// DefaultTestAssemblyBuilder loads a single assembly and builds a TestSuite
@@ -44,24 +44,30 @@ namespace NUnit.Framework.Api
         /// Build a suite of tests from a provided assembly
         /// </summary>
         /// <param name="assembly">The assembly from which tests are to be built</param>
-        /// <param name="fixtureName">The name of a fixture to load, or null</param>
+        /// <param name="options">A dictionary of options to use in building the suite</param>
         /// <returns>
         /// A TestSuite containing the tests found in the assembly
         /// </returns>
-        public TestSuite Build(Assembly assembly, string fixtureName)
+        public TestSuite Build(Assembly assembly, IDictionary options)
         {
-            throw new NotImplementedException();
+            IList fixtureNames = options["LOAD"] as IList;
+
+            IList fixtures = GetFixtures(assembly, fixtureNames);
+            if (fixtures.Count > 0)
+                return BuildTestAssembly(assembly.GetName().Name, fixtures);
+
+            return null;
         }
 
         /// <summary>
         /// Build a suite of tests given the filename of an assembly
         /// </summary>
         /// <param name="assemblyName">The filename of the assembly from which tests are to be built</param>
-        /// <param name="fixtureName">The name of a fixture to load, or null</param>
+        /// <param name="options">A dictionary of options to use in building the suite</param>
         /// <returns>
         /// A TestSuite containing the tests found in the assembly
         /// </returns>
-        public TestSuite Build(string assemblyName, string fixtureName)
+        public TestSuite Build(string assemblyName, IDictionary options)
         {
             // Change currentDirectory in case assembly references unmanaged dlls
             // and so that any addins are able to access the directory easily.
@@ -70,16 +76,9 @@ namespace NUnit.Framework.Api
                 this.assembly = Load(assemblyName);
                 if (assembly == null) return null;
 
-                // If provided test name is actually the name of
-                // a type, we handle it specially
-                if (fixtureName != null && fixtureName != string.Empty)
-                {
-                    Type testType = assembly.GetType(fixtureName);
-                    if (testType != null)
-                        return BuildFromFixtureType(assemblyName, testType);
-                }
+                IList fixtureNames = options["LOAD"] as IList;
 
-                IList fixtures = GetFixtures(assembly, fixtureName);
+                IList fixtures = GetFixtures(assembly, fixtureNames);
                 if (fixtures.Count > 0)
                     return BuildTestAssembly(assemblyName, fixtures);
 
@@ -110,23 +109,24 @@ namespace NUnit.Framework.Api
             return assembly;
         }
 
-        private IList GetFixtures(Assembly assembly, string ns)
+        private IList GetFixtures(Assembly assembly, IList names)
         {
             ObjectList fixtures = new ObjectList();
             log.Debug("Examining assembly for test fixtures");
 
-            IList testTypes = GetCandidateFixtureTypes(assembly, ns);
+            IList testTypes = GetCandidateFixtureTypes(assembly, names);
 
             log.Debug("Found {0} classes to examine", testTypes.Count);
 #if LOAD_TIMING
             System.Diagnostics.Stopwatch timer = new System.Diagnostics.Stopwatch();
             timer.Start();
 #endif
-
             foreach (Type testType in testTypes)
             {
                 if (TestFixtureBuilder.CanBuildFrom(testType))
                     fixtures.Add(TestFixtureBuilder.BuildFrom(testType));
+                else if (names != null && legacySuiteBuilder.CanBuildFrom(testType))
+                    fixtures.Add(legacySuiteBuilder.BuildFrom(testType));
             }
 
 #if LOAD_TIMING
@@ -138,19 +138,29 @@ namespace NUnit.Framework.Api
             return fixtures;
         }
 
-        private IList GetCandidateFixtureTypes(Assembly assembly, string ns)
+        private IList GetCandidateFixtureTypes(Assembly assembly, IList names)
         {
             IList types = assembly.GetTypes();
 
-            if (ns == null || ns == string.Empty || types.Count == 0)
+            if (names == null || names.Count == 0)
                 return types;
 
-            string prefix = ns + ".";
-
             ObjectList result = new ObjectList();
-            foreach (Type type in types)
-                if (type.FullName.StartsWith(prefix))
-                    result.Add(type);
+
+            foreach (string name in names)
+            {
+                Type fixtureType = assembly.GetType(name);
+                if (fixtureType != null)
+                    result.Add(fixtureType);
+                else
+                {
+                    string prefix = name + ".";
+
+                    foreach (Type type in types)
+                        if (type.FullName.StartsWith(prefix))
+                            result.Add(type);
+                }
+            }
 
             return result;
         }
@@ -172,10 +182,13 @@ namespace NUnit.Framework.Api
         {
             TestSuite testAssembly = new TestSuite(assemblyName);
 
-            NamespaceTreeBuilder treeBuilder =
-                new NamespaceTreeBuilder(testAssembly);
-            treeBuilder.Add(fixtures);
-            testAssembly = treeBuilder.RootSuite;
+            //NamespaceTreeBuilder treeBuilder =
+            //    new NamespaceTreeBuilder(testAssembly);
+            //treeBuilder.Add(fixtures);
+            //testAssembly = treeBuilder.RootSuite;
+
+            foreach (Test fixture in fixtures)
+                testAssembly.Add(fixture);
 
             if (fixtures.Count == 0)
             {
