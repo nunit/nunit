@@ -21,7 +21,7 @@ Api/ITestResult.cs
 Api/ResultState.cs
 Api/RunState.cs
 Api/TestOutput.cs
-Api/TestResult.cs
+Api/TestStatus.cs
 Attributes/*.cs
 Constraints/*.cs
 Exceptions/*.cs
@@ -36,6 +36,8 @@ Internal/TestFixture.cs
 Internal/TestMethod.cs
 Internal/TestSuite.cs
 Internal/TestListener.cs
+Internal/TestResult.cs
 Internal/TextMessageWriter.cs
 Internal/TypeHelper.cs
+Internal/XmlHelper.cs
 Runner/*.cs

@@ -46,10 +46,10 @@ namespace NUnit.Framework.Tests
             Test test = TestBuilder.MakeTestCase(fixtureType, dummyName);
             TestResult result = test.Run(TestListener.NULL);
             if (shouldPass)
-                Assert.IsTrue(result.IsSuccess, "{0} test should have passed", dummyName);
+                Assert.IsTrue(result.ResultState == ResultState.Success, "{0} test should have passed", dummyName);
             else
             {
-                Assert.IsTrue(result.IsFailure, "{0} test should have failed", dummyName);
+                Assert.IsTrue(result.ResultState == ResultState.Failure, "{0} test should have failed", dummyName);
                 Assert.AreEqual("System.ApplicationException : Test exception", result.Message);
             }
         }

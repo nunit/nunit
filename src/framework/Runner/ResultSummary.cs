@@ -33,7 +33,6 @@ namespace NUnitLite
     public class ResultSummary
     {
         private int testCount;
-        private int errorCount;
         private int failureCount;
         private int notRunCount;
 
@@ -53,15 +52,6 @@ namespace NUnitLite
         public int TestCount
         {
             get { return testCount; }
-        }
-
-        /// <summary>
-        /// Gets the error count.
-        /// </summary>
-        /// <value>The error count.</value>
-        public int ErrorCount
-        {
-            get { return errorCount; }
         }
 
         /// <summary>
@@ -87,18 +77,12 @@ namespace NUnitLite
             if (result.IsTestCase)
             {
                 testCount++;
-                switch (result.ResultState)
+                switch (result.ResultState.Status)
                 {
-                    case ResultState.Ignored:
-                    case ResultState.Skipped:
+                    case TestStatus.Skipped:
                         notRunCount++;
                         break;
-                    case ResultState.Error:
-                    case ResultState.NotRunnable:
-                    case ResultState.Cancelled:
-                        errorCount++;
-                        break;
-                    case ResultState.Failure:
+                    case TestStatus.Failed:
                         failureCount++;
                         break;
                     default:

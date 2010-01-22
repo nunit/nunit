@@ -34,8 +34,6 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public abstract class TestThread
     {
-        static Logger log = InternalTrace.GetLogger(typeof(TestThread));
-
         #region Private Fields
         /// <summary>
         /// The TestMethod or TestSuite to be run on the thread
@@ -105,17 +103,18 @@ namespace NUnit.Framework.Internal
             this.testResult = testResult;
             this.listener = listener;
 
-            log.Debug("Starting TestThread");
+            InternalTrace.Debug("Starting TestThread");
             thread.Start();
             thread.Join(this.Timeout);
-            log.Debug("Join Complete");
+            InternalTrace.Debug("Join Complete");
 
             // Timeout?
             if (thread.IsAlive)
             {
                 thread.Abort();
                 //thread.Join();
-                testResult.Failure(string.Format("Test exceeded Timeout value of {0}ms", Timeout));
+                testResult.SetResult(ResultState.Failure,
+                    string.Format("Test exceeded Timeout value of {0}ms", Timeout));
             }
 
             // Handle any exception communicated back from the thread, ie. from proc!

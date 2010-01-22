@@ -65,11 +65,11 @@ namespace NUnit.AdhocTestRunner
 
                     switch (resultState)
                     {
-                        case "Success":
+                        case "Passed":
                             successCount++;
                             testsRun++;
                             break;
-                        case "Failure":
+                        case "Failed":
                             failureCount++;
                             testsRun++;
                             break;

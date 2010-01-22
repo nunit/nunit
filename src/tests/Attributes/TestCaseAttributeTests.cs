@@ -211,7 +211,7 @@ namespace NUnit.Framework.Tests
 
             ResultSummary summary = new ResultSummary(result);
             Assert.AreEqual(3, summary.ResultCount);
-            Assert.AreEqual(2, summary.Ignored);
+            Assert.AreEqual(2, summary.Skipped);
             Assert.That(result.Results, Has.Some.Message.EqualTo("Don't Run Me!"));
         }
     }

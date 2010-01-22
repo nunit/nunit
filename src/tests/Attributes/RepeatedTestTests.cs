@@ -62,7 +62,7 @@ namespace NUnit.Framework.Attributes
 			RepeatSuccessFixture fixture = new RepeatSuccessFixture();
 			TestResult result = RunTestOnFixture( fixture );
 
-			Assert.IsTrue(result.IsSuccess);
+            Assert.IsTrue(result.ResultState == ResultState.Success);
 			Assert.AreEqual(1, fixture.FixtureSetupCount);
 			Assert.AreEqual(1, fixture.FixtureTeardownCount);
 			Assert.AreEqual(3, fixture.SetupCount);
@@ -77,7 +77,7 @@ namespace NUnit.Framework.Attributes
 			RepeatFailOnFirstFixture fixture = new RepeatFailOnFirstFixture();
 			TestResult result = RunTestOnFixture( fixture );
 
-			Assert.IsFalse(result.IsSuccess);
+            Assert.IsFalse(result.ResultState == ResultState.Success);
 			Assert.AreEqual(1, fixture.SetupCount);
 			Assert.AreEqual(1, fixture.TeardownCount);
 			Assert.AreEqual(1, fixture.Count);
@@ -90,7 +90,7 @@ namespace NUnit.Framework.Attributes
 			RepeatFailOnThirdFixture fixture = new RepeatFailOnThirdFixture();
 			TestResult result = RunTestOnFixture( fixture );
 
-			Assert.IsFalse(result.IsSuccess);
+            Assert.IsFalse(result.ResultState == ResultState.Success);
 			Assert.AreEqual(3, fixture.SetupCount);
 			Assert.AreEqual(3, fixture.TeardownCount);
 			Assert.AreEqual(3, fixture.Count);

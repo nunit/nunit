@@ -39,8 +39,6 @@ namespace NUnit.Framework.Internal
 	/// </summary>
 	public class CoreExtensions : ExtensionHost
 	{
-		static Logger log = InternalTrace.GetLogger("CoreExtensions");
-
 		#region Instance Fields
 		private IAddinRegistry addinRegistry;
 		private bool initialized;
@@ -166,7 +164,7 @@ namespace NUnit.Framework.Internal
 
         public void InstallBuiltins()
 		{
-			log.Info( "Installing Builtins" );
+            InternalTrace.Info("Installing Builtins");
 
 			// Install builtin SuiteBuilders
 			suiteBuilders.Install( new NUnitTestFixtureBuilder() );
@@ -189,7 +187,7 @@ namespace NUnit.Framework.Internal
 
 		public void InstallAddins()
 		{
-			log.Info( "Installing Addins" );
+            InternalTrace.Info("Installing Addins");
 
 			if( AddinRegistry != null )
 			{
@@ -227,8 +225,8 @@ namespace NUnit.Framework.Internal
 						AddinRegistry.SetStatus( addin.Name, status, message );
 						if ( status != AddinStatus.Loaded )
 						{
-							log.Error( "Failed to load {0}", addin.Name );
-							log.Error( message );
+                            InternalTrace.Error("Failed to load {0}", addin.Name);
+                            InternalTrace.Error(message);
 						}
 					}
 				}

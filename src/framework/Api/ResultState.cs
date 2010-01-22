@@ -23,49 +23,104 @@
 
 namespace NUnit.Framework.Api
 {
-	/// <summary>
-	/// The ResultState enum indicates the result of running a test
+    /// <summary>
+	/// The ResultState class represents the outcome of running a test.
+    /// It contains two pieces of information. The Status of the test
+    /// is an enum indicating whether the test passed, failed, was
+    /// skipped or was inconclusive. The Label provides a more
+    /// detailed breakdown for use by client runners.
 	/// </summary>
-	public enum ResultState
+	public class ResultState
 	{
+        private TestStatus status;
+        private string label;
+
+        #region Constructors
+
+        public ResultState(TestStatus status)
+        {
+            this.status = status;
+            this.label = null;
+        }
+
+        public ResultState(TestStatus status, string label)
+        {
+            this.status = status;
+            this.label = label;
+        }
+
+        #endregion
+
+        #region Predefined ResultStates
+
         /// <summary>
         /// The result is inconclusive
         /// </summary>
-        Inconclusive,
+        public static ResultState Inconclusive = new ResultState(TestStatus.Inconclusive);
 
         /// <summary>
         /// The test was not runnable.
         /// </summary>
-		NotRunnable, 
+        public static ResultState NotRunnable = new ResultState(TestStatus.Skipped, "Invalid");
 
         /// <summary>
         /// The test has been skipped. 
         /// </summary>
-		Skipped,
+        public static ResultState Skipped = new ResultState(TestStatus.Skipped);
 
         /// <summary>
         /// The test has been ignored.
         /// </summary>
-		Ignored,
+        public static ResultState Ignored = new ResultState(TestStatus.Skipped, "Ignored");
 
         /// <summary>
         /// The test succeeded
         /// </summary>
-		Success,
+        public static ResultState Success = new ResultState(TestStatus.Passed);
 
         /// <summary>
         /// The test failed
         /// </summary>
-		Failure,
+        public static ResultState Failure = new ResultState(TestStatus.Failed);
 
         /// <summary>
         /// The test encountered an unexpected exception
         /// </summary>
-		Error,
+        public static ResultState Error = new ResultState(TestStatus.Failed, "Error");
 
         /// <summary>
         /// The test was cancelled by the user
         /// </summary>
-        Cancelled
-	}
+        public static ResultState Cancelled = new ResultState(TestStatus.Failed, "Cancelled");
+        
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Gets the TestStatus for the test.
+        /// </summary>
+        /// <value>The status.</value>
+        public TestStatus Status
+        {
+            get { return status; }
+        }
+
+        /// <summary>
+        /// Gets the label under which this test resullt is
+        /// categorized. If no label has been set, the status
+        /// is converted to a string and used.
+        /// </summary>
+        public string Label
+        {
+            get 
+            { 
+                return label == null
+                    ? status.ToString()
+                    : label; 
+            }
+        }
+
+        #endregion
+    }
 }

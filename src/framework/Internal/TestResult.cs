@@ -83,7 +83,7 @@ namespace NUnit.Framework.Internal
 		public TestResult(ITest test)
 		{
 			this.test = test;
-			this.message = test.IgnoreReason;
+            this.resultState = ResultState.Inconclusive;
 		}
 
 		#endregion
@@ -97,21 +97,6 @@ namespace NUnit.Framework.Internal
         public ResultState ResultState
         {
             get { return resultState; }
-        }
-
-		/// <summary>
-		/// Indicates whether the test executed
-		/// </summary>
-        public bool Executed
-        {
-            get
-            {
-                return resultState == ResultState.Success ||
-                       resultState == ResultState.Failure ||
-                       resultState == ResultState.Cancelled ||
-                       resultState == ResultState.Error ||
-                       resultState == ResultState.Inconclusive;
-            }
         }
 
         /// <summary>
@@ -130,35 +115,10 @@ namespace NUnit.Framework.Internal
 			get { return test.FullName; }
 		}
 
-
         public bool IsTestCase
         {
             get { return test.IsTestCase; }
         }
-
-		/// <summary>
-		/// Indicates whether the test ran successfully
-		/// </summary>
-        public virtual bool IsSuccess
-        {
-            get { return resultState == ResultState.Success; }
-        }
-
-        /// <summary>
-        /// Indicates whether the test failed
-        /// </summary>
-        public virtual bool IsFailure
-        {
-            get { return resultState == ResultState.Failure;  }
-        }
-
-	    /// <summary>
-	    /// Indicates whether the test had an error (as opposed to a failure)
-	    /// </summary>
-        public virtual bool IsError
-	    {
-            get { return resultState == ResultState.Error;  }   
-	    }
 
         /// <summary>
         /// Gets or sets the elapsed time for running the test
@@ -211,71 +171,26 @@ namespace NUnit.Framework.Internal
 		#endregion
 
         #region Public Methods
-        /// <summary>
-        /// Mark the test as succeeding
-        /// </summary>
-        public void Success()
-        {
-            SetResult( ResultState.Success, null );
-        }
-
-        /// <summary>
-        /// Mark the test as succeeding and set a message
-        /// </summary>
-        public void Success( string message )
-        {
-            SetResult( ResultState.Success, message );
-        }
-
-        /// <summary>
-		/// Mark the test as ignored.
-		/// </summary>
-		/// <param name="reason">The reason the test was not run</param>
-		public void Ignore(string reason)
-		{
-			SetResult( ResultState.Ignored, reason );
-		}
-
-		/// <summary>
-		/// Mark the test as skipped.
-		/// </summary>
-		/// <param name="reason">The reason the test was not run</param>
-        public void Skip(string reason)
-        {
-            SetResult(ResultState.Skipped, reason);
-        }
-
-        /// <summary>
-        /// Mark the test a not runnable with a reason
-        /// </summary>
-        /// <param name="reason">The reason the test is invalid</param>
-        public void Invalid( string reason )
-        {
-            SetResult( ResultState.NotRunnable, reason );
-        }
-
-        /// <summary>
-        /// Mark the test as not runnable due to a builder exception
-        /// </summary>
-        /// <param name="ex">The exception thrown by the builder or an addin</param>
-        public void Invalid(Exception ex)
-        {
-#if !NETCF_1_0
-            SetResult(ResultState.NotRunnable, BuildMessage( ex ), BuildStackTrace(ex));
-#else
-            SetResult(ResultState.NotRunnable, BuildMessage( ex ));
-#endif
-        }
 
         /// <summary>
         /// Set the result of the test
         /// </summary>
         /// <param name="resultState">The ResultState to use in the result</param>
-        /// <param name="reason">The reason the test was not run</param>
-        public void SetResult(ResultState resultState, string reason)
+        public void SetResult(ResultState resultState)
         {
             this.resultState = resultState;
-            this.message = reason;
+            this.message = null;
+        }
+
+        /// <summary>
+        /// Set the result of the test
+        /// </summary>
+        /// <param name="resultState">The ResultState to use in the result</param>
+        /// <param name="message">A message associated with the result state</param>
+        public void SetResult(ResultState resultState, string message)
+        {
+            this.resultState = resultState;
+            this.message = message;
         }
 
 #if !NETCF_1_0
@@ -283,12 +198,12 @@ namespace NUnit.Framework.Internal
         /// Set the result of the test
         /// </summary>
         /// <param name="resultState">The ResultState to use in the result</param>
-        /// <param name="reason">The reason the test was not run</param>
+        /// <param name="message">A message associated with the result state</param>
         /// <param name="stackTrace">Stack trace giving the location of the command</param>
-        public void SetResult(ResultState resultState, string reason, string stackTrace)
+        public void SetResult(ResultState resultState, string message, string stackTrace)
         {
             this.resultState = resultState;
-            this.message = reason;
+            this.message = message;
             this.stackTrace = stackTrace;
         }
 #endif
@@ -326,64 +241,6 @@ namespace NUnit.Framework.Internal
 #endif
         }
 
-        /// <summary>
-        /// Mark the test as a failure due to an assertion having failed.
-        /// </summary>
-        /// <param name="message">Message to display</param>
-        public void Failure(string message)
-        {
-            SetResult(ResultState.Failure, message);
-        }
-
-#if !NETCF_1_0
-        /// <summary>
-        /// Mark the test as a failure due to an assertion having failed.
-        /// </summary>
-        /// <param name="message">Message to display</param>
-        /// <param name="stackTrace">Stack trace giving the location of the failure</param>
-        public void Failure(string message, string stackTrace)
-        {
-            SetResult(ResultState.Failure, message, stackTrace);
-        }
-#endif
-
-		/// <summary>
-		/// Marks the result as an error due to an exception thrown
-		/// by the test.
-		/// </summary>
-		/// <param name="exception">The exception that was caught</param>
-        public void Error(Exception exception)
-        {
-            string message = BuildMessage(exception);
-#if !NETCF_1_0
-            SetResult(ResultState.Error, message, BuildStackTrace(exception));
-#else
-            SetResult(ResultState.Error, message);
-#endif
-        }
-
-		/// <summary>
-		/// Marks the result as an error due to an exception thrown
-		/// in the TearDown phase.
-		/// </summary>
-		/// <param name="exception">The exception that was caught</param>
-		public void TearDownError( Exception exception )
-		{
-            string message = "TearDown : " + BuildMessage(exception);
-            if (this.message != null)
-                message = this.message + NUnit.Env.NewLine + message;
-
-#if !NETCF_1_0
-            string stackTrace = "--TearDown" + NUnit.Env.NewLine + BuildStackTrace(exception);
-            if (this.stackTrace != null)
-                stackTrace = this.stackTrace + NUnit.Env.NewLine + stackTrace;
-
-            SetResult(ResultState.Error, message, stackTrace);
-#else
-            SetResult(ResultState.Error, message);
-#endif
-        }
-
 		/// <summary>
 		/// Add a child result
 		/// </summary>
@@ -395,19 +252,15 @@ namespace NUnit.Framework.Internal
 
 			this.results.Add(result);
 
-            switch (result.ResultState)
+            switch (result.ResultState.Status)
             {
-                case ResultState.Failure:
-                case ResultState.Error:
-                    if (!this.IsFailure && !this.IsError)
-                        this.Failure("Child test failed");
+                case TestStatus.Failed:
+                    if (this.ResultState.Status != TestStatus.Failed)
+                        this.SetResult(ResultState.Failure, "Child test failed");
                     break;
-                case ResultState.Success:
+                case TestStatus.Passed:
                     if (this.ResultState == ResultState.Inconclusive)
-                        this.Success();
-                    break;
-                case ResultState.Cancelled:
-                    this.SetResult(ResultState.Cancelled, result.Message);
+                        this.SetResult(ResultState.Success);
                     break;
             }
 		}
@@ -419,84 +272,59 @@ namespace NUnit.Framework.Internal
         /// <returns>An XmlNode representing the result</returns>
         public XmlNode ToXml(bool recursive)
         {
-            XmlDocument doc = new XmlDocument();
-            doc.LoadXml("<dummy/>");
-            XmlNode topNode = doc.FirstChild;
+            XmlNode topNode = XmlHelper.CreateTopLevelElement("dummy");
 
             AddToXml(topNode, recursive);
 
             return topNode.FirstChild;
         }
 
-        private void AddToXml(XmlNode parent, bool recursive)
+        protected virtual XmlNode AddToXml(XmlNode parent, bool recursive)
         {
-            XmlDocument doc = parent.OwnerDocument;
-
-            XmlNode node = doc.CreateElement(
+            XmlNode node = parent.OwnerDocument.CreateElement(
                 this.IsTestCase
                     ? "test-case"
                     : "test-suite");
             parent.AppendChild(node);
 
-            XmlAttribute attr = doc.CreateAttribute("name");
-            attr.Value = this.Name;
-            node.Attributes.Append(attr);
-            attr = doc.CreateAttribute("fullname");
-            attr.Value = this.FullName;
-            node.Attributes.Append(attr);
-            attr = doc.CreateAttribute("result");
-            attr.Value = this.ResultState.ToString();
-            node.Attributes.Append(attr);
-            attr = doc.CreateAttribute("time");
-            attr.Value = string.Format("0.000", this.Time, System.Globalization.CultureInfo.InvariantCulture);
-            node.Attributes.Append(attr);
+            TestStatus status = this.ResultState.Status;
 
-            if (this.IsFailure || this.IsError)
-            {
+            XmlHelper.AddAttribute(node, "name", this.Name);
+            XmlHelper.AddAttribute(node, "fullname", this.FullName);
+            XmlHelper.AddAttribute(node, "result", status.ToString());
+            XmlHelper.AddAttribute(node, "time", this.Time.ToString("0.000", System.Globalization.CultureInfo.InvariantCulture));
+
+            if (status == TestStatus.Failed)
                 AddFailureElement(node);
-            }
-            else if (!this.Executed)
-            {
+            else if (status == TestStatus.Skipped)
                 AddReasonElement(node);
-            }
 
             if (recursive && this.Results != null)
                 foreach (TestResult childResult in Results)
                     childResult.AddToXml(node, recursive);
+
+            return node;
         }
 
         private void AddReasonElement(XmlNode targetNode)
         {
-            XmlDocument doc = targetNode.OwnerDocument;
-
-            XmlNode reasonNode = doc.CreateElement("reason");
-            targetNode.AppendChild(reasonNode);
-
-            XmlNode messageNode = doc.CreateElement("message");
-            messageNode.AppendChild(doc.CreateCDataSection(this.Message));
-            reasonNode.AppendChild(messageNode);
+            XmlNode reasonNode = XmlHelper.AddElement(targetNode, "reason");
+            XmlHelper.AddElementWithCDataSection(reasonNode, "message", this.Message);
         }
 
         private void AddFailureElement(XmlNode targetNode)
         {
-            XmlDocument doc = targetNode.OwnerDocument;
-
-            XmlNode failureNode = doc.CreateElement("failure");
-            targetNode.AppendChild(failureNode);
+            XmlNode failureNode = XmlHelper.AddElement(targetNode, "failure");
 
             if (this.Message != null)
             {
-                XmlNode messageNode = doc.CreateElement("message");
-                messageNode.AppendChild(doc.CreateCDataSection(this.Message));
-                failureNode.AppendChild(messageNode);
+                XmlHelper.AddElementWithCDataSection(failureNode, "message", this.Message);
             }
 
 #if !NETCF_1_0
             if (this.StackTrace != null)
             {
-                XmlNode stackNode = doc.CreateElement("stack-trace");
-                stackNode.AppendChild(doc.CreateCDataSection(this.StackTrace));
-                failureNode.AppendChild(stackNode);
+                XmlHelper.AddElementWithCDataSection(failureNode, "stack-trace", this.StackTrace);
             }
 #endif
         }
@@ -504,8 +332,8 @@ namespace NUnit.Framework.Internal
         #endregion
 
         #region Exception Helpers
-
-        private static string BuildMessage(Exception exception)
+        // TODO: Move to a utility class
+        public static string BuildMessage(Exception exception)
 		{
 			StringBuilder sb = new StringBuilder();
 			sb.AppendFormat( CultureInfo.CurrentCulture, "{0} : {1}", exception.GetType().ToString(), exception.Message );
@@ -522,7 +350,8 @@ namespace NUnit.Framework.Internal
 		}
 
 #if !NETCF_1_0
-		private static string BuildStackTrace(Exception exception)
+		// TODO: Move to a utility class
+        public static string BuildStackTrace(Exception exception)
 		{
             StringBuilder sb = new StringBuilder( GetStackTrace( exception ) );
 
@@ -555,5 +384,5 @@ namespace NUnit.Framework.Internal
 #endif
 
 		#endregion
-	}
+    }
 }

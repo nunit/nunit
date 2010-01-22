@@ -163,16 +163,23 @@ namespace NUnit.Framework.Internal
                         break;
                     case RunState.Skipped:
                     default:
-                        testResult.Skip(IgnoreReason);
+                        testResult.SetResult(ResultState.Skipped, IgnoreReason);
                         break;
                     case RunState.NotRunnable:
                         if (BuilderException != null)
-                            testResult.Invalid(BuilderException);
+#if !NETCF_1_0
+                            testResult.SetResult(ResultState.NotRunnable, 
+                                TestResult.BuildMessage( BuilderException ), 
+                                TestResult.BuildStackTrace(BuilderException));
+#else
+                            testResult.SetResult(ResultState.NotRunnable, 
+                                TestResult.BuildMessage( BuilderException ));
+#endif
                         else
-                            testResult.Invalid(IgnoreReason);
+                            testResult.SetResult(ResultState.NotRunnable, IgnoreReason);
                         break;
                     case RunState.Ignored:
-                        testResult.Ignore(IgnoreReason);
+                        testResult.SetResult(ResultState.Ignored, IgnoreReason);
                         break;
                 }
 
@@ -292,13 +299,13 @@ namespace NUnit.Framework.Internal
 				testResult.Time = (double)span.Ticks / (double)TimeSpan.TicksPerSecond;
 
 
-                if (testResult.IsSuccess && this.Properties.Contains("MaxTime"))
+                if (testResult.ResultState == ResultState.Success && this.Properties.Contains("MaxTime"))
                 {
                     int elapsedTime = (int)Math.Round(testResult.Time * 1000.0);
                     int maxTime = (int)this.Properties["MaxTime"];
 
                     if (maxTime > 0 && elapsedTime > maxTime)
-                        testResult.Failure(
+                        testResult.SetResult(ResultState.Failure,
                             string.Format("Elapsed time of {0}ms exceeds maximum of {1}ms",
                                 elapsedTime, maxTime));
                 }
@@ -330,9 +337,23 @@ namespace NUnit.Framework.Internal
 			{
 				if ( ex is NUnitException )
 					ex = ex.InnerException;
-				// TODO: What about ignore exceptions in teardown?
-				testResult.TearDownError( ex );
-			}
+
+                // TODO: Can we move this logic into TestResult itself?
+                string message = "TearDown : " + TestResult.BuildMessage(ex);
+                if (testResult.Message != null)
+                    message = testResult.Message + NUnit.Env.NewLine + message;
+
+#if !NETCF_1_0
+                string stackTrace = "--TearDown" + NUnit.Env.NewLine + TestResult.BuildStackTrace(ex);
+                if (testResult.StackTrace != null)
+                    stackTrace = testResult.StackTrace + NUnit.Env.NewLine + stackTrace;
+
+                // TODO: What about ignore exceptions in teardown?
+                testResult.SetResult(ResultState.Error, message, stackTrace);
+#else
+                testResult.SetResult(ResultState.Error, message);
+#endif
+            }
 		}
 
 		private void doTestCase( TestResult testResult )
@@ -340,7 +361,7 @@ namespace NUnit.Framework.Internal
             try
             {
                 RunTestMethod(testResult);
-                if (testResult.IsSuccess && exceptionProcessor != null)
+                if (testResult.ResultState == ResultState.Success && exceptionProcessor != null)
                     exceptionProcessor.ProcessNoException(testResult);
             }
             catch (Exception ex)
@@ -366,7 +387,7 @@ namespace NUnit.Framework.Internal
             if (this.expectedResult != null)
                 NUnit.Framework.Assert.AreEqual(expectedResult, result);
 
-            testResult.Success();
+            testResult.SetResult(ResultState.Success);
         }
 
 		#endregion
