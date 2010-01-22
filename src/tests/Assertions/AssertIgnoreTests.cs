@@ -63,7 +63,8 @@ namespace NUnit.Framework.Assertions
             Type fixtureType = typeof(IgnoredTestCaseFixture);
             Test test = TestBuilder.MakeTestCase(fixtureType, "CallsIgnore");
             TestResult result = test.Run(TestListener.NULL);
-            Assert.IsFalse(result.Executed, "Test should not run");
+            Assert.AreEqual(TestStatus.Skipped, result.ResultState.Status);
+            Assert.AreEqual("Ignored", result.ResultState.Label);
             Assert.AreEqual("Ignore me", result.Message);
         }
 
@@ -73,7 +74,8 @@ namespace NUnit.Framework.Assertions
             Type fixtureType = typeof(IgnoredTestCaseFixture);
             Test test = TestBuilder.MakeTestCase(fixtureType, "CallsIgnoreWithExpectedException");
             TestResult result = test.Run(TestListener.NULL);
-            Assert.IsFalse(result.Executed, "Test should not run");
+            Assert.AreEqual(TestStatus.Skipped, result.ResultState.Status);
+            Assert.AreEqual("Ignored", result.ResultState.Label);
             Assert.AreEqual("Ignore me", result.Message);
         }
 
@@ -86,10 +88,14 @@ namespace NUnit.Framework.Assertions
             TestResult result = suite.Run(TestListener.NULL);
 
 			TestResult fixtureResult = (TestResult)result.Results[0];
-			Assert.IsFalse( fixtureResult.Executed, "Fixture should not have been executed" );
-			
-			foreach( TestResult testResult in fixtureResult.Results )
-				Assert.IsFalse( testResult.Executed, "Test case should not have been executed" );
+            Assert.AreEqual(TestStatus.Skipped, fixtureResult.ResultState.Status);
+            Assert.AreEqual("Ignored", fixtureResult.ResultState.Label);
+
+            foreach (TestResult testResult in fixtureResult.Results)
+            {
+                Assert.AreEqual(TestStatus.Skipped, testResult.ResultState.Status);
+                Assert.AreEqual("Ignored", testResult.ResultState.Label);
+            }
 		}
 
 		[Test]
@@ -98,10 +104,14 @@ namespace NUnit.Framework.Assertions
 			TestSuite testFixture = TestBuilder.MakeFixture( typeof( IgnoreInSetUpFixture ) );
             TestResult fixtureResult = testFixture.Run(TestListener.NULL);
 
-			Assert.IsTrue( fixtureResult.Executed, "Fixture should have been executed" );
-			
-			foreach( TestResult testResult in fixtureResult.Results )
-				Assert.IsFalse( testResult.Executed, "Test case should not have been executed" );
+            Assert.AreEqual(TestStatus.Passed, fixtureResult.ResultState.Status);
+            Assert.AreEqual("Passed", fixtureResult.ResultState.Label);
+
+            foreach (TestResult testResult in fixtureResult.Results)
+            {
+                Assert.AreEqual(TestStatus.Skipped, testResult.ResultState.Status);
+                Assert.AreEqual("Ignored", testResult.ResultState.Label);
+            }
 		}
 #endif
 

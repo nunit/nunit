@@ -349,13 +349,13 @@ namespace NUnit.Framework.Internal
 #endif
             try
             {
-                suiteResult.Success(); // Assume success
+                suiteResult.SetResult(ResultState.Success); // Assume success
                 DoOneTimeSetUp(suiteResult);
 
-                switch (suiteResult.ResultState)
+                switch (suiteResult.ResultState.Status)
                 {
-                    case ResultState.Failure:
-                    case ResultState.Error:
+                        // TODO: Handle Cancellation Better
+                    case TestStatus.Failed:
                         string msg = string.Format("TestFixtureSetUp failed in {0}", this.FixtureType.Name);
 #if !NUNITLITE
                     if (this is SetUpFixture)
@@ -474,9 +474,22 @@ namespace NUnit.Framework.Internal
 					if (nex != null)
 						ex = nex.InnerException;
 
+                    // TODO: Can we move this logic into TestResult itself?
+                    string message = "TearDown : " + TestResult.BuildMessage(ex);
+                    if (suiteResult.Message != null)
+                        message = suiteResult.Message + NUnit.Env.NewLine + message;
 
-					suiteResult.TearDownError(ex);
-				}
+#if !NETCF_1_0
+                    string stackTrace = "--TearDown" + NUnit.Env.NewLine + TestResult.BuildStackTrace(ex);
+                    if (suiteResult.StackTrace != null)
+                        stackTrace = suiteResult.StackTrace + NUnit.Env.NewLine + stackTrace;
+
+                    // TODO: What about ignore exceptions in teardown?
+                    suiteResult.SetResult(ResultState.Error, message, stackTrace);
+#else
+                    suiteResult.SetResult(ResultState.Error, message);
+#endif
+                }
 
                 this.Fixture = null;
             }
@@ -529,19 +542,19 @@ namespace NUnit.Framework.Internal
 
         private void SkipAllTests(TestResult suiteResult, ITestListener listener)
         {
-            suiteResult.Skip(this.IgnoreReason);
+            suiteResult.SetResult(ResultState.Skipped, this.IgnoreReason);
             MarkTestsNotRun(this.tests, ResultState.Skipped, this.IgnoreReason, suiteResult, listener);
         }
 
         private void IgnoreAllTests(TestResult suiteResult, ITestListener listener)
         {
-            suiteResult.Ignore(this.IgnoreReason);
+            suiteResult.SetResult(ResultState.Ignored, this.IgnoreReason);
             MarkTestsNotRun(this.tests, ResultState.Ignored, this.IgnoreReason, suiteResult, listener);
         }
 
         private void MarkAllTestsInvalid(TestResult suiteResult, ITestListener listener)
         {
-            suiteResult.Invalid(this.IgnoreReason);
+            suiteResult.SetResult(ResultState.NotRunnable, this.IgnoreReason);
             MarkTestsNotRun(this.tests, ResultState.NotRunnable, this.IgnoreReason, suiteResult, listener);
         }
        
@@ -588,7 +601,7 @@ namespace NUnit.Framework.Internal
             if (suite != null)
                 MarkTestsFailed(suite.tests, msg, suiteResult, listener);
 
-            result.Failure(msg);
+            result.SetResult(ResultState.Failure, msg);
             suiteResult.AddResult(result);
             listener.TestFinished(result);
         }

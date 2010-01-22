@@ -71,33 +71,33 @@ namespace NUnit.TestUtilities
             {
                 resultCount++;
 
-                switch (result.ResultState)
+                switch (result.ResultState.Status)
                 {
-                    case ResultState.Success:
+                    case TestStatus.Passed:
                         successCount++;
                         testsRun++;
                         break;
-                    case ResultState.Failure:
+                    case TestStatus.Failed:
                         failureCount++;
                         testsRun++;
                         break;
-                    case ResultState.Error:
-                    case ResultState.Cancelled:
-                        errorCount++;
-                        testsRun++;
-                        break;
-                    case ResultState.Inconclusive:
+                    //case TestStatus.Error:
+                    //case TestStatus.Cancelled:
+                        //errorCount++;
+                        //testsRun++;
+                        //break;
+                    case TestStatus.Inconclusive:
                         inconclusiveCount++;
                         testsRun++;
                         break;
-                    case ResultState.NotRunnable:
-                        notRunnable++;
-                        //errorCount++;
-                        break;
-                    case ResultState.Ignored:
-                        ignoreCount++;
-                        break;
-                    case ResultState.Skipped:
+                    //case TestStatus.NotRunnable:
+                    //    notRunnable++;
+                    //    //errorCount++;
+                    //    break;
+                    //case TestStatus.Ignored:
+                    //    ignoreCount++;
+                    //    break;
+                    case TestStatus.Skipped:
                     default:
                         skipCount++;
                         break;

@@ -82,7 +82,7 @@ namespace NUnit.AdhocTestRunner
             {
                 case"test-case":
                     string resultState = result.Attributes["result"].Value;
-                    if (resultState == "Failure" || resultState == "Error" || resultState == "Cancelled")
+                    if (resultState == "Failed" || resultState == "Error" || resultState == "Cancelled")
                         WriteSingleResult(result);
                     break;
                 case "test-suite":
@@ -136,7 +136,7 @@ namespace NUnit.AdhocTestRunner
                     Console.WriteLine(message.InnerText);
 
                 if (stacktrace != null)
-                    Console.WriteLine(status == "Failure"
+                    Console.WriteLine(status == "Failed"
                         ? StackTraceFilter.Filter(stacktrace.InnerText)
                         : stacktrace.InnerText + Environment.NewLine);
                     //Console.WriteLine(stacktrace.InnerText + Environment.NewLine);

@@ -120,7 +120,7 @@ namespace NUnit.Framework.Internal
         #region Public Methods
         public void ProcessNoException(TestResult testResult)
         {
-            testResult.Failure(NoExceptionMessage());
+            testResult.SetResult(ResultState.Failure, NoExceptionMessage());
         }
 
         public void ProcessException(Exception exception, TestResult testResult)
@@ -135,14 +135,14 @@ namespace NUnit.Framework.Internal
                     if (exceptionHandler != null)
                         Reflect.InvokeMethod(exceptionHandler, testMethod.Fixture, exception);
 
-                    testResult.Success();
+                    testResult.SetResult(ResultState.Success);
                 }
                 else
                 {
 #if NETCF_1_0
-                    testResult.Failure(WrongTextMessage(exception));
+                    testResult.SetResult(ResultState.Failure, WrongTextMessage(exception));
 #else
-                    testResult.Failure(WrongTextMessage(exception), GetStackTrace(exception));
+                    testResult.SetResult(ResultState.Failure, WrongTextMessage(exception), GetStackTrace(exception));
 #endif
                 }
             }
@@ -153,9 +153,9 @@ namespace NUnit.Framework.Internal
                 // If it shows as an error, change it to a failure due to the wrong type
                 if (testResult.ResultState == ResultState.Error)
 #if NETCF_1_0
-                    testResult.Failure(WrongTypeMessage(exception));
+                    testResult.SetResult(ResultState.Failure, WrongTypeMessage(exception));
 #else
-                    testResult.Failure(WrongTypeMessage(exception), GetStackTrace(exception));
+                    testResult.SetResult(ResultState.Failure, WrongTypeMessage(exception), GetStackTrace(exception));
 #endif
             }
 		}

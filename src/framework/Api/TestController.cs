@@ -44,6 +44,10 @@ namespace NUnit.Framework.Api
             if (!CoreExtensions.Host.Initialized)
                 CoreExtensions.Host.Initialize();
 
+            // TODO: This should be taken from constructor options
+            InternalTrace.Level = InternalTrace.TraceLevel.Debug;
+            InternalTrace.Open("InternalTrace.txt");
+
             this.builder = new DefaultTestAssemblyBuilder();
             this.runner = new DefaultTestAssemblyRunner(this.builder);
         }

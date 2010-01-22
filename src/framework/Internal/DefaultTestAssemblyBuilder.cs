@@ -12,8 +12,6 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public class DefaultTestAssemblyBuilder : ITestAssemblyBuilder
     {
-        static Logger log = InternalTrace.GetLogger("TestAssemblyBuilder");
-
         #region Instance Fields
         /// <summary>
         /// The loaded assembly
@@ -104,7 +102,7 @@ namespace NUnit.Framework.Internal
             if (assembly != null)
                 CoreExtensions.Host.InstallAdhocExtensions(assembly);
 
-            log.Info("Loaded assembly " + assembly.FullName);
+            InternalTrace.Info("Loaded assembly " + assembly.FullName);
 
             return assembly;
         }
@@ -112,11 +110,11 @@ namespace NUnit.Framework.Internal
         private IList GetFixtures(Assembly assembly, IList names)
         {
             ObjectList fixtures = new ObjectList();
-            log.Debug("Examining assembly for test fixtures");
+            InternalTrace.Debug("Examining assembly for test fixtures");
 
             IList testTypes = GetCandidateFixtureTypes(assembly, names);
 
-            log.Debug("Found {0} classes to examine", testTypes.Count);
+            InternalTrace.Debug("Found {0} classes to examine", testTypes.Count);
 #if LOAD_TIMING
             System.Diagnostics.Stopwatch timer = new System.Diagnostics.Stopwatch();
             timer.Start();
@@ -130,9 +128,9 @@ namespace NUnit.Framework.Internal
             }
 
 #if LOAD_TIMING
-            log.Debug("Found {0} fixtures in {1} seconds", fixtures.Count, timer.Elapsed);
+            InternalTrace.Debug("Found {0} fixtures in {1} seconds", fixtures.Count, timer.Elapsed);
 #else
-            log.Debug("Found {0} fixtures", fixtures.Count);
+            InternalTrace.Debug("Found {0} fixtures", fixtures.Count);
 #endif
 
             return fixtures;

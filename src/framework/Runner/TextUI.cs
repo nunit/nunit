@@ -219,10 +219,10 @@ namespace NUnitLite.Runner
         {
             ResultSummary summary = new ResultSummary(result);
 
-            writer.WriteLine("{0} Tests : {1} Errors, {2} Failures, {3} Not Run",
-                summary.TestCount, summary.ErrorCount, summary.FailureCount, summary.NotRunCount);
+            writer.WriteLine("{0} Tests : {1} Failures, {2} Not Run",
+                summary.TestCount, summary.FailureCount, summary.NotRunCount);
 
-            if (summary.ErrorCount + summary.FailureCount > 0)
+            if (summary.FailureCount > 0)
                 PrintErrorReport(result);
 
             if (summary.NotRunCount > 0)
@@ -341,29 +341,19 @@ namespace NUnitLite.Runner
         private void PrintAllResults(ITestResult result, string indent)
         {
             string status = null;
-            switch (result.ResultState)
+            switch (result.ResultState.Status)
             {
-                case ResultState.Error:
-                case ResultState.NotRunnable:
-                    status = "ERROR ";
+                case TestStatus.Failed:
+                    status = "FAIL";
                     break;
-                case ResultState.Failure:
-                    status = "FAILED";
+                case TestStatus.Skipped:
+                    status = "SKIP";
                     break;
-                case ResultState.Cancelled:
-                    status = "CANCEL ";
+                case TestStatus.Inconclusive:
+                    status = "INC ";
                     break;
-                case ResultState.Skipped:
-                    status = "SKIP  ";
-                    break;
-                case ResultState.Ignored:
-                    status = "IGNORE";
-                    break;
-                case ResultState.Inconclusive:
-                    status = "INC   ";
-                    break;
-                case ResultState.Success:
-                    status = "OK    ";
+                case TestStatus.Passed:
+                    status = "OK  ";
                     break;
             }
 

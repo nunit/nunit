@@ -22,48 +22,68 @@
 // ***********************************************************************
 
 using System;
-using System.Diagnostics;
+using System.IO;
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Internal
 {
 	/// <summary>
-	/// Summary description for Logger.
-	/// </summary>
+	/// InternalTrace provides static methods used for tracing the execution
+    /// of the NUnit framework. Tests and classes under test may make use 
+    /// of Console writes, System.Diagnostics.Trace or various loggers and
+    /// NUnit itself traps and processes each of them. For that reason, a
+    /// separate internal trace is needed.
+    /// </summary>
 	public class InternalTrace
-	{
-		private readonly static string NL = Environment.NewLine;
+    {
+        #region TraceLevel Enumeration
+
+        public enum TraceLevel
+        {
+            Off,
+            Error,
+            Warning,
+            Info,
+            Debug
+        }
+
+        #endregion
+
+        #region Static Fields
+        private static string MY_NAME = "NUnit.Framework.Internal.InternalTrace";
+        
+        private readonly static string NL = NUnit.Env.NewLine;
         private readonly static string TIME_FMT = "HH:mm:ss.fff";
+        private readonly static string TRACE_FMT = "{0} {1,-5} [{2,2}] {3} : {4}";
 
-		private static bool initialized;
+        private static StreamWriter writer;
+        private static TraceLevel level = TraceLevel.Off;
+        #endregion
 
-        private static InternalTraceWriter writer;
-        public static InternalTraceWriter Writer
+        #region Static Properties
+        public static StreamWriter Writer
         {
-            get { return writer; }
+            get 
+            {
+                if (writer == null)
+                    writer = new StreamWriter(Console.OpenStandardOutput());
+                writer.AutoFlush = true;
+
+                return writer;
+            }
         }
 
-		public static TraceLevel Level;
-
-        public static void Initialize(string logName)
+        public static TraceLevel Level
         {
-			Initialize(logName, new TraceSwitch( "NTrace", "NUnit internal trace" ).Level);
+            get { return level; }
+            set { level = value; }
         }
+        #endregion
 
-        public static void Initialize(string logName, TraceLevel level)
+        #region Public Static Methods
+        public static void Open(string logName)
         {
-			if (!initialized)
-			{
-				Level = level;
-
-				if (writer == null && Level > TraceLevel.Off)
-				{
-					writer = new InternalTraceWriter(logName);
-					writer.WriteLine("InternalTrace: Initializing at level " + Level.ToString());
-				}
-
-				initialized = true;
-			}
+            writer = new StreamWriter(logName);
         }
 
         public static void Flush()
@@ -80,36 +100,79 @@ namespace NUnit.Framework.Internal
             writer = null;
         }
 
-        public static Logger GetLogger(string name)
-		{
-			return new Logger( name );
-		}
-
-		public static Logger GetLogger( Type type )
-		{
-			return new Logger( type.FullName );
-		}
-
-        public static void Log(TraceLevel level, string message, string category)
+        public static void Error(string message, params object[] args)
         {
-            Log(level, message, category, null);
+            WriteTrace(TraceLevel.Error, message, args);
         }
 
-        public static void Log(TraceLevel level, string message, string category, Exception ex)
+        public static void Warning(string message, params object[] args)
         {
-            Writer.WriteLine("{0} {1,-5} [{2,2}] {3}: {4}",
-                DateTime.Now.ToString(TIME_FMT),
-                level == TraceLevel.Verbose ? "Debug" : level.ToString(),
+            WriteTrace(TraceLevel.Warning, message, args);
+        }
+
+        public static void Info(string message, params object[] args)
+        {
+            WriteTrace(TraceLevel.Info, message, args);
+        }
+
+        public static void Debug(string message, params object[] args)
+        {
+            WriteTrace(TraceLevel.Debug, message, args);
+        }
+        #endregion
+
+        #region Private WriteTrace Method
+
+        private static void WriteTrace(TraceLevel level, string message, params object[] args)
+        {
+            if (level <= InternalTrace.Level)
+            {
+                string caller = "UNKNOWN";
+                string stack = System.Environment.StackTrace;
+                int index1 = stack.LastIndexOf(MY_NAME);
+                if (index1 >= 0)
+                {
+                    // Point to stack entry of the caller
+                    index1 = stack.IndexOf(Env.NewLine, index1) + Env.NewLine.Length;
+                    if (index1 >= 0 && index1 < stack.Length)
+                    {
+                        // Skip backwards over method name
+                        int index2 = stack.IndexOf('(', index1);
+                        if (index2 <= 0)
+                            index2 = stack.LastIndexOf('.');
+                        else
+                            index2 = stack.LastIndexOf('.', index2);
+
+                        // Skip over prefix word ('at' in English)
+                        while (index1 < stack.Length && char.IsWhiteSpace(stack[index1])) index1++;
+                        while (index1 < stack.Length && !char.IsWhiteSpace(stack[index1])) index1++;
+                        while (index1 < stack.Length && char.IsWhiteSpace(stack[index1])) index1++;
+
+                        // Skip past namespace, if any
+                        index1 = Math.Max(stack.LastIndexOf('.', index2 - 1) + 1, index1);
+
+                        // Set the caller's Type name
+                        caller = stack.Substring(index1, index2 - index1);
+                    }
+                }
+
+
 #if CLR_2_0
-                System.Threading.Thread.CurrentThread.ManagedThreadId,
+                int threadID = System.Threading.Thread.CurrentThread.ManagedThreadId;
 #else
-                AppDomain.GetCurrentThreadId(),
+                int threadID =AppDomain.GetCurrentThreadId();
 #endif
-                category,
-                message);
-
-            if (ex != null)
-                Writer.WriteLine(ex.ToString());
+                if (args != null)
+                    message = string.Format(message, args);
+                
+                Writer.WriteLine(TRACE_FMT,
+                    DateTime.Now.ToString(TIME_FMT),
+                    level.ToString(),
+                    threadID,
+                    caller,
+                    message);
+            }
         }
+        #endregion
     }
 }

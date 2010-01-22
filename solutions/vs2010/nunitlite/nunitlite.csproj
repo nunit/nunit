@@ -68,6 +68,9 @@
     <Compile Include="..\..\..\src\framework\Api\TestOutput.cs">
       <Link>Api\TestOutput.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\framework\Api\TestStatus.cs">
+      <Link>Api\TestStatus.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\framework\AssemblyInfo.cs">
       <Link>AssemblyInfo.cs</Link>
     </Compile>
@@ -301,6 +304,9 @@
     </Compile>
     <Compile Include="..\..\..\src\framework\Internal\TypeHelper.cs">
       <Link>Internal\TypeHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\XmlHelper.cs">
+      <Link>Internal\XmlHelper.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Is.cs">
       <Link>Is.cs</Link>

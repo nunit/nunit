@@ -62,12 +62,18 @@ namespace NUnit.Framework.Internal
         /// <param name="test">The test that is starting</param>
         public void TestStarted(ITest test)
         {
-            xml.WriteStartElement("start");
-            xml.WriteAttributeString("id", test.ID.ToString());
-            xml.WriteAttributeString("name", test.Name);
-            xml.WriteAttributeString("fullname", test.FullName);
-            xml.WriteEndElement();
-            SendReport();
+            try
+            {
+                XmlNode node = XmlHelper.CreateTopLevelElement("start");
+                XmlHelper.AddAttribute(node, "id", test.ID.ToString());
+                XmlHelper.AddAttribute(node, "name", test.Name);
+                XmlHelper.AddAttribute(node, "fullname", test.FullName);
+                callback(new ProgressReport(node));
+            }
+            catch(Exception ex)
+            {
+                InternalTrace.Error("Exception processing " + test.FullName + NUnit.Env.NewLine + ex.ToString());
+            }
         }
 
         /// <summary>
@@ -77,7 +83,14 @@ namespace NUnit.Framework.Internal
         /// <param name="result">The result of the test</param>
         public void TestFinished(ITestResult result)
         {
-            callback(new ProgressReport(result.ToXml(false)));
+            try
+            {
+                callback(new ProgressReport(result.ToXml(false)));
+            }
+            catch (Exception ex)
+            {
+                InternalTrace.Error("Exception processing " + result.FullName + NUnit.Env.NewLine + ex.ToString());
+            }
         }
 
         /// <summary>
@@ -86,22 +99,20 @@ namespace NUnit.Framework.Internal
         /// <param name="testOutput">A console message</param>
         public void TestOutput(TestOutput testOutput)
         {
-            xml.WriteStartElement("output");
-            xml.WriteAttributeString("type", testOutput.Type.ToString());
-            xml.WriteStartElement("text");
-            xml.WriteCData(testOutput.Text);
-            xml.WriteEndElement();
-            xml.WriteEndElement();
-            SendReport();
+            try
+            {
+                XmlNode node = XmlHelper.CreateTopLevelElement("output");
+                XmlHelper.AddAttribute(node, "type", testOutput.Type.ToString());
+                XmlHelper.AddElementWithCDataSection(node, "text", testOutput.Text);
+                callback(new ProgressReport(node));
+            }
+            catch (Exception ex)
+            {
+                InternalTrace.Error("Exception processing: " + testOutput.ToString() + NUnit.Env.NewLine + ex.ToString());
+            }
+
         }
 
         #endregion
-
-        private void SendReport()
-        {
-            doc.LoadXml(sb.ToString());
-            callback(new ProgressReport(doc.FirstChild));
-            sb.Remove(0, sb.Length);
-        }
     }
 }

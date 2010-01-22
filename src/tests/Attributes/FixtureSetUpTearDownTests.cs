@@ -116,9 +116,9 @@ namespace NUnit.Framework.Attributes
 			Assert.IsNotNull(result.StackTrace, "TestSuite StackTrace should not be null");
 
 			TestResult testResult = ((TestResult)result.Results[0]);
-			Assert.IsTrue(testResult.Executed, "Test should have executed");
+            Assert.AreEqual(TestStatus.Failed, testResult.ResultState.Status);
+            //Assert.AreEqual("Error", testResult.ResultState.Reason);
 			Assert.AreEqual("TestFixtureSetUp failed in MisbehavingFixture", testResult.Message, "TestSuite Message");
-			Assert.AreEqual(testResult.StackTrace, testResult.StackTrace, "Test stackTrace should match TestSuite stackTrace" );
 		}
 
 		[Test]
@@ -132,7 +132,7 @@ namespace NUnit.Framework.Attributes
 			ResultSummary summ = new ResultSummary(result);
 			Assert.AreEqual(1, summ.TestsRun);
 			Assert.AreEqual(0, summ.TestsNotRun);
-			Assert.IsTrue(result.Executed, "Suite should have executed");
+            Assert.AreEqual(TestStatus.Failed, result.ResultState.Status);
 
 			//fix the blow up in setup
 			fixture.Reinitialize();
@@ -157,12 +157,12 @@ namespace NUnit.Framework.Attributes
 			ResultSummary summ = new ResultSummary(result);
 			Assert.AreEqual(0, summ.TestsRun);
 			Assert.AreEqual(1, summ.TestsNotRun);
-			Assert.IsFalse(result.Executed, "Suite should not have executed");
+            Assert.AreEqual(TestStatus.Skipped, result.ResultState.Status, "Suite should not have executed");
 			Assert.AreEqual("TestFixtureSetUp called Ignore", result.Message);
 			Assert.IsNotNull(result.StackTrace, "StackTrace should not be null");
 
 			TestResult testResult = ((TestResult)result.Results[0]);
-			Assert.IsFalse(testResult.Executed, "Testcase should not have executed");
+            Assert.AreEqual(TestStatus.Skipped, testResult.ResultState.Status, "Testcase should not have executed");
 			Assert.AreEqual("TestFixtureSetUp called Ignore", testResult.Message );
 		}
 
@@ -203,7 +203,7 @@ namespace NUnit.Framework.Attributes
 			Assert.IsNotNull(result.StackTrace, "TestSuite StackTrace should not be null");
 
 			TestResult testResult = ((TestResult)result.Results[0]);
-			Assert.IsTrue(testResult.Executed, "Testcase should have executed");
+            Assert.AreEqual(TestStatus.Failed, testResult.ResultState.Status, "Testcase should have executed");
 			Assert.AreEqual("TestFixtureSetUp failed in ExceptionInConstructor", testResult.Message, "TestSuite Message");
 			Assert.AreEqual(testResult.StackTrace, testResult.StackTrace, "Test stackTrace should match TestSuite stackTrace" );
 		}
