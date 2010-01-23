@@ -27,6 +27,10 @@ using System.Globalization;
 
 namespace NUnit.Framework.Internal
 {
+    /// <summary>
+    /// CultureDetector is a helper class used by NUnit to determine
+    /// whether a test should be run based on the current culture.
+    /// </summary>
 	public class CultureDetector
 	{
 		private CultureInfo currentCulture;
@@ -43,7 +47,7 @@ namespace NUnit.Framework.Internal
 		}
 
 		/// <summary>
-		/// Contruct a CultureHelper for a particular culture for testing.
+		/// Contruct a CultureDetector for a particular culture for testing.
 		/// </summary>
 		/// <param name="culture">The culture to be used</param>
 		public CultureDetector( string culture )

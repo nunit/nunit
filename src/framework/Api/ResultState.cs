@@ -37,12 +37,21 @@ namespace NUnit.Framework.Api
 
         #region Constructors
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ResultState"/> class.
+        /// </summary>
+        /// <param name="status">The TestStatus.</param>
         public ResultState(TestStatus status)
         {
             this.status = status;
             this.label = null;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ResultState"/> class.
+        /// </summary>
+        /// <param name="status">The TestStatus.</param>
+        /// <param name="label">The label.</param>
         public ResultState(TestStatus status, string label)
         {
             this.status = status;

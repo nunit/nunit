@@ -26,8 +26,16 @@ using System.Xml;
 
 namespace NUnit.Framework.Internal
 {
+    /// <summary>
+    /// XmlHelper provides static methods for basic XML operations
+    /// </summary>
     public class XmlHelper
     {
+        /// <summary>
+        /// Creates a new top level element node.
+        /// </summary>
+        /// <param name="name">The element name.</param>
+        /// <returns></returns>
         public static XmlNode CreateTopLevelElement(string name)
         {
             XmlDocument doc = new XmlDocument();
@@ -35,6 +43,12 @@ namespace NUnit.Framework.Internal
             return doc.FirstChild;
         }
 
+        /// <summary>
+        /// Adds an attribute with a specified name and value to an existing XmlNode.
+        /// </summary>
+        /// <param name="node">The node to which the attribute should be added.</param>
+        /// <param name="name">The name of the attribute.</param>
+        /// <param name="value">The value of the attribute.</param>
         public static void AddAttribute(XmlNode node, string name, string value)
         {
             XmlAttribute attr = node.OwnerDocument.CreateAttribute(name);
@@ -42,6 +56,12 @@ namespace NUnit.Framework.Internal
             node.Attributes.Append(attr);
         }
 
+        /// <summary>
+        /// Adds a new element as a child of an existing XmlNode and returns it.
+        /// </summary>
+        /// <param name="node">The node to which the element should be added.</param>
+        /// <param name="name">The element name.</param>
+        /// <returns>The newly created child element</returns>
         public static XmlNode AddElement(XmlNode node, string name)
         {
             XmlNode childNode = node.OwnerDocument.CreateElement(name);
@@ -49,6 +69,14 @@ namespace NUnit.Framework.Internal
             return childNode;
         }
 
+        /// <summary>
+        /// Adds the a new element as a child of an existing node and returns it.
+        /// A CDataSection is added to the new element using the data provided.
+        /// </summary>
+        /// <param name="node">The node to which the element should be added.</param>
+        /// <param name="name">The element name.</param>
+        /// <param name="data">The data for the CDataSection.</param>
+        /// <returns></returns>
         public static XmlNode AddElementWithCDataSection(XmlNode node, string name, string data)
         {
             XmlNode childNode = AddElement(node, name);

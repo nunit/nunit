@@ -55,6 +55,12 @@ namespace NUnit.Framework.Api
             get;
         }
 
+        /// <summary>
+        /// Gets a value indicating whether this instance is a test case.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if this instance is test case; otherwise, <c>false</c>.
+        /// </value>
         bool IsTestCase
         {
             get;
@@ -98,6 +104,10 @@ namespace NUnit.Framework.Api
             get;
         }
 
+        /// <summary>
+        /// Gets the collection of child results.
+        /// </summary>
+        /// <value>The child results collection</value>
         System.Collections.IList Results
         {
             get;

@@ -26,6 +26,10 @@ using System.Configuration;
 
 namespace NUnit.Framework.Internal
 {
+    /// <summary>
+    /// LogCapture is the abstract base for classes that
+    /// capture log info from a specific logging system.
+    /// </summary>
     public abstract class LogCapture : TextCapture
     {
         private string defaultThreshold;

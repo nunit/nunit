@@ -29,6 +29,10 @@ using NUnit.Core.Extensibility;
 
 namespace NUnit.Core.Builders
 {
+    /// <summary>
+    /// PairwiseStrategy creates test cases by combining the parameter
+    /// data so that all possible pairs of data items are used.
+    /// </summary>
 	public class PairwiseStrategy : CombiningStrategy
 	{
 		internal class FleaRand
@@ -45,6 +49,10 @@ namespace NUnit.Core.Builders
 
 			private uint q;
 
+            /// <summary>
+            /// Initializes a new instance of the <see cref="FleaRand"/> class.
+            /// </summary>
+            /// <param name="seed">The seed.</param>
 			public FleaRand(uint seed)
 			{
 				this.b = seed;

@@ -115,6 +115,12 @@ namespace NUnit.Framework.Internal
 			get { return test.FullName; }
 		}
 
+        /// <summary>
+        /// Gets a value indicating whether this instance is a test case.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if this instance is test case; otherwise, <c>false</c>.
+        /// </value>
         public bool IsTestCase
         {
             get { return test.IsTestCase; }
@@ -214,6 +220,9 @@ namespace NUnit.Framework.Internal
         /// <param name="ex">The exception that was thrown</param>
         public void RecordException(Exception ex)
         {
+            if (ex is NUnitException)
+                ex = ex.InnerException;
+
 #if !NETCF_1_0
             if (ex is System.Threading.ThreadAbortException)
                 SetResult(ResultState.Cancelled, "Test cancelled by user", ex.StackTrace);
@@ -279,6 +288,13 @@ namespace NUnit.Framework.Internal
             return topNode.FirstChild;
         }
 
+        /// <summary>
+        /// Adds the XML representation of the result as a child of the
+        /// supplied parent node..
+        /// </summary>
+        /// <param name="parent">The parent node.</param>
+        /// <param name="recursive">If true, descendant results are included</param>
+        /// <returns></returns>
         protected virtual XmlNode AddToXml(XmlNode parent, bool recursive)
         {
             XmlNode node = parent.OwnerDocument.CreateElement(
@@ -333,6 +349,12 @@ namespace NUnit.Framework.Internal
 
         #region Exception Helpers
         // TODO: Move to a utility class
+        /// <summary>
+        /// Builds up a message, using the Message field of the specified exception
+        /// as well as any InnerExceptions.
+        /// </summary>
+        /// <param name="exception">The exception.</param>
+        /// <returns>A combined message string.</returns>
         public static string BuildMessage(Exception exception)
 		{
 			StringBuilder sb = new StringBuilder();
@@ -351,6 +373,12 @@ namespace NUnit.Framework.Internal
 
 #if !NETCF_1_0
 		// TODO: Move to a utility class
+        /// <summary>
+        /// Builds up a message, using the Message field of the specified exception
+        /// as well as any InnerExceptions.
+        /// </summary>
+        /// <param name="exception">The exception.</param>
+        /// <returns>A combined stack trace.</returns>
         public static string BuildStackTrace(Exception exception)
 		{
             StringBuilder sb = new StringBuilder( GetStackTrace( exception ) );

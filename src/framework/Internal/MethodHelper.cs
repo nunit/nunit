@@ -27,8 +27,17 @@ using System.Text;
 
 namespace NUnit.Framework.Internal
 {
+    /// <summary>
+    /// MethodHelper provides static methods for working with methods.
+    /// </summary>
     public class MethodHelper
     {
+        /// <summary>
+        /// Gets the display name for a method as used by NUnit.
+        /// </summary>
+        /// <param name="method">The method for which a display name is needed.</param>
+        /// <param name="arglist">The arguments provided.</param>
+        /// <returns>The display name for the method</returns>
         public static string GetDisplayName(MethodInfo method, object[] arglist)
         {
             StringBuilder sb = new StringBuilder(method.Name);

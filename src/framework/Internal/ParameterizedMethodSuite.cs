@@ -47,7 +47,6 @@ namespace NUnit.Framework.Internal
         /// Override Run, setting Fixture to that of the Parent.
         /// </summary>
         /// <param name="listener"></param>
-        /// <param name="filter"></param>
         /// <returns></returns>
         public override TestResult Run(ITestListener listener)
         {

@@ -34,6 +34,10 @@ namespace NUnit
 #if CLR_2_0
     public class ObjectList : System.Collections.Generic.List<object>
     {
+        /// <summary>
+        /// Adds a range of values to the collection.
+        /// </summary>
+        /// <param name="collection">The collection.</param>
         public void AddRange(System.Collections.ICollection collection)
         {
             foreach (object item in collection)

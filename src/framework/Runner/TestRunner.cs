@@ -115,7 +115,7 @@ namespace NUnitLite.Runner
         /// <summary>
         /// Forwards the TestOutput event to all listeners.
         /// </summary>
-        /// <param name="result">The result of the test that just finished.</param>
+        /// <param name="testOutput">A TestOutput instance.</param>
         public void TestOutput(TestOutput testOutput)
         {
             foreach (ITestListener listener in listeners)

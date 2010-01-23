@@ -30,14 +30,13 @@ using NUnit.Framework.Api;
 
 namespace NUnit.Framework.Internal
 {
-	/// <summary>
-	/// The TestMethod class represents a Test implemented as a method.
-	/// 
-	/// Because of how exceptions are handled internally, this class
-	/// must incorporate processing of expected exceptions. A change to
-	/// the Test interface might make it easier to process exceptions
-	/// in an object that aggregates a TestMethod in the future.
-	/// </summary>
+    /// <summary>
+    /// The TestMethod class represents a Test implemented as a method.
+    /// Because of how exceptions are handled internally, this class
+    /// must incorporate processing of expected exceptions. A change to
+    /// the Test interface might make it easier to process exceptions
+    /// in an object that aggregates a TestMethod in the future.
+    /// </summary>
 	public class TestMethod : Test
 	{
 		#region Fields
@@ -66,10 +65,12 @@ namespace NUnit.Framework.Internal
         /// </summary>
 	    internal object[] arguments;
 
+#if !NUNITLITE
         /// <summary>
         /// The expected result of the method return value
         /// </summary>
 	    internal object expectedResult;
+#endif
 
         /// <summary>
         /// The fixture object, if it has been created
@@ -81,6 +82,11 @@ namespace NUnit.Framework.Internal
 		#endregion
 
 		#region Constructors
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TestMethod"/> class.
+        /// </summary>
+        /// <param name="method">The method to be used as a test.</param>
 		public TestMethod( MethodInfo method ) 
 			: base( method.ReflectedType.FullName, method.Name ) 
 		{
@@ -94,27 +100,47 @@ namespace NUnit.Framework.Internal
 		#endregion
 
 		#region Properties
+        /// <summary>
+        /// Gets the method.
+        /// </summary>
+        /// <value>The method that performs the test.</value>
 		public MethodInfo Method
 		{
 			get { return method; }
 		}
 
+        /// <summary>
+        /// Gets the Type of the fixture used in running this test
+        /// </summary>
+        /// <value></value>
         public override Type FixtureType
         {
             get { return method.ReflectedType; }
         }
 
+        /// <summary>
+        /// Gets or sets the exception processor.
+        /// </summary>
+        /// <value>The exception processor.</value>
         public ExpectedExceptionProcessor ExceptionProcessor
         {
             get { return exceptionProcessor; }
             set { exceptionProcessor = value; }
         }
 
+        /// <summary>
+        /// Gets a value indicating whether an exception is expected.
+        /// </summary>
+        /// <value><c>true</c> if an exception is expected; otherwise, <c>false</c>.</value>
 		public bool ExceptionExpected
 		{
             get { return exceptionProcessor != null; }
 		}
 
+        /// <summary>
+        /// Gets or sets a fixture object for running this test
+        /// </summary>
+        /// <value></value>
         public override object Fixture
         {
             get { return fixture; }
@@ -122,6 +148,10 @@ namespace NUnit.Framework.Internal
         }
 
 #if !NUNITLITE
+        /// <summary>
+        /// Gets the timeout value to be used for this test.
+        /// </summary>
+        /// <value>The timeout in milliseconds.</value>
         public int Timeout
         {
             get
@@ -133,12 +163,20 @@ namespace NUnit.Framework.Internal
         }
 #endif
 
+        /// <summary>
+        /// Gets or sets a builder exception, which was thrown
+        /// when attempting to construct the test.
+        /// </summary>
+        /// <value>The builder exception.</value>
         public Exception BuilderException
         {
             get { return builderException; }
             set { builderException = value; }
         }
 
+        /// <summary>
+        /// Indicates whether this test is a test case
+        /// </summary>
         public override bool IsTestCase
         {
             get { return true; }
@@ -146,6 +184,13 @@ namespace NUnit.Framework.Internal
         #endregion
 
 		#region Run Methods
+
+        /// <summary>
+        /// Runs the test under a particular filter, sending
+        /// notifications to a listener.
+        /// </summary>
+        /// <param name="listener">An event listener to receive notifications</param>
+        /// <returns>A TestResult.</returns>
         public override TestResult Run(ITestListener listener)
         {
             //using (new TestContext())
@@ -193,7 +238,11 @@ namespace NUnit.Framework.Internal
                 return testResult;
             //}
         }
-        
+
+        /// <summary>
+        /// Runs the test, recoding information in the specified TestResult.
+        /// </summary>
+        /// <param name="testResult">The test result.</param>
         public virtual void Run(TestResult testResult)
 		{
 #if !NUNITLITE
@@ -254,7 +303,7 @@ namespace NUnit.Framework.Internal
                     Thread.ResetAbort();
 #endif
 
-                RecordException(ex, testResult);
+                testResult.RecordException(ex);
             }
             finally
             {
@@ -288,7 +337,7 @@ namespace NUnit.Framework.Internal
                     Thread.ResetAbort();
 #endif
 
-                RecordException(ex, testResult);
+                testResult.RecordException(ex);
 			}
 			finally 
 			{
@@ -372,34 +421,30 @@ namespace NUnit.Framework.Internal
 #endif
 
                 if (exceptionProcessor == null)
-                    RecordException(ex, testResult);
+                    testResult.RecordException(ex);
                 else
                     exceptionProcessor.ProcessException(ex, testResult);
             }
 		}
 
+        /// <summary>
+        /// Runs the test method setting the TestResult.
+        /// </summary>
+        /// <param name="testResult">The test result.</param>
 		public virtual void RunTestMethod(TestResult testResult)
 		{
 		    object fixture = this.method.IsStatic ? null : this.Fixture;
 
 			object result = Reflect.InvokeMethod( this.method, fixture, this.arguments );
 
+#if !NUNITLITE
             if (this.expectedResult != null)
                 NUnit.Framework.Assert.AreEqual(expectedResult, result);
+#endif
 
             testResult.SetResult(ResultState.Success);
         }
 
-		#endregion
-
-		#region Record Info About An Exception
-		protected virtual void RecordException( Exception exception, TestResult testResult )
-		{
-            if (exception is NUnitException)
-                exception = exception.InnerException;
-
-            testResult.RecordException(exception);
-		}
 		#endregion
     }
 }

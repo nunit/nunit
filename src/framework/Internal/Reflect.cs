@@ -72,7 +72,7 @@ namespace NUnit.Framework.Internal
 		/// Get all attributes of a given type on a member.
 		/// </summary>
 		/// <param name="member">The member to examine</param>
-		/// <param name="attribueType">The attribute Type to look for</param>
+		/// <param name="attributeType">The attribute Type to look for</param>
 		/// <param name="inherit">True to include inherited attributes</param>
 		/// <returns>The attribute or null</returns>
         public static System.Attribute[] GetAttributes(
@@ -145,9 +145,10 @@ namespace NUnit.Framework.Internal
 		}
 
 		/// <summary>
-		/// Find the default constructor on a type
+		/// Find a constructor for a type matching a set of argument Types
 		/// </summary>
-		/// <param name="fixtureType"></param>
+		/// <param name="fixtureType">The Type for which a constructor is needed.</param>
+        /// <param name="types">An array of Type arguments.</param>
 		/// <returns></returns>
 		public static ConstructorInfo GetConstructor( Type fixtureType, Type[] types )
 		{
@@ -191,6 +192,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="fixtureType">The type to examine</param>
         /// <param name="attributeType">The attribute Type to look for</param>
+        /// <param name="inherit">Specifies whether to search the fixture type inheritance chain</param>
         /// <returns>The array of methods found</returns>
         public static MethodInfo[] GetMethodsWithAttribute(Type fixtureType, Type attributeType, bool inherit)
         {
@@ -256,6 +258,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="fixtureType">The type to examine</param>
         /// <param name="attributeType">The attribute Type to look for</param>
+        /// <param name="inherit">Specifies whether to search the fixture type inheritance chain</param>
         /// <returns>True if found, otherwise false</returns>
         public static bool HasMethodWithAttribute(Type fixtureType, Type attributeType, bool inherit)
         {
@@ -408,11 +411,12 @@ namespace NUnit.Framework.Internal
 		}
 
 		/// <summary>
-		/// Invoke a method returning void, converting any TargetInvocationException
-		/// to an NUnitException
+		/// Invoke a method, converting any TargetInvocationException to an NUnitException.
 		/// </summary>
 		/// <param name="method">A MethodInfo for the method to be invoked</param>
 		/// <param name="fixture">The object on which to invoke the method</param>
+        /// <param name="args">The argument list for the method</param>
+        /// <returns>The return value from the invoked method</returns>
 		public static object InvokeMethod( MethodInfo method, object fixture, params object[] args )
 		{
 			if(method != null)

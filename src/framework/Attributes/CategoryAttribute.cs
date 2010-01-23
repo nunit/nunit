@@ -67,6 +67,10 @@ namespace NUnit.Framework
 
         #region IApplyToTest Members
 
+        /// <summary>
+        /// Modifies a test by adding a category to it.
+        /// </summary>
+        /// <param name="test">The test to modify</param>
         public void ApplyToTest(ITest test)
         {
             test.Categories.Add(this.Name);

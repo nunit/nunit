@@ -30,6 +30,11 @@ using NUnit.Framework.Internal;
 
 namespace NUnit.Core.Builders
 {
+    /// <summary>
+    /// CombinatorialTestCaseProvider creates test cases from individual
+    /// parameter data values, combining them using the CombiningStrategy
+    /// indicated by an Attribute used on the test method.
+    /// </summary>
     public class CombinatorialTestCaseProvider : ITestCaseProvider2
     {
         #region Static Members
