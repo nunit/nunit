@@ -35,6 +35,11 @@ namespace NUnit.Framework.Internal
 	public class SetUpFixture : TestSuite
 	{
 		#region Constructor
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SetUpFixture"/> class.
+        /// </summary>
+        /// <param name="type">The type.</param>
 		public SetUpFixture( Type type ) : base( type )
 		{
             this.Name = type.Namespace;

@@ -36,9 +36,6 @@ namespace NUnit.Core.Builders
     /// </summary>
     public abstract class CombiningStrategy
     {
-        protected IDataPointProvider dataPointProvider =
-            (IDataPointProvider)CoreExtensions.Host.GetExtensionPoint("DataPointProviders");
-
         private IEnumerable[] sources;
         private IEnumerator[] enumerators;
 

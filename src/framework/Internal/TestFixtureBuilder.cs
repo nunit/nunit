@@ -34,6 +34,13 @@ namespace NUnit.Framework.Internal
 	/// </summary>
 	public class TestFixtureBuilder
 	{
+        /// <summary>
+        /// Determines whether this instance [can build from] the specified type.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <returns>
+        /// 	<c>true</c> if this instance [can build from] the specified type; otherwise, <c>false</c>.
+        /// </returns>
 		public static bool CanBuildFrom( Type type )
 		{
 			return CoreExtensions.Host.SuiteBuilders.CanBuildFrom( type );
