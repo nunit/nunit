@@ -28,6 +28,9 @@ namespace NUnit.Framework.Internal
 
         #region Constructor
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DefaultTestAssemblyBuilder"/> class.
+        /// </summary>
         public DefaultTestAssemblyBuilder()
         {
             // TODO: Keeping this separate till we can make

@@ -341,7 +341,6 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="suiteResult">The suite result.</param>
         /// <param name="listener">The listener.</param>
-        /// <param name="filter">The filter.</param>
         public void Run(TestResult suiteResult, ITestListener listener)
         {
 #if !NUNITLITE

@@ -29,6 +29,12 @@ using NUnit.Framework.Api;
 
 namespace NUnit.Framework.Internal
 {
+    /// <summary>
+    /// ExceptedException processor is used internally to handle the
+    /// evaluation of exceptions when a method is annotated with the
+    /// ExpectedExceptionAttribute or a ParameterSet specifies an
+    /// expected exception.
+    /// </summary>
     public class ExpectedExceptionProcessor
     {
         #region Fields
@@ -68,12 +74,14 @@ namespace NUnit.Framework.Internal
         internal string userMessage;
         #endregion
 
-        #region Constructor
-        public ExpectedExceptionProcessor( TestMethod testMethod )
-        {
-            this.testMethod = testMethod;
-        }
+        #region Constructors
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ExpectedExceptionProcessor"/> class
+        /// based on an ExpectedExceptionAttribute.
+        /// </summary>
+        /// <param name="testMethod">The test method.</param>
+        /// <param name="source">The ExpectedExceptionAttribute.</param>
         public ExpectedExceptionProcessor(TestMethod testMethod, ExpectedExceptionAttribute source)
         {
             this.testMethod = testMethod;
@@ -102,6 +110,12 @@ namespace NUnit.Framework.Internal
         }
 
 #if !NUNITLITE
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ExpectedExceptionProcessor"/> class
+        /// based on a ParameterSet.
+        /// </summary>
+        /// <param name="testMethod">The test method.</param>
+        /// <param name="source">The ParameterSet.</param>
         public ExpectedExceptionProcessor(TestMethod testMethod, NUnit.Core.Extensibility.ParameterSet source)
         {
             this.testMethod = testMethod;
@@ -118,11 +132,20 @@ namespace NUnit.Framework.Internal
         #endregion
 
         #region Public Methods
+        /// <summary>
+        /// Handles processing when no exception was thrown.
+        /// </summary>
+        /// <param name="testResult">The test result.</param>
         public void ProcessNoException(TestResult testResult)
         {
             testResult.SetResult(ResultState.Failure, NoExceptionMessage());
         }
 
+        /// <summary>
+        /// Handles processing when an exception was thrown.
+        /// </summary>
+        /// <param name="exception">The exception.</param>
+        /// <param name="testResult">The test result.</param>
         public void ProcessException(Exception exception, TestResult testResult)
         {
             if (exception is NUnitException)

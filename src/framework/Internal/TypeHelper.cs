@@ -27,8 +27,16 @@ using System.Text;
 
 namespace NUnit.Framework.Internal
 {
+    /// <summary>
+    /// TypeHelper provides static methods that operate on Types.
+    /// </summary>
     public class TypeHelper
     {
+        /// <summary>
+        /// Gets the display name for a Type as used by NUnit.
+        /// </summary>
+        /// <param name="type">The Type for which a display name is needed.</param>
+        /// <returns>The display name for the Type</returns>
         public static string GetDisplayName(Type type)
         {
 #if CLR_2_0
@@ -67,6 +75,12 @@ namespace NUnit.Framework.Internal
                 : type.FullName;
         }
 
+        /// <summary>
+        /// Gets the display name for a Type as used by NUnit.
+        /// </summary>
+        /// <param name="type">The Type for which a display name is needed.</param>
+        /// <param name="arglist">The arglist provided.</param>
+        /// <returns>The display name for the Type</returns>
         public static string GetDisplayName(Type type, object[] arglist)
         {
             string baseName = GetDisplayName(type);
@@ -101,6 +115,13 @@ namespace NUnit.Framework.Internal
             return sb.ToString();
         }
 
+        /// <summary>
+        /// Returns the best fit for a common type to be used in
+        /// matching actual arguments to a methods Type parameters.
+        /// </summary>
+        /// <param name="type1">The first type.</param>
+        /// <param name="type2">The second type.</param>
+        /// <returns>Either type1 or type2, depending on which is more general.</returns>
         public static Type BestCommonType(Type type1, Type type2)
         {
             if (type1 == type2) return type1;
@@ -146,6 +167,13 @@ namespace NUnit.Framework.Internal
             return type1;
         }
 
+        /// <summary>
+        /// Determines whether the specified type is numeric.
+        /// </summary>
+        /// <param name="type">The type to be examined.</param>
+        /// <returns>
+        /// 	<c>true</c> if the specified type is numeric; otherwise, <c>false</c>.
+        /// </returns>
         public static bool IsNumeric(Type type)
         {
             return type == typeof(double) ||
@@ -162,12 +190,27 @@ namespace NUnit.Framework.Internal
         }
 
 #if CLR_2_0
+        /// <summary>
+        /// Creates an instance of a generic Type using the supplied Type arguments
+        /// </summary>
+        /// <param name="type">The generic type to be specialized.</param>
+        /// <param name="typeArgs">The type args.</param>
+        /// <returns>An instance of the generic type.</returns>
         public static Type MakeGenericType(Type type, Type[] typeArgs)
         {
             // TODO: Add error handling
             return type.MakeGenericType(typeArgs);
         }
 
+        /// <summary>
+        /// Determines whether this instance can deduce type args for a generic type from the supplied arguments.
+        /// </summary>
+        /// <param name="type">The type to be examined.</param>
+        /// <param name="arglist">The arglist.</param>
+        /// <param name="typeArgsOut">The type args to be used.</param>
+        /// <returns>
+        /// 	<c>true</c> if this the provided args give sufficient information to determine the type args to be used; otherwise, <c>false</c>.
+        /// </returns>
         public static bool CanDeduceTypeArgsFromArgs(Type type, object[] arglist, ref Type[] typeArgsOut)
         {
             Type[] typeParameters = type.GetGenericArguments();

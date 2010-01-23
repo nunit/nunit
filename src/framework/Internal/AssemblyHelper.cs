@@ -27,9 +27,19 @@ using System.Reflection;
 
 namespace NUnit.Framework.Internal
 {
+    /// <summary>
+    /// AssemblyHelper provides static methods for working 
+    /// with assemblies.
+    /// </summary>
     public class AssemblyHelper
     {
         #region GetAssemblyPath
+
+        /// <summary>
+        /// Gets the path from which an assembly was loaded.
+        /// </summary>
+        /// <param name="assembly">The assembly.</param>
+        /// <returns>The path.</returns>
         public static string GetAssemblyPath(Assembly assembly)
         {
             string path = assembly.CodeBase;
@@ -50,13 +60,21 @@ namespace NUnit.Framework.Internal
 
             return path.Substring(start);
         }
+
         #endregion
 
         #region GetDirectoryName
+
+        /// <summary>
+        /// Gets the path to the directory from which an assembly was loaded.
+        /// </summary>
+        /// <param name="assembly">The assembly.</param>
+        /// <returns>The path.</returns>
         public static string GetDirectoryName( Assembly assembly )
         {
             return System.IO.Path.GetDirectoryName(GetAssemblyPath(assembly));
         }
+
         #endregion
     }
 }

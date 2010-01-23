@@ -37,20 +37,23 @@ namespace NUnit.Framework.Internal
 #endif
 	public class NUnitException : ApplicationException 
 	{
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NUnitException"/> class.
+        /// </summary>
 		public NUnitException () : base() 
 		{} 
 
 		/// <summary>
-		/// Standard constructor
-		/// </summary>
+        /// Initializes a new instance of the <see cref="NUnitException"/> class.
+        /// </summary>
 		/// <param name="message">The error message that explains 
 		/// the reason for the exception</param>
 		public NUnitException(string message) : base (message)
 		{}
 
 		/// <summary>
-		/// Standard constructor
-		/// </summary>
+        /// Initializes a new instance of the <see cref="NUnitException"/> class.
+        /// </summary>
 		/// <param name="message">The error message that explains 
 		/// the reason for the exception</param>
 		/// <param name="inner">The exception that caused the 

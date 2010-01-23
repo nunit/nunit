@@ -56,6 +56,10 @@ namespace NUnit.Framework
 
         #region ISetRunState members
 
+        /// <summary>
+        /// Modifies a test by marking it as Ignored.
+        /// </summary>
+        /// <param name="test">The test to modify</param>
         public void ApplyToTest(ITest test)
         {
             if (test.RunState != RunState.NotRunnable)

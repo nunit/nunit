@@ -29,31 +29,60 @@ namespace NUnit.Framework.Internal
 	using System.IO;
 	using System.Text;
 
+    /// <summary>
+    /// EventListenerTextWriter is a TextWriter that channels output to
+    /// the TestOutput method of an ITestListener.
+    /// </summary>
 	public class EventListenerTextWriter : TextWriter
 	{
 		private ITestListener eventListener;
 		private TestOutputType type;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EventListenerTextWriter"/> class.
+        /// </summary>
+        /// <param name="eventListener">The event listener.</param>
+        /// <param name="type">The type.</param>
 		public EventListenerTextWriter( ITestListener eventListener, TestOutputType type )
 		{
 			this.eventListener = eventListener;
 			this.type = type;
 		}
+
+        /// <summary>
+        /// Writes the specified char.
+        /// </summary>
+        /// <param name="aChar">A char.</param>
 		override public void Write(char aChar)
 		{
 			this.eventListener.TestOutput( new TestOutput( aChar.ToString(), this.type ) );
 		}
 
+        /// <summary>
+        /// Writes the specified string.
+        /// </summary>
+        /// <param name="aString">A string.</param>
 		override public void Write(string aString)
 		{
 			this.eventListener.TestOutput( new TestOutput( aString, this.type ) );
 		}
 
+        /// <summary>
+        /// Writes the specified string followed by a NewLine.
+        /// </summary>
+        /// <param name="aString">A string.</param>
 		override public void WriteLine(string aString)
 		{
 			this.eventListener.TestOutput( new TestOutput( aString + this.NewLine, this.type ) );
 		}
 
+        /// <summary>
+        /// When overridden in a derived class, returns the <see cref="T:System.Text.Encoding"/> in which the output is written.
+        /// </summary>
+        /// <value></value>
+        /// <returns>
+        /// The Encoding in which the output is written.
+        /// </returns>
 		override public System.Text.Encoding Encoding
 		{
 			get { return Encoding.Default; }

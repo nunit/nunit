@@ -29,6 +29,13 @@ using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Api
 {
+    /// <summary>
+    /// TestController provides a facade for use in loading, browsing 
+    /// and running tests without requiringa reference to the NUnit 
+    /// framework. All calls are encapsulated in constructors for
+    /// this class and its nested classes, which only require the
+    /// types of the Common Type System as arguments.
+    /// </summary>
     public class TestController : MarshalByRefObject
     {
         private ITestAssemblyBuilder builder;
@@ -73,11 +80,19 @@ namespace NUnit.Framework.Api
 
         #region Properties
 
+        /// <summary>
+        /// Gets the ITestAssemblyBuilder used by this controller instance.
+        /// </summary>
+        /// <value>The builder.</value>
         public ITestAssemblyBuilder Builder
         {
             get { return builder; }
         }
 
+        /// <summary>
+        /// Gets the ITestAssemblyRunner used by this controller instance.
+        /// </summary>
+        /// <value>The runner.</value>
         public ITestAssemblyRunner Runner
         {
             get { return runner; }

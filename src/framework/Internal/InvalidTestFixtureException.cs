@@ -28,19 +28,32 @@ namespace NUnit.Framework.Internal
 	using System.Runtime.Serialization;
 #endif
 
-	/// <summary>
-	/// Summary description for NoTestMethodsException.
-	/// </summary>
+    /// <summary>
+    /// InvalidTestFixtureException is thrown when an appropriate test
+    /// fixture constructor using the provided arguments cannot be found.
+    /// </summary>
 #if !NETCF
 	[Serializable]
 #endif
 	public class InvalidTestFixtureException : ApplicationException
 	{
+        /// <summary>
+        /// Initializes a new instance of the <see cref="InvalidTestFixtureException"/> class.
+        /// </summary>
 		public InvalidTestFixtureException() : base() {}
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="InvalidTestFixtureException"/> class.
+        /// </summary>
+        /// <param name="message">The message.</param>
 		public InvalidTestFixtureException(string message) : base(message)
 		{}
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="InvalidTestFixtureException"/> class.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <param name="inner">The inner.</param>
 		public InvalidTestFixtureException(string message, Exception inner) : base(message, inner)
 		{}
 
