@@ -34,6 +34,9 @@ using NUnit.Framework.Internal;
 
 namespace NUnit.Core.Builders
 {
+    /// <summary>
+    /// TestCaseParameterProvider supplies test cases specified by TestCaseAttribute
+    /// </summary>
     public class TestCaseParameterProvider : ITestCaseProvider 
     {
         /// <summary>

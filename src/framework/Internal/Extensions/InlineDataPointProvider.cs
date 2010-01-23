@@ -29,17 +29,38 @@ using NUnit.Framework.Internal;
 
 namespace NUnit.Core.Builders
 {
+    /// <summary>
+    /// InlineDataPointProvider supplies individual argument values for single
+    /// parameters using attributes derived from ParameterDataAttribute.
+    /// </summary>
     public class InlineDataPointProvider : IDataPointProvider
     {
         private static readonly string GetDataMethod = "GetData";
 
         #region IDataPointProvider Members
 
+        /// <summary>
+        /// Determine whether any data is available for a parameter.
+        /// </summary>
+        /// <param name="parameter">A ParameterInfo representing one
+        /// argument to a parameterized test</param>
+        /// <returns>
+        /// True if any data is available, otherwise false.
+        /// </returns>
         public bool HasDataFor(ParameterInfo parameter)
         {
             return parameter.IsDefined(typeof(NUnit.Framework.ParameterDataAttribute), false);
         }
-        
+
+        /// <summary>
+        /// Return an IEnumerable providing data for use with the
+        /// supplied parameter.
+        /// </summary>
+        /// <param name="parameter">A ParameterInfo representing one
+        /// argument to a parameterized test</param>
+        /// <returns>
+        /// An IEnumerable providing the required data
+        /// </returns>
         public IEnumerable GetDataFor(ParameterInfo parameter)
         {
             Attribute attr = Reflect.GetAttribute(parameter, typeof(NUnit.Framework.ParameterDataAttribute), false);

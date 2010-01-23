@@ -37,6 +37,14 @@ namespace NUnit.Core.Builders
     {
         #region IDataPointProvider Members
 
+        /// <summary>
+        /// Determine whether any data is available for a parameter.
+        /// </summary>
+        /// <param name="parameter">A ParameterInfo representing one
+        /// argument to a parameterized test</param>
+        /// <returns>
+        /// True if any data is available, otherwise false.
+        /// </returns>
         public bool HasDataFor(System.Reflection.ParameterInfo parameter)
         {
             Type parameterType = parameter.ParameterType;
@@ -63,6 +71,15 @@ namespace NUnit.Core.Builders
             return false;
         }
 
+        /// <summary>
+        /// Return an IEnumerable providing data for use with the
+        /// supplied parameter.
+        /// </summary>
+        /// <param name="parameter">A ParameterInfo representing one
+        /// argument to a parameterized test</param>
+        /// <returns>
+        /// An IEnumerable providing the required data
+        /// </returns>
         public System.Collections.IEnumerable GetDataFor(System.Reflection.ParameterInfo parameter)
         {
             ObjectList datapoints = new ObjectList();

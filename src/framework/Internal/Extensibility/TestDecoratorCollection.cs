@@ -36,12 +36,25 @@ namespace NUnit.Core.Extensibility
 	public class TestDecoratorCollection : ExtensionPoint, IExtensionPoint2, ITestDecorator
 	{
 		#region Constructor
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TestDecoratorCollection"/> class.
+        /// </summary>
+        /// <param name="host">The host.</param>
 		public TestDecoratorCollection(IExtensionHost host)
 			: base( "TestDecorators", host, 10 ) { }
+
 		#endregion
 
 		#region ITestDecorator Members
 
+        /// <summary>
+        /// Examine the a Test and either return it as is, modify it
+        /// or return a different TestCase.
+        /// </summary>
+        /// <param name="test">The Test to be decorated</param>
+        /// <param name="member">The MethodInfo used to construct the test</param>
+        /// <returns>The resulting Test</returns>
 		public Test Decorate(Test test, MemberInfo member)
 		{
 			Test decoratedTest = test;
@@ -51,13 +64,23 @@ namespace NUnit.Core.Extensibility
 
 			return decoratedTest;
 		}
+
 		#endregion
 
 		#region ExtensionPoint Overrides
+
+        /// <summary>
+        /// Determines whether [is valid extension] [the specified extension].
+        /// </summary>
+        /// <param name="extension">The extension.</param>
+        /// <returns>
+        /// 	<c>true</c> if [is valid extension] [the specified extension]; otherwise, <c>false</c>.
+        /// </returns>
 		protected override bool IsValidExtension(object extension)
 		{
 			return extension is ITestDecorator; 
 		}
+
 		#endregion
 	}
 }

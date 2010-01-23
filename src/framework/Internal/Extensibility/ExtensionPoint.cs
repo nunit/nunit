@@ -36,14 +36,30 @@ namespace NUnit.Core.Extensibility
 		private readonly IExtensionHost host;
 		private readonly ExtensionsCollection extensions;
 
+        /// <summary>
+        /// Gets the extensions.
+        /// </summary>
+        /// <value>The extensions.</value>
 		protected IEnumerable Extensions
 		{
 			get { return extensions; }
 		}
 
 		#region Constructor
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ExtensionPoint"/> class.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <param name="host">The host.</param>
         public ExtensionPoint(string name, IExtensionHost host) : this( name, host, 0) { }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ExtensionPoint"/> class.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <param name="host">The host.</param>
+        /// <param name="priorityLevels">The priority levels.</param>
 	    public ExtensionPoint(string name, IExtensionHost host, int priorityLevels)
 		{
 			this.name = name;
@@ -53,6 +69,7 @@ namespace NUnit.Core.Extensibility
 		#endregion
 
 		#region IExtensionPoint Members
+
 		/// <summary>
 		/// Get the name of this extension point
 		/// </summary>

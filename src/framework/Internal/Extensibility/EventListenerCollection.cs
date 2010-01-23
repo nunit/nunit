@@ -34,25 +34,42 @@ namespace NUnit.Core.Extensibility
 	/// </summary>
 	public class EventListenerCollection : ExtensionPoint, ITestListener
 	{
-		#region Constructor
+		#region 
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EventListenerCollection"/> class.
+        /// </summary>
+        /// <param name="host">The host.</param>
 		public EventListenerCollection( IExtensionHost host )
 			: base( "EventListeners", host ) { }
 		#endregion
 
 		#region EventListener Members
 
+        /// <summary>
+        /// Called when a test has just started
+        /// </summary>
+        /// <param name="test">The test that is starting</param>
 		public void TestStarted(ITest test)
 		{
 			foreach( ITestListener listener in Extensions )
 				listener.TestStarted( test );
 		}
 
+        /// <summary>
+        /// Called when a test has finished
+        /// </summary>
+        /// <param name="result">The result of the test</param>
 		public void TestFinished(ITestResult result)
 		{
 			foreach( ITestListener listener in Extensions )
 				listener.TestFinished( result );
 		}
 
+        /// <summary>
+        /// Called when the test creates text output.
+        /// </summary>
+        /// <param name="testOutput">A console message</param>
 		public void TestOutput(TestOutput testOutput)
 		{
 			foreach( ITestListener listener in Extensions )
@@ -62,6 +79,14 @@ namespace NUnit.Core.Extensibility
 		#endregion
 
 		#region ExtensionPoint Overrides
+
+        /// <summary>
+        /// Determines whether [is valid extension] [the specified extension].
+        /// </summary>
+        /// <param name="extension">The extension.</param>
+        /// <returns>
+        /// 	<c>true</c> if [is valid extension] [the specified extension]; otherwise, <c>false</c>.
+        /// </returns>
 		protected override bool IsValidExtension(object extension)
 		{
 			return extension is ITestListener; 
