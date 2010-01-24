@@ -70,6 +70,11 @@ namespace NUnit.Framework.Internal
         /// The expected result of the method return value
         /// </summary>
 	    internal object expectedResult;
+
+        /// <summary>
+        /// Indicated whether the method has an expected result.
+        /// </summary>
+	    internal bool hasExpectedResult;
 #endif
 
         /// <summary>
@@ -438,7 +443,7 @@ namespace NUnit.Framework.Internal
 			object result = Reflect.InvokeMethod( this.method, fixture, this.arguments );
 
 #if !NUNITLITE
-            if (this.expectedResult != null)
+            if (this.hasExpectedResult)
                 NUnit.Framework.Assert.AreEqual(expectedResult, result);
 #endif
 

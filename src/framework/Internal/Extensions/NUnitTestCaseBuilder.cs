@@ -297,6 +297,7 @@ namespace NUnit.Core.Builders
             {
                 testMethod.arguments = parms.Arguments;
                 testMethod.expectedResult = parms.Result;
+                testMethod.hasExpectedResult = parms.HasExpectedResult;
                 testMethod.RunState = parms.RunState;
                 testMethod.IgnoreReason = parms.NotRunReason;
                 testMethod.BuilderException = parms.ProviderException;
@@ -311,7 +312,7 @@ namespace NUnit.Core.Builders
             }
 
             if (!testMethod.Method.ReturnType.Equals(typeof(void)) &&
-                (parms == null || parms.Result == null && parms.ExpectedExceptionName == null))
+                (parms == null || !parms.HasExpectedResult && parms.ExpectedExceptionName == null))
             {
                 testMethod.RunState = RunState.NotRunnable;
                 testMethod.IgnoreReason = "Method has non-void return value";

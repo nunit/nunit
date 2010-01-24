@@ -47,7 +47,7 @@ namespace NUnit.Core.Extensibility
         private RunState runState;
         private Exception providerException;
         private object[] arguments;
-        private System.Type expectedExceptionType;
+        private System.Type expectedException;
         private string expectedExceptionName;
         private string expectedMessage;
         private MessageMatch matchType;
@@ -55,6 +55,7 @@ namespace NUnit.Core.Extensibility
         private string testName;
         private string ignoreReason;
         private bool isIgnored;
+        private bool hasExpectedResult;
 
         /// <summary>
         /// A dictionary of properties, used to add information
@@ -105,8 +106,8 @@ namespace NUnit.Core.Extensibility
         /// </summary>
         public System.Type ExpectedException
         {
-            get { return expectedExceptionType; }
-            set { expectedExceptionType = value; }
+            get { return expectedException; }
+            set { expectedException = value; }
         }
 
         /// <summary>
@@ -143,7 +144,19 @@ namespace NUnit.Core.Extensibility
         public object Result
         {
             get { return result; }
-            set { result = value; }
+            set
+            {
+                result = value;
+                hasExpectedResult = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether an expected result was specified.
+        /// </summary>
+        public bool HasExpectedResult
+        {
+            get { return hasExpectedResult; }
         }
 
         /// <summary>
@@ -247,13 +260,13 @@ namespace NUnit.Core.Extensibility
         /// <param name="data"></param>
         public ParameterSet(ITestCaseData data)
         {
-            this.runState = RunState.Runnable;
-            this.arguments = data.Arguments;
-            this.expectedExceptionType = data.ExpectedException;
-            this.expectedExceptionName = data.ExpectedExceptionName;
-            this.expectedMessage = data.ExpectedMessage;
-            this.matchType = data.MatchType;
-            this.result = data.Result;
+            this.RunState = RunState.Runnable;
+            this.Arguments = data.Arguments;
+            this.ExpectedException = data.ExpectedException;
+            this.ExpectedExceptionName = data.ExpectedExceptionName;
+            this.ExpectedMessage = data.ExpectedMessage;
+            this.MatchType = data.MatchType;
+            this.Result = data.Result;
             this.Description = data.Description;
             this.TestName = data.TestName;
             this.Ignored = data.Ignored;
