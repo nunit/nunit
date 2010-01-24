@@ -130,7 +130,7 @@ namespace NUnit.AdhocTestRunner
             if (failureNode != null)
             {
                 XmlNode message = failureNode.SelectSingleNode("message");
-                XmlNode stacktrace = failureNode.SelectSingleNode("stacktrace");
+                XmlNode stacktrace = failureNode.SelectSingleNode("stack-trace");
 
                 if (message != null)
                     Console.WriteLine(message.InnerText);

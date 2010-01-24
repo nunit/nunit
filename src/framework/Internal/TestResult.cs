@@ -33,7 +33,7 @@ namespace NUnit.Framework.Internal
     /// <summary>
     /// The TestResult class represents the result of a test.
     /// </summary>
-    public class TestResult : ITestResult
+    public abstract class TestResult : ITestResult
 	{
 		#region Fields
 		/// <summary>
@@ -64,18 +64,23 @@ namespace NUnit.Framework.Internal
 		private string message;
 
 		/// <summary>
-		/// List of child results
-		/// </summary>
-		private IList results;
-
-		/// <summary>
 		/// Number of asserts executed by this test
 		/// </summary>
 		private int assertCount = 0;
 
-		#endregion
+        /// <summary>
+        /// List of child results
+        /// </summary>
+#if CLR_2_0
+        private System.Collections.Generic.List<ITestResult> children;
+#else
+        private System.Collections.ArrayList children;
+#endif
+
+        #endregion
 
 		#region Constructor
+
 		/// <summary>
 		/// Construct a test result given a Test
 		/// </summary>
@@ -114,17 +119,6 @@ namespace NUnit.Framework.Internal
 		{
 			get { return test.FullName; }
 		}
-
-        /// <summary>
-        /// Gets a value indicating whether this instance is a test case.
-        /// </summary>
-        /// <value>
-        /// 	<c>true</c> if this instance is test case; otherwise, <c>false</c>.
-        /// </value>
-        public bool IsTestCase
-        {
-            get { return test.IsTestCase; }
-        }
 
         /// <summary>
         /// Gets or sets the elapsed time for running the test
@@ -166,15 +160,44 @@ namespace NUnit.Framework.Internal
             set { assertCount = value; }
         }
 
-		/// <summary>
-		/// Gets a list of the child results of this TestResult
-		/// </summary>
-		public IList Results
-		{
-			get { return results; }
-		}
+        /// <summary>
+        /// Indicates whether this result has any child results.
+        /// Test HasChildren before accessing Children to avoid
+        /// the creation of an empty collection.
+        /// </summary>
+        public bool HasChildren
+        {
+            get { return children != null && children.Count > 0; }
+        }
 
-		#endregion
+        /// <summary>
+        /// Gets the collection of child results.
+        /// </summary>
+#if CLR_2_0
+        public System.Collections.Generic.IList<ITestResult> Children
+        {
+            get
+            {
+                if (children == null)
+                    children = new System.Collections.Generic.List<ITestResult>();
+
+                return children;
+            }
+        }
+#else
+        public System.Collections.IList Children
+        {
+            get 
+            {
+                if (children == null)
+                    children = new System.Collections.ArrayList();
+
+                return children; 
+            }
+        }
+#endif
+
+        #endregion
 
         #region Public Methods
 
@@ -235,7 +258,9 @@ namespace NUnit.Framework.Internal
             else if (ex is SuccessException)
                 SetResult(ResultState.Success, ex.Message, ex.StackTrace);
             else
-                SetResult(ResultState.Error, BuildMessage(ex), BuildStackTrace(ex));
+                SetResult(ResultState.Error, 
+                    ExceptionHelper.BuildMessage(ex), 
+                    ExceptionHelper.BuildStackTrace(ex));
 #else
             if (ex is AssertionException)
                 SetResult(ResultState.Failure, ex.Message);
@@ -246,33 +271,9 @@ namespace NUnit.Framework.Internal
             else if (ex is SuccessException)
                 SetResult(ResultState.Success, ex.Message);
             else
-                SetResult(ResultState.Error, BuildMessage(ex));
+                SetResult(ResultState.Error, ExceptionHelper.BuildMessage(ex));
 #endif
         }
-
-		/// <summary>
-		/// Add a child result
-		/// </summary>
-		/// <param name="result">The child result to be added</param>
-		public void AddResult(TestResult result) 
-		{
-			if ( results == null )
-				results = new ArrayList();
-
-			this.results.Add(result);
-
-            switch (result.ResultState.Status)
-            {
-                case TestStatus.Failed:
-                    if (this.ResultState.Status != TestStatus.Failed)
-                        this.SetResult(ResultState.Failure, "Child test failed");
-                    break;
-                case TestStatus.Passed:
-                    if (this.ResultState == ResultState.Inconclusive)
-                        this.SetResult(ResultState.Success);
-                    break;
-            }
-		}
 
         /// <summary>
         /// Returns the Xml representation of the result.
@@ -288,47 +289,33 @@ namespace NUnit.Framework.Internal
             return topNode.FirstChild;
         }
 
-        /// <summary>
+                /// <summary>
         /// Adds the XML representation of the result as a child of the
         /// supplied parent node..
         /// </summary>
         /// <param name="parent">The parent node.</param>
         /// <param name="recursive">If true, descendant results are included</param>
         /// <returns></returns>
-        protected virtual XmlNode AddToXml(XmlNode parent, bool recursive)
-        {
-            XmlNode node = parent.OwnerDocument.CreateElement(
-                this.IsTestCase
-                    ? "test-case"
-                    : "test-suite");
-            parent.AppendChild(node);
+        public abstract XmlNode AddToXml(XmlNode parent, bool recursive);
 
-            TestStatus status = this.ResultState.Status;
-
-            XmlHelper.AddAttribute(node, "name", this.Name);
-            XmlHelper.AddAttribute(node, "fullname", this.FullName);
-            XmlHelper.AddAttribute(node, "result", status.ToString());
-            XmlHelper.AddAttribute(node, "time", this.Time.ToString("0.000", System.Globalization.CultureInfo.InvariantCulture));
-
-            if (status == TestStatus.Failed)
-                AddFailureElement(node);
-            else if (status == TestStatus.Skipped)
-                AddReasonElement(node);
-
-            if (recursive && this.Results != null)
-                foreach (TestResult childResult in Results)
-                    childResult.AddToXml(node, recursive);
-
-            return node;
-        }
-
-        private void AddReasonElement(XmlNode targetNode)
+        /// <summary>
+        /// Adds a reason element to a note and returns it.
+        /// </summary>
+        /// <param name="targetNode">The target node.</param>
+        /// <returns>The new reason element.</returns>
+        protected XmlNode AddReasonElement(XmlNode targetNode)
         {
             XmlNode reasonNode = XmlHelper.AddElement(targetNode, "reason");
             XmlHelper.AddElementWithCDataSection(reasonNode, "message", this.Message);
+            return reasonNode;
         }
 
-        private void AddFailureElement(XmlNode targetNode)
+        /// <summary>
+        /// Adds a failure element to a note and returns it.
+        /// </summary>
+        /// <param name="targetNode">The target node.</param>
+        /// <returns>The new failure element.</returns>
+        protected XmlNode AddFailureElement(XmlNode targetNode)
         {
             XmlNode failureNode = XmlHelper.AddElement(targetNode, "failure");
 
@@ -343,74 +330,10 @@ namespace NUnit.Framework.Internal
                 XmlHelper.AddElementWithCDataSection(failureNode, "stack-trace", this.StackTrace);
             }
 #endif
+
+            return failureNode;
         }
         
         #endregion
-
-        #region Exception Helpers
-        // TODO: Move to a utility class
-        /// <summary>
-        /// Builds up a message, using the Message field of the specified exception
-        /// as well as any InnerExceptions.
-        /// </summary>
-        /// <param name="exception">The exception.</param>
-        /// <returns>A combined message string.</returns>
-        public static string BuildMessage(Exception exception)
-		{
-			StringBuilder sb = new StringBuilder();
-			sb.AppendFormat( CultureInfo.CurrentCulture, "{0} : {1}", exception.GetType().ToString(), exception.Message );
-
-			Exception inner = exception.InnerException;
-			while( inner != null )
-			{
-				sb.Append( NUnit.Env.NewLine );
-				sb.AppendFormat( CultureInfo.CurrentCulture, "  ----> {0} : {1}", inner.GetType().ToString(), inner.Message );
-				inner = inner.InnerException;
-			}
-
-			return sb.ToString();
-		}
-
-#if !NETCF_1_0
-		// TODO: Move to a utility class
-        /// <summary>
-        /// Builds up a message, using the Message field of the specified exception
-        /// as well as any InnerExceptions.
-        /// </summary>
-        /// <param name="exception">The exception.</param>
-        /// <returns>A combined stack trace.</returns>
-        public static string BuildStackTrace(Exception exception)
-		{
-            StringBuilder sb = new StringBuilder( GetStackTrace( exception ) );
-
-            Exception inner = exception.InnerException;
-            while( inner != null )
-            {
-                sb.Append( NUnit.Env.NewLine );
-                sb.Append( "--" );
-                sb.Append( inner.GetType().Name );
-                sb.Append( NUnit.Env.NewLine );
-                sb.Append( GetStackTrace( inner ) );
-
-                inner = inner.InnerException;
-            }
-
-            return sb.ToString();
-		}
-
-		private static string GetStackTrace(Exception exception)
-		{
-			try
-			{
-				return exception.StackTrace;
-			}
-			catch( Exception )
-			{
-				return "No stack trace available";
-			}
-		}
-#endif
-
-		#endregion
     }
 }

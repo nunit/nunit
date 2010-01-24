@@ -72,6 +72,10 @@ namespace NUnit
 #else
     public class IntList : System.Collections.ArrayList
     {
+        /// <summary>
+        /// Converts the  ArrayList to an array.
+        /// </summary>
+        /// <returns>The arra.</returns>
         public new int[] ToArray()
         {
             return (int[])base.ToArray(typeof(int));

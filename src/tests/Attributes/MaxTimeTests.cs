@@ -45,9 +45,9 @@ namespace NUnit.Framework.Tests
         public void MaxTimeExceeded()
         {
             Test test = TestBuilder.MakeFixture(typeof(MaxTimeFixture));
-            TestResult result = test.Run(TestListener.NULL);
-            Assert.AreEqual(ResultState.Failure, result.ResultState);
-            result = (TestResult)result.Results[0];
+            CompositeResult suiteResult = (CompositeResult)test.Run(TestListener.NULL);
+            Assert.AreEqual(ResultState.Failure, suiteResult.ResultState);
+            TestResult result = (TestResult)suiteResult.Children[0];
             StringAssert.IsMatch(@"Elapsed time of \d*ms exceeds maximum of 1ms", result.Message);
         }
 
@@ -64,7 +64,7 @@ namespace NUnit.Framework.Tests
             Test test = TestBuilder.MakeFixture(typeof(MaxTimeFixtureWithFailure));
             TestResult result = test.Run(TestListener.NULL);
             Assert.AreEqual(ResultState.Failure, result.ResultState);
-            result = (TestResult)result.Results[0];
+            result = (TestResult)result.Children[0];
             Assert.AreEqual(ResultState.Failure, result.ResultState);
             StringAssert.IsMatch("Intentional Failure", result.Message);
         }
@@ -81,7 +81,7 @@ namespace NUnit.Framework.Tests
             Test test = TestBuilder.MakeFixture(typeof(MaxTimeFixtureWithError));
             TestResult result = test.Run(TestListener.NULL);
             Assert.AreEqual(ResultState.Failure, result.ResultState);
-            result = (TestResult)result.Results[0];
+            result = (TestResult)result.Children[0];
             Assert.AreEqual(ResultState.Error, result.ResultState);
             StringAssert.IsMatch("Exception message", result.Message);
         }

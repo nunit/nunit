@@ -200,7 +200,7 @@ namespace NUnit.Framework.Internal
         {
             //using (new TestContext())
             //{
-                TestResult testResult = new TestResult(this);
+                TestCaseResult testResult = new TestCaseResult(this);
 
                 listener.TestStarted(this);
                 long startTime = DateTime.Now.Ticks;
@@ -219,11 +219,11 @@ namespace NUnit.Framework.Internal
                         if (BuilderException != null)
 #if !NETCF_1_0
                             testResult.SetResult(ResultState.NotRunnable, 
-                                TestResult.BuildMessage( BuilderException ), 
-                                TestResult.BuildStackTrace(BuilderException));
+                                ExceptionHelper.BuildMessage( BuilderException ), 
+                                ExceptionHelper.BuildStackTrace(BuilderException));
 #else
                             testResult.SetResult(ResultState.NotRunnable, 
-                                TestResult.BuildMessage( BuilderException ));
+                                ExceptionHelper.BuildMessage( BuilderException ));
 #endif
                         else
                             testResult.SetResult(ResultState.NotRunnable, IgnoreReason);
@@ -393,12 +393,12 @@ namespace NUnit.Framework.Internal
 					ex = ex.InnerException;
 
                 // TODO: Can we move this logic into TestResult itself?
-                string message = "TearDown : " + TestResult.BuildMessage(ex);
+                string message = "TearDown : " + ExceptionHelper.BuildMessage(ex);
                 if (testResult.Message != null)
                     message = testResult.Message + NUnit.Env.NewLine + message;
 
 #if !NETCF_1_0
-                string stackTrace = "--TearDown" + NUnit.Env.NewLine + TestResult.BuildStackTrace(ex);
+                string stackTrace = "--TearDown" + NUnit.Env.NewLine + ExceptionHelper.BuildStackTrace(ex);
                 if (testResult.StackTrace != null)
                     stackTrace = testResult.StackTrace + NUnit.Env.NewLine + stackTrace;
 

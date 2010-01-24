@@ -74,7 +74,12 @@ namespace NUnitLite
 
         private void Visit(ITestResult result)
         {
-            if (result.IsTestCase)
+            if (result.HasChildren)
+            {
+                foreach (ITestResult r in result.Children)
+                    Visit(r);
+            }
+            else
             {
                 testCount++;
                 switch (result.ResultState.Status)
@@ -91,10 +96,6 @@ namespace NUnitLite
 
                 return;
             }
-
-            if (result.Results != null)
-                foreach (ITestResult r in result.Results)
-                    Visit(r);
         }
     }
 }

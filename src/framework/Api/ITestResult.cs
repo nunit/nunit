@@ -56,17 +56,6 @@ namespace NUnit.Framework.Api
         }
 
         /// <summary>
-        /// Gets a value indicating whether this instance is a test case.
-        /// </summary>
-        /// <value>
-        /// 	<c>true</c> if this instance is test case; otherwise, <c>false</c>.
-        /// </value>
-        bool IsTestCase
-        {
-            get;
-        }
-
-        /// <summary>
         /// Gets the elapsed time for running the test
         /// </summary>
         double Time
@@ -94,7 +83,7 @@ namespace NUnit.Framework.Api
             get;
         }
 #endif
-
+        
         /// <summary>
         /// Gets or sets the count of asserts executed
         /// when running the test.
@@ -105,10 +94,23 @@ namespace NUnit.Framework.Api
         }
 
         /// <summary>
-        /// Gets the collection of child results.
+        /// Indicates whether this result has any child results.
+        /// Accessing HasChildren should not force creation of the
+        /// Children collection in classes implementing this interface.
         /// </summary>
-        /// <value>The child results collection</value>
-        System.Collections.IList Results
+        bool HasChildren
+        {
+            get;
+        }
+
+        /// <summary>
+        /// Gets the the collection of child results.
+        /// </summary>
+#if CLR_2_0
+        System.Collections.Generic.IList<ITestResult> Children
+#else
+        System.Collections.IList Children
+#endif
         {
             get;
         }

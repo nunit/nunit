@@ -616,6 +616,15 @@
     <Compile Include="..\..\..\src\framework\Internal\XmlHelper.cs">
       <Link>Internal\XmlHelper.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\TestCaseResult.cs">
+      <Link>Internal\TestCaseResult.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\CompositeResult.cs">
+      <Link>Internal\CompositeResult.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\ExceptionHelper.cs">
+      <Link>Internal\ExceptionHelper.cs</Link>
+    </Compile>
     <None Include="..\..\..\src\framework\Templates\Contains.template.cs">
       <Link>Templates\Contains.template.cs</Link>
     </None>

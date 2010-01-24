@@ -34,16 +34,16 @@ namespace NUnit.Framework.Api
 	[TestFixture]
 	public abstract class TestResultTests
 	{
-		protected TestResult testResult;
-        protected TestResult suiteResult;
+		protected TestCaseResult testResult;
+        protected CompositeResult suiteResult;
         protected XmlNode testNode;
         protected XmlNode suiteNode;
 
 		[SetUp]
 		public void SetUp()
 		{
-			testResult = new TestResult( new TestMethod(Reflect.GetNamedMethod( typeof(DummySuite), "DummyMethod" ) ) );
-            suiteResult = new TestResult(new TestSuite(typeof(DummySuite)));
+			testResult = new TestCaseResult( new TestMethod(Reflect.GetNamedMethod( typeof(DummySuite), "DummyMethod" ) ) );
+            suiteResult = new CompositeResult(new TestSuite(typeof(DummySuite)));
 
             SetResultState();
             suiteResult.AddResult(testResult);

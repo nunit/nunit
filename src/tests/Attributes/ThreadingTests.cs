@@ -25,6 +25,7 @@ using System;
 using System.Threading;
 using NUnit.Framework;
 using NUnit.Framework.Api;
+using NUnit.Framework.Internal;
 using NUnit.TestData.ThreadingFixture;
 using NUnit.TestUtilities;
 
@@ -144,9 +145,9 @@ namespace NUnit.Framework.Attributes
         [Platform(Exclude = "Mono", Reason = "Runner hangs at end when this is run")]
         public void TimeoutCanBeSetOnTestFixture()
         {
-            ITestResult result = TestBuilder.RunTestFixture(typeof(ThreadingFixtureWithTimeout));
-            Assert.That(result.ResultState, Is.EqualTo(ResultState.Failure));
-            result = TestFinder.Find("Test2WithInfiniteLoop", result, false);
+            CompositeResult suiteResult = TestBuilder.RunTestFixture(typeof(ThreadingFixtureWithTimeout));
+            Assert.That(suiteResult.ResultState, Is.EqualTo(ResultState.Failure));
+            ITestResult result = TestFinder.Find("Test2WithInfiniteLoop", suiteResult, false);
             Assert.That(result.ResultState, Is.EqualTo(ResultState.Failure));
             Assert.That(result.Message, Contains.Substring("50ms"));
         }
