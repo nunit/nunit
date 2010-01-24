@@ -377,7 +377,7 @@ namespace NUnit.Framework.Attributes
 		{ 
 			TestResult suiteResult = TestBuilder.RunTestFixture( typeof (TestAssertsBeforeThrowingException) );
 			Assert.AreEqual( ResultState.Failure, suiteResult.ResultState );
-			TestResult result = (TestResult)suiteResult.Results[0];
+            TestResult result = (TestResult)suiteResult.Children[0];
 			Assert.AreEqual( "private message", result.Message );
 		} 
 

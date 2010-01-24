@@ -25,6 +25,7 @@
     using NUnit.Core;
     using NUnit.Framework;
     using NUnit.Framework.Api;
+using NUnit.Framework.Internal;
 
 namespace NUnit.TestUtilities
 {
@@ -48,18 +49,12 @@ namespace NUnit.TestUtilities
 
         public ResultSummary() { }
 
-        public ResultSummary(ITestResult result)
+        public ResultSummary(TestResult result)
         {
             Summarize(result);
         }
 
-        public ResultSummary(ITestResult[] results)
-        {
-            foreach (ITestResult result in results)
-                Summarize(result);
-        }
-
-        public void Summarize(ITestResult result)
+        public void Summarize(TestResult result)
         {
             if (this.name == null)
             {
@@ -67,7 +62,14 @@ namespace NUnit.TestUtilities
                 this.time = result.Time;
             }
 
-            if (result.IsTestCase)
+            if (result is CompositeResult)
+            {
+                CompositeResult suiteResult = result as CompositeResult;
+                if (suiteResult.HasChildren)
+                    foreach (TestResult childResult in suiteResult.Children)
+                        Summarize(childResult);
+            }
+            else
             {
                 resultCount++;
 
@@ -83,9 +85,9 @@ namespace NUnit.TestUtilities
                         break;
                     //case TestStatus.Error:
                     //case TestStatus.Cancelled:
-                        //errorCount++;
-                        //testsRun++;
-                        //break;
+                    //errorCount++;
+                    //testsRun++;
+                    //break;
                     case TestStatus.Inconclusive:
                         inconclusiveCount++;
                         testsRun++;
@@ -103,10 +105,6 @@ namespace NUnit.TestUtilities
                         break;
                 }
             }
-
-            if (result.Results != null)
-                foreach (ITestResult childResult in result.Results)
-                    Summarize(childResult);
         }
 
         public string Name

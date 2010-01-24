@@ -257,6 +257,12 @@
     <Compile Include="..\..\..\src\framework\IExpectException.cs">
       <Link>IExpectException.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\CompositeResult.cs">
+      <Link>Internal\CompositeResult.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\ExceptionHelper.cs">
+      <Link>Internal\ExceptionHelper.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\framework\Internal\ExpectedExceptionProcessor.cs">
       <Link>Internal\ExpectedExceptionProcessor.cs</Link>
     </Compile>
@@ -277,6 +283,9 @@
     </Compile>
     <Compile Include="..\..\..\src\framework\Internal\Test.cs">
       <Link>Internal\Test.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\TestCaseResult.cs">
+      <Link>Internal\TestCaseResult.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Internal\TestFixture.cs">
       <Link>Internal\TestFixture.cs</Link>

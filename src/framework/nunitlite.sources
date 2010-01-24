@@ -25,6 +25,8 @@ Api/TestStatus.cs
 Attributes/*.cs
 Constraints/*.cs
 Exceptions/*.cs
+Internal/CompositeResult.cs
+Internal/ExceptionHelper.cs
 Internal/ExpectedExceptionProcessor.cs
 Internal/InvalidTestFixtureException.cs
 Internal/MethodHelper.cs
@@ -32,6 +34,7 @@ Internal/NUnitException.cs
 Internal/ParameterizedMethodSuite.cs
 Internal/Reflect.cs
 Internal/Test.cs
+Internal/TestCaseResult.cs
 Internal/TestFixture.cs
 Internal/TestMethod.cs
 Internal/TestSuite.cs

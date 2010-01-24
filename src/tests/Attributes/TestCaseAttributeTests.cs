@@ -136,11 +136,13 @@ namespace NUnit.Framework.Tests
             Assert.AreEqual("b", array[1]);
         }
 
+#if CLR_2_0
         [TestCase(Result = null)]
         public object ResultCanBeNull()
         {
             return null;
         }
+#endif
 
         [Test]
         public void CanSpecifyDescription()
@@ -218,7 +220,7 @@ namespace NUnit.Framework.Tests
             ResultSummary summary = new ResultSummary(result);
             Assert.AreEqual(3, summary.ResultCount);
             Assert.AreEqual(2, summary.Skipped);
-            Assert.That(result.Results, Has.Some.Message.EqualTo("Don't Run Me!"));
+            Assert.That(result.Children, Has.Some.Message.EqualTo("Don't Run Me!"));
         }
     }
 }

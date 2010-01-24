@@ -207,7 +207,7 @@ namespace NUnit.Framework.Tests
             ResultSummary summary = new ResultSummary(result);
             Assert.AreEqual( 3, summary.ResultCount );
             Assert.AreEqual( 2, summary.Skipped );
-            Assert.AreEqual( "Don't Run Me!", ((TestResult)result.Results[2]).Message );
+            Assert.AreEqual("Don't Run Me!", ((TestResult)result.Children[2]).Message);
         }
 
         [Test]

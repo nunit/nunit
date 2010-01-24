@@ -287,8 +287,8 @@ namespace NUnitLite.Runner
 
         private void PrintErrorResults(ITestResult result)
         {
-            if (result.Results != null)
-                foreach (ITestResult r in result.Results)
+            if (result.HasChildren)
+                foreach (ITestResult r in result.Children)
                     PrintErrorResults(r);
             else if (result.ResultState == ResultState.Error || result.ResultState == ResultState.Failure)
             {
@@ -313,8 +313,8 @@ namespace NUnitLite.Runner
 
         private void PrintNotRunResults(ITestResult result)
         {
-            if (result.Results != null)
-                foreach (ITestResult r in result.Results)
+            if (result.HasChildren)
+                foreach (ITestResult r in result.Children)
                     PrintNotRunResults(r);
             else if (result.ResultState == ResultState.Ignored || result.ResultState == ResultState.NotRunnable || result.ResultState == ResultState.Skipped)
             {
@@ -361,8 +361,8 @@ namespace NUnitLite.Runner
             writer.Write(indent);
             writer.WriteLine(result.Name);
 
-            if (result.Results != null)
-                foreach (ITestResult r in result.Results)
+            if (result.HasChildren)
+                foreach (ITestResult r in result.Children)
                     PrintAllResults(r, indent + "  ");
         }
         #endregion
