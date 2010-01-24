@@ -88,7 +88,7 @@ namespace NUnit.Framework.Internal
 		/// <summary>
 		/// Constructor
 		/// </summary>
-		/// <param name="listener">The EventListener to receive events</param>
+		/// <param name="eventListener">The EventListener to receive events</param>
 		/// <param name="events">The event queue to pull events from</param>
 		/// <param name="autostop">Set to true to stop pump after all tests finish</param>
 		public EventPump( ITestListener eventListener, EventQueue events, bool autostop)
@@ -159,7 +159,12 @@ namespace NUnit.Framework.Internal
 		private void PumpThreadProc()
 		{
 			ITestListener hostListeners = CoreExtensions.Host.Listeners;
+#if NET_4_0
+            bool lockTaken = false;
+			Monitor.Enter( events, ref lockTaken );
+#else
 			Monitor.Enter( events );
+#endif
             try
             {
                 int pendingTests = 0;
@@ -191,7 +196,10 @@ namespace NUnit.Framework.Internal
             }
 			finally
 			{
-				Monitor.Exit( events );
+#if NET_4_0
+                if (lockTaken)
+#endif
+				    Monitor.Exit( events );
                 pumpState = EventPumpState.Stopped;
 				//pumpThread = null;
 			}

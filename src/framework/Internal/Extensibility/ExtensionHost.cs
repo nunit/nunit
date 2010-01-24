@@ -37,17 +37,36 @@ namespace NUnit.Core.Extensibility
 	{
 		#region Protected Fields
 
+        /// <summary>
+        /// List of extension points on this host
+        /// </summary>
         protected ExtensionPointList extensions = new ExtensionPointList();
 
-		protected ExtensionType supportedTypes;
+        /// <summary>
+        /// Flags indicating the types of extensions supported by this host
+        /// </summary>
+        protected ExtensionType supportedTypes;
+
 		#endregion
 
 		#region IExtensionHost Interface
+
+        /// <summary>
+        /// Get a list of the ExtensionPoints provided by this host.
+        /// </summary>
+        /// <value></value>
 		public IExtensionPoint[] ExtensionPoints
 		{
 			get { return (IExtensionPoint[])extensions.ToArray(); }
 		}
 
+        /// <summary>
+        /// Return an extension point by name, if present
+        /// </summary>
+        /// <param name="name">The name of the extension point</param>
+        /// <returns>
+        /// The extension point, if found, otherwise null
+        /// </returns>
 		public IExtensionPoint GetExtensionPoint( string name )
 		{
 			foreach ( IExtensionPoint extensionPoint in extensions )
@@ -57,6 +76,11 @@ namespace NUnit.Core.Extensibility
 			return null;
 		}
 
+        /// <summary>
+        /// Gets the ExtensionTypes supported by this host
+        /// </summary>
+        /// <value></value>
+        /// <returns>An enum indicating the ExtensionTypes supported</returns>
 		public ExtensionType ExtensionTypes
 		{
 			get { return supportedTypes; }

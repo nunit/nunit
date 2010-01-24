@@ -58,7 +58,6 @@ namespace NUnit.Core.Builders
         /// in BuildFrom rather than here.
         /// </summary>
         /// <param name="method">A MethodInfo for the method being used as a test method</param>
-        /// <param name="suite">The test suite being built, to which the new test would be added</param>
         /// <returns>True if the builder can create a test case from this method</returns>
         public bool CanBuildFrom(MethodInfo method)
         {
@@ -68,14 +67,13 @@ namespace NUnit.Core.Builders
                 || method.IsDefined(typeof(TheoryAttribute), false);
         }
 
-		/// <summary>
+        /// <summary>
         /// Build a Test from the provided MethodInfo. Depending on
         /// whether the method takes arguments and on the availability
         /// of test case data, this method may return a single test
         /// or a group of tests contained in a ParameterizedMethodSuite.
         /// </summary>
         /// <param name="method">The MethodInfo for which a test is to be built</param>
-        /// <param name="suite">The test fixture being populated, or null</param>
         /// <returns>A Test representing one or more method invocations</returns>
         public Test BuildFrom(MethodInfo method)
 		{
@@ -84,11 +82,35 @@ namespace NUnit.Core.Builders
 
         #region ITestCaseBuilder2 Members
 
+        /// <summary>
+        /// Determines if the method can be used to build an NUnit test
+        /// test method of some kind. The method must normally be marked
+        /// with an identifying attriute for this to be true.
+        /// 
+        /// Note that this method does not check that the signature
+        /// of the method for validity. If we did that here, any
+        /// test methods with invalid signatures would be passed
+        /// over in silence in the test run. Since we want such
+        /// methods to be reported, the check for validity is made
+        /// in BuildFrom rather than here.
+        /// </summary>
+        /// <param name="method">A MethodInfo for the method being used as a test method</param>
+        /// <param name="parentSuite">The test suite being built, to which the new test would be added</param>
+        /// <returns>True if the builder can create a test case from this method</returns>
         public bool CanBuildFrom(MethodInfo method, Test parentSuite)
         {
             return CanBuildFrom(method);
         }
 
+        /// <summary>
+        /// Build a Test from the provided MethodInfo. Depending on
+        /// whether the method takes arguments and on the availability
+        /// of test case data, this method may return a single test
+        /// or a group of tests contained in a ParameterizedMethodSuite.
+        /// </summary>
+        /// <param name="method">The MethodInfo for which a test is to be built</param>
+        /// <param name="parentSuite">The test fixture being populated, or null</param>
+        /// <returns>A Test representing one or more method invocations</returns>
         public Test BuildFrom(MethodInfo method, Test parentSuite)
         {
             return CoreExtensions.Host.TestCaseProviders.HasTestCasesFor(method)
@@ -104,6 +126,7 @@ namespace NUnit.Core.Builders
         /// this method.
         /// </summary>
         /// <param name="method">The MethodInfo for which a test is to be built</param>
+        /// <param name="parentSuite">The test suite for which the method is being built</param>
         /// <returns>A ParameterizedMethodSuite populated with test cases</returns>
         public static Test BuildParameterizedMethodSuite(MethodInfo method, Test parentSuite)
         {

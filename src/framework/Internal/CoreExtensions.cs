@@ -40,7 +40,9 @@ namespace NUnit.Framework.Internal
 	public class CoreExtensions : ExtensionHost
 	{
 		#region Instance Fields
-		private IAddinRegistry addinRegistry;
+        private static CoreExtensions host;
+        
+        private IAddinRegistry addinRegistry;
 		private bool initialized;
 
 		private SuiteBuilderCollection suiteBuilders;
@@ -53,7 +55,11 @@ namespace NUnit.Framework.Internal
 		#endregion
 
 		#region CoreExtensions Singleton
-		private static CoreExtensions host;
+
+        /// <summary>
+        /// Gets the CoreExtensions host singleton.
+        /// </summary>
+        /// <value>The host.</value>
 		public static CoreExtensions Host
 		{
 			get
@@ -64,9 +70,14 @@ namespace NUnit.Framework.Internal
 				return host;
 			}
 		}
+
 		#endregion
 
 		#region Constructors
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CoreExtensions"/> class.
+        /// </summary>
 		public CoreExtensions() 
 		{
 			this.suiteBuilders = new SuiteBuilderCollection(this);
@@ -103,6 +114,10 @@ namespace NUnit.Framework.Internal
 
 		#region Public Properties
 
+        /// <summary>
+        /// Gets a value indicating whether this <see cref="CoreExtensions"/> is initialized.
+        /// </summary>
+        /// <value><c>true</c> if initialized; otherwise, <c>false</c>.</value>
 		public bool Initialized
 		{
 			get { return initialized; }
@@ -154,6 +169,9 @@ namespace NUnit.Framework.Internal
 
 		#region Public Methods	
 
+        /// <summary>
+        /// Initializes this instance of the CoreExtensions host.
+        /// </summary>
         public void Initialize()
         {
             InstallBuiltins();
@@ -162,6 +180,9 @@ namespace NUnit.Framework.Internal
             initialized = true;
         }
 
+        /// <summary>
+        /// Installs the builtin 'extensions'.
+        /// </summary>
         public void InstallBuiltins()
 		{
             InternalTrace.Info("Installing Builtins");
@@ -185,6 +206,9 @@ namespace NUnit.Framework.Internal
             dataPointProviders.Install(new DatapointProvider());
 		}
 
+        /// <summary>
+        /// Installs the addins.
+        /// </summary>
 		public void InstallAddins()
 		{
             InternalTrace.Info("Installing Addins");
@@ -233,6 +257,10 @@ namespace NUnit.Framework.Internal
 			}
 		}
 
+        /// <summary>
+        /// Installs any adhoc extensions.
+        /// </summary>
+        /// <param name="assembly">The assembly to scan for adhoc extensions.</param>
 		public void InstallAdhocExtensions( Assembly assembly )
 		{
 			foreach ( Type type in assembly.GetExportedTypes() )

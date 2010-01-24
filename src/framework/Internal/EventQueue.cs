@@ -39,49 +39,86 @@ namespace NUnit.Framework.Internal
 	/// </summary>
 	public abstract class Event
 	{
+        /// <summary>
+        /// The Send method is implemented by derived classes to send the event to the specified listener.
+        /// </summary>
+        /// <param name="listener">The listener.</param>
 		abstract public void Send( ITestListener listener );
 	}
 
-	public class TestStartedEvent : Event
+    /// <summary>
+    /// TestStartedEvent holds information needed to call the TestStarted method.
+    /// </summary>
+    public class TestStartedEvent : Event
 	{
 		ITest test;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TestStartedEvent"/> class.
+        /// </summary>
+        /// <param name="test">The test.</param>
 		public TestStartedEvent( ITest test )
 		{
 			this.test = test;
 		}
 
-		public override void Send( ITestListener listener )
+        /// <summary>
+        /// Calls TestStarted on the specified listener.
+        /// </summary>
+        /// <param name="listener">The listener.</param>
+        public override void Send(ITestListener listener)
 		{
 			listener.TestStarted( this.test );
 		}
 	}
-			
-	public class TestFinishedEvent : Event
+
+    /// <summary>
+    /// TestFinishedEvent holds information needed to call the TestFinished method.
+    /// </summary>
+    public class TestFinishedEvent : Event
 	{
 		ITestResult result;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TestFinishedEvent"/> class.
+        /// </summary>
+        /// <param name="result">The result.</param>
 		public TestFinishedEvent( ITestResult result )
 		{
 			this.result = result;
 		}
 
-		public override void Send( ITestListener listener )
+        /// <summary>
+        /// Calls TestFinished on the specified listener.
+        /// </summary>
+        /// <param name="listener">The listener.</param>
+        public override void Send(ITestListener listener)
 		{
 			listener.TestFinished( this.result );
 		}
 	}
 
-	public class OutputEvent : Event
+    /// <summary>
+    /// OutputEvent holds information needed to call the TestOutput method.
+    /// </summary>
+    public class OutputEvent : Event
 	{
 		TestOutput output;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="OutputEvent"/> class.
+        /// </summary>
+        /// <param name="output">The output.</param>
 		public OutputEvent( TestOutput output )
 		{
 			this.output = output;
 		}
 
-		public override void Send( ITestListener listener )
+        /// <summary>
+        /// Calls TestOutput on the specified listener.
+        /// </summary>
+        /// <param name="listener">The listener.</param>
+        public override void Send(ITestListener listener)
 		{
 			listener.TestOutput( this.output );
 		}
@@ -97,6 +134,9 @@ namespace NUnit.Framework.Internal
 	{
 		private Queue queue = new Queue();
 
+        /// <summary>
+        /// Gets the count of items in the queue.
+        /// </summary>
 		public int Count
 		{
 			get 
@@ -108,6 +148,10 @@ namespace NUnit.Framework.Internal
 			}
 		}
 
+        /// <summary>
+        /// Enqueues the specified event
+        /// </summary>
+        /// <param name="e">The event to enqueue.</param>
 		public void Enqueue( Event e )
 		{
 			lock( this )
@@ -117,6 +161,10 @@ namespace NUnit.Framework.Internal
 			}
 		}
 
+        /// <summary>
+        /// Removes the next event in the queue.
+        /// </summary>
+        /// <returns>The next event.</returns>
 		public Event Dequeue()
 		{
 			lock( this )

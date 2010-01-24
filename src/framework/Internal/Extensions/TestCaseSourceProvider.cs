@@ -67,8 +67,9 @@ namespace NUnit.Core.Builders
         /// Determine whether any test cases are available for a parameterized method.
         /// </summary>
         /// <param name="method">A MethodInfo representing a parameterized test</param>
+        /// <param name="parentSuite">The TestSuite being built - ignored in this implementation</param>
         /// <returns>True if any cases are available, otherwise false.</returns>
-        public bool HasTestCasesFor(MethodInfo method, Test suite)
+        public bool HasTestCasesFor(MethodInfo method, Test parentSuite)
         {
             return HasTestCasesFor(method);
         }
@@ -77,7 +78,8 @@ namespace NUnit.Core.Builders
         /// Return an IEnumerable providing test cases for use in
         /// running a parameterized test.
         /// </summary>
-        /// <param name="method"></param>
+        /// <param name="method">A MethodInfo representing a parameterized test</param>
+        /// <param name="parentSuite">The TestSuite being built - ignored in this implementation</param>
         /// <returns></returns>
         public IEnumerable GetTestCasesFor(MethodInfo method, Test parentSuite)
         {

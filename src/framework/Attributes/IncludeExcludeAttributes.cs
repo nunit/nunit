@@ -39,8 +39,6 @@ namespace NUnit.Framework
 		private string exclude;
 		private string reason;
 
-        protected bool shouldRun;
-
 		/// <summary>
 		/// Constructor with no included items specified, for use
 		/// with named property syntax.
@@ -108,8 +106,12 @@ namespace NUnit.Framework
 		/// <param name="platforms">Comma-deliminted list of platforms</param>
 		public PlatformAttribute( string platforms ) : base( platforms ) { }
 
-        #region ISetRunState members
+        #region IApplyToTest members
 
+        /// <summary>
+        /// Causes a test to be skipped if this PlatformAttribute is not satisfied.
+        /// </summary>
+        /// <param name="test">The test to modify</param>
         public void ApplyToTest(ITest test)
         {
             if (test.RunState != RunState.NotRunnable && !platformHelper.IsPlatformSupported(this))
@@ -144,8 +146,12 @@ namespace NUnit.Framework
 		/// <param name="cultures">Comma-deliminted list of cultures</param>
 		public CultureAttribute( string cultures ) : base( cultures ) { }
 
-        #region ISetRunState members
+        #region IApplyToTest members
 
+        /// <summary>
+        /// Causes a test to be skipped if this CultureAttribute is not satisfied.
+        /// </summary>
+        /// <param name="test">The test to modify</param>
         public void ApplyToTest(ITest test)
         {
             if (test.RunState != RunState.NotRunnable && !IsCultureSupported())

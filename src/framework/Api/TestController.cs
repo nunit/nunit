@@ -182,10 +182,10 @@ namespace NUnit.Framework.Api
 
         #region CountTestsAction
 
-        /// <summary>
-        /// CountTestsAction counts the number of test cases in the loaded TestSuite
-        /// held by the TestController.
-        /// </summary>
+        ///// <summary>
+        ///// CountTestsAction counts the number of test cases in the loaded TestSuite
+        ///// held by the TestController.
+        ///// </summary>
         //public class CountTestsAction : TestControllerAction
         //{
         //    /// <summary>

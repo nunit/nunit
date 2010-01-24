@@ -77,6 +77,7 @@ namespace NUnit.Core.Extensibility
         /// </summary>
         /// <param name="parameter">A ParameterInfo representing one
         /// argument to a parameterized test</param>
+        /// <param name="suite">The test suite for which tests are being constructed</param>
         /// <returns>True if any data is available, otherwise false.</returns>
         public bool HasDataFor(ParameterInfo parameter, Test suite)
         {
@@ -101,6 +102,7 @@ namespace NUnit.Core.Extensibility
         /// </summary>
         /// <param name="parameter">A ParameterInfo representing one
         /// argument to a parameterized test</param>
+        /// <param name="suite">The test suite for which tests are being constructed</param>
         /// <returns>An IEnumerable providing the required data</returns>
         public IEnumerable GetDataFor(ParameterInfo parameter, Test suite)
         {

@@ -64,6 +64,7 @@ namespace NUnit.Framework.Internal
 		/// system and common language runtime. Used in testing.
 		/// </summary>
 		/// <param name="os">OperatingSystem to be used</param>
+        /// <param name="rt">RuntimeFramework to be used</param>
 		public PlatformHelper( OSPlatform os, RuntimeFramework rt )
 		{
 			this.os = os;

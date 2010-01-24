@@ -38,12 +38,30 @@ namespace NUnit.Framework.Internal
     {
         #region TraceLevel Enumeration
 
+        /// <summary>
+        /// The TraceLevel enumeration defines the verbosity levels supported by InternalTrace.
+        /// </summary>
         public enum TraceLevel
         {
+            /// <summary>
+            /// All tracing is off.
+            /// </summary>
             Off,
+            /// <summary>
+            /// Report errors only.
+            /// </summary>
             Error,
+            /// <summary>
+            /// Report warnings and above.
+            /// </summary>
             Warning,
+            /// <summary>
+            /// Report informational entries and above.
+            /// </summary>
             Info,
+            /// <summary>
+            /// Report debug entries and above (all entries)
+            /// </summary>
             Debug
         }
 
@@ -61,6 +79,11 @@ namespace NUnit.Framework.Internal
         #endregion
 
         #region Static Properties
+
+        /// <summary>
+        /// Gets the writer used to output messages.
+        /// </summary>
+        /// <value>The writer.</value>
         public static StreamWriter Writer
         {
             get 
@@ -73,25 +96,41 @@ namespace NUnit.Framework.Internal
             }
         }
 
+        /// <summary>
+        /// Gets or sets the TraceLevel
+        /// </summary>
+        /// <value>The level of messages to write.</value>
         public static TraceLevel Level
         {
             get { return level; }
             set { level = value; }
         }
+
         #endregion
 
         #region Public Static Methods
+
+        /// <summary>
+        /// Opens the specified log name for writing trace entries.
+        /// </summary>
+        /// <param name="logName">Name of the log.</param>
         public static void Open(string logName)
         {
             writer = new StreamWriter(logName);
         }
 
+        /// <summary>
+        /// Flushes the output writer.
+        /// </summary>
         public static void Flush()
         {
             if (writer != null)
                 writer.Flush();
         }
 
+        /// <summary>
+        /// Closes the output writer.
+        /// </summary>
         public static void Close()
         {
             if (writer != null)
@@ -100,21 +139,41 @@ namespace NUnit.Framework.Internal
             writer = null;
         }
 
+        /// <summary>
+        /// Issue a message at the Error level.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <param name="args">The args.</param>
         public static void Error(string message, params object[] args)
         {
             WriteTrace(TraceLevel.Error, message, args);
         }
 
+        /// <summary>
+        /// Issue a message at the Warning level.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <param name="args">The args.</param>
         public static void Warning(string message, params object[] args)
         {
             WriteTrace(TraceLevel.Warning, message, args);
         }
 
+        /// <summary>
+        /// Issue a message at the Info level.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <param name="args">The args.</param>
         public static void Info(string message, params object[] args)
         {
             WriteTrace(TraceLevel.Info, message, args);
         }
 
+        /// <summary>
+        /// Issue a message at the Debug level.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <param name="args">The args.</param>
         public static void Debug(string message, params object[] args)
         {
             WriteTrace(TraceLevel.Debug, message, args);

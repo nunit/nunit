@@ -39,6 +39,7 @@ namespace NUnit.Framework.Api
         /// Loads the tests found in an Assembly
         /// </summary>
         /// <param name="assemblyName">File name of the assembly to load</param>
+        /// <param name="options">Dictionary of options to use in loading the test</param>
         /// <returns>True if the load was successful</returns>
         bool Load(string assemblyName, System.Collections.IDictionary options);
 

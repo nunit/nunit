@@ -77,6 +77,11 @@ namespace NUnit.Core.Extensibility
 		#endregion
 
 		#region ExtensionPoint Overrides
+
+        /// <summary>
+        /// Determines whether the specified extension is an ISuiteBuilder.
+        /// </summary>
+        /// <param name="extension">The extension.</param>
 		protected override bool IsValidExtension(object extension)
 		{
 			return extension is ISuiteBuilder; 

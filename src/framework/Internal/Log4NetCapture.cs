@@ -59,7 +59,10 @@ namespace NUnit.Framework.Internal
 		private static readonly string logFormat =
 			"%d{ABSOLUTE} %-5p [%4t] %c{1} [%x]- %m%n";
 
-		protected override void StartCapture()
+        /// <summary>
+        /// Starts capture of the log4net logging output.
+        /// </summary>
+        protected override void StartCapture()
 		{
 			if ( IsInitialized )
 			{
@@ -72,7 +75,10 @@ namespace NUnit.Framework.Internal
 			}
 		}
 
-		protected override void StopCapture()
+        /// <summary>
+        /// Stops capture of the log4net logging output.
+        /// </summary>
+        protected override void StopCapture()
 		{
 			if ( appender != null )
 			{
@@ -82,6 +88,7 @@ namespace NUnit.Framework.Internal
 		}
 
 		#region Helpers
+
 		private bool IsInitialized
 		{
 			get
@@ -192,6 +199,7 @@ namespace NUnit.Framework.Internal
 			if ( configureMethod != null )
 				configureMethod.Invoke( null, new object[] { appender } );
 		}
+
 		#endregion
 	}
 }

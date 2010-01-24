@@ -42,7 +42,16 @@ namespace NUnit.Framework.Attributes
         public void GetParentThreadInfo()
         {
 			this.parentThread = Thread.CurrentThread;
-			this.parentThreadApartment = parentThread.ApartmentState;
+            this.parentThreadApartment = GetApartmentState(parentThread);
+        }
+
+        private static ApartmentState GetApartmentState(Thread thread)
+        { 
+#if CLR_2_0
+            return thread.GetApartmentState();
+#else
+			return thread.ApartmentState;
+#endif
         }
 
         [SetUp]
@@ -92,7 +101,7 @@ namespace NUnit.Framework.Attributes
         [Test, RequiresSTA]
         public void TestWithRequiresSTARunsInSTA()
         {
-            Assert.That(Thread.CurrentThread.ApartmentState, Is.EqualTo(ApartmentState.STA));
+            Assert.That(GetApartmentState(Thread.CurrentThread), Is.EqualTo(ApartmentState.STA));
             if (parentThreadApartment == ApartmentState.STA)
                 Assert.That(Thread.CurrentThread, Is.EqualTo(parentThread));
         }
@@ -100,7 +109,7 @@ namespace NUnit.Framework.Attributes
         [Test, RequiresMTA]
         public void TestWithRequiresMTARunsInMTA()
         {
-            Assert.That(Thread.CurrentThread.ApartmentState, Is.EqualTo(ApartmentState.MTA));
+            Assert.That(GetApartmentState(Thread.CurrentThread), Is.EqualTo(ApartmentState.MTA));
             if (parentThreadApartment == ApartmentState.MTA)
                 Assert.That(Thread.CurrentThread, Is.EqualTo(parentThread));
         }
@@ -120,14 +129,14 @@ namespace NUnit.Framework.Attributes
         [Test, RequiresThread(ApartmentState.STA)]
         public void TestWithRequiresThreadWithSTAArgRunsOnSeparateThreadInSTA()
         {
-            Assert.That(Thread.CurrentThread.ApartmentState, Is.EqualTo(ApartmentState.STA));
+            Assert.That(GetApartmentState(Thread.CurrentThread), Is.EqualTo(ApartmentState.STA));
             Assert.That(Thread.CurrentThread, Is.Not.EqualTo(parentThread));
         }
 
         [Test, RequiresThread(ApartmentState.MTA)]
         public void TestWithRequiresThreadWithMTAArgRunsOnSeparateThreadInMTA()
         {
-            Assert.That(Thread.CurrentThread.ApartmentState, Is.EqualTo(ApartmentState.MTA));
+            Assert.That(GetApartmentState(Thread.CurrentThread), Is.EqualTo(ApartmentState.MTA));
             Assert.That(Thread.CurrentThread, Is.Not.EqualTo(parentThread));
         }
 
@@ -148,7 +157,7 @@ namespace NUnit.Framework.Attributes
             [Test]
             public void RequiresSTACanBeSetOnTestFixture()
             {
-                Assert.That(Thread.CurrentThread.ApartmentState, Is.EqualTo(ApartmentState.STA));
+                Assert.That(GetApartmentState(Thread.CurrentThread), Is.EqualTo(ApartmentState.STA));
             }
         }
 
@@ -158,7 +167,7 @@ namespace NUnit.Framework.Attributes
             [Test]
             public void RequiresMTACanBeSetOnTestFixture()
             {
-                Assert.That(Thread.CurrentThread.ApartmentState, Is.EqualTo(ApartmentState.MTA));
+                Assert.That(GetApartmentState(Thread.CurrentThread), Is.EqualTo(ApartmentState.MTA));
             }
         }
 

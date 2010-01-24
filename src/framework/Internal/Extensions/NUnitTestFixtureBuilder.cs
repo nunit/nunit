@@ -180,8 +180,9 @@ namespace NUnit.Core.Builders
 		/// Derived classes should add builders to the collection
 		/// in their constructor.
 		/// </summary>
-		/// <param name="method"></param>
-		/// <returns></returns>
+		/// <param name="method">The MethodInfo for which a test is to be created</param>
+        /// <param name="suite">The test suite being built.</param>
+		/// <returns>A newly constructed Test</returns>
 		private Test BuildTestCase( MethodInfo method, TestSuite suite )
 		{
             Test test = testBuilders.BuildFrom( method, suite );

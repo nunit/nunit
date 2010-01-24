@@ -48,6 +48,10 @@ namespace NUnit.Framework.Internal
 
 		#region Constructor
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NamespaceTreeBuilder"/> class.
+        /// </summary>
+        /// <param name="rootSuite">The root suite.</param>
 		public NamespaceTreeBuilder( TestSuite rootSuite )
 		{
 			this.rootSuite = rootSuite;
@@ -57,6 +61,10 @@ namespace NUnit.Framework.Internal
 
 		#region Properties
 
+        /// <summary>
+        /// Gets the root entry in the tree created by the NamespaceTreeBuilder.
+        /// </summary>
+        /// <value>The root suite.</value>
 		public TestSuite RootSuite
 		{
 			get { return rootSuite; }
@@ -66,6 +74,10 @@ namespace NUnit.Framework.Internal
 
 		#region Public Methods
 
+        /// <summary>
+        /// Adds the specified fixtures to the tree.
+        /// </summary>
+        /// <param name="fixtures">The fixtures to be added.</param>
 		public void Add( IList fixtures )
 		{
             foreach (TestSuite fixture in fixtures)
@@ -75,9 +87,12 @@ namespace NUnit.Framework.Internal
                     Add( fixture );
 		}
 
+        /// <summary>
+        /// Adds the specified fixture to the tree.
+        /// </summary>
+        /// <param name="fixture">The fixture to be added.</param>
 		public void Add( TestSuite fixture )
 		{
-            
             string ns = fixture.FullName;
             int index = ns.IndexOf("[");
             if (index >= 0) ns = ns.Substring(0, index);

@@ -80,6 +80,9 @@ namespace NUnit.Framework.Internal
             get { return synchronous; }
         }
 
+        /// <summary>
+        /// Gets a value that indicates whether the asynchronous operation has completed.
+        /// </summary>
         public bool IsCompleted
         {
             get { return isCompleted; }

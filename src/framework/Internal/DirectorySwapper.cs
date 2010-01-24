@@ -43,8 +43,17 @@ namespace NUnit.Framework.Internal
 	{
 		private string savedDirectoryName;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DirectorySwapper"/> class,
+        /// saving the CurrentDirectory.
+        /// </summary>
 		public DirectorySwapper() : this( null ) { }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DirectorySwapper"/> class,
+        /// saving the CurrentDirectory and setting it to a new value.
+        /// </summary>
+        /// <param name="directoryName">Name of the directory.</param>
 		public DirectorySwapper( string directoryName )
 		{
 			savedDirectoryName = Environment.CurrentDirectory;
@@ -53,6 +62,9 @@ namespace NUnit.Framework.Internal
 				Environment.CurrentDirectory = directoryName;
 		}
 
+        /// <summary>
+        /// Restores the saved value of CurrentDirectory.
+        /// </summary>
 		public void Dispose()
 		{
 			Environment.CurrentDirectory = savedDirectoryName;

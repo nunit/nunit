@@ -39,8 +39,14 @@ namespace NUnit.Core.Extensibility
 	public class TestCaseBuilderCollection : ExtensionPoint, ITestCaseBuilder2
 	{
 		#region Constructor
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TestCaseBuilderCollection"/> class.
+        /// </summary>
+        /// <param name="host">The host.</param>
 		public TestCaseBuilderCollection(IExtensionHost host)
 			: base("TestCaseBuilders", host) { }
+
 		#endregion
 
         #region ITestCaseBuilder Members
@@ -82,6 +88,7 @@ namespace NUnit.Core.Extensibility
         /// any TestCaseBuilder to use in building a Test
         /// </summary>
         /// <param name="method">The method to be used as a test case</param>
+        /// <param name="suite">The test suite for which the method is being built</param>
         /// <returns>True if the method can be used to build a Test</returns>
         public bool CanBuildFrom(MethodInfo method, Test suite)
         {
@@ -104,6 +111,7 @@ namespace NUnit.Core.Extensibility
         /// Build a Test from the method provided.
         /// </summary>
         /// <param name="method">The method to be used</param>
+        /// <param name="suite">The test suite for which the method is being built</param>
         /// <returns>A Test or null</returns>
         public Test BuildFrom(MethodInfo method, Test suite)
         {
@@ -124,10 +132,19 @@ namespace NUnit.Core.Extensibility
         #endregion
 
         #region ExtensionPoint Overrides
+
+        /// <summary>
+        /// Determines whether an objext is a valid TestCaseBuilder extension.
+        /// </summary>
+        /// <param name="extension">The extension.</param>
+        /// <returns>
+        /// 	<c>true</c> if the specified extension is a valid TestCaseBuilder; otherwise, <c>false</c>.
+        /// </returns>
 		protected override bool IsValidExtension(object extension)
 		{
 			return extension is ITestCaseBuilder; 
 		}
+
 		#endregion
 	}
 }

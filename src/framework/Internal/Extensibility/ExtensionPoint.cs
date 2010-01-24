@@ -136,10 +136,19 @@ namespace NUnit.Core.Extensibility
 		#endregion
 
 		#region Abstract Members
+
+        /// <summary>
+        /// Determines whether the specified extension is valid for this extension point.
+        /// </summary>
+        /// <param name="extension">The extension.</param>
 		protected abstract bool IsValidExtension(object extension);
+
 		#endregion
 	}
 
+    /// <summary>
+    /// ExtensionPointList represents a collection of extension points in a cross-platform manner.
+    /// </summary>
 #if CLR_2_0
     public class ExtensionPointList : System.Collections.Generic.List<ExtensionPoint> { }
 #else
