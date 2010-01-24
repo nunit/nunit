@@ -44,6 +44,14 @@ namespace NUnit.Core.Builders
         #endregion
 
         #region ITestCaseProvider Members
+
+        /// <summary>
+        /// Determine whether any test cases are available for a parameterized method.
+        /// </summary>
+        /// <param name="method">A MethodInfo representing a parameterized test</param>
+        /// <returns>
+        /// True if any cases are available, otherwise false.
+        /// </returns>
         public bool HasTestCasesFor(System.Reflection.MethodInfo method)
         {
             if (method.GetParameters().Length == 0)
@@ -56,6 +64,12 @@ namespace NUnit.Core.Builders
             return true;
         }
 
+        /// <summary>
+        /// Return an IEnumerable providing test cases for use in
+        /// running a paramterized test.
+        /// </summary>
+        /// <param name="method"></param>
+        /// <returns></returns>
         public IEnumerable GetTestCasesFor(MethodInfo method)
         {
             return GetStrategy(method, null).GetTestCases();
@@ -63,18 +77,42 @@ namespace NUnit.Core.Builders
         #endregion
 
         #region ITestCaseProvider2 Members
+
+        /// <summary>
+        /// Determine whether any test cases are available for a parameterized method.
+        /// </summary>
+        /// <param name="method">A MethodInfo representing a parameterized test</param>
+        /// <param name="suite">The suite for which the test case is being built</param>
+        /// <returns>
+        /// True if any cases are available, otherwise false.
+        /// </returns>
         public bool HasTestCasesFor(System.Reflection.MethodInfo method, Test suite)
         {
             return HasTestCasesFor(method);
         }
 
+        /// <summary>
+        /// Return an IEnumerable providing test cases for use in
+        /// running a paramterized test.
+        /// </summary>
+        /// <param name="method"></param>
+        /// <param name="suite">The suite for which the test case is being built</param>
+        /// <returns></returns>
         public IEnumerable GetTestCasesFor(MethodInfo method, Test suite)
         {
             return GetStrategy(method, suite).GetTestCases();
         }
+
         #endregion
 
         #region GetStrategy
+
+        /// <summary>
+        /// Gets the strategy to be used in building test cases for this test.
+        /// </summary>
+        /// <param name="method">The method for which test cases are being built.</param>
+        /// <param name="suite">The suite to which methods will be added.</param>
+        /// <returns></returns>
         private CombiningStrategy GetStrategy(MethodInfo method, Test suite)
         {
             ParameterInfo[] parameters = method.GetParameters();
@@ -91,6 +129,7 @@ namespace NUnit.Core.Builders
 
             return new CombinatorialStrategy(sources);
         }
+
         #endregion
     }
 }

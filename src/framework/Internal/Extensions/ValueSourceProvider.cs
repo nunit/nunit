@@ -37,12 +37,6 @@ namespace NUnit.Core.Builders
     /// </summary>
     public class ValueSourceProvider : IDataPointProvider2
     {
-        #region Constants
-        public const string SourcesAttribute = "NUnit.Framework.ValueSourceAttribute";
-        public const string SourceTypeProperty = "SourceType";
-        public const string SourceNameProperty = "SourceName";
-        #endregion
-
         #region IDataPointProvider Members
 
         /// <summary>

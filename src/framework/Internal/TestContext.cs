@@ -56,13 +56,20 @@ namespace NUnit.Framework.Internal
 		private static ContextHolder current = new ContextHolder();
 		#endregion
 
-		#region Static Methods
+		#region Static Properties
+
+        /// <summary>
+        /// Gets or sets a value indicating whether trace output is captured.
+        /// </summary>
 		public static bool Tracing
 		{
 			get { return current.Tracing; }
 			set { current.Tracing = value; }
 		}
 
+        /// <summary>
+        /// Gets or sets a value indicating whether logging output is captured.
+        /// </summary>
 		public static bool Logging
 		{
 			get { return current.Logging; }
@@ -96,6 +103,10 @@ namespace NUnit.Framework.Internal
 			set { current.TraceWriter = value; }
 		}
 
+        /// <summary>
+        /// Gets or sets the log writer.
+        /// </summary>
+        /// <value>The log writer.</value>
 		public static TextWriter LogWriter
 		{
 			get { return current.LogWriter; }
@@ -111,25 +122,41 @@ namespace NUnit.Framework.Internal
 			set { current.CurrentDirectory = value; }
 		}
 
+        /// <summary>
+        /// Gets or sets the current culture.
+        /// </summary>
+        /// <value>The current culture.</value>
 		public static CultureInfo CurrentCulture
 		{
 			get { return current.CurrentCulture; }
 			set { current.CurrentCulture = value; }
 		}
 
+        /// <summary>
+        /// Gets or sets the current UI culture.
+        /// </summary>
+        /// <value>The current UI culture.</value>
         public static CultureInfo CurrentUICulture
         {
             get { return current.CurrentUICulture; }
             set { current.CurrentUICulture = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the test case timeout.
+        /// </summary>
+        /// <value>The test case timeout.</value>
         public static int TestCaseTimeout
         {
             get { return current.TestCaseTimeout; }
             set { current.TestCaseTimeout = value; }
         }
-		
-		/// <summary>
+
+        #endregion
+
+        #region Static Methods
+
+        /// <summary>
 		/// Saves the old context and makes a fresh one 
 		/// current without changing any settings.
 		/// </summary>
@@ -142,14 +169,16 @@ namespace NUnit.Framework.Internal
 		/// Restores the last saved context and puts
 		/// any saved settings back into effect.
 		/// </summary>
-		public static void Restore()
-		{
-			current.ReverseChanges();
-			current = current.prior;
-		}
+        public static void Restore()
+        {
+            current.ReverseChanges();
+            current = current.prior;
+        }
+
 		#endregion
 
 		#region Construct and Dispose
+
 		/// <summary>
 		/// The constructor saves the current context.
 		/// </summary>
@@ -165,9 +194,11 @@ namespace NUnit.Framework.Internal
 		{
 			TestContext.Restore();
 		}
+
 		#endregion
 
 		#region ContextHolder internal class
+
 		private class ContextHolder
 		{
 			/// <summary>

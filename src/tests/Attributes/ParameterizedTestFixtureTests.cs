@@ -119,7 +119,6 @@ namespace NUnit.Framework.Attributes
     public class ParameterizedTestFixtureNamingTests
     {
         TestSuite fixture;
-        Test[] instances;
 
         [SetUp]
         public void MakeFixture()

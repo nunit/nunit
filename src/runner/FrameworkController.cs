@@ -73,15 +73,12 @@ namespace NUnit.AdhocTestRunner
         private object CreateObject(string typeName, params object[] args)
         {
             return this.testDomain.CreateInstanceAndUnwrap(
-                "nunit.framework",
-                typeName,
-                false,
-                0,
-                null,
-                args,
-                null,
-                null,
-                null);
+                "nunit.framework", typeName, false, 0,
+#if !NET_4_0
+                null, args, null, null, null );
+#else
+                null, args, null, null );
+#endif
         }
 
         #endregion

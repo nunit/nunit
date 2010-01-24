@@ -78,7 +78,6 @@ namespace NUnit.Framework.Internal
         /// notifications to a listener.
         /// </summary>
         /// <param name="listener">An event listener to receive notifications</param>
-        /// <param name="filter">A filter used in running the test</param>
         /// <returns></returns>
 		public override TestResult Run(ITestListener listener)
 		{

@@ -55,8 +55,12 @@ namespace NUnit.Framework
             this.reason = reason;
         }
 
-        #region ISetRunState members
+        #region IApplyToTest members
 
+        /// <summary>
+        /// Modifies a test by marking it as explicit.
+        /// </summary>
+        /// <param name="test">The test to modify</param>
         public void ApplyToTest(ITest test)
         {
             if (test.RunState != RunState.NotRunnable)

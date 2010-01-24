@@ -89,9 +89,9 @@ namespace NUnit.Framework.Internal
 		}
 	}
 
-	/// <summary>
-	/// This wrapper adds buffering to improve cross-domain performance.
-	/// </summary>
+    ///// <summary>
+    ///// This wrapper adds buffering to improve cross-domain performance.
+    ///// </summary>
     //public class BufferedEventListenerTextWriter : TextWriter
     //{
     //    private ITestListener listener;

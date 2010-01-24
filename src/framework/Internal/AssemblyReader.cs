@@ -57,12 +57,20 @@ namespace NUnit.Framework.Internal
 
 		private Section[] sections;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AssemblyReader"/> class.
+        /// </summary>
+        /// <param name="assemblyPath">The assembly path.</param>
 		public AssemblyReader( string assemblyPath )
 		{
 			this.assemblyPath = assemblyPath;
 			CalcHeaderOffsets();
 		}
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AssemblyReader"/> class.
+        /// </summary>
+        /// <param name="assembly">The assembly.</param>
 		public AssemblyReader( Assembly assembly )
 		{
 			this.assemblyPath = AssemblyHelper.GetAssemblyPath( assembly );
@@ -123,21 +131,41 @@ namespace NUnit.Framework.Internal
 			return 0;
 		}
 
+        /// <summary>
+        /// Gets the assembly path.
+        /// </summary>
+        /// <value>The assembly path.</value>
 		public string AssemblyPath
 		{
 			get { return assemblyPath; }
 		}
 
+        /// <summary>
+        /// Gets a value indicating whether this instance is a valid PE file.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if this instance is a valid PE file; otherwise, <c>false</c>.
+        /// </value>
 		public bool IsValidPeFile
 		{
 			get { return dos_magic == 0x5a4d && pe_signature == 0x00004550; }
 		}
 
+        /// <summary>
+        /// Gets a value indicating whether this instance is a .NET executable.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if this instance is a .NET executable; otherwise, <c>false</c>.
+        /// </value>
 		public bool IsDotNetFile
 		{
 			get { return IsValidPeFile && DataDirectoryRva(14) != 0; }
 		}
 
+        /// <summary>
+        /// Gets the image runtime version for the assembly.
+        /// </summary>
+        /// <value>The image runtime version.</value>
 		public string ImageRuntimeVersion
 		{
 			get 
@@ -172,6 +200,9 @@ namespace NUnit.Framework.Internal
 			}
 		}
 
+        /// <summary>
+        /// Closes the file stream and reader and sets references to null.
+        /// </summary>
 		public void Dispose()
 		{
 			if ( fs != null )

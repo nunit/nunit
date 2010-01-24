@@ -54,7 +54,7 @@ namespace NUnit.Framework
 			this.reason = reason;
         }
 
-        #region ISetRunState members
+        #region IApplyToTest members
 
         /// <summary>
         /// Modifies a test by marking it as Ignored.

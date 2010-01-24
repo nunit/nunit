@@ -29,7 +29,7 @@ using Microsoft.Win32;
 namespace NUnit.Framework.Internal
 {
 	/// <summary>
-	/// Enumeration identifying a common language 
+	/// Enumeration identifying a common language
 	/// runtime implementation.
 	/// </summary>
 	public enum RuntimeType

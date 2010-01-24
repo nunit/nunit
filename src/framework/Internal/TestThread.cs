@@ -50,6 +50,9 @@ namespace NUnit.Framework.Internal
         /// </summary>
         protected TestResult testResult;
 
+        /// <summary>
+        /// The ITestListener to receive progress event calls
+        /// </summary>
         protected ITestListener listener;
 
         /// <summary>
@@ -59,6 +62,11 @@ namespace NUnit.Framework.Internal
         #endregion
 
         #region Constructor
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TestThread"/> class.
+        /// </summary>
+        /// <param name="test">The test.</param>
         protected TestThread(Test test)
         {
             this.test = test;
@@ -71,9 +79,15 @@ namespace NUnit.Framework.Internal
             if ( test.ApartmentState != ApartmentState.Unknown )
                 this.ApartmentState = test.ApartmentState;
         }
+
         #endregion
 
         #region Properties
+
+        /// <summary>
+        /// Gets or sets the desired ApartmentState.
+        /// </summary>
+        /// <value>The ApartmentState to use for the test.</value>
         public ApartmentState ApartmentState
         {
 #if CLR_2_0
@@ -84,6 +98,7 @@ namespace NUnit.Framework.Internal
             set { thread.ApartmentState = value; }
 #endif
         }
+
         #endregion
 
         /// <summary>
@@ -138,20 +153,41 @@ namespace NUnit.Framework.Internal
             }
         }
 
+        /// <summary>
+        /// Gets the timeout.
+        /// </summary>
+        /// <value>The timeout.</value>
+
         protected abstract int Timeout { get; }
+
+        /// <summary>
+        /// Runs the test.
+        /// </summary>
         protected abstract void RunTest();
     }
 
+    /// <summary>
+    /// TestMethodThread is a specialized version of TestThread
+    /// used for running methods.
+    /// </summary>
     public class TestMethodThread : TestThread
     {
         private TestMethod testMethod;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TestMethodThread"/> class.
+        /// </summary>
+        /// <param name="testMethod">The test method to be run.</param>
         public TestMethodThread(TestMethod testMethod)
             : base(testMethod)
         {
             this.testMethod = testMethod;
         }
 
+        /// <summary>
+        /// Gets the timeout to be used for this test.
+        /// </summary>
+        /// <value>The timeout.</value>
         protected override int Timeout
         {
             get 
@@ -162,27 +198,44 @@ namespace NUnit.Framework.Internal
             }
         }
 
+        /// <summary>
+        /// Runs the test.
+        /// </summary>
         protected override void RunTest()
         {
             testMethod.doRun(testResult);
         }
     }
 
+    /// <summary>
+    /// TestSuiteThread specializes TestThread for running a test suite.
+    /// </summary>
     public class TestSuiteThread : TestThread
     {
         private TestSuite suite;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TestSuiteThread"/> class.
+        /// </summary>
+        /// <param name="suite">The suite.</param>
         public TestSuiteThread(TestSuite suite)
             : base(suite)
         {
             this.suite = suite;
         }
 
+        /// <summary>
+        /// Gets the timeout value to be used in running the test.
+        /// </summary>
+        /// <value>The timeout.</value>
         protected override int Timeout
         {
             get { return System.Threading.Timeout.Infinite; }
         }
 
+        /// <summary>
+        /// Runs the test.
+        /// </summary>
         protected override void RunTest()
         {
             suite.Run(testResult, listener);

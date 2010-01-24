@@ -67,8 +67,8 @@ namespace NUnit.Framework
         /// </summary>
         private string expectedExceptionName;
 
-        private string expectedMessage;
-        private MessageMatch matchType;
+        //private string expectedMessage;
+        //private MessageMatch matchType;
 
         /// <summary>
         /// The name to be used for the test
@@ -182,7 +182,7 @@ namespace NUnit.Framework
         /// <value>The expected message of the exception.</value>
         public string ExpectedMessage
         {
-            get { return expectedMessage; }
+            get { return null; }
         }
 
         /// <summary>
@@ -190,7 +190,7 @@ namespace NUnit.Framework
         /// </summary>
         public MessageMatch MatchType
         {
-            get { return matchType; }
+            get { return 0; }
         }
 
         /// <summary>
