@@ -49,8 +49,11 @@ namespace NUnit.Framework.Internal
         /// <returns>The new top level element node.</returns>
         protected override System.Xml.XmlNode AddTopLevelElement(System.Xml.XmlNode parentNode)
         {
-            return XmlHelper.AddElement(parentNode, suite.ParameterizedType.ContainsGenericParameters
-                ? "generic-fixture" : "parameterized-fixture");
+#if CLR_2_0
+            if (suite.ParameterizedType.ContainsGenericParameters)
+                return XmlHelper.AddElement(parentNode, "generic-fixture");
+#endif
+            return XmlHelper.AddElement(parentNode, "parameterized-fixture");
         }
     }
 }
