@@ -20,7 +20,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;NET_3_5;CLR_2_0</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NET_3_5;CLR_2_0;CS_3_0</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>
@@ -30,7 +30,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\bin\Release\</OutputPath>
-    <DefineConstants>TRACE;NET_3_5;CLR_2_0</DefineConstants>
+    <DefineConstants>TRACE;NET_3_5;CLR_2_0;CS_3_0</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>
@@ -283,6 +283,9 @@
     <Compile Include="..\..\..\src\tests\Internal\RuntimeFrameworkTests.cs">
       <Link>Internal\RuntimeFrameworkTests.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\tests\Internal\TestResultTests.cs">
+      <Link>Internal\TestResultTests.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\tests\Internal\TextMessageWriterTests.cs">
       <Link>Internal\TextMessageWriterTests.cs</Link>
     </Compile>
@@ -402,9 +405,6 @@
     </Compile>
     <Compile Include="..\..\..\src\tests\Internal\EventQueueTests.cs">
       <Link>Internal\EventQueueTests.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\tests\Api\TestResultTests.cs">
-      <Link>Api\TestResultTests.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup>

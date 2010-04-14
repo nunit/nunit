@@ -100,7 +100,7 @@ namespace NUnit.Core.Builders
 		#region Helper Methods
         private Test BuildMultipleFixtures(Type type, TestFixtureAttribute[] attrs)
         {
-            TestSuite suite = new TestSuite(type.Namespace, TypeHelper.GetDisplayName(type));
+            TestSuite suite = new ParameterizedFixtureSuite(type);
 
             foreach (TestFixtureAttribute attr in attrs)
                 suite.Add(BuildSingleFixture(type, attr));

@@ -23,10 +23,10 @@
 
 using System;
 using System.Xml;
-using NUnit.Framework.Internal;
+using NUnit.Framework.Api;
 using NUnit.TestUtilities;
 
-namespace NUnit.Framework.Api
+namespace NUnit.Framework.Internal
 {
 	/// <summary>
 	/// Summary description for TestResultTests.
@@ -35,15 +35,24 @@ namespace NUnit.Framework.Api
 	public abstract class TestResultTests
 	{
 		protected TestCaseResult testResult;
-        protected CompositeResult suiteResult;
+        protected TestSuiteResult suiteResult;
         protected XmlNode testNode;
         protected XmlNode suiteNode;
 
 		[SetUp]
 		public void SetUp()
 		{
-			testResult = new TestCaseResult( new TestMethod(Reflect.GetNamedMethod( typeof(DummySuite), "DummyMethod" ) ) );
-            suiteResult = new CompositeResult(new TestSuite(typeof(DummySuite)));
+            TestMethod test = new TestMethod(Reflect.GetNamedMethod(typeof(DummySuite), "DummyMethod"));
+            test.Description = "Test description";
+            test.Categories.Add("Dubious");
+            test.Properties["Priority"] = "low";
+			testResult = new TestCaseResult(test);
+
+            TestSuite suite = new TestSuite(typeof(DummySuite));
+            suite.Description = "Suite description";
+            suite.Categories.Add("Fast");
+            suite.Properties.Add("Value", 3);
+            suiteResult = new TestSuiteResult(suite);
 
             SetResultState();
             suiteResult.AddResult(testResult);
@@ -56,26 +65,31 @@ namespace NUnit.Framework.Api
         public void TestResultBasicInfo()
         {
             Assert.AreEqual("DummyMethod", testResult.Name);
-            Assert.AreEqual("NUnit.Framework.Api.TestResultTests+DummySuite.DummyMethod", testResult.FullName);
-            Assert.AreEqual(0.0, testResult.Time);
+            Assert.AreEqual("NUnit.Framework.Internal.TestResultTests+DummySuite.DummyMethod", testResult.FullName);
         }
 
         [Test]
         public void SuiteResultBasicInfo()
         {
             Assert.AreEqual("TestResultTests+DummySuite", suiteResult.Name);
-            Assert.AreEqual("NUnit.Framework.Api.TestResultTests+DummySuite", suiteResult.FullName);
-            Assert.AreEqual(0.0, suiteResult.Time);
+            Assert.AreEqual("NUnit.Framework.Internal.TestResultTests+DummySuite", suiteResult.FullName);
         }
 
         [Test]
         public void TestResultXmlNodeBasicInfo()
         {
             Assert.True(testNode is XmlElement);
+            Assert.NotNull(testNode.Attributes["id"]);
             Assert.AreEqual("test-case", testNode.Name);
             Assert.AreEqual("DummyMethod", testNode.Attributes["name"].Value);
-            Assert.AreEqual("NUnit.Framework.Api.TestResultTests+DummySuite.DummyMethod", testNode.Attributes["fullname"].Value);
-            Assert.AreEqual("0.000", testNode.Attributes["time"].Value);
+            Assert.AreEqual("NUnit.Framework.Internal.TestResultTests+DummySuite.DummyMethod", testNode.Attributes["fullname"].Value);
+            Assert.AreEqual("Test description", testNode.Attributes["description"].Value);
+
+            Assert.AreEqual("Dubious", testNode.SelectSingleNode("categories/category").Attributes["name"].Value);
+
+            Assert.AreEqual("Priority", testNode.SelectSingleNode("properties/property").Attributes["name"].Value);
+            Assert.AreEqual("low", testNode.SelectSingleNode("properties/property").Attributes["value"].Value);
+
             Assert.AreEqual(0, testNode.SelectNodes("test-case").Count);
         }
 
@@ -83,10 +97,16 @@ namespace NUnit.Framework.Api
         public void SuiteResultXmlNodeBasicInfo()
         {
             Assert.True(suiteNode is XmlElement);
+            Assert.NotNull(suiteNode.Attributes["id"]);
             Assert.AreEqual("test-suite", suiteNode.Name);
             Assert.AreEqual("TestResultTests+DummySuite", suiteNode.Attributes["name"].Value);
-            Assert.AreEqual("NUnit.Framework.Api.TestResultTests+DummySuite", suiteNode.Attributes["fullname"].Value);
-            Assert.AreEqual("0.000", suiteNode.Attributes["time"].Value);
+            Assert.AreEqual("NUnit.Framework.Internal.TestResultTests+DummySuite", suiteNode.Attributes["fullname"].Value);
+            Assert.AreEqual("Suite description", suiteNode.Attributes["description"].Value);
+
+            Assert.AreEqual("Fast", suiteNode.SelectSingleNode("categories/category").Attributes["name"].Value);
+
+            Assert.AreEqual("Value", suiteNode.SelectSingleNode("properties/property").Attributes["name"].Value);
+            Assert.AreEqual("3", suiteNode.SelectSingleNode("properties/property").Attributes["value"].Value);
         }
 
         protected abstract void SetResultState();
@@ -108,7 +128,8 @@ namespace NUnit.Framework.Api
         {
             Assert.AreEqual(ResultState.Inconclusive, testResult.ResultState);
             Assert.AreEqual(TestStatus.Inconclusive, testResult.ResultState.Status);
-            Assert.AreEqual("Inconclusive", testResult.ResultState.Label);
+            Assert.Null(testResult.ResultState.Label);
+            Assert.AreEqual(0.0, testResult.Time);
         }
 
         [Test]
@@ -116,7 +137,12 @@ namespace NUnit.Framework.Api
         {
             Assert.AreEqual(ResultState.Inconclusive, suiteResult.ResultState);
             Assert.AreEqual(TestStatus.Inconclusive, suiteResult.ResultState.Status);
-            Assert.AreEqual("Inconclusive", suiteResult.ResultState.Label);
+            Assert.Null(suiteResult.ResultState.Label);
+            Assert.AreEqual("0", suiteNode.Attributes["passed"].Value);
+            Assert.AreEqual("0", suiteNode.Attributes["failed"].Value);
+            Assert.AreEqual("0", suiteNode.Attributes["skipped"].Value);
+            Assert.AreEqual("1", suiteNode.Attributes["inconclusive"].Value);
+            Assert.AreEqual("0", suiteNode.Attributes["asserts"].Value);
         }
 
         [Test]
@@ -143,6 +169,9 @@ namespace NUnit.Framework.Api
         protected override void SetResultState()
         {
             testResult.SetResult(ResultState.Success);
+            testResult.Time = 0.125;
+            suiteResult.Time = 0.125;
+            testResult.AssertCount = 2;
         }
 
         [Test]
@@ -150,7 +179,8 @@ namespace NUnit.Framework.Api
         {
             Assert.True(testResult.ResultState == ResultState.Success);
             Assert.AreEqual(TestStatus.Passed, testResult.ResultState.Status);
-            Assert.AreEqual("Passed", testResult.ResultState.Label);
+            Assert.Null(testResult.ResultState.Label);
+            Assert.AreEqual(0.125, testResult.Time);
         }
 
         [Test]
@@ -158,19 +188,27 @@ namespace NUnit.Framework.Api
         {
             Assert.True(suiteResult.ResultState == ResultState.Success);
             Assert.AreEqual(TestStatus.Passed, suiteResult.ResultState.Status);
-            Assert.AreEqual("Passed", suiteResult.ResultState.Label);
+            Assert.Null(suiteResult.ResultState.Label);
         }
 
         [Test]
         public void TestResultXmlNodeIsSuccess()
         {
             Assert.AreEqual("Passed", testNode.Attributes["result"].Value);
+            Assert.AreEqual("0.125", testNode.Attributes["time"].Value);
+            Assert.AreEqual("2", testNode.Attributes["asserts"].Value);
         }
 
         [Test]
         public void SuiteResultXmlNodeIsSuccess()
         {
             Assert.AreEqual("Passed", suiteNode.Attributes["result"].Value);
+            Assert.AreEqual("0.125", suiteNode.Attributes["time"].Value);
+            Assert.AreEqual("1", suiteNode.Attributes["passed"].Value);
+            Assert.AreEqual("0", suiteNode.Attributes["failed"].Value);
+            Assert.AreEqual("0", suiteNode.Attributes["skipped"].Value);
+            Assert.AreEqual("0", suiteNode.Attributes["inconclusive"].Value);
+            Assert.AreEqual("2", suiteNode.Attributes["asserts"].Value);
         }
 
         [Test]
@@ -201,7 +239,6 @@ namespace NUnit.Framework.Api
         {
             Assert.AreEqual(ResultState.Inconclusive, suiteResult.ResultState);
             Assert.AreEqual(TestStatus.Inconclusive, suiteResult.ResultState.Status);
-            Assert.AreEqual("Inconclusive", suiteResult.ResultState.Label);
             Assert.Null(suiteResult.Message);
         }
 
@@ -209,6 +246,7 @@ namespace NUnit.Framework.Api
         public void TestResultXmlNodeIsIgnored()
         {
             Assert.AreEqual("Skipped", testNode.Attributes["result"].Value);
+            Assert.AreEqual("Ignored", testNode.Attributes["label"].Value);
             XmlNode reason = testNode.SelectSingleNode("reason");
             Assert.NotNull(reason);
             Assert.NotNull(reason.SelectSingleNode("message"));
@@ -217,9 +255,14 @@ namespace NUnit.Framework.Api
         }
 
         [Test]
-        public void SuiteResultXmlNodeIsUnchanged()
+        public void SuiteResultXmlNodeIsInconclusive()
         {
             Assert.AreEqual("Inconclusive", suiteNode.Attributes["result"].Value);
+            Assert.AreEqual("0", suiteNode.Attributes["passed"].Value);
+            Assert.AreEqual("0", suiteNode.Attributes["failed"].Value);
+            Assert.AreEqual("1", suiteNode.Attributes["skipped"].Value);
+            Assert.AreEqual("0", suiteNode.Attributes["inconclusive"].Value);
+            Assert.AreEqual("0", suiteNode.Attributes["asserts"].Value);
         }
 
         [Test]
@@ -234,6 +277,9 @@ namespace NUnit.Framework.Api
         protected override void SetResultState()
         {
             testResult.SetResult(ResultState.Failure, "message", "stack trace");
+            testResult.Time = 0.125;
+            suiteResult.Time = 0.125;
+            testResult.AssertCount = 3;
         }
 
         [Test]
@@ -241,9 +287,9 @@ namespace NUnit.Framework.Api
         {
             Assert.AreEqual(ResultState.Failure, testResult.ResultState);
             Assert.AreEqual(TestStatus.Failed, testResult.ResultState.Status);
-            Assert.AreEqual("Failed", testResult.ResultState.Label);
             Assert.AreEqual("message", testResult.Message);
             Assert.AreEqual("stack trace", testResult.StackTrace);
+            Assert.AreEqual(0.125, testResult.Time);
         }
 
         [Test]
@@ -251,7 +297,6 @@ namespace NUnit.Framework.Api
         {
             Assert.AreEqual(ResultState.Failure, suiteResult.ResultState);
             Assert.AreEqual(TestStatus.Failed, suiteResult.ResultState.Status);
-            Assert.AreEqual("Failed", suiteResult.ResultState.Label);
             Assert.AreEqual("Child test failed", suiteResult.Message);
             Assert.Null(suiteResult.StackTrace);
         }
@@ -260,6 +305,8 @@ namespace NUnit.Framework.Api
         public void TestResultXmlNodeIsFailure()
         {
             Assert.AreEqual("Failed", testNode.Attributes["result"].Value);
+            Assert.AreEqual("0.125", testNode.Attributes["time"].Value);
+
             XmlNode failureNode = testNode.SelectSingleNode("failure");
             Assert.NotNull(failureNode, "No <failure> element found");
 
@@ -276,6 +323,8 @@ namespace NUnit.Framework.Api
         public void SuiteResultXmlNodeIsFailure()
         {
             Assert.AreEqual("Failed", suiteNode.Attributes["result"].Value);
+            Assert.AreEqual("0.125", suiteNode.Attributes["time"].Value);
+
             XmlNode failureNode = suiteNode.SelectSingleNode("failure");
             Assert.NotNull(failureNode, "No <failure> element found");
 
@@ -285,6 +334,12 @@ namespace NUnit.Framework.Api
 
             XmlNode stacktraceNode = failureNode.SelectSingleNode("stacktrace");
             Assert.Null(stacktraceNode, "Unexpected <stack-trace> element found");
+
+            Assert.AreEqual("0", suiteNode.Attributes["passed"].Value);
+            Assert.AreEqual("1", suiteNode.Attributes["failed"].Value);
+            Assert.AreEqual("0", suiteNode.Attributes["skipped"].Value);
+            Assert.AreEqual("0", suiteNode.Attributes["inconclusive"].Value);
+            Assert.AreEqual("3", suiteNode.Attributes["asserts"].Value);
         }
 
         [Test]
@@ -299,12 +354,16 @@ namespace NUnit.Framework.Api
         protected override void SetResultState()
         {
             testResult.SetResult(ResultState.Success);
+            testResult.AssertCount = 2;
             suiteResult.AddResult(testResult);
             testResult.SetResult(ResultState.Failure, "message", "stack trace");
+            testResult.AssertCount = 1;
             suiteResult.AddResult(testResult);
             testResult.SetResult(ResultState.Success);
+            testResult.AssertCount = 3;
             suiteResult.AddResult(testResult);
             testResult.SetResult(ResultState.Inconclusive, "inconclusive reason", "stacktrace");
+            testResult.AssertCount = 0;
             suiteResult.AddResult(testResult);
         }
 
@@ -313,7 +372,6 @@ namespace NUnit.Framework.Api
         {
             Assert.AreEqual(ResultState.Failure, suiteResult.ResultState);
             Assert.AreEqual(TestStatus.Failed, suiteResult.ResultState.Status);
-            Assert.AreEqual("Failed", suiteResult.ResultState.Label);
             Assert.AreEqual("Child test failed", suiteResult.Message);
             Assert.Null(suiteResult.StackTrace);
         }
@@ -331,6 +389,12 @@ namespace NUnit.Framework.Api
 
             XmlNode stacktraceNode = failureNode.SelectSingleNode("stacktrace");
             Assert.Null(stacktraceNode, "There should be no stacktrace");
+
+            Assert.AreEqual("2", suiteNode.Attributes["passed"].Value);
+            Assert.AreEqual("1", suiteNode.Attributes["failed"].Value);
+            Assert.AreEqual("0", suiteNode.Attributes["skipped"].Value);
+            Assert.AreEqual("2", suiteNode.Attributes["inconclusive"].Value);
+            Assert.AreEqual("6", suiteNode.Attributes["asserts"].Value);
         }
 
         [Test]

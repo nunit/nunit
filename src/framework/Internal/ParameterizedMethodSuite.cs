@@ -33,6 +33,8 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public class ParameterizedMethodSuite : TestSuite
     {
+        private MethodInfo method;
+
         /// <summary>
         /// Construct from a MethodInfo
         /// </summary>
@@ -40,7 +42,25 @@ namespace NUnit.Framework.Internal
         public ParameterizedMethodSuite(MethodInfo method)
             : base(method.ReflectedType.FullName, method.Name)
         {
+            this.method = method;
             this.maintainTestOrder = true;
+        }
+
+        /// <summary>
+        /// Gets the MethodInfo for which this suite is being built.
+        /// </summary>
+        public MethodInfo Method
+        {
+            get { return method; }
+        }
+
+        /// <summary>
+        /// Creates a ParameterizedMethodResult for this test.
+        /// </summary>
+        /// <returns>The newly created result.</returns>
+        public override TestResult MakeTestResult()
+        {
+            return new ParameterizedMethodResult(this);
         }
 
         /// <summary>

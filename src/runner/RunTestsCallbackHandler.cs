@@ -61,12 +61,12 @@ namespace NUnit.AdhocTestRunner
         {
             XmlAttribute id = startNode.Attributes["id"];
             XmlAttribute name = startNode.Attributes["name"];
-            XmlAttribute fullname = startNode.Attributes["fullname"];
+            //XmlAttribute fullname = startNode.Attributes["fullname"];
             XmlAttribute testcase = startNode.Attributes["testcase"];
 
             Debug.Assert(id != null);
             Debug.Assert(name != null);
-            Debug.Assert(fullname != null);
+            //Debug.Assert(fullname != null);
 
             //output.WriteLine(name);
         }
@@ -75,11 +75,11 @@ namespace NUnit.AdhocTestRunner
         {
             //int id = int.Parse(testNode.Attributes["id"].Value);
             XmlAttribute name = testNode.Attributes["name"];
-            XmlAttribute fullname = testNode.Attributes["fullname"];
+            //XmlAttribute fullname = testNode.Attributes["fullname"];
             XmlAttribute result = testNode.Attributes["result"];
 
             Debug.Assert(name != null);
-            Debug.Assert(fullname != null);
+            //Debug.Assert(fullname != null);
             Debug.Assert(result != null);
         }
 
@@ -87,11 +87,11 @@ namespace NUnit.AdhocTestRunner
         {
             //int id = int.Parse(suiteNode.Attributes["id"].Value);
             XmlAttribute name = suiteNode.Attributes["name"];
-            XmlAttribute fullname = suiteNode.Attributes["fullname"];
+            //XmlAttribute fullname = suiteNode.Attributes["fullname"];
             XmlAttribute result = suiteNode.Attributes["result"];
 
             Debug.Assert(name != null);
-            Debug.Assert(fullname != null);
+            //Debug.Assert(fullname != null);
             Debug.Assert(result != null);
         }
 

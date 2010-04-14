@@ -62,9 +62,9 @@ namespace NUnit.TestUtilities
                 this.time = result.Time;
             }
 
-            if (result is CompositeResult)
+            if (result is TestSuiteResult)
             {
-                CompositeResult suiteResult = result as CompositeResult;
+                TestSuiteResult suiteResult = result as TestSuiteResult;
                 if (suiteResult.HasChildren)
                     foreach (TestResult childResult in suiteResult.Children)
                         Summarize(childResult);

@@ -117,17 +117,11 @@ namespace NUnit.Framework.Api
 
         /// <summary>
         /// Gets the label under which this test resullt is
-        /// categorized. If no label has been set, the status
-        /// is converted to a string and used.
+        /// categorized, if any.
         /// </summary>
         public string Label
         {
-            get 
-            { 
-                return label == null
-                    ? status.ToString()
-                    : label; 
-            }
+            get { return label; }
         }
 
         #endregion

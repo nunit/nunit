@@ -105,7 +105,6 @@ namespace NUnit.Framework.Assertions
             TestResult fixtureResult = testFixture.Run(TestListener.NULL);
 
             Assert.AreEqual(TestStatus.Passed, fixtureResult.ResultState.Status);
-            Assert.AreEqual("Passed", fixtureResult.ResultState.Label);
 
             foreach (TestResult testResult in fixtureResult.Children)
             {

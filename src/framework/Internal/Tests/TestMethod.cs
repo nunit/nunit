@@ -191,6 +191,15 @@ namespace NUnit.Framework.Internal
 		#region Run Methods
 
         /// <summary>
+        /// Creates a TestCaseResult.
+        /// </summary>
+        /// <returns>The new TestCaseResult.</returns>
+        public override TestResult MakeTestResult()
+        {
+            return new TestCaseResult(this);
+        }
+
+        /// <summary>
         /// Runs the test under a particular filter, sending
         /// notifications to a listener.
         /// </summary>
@@ -200,7 +209,7 @@ namespace NUnit.Framework.Internal
         {
             //using (new TestContext())
             //{
-                TestCaseResult testResult = new TestCaseResult(this);
+                TestResult testResult = this.MakeTestResult();
 
                 listener.TestStarted(this);
                 long startTime = DateTime.Now.Ticks;

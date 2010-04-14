@@ -292,6 +292,14 @@ namespace NUnit.Framework.Internal
         //}
 
         /// <summary>
+        /// Creates a TestSuiteResult.
+        /// </summary>
+        /// <returns>The new TestSuiteResult.</returns>
+        public override TestResult MakeTestResult()
+        {
+            return new TestSuiteResult(this);
+        }
+        /// <summary>
         /// Runs the suite under a particular filter, sending
         /// notifications to a listener.
         /// </summary>
@@ -299,7 +307,8 @@ namespace NUnit.Framework.Internal
         /// <returns></returns>
 		public override TestResult Run(ITestListener listener)
 		{
-			CompositeResult suiteResult = new CompositeResult(this);
+            // Derived classes must return a result derived from TestSuiteResult
+            TestSuiteResult suiteResult = (TestSuiteResult)this.MakeTestResult();
 
 			listener.TestStarted( this );
 			long startTime = DateTime.Now.Ticks;
@@ -342,7 +351,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="suiteResult">The suite result.</param>
         /// <param name="listener">The listener.</param>
-        public void Run(CompositeResult suiteResult, ITestListener listener)
+        public void Run(TestSuiteResult suiteResult, ITestListener listener)
         {
 #if !NUNITLITE
             TestContext context = new TestContext();
@@ -505,7 +514,7 @@ namespace NUnit.Framework.Internal
         }
 
         private void RunAllTests(
-			CompositeResult suiteResult, ITestListener listener )
+			TestSuiteResult suiteResult, ITestListener listener )
 		{
 #if !NUNITLITE
             if (Properties.Contains("Timeout"))
@@ -540,26 +549,26 @@ namespace NUnit.Framework.Internal
             }
 		}
 
-        private void SkipAllTests(CompositeResult suiteResult, ITestListener listener)
+        private void SkipAllTests(TestSuiteResult suiteResult, ITestListener listener)
         {
             suiteResult.SetResult(ResultState.Skipped, this.IgnoreReason);
             MarkTestsNotRun(this.tests, ResultState.Skipped, this.IgnoreReason, suiteResult, listener);
         }
 
-        private void IgnoreAllTests(CompositeResult suiteResult, ITestListener listener)
+        private void IgnoreAllTests(TestSuiteResult suiteResult, ITestListener listener)
         {
             suiteResult.SetResult(ResultState.Ignored, this.IgnoreReason);
             MarkTestsNotRun(this.tests, ResultState.Ignored, this.IgnoreReason, suiteResult, listener);
         }
 
-        private void MarkAllTestsInvalid(CompositeResult suiteResult, ITestListener listener)
+        private void MarkAllTestsInvalid(TestSuiteResult suiteResult, ITestListener listener)
         {
             suiteResult.SetResult(ResultState.NotRunnable, this.IgnoreReason);
             MarkTestsNotRun(this.tests, ResultState.NotRunnable, this.IgnoreReason, suiteResult, listener);
         }
        
         private void MarkTestsNotRun(
-            TestCollection tests, ResultState resultState, string ignoreReason, CompositeResult suiteResult, ITestListener listener)
+            TestCollection tests, ResultState resultState, string ignoreReason, TestSuiteResult suiteResult, ITestListener listener)
         {
             foreach (Test test in ArrayList.Synchronized(tests))
             {
@@ -569,12 +578,11 @@ namespace NUnit.Framework.Internal
         }
 
         private void MarkTestNotRun(
-            Test test, ResultState resultState, string ignoreReason, CompositeResult suiteResult, ITestListener listener)
+            Test test, ResultState resultState, string ignoreReason, TestSuiteResult suiteResult, ITestListener listener)
         {
             listener.TestStarted(test);
-            TestResult result = test.IsTestCase 
-                ? (TestResult)new TestCaseResult(test) 
-                : (TestResult)new CompositeResult(test);
+
+            TestResult result = test.MakeTestResult(); 
             
             TestSuite suite = test as TestSuite;
             if (suite != null)
@@ -586,7 +594,7 @@ namespace NUnit.Framework.Internal
         }
 
         private void MarkTestsFailed(
-            TestCollection tests, string msg, CompositeResult suiteResult, ITestListener listener)
+            TestCollection tests, string msg, TestSuiteResult suiteResult, ITestListener listener)
         {
             foreach (Test test in ArrayList.Synchronized(tests))
                 if (test.RunState != RunState.Explicit)
@@ -594,12 +602,11 @@ namespace NUnit.Framework.Internal
         }
 
         private void MarkTestFailed(
-            Test test, string msg, CompositeResult suiteResult, ITestListener listener)
+            Test test, string msg, TestSuiteResult suiteResult, ITestListener listener)
         {
             listener.TestStarted(test);
-            TestResult result = test.IsTestCase
-                ? (TestResult)new TestCaseResult(test)
-                : (TestResult)new CompositeResult(test);
+
+            TestResult result = test.MakeTestResult();
 
             TestSuite suite = test as TestSuite;
             if (suite != null)

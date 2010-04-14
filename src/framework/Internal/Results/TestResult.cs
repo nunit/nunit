@@ -49,7 +49,7 @@ namespace NUnit.Framework.Internal
 		/// <summary>
 		/// The test that this result pertains to
 		/// </summary>
-		private readonly ITest test;
+		protected readonly ITest test;
 
 #if !NETCF_1_0
 		/// <summary>
@@ -289,21 +289,71 @@ namespace NUnit.Framework.Internal
             return topNode.FirstChild;
         }
 
-                /// <summary>
+        /// <summary>
         /// Adds the XML representation of the result as a child of the
         /// supplied parent node..
         /// </summary>
-        /// <param name="parent">The parent node.</param>
+        /// <param name="parentNode">The parent node.</param>
         /// <param name="recursive">If true, descendant results are included</param>
         /// <returns></returns>
-        public abstract XmlNode AddToXml(XmlNode parent, bool recursive);
+        public virtual XmlNode AddToXml(XmlNode parentNode, bool recursive)
+        {
+            XmlNode thisNode = AddTopLevelElement(parentNode);
+
+            XmlHelper.AddAttribute(thisNode, "id", test.ID.ToString());
+            XmlHelper.AddAttribute(thisNode, "name", this.Name);
+            XmlHelper.AddAttribute(thisNode, "fullname", this.FullName);
+
+            if (test.Description != null)
+                XmlHelper.AddAttribute(thisNode, "description", test.Description);
+
+            XmlHelper.AddAttribute(thisNode, "result", ResultState.Status.ToString());
+            if (ResultState.Label != ResultState.Status.ToString())
+                XmlHelper.AddAttribute(thisNode, "label", ResultState.Label);
+
+            XmlHelper.AddAttribute(thisNode, "time", this.Time.ToString("0.000", System.Globalization.CultureInfo.InvariantCulture));
+
+            if (this.test.Categories.Count > 0)
+                AddCategories(thisNode);
+            if (this.test.Properties.Count > 0)
+                AddProperties(thisNode);
+
+            switch (ResultState.Status)
+            {
+                case TestStatus.Failed:
+                    AddFailureElement(thisNode);
+                    break;
+                case TestStatus.Skipped:
+                    AddReasonElement(thisNode);
+                    break;
+                case TestStatus.Passed:
+                    break;
+                case TestStatus.Inconclusive:
+                    break;
+            }
+
+            return thisNode;
+        }
+
+        #endregion
+
+        #region Protected Methods
+
+        /// <summary>
+        /// Adds the top level element for this result, possibly
+        /// with some added attributes or elements. Must be 
+        /// overridden by derived classes
+        /// </summary>
+        /// <param name="parentNode">The parent node.</param>
+        /// <returns>The new top level element node.</returns>
+        protected abstract XmlNode AddTopLevelElement(XmlNode parentNode);
 
         /// <summary>
         /// Adds a reason element to a note and returns it.
         /// </summary>
         /// <param name="targetNode">The target node.</param>
         /// <returns>The new reason element.</returns>
-        protected XmlNode AddReasonElement(XmlNode targetNode)
+        private XmlNode AddReasonElement(XmlNode targetNode)
         {
             XmlNode reasonNode = XmlHelper.AddElement(targetNode, "reason");
             XmlHelper.AddElementWithCDataSection(reasonNode, "message", this.Message);
@@ -311,11 +361,11 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// Adds a failure element to a note and returns it.
+        /// Adds a failure element to a node and returns it.
         /// </summary>
         /// <param name="targetNode">The target node.</param>
         /// <returns>The new failure element.</returns>
-        protected XmlNode AddFailureElement(XmlNode targetNode)
+        private XmlNode AddFailureElement(XmlNode targetNode)
         {
             XmlNode failureNode = XmlHelper.AddElement(targetNode, "failure");
 
@@ -329,11 +379,58 @@ namespace NUnit.Framework.Internal
             {
                 XmlHelper.AddElementWithCDataSection(failureNode, "stack-trace", this.StackTrace);
             }
-#endif
+#endif 
 
             return failureNode;
         }
-        
+
+        /// <summary>
+        /// Adds a categories element to the target node, populates
+        /// it with any categories on the test and returns it.
+        /// </summary>
+        /// <param name="targetNode">The target node.</param>
+        /// <returns>The new node that was added.</returns>
+        private XmlNode AddCategories(XmlNode targetNode)
+        {
+            XmlNode categories = XmlHelper.AddElement(targetNode, "categories");
+
+            foreach (string category in test.Categories)
+            {
+                XmlNode categoryNode = XmlHelper.AddElement(categories, "category");
+                XmlHelper.AddAttribute(categoryNode, "name", category);
+            }
+
+            return categories;
+        }
+
+        /// <summary>
+        /// Adds a failure element to a node, populates it with the
+        /// individual properties from this result and returns it.
+        /// </summary>
+        /// <param name="targetNode">The target node.</param>
+        /// <returns>The new properties element.</returns>
+        private XmlNode AddProperties(XmlNode targetNode)
+        {
+            XmlNode properties = null;
+
+            foreach (string key in test.Properties.Keys)
+            {
+                if (!key.StartsWith("_"))
+                {
+                    if (properties == null)
+                        properties = XmlHelper.AddElement(targetNode, "properties");
+
+                    XmlNode prop = XmlHelper.AddElement(properties, "property");
+
+                    // TODO: Format as string
+                    XmlHelper.AddAttribute(prop, "name", key.ToString());
+                    XmlHelper.AddAttribute(prop, "value", test.Properties[key].ToString());
+                }
+            }
+
+            return properties;
+        }
+
         #endregion
     }
 }

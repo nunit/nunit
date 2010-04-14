@@ -55,7 +55,7 @@ namespace NUnit.TestUtilities
             Test test = TestBuilder.MakeTestCase(type, name);
             Assert.That(test.RunState, Is.EqualTo(RunState.Runnable));
             ITestResult result = test.Run(TestListener.NULL);
-            CompositeResult suiteResult = result as CompositeResult;
+            TestSuiteResult suiteResult = result as TestSuiteResult;
             if (suiteResult != null)
                 result = (ITestResult)suiteResult.Children[0];
             Assert.That(result.ResultState, Is.EqualTo(resultState));
