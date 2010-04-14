@@ -47,9 +47,6 @@
     <Compile Include="..\..\..\src\tests\AlwaysEqualComparer.cs">
       <Link>AlwaysEqualComparer.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\tests\Api\TestResultTests.cs">
-      <Link>Api\TestResultTests.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\src\tests\Assertions\ArrayEqualsFailureMessageFixture.cs">
       <Link>Assertions\ArrayEqualsFailureMessageFixture.cs</Link>
     </Compile>
@@ -274,6 +271,9 @@
     </Compile>
     <Compile Include="..\..\..\src\tests\Internal\RuntimeFrameworkTests.cs">
       <Link>Internal\RuntimeFrameworkTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\Internal\TestResultTests.cs">
+      <Link>Internal\TestResultTests.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\tests\Internal\TextMessageWriterTests.cs">
       <Link>Internal\TextMessageWriterTests.cs</Link>
