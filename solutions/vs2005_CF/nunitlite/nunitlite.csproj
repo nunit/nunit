@@ -65,6 +65,9 @@
     <Compile Include="..\..\..\src\framework\Api\ITestResult.cs">
       <Link>Api\ITestResult.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\framework\Api\IXmlNodeBuilder.cs">
+      <Link>Api\IXmlNodeBuilder.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\framework\Api\ResultState.cs">
       <Link>Api\ResultState.cs</Link>
     </Compile>
@@ -254,9 +257,6 @@
     <Compile Include="..\..\..\src\framework\IExpectException.cs">
       <Link>IExpectException.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\CompositeResult.cs">
-      <Link>Internal\CompositeResult.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\src\framework\Internal\ExceptionHelper.cs">
       <Link>Internal\ExceptionHelper.cs</Link>
     </Compile>
@@ -278,26 +278,47 @@
     <Compile Include="..\..\..\src\framework\Internal\Reflect.cs">
       <Link>Internal\Reflect.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Test.cs">
-      <Link>Internal\Test.cs</Link>
+    <Compile Include="..\..\..\src\framework\Internal\Results\ParameterizedFixtureResult.cs">
+      <Link>Internal\Results\ParameterizedFixtureResult.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\TestCaseResult.cs">
-      <Link>Internal\TestCaseResult.cs</Link>
+    <Compile Include="..\..\..\src\framework\Internal\Results\ParameterizedMethodResult.cs">
+      <Link>Internal\Results\ParameterizedMethodResult.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\TestFixture.cs">
-      <Link>Internal\TestFixture.cs</Link>
+    <Compile Include="..\..\..\src\framework\Internal\Results\TestAssemblyResult.cs">
+      <Link>Internal\Results\TestAssemblyResult.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\Results\TestCaseResult.cs">
+      <Link>Internal\Results\TestCaseResult.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\Results\TestFixtureResult.cs">
+      <Link>Internal\Results\TestFixtureResult.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\Results\TestResult.cs">
+      <Link>Internal\Results\TestResult.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\Results\TestSuiteResult.cs">
+      <Link>Internal\Results\TestSuiteResult.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Internal\TestListener.cs">
       <Link>Internal\TestListener.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\TestMethod.cs">
-      <Link>Internal\TestMethod.cs</Link>
+    <Compile Include="..\..\..\src\framework\Internal\Tests\ParameterizedFixtureSuite.cs">
+      <Link>Internal\Tests\ParameterizedFixtureSuite.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\TestResult.cs">
-      <Link>Internal\TestResult.cs</Link>
+    <Compile Include="..\..\..\src\framework\Internal\Tests\Test.cs">
+      <Link>Internal\Tests\Test.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\TestSuite.cs">
-      <Link>Internal\TestSuite.cs</Link>
+    <Compile Include="..\..\..\src\framework\Internal\Tests\TestAssembly.cs">
+      <Link>Internal\Tests\TestAssembly.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\Tests\TestFixture.cs">
+      <Link>Internal\Tests\TestFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\Tests\TestMethod.cs">
+      <Link>Internal\Tests\TestMethod.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\Tests\TestSuite.cs">
+      <Link>Internal\Tests\TestSuite.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Internal\TextMessageWriter.cs">
       <Link>Internal\TextMessageWriter.cs</Link>
