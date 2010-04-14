@@ -78,6 +78,15 @@ namespace NUnit.Framework.Internal
 
 		#region TestSuite Overrides
 
+        /// <summary>
+        /// Creates a TestFixtureResult.
+        /// </summary>
+        /// <returns>The new TestFixtureResult.</returns>
+        public override TestResult MakeTestResult()
+        {
+            return new TestFixtureResult(this);
+        }
+
 #if !NUNITLITE
         /// <summary>
         /// Runs the suite under a particular filter, sending

@@ -78,14 +78,14 @@ namespace NUnit.TestUtilities
             return test;
         }
 
-        public static CompositeResult RunTestFixture(Type type)
+        public static TestSuiteResult RunTestFixture(Type type)
         {
-            return (CompositeResult)MakeFixture(type).Run(TestListener.NULL);
+            return (TestSuiteResult)MakeFixture(type).Run(TestListener.NULL);
         }
 
-        public static CompositeResult RunTestFixture(object fixture)
+        public static TestSuiteResult RunTestFixture(object fixture)
         {
-            return (CompositeResult)MakeFixture(fixture).Run(TestListener.NULL);
+            return (TestSuiteResult)MakeFixture(fixture).Run(TestListener.NULL);
         }
 
         public static TestResult RunTestCase(Type type, string methodName)

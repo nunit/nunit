@@ -111,7 +111,7 @@ namespace NUnit.Framework.Syntax
         }
 
 #if CLR_2_0
-#if NET_3_5 || MONO_3_5 || NETCF_3_5 || NET_4_0
+#if CS_3_0
         [Test]
         public void DelegateThrowsException()
         {

@@ -87,6 +87,8 @@ namespace NUnit.AdhocTestRunner
                     break;
                 case "test-suite":
                 case "test-fixture":
+                case "method-group":
+                default:
                     foreach (XmlNode childResult in result.ChildNodes)
                         WriteErrorsAndFailures(childResult);
                     break;
@@ -106,6 +108,7 @@ namespace NUnit.AdhocTestRunner
         {
             switch (result.Name)
             {
+                case "test-assembly":
                 case "test-suite":
                 case "test-fixture":
                     foreach (XmlNode childResult in result.ChildNodes)

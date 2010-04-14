@@ -26,6 +26,7 @@ using System.Collections;
 using System.Collections.Specialized;
 using System.Threading;
 using System.Reflection;
+using System.Xml;
 using NUnit.Framework.Api;
 
 namespace NUnit.Framework.Internal
@@ -309,19 +310,30 @@ namespace NUnit.Framework.Internal
         //    return 0;
         //}
 
+        #endregion
+
+        #endregion
+
+        #region IXmlNodeBuilder Members
+
+        public XmlNode ToXml(bool recursive)
+        {
+            XmlNode topNode = XmlHelper.CreateTopLevelElement("dummy");
+
+            XmlNode thisNode = AddToXml(topNode, recursive);
+
+            return thisNode;
+        }
+
+        public XmlNode AddToXml(XmlNode parentNode, bool recursive)
+        {
+            return XmlHelper.AddElement(parentNode, "test");
+        }
+
+        #endregion
+
+        #region IComparable Members
         /// <summary>
-        /// Runs the test under a particular filter, sending
-        /// notifications to a listener.
-        /// </summary>
-        /// <param name="listener">An event listener to receive notifications</param>
-        /// <returns></returns>
-        public abstract TestResult Run(ITestListener listener);
-        #endregion
-
-        #endregion
-
-		#region IComparable Members
-		/// <summary>
 		/// Compares this test to another test for sorting purposes
 		/// </summary>
 		/// <param name="obj">The other test</param>
@@ -336,6 +348,8 @@ namespace NUnit.Framework.Internal
 			return this.FullName.CompareTo( other.FullName );
 		}
 		#endregion
+
+        #region Public Methods
 
         /// <summary>
         /// Modify a newly constructed test by applying any of NUnit's common
@@ -355,5 +369,25 @@ namespace NUnit.Framework.Internal
                 }
             }
         }
-	}
+
+        #endregion
+
+        #region Abstract Methods
+
+        /// <summary>
+        /// Override this to return the proper type of TestResult for this test
+        /// </summary>
+        /// <returns>A concrete TestResult.</returns>
+        public abstract TestResult MakeTestResult();
+
+        /// <summary>
+        /// Runs the test under a particular filter, sending
+        /// notifications to a listener.
+        /// </summary>
+        /// <param name="listener">An event listener to receive notifications</param>
+        /// <returns></returns>
+        public abstract TestResult Run(ITestListener listener);
+
+        #endregion
+    }
 }

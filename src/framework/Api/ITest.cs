@@ -31,7 +31,7 @@ namespace NUnit.Framework.Api
 	/// The Run method is specifically excluded to allow
 	/// for data-only representations of a test.
 	/// </summary>
-	public interface ITest
+	public interface ITest : IXmlNodeBuilder
     {
         #region Properties
 

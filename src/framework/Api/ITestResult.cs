@@ -28,7 +28,7 @@ namespace NUnit.Framework.Api
     /// <summary>
     /// The ITestResult interface represents the result of a test.
     /// </summary>
-    public interface ITestResult
+    public interface ITestResult : IXmlNodeBuilder
     {
         /// <summary>
         /// Gets the ResultState of the test result, which 
@@ -114,12 +114,5 @@ namespace NUnit.Framework.Api
         {
             get;
         }
-
-        /// <summary>
-        /// Returns the Xml representation of the result.
-        /// </summary>
-        /// <param name="recursive">If true, descendant results are included</param>
-        /// <returns>An XmlNode representing the result</returns>
-        System.Xml.XmlNode ToXml(bool recursive);
     }
 }

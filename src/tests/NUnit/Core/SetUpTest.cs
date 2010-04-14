@@ -110,7 +110,7 @@ namespace NUnit.Framework.Tests
             Exception e = new Exception("Test message for exception thrown from setup");
             SetupAndTearDownExceptionFixture fixture = new SetupAndTearDownExceptionFixture();
             fixture.setupException = e;
-            CompositeResult suiteResult = TestBuilder.RunTestFixture(fixture);
+            TestSuiteResult suiteResult = TestBuilder.RunTestFixture(fixture);
             Assert.IsTrue(suiteResult.HasChildren, "Fixture test should have child result.");
             TestResult result = (TestResult)suiteResult.Children[0];
             Assert.AreEqual(result.ResultState, ResultState.Error, "Test should be in error state");
@@ -124,7 +124,7 @@ namespace NUnit.Framework.Tests
             Exception e = new Exception("Test message for exception thrown from tear down");
             SetupAndTearDownExceptionFixture fixture = new SetupAndTearDownExceptionFixture();
             fixture.tearDownException = e;
-            CompositeResult suiteResult = TestBuilder.RunTestFixture(fixture);
+            TestSuiteResult suiteResult = TestBuilder.RunTestFixture(fixture);
             Assert.That(suiteResult.HasChildren, "Fixture test should have child result.");
             TestResult result = (TestResult)suiteResult.Children[0];
             Assert.AreEqual(result.ResultState, ResultState.Error, "Test should be in error state");

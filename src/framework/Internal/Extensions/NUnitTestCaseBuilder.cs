@@ -205,7 +205,8 @@ namespace NUnit.Core.Builders
 
             if (CheckTestMethodSignature(testMethod, parms))
             {
-                testMethod.ApplyCommonAttributes(Reflect.GetAttributes(method, false));
+                if (parms == null)
+                    testMethod.ApplyCommonAttributes(Reflect.GetAttributes(method, false));
 
                 ExpectedExceptionAttribute[] attributes =
                     (ExpectedExceptionAttribute[])method.GetCustomAttributes(typeof(ExpectedExceptionAttribute), false);
