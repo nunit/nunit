@@ -151,6 +151,9 @@
     <Compile Include="..\..\..\src\tests\Attributes\CombinatorialTests.cs">
       <Link>Attributes\CombinatorialTests.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\tests\Attributes\DatapointTests.cs">
+      <Link>Attributes\DatapointTests.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\tests\Attributes\ExpectedExceptionTests.cs">
       <Link>Attributes\ExpectedExceptionTests.cs</Link>
     </Compile>

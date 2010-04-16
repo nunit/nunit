@@ -53,6 +53,30 @@ namespace NUnit.Framework.Tests
             Assert.That(test.TestCaseCount, Is.EqualTo(9));
         }
 
+        [Test]
+        public void BooleanArgumentsAreSuppliedAutomatically()
+        {
+            Test test = TestBuilder.MakeTestCase(fixtureType, "TestWithBooleanArguments");
+            TestAssert.IsRunnable(test);
+            Assert.That(test.TestCaseCount, Is.EqualTo(4));
+        }
+
+        [Theory]
+        public void NullDatapointIsOK(object o)
+        {
+        }
+
+        [Datapoint]
+        object objData = null;
+
+        [Test]
+        public void EnumArgumentsAreSuppliedAutomatically()
+        {
+            Test test = TestBuilder.MakeTestCase(fixtureType, "TestWithEnumAsArgument");
+            TestAssert.IsRunnable(test);
+            Assert.That(test.TestCaseCount, Is.EqualTo(3));
+        }
+
         [Theory]
         public void SquareRootWithAllGoodValues(
             [Values(12.0, 4.0, 9.0)] double d)

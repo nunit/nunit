@@ -125,5 +125,13 @@ namespace NUnit.Framework.Api
         }
 
         #endregion
+
+        public override string ToString()
+        {
+            string s = status.ToString();
+            if (label == null) return s;
+
+            return string.Format("{0}:{1}", s, label);
+        }
     }
 }
