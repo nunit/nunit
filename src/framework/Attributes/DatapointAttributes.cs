@@ -40,7 +40,7 @@ namespace NUnit.Framework
     /// executing a theory within the same fixture that requires an argument 
     /// of the Type of the array elements.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Field, AllowMultiple = false, Inherited = true)]
+    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property | AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
     public class DatapointsAttribute : Attribute
     {
     }
