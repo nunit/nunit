@@ -361,6 +361,16 @@ namespace NUnit.Framework.Internal
                 suiteResult.SetResult(ResultState.Success); // Assume success
                 DoOneTimeSetUp(suiteResult);
 
+#if !NUNITLITE
+                if (this.Properties["_SETCULTURE"] != null)
+                    TestContext.CurrentCulture =
+                        new System.Globalization.CultureInfo((string)Properties["_SETCULTURE"]);
+
+                if (this.Properties["_SETUICULTURE"] != null)
+                    TestContext.CurrentUICulture =
+                        new System.Globalization.CultureInfo((string)Properties["_SETUICULTURE"]);
+#endif
+
                 switch (suiteResult.ResultState.Status)
                 {
                         // TODO: Handle Cancellation Better
@@ -407,16 +417,6 @@ namespace NUnit.Framework.Internal
 					// In case TestFixture was created with fixture object
 					if (Fixture == null && !IsStaticClass( FixtureType ) )
 						CreateUserFixture();
-
-#if !NUNITLITE
-                    if (this.Properties["_SETCULTURE"] != null)
-                        TestContext.CurrentCulture =
-                            new System.Globalization.CultureInfo((string)Properties["_SETCULTURE"]);
-
-                    if (this.Properties["_SETUICULTURE"] != null)
-                        TestContext.CurrentUICulture =
-                            new System.Globalization.CultureInfo((string)Properties["_SETUICULTURE"]);
-#endif
 
                     if (this.fixtureSetUpMethods != null)
                         foreach( MethodInfo fixtureSetUp in fixtureSetUpMethods )
