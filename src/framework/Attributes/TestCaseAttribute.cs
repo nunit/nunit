@@ -32,7 +32,7 @@ namespace NUnit.Framework
     /// and provide them with their arguments.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
-    public class TestCaseAttribute : Attribute, ITestCaseData
+    public class TestCaseAttribute : PropertyAttribute, ITestCaseData
     {
         private object[] arguments;
 #if !NUNITLITE
@@ -215,6 +215,15 @@ namespace NUnit.Framework
         {
             get { return new string[0]; }
         }
+
+        /// <summary>
+        /// NYI
+        /// </summary>
+        public IDictionary Properties
+        {
+            get { return new Hashtable(); }
+        }
+
 #endif
     }
 }

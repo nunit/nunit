@@ -78,5 +78,14 @@ namespace NUnit.Framework.Tests
             Test testCase = TestBuilder.MakeTestCase(FixtureType, "SeparateDescriptionMethod");
             Assert.AreEqual("Separate Description", testCase.Description);
         }
+
+        [Test]
+        public void DescriptionOnTestCase()
+        {
+            TestSuite parameterizedMethodSuite = TestBuilder.MakeParameterizedMethodSuite(FixtureType, "TestCaseWithDescription");
+            Assert.AreEqual("method description", parameterizedMethodSuite.Description);
+            Test testCase = (Test)parameterizedMethodSuite.Tests[0];
+            Assert.AreEqual("case description", testCase.Description);
+        }
     }
 }
