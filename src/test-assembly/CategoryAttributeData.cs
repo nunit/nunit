@@ -34,6 +34,13 @@ namespace NUnit.TestData.CategoryAttributeData
 
 		[Test, Critical]
 		public void Test2() { }
+
+        [Test, Category("Top")]
+        [TestCaseSource("Test3Data")]
+        public void Test3(int x) { }
+
+        private TestCaseData[] Test3Data = new TestCaseData[] {
+            new TestCaseData(5).SetCategory("Bottom") };
 	}
 
 	[AttributeUsage(AttributeTargets.Method, AllowMultiple=false)]

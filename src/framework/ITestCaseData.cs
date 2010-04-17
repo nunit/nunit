@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Collections;
 
 namespace NUnit.Framework
 {
@@ -79,6 +80,11 @@ namespace NUnit.Framework
         /// Gets the description of the test
         /// </summary>
         string Description { get; }
+
+        /// <summary>
+        /// Gets the a list of the categories associated with a test case
+        /// </summary>
+        IList Categories { get; }
 
         /// <summary>
         /// Gets a value indicating whether this <see cref="ITestCaseData"/> is ignored.

@@ -207,6 +207,14 @@ namespace NUnit.Framework
                 isIgnored = ignoreReason != null && ignoreReason != string.Empty;
             }
         }
+
+        /// <summary>
+        /// NYI
+        /// </summary>
+        public IList Categories
+        {
+            get { return new string[0]; }
+        }
 #endif
     }
 }
