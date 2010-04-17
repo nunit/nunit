@@ -115,6 +115,15 @@ namespace NUnit.Framework.Attributes
                 Assert.AreEqual("ru-RU", CultureInfo.CurrentCulture.Name, "Culture not set correctly");
                 Assert.AreEqual("fr-FR", CultureInfo.CurrentUICulture.Name, "UICulture not set correctly");
             }
-        }        
+        }
+
+#if CLR_2_0
+        [Test, SetCulture("de-DE")]
+        [TestCase(Result="01.06.2010 00:00:00")]
+        public string UseWithParameterizedTest()
+        {
+            return new DateTime(2010, 6, 1).ToString();
+        }
+#endif
     }
 }
