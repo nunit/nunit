@@ -41,5 +41,10 @@ namespace NUnit.TestData.DescriptionFixture
         [Description("Separate Description")]
         public void SeparateDescriptionMethod()
         { }
+
+        [Test, Description("method description")]
+        [TestCase(5, Description = "case description")]
+        public void TestCaseWithDescription(int x)
+        { }
 	}
 }

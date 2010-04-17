@@ -82,11 +82,6 @@ namespace NUnit.Framework
         string Description { get; }
 
         /// <summary>
-        /// Gets the a list of the categories associated with a test case
-        /// </summary>
-        IList Categories { get; }
-
-        /// <summary>
         /// Gets a value indicating whether this <see cref="ITestCaseData"/> is ignored.
         /// </summary>
         /// <value><c>true</c> if ignored; otherwise, <c>false</c>.</value>
@@ -97,6 +92,17 @@ namespace NUnit.Framework
         /// </summary>
         /// <value>The ignore reason.</value>
         string IgnoreReason { get; }
+
+        /// <summary>
+        /// Gets the a list of the categories associated with the test case
+        /// </summary>
+        IList Categories { get; }
+
+        /// <summary>
+        /// Gets the property dictionary for the test case
+        /// </summary>
+        IDictionary Properties { get; }
+
 #endif
     }
 }
