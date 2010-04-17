@@ -146,7 +146,7 @@ namespace NUnit.Framework.Tests
             Assert.AreEqual(r, n % d);
         }
 
-        [Test, TestCaseSource(typeof(DivideDataProvider), "HereIsTheData")]
+        [Test, Category("Top"), TestCaseSource(typeof(DivideDataProvider), "HereIsTheData")]
         public void SourceMayBeInAnotherClass(int n, int d, int q)
         {
             Assert.AreEqual(q, n / d);

@@ -50,7 +50,7 @@ namespace NUnit.Framework.Attributes
 		}
 
 		[Test]
-		public void CategoryOnTestCase()
+		public void CategoryOnTestMethod()
 		{
 			Test test1 = (Test)fixture.Tests[0];
 			Assert.Contains( "Long", test1.Categories );
@@ -62,5 +62,14 @@ namespace NUnit.Framework.Attributes
 			Test test2 = (Test)fixture.Tests[1];
 			Assert.Contains( "Critical", test2.Categories );
 		}
+
+        [Test]
+        public void CanSpecifyOnMethodAndTestCase()
+        {
+            TestSuite test3 = (TestSuite)fixture.Tests[2];
+            Assert.Contains("Top", test3.Categories);
+            Test testCase = (Test)test3.Tests[0];
+            Assert.Contains("Bottom", testCase.Categories);
+        }
 	}
 }

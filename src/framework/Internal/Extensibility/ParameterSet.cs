@@ -271,6 +271,9 @@ namespace NUnit.Core.Extensibility
             this.TestName = data.TestName;
             this.Ignored = data.Ignored;
             this.IgnoreReason = data.IgnoreReason;
+
+            foreach (string category in data.Categories)
+                this.Categories.Add(category);
         }
         #endregion
     }
