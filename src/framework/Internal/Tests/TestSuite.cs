@@ -456,7 +456,7 @@ namespace NUnit.Framework.Internal
         /// <param name="suiteResult">The suite result.</param>
         protected virtual void DoOneTimeTearDown(TestResult suiteResult)
         {
-            if ( this.Fixture != null)
+            if ( this.FixtureType != null)
             {
                 try
                 {
