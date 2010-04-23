@@ -357,10 +357,10 @@ namespace NUnit.Framework.Internal
         /// for all attributes, relying on the fact that specific attributes can only
         /// occur on those constructs on which they are allowed.
         /// </summary>
-        /// <param name="attributes">An array of attributes possibly including NUnit attributes</param>
-        public void ApplyCommonAttributes(Attribute[] attributes)
+        /// <param name="attributes">An array of NUnitAttributes</param>
+        public void ApplyCommonAttributes(NUnitAttribute[] attributes)
         {
-            foreach (Attribute attribute in attributes)
+            foreach (NUnitAttribute attribute in attributes)
             {
                 IApplyToTest iApply = attribute as IApplyToTest;
                 if (iApply != null)

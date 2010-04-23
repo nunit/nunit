@@ -32,7 +32,7 @@ namespace NUnit.Framework
 	/// guaranteed to be called, even if an exception is thrown.
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Method, AllowMultiple=false)]
-	public class TestFixtureTearDownAttribute : Attribute
+	public class TestFixtureTearDownAttribute : NUnitAttribute
 	{
 	}
 }

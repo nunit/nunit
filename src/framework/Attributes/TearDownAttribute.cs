@@ -31,6 +31,6 @@ namespace NUnit.Framework
 	/// guaranteed to be called, even if an exception is thrown.
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Method, AllowMultiple=false)]
-	public class TearDownAttribute : Attribute
+	public class TearDownAttribute : NUnitAttribute
 	{}
 }

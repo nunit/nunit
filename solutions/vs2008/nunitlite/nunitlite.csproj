@@ -91,6 +91,9 @@
     <Compile Include="..\..\..\src\framework\Attributes\IgnoreAttribute.cs">
       <Link>Attributes\IgnoreAttribute.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\framework\Attributes\NUnitAttribute.cs">
+      <Link>Attributes\NUnitAttribute.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\framework\Attributes\PropertyAttribute.cs">
       <Link>Attributes\PropertyAttribute.cs</Link>
     </Compile>

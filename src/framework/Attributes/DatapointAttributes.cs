@@ -31,7 +31,7 @@ namespace NUnit.Framework
     /// within the same fixture that requires an argument of the field's Type.
     /// </summary>
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = false, Inherited = true)]
-    public class DatapointAttribute : Attribute
+    public class DatapointAttribute : NUnitAttribute
     {
     }
 
@@ -41,7 +41,7 @@ namespace NUnit.Framework
     /// of the Type of the array elements.
     /// </summary>
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property | AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
-    public class DatapointsAttribute : Attribute
+    public class DatapointsAttribute : NUnitAttribute
     {
     }
 }

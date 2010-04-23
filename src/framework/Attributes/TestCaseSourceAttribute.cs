@@ -30,7 +30,7 @@ namespace NUnit.Framework
     /// provide test cases for a test method.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true, Inherited = false)]
-    public class TestCaseSourceAttribute : Attribute
+    public class TestCaseSourceAttribute : NUnitAttribute
     {
         private readonly string sourceName;
         private readonly Type sourceType;

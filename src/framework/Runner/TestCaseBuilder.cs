@@ -138,7 +138,7 @@ namespace NUnitLite.Runner
 
             if (HasValidSignature(testMethod, method, args))
             {
-                testMethod.ApplyCommonAttributes(Reflect.GetAttributes(method, false));
+                testMethod.ApplyCommonAttributes(Reflect.GetNUnitAttributes(method, false));
 
                 ExpectedExceptionAttribute[] attributes =
                     (ExpectedExceptionAttribute[])method.GetCustomAttributes(typeof(ExpectedExceptionAttribute), false);

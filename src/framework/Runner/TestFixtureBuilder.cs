@@ -72,7 +72,7 @@ namespace NUnitLite.Runner
         {
             TestFixture suite = new TestFixture(type);
 
-            suite.ApplyCommonAttributes(Reflect.GetAttributes(type, false));
+            suite.ApplyCommonAttributes(Reflect.GetNUnitAttributes(type, false));
 
             //object[] attrs = type.GetCustomAttributes(typeof(PropertyAttribute), true);
             //foreach (PropertyAttribute attr in attrs)

@@ -1,5 +1,5 @@
-// ***********************************************************************
-// Copyright (c) 2007 Charlie Poole
+﻿// ***********************************************************************
+// Copyright (c) 2010 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,17 +21,18 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NUNITLITE
 using System;
 
 namespace NUnit.Framework
 {
-	/// <summary>
-	/// SetUpFixtureAttribute is used to identify a SetUpFixture
-	/// </summary>
-	[AttributeUsage(AttributeTargets.Class, AllowMultiple=false)]
-	public class SetUpFixtureAttribute : NUnitAttribute
-	{
-	}
+    /// <summary>
+    /// The abstract base class for all custom attributes defined by NUnit.
+    /// </summary>
+    public abstract class NUnitAttribute : Attribute
+    {
+        /// <summary>
+        /// Default constructor
+        /// </summary>
+        public NUnitAttribute() { }
+    }
 }
-#endif
