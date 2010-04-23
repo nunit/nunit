@@ -131,7 +131,7 @@ namespace NUnit.Core.Builders
             this.fixture = new TestFixture(type, arguments);
             CheckTestFixtureIsValid(fixture);
 
-            fixture.ApplyCommonAttributes(Reflect.GetAttributes(type, false));
+            fixture.ApplyCommonAttributes(Reflect.GetNUnitAttributes(type, false));
 
             if (fixture.RunState == RunState.Runnable && attr != null)
             {

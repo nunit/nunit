@@ -21,15 +21,15 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
+
 namespace NUnit.Framework
 {
-    using System;
-
     /// <summary>
     /// ExpectedExceptionAttribute
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
-    public class ExpectedExceptionAttribute : Attribute
+    public class ExpectedExceptionAttribute : NUnitAttribute
     {
         private Type expectedException;
         private string expectedExceptionName;

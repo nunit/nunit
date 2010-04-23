@@ -33,7 +33,7 @@ namespace NUnit.Framework
     /// and supply data for the parameter.
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false, Inherited = true)]
-    public abstract class ParameterDataAttribute : Attribute
+    public abstract class ParameterDataAttribute : NUnitAttribute
     {
         /// <summary>
         /// Gets the data to be provided to the specified parameter

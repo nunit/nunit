@@ -31,6 +31,6 @@ namespace NUnit.Framework
 	/// namespace or an assembly.
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Method, AllowMultiple=false)]
-	public class SetUpAttribute : Attribute
+	public class SetUpAttribute : NUnitAttribute
 	{}
 }

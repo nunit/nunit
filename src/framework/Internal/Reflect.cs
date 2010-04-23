@@ -69,34 +69,28 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-		/// Get all attributes of a given type on a member.
-		/// </summary>
-		/// <param name="member">The member to examine</param>
-		/// <param name="attributeType">The attribute Type to look for</param>
-		/// <param name="inherit">True to include inherited attributes</param>
-		/// <returns>The attribute or null</returns>
-        public static System.Attribute[] GetAttributes(
+        /// Get all attributes of a given type on a member.
+        /// </summary>
+        /// <param name="member">The member to examine</param>
+        /// <param name="attributeType">The attribute Type to look for</param>
+        /// <param name="inherit">True to include inherited attributes</param>
+        /// <returns>The attribute or null</returns>
+        public static System.Attribute[] GetAttributesOfType(
             ICustomAttributeProvider member, Type attributeType, bool inherit)
         {
             return (System.Attribute[])member.GetCustomAttributes(attributeType, inherit);
         }
 
         /// <summary>
-        /// Get all attributes on a member.
+        /// Get all NUnitAttributes on a member.
         /// </summary>
         /// <param name="member">The member to examine</param>
         /// <param name="inherit">True to include inherited attributes</param>
         /// <returns>The attribute or null</returns>
-        public static System.Attribute[] GetAttributes(
+        public static NUnitAttribute[] GetNUnitAttributes(
             ICustomAttributeProvider member, bool inherit)
         {
-            object[] attributes = member.GetCustomAttributes(inherit);
-            System.Attribute[] result = new System.Attribute[attributes.Length];
-            int n = 0;
-            foreach (Attribute attribute in attributes)
-                result[n++] = attribute;
-
-            return result;
+            return (NUnitAttribute[])member.GetCustomAttributes(typeof(NUnitAttribute), inherit);
         }
 
         #endregion
