@@ -35,7 +35,7 @@ namespace NUnit.Framework
     /// as NotRunnable.
     /// </summary>
     [AttributeUsage(AttributeTargets.Assembly,AllowMultiple=true)]
-    public class RequiredAddinAttribute : NUnitAttribute, IApplyToTest
+    public class RequiredAddinAttribute : TestModificationAttribute, IApplyToTest
     {
         private string requiredAddin;
         private bool isAddinAvailable;

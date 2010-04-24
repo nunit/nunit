@@ -32,7 +32,7 @@ namespace NUnit.Framework
 	/// {}
 	/// </example>
 	[AttributeUsage(AttributeTargets.Class, AllowMultiple=true, Inherited=true)]
-	public class TestFixtureAttribute : NUnitAttribute, IApplyToTest
+	public class TestFixtureAttribute : TestModificationAttribute, IApplyToTest
 	{
 		private string description;
 

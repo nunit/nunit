@@ -75,22 +75,10 @@ namespace NUnit.Framework.Internal
         /// <param name="attributeType">The attribute Type to look for</param>
         /// <param name="inherit">True to include inherited attributes</param>
         /// <returns>The attribute or null</returns>
-        public static System.Attribute[] GetAttributesOfType(
-            ICustomAttributeProvider member, Type attributeType, bool inherit)
+        public static System.Attribute[] GetAttributes(
+            ICustomAttributeProvider member, Type attributeType)
         {
-            return (System.Attribute[])member.GetCustomAttributes(attributeType, inherit);
-        }
-
-        /// <summary>
-        /// Get all NUnitAttributes on a member.
-        /// </summary>
-        /// <param name="member">The member to examine</param>
-        /// <param name="inherit">True to include inherited attributes</param>
-        /// <returns>The attribute or null</returns>
-        public static NUnitAttribute[] GetNUnitAttributes(
-            ICustomAttributeProvider member, bool inherit)
-        {
-            return (NUnitAttribute[])member.GetCustomAttributes(typeof(NUnitAttribute), inherit);
+            return (System.Attribute[])member.GetCustomAttributes(attributeType, false);
         }
 
         #endregion

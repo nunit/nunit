@@ -63,7 +63,7 @@ namespace NUnit.Core.Builders
 			ArrayList list = new ArrayList();
 #endif
 
-            TestCaseAttribute[] attrs = (TestCaseAttribute[])Reflect.GetAttributesOfType(method, typeof(TestCaseAttribute), false);
+            TestCaseAttribute[] attrs = (TestCaseAttribute[])Reflect.GetAttributes(method, typeof(TestCaseAttribute));
 
             ParameterInfo[] parameters = method.GetParameters();
             int argsNeeded = parameters.Length;

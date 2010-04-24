@@ -115,6 +115,9 @@
     <Compile Include="..\..\..\src\framework\Attributes\TestFixtureAttribute.cs">
       <Link>Attributes\TestFixtureAttribute.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\framework\Attributes\TestModificationAttribute.cs">
+      <Link>Attributes\TestModificationAttribute.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\framework\CompatibleCollections.cs">
       <Link>CompatibleCollections.cs</Link>
     </Compile>
