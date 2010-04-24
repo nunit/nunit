@@ -62,7 +62,7 @@ namespace NUnit.Core.Builders
                 if (member.IsDefined(typeof(DatapointAttribute), true) &&
                     GetTypeFromMemberInfo(member) == parameterType)
                         return true;
-                else if (member.IsDefined(typeof(DatapointsAttribute), true) &&
+                else if (member.IsDefined(typeof(DatapointSourceAttribute), true) &&
                     GetElementTypeFromMemberInfo(member) == parameterType)
                     return true;
             }
@@ -100,7 +100,7 @@ namespace NUnit.Core.Builders
                             datapoints.Add(field.GetValue(ProviderCache.GetInstanceOf(fixtureType)));
                     }
                 }
-                else if (member.IsDefined(typeof(DatapointsAttribute), true))
+                else if (member.IsDefined(typeof(DatapointSourceAttribute), true))
                 {
                     if (GetElementTypeFromMemberInfo(member) == parameterType)
                     {
