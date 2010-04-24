@@ -1,6 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using NUnit.Framework;
+#if CLR_2_0
+using System.Collections.Generic;
+#endif
 
 namespace NUnit.TestData.DatapointFixture
 {
