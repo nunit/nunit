@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using NUnit.Framework.Api;
 using NUnit.Framework.Internal;
 using NUnit.TestData.DatapointFixture;
