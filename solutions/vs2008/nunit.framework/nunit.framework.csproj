@@ -64,6 +64,9 @@
     <Compile Include="..\..\..\src\framework\Api\ITestAssemblyRunner.cs">
       <Link>Api\ITestAssemblyRunner.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\framework\Api\ITestCaseData.cs">
+      <Link>Api\ITestCaseData.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\framework\Api\ITestListener.cs">
       <Link>Api\ITestListener.cs</Link>
     </Compile>
@@ -576,9 +579,6 @@
     </Compile>
     <Compile Include="..\..\..\src\framework\Is.cs">
       <Link>Is.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\ITestCaseData.cs">
-      <Link>ITestCaseData.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Iz.cs">
       <Link>Iz.cs</Link>

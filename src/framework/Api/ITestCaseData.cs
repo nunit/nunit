@@ -24,7 +24,7 @@
 using System;
 using System.Collections;
 
-namespace NUnit.Framework
+namespace NUnit.Framework.Api
 {
     /// <summary>
     /// The ITestCaseData interface is implemented by a class

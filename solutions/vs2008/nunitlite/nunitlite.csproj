@@ -49,6 +49,9 @@
     <Compile Include="..\..\..\src\framework\Api\ITest.cs">
       <Link>Api\ITest.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\framework\Api\ITestCaseData.cs">
+      <Link>Api\ITestCaseData.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\framework\Api\ITestListener.cs">
       <Link>Api\ITestListener.cs</Link>
     </Compile>
@@ -321,9 +324,6 @@
     </Compile>
     <Compile Include="..\..\..\src\framework\Is.cs">
       <Link>Is.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\ITestCaseData.cs">
-      <Link>ITestCaseData.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\ListMapper.cs">
       <Link>ListMapper.cs</Link>

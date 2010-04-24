@@ -37,7 +37,7 @@ namespace NUnit.Framework
     /// Note: Instance modifiers are getters that return
     /// the same instance after modifying it's state.
     /// </summary>
-    public class TestCaseData : ITestCaseData
+    public class TestCaseData : NUnit.Framework.Api.ITestCaseData
     {
         #region Constants
 #if !NUNITLITE
