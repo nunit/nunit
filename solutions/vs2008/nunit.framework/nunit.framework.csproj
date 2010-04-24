@@ -94,8 +94,8 @@
     <Compile Include="..\..\..\src\framework\Attributes\CategoryAttribute.cs">
       <Link>Attributes\CategoryAttribute.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Attributes\DatapointAttributes.cs">
-      <Link>Attributes\DatapointAttributes.cs</Link>
+    <Compile Include="..\..\..\src\framework\Attributes\DatapointAttribute.cs">
+      <Link>Attributes\DatapointAttribute.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Attributes\DescriptionAttribute.cs">
       <Link>Attributes\DescriptionAttribute.cs</Link>
@@ -651,6 +651,12 @@
     </Compile>
     <Compile Include="..\..\..\src\framework\Attributes\TestModificationAttribute.cs">
       <Link>Attributes\TestModificationAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Attributes\DatapointsAttribute.cs">
+      <Link>Attributes\DatapointsAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Attributes\DatapointSourceAttribute.cs">
+      <Link>Attributes\DatapointSourceAttribute.cs</Link>
     </Compile>
     <None Include="..\..\..\src\framework\Templates\Contains.template.cs">
       <Link>Templates\Contains.template.cs</Link>

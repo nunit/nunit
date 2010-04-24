@@ -27,21 +27,14 @@ using System;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// Used to mark a field for use as a datapoint when executing a theory
-    /// within the same fixture that requires an argument of the field's Type.
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Field, AllowMultiple = false, Inherited = true)]
-    public class DatapointAttribute : NUnitAttribute
-    {
-    }
-
-    /// <summary>
-    /// Used to mark an array as containing a set of datapoints to be used
-    /// executing a theory within the same fixture that requires an argument 
-    /// of the Type of the array elements.
+    /// Used to mark a field, property or method providing a set of datapoints to 
+    /// be used in executing any theories within the same fixture that require an 
+    /// argument of the Type provided. The data source may provide an array of
+    /// the required Type or an IEnumerable&lt;T&gt;.
+    /// Synonymous with DatapointsAttribute.
     /// </summary>
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property | AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
-    public class DatapointsAttribute : NUnitAttribute
+    public class DatapointSourceAttribute : NUnitAttribute
     {
     }
 }
