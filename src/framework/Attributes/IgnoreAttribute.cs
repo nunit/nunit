@@ -32,7 +32,7 @@ namespace NUnit.Framework
 	/// tests are run.
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Method|AttributeTargets.Class|AttributeTargets.Assembly, AllowMultiple=false)]
-	public class IgnoreAttribute : NUnitAttribute, IApplyToTest
+	public class IgnoreAttribute : TestModificationAttribute, IApplyToTest
 	{
 		private string reason;
 

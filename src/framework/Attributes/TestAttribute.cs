@@ -48,7 +48,7 @@ namespace NUnit.Framework
 	/// </example>
 	/// 
 	[AttributeUsage(AttributeTargets.Method, AllowMultiple=false)]
-	public class TestAttribute : NUnitAttribute, IApplyToTest
+	public class TestAttribute : TestModificationAttribute, IApplyToTest
 	{
 		private string description;
 

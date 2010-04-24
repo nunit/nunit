@@ -353,14 +353,14 @@ namespace NUnit.Framework.Internal
 
         /// <summary>
         /// Modify a newly constructed test by applying any of NUnit's common
-        /// attributes, based on an input array of attributes. This method checks
-        /// for all attributes, relying on the fact that specific attributes can only
-        /// occur on those constructs on which they are allowed.
+        /// attributes, based on a supplied ICustomAttributeProvider, which is
+        /// usually the reflection element from which the test was constructed,
+        /// but may not be in some instances.
         /// </summary>
-        /// <param name="attributes">An array of NUnitAttributes</param>
-        public void ApplyCommonAttributes(NUnitAttribute[] attributes)
+        /// <param name="provider">An object implementing ICustomAttributeProvider</param>
+        public void ApplyCommonAttributes(ICustomAttributeProvider provider)
         {
-            foreach (NUnitAttribute attribute in attributes)
+            foreach (Attribute attribute in provider.GetCustomAttributes(typeof(TestModificationAttribute), false))
             {
                 IApplyToTest iApply = attribute as IApplyToTest;
                 if (iApply != null)

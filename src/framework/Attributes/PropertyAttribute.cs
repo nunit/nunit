@@ -32,7 +32,7 @@ namespace NUnit.Framework
 	/// PropertyAttribute is used to attach information to a test as a name/value pair..
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Class|AttributeTargets.Method|AttributeTargets.Assembly, AllowMultiple=true)]
-	public class PropertyAttribute : NUnitAttribute, IApplyToTest
+	public class PropertyAttribute : TestModificationAttribute, IApplyToTest
 	{
         private IDictionary properties = new ListDictionary();
 
