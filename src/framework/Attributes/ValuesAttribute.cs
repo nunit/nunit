@@ -29,19 +29,6 @@ using System.Reflection;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// Abstract base class for attributes that apply to parameters 
-    /// and supply data for the parameter.
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false, Inherited = true)]
-    public abstract class ParameterDataAttribute : NUnitAttribute
-    {
-        /// <summary>
-        /// Gets the data to be provided to the specified parameter
-        /// </summary>
-        public abstract IEnumerable GetData(ParameterInfo parameter);
-    }
-
-    /// <summary>
     /// ValuesAttribute is used to provide literal arguments for
     /// an individual parameter of a test.
     /// </summary>

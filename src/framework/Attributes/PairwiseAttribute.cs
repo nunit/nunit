@@ -1,4 +1,4 @@
-// ***********************************************************************
+﻿// ***********************************************************************
 // Copyright (c) 2008 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -27,23 +27,9 @@ using System;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// Marks a test to use a combinatorial join of any argument 
-    /// data provided. Since this is the default, the attribute is
-    /// not needed.
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
-    public class CombinatorialAttribute : PropertyAttribute
-    {
-        /// <summary>
-        /// Default constructor
-        /// </summary>
-        public CombinatorialAttribute() : base("_JOINTYPE", "Combinatorial") { }
-    }
-
-    /// <summary>
-    /// Marks a test to use a combinatorial join of any argument 
-    /// data provided. Since this is the default, the attribute is
-    /// not needed.
+    /// Marks a test to use a pairwise join of any argument 
+    /// data provided. Arguments will be combined in such a
+    /// way that all possible pairs of arguments are used.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
     public class PairwiseAttribute : PropertyAttribute
@@ -52,20 +38,6 @@ namespace NUnit.Framework
         /// Default constructor
         /// </summary>
         public PairwiseAttribute() : base("_JOINTYPE", "Pairwise") { }
-    }
-
-    /// <summary>
-    /// Marks a test to use a combinatorial join of any argument 
-    /// data provided. Since this is the default, the attribute is
-    /// not needed.
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
-    public class SequentialAttribute : PropertyAttribute
-    {
-        /// <summary>
-        /// Default constructor
-        /// </summary>
-        public SequentialAttribute() : base("_JOINTYPE", "Sequential") { }
     }
 }
 #endif
