@@ -27,12 +27,12 @@ using System.Collections;
 using System.Reflection;
 using NUnit.Framework.Api;
 
-namespace NUnit.Framework.Internal
+namespace NUnit.Framework.Internal.Builders
 {
     /// <summary>
-    /// Static class used to build test cases.
+    /// Static class used by NUnitLite to build test cases.
     /// </summary>
-    public class TestCaseBuilder
+    public class NUnitLiteTestCaseBuilder
     {
         /// <summary>
         /// Determines whether the specified method is a test method.

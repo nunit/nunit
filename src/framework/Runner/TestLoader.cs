@@ -26,6 +26,7 @@ using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.Api;
 using NUnit.Framework.Internal;
+using NUnit.Framework.Internal.Builders;
 
 namespace NUnitLite.Runner
 {
@@ -45,29 +46,11 @@ namespace NUnitLite.Runner
 
             foreach (Type type in assembly.GetTypes())
             {
-                if (TestFixtureBuilder.CanBuildFrom(type))
-                    suite.Add(TestFixtureBuilder.BuildFrom(type));
+                if (NUnitLiteTestFixtureBuilder.CanBuildFrom(type))
+                    suite.Add(NUnitLiteTestFixtureBuilder.BuildFrom(type));
             }
 
             return suite;
-        }
-
-        /// <summary>
-        /// Load a named fixture class from an assembly
-        /// </summary>
-        /// <param name="assembly">The assembly</param>
-        /// <param name="className">The name of the test fixture class</param>
-        /// <returns>A test representing the named fixture</returns>
-        public static Test Load(Assembly assembly, string className)
-        {
-            Type type = assembly.GetType(className);
-            //if (type == null && className.IndexOf(',') == -1)
-            //    type = Type.GetType(className + "," + assembly.GetName().Name);
-
-            if (type == null)
-                throw new TestRunnerException("Unable to load class " + className);
-
-            return Load(type);
         }
 
         /// <summary>
@@ -86,33 +69,19 @@ namespace NUnitLite.Runner
         }
 
         /// <summary>
-        /// Loads a type as a test using either the test suite
-        /// mechansm or the fixture mechanism.
+        /// Load a named fixture class from an assembly
         /// </summary>
-        /// <param name="type">The type to be loaded</param>
-        /// <returns>A test constructed on that type</returns>
-        public static Test Load(Type type)
+        /// <param name="assembly">The assembly</param>
+        /// <param name="className">The name of the test fixture class</param>
+        /// <returns>A test representing the named fixture</returns>
+        private static Test Load(Assembly assembly, string className)
         {
-            Test test = TestLoader.LoadAsSuite(type);
-            if (test == null)
-                test = TestFixtureBuilder.BuildFrom(type);
+            Type type = assembly.GetType(className);
 
-            return test;
-        }
+            if (type == null)
+                throw new TestRunnerException("Unable to load class " + className);
 
-        /// <summary>
-        /// Loads a type as a suite if possible
-        /// </summary>
-        /// <param name="type">The type to load</param>
-        /// <returns>A test constructed from the type</returns>
-        public static Test LoadAsSuite(Type type)
-        {
-            Type[] empty = new Type[0];
-            PropertyInfo suiteProperty = type.GetProperty("Suite", typeof(ITest), empty);
-            if (suiteProperty != null)
-                return (Test)suiteProperty.GetValue(null, empty);
-
-            return null;
+            return NUnitLiteTestFixtureBuilder.BuildFrom(type);
         }
     }
 }

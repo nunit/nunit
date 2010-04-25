@@ -44,28 +44,6 @@ namespace NUnitLite.Runner
         private NUnit.ObjectList listeners = new NUnit.ObjectList();
 
         /// <summary>
-        /// Runs all tests in the specified assembly.
-        /// </summary>
-        /// <param name="assembly">The assembly for which tests are to be run.</param>
-        /// <returns>ITestResult representing the result of the run</returns>
-        public virtual ITestResult Run(Assembly assembly)
-        {
-            return Run( TestLoader.Load(assembly) );
-        }
-
-        /// <summary>
-        /// Runs a set of tests specified by name
-        /// </summary>
-        /// <param name="assembly">The assembly containing the tests</param>
-        /// <param name="tests">Array of test names to be run</param>
-        /// <returns>TestResult representing the result of the run</returns>
-        public virtual ITestResult Run(Assembly assembly, string[] tests)
-        {
-            return Run( TestLoader.Load( assembly, tests ) );
-        }
-
-
-        /// <summary>
         /// Runs the specified test.
         /// </summary>
         /// <param name="test">The test.</param>
