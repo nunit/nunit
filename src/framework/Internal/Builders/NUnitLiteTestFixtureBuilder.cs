@@ -24,16 +24,14 @@
 using System;
 using System.Collections;
 using System.Reflection;
-using NUnit.Framework;
 using NUnit.Framework.Api;
-using NUnit.Framework.Internal;
 
-namespace NUnitLite.Runner
+namespace NUnit.Framework.Internal.Builders
 {
     /// <summary>
-    /// Static class used to create test fixtures from Types
+    /// Static class used by NUnitLite to create test fixtures from Types
     /// </summary>
-    public class TestFixtureBuilder
+    public class NUnitLiteTestFixtureBuilder
     {
         /// <summary>
         /// Determines whether this instance can build a fixture from the specified type.
@@ -95,8 +93,8 @@ namespace NUnitLite.Runner
 
             foreach (MethodInfo method in type.GetMethods())
             {
-                if (TestCaseBuilder.IsTestMethod(method))
-                    suite.Add(TestCaseBuilder.BuildFrom(method));
+                if (NUnitLiteTestCaseBuilder.IsTestMethod(method))
+                    suite.Add(NUnitLiteTestCaseBuilder.BuildFrom(method));
             }
 
             return suite;

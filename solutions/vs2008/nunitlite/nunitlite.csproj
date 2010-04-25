@@ -256,6 +256,12 @@
     <Compile Include="..\..\..\src\framework\IExpectException.cs">
       <Link>IExpectException.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\Builders\NUnitLiteTestCaseBuilder.cs">
+      <Link>Internal\Builders\NUnitLiteTestCaseBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\Builders\NUnitLiteTestFixtureBuilder.cs">
+      <Link>Internal\Builders\NUnitLiteTestFixtureBuilder.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\framework\Internal\ExceptionHelper.cs">
       <Link>Internal\ExceptionHelper.cs</Link>
     </Compile>
@@ -294,12 +300,6 @@
     </Compile>
     <Compile Include="..\..\..\src\framework\Internal\Results\TestSuiteResult.cs">
       <Link>Internal\Results\TestSuiteResult.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\TestCaseBuilder.cs">
-      <Link>Internal\TestCaseBuilder.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\TestFixtureBuilder.cs">
-      <Link>Internal\TestFixtureBuilder.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Internal\TestListener.cs">
       <Link>Internal\TestListener.cs</Link>

@@ -43,27 +43,7 @@ namespace NUnit.Framework.Internal
         /// </returns>
 		public static bool CanBuildFrom( Type type )
 		{
-#if NUNITLITE
-            if (type.IsDefined(typeof(TestFixtureAttribute), true))
-                return true;
-
-            if (!type.IsPublic && !type.IsNestedPublic)
-                return false;
-
-            if (type.IsAbstract && !type.IsSealed)
-                return false;
-
-            foreach (MethodInfo method in type.GetMethods())
-            {
-                if (method.IsDefined(typeof(TestAttribute), true) ||
-                    method.IsDefined(typeof(TestCaseAttribute), true))
-                        return true;
-            }
-
-            return false;
-#else
             return CoreExtensions.Host.SuiteBuilders.CanBuildFrom( type );
-#endif
 		}
 
 		/// <summary>
@@ -73,48 +53,14 @@ namespace NUnit.Framework.Internal
 		/// <returns>A TestSuite if the fixture can be built, null if not</returns>
 		public static Test BuildFrom( Type type )
 		{
-#if NUNITLITE
-            TestFixture suite = new TestFixture(type);
-
-            suite.ApplyCommonAttributes(type);
-
-            //object[] attrs = type.GetCustomAttributes(typeof(PropertyAttribute), true);
-            //foreach (PropertyAttribute attr in attrs)
-            //    foreach( DictionaryEntry entry in attr.Properties )
-            //        suite.Properties[entry.Key] = entry.Value;
-
-            //IgnoreAttribute ignore = (IgnoreAttribute)Reflect.GetAttribute(type, typeof(IgnoreAttribute), false);
-            //if (ignore != null)
-            //{
-            //    suite.RunState = RunState.Ignored;
-            //    suite.IgnoreReason = ignore.GetReason();
-            //}
-
-            if (!Reflect.HasConstructor(type))
-            {
-                suite.RunState = RunState.NotRunnable;
-                suite.IgnoreReason = string.Format("Class {0} has no default constructor", type.Name);
-                return suite;
-            }
-
-            foreach (MethodInfo method in type.GetMethods())
-            {
-                if (TestCaseBuilder.IsTestMethod(method))
-                    suite.Add(TestCaseBuilder.BuildFrom(method));
-            }
-
-            return suite;
-#else
             Test suite = CoreExtensions.Host.SuiteBuilders.BuildFrom( type );
 
 			if ( suite != null )
 				suite = CoreExtensions.Host.TestDecorators.Decorate( suite, type );
 
 			return suite;
-#endif
 		}
 
-#if !NUNITLITE
 		/// <summary>
 		/// Build a fixture from an object. 
 		/// </summary>
@@ -127,7 +73,6 @@ namespace NUnit.Framework.Internal
 				suite.Fixture = fixture;
 			return suite;
 		}
-#endif
 
 		/// <summary>
 		/// Private constructor to prevent instantiation
