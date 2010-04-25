@@ -24,6 +24,7 @@
 using System;
 using System.Collections;
 using System.Collections.Specialized;
+using NUnit.Framework.Api;
 
 namespace NUnit.Framework
 {
@@ -32,7 +33,7 @@ namespace NUnit.Framework
     /// and provide them with their arguments.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
-    public class TestCaseAttribute : PropertyAttribute, NUnit.Framework.Api.ITestCaseData
+    public class TestCaseAttribute : PropertyAttribute, ITestCaseData
     {
         private object[] arguments;
 #if !NUNITLITE

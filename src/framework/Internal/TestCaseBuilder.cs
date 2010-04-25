@@ -21,15 +21,13 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#if NUNITLITE
 using System;
 using System.Collections;
 using System.Reflection;
-using NUnit.Framework;
 using NUnit.Framework.Api;
-using NUnit.Framework.Internal;
-using ObjectList = NUnit.ObjectList;
 
-namespace NUnitLite.Runner
+namespace NUnit.Framework.Internal
 {
     /// <summary>
     /// Static class used to build test cases.
@@ -197,3 +195,5 @@ namespace NUnitLite.Runner
         }
     }
 }
+#endif
+
