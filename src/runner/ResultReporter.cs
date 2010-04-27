@@ -78,20 +78,16 @@ namespace NUnit.AdhocTestRunner
 
         private void WriteErrorsAndFailures(XmlNode result)
         {
-            switch (result.Name)
+            if (result.Name=="test-case")
             {
-                case"test-case":
-                    string resultState = result.Attributes["result"].Value;
-                    if (resultState == "Failed" || resultState == "Error" || resultState == "Cancelled")
-                        WriteSingleResult(result);
-                    break;
-                case "test-suite":
-                case "test-fixture":
-                case "method-group":
-                default:
-                    foreach (XmlNode childResult in result.ChildNodes)
-                        WriteErrorsAndFailures(childResult);
-                    break;
+                string resultState = result.Attributes["result"].Value;
+                if (resultState == "Failed" || resultState == "Error" || resultState == "Cancelled")
+                    WriteSingleResult(result);
+            }
+            else
+            {
+                foreach (XmlNode childResult in result.ChildNodes)
+                    WriteErrorsAndFailures(childResult);
             }
         }
 
@@ -106,19 +102,16 @@ namespace NUnit.AdhocTestRunner
 
         private void WriteNotRunResults(XmlNode result)
         {
-            switch (result.Name)
+            if (result.Name == "test-case")
             {
-                case "test-assembly":
-                case "test-suite":
-                case "test-fixture":
-                    foreach (XmlNode childResult in result.ChildNodes)
-                        WriteNotRunResults(childResult);
-                    break;
-                case "test-case":
-                    string resultState = result.Attributes["result"].Value;
-                    if (resultState == "Skipped" || resultState == "Ignored" || resultState == "NotRunnable")
-                        WriteSingleResult(result);
-                    break;
+                string resultState = result.Attributes["result"].Value;
+                if (resultState == "Skipped" || resultState == "Ignored" || resultState == "NotRunnable")
+                    WriteSingleResult(result);
+            }
+            else
+            {
+                foreach (XmlNode childResult in result.ChildNodes)
+                    WriteNotRunResults(childResult);
             }
         }
 
