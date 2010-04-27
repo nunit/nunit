@@ -16,6 +16,8 @@ TestCaseData.cs
 Throws.cs
 Api/IApplyToTest.cs
 Api/ITest.cs
+Api/ITestCaseData.cs
+Api/ITestCaseSource.cs
 Api/ITestListener.cs
 Api/ITestResult.cs
 Api/IXmlNodeBuilder.cs
@@ -31,11 +33,14 @@ Internal/ExpectedExceptionProcessor.cs
 Internal/InvalidTestFixtureException.cs
 Internal/MethodHelper.cs
 Internal/NUnitException.cs
+Internal/ParameterSet.cs
 Internal/Reflect.cs
 Internal/TestListener.cs
 Internal/TextMessageWriter.cs
 Internal/TypeHelper.cs
 Internal/XmlHelper.cs
+Internal/Builders/NUnitLiteTestCaseBuilder.cs
+Internal/Builders/NUnitLiteTestFixtureBuilder.cs
 Internal/Results/CompositeResult.cs
 Internal/Results/ParameterizedMethodResult.cs
 Internal/Results/TestCaseResult.cs

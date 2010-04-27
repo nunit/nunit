@@ -15,6 +15,8 @@
       <sources basedir=".">
         <include name="../CommonAssemblyInfo.cs" />
         <includesfile name="nunit.framework.sources"/>
+        <exclude name="Internal/Builders/NUnitLiteTestCaseBuilder.cs"/>
+        <exclude name="Internal/Builders/NUnitLiteTestFixtureBuilder.cs"/>
       </sources>
       <references basedir="${current.build.dir}">
         <include name="System.Configuration.dll"/>

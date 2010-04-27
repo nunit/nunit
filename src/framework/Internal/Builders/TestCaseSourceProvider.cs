@@ -84,12 +84,17 @@ namespace NUnit.Core.Builders
         public IEnumerable GetTestCasesFor(MethodInfo method, Test parentSuite)
         {
             ObjectList parameterList = new ObjectList();
-
+#if !EXPERIMENTAL
             foreach (ProviderReference info in GetSourcesFor(method, parentSuite))
             {
                 foreach (object o in info.GetInstance())
                     parameterList.Add(o);
             }
+#else
+            foreach (ITestCaseSource source in method.GetCustomAttributes(typeof(TestCaseSourceAttribute), false))
+                foreach (ITestCaseData data in source.GetTestCasesFor(method))
+                    parameterList.Add(data);
+#endif
 
             return parameterList;
         }

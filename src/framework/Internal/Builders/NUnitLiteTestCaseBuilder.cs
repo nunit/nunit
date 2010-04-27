@@ -62,70 +62,23 @@ namespace NUnit.Framework.Internal.Builders
 
             ParameterizedMethodSuite testcases = new ParameterizedMethodSuite(method);
 
-            foreach (object[] args in testdata)
-                testcases.Add(BuildTestMethod(method, args));
+            foreach (ITestCaseData testCase in testdata)
+                testcases.Add(BuildTestMethod(method, testCase.Arguments));
 
             return testcases;
         }
 
         private static IList GetTestCaseData(MethodInfo method)
         {
-            ObjectList data = new ObjectList();
+            ObjectList testCases = new ObjectList();
 
-            object[] attrs = method.GetCustomAttributes(typeof(TestCaseAttribute), false);
-            foreach (TestCaseAttribute attr in attrs)
+            foreach (ITestCaseSource source in method.GetCustomAttributes(typeof(ITestCaseSource), false))
             {
-                data.Add(attr.Arguments);
+                foreach (ITestCaseData testCase in source.GetTestCasesFor(method))
+                    testCases.Add(testCase);
             }
 
-            attrs = method.GetCustomAttributes(typeof(TestCaseSourceAttribute), false);
-            foreach (TestCaseSourceAttribute attr in attrs)
-            {
-                string sourceName = attr.SourceName;
-                Type sourceType = attr.SourceType;
-                if (sourceType == null)
-                    sourceType = method.ReflectedType;
-
-                IEnumerable source = null;
-                MemberInfo[] members = sourceType.GetMember(sourceName, 
-                    BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
-                if (members.Length == 1)
-                {
-                    MemberInfo member = members[0];
-                    object sourceobject = Reflect.Construct(sourceType);
-                    switch (member.MemberType)
-                    {
-                        case MemberTypes.Field:
-                            FieldInfo field = member as FieldInfo;
-                            source = (IEnumerable)field.GetValue(sourceobject);
-                            break;
-                        case MemberTypes.Property:
-                            PropertyInfo property = member as PropertyInfo;
-                            source = (IEnumerable)property.GetValue(sourceobject, null);
-                            break;
-                        case MemberTypes.Method:
-                            MethodInfo m = member as MethodInfo;
-                            source = (IEnumerable)m.Invoke(sourceobject, null);
-                            break;
-                    }
-
-                    int nparms = method.GetParameters().Length;
-                    
-                    foreach (object obj in source)
-                        if (obj is TestCaseData)
-                            data.Add(((TestCaseData)obj).Arguments);
-                        else
-                        {
-                            object[] array = obj as object[];
-                            if (array != null && array.Length == nparms)
-                                data.Add(obj);
-                            else
-                                data.Add(new object[] { obj });
-                        }
-                }
-            }
-
-            return data;
+            return testCases;
         }
 
         private static Test BuildTestMethod(MethodInfo method, object[] args)
