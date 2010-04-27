@@ -28,7 +28,7 @@ using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.Api;
 
-namespace NUnit.Core.Extensibility
+namespace NUnit.Framework.Internal
 {
     /// <summary>
     /// ParameterSet encapsulates method arguments and
@@ -47,6 +47,7 @@ namespace NUnit.Core.Extensibility
         private RunState runState;
         private Exception providerException;
         private object[] arguments;
+#if !NUNITLITE
         private System.Type expectedException;
         private string expectedExceptionName;
         private string expectedMessage;
@@ -62,6 +63,7 @@ namespace NUnit.Core.Extensibility
         /// to tests without requiring the class to change.
         /// </summary>
         private IDictionary properties;
+#endif
         #endregion
 
         #region Properties
@@ -72,15 +74,6 @@ namespace NUnit.Core.Extensibility
         {
             get { return runState; }
             set { runState = value; }
-        }
-
-        /// <summary>
-        /// The reason for not running the test case
-        /// represented by this ParameterSet
-        /// </summary>
-        public string NotRunReason
-        {
-            get { return (string)Properties[IGNOREREASON]; }
         }
 
         /// <summary>
@@ -99,6 +92,16 @@ namespace NUnit.Core.Extensibility
         {
             get { return arguments; }
             set { arguments = value; }
+        }
+
+#if !NUNITLITE
+        /// <summary>
+        /// The reason for not running the test case
+        /// represented by this ParameterSet
+        /// </summary>
+        public string NotRunReason
+        {
+            get { return (string)Properties[IGNOREREASON]; }
         }
 
         /// <summary>
@@ -232,6 +235,7 @@ namespace NUnit.Core.Extensibility
                 return properties;
             }
         }
+#endif
         #endregion
 
         #region Constructors
@@ -262,6 +266,7 @@ namespace NUnit.Core.Extensibility
         {
             this.RunState = RunState.Runnable;
             this.Arguments = data.Arguments;
+#if !NUNITLITE
             this.ExpectedException = data.ExpectedException;
             this.ExpectedExceptionName = data.ExpectedExceptionName;
             this.ExpectedMessage = data.ExpectedMessage;
@@ -274,6 +279,7 @@ namespace NUnit.Core.Extensibility
 
             foreach (string category in data.Categories)
                 this.Categories.Add(category);
+#endif
         }
         #endregion
     }

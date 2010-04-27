@@ -70,90 +70,11 @@ namespace NUnit.Core.Builders
 
             foreach (TestCaseAttribute attr in attrs)
             {
-                ParameterSet parms;
-
-                try
-                {
-                    parms = new ParameterSet(attr);
-
-                    //if (method.GetParameters().Length == 1 && method.GetParameters()[0].ParameterType == typeof(object[]))
-                    //    parms.Arguments = new object[]{parms.Arguments};
-
-                    if (argsNeeded == 1 && method.GetParameters()[0].ParameterType == typeof(object[]))
-                    {
-                        if (parms.Arguments.Length > 1 ||
-                            parms.Arguments.Length == 1 && parms.Arguments[0].GetType() != typeof(object[]))
-                        {
-                            parms.Arguments = new object[] { parms.Arguments };
-                        }
-                    }
-
-
-                    if (parms.Arguments.Length == argsNeeded)
-                        PerformSpecialConversions(parms.Arguments, parameters);
-                }
-                catch (Exception ex)
-                {
-                    parms = new ParameterSet( ex );
-                }
-
-                list.Add( parms );
-			}
+                foreach (ParameterSet parms in attr.GetTestCasesFor(method))
+                    list.Add(parms);
+            }
 
 			return list;
-        }
-        
-        /// <summary>
-        /// Performs several special conversions allowed by NUnit in order to
-        /// permit arguments with types that cannot be used in the constructor
-        /// of an Attribute such as TestCaseAttribute.
-        /// </summary>
-        /// <param name="arglist">The arguments to be converted</param>
-        /// <param name="parameters">The ParameterInfo array for the method</param>
-        private static void PerformSpecialConversions(object[] arglist, ParameterInfo[] parameters)
-        {
-            for (int i = 0; i < arglist.Length; i++)
-            {
-                object arg = arglist[i];
-                Type targetType = parameters[i].ParameterType;
-
-                if (arg == null)
-                    continue;
-
-                if (arg is SpecialValue && (SpecialValue)arg == SpecialValue.Null)
-                {
-                    arglist[i] = null;
-                    continue;
-                }
-
-                if (targetType.IsAssignableFrom(arg.GetType()))
-                    continue;
-                
-                if (arg is DBNull)
-                {
-                    arglist[i] = null;
-                    continue;
-                }
-
-                bool convert = false;
-
-                if (targetType == typeof(decimal))
-                    convert = arg is double || arg is string;
-                else 
-                if (targetType == typeof(DateTime) || targetType == typeof(TimeSpan))
-                    convert = arg is string;
-
-                if (convert)
-                try
-                {
-                    arglist[i] = Convert.ChangeType(arg, targetType, System.Globalization.CultureInfo.InvariantCulture);
-                }
-                catch (Exception)
-                {
-                    // Do nothing - the incompatible argument will be
-                    // reported when the method is inoked.r
-                }
-            }
         }
     }
 }

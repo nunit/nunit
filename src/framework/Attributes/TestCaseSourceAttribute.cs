@@ -22,6 +22,13 @@
 // ***********************************************************************
 
 using System;
+using System.Collections;
+using System.Reflection;
+using NUnit.Framework.Api;
+using NUnit.Framework.Internal;
+#if CLR_2_0
+using System.Collections.Generic;
+#endif
 
 namespace NUnit.Framework
 {
@@ -30,7 +37,7 @@ namespace NUnit.Framework
     /// provide test cases for a test method.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true, Inherited = false)]
-    public class TestCaseSourceAttribute : NUnitAttribute
+    public class TestCaseSourceAttribute : NUnitAttribute, ITestCaseSource
     {
         private readonly string sourceName;
         private readonly Type sourceType;
@@ -72,5 +79,67 @@ namespace NUnit.Framework
         {
             get { return sourceType;  }
         }
+
+        #region ITestCaseSource Members
+#if CLR_2_0
+        public IEnumerable<ITestCaseData> GetTestCasesFor(MethodInfo method)
+        {
+            List<ITestCaseData> data = new List<ITestCaseData>();
+#else
+        public IEnumerable GetTestCasesFor(MethodInfo method)
+        {
+            ArrayList data = new ArrayList();
+#endif
+            Type sourceType = this.sourceType;
+            if (sourceType == null)
+                sourceType = method.ReflectedType;
+
+            IEnumerable source = null;
+            MemberInfo[] members = sourceType.GetMember(sourceName, 
+                BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
+            if (members.Length == 1)
+            {
+                MemberInfo member = members[0];
+                object sourceobject = Internal.Reflect.Construct(sourceType);
+                switch (member.MemberType)
+                {
+                    case MemberTypes.Field:
+                        FieldInfo field = member as FieldInfo;
+                        source = (IEnumerable)field.GetValue(sourceobject);
+                        break;
+                    case MemberTypes.Property:
+                        PropertyInfo property = member as PropertyInfo;
+                        source = (IEnumerable)property.GetValue(sourceobject, null);
+                        break;
+                    case MemberTypes.Method:
+                        MethodInfo m = member as MethodInfo;
+                        source = (IEnumerable)m.Invoke(sourceobject, null);
+                        break;
+                }
+
+                int nparms = method.GetParameters().Length;
+
+                foreach (object obj in source)
+                {
+                    ITestCaseData testCase = obj as ITestCaseData;
+                    if (testCase != null)
+                        data.Add(testCase);
+                    else
+                    {
+                        ParameterSet parms = new ParameterSet();
+                        object[] array = obj as object[];
+                        parms.Arguments = array != null && array.Length == nparms
+                            ? array
+                            : new object[] { obj };
+
+                        data.Add(parms);
+                    }
+                }
+            }
+
+            return data;
+        }
+
+        #endregion
     }
 }

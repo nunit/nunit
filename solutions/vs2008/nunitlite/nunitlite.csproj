@@ -280,6 +280,9 @@
     <Compile Include="..\..\..\src\framework\Internal\ParameterizedMethodSuite.cs">
       <Link>Internal\ParameterizedMethodSuite.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\ParameterSet.cs">
+      <Link>Internal\ParameterSet.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\framework\Internal\Reflect.cs">
       <Link>Internal\Reflect.cs</Link>
     </Compile>
