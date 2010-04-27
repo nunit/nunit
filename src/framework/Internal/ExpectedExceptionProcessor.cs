@@ -116,7 +116,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="testMethod">The test method.</param>
         /// <param name="source">The ParameterSet.</param>
-        public ExpectedExceptionProcessor(TestMethod testMethod, NUnit.Core.Extensibility.ParameterSet source)
+        public ExpectedExceptionProcessor(TestMethod testMethod, ParameterSet source)
         {
             this.testMethod = testMethod;
 
