@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2008 Charlie Poole
+// Copyright (c) 2010 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,24 +21,18 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NUNITLITE
 using System;
-using System.Collections;
-using System.Reflection;
 
 namespace NUnit.Framework
 {
     /// <summary>
-    /// Abstract base class for attributes that apply to parameters 
-    /// and supply data for the parameter.
+    /// The abstract base class for all custom attributes defined by NUnit.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false, Inherited = true)]
-    public abstract class ParameterDataAttribute : DataAttribute
+    public abstract class DataAttribute : NUnitAttribute
     {
         /// <summary>
-        /// Gets the data to be provided to the specified parameter
+        /// Default constructor
         /// </summary>
-        public abstract IEnumerable GetData(ParameterInfo parameter);
+        public DataAttribute() { }
     }
 }
-#endif

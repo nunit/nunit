@@ -81,6 +81,8 @@ namespace NUnit.AdhocTestRunner
             Debug.Assert(name != null);
             //Debug.Assert(fullname != null);
             Debug.Assert(result != null);
+
+            //output.WriteLine(name.Value);
         }
 
         private void OnSuiteFinished(XmlNode suiteNode)

@@ -37,7 +37,7 @@ namespace NUnit.Framework
     /// provide test cases for a test method.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true, Inherited = false)]
-    public class TestCaseSourceAttribute : NUnitAttribute, ITestCaseSource
+    public class TestCaseSourceAttribute : DataAttribute, ITestCaseSource
     {
         private readonly string sourceName;
         private readonly Type sourceType;
@@ -90,12 +90,75 @@ namespace NUnit.Framework
         {
             ArrayList data = new ArrayList();
 #endif
+            IEnumerable source = GetTestCaseSource(method);
+
+            if (source != null)
+            {
+                ParameterInfo[] parameters = method.GetParameters();
+
+                foreach (object item in source)
+                {
+                    if (item is ITestCaseData)
+                    {
+                        ITestCaseData testCase = item as ITestCaseData;
+                        data.Add(testCase);
+                    }
+                    else if (item is object[])
+                    {
+                        ParameterSet parms = new ParameterSet();
+                        object[] array = item as object[];
+                        parms.Arguments = array.Length == parameters.Length
+                            ? array
+                            : new object[] { item };
+
+                        data.Add(parms);
+                    }
+                    //else if (parameters.Length == 1 && parameters[0].ParameterType.IsAssignableFrom(item.GetType()))
+                    //{
+                    //    ParameterSet parms = new ParameterSet();
+                    //    parms.Arguments = new object[] { item };
+
+                    //    data.Add(parms);
+                    //}
+                    else if (item is Array)
+                    {
+                        Array array = item as Array;
+                        ParameterSet parms = new ParameterSet();
+
+                        if (array.Rank == 1 && array.Length == parameters.Length)
+                        {
+                            parms.Arguments = new object[array.Length];
+                            for (int i = 0; i < array.Length; i++)
+                                parms.Arguments[i] = (object)array.GetValue(i);
+                        }
+                        else
+                        {
+                            parms.Arguments = new object[] { item };
+                        }
+
+                        data.Add(parms);
+                    }
+                    else
+                    {
+                        ParameterSet parms = new ParameterSet();
+                        parms.Arguments = new object[] { item };
+                        data.Add(parms);
+                    }
+                }
+            }
+
+            return data;
+        }
+
+        private IEnumerable GetTestCaseSource(MethodInfo method)
+        {
+            IEnumerable source = null;
+
             Type sourceType = this.sourceType;
             if (sourceType == null)
                 sourceType = method.ReflectedType;
 
-            IEnumerable source = null;
-            MemberInfo[] members = sourceType.GetMember(sourceName, 
+            MemberInfo[] members = sourceType.GetMember(sourceName,
                 BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
             if (members.Length == 1)
             {
@@ -116,30 +179,10 @@ namespace NUnit.Framework
                         source = (IEnumerable)m.Invoke(sourceobject, null);
                         break;
                 }
-
-                int nparms = method.GetParameters().Length;
-
-                foreach (object obj in source)
-                {
-                    ITestCaseData testCase = obj as ITestCaseData;
-                    if (testCase != null)
-                        data.Add(testCase);
-                    else
-                    {
-                        ParameterSet parms = new ParameterSet();
-                        object[] array = obj as object[];
-                        parms.Arguments = array != null && array.Length == nparms
-                            ? array
-                            : new object[] { obj };
-
-                        data.Add(parms);
-                    }
-                }
             }
-
-            return data;
+            return source;
         }
-
         #endregion
+
     }
 }

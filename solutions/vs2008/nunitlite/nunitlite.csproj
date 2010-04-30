@@ -85,6 +85,9 @@
     <Compile Include="..\..\..\src\framework\Attributes\CategoryAttribute.cs">
       <Link>Attributes\CategoryAttribute.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\framework\Attributes\DataAttribute.cs">
+      <Link>Attributes\DataAttribute.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\framework\Attributes\DescriptionAttribute.cs">
       <Link>Attributes\DescriptionAttribute.cs</Link>
     </Compile>

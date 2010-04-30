@@ -685,6 +685,10 @@
     <Compile Include="..\..\..\src\framework\Attributes\ParameterDataAttribute.cs">
       <Link>Attributes\ParameterDataAttribute.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\framework\Attributes\DataAttribute.cs">
+      <Link>Attributes\DataAttribute.cs</Link>
+    </Compile>
+    <Compile Include="ITestCaseSourceProvider.cs" />
     <None Include="..\..\..\src\framework\Templates\Contains.template.cs">
       <Link>Templates\Contains.template.cs</Link>
     </None>
