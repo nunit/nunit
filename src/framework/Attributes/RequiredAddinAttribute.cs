@@ -49,8 +49,8 @@ namespace NUnit.Framework
             this.requiredAddin = requiredAddin;
             this.isAddinAvailable = false;
 
-            foreach (NUnit.Core.Extensibility.Addin addin in CoreExtensions.Host.AddinRegistry.Addins)
-                if (addin.Name == requiredAddin && addin.Status == NUnit.Core.Extensibility.AddinStatus.Loaded)
+            foreach (NUnit.Framework.Extensibility.Addin addin in CoreExtensions.Host.AddinRegistry.Addins)
+                if (addin.Name == requiredAddin && addin.Status == NUnit.Framework.Extensibility.AddinStatus.Loaded)
                     this.isAddinAvailable = true;
         }
 

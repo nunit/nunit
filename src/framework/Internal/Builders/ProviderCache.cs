@@ -26,7 +26,7 @@ using System.Collections;
 using System.Text;
 using NUnit.Framework.Internal;
 
-namespace NUnit.Core.Builders
+namespace NUnit.Framework.Builders
 {
     class ProviderCache
     {

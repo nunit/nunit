@@ -24,9 +24,9 @@
 using System;
 using System.Collections;
 using System.Reflection;
-using NUnit.Core.Extensibility;
+using NUnit.Framework.Extensibility;
 
-namespace NUnit.Core.Builders
+namespace NUnit.Framework.Builders
 {
     /// <summary>
     /// CombinatorialStrategy creates test cases by using all possible

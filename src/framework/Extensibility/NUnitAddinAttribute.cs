@@ -23,7 +23,7 @@
 
 using System;
 
-namespace NUnit.Core.Extensibility
+namespace NUnit.Framework.Extensibility
 {
 	/// <summary>
 	/// NUnitAddinAttribute is used to mark all add-ins. The marked class

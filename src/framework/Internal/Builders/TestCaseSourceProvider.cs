@@ -24,15 +24,14 @@
 using System;
 using System.Collections;
 using System.Reflection;
-using NUnit.Core.Extensibility;
-using NUnit.Framework;
 using NUnit.Framework.Api;
+using NUnit.Framework.Extensibility;
 using NUnit.Framework.Internal;
 #if CLR_2_0
 using System.Collections.Generic;
 #endif
 
-namespace NUnit.Core.Builders
+namespace NUnit.Framework.Builders
 {
     /// <summary>
     /// TestCaseSourceProvider provides data for methods

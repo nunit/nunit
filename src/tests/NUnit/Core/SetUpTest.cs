@@ -25,7 +25,7 @@ using System;
 using NUnit.Framework;
 using NUnit.Framework.Api;
 using NUnit.Framework.Internal;
-using NUnit.Core.Builders;
+using NUnit.Framework.Builders;
 using NUnit.TestUtilities;
 using NUnit.TestData.SetUpTest;
 

@@ -25,7 +25,7 @@ using System;
 using System.Reflection;
 using NUnit.Framework.Internal;
 
-namespace NUnit.Core.Extensibility
+namespace NUnit.Framework.Extensibility
 {
 	/// <summary>
 	/// DecoratorPriority wraps constants that may be used

@@ -23,7 +23,7 @@
 
 using System;
 
-namespace NUnit.Core.Extensibility
+namespace NUnit.Framework.Extensibility
 {
 	/// <summary>
 	/// The AddinStatus enum indicates the load status of an addin.

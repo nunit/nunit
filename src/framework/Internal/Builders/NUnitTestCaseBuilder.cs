@@ -23,12 +23,11 @@
 
 using System;
 using System.Reflection;
-using NUnit.Framework;
 using NUnit.Framework.Api;
 using NUnit.Framework.Internal;
-using NUnit.Core.Extensibility;
+using NUnit.Framework.Extensibility;
 
-namespace NUnit.Core.Builders
+namespace NUnit.Framework.Builders
 {
     /// <summary>
     /// Class to build ether a parameterized or a normal NUnitTestMethod.

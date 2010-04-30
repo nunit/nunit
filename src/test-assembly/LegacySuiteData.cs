@@ -23,7 +23,6 @@
 
 using System;
 using System.Collections;
-using NUnit.Core;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
 

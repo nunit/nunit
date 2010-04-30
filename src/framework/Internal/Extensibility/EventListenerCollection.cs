@@ -26,7 +26,7 @@ using System.Collections;
 using NUnit.Framework.Api;
 using NUnit.Framework.Internal;
 
-namespace NUnit.Core.Extensibility
+namespace NUnit.Framework.Extensibility
 {
 	/// <summary>
 	/// EventListenerCollection holds multiple event listeners

@@ -26,7 +26,7 @@ using System.Collections;
 using System.Reflection;
 using NUnit.Framework.Internal;
 
-namespace NUnit.Core.Builders
+namespace NUnit.Framework.Builders
 {
     class ProviderReference
     {

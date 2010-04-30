@@ -25,7 +25,7 @@ using System;
 using System.Collections;
 using NUnit.Framework.Internal;
 
-namespace NUnit.Core.Extensibility
+namespace NUnit.Framework.Extensibility
 {
 	/// <summary>
 	/// SuiteBuilderCollection is an ExtensionPoint for SuiteBuilders and

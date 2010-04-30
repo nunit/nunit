@@ -24,7 +24,7 @@
 using System.Reflection;
 using NUnit.Framework.Internal;
 
-namespace NUnit.Core.Extensibility
+namespace NUnit.Framework.Extensibility
 {
 	/// <summary>
 	/// The ITestCaseBuilder interface is exposed by a class that knows how to

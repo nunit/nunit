@@ -23,11 +23,10 @@
 
 using System;
 using System.Reflection;
-using NUnit.Core;
-using NUnit.Core.Builders;
-using NUnit.Core.Extensibility;
 using NUnit.Framework;
 using NUnit.Framework.Api;
+using NUnit.Framework.Builders;
+using NUnit.Framework.Extensibility;
 using NUnit.Framework.Internal;
 
 namespace NUnit.TestUtilities

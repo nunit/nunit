@@ -24,7 +24,7 @@
 using System;
 using System.Collections;
 using NUnit.Framework;
-using NUnit.Core.Builders;
+using NUnit.Framework.Builders;
 
 namespace NUnit.Framework.Attributes
 {

@@ -23,7 +23,7 @@
 
 using System;
 
-namespace NUnit.Core.Extensibility
+namespace NUnit.Framework.Extensibility
 {
 	/// <summary>
 	/// The IAddinRegistry interface allows registering addins

@@ -3,6 +3,8 @@ using System.Collections;
 using System.IO;
 using System.Reflection;
 using NUnit.Framework.Api;
+using NUnit.Framework.Builders;
+using NUnit.Framework.Extensibility;
 
 namespace NUnit.Framework.Internal
 {
@@ -22,7 +24,7 @@ namespace NUnit.Framework.Internal
         /// Our LegacySuite builder, which is only used when a 
         /// fixture has been passed by name on the command line.
         /// </summary>
-        NUnit.Core.Extensibility.ISuiteBuilder legacySuiteBuilder;
+        ISuiteBuilder legacySuiteBuilder;
 
         #endregion
 
@@ -35,7 +37,7 @@ namespace NUnit.Framework.Internal
         {
             // TODO: Keeping this separate till we can make
             //it work in all situations.
-            legacySuiteBuilder = new NUnit.Core.Builders.LegacySuiteBuilder();
+            legacySuiteBuilder = new LegacySuiteBuilder();
         }
 
         #endregion

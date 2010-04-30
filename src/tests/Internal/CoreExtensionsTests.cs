@@ -24,7 +24,7 @@
 using System;
 using System.Text;
 using System.Reflection;
-using NUnit.Core.Extensibility;
+using NUnit.Framework.Extensibility;
 
 namespace NUnit.Framework.Internal
 {

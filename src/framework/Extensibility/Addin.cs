@@ -24,7 +24,7 @@
 using System;
 using System.Reflection;
 
-namespace NUnit.Core.Extensibility
+namespace NUnit.Framework.Extensibility
 {
 	/// <summary>
 	/// The Addin class holds information about an addin.

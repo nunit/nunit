@@ -23,7 +23,7 @@
 
 using System;
 
-namespace NUnit.Core.Extensibility
+namespace NUnit.Framework.Extensibility
 {
     /// <summary>
     /// Represents a single point of extension for NUnit. Some extension

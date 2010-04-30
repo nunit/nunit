@@ -25,8 +25,7 @@ using System;
 using System.Collections;
 using NUnit.Framework.Api;
 using NUnit.Framework.Internal;
-using NUnit.Core;
-using NUnit.Core.Builders;
+using NUnit.Framework.Builders;
 using NUnit.TestData;
 using NUnit.TestData.LegacySuiteData;
 
