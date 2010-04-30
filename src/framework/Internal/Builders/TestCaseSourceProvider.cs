@@ -28,6 +28,9 @@ using NUnit.Core.Extensibility;
 using NUnit.Framework;
 using NUnit.Framework.Api;
 using NUnit.Framework.Internal;
+#if CLR_2_0
+using System.Collections.Generic;
+#endif
 
 namespace NUnit.Core.Builders
 {
@@ -83,11 +86,21 @@ namespace NUnit.Core.Builders
         /// <returns></returns>
         public IEnumerable GetTestCasesFor(MethodInfo method, Test parentSuite)
         {
-            ObjectList parameterList = new ObjectList();
-#if EXPERIMENTAL
-            foreach (ITestCaseSource source in method.GetCustomAttributes(typeof(TestCaseSourceAttribute), false))
-                foreach (ITestCaseData data in source.GetTestCasesFor(method))
-                    parameterList.Add(data);
+#if CLR_2_0
+            List<ITestCaseData> testCases = new List<ITestCaseData>();
+#else
+            ArrayList testCases = new ArrayList();
+#endif
+#if true // EXPERIMENTAL
+            foreach (TestCaseSourceAttribute attr in method.GetCustomAttributes(typeof(TestCaseSourceAttribute), false))
+            {
+                // We recast the attr and test it because this code is in the process
+                // of being refactored to be combined with other providers.
+                ITestCaseSource source = attr as ITestCaseSource;
+                if (source != null)
+                    foreach (ITestCaseData data in source.GetTestCasesFor(method))
+                        testCases.Add(data);
+            }
 #else
             foreach (ProviderReference info in GetSourcesFor(method, parentSuite))
             {
@@ -96,7 +109,7 @@ namespace NUnit.Core.Builders
             }
 #endif
 
-            return parameterList;
+            return testCases;
         }
         #endregion
 

@@ -34,7 +34,7 @@ namespace NUnit.Framework
     /// and provide them with their arguments.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
-    public class TestCaseAttribute : PropertyAttribute, ITestCaseData, ITestCaseSource
+    public class TestCaseAttribute : DataAttribute, ITestCaseData, ITestCaseSource
     {
         private object[] arguments;
 #if !NUNITLITE

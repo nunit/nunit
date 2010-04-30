@@ -73,6 +73,7 @@ namespace NUnit.Framework.Attributes
         }
     }
 
+#if DYNAMIC_DATA
     [TestFixture(42)]
     public class ParameterizedTestFixtureWithDataSources
     {
@@ -115,6 +116,7 @@ namespace NUnit.Framework.Attributes
             Assert.That(answer % x == 0);
         }
     }
+#endif
 
     public class ParameterizedTestFixtureNamingTests
     {
@@ -176,8 +178,5 @@ namespace NUnit.Framework.Attributes
             Assert.That(testcase.Name, Is.EqualTo("MethodWithParams(10,20)"));
             Assert.That(testcase.FullName, Is.EqualTo(instance.FullName + ".MethodWithParams(10,20)"));
         }
-
-        //[Test]
-        //public void M
     }
 }

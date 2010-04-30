@@ -23,22 +23,25 @@
 
 using System;
 using System.Collections;
-#if CLR_2_0
-using System.Collections.Generic;
-#endif
 using System.Reflection;
 using System.Text;
 using NUnit.Core.Extensibility;
 using NUnit.Framework;
+using NUnit.Framework.Api;
 using NUnit.Framework.Internal;
+#if CLR_2_0
+using System.Collections.Generic;
+#endif
 
 namespace NUnit.Core.Builders
 {
     /// <summary>
     /// TestCaseParameterProvider supplies test cases specified by TestCaseAttribute
     /// </summary>
-    public class TestCaseParameterProvider : ITestCaseProvider 
+    public class TestCaseParameterProvider : ITestCaseProvider
     {
+        #region ITestCaseProvider Members
+
         /// <summary>
         /// Determine whether any test cases are available for a parameterized method.
         /// </summary>
@@ -58,23 +61,22 @@ namespace NUnit.Core.Builders
         public IEnumerable GetTestCasesFor(MethodInfo method)
         {
 #if CLR_2_0
-            List<ParameterSet> list = new List<ParameterSet>();
+            List<ITestCaseData> testCases = new List<ITestCaseData>();
 #else
-			ArrayList list = new ArrayList();
+			ArrayList testCases = new ArrayList();
 #endif
 
-            TestCaseAttribute[] attrs = (TestCaseAttribute[])Reflect.GetAttributes(method, typeof(TestCaseAttribute));
-
-            ParameterInfo[] parameters = method.GetParameters();
-            int argsNeeded = parameters.Length;
-
-            foreach (TestCaseAttribute attr in attrs)
+            foreach (TestCaseAttribute attr in method.GetCustomAttributes(typeof(TestCaseAttribute), false))
             {
-                foreach (ParameterSet parms in attr.GetTestCasesFor(method))
-                    list.Add(parms);
+                ITestCaseSource source = attr as ITestCaseSource;
+                if (source != null)
+                    foreach (ITestCaseData data in source.GetTestCasesFor(method))
+                        testCases.Add(data);
             }
 
-			return list;
+			return testCases;
         }
+
+        #endregion
     }
 }
