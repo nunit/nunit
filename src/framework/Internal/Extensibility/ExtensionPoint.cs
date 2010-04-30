@@ -24,7 +24,7 @@
 using System;
 using System.Collections;
 
-namespace NUnit.Core.Extensibility
+namespace NUnit.Framework.Extensibility
 {
 	/// <summary>
 	/// ExtensionPoint is used as a base class for all 

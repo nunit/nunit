@@ -24,10 +24,10 @@
 using System;
 using System.Reflection;
 using System.Collections;
-using NUnit.Core.Extensibility;
+using NUnit.Framework.Extensibility;
 using NUnit.Framework.Internal;
 
-namespace NUnit.Core.Builders
+namespace NUnit.Framework.Builders
 {
     /// <summary>
     /// InlineDataPointProvider supplies individual argument values for single

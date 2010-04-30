@@ -24,7 +24,7 @@
 using System;
 using NUnit.Framework.Api;
 using NUnit.Framework.Internal;
-using NUnit.Core.Builders;
+using NUnit.Framework.Builders;
 using NUnit.TestData.FixtureSetUpTearDownData;
 using NUnit.TestUtilities;
 

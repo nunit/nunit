@@ -24,11 +24,11 @@
 using System;
 using System.Reflection;
 using System.Collections;
-using NUnit.Core.Extensibility;
 using NUnit.Framework.Api;
+using NUnit.Framework.Extensibility;
 using NUnit.Framework.Internal;
 
-namespace NUnit.Core.Builders
+namespace NUnit.Framework.Builders
 {
     /// <summary>
     /// CombinatorialTestCaseProvider creates test cases from individual

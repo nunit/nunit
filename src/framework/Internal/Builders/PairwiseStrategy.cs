@@ -25,9 +25,9 @@ using System;
 using System.Collections;
 using System.Reflection;
 using System.Text;
-using NUnit.Core.Extensibility;
+using NUnit.Framework.Extensibility;
 
-namespace NUnit.Core.Builders
+namespace NUnit.Framework.Builders
 {
     /// <summary>
     /// PairwiseStrategy creates test cases by combining the parameter

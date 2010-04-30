@@ -26,7 +26,7 @@ using System.Collections;
 using System.Reflection;
 using NUnit.Framework.Internal;
 
-namespace NUnit.Core.Extensibility
+namespace NUnit.Framework.Extensibility
 {
 	/// <summary>
 	/// TestDecoratorCollection is an ExtensionPoint for TestDecorators and

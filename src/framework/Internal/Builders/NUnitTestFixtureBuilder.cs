@@ -26,16 +26,16 @@ using System.Collections;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Text;
-using NUnit.Framework;
 using NUnit.Framework.Api;
 using NUnit.Framework.Internal;
+using NUnit.Framework.Extensibility;
 
-namespace NUnit.Core.Builders
+namespace NUnit.Framework.Builders
 {
 	/// <summary>
 	/// Built-in SuiteBuilder for NUnit TestFixture
 	/// </summary>
-	public class NUnitTestFixtureBuilder : Extensibility.ISuiteBuilder
+	public class NUnitTestFixtureBuilder : ISuiteBuilder
 	{
 		#region Instance Fields
 		/// <summary>

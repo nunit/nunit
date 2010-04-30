@@ -26,7 +26,7 @@ using System.Reflection;
 using System.Collections;
 using NUnit.Framework.Internal;
 
-namespace NUnit.Core.Extensibility
+namespace NUnit.Framework.Extensibility
 {
     class DataPointProviders : ExtensionPoint, IDataPointProvider2
     {

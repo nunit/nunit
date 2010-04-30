@@ -24,7 +24,7 @@
 using System;
 using System.Collections;
 
-namespace NUnit.Core.Extensibility
+namespace NUnit.Framework.Extensibility
 {
 	/// <summary>
 	/// ExtensionHost is the abstract base class used for

@@ -24,7 +24,7 @@
 using System;
 using NUnit.Framework.Internal;
 
-namespace NUnit.Core.Extensibility
+namespace NUnit.Framework.Extensibility
 {
 	/// <summary>
 	/// The ISuiteBuilder interface is exposed by a class that knows how to

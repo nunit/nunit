@@ -24,10 +24,10 @@
 using System;
 using System.Collections;
 using System.Reflection;
-using NUnit.Core.Extensibility;
 using NUnit.Framework.Internal;
+using NUnit.Framework.Extensibility;
 
-namespace NUnit.Core.Builders
+namespace NUnit.Framework.Builders
 {
     /// <summary>
     /// CombiningStrategy is the abstract base for classes that

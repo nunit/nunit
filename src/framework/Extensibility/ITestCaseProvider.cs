@@ -25,7 +25,7 @@ using System.Collections;
 using System.Reflection;
 using NUnit.Framework.Internal;
 
-namespace NUnit.Core.Extensibility
+namespace NUnit.Framework.Extensibility
 {
     /// <summary>
     /// The ITestCaseProvider interface is used by extensions
