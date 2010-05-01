@@ -37,7 +37,7 @@ namespace NUnit.Framework.Builders
     /// TestCaseSourceProvider provides data for methods
     /// annotated with the TestCaseSourceAttribute.
     /// </summary>
-    public class TestCaseSourceProvider : ITestCaseProvider2
+    public class DataAttributeTestCaseProvider : ITestCaseProvider2
     {
         #region ITestCaseProvider Members
 
@@ -48,7 +48,7 @@ namespace NUnit.Framework.Builders
         /// <returns>True if any cases are available, otherwise false.</returns>
         public bool HasTestCasesFor(MethodInfo method)
         {
-            return method.IsDefined(typeof(TestCaseSourceAttribute), false);
+            return method.IsDefined(typeof(DataAttribute), false);
         }
 
         /// <summary>
@@ -91,7 +91,7 @@ namespace NUnit.Framework.Builders
             ArrayList testCases = new ArrayList();
 #endif
 #if true // EXPERIMENTAL
-            foreach (TestCaseSourceAttribute attr in method.GetCustomAttributes(typeof(TestCaseSourceAttribute), false))
+            foreach (DataAttribute attr in method.GetCustomAttributes(typeof(DataAttribute), false))
             {
                 // We recast the attr and test it because this code is in the process
                 // of being refactored to be combined with other providers.

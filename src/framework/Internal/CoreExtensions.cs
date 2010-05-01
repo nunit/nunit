@@ -196,8 +196,7 @@ namespace NUnit.Framework.Internal
             //testBuilders.Install(new TheoryBuilder());
 
             // Install builtin TestCaseProviders
-            testcaseProviders.Install(new TestCaseParameterProvider());
-            testcaseProviders.Install(new TestCaseSourceProvider());
+            testcaseProviders.Install(new DataAttributeTestCaseProvider());
             testcaseProviders.Install(new CombinatorialTestCaseProvider());
 
             // Install builtin DataPointProvider
