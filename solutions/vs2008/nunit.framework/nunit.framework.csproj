@@ -394,6 +394,9 @@
     <Compile Include="..\..\..\src\framework\Internal\Builders\CombiningStrategy.cs">
       <Link>Internal\Builders\CombiningStrategy.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\Builders\DataAttributeTestCaseProvider.cs">
+      <Link>Internal\Builders\DataAttributeTestCaseProvider.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\framework\Internal\Builders\DatapointProvider.cs">
       <Link>Internal\Builders\DatapointProvider.cs</Link>
     </Compile>
@@ -423,12 +426,6 @@
     </Compile>
     <Compile Include="..\..\..\src\framework\Internal\Builders\SetUpFixtureBuilder.cs">
       <Link>Internal\Builders\SetUpFixtureBuilder.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Builders\TestCaseParameterProvider.cs">
-      <Link>Internal\Builders\TestCaseParameterProvider.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Builders\TestCaseSourceProvider.cs">
-      <Link>Internal\Builders\TestCaseSourceProvider.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Internal\Builders\ValueSourceProvider.cs">
       <Link>Internal\Builders\ValueSourceProvider.cs</Link>
