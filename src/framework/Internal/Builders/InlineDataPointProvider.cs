@@ -24,6 +24,7 @@
 using System;
 using System.Reflection;
 using System.Collections;
+using NUnit.Framework.Api;
 using NUnit.Framework.Extensibility;
 using NUnit.Framework.Internal;
 
@@ -49,7 +50,7 @@ namespace NUnit.Framework.Builders
         /// </returns>
         public bool HasDataFor(ParameterInfo parameter)
         {
-            return parameter.IsDefined(typeof(NUnit.Framework.ParameterDataAttribute), false);
+            return parameter.IsDefined(typeof(DataAttribute), false);
         }
 
         /// <summary>
@@ -63,15 +64,17 @@ namespace NUnit.Framework.Builders
         /// </returns>
         public IEnumerable GetDataFor(ParameterInfo parameter)
         {
-            Attribute attr = Reflect.GetAttribute(parameter, typeof(NUnit.Framework.ParameterDataAttribute), false);
-            if (attr == null) return null;
+            ArrayList data = new ArrayList();
 
-            MethodInfo getData = attr.GetType().GetMethod(
-                GetDataMethod,
-                new Type[] { typeof(ParameterInfo) });
-            if ( getData == null) return null;
-            
-            return getData.Invoke(attr, new object[] { parameter }) as IEnumerable;
+            foreach (Attribute attr in parameter.GetCustomAttributes(typeof(DataAttribute), false))
+            {
+                IParameterDataSource source = attr as IParameterDataSource;
+                if (source != null)
+                    foreach (object item in source.GetData(parameter))
+                        data.Add(item);
+            }
+
+            return data;
         }
         #endregion
     }

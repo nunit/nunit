@@ -25,6 +25,7 @@
 using System;
 using System.Collections;
 using System.Reflection;
+using NUnit.Framework.Api;
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework
@@ -33,7 +34,7 @@ namespace NUnit.Framework
     /// RandomAttribute is used to supply a set of random values
     /// to a single parameter of a parameterized test.
     /// </summary>
-    public class RandomAttribute : ParameterDataAttribute
+    public class RandomAttribute : DataAttribute, IParameterDataSource
     {
         enum SampleType
         {
@@ -89,7 +90,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Get the collection of values to be used as arguments
         /// </summary>
-        public override IEnumerable GetData(ParameterInfo parameter)
+        public IEnumerable GetData(ParameterInfo parameter)
         {
             Randomizer r = Randomizer.GetRandomizer(parameter);
 
