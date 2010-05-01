@@ -21,24 +21,24 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NUNITLITE
 using System;
 using System.Collections;
 using System.Reflection;
 
-namespace NUnit.Framework
+namespace NUnit.Framework.Api
 {
     /// <summary>
-    /// Abstract base class for attributes that apply to parameters 
-    /// and supply data for the parameter.
+    /// The IParameterDataSource interface is implemented by types
+    /// that can provide data for a test method parameter.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false, Inherited = true)]
-    public abstract class ParameterDataAttribute : DataAttribute
+    public interface IParameterDataSource
     {
         /// <summary>
-        /// Gets the data to be provided to the specified parameter
+        /// Gets an enumeration of data items for use as arguments
+        /// for a test method parameter.
         /// </summary>
-        public abstract IEnumerable GetData(ParameterInfo parameter);
+        /// <param name="parameter">The parameter for which data is needed</param>
+        /// <returns>An enumeration containing individual data items</returns>
+        IEnumerable GetData(ParameterInfo parameter);
     }
 }
-#endif

@@ -33,7 +33,7 @@ namespace NUnit.Framework
     /// an individual parameter of a test.
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false, Inherited = true)]
-    public class ValuesAttribute : ParameterDataAttribute
+    public class ValuesAttribute : DataAttribute, Api.IParameterDataSource
     {
         /// <summary>
         /// The collection of data to be returned. Must
@@ -83,7 +83,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Get the collection of values to be used as arguments
         /// </summary>
-        public override IEnumerable GetData(ParameterInfo parameter)
+        public IEnumerable GetData(ParameterInfo parameter)
         {
 			return data;
         }
