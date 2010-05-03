@@ -132,7 +132,7 @@ namespace NUnit.Framework.Builders
             ParameterizedMethodSuite methodSuite = new ParameterizedMethodSuite(method);
             methodSuite.ApplyCommonAttributes(method);
 
-            foreach (object source in CoreExtensions.Host.TestCaseProviders.GetTestCasesFor(method, parentSuite))
+            foreach (object source in CoreExtensions.Host.TestCaseProviders.GetTestCasesFor(method))
             {
                 ParameterSet parms;
 
