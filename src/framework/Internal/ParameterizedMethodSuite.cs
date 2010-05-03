@@ -81,7 +81,13 @@ namespace NUnit.Framework.Internal
                 }
             }
 
-            // DYNAMIC: Get the parameters, and add the methods here.
+            //Extensibility.ITestCaseProvider provider = CoreExtensions.Host.TestCaseProviders;
+
+            //if (provider.HasTestCasesFor(this.method))
+
+            //foreach (TestCaseSourceAttribute attr in this.method.GetCustomAttributes(typeof(TestCaseSourceAttribute), false))
+            //{
+            //}
             
             return base.Run(listener);
         }

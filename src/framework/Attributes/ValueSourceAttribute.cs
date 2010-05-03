@@ -23,6 +23,9 @@
 
 #if !NUNITLITE
 using System;
+using System.Collections;
+using System.Reflection;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Framework
 {
@@ -31,7 +34,7 @@ namespace NUnit.Framework
     /// provide data for one parameter of a test method.
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = true, Inherited = false)]
-    public class ValueSourceAttribute : NUnitAttribute
+    public class ValueSourceAttribute : NUnitAttribute, Api.IParameterDataSource
     {
         private readonly string sourceName;
         private readonly Type sourceType;
@@ -73,6 +76,65 @@ namespace NUnit.Framework
         {
             get { return sourceType; }
         }
+
+        #region IParameterDataSource Members
+
+        public IEnumerable GetData(ParameterInfo parameter)
+        {
+            ObjectList data = new ObjectList();
+            IEnumerable source = GetDataSource(parameter);
+
+            if (source != null)
+                foreach (object item in source)
+                    data.Add(item);
+
+            return source;
+        }
+
+        #endregion
+
+        #region Helper Methods
+
+        private IEnumerable GetDataSource(ParameterInfo parameter)
+        {
+            IEnumerable source = null;
+
+            Type sourceType = this.sourceType;
+            if (sourceType == null)
+                sourceType = parameter.Member.ReflectedType;
+
+            // TODO: Test this
+            if (this.sourceName == null)
+            {
+                return Reflect.Construct(sourceType) as IEnumerable;
+            }
+
+            MemberInfo[] members = sourceType.GetMember(sourceName,
+                BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
+            if (members.Length == 1)
+            {
+                MemberInfo member = members[0];
+                object sourceobject = Internal.Reflect.Construct(sourceType);
+                switch (member.MemberType)
+                {
+                    case MemberTypes.Field:
+                        FieldInfo field = member as FieldInfo;
+                        source = (IEnumerable)field.GetValue(sourceobject);
+                        break;
+                    case MemberTypes.Property:
+                        PropertyInfo property = member as PropertyInfo;
+                        source = (IEnumerable)property.GetValue(sourceobject, null);
+                        break;
+                    case MemberTypes.Method:
+                        MethodInfo m = member as MethodInfo;
+                        source = (IEnumerable)m.Invoke(sourceobject, null);
+                        break;
+                }
+            }
+            return source;
+        }
+
+        #endregion
     }
 }
 #endif

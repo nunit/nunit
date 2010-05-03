@@ -34,10 +34,14 @@ using System.Collections.Generic;
 namespace NUnit.Framework.Builders
 {
     /// <summary>
-    /// TestCaseSourceProvider provides data for methods
-    /// annotated with the TestCaseSourceAttribute.
+    /// DataAttributeTestCaseProvider provides data for methods
+    /// annotated with any DataAttribute. For correct operation,
+    /// any new or custom Attributes must implement one of the 
+    /// following interfaces:
+    ///    ITestCaseData
+    ///    ITestCaseSource
     /// </summary>
-    public class DataAttributeTestCaseProvider : ITestCaseProvider2
+    public class DataAttributeTestCaseProvider : ITestCaseProvider
     {
         #region ITestCaseProvider Members
 
@@ -59,32 +63,6 @@ namespace NUnit.Framework.Builders
         /// <returns></returns>
         public IEnumerable GetTestCasesFor(MethodInfo method)
         {
-            return GetTestCasesFor(method, null);
-        }
-        #endregion
-
-        #region ITestCaseProvider2 Members
-
-        /// <summary>
-        /// Determine whether any test cases are available for a parameterized method.
-        /// </summary>
-        /// <param name="method">A MethodInfo representing a parameterized test</param>
-        /// <param name="parentSuite">The TestSuite being built - ignored in this implementation</param>
-        /// <returns>True if any cases are available, otherwise false.</returns>
-        public bool HasTestCasesFor(MethodInfo method, Test parentSuite)
-        {
-            return HasTestCasesFor(method);
-        }
-
-        /// <summary>
-        /// Return an IEnumerable providing test cases for use in
-        /// running a parameterized test.
-        /// </summary>
-        /// <param name="method">A MethodInfo representing a parameterized test</param>
-        /// <param name="parentSuite">The TestSuite being built - ignored in this implementation</param>
-        /// <returns></returns>
-        public IEnumerable GetTestCasesFor(MethodInfo method, Test parentSuite)
-        {
 #if CLR_2_0
             List<ITestCaseData> testCases = new List<ITestCaseData>();
 #else
@@ -93,12 +71,13 @@ namespace NUnit.Framework.Builders
 #if true // EXPERIMENTAL
             foreach (DataAttribute attr in method.GetCustomAttributes(typeof(DataAttribute), false))
             {
-                // We recast the attr and test it because this code is in the process
-                // of being refactored to be combined with other providers.
                 ITestCaseSource source = attr as ITestCaseSource;
                 if (source != null)
-                    foreach (ITestCaseData data in source.GetTestCasesFor(method))
-                        testCases.Add(data);
+                {
+                    foreach (ITestCaseData testCase in ((ITestCaseSource)attr).GetTestCasesFor(method))
+                        testCases.Add(testCase);
+                    continue;
+                }
             }
 #else
             foreach (ProviderReference info in GetSourcesFor(method, parentSuite))
@@ -113,31 +92,31 @@ namespace NUnit.Framework.Builders
         #endregion
 
         #region Helper Methods
-        private static ProviderList GetSourcesFor(MethodInfo method, Test parent)
-        {
-            ProviderList sources = new ProviderList();
-            TestFixture parentSuite = parent as TestFixture;
+        //private static ProviderList GetSourcesFor(MethodInfo method, Test parent)
+        //{
+        //    ProviderList sources = new ProviderList();
+        //    TestFixture parentSuite = parent as TestFixture;
 
-            foreach (TestCaseSourceAttribute sourceAttr in method.GetCustomAttributes(typeof(TestCaseSourceAttribute), false))
-            {
-                Type sourceType = sourceAttr.SourceType;
-                string sourceName = sourceAttr.SourceName;
+        //    foreach (TestCaseSourceAttribute sourceAttr in method.GetCustomAttributes(typeof(TestCaseSourceAttribute), false))
+        //    {
+        //        Type sourceType = sourceAttr.SourceType;
+        //        string sourceName = sourceAttr.SourceName;
 
-                if (sourceType == null)
-                {
-                    if (parentSuite != null)
-                        sources.Add(new ProviderReference(parentSuite.FixtureType, parentSuite.arguments, sourceName));
-                    else
-                        sources.Add(new ProviderReference(method.ReflectedType, sourceName));
-                }
-                else
-                {
-                    sources.Add(new ProviderReference(sourceType, sourceName));
-                }
+        //        if (sourceType == null)
+        //        {
+        //            if (parentSuite != null)
+        //                sources.Add(new ProviderReference(parentSuite.FixtureType, parentSuite.arguments, sourceName));
+        //            else
+        //                sources.Add(new ProviderReference(method.ReflectedType, sourceName));
+        //        }
+        //        else
+        //        {
+        //            sources.Add(new ProviderReference(sourceType, sourceName));
+        //        }
 
-            }
-            return sources;
-        }
+        //    }
+        //    return sources;
+        //}
         #endregion
     }
 }
