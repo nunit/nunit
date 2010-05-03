@@ -79,6 +79,8 @@ namespace NUnit.Framework.Builders
             return BuildFrom(method, null);
         }
 
+        #endregion
+
         #region ITestCaseBuilder2 Members
 
         /// <summary>
@@ -118,6 +120,8 @@ namespace NUnit.Framework.Builders
         }
 
         #endregion
+
+        #region Implementation
 
         /// <summary>
         /// Builds a ParameterizedMetodSuite containing individual
@@ -196,6 +200,8 @@ namespace NUnit.Framework.Builders
 
             string prefix = method.ReflectedType.FullName;
 
+            // Needed to give proper fullname to test in a parameterized fixture.
+            // Without this, the arguments to the fixture are not included.
             if (parentSuite != null)
             {
                 prefix = parentSuite.FullName;
