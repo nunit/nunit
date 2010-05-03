@@ -38,8 +38,8 @@ namespace NUnit.Framework.Builders
     public class CombinatorialTestCaseProvider : ITestCaseProvider2
     {
         #region Static Members
-        static IDataPointProvider2 dataPointProvider =
-            (IDataPointProvider2)CoreExtensions.Host.GetExtensionPoint("DataPointProviders");
+        static IDataPointProvider dataPointProvider =
+            (IDataPointProvider)CoreExtensions.Host.GetExtensionPoint("DataPointProviders");
 
         #endregion
 
@@ -72,7 +72,7 @@ namespace NUnit.Framework.Builders
         /// <returns></returns>
         public IEnumerable GetTestCasesFor(MethodInfo method)
         {
-            return GetStrategy(method, null).GetTestCases();
+            return GetStrategy(method).GetTestCases();
         }
         #endregion
 
@@ -100,7 +100,7 @@ namespace NUnit.Framework.Builders
         /// <returns></returns>
         public IEnumerable GetTestCasesFor(MethodInfo method, Test suite)
         {
-            return GetStrategy(method, suite).GetTestCases();
+            return GetStrategy(method).GetTestCases();
         }
 
         #endregion
@@ -113,12 +113,12 @@ namespace NUnit.Framework.Builders
         /// <param name="method">The method for which test cases are being built.</param>
         /// <param name="suite">The suite to which methods will be added.</param>
         /// <returns></returns>
-        private CombiningStrategy GetStrategy(MethodInfo method, Test suite)
+        private CombiningStrategy GetStrategy(MethodInfo method)
         {
             ParameterInfo[] parameters = method.GetParameters();
             IEnumerable[] sources = new IEnumerable[parameters.Length];
             for (int i = 0; i < parameters.Length; i++)
-                sources[i] = dataPointProvider.GetDataFor(parameters[i], suite);
+                sources[i] = dataPointProvider.GetDataFor(parameters[i]);
 
             if (method.IsDefined(typeof(NUnit.Framework.SequentialAttribute), false))
                 return new SequentialStrategy(sources);

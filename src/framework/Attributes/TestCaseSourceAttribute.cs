@@ -64,6 +64,11 @@ namespace NUnit.Framework
             this.sourceName = sourceName;
         }
 
+        public TestCaseSourceAttribute(Type sourceType)
+        {
+            this.sourceType = sourceType;
+        }
+
         /// <summary>
         /// The name of a the method, property or fiend to be used as a source
         /// </summary>
@@ -157,6 +162,11 @@ namespace NUnit.Framework
             Type sourceType = this.sourceType;
             if (sourceType == null)
                 sourceType = method.ReflectedType;
+
+            if (this.sourceName == null)
+            {
+                return Reflect.Construct(sourceType) as IEnumerable;
+            }
 
             MemberInfo[] members = sourceType.GetMember(sourceName,
                 BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);

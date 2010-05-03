@@ -24,11 +24,10 @@
 using System;
 using System.Reflection;
 using System.Collections;
-using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Extensibility
 {
-    class DataPointProviders : ExtensionPoint, IDataPointProvider2
+    class DataPointProviders : ExtensionPoint, IDataPointProvider
     {
         public DataPointProviders(ExtensionHost host)
             : base("DataPointProviders", host) { }
@@ -65,62 +64,6 @@ namespace NUnit.Framework.Extensibility
                 if (provider.HasDataFor(parameter))
                     foreach (object o in provider.GetDataFor(parameter))
                         list.Add(o);
-
-            return list;
-        }
-        #endregion
-
-        #region IDataPointProvider2 Members
-
-        /// <summary>
-        /// Determine whether any data is available for a parameter.
-        /// </summary>
-        /// <param name="parameter">A ParameterInfo representing one
-        /// argument to a parameterized test</param>
-        /// <param name="suite">The test suite for which tests are being constructed</param>
-        /// <returns>True if any data is available, otherwise false.</returns>
-        public bool HasDataFor(ParameterInfo parameter, Test suite)
-        {
-            foreach (IDataPointProvider provider in Extensions)
-            {
-                if (provider is IDataPointProvider2)
-                {
-                    IDataPointProvider2 provider2 = (IDataPointProvider2)provider;
-                    if (provider2.HasDataFor(parameter, suite))
-                        return true;
-                }
-                else if (provider.HasDataFor(parameter))
-                    return true;
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Return an IEnumerable providing data for use with the
-        /// supplied parameter.
-        /// </summary>
-        /// <param name="parameter">A ParameterInfo representing one
-        /// argument to a parameterized test</param>
-        /// <param name="suite">The test suite for which tests are being constructed</param>
-        /// <returns>An IEnumerable providing the required data</returns>
-        public IEnumerable GetDataFor(ParameterInfo parameter, Test suite)
-        {
-            ObjectList list = new ObjectList();
-
-            foreach (IDataPointProvider provider in Extensions)
-            {
-                if (provider is IDataPointProvider2)
-                {
-                    IDataPointProvider2 provider2 = (IDataPointProvider2)provider;
-                    if (provider2.HasDataFor(parameter, suite))
-                        foreach (object o in provider2.GetDataFor(parameter, suite))
-                            list.Add(o);
-                }
-                else if (provider.HasDataFor(parameter))
-                    foreach (object o in provider.GetDataFor(parameter))
-                        list.Add(o);
-            }
 
             return list;
         }

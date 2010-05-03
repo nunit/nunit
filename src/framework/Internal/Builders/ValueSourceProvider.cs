@@ -34,7 +34,7 @@ namespace NUnit.Framework.Builders
     /// ValueSourceProvider supplies data items for individual parameters
     /// from named data sources in the test class or a separate class.
     /// </summary>
-    public class ValueSourceProvider : IDataPointProvider2
+    public class ValueSourceProvider : IDataPointProvider
     {
         #region IDataPointProvider Members
 
@@ -56,66 +56,48 @@ namespace NUnit.Framework.Builders
         /// <returns></returns>
         public IEnumerable GetDataFor(ParameterInfo parameter)
         {
-            return GetDataFor(parameter, null);
-        }
-        #endregion
+            ObjectList data = new ObjectList();
 
-        #region IDataPointProvider2 Members
-
-        /// <summary>
-        /// Determine whether any data sources are available for a parameter.
-        /// </summary>
-        /// <param name="parameter">A ParameterInfo test parameter</param>
-        /// <param name="parentSuite">The test suite for which the test is being built</param>
-        /// <returns>True if any data is available, otherwise false.</returns>
-        public bool HasDataFor(ParameterInfo parameter, Test parentSuite)
-        {
-            return HasDataFor(parameter);
-        }
-
-        /// <summary>
-        /// Return an IEnumerable providing test data for use with
-        /// one parameter of a parameterized test.
-        /// </summary>
-        /// <param name="parameter"></param>
-        /// <param name="parentSuite">The test suite for which the test is being built</param>
-        /// <returns></returns>
-        public IEnumerable GetDataFor(ParameterInfo parameter, Test parentSuite)
-        {
-            ObjectList parameterList = new ObjectList();
-
+#if true // EXPERIMENTAL
+            foreach (ValueSourceAttribute attr in parameter.GetCustomAttributes(typeof(ValueSourceAttribute), false))
+            {
+                foreach (object item in attr.GetData(parameter))
+                    data.Add(item);
+            }
+#else
             foreach (ProviderReference providerRef in GetSourcesFor(parameter, parentSuite))
             {
                 IEnumerable instance = providerRef.GetInstance();
                 if (instance != null)
                     foreach (object o in instance)
-                        parameterList.Add(o);
+                        data.Add(o);
             }
+#endif
 
-            return parameterList;
+            return data;
         }
         #endregion
 
         #region Helper Methods
-        private static ProviderList GetSourcesFor(ParameterInfo parameter, Test parent)
-        {
-            ProviderList sources = new ProviderList();
-            TestFixture parentSuite = parent as TestFixture;
+        //private static ProviderList GetSourcesFor(ParameterInfo parameter, Test parent)
+        //{
+        //    ProviderList sources = new ProviderList();
+        //    TestFixture parentSuite = parent as TestFixture;
 
-            foreach (ValueSourceAttribute sourceAttr in parameter.GetCustomAttributes(typeof(ValueSourceAttribute), false))
-            {
-                Type sourceType = sourceAttr.SourceType;
-                string sourceName = sourceAttr.SourceName;
+        //    foreach (ValueSourceAttribute sourceAttr in parameter.GetCustomAttributes(typeof(ValueSourceAttribute), false))
+        //    {
+        //        Type sourceType = sourceAttr.SourceType;
+        //        string sourceName = sourceAttr.SourceName;
 
-                if (sourceType != null)
-                    sources.Add(new ProviderReference(sourceType, sourceName));
-                else if (parentSuite != null)
-                    sources.Add(new ProviderReference(parentSuite.FixtureType, parentSuite.arguments, sourceName));
-                else
-                    sources.Add(new ProviderReference(parameter.Member.ReflectedType, sourceName));
-            }
-            return sources;
-        }
+        //        if (sourceType != null)
+        //            sources.Add(new ProviderReference(sourceType, sourceName));
+        //        else if (parentSuite != null)
+        //            sources.Add(new ProviderReference(parentSuite.FixtureType, parentSuite.arguments, sourceName));
+        //        else
+        //            sources.Add(new ProviderReference(parameter.Member.ReflectedType, sourceName));
+        //    }
+        //    return sources;
+        //}
         #endregion
     }
 }

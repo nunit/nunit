@@ -29,21 +29,8 @@ namespace NUnit.Framework.Api
     /// The ITestCaseSourceProvider interface is implemented by Types that 
     /// are able to provide a test case source for use by a test method.
     /// </summary>
-    public interface ITestCaseSourceProvider
+    public interface IDynamicTestCaseSource
     {
-        ///// <summary>
-        ///// Gets the Type containing the source member. Returns null if 
-        ///// the current test fixture should be used. 
-        ///// </summary>
-        //Type SourceType { get; }
-
-        ///// <summary>
-        ///// The name of the member to be used as a source. Null for
-        ///// source providers that use an interface rather than a string
-        ///// to identify the source.
-        ///// </summary>
-        //string SourceName { get; }
-
         /// <summary>
         /// Returns a test case source. May be called on a provider
         /// implementing the source internally or able to create
