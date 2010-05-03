@@ -35,7 +35,7 @@ namespace NUnit.Framework.Builders
     /// parameter data values, combining them using the CombiningStrategy
     /// indicated by an Attribute used on the test method.
     /// </summary>
-    public class CombinatorialTestCaseProvider : ITestCaseProvider2
+    public class CombinatorialTestCaseProvider : ITestCaseProvider
     {
         #region Static Members
         static IDataPointProvider dataPointProvider =
@@ -74,35 +74,6 @@ namespace NUnit.Framework.Builders
         {
             return GetStrategy(method).GetTestCases();
         }
-        #endregion
-
-        #region ITestCaseProvider2 Members
-
-        /// <summary>
-        /// Determine whether any test cases are available for a parameterized method.
-        /// </summary>
-        /// <param name="method">A MethodInfo representing a parameterized test</param>
-        /// <param name="suite">The suite for which the test case is being built</param>
-        /// <returns>
-        /// True if any cases are available, otherwise false.
-        /// </returns>
-        public bool HasTestCasesFor(System.Reflection.MethodInfo method, Test suite)
-        {
-            return HasTestCasesFor(method);
-        }
-
-        /// <summary>
-        /// Return an IEnumerable providing test cases for use in
-        /// running a paramterized test.
-        /// </summary>
-        /// <param name="method"></param>
-        /// <param name="suite">The suite for which the test case is being built</param>
-        /// <returns></returns>
-        public IEnumerable GetTestCasesFor(MethodInfo method, Test suite)
-        {
-            return GetStrategy(method).GetTestCases();
-        }
-
         #endregion
 
         #region GetStrategy
