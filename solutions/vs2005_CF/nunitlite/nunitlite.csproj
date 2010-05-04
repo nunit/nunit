@@ -59,6 +59,12 @@
     <Compile Include="..\..\..\src\framework\Api\ITest.cs">
       <Link>Api\ITest.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\framework\Api\ITestCaseData.cs">
+      <Link>Api\ITestCaseData.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Api\ITestCaseSource.cs">
+      <Link>Api\ITestCaseSource.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\framework\Api\ITestListener.cs">
       <Link>Api\ITestListener.cs</Link>
     </Compile>
@@ -92,6 +98,9 @@
     <Compile Include="..\..\..\src\framework\Attributes\CategoryAttribute.cs">
       <Link>Attributes\CategoryAttribute.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\framework\Attributes\DataAttribute.cs">
+      <Link>Attributes\DataAttribute.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\framework\Attributes\DescriptionAttribute.cs">
       <Link>Attributes\DescriptionAttribute.cs</Link>
     </Compile>
@@ -100,6 +109,9 @@
     </Compile>
     <Compile Include="..\..\..\src\framework\Attributes\IgnoreAttribute.cs">
       <Link>Attributes\IgnoreAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Attributes\NUnitAttribute.cs">
+      <Link>Attributes\NUnitAttribute.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Attributes\PropertyAttribute.cs">
       <Link>Attributes\PropertyAttribute.cs</Link>
@@ -121,6 +133,9 @@
     </Compile>
     <Compile Include="..\..\..\src\framework\Attributes\TestFixtureAttribute.cs">
       <Link>Attributes\TestFixtureAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Attributes\TestModificationAttribute.cs">
+      <Link>Attributes\TestModificationAttribute.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\CompatibleCollections.cs">
       <Link>CompatibleCollections.cs</Link>
@@ -257,6 +272,12 @@
     <Compile Include="..\..\..\src\framework\IExpectException.cs">
       <Link>IExpectException.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\Builders\NUnitLiteTestCaseBuilder.cs">
+      <Link>Internal\Builders\NUnitLiteTestCaseBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\Builders\NUnitLiteTestFixtureBuilder.cs">
+      <Link>Internal\Builders\NUnitLiteTestFixtureBuilder.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\framework\Internal\ExceptionHelper.cs">
       <Link>Internal\ExceptionHelper.cs</Link>
     </Compile>
@@ -274,6 +295,9 @@
     </Compile>
     <Compile Include="..\..\..\src\framework\Internal\ParameterizedMethodSuite.cs">
       <Link>Internal\ParameterizedMethodSuite.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\ParameterSet.cs">
+      <Link>Internal\ParameterSet.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Internal\Reflect.cs">
       <Link>Internal\Reflect.cs</Link>
@@ -332,9 +356,6 @@
     <Compile Include="..\..\..\src\framework\Is.cs">
       <Link>Is.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\ITestCaseData.cs">
-      <Link>ITestCaseData.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\src\framework\ListMapper.cs">
       <Link>ListMapper.cs</Link>
     </Compile>
@@ -355,12 +376,6 @@
     </Compile>
     <Compile Include="..\..\..\src\framework\Runner\TcpWriter.cs">
       <Link>Runner\TcpWriter.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Runner\TestCaseBuilder.cs">
-      <Link>Runner\TestCaseBuilder.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Runner\TestFixtureBuilder.cs">
-      <Link>Runner\TestFixtureBuilder.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Runner\TestLoader.cs">
       <Link>Runner\TestLoader.cs</Link>
