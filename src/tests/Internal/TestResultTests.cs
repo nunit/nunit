@@ -42,7 +42,7 @@ namespace NUnit.Framework.Internal
 		[SetUp]
 		public void SetUp()
 		{
-            TestMethod test = new TestMethod(Reflect.GetNamedMethod(typeof(DummySuite), "DummyMethod"));
+            TestMethod test = new TestMethod(typeof(DummySuite).GetMethod("DummyMethod"));
             test.Description = "Test description";
             test.Categories.Add("Dubious");
             test.Properties["Priority"] = "low";

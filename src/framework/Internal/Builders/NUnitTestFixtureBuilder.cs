@@ -211,8 +211,8 @@ namespace NUnit.Framework.Builders
                 object[] args = fixture.arguments;
 
                 ConstructorInfo ctor = args == null || args.Length == 0
-                    ? Reflect.GetConstructor(fixtureType)
-                    : Reflect.GetConstructor(fixtureType, Type.GetTypeArray(args));
+                    ? fixtureType.GetConstructor(Type.EmptyTypes)
+                    : fixtureType.GetConstructor(Type.GetTypeArray(args));
 
                 if (ctor == null)
                 {
