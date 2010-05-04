@@ -58,6 +58,9 @@
     <Compile Include="..\..\..\src\test-assembly\CultureAttributeData.cs">
       <Link>CultureAttributeData.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\test-assembly\DatapointFixture.cs">
+      <Link>DatapointFixture.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\test-assembly\DescriptionFixture.cs">
       <Link>DescriptionFixture.cs</Link>
     </Compile>
