@@ -52,121 +52,7 @@ namespace NUnit.Framework.Internal
         // A zero-length Type array - not provided by System.Type for all CLR versions we support.
         private static readonly Type[] EmptyTypes = new Type[0];
 
-        #region Attributes
-
-        /// <summary>
-        /// Get attribute of a given type on a member. If multiple attributes
-        /// of a type are present, the first one found is returned.
-        /// </summary>
-        /// <param name="member">The member to examine</param>
-        /// <param name="attributeType">The attribute Type to look for</param>
-        /// <param name="inherit">True to include inherited attributes</param>
-        /// <returns>The attribute or null</returns>
-        public static System.Attribute GetAttribute(ICustomAttributeProvider member, Type attributeType, bool inherit)
-        {
-            object[] attrs = member.GetCustomAttributes(attributeType, inherit);
-            return attrs.Length > 0 ? (Attribute)attrs[0] : null;
-        }
-
-        /// <summary>
-        /// Get all attributes of a given type on a member.
-        /// </summary>
-        /// <param name="member">The member to examine</param>
-        /// <param name="attributeType">The attribute Type to look for</param>
-        /// <param name="inherit">True to include inherited attributes</param>
-        /// <returns>The attribute or null</returns>
-        public static System.Attribute[] GetAttributes(
-            ICustomAttributeProvider member, Type attributeType)
-        {
-            return (System.Attribute[])member.GetCustomAttributes(attributeType, false);
-        }
-
-        #endregion
-
-		#region Interfaces
-
-		/// <summary>
-		/// Check to see if a type implements a named interface.
-		/// </summary>
-		/// <param name="fixtureType">The type to examine</param>
-		/// <param name="interfaceType">The Type of the interface to check for</param>
-		/// <returns>True if the interface is implemented by the type</returns>
-        public static bool HasInterface(Type fixtureType, Type interfaceType)
-        {
-            foreach (Type type in fixtureType.GetInterfaces())
-                if (type == interfaceType)
-                    return true;
-            return false;
-        }
-
-		#endregion
-
-        #region Get Constructors for a Type
-
-        /// <summary>
-        /// Determines whether the specified type has a constructor that takes the specified arg types.
-        /// </summary>
-        /// <param name="type">The type.</param>
-        /// <param name="argTypes">The arg types.</param>
-        /// <returns>
-        /// 	<c>true</c> if the specified type has such a constructor; otherwise, <c>false</c>.
-        /// </returns>
-        public static bool HasConstructor(Type type, params Type[] argTypes)
-        {
-            return GetConstructor(type, argTypes) != null;
-        }
-
-        /// <summary>
-		/// Find the default constructor on a type
-		/// </summary>
-		/// <param name="fixtureType"></param>
-		/// <returns></returns>
-		public static ConstructorInfo GetConstructor( Type fixtureType )
-		{
-			return fixtureType.GetConstructor( Reflect.EmptyTypes );
-		}
-
-		/// <summary>
-		/// Find a constructor for a type matching a set of argument Types
-		/// </summary>
-		/// <param name="fixtureType">The Type for which a constructor is needed.</param>
-        /// <param name="types">An array of Type arguments.</param>
-		/// <returns></returns>
-		public static ConstructorInfo GetConstructor( Type fixtureType, Type[] types )
-		{
-			return fixtureType.GetConstructor( types );
-		}
-
-        #endregion
-
         #region Get Methods of a type
-
-        /// <summary>
-        /// Gets the MethodInfo for a named method.
-        /// </summary>
-        /// <param name="type">The type.</param>
-        /// <param name="name">The methd name.</param>
-        /// <param name="argTypes">The arg types.</param>
-        /// <returns>A MethodInfo</returns>
-        public static MethodInfo GetMethod(Type type, string name, params Type[] argTypes)
-        {
-            if (argTypes == null) argTypes = Reflect.EmptyTypes;
-            return type.GetMethod(name, argTypes);
-        }
-
-        /// <summary>
-        /// Gets a method.
-        /// </summary>
-        /// <param name="type">The type.</param>
-        /// <param name="name">The name.</param>
-        /// <param name="flags">The flags.</param>
-        /// <param name="argTypes">The arg types.</param>
-        /// <returns></returns>
-        public static MethodInfo GetMethod(Type type, string name, BindingFlags flags, params Type[] argTypes)
-        {
-            if (argTypes == null) argTypes = Reflect.EmptyTypes;
-            return type.GetMethod(name, flags, null, argTypes, null);
-        }
 
         /// <summary>
         /// Examine a fixture type and return an array of methods having a 
@@ -184,7 +70,7 @@ namespace NUnit.Framework.Internal
             ArrayList list = new ArrayList();
 #endif
 
-            foreach (MethodInfo method in GetMethods(fixtureType))
+            foreach (MethodInfo method in fixtureType.GetMethods(AllMembers))
             {
                 if (method.IsDefined(attributeType, inherit))
                     list.Add(method);
@@ -197,11 +83,6 @@ namespace NUnit.Framework.Internal
 #else
             return (MethodInfo[])list.ToArray(typeof(MethodInfo));
 #endif
-        }
-
-        private static MethodInfo[] GetMethods(Type fixtureType)
-        {
-            return fixtureType.GetMethods(AllMembers);
         }
 
 #if CLR_2_0
@@ -244,7 +125,7 @@ namespace NUnit.Framework.Internal
         /// <returns>True if found, otherwise false</returns>
         public static bool HasMethodWithAttribute(Type fixtureType, Type attributeType, bool inherit)
         {
-            foreach (MethodInfo method in GetMethods( fixtureType ))
+            foreach (MethodInfo method in fixtureType.GetMethods(AllMembers))
             {
                 if (method.IsDefined(attributeType, inherit))
                     return true;
@@ -253,80 +134,7 @@ namespace NUnit.Framework.Internal
             return false;
         }
 
-        /// <summary>
-        /// Examine a fixture type and get a method with a particular name.
-        /// In the case of overloads, the first one found is returned.
-        /// </summary>
-        /// <param name="fixtureType">The type to examine</param>
-        /// <param name="methodName">The name of the method</param>
-        /// <returns>A MethodInfo or null</returns>
-        public static MethodInfo GetNamedMethod(Type fixtureType, string methodName)
-        {
-            foreach (MethodInfo method in GetMethods( fixtureType ))
-            {
-                if (method.Name == methodName)
-                    return method;
-            }
-
-            return null;
-        }
-
-        /// <summary>
-        /// Examine a fixture type and get a method with a particular name and list
-        /// of arguments. In the case of overloads, the first one found is returned.
-        /// </summary>
-        /// <param name="fixtureType">The type to examine</param>
-        /// <param name="methodName">The name of the method</param>
-        /// <param name="argTypes">The full names of the argument types to search for</param>
-        /// <returns>A MethodInfo or null</returns>
-        public static MethodInfo GetNamedMethod(Type fixtureType, string methodName, 
-            string[] argTypes)
-        {
-            foreach (MethodInfo method in GetMethods(fixtureType) )
-            {
-                if (method.Name == methodName)
-                {
-                    ParameterInfo[] parameters = method.GetParameters();
-                    if (parameters.Length == argTypes.Length)
-                    {
-                        bool match = true;
-                        for (int i = 0; i < argTypes.Length; i++)
-                            if (parameters[i].ParameterType.FullName != argTypes[i])
-                            {
-                                match = false;
-                                break;
-                            }
-
-                        if (match)
-                            return method;
-                    }
-                }
-            }
-
-            return null;
-        }
-
         #endregion
-
-		#region Get Properties of a type
-		/// <summary>
-		/// Examine a type and return a property having a particular attribute.
-		/// In the case of multiple methods, the first one found is returned.
-		/// </summary>
-		/// <param name="fixtureType">The type to examine</param>
-		/// <param name="attributeType">The attribute Type to look for</param>
-		/// <returns>A PropertyInfo or null</returns>
-        public static PropertyInfo GetPropertyWithAttribute(Type fixtureType, Type attributeType)
-        {
-            foreach (PropertyInfo property in fixtureType.GetProperties(AllMembers))
-            {
-                if (property.IsDefined(attributeType, true))
-                    return property;
-            }
-
-            return null;
-        }
-		#endregion
 
         #region Invoke Constructors
 
@@ -337,7 +145,7 @@ namespace NUnit.Framework.Internal
         /// <returns>An instance of the Type</returns>
         public static object Construct(Type type)
         {
-            ConstructorInfo ctor = GetConstructor(type);
+            ConstructorInfo ctor = type.GetConstructor(EmptyTypes);
             if (ctor == null)
                 throw new InvalidTestFixtureException(type.FullName + " does not have a default constructor");
 
@@ -355,7 +163,7 @@ namespace NUnit.Framework.Internal
             if (arguments == null) return Construct(type);
 
             Type[] argTypes = GetTypeArray(arguments);
-            ConstructorInfo ctor = GetConstructor(type, argTypes);
+            ConstructorInfo ctor = type.GetConstructor(argTypes);
             if (ctor == null)
                 throw new InvalidTestFixtureException(type.FullName + " does not have a suitable constructor");
 

@@ -110,7 +110,7 @@ namespace NUnit.Framework.Builders
                 return false;
             }
 
-            if (Reflect.GetConstructor(type) == null)
+            if (type.GetConstructor(Type.EmptyTypes) == null)
             {
                 reason = string.Format("{0} does not have a valid constructor", type.FullName);
                 return false;
@@ -133,7 +133,13 @@ namespace NUnit.Framework.Builders
 
         private static PropertyInfo GetSuiteProperty(Type testClass)
         {
-            return Reflect.GetPropertyWithAttribute(testClass, typeof(NUnit.Framework.SuiteAttribute));
+            foreach (PropertyInfo property in testClass.GetProperties(BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
+            {
+                if (property.IsDefined(typeof(SuiteAttribute), true))
+                    return property;
+            }
+
+            return null;
         }
         #endregion
     }

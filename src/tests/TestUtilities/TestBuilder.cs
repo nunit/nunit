@@ -64,7 +64,7 @@ namespace NUnit.TestUtilities
 
         public static Test MakeTestCase(Type type, string methodName)
         {
-            MethodInfo method = Reflect.GetNamedMethod(type, methodName);
+            MethodInfo method = type.GetMethod(methodName, BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
             if (method == null)
                 Assert.Fail("Method not found: " + methodName);
             return testBuilder.BuildFrom(method);

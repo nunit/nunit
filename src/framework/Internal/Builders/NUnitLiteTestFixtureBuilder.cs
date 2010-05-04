@@ -84,7 +84,8 @@ namespace NUnit.Framework.Internal.Builders
             //    suite.IgnoreReason = ignore.GetReason();
             //}
 
-            if (!Reflect.HasConstructor(type))
+            // Note: Type.EmptyTypes is not supported on all CLR versions we support.
+            if (type.GetConstructor(new Type[0]) == null)
             {
                 suite.RunState = RunState.NotRunnable;
                 suite.IgnoreReason = string.Format("Class {0} has no default constructor", type.Name);

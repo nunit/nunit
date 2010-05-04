@@ -93,9 +93,7 @@ namespace NUnit.Framework.Internal
             this.userMessage = source.UserMessage;
 
             string handlerName = source.Handler;
-            if (handlerName == null)
-                this.exceptionHandler = GetDefaultExceptionHandler(testMethod.FixtureType);
-            else
+            if (handlerName != null)
             {
                 MethodInfo handler = GetExceptionHandler(testMethod.FixtureType, handlerName);
                 if (handler != null)
@@ -124,8 +122,6 @@ namespace NUnit.Framework.Internal
             this.expectedExceptionName = source.ExpectedExceptionName;
             this.expectedMessage = source.ExpectedMessage;
             this.matchType = source.MatchType;
-
-            this.exceptionHandler = GetDefaultExceptionHandler(testMethod.FixtureType);
         }
 #endif
 
@@ -157,6 +153,12 @@ namespace NUnit.Framework.Internal
                 {
                     if (exceptionHandler != null)
                         Reflect.InvokeMethod(exceptionHandler, testMethod.Fixture, exception);
+                    else
+                    {
+                        IExpectException handler = testMethod.Fixture as IExpectException;
+                        if (handler != null)
+                            handler.HandleException(exception);
+                    }
 
                     testResult.SetResult(ResultState.Success);
                 }
@@ -271,19 +273,14 @@ namespace NUnit.Framework.Internal
         }
 #endif
 
-        private static MethodInfo GetDefaultExceptionHandler(Type fixtureType)
-        {
-            return Reflect.HasInterface(fixtureType, typeof(IExpectException))
-                ? GetExceptionHandler(fixtureType, "HandleException")
-                : null;
-        }
-
         private static MethodInfo GetExceptionHandler(Type fixtureType, string name)
         {
-            return Reflect.GetNamedMethod(
-                fixtureType,
+            return fixtureType.GetMethod(
                 name,
-                new string[] { "System.Exception" });
+                BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
+                null,
+                new Type[] { typeof(System.Exception) },
+                null);
         }
         #endregion
     }
