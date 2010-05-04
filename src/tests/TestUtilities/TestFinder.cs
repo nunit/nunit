@@ -22,7 +22,6 @@
 // ***********************************************************************
 
 using System;
-using NUnit.Core;
 using NUnit.Framework.Api;
 using NUnit.Framework.Internal;
 

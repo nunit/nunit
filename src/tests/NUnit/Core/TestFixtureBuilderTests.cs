@@ -26,7 +26,6 @@ using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.Api;
 using NUnit.Framework.Internal;
-using NUnit.Core;
 using NUnit.TestUtilities;
 using NUnit.TestData.TestFixtureBuilderData;
 
