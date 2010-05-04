@@ -28,7 +28,7 @@
   <target name="package">
     <copy todir="${package.src.dir}/framework">
       <fileset>
-        <includesfile name="nunit.sources"/>
+        <includesfile name="nunit.framework.sources"/>
         <include name="Templates/*.cs"/>
       </fileset>
     </copy>
