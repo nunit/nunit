@@ -51,6 +51,9 @@
     <Compile Include="..\..\..\src\framework\Api\IApplyToTest.cs">
       <Link>Api\IApplyToTest.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\framework\Api\IParameterDataSource.cs">
+      <Link>Api\IParameterDataSource.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\framework\Api\ITest.cs">
       <Link>Api\ITest.cs</Link>
     </Compile>
@@ -59,6 +62,12 @@
     </Compile>
     <Compile Include="..\..\..\src\framework\Api\ITestAssemblyRunner.cs">
       <Link>Api\ITestAssemblyRunner.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Api\ITestCaseData.cs">
+      <Link>Api\ITestCaseData.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Api\ITestCaseSource.cs">
+      <Link>Api\ITestCaseSource.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Api\ITestListener.cs">
       <Link>Api\ITestListener.cs</Link>
@@ -99,8 +108,23 @@
     <Compile Include="..\..\..\src\framework\Attributes\CategoryAttribute.cs">
       <Link>Attributes\CategoryAttribute.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Attributes\DatapointAttributes.cs">
-      <Link>Attributes\DatapointAttributes.cs</Link>
+    <Compile Include="..\..\..\src\framework\Attributes\CombinatorialAttribute.cs">
+      <Link>Attributes\CombinatorialAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Attributes\CultureAttribute.cs">
+      <Link>Attributes\CultureAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Attributes\DataAttribute.cs">
+      <Link>Attributes\DataAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Attributes\DatapointAttribute.cs">
+      <Link>Attributes\DatapointAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Attributes\DatapointsAttribute.cs">
+      <Link>Attributes\DatapointsAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Attributes\DatapointSourceAttribute.cs">
+      <Link>Attributes\DatapointSourceAttribute.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Attributes\DescriptionAttribute.cs">
       <Link>Attributes\DescriptionAttribute.cs</Link>
@@ -114,14 +138,20 @@
     <Compile Include="..\..\..\src\framework\Attributes\IgnoreAttribute.cs">
       <Link>Attributes\IgnoreAttribute.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Attributes\IncludeExcludeAttributes.cs">
-      <Link>Attributes\IncludeExcludeAttributes.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Attributes\JoinTypeAttributes.cs">
-      <Link>Attributes\JoinTypeAttributes.cs</Link>
+    <Compile Include="..\..\..\src\framework\Attributes\IncludeExcludeAttribute.cs">
+      <Link>Attributes\IncludeExcludeAttribute.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Attributes\MaxTimeAttribute.cs">
       <Link>Attributes\MaxTimeAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Attributes\NUnitAttribute.cs">
+      <Link>Attributes\NUnitAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Attributes\PairwiseAttribute.cs">
+      <Link>Attributes\PairwiseAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Attributes\PlatformAttribute.cs">
+      <Link>Attributes\PlatformAttribute.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Attributes\PropertyAttribute.cs">
       <Link>Attributes\PropertyAttribute.cs</Link>
@@ -137,6 +167,18 @@
     </Compile>
     <Compile Include="..\..\..\src\framework\Attributes\RequiredAddinAttribute.cs">
       <Link>Attributes\RequiredAddinAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Attributes\RequiresMTAAtribute.cs">
+      <Link>Attributes\RequiresMTAAtribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Attributes\RequiresSTAAttribute.cs">
+      <Link>Attributes\RequiresSTAAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Attributes\RequiresThreadAttribute.cs">
+      <Link>Attributes\RequiresThreadAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Attributes\SequentialAttribute.cs">
+      <Link>Attributes\SequentialAttribute.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Attributes\SetCultureAttribute.cs">
       <Link>Attributes\SetCultureAttribute.cs</Link>
@@ -174,11 +216,14 @@
     <Compile Include="..\..\..\src\framework\Attributes\TestFixtureTearDownAttribute.cs">
       <Link>Attributes\TestFixtureTearDownAttribute.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\framework\Attributes\TestModificationAttribute.cs">
+      <Link>Attributes\TestModificationAttribute.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\framework\Attributes\TheoryAttribute.cs">
       <Link>Attributes\TheoryAttribute.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Attributes\ThreadingAttributes.cs">
-      <Link>Attributes\ThreadingAttributes.cs</Link>
+    <Compile Include="..\..\..\src\framework\Attributes\TimeoutAttribute.cs">
+      <Link>Attributes\TimeoutAttribute.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Attributes\ValuesAttribute.cs">
       <Link>Attributes\ValuesAttribute.cs</Link>
@@ -390,6 +435,51 @@
     <Compile Include="..\..\..\src\framework\Internal\AsyncResult.cs">
       <Link>Internal\AsyncResult.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\Builders\CombinatorialStrategy.cs">
+      <Link>Internal\Builders\CombinatorialStrategy.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\Builders\CombinatorialTestCaseProvider.cs">
+      <Link>Internal\Builders\CombinatorialTestCaseProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\Builders\CombiningStrategy.cs">
+      <Link>Internal\Builders\CombiningStrategy.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\Builders\DataAttributeTestCaseProvider.cs">
+      <Link>Internal\Builders\DataAttributeTestCaseProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\Builders\DatapointProvider.cs">
+      <Link>Internal\Builders\DatapointProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\Builders\InlineDataPointProvider.cs">
+      <Link>Internal\Builders\InlineDataPointProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\Builders\LegacySuiteBuilder.cs">
+      <Link>Internal\Builders\LegacySuiteBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\Builders\NUnitTestCaseBuilder.cs">
+      <Link>Internal\Builders\NUnitTestCaseBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\Builders\NUnitTestFixtureBuilder.cs">
+      <Link>Internal\Builders\NUnitTestFixtureBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\Builders\PairwiseStrategy.cs">
+      <Link>Internal\Builders\PairwiseStrategy.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\Builders\ProviderCache.cs">
+      <Link>Internal\Builders\ProviderCache.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\Builders\ProviderInfo.cs">
+      <Link>Internal\Builders\ProviderInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\Builders\SequentialStrategy.cs">
+      <Link>Internal\Builders\SequentialStrategy.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\Builders\SetUpFixtureBuilder.cs">
+      <Link>Internal\Builders\SetUpFixtureBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\Builders\ValueSourceProvider.cs">
+      <Link>Internal\Builders\ValueSourceProvider.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\framework\Internal\CoreExtensions.cs">
       <Link>Internal\CoreExtensions.cs</Link>
     </Compile>
@@ -435,9 +525,6 @@
     <Compile Include="..\..\..\src\framework\Internal\Extensibility\ExtensionsCollection.cs">
       <Link>Internal\Extensibility\ExtensionsCollection.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Extensibility\ParameterSet.cs">
-      <Link>Internal\Extensibility\ParameterSet.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\src\framework\Internal\Extensibility\SuiteBuilderCollection.cs">
       <Link>Internal\Extensibility\SuiteBuilderCollection.cs</Link>
     </Compile>
@@ -449,54 +536,6 @@
     </Compile>
     <Compile Include="..\..\..\src\framework\Internal\Extensibility\TestDecoratorCollection.cs">
       <Link>Internal\Extensibility\TestDecoratorCollection.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Extensions\CombinatorialStrategy.cs">
-      <Link>Internal\Extensions\CombinatorialStrategy.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Extensions\CombinatorialTestCaseProvider.cs">
-      <Link>Internal\Extensions\CombinatorialTestCaseProvider.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Extensions\CombiningStrategy.cs">
-      <Link>Internal\Extensions\CombiningStrategy.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Extensions\DatapointProvider.cs">
-      <Link>Internal\Extensions\DatapointProvider.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Extensions\InlineDataPointProvider.cs">
-      <Link>Internal\Extensions\InlineDataPointProvider.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Extensions\LegacySuiteBuilder.cs">
-      <Link>Internal\Extensions\LegacySuiteBuilder.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Extensions\NUnitTestCaseBuilder.cs">
-      <Link>Internal\Extensions\NUnitTestCaseBuilder.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Extensions\NUnitTestFixtureBuilder.cs">
-      <Link>Internal\Extensions\NUnitTestFixtureBuilder.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Extensions\PairwiseStrategy.cs">
-      <Link>Internal\Extensions\PairwiseStrategy.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Extensions\ProviderCache.cs">
-      <Link>Internal\Extensions\ProviderCache.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Extensions\ProviderInfo.cs">
-      <Link>Internal\Extensions\ProviderInfo.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Extensions\SequentialStrategy.cs">
-      <Link>Internal\Extensions\SequentialStrategy.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Extensions\SetUpFixtureBuilder.cs">
-      <Link>Internal\Extensions\SetUpFixtureBuilder.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Extensions\TestCaseParameterProvider.cs">
-      <Link>Internal\Extensions\TestCaseParameterProvider.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Extensions\TestCaseSourceProvider.cs">
-      <Link>Internal\Extensions\TestCaseSourceProvider.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Extensions\ValueSourceProvider.cs">
-      <Link>Internal\Extensions\ValueSourceProvider.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Internal\InternalTrace.cs">
       <Link>Internal\InternalTrace.cs</Link>
@@ -524,6 +563,9 @@
     </Compile>
     <Compile Include="..\..\..\src\framework\Internal\ParameterizedMethodSuite.cs">
       <Link>Internal\ParameterizedMethodSuite.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\ParameterSet.cs">
+      <Link>Internal\ParameterSet.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Internal\PlatformHelper.cs">
       <Link>Internal\PlatformHelper.cs</Link>
@@ -614,9 +656,6 @@
     </Compile>
     <Compile Include="..\..\..\src\framework\Is.cs">
       <Link>Is.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\ITestCaseData.cs">
-      <Link>ITestCaseData.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Iz.cs">
       <Link>Iz.cs</Link>
