@@ -30,7 +30,7 @@ using System.Reflection;
 //
 [assembly: AssemblyCompany("NUnit.org")]
 [assembly: AssemblyProduct("NUnit Framework")]
-[assembly: AssemblyCopyright("Copyright (C) 2009 Charlie Poole")]
+[assembly: AssemblyCopyright("Copyright (C) 2010 Charlie Poole")]
 [assembly: AssemblyTrademark("NUnit is a trademark of NUnit.org")]
 
 //
@@ -44,5 +44,5 @@ using System.Reflection;
 // You can specify all the values or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
 //
-[assembly: AssemblyVersion("2.9.3")]
-[assembly: AssemblyInformationalVersion("2.9.3")]
+[assembly: AssemblyVersion("2.9.4")]
+[assembly: AssemblyInformationalVersion("2.9.4")]
