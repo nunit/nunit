@@ -45,18 +45,29 @@ namespace NUnit.TestData.DatapointFixture
     }
 
 #if CLR_2_0
+#if NET_3_5
     public class SquareRootTest_Field_IEnumerableOfDouble : SquareRootTest
     {
         [Datapoints]
         public IEnumerable<double> values = new List<double> { 0.0, 1.0, -1.0, double.MaxValue, double.PositiveInfinity };
     }
+#endif
 
     public class SquareRootTest_Property_IEnumerableOfDouble : SquareRootTest
     {
         [Datapoints]
         public IEnumerable<double> Values
         {
-            get { return new List<double> { 0.0, 1.0, -1.0, double.MaxValue, double.PositiveInfinity }; }
+            get 
+            {
+                List<double> list = new List<double>();
+                list.Add(0.0);
+                list.Add(1.0);
+                list.Add(-1.0);
+                list.Add(double.MaxValue);
+                list.Add(double.PositiveInfinity);
+                return list;
+            }
         }
     }
 
@@ -65,7 +76,13 @@ namespace NUnit.TestData.DatapointFixture
         [Datapoints]
         public IEnumerable<double> GetValues()
         {
-            return new List<double> { 0.0, 1.0, -1.0, double.MaxValue, double.PositiveInfinity };
+            List<double> list = new List<double>();
+            list.Add(0.0);
+            list.Add(1.0);
+            list.Add(-1.0);
+            list.Add(double.MaxValue);
+            list.Add(double.PositiveInfinity);
+            return list;
         }
     }
 #endif

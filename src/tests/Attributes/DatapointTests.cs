@@ -42,11 +42,13 @@ namespace NUnit.Framework.Attributes
         }
 
 #if CLR_2_0
+#if NET_3_5
         [Test]
         public void WorksOnIEnumerableOfT()
         {
             RunTestOnFixture(typeof(SquareRootTest_Field_IEnumerableOfDouble));
         }
+#endif
 
         [Test]
         public void WorksOnPropertyReturningIEnumerableOfT()
