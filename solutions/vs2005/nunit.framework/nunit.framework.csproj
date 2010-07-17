@@ -277,11 +277,11 @@
     <Compile Include="..\..\..\src\framework\Constraints\DelayedConstraint.cs">
       <Link>Constraints\DelayedConstraint.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\DirectoryConstraints.cs">
-      <Link>Constraints\DirectoryConstraints.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\src\framework\Constraints\EmptyConstraint.cs">
       <Link>Constraints\EmptyConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Constraints\EmptyDirectoryConstraint.cs">
+      <Link>Constraints\EmptyDirectoryConstraint.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Constraints\EqualConstraint.cs">
       <Link>Constraints\EqualConstraint.cs</Link>
@@ -348,9 +348,6 @@
     </Compile>
     <Compile Include="..\..\..\src\framework\Contains.cs">
       <Link>Contains.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\DirectoryAssert.cs">
-      <Link>DirectoryAssert.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Env.cs">
       <Link>Env.cs</Link>
