@@ -75,9 +75,6 @@
     <Compile Include="..\..\..\src\tests\Assertions\ConditionAssertTests.cs">
       <Link>Assertions\ConditionAssertTests.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\tests\Assertions\DirectoryAssertTests.cs">
-      <Link>Assertions\DirectoryAssertTests.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\src\tests\Assertions\EqualsFixture.cs">
       <Link>Assertions\EqualsFixture.cs</Link>
     </Compile>
