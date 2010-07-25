@@ -61,10 +61,9 @@ namespace NUnit.Framework.Builders
                 return false;
 
 			return type.IsDefined(typeof(TestFixtureAttribute), true ) ||
-                   ( type.IsPublic || type.IsNestedPublic ) && 
-                   ( Reflect.HasMethodWithAttribute(type, typeof(NUnit.Framework.TestAttribute), true) ||
-                     Reflect.HasMethodWithAttribute(type, typeof(NUnit.Framework.TestCaseAttribute), true) ||
-                     Reflect.HasMethodWithAttribute(type, typeof(NUnit.Framework.TheoryAttribute), true) );
+                   Reflect.HasMethodWithAttribute(type, typeof(NUnit.Framework.TestAttribute), true) ||
+                   Reflect.HasMethodWithAttribute(type, typeof(NUnit.Framework.TestCaseAttribute), true) ||
+                   Reflect.HasMethodWithAttribute(type, typeof(NUnit.Framework.TheoryAttribute), true);
 		}
 
 		/// <summary>
