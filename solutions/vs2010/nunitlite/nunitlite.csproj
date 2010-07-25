@@ -179,6 +179,9 @@
     <Compile Include="..\..\..\src\framework\Constraints\EmptyConstraint.cs">
       <Link>Constraints\EmptyConstraint.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\framework\Constraints\EmptyDirectoryConstraint.cs">
+      <Link>Constraints\EmptyDirectoryConstraint.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\framework\Constraints\EqualConstraint.cs">
       <Link>Constraints\EqualConstraint.cs</Link>
     </Compile>
