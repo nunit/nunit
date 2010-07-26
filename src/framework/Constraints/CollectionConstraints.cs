@@ -605,7 +605,7 @@ namespace NUnit.Framework.Constraints
         /// Returns the string representation of the constraint.
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
+        protected override string GetStringRepresentation()
         {
             StringBuilder sb = new StringBuilder("<ordered");
 

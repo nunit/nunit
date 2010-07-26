@@ -412,6 +412,10 @@
     <Compile Include="..\..\..\src\framework\Constraints\ReusableConstraintTests.cs">
       <Link>Constraints\ReusableConstraintTests.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\tests\Constraints\ToStringTests.cs">
+      <SubType>Code</SubType>
+      <Link>Constraints\ToStringTests.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

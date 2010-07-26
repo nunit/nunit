@@ -147,7 +147,7 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Returns a string representation of the constraint.
         /// </summary>
-        public override string ToString()
+        protected override string GetStringRepresentation()
         {
             return string.Format("<attribute {0} {1}>", expectedType, baseConstraint); 
         }

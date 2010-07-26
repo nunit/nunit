@@ -173,7 +173,7 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Returns the string representation of the constraint.
         /// </summary>
-        public override string ToString()
+        protected override string GetStringRepresentation()
         {
             return string.Format("<after {0} {1}>", delayInMilliseconds, baseConstraint);
         }

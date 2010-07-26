@@ -95,7 +95,7 @@ namespace NUnit.Framework.Constraints
         /// Returns the string representation of the constraint.
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
+        protected override string GetStringRepresentation()
         {
             return string.Format("<propertyexists {0}>", name);
         }
@@ -177,7 +177,7 @@ namespace NUnit.Framework.Constraints
         /// Returns the string representation of the constraint.
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
+        protected override string GetStringRepresentation()
         {
             return string.Format("<property {0} {1}>", name, baseConstraint);
         }
