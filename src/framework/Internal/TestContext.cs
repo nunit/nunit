@@ -143,6 +143,16 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
+        /// Gets or sets the current security Principal
+        /// </summary>
+        /// <value>The current security Principal</value>
+        public static System.Security.Principal.IPrincipal CurrentPrincipal
+        {
+            get { return current.CurrentPrincipal; }
+            set { current.CurrentPrincipal = value; }
+        }
+
+        /// <summary>
         /// Gets or sets the test case timeout.
         /// </summary>
         /// <value>The test case timeout.</value>
@@ -165,7 +175,16 @@ namespace NUnit.Framework.Internal
 			TestContext.current = new ContextHolder( current );
 		}
 
-		/// <summary>
+        /// <summary>
+        /// Updates the current context using any values set 
+        /// by the user.
+        /// </summary>
+        public static void Update()
+        {
+            current.Update();
+        }
+
+        /// <summary>
 		/// Restores the last saved context and puts
 		/// any saved settings back into effect.
 		/// </summary>
@@ -311,7 +330,18 @@ namespace NUnit.Framework.Internal
 			    this.CurrentPrincipal = prior.CurrentPrincipal;
 			}
 
-			/// <summary>
+            /// <summary>
+            /// Record any changed values in the current context
+            /// </summary>
+            public void Update()
+            {
+                this.currentDirectory = Environment.CurrentDirectory;
+                this.currentCulture = CultureInfo.CurrentCulture;
+                this.currentUICulture = CultureInfo.CurrentUICulture;
+                this.currentPrincipal = System.Threading.Thread.CurrentPrincipal;
+            }
+
+            /// <summary>
 			/// Controls whether trace and debug output are written
 			/// to the standard output.
 			/// </summary>
