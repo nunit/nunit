@@ -71,5 +71,12 @@ namespace NUnit.Framework.Attributes
             Test testCase = (Test)test3.Tests[0];
             Assert.Contains("Bottom", testCase.Categories);
         }
+
+        [Test]
+        public void TestWithInvalidCategoryNameIsNotRunnable()
+        {
+            Test test4 = (Test)fixture.Tests[3];
+            Assert.That(test4.RunState, Is.EqualTo(RunState.NotRunnable));
+        }
 	}
 }
