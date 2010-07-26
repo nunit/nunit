@@ -98,16 +98,15 @@ namespace NUnit.Framework.Internal
 
             // Throws if this isn't a managed assembly or if it was built
             // with a later version of the same assembly. 
-            AssemblyName.GetAssemblyName(Path.GetFileName(path));
+            AssemblyName assemblyName = AssemblyName.GetAssemblyName(Path.GetFileName(path));
 
-            // TODO: Figure out why we can't load using the assembly name
-            // in all cases. Might be a problem with the tests themselves.
-            assembly = Assembly.Load(Path.GetFileNameWithoutExtension(path));
+            assembly = Assembly.Load(assemblyName);
 
             if (assembly != null)
+            {
+                InternalTrace.Info("Loaded assembly " + assembly.FullName);
                 CoreExtensions.Host.InstallAdhocExtensions(assembly);
-
-            InternalTrace.Info("Loaded assembly " + assembly.FullName);
+            }
 
             return assembly;
         }
