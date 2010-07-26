@@ -22,6 +22,8 @@
 // ***********************************************************************
 
 using System;
+using System.Security.Principal;
+using System.Threading;
 using NUnit.Framework.Api;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Builders;
@@ -311,4 +313,35 @@ namespace NUnit.Framework.Attributes
             Assert.IsTrue(fixture.disposeCalled);
         }
 	}
+
+    [TestFixture]
+    class ChangesMadeInFixtureSetUp
+    {
+        [TestFixtureSetUp]
+        public void TestFixtureSetUp()
+        {
+            GenericIdentity identity = new GenericIdentity("foo");
+            Thread.CurrentPrincipal = new GenericPrincipal(identity, new string[0]);
+
+            System.Globalization.CultureInfo culture = new System.Globalization.CultureInfo("en-GB");
+            Thread.CurrentThread.CurrentCulture = culture;
+            Thread.CurrentThread.CurrentUICulture = culture;
+        }
+
+        [Test]
+        public void TestThatChangesPersistUsingSameThread()
+        {
+            Assert.AreEqual("foo", Thread.CurrentPrincipal.Identity.Name);
+            Assert.AreEqual("en-GB", Thread.CurrentThread.CurrentCulture.Name);
+            Assert.AreEqual("en-GB", Thread.CurrentThread.CurrentUICulture.Name);
+        }
+
+        [Test, RequiresThread]
+        public void TestThatChangesPersistUsingSeparateThread()
+        {
+            Assert.AreEqual("foo", Thread.CurrentPrincipal.Identity.Name);
+            Assert.AreEqual("en-GB", Thread.CurrentThread.CurrentCulture.Name);
+            Assert.AreEqual("en-GB", Thread.CurrentThread.CurrentUICulture.Name);
+        }
+    }
 }

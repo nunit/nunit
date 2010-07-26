@@ -419,8 +419,12 @@ namespace NUnit.Framework.Internal
 						CreateUserFixture();
 
                     if (this.fixtureSetUpMethods != null)
-                        foreach( MethodInfo fixtureSetUp in fixtureSetUpMethods )
+                        foreach (MethodInfo fixtureSetUp in fixtureSetUpMethods)
                             Reflect.InvokeMethod(fixtureSetUp, fixtureSetUp.IsStatic ? null : Fixture);
+
+#if !NUNITLITE
+                    TestContext.Update();
+#endif
                 }
                 catch (Exception ex)
                 {
