@@ -39,6 +39,9 @@ namespace NUnit.TestData.CategoryAttributeData
         [TestCaseSource("Test3Data")]
         public void Test3(int x) { }
 
+        [Test, Category("A-B")]
+        public void Test4() { }
+
         private TestCaseData[] Test3Data = new TestCaseData[] {
             new TestCaseData(5).SetCategory("Bottom") };
 	}

@@ -37,14 +37,21 @@ namespace NUnit.Framework
 		/// </summary>
 		protected string categoryName;
 
-		/// <summary>
-		/// Construct attribute for a given category
-		/// </summary>
-		/// <param name="name">The name of the category</param>
-		public CategoryAttribute(string name)
-		{
-			this.categoryName = name;
-		}
+        /// <summary>
+        /// Construct attribute for a given category based on
+        /// a name. The name may not contain the characters ',',
+        /// '+', '-' or '!'. However, this is not checked in the
+        /// constructor since it would cause an error to arise at
+        /// as the test was loaded without giving a clear indication
+        /// of where the problem is located. The error is handled
+        /// in NUnitFramework.cs by marking the test as not
+        /// runnable.
+        /// </summary>
+        /// <param name="name">The name of the category</param>
+        public CategoryAttribute(string name)
+        {
+            this.categoryName = name.Trim();
+        }
 
 		/// <summary>
 		/// Protected constructor uses the Type name as the name
@@ -74,6 +81,12 @@ namespace NUnit.Framework
         public void ApplyToTest(ITest test)
         {
             test.Categories.Add(this.Name);
+
+            if (this.Name.IndexOfAny(new char[] { ',', '!', '+', '-' }) >= 0)
+            {
+                test.RunState = RunState.NotRunnable;
+                test.IgnoreReason = "Category name must not contain ',', '!', '+' or '-'";
+            }
         }
 
         #endregion
