@@ -129,12 +129,12 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Returns the string representation of this constraint
         /// </summary>
-        public override string ToString()
+        protected override string GetStringRepresentation()
         {
             if (baseConstraint == null)
                 return "<throws>";
             
-            return base.ToString();
+            return base.GetStringRepresentation();
         }
     }
     #endregion

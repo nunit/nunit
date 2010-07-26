@@ -76,7 +76,7 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Returns the string representation of this constraint
         /// </summary>
-        public override string ToString()
+        protected override string GetStringRepresentation()
         {
             return string.Format( "<{0} \"{1}\" {2}>", DisplayName, expected, caseInsensitive ? "ignorecase" : "respectcase" );
         }
