@@ -406,7 +406,12 @@
     <Compile Include="..\..\..\src\tests\Internal\EventQueueTests.cs">
       <Link>Internal\EventQueueTests.cs</Link>
     </Compile>
-    <Compile Include="Internal\TestContextTests.cs" />
+    <Compile Include="..\..\..\src\tests\Internal\TestContextTests.cs">
+      <Link>Internal\TestContextTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Constraints\ReusableConstraintTests.cs">
+      <Link>Constraints\ReusableConstraintTests.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
