@@ -378,4 +378,42 @@ namespace NUnit.TestData.TestFixtureData
             System.Threading.Thread.CurrentPrincipal = principal;
         }
     }
+
+#if CLR_2_0 || CLR_4_0
+    [TestFixture(typeof(string))]
+    public class GenericFixtureWithProperArgsProvided<T>
+    {
+        [Test]
+        public void SomeTest() { }
+    }
+
+    public class GenericFixtureWithNoTestFixtureAttribute<T>
+    {
+        [Test]
+        public void SomeTest() { }
+    }
+
+    [TestFixture]
+    public class GenericFixtureWithNoArgsProvided<T>
+    {
+        [Test]
+        public void SomeTest() { }
+    }
+
+    [TestFixture]
+    public abstract class AbstractFixtureBase
+    {
+        [Test]
+        public void SomeTest() { }
+    }
+
+    public class GenericFixtureDerivedFromAbstractFixtureWithNoArgsProvided<T> : AbstractFixtureBase
+    {
+    }
+
+    [TestFixture(typeof(int))]
+    public class GenericFixtureDerivedFromAbstractFixtureWithArgsProvided<T> : AbstractFixtureBase
+    {
+    }
+#endif
 }

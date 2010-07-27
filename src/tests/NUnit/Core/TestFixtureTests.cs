@@ -37,47 +37,42 @@ namespace NUnit.Framework.Tests
 	[TestFixture]
 	public class TestFixtureTests
 	{
-		[Test]
+        private static void CanConstructFrom(Type fixtureType)
+        {
+            CanConstructFrom(fixtureType, fixtureType.Name);
+        }
+
+        private static void CanConstructFrom(Type fixtureType, string expectedName)
+        {
+            TestSuite fixture = TestBuilder.MakeFixture(fixtureType);
+            Assert.AreEqual(expectedName, fixture.Name);
+            Assert.AreEqual(fixtureType.FullName, fixture.FullName);
+        }
+
+        [Test]
 		public void ConstructFromType()
 		{
-			TestSuite fixture = TestBuilder.MakeFixture( typeof( FixtureWithTestFixtureAttribute ) );
-			Assert.AreEqual( "FixtureWithTestFixtureAttribute", fixture.Name );
-            Assert.AreEqual("NUnit.TestData.TestFixtureData.FixtureWithTestFixtureAttribute", fixture.FullName);
+            CanConstructFrom(typeof(FixtureWithTestFixtureAttribute));
 		}
 
 		[Test]
 		public void ConstructFromNestedType()
 		{
-			TestSuite fixture = TestBuilder.MakeFixture( typeof( OuterClass.NestedTestFixture ) );
-			Assert.AreEqual( "OuterClass+NestedTestFixture", fixture.Name );
-            Assert.AreEqual("NUnit.TestData.TestFixtureData.OuterClass+NestedTestFixture", fixture.FullName);
+            CanConstructFrom(typeof(OuterClass.NestedTestFixture), "OuterClass+NestedTestFixture");
 		}
 
 		[Test]
 		public void ConstructFromDoublyNestedType()
 		{
-			TestSuite fixture = TestBuilder.MakeFixture( typeof( OuterClass.NestedTestFixture.DoublyNestedTestFixture ) );
-			Assert.AreEqual( "OuterClass+NestedTestFixture+DoublyNestedTestFixture", fixture.Name );
-            Assert.AreEqual("NUnit.TestData.TestFixtureData.OuterClass+NestedTestFixture+DoublyNestedTestFixture", fixture.FullName);
+            CanConstructFrom(typeof(OuterClass.NestedTestFixture.DoublyNestedTestFixture),
+                "OuterClass+NestedTestFixture+DoublyNestedTestFixture");
 		}
 
         [Test]
         public void ConstructFromTypeWithoutTestFixtureAttribute()
         {
-            TestSuite fixture = TestBuilder.MakeFixture(typeof(FixtureWithoutTestFixtureAttribute));
-            Assert.AreEqual("FixtureWithoutTestFixtureAttribute", fixture.Name);
-            Assert.AreEqual("NUnit.TestData.TestFixtureData.FixtureWithoutTestFixtureAttribute", fixture.FullName);
+            CanConstructFrom(typeof(FixtureWithoutTestFixtureAttribute));
         }
-
-#if CLR_2_0
-        [Test]
-        public void ConstructFromStaticTypeWithoutTestFixtureAttribute()
-        {
-            TestSuite fixture = TestBuilder.MakeFixture(typeof(StaticFixtureWithoutTestFixtureAttribute));
-            Assert.AreEqual("StaticFixtureWithoutTestFixtureAttribute", fixture.Name);
-            Assert.AreEqual("NUnit.TestData.TestFixtureData.StaticFixtureWithoutTestFixtureAttribute", fixture.FullName);
-        }
-#endif
 
         [Test]
         public void CannotRunConstructorWithArgsNotSupplied()
@@ -135,14 +130,6 @@ namespace NUnit.Framework.Tests
             TestAssert.IsRunnable(typeof(DerivedFromAbstractDerivedTestFixture));
         }
 
-#if CLR_2_0
-        [Test]
-        public void CanRunStaticFixture()
-        {
-            TestAssert.IsRunnable(typeof(StaticFixtureWithoutTestFixtureAttribute));
-        }
-#endif
-
 		[Test]
 		public void CannotRunAbstractDerivedFixture()
 		{
@@ -175,8 +162,66 @@ namespace NUnit.Framework.Tests
             TestAssert.IsRunnable(typeof(FixtureWithNoTests));
         }
 
-		#region SetUp Signature
-		[Test] 
+#if CLR_2_0 || CLR_4_0
+        [Test]
+        public void ConstructFromStaticTypeWithoutTestFixtureAttribute()
+        {
+            CanConstructFrom(typeof(StaticFixtureWithoutTestFixtureAttribute));
+        }
+
+        [Test]
+        public void CanRunStaticFixture()
+        {
+            TestAssert.IsRunnable(typeof(StaticFixtureWithoutTestFixtureAttribute));
+        }
+
+        [Test]
+        public void CanRunGenericFixtureWithProperArgsProvided()
+        {
+            TestAssert.IsRunnable(
+                Type.GetType("NUnit.TestData.TestFixtureData.GenericFixtureWithProperArgsProvided`1,test-assembly"));
+        }
+
+        [Test]
+        public void CannotRunGenericFixtureWithNoTestFixtureAttribute()
+        {
+            TestSuite suite = TestBuilder.MakeFixture(
+                Type.GetType("NUnit.TestData.TestFixtureData.GenericFixtureWithNoTestFixtureAttribute`1,test-assembly"));
+
+            Assert.That(suite.RunState, Is.EqualTo(RunState.NotRunnable));
+            Assert.That(suite.IgnoreReason, Is.StringStarting("Fixture type contains generic parameters"));
+        }
+
+        [Test]
+        public void CannotRunGenericFixtureWithNoArgsProvided()
+        {
+            TestSuite suite = TestBuilder.MakeFixture(
+                Type.GetType("NUnit.TestData.TestFixtureData.GenericFixtureWithNoArgsProvided`1,test-assembly"));
+
+            Test fixture = (Test)suite.Tests[0];
+            Assert.That(fixture.RunState, Is.EqualTo(RunState.NotRunnable));
+            Assert.That(fixture.IgnoreReason, Is.StringStarting("Fixture type contains generic parameters"));
+        }
+
+        [Test]
+        public void CannotRunGenericFixtureDerivedFromAbstractFixtureWithNoArgsProvided()
+        {
+            TestSuite suite = TestBuilder.MakeFixture(
+                Type.GetType("NUnit.TestData.TestFixtureData.GenericFixtureDerivedFromAbstractFixtureWithNoArgsProvided`1,test-assembly"));
+            TestAssert.IsNotRunnable((Test)suite.Tests[0]);
+        }
+
+        [Test]
+        public void CanRunGenericFixtureDerivedFromAbstractFixtureWithArgsProvided()
+        {
+            TestSuite suite = TestBuilder.MakeFixture(
+                Type.GetType("NUnit.TestData.TestFixtureData.GenericFixtureDerivedFromAbstractFixtureWithArgsProvided`1,test-assembly"));
+            TestAssert.IsRunnable((Test)suite.Tests[0]);
+        }
+#endif
+        
+        #region SetUp Signature
+        [Test] 
 		public void CannotRunPrivateSetUp()
 		{
             TestAssert.IsNotRunnable(typeof(PrivateSetUp));
