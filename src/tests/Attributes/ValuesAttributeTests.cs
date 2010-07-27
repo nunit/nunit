@@ -37,6 +37,36 @@ namespace NUnit.Framework.Attributes
         private void MethodWithValues( [Values(1, 2, 3)] int x) { }
 
         [Test]
+        public void CanConvertSmallIntsToShort([Values(5)]short x)
+        {
+        }
+
+        [Test]
+        public void CanConvertSmallIntsToByte([Values(5)]byte x)
+        {
+        }
+
+        [Test]
+        public void CanConvertSmallIntsToSByte([Values(5)]sbyte x)
+        {
+        }
+
+        [Test]
+        public void CanConvertIntToDecimal([Values(12)]decimal x)
+        {
+        }
+
+        [Test]
+        public void CanConverDoubleToDecimal([Values(12.5)]decimal x)
+        {
+        }
+
+        [Test]
+        public void CanConvertStringToDecimal([Values("12.5")]decimal x)
+        {
+        }
+
+        [Test]
         public void RangeAttributeWithIntRange()
         {
             CheckValues("MethodWithIntRange", 11, 12, 13, 14, 15);
@@ -75,6 +105,36 @@ namespace NUnit.Framework.Attributes
         }
 
         private void MethodWithFloatRangeAndStep([Range(0.7f, 1.2f, 0.2f)] float x) { }
+
+        [Test]
+        public void CanConvertIntRangeToShort([Range(1, 3)] short x) { }
+
+        [Test]
+        public void CanConvertIntRangeToByte([Range(1, 3)] byte x) { }
+
+        [Test]
+        public void CanConvertIntRangeToSByte([Range(1, 3)] sbyte x) { }
+
+        [Test]
+        public void CanConvertIntRangeToDecimal([Range(1, 3)] decimal x) { }
+
+        [Test]
+        public void CanConvertDoubleRangeToDecimal([Range(1.0, 1.3, 0.1)] decimal x) { }
+
+        [Test]
+        public void CanConvertRandomIntToShort([Random(1, 10, 3)] short x) { }
+
+        [Test]
+        public void CanConvertRandomIntToByte([Random(1, 10, 3)] byte x) { }
+
+        [Test]
+        public void CanConvertRandomIntToSByte([Random(1, 10, 3)] sbyte x) { }
+
+        [Test]
+        public void CanConvertRandomIntToDecimal([Random(1, 10, 3)] decimal x) { }
+
+        [Test]
+        public void CanConvertRandomDoubleToDecimal([Random(1.0, 10.0, 3)] decimal x) { }
 
         #region Helper Methods
         private void CheckValues(string methodName, params object[] expected)

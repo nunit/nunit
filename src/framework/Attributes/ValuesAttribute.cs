@@ -38,8 +38,12 @@ namespace NUnit.Framework
         /// <summary>
         /// The collection of data to be returned. Must
         /// be set by any derived attribute classes.
+        /// We use an object[] so that the individual
+        /// elements may have their type changed in GetData
+        /// if necessary
         /// </summary>
-        protected ICollection data;
+        // TODO: This causes a lot of boxing so we should eliminate it
+        protected object[] data;
 
         /// <summary>
         /// Construct with one argument
@@ -85,6 +89,46 @@ namespace NUnit.Framework
         /// </summary>
         public IEnumerable GetData(ParameterInfo parameter)
         {
+            Type targetType = parameter.ParameterType;
+
+            for (int i = 0; i < data.Length; i++)
+            {
+                object arg = data[i];
+
+                if (arg == null) 
+                    continue;
+
+                if (arg.GetType().FullName == "NUnit.Framework.SpecialValue" &&
+                    arg.ToString() == "Null")
+                {
+                    data[i] = null;
+                    continue;
+                }
+
+                if (targetType.IsAssignableFrom(arg.GetType()))
+                    continue;
+
+                if (arg is DBNull)
+                {
+                    data[i] = null;
+                    continue;
+                }
+
+                bool convert = false;
+
+                if (targetType == typeof(short) || targetType == typeof(byte) || targetType == typeof(sbyte))
+                    convert = arg is int;
+                else
+                    if (targetType == typeof(decimal))
+                        convert = arg is double || arg is string || arg is int;
+                    else
+                        if (targetType == typeof(DateTime) || targetType == typeof(TimeSpan))
+                            convert = arg is string;
+
+                if (convert)
+                    data[i] = Convert.ChangeType(arg, targetType, System.Globalization.CultureInfo.InvariantCulture);
+            }
+
 			return data;
         }
     }

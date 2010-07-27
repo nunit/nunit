@@ -49,11 +49,10 @@ namespace NUnit.Framework
         public RangeAttribute(int from, int to, int step)
         {
             int count = (to - from) / step + 1;
-            int[] range = new int[count];
+            this.data = new object[count];
             int index = 0;
             for (int val = from; index < count; val += step)
-                range[index++] = val;
-            this.data = range;
+                this.data[index++] = val;
         }
 
         /// <summary>
@@ -65,11 +64,10 @@ namespace NUnit.Framework
         public RangeAttribute(long from, long to, long step)
         {
             long count = (to - from) / step + 1;
-            long[] range = new long[count];
+            this.data = new object[count];
             int index = 0;
             for (long val = from; index < count; val += step)
-                range[index++] = val;
-            this.data = range;
+                this.data[index++] = val;
         }
 
         /// <summary>
@@ -82,11 +80,10 @@ namespace NUnit.Framework
         {
             double tol = step / 1000;
             int count = (int)((to - from) / step + tol + 1);
-            double[] range = new double[count];
+            this.data = new object[count];
             int index = 0;
             for (double val = from; index < count; val += step)
-                range[index++] = val;
-            this.data = range;
+                this.data[index++] = val;
         }
 
         /// <summary>
@@ -99,11 +96,10 @@ namespace NUnit.Framework
         {
             float tol = step / 1000;
             int count = (int)((to - from) / step + tol + 1);
-            float[] range = new float[count];
+            this.data = new object[count];
             int index = 0;
             for (float val = from; index < count; val += step)
-                range[index++] = val;
-            this.data = range;
+                this.data[index++] = val;
         }
     }
 }

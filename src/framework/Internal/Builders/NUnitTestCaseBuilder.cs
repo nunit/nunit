@@ -254,6 +254,9 @@ namespace NUnit.Framework.Builders
                 // Description is stored in parms.Properties
                 if (parms.Description != null)
                     testMethod.Description = parms.Description;
+
+                if (testMethod.BuilderException != null)
+                    testMethod.RunState = RunState.NotRunnable;
             }
 
             return testMethod;

@@ -72,14 +72,36 @@ namespace NUnit.Framework.Tests
             return x + y;
         }
 
+        [TestCase(5, 2, Result = 7)]
+        public decimal CanConvertIntToDecimal(decimal x, decimal y)
+        {
+            return x + y;
+        }
+
+        [TestCase(5, 2, Result = 7)]
+        public short CanConvertSmallIntsToShort(short x, short y)
+        {
+            return (short)(x + y);
+        }
+
+        [TestCase(5, 2, Result = 7)]
+        public byte CanConvertSmallIntsToByte(byte x, byte y)
+        {
+            return (byte)(x + y);
+        }
+
+        [TestCase(5, 2, Result = 7)]
+        public sbyte CanConvertSmallIntsToSByte(sbyte x, sbyte y)
+        {
+            return (sbyte)(x + y);
+        }
+
         [Test]
-		public void ConversionOverflowGivesError()
+		public void ConversionOverflowMakesTestNotRunnable()
 		{
 			Test test = (Test)TestBuilder.MakeParameterizedMethodSuite(
 				typeof(TestCaseAttributeFixture), "MethodCausesConversionOverflow").Tests[0];
-			Assert.AreEqual(RunState.Runnable, test.RunState);
-            TestResult result = test.Run(TestListener.NULL);
-            Assert.AreEqual(ResultState.Error, result.ResultState);
+			Assert.AreEqual(RunState.NotRunnable, test.RunState);
 		}
 
         [TestCase("12-October-1942")]
