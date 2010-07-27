@@ -249,22 +249,47 @@ namespace NUnit.Framework
             {
                 ParameterInfo[] parameters = method.GetParameters();
                 int argsNeeded = parameters.Length;
+                int argsProvided = Arguments.Length;
 
                 parms = new ParameterSet(this);
+
+                // Special handling for params arguments
+                if (argsProvided > argsNeeded)
+                {
+                    ParameterInfo lastParameter = parameters[argsNeeded - 1];
+                    Type lastParameterType = lastParameter.ParameterType;
+
+                    if (lastParameterType.IsArray && lastParameter.IsDefined(typeof(ParamArrayAttribute), false))
+                    {
+                        object[] newArglist = new object[argsNeeded];
+                        for (int i = 0; i < argsNeeded; i++)
+                            newArglist[i] = parms.Arguments[i];
+
+                        int length = argsProvided - argsNeeded + 1;
+                        Array array = Array.CreateInstance(lastParameterType.GetElementType(), length);
+                        for (int i = 0; i < length; i++)
+                            array.SetValue(parms.Arguments[argsNeeded + i - 1], i);
+
+                        newArglist[argsNeeded - 1] = array;
+                        parms.Arguments = newArglist;
+                        argsProvided = argsNeeded;
+                    }
+                }
 
                 //if (method.GetParameters().Length == 1 && method.GetParameters()[0].ParameterType == typeof(object[]))
                 //    parms.Arguments = new object[]{parms.Arguments};
 
+                // Special handling when sole argument is an object[]
                 if (argsNeeded == 1 && method.GetParameters()[0].ParameterType == typeof(object[]))
                 {
-                    if (parms.Arguments.Length > 1 ||
-                        parms.Arguments.Length == 1 && parms.Arguments[0].GetType() != typeof(object[]))
+                    if (argsProvided > 1 ||
+                        argsProvided == 1 && parms.Arguments[0].GetType() != typeof(object[]))
                     {
                         parms.Arguments = new object[] { parms.Arguments };
                     }
                 }
 
-                if (parms.Arguments.Length == argsNeeded)
+                if (argsProvided == argsNeeded)
                     PerformSpecialConversions(parms.Arguments, parameters);
             }
             catch (Exception ex)
