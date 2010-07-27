@@ -73,8 +73,7 @@ namespace NUnit.Framework.Builders
 		/// <returns></returns>
 		public Test BuildFrom(Type type)
 		{
-            TestFixtureAttribute[] attrs = 
-                (TestFixtureAttribute[])type.GetCustomAttributes(typeof(TestFixtureAttribute), false);
+            TestFixtureAttribute[] attrs = GetTestFixtureAttributes(type);
 
 #if CLR_2_0
             if (type.IsGenericType)
@@ -247,6 +246,55 @@ namespace NUnit.Framework.Builders
 #endif
 
             return true;
+        }
+
+        /// <summary>
+        /// Get TestFixtureAttributes following a somewhat obscure
+        /// set of rules to eliminate spurious duplication of fixtures.
+        /// 1. If there are any attributes with args, they are the only
+        ///    ones returned and those without args are ignored.
+        /// 2. No more than one attribute without args is ever returned.
+        /// </summary>
+        private TestFixtureAttribute[] GetTestFixtureAttributes(Type type)
+        {
+            TestFixtureAttribute[] attrs = 
+                (TestFixtureAttribute[])type.GetCustomAttributes(typeof(TestFixtureAttribute), true);
+
+            // Just return - no possibility of duplication
+            if (attrs.Length <= 1)
+                return attrs;
+
+            int withArgs = 0;
+            bool[] hasArgs = new bool[attrs.Length];
+
+            // Count and record those attrs with arguments            
+            for (int i = 0; i < attrs.Length; i++)
+            {
+                object[] args = attrs[i].Arguments;
+
+                if (args.Length > 0)
+                {
+                    withArgs++;
+                    hasArgs[i] = true;
+                }
+            }
+
+            // If all attributes have args, just return them
+            if (withArgs == attrs.Length)
+                return attrs;
+
+            // If all attributes are without args, just return the first found
+            if (withArgs == 0)
+                return new TestFixtureAttribute[] { attrs[0] };
+
+            // Some of each type, so extract those with args
+            int count = 0;
+            TestFixtureAttribute[] result = new TestFixtureAttribute[withArgs];
+            for (int i = 0; i < attrs.Length; i++)
+                if (hasArgs[i])
+                    result[count++] = attrs[i];
+
+            return result;
         }
 		#endregion
 	}

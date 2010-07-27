@@ -149,7 +149,15 @@ namespace NUnit.Framework.Tests
             TestAssert.IsNotRunnable(typeof(AbstractDerivedTestFixture));
 		}
 
-		[Test] 
+        [Test]
+        public void FixtureInheritingTwoTestFixtureAttributesIsLoadedOnlyOnce()
+        {
+            TestSuite suite = TestBuilder.MakeFixture(typeof(DoubleDerivedClassWithTwoInheritedAttributes));
+            Assert.That(suite, Is.TypeOf(typeof(TestFixture)));
+            Assert.That(suite.Tests.Count, Is.EqualTo(0));
+        }
+
+        [Test] 
 		public void CanRunMultipleTestFixtureSetUp()
 		{
             TestAssert.IsRunnable(typeof(MultipleFixtureSetUpAttributes));
