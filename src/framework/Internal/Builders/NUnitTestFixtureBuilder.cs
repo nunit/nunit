@@ -36,9 +36,18 @@ namespace NUnit.Framework.Builders
 	/// Built-in SuiteBuilder for NUnit TestFixture
 	/// </summary>
 	public class NUnitTestFixtureBuilder : ISuiteBuilder
-	{
-		#region Instance Fields
-		/// <summary>
+    {
+        #region Static Fields
+                
+        static readonly string NO_TYPE_ARGS_MSG = 
+            "Fixture type contains generic parameters. You must either provide " +
+            "Type arguments or specify constructor arguments that allow NUnit " +
+            "to deduce the Type arguments.";
+
+        #endregion
+
+        #region Instance Fields
+        /// <summary>
 		/// The NUnitTestFixture being constructed;
 		/// </summary>
 		private TestFixture fixture;
@@ -100,8 +109,16 @@ namespace NUnit.Framework.Builders
         {
             TestSuite suite = new ParameterizedFixtureSuite(type);
 
-            foreach (TestFixtureAttribute attr in attrs)
-                suite.Add(BuildSingleFixture(type, attr));
+            if (attrs.Length > 0)
+            {
+                foreach (TestFixtureAttribute attr in attrs)
+                    suite.Add(BuildSingleFixture(type, attr));
+            }
+            else
+            {
+                suite.RunState = RunState.NotRunnable;
+                suite.IgnoreReason = NO_TYPE_ARGS_MSG;
+            }
 
             return suite;
         }
@@ -238,9 +255,7 @@ namespace NUnit.Framework.Builders
 #if CLR_2_0
             if ( fixtureType.ContainsGenericParameters )
             {
-                reason = "Fixture type contains generic parameters. You must either provide "
-                        + "Type arguments or specify constructor arguments that allow NUnit "
-                        + "to deduce the Type arguments.";
+                reason = NO_TYPE_ARGS_MSG;
                 return false;
             }
 #endif
