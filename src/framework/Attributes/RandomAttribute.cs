@@ -34,7 +34,7 @@ namespace NUnit.Framework
     /// RandomAttribute is used to supply a set of random values
     /// to a single parameter of a parameterized test.
     /// </summary>
-    public class RandomAttribute : DataAttribute, IParameterDataSource
+    public class RandomAttribute : ValuesAttribute, IParameterDataSource
     {
         enum SampleType
         {
@@ -93,17 +93,30 @@ namespace NUnit.Framework
         public IEnumerable GetData(ParameterInfo parameter)
         {
             Randomizer r = Randomizer.GetRandomizer(parameter);
+            IList values;
 
             switch (sampleType)
             {
                 default:
                 case SampleType.Raw:
-                    return r.GetDoubles(count);
+                    values = r.GetDoubles(count);
+                    break;
                 case SampleType.IntRange:
-                    return r.GetInts(min, max, count);
+                    values = r.GetInts(min, max, count);
+                    break;
                 case SampleType.DoubleRange:
-                    return r.GetDoubles(dmin, dmax, count);
+                    values = r.GetDoubles(dmin, dmax, count);
+                    break;
             }
+
+            // Copy the random values into the data array
+            // and call the base class which may need to
+            // convert them to another type.
+            this.data = new object[values.Count];
+            for (int i = 0; i < values.Count; i++)
+                this.data[i] = values[i];
+ 
+            return base.GetData(parameter);
         }
     }
 }
