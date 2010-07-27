@@ -72,7 +72,6 @@ namespace NUnit.Framework.Attributes
 			Assert.AreEqual(1, fixture.tearDownCount);
 		}
 
-#if CLR_2_0 || NET_4_0
         [Test]
         public static void StaticSetUpAndTearDownAreCalled()
         {
@@ -82,6 +81,18 @@ namespace NUnit.Framework.Attributes
 
             Assert.AreEqual(1, StaticSetUpAndTearDownFixture.setUpCount);
             Assert.AreEqual(1, StaticSetUpAndTearDownFixture.tearDownCount);
+        }
+
+#if CLR_2_0 || CLR_4_0
+        [Test]
+        public static void StaticClassSetUpAndTearDownAreCalled()
+        {
+            StaticClassSetUpAndTearDownFixture.setUpCount = 0;
+            StaticClassSetUpAndTearDownFixture.tearDownCount = 0;
+            TestBuilder.RunTestFixture(typeof(StaticClassSetUpAndTearDownFixture));
+
+            Assert.AreEqual(1, StaticClassSetUpAndTearDownFixture.setUpCount);
+            Assert.AreEqual(1, StaticClassSetUpAndTearDownFixture.tearDownCount);
         }
 #endif
 
@@ -111,7 +122,26 @@ namespace NUnit.Framework.Attributes
             Assert.That(fixture.baseTearDownCalledLast, "Base TearDown called last");
         }
 
-		[Test]
+        [Test]
+        public void StaticBaseSetUpCalledFirstAndTearDownCalledLast()
+        {
+            StaticSetUpAndTearDownFixture.setUpCount = 0;
+            StaticSetUpAndTearDownFixture.tearDownCount = 0;
+            DerivedStaticSetUpAndTearDownFixture.derivedSetUpCount = 0;
+            DerivedStaticSetUpAndTearDownFixture.derivedTearDownCount = 0;
+
+            DerivedStaticSetUpAndTearDownFixture fixture = new DerivedStaticSetUpAndTearDownFixture();
+            RunTestOnFixture(fixture);
+
+            Assert.AreEqual(1, DerivedStaticSetUpAndTearDownFixture.setUpCount);
+            Assert.AreEqual(1, DerivedStaticSetUpAndTearDownFixture.tearDownCount);
+            Assert.AreEqual(1, DerivedStaticSetUpAndTearDownFixture.derivedSetUpCount);
+            Assert.AreEqual(1, DerivedStaticSetUpAndTearDownFixture.derivedTearDownCount);
+            Assert.That(DerivedStaticSetUpAndTearDownFixture.baseSetUpCalledFirst, "Base SetUp called first");
+            Assert.That(DerivedStaticSetUpAndTearDownFixture.baseTearDownCalledLast, "Base TearDown called last");
+        }
+
+        [Test]
 		public void HandleErrorInFixtureSetup() 
 		{
 			MisbehavingFixture fixture = new MisbehavingFixture();

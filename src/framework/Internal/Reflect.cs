@@ -47,7 +47,7 @@ namespace NUnit.Framework.Internal
 	/// </summary>
 	public class Reflect
 	{
-        private static readonly BindingFlags AllMembers = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static;
+        private static readonly BindingFlags AllMembers = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.FlattenHierarchy;
 
         // A zero-length Type array - not provided by System.Type for all CLR versions we support.
         private static readonly Type[] EmptyTypes = new Type[0];

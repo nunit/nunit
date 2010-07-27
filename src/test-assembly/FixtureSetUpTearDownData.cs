@@ -141,9 +141,53 @@ namespace NUnit.TestData.FixtureSetUpTearDownData
         public void YetAnotherTest() { }
     }
 
+    [TestFixture]
+    public class StaticSetUpAndTearDownFixture
+    {
+        public static int setUpCount = 0;
+        public static int tearDownCount = 0;
+
+        [TestFixtureSetUp]
+        public static void Init()
+        {
+            setUpCount++;
+        }
+
+        [TestFixtureTearDown]
+        public static void Destroy()
+        {
+            tearDownCount++;
+        }
+    }
+
+    [TestFixture]
+    public class DerivedStaticSetUpAndTearDownFixture : StaticSetUpAndTearDownFixture
+    {
+        public static int derivedSetUpCount;
+        public static int derivedTearDownCount;
+
+        public static bool baseSetUpCalledFirst;
+        public static bool baseTearDownCalledLast;
+
+
+        [TestFixtureSetUp]
+        public static void Init2()
+        {
+            derivedSetUpCount++;
+            baseSetUpCalledFirst = setUpCount > 0;
+        }
+
+        [TestFixtureTearDown]
+        public static void Destroy2()
+        {
+            derivedTearDownCount++;
+            baseTearDownCalledLast = tearDownCount == 0;
+        }
+    }
+
 #if CLR_2_0 || CLR_4_0
     [TestFixture]
-    public static class StaticSetUpAndTearDownFixture
+    public static class StaticClassSetUpAndTearDownFixture
     {
         public static int setUpCount = 0;
         public static int tearDownCount = 0;
@@ -161,7 +205,7 @@ namespace NUnit.TestData.FixtureSetUpTearDownData
         }
     }
 #endif
-    
+
     [TestFixture]
 	public class MisbehavingFixture 
 	{
