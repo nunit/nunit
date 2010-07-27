@@ -47,6 +47,7 @@ namespace NUnit.Framework.Internal
         private RunState runState;
         private Exception providerException;
         private object[] arguments;
+        private object[] originalArguments;
 #if !NUNITLITE
         private System.Type expectedException;
         private string expectedExceptionName;
@@ -91,7 +92,22 @@ namespace NUnit.Framework.Internal
         public object[] Arguments
         {
             get { return arguments; }
-            set { arguments = value; }
+            set 
+            { 
+                arguments = value;
+
+                if (originalArguments == null)
+                    originalArguments = value;
+            }
+        }
+
+        /// <summary>
+        /// The original arguments provided by the user,
+        /// used for display purposes.
+        /// </summary>
+        public object[] OriginalArguments
+        {
+            get { return originalArguments; }
         }
 
 #if !NUNITLITE

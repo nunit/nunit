@@ -232,9 +232,9 @@ namespace NUnit.Framework.Builders
                     testMethod.Name = parms.TestName;
                     testMethod.FullName = prefix + "." + parms.TestName;
                 }
-                else if (parms.Arguments != null)
+                else if (parms.OriginalArguments != null)
                 {
-                    string name = MethodHelper.GetDisplayName(method, parms.Arguments);
+                    string name = MethodHelper.GetDisplayName(method, parms.OriginalArguments);
                     testMethod.Name = name;
                     testMethod.FullName = prefix + "." + name;
                 }
