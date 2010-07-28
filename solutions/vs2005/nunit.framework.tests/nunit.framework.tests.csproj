@@ -129,6 +129,9 @@
     <Compile Include="..\..\..\src\tests\Attributes\CombinatorialTests.cs">
       <Link>Attributes\CombinatorialTests.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\tests\Attributes\DatapointTests.cs">
+      <Link>Attributes\DatapointTests.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\tests\Attributes\ExpectedExceptionTests.cs">
       <Link>Attributes\ExpectedExceptionTests.cs</Link>
     </Compile>
@@ -225,6 +228,9 @@
     <Compile Include="..\..\..\src\tests\Constraints\PropertyTests.cs">
       <Link>Constraints\PropertyTests.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\tests\Constraints\ReusableConstraintTests.cs">
+      <Link>Constraints\ReusableConstraintTests.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\tests\Constraints\SameAsTest.cs">
       <Link>Constraints\SameAsTest.cs</Link>
     </Compile>
@@ -233,6 +239,9 @@
     </Compile>
     <Compile Include="..\..\..\src\tests\Constraints\ThrowsConstraintTests.cs">
       <Link>Constraints\ThrowsConstraintTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\Constraints\ToStringTests.cs">
+      <Link>Constraints\ToStringTests.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\tests\Constraints\TypeConstraintTests.cs">
       <Link>Constraints\TypeConstraintTests.cs</Link>
@@ -263,6 +272,9 @@
     </Compile>
     <Compile Include="..\..\..\src\tests\Internal\RuntimeFrameworkTests.cs">
       <Link>Internal\RuntimeFrameworkTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\Internal\TestContextTests.cs">
+      <Link>Internal\TestContextTests.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\tests\Internal\TestResultTests.cs">
       <Link>Internal\TestResultTests.cs</Link>
