@@ -127,6 +127,9 @@
     <Compile Include="..\..\..\src\tests\Constraints\ThrowsConstraintTests.cs">
       <Link>Constraints\ThrowsConstraintTests.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\tests\Constraints\ToStringTests.cs">
+      <Link>Constraints\ToStringTests.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\tests\Constraints\TypeConstraintTests.cs">
       <Link>Constraints\TypeConstraintTests.cs</Link>
     </Compile>
