@@ -505,7 +505,7 @@
     <Compile Include="..\..\..\src\framework\Internal\OSPlatform.cs">
       <Link>Internal\OSPlatform.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\ParameterizedMethodSuite.cs">
+    <Compile Include="..\..\..\src\framework\Internal\Tests\ParameterizedMethodSuite.cs">
       <Link>Internal\Tests\ParameterizedMethodSuite.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Internal\ParameterSet.cs">
