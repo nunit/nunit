@@ -28,7 +28,8 @@ namespace NUnit.Framework
 {
     /// <summary>
     /// The abstract base class for all NUnitAttributes that modify
-    /// to a test once it has been constructed.
+    /// to a test once it has been constructed. It is used by the
+    /// framework to select all test-modifying attributes on a test.
     /// </summary>
     public abstract class TestModificationAttribute : NUnitAttribute
     {

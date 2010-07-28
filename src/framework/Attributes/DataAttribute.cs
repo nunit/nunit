@@ -26,7 +26,9 @@ using System;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// The abstract base class for all custom attributes defined by NUnit.
+    /// The abstract base class for all data-providing attributes 
+    /// defined by NUnit. Used to select all data sources for a 
+    /// method, class or parameter.
     /// </summary>
     public abstract class DataAttribute : NUnitAttribute
     {
