@@ -283,9 +283,6 @@
     <Compile Include="..\..\..\src\framework\Internal\NUnitException.cs">
       <Link>Internal\NUnitException.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\ParameterizedMethodSuite.cs">
-      <Link>Internal\ParameterizedMethodSuite.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\src\framework\Internal\ParameterSet.cs">
       <Link>Internal\ParameterSet.cs</Link>
     </Compile>
@@ -312,6 +309,9 @@
     </Compile>
     <Compile Include="..\..\..\src\framework\Internal\TestListener.cs">
       <Link>Internal\TestListener.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\Tests\ParameterizedMethodSuite.cs">
+      <Link>Internal\Tests\ParameterizedMethodSuite.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Internal\Tests\Test.cs">
       <Link>Internal\Tests\Test.cs</Link>

@@ -247,6 +247,9 @@
     <Compile Include="..\..\..\src\tests\Constraints\PropertyTests.cs">
       <Link>Constraints\PropertyTests.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\tests\Constraints\ReusableConstraintTests.cs">
+      <Link>Constraints\ReusableConstraintTests.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\tests\Constraints\SameAsTest.cs">
       <Link>Constraints\SameAsTest.cs</Link>
     </Compile>
@@ -408,9 +411,6 @@
     </Compile>
     <Compile Include="..\..\..\src\tests\Internal\TestContextTests.cs">
       <Link>Internal\TestContextTests.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\ReusableConstraintTests.cs">
-      <Link>Constraints\ReusableConstraintTests.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\tests\Constraints\ToStringTests.cs">
       <SubType>Code</SubType>
