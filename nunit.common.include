@@ -237,7 +237,7 @@
     <property name="runtime.platform" value="net"/>
     <property name="runtime.version" value="3.5"/>
     <property name="runtime.config" value="net-3.5"/>
-    <property name="runtime.defines" value="MSNET,NET_3_5,CLR_2_0"/>
+    <property name="runtime.defines" value="MSNET,NET_3_5,CLR_2_0,CS_3_0"/>
     <property name="nant.settings.currentframework" value="net-3.5"/>
   </target>
  	
