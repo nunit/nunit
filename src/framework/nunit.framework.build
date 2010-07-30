@@ -29,6 +29,7 @@
     <copy todir="${package.src.dir}/framework">
       <fileset>
         <includesfile name="nunit.framework.sources"/>
+        <include name="Runner/*.cs"/>
         <include name="Templates/*.cs"/>
       </fileset>
     </copy>
