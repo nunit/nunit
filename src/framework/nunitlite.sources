@@ -47,9 +47,10 @@ Internal/Results/TestCaseResult.cs
 Internal/Results/TestFixtureResult.cs
 Internal/Results/TestResult.cs
 Internal/Results/TestSuiteResult.cs
-Internal/ParameterizedMethodSuite.cs
+Internal/Tests/ParameterizedMethodSuite.cs
 Internal/Tests/Test.cs
 Internal/Tests/TestFixture.cs
 Internal/Tests/TestMethod.cs
+Internal/Tests/TestMethodSuite.cs
 Internal/Tests/TestSuite.cs
 Runner/*.cs
