@@ -285,9 +285,9 @@ namespace NUnit.Framework.Builders
             // Count and record those attrs with arguments            
             for (int i = 0; i < attrs.Length; i++)
             {
-                object[] args = attrs[i].Arguments;
+                TestFixtureAttribute attr = attrs[i];
 
-                if (args.Length > 0)
+                if (attr.Arguments.Length > 0 || attr.TypeArgs.Length > 0)
                 {
                     withArgs++;
                     hasArgs[i] = true;
