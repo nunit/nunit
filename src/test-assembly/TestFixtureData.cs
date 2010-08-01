@@ -380,6 +380,7 @@ namespace NUnit.TestData.TestFixtureData
     }
 
 #if CLR_2_0 || CLR_4_0
+    [TestFixture(typeof(int))]
     [TestFixture(typeof(string))]
     public class GenericFixtureWithProperArgsProvided<T>
     {
@@ -412,6 +413,7 @@ namespace NUnit.TestData.TestFixtureData
     }
 
     [TestFixture(typeof(int))]
+    [TestFixture(typeof(string))]
     public class GenericFixtureDerivedFromAbstractFixtureWithArgsProvided<T> : AbstractFixtureBase
     {
     }

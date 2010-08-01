@@ -36,14 +36,13 @@ namespace NUnit.Framework
 	{
 		private string description;
 
-        private object[] arguments;
+        private object[] originalArgs;
+        private object[] constructorArgs;
+        private Type[] typeArgs;
+        private bool argsInitialized;
+
         private bool isIgnored;
         private string ignoreReason;
-
-#if CLR_2_0 && !NUNITLITE
-        private Type[] typeArgs;
-        private bool argsSeparated;
-#endif
 
         /// <summary>
         /// Default constructor
@@ -58,9 +57,11 @@ namespace NUnit.Framework
         /// <param name="arguments"></param>
         public TestFixtureAttribute(params object[] arguments)
         {
-            this.arguments = arguments == null
+            this.originalArgs = arguments == null
                 ? new object[0]
                 : arguments;
+            this.constructorArgs = this.originalArgs;
+            this.typeArgs = new Type[0];
         }
 
 		/// <summary>
@@ -80,10 +81,10 @@ namespace NUnit.Framework
             get 
             {
 #if CLR_2_0 && !NUNITLITE
-                if (!argsSeparated)
-                    SeparateArgs();
+                if (!argsInitialized)
+                    InitializeArgs();
 #endif
-                return arguments; 
+                return constructorArgs; 
             }
         }
 
@@ -111,7 +112,6 @@ namespace NUnit.Framework
             }
         }
 
-#if CLR_2_0 && !NUNITLITE
         /// <summary>
         /// Get or set the type arguments. If not set
         /// explicitly, any leading arguments that are
@@ -121,44 +121,48 @@ namespace NUnit.Framework
         {
             get
             {
-                if (!argsSeparated)
-                    SeparateArgs();
-
+#if CLR_2_0 && !NUNITLITE
+                if (!argsInitialized)
+                    InitializeArgs();
+#endif
                 return typeArgs;
             }
             set 
             { 
                 typeArgs = value;
-                argsSeparated = true;
+                argsInitialized = true;
             }
         }
 
-        private void SeparateArgs()
+#if CLR_2_0 && !NUNITLITE
+        /// <summary>
+        /// Helper method to split the original argument list
+        /// into type arguments and constructor arguments.
+        /// This action has to be delayed rather than done in
+        /// the constructor, since TypeArgs may be set by
+        /// menas of a named parameter.
+        /// </summary>
+        private void InitializeArgs()
         {
-            int cnt = 0;
-            if (arguments != null)
+            int typeArgCount = 0;
+
+            if (this.originalArgs != null)
             {
-                foreach (object o in arguments)
-                    if (o is Type) cnt++;
+                foreach (object o in this.originalArgs)
+                    if (o is Type) typeArgCount++;
                     else break;
-
-                typeArgs = new Type[cnt];
-                for (int i = 0; i < cnt; i++)
-                    typeArgs[i] = (Type)arguments[i];
-
-                if (cnt > 0)
-                {
-                    object[] args = new object[arguments.Length - cnt];
-                    for (int i = 0; i < args.Length; i++)
-                        args[i] = arguments[cnt + i];
-
-                    arguments = args;
-                }
             }
-            else
-                typeArgs = new Type[0];
 
-            argsSeparated = true;
+            this.typeArgs = new Type[typeArgCount];
+            for (int i = 0; i < typeArgCount; i++)
+                this.typeArgs[i] = (Type)this.originalArgs[i];
+
+            int constructorArgCount = originalArgs.Length - typeArgCount;
+            this.constructorArgs = new object[constructorArgCount];
+                for (int i = 0; i < constructorArgCount; i++)
+                    this.constructorArgs[i] = this.originalArgs[typeArgCount + i];
+                
+            argsInitialized = true;
         }
 #endif
 
