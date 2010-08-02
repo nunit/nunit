@@ -134,7 +134,7 @@ namespace NUnit.Framework.Internal
         }
         #endregion
 
-#if CLR_2_0
+#if CLR_2_0 || CLR_4_0
         class RandomizerDictionary : System.Collections.Generic.Dictionary<MemberInfo, Randomizer> { }
 #else
         class RandomizerDictionary : Hashtable { }

@@ -49,7 +49,7 @@ namespace NUnit.Framework.Internal
 
 #if !NUNITLITE
                     NameValueCollection settings = (NameValueCollection)
-#if CLR_2_0
+#if CLR_2_0 || CLR_4_0
                         ConfigurationManager.GetSection("NUnit/TestRunner");
 #else
                         ConfigurationSettings.GetConfig("NUnit/TestRunner");

@@ -304,7 +304,7 @@ namespace NUnit.Framework.Assertions
 			Assert.AreEqual( 35, i21  );
 			Assert.AreEqual( 35, i22  );
 
-#if CLR_2_0
+#if CLR_2_0 || CLR_4_0
             byte? b23 = 35;
             sbyte? sb24 = 35;
             decimal? d25 = 35;

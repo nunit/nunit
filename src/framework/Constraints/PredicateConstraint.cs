@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if CLR_2_0 && !NUNITLITE
+#if (CLR_2_0 || CLR_4_0) && !NUNITLITE
 using System;
 using System.Collections.Generic;
 

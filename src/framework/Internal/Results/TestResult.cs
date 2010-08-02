@@ -71,7 +71,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// List of child results
         /// </summary>
-#if CLR_2_0
+#if CLR_2_0 || CLR_4_0
         private System.Collections.Generic.List<ITestResult> children;
 #else
         private System.Collections.ArrayList children;
@@ -173,7 +173,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Gets the collection of child results.
         /// </summary>
-#if CLR_2_0
+#if CLR_2_0 || CLR_4_0
         public System.Collections.Generic.IList<ITestResult> Children
         {
             get

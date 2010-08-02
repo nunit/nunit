@@ -23,7 +23,7 @@
 
 using System;
 using System.Collections;
-#if CLR_2_0
+#if CLR_2_0 || CLR_4_0
 using System.Collections.Generic;
 #endif
 
@@ -45,7 +45,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public class OperatorStack
         {
-#if CLR_2_0
+#if CLR_2_0 || CLR_4_0
             private Stack<ConstraintOperator> stack = new Stack<ConstraintOperator>();
 #else
 		    private Stack stack = new Stack();
@@ -102,7 +102,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public class ConstraintStack
         {
-#if CLR_2_0
+#if CLR_2_0 || CLR_4_0
             private Stack<Constraint> stack = new Stack<Constraint>();
 #else
 		    private Stack stack = new Stack();

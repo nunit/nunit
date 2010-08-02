@@ -92,7 +92,7 @@ namespace NUnit.Framework.Attributes
             Assert.That(x * y, Is.EqualTo(answer));
         }
 
-#if CLR_2_0
+#if CLR_2_0 || CLR_4_0
         IEnumerable GenerateData()
         {
             for(int i = 1; i <= answer; i++)

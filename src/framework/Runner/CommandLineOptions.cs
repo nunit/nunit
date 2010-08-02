@@ -24,7 +24,7 @@
 using System;
 using System.Text;
 using System.Collections;
-#if CLR_2_0
+#if CLR_2_0 || CLR_4_0
 using System.Collections.Generic;
 #endif
 
@@ -47,7 +47,7 @@ namespace NUnitLite.Runner
 
         private bool error = false;
 
-#if CLR_2_0
+#if CLR_2_0 || CLR_4_0
         private List<string> tests = new List<string>();
         private List<string> invalidOptions = new List<string>();
         private List<string> parameters = new List<string>();
@@ -150,7 +150,7 @@ namespace NUnitLite.Runner
         /// </summary>
         public string[] Parameters
         {
-#if CLR_2_0
+#if CLR_2_0 || CLR_4_0
             get { return (string[])parameters.ToArray(); }
 #else
             get { return (string[])parameters.ToArray(typeof(string)); }

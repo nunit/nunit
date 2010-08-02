@@ -715,7 +715,7 @@ namespace NUnit.Framework.Builders
 			return dimensions;
 		}
 
-#if CLR_2_0
+#if CLR_2_0 || CLR_4_0
         class FeatureList : System.Collections.Generic.List<FeatureInfo> { }
         class TupleList : System.Collections.Generic.List<Tuple> { }
         class TestCaseList : System.Collections.Generic.List<TestCase> { }

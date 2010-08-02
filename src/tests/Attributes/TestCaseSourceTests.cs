@@ -94,7 +94,7 @@ namespace NUnit.Framework.Tests
         static object[] InstanceField =
             { new object[] { "InstanceField" } };
 
-#if CLR_2_0
+#if CLR_2_0 || CLR_4_0
         [Test, TestCaseSource(typeof(DataSourceClass))]
         public void SourceCanBeInstanceOfIEnumerable(string source)
         {
@@ -297,7 +297,7 @@ namespace NUnit.Framework.Tests
             {
                 get
                 {
-#if CLR_2_0
+#if CLR_2_0 || CLR_4_0
                     yield return new TestCaseData(0, 0, 0)
                         .SetName("ThisOneShouldThrow")
                         .SetDescription("Demonstrates use of ExpectedException")
@@ -342,7 +342,7 @@ namespace NUnit.Framework.Tests
         {
             get
             {
-#if CLR_2_0
+#if CLR_2_0 || CLR_4_0
                 yield return new TestCaseData("a", "a");
                 yield return new TestCaseData("b", "b");
 #endif

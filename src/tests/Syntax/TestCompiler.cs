@@ -29,7 +29,7 @@ namespace NUnit.Framework.Syntax
     class TestCompiler
     {
         Microsoft.CSharp.CSharpCodeProvider provider;
-#if !CLR_2_0
+#if !CLR_2_0 || CLR_4_0
 		ICodeCompiler compiler;
 #endif
 		CompilerParameters options;
@@ -41,7 +41,7 @@ namespace NUnit.Framework.Syntax
 		public TestCompiler( string[] assemblyNames, string outputName )
 		{
 			this.provider = new Microsoft.CSharp.CSharpCodeProvider();
-#if !CLR_2_0
+#if !CLR_2_0 || CLR_4_0
 			this.compiler = provider.CreateCompiler();
 #endif
 			this.options = new CompilerParameters();
@@ -63,7 +63,7 @@ namespace NUnit.Framework.Syntax
 
 		public CompilerResults CompileCode( string code )
 		{
-#if CLR_2_0
+#if CLR_2_0 || CLR_4_0
 			return provider.CompileAssemblyFromSource( options, code );
 #else
             return compiler.CompileAssemblyFromSource(options, code);

@@ -31,7 +31,7 @@ namespace NUnit
     /// ObjectList does not attempt to be a general replacement for either of
     /// these classes but only implements what is needed within the framework.
     /// </summary>
-#if CLR_2_0
+#if CLR_2_0 || CLR_4_0
     public class ObjectList : System.Collections.Generic.List<object>
     {
         /// <summary>
@@ -55,7 +55,7 @@ namespace NUnit
     /// these classes but only implements what is needed within the framework. It
     /// is primarily used to hold argument lists within the framework.
     /// </summary>
-#if CLR_2_0
+#if CLR_2_0 || CLR_4_0
     class ArgumentsCollection : System.Collections.Generic.List<object[]> { }
 #else
     class ArgumentsCollection : System.Collections.ArrayList { }
@@ -67,7 +67,7 @@ namespace NUnit
     /// IntList does not attempt to be a general replacement for either of
     /// these classes but only implements what is needed within the framework.
     /// </summary>
-#if CLR_2_0
+#if CLR_2_0 || CLR_4_0
     public class IntList : System.Collections.Generic.List<Int32> { }
 #else
     public class IntList : System.Collections.ArrayList

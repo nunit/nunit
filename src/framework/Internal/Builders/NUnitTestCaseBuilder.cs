@@ -349,7 +349,7 @@ namespace NUnit.Framework.Builders
                 return false;
             }
 
-#if CLR_2_0
+#if CLR_2_0 || CLR_4_0
             if (testMethod.Method.IsGenericMethodDefinition)
             {
                 Type[] typeArguments = GetTypeArgumentsForMethod(testMethod.Method, arglist);
@@ -384,7 +384,7 @@ namespace NUnit.Framework.Builders
             return true;
         }
 
-#if CLR_2_0
+#if CLR_2_0 || CLR_4_0
         private static Type[] GetTypeArgumentsForMethod(MethodInfo method, object[] arglist)
         {
             Type[] typeParameters = method.GetGenericArguments();

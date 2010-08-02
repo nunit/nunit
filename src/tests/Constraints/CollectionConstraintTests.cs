@@ -23,7 +23,7 @@
 
 using System;
 using System.Collections;
-#if CLR_2_0
+#if CLR_2_0 || CLR_4_0
 using System.Collections.Generic;
 #endif
 using NUnit.Framework.Internal;
@@ -65,7 +65,7 @@ namespace NUnit.Framework.Constraints.Tests
             Assert.That(c, new AllItemsConstraint(new RangeConstraint(10, 100).Using(Comparer.Default)));
         }
 
-#if CLR_2_0
+#if CLR_2_0 || CLR_4_0
         [Test]
         public void AllItemsAreInRange_UsingIComparerOfT()
         {
@@ -158,7 +158,7 @@ namespace NUnit.Framework.Constraints.Tests
                 new CollectionContainsConstraint("WORLD").IgnoreCase);
         }
 
-#if CS_3_0
+#if CS_3_0 || CS_4_0
         [Test]
         public void UsingIsHonored()
         {
@@ -244,7 +244,7 @@ namespace NUnit.Framework.Constraints.Tests
             Assert.That(new CollectionEquivalentConstraint(set1).IgnoreCase.Matches(set2));
         }
 
-#if CS_3_0
+#if CS_3_0 || CS_4_0
         [Test]
         public void EquivalentHonorsUsing()
         {
@@ -390,7 +390,7 @@ namespace NUnit.Framework.Constraints.Tests
             Assert.That(comparer.Called, "TestComparer was not called");
         }
 
-#if CLR_2_0
+#if CLR_2_0 || CLR_4_0
         [Test]
         public void UsesProvidedComparerOfT()
         {
@@ -437,7 +437,7 @@ namespace NUnit.Framework.Constraints.Tests
             }
         }
 
-#if CS_3_0
+#if CS_3_0 || CS_4_0
         [Test]
         public void UsesProvidedLambda()
         {

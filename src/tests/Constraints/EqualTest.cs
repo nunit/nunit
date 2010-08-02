@@ -25,7 +25,7 @@ using System;
 using System.IO;
 using System.Drawing;
 using System.Collections;
-#if CLR_2_0
+#if CLR_2_0 || CLR_4_0
 using System.Collections.Generic;
 #endif
 
@@ -137,7 +137,7 @@ namespace NUnit.Framework.Constraints.Tests
 
         #region Dictionary Tests
         // TODO: Move these to a separate fixture
-#if CS_3_0
+#if CS_3_0 || CS_4_0
         [Test]
         public void CanMatchHashtables_SameOrder()
         {
@@ -351,7 +351,7 @@ namespace NUnit.Framework.Constraints.Tests
             }
         }
 
-#if CLR_2_0
+#if CLR_2_0 || CLR_4_0
         [Test]
         public void UsesProvidedEqualityComparer()
         {
@@ -438,7 +438,7 @@ namespace NUnit.Framework.Constraints.Tests
             }
         }
 
-#if CS_3_0
+#if CS_3_0 || CS_4_0
         [Test]
         public void UsesProvidedLambda_IntArgs()
         {
@@ -553,7 +553,7 @@ namespace NUnit.Framework.Constraints.Tests
             }
         }
 
-#if CLR_2_0
+#if CLR_2_0 || CLR_4_0
         [Test]
         public void TestPropertyWithPrivateSetter()
         {

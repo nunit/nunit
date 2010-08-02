@@ -88,7 +88,7 @@ namespace NUnit.Framework.Builders
             }
         }
 
-#if CLR_2_0
+#if CLR_2_0 || CLR_4_0
         class ProviderDictionary : System.Collections.Generic.Dictionary<CacheEntry, object> { }
 #else
         class ProviderDictionary : Hashtable

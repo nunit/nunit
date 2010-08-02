@@ -171,7 +171,7 @@ namespace NUnit.Framework.Internal
 		#endregion
 
         #region NamespaceDictionary Type
-#if CLR_2_0
+#if CLR_2_0 || CLR_4_0
         class NamespaceDictionary : System.Collections.Generic.Dictionary<string, TestSuite> { }
 #else
         class NamespaceDictionary : DictionaryBase

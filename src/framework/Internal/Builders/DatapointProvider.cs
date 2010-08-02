@@ -169,7 +169,7 @@ namespace NUnit.Framework.Builders
             if (type.IsArray)
                 return type.GetElementType();
 
-#if CLR_2_0
+#if CLR_2_0 || CLR_4_0
             if (type.IsGenericType && type.Name == "IEnumerable`1")
                 return type.GetGenericArguments()[0];
 #endif

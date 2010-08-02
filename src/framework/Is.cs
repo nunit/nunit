@@ -274,7 +274,7 @@ namespace NUnit.Framework
             return new ExactTypeConstraint(expectedType);
         }
 
-#if CLR_2_0
+#if CLR_2_0 || CLR_4_0
         /// <summary>
         /// Returns a constraint that tests whether the actual
         /// value is of the exact type supplied as an argument.
@@ -298,7 +298,7 @@ namespace NUnit.Framework
             return new InstanceOfTypeConstraint(expectedType);
         }
 
-#if CLR_2_0
+#if CLR_2_0 || CLR_4_0
         /// <summary>
         /// Returns a constraint that tests whether the actual value
         /// is of the type supplied as an argument or a derived type.
@@ -322,7 +322,7 @@ namespace NUnit.Framework
             return new AssignableFromConstraint(expectedType);
         }
 
-#if CLR_2_0
+#if CLR_2_0 || CLR_4_0
         /// <summary>
         /// Returns a constraint that tests whether the actual value
         /// is assignable from the type supplied as an argument.
@@ -346,7 +346,7 @@ namespace NUnit.Framework
             return new AssignableToConstraint(expectedType);
         }
 
-#if CLR_2_0
+#if CLR_2_0 || CLR_4_0
         /// <summary>
         /// Returns a constraint that tests whether the actual value
         /// is assignable from the type supplied as an argument.

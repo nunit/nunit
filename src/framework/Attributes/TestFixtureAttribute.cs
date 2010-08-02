@@ -80,7 +80,7 @@ namespace NUnit.Framework
         {
             get 
             {
-#if CLR_2_0 && !NUNITLITE
+#if (CLR_2_0 || CLR_4_0) && !NUNITLITE
                 if (!argsInitialized)
                     InitializeArgs();
 #endif
@@ -121,7 +121,7 @@ namespace NUnit.Framework
         {
             get
             {
-#if CLR_2_0 && !NUNITLITE
+#if (CLR_2_0 || CLR_4_0) && !NUNITLITE
                 if (!argsInitialized)
                     InitializeArgs();
 #endif
@@ -134,7 +134,7 @@ namespace NUnit.Framework
             }
         }
 
-#if CLR_2_0 && !NUNITLITE
+#if (CLR_2_0 || CLR_4_0) && !NUNITLITE
         /// <summary>
         /// Helper method to split the original argument list
         /// into type arguments and constructor arguments.

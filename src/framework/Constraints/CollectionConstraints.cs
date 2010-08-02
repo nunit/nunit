@@ -25,7 +25,7 @@ using System;
 using System.Collections;
 using System.Reflection;
 using System.Text;
-#if CLR_2_0
+#if CLR_2_0 || CLR_4_0
 using System.Collections.Generic;
 #endif
 
@@ -135,7 +135,7 @@ namespace NUnit.Framework.Constraints
             return this;
         }
 
-#if CLR_2_0
+#if CLR_2_0 || CLR_4_0
         /// <summary>
         /// Flag the constraint to use the supplied IComparer object.
         /// </summary>
@@ -443,7 +443,7 @@ namespace NUnit.Framework.Constraints
             return this;
         }
 
-#if CLR_2_0
+#if CLR_2_0 || CLR_4_0
         /// <summary>
         /// Modifies the constraint to use an IComparer&lt;T&gt; and returns self.
         /// </summary>

@@ -27,7 +27,7 @@ using System.Reflection;
 using NUnit.Framework.Api;
 using NUnit.Framework.Extensibility;
 using NUnit.Framework.Internal;
-#if CLR_2_0
+#if CLR_2_0 || CLR_4_0
 using System.Collections.Generic;
 #endif
 
@@ -63,7 +63,7 @@ namespace NUnit.Framework.Builders
         /// <returns></returns>
         public IEnumerable GetTestCasesFor(MethodInfo method)
         {
-#if CLR_2_0
+#if CLR_2_0 || CLR_4_0
             List<ITestCaseData> testCases = new List<ITestCaseData>();
 #else
             ArrayList testCases = new ArrayList();
