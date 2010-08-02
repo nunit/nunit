@@ -26,7 +26,7 @@ using System.Collections;
 using System.Reflection;
 using NUnit.Framework.Api;
 using NUnit.Framework.Internal;
-#if CLR_2_0
+#if CLR_2_0 || CLR_4_0
 using System.Collections.Generic;
 #endif
 
@@ -86,7 +86,7 @@ namespace NUnit.Framework
         }
 
         #region ITestCaseSource Members
-#if CLR_2_0
+#if CLR_2_0 || CLR_4_0
         public IEnumerable<ITestCaseData> GetTestCasesFor(MethodInfo method)
         {
             List<ITestCaseData> data = new List<ITestCaseData>();

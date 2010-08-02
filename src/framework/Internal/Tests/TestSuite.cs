@@ -622,7 +622,7 @@ namespace NUnit.Framework.Internal
         }
         #endregion
 
-#if CLR_2_0 && !NETCF
+#if (CLR_2_0 || CLR_4_0) && !NETCF
         private class TestCollection : System.Collections.Generic.List<Test> { }
 #else
         private class TestCollection : ArrayList { }

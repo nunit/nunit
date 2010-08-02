@@ -90,7 +90,7 @@ namespace NUnit.Framework.Internal
         /// <value>The ApartmentState to use for the test.</value>
         public ApartmentState ApartmentState
         {
-#if CLR_2_0
+#if CLR_2_0 || CLR_4_0
             get { return thread.GetApartmentState(); }
             set { thread.SetApartmentState(value); }
 #else

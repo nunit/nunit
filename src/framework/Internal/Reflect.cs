@@ -24,7 +24,7 @@
 using System;
 using System.Reflection;
 using System.Collections;
-#if CLR_2_0
+#if CLR_2_0 || CLR_4_0
 using System.Collections.Generic;
 #endif
 
@@ -64,7 +64,7 @@ namespace NUnit.Framework.Internal
         /// <returns>The array of methods found</returns>
         public static MethodInfo[] GetMethodsWithAttribute(Type fixtureType, Type attributeType, bool inherit)
         {
-#if CLR_2_0
+#if CLR_2_0 || CLR_4_0
             List<MethodInfo> list = new List<MethodInfo>();
 #else
             ArrayList list = new ArrayList();
@@ -78,21 +78,21 @@ namespace NUnit.Framework.Internal
 
             list.Sort(new BaseTypesFirstComparer());
 
-#if CLR_2_0
+#if CLR_2_0 || CLR_4_0
             return (MethodInfo[])list.ToArray();
 #else
             return (MethodInfo[])list.ToArray(typeof(MethodInfo));
 #endif
         }
 
-#if CLR_2_0
+#if CLR_2_0 || CLR_4_0
         private class BaseTypesFirstComparer : System.Collections.Generic.IComparer<MethodInfo>
 #else
         private class BaseTypesFirstComparer : IComparer
 #endif
         {
             #region IComparer Members
-#if CLR_2_0
+#if CLR_2_0 || CLR_4_0
             public int Compare(MethodInfo x, MethodInfo y)
 #else
             public int Compare(object x, object y)

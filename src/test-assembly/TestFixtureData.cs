@@ -74,7 +74,7 @@ namespace NUnit.TestData.TestFixtureData
         public void SomeTest() { }
     }
 
-#if CLR_2_0
+#if CLR_2_0 || CLR_4_0
     public static class StaticFixtureWithoutTestFixtureAttribute
     {
         [Test]

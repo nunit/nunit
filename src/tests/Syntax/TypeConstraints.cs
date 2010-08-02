@@ -103,7 +103,7 @@ namespace NUnit.Framework.Syntax
         }
     }
 
-#if CLR_2_0
+#if CLR_2_0 || CLR_4_0
     [TestFixture]
     public class ExactTypeTest_Generic : SyntaxTest
     {

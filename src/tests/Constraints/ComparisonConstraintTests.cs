@@ -23,7 +23,7 @@
 
 using System;
 using System.Collections;
-#if CLR_2_0
+#if CLR_2_0 || CLR_4_0
 using System.Collections.Generic;
 #endif
 
@@ -53,7 +53,7 @@ namespace NUnit.Framework.Constraints.Tests
             }
         }
 
-#if CLR_2_0
+#if CLR_2_0 || CLR_4_0
         [Test]
         public void UsesProvidedComparerOfT()
         {
@@ -92,7 +92,7 @@ namespace NUnit.Framework.Constraints.Tests
             }
         }
 
-#if CS_3_0
+#if CS_3_0 || CS_4_0
         [Test]
         public void UsesProvidedLambda()
         {
@@ -130,7 +130,7 @@ namespace NUnit.Framework.Constraints.Tests
             Assert.That(actual, Is.GreaterThan(expected));
         }
 
-#if CLR_2_0
+#if CLR_2_0 || CLR_4_0
         [Test]
         public void CanCompareIComparablesOfT()
         {
@@ -168,7 +168,7 @@ namespace NUnit.Framework.Constraints.Tests
             Assert.That(actual, Is.GreaterThanOrEqualTo(expected));
         }
 
-#if CLR_2_0
+#if CLR_2_0 || CLR_4_0
         [Test]
         public void CanCompareIComparablesOfT()
         {
@@ -206,7 +206,7 @@ namespace NUnit.Framework.Constraints.Tests
             Assert.That(actual, Is.LessThan(expected));
         }
 
-#if CLR_2_0
+#if CLR_2_0 || CLR_4_0
         [Test]
         public void CanCompareIComparablesOfT()
         {
@@ -244,7 +244,7 @@ namespace NUnit.Framework.Constraints.Tests
             Assert.That(actual, Is.LessThanOrEqualTo(expected));
         }
 
-#if CLR_2_0
+#if CLR_2_0 || CLR_4_0
         [Test]
         public void CanCompareIComparablesOfT()
         {
@@ -295,7 +295,7 @@ namespace NUnit.Framework.Constraints.Tests
             }
         }
 
-#if CLR_2_0
+#if CLR_2_0 || CLR_4_0
         [Test]
         public void UsesProvidedComparerOfT()
         {
@@ -334,7 +334,7 @@ namespace NUnit.Framework.Constraints.Tests
             }
         }
 
-#if CS_3_0
+#if CS_3_0 || CS_4_0
         [Test]
         public void UsesProvidedLambda()
         {
@@ -366,7 +366,7 @@ namespace NUnit.Framework.Constraints.Tests
         }
     }
 
-#if CLR_2_0
+#if CLR_2_0 || CLR_4_0
     class ClassWithIComparableOfT : IComparable<ClassWithIComparableOfT>
     {
         private int val;

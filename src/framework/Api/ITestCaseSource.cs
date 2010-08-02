@@ -41,7 +41,7 @@ namespace NUnit.Framework.Api
         /// </summary>
         /// <param name="method">The method for which data is needed.</param>
         /// <returns></returns>
-#if CLR_2_0
+#if CLR_2_0 || CLR_4_0
         System.Collections.Generic.IEnumerable<ITestCaseData> GetTestCasesFor(MethodInfo method);
 #else
         System.Collections.IEnumerable GetTestCasesFor(MethodInfo method);

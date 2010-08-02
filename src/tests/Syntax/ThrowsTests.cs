@@ -110,8 +110,8 @@ namespace NUnit.Framework.Syntax
                 expr.Resolve().ToString());
         }
 
-#if CLR_2_0
-#if CS_3_0
+#if CLR_2_0 || CLR_4_0
+#if CS_3_0 || CS_4_0
         [Test]
         public void DelegateThrowsException()
         {

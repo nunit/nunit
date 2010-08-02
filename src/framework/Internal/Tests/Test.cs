@@ -101,7 +101,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         protected ApartmentState GetCurrentApartment()
         {
-#if CLR_2_0
+#if CLR_2_0 || CLR_4_0
             return Thread.CurrentThread.GetApartmentState();
 #else
             return Thread.CurrentThread.ApartmentState;

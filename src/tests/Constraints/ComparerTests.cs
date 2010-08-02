@@ -38,7 +38,7 @@ namespace NUnit.Framework.Constraints.Tests
         [TestCase(4.0f, 4)]
         [TestCase(4.0f, 4.0d)]
         [TestCase(SpecialValue.Null, SpecialValue.Null)]
-#if CLR_2_0
+#if CLR_2_0 || CLR_4_0
         [TestCase(null, null)]
 #endif
         public void EqualItems(object x, object y)
@@ -59,7 +59,7 @@ namespace NUnit.Framework.Constraints.Tests
 #if !NUNITLITE
         [TestCase(4, SpecialValue.Null)]
 #endif
-#if CLR_2_0
+#if CLR_2_0 || CLR_4_0
         [TestCase(4, null)]
 #endif
         public void UnequalItems(object greater, object lesser)

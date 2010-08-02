@@ -107,7 +107,7 @@ namespace NUnit.Framework.Builders
         }
     }
 
-#if CLR_2_0
+#if CLR_2_0 || CLR_4_0
     class ProviderList : System.Collections.Generic.List<ProviderReference> { }
 #else
     class ProviderList : ArrayList { }

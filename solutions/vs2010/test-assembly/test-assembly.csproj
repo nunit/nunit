@@ -18,7 +18,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;CLR_2_0;NET_4_0</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;CLR_4_0;NET_4_0;CS_4_0</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -26,7 +26,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..bin\Release\</OutputPath>
-    <DefineConstants>TRACE;CLR_2_0;NET_4_0</DefineConstants>
+    <DefineConstants>TRACE;CLR_4_0;NET_4_0;CS_4_0</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>

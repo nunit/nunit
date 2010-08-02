@@ -50,7 +50,7 @@ namespace NUnit.Framework.Internal
         /// <returns>The new top level element node.</returns>
         protected override System.Xml.XmlNode AddTopLevelElement(System.Xml.XmlNode parentNode)
         {
-#if CLR_2_0
+#if CLR_2_0 || CLR_4_0
             if ( suite.Method.ContainsGenericParameters )
                 return XmlHelper.AddElement(parentNode, "generic-method");
 #endif

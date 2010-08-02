@@ -84,7 +84,7 @@ namespace NUnit.Framework.Builders
 		{
             TestFixtureAttribute[] attrs = GetTestFixtureAttributes(type);
 
-#if CLR_2_0
+#if CLR_2_0 || CLR_4_0
             if (type.IsGenericType)
                 return BuildMultipleFixtures(type, attrs);
 #endif
@@ -130,7 +130,7 @@ namespace NUnit.Framework.Builders
             if (attr != null)
             {
                 arguments = (object[])attr.Arguments;
-#if CLR_2_0
+#if CLR_2_0 || CLR_4_0
                 if (type.ContainsGenericParameters)
                 {
                     Type[] typeArgs = (Type[])attr.TypeArgs;
@@ -252,7 +252,7 @@ namespace NUnit.Framework.Builders
         /// <returns>True if the fixture is valid, false if not</returns>
         private bool IsValidFixtureType(Type fixtureType, ref string reason)
         {
-#if CLR_2_0
+#if CLR_2_0 || CLR_4_0
             if ( fixtureType.ContainsGenericParameters )
             {
                 reason = NO_TYPE_ARGS_MSG;
