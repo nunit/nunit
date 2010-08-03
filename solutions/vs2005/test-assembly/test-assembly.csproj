@@ -79,17 +79,20 @@
     <Compile Include="..\..\..\src\test-assembly\RepeatedTestFixture.cs">
       <Link>RepeatedTestFixture.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\test-assembly\SetUpData.cs">
+      <Link>SetUpData.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\test-assembly\SetupFixtureTests.cs">
       <Link>SetupFixtureTests.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\test-assembly\SetUpTest.cs">
-      <Link>SetUpTest.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\test-assembly\TestCaseAttributeFixture.cs">
       <Link>TestCaseAttributeFixture.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\test-assembly\TestCaseSourceAttributeFixture.cs">
       <Link>TestCaseSourceAttributeFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\test-assembly\TestContextData.cs">
+      <Link>TestContextData.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\test-assembly\TestFixtureBuilderData.cs">
       <Link>TestFixtureBuilderData.cs</Link>

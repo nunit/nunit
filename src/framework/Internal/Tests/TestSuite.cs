@@ -354,8 +354,9 @@ namespace NUnit.Framework.Internal
         public void Run(TestSuiteResult suiteResult, ITestListener listener)
         {
 #if !NUNITLITE
-            TestContext context = new TestContext();
+            ExecutionContext.Save();
 #endif
+
             try
             {
                 suiteResult.SetResult(ResultState.Success); // Assume success
@@ -363,11 +364,11 @@ namespace NUnit.Framework.Internal
 
 #if !NUNITLITE
                 if (this.Properties["_SETCULTURE"] != null)
-                    TestContext.CurrentCulture =
+                    ExecutionContext.CurrentCulture =
                         new System.Globalization.CultureInfo((string)Properties["_SETCULTURE"]);
 
                 if (this.Properties["_SETUICULTURE"] != null)
-                    TestContext.CurrentUICulture =
+                    ExecutionContext.CurrentUICulture =
                         new System.Globalization.CultureInfo((string)Properties["_SETUICULTURE"]);
 #endif
 
@@ -397,7 +398,7 @@ namespace NUnit.Framework.Internal
             finally
             {
 #if !NUNITLITE
-                context.Dispose();
+                ExecutionContext.Restore();
 #endif
             }
         }
@@ -421,9 +422,8 @@ namespace NUnit.Framework.Internal
                     if (this.fixtureSetUpMethods != null)
                         foreach (MethodInfo fixtureSetUp in fixtureSetUpMethods)
                             Reflect.InvokeMethod(fixtureSetUp, fixtureSetUp.IsStatic ? null : Fixture);
-
 #if !NUNITLITE
-                    TestContext.Update();
+                    ExecutionContext.Update();
 #endif
                 }
                 catch (Exception ex)
@@ -522,7 +522,7 @@ namespace NUnit.Framework.Internal
 		{
 #if !NUNITLITE
             if (Properties.Contains("Timeout"))
-                TestContext.TestCaseTimeout = (int)Properties["Timeout"];
+                ExecutionContext.TestCaseTimeout = (int)Properties["Timeout"];
 #endif
 
             foreach (Test test in ArrayList.Synchronized(tests))

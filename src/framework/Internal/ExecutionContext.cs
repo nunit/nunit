@@ -47,9 +47,9 @@ namespace NUnit.Framework.Internal
 	/// save and restore settings for a block. It should be 
 	/// used with using() or Disposed in a finally block.
 	/// </summary>
-	public class TestContext : IDisposable
+	public class ExecutionContext
 	{
-		#region Instance Variables
+		#region Static Fields
 		/// <summary>
 		/// The current context, head of the list of saved contexts.
 		/// </summary>
@@ -57,6 +57,11 @@ namespace NUnit.Framework.Internal
 		#endregion
 
 		#region Static Properties
+
+        //public static ExecutionContext CurrentContext
+        //{
+        //    get { return current; }
+        //}
 
         /// <summary>
         /// Gets or sets a value indicating whether trace output is captured.
@@ -172,7 +177,7 @@ namespace NUnit.Framework.Internal
 		/// </summary>
 		public static void Save()
 		{
-			TestContext.current = new ContextHolder( current );
+			ExecutionContext.current = new ContextHolder( current );
 		}
 
         /// <summary>
@@ -193,26 +198,6 @@ namespace NUnit.Framework.Internal
             current.ReverseChanges();
             current = current.prior;
         }
-
-		#endregion
-
-		#region Construct and Dispose
-
-		/// <summary>
-		/// The constructor saves the current context.
-		/// </summary>
-		public TestContext() 
-		{ 
-			TestContext.Save();
-		}
-
-		/// <summary>
-		/// Dispose restores the old context
-		/// </summary>
-		public void Dispose()
-		{
-			TestContext.Restore();
-		}
 
 		#endregion
 
