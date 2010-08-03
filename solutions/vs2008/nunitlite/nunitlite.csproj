@@ -277,6 +277,12 @@
     <Compile Include="..\..\..\src\framework\Internal\InvalidTestFixtureException.cs">
       <Link>Internal\InvalidTestFixtureException.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\Log4NetCapture.cs">
+      <Link>Internal\Log4NetCapture.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\LogCapture.cs">
+      <Link>Internal\LogCapture.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\framework\Internal\MethodHelper.cs">
       <Link>Internal\MethodHelper.cs</Link>
     </Compile>
@@ -327,6 +333,9 @@
     </Compile>
     <Compile Include="..\..\..\src\framework\Internal\Tests\TestSuite.cs">
       <Link>Internal\Tests\TestSuite.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\TextCapture.cs">
+      <Link>Internal\TextCapture.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Internal\TextMessageWriter.cs">
       <Link>Internal\TextMessageWriter.cs</Link>

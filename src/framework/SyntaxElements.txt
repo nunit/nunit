@@ -71,7 +71,7 @@
 #   and generates the necessary get {...} sequence in the 
 #   latter case. Note that only getters are generated. If
 #   the method signature uses generics, the entire definition
-#   is enclosed in an #if NET_2_0 ... #endif sequence.
+#   is enclosed in an #if CLR_2_0 || CLR_4_0 ... #endif sequence.
 #
 #   If the class name in a method signature is 'Assert' the
 #   code generator creates multiple overloads of the method,

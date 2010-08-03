@@ -27,7 +27,7 @@ using NUnit.Framework.Api;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Builders;
 using NUnit.TestUtilities;
-using NUnit.TestData.SetUpTest;
+using NUnit.TestData.SetUpData;
 
 namespace NUnit.Framework.Tests
 {
@@ -131,5 +131,34 @@ namespace NUnit.Framework.Tests
             string expected = string.Format("TearDown : {0} : {1}", e.GetType().FullName, e.Message);
             Assert.AreEqual(expected, result.Message);
         }
-	}
+
+        public class SetupCallBase
+        {
+            protected int setupCount = 0;
+            public virtual void Init()
+            {
+                setupCount++;
+            }
+            public virtual void AssertCount()
+            {
+            }
+        }
+
+        [TestFixture]
+        // Test for bug 441022
+        public class SetupCallDerived : SetupCallBase
+        {
+            [SetUp]
+            public override void Init()
+            {
+                setupCount++;
+                base.Init();
+            }
+            [Test]
+            public override void AssertCount()
+            {
+                Assert.AreEqual(2, setupCount);
+            }
+        }
+    }
 }

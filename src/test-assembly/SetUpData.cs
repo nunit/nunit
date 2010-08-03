@@ -24,7 +24,7 @@
 using System;
 using NUnit.Framework;
 
-namespace NUnit.TestData.SetUpTest
+namespace NUnit.TestData.SetUpData
 {
 	[TestFixture]
 	public class SetUpAndTearDownFixture

@@ -221,10 +221,6 @@ namespace NUnit.Framework.Internal
 
                 return (IList)Properties[CATEGORIES]; 
             }
-			set 
-            {
-                Properties[CATEGORIES] = value; 
-            }
 		}
 
 		/// <summary>
@@ -253,10 +249,6 @@ namespace NUnit.Framework.Internal
 					properties = new ListDictionary();
 
 				return properties; 
-			}
-			set
-			{
-				properties = value;
 			}
 		}
 

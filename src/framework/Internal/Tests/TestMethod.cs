@@ -22,10 +22,12 @@
 // ***********************************************************************
 
 using System;
+using System.Collections;
+using System.Reflection;
 using System.Threading;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Reflection;
+using NUnit.Framework;
 using NUnit.Framework.Api;
 
 namespace NUnit.Framework.Internal
@@ -104,7 +106,7 @@ namespace NUnit.Framework.Internal
 		}
 		#endregion
 
-		#region Properties
+        #region Properties
         /// <summary>
         /// Gets the method.
         /// </summary>
@@ -163,7 +165,7 @@ namespace NUnit.Framework.Internal
             {
                 return Properties.Contains("Timeout")
                     ? (int)Properties["Timeout"]
-                    : TestContext.TestCaseTimeout;
+                    : ExecutionContext.TestCaseTimeout;
             }
         }
 #endif
@@ -212,6 +214,7 @@ namespace NUnit.Framework.Internal
                 TestResult testResult = this.MakeTestResult();
 
                 listener.TestStarted(this);
+                
                 long startTime = DateTime.Now.Ticks;
 
                 switch (this.RunState)
@@ -260,8 +263,11 @@ namespace NUnit.Framework.Internal
         public virtual void Run(TestResult testResult)
 		{
 #if !NUNITLITE
-            TestContext context = new TestContext();
+            ExecutionContext.Save();
+            TestContext.CurrentContext._test = this;
+            TestContext.CurrentContext._result = testResult;
 #endif
+
             try
             {
                 if (this.Parent != null)
@@ -281,11 +287,11 @@ namespace NUnit.Framework.Internal
 
 #if !NUNITLITE
                 if (this.Properties["_SETCULTURE"] != null)
-                    TestContext.CurrentCulture =
+                    ExecutionContext.CurrentCulture =
                         new System.Globalization.CultureInfo((string)Properties["_SETCULTURE"]);
 
                 if (this.Properties["_SETUICULTURE"] != null)
-                    TestContext.CurrentUICulture =
+                    ExecutionContext.CurrentUICulture =
                         new System.Globalization.CultureInfo((string)Properties["_SETUICULTURE"]);
 #endif
 
@@ -323,7 +329,7 @@ namespace NUnit.Framework.Internal
             {
                 Fixture = null;
 #if !NUNITLITE
-                context.Dispose();
+                ExecutionContext.Restore();
 #endif
             }
 		}
