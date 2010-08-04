@@ -90,7 +90,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Get the collection of values to be used as arguments
         /// </summary>
-        public IEnumerable GetData(ParameterInfo parameter)
+        public new IEnumerable GetData(ParameterInfo parameter)
         {
             Randomizer r = Randomizer.GetRandomizer(parameter);
             IList values;

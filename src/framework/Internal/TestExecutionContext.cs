@@ -123,6 +123,9 @@ namespace NUnit.Framework.Internal
 
         #region Constructors
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TestExecutionContext"/> class.
+        /// </summary>
         public TestExecutionContext()
 		{
 			this.prior = null;
@@ -140,6 +143,10 @@ namespace NUnit.Framework.Internal
 			this.currentPrincipal = Thread.CurrentPrincipal;
 		}
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TestExecutionContext"/> class.
+        /// </summary>
+        /// <param name="other">An existing instance of TestExecutionContext.</param>
 		public TestExecutionContext( TestExecutionContext other )
 		{
 			this.prior = other;
@@ -164,6 +171,10 @@ namespace NUnit.Framework.Internal
 
         #region Static Singleton Instance
 
+        /// <summary>
+        /// Gets the current context.
+        /// </summary>
+        /// <value>The current context.</value>
         public static TestExecutionContext CurrentContext
         {
             get { return current; }
@@ -238,6 +249,9 @@ namespace NUnit.Framework.Internal
 			}
 		}
 
+        /// <summary>
+        /// Controls where Trace output is directed
+        /// </summary>
 		public TextWriter TraceWriter
 		{
 			get { return traceWriter; }
@@ -284,6 +298,9 @@ namespace NUnit.Framework.Internal
 			System.Diagnostics.Trace.Listeners.Add( new TextWriterTraceListener( traceWriter, "NUnit" ) );
 		}
 
+        /// <summary>
+        /// Saves and restores the CurrentDirectory
+        /// </summary>
 		public string CurrentDirectory
 		{
 			get { return currentDirectory; }
@@ -294,6 +311,9 @@ namespace NUnit.Framework.Internal
 			}
 		}
 
+        /// <summary>
+        /// Saves or restores the CurrentCulture
+        /// </summary>
 		public CultureInfo CurrentCulture
 		{
 			get { return currentCulture; }
@@ -304,6 +324,9 @@ namespace NUnit.Framework.Internal
 			}
 		}
 
+        /// <summary>
+        /// Saves or restores the CurrentUICulture
+        /// </summary>
         public CultureInfo CurrentUICulture
 		{
 			get { return currentUICulture; }
@@ -327,18 +350,27 @@ namespace NUnit.Framework.Internal
             }
 		}
 
+        /// <summary>
+        /// Gets or sets the test case timeout vaue
+        /// </summary>
         public int TestCaseTimeout
         {
             get { return testCaseTimeout; }
             set { testCaseTimeout = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the current test
+        /// </summary>
         public Test CurrentTest
         {
             get { return currentTest; }
             set { currentTest = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the current test result
+        /// </summary>
         public TestResult CurrentResult
         {
             get { return currentResult; }

@@ -79,6 +79,14 @@ namespace NUnit.Framework
 
         #region IParameterDataSource Members
 
+        /// <summary>
+        /// Gets an enumeration of data items for use as arguments
+        /// for a test method parameter.
+        /// </summary>
+        /// <param name="parameter">The parameter for which data is needed</param>
+        /// <returns>
+        /// An enumeration containing individual data items
+        /// </returns>
         public IEnumerable GetData(ParameterInfo parameter)
         {
             ObjectList data = new ObjectList();

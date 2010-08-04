@@ -24,6 +24,7 @@
 using System;
 using System.Collections;
 using System.Collections.Specialized;
+using NUnit.Framework.Api;
 
 // TODO: Remove conditional code
 namespace NUnit.Framework
@@ -37,7 +38,7 @@ namespace NUnit.Framework
     /// Note: Instance modifiers are getters that return
     /// the same instance after modifying it's state.
     /// </summary>
-    public class TestCaseData : NUnit.Framework.Api.ITestCaseData
+    public class TestCaseData : ITestCaseData
     {
         #region Constants
 #if !NUNITLITE
