@@ -36,8 +36,6 @@ namespace NUnit.Framework.Builders
     /// </summary>
     public class InlineDataPointProvider : IDataPointProvider
     {
-        private static readonly string GetDataMethod = "GetData";
-
         #region IDataPointProvider Members
 
         /// <summary>
