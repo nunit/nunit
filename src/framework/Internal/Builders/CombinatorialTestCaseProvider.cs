@@ -82,7 +82,6 @@ namespace NUnit.Framework.Builders
         /// Gets the strategy to be used in building test cases for this test.
         /// </summary>
         /// <param name="method">The method for which test cases are being built.</param>
-        /// <param name="suite">The suite to which methods will be added.</param>
         /// <returns></returns>
         private CombiningStrategy GetStrategy(MethodInfo method)
         {

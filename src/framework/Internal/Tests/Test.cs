@@ -308,6 +308,11 @@ namespace NUnit.Framework.Internal
 
         #region IXmlNodeBuilder Members
 
+        /// <summary>
+        /// Returns the Xml representation of the test
+        /// </summary>
+        /// <param name="recursive">If true, include child tests recursively</param>
+        /// <returns></returns>
         public XmlNode ToXml(bool recursive)
         {
             XmlNode topNode = XmlHelper.CreateTopLevelElement("dummy");
@@ -317,6 +322,13 @@ namespace NUnit.Framework.Internal
             return thisNode;
         }
 
+        /// <summary>
+        /// Returns an XmlNode representing the current result after
+        /// adding it as a child of the supplied parent node.
+        /// </summary>
+        /// <param name="parentNode">The parent node.</param>
+        /// <param name="recursive">If true, descendant results are included</param>
+        /// <returns></returns>
         public XmlNode AddToXml(XmlNode parentNode, bool recursive)
         {
             return XmlHelper.AddElement(parentNode, "test");

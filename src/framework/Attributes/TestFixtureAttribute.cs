@@ -39,7 +39,9 @@ namespace NUnit.Framework
         private object[] originalArgs;
         private object[] constructorArgs;
         private Type[] typeArgs;
+#if !NUNITLITE
         private bool argsInitialized;
+#endif
 
         private bool isIgnored;
         private string ignoreReason;
