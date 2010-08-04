@@ -165,7 +165,7 @@ namespace NUnit.Framework.Internal
             {
                 return Properties.Contains("Timeout")
                     ? (int)Properties["Timeout"]
-                    : ExecutionContext.TestCaseTimeout;
+                    : TestExecutionContext.CurrentContext.TestCaseTimeout;
             }
         }
 #endif
@@ -263,9 +263,10 @@ namespace NUnit.Framework.Internal
         public virtual void Run(TestResult testResult)
 		{
 #if !NUNITLITE
-            ExecutionContext.Save();
-            TestContext.CurrentContext._test = this;
-            TestContext.CurrentContext._result = testResult;
+            TestExecutionContext.Save();
+            
+            TestExecutionContext.CurrentContext.CurrentTest = this;
+            TestExecutionContext.CurrentContext.CurrentResult = testResult;
 #endif
 
             try
@@ -287,11 +288,11 @@ namespace NUnit.Framework.Internal
 
 #if !NUNITLITE
                 if (this.Properties["_SETCULTURE"] != null)
-                    ExecutionContext.CurrentCulture =
+                    TestExecutionContext.CurrentContext.CurrentCulture =
                         new System.Globalization.CultureInfo((string)Properties["_SETCULTURE"]);
 
                 if (this.Properties["_SETUICULTURE"] != null)
-                    ExecutionContext.CurrentUICulture =
+                    TestExecutionContext.CurrentContext.CurrentUICulture =
                         new System.Globalization.CultureInfo((string)Properties["_SETUICULTURE"]);
 #endif
 
@@ -329,7 +330,7 @@ namespace NUnit.Framework.Internal
             {
                 Fixture = null;
 #if !NUNITLITE
-                ExecutionContext.Restore();
+                TestExecutionContext.Restore();
 #endif
             }
 		}

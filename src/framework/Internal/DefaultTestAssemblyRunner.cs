@@ -67,8 +67,8 @@ namespace NUnit.Framework.Internal
 
                 QueuingEventListener queue = new QueuingEventListener();
 
-                ExecutionContext.Out = new EventListenerTextWriter(queue, TestOutputType.Out);
-                ExecutionContext.Error = new EventListenerTextWriter(queue, TestOutputType.Error);
+                TestExecutionContext.CurrentContext.Out = new EventListenerTextWriter(queue, TestOutputType.Out);
+                TestExecutionContext.CurrentContext.Error = new EventListenerTextWriter(queue, TestOutputType.Error);
 
                 using (EventPump pump = new EventPump(listener, queue.Events, true))
                 {

@@ -510,9 +510,6 @@
     <Compile Include="..\..\..\src\framework\Internal\ExceptionHelper.cs">
       <Link>Internal\ExceptionHelper.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\ExecutionContext.cs">
-      <Link>Internal\ExecutionContext.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\src\framework\Internal\ExpectedExceptionProcessor.cs">
       <Link>Internal\ExpectedExceptionProcessor.cs</Link>
     </Compile>
@@ -606,6 +603,7 @@
     <Compile Include="..\..\..\src\framework\Internal\RuntimeFramework.cs">
       <Link>Internal\RuntimeFramework.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\TestExecutionContext.cs" />
     <Compile Include="..\..\..\src\framework\Internal\TestFixtureBuilder.cs">
       <Link>Internal\TestFixtureBuilder.cs</Link>
     </Compile>

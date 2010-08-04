@@ -7,7 +7,6 @@ namespace NUnit.TestData.TestContextData
     public class TestStateRecordingFixture
     {
         public string stateList;
-        public string statusList;
 
         public bool testFailure;
         public bool testInconclusive;
@@ -17,8 +16,7 @@ namespace NUnit.TestData.TestContextData
         [SetUp]
         public void SetUp()
         {
-            stateList = TestContext.CurrentContext.Result + "=>";
-            statusList = TestContext.CurrentContext.Result.Status.ToString() + "=>";
+            stateList = TestContext.CurrentContext.Result.Outcome + "=>";
 
             if (setUpFailure)
                 Assert.Fail("Failure in SetUp");
@@ -29,8 +27,7 @@ namespace NUnit.TestData.TestContextData
         [Test]
         public void TheTest()
         {
-            stateList += TestContext.CurrentContext.Result;
-            statusList += TestContext.CurrentContext.Result.Status.ToString();
+            stateList += TestContext.CurrentContext.Result.Outcome;
 
             if (testFailure)
                 Assert.Fail("Deliberate failure");
@@ -41,8 +38,7 @@ namespace NUnit.TestData.TestContextData
         [TearDown]
         public void TearDown()
         {
-            stateList += "=>" + TestContext.CurrentContext.Result;
-            statusList += "=>" + TestContext.CurrentContext.Result.Status.ToString();
+            stateList += "=>" + TestContext.CurrentContext.Result.Outcome;
         }
     }
 }

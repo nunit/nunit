@@ -354,7 +354,7 @@ namespace NUnit.Framework.Internal
         public void Run(TestSuiteResult suiteResult, ITestListener listener)
         {
 #if !NUNITLITE
-            ExecutionContext.Save();
+            TestExecutionContext.Save();
 #endif
 
             try
@@ -364,11 +364,11 @@ namespace NUnit.Framework.Internal
 
 #if !NUNITLITE
                 if (this.Properties["_SETCULTURE"] != null)
-                    ExecutionContext.CurrentCulture =
+                    TestExecutionContext.CurrentContext.CurrentCulture =
                         new System.Globalization.CultureInfo((string)Properties["_SETCULTURE"]);
 
                 if (this.Properties["_SETUICULTURE"] != null)
-                    ExecutionContext.CurrentUICulture =
+                    TestExecutionContext.CurrentContext.CurrentUICulture =
                         new System.Globalization.CultureInfo((string)Properties["_SETUICULTURE"]);
 #endif
 
@@ -398,7 +398,7 @@ namespace NUnit.Framework.Internal
             finally
             {
 #if !NUNITLITE
-                ExecutionContext.Restore();
+                TestExecutionContext.Restore();
 #endif
             }
         }
@@ -423,7 +423,7 @@ namespace NUnit.Framework.Internal
                         foreach (MethodInfo fixtureSetUp in fixtureSetUpMethods)
                             Reflect.InvokeMethod(fixtureSetUp, fixtureSetUp.IsStatic ? null : Fixture);
 #if !NUNITLITE
-                    ExecutionContext.Update();
+                    TestExecutionContext.CurrentContext.Update();
 #endif
                 }
                 catch (Exception ex)
@@ -522,7 +522,7 @@ namespace NUnit.Framework.Internal
 		{
 #if !NUNITLITE
             if (Properties.Contains("Timeout"))
-                ExecutionContext.TestCaseTimeout = (int)Properties["Timeout"];
+                TestExecutionContext.CurrentContext.TestCaseTimeout = (int)Properties["Timeout"];
 #endif
 
             foreach (Test test in ArrayList.Synchronized(tests))
