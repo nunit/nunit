@@ -11,62 +11,110 @@ using NUnit.Framework.Internal;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// Provide the context information of the current test
+    /// Provide the context information of the current test.
+    /// This is an adapter for the internal ExecutionContext
+    /// class, hiding the internals from the user test.
     /// </summary>
     public class TestContext
     {
-        private const string contextKey = "NUnit.Framework.TestContext";
-        private const string dictionaryKey = "NUnit.Framework.TestContext.ContextDictionary";
-        private const string resultKey = "Result";
+        private TestExecutionContext ec;
+        private TestAdapter test;
+        private ResultAdapter result;
 
-        private static TestContext _current;
+        #region Constructor
 
-        internal Test _test;
-        internal TestResult _result;
-        
-        public static TestContext CurrentContext
+        /// <summary>
+        /// Construct a TestContext for an ExecutionContext
+        /// </summary>
+        /// <param name="ec">The ExecutionContext to adapt</param>
+        public TestContext(TestExecutionContext ec)
         {
-            get 
-            {
-                if (_current == null)
-                    _current = new TestContext();
-
-                return _current; 
-            }
+            this.ec = ec;
         }
 
-        public TestRepresentation Test
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Get the current test context. This is created
+        /// as needed. The user may save the context for
+        /// use within a test, but it should not be used
+        /// outside the test for which it is created.
+        /// </summary>
+        public static TestContext CurrentContext
         {
             get
             {
-                return new TestRepresentation(_test);
+                return new TestContext(TestExecutionContext.CurrentContext);
             }
         }
 
         /// <summary>
-        /// Gets a ResultState representing the outcome of the current test. 
+        /// Get a representation of the current test.
         /// </summary>
-        public ResultState Result
+        public TestAdapter Test
         {
             get
             {
-                return _result.ResultState;
+                if (test == null)
+                    test = new TestAdapter(ec.CurrentTest);
+
+                return test;
             }
         }
 
-        #region Nested Classes
-        public class TestRepresentation
+        /// <summary>
+        /// Gets a Representation of the TestResult for the current test. 
+        /// </summary>
+        public ResultAdapter Result
+        {
+            get
+            {
+                if (result == null)
+                    result = new ResultAdapter(ec.CurrentResult);
+
+                return result;
+            }
+        }
+
+        #endregion
+
+        #region Nested TestAdapter Class
+
+        /// <summary>
+        /// TestAdapter adapts a Test for consumption by
+        /// the user test code.
+        /// </summary>
+        public class TestAdapter
         {
             private Test test;
 
-            public TestRepresentation(Test test)
+            #region Constructor
+
+            /// <summary>
+            /// Construct a TestAdapter for a Test
+            /// </summary>
+            /// <param name="test">The Test to be adapted</param>
+            public TestAdapter(Test test)
             {
                 this.test = test;
             }
 
+            #endregion
+
+            #region Properties
+
             /// <summary>
-            /// The name of the currently executing test. If no
-            /// test is running, the name of the last test run.
+            /// Gets the unique Id of a test
+            /// </summary>
+            public int ID
+            {
+                get { return test.ID; }
+            }
+
+            /// <summary>
+            /// The name of the test.
             /// </summary>
             public string Name
             {
@@ -77,8 +125,18 @@ namespace NUnit.Framework
             }
 
             /// <summary>
-            /// The properties of the currently executing test
-            /// or, if no test is running, of the last test run.
+            /// The FullName of the test
+            /// </summary>
+            public string FullName
+            {
+                get
+                {
+                    return test.FullName;
+                }
+            }
+
+            /// <summary>
+            /// The properties of the test.
             /// </summary>
             public IDictionary Properties
             {
@@ -87,7 +145,51 @@ namespace NUnit.Framework
                     return test.Properties;
                 }
             }
+
+            #endregion
         }
+
+        #endregion
+
+        #region Nested ResultAdapter Class
+
+        /// <summary>
+        /// ResultAdapter adapts a TestResult for consumption by
+        /// the user test code.
+        /// </summary>
+        public class ResultAdapter
+        {
+            private TestResult result;
+
+            #region Constructor
+
+            /// <summary>
+            /// Construct a ResultAdapter for a TestResult
+            /// </summary>
+            /// <param name="result">The TestResult to be adapted</param>
+            public ResultAdapter(TestResult result)
+            {
+                this.result = result;
+            }
+
+            #endregion
+
+            #region Properties
+
+            /// <summary>
+            /// Gets a ResultState representing the outcome of the test.
+            /// </summary>
+            public ResultState Outcome
+            {
+                get
+                {
+                    return result.ResultState;
+                }
+            }
+
+            #endregion
+        }
+        
         #endregion
     }
 }

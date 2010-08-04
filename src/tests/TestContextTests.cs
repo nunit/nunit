@@ -14,12 +14,22 @@ namespace NUnit.Framework.Tests
         }
 
         [Test]
+        public void TestCanAccessItsOwnFullName()
+        {
+            Assert.That(TestContext.CurrentContext.Test.FullName,
+                Is.EqualTo("NUnit.Framework.Tests.TestContextTests.TestCanAccessItsOwnFullName"));
+        }
+
+        [Test]
+        public void TestCanAccessItsOwnId()
+        {
+            Assert.That(TestContext.CurrentContext.Test.ID, Is.GreaterThan(0));
+        }
+
+        [Test]
         [Property("Answer", 42)]
         public void TestCanAccessItsOwnProperties()
         {
-            System.Collections.IDictionary dict = TestContext.CurrentContext.Test.Properties;
-            foreach (string key in dict.Keys)
-                Console.WriteLine("{0}={1}", key, dict[key]);
             Assert.That(TestContext.CurrentContext.Test.Properties["Answer"], Is.EqualTo(42));
         }
 
@@ -29,7 +39,6 @@ namespace NUnit.Framework.Tests
             TestStateRecordingFixture fixture = new TestStateRecordingFixture();
             TestBuilder.RunTestFixture(fixture);
             Assert.That(fixture.stateList, Is.EqualTo("Inconclusive=>Inconclusive=>Passed"));
-            Assert.That(fixture.statusList, Is.EqualTo("Inconclusive=>Inconclusive=>Passed"));
         }
 
         [Test]
@@ -39,7 +48,6 @@ namespace NUnit.Framework.Tests
             fixture.setUpFailure = true;
             TestBuilder.RunTestFixture(fixture);
             Assert.That(fixture.stateList, Is.EqualTo("Inconclusive=>=>Failed"));
-            Assert.That(fixture.statusList, Is.EqualTo("Inconclusive=>=>Failed"));
         }
 
         [Test]
@@ -49,7 +57,6 @@ namespace NUnit.Framework.Tests
             fixture.testFailure = true;
             TestBuilder.RunTestFixture(fixture);
             Assert.That(fixture.stateList, Is.EqualTo("Inconclusive=>Inconclusive=>Failed"));
-            Assert.That(fixture.statusList, Is.EqualTo("Inconclusive=>Inconclusive=>Failed"));
         }
 
         [Test]
@@ -59,7 +66,6 @@ namespace NUnit.Framework.Tests
             fixture.setUpIgnore = true;
             TestBuilder.RunTestFixture(fixture);
             Assert.That(fixture.stateList, Is.EqualTo("Inconclusive=>=>Skipped:Ignored"));
-            Assert.That(fixture.statusList, Is.EqualTo("Inconclusive=>=>Skipped"));
         }
     }
 }

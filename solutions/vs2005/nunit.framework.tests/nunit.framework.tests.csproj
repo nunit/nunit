@@ -264,9 +264,6 @@
     <Compile Include="..\..\..\src\tests\Internal\EventQueueTests.cs">
       <Link>Internal\EventQueueTests.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\tests\Internal\ExecutionContextTests.cs">
-      <Link>Internal\ExecutionContextTests.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\src\tests\Internal\PlatformDetectionTests.cs">
       <Link>Internal\PlatformDetectionTests.cs</Link>
     </Compile>
@@ -275,6 +272,9 @@
     </Compile>
     <Compile Include="..\..\..\src\tests\Internal\RuntimeFrameworkTests.cs">
       <Link>Internal\RuntimeFrameworkTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\Internal\TestExecutionContextTests.cs">
+      <Link>Internal\TestExecutionContextTests.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\tests\Internal\TestResultTests.cs">
       <Link>Internal\TestResultTests.cs</Link>
