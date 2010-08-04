@@ -33,7 +33,7 @@ using System.Collections.Generic;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// FactoryAttribute indicates the source to be used to
+    /// TestCaseSourceAttribute indicates the source to be used to
     /// provide test cases for a test method.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true, Inherited = false)]
@@ -43,18 +43,16 @@ namespace NUnit.Framework
         private readonly Type sourceType;
 
         /// <summary>
-        /// Construct with the name of the factory - for use with languages
-        /// that don't support params arrays.
+        /// Construct with the name of the method, property or field that will prvide data
         /// </summary>
-        /// <param name="sourceName">An array of the names of the factories that will provide data</param>
+        /// <param name="sourceName">The name of the method, property or field that will provide data</param>
         public TestCaseSourceAttribute(string sourceName)
         {
             this.sourceName = sourceName;
         }
 
         /// <summary>
-        /// Construct with a Type and name - for use with languages
-        /// that don't support params arrays.
+        /// Construct with a Type and name
         /// </summary>
         /// <param name="sourceType">The Type that will provide data</param>
         /// <param name="sourceName">The name of the method, property or field that will provide data</param>
@@ -63,7 +61,11 @@ namespace NUnit.Framework
             this.sourceType = sourceType;
             this.sourceName = sourceName;
         }
-
+        
+        /// <summary>
+        /// Construct with a Type
+        /// </summary>
+        /// <param name="sourceType">The type that will provide data</param>
         public TestCaseSourceAttribute(Type sourceType)
         {
             this.sourceType = sourceType;
@@ -86,6 +88,12 @@ namespace NUnit.Framework
         }
 
         #region ITestCaseSource Members
+        /// <summary>
+        /// Returns a set of ITestCaseDataItems for use as arguments
+        /// to a parameterized test method.
+        /// </summary>
+        /// <param name="method">The method for which data is needed.</param>
+        /// <returns></returns>
 #if CLR_2_0 || CLR_4_0
         public IEnumerable<ITestCaseData> GetTestCasesFor(MethodInfo method)
         {
