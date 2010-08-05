@@ -62,7 +62,7 @@ namespace NUnit.Framework.Builders
         /// </returns>
         public IEnumerable GetDataFor(ParameterInfo parameter)
         {
-            ArrayList data = new ArrayList();
+            ObjectList data = new ObjectList();
 
             foreach (Attribute attr in parameter.GetCustomAttributes(typeof(DataAttribute), false))
             {

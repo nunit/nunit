@@ -23,7 +23,6 @@
 
 using System;
 using System.Reflection;
-using System.Collections;
 using Microsoft.Win32;
 
 namespace NUnit.Framework.Internal
@@ -111,16 +110,16 @@ namespace NUnit.Framework.Internal
         {
             get 
             {
-                ArrayList frameworks = new ArrayList();
+                FrameworkList frameworks = new FrameworkList();
 
-		if (Environment.OSVersion.Platform == PlatformID.Win32NT)
-	            foreach (RuntimeFramework framework in GetAvailableFrameworks(RuntimeType.Net))
+		        if (Environment.OSVersion.Platform == PlatformID.Win32NT)
+	                foreach (RuntimeFramework framework in GetAvailableFrameworks(RuntimeType.Net))
                         frameworks.Add(framework);
 
                 foreach (RuntimeFramework framework in GetAvailableFrameworks(RuntimeType.Mono))
-                    frameworks.Add(framework);
+                     frameworks.Add(framework);
 
-                return (RuntimeFramework[])frameworks.ToArray(typeof(RuntimeFramework)); 
+                return frameworks.ToArray(); 
             }
         }
 
@@ -227,7 +226,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public static RuntimeFramework[] GetAvailableFrameworks(RuntimeType rt)
         {
-            ArrayList frameworks = new ArrayList();
+            FrameworkList frameworks = new FrameworkList();
 
             if (rt == RuntimeType.Net)
             {
@@ -272,7 +271,7 @@ namespace NUnit.Framework.Internal
             //    }
             //}
 
-            return (RuntimeFramework[])frameworks.ToArray(typeof(RuntimeFramework));
+            return frameworks.ToArray();
         }
         #endregion
 
@@ -427,6 +426,19 @@ namespace NUnit.Framework.Internal
                     if (version.Major == v.Major && version.Minor == v.Minor)
                         version = v;
         }
+        #endregion
+
+        #region Nested Classes
+
+#if CLR_2_0 || CLR_4_0
+        private class FrameworkList : System.Collections.Generic.List<RuntimeFramework>
+        {
+        }
+#else
+        private class FrameworkList : System.Collections.ArrayList
+        {
+        }
+#endif
         #endregion
     }
 }

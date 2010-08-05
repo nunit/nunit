@@ -223,7 +223,11 @@ namespace NUnit.Framework
         /// </summary>
         public IDictionary Properties
         {
+#if CLR_2_0 || CLR_4_0
+            get { return new System.Collections.Generic.Dictionary<string, object>(); }
+#else
             get { return new Hashtable(); }
+#endif
         }
 
 #endif

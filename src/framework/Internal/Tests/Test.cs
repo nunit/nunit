@@ -217,7 +217,7 @@ namespace NUnit.Framework.Internal
 			get 
             {
                 if (Properties[CATEGORIES] == null)
-                    Properties[CATEGORIES] = new ArrayList();
+                    Properties[CATEGORIES] = new CategoryList();
 
                 return (IList)Properties[CATEGORIES]; 
             }
@@ -392,6 +392,15 @@ namespace NUnit.Framework.Internal
         /// <returns></returns>
         public abstract TestResult Run(ITestListener listener);
 
+        #endregion
+
+        #region Nested Classes
+
+#if CLR_2_0 || CLR_4_0
+        public class CategoryList : System.Collections.Generic.List<string> { }
+#else
+        public class CategoryList : System.Collections.ArrayList { }
+#endif
         #endregion
     }
 }

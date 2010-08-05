@@ -525,7 +525,8 @@ namespace NUnit.Framework.Internal
                 TestExecutionContext.CurrentContext.TestCaseTimeout = (int)Properties["Timeout"];
 #endif
 
-            foreach (Test test in ArrayList.Synchronized(tests))
+            //foreach (Test test in ArrayList.Synchronized(tests))
+            foreach (Test test in tests)
             {
                 if (test.RunState != RunState.Explicit)
                 {
@@ -574,7 +575,8 @@ namespace NUnit.Framework.Internal
         private void MarkTestsNotRun(
             TestCollection tests, ResultState resultState, string ignoreReason, TestSuiteResult suiteResult, ITestListener listener)
         {
-            foreach (Test test in ArrayList.Synchronized(tests))
+            //foreach (Test test in ArrayList.Synchronized(tests))
+            foreach (Test test in tests)
             {
                 if (test.RunState != RunState.Explicit)
                     MarkTestNotRun(test, resultState, ignoreReason, suiteResult, listener);
@@ -600,7 +602,8 @@ namespace NUnit.Framework.Internal
         private void MarkTestsFailed(
             TestCollection tests, string msg, TestSuiteResult suiteResult, ITestListener listener)
         {
-            foreach (Test test in ArrayList.Synchronized(tests))
+            //foreach (Test test in ArrayList.Synchronized(tests))
+            foreach (Test test in tests)
                 if (test.RunState != RunState.Explicit)
                     MarkTestFailed(test, msg, suiteResult, listener);
         }
@@ -622,7 +625,7 @@ namespace NUnit.Framework.Internal
         }
         #endregion
 
-#if (CLR_2_0 || CLR_4_0) && !NETCF
+#if (CLR_2_0 || CLR_4_0)
         private class TestCollection : System.Collections.Generic.List<Test> { }
 #else
         private class TestCollection : ArrayList { }

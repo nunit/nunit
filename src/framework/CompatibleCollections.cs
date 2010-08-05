@@ -25,6 +25,8 @@ using System;
 
 namespace NUnit
 {
+    #region ObjectList
+
     /// <summary>
     /// ObjectList represents a collection of objects. It is implemented 
     /// as a List&lt;object&gt; in .NET 2.0 or higher and as an ArrayList otherwise.
@@ -45,8 +47,22 @@ namespace NUnit
         }
     }
 #else
-    public class ObjectList : System.Collections.ArrayList { }
+    public class ObjectList : System.Collections.ArrayList 
+    { 
+        /// <summary>
+        /// Converts the  ArrayList to an array.
+        /// </summary>
+        /// <returns>The array</returns>
+        public new object[] ToArray()
+        {
+            return (object[])base.ToArray(typeof(object));
+        }
+    }
 #endif
+
+    #endregion
+
+    #region ArgumentsCollection
 
     /// <summary>
     /// ArgumentsCollection represents a collection of object arrrays. It is implemented 
@@ -58,8 +74,22 @@ namespace NUnit
 #if CLR_2_0 || CLR_4_0
     class ArgumentsCollection : System.Collections.Generic.List<object[]> { }
 #else
-    class ArgumentsCollection : System.Collections.ArrayList { }
+    class ArgumentsCollection : System.Collections.ArrayList 
+    {
+        /// <summary>
+        /// Converts the  ArrayList to an array.
+        /// </summary>
+        /// <returns>The array</returns>
+        public new object[][] ToArray()
+        {
+            return (object[][])base.ToArray(typeof(int));
+        }
+    }
 #endif
+
+    #endregion
+
+    #region IntList
 
     /// <summary>
     /// IntList represents a collection of ints. It is implemented as a
@@ -82,4 +112,6 @@ namespace NUnit
         }
     }
 #endif
+
+    #endregion
 }
