@@ -16,7 +16,7 @@ namespace NUnit.Framework.Constraints
     public class CollectionTally
     {
         // Internal list used to track occurences
-        private ArrayList list = new ArrayList();
+        private ObjectList list = new ObjectList();
 
         private NUnitEqualityComparer comparer;
 

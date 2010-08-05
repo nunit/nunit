@@ -132,7 +132,9 @@ namespace NUnit.Framework
             set 
             { 
                 typeArgs = value;
+#if !NUNITLITE
                 argsInitialized = true;
+#endif
             }
         }
 

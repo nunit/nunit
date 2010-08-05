@@ -144,7 +144,9 @@ namespace NUnit.Framework.Extensibility
 		protected abstract bool IsValidExtension(object extension);
 
 		#endregion
-	}
+    }
+
+    #region ExtensionPointList
 
     /// <summary>
     /// ExtensionPointList represents a collection of extension points in a cross-platform manner.
@@ -154,4 +156,6 @@ namespace NUnit.Framework.Extensibility
 #else
     public class ExtensionPointList : ArrayList { }
 #endif
+
+    #endregion
 }
