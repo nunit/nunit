@@ -36,13 +36,6 @@ namespace NUnit.Framework.Internal
 	/// </summary>
 	public abstract class Test : ITest, IComparable
     {
-        #region Constants
-        //private static readonly string SETCULTURE = "_SETCULTURE";
-        private static readonly string DESCRIPTION = "_DESCRIPTION";
-        private static readonly string IGNOREREASON = "_IGNOREREASON";
-        private static readonly string CATEGORIES = "_CATEGORIES";
-        #endregion
-
         #region Fields
 
         /// <summary>
@@ -69,7 +62,7 @@ namespace NUnit.Framework.Internal
 		/// A dictionary of properties, used to add information
 		/// to tests without requiring the class to change.
 		/// </summary>
-		private IDictionary properties;
+		private PropertyBag properties;
 
 		#endregion
 
@@ -80,7 +73,11 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public bool RequiresThread
         {
-            get { return Properties.Contains("RequiresThread") && (bool)Properties["RequiresThread"]; }
+            get 
+            { 
+                return Properties.ContainsKey(PropertyNames.RequiresThread)
+                    && (bool)Properties.Get(PropertyNames.RequiresThread);
+            }
         }
 
         /// <summary>
@@ -90,8 +87,8 @@ namespace NUnit.Framework.Internal
         {
             get
             {
-                return Properties.Contains("APARTMENT_STATE")
-                    ? (ApartmentState)Properties["APARTMENT_STATE"]
+                return Properties.ContainsKey(PropertyNames.ApartmentState)
+                    ? (ApartmentState)Properties.Get(PropertyNames.ApartmentState)
                     : GetCurrentApartment();
             }
         }
@@ -145,8 +142,6 @@ namespace NUnit.Framework.Internal
 
 		#region ITest Members
 
-        #region Properties
-
         /// <summary>
         /// Gets or sets the id of the test
         /// </summary>
@@ -186,21 +181,6 @@ namespace NUnit.Framework.Internal
         }
 
 		/// <summary>
-		/// Reason for not running the test, if applicable
-		/// </summary>
-		public string IgnoreReason
-		{
-			get { return (string)Properties[IGNOREREASON]; }
-			set 
-            {
-                if (value == null)
-                    Properties.Remove(IGNOREREASON);
-                else
-                    Properties[IGNOREREASON] = value;
-            }
-		}
-
-		/// <summary>
 		/// Gets a count of test cases represented by
 		/// or contained under this test.
 		/// </summary>
@@ -216,37 +196,22 @@ namespace NUnit.Framework.Internal
 		{
 			get 
             {
-                if (Properties[CATEGORIES] == null)
-                    Properties[CATEGORIES] = new CategoryList();
+                //if (Properties[PropertyNames.Categories] == null)
+                //    Properties[PropertyNames.Categories] = (IList<object>)new CategoryList();
 
-                return (IList)Properties[CATEGORIES]; 
+                return (IList)Properties[PropertyNames.Categories]; 
             }
 		}
 
 		/// <summary>
-		/// Gets a description associated with this test.
+		/// Gets the properties for this test
 		/// </summary>
-		public String Description
-		{
-			get { return (string)Properties[DESCRIPTION]; }
-			set 
-            {
-                if (value == null)
-                    Properties.Remove(DESCRIPTION);
-                else
-                    Properties[DESCRIPTION] = value; 
-            }
-		}
-
-		/// <summary>
-		/// Gets the property dictionary for this test
-		/// </summary>
-		public IDictionary Properties
+		public IPropertyBag Properties
 		{
 			get 
 			{
 				if ( properties == null )
-					properties = new ListDictionary();
+					properties = new PropertyBag();
 
 				return properties; 
 			}
@@ -260,7 +225,41 @@ namespace NUnit.Framework.Internal
             get;
         }
 
-		/// <summary>
+        #endregion
+
+        #region Other Public Properties
+
+        /// <summary>
+        /// Gets a description associated with this test.
+        /// </summary>
+        public String Description
+        {
+            get { return (string)Properties.Get(PropertyNames.Description); }
+            set
+            {
+                if (value == null)
+                    Properties.Remove(PropertyNames.Description);
+                else
+                    Properties.Set(PropertyNames.Description, value);
+            }
+        }
+
+        /// <summary>
+        /// Reason for not running the test, if applicable
+        /// </summary>
+        public string IgnoreReason
+        {
+            get { return (string)Properties.Get(PropertyNames.IgnoreReason); }
+            set
+            {
+                if (value == null)
+                    Properties.Remove(PropertyNames.IgnoreReason);
+                else
+                    Properties.Set(PropertyNames.IgnoreReason, value);
+            }
+        }
+
+        /// <summary>
 		/// Gets the parent as a Test object.
 		/// Used by the core to set the parent.
 		/// </summary>
@@ -301,8 +300,6 @@ namespace NUnit.Framework.Internal
 
         //    return 0;
         //}
-
-        #endregion
 
         #endregion
 

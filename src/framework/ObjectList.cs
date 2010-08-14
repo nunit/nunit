@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2008 Charlie Poole
+// Copyright (c) 2007 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,24 +21,40 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NUNITLITE
 using System;
-using NUnit.Framework.Api;
 
-namespace NUnit.Framework
+namespace NUnit
 {
     /// <summary>
-    /// Marks a test to use a Sequential join of any argument 
-    /// data provided. Arguments will be combined into test cases,
-    /// taking the next value of each argument until all are used.
+    /// ObjectList represents a collection of objects. It is implemented 
+    /// as a List&lt;object&gt; in .NET 2.0 or higher and as an ArrayList otherwise.
+    /// ObjectList does not attempt to be a general replacement for either of
+    /// these classes but only implements what is needed within the framework.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
-    public class SequentialAttribute : PropertyAttribute
+#if CLR_2_0 || CLR_4_0
+    public class ObjectList : System.Collections.Generic.List<object>
     {
         /// <summary>
-        /// Default constructor
+        /// Adds a range of values to the collection.
         /// </summary>
-        public SequentialAttribute() : base(PropertyNames.JoinType, "Sequential") { }
+        /// <param name="collection">The collection.</param>
+        public void AddRange(System.Collections.ICollection collection)
+        {
+            foreach (object item in collection)
+                Add(item);
+        }
     }
-}
+#else
+    public class ObjectList : System.Collections.ArrayList 
+    { 
+        /// <summary>
+        /// Converts the  ArrayList to an object[].
+        /// </summary>
+        /// <returns>The array</returns>
+        public new object[] ToArray()
+        {
+            return (object[])base.ToArray(typeof(object));
+        }
+    }
 #endif
+}

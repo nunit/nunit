@@ -61,6 +61,8 @@ namespace NUnit.Framework.Internal
         /// <returns></returns>
         public ITestResult Run(ITestListener listener)
         {
+            TestExecutionContext.Save();
+
             try
             {
                 this.runThread = Thread.CurrentThread;
@@ -79,6 +81,7 @@ namespace NUnit.Framework.Internal
             finally
             {
                 this.runThread = null;
+                TestExecutionContext.Restore();
             }
         }
 

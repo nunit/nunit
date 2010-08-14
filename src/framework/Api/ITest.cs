@@ -57,16 +57,6 @@ namespace NUnit.Framework.Api
 		RunState RunState { get; set; }
 
         /// <summary>
-        ///  Description for the test;
-        /// </summary>
-        string Description { get; set; }
-
-		/// <summary>
-		/// Reason for not running the test, if applicable
-		/// </summary>
-		string IgnoreReason { get; set; }
-
-        /// <summary>
         /// Count of the test cases ( 1 if this is a test case )
         /// </summary>
 		int TestCaseCount { get; }
@@ -74,7 +64,7 @@ namespace NUnit.Framework.Api
 		/// <summary>
 		/// Gets the properties of the test
 		/// </summary>
-		IDictionary Properties { get; }
+		IPropertyBag Properties { get; }
 
         /// <summary>
         /// Gets the categories of the test

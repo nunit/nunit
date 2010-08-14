@@ -30,7 +30,7 @@ namespace NUnit.Framework.Tests
         [Property("Answer", 42)]
         public void TestCanAccessItsOwnProperties()
         {
-            Assert.That(TestContext.CurrentContext.Test.Properties["Answer"], Is.EqualTo(42));
+            Assert.That(TestContext.CurrentContext.Test.Properties.Get("Answer"), Is.EqualTo(42));
         }
 
         [Test]

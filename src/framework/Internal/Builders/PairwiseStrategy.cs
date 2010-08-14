@@ -713,16 +713,28 @@ namespace NUnit.Framework.Builders
 			}
 
 			return dimensions;
-		}
+        }
+
+        #region Compatible Collections
 
 #if CLR_2_0 || CLR_4_0
+        class IntList : System.Collections.Generic.List<Int32> { }
         class FeatureList : System.Collections.Generic.List<FeatureInfo> { }
         class TupleList : System.Collections.Generic.List<Tuple> { }
         class TestCaseList : System.Collections.Generic.List<TestCase> { }
 #else
+        class IntList : System.Collections.ArrayList
+        {
+            public new int[] ToArray()
+            {
+                return (int[])base.ToArray(typeof(int));
+            }
+        }
         class FeatureList : ArrayList { }
         class TupleList : ArrayList { }
         class TestCaseList : ArrayList { }
 #endif
+
+        #endregion
     }
 }

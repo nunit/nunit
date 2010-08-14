@@ -363,13 +363,15 @@ namespace NUnit.Framework.Internal
                 DoOneTimeSetUp(suiteResult);
 
 #if !NUNITLITE
-                if (this.Properties["_SETCULTURE"] != null)
+                string setCulture = (string)this.Properties.Get(PropertyNames.SetCulture);
+                if (setCulture != null)
                     TestExecutionContext.CurrentContext.CurrentCulture =
-                        new System.Globalization.CultureInfo((string)Properties["_SETCULTURE"]);
+                        new System.Globalization.CultureInfo(setCulture);
 
-                if (this.Properties["_SETUICULTURE"] != null)
+                string setUICulture = (string)this.Properties.Get(PropertyNames.SetUICulture);
+                if (setUICulture != null)
                     TestExecutionContext.CurrentContext.CurrentUICulture =
-                        new System.Globalization.CultureInfo((string)Properties["_SETUICULTURE"]);
+                        new System.Globalization.CultureInfo(setUICulture);
 #endif
 
                 switch (suiteResult.ResultState.Status)
@@ -521,8 +523,8 @@ namespace NUnit.Framework.Internal
 			TestSuiteResult suiteResult, ITestListener listener )
 		{
 #if !NUNITLITE
-            if (Properties.Contains("Timeout"))
-                TestExecutionContext.CurrentContext.TestCaseTimeout = (int)Properties["Timeout"];
+            if (Properties.ContainsKey(PropertyNames.Timeout))
+                TestExecutionContext.CurrentContext.TestCaseTimeout = (int)Properties.Get(PropertyNames.Timeout);
 #endif
 
             //foreach (Test test in ArrayList.Synchronized(tests))

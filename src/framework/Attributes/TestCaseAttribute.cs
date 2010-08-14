@@ -43,10 +43,9 @@ namespace NUnit.Framework
         private string expectedMessage;
         private MessageMatch matchType;
         private object result;
-        private string description;
         private string testName;
         private bool isIgnored;
-        private string ignoreReason;
+        private IPropertyBag properties;
 #endif
 
         /// <summary>
@@ -164,8 +163,8 @@ namespace NUnit.Framework
         /// <value>The description.</value>
         public string Description
         {
-            get { return description; }
-            set { description = value; }
+            get { return this.Properties.Get(PropertyNames.Description) as string; }
+            set { this.Properties.Set(PropertyNames.Description, value); }
         }
 
         /// <summary>
@@ -202,32 +201,26 @@ namespace NUnit.Framework
         /// <value>The ignore reason.</value>
         public string IgnoreReason
         {
-            get { return ignoreReason; }
+            get { return this.Properties.Get(PropertyNames.IgnoreReason) as string; }
             set
             {
-                ignoreReason = value;
-                isIgnored = ignoreReason != null && ignoreReason != string.Empty;
+                this.Properties.Set(PropertyNames.IgnoreReason, value);
+                isIgnored = value != null && value != string.Empty;
             }
         }
 
         /// <summary>
         /// NYI
         /// </summary>
-        public IList Categories
+        public IPropertyBag Properties
         {
-            get { return new string[0]; }
-        }
+            get
+            {
+                if (properties == null)
+                    properties = new PropertyBag();
 
-        /// <summary>
-        /// NYI
-        /// </summary>
-        public IDictionary Properties
-        {
-#if CLR_2_0 || CLR_4_0
-            get { return new System.Collections.Generic.Dictionary<string, object>(); }
-#else
-            get { return new Hashtable(); }
-#endif
+                return properties;
+            }
         }
 
 #endif

@@ -163,8 +163,8 @@ namespace NUnit.Framework.Internal
         {
             get
             {
-                return Properties.Contains("Timeout")
-                    ? (int)Properties["Timeout"]
+                return Properties.ContainsKey(PropertyNames.Timeout)
+                    ? (int)Properties.Get(PropertyNames.Timeout)
                     : TestExecutionContext.CurrentContext.TestCaseTimeout;
             }
         }
@@ -209,51 +209,48 @@ namespace NUnit.Framework.Internal
         /// <returns>A TestResult.</returns>
         public override TestResult Run(ITestListener listener)
         {
-            //using (new TestContext())
-            //{
-                TestResult testResult = this.MakeTestResult();
+            TestResult testResult = this.MakeTestResult();
 
-                listener.TestStarted(this);
-                
-                long startTime = DateTime.Now.Ticks;
+            listener.TestStarted(this);
+            
+            long startTime = DateTime.Now.Ticks;
 
-                switch (this.RunState)
-                {
-                    case RunState.Runnable:
-                    case RunState.Explicit:
-                        Run(testResult);
-                        break;
-                    case RunState.Skipped:
-                    default:
-                        testResult.SetResult(ResultState.Skipped, IgnoreReason);
-                        break;
-                    case RunState.NotRunnable:
-                        if (BuilderException != null)
+            switch (this.RunState)
+            {
+                case RunState.Runnable:
+                case RunState.Explicit:
+                    Run(testResult);
+                    break;
+                case RunState.Skipped:
+                default:
+                    testResult.SetResult(ResultState.Skipped, IgnoreReason);
+                    break;
+                case RunState.NotRunnable:
+                    if (BuilderException != null)
 #if !NETCF_1_0
-                            testResult.SetResult(ResultState.NotRunnable, 
-                                ExceptionHelper.BuildMessage( BuilderException ), 
-                                ExceptionHelper.BuildStackTrace(BuilderException));
+                        testResult.SetResult(ResultState.NotRunnable, 
+                            ExceptionHelper.BuildMessage( BuilderException ), 
+                            ExceptionHelper.BuildStackTrace(BuilderException));
 #else
-                            testResult.SetResult(ResultState.NotRunnable, 
-                                ExceptionHelper.BuildMessage( BuilderException ));
+                        testResult.SetResult(ResultState.NotRunnable, 
+                            ExceptionHelper.BuildMessage( BuilderException ));
 #endif
-                        else
-                            testResult.SetResult(ResultState.NotRunnable, IgnoreReason);
-                        break;
-                    case RunState.Ignored:
-                        testResult.SetResult(ResultState.Ignored, IgnoreReason);
-                        break;
-                }
+                    else
+                        testResult.SetResult(ResultState.NotRunnable, IgnoreReason);
+                    break;
+                case RunState.Ignored:
+                    testResult.SetResult(ResultState.Ignored, IgnoreReason);
+                    break;
+            }
 
-                long stopTime = DateTime.Now.Ticks;
-                double time = ((double)(stopTime - startTime)) / (double)TimeSpan.TicksPerSecond;
-                testResult.Time = time;
+            long stopTime = DateTime.Now.Ticks;
+            double time = ((double)(stopTime - startTime)) / (double)TimeSpan.TicksPerSecond;
+            testResult.Time = time;
 
-                testResult.AssertCount = NUnit.Framework.Assert.Counter;
+            testResult.AssertCount = NUnit.Framework.Assert.Counter;
 
-                listener.TestFinished(testResult);
-                return testResult;
-            //}
+            listener.TestFinished(testResult);
+            return testResult;
         }
 
         /// <summary>
@@ -287,17 +284,19 @@ namespace NUnit.Framework.Internal
                     Fixture = Reflect.Construct(this.FixtureType);
 
 #if !NUNITLITE
-                if (this.Properties["_SETCULTURE"] != null)
+                string setCulture = (string)this.Properties.Get(PropertyNames.SetCulture);
+                if (setCulture != null)
                     TestExecutionContext.CurrentContext.CurrentCulture =
-                        new System.Globalization.CultureInfo((string)Properties["_SETCULTURE"]);
+                        new System.Globalization.CultureInfo(setCulture);
 
-                if (this.Properties["_SETUICULTURE"] != null)
+                string setUICulture = (string)this.Properties.Get(PropertyNames.SetUICulture);
+                if (setUICulture != null)
                     TestExecutionContext.CurrentContext.CurrentUICulture =
-                        new System.Globalization.CultureInfo((string)Properties["_SETUICULTURE"]);
+                        new System.Globalization.CultureInfo(setUICulture);
 #endif
 
-                int repeatCount = this.Properties.Contains("Repeat")
-                    ? (int)this.Properties["Repeat"] : 1;
+                int repeatCount = this.Properties.ContainsKey(PropertyNames.RepeatCount)
+                    ? (int)this.Properties.Get(PropertyNames.RepeatCount) : 1;
 
                 while (repeatCount-- > 0)
                 {
@@ -369,10 +368,10 @@ namespace NUnit.Framework.Internal
 				testResult.Time = (double)span.Ticks / (double)TimeSpan.TicksPerSecond;
 
 
-                if (testResult.ResultState == ResultState.Success && this.Properties.Contains("MaxTime"))
+                if (testResult.ResultState == ResultState.Success && this.Properties.ContainsKey(PropertyNames.MaxTime))
                 {
                     int elapsedTime = (int)Math.Round(testResult.Time * 1000.0);
-                    int maxTime = (int)this.Properties["MaxTime"];
+                    int maxTime = (int)this.Properties.Get(PropertyNames.MaxTime);
 
                     if (maxTime > 0 && elapsedTime > maxTime)
                         testResult.SetResult(ResultState.Failure,

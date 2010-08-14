@@ -46,6 +46,9 @@
     <Compile Include="..\..\..\src\framework\Api\IApplyToTest.cs">
       <Link>Api\IApplyToTest.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\framework\Api\IPropertyBag.cs">
+      <Link>Api\IPropertyBag.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\framework\Api\ITest.cs">
       <Link>Api\ITest.cs</Link>
     </Compile>
@@ -60,6 +63,12 @@
     </Compile>
     <Compile Include="..\..\..\src\framework\Api\IXmlNodeBuilder.cs">
       <Link>Api\IXmlNodeBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Api\PropertyEntry.cs">
+      <Link>Api\PropertyEntry.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Api\PropertyNames.cs">
+      <Link>Api\PropertyNames.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Api\ResultState.cs">
       <Link>Api\ResultState.cs</Link>
@@ -123,9 +132,6 @@
     </Compile>
     <Compile Include="..\..\..\src\framework\Attributes\TestModificationAttribute.cs">
       <Link>Attributes\TestModificationAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\CompatibleCollections.cs">
-      <Link>CompatibleCollections.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Constraints\AttributeConstraints.cs">
       <Link>Constraints\AttributeConstraints.cs</Link>
@@ -292,6 +298,9 @@
     <Compile Include="..\..\..\src\framework\Internal\ParameterSet.cs">
       <Link>Internal\ParameterSet.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\PropertyBag.cs">
+      <Link>Internal\PropertyBag.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\framework\Internal\Reflect.cs">
       <Link>Internal\Reflect.cs</Link>
     </Compile>
@@ -354,6 +363,9 @@
     </Compile>
     <Compile Include="..\..\..\src\framework\MessageMatch.cs">
       <Link>MessageMatch.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\ObjectList.cs">
+      <Link>ObjectList.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Runner\CommandLineOptions.cs">
       <Link>Runner\CommandLineOptions.cs</Link>

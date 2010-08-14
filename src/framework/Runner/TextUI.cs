@@ -308,8 +308,8 @@ namespace NUnitLite.Runner
 
         private void PrintTestProperties(ITest test)
         {
-            foreach (DictionaryEntry entry in test.Properties)
-                writer.WriteLine("  {0}: {1}", entry.Key, entry.Value);            
+            foreach (PropertyEntry entry in test.Properties)
+                writer.WriteLine("  {0}: {1}", entry.Name, entry.Value);            
         }
 
         private void PrintFullReport(ITestResult result)

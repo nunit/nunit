@@ -82,5 +82,28 @@ namespace NUnit.Framework.Builders
         /// </summary>
         /// <returns>The test cases.</returns>
         public abstract IEnumerable GetTestCases();
+
+        #region Cross-Platform ArgumentsCollection
+
+        /// <summary>
+        /// ArgumentsCollection represents a collection of object arrrays. It is implemented 
+        /// as a List&lt;object[]&gt; in .NET 2.0 or higher and as an ArrayList otherwise.
+        /// ObjectArrayList does not attempt to be a general replacement for either of
+        /// these classes but only implements what is needed within the framework. It
+        /// is primarily used to hold argument lists within the framework.
+        /// </summary>
+#if CLR_2_0 || CLR_4_0
+        protected class ArgumentsCollection : System.Collections.Generic.List<object[]> { }
+#else
+        protected class ArgumentsCollection : System.Collections.ArrayList 
+        {
+            public new object[][] ToArray()
+            {
+                return (object[][])base.ToArray(typeof(int));
+            }
+        }
+#endif
+
+        #endregion
     }
 }

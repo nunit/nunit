@@ -79,13 +79,13 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="listener">An event listener to receive notifications</param>
         /// <returns></returns>
-		public override TestResult Run(ITestListener listener)
-		{
-			using ( new DirectorySwapper( AssemblyHelper.GetDirectoryName( FixtureType.Assembly ) ) )
-			{
-				return base.Run(listener);
-			}
-		}
+        //public override TestResult Run(ITestListener listener)
+        //{
+        //    using ( new DirectorySwapper( AssemblyHelper.GetDirectoryName( FixtureType.Assembly ) ) )
+        //    {
+        //        return base.Run(listener);
+        //    }
+        //}
 		#endregion
 	}
 }

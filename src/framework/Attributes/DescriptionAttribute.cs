@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using NUnit.Framework.Api;
 
 namespace NUnit.Framework
 {
@@ -36,7 +37,7 @@ namespace NUnit.Framework
         /// Construct a description Attribute
         /// </summary>
         /// <param name="description">The text of the description</param>
-        public DescriptionAttribute(string description) : base("_DESCRIPTION", description) { }
+        public DescriptionAttribute(string description) : base(PropertyNames.Description, description) { }
     }
 
 }

@@ -304,8 +304,9 @@ namespace NUnit.Framework.Internal
             XmlHelper.AddAttribute(thisNode, "name", this.Name);
             XmlHelper.AddAttribute(thisNode, "fullname", this.FullName);
 
-            if (test.Description != null)
-                XmlHelper.AddAttribute(thisNode, "description", test.Description);
+            // TODO: Should we eliminate this and just show it among properties?
+            if (test.Properties[PropertyNames.Description] != null)
+                XmlHelper.AddAttribute(thisNode, "description", (string)test.Properties.Get(PropertyNames.Description));
 
             XmlHelper.AddAttribute(thisNode, "result", ResultState.Status.ToString());
             if (ResultState.Label != ResultState.Status.ToString())
@@ -420,11 +421,15 @@ namespace NUnit.Framework.Internal
                     if (properties == null)
                         properties = XmlHelper.AddElement(targetNode, "properties");
 
-                    XmlNode prop = XmlHelper.AddElement(properties, "property");
+                    IList values = test.Properties[key];
+                    foreach (object value in values)
+                    {
+                        XmlNode prop = XmlHelper.AddElement(properties, "property");
 
-                    // TODO: Format as string
-                    XmlHelper.AddAttribute(prop, "name", key.ToString());
-                    XmlHelper.AddAttribute(prop, "value", test.Properties[key].ToString());
+                        // TODO: Format as string
+                        XmlHelper.AddAttribute(prop, "name", key.ToString());
+                        XmlHelper.AddAttribute(prop, "value", value.ToString());
+                    }
                 }
             }
 

@@ -437,6 +437,10 @@ namespace NUnit.Framework.Internal
 #else
         private class FrameworkList : System.Collections.ArrayList
         {
+            public new RuntimeFramework[] ToArray()
+            {
+                return (RuntimeFramework[])base.ToArray(typeof(RuntimeFramework));
+            }
         }
 #endif
         #endregion

@@ -60,7 +60,7 @@ namespace NUnit.Framework
             if (test.RunState != RunState.NotRunnable && !platformHelper.IsPlatformSupported(this))
             {
                 test.RunState = RunState.Skipped;
-                test.IgnoreReason = platformHelper.Reason;
+                test.Properties.Add(PropertyNames.IgnoreReason, platformHelper.Reason);
             }
         }
 

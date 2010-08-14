@@ -1,7 +1,6 @@
 AssemblyInfo.cs
 Assert.cs
 AssertionHelper.cs
-CompatibleCollections.cs
 Contains.cs
 Env.cs
 GlobalSettings.cs
@@ -11,16 +10,20 @@ Is.cs
 ITestCaseData.cs
 ListMapper.cs
 MessageMatch.cs
+ObjectList.cs
 SpecialValue.cs
 TestCaseData.cs
 Throws.cs
 Api/IApplyToTest.cs
+Api/IPropertyBag.cs
 Api/ITest.cs
 Api/ITestCaseData.cs
 Api/ITestCaseSource.cs
 Api/ITestListener.cs
 Api/ITestResult.cs
 Api/IXmlNodeBuilder.cs
+Api/PropertyEntry.cs
+Api/PropertyNames.cs
 Api/ResultState.cs
 Api/RunState.cs
 Api/TestOutput.cs
@@ -34,6 +37,7 @@ Internal/InvalidTestFixtureException.cs
 Internal/MethodHelper.cs
 Internal/NUnitException.cs
 Internal/ParameterSet.cs
+Internal/PropertyBag.cs
 Internal/Reflect.cs
 Internal/TestListener.cs
 Internal/TextMessageWriter.cs

@@ -85,7 +85,7 @@ namespace NUnit.Framework
             if (this.Name.IndexOfAny(new char[] { ',', '!', '+', '-' }) >= 0)
             {
                 test.RunState = RunState.NotRunnable;
-                test.IgnoreReason = "Category name must not contain ',', '!', '+' or '-'";
+                test.Properties.Set(PropertyNames.IgnoreReason, "Category name must not contain ',', '!', '+' or '-'");
             }
         }
 

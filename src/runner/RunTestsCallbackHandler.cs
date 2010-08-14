@@ -68,7 +68,7 @@ namespace NUnit.AdhocTestRunner
             Debug.Assert(name != null);
             //Debug.Assert(fullname != null);
 
-            //output.WriteLine(name);
+            //output.WriteLine(name.Value);
         }
 
         private void OnTestCaseFinished(XmlNode testNode)

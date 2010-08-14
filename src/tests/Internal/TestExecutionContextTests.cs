@@ -30,10 +30,10 @@ using NUnit.Framework;
 namespace NUnit.Framework.Internal
 {
 	/// <summary>
-	/// Summary description for ExecutionContextTests.
+	/// Summary description for TestExecutionContextTests.
 	/// </summary>
 	[TestFixture]
-	public class ExecutionContextTests
+	public class TestExecutionContextTests
 	{
 		string currentDirectory;
 		CultureInfo currentCulture;

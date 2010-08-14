@@ -13,6 +13,7 @@ Assertions/AssertPassTests.cs
 Assertions/MessageChecker.cs
 Attributes/TestFixtureAttributeTests.cs
 Constraints/*.cs
+Internal/PropertyBagTests.cs
 Internal/TextMessageWriterTests.cs
 Syntax/CollectionTests.cs
 Syntax/ComparisonTests.cs
