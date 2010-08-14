@@ -23,6 +23,7 @@
 
 #if !NUNITLITE
 using System;
+using NUnit.Framework.Api;
 
 namespace NUnit.Framework
 {
@@ -37,7 +38,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Default constructor
         /// </summary>
-        public CombinatorialAttribute() : base("_JOINTYPE", "Combinatorial") { }
+        public CombinatorialAttribute() : base(PropertyNames.JoinType, "Combinatorial") { }
     }
 }
 #endif

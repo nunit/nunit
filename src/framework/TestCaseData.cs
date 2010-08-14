@@ -40,11 +40,6 @@ namespace NUnit.Framework
     /// </summary>
     public class TestCaseData : ITestCaseData
     {
-        #region Constants
-#if !NUNITLITE
-        private static readonly string CATEGORIES = "_CATEGORIES";
-#endif
-        #endregion
 
         #region Instance Fields
         /// <summary>
@@ -77,25 +72,15 @@ namespace NUnit.Framework
         private string testName;
 
         /// <summary>
-        /// The description of the test
-        /// </summary>
-        private string description;
-
-        /// <summary>
         /// A dictionary of properties, used to add information
         /// to tests without requiring the class to change.
         /// </summary>
-        private IDictionary properties;
+        private IPropertyBag properties;
 
         /// <summary>
         /// If true, indicates that the test case is to be ignored
         /// </summary>
         bool isIgnored;
-
-        /// <summary>
-        /// The reason for ignoring a test case
-        /// </summary>
-        string ignoreReason;
 #endif
         #endregion
 
@@ -203,29 +188,12 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Gets the description of the test
-        /// </summary>
-        public string Description
-        {
-            get { return description; }
-        }
-
-        /// <summary>
         /// Gets a value indicating whether this <see cref="ITestCaseData"/> is ignored.
         /// </summary>
         /// <value><c>true</c> if ignored; otherwise, <c>false</c>.</value>
         public bool Ignored
         {
             get { return isIgnored; }
-        }
-
-        /// <summary>
-        /// Gets the ignore reason.
-        /// </summary>
-        /// <value>The ignore reason.</value>
-        public string IgnoreReason
-        {
-            get { return ignoreReason; }
         }
 #endif
         #endregion
@@ -235,26 +203,26 @@ namespace NUnit.Framework
         /// <summary>
         /// Gets a list of categories associated with this test.
         /// </summary>
-        public IList Categories
-        {
-            get
-            {
-                if (Properties[CATEGORIES] == null)
-                    Properties[CATEGORIES] = new StringCollection();
+        //private IList Categories
+        //{
+        //    get
+        //    {
+        //        if (Properties[PropertyNames.Categories] == null)
+        //            Properties[PropertyNames.Categories] = new StringCollection();
 
-                return (IList)Properties[CATEGORIES];
-            }
-        }
+        //        return (IList)Properties[PropertyNames.Categories];
+        //    }
+        //}
 
         /// <summary>
         /// Gets the property dictionary for this test
         /// </summary>
-        public IDictionary Properties
+        public IPropertyBag Properties
         {
             get
             {
                 if (properties == null)
-                    properties = new ListDictionary();
+                    properties = new NUnit.Framework.Internal.PropertyBag();
 
                 return properties;
             }
@@ -314,7 +282,7 @@ namespace NUnit.Framework
         /// <returns>The modified TestCaseData instance.</returns>
         public TestCaseData SetDescription(string description)
         {
-            this.description = description;
+            this.Properties.Set(PropertyNames.Description, description);
             return this;
         }
 
@@ -325,7 +293,7 @@ namespace NUnit.Framework
         /// <returns></returns>
         public TestCaseData SetCategory(string category)
         {
-            this.Categories.Add(category);
+            this.Properties.Add(PropertyNames.Categories, category);
             return this;
         }
 
@@ -383,7 +351,7 @@ namespace NUnit.Framework
         public TestCaseData Ignore(string reason)
         {
             isIgnored = true;
-            ignoreReason = reason;
+            this.Properties.Set(PropertyNames.IgnoreReason, reason);
             return this;
         }
         #endregion

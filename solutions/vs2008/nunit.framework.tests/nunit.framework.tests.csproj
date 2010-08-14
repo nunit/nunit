@@ -419,6 +419,9 @@
     <Compile Include="..\..\..\src\tests\TestContextTests.cs">
       <Link>TestContextTests.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\tests\Internal\PropertyBagTests.cs">
+      <Link>Internal\PropertyBagTests.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

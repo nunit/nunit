@@ -138,7 +138,7 @@ namespace NUnit.Framework
             /// <summary>
             /// The properties of the test.
             /// </summary>
-            public IDictionary Properties
+            public IPropertyBag Properties
             {
                 get
                 {

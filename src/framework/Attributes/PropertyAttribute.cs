@@ -22,9 +22,8 @@
 // ***********************************************************************
 
 using System;
-using System.Collections;
-using System.Collections.Specialized;
 using NUnit.Framework.Api;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Framework
 {
@@ -34,7 +33,7 @@ namespace NUnit.Framework
 	[AttributeUsage(AttributeTargets.Class|AttributeTargets.Method|AttributeTargets.Assembly, AllowMultiple=true)]
 	public class PropertyAttribute : TestModificationAttribute, IApplyToTest
 	{
-        private IDictionary properties = new ListDictionary();
+        private PropertyBag properties = new PropertyBag();
 
         /// <summary>
         /// Construct a PropertyAttribute with a name and string value
@@ -91,7 +90,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Gets the property dictionary for this attribute
         /// </summary>
-        public IDictionary Properties
+        public IPropertyBag Properties
         {
             get { return properties; }
         }
@@ -104,8 +103,9 @@ namespace NUnit.Framework
         /// <param name="test">The test to modify</param>
         public void ApplyToTest(ITest test)
         {
-            foreach (DictionaryEntry entry in Properties)
-                test.Properties.Add(entry.Key, entry.Value);
+            foreach (string key in Properties.Keys)
+                foreach(object value in Properties[key])
+                    test.Properties.Add(key, value);
         }
 
         #endregion

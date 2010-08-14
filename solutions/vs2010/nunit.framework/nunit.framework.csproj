@@ -54,6 +54,9 @@
     <Compile Include="..\..\..\src\framework\Api\IParameterDataSource.cs">
       <Link>Api\IParameterDataSource.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\framework\Api\IPropertyBag.cs">
+      <Link>Api\IPropertyBag.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\framework\Api\ITest.cs">
       <Link>Api\ITest.cs</Link>
     </Compile>
@@ -77,6 +80,12 @@
     </Compile>
     <Compile Include="..\..\..\src\framework\Api\IXmlNodeBuilder.cs">
       <Link>Api\IXmlNodeBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Api\PropertyEntry.cs">
+      <Link>Api\PropertyEntry.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Api\PropertyNames.cs">
+      <Link>Api\PropertyNames.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Api\ResultState.cs">
       <Link>Api\ResultState.cs</Link>
@@ -233,9 +242,6 @@
     </Compile>
     <Compile Include="..\..\..\src\framework\CollectionAssert.cs">
       <Link>CollectionAssert.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\CompatibleCollections.cs">
-      <Link>CompatibleCollections.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Constraints\AttributeConstraints.cs">
       <Link>Constraints\AttributeConstraints.cs</Link>
@@ -570,6 +576,9 @@
     <Compile Include="..\..\..\src\framework\Internal\PlatformHelper.cs">
       <Link>Internal\PlatformHelper.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\PropertyBag.cs">
+      <Link>Internal\PropertyBag.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\framework\Internal\QueuingEventListener.cs">
       <Link>Internal\QueuingEventListener.cs</Link>
     </Compile>
@@ -669,6 +678,9 @@
     </Compile>
     <Compile Include="..\..\..\src\framework\MessageMatch.cs">
       <Link>MessageMatch.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\ObjectList.cs">
+      <Link>ObjectList.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\SpecialValue.cs">
       <Link>SpecialValue.cs</Link>

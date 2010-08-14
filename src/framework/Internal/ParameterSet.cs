@@ -37,12 +37,6 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public class ParameterSet : ITestCaseData
     {
-        #region Constants
-        private static readonly string DESCRIPTION = "_DESCRIPTION";
-        private static readonly string IGNOREREASON = "_IGNOREREASON";
-        private static readonly string CATEGORIES = "_CATEGORIES";
-        #endregion
-
         #region Instance Fields
         private RunState runState;
         private Exception providerException;
@@ -55,7 +49,6 @@ namespace NUnit.Framework.Internal
         private MessageMatch matchType;
         private object result;
         private string testName;
-        private string ignoreReason;
         private bool isIgnored;
         private bool hasExpectedResult;
 
@@ -63,7 +56,7 @@ namespace NUnit.Framework.Internal
         /// A dictionary of properties, used to add information
         /// to tests without requiring the class to change.
         /// </summary>
-        private IDictionary properties;
+        private IPropertyBag properties;
 #endif
         #endregion
 
@@ -115,10 +108,10 @@ namespace NUnit.Framework.Internal
         /// The reason for not running the test case
         /// represented by this ParameterSet
         /// </summary>
-        public string NotRunReason
-        {
-            get { return (string)Properties[IGNOREREASON]; }
-        }
+        //public string NotRunReason
+        //{
+        //    get { return (string)Properties[PropertyNames.IgnoreReason]; }
+        //}
 
         /// <summary>
         /// The Type of any exception that is expected.
@@ -179,21 +172,6 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// A description to be applied to this test case
-        /// </summary>
-        public string Description
-        {
-            get { return (string)Properties[DESCRIPTION]; }
-            set
-            {
-                if (value != null)
-                    Properties[DESCRIPTION] = value;
-                else
-                    Properties.Remove(DESCRIPTION);
-            }
-        }
-
-        /// <summary>
         /// A name to be used for this test case in lieu
         /// of the standard generated name containing
         /// the argument list.
@@ -215,38 +193,14 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// Gets or sets the ignore reason.
-        /// </summary>
-        /// <value>The ignore reason.</value>
-        public string IgnoreReason
-        {
-            get { return ignoreReason; }
-            set { ignoreReason = value; }
-        }
-
-        /// <summary>
-        /// Gets a list of categories associated with this test.
-        /// </summary>
-        public IList Categories
-        {
-            get
-            {
-                if (Properties[CATEGORIES] == null)
-                    Properties[CATEGORIES] = new StringCollection();
-
-                return (IList)Properties[CATEGORIES];
-            }
-        }
-
-        /// <summary>
         /// Gets the property dictionary for this test
         /// </summary>
-        public IDictionary Properties
+        public IPropertyBag Properties
         {
             get
             {
                 if (properties == null)
-                    properties = new ListDictionary();
+                    properties = new PropertyBag();
 
                 return properties;
             }
@@ -257,7 +211,7 @@ namespace NUnit.Framework.Internal
         #region Constructors
         /// <summary>
         /// Construct a non-runnable ParameterSet, specifying
-        /// the provider excetpion that made it invalid.
+        /// the provider exception that made it invalid.
         /// </summary>
         public ParameterSet(Exception exception)
         {
@@ -288,13 +242,11 @@ namespace NUnit.Framework.Internal
             this.ExpectedMessage = data.ExpectedMessage;
             this.MatchType = data.MatchType;
             this.Result = data.Result;
-            this.Description = data.Description;
             this.TestName = data.TestName;
             this.Ignored = data.Ignored;
-            this.IgnoreReason = data.IgnoreReason;
 
-            foreach (string category in data.Categories)
-                this.Categories.Add(category);
+            foreach (string key in data.Properties.Keys)
+                this.Properties[key] = data.Properties[key];
 #endif
         }
         #endregion

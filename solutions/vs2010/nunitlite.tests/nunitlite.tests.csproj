@@ -146,6 +146,9 @@
     <Compile Include="..\..\..\src\tests\Constraints\XmlSerializableTest.cs">
       <Link>Constraints\XmlSerializableTest.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\tests\Internal\PropertyBagTests.cs">
+      <Link>Internal\PropertyBagTests.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\tests\Internal\TextMessageWriterTests.cs">
       <Link>Internal\TextMessageWriterTests.cs</Link>
     </Compile>

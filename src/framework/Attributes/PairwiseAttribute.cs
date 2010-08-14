@@ -23,6 +23,7 @@
 
 #if !NUNITLITE
 using System;
+using NUnit.Framework.Api;
 
 namespace NUnit.Framework
 {
@@ -37,7 +38,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Default constructor
         /// </summary>
-        public PairwiseAttribute() : base("_JOINTYPE", "Pairwise") { }
+        public PairwiseAttribute() : base(PropertyNames.JoinType, "Pairwise") { }
     }
 }
 #endif

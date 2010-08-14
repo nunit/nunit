@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2008 Charlie Poole
+// Copyright (c) 2010 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,24 +21,29 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NUNITLITE
 using System;
-using NUnit.Framework.Api;
 
-namespace NUnit.Framework
+namespace NUnit.Framework.Api
 {
-    /// <summary>
-    /// Marks a test to use a Sequential join of any argument 
-    /// data provided. Arguments will be combined into test cases,
-    /// taking the next value of each argument until all are used.
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
-    public class SequentialAttribute : PropertyAttribute
+    public class PropertyEntry
     {
-        /// <summary>
-        /// Default constructor
-        /// </summary>
-        public SequentialAttribute() : base(PropertyNames.JoinType, "Sequential") { }
+        private string name;
+        private object value;
+
+        public PropertyEntry(string name, object value)
+        {
+            this.name = name;
+            this.value = value;
+        }
+
+        public string Name
+        {
+            get { return name; }
+        }
+
+        public object Value
+        {
+            get { return value; }
+        }
     }
 }
-#endif

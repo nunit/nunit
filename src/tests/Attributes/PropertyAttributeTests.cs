@@ -44,28 +44,28 @@ namespace NUnit.Framework.Attributes
 		public void PropertyWithStringValue()
 		{
 			Test test1 = (Test)fixture.Tests[0];
-			Assert.AreEqual( "Charlie", test1.Properties["user"] );
+			Assert.That( test1.Properties["user"].Contains("Charlie"));
 		}
 
 		[Test]
 		public void PropertiesWithNumericValues()
 		{
 			Test test2 = (Test)fixture.Tests[1];
-			Assert.AreEqual( 10.0, test2.Properties["X"] );
-			Assert.AreEqual( 17.0, test2.Properties["Y"] );
+			Assert.AreEqual( 10.0, test2.Properties.Get("X") );
+			Assert.AreEqual( 17.0, test2.Properties.Get("Y") );
 		}
 
 		[Test]
 		public void PropertyWorksOnFixtures()
 		{
-			Assert.AreEqual( "SomeClass", fixture.Properties["ClassUnderTest"] );
+			Assert.AreEqual( "SomeClass", fixture.Properties.Get("ClassUnderTest") );
 		}
 
 		[Test]
 		public void CanDeriveFromPropertyAttribute()
 		{
 			Test test3 = (Test)fixture.Tests[2];
-			Assert.AreEqual( 5, test3.Properties["Priority"] );
+			Assert.AreEqual( 5, test3.Properties.Get("Priority") );
 		}
 	}
 }

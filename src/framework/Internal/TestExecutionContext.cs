@@ -42,10 +42,6 @@ namespace NUnit.Framework.Internal
 	/// 
 	/// Static methods for each setting forward to the internal 
 	/// object on the top of the stack.
-	/// 
-	/// When TestContext itself is instantiated, it is used to
-	/// save and restore settings for a block. It should be 
-	/// used with using() or Disposed in a finally block.
 	/// </summary>
 	public class TestExecutionContext
 	{
@@ -110,8 +106,14 @@ namespace NUnit.Framework.Internal
         /// </summary>
 		private IPrincipal currentPrincipal;
 
+        /// <summary>
+        /// The currently executing test
+        /// </summary>
         private Test currentTest;
 
+        /// <summary>
+        /// The active TestResult for the current test
+        /// </summary>
         private TestResult currentResult;
 
 		/// <summary>

@@ -45,7 +45,7 @@ namespace NUnit.Framework.Internal
             TestMethod test = new TestMethod(typeof(DummySuite).GetMethod("DummyMethod"));
             test.Description = "Test description";
             test.Categories.Add("Dubious");
-            test.Properties["Priority"] = "low";
+            test.Properties.Set("Priority", "low");
 			testResult = new TestCaseResult(test);
 
             TestSuite suite = new TestSuite(typeof(DummySuite));

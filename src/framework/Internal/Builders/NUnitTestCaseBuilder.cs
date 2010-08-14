@@ -240,20 +240,14 @@ namespace NUnit.Framework.Builders
                 }
 
                 if (parms.Ignored)
-                {
                     testMethod.RunState = RunState.Ignored;
-                    testMethod.IgnoreReason = parms.IgnoreReason;
-                }
 
                 if (parms.ExpectedExceptionName != null)
                     testMethod.exceptionProcessor = new ExpectedExceptionProcessor(testMethod, parms);
 
                 foreach (string key in parms.Properties.Keys)
-                    testMethod.Properties.Add(key, parms.Properties[key]);
-
-                // Description is stored in parms.Properties
-                if (parms.Description != null)
-                    testMethod.Description = parms.Description;
+                    foreach(object value in parms.Properties[key])
+                        testMethod.Properties.Add(key, value);
 
                 if (testMethod.BuilderException != null)
                     testMethod.RunState = RunState.NotRunnable;
@@ -308,7 +302,7 @@ namespace NUnit.Framework.Builders
                 testMethod.expectedResult = parms.Result;
                 testMethod.hasExpectedResult = parms.HasExpectedResult;
                 testMethod.RunState = parms.RunState;
-                testMethod.IgnoreReason = parms.NotRunReason;
+                //testMethod.IgnoreReason = parms.NotRunReason;
                 testMethod.BuilderException = parms.ProviderException;
 
                 arglist = parms.Arguments;

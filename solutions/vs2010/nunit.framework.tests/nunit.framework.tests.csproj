@@ -272,6 +272,9 @@
     <Compile Include="..\..\..\src\tests\Internal\PlatformDetectionTests.cs">
       <Link>Internal\PlatformDetectionTests.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\tests\Internal\PropertyBagTests.cs">
+      <Link>Internal\PropertyBagTests.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\tests\Internal\RandomizerTests.cs">
       <Link>Internal\RandomizerTests.cs</Link>
     </Compile>

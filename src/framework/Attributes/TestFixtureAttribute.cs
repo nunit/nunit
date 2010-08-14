@@ -178,8 +178,8 @@ namespace NUnit.Framework
         /// <param name="test">The test to modify</param>
         public void ApplyToTest(ITest test)
         {
-            if (!test.Properties.Contains("_DESCRIPTION") && description != null)
-                test.Properties["_DESCRIPTION"] = description;
+            if (!test.Properties.ContainsKey(PropertyNames.Description) && description != null)
+                test.Properties.Set(PropertyNames.Description, description);
         }
 
         #endregion
