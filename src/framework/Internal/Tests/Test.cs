@@ -190,20 +190,6 @@ namespace NUnit.Framework.Internal
 		}
 
 		/// <summary>
-		/// Gets a list of categories associated with this test.
-		/// </summary>
-		public IList Categories 
-		{
-			get 
-            {
-                //if (Properties[PropertyNames.Categories] == null)
-                //    Properties[PropertyNames.Categories] = (IList<object>)new CategoryList();
-
-                return (IList)Properties[PropertyNames.Categories]; 
-            }
-		}
-
-		/// <summary>
 		/// Gets the properties for this test
 		/// </summary>
 		public IPropertyBag Properties

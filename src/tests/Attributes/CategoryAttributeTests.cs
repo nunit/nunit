@@ -46,30 +46,30 @@ namespace NUnit.Framework.Attributes
 		[Test]
 		public void CategoryOnFixture()
 		{
-			Assert.Contains( "DataBase", fixture.Categories );
+			Assert.That( fixture.Properties.Contains("Category", "DataBase"));
 		}
 
 		[Test]
 		public void CategoryOnTestMethod()
 		{
 			Test test1 = (Test)fixture.Tests[0];
-			Assert.Contains( "Long", test1.Categories );
+			Assert.That( test1.Properties.Contains("Category", "Long") );
 		}
 
 		[Test]
 		public void CanDeriveFromCategoryAttribute()
 		{
 			Test test2 = (Test)fixture.Tests[1];
-			Assert.Contains( "Critical", test2.Categories );
+			Assert.Contains( "Critical", test2.Properties["Category"] );
 		}
 
         [Test]
         public void CanSpecifyOnMethodAndTestCase()
         {
             TestSuite test3 = (TestSuite)fixture.Tests[2];
-            Assert.Contains("Top", test3.Categories);
+            Assert.Contains("Top", test3.Properties["Category"]);
             Test testCase = (Test)test3.Tests[0];
-            Assert.Contains("Bottom", testCase.Categories);
+            Assert.Contains("Bottom", testCase.Properties["Category"]);
         }
 
         [Test]

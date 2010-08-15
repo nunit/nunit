@@ -200,19 +200,6 @@ namespace NUnit.Framework
 
 #if !NUNITLITE
         #region Additional Public Properties
-        /// <summary>
-        /// Gets a list of categories associated with this test.
-        /// </summary>
-        //private IList Categories
-        //{
-        //    get
-        //    {
-        //        if (Properties[PropertyNames.Categories] == null)
-        //            Properties[PropertyNames.Categories] = new StringCollection();
-
-        //        return (IList)Properties[PropertyNames.Categories];
-        //    }
-        //}
 
         /// <summary>
         /// Gets the property dictionary for this test
@@ -293,7 +280,7 @@ namespace NUnit.Framework
         /// <returns></returns>
         public TestCaseData SetCategory(string category)
         {
-            this.Properties.Add(PropertyNames.Categories, category);
+            this.Properties.Add(PropertyNames.Category, category);
             return this;
         }
 

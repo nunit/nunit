@@ -314,8 +314,6 @@ namespace NUnit.Framework.Internal
 
             XmlHelper.AddAttribute(thisNode, "time", this.Time.ToString("0.000", System.Globalization.CultureInfo.InvariantCulture));
 
-            if (this.test.Categories.Count > 0)
-                AddCategories(thisNode);
             if (this.test.Properties.Count > 0)
                 AddProperties(thisNode);
 
@@ -383,25 +381,6 @@ namespace NUnit.Framework.Internal
 #endif 
 
             return failureNode;
-        }
-
-        /// <summary>
-        /// Adds a categories element to the target node, populates
-        /// it with any categories on the test and returns it.
-        /// </summary>
-        /// <param name="targetNode">The target node.</param>
-        /// <returns>The new node that was added.</returns>
-        private XmlNode AddCategories(XmlNode targetNode)
-        {
-            XmlNode categories = XmlHelper.AddElement(targetNode, "categories");
-
-            foreach (string category in test.Categories)
-            {
-                XmlNode categoryNode = XmlHelper.AddElement(categories, "category");
-                XmlHelper.AddAttribute(categoryNode, "name", category);
-            }
-
-            return categories;
         }
 
         /// <summary>

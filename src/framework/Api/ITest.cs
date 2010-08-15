@@ -69,7 +69,7 @@ namespace NUnit.Framework.Api
         /// <summary>
         /// Gets the categories of the test
         /// </summary>
-        IList Categories { get; }
+        //IList Categories { get; }
 
         /// <summary>
         /// True if this is a test case
