@@ -80,7 +80,7 @@ namespace NUnit.Framework
         /// <param name="test">The test to modify</param>
         public void ApplyToTest(ITest test)
         {
-            test.Categories.Add(this.Name);
+            test.Properties.Add(PropertyNames.Category, this.Name);
 
             if (this.Name.IndexOfAny(new char[] { ',', '!', '+', '-' }) >= 0)
             {

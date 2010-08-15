@@ -112,9 +112,10 @@ namespace NUnit.Framework.Attributes
         {
             TestSuite suite = TestBuilder.MakeFixture(typeof(RepeatedTestWithCategory));
             Test test = suite.Tests[0] as Test;
-            Assert.IsNotNull(test.Categories);
-            Assert.AreEqual(1, test.Categories.Count);
-            Assert.AreEqual("SAMPLE", test.Categories[0]);
+            System.Collections.IList categories = test.Properties["Category"];
+            Assert.IsNotNull(categories);
+            Assert.AreEqual(1, categories.Count);
+            Assert.AreEqual("SAMPLE", categories[0]);
         }
 	}
 }

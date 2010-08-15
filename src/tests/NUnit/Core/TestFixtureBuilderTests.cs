@@ -50,7 +50,7 @@ namespace NUnit.Framework.Tests
 		{
 			Test fixture = TestBuilder.MakeFixture( typeof( HasCategories ) );
 			Assert.IsNotNull(fixture);
-			Assert.AreEqual(2, fixture.Categories.Count);
+			Assert.AreEqual(2, fixture.Properties["Category"].Count);
 		}
 	}
 }

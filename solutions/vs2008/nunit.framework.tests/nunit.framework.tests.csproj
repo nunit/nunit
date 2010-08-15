@@ -139,6 +139,9 @@
     <Compile Include="..\..\..\src\tests\Assertions\TypeAssertTest.cs">
       <Link>Assertions\TypeAssertTest.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\tests\Attributes\ApplyToTestTests.cs">
+      <Link>Attributes\ApplyToTestTests.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\tests\Attributes\AttributeInheritanceTests.cs">
       <Link>Attributes\AttributeInheritanceTests.cs</Link>
     </Compile>
@@ -180,6 +183,9 @@
     </Compile>
     <Compile Include="..\..\..\src\tests\Attributes\TestCaseSourceTests.cs">
       <Link>Attributes\TestCaseSourceTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\Attributes\TestDummy.cs">
+      <Link>Attributes\TestDummy.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\tests\Attributes\TestFixtureAttributeTests.cs">
       <Link>Attributes\TestFixtureAttributeTests.cs</Link>

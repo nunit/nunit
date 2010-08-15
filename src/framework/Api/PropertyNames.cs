@@ -33,7 +33,7 @@ namespace NUnit.Framework.Api
         /// <summary>
         /// The categories applying to a test
         /// </summary>
-        public static readonly string Categories = "_CATEGORIES";
+        public static readonly string Category = "Category";
 
         /// <summary>
         /// Indicates that the test should be run on a separate thread
