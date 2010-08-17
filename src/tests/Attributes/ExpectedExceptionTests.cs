@@ -464,7 +464,7 @@ namespace NUnit.Framework.Attributes
 			Assert.AreEqual( RunState.NotRunnable, test.RunState );
 			Assert.AreEqual(
 				"The specified exception handler DeliberatelyMissingHandler was not found",
-				test.IgnoreReason );
+				test.Properties.Get(PropertyNames.IgnoreReason) );
 		}
 	}
 }

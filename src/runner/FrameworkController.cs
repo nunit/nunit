@@ -57,11 +57,24 @@ namespace NUnit.AdhocTestRunner
             return (bool)handler.Result;
         }
 
-        public XmlNode Run()
+        public XmlNode GetLoadedTests()
+        {
+            CallbackHandler handler = new CallbackHandler();
+
+            CreateObject("NUnit.Framework.Api.TestController+GetLoadedTestsAction",
+                testController, handler.Callback);
+
+            Debug.Assert(handler.Result == null || handler.Result is XmlNode,
+                "Returned result was not an XmlNode");
+
+            return handler.Result as XmlNode;
+        }
+
+        public XmlNode Run(IDictionary runOptions)
         {
             CallbackHandler handler = new RunTestsCallbackHandler();
 
-            CreateObject("NUnit.Framework.Api.TestController+RunTestsAction", testController, handler.Callback);
+            CreateObject("NUnit.Framework.Api.TestController+RunTestsAction", testController, runOptions, handler.Callback);
 
             Debug.Assert(handler.Result is XmlNode, "Returned result was not an XmlNode");
 

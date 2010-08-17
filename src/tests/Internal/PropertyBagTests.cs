@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Xml;
 using NUnit.Framework.Api;
 
 namespace NUnit.Framework.Internal
@@ -179,6 +180,28 @@ namespace NUnit.Framework.Internal
                 ++count;
             Assert.That(count, Is.EqualTo(3));
 
+        }
+
+        [Test]
+        public void XmlIsProducedCorrectly()
+        {
+            XmlNode topNode = bag.ToXml(true);
+            Assert.That(topNode.Name, Is.EqualTo("properties"));
+
+            string[] props = new string[topNode.ChildNodes.Count];
+            for (int i = 0; i < topNode.ChildNodes.Count; i++)
+            {
+                XmlNode node = topNode.ChildNodes[i];
+
+                Assert.That(node.Name, Is.EqualTo("property"));
+                
+                props[i] = string.Format("{0}={1}",
+                    node.Attributes["name"].Value,
+                    node.Attributes["value"].Value);
+            }
+
+            Assert.That(props,
+                Is.EquivalentTo(new string[] { "Answer=42", "Tag=bug", "Tag=easy" }));
         }
     }
 }

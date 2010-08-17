@@ -76,8 +76,9 @@ namespace NUnit.Framework.Internal
             thread.CurrentUICulture = Thread.CurrentThread.CurrentUICulture;
 
             // Setting to Unknown causes an error under the Mono 1.0 profile
-            if ( test.ApartmentState != ApartmentState.Unknown )
-                this.ApartmentState = test.ApartmentState;
+            ApartmentState state = (ApartmentState)test.Properties.GetSetting(PropertyNames.ApartmentState, ApartmentState.Unknown);
+            if ( state != ApartmentState.Unknown )
+                this.ApartmentState = state;
         }
 
         #endregion

@@ -47,6 +47,10 @@ namespace NUnit.AdhocTestRunner
                 if (commandlineOptions.Load.Count > 0)
                     loadOptions["LOAD"] = commandlineOptions.Load;
 
+                IDictionary runOptions = new Hashtable();
+                if (commandlineOptions.Run.Count > 0)
+                    runOptions["RUN"] = commandlineOptions.Run;
+
                 AppDomain testDomain = AppDomain.CurrentDomain;
                 if (commandlineOptions.UseAppDomain)
                     testDomain = CreateDomain(
@@ -63,26 +67,30 @@ namespace NUnit.AdhocTestRunner
                             ? "Specifed tests not found in assembly {0}"
                             : "No tests found in assembly {0}", 
                         assemblyFilename);
+                    return;
                 }
-                else
-                {
-                    TextWriter savedOut = Console.Out;
-                    TextWriter savedError = Console.Error;
 
-                    //TestEventListener listener = new TestEventListener(options, Console.Out);
+                XmlNode testNode = driver.GetLoadedTests();
+                XmlTextWriter testWriter = new XmlTextWriter("LoadedTests.xml", System.Text.Encoding.UTF8);
+                testWriter.Formatting = Formatting.Indented;
+                testNode.WriteTo(testWriter);
+                testWriter.Close();
+                
+                TextWriter savedOut = Console.Out;
+                TextWriter savedError = Console.Error;
 
-                    XmlNode result = driver.Run();
+                //TestEventListener listener = new TestEventListener(options, Console.Out);
 
-                    Console.SetOut(savedOut);
-                    Console.SetError(savedError);
+                XmlNode resultNode = driver.Run(runOptions);
 
-                    XmlNode xmlResult = result as XmlNode;
-                    XmlTextWriter writer = new XmlTextWriter("TestResult.Xml", System.Text.Encoding.UTF8);
-                    xmlResult.WriteTo(writer);
-                    writer.Close();
+                Console.SetOut(savedOut);
+                Console.SetError(savedError);
 
-                    new ResultReporter(result).ReportResults();
-                }
+                XmlTextWriter resultWriter = new XmlTextWriter("TestResult.Xml", System.Text.Encoding.UTF8);
+                resultNode.WriteTo(resultWriter);
+                resultWriter.Close();
+
+                new ResultReporter(resultNode).ReportResults();
             }
             catch (Exception ex)
             {

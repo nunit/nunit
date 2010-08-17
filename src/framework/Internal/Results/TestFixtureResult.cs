@@ -36,15 +36,5 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="test">The test to be used</param>
         public TestFixtureResult(TestFixture test) : base(test) { }
-
-        /// <summary>
-        /// Adds the test-fixture top level element.
-        /// </summary>
-        /// <param name="parentNode">The parent node.</param>
-        /// <returns>The newly created element node.</returns>
-        protected override System.Xml.XmlNode AddTopLevelElement(System.Xml.XmlNode parentNode)
-        {
-            return XmlHelper.AddElement(parentNode, "test-fixture");
-        }
     }
 }

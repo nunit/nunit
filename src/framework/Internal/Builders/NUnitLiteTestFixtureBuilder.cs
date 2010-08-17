@@ -88,7 +88,7 @@ namespace NUnit.Framework.Internal.Builders
             if (type.GetConstructor(new Type[0]) == null)
             {
                 suite.RunState = RunState.NotRunnable;
-                suite.IgnoreReason = string.Format("Class {0} has no default constructor", type.Name);
+                suite.Properties.Set(PropertyNames.IgnoreReason, string.Format("Class {0} has no default constructor", type.Name));
                 return suite;
             }
 

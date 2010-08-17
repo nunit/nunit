@@ -109,16 +109,6 @@ namespace NUnit.Framework.Internal
         #region TestResult Overrides
 
         /// <summary>
-        /// Adds the top level test-suite element for this result.
-        /// </summary>
-        /// <param name="parentNode">The parent node.</param>
-        /// <returns>The new top level element node.</returns>
-        protected override XmlNode AddTopLevelElement(XmlNode parentNode)
-        {
-            return XmlHelper.AddElement(parentNode, "test-suite");
-        }
-
-        /// <summary>
         /// Adds the XML representation of the result as a child of the
         /// supplied parent node..
         /// </summary>

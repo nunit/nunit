@@ -22,11 +22,11 @@
 // ***********************************************************************
 
 using System;
-using System.Collections;
 using System.Reflection;
 using System.Threading;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Xml;
 using NUnit.Framework;
 using NUnit.Framework.Api;
 
@@ -181,16 +181,31 @@ namespace NUnit.Framework.Internal
             set { builderException = value; }
         }
 
-        /// <summary>
-        /// Indicates whether this test is a test case
-        /// </summary>
-        public override bool IsTestCase
-        {
-            get { return true; }
-        }
         #endregion
 
-		#region Run Methods
+        #region Test Overrides
+
+        /// <summary>
+        /// Gets a bool indicating whether the current test
+        /// has any descendant tests.
+        /// </summary>
+        public override bool HasChildren
+        {
+            get { return false; }
+        }
+
+        /// <summary>
+        /// Gets this test's child tests
+        /// </summary>
+        /// <value>A list of child tests</value>
+#if CLR_2_0 || CLR_4_0
+        public override System.Collections.Generic.IList<ITest> Tests
+#else
+        public override System.Collections.IList Tests
+#endif
+        {
+            get { return new ITest[0]; }
+        }
 
         /// <summary>
         /// Creates a TestCaseResult.
@@ -200,6 +215,19 @@ namespace NUnit.Framework.Internal
         {
             return new TestCaseResult(this);
         }
+
+        /// <summary>
+        /// The name used for the top-level element in the
+        /// XML representation of this test
+        /// </summary>
+        public override string ElementName
+        {
+            get { return "test-case"; }
+        }
+
+        #endregion
+
+        #region Run Methods
 
         /// <summary>
         /// Runs the test under a particular filter, sending
@@ -223,7 +251,7 @@ namespace NUnit.Framework.Internal
                     break;
                 case RunState.Skipped:
                 default:
-                    testResult.SetResult(ResultState.Skipped, IgnoreReason);
+                    testResult.SetResult(ResultState.Skipped, (string)Properties.Get(PropertyNames.IgnoreReason));
                     break;
                 case RunState.NotRunnable:
                     if (BuilderException != null)
@@ -236,10 +264,10 @@ namespace NUnit.Framework.Internal
                             ExceptionHelper.BuildMessage( BuilderException ));
 #endif
                     else
-                        testResult.SetResult(ResultState.NotRunnable, IgnoreReason);
+                        testResult.SetResult(ResultState.NotRunnable, (string)Properties.Get(PropertyNames.IgnoreReason));
                     break;
                 case RunState.Ignored:
-                    testResult.SetResult(ResultState.Ignored, IgnoreReason);
+                    testResult.SetResult(ResultState.Ignored, (string)Properties.Get(PropertyNames.IgnoreReason));
                     break;
             }
 
@@ -268,18 +296,19 @@ namespace NUnit.Framework.Internal
 
             try
             {
+                // TODO: Clean this up
                 if (this.Parent != null)
                 {
-                    this.Fixture = this.Parent.Fixture;
                     TestSuite suite = this.Parent as TestSuite;
                     if (suite != null)
                     {
+                        this.Fixture = suite.Fixture;
                         this.setUpMethods = suite.GetSetUpMethods();
                         this.tearDownMethods = suite.GetTearDownMethods();
                     }
                 }
 
-                // Temporary... to allow for tests that directly execute a test case
+                // TODO: Temporary... to allow for tests that directly execute a test case
                 if (Fixture == null && !method.IsStatic)
                     Fixture = Reflect.Construct(this.FixtureType);
 
@@ -301,7 +330,17 @@ namespace NUnit.Framework.Internal
                 while (repeatCount-- > 0)
                 {
 #if !NUNITLITE
-                    if (RequiresThread || Timeout > 0 || ApartmentState != GetCurrentApartment())
+#if CLR_2_0 || CLR_4_0
+                    ApartmentState currentApartment = Thread.CurrentThread.GetApartmentState();
+#else
+                    ApartmentState currentApartment = Thread.CurrentThread.ApartmentState;
+#endif
+                    ApartmentState targetApartment =
+                        (ApartmentState)Properties.GetSetting(PropertyNames.ApartmentState, ApartmentState.Unknown);
+
+                    bool requiresThread = Properties.GetSetting(PropertyNames.RequiresThread, false);
+
+                    if (requiresThread || Timeout > 0 || targetApartment != ApartmentState.Unknown && targetApartment != currentApartment)
                         new TestMethodThread(this).Run(testResult, TestListener.NULL);
                     else
 #endif

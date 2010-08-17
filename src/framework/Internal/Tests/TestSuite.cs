@@ -24,9 +24,15 @@
 using System;
 using System.Text;
 using System.Threading;
-using System.Collections;
 using System.Reflection;
+using System.Xml;
 using NUnit.Framework.Api;
+
+#if CLR_2_0 || CLR_4_0
+using System.Collections.Generic;
+#else
+using System.Collections;
+#endif
 
 namespace NUnit.Framework.Internal
 {
@@ -39,7 +45,11 @@ namespace NUnit.Framework.Internal
 		/// <summary>
 		/// Our collection of child tests
 		/// </summary>
-		private TestCollection tests = new TestCollection();
+#if CLR_2_0 || CLR_4_0
+        private List<ITest> tests = new List<ITest>();
+#else
+        private ArrayList tests = new ArrayList();
+#endif
 
         /// <summary>
         /// The fixture setup methods for this suite
@@ -197,19 +207,14 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Gets this test's child tests
         /// </summary>
-        /// <value></value>
-		public IList Tests 
+        /// <value>The list of child tests</value>
+#if CLR_2_0 || CLR_4_0
+        public override System.Collections.Generic.IList<ITest> Tests 
+#else
+        public override System.Collections.IList Tests
+#endif
 		{
 			get { return tests; }
-		}
-
-        /// <summary>
-        /// Indicates whether this test is a suite
-        /// </summary>
-        /// <value></value>
-		public override bool IsTestCase
-		{
-			get { return false; }
 		}
 
         /// <summary>
@@ -271,6 +276,27 @@ namespace NUnit.Framework.Internal
 
 		#region Test Overrides
 
+        /// <summary>
+        /// Gets a bool indicating whether the current test
+        /// has any descendant tests.
+        /// </summary>
+        public override bool HasChildren
+        {
+            get
+            {
+                return tests.Count > 0;
+            }
+        }
+
+        /// <summary>
+        /// The name used for the top-level element in the
+        /// XML representation of this test
+        /// </summary>
+        public override string ElementName
+        {
+            get { return "test-suite"; }
+        }
+
         ///// <summary>
         ///// Gets a count of test cases that would be run using
         ///// the specified filter.
@@ -318,7 +344,17 @@ namespace NUnit.Framework.Internal
 				case RunState.Runnable:
 				case RunState.Explicit:
 #if !NUNITLITE
-                    if (RequiresThread || ApartmentState != GetCurrentApartment())
+#if CLR_2_0 || CLR_4_0
+                    ApartmentState currentApartment = Thread.CurrentThread.GetApartmentState();
+#else
+                    ApartmentState currentApartment = Thread.CurrentThread.ApartmentState;
+#endif
+                    ApartmentState targetApartment = 
+                        (ApartmentState)Properties.GetSetting(PropertyNames.ApartmentState, ApartmentState.Unknown);
+
+                    bool requiresThread = Properties.GetSetting(PropertyNames.RequiresThread, false);
+
+                    if (requiresThread || targetApartment != ApartmentState.Unknown && targetApartment != currentApartment)
                         new TestSuiteThread(this).Run(suiteResult, listener);
                     else
 #endif
@@ -404,6 +440,18 @@ namespace NUnit.Framework.Internal
 #endif
             }
         }
+
+        public override System.Xml.XmlNode AddToXml(XmlNode parentNode, bool recursive)
+        {
+            XmlNode thisNode = base.AddToXml(parentNode, recursive);
+
+            if (recursive)
+                foreach (Test test in this.Tests)
+                    test.AddToXml(thisNode, recursive);
+
+            return thisNode;
+        }
+
 		#endregion
 
 		#region Virtual Methods
@@ -439,7 +487,7 @@ namespace NUnit.Framework.Internal
                     if (ex is NUnit.Framework.IgnoreException)
                     {
                         this.RunState = RunState.Ignored;
-                        this.IgnoreReason = ex.Message;
+                        this.Properties.Set(PropertyNames.IgnoreReason, ex.Message);
                     }
                 }
             }
@@ -537,7 +585,8 @@ namespace NUnit.Framework.Internal
                     if (test.RunState == RunState.Runnable && this.RunState != RunState.Runnable && this.RunState != RunState.Explicit )
                     {
                         test.RunState = this.RunState;
-                        test.IgnoreReason = this.IgnoreReason;
+                        test.Properties.Set(PropertyNames.IgnoreReason, 
+                            this.Properties.Get(PropertyNames.IgnoreReason));
                     }
 
                     TestResult result = test.Run(listener);
@@ -547,7 +596,7 @@ namespace NUnit.Framework.Internal
                     if (saveRunState != test.RunState)
                     {
                         test.RunState = saveRunState;
-                        test.IgnoreReason = null;
+                        test.Properties.Remove(PropertyNames.IgnoreReason);
                     }
 
                     if (result.ResultState == ResultState.Cancelled)
@@ -558,24 +607,29 @@ namespace NUnit.Framework.Internal
 
         private void SkipAllTests(TestSuiteResult suiteResult, ITestListener listener)
         {
-            suiteResult.SetResult(ResultState.Skipped, this.IgnoreReason);
-            MarkTestsNotRun(this.tests, ResultState.Skipped, this.IgnoreReason, suiteResult, listener);
+            suiteResult.SetResult(ResultState.Skipped, (string)this.Properties.Get(PropertyNames.IgnoreReason));
+            MarkTestsNotRun(this.tests, ResultState.Skipped, (string)this.Properties.Get(PropertyNames.IgnoreReason), suiteResult, listener);
         }
 
         private void IgnoreAllTests(TestSuiteResult suiteResult, ITestListener listener)
         {
-            suiteResult.SetResult(ResultState.Ignored, this.IgnoreReason);
-            MarkTestsNotRun(this.tests, ResultState.Ignored, this.IgnoreReason, suiteResult, listener);
+            suiteResult.SetResult(ResultState.Ignored, (string)this.Properties.Get(PropertyNames.IgnoreReason));
+            MarkTestsNotRun(this.tests, ResultState.Ignored, (string)this.Properties.Get(PropertyNames.IgnoreReason), suiteResult, listener);
         }
 
         private void MarkAllTestsInvalid(TestSuiteResult suiteResult, ITestListener listener)
         {
-            suiteResult.SetResult(ResultState.NotRunnable, this.IgnoreReason);
-            MarkTestsNotRun(this.tests, ResultState.NotRunnable, this.IgnoreReason, suiteResult, listener);
+            suiteResult.SetResult(ResultState.NotRunnable, (string)Properties.Get(PropertyNames.IgnoreReason));
+            MarkTestsNotRun(this.tests, ResultState.NotRunnable, (string)Properties.Get(PropertyNames.IgnoreReason), suiteResult, listener);
         }
-       
+
+#if CLR_2_0 || CLR_4_0
         private void MarkTestsNotRun(
-            TestCollection tests, ResultState resultState, string ignoreReason, TestSuiteResult suiteResult, ITestListener listener)
+            IList<ITest> tests, ResultState resultState, string ignoreReason, TestSuiteResult suiteResult, ITestListener listener)
+#else
+        private void MarkTestsNotRun(
+            IList tests, ResultState resultState, string ignoreReason, TestSuiteResult suiteResult, ITestListener listener)
+#endif
         {
             //foreach (Test test in ArrayList.Synchronized(tests))
             foreach (Test test in tests)
@@ -601,8 +655,13 @@ namespace NUnit.Framework.Internal
             listener.TestFinished(result);
         }
 
+#if CLR_2_0 || CLR_4_0
         private void MarkTestsFailed(
-            TestCollection tests, string msg, TestSuiteResult suiteResult, ITestListener listener)
+            IList<ITest> tests, string msg, TestSuiteResult suiteResult, ITestListener listener)
+#else
+        private void MarkTestsFailed(
+            IList tests, string msg, TestSuiteResult suiteResult, ITestListener listener)
+#endif
         {
             //foreach (Test test in ArrayList.Synchronized(tests))
             foreach (Test test in tests)
@@ -626,11 +685,5 @@ namespace NUnit.Framework.Internal
             listener.TestFinished(result);
         }
         #endregion
-
-#if (CLR_2_0 || CLR_4_0)
-        private class TestCollection : System.Collections.Generic.List<Test> { }
-#else
-        private class TestCollection : ArrayList { }
-#endif
     }
 }

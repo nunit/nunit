@@ -21,8 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System.Collections;
-
 namespace NUnit.Framework.Api
 {
 	/// <summary>
@@ -33,8 +31,6 @@ namespace NUnit.Framework.Api
 	/// </summary>
 	public interface ITest : IXmlNodeBuilder
     {
-        #region Properties
-
         /// <summary>
         /// Gets or sets the id of the test
         /// </summary>
@@ -67,16 +63,26 @@ namespace NUnit.Framework.Api
 		IPropertyBag Properties { get; }
 
         /// <summary>
-        /// Gets the categories of the test
+        /// Gets the parent test, if any.
         /// </summary>
-        //IList Categories { get; }
+        /// <value>The parent test or null if none exists.</value>
+        ITest Parent { get; }
 
         /// <summary>
-        /// True if this is a test case
+        /// Gets a bool indicating whether the current test
+        /// has any descendant tests.
         /// </summary>
-        bool IsTestCase { get; }
+        bool HasChildren { get; }
 
-        #endregion
+        /// <summary>
+        /// Gets this test's child tests
+        /// </summary>
+        /// <value>A list of child tests</value>
+#if CLR_2_0 || CLR_4_0
+        System.Collections.Generic.IList<ITest> Tests { get; }
+#else
+        System.Collections.IList Tests { get; }
+#endif
     }
 }
 

@@ -187,7 +187,7 @@ namespace NUnit.Framework.Tests
         {
 			Test test = (Test)TestBuilder.MakeParameterizedMethodSuite(
 				typeof(TestCaseAttributeFixture), "MethodHasDescriptionSpecified").Tests[0];
-			Assert.AreEqual("My Description", test.Description);
+			Assert.AreEqual("My Description", test.Properties.Get(PropertyNames.Description));
 		}
 
         [Test]

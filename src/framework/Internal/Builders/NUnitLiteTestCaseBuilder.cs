@@ -116,7 +116,7 @@ namespace NUnit.Framework.Internal.Builders
             if (method.ReturnType != typeof(void))
             {
                 test.RunState = RunState.NotRunnable;
-                test.IgnoreReason = "A TestMethod must return void";
+                test.Properties.Set(PropertyNames.IgnoreReason, "A TestMethod must return void");
                 return false;
             }
 
@@ -126,21 +126,21 @@ namespace NUnit.Framework.Internal.Builders
             if (argsNeeded == 0 && argsPassed > 0)
             {
                 test.RunState = RunState.NotRunnable;
-                test.IgnoreReason = "Arguments may not be specified for a method with no parameters";
+                test.Properties.Set(PropertyNames.IgnoreReason, "Arguments may not be specified for a method with no parameters");
                 return false;
             }
 
             if (argsNeeded > 0 && argsPassed == 0)
             {
                 test.RunState = RunState.NotRunnable;
-                test.IgnoreReason = "No arguments provided for a method requiring them";
+                test.Properties.Set(PropertyNames.IgnoreReason, "No arguments provided for a method requiring them");
                 return false;
             }
 
             if (argsNeeded != argsPassed)
             {
                 test.RunState = RunState.NotRunnable;
-                test.IgnoreReason = string.Format("Expected {0} arguments, but received {1}", argsNeeded, argsPassed);
+                test.Properties.Set(PropertyNames.IgnoreReason, string.Format("Expected {0} arguments, but received {1}", argsNeeded, argsPassed));
                 return false;
             }
 

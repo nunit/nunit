@@ -101,8 +101,8 @@ namespace NUnit.Framework.Internal
                 else
                 {
                     testMethod.RunState = RunState.NotRunnable;
-                    testMethod.IgnoreReason = string.Format(
-                        "The specified exception handler {0} was not found", handlerName);
+                    testMethod.Properties.Set(PropertyNames.IgnoreReason, string.Format(
+                        "The specified exception handler {0} was not found", handlerName));
                 }
             }
         }

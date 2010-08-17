@@ -11,7 +11,7 @@ namespace NUnit.Framework.Internal
     public class DefaultTestAssemblyRunner : ITestAssemblyRunner
     {
         private ITestAssemblyBuilder builder;
-        private TestSuite suite;
+        private TestSuite loadedTest;
         private Thread runThread;
 
         #region Constructors
@@ -27,6 +27,18 @@ namespace NUnit.Framework.Internal
 
         #endregion
 
+        #region Properties
+
+        public ITest LoadedTest
+        {
+            get
+            {
+                return this.loadedTest;
+            }
+        }
+
+        #endregion
+
         #region Methods
 
         /// <summary>
@@ -37,8 +49,8 @@ namespace NUnit.Framework.Internal
         /// <returns>True if the load was successful</returns>
         public bool Load(string assemblyName, IDictionary options)
         {
-            this.suite = this.builder.Build(assemblyName, options);
-            if (suite == null) return false;
+            this.loadedTest = this.builder.Build(assemblyName, options);
+            if (loadedTest == null) return false;
 
             return true;
         }
@@ -59,7 +71,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="listener">Interface to receive EventListener notifications.</param>
         /// <returns></returns>
-        public ITestResult Run(ITestListener listener)
+        public ITestResult Run(ITestListener listener, IDictionary runOptions)
         {
             TestExecutionContext.Save();
 
@@ -75,7 +87,7 @@ namespace NUnit.Framework.Internal
                 using (EventPump pump = new EventPump(listener, queue.Events, true))
                 {
                     pump.Start();
-                    return this.suite.Run(listener);
+                    return this.loadedTest.Run(listener);
                 }
             }
             finally

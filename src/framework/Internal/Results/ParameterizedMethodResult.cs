@@ -42,19 +42,5 @@ namespace NUnit.Framework.Internal
         {
             this.suite = suite;
         }
-
-        /// <summary>
-        /// Adds the top level method or generic-method element for this result.
-        /// </summary>
-        /// <param name="parentNode">The parent node.</param>
-        /// <returns>The new top level element node.</returns>
-        protected override System.Xml.XmlNode AddTopLevelElement(System.Xml.XmlNode parentNode)
-        {
-#if CLR_2_0 || CLR_4_0
-            if ( suite.Method.ContainsGenericParameters )
-                return XmlHelper.AddElement(parentNode, "generic-method");
-#endif
-            return XmlHelper.AddElement(parentNode, "method");
-        }
     }
 }

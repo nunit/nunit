@@ -622,20 +622,8 @@
     <Compile Include="..\..\..\src\framework\Internal\ExceptionHelper.cs">
       <Link>Internal\ExceptionHelper.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Results\ParameterizedMethodResult.cs">
-      <Link>Internal\Results\ParameterizedMethodResult.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Results\TestFixtureResult.cs">
-      <Link>Internal\Results\TestFixtureResult.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Results\TestAssemblyResult.cs">
-      <Link>Internal\Results\TestAssemblyResult.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\src\framework\Internal\Tests\TestAssembly.cs">
       <Link>Internal\Tests\TestAssembly.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Results\ParameterizedFixtureResult.cs">
-      <Link>Internal\Results\ParameterizedFixtureResult.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Api\IXmlNodeBuilder.cs">
       <Link>Api\IXmlNodeBuilder.cs</Link>
@@ -707,6 +695,9 @@
     <Compile Include="..\..\..\src\framework\Api\PropertyEntry.cs">
       <Link>Api\PropertyEntry.cs</Link>
     </Compile>
+    <Compile Include="Api\ITestFilter.cs" />
+    <Compile Include="Internal\Filters\SimpleNameFilter.cs" />
+    <Compile Include="Internal\TestFilter.cs" />
     <None Include="..\..\..\src\framework\Templates\Contains.template.cs">
       <Link>Templates\Contains.template.cs</Link>
     </None>

@@ -109,7 +109,7 @@ namespace NUnit.Framework.Tests
 		{
 			TestSuite suite = TestBuilder.MakeFixture( typeof( IgnoredFixture ) );
 			Assert.AreEqual( RunState.Ignored, suite.RunState );
-			Assert.AreEqual( "testing ignore a fixture", suite.IgnoreReason );
+			Assert.AreEqual( "testing ignore a fixture", suite.Properties.Get(PropertyNames.IgnoreReason) );
 		}
 
 		[Test]
@@ -192,7 +192,8 @@ namespace NUnit.Framework.Tests
                 Type.GetType("NUnit.TestData.TestFixtureData.GenericFixtureWithNoTestFixtureAttribute`1,test-assembly"));
 
             Assert.That(suite.RunState, Is.EqualTo(RunState.NotRunnable));
-            Assert.That(suite.IgnoreReason, Is.StringStarting("Fixture type contains generic parameters"));
+            Assert.That(suite.Properties.Get(PropertyNames.IgnoreReason), 
+                Is.StringStarting("Fixture type contains generic parameters"));
         }
 
         [Test]
@@ -203,7 +204,7 @@ namespace NUnit.Framework.Tests
 
             Test fixture = (Test)suite.Tests[0];
             Assert.That(fixture.RunState, Is.EqualTo(RunState.NotRunnable));
-            Assert.That(fixture.IgnoreReason, Is.StringStarting("Fixture type contains generic parameters"));
+            Assert.That((string)fixture.Properties.Get(PropertyNames.IgnoreReason), Is.StringStarting("Fixture type contains generic parameters"));
         }
 
         [Test]

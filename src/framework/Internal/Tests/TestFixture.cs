@@ -67,7 +67,7 @@ namespace NUnit.Framework.Internal
                      method.GetParameters().Length > 0 ||
                      !method.ReturnType.Equals(typeof(void)))
                 {
-                    this.IgnoreReason = string.Format("Invalid signature for SetUp or TearDown method: {0}", method.Name);
+                    this.Properties.Set(PropertyNames.IgnoreReason, string.Format("Invalid signature for SetUp or TearDown method: {0}", method.Name));
                     this.RunState = RunState.NotRunnable;
                     break;
                 }
@@ -79,12 +79,16 @@ namespace NUnit.Framework.Internal
 		#region TestSuite Overrides
 
         /// <summary>
-        /// Creates a TestFixtureResult.
+        /// The name used for the top-level element in the
+        /// XML representation of this test
         /// </summary>
-        /// <returns>The new TestFixtureResult.</returns>
-        public override TestResult MakeTestResult()
+        /// <value></value>
+        public override string ElementName
         {
-            return new TestFixtureResult(this);
+            get
+            {
+                return "test-fixture";
+            }
         }
 
 #if !NUNITLITE
