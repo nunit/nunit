@@ -180,6 +180,31 @@ namespace NUnit.Framework.Api
 
         #endregion
 
+        #region GetLoadedTestsAction
+
+        /// <summary>
+        /// GetLoadedTestsAction returns the XML representation
+        /// of a suite of tests, which must have been loaded already.
+        /// </summary>
+        public class GetLoadedTestsAction : TestControllerAction
+        {
+            /// <summary>
+            /// Initializes a new instance of the <see cref="GetLoadedTestsAction"/> class.
+            /// </summary>
+            /// <param name="controller">The controller.</param>
+            /// <param name="callback">The callback.</param>
+            public GetLoadedTestsAction(TestController controller, AsyncCallback callback)
+                : base(controller, callback)
+            {
+                ITest loadedTests = controller.Runner.LoadedTest;
+
+                if (loadedTests != null)
+                    ReportResult(loadedTests.ToXml(true), true);
+            }
+        }
+
+        #endregion
+
         #region CountTestsAction
 
         ///// <summary>
@@ -214,10 +239,10 @@ namespace NUnit.Framework.Api
             /// </summary>
             /// <param name="controller">A TestController holding the TestSuite to run</param>
             /// <param name="callback">A callback used to report results</param>
-            public RunTestsAction(TestController controller, AsyncCallback callback) 
+            public RunTestsAction(TestController controller, IDictionary runOptions, AsyncCallback callback) 
                 : base(controller, callback)
             {
-                ITestResult result = controller.Runner.Run(new TestProgressReporter(callback));
+                ITestResult result = controller.Runner.Run(new TestProgressReporter(callback), runOptions);
                 ReportResult(result.ToXml(true), true);
             }
 

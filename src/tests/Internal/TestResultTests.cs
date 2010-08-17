@@ -43,13 +43,13 @@ namespace NUnit.Framework.Internal
 		public void SetUp()
 		{
             TestMethod test = new TestMethod(typeof(DummySuite).GetMethod("DummyMethod"));
-            test.Description = "Test description";
+            test.Properties.Set(PropertyNames.Description, "Test description");
             test.Properties.Add(PropertyNames.Category, "Dubious");
             test.Properties.Set("Priority", "low");
 			testResult = new TestCaseResult(test);
 
             TestSuite suite = new TestSuite(typeof(DummySuite));
-            suite.Description = "Suite description";
+            suite.Properties.Set(PropertyNames.Description, "Suite description");
             suite.Properties.Add(PropertyNames.Category, "Fast");
             suite.Properties.Add("Value", 3);
             suiteResult = new TestSuiteResult(suite);
@@ -83,8 +83,8 @@ namespace NUnit.Framework.Internal
             Assert.AreEqual("test-case", testNode.Name);
             Assert.AreEqual("DummyMethod", testNode.Attributes["name"].Value);
             Assert.AreEqual("NUnit.Framework.Internal.TestResultTests+DummySuite.DummyMethod", testNode.Attributes["fullname"].Value);
-            Assert.AreEqual("Test description", testNode.Attributes["description"].Value);
-
+            
+            Assert.AreEqual("Test description", testNode.SelectSingleNode("properties/property[@name='_DESCRIPTION']").Attributes["value"].Value);
             Assert.AreEqual("Dubious", testNode.SelectSingleNode("properties/property[@name='Category']").Attributes["value"].Value);
             Assert.AreEqual("low", testNode.SelectSingleNode("properties/property[@name='Priority']").Attributes["value"].Value);
 
@@ -102,8 +102,8 @@ namespace NUnit.Framework.Internal
             Assert.AreEqual("test-suite", suiteNode.Name);
             Assert.AreEqual("TestResultTests+DummySuite", suiteNode.Attributes["name"].Value);
             Assert.AreEqual("NUnit.Framework.Internal.TestResultTests+DummySuite", suiteNode.Attributes["fullname"].Value);
-            Assert.AreEqual("Suite description", suiteNode.Attributes["description"].Value);
 
+            Assert.AreEqual("Suite description", suiteNode.SelectSingleNode("properties/property[@name='_DESCRIPTION']").Attributes["value"].Value);
             Assert.AreEqual("Fast", suiteNode.SelectSingleNode("properties/property[@name='Category']").Attributes["value"].Value);
             Assert.AreEqual("3", suiteNode.SelectSingleNode("properties/property[@name='Value']").Attributes["value"].Value);
         }

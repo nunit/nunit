@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Xml;
 using NUnit.Framework.Api;
 
 #if CLR_2_0 || CLR_4_0
@@ -46,17 +47,6 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// Add multiple values to the property bag
-        /// </summary>
-        /// <param name="key">The key</param>
-        /// <param name="values">A list of the values</param>
-        //public void AddEach(string key, IList<object> values)
-        //{
-        //    foreach (object value in values)
-        //        Add(key, value);
-        //}
-
-        /// <summary>
         /// Sets the value for a key, removing any other
         /// values that are already in the property set.
         /// </summary>
@@ -89,6 +79,62 @@ namespace NUnit.Framework.Internal
                 ? list[0]
                 : null;
 #endif
+        }
+
+        /// <summary>
+        /// Gets a single boolean value for a key, using the first
+        /// one if multiple values are present and returning the
+        /// default value if no entry is found.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="defaultValue"></param>
+        /// <returns></returns>
+        public bool GetSetting(string key, bool defaultValue)
+        {
+            object value = Get(key);
+            return value == null
+                ? defaultValue
+                : (bool)value;
+        }
+
+        /// <summary>
+        /// Gets a single string value for a key, using the first
+        /// one if multiple values are present and returning the
+        /// default value if no entry is found.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="defaultValue"></param>
+        /// <returns></returns>
+        public string GetSetting(string key, string defaultValue)
+        {
+            object value = Get(key);
+            return value == null
+                ? defaultValue
+                : (string)value;
+        }
+
+        /// <summary>
+        /// Gets a single int value for a key, using the first
+        /// one if multiple values are present and returning the
+        /// default value if no entry is found.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="defaultValue"></param>
+        /// <returns></returns>
+        public int GetSetting(string key, int defaultValue)
+        {
+            object value = Get(key);
+            return value == null
+                ? defaultValue
+                : (int)value;
+        }
+
+        public System.Enum GetSetting(string key, System.Enum defaultValue)
+        {
+            object value = Get(key);
+            return value == null
+                ? defaultValue
+                : (System.Enum)value;
         }
 
         /// <summary>
@@ -251,6 +297,50 @@ namespace NUnit.Framework.Internal
                 inner[key] = value;
             }
         }
+
+        #region IXmlNodeBuilder Members
+
+        /// <summary>
+        /// Returns an XmlNode representating the current PropertyBag.
+        /// </summary>
+        /// <param name="recursive">Not used</param>
+        /// <returns>An XmlNode representing the PropertyBag</returns>
+        public System.Xml.XmlNode ToXml(bool recursive)
+        {
+            XmlNode topNode = XmlHelper.CreateTopLevelElement("dummy");
+
+            XmlNode thisNode = AddToXml(topNode, recursive);
+
+            return thisNode;
+        }
+
+        /// <summary>
+        /// Returns an XmlNode representing the PropertyBag after
+        /// adding it as a child of the supplied parent node.
+        /// </summary>
+        /// <param name="parentNode">The parent node.</param>
+        /// <param name="recursive">Not used</param>
+        /// <returns></returns>
+        public System.Xml.XmlNode AddToXml(System.Xml.XmlNode parentNode, bool recursive)
+        {
+            XmlNode properties = XmlHelper.AddElement(parentNode, "properties");
+
+            foreach (string key in Keys)
+            {
+                foreach (object value in this[key])
+                {
+                    XmlNode prop = XmlHelper.AddElement(properties, "property");
+
+                    // TODO: Format as string
+                    XmlHelper.AddAttribute(prop, "name", key.ToString());
+                    XmlHelper.AddAttribute(prop, "value", value.ToString());
+                }
+            }
+
+            return properties;
+        }
+
+        #endregion
 
         #region Nested PropertyBagEnumerator Class
 

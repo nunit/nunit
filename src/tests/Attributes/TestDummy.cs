@@ -81,14 +81,32 @@ namespace NUnit.Framework.Attributes
             }
         }
 
-        public System.Collections.IList Categories
+        public bool HasChildren
         {
-            get { throw new NotImplementedException(); }
+            get
+            {
+                return false;
+            }
         }
 
-        public bool IsTestCase
+        public ITest Parent
         {
-            get { throw new NotImplementedException(); }
+            get
+            {
+                return null;
+            }
+        }
+
+#if CLR_2_0 || CLR_4_0
+        public System.Collections.Generic.IList<ITest> Tests
+#else
+        public System.Collections.IList Tests
+#endif
+        {
+            get
+            {
+                return new ITest[0];
+            }
         }
 
         #endregion

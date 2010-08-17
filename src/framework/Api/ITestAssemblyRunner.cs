@@ -33,10 +33,21 @@ namespace NUnit.Framework.Api
     /// </summary>
     public interface ITestAssemblyRunner
     {
+        #region Properties
+
+        /// <summary>
+        /// Gets the tree of loaded tests, or null if
+        /// no tests have been loaded.
+        /// </summary>
+        ITest LoadedTest { get; }
+
+        #endregion
+
         #region Methods
 
         /// <summary>
-        /// Loads the tests found in an Assembly
+        /// Loads the tests found in an Assembly, returning an 
+        /// indication of whether or not the load succeeded.
         /// </summary>
         /// <param name="assemblyName">File name of the assembly to load</param>
         /// <param name="options">Dictionary of options to use in loading the test</param>
@@ -55,7 +66,7 @@ namespace NUnit.Framework.Api
         /// and the listener interface is notified as it progresses.
         /// </summary>
         /// <param name="listener">Interface to receive ITestListener notifications.</param>
-        ITestResult Run(ITestListener listener);
+        ITestResult Run(ITestListener listener, System.Collections.IDictionary runOptions);
 
         #endregion
     }

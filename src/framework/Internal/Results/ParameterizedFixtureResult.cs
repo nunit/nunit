@@ -37,23 +37,10 @@ namespace NUnit.Framework.Internal
         /// Initializes a new instance of the <see cref="ParameterizedFixtureResult"/> class.
         /// </summary>
         /// <param name="suite">The suite.</param>
-        public ParameterizedFixtureResult(ParameterizedFixtureSuite suite) : base(suite) 
+        public ParameterizedFixtureResult(ParameterizedFixtureSuite suite)
+            : base(suite)
         {
             this.suite = suite;
-        }
-
-        /// <summary>
-        /// Adds the top level test-suite element for this result.
-        /// </summary>
-        /// <param name="parentNode">The parent node.</param>
-        /// <returns>The new top level element node.</returns>
-        protected override System.Xml.XmlNode AddTopLevelElement(System.Xml.XmlNode parentNode)
-        {
-#if CLR_2_0 || CLR_4_0
-            if (suite.ParameterizedType.ContainsGenericParameters)
-                return XmlHelper.AddElement(parentNode, "generic-fixture");
-#endif
-            return XmlHelper.AddElement(parentNode, "parameterized-fixture");
         }
     }
 }

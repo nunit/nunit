@@ -293,6 +293,9 @@
     <Compile Include="..\..\..\src\tests\Internal\TestResultTests.cs">
       <Link>Internal\TestResultTests.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\tests\Internal\TestXmlTests.cs">
+      <Link>Internal\TestXmlTests.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\tests\Internal\TextMessageWriterTests.cs">
       <Link>Internal\TextMessageWriterTests.cs</Link>
     </Compile>

@@ -55,15 +55,6 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// Creates a ParameterizedMethodResult for this test.
-        /// </summary>
-        /// <returns>The newly created result.</returns>
-        public override TestResult MakeTestResult()
-        {
-            return new ParameterizedMethodResult(this);
-        }
-
-        /// <summary>
         /// Override Run, setting Fixture to that of the Parent.
         /// </summary>
         /// <param name="listener"></param>
@@ -72,10 +63,11 @@ namespace NUnit.Framework.Internal
         {
             if (this.Parent != null)
             {
-                this.Fixture = this.Parent.Fixture;
+                // TODO: Clean this up
                 TestSuite suite = this.Parent as TestSuite;
                 if (suite != null)
                 {
+                    this.Fixture = suite.Fixture;
                     this.setUpMethods = suite.GetSetUpMethods();
                     this.tearDownMethods = suite.GetTearDownMethods();
                 }
@@ -108,6 +100,24 @@ namespace NUnit.Framework.Internal
         /// <param name="suiteResult"></param>
         protected override void DoOneTimeTearDown(TestResult suiteResult)
         {
+        }
+
+        /// <summary>
+        /// The name used for the top-level element in the
+        /// XML representation of this test
+        /// </summary>
+        /// <value></value>
+        public override string ElementName
+        {
+            get
+            {
+#if CLR_2_0 || CLR_4_0
+                if (this.Method.ContainsGenericParameters)
+                    return "generic-method";
+#endif
+                
+                return "method";
+            }
         }
     }
 }

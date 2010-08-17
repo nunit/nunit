@@ -52,12 +52,21 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// Creates a ParameterizedFixtueResult.
+        /// The name used for the top-level element in the
+        /// XML representation of this test
         /// </summary>
-        /// <returns>The new ParameterizedFixtureResult.</returns>
-        public override TestResult MakeTestResult()
+        /// <value></value>
+        public override string ElementName
         {
-            return new ParameterizedFixtureResult(this);
+            get
+            {
+#if CLR_2_0 || CLR_4_0
+                if (this.ParameterizedType.ContainsGenericParameters)
+                    return "generic-fixture";
+#endif
+                
+                return "parameterized-fixture";
+            }
         }
     }
 }

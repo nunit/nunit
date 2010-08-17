@@ -22,8 +22,6 @@
 // ***********************************************************************
 
 using System;
-using System.Collections;
-using System.Collections.Specialized;
 using System.Threading;
 using System.Reflection;
 using System.Xml;
@@ -56,7 +54,7 @@ namespace NUnit.Framework.Internal
 		/// <summary>
 		/// Test suite containing this test, or null
 		/// </summary>
-		private Test parent;
+		private ITest parent;
 		
 		/// <summary>
 		/// A dictionary of properties, used to add information
@@ -65,47 +63,6 @@ namespace NUnit.Framework.Internal
 		private PropertyBag properties;
 
 		#endregion
-
-        #region Properties
-#if !NUNITLITE
-        /// <summary>
-        /// Return true if the test requires a thread
-        /// </summary>
-        public bool RequiresThread
-        {
-            get 
-            { 
-                return Properties.ContainsKey(PropertyNames.RequiresThread)
-                    && (bool)Properties.Get(PropertyNames.RequiresThread);
-            }
-        }
-
-        /// <summary>
-        /// Get the desired apartment state for running the test
-        /// </summary>
-        public ApartmentState ApartmentState
-        {
-            get
-            {
-                return Properties.ContainsKey(PropertyNames.ApartmentState)
-                    ? (ApartmentState)Properties.Get(PropertyNames.ApartmentState)
-                    : GetCurrentApartment();
-            }
-        }
-
-        /// <summary>
-        /// Get the current apartment state of the test
-        /// </summary>
-        protected ApartmentState GetCurrentApartment()
-        {
-#if CLR_2_0 || CLR_4_0
-            return Thread.CurrentThread.GetApartmentState();
-#else
-            return Thread.CurrentThread.ApartmentState;
-#endif
-        }
-#endif
-        #endregion
 
         #region Construction
 
@@ -203,53 +160,31 @@ namespace NUnit.Framework.Internal
 			}
 		}
 
-		/// <summary>
-		/// Indicates whether this test is a test case
-		/// </summary>
-        public abstract bool IsTestCase
-        {
-            get;
-        }
+        /// <summary>
+        /// Gets a bool indicating whether the current test
+        /// has any descendant tests.
+        /// </summary>
+        public abstract bool HasChildren { get; }
+
+        /// <summary>
+        /// Gets this test's child tests
+        /// </summary>
+        /// <value>A list of child tests</value>
+#if CLR_2_0 || CLR_4_0
+        public abstract System.Collections.Generic.IList<ITest> Tests { get; }
+#else
+        public abstract System.Collections.IList Tests { get; }
+#endif
 
         #endregion
 
         #region Other Public Properties
 
         /// <summary>
-        /// Gets a description associated with this test.
-        /// </summary>
-        public String Description
-        {
-            get { return (string)Properties.Get(PropertyNames.Description); }
-            set
-            {
-                if (value == null)
-                    Properties.Remove(PropertyNames.Description);
-                else
-                    Properties.Set(PropertyNames.Description, value);
-            }
-        }
-
-        /// <summary>
-        /// Reason for not running the test, if applicable
-        /// </summary>
-        public string IgnoreReason
-        {
-            get { return (string)Properties.Get(PropertyNames.IgnoreReason); }
-            set
-            {
-                if (value == null)
-                    Properties.Remove(PropertyNames.IgnoreReason);
-                else
-                    Properties.Set(PropertyNames.IgnoreReason, value);
-            }
-        }
-
-        /// <summary>
 		/// Gets the parent as a Test object.
 		/// Used by the core to set the parent.
 		/// </summary>
-		public Test Parent
+		public ITest Parent
 		{
 			get { return parent; }
 			set { parent = value; }
@@ -312,9 +247,23 @@ namespace NUnit.Framework.Internal
         /// <param name="parentNode">The parent node.</param>
         /// <param name="recursive">If true, descendant results are included</param>
         /// <returns></returns>
-        public XmlNode AddToXml(XmlNode parentNode, bool recursive)
+        public virtual XmlNode AddToXml(XmlNode parentNode, bool recursive)
         {
-            return XmlHelper.AddElement(parentNode, "test");
+            XmlNode thisNode = XmlHelper.AddElement(parentNode, this.ElementName);
+
+            PopulateTestNode(thisNode, recursive);
+
+            return thisNode;
+        }
+
+        protected void PopulateTestNode(XmlNode thisNode, bool recursive)
+        {
+            XmlHelper.AddAttribute(thisNode, "id", this.ID.ToString());
+            XmlHelper.AddAttribute(thisNode, "name", this.Name);
+            XmlHelper.AddAttribute(thisNode, "fullname", this.FullName);
+
+            if (Properties.Count > 0)
+                Properties.AddToXml(thisNode, recursive);
         }
 
         #endregion
@@ -359,7 +308,16 @@ namespace NUnit.Framework.Internal
 
         #endregion
 
-        #region Abstract Methods
+        #region Abstract Properties and Methods
+
+        /// <summary>
+        /// The name used for the top-level element in the
+        /// XML representation of this test
+        /// </summary>
+        public abstract string ElementName
+        {
+            get;
+        }
 
         /// <summary>
         /// Override this to return the proper type of TestResult for this test

@@ -298,24 +298,14 @@ namespace NUnit.Framework.Internal
         /// <returns></returns>
         public virtual XmlNode AddToXml(XmlNode parentNode, bool recursive)
         {
-            XmlNode thisNode = AddTopLevelElement(parentNode);
-
-            XmlHelper.AddAttribute(thisNode, "id", test.ID.ToString());
-            XmlHelper.AddAttribute(thisNode, "name", this.Name);
-            XmlHelper.AddAttribute(thisNode, "fullname", this.FullName);
-
-            // TODO: Should we eliminate this and just show it among properties?
-            if (test.Properties[PropertyNames.Description] != null)
-                XmlHelper.AddAttribute(thisNode, "description", (string)test.Properties.Get(PropertyNames.Description));
+            // A result node looks like a test node with extra info added
+            XmlNode thisNode = this.test.AddToXml(parentNode, false);
 
             XmlHelper.AddAttribute(thisNode, "result", ResultState.Status.ToString());
             if (ResultState.Label != ResultState.Status.ToString())
                 XmlHelper.AddAttribute(thisNode, "label", ResultState.Label);
 
             XmlHelper.AddAttribute(thisNode, "time", this.Time.ToString("0.000", System.Globalization.CultureInfo.InvariantCulture));
-
-            if (this.test.Properties.Count > 0)
-                AddProperties(thisNode);
 
             switch (ResultState.Status)
             {
@@ -337,15 +327,6 @@ namespace NUnit.Framework.Internal
         #endregion
 
         #region Protected Methods
-
-        /// <summary>
-        /// Adds the top level element for this result, possibly
-        /// with some added attributes or elements. Must be 
-        /// overridden by derived classes
-        /// </summary>
-        /// <param name="parentNode">The parent node.</param>
-        /// <returns>The new top level element node.</returns>
-        protected abstract XmlNode AddTopLevelElement(XmlNode parentNode);
 
         /// <summary>
         /// Adds a reason element to a note and returns it.
@@ -381,38 +362,6 @@ namespace NUnit.Framework.Internal
 #endif 
 
             return failureNode;
-        }
-
-        /// <summary>
-        /// Adds a failure element to a node, populates it with the
-        /// individual properties from this result and returns it.
-        /// </summary>
-        /// <param name="targetNode">The target node.</param>
-        /// <returns>The new properties element.</returns>
-        private XmlNode AddProperties(XmlNode targetNode)
-        {
-            XmlNode properties = null;
-
-            foreach (string key in test.Properties.Keys)
-            {
-                if (!key.StartsWith("_"))
-                {
-                    if (properties == null)
-                        properties = XmlHelper.AddElement(targetNode, "properties");
-
-                    IList values = test.Properties[key];
-                    foreach (object value in values)
-                    {
-                        XmlNode prop = XmlHelper.AddElement(properties, "property");
-
-                        // TODO: Format as string
-                        XmlHelper.AddAttribute(prop, "name", key.ToString());
-                        XmlHelper.AddAttribute(prop, "value", value.ToString());
-                    }
-                }
-            }
-
-            return properties;
         }
 
         #endregion

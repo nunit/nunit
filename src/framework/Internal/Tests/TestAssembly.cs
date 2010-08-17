@@ -38,12 +38,16 @@ namespace NUnit.Framework.Internal
         public TestAssembly(string path) : base(path) { }
 
         /// <summary>
-        /// Creates a new TestAssemblyResult.
+        /// The name used for the top-level element in the
+        /// XML representation of this test
         /// </summary>
-        /// <returns>The newly created result.</returns>
-        public override TestResult MakeTestResult()
+        /// <value></value>
+        public override string ElementName
         {
-            return new TestAssemblyResult(this);
+            get
+            {
+                return "test-assembly";
+            }
         }
     }
 }

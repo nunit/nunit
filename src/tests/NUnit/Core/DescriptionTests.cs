@@ -50,14 +50,14 @@ namespace NUnit.Framework.Tests
         public void Description()
         {
             Test testCase = TestBuilder.MakeTestCase(FixtureType, "Method");
-            Assert.AreEqual("Test Description", testCase.Description);
+            Assert.AreEqual("Test Description", testCase.Properties.Get(PropertyNames.Description));
         }
 
         [Test]
 		public void NoDescription()
 		{
 			Test testCase = TestBuilder.MakeTestCase( FixtureType, "NoDescriptionMethod" );
-			Assert.IsNull(testCase.Description);
+			Assert.IsNull(testCase.Properties.Get(PropertyNames.Description));
 		}
 
 		[Test]
@@ -66,26 +66,25 @@ namespace NUnit.Framework.Tests
 			TestSuite suite = new TestSuite("suite");
 			suite.Add( TestBuilder.MakeFixture( typeof( DescriptionFixture ) ) );
 
-			IList tests = suite.Tests;
-			TestSuite mockFixtureSuite = (TestSuite)tests[0];
+			TestSuite mockFixtureSuite = (TestSuite)suite.Tests[0];
 
-			Assert.AreEqual("Fixture Description", mockFixtureSuite.Description);
+			Assert.AreEqual("Fixture Description", mockFixtureSuite.Properties.Get(PropertyNames.Description));
 		}
 
         [Test]
         public void SeparateDescriptionAttribute()
         {
             Test testCase = TestBuilder.MakeTestCase(FixtureType, "SeparateDescriptionMethod");
-            Assert.AreEqual("Separate Description", testCase.Description);
+            Assert.AreEqual("Separate Description", testCase.Properties.Get(PropertyNames.Description));
         }
 
         [Test]
         public void DescriptionOnTestCase()
         {
             TestSuite parameterizedMethodSuite = TestBuilder.MakeParameterizedMethodSuite(FixtureType, "TestCaseWithDescription");
-            Assert.AreEqual("method description", parameterizedMethodSuite.Description);
+            Assert.AreEqual("method description", parameterizedMethodSuite.Properties.Get(PropertyNames.Description));
             Test testCase = (Test)parameterizedMethodSuite.Tests[0];
-            Assert.AreEqual("case description", testCase.Description);
+            Assert.AreEqual("case description", testCase.Properties.Get(PropertyNames.Description));
         }
     }
 }
