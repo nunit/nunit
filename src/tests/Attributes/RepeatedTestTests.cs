@@ -48,7 +48,7 @@ namespace NUnit.Framework.Attributes
 			failOnThirdMethod = testType.GetMethod("RepeatFailOnThird");
 		}
 
-		private TestResult RunTestOnFixture( object fixture )
+		private ITestResult RunTestOnFixture( object fixture )
 		{
 			TestSuite suite = TestBuilder.MakeFixture( fixture );
 			Assert.AreEqual( 1, suite.Tests.Count, "Test case count" );
@@ -60,7 +60,7 @@ namespace NUnit.Framework.Attributes
 		{
 			Assert.IsNotNull (successMethod);
 			RepeatSuccessFixture fixture = new RepeatSuccessFixture();
-			TestResult result = RunTestOnFixture( fixture );
+			ITestResult result = RunTestOnFixture( fixture );
 
             Assert.IsTrue(result.ResultState == ResultState.Success);
 			Assert.AreEqual(1, fixture.FixtureSetupCount);
@@ -75,7 +75,7 @@ namespace NUnit.Framework.Attributes
 		{
 			Assert.IsNotNull (failOnFirstMethod);
 			RepeatFailOnFirstFixture fixture = new RepeatFailOnFirstFixture();
-			TestResult result = RunTestOnFixture( fixture );
+			ITestResult result = RunTestOnFixture( fixture );
 
             Assert.IsFalse(result.ResultState == ResultState.Success);
 			Assert.AreEqual(1, fixture.SetupCount);
@@ -88,7 +88,7 @@ namespace NUnit.Framework.Attributes
 		{
 			Assert.IsNotNull (failOnThirdMethod);
 			RepeatFailOnThirdFixture fixture = new RepeatFailOnThirdFixture();
-			TestResult result = RunTestOnFixture( fixture );
+			ITestResult result = RunTestOnFixture( fixture );
 
             Assert.IsFalse(result.ResultState == ResultState.Success);
 			Assert.AreEqual(3, fixture.SetupCount);

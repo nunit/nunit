@@ -167,6 +167,16 @@ namespace NUnit.Framework.Internal
         public abstract bool HasChildren { get; }
 
         /// <summary>
+        /// Gets the parent as a Test object.
+        /// Used by the core to set the parent.
+        /// </summary>
+        public ITest Parent
+        {
+            get { return parent; }
+            set { parent = value; }
+        }
+
+        /// <summary>
         /// Gets this test's child tests
         /// </summary>
         /// <value>A list of child tests</value>
@@ -179,16 +189,6 @@ namespace NUnit.Framework.Internal
         #endregion
 
         #region Other Public Properties
-
-        /// <summary>
-		/// Gets the parent as a Test object.
-		/// Used by the core to set the parent.
-		/// </summary>
-		public ITest Parent
-		{
-			get { return parent; }
-			set { parent = value; }
-		}
 
 		/// <summary>
 		/// Gets the Type of the fixture used in running this test

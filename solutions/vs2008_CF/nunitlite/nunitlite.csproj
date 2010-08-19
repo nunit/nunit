@@ -317,29 +317,11 @@
     <Compile Include="..\..\..\src\framework\Internal\Reflect.cs">
       <Link>Internal\Reflect.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Results\ParameterizedFixtureResult.cs">
-      <Link>Internal\Results\ParameterizedFixtureResult.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Results\ParameterizedMethodResult.cs">
-      <Link>Internal\Results\ParameterizedMethodResult.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Results\TestAssemblyResult.cs">
-      <Link>Internal\Results\TestAssemblyResult.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Results\TestCaseResult.cs">
-      <Link>Internal\Results\TestCaseResult.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Results\TestFixtureResult.cs">
-      <Link>Internal\Results\TestFixtureResult.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Results\TestResult.cs">
-      <Link>Internal\Results\TestResult.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Results\TestSuiteResult.cs">
-      <Link>Internal\Results\TestSuiteResult.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\src\framework\Internal\TestListener.cs">
       <Link>Internal\TestListener.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\TestResult.cs">
+      <Link>Internal\TestResult.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Internal\Tests\ParameterizedFixtureSuite.cs">
       <Link>Internal\Tests\ParameterizedFixtureSuite.cs</Link>

@@ -72,7 +72,6 @@ namespace NUnit.Framework.Api
             get;
         }
 
-#if !NETCF_1_0
         /// <summary>
         /// Gets any stacktrace associated with an
         /// error or failure. Not available in
@@ -82,13 +81,49 @@ namespace NUnit.Framework.Api
         {
             get;
         }
-#endif
-        
+
         /// <summary>
-        /// Gets or sets the count of asserts executed
-        /// when running the test.
+        /// Gets the number of asserts executed
+        /// when running the test and all its children.
         /// </summary>
         int AssertCount
+        {
+            get;
+        }
+
+
+        /// <summary>
+        /// Gets the number of test cases that failed
+        /// when running the test and all its children.
+        /// </summary>
+        int FailCount
+        {
+            get;
+        }
+
+        /// <summary>
+        /// Gets the number of test cases that passed
+        /// when running the test and all its children.
+        /// </summary>
+        int PassCount
+        {
+            get;
+        }
+
+        /// <summary>
+        /// Gets the number of test cases that were skipped
+        /// when running the test and all its children.
+        /// </summary>
+        int SkipCount
+        {
+            get;
+        }
+
+        /// <summary>
+        /// Gets the number of test cases that were inconclusive
+        /// when running the test and all its children.
+        /// </summary>
+        int InconclusiveCount
         {
             get;
         }

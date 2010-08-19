@@ -40,7 +40,7 @@ namespace NUnit.TestUtilities
         {
             TestSuite suite = TestBuilder.MakeFixture(type);
             Assert.AreEqual(RunState.Runnable, suite.RunState);
-            TestResult result = suite.Run(TestListener.NULL);
+            ITestResult result = suite.Run(TestListener.NULL);
             Assert.AreEqual(ResultState.Success, result.ResultState);
         }
 
@@ -54,9 +54,8 @@ namespace NUnit.TestUtilities
             Test test = TestBuilder.MakeTestCase(type, name);
             Assert.That(test.RunState, Is.EqualTo(RunState.Runnable));
             ITestResult result = test.Run(TestListener.NULL);
-            TestSuiteResult suiteResult = result as TestSuiteResult;
-            if (suiteResult != null)
-                result = (ITestResult)suiteResult.Children[0];
+            if (result.HasChildren) // In case it's a parameterized method
+                result = (ITestResult)result.Children[0];
             Assert.That(result.ResultState, Is.EqualTo(resultState));
         }
         #endregion
@@ -65,7 +64,7 @@ namespace NUnit.TestUtilities
         public static void IsNotRunnable(Test test)
         {
             Assert.AreEqual(RunState.NotRunnable, test.RunState);
-            TestResult result = test.Run(TestListener.NULL);
+            ITestResult result = test.Run(TestListener.NULL);
             Assert.AreEqual(ResultState.NotRunnable, result.ResultState);
         }
 

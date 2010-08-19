@@ -151,7 +151,7 @@ namespace NUnit.Framework.Internal
 		[Test]
 		public void SettingInvalidCultureGivesError()
 		{
-			TestResult result = TestBuilder.RunTestCase( typeof( InvalidCultureFixture ), "InvalidCultureSet" );
+			ITestResult result = TestBuilder.RunTestCase( typeof( InvalidCultureFixture ), "InvalidCultureSet" );
 			Assert.AreEqual( ResultState.Error, result.ResultState );
 		    string expectedException = RuntimeFramework.CurrentFramework.Version.Major == 4
 		      ? "System.Globalization.CultureNotFoundException"

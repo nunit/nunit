@@ -213,7 +213,7 @@ namespace NUnit.Framework.Internal
         /// <returns>The new TestCaseResult.</returns>
         public override TestResult MakeTestResult()
         {
-            return new TestCaseResult(this);
+            return new TestResult(this);
         }
 
         /// <summary>
@@ -242,7 +242,7 @@ namespace NUnit.Framework.Internal
             listener.TestStarted(this);
             
             long startTime = DateTime.Now.Ticks;
-
+            /**/
             switch (this.RunState)
             {
                 case RunState.Runnable:
@@ -270,7 +270,7 @@ namespace NUnit.Framework.Internal
                     testResult.SetResult(ResultState.Ignored, (string)Properties.Get(PropertyNames.IgnoreReason));
                     break;
             }
-
+            /**/
             long stopTime = DateTime.Now.Ticks;
             double time = ((double)(stopTime - startTime)) / (double)TimeSpan.TicksPerSecond;
             testResult.Time = time;

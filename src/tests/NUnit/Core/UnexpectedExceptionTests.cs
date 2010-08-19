@@ -51,7 +51,7 @@ namespace NUnit.Framework.Tests
         [Test]
         public void BadStackTraceIsHandled()
         {
-            TestResult result = TestBuilder.RunTestCase(
+            ITestResult result = TestBuilder.RunTestCase(
                 typeof(UnexpectedExceptionFixture), 
                 "ThrowsWithBadStackTrace");
 

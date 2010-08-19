@@ -33,7 +33,7 @@ namespace NUnit.Framework.Internal
     /// <summary>
     /// The TestResult class represents the result of a test.
     /// </summary>
-    public abstract class TestResult : ITestResult
+    public class TestResult : ITestResult
 	{
 		#region Fields
 		/// <summary>
@@ -51,12 +51,10 @@ namespace NUnit.Framework.Internal
 		/// </summary>
 		protected readonly ITest test;
 
-#if !NETCF_1_0
 		/// <summary>
 		/// The stacktrace at the point of failure
 		/// </summary>
 		private string stackTrace;
-#endif
 
 		/// <summary>
 		/// Message giving the reason for failure, error or skipping the test
@@ -68,6 +66,11 @@ namespace NUnit.Framework.Internal
 		/// </summary>
 		private int assertCount = 0;
 
+        private int passCount = 0;
+        private int failCount = 0;
+        private int skipCount = 0;
+        private int inconclusiveCount = 0;
+        
         /// <summary>
         /// List of child results
         /// </summary>
@@ -89,11 +92,14 @@ namespace NUnit.Framework.Internal
 		{
 			this.test = test;
             this.resultState = ResultState.Inconclusive;
+
+            if (IsTestCase(this.test))
+                this.inconclusiveCount = 1;
 		}
 
 		#endregion
 
-        #region Properties
+        #region ITestResult Members
 
         /// <summary>
         /// Gets the ResultState of the test result, which 
@@ -138,7 +144,6 @@ namespace NUnit.Framework.Internal
             get { return message; }
         }
 
-#if !NETCF_1_0
         /// <summary>
         /// Gets any stacktrace associated with an
         /// error or failure. Not available in
@@ -148,7 +153,6 @@ namespace NUnit.Framework.Internal
         {
             get { return stackTrace; }
         }
-#endif
 
         /// <summary>
         /// Gets or sets the count of asserts executed
@@ -158,6 +162,42 @@ namespace NUnit.Framework.Internal
         {
             get { return assertCount; }
             set { assertCount = value; }
+        }
+
+        /// <summary>
+        /// Gets the number of test cases that failed
+        /// when running the test and all its children.
+        /// </summary>
+        public int FailCount
+        {
+            get { return this.failCount; }
+        }
+
+        /// <summary>
+        /// Gets the number of test cases that passed
+        /// when running the test and all its children.
+        /// </summary>
+        public int PassCount
+        {
+            get { return this.passCount; }
+        }
+
+        /// <summary>
+        /// Gets the number of test cases that were skipped
+        /// when running the test and all its children.
+        /// </summary>
+        public int SkipCount
+        {
+            get { return this.skipCount; }
+        }
+
+        /// <summary>
+        /// Gets the number of test cases that were inconclusive
+        /// when running the test and all its children.
+        /// </summary>
+        public int InconclusiveCount
+        {
+            get { return this.inconclusiveCount; }
         }
 
         /// <summary>
@@ -199,7 +239,120 @@ namespace NUnit.Framework.Internal
 
         #endregion
 
-        #region Public Methods
+        #region IXmlNodeBuilder Members
+
+        /// <summary>
+        /// Returns the Xml representation of the result.
+        /// </summary>
+        /// <param name="recursive">If true, descendant results are included</param>
+        /// <returns>An XmlNode representing the result</returns>
+        public XmlNode ToXml(bool recursive)
+        {
+            XmlNode topNode = XmlHelper.CreateTopLevelElement("dummy");
+
+            AddToXml(topNode, recursive);
+
+            return topNode.FirstChild;
+        }
+
+        /// <summary>
+        /// Adds the XML representation of the result as a child of the
+        /// supplied parent node..
+        /// </summary>
+        /// <param name="parentNode">The parent node.</param>
+        /// <param name="recursive">If true, descendant results are included</param>
+        /// <returns></returns>
+        public virtual XmlNode AddToXml(XmlNode parentNode, bool recursive)
+        {
+            // A result node looks like a test node with extra info added
+            XmlNode thisNode = this.test.AddToXml(parentNode, false);
+
+            XmlHelper.AddAttribute(thisNode, "result", ResultState.Status.ToString());
+            if (ResultState.Label != ResultState.Status.ToString())
+                XmlHelper.AddAttribute(thisNode, "label", ResultState.Label);
+
+            XmlHelper.AddAttribute(thisNode, "time", this.Time.ToString("0.000", System.Globalization.CultureInfo.InvariantCulture));
+
+            if (this.test is TestSuite)
+            {
+                XmlHelper.AddAttribute(thisNode, "total", (passCount + failCount + skipCount + inconclusiveCount).ToString());
+                XmlHelper.AddAttribute(thisNode, "passed", passCount.ToString());
+                XmlHelper.AddAttribute(thisNode, "failed", failCount.ToString());
+                XmlHelper.AddAttribute(thisNode, "inconclusive", inconclusiveCount.ToString());
+                XmlHelper.AddAttribute(thisNode, "skipped", skipCount.ToString());
+            }
+
+            XmlHelper.AddAttribute(thisNode, "asserts", this.AssertCount.ToString());
+
+            switch (ResultState.Status)
+            {
+                case TestStatus.Failed:
+                    AddFailureElement(thisNode);
+                    break;
+                case TestStatus.Skipped:
+                    AddReasonElement(thisNode);
+                    break;
+                case TestStatus.Passed:
+                    break;
+                case TestStatus.Inconclusive:
+                    break;
+            }
+
+            if (recursive && HasChildren)
+                foreach (TestResult child in Children)
+                    child.AddToXml(thisNode, recursive);
+
+            return thisNode;
+        }
+
+        #endregion
+
+        #region Other Public Methods
+
+        /// <summary>
+        /// Add a child result
+        /// </summary>
+        /// <param name="result">The child result to be added</param>
+        public void AddResult(TestResult result)
+        {
+            this.Children.Add(result);
+
+            this.assertCount += result.assertCount;
+            this.passCount += result.passCount;
+            this.failCount += result.failCount;
+            this.skipCount += result.skipCount;
+            this.inconclusiveCount += result.inconclusiveCount;
+
+            // NOTE: We don't call SetResult from this
+            // method to avoid double-counting of results.
+            switch (result.ResultState.Status)
+            {
+                case TestStatus.Passed:
+
+                    if (this.resultState.Status == TestStatus.Inconclusive)
+                        this.resultState = ResultState.Success;
+
+                    break;
+
+                case TestStatus.Failed:
+
+                    if (this.resultState.Status != TestStatus.Failed)
+                    {
+                        this.resultState = ResultState.Failure;
+                        this.message = "Child test failed";
+                    }
+
+                    break;
+
+                case TestStatus.Skipped:
+
+                    break;
+
+                case TestStatus.Inconclusive:
+
+                    break;
+            }
+        }
 
         /// <summary>
         /// Set the result of the test
@@ -207,8 +360,7 @@ namespace NUnit.Framework.Internal
         /// <param name="resultState">The ResultState to use in the result</param>
         public void SetResult(ResultState resultState)
         {
-            this.resultState = resultState;
-            this.message = null;
+            SetResult(resultState, null, null);
         }
 
         /// <summary>
@@ -218,11 +370,9 @@ namespace NUnit.Framework.Internal
         /// <param name="message">A message associated with the result state</param>
         public void SetResult(ResultState resultState, string message)
         {
-            this.resultState = resultState;
-            this.message = message;
+            SetResult(resultState, message, null);
         }
 
-#if !NETCF_1_0
         /// <summary>
         /// Set the result of the test
         /// </summary>
@@ -234,8 +384,32 @@ namespace NUnit.Framework.Internal
             this.resultState = resultState;
             this.message = message;
             this.stackTrace = stackTrace;
+
+            if (IsTestCase(this.test))
+            {
+                this.passCount = 0;
+                this.failCount = 0;
+                this.skipCount = 0;
+                this.inconclusiveCount = 0;
+            }
+
+            switch (this.ResultState.Status)
+            {
+                case TestStatus.Passed:                  
+                    this.passCount++;
+                    break;
+                case TestStatus.Failed:
+                    this.failCount++;
+                    break;
+                case TestStatus.Skipped:
+                    this.skipCount++;
+                    break;
+                default:
+                case TestStatus.Inconclusive:
+                    this.inconclusiveCount++;
+                    break;
+            }
         }
-#endif
 
         /// <summary>
         /// Set the test result based on the type of exception thrown
@@ -275,61 +449,12 @@ namespace NUnit.Framework.Internal
 #endif
         }
 
-        /// <summary>
-        /// Returns the Xml representation of the result.
-        /// </summary>
-        /// <param name="recursive">If true, descendant results are included</param>
-        /// <returns>An XmlNode representing the result</returns>
-        public XmlNode ToXml(bool recursive)
-        {
-            XmlNode topNode = XmlHelper.CreateTopLevelElement("dummy");
-
-            AddToXml(topNode, recursive);
-
-            return topNode.FirstChild;
-        }
-
-        /// <summary>
-        /// Adds the XML representation of the result as a child of the
-        /// supplied parent node..
-        /// </summary>
-        /// <param name="parentNode">The parent node.</param>
-        /// <param name="recursive">If true, descendant results are included</param>
-        /// <returns></returns>
-        public virtual XmlNode AddToXml(XmlNode parentNode, bool recursive)
-        {
-            // A result node looks like a test node with extra info added
-            XmlNode thisNode = this.test.AddToXml(parentNode, false);
-
-            XmlHelper.AddAttribute(thisNode, "result", ResultState.Status.ToString());
-            if (ResultState.Label != ResultState.Status.ToString())
-                XmlHelper.AddAttribute(thisNode, "label", ResultState.Label);
-
-            XmlHelper.AddAttribute(thisNode, "time", this.Time.ToString("0.000", System.Globalization.CultureInfo.InvariantCulture));
-
-            switch (ResultState.Status)
-            {
-                case TestStatus.Failed:
-                    AddFailureElement(thisNode);
-                    break;
-                case TestStatus.Skipped:
-                    AddReasonElement(thisNode);
-                    break;
-                case TestStatus.Passed:
-                    break;
-                case TestStatus.Inconclusive:
-                    break;
-            }
-
-            return thisNode;
-        }
-
         #endregion
 
-        #region Protected Methods
+        #region Helper Methods
 
         /// <summary>
-        /// Adds a reason element to a note and returns it.
+        /// Adds a reason element to a node and returns it.
         /// </summary>
         /// <param name="targetNode">The target node.</param>
         /// <returns>The new reason element.</returns>
@@ -362,6 +487,11 @@ namespace NUnit.Framework.Internal
 #endif 
 
             return failureNode;
+        }
+
+        private static bool IsTestCase(ITest test)
+        {
+            return !(test is TestSuite);
         }
 
         #endregion

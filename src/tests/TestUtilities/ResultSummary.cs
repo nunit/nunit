@@ -48,12 +48,12 @@ namespace NUnit.TestUtilities
 
         public ResultSummary() { }
 
-        public ResultSummary(TestResult result)
+        public ResultSummary(ITestResult result)
         {
             Summarize(result);
         }
 
-        public void Summarize(TestResult result)
+        public void Summarize(ITestResult result)
         {
             if (this.name == null)
             {
@@ -61,12 +61,10 @@ namespace NUnit.TestUtilities
                 this.time = result.Time;
             }
 
-            if (result is TestSuiteResult)
+            if (result.HasChildren)
             {
-                TestSuiteResult suiteResult = result as TestSuiteResult;
-                if (suiteResult.HasChildren)
-                    foreach (TestResult childResult in suiteResult.Children)
-                        Summarize(childResult);
+                foreach (TestResult childResult in result.Children)
+                    Summarize(childResult);
             }
             else
             {
