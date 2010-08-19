@@ -239,7 +239,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         protected override void RunTest()
         {
-            suite.Run((TestSuiteResult)testResult, listener);
+            suite.Run(testResult, listener);
         }
     }
 }

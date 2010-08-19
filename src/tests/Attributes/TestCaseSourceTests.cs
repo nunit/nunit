@@ -179,7 +179,7 @@ namespace NUnit.Framework.Tests
         {
             Test test = (Test)TestBuilder.MakeParameterizedMethodSuite(
                 typeof(TestCaseSourceAttributeFixture), "MethodThrowsExpectedException").Tests[0];
-            TestResult result = test.Run(TestListener.NULL);
+            ITestResult result = test.Run(TestListener.NULL);
             Assert.AreEqual(ResultState.Success, result.ResultState);
         }
 
@@ -188,7 +188,7 @@ namespace NUnit.Framework.Tests
         {
             Test test = (Test)TestBuilder.MakeParameterizedMethodSuite(
                 typeof(TestCaseSourceAttributeFixture), "MethodThrowsWrongException").Tests[0];
-            TestResult result = test.Run(TestListener.NULL);
+            ITestResult result = test.Run(TestListener.NULL);
             Assert.AreEqual(ResultState.Failure, result.ResultState);
             StringAssert.StartsWith("An unexpected exception type was thrown", result.Message);
         }
@@ -198,7 +198,7 @@ namespace NUnit.Framework.Tests
         {
             Test test = (Test)TestBuilder.MakeParameterizedMethodSuite(
                 typeof(TestCaseSourceAttributeFixture), "MethodThrowsNoException").Tests[0];
-            TestResult result = test.Run(TestListener.NULL);
+            ITestResult result = test.Run(TestListener.NULL);
             Assert.AreEqual(ResultState.Failure, result.ResultState);
             Assert.AreEqual("System.ArgumentNullException was expected", result.Message);
         }
@@ -208,7 +208,7 @@ namespace NUnit.Framework.Tests
         {
             Test test = (Test)TestBuilder.MakeParameterizedMethodSuite(
                 typeof(TestCaseSourceAttributeFixture), "MethodCallsIgnore").Tests[0];
-            TestResult result = test.Run(TestListener.NULL);
+            ITestResult result = test.Run(TestListener.NULL);
             Assert.AreEqual(ResultState.Ignored, result.ResultState);
             Assert.AreEqual("Ignore this", result.Message);
         }
@@ -218,7 +218,7 @@ namespace NUnit.Framework.Tests
         {
             Test test = TestBuilder.MakeTestCase(
                 typeof(TestCaseSourceAttributeFixture), "MethodWithIgnoredTestCases");
-            TestResult result = test.Run(TestListener.NULL);
+            ITestResult result = test.Run(TestListener.NULL);
 
             ResultSummary summary = new ResultSummary(result);
             Assert.AreEqual( 3, summary.ResultCount );
@@ -232,7 +232,7 @@ namespace NUnit.Framework.Tests
             Test test = (Test)TestBuilder.MakeParameterizedMethodSuite(
                 typeof(TestCaseSourceAttributeFixture), "MethodWithSourceThrowingException").Tests[0];
             Assert.AreEqual(RunState.NotRunnable, test.RunState);
-            TestResult result = test.Run(TestListener.NULL);
+            ITestResult result = test.Run(TestListener.NULL);
             Assert.AreEqual(ResultState.NotRunnable, result.ResultState);
             Assert.AreEqual("System.Exception : my message", result.Message);
         }

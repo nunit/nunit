@@ -53,7 +53,7 @@ namespace NUnit.TestUtilities
             return null;
         }
 
-        public static ITestResult Find(string name, TestSuiteResult result, bool recursive)
+        public static ITestResult Find(string name, TestResult result, bool recursive)
         {
             if (result.HasChildren)
             {
@@ -62,9 +62,9 @@ namespace NUnit.TestUtilities
                     if (childResult.Name == name)
                         return childResult;
 
-                    if (recursive && childResult is TestSuiteResult)
+                    if (recursive && childResult.HasChildren)
                     {
-                        ITestResult r = Find(name, (TestSuiteResult)childResult, true);
+                        ITestResult r = Find(name, childResult, true);
                         if (r != null)
                             return r;
                     }

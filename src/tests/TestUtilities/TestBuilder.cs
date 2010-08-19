@@ -77,17 +77,17 @@ namespace NUnit.TestUtilities
             return test;
         }
 
-        public static TestSuiteResult RunTestFixture(Type type)
+        public static TestResult RunTestFixture(Type type)
         {
-            return (TestSuiteResult)MakeFixture(type).Run(TestListener.NULL);
+            return (TestResult)MakeFixture(type).Run(TestListener.NULL);
         }
 
-        public static TestSuiteResult RunTestFixture(object fixture)
+        public static TestResult RunTestFixture(object fixture)
         {
-            return (TestSuiteResult)MakeFixture(fixture).Run(TestListener.NULL);
+            return (TestResult)MakeFixture(fixture).Run(TestListener.NULL);
         }
 
-        public static TestResult RunTestCase(Type type, string methodName)
+        public static ITestResult RunTestCase(Type type, string methodName)
         {
             return MakeTestCase(type, methodName).Run(TestListener.NULL);
         }

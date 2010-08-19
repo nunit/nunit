@@ -70,10 +70,13 @@ namespace NUnit.Framework.Internal
         /// and the listener interface is notified as it progresses.
         /// </summary>
         /// <param name="listener">Interface to receive EventListener notifications.</param>
+        /// <param name="runOptions">A dictionary containing options for this run</param>
         /// <returns></returns>
         public ITestResult Run(ITestListener listener, IDictionary runOptions)
         {
             TestExecutionContext.Save();
+
+            //ITestCommand rootCommand = TestCommandFactory.MakeCommand(this.loadedTest);
 
             try
             {

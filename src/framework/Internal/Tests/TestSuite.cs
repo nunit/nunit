@@ -323,7 +323,7 @@ namespace NUnit.Framework.Internal
         /// <returns>The new TestSuiteResult.</returns>
         public override TestResult MakeTestResult()
         {
-            return new TestSuiteResult(this);
+            return new TestResult(this);
         }
         /// <summary>
         /// Runs the suite under a particular filter, sending
@@ -334,11 +334,11 @@ namespace NUnit.Framework.Internal
 		public override TestResult Run(ITestListener listener)
 		{
             // Derived classes must return a result derived from TestSuiteResult
-            TestSuiteResult suiteResult = (TestSuiteResult)this.MakeTestResult();
+            TestResult suiteResult = this.MakeTestResult();
 
 			listener.TestStarted( this );
 			long startTime = DateTime.Now.Ticks;
-
+            /**/
 			switch (this.RunState)
 			{
 				case RunState.Runnable:
@@ -363,16 +363,19 @@ namespace NUnit.Framework.Internal
 
 				default:
                 case RunState.Skipped:
-			        SkipAllTests(suiteResult, listener);
+                    suiteResult.SetResult(ResultState.Skipped, (string)this.Properties.Get(PropertyNames.IgnoreReason));
+			        //SkipAllTests(suiteResult, listener);
                     break;
                 case RunState.NotRunnable:
-                    MarkAllTestsInvalid( suiteResult, listener);
+                    suiteResult.SetResult(ResultState.NotRunnable, (string)this.Properties.Get(PropertyNames.IgnoreReason));
+                    //MarkAllTestsInvalid( suiteResult, listener);
                     break;
                 case RunState.Ignored:
-                    IgnoreAllTests(suiteResult, listener);
+                    suiteResult.SetResult(ResultState.Ignored, (string)this.Properties.Get(PropertyNames.IgnoreReason));
+                    //IgnoreAllTests(suiteResult, listener);
                     break;
 			}
-
+            /**/
 			long stopTime = DateTime.Now.Ticks;
 			double time = ((double)(stopTime - startTime)) / (double)TimeSpan.TicksPerSecond;
 			suiteResult.Time = time;
@@ -387,7 +390,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="suiteResult">The suite result.</param>
         /// <param name="listener">The listener.</param>
-        public void Run(TestSuiteResult suiteResult, ITestListener listener)
+        public void Run(TestResult suiteResult, ITestListener listener)
         {
 #if !NUNITLITE
             TestExecutionContext.Save();
@@ -414,12 +417,12 @@ namespace NUnit.Framework.Internal
                 {
                         // TODO: Handle Cancellation Better
                     case TestStatus.Failed:
-                        string msg = string.Format("TestFixtureSetUp failed in {0}", this.FixtureType.Name);
-#if !NUNITLITE
-                    if (this is SetUpFixture)
-                        msg = string.Format("Parent SetUp failed in {0}", this.FixtureType.Name);
-#endif
-                        MarkTestsFailed(this.tests, msg, suiteResult, listener);
+//                        string msg = string.Format("TestFixtureSetUp failed in {0}", this.FixtureType.Name);
+//#if !NUNITLITE
+//                    if (this is SetUpFixture)
+//                        msg = string.Format("Parent SetUp failed in {0}", this.FixtureType.Name);
+//#endif
+//                        MarkTestsFailed(this.tests, msg, suiteResult, listener);
                         break;
                     default:
                         try
@@ -568,7 +571,7 @@ namespace NUnit.Framework.Internal
         }
 
         private void RunAllTests(
-			TestSuiteResult suiteResult, ITestListener listener )
+			TestResult suiteResult, ITestListener listener )
 		{
 #if !NUNITLITE
             if (Properties.ContainsKey(PropertyNames.Timeout))
@@ -605,85 +608,85 @@ namespace NUnit.Framework.Internal
             }
 		}
 
-        private void SkipAllTests(TestSuiteResult suiteResult, ITestListener listener)
-        {
-            suiteResult.SetResult(ResultState.Skipped, (string)this.Properties.Get(PropertyNames.IgnoreReason));
-            MarkTestsNotRun(this.tests, ResultState.Skipped, (string)this.Properties.Get(PropertyNames.IgnoreReason), suiteResult, listener);
-        }
+//        private void SkipAllTests(TestSuiteResult suiteResult, ITestListener listener)
+//        {
+//            suiteResult.SetResult(ResultState.Skipped, (string)this.Properties.Get(PropertyNames.IgnoreReason));
+//            MarkTestsNotRun(this.tests, ResultState.Skipped, (string)this.Properties.Get(PropertyNames.IgnoreReason), suiteResult, listener);
+//        }
 
-        private void IgnoreAllTests(TestSuiteResult suiteResult, ITestListener listener)
-        {
-            suiteResult.SetResult(ResultState.Ignored, (string)this.Properties.Get(PropertyNames.IgnoreReason));
-            MarkTestsNotRun(this.tests, ResultState.Ignored, (string)this.Properties.Get(PropertyNames.IgnoreReason), suiteResult, listener);
-        }
+//        private void IgnoreAllTests(TestSuiteResult suiteResult, ITestListener listener)
+//        {
+//            suiteResult.SetResult(ResultState.Ignored, (string)this.Properties.Get(PropertyNames.IgnoreReason));
+//            MarkTestsNotRun(this.tests, ResultState.Ignored, (string)this.Properties.Get(PropertyNames.IgnoreReason), suiteResult, listener);
+//        }
 
-        private void MarkAllTestsInvalid(TestSuiteResult suiteResult, ITestListener listener)
-        {
-            suiteResult.SetResult(ResultState.NotRunnable, (string)Properties.Get(PropertyNames.IgnoreReason));
-            MarkTestsNotRun(this.tests, ResultState.NotRunnable, (string)Properties.Get(PropertyNames.IgnoreReason), suiteResult, listener);
-        }
+//        private void MarkAllTestsInvalid(TestSuiteResult suiteResult, ITestListener listener)
+//        {
+//            suiteResult.SetResult(ResultState.NotRunnable, (string)Properties.Get(PropertyNames.IgnoreReason));
+//            MarkTestsNotRun(this.tests, ResultState.NotRunnable, (string)Properties.Get(PropertyNames.IgnoreReason), suiteResult, listener);
+//        }
 
-#if CLR_2_0 || CLR_4_0
-        private void MarkTestsNotRun(
-            IList<ITest> tests, ResultState resultState, string ignoreReason, TestSuiteResult suiteResult, ITestListener listener)
-#else
-        private void MarkTestsNotRun(
-            IList tests, ResultState resultState, string ignoreReason, TestSuiteResult suiteResult, ITestListener listener)
-#endif
-        {
-            //foreach (Test test in ArrayList.Synchronized(tests))
-            foreach (Test test in tests)
-            {
-                if (test.RunState != RunState.Explicit)
-                    MarkTestNotRun(test, resultState, ignoreReason, suiteResult, listener);
-            }
-        }
+//#if CLR_2_0 || CLR_4_0
+//        private void MarkTestsNotRun(
+//            IList<ITest> tests, ResultState resultState, string ignoreReason, TestSuiteResult suiteResult, ITestListener listener)
+//#else
+//        private void MarkTestsNotRun(
+//            IList tests, ResultState resultState, string ignoreReason, TestSuiteResult suiteResult, ITestListener listener)
+//#endif
+//        {
+//            //foreach (Test test in ArrayList.Synchronized(tests))
+//            foreach (Test test in tests)
+//            {
+//                if (test.RunState != RunState.Explicit)
+//                    MarkTestNotRun(test, resultState, ignoreReason, suiteResult, listener);
+//            }
+//        }
 
-        private void MarkTestNotRun(
-            Test test, ResultState resultState, string ignoreReason, TestSuiteResult suiteResult, ITestListener listener)
-        {
-            listener.TestStarted(test);
+//        private void MarkTestNotRun(
+//            Test test, ResultState resultState, string ignoreReason, TestSuiteResult suiteResult, ITestListener listener)
+//        {
+//            listener.TestStarted(test);
 
-            TestResult result = test.MakeTestResult(); 
+//            TestResult result = test.MakeTestResult(); 
             
-            TestSuite suite = test as TestSuite;
-            if (suite != null)
-                MarkTestsNotRun(suite.tests, resultState, ignoreReason, suiteResult, listener);
+//            TestSuite suite = test as TestSuite;
+//            if (suite != null)
+//                MarkTestsNotRun(suite.tests, resultState, ignoreReason, suiteResult, listener);
 
-            result.SetResult(resultState, ignoreReason);
-            suiteResult.AddResult(result);
-            listener.TestFinished(result);
-        }
+//            result.SetResult(resultState, ignoreReason);
+//            suiteResult.AddResult(result);
+//            listener.TestFinished(result);
+//        }
 
-#if CLR_2_0 || CLR_4_0
-        private void MarkTestsFailed(
-            IList<ITest> tests, string msg, TestSuiteResult suiteResult, ITestListener listener)
-#else
-        private void MarkTestsFailed(
-            IList tests, string msg, TestSuiteResult suiteResult, ITestListener listener)
-#endif
-        {
-            //foreach (Test test in ArrayList.Synchronized(tests))
-            foreach (Test test in tests)
-                if (test.RunState != RunState.Explicit)
-                    MarkTestFailed(test, msg, suiteResult, listener);
-        }
+//#if CLR_2_0 || CLR_4_0
+//        private void MarkTestsFailed(
+//            IList<ITest> tests, string msg, TestSuiteResult suiteResult, ITestListener listener)
+//#else
+//        private void MarkTestsFailed(
+//            IList tests, string msg, TestSuiteResult suiteResult, ITestListener listener)
+//#endif
+//        {
+//            //foreach (Test test in ArrayList.Synchronized(tests))
+//            foreach (Test test in tests)
+//                if (test.RunState != RunState.Explicit)
+//                    MarkTestFailed(test, msg, suiteResult, listener);
+//        }
 
-        private void MarkTestFailed(
-            Test test, string msg, TestSuiteResult suiteResult, ITestListener listener)
-        {
-            listener.TestStarted(test);
+//        private void MarkTestFailed(
+//            Test test, string msg, TestSuiteResult suiteResult, ITestListener listener)
+//        {
+//            listener.TestStarted(test);
 
-            TestResult result = test.MakeTestResult();
+//            TestResult result = test.MakeTestResult();
 
-            TestSuite suite = test as TestSuite;
-            if (suite != null)
-                MarkTestsFailed(suite.tests, msg, suiteResult, listener);
+//            TestSuite suite = test as TestSuite;
+//            if (suite != null)
+//                MarkTestsFailed(suite.tests, msg, suiteResult, listener);
 
-            result.SetResult(ResultState.Failure, msg);
-            suiteResult.AddResult(result);
-            listener.TestFinished(result);
-        }
+//            result.SetResult(ResultState.Failure, msg);
+//            suiteResult.AddResult(result);
+//            listener.TestFinished(result);
+//        }
         #endregion
     }
 }
