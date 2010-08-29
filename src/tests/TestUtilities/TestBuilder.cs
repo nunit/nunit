@@ -59,7 +59,9 @@ namespace NUnit.TestUtilities
 
         public static TestSuite MakeParameterizedMethodSuite(Type type, string methodName)
         {
-            return (TestSuite)MakeTestCase(type, methodName);
+            TestSuite suite = (TestSuite)MakeTestCase(type, methodName);
+            suite.Fixture = Activator.CreateInstance(type);
+            return suite;
         }
 
         public static Test MakeTestCase(Type type, string methodName)
@@ -89,7 +91,15 @@ namespace NUnit.TestUtilities
 
         public static ITestResult RunTestCase(Type type, string methodName)
         {
-            return MakeTestCase(type, methodName).Run(TestListener.NULL);
+            Test test = MakeTestCase(type, methodName);
+            if (!IsStaticClass(type))
+                test.Fixture = Activator.CreateInstance(type);
+            return test.Run(TestListener.NULL);
+        }
+
+        private static bool IsStaticClass(Type type)
+        {
+            return type.IsAbstract && type.IsSealed;
         }
 
         private TestBuilder() { }

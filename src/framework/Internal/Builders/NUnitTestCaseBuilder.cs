@@ -279,14 +279,14 @@ namespace NUnit.Framework.Builders
             if (testMethod.Method.IsAbstract)
             {
                 testMethod.RunState = RunState.NotRunnable;
-                testMethod.Properties.Set(PropertyNames.IgnoreReason, "Method is abstract");
+                testMethod.SkipReason = "Method is abstract";
                 return false;
             }
 
             if (!testMethod.Method.IsPublic)
             {
                 testMethod.RunState = RunState.NotRunnable;
-                testMethod.Properties.Set(PropertyNames.IgnoreReason, "Method is not public");
+                testMethod.SkipReason = "Method is not public";
                 return false;
             }
 
@@ -302,7 +302,6 @@ namespace NUnit.Framework.Builders
                 testMethod.expectedResult = parms.Result;
                 testMethod.hasExpectedResult = parms.HasExpectedResult;
                 testMethod.RunState = parms.RunState;
-                //testMethod.IgnoreReason = parms.NotRunReason;
                 testMethod.BuilderException = parms.ProviderException;
 
                 arglist = parms.Arguments;
@@ -318,28 +317,28 @@ namespace NUnit.Framework.Builders
                 (parms == null || !parms.HasExpectedResult && parms.ExpectedExceptionName == null))
             {
                 testMethod.RunState = RunState.NotRunnable;
-                testMethod.Properties.Set(PropertyNames.IgnoreReason, "Method has non-void return value");
+                testMethod.SkipReason = "Method has non-void return value";
                 return false;
             }
 
             if (argsProvided > 0 && argsNeeded == 0)
             {
                 testMethod.RunState = RunState.NotRunnable;
-                testMethod.Properties.Set(PropertyNames.IgnoreReason, "Arguments provided for method not taking any");
+                testMethod.SkipReason = "Arguments provided for method not taking any";
                 return false;
             }
 
             if (argsProvided == 0 && argsNeeded > 0)
             {
                 testMethod.RunState = RunState.NotRunnable;
-                testMethod.Properties.Set(PropertyNames.IgnoreReason, "No arguments were provided");
+                testMethod.SkipReason = "No arguments were provided";
                 return false;
             }
 
             if (argsProvided != argsNeeded)
             {
                 testMethod.RunState = RunState.NotRunnable;
-                testMethod.Properties.Set(PropertyNames.IgnoreReason, "Wrong number of arguments provided");
+                testMethod.SkipReason = "Wrong number of arguments provided";
                 return false;
             }
 
@@ -351,7 +350,7 @@ namespace NUnit.Framework.Builders
                     if (o == null)
                     {
                         testMethod.RunState = RunState.NotRunnable;
-                        testMethod.Properties.Set(PropertyNames.IgnoreReason, "Unable to determine type arguments for fixture");
+                        testMethod.SkipReason = "Unable to determine type arguments for fixture";
                         return false;
                     }
 

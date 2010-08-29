@@ -40,6 +40,7 @@ namespace NUnit.Framework.Tests
 		public void CreateFixture()
 		{
 			fixture = TestBuilder.MakeFixture( typeof( TestMethodSignatureFixture ) );
+            fixture.Fixture = Activator.CreateInstance(typeof(TestMethodSignatureFixture));
 		}
 
         [Test]

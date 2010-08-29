@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2007 Charlie Poole
+// Copyright (c) 2010 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -385,29 +385,29 @@ namespace NUnit.Framework.Internal
             this.message = message;
             this.stackTrace = stackTrace;
 
-            if (IsTestCase(this.test))
+            if (!this.HasChildren)
             {
                 this.passCount = 0;
                 this.failCount = 0;
                 this.skipCount = 0;
                 this.inconclusiveCount = 0;
-            }
 
-            switch (this.ResultState.Status)
-            {
-                case TestStatus.Passed:                  
-                    this.passCount++;
-                    break;
-                case TestStatus.Failed:
-                    this.failCount++;
-                    break;
-                case TestStatus.Skipped:
-                    this.skipCount++;
-                    break;
-                default:
-                case TestStatus.Inconclusive:
-                    this.inconclusiveCount++;
-                    break;
+                switch (this.ResultState.Status)
+                {
+                    case TestStatus.Passed:
+                        this.passCount++;
+                        break;
+                    case TestStatus.Failed:
+                        this.failCount++;
+                        break;
+                    case TestStatus.Skipped:
+                        this.skipCount++;
+                        break;
+                    default:
+                    case TestStatus.Inconclusive:
+                        this.inconclusiveCount++;
+                        break;
+                }
             }
         }
 
@@ -493,7 +493,6 @@ namespace NUnit.Framework.Internal
         {
             return !(test is TestSuite);
         }
-
         #endregion
     }
 }

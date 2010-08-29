@@ -28,10 +28,10 @@ using System.IO;
 namespace NUnit.AdhocTestRunner
 {
     /// <summary>
-    /// AdhocTestRunner is an adoc runner used in testing the framework.
-    /// It is based partly on the NUnitLite embedded runner but is not 
-    /// is only available in the source code for use by developers and
-    /// is not distributed as part of NUnit.
+    /// This class is an adoc runner used in testing the framework
+    /// by running tests directly, without use of the normal infrastructure
+    /// used by standard NUnit runners. It is only available in the source 
+    /// code for use by developers and is not distributed as part of NUnit.
     /// </summary>
     public class Program
     {

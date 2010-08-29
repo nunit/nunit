@@ -178,7 +178,7 @@ namespace NUnit.Framework.Attributes
             [Test]
             public void RequiresThreadCanBeSetOnTestFixture()
             {
-                Assert.That(Environment.StackTrace, Contains.Substring("TestSuiteThread"));
+                Assert.That(Environment.StackTrace, Contains.Substring("RunTestProc"));
             }
         }
     }

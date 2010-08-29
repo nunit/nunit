@@ -46,7 +46,12 @@ namespace NUnit.Framework.Internal
         private string name;
         private string fullName;
 
-		/// <summary>
+        /// <summary>
+        /// Exception that was thrown while trying to build the test
+        /// </summary>
+        private Exception builderException;
+
+        /// <summary>
 		/// Indicates whether the test should be executed
 		/// </summary>
 		private RunState runState;
@@ -62,7 +67,42 @@ namespace NUnit.Framework.Internal
 		/// </summary>
 		private PropertyBag properties;
 
-		#endregion
+        /// <summary>
+        /// The TestListener for use in running child tests
+        /// </summary>
+        private ITestListener listener;
+
+        /// <summary>
+        /// The System.Type of the fixture for this test suite, if there is one
+        /// </summary>
+        private Type fixtureType;
+
+        /// <summary>
+        /// The fixture object, if it has been created
+        /// </summary>
+        private object fixture;
+
+        /// <summary>
+        /// The SetUp method.
+        /// </summary>
+        protected MethodInfo[] setUpMethods;
+
+        /// <summary>
+        /// The teardown method
+        /// </summary>
+        protected MethodInfo[] tearDownMethods;
+
+        /// <summary>
+        /// The fixture setup methods for this suite
+        /// </summary>
+        protected MethodInfo[] fixtureSetUpMethods;
+
+        /// <summary>
+        /// The fixture teardown methods for this suite
+        /// </summary>
+        protected MethodInfo[] fixtureTearDownMethods;
+
+        #endregion
 
         #region Construction
 
@@ -94,6 +134,11 @@ namespace NUnit.Framework.Internal
 
             this.runState = RunState.Runnable;
 		}
+
+        protected Test(Type fixtureType) : this(fixtureType.FullName)
+        {
+            this.fixtureType = fixtureType;
+        }
 
 		#endregion
 
@@ -188,42 +233,6 @@ namespace NUnit.Framework.Internal
 
         #endregion
 
-        #region Other Public Properties
-
-		/// <summary>
-		/// Gets the Type of the fixture used in running this test
-		/// </summary>
-		public virtual Type FixtureType
-		{
-			get { return null; }
-		}
-
-		/// <summary>
-		/// Gets or sets a fixture object for running this test
-		/// </summary>
-		public  abstract object Fixture
-		{
-			get; set;
-        }
-        #endregion
-
-        #region Methods
-        ///// <summary>
-        ///// Gets a count of test cases that would be run using
-        ///// the specified filter.
-        ///// </summary>
-        ///// <param name="filter"></param>
-        ///// <returns></returns>
-        //public virtual int CountTestCases(TestFilter filter)
-        //{
-        //    if (filter.Pass(this))
-        //        return 1;
-
-        //    return 0;
-        //}
-
-        #endregion
-
         #region IXmlNodeBuilder Members
 
         /// <summary>
@@ -270,22 +279,78 @@ namespace NUnit.Framework.Internal
 
         #region IComparable Members
         /// <summary>
-		/// Compares this test to another test for sorting purposes
-		/// </summary>
-		/// <param name="obj">The other test</param>
-		/// <returns>Value of -1, 0 or +1 depending on whether the current test is less than, equal to or greater than the other test</returns>
-		public int CompareTo(object obj)
-		{
-			Test other = obj as Test;
-			
-			if ( other == null )
-				return -1;
+        /// Compares this test to another test for sorting purposes
+        /// </summary>
+        /// <param name="obj">The other test</param>
+        /// <returns>Value of -1, 0 or +1 depending on whether the current test is less than, equal to or greater than the other test</returns>
+        public int CompareTo(object obj)
+        {
+            Test other = obj as Test;
 
-			return this.FullName.CompareTo( other.FullName );
-		}
-		#endregion
+            if (other == null)
+                return -1;
 
-        #region Public Methods
+            return this.FullName.CompareTo(other.FullName);
+        }
+        #endregion
+
+        #region Other Public Properties
+
+        /// <summary>
+        /// Gets or sets a builder exception, which was thrown
+        /// when attempting to construct the test.
+        /// </summary>
+        /// <value>The builder exception.</value>
+        public Exception BuilderException
+        {
+            get { return builderException; }
+            set { builderException = value; }
+        }
+
+        /// <summary>
+        /// Gets the Type of the fixture used in running this test
+        /// </summary>
+        public Type FixtureType
+        {
+            get { return fixtureType; }
+        }
+
+
+        /// <summary>
+        /// Gets or sets a fixture object for running this test
+        /// </summary>
+        public object Fixture
+        {
+            get { return fixture; }
+            set { fixture = value; }
+        }
+
+        /// <summary>
+        /// The name used for the top-level element in the
+        /// XML representation of this test
+        /// </summary>
+        public abstract string ElementName
+        {
+            get;
+        }
+
+        #endregion
+
+        #region Other Public Methods
+
+        ///// <summary>
+        ///// Gets a count of test cases that would be run using
+        ///// the specified filter.
+        ///// </summary>
+        ///// <param name="filter"></param>
+        ///// <returns></returns>
+        //public virtual int CountTestCases(TestFilter filter)
+        //{
+        //    if (filter.Pass(this))
+        //        return 1;
+
+        //    return 0;
+        //}
 
         /// <summary>
         /// Modify a newly constructed test by applying any of NUnit's common
@@ -306,33 +371,159 @@ namespace NUnit.Framework.Internal
             }
         }
 
-        #endregion
-
-        #region Abstract Properties and Methods
-
-        /// <summary>
-        /// The name used for the top-level element in the
-        /// XML representation of this test
-        /// </summary>
-        public abstract string ElementName
-        {
-            get;
-        }
-
-        /// <summary>
-        /// Override this to return the proper type of TestResult for this test
-        /// </summary>
-        /// <returns>A concrete TestResult.</returns>
-        public abstract TestResult MakeTestResult();
-
         /// <summary>
         /// Runs the test under a particular filter, sending
         /// notifications to a listener.
         /// </summary>
         /// <param name="listener">An event listener to receive notifications</param>
-        /// <returns></returns>
-        public abstract TestResult Run(ITestListener listener);
+        /// <returns>A TestResult.</returns>
+        public virtual TestResult Run(ITestListener listener)
+        {
+            this.Listener = listener;
 
+            TestResult testResult;
+
+            listener.TestStarted(this);
+
+            long startTime = DateTime.Now.Ticks;
+
+            TestCommand command = CommandBuilder.MakeTestCommand(this);
+            testResult = command.Execute(this.Fixture);
+
+            long stopTime = DateTime.Now.Ticks;
+            double time = ((double)(stopTime - startTime)) / (double)TimeSpan.TicksPerSecond;
+            testResult.Time = time;
+
+            listener.TestFinished(testResult);
+            return testResult;
+        }
+
+        #endregion
+
+        #region Protected Properties
+
+        /// <summary>
+        /// Gets the test listener for use in running child tests
+        /// </summary>
+        internal ITestListener Listener // Temporarily internal
+        {
+            get { return this.listener; }
+            set { this.listener = value; }
+        }
+
+        #endregion
+
+        #region Internal Properties
+
+        /// <summary>
+        /// Gets or sets the IgnoreReason property of the PropertyBag.
+        /// Provided for the convenience of internal methods.
+        /// </summary>
+        internal string SkipReason
+        {
+            get
+            {
+                return (string)Properties.Get(PropertyNames.SkipReason);
+            }
+            set
+            {
+                Properties.Set(PropertyNames.SkipReason, value);
+            }
+        }
+
+#if !NETCF_1_0
+        /// <summary>
+        /// Gets the ApartmentState property from the PropertyBag.
+        /// Provided for the convenience of internal methods.
+        /// </summary>
+        internal ApartmentState ApartmentState
+        {
+            get
+            {
+                return (ApartmentState)Properties.GetSetting(PropertyNames.ApartmentState, ApartmentState.Unknown);
+            }
+        }
+#endif
+
+#if !NUNITLITE
+        /// <summary>
+        /// Gets the current ApartmentState. Provided to 
+        /// encapsulate CLR version differences.
+        /// </summary>
+        internal ApartmentState CurrentApartmentState
+        {
+            get
+            {
+#if CLR_2_0 || CLR_4_0
+                return Thread.CurrentThread.GetApartmentState();
+#else
+                return Thread.CurrentThread.ApartmentState;
+#endif
+            }
+        }
+
+        /// <summary>
+        /// Gets a boolean value indicating whether this 
+        /// test should run on it's own thread.
+        /// </summary>
+        internal virtual bool ShouldRunOnOwnThread
+        {
+            get
+            {
+                return Properties.GetSetting(PropertyNames.RequiresThread, false)
+                    || ApartmentState != ApartmentState.Unknown
+                    && ApartmentState != CurrentApartmentState;
+            }
+        }
+#endif
+
+        /// <summary>
+        /// Gets the set up methods.
+        /// </summary>
+        /// <returns></returns>
+        internal MethodInfo[] SetUpMethods
+        {
+            get
+            {
+                return setUpMethods;
+            }
+        }
+
+        /// <summary>
+        /// Gets the tear down methods.
+        /// </summary>
+        /// <returns></returns>
+        internal MethodInfo[] TearDownMethods
+        {
+            get
+            {
+                return tearDownMethods;
+            }
+        }
+
+        /// <summary>
+        /// Gets the set up methods.
+        /// </summary>
+        /// <returns></returns>
+        internal MethodInfo[] OneTimeSetUpMethods
+        {
+            get
+            {
+                return fixtureSetUpMethods;
+            }
+        }
+
+        /// <summary>
+        /// Gets the tear down methods.
+        /// </summary>
+        /// <returns></returns>
+        internal MethodInfo[] OneTimeTearDownMethods
+        {
+            get
+            {
+                return fixtureTearDownMethods;
+            }
+        }
         #endregion
 
         #region Nested Classes

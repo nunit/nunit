@@ -74,7 +74,7 @@ namespace NUnit.Framework
             if (test.RunState != RunState.NotRunnable && !isAddinAvailable)
             {
                 test.RunState = RunState.NotRunnable;
-                test.Properties.Set(PropertyNames.IgnoreReason, string.Format("Required addin {0} not available", requiredAddin));
+                test.Properties.Set(PropertyNames.SkipReason, string.Format("Required addin {0} not available", requiredAddin));
             }
         }
 

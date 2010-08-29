@@ -61,10 +61,8 @@ namespace NUnit.Framework.Assertions
 		public void IgnoreWorksForTestCase()
 		{
             Type fixtureType = typeof(IgnoredTestCaseFixture);
-            Test test = TestBuilder.MakeTestCase(fixtureType, "CallsIgnore");
-            ITestResult result = test.Run(TestListener.NULL);
-            Assert.AreEqual(TestStatus.Skipped, result.ResultState.Status);
-            Assert.AreEqual("Ignored", result.ResultState.Label);
+            ITestResult result = TestBuilder.RunTestCase(fixtureType, "CallsIgnore");
+            Assert.AreEqual(ResultState.Ignored, result.ResultState);
             Assert.AreEqual("Ignore me", result.Message);
         }
 
@@ -72,30 +70,23 @@ namespace NUnit.Framework.Assertions
         public void IgnoreTakesPrecedenceOverExpectedException()
         {
             Type fixtureType = typeof(IgnoredTestCaseFixture);
-            Test test = TestBuilder.MakeTestCase(fixtureType, "CallsIgnoreWithExpectedException");
-            ITestResult result = test.Run(TestListener.NULL);
-            Assert.AreEqual(TestStatus.Skipped, result.ResultState.Status);
-            Assert.AreEqual("Ignored", result.ResultState.Label);
+            ITestResult result = TestBuilder.RunTestCase(fixtureType, "CallsIgnoreWithExpectedException");
+            Assert.AreEqual(ResultState.Ignored, result.ResultState);
             Assert.AreEqual("Ignore me", result.Message);
         }
 
 		[Test]
 		public void IgnoreWorksForTestSuite()
 		{
-			//IgnoredTestSuiteFixture testFixture = new IgnoredTestSuiteFixture();
 			TestSuite suite = new TestSuite("IgnoredTestFixture");
 			suite.Add( TestBuilder.MakeFixture( typeof( IgnoredTestSuiteFixture ) ) );
-            ITestResult result = suite.Run(TestListener.NULL);
+            TestResult result = suite.Run(TestListener.NULL);
 
 			ITestResult fixtureResult = (ITestResult)result.Children[0];
-            Assert.AreEqual(TestStatus.Skipped, fixtureResult.ResultState.Status);
-            Assert.AreEqual("Ignored", fixtureResult.ResultState.Label);
+            Assert.AreEqual(ResultState.Ignored, fixtureResult.ResultState);
 
             foreach (ITestResult testResult in fixtureResult.Children)
-            {
-                Assert.AreEqual(TestStatus.Skipped, testResult.ResultState.Status);
-                Assert.AreEqual("Ignored", testResult.ResultState.Label);
-            }
+                Assert.AreEqual(ResultState.Ignored, testResult.ResultState);
 		}
 
 		[Test]
@@ -104,13 +95,10 @@ namespace NUnit.Framework.Assertions
 			TestSuite testFixture = TestBuilder.MakeFixture( typeof( IgnoreInSetUpFixture ) );
             ITestResult fixtureResult = testFixture.Run(TestListener.NULL);
 
-            Assert.AreEqual(TestStatus.Passed, fixtureResult.ResultState.Status);
+            Assert.AreEqual(ResultState.Success, fixtureResult.ResultState);
 
             foreach (TestResult testResult in fixtureResult.Children)
-            {
-                Assert.AreEqual(TestStatus.Skipped, testResult.ResultState.Status);
-                Assert.AreEqual("Ignored", testResult.ResultState.Label);
-            }
+                Assert.AreEqual(ResultState.Ignored, testResult.ResultState);
 		}
 #endif
 

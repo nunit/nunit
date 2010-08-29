@@ -149,23 +149,14 @@ namespace NUnit.Framework.Attributes
 			ITestResult result = RunTestOnFixture( fixture );
 
 			Assert.AreEqual( 1, fixture.setUpCount, "setUpCount" );
-			Assert.AreEqual( 0, fixture.tearDownCount, "tearDownCOunt" );
+			Assert.AreEqual( 1, fixture.tearDownCount, "tearDownCOunt" );
 
-			// should have one suite and one fixture
-			ResultSummary summ = new ResultSummary(result);
-			Assert.AreEqual(1, summ.TestsRun);
-			Assert.AreEqual(0, summ.TestsNotRun);
-			
 			Assert.AreEqual(ResultState.Error, result.ResultState);
 			Assert.AreEqual("System.Exception : This was thrown from fixture setup", result.Message, "TestSuite Message");
 			Assert.IsNotNull(result.StackTrace, "TestSuite StackTrace should not be null");
 
             Assert.AreEqual(0, result.Children.Count, "Result should have no children");
             Assert.AreEqual(1, result.FailCount, "Failure count");
-            //TestResult testResult = (TestResult)result.Children[0];
-            //Assert.AreEqual(TestStatus.Failed, testResult.ResultState.Status);
-            //Assert.AreEqual("Error", testResult.ResultState.Reason);
-            //Assert.AreEqual("TestFixtureSetUp failed in MisbehavingFixture", testResult.Message, "TestSuite Message");
 		}
 
 		[Test]
@@ -175,11 +166,7 @@ namespace NUnit.Framework.Attributes
 			fixture.blowUpInSetUp = true;
 			ITestResult result = RunTestOnFixture( fixture );
 
-			// should have one suite and one fixture
-			ResultSummary summ = new ResultSummary(result);
-			Assert.AreEqual(1, summ.TestsRun);
-			Assert.AreEqual(0, summ.TestsNotRun);
-            Assert.AreEqual(TestStatus.Failed, result.ResultState.Status);
+            Assert.AreEqual(ResultState.Error, result.ResultState);
 
 			//fix the blow up in setup
 			fixture.Reinitialize();
@@ -188,10 +175,7 @@ namespace NUnit.Framework.Attributes
 			Assert.AreEqual( 1, fixture.setUpCount, "setUpCount" );
 			Assert.AreEqual( 1, fixture.tearDownCount, "tearDownCOunt" );
 
-			// should have one suite and one fixture
-			summ = new ResultSummary(result);
-			Assert.AreEqual(1, summ.TestsRun);
-			Assert.AreEqual(0, summ.TestsNotRun);
+            Assert.AreEqual(ResultState.Success, result.ResultState);
 		}
 
 		[Test]
@@ -201,17 +185,12 @@ namespace NUnit.Framework.Attributes
 			ITestResult result = RunTestOnFixture( fixture );
 
 			// should have one suite and one fixture
-			ResultSummary summ = new ResultSummary(result);
-			Assert.AreEqual(0, summ.TestsRun);
-			Assert.AreEqual(1, summ.TestsNotRun);
-            Assert.AreEqual(TestStatus.Skipped, result.ResultState.Status, "Suite should not have executed");
+            Assert.AreEqual(ResultState.Ignored, result.ResultState, "Suite should be ignored");
 			Assert.AreEqual("TestFixtureSetUp called Ignore", result.Message);
 			Assert.IsNotNull(result.StackTrace, "StackTrace should not be null");
 
-            Assert.AreEqual(1, result.Children.Count);
-            TestResult testResult = ((TestResult)result.Children[0]);
-            Assert.AreEqual(TestStatus.Skipped, testResult.ResultState.Status, "Testcase should not have executed");
-			Assert.AreEqual("TestFixtureSetUp called Ignore", testResult.Message );
+            Assert.AreEqual(0, result.Children.Count);
+            Assert.AreEqual(1, result.SkipCount);
 		}
 
 		[Test]
@@ -228,11 +207,6 @@ namespace NUnit.Framework.Attributes
 
 			Assert.AreEqual("TearDown : System.Exception : This was thrown from fixture teardown", result.Message);
 			Assert.IsNotNull(result.StackTrace, "StackTrace should not be null");
-
-			// should have one suite and one fixture
-			ResultSummary summ = new ResultSummary(result);
-			Assert.AreEqual(1, summ.TestsRun);
-			Assert.AreEqual(0, summ.TestsNotRun);
 		}
 
 		[Test]
@@ -241,21 +215,12 @@ namespace NUnit.Framework.Attributes
 			TestSuite suite = TestBuilder.MakeFixture( typeof( ExceptionInConstructor ) );
             ITestResult result = suite.Run(TestListener.NULL);
 
-			// should have one suite and one fixture
-			ResultSummary summ = new ResultSummary(result);
-			Assert.AreEqual(1, summ.TestsRun);
-			Assert.AreEqual(0, summ.TestsNotRun);
-			
 			Assert.AreEqual(ResultState.Error, result.ResultState);
 			Assert.AreEqual("System.Exception : This was thrown in constructor", result.Message, "TestSuite Message");
 			Assert.IsNotNull(result.StackTrace, "TestSuite StackTrace should not be null");
 
             Assert.AreEqual(0, result.Children.Count, "Result should have no children");
             Assert.AreEqual(1, result.FailCount, "Failure count");
-            //TestResult testResult = ((TestResult)result.Children[0]);
-            //Assert.AreEqual(TestStatus.Failed, testResult.ResultState.Status, "Testcase should have executed");
-            //Assert.AreEqual("TestFixtureSetUp failed in ExceptionInConstructor", testResult.Message, "TestSuite Message");
-            //Assert.AreEqual(testResult.StackTrace, testResult.StackTrace, "Test stackTrace should match TestSuite stackTrace" );
 		}
 
 		[Test]
@@ -266,20 +231,11 @@ namespace NUnit.Framework.Attributes
 			ITestResult result = RunTestOnFixture( fixture );
             Assert.AreEqual(1, result.Children.Count);
 
-			// should have one suite and one fixture
-			ResultSummary summ = new ResultSummary(result);
-			Assert.AreEqual(1, summ.TestsRun);
-			Assert.AreEqual(0, summ.TestsNotRun);
-
 			fixture.Reinitialize();
 			result = RunTestOnFixture( fixture );
 
 			Assert.AreEqual( 1, fixture.setUpCount, "setUpCount" );
 			Assert.AreEqual( 1, fixture.tearDownCount, "tearDownCOunt" );
-
-			summ = new ResultSummary(result);
-			Assert.AreEqual(1, summ.TestsRun);
-			Assert.AreEqual(0, summ.TestsNotRun);
 		}
 
 		[Test]

@@ -47,16 +47,6 @@ namespace NUnit.Framework.Internal
 		/// </summary>
 		internal MethodInfo method;
 
-		/// <summary>
-		/// The SetUp method.
-		/// </summary>
-		protected MethodInfo[] setUpMethods;
-
-		/// <summary>
-		/// The teardown method
-		/// </summary>
-		protected MethodInfo[] tearDownMethods;
-
         /// <summary>
         /// The ExpectedExceptionProcessor for this test, if any
         /// </summary>
@@ -79,13 +69,6 @@ namespace NUnit.Framework.Internal
 	    internal bool hasExpectedResult;
 #endif
 
-        /// <summary>
-        /// The fixture object, if it has been created
-        /// </summary>
-        private object fixture;
-
-        private Exception builderException;
-
 		#endregion
 
 		#region Constructors
@@ -95,8 +78,11 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="method">The method to be used as a test.</param>
 		public TestMethod( MethodInfo method ) 
-			: base( method.ReflectedType.FullName, method.Name ) 
+			: base( method.ReflectedType ) 
 		{
+            this.Name = method.Name;
+            this.FullName += "." + this.Name;
+
             // Disambiguate call to base class methods
             // TODO: This should not be here - it's a presentation issue
             if( method.DeclaringType != method.ReflectedType)
@@ -117,15 +103,6 @@ namespace NUnit.Framework.Internal
 		}
 
         /// <summary>
-        /// Gets the Type of the fixture used in running this test
-        /// </summary>
-        /// <value></value>
-        public override Type FixtureType
-        {
-            get { return method.ReflectedType; }
-        }
-
-        /// <summary>
         /// Gets or sets the exception processor.
         /// </summary>
         /// <value>The exception processor.</value>
@@ -144,43 +121,6 @@ namespace NUnit.Framework.Internal
             get { return exceptionProcessor != null; }
 		}
 
-        /// <summary>
-        /// Gets or sets a fixture object for running this test
-        /// </summary>
-        /// <value></value>
-        public override object Fixture
-        {
-            get { return fixture; }
-            set { fixture = value; }
-        }
-
-#if !NUNITLITE
-        /// <summary>
-        /// Gets the timeout value to be used for this test.
-        /// </summary>
-        /// <value>The timeout in milliseconds.</value>
-        public int Timeout
-        {
-            get
-            {
-                return Properties.ContainsKey(PropertyNames.Timeout)
-                    ? (int)Properties.Get(PropertyNames.Timeout)
-                    : TestExecutionContext.CurrentContext.TestCaseTimeout;
-            }
-        }
-#endif
-
-        /// <summary>
-        /// Gets or sets a builder exception, which was thrown
-        /// when attempting to construct the test.
-        /// </summary>
-        /// <value>The builder exception.</value>
-        public Exception BuilderException
-        {
-            get { return builderException; }
-            set { builderException = value; }
-        }
-
         #endregion
 
         #region Test Overrides
@@ -193,6 +133,27 @@ namespace NUnit.Framework.Internal
         {
             get { return false; }
         }
+
+#if !NUNITLITE
+        /// <summary>
+        /// Gets a boolean value indicating whether this 
+        /// test should run on it's own thread.
+        /// </summary>
+        internal override bool ShouldRunOnOwnThread
+        {
+            get
+            {
+                if (base.ShouldRunOnOwnThread)
+                    return true;
+
+                int timeout = TestExecutionContext.CurrentContext.TestCaseTimeout;
+                if (Properties.ContainsKey(PropertyNames.Timeout))
+                    timeout = (int)Properties.Get(PropertyNames.Timeout);
+
+                return timeout > 0;
+            }
+        }
+#endif
 
         /// <summary>
         /// Gets this test's child tests
@@ -208,15 +169,6 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// Creates a TestCaseResult.
-        /// </summary>
-        /// <returns>The new TestCaseResult.</returns>
-        public override TestResult MakeTestResult()
-        {
-            return new TestResult(this);
-        }
-
-        /// <summary>
         /// The name used for the top-level element in the
         /// XML representation of this test
         /// </summary>
@@ -226,284 +178,5 @@ namespace NUnit.Framework.Internal
         }
 
         #endregion
-
-        #region Run Methods
-
-        /// <summary>
-        /// Runs the test under a particular filter, sending
-        /// notifications to a listener.
-        /// </summary>
-        /// <param name="listener">An event listener to receive notifications</param>
-        /// <returns>A TestResult.</returns>
-        public override TestResult Run(ITestListener listener)
-        {
-            TestResult testResult = this.MakeTestResult();
-
-            listener.TestStarted(this);
-            
-            long startTime = DateTime.Now.Ticks;
-            /**/
-            switch (this.RunState)
-            {
-                case RunState.Runnable:
-                case RunState.Explicit:
-                    Run(testResult);
-                    break;
-                case RunState.Skipped:
-                default:
-                    testResult.SetResult(ResultState.Skipped, (string)Properties.Get(PropertyNames.IgnoreReason));
-                    break;
-                case RunState.NotRunnable:
-                    if (BuilderException != null)
-#if !NETCF_1_0
-                        testResult.SetResult(ResultState.NotRunnable, 
-                            ExceptionHelper.BuildMessage( BuilderException ), 
-                            ExceptionHelper.BuildStackTrace(BuilderException));
-#else
-                        testResult.SetResult(ResultState.NotRunnable, 
-                            ExceptionHelper.BuildMessage( BuilderException ));
-#endif
-                    else
-                        testResult.SetResult(ResultState.NotRunnable, (string)Properties.Get(PropertyNames.IgnoreReason));
-                    break;
-                case RunState.Ignored:
-                    testResult.SetResult(ResultState.Ignored, (string)Properties.Get(PropertyNames.IgnoreReason));
-                    break;
-            }
-            /**/
-            long stopTime = DateTime.Now.Ticks;
-            double time = ((double)(stopTime - startTime)) / (double)TimeSpan.TicksPerSecond;
-            testResult.Time = time;
-
-            testResult.AssertCount = NUnit.Framework.Assert.Counter;
-
-            listener.TestFinished(testResult);
-            return testResult;
-        }
-
-        /// <summary>
-        /// Runs the test, recoding information in the specified TestResult.
-        /// </summary>
-        /// <param name="testResult">The test result.</param>
-        public virtual void Run(TestResult testResult)
-		{
-#if !NUNITLITE
-            TestExecutionContext.Save();
-            
-            TestExecutionContext.CurrentContext.CurrentTest = this;
-            TestExecutionContext.CurrentContext.CurrentResult = testResult;
-#endif
-
-            try
-            {
-                // TODO: Clean this up
-                if (this.Parent != null)
-                {
-                    TestSuite suite = this.Parent as TestSuite;
-                    if (suite != null)
-                    {
-                        this.Fixture = suite.Fixture;
-                        this.setUpMethods = suite.GetSetUpMethods();
-                        this.tearDownMethods = suite.GetTearDownMethods();
-                    }
-                }
-
-                // TODO: Temporary... to allow for tests that directly execute a test case
-                if (Fixture == null && !method.IsStatic)
-                    Fixture = Reflect.Construct(this.FixtureType);
-
-#if !NUNITLITE
-                string setCulture = (string)this.Properties.Get(PropertyNames.SetCulture);
-                if (setCulture != null)
-                    TestExecutionContext.CurrentContext.CurrentCulture =
-                        new System.Globalization.CultureInfo(setCulture);
-
-                string setUICulture = (string)this.Properties.Get(PropertyNames.SetUICulture);
-                if (setUICulture != null)
-                    TestExecutionContext.CurrentContext.CurrentUICulture =
-                        new System.Globalization.CultureInfo(setUICulture);
-#endif
-
-                int repeatCount = this.Properties.ContainsKey(PropertyNames.RepeatCount)
-                    ? (int)this.Properties.Get(PropertyNames.RepeatCount) : 1;
-
-                while (repeatCount-- > 0)
-                {
-#if !NUNITLITE
-#if CLR_2_0 || CLR_4_0
-                    ApartmentState currentApartment = Thread.CurrentThread.GetApartmentState();
-#else
-                    ApartmentState currentApartment = Thread.CurrentThread.ApartmentState;
-#endif
-                    ApartmentState targetApartment =
-                        (ApartmentState)Properties.GetSetting(PropertyNames.ApartmentState, ApartmentState.Unknown);
-
-                    bool requiresThread = Properties.GetSetting(PropertyNames.RequiresThread, false);
-
-                    if (requiresThread || Timeout > 0 || targetApartment != ApartmentState.Unknown && targetApartment != currentApartment)
-                        new TestMethodThread(this).Run(testResult, TestListener.NULL);
-                    else
-#endif
-                        doRun(testResult);
-
-                    if (testResult.ResultState == ResultState.Failure ||
-                        testResult.ResultState == ResultState.Error ||
-                        testResult.ResultState == ResultState.Cancelled)
-                    {
-                        break;
-                    }
-                }
-
-            }
-            catch (Exception ex)
-            {
-#if !NETCF
-                if (ex is ThreadAbortException)
-                    Thread.ResetAbort();
-#endif
-
-                testResult.RecordException(ex);
-            }
-            finally
-            {
-                Fixture = null;
-#if !NUNITLITE
-                TestExecutionContext.Restore();
-#endif
-            }
-		}
-
-		/// <summary>
-		/// The doRun method is used to run a test internally.
-		/// It assumes that the caller is taking care of any 
-		/// TestFixtureSetUp and TestFixtureTearDown needed.
-		/// </summary>
-		/// <param name="testResult">The result in which to record success or failure</param>
-		public virtual void doRun( TestResult testResult )
-		{
-			DateTime start = DateTime.Now;
-
-			try 
-			{
-                doSetUp();
-
-				doTestCase( testResult );
-			}
-			catch(Exception ex)
-			{
-#if !NETCF
-                if (ex is ThreadAbortException)
-                    Thread.ResetAbort();
-#endif
-
-                testResult.RecordException(ex);
-			}
-			finally 
-			{
-				doTearDown( testResult );
-
-				DateTime stop = DateTime.Now;
-				TimeSpan span = stop.Subtract(start);
-				testResult.Time = (double)span.Ticks / (double)TimeSpan.TicksPerSecond;
-
-
-                if (testResult.ResultState == ResultState.Success && this.Properties.ContainsKey(PropertyNames.MaxTime))
-                {
-                    int elapsedTime = (int)Math.Round(testResult.Time * 1000.0);
-                    int maxTime = (int)this.Properties.Get(PropertyNames.MaxTime);
-
-                    if (maxTime > 0 && elapsedTime > maxTime)
-                        testResult.SetResult(ResultState.Failure,
-                            string.Format("Elapsed time of {0}ms exceeds maximum of {1}ms",
-                                elapsedTime, maxTime));
-                }
-			}
-		}
-		#endregion
-
-		#region Invoke Methods by Reflection, Recording Errors
-
-        private void doSetUp()
-        {
-            if (setUpMethods != null)
-                foreach( MethodInfo setUpMethod in setUpMethods )
-                    Reflect.InvokeMethod(setUpMethod, setUpMethod.IsStatic ? null : this.Fixture);
-        }
-
-		private void doTearDown( TestResult testResult )
-		{
-			try
-			{
-                if (tearDownMethods != null)
-                {
-                    int index = tearDownMethods.Length;
-                    while (--index >= 0)
-                        Reflect.InvokeMethod(tearDownMethods[index], tearDownMethods[index].IsStatic ? null : this.Fixture);
-                }
-			}
-			catch(Exception ex)
-			{
-				if ( ex is NUnitException )
-					ex = ex.InnerException;
-
-                // TODO: Can we move this logic into TestResult itself?
-                string message = "TearDown : " + ExceptionHelper.BuildMessage(ex);
-                if (testResult.Message != null)
-                    message = testResult.Message + NUnit.Env.NewLine + message;
-
-#if !NETCF_1_0
-                string stackTrace = "--TearDown" + NUnit.Env.NewLine + ExceptionHelper.BuildStackTrace(ex);
-                if (testResult.StackTrace != null)
-                    stackTrace = testResult.StackTrace + NUnit.Env.NewLine + stackTrace;
-
-                // TODO: What about ignore exceptions in teardown?
-                testResult.SetResult(ResultState.Error, message, stackTrace);
-#else
-                testResult.SetResult(ResultState.Error, message);
-#endif
-            }
-		}
-
-		private void doTestCase( TestResult testResult )
-		{
-            try
-            {
-                RunTestMethod(testResult);
-                if (testResult.ResultState == ResultState.Success && exceptionProcessor != null)
-                    exceptionProcessor.ProcessNoException(testResult);
-            }
-            catch (Exception ex)
-            {
-#if !NETCF
-                if (ex is ThreadAbortException)
-                    Thread.ResetAbort();
-#endif
-
-                if (exceptionProcessor == null)
-                    testResult.RecordException(ex);
-                else
-                    exceptionProcessor.ProcessException(ex, testResult);
-            }
-		}
-
-        /// <summary>
-        /// Runs the test method setting the TestResult.
-        /// </summary>
-        /// <param name="testResult">The test result.</param>
-		public virtual void RunTestMethod(TestResult testResult)
-		{
-		    object fixture = this.method.IsStatic ? null : this.Fixture;
-
-			object result = Reflect.InvokeMethod( this.method, fixture, this.arguments );
-
-#if !NUNITLITE
-            if (this.hasExpectedResult)
-                NUnit.Framework.Assert.AreEqual(expectedResult, result);
-#endif
-
-            testResult.SetResult(ResultState.Success);
-        }
-
-		#endregion
     }
 }

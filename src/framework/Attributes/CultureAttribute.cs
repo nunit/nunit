@@ -62,7 +62,7 @@ namespace NUnit.Framework
             if (test.RunState != RunState.NotRunnable && !IsCultureSupported())
             {
                 test.RunState = RunState.Skipped;
-                test.Properties.Set(PropertyNames.IgnoreReason, Reason);
+                test.Properties.Set(PropertyNames.SkipReason, Reason);
             }
         }
 

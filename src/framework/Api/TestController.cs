@@ -171,10 +171,34 @@ namespace NUnit.Framework.Api
             /// <param name="assemblyFilename">The assembly filename.</param>
             /// <param name="loadOptions">Options controlling how the tests are loaded</param>
             /// <param name="callback">The callback.</param>
-            public LoadTestsAction(TestController controller, string assemblyFilename, IDictionary loadOptions, AsyncCallback callback) 
+            public LoadTestsAction(TestController controller, string assemblyFilename, IDictionary loadOptions, AsyncCallback callback)
                 : base(controller, callback)
             {
                 ReportResult(controller.Runner.Load(assemblyFilename, loadOptions), true);
+            }
+        }
+
+        #endregion
+
+        #region LoadTestsAction
+
+        /// <summary>
+        /// ExploreTestsAction returns info about the tests in an assembly
+        /// </summary>
+        public class ExploreTestsAction : TestControllerAction
+        {
+            /// <summary>
+            /// Initializes a new instance of the <see cref="LoadTestsAction"/> class.
+            /// </summary>
+            /// <param name="controller">The controller.</param>
+            /// <param name="assemblyFilename">The assembly filename.</param>
+            /// <param name="loadOptions">Options controlling how the tests are loaded</param>
+            /// <param name="callback">The callback.</param>
+            public ExploreTestsAction(TestController controller, string assemblyFilename, IDictionary loadOptions, AsyncCallback callback)
+                : base(controller, callback)
+            {
+                if (controller.Runner.Load(assemblyFilename, loadOptions))
+                    ReportResult(controller.Runner.LoadedTest.ToXml(true), true);
             }
         }
 
@@ -243,6 +267,7 @@ namespace NUnit.Framework.Api
                 : base(controller, callback)
             {
                 ITestResult result = controller.Runner.Run(new TestProgressReporter(callback), runOptions);
+
                 ReportResult(result.ToXml(true), true);
             }
 
