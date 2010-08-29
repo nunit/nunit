@@ -41,6 +41,8 @@ namespace NUnit.AdhocTestRunner
         private bool help = false;
         private bool labels = false;
         private bool useappdomain = false;
+        private bool dump = false;
+        private string dumpFile = null;
 
         private bool error = false;
 
@@ -86,6 +88,16 @@ namespace NUnit.AdhocTestRunner
         public bool Labels
         {
             get { return labels; }
+        }
+
+        public bool Dump
+        {
+            get { return dump; }
+        }
+
+        public string DumpFile
+        {
+            get { return dumpFile; }
         }
 
         /// <summary>
@@ -171,6 +183,10 @@ namespace NUnit.AdhocTestRunner
                 case "run":
                     runList.Add(val);
                     break;
+                case "dump":
+                    dump = true;
+                    dumpFile = val;
+                    break;
                 case "l":
                 case "labels":
                     labels = true;
@@ -236,7 +252,7 @@ namespace NUnit.AdhocTestRunner
                 string NL = Environment.NewLine;
 
                 string name = System.Reflection.Assembly.GetEntryAssembly().GetName().Name;
-
+                // TODO: This is out of synch with the current options
                 sb.Append(NL + name + " [assemblies] [options]" + NL + NL);
                 sb.Append(" Runs a set of NUnitLite tests from the console." + NL + NL);
                 sb.Append("You may specify one or more test assemblies by name, without a path or" + NL);
@@ -251,8 +267,9 @@ namespace NUnit.AdhocTestRunner
                 sb.Append("  -h[elp]           Displays this help" + NL + NL);
                 sb.Append("  -nologo           Suppresses display of the initial message" + NL + NL);
                 sb.Append("  -w[ait]           Waits for a key press before exiting" + NL + NL);
-                sb.Append("  -l[abels]       Display name of each test as it is run" + NL + NL);
+                sb.Append("  -l[abels]         Display name of each test as it is run" + NL + NL);
                 sb.Append("  -a[ppdomain]      Run tests in a separate AppDomain" + NL + NL);
+                sb.Append("  -dump             Don't run - just list the tests in XML format" + NL + NL);
                 sb.Append("Options that take values may use an equal sign or a colon" + NL);
                 sb.Append("to separate the option from its value." + NL + NL);
 

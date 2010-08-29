@@ -201,10 +201,10 @@ namespace NUnit.Framework
         /// <value>The ignore reason.</value>
         public string IgnoreReason
         {
-            get { return this.Properties.Get(PropertyNames.IgnoreReason) as string; }
+            get { return this.Properties.Get(PropertyNames.SkipReason) as string; }
             set
             {
-                this.Properties.Set(PropertyNames.IgnoreReason, value);
+                this.Properties.Set(PropertyNames.SkipReason, value);
                 isIgnored = value != null && value != string.Empty;
             }
         }

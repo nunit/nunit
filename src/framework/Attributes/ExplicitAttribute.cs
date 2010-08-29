@@ -65,7 +65,7 @@ namespace NUnit.Framework
             if (test.RunState != RunState.NotRunnable)
             {
                 test.RunState = RunState.Explicit;
-                test.Properties.Set(PropertyNames.IgnoreReason, reason);
+                test.Properties.Set(PropertyNames.SkipReason, reason);
             }
         }
 

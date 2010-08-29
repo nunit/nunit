@@ -55,8 +55,8 @@
     <Compile Include="..\..\..\src\runner\ConsoleRunner.cs">
       <Link>ConsoleRunner.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\runner\FrameworkController.cs">
-      <Link>FrameworkController.cs</Link>
+    <Compile Include="..\..\..\src\runner\FrameworkDriver.cs">
+      <Link>FrameworkDriver.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\runner\Program.cs">
       <Link>Program.cs</Link>

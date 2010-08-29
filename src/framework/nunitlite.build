@@ -7,7 +7,8 @@
         output="${current.build.dir}/nunitlite.dll"
         doc="${current.build.dir}/nunitlite.xml"
         debug="${build.debug}" 
-        define="${build.defines};NUNITLITE">
+        define="${build.defines};NUNITLITE"
+        warninglevel="0">
       <nowarn>
         <warning number="1699" if="${runtime.version>='2.0'}"/>
       </nowarn>

@@ -274,6 +274,48 @@
     <Compile Include="..\..\..\src\framework\Internal\Builders\NUnitLiteTestFixtureBuilder.cs">
       <Link>Internal\Builders\NUnitLiteTestFixtureBuilder.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\Commands\CommandBuilder.cs">
+      <Link>Internal\Commands\CommandBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\Commands\DelegatingTestCommand.cs">
+      <Link>Internal\Commands\DelegatingTestCommand.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\Commands\ExpectedExceptionCommand.cs">
+      <Link>Internal\Commands\ExpectedExceptionCommand.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\Commands\ITestCommand.cs">
+      <Link>Internal\Commands\ITestCommand.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\Commands\MaxTimeCommand.cs">
+      <Link>Internal\Commands\MaxTimeCommand.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\Commands\RepeatedTestCommand.cs">
+      <Link>Internal\Commands\RepeatedTestCommand.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\Commands\SetUpTearDownCommand.cs">
+      <Link>Internal\Commands\SetUpTearDownCommand.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\Commands\SkipCommand.cs">
+      <Link>Internal\Commands\SkipCommand.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\Commands\TestCaseCommand.cs">
+      <Link>Internal\Commands\TestCaseCommand.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\Commands\TestCommand.cs">
+      <Link>Internal\Commands\TestCommand.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\Commands\TestExecutionContextCommand.cs">
+      <Link>Internal\Commands\TestExecutionContextCommand.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\Commands\TestGroupCommand.cs">
+      <Link>Internal\Commands\TestGroupCommand.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\Commands\TestMethodCommand.cs">
+      <Link>Internal\Commands\TestMethodCommand.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\Commands\TestSuiteCommand.cs">
+      <Link>Internal\Commands\TestSuiteCommand.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\framework\Internal\ExceptionHelper.cs">
       <Link>Internal\ExceptionHelper.cs</Link>
     </Compile>
@@ -303,6 +345,9 @@
     </Compile>
     <Compile Include="..\..\..\src\framework\Internal\Reflect.cs">
       <Link>Internal\Reflect.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Internal\TestExecutionContext.cs">
+      <Link>Internal\TestExecutionContext.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Internal\TestListener.cs">
       <Link>Internal\TestListener.cs</Link>

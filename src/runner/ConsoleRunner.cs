@@ -56,41 +56,60 @@ namespace NUnit.AdhocTestRunner
                     testDomain = CreateDomain(
                         Path.GetDirectoryName(Path.GetFullPath(commandlineOptions.Parameters[0])));
 
-                FrameworkController driver = new FrameworkController(testDomain);
+                FrameworkDriver driver = new FrameworkDriver(testDomain);
 
                 string assemblyFilename = commandlineOptions.Parameters[0];
 
-                if (!driver.Load(assemblyFilename, loadOptions))
+                if (commandlineOptions.Dump)
                 {
-                    Console.WriteLine( 
-                        commandlineOptions.Load.Count > 0
-                            ? "Specifed tests not found in assembly {0}"
-                            : "No tests found in assembly {0}", 
-                        assemblyFilename);
-                    return;
+                    XmlNode testNode = driver.ExploreTests(assemblyFilename, loadOptions);
+
+                    if (testNode == null)
+                    {
+                        Console.WriteLine(
+                            commandlineOptions.Load.Count > 0
+                                ? "Specifed tests not found in assembly {0}"
+                                : "No tests found in assembly {0}",
+                            assemblyFilename);
+                        return;
+                    }
+
+                    string dumpFile = commandlineOptions.DumpFile;
+                    XmlTextWriter testWriter = dumpFile != null && dumpFile.Length > 0
+                        ? new XmlTextWriter(dumpFile, System.Text.Encoding.UTF8)
+                        : new XmlTextWriter(Console.Out);
+                    testWriter.Formatting = Formatting.Indented;
+                    testNode.WriteTo(testWriter);
+                    testWriter.Close();
                 }
+                else
+                {
+                    if (!driver.Load(assemblyFilename, loadOptions))
+                    {
+                        Console.WriteLine(
+                            commandlineOptions.Load.Count > 0
+                                ? "Specifed tests not found in assembly {0}"
+                                : "No tests found in assembly {0}",
+                            assemblyFilename);
+                        return;
+                    }
 
-                XmlNode testNode = driver.GetLoadedTests();
-                XmlTextWriter testWriter = new XmlTextWriter("LoadedTests.xml", System.Text.Encoding.UTF8);
-                testWriter.Formatting = Formatting.Indented;
-                testNode.WriteTo(testWriter);
-                testWriter.Close();
-                
-                TextWriter savedOut = Console.Out;
-                TextWriter savedError = Console.Error;
+                    TextWriter savedOut = Console.Out;
+                    TextWriter savedError = Console.Error;
 
-                //TestEventListener listener = new TestEventListener(options, Console.Out);
+                    //TestEventListener listener = new TestEventListener(options, Console.Out);
 
-                XmlNode resultNode = driver.Run(runOptions);
+                    XmlNode resultNode = driver.Run(runOptions);
 
-                Console.SetOut(savedOut);
-                Console.SetError(savedError);
+                    Console.SetOut(savedOut);
+                    Console.SetError(savedError);
 
-                XmlTextWriter resultWriter = new XmlTextWriter("TestResult.Xml", System.Text.Encoding.UTF8);
-                resultNode.WriteTo(resultWriter);
-                resultWriter.Close();
+                    XmlTextWriter resultWriter = new XmlTextWriter("TestResult.Xml", System.Text.Encoding.UTF8);
+                    resultNode.WriteTo(resultWriter);
+                    resultWriter.Close();
 
-                new ResultReporter(resultNode).ReportResults();
+                    new ResultReporter(resultNode).ReportResults();
+                }
             }
             catch (Exception ex)
             {

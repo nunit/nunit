@@ -87,7 +87,7 @@ namespace NUnit.Framework.Attributes
             attr.Exclude = name;
             attr.ApplyToTest(test);
             Assert.That(test.RunState, Is.EqualTo(RunState.Skipped));
-            Assert.That(test.Properties.Get(PropertyNames.IgnoreReason),
+            Assert.That(test.Properties.Get(PropertyNames.SkipReason),
                 Is.EqualTo("Not supported under culture " + name));
         }
 
@@ -100,7 +100,7 @@ namespace NUnit.Framework.Attributes
 
             new CultureAttribute(name).ApplyToTest(test);
             Assert.That(test.RunState, Is.EqualTo(RunState.Skipped));
-            Assert.That(test.Properties.Get(PropertyNames.IgnoreReason),
+            Assert.That(test.Properties.Get(PropertyNames.SkipReason),
                 Is.EqualTo("Only supported under culture " + name));
         }
 
@@ -155,7 +155,7 @@ namespace NUnit.Framework.Attributes
         {
             new ExplicitAttribute("BECAUSE").ApplyToTest(test);
             Assert.That(test.RunState, Is.EqualTo(RunState.Explicit));
-            Assert.That(test.Properties.Get(PropertyNames.IgnoreReason), Is.EqualTo("BECAUSE"));
+            Assert.That(test.Properties.Get(PropertyNames.SkipReason), Is.EqualTo("BECAUSE"));
         }
 
         #endregion
@@ -174,7 +174,7 @@ namespace NUnit.Framework.Attributes
         {
             new IgnoreAttribute("BECAUSE").ApplyToTest(test);
             Assert.That(test.RunState, Is.EqualTo(RunState.Ignored));
-            Assert.That(test.Properties.Get(PropertyNames.IgnoreReason), Is.EqualTo("BECAUSE"));
+            Assert.That(test.Properties.Get(PropertyNames.SkipReason), Is.EqualTo("BECAUSE"));
         }
 
         #endregion
@@ -236,7 +236,7 @@ namespace NUnit.Framework.Attributes
         #region RequiredAddinAttribute
 
         [Test, Ignore("NYI")]
-        public void RequiredAttributeSkipsTest()
+        public void RequiredAddinAttributeSkipsTest()
         {
             new RequiredAddinAttribute("JUNK").ApplyToTest(test);
             Assert.That(test.RunState, Is.EqualTo(RunState.Skipped));

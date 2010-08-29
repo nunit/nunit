@@ -90,6 +90,7 @@ namespace NUnit.Framework.Internal
             {
                 if (writer == null)
                     writer = new StreamWriter(Console.OpenStandardOutput());
+
                 writer.AutoFlush = true;
 
                 return writer;
@@ -187,6 +188,7 @@ namespace NUnit.Framework.Internal
             if (level <= InternalTrace.Level)
             {
                 string caller = "UNKNOWN";
+#if !NETCF
                 string stack = System.Environment.StackTrace;
                 int index1 = stack.LastIndexOf(MY_NAME);
                 if (index1 >= 0)
@@ -213,6 +215,7 @@ namespace NUnit.Framework.Internal
                         // Set the caller's Type name
                         caller = stack.Substring(index1, index2 - index1);
                     }
+#endif
                 }
 
 

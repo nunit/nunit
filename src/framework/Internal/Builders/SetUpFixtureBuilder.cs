@@ -48,7 +48,7 @@ namespace NUnit.Framework.Builders
                 if (!IsValidFixtureType(type, ref reason))
                 {
                     fixture.RunState = RunState.NotRunnable;
-                    fixture.Properties.Set(PropertyNames.IgnoreReason, reason);
+                    fixture.SkipReason = reason;
                 }
             }
 

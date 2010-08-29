@@ -148,19 +148,31 @@ namespace NUnit.Framework.Internal
 				Assert.AreEqual( RunState.Skipped, test.RunState, test.Name );
 		}
 
-		[Test]
-		public void SettingInvalidCultureGivesError()
-		{
-			ITestResult result = TestBuilder.RunTestCase( typeof( InvalidCultureFixture ), "InvalidCultureSet" );
-			Assert.AreEqual( ResultState.Error, result.ResultState );
-		    string expectedException = RuntimeFramework.CurrentFramework.Version.Major == 4
-		      ? "System.Globalization.CultureNotFoundException"
-		      : "System.ArgumentException";
-            Assert.That( result.Message, Is.StringStarting(expectedException) );
-            Assert.That( result.Message, Is.StringContaining("xx-XX").IgnoreCase );
-		}
+        [Test]
+        public void SettingInvalidCultureOnFixtureGivesError()
+        {
+            ITestResult result = TestBuilder.RunTestFixture(typeof(FixtureWithInvalidSetCultureAttribute));
+            Assert.AreEqual(ResultState.Error, result.ResultState);
+            string expectedException = RuntimeFramework.CurrentFramework.Version.Major == 4
+              ? "System.Globalization.CultureNotFoundException"
+              : "System.ArgumentException";
+            Assert.That(result.Message, Is.StringStarting(expectedException));
+            Assert.That(result.Message, Is.StringContaining("xx-XX").IgnoreCase);
+        }
 
-		[TestFixture, SetCulture("en-GB")]
+        [Test]
+        public void SettingInvalidCultureOnTestGivesError()
+        {
+            ITestResult result = TestBuilder.RunTestCase(typeof(FixtureWithInvalidSetCultureAttributeOnTest), "InvalidCultureSet");
+            Assert.AreEqual(ResultState.Error, result.ResultState);
+            string expectedException = RuntimeFramework.CurrentFramework.Version.Major == 4
+              ? "System.Globalization.CultureNotFoundException"
+              : "System.ArgumentException";
+            Assert.That(result.Message, Is.StringStarting(expectedException));
+            Assert.That(result.Message, Is.StringContaining("xx-XX").IgnoreCase);
+        }
+
+        [TestFixture, SetCulture("en-GB")]
 		public class NestedFixture
 		{
 			[Test]

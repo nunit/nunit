@@ -251,9 +251,8 @@ namespace NUnit.Framework.Tests
         [Test]
         public void CanIgnoreIndividualTestCase()
         {
-            Test test = TestBuilder.MakeTestCase(
+            ITestResult result = TestBuilder.RunTestCase(
                 typeof(TestCaseAttributeFixture), "MethodWithIgnoredTestCases");
-            ITestResult result = test.Run(TestListener.NULL);
 
             ResultSummary summary = new ResultSummary(result);
             Assert.AreEqual(3, summary.ResultCount);

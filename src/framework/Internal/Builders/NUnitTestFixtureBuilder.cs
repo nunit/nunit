@@ -117,7 +117,7 @@ namespace NUnit.Framework.Builders
             else
             {
                 suite.RunState = RunState.NotRunnable;
-                suite.Properties.Set(PropertyNames.IgnoreReason, NO_TYPE_ARGS_MSG);
+                suite.SkipReason = NO_TYPE_ARGS_MSG;
             }
 
             return suite;
@@ -153,7 +153,7 @@ namespace NUnit.Framework.Builders
                 if (attr.Ignore)
                 {
                     fixture.RunState = RunState.Ignored;
-                    fixture.Properties.Set(PropertyNames.IgnoreReason, attr.IgnoreReason);
+                    fixture.SkipReason = attr.IgnoreReason;
                 }
             }
 
@@ -219,7 +219,7 @@ namespace NUnit.Framework.Builders
             if (!IsValidFixtureType(fixtureType, ref reason))
             {
                 fixture.RunState = RunState.NotRunnable;
-                fixture.Properties.Set(PropertyNames.IgnoreReason, reason);
+                fixture.SkipReason = reason;
             }
             else if( !IsStaticClass( fixtureType ) )
             {
@@ -232,7 +232,7 @@ namespace NUnit.Framework.Builders
                 if (ctor == null)
                 {
                     fixture.RunState = RunState.NotRunnable;
-                    fixture.Properties.Set(PropertyNames.IgnoreReason, "No suitable constructor was found");
+                    fixture.SkipReason = "No suitable constructor was found";
                 }
             }
         }

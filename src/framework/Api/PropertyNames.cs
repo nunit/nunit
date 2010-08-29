@@ -31,8 +31,6 @@ namespace NUnit.Framework.Api
     /// </summary>
     public class PropertyNames
     {
-        #region Properties Used on All Types of Test
-
         /// <summary>
         /// The Description of a test
         /// </summary>
@@ -41,7 +39,7 @@ namespace NUnit.Framework.Api
         /// <summary>
         /// The reason a test was not run
         /// </summary>
-        public static readonly string IgnoreReason = "_IGNOREREASON";
+        public static readonly string SkipReason = "_SKIPREASON";
 
         /// <summary>
         /// The culture to be set for a test
@@ -88,10 +86,6 @@ namespace NUnit.Framework.Api
         /// </summary>
         public static readonly string JoinType = "_JOINTYPE";
 
-        #endregion
-
-        #region Properties used on Test assemblies only
-
         /// <summary>
         /// The process ID of the executing assembly
         /// </summary>
@@ -101,7 +95,5 @@ namespace NUnit.Framework.Api
         /// The FriendlyName of the AppDomain in which the assembly is running
         /// </summary>
         public static readonly string AppDomain = "_APPDOMAIN";
-
-        #endregion
     }
 }

@@ -55,8 +55,6 @@ namespace NUnit.Framework.Internal
             return sb.ToString();
         }
 
-#if !NETCF_1_0
-        // TODO: Move to a utility class
         /// <summary>
         /// Builds up a message, using the Message field of the specified exception
         /// as well as any InnerExceptions.
@@ -65,6 +63,7 @@ namespace NUnit.Framework.Internal
         /// <returns>A combined stack trace.</returns>
         public static string BuildStackTrace(Exception exception)
         {
+#if !NETCF_1_0
             StringBuilder sb = new StringBuilder(GetStackTrace(exception));
 
             Exception inner = exception.InnerException;
@@ -80,8 +79,12 @@ namespace NUnit.Framework.Internal
             }
 
             return sb.ToString();
+#else
+            return "No stack trace available";
+#endif
         }
 
+#if !NETCF_1_0
         private static string GetStackTrace(Exception exception)
         {
             try

@@ -33,13 +33,13 @@ namespace NUnit.AdhocTestRunner
     /// FrameworkController is used by the test-runner to load and run
     /// tests using the NUnit framework assembly.
     /// </summary>
-    public class FrameworkController
+    public class FrameworkDriver
     {
         AppDomain testDomain;
 
         object testController;
 
-        public FrameworkController(AppDomain testDomain)
+        public FrameworkDriver(AppDomain testDomain)
         {
             this.testDomain = testDomain;
             this.testController = CreateObject("NUnit.Framework.Api.TestController");
@@ -49,12 +49,24 @@ namespace NUnit.AdhocTestRunner
         {
             CallbackHandler handler = new CallbackHandler();
 
-            CreateObject("NUnit.Framework.Api.TestController+LoadTestsAction", 
+            CreateObject("NUnit.Framework.Api.TestController+LoadTestsAction",
                 testController, assemblyFileName, options, handler.Callback);
 
             Debug.Assert(handler.Result is bool, "Returned result was not a bool");
 
             return (bool)handler.Result;
+        }
+
+        public XmlNode ExploreTests(string assemblyFileName, IDictionary options)
+        {
+            CallbackHandler handler = new CallbackHandler();
+
+            CreateObject("NUnit.Framework.Api.TestController+ExploreTestsAction",
+                testController, assemblyFileName, options, handler.Callback);
+
+            Debug.Assert(handler.Result is XmlNode, "Returned result was not an XmlNode");
+
+            return (XmlNode)handler.Result;
         }
 
         public XmlNode GetLoadedTests()

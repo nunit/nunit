@@ -53,6 +53,7 @@ namespace NUnit.TestUtilities
         {
             Test test = TestBuilder.MakeTestCase(type, name);
             Assert.That(test.RunState, Is.EqualTo(RunState.Runnable));
+            test.Fixture = Activator.CreateInstance(type);
             ITestResult result = test.Run(TestListener.NULL);
             if (result.HasChildren) // In case it's a parameterized method
                 result = (ITestResult)result.Children[0];

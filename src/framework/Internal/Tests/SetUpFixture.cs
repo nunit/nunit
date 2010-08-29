@@ -63,7 +63,7 @@ namespace NUnit.Framework.Internal
                      method.GetParameters().Length > 0 ||
                      !method.ReturnType.Equals(typeof(void)))
                 {
-                    this.Properties.Set(PropertyNames.IgnoreReason, string.Format("Invalid signature for SetUp or TearDown method: {0}", method.Name));
+                    this.SkipReason = string.Format("Invalid signature for SetUp or TearDown method: {0}", method.Name);
                     this.RunState = RunState.NotRunnable;
                     break;
                 }

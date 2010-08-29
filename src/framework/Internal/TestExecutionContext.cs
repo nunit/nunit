@@ -26,8 +26,11 @@ using System.Collections.Specialized;
 using System.IO;
 using System.Diagnostics;
 using System.Globalization;
-using System.Security.Principal;
 using System.Threading;
+
+#if !NUNITLITE
+using System.Security.Principal;
+#endif
 
 namespace NUnit.Framework.Internal
 {
@@ -45,66 +48,12 @@ namespace NUnit.Framework.Internal
 	/// </summary>
 	public class TestExecutionContext
 	{
-		#region Static Fields
-		/// <summary>
-		/// The current context, head of the list of saved contexts.
-		/// </summary>
-		private static TestExecutionContext current = new TestExecutionContext();
-		#endregion
-
         #region Instance Fields
 
         /// <summary>
-		/// Indicates whether trace is enabled
-		/// </summary>
-		private bool tracing;
-
-		/// <summary>
-		/// Indicates whether logging is enabled
-		/// </summary>
-		private bool logging;
-
-		/// <summary>
-		/// Destination for standard output
-		/// </summary>
-		private TextWriter outWriter;
-
-		/// <summary>
-		/// Destination for standard error
-		/// </summary>
-		private TextWriter errorWriter;
-
-		/// <summary>
-		/// Destination for Trace output
-		/// </summary>
-		private TextWriter traceWriter;
-
-        /// <summary>
-        /// Default timeout for test cases
+        /// Link to a prior saved context
         /// </summary>
-        private int testCaseTimeout;
-
-		private Log4NetCapture logCapture;
-
-		/// <summary>
-		/// The current working directory
-		/// </summary>
-		private string currentDirectory;
-
-		/// <summary>
-		/// The current culture
-		/// </summary>
-		private CultureInfo currentCulture;
-
-        /// <summary>
-        /// The current UI culture
-        /// </summary>
-        private CultureInfo currentUICulture;
-
-        /// <summary>
-        /// The current Principal.
-        /// </summary>
-		private IPrincipal currentPrincipal;
+        public TestExecutionContext prior;
 
         /// <summary>
         /// The currently executing test
@@ -116,10 +65,68 @@ namespace NUnit.Framework.Internal
         /// </summary>
         private TestResult currentResult;
 
-		/// <summary>
-		/// Link to a prior saved context
+        /// <summary>
+        /// The number of assertions for the current test
+        /// </summary>
+        private int assertCount;
+
+#if !NETCF_1_0
+        /// <summary>
+        /// Destination for standard output
+        /// </summary>
+        private TextWriter outWriter;
+
+        /// <summary>
+        /// Destination for standard error
+        /// </summary>
+        private TextWriter errorWriter;
+#endif
+
+#if !NETCF
+        /// <summary>
+		/// Indicates whether trace is enabled
 		/// </summary>
-		public TestExecutionContext prior;
+		private bool tracing;
+
+        /// <summary>
+        /// Destination for Trace output
+        /// </summary>
+        private TextWriter traceWriter;
+#endif
+
+#if !NUNITLITE
+        /// <summary>
+        /// Default timeout for test cases
+        /// </summary>
+        private int testCaseTimeout;
+
+        /// <summary>
+        /// Indicates whether logging is enabled
+        /// </summary>
+        private bool logging;
+
+        /// <summary>
+		/// The current culture
+		/// </summary>
+		private CultureInfo currentCulture;
+
+        /// <summary>
+        /// The current UI culture
+        /// </summary>
+        private CultureInfo currentUICulture;
+
+		/// <summary>
+		/// The current working directory
+		/// </summary>
+		private string currentDirectory;
+
+		private Log4NetCapture logCapture;
+
+        /// <summary>
+        /// The current Principal.
+        /// </summary>
+		private IPrincipal currentPrincipal;
+#endif
 
         #endregion
 
@@ -131,19 +138,27 @@ namespace NUnit.Framework.Internal
         public TestExecutionContext()
 		{
 			this.prior = null;
-			this.tracing = false;
-			this.logging = false;
+
+#if !NETCF_1_0
 			this.outWriter = Console.Out;
 			this.errorWriter = Console.Error;
-			this.traceWriter = null;
-			this.logCapture = new Log4NetCapture();
-            this.testCaseTimeout = 0;
+#endif
 
-			this.currentDirectory = Environment.CurrentDirectory;
+#if !NETCF
+            this.traceWriter = null;
+            this.tracing = false;
+#endif
+
+#if !NUNITLITE
+            this.testCaseTimeout = 0;
+			this.logging = false;
 			this.currentCulture = CultureInfo.CurrentCulture;
             this.currentUICulture = CultureInfo.CurrentUICulture;
-			this.currentPrincipal = Thread.CurrentPrincipal;
-		}
+			this.currentDirectory = Environment.CurrentDirectory;
+            this.logCapture = new Log4NetCapture();
+            this.currentPrincipal = Thread.CurrentPrincipal;
+#endif
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TestExecutionContext"/> class.
@@ -152,26 +167,39 @@ namespace NUnit.Framework.Internal
 		public TestExecutionContext( TestExecutionContext other )
 		{
 			this.prior = other;
-			this.tracing = other.tracing;
-			this.logging = other.logging;
-			this.outWriter = other.outWriter;
-			this.errorWriter = other.errorWriter;
-			this.traceWriter = other.traceWriter;
-			this.logCapture = other.logCapture;
-            this.testCaseTimeout = other.testCaseTimeout;
 
             this.currentTest = other.currentTest;
             this.currentResult = other.currentResult;
 
-			this.currentDirectory = Environment.CurrentDirectory;
+#if !NETCF_1_0
+			this.outWriter = other.outWriter;
+			this.errorWriter = other.errorWriter;
+#endif
+
+#if !NETCF
+            this.traceWriter = other.traceWriter;
+            this.tracing = other.tracing;
+#endif
+
+#if !NUNITLITE
+            this.testCaseTimeout = other.testCaseTimeout;
+			this.logging = other.logging;
 			this.currentCulture = CultureInfo.CurrentCulture;
             this.currentUICulture = CultureInfo.CurrentUICulture;
-			this.currentPrincipal = Thread.CurrentPrincipal;
-		}
+			this.currentDirectory = Environment.CurrentDirectory;
+            this.logCapture = other.logCapture;
+            this.currentPrincipal = Thread.CurrentPrincipal;
+#endif
+        }
 
         #endregion
 
         #region Static Singleton Instance
+
+        /// <summary>
+        /// The current context, head of the list of saved contexts.
+        /// </summary>
+        private static TestExecutionContext current = new TestExecutionContext();
 
         /// <summary>
         /// Gets the current context.
@@ -184,40 +212,60 @@ namespace NUnit.Framework.Internal
 
         #endregion
 
+        #region Static Methods
+
+        /// <summary>
+        /// Saves the old context and makes a fresh one 
+        /// current without changing any settings.
+        /// </summary>
+        public static void Save()
+        {
+            TestExecutionContext.current = new TestExecutionContext(current);
+        }
+
+        /// <summary>
+        /// Restores the last saved context and puts
+        /// any saved settings back into effect.
+        /// </summary>
+        public static void Restore()
+        {
+            current.ReverseChanges();
+            current = current.prior;
+        }
+
+        #endregion
+
         #region Properties
 
         /// <summary>
-		/// Controls whether trace and debug output are written
-		/// to the standard output.
-		/// </summary>
-		public bool Tracing
-		{
-			get { return tracing; }
-			set 
-			{
-				if ( tracing != value )
-				{
-					if ( traceWriter != null && tracing )
-						StopTracing();
+        /// Gets or sets the current test
+        /// </summary>
+        public Test CurrentTest
+        {
+            get { return currentTest; }
+            set { currentTest = value; }
+        }
 
-					tracing = value; 
+        /// <summary>
+        /// Gets or sets the current test result
+        /// </summary>
+        public TestResult CurrentResult
+        {
+            get { return currentResult; }
+            set { currentResult = value; }
+        }
 
-					if ( traceWriter != null && tracing )
-						StartTracing();
-				}
-			}
-		}
+        /// <summary>
+        /// Gets the assert count.
+        /// </summary>
+        /// <value>The assert count.</value>
+        public int AssertCount
+        {
+            get { return assertCount; }
+        }
 
-		/// <summary>
-		/// Controls whether log output is captured
-		/// </summary>
-		public bool Logging
-		{
-			get { return logCapture.Enabled; }
-			set { logCapture.Enabled = value; }
-		}
-
-		/// <summary>
+#if !NETCF_1_0
+        /// <summary>
 		/// Controls where Console.Out is directed
 		/// </summary>
 		public TextWriter Out
@@ -233,7 +281,7 @@ namespace NUnit.Framework.Internal
 				}
 			}
 		}
-		
+
 		/// <summary>
 		/// Controls where Console.Error is directed
 		/// </summary>
@@ -250,6 +298,30 @@ namespace NUnit.Framework.Internal
 				}
 			}
 		}
+#endif
+
+#if !NETCF
+        /// <summary>
+        /// Controls whether trace and debug output are written
+        /// to the standard output.
+        /// </summary>
+        public bool Tracing
+        {
+            get { return tracing; }
+            set
+            {
+                if (tracing != value)
+                {
+                    if (traceWriter != null && tracing)
+                        StopTracing();
+
+                    tracing = value;
+
+                    if (traceWriter != null && tracing)
+                        StartTracing();
+                }
+            }
+        }
 
         /// <summary>
         /// Controls where Trace output is directed
@@ -272,23 +344,6 @@ namespace NUnit.Framework.Internal
 			}
 		}
 
-		/// <summary>
-		///  Gets or sets the Log writer, which is actually held by a log4net 
-		///  TextWriterAppender. When first set, the appender will be created
-		///  and will thereafter send any log events to the writer.
-		///  
-		///  In normal operation, LogWriter is set to an EventListenerTextWriter
-		///  connected to the EventQueue in the test domain. The events are
-		///  subsequently captured in the Gui an the output displayed in
-		///  the Log tab. The application under test does not need to define
-		///  any additional appenders.
-		/// </summary>
-		public TextWriter LogWriter
-		{
-			get { return logCapture.Writer; }
-			set { logCapture.Writer = value; }
-		}
-
 		private void StopTracing()
 		{
 			traceWriter.Close();
@@ -299,7 +354,35 @@ namespace NUnit.Framework.Internal
 		{
 			System.Diagnostics.Trace.Listeners.Add( new TextWriterTraceListener( traceWriter, "NUnit" ) );
 		}
+#endif
 
+#if !NUNITLITE
+        /// <summary>
+        /// Controls whether log output is captured
+        /// </summary>
+        public bool Logging
+        {
+            get { return logCapture.Enabled; }
+            set { logCapture.Enabled = value; }
+        }
+
+        /// <summary>
+        ///  Gets or sets the Log writer, which is actually held by a log4net 
+        ///  TextWriterAppender. When first set, the appender will be created
+        ///  and will thereafter send any log events to the writer.
+        ///  
+        ///  In normal operation, LogWriter is set to an EventListenerTextWriter
+        ///  connected to the EventQueue in the test domain. The events are
+        ///  subsequently captured in the Gui an the output displayed in
+        ///  the Log tab. The application under test does not need to define
+        ///  any additional appenders.
+        /// </summary>
+        public TextWriter LogWriter
+        {
+            get { return logCapture.Writer; }
+            set { logCapture.Writer = value; }
+        }
+        
         /// <summary>
         /// Saves and restores the CurrentDirectory
         /// </summary>
@@ -360,49 +443,9 @@ namespace NUnit.Framework.Internal
             get { return testCaseTimeout; }
             set { testCaseTimeout = value; }
         }
-
-        /// <summary>
-        /// Gets or sets the current test
-        /// </summary>
-        public Test CurrentTest
-        {
-            get { return currentTest; }
-            set { currentTest = value; }
-        }
-
-        /// <summary>
-        /// Gets or sets the current test result
-        /// </summary>
-        public TestResult CurrentResult
-        {
-            get { return currentResult; }
-            set { currentResult = value; }
-        }
+#endif
 
         #endregion
-
-        #region Static Methods
-
-        /// <summary>
-		/// Saves the old context and makes a fresh one 
-		/// current without changing any settings.
-		/// </summary>
-		public static void Save()
-		{
-			TestExecutionContext.current = new TestExecutionContext( current );
-		}
-
-        /// <summary>
-		/// Restores the last saved context and puts
-		/// any saved settings back into effect.
-		/// </summary>
-        public static void Restore()
-        {
-            current.ReverseChanges();
-            current = current.prior;
-        }
-
-		#endregion
 
         #region Instance Methods
 
@@ -415,16 +458,25 @@ namespace NUnit.Framework.Internal
 			if ( prior == null )
 				throw new InvalidOperationException( "TestContext: too many Restores" );
 
-			this.Tracing = prior.Tracing;
+#if !NETCF_1_0
 			this.Out = prior.Out;
 			this.Error = prior.Error;
+#endif
+
+#if !NETCF
+            this.Tracing = prior.Tracing;
+#endif
+
+#if !NUNITLITE
 			this.CurrentDirectory = prior.CurrentDirectory;
 			this.CurrentCulture = prior.CurrentCulture;
             this.CurrentUICulture = prior.CurrentUICulture;
             this.TestCaseTimeout = prior.TestCaseTimeout;
 			this.CurrentPrincipal = prior.CurrentPrincipal;
+#endif
 		}
 
+#if !NUNITLITE
         /// <summary>
         /// Record any changed values in the current context
         /// </summary>
@@ -434,6 +486,15 @@ namespace NUnit.Framework.Internal
             this.currentCulture = CultureInfo.CurrentCulture;
             this.currentUICulture = CultureInfo.CurrentUICulture;
             this.currentPrincipal = System.Threading.Thread.CurrentPrincipal;
+        }
+#endif
+
+        /// <summary>
+        /// Increments the assert count.
+        /// </summary>
+        public void IncrementAssertCount()
+        {
+            System.Threading.Interlocked.Increment(ref assertCount);
         }
 
         #endregion

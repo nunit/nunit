@@ -53,7 +53,7 @@ namespace NUnit.TestUtilities
             Summarize(result);
         }
 
-        public void Summarize(ITestResult result)
+        private void Summarize(ITestResult result)
         {
             if (this.name == null)
             {

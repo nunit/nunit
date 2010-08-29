@@ -60,31 +60,6 @@ namespace NUnit.Framework
 
         #endregion
 
-        #region Assert Counting
-
-        private static int counter = 0;
-
-        /// <summary>
-        /// Gets the number of assertions executed so far and 
-        /// resets the counter to zero.
-        /// </summary>
-        public static int Counter
-        {
-            get
-            {
-                int cnt = counter;
-                counter = 0;
-                return cnt;
-            }
-        }
-
-        private static void IncrementAssertCount()
-        {
-            ++counter;
-        }
-
-        #endregion
-
         #region Equals and ReferenceEquals
 
 #if !NETCF
@@ -312,7 +287,7 @@ namespace NUnit.Framework
         {
             Constraint constraint = expression.Resolve();
 
-            Assert.IncrementAssertCount();
+            TestExecutionContext.CurrentContext.IncrementAssertCount();
             if (!constraint.Matches(actual))
             {
                 MessageWriter writer = new TextMessageWriter(message, args);
@@ -359,7 +334,7 @@ namespace NUnit.Framework
         {
             Constraint constraint = expr.Resolve();
 
-            Assert.IncrementAssertCount();
+            TestExecutionContext.CurrentContext.IncrementAssertCount();
             if (!constraint.Matches(del))
             {
                 MessageWriter writer = new TextMessageWriter(message, args);
@@ -407,7 +382,7 @@ namespace NUnit.Framework
         {
             Constraint constraint = expression.Resolve();
 
-            Assert.IncrementAssertCount();
+            TestExecutionContext.CurrentContext.IncrementAssertCount();
             if (!constraint.Matches(ref actual))
             {
                 MessageWriter writer = new TextMessageWriter(message, args);
@@ -451,7 +426,7 @@ namespace NUnit.Framework
         {
             Constraint constraint = expression.Resolve();
 
-            Assert.IncrementAssertCount();
+            TestExecutionContext.CurrentContext.IncrementAssertCount();
             if (!constraint.Matches(ref actual))
             {
                 MessageWriter writer = new TextMessageWriter(message, args);

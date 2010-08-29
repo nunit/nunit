@@ -68,38 +68,12 @@ namespace NUnit.Framework.Internal
                 if (suite != null)
                 {
                     this.Fixture = suite.Fixture;
-                    this.setUpMethods = suite.GetSetUpMethods();
-                    this.tearDownMethods = suite.GetTearDownMethods();
+                    this.setUpMethods = suite.SetUpMethods;
+                    this.tearDownMethods = suite.TearDownMethods;
                 }
             }
-
-            //Extensibility.ITestCaseProvider provider = CoreExtensions.Host.TestCaseProviders;
-
-            //if (provider.HasTestCasesFor(this.method))
-
-            //foreach (TestCaseSourceAttribute attr in this.method.GetCustomAttributes(typeof(TestCaseSourceAttribute), false))
-            //{
-            //}
-            
+          
             return base.Run(listener);
-        }
-
-        /// <summary>
-        /// Override DoOneTimeSetUp to avoid executing any
-        /// TestFixtureSetUp method for this suite
-        /// </summary>
-        /// <param name="suiteResult"></param>
-        protected override void DoOneTimeSetUp(TestResult suiteResult)
-        {
-        }
-
-        /// <summary>
-        /// Override DoOneTimeTearDown to avoid executing any
-        /// TestFixtureTearDown method for this suite.
-        /// </summary>
-        /// <param name="suiteResult"></param>
-        protected override void DoOneTimeTearDown(TestResult suiteResult)
-        {
         }
 
         /// <summary>

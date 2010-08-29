@@ -67,7 +67,7 @@ namespace NUnit.Framework.Internal
                      method.GetParameters().Length > 0 ||
                      !method.ReturnType.Equals(typeof(void)))
                 {
-                    this.Properties.Set(PropertyNames.IgnoreReason, string.Format("Invalid signature for SetUp or TearDown method: {0}", method.Name));
+                    this.SkipReason = string.Format("Invalid signature for SetUp or TearDown method: {0}", method.Name);
                     this.RunState = RunState.NotRunnable;
                     break;
                 }
@@ -91,43 +91,6 @@ namespace NUnit.Framework.Internal
             }
         }
 
-#if !NUNITLITE
-        /// <summary>
-        /// Runs the suite under a particular filter, sending
-        /// notifications to a listener.
-        /// </summary>
-        /// <param name="listener">An event listener to receive notifications</param>
-        /// <returns></returns>
-        //public override TestResult Run(ITestListener listener)
-        //{
-        //    using ( new DirectorySwapper( AssemblyHelper.GetDirectoryName( FixtureType.Assembly ) ) )
-        //    {
-        //        return base.Run(listener);
-        //    }
-        //}
-#endif
-
-        /// <summary>
-        /// Does the one time set up.
-        /// </summary>
-        /// <param name="suiteResult">The suite result.</param>
-        protected override void DoOneTimeSetUp(TestResult suiteResult)
-        {
-            base.DoOneTimeSetUp(suiteResult);
-
-            suiteResult.AssertCount = Assert.Counter; ;
-        }
-
-        /// <summary>
-        /// Does the one time tear down.
-        /// </summary>
-        /// <param name="suiteResult">The suite result.</param>
-        protected override void DoOneTimeTearDown(TestResult suiteResult)
-        {
-            base.DoOneTimeTearDown(suiteResult);
-
-            suiteResult.AssertCount += Assert.Counter;
-        }
         #endregion
 	}
 }

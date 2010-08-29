@@ -338,7 +338,7 @@ namespace NUnit.Framework
         public TestCaseData Ignore(string reason)
         {
             isIgnored = true;
-            this.Properties.Set(PropertyNames.IgnoreReason, reason);
+            this.Properties.Set(PropertyNames.SkipReason, reason);
             return this;
         }
         #endregion
