@@ -84,7 +84,7 @@ namespace NUnit.Framework.Constraints
 
         class EqualityComparerAdapter : EqualityAdapter
         {
-            private IEqualityComparer comparer;
+            private readonly IEqualityComparer comparer;
 
             public EqualityComparerAdapter(IEqualityComparer comparer)
             {
@@ -99,7 +99,7 @@ namespace NUnit.Framework.Constraints
 
         class EqualityComparerAdapter<T> : EqualityAdapter
         {
-            private IEqualityComparer<T> comparer;
+            private readonly IEqualityComparer<T> comparer;
 
             public EqualityComparerAdapter(IEqualityComparer<T> comparer)
             {
@@ -121,7 +121,7 @@ namespace NUnit.Framework.Constraints
 
         class ComparisonAdapterAdapter : EqualityAdapter
         {
-            private ComparisonAdapter comparer;
+            private readonly ComparisonAdapter comparer;
 
             public ComparisonAdapterAdapter(ComparisonAdapter comparer)
             {

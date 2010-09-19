@@ -4,7 +4,6 @@
 // obtain a copy of the license at http://nunit.org
 // ****************************************************************
 
-using System;
 using System.Collections;
 
 namespace NUnit.Framework.Constraints
@@ -16,9 +15,9 @@ namespace NUnit.Framework.Constraints
     public class CollectionTally
     {
         // Internal list used to track occurences
-        private ObjectList list = new ObjectList();
+        private readonly ObjectList list = new ObjectList();
 
-        private NUnitEqualityComparer comparer;
+        private readonly NUnitEqualityComparer comparer;
 
         /// <summary>
         /// Construct a CollectionTally object from a comparer and a collection

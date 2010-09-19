@@ -35,7 +35,7 @@ namespace NUnit.Framework.Constraints
 	/// </summary>
 	public class ContainsConstraint : Constraint
 	{
-		object expected;
+	    readonly object expected;
 		Constraint realConstraint;
         bool ignoreCase;
 

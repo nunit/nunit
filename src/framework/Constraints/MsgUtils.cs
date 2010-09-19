@@ -35,7 +35,7 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Static string used when strings are clipped
         /// </summary>
-        private static readonly string ELLIPSIS = "...";
+        private const string ELLIPSIS = "...";
 
         /// <summary>
         /// Returns the representation of a type as used in NUnitLite.
@@ -84,18 +84,16 @@ namespace NUnit.Framework.Constraints
             {
                 StringBuilder sb = new StringBuilder();
 
-                for (int i = 0; i < s.Length; i++)
+                foreach (char c in s)
                 {
-                    char c = s[i];
-
                     switch (c)
                     {
-                        //case '\'':
-                        //    sb.Append("\\\'");
-                        //    break;
-                        //case '\"':
-                        //    sb.Append("\\\"");
-                        //    break;
+                            //case '\'':
+                            //    sb.Append("\\\'");
+                            //    break;
+                            //case '\"':
+                            //    sb.Append("\\\"");
+                            //    break;
                         case '\\':
                             sb.Append("\\\\");
                             break;

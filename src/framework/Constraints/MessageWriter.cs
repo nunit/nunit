@@ -39,7 +39,7 @@ namespace NUnit.Framework.Constraints
 		/// <summary>
 		/// Construct a MessageWriter given a culture
 		/// </summary>
-        public MessageWriter() : base( System.Globalization.CultureInfo.InvariantCulture ) { }
+		protected MessageWriter() : base( System.Globalization.CultureInfo.InvariantCulture ) { }
 
         /// <summary>
         /// Abstract method to get the max line length

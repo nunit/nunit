@@ -35,8 +35,8 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class RangeConstraint : Constraint
     {
-        private IComparable from;
-        private IComparable to;
+        private readonly IComparable from;
+        private readonly IComparable to;
 
         private ComparisonAdapter comparer = ComparisonAdapter.Default;
 

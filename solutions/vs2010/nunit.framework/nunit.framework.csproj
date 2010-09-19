@@ -243,20 +243,62 @@
     <Compile Include="..\..\..\src\framework\CollectionAssert.cs">
       <Link>CollectionAssert.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\AttributeConstraints.cs">
-      <Link>Constraints\AttributeConstraints.cs</Link>
+    <Compile Include="..\..\..\src\framework\Constraints\AllItemsConstraint.cs">
+      <Link>Constraints\OF-PrefixConstraints\AllItemsConstraint.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\BasicConstraints.cs">
-      <Link>Constraints\BasicConstraints.cs</Link>
+    <Compile Include="..\..\..\src\framework\Constraints\AndConstraint.cs">
+      <Link>Constraints\OF-BinaryOperations\AndConstraint.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\BinaryOperations.cs">
-      <Link>Constraints\BinaryOperations.cs</Link>
+    <Compile Include="..\..\..\src\framework\Constraints\AndOperator.cs">
+      <Link>Constraints\OF-ConstraintOperators\AndOperator.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Constraints\AssignableFromConstraint.cs">
+      <Link>Constraints\OF-TypeConstraints\AssignableFromConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Constraints\AssignableToConstraint.cs">
+      <Link>Constraints\OF-TypeConstraints\AssignableToConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Constraints\AttributeConstraint.cs">
+      <Link>Constraints\OF-AttributeConstraint\AttributeConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Constraints\AttributeExistsConstraint.cs">
+      <Link>Constraints\OF-AttributeConstraint\AttributeExistsConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Constraints\AttributeOperator.cs">
+      <Link>Constraints\OF-ConstraintOperators\AttributeOperator.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Constraints\BasicConstraint.cs">
+      <Link>Constraints\OF-BasicConstraints\BasicConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Constraints\BinaryConstraint.cs">
+      <Link>Constraints\OF-BinaryOperations\BinaryConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Constraints\BinaryOperator.cs">
+      <Link>Constraints\OF-ConstraintOperators\BinaryOperator.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Constraints\BinarySerializableConstraint.cs">
       <Link>Constraints\BinarySerializableConstraint.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\CollectionConstraints.cs">
-      <Link>Constraints\CollectionConstraints.cs</Link>
+    <Compile Include="..\..\..\src\framework\Constraints\CollectionConstraint.cs">
+      <Link>Constraints\OF-CollectionConstraints\CollectionConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Constraints\CollectionContainsConstraint.cs">
+      <Link>Constraints\OF-CollectionConstraints\CollectionContainsConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Constraints\CollectionEquivalentConstraint.cs">
+      <Link>Constraints\OF-CollectionConstraints\CollectionEquivalentConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Constraints\CollectionItemsEqualConstraint.cs">
+      <Link>Constraints\OF-CollectionConstraints\CollectionItemsEqualConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Constraints\CollectionOperator.cs">
+      <Link>Constraints\OF-ConstraintOperators\CollectionOperator.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Constraints\CollectionOrderedConstraint.cs">
+      <Link>Constraints\OF-CollectionConstraints\CollectionOrderedConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Constraints\CollectionSubsetConstraint.cs">
+      <Link>Constraints\OF-CollectionConstraints\CollectionSubsetConstraint.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Constraints\CollectionTally.cs">
       <Link>Constraints\CollectionTally.cs</Link>
@@ -264,8 +306,8 @@
     <Compile Include="..\..\..\src\framework\Constraints\ComparisonAdapter.cs">
       <Link>Constraints\ComparisonAdapter.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\ComparisonConstraints.cs">
-      <Link>Constraints\ComparisonConstraints.cs</Link>
+    <Compile Include="..\..\..\src\framework\Constraints\ComparisonConstraint.cs">
+      <Link>Constraints\OF-ComparisonConstraints\ComparisonConstraint.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Constraints\Constraint.cs">
       <Link>Constraints\Constraint.cs</Link>
@@ -282,8 +324,8 @@
     <Compile Include="..\..\..\src\framework\Constraints\ConstraintFactory.cs">
       <Link>Constraints\ConstraintFactory.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\ConstraintOperators.cs">
-      <Link>Constraints\ConstraintOperators.cs</Link>
+    <Compile Include="..\..\..\src\framework\Constraints\ConstraintOperator.cs">
+      <Link>Constraints\OF-ConstraintOperators\ConstraintOperator.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Constraints\ContainsConstraint.cs">
       <Link>Constraints\ContainsConstraint.cs</Link>
@@ -291,11 +333,20 @@
     <Compile Include="..\..\..\src\framework\Constraints\DelayedConstraint.cs">
       <Link>Constraints\DelayedConstraint.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\framework\Constraints\EmptyCollectionConstraint.cs">
+      <Link>Constraints\OF-CollectionConstraints\EmptyCollectionConstraint.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\framework\Constraints\EmptyConstraint.cs">
       <Link>Constraints\EmptyConstraint.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Constraints\EmptyDirectoryConstraint.cs">
       <Link>Constraints\EmptyDirectoryConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Constraints\EmptyStringConstraint.cs">
+      <Link>Constraints\OF-StringConstraints\EmptyStringConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Constraints\EndsWithConstraint.cs">
+      <Link>Constraints\OF-StringConstraints\EndsWithConstraint.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Constraints\EqualConstraint.cs">
       <Link>Constraints\EqualConstraint.cs</Link>
@@ -303,17 +354,56 @@
     <Compile Include="..\..\..\src\framework\Constraints\EqualityAdapter.cs">
       <Link>Constraints\EqualityAdapter.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\framework\Constraints\ExactTypeConstraint.cs">
+      <Link>Constraints\OF-TypeConstraints\ExactTypeConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Constraints\FalseConstraint.cs">
+      <Link>Constraints\BasicConstraints\FalseConstraint.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\framework\Constraints\FloatingPointNumerics.cs">
       <Link>Constraints\FloatingPointNumerics.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\framework\Constraints\GreaterThanConstraint.cs">
+      <Link>Constraints\OF-ComparisonConstraints\GreaterThanConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Constraints\GreaterThanOrEqualConstraint.cs">
+      <Link>Constraints\OF-ComparisonConstraints\GreaterThanOrEqualConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Constraints\InstanceOfTypeConstraint.cs">
+      <Link>Constraints\OF-TypeConstraints\InstanceOfTypeConstraint.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\framework\Constraints\IResolveConstraint.cs">
       <Link>Constraints\IResolveConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Constraints\LessThanConstraint.cs">
+      <Link>Constraints\OF-ComparisonConstraints\LessThanConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Constraints\LessThanOrEqualConstraint.cs">
+      <Link>Constraints\OF-ComparisonConstraints\LessThanOrEqualConstraint.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Constraints\MessageWriter.cs">
       <Link>Constraints\MessageWriter.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Constraints\MsgUtils.cs">
       <Link>Constraints\MsgUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Constraints\NaNConstraint.cs">
+      <Link>Constraints\BasicConstraints\NaNConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Constraints\NoItemConstraint.cs">
+      <Link>Constraints\OF-PrefixConstraints\NoItemConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Constraints\NotConstraint.cs">
+      <Link>Constraints\OF-PrefixConstraints\NotConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Constraints\NotOperator.cs">
+      <Link>Constraints\OF-ConstraintOperators\NotOperator.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Constraints\NullConstraint.cs">
+      <Link>Constraints\BasicConstraints\NullConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Constraints\NullOrEmptyStringConstraint.cs">
+      <Link>Constraints\OF-StringConstraints\NullOrEmptyStringConstraint.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Constraints\Numerics.cs">
       <Link>Constraints\Numerics.cs</Link>
@@ -324,20 +414,38 @@
     <Compile Include="..\..\..\src\framework\Constraints\NUnitEqualityComparer.cs">
       <Link>Constraints\NUnitEqualityComparer.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\PathConstraints.cs">
-      <Link>Constraints\PathConstraints.cs</Link>
+    <Compile Include="..\..\..\src\framework\Constraints\OrConstraint.cs">
+      <Link>Constraints\OF-BinaryOperations\OrConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Constraints\OrOperator.cs">
+      <Link>Constraints\OF-ConstraintOperators\OrOperator.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Constraints\PathConstraint.cs">
+      <Link>Constraints\OF-PathConstraints\PathConstraint.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Constraints\PredicateConstraint.cs">
       <Link>Constraints\PredicateConstraint.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\PrefixConstraints.cs">
-      <Link>Constraints\PrefixConstraints.cs</Link>
+    <Compile Include="..\..\..\src\framework\Constraints\PrefixConstraint.cs">
+      <Link>Constraints\OF-PrefixConstraints\PrefixConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Constraints\PrefixOperator.cs">
+      <Link>Constraints\OF-ConstraintOperators\PrefixOperator.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Constraints\PropertyConstraint.cs">
       <Link>Constraints\PropertyConstraint.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\framework\Constraints\PropertyExistsConstraint.cs">
+      <Link>Constraints\PropertyExistsConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Constraints\PropOperator.cs">
+      <Link>Constraints\OF-ConstraintOperators\PropOperator.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\framework\Constraints\RangeConstraint.cs">
       <Link>Constraints\RangeConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Constraints\RegexConstraint.cs">
+      <Link>Constraints\OF-StringConstraints\RegexConstraint.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Constraints\ResolvableConstraintExpression.cs">
       <Link>Constraints\ResolvableConstraintExpression.cs</Link>
@@ -348,17 +456,53 @@
     <Compile Include="..\..\..\src\framework\Constraints\SameAsConstraint.cs">
       <Link>Constraints\SameAsConstraint.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\StringConstraints.cs">
-      <Link>Constraints\StringConstraints.cs</Link>
+    <Compile Include="..\..\..\src\framework\Constraints\SamePathConstraint.cs">
+      <Link>Constraints\OF-PathConstraints\SamePathConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Constraints\SamePathOrUnderConstraint.cs">
+      <Link>Constraints\OF-PathConstraints\SamePathOrUnderConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Constraints\SelfResolvingOperator.cs">
+      <Link>Constraints\OF-ConstraintOperators\SelfResolvingOperator.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Constraints\SomeItemsConstraint.cs">
+      <Link>Constraints\OF-PrefixConstraints\SomeItemsConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Constraints\StartsWithConstraint.cs">
+      <Link>Constraints\OF-StringConstraints\StartsWithConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Constraints\StringConstraint.cs">
+      <Link>Constraints\OF-StringConstraints\StringConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Constraints\SubstringConstraint.cs">
+      <Link>Constraints\OF-StringConstraints\SubstringConstraint.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Constraints\ThrowsConstraint.cs">
       <Link>Constraints\ThrowsConstraint.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\framework\Constraints\ThrowsNothingConstraint.cs">
+      <Link>Constraints\ThrowsNothingConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Constraints\ThrowsOperator.cs">
+      <Link>Constraints\OF-ConstraintOperators\ThrowsOperator.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\framework\Constraints\Tolerance.cs">
       <Link>Constraints\Tolerance.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\TypeConstraints.cs">
-      <Link>Constraints\TypeConstraints.cs</Link>
+    <Compile Include="..\..\..\src\framework\Constraints\ToleranceMode.cs">
+      <Link>Constraints\ToleranceMode.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Constraints\TrueConstraint.cs">
+      <Link>Constraints\BasicConstraints\TrueConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Constraints\TypeConstraint.cs">
+      <Link>Constraints\OF-TypeConstraints\TypeConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Constraints\UniqueItemsConstraint.cs">
+      <Link>Constraints\OF-CollectionConstraints\UniqueItemsConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\framework\Constraints\WithOperator.cs">
+      <Link>Constraints\OF-ConstraintOperators\WithOperator.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Constraints\XmlSerializableConstraint.cs">
       <Link>Constraints\XmlSerializableConstraint.cs</Link>
