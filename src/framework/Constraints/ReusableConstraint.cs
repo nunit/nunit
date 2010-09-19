@@ -8,7 +8,7 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class ReusableConstraint : IResolveConstraint
     {
-        private Constraint constraint;
+        private readonly Constraint constraint;
 
         /// <summary>
         /// Construct a ReusableConstraint from a constraint expression

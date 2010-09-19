@@ -87,7 +87,7 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Construct a constraint with no arguments
         /// </summary>
-        public Constraint()
+        protected Constraint()
         {
             argcnt = 0;
         }
@@ -95,7 +95,7 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Construct a constraint with one argument
         /// </summary>
-        public Constraint(object arg)
+        protected Constraint(object arg)
         {
             argcnt = 1;
             this.arg1 = arg;
@@ -104,7 +104,7 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Construct a constraint with two arguments
         /// </summary>
-        public Constraint(object arg1, object arg2)
+        protected Constraint(object arg1, object arg2)
         {
             argcnt = 2;
             this.arg1 = arg1;
@@ -262,7 +262,7 @@ namespace NUnit.Framework.Constraints
             }
         }
 
-        private string _displayable(object o)
+        private static string _displayable(object o)
         {
             if (o == null) return "null";
 

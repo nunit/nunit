@@ -22,7 +22,6 @@
 // ***********************************************************************
 
 using System;
-using System.Collections;
 #if CLR_2_0 || CLR_4_0
 using System.Collections.Generic;
 #endif
@@ -46,7 +45,7 @@ namespace NUnit.Framework.Constraints
         public class OperatorStack
         {
 #if CLR_2_0 || CLR_4_0
-            private Stack<ConstraintOperator> stack = new Stack<ConstraintOperator>();
+            private readonly Stack<ConstraintOperator> stack = new Stack<ConstraintOperator>();
 #else
 		    private Stack stack = new Stack();
 #endif
@@ -103,11 +102,11 @@ namespace NUnit.Framework.Constraints
         public class ConstraintStack
         {
 #if CLR_2_0 || CLR_4_0
-            private Stack<Constraint> stack = new Stack<Constraint>();
+            private readonly Stack<Constraint> stack = new Stack<Constraint>();
 #else
-		    private Stack stack = new Stack();
+		    private readonly Stack stack = new Stack();
 #endif
-            private ConstraintBuilder builder;
+            private readonly ConstraintBuilder builder;
 
             /// <summary>
             /// Initializes a new instance of the <see cref="T:ConstraintStack"/> class.
@@ -164,9 +163,9 @@ namespace NUnit.Framework.Constraints
         #endregion
 
         #region Instance Fields
-        private OperatorStack ops;
+        private readonly OperatorStack ops;
 
-        private ConstraintStack constraints;
+        private readonly ConstraintStack constraints;
 
         private object lastPushed;
         #endregion

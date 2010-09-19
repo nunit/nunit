@@ -33,7 +33,7 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class PredicateConstraint<T> : Constraint
     {
-        Predicate<T> predicate;
+        readonly Predicate<T> predicate;
 
         /// <summary>
         /// Construct a PredicateConstraint from a predicate

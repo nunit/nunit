@@ -254,7 +254,7 @@ namespace NUnit.Framework.Constraints
             IEnumerator expectedEnum = x.GetEnumerator();
             IEnumerator actualEnum = y.GetEnumerator();
 
-            int count = 0;
+            const int count = 0;
             for (; ; )
             {
                 bool expectedHasData = expectedEnum.MoveNext();
@@ -278,7 +278,7 @@ namespace NUnit.Framework.Constraints
         /// <param name="x">first directory to compare</param>
         /// <param name="y">second directory to compare</param>
         /// <returns>true if equivalent, false if not</returns>
-        private bool DirectoriesEqual(DirectoryInfo x, DirectoryInfo y)
+        private static bool DirectoriesEqual(DirectoryInfo x, DirectoryInfo y)
         {
             return x.Attributes == y.Attributes
                 && x.CreationTime == y.CreationTime

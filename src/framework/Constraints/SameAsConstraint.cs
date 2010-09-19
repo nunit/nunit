@@ -31,7 +31,7 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class SameAsConstraint : Constraint
     {
-        private object expected;
+        private readonly object expected;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:SameAsConstraint"/> class.
