@@ -358,7 +358,7 @@
       <Link>Constraints\OF-TypeConstraints\ExactTypeConstraint.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Constraints\FalseConstraint.cs">
-      <Link>Constraints\BasicConstraints\FalseConstraint.cs</Link>
+      <Link>Constraints\OF-BasicConstraints\FalseConstraint.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Constraints\FloatingPointNumerics.cs">
       <Link>Constraints\FloatingPointNumerics.cs</Link>
@@ -388,7 +388,7 @@
       <Link>Constraints\MsgUtils.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Constraints\NaNConstraint.cs">
-      <Link>Constraints\BasicConstraints\NaNConstraint.cs</Link>
+      <Link>Constraints\OF-BasicConstraints\NaNConstraint.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Constraints\NoItemConstraint.cs">
       <Link>Constraints\OF-PrefixConstraints\NoItemConstraint.cs</Link>
@@ -400,7 +400,7 @@
       <Link>Constraints\OF-ConstraintOperators\NotOperator.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Constraints\NullConstraint.cs">
-      <Link>Constraints\BasicConstraints\NullConstraint.cs</Link>
+      <Link>Constraints\OF-BasicConstraints\NullConstraint.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Constraints\NullOrEmptyStringConstraint.cs">
       <Link>Constraints\OF-StringConstraints\NullOrEmptyStringConstraint.cs</Link>
@@ -493,7 +493,7 @@
       <Link>Constraints\ToleranceMode.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Constraints\TrueConstraint.cs">
-      <Link>Constraints\BasicConstraints\TrueConstraint.cs</Link>
+      <Link>Constraints\OF-BasicConstraints\TrueConstraint.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\framework\Constraints\TypeConstraint.cs">
       <Link>Constraints\OF-TypeConstraints\TypeConstraint.cs</Link>
