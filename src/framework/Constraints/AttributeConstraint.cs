@@ -32,7 +32,7 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class AttributeConstraint : PrefixConstraint
     {
-        private Type expectedType;
+        private readonly Type expectedType;
         private Attribute attrFound;
 
         /// <summary>
