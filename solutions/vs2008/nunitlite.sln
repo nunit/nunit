@@ -1,4 +1,3 @@
-﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunitlite", "nunitlite\nunitlite.csproj", "{0BFA7F0A-BC15-40A5-863A-FA9B55AE2FD3}"
