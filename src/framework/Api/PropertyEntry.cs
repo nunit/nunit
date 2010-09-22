@@ -25,22 +25,32 @@ using System;
 
 namespace NUnit.Framework.Api
 {
+    /// <summary>
+    /// Immutable class that stores a property entry as a Name/Value pair.
+    /// </summary>
     public class PropertyEntry
     {
-        private string name;
-        private object value;
+        private readonly string name;
+        private readonly object value;
 
+        /// <summary>
+        /// Initializes a new immutable instance of the <see cref="PropertyEntry"/> class.  
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="value"></param>
         public PropertyEntry(string name, object value)
         {
             this.name = name;
             this.value = value;
         }
 
+        /// <summary>Name of the PropertyEntry.</summary>
         public string Name
         {
             get { return name; }
         }
 
+        /// <summary>Value of the PropertyEntry.</summary>
         public object Value
         {
             get { return value; }

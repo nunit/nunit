@@ -37,13 +37,16 @@ namespace NUnit.Framework.Internal
     public abstract class TestCommand : ITestCommand
     {
         private Test test;
-        private TestResult result;
 #if CLR_2_0 || CLR_4_0
         private IList<ITestCommand> children;
 #else
         private IList children;
 #endif
 
+        /// <summary>
+        /// TODO: Documentation needed for constructor
+        /// </summary>
+        /// <param name="test"></param>
         public TestCommand(Test test)
         {
             this.test = test;
@@ -51,16 +54,19 @@ namespace NUnit.Framework.Internal
 
         #region Public Properties and Methods
 
+        /// <summary>
+        /// TODO: Documentation needed for property
+        /// </summary>
         public Test Test
         {
             get { return test; }
         }
 
+#if CLR_2_0 || CLR_4_0
         /// <summary>
         /// Gets any child TestCommands of this command
         /// </summary>
         /// <value>A list of child TestCommands</value>
-#if CLR_2_0 || CLR_4_0
         public IList<ITestCommand> Children
         {
             get 
@@ -95,6 +101,9 @@ namespace NUnit.Framework.Internal
 
         #region Protected Properties
 
+        /// <summary>
+        /// TODO: Documentation needed for property
+        /// </summary>
         public virtual TestResult Result
         {
             get
@@ -106,38 +115,6 @@ namespace NUnit.Framework.Internal
                 TestExecutionContext.CurrentContext.CurrentResult = value;
             }
         }
-
-        /// <summary>
-        /// Gets the result which is currently being built for this test.
-        /// Returns null if accessed before the test begins execution.
-        /// </summary>
-        //protected TestResult CurrentResult
-        //{
-        //    get
-        //    {
-        //        return TestExecutionContext.CurrentContext.CurrentResult;
-        //    }
-        //    set
-        //    {
-        //        TestExecutionContext.CurrentContext.CurrentResult = value;
-        //    }
-        //}
-
-        /// <summary>
-        /// Gets the test for which this command was created. Since the
-        /// value is stored in the TestExecutionContext, it may only be
-        /// used during execution of the command. At other times, such
-        /// as when the command is being constructed, it returns null,
-        /// so any constructors that need the test should take it as
-        /// an argument.
-        /// </summary>
-        //protected Test CurrentTest
-        //{
-        //    get
-        //    {
-        //        return TestExecutionContext.CurrentContext.CurrentTest;
-        //    }
-        //}
 
         #endregion
     }

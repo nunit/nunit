@@ -135,6 +135,10 @@ namespace NUnit.Framework.Internal
             this.runState = RunState.Runnable;
 		}
 
+        /// <summary>
+        ///  TODO: Documentation needed for constructor
+        /// </summary>
+        /// <param name="fixtureType"></param>
         protected Test(Type fixtureType) : this(fixtureType.FullName)
         {
             this.fixtureType = fixtureType;
@@ -148,7 +152,7 @@ namespace NUnit.Framework.Internal
         /// Gets or sets the id of the test
         /// </summary>
         /// <value></value>
-        public int ID
+        public int Id
         {
             get { return id; }
             set { id = value; }
@@ -265,9 +269,15 @@ namespace NUnit.Framework.Internal
             return thisNode;
         }
 
+
+        /// <summary>
+        /// TODO: Documentation needed for method
+        /// </summary>
+        /// <param name="thisNode"></param>
+        /// <param name="recursive"></param>
         protected void PopulateTestNode(XmlNode thisNode, bool recursive)
         {
-            XmlHelper.AddAttribute(thisNode, "id", this.ID.ToString());
+            XmlHelper.AddAttribute(thisNode, "id", this.Id.ToString());
             XmlHelper.AddAttribute(thisNode, "name", this.Name);
             XmlHelper.AddAttribute(thisNode, "fullname", this.FullName);
 
@@ -529,8 +539,22 @@ namespace NUnit.Framework.Internal
         #region Nested Classes
 
 #if CLR_2_0 || CLR_4_0
+        /// <summary>
+        /// CategoryList is a collection of strings which derives from List&lt;string&gt;.
+        /// </summary>
+        /// <remarks>
+        /// CategoryList base type is dependent on the .NET CLR it's compiled for. 
+        /// For CLR 2.0/4.0 it's based on a List&lt;string&gt; and for CLR 1.0/1.1 it's based on an ArrayList.
+        /// </remarks>        
         public class CategoryList : System.Collections.Generic.List<string> { }
 #else
+        /// <summary>
+        /// CategoryList is a collection of strings which derives from ArrayList.
+        /// </summary>
+        /// <remarks>
+        /// CategoryList base type is dependent on the .NET CLR it's compiled for. 
+        /// For CLR 2.0/4.0 it's based on a List&lt;string&gt; and for CLR 1.0/1.1 it's based on an ArrayList.
+        /// </remarks>        
         public class CategoryList : System.Collections.ArrayList { }
 #endif
         #endregion

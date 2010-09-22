@@ -104,14 +104,6 @@ namespace NUnit.Framework.Internal
         }
 
 #if !NUNITLITE
-        /// <summary>
-        /// The reason for not running the test case
-        /// represented by this ParameterSet
-        /// </summary>
-        //public string NotRunReason
-        //{
-        //    get { return (string)Properties[PropertyNames.IgnoreReason]; }
-        //}
 
         /// <summary>
         /// The Type of any exception that is expected.

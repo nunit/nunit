@@ -66,6 +66,7 @@ namespace NUnit.Framework.Api
         /// and the listener interface is notified as it progresses.
         /// </summary>
         /// <param name="listener">Interface to receive ITestListener notifications.</param>
+        /// <param name="runOptions">TODO Comment for runOptions</param>
         ITestResult Run(ITestListener listener, System.Collections.IDictionary runOptions);
 
         #endregion

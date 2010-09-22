@@ -4,17 +4,29 @@ using NUnit.Framework.Api;
 
 namespace NUnit.Framework.Internal
 {
+    ///<summary>
+    /// TODO: Documentation needed for class
+    ///</summary>
     public class TestSuiteCommand : TestCommand
     {
-        private TestSuite suite;
-        private Type fixtureType;
+        private readonly TestSuite suite;
+        private readonly Type fixtureType;
 
+        /// <summary>
+        /// TODO: Documentation needed for constructor
+        /// </summary>
+        /// <param name="test"></param>
         public TestSuiteCommand(Test test) : base(test)
         {
             this.suite = Test as TestSuite;
             this.fixtureType = Test.FixtureType;
         }
 
+        /// <summary>
+        /// TODO: Documentation needed for method
+        /// </summary>
+        /// <param name="testObject"></param>
+        /// <returns></returns>
         public override TestResult Execute(object testObject)
         {
             try
@@ -79,7 +91,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Does the one time tear down.
         /// </summary>
-        /// <param name="suiteResult">The suite result.</param>
+        /// <param name="testObject"></param>
         protected virtual void DoOneTimeTearDown(object testObject)
         {
             if (fixtureType != null)
@@ -165,7 +177,7 @@ namespace NUnit.Framework.Internal
             return Result;
         }
 
-        private bool IsStaticClass(Type type)
+        private static bool IsStaticClass(Type type)
         {
             return type.IsAbstract && type.IsSealed;
         }

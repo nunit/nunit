@@ -26,11 +26,11 @@ using System.CodeDom.Compiler;
 
 namespace NUnit.Framework.Syntax
 {
-    class TestCompiler
+    internal class TestCompiler
     {
-        Microsoft.CSharp.CSharpCodeProvider provider;
-#if !CLR_2_0 || CLR_4_0
-		ICodeCompiler compiler;
+        private readonly Microsoft.CSharp.CSharpCodeProvider provider;
+#if !CLR_2_0 && !CLR_4_0
+		private readonly ICodeCompiler compiler;
 #endif
 		CompilerParameters options;
 
@@ -41,10 +41,10 @@ namespace NUnit.Framework.Syntax
 		public TestCompiler( string[] assemblyNames, string outputName )
 		{
 			this.provider = new Microsoft.CSharp.CSharpCodeProvider();
-#if !CLR_2_0 || CLR_4_0
+#if !CLR_2_0 && !CLR_4_0
 			this.compiler = provider.CreateCompiler();
 #endif
-			this.options = new CompilerParameters();
+            this.options = new CompilerParameters();
 
 			if ( assemblyNames != null && assemblyNames.Length > 0 )
 				options.ReferencedAssemblies.AddRange( assemblyNames );

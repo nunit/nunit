@@ -34,7 +34,7 @@ namespace NUnit.Framework.Attributes
 
         #region ITest Members
 
-        public int ID
+        public int Id
         {
             get
             {

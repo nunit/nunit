@@ -262,6 +262,7 @@ namespace NUnit.Framework.Api
             /// Construct a RunTestsAction and run all tests in the loaded TestSuite.
             /// </summary>
             /// <param name="controller">A TestController holding the TestSuite to run</param>
+            /// <param name="runOptions">TODO Comment for runOptions</param>
             /// <param name="callback">A callback used to report results</param>
             public RunTestsAction(TestController controller, IDictionary runOptions, AsyncCallback callback) 
                 : base(controller, callback)

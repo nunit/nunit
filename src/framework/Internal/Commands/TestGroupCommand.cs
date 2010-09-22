@@ -3,17 +3,24 @@ using NUnit.Framework.Api;
 
 namespace NUnit.Framework.Internal
 {
+    ///<summary>
+    /// TODO: Documentation needed for class
+    ///</summary>
     public class TestGroupCommand : TestCommand
     {
+        /// <summary>
+        /// TODO: Documentation needed for constructor
+        /// </summary>
+        /// <param name="test"></param>
         public TestGroupCommand(Test test) : base(test)
         {
         }
 
-        //public TestGroupCommand(TestSuite suite, IList<TestCommand> commands)
-        //{
-        //    this.commands = commands;
-        //}
-
+        /// <summary>
+        /// TODO: Documentation needed for method
+        /// </summary>
+        /// <param name="testObject"></param>
+        /// <returns></returns>
         public override TestResult Execute(object testObject)
         {
             Result.SetResult(ResultState.Success);

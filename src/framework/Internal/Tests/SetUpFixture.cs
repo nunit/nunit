@@ -71,21 +71,5 @@ namespace NUnit.Framework.Internal
             return methods;
         }
         #endregion
-
-		#region TestSuite Overrides
-        /// <summary>
-        /// Runs the suite under a particular filter, sending
-        /// notifications to a listener.
-        /// </summary>
-        /// <param name="listener">An event listener to receive notifications</param>
-        /// <returns></returns>
-        //public override TestResult Run(ITestListener listener)
-        //{
-        //    using ( new DirectorySwapper( AssemblyHelper.GetDirectoryName( FixtureType.Assembly ) ) )
-        //    {
-        //        return base.Run(listener);
-        //    }
-        //}
-		#endregion
-	}
+    }
 }

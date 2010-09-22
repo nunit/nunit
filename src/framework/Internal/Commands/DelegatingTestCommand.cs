@@ -21,21 +21,29 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
-using NUnit.Framework.Api;
-
 namespace NUnit.Framework.Internal
 {
+    /// <summary>
+    /// TODO: Documentation needed for class
+    /// </summary>
     public abstract class DelegatingTestCommand : TestCommand
     {
+        /// <summary>TODO: Documentation needed for field</summary>
         protected TestCommand innerCommand;
 
-        public DelegatingTestCommand(TestCommand innerCommand)
+        /// <summary>
+        /// TODO: Documentation needed for constructor
+        /// </summary>
+        /// <param name="innerCommand"></param>
+        protected DelegatingTestCommand(TestCommand innerCommand)
             : base(innerCommand.Test)
         {
             this.innerCommand = innerCommand;
         }
 
+        /// <summary>
+        /// TODO: Documentation needed for property
+        /// </summary>
         public override TestResult Result
         {
             get

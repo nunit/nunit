@@ -27,15 +27,17 @@ using NUnit.Framework.Api;
 
 namespace NUnit.Framework.Internal
 {
+    /// <summary>
+    /// TODO: Documentation needed for class
+    /// </summary>
     public class ExpectedExceptionCommand : DelegatingTestCommand
     {
-        private ExpectedExceptionProcessor exceptionProcessor;
+        private readonly ExpectedExceptionProcessor exceptionProcessor;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ExpectedExceptionCommand"/> class.
         /// </summary>
         /// <param name="innerCommand">The inner command.</param>
-        /// <param name="exceptionProcessor">The exception processor.</param>
         public ExpectedExceptionCommand(TestCommand innerCommand)
             : base(innerCommand)
         {
@@ -71,5 +73,4 @@ namespace NUnit.Framework.Internal
             return Result;
         }
     }
-
 }

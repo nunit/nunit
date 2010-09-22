@@ -58,13 +58,7 @@ namespace NUnit.Framework.Api
         /// <param name="value">The value</param>
         void Add(string key, object value);
 
-        /// <summary>
-        /// Add multiple values to the property bag
-        /// </summary>
-        /// <param name="key">The key</param>
-        /// <param name="values">A list of the values</param>
-        //void AddEach(string key, IList<object> values);
-
+        
         /// <summary>
         /// Sets the value for a key, removing any other
         /// values that are already in the property set.
