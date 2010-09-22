@@ -34,7 +34,7 @@ namespace NUnit.Framework.Api
         /// <summary>
         /// Gets or sets the id of the test
         /// </summary>
-        int ID { get; set; }
+        int Id { get; set; }
 
         /// <summary>
         /// Gets or sets the name of the test

@@ -29,6 +29,9 @@ namespace NUnit.Framework.Internal
 
         #region Properties
 
+        /// <summary>
+        /// TODO: Documentation needed for property
+        /// </summary>
         public ITest LoadedTest
         {
             get

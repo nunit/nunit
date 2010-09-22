@@ -26,15 +26,18 @@ using NUnit.Framework.Api;
 
 namespace NUnit.Framework.Internal
 {
+    /// <summary>
+    /// TODO: Documentation needed for class
+    /// </summary>
     public class MaxTimeCommand : DelegatingTestCommand
     {
         private int maxTime;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MaxTimeCommand"/> class.
+        /// TODO: Add a comment about where the max time is retrieved.
         /// </summary>
         /// <param name="innerCommand">The inner command.</param>
-        /// <param name="maxTime">The max time.</param>
         public MaxTimeCommand(TestCommand innerCommand)
             : base(innerCommand)
         {

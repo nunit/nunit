@@ -26,6 +26,9 @@ using NUnit.Framework.Api;
 
 namespace NUnit.Framework.Internal
 {
+    /// <summary>
+    /// TODO: Documentation needed for class
+    /// </summary>
     public class SkipCommand : TestCommand
     {
         /// <summary>

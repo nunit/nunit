@@ -21,21 +21,21 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
-using System.Reflection;
 using NUnit.Framework.Api;
 
 namespace NUnit.Framework.Internal
 {
+    /// <summary>
+    /// TODO: Documentation needed for class
+    /// </summary>
     public class TestCaseCommand : TestCommand
     {
-        private TestMethod testMethod;
+        private readonly TestMethod testMethod;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TestCaseCommand"/> class.
         /// </summary>
         /// <param name="test">The test.</param>
-        /// <param name="arguments">The arguments.</param>
         public TestCaseCommand(Test test) : base(test)
         {
             this.testMethod = test as TestMethod;

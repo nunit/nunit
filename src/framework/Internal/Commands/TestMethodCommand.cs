@@ -28,6 +28,9 @@ using NUnit.Framework.Api;
 
 namespace NUnit.Framework.Internal
 {
+    /// <summary>
+    /// TODO: Documentation needed for class
+    /// </summary>
     public class TestMethodCommand : DelegatingTestCommand
     {
         #region Fields
@@ -35,7 +38,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// The TestMethod for which this is built
         /// </summary>
-        private TestMethod test;
+        private readonly TestMethod test;
 
         /// <summary>
         /// The test method
@@ -52,7 +55,6 @@ namespace NUnit.Framework.Internal
         /// </summary>
         private MethodInfo[] tearDownMethods;
 
-        private ITestListener listener;
 
         #endregion
 
@@ -60,11 +62,10 @@ namespace NUnit.Framework.Internal
         /// Initializes a new instance of the <see cref="TestMethodCommand"/> class.
         /// </summary>
         /// <param name="innerCommand">The inner command.</param>
-        /// <param name="test">The test.</param>
         public TestMethodCommand(TestCommand innerCommand)
             : base(innerCommand)
         {
-            this.test = Test as TestMethod;
+            this.test = Test as TestMethod;            
             this.method = test.Method;
         }
 

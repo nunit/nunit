@@ -65,7 +65,7 @@ namespace NUnit.Framework.Internal
             try
             {
                 XmlNode node = XmlHelper.CreateTopLevelElement("start");
-                XmlHelper.AddAttribute(node, "id", test.ID.ToString());
+                XmlHelper.AddAttribute(node, "id", test.Id.ToString());
                 XmlHelper.AddAttribute(node, "name", test.Name);
                 XmlHelper.AddAttribute(node, "fullname", test.FullName);
                 callback(new ProgressReport(node));

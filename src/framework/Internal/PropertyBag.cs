@@ -129,12 +129,20 @@ namespace NUnit.Framework.Internal
                 : (int)value;
         }
 
-        public System.Enum GetSetting(string key, System.Enum defaultValue)
+        /// <summary>
+        /// Gets a single Enum value for a key, using the first
+        /// one if multiple values are present and returning the
+        /// default value if no entry is found.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="defaultValue"></param>
+        /// <returns></returns>
+        public Enum GetSetting(string key, Enum defaultValue)
         {
             object value = Get(key);
             return value == null
                 ? defaultValue
-                : (System.Enum)value;
+                : (Enum)value;
         }
 
         /// <summary>
@@ -345,6 +353,10 @@ namespace NUnit.Framework.Internal
         #region Nested PropertyBagEnumerator Class
 
 #if CLR_2_0 || CLR_4_0
+
+        /// <summary>
+        /// TODO: Documentation needed for class
+        /// </summary>
         public class PropertyBagEnumerator : IEnumerator<PropertyEntry>
         {
             private IEnumerator<KeyValuePair<string, IList>> innerEnum;
@@ -356,6 +368,10 @@ namespace NUnit.Framework.Internal
             private PropertyBag bag;
             private IEnumerator valueEnum;
 
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="bag"></param>
             public PropertyBagEnumerator(PropertyBag bag)
             {
                 this.bag = bag;

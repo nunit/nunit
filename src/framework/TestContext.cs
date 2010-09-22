@@ -110,7 +110,7 @@ namespace NUnit.Framework
             /// </summary>
             public int ID
             {
-                get { return test.ID; }
+                get { return test.Id; }
             }
 
             /// <summary>

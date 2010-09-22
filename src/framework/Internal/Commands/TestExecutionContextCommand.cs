@@ -2,13 +2,25 @@
 
 namespace NUnit.Framework.Internal
 {
+    ///<summary>
+    /// TODO: Documentation needed for class
+    ///</summary>
     public class TestExecutionContextCommand : DelegatingTestCommand
     {
+        /// <summary>
+        /// TODO: Documentation needed for constructor
+        /// </summary>
+        /// <param name="innerCommand"></param>
         public TestExecutionContextCommand(TestCommand innerCommand)
             : base(innerCommand)
         {
         }
 
+        /// <summary>
+        /// TODO: Documentation needed for constructor
+        /// </summary>
+        /// <param name="testObject"></param>
+        /// <returns></returns>
         public override TestResult Execute(object testObject)
         {
             TestExecutionContext.Save();

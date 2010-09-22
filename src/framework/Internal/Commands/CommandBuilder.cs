@@ -22,13 +22,20 @@
 // ***********************************************************************
 
 using System;
-using System.Reflection;
 using NUnit.Framework.Api;
 
 namespace NUnit.Framework.Internal
 {
+    /// <summary>
+    /// TODO: Documentation needed for class
+    /// </summary>
     public class CommandBuilder
     {
+        /// <summary>
+        /// TODO: Documentation needed for method
+        /// </summary>
+        /// <param name="test"></param>
+        /// <returns></returns>
         public static TestCommand MakeTestCommand(Test test)
         {
             if (test.RunState != RunState.Runnable && test.RunState != RunState.Explicit)
@@ -41,6 +48,11 @@ namespace NUnit.Framework.Internal
             return MakeTestCommand(test as TestMethod);
         }
 
+        /// <summary>
+        /// TODO: Documentation needed for method
+        /// </summary>
+        /// <param name="test"></param>
+        /// <returns></returns>
         public static TestCommand MakeTestCommand(TestMethod test)
         {
             if (test == null)
@@ -70,6 +82,11 @@ namespace NUnit.Framework.Internal
             return command;
         }
 
+        /// <summary>
+        /// TODO: Documentation needed for method
+        /// </summary>
+        /// <param name="suite"></param>
+        /// <returns></returns>
         public static TestCommand MakeTestCommand(TestSuite suite)
         {
             if (suite == null)

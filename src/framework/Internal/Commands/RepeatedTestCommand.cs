@@ -21,20 +21,22 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
 using NUnit.Framework.Api;
 
 namespace NUnit.Framework.Internal
 {
+    /// <summary>
+    /// TODO: Documentation needed for class
+    /// </summary>
     public class RepeatedTestCommand : DelegatingTestCommand
     {
         private int repeatCount;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RepeatedTestCommand"/> class.
+        /// TODO: Add a comment about where the repeat count is retrieved. 
         /// </summary>
         /// <param name="innerCommand">The inner command.</param>
-        /// <param name="repeatCount">The repeat count.</param>
         public RepeatedTestCommand(TestCommand innerCommand)
             : base(innerCommand)
         {

@@ -100,7 +100,7 @@ namespace NUnit.Framework.Internal
 
             Assert.That(topNode.Name, Is.EqualTo(test.ElementName));
 
-            Assert.That(topNode.Attributes["id"].Value, Is.EqualTo(test.ID.ToString()));
+            Assert.That(topNode.Attributes["id"].Value, Is.EqualTo(test.Id.ToString()));
             Assert.That(topNode.Attributes["name"].Value, Is.EqualTo(test.Name));
             Assert.That(topNode.Attributes["fullname"].Value, Is.EqualTo(test.FullName));
 
@@ -137,9 +137,9 @@ namespace NUnit.Framework.Internal
                 {
                     foreach (Test child in suite.Tests)
                     {
-                        string xpathQuery = string.Format("{0}[@id={1}]", child.ElementName, child.ID);
+                        string xpathQuery = string.Format("{0}[@id={1}]", child.ElementName, child.Id);
                         XmlNode childNode = topNode.SelectSingleNode(xpathQuery);
-                        Assert.NotNull(childNode, "Expected node for test with ID={0}, Name={1}", child.ID, child.Name);
+                        Assert.NotNull(childNode, "Expected node for test with ID={0}, Name={1}", child.Id, child.Name);
 
                         CheckXmlForTest(child, childNode, recursive);
                     }

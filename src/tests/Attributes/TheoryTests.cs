@@ -31,7 +31,7 @@ namespace NUnit.Framework.Tests
 {
     public class TheoryTests
     {
-        static Type fixtureType = typeof(TheoryFixture);
+        static readonly Type fixtureType = typeof(TheoryFixture);
 
         [Test]
         public void TheoryWithNoArgumentsIsTreatedAsTest()
@@ -66,8 +66,6 @@ namespace NUnit.Framework.Tests
         {
         }
 
-        [Datapoint]
-        object objData = null;
 
         [Test]
         public void EnumArgumentsAreSuppliedAutomatically()
@@ -107,7 +105,7 @@ namespace NUnit.Framework.Tests
             Assert.That(s.StartsWith("xyz"));
         }
 
-        private void SquareRootTest(double d)
+        private static void SquareRootTest(double d)
         {
             Assume.That(d > 0);
             double root = Math.Sqrt(d);
