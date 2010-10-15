@@ -34,7 +34,7 @@ namespace NUnit.Framework.Api
         /// <summary>
         /// The Description of a test
         /// </summary>
-        public static readonly string Description = "_DESCRIPTION";
+        public static readonly string Description = "Description";
         
         /// <summary>
         /// The reason a test was not run
@@ -44,12 +44,12 @@ namespace NUnit.Framework.Api
         /// <summary>
         /// The culture to be set for a test
         /// </summary>
-        public static readonly string SetCulture = "_SETCULTURE";
+        public static readonly string SetCulture = "SetCulture";
 
         /// <summary>
         /// The UI culture to be set for a test
         /// </summary>
-        public static readonly string SetUICulture = "_SETUICULTURE";
+        public static readonly string SetUICulture = "SetUICulture";
 
         /// <summary>
         /// The categories applying to a test
@@ -64,7 +64,7 @@ namespace NUnit.Framework.Api
         /// <summary>
         /// The ApartmentState required for running the test
         /// </summary>
-        public static readonly string ApartmentState = "APARTMENT_STATE";
+        public static readonly string ApartmentState = "ApartmentState";
 
         /// <summary>
         /// The timeout value for the test

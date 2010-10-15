@@ -24,6 +24,7 @@
 #if !NUNITLITE
 using System;
 using System.Threading;
+using NUnit.Framework.Api;
 
 namespace NUnit.Framework
 {
@@ -42,7 +43,7 @@ namespace NUnit.Framework
         /// </summary>
         public RequiresMTAAttribute()
         {
-            this.Properties.Add("APARTMENT_STATE", ApartmentState.MTA);
+            this.Properties.Add(PropertyNames.ApartmentState, ApartmentState.MTA);
         }
     }
 }

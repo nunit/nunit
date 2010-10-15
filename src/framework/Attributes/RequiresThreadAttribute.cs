@@ -24,6 +24,7 @@
 #if !NUNITLITE
 using System;
 using System.Threading;
+using NUnit.Framework.Api;
 
 namespace NUnit.Framework
 {
@@ -45,7 +46,7 @@ namespace NUnit.Framework
         public RequiresThreadAttribute(ApartmentState apartment)
             : base(true)
         {
-            this.Properties.Add("APARTMENT_STATE", apartment);
+            this.Properties.Add(PropertyNames.ApartmentState, apartment);
         }
     }
 }

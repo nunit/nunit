@@ -24,6 +24,7 @@
 #if !NUNITLITE
 using System;
 using System.Threading;
+using NUnit.Framework.Api;
 
 namespace NUnit.Framework
 {
@@ -39,7 +40,7 @@ namespace NUnit.Framework
         /// </summary>
         public RequiresSTAAttribute()
         {
-            this.Properties.Add("APARTMENT_STATE", ApartmentState.STA);
+            this.Properties.Add(PropertyNames.ApartmentState, ApartmentState.STA);
         }
     }
 }
