@@ -235,7 +235,6 @@ namespace NUnit.Framework.Tests
             ITestResult result = test.Run(TestListener.NULL);
             Assert.AreEqual(ResultState.NotRunnable, result.ResultState);
             Assert.AreEqual("System.Exception : my message", result.Message);
-            Assert.That(result.StackTrace, Contains.Substring("exception_source"));
         }
 
         [TestCaseSource("exception_source"), Explicit]

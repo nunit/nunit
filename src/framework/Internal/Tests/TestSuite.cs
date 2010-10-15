@@ -230,7 +230,7 @@ namespace NUnit.Framework.Internal
         /// The name used for the top-level element in the
         /// XML representation of this test
         /// </summary>
-        public override string ElementName
+        public override string TestKind
         {
             get { return "test-suite"; }
         }
@@ -244,7 +244,10 @@ namespace NUnit.Framework.Internal
         /// <returns></returns>
         public override System.Xml.XmlNode AddToXml(XmlNode parentNode, bool recursive)
         {
-            XmlNode thisNode = base.AddToXml(parentNode, recursive);
+            XmlNode thisNode = XmlHelper.AddElement(parentNode, "test-suite");
+			XmlHelper.AddAttribute(thisNode, "type", this.TestKind);
+
+			PopulateTestNode(thisNode, recursive);
 
             if (recursive)
                 foreach (Test test in this.Tests)

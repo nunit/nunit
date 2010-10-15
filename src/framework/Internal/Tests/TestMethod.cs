@@ -156,6 +156,22 @@ namespace NUnit.Framework.Internal
 #endif
 
         /// <summary>
+        /// Returns an XmlNode representing the current result after
+        /// adding it as a child of the supplied parent node.
+        /// </summary>
+        /// <param name="parentNode">The parent node.</param>
+        /// <param name="recursive">If true, descendant results are included</param>
+        /// <returns></returns>
+        public override XmlNode AddToXml(XmlNode parentNode, bool recursive)
+        {
+            XmlNode thisNode = XmlHelper.AddElement(parentNode, "test-case");
+
+            PopulateTestNode(thisNode, recursive);
+
+            return thisNode;
+        }
+
+		/// <summary>
         /// Gets this test's child tests
         /// </summary>
         /// <value>A list of child tests</value>
@@ -172,7 +188,7 @@ namespace NUnit.Framework.Internal
         /// The name used for the top-level element in the
         /// XML representation of this test
         /// </summary>
-        public override string ElementName
+        public override string TestKind
         {
             get { return "test-case"; }
         }
