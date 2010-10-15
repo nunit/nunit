@@ -23,6 +23,7 @@
 
 #if !NUNITLITE
 using System;
+using NUnit.Framework.Api;
 
 namespace NUnit.Framework
 {
@@ -36,7 +37,7 @@ namespace NUnit.Framework
 		/// Construct given the name of a culture
 		/// </summary>
 		/// <param name="culture"></param>
-		public SetCultureAttribute( string culture ) : base( "_SETCULTURE", culture ) { }
+		public SetCultureAttribute( string culture ) : base( PropertyNames.SetCulture, culture ) { }
 	}
 }
 #endif

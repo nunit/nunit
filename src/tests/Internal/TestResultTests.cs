@@ -85,7 +85,7 @@ namespace NUnit.Framework.Internal
             Assert.AreEqual("DummyMethod", testNode.Attributes["name"].Value);
             Assert.AreEqual("NUnit.Framework.Internal.TestResultTests+DummySuite.DummyMethod", testNode.Attributes["fullname"].Value);
             
-            Assert.AreEqual("Test description", testNode.SelectSingleNode("properties/property[@name='_DESCRIPTION']").Attributes["value"].Value);
+            Assert.AreEqual("Test description", testNode.SelectSingleNode("properties/property[@name='Description']").Attributes["value"].Value);
             Assert.AreEqual("Dubious", testNode.SelectSingleNode("properties/property[@name='Category']").Attributes["value"].Value);
             Assert.AreEqual("low", testNode.SelectSingleNode("properties/property[@name='Priority']").Attributes["value"].Value);
 
@@ -104,7 +104,7 @@ namespace NUnit.Framework.Internal
             Assert.AreEqual("TestResultTests+DummySuite", suiteNode.Attributes["name"].Value);
             Assert.AreEqual("NUnit.Framework.Internal.TestResultTests+DummySuite", suiteNode.Attributes["fullname"].Value);
 
-            Assert.AreEqual("Suite description", suiteNode.SelectSingleNode("properties/property[@name='_DESCRIPTION']").Attributes["value"].Value);
+            Assert.AreEqual("Suite description", suiteNode.SelectSingleNode("properties/property[@name='Description']").Attributes["value"].Value);
             Assert.AreEqual("Fast", suiteNode.SelectSingleNode("properties/property[@name='Category']").Attributes["value"].Value);
             Assert.AreEqual("3", suiteNode.SelectSingleNode("properties/property[@name='Value']").Attributes["value"].Value);
         }

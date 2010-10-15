@@ -135,7 +135,7 @@ namespace NUnit.Framework.Constraints.Tests
         {
             Assert.That(
                 GetType().GetMethod("AttributeTestPropertyValueOnMethodInfo"),
-                Has.Attribute(typeof(DescriptionAttribute)).Property("Properties").Property("Keys").Contains("_DESCRIPTION"));
+                Has.Attribute(typeof(DescriptionAttribute)).Property("Properties").Property("Keys").Contains("Description"));
         }
     }
 }
