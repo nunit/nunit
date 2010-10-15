@@ -83,7 +83,7 @@ namespace NUnit.Framework.Internal
         /// XML representation of this test
         /// </summary>
         /// <value></value>
-        public override string ElementName
+        public override string TestKind
         {
             get
             {

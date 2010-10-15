@@ -61,6 +61,9 @@ namespace NUnit.Framework.Tests
             Assert.That(test.TestCaseCount, Is.EqualTo(4));
         }
 
+		[Datapoint]
+		object nullObj = null;
+		
         [Theory]
         public void NullDatapointIsOK(object o)
         {

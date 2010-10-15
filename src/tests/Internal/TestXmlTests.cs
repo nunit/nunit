@@ -31,26 +31,26 @@ namespace NUnit.Framework.Internal
         }
 
         [Test]
-        public void ElementNameTests()
+        public void TestKindTests()
         {
-            Assert.That(testMethod.ElementName, 
+            Assert.That(testMethod.TestKind, 
                 Is.EqualTo("test-case"));
-            Assert.That(testFixture.ElementName, 
+            Assert.That(testFixture.TestKind, 
                 Is.EqualTo("test-fixture"));
-            Assert.That(testSuite.ElementName, 
+            Assert.That(testSuite.TestKind, 
                 Is.EqualTo("test-suite"));
-            Assert.That(new TestAssembly("junk").ElementName, 
+            Assert.That(new TestAssembly("junk").TestKind, 
                 Is.EqualTo("test-assembly"));
 #if CLR_2_0 || CLR_4_0
-            Assert.That(new ParameterizedMethodSuite(typeof(DummyFixture).GetMethod("GenericMethod")).ElementName,
+            Assert.That(new ParameterizedMethodSuite(typeof(DummyFixture).GetMethod("GenericMethod")).TestKind,
                 Is.EqualTo("generic-method"));
-            Assert.That(new ParameterizedMethodSuite(typeof(DummyFixture).GetMethod("ParameterizedMethod")).ElementName,
-                Is.EqualTo("method"));
+            Assert.That(new ParameterizedMethodSuite(typeof(DummyFixture).GetMethod("ParameterizedMethod")).TestKind,
+                Is.EqualTo("parameterized-method"));
 #if !NUNITLITE
-            Assert.That(new ParameterizedFixtureSuite(typeof(DummyFixture)).ElementName,
+            Assert.That(new ParameterizedFixtureSuite(typeof(DummyFixture)).TestKind,
                 Is.EqualTo("parameterized-fixture"));
             Type genericType = typeof(DummyGenericFixture<int>).GetGenericTypeDefinition();
-            Assert.That(new ParameterizedFixtureSuite(genericType).ElementName,
+            Assert.That(new ParameterizedFixtureSuite(genericType).TestKind,
                 Is.EqualTo("generic-fixture"));
 #endif
 #endif
@@ -98,7 +98,15 @@ namespace NUnit.Framework.Internal
         {
             Assert.NotNull(topNode);
 
-            Assert.That(topNode.Name, Is.EqualTo(test.ElementName));
+			if (test is TestSuite)
+			{
+            	Assert.That(topNode.Name, Is.EqualTo("test-suite"));
+				Assert.That(topNode.Attributes["type"].Value, Is.EqualTo(test.TestKind));
+			}
+			else
+			{
+            	Assert.That(topNode.Name, Is.EqualTo("test-case"));
+			}
 
             Assert.That(topNode.Attributes["id"].Value, Is.EqualTo(test.Id.ToString()));
             Assert.That(topNode.Attributes["name"].Value, Is.EqualTo(test.Name));
@@ -137,7 +145,7 @@ namespace NUnit.Framework.Internal
                 {
                     foreach (Test child in suite.Tests)
                     {
-                        string xpathQuery = string.Format("{0}[@id={1}]", child.ElementName, child.Id);
+                        string xpathQuery = string.Format("{0}[@id={1}]", child.TestKind, child.Id);
                         XmlNode childNode = topNode.SelectSingleNode(xpathQuery);
                         Assert.NotNull(childNode, "Expected node for test with ID={0}, Name={1}", child.Id, child.Name);
 

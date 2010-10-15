@@ -260,18 +260,10 @@ namespace NUnit.Framework.Internal
         /// <param name="parentNode">The parent node.</param>
         /// <param name="recursive">If true, descendant results are included</param>
         /// <returns></returns>
-        public virtual XmlNode AddToXml(XmlNode parentNode, bool recursive)
-        {
-            XmlNode thisNode = XmlHelper.AddElement(parentNode, this.ElementName);
-
-            PopulateTestNode(thisNode, recursive);
-
-            return thisNode;
-        }
-
+        public abstract XmlNode AddToXml(XmlNode parentNode, bool recursive);
 
         /// <summary>
-        /// TODO: Documentation needed for method
+        /// Add standard attributes and members to a test node.
         /// </summary>
         /// <param name="thisNode"></param>
         /// <param name="recursive"></param>
@@ -336,10 +328,11 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// The name used for the top-level element in the
-        /// XML representation of this test
+        /// A string representing the type of test. Used as an attribute
+        /// value in the XML representation of a test and has no other
+        /// function in the framework.
         /// </summary>
-        public abstract string ElementName
+        public abstract string TestKind
         {
             get;
         }
