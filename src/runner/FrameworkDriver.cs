@@ -64,9 +64,9 @@ namespace NUnit.AdhocTestRunner
             CreateObject("NUnit.Framework.Api.TestController+ExploreTestsAction",
                 testController, assemblyFileName, options, handler.Callback);
 
-            Debug.Assert(handler.Result is XmlNode, "Returned result was not an XmlNode");
-
-            return (XmlNode)handler.Result;
+ 			XmlDocument doc = new XmlDocument();
+			doc.LoadXml((string)handler.Result);
+            return doc.FirstChild;
         }
 
         public XmlNode GetLoadedTests()
@@ -76,10 +76,12 @@ namespace NUnit.AdhocTestRunner
             CreateObject("NUnit.Framework.Api.TestController+GetLoadedTestsAction",
                 testController, handler.Callback);
 
-            Debug.Assert(handler.Result == null || handler.Result is XmlNode,
+            Debug.Assert(handler.Result == null || handler.Result is string,
                 "Returned result was not an XmlNode");
 
-            return handler.Result as XmlNode;
+			XmlDocument doc = new XmlDocument();
+			doc.LoadXml((string)handler.Result);
+            return doc.FirstChild;
         }
 
         public XmlNode Run(IDictionary runOptions)
@@ -88,9 +90,11 @@ namespace NUnit.AdhocTestRunner
 
             CreateObject("NUnit.Framework.Api.TestController+RunTestsAction", testController, runOptions, handler.Callback);
 
-            Debug.Assert(handler.Result is XmlNode, "Returned result was not an XmlNode");
+            Debug.Assert(handler.Result is string, "Returned result was not a string");
 
-            return handler.Result as XmlNode;
+			XmlDocument doc = new XmlDocument();
+			doc.LoadXml((string)handler.Result);
+            return doc.FirstChild;
         }
 
         #region Helper Methods
