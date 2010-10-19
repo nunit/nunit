@@ -230,6 +230,7 @@
     <nant target="build" buildfile="src/test-assembly/test-assembly.build"/>
     <nant target="build" buildfile="src/tests/nunit.framework.tests.build"/>
     <nant target="build" buildfile="src/runner/test-runner.build"/>
+    <nant target="build" buildfile="src/mock-assembly/mock-assembly.build"/>
 
   </target>
 
@@ -835,6 +836,8 @@ to the correct location.
     <include name="test-assembly/test-assembly.build" />
     <!-- Test Runner -->
     <include name="runner/test-runner.build" />
+    <!-- Mock Assembly -->
+    <include name="mock-assembly/mock-assembly.build" />
 
   </fileset>
 

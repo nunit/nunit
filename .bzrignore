@@ -11,3 +11,4 @@ package
 StyleCop.Cache
 *.StyleCop
 local.settings.include
+mock-assembly.pidb
