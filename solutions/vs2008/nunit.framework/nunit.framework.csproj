@@ -47,6 +47,18 @@
   -->
   <ItemGroup>
     <None Include="nunit.snk" />
+    <None Include="..\..\..\src\framework\nunit.framework.build">
+      <Link>nunit.framework.build</Link>
+    </None>
+    <None Include="..\..\..\src\framework\nunit.framework.sources">
+      <Link>nunit.framework.sources</Link>
+    </None>
+    <None Include="..\..\..\src\framework\nunitlite.build">
+      <Link>nunitlite.build</Link>
+    </None>
+    <None Include="..\..\..\src\framework\nunitlite.sources">
+      <Link>nunitlite.sources</Link>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\..\src\CommonAssemblyInfo.cs">

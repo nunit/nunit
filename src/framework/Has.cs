@@ -47,7 +47,7 @@ namespace NUnit.Framework
         /// Returns a ConstraintExpression that negates any
         /// following constraint.
         /// </summary>
-        public static ConstraintExpression No
+public static ConstraintExpression No
         {
             get { return new ConstraintExpression().Not; }
         }
@@ -61,7 +61,7 @@ namespace NUnit.Framework
         /// the following constraint to all members of a collection,
         /// succeeding if all of them succeed.
         /// </summary>
-        public static ConstraintExpression All
+public static ConstraintExpression All
         {
             get { return new ConstraintExpression().All; }
         }
@@ -75,7 +75,7 @@ namespace NUnit.Framework
         /// the following constraint to all members of a collection,
         /// succeeding if at least one of them succeeds.
         /// </summary>
-        public static ConstraintExpression Some
+public static ConstraintExpression Some
         {
             get { return new ConstraintExpression().Some; }
         }
@@ -89,7 +89,7 @@ namespace NUnit.Framework
         /// the following constraint to all members of a collection,
         /// succeeding if all of them fail.
         /// </summary>
-        public static ConstraintExpression None
+public static ConstraintExpression None
         {
             get { return new ConstraintExpression().None; }
         }
@@ -103,7 +103,7 @@ namespace NUnit.Framework
         /// test for the existence of the named property on the object
         /// being tested or apply any following constraint to that property.
         /// </summary>
-        public static ResolvableConstraintExpression Property(string name)
+public static ResolvableConstraintExpression Property(string name)
         {
             return new ConstraintExpression().Property(name);
         }
@@ -116,7 +116,7 @@ namespace NUnit.Framework
         /// Returns a new ConstraintExpression, which will apply the following
         /// constraint to the Length property of the object being tested.
         /// </summary>
-        public static ResolvableConstraintExpression Length
+public static ResolvableConstraintExpression Length
         {
             get { return Property("Length"); }
         }
@@ -129,7 +129,7 @@ namespace NUnit.Framework
         /// Returns a new ConstraintExpression, which will apply the following
         /// constraint to the Count property of the object being tested.
         /// </summary>
-        public static ResolvableConstraintExpression Count
+public static ResolvableConstraintExpression Count
         {
             get { return Property("Count"); }
         }
@@ -142,7 +142,7 @@ namespace NUnit.Framework
         /// Returns a new ConstraintExpression, which will apply the following
         /// constraint to the Message property of the object being tested.
         /// </summary>
-        public static ResolvableConstraintExpression Message
+public static ResolvableConstraintExpression Message
         {
             get { return Property("Message"); }
         }
@@ -155,7 +155,7 @@ namespace NUnit.Framework
         /// Returns a new ConstraintExpression, which will apply the following
         /// constraint to the InnerException property of the object being tested.
         /// </summary>
-        public static ResolvableConstraintExpression InnerException
+public static ResolvableConstraintExpression InnerException
         {
             get { return Property("InnerException"); }
         }
@@ -168,7 +168,7 @@ namespace NUnit.Framework
         /// Returns a new AttributeConstraint checking for the
         /// presence of a particular attribute on an object.
         /// </summary>
-        public static ResolvableConstraintExpression Attribute(Type expectedType)
+public static ResolvableConstraintExpression Attribute(Type expectedType)
         {
             return new ConstraintExpression().Attribute(expectedType);
         }
@@ -178,7 +178,7 @@ namespace NUnit.Framework
         /// Returns a new AttributeConstraint checking for the
         /// presence of a particular attribute on an object.
         /// </summary>
-        public static ResolvableConstraintExpression Attribute<T>()
+public static ResolvableConstraintExpression Attribute<T>()
         {
             return Attribute(typeof(T));
         }
@@ -192,7 +192,7 @@ namespace NUnit.Framework
         /// Returns a new CollectionContainsConstraint checking for the
         /// presence of a particular object in the collection.
         /// </summary>
-        public static CollectionContainsConstraint Member(object expected)
+public static CollectionContainsConstraint Member(object expected)
         {
             return new CollectionContainsConstraint(expected);
         }
