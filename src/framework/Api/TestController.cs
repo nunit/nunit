@@ -198,7 +198,7 @@ namespace NUnit.Framework.Api
                 : base(controller, callback)
             {
                 if (controller.Runner.Load(assemblyFilename, loadOptions))
-                    ReportResult(controller.Runner.LoadedTest.ToXml(true), true);
+                    ReportResult(controller.Runner.LoadedTest.ToXml(true).OuterXml, true);
             }
         }
 
@@ -223,7 +223,7 @@ namespace NUnit.Framework.Api
                 ITest loadedTests = controller.Runner.LoadedTest;
 
                 if (loadedTests != null)
-                    ReportResult(loadedTests.ToXml(true), true);
+                    ReportResult(loadedTests.ToXml(true).OuterXml, true);
             }
         }
 
@@ -269,7 +269,7 @@ namespace NUnit.Framework.Api
             {
                 ITestResult result = controller.Runner.Run(new TestProgressReporter(callback), runOptions);
 
-                ReportResult(result.ToXml(true), true);
+                ReportResult(result.ToXml(true).OuterXml, true);
             }
 
             ///// <summary>

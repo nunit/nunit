@@ -40,7 +40,6 @@ namespace NUnit.Framework.Internal
         private StringWriter writer;
         private XmlTextWriter xml;
         private StringBuilder sb;
-        XmlDocument doc = new XmlDocument();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TestProgressReporter"/> class.
@@ -64,11 +63,11 @@ namespace NUnit.Framework.Internal
         {
             try
             {
-                XmlNode node = XmlHelper.CreateTopLevelElement("start");
-                XmlHelper.AddAttribute(node, "id", test.Id.ToString());
-                XmlHelper.AddAttribute(node, "name", test.Name);
-                XmlHelper.AddAttribute(node, "fullname", test.FullName);
-                callback(new ProgressReport(node));
+				string report = string.Format(
+					"<start id=\"{0}\" name=\"{1}\" fullname=\"{2}\"/>",
+				    test.Id, test.Name, test.FullName);
+				                              
+				callback(new ProgressReport(report));
             }
             catch(Exception ex)
             {
@@ -85,7 +84,8 @@ namespace NUnit.Framework.Internal
         {
             try
             {
-                callback(new ProgressReport(result.ToXml(false)));
+				result.ToXml(false).WriteTo(xml);
+                callback(new ProgressReport(sb.ToString()));
             }
             catch (Exception ex)
             {
@@ -100,11 +100,10 @@ namespace NUnit.Framework.Internal
         public void TestOutput(TestOutput testOutput)
         {
             try
-            {
-                XmlNode node = XmlHelper.CreateTopLevelElement("output");
-                XmlHelper.AddAttribute(node, "type", testOutput.Type.ToString());
-                XmlHelper.AddElementWithCDataSection(node, "text", testOutput.Text);
-                callback(new ProgressReport(node));
+            {			
+				string report = string.Format("<output type=\"{0}\"><text>{1}\n</text></output>",
+				    testOutput.Type, testOutput.Text);
+				callback(new ProgressReport(report));
             }
             catch (Exception ex)
             {

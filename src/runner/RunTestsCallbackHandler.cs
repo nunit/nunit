@@ -39,7 +39,12 @@ namespace NUnit.AdhocTestRunner
 
         public override void ReportProgress(object state)
         {
-            XmlNode topNode = (XmlNode)state;
+			string report = (string)state;
+
+			XmlDocument doc = new XmlDocument();
+			doc.LoadXml(report);
+			XmlNode topNode = doc.FirstChild;
+			
             switch (topNode.Name)
             {
                 case "start":
