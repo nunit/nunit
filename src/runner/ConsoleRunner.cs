@@ -105,6 +105,7 @@ namespace NUnit.AdhocTestRunner
                     Console.SetError(savedError);
 
                     XmlTextWriter resultWriter = new XmlTextWriter("TestResult.Xml", System.Text.Encoding.UTF8);
+					resultWriter.Formatting = Formatting.Indented;
                     resultNode.WriteTo(resultWriter);
                     resultWriter.Close();
 
