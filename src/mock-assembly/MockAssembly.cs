@@ -244,11 +244,13 @@ namespace NUnit.Tests
 			return x+y;
 		}
 		
+#if CLR_2_0 || CLR_4_0
 		[TestCase(2, 4)]
 		[TestCase(9.2, 11.7)]
 		public void GenericMethod<T>(T x, T y)
 		{
 		}
+#endif
 	}
 	
 	[TestFixture(5)]
@@ -272,7 +274,8 @@ namespace NUnit.Tests
 		public static readonly int Tests = 4;
 		public static readonly int Suites = 3;
 	}
-		
+	
+#if CLR_2_0 || CLR_4_0	
 	[TestFixture(5)]
 	[TestFixture(11.5)]
 	public class GenericFixture<T>
@@ -285,4 +288,5 @@ namespace NUnit.Tests
 		[Test]
 		public void Test2() { }
 	}
+#endif
 }

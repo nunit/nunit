@@ -1,6 +1,67 @@
 <?xml version="1.0"?>
 <project name="NUnitFramework" default="build" basedir=".">
 
+  <patternset id="source-files">
+        <include name="AssemblyInfo.cs"/>
+        <include name="Assert.cs"/>
+        <include name="AssertionHelper.cs"/>
+        <include name="Contains.cs"/>
+        <include name="Env.cs"/>
+        <include name="GlobalSettings.cs"/>
+        <include name="Has.cs"/>
+        <include name="IExpectException.cs"/>
+        <include name="Is.cs"/>
+        <include name="ITestCaseData.cs"/>
+        <include name="ListMapper.cs"/>
+        <include name="MessageMatch.cs"/>
+        <include name="ObjectList.cs"/>
+        <include name="SpecialValue.cs"/>
+        <include name="TestCaseData.cs"/>
+        <include name="Throws.cs"/>
+        <include name="Api/IApplyToTest.cs"/>
+        <include name="Api/IPropertyBag.cs"/>
+        <include name="Api/ITest.cs"/>
+        <include name="Api/ITestCaseData.cs"/>
+        <include name="Api/ITestCaseSource.cs"/>
+        <include name="Api/ITestListener.cs"/>
+        <include name="Api/ITestResult.cs"/>
+        <include name="Api/IXmlNodeBuilder.cs"/>
+        <include name="Api/PropertyEntry.cs"/>
+        <include name="Api/PropertyNames.cs"/>
+        <include name="Api/ResultState.cs"/>
+        <include name="Api/RunState.cs"/>
+        <include name="Api/TestOutput.cs"/>
+        <include name="Api/TestStatus.cs"/>
+        <include name="Attributes/*.cs"/>
+        <include name="Constraints/*.cs"/>
+        <include name="Exceptions/*.cs"/>
+        <include name="Internal/ExceptionHelper.cs"/>
+        <include name="Internal/ExpectedExceptionProcessor.cs"/>
+        <include name="Internal/InvalidTestFixtureException.cs"/>
+        <include name="Internal/MethodHelper.cs"/>
+        <include name="Internal/NUnitException.cs"/>
+        <include name="Internal/ParameterSet.cs"/>
+        <include name="Internal/PropertyBag.cs"/>
+        <include name="Internal/Reflect.cs"/>
+        <include name="Internal/TestExecutionContext.cs"/>
+        <include name="Internal/TestListener.cs"/>
+        <include name="Internal/TestResult.cs"/>
+        <include name="Internal/TextMessageWriter.cs"/>
+        <include name="Internal/TypeHelper.cs"/>
+        <include name="Internal/XmlHelper.cs"/>
+        <include name="Internal/Builders/NUnitLiteTestCaseBuilder.cs"/>
+        <include name="Internal/Builders/NUnitLiteTestFixtureBuilder.cs"/>
+        <include name="Internal/Commands/*.cs"/>
+        <include name="Internal/Tests/ParameterizedMethodSuite.cs"/>
+        <include name="Internal/Tests/Test.cs"/>
+        <include name="Internal/Tests/TestAssembly.cs"/>
+        <include name="Internal/Tests/TestFixture.cs"/>
+        <include name="Internal/Tests/TestMethod.cs"/>
+        <include name="Internal/Tests/TestMethodSuite.cs"/>
+        <include name="Internal/Tests/TestSuite.cs"/>
+        <include name="Runner/*.cs"/>
+  </patternset>
+
   <target name="build">
 
     <csc target="library"
@@ -8,13 +69,13 @@
         doc="${current.build.dir}/nunitlite.xml"
         debug="${build.debug}" 
         define="${build.defines};NUNITLITE"
-        warninglevel="0">
+        warninglevel="${warn}">
       <nowarn>
         <warning number="1699" if="${runtime.version>='2.0'}"/>
       </nowarn>
       <sources basedir=".">
         <include name="../CommonAssemblyInfo.cs" />
-        <includesfile name="nunitlite.sources"/>
+        <patternset refid="source-files" />
       </sources>
       <references basedir="${current.build.dir}">
         <include name="mscorlib.dll"/>
@@ -28,7 +89,7 @@
   <target name="package">
     <copy todir="${package.src.dir}/framework">
       <fileset>
-        <includesfile name="nunitlite.sources"/>
+        <paternset refid="source-files"/>
         <include name="Templates/*.cs"/>
       </fileset>
     </copy>

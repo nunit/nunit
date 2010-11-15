@@ -334,7 +334,7 @@
   <target name="set-std-package-config">
     <property name="package.config" value="std"/>
     <property name="package.runtimes" value="net-4.0+net-3.5+net-2.0+net-1.1+netcf-3.5+netcf-2.0+netcf-1.1"/>
-    <property name="create.msi" value="${platform::is-win32()}"/>
+    <property name="create.msi" value="${platform::is-windows()}"/>
   </target>
 
   <target name="set-mono-package-config">
