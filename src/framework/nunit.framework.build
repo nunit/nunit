@@ -1,6 +1,18 @@
 <?xml version="1.0"?>
 <project name="NUnitFramework" default="build" basedir=".">
 
+  <patternset id="source-files">
+	<include name="*.cs" />
+	<include name="Api/*.cs" />
+	<include name="Attributes/*.cs" />
+	<include name="Constraints/*.cs" />
+	<include name="Exceptions/*.cs" />
+	<include name="Extensibility/*.cs" />
+	<include name="Internal/**/*.cs" />
+        <exclude name="Internal/Builders/NUnitLiteTestCaseBuilder.cs"/>
+        <exclude name="Internal/Builders/NUnitLiteTestFixtureBuilder.cs"/>
+  </patternset>
+
   <target name="build">
 
     <csc target="library"
@@ -8,15 +20,14 @@
         doc="${current.build.dir}/nunit.framework.xml"
         debug="${build.debug}" 
         define="${build.defines}"
-        keyfile="../../nunit.snk">
+        keyfile="../../nunit.snk"
+        warninglevel="${warn}">
       <nowarn>
         <warning number="1699" if="${runtime.version=='2.0'}"/>
       </nowarn>
       <sources basedir=".">
         <include name="../CommonAssemblyInfo.cs" />
-        <includesfile name="nunit.framework.sources"/>
-        <exclude name="Internal/Builders/NUnitLiteTestCaseBuilder.cs"/>
-        <exclude name="Internal/Builders/NUnitLiteTestFixtureBuilder.cs"/>
+        <patternset refid="source-files" />
       </sources>
       <references basedir="${current.build.dir}">
         <include name="System.Configuration.dll"/>
@@ -28,7 +39,7 @@
   <target name="package">
     <copy todir="${package.src.dir}/framework">
       <fileset>
-        <includesfile name="nunit.framework.sources"/>
+        <patternset refid="source-files" />
         <include name="Runner/*.cs"/>
         <include name="Templates/*.cs"/>
       </fileset>

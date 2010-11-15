@@ -6,7 +6,8 @@
     <csc target="exe"
         output="${current.build.dir}/test-runner.exe"
         debug="${build.debug}" 
-        define="${build.defines}">
+        define="${build.defines}"
+        warninglevel="${warn}">
       <sources basedir=".">
         <include name="*.cs"/>
       </sources>

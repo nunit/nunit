@@ -4,7 +4,8 @@
   <target name="build">
     <csc target="library" 
       output="${current.build.dir}/mock-assembly.dll" 
-      debug="${build.debug}" define="${build.defines}">
+      debug="${build.debug}" define="${build.defines}"
+      warninglevel="${warn}">
       <sources>
         <include name="AssemblyInfo.cs"/>
         <include name="MockAssembly.cs"/>

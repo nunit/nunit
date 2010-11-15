@@ -24,6 +24,8 @@
 using System;
 #if CLR_2_0 || CLR_4_0
 using System.Collections.Generic;
+#else
+using System.Collections;
 #endif
 
 namespace NUnit.Framework.Constraints

@@ -10,7 +10,7 @@
 *                                                                        *
 * Dependencies:                                                          *                                         
 *                                                                        *
-*   The script requires the NAnt 0.86 beta 1 release or a later version. *
+*   The script requires the NAnt 0.90 release or a later version.        *
 *                                                                        *
 *   To build the windows installer, you must be running on Windows.      *
 *   WiX 3.0 and the WiX tasks for NAnt are required. For a standard WiX  *
@@ -69,6 +69,9 @@
 
   <!-- Our standard package for general distribution -->
   <property name="default.package.config" value="std" />
+
+  <!-- Set default warning level for compiles -->
+  <property name="warn" value="4" unless="${property::exists('warn')}"/>
 
   <!-- Additional internal properties are set in the include file -->
   <include buildfile="nunit.common.include"/>
@@ -166,11 +169,13 @@
 <!-- ***************************************************************** -->
 
   <!-- Generate code for the fluent constraint builder interface -->
+  <!-- Note that we run GenSyntax under .NET 2.0 or above even   -->
+  <!-- we are building for an earlier version of the CLR.        -->
   <target name="gen-syntax" 
     description="Generate code for the fluent constraint builder interface">
 
     <exec program="GenSyntax.exe"
-      useruntimeengine="true"
+      managed="auto"
       basedir="${project.tools.dir}/bin"
       workingdir="${project.src.dir}/framework">
 
@@ -221,8 +226,8 @@
     <fail if="${runtime.platform=='netcf'}"
       message="The full NUnit framework may not be built for netcf"/>
 
-    <call target="build-tools"
-      unless="${property::exists('built.tools')}"/>
+    <!--<call target="build-tools"
+      unless="${property::exists('built.tools')}"/>-->
     <call target="gen-syntax" 
       unless="${property::exists('generated.syntax')}"/>
 
@@ -236,8 +241,8 @@
 
   <target name="build-nunitlite" depends="make-build-dir">
 
-    <call target="build-tools"
-      unless="${property::exists('built.tools')}"/>
+    <!--<call target="build-tools"
+      unless="${property::exists('built.tools')}"/>-->
     <call target="gen-syntax" 
       unless="${property::exists('generated.syntax')}"/>
 
@@ -288,13 +293,13 @@
     <!--<exec basedir="${nunit.console.dir}"
           workingdir="${current.build.dir}" 
 	  program="nunit-console.exe" 
-          useruntimeengine="true"
+          managed="strict"
 	  commandline="${nunit.commandline}" />-->
 
     <exec basedir="${current.build.dir}"
           workingdir="${current.build.dir}"
           program="test-runner.exe"
-          useruntimeengine="true"
+          managed="strict"
           commandline="${nunit.commandline}" />
 
   </target>
@@ -307,7 +312,7 @@
 
     <exec basedir="${current.build.dir}"
 	  program="nunitlite.tests.exe" 
-          useruntimeengine="true" />
+          managed="strict" />
 
   </target>
 
@@ -349,7 +354,7 @@ file or set the NCOVER_DIR environment variable.
     <exec basedir="${ncover.dir}"
           workingdir="${current.build.dir}" 
 	  program="NCover.Console.exe" 
-          useruntimeengine="true"
+          managed="strict"
 	  commandline="${ncover.commandline}" />
 
   </target>
@@ -368,7 +373,7 @@ file or set the PARTCOVER_DIR environment variable.
     <exec basedir="${partcover.dir}"
           workingdir="${current.build.dir}" 
 	  program="PartCover.exe" 
-          useruntimeengine="true"
+          managed="strict"
 	  commandline="${partcover.commandline}" />
 
   </target>
@@ -536,7 +541,7 @@ NUNIT_DIR environment variable.
   <target name="create-msi">
   
     <fail message="MSI can only be built on the Win32 platform" 
-      unless="${platform::is-win32()}"/>
+      unless="${platform::is-windows()}"/>
 
     <!--<fail message="MSI can only be built for a Microsoft runtime" 
       unless="${runtime.platform=='net'}"/>-->

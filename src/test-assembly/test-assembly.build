@@ -5,7 +5,8 @@
     <csc target="library" 
         output="${current.build.dir}/test-assembly.dll"
         debug="${build.debug}" 
-        define="${build.defines}">
+        define="${build.defines}"
+        warninglevel="${warn}">
       <sources basedir=".">
         <include name="*.cs"/>
       </sources>

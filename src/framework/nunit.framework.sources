@@ -1,7 +1,0 @@
-*.cs
-Api/*.cs
-Attributes/*.cs
-Constraints/*.cs
-Exceptions/*.cs
-Extensibility/*.cs
-Internal/**/*.cs

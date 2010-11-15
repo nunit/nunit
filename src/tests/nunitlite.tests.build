@@ -5,7 +5,8 @@
     <csc target="exe" 
         output="${current.build.dir}/nunitlite.tests.exe"
         debug="${build.debug}" 
-        define="${build.defines};NUNITLITE">
+        define="${build.defines};NUNITLITE"
+        warninglevel="${warn}">
       <sources>
         <include name="../CommonAssemblyInfo.cs"/>
         <includesfile name="nunitlite.tests.sources"/>
