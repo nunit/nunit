@@ -32,8 +32,8 @@ namespace NUnit.Framework.Api
 	/// </summary>
 	public class ResultState
 	{
-        private TestStatus status;
-        private string label;
+        private readonly TestStatus status;
+        private readonly string label;
 
         #region Constructors
 
@@ -41,10 +41,8 @@ namespace NUnit.Framework.Api
         /// Initializes a new instance of the <see cref="ResultState"/> class.
         /// </summary>
         /// <param name="status">The TestStatus.</param>
-        public ResultState(TestStatus status)
+        public ResultState(TestStatus status) : this (status, string.Empty)
         {
-            this.status = status;
-            this.label = null;
         }
 
         /// <summary>
@@ -55,7 +53,7 @@ namespace NUnit.Framework.Api
         public ResultState(TestStatus status, string label)
         {
             this.status = status;
-            this.label = label;
+            this.label = label ?? string.Empty;
         }
 
         #endregion
@@ -65,42 +63,42 @@ namespace NUnit.Framework.Api
         /// <summary>
         /// The result is inconclusive
         /// </summary>
-        public static ResultState Inconclusive = new ResultState(TestStatus.Inconclusive);
-
+        public readonly static ResultState Inconclusive = new ResultState(TestStatus.Inconclusive);
+        
         /// <summary>
         /// The test was not runnable.
         /// </summary>
-        public static ResultState NotRunnable = new ResultState(TestStatus.Skipped, "Invalid");
+        public readonly static ResultState NotRunnable = new ResultState(TestStatus.Skipped, "Invalid");
 
         /// <summary>
         /// The test has been skipped. 
         /// </summary>
-        public static ResultState Skipped = new ResultState(TestStatus.Skipped);
+        public readonly static ResultState Skipped = new ResultState(TestStatus.Skipped);
 
         /// <summary>
         /// The test has been ignored.
         /// </summary>
-        public static ResultState Ignored = new ResultState(TestStatus.Skipped, "Ignored");
+        public readonly static ResultState Ignored = new ResultState(TestStatus.Skipped, "Ignored");
 
         /// <summary>
         /// The test succeeded
         /// </summary>
-        public static ResultState Success = new ResultState(TestStatus.Passed);
+        public readonly static ResultState Success = new ResultState(TestStatus.Passed);
 
         /// <summary>
         /// The test failed
         /// </summary>
-        public static ResultState Failure = new ResultState(TestStatus.Failed);
+        public readonly static ResultState Failure = new ResultState(TestStatus.Failed);
 
         /// <summary>
         /// The test encountered an unexpected exception
         /// </summary>
-        public static ResultState Error = new ResultState(TestStatus.Failed, "Error");
+        public readonly static ResultState Error = new ResultState(TestStatus.Failed, "Error");
 
         /// <summary>
         /// The test was cancelled by the user
         /// </summary>
-        public static ResultState Cancelled = new ResultState(TestStatus.Failed, "Cancelled");
+        public readonly static ResultState Cancelled = new ResultState(TestStatus.Failed, "Cancelled");
         
         #endregion
 
@@ -135,9 +133,7 @@ namespace NUnit.Framework.Api
         public override string ToString()
         {
             string s = status.ToString();
-            if (label == null) return s;
-
-            return string.Format("{0}:{1}", s, label);
+            return string.IsNullOrEmpty(label) ? s : string.Format("{0}:{1}", s, label);
         }
     }
 }

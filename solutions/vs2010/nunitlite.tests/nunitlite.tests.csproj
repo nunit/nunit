@@ -53,6 +53,9 @@
     <Compile Include="..\..\..\src\tests\AlwaysEqualComparer.cs">
       <Link>AlwaysEqualComparer.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\tests\Api\ResultStateTests.cs">
+      <Link>Api\ResultStateTests.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\tests\Assertions\ArrayEqualsFailureMessageFixture.cs">
       <Link>Assertions\ArrayEqualsFailureMessageFixture.cs</Link>
     </Compile>
