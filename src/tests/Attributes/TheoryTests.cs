@@ -61,9 +61,11 @@ namespace NUnit.Framework.Tests
             Assert.That(test.TestCaseCount, Is.EqualTo(4));
         }
 
-		[Datapoint]
-		object nullObj = null;
-		
+#pragma warning disable 0169  // nullObj is used by Theory NullDatapointIsOK
+        [Datapoint]
+        object nullObj;
+#pragma warning restore 0169
+
         [Theory]
         public void NullDatapointIsOK(object o)
         {
