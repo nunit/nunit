@@ -3,6 +3,7 @@ CollectionAdapter.cs
 Program.cs
 TestComparer.cs
 TestDelegates.cs
+Api/ResultStateTests.cs
 Assertions/ArrayEqualsFailureMessageFixture.cs
 Assertions/ArrayEqualsFixture.cs
 Assertions/ArrayNotEqualFixture.cs

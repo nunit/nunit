@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{0B5B1B19-D9D1-4E9C-80EE-37D4F56282C1}</ProjectGuid>
     <OutputType>Exe</OutputType>
@@ -71,6 +71,9 @@
     </Compile>
     <Compile Include="..\..\..\src\tests\AlwaysEqualComparer.cs">
       <Link>AlwaysEqualComparer.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\tests\Api\ResultStateTests.cs">
+      <Link>Api\ResultStateTests.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\tests\Assertions\ArrayEqualsFailureMessageFixture.cs">
       <Link>Assertions\ArrayEqualsFailureMessageFixture.cs</Link>
