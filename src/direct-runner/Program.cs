@@ -25,7 +25,7 @@ using System;
 using System.Reflection;
 using System.IO;
 
-namespace NUnit.AdhocTestRunner
+namespace NUnit.DirectRunner
 {
     /// <summary>
     /// This class is an adoc runner used in testing the framework

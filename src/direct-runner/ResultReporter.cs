@@ -24,7 +24,7 @@
 using System;
 using System.Xml;
 
-namespace NUnit.AdhocTestRunner
+namespace NUnit.DirectRunner
 {
     public class ResultReporter
     {

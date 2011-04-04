@@ -8,7 +8,7 @@
     <ProjectGuid>{126DBBB4-1731-4E0D-8937-4F2FAADCA0EF}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NUnit.AdhocTestRunner</RootNamespace>
+    <RootNamespace>NUnit.DirectRunner</RootNamespace>
     <AssemblyName>direct-runner</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

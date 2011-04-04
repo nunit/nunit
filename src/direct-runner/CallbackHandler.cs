@@ -23,7 +23,7 @@
 
 using System;
 
-namespace NUnit.AdhocTestRunner
+namespace NUnit.DirectRunner
 {
     public class CallbackHandler : MarshalByRefObject
     {
