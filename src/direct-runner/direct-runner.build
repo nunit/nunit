@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
-<project name="TestRunner" default="build" basedir=".">
+<project name="DirectRunner" default="build" basedir=".">
 
   <target name="build">
 
     <csc target="exe"
-        output="${current.build.dir}/test-runner.exe"
+        output="${current.build.dir}/direct-runner.exe"
         debug="${build.debug}" 
         define="${build.defines}"
         warninglevel="${warn}">
@@ -19,9 +19,9 @@
   </target>
 
   <target name="package">
-    <copy todir="${package.src.dir}/runner">
+    <copy todir="${package.src.dir}/direct-runner">
       <fileset>
-        <include name="test-runner.build"/>
+        <include name="direct-runner.build"/>
         <include name="*.cs"/>
       </fileset>
     </copy>

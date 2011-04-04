@@ -234,7 +234,7 @@
     <nant target="build" buildfile="src/framework/nunit.framework.build"/>
     <nant target="build" buildfile="src/test-assembly/test-assembly.build"/>
     <nant target="build" buildfile="src/tests/nunit.framework.tests.build"/>
-    <nant target="build" buildfile="src/runner/test-runner.build"/>
+    <nant target="build" buildfile="src/runner/direct-runner.build"/>
     <nant target="build" buildfile="src/mock-assembly/mock-assembly.build"/>
 
   </target>
@@ -298,7 +298,7 @@
 
     <exec basedir="${current.build.dir}"
           workingdir="${current.build.dir}"
-          program="test-runner.exe"
+          program="direct-runner.exe"
           managed="strict"
           commandline="${nunit.commandline}" />
 
@@ -349,7 +349,7 @@ file or set the NCOVER_DIR environment variable.
     </fail>
 
     <property name="ncover.commandline"
-      value="test-runner.exe ${nunit.commandline} //a nunit.framework //x TestCoverage-${nant.settings.currentframework}.xml"/>
+      value="direct-runner.exe ${nunit.commandline} //a nunit.framework //x TestCoverage-${nant.settings.currentframework}.xml"/>
 
     <exec basedir="${ncover.dir}"
           workingdir="${current.build.dir}" 
@@ -368,7 +368,7 @@ file or set the PARTCOVER_DIR environment variable.
     </fail>
 
     <property name="partcover.commandline"
-      value='--target test-runner.exe --target-args "${nunit.commandline}" --include [nunit.framework]* --output TestCoverage-${nant.settings.currentframework}.xml'/>
+      value='--target direct-runner.exe --target-args "${nunit.commandline}" --include [nunit.framework]* --output TestCoverage-${nant.settings.currentframework}.xml'/>
 
     <exec basedir="${partcover.dir}"
           workingdir="${current.build.dir}" 
@@ -775,7 +775,7 @@ to the correct location.
         <include name="**/nunitlite/nunitlite.csproj"/>
         <include name="**/nunitlite.tests/nunitlite.tests.csproj"/>
         <include name="**/test-assembly/test-assembly.csproj"/>
-        <include name="**/test-runner/test-runner.csproj"/>
+        <include name="**/direct-runner/direct-runner.csproj"/>
       </fileset>
     </copy>
 
@@ -840,7 +840,7 @@ to the correct location.
     <!-- Test Data -->
     <include name="test-assembly/test-assembly.build" />
     <!-- Test Runner -->
-    <include name="runner/test-runner.build" />
+    <include name="runner/direct-runner.build" />
     <!-- Mock Assembly -->
     <include name="mock-assembly/mock-assembly.build" />
 
