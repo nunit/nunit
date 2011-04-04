@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-namespace NUnit.AdhocTestRunner
+namespace NUnit.DirectRunner
 {
     using System;
     using System.IO;

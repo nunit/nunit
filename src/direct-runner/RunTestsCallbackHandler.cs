@@ -26,7 +26,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Xml;
 
-namespace NUnit.AdhocTestRunner
+namespace NUnit.DirectRunner
 {
     public class RunTestsCallbackHandler : CallbackHandler
     {

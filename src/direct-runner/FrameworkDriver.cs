@@ -27,7 +27,7 @@ using System.IO;
 using System.Collections;
 using System.Xml;
 
-namespace NUnit.AdhocTestRunner
+namespace NUnit.DirectRunner
 {
     /// <summary>
     /// FrameworkController is used by the test-runner to load and run

@@ -26,7 +26,7 @@ using System.Collections;
 using System.Xml;
 using System.IO;
 
-namespace NUnit.AdhocTestRunner
+namespace NUnit.DirectRunner
 {
     public class ConsoleRunner
     {

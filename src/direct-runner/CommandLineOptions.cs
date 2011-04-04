@@ -28,7 +28,7 @@ using System.Collections;
 using System.Collections.Generic;
 #endif
 
-namespace NUnit.AdhocTestRunner
+namespace NUnit.DirectRunner
 {
     /// <summary>
     /// The CommandLineOptions class parses and holds the values of
