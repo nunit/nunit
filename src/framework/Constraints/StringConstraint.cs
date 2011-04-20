@@ -57,5 +57,22 @@ namespace NUnit.Framework.Constraints
         {
             get { caseInsensitive = true; return this; }
         }
+
+        /// <summary>
+        /// Test whether the constraint is satisfied by a given value
+        /// </summary>
+        /// <param name="actual">The value to be tested</param>
+        /// <returns>True for success, false for failure</returns>
+        public override bool Matches(object actual)
+        {
+            this.actual = actual;
+
+            if (!(actual is string))
+                return false;
+
+            return Matches((string)actual);
+        }
+
+        protected abstract bool Matches(string actual);
     } 
 }
