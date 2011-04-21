@@ -252,6 +252,8 @@ namespace NUnit.Framework
         #region Assert.That
 
         #region Object
+
+#if !CLR_2_0 && !CLR_4_0
         /// <summary>
         /// Apply a constraint to an actual value, succeeding if the constraint
         /// is satisfied and throwing an assertion exception on failure.
@@ -295,6 +297,95 @@ namespace NUnit.Framework
                 throw new AssertionException(writer.ToString());
             }
         }
+#endif
+
+        #endregion
+
+        #region Boolean
+
+        /// <summary>
+        /// Asserts that a condition is true. If the condition is false the method throws
+        /// an <see cref="AssertionException"/>.
+        /// </summary> 
+        /// <param name="condition">The evaluated condition</param>
+        /// <param name="message">The message to display if the condition is false</param>
+        /// <param name="args">Arguments to be used in formatting the message</param>
+        static public void That(bool condition, string message, params object[] args)
+        {
+            Assert.That(condition, Is.True, message, args);
+        }
+
+        /// <summary>
+        /// Asserts that a condition is true. If the condition is false the method throws
+        /// an <see cref="AssertionException"/>.
+        /// </summary>
+        /// <param name="condition">The evaluated condition</param>
+        /// <param name="message">The message to display if the condition is false</param>
+        static public void That(bool condition, string message)
+        {
+            Assert.That(condition, Is.True, message, null);
+        }
+
+        /// <summary>
+        /// Asserts that a condition is true. If the condition is false the method throws
+        /// an <see cref="AssertionException"/>.
+        /// </summary>
+        /// <param name="condition">The evaluated condition</param>
+        static public void That(bool condition)
+        {
+            Assert.That(condition, Is.True, null, null);
+        }
+
+        #endregion
+
+        #region ref Boolean
+
+#if !CLR_2_0 && !CLR_4_0
+        /// <summary>
+        /// Apply a constraint to a referenced boolean, succeeding if the constraint
+        /// is satisfied and throwing an assertion exception on failure.
+        /// </summary>
+        /// <param name="actual">The actual value to test</param>
+        /// <param name="expression">A Constraint to be applied</param>
+        static public void That(ref bool actual, IResolveConstraint expression)
+        {
+            Assert.That(ref actual, expression, null, null);
+        }
+
+        /// <summary>
+        /// Apply a constraint to a referenced value, succeeding if the constraint
+        /// is satisfied and throwing an assertion exception on failure.
+        /// </summary>
+        /// <param name="actual">The actual value to test</param>
+        /// <param name="expression">A Constraint to be applied</param>
+        /// <param name="message">The message that will be displayed on failure</param>
+        static public void That(ref bool actual, IResolveConstraint expression, string message)
+        {
+            Assert.That(ref actual, expression, message, null);
+        }
+
+        /// <summary>
+        /// Apply a constraint to a referenced value, succeeding if the constraint
+        /// is satisfied and throwing an assertion exception on failure.
+        /// </summary>
+        /// <param name="actual">The actual value to test</param>
+        /// <param name="expression">A Constraint to be applied</param>
+        /// <param name="message">The message that will be displayed on failure</param>
+        /// <param name="args">Arguments to be used in formatting the message</param>
+        static public void That(ref bool actual, IResolveConstraint expression, string message, params object[] args)
+        {
+            Constraint constraint = expression.Resolve();
+
+            TestExecutionContext.CurrentContext.IncrementAssertCount();
+            if (!constraint.Matches(ref actual))
+            {
+                MessageWriter writer = new TextMessageWriter(message, args);
+                constraint.WriteMessageTo(writer);
+                throw new AssertionException(writer.ToString());
+            }
+        }
+#endif
+
         #endregion
 
         #region ActualValueDelegate
@@ -345,8 +436,70 @@ namespace NUnit.Framework
 #endif
         #endregion
 
-        #region ref Object
+        #region TestDelegate
+
+        /// <summary>
+        /// Asserts that the code represented by a delegate throws an exception
+        /// that satisfies the constraint provided.
+        /// </summary>
+        /// <param name="code">A TestDelegate to be executed</param>
+        /// <param name="constraint">A ThrowsConstraint used in the test</param>
+        static public void That(TestDelegate code, IResolveConstraint constraint)
+        {
+            Assert.That((object)code, constraint);
+        }
+
+        #endregion
+
+        #endregion
+
+        #region Assert.That<T>
+
 #if CLR_2_0 || CLR_4_0
+        /// <summary>
+        /// Apply a constraint to an actual value, succeeding if the constraint
+        /// is satisfied and throwing an assertion exception on failure.
+        /// </summary>
+        /// <param name="expression">A Constraint to be applied</param>
+        /// <param name="actual">The actual value to test</param>
+        static public void That<T>(T actual, IResolveConstraint expression)
+        {
+            Assert.That(actual, expression, null, null);
+        }
+
+        /// <summary>
+        /// Apply a constraint to an actual value, succeeding if the constraint
+        /// is satisfied and throwing an assertion exception on failure.
+        /// </summary>
+        /// <param name="expression">A Constraint to be applied</param>
+        /// <param name="actual">The actual value to test</param>
+        /// <param name="message">The message that will be displayed on failure</param>
+        static public void That<T>(T actual, IResolveConstraint expression, string message)
+        {
+            Assert.That(actual, expression, message, null);
+        }
+
+        /// <summary>
+        /// Apply a constraint to an actual value, succeeding if the constraint
+        /// is satisfied and throwing an assertion exception on failure.
+        /// </summary>
+        /// <param name="expression">A Constraint expression to be applied</param>
+        /// <param name="actual">The actual value to test</param>
+        /// <param name="message">The message that will be displayed on failure</param>
+        /// <param name="args">Arguments to be used in formatting the message</param>
+        static public void That<T>(T actual, IResolveConstraint expression, string message, params object[] args)
+        {
+            Constraint constraint = expression.Resolve();
+
+            TestExecutionContext.CurrentContext.IncrementAssertCount();
+            if (!constraint.Matches(actual))
+            {
+                MessageWriter writer = new TextMessageWriter(message, args);
+                constraint.WriteMessageTo(writer);
+                throw new AssertionException(writer.ToString());
+            }
+        }
+
         /// <summary>
         /// Apply a constraint to a referenced value, succeeding if the constraint
         /// is satisfied and throwing an assertion exception on failure.
@@ -390,98 +543,8 @@ namespace NUnit.Framework
                 throw new AssertionException(writer.ToString());
             }
         }
-#else
-        /// <summary>
-        /// Apply a constraint to a referenced boolean, succeeding if the constraint
-        /// is satisfied and throwing an assertion exception on failure.
-        /// </summary>
-        /// <param name="actual">The actual value to test</param>
-        /// <param name="expression">A Constraint to be applied</param>
-        static public void That(ref bool actual, IResolveConstraint expression)
-        {
-            Assert.That(ref actual, expression, null, null);
-        }
-
-        /// <summary>
-        /// Apply a constraint to a referenced value, succeeding if the constraint
-        /// is satisfied and throwing an assertion exception on failure.
-        /// </summary>
-        /// <param name="actual">The actual value to test</param>
-        /// <param name="expression">A Constraint to be applied</param>
-        /// <param name="message">The message that will be displayed on failure</param>
-        static public void That(ref bool actual, IResolveConstraint expression, string message)
-        {
-            Assert.That(ref actual, expression, message, null);
-        }
-
-        /// <summary>
-        /// Apply a constraint to a referenced value, succeeding if the constraint
-        /// is satisfied and throwing an assertion exception on failure.
-        /// </summary>
-        /// <param name="actual">The actual value to test</param>
-        /// <param name="expression">A Constraint to be applied</param>
-        /// <param name="message">The message that will be displayed on failure</param>
-        /// <param name="args">Arguments to be used in formatting the message</param>
-        static public void That(ref bool actual, IResolveConstraint expression, string message, params object[] args)
-        {
-            Constraint constraint = expression.Resolve();
-
-            TestExecutionContext.CurrentContext.IncrementAssertCount();
-            if (!constraint.Matches(ref actual))
-            {
-                MessageWriter writer = new TextMessageWriter(message, args);
-                constraint.WriteMessageTo(writer);
-                throw new AssertionException(writer.ToString());
-            }
-        }
 #endif
-        #endregion
 
-        #region Boolean
-        /// <summary>
-        /// Asserts that a condition is true. If the condition is false the method throws
-        /// an <see cref="AssertionException"/>.
-        /// </summary> 
-        /// <param name="condition">The evaluated condition</param>
-        /// <param name="message">The message to display if the condition is false</param>
-        /// <param name="args">Arguments to be used in formatting the message</param>
-        static public void That(bool condition, string message, params object[] args)
-        {
-            Assert.That(condition, Is.True, message, args);
-        }
-
-        /// <summary>
-        /// Asserts that a condition is true. If the condition is false the method throws
-        /// an <see cref="AssertionException"/>.
-        /// </summary>
-        /// <param name="condition">The evaluated condition</param>
-        /// <param name="message">The message to display if the condition is false</param>
-        static public void That(bool condition, string message)
-        {
-            Assert.That(condition, Is.True, message, null);
-        }
-
-        /// <summary>
-        /// Asserts that a condition is true. If the condition is false the method throws
-        /// an <see cref="AssertionException"/>.
-        /// </summary>
-        /// <param name="condition">The evaluated condition</param>
-        static public void That(bool condition)
-        {
-            Assert.That(condition, Is.True, null, null);
-        }
-        #endregion
-
-        /// <summary>
-        /// Asserts that the code represented by a delegate throws an exception
-        /// that satisfies the constraint provided.
-        /// </summary>
-        /// <param name="code">A TestDelegate to be executed</param>
-        /// <param name="constraint">A ThrowsConstraint used in the test</param>
-        static public void That(TestDelegate code, IResolveConstraint constraint)
-        {
-            Assert.That((object)code, constraint);
-        }
         #endregion
 
         #region Throws, Catch and DoesNotThrow
