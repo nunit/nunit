@@ -59,15 +59,30 @@ namespace NUnit.Framework.CodeGeneration
             writer.Write(value);
         }
 
+        /// <summary>
+        /// Write a line using current indent.
+        /// </summary>
+        /// <param name="value">Text to write</param>
         public override void WriteLine(string value)
         {
             writer.Write(prefix);
-            writer.WriteLine(value);
+            writer.Write(value);
+            writer.Write("\r\n");
         }
 
+        /// <summary>
+        /// Write standard CRLF line ending. We do
+        /// this rather than using the underlying
+        /// WriteLine so that the text is generated
+        /// the same way no matter what system we 
+        /// are running on. Use of CRLF is for 
+        /// historical reasons only: NUnit was
+        /// first developed on Windows. Most IDEs
+        /// should cope with this.
+        /// </summary>
         public override void WriteLine()
         {
-            writer.WriteLine();
+            writer.Write("\r\n");
         }
 
         public override void Flush()

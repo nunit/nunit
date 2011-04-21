@@ -47,7 +47,7 @@ namespace NUnit.Framework
         /// Returns a new CollectionContainsConstraint checking for the
         /// presence of a particular object in the collection.
         /// </summary>
-public static CollectionContainsConstraint Item(object expected)
+        public static CollectionContainsConstraint Item(object expected)
         {
             return new CollectionContainsConstraint(expected);
         }
@@ -60,7 +60,7 @@ public static CollectionContainsConstraint Item(object expected)
         /// Returns a constraint that succeeds if the actual
         /// value contains the substring supplied as an argument.
         /// </summary>
-public static SubstringConstraint Substring(string expected)
+        public static SubstringConstraint Substring(string expected)
         {
             return new SubstringConstraint(expected);;
         }
