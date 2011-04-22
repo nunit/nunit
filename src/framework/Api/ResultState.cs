@@ -53,7 +53,7 @@ namespace NUnit.Framework.Api
         public ResultState(TestStatus status, string label)
         {
             this.status = status;
-            this.label = label ?? string.Empty;
+            this.label = label == null ? string.Empty : label;
         }
 
         #endregion
@@ -133,7 +133,7 @@ namespace NUnit.Framework.Api
         public override string ToString()
         {
             string s = status.ToString();
-            return string.IsNullOrEmpty(label) ? s : string.Format("{0}:{1}", s, label);
+            return label == null || label.Length == 0 ? s : string.Format("{0}:{1}", s, label);
         }
     }
 }
