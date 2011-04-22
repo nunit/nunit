@@ -186,7 +186,6 @@
       <arg value="Throws.cs"/>
       <arg value="Constraints/ConstraintFactory.cs"/>
       <arg value="Constraints/ConstraintExpression.cs"/>
-      <arg value="Assert.cs"/>
 
     </exec>
 
