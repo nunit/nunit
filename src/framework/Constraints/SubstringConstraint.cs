@@ -40,17 +40,14 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="actual">The value to be tested</param>
         /// <returns>True for success, false for failure</returns>
-        public override bool Matches(object actual)
+        protected override bool Matches(string actual)
         {
-            this.actual = actual;
-            
-            if ( !(actual is string) )
-                return false;
+            //this.actual = actual;
 
             if (this.caseInsensitive)
-                return ((string)actual).ToLower().IndexOf(expected.ToLower()) >= 0;
+                return actual.ToLower().IndexOf(expected.ToLower()) >= 0;
             else
-                return ((string)actual).IndexOf(expected) >= 0;
+                return actual.IndexOf(expected) >= 0;
         }
 
         /// <summary>
