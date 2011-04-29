@@ -31,7 +31,7 @@ namespace NUnit.Framework.Api
 
         /// <summary>
         /// Adds a key/value pair to the property set. Throws
-        /// an <see cref="Invalid ArgumentException"/> if the
+        /// an <see cref="InvalidArgumentException"/> if the
         /// key is already present.
         /// </summary>
         /// <param name="key">The key</param>

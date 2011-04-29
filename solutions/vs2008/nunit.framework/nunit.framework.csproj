@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -47,876 +47,881 @@
   -->
   <ItemGroup>
     <None Include="nunit.snk" />
-    <None Include="..\..\..\src\framework\nunit.framework.build">
-      <Link>nunit.framework.build</Link>
-    </None>
-    <None Include="..\..\..\src\framework\nunit.framework.sources">
-      <Link>nunit.framework.sources</Link>
-    </None>
-    <None Include="..\..\..\src\framework\nunitlite.build">
-      <Link>nunitlite.build</Link>
-    </None>
-    <None Include="..\..\..\src\framework\nunitlite.sources">
-      <Link>nunitlite.sources</Link>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\..\src\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Api\IApplyToTest.cs">
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Api\IApplyToTest.cs">
       <Link>Api\IApplyToTest.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Api\ITest.cs">
-      <Link>Api\ITest.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Api\ITestAssemblyBuilder.cs">
-      <Link>Api\ITestAssemblyBuilder.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Api\ITestAssemblyRunner.cs">
-      <Link>Api\ITestAssemblyRunner.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Api\ITestCaseData.cs">
-      <Link>Api\ITestCaseData.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Api\ITestCaseSource.cs">
-      <Link>Api\ITestCaseSource.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Api\ITestListener.cs">
-      <Link>Api\ITestListener.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Api\ITestResult.cs">
-      <Link>Api\ITestResult.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Api\ResultState.cs">
-      <Link>Api\ResultState.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Api\RunState.cs">
-      <Link>Api\RunState.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Api\TestController.cs">
-      <Link>Api\TestController.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Api\TestOutput.cs">
-      <Link>Api\TestOutput.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\AssemblyInfo.cs">
-      <Link>AssemblyInfo.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Assert.cs">
-      <Link>Assert.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\AssertionHelper.cs">
-      <Link>AssertionHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Assume.cs">
-      <Link>Assume.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Attributes\CategoryAttribute.cs">
-      <Link>Attributes\CategoryAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Attributes\CombinatorialAttribute.cs">
-      <Link>Attributes\CombinatorialAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Attributes\DatapointAttribute.cs">
-      <Link>Attributes\DatapointAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Attributes\DescriptionAttribute.cs">
-      <Link>Attributes\DescriptionAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Attributes\ExpectedExceptionAttribute.cs">
-      <Link>Attributes\ExpectedExceptionAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Attributes\ExplicitAttribute.cs">
-      <Link>Attributes\ExplicitAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Attributes\IgnoreAttribute.cs">
-      <Link>Attributes\IgnoreAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Attributes\IncludeExcludeAttribute.cs">
-      <Link>Attributes\IncludeExcludeAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Attributes\MaxTimeAttribute.cs">
-      <Link>Attributes\MaxTimeAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Attributes\PropertyAttribute.cs">
-      <Link>Attributes\PropertyAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Attributes\RandomAttribute.cs">
-      <Link>Attributes\RandomAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Attributes\RangeAttribute.cs">
-      <Link>Attributes\RangeAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Attributes\RepeatAttribute.cs">
-      <Link>Attributes\RepeatAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Attributes\RequiredAddinAttribute.cs">
-      <Link>Attributes\RequiredAddinAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Attributes\RequiresThreadAttribute.cs">
-      <Link>Attributes\RequiresThreadAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Attributes\SetCultureAttribute.cs">
-      <Link>Attributes\SetCultureAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Attributes\SetUICultureAttribute.cs">
-      <Link>Attributes\SetUICultureAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Attributes\SetUpAttribute.cs">
-      <Link>Attributes\SetUpAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Attributes\SetUpFixtureAttribute.cs">
-      <Link>Attributes\SetUpFixtureAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Attributes\SuiteAttribute.cs">
-      <Link>Attributes\SuiteAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Attributes\TearDownAttribute.cs">
-      <Link>Attributes\TearDownAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Attributes\TestAttribute.cs">
-      <Link>Attributes\TestAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Attributes\TestCaseAttribute.cs">
-      <Link>Attributes\TestCaseAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Attributes\TestCaseSourceAttribute.cs">
-      <Link>Attributes\TestCaseSourceAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Attributes\TestFixtureAttribute.cs">
-      <Link>Attributes\TestFixtureAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Attributes\TestFixtureSetUpAttribute.cs">
-      <Link>Attributes\TestFixtureSetUpAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Attributes\TestFixtureTearDownAttribute.cs">
-      <Link>Attributes\TestFixtureTearDownAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Attributes\TheoryAttribute.cs">
-      <Link>Attributes\TheoryAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Attributes\ValuesAttribute.cs">
-      <Link>Attributes\ValuesAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Attributes\ValueSourceAttribute.cs">
-      <Link>Attributes\ValueSourceAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\CollectionAssert.cs">
-      <Link>CollectionAssert.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\AllItemsConstraint.cs">
-      <Link>Constraints\AllItemsConstraint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\AndConstraint.cs">
-      <Link>Constraints\AndConstraint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\AndOperator.cs">
-      <Link>Constraints\Operators\AndOperator.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\AssignableFromConstraint.cs">
-      <Link>Constraints\AssignableFromConstraint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\AssignableToConstraint.cs">
-      <Link>Constraints\AssignableToConstraint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\AttributeConstraint.cs">
-      <Link>Constraints\AttributeConstraint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\AttributeExistsConstraint.cs">
-      <Link>Constraints\AttributeExistsConstraint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\AttributeOperator.cs">
-      <Link>Constraints\Operators\AttributeOperator.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\BasicConstraint.cs">
-      <Link>Constraints\BasicConstraint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\BinaryConstraint.cs">
-      <Link>Constraints\BinaryConstraint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\BinaryOperator.cs">
-      <Link>Constraints\Operators\BinaryOperator.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\CollectionConstraint.cs">
-      <Link>Constraints\CollectionConstraint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\CollectionContainsConstraint.cs">
-      <Link>Constraints\CollectionContainsConstraint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\CollectionEquivalentConstraint.cs">
-      <Link>Constraints\CollectionEquivalentConstraint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\CollectionItemsEqualConstraint.cs">
-      <Link>Constraints\CollectionItemsEqualConstraint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\CollectionOperator.cs">
-      <Link>Constraints\Operators\CollectionOperator.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\CollectionOrderedConstraint.cs">
-      <Link>Constraints\CollectionOrderedConstraint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\CollectionSubsetConstraint.cs">
-      <Link>Constraints\CollectionSubsetConstraint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\ComparisonConstraint.cs">
-      <Link>Constraints\ComparisonConstraint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\ConstraintOperator.cs">
-      <Link>Constraints\Operators\ConstraintOperator.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\EmptyCollectionConstraint.cs">
-      <Link>Constraints\EmptyCollectionConstraint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\EmptyStringConstraint.cs">
-      <Link>Constraints\EmptyStringConstraint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\EndsWithConstraint.cs">
-      <Link>Constraints\EndsWithConstraint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\ExactTypeConstraint.cs">
-      <Link>Constraints\ExactTypeConstraint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\FalseConstraint.cs">
-      <Link>Constraints\FalseConstraint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\GreaterThanConstraint.cs">
-      <Link>Constraints\GreaterThanConstraint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\GreaterThanOrEqualConstraint.cs">
-      <Link>Constraints\GreaterThanOrEqualConstraint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\InstanceOfTypeConstraint.cs">
-      <Link>Constraints\InstanceOfTypeConstraint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\LessThanConstraint.cs">
-      <Link>Constraints\LessThanConstraint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\LessThanOrEqualConstraint.cs">
-      <Link>Constraints\LessThanOrEqualConstraint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\NaNConstraint.cs">
-      <Link>Constraints\NaNConstraint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\NoItemConstraint.cs">
-      <Link>Constraints\NoItemConstraint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\NotConstraint.cs">
-      <Link>Constraints\NotConstraint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\NotOperator.cs">
-      <Link>Constraints\Operators\NotOperator.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\NullConstraint.cs">
-      <Link>Constraints\NullConstraint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\NullOrEmptyStringConstraint.cs">
-      <Link>Constraints\NullOrEmptyStringConstraint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\OrConstraint.cs">
-      <Link>Constraints\OrConstraint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\OrOperator.cs">
-      <Link>Constraints\Operators\OrOperator.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\PathConstraint.cs">
-      <Link>Constraints\PathConstraint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\PrefixConstraint.cs">
-      <Link>Constraints\PrefixConstraint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\PrefixOperator.cs">
-      <Link>Constraints\Operators\PrefixOperator.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\PropertyExistsConstraint.cs">
-      <Link>Constraints\PropertyExistsConstraint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\PropOperator.cs">
-      <Link>Constraints\Operators\PropOperator.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\RegexConstraint.cs">
-      <Link>Constraints\RegexConstraint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\SamePathConstraint.cs">
-      <Link>Constraints\SamePathConstraint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\SamePathOrUnderConstraint.cs">
-      <Link>Constraints\SamePathOrUnderConstraint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\SelfResolvingOperator.cs">
-      <Link>Constraints\Operators\SelfResolvingOperator.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\SomeItemsConstraint.cs">
-      <Link>Constraints\SomeItemsConstraint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\StartsWithConstraint.cs">
-      <Link>Constraints\StartsWithConstraint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\StringConstraint.cs">
-      <Link>Constraints\StringConstraint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\SubstringConstraint.cs">
-      <Link>Constraints\SubstringConstraint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\ThrowsNothingConstraint.cs">
-      <Link>Constraints\ThrowsNothingConstraint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\ThrowsOperator.cs">
-      <Link>Constraints\Operators\ThrowsOperator.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\ToleranceMode.cs">
-      <Link>Constraints\ToleranceMode.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\TrueConstraint.cs">
-      <Link>Constraints\TrueConstraint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\TypeConstraint.cs">
-      <Link>Constraints\TypeConstraint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\UniqueItemsConstraint.cs">
-      <Link>Constraints\UniqueItemsConstraint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\WithOperator.cs">
-      <Link>Constraints\Operators\WithOperator.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Commands\CommandBuilder.cs">
-      <Link>Internal\Commands\CommandBuilder.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Commands\DelegatingTestCommand.cs">
-      <Link>Internal\Commands\DelegatingTestCommand.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Commands\ExpectedExceptionCommand.cs">
-      <Link>Internal\Commands\ExpectedExceptionCommand.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Commands\ITestCommand.cs">
-      <Link>Internal\Commands\ITestCommand.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Commands\MaxTimeCommand.cs">
-      <Link>Internal\Commands\MaxTimeCommand.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Commands\RepeatedTestCommand.cs">
-      <Link>Internal\Commands\RepeatedTestCommand.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Commands\SetUpTearDownCommand.cs">
-      <Link>Internal\Commands\SetUpTearDownCommand.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Commands\SkipCommand.cs">
-      <Link>Internal\Commands\SkipCommand.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Commands\TestCaseCommand.cs">
-      <Link>Internal\Commands\TestCaseCommand.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Commands\TestCommand.cs">
-      <Link>Internal\Commands\TestCommand.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Commands\TestGroupCommand.cs">
-      <Link>Internal\Commands\TestGroupCommand.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Commands\TestMethodCommand.cs">
-      <Link>Internal\Commands\TestMethodCommand.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Commands\ThreadedTestCommand.cs">
-      <Link>Internal\Commands\ThreadedTestCommand.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\TestResult.cs">
-      <Link>Internal\TestResult.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\ObjectList.cs">
-      <Link>ObjectList.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\BinarySerializableConstraint.cs">
-      <Link>Constraints\BinarySerializableConstraint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\ComparisonAdapter.cs">
-      <Link>Constraints\ComparisonAdapter.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\Constraint.cs">
-      <Link>Constraints\Constraint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\ConstraintBuilder.cs">
-      <Link>Constraints\ConstraintBuilder.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\ConstraintExpression.cs">
-      <Link>Constraints\ConstraintExpression.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\ConstraintExpressionBase.cs">
-      <Link>Constraints\ConstraintExpressionBase.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\ConstraintFactory.cs">
-      <Link>Constraints\ConstraintFactory.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\ContainsConstraint.cs">
-      <Link>Constraints\ContainsConstraint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\DelayedConstraint.cs">
-      <Link>Constraints\DelayedConstraint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\EmptyConstraint.cs">
-      <Link>Constraints\EmptyConstraint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\EmptyDirectoryConstraint.cs">
-      <Link>Constraints\EmptyDirectoryConstraint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\EqualConstraint.cs">
-      <Link>Constraints\EqualConstraint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\EqualityAdapter.cs">
-      <Link>Constraints\EqualityAdapter.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\FloatingPointNumerics.cs">
-      <Link>Constraints\FloatingPointNumerics.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\IResolveConstraint.cs">
-      <Link>Constraints\IResolveConstraint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\MessageWriter.cs">
-      <Link>Constraints\MessageWriter.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\MsgUtils.cs">
-      <Link>Constraints\MsgUtils.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\Numerics.cs">
-      <Link>Constraints\Numerics.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\NUnitComparer.cs">
-      <Link>Constraints\NUnitComparer.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\NUnitEqualityComparer.cs">
-      <Link>Constraints\NUnitEqualityComparer.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\PredicateConstraint.cs">
-      <Link>Constraints\PredicateConstraint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\PropertyConstraint.cs">
-      <Link>Constraints\PropertyConstraint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\RangeConstraint.cs">
-      <Link>Constraints\RangeConstraint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\ResolvableConstraintExpression.cs">
-      <Link>Constraints\ResolvableConstraintExpression.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\SameAsConstraint.cs">
-      <Link>Constraints\SameAsConstraint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\ThrowsConstraint.cs">
-      <Link>Constraints\ThrowsConstraint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\Tolerance.cs">
-      <Link>Constraints\Tolerance.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\XmlSerializableConstraint.cs">
-      <Link>Constraints\XmlSerializableConstraint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Contains.cs">
-      <Link>Contains.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Env.cs">
-      <Link>Env.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Exceptions\AssertionException.cs">
-      <Link>Exceptions\AssertionException.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Exceptions\IgnoreException.cs">
-      <Link>Exceptions\IgnoreException.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Exceptions\InconclusiveException.cs">
-      <Link>Exceptions\InconclusiveException.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Exceptions\SuccessException.cs">
-      <Link>Exceptions\SuccessException.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Extensibility\Addin.cs">
-      <Link>Extensibility\Addin.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Extensibility\AddinStatus.cs">
-      <Link>Extensibility\AddinStatus.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Extensibility\ExtensionType.cs">
-      <Link>Extensibility\ExtensionType.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Extensibility\IAddin.cs">
-      <Link>Extensibility\IAddin.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Extensibility\IAddinRegistry.cs">
-      <Link>Extensibility\IAddinRegistry.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Extensibility\IDataPointProvider.cs">
-      <Link>Extensibility\IDataPointProvider.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Extensibility\IExtensionHost.cs">
-      <Link>Extensibility\IExtensionHost.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Extensibility\IExtensionPoint.cs">
-      <Link>Extensibility\IExtensionPoint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Extensibility\ISuiteBuilder.cs">
-      <Link>Extensibility\ISuiteBuilder.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Extensibility\ITestCaseBuilder.cs">
-      <Link>Extensibility\ITestCaseBuilder.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Extensibility\ITestCaseProvider.cs">
-      <Link>Extensibility\ITestCaseProvider.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Extensibility\ITestDecorator.cs">
-      <Link>Extensibility\ITestDecorator.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Extensibility\NUnitAddinAttribute.cs">
-      <Link>Extensibility\NUnitAddinAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Extensibility\TestFramework.cs">
-      <Link>Extensibility\TestFramework.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\FileAssert.cs">
-      <Link>FileAssert.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\GlobalSettings.cs">
-      <Link>GlobalSettings.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Has.cs">
-      <Link>Has.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\IExpectException.cs">
-      <Link>IExpectException.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\AssemblyHelper.cs">
-      <Link>Internal\AssemblyHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\AssemblyReader.cs">
-      <Link>Internal\AssemblyReader.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Builders\CombinatorialStrategy.cs">
-      <Link>Internal\Builders\CombinatorialStrategy.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Builders\CombinatorialTestCaseProvider.cs">
-      <Link>Internal\Builders\CombinatorialTestCaseProvider.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Builders\CombiningStrategy.cs">
-      <Link>Internal\Builders\CombiningStrategy.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Builders\DataAttributeTestCaseProvider.cs">
-      <Link>Internal\Builders\DataAttributeTestCaseProvider.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Builders\DatapointProvider.cs">
-      <Link>Internal\Builders\DatapointProvider.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Builders\InlineDataPointProvider.cs">
-      <Link>Internal\Builders\InlineDataPointProvider.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Builders\LegacySuiteBuilder.cs">
-      <Link>Internal\Builders\LegacySuiteBuilder.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Builders\NUnitTestCaseBuilder.cs">
-      <Link>Internal\Builders\NUnitTestCaseBuilder.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Builders\NUnitTestFixtureBuilder.cs">
-      <Link>Internal\Builders\NUnitTestFixtureBuilder.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Builders\PairwiseStrategy.cs">
-      <Link>Internal\Builders\PairwiseStrategy.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Builders\ProviderCache.cs">
-      <Link>Internal\Builders\ProviderCache.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Builders\ProviderInfo.cs">
-      <Link>Internal\Builders\ProviderInfo.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Builders\SequentialStrategy.cs">
-      <Link>Internal\Builders\SequentialStrategy.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Builders\SetUpFixtureBuilder.cs">
-      <Link>Internal\Builders\SetUpFixtureBuilder.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Builders\ValueSourceProvider.cs">
-      <Link>Internal\Builders\ValueSourceProvider.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\CoreExtensions.cs">
-      <Link>Internal\CoreExtensions.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\CultureDetector.cs">
-      <Link>Internal\CultureDetector.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\DefaultTestAssemblyBuilder.cs">
-      <Link>Internal\DefaultTestAssemblyBuilder.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\DefaultTestAssemblyRunner.cs">
-      <Link>Internal\DefaultTestAssemblyRunner.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\DirectorySwapper.cs">
-      <Link>Internal\DirectorySwapper.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\EventListenerTextWriter.cs">
-      <Link>Internal\EventListenerTextWriter.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\EventPump.cs">
-      <Link>Internal\EventPump.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\EventQueue.cs">
-      <Link>Internal\EventQueue.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\ExpectedExceptionProcessor.cs">
-      <Link>Internal\ExpectedExceptionProcessor.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Extensibility\DataPointProviders.cs">
-      <Link>Internal\Extensibility\DataPointProviders.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Extensibility\EventListenerCollection.cs">
-      <Link>Internal\Extensibility\EventListenerCollection.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Extensibility\ExtensionHost.cs">
-      <Link>Internal\Extensibility\ExtensionHost.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Extensibility\ExtensionPoint.cs">
-      <Link>Internal\Extensibility\ExtensionPoint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Extensibility\ExtensionsCollection.cs">
-      <Link>Internal\Extensibility\ExtensionsCollection.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Extensibility\SuiteBuilderCollection.cs">
-      <Link>Internal\Extensibility\SuiteBuilderCollection.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Extensibility\TestCaseBuilderCollection.cs">
-      <Link>Internal\Extensibility\TestCaseBuilderCollection.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Extensibility\TestCaseProviders.cs">
-      <Link>Internal\Extensibility\TestCaseProviders.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Extensibility\TestDecoratorCollection.cs">
-      <Link>Internal\Extensibility\TestDecoratorCollection.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\InternalTrace.cs">
-      <Link>Internal\InternalTrace.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\InvalidTestFixtureException.cs">
-      <Link>Internal\InvalidTestFixtureException.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Log4NetCapture.cs">
-      <Link>Internal\Log4NetCapture.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\LogCapture.cs">
-      <Link>Internal\LogCapture.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\MethodHelper.cs">
-      <Link>Internal\MethodHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\NamespaceTreeBuilder.cs">
-      <Link>Internal\NamespaceTreeBuilder.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\NUnitException.cs">
-      <Link>Internal\NUnitException.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\OSPlatform.cs">
-      <Link>Internal\OSPlatform.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\TestExecutionContext.cs">
-      <Link>Internal\TestExecutionContext.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Tests\ParameterizedMethodSuite.cs">
-      <Link>Internal\Tests\ParameterizedMethodSuite.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\ParameterSet.cs">
-      <Link>Internal\ParameterSet.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\PlatformHelper.cs">
-      <Link>Internal\PlatformHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\QueuingEventListener.cs">
-      <Link>Internal\QueuingEventListener.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Randomizer.cs">
-      <Link>Internal\Randomizer.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Reflect.cs">
-      <Link>Internal\Reflect.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\RuntimeFramework.cs">
-      <Link>Internal\RuntimeFramework.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\TestFixtureBuilder.cs">
-      <Link>Internal\TestFixtureBuilder.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\TestListener.cs">
-      <Link>Internal\TestListener.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Tests\LegacySuite.cs">
-      <Link>Internal\Tests\LegacySuite.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Tests\SetUpFixture.cs">
-      <Link>Internal\Tests\SetUpFixture.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Tests\Test.cs">
-      <Link>Internal\Tests\Test.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Tests\TestFixture.cs">
-      <Link>Internal\Tests\TestFixture.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Tests\TestMethod.cs">
-      <Link>Internal\Tests\TestMethod.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Tests\TestSuite.cs">
-      <Link>Internal\Tests\TestSuite.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\TextCapture.cs">
-      <Link>Internal\TextCapture.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\TextMessageWriter.cs">
-      <Link>Internal\TextMessageWriter.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\TypeHelper.cs">
-      <Link>Internal\TypeHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Is.cs">
-      <Link>Is.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Iz.cs">
-      <Link>Iz.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\List.cs">
-      <Link>List.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\ListMapper.cs">
-      <Link>ListMapper.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\MessageMatch.cs">
-      <Link>MessageMatch.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\SpecialValue.cs">
-      <Link>SpecialValue.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\StringAssert.cs">
-      <Link>StringAssert.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\TestCaseData.cs">
-      <Link>TestCaseData.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Throws.cs">
-      <Link>Throws.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\AsyncResult.cs">
-      <Link>Internal\AsyncResult.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\TestProgressReporter.cs">
-      <Link>Internal\TestProgressReporter.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Api\TestStatus.cs">
-      <Link>Api\TestStatus.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\XmlHelper.cs">
-      <Link>Internal\XmlHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\ExceptionHelper.cs">
-      <Link>Internal\ExceptionHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Tests\TestAssembly.cs">
-      <Link>Internal\Tests\TestAssembly.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Api\IXmlNodeBuilder.cs">
-      <Link>Api\IXmlNodeBuilder.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Tests\ParameterizedFixtureSuite.cs">
-      <Link>Internal\Tests\ParameterizedFixtureSuite.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Attributes\NUnitAttribute.cs">
-      <Link>Attributes\NUnitAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Attributes\TestModificationAttribute.cs">
-      <Link>Attributes\TestModificationAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Attributes\DatapointsAttribute.cs">
-      <Link>Attributes\DatapointsAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Attributes\DatapointSourceAttribute.cs">
-      <Link>Attributes\DatapointSourceAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Attributes\CultureAttribute.cs">
-      <Link>Attributes\CultureAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Attributes\PlatformAttribute.cs">
-      <Link>Attributes\PlatformAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Attributes\PairwiseAttribute.cs">
-      <Link>Attributes\PairwiseAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Attributes\SequentialAttribute.cs">
-      <Link>Attributes\SequentialAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Attributes\RequiresMTAAtribute.cs">
-      <Link>Attributes\RequiresMTAAtribute.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Attributes\RequiresSTAAttribute.cs">
-      <Link>Attributes\RequiresSTAAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Attributes\TimeoutAttribute.cs">
-      <Link>Attributes\TimeoutAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Attributes\DataAttribute.cs">
-      <Link>Attributes\DataAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Api\IParameterDataSource.cs">
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Api\IParameterDataSource.cs">
       <Link>Api\IParameterDataSource.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Api\ITestCaseSourceProvider.cs">
-      <Link>Api\ITestCaseSourceProvider.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\ReusableConstraint.cs">
-      <SubType>Code</SubType>
-      <Link>Constraints\ReusableConstraint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Constraints\CollectionTally.cs">
-      <Link>Constraints\CollectionTally.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\TestContext.cs">
-      <Link>TestContext.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Api\PropertyNames.cs">
-      <Link>Api\PropertyNames.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\framework\Api\IPropertyBag.cs">
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Api\IPropertyBag.cs">
       <Link>Api\IPropertyBag.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\PropertyBag.cs">
-      <Link>Internal\PropertyBag.cs</Link>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Api\IPropertySet.cs">
+      <Link>Api\IPropertySet.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Api\PropertyEntry.cs">
-      <Link>Api\PropertyEntry.cs</Link>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Api\ITest.cs">
+      <Link>Api\ITest.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Api\ITestFilter.cs">
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Api\ITestAssemblyBuilder.cs">
+      <Link>Api\ITestAssemblyBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Api\ITestAssemblyRunner.cs">
+      <Link>Api\ITestAssemblyRunner.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Api\ITestCaseData.cs">
+      <Link>Api\ITestCaseData.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Api\ITestCaseSource.cs">
+      <Link>Api\ITestCaseSource.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Api\ITestCaseSourceProvider.cs">
+      <Link>Api\ITestCaseSourceProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Api\ITestFilter.cs">
       <Link>Api\ITestFilter.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Filters\SimpleNameFilter.cs">
-      <Link>Internal\Filters\SimpleNameFilter.cs</Link>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Api\ITestListener.cs">
+      <Link>Api\ITestListener.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\TestFilter.cs">
-      <Link>Internal\TestFilter.cs</Link>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Api\ITestResult.cs">
+      <Link>Api\ITestResult.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Commands\TestExecutionContextCommand.cs">
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Api\IXmlNodeBuilder.cs">
+      <Link>Api\IXmlNodeBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Api\PropertyEntry.cs">
+      <Link>Api\PropertyEntry.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Api\PropertyNames.cs">
+      <Link>Api\PropertyNames.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Api\ResultState.cs">
+      <Link>Api\ResultState.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Api\RunState.cs">
+      <Link>Api\RunState.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Api\TestController.cs">
+      <Link>Api\TestController.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Api\TestOutput.cs">
+      <Link>Api\TestOutput.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Api\TestStatus.cs">
+      <Link>Api\TestStatus.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\AssemblyInfo.cs">
+      <Link>AssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Assert.cs">
+      <Link>Assert.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\AssertionHelper.cs">
+      <Link>AssertionHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Assume.cs">
+      <Link>Assume.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Attributes\CategoryAttribute.cs">
+      <Link>Attributes\CategoryAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Attributes\CombinatorialAttribute.cs">
+      <Link>Attributes\CombinatorialAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Attributes\CultureAttribute.cs">
+      <Link>Attributes\CultureAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Attributes\DataAttribute.cs">
+      <Link>Attributes\DataAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Attributes\DatapointAttribute.cs">
+      <Link>Attributes\DatapointAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Attributes\DatapointsAttribute.cs">
+      <Link>Attributes\DatapointsAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Attributes\DatapointSourceAttribute.cs">
+      <Link>Attributes\DatapointSourceAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Attributes\DescriptionAttribute.cs">
+      <Link>Attributes\DescriptionAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Attributes\ExpectedExceptionAttribute.cs">
+      <Link>Attributes\ExpectedExceptionAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Attributes\ExplicitAttribute.cs">
+      <Link>Attributes\ExplicitAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Attributes\IgnoreAttribute.cs">
+      <Link>Attributes\IgnoreAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Attributes\IncludeExcludeAttribute.cs">
+      <Link>Attributes\IncludeExcludeAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Attributes\MaxTimeAttribute.cs">
+      <Link>Attributes\MaxTimeAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Attributes\NUnitAttribute.cs">
+      <Link>Attributes\NUnitAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Attributes\PairwiseAttribute.cs">
+      <Link>Attributes\PairwiseAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Attributes\PlatformAttribute.cs">
+      <Link>Attributes\PlatformAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Attributes\PropertyAttribute.cs">
+      <Link>Attributes\PropertyAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Attributes\RandomAttribute.cs">
+      <Link>Attributes\RandomAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Attributes\RangeAttribute.cs">
+      <Link>Attributes\RangeAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Attributes\RepeatAttribute.cs">
+      <Link>Attributes\RepeatAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Attributes\RequiredAddinAttribute.cs">
+      <Link>Attributes\RequiredAddinAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Attributes\RequiresMTAAtribute.cs">
+      <Link>Attributes\RequiresMTAAtribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Attributes\RequiresSTAAttribute.cs">
+      <Link>Attributes\RequiresSTAAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Attributes\RequiresThreadAttribute.cs">
+      <Link>Attributes\RequiresThreadAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Attributes\SequentialAttribute.cs">
+      <Link>Attributes\SequentialAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Attributes\SetCultureAttribute.cs">
+      <Link>Attributes\SetCultureAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Attributes\SetUICultureAttribute.cs">
+      <Link>Attributes\SetUICultureAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Attributes\SetUpAttribute.cs">
+      <Link>Attributes\SetUpAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Attributes\SetUpFixtureAttribute.cs">
+      <Link>Attributes\SetUpFixtureAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Attributes\SuiteAttribute.cs">
+      <Link>Attributes\SuiteAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Attributes\TearDownAttribute.cs">
+      <Link>Attributes\TearDownAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Attributes\TestAttribute.cs">
+      <Link>Attributes\TestAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Attributes\TestCaseAttribute.cs">
+      <Link>Attributes\TestCaseAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Attributes\TestCaseSourceAttribute.cs">
+      <Link>Attributes\TestCaseSourceAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Attributes\TestFixtureAttribute.cs">
+      <Link>Attributes\TestFixtureAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Attributes\TestFixtureSetUpAttribute.cs">
+      <Link>Attributes\TestFixtureSetUpAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Attributes\TestFixtureTearDownAttribute.cs">
+      <Link>Attributes\TestFixtureTearDownAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Attributes\TestModificationAttribute.cs">
+      <Link>Attributes\TestModificationAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Attributes\TheoryAttribute.cs">
+      <Link>Attributes\TheoryAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Attributes\TimeoutAttribute.cs">
+      <Link>Attributes\TimeoutAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Attributes\ValuesAttribute.cs">
+      <Link>Attributes\ValuesAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Attributes\ValueSourceAttribute.cs">
+      <Link>Attributes\ValueSourceAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\CollectionAssert.cs">
+      <Link>CollectionAssert.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\AllItemsConstraint.cs">
+      <Link>Constraints\AllItemsConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\AndConstraint.cs">
+      <Link>Constraints\AndConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\AssignableFromConstraint.cs">
+      <Link>Constraints\AssignableFromConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\AssignableToConstraint.cs">
+      <Link>Constraints\AssignableToConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\AttributeConstraint.cs">
+      <Link>Constraints\AttributeConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\AttributeExistsConstraint.cs">
+      <Link>Constraints\AttributeExistsConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\BasicConstraint.cs">
+      <Link>Constraints\BasicConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\BinaryConstraint.cs">
+      <Link>Constraints\BinaryConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\BinarySerializableConstraint.cs">
+      <Link>Constraints\BinarySerializableConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\CollectionConstraint.cs">
+      <Link>Constraints\CollectionConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\CollectionContainsConstraint.cs">
+      <Link>Constraints\CollectionContainsConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\CollectionEquivalentConstraint.cs">
+      <Link>Constraints\CollectionEquivalentConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\CollectionItemsEqualConstraint.cs">
+      <Link>Constraints\CollectionItemsEqualConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\CollectionOrderedConstraint.cs">
+      <Link>Constraints\CollectionOrderedConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\CollectionSubsetConstraint.cs">
+      <Link>Constraints\CollectionSubsetConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\CollectionTally.cs">
+      <Link>Constraints\CollectionTally.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\ComparisonAdapter.cs">
+      <Link>Constraints\ComparisonAdapter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\ComparisonConstraint.cs">
+      <Link>Constraints\ComparisonConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\Constraint.cs">
+      <Link>Constraints\Constraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\ConstraintBuilder.cs">
+      <Link>Constraints\ConstraintBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\ConstraintExpression.cs">
+      <Link>Constraints\ConstraintExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\ConstraintExpressionBase.cs">
+      <Link>Constraints\ConstraintExpressionBase.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\ConstraintFactory.cs">
+      <Link>Constraints\ConstraintFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\ContainsConstraint.cs">
+      <Link>Constraints\ContainsConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\DelayedConstraint.cs">
+      <Link>Constraints\DelayedConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\EmptyCollectionConstraint.cs">
+      <Link>Constraints\EmptyCollectionConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\EmptyConstraint.cs">
+      <Link>Constraints\EmptyConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\EmptyDirectoryConstraint.cs">
+      <Link>Constraints\EmptyDirectoryConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\EmptyStringConstraint.cs">
+      <Link>Constraints\EmptyStringConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\EndsWithConstraint.cs">
+      <Link>Constraints\EndsWithConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\EqualConstraint.cs">
+      <Link>Constraints\EqualConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\EqualityAdapter.cs">
+      <Link>Constraints\EqualityAdapter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\ExactTypeConstraint.cs">
+      <Link>Constraints\ExactTypeConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\FalseConstraint.cs">
+      <Link>Constraints\FalseConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\FloatingPointNumerics.cs">
+      <Link>Constraints\FloatingPointNumerics.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\GreaterThanConstraint.cs">
+      <Link>Constraints\GreaterThanConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\GreaterThanOrEqualConstraint.cs">
+      <Link>Constraints\GreaterThanOrEqualConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\InstanceOfTypeConstraint.cs">
+      <Link>Constraints\InstanceOfTypeConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\IResolveConstraint.cs">
+      <Link>Constraints\IResolveConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\LessThanConstraint.cs">
+      <Link>Constraints\LessThanConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\LessThanOrEqualConstraint.cs">
+      <Link>Constraints\LessThanOrEqualConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\MessageWriter.cs">
+      <Link>Constraints\MessageWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\MsgUtils.cs">
+      <Link>Constraints\MsgUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\NaNConstraint.cs">
+      <Link>Constraints\NaNConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\NoItemConstraint.cs">
+      <Link>Constraints\NoItemConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\NotConstraint.cs">
+      <Link>Constraints\NotConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\NullConstraint.cs">
+      <Link>Constraints\NullConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\NullOrEmptyStringConstraint.cs">
+      <Link>Constraints\NullOrEmptyStringConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\Numerics.cs">
+      <Link>Constraints\Numerics.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\NUnitComparer.cs">
+      <Link>Constraints\NUnitComparer.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\NUnitEqualityComparer.cs">
+      <Link>Constraints\NUnitEqualityComparer.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\Operators\AndOperator.cs">
+      <Link>Constraints\Operators\AndOperator.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\Operators\AttributeOperator.cs">
+      <Link>Constraints\Operators\AttributeOperator.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\Operators\BinaryOperator.cs">
+      <Link>Constraints\Operators\BinaryOperator.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\Operators\CollectionOperator.cs">
+      <Link>Constraints\Operators\CollectionOperator.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\Operators\ConstraintOperator.cs">
+      <Link>Constraints\Operators\ConstraintOperator.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\Operators\NotOperator.cs">
+      <Link>Constraints\Operators\NotOperator.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\Operators\OrOperator.cs">
+      <Link>Constraints\Operators\OrOperator.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\Operators\PrefixOperator.cs">
+      <Link>Constraints\Operators\PrefixOperator.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\Operators\PropOperator.cs">
+      <Link>Constraints\Operators\PropOperator.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\Operators\SelfResolvingOperator.cs">
+      <Link>Constraints\Operators\SelfResolvingOperator.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\Operators\ThrowsOperator.cs">
+      <Link>Constraints\Operators\ThrowsOperator.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\Operators\WithOperator.cs">
+      <Link>Constraints\Operators\WithOperator.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\OrConstraint.cs">
+      <Link>Constraints\OrConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\PathConstraint.cs">
+      <Link>Constraints\PathConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\PredicateConstraint.cs">
+      <Link>Constraints\PredicateConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\PrefixConstraint.cs">
+      <Link>Constraints\PrefixConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\PropertyConstraint.cs">
+      <Link>Constraints\PropertyConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\PropertyExistsConstraint.cs">
+      <Link>Constraints\PropertyExistsConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\RangeConstraint.cs">
+      <Link>Constraints\RangeConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\RegexConstraint.cs">
+      <Link>Constraints\RegexConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\ResolvableConstraintExpression.cs">
+      <Link>Constraints\ResolvableConstraintExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\ReusableConstraint.cs">
+      <Link>Constraints\ReusableConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\SameAsConstraint.cs">
+      <Link>Constraints\SameAsConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\SamePathConstraint.cs">
+      <Link>Constraints\SamePathConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\SamePathOrUnderConstraint.cs">
+      <Link>Constraints\SamePathOrUnderConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\SomeItemsConstraint.cs">
+      <Link>Constraints\SomeItemsConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\StartsWithConstraint.cs">
+      <Link>Constraints\StartsWithConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\StringConstraint.cs">
+      <Link>Constraints\StringConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\SubstringConstraint.cs">
+      <Link>Constraints\SubstringConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\ThrowsConstraint.cs">
+      <Link>Constraints\ThrowsConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\ThrowsNothingConstraint.cs">
+      <Link>Constraints\ThrowsNothingConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\Tolerance.cs">
+      <Link>Constraints\Tolerance.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\ToleranceMode.cs">
+      <Link>Constraints\ToleranceMode.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\TrueConstraint.cs">
+      <Link>Constraints\TrueConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\TypeConstraint.cs">
+      <Link>Constraints\TypeConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\UniqueItemsConstraint.cs">
+      <Link>Constraints\UniqueItemsConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Constraints\XmlSerializableConstraint.cs">
+      <Link>Constraints\XmlSerializableConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Contains.cs">
+      <Link>Contains.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Env.cs">
+      <Link>Env.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Exceptions\AssertionException.cs">
+      <Link>Exceptions\AssertionException.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Exceptions\IgnoreException.cs">
+      <Link>Exceptions\IgnoreException.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Exceptions\InconclusiveException.cs">
+      <Link>Exceptions\InconclusiveException.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Exceptions\SuccessException.cs">
+      <Link>Exceptions\SuccessException.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Extensibility\Addin.cs">
+      <Link>Extensibility\Addin.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Extensibility\AddinStatus.cs">
+      <Link>Extensibility\AddinStatus.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Extensibility\ExtensionType.cs">
+      <Link>Extensibility\ExtensionType.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Extensibility\IAddin.cs">
+      <Link>Extensibility\IAddin.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Extensibility\IAddinRegistry.cs">
+      <Link>Extensibility\IAddinRegistry.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Extensibility\IDataPointProvider.cs">
+      <Link>Extensibility\IDataPointProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Extensibility\IExtensionHost.cs">
+      <Link>Extensibility\IExtensionHost.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Extensibility\IExtensionPoint.cs">
+      <Link>Extensibility\IExtensionPoint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Extensibility\ISuiteBuilder.cs">
+      <Link>Extensibility\ISuiteBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Extensibility\ITestCaseBuilder.cs">
+      <Link>Extensibility\ITestCaseBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Extensibility\ITestCaseProvider.cs">
+      <Link>Extensibility\ITestCaseProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Extensibility\ITestDecorator.cs">
+      <Link>Extensibility\ITestDecorator.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Extensibility\NUnitAddinAttribute.cs">
+      <Link>Extensibility\NUnitAddinAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Extensibility\TestFramework.cs">
+      <Link>Extensibility\TestFramework.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\FileAssert.cs">
+      <Link>FileAssert.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\GlobalSettings.cs">
+      <Link>GlobalSettings.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Has.cs">
+      <Link>Has.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\IExpectException.cs">
+      <Link>IExpectException.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\AssemblyHelper.cs">
+      <Link>Internal\AssemblyHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\AssemblyReader.cs">
+      <Link>Internal\AssemblyReader.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\AsyncResult.cs">
+      <Link>Internal\AsyncResult.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\Builders\CombinatorialStrategy.cs">
+      <Link>Internal\Builders\CombinatorialStrategy.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\Builders\CombinatorialTestCaseProvider.cs">
+      <Link>Internal\Builders\CombinatorialTestCaseProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\Builders\CombiningStrategy.cs">
+      <Link>Internal\Builders\CombiningStrategy.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\Builders\DataAttributeTestCaseProvider.cs">
+      <Link>Internal\Builders\DataAttributeTestCaseProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\Builders\DatapointProvider.cs">
+      <Link>Internal\Builders\DatapointProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\Builders\InlineDataPointProvider.cs">
+      <Link>Internal\Builders\InlineDataPointProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\Builders\LegacySuiteBuilder.cs">
+      <Link>Internal\Builders\LegacySuiteBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\Builders\NUnitTestCaseBuilder.cs">
+      <Link>Internal\Builders\NUnitTestCaseBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\Builders\NUnitTestFixtureBuilder.cs">
+      <Link>Internal\Builders\NUnitTestFixtureBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\Builders\PairwiseStrategy.cs">
+      <Link>Internal\Builders\PairwiseStrategy.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\Builders\ProviderCache.cs">
+      <Link>Internal\Builders\ProviderCache.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\Builders\ProviderInfo.cs">
+      <Link>Internal\Builders\ProviderInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\Builders\SequentialStrategy.cs">
+      <Link>Internal\Builders\SequentialStrategy.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\Builders\SetUpFixtureBuilder.cs">
+      <Link>Internal\Builders\SetUpFixtureBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\Builders\ValueSourceProvider.cs">
+      <Link>Internal\Builders\ValueSourceProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\Commands\CommandBuilder.cs">
+      <Link>Internal\Commands\CommandBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\Commands\DelegatingTestCommand.cs">
+      <Link>Internal\Commands\DelegatingTestCommand.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\Commands\ExpectedExceptionCommand.cs">
+      <Link>Internal\Commands\ExpectedExceptionCommand.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\Commands\ITestCommand.cs">
+      <Link>Internal\Commands\ITestCommand.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\Commands\MaxTimeCommand.cs">
+      <Link>Internal\Commands\MaxTimeCommand.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\Commands\RepeatedTestCommand.cs">
+      <Link>Internal\Commands\RepeatedTestCommand.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\Commands\SetUpTearDownCommand.cs">
+      <Link>Internal\Commands\SetUpTearDownCommand.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\Commands\SkipCommand.cs">
+      <Link>Internal\Commands\SkipCommand.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\Commands\TestCaseCommand.cs">
+      <Link>Internal\Commands\TestCaseCommand.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\Commands\TestCommand.cs">
+      <Link>Internal\Commands\TestCommand.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\Commands\TestExecutionContextCommand.cs">
       <Link>Internal\Commands\TestExecutionContextCommand.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\framework\Internal\Commands\TestSuiteCommand.cs">
-      <SubType>Code</SubType>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\Commands\TestGroupCommand.cs">
+      <Link>Internal\Commands\TestGroupCommand.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\Commands\TestMethodCommand.cs">
+      <Link>Internal\Commands\TestMethodCommand.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\Commands\TestSuiteCommand.cs">
       <Link>Internal\Commands\TestSuiteCommand.cs</Link>
     </Compile>
-    <None Include="..\..\..\src\framework\Templates\Contains.template.cs">
-      <Link>Templates\Contains.template.cs</Link>
-    </None>
-    <None Include="..\..\..\src\framework\Templates\Assert.template.cs">
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\Commands\ThreadedTestCommand.cs">
+      <Link>Internal\Commands\ThreadedTestCommand.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\CoreExtensions.cs">
+      <Link>Internal\CoreExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\CultureDetector.cs">
+      <Link>Internal\CultureDetector.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\DefaultTestAssemblyBuilder.cs">
+      <Link>Internal\DefaultTestAssemblyBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\DefaultTestAssemblyRunner.cs">
+      <Link>Internal\DefaultTestAssemblyRunner.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\DirectorySwapper.cs">
+      <Link>Internal\DirectorySwapper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\EventListenerTextWriter.cs">
+      <Link>Internal\EventListenerTextWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\EventPump.cs">
+      <Link>Internal\EventPump.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\EventQueue.cs">
+      <Link>Internal\EventQueue.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\ExceptionHelper.cs">
+      <Link>Internal\ExceptionHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\ExpectedExceptionProcessor.cs">
+      <Link>Internal\ExpectedExceptionProcessor.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\Extensibility\DataPointProviders.cs">
+      <Link>Internal\Extensibility\DataPointProviders.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\Extensibility\EventListenerCollection.cs">
+      <Link>Internal\Extensibility\EventListenerCollection.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\Extensibility\ExtensionHost.cs">
+      <Link>Internal\Extensibility\ExtensionHost.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\Extensibility\ExtensionPoint.cs">
+      <Link>Internal\Extensibility\ExtensionPoint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\Extensibility\ExtensionsCollection.cs">
+      <Link>Internal\Extensibility\ExtensionsCollection.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\Extensibility\SuiteBuilderCollection.cs">
+      <Link>Internal\Extensibility\SuiteBuilderCollection.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\Extensibility\TestCaseBuilderCollection.cs">
+      <Link>Internal\Extensibility\TestCaseBuilderCollection.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\Extensibility\TestCaseProviders.cs">
+      <Link>Internal\Extensibility\TestCaseProviders.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\Extensibility\TestDecoratorCollection.cs">
+      <Link>Internal\Extensibility\TestDecoratorCollection.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\Filters\SimpleNameFilter.cs">
+      <Link>Internal\Filters\SimpleNameFilter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\InternalTrace.cs">
+      <Link>Internal\InternalTrace.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\InvalidTestFixtureException.cs">
+      <Link>Internal\InvalidTestFixtureException.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\Log4NetCapture.cs">
+      <Link>Internal\Log4NetCapture.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\LogCapture.cs">
+      <Link>Internal\LogCapture.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\MethodHelper.cs">
+      <Link>Internal\MethodHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\NamespaceTreeBuilder.cs">
+      <Link>Internal\NamespaceTreeBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\NUnitException.cs">
+      <Link>Internal\NUnitException.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\OSPlatform.cs">
+      <Link>Internal\OSPlatform.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\ParameterSet.cs">
+      <Link>Internal\ParameterSet.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\PlatformHelper.cs">
+      <Link>Internal\PlatformHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\PropertyBag.cs">
+      <Link>Internal\PropertyBag.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\PropertySet.cs">
+      <Link>Internal\PropertySet.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\QueuingEventListener.cs">
+      <Link>Internal\QueuingEventListener.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\Randomizer.cs">
+      <Link>Internal\Randomizer.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\Reflect.cs">
+      <Link>Internal\Reflect.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\RuntimeFramework.cs">
+      <Link>Internal\RuntimeFramework.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\TestExecutionContext.cs">
+      <Link>Internal\TestExecutionContext.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\TestFilter.cs">
+      <Link>Internal\TestFilter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\TestFixtureBuilder.cs">
+      <Link>Internal\TestFixtureBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\TestListener.cs">
+      <Link>Internal\TestListener.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\TestProgressReporter.cs">
+      <Link>Internal\TestProgressReporter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\TestResult.cs">
+      <Link>Internal\TestResult.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\Tests\LegacySuite.cs">
+      <Link>Internal\Tests\LegacySuite.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\Tests\ParameterizedFixtureSuite.cs">
+      <Link>Internal\Tests\ParameterizedFixtureSuite.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\Tests\ParameterizedMethodSuite.cs">
+      <Link>Internal\Tests\ParameterizedMethodSuite.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\Tests\SetUpFixture.cs">
+      <Link>Internal\Tests\SetUpFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\Tests\Test.cs">
+      <Link>Internal\Tests\Test.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\Tests\TestAssembly.cs">
+      <Link>Internal\Tests\TestAssembly.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\Tests\TestFixture.cs">
+      <Link>Internal\Tests\TestFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\Tests\TestMethod.cs">
+      <Link>Internal\Tests\TestMethod.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\Tests\TestSuite.cs">
+      <Link>Internal\Tests\TestSuite.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\TextCapture.cs">
+      <Link>Internal\TextCapture.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\TextMessageWriter.cs">
+      <Link>Internal\TextMessageWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\TypeHelper.cs">
+      <Link>Internal\TypeHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\XmlHelper.cs">
+      <Link>Internal\XmlHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Is.cs">
+      <Link>Is.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Iz.cs">
+      <Link>Iz.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\List.cs">
+      <Link>List.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\ListMapper.cs">
+      <Link>ListMapper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\MessageMatch.cs">
+      <Link>MessageMatch.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\ObjectList.cs">
+      <Link>ObjectList.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\SpecialValue.cs">
+      <Link>SpecialValue.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\StringAssert.cs">
+      <Link>StringAssert.cs</Link>
+    </Compile>
+    <Content Include="..\..\..\src\NUnitFramework\framework\Templates\Assert.template.cs">
       <Link>Templates\Assert.template.cs</Link>
-    </None>
-    <None Include="..\..\..\src\framework\Templates\ConstraintExpression.template.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\..\src\NUnitFramework\framework\Templates\ConstraintExpression.template.cs">
       <Link>Templates\ConstraintExpression.template.cs</Link>
-    </None>
-    <None Include="..\..\..\src\framework\Templates\ConstraintFactory.template.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\..\src\NUnitFramework\framework\Templates\ConstraintFactory.template.cs">
       <Link>Templates\ConstraintFactory.template.cs</Link>
-    </None>
-    <None Include="..\..\..\src\framework\Templates\Has.template.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\..\src\NUnitFramework\framework\Templates\Contains.template.cs">
+      <Link>Templates\Contains.template.cs</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\..\src\NUnitFramework\framework\Templates\Has.template.cs">
       <Link>Templates\Has.template.cs</Link>
-    </None>
-    <None Include="..\..\..\src\framework\Templates\Is.template.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\..\src\NUnitFramework\framework\Templates\Is.template.cs">
       <Link>Templates\Is.template.cs</Link>
-    </None>
-    <None Include="..\..\..\src\framework\Templates\Throws.template.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\..\src\NUnitFramework\framework\Templates\Throws.template.cs">
       <Link>Templates\Throws.template.cs</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\TestCaseData.cs">
+      <Link>TestCaseData.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\TestContext.cs">
+      <Link>TestContext.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Throws.cs">
+      <Link>Throws.cs</Link>
+    </Compile>
+    <None Include="..\..\..\src\NUnitFramework\framework\nunit.framework.build">
+      <Link>nunit.framework.build</Link>
+    </None>
+    <None Include="..\..\..\src\NUnitFramework\framework\nunitlite.build">
+      <Link>nunitlite.build</Link>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -929,7 +934,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\..\..\src\framework\SyntaxElements.txt">
+    <Content Include="..\..\..\src\NUnitFramework\framework\SyntaxElements.txt">
       <Link>SyntaxElements.txt</Link>
     </Content>
   </ItemGroup>
