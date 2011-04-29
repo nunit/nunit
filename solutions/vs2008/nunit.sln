@@ -1,4 +1,3 @@
-
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.framework", "nunit.framework\nunit.framework.csproj", "{12B66B03-90F1-4992-BD33-BDF3C69AE49E}"
@@ -10,7 +9,20 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mock-assembly", "mock-assembly\mock-assembly.csproj", "{2E368281-3BA8-4050-B05E-0E0E43F8F446}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "direct-runner", "direct-runner\direct-runner.csproj", "{126DBBB4-1731-4E0D-8937-4F2FAADCA0EF}"
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mock-assembly", "mock-assembly\mock-assembly.csproj", "{2E368281-3BA8-4050-B05E-0E0E43F8F446}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit-console", "nunit-console\nunit-console.csproj", "{0DE218CA-AFB8-423A-9CD2-E22DEAC55C46}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit-console.tests", "nunit-console.tests\nunit-console.tests.csproj", "{B310A760-8AE1-41CA-81F8-03B12E2FCE30}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NUnitFramework", "NUnitFramework", "{A20E77C3-DA32-4BF9-BFF1-85DE62CF744D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ConsoleRunner", "ConsoleRunner", "{953DF00B-695A-422F-9B88-EB8295E480D8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NUnitEngine", "NUnitEngine", "{E07AC546-1ABD-4388-B53D-8505317F67D8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.engine", "engine\nunit.engine.csproj", "{372A3447-D657-40FF-A089-77C19FEC30C8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.engine.api", "nunit.engine.api\nunit.engine.api.csproj", "{775FAD50-3623-4922-97C4-DFB29A8BE4C7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -38,9 +50,33 @@ Global
 		{126DBBB4-1731-4E0D-8937-4F2FAADCA0EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{126DBBB4-1731-4E0D-8937-4F2FAADCA0EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{126DBBB4-1731-4E0D-8937-4F2FAADCA0EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0DE218CA-AFB8-423A-9CD2-E22DEAC55C46}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0DE218CA-AFB8-423A-9CD2-E22DEAC55C46}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0DE218CA-AFB8-423A-9CD2-E22DEAC55C46}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0DE218CA-AFB8-423A-9CD2-E22DEAC55C46}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B310A760-8AE1-41CA-81F8-03B12E2FCE30}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B310A760-8AE1-41CA-81F8-03B12E2FCE30}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B310A760-8AE1-41CA-81F8-03B12E2FCE30}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B310A760-8AE1-41CA-81F8-03B12E2FCE30}.Release|Any CPU.Build.0 = Release|Any CPU
+		{372A3447-D657-40FF-A089-77C19FEC30C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{372A3447-D657-40FF-A089-77C19FEC30C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{372A3447-D657-40FF-A089-77C19FEC30C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{372A3447-D657-40FF-A089-77C19FEC30C8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{775FAD50-3623-4922-97C4-DFB29A8BE4C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{775FAD50-3623-4922-97C4-DFB29A8BE4C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{775FAD50-3623-4922-97C4-DFB29A8BE4C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{775FAD50-3623-4922-97C4-DFB29A8BE4C7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{EA9871E3-9972-4476-821E-3961C28125E8} = {A20E77C3-DA32-4BF9-BFF1-85DE62CF744D}
+		{12B66B03-90F1-4992-BD33-BDF3C69AE49E} = {A20E77C3-DA32-4BF9-BFF1-85DE62CF744D}
+		{B310A760-8AE1-41CA-81F8-03B12E2FCE30} = {953DF00B-695A-422F-9B88-EB8295E480D8}
+		{0DE218CA-AFB8-423A-9CD2-E22DEAC55C46} = {953DF00B-695A-422F-9B88-EB8295E480D8}
+		{372A3447-D657-40FF-A089-77C19FEC30C8} = {E07AC546-1ABD-4388-B53D-8505317F67D8}
+		{775FAD50-3623-4922-97C4-DFB29A8BE4C7} = {E07AC546-1ABD-4388-B53D-8505317F67D8}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = test-runner\test-runner.csproj
