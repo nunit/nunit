@@ -24,7 +24,7 @@
 using System;
 using System.Xml;
 
-namespace NUnit.Framework.Internal
+namespace NUnit.Engine
 {
     /// <summary>
     /// XmlHelper provides static methods for basic XML operations
@@ -84,15 +84,33 @@ namespace NUnit.Framework.Internal
             return childNode;
         }
 
-        /// <summary>
-        /// Makes a string safe for use as an attribute, replacing single
-        /// and double quotes with &quot; and &apos; respectively.
-        /// </summary>
-        /// <param name="original">The string to be used</param>
-        /// <returns>A new string with the values replaced</returns>
-        public static string ReplaceQuotes(string original)
+        #region Safe Attribute Access
+
+        public static string GetAttribute(XmlNode result, string name)
         {
-            return original.Replace("\"", "&quot;").Replace("'", "&apos;");
+            var attr = result.Attributes[name];
+
+            return attr == null ? null : attr.Value;
         }
+
+        public static int GetAttribute(XmlNode result, string name, int defaultValue)
+        {
+            var attr = result.Attributes[name];
+
+            return attr == null
+                ? defaultValue
+                : int.Parse(attr.Value, System.Globalization.CultureInfo.InvariantCulture);
+        }
+
+        public static double GetAttribute(XmlNode result, string name, double defaultValue)
+        {
+            var attr = result.Attributes[name];
+
+            return attr == null
+                ? defaultValue
+                : double.Parse(attr.Value, System.Globalization.CultureInfo.InvariantCulture);
+        }
+
+        #endregion
     }
 }

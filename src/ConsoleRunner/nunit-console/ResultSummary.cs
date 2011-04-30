@@ -48,8 +48,9 @@ namespace NUnit.ConsoleRunner
 
         public ResultSummary(XmlNode result)
         {
-            this.name = result.Attributes["name"].Value;
-            this.time = double.Parse(result.Attributes["time"].Value, System.Globalization.CultureInfo.InvariantCulture);
+            this.name = GetAttribute(result, "name");
+            this.time = GetAttribute(result, "time", 0.0);
+            //this.time = double.Parse(result.GetAttribute("time"), System.Globalization.CultureInfo.InvariantCulture);
 
             Summarize(result);
         }
@@ -61,7 +62,7 @@ namespace NUnit.ConsoleRunner
                 case "test-case":
                     resultCount++;
 
-                    string resultState = result.Attributes["result"].Value;
+                    string resultState = GetAttribute(result, "result");
 
                     switch (resultState)
                     {
@@ -205,5 +206,29 @@ namespace NUnit.ConsoleRunner
         {
             get { return errorCount + failureCount; }
         }
+
+        #region Helper Methods
+
+        public static string GetAttribute(XmlNode result, string name)
+        {
+            var attr = result.Attributes[name];
+
+            if (attr == null)
+                return null;
+
+            return attr.Value;
+        }
+
+        public static double GetAttribute(XmlNode result, string name, double defaultValue)
+        {
+            var attr = result.Attributes[name];
+
+            if (attr == null)
+                return defaultValue;
+
+            return double.Parse(attr.Value, System.Globalization.CultureInfo.InvariantCulture);
+        }
+
+        #endregion
     }
 }

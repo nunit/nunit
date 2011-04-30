@@ -60,7 +60,7 @@ namespace NUnit.Engine
                     return new DirectTestRunner();
                 case DomainUsage.Single:
                 default:
-                    testDomain = AppDomain.CreateDomain(Path.GetDirectoryName(Path.GetFullPath(package.TestFiles[0])));
+                    testDomain = Services.DomainManager.CreateDomain(package);
                     return new DirectTestRunner(testDomain);
             }
         }

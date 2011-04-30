@@ -117,7 +117,8 @@ namespace NUnit.Framework.Internal
         /// <param name="logName">Name of the log.</param>
         public static void Open(string logName)
         {
-            writer = new StreamWriter(logName);
+            writer = new StreamWriter(
+                new FileStream(logName, FileMode.Append, FileAccess.Write, FileShare.Write));
         }
 
         /// <summary>
