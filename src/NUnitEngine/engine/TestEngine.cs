@@ -38,6 +38,11 @@ namespace NUnit.Engine
     {
         ITestRunnerFactory factory;
 
+        static TestEngine()
+        {
+            InitializeServices();
+        }
+
         public TestEngine()
         {
             this.factory = new InProcessTestRunnerFactory();
@@ -56,11 +61,8 @@ namespace NUnit.Engine
             // TODO: We will need an agent or remote explorer
             // in the future in order to explore tests that
             // are located on a different machine.
-            using (ITestRunner runner = GetRunner(package))
-            {
-                var driver = new FrameworkDriver(AppDomain.CurrentDomain);
-                return driver.ExploreTests(package.TestFiles[0], new Hashtable());
-            }
+            var driver = new FrameworkDriver(AppDomain.CurrentDomain);
+            return driver.ExploreTests(package.TestFiles[0], new Hashtable());
         }
 
         /// <summary>
@@ -89,6 +91,17 @@ namespace NUnit.Engine
         public ITestRunner GetRunner(TestPackage package)
         {
             return factory.MakeTestRunner(package);
+        }
+
+        #endregion
+
+        #region Helper Methods
+
+        private static void InitializeServices()
+        {
+            ServiceManager.Services.AddService(new DomainManager());
+
+            ServiceManager.Services.InitializeServices();
         }
 
         #endregion

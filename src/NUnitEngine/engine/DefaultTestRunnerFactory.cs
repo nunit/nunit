@@ -33,7 +33,6 @@ namespace NUnit.Engine
     /// </summary>
     public class DefaultTestRunnerFactory : InProcessTestRunnerFactory, ITestRunnerFactory
     {
-#if CLR_2_0 || CLR_4_0
         //private RuntimeFrameworkSelector selector = new RuntimeFrameworkSelector();        
         
         /// <summary>
@@ -94,6 +93,5 @@ namespace NUnit.Engine
             //        processModel = ProcessModel.Separate;
             return processModel;
         }
-#endif
     }
 }

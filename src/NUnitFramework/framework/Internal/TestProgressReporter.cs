@@ -65,7 +65,7 @@ namespace NUnit.Framework.Internal
             {
 				string report = string.Format(
 					"<start id=\"{0}\" name=\"{1}\" fullname=\"{2}\"/>",
-				    test.Id, test.Name, test.FullName);
+				    test.Id, XmlHelper.ReplaceQuotes(test.Name), XmlHelper.ReplaceQuotes(test.FullName));
 				                              
 				callback(new ProgressReport(report));
             }
@@ -84,6 +84,7 @@ namespace NUnit.Framework.Internal
         {
             try
             {
+                sb.Remove(0, sb.Length);
 				result.ToXml(false).WriteTo(xml);
                 callback(new ProgressReport(sb.ToString()));
             }

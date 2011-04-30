@@ -39,6 +39,7 @@ namespace NUnit.Engine.Api
 
         public TestPackage(string filePath)
         {
+            filePath = Path.GetFullPath(filePath);
             this.testFiles.Add(filePath);
             this.fullName = filePath;
             this.name = Path.GetFileName(filePath);
@@ -46,7 +47,7 @@ namespace NUnit.Engine.Api
 
         public TestPackage(IList<string> files)
         {
-            this.fullName = files[0];
+            this.fullName = Path.GetFullPath(files[0]);
             this.name = Path.GetFileName(fullName);
 
             foreach (string file in files)
