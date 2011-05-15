@@ -25,7 +25,7 @@ using System;
 using System.IO;
 using NUnit.Framework.Api;
 
-namespace NUnit.AdhocTestRunner
+namespace NUnit.DirectRunner
 {
     class TestEventListener : MarshalByRefObject, ITestListener
     {
