@@ -21,9 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
 using System.Collections;
-using NUnit.Framework;
 using NUnit.Framework.Constraints;
 
 namespace NUnit.Framework
@@ -48,6 +46,8 @@ namespace NUnit.Framework
         #region Expect
 
         #region Object
+
+#if !CLR_2_0 && !CLR_4_0
         /// <summary>
         /// Apply a constraint to an actual value, succeeding if the constraint
         /// is satisfied and throwing an assertion exception on failure. Works
@@ -86,6 +86,90 @@ namespace NUnit.Framework
         {
             Assert.That(actual, constraint, message, args);
         }
+#endif
+
+        #endregion
+
+        #region Boolean
+
+        /// <summary>
+        /// Asserts that a condition is true. If the condition is false the method throws
+        /// an <see cref="AssertionException"/>. Works Identically to 
+        /// <see cref="Assert.That(bool, string, object[])"/>.
+        /// </summary> 
+        /// <param name="condition">The evaluated condition</param>
+        /// <param name="message">The message to display if the condition is false</param>
+        /// <param name="args">Arguments to be used in formatting the message</param>
+        public void Expect(bool condition, string message, params object[] args)
+        {
+            Assert.That(condition, Is.True, message, args);
+        }
+
+        /// <summary>
+        /// Asserts that a condition is true. If the condition is false the method throws
+        /// an <see cref="AssertionException"/>. Works Identically to 
+        /// <see cref="Assert.That(bool, string)"/>.
+        /// </summary>
+        /// <param name="condition">The evaluated condition</param>
+        /// <param name="message">The message to display if the condition is false</param>
+        public void Expect(bool condition, string message)
+        {
+            Assert.That(condition, Is.True, message, null);
+        }
+
+        /// <summary>
+        /// Asserts that a condition is true. If the condition is false the method throws
+        /// an <see cref="AssertionException"/>. Works Identically to <see cref="Assert.That(bool)"/>.
+        /// </summary>
+        /// <param name="condition">The evaluated condition</param>
+        public void Expect(bool condition)
+        {
+            Assert.That(condition, Is.True, null, null);
+        }
+
+        #endregion
+
+
+        #region ref Boolean
+
+#if !CLR_2_0 && !CLR_4_0
+        /// <summary>
+        /// Apply a constraint to a referenced boolean, succeeding if the constraint
+        /// is satisfied and throwing an assertion exception on failure.
+        /// </summary>
+        /// <param name="constraint">A Constraint to be applied</param>
+        /// <param name="actual">The actual value to test</param>
+        public void Expect(ref bool actual, IResolveConstraint constraint)
+        {
+            Assert.That(ref actual, constraint.Resolve(), null, null);
+        }
+
+        /// <summary>
+        /// Apply a constraint to a referenced value, succeeding if the constraint
+        /// is satisfied and throwing an assertion exception on failure.
+        /// </summary>
+        /// <param name="constraint">A Constraint to be applied</param>
+        /// <param name="actual">The actual value to test</param>
+        /// <param name="message">The message that will be displayed on failure</param>
+        public void Expect(ref bool actual, IResolveConstraint constraint, string message)
+        {
+            Assert.That(ref actual, constraint.Resolve(), message, null);
+        }
+
+        /// <summary>
+        /// Apply a constraint to a referenced value, succeeding if the constraint
+        /// is satisfied and throwing an assertion exception on failure.
+        /// </summary>
+        /// <param name="actual">The actual value to test</param>
+        /// <param name="expression">A Constraint to be applied</param>
+        /// <param name="message">The message that will be displayed on failure</param>
+        /// <param name="args">Arguments to be used in formatting the message</param>
+        public void Expect(ref bool actual, IResolveConstraint expression, string message, params object[] args)
+        {
+            Assert.That(ref actual, expression, message, args);
+        }
+#endif
+
         #endregion
 
         #region ActualValueDelegate
@@ -126,118 +210,7 @@ namespace NUnit.Framework
         }
         #endregion
 
-        #region ref Object
-#if CLR_2_0 || CLR_4_0
-        /// <summary>
-        /// Apply a constraint to a referenced value, succeeding if the constraint
-        /// is satisfied and throwing an assertion exception on failure.
-        /// </summary>
-        /// <param name="constraint">A Constraint to be applied</param>
-        /// <param name="actual">The actual value to test</param>
-        public void Expect<T>(ref T actual, IResolveConstraint constraint)
-        {
-            Assert.That(ref actual, constraint.Resolve(), null, null);
-        }
-
-        /// <summary>
-        /// Apply a constraint to a referenced value, succeeding if the constraint
-        /// is satisfied and throwing an assertion exception on failure.
-        /// </summary>
-        /// <param name="constraint">A Constraint to be applied</param>
-        /// <param name="actual">The actual value to test</param>
-        /// <param name="message">The message that will be displayed on failure</param>
-        public void Expect<T>(ref T actual, IResolveConstraint constraint, string message)
-        {
-            Assert.That(ref actual, constraint.Resolve(), message, null);
-        }
-
-        /// <summary>
-        /// Apply a constraint to a referenced value, succeeding if the constraint
-        /// is satisfied and throwing an assertion exception on failure.
-        /// </summary>
-        /// <param name="expression">A Constraint to be applied</param>
-        /// <param name="actual">The actual value to test</param>
-        /// <param name="message">The message that will be displayed on failure</param>
-        /// <param name="args">Arguments to be used in formatting the message</param>
-        public void Expect<T>(ref T actual, IResolveConstraint expression, string message, params object[] args)
-        {
-            Assert.That(ref actual, expression, message, args);
-        }
-#else
-        /// <summary>
-        /// Apply a constraint to a referenced boolean, succeeding if the constraint
-        /// is satisfied and throwing an assertion exception on failure.
-        /// </summary>
-        /// <param name="constraint">A Constraint to be applied</param>
-        /// <param name="actual">The actual value to test</param>
-        public void Expect(ref bool actual, IResolveConstraint constraint)
-        {
-            Assert.That(ref actual, constraint.Resolve(), null, null);
-        }
-
-        /// <summary>
-        /// Apply a constraint to a referenced value, succeeding if the constraint
-        /// is satisfied and throwing an assertion exception on failure.
-        /// </summary>
-        /// <param name="constraint">A Constraint to be applied</param>
-        /// <param name="actual">The actual value to test</param>
-        /// <param name="message">The message that will be displayed on failure</param>
-        public void Expect(ref bool actual, IResolveConstraint constraint, string message)
-        {
-            Assert.That(ref actual, constraint.Resolve(), message, null);
-        }
-
-        /// <summary>
-        /// Apply a constraint to a referenced value, succeeding if the constraint
-        /// is satisfied and throwing an assertion exception on failure.
-        /// </summary>
-        /// <param name="actual">The actual value to test</param>
-        /// <param name="expression">A Constraint to be applied</param>
-        /// <param name="message">The message that will be displayed on failure</param>
-        /// <param name="args">Arguments to be used in formatting the message</param>
-        public void Expect(ref bool actual, IResolveConstraint expression, string message, params object[] args)
-        {
-            Assert.That( ref actual, expression, message, args );
-        }
-#endif
-        #endregion
-
-        #region Boolean
-        /// <summary>
-		/// Asserts that a condition is true. If the condition is false the method throws
-		/// an <see cref="AssertionException"/>. Works Identically to 
-        /// <see cref="Assert.That(bool, string, object[])"/>.
-		/// </summary> 
-		/// <param name="condition">The evaluated condition</param>
-		/// <param name="message">The message to display if the condition is false</param>
-		/// <param name="args">Arguments to be used in formatting the message</param>
-		public void Expect(bool condition, string message, params object[] args)
-		{
-			Assert.That(condition, Is.True, message, args);
-		}
-
-		/// <summary>
-		/// Asserts that a condition is true. If the condition is false the method throws
-		/// an <see cref="AssertionException"/>. Works Identically to 
-        /// <see cref="Assert.That(bool, string)"/>.
-		/// </summary>
-		/// <param name="condition">The evaluated condition</param>
-		/// <param name="message">The message to display if the condition is false</param>
-		public void Expect(bool condition, string message)
-		{
-			Assert.That(condition, Is.True, message, null);
-		}
-
-		/// <summary>
-		/// Asserts that a condition is true. If the condition is false the method throws
-		/// an <see cref="AssertionException"/>. Works Identically to <see cref="Assert.That(bool)"/>.
-		/// </summary>
-		/// <param name="condition">The evaluated condition</param>
-		public void Expect(bool condition)
-		{
-			Assert.That(condition, Is.True, null, null);
-        }
-        #endregion
+        #region TestDelegate
 
         /// <summary>
         /// Asserts that the code represented by a delegate throws an exception
@@ -250,6 +223,86 @@ namespace NUnit.Framework
             Assert.That((object)code, constraint);
         }
 
+        #endregion
+
+        #endregion
+
+        #region Expect<T>
+
+#if CLR_2_0 || CLR_4_0
+        /// <summary>
+        /// Apply a constraint to an actual value, succeeding if the constraint
+        /// is satisfied and throwing an assertion exception on failure.
+        /// </summary>
+        /// <param name="expression">A Constraint to be applied</param>
+        /// <param name="actual">The actual value to test</param>
+        static public void Expect<T>(T actual, IResolveConstraint expression)
+        {
+            Assert.That(actual, expression, null, null);
+        }
+
+        /// <summary>
+        /// Apply a constraint to an actual value, succeeding if the constraint
+        /// is satisfied and throwing an assertion exception on failure.
+        /// </summary>
+        /// <param name="expression">A Constraint to be applied</param>
+        /// <param name="actual">The actual value to test</param>
+        /// <param name="message">The message that will be displayed on failure</param>
+        static public void Expect<T>(T actual, IResolveConstraint expression, string message)
+        {
+            Assert.That(actual, expression, message, null);
+        }
+
+        /// <summary>
+        /// Apply a constraint to an actual value, succeeding if the constraint
+        /// is satisfied and throwing an assertion exception on failure.
+        /// </summary>
+        /// <param name="expression">A Constraint expression to be applied</param>
+        /// <param name="actual">The actual value to test</param>
+        /// <param name="message">The message that will be displayed on failure</param>
+        /// <param name="args">Arguments to be used in formatting the message</param>
+        static public void Expect<T>(T actual, IResolveConstraint expression, string message, params object[] args)
+        {
+            Assert.That(actual, expression, message, args);
+        }
+
+        /// <summary>
+        /// Apply a constraint to a referenced value, succeeding if the constraint
+        /// is satisfied and throwing an assertion exception on failure.
+        /// </summary>
+        /// <param name="actual">The actual value to test</param>
+        /// <param name="expression">A Constraint to be applied</param>
+        static public void Expect<T>(ref T actual, IResolveConstraint expression)
+        {
+            Assert.That(ref actual, expression, null, null);
+        }
+
+        /// <summary>
+        /// Apply a constraint to a referenced value, succeeding if the constraint
+        /// is satisfied and throwing an assertion exception on failure.
+        /// </summary>
+        /// <param name="actual">The actual value to test</param>
+        /// <param name="expression">A Constraint to be applied</param>
+        /// <param name="message">The message that will be displayed on failure</param>
+        static public void Expect<T>(ref T actual, IResolveConstraint expression, string message)
+        {
+            Assert.That(ref actual, expression, message, null);
+        }
+
+        /// <summary>
+        /// Apply a constraint to a referenced value, succeeding if the constraint
+        /// is satisfied and throwing an assertion exception on failure.
+        /// </summary>
+        /// <param name="actual">The actual value to test</param>
+        /// <param name="expression">A Constraint to be applied</param>
+        /// <param name="message">The message that will be displayed on failure</param>
+        /// <param name="args">Arguments to be used in formatting the message</param>
+        static public void Expect<T>(ref T actual, IResolveConstraint expression, string message, params object[] args)
+        {
+            Assert.That(actual, expression, message, args);
+        }
+#endif
+        
         #endregion
 
         #region Map
