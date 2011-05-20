@@ -22,7 +22,6 @@
 // ***********************************************************************
 
 using System;
-using NUnit.Framework;
 using NUnit.Framework.Internal;
 using NUnit.TestUtilities;
 using NUnit.TestData.TheoryFixture;
@@ -62,13 +61,13 @@ namespace NUnit.Framework.Tests
         }
 
         [Datapoint]
-        object nullObj; 
-        // Ignore warning: this is used as data for NullDatapointIsOk
-        // Do not disable the warning with a pragma or it will not
-        // compile under .NET 1.1
+        object nullObj = null;
+
         [Theory]
         public void NullDatapointIsOK(object o)
         {
+            Assert.Null(o);
+            Assert.Null(nullObj); // to avoid a warning
         }
 
 

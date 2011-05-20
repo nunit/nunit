@@ -73,6 +73,11 @@ namespace NUnit.Framework.Constraints
             return Matches((string)actual);
         }
 
+        /// <summary>
+        /// Test whether the constraint is satisfied by a given value
+        /// </summary>
+        /// <param name="actual">The value to be tested</param>
+        /// <returns>True for success, false for failure</returns>
         protected abstract bool Matches(string actual);
     } 
 }
