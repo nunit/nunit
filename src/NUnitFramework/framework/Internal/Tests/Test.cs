@@ -341,6 +341,12 @@ namespace NUnit.Framework.Internal
 
         #region Other Public Methods
 
+        /// <summary>
+        /// Creates a TestResult for this test.
+        /// </summary>
+        /// <returns>A TestResult suitable for this type of test.</returns>
+        public abstract TestResult MakeTestResult();
+
         ///// <summary>
         ///// Gets a count of test cases that would be run using
         ///// the specified filter.

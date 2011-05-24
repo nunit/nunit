@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using NUnit.Framework.Api;
+using System.Diagnostics;
 
 namespace NUnit.Framework.Internal
 {
@@ -11,14 +12,15 @@ namespace NUnit.Framework.Internal
     {
         private readonly TestSuite suite;
         private readonly Type fixtureType;
+        private TestSuiteResult suiteResult;
 
         /// <summary>
         /// TODO: Documentation needed for constructor
         /// </summary>
         /// <param name="test"></param>
-        public TestSuiteCommand(Test test) : base(test)
+        public TestSuiteCommand(TestSuite test) : base(test)
         {
-            this.suite = Test as TestSuite;
+            this.suite = test;
             this.fixtureType = Test.FixtureType;
         }
 
@@ -29,6 +31,11 @@ namespace NUnit.Framework.Internal
         /// <returns></returns>
         public override TestResult Execute(object testObject)
         {
+            this.suiteResult = CurrentResult as TestSuiteResult;
+            Debug.Assert(suiteResult != null);
+
+            bool oneTimeSetUpComplete = false;
+
             try
             {
 #if !NUNITLITE
@@ -42,25 +49,30 @@ namespace NUnit.Framework.Internal
                     testObject = Test.Fixture;
 
                 DoOneTimeSetUp(testObject);
+                oneTimeSetUpComplete = true;
 #if !NUNITLITE
                 // SetUp may have changed some things
                 TestExecutionContext.CurrentContext.Update();
 #endif
-                Result = RunChildTests();
+                this.suiteResult = RunChildTests();
             }
             catch (Exception ex)
             {
                 if (ex is NUnitException || ex is System.Reflection.TargetInvocationException)
                     ex = ex.InnerException;
 
-                Result.RecordException(ex);
+
+                if (oneTimeSetUpComplete)
+                    this.suiteResult.RecordException(ex);
+                else
+                    this.suiteResult.RecordException(ex, FailureSite.SetUp);
             }
             finally
             {
                 DoOneTimeTearDown(testObject);
             }
 
-            return Result;
+            return this.suiteResult;
         }
 
         /// <summary>
@@ -123,16 +135,16 @@ namespace NUnit.Framework.Internal
 
                     // TODO: Can we move this logic into TestResult itself?
                     string message = "TearDown : " + ExceptionHelper.BuildMessage(ex);
-                    if (Result.Message != null)
-                        message = Result.Message + NUnit.Env.NewLine + message;
+                    if (suiteResult.Message != null)
+                        message = suiteResult.Message + NUnit.Env.NewLine + message;
 
 #if !NETCF_1_0
                     string stackTrace = "--TearDown" + NUnit.Env.NewLine + ExceptionHelper.BuildStackTrace(ex);
-                    if (Result.StackTrace != null)
-                        stackTrace = Result.StackTrace + NUnit.Env.NewLine + stackTrace;
+                    if (suiteResult.StackTrace != null)
+                        stackTrace = suiteResult.StackTrace + NUnit.Env.NewLine + stackTrace;
 
                     // TODO: What about ignore exceptions in teardown?
-                    Result.SetResult(ResultState.Error, message, stackTrace);
+                    suiteResult.SetResult(ResultState.Error, message, stackTrace);
 #else
                     Result.SetResult(ResultState.Error, message);
 #endif
@@ -140,9 +152,9 @@ namespace NUnit.Framework.Internal
             }
         }
 
-        private TestResult RunChildTests()
+        private TestSuiteResult RunChildTests()
         {
-            Result.SetResult(ResultState.Success);
+            this.suiteResult.SetResult(ResultState.Success);
 
             foreach (Test test in Test.Tests)
             {
@@ -150,32 +162,32 @@ namespace NUnit.Framework.Internal
                 {
                     TestResult childResult = test.Run(suite.Listener);
 
-                    Result.AddResult(childResult);
+                    this.suiteResult.AddResult(childResult);
 
                     if (childResult.ResultState == ResultState.Cancelled)
                         break;
                 }
             }
 
-            return Result;
+            return this.suiteResult;
         }
 
-        private TestResult RunChildCommands(object testObject)
-        {
-            Result.SetResult(ResultState.Success);
+        //private TestResult RunChildCommands(object testObject)
+        //{
+        //    Result.SetResult(ResultState.Success);
 
-            foreach (TestCommand command in Children)
-            {
-                TestResult childResult = command.Execute(testObject);
+        //    foreach (TestCommand command in Children)
+        //    {
+        //        TestResult childResult = command.Execute(testObject);
 
-                Result.AddResult(childResult);
+        //        Result.AddResult(childResult);
 
-                if (childResult.ResultState == ResultState.Cancelled)
-                    break;
-            }
+        //        if (childResult.ResultState == ResultState.Cancelled)
+        //            break;
+        //    }
 
-            return Result;
-        }
+        //    return Result;
+        //}
 
         private static bool IsStaticClass(Type type)
         {

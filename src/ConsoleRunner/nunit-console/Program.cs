@@ -79,7 +79,7 @@ namespace NUnit.ConsoleRunner
                 return ConsoleRunner.INVALID_ARG;
             }
             
-            if (options.InputFiles.Count == 0)
+            if (options.InputFiles.Length == 0)
             {
                 Console.Error.WriteLine("Error: no inputs specified");
                 return ConsoleRunner.OK;

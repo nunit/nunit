@@ -499,14 +499,20 @@
     <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\Reflect.cs">
       <Link>Internal\Reflect.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\Results\TestCaseResult.cs">
+      <Link>Internal\Results\TestCaseResult.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\Results\TestResult.cs">
+      <Link>Internal\Results\TestResult.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\Results\TestSuiteResult.cs">
+      <Link>Internal\Results\TestSuiteResult.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\TestExecutionContext.cs">
       <Link>Internal\TestExecutionContext.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\TestListener.cs">
       <Link>Internal\TestListener.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\TestResult.cs">
-      <Link>Internal\TestResult.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\Tests\ParameterizedMethodSuite.cs">
       <Link>Internal\Tests\ParameterizedMethodSuite.cs</Link>
@@ -606,6 +612,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\..\src\NUnitFramework\framework\nunitlite.build">
+      <Link>nunitlite.build</Link>
+    </None>
     <None Include="nunit.snk" />
   </ItemGroup>
   <ItemGroup>

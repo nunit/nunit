@@ -7,7 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using NUnit.Engine.Api;
+using NUnit.Engine;
 
 namespace NUnit.ConsoleRunner
 {
@@ -113,9 +113,9 @@ namespace NUnit.ConsoleRunner
             get { return workDir == null ? Environment.CurrentDirectory : workDir; }
         }
 
-        public IList<string> InputFiles
+        public string[] InputFiles
         {
-            get { return inputFiles; }
+            get { return inputFiles.ToArray(); }
         }
 
         public IList<string> ErrorMessages

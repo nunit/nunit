@@ -177,7 +177,7 @@
     <exec program="GenSyntax.exe"
       managed="auto"
       basedir="${project.tools.dir}/bin"
-      workingdir="${project.src.dir}/framework">
+      workingdir="${project.src.dir}/NUnitFramework/framework">
 
       <arg value="-syntax:SyntaxElements.txt"/>
       <arg value="Is.cs"/>
@@ -228,11 +228,19 @@
     <call target="gen-syntax" 
       unless="${property::exists('generated.syntax')}"/>
 
-    <nant target="build" buildfile="src/framework/nunit.framework.build"/>
+    <nant target="build" buildfile="src/NUnitFramework/framework/nunit.framework.build"/>
     <nant target="build" buildfile="src/test-assembly/test-assembly.build"/>
-    <nant target="build" buildfile="src/tests/nunit.framework.tests.build"/>
-    <nant target="build" buildfile="src/runner/direct-runner.build"/>
+    <nant target="build" buildfile="src/NUnitFramework/tests/nunit.framework.tests.build"/>
+    <nant target="build" buildfile="src/direct-runner/direct-runner.build"/>
     <nant target="build" buildfile="src/mock-assembly/mock-assembly.build"/>
+
+    <nant target="build" buildfile="src/NUnitEngine/nunit.engine.api/nunit.engine.api.build"/>
+    <nant target="build" buildfile="src/NUnitEngine/nunit.engine/nunit.engine.build"/>
+    <nant target="build" buildfile="src/NUnitEngine/nunit-agent/nunit-agent.build"/>
+    <nant target="build" buildfile="src/NUnitEngine/nunit.engine.tests/nunit.engine.tests.build"/>
+
+    <nant target="build" buildfile="src/ConsoleRunner/nunit-console/nunit-console.build"/>
+    <nant target="build" buildfile="src/ConsoleRunner/nunit-console.tests/nunit-console.tests.build"/>
 
   </target>
 
@@ -243,8 +251,8 @@
     <call target="gen-syntax" 
       unless="${property::exists('generated.syntax')}"/>
 
-    <nant target="build" buildfile="src/framework/nunitlite.build"/>
-    <nant target="build" buildfile="src/tests/nunitlite.tests.build"/>
+    <nant target="build" buildfile="src/NUnitFramework/framework/nunitlite.build"/>
+    <nant target="build" buildfile="src/NUnitFramework/tests/nunitlite.tests.build"/>
 
   </target>
 
@@ -295,7 +303,7 @@
 
     <exec basedir="${current.build.dir}"
           workingdir="${current.build.dir}"
-          program="direct-runner.exe"
+          program="nunit-console.exe"
           managed="strict"
           commandline="${nunit.commandline}" />
 

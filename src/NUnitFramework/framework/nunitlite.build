@@ -34,6 +34,7 @@
         <include name="Api/TestStatus.cs"/>
         <include name="Attributes/*.cs"/>
         <include name="Constraints/*.cs"/>
+    <include name="Constraints/Operators/*.cs"/>
         <include name="Exceptions/*.cs"/>
         <include name="Internal/ExceptionHelper.cs"/>
         <include name="Internal/ExpectedExceptionProcessor.cs"/>
@@ -45,13 +46,13 @@
         <include name="Internal/Reflect.cs"/>
         <include name="Internal/TestExecutionContext.cs"/>
         <include name="Internal/TestListener.cs"/>
-        <include name="Internal/TestResult.cs"/>
         <include name="Internal/TextMessageWriter.cs"/>
         <include name="Internal/TypeHelper.cs"/>
         <include name="Internal/XmlHelper.cs"/>
         <include name="Internal/Builders/NUnitLiteTestCaseBuilder.cs"/>
         <include name="Internal/Builders/NUnitLiteTestFixtureBuilder.cs"/>
         <include name="Internal/Commands/*.cs"/>
+        <include name="Internal/Results/*.cs"/>
         <include name="Internal/Tests/ParameterizedMethodSuite.cs"/>
         <include name="Internal/Tests/Test.cs"/>
         <include name="Internal/Tests/TestAssembly.cs"/>
@@ -74,7 +75,7 @@
         <warning number="1699" if="${runtime.version>='2.0'}"/>
       </nowarn>
       <sources basedir=".">
-        <include name="../CommonAssemblyInfo.cs" />
+        <include name="../../CommonAssemblyInfo.cs" />
         <patternset refid="source-files" />
       </sources>
       <references basedir="${current.build.dir}">

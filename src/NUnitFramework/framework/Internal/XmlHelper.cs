@@ -85,14 +85,19 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// Makes a string safe for use as an attribute, replacing single
-        /// and double quotes with &quot; and &apos; respectively.
+        /// Makes a string safe for use as an attribute, replacing
+        /// characters characters that can't be used with their
+        /// corresponding xml representations.
         /// </summary>
         /// <param name="original">The string to be used</param>
         /// <returns>A new string with the values replaced</returns>
-        public static string ReplaceQuotes(string original)
+        public static string FormatAttributeValue(string original)
         {
-            return original.Replace("\"", "&quot;").Replace("'", "&apos;");
+            return original
+                .Replace("\"", "&quot;")
+                .Replace("'", "&apos;")
+                .Replace("<", "&lt;")
+                .Replace(">", "&gt;");
         }
     }
 }

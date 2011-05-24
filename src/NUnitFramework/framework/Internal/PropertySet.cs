@@ -20,7 +20,7 @@ namespace NUnit.Framework.Internal
     {
         /// <summary>
         /// Adds a key/value pair to the property set. Throws
-        /// an <see cref="Invalid ArgumentException"/> if the
+        /// an InvalidArgumentException if the
         /// key is already present.
         /// </summary>
         /// <param name="key">The key</param>

@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NUnit.Engine</RootNamespace>
     <AssemblyName>nunit.engine</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <StartupObject>
     </StartupObject>
@@ -34,47 +34,114 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
+    <Reference Include="System.configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Remoting" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\..\src\NUnitEngine\engine\CallbackHandler.cs">
+    <Compile Include="..\..\..\src\NUnitEngine\nunit.engine\Agents\RemoteTestAgent.cs">
+      <Link>Agents\RemoteTestAgent.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitEngine\nunit.engine\Agents\TestAgent.cs">
+      <Link>Agents\TestAgent.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitEngine\nunit.engine\CallbackHandler.cs">
       <Link>CallbackHandler.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\NUnitEngine\engine\FrameworkDriver.cs">
+    <Compile Include="..\..\..\src\NUnitEngine\nunit.engine\FrameworkDriver.cs">
       <Link>FrameworkDriver.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\NUnitEngine\engine\Runners\DirectTestRunner.cs">
-      <Link>Runners\DirectTestRunner.cs</Link>
+    <Compile Include="..\..\..\src\NUnitEngine\nunit.engine\IFrameworkDriver.cs">
+      <Link>IFrameworkDriver.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\NUnitEngine\engine\RunTestsCallbackHandler.cs">
-      <Link>RunTestsCallbackHandler.cs</Link>
+    <Compile Include="..\..\..\src\NUnitEngine\nunit.engine\Internal\AssemblyHelper.cs">
+      <Link>Internal\AssemblyHelper.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\NUnitEngine\engine\TestEngine.cs">
-      <Link>TestEngine.cs</Link>
+    <Compile Include="..\..\..\src\NUnitEngine\nunit.engine\Internal\AssemblyReader.cs">
+      <Link>Internal\AssemblyReader.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\NUnitEngine\engine\DefaultTestRunnerFactory.cs">
-      <Link>DefaultTestRunnerFactory.cs</Link>
+    <Compile Include="..\..\..\src\NUnitEngine\nunit.engine\Internal\NUnitConfiguration.cs">
+      <Link>Internal\NUnitConfiguration.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\NUnitEngine\engine\InProcessTestRunnerFactory.cs">
-      <SubType>Code</SubType>
-      <Link>InProcessTestRunnerFactory.cs</Link>
+    <Compile Include="..\..\..\src\NUnitEngine\nunit.engine\Internal\PathUtils.cs">
+      <Link>Internal\PathUtils.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\NUnitEngine\engine\Interfaces\ITestRunnerFactory.cs">
-      <Link>Interfaces\ITestRunnerFactory.cs</Link>
+    <Compile Include="..\..\..\src\NUnitEngine\nunit.engine\Internal\RuntimeFrameworkSelector.cs">
+      <Link>Internal\RuntimeFrameworkSelector.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\NUnitEngine\engine\Internal\XmlHelper.cs">
+    <Compile Include="..\..\..\src\NUnitEngine\nunit.engine\Internal\ServerBase.cs">
+      <Link>Internal\ServerBase.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitEngine\nunit.engine\Internal\ServerUtilities.cs">
+      <Link>Internal\ServerUtilities.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitEngine\nunit.engine\Internal\SettingsGroup.cs">
+      <Link>Internal\SettingsGroup.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitEngine\nunit.engine\Internal\XmlHelper.cs">
       <Link>Internal\XmlHelper.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\NUnitEngine\engine\Interfaces\IServiceManager.cs">
-      <Link>Interfaces\IServiceManager.cs</Link>
+    <Compile Include="..\..\..\src\NUnitEngine\nunit.engine\IRuntimeFrameworkSelector.cs">
+      <Link>IRuntimeFrameworkSelector.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\NUnitEngine\engine\Internal\PathUtils.cs">
-      <Link>Internal\PathUtils.cs</Link>
+    <Compile Include="..\..\..\src\NUnitEngine\nunit.engine\IService.cs">
+      <Link>IService.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitEngine\nunit.engine\IServiceManager.cs">
+      <Link>IServiceManager.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitEngine\nunit.engine\ISettings.cs">
+      <Link>ISettings.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitEngine\nunit.engine\ITestRunnerFactory.cs">
+      <Link>ITestRunnerFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitEngine\nunit.engine\Runners\DirectTestRunner.cs">
+      <Link>Runners\DirectTestRunner.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitEngine\nunit.engine\Runners\LocalTestRunner.cs">
+      <Link>Runners\LocalTestRunner.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitEngine\nunit.engine\Runners\MultipleTestDomainRunner.cs">
+      <Link>Runners\MultipleTestDomainRunner.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitEngine\nunit.engine\Runners\ProcessRunner.cs">
+      <Link>Runners\ProcessRunner.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitEngine\nunit.engine\Runners\TestDomainRunner.cs">
+      <Link>Runners\TestDomainRunner.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitEngine\nunit.engine\RunTestsCallbackHandler.cs">
+      <Link>RunTestsCallbackHandler.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitEngine\nunit.engine\RuntimeFramework.cs">
+      <Link>RuntimeFramework.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitEngine\nunit.engine\ServiceContext.cs">
+      <Link>ServiceContext.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitEngine\nunit.engine\Services\DefaultTestRunnerFactory.cs">
+      <Link>Services\DefaultTestRunnerFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitEngine\nunit.engine\Services\DomainManager.cs">
+      <Link>Services\DomainManager.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitEngine\nunit.engine\Services\InProcessTestRunnerFactory.cs">
+      <Link>Services\InProcessTestRunnerFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitEngine\nunit.engine\Services\ServiceManager.cs">
+      <Link>Services\ServiceManager.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitEngine\nunit.engine\Services\SettingsService.cs">
+      <Link>Services\SettingsService.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitEngine\nunit.engine\Services\TestAgency.cs">
+      <Link>Services\TestAgency.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitEngine\nunit.engine\TestEngine.cs">
+      <Link>TestEngine.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -87,6 +154,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <None Include="..\..\..\src\NUnitEngine\nunit.engine\nunit.engine.build">
+      <Link>nunit.engine.build</Link>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -95,18 +165,6 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
-    <Compile Include="..\..\..\src\NUnitEngine\engine\Interfaces\IService.cs">
-      <Link>Interfaces\IService.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\NUnitEngine\engine\Services.cs">
-      <Link>Services.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\NUnitEngine\engine\Services\DomainManager.cs">
-      <Link>Services\DomainManager.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\NUnitEngine\engine\Services\ServiceManager.cs">
-      <Link>Services\ServiceManager.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup>

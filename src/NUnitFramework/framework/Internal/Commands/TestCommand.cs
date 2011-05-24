@@ -104,7 +104,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// TODO: Documentation needed for property
         /// </summary>
-        public virtual TestResult Result
+        public virtual TestResult CurrentResult
         {
             get
             {

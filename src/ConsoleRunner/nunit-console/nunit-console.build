@@ -4,15 +4,18 @@
   <patternset id="source-files">
     <include name="AssemblyInfo.cs"/>
     <include name="ConsoleOptions.cs"/>
-    <include name="ConsoleUi.cs"/>
-    <include name="EventCollector.cs"/>
-    <include name="Runner.cs"/>
+    <include name="ConsoleRunner.cs"/>
+    <include name="Options.cs"/>
+    <include name="Program.cs"/>
+    <include name="ResultReporter.cs"/>
+    <include name="ResultSummary.cs"/>
+    <include name="StackTraceFilter.cs"/>
     <include name="TestNameParser.cs"/>
   </patternset>
 
   <target name="build">
-    <csc target="library" 
-        output="${current.lib.dir}/nunit-console-runner.dll"
+    <csc target="exe" 
+        output="${current.build.dir}/nunit-console.exe"
         debug="${build.debug}" define="${build.defines}">
       <sources>
         <patternset refid="source-files"/>
@@ -21,10 +24,8 @@
       <nowarn>
         <warning number="1699" if="${runtime.version>='2.0'}"/>
       </nowarn>
-      <references basedir="${current.lib.dir}">
-        <include name="nunit.core.interfaces.dll"/>
-        <include name="nunit.core.dll"/>
-        <include name="nunit.util.dll"/>
+      <references basedir="${current.build.dir}">
+        <include name="nunit.engine.api.dll"/>
       </references>
     </csc>
   </target>

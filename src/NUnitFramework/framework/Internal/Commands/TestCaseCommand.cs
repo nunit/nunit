@@ -55,8 +55,8 @@ namespace NUnit.Framework.Internal
                 NUnit.Framework.Assert.AreEqual(testMethod.expectedResult, result);
 #endif
 
-            Result.SetResult(ResultState.Success);
-            return Result;
+            CurrentResult.SetResult(ResultState.Success);
+            return CurrentResult;
         }
     }
 }

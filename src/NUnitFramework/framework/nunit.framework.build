@@ -2,15 +2,16 @@
 <project name="NUnitFramework" default="build" basedir=".">
 
   <patternset id="source-files">
-	<include name="*.cs" />
-	<include name="Api/*.cs" />
-	<include name="Attributes/*.cs" />
-	<include name="Constraints/*.cs" />
-	<include name="Exceptions/*.cs" />
-	<include name="Extensibility/*.cs" />
-	<include name="Internal/**/*.cs" />
-        <exclude name="Internal/Builders/NUnitLiteTestCaseBuilder.cs"/>
-        <exclude name="Internal/Builders/NUnitLiteTestFixtureBuilder.cs"/>
+	  <include name="*.cs" />
+	  <include name="Api/*.cs" />
+	  <include name="Attributes/*.cs" />
+	  <include name="Constraints/*.cs" />
+      <include name="Constraints/Operators/*.cs" />
+	  <include name="Exceptions/*.cs" />
+	  <include name="Extensibility/*.cs" />
+	  <include name="Internal/**/*.cs" />
+    <exclude name="Internal/Builders/NUnitLiteTestCaseBuilder.cs"/>
+    <exclude name="Internal/Builders/NUnitLiteTestFixtureBuilder.cs"/>
   </patternset>
 
   <target name="build">
@@ -20,7 +21,7 @@
         doc="${current.build.dir}/nunit.framework.xml"
         debug="${build.debug}" 
         define="${build.defines}"
-        keyfile="../../nunit.snk"
+        keyfile="../../../nunit.snk"
         warninglevel="${warn}">
       <nowarn>
         <warning number="1699" if="${runtime.version=='2.0'}"/>

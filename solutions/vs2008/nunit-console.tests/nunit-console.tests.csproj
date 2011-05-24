@@ -45,10 +45,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\..\src\ConsoleRunner\tests\CommandLineTests.cs">
+    <Compile Include="..\..\..\src\ConsoleRunner\nunit-console.tests\CommandLineTests.cs">
       <Link>CommandLineTests.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\ConsoleRunner\tests\MakeTestPackageTests.cs">
+    <Compile Include="..\..\..\src\ConsoleRunner\nunit-console.tests\MakeTestPackageTests.cs">
       <Link>MakeTestPackageTests.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -66,6 +66,11 @@
       <Project>{12B66B03-90F1-4992-BD33-BDF3C69AE49E}</Project>
       <Name>nunit.framework</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\src\ConsoleRunner\nunit-console.tests\nunit-console.tests.build">
+      <Link>nunit-console.tests.build</Link>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

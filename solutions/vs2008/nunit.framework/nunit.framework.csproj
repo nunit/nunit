@@ -679,9 +679,6 @@
     <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\Commands\TestExecutionContextCommand.cs">
       <Link>Internal\Commands\TestExecutionContextCommand.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\Commands\TestGroupCommand.cs">
-      <Link>Internal\Commands\TestGroupCommand.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\Commands\TestMethodCommand.cs">
       <Link>Internal\Commands\TestMethodCommand.cs</Link>
     </Compile>
@@ -796,6 +793,9 @@
     <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\Reflect.cs">
       <Link>Internal\Reflect.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\Results\TestResult.cs">
+      <Link>Internal\Results\TestResult.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\RuntimeFramework.cs">
       <Link>Internal\RuntimeFramework.cs</Link>
     </Compile>
@@ -813,9 +813,6 @@
     </Compile>
     <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\TestProgressReporter.cs">
       <Link>Internal\TestProgressReporter.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\TestResult.cs">
-      <Link>Internal\TestResult.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\Tests\LegacySuite.cs">
       <Link>Internal\Tests\LegacySuite.cs</Link>
@@ -916,6 +913,12 @@
     </Compile>
     <Compile Include="..\..\..\src\NUnitFramework\framework\Throws.cs">
       <Link>Throws.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\Results\TestCaseResult.cs">
+      <Link>Internal\Results\TestCaseResult.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\framework\Internal\Results\TestSuiteResult.cs">
+      <Link>Internal\Results\TestSuiteResult.cs</Link>
     </Compile>
     <None Include="..\..\..\src\NUnitFramework\framework\nunit.framework.build">
       <Link>nunit.framework.build</Link>

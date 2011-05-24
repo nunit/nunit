@@ -62,7 +62,7 @@ namespace NUnit.Framework.Internal
             {
                 RunSetUpMethods(testObject);
 
-                Result = innerCommand.Execute(testObject);
+                CurrentResult = innerCommand.Execute(testObject);
             }
             catch (Exception ex)
             {
@@ -70,14 +70,14 @@ namespace NUnit.Framework.Internal
                 if (ex is ThreadAbortException)
                     Thread.ResetAbort();
 #endif
-                Result.RecordException(ex);
+                CurrentResult.RecordException(ex);
             }
             finally
             {
                 RunTearDownMethods(testObject);
             }
 
-            return Result;
+            return CurrentResult;
         }
 
         private void RunSetUpMethods(object testObject)
@@ -105,16 +105,16 @@ namespace NUnit.Framework.Internal
 
                 // TODO: Can we move this logic into TestResult itself?
                 string message = "TearDown : " + ExceptionHelper.BuildMessage(ex);
-                if (Result.Message != null)
-                    message = Result.Message + NUnit.Env.NewLine + message;
+                if (CurrentResult.Message != null)
+                    message = CurrentResult.Message + NUnit.Env.NewLine + message;
 
 #if !NETCF_1_0
                 string stackTrace = "--TearDown" + NUnit.Env.NewLine + ExceptionHelper.BuildStackTrace(ex);
-                if (Result.StackTrace != null)
-                    stackTrace = Result.StackTrace + NUnit.Env.NewLine + stackTrace;
+                if (CurrentResult.StackTrace != null)
+                    stackTrace = CurrentResult.StackTrace + NUnit.Env.NewLine + stackTrace;
 
                 // TODO: What about ignore exceptions in teardown?
-                Result.SetResult(ResultState.Error, message, stackTrace);
+                CurrentResult.SetResult(ResultState.Error, message, stackTrace);
 #else
                 Result.SetResult(ResultState.Error, message);
 #endif

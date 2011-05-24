@@ -29,7 +29,7 @@ namespace NUnit.ConsoleRunner
 	using System.Xml;
 	using System.Resources;
 	using System.Text;
-    using NUnit.Engine.Api;
+    using NUnit.Engine;
 	
 	/// <summary>
 	/// ConsoleRunner provides the nunit-console text-based
@@ -85,8 +85,8 @@ namespace NUnit.ConsoleRunner
             // Display key options for the run
             // TODO: These are requested options - should be options as resolved by engine
             Console.WriteLine("ProcessModel: {0}    DomainUsage: {1}", options.processModel, options.domainUsage);
-
             Console.WriteLine("Execution Runtime: {0}", options.framework == null ? "Not Specified" : options.framework);
+            Console.WriteLine();
 
             //testRunner.Load(package);
 
@@ -140,11 +140,13 @@ namespace NUnit.ConsoleRunner
             {
                 ITestEngine engine = TestEngineActivator.CreateInstance();
 #if false
-                result = engine.Run(package, testFilter /*collector, testFilter*/ );
+                result = engine.Run(package, testFilter /*collector, testFilter*/ ).GetXml();
 #else
-                ITestRunner runner = engine.GetRunner(package);
-                if (runner.Load(package))
-                    result = runner.Run(testFilter);
+                using (ITestRunner runner = engine.GetRunner(package))
+                {
+                    if (runner.Load(package))
+                        result = runner.Run(testFilter).GetXml();
+                }
 #endif
             }
             finally
