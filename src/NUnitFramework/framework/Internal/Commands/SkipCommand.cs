@@ -45,7 +45,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public override TestResult Execute(object TestObject)
         {
-            TestResult testResult = new TestResult(Test);
+            TestResult testResult = this.Test.MakeTestResult();
 
             switch (Test.RunState)
             {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if UNUSED
+using System;
 using NUnit.Framework.Api;
 
 namespace NUnit.Framework.Internal
@@ -46,3 +47,4 @@ namespace NUnit.Framework.Internal
         }
     }
 }
+#endif

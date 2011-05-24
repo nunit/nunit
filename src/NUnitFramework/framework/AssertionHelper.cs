@@ -51,7 +51,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Apply a constraint to an actual value, succeeding if the constraint
         /// is satisfied and throwing an assertion exception on failure. Works
-        /// identically to <see cref="NUnit.Framework.Assert.That(object, IResolveConstraint)"/>
+        /// identically to NUnit.Framework.Assert.That(object, IResolveConstraint)
         /// </summary>
         /// <param name="constraint">A Constraint to be applied</param>
         /// <param name="actual">The actual value to test</param>
@@ -63,7 +63,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Apply a constraint to an actual value, succeeding if the constraint
         /// is satisfied and throwing an assertion exception on failure. Works
-        /// identically to <see cref="NUnit.Framework.Assert.That(object, IResolveConstraint, string)"/>
+        /// identically to NUnit.Framework.Assert.That(object, IResolveConstraint, string)
         /// </summary>
         /// <param name="constraint">A Constraint to be applied</param>
         /// <param name="actual">The actual value to test</param>
@@ -76,7 +76,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Apply a constraint to an actual value, succeeding if the constraint
         /// is satisfied and throwing an assertion exception on failure. Works
-        /// identically to <see cref="NUnit.Framework.Assert.That(object, IResolveConstraint, string, object[])"/>
+        /// identically to NUnit.Framework.Assert.That(object, IResolveConstraint, string, object[])
         /// </summary>
         /// <param name="constraint">A Constraint to be applied</param>
         /// <param name="actual">The actual value to test</param>

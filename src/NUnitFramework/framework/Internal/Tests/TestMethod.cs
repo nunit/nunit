@@ -126,6 +126,15 @@ namespace NUnit.Framework.Internal
         #region Test Overrides
 
         /// <summary>
+        /// Overridden to return a TestCaseResult.
+        /// </summary>
+        /// <returns>A TestResult for this test.</returns>
+        public override TestResult MakeTestResult()
+        {
+            return new TestCaseResult(this);
+        }
+
+        /// <summary>
         /// Gets a bool indicating whether the current test
         /// has any descendant tests.
         /// </summary>

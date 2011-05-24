@@ -44,15 +44,15 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// TODO: Documentation needed for property
         /// </summary>
-        public override TestResult Result
+        public override TestResult CurrentResult
         {
             get
             {
-                return this.innerCommand.Result;
+                return this.innerCommand.CurrentResult;
             }
             set
             {
-                this.innerCommand.Result = value;
+                this.innerCommand.CurrentResult = value;
             }
         }
     }

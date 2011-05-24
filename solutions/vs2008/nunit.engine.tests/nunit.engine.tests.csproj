@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NUnit.Engine.Tests</RootNamespace>
     <AssemblyName>nunit.engine.tests</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -32,21 +32,38 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Xml.Linq">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Data.DataSetExtensions">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Remoting" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\..\src\NUnitEngine\tests\DomainManagerTests.cs">
-      <Link>DomainManagerTests.cs</Link>
+    <Compile Include="..\..\..\src\NUnitEngine\nunit.engine.tests\Api\TestPackageTests.cs">
+      <Link>Api\TestPackageTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitEngine\nunit.engine.tests\Internal\AssemblyHelperTests.cs">
+      <Link>Internal\AssemblyHelperTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitEngine\nunit.engine.tests\Internal\AssemblyReaderTests.cs">
+      <Link>Internal\AssemblyReaderTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitEngine\nunit.engine.tests\Internal\PathUtilTests.cs">
+      <Link>Internal\PathUtilTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitEngine\nunit.engine.tests\Internal\ServerUtilityTests.cs">
+      <Link>Internal\ServerUtilityTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitEngine\nunit.engine.tests\Internal\SettingsGroupTests.cs">
+      <Link>Internal\SettingsGroupTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitEngine\nunit.engine.tests\Internal\XmlHelperTests.cs">
+      <Link>Internal\XmlHelperTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitEngine\nunit.engine.tests\RuntimeFrameworkTests.cs">
+      <Link>RuntimeFrameworkTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitEngine\nunit.engine.tests\Services\DomainManagerTests.cs">
+      <Link>Services\DomainManagerTests.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -63,6 +80,11 @@
       <Project>{12B66B03-90F1-4992-BD33-BDF3C69AE49E}</Project>
       <Name>nunit.framework</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\src\NUnitEngine\nunit.engine.tests\nunit.engine.tests.build">
+      <Link>nunit.engine.tests.build</Link>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

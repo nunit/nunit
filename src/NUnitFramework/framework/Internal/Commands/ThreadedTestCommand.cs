@@ -89,11 +89,11 @@ namespace NUnit.Framework.Internal
             if (thread.IsAlive)
             {
                 thread.Abort();
-                Result.SetResult(ResultState.Failure,
+                CurrentResult.SetResult(ResultState.Failure,
                     string.Format("Test exceeded Timeout value of {0}ms", timeout));
             }
 
-            return Result;
+            return CurrentResult;
         }
 
         /// <summary>
@@ -104,11 +104,11 @@ namespace NUnit.Framework.Internal
         {
             try
             {
-                Result = innerCommand.Execute(testObject);
+                CurrentResult = innerCommand.Execute(testObject);
             }
             catch (Exception e)
             {
-                Result.RecordException(e);
+                CurrentResult.RecordException(e);
             }
         }
     }

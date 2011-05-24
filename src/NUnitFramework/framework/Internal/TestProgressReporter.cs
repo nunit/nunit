@@ -65,7 +65,7 @@ namespace NUnit.Framework.Internal
             {
 				string report = string.Format(
 					"<start id=\"{0}\" name=\"{1}\" fullname=\"{2}\"/>",
-				    test.Id, XmlHelper.ReplaceQuotes(test.Name), XmlHelper.ReplaceQuotes(test.FullName));
+				    test.Id, XmlHelper.FormatAttributeValue(test.Name), XmlHelper.FormatAttributeValue(test.FullName));
 				                              
 				callback(new ProgressReport(report));
             }

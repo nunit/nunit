@@ -34,8 +34,8 @@ namespace NUnit.Framework.Internal
 	[TestFixture]
 	public abstract class TestResultTests
 	{
-		protected TestResult testResult;
-        protected TestResult suiteResult;
+		protected TestCaseResult testResult;
+        protected TestSuiteResult suiteResult;
         protected XmlNode testNode;
         protected XmlNode suiteNode;
         protected TestMethod test;
@@ -47,13 +47,13 @@ namespace NUnit.Framework.Internal
             test.Properties.Set(PropertyNames.Description, "Test description");
             test.Properties.Add(PropertyNames.Category, "Dubious");
             test.Properties.Set("Priority", "low");
-			testResult = new TestResult(test);
+			testResult = (TestCaseResult)test.MakeTestResult();
 
             TestSuite suite = new TestSuite(typeof(DummySuite));
             suite.Properties.Set(PropertyNames.Description, "Suite description");
             suite.Properties.Add(PropertyNames.Category, "Fast");
             suite.Properties.Add("Value", 3);
-            suiteResult = new TestResult(suite);
+            suiteResult = (TestSuiteResult)suite.MakeTestResult();
 
             SetResultState();
             suiteResult.AddResult(testResult);

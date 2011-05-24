@@ -26,7 +26,7 @@ namespace NUnit.Framework.Internal
             TestExecutionContext.Save();
 
             TestExecutionContext.CurrentContext.CurrentTest = this.Test;
-            TestExecutionContext.CurrentContext.CurrentResult = new TestResult(this.Test);
+            TestExecutionContext.CurrentContext.CurrentResult = this.Test.MakeTestResult();
 
             try
             {
@@ -35,7 +35,7 @@ namespace NUnit.Framework.Internal
                 // TODO: Ensure no exceptions escape
             finally
             {
-                Result.AssertCount = TestExecutionContext.CurrentContext.AssertCount;
+                CurrentResult.AssertCount = TestExecutionContext.CurrentContext.AssertCount;
                 this.Test.Fixture = null;
 
                 TestExecutionContext.Restore();

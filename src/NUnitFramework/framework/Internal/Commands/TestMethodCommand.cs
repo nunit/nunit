@@ -98,8 +98,8 @@ namespace NUnit.Framework.Internal
                 if (ex is ThreadAbortException)
                     Thread.ResetAbort();
 #endif
-                Result.RecordException(ex);
-                return Result;
+                CurrentResult.RecordException(ex);
+                return CurrentResult;
             }
         }
 

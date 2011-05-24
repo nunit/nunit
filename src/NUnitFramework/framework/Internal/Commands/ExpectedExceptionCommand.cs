@@ -53,10 +53,10 @@ namespace NUnit.Framework.Internal
         {
             try
             {
-                Result = innerCommand.Execute(testObject);
+                CurrentResult = innerCommand.Execute(testObject);
 
-                if (Result.ResultState == ResultState.Success && exceptionProcessor != null)
-                    exceptionProcessor.ProcessNoException(Result);
+                if (CurrentResult.ResultState == ResultState.Success && exceptionProcessor != null)
+                    exceptionProcessor.ProcessNoException(CurrentResult);
             }
             catch (Exception ex)
             {
@@ -65,12 +65,12 @@ namespace NUnit.Framework.Internal
                     Thread.ResetAbort();
 #endif
                 if (exceptionProcessor == null)
-                    Result.RecordException(ex);
+                    CurrentResult.RecordException(ex);
                 else
-                    exceptionProcessor.ProcessException(ex, Result);
+                    exceptionProcessor.ProcessException(ex, CurrentResult);
             }
 
-            return Result;
+            return CurrentResult;
         }
     }
 }

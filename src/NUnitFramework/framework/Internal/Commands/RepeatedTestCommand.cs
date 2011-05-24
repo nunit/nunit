@@ -54,18 +54,18 @@ namespace NUnit.Framework.Internal
 
             while (count-- > 0)
             {
-                Result = innerCommand.Execute(testObject);
+                CurrentResult = innerCommand.Execute(testObject);
 
                 // TODO: We may want to change this so that all iterations are run
-                if (Result.ResultState == ResultState.Failure ||
-                    Result.ResultState == ResultState.Error ||
-                    Result.ResultState == ResultState.Cancelled)
+                if (CurrentResult.ResultState == ResultState.Failure ||
+                    CurrentResult.ResultState == ResultState.Error ||
+                    CurrentResult.ResultState == ResultState.Cancelled)
                 {
                     break;
                 }
             }
 
-            return Result;
+            return CurrentResult;
         }
     }
 }
