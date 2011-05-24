@@ -14,12 +14,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit-console", "nunit-cons
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit-console.tests", "nunit-console.tests\nunit-console.tests.csproj", "{B310A760-8AE1-41CA-81F8-03B12E2FCE30}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NUnitFramework", "NUnitFramework", "{A20E77C3-DA32-4BF9-BFF1-85DE62CF744D}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ConsoleRunner", "ConsoleRunner", "{953DF00B-695A-422F-9B88-EB8295E480D8}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NUnitEngine", "NUnitEngine", "{E07AC546-1ABD-4388-B53D-8505317F67D8}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.engine", "engine\nunit.engine.csproj", "{372A3447-D657-40FF-A089-77C19FEC30C8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.engine.api", "nunit.engine.api\nunit.engine.api.csproj", "{775FAD50-3623-4922-97C4-DFB29A8BE4C7}"
@@ -28,7 +22,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.engine.tests", "nunit
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit-agent", "nunit-agent\nunit-agent.csproj", "{C2A8FC7A-FA64-46EA-AF6D-73D6B371DBF8}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution", "Solution", "{9CC334E1-AA6C-4E32-BE7D-522CC9CD8E17}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{493CF731-2084-4484-ACED-A93CEB8A5874}"
 	ProjectSection(SolutionItems) = preProject
 		..\..\nunit.build = ..\..\nunit.build
 		..\..\nunit.common.include = ..\..\nunit.common.include
@@ -87,16 +81,6 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{EA9871E3-9972-4476-821E-3961C28125E8} = {A20E77C3-DA32-4BF9-BFF1-85DE62CF744D}
-		{12B66B03-90F1-4992-BD33-BDF3C69AE49E} = {A20E77C3-DA32-4BF9-BFF1-85DE62CF744D}
-		{B310A760-8AE1-41CA-81F8-03B12E2FCE30} = {953DF00B-695A-422F-9B88-EB8295E480D8}
-		{0DE218CA-AFB8-423A-9CD2-E22DEAC55C46} = {953DF00B-695A-422F-9B88-EB8295E480D8}
-		{372A3447-D657-40FF-A089-77C19FEC30C8} = {E07AC546-1ABD-4388-B53D-8505317F67D8}
-		{775FAD50-3623-4922-97C4-DFB29A8BE4C7} = {E07AC546-1ABD-4388-B53D-8505317F67D8}
-		{D694CB69-6CFB-4762-86C2-EB27B808B282} = {E07AC546-1ABD-4388-B53D-8505317F67D8}
-		{C2A8FC7A-FA64-46EA-AF6D-73D6B371DBF8} = {E07AC546-1ABD-4388-B53D-8505317F67D8}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = test-runner\test-runner.csproj
