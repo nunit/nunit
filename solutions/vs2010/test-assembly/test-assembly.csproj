@@ -40,92 +40,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\..\src\test-assembly\AssemblyInfo.cs">
-      <Link>AssemblyInfo.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\test-assembly\AssertFailFixture.cs">
-      <Link>AssertFailFixture.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\test-assembly\AssertIgnoreData.cs">
-      <Link>AssertIgnoreData.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\test-assembly\AttributeInheritanceData.cs">
-      <Link>AttributeInheritanceData.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\test-assembly\CategoryAttributeData.cs">
-      <Link>CategoryAttributeData.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\test-assembly\CultureAttributeData.cs">
-      <Link>CultureAttributeData.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\test-assembly\DatapointFixture.cs">
-      <Link>DatapointFixture.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\test-assembly\DescriptionFixture.cs">
-      <Link>DescriptionFixture.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\test-assembly\ExpectedExceptionData.cs">
-      <Link>ExpectedExceptionData.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\test-assembly\FixtureSetUpTearDownData.cs">
-      <Link>FixtureSetUpTearDownData.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\test-assembly\LegacySuiteData.cs">
-      <Link>LegacySuiteData.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\test-assembly\MaxTimeFixture.cs">
-      <Link>MaxTimeFixture.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\test-assembly\ParameterizedTestFixture.cs">
-      <Link>ParameterizedTestFixture.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\test-assembly\PropertyAttributeTests.cs">
-      <Link>PropertyAttributeTests.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\test-assembly\RepeatedTestFixture.cs">
-      <Link>RepeatedTestFixture.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\test-assembly\SetUpData.cs">
-      <Link>SetUpData.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\test-assembly\SetupFixtureTests.cs">
-      <Link>SetupFixtureTests.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\test-assembly\TestCaseAttributeFixture.cs">
-      <Link>TestCaseAttributeFixture.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\test-assembly\TestCaseSourceAttributeFixture.cs">
-      <Link>TestCaseSourceAttributeFixture.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\test-assembly\TestContextData.cs">
-      <Link>TestContextData.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\test-assembly\TestFixtureBuilderData.cs">
-      <Link>TestFixtureBuilderData.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\test-assembly\TestFixtureData.cs">
-      <Link>TestFixtureData.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\test-assembly\TestFixtureExtensionData.cs">
-      <Link>TestFixtureExtensionData.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\test-assembly\TestMethodSignatureFixture.cs">
-      <Link>TestMethodSignatureFixture.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\test-assembly\TheoryFixture.cs">
-      <Link>TheoryFixture.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\test-assembly\ThreadingFixture.cs">
-      <Link>ThreadingFixture.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\test-assembly\UnexpectedExceptionFixture.cs">
-      <Link>UnexpectedExceptionFixture.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\test-assembly\UnhandledExceptions.cs">
-      <Link>UnhandledExceptions.cs</Link>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
@@ -133,6 +47,97 @@
       <Project>{F55F0FC4-E9B8-4D3C-B499-2FBB1E7C1D09}</Project>
       <Name>nunit.framework</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\..\src\NUnitFramework\test-assembly\AssemblyInfo.cs">
+      <Link>AssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\test-assembly\AssertFailFixture.cs">
+      <Link>AssertFailFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\test-assembly\AssertIgnoreData.cs">
+      <Link>AssertIgnoreData.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\test-assembly\AttributeInheritanceData.cs">
+      <Link>AttributeInheritanceData.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\test-assembly\CategoryAttributeData.cs">
+      <Link>CategoryAttributeData.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\test-assembly\CultureAttributeData.cs">
+      <Link>CultureAttributeData.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\test-assembly\DatapointFixture.cs">
+      <Link>DatapointFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\test-assembly\DescriptionFixture.cs">
+      <Link>DescriptionFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\test-assembly\ExpectedExceptionData.cs">
+      <Link>ExpectedExceptionData.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\test-assembly\FixtureSetUpTearDownData.cs">
+      <Link>FixtureSetUpTearDownData.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\test-assembly\LegacySuiteData.cs">
+      <Link>LegacySuiteData.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\test-assembly\MaxTimeFixture.cs">
+      <Link>MaxTimeFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\test-assembly\ParameterizedTestFixture.cs">
+      <Link>ParameterizedTestFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\test-assembly\PropertyAttributeTests.cs">
+      <Link>PropertyAttributeTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\test-assembly\RepeatedTestFixture.cs">
+      <Link>RepeatedTestFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\test-assembly\SetUpData.cs">
+      <Link>SetUpData.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\test-assembly\SetupFixtureTests.cs">
+      <Link>SetupFixtureTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\test-assembly\TestCaseAttributeFixture.cs">
+      <Link>TestCaseAttributeFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\test-assembly\TestCaseSourceAttributeFixture.cs">
+      <Link>TestCaseSourceAttributeFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\test-assembly\TestContextData.cs">
+      <Link>TestContextData.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\test-assembly\TestFixtureBuilderData.cs">
+      <Link>TestFixtureBuilderData.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\test-assembly\TestFixtureData.cs">
+      <Link>TestFixtureData.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\test-assembly\TestFixtureExtensionData.cs">
+      <Link>TestFixtureExtensionData.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\test-assembly\TestMethodSignatureFixture.cs">
+      <Link>TestMethodSignatureFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\test-assembly\TheoryFixture.cs">
+      <Link>TheoryFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\test-assembly\ThreadingFixture.cs">
+      <Link>ThreadingFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\test-assembly\UnexpectedExceptionFixture.cs">
+      <Link>UnexpectedExceptionFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\NUnitFramework\test-assembly\UnhandledExceptions.cs">
+      <Link>UnhandledExceptions.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\src\NUnitFramework\test-assembly\test-assembly.build">
+      <Link>test-assembly.build</Link>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
