@@ -52,42 +52,42 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\..\src\direct-runner\AssemblyInfo.cs">
+    <Compile Include="..\..\..\src\NUnitFramework\direct-runner\AssemblyInfo.cs">
       <Link>AssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\direct-runner\CallbackHandler.cs">
+    <Compile Include="..\..\..\src\NUnitFramework\direct-runner\CallbackHandler.cs">
       <Link>CallbackHandler.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\direct-runner\CommandLineOptions.cs">
+    <Compile Include="..\..\..\src\NUnitFramework\direct-runner\CommandLineOptions.cs">
       <Link>CommandLineOptions.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\direct-runner\ConsoleRunner.cs">
+    <Compile Include="..\..\..\src\NUnitFramework\direct-runner\ConsoleRunner.cs">
       <Link>ConsoleRunner.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\direct-runner\FrameworkDriver.cs">
+    <Compile Include="..\..\..\src\NUnitFramework\direct-runner\FrameworkDriver.cs">
       <Link>FrameworkDriver.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\direct-runner\Program.cs">
+    <Compile Include="..\..\..\src\NUnitFramework\direct-runner\Program.cs">
       <Link>Program.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\direct-runner\ResultReporter.cs">
+    <Compile Include="..\..\..\src\NUnitFramework\direct-runner\ResultReporter.cs">
       <Link>ResultReporter.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\direct-runner\ResultSummary.cs">
+    <Compile Include="..\..\..\src\NUnitFramework\direct-runner\ResultSummary.cs">
       <Link>ResultSummary.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\direct-runner\RunTestsCallbackHandler.cs">
+    <Compile Include="..\..\..\src\NUnitFramework\direct-runner\RunTestsCallbackHandler.cs">
       <Link>RunTestsCallbackHandler.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\direct-runner\StackTraceFilter.cs">
+    <Compile Include="..\..\..\src\NUnitFramework\direct-runner\StackTraceFilter.cs">
       <Link>StackTraceFilter.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\direct-runner\TestEventListener.cs">
+    <Compile Include="..\..\..\src\NUnitFramework\direct-runner\TestEventListener.cs">
       <Link>TestEventListener.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\..\src\direct-runner\direct-runner.build">
+    <None Include="..\..\..\src\NUnitFramework\direct-runner\direct-runner.build">
       <Link>direct-runner.build</Link>
     </None>
   </ItemGroup>
