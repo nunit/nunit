@@ -437,6 +437,16 @@
       <Link>TestText2.txt</Link>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\nunit.framework\nunit.framework.csproj">
+      <Project>{F55F0FC4-E9B8-4D3C-B499-2FBB1E7C1D09}</Project>
+      <Name>nunit.framework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\test-assembly\test-assembly.csproj">
+      <Project>{3A0FAD44-A336-43D4-90D9-A5206EB6F02E}</Project>
+      <Name>test-assembly</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
