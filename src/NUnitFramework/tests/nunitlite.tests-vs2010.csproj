@@ -1,0 +1,129 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{0B5B1B19-D9D1-4E9C-80EE-37D4F56282C1}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>NUnit.Framework.Tests</RootNamespace>
+    <AssemblyName>nunitlite.tests</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\..\bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;NET_3_5;CLR_2_0;CS_3_0;NUNITLITE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>
+    </DocumentationFile>
+    <Externalconsole>true</Externalconsole>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\..\bin\Release\</OutputPath>
+    <DefineConstants>TRACE;NET_3_5;CLR_2_0;NUNITLITE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>
+    </DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\..\src\CommonAssemblyInfo.cs">
+      <Link>CommonAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="AlwaysEqualComparer.cs" />
+    <Compile Include="Api\ResultStateTests.cs" />
+    <Compile Include="Assertions\ArrayEqualsFailureMessageFixture.cs" />
+    <Compile Include="Assertions\ArrayEqualsFixture.cs" />
+    <Compile Include="Assertions\ArrayNotEqualFixture.cs" />
+    <Compile Include="Assertions\AssertFailTests.cs" />
+    <Compile Include="Assertions\AssertIgnoreTests.cs" />
+    <Compile Include="Assertions\AssertInconclusiveTests.cs" />
+    <Compile Include="Assertions\AssertPassTests.cs" />
+    <Compile Include="Assertions\MessageChecker.cs" />
+    <Compile Include="Attributes\TestFixtureAttributeTests.cs" />
+    <Compile Include="CollectionAdapter.cs" />
+    <Compile Include="Constraints\AndTest.cs" />
+    <Compile Include="Constraints\BasicConstraintTests.cs" />
+    <Compile Include="Constraints\BinarySerializableTest.cs" />
+    <Compile Include="Constraints\CollectionConstraintTests.cs" />
+    <Compile Include="Constraints\ComparerTests.cs" />
+    <Compile Include="Constraints\ComparisonConstraintTests.cs" />
+    <Compile Include="Constraints\ConstraintTestBase.cs" />
+    <Compile Include="Constraints\EmptyConstraintTest.cs" />
+    <Compile Include="Constraints\EqualTest.cs" />
+    <Compile Include="Constraints\FloatingPointNumericsTest.cs" />
+    <Compile Include="Constraints\MsgUtilTests.cs" />
+    <Compile Include="Constraints\NotTest.cs" />
+    <Compile Include="Constraints\NumericsTest.cs" />
+    <Compile Include="Constraints\OrTest.cs" />
+    <Compile Include="Constraints\PathConstraintTests.cs" />
+    <Compile Include="Constraints\PropertyTests.cs" />
+    <Compile Include="Constraints\SameAsTest.cs" />
+    <Compile Include="Constraints\StringConstraintTests.cs" />
+    <Compile Include="Constraints\ThrowsConstraintTests.cs" />
+    <Compile Include="Constraints\ToStringTests.cs" />
+    <Compile Include="Constraints\TypeConstraintTests.cs" />
+    <Compile Include="Constraints\XmlSerializableTest.cs" />
+    <Compile Include="Internal\PropertyBagTests.cs" />
+    <Compile Include="Internal\TestXmlTests.cs" />
+    <Compile Include="Internal\TextMessageWriterTests.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Syntax\CollectionTests.cs" />
+    <Compile Include="Syntax\ComparisonTests.cs" />
+    <Compile Include="Syntax\EqualityTests.cs" />
+    <Compile Include="Syntax\OperatorOverrides.cs" />
+    <Compile Include="Syntax\OperatorTests.cs" />
+    <Compile Include="Syntax\PathConstraintTests.cs" />
+    <Compile Include="Syntax\PropertyTests.cs" />
+    <Compile Include="Syntax\SerializableConstraints.cs" />
+    <Compile Include="Syntax\SimpleConstraints.cs" />
+    <Compile Include="Syntax\StringConstraints.cs" />
+    <Compile Include="Syntax\SyntaxTest.cs" />
+    <Compile Include="Syntax\ThrowsTests.cs" />
+    <Compile Include="Syntax\TypeConstraints.cs" />
+    <Compile Include="TestComparer.cs" />
+    <Compile Include="TestDelegates.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="TestImage1.jpg" />
+    <EmbeddedResource Include="TestImage2.jpg" />
+    <EmbeddedResource Include="TestText1.txt" />
+    <EmbeddedResource Include="TestText2.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\framework\nunitlite-vs2008.csproj">
+      <Project>{0BFA7F0A-BC15-40A5-863A-FA9B55AE2FD3}</Project>
+      <Name>nunitlite-vs2008</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
