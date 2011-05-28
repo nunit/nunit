@@ -32,7 +32,7 @@ namespace NUnit.Framework.Builders
     /// Provides data from fields marked with the DatapointAttribute or the
     /// DatapointsAttribute.
     /// </summary>
-    public class DatapointProvider : IDataPointProvider
+    public class DatapointProvider : IParameterDataProvider
     {
         #region IDataPointProvider Members
 

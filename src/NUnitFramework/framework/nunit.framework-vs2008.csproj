@@ -219,7 +219,7 @@
     <Compile Include="Extensibility\ExtensionType.cs" />
     <Compile Include="Extensibility\IAddin.cs" />
     <Compile Include="Extensibility\IAddinRegistry.cs" />
-    <Compile Include="Extensibility\IDataPointProvider.cs" />
+    <Compile Include="Extensibility\IParameterDataProvider.cs" />
     <Compile Include="Extensibility\IExtensionHost.cs" />
     <Compile Include="Extensibility\IExtensionPoint.cs" />
     <Compile Include="Extensibility\ISuiteBuilder.cs" />
@@ -240,7 +240,7 @@
     <Compile Include="Internal\Builders\CombiningStrategy.cs" />
     <Compile Include="Internal\Builders\DataAttributeTestCaseProvider.cs" />
     <Compile Include="Internal\Builders\DatapointProvider.cs" />
-    <Compile Include="Internal\Builders\InlineDataPointProvider.cs" />
+    <Compile Include="Internal\Builders\ParameterDataProvider.cs" />
     <Compile Include="Internal\Builders\LegacySuiteBuilder.cs" />
     <Compile Include="Internal\Builders\NUnitTestCaseBuilder.cs" />
     <Compile Include="Internal\Builders\NUnitTestFixtureBuilder.cs" />
@@ -248,7 +248,6 @@
     <Compile Include="Internal\Builders\ProviderCache.cs" />
     <Compile Include="Internal\Builders\SequentialStrategy.cs" />
     <Compile Include="Internal\Builders\SetUpFixtureBuilder.cs" />
-    <Compile Include="Internal\Builders\ValueSourceProvider.cs" />
     <Compile Include="Internal\Commands\CommandBuilder.cs" />
     <Compile Include="Internal\Commands\DelegatingTestCommand.cs" />
     <Compile Include="Internal\Commands\ExpectedExceptionCommand.cs" />
@@ -273,7 +272,7 @@
     <Compile Include="Internal\EventQueue.cs" />
     <Compile Include="Internal\ExceptionHelper.cs" />
     <Compile Include="Internal\ExpectedExceptionProcessor.cs" />
-    <Compile Include="Internal\Extensibility\DataPointProviders.cs" />
+    <Compile Include="Internal\Extensibility\ParameterDataProviders.cs" />
     <Compile Include="Internal\Extensibility\EventListenerCollection.cs" />
     <Compile Include="Internal\Extensibility\ExtensionHost.cs" />
     <Compile Include="Internal\Extensibility\ExtensionPoint.cs" />
