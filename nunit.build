@@ -165,34 +165,6 @@
   </target>
 
 <!-- ***************************************************************** -->
-<!-- ***              Targets that generate code                   *** -->
-<!-- ***************************************************************** -->
-
-  <!-- Generate code for the fluent constraint builder interface -->
-  <!-- Note that we run GenSyntax under .NET 2.0 or above even   -->
-  <!-- we are building for an earlier version of the CLR.        -->
-  <target name="gen-syntax" 
-    description="Generate code for the fluent constraint builder interface">
-
-    <exec program="GenSyntax.exe"
-      managed="auto"
-      basedir="${project.tools.dir}/bin"
-      workingdir="${project.src.dir}/NUnitFramework/framework">
-
-      <arg value="-syntax:SyntaxElements.txt"/>
-      <arg value="Is.cs"/>
-      <arg value="Has.cs"/>
-      <arg value="Constraints/ConstraintFactory.cs"/>
-      <arg value="Constraints/ConstraintExpression.cs"/>
-
-    </exec>
-
-    <!-- Ensure we only do this once per session -->
-    <property name="generated.syntax" value="YES"/>
-
-  </target>
-
-<!-- ***************************************************************** -->
 <!-- ***              Targets that perform builds                  *** -->
 <!-- ***************************************************************** -->
 
@@ -223,11 +195,6 @@
     <fail if="${runtime.platform=='netcf'}"
       message="The full NUnit framework may not be built for netcf"/>
 
-    <!--<call target="build-tools"
-      unless="${property::exists('built.tools')}"/>-->
-    <call target="gen-syntax" 
-      unless="${property::exists('generated.syntax')}"/>
-
     <nant target="build" buildfile="src/NUnitFramework/framework/nunit.framework.build"/>
     <nant target="build" buildfile="src/NUnitFramework/test-assembly/test-assembly.build"/>
     <nant target="build" buildfile="src/NUnitFramework/tests/nunit.framework.tests.build"/>
@@ -245,11 +212,6 @@
   </target>
 
   <target name="build-nunitlite" depends="make-build-dir">
-
-    <!--<call target="build-tools"
-      unless="${property::exists('built.tools')}"/>-->
-    <call target="gen-syntax" 
-      unless="${property::exists('generated.syntax')}"/>
 
     <nant target="build" buildfile="src/NUnitFramework/framework/nunitlite.build"/>
     <nant target="build" buildfile="src/NUnitFramework/tests/nunitlite.tests.build"/>
@@ -603,7 +565,6 @@ to the correct location.
     <call target="copy-docs"/>
     <!--<call target="copy-samples"/>-->
     <call target="copy-src"/>
-    <call target="copy-tools" />
 
     <copy file="LICENSE.txt" todir="${package.working.dir}" />
 
@@ -783,52 +744,6 @@ to the correct location.
         <include name="**/direct-runner/direct-runner.csproj"/>
       </fileset>
     </copy>
-
-  </target>
-
-<!-- ***************************************************************** -->
-<!-- ***               Copy the tools for a package                *** -->
-<!-- ***************************************************************** -->
-
-  <target name="copy-tools">
-
-    <mkdir dir="${package.tools.dir}" />
-
-    <copy todir="${package.tools.dir}">
-      <fileset basedir="${project.tools.dir}">
-        <include name="bin/GenSyntax.exe"/>
-        <include name="src/CodeGeneration/CodeGeneration.sln"/>
-        <include name="src/CodeGeneration/CodeGeneration.build"/>
-        <include name="src/CodeGeneration/**/*.csproj"/>
-        <include name="src/CodeGeneration/**/*.cs"/>
-        <include name="src/CodeGeneration/GenSyntax/App.ico"/>
-      </fileset>
-    </copy>
-
-  </target>
-
-<!-- ***************************************************************** -->
-<!-- ***    Targets for building custom tools used in the build    *** -->
-<!-- ***                                                           *** -->
-<!-- ***    NOTE: Tools are not built automatically. If you are    *** -->
-<!-- ***    building from source and don't have binaries for       *** -->
-<!-- ***    NUnit-specific tools, you can run this target.         *** -->
-<!-- ***************************************************************** -->
-
-  <target name="clean-tools"
-      description="Remove binaries of tools used to build NUnit (DANGEROUS!)">
-
-    <nant target="clean" buildfile="tools/src/CodeGeneration/CodeGeneration.build"/>
-
-  </target>
-
-  <target name="build-tools"
-      description="Build tools used in building NUnit">
-
-    <nant target="GenSyntax" buildfile="tools/src/CodeGeneration/CodeGeneration.build"/>
-
-    <!-- Ensure we only do this once per session -->
-    <property name="built.tools" value="YES"/>
 
   </target>
 

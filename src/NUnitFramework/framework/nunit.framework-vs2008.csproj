@@ -325,13 +325,6 @@
     <Compile Include="ObjectList.cs" />
     <Compile Include="SpecialValue.cs" />
     <Compile Include="StringAssert.cs" />
-    <Content Include="Templates\Assert.template.cs" />
-    <Content Include="Templates\ConstraintExpression.template.cs" />
-    <Content Include="Templates\ConstraintFactory.template.cs" />
-    <Content Include="Templates\Contains.template.cs" />
-    <Content Include="Templates\Has.template.cs" />
-    <Content Include="Templates\Is.template.cs" />
-    <Content Include="Templates\Throws.template.cs" />
     <Compile Include="TestCaseData.cs" />
     <Compile Include="TestContext.cs" />
     <Compile Include="Throws.cs" />
