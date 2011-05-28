@@ -248,7 +248,6 @@
     <Compile Include="Internal\Builders\NUnitTestFixtureBuilder.cs" />
     <Compile Include="Internal\Builders\PairwiseStrategy.cs" />
     <Compile Include="Internal\Builders\ProviderCache.cs" />
-    <Compile Include="Internal\Builders\ProviderInfo.cs" />
     <Compile Include="Internal\Builders\SequentialStrategy.cs" />
     <Compile Include="Internal\Builders\SetUpFixtureBuilder.cs" />
     <Compile Include="Internal\Builders\ValueSourceProvider.cs" />

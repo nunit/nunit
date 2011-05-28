@@ -21,9 +21,15 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System.Collections;
 using System.Reflection;
+using NUnit.Framework.Api;
 using NUnit.Framework.Internal;
+
+#if CLR_2_0 || CLR_4_0
+using System.Collections.Generic;
+#else
+using System.Collections;
+#endif
 
 namespace NUnit.Framework.Extensibility
 {
@@ -49,20 +55,26 @@ namespace NUnit.Framework.Extensibility
 
         /// <summary>
         /// Return an enumeration providing test cases for use in
-        /// running a paramterized test.
+        /// running a parameterized test.
         /// </summary>
         /// <param name="method"></param>
         /// <returns></returns>
-        public IEnumerable GetTestCasesFor(MethodInfo method)
+#if CLR_2_0 || CLR_4_0
+        public System.Collections.Generic.IEnumerable<ITestCaseData> GetTestCasesFor(MethodInfo method)
         {
-            ObjectList testcases = new ObjectList();
+            List<ITestCaseData> testcases = new List<ITestCaseData>();
+#else
+        public System.Collections.IEnumerable GetTestCasesFor(MethodInfo method)
+        {
+            ArrayList testcases = new ArrayList();
+#endif
 
             foreach (ITestCaseProvider provider in Extensions)
                 try
                 {
                     if (provider.HasTestCasesFor(method))
-                        foreach (object o in provider.GetTestCasesFor(method))
-                            testcases.Add(o);
+                        foreach (ITestCaseData testcase in provider.GetTestCasesFor(method))
+                            testcases.Add(testcase);
                 }
                 catch (System.Reflection.TargetInvocationException ex)
                 {

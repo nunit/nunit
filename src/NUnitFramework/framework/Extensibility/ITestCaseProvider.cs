@@ -21,9 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System.Collections;
 using System.Reflection;
-using NUnit.Framework.Internal;
+using NUnit.Framework.Api;
 
 namespace NUnit.Framework.Extensibility
 {
@@ -47,6 +46,10 @@ namespace NUnit.Framework.Extensibility
         /// </summary>
         /// <param name="method"></param>
         /// <returns></returns>
-        IEnumerable GetTestCasesFor(MethodInfo method);
+#if CLR_2_0 || CLR_4_0
+        System.Collections.Generic.IEnumerable<ITestCaseData> GetTestCasesFor(MethodInfo method);
+#else
+        System.Collections.IEnumerable GetTestCasesFor(MethodInfo method);
+#endif
     }
 }

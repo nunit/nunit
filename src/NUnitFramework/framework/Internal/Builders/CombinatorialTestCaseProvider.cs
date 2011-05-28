@@ -70,7 +70,11 @@ namespace NUnit.Framework.Builders
         /// </summary>
         /// <param name="method"></param>
         /// <returns></returns>
-        public IEnumerable GetTestCasesFor(MethodInfo method)
+#if CLR_2_0 || CLR_4_0
+        public System.Collections.Generic.IEnumerable<ITestCaseData> GetTestCasesFor(MethodInfo method)
+#else
+        public System.Collections.IEnumerable GetTestCasesFor(MethodInfo method)
+#endif
         {
             return GetStrategy(method).GetTestCases();
         }

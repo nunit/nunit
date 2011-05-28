@@ -61,15 +61,17 @@ namespace NUnit.Framework.Builders
         /// </summary>
         /// <param name="method"></param>
         /// <returns></returns>
-        public IEnumerable GetTestCasesFor(MethodInfo method)
-        {
 #if CLR_2_0 || CLR_4_0
-            List<ITestCaseData> testCases = new List<ITestCaseData>();
+       public IEnumerable<ITestCaseData> GetTestCasesFor(MethodInfo method)
+       {
+           List<ITestCaseData> testCases = new List<ITestCaseData>();
 #else
-            ArrayList testCases = new ArrayList();
+       public IEnumerable GetTestCasesFor(MethodInfo method)
+       {
+           ArrayList testCases = new ArrayList();
 #endif
-#if true // EXPERIMENTAL
-            foreach (DataAttribute attr in method.GetCustomAttributes(typeof(DataAttribute), false))
+
+           foreach (DataAttribute attr in method.GetCustomAttributes(typeof(DataAttribute), false))
             {
                 ITestCaseSource source = attr as ITestCaseSource;
                 if (source != null)
@@ -79,44 +81,9 @@ namespace NUnit.Framework.Builders
                     continue;
                 }
             }
-#else
-            foreach (ProviderReference info in GetSourcesFor(method, parentSuite))
-            {
-                foreach (object o in info.GetInstance())
-                    parameterList.Add(o);
-            }
-#endif
 
             return testCases;
         }
-        #endregion
-
-        #region Helper Methods
-        //private static ProviderList GetSourcesFor(MethodInfo method, Test parent)
-        //{
-        //    ProviderList sources = new ProviderList();
-        //    TestFixture parentSuite = parent as TestFixture;
-
-        //    foreach (TestCaseSourceAttribute sourceAttr in method.GetCustomAttributes(typeof(TestCaseSourceAttribute), false))
-        //    {
-        //        Type sourceType = sourceAttr.SourceType;
-        //        string sourceName = sourceAttr.SourceName;
-
-        //        if (sourceType == null)
-        //        {
-        //            if (parentSuite != null)
-        //                sources.Add(new ProviderReference(parentSuite.FixtureType, parentSuite.arguments, sourceName));
-        //            else
-        //                sources.Add(new ProviderReference(method.ReflectedType, sourceName));
-        //        }
-        //        else
-        //        {
-        //            sources.Add(new ProviderReference(sourceType, sourceName));
-        //        }
-
-        //    }
-        //    return sources;
-        //}
         #endregion
     }
 }

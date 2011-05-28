@@ -58,46 +58,14 @@ namespace NUnit.Framework.Builders
         {
             ObjectList data = new ObjectList();
 
-#if true // EXPERIMENTAL
             foreach (ValueSourceAttribute attr in parameter.GetCustomAttributes(typeof(ValueSourceAttribute), false))
             {
                 foreach (object item in attr.GetData(parameter))
                     data.Add(item);
             }
-#else
-            foreach (ProviderReference providerRef in GetSourcesFor(parameter, parentSuite))
-            {
-                IEnumerable instance = providerRef.GetInstance();
-                if (instance != null)
-                    foreach (object o in instance)
-                        data.Add(o);
-            }
-#endif
 
             return data;
         }
-        #endregion
-
-        #region Helper Methods
-        //private static ProviderList GetSourcesFor(ParameterInfo parameter, Test parent)
-        //{
-        //    ProviderList sources = new ProviderList();
-        //    TestFixture parentSuite = parent as TestFixture;
-
-        //    foreach (ValueSourceAttribute sourceAttr in parameter.GetCustomAttributes(typeof(ValueSourceAttribute), false))
-        //    {
-        //        Type sourceType = sourceAttr.SourceType;
-        //        string sourceName = sourceAttr.SourceName;
-
-        //        if (sourceType != null)
-        //            sources.Add(new ProviderReference(sourceType, sourceName));
-        //        else if (parentSuite != null)
-        //            sources.Add(new ProviderReference(parentSuite.FixtureType, parentSuite.arguments, sourceName));
-        //        else
-        //            sources.Add(new ProviderReference(parameter.Member.ReflectedType, sourceName));
-        //    }
-        //    return sources;
-        //}
         #endregion
     }
 }
