@@ -30,13 +30,6 @@ namespace NUnit.Framework.Api
     /// The ITestCaseData interface is implemented by a class
     /// that is able to return complete testcases for use by
     /// a parameterized test method.
-    /// 
-    /// NOTE: This interface is used in both the framework
-    /// and the core, even though that results in two different
-    /// types. However, sharing the source code guarantees that
-    /// the various implementations will be compatible and that
-    /// the core is able to reflect successfully over the
-    /// framework implementations of ITestCaseData.
     /// </summary>
     public interface ITestCaseData
     {
@@ -47,7 +40,7 @@ namespace NUnit.Framework.Api
 
 #if !NUNITLITE
         /// <summary>
-        /// Gets the expected result
+        /// Gets the expected result of the test case
         /// </summary>
         object Result { get; }
 

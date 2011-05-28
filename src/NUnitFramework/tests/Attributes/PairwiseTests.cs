@@ -111,13 +111,13 @@ namespace NUnit.Framework.Attributes
 
             Hashtable pairs = new Hashtable();
             int cases = 0;
-            foreach (object[] testcase in strategy.GetTestCases())
+            foreach (NUnit.Framework.Internal.ParameterSet parms in strategy.GetTestCases())
             {
                 for (int i = 1; i < features; i++)
                     for (int j = 0; j < i; j++)
                     {
-                        string a = testcase[i] as string;
-                        string b = testcase[j] as string;
+                        string a = parms.Arguments[i] as string;
+                        string b = parms.Arguments[j] as string;
                         pairs[a + b] = null;
                     }
 

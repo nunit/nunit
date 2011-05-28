@@ -136,47 +136,11 @@ namespace NUnit.Framework.Builders
             ParameterizedMethodSuite methodSuite = new ParameterizedMethodSuite(method);
             methodSuite.ApplyCommonAttributes(method);
 
-            foreach (object source in CoreExtensions.Host.TestCaseProviders.GetTestCasesFor(method))
+            foreach (ITestCaseData testcase in CoreExtensions.Host.TestCaseProviders.GetTestCasesFor(method))
             {
-                ParameterSet parms;
-
-                if (source == null)
-                {
-                    parms = new ParameterSet();
-                    parms.Arguments = new object[] { null };
-                }
-                else
-                    parms = source as ParameterSet;
-
+                ParameterSet parms = testcase as ParameterSet;
                 if (parms == null)
-                {
-                    if (source is ITestCaseData)
-                        parms = new ParameterSet((ITestCaseData)source);
-                    else
-                    {
-                        parms = new ParameterSet();
-
-                        ParameterInfo[] parameters = method.GetParameters();
-                        Type sourceType = source.GetType();
-
-                        if (parameters.Length == 1 && parameters[0].ParameterType.IsAssignableFrom(sourceType))
-                            parms.Arguments = new object[] { source };
-                        else if (source is object[])
-                            parms.Arguments = (object[])source;
-                        else if (source is Array)
-                        {
-                            Array array = (Array)source;
-                            if (array.Rank == 1)
-                            {
-                                parms.Arguments = new object[array.Length];
-                                for (int i = 0; i < array.Length; i++)
-                                    parms.Arguments[i] = (object)array.GetValue(i);
-                            }
-                        }
-                        else
-                            parms.Arguments = new object[] { source };
-                    }
-                }
+                    parms = new ParameterSet(testcase);
 
                 TestMethod test = BuildSingleTestMethod(method, parentSuite, parms);
 
