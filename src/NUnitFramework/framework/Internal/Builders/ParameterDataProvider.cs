@@ -24,14 +24,18 @@
 using System;
 using System.Reflection;
 using System.Collections;
+using NUnit.Framework.Api;
+using NUnit.Framework.Extensibility;
+using NUnit.Framework.Internal;
 
-namespace NUnit.Framework.Extensibility
+namespace NUnit.Framework.Builders
 {
-    class DataPointProviders : ExtensionPoint, IDataPointProvider
+    /// <summary>
+    /// ParameterDataProvider supplies individual argument values for
+    /// single parameters using attributes derived from DataAttribute.
+    /// </summary>
+    public class ParameterDataProvider : IParameterDataProvider
     {
-        public DataPointProviders(ExtensionHost host)
-            : base("DataPointProviders", host) { }
-
         #region IDataPointProvider Members
 
         /// <summary>
@@ -39,14 +43,12 @@ namespace NUnit.Framework.Extensibility
         /// </summary>
         /// <param name="parameter">A ParameterInfo representing one
         /// argument to a parameterized test</param>
-        /// <returns>True if any data is available, otherwise false.</returns>
+        /// <returns>
+        /// True if any data is available, otherwise false.
+        /// </returns>
         public bool HasDataFor(ParameterInfo parameter)
         {
-            foreach (IDataPointProvider provider in Extensions)
-                if (provider.HasDataFor(parameter))
-                    return true;
-
-            return false;
+            return parameter.IsDefined(typeof(DataAttribute), false);
         }
 
         /// <summary>
@@ -55,24 +57,22 @@ namespace NUnit.Framework.Extensibility
         /// </summary>
         /// <param name="parameter">A ParameterInfo representing one
         /// argument to a parameterized test</param>
-        /// <returns>An IEnumerable providing the required data</returns>
+        /// <returns>
+        /// An IEnumerable providing the required data
+        /// </returns>
         public IEnumerable GetDataFor(ParameterInfo parameter)
         {
-            ObjectList list = new ObjectList();
+            ObjectList data = new ObjectList();
 
-            foreach (IDataPointProvider provider in Extensions)
-                if (provider.HasDataFor(parameter))
-                    foreach (object o in provider.GetDataFor(parameter))
-                        list.Add(o);
+            foreach (Attribute attr in parameter.GetCustomAttributes(typeof(DataAttribute), false))
+            {
+                IParameterDataSource source = attr as IParameterDataSource;
+                if (source != null)
+                    foreach (object item in source.GetData(parameter))
+                        data.Add(item);
+            }
 
-            return list;
-        }
-        #endregion
-
-        #region ExtensionPoint Overrides
-        protected override bool IsValidExtension(object extension)
-        {
-            return extension is IDataPointProvider;
+            return data;
         }
         #endregion
     }

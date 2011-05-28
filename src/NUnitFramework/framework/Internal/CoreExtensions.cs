@@ -50,7 +50,7 @@ namespace NUnit.Framework.Internal
 		private TestDecoratorCollection testDecorators;
 		private EventListenerCollection listeners;
 	    private TestCaseProviders testcaseProviders;
-        private DataPointProviders dataPointProviders;
+        private ParameterDataProviders parameterDataProviders;
          
 		#endregion
 
@@ -85,14 +85,14 @@ namespace NUnit.Framework.Internal
 			this.testDecorators = new TestDecoratorCollection(this);
 			this.listeners = new EventListenerCollection(this);
             this.testcaseProviders = new TestCaseProviders(this);
-            this.dataPointProviders = new DataPointProviders(this);
+            this.parameterDataProviders = new ParameterDataProviders(this);
 
 		    extensions.Add(suiteBuilders);
 		    extensions.Add(testBuilders);
 		    extensions.Add(testDecorators);
 		    extensions.Add(listeners);
 		    extensions.Add(testcaseProviders);
-            extensions.Add(dataPointProviders);
+            extensions.Add(parameterDataProviders);
 
 			this.supportedTypes = ExtensionType.Core;
 
@@ -199,10 +199,9 @@ namespace NUnit.Framework.Internal
             testcaseProviders.Install(new DataAttributeTestCaseProvider());
             testcaseProviders.Install(new CombinatorialTestCaseProvider());
 
-            // Install builtin DataPointProvider
-            dataPointProviders.Install(new InlineDataPointProvider());
-            dataPointProviders.Install(new ValueSourceProvider());
-            dataPointProviders.Install(new DatapointProvider());
+            // Install builtin ParameterDataProviders
+            parameterDataProviders.Install(new ParameterDataProvider());
+            parameterDataProviders.Install(new DatapointProvider());
 		}
 
         /// <summary>
