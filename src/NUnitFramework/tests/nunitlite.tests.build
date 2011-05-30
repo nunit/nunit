@@ -1,6 +1,42 @@
 <?xml version="1.0"?>
-<project name="NUnitFrameworkTests" default="build" basedir=".">
+<project name="NUnitLiteTests" default="build" basedir=".">
 
+  <patternset id="source-files">
+    <include name="AlwaysEqualComparer.cs" />
+    <include name="CollectionAdapter.cs" />
+    <include name="Program.cs" />
+    <include name="TestComparer.cs" />
+    <include name="TestDelegates.cs" />
+    <include name="Api/ResultStateTests.cs" />
+    <include name="Assertions/ArrayEqualsFailureMessageFixture.cs" />
+    <include name="Assertions/ArrayEqualsFixture.cs" />
+    <include name="Assertions/ArrayNotEqualFixture.cs" />
+    <include name="Assertions/AssertFailTests.cs" />
+    <include name="Assertions/AssertIgnoreTests.cs" />
+    <include name="Assertions/AssertInconclusiveTests.cs" />
+    <include name="Assertions/AssertPassTests.cs" />
+    <include name="Assertions/MessageChecker.cs" />
+    <include name="Attributes/TestFixtureAttributeTests.cs" />
+    <include name="Constraints/*.cs" />
+    <exclude name="Constraints/AfterConstraintTests.cs"/>
+    <include name="Internal/PropertyBagTests.cs" />
+    <include name="Internal/TestXmlTests.cs" />
+    <include name="Internal/TextMessageWriterTests.cs" />
+    <include name="Syntax/CollectionTests.cs" />
+    <include name="Syntax/ComparisonTests.cs" />
+    <include name="Syntax/EqualityTests.cs" />
+    <include name="Syntax/OperatorOverrides.cs" />
+    <include name="Syntax/OperatorTests.cs" />
+    <include name="Syntax/PathConstraintTests.cs" />
+    <include name="Syntax/PropertyTests.cs" />
+    <include name="Syntax/SerializableConstraints.cs" />
+    <include name="Syntax/SimpleConstraints.cs" />
+    <include name="Syntax/StringConstraints.cs" />
+    <include name="Syntax/SyntaxTest.cs" />
+    <include name="Syntax/ThrowsTests.cs" />
+    <include name="Syntax/TypeConstraints.cs" />
+  </patternset>
+  
   <target name="build">
     <csc target="exe" 
         output="${current.build.dir}/nunitlite.tests.exe"
@@ -9,8 +45,39 @@
         warninglevel="${warn}">
       <sources>
         <include name="../CommonAssemblyInfo.cs"/>
-        <includesfile name="nunitlite.tests.sources"/>
+        <include name="AlwaysEqualComparer.cs" />
+        <include name="CollectionAdapter.cs" />
+        <include name="Program.cs" />
+        <include name="TestComparer.cs" />
+        <include name="TestDelegates.cs" />
+        <include name="Api/ResultStateTests.cs" />
+        <include name="Assertions/ArrayEqualsFailureMessageFixture.cs" />
+        <include name="Assertions/ArrayEqualsFixture.cs" />
+        <include name="Assertions/ArrayNotEqualFixture.cs" />
+        <include name="Assertions/AssertFailTests.cs" />
+        <include name="Assertions/AssertIgnoreTests.cs" />
+        <include name="Assertions/AssertInconclusiveTests.cs" />
+        <include name="Assertions/AssertPassTests.cs" />
+        <include name="Assertions/MessageChecker.cs" />
+        <include name="Attributes/TestFixtureAttributeTests.cs" />
+        <include name="Constraints/*.cs" />
         <exclude name="Constraints/AfterConstraintTests.cs"/>
+        <include name="Internal/PropertyBagTests.cs" />
+        <include name="Internal/TestXmlTests.cs" />
+        <include name="Internal/TextMessageWriterTests.cs" />
+        <include name="Syntax/CollectionTests.cs" />
+        <include name="Syntax/ComparisonTests.cs" />
+        <include name="Syntax/EqualityTests.cs" />
+        <include name="Syntax/OperatorOverrides.cs" />
+        <include name="Syntax/OperatorTests.cs" />
+        <include name="Syntax/PathConstraintTests.cs" />
+        <include name="Syntax/PropertyTests.cs" />
+        <include name="Syntax/SerializableConstraints.cs" />
+        <include name="Syntax/SimpleConstraints.cs" />
+        <include name="Syntax/StringConstraints.cs" />
+        <include name="Syntax/SyntaxTest.cs" />
+        <include name="Syntax/ThrowsTests.cs" />
+        <include name="Syntax/TypeConstraints.cs" />
       </sources>
       <resources prefix="NUnit.Framework.Tests">
         <include name="TestImage1.jpg"/>
@@ -27,19 +94,6 @@
         <include name="System.Drawing.dll"/>
       </references>
     </csc>
-  </target>
-
-  <target name="package">
-    <copy todir="${package.src.dir}/tests">
-      <fileset>
-        <includesfile name="nunitlite.tests.sources"/>
-        <include name="TestImage1.jpg"/>
-        <include name="TestImage2.jpg"/>
-        <include name="TestText1.txt"/>
-        <include name="TestText2.txt"/>
-        <include name="nunit.framework.tests.build"/>
-      </fileset>
-    </copy>
   </target>
 
 </project>

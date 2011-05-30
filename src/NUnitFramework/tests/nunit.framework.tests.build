@@ -9,7 +9,8 @@
         warninglevel="${warn}">
       <sources>
         <include name="../CommonAssemblyInfo.cs"/>
-        <includesfile name="nunit.framework.tests.sources"/>
+        <include name="**/*.cs"/>
+        <exclude name="Program.cs"/>
         <exclude name="NUnit/Core/Generic/*.cs" unless="${runtime.version>='2.0'}"/>
       </sources>
       <resources prefix="NUnit.Framework.Tests">
@@ -31,14 +32,14 @@
   <target name="package">
     <copy todir="${package.src.dir}/tests">
       <fileset>
-        <!--<patternset refid="source-files"/>-->
         <include name="**/*.cs"/>
-        <includesfile name="nunit.framework.tests.sources"/>
+        <include name="*.csproj"/>
         <include name="TestImage1.jpg"/>
         <include name="TestImage2.jpg"/>
         <include name="TestText1.txt"/>
         <include name="TestText2.txt"/>
         <include name="nunit.framework.tests.build"/>
+        <include name="nunitlite.tests.build"/>
       </fileset>
     </copy>
   </target>

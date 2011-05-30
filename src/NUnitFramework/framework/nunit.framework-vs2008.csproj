@@ -49,7 +49,7 @@
     <None Include="nunit.snk" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\CommonAssemblyInfo.cs">
+    <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Api\IApplyToTest.cs" />
@@ -343,6 +343,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="SyntaxElements.txt" />
+    <Content Include="Api\InterfaceChanges.txt" />
   </ItemGroup>
 </Project>

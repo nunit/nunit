@@ -75,7 +75,7 @@
         <warning number="1699" if="${runtime.version>='2.0'}"/>
       </nowarn>
       <sources basedir=".">
-        <include name="../../CommonAssemblyInfo.cs" />
+        <include name="../CommonAssemblyInfo.cs" />
         <patternset refid="source-files" />
       </sources>
       <references basedir="${current.build.dir}">
@@ -85,15 +85,6 @@
       </references>
     </csc>
 
-  </target>
-
-  <target name="package">
-    <copy todir="${package.src.dir}/framework">
-      <fileset>
-        <paternset refid="source-files"/>
-        <include name="Templates/*.cs"/>
-      </fileset>
-    </copy>
   </target>
 
 </project>

@@ -1,5 +1,5 @@
-﻿// ***********************************************************************
-// Copyright (c) 2009 Charlie Poole
+// ***********************************************************************
+// Copyright (c) 2011 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,30 +21,19 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
 using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 
-// General Information about an assembly is controlled through the following 
-// set of attributes. Change these attribute values to modify the information
-// associated with an assembly.
-[assembly: AssemblyTitle("test-assembly")]
-[assembly: AssemblyDescription("")]
-[assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("test-assembly")]
-[assembly: AssemblyCopyright("Copyright ©  2009")]
-[assembly: AssemblyTrademark("")]
-[assembly: AssemblyCulture("")]
+//
+// Common Information about the NUnit Framework assembly and associated
+// assemblies like tests is controlled through the following attributes.
+//
+[assembly: AssemblyCompany("NUnit.org")]
+[assembly: AssemblyProduct("NUnit Framework 3.0")]
+[assembly: AssemblyCopyright("Copyright (C) 2011 Charlie Poole")]
+[assembly: AssemblyTrademark("NUnit is a trademark of NUnit.org")]
 
-// Setting ComVisible to false makes the types in this assembly not visible 
-// to COM components.  If you need to access a type in this assembly from 
-// COM, set the ComVisible attribute to true on that type.
-[assembly: ComVisible(false)]
-
-// The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("b9f0b75b-5bdc-41a2-8c0a-f9039d433805")]
-
+//
 // Version information for an assembly consists of the following four values:
 //
 //      Major Version
@@ -52,8 +41,8 @@ using System.Runtime.InteropServices;
 //      Build Number
 //      Revision
 //
-// You can specify all the values or you can default the Build and Revision Numbers 
+// You can specify all the values or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
-// [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
+//
+[assembly: AssemblyVersion("2.9.5")]
+[assembly: AssemblyInformationalVersion("2.9.5")]

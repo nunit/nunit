@@ -43,6 +43,7 @@ namespace NUnit.DirectRunner
         private bool useappdomain = false;
         private bool dump = false;
         private string dumpFile = null;
+        private string resultFile = "TestResult.xml";
 
         private bool error = false;
 
@@ -98,6 +99,11 @@ namespace NUnit.DirectRunner
         public string DumpFile
         {
             get { return dumpFile; }
+        }
+
+        public string ResultFile
+        {
+            get { return resultFile; }
         }
 
         /// <summary>
@@ -186,6 +192,9 @@ namespace NUnit.DirectRunner
                 case "dump":
                     dump = true;
                     dumpFile = val;
+                    break;
+                case "xml":
+                    resultFile = val;
                     break;
                 case "l":
                 case "labels":
