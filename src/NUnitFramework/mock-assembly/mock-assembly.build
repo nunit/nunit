@@ -7,8 +7,7 @@
       debug="${build.debug}" define="${build.defines}"
       warninglevel="${warn}">
       <sources>
-        <include name="AssemblyInfo.cs"/>
-        <include name="MockAssembly.cs"/>
+        <include name="*.cs"/>
       </sources>
       <references basedir="${current.build.dir}">
         <include name="nunit.framework.dll"/>
@@ -17,11 +16,10 @@
   </target>
 
   <target name="package">
-    <copy todir="${package.src.dir}/tests/mock-assembly">
+    <copy todir="${package.src.dir}/mock-assembly">
       <fileset>
-        <include name="AssemblyInfo.cs"/>
-        <include name="MockAssembly.cs"/>
-        <include name="mock-assembly.csproj"/>
+        <include name="*.cs"/>
+        <include name="*.csproj"/>
         <include name="mock-assembly.build"/>
       </fileset>
     </copy>

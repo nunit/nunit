@@ -22,6 +22,7 @@
     <copy todir="${package.src.dir}/direct-runner">
       <fileset>
         <include name="direct-runner.build"/>
+        <include name="*.csproj"/>
         <include name="*.cs"/>
       </fileset>
     </copy>

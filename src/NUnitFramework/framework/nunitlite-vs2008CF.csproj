@@ -4,7 +4,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{0BFA7F0A-BC15-40A5-863A-FA9B55AE2FD3}</ProjectGuid>
+    <ProjectGuid>{B41B7A5D-EF79-480D-A56C-D27F2622BB4D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NUnitLite</RootNamespace>
@@ -53,9 +53,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\..\src\CommonAssemblyInfo.cs">
-      <Link>CommonAssemblyInfo.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\src\NUnitFramework\framework\Api\IApplyToTest.cs">
       <Link>Api\IApplyToTest.cs</Link>
     </Compile>
@@ -587,39 +584,14 @@
     <Compile Include="..\..\..\src\NUnitFramework\framework\SpecialValue.cs">
       <Link>SpecialValue.cs</Link>
     </Compile>
-    <Content Include="..\..\..\src\NUnitFramework\framework\Templates\Assert.template.cs">
-      <Link>Templates\Assert.template.cs</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\..\src\NUnitFramework\framework\Templates\ConstraintExpression.template.cs">
-      <Link>Templates\ConstraintExpression.template.cs</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\..\src\NUnitFramework\framework\Templates\ConstraintFactory.template.cs">
-      <Link>Templates\ConstraintFactory.template.cs</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\..\src\NUnitFramework\framework\Templates\Contains.template.cs">
-      <Link>Templates\Contains.template.cs</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\..\src\NUnitFramework\framework\Templates\Has.template.cs">
-      <Link>Templates\Has.template.cs</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\..\src\NUnitFramework\framework\Templates\Is.template.cs">
-      <Link>Templates\Is.template.cs</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\..\src\NUnitFramework\framework\Templates\Throws.template.cs">
-      <Link>Templates\Throws.template.cs</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Compile Include="..\..\..\src\NUnitFramework\framework\TestCaseData.cs">
       <Link>TestCaseData.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\NUnitFramework\framework\Throws.cs">
       <Link>Throws.cs</Link>
+    </Compile>
+    <Compile Include="..\CommonAssemblyInfo.cs">
+      <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
     <None Include="..\..\..\src\NUnitFramework\framework\nunitlite.build">
       <Link>nunitlite.build</Link>
@@ -630,6 +602,17 @@
     <Content Include="..\..\..\src\NUnitFramework\framework\SyntaxElements.txt">
       <Link>SyntaxElements.txt</Link>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Api\" />
+    <Folder Include="Attributes\" />
+    <Folder Include="Constraints\Operators\" />
+    <Folder Include="Exceptions\" />
+    <Folder Include="Internal\Builders\" />
+    <Folder Include="Internal\Commands\" />
+    <Folder Include="Internal\Results\" />
+    <Folder Include="Internal\Tests\" />
+    <Folder Include="Runner\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.targets" />
   <ProjectExtensions>

@@ -40,7 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\CommonAssemblyInfo.cs">
+    <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Api\IApplyToTest.cs" />
@@ -225,20 +225,10 @@
     <Compile Include="SpecialValue.cs" />
     <Compile Include="TestCaseData.cs" />
     <Compile Include="Throws.cs" />
-    <None Include="Templates\Assert.template.cs" />
-    <None Include="Templates\ConstraintExpression.template.cs" />
-    <None Include="Templates\ConstraintFactory.template.cs" />
-    <None Include="Templates\Contains.template.cs" />
-    <None Include="Templates\Has.template.cs" />
-    <None Include="Templates\Is.template.cs" />
-    <None Include="Templates\Throws.template.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="nunitlite.build" />
     <None Include="nunit.snk" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="SyntaxElements.txt" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />

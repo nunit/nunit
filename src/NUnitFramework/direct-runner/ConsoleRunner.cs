@@ -104,7 +104,7 @@ namespace NUnit.DirectRunner
                     Console.SetOut(savedOut);
                     Console.SetError(savedError);
 
-                    XmlTextWriter resultWriter = new XmlTextWriter("TestResult.Xml", System.Text.Encoding.UTF8);
+                    XmlTextWriter resultWriter = new XmlTextWriter(commandlineOptions.ResultFile, System.Text.Encoding.UTF8);
 					resultWriter.Formatting = Formatting.Indented;
                     resultNode.WriteTo(resultWriter);
                     resultWriter.Close();
