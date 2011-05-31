@@ -23,7 +23,7 @@
 
 using System;
 
-namespace NUnit.Framework.Assertions
+namespace NUnit.Framework.Constraints.Tests
 {
 	[TestFixture]
 	public class RangeTests

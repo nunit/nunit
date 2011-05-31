@@ -42,13 +42,13 @@ namespace NUnit.Framework.Internal.Builders
         /// </returns>
         public static bool CanBuildFrom(Type type)
         {
+            if (type.IsAbstract && !type.IsSealed)
+                return false;
+
             if (type.IsDefined(typeof(TestFixtureAttribute), true))
                 return true;
 
             if (!type.IsPublic && !type.IsNestedPublic)
-                return false;
-
-            if (type.IsAbstract && !type.IsSealed)
                 return false;
 
             foreach (MethodInfo method in type.GetMethods())

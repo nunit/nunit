@@ -25,6 +25,7 @@ using System;
 using System.IO;
 using System.Collections;
 using System.Reflection;
+using System.Xml;
 using NUnit.Framework;
 using NUnit.Framework.Api;
 using NUnit.Framework.Internal;
@@ -166,7 +167,10 @@ namespace NUnitLite.Runner
                             ? TestLoader.Load(assembly)
                             : TestLoader.Load(assembly, options.Tests);
 
-                        ReportResults( runner.Run(suite) );
+                        if (options.ListTests)
+                            ListTests(suite);
+                        else
+                            ReportResults(runner.Run(suite));
                     }
                 }
                 catch (TestRunnerException ex)
@@ -190,6 +194,19 @@ namespace NUnitLite.Runner
                     }
                 }
             }
+        }
+
+        private void ListTests(ITest test)
+        {
+            XmlNode testNode = test.ToXml(true);
+
+            string listFile = options.ListFile;
+            XmlTextWriter testWriter = listFile != null && listFile.Length > 0
+                ? new XmlTextWriter(listFile, System.Text.Encoding.UTF8)
+                : new XmlTextWriter(Console.Out);
+            testWriter.Formatting = Formatting.Indented;
+            testNode.WriteTo(testWriter);
+            testWriter.Close();
         }
 
         /// <summary>

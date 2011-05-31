@@ -27,6 +27,7 @@ using System.Collections;
 using System.Collections.Generic;
 #endif
 using NUnit.Framework.Internal;
+using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Constraints.Tests
 {

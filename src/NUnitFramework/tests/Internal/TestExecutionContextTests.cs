@@ -26,6 +26,10 @@ using System.Security.Principal;
 using System.Threading;
 using System.Globalization;
 using NUnit.Framework;
+#if !NUNITLITE
+using NUnit.TestData.TestContextData;
+using NUnit.TestUtilities;
+#endif
 
 namespace NUnit.Framework.Internal
 {
@@ -61,6 +65,68 @@ namespace NUnit.Framework.Internal
             Thread.CurrentThread.CurrentUICulture = currentUICulture;
             Thread.CurrentPrincipal = currentPrincipal;
 		}
+
+        [Test]
+        public void TestCanAccessItsOwnName()
+        {
+            Assert.That(TestExecutionContext.CurrentContext.CurrentTest.Name, Is.EqualTo("TestCanAccessItsOwnName"));
+        }
+
+        [Test]
+        public void TestCanAccessItsOwnFullName()
+        {
+            Assert.That(TestExecutionContext.CurrentContext.CurrentTest.FullName,
+                Is.EqualTo("NUnit.Framework.Internal.TestExecutionContextTests.TestCanAccessItsOwnFullName"));
+        }
+
+        [Test]
+        public void TestCanAccessItsOwnId()
+        {
+            Assert.That(TestExecutionContext.CurrentContext.CurrentTest.Id, Is.GreaterThan(0));
+        }
+
+        [Test]
+        [Property("Answer", 42)]
+        public void TestCanAccessItsOwnProperties()
+        {
+            Assert.That(TestExecutionContext.CurrentContext.CurrentTest.Properties.Get("Answer"), Is.EqualTo(42));
+        }
+
+#if !NUNITLITE
+        [Test]
+        public void TestCanAccessTestState_PassingTest()
+        {
+            TestStateRecordingFixture fixture = new TestStateRecordingFixture();
+            TestBuilder.RunTestFixture(fixture);
+            Assert.That(fixture.stateList, Is.EqualTo("Inconclusive=>Inconclusive=>Passed"));
+        }
+
+        [Test]
+        public void TestCanAccessTestState_FailureInSetUp()
+        {
+            TestStateRecordingFixture fixture = new TestStateRecordingFixture();
+            fixture.setUpFailure = true;
+            TestBuilder.RunTestFixture(fixture);
+            Assert.That(fixture.stateList, Is.EqualTo("Inconclusive=>=>Failed"));
+        }
+
+        [Test]
+        public void TestCanAccessTestState_FailingTest()
+        {
+            TestStateRecordingFixture fixture = new TestStateRecordingFixture();
+            fixture.testFailure = true;
+            TestBuilder.RunTestFixture(fixture);
+            Assert.That(fixture.stateList, Is.EqualTo("Inconclusive=>Inconclusive=>Failed"));
+        }
+
+        [Test]
+        public void TestCanAccessTestState_IgnoredInSetUp()
+        {
+            TestStateRecordingFixture fixture = new TestStateRecordingFixture();
+            fixture.setUpIgnore = true;
+            TestBuilder.RunTestFixture(fixture);
+            Assert.That(fixture.stateList, Is.EqualTo("Inconclusive=>=>Skipped:Ignored"));
+        }
 
 		[Test]
 		public void SetAndRestoreCurrentDirectory()
@@ -157,5 +223,6 @@ namespace NUnit.Framework.Internal
             Assert.AreEqual(currentPrincipal, Thread.CurrentPrincipal, "Principal was not restored");
             Assert.AreEqual(currentPrincipal, TestExecutionContext.CurrentContext.CurrentPrincipal, "Principal not in final context");
         }
+#endif
     }
 }

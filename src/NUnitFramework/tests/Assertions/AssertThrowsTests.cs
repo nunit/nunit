@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Assertions
 {

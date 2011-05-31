@@ -26,7 +26,7 @@ using NUnitLite.Runner;
 
 namespace NUnitLite.Tests
 {
-    class Program
+    class NUnitLite
     {
         // The main program executes the tests. Output may be routed to
         // various locations, depending on the sub class of TextUI

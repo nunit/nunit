@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2008 Charlie Poole
+// Copyright (c) 2006 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -22,37 +22,30 @@
 // ***********************************************************************
 
 using System;
+using System.Collections;
 
-namespace NUnit.Framework
+namespace NUnit.TestUtilities
 {
-    public class TestDelegates
+    internal class TestComparer : IComparer
     {
-        public static void ThrowsArgumentException()
-        {
-            throw new ArgumentException("myMessage", "myParam");
-        }
+        public bool Called = false;
 
-        public static void ThrowsApplicationException()
+        #region IComparer Members
+        public int Compare(object x, object y)
         {
-            throw new ApplicationException();
-        }
+            Called = true;
 
-        public static void ThrowsSystemException()
-        {
-            throw new Exception();
-        }
+            if (x == null && y == null)
+                return 0;
 
-        public static void ThrowsNothing()
-        {
-        }
+            if (x == null || y == null)
+                return -1;
 
-        public static void ThrowsDerivedApplicationException()
-        {
-            throw new DerivedApplicationException();
-        }
+            if (x.Equals(y))
+                return 0;
 
-        public class DerivedApplicationException : ApplicationException
-        {
+            return -1;
         }
+        #endregion
     }
 }

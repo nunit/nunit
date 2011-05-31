@@ -24,28 +24,18 @@
 using System;
 using System.Collections;
 
-namespace NUnit.Framework
+namespace NUnit.TestUtilities
 {
-    internal class TestComparer : IComparer
+    internal class AlwaysEqualComparer : IComparer
     {
         public bool Called = false;
 
-        #region IComparer Members
-        public int Compare(object x, object y)
+        int IComparer.Compare(object x, object y)
         {
             Called = true;
 
-            if (x == null && y == null)
-                return 0;
-
-            if (x == null || y == null)
-                return -1;
-
-            if (x.Equals(y))
-                return 0;
-
-            return -1;
+            // This comparer ALWAYS returns zero (equal)!
+            return 0;
         }
-        #endregion
     }
 }

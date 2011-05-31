@@ -60,7 +60,7 @@ namespace NUnit.DirectRunner
 
                 string assemblyFilename = commandlineOptions.Parameters[0];
 
-                if (commandlineOptions.Dump)
+                if (commandlineOptions.ListTests)
                 {
                     XmlNode testNode = driver.ExploreTests(assemblyFilename, loadOptions);
 
@@ -74,9 +74,9 @@ namespace NUnit.DirectRunner
                         return;
                     }
 
-                    string dumpFile = commandlineOptions.DumpFile;
-                    XmlTextWriter testWriter = dumpFile != null && dumpFile.Length > 0
-                        ? new XmlTextWriter(dumpFile, System.Text.Encoding.UTF8)
+                    string listFile = commandlineOptions.ListFile;
+                    XmlTextWriter testWriter = listFile != null && listFile.Length > 0
+                        ? new XmlTextWriter(listFile, System.Text.Encoding.UTF8)
                         : new XmlTextWriter(Console.Out);
                     testWriter.Formatting = Formatting.Indented;
                     testNode.WriteTo(testWriter);

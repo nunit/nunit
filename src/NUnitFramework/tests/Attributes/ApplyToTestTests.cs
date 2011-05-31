@@ -58,6 +58,38 @@ namespace NUnit.Framework.Attributes
 
         #endregion
 
+        #region DescriptionAttribute
+
+        [Test]
+        public void DescriptionAttributeSetsDescription()
+        {
+            new DescriptionAttribute("Cool test!").ApplyToTest(test);
+            Assert.That(test.Properties.Get(PropertyNames.Description), Is.EqualTo("Cool test!"));
+        }
+
+        #endregion
+
+        #region IgnoreAttribute
+
+        [Test]
+        public void IgnoreAttributeIgnoresTest()
+        {
+            new IgnoreAttribute().ApplyToTest(test);
+            Assert.That(test.RunState, Is.EqualTo(RunState.Ignored));
+        }
+
+        [Test]
+        public void IgnoreAttributeSetsIgnoreReason()
+        {
+            new IgnoreAttribute("BECAUSE").ApplyToTest(test);
+            Assert.That(test.RunState, Is.EqualTo(RunState.Ignored));
+            Assert.That(test.Properties.Get(PropertyNames.SkipReason), Is.EqualTo("BECAUSE"));
+        }
+
+        #endregion
+
+#if !NUNITLITE
+
         #region CombinatorialAttribute
 
         [Test]
@@ -130,17 +162,6 @@ namespace NUnit.Framework.Attributes
 
         #endregion
 
-        #region DescriptionAttribute
-
-        [Test]
-        public void DescriptionAttributeSetsDescription()
-        {
-            new DescriptionAttribute("Cool test!").ApplyToTest(test);
-            Assert.That(test.Properties.Get(PropertyNames.Description), Is.EqualTo("Cool test!"));
-        }
-
-        #endregion
-
         #region ExplicitAttribute
 
         [Test]
@@ -155,25 +176,6 @@ namespace NUnit.Framework.Attributes
         {
             new ExplicitAttribute("BECAUSE").ApplyToTest(test);
             Assert.That(test.RunState, Is.EqualTo(RunState.Explicit));
-            Assert.That(test.Properties.Get(PropertyNames.SkipReason), Is.EqualTo("BECAUSE"));
-        }
-
-        #endregion
-
-        #region IgnoreAttribute
-
-        [Test]
-        public void IgnoreAttributeIgnoresTest()
-        {
-            new IgnoreAttribute().ApplyToTest(test);
-            Assert.That(test.RunState, Is.EqualTo(RunState.Ignored));
-        }
-
-        [Test]
-        public void IgnoreAttributeSetsIgnoreReason()
-        {
-            new IgnoreAttribute("BECAUSE").ApplyToTest(test);
-            Assert.That(test.RunState, Is.EqualTo(RunState.Ignored));
             Assert.That(test.Properties.Get(PropertyNames.SkipReason), Is.EqualTo("BECAUSE"));
         }
 
@@ -318,5 +320,7 @@ namespace NUnit.Framework.Attributes
         }
 
         #endregion
+
+#endif
     }
 }

@@ -41,9 +41,12 @@ namespace NUnitLite.Runner
 
         private bool wait = false;
         private bool nologo = false;
-        private bool listprops = false;
         private bool help = false;
         private bool full = false;
+        private bool listTests = false;
+
+        private string listFile;
+        private string resultFile;
 
         private bool error = false;
 
@@ -74,14 +77,6 @@ namespace NUnitLite.Runner
         }
 
         /// <summary>
-        /// Gets a value indicating whether the 'listprops' option was used.
-        /// </summary>
-        public bool ListProperties
-        {
-            get { return listprops; }
-        }
-
-        /// <summary>
         /// Gets a value indicating whether the 'help' option was used.
         /// </summary>
         public bool Help
@@ -103,6 +98,23 @@ namespace NUnitLite.Runner
         public bool Full
         {
             get { return full; }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether tests should be listed
+        /// rather than run.
+        /// </summary>
+        public bool ListTests
+        {
+            get { return listTests; }
+        }
+
+        /// <summary>
+        /// Gets the name of the file to be used for listing tests
+        /// </summary>
+        public string ListFile
+        {
+            get { return listFile; }
         }
 
         /// <summary>
@@ -179,14 +191,18 @@ namespace NUnitLite.Runner
                 case "help":
                     help = true;
                     break;
-                case "props":
-                    listprops = true;
-                    break;
                 case "test":
                     tests.Add(val);
                     break;
                 case "full":
                     full = true;
+                    break;
+                case "list":
+                    listTests = true;
+                    listFile = val;
+                    break;
+                case "xml":
+                    resultFile = val;
                     break;
                 default:
                     error = true;
@@ -241,7 +257,7 @@ namespace NUnitLite.Runner
 #endif
 
                 sb.Append(NL + name + " [assemblies] [options]" + NL + NL);
-                sb.Append(" Runs a set of NUnitLite tests from the console." + NL + NL);
+                sb.Append("Runs a set of NUnitLite tests from the console." + NL + NL);
                 sb.Append("You may specify one or more test assemblies by name, without a path or" + NL);
                 sb.Append("extension. They must be in the same in the same directory as the exe" + NL);
                 sb.Append("or on the probing path. If no assemblies are provided, tests in the" + NL);

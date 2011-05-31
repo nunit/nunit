@@ -41,8 +41,8 @@ namespace NUnit.DirectRunner
         private bool help = false;
         private bool labels = false;
         private bool useappdomain = false;
-        private bool dump = false;
-        private string dumpFile = null;
+        private bool listTests = false;
+        private string listFile = null;
         private string resultFile = "TestResult.xml";
 
         private bool error = false;
@@ -91,14 +91,14 @@ namespace NUnit.DirectRunner
             get { return labels; }
         }
 
-        public bool Dump
+        public bool ListTests
         {
-            get { return dump; }
+            get { return listTests; }
         }
 
-        public string DumpFile
+        public string ListFile
         {
-            get { return dumpFile; }
+            get { return listFile; }
         }
 
         public string ResultFile
@@ -189,9 +189,9 @@ namespace NUnit.DirectRunner
                 case "run":
                     runList.Add(val);
                     break;
-                case "dump":
-                    dump = true;
-                    dumpFile = val;
+                case "list":
+                    listTests = true;
+                    listFile = val;
                     break;
                 case "xml":
                     resultFile = val;
@@ -261,24 +261,27 @@ namespace NUnit.DirectRunner
                 string NL = Environment.NewLine;
 
                 string name = System.Reflection.Assembly.GetEntryAssembly().GetName().Name;
-                // TODO: This is out of synch with the current options
                 sb.Append(NL + name + " [assemblies] [options]" + NL + NL);
-                sb.Append(" Runs a set of NUnitLite tests from the console." + NL + NL);
+                sb.Append("Runs a set of NUnitLite tests from the console." + NL + NL);
                 sb.Append("You may specify one or more test assemblies by name, without a path or" + NL);
                 sb.Append("extension. They must be in the same in the same directory as the exe" + NL);
                 sb.Append("or on the probing path. If no assemblies are provided, tests in the" + NL);
                 sb.Append("executing assembly itself are run." + NL + NL);
                 sb.Append("Options:" + NL);
-                sb.Append("  -f[ixture]:name   Provides the name of a test to load. This option may be" + NL);
+                sb.Append("  -load:name        Provides the name of a test to load. This option may be" + NL);
                 sb.Append("                    repeated. If no test names are given, all tests are loaded." + NL + NL);
                 sb.Append("  -r[un]:name       Provides the name of a test to run. This option may be" + NL);
-                sb.Append("                    repeated. If no test names are given, all loaded tests are run." + NL + NL);
+                sb.Append("                    repeated. If no test names are given, all loaded tests" + NL);
+                sb.Append("                    are run." + NL + NL);
                 sb.Append("  -h[elp]           Displays this help" + NL + NL);
                 sb.Append("  -nologo           Suppresses display of the initial message" + NL + NL);
                 sb.Append("  -w[ait]           Waits for a key press before exiting" + NL + NL);
                 sb.Append("  -l[abels]         Display name of each test as it is run" + NL + NL);
                 sb.Append("  -a[ppdomain]      Run tests in a separate AppDomain" + NL + NL);
-                sb.Append("  -dump             Don't run - just list the tests in XML format" + NL + NL);
+                sb.Append("  -list[:filename]  Don't run - just list the tests in XML format. If no" + NL);
+                sb.Append("                    filename is specified, output is to the console." + NL + NL);
+                sb.Append("  -xml:filename     Save the xml results to <filename>. If not used," + NL);
+                sb.Append("                    the results are saved to 'TestResult.xml'" + NL + NL);
                 sb.Append("Options that take values may use an equal sign or a colon" + NL);
                 sb.Append("to separate the option from its value." + NL + NL);
 
