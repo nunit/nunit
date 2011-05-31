@@ -47,7 +47,6 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="AlwaysEqualComparer.cs" />
     <Compile Include="Api\ResultStateTests.cs" />
     <Compile Include="Assertions\ArrayEqualsFailureMessageFixture.cs" />
     <Compile Include="Assertions\ArrayEqualsFixture.cs" />
@@ -56,9 +55,16 @@
     <Compile Include="Assertions\AssertIgnoreTests.cs" />
     <Compile Include="Assertions\AssertInconclusiveTests.cs" />
     <Compile Include="Assertions\AssertPassTests.cs" />
+    <Compile Include="Assertions\AssertThrowsTests.cs" />
+    <Compile Include="Assertions\ConditionAssertTests.cs" />
+    <Compile Include="Assertions\EqualsFixture.cs" />
     <Compile Include="Assertions\MessageChecker.cs" />
+    <Compile Include="Assertions\NotEqualFixture.cs" />
+    <Compile Include="Assertions\NotSameFixture.cs" />
+    <Compile Include="Assertions\SameFixture.cs" />
+    <Compile Include="Attributes\ApplyToTestTests.cs" />
+    <Compile Include="Attributes\TestDummy.cs" />
     <Compile Include="Attributes\TestFixtureAttributeTests.cs" />
-    <Compile Include="CollectionAdapter.cs" />
     <Compile Include="Constraints\AndTest.cs" />
     <Compile Include="Constraints\BasicConstraintTests.cs" />
     <Compile Include="Constraints\BinarySerializableTest.cs" />
@@ -75,6 +81,7 @@
     <Compile Include="Constraints\OrTest.cs" />
     <Compile Include="Constraints\PathConstraintTests.cs" />
     <Compile Include="Constraints\PropertyTests.cs" />
+    <Compile Include="Constraints\RangeTests.cs" />
     <Compile Include="Constraints\SameAsTest.cs" />
     <Compile Include="Constraints\StringConstraintTests.cs" />
     <Compile Include="Constraints\ThrowsConstraintTests.cs" />
@@ -82,9 +89,13 @@
     <Compile Include="Constraints\TypeConstraintTests.cs" />
     <Compile Include="Constraints\XmlSerializableTest.cs" />
     <Compile Include="Internal\PropertyBagTests.cs" />
+    <Compile Include="Internal\TestExecutionContextTests.cs" />
+    <Compile Include="Internal\TestResultTests.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Internal\TestXmlTests.cs" />
     <Compile Include="Internal\TextMessageWriterTests.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="NUnitLite.cs" />
     <Compile Include="Syntax\CollectionTests.cs" />
     <Compile Include="Syntax\ComparisonTests.cs" />
     <Compile Include="Syntax\EqualityTests.cs" />
@@ -98,8 +109,10 @@
     <Compile Include="Syntax\SyntaxTest.cs" />
     <Compile Include="Syntax\ThrowsTests.cs" />
     <Compile Include="Syntax\TypeConstraints.cs" />
-    <Compile Include="TestComparer.cs" />
-    <Compile Include="TestDelegates.cs" />
+    <Compile Include="TestUtilities\TestDelegates.cs" />
+    <Compile Include="TestUtilities\AlwaysEqualComparer.cs" />
+    <Compile Include="TestUtilities\CollectionAdapter.cs" />
+    <Compile Include="TestUtilities\TestComparer.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="TestImage1.jpg" />

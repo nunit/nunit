@@ -1,42 +1,6 @@
 <?xml version="1.0"?>
 <project name="NUnitLiteTests" default="build" basedir=".">
-
-  <patternset id="source-files">
-    <include name="AlwaysEqualComparer.cs" />
-    <include name="CollectionAdapter.cs" />
-    <include name="Program.cs" />
-    <include name="TestComparer.cs" />
-    <include name="TestDelegates.cs" />
-    <include name="Api/ResultStateTests.cs" />
-    <include name="Assertions/ArrayEqualsFailureMessageFixture.cs" />
-    <include name="Assertions/ArrayEqualsFixture.cs" />
-    <include name="Assertions/ArrayNotEqualFixture.cs" />
-    <include name="Assertions/AssertFailTests.cs" />
-    <include name="Assertions/AssertIgnoreTests.cs" />
-    <include name="Assertions/AssertInconclusiveTests.cs" />
-    <include name="Assertions/AssertPassTests.cs" />
-    <include name="Assertions/MessageChecker.cs" />
-    <include name="Attributes/TestFixtureAttributeTests.cs" />
-    <include name="Constraints/*.cs" />
-    <exclude name="Constraints/AfterConstraintTests.cs"/>
-    <include name="Internal/PropertyBagTests.cs" />
-    <include name="Internal/TestXmlTests.cs" />
-    <include name="Internal/TextMessageWriterTests.cs" />
-    <include name="Syntax/CollectionTests.cs" />
-    <include name="Syntax/ComparisonTests.cs" />
-    <include name="Syntax/EqualityTests.cs" />
-    <include name="Syntax/OperatorOverrides.cs" />
-    <include name="Syntax/OperatorTests.cs" />
-    <include name="Syntax/PathConstraintTests.cs" />
-    <include name="Syntax/PropertyTests.cs" />
-    <include name="Syntax/SerializableConstraints.cs" />
-    <include name="Syntax/SimpleConstraints.cs" />
-    <include name="Syntax/StringConstraints.cs" />
-    <include name="Syntax/SyntaxTest.cs" />
-    <include name="Syntax/ThrowsTests.cs" />
-    <include name="Syntax/TypeConstraints.cs" />
-  </patternset>
-  
+ 
   <target name="build">
     <csc target="exe" 
         output="${current.build.dir}/nunitlite.tests.exe"
@@ -45,26 +9,36 @@
         warninglevel="${warn}">
       <sources>
         <include name="../CommonAssemblyInfo.cs"/>
-        <include name="AlwaysEqualComparer.cs" />
-        <include name="CollectionAdapter.cs" />
-        <include name="Program.cs" />
-        <include name="TestComparer.cs" />
-        <include name="TestDelegates.cs" />
-        <include name="Api/ResultStateTests.cs" />
-        <include name="Assertions/ArrayEqualsFailureMessageFixture.cs" />
-        <include name="Assertions/ArrayEqualsFixture.cs" />
-        <include name="Assertions/ArrayNotEqualFixture.cs" />
-        <include name="Assertions/AssertFailTests.cs" />
-        <include name="Assertions/AssertIgnoreTests.cs" />
-        <include name="Assertions/AssertInconclusiveTests.cs" />
-        <include name="Assertions/AssertPassTests.cs" />
-        <include name="Assertions/MessageChecker.cs" />
+        <include name="NUnitLite.cs" />
+
+        <include name="Api/*.cs" />
+
+        <include name="Assertions/*.cs" />
+        <exclude name="Assertions/AssumeThatTests.cs" />
+        <exclude name="Assertions/CollectionAssertTest.cs" />
+        <exclude name="Assertions/FileAssertTests.cs" />
+        <exclude name="Assertions/GreaterEqualFixture.cs" />
+        <exclude name="Assertions/GreaterFixture.cs" />
+        <exclude name="Assertions/LessEqualFixture.cs" />
+        <exclude name="Assertions/LessFixture.cs" />
+        <exclude name="Assertions/ListContentsTests.cs" />
+        <exclude name="Assertions/NullableTypesTests.cs" />
+        <exclude name="Assertions/StringAssertTests.cs" />
+        <exclude name="Assertions/TypeAssertTest.cs" />
+
+        <include name="Attributes/ApplyToTestTests.cs" />
+        <include name="Attributes/TestDummy.cs" />
         <include name="Attributes/TestFixtureAttributeTests.cs" />
+
         <include name="Constraints/*.cs" />
         <exclude name="Constraints/AfterConstraintTests.cs"/>
+
         <include name="Internal/PropertyBagTests.cs" />
+        <include name="Internal/TestExecutionContextTests.cs" />
+        <include name="Internal/TestResultTests.cs" />
         <include name="Internal/TestXmlTests.cs" />
         <include name="Internal/TextMessageWriterTests.cs" />
+
         <include name="Syntax/CollectionTests.cs" />
         <include name="Syntax/ComparisonTests.cs" />
         <include name="Syntax/EqualityTests.cs" />
@@ -78,6 +52,10 @@
         <include name="Syntax/SyntaxTest.cs" />
         <include name="Syntax/ThrowsTests.cs" />
         <include name="Syntax/TypeConstraints.cs" />
+        <include name="TestUtilities/AlwaysEqualComparer.cs" />
+        <include name="TestUtilities/CollectionAdapter.cs" />
+        <include name="TestUtilities/TestComparer.cs" />
+        <include name="TestUtilities/TestDelegates.cs" />
       </sources>
       <resources prefix="NUnit.Framework.Tests">
         <include name="TestImage1.jpg"/>

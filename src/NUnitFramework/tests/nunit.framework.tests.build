@@ -10,7 +10,7 @@
       <sources>
         <include name="../CommonAssemblyInfo.cs"/>
         <include name="**/*.cs"/>
-        <exclude name="Program.cs"/>
+        <exclude name="NUnitLite.cs"/>
         <exclude name="NUnit/Core/Generic/*.cs" unless="${runtime.version>='2.0'}"/>
       </sources>
       <resources prefix="NUnit.Framework.Tests">

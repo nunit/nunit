@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2006 Charlie Poole
+// Copyright (c) 2008 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -22,20 +22,37 @@
 // ***********************************************************************
 
 using System;
-using System.Collections;
 
-namespace NUnit.Framework
+namespace NUnit.TestUtilities
 {
-    internal class AlwaysEqualComparer : IComparer
+    public class TestDelegates
     {
-        public bool Called = false;
-
-        int IComparer.Compare(object x, object y)
+        public static void ThrowsArgumentException()
         {
-            Called = true;
+            throw new ArgumentException("myMessage", "myParam");
+        }
 
-            // This comparer ALWAYS returns zero (equal)!
-            return 0;
+        public static void ThrowsApplicationException()
+        {
+            throw new ApplicationException();
+        }
+
+        public static void ThrowsSystemException()
+        {
+            throw new Exception();
+        }
+
+        public static void ThrowsNothing()
+        {
+        }
+
+        public static void ThrowsDerivedApplicationException()
+        {
+            throw new DerivedApplicationException();
+        }
+
+        public class DerivedApplicationException : ApplicationException
+        {
         }
     }
 }
