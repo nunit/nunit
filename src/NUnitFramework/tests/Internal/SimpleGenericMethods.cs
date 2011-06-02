@@ -22,27 +22,44 @@
 // ***********************************************************************
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Text;
-using NUnit.Framework;
 
-namespace NUnit.Core.Tests.Generic
+namespace NUnit.Framework.Internal
 {
-    [Category("Generics")]
-    [TestFixture(typeof(List<int>))]
-    [TestFixture(TypeArgs=new Type[] {typeof(ArrayList)} )]
-    public class SimpleGenericFixture<TList> where TList : IList, new()
+    [TestFixture,Category("Generics")]
+    class SimpleGenericMethods
     {
-        [Test]
-        public void TestCollectionCount()
+        [TestCase(5, 2, "ABC")]
+        [TestCase(5.0, 2.0, "ABC")]
+        [TestCase(5, 2.0, "ABC")]
+        [TestCase(5.0, 2L, "ABC")]
+        public void GenericTestMethodWithOneTypeParameter<T>(T x, T y, string label)
         {
-            Console.WriteLine("TList is {0}", typeof(TList));
-            IList list = new TList();
-            list.Add(1);
-            list.Add(2);
-            list.Add(3);
-            Assert.AreEqual(3, list.Count);
+            Assert.AreEqual(5, x);
+            Assert.AreEqual(2, y);
+            Assert.AreEqual("ABC", label);
+        }
+
+        [TestCase(5, 2, "ABC")]
+        [TestCase(5.0, 2.0, "ABC")]
+        [TestCase(5, 2.0, "ABC")]
+        [TestCase(5.0, 2L, "ABC")]
+        public void GenericTestMethodWithTwoTypeParameters<T1, T2>(T1 x, T2 y, string label)
+        {
+            Assert.AreEqual(5, x);
+            Assert.AreEqual(2, y);
+            Assert.AreEqual("ABC", label);
+        }
+
+        [TestCase(5, 2, "ABC")]
+        [TestCase(5.0, 2.0, "ABC")]
+        [TestCase(5, 2.0, "ABC")]
+        [TestCase(5.0, 2L, "ABC")]
+        public void GenericTestMethodWithTwoTypeParameters_Reversed<T1, T2>(T2 x, T1 y, string label)
+        {
+            Assert.AreEqual(5, x);
+            Assert.AreEqual(2, y);
+            Assert.AreEqual("ABC", label);
         }
     }
 }

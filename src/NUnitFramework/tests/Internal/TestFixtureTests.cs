@@ -23,13 +23,12 @@
 
 using System;
 using NUnit.Framework.Api;
-using NUnit.Framework.Internal;
 using NUnit.TestData.FixtureSetUpTearDownData;
 using NUnit.TestUtilities;
 using NUnit.TestData.TestFixtureData;
 using IgnoredFixture = NUnit.TestData.TestFixtureData.IgnoredFixture;
 
-namespace NUnit.Framework.Tests
+namespace NUnit.Framework.Internal
 {
 	/// <summary>
 	/// Tests of the NUnitTestFixture class
@@ -179,7 +178,7 @@ namespace NUnit.Framework.Tests
         public void CanRunGenericFixtureWithProperArgsProvided()
         {
             TestSuite suite = TestBuilder.MakeFixture(
-                Type.GetType("NUnit.TestData.TestFixtureData.GenericFixtureWithProperArgsProvided`1,test-assembly"));
+                Type.GetType("NUnit.TestData.TestFixtureData.GenericFixtureWithProperArgsProvided`1,nunit.testdata"));
             Assert.That(suite.RunState, Is.EqualTo(RunState.Runnable));
             Assert.That(suite is ParameterizedFixtureSuite);
             Assert.That(suite.Tests.Count, Is.EqualTo(2));
@@ -189,7 +188,7 @@ namespace NUnit.Framework.Tests
         public void CannotRunGenericFixtureWithNoTestFixtureAttribute()
         {
             TestSuite suite = TestBuilder.MakeFixture(
-                Type.GetType("NUnit.TestData.TestFixtureData.GenericFixtureWithNoTestFixtureAttribute`1,test-assembly"));
+                Type.GetType("NUnit.TestData.TestFixtureData.GenericFixtureWithNoTestFixtureAttribute`1,nunit.testdata"));
 
             Assert.That(suite.RunState, Is.EqualTo(RunState.NotRunnable));
             Assert.That(suite.Properties.Get(PropertyNames.SkipReason), 
@@ -200,7 +199,7 @@ namespace NUnit.Framework.Tests
         public void CannotRunGenericFixtureWithNoArgsProvided()
         {
             TestSuite suite = TestBuilder.MakeFixture(
-                Type.GetType("NUnit.TestData.TestFixtureData.GenericFixtureWithNoArgsProvided`1,test-assembly"));
+                Type.GetType("NUnit.TestData.TestFixtureData.GenericFixtureWithNoArgsProvided`1,nunit.testdata"));
 
             Test fixture = (Test)suite.Tests[0];
             Assert.That(fixture.RunState, Is.EqualTo(RunState.NotRunnable));
@@ -211,7 +210,7 @@ namespace NUnit.Framework.Tests
         public void CannotRunGenericFixtureDerivedFromAbstractFixtureWithNoArgsProvided()
         {
             TestSuite suite = TestBuilder.MakeFixture(
-                Type.GetType("NUnit.TestData.TestFixtureData.GenericFixtureDerivedFromAbstractFixtureWithNoArgsProvided`1,test-assembly"));
+                Type.GetType("NUnit.TestData.TestFixtureData.GenericFixtureDerivedFromAbstractFixtureWithNoArgsProvided`1,nunit.testdata"));
             TestAssert.IsNotRunnable((Test)suite.Tests[0]);
         }
 
@@ -219,7 +218,7 @@ namespace NUnit.Framework.Tests
         public void CanRunGenericFixtureDerivedFromAbstractFixtureWithArgsProvided()
         {
             TestSuite suite = TestBuilder.MakeFixture(
-                Type.GetType("NUnit.TestData.TestFixtureData.GenericFixtureDerivedFromAbstractFixtureWithArgsProvided`1,test-assembly"));
+                Type.GetType("NUnit.TestData.TestFixtureData.GenericFixtureDerivedFromAbstractFixtureWithArgsProvided`1,nunit.testdata"));
             Assert.That(suite.RunState, Is.EqualTo(RunState.Runnable));
             Assert.That(suite is ParameterizedFixtureSuite);
             Assert.That(suite.Tests.Count, Is.EqualTo(2));

@@ -54,6 +54,15 @@ namespace NUnit.Framework.Api
         /// <returns>True if the load was successful</returns>
         bool Load(string assemblyName, System.Collections.IDictionary options);
 
+        /// <summary>
+        /// Loads the tests found in an Assembly, returning an 
+        /// indication of whether or not the load succeeded.
+        /// </summary>
+        /// <param name="assembly">The assembly to load</param>
+        /// <param name="options">Dictionary of options to use in loading the test</param>
+        /// <returns>True if the load was successful</returns>
+        bool Load(Assembly assembly, System.Collections.IDictionary options);
+
         ///// <summary>
         ///// Count Test Cases using a filter
         ///// </summary>

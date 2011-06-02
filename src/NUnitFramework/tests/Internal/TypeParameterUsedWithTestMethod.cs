@@ -1,5 +1,5 @@
-// ***********************************************************************
-// Copyright (c) 2007 Charlie Poole
+﻿// ***********************************************************************
+// Copyright (c) 2009 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -22,30 +22,18 @@
 // ***********************************************************************
 
 using System;
-using NUnit.Framework;
 
-namespace NUnit.TestData.CategoryAttributeData
+namespace NUnit.Framework.Internal
 {
-	[TestFixture, Category( "DataBase" )]
-	public class FixtureWithCategories
-	{
-		[Test, Category("Long")]
-		public void Test1() { }
-
-		[Test, Critical]
-		public void Test2() { }
-
-        [Test, Category("Top")]
-        [TestCaseSource("Test3Data")]
-        public void Test3(int x) { }
-
-        [Test, Category("A-B")]
-        public void Test4() { }
-
-        private TestCaseData[] Test3Data = new TestCaseData[] {
-            new TestCaseData(5).SetCategory("Bottom") };
-	}
-
-	[AttributeUsage(AttributeTargets.Method, AllowMultiple=false)]
-	public class CriticalAttribute : CategoryAttribute { }
+    [Category("Generics")]
+    [TestFixture(typeof(double))]
+    public class TypeParameterUsedWithTestMethod<T>
+    {
+        [TestCase(5)]
+        [TestCase(1.23)]
+        public void TestMyArgType(T x)
+        {
+            Assert.That(x, Is.TypeOf(typeof(T)));
+        }
+    }
 }

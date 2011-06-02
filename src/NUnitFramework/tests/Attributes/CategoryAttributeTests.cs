@@ -66,10 +66,12 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void CanSpecifyOnMethodAndTestCase()
         {
+#if !NUNITLITE
             TestSuite test3 = (TestSuite)fixture.Tests[2];
             Assert.Contains("Top", test3.Properties["Category"]);
             Test testCase = (Test)test3.Tests[0];
             Assert.Contains("Bottom", testCase.Properties["Category"]);
+#endif
         }
 
         [Test]

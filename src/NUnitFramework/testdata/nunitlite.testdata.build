@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<project name="TestData" default="build" basedir=".">
+
+  <patternset id="source-files">
+    <include name="AssertFailFixture.cs"/>
+    <include name="AssertIgnoreData.cs"/>
+    <include name="AttributeInheritanceData.cs"/>
+    <include name="CategoryAttributeData.cs"/>
+    <include name="DescriptionFixture.cs"/>
+    <include name="ExpectedExceptionData.cs"/>
+    <include name="PropertyAttributeTests.cs"/>
+    <include name="TestCaseAttributeFixture.cs"/>
+    <include name="TestCaseSourceAttributeFixture.cs"/>
+  </patternset>
+  
+  <target name="build">
+    <csc target="library"
+        output="${current.build.dir}/nunitlite.testdata.dll"
+        debug="${build.debug}"
+        define="${build.defines};NUNITLITE"
+        warninglevel="${warn}">
+      <sources basedir=".">
+        <include name="../CommonAssemblyInfo.cs"/>
+        <patternset refid="source-files"/>
+      </sources>
+      <references basedir="${current.build.dir}">
+        <include name="nunitlite.dll"/>
+      </references>
+    </csc>
+  </target>
+
+</project>

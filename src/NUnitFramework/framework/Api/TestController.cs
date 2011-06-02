@@ -180,7 +180,7 @@ namespace NUnit.Framework.Api
 
         #endregion
 
-        #region LoadTestsAction
+        #region ExploreTestsAction
 
         /// <summary>
         /// ExploreTestsAction returns info about the tests in an assembly

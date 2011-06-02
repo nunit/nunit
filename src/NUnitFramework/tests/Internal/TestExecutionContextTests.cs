@@ -22,10 +22,12 @@
 // ***********************************************************************
 
 using System;
-using System.Security.Principal;
 using System.Threading;
 using System.Globalization;
 using NUnit.Framework;
+#if !NETCF
+using System.Security.Principal;
+#endif
 #if !NUNITLITE
 using NUnit.TestData.TestContextData;
 using NUnit.TestUtilities;
@@ -42,7 +44,9 @@ namespace NUnit.Framework.Internal
 		string currentDirectory;
 		CultureInfo currentCulture;
         CultureInfo currentUICulture;
+#if !NETCF
         IPrincipal currentPrincipal;
+#endif
 
 		/// <summary>
 		/// Since we are testing the mechanism that saves and
@@ -51,19 +55,23 @@ namespace NUnit.Framework.Internal
 		[SetUp]
 		public void SaveContext()
 		{
-			currentDirectory = Environment.CurrentDirectory;
 			currentCulture = CultureInfo.CurrentCulture;
             currentUICulture = CultureInfo.CurrentUICulture;
+#if !NETCF
+			currentDirectory = Environment.CurrentDirectory;
             currentPrincipal = Thread.CurrentPrincipal;
+#endif
 		}
 
 		[TearDown]
 		public void RestoreContext()
 		{
+#if !NETCF
 			Environment.CurrentDirectory = currentDirectory;
 			Thread.CurrentThread.CurrentCulture = currentCulture;
             Thread.CurrentThread.CurrentUICulture = currentUICulture;
             Thread.CurrentPrincipal = currentPrincipal;
+#endif
 		}
 
         [Test]
@@ -93,41 +101,6 @@ namespace NUnit.Framework.Internal
         }
 
 #if !NUNITLITE
-        [Test]
-        public void TestCanAccessTestState_PassingTest()
-        {
-            TestStateRecordingFixture fixture = new TestStateRecordingFixture();
-            TestBuilder.RunTestFixture(fixture);
-            Assert.That(fixture.stateList, Is.EqualTo("Inconclusive=>Inconclusive=>Passed"));
-        }
-
-        [Test]
-        public void TestCanAccessTestState_FailureInSetUp()
-        {
-            TestStateRecordingFixture fixture = new TestStateRecordingFixture();
-            fixture.setUpFailure = true;
-            TestBuilder.RunTestFixture(fixture);
-            Assert.That(fixture.stateList, Is.EqualTo("Inconclusive=>=>Failed"));
-        }
-
-        [Test]
-        public void TestCanAccessTestState_FailingTest()
-        {
-            TestStateRecordingFixture fixture = new TestStateRecordingFixture();
-            fixture.testFailure = true;
-            TestBuilder.RunTestFixture(fixture);
-            Assert.That(fixture.stateList, Is.EqualTo("Inconclusive=>Inconclusive=>Failed"));
-        }
-
-        [Test]
-        public void TestCanAccessTestState_IgnoredInSetUp()
-        {
-            TestStateRecordingFixture fixture = new TestStateRecordingFixture();
-            fixture.setUpIgnore = true;
-            TestBuilder.RunTestFixture(fixture);
-            Assert.That(fixture.stateList, Is.EqualTo("Inconclusive=>=>Skipped:Ignored"));
-        }
-
 		[Test]
 		public void SetAndRestoreCurrentDirectory()
 		{

@@ -27,6 +27,13 @@
         <exclude name="Assertions/TypeAssertTest.cs" />
 
         <include name="Attributes/ApplyToTestTests.cs" />
+        <include name="Attributes/AttributeInheritanceTests.cs" />
+        <include name="Attributes/CategoryAttributeTests.cs" />
+        <include name="Attributes/DescriptionTests.cs" />
+        <include name="Attributes/ExpectedExceptionTests.cs" />
+        <include name="Attributes/PropertyAttributeTests.cs" />
+        <include name="Attributes/TestCaseAttributeTests.cs" />
+        <include name="Attributes/TestCaseSourceTests.cs" />
         <include name="Attributes/TestDummy.cs" />
         <include name="Attributes/TestFixtureAttributeTests.cs" />
 
@@ -52,8 +59,10 @@
         <include name="Syntax/SyntaxTest.cs" />
         <include name="Syntax/ThrowsTests.cs" />
         <include name="Syntax/TypeConstraints.cs" />
+        
         <include name="TestUtilities/AlwaysEqualComparer.cs" />
         <include name="TestUtilities/CollectionAdapter.cs" />
+        <include name="TestUtilities/TestBuilder.cs" />
         <include name="TestUtilities/TestComparer.cs" />
         <include name="TestUtilities/TestDelegates.cs" />
       </sources>
@@ -65,6 +74,7 @@
       </resources>
       <references basedir="${current.build.dir}">
         <include name="nunitlite.dll"/>
+        <include name="nunitlite.testdata.dll"/>
         <include name="mscorlib.dll"/>
         <include name="System.dll"/>
         <include name="System.Xml.dll"/>

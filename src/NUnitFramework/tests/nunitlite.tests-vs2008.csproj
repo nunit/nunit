@@ -63,6 +63,13 @@
     <Compile Include="Assertions\NotSameFixture.cs" />
     <Compile Include="Assertions\SameFixture.cs" />
     <Compile Include="Attributes\ApplyToTestTests.cs" />
+    <Compile Include="Attributes\AttributeInheritanceTests.cs" />
+    <Compile Include="Attributes\CategoryAttributeTests.cs" />
+    <Compile Include="Attributes\DescriptionTests.cs" />
+    <Compile Include="Attributes\ExpectedExceptionTests.cs" />
+    <Compile Include="Attributes\PropertyAttributeTests.cs" />
+    <Compile Include="Attributes\TestCaseAttributeTests.cs" />
+    <Compile Include="Attributes\TestCaseSourceTests.cs" />
     <Compile Include="Attributes\TestDummy.cs" />
     <Compile Include="Attributes\TestFixtureAttributeTests.cs" />
     <Compile Include="Constraints\AndTest.cs" />
@@ -109,6 +116,8 @@
     <Compile Include="Syntax\SyntaxTest.cs" />
     <Compile Include="Syntax\ThrowsTests.cs" />
     <Compile Include="Syntax\TypeConstraints.cs" />
+    <Compile Include="TestUtilities\ResultSummary.cs" />
+    <Compile Include="TestUtilities\TestBuilder.cs" />
     <Compile Include="TestUtilities\TestDelegates.cs" />
     <Compile Include="TestUtilities\AlwaysEqualComparer.cs" />
     <Compile Include="TestUtilities\CollectionAdapter.cs" />
@@ -125,6 +134,13 @@
       <Project>{0BFA7F0A-BC15-40A5-863A-FA9B55AE2FD3}</Project>
       <Name>nunitlite-vs2008</Name>
     </ProjectReference>
+    <ProjectReference Include="..\testdata\nunitlite.testdata-vs2008.csproj">
+      <Project>{442DAB16-3063-4FE3-90B6-C29C3D85360D}</Project>
+      <Name>nunitlite.testdata-vs2008</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="nunitlite.tests.build" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />

@@ -47,20 +47,19 @@
   </Target>
   -->
   <ItemGroup>
-    <ProjectReference Include="..\framework\nunit.framework-vs2008.csproj">
+    <ProjectReference Include="..\framework\nunit.framework-vs2010.csproj">
       <Project>{12B66B03-90F1-4992-BD33-BDF3C69AE49E}</Project>
-      <Name>nunit.framework-vs2008</Name>
+      <Name>nunit.framework-vs2010</Name>
     </ProjectReference>
-    <ProjectReference Include="..\test-assembly\test-assembly-vs2008.csproj">
+    <ProjectReference Include="..\testdata\nunit.testdata-vs2010.csproj">
       <Project>{15B64946-4989-4873-915C-3E181772FA03}</Project>
-      <Name>test-assembly-vs2008</Name>
+      <Name>nunit.testdata-vs2010</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="AlwaysEqualComparer.cs" />
     <Compile Include="Api\ResultStateTests.cs" />
     <Compile Include="Assertions\ArrayEqualsFailureMessageFixture.cs" />
     <Compile Include="Assertions\ArrayEqualsFixture.cs" />
@@ -84,7 +83,6 @@
     <Compile Include="Assertions\NotEqualFixture.cs" />
     <Compile Include="Assertions\NotSameFixture.cs" />
     <Compile Include="Assertions\NullableTypesTests.cs" />
-    <Compile Include="Assertions\RangeTests.cs" />
     <Compile Include="Assertions\SameFixture.cs" />
     <Compile Include="Assertions\StringAssertTests.cs" />
     <Compile Include="Assertions\TypeAssertTest.cs" />
@@ -93,6 +91,7 @@
     <Compile Include="Attributes\CategoryAttributeTests.cs" />
     <Compile Include="Attributes\CombinatorialTests.cs" />
     <Compile Include="Attributes\DatapointTests.cs" />
+    <Compile Include="Attributes\DescriptionTests.cs" />
     <Compile Include="Attributes\ExpectedExceptionTests.cs" />
     <Compile Include="Attributes\FixtureSetUpTearDownTests.cs" />
     <Compile Include="Attributes\MaxTimeTests.cs" />
@@ -109,7 +108,6 @@
     <Compile Include="Attributes\ThreadingTests.cs" />
     <Compile Include="Attributes\ValuesAttributeTests.cs" />
     <Compile Include="Attributes\ValueSourceTests.cs" />
-    <Compile Include="CollectionAdapter.cs" />
     <Compile Include="Constraints\AfterConstraintTests.cs" />
     <Compile Include="Constraints\AndTest.cs" />
     <Compile Include="Constraints\BasicConstraintTests.cs" />
@@ -127,6 +125,7 @@
     <Compile Include="Constraints\OrTest.cs" />
     <Compile Include="Constraints\PathConstraintTests.cs" />
     <Compile Include="Constraints\PropertyTests.cs" />
+    <Compile Include="Constraints\RangeTests.cs" />
     <Compile Include="Constraints\ReusableConstraintTests.cs" />
     <Compile Include="Constraints\SameAsTest.cs" />
     <Compile Include="Constraints\StringConstraintTests.cs" />
@@ -135,33 +134,31 @@
     <Compile Include="Constraints\TypeConstraintTests.cs" />
     <Compile Include="Constraints\XmlSerializableTest.cs" />
     <Compile Include="Internal\AssemblyReaderTests.cs" />
+    <Compile Include="Internal\CallContextTests.cs" />
     <Compile Include="Internal\CoreExtensionsTests.cs" />
     <Compile Include="Internal\CultureSettingAndDetectionTests.cs" />
+    <Compile Include="Internal\DeduceTypeArgsFromArgs.cs" />
     <Compile Include="Internal\DirectorySwapperTests.cs" />
     <Compile Include="Internal\EventQueueTests.cs" />
+    <Compile Include="Internal\GenericTestFixtureTests.cs" />
+    <Compile Include="Internal\GenericTestMethodTests.cs" />
+    <Compile Include="Internal\LegacySuiteTests.cs" />
     <Compile Include="Internal\PlatformDetectionTests.cs" />
     <Compile Include="Internal\PropertyBagTests.cs" />
     <Compile Include="Internal\RandomizerTests.cs" />
     <Compile Include="Internal\RuntimeFrameworkTests.cs" />
+    <Compile Include="Internal\SetUpTest.cs" />
+    <Compile Include="Internal\SimpleGenericFixture.cs" />
+    <Compile Include="Internal\SimpleGenericMethods.cs" />
     <Compile Include="Internal\TestExecutionContextTests.cs" />
+    <Compile Include="Internal\TestFixtureTests.cs" />
+    <Compile Include="Internal\TestMethodSignatureTests.cs" />
     <Compile Include="Internal\TestResultTests.cs" />
     <Compile Include="Internal\TestXmlTests.cs" />
     <Compile Include="Internal\TextMessageWriterTests.cs" />
+    <Compile Include="Internal\TypeParameterUsedWithTestMethod.cs" />
+    <Compile Include="Internal\UnexpectedExceptionTests.cs" />
     <Compile Include="Internal\UnhandledExceptionTests.cs" />
-    <Compile Include="NUnit\Core\CallContextTests.cs" />
-    <Compile Include="NUnit\Core\DescriptionTests.cs" />
-    <Compile Include="NUnit\Core\Generic\DeduceTypeArgsFromArgs.cs" />
-    <Compile Include="NUnit\Core\Generic\GenericTestFixtureTests.cs" />
-    <Compile Include="NUnit\Core\Generic\GenericTestMethodTests.cs" />
-    <Compile Include="NUnit\Core\Generic\SimpleGenericFixture.cs" />
-    <Compile Include="NUnit\Core\Generic\SimpleGenericMethods.cs" />
-    <Compile Include="NUnit\Core\Generic\TypeParameterUsedWithTestMethod.cs" />
-    <Compile Include="NUnit\Core\LegacySuiteTests.cs" />
-    <Compile Include="NUnit\Core\SetUpTest.cs" />
-    <Compile Include="NUnit\Core\TestFixtureBuilderTests.cs" />
-    <Compile Include="NUnit\Core\TestFixtureTests.cs" />
-    <Compile Include="NUnit\Core\TestMethodSignatureTests.cs" />
-    <Compile Include="NUnit\Core\UnexpectedExceptionTests.cs" />
     <Compile Include="Syntax\AfterTests.cs" />
     <Compile Include="Syntax\ArbitraryConstraintMatching.cs" />
     <Compile Include="Syntax\CollectionTests.cs" />
@@ -179,12 +176,14 @@
     <Compile Include="Syntax\TestCompiler.cs" />
     <Compile Include="Syntax\ThrowsTests.cs" />
     <Compile Include="Syntax\TypeConstraints.cs" />
-    <Compile Include="TestComparer.cs" />
     <Compile Include="TestContextTests.cs" />
-    <Compile Include="TestDelegates.cs" />
+    <Compile Include="TestUtilities\AlwaysEqualComparer.cs" />
+    <Compile Include="TestUtilities\CollectionAdapter.cs" />
     <Compile Include="TestUtilities\ResultSummary.cs" />
     <Compile Include="TestUtilities\TestAssert.cs" />
     <Compile Include="TestUtilities\TestBuilder.cs" />
+    <Compile Include="TestUtilities\TestComparer.cs" />
+    <Compile Include="TestUtilities\TestDelegates.cs" />
     <Compile Include="TestUtilities\TestFinder.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -201,5 +200,8 @@
     <EmbeddedResource Include="TestImage2.jpg" />
     <EmbeddedResource Include="TestText1.txt" />
     <EmbeddedResource Include="TestText2.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="nunit.framework.tests.build" />
   </ItemGroup>
 </Project>

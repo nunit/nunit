@@ -24,46 +24,63 @@
 using System;
 using NUnit.Framework;
 
-namespace NUnit.TestData.TestFixtureBuilderData
+namespace NUnit.TestData.AssertIgnoreData
 {
 	[TestFixture]
-	[Category("fixture category")]
-	[Category("second")]
-	public class HasCategories 
+	public class IgnoredTestCaseFixture
 	{
-		[Test] public void OneTest()
-		{}
+        [Test]
+        public void CallsIgnore()
+        {
+            Assert.Ignore("Ignore me");
+        }
+
+        [Test, ExpectedException(typeof(InvalidOperationException))]
+        public void CallsIgnoreWithExpectedException()
+        {
+            Assert.Ignore("Ignore me");
+        }
+    }
+
+#if !NUNITLITE
+	[TestFixture]
+	public class IgnoredTestSuiteFixture
+	{
+		[TestFixtureSetUp]
+		public void FixtureSetUp()
+		{
+			Assert.Ignore("Ignore this fixture");
+		}
+
+		[Test]
+		public void ATest()
+		{
+		}
+
+		[Test]
+		public void AnotherTest()
+		{
+		}
 	}
+#endif
 
 	[TestFixture]
-	public class SignatureTestFixture
+	public class IgnoreInSetUpFixture
 	{
+		[SetUp]
+		public void SetUp()
+		{
+			Assert.Ignore( "Ignore this test" );
+		}
+
 		[Test]
-		public static void Static()
+		public void Test1()
 		{
 		}
 
 		[Test]
-		public int NotVoid() 
+		public void Test2()
 		{
-			return 1;
 		}
-
-		[Test]
-		public void Parameters(string test) 
-		{}
-		
-		[Test]
-		protected void Protected() 
-		{}
-
-		[Test]
-		private void Private() 
-		{}
-
-
-		[Test]
-		public void TestVoid() 
-		{}
 	}
 }

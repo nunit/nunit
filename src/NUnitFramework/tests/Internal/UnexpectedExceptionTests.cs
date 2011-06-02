@@ -22,14 +22,11 @@
 // ***********************************************************************
 
 using System;
-using NUnit.Framework;
 using NUnit.Framework.Api;
-using NUnit.Framework.Internal;
-using NUnit.Framework.Builders;
 using NUnit.TestData.UnexpectedExceptionFixture;
 using NUnit.TestUtilities;
 
-namespace NUnit.Framework.Tests
+namespace NUnit.Framework.Internal
 {
 	[TestFixture]
 	public class UnexpectedExceptionTests

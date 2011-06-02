@@ -1,5 +1,5 @@
-﻿// ***********************************************************************
-// Copyright (c) 2009 Charlie Poole
+// ***********************************************************************
+// Copyright (c) 2007 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -24,27 +24,29 @@
 using System;
 using NUnit.Framework;
 
-namespace NUnit.Core.Tests.Generic
+namespace NUnit.TestData.DescriptionFixture
 {
-    [Category("Generics")]
-    [TestFixture(100.0, 42)]
-    [TestFixture(42, 100.0)]
-    public class DeduceTypeArgsFromArgs<T1, T2>
-    {
-        T1 t1;
-        T2 t2;
+	[TestFixture(Description = "Fixture Description")]
+	public class DescriptionFixture
+	{
+		[Test(Description = "Test Description")]
+		public void Method()
+		{}
 
-        public DeduceTypeArgsFromArgs(T1 t1, T2 t2)
-        {
-            this.t1 = t1;
-            this.t2 = t2;
-        }
+		[Test]
+		public void NoDescriptionMethod()
+		{}
 
-        [TestCase(5, 7)]
-        public void TestMyArgTypes(T1 t1, T2 t2)
-        {
-            Assert.That(t1, Is.TypeOf<T1>());
-            Assert.That(t2, Is.TypeOf<T2>());
-        }
-    }
+        [Test]
+        [Description("Separate Description")]
+        public void SeparateDescriptionMethod()
+        { }
+
+#if !NUNITLITE
+        [Test, Description("method description")]
+        [TestCase(5, Description = "case description")]
+        public void TestCaseWithDescription(int x)
+        { }
+#endif
+	}
 }

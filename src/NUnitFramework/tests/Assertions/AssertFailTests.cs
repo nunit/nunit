@@ -23,10 +23,8 @@
 
 using System;
 using NUnit.Framework.Api;
-#if !NUNITLITE
 using NUnit.TestData.AssertFailFixture;
 using NUnit.TestUtilities;
-#endif
 
 namespace NUnit.Framework.Assertions
 {
@@ -51,7 +49,6 @@ namespace NUnit.Framework.Assertions
             Assert.Fail("MESSAGE: {0}+{1}={2}", 2, 2, 4);
         }
 
-#if !NUNITLITE
         [Test]
         public void AssertFailWorks()
         {
@@ -83,6 +80,5 @@ namespace NUnit.Framework.Assertions
             Assert.AreEqual(ResultState.Failure, result.ResultState);
             Assert.AreEqual("MESSAGE: 2+2=4", result.Message);
         }
-#endif
     }
 }

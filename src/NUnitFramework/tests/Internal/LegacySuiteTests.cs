@@ -21,15 +21,11 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
-using System.Collections;
 using NUnit.Framework.Api;
-using NUnit.Framework.Internal;
 using NUnit.Framework.Builders;
-using NUnit.TestData;
 using NUnit.TestData.LegacySuiteData;
 
-namespace NUnit.Framework.Tests
+namespace NUnit.Framework.Internal
 {
 	/// <summary>
 	/// Summary description for LegacySuiteTests.

@@ -274,7 +274,7 @@
       message="The full NUnit framework may not be built for netcf"/>
 
     <nant target="build" buildfile="framework/nunit.framework.build"/>
-    <nant target="build" buildfile="test-assembly/test-assembly.build"/>
+    <nant target="build" buildfile="testdata/nunit.testdata.build"/>
     <nant target="build" buildfile="tests/nunit.framework.tests.build"/>
     <nant target="build" buildfile="direct-runner/direct-runner.build"/>
     <nant target="build" buildfile="mock-assembly/mock-assembly.build"/>
@@ -284,6 +284,7 @@
   <target name="build-nunitlite" depends="make-build-dir">
 
     <nant target="build" buildfile="framework/nunitlite.build"/>
+    <nant target="build" buildfile="testdata/nunitlite.testdata.build"/>
     <nant target="build" buildfile="tests/nunitlite.tests.build"/>
 
   </target>

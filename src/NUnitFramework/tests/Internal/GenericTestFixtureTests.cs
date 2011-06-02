@@ -22,45 +22,35 @@
 // ***********************************************************************
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
-using NUnit.Framework;
+using System.Text;
 
-namespace NUnit.Core.Tests.Generic
+namespace NUnit.Framework.Internal
 {
-    [TestFixture]
-    class GenericTestMethodTests
+    [TestFixture(typeof(List<int>))]
+    [TestFixture(typeof(ArrayList))]
+    public class GenericTestFixture_IList<T> where T : IList, new()
     {
-        [TestCase(5, 2, "ABC")]
-        [TestCase(5.0, 2.0, "ABC")]
-        [TestCase(5, 2.0, "ABC")]
-        [TestCase(5.0, 2L, "ABC")]
-        public void GenericTestMethodWithOneTypeParameter<T>(T x, T y, string label)
+        [Test]
+        public void TestCollectionCount()
         {
-            Assert.AreEqual(5, x);
-            Assert.AreEqual(2, y);
-            Assert.AreEqual("ABC", label);
+            IList list = new T();
+            list.Add(1);
+            list.Add(2);
+            list.Add(3);
+            Assert.AreEqual(3, list.Count);
         }
+    }
 
-        [TestCase(5, 2, "ABC")]
-        [TestCase(5.0, 2.0, "ABC")]
-        [TestCase(5, 2.0, "ABC")]
-        [TestCase(5.0, 2L, "ABC")]
-        public void GenericTestMethodWithTwoTypeParameters<T1, T2>(T1 x, T2 y, string label)
+    [TestFixture(typeof(double))]
+    public class GenericTestFixture_Numeric<T>
+    {
+        [TestCase(5)]
+        [TestCase(1.23)]
+        public void TestMyArgType(T x)
         {
-            Assert.AreEqual(5, x);
-            Assert.AreEqual(2, y);
-            Assert.AreEqual("ABC", label);
-        }
-
-        [TestCase(5, 2, "ABC")]
-        [TestCase(5.0, 2.0, "ABC")]
-        [TestCase(5, 2.0, "ABC")]
-        [TestCase(5.0, 2L, "ABC")]
-        public void GenericTestMethodWithTwoTypeParameters_Reversed<T1, T2>(T2 x, T1 y, string label)
-        {
-            Assert.AreEqual(5, x);
-            Assert.AreEqual(2, y);
-            Assert.AreEqual("ABC", label);
+            Assert.That(x, Is.TypeOf(typeof(T)));
         }
     }
 }

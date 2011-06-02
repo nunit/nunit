@@ -150,6 +150,7 @@ namespace NUnit.Framework.Assertions
 			Assert.AreEqual(float.PositiveInfinity, float.NegativeInfinity, (float)0.0);
 		}
 
+#if !NETCF
 		[Test,ExpectedException(typeof(InvalidOperationException))]
 		public void EqualsThrowsException()
 		{
@@ -163,6 +164,7 @@ namespace NUnit.Framework.Assertions
 			object o = new object();
 			Assert.ReferenceEquals(o, o);
 		}
+#endif
 		
 		[Test]
 		public void Float() 

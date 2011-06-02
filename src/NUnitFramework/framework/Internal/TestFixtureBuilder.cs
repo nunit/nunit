@@ -24,6 +24,9 @@
 using System;
 using System.Reflection;
 using NUnit.Framework.Api;
+#if NUNITLITE
+using NUnit.Framework.Builders;
+#endif
 
 namespace NUnit.Framework.Internal
 {
@@ -34,6 +37,10 @@ namespace NUnit.Framework.Internal
 	/// </summary>
 	public class TestFixtureBuilder
 	{
+#if NUNITLITE
+        private static NUnitLiteTestFixtureBuilder builder = new NUnitLiteTestFixtureBuilder();
+#endif
+
         /// <summary>
         /// Determines whether this instance [can build from] the specified type.
         /// </summary>
@@ -43,7 +50,11 @@ namespace NUnit.Framework.Internal
         /// </returns>
 		public static bool CanBuildFrom( Type type )
 		{
+#if NUNITLITE
+            return builder.CanBuildFrom(type);
+#else
             return CoreExtensions.Host.SuiteBuilders.CanBuildFrom( type );
+#endif
 		}
 
 		/// <summary>
@@ -53,12 +64,16 @@ namespace NUnit.Framework.Internal
 		/// <returns>A TestSuite if the fixture can be built, null if not</returns>
 		public static Test BuildFrom( Type type )
 		{
+#if NUNITLITE
+            return builder.BuildFrom(type);
+#else
             Test suite = CoreExtensions.Host.SuiteBuilders.BuildFrom( type );
 
 			if ( suite != null )
 				suite = CoreExtensions.Host.TestDecorators.Decorate( suite, type );
 
 			return suite;
+#endif
 		}
 
 		/// <summary>

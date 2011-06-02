@@ -9,7 +9,7 @@ namespace NUnit.Framework.Internal
     /// <summary>
     /// Default implementation of ITestAssemblyRunner
     /// </summary>
-    public class DefaultTestAssemblyRunner : ITestAssemblyRunner
+    public class NUnitLiteTestAssemblyRunner : ITestAssemblyRunner
     {
         private ITestAssemblyBuilder builder;
         private TestSuite loadedTest;
@@ -18,10 +18,10 @@ namespace NUnit.Framework.Internal
         #region Constructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DefaultTestAssemblyRunner"/> class.
+        /// Initializes a new instance of the <see cref="NUnitLiteTestAssemblyRunner"/> class.
         /// </summary>
         /// <param name="builder">The builder.</param>
-        public DefaultTestAssemblyRunner(ITestAssemblyBuilder builder)
+        public NUnitLiteTestAssemblyRunner(ITestAssemblyBuilder builder)
         {
             this.builder = builder;
         }
@@ -92,30 +92,7 @@ namespace NUnit.Framework.Internal
         /// <returns></returns>
         public ITestResult Run(ITestListener listener, IDictionary runOptions)
         {
-            TestExecutionContext.Save();
-
-            //ITestCommand rootCommand = TestCommandFactory.MakeCommand(this.loadedTest);
-
-            try
-            {
-                this.runThread = Thread.CurrentThread;
-
-                QueuingEventListener queue = new QueuingEventListener();
-
-                TestExecutionContext.CurrentContext.Out = new EventListenerTextWriter(queue, TestOutputType.Out);
-                TestExecutionContext.CurrentContext.Error = new EventListenerTextWriter(queue, TestOutputType.Error);
-
-                using (EventPump pump = new EventPump(listener, queue.Events, true))
-                {
-                    pump.Start();
-                    return this.loadedTest.Run(listener);
-                }
-            }
-            finally
-            {
-                this.runThread = null;
-                TestExecutionContext.Restore();
-            }
+            return this.loadedTest.Run(listener);
         }
 
         #endregion

@@ -21,8 +21,7 @@
       </resources>
       <references basedir="${current.build.dir}">
         <include name="nunit.framework.dll"/>
-        <include name="nunit.interfaces.dll"/>
-        <include name="test-assembly.dll"/>
+        <include name="nunit.testdata.dll"/>
         <include name="System.Data.dll"/>
         <include name="System.Drawing.dll"/>
       </references>

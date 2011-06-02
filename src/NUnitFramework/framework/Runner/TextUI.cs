@@ -114,14 +114,14 @@ namespace NUnitLite.Runner
     /// </summary>
     public class TextUI
     {
-        private CommandLineOptions options;
+        private CommandLineOptions commandLineOptions;
         private int reportCount = 0;
 
         private NUnit.ObjectList assemblies = new NUnit.ObjectList();
 
         private TextWriter writer;
 
-        private TestRunner runner = new TestRunner();
+        private ITestAssemblyRunner runner;
 
         #region Constructors
         /// <summary>
@@ -131,6 +131,7 @@ namespace NUnitLite.Runner
         public TextUI(TextWriter writer)
         {
             this.writer = writer;
+            this.runner = new NUnitLiteTestAssemblyRunner(new NUnitLiteTestAssemblyBuilder());
         }
         #endregion
 
@@ -146,36 +147,42 @@ namespace NUnitLite.Runner
             // test assembly in order for the mechanism to work.
             Assembly callingAssembly = Assembly.GetCallingAssembly();
 
-            this.options = ProcessArguments( args );
+            this.commandLineOptions = ProcessArguments( args );
 
-            if (!options.Help && !options.Error)
+            if (!commandLineOptions.Help && !commandLineOptions.Error)
             {
-                if (options.Wait && !(this is ConsoleUI))
+                if (commandLineOptions.Wait && !(this is ConsoleUI))
                     writer.WriteLine("Ignoring /wait option - only valid for Console");
+
+                IDictionary loadOptions = new Hashtable();
+                //if (options.Load.Count > 0)
+                //    loadOptions["LOAD"] = options.Load;
+
+                IDictionary runOptions = new Hashtable();
+                if (commandLineOptions.TestCount > 0)
+                    runOptions["RUN"] = commandLineOptions.Tests;
 
                 try
                 {
-                    foreach (string name in options.Parameters)
+                    foreach (string name in commandLineOptions.Parameters)
                         assemblies.Add(Assembly.Load(name));
 
                     if (assemblies.Count == 0)
                         assemblies.Add(callingAssembly);
 
-                    foreach (Assembly assembly in assemblies)
-                    {
-                        Test suite = options.TestCount == 0
-                            ? TestLoader.Load(assembly)
-                            : TestLoader.Load(assembly, options.Tests);
+                    // TODO: For now, ignore all but first assembly
+                    Assembly assembly = assemblies[0] as Assembly;
 
-                        if (options.ListTests)
-                            ListTests(suite);
-                        else
-                            ReportResults(runner.Run(suite));
+                    if (!runner.Load(assembly, loadOptions))
+                    {
+                        Console.WriteLine("No tests found in assembly {0}", assembly.GetName().Name);
+                        return;
                     }
-                }
-                catch (TestRunnerException ex)
-                {
-                    writer.WriteLine(ex.Message);
+
+                    if (commandLineOptions.ListTests)
+                        ListTests(runner.LoadedTest);
+                    else
+                        ReportResults(runner.Run(TestListener.NULL, runOptions));
                 }
                 catch (FileNotFoundException ex)
                 {
@@ -187,7 +194,7 @@ namespace NUnitLite.Runner
                 }
                 finally
                 {
-                    if (options.Wait && this is ConsoleUI)
+                    if (commandLineOptions.Wait && this is ConsoleUI)
                     {
                         Console.WriteLine("Press Enter key to continue . . .");
                         Console.ReadLine();
@@ -200,7 +207,7 @@ namespace NUnitLite.Runner
         {
             XmlNode testNode = test.ToXml(true);
 
-            string listFile = options.ListFile;
+            string listFile = commandLineOptions.ListFile;
             XmlTextWriter testWriter = listFile != null && listFile.Length > 0
                 ? new XmlTextWriter(listFile, System.Text.Encoding.UTF8)
                 : new XmlTextWriter(Console.Out);
@@ -226,7 +233,7 @@ namespace NUnitLite.Runner
             if (summary.NotRunCount > 0)
                 PrintNotRunReport(result);
 
-            if (options.Full)
+            if (commandLineOptions.Full)
                 PrintFullReport(result);
         }
         #endregion
@@ -234,18 +241,18 @@ namespace NUnitLite.Runner
         #region Helper Methods
         private CommandLineOptions ProcessArguments(string[] args)
         {
-            this.options = new CommandLineOptions();
-            options.Parse(args);
+            this.commandLineOptions = new CommandLineOptions();
+            commandLineOptions.Parse(args);
 
-            if (!options.Nologo)
+            if (!commandLineOptions.Nologo)
                 WriteCopyright();
 
-            if (options.Help)
-                writer.Write(options.HelpText);
-            else if (options.Error)
-                writer.WriteLine(options.ErrorMessage);
+            if (commandLineOptions.Help)
+                writer.Write(commandLineOptions.HelpText);
+            else if (commandLineOptions.Error)
+                writer.WriteLine(commandLineOptions.ErrorMessage);
 
-            return options;
+            return commandLineOptions;
         }
 
         private void WriteCopyright()

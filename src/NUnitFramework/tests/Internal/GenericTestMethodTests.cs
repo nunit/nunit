@@ -23,12 +23,11 @@
 
 using System;
 using System.Collections.Generic;
-using NUnit.Framework;
 
-namespace NUnit.Core.Tests.Generic
+namespace NUnit.Framework.Internal
 {
-    [TestFixture,Category("Generics")]
-    class SimpleGenericMethods
+    [TestFixture]
+    class GenericTestMethodTests
     {
         [TestCase(5, 2, "ABC")]
         [TestCase(5.0, 2.0, "ABC")]

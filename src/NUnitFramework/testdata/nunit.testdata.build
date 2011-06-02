@@ -3,7 +3,7 @@
 
   <target name="build">
     <csc target="library" 
-        output="${current.build.dir}/test-assembly.dll"
+        output="${current.build.dir}/nunit.testdata.dll"
         debug="${build.debug}" 
         define="${build.defines}"
         warninglevel="${warn}">

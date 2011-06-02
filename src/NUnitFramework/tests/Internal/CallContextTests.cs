@@ -25,12 +25,10 @@ using System;
 using System.Threading;
 using System.Runtime.Remoting.Messaging;
 using System.Security.Principal;
-using NUnit.Framework.Api;
-using NUnit.Framework.Internal;
 using NUnit.TestData.TestFixtureData;
 using NUnit.TestUtilities;
 
-namespace NUnit.Framework.Tests
+namespace NUnit.Framework.Internal
 {
 	// TODO: Make this work for .NET 2.0
 	[TestFixture]
