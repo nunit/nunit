@@ -1,5 +1,5 @@
-// ***********************************************************************
-// Copyright (c) 2008 Charlie Poole
+﻿// ***********************************************************************
+// Copyright (c) 2009 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -22,66 +22,75 @@
 // ***********************************************************************
 
 using System;
+using System.Collections;
 using NUnit.Framework;
 
-namespace NUnit.TestData.TestCaseAttributeFixture
+namespace NUnit.TestData.TestCaseSourceAttributeFixture
 {
     [TestFixture]
-    public class TestCaseAttributeFixture
+    public class TestCaseSourceAttributeFixture
     {
-        [TestCase(2,3,4,Description="My Description")]
-        public void MethodHasDescriptionSpecified(int x, int y, int z)
-        {}
-
-		[TestCase(2,3,4,TestName="XYZ")]
-		public void MethodHasTestNameSpecified(int x, int y, int z)
-		{}
- 
-		[TestCase(2, 2000000, Result=4)]
-		public int MethodCausesConversionOverflow(short x, short y)
-		{
-			return x + y;
-		}
-
-		[TestCase("12-Octobar-1942")]
-		public void MethodHasInvalidDateFormat(DateTime dt)
-		{}
-
-        [TestCase(2, 3, 4, ExpectedException = typeof(ArgumentNullException))]
+#if !NUNITLITE
+        [TestCaseSource("source")]
         public void MethodThrowsExpectedException(int x, int y, int z)
         {
             throw new ArgumentNullException();
         }
 
-        [TestCase(2, 3, 4, ExpectedException = typeof(ArgumentNullException))]
+        [TestCaseSource("source")]
         public void MethodThrowsWrongException(int x, int y, int z)
         {
             throw new ArgumentException();
         }
 
-        [TestCase(2, 3, 4, ExpectedException = typeof(ArgumentNullException))]
+        [TestCaseSource("source")]
         public void MethodThrowsNoException(int x, int y, int z)
         {
         }
 
-        [TestCase(2, 3, 4, ExpectedException = typeof(ApplicationException),
-            ExpectedMessage="Test Exception")]
-        public void MethodThrowsExpectedExceptionWithWrongMessage(int x, int y, int z)
-        {
-            throw new ApplicationException("Wrong Test Exception");
-        }
-
-        [TestCase(2, 3, 4, ExpectedException = typeof(ArgumentNullException))]
+        [TestCaseSource("source")]
         public void MethodCallsIgnore(int x, int y, int z)
         {
             Assert.Ignore("Ignore this");
         }
 
-        [TestCase(1)]
-        [TestCase(2, Ignore = true)]
-        [TestCase(3, IgnoreReason = "Don't Run Me!")]
+        private static object[] source = new object[] {
+            new TestCaseData( 2, 3, 4 ).Throws(typeof(ArgumentNullException)) };
+
+        [TestCaseSource("ignored_source")]
         public void MethodWithIgnoredTestCases(int num)
         {
+        }
+
+        private static IEnumerable ignored_source
+        {
+            get
+            {
+                return new object[] {
+                    new TestCaseData(1),
+                    new TestCaseData(2).Ignore(),
+                    new TestCaseData(3).Ignore("Don't Run Me!")
+                };
+            }
+        }
+#endif
+
+        [TestCaseSource("exception_source")]
+        public void MethodWithSourceThrowingException(string lhs, string rhs)
+        {
+        }
+
+        private static IEnumerable exception_source
+        {
+            get
+            {
+#if CLR_2_0 || CLR_4_0
+                yield return new TestCaseData("a", "a");
+                yield return new TestCaseData("b", "b");
+#endif
+
+                throw new System.Exception("my message");
+            }
         }
     }
 }

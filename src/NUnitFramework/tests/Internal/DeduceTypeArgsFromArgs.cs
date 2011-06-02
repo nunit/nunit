@@ -1,5 +1,5 @@
-// ***********************************************************************
-// Copyright (c) 2007 Charlie Poole
+﻿// ***********************************************************************
+// Copyright (c) 2009 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -22,35 +22,28 @@
 // ***********************************************************************
 
 using System;
-using System.Reflection;
-using NUnit.Framework;
-using NUnit.Framework.Api;
-using NUnit.Framework.Internal;
-using NUnit.TestUtilities;
-using NUnit.TestData.TestFixtureBuilderData;
 
-namespace NUnit.Framework.Tests
+namespace NUnit.Framework.Internal
 {
-	// TODO: Figure out what this is really testing and eliminate if not needed
-	[TestFixture]
-	public class TestFixtureBuilderTests
-	{
-		[Test]
-		public void GoodSignature()
-		{
-			string methodName = "TestVoid";
-			TestSuite fixture = TestBuilder.MakeFixture( typeof( SignatureTestFixture ) );
-			Test foundTest = TestFinder.Find( methodName, fixture, true );
-			Assert.IsNotNull( foundTest );
-			Assert.AreEqual( RunState.Runnable, foundTest.RunState );
-		}
+    [Category("Generics")]
+    [TestFixture(100.0, 42)]
+    [TestFixture(42, 100.0)]
+    public class DeduceTypeArgsFromArgs<T1, T2>
+    {
+        T1 t1;
+        T2 t2;
 
-		[Test]
-		public void LoadCategories() 
-		{
-			Test fixture = TestBuilder.MakeFixture( typeof( HasCategories ) );
-			Assert.IsNotNull(fixture);
-			Assert.AreEqual(2, fixture.Properties["Category"].Count);
-		}
-	}
+        public DeduceTypeArgsFromArgs(T1 t1, T2 t2)
+        {
+            this.t1 = t1;
+            this.t2 = t2;
+        }
+
+        [TestCase(5, 7)]
+        public void TestMyArgTypes(T1 t1, T2 t2)
+        {
+            Assert.That(t1, Is.TypeOf<T1>());
+            Assert.That(t2, Is.TypeOf<T2>());
+        }
+    }
 }

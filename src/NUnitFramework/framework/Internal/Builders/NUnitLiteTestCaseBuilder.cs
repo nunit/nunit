@@ -26,13 +26,15 @@ using System;
 using System.Collections;
 using System.Reflection;
 using NUnit.Framework.Api;
+using NUnit.Framework.Extensibility;
+using NUnit.Framework.Internal;
 
-namespace NUnit.Framework.Internal.Builders
+namespace NUnit.Framework.Builders
 {
     /// <summary>
     /// Static class used by NUnitLite to build test cases.
     /// </summary>
-    public class NUnitLiteTestCaseBuilder
+    public class NUnitLiteTestCaseBuilder : ITestCaseBuilder
     {
         /// <summary>
         /// Determines whether the specified method is a test method.
@@ -41,7 +43,7 @@ namespace NUnit.Framework.Internal.Builders
         /// <returns>
         /// 	<c>true</c> if the specified method is a test method; otherwise, <c>false</c>.
         /// </returns>
-        public static bool IsTestMethod(MethodInfo method)
+        public bool CanBuildFrom(MethodInfo method)
         {
             return method.IsDefined(typeof(TestAttribute), true)
                 || method.IsDefined(typeof(TestCaseAttribute), true)
@@ -53,7 +55,7 @@ namespace NUnit.Framework.Internal.Builders
         /// </summary>
         /// <param name="method">The method.</param>
         /// <returns></returns>
-        public static Test BuildFrom(MethodInfo method)
+        public Test BuildFrom(MethodInfo method)
         {
             IList testdata = GetTestCaseData(method);
 

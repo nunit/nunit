@@ -25,14 +25,18 @@ using System;
 using System.Collections;
 using System.Reflection;
 using NUnit.Framework.Api;
+using NUnit.Framework.Extensibility;
+using NUnit.Framework.Internal;
 
-namespace NUnit.Framework.Internal.Builders
+namespace NUnit.Framework.Builders
 {
     /// <summary>
     /// Static class used by NUnitLite to create test fixtures from Types
     /// </summary>
-    public class NUnitLiteTestFixtureBuilder
+    public class NUnitLiteTestFixtureBuilder : ISuiteBuilder
     {
+        private NUnitLiteTestCaseBuilder testCaseBuilder = new NUnitLiteTestCaseBuilder();
+
         /// <summary>
         /// Determines whether this instance can build a fixture from the specified type.
         /// </summary>
@@ -40,7 +44,7 @@ namespace NUnit.Framework.Internal.Builders
         /// <returns>
         /// 	<c>true</c> if this instance can build from the specified type; otherwise, <c>false</c>.
         /// </returns>
-        public static bool CanBuildFrom(Type type)
+        public bool CanBuildFrom(Type type)
         {
             if (type.IsAbstract && !type.IsSealed)
                 return false;
@@ -66,7 +70,7 @@ namespace NUnit.Framework.Internal.Builders
         /// </summary>
         /// <param name="type">The type to use as a fixture.</param>
         /// <returns></returns>
-        public static TestSuite BuildFrom(Type type)
+        public Test BuildFrom(Type type)
         {
             TestFixture suite = new TestFixture(type);
 
@@ -94,8 +98,8 @@ namespace NUnit.Framework.Internal.Builders
 
             foreach (MethodInfo method in type.GetMethods())
             {
-                if (NUnitLiteTestCaseBuilder.IsTestMethod(method))
-                    suite.Add(NUnitLiteTestCaseBuilder.BuildFrom(method));
+                if (testCaseBuilder.CanBuildFrom(method))
+                    suite.Add(testCaseBuilder.BuildFrom(method));
             }
 
             return suite;

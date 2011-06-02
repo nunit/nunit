@@ -22,15 +22,12 @@
 // ***********************************************************************
 
 using System;
-using System.Reflection;
-using System.Collections;
 using NUnit.Framework.Api;
-using NUnit.Framework.Builders;
 using NUnit.TestData.DescriptionFixture;
 using NUnit.TestUtilities;
 using NUnit.Framework.Internal;
 
-namespace NUnit.Framework.Tests
+namespace NUnit.Framework.Attributes
 {
 	// TODO: Review to see if we need these tests
 
@@ -78,6 +75,7 @@ namespace NUnit.Framework.Tests
             Assert.AreEqual("Separate Description", testCase.Properties.Get(PropertyNames.Description));
         }
 
+#if !NUNITLITE
         [Test]
         public void DescriptionOnTestCase()
         {
@@ -86,5 +84,6 @@ namespace NUnit.Framework.Tests
             Test testCase = (Test)parameterizedMethodSuite.Tests[0];
             Assert.AreEqual("case description", testCase.Properties.Get(PropertyNames.Description));
         }
+#endif
     }
 }

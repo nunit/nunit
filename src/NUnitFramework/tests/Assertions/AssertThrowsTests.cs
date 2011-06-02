@@ -60,7 +60,9 @@ namespace NUnit.Framework.Assertions
 
             Assert.IsNotNull(ex, "No ArgumentException thrown");
             Assert.That(ex.Message, Is.StringStarting("myMessage"));
+#if !NETCF
             Assert.That(ex.ParamName, Is.EqualTo("myParam"));
+#endif
 
 #if CLR_2_0 || CLR_4_0
             ex = Assert.Throws<ArgumentException>(
@@ -68,20 +70,26 @@ namespace NUnit.Framework.Assertions
 
             Assert.IsNotNull(ex, "No ArgumentException thrown");
             Assert.That(ex.Message, Is.StringStarting("myMessage"));
+#if !NETCF
             Assert.That(ex.ParamName, Is.EqualTo("myParam"));
+#endif
 
 			ex = Assert.Throws(typeof(ArgumentException), 
                 delegate { throw new ArgumentException("myMessage", "myParam"); } ) as ArgumentException;
 
             Assert.IsNotNull(ex, "No ArgumentException thrown");
             Assert.That(ex.Message, Is.StringStarting("myMessage"));
+#if !NETCF
             Assert.That(ex.ParamName, Is.EqualTo("myParam"));
+#endif
 
             ex = Assert.Throws<ArgumentException>(TestDelegates.ThrowsArgumentException) as ArgumentException;
 
             Assert.IsNotNull(ex, "No ArgumentException thrown");
             Assert.That(ex.Message, Is.StringStarting("myMessage"));
+#if !NETCF
             Assert.That(ex.ParamName, Is.EqualTo("myParam"));
+#endif
 #endif
 		}
 

@@ -180,7 +180,11 @@ namespace NUnit.TestData.ExpectedExceptionData
 		[ExpectedException(typeof(ArgumentOutOfRangeException)) ]
 		public void TestThrow()
 		{
+#if NETCF
+			throw new ArgumentOutOfRangeException("param", "the message");
+#else
 			throw new ArgumentOutOfRangeException("param", "actual value", "the message");
+#endif
 		}
 	}
 

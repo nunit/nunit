@@ -49,7 +49,6 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="AlwaysEqualComparer.cs" />
     <Compile Include="Api\ResultStateTests.cs" />
     <Compile Include="Assertions\ArrayEqualsFailureMessageFixture.cs" />
     <Compile Include="Assertions\ArrayEqualsFixture.cs" />
@@ -58,9 +57,23 @@
     <Compile Include="Assertions\AssertIgnoreTests.cs" />
     <Compile Include="Assertions\AssertInconclusiveTests.cs" />
     <Compile Include="Assertions\AssertPassTests.cs" />
+    <Compile Include="Assertions\AssertThrowsTests.cs" />
+    <Compile Include="Assertions\ConditionAssertTests.cs" />
+    <Compile Include="Assertions\EqualsFixture.cs" />
     <Compile Include="Assertions\MessageChecker.cs" />
+    <Compile Include="Assertions\NotEqualFixture.cs" />
+    <Compile Include="Assertions\NotSameFixture.cs" />
+    <Compile Include="Assertions\SameFixture.cs" />
+    <Compile Include="Attributes\ApplyToTestTests.cs" />
+    <Compile Include="Attributes\AttributeInheritanceTests.cs" />
+    <Compile Include="Attributes\CategoryAttributeTests.cs" />
+    <Compile Include="Attributes\DescriptionTests.cs" />
+    <Compile Include="Attributes\ExpectedExceptionTests.cs" />
+    <Compile Include="Attributes\PropertyAttributeTests.cs" />
+    <Compile Include="Attributes\TestCaseAttributeTests.cs" />
+    <Compile Include="Attributes\TestCaseSourceTests.cs" />
+    <Compile Include="Attributes\TestDummy.cs" />
     <Compile Include="Attributes\TestFixtureAttributeTests.cs" />
-    <Compile Include="CollectionAdapter.cs" />
     <Compile Include="Constraints\AndTest.cs" />
     <Compile Include="Constraints\BasicConstraintTests.cs" />
     <Compile Include="Constraints\BinarySerializableTest.cs" />
@@ -77,6 +90,8 @@
     <Compile Include="Constraints\OrTest.cs" />
     <Compile Include="Constraints\PathConstraintTests.cs" />
     <Compile Include="Constraints\PropertyTests.cs" />
+    <Compile Include="Constraints\RangeTests.cs" />
+    <Compile Include="Constraints\ReusableConstraintTests.cs" />
     <Compile Include="Constraints\SameAsTest.cs" />
     <Compile Include="Constraints\StringConstraintTests.cs" />
     <Compile Include="Constraints\ThrowsConstraintTests.cs" />
@@ -84,9 +99,11 @@
     <Compile Include="Constraints\TypeConstraintTests.cs" />
     <Compile Include="Constraints\XmlSerializableTest.cs" />
     <Compile Include="Internal\PropertyBagTests.cs" />
+    <Compile Include="Internal\TestExecutionContextTests.cs" />
+    <Compile Include="Internal\TestResultTests.cs" />
     <Compile Include="Internal\TestXmlTests.cs" />
     <Compile Include="Internal\TextMessageWriterTests.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="NUnitLite.cs" />
     <Compile Include="Syntax\CollectionTests.cs" />
     <Compile Include="Syntax\ComparisonTests.cs" />
     <Compile Include="Syntax\EqualityTests.cs" />
@@ -100,8 +117,11 @@
     <Compile Include="Syntax\SyntaxTest.cs" />
     <Compile Include="Syntax\ThrowsTests.cs" />
     <Compile Include="Syntax\TypeConstraints.cs" />
-    <Compile Include="TestComparer.cs" />
-    <Compile Include="TestDelegates.cs" />
+    <Compile Include="TestUtilities\AlwaysEqualComparer.cs" />
+    <Compile Include="TestUtilities\CollectionAdapter.cs" />
+    <Compile Include="TestUtilities\TestBuilder.cs" />
+    <Compile Include="TestUtilities\TestComparer.cs" />
+    <Compile Include="TestUtilities\TestDelegates.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="TestImage1.jpg" />
@@ -110,13 +130,22 @@
     <EmbeddedResource Include="TestText2.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\framework\nunitlite-vs2008.csproj">
+    <ProjectReference Include="..\framework\nunitlite-vs2010.csproj">
       <Project>{0BFA7F0A-BC15-40A5-863A-FA9B55AE2FD3}</Project>
-      <Name>nunitlite-vs2008</Name>
+      <Name>nunitlite-vs2010</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\testdata\nunitlite.testdata-vs2010.csproj">
+      <Project>{442DAB16-3063-4FE3-90B6-C29C3D85360D}</Project>
+      <Name>nunitlite.testdata-vs2010</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="nunitlite.tests.build">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

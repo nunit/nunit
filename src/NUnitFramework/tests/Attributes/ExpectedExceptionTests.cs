@@ -147,11 +147,10 @@ namespace NUnit.Framework.Attributes
 			Type fixtureType = typeof(BaseException);
 			ITestResult result = TestBuilder.RunTestCase( fixtureType, "BaseExceptionTest" );
 			Assert.IsTrue(result.ResultState == ResultState.Failure, "BaseExceptionTest should have failed");
-			StringAssert.StartsWith(
+			Assert.That(result.Message, Is.StringStarting(
 				"An unexpected exception type was thrown" + Environment.NewLine +
 				"Expected: System.ArgumentException" + Environment.NewLine +
-				" but was: System.Exception",
-				result.Message);
+				" but was: System.Exception"));
 		}
 
 		[Test]
@@ -160,11 +159,10 @@ namespace NUnit.Framework.Attributes
 			Type fixtureType = typeof(DerivedException);
             ITestResult result = TestBuilder.RunTestCase(fixtureType, "DerivedExceptionTest");
 			Assert.IsTrue(result.ResultState == ResultState.Failure, "DerivedExceptionTest should have failed");
-			StringAssert.StartsWith( 
+			Assert.That(result.Message, Is.StringStarting( 
 				"An unexpected exception type was thrown" + Environment.NewLine +
 				"Expected: System.Exception" + Environment.NewLine +
-				" but was: System.ArgumentException",
-				result.Message);
+				" but was: System.ArgumentException"));
 		}
 
         [Test]
@@ -173,11 +171,10 @@ namespace NUnit.Framework.Attributes
             Type fixtureType = typeof(MismatchedException);
             ITestResult result = TestBuilder.RunTestCase(fixtureType, "MismatchedExceptionType");
             Assert.IsTrue(result.ResultState == ResultState.Failure, "MismatchedExceptionType should have failed");
-            StringAssert.StartsWith(
+            Assert.That(result.Message, Is.StringStarting(
                 "An unexpected exception type was thrown" + Environment.NewLine +
                 "Expected: System.ArgumentException" + Environment.NewLine +
-                " but was: System.ArgumentOutOfRangeException",
-                result.Message);
+                " but was: System.ArgumentOutOfRangeException"));
         }
 
         [Test]
@@ -186,11 +183,10 @@ namespace NUnit.Framework.Attributes
             Type fixtureType = typeof(MismatchedException);
             ITestResult result = TestBuilder.RunTestCase(fixtureType, "MismatchedExceptionTypeAsNamedParameter");
             Assert.IsTrue(result.ResultState == ResultState.Failure, "MismatchedExceptionType should have failed");
-            StringAssert.StartsWith(
+            Assert.That(result.Message, Is.StringStarting(
                 "An unexpected exception type was thrown" + Environment.NewLine +
                 "Expected: System.ArgumentException" + Environment.NewLine +
-                " but was: System.ArgumentOutOfRangeException",
-                result.Message);
+                " but was: System.ArgumentOutOfRangeException"));
         }
 
         [Test]
@@ -199,12 +195,11 @@ namespace NUnit.Framework.Attributes
 			Type fixtureType = typeof(MismatchedException);
 			ITestResult result = TestBuilder.RunTestCase( fixtureType, "MismatchedExceptionTypeWithUserMessage" );
 			Assert.IsTrue(result.ResultState == ResultState.Failure, "Test method should have failed");
-			StringAssert.StartsWith(
+			Assert.That(result.Message, Is.StringStarting(
 				"custom message" + Environment.NewLine +
 				"An unexpected exception type was thrown" + Environment.NewLine +
 				"Expected: System.ArgumentException" + Environment.NewLine +
-				" but was: System.ArgumentOutOfRangeException", 
-				result.Message);
+				" but was: System.ArgumentOutOfRangeException"));
 		}
 
 		[Test]
@@ -213,11 +208,10 @@ namespace NUnit.Framework.Attributes
 			Type fixtureType = typeof(MismatchedException);
 			ITestResult result = TestBuilder.RunTestCase( fixtureType, "MismatchedExceptionName" );
 			Assert.IsTrue(result.ResultState == ResultState.Failure, "MismatchedExceptionName should have failed");
-			StringAssert.StartsWith(
+			Assert.That(result.Message, Is.StringStarting(
 				"An unexpected exception type was thrown" + Environment.NewLine +
 				"Expected: System.ArgumentException" + Environment.NewLine +
-				" but was: System.ArgumentOutOfRangeException", 
-				result.Message);
+				" but was: System.ArgumentOutOfRangeException")); 
 		}
 
 		[Test]
@@ -226,12 +220,11 @@ namespace NUnit.Framework.Attributes
 			Type fixtureType = typeof(MismatchedException);
             ITestResult result = TestBuilder.RunTestCase(fixtureType, "MismatchedExceptionNameWithUserMessage");
 			Assert.IsTrue(result.ResultState == ResultState.Failure, "Test method should have failed");
-			StringAssert.StartsWith(
+			Assert.That(result.Message, Is.StringStarting(
 				"custom message" + Environment.NewLine +
 				"An unexpected exception type was thrown" + Environment.NewLine +
 				"Expected: System.ArgumentException" + Environment.NewLine +
-				" but was: System.ArgumentOutOfRangeException", 
-				result.Message);
+				" but was: System.ArgumentOutOfRangeException")); 
 		}
 
 		[Test]
@@ -375,9 +368,11 @@ namespace NUnit.Framework.Attributes
 				base(message, inner) 
 			{}
 
+#if !NETCF
 			protected MyAppException(SerializationInfo info, 
 				StreamingContext context) : base(info,context)
 			{}
+#endif
 		}
 
 		[Test]

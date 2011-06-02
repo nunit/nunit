@@ -36,7 +36,10 @@ namespace NUnit.TestUtilities
     /// </summary>
     public class TestBuilder
     {
-#if !NUNITLITE
+#if NUNITLITE
+        private static NUnitLiteTestFixtureBuilder fixtureBuilder = new NUnitLiteTestFixtureBuilder();
+        private static NUnitLiteTestCaseBuilder testBuilder = new NUnitLiteTestCaseBuilder();
+#else
         private static NUnitTestFixtureBuilder fixtureBuilder = new NUnitTestFixtureBuilder();
         private static NUnitTestCaseBuilder testBuilder = new NUnitTestCaseBuilder();
 
@@ -49,11 +52,7 @@ namespace NUnit.TestUtilities
 
         public static TestSuite MakeFixture(Type type)
         {
-#if NUNITLITE
-            return NUnitLiteTestFixtureBuilder.BuildFrom(type);
-#else
             return (TestSuite)fixtureBuilder.BuildFrom(type);
-#endif
         }
 
         public static TestSuite MakeFixture(object fixture)

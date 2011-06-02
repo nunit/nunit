@@ -58,6 +58,7 @@ namespace NUnit.DirectRunner
 
                 FrameworkDriver driver = new FrameworkDriver(testDomain);
 
+                // TODO: For now, ignore all but first assembly
                 string assemblyFilename = commandlineOptions.Parameters[0];
 
                 if (commandlineOptions.ListTests)

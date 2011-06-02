@@ -24,11 +24,10 @@
 using System;
 using System.Collections;
 using NUnit.Framework.Api;
-using NUnit.Framework.Internal;
 using NUnit.TestData.TestMethodSignatureFixture;
 using NUnit.TestUtilities;
 
-namespace NUnit.Framework.Tests
+namespace NUnit.Framework.Internal
 {
 	[TestFixture]
 	public class TestMethodSignatureTests

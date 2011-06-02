@@ -18,33 +18,46 @@
         <include name="SpecialValue.cs"/>
         <include name="TestCaseData.cs"/>
         <include name="Throws.cs"/>
-        <include name="Api/IApplyToTest.cs"/>
-        <include name="Api/IPropertyBag.cs"/>
-        <include name="Api/ITest.cs"/>
-        <include name="Api/ITestCaseData.cs"/>
-        <include name="Api/ITestCaseSource.cs"/>
-        <include name="Api/ITestListener.cs"/>
-        <include name="Api/ITestResult.cs"/>
-        <include name="Api/IXmlNodeBuilder.cs"/>
-        <include name="Api/PropertyEntry.cs"/>
-        <include name="Api/PropertyNames.cs"/>
-        <include name="Api/ResultState.cs"/>
-        <include name="Api/RunState.cs"/>
-        <include name="Api/TestOutput.cs"/>
-        <include name="Api/TestStatus.cs"/>
-        <include name="Attributes/*.cs"/>
-        <include name="Constraints/*.cs"/>
+    
+    <include name="Api/IApplyToTest.cs"/>
+    <include name="Api/IPropertyBag.cs"/>
+    <include name="Api/ITest.cs"/>
+    <include name="Api/ITestAssemblyBuilder.cs"/>
+    <include name="Api/ITestAssemblyRunner.cs"/>
+    <include name="Api/ITestCaseData.cs"/>
+    <include name="Api/ITestCaseSource.cs"/>
+    <include name="Api/ITestListener.cs"/>
+    <include name="Api/ITestResult.cs"/>
+    <include name="Api/IXmlNodeBuilder.cs"/>
+    <include name="Api/PropertyEntry.cs"/>
+    <include name="Api/PropertyNames.cs"/>
+    <include name="Api/ResultState.cs"/>
+    <include name="Api/RunState.cs"/>
+    <include name="Api/TestOutput.cs"/>
+    <include name="Api/TestStatus.cs"/>
+    
+    <include name="Attributes/*.cs"/>
+    
+    <include name="Constraints/*.cs"/>
     <include name="Constraints/Operators/*.cs"/>
-        <include name="Exceptions/*.cs"/>
+    
+    <include name="Exceptions/*.cs"/>
+
+    <include name="Extensibility/ISuiteBuilder.cs"/>
+    <include name="Extensibility/ITestCaseBuilder.cs"/>
+    
         <include name="Internal/ExceptionHelper.cs"/>
         <include name="Internal/ExpectedExceptionProcessor.cs"/>
         <include name="Internal/InvalidTestFixtureException.cs"/>
         <include name="Internal/MethodHelper.cs"/>
         <include name="Internal/NUnitException.cs"/>
-        <include name="Internal/ParameterSet.cs"/>
-        <include name="Internal/PropertyBag.cs"/>
-        <include name="Internal/Reflect.cs"/>
-        <include name="Internal/TestExecutionContext.cs"/>
+    <include name="Internal/NUnitLiteTestAssemblyBuilder.cs"/>
+    <include name="Internal/NUnitLiteTestAssemblyRunner.cs"/>
+    <include name="Internal/ParameterSet.cs"/>
+    <include name="Internal/PropertyBag.cs"/>
+    <include name="Internal/Reflect.cs"/>
+    <include name="Internal/TestExecutionContext.cs"/>
+    <include name="Internal/TestFixtureBuilder.cs"/>
         <include name="Internal/TestListener.cs"/>
         <include name="Internal/TextMessageWriter.cs"/>
         <include name="Internal/TypeHelper.cs"/>

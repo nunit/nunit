@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -8,14 +8,10 @@
     <ProjectGuid>{15B64946-4989-4873-915C-3E181772FA03}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>test_assembly</RootNamespace>
-    <AssemblyName>test-assembly</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <RootNamespace>NUnit.TestData</RootNamespace>
+    <AssemblyName>nunit.testdata</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <FileUpgradeFlags>
-    </FileUpgradeFlags>
-    <OldToolsVersion>3.5</OldToolsVersion>
-    <UpgradeBackupLocation />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -71,7 +67,6 @@
     <Compile Include="TestCaseAttributeFixture.cs" />
     <Compile Include="TestCaseSourceAttributeFixture.cs" />
     <Compile Include="TestContextData.cs" />
-    <Compile Include="TestFixtureBuilderData.cs" />
     <Compile Include="TestFixtureData.cs" />
     <Compile Include="TestFixtureExtensionData.cs" />
     <Compile Include="TestMethodSignatureFixture.cs" />
@@ -81,7 +76,7 @@
     <Compile Include="UnhandledExceptions.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="test-assembly.build" />
+    <None Include="nunit.testdata.build" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
