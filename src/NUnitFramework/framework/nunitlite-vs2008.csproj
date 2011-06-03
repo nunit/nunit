@@ -19,20 +19,20 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\bin\Debug\</OutputPath>
+    <OutputPath>..\..\..\bin\net-3.5\Debug\</OutputPath>
     <DefineConstants>TRACE;DEBUG;NET_3_5;CLR_2_0;NUNITLITE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\..\..\bin\Debug\nunitlite.xml</DocumentationFile>
+    <DocumentationFile>..\..\..\bin\net-3.5\Debug\nunitlite.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\bin\Release\</OutputPath>
+    <OutputPath>..\bin\net-3.5\Release\</OutputPath>
     <DefineConstants>TRACE;NET_3_5;CLR_2_0;NUNITLITE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\bin\Release\nunitlite.XML</DocumentationFile>
+    <DocumentationFile>..\bin\net-3.5\Release\nunitlite.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
