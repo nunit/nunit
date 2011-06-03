@@ -31,7 +31,7 @@ using NUnit.Framework.Internal;
 namespace NUnit.Framework.Builders
 {
     /// <summary>
-    /// Static class used by NUnitLite to create test fixtures from Types
+    /// Class used by NUnitLite to create test fixtures from Types
     /// </summary>
     public class NUnitLiteTestFixtureBuilder : ISuiteBuilder
     {

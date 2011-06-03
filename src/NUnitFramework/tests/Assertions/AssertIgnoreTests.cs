@@ -72,7 +72,6 @@ namespace NUnit.Framework.Assertions
             Assert.AreEqual("Ignore me", result.Message);
         }
 
-#if !NUNITLITE
 		[Test]
 		public void IgnoreWorksForTestSuite()
 		{
@@ -86,7 +85,6 @@ namespace NUnit.Framework.Assertions
             foreach (ITestResult testResult in fixtureResult.Children)
                 Assert.AreEqual(ResultState.Ignored, testResult.ResultState);
 		}
-#endif
 
 		[Test]
 		public void IgnoreWorksFromSetUp()

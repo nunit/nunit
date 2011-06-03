@@ -88,6 +88,25 @@ namespace NUnit.Framework.Attributes
 
         #endregion
 
+        #region ExplicitAttribute
+
+        [Test]
+        public void ExplicitAttributeMakesTestExplicit()
+        {
+            new ExplicitAttribute().ApplyToTest(test);
+            Assert.That(test.RunState, Is.EqualTo(RunState.Explicit));
+        }
+
+        [Test]
+        public void ExplicitAttributeSetsIgnoreReason()
+        {
+            new ExplicitAttribute("BECAUSE").ApplyToTest(test);
+            Assert.That(test.RunState, Is.EqualTo(RunState.Explicit));
+            Assert.That(test.Properties.Get(PropertyNames.SkipReason), Is.EqualTo("BECAUSE"));
+        }
+
+        #endregion
+
 #if !NUNITLITE
 
         #region CombinatorialAttribute
@@ -158,25 +177,6 @@ namespace NUnit.Framework.Attributes
 
             new CultureAttribute(cultures).ApplyToTest(test);
             Assert.That(test.RunState, Is.EqualTo(RunState.Runnable));
-        }
-
-        #endregion
-
-        #region ExplicitAttribute
-
-        [Test]
-        public void ExplicitAttributeMakesTestExplicit()
-        {
-            new ExplicitAttribute().ApplyToTest(test);
-            Assert.That(test.RunState, Is.EqualTo(RunState.Explicit));
-        }
-
-        [Test]
-        public void ExplicitAttributeSetsIgnoreReason()
-        {
-            new ExplicitAttribute("BECAUSE").ApplyToTest(test);
-            Assert.That(test.RunState, Is.EqualTo(RunState.Explicit));
-            Assert.That(test.Properties.Get(PropertyNames.SkipReason), Is.EqualTo("BECAUSE"));
         }
 
         #endregion

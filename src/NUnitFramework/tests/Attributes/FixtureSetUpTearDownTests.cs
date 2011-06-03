@@ -22,7 +22,9 @@
 // ***********************************************************************
 
 using System;
+#if !NETCF
 using System.Security.Principal;
+#endif
 using System.Threading;
 using NUnit.Framework.Api;
 using NUnit.Framework.Internal;
@@ -83,12 +85,13 @@ namespace NUnit.Framework.Attributes
             Assert.AreEqual(1, StaticSetUpAndTearDownFixture.tearDownCount);
         }
 
-#if CLR_2_0 || CLR_4_0
+#if (CLR_2_0 || CLR_4_0) && !NUNITLITE
         [Test]
         public static void StaticClassSetUpAndTearDownAreCalled()
         {
             StaticClassSetUpAndTearDownFixture.setUpCount = 0;
             StaticClassSetUpAndTearDownFixture.tearDownCount = 0;
+
             TestBuilder.RunTestFixture(typeof(StaticClassSetUpAndTearDownFixture));
 
             Assert.AreEqual(1, StaticClassSetUpAndTearDownFixture.setUpCount);
@@ -305,6 +308,7 @@ namespace NUnit.Framework.Attributes
         }
 	}
 
+#if !NUNITLITE
     [TestFixture]
     class ChangesMadeInFixtureSetUp
     {
@@ -335,4 +339,5 @@ namespace NUnit.Framework.Attributes
             Assert.AreEqual("en-GB", Thread.CurrentThread.CurrentUICulture.Name);
         }
     }
+#endif
 }

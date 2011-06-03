@@ -42,7 +42,6 @@ namespace NUnit.TestData.AssertIgnoreData
         }
     }
 
-#if !NUNITLITE
 	[TestFixture]
 	public class IgnoredTestSuiteFixture
 	{
@@ -62,7 +61,6 @@ namespace NUnit.TestData.AssertIgnoreData
 		{
 		}
 	}
-#endif
 
 	[TestFixture]
 	public class IgnoreInSetUpFixture

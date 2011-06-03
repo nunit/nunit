@@ -97,6 +97,7 @@ namespace NUnit.Framework.Assertions
 			Assert.IsNotNull(null);
 		}
 	
+#if !NUNITLITE
 		[Test]
 		public void IsNaN()
 		{
@@ -198,5 +199,6 @@ namespace NUnit.Framework.Assertions
 				"  But was:  <empty>" + Environment.NewLine;
 			Assert.IsNotEmpty( new Hashtable() );
 		}
+#endif
 	}
 }
