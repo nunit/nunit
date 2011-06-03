@@ -128,7 +128,7 @@ namespace NUnit.Framework.Internal
         {
             Assert.AreEqual(ResultState.Inconclusive, testResult.ResultState);
             Assert.AreEqual(TestStatus.Inconclusive, testResult.ResultState.Status);
-            Assert.IsEmpty(testResult.ResultState.Label);
+            Assert.That(testResult.ResultState.Label, Is.Empty);
             Assert.AreEqual(0.0, testResult.Time);
         }
 
@@ -178,7 +178,7 @@ namespace NUnit.Framework.Internal
         {
             Assert.True(testResult.ResultState == ResultState.Success);
             Assert.AreEqual(TestStatus.Passed, testResult.ResultState.Status);
-            Assert.IsEmpty(testResult.ResultState.Label);
+            Assert.That(testResult.ResultState.Label, Is.Empty);
             Assert.AreEqual(0.125, testResult.Time);
         }
 
@@ -187,7 +187,7 @@ namespace NUnit.Framework.Internal
         {
             Assert.True(suiteResult.ResultState == ResultState.Success);
             Assert.AreEqual(TestStatus.Passed, suiteResult.ResultState.Status);
-            Assert.IsEmpty(suiteResult.ResultState.Label);
+            Assert.That(suiteResult.ResultState.Label, Is.Empty);
 
             Assert.AreEqual(1, suiteResult.PassCount);
             Assert.AreEqual(0, suiteResult.FailCount);

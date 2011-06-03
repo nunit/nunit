@@ -67,12 +67,15 @@
     <Compile Include="CategoryAttributeData.cs" />
     <Compile Include="DescriptionFixture.cs" />
     <Compile Include="ExpectedExceptionData.cs" />
+    <Compile Include="FixtureSetUpTearDownData.cs" />
     <Compile Include="PropertyAttributeTests.cs" />
     <Compile Include="TestCaseAttributeFixture.cs" />
     <Compile Include="TestCaseSourceAttributeFixture.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="nunitlite.testdata.build" />
+    <None Include="nunitlite.testdata.build">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">

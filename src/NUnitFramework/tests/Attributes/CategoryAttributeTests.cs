@@ -60,7 +60,7 @@ namespace NUnit.Framework.Attributes
 		public void CanDeriveFromCategoryAttribute()
 		{
 			Test test2 = (Test)fixture.Tests[1];
-			Assert.Contains( "Critical", test2.Properties["Category"] );
+			Assert.That(test2.Properties["Category"], Contains.Item("Critical") );
 		}
 
         [Test]

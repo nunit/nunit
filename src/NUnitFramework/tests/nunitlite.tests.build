@@ -31,6 +31,7 @@
         <include name="Attributes/CategoryAttributeTests.cs" />
         <include name="Attributes/DescriptionTests.cs" />
         <include name="Attributes/ExpectedExceptionTests.cs" />
+        <include name="Attributes/FixtureSetUpTearDownTests.cs" />
         <include name="Attributes/PropertyAttributeTests.cs" />
         <include name="Attributes/TestCaseAttributeTests.cs" />
         <include name="Attributes/TestCaseSourceTests.cs" />
