@@ -21,16 +21,16 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\bin\Debug\</OutputPath>
+    <OutputPath>..\..\..\bin\net-4.0\Debug\</OutputPath>
     <DefineConstants>TRACE;DEBUG;NET_3_5;CLR_2_0;NUNITLITE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\..\..\bin\Debug\nunitlite.xml</DocumentationFile>
+    <DocumentationFile>..\..\..\bin\net-4.0\Debug\nunitlite.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\bin\Release\</OutputPath>
+    <OutputPath>..\..\..\bin\net-4.0\Release\</OutputPath>
     <DefineConstants>TRACE;NET_3_5;CLR_2_0;NUNITLITE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -68,6 +68,7 @@
     <Compile Include="Attributes\DataAttribute.cs" />
     <Compile Include="Attributes\DescriptionAttribute.cs" />
     <Compile Include="Attributes\ExpectedExceptionAttribute.cs" />
+    <Compile Include="Attributes\ExplicitAttribute.cs" />
     <Compile Include="Attributes\IgnoreAttribute.cs" />
     <Compile Include="Attributes\NUnitAttribute.cs" />
     <Compile Include="Attributes\PropertyAttribute.cs" />
@@ -77,6 +78,8 @@
     <Compile Include="Attributes\TestCaseAttribute.cs" />
     <Compile Include="Attributes\TestCaseSourceAttribute.cs" />
     <Compile Include="Attributes\TestFixtureAttribute.cs" />
+    <Compile Include="Attributes\TestFixtureSetUpAttribute.cs" />
+    <Compile Include="Attributes\TestFixtureTearDownAttribute.cs" />
     <Compile Include="Attributes\TestModificationAttribute.cs" />
     <Compile Include="Constraints\AllItemsConstraint.cs" />
     <Compile Include="Constraints\AndConstraint.cs" />
