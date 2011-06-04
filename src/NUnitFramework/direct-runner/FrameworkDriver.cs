@@ -64,8 +64,8 @@ namespace NUnit.DirectRunner
             CreateObject("NUnit.Framework.Api.TestController+ExploreTestsAction",
                 testController, assemblyFileName, options, handler.Callback);
 
- 			XmlDocument doc = new XmlDocument();
-			doc.LoadXml((string)handler.Result);
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml((string)handler.Result);
             return doc.FirstChild;
         }
 
@@ -79,8 +79,8 @@ namespace NUnit.DirectRunner
             Debug.Assert(handler.Result == null || handler.Result is string,
                 "Returned result was not an XmlNode");
 
-			XmlDocument doc = new XmlDocument();
-			doc.LoadXml((string)handler.Result);
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml((string)handler.Result);
             return doc.FirstChild;
         }
 
@@ -92,8 +92,8 @@ namespace NUnit.DirectRunner
 
             Debug.Assert(handler.Result is string, "Returned result was not a string");
 
-			XmlDocument doc = new XmlDocument();
-			doc.LoadXml((string)handler.Result);
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml((string)handler.Result);
             return doc.FirstChild;
         }
 
@@ -104,7 +104,7 @@ namespace NUnit.DirectRunner
             return this.testDomain.CreateInstanceAndUnwrap(
                 "nunit.framework", typeName, false, 0,
 #if !NET_4_0
-                null, args, null, null, null );
+ null, args, null, null, null);
 #else
                 null, args, null, null );
 #endif

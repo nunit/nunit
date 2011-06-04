@@ -71,7 +71,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public static EqualityAdapter For<T>(IComparer<T> comparer)
         {
-            return new ComparisonAdapterAdapter( ComparisonAdapter.For(comparer) );
+            return new ComparisonAdapterAdapter(ComparisonAdapter.For(comparer));
         }
 
         /// <summary>
@@ -79,7 +79,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public static EqualityAdapter For<T>(Comparison<T> comparer)
         {
-            return new ComparisonAdapterAdapter( ComparisonAdapter.For(comparer) );
+            return new ComparisonAdapterAdapter(ComparisonAdapter.For(comparer));
         }
 
         class EqualityComparerAdapter : EqualityAdapter

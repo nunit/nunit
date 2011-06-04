@@ -38,15 +38,15 @@ namespace NUnit.Framework.Constraints.Tests
         public void AllItemsAreNotNull()
         {
             object[] c = new object[] { 1, "hello", 3, Environment.OSVersion };
-            Assert.That(c, new AllItemsConstraint( Is.Not.Null ));
+            Assert.That(c, new AllItemsConstraint(Is.Not.Null));
         }
 
         [Test, ExpectedException(typeof(AssertionException))]
         public void AllItemsAreNotNullFails()
         {
             object[] c = new object[] { 1, "hello", null, 3 };
-            expectedMessage = 
-				TextMessageWriter.Pfx_Expected + "all items not null" + NL +
+            expectedMessage =
+                TextMessageWriter.Pfx_Expected + "all items not null" + NL +
                 TextMessageWriter.Pfx_Actual + "< 1, \"hello\", null, 3 >" + NL;
             Assert.That(c, new AllItemsConstraint(new NotConstraint(new EqualConstraint(null))));
         }
@@ -81,13 +81,13 @@ namespace NUnit.Framework.Constraints.Tests
         }
 #endif
 
-		[Test, ExpectedException(typeof(AssertionException))]
+        [Test, ExpectedException(typeof(AssertionException))]
         public void AllItemsAreInRangeFailureMessage()
         {
             int[] c = new int[] { 12, 27, 19, 32, 107, 99, 26 };
-            expectedMessage = 
+            expectedMessage =
                 TextMessageWriter.Pfx_Expected + "all items in range (10,100)" + NL +
-                TextMessageWriter.Pfx_Actual   + "< 12, 27, 19, 32, 107, 99, 26 >" + NL;
+                TextMessageWriter.Pfx_Actual + "< 12, 27, 19, 32, 107, 99, 26 >" + NL;
             Assert.That(c, new AllItemsConstraint(new RangeConstraint(10, 100)));
         }
 
@@ -102,9 +102,9 @@ namespace NUnit.Framework.Constraints.Tests
         public void AllItemsAreInstancesOfTypeFailureMessage()
         {
             object[] c = new object[] { 'a', "b", 'c' };
-            expectedMessage = 
+            expectedMessage =
                 TextMessageWriter.Pfx_Expected + "all items instance of <System.Char>" + NL +
-                TextMessageWriter.Pfx_Actual   + "< 'a', \"b\", 'c' >" + NL;
+                TextMessageWriter.Pfx_Actual + "< 'a', \"b\", 'c' >" + NL;
             Assert.That(c, new AllItemsConstraint(new InstanceOfTypeConstraint(typeof(char))));
         }
     }
@@ -126,7 +126,7 @@ namespace NUnit.Framework.Constraints.Tests
         public void CanTestContentsOfArrayList()
         {
             object item = "xyz";
-            ArrayList list = new ArrayList( new object[] { 123, item, "abc" } );
+            ArrayList list = new ArrayList(new object[] { 123, item, "abc" });
             Assert.That(list, new CollectionContainsConstraint(item));
         }
 
@@ -144,17 +144,17 @@ namespace NUnit.Framework.Constraints.Tests
         }
 #endif
 
-		[Test]
-		public void CanTestContentsOfCollectionNotImplementingIList()
-		{
-			ICollectionAdapter ints = new ICollectionAdapter(new int[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9});           
-			Assert.That(ints, new CollectionContainsConstraint( 9 ));
-		}
+        [Test]
+        public void CanTestContentsOfCollectionNotImplementingIList()
+        {
+            ICollectionAdapter ints = new ICollectionAdapter(new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 });
+            Assert.That(ints, new CollectionContainsConstraint(9));
+        }
 
         [Test]
         public void IgnoreCaseIsHonored()
         {
-            Assert.That(new string[] { "Hello", "World" }, 
+            Assert.That(new string[] { "Hello", "World" },
                 new CollectionContainsConstraint("WORLD").IgnoreCase);
         }
 
@@ -163,7 +163,7 @@ namespace NUnit.Framework.Constraints.Tests
         public void UsingIsHonored()
         {
             Assert.That(new string[] { "Hello", "World" },
-                new CollectionContainsConstraint("WORLD").Using<string>( (x,y)=>String.Compare(x, y, true) ));
+                new CollectionContainsConstraint("WORLD").Using<string>((x, y) => String.Compare(x, y, true)));
         }
 #endif
     }
@@ -178,7 +178,7 @@ namespace NUnit.Framework.Constraints.Tests
             ICollection set1 = new ICollectionAdapter("x", "y", "z");
             ICollection set2 = new ICollectionAdapter("x", "y", "z");
 
-            Assert.That(new CollectionEquivalentConstraint(set1).Matches(set2));
+            Assert.That(new CollectionEquivalentConstraint(set1).Matches(set2).HasSucceeded);
         }
 
         [Test]
@@ -193,10 +193,10 @@ namespace NUnit.Framework.Constraints.Tests
             ICollection set2 = new ICollectionAdapter(array3, array4);
 
             Constraint constraint = new CollectionEquivalentConstraint(set1);
-            Assert.That(constraint.Matches(set2));
+            Assert.That(constraint.Matches(set2).HasSucceeded);
 
             set2 = new ICollectionAdapter(array4, array3);
-            Assert.That(constraint.Matches(set2));
+            Assert.That(constraint.Matches(set2).HasSucceeded);
         }
 
         [Test]
@@ -205,7 +205,7 @@ namespace NUnit.Framework.Constraints.Tests
             ICollection set1 = new ICollectionAdapter("x", "y", "z");
             ICollection set2 = new ICollectionAdapter("z", "y", "x");
 
-            Assert.That(new CollectionEquivalentConstraint(set1).Matches(set2));
+            Assert.That(new CollectionEquivalentConstraint(set1).Matches(set2).HasSucceeded);
         }
 
         [Test]
@@ -214,7 +214,7 @@ namespace NUnit.Framework.Constraints.Tests
             ICollection set1 = new ICollectionAdapter("x", "y", "z");
             ICollection set2 = new ICollectionAdapter("x", "y", "x");
 
-            Assert.False(new CollectionEquivalentConstraint(set1).Matches(set2));
+            Assert.False(new CollectionEquivalentConstraint(set1).Matches(set2).HasSucceeded);
         }
 
         [Test]
@@ -223,7 +223,7 @@ namespace NUnit.Framework.Constraints.Tests
             ICollection set1 = new ICollectionAdapter("x", "y", "x");
             ICollection set2 = new ICollectionAdapter("x", "y", "z");
 
-            Assert.False(new CollectionEquivalentConstraint(set1).Matches(set2));
+            Assert.False(new CollectionEquivalentConstraint(set1).Matches(set2).HasSucceeded);
         }
 
         [Test]
@@ -232,7 +232,7 @@ namespace NUnit.Framework.Constraints.Tests
             ICollection set1 = new ICollectionAdapter(null, "x", null, "z");
             ICollection set2 = new ICollectionAdapter("z", null, "x", null);
 
-            Assert.That(new CollectionEquivalentConstraint(set1).Matches(set2));
+            Assert.That(new CollectionEquivalentConstraint(set1).Matches(set2).HasSucceeded);
         }
 
         [Test]
@@ -241,7 +241,7 @@ namespace NUnit.Framework.Constraints.Tests
             ICollection set1 = new ICollectionAdapter("x", "y", "z");
             ICollection set2 = new ICollectionAdapter("z", "Y", "X");
 
-            Assert.That(new CollectionEquivalentConstraint(set1).IgnoreCase.Matches(set2));
+            Assert.That(new CollectionEquivalentConstraint(set1).IgnoreCase.Matches(set2).HasSucceeded);
         }
 
 #if CS_3_0 || CS_4_0
@@ -252,8 +252,8 @@ namespace NUnit.Framework.Constraints.Tests
             ICollection set2 = new ICollectionAdapter("z", "Y", "X");
 
             Assert.That(new CollectionEquivalentConstraint(set1)
-                .Using<string>( (x,y)=>String.Compare(x,y,true) )
-                .Matches(set2));
+                .Using<string>((x, y) => String.Compare(x, y, true))
+                .Matches(set2).HasSucceeded);
         }
 #endif
     }
@@ -334,8 +334,8 @@ namespace NUnit.Framework.Constraints.Tests
             Assert.That(al, Is.Ordered);
         }
 
-        [Test, ExpectedException(typeof(ArgumentNullException), 
-            ExpectedMessage="index 1", MatchType=MessageMatch.Contains)]
+        [Test, ExpectedException(typeof(ArgumentNullException),
+            ExpectedMessage = "index 1", MatchType = MessageMatch.Contains)]
         public void IsOrdered_Handles_null()
         {
             ArrayList al = new ArrayList();
@@ -485,10 +485,10 @@ namespace NUnit.Framework.Constraints.Tests
         {
             private int myValue;
 
-            public int Value 
+            public int Value
             {
                 get { return myValue; }
-                set { myValue = value; } 
+                set { myValue = value; }
             }
 
             public OrderedByTestClass(int value)
@@ -500,10 +500,10 @@ namespace NUnit.Framework.Constraints.Tests
         class OrderedByTestClass2
         {
             private int myValue;
-            public int Value 
+            public int Value
             {
                 get { return myValue; }
-                set { myValue = value; } 
+                set { myValue = value; }
             }
 
             public OrderedByTestClass2(int value)

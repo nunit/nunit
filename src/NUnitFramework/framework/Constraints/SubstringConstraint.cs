@@ -24,9 +24,9 @@
 namespace NUnit.Framework.Constraints
 {
     /// <summary>
-	/// SubstringConstraint can test whether a string contains
-	/// the expected substring.
-	/// </summary>
+    /// SubstringConstraint can test whether a string contains
+    /// the expected substring.
+    /// </summary>
     public class SubstringConstraint : StringConstraint
     {
         /// <summary>
@@ -58,8 +58,8 @@ namespace NUnit.Framework.Constraints
         {
             writer.WritePredicate("String containing");
             writer.WriteExpectedValue(expected);
-			if ( this.caseInsensitive )
-				writer.WriteModifier( "ignoring case" );
-		}
-    } 
+            if (this.caseInsensitive)
+                writer.WriteModifier("ignoring case");
+        }
+    }
 }

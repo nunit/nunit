@@ -38,13 +38,13 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="actual">The value to be tested</param>
         /// <returns>True if no exception is thrown, otherwise false</returns>
-        public override bool Matches(object actual)
+        public override IConstraintResult Matches(object actual)
         {
             TestDelegate code = actual as TestDelegate;
             if (code == null)
                 throw new ArgumentException("The actual value must be a TestDelegate", "actual");
 
-            this.caughtException = null;
+            caughtException = null;
 
             try
             {
@@ -52,10 +52,10 @@ namespace NUnit.Framework.Constraints
             }
             catch (Exception ex)
             {
-                this.caughtException = ex;
+                caughtException = ex;
             }
 
-            return this.caughtException == null;
+            return new StandardConstraintResult(caughtException == null);
         }
 
         /// <summary>
@@ -76,7 +76,7 @@ namespace NUnit.Framework.Constraints
         /// <param name="writer">The writer on which the actual value is displayed</param>
         public override void WriteActualValueTo(MessageWriter writer)
         {
-            writer.WriteActualValue(this.caughtException.GetType());
+            writer.WriteActualValue(caughtException.GetType());
         }
     }
 }

@@ -33,14 +33,14 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="actual">The value to be tested</param>
         /// <returns>True for success, false for failure</returns>
-        public override bool Matches(object actual)
+        public override IConstraintResult Matches(object actual)
         {
             this.actual = actual;
 
-            if (!(actual is string))
-                return false;
+            string actualAsString = actual as string;
+            bool hasSucceeded = actual != null && string.IsNullOrEmpty(actualAsString);
 
-            return (string)actual == string.Empty;
+            return new StandardConstraintResult(hasSucceeded);
         }
 
         /// <summary>
@@ -51,5 +51,5 @@ namespace NUnit.Framework.Constraints
         {
             writer.Write("<empty>");
         }
-    } 
+    }
 }

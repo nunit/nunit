@@ -1,5 +1,5 @@
-// ***********************************************************************
-// Copyright (c) 2008 Charlie Poole
+﻿// ***********************************************************************
+// Copyright (c) 2011 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -23,29 +23,61 @@
 
 namespace NUnit.Framework.Constraints
 {
-    /// <summary>
-    /// Represents a constraint that simply wraps the
-    /// constraint provided as an argument, without any
-    /// further functionality, but which modifes the
-    /// order of evaluation because of its precedence.
-    /// </summary>
-    public class WithOperator : PrefixOperator
+
+    internal class StandardConstraintResult : IConstraintResult
     {
-        /// <summary>
-        /// Constructor for the WithOperator
-        /// </summary>
-        public WithOperator()
+        private readonly bool hasSucceeded;
+
+        public StandardConstraintResult(bool hasSucceeded)
         {
-            this.left_precedence = 1;
-            this.right_precedence = 4;
+            this.hasSucceeded = hasSucceeded;
         }
 
-        /// <summary>
-        /// Returns a constraint that wraps its argument
-        /// </summary>
-        public override Constraint ApplyPrefix(Constraint constraint)
+        public bool HasSucceeded
         {
-            return constraint;
+            get { return hasSucceeded; }
+        }
+
+        public object Actual
+        {
+            get { return null; }
+        }
+
+        public object Expected
+        {
+            get { return null; }
+        }
+
+        public string Name
+        {
+            get { return string.Empty; }
+        }
+
+        public string Description
+        {
+            get { return string.Empty; }
+        }
+
+        public string Predicate
+        {
+            get { return string.Empty; }
+        }
+
+        public string Modifier
+        {
+            get { return string.Empty; }
+        }
+
+        public void WriteDescriptionTo(MessageWriter writer)
+        {
+        }
+
+        public void WriteMessageTo(MessageWriter writer)
+        {
+        }
+
+        public void WriteActualValueTo(MessageWriter writer)
+        {
         }
     }
 }

@@ -53,5 +53,5 @@ namespace NUnit.Framework.Constraints
             else
                 stack.Push(new ThrowsConstraint(stack.Pop()));
         }
-    } 
+    }
 }
