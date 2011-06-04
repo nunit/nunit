@@ -14,7 +14,6 @@
         <include name="Api/*.cs" />
 
         <include name="Assertions/*.cs" />
-        <exclude name="Assertions/AssumeThatTests.cs" />
         <exclude name="Assertions/CollectionAssertTest.cs" />
         <exclude name="Assertions/FileAssertTests.cs" />
         <exclude name="Assertions/GreaterEqualFixture.cs" />
@@ -26,20 +25,22 @@
         <exclude name="Assertions/StringAssertTests.cs" />
         <exclude name="Assertions/TypeAssertTest.cs" />
 
-        <include name="Attributes/ApplyToTestTests.cs" />
-        <include name="Attributes/AttributeInheritanceTests.cs" />
-        <include name="Attributes/CategoryAttributeTests.cs" />
-        <include name="Attributes/DescriptionTests.cs" />
-        <include name="Attributes/ExpectedExceptionTests.cs" />
-        <include name="Attributes/FixtureSetUpTearDownTests.cs" />
-        <include name="Attributes/PropertyAttributeTests.cs" />
-        <include name="Attributes/TestCaseAttributeTests.cs" />
-        <include name="Attributes/TestCaseSourceTests.cs" />
-        <include name="Attributes/TestDummy.cs" />
-        <include name="Attributes/TestFixtureAttributeTests.cs" />
+        <include name="Attributes/*.cs"/>
+        <exclude name="Attributes/CombinatorialTests.cs"/>
+        <exclude name="Attributes/DatapointTests.cs"/>
+        <exclude name="Attributes/MaxTimeTests.cs"/>
+        <exclude name="Attributes/PairwiseTests.cs"/>
+        <exclude name="Attributes/ParameterizedTestFixtureTests.cs"/>
+        <exclude name="Attributes/RepeatedTestTests.cs"/>
+        <exclude name="Attributes/SetCultureAttributeTests.cs"/>
+        <exclude name="Attributes/TheoryTests.cs"/>
+        <exclude name="Attributes/ThreadingTests.cs"/>
+        <exclude name="Attributes/ValuesAttributeTests.cs"/>
+        <exclude name="Attributes/ValueSourceTests.cs"/>
 
         <include name="Constraints/*.cs" />
         <exclude name="Constraints/AfterConstraintTests.cs"/>
+        <exclude name="Constraints/ReusableConstraintTests.cs"/>
 
         <include name="Internal/PropertyBagTests.cs" />
         <include name="Internal/TestExecutionContextTests.cs" />
@@ -47,26 +48,13 @@
         <include name="Internal/TestXmlTests.cs" />
         <include name="Internal/TextMessageWriterTests.cs" />
 
-        <include name="Syntax/CollectionTests.cs" />
-        <include name="Syntax/ComparisonTests.cs" />
-        <include name="Syntax/EqualityTests.cs" />
-        <include name="Syntax/OperatorOverrides.cs" />
-        <include name="Syntax/OperatorTests.cs" />
-        <include name="Syntax/PathConstraintTests.cs" />
-        <include name="Syntax/PropertyTests.cs" />
-        <include name="Syntax/SerializableConstraints.cs" />
-        <include name="Syntax/SimpleConstraints.cs" />
-        <include name="Syntax/StringConstraints.cs" />
-        <include name="Syntax/SyntaxTest.cs" />
-        <include name="Syntax/ThrowsTests.cs" />
-        <include name="Syntax/TypeConstraints.cs" />
-        
-        <include name="TestUtilities/AlwaysEqualComparer.cs" />
-        <include name="TestUtilities/CollectionAdapter.cs" />
-        <include name="TestUtilities/ResultSummary.cs" />
-        <include name="TestUtilities/TestBuilder.cs" />
-        <include name="TestUtilities/TestComparer.cs" />
-        <include name="TestUtilities/TestDelegates.cs" />
+        <include name="Syntax/*.cs" />
+        <exclude name="Syntax/AfterTests.cs" />
+        <exclude name="Syntax/ArbitraryConstraintMatching.cs" />
+        <exclude name="Syntax/InvalidCodeTests.cs" />
+
+        <include name="TestUtilities/*.cs"/>
+        <exclude name="TestUtilities/TestFinder.cs"/>
       </sources>
       <resources prefix="NUnit.Framework.Tests">
         <include name="TestImage1.jpg"/>
