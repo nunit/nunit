@@ -107,7 +107,6 @@ namespace NUnit.Framework.Internal
             }
         }
 
-#if !NUNITLITE
         /// <summary>
         /// Initializes a new instance of the <see cref="ExpectedExceptionProcessor"/> class
         /// based on a ParameterSet.
@@ -123,7 +122,6 @@ namespace NUnit.Framework.Internal
             this.expectedMessage = source.ExpectedMessage;
             this.matchType = source.MatchType;
         }
-#endif
 
         #endregion
 

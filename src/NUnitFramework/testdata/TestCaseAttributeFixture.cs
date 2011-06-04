@@ -33,7 +33,6 @@ namespace NUnit.TestData.TestCaseAttributeFixture
 		public void MethodHasInvalidDateFormat(DateTime dt)
 		{}
 
-#if !NUNITLITE
         [TestCase(2,3,4,Description="My Description")]
         public void MethodHasDescriptionSpecified(int x, int y, int z)
         {}
@@ -84,6 +83,5 @@ namespace NUnit.TestData.TestCaseAttributeFixture
         public void MethodWithIgnoredTestCases(int num)
         {
         }
-#endif
     }
 }

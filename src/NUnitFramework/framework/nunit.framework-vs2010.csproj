@@ -344,7 +344,4 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Xml" />
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="SyntaxElements.txt" />
-  </ItemGroup>
 </Project>

@@ -63,6 +63,7 @@
         
         <include name="TestUtilities/AlwaysEqualComparer.cs" />
         <include name="TestUtilities/CollectionAdapter.cs" />
+        <include name="TestUtilities/ResultSummary.cs" />
         <include name="TestUtilities/TestBuilder.cs" />
         <include name="TestUtilities/TestComparer.cs" />
         <include name="TestUtilities/TestDelegates.cs" />

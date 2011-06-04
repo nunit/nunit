@@ -42,7 +42,6 @@ namespace NUnit.Framework.Internal
         private Exception providerException;
         private object[] arguments;
         private object[] originalArguments;
-#if !NUNITLITE
         private System.Type expectedException;
         private string expectedExceptionName;
         private string expectedMessage;
@@ -57,7 +56,7 @@ namespace NUnit.Framework.Internal
         /// to tests without requiring the class to change.
         /// </summary>
         private IPropertyBag properties;
-#endif
+
         #endregion
 
         #region Properties
@@ -103,7 +102,6 @@ namespace NUnit.Framework.Internal
             get { return originalArguments; }
         }
 
-#if !NUNITLITE
 
         /// <summary>
         /// The Type of any exception that is expected.
@@ -197,7 +195,7 @@ namespace NUnit.Framework.Internal
                 return properties;
             }
         }
-#endif
+
         #endregion
 
         #region Constructors
@@ -228,7 +226,6 @@ namespace NUnit.Framework.Internal
         {
             this.RunState = RunState.Runnable;
             this.Arguments = data.Arguments;
-#if !NUNITLITE
             this.ExpectedException = data.ExpectedException;
             this.ExpectedExceptionName = data.ExpectedExceptionName;
             this.ExpectedMessage = data.ExpectedMessage;
@@ -239,7 +236,6 @@ namespace NUnit.Framework.Internal
 
             foreach (string key in data.Properties.Keys)
                 this.Properties[key] = data.Properties[key];
-#endif
         }
         #endregion
     }

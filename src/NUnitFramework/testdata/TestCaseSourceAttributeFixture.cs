@@ -30,7 +30,6 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
     [TestFixture]
     public class TestCaseSourceAttributeFixture
     {
-#if !NUNITLITE
         [TestCaseSource("source")]
         public void MethodThrowsExpectedException(int x, int y, int z)
         {
@@ -73,7 +72,6 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
                 };
             }
         }
-#endif
 
         [TestCaseSource("exception_source")]
         public void MethodWithSourceThrowingException(string lhs, string rhs)

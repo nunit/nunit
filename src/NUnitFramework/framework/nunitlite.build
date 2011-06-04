@@ -45,12 +45,13 @@
 
     <include name="Extensibility/ISuiteBuilder.cs"/>
     <include name="Extensibility/ITestCaseBuilder.cs"/>
+    <include name="Extensibility/ITestCaseProvider.cs"/>
     
-        <include name="Internal/ExceptionHelper.cs"/>
-        <include name="Internal/ExpectedExceptionProcessor.cs"/>
-        <include name="Internal/InvalidTestFixtureException.cs"/>
-        <include name="Internal/MethodHelper.cs"/>
-        <include name="Internal/NUnitException.cs"/>
+    <include name="Internal/ExceptionHelper.cs"/>
+    <include name="Internal/ExpectedExceptionProcessor.cs"/>
+    <include name="Internal/InvalidTestFixtureException.cs"/>
+    <include name="Internal/MethodHelper.cs"/>
+    <include name="Internal/NUnitException.cs"/>
     <include name="Internal/NUnitLiteTestAssemblyBuilder.cs"/>
     <include name="Internal/NUnitLiteTestAssemblyRunner.cs"/>
     <include name="Internal/ParameterSet.cs"/>
@@ -58,22 +59,24 @@
     <include name="Internal/Reflect.cs"/>
     <include name="Internal/TestExecutionContext.cs"/>
     <include name="Internal/TestFixtureBuilder.cs"/>
-        <include name="Internal/TestListener.cs"/>
-        <include name="Internal/TextMessageWriter.cs"/>
-        <include name="Internal/TypeHelper.cs"/>
-        <include name="Internal/XmlHelper.cs"/>
-        <include name="Internal/Builders/NUnitLiteTestCaseBuilder.cs"/>
-        <include name="Internal/Builders/NUnitLiteTestFixtureBuilder.cs"/>
-        <include name="Internal/Commands/*.cs"/>
-        <include name="Internal/Results/*.cs"/>
-        <include name="Internal/Tests/ParameterizedMethodSuite.cs"/>
-        <include name="Internal/Tests/Test.cs"/>
-        <include name="Internal/Tests/TestAssembly.cs"/>
-        <include name="Internal/Tests/TestFixture.cs"/>
-        <include name="Internal/Tests/TestMethod.cs"/>
-        <include name="Internal/Tests/TestMethodSuite.cs"/>
-        <include name="Internal/Tests/TestSuite.cs"/>
-        <include name="Runner/*.cs"/>
+    <include name="Internal/TestListener.cs"/>
+    <include name="Internal/TextMessageWriter.cs"/>
+    <include name="Internal/TypeHelper.cs"/>
+    <include name="Internal/XmlHelper.cs"/>
+    <include name="Internal/Builders/DataAttributeTestCaseProvider.cs"/>
+    <include name="Internal/Builders/NUnitLiteTestCaseProvider.cs"/>
+    <include name="Internal/Builders/NUnitTestCaseBuilder.cs"/>
+    <include name="Internal/Builders/NUnitTestFixtureBuilder.cs"/>
+    <include name="Internal/Commands/*.cs"/>
+    <include name="Internal/Results/*.cs"/>
+    <include name="Internal/Tests/ParameterizedMethodSuite.cs"/>
+    <include name="Internal/Tests/Test.cs"/>
+    <include name="Internal/Tests/TestAssembly.cs"/>
+    <include name="Internal/Tests/TestFixture.cs"/>
+    <include name="Internal/Tests/TestMethod.cs"/>
+    <include name="Internal/Tests/TestMethodSuite.cs"/>
+    <include name="Internal/Tests/TestSuite.cs"/>
+    <include name="Runner/*.cs"/>
   </patternset>
 
   <target name="build">

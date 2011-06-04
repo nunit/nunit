@@ -78,8 +78,12 @@
     <Compile Include="Attributes\ExpectedExceptionTests.cs" />
     <Compile Include="Attributes\FixtureSetUpTearDownTests.cs" />
     <Compile Include="Attributes\PropertyAttributeTests.cs" />
-    <Compile Include="Attributes\TestCaseAttributeTests.cs" />
-    <Compile Include="Attributes\TestCaseSourceTests.cs" />
+    <Compile Include="Attributes\TestCaseAttributeTests.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Attributes\TestCaseSourceTests.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Attributes\TestDummy.cs" />
     <Compile Include="Attributes\TestFixtureAttributeTests.cs" />
     <Compile Include="Constraints\AndTest.cs" />

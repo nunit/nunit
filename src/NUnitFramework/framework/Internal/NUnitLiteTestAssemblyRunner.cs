@@ -13,7 +13,7 @@ namespace NUnit.Framework.Internal
     {
         private ITestAssemblyBuilder builder;
         private TestSuite loadedTest;
-        private Thread runThread;
+        //private Thread runThread;
 
         #region Constructors
 

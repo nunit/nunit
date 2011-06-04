@@ -47,7 +47,6 @@ namespace NUnit.Framework
         /// </summary>
         private object[] arguments;
 
-#if !NUNITLITE
         /// <summary>
         /// The expected result to be returned
         /// </summary>
@@ -81,7 +80,7 @@ namespace NUnit.Framework
         /// If true, indicates that the test case is to be ignored
         /// </summary>
         bool isIgnored;
-#endif
+
         #endregion
 
         #region Constructors
@@ -106,26 +105,27 @@ namespace NUnit.Framework
             this.arguments = new object[] { arg };
         }
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="T:TestCaseData"/> class.
-    /// </summary>
-    /// <param name="arg1">The first argument.</param>
-    /// <param name="arg2">The second argument.</param>
-    public TestCaseData(object arg1, object arg2)
-    {
-        this.arguments = new object[] { arg1, arg2 };
-    }
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:TestCaseData"/> class.
+        /// </summary>
+        /// <param name="arg1">The first argument.</param>
+        /// <param name="arg2">The second argument.</param>
+        public TestCaseData(object arg1, object arg2)
+        {
+            this.arguments = new object[] { arg1, arg2 };
+        }
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="T:TestCaseData"/> class.
-    /// </summary>
-    /// <param name="arg1">The first argument.</param>
-    /// <param name="arg2">The second argument.</param>
-    /// <param name="arg3">The third argument.</param>
-    public TestCaseData(object arg1, object arg2, object arg3)
-    {
-        this.arguments = new object[] { arg1, arg2, arg3 };
-    }
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:TestCaseData"/> class.
+        /// </summary>
+        /// <param name="arg1">The first argument.</param>
+        /// <param name="arg2">The second argument.</param>
+        /// <param name="arg3">The third argument.</param>
+        public TestCaseData(object arg1, object arg2, object arg3)
+        {
+            this.arguments = new object[] { arg1, arg2, arg3 };
+        }
+
         #endregion
 
         #region ITestCaseData Members
@@ -137,7 +137,6 @@ namespace NUnit.Framework
             get { return arguments; }
         }
 
-#if !NUNITLITE
         /// <summary>
         /// Gets the expected result
         /// </summary>
@@ -195,10 +194,9 @@ namespace NUnit.Framework
         {
             get { return isIgnored; }
         }
-#endif
+
         #endregion
 
-#if !NUNITLITE
         #region Additional Public Properties
 
         /// <summary>
@@ -342,6 +340,5 @@ namespace NUnit.Framework
             return this;
         }
         #endregion
-#endif
     }
 }

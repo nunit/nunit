@@ -36,13 +36,10 @@ namespace NUnit.TestUtilities
     /// </summary>
     public class TestBuilder
     {
-#if NUNITLITE
-        private static NUnitLiteTestFixtureBuilder fixtureBuilder = new NUnitLiteTestFixtureBuilder();
-        private static NUnitLiteTestCaseBuilder testBuilder = new NUnitLiteTestCaseBuilder();
-#else
         private static NUnitTestFixtureBuilder fixtureBuilder = new NUnitTestFixtureBuilder();
         private static NUnitTestCaseBuilder testBuilder = new NUnitTestCaseBuilder();
 
+#if !NUNITLITE
         static TestBuilder()
         {
             if (!CoreExtensions.Host.Initialized)

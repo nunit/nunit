@@ -189,6 +189,48 @@ namespace NUnit.Framework.Internal
                     type == typeof(sbyte);
         }
 
+        /// <summary>
+        /// Convert an argument list to the required paramter types.
+        /// Currently, only widening numeric conversions are performed.
+        /// </summary>
+        /// <param name="arglist">An array of args to be converted</param>
+        /// <param name="parameters">A ParamterInfo[] whose types will be used as targets</param>
+        public static void ConvertArgumentList(object[] arglist, ParameterInfo[] parameters)
+        {
+            System.Diagnostics.Debug.Assert(arglist.Length == parameters.Length);
+
+            for (int i = 0; i < parameters.Length; i++)
+            {
+                object arg = arglist[i];
+
+                if (arg != null && arg is IConvertible)
+                {
+                    Type argType = arg.GetType();
+                    Type targetType = parameters[i].ParameterType;
+                    bool convert = false;
+
+                    if (argType != targetType && !argType.IsAssignableFrom(targetType))
+                    {
+                        if (IsNumeric(argType) && IsNumeric(targetType))
+                        {
+                            if (targetType == typeof(double) || targetType == typeof(float))
+                                convert = arg is int || arg is long || arg is short || arg is byte || arg is sbyte;
+                            else
+                                if (targetType == typeof(long))
+                                    convert = arg is int || arg is short || arg is byte || arg is sbyte;
+                                else
+                                    if (targetType == typeof(short))
+                                        convert = arg is byte || arg is sbyte;
+                        }
+                    }
+
+                    if (convert)
+                        arglist[i] = Convert.ChangeType(arg, targetType,
+                            System.Globalization.CultureInfo.InvariantCulture);
+                }
+            }
+        }
+
 #if CLR_2_0 || CLR_4_0
         /// <summary>
         /// Creates an instance of a generic Type using the supplied Type arguments
