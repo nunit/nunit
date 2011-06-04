@@ -24,9 +24,9 @@
 namespace NUnit.Framework.Constraints
 {
     /// <summary>
-	/// StartsWithConstraint can test whether a string starts
-	/// with an expected substring.
-	/// </summary>
+    /// StartsWithConstraint can test whether a string starts
+    /// with an expected substring.
+    /// </summary>
     public class StartsWithConstraint : StringConstraint
     {
         /// <summary>
@@ -59,9 +59,9 @@ namespace NUnit.Framework.Constraints
         public override void WriteDescriptionTo(MessageWriter writer)
         {
             writer.WritePredicate("String starting with");
-            writer.WriteExpectedValue( MsgUtils.ClipString(expected, writer.MaxLineLength - 40, 0) );
-			if ( this.caseInsensitive )
-				writer.WriteModifier( "ignoring case" );
-		}
-    } 
+            writer.WriteExpectedValue(MsgUtils.ClipString(expected, writer.MaxLineLength - 40, 0));
+            if (this.caseInsensitive)
+                writer.WriteModifier("ignoring case");
+        }
+    }
 }

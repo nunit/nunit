@@ -23,9 +23,9 @@
 
 namespace NUnit.Framework.Constraints
 {
-	/// <summary>
-	/// Abstract base class used for prefixes
-	/// </summary>
+    /// <summary>
+    /// Abstract base class used for prefixes
+    /// </summary>
     public abstract class PrefixConstraint : Constraint
     {
         /// <summary>
@@ -37,9 +37,10 @@ namespace NUnit.Framework.Constraints
         /// Construct given a base constraint
         /// </summary>
         /// <param name="resolvable"></param>
-        protected PrefixConstraint(IResolveConstraint resolvable) : base(resolvable)
+        protected PrefixConstraint(IResolveConstraint resolvable)
+            : base(resolvable)
         {
-            if ( resolvable != null )
+            if (resolvable != null)
                 this.baseConstraint = resolvable.Resolve();
         }
     }

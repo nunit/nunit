@@ -39,7 +39,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="actual">The value to be tested</param>
         /// <returns>True for success, false for failure</returns>
-        public override bool Matches(object actual)
+        public override IConstraintResult Matches(object actual)
         {
             this.actual = actual;
 
@@ -49,8 +49,9 @@ namespace NUnit.Framework.Constraints
 
             files = dirInfo.GetFiles().Length;
             subdirs = dirInfo.GetDirectories().Length;
+            bool hasSucceeded = files == 0 && subdirs == 0;
 
-            return files == 0 && subdirs == 0;
+            return new StandardConstraintResult(hasSucceeded);
         }
 
         /// <summary>

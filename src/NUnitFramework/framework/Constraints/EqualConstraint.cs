@@ -54,21 +54,21 @@ namespace NUnit.Framework.Constraints
 
         #region Message Strings
         private static readonly string StringsDiffer_1 =
-			"String lengths are both {0}. Strings differ at index {1}.";
-		private static readonly string StringsDiffer_2 =
-			"Expected string length {0} but was {1}. Strings differ at index {2}.";
-		private static readonly string StreamsDiffer_1 =
-			"Stream lengths are both {0}. Streams differ at offset {1}.";
-		private static readonly string StreamsDiffer_2 =
-			"Expected Stream length {0} but was {1}.";// Streams differ at offset {2}.";
-		private static readonly string CollectionType_1 =
-			"Expected and actual are both {0}";
-		private static readonly string CollectionType_2 =
-			"Expected is {0}, actual is {1}";
-		private static readonly string ValuesDiffer_1 =
-			"Values differ at index {0}";
-		private static readonly string ValuesDiffer_2 =
-			"Values differ at expected index {0}, actual index {1}";
+            "String lengths are both {0}. Strings differ at index {1}.";
+        private static readonly string StringsDiffer_2 =
+            "Expected string length {0} but was {1}. Strings differ at index {2}.";
+        private static readonly string StreamsDiffer_1 =
+            "Stream lengths are both {0}. Streams differ at offset {1}.";
+        private static readonly string StreamsDiffer_2 =
+            "Expected Stream length {0} but was {1}.";// Streams differ at offset {2}.";
+        private static readonly string CollectionType_1 =
+            "Expected and actual are both {0}";
+        private static readonly string CollectionType_2 =
+            "Expected is {0}, actual is {1}";
+        private static readonly string ValuesDiffer_1 =
+            "Values differ at index {0}";
+        private static readonly string ValuesDiffer_2 =
+            "Values differ at expected index {0}, actual index {1}";
         #endregion
 
         #endregion
@@ -78,7 +78,8 @@ namespace NUnit.Framework.Constraints
         /// Initializes a new instance of the <see cref="EqualConstraint"/> class.
         /// </summary>
         /// <param name="expected">The expected value.</param>
-        public EqualConstraint(object expected) : base(expected)
+        public EqualConstraint(object expected)
+            : base(expected)
         {
             this.expected = expected;
         }
@@ -272,18 +273,18 @@ namespace NUnit.Framework.Constraints
         /// <returns>Self.</returns>
         public EqualConstraint Using<T>(IComparer<T> comparer)
         {
-            this.comparer.ExternalComparer = EqualityAdapter.For( comparer );
+            this.comparer.ExternalComparer = EqualityAdapter.For(comparer);
             return this;
         }
 
-                /// <summary>
+        /// <summary>
         /// Flag the constraint to use the supplied Comparison object.
         /// </summary>
         /// <param name="comparer">The IComparer object to use.</param>
         /// <returns>Self.</returns>
         public EqualConstraint Using<T>(Comparison<T> comparer)
         {
-            this.comparer.ExternalComparer = EqualityAdapter.For( comparer );
+            this.comparer.ExternalComparer = EqualityAdapter.For(comparer);
             return this;
         }
 
@@ -312,16 +313,17 @@ namespace NUnit.Framework.Constraints
         #endregion
 
         #region Public Methods
+
         /// <summary>
         /// Test whether the constraint is satisfied by a given value
         /// </summary>
         /// <param name="actual">The value to be tested</param>
         /// <returns>True for success, false for failure</returns>
-        public override bool Matches(object actual)
+        public override IConstraintResult Matches(object actual)
         {
             this.actual = actual;
 
-            return comparer.ObjectsEqual(expected, actual);
+            return new StandardConstraintResult(comparer.ObjectsEqual(expected, actual));
         }
 
         /// <summary>
@@ -341,16 +343,16 @@ namespace NUnit.Framework.Constraints
         /// <param name="writer">The MessageWriter to write to</param>
         public override void WriteDescriptionTo(MessageWriter writer)
         {
-			writer.WriteExpectedValue( expected );
+            writer.WriteExpectedValue(expected);
 
             if (comparer.Tolerance != null && !comparer.Tolerance.IsEmpty)
-			{
-				writer.WriteConnector("+/-");
+            {
+                writer.WriteConnector("+/-");
                 writer.WriteExpectedValue(comparer.Tolerance.Value);
-			}
+            }
 
-			if ( comparer.IgnoreCase )
-				writer.WriteModifier("ignoring case");
+            if (comparer.IgnoreCase)
+                writer.WriteModifier("ignoring case");
         }
 
         private void DisplayDifferences(MessageWriter writer, object expected, object actual, int depth)
@@ -374,33 +376,33 @@ namespace NUnit.Framework.Constraints
             int mismatch = MsgUtils.FindMismatchPosition(expected, actual, 0, comparer.IgnoreCase);
 
             if (expected.Length == actual.Length)
-				writer.WriteMessageLine(StringsDiffer_1, expected.Length, mismatch);
-			else
-				writer.WriteMessageLine(StringsDiffer_2, expected.Length, actual.Length, mismatch);
+                writer.WriteMessageLine(StringsDiffer_1, expected.Length, mismatch);
+            else
+                writer.WriteMessageLine(StringsDiffer_2, expected.Length, actual.Length, mismatch);
 
             writer.DisplayStringDifferences(expected, actual, mismatch, comparer.IgnoreCase, clipStrings);
         }
         #endregion
 
-		#region DisplayStreamDifferences
-		private void DisplayStreamDifferences(MessageWriter writer, Stream expected, Stream actual, int depth)
-		{
+        #region DisplayStreamDifferences
+        private void DisplayStreamDifferences(MessageWriter writer, Stream expected, Stream actual, int depth)
+        {
             if (expected.Length == actual.Length)
-			{
+            {
                 long offset = (long)comparer.FailurePoints[depth];
                 writer.WriteMessageLine(StreamsDiffer_1, expected.Length, offset);
-			}
-			else
-				writer.WriteMessageLine(StreamsDiffer_2, expected.Length, actual.Length);
-		}
-		#endregion
+            }
+            else
+                writer.WriteMessageLine(StreamsDiffer_2, expected.Length, actual.Length);
+        }
+        #endregion
 
         #region DisplayCollectionDifferences
         /// <summary>
         /// Display the failure information for two collections that did not match.
         /// </summary>
-		/// <param name="writer">The MessageWriter on which to display</param>
-		/// <param name="expected">The expected collection.</param>
+        /// <param name="writer">The MessageWriter on which to display</param>
+        /// <param name="expected">The expected collection.</param>
         /// <param name="actual">The actual collection</param>
         /// <param name="depth">The depth of this failure in a set of nested collections</param>
         private void DisplayCollectionDifferences(MessageWriter writer, ICollection expected, ICollection actual, int depth)
@@ -412,22 +414,22 @@ namespace NUnit.Framework.Constraints
             if (failurePoint >= 0)
             {
                 DisplayFailurePoint(writer, expected, actual, failurePoint, depth);
-				if (failurePoint < expected.Count && failurePoint < actual.Count)
-					DisplayDifferences(
-						writer,
-						GetValueFromCollection(expected, (int)failurePoint),
-						GetValueFromCollection(actual, (int)failurePoint),
-						++depth);
-				else if (expected.Count < actual.Count)
-				{
-					writer.Write( "  Extra:    " );
-					writer.WriteCollectionElements( actual, (int)failurePoint, 3 );
-				}
-				else
-				{
-					writer.Write( "  Missing:  " );
-					writer.WriteCollectionElements( expected, (int)failurePoint, 3 );
-				}
+                if (failurePoint < expected.Count && failurePoint < actual.Count)
+                    DisplayDifferences(
+                        writer,
+                        GetValueFromCollection(expected, (int)failurePoint),
+                        GetValueFromCollection(actual, (int)failurePoint),
+                        ++depth);
+                else if (expected.Count < actual.Count)
+                {
+                    writer.Write("  Extra:    ");
+                    writer.WriteCollectionElements(actual, (int)failurePoint, 3);
+                }
+                else
+                {
+                    writer.Write("  Missing:  ");
+                    writer.WriteCollectionElements(expected, (int)failurePoint, 3);
+                }
             }
         }
 
@@ -436,11 +438,11 @@ namespace NUnit.Framework.Constraints
         /// and actual collections or arrays. If both are identical, the value is 
         /// only shown once.
         /// </summary>
-		/// <param name="writer">The MessageWriter on which to display</param>
-		/// <param name="expected">The expected collection or array</param>
+        /// <param name="writer">The MessageWriter on which to display</param>
+        /// <param name="expected">The expected collection or array</param>
         /// <param name="actual">The actual collection or array</param>
-		/// <param name="indent">The indentation level for the message line</param>
-		private void DisplayCollectionTypesAndSizes(MessageWriter writer, ICollection expected, ICollection actual, int indent)
+        /// <param name="indent">The indentation level for the message line</param>
+        private void DisplayCollectionTypesAndSizes(MessageWriter writer, ICollection expected, ICollection actual, int indent)
         {
             string sExpected = MsgUtils.GetTypeRepresentation(expected);
             if (!(expected is Array))
@@ -461,12 +463,12 @@ namespace NUnit.Framework.Constraints
         /// arrays at which the comparison failed. If the arrays have different
         /// structures or dimensions, both values are shown.
         /// </summary>
-		/// <param name="writer">The MessageWriter on which to display</param>
-		/// <param name="expected">The expected array</param>
+        /// <param name="writer">The MessageWriter on which to display</param>
+        /// <param name="expected">The expected array</param>
         /// <param name="actual">The actual array</param>
         /// <param name="failurePoint">Index of the failure point in the underlying collections</param>
-		/// <param name="indent">The indentation level for the message line</param>
-		private void DisplayFailurePoint(MessageWriter writer, ICollection expected, ICollection actual, long failurePoint, int indent)
+        /// <param name="indent">The indentation level for the message line</param>
+        private void DisplayFailurePoint(MessageWriter writer, ICollection expected, ICollection actual, long failurePoint, int indent)
         {
             Array expectedArray = expected as Array;
             Array actualArray = actual as Array;

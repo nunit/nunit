@@ -47,14 +47,14 @@ namespace NUnit.Framework.Constraints
         /// Determines whether the predicate succeeds when applied
         /// to the actual value.
         /// </summary>
-        public override bool Matches(object actual)
+        public override IConstraintResult Matches(object actual)
         {
             this.actual = actual;
 
             if (!(actual is T))
                 throw new ArgumentException("The actual value is not of type " + typeof(T).Name, "actual");
 
-            return predicate((T)actual);
+            return new StandardConstraintResult(predicate((T)actual));
         }
 
         /// <summary>

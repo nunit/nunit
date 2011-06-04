@@ -63,14 +63,14 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="actual">The value to be tested</param>
         /// <returns>True for success, false for failure</returns>
-        public override bool Matches(object actual)
+        public override IConstraintResult Matches(object actual)
         {
             this.actual = actual;
 
-            if (!(actual is string))
-                return false;
+            string actualAsString = actual as string;
+            bool hasSucceeded = actualAsString != null && Matches(actualAsString);
 
-            return Matches((string)actual);
+            return new StandardConstraintResult(hasSucceeded);
         }
 
         /// <summary>
@@ -79,5 +79,5 @@ namespace NUnit.Framework.Constraints
         /// <param name="actual">The string to be tested</param>
         /// <returns>True for success, false for failure</returns>
         protected abstract bool Matches(string actual);
-    } 
+    }
 }

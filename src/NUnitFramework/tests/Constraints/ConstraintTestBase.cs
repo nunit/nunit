@@ -52,7 +52,7 @@ namespace NUnit.Framework.Constraints.Tests
         [Test, TestCaseSource("SuccessData")]
         public void SucceedsWithGoodValues(object value)
         {
-            Assert.That(theConstraint.Matches(value));
+            Assert.That(theConstraint.Matches(value).HasSucceeded);
         }
 
         [Test, TestCaseSource("FailureData")]
@@ -60,7 +60,7 @@ namespace NUnit.Framework.Constraints.Tests
         {
             string NL = Env.NewLine;
 
-            Assert.IsFalse(theConstraint.Matches(badValue));
+            Assert.IsFalse(theConstraint.Matches(badValue).HasSucceeded);
 
             TextMessageWriter writer = new TextMessageWriter();
             theConstraint.WriteMessageTo(writer);

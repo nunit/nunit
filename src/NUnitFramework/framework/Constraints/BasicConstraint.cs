@@ -21,8 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
-
 namespace NUnit.Framework.Constraints
 {
     /// <summary>
@@ -50,17 +48,17 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="actual">The value to be tested</param>
         /// <returns>True for success, false for failure</returns>
-        public override bool Matches(object actual)
+        public override IConstraintResult Matches(object actual)
         {
             this.actual = actual;
 
             if (actual == null && expected == null)
-                return true;
+                return new StandardConstraintResult(true);
 
             if (actual == null || expected == null)
-                return false;
+                return new StandardConstraintResult(false);
 
-            return expected.Equals(actual);
+            return new StandardConstraintResult(expected.Equals(actual));
         }
 
         /// <summary>
@@ -71,5 +69,5 @@ namespace NUnit.Framework.Constraints
         {
             writer.Write(description);
         }
-    }    
+    }
 }

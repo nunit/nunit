@@ -46,10 +46,12 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="actual">The object to be tested</param>
         /// <returns>True if the object is of the provided type or derives from it, otherwise false.</returns>
-        public override bool Matches(object actual)
+        public override IConstraintResult Matches(object actual)
         {
             this.actual = actual;
-            return actual != null && expectedType.IsInstanceOfType(actual);
+            bool hasSucceeded = actual != null && expectedType.IsInstanceOfType(actual);
+
+            return new StandardConstraintResult(hasSucceeded);
         }
 
         /// <summary>

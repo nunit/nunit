@@ -21,8 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
-
 namespace NUnit.Framework.Constraints
 {
     /// <summary>
@@ -47,16 +45,18 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="actual">The value to be tested</param>
         /// <returns>True for success, false for failure</returns>
-        public override bool Matches(object actual)
+        public override IConstraintResult Matches(object actual)
         {
             this.actual = actual;
 
 #if NETCF_1_0
             // TODO: THis makes it compile, now make it work.
-            return expected.Equals(actual);
+            bool hasSucceeded = expected.Equals(actual);
 #else
-            return Object.ReferenceEquals(expected, actual);
+            bool hasSucceeded = ReferenceEquals(expected, actual);
 #endif
+
+            return new StandardConstraintResult(hasSucceeded);
         }
 
         /// <summary>

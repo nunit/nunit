@@ -56,15 +56,15 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="actual">The value to be tested</param>
         /// <returns>True for success, false for failure</returns>
-        public override bool Matches(object actual)
+        public override IConstraintResult Matches(object actual)
         {
             this.actual = actual;
 
             if ( from == null || to == null || actual == null)
-                throw new ArgumentException( "Cannot compare using a null reference", "expected" );
+                throw new ArgumentException( "Cannot compare using a null reference", "actual" );
 
-            return comparer.Compare(from, actual) <= 0 &&
-                   comparer.Compare(to, actual) >= 0;
+            bool isInsideRange = comparer.Compare(from, actual) <= 0 && comparer.Compare(to, actual) >= 0;
+            return new StandardConstraintResult(isInsideRange);
         }
 
         /// <summary>
