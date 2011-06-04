@@ -43,6 +43,12 @@ namespace NUnit.Framework.Builders
     /// </summary>
     public class NUnitTestCaseBuilder : ITestCaseBuilder2
 	{
+#if NUNITLITE
+        private ITestCaseProvider testCaseProvider = new NUnitLiteTestCaseProvider();
+#else
+        private ITestCaseProvider testCaseProvider = CoreExtensions.Host.TestCaseProviders;
+#endif
+
         #region ITestCaseBuilder Methods
         /// <summary>
         /// Determines if the method can be used to build an NUnit test
@@ -60,10 +66,14 @@ namespace NUnit.Framework.Builders
         /// <returns>True if the builder can create a test case from this method</returns>
         public bool CanBuildFrom(MethodInfo method)
         {
+#if NUNITLITE
             return method.IsDefined(typeof(TestAttribute), false)
-                || method.IsDefined(typeof(TestCaseAttribute), false)
-                || method.IsDefined(typeof(TestCaseSourceAttribute), false)
+                || method.IsDefined(typeof(ITestCaseSource), false);
+#else
+            return method.IsDefined(typeof(TestAttribute), false)
+                || method.IsDefined(typeof(ITestCaseSource), false)
                 || method.IsDefined(typeof(TheoryAttribute), false);
+#endif
         }
 
         /// <summary>
@@ -114,7 +124,7 @@ namespace NUnit.Framework.Builders
         /// <returns>A Test representing one or more method invocations</returns>
         public Test BuildFrom(MethodInfo method, Test parentSuite)
         {
-            return CoreExtensions.Host.TestCaseProviders.HasTestCasesFor(method)
+            return testCaseProvider.HasTestCasesFor(method)
                 ? BuildParameterizedMethodSuite(method, parentSuite)
                 : BuildSingleTestMethod(method, parentSuite, null);
         }
@@ -131,12 +141,12 @@ namespace NUnit.Framework.Builders
         /// <param name="method">The MethodInfo for which a test is to be built</param>
         /// <param name="parentSuite">The test suite for which the method is being built</param>
         /// <returns>A ParameterizedMethodSuite populated with test cases</returns>
-        public static Test BuildParameterizedMethodSuite(MethodInfo method, Test parentSuite)
+        public Test BuildParameterizedMethodSuite(MethodInfo method, Test parentSuite)
         {
             ParameterizedMethodSuite methodSuite = new ParameterizedMethodSuite(method);
             methodSuite.ApplyCommonAttributes(method);
 
-            foreach (ITestCaseData testcase in CoreExtensions.Host.TestCaseProviders.GetTestCasesFor(method))
+            foreach (ITestCaseData testcase in testCaseProvider.GetTestCasesFor(method))
             {
                 ParameterSet parms = testcase as ParameterSet;
                 if (parms == null)
@@ -314,29 +324,17 @@ namespace NUnit.Framework.Builders
                     if (o == null)
                     {
                         testMethod.RunState = RunState.NotRunnable;
-                        testMethod.SkipReason = "Unable to determine type arguments for fixture";
+                        testMethod.SkipReason = "Unable to determine type arguments for method";
                         return false;
                     }
 
                 testMethod.method = testMethod.Method.MakeGenericMethod(typeArguments);
                 parameters = testMethod.Method.GetParameters();
-
-                for (int i = 0; i < parameters.Length; i++)
-                {
-                    if (arglist[i].GetType() != parameters[i].ParameterType && arglist[i] is IConvertible)
-                    {
-                        try
-                        {
-                            arglist[i] = Convert.ChangeType(arglist[i], parameters[i].ParameterType);
-                        }
-                        catch (Exception)
-                        {
-                            // Do nothing - the incompatible argument will be reported below
-                        }
-                    }
-                }
-            }
+           }
 #endif
+
+           if (arglist != null && parameters != null)
+               TypeHelper.ConvertArgumentList(arglist, parameters);
 
             return true;
         }

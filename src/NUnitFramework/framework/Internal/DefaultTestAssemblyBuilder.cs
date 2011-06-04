@@ -20,11 +20,13 @@ namespace NUnit.Framework.Internal
         /// </summary>
         Assembly assembly;
 
+#if !NUNITLITE
         /// <summary>
         /// Our LegacySuite builder, which is only used when a 
         /// fixture has been passed by name on the command line.
         /// </summary>
         ISuiteBuilder legacySuiteBuilder;
+#endif
 
         #endregion
 
@@ -35,9 +37,11 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public DefaultTestAssemblyBuilder()
         {
+#if !NUNITLITE
             // TODO: Keeping this separate till we can make
             //it work in all situations.
             legacySuiteBuilder = new LegacySuiteBuilder();
+#endif
         }
 
         #endregion

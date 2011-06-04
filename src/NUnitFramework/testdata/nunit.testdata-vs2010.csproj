@@ -8,8 +8,8 @@
     <ProjectGuid>{15B64946-4989-4873-915C-3E181772FA03}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>test_assembly</RootNamespace>
-    <AssemblyName>test-assembly</AssemblyName>
+    <RootNamespace>NUnit.TestData</RootNamespace>
+    <AssemblyName>nunit.testdata</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <FileUpgradeFlags>

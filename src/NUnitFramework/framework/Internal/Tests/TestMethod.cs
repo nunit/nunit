@@ -57,7 +57,6 @@ namespace NUnit.Framework.Internal
         /// </summary>
 	    internal object[] arguments;
 
-#if !NUNITLITE
         /// <summary>
         /// The expected result of the method return value
         /// </summary>
@@ -67,7 +66,6 @@ namespace NUnit.Framework.Internal
         /// Indicated whether the method has an expected result.
         /// </summary>
 	    internal bool hasExpectedResult;
-#endif
 
 		#endregion
 

@@ -43,10 +43,7 @@ namespace NUnit.TestData.CategoryAttributeData
         public void Test4() { }
 
         private TestCaseData[] Test3Data = new TestCaseData[] {
-            new TestCaseData(5)
-#if !NUNITLITE
-            .SetCategory("Bottom")
-#endif
+            new TestCaseData(5).SetCategory("Bottom")
         };
     }
 

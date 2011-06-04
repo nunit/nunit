@@ -36,16 +36,13 @@ namespace NUnit.Framework.Tests
         [TestCase(12, 3, 4)]
         [TestCase(12, 2, 6)]
         [TestCase(12, 4, 3)]
-#if !NUNITLITE
         [TestCase(12, 0, 0, ExpectedException = typeof(System.DivideByZeroException))]
         [TestCase(12, 0, 0, ExpectedExceptionName = "System.DivideByZeroException")]
-#endif
         public void IntegerDivisionWithResultPassedToTest(int n, int d, int q)
         {
             Assert.AreEqual(q, n / d);
         }
 
-#if !NUNITLITE
         [TestCase(12, 3, Result = 4)]
         [TestCase(12, 2, Result = 6)]
         [TestCase(12, 4, Result = 3)]
@@ -106,7 +103,6 @@ namespace NUnit.Framework.Tests
 				typeof(TestCaseAttributeFixture), "MethodCausesConversionOverflow").Tests[0];
 			Assert.AreEqual(RunState.NotRunnable, test.RunState);
 		}
-#endif
 
         [TestCase("12-October-1942")]
         public void CanConvertStringToDateTime(DateTime dt)
@@ -114,7 +110,6 @@ namespace NUnit.Framework.Tests
             Assert.AreEqual(1942, dt.Year);
         }
 
-#if !NUNITLITE
         [TestCase(42, ExpectedException = typeof(System.Exception),
                    ExpectedMessage = "Test Exception")]
         public void CanSpecifyExceptionMessage(int a)
@@ -129,7 +124,6 @@ namespace NUnit.Framework.Tests
         {
             throw new System.Exception("Test Exception thrown here");
         }
-#endif
 
         [TestCase(null)]
         public void CanPassNullAsFirstArgument(object a)
@@ -164,7 +158,7 @@ namespace NUnit.Framework.Tests
             Assert.AreEqual("b", array[1]);
         }
 
-#if (CLR_2_0 || CLR_4_0) && !NUNITLITE
+#if CLR_2_0 || CLR_4_0
         [TestCase(Result = null)]
         public object ResultCanBeNull()
         {
@@ -188,7 +182,6 @@ namespace NUnit.Framework.Tests
             Assert.AreEqual("d", array[1]);
         }
 
-#if !NUNITLITE
         [Test]
         public void CanSpecifyDescription()
         {
@@ -266,6 +259,5 @@ namespace NUnit.Framework.Tests
             Assert.AreEqual(2, summary.Skipped);
             Assert.That(result.Children, Has.Some.Message.EqualTo("Don't Run Me!"));
         }
-#endif
     }
 }

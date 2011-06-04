@@ -75,7 +75,6 @@ namespace NUnit.Framework.Attributes
             Assert.AreEqual("Separate Description", testCase.Properties.Get(PropertyNames.Description));
         }
 
-#if !NUNITLITE
         [Test]
         public void DescriptionOnTestCase()
         {
@@ -84,6 +83,5 @@ namespace NUnit.Framework.Attributes
             Test testCase = (Test)parameterizedMethodSuite.Tests[0];
             Assert.AreEqual("case description", testCase.Properties.Get(PropertyNames.Description));
         }
-#endif
     }
 }

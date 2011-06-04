@@ -52,9 +52,12 @@ namespace NUnit.Framework.Builders
 		/// </summary>
 		private TestFixture fixture;
 
-	    private Extensibility.ITestCaseBuilder2 testBuilders = CoreExtensions.Host.TestBuilders;
-
-	    private Extensibility.ITestDecorator testDecorators = CoreExtensions.Host.TestDecorators;
+#if NUNITLITE
+        private Extensibility.ITestCaseBuilder2 testBuilder = new NUnitTestCaseBuilder();
+#else
+        private Extensibility.ITestCaseBuilder2 testBuilder = CoreExtensions.Host.TestBuilders;
+        private Extensibility.ITestDecorator testDecorators = CoreExtensions.Host.TestDecorators;
+#endif
 
 		#endregion
 
@@ -69,10 +72,21 @@ namespace NUnit.Framework.Builders
             if ( type.IsAbstract && !type.IsSealed )
                 return false;
 
-			return type.IsDefined(typeof(TestFixtureAttribute), true ) ||
-                   Reflect.HasMethodWithAttribute(type, typeof(NUnit.Framework.TestAttribute), true) ||
+            if (type.IsDefined(typeof(TestFixtureAttribute), true))
+                return true;
+
+            // Generics must have a TestFixtureAttribute
+            if (type.IsGenericTypeDefinition)
+                return false;
+
+#if NUNITLITE
+            return Reflect.HasMethodWithAttribute(type, typeof(NUnit.Framework.TestAttribute), true) ||
+                   Reflect.HasMethodWithAttribute(type, typeof(NUnit.Framework.TestCaseAttribute), true);
+#else
+            return Reflect.HasMethodWithAttribute(type, typeof(NUnit.Framework.TestAttribute), true) ||
                    Reflect.HasMethodWithAttribute(type, typeof(NUnit.Framework.TestCaseAttribute), true) ||
                    Reflect.HasMethodWithAttribute(type, typeof(NUnit.Framework.TheoryAttribute), true);
+#endif
 		}
 
 		/// <summary>
@@ -82,6 +96,9 @@ namespace NUnit.Framework.Builders
 		/// <returns></returns>
 		public Test BuildFrom(Type type)
 		{
+#if NUNITLITE
+            return BuildSingleFixture(type, null);
+#else
             TestFixtureAttribute[] attrs = GetTestFixtureAttributes(type);
 
 #if CLR_2_0 || CLR_4_0
@@ -101,10 +118,12 @@ namespace NUnit.Framework.Builders
                 default:
                     return BuildMultipleFixtures(type, attrs);
             }
+#endif
         }
 		#endregion
 
 		#region Helper Methods
+#if !NUNITLITE
         private Test BuildMultipleFixtures(Type type, TestFixtureAttribute[] attrs)
         {
             TestSuite suite = new ParameterizedFixtureSuite(type);
@@ -122,6 +141,7 @@ namespace NUnit.Framework.Builders
 
             return suite;
         }
+#endif
 
         private Test BuildSingleFixture(Type type, TestFixtureAttribute attr)
         {
@@ -200,12 +220,18 @@ namespace NUnit.Framework.Builders
 		/// <returns>A newly constructed Test</returns>
 		private Test BuildTestCase( MethodInfo method, TestSuite suite )
 		{
-            Test test = testBuilders.BuildFrom( method, suite );
+#if NUNITLITE
+            return testBuilder.CanBuildFrom(method, suite)
+                ? testBuilder.BuildFrom(method, suite)
+                : null;
+#else
+            Test test = testBuilder.BuildFrom( method, suite );
 
 			if ( test != null )
 				test = testDecorators.Decorate( test, method );
 
 			return test;
+#endif
 		}
 
         private void CheckTestFixtureIsValid(TestFixture fixture)
@@ -225,9 +251,23 @@ namespace NUnit.Framework.Builders
             {
                 object[] args = fixture.arguments;
 
-                ConstructorInfo ctor = args == null || args.Length == 0
-                    ? fixtureType.GetConstructor(Type.EmptyTypes)
-                    : fixtureType.GetConstructor(Type.GetTypeArray(args));
+                Type[] argTypes;
+
+                // Note: This could be done more simply using
+                // Type.EmptyTypes and Type.GetTypeArray() but
+                // they don't exist in all runtimes we support.
+                if (args == null)
+                    argTypes = new Type[0];
+                else
+                {
+                    argTypes = new Type[args.Length];
+
+                    int index = 0;
+                    foreach (object arg in args)
+                        argTypes[index++] = arg.GetType();
+                }
+                
+                ConstructorInfo ctor = fixtureType.GetConstructor(argTypes);
 
                 if (ctor == null)
                 {

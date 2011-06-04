@@ -76,6 +76,7 @@ namespace NUnit.Framework.Builders
                 ITestCaseSource source = attr as ITestCaseSource;
                 if (source != null)
                 {
+                    // TODO: Create a class to handle exceptions for NUnitLite
                     foreach (ITestCaseData testCase in ((ITestCaseSource)attr).GetTestCasesFor(method))
                         testCases.Add(testCase);
                     continue;

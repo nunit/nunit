@@ -50,10 +50,8 @@ namespace NUnit.Framework.Internal
         {
             object result = Reflect.InvokeMethod(testMethod.Method, testObject, testMethod.arguments);
 
-#if !NUNITLITE
             if (testMethod.hasExpectedResult)
                 NUnit.Framework.Assert.AreEqual(testMethod.expectedResult, result);
-#endif
 
             CurrentResult.SetResult(ResultState.Success);
             return CurrentResult;

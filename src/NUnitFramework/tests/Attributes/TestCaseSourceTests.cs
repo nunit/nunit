@@ -142,20 +142,16 @@ namespace NUnit.Framework.Tests
             Assert.AreEqual(0, n % 2);
         }
 
-#if !NUNITLITE
         [Test, TestCaseSource("Params")]
         public int SourceMayReturnArgumentsAsParamSet(int n, int d)
         {
             return n / d;
         }
-#endif
 
         [Test]
         [TestCaseSource("MyData")]
         [TestCaseSource("MoreData")]
-#if !NUNITLITE
         [TestCase(12, 0, 0, ExpectedException = typeof(System.DivideByZeroException))]
-#endif
         public void TestMayUseMultipleSourceAttributes(int n, int d, int q)
         {
             Assert.AreEqual(q, n / d);
@@ -174,7 +170,6 @@ namespace NUnit.Framework.Tests
             Assert.AreEqual(q, n / d);
         }
 
-#if !NUNITLITE
         [Test, TestCaseSource(typeof(DivideDataProviderWithReturnValue), "TestCases")]
         public int SourceMayBeInAnotherClassWithReturn(int n, int d)
         {
@@ -244,6 +239,7 @@ namespace NUnit.Framework.Tests
             Assert.AreEqual("System.Exception : my message", result.Message);
         }
 
+#if !NUNITLITE
         [TestCaseSource("exception_source"), Explicit]
         public void HandlesExceptioninTestCaseSource_GuiDisplay(string lhs, string rhs)
         {
@@ -297,11 +293,9 @@ namespace NUnit.Framework.Tests
             new object[] { 12, 1, 12 },
             new object[] { 12, 2, 6 } };
 
-#if !NUNITLITE
         static object[] Params = new object[] {
             new TestCaseData(24, 3).Returns(8),
             new TestCaseData(24, 2).Returns(12) };
-#endif
 
         private class DivideDataProvider
         {
@@ -310,27 +304,23 @@ namespace NUnit.Framework.Tests
                 get
                 {
 #if CLR_2_0 || CLR_4_0
-#if !NUNITLITE
                     yield return new TestCaseData(0, 0, 0)
                         .SetName("ThisOneShouldThrow")
                         .SetDescription("Demonstrates use of ExpectedException")
                         .SetCategory("Junk")
                         .SetProperty("MyProp", "zip")
                         .Throws(typeof(System.DivideByZeroException));
-#endif
                     yield return new object[] { 100, 20, 5 };
                     yield return new object[] { 100, 4, 25 };
 #else
                     ArrayList list = new ArrayList();
                     list.Add(
-#if !NUNITLITE
                         new TestCaseData( 0, 0, 0)
                             .SetName("ThisOneShouldThrow")
                             .SetDescription("Demonstrates use of ExpectedException")
 							.SetCategory("Junk")
 							.SetProperty("MyProp", "zip")
 							.Throws( typeof (System.DivideByZeroException) ));
-#endif
                     list.Add(new object[] { 100, 20, 5 });
                     list.Add(new object[] {100, 4, 25});
                     return list;
@@ -339,7 +329,6 @@ namespace NUnit.Framework.Tests
             }
         }
 
-#if !NUNITLITE
         public class DivideDataProviderWithReturnValue
         {
             public static IEnumerable TestCases
@@ -354,7 +343,6 @@ namespace NUnit.Framework.Tests
                 }
             }
         }
-#endif
 
         private static IEnumerable exception_source
         {

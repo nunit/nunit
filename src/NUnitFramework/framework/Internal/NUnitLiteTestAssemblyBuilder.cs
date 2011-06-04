@@ -138,7 +138,7 @@ namespace NUnit.Framework.Internal
 
         private TestSuite BuildFromFixtureType(string assemblyName, Type testType)
         {
-            ISuiteBuilder testFixtureBuilder = new NUnitLiteTestFixtureBuilder();
+            ISuiteBuilder testFixtureBuilder = new NUnitTestFixtureBuilder();
 
             // TODO: This is the only situation in which we currently
             // recognize and load legacy suites. We need to determine 

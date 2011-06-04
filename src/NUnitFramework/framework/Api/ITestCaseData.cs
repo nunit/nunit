@@ -38,7 +38,6 @@ namespace NUnit.Framework.Api
         /// </summary>
         object[] Arguments { get; }
 
-#if !NUNITLITE
         /// <summary>
         /// Gets the expected result of the test case
         /// </summary>
@@ -79,7 +78,5 @@ namespace NUnit.Framework.Api
         /// Gets the property dictionary for the test case
         /// </summary>
         IPropertyBag Properties { get; }
-
-#endif
     }
 }

@@ -37,7 +37,6 @@ namespace NUnit.Framework
     public class TestCaseAttribute : DataAttribute, ITestCaseData, ITestCaseSource
     {
         private object[] arguments;
-#if !NUNITLITE
         private Type expectedExceptionType;
         private string expectedExceptionName;
         private string expectedMessage;
@@ -46,7 +45,6 @@ namespace NUnit.Framework
         private string testName;
         private bool isIgnored;
         private IPropertyBag properties;
-#endif
 
         /// <summary>
         /// Construct a TestCaseAttribute with a list of arguments.
@@ -99,7 +97,6 @@ namespace NUnit.Framework
             get { return arguments; }
         }
 
-#if !NUNITLITE
         /// <summary>
         /// Gets or sets the expected result.
         /// </summary>
@@ -222,8 +219,6 @@ namespace NUnit.Framework
                 return properties;
             }
         }
-
-#endif
 
         #region ITestCaseSource Members
 
