@@ -2,42 +2,46 @@
 <project name="NUnitFramework" default="build" basedir=".">
 
   <patternset id="source-files">
-        <include name="AssemblyInfo.cs"/>
-        <include name="Assert.cs"/>
-        <include name="AssertionHelper.cs"/>
-        <include name="Contains.cs"/>
-        <include name="Env.cs"/>
-        <include name="GlobalSettings.cs"/>
-        <include name="Has.cs"/>
-        <include name="IExpectException.cs"/>
-        <include name="Is.cs"/>
-        <include name="ITestCaseData.cs"/>
-        <include name="ListMapper.cs"/>
-        <include name="MessageMatch.cs"/>
-        <include name="ObjectList.cs"/>
-        <include name="SpecialValue.cs"/>
-        <include name="TestCaseData.cs"/>
-        <include name="Throws.cs"/>
-    
-    <include name="Api/IApplyToTest.cs"/>
-    <include name="Api/IPropertyBag.cs"/>
-    <include name="Api/ITest.cs"/>
-    <include name="Api/ITestAssemblyBuilder.cs"/>
-    <include name="Api/ITestAssemblyRunner.cs"/>
-    <include name="Api/ITestCaseData.cs"/>
-    <include name="Api/ITestCaseSource.cs"/>
-    <include name="Api/ITestListener.cs"/>
-    <include name="Api/ITestResult.cs"/>
-    <include name="Api/IXmlNodeBuilder.cs"/>
-    <include name="Api/PropertyEntry.cs"/>
-    <include name="Api/PropertyNames.cs"/>
-    <include name="Api/ResultState.cs"/>
-    <include name="Api/RunState.cs"/>
-    <include name="Api/TestOutput.cs"/>
-    <include name="Api/TestStatus.cs"/>
+    <include name="*.cs"/>
+    <exclude name="CollectionAssert.cs"/>
+    <exclude name="FileAssert.cs"/>
+    <exclude name="StringAssert.cs"/>
+    <exclude name="TestContext.cs"/>
+
+    <include name="Api/*.cs"/>
+    <exclude name="Api/IParameterDataSource.cs"/>
+    <exclude name="Api/IPropertySet.cs"/>
+    <exclude name="Api/ITestCaseSourceProvider.cs"/>
+    <exclude name="Api/ITestFilter.cs"/>
+    <exclude name="Api/TestController.cs"/>
     
     <include name="Attributes/*.cs"/>
-    
+    <exclude name="Attributes/CombinatorialAttribute.cs"/>
+    <exclude name="Attributes/CultureAttribute.cs"/>
+    <exclude name="Attributes/DatapointAttribute.cs"/>
+    <exclude name="Attributes/DatapointsAttribute.cs"/>
+    <exclude name="Attributes/DatapointSourceAttribute.cs"/>
+    <exclude name="Attributes/IncludeExcludeAttribute.cs"/>
+    <exclude name="Attributes/MaxTimeAttribute.cs"/>
+    <exclude name="Attributes/PairwiseAttribute.cs"/>
+    <exclude name="Attributes/PlatformAttribute.cs"/>
+    <exclude name="Attributes/RandomAttribute.cs"/>
+    <exclude name="Attributes/RangeAttribute.cs"/>
+    <exclude name="Attributes/RepeatAttribute.cs"/>
+    <exclude name="Attributes/RequiredAddinAttribute.cs"/>
+    <exclude name="Attributes/RequiresMTAAttribute.cs"/>
+    <exclude name="Attributes/RequiresSTAAttribute.cs"/>
+    <exclude name="Attributes/RequiresThreadAttribute.cs"/>
+    <exclude name="Attributes/SequentialAttribute.cs"/>
+    <exclude name="Attributes/SetCultureAttribute.cs"/>
+    <exclude name="Attributes/SetUICultureAttribute.cs"/>
+    <exclude name="Attributes/SetUpFixtureAttribute.cs"/>
+    <exclude name="Attributes/SuiteAttribute.cs"/>
+    <exclude name="Attributes/TheoryAttribute.cs"/>
+    <exclude name="Attributes/TimeoutAttribute.cs"/>
+    <exclude name="Attributes/ValuesAttribute.cs"/>
+    <exclude name="Attributes/ValueSourceAttribute.cs"/>
+
     <include name="Constraints/*.cs"/>
     <include name="Constraints/Operators/*.cs"/>
     

@@ -56,6 +56,7 @@
     <Compile Include="Assertions\AssertInconclusiveTests.cs" />
     <Compile Include="Assertions\AssertPassTests.cs" />
     <Compile Include="Assertions\AssertThrowsTests.cs" />
+    <Compile Include="Assertions\AssumeThatTests.cs" />
     <Compile Include="Assertions\ConditionAssertTests.cs" />
     <Compile Include="Assertions\EqualsFixture.cs" />
     <Compile Include="Assertions\MessageChecker.cs" />
@@ -125,7 +126,7 @@
     <Compile Include="TestUtilities\TestComparer.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="TestImage1.jpg" />
+    <EmbeddedResource Include="TestUtilities\TestImage1.jpg" />
     <EmbeddedResource Include="TestImage2.jpg" />
     <EmbeddedResource Include="TestText1.txt" />
     <EmbeddedResource Include="TestText2.txt" />
