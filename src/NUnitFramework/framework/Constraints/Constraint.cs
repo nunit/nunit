@@ -30,7 +30,7 @@ namespace NUnit.Framework.Constraints
     /// to be used in evaluating a constraint
     /// </summary>
     public delegate object ActualValueDelegate();
-    
+
     /// <summary>
     /// The Constraint class is the base of all built-in constraints
     /// within NUnit. It provides the operator overloads used to combine 
@@ -53,14 +53,14 @@ namespace NUnit.Framework.Constraints
         }
         #endregion
 
-		#region Static and Instance Fields
+        #region Static and Instance Fields
         /// <summary>
         /// Static UnsetObject used to detect derived constraints
         /// failing to set the actual value.
         /// </summary>
         protected static object UNSET = new UnsetObject();
 
-		/// <summary>
+        /// <summary>
         /// The actual value being tested against a constraint
         /// </summary>
         protected object actual = UNSET;
@@ -147,9 +147,9 @@ namespace NUnit.Framework.Constraints
 
             set { displayName = value; }
         }
-		#endregion
+        #endregion
 
-		#region Abstract and Virtual Methods
+        #region Abstract and Virtual Methods
         /// <summary>
         /// Write the failure message to the MessageWriter provided
         /// as an argument. The default implementation simply passes
@@ -170,7 +170,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="actual">The value to be tested</param>
         /// <returns>True for success, false for failure</returns>
-        public abstract bool Matches(object actual);
+        public abstract IConstraintResult Matches(object actual);
 
         /// <summary>
         /// Test whether the constraint is satisfied by an
@@ -181,7 +181,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="del">An ActualValueDelegate</param>
         /// <returns>True for success, false for failure</returns>
-        public virtual bool Matches(ActualValueDelegate del)
+        public virtual IConstraintResult Matches(ActualValueDelegate del)
         {
             return Matches(del());
         }
@@ -194,22 +194,22 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="actual">A reference to the value to be tested</param>
         /// <returns>True for success, false for failure</returns>
-        public virtual bool Matches<T>(ref T actual)
+        public virtual IConstraintResult Matches<T>(ref T actual)
         {
             return Matches(actual);
         }
 #else
-		/// <summary>
-		/// Test whether the constraint is satisfied by a given bool reference.
-		/// The default implementation simply dereferences the value but
-		/// derived classes may override it to provide for delayed processing.
-		/// </summary>
-		/// <param name="actual">A reference to the value to be tested</param>
-		/// <returns>True for success, false for failure</returns>
-		public virtual bool Matches(ref bool actual)
-		{
-			return Matches(actual);
-		}
+        /// <summary>
+        /// Test whether the constraint is satisfied by a given bool reference.
+        /// The default implementation simply dereferences the value but
+        /// derived classes may override it to provide for delayed processing.
+        /// </summary>
+        /// <param name="actual">A reference to the value to be tested</param>
+        /// <returns>True for success, false for failure</returns>
+        public virtual IConstraintResult Matches(ref bool actual)
+        {
+            return Matches(actual);
+        }
 #endif
 
         /// <summary>
@@ -219,17 +219,17 @@ namespace NUnit.Framework.Constraints
         public abstract void WriteDescriptionTo(MessageWriter writer);
 
         /// <summary>
-		/// Write the actual value for a failing constraint test to a
-		/// MessageWriter. The default implementation simply writes
-		/// the raw value of actual, leaving it to the writer to
-		/// perform any formatting.
-		/// </summary>
-		/// <param name="writer">The writer on which the actual value is displayed</param>
-		public virtual void WriteActualValueTo(MessageWriter writer)
-		{
-			writer.WriteActualValue( actual );
-		}
-		#endregion
+        /// Write the actual value for a failing constraint test to a
+        /// MessageWriter. The default implementation simply writes
+        /// the raw value of actual, leaving it to the writer to
+        /// perform any formatting.
+        /// </summary>
+        /// <param name="writer">The writer on which the actual value is displayed</param>
+        public virtual void WriteActualValueTo(MessageWriter writer)
+        {
+            writer.WriteActualValue(actual);
+        }
+        #endregion
 
         #region ToString Override
         /// <summary>

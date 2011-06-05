@@ -42,10 +42,11 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="actual">The object to be tested</param>
         /// <returns>True if the object can be assigned a value of the expected Type, otherwise false.</returns>
-        public override bool Matches(object actual)
+        public override IConstraintResult Matches(object actual)
         {
             this.actual = actual;
-            return actual != null && actual.GetType().IsAssignableFrom(expectedType);
+            bool hasSucceeded = actual != null && actual.GetType().IsAssignableFrom(expectedType);
+            return new StandardConstraintResult(hasSucceeded);
         }
 
         /// <summary>

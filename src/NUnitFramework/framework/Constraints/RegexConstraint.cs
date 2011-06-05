@@ -63,9 +63,9 @@ namespace NUnit.Framework.Constraints
         {
             writer.WritePredicate("String matching");
             writer.WriteExpectedValue(this.expected);
-			if ( this.caseInsensitive )
-				writer.WriteModifier( "ignoring case" );
-		}
+            if (this.caseInsensitive)
+                writer.WriteModifier("ignoring case");
+        }
     }
 #endif
 }

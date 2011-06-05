@@ -44,7 +44,7 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Construct a CollectionOrderedConstraint
         /// </summary>
-        public CollectionOrderedConstraint() 
+        public CollectionOrderedConstraint()
         {
             this.DisplayName = "ordered";
         }
@@ -66,7 +66,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public CollectionOrderedConstraint Using(IComparer comparer)
         {
-            this.comparer = ComparisonAdapter.For( comparer );
+            this.comparer = ComparisonAdapter.For(comparer);
             this.comparerName = comparer.GetType().FullName;
             return this;
         }
@@ -98,10 +98,10 @@ namespace NUnit.Framework.Constraints
         /// a specified property and returns self.
         /// </summary>
         public CollectionOrderedConstraint By(string propertyName)
-		{
-			this.propertyName = propertyName;
-			return this;
-		}
+        {
+            this.propertyName = propertyName;
+            return this;
+        }
 
         /// <summary>
         /// Test whether the collection is ordered
@@ -112,7 +112,7 @@ namespace NUnit.Framework.Constraints
         {
             object previous = null;
             int index = 0;
-            foreach(object obj in actual)
+            foreach (object obj in actual)
             {
                 object objToCompare = obj;
                 if (obj == null)

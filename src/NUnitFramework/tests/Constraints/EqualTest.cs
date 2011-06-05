@@ -541,15 +541,39 @@ namespace NUnit.Framework.Constraints.Tests
                 this.expectedColor = expectedColor;
             }
 
-            public override bool Matches(object actual)
+            public override IConstraintResult Matches(object actual)
             {
                 this.actual = actual;
-                return actual is Color && ((Color)actual).ToArgb() == expectedColor.ToArgb();
+                return new Result
+                           {HasSucceeded = actual is Color && ((Color) actual).ToArgb() == expectedColor.ToArgb()};
             }
 
             public override void WriteDescriptionTo(MessageWriter writer)
             {
                 writer.WriteExpectedValue( "same color as " + expectedColor );
+            }
+
+            private class Result : IConstraintResult
+            {
+                public bool HasSucceeded { get; set; }
+                public object Actual { get; set; }
+                public object Expected { get; set; }
+                public string Name { get; set; }
+                public string Description { get; set; }
+                public string Predicate { get; set; }
+                public string Modifier { get; set; }
+
+                public void WriteDescriptionTo(MessageWriter writer)
+                {
+                }
+
+                public void WriteMessageTo(MessageWriter writer)
+                {
+                }
+
+                public void WriteActualValueTo(MessageWriter writer)
+                {
+                }
             }
         }
 

@@ -22,7 +22,7 @@
 // ***********************************************************************
 
 namespace NUnit.Framework.Constraints
-{    
+{
     /// <summary>
     /// Represents a constraint that simply wraps the
     /// constraint provided as an argument, without any
@@ -47,5 +47,5 @@ namespace NUnit.Framework.Constraints
         {
             return constraint;
         }
-    } 
+    }
 }

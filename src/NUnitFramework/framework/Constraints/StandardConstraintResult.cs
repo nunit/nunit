@@ -1,5 +1,5 @@
-// ***********************************************************************
-// Copyright (c) 2007 Charlie Poole
+﻿// ***********************************************************************
+// Copyright (c) 2011 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -23,25 +23,61 @@
 
 namespace NUnit.Framework.Constraints
 {
-    /// <summary>
-    /// Abstract base class used for prefixes
-    /// </summary>
-    public abstract class PrefixConstraint : Constraint
-    {
-        /// <summary>
-        /// The base constraint
-        /// </summary>
-        protected Constraint baseConstraint;
 
-        /// <summary>
-        /// Construct given a base constraint
-        /// </summary>
-        /// <param name="resolvable"></param>
-        protected PrefixConstraint(IResolveConstraint resolvable)
-            : base(resolvable)
+    internal class StandardConstraintResult : IConstraintResult
+    {
+        private readonly bool hasSucceeded;
+
+        public StandardConstraintResult(bool hasSucceeded)
         {
-            if (resolvable != null)
-                this.baseConstraint = resolvable.Resolve();
+            this.hasSucceeded = hasSucceeded;
+        }
+
+        public bool HasSucceeded
+        {
+            get { return hasSucceeded; }
+        }
+
+        public object Actual
+        {
+            get { return null; }
+        }
+
+        public object Expected
+        {
+            get { return null; }
+        }
+
+        public string Name
+        {
+            get { return string.Empty; }
+        }
+
+        public string Description
+        {
+            get { return string.Empty; }
+        }
+
+        public string Predicate
+        {
+            get { return string.Empty; }
+        }
+
+        public string Modifier
+        {
+            get { return string.Empty; }
+        }
+
+        public void WriteDescriptionTo(MessageWriter writer)
+        {
+        }
+
+        public void WriteMessageTo(MessageWriter writer)
+        {
+        }
+
+        public void WriteActualValueTo(MessageWriter writer)
+        {
         }
     }
 }

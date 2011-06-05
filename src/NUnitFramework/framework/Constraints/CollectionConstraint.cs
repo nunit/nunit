@@ -48,38 +48,38 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="enumerable">The enumerable.</param>
         /// <returns>
-        /// 	<c>true</c> if the specified enumerable is empty; otherwise, <c>false</c>.
+        /// <c>true</c> if the specified enumerable is empty; otherwise, <c>false</c>.
         /// </returns>
-		protected static bool IsEmpty( IEnumerable enumerable )
-		{
-			ICollection collection = enumerable as ICollection;
-			if ( collection != null )
-				return collection.Count == 0;
-			else
-				return !enumerable.GetEnumerator().MoveNext();
-		}
+        protected static bool IsEmpty(IEnumerable enumerable)
+        {
+            ICollection collection = enumerable as ICollection;
+            if (collection != null)
+                return collection.Count == 0;
 
-		/// <summary>
-		/// Test whether the constraint is satisfied by a given value
-		/// </summary>
-		/// <param name="actual">The value to be tested</param>
-		/// <returns>True for success, false for failure</returns>
-		public override bool Matches(object actual)
-		{
-			this.actual = actual;
+            return !enumerable.GetEnumerator().MoveNext();
+        }
 
-			IEnumerable enumerable = actual as IEnumerable;
-			if ( enumerable == null )
-				throw new ArgumentException( "The actual value must be an IEnumerable", "actual" );
-		
-			return doMatch( enumerable );
-		}
+        /// <summary>
+        /// Test whether the constraint is satisfied by a given value
+        /// </summary>
+        /// <param name="actual">The value to be tested</param>
+        /// <returns>True for success, false for failure</returns>
+        public override IConstraintResult Matches(object actual)
+        {
+            this.actual = actual;
 
-		/// <summary>
-		/// Protected method to be implemented by derived classes
-		/// </summary>
-		/// <param name="collection"></param>
-		/// <returns></returns>
-		protected abstract bool doMatch(IEnumerable collection);
+            IEnumerable enumerable = actual as IEnumerable;
+            if (enumerable == null)
+                throw new ArgumentException("The actual value must be an IEnumerable", "actual");
+
+            return new StandardConstraintResult(doMatch(enumerable));
+        }
+
+        /// <summary>
+        /// Protected method to be implemented by derived classes
+        /// </summary>
+        /// <param name="collection"></param>
+        /// <returns></returns>
+        protected abstract bool doMatch(IEnumerable collection);
     }
 }

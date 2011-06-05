@@ -21,30 +21,29 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
 
 namespace NUnit.Framework.Constraints
 {
-	// TODO Needs tests
-	/// <summary>
-	/// ContainsConstraint tests a whether a string contains a substring
-	/// or a collection contains an object. It postpones the decision of
-	/// which test to use until the type of the actual argument is known.
-	/// This allows testing whether a string is contained in a collection
-	/// or as a substring of another string using the same syntax.
-	/// </summary>
-	public class ContainsConstraint : Constraint
-	{
-	    readonly object expected;
-		Constraint realConstraint;
+    // TODO Needs tests
+    /// <summary>
+    /// ContainsConstraint tests a whether a string contains a substring
+    /// or a collection contains an object. It postpones the decision of
+    /// which test to use until the type of the actual argument is known.
+    /// This allows testing whether a string is contained in a collection
+    /// or as a substring of another string using the same syntax.
+    /// </summary>
+    public class ContainsConstraint : Constraint
+    {
+        readonly object expected;
+        Constraint realConstraint;
         bool ignoreCase;
 
-		private Constraint RealConstraint
-		{
-			get 
-			{
-				if ( realConstraint == null )
-				{
+        private Constraint RealConstraint
+        {
+            get
+            {
+                if (realConstraint == null)
+                {
                     if (actual is string)
                     {
                         StringConstraint constraint = new SubstringConstraint((string)expected);
@@ -54,24 +53,24 @@ namespace NUnit.Framework.Constraints
                     }
                     else
                         this.realConstraint = new CollectionContainsConstraint(expected);
-				}
+                }
 
-				return realConstraint;
-			}
-			set 
-			{ 
-				realConstraint = value; 
-			}
-		}
+                return realConstraint;
+            }
+            set
+            {
+                realConstraint = value;
+            }
+        }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:ContainsConstraint"/> class.
+        /// Initializes a new instance of the <see cref="ContainsConstraint"/> class.
         /// </summary>
         /// <param name="expected">The expected.</param>
-		public ContainsConstraint( object expected )
-		{
-			this.expected = expected;
-		}
+        public ContainsConstraint(object expected)
+        {
+            this.expected = expected;
+        }
 
         /// <summary>
         /// Flag the constraint to ignore case and return self.
@@ -86,19 +85,19 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="actual">The value to be tested</param>
         /// <returns>True for success, false for failure</returns>
-		public override bool Matches(object actual)
-		{
+        public override IConstraintResult Matches(object actual)
+        {
             this.actual = actual;
-			return this.RealConstraint.Matches( actual );
-		}
+            return this.RealConstraint.Matches(actual);
+        }
 
         /// <summary>
         /// Write the constraint description to a MessageWriter
         /// </summary>
         /// <param name="writer">The writer on which the description is displayed</param>
-		public override void WriteDescriptionTo(MessageWriter writer)
-		{
-			this.RealConstraint.WriteDescriptionTo(writer);
-		}
-	}
+        public override void WriteDescriptionTo(MessageWriter writer)
+        {
+            this.RealConstraint.WriteDescriptionTo(writer);
+        }
+    }
 }

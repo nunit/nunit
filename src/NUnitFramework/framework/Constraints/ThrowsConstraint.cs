@@ -50,6 +50,7 @@ namespace NUnit.Framework.Constraints
         }
 
         #region Constraint Overrides
+
         /// <summary>
         /// Executes the code of the delegate and captures any exception.
         /// If a non-null base constraint was provided, it applies that
@@ -57,14 +58,14 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="actual">A delegate representing the code to be tested</param>
         /// <returns>True if an exception is thrown and the constraint succeeds, otherwise false</returns>
-        public override bool Matches(object actual)
+        public override IConstraintResult Matches(object actual)
         {
             TestDelegate code = actual as TestDelegate;
             if (code == null)
                 throw new ArgumentException(
                     string.Format("The actual value must be a TestDelegate but was {0}", actual.GetType().Name), "actual");
 
-            this.caughtException = null;
+            caughtException = null;
 
             try
             {
@@ -72,13 +73,13 @@ namespace NUnit.Framework.Constraints
             }
             catch (Exception ex)
             {
-                this.caughtException = ex;
+                caughtException = ex;
             }
 
-            if (this.caughtException == null)
-                return false;
+            bool hasSucceeded = caughtException != null &&
+                (baseConstraint == null || baseConstraint.Matches(caughtException).HasSucceeded);
 
-            return baseConstraint == null || baseConstraint.Matches(caughtException);
+            return new StandardConstraintResult(hasSucceeded);
         }
 
 #if CLR_2_0 || CLR_4_0
@@ -88,7 +89,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="del"></param>
         /// <returns></returns>
-        public override bool Matches(ActualValueDelegate del)
+        public override IConstraintResult Matches(ActualValueDelegate del)
         {
             TestDelegate testDelegate = new TestDelegate(delegate { del(); });
             return Matches((object)testDelegate);
