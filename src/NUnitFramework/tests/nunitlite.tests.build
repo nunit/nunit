@@ -33,7 +33,6 @@
         <exclude name="Attributes/PairwiseTests.cs"/>
         <exclude name="Attributes/ParameterizedTestFixtureTests.cs"/>
         <exclude name="Attributes/RepeatedTestTests.cs"/>
-        <exclude name="Attributes/SetCultureAttributeTests.cs"/>
         <exclude name="Attributes/TheoryTests.cs"/>
         <exclude name="Attributes/ThreadingTests.cs"/>
         <exclude name="Attributes/ValuesAttributeTests.cs"/>
@@ -44,9 +43,14 @@
         <exclude name="Constraints/ReusableConstraintTests.cs"/>
 
         <include name="Internal/CultureSettingAndDetectionTests.cs"/>
+        <include name="Internal/GenericTestMethodTests.cs"/>
         <include name="Internal/PlatformDetectionTests.cs"/>
         <include name="Internal/PropertyBagTests.cs" />
+        <include name="Internal/RuntimeFrameworkTests.cs" />
+        <include name="Internal/SetUpTest.cs" />
+        <include name="Internal/SimpleGenericMethods.cs" />
         <include name="Internal/TestExecutionContextTests.cs" />
+        <include name="Internal/TestMethodSignatureTests.cs" />
         <include name="Internal/TestResultTests.cs" />
         <include name="Internal/TestXmlTests.cs" />
         <include name="Internal/TextMessageWriterTests.cs" />
@@ -57,7 +61,6 @@
         <exclude name="Syntax/InvalidCodeTests.cs" />
 
         <include name="TestUtilities/*.cs"/>
-        <exclude name="TestUtilities/TestFinder.cs"/>
       </sources>
       <resources prefix="NUnit.Framework.Tests">
         <include name="TestImage1.jpg"/>

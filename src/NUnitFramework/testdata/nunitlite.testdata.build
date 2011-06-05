@@ -11,9 +11,11 @@
     <include name="ExpectedExceptionData.cs"/>
     <include name="FixtureSetUpTearDownData.cs"/>
     <include name="PropertyAttributeTests.cs"/>
+    <include name="SetUpData.cs"/>
     <include name="TestCaseAttributeFixture.cs"/>
     <include name="TestCaseSourceAttributeFixture.cs"/>
     <include name="TestContextData.cs"/>
+    <include name="TestMethodSignatureFixture.cs"/>
   </patternset>
   
   <target name="build">
