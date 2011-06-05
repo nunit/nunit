@@ -33,12 +33,13 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="actual"></param>
         /// <returns></returns>
-        public override bool Matches(object actual)
+        public override IConstraintResult Matches(object actual)
         {
             this.actual = actual;
-
-            return actual is double && double.IsNaN((double)actual)
+            bool hasSucceeded = actual is double && double.IsNaN((double)actual)
                 || actual is float && float.IsNaN((float)actual);
+
+            return new StandardConstraintResult(hasSucceeded);
         }
 
         /// <summary>

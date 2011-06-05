@@ -85,7 +85,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="actual">The value to be tested</param>
         /// <returns>True for success, false for failure</returns>
-        public override bool Matches(object actual)
+        public override IConstraintResult Matches(object actual)
         {
             this.actual = actual;
 
@@ -97,7 +97,8 @@ namespace NUnit.Framework.Constraints
 
             int icomp = comparer.Compare(expected, actual);
 
-            return icomp < 0 && greaterComparisonResult || icomp == 0 && equalComparisonResult || icomp > 0 && lessComparisonResult;
+            bool hasSucceeded = icomp < 0 && greaterComparisonResult || icomp == 0 && equalComparisonResult || icomp > 0 && lessComparisonResult;
+            return new StandardConstraintResult(hasSucceeded);
         }
 
         /// <summary>

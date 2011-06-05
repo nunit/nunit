@@ -60,8 +60,8 @@ namespace NUnit.Framework.Constraints
         {
             writer.WritePredicate("String ending with");
             writer.WriteExpectedValue(expected);
-			if ( this.caseInsensitive )
-				writer.WriteModifier( "ignoring case" );
-		}
+            if (this.caseInsensitive)
+                writer.WriteModifier("ignoring case");
+        }
     }
 }

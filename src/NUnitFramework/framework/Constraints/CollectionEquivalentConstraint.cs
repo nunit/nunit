@@ -37,7 +37,8 @@ namespace NUnit.Framework.Constraints
         /// Construct a CollectionEquivalentConstraint
         /// </summary>
         /// <param name="expected"></param>
-        public CollectionEquivalentConstraint(IEnumerable expected) : base(expected)
+        public CollectionEquivalentConstraint(IEnumerable expected)
+            : base(expected)
         {
             this.expected = expected;
             this.DisplayName = "equivalent";
@@ -50,10 +51,10 @@ namespace NUnit.Framework.Constraints
         /// <returns></returns>
         protected override bool doMatch(IEnumerable actual)
         {
-			// This is just an optimization
-			if( expected is ICollection && actual is ICollection )
-				if( ((ICollection)actual).Count != ((ICollection)expected).Count )
-					return false;
+            // This is just an optimization
+            if (expected is ICollection && actual is ICollection)
+                if (((ICollection)actual).Count != ((ICollection)expected).Count)
+                    return false;
 
             CollectionTally tally = Tally(expected);
             return tally.TryRemove(actual) && tally.Count == 0;
@@ -68,5 +69,5 @@ namespace NUnit.Framework.Constraints
             writer.WritePredicate("equivalent to");
             writer.WriteExpectedValue(expected);
         }
-    } 
+    }
 }

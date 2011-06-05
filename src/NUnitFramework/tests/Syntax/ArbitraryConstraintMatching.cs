@@ -80,7 +80,7 @@ namespace NUnit.Framework.Syntax
 
         class CustomConstraint : Constraint
         {
-            public override bool Matches(object actual)
+            public override IConstraintResult Matches(object actual)
             {
                 throw new NotImplementedException();
             }

@@ -44,7 +44,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="actual">The value to be tested</param>
         /// <returns>True for success, false for failure</returns>
-        public override bool Matches(object actual)
+        public override IConstraintResult Matches(object actual)
         {
             this.actual = actual;
 
@@ -63,15 +63,15 @@ namespace NUnit.Framework.Constraints
 
                 object value = serializer.Deserialize(stream);
 
-                return value != null;
+                return new StandardConstraintResult(value != null);
             }
             catch (NotSupportedException)
             {
-                return false;
+                return new StandardConstraintResult(false);
             }
             catch (InvalidOperationException)
             {
-                return false;
+                return new StandardConstraintResult(false);
             }
         }
 

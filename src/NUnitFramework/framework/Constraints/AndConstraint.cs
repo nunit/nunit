@@ -50,17 +50,17 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="actual">The actual value</param>
         /// <returns>True if the constraints both succeeded</returns>
-        public override bool Matches(object actual)
+        public override IConstraintResult Matches(object actual)
         {
             this.actual = actual;
 
-            failurePoint = Left.Matches(actual)
-                ? Right.Matches(actual)
+            failurePoint = Left.Matches(actual).HasSucceeded
+                ? Right.Matches(actual).HasSucceeded
                     ? FailurePoint.None
                     : FailurePoint.Right
                 : FailurePoint.Left;
 
-            return failurePoint == FailurePoint.None;
+            return new StandardConstraintResult(failurePoint == FailurePoint.None);
         }
 
         /// <summary>

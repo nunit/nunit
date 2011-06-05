@@ -47,8 +47,8 @@ namespace NUnit.Framework.Constraints
         public static string GetTypeRepresentation(object obj)
         {
             Array array = obj as Array;
-            if ( array == null )
-                return string.Format( "<{0}>", obj.GetType() );
+            if (array == null)
+                return string.Format("<{0}>", obj.GetType());
 
             StringBuilder sb = new StringBuilder();
             Type elementType = array.GetType();
@@ -70,7 +70,7 @@ namespace NUnit.Framework.Constraints
             while (--nest > 0)
                 sb.Append("[]");
 
-            return string.Format( "<{0}>", sb.ToString() );
+            return string.Format("<{0}>", sb.ToString());
         }
         /// <summary>
         /// Converts any control characters in a string 
@@ -88,12 +88,12 @@ namespace NUnit.Framework.Constraints
                 {
                     switch (c)
                     {
-                            //case '\'':
-                            //    sb.Append("\\\'");
-                            //    break;
-                            //case '\"':
-                            //    sb.Append("\\\"");
-                            //    break;
+                        //case '\'':
+                        //    sb.Append("\\\'");
+                        //    break;
+                        //case '\"':
+                        //    sb.Append("\\\"");
+                        //    break;
                         case '\\':
                             sb.Append("\\\\");
                             break;
@@ -137,7 +137,7 @@ namespace NUnit.Framework.Constraints
                 s = sb.ToString();
             }
 
-			return s;
+            return s;
         }
 
         /// <summary>
@@ -198,20 +198,20 @@ namespace NUnit.Framework.Constraints
             if (clipStart > 0)
             {
                 clipLength -= ELLIPSIS.Length;
-                sb.Append( ELLIPSIS );
+                sb.Append(ELLIPSIS);
             }
 
             if (s.Length - clipStart > clipLength)
             {
                 clipLength -= ELLIPSIS.Length;
-                sb.Append( s.Substring( clipStart, clipLength ));
+                sb.Append(s.Substring(clipStart, clipLength));
                 sb.Append(ELLIPSIS);
             }
             else if (clipStart > 0)
-                sb.Append( s.Substring(clipStart));
+                sb.Append(s.Substring(clipStart));
             else
-                sb.Append( s );
- 
+                sb.Append(s);
+
             return sb.ToString();
         }
 
@@ -235,8 +235,8 @@ namespace NUnit.Framework.Constraints
             int clipStart = maxStringLength - clipLength;
 
             // Case 3: If it doesn't, center the mismatch position
-            if ( clipStart > mismatch )
-                clipStart = Math.Max( 0, mismatch - clipLength / 2 );
+            if (clipStart > mismatch)
+                clipStart = Math.Max(0, mismatch - clipLength / 2);
 
             expected = ClipString(expected, maxDisplayLength, clipStart);
             actual = ClipString(actual, maxDisplayLength, clipStart);

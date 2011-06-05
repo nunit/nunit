@@ -280,7 +280,7 @@ namespace NUnit.Framework.Constraints.Tests
         public void UsesProvidedIComparer()
         {
             MyComparer comparer = new MyComparer();
-            Assert.That(rangeConstraint.Using(comparer).Matches(19));
+            Assert.That(rangeConstraint.Using(comparer).Matches(19).HasSucceeded);
             Assert.That(comparer.Called, "Comparer was not called");
         }
 
@@ -300,7 +300,7 @@ namespace NUnit.Framework.Constraints.Tests
         public void UsesProvidedComparerOfT()
         {
             MyComparer<int> comparer = new MyComparer<int>();
-            Assert.That(rangeConstraint.Using(comparer).Matches(19));
+            Assert.That(rangeConstraint.Using(comparer).Matches(19).HasSucceeded);
             Assert.That(comparer.Called, "Comparer was not called");
         }
 
@@ -319,7 +319,7 @@ namespace NUnit.Framework.Constraints.Tests
         public void UsesProvidedComparisonOfT()
         {
             MyComparison<int> comparer = new MyComparison<int>();
-            Assert.That(rangeConstraint.Using(new Comparison<int>(comparer.Compare)).Matches(19));
+            Assert.That(rangeConstraint.Using(new Comparison<int>(comparer.Compare)).Matches(19).HasSucceeded);
             Assert.That(comparer.Called, "Comparer was not called");
         }
 
@@ -339,7 +339,7 @@ namespace NUnit.Framework.Constraints.Tests
         public void UsesProvidedLambda()
         {
             Comparison<int> comparer = (x, y) => x.CompareTo(y);
-            Assert.That(rangeConstraint.Using(comparer).Matches(19));
+            Assert.That(rangeConstraint.Using(comparer).Matches(19).HasSucceeded);
         }
 #endif
 #endif

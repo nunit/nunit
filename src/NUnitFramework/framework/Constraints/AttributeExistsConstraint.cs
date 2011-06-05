@@ -52,7 +52,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="actual">A Type, MethodInfo, or other ICustomAttributeProvider</param>
         /// <returns>True if the expected attribute is present, otherwise false</returns>
-        public override bool Matches(object actual)
+        public override IConstraintResult Matches(object actual)
         {
             this.actual = actual;
             System.Reflection.ICustomAttributeProvider attrProvider =
@@ -61,7 +61,8 @@ namespace NUnit.Framework.Constraints
             if (attrProvider == null)
                 throw new ArgumentException(string.Format("Actual value {0} does not implement ICustomAttributeProvider", actual), "actual");
 
-            return attrProvider.GetCustomAttributes(expectedType, true).Length > 0;
+            bool hasSucceeded = attrProvider.GetCustomAttributes(expectedType, true).Length > 0;
+            return new StandardConstraintResult(hasSucceeded);
         }
 
         /// <summary>

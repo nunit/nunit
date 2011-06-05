@@ -23,27 +23,28 @@
 
 namespace NUnit.Framework.Constraints
 {
-	/// <summary>
-	/// BinaryConstraint is the abstract base of all constraints
-	/// that combine two other constraints in some fashion.
-	/// </summary>
+    /// <summary>
+    /// BinaryConstraint is the abstract base of all constraints
+    /// that combine two other constraints in some fashion.
+    /// </summary>
     public abstract class BinaryConstraint : Constraint
     {
-		/// <summary>
-		/// The first constraint being combined
-		/// </summary>
-		protected Constraint Left;
-		/// <summary>
-		/// The second constraint being combined
-		/// </summary>
-		protected Constraint Right;
+        /// <summary>
+        /// The first constraint being combined
+        /// </summary>
+        protected Constraint Left;
+        /// <summary>
+        /// The second constraint being combined
+        /// </summary>
+        protected Constraint Right;
 
-		/// <summary>
-		/// Construct a BinaryConstraint from two other constraints
-		/// </summary>
-		/// <param name="left">The first constraint</param>
-		/// <param name="right">The second constraint</param>
-		protected BinaryConstraint(Constraint left, Constraint right) : base(left, right)
+        /// <summary>
+        /// Construct a BinaryConstraint from two other constraints
+        /// </summary>
+        /// <param name="left">The first constraint</param>
+        /// <param name="right">The second constraint</param>
+        protected BinaryConstraint(Constraint left, Constraint right)
+            : base(left, right)
         {
             this.Left = left;
             this.Right = right;

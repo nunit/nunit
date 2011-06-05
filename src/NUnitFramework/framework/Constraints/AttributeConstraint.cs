@@ -56,7 +56,7 @@ namespace NUnit.Framework.Constraints
         /// expected attribute and if its value matches the
         /// additional constraint specified.
         /// </summary>
-        public override bool Matches(object actual)
+        public override IConstraintResult Matches(object actual)
         {
             this.actual = actual;
             System.Reflection.ICustomAttributeProvider attrProvider =
@@ -69,7 +69,7 @@ namespace NUnit.Framework.Constraints
             if (attrs.Length == 0)
                 throw new ArgumentException(string.Format("Attribute {0} was not found", expectedType), "actual");
 
-            this.attrFound = attrs[0];
+            attrFound = attrs[0];
             return baseConstraint.Matches(attrFound);
         }
 

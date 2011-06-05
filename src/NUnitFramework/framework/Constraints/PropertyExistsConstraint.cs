@@ -55,21 +55,21 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="actual">The object to be tested</param>
         /// <returns>True for success, false for failure</returns>
-        public override bool Matches(object actual)
+        public override IConstraintResult Matches(object actual)
         {
             this.actual = actual;
 
             if (actual == null)
                 throw new ArgumentNullException("actual");
 
-            this.actualType = actual as Type;
+            actualType = actual as Type;
             if (actualType == null)
                 actualType = actual.GetType();
 
             PropertyInfo property = actualType.GetProperty(name,
                 BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.GetProperty);
 
-            return property != null;
+            return new StandardConstraintResult(property != null);
         }
 
         /// <summary>

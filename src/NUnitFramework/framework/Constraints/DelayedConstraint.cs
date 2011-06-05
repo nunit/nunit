@@ -66,7 +66,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="actual">The value to be tested</param>
         /// <returns>True for if the base constraint fails, false if it succeeds</returns>
-        public override bool Matches(object actual)
+        public override IConstraintResult Matches(object actual)
         {
             Thread.Sleep(delayInMilliseconds);
             this.actual = actual;
@@ -78,23 +78,24 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="del">The delegate whose value is to be tested</param>
         /// <returns>True for if the base constraint fails, false if it succeeds</returns>
-        public override bool Matches(ActualValueDelegate del)
+        public override IConstraintResult Matches(ActualValueDelegate del)
         {
-			int remainingDelay = delayInMilliseconds;
+            int remainingDelay = delayInMilliseconds;
 
-			while (pollingInterval > 0 && pollingInterval < remainingDelay)
-			{
-				remainingDelay -= pollingInterval;
-				Thread.Sleep(pollingInterval);
-				this.actual = del();
-				if (baseConstraint.Matches(actual))
-					return true;
-			}
+            while (pollingInterval > 0 && pollingInterval < remainingDelay)
+            {
+                remainingDelay -= pollingInterval;
+                Thread.Sleep(pollingInterval);
+                actual = del();
+                IConstraintResult result = baseConstraint.Matches(actual);
+                if (result.HasSucceeded)
+                    return result;
+            }
 
-			if ( remainingDelay > 0 )
-				Thread.Sleep(remainingDelay);
-			this.actual = del();
-			return baseConstraint.Matches(actual);
+            if (remainingDelay > 0)
+                Thread.Sleep(remainingDelay);
+            actual = del();
+            return baseConstraint.Matches(actual);
         }
 
 #if CLR_2_0 || CLR_4_0
@@ -105,7 +106,34 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="actual">A reference to the value to be tested</param>
         /// <returns>True for success, false for failure</returns>
-        public override bool Matches<T>(ref T actual)
+        public override IConstraintResult Matches<T>(ref T actual)
+        {
+            int remainingDelay = delayInMilliseconds;
+
+            while (pollingInterval > 0 && pollingInterval < remainingDelay)
+            {
+                remainingDelay -= pollingInterval;
+                Thread.Sleep(pollingInterval);
+                this.actual = actual;
+                IConstraintResult result = baseConstraint.Matches(actual);
+                if (result.HasSucceeded)
+                    return result;
+            }
+
+            if (remainingDelay > 0)
+                Thread.Sleep(remainingDelay);
+            this.actual = actual;
+            return baseConstraint.Matches(actual);
+        }
+#else
+        /// <summary>
+        /// Test whether the constraint is satisfied by a given boolean reference.
+        /// Overridden to wait for the specified delay period before
+        /// calling the base constraint with the dereferenced value.
+        /// </summary>
+        /// <param name="actual">A reference to the value to be tested</param>
+        /// <returns>True for success, false for failure</returns>
+        public override bool Matches(ref bool actual)
         {
             int remainingDelay = delayInMilliseconds;
 
@@ -120,35 +148,10 @@ namespace NUnit.Framework.Constraints
 
             if ( remainingDelay > 0 )
                 Thread.Sleep(remainingDelay);
+            
             this.actual = actual;
             return baseConstraint.Matches(actual);
         }
-#else
-		/// <summary>
-		/// Test whether the constraint is satisfied by a given boolean reference.
-		/// Overridden to wait for the specified delay period before
-		/// calling the base constraint with the dereferenced value.
-		/// </summary>
-		/// <param name="actual">A reference to the value to be tested</param>
-		/// <returns>True for success, false for failure</returns>
-		public override bool Matches(ref bool actual)
-		{
-			int remainingDelay = delayInMilliseconds;
-
-			while (pollingInterval > 0 && pollingInterval < remainingDelay)
-			{
-				remainingDelay -= pollingInterval;
-				Thread.Sleep(pollingInterval);
-				this.actual = actual;
-				if (baseConstraint.Matches(actual))
-					return true;
-			}
-
-			if ( remainingDelay > 0 )
-				Thread.Sleep(remainingDelay);
-			this.actual = actual;
-			return baseConstraint.Matches(actual);
-		}
 #endif
 
         /// <summary>

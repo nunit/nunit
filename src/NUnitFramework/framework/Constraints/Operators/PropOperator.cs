@@ -65,5 +65,5 @@ namespace NUnit.Framework.Constraints
             else
                 stack.Push(new PropertyConstraint(name, stack.Pop()));
         }
-    } 
+    }
 }

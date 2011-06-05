@@ -27,20 +27,20 @@ using System.Threading;
 namespace NUnit.Framework.Constraints.Tests
 {
     [TestFixture]
-	public class AfterConstraintTest : ConstraintTestBase
-	{
-		private static bool value;
+    public class AfterConstraintTest : ConstraintTestBase
+    {
+        private static bool value;
 
-		[SetUp]
-		public void SetUp()
-		{
-			theConstraint = new DelayedConstraint(new EqualConstraint(true), 500);
-			expectedDescription = "True after 500 millisecond delay";
-			stringRepresentation = "<after 500 <equal True>>";
+        [SetUp]
+        public void SetUp()
+        {
+            theConstraint = new DelayedConstraint(new EqualConstraint(true), 500);
+            expectedDescription = "True after 500 millisecond delay";
+            stringRepresentation = "<after 500 <equal True>>";
 
             value = false;
             //SetValueTrueAfterDelay(300);
-		}
+        }
 
         object[] SuccessData = new object[] { true };
         object[] FailureData = new object[] { 
@@ -48,7 +48,7 @@ namespace NUnit.Framework.Constraints.Tests
             new TestCaseData( 0, "0" ),
             new TestCaseData( null, "null" ) };
 
-		object[] InvalidData = new object[] { InvalidDelegate };
+        object[] InvalidData = new object[] { InvalidDelegate };
 
         ActualValueDelegate[] SuccessDelegates = new ActualValueDelegate[] { DelegateReturningValue };
         ActualValueDelegate[] FailureDelegates = new ActualValueDelegate[] { DelegateReturningFalse, DelegateReturningZero };
@@ -57,13 +57,13 @@ namespace NUnit.Framework.Constraints.Tests
         public void SucceedsWithGoodDelegates(ActualValueDelegate del)
         {
             SetValueTrueAfterDelay(300);
-            Assert.That(theConstraint.Matches(del));
+            Assert.That(theConstraint.Matches(del).HasSucceeded);
         }
 
-        [Test,TestCaseSource("FailureDelegates")]
+        [Test, TestCaseSource("FailureDelegates")]
         public void FailsWithBadDelegates(ActualValueDelegate del)
         {
-            Assert.IsFalse(theConstraint.Matches(del));
+            Assert.IsFalse(theConstraint.Matches(del).HasSucceeded);
         }
 
         [Test]
@@ -94,30 +94,30 @@ namespace NUnit.Framework.Constraints.Tests
 
         private static int setValueTrueDelay;
 
-		private void SetValueTrueAfterDelay(int delay)
-		{
+        private void SetValueTrueAfterDelay(int delay)
+        {
             setValueTrueDelay = delay;
-            Thread thread = new Thread( SetValueTrueDelegate );
+            Thread thread = new Thread(SetValueTrueDelegate);
             thread.Start();
-		}
+        }
 
-		private static void MethodReturningVoid() { }
-		private static TestDelegate InvalidDelegate = new TestDelegate(MethodReturningVoid);
+        private static void MethodReturningVoid() { }
+        private static TestDelegate InvalidDelegate = new TestDelegate(MethodReturningVoid);
 
-		private static object MethodReturningValue() { return value; }
-		private static ActualValueDelegate DelegateReturningValue = new ActualValueDelegate(MethodReturningValue);
+        private static object MethodReturningValue() { return value; }
+        private static ActualValueDelegate DelegateReturningValue = new ActualValueDelegate(MethodReturningValue);
 
-		private static object MethodReturningFalse() { return false; }
-		private static ActualValueDelegate DelegateReturningFalse = new ActualValueDelegate(MethodReturningFalse);
+        private static object MethodReturningFalse() { return false; }
+        private static ActualValueDelegate DelegateReturningFalse = new ActualValueDelegate(MethodReturningFalse);
 
-		private static object MethodReturningZero() { return 0; }
-		private static ActualValueDelegate DelegateReturningZero = new ActualValueDelegate(MethodReturningZero);
+        private static object MethodReturningZero() { return 0; }
+        private static ActualValueDelegate DelegateReturningZero = new ActualValueDelegate(MethodReturningZero);
 
         private static void MethodSetsValueTrue()
         {
             Thread.Sleep(setValueTrueDelay);
             value = true;
         }
-		private ThreadStart SetValueTrueDelegate = new ThreadStart(MethodSetsValueTrue);
-	}
+        private ThreadStart SetValueTrueDelegate = new ThreadStart(MethodSetsValueTrue);
+    }
 }
