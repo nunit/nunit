@@ -65,12 +65,14 @@
     <Compile Include="AssertIgnoreData.cs" />
     <Compile Include="AttributeInheritanceData.cs" />
     <Compile Include="CategoryAttributeData.cs" />
+    <Compile Include="CultureAttributeData.cs" />
     <Compile Include="DescriptionFixture.cs" />
     <Compile Include="ExpectedExceptionData.cs" />
     <Compile Include="FixtureSetUpTearDownData.cs" />
     <Compile Include="PropertyAttributeTests.cs" />
     <Compile Include="TestCaseAttributeFixture.cs" />
     <Compile Include="TestCaseSourceAttributeFixture.cs" />
+    <Compile Include="TestContextData.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="nunitlite.testdata.build">

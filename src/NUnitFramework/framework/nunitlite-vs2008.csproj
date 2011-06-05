@@ -245,6 +245,7 @@
     <Compile Include="Runner\TextUI.cs" />
     <Compile Include="SpecialValue.cs" />
     <Compile Include="TestCaseData.cs" />
+    <Compile Include="TestContext.cs" />
     <Compile Include="Throws.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -79,6 +79,7 @@
     <Compile Include="Attributes\ExpectedExceptionTests.cs" />
     <Compile Include="Attributes\FixtureSetUpTearDownTests.cs" />
     <Compile Include="Attributes\PropertyAttributeTests.cs" />
+    <Compile Include="Attributes\SetCultureAttributeTests.cs" />
     <Compile Include="Attributes\TestCaseAttributeTests.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -111,7 +112,10 @@
     <Compile Include="Constraints\ToStringTests.cs" />
     <Compile Include="Constraints\TypeConstraintTests.cs" />
     <Compile Include="Constraints\XmlSerializableTest.cs" />
+    <Compile Include="Internal\CultureSettingAndDetectionTests.cs" />
+    <Compile Include="Internal\PlatformDetectionTests.cs" />
     <Compile Include="Internal\PropertyBagTests.cs" />
+    <Compile Include="Internal\RuntimeFrameworkTests.cs" />
     <Compile Include="Internal\TestExecutionContextTests.cs" />
     <Compile Include="Internal\TestXmlTests.cs" />
     <Compile Include="Internal\TextMessageWriterTests.cs" />

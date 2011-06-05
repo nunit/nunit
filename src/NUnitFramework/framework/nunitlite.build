@@ -6,7 +6,6 @@
     <exclude name="CollectionAssert.cs"/>
     <exclude name="FileAssert.cs"/>
     <exclude name="StringAssert.cs"/>
-    <exclude name="TestContext.cs"/>
 
     <include name="Api/*.cs"/>
     <exclude name="Api/IParameterDataSource.cs"/>

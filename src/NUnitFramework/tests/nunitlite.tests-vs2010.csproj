@@ -33,7 +33,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\..\..\bin\net-4.5\Release\</OutputPath>
-    <DefineConstants>TRACE;NET_3_5;CLR_2_0;NUNITLITE</DefineConstants>
+    <DefineConstants>TRACE;NET_3_5;CLR_2_0;CS_3_0;NUNITLITE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>
@@ -100,6 +100,8 @@
     <Compile Include="Constraints\ToStringTests.cs" />
     <Compile Include="Constraints\TypeConstraintTests.cs" />
     <Compile Include="Constraints\XmlSerializableTest.cs" />
+    <Compile Include="Internal\CultureSettingAndDetectionTests.cs" />
+    <Compile Include="Internal\PlatformDetectionTests.cs" />
     <Compile Include="Internal\PropertyBagTests.cs" />
     <Compile Include="Internal\TestExecutionContextTests.cs" />
     <Compile Include="Internal\TestResultTests.cs" />
@@ -119,6 +121,7 @@
     <Compile Include="Syntax\SyntaxTest.cs" />
     <Compile Include="Syntax\ThrowsTests.cs" />
     <Compile Include="Syntax\TypeConstraints.cs" />
+    <Compile Include="TestContextTests.cs" />
     <Compile Include="TestUtilities\AlwaysEqualComparer.cs" />
     <Compile Include="TestUtilities\CollectionAdapter.cs" />
     <Compile Include="TestUtilities\ResultSummary.cs" />
