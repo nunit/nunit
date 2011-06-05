@@ -5,6 +5,7 @@
     <include name="AssertFailFixture.cs"/>
     <include name="AssertIgnoreData.cs"/>
     <include name="AttributeInheritanceData.cs"/>
+    <include name="CultureAttributeData.cs"/>
     <include name="CategoryAttributeData.cs"/>
     <include name="DescriptionFixture.cs"/>
     <include name="ExpectedExceptionData.cs"/>

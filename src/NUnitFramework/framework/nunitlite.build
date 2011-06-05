@@ -17,14 +17,11 @@
     
     <include name="Attributes/*.cs"/>
     <exclude name="Attributes/CombinatorialAttribute.cs"/>
-    <exclude name="Attributes/CultureAttribute.cs"/>
     <exclude name="Attributes/DatapointAttribute.cs"/>
     <exclude name="Attributes/DatapointsAttribute.cs"/>
     <exclude name="Attributes/DatapointSourceAttribute.cs"/>
-    <exclude name="Attributes/IncludeExcludeAttribute.cs"/>
     <exclude name="Attributes/MaxTimeAttribute.cs"/>
     <exclude name="Attributes/PairwiseAttribute.cs"/>
-    <exclude name="Attributes/PlatformAttribute.cs"/>
     <exclude name="Attributes/RandomAttribute.cs"/>
     <exclude name="Attributes/RangeAttribute.cs"/>
     <exclude name="Attributes/RepeatAttribute.cs"/>
@@ -33,8 +30,6 @@
     <exclude name="Attributes/RequiresSTAAttribute.cs"/>
     <exclude name="Attributes/RequiresThreadAttribute.cs"/>
     <exclude name="Attributes/SequentialAttribute.cs"/>
-    <exclude name="Attributes/SetCultureAttribute.cs"/>
-    <exclude name="Attributes/SetUICultureAttribute.cs"/>
     <exclude name="Attributes/SetUpFixtureAttribute.cs"/>
     <exclude name="Attributes/SuiteAttribute.cs"/>
     <exclude name="Attributes/TheoryAttribute.cs"/>
@@ -50,7 +45,8 @@
     <include name="Extensibility/ISuiteBuilder.cs"/>
     <include name="Extensibility/ITestCaseBuilder.cs"/>
     <include name="Extensibility/ITestCaseProvider.cs"/>
-    
+
+    <include name="Internal/CultureDetector.cs"/>
     <include name="Internal/ExceptionHelper.cs"/>
     <include name="Internal/ExpectedExceptionProcessor.cs"/>
     <include name="Internal/InvalidTestFixtureException.cs"/>
@@ -58,9 +54,12 @@
     <include name="Internal/NUnitException.cs"/>
     <include name="Internal/NUnitLiteTestAssemblyBuilder.cs"/>
     <include name="Internal/NUnitLiteTestAssemblyRunner.cs"/>
+    <include name="Internal/OSPlatform.cs"/>
     <include name="Internal/ParameterSet.cs"/>
+    <include name="Internal/PlatformHelper.cs"/>
     <include name="Internal/PropertyBag.cs"/>
     <include name="Internal/Reflect.cs"/>
+    <include name="Internal/RuntimeFramework.cs"/>
     <include name="Internal/TestExecutionContext.cs"/>
     <include name="Internal/TestFixtureBuilder.cs"/>
     <include name="Internal/TestListener.cs"/>
@@ -80,6 +79,7 @@
     <include name="Internal/Tests/TestMethod.cs"/>
     <include name="Internal/Tests/TestMethodSuite.cs"/>
     <include name="Internal/Tests/TestSuite.cs"/>
+    
     <include name="Runner/*.cs"/>
   </patternset>
 

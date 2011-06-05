@@ -26,7 +26,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\..\..\bin\net-3.5\Release\</OutputPath>
-    <DefineConstants>TRACE;NET_3_5;CLR_2_0</DefineConstants>
+    <DefineConstants>TRACE;NET_3_5;CLR_2_0;CS_3_0</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>

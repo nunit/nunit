@@ -97,6 +97,8 @@
     <Compile Include="Constraints\ToStringTests.cs" />
     <Compile Include="Constraints\TypeConstraintTests.cs" />
     <Compile Include="Constraints\XmlSerializableTest.cs" />
+    <Compile Include="Internal\CultureSettingAndDetectionTests.cs" />
+    <Compile Include="Internal\PlatformDetectionTests.cs" />
     <Compile Include="Internal\PropertyBagTests.cs" />
     <Compile Include="Internal\TestExecutionContextTests.cs" />
     <Compile Include="Internal\TestResultTests.cs">
