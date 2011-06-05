@@ -65,16 +65,16 @@ namespace NUnit.Framework.Internal
 
             command = new SetUpTearDownCommand(command);
 
-#if !NUNITLITE
             if (test.Properties.ContainsKey(PropertyNames.MaxTime))
                 command = new MaxTimeCommand(command);
 
+#if !NUNITLITE
             if (test.ShouldRunOnOwnThread)
                 command = new ThreadedTestCommand(command);
+#endif
 
             if (test.Properties.ContainsKey(PropertyNames.RepeatCount))
                 command = new RepeatedTestCommand(command);
-#endif
 
             command = new TestExecutionContextCommand(
                 new TestMethodCommand(command));

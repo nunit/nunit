@@ -19,11 +19,9 @@
     <exclude name="Attributes/DatapointAttribute.cs"/>
     <exclude name="Attributes/DatapointsAttribute.cs"/>
     <exclude name="Attributes/DatapointSourceAttribute.cs"/>
-    <exclude name="Attributes/MaxTimeAttribute.cs"/>
     <exclude name="Attributes/PairwiseAttribute.cs"/>
     <exclude name="Attributes/RandomAttribute.cs"/>
     <exclude name="Attributes/RangeAttribute.cs"/>
-    <exclude name="Attributes/RepeatAttribute.cs"/>
     <exclude name="Attributes/RequiredAddinAttribute.cs"/>
     <exclude name="Attributes/RequiresMTAAttribute.cs"/>
     <exclude name="Attributes/RequiresSTAAttribute.cs"/>

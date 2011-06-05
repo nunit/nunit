@@ -29,9 +29,7 @@
         <include name="Attributes/*.cs"/>
         <exclude name="Attributes/CombinatorialTests.cs"/>
         <exclude name="Attributes/DatapointTests.cs"/>
-        <exclude name="Attributes/MaxTimeTests.cs"/>
         <exclude name="Attributes/PairwiseTests.cs"/>
-        <exclude name="Attributes/RepeatedTestTests.cs"/>
         <exclude name="Attributes/TheoryTests.cs"/>
         <exclude name="Attributes/ThreadingTests.cs"/>
         <exclude name="Attributes/ValuesAttributeTests.cs"/>
