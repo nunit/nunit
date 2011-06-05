@@ -55,6 +55,7 @@
     <Compile Include="TestCaseSourceAttributeFixture.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="TestContextData.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\framework\nunitlite-vs2008.csproj">

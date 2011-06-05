@@ -31,7 +31,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\..\..\bin\net-3.5\Release\</OutputPath>
-    <DefineConstants>TRACE;NET_3_5;CLR_2_0;NUNITLITE</DefineConstants>
+    <DefineConstants>TRACE;NET_3_5;CLR_2_0;CS_3_0;NUNITLITE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>
@@ -120,6 +120,7 @@
     <Compile Include="Syntax\SyntaxTest.cs" />
     <Compile Include="Syntax\ThrowsTests.cs" />
     <Compile Include="Syntax\TypeConstraints.cs" />
+    <Compile Include="TestContextTests.cs" />
     <Compile Include="TestUtilities\ResultSummary.cs" />
     <Compile Include="TestUtilities\TestBuilder.cs" />
     <Compile Include="TestUtilities\TestDelegates.cs" />

@@ -13,6 +13,7 @@
     <include name="PropertyAttributeTests.cs"/>
     <include name="TestCaseAttributeFixture.cs"/>
     <include name="TestCaseSourceAttributeFixture.cs"/>
+    <include name="TestContextData.cs"/>
   </patternset>
   
   <target name="build">
