@@ -2,20 +2,17 @@
 <project name="TestData" default="build" basedir=".">
 
   <patternset id="source-files">
-    <include name="AssertFailFixture.cs"/>
-    <include name="AssertIgnoreData.cs"/>
-    <include name="AttributeInheritanceData.cs"/>
-    <include name="CultureAttributeData.cs"/>
-    <include name="CategoryAttributeData.cs"/>
-    <include name="DescriptionFixture.cs"/>
-    <include name="ExpectedExceptionData.cs"/>
-    <include name="FixtureSetUpTearDownData.cs"/>
-    <include name="PropertyAttributeTests.cs"/>
-    <include name="SetUpData.cs"/>
-    <include name="TestCaseAttributeFixture.cs"/>
-    <include name="TestCaseSourceAttributeFixture.cs"/>
-    <include name="TestContextData.cs"/>
-    <include name="TestMethodSignatureFixture.cs"/>
+    <include name="*.cs"/>
+    <exclude name="DatapointFixture.cs"/>
+    <exclude name="LegacySuiteData.cs"/>
+    <exclude name="MaxTimeFixture.cs"/>
+    <exclude name="RepeatedTestFixture.cs"/>
+    <exclude name="SetUpFixtureTests.cs"/>
+    <exclude name="TestFixtureExtensionData.cs"/>
+    <exclude name="TheoryFixture.cs"/>
+    <exclude name="ThreadingFixture.cs"/>
+    <exclude name="UnexpectedExceptionFixture.cs"/>
+    <exclude name="UnhandledExceptions.cs"/>
   </patternset>
   
   <target name="build">

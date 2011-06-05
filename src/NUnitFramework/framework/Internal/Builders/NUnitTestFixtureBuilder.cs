@@ -96,9 +96,6 @@ namespace NUnit.Framework.Builders
 		/// <returns></returns>
 		public Test BuildFrom(Type type)
 		{
-#if NUNITLITE
-            return BuildSingleFixture(type, null);
-#else
             TestFixtureAttribute[] attrs = GetTestFixtureAttributes(type);
 
 #if CLR_2_0 || CLR_4_0
@@ -118,12 +115,11 @@ namespace NUnit.Framework.Builders
                 default:
                     return BuildMultipleFixtures(type, attrs);
             }
-#endif
         }
 		#endregion
 
 		#region Helper Methods
-#if !NUNITLITE
+
         private Test BuildMultipleFixtures(Type type, TestFixtureAttribute[] attrs)
         {
             TestSuite suite = new ParameterizedFixtureSuite(type);
@@ -141,7 +137,6 @@ namespace NUnit.Framework.Builders
 
             return suite;
         }
-#endif
 
         private Test BuildSingleFixture(Type type, TestFixtureAttribute attr)
         {

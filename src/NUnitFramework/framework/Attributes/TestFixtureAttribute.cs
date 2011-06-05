@@ -39,9 +39,7 @@ namespace NUnit.Framework
         private object[] originalArgs;
         private object[] constructorArgs;
         private Type[] typeArgs;
-#if !NUNITLITE
         private bool argsInitialized;
-#endif
 
         private bool isIgnored;
         private string ignoreReason;
@@ -82,7 +80,7 @@ namespace NUnit.Framework
         {
             get 
             {
-#if (CLR_2_0 || CLR_4_0) && !NUNITLITE
+#if CLR_2_0 || CLR_4_0
                 if (!argsInitialized)
                     InitializeArgs();
 #endif
@@ -123,7 +121,7 @@ namespace NUnit.Framework
         {
             get
             {
-#if (CLR_2_0 || CLR_4_0) && !NUNITLITE
+#if CLR_2_0 || CLR_4_0
                 if (!argsInitialized)
                     InitializeArgs();
 #endif
@@ -132,13 +130,11 @@ namespace NUnit.Framework
             set 
             { 
                 typeArgs = value;
-#if !NUNITLITE
                 argsInitialized = true;
-#endif
             }
         }
 
-#if (CLR_2_0 || CLR_4_0) && !NUNITLITE
+#if CLR_2_0 || CLR_4_0
         /// <summary>
         /// Helper method to split the original argument list
         /// into type arguments and constructor arguments.
