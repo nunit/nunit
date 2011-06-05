@@ -78,9 +78,7 @@ namespace NUnit.Framework.Internal
         {
             try
             {
-#if !NUNITLITE
                 ApplySettingsToExecutionContext();
-#endif
 
                 Test parent = test.Parent as Test;
                 if (parent != null)
@@ -103,7 +101,6 @@ namespace NUnit.Framework.Internal
             }
         }
 
-#if !NUNITLITE
         /// <summary>
         /// Applies the culture settings specified on the test
         /// to the TestExecutionContext.
@@ -120,9 +117,10 @@ namespace NUnit.Framework.Internal
                 TestExecutionContext.CurrentContext.CurrentUICulture =
                     new System.Globalization.CultureInfo(setUICulture);
 
+#if !NUNITLITE
             if (test.Properties.ContainsKey(PropertyNames.Timeout))
                 TestExecutionContext.CurrentContext.TestCaseTimeout = (int)test.Properties.Get(PropertyNames.Timeout);
-        }
 #endif
+        }
     }
 }

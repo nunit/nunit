@@ -94,6 +94,16 @@ namespace NUnit.Framework.Internal
         private TextWriter traceWriter;
 #endif
 
+        /// <summary>
+        /// The current culture
+        /// </summary>
+        private CultureInfo currentCulture;
+
+        /// <summary>
+        /// The current UI culture
+        /// </summary>
+        private CultureInfo currentUICulture;
+
 #if !NUNITLITE
         /// <summary>
         /// Default timeout for test cases
@@ -104,16 +114,6 @@ namespace NUnit.Framework.Internal
         /// Indicates whether logging is enabled
         /// </summary>
         private bool logging;
-
-        /// <summary>
-		/// The current culture
-		/// </summary>
-		private CultureInfo currentCulture;
-
-        /// <summary>
-        /// The current UI culture
-        /// </summary>
-        private CultureInfo currentUICulture;
 
 		/// <summary>
 		/// The current working directory
@@ -149,11 +149,11 @@ namespace NUnit.Framework.Internal
             this.tracing = false;
 #endif
 
+			this.currentCulture = CultureInfo.CurrentCulture;
+            this.currentUICulture = CultureInfo.CurrentUICulture;
 #if !NUNITLITE
             this.testCaseTimeout = 0;
 			this.logging = false;
-			this.currentCulture = CultureInfo.CurrentCulture;
-            this.currentUICulture = CultureInfo.CurrentUICulture;
 			this.currentDirectory = Environment.CurrentDirectory;
             this.logCapture = new Log4NetCapture();
             this.currentPrincipal = Thread.CurrentPrincipal;
@@ -181,11 +181,11 @@ namespace NUnit.Framework.Internal
             this.tracing = other.tracing;
 #endif
 
+			this.currentCulture = CultureInfo.CurrentCulture;
+            this.currentUICulture = CultureInfo.CurrentUICulture;
 #if !NUNITLITE
             this.testCaseTimeout = other.testCaseTimeout;
 			this.logging = other.logging;
-			this.currentCulture = CultureInfo.CurrentCulture;
-            this.currentUICulture = CultureInfo.CurrentUICulture;
 			this.currentDirectory = Environment.CurrentDirectory;
             this.logCapture = other.logCapture;
             this.currentPrincipal = Thread.CurrentPrincipal;
@@ -356,6 +356,32 @@ namespace NUnit.Framework.Internal
 		}
 #endif
 
+        /// <summary>
+        /// Saves or restores the CurrentCulture
+        /// </summary>
+        public CultureInfo CurrentCulture
+        {
+            get { return currentCulture; }
+            set
+            {
+                currentCulture = value;
+                Thread.CurrentThread.CurrentCulture = currentCulture;
+            }
+        }
+
+        /// <summary>
+        /// Saves or restores the CurrentUICulture
+        /// </summary>
+        public CultureInfo CurrentUICulture
+        {
+            get { return currentUICulture; }
+            set
+            {
+                currentUICulture = value;
+                Thread.CurrentThread.CurrentUICulture = currentUICulture;
+            }
+        }
+
 #if !NUNITLITE
         /// <summary>
         /// Controls whether log output is captured
@@ -393,32 +419,6 @@ namespace NUnit.Framework.Internal
 			{
 				currentDirectory = value;
 				Environment.CurrentDirectory = currentDirectory;
-			}
-		}
-
-        /// <summary>
-        /// Saves or restores the CurrentCulture
-        /// </summary>
-		public CultureInfo CurrentCulture
-		{
-			get { return currentCulture; }
-			set
-			{
-				currentCulture = value;
-				Thread.CurrentThread.CurrentCulture = currentCulture;
-			}
-		}
-
-        /// <summary>
-        /// Saves or restores the CurrentUICulture
-        /// </summary>
-        public CultureInfo CurrentUICulture
-		{
-			get { return currentUICulture; }
-			set
-			{
-				currentUICulture = value;
-				Thread.CurrentThread.CurrentUICulture = currentUICulture;
 			}
 		}
 
@@ -467,27 +467,27 @@ namespace NUnit.Framework.Internal
             this.Tracing = prior.Tracing;
 #endif
 
-#if !NUNITLITE
-			this.CurrentDirectory = prior.CurrentDirectory;
 			this.CurrentCulture = prior.CurrentCulture;
             this.CurrentUICulture = prior.CurrentUICulture;
+#if !NUNITLITE
+			this.CurrentDirectory = prior.CurrentDirectory;
             this.TestCaseTimeout = prior.TestCaseTimeout;
 			this.CurrentPrincipal = prior.CurrentPrincipal;
 #endif
 		}
 
-#if !NUNITLITE
         /// <summary>
         /// Record any changed values in the current context
         /// </summary>
         public void Update()
         {
-            this.currentDirectory = Environment.CurrentDirectory;
             this.currentCulture = CultureInfo.CurrentCulture;
             this.currentUICulture = CultureInfo.CurrentUICulture;
+#if !NUNITLITE
+            this.currentDirectory = Environment.CurrentDirectory;
             this.currentPrincipal = System.Threading.Thread.CurrentPrincipal;
-        }
 #endif
+        }
 
         /// <summary>
         /// Increments the assert count.

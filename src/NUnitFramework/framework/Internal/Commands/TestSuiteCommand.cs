@@ -38,9 +38,8 @@ namespace NUnit.Framework.Internal
 
             try
             {
-#if !NUNITLITE
                 ApplySettingsToExecutionContext();
-#endif
+
                 // TODO: Eliminate need for Test.Fixture in child test methods
                 if (fixtureType != null && Test.Fixture == null && !IsStaticClass(fixtureType))
                     CreateUserFixture();
@@ -50,10 +49,10 @@ namespace NUnit.Framework.Internal
 
                 DoOneTimeSetUp(testObject);
                 oneTimeSetUpComplete = true;
-#if !NUNITLITE
+
                 // SetUp may have changed some things
                 TestExecutionContext.CurrentContext.Update();
-#endif
+
                 this.suiteResult = RunChildTests();
             }
             catch (Exception ex)
@@ -194,7 +193,6 @@ namespace NUnit.Framework.Internal
             return type.IsAbstract && type.IsSealed;
         }
 
-#if !NUNITLITE
         /// <summary>
         /// Applies the culture settings specified on the test
         /// to the TestExecutionContext.
@@ -211,9 +209,10 @@ namespace NUnit.Framework.Internal
                 TestExecutionContext.CurrentContext.CurrentUICulture =
                     new System.Globalization.CultureInfo(setUICulture);
 
+#if !NUNITLITE
             if (suite.Properties.ContainsKey(PropertyNames.Timeout))
                 TestExecutionContext.CurrentContext.TestCaseTimeout = (int)suite.Properties.Get(PropertyNames.Timeout);
-        }
 #endif
+        }
     }
 }

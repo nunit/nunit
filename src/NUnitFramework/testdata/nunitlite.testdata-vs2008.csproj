@@ -46,6 +46,7 @@
     <Compile Include="AssertIgnoreData.cs" />
     <Compile Include="AttributeInheritanceData.cs" />
     <Compile Include="CategoryAttributeData.cs" />
+    <Compile Include="CultureAttributeData.cs" />
     <Compile Include="DescriptionFixture.cs" />
     <Compile Include="ExpectedExceptionData.cs" />
     <Compile Include="FixtureSetUpTearDownData.cs" />
