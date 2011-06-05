@@ -51,11 +51,13 @@
     <Compile Include="ExpectedExceptionData.cs" />
     <Compile Include="FixtureSetUpTearDownData.cs" />
     <Compile Include="PropertyAttributeTests.cs" />
+    <Compile Include="SetUpData.cs" />
     <Compile Include="TestCaseAttributeFixture.cs" />
     <Compile Include="TestCaseSourceAttributeFixture.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="TestContextData.cs" />
+    <Compile Include="TestMethodSignatureFixture.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\framework\nunitlite-vs2008.csproj">
