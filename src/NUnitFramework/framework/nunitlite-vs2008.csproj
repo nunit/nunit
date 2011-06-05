@@ -71,9 +71,11 @@
     <Compile Include="Attributes\ExplicitAttribute.cs" />
     <Compile Include="Attributes\IgnoreAttribute.cs" />
     <Compile Include="Attributes\IncludeExcludeAttribute.cs" />
+    <Compile Include="Attributes\MaxTimeAttribute.cs" />
     <Compile Include="Attributes\NUnitAttribute.cs" />
     <Compile Include="Attributes\PlatformAttribute.cs" />
     <Compile Include="Attributes\PropertyAttribute.cs" />
+    <Compile Include="Attributes\RepeatAttribute.cs" />
     <Compile Include="Attributes\SetCultureAttribute.cs" />
     <Compile Include="Attributes\SetUICultureAttribute.cs" />
     <Compile Include="Attributes\SetUpAttribute.cs" />

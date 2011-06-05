@@ -48,7 +48,7 @@ namespace NUnit.Framework.Tests
             ITestResult suiteResult = test.Run(TestListener.NULL);
             Assert.AreEqual(ResultState.Failure, suiteResult.ResultState);
             TestResult result = (TestResult)suiteResult.Children[0];
-            StringAssert.IsMatch(@"Elapsed time of \d*ms exceeds maximum of 1ms", result.Message);
+            Assert.That(result.Message, Is.StringMatching(@"Elapsed time of \d*ms exceeds maximum of 1ms"));
         }
 
         [Test, MaxTime(1000)]
@@ -66,7 +66,7 @@ namespace NUnit.Framework.Tests
             Assert.AreEqual(ResultState.Failure, result.ResultState);
             result = (TestResult)result.Children[0];
             Assert.AreEqual(ResultState.Failure, result.ResultState);
-            StringAssert.IsMatch("Intentional Failure", result.Message);
+            Assert.That(result.Message, Is.EqualTo("Intentional Failure"));
         }
 
         [Test, MaxTime(1000), ExpectedException]
@@ -83,7 +83,7 @@ namespace NUnit.Framework.Tests
             Assert.AreEqual(ResultState.Failure, result.ResultState);
             result = (ITestResult)result.Children[0];
             Assert.AreEqual(ResultState.Error, result.ResultState);
-            StringAssert.IsMatch("Exception message", result.Message);
+            Assert.That(result.Message, Is.StringMatching("Exception message"));
         }
     }
 }

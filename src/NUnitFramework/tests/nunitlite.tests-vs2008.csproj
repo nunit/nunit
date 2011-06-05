@@ -69,8 +69,10 @@
     <Compile Include="Attributes\DescriptionTests.cs" />
     <Compile Include="Attributes\ExpectedExceptionTests.cs" />
     <Compile Include="Attributes\FixtureSetUpTearDownTests.cs" />
+    <Compile Include="Attributes\MaxTimeTests.cs" />
     <Compile Include="Attributes\ParameterizedTestFixtureTests.cs" />
     <Compile Include="Attributes\PropertyAttributeTests.cs" />
+    <Compile Include="Attributes\RepeatedTestTests.cs" />
     <Compile Include="Attributes\SetCultureAttributeTests.cs" />
     <Compile Include="Attributes\TestCaseAttributeTests.cs" />
     <Compile Include="Attributes\TestCaseSourceTests.cs" />
