@@ -69,15 +69,14 @@
     <include name="Internal/Builders/NUnitLiteTestCaseProvider.cs"/>
     <include name="Internal/Builders/NUnitTestCaseBuilder.cs"/>
     <include name="Internal/Builders/NUnitTestFixtureBuilder.cs"/>
+    
     <include name="Internal/Commands/*.cs"/>
+    
     <include name="Internal/Results/*.cs"/>
-    <include name="Internal/Tests/ParameterizedMethodSuite.cs"/>
-    <include name="Internal/Tests/Test.cs"/>
-    <include name="Internal/Tests/TestAssembly.cs"/>
-    <include name="Internal/Tests/TestFixture.cs"/>
-    <include name="Internal/Tests/TestMethod.cs"/>
-    <include name="Internal/Tests/TestMethodSuite.cs"/>
-    <include name="Internal/Tests/TestSuite.cs"/>
+    
+    <include name="Internal/Tests/*.cs"/>
+    <exclude name="Internal/Tests/LegacySuite.cs"/>
+    <exclude name="Internal/Tests/SetUpFixture.cs"/>
     
     <include name="Runner/*.cs"/>
   </patternset>

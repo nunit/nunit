@@ -227,6 +227,7 @@
     <Compile Include="Internal\TestExecutionContext.cs" />
     <Compile Include="Internal\TestFixtureBuilder.cs" />
     <Compile Include="Internal\TestListener.cs" />
+    <Compile Include="Internal\Tests\ParameterizedFixtureSuite.cs" />
     <Compile Include="Internal\Tests\ParameterizedMethodSuite.cs" />
     <Compile Include="Internal\Tests\Test.cs" />
     <Compile Include="Internal\Tests\TestAssembly.cs" />

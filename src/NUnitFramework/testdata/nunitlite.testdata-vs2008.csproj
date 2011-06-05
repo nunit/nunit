@@ -9,7 +9,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>nunitlite.testdata_vs2008</RootNamespace>
-    <AssemblyName>nunitlite.testdata-vs2008</AssemblyName>
+    <AssemblyName>nunitlite.testdata</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -50,6 +50,7 @@
     <Compile Include="DescriptionFixture.cs" />
     <Compile Include="ExpectedExceptionData.cs" />
     <Compile Include="FixtureSetUpTearDownData.cs" />
+    <Compile Include="ParameterizedTestFixture.cs" />
     <Compile Include="PropertyAttributeTests.cs" />
     <Compile Include="SetUpData.cs" />
     <Compile Include="TestCaseAttributeFixture.cs" />
@@ -57,6 +58,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="TestContextData.cs" />
+    <Compile Include="TestFixtureData.cs" />
     <Compile Include="TestMethodSignatureFixture.cs" />
   </ItemGroup>
   <ItemGroup>

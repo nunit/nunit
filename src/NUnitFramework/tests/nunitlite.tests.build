@@ -31,7 +31,6 @@
         <exclude name="Attributes/DatapointTests.cs"/>
         <exclude name="Attributes/MaxTimeTests.cs"/>
         <exclude name="Attributes/PairwiseTests.cs"/>
-        <exclude name="Attributes/ParameterizedTestFixtureTests.cs"/>
         <exclude name="Attributes/RepeatedTestTests.cs"/>
         <exclude name="Attributes/TheoryTests.cs"/>
         <exclude name="Attributes/ThreadingTests.cs"/>
@@ -42,18 +41,16 @@
         <exclude name="Constraints/AfterConstraintTests.cs"/>
         <exclude name="Constraints/ReusableConstraintTests.cs"/>
 
-        <include name="Internal/CultureSettingAndDetectionTests.cs"/>
-        <include name="Internal/GenericTestMethodTests.cs"/>
-        <include name="Internal/PlatformDetectionTests.cs"/>
-        <include name="Internal/PropertyBagTests.cs" />
-        <include name="Internal/RuntimeFrameworkTests.cs" />
-        <include name="Internal/SetUpTest.cs" />
-        <include name="Internal/SimpleGenericMethods.cs" />
-        <include name="Internal/TestExecutionContextTests.cs" />
-        <include name="Internal/TestMethodSignatureTests.cs" />
-        <include name="Internal/TestResultTests.cs" />
-        <include name="Internal/TestXmlTests.cs" />
-        <include name="Internal/TextMessageWriterTests.cs" />
+        <include name="Internal/*.cs"/>
+        <exclude name="Internal/AssemblyReaderTests.cs" />
+        <exclude name="Internal/CallContextTests.cs" />
+        <exclude name="Internal/CoreExtensionsTests.cs" />
+        <exclude name="Internal/DirectorySwapperTests.cs" />
+        <exclude name="Internal/EventQueueTests.cs" />
+        <exclude name="Internal/LegacySuiteTests.cs" />
+        <exclude name="Internal/RandomizerTests.cs" />
+        <exclude name="Internal/UnexpectedExceptionTests.cs" />
+        <exclude name="Internal/UnhandledExceptionTests.cs" />
 
         <include name="Syntax/*.cs" />
         <exclude name="Syntax/AfterTests.cs" />

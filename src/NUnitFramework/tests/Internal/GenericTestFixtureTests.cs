@@ -29,7 +29,7 @@ using System.Text;
 namespace NUnit.Framework.Internal
 {
     [TestFixture(typeof(List<int>))]
-    [TestFixture(typeof(ArrayList))]
+    [TestFixture(TypeArgs=new Type[] {typeof(ArrayList)} )]
     public class GenericTestFixture_IList<T> where T : IList, new()
     {
         [Test]
