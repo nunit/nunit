@@ -267,7 +267,6 @@
     <Compile Include="Internal\CultureDetector.cs" />
     <Compile Include="Internal\DefaultTestAssemblyBuilder.cs" />
     <Compile Include="Internal\DefaultTestAssemblyRunner.cs" />
-    <Compile Include="Internal\DirectorySwapper.cs" />
     <Compile Include="Internal\EventListenerTextWriter.cs" />
     <Compile Include="Internal\EventPump.cs" />
     <Compile Include="Internal\EventQueue.cs" />

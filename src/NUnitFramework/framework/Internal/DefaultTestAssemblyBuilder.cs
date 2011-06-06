@@ -76,21 +76,16 @@ namespace NUnit.Framework.Internal
         /// </returns>
         public TestSuite Build(string assemblyName, IDictionary options)
         {
-            // Change currentDirectory in case assembly references unmanaged dlls
-            // and so that any addins are able to access the directory easily.
-            using (new DirectorySwapper(Path.GetDirectoryName(assemblyName)))
-            {
-                this.assembly = Load(assemblyName);
-                if (assembly == null) return null;
+            this.assembly = Load(assemblyName);
+            if (assembly == null) return null;
 
-                IList fixtureNames = options["LOAD"] as IList;
+            IList fixtureNames = options["LOAD"] as IList;
 
-                IList fixtures = GetFixtures(assembly, fixtureNames);
-                if (fixtures.Count > 0)
-                    return BuildTestAssembly(assemblyName, fixtures);
+            IList fixtures = GetFixtures(assembly, fixtureNames);
+            if (fixtures.Count > 0)
+                return BuildTestAssembly(assemblyName, fixtures);
 
-                return null;
-            }
+            return null;
         }
         #endregion
 

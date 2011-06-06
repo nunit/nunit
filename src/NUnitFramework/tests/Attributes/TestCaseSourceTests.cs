@@ -110,14 +110,6 @@ namespace NUnit.Framework.Tests
         }
 #endif
 
-#if !NETCF
-        [Test, TestCaseSource("CurrentDirectoryAtLoadTime")]
-        public void SourceIsInvokedWithCorrectCurrentDirectory(string directory)
-        {
-            Assert.That(directory, Is.EqualTo(System.Environment.CurrentDirectory));
-        }
-#endif
-
         [Test, TestCaseSource("MyData")]
         public void SourceMayReturnArgumentsAsObjectArray(int n, int d, int q)
         {
@@ -278,16 +270,6 @@ namespace NUnit.Framework.Tests
             new TestCaseData( 12, 5, 2, 2 ) };
 
         static int[] EvenNumbers = new int[] { 2, 4, 6, 8 };
-
-#if !NETCF
-        private static IEnumerable CurrentDirectoryAtLoadTime
-        {
-            get
-            {
-                return new object[] { new object[] { System.Environment.CurrentDirectory } };  
-            }
-        }
-#endif
 
         static object[] MoreData = new object[] {
             new object[] { 12, 1, 12 },

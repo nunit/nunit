@@ -109,7 +109,6 @@
     <Compile Include="Constraints\XmlSerializableTest.cs" />
     <Compile Include="Internal\CultureSettingAndDetectionTests.cs" />
     <Compile Include="Internal\DeduceTypeArgsFromArgs.cs" />
-    <Compile Include="Internal\DirectorySwapperTests.cs" />
     <Compile Include="Internal\GenericTestFixtureTests.cs" />
     <Compile Include="Internal\GenericTestMethodTests.cs" />
     <Compile Include="Internal\PlatformDetectionTests.cs" />
