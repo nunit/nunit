@@ -68,10 +68,12 @@
     <Compile Include="Attributes\ApplyToTestTests.cs" />
     <Compile Include="Attributes\AttributeInheritanceTests.cs" />
     <Compile Include="Attributes\CategoryAttributeTests.cs" />
+    <Compile Include="Attributes\CombinatorialTests.cs" />
     <Compile Include="Attributes\DescriptionTests.cs" />
     <Compile Include="Attributes\ExpectedExceptionTests.cs" />
     <Compile Include="Attributes\FixtureSetUpTearDownTests.cs" />
     <Compile Include="Attributes\MaxTimeTests.cs" />
+    <Compile Include="Attributes\PairwiseTests.cs" />
     <Compile Include="Attributes\ParameterizedTestFixtureTests.cs" />
     <Compile Include="Attributes\PropertyAttributeTests.cs" />
     <Compile Include="Attributes\RepeatedTestTests.cs" />
@@ -80,6 +82,8 @@
     <Compile Include="Attributes\TestCaseSourceTests.cs" />
     <Compile Include="Attributes\TestDummy.cs" />
     <Compile Include="Attributes\TestFixtureAttributeTests.cs" />
+    <Compile Include="Attributes\ValuesAttributeTests.cs" />
+    <Compile Include="Attributes\ValueSourceTests.cs" />
     <Compile Include="Constraints\AndTest.cs" />
     <Compile Include="Constraints\BasicConstraintTests.cs" />
     <Compile Include="Constraints\BinarySerializableTest.cs" />
@@ -106,10 +110,12 @@
     <Compile Include="Constraints\XmlSerializableTest.cs" />
     <Compile Include="Internal\CultureSettingAndDetectionTests.cs" />
     <Compile Include="Internal\DeduceTypeArgsFromArgs.cs" />
+    <Compile Include="Internal\DirectorySwapperTests.cs" />
     <Compile Include="Internal\GenericTestFixtureTests.cs" />
     <Compile Include="Internal\GenericTestMethodTests.cs" />
     <Compile Include="Internal\PlatformDetectionTests.cs" />
     <Compile Include="Internal\PropertyBagTests.cs" />
+    <Compile Include="Internal\RandomizerTests.cs" />
     <Compile Include="Internal\RuntimeFrameworkTests.cs" />
     <Compile Include="Internal\SetUpTest.cs" />
     <Compile Include="Internal\SimpleGenericMethods.cs" />

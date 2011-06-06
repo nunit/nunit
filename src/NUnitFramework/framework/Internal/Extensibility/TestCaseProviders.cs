@@ -22,20 +22,32 @@
 // ***********************************************************************
 
 using System.Reflection;
-using NUnit.Framework.Api;
-using NUnit.Framework.Internal;
-
 #if CLR_2_0 || CLR_4_0
 using System.Collections.Generic;
 #else
 using System.Collections;
 #endif
+using NUnit.Framework.Api;
+using NUnit.Framework.Internal;
+using NUnit.Framework.Builders;
 
 namespace NUnit.Framework.Extensibility
 {
+#if NUNITLITE
+    class TestCaseProviders : ITestCaseProvider
+    {
+        private List<ITestCaseProvider> Extensions = new List<ITestCaseProvider>();
+
+        public TestCaseProviders()
+        {
+            this.Extensions.Add(new DataAttributeTestCaseProvider());
+            this.Extensions.Add(new CombinatorialTestCaseProvider());
+        }
+#else
     class TestCaseProviders : ExtensionPoint, ITestCaseProvider
     {
         public TestCaseProviders(IExtensionHost host) : base( "TestCaseProviders", host ) { }
+#endif
 
         #region ITestCaseProvider Members
 
@@ -90,11 +102,13 @@ namespace NUnit.Framework.Extensibility
 
         #endregion
 
+#if !NUNITLITE
         #region IsValidExtension
         protected override bool IsValidExtension(object extension)
         {
             return extension is ITestCaseProvider;
         }
         #endregion
+#endif
     }
 }
