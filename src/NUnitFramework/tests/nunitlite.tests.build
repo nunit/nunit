@@ -27,13 +27,9 @@
         <exclude name="Assertions/TypeAssertTest.cs" />
 
         <include name="Attributes/*.cs"/>
-        <exclude name="Attributes/CombinatorialTests.cs"/>
         <exclude name="Attributes/DatapointTests.cs"/>
-        <exclude name="Attributes/PairwiseTests.cs"/>
         <exclude name="Attributes/TheoryTests.cs"/>
         <exclude name="Attributes/ThreadingTests.cs"/>
-        <exclude name="Attributes/ValuesAttributeTests.cs"/>
-        <exclude name="Attributes/ValueSourceTests.cs"/>
 
         <include name="Constraints/*.cs" />
         <exclude name="Constraints/AfterConstraintTests.cs"/>
@@ -43,10 +39,8 @@
         <exclude name="Internal/AssemblyReaderTests.cs" />
         <exclude name="Internal/CallContextTests.cs" />
         <exclude name="Internal/CoreExtensionsTests.cs" />
-        <exclude name="Internal/DirectorySwapperTests.cs" />
         <exclude name="Internal/EventQueueTests.cs" />
         <exclude name="Internal/LegacySuiteTests.cs" />
-        <exclude name="Internal/RandomizerTests.cs" />
         <exclude name="Internal/UnexpectedExceptionTests.cs" />
         <exclude name="Internal/UnhandledExceptionTests.cs" />
 

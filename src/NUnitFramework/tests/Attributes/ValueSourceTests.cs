@@ -4,6 +4,7 @@
 // obtain a copy of the license at http://nunit.org
 // ****************************************************************
 
+using System;
 using System.Collections;
 #if CLR_2_0 || CLR_4_0
 using System.Collections.Generic;
@@ -87,23 +88,29 @@ namespace NUnit.Framework.Attributes
 
         internal static object[] InstanceField = { "InstanceField" };
 
+#if !NUNITLITE
         [Test]
         public void ValueSourceIsInvokedWithCorrectCurrentDirectory(
-            [ValueSource("GetExpectedDirectory")] string expectedDirectory)
+            [ValueSource("CheckDirectory")] bool directoryIsOK)
         {
-            Assert.That(System.Environment.CurrentDirectory, Is.EqualTo(expectedDirectory));
+            Assert.That(directoryIsOK);
         }
 
-        private static IEnumerable GetExpectedDirectory
+        private static IEnumerable CheckDirectory
         {
             get
             {
                 string assemblyPath = NUnit.Framework.Internal.AssemblyHelper.GetAssemblyPath(
                     System.Reflection.Assembly.GetExecutingAssembly());
 
-                return new object[] { System.IO.Path.GetDirectoryName(assemblyPath) };
+                Console.WriteLine(assemblyPath);
+                Console.WriteLine(Environment.CurrentDirectory);
+
+                return new object[] {
+                    System.IO.Path.GetDirectoryName(assemblyPath) == Environment.CurrentDirectory };
             }
         }
+#endif
 
         [Test, Sequential]
         public void MultipleArguments(

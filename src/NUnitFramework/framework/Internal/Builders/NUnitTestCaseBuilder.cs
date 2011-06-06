@@ -44,7 +44,7 @@ namespace NUnit.Framework.Builders
     public class NUnitTestCaseBuilder : ITestCaseBuilder2
 	{
 #if NUNITLITE
-        private ITestCaseProvider testCaseProvider = new NUnitLiteTestCaseProvider();
+        private ITestCaseProvider testCaseProvider = new TestCaseProviders();
 #else
         private ITestCaseProvider testCaseProvider = CoreExtensions.Host.TestCaseProviders;
 #endif
