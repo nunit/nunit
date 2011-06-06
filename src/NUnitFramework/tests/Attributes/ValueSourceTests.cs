@@ -88,30 +88,6 @@ namespace NUnit.Framework.Attributes
 
         internal static object[] InstanceField = { "InstanceField" };
 
-#if !NUNITLITE
-        [Test]
-        public void ValueSourceIsInvokedWithCorrectCurrentDirectory(
-            [ValueSource("CheckDirectory")] bool directoryIsOK)
-        {
-            Assert.That(directoryIsOK);
-        }
-
-        private static IEnumerable CheckDirectory
-        {
-            get
-            {
-                string assemblyPath = NUnit.Framework.Internal.AssemblyHelper.GetAssemblyPath(
-                    System.Reflection.Assembly.GetExecutingAssembly());
-
-                Console.WriteLine(assemblyPath);
-                Console.WriteLine(Environment.CurrentDirectory);
-
-                return new object[] {
-                    System.IO.Path.GetDirectoryName(assemblyPath) == Environment.CurrentDirectory };
-            }
-        }
-#endif
-
         [Test, Sequential]
         public void MultipleArguments(
             [ValueSource("Numerators")] int n, 

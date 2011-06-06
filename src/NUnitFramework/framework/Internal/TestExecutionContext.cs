@@ -470,7 +470,7 @@ namespace NUnit.Framework.Internal
 			this.CurrentCulture = prior.CurrentCulture;
             this.CurrentUICulture = prior.CurrentUICulture;
 #if !NUNITLITE
-			this.CurrentDirectory = prior.CurrentDirectory;
+            this.CurrentDirectory = prior.CurrentDirectory;
             this.TestCaseTimeout = prior.TestCaseTimeout;
 			this.CurrentPrincipal = prior.CurrentPrincipal;
 #endif
