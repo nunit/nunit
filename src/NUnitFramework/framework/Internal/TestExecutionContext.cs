@@ -92,7 +92,6 @@ namespace NUnit.Framework.Internal
         /// Destination for Trace output
         /// </summary>
         private TextWriter traceWriter;
-#endif
 
         /// <summary>
         /// The current culture
@@ -103,6 +102,7 @@ namespace NUnit.Framework.Internal
         /// The current UI culture
         /// </summary>
         private CultureInfo currentUICulture;
+#endif
 
 #if !NUNITLITE
         /// <summary>
@@ -147,10 +147,10 @@ namespace NUnit.Framework.Internal
 #if !NETCF
             this.traceWriter = null;
             this.tracing = false;
-#endif
-
 			this.currentCulture = CultureInfo.CurrentCulture;
             this.currentUICulture = CultureInfo.CurrentUICulture;
+#endif
+
 #if !NUNITLITE
             this.testCaseTimeout = 0;
 			this.logging = false;
@@ -179,10 +179,10 @@ namespace NUnit.Framework.Internal
 #if !NETCF
             this.traceWriter = other.traceWriter;
             this.tracing = other.tracing;
-#endif
-
 			this.currentCulture = CultureInfo.CurrentCulture;
             this.currentUICulture = CultureInfo.CurrentUICulture;
+#endif
+
 #if !NUNITLITE
             this.testCaseTimeout = other.testCaseTimeout;
 			this.logging = other.logging;
@@ -354,7 +354,6 @@ namespace NUnit.Framework.Internal
 		{
 			System.Diagnostics.Trace.Listeners.Add( new TextWriterTraceListener( traceWriter, "NUnit" ) );
 		}
-#endif
 
         /// <summary>
         /// Saves or restores the CurrentCulture
@@ -381,6 +380,7 @@ namespace NUnit.Framework.Internal
                 Thread.CurrentThread.CurrentUICulture = currentUICulture;
             }
         }
+#endif
 
 #if !NUNITLITE
         /// <summary>
@@ -465,10 +465,10 @@ namespace NUnit.Framework.Internal
 
 #if !NETCF
             this.Tracing = prior.Tracing;
-#endif
-
 			this.CurrentCulture = prior.CurrentCulture;
             this.CurrentUICulture = prior.CurrentUICulture;
+#endif
+
 #if !NUNITLITE
             this.CurrentDirectory = prior.CurrentDirectory;
             this.TestCaseTimeout = prior.TestCaseTimeout;
@@ -481,8 +481,10 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public void Update()
         {
+#if !NETCF
             this.currentCulture = CultureInfo.CurrentCulture;
             this.currentUICulture = CultureInfo.CurrentUICulture;
+#endif
 #if !NUNITLITE
             this.currentDirectory = Environment.CurrentDirectory;
             this.currentPrincipal = System.Threading.Thread.CurrentPrincipal;

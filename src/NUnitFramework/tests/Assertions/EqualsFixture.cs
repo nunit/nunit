@@ -78,10 +78,10 @@ namespace NUnit.Framework.Assertions
 			string expected = "Hello NUnit";
 
 			expectedMessage =
-				"  Expected string length 11 but was 13. Strings differ at index 0." + Environment.NewLine +
-				"  Expected: \"Hello NUnit\"" + Environment.NewLine +
-				"  But was:  \"Goodbye JUnit\"" + Environment.NewLine +
-				"  -----------^" + Environment.NewLine;
+				"  Expected string length 11 but was 13. Strings differ at index 0." + Env.NewLine +
+				"  Expected: \"Hello NUnit\"" + Env.NewLine +
+				"  But was:  \"Goodbye JUnit\"" + Env.NewLine +
+				"  -----------^" + Env.NewLine;
 			Assert.AreEqual(expected, junitString);
 		}
 		
@@ -89,8 +89,8 @@ namespace NUnit.Framework.Assertions
 		public void EqualsNaNFails() 
 		{
 			expectedMessage =
-				"  Expected: 1.234d +/- 0.0d" + Environment.NewLine +
-				"  But was:  NaN" + Environment.NewLine;
+				"  Expected: 1.234d +/- 0.0d" + Env.NewLine +
+				"  But was:  NaN" + Env.NewLine;
 			Assert.AreEqual(1.234, Double.NaN, 0.0);
 		}    
 
@@ -100,8 +100,8 @@ namespace NUnit.Framework.Assertions
 		public void NanEqualsFails() 
 		{
 			expectedMessage =
-				"  Expected: NaN" + Environment.NewLine +
-				"  But was:  1.234d" + Environment.NewLine;
+				"  Expected: NaN" + Env.NewLine +
+				"  But was:  1.234d" + Env.NewLine;
 			Assert.AreEqual(Double.NaN, 1.234, 0.0);
 		}     
 		
@@ -127,8 +127,8 @@ namespace NUnit.Framework.Assertions
 		public void PosInfinityNotEquals() 
 		{
 			expectedMessage =
-				"  Expected: Infinity" + Environment.NewLine +
-				"  But was:  1.23d" + Environment.NewLine;
+				"  Expected: Infinity" + Env.NewLine +
+				"  But was:  1.23d" + Env.NewLine;
 			Assert.AreEqual(Double.PositiveInfinity, 1.23, 0.0);
 		}
 
@@ -136,8 +136,8 @@ namespace NUnit.Framework.Assertions
 		public void PosInfinityNotEqualsNegInfinity() 
 		{
 			expectedMessage =
-				"  Expected: Infinity" + Environment.NewLine +
-				"  But was:  -Infinity" + Environment.NewLine;
+				"  Expected: Infinity" + Env.NewLine +
+				"  But was:  -Infinity" + Env.NewLine;
 			Assert.AreEqual(Double.PositiveInfinity, Double.NegativeInfinity, 0.0);
 		}
 
@@ -145,8 +145,8 @@ namespace NUnit.Framework.Assertions
 		public void SinglePosInfinityNotEqualsNegInfinity() 
 		{
 			expectedMessage =
-				"  Expected: Infinity" + Environment.NewLine +
-				"  But was:  -Infinity" + Environment.NewLine;
+				"  Expected: Infinity" + Env.NewLine +
+				"  But was:  -Infinity" + Env.NewLine;
 			Assert.AreEqual(float.PositiveInfinity, float.NegativeInfinity, (float)0.0);
 		}
 
@@ -343,8 +343,8 @@ namespace NUnit.Framework.Assertions
 		{
 			MyEnum actual = MyEnum.a;
 			expectedMessage =
-				"  Expected: c" + Environment.NewLine +
-				"  But was:  a" + Environment.NewLine;
+				"  Expected: c" + Env.NewLine +
+				"  But was:  a" + Env.NewLine;
 			Assert.AreEqual( MyEnum.c, actual );
 		}
 
@@ -362,8 +362,8 @@ namespace NUnit.Framework.Assertions
 			DateTime dt1 = new DateTime( 2005, 6, 1, 7, 0, 0 );
 			DateTime dt2 = new DateTime( 2005, 6, 1, 0, 0, 0 );
 			expectedMessage =
-				"  Expected: 2005-06-01 07:00:00.000" + Environment.NewLine +
-				"  But was:  2005-06-01 00:00:00.000" + Environment.NewLine;
+				"  Expected: 2005-06-01 07:00:00.000" + Env.NewLine +
+				"  But was:  2005-06-01 00:00:00.000" + Env.NewLine;
 			Assert.AreEqual(dt1, dt2);
 		}
 

@@ -85,7 +85,7 @@ namespace NUnit.Framework.Internal
         [Test]
         public void ReturnsSameRandomizerForSameParameter()
         {
-            ParameterInfo p = testMethod.GetParameters()[0];
+            ParameterInfo p = testMethod1.GetParameters()[0];
             Randomizer r1 = Randomizer.GetRandomizer(p);
             Randomizer r2 = Randomizer.GetRandomizer(p);
             Assert.That(r1, Is.SameAs(r2));
@@ -94,8 +94,8 @@ namespace NUnit.Framework.Internal
         [Test]
         public void ReturnsSameRandomizerForDifferentParametersOfSameMethod()
         {
-            ParameterInfo p1 = testMethod.GetParameters()[0];
-            ParameterInfo p2 = testMethod.GetParameters()[1];
+            ParameterInfo p1 = testMethod1.GetParameters()[0];
+            ParameterInfo p2 = testMethod1.GetParameters()[1];
             Randomizer r1 = Randomizer.GetRandomizer(p1);
             Randomizer r2 = Randomizer.GetRandomizer(p2);
             Assert.That(r1, Is.SameAs(r2));
@@ -104,22 +104,28 @@ namespace NUnit.Framework.Internal
         [Test]
         public void ReturnsSameRandomizerForSameMethod()
         {
-            Randomizer r1 = Randomizer.GetRandomizer(testMethod);
-            Randomizer r2 = Randomizer.GetRandomizer(testMethod);
+            Randomizer r1 = Randomizer.GetRandomizer(testMethod1);
+            Randomizer r2 = Randomizer.GetRandomizer(testMethod1);
             Assert.That(r1, Is.SameAs(r2));
         }
 
         [Test]
         public void ReturnsDifferentRandomizersForDifferentMethods()
         {
-            Randomizer r1 = Randomizer.GetRandomizer(testMethod);
-            Randomizer r2 = Randomizer.GetRandomizer(MethodInfo.GetCurrentMethod());
+            Randomizer r1 = Randomizer.GetRandomizer(testMethod1);
+            Randomizer r2 = Randomizer.GetRandomizer(testMethod2);
             Assert.That(r1, Is.Not.SameAs(r2));
         }
 
-        static readonly MethodInfo testMethod =
-            typeof(RandomizerTests).GetMethod("TestMethod", BindingFlags.NonPublic | BindingFlags.Instance);
-        private void TestMethod(int x, int y)
+        static readonly MethodInfo testMethod1 =
+            typeof(RandomizerTests).GetMethod("TestMethod1", BindingFlags.NonPublic | BindingFlags.Instance);
+        private void TestMethod1(int x, int y)
+        {
+        }
+
+        static readonly MethodInfo testMethod2 =
+            typeof(RandomizerTests).GetMethod("TestMethod2", BindingFlags.NonPublic | BindingFlags.Instance);
+        private void TestMethod2(int x, int y)
         {
         }
     }

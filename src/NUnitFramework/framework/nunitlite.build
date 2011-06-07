@@ -21,6 +21,8 @@
     <exclude name="Attributes/RequiresMTAAttribute.cs"/>
     <exclude name="Attributes/RequiresSTAAttribute.cs"/>
     <exclude name="Attributes/RequiresThreadAttribute.cs"/>
+    <exclude name="Attributes/SetCultureAttribute" if="${runtime.platform=='netcf'}"/>
+    <exclude name="Attributes/SetUICultureAttribute" if="${runtime.platform=='netcf'}"/>
     <exclude name="Attributes/SetUpFixtureAttribute.cs"/>
     <exclude name="Attributes/SuiteAttribute.cs"/>
     <exclude name="Attributes/TheoryAttribute.cs"/>
@@ -45,6 +47,9 @@
     <exclude name="Internal/EventListenerTextWriter.cs"/>
     <exclude name="Internal/EventPump.cs"/>
     <exclude name="Internal/EventQueue.cs"/>
+    <exclude name="Internal/InternalTrace.cs"/>
+    <exclude name="Internal/Log4NetCapture.cs" if="${runtime.platform=='netcf'}"/>
+    <exclude name="Internal/LogCapture.cs" if="${runtime.platform=='netcf'}"/>
     <exclude name="Internal/NamespaceTreeBuilder.cs"/>
     <exclude name="Internal/PropertySet.cs"/>
     <exclude name="Internal/QueuingEventListener.cs"/>

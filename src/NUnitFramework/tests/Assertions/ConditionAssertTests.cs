@@ -42,8 +42,8 @@ namespace NUnit.Framework.Assertions
 		public void IsTrueFails()
 		{
 			expectedMessage =
-				"  Expected: True" + Environment.NewLine +
-				"  But was:  False" + Environment.NewLine;
+				"  Expected: True" + Env.NewLine +
+				"  But was:  False" + Env.NewLine;
 			Assert.IsTrue(false);
 		}
 
@@ -58,8 +58,8 @@ namespace NUnit.Framework.Assertions
 		public void IsFalseFails()
 		{
 			expectedMessage =
-				"  Expected: False" + Environment.NewLine +
-				"  But was:  True" + Environment.NewLine;
+				"  Expected: False" + Env.NewLine +
+				"  But was:  True" + Env.NewLine;
 			Assert.IsFalse(true);
 		}
 	
@@ -75,8 +75,8 @@ namespace NUnit.Framework.Assertions
 		{
 			String s1 = "S1";
 			expectedMessage =
-				"  Expected: null" + Environment.NewLine +
-				"  But was:  \"S1\"" + Environment.NewLine;
+				"  Expected: null" + Env.NewLine +
+				"  But was:  \"S1\"" + Env.NewLine;
 			Assert.IsNull(s1);
 		}
 	
@@ -92,8 +92,8 @@ namespace NUnit.Framework.Assertions
 		public void IsNotNullFails()
 		{
 			expectedMessage =
-				"  Expected: not null" + Environment.NewLine +
-				"  But was:  null" + Environment.NewLine;
+				"  Expected: not null" + Env.NewLine +
+				"  But was:  null" + Env.NewLine;
 			Assert.IsNotNull(null);
 		}
 	
@@ -109,8 +109,8 @@ namespace NUnit.Framework.Assertions
 		public void IsNaNFails()
 		{
 			expectedMessage =
-				"  Expected: NaN" + Environment.NewLine +
-				"  But was:  10.0d" + Environment.NewLine;
+				"  Expected: NaN" + Env.NewLine +
+				"  But was:  10.0d" + Env.NewLine;
 			Assert.IsNaN(10.0);
 		}
 
@@ -127,8 +127,8 @@ namespace NUnit.Framework.Assertions
 		public void IsEmptyFailsOnString()
 		{
 			expectedMessage =
-				"  Expected: <empty>" + Environment.NewLine +
-				"  But was:  \"Hi!\"" + Environment.NewLine;
+				"  Expected: <empty>" + Env.NewLine +
+				"  But was:  \"Hi!\"" + Env.NewLine;
 			Assert.IsEmpty( "Hi!" );
 		}
 
@@ -136,8 +136,8 @@ namespace NUnit.Framework.Assertions
 		public void IsEmptyFailsOnNullString()
 		{
 			expectedMessage =
-				"  Expected: <empty>" + Environment.NewLine +
-				"  But was:  null" + Environment.NewLine;
+				"  Expected: <empty>" + Env.NewLine +
+				"  But was:  null" + Env.NewLine;
 			Assert.IsEmpty( (string)null );
 		}
 
@@ -145,8 +145,8 @@ namespace NUnit.Framework.Assertions
 		public void IsEmptyFailsOnNonEmptyArray()
 		{
 			expectedMessage =
-				"  Expected: <empty>" + Environment.NewLine +
-				"  But was:  < 1, 2, 3 >" + Environment.NewLine;
+				"  Expected: <empty>" + Env.NewLine +
+				"  But was:  < 1, 2, 3 >" + Env.NewLine;
 			Assert.IsEmpty( new int[] { 1, 2, 3 } );
 		}
 
@@ -168,8 +168,8 @@ namespace NUnit.Framework.Assertions
 		public void IsNotEmptyFailsOnEmptyString()
 		{
 			expectedMessage =
-				"  Expected: not <empty>" + Environment.NewLine +
-				"  But was:  <string.Empty>" + Environment.NewLine;
+				"  Expected: not <empty>" + Env.NewLine +
+				"  But was:  <string.Empty>" + Env.NewLine;
 			Assert.IsNotEmpty( "" );
 		}
 
@@ -177,8 +177,8 @@ namespace NUnit.Framework.Assertions
 		public void IsNotEmptyFailsOnEmptyArray()
 		{
 			expectedMessage =
-				"  Expected: not <empty>" + Environment.NewLine +
-				"  But was:  <empty>" + Environment.NewLine;
+				"  Expected: not <empty>" + Env.NewLine +
+				"  But was:  <empty>" + Env.NewLine;
 			Assert.IsNotEmpty( new int[0] );
 		}
 
@@ -186,8 +186,8 @@ namespace NUnit.Framework.Assertions
 		public void IsNotEmptyFailsOnEmptyArrayList()
 		{
 			expectedMessage =
-				"  Expected: not <empty>" + Environment.NewLine +
-				"  But was:  <empty>" + Environment.NewLine;
+				"  Expected: not <empty>" + Env.NewLine +
+				"  But was:  <empty>" + Env.NewLine;
 			Assert.IsNotEmpty( new ArrayList() );
 		}
 
@@ -195,8 +195,8 @@ namespace NUnit.Framework.Assertions
 		public void IsNotEmptyFailsOnEmptyHashTable()
 		{
 			expectedMessage =
-				"  Expected: not <empty>" + Environment.NewLine +
-				"  But was:  <empty>" + Environment.NewLine;
+				"  Expected: not <empty>" + Env.NewLine +
+				"  But was:  <empty>" + Env.NewLine;
 			Assert.IsNotEmpty( new Hashtable() );
 		}
 #endif

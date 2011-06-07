@@ -43,8 +43,8 @@ namespace NUnit.Framework.Assertions
 			Exception ex1 = new Exception( "one" );
 			Exception ex2 = new Exception( "two" );
 			expectedMessage =
-				"  Expected: same as <System.Exception: one>" + Environment.NewLine +
-				"  But was:  <System.Exception: two>" + Environment.NewLine;
+				"  Expected: same as <System.Exception: one>" + Env.NewLine +
+				"  But was:  <System.Exception: two>" + Env.NewLine;
 			Assert.AreSame(ex1, ex2);
 		}
 
@@ -53,8 +53,8 @@ namespace NUnit.Framework.Assertions
 		{
 			int index = 2;
 			expectedMessage =
-				"  Expected: same as 2" + Environment.NewLine +
-				"  But was:  2" + Environment.NewLine;
+				"  Expected: same as 2" + Env.NewLine +
+				"  But was:  2" + Env.NewLine;
 			Assert.AreSame(index, index);
 		}
 	}

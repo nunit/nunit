@@ -22,12 +22,13 @@
 // ***********************************************************************
 
 using System;
-using System.Reflection;
-using System.Runtime.Serialization;
 using NUnit.Framework.Api;
 using NUnit.Framework.Internal;
 using NUnit.TestUtilities;
 using NUnit.TestData.ExpectedExceptionData;
+#if !NETCF
+using System.Runtime.Serialization;
+#endif
 
 namespace NUnit.Framework.Attributes
 {
@@ -148,8 +149,8 @@ namespace NUnit.Framework.Attributes
 			ITestResult result = TestBuilder.RunTestCase( fixtureType, "BaseExceptionTest" );
 			Assert.IsTrue(result.ResultState == ResultState.Failure, "BaseExceptionTest should have failed");
 			Assert.That(result.Message, Is.StringStarting(
-				"An unexpected exception type was thrown" + Environment.NewLine +
-				"Expected: System.ArgumentException" + Environment.NewLine +
+				"An unexpected exception type was thrown" + Env.NewLine +
+				"Expected: System.ArgumentException" + Env.NewLine +
 				" but was: System.Exception"));
 		}
 
@@ -160,8 +161,8 @@ namespace NUnit.Framework.Attributes
             ITestResult result = TestBuilder.RunTestCase(fixtureType, "DerivedExceptionTest");
 			Assert.IsTrue(result.ResultState == ResultState.Failure, "DerivedExceptionTest should have failed");
 			Assert.That(result.Message, Is.StringStarting( 
-				"An unexpected exception type was thrown" + Environment.NewLine +
-				"Expected: System.Exception" + Environment.NewLine +
+				"An unexpected exception type was thrown" + Env.NewLine +
+				"Expected: System.Exception" + Env.NewLine +
 				" but was: System.ArgumentException"));
 		}
 
@@ -172,8 +173,8 @@ namespace NUnit.Framework.Attributes
             ITestResult result = TestBuilder.RunTestCase(fixtureType, "MismatchedExceptionType");
             Assert.IsTrue(result.ResultState == ResultState.Failure, "MismatchedExceptionType should have failed");
             Assert.That(result.Message, Is.StringStarting(
-                "An unexpected exception type was thrown" + Environment.NewLine +
-                "Expected: System.ArgumentException" + Environment.NewLine +
+                "An unexpected exception type was thrown" + Env.NewLine +
+                "Expected: System.ArgumentException" + Env.NewLine +
                 " but was: System.ArgumentOutOfRangeException"));
         }
 
@@ -184,8 +185,8 @@ namespace NUnit.Framework.Attributes
             ITestResult result = TestBuilder.RunTestCase(fixtureType, "MismatchedExceptionTypeAsNamedParameter");
             Assert.IsTrue(result.ResultState == ResultState.Failure, "MismatchedExceptionType should have failed");
             Assert.That(result.Message, Is.StringStarting(
-                "An unexpected exception type was thrown" + Environment.NewLine +
-                "Expected: System.ArgumentException" + Environment.NewLine +
+                "An unexpected exception type was thrown" + Env.NewLine +
+                "Expected: System.ArgumentException" + Env.NewLine +
                 " but was: System.ArgumentOutOfRangeException"));
         }
 
@@ -196,9 +197,9 @@ namespace NUnit.Framework.Attributes
 			ITestResult result = TestBuilder.RunTestCase( fixtureType, "MismatchedExceptionTypeWithUserMessage" );
 			Assert.IsTrue(result.ResultState == ResultState.Failure, "Test method should have failed");
 			Assert.That(result.Message, Is.StringStarting(
-				"custom message" + Environment.NewLine +
-				"An unexpected exception type was thrown" + Environment.NewLine +
-				"Expected: System.ArgumentException" + Environment.NewLine +
+				"custom message" + Env.NewLine +
+				"An unexpected exception type was thrown" + Env.NewLine +
+				"Expected: System.ArgumentException" + Env.NewLine +
 				" but was: System.ArgumentOutOfRangeException"));
 		}
 
@@ -209,8 +210,8 @@ namespace NUnit.Framework.Attributes
 			ITestResult result = TestBuilder.RunTestCase( fixtureType, "MismatchedExceptionName" );
 			Assert.IsTrue(result.ResultState == ResultState.Failure, "MismatchedExceptionName should have failed");
 			Assert.That(result.Message, Is.StringStarting(
-				"An unexpected exception type was thrown" + Environment.NewLine +
-				"Expected: System.ArgumentException" + Environment.NewLine +
+				"An unexpected exception type was thrown" + Env.NewLine +
+				"Expected: System.ArgumentException" + Env.NewLine +
 				" but was: System.ArgumentOutOfRangeException")); 
 		}
 
@@ -221,9 +222,9 @@ namespace NUnit.Framework.Attributes
             ITestResult result = TestBuilder.RunTestCase(fixtureType, "MismatchedExceptionNameWithUserMessage");
 			Assert.IsTrue(result.ResultState == ResultState.Failure, "Test method should have failed");
 			Assert.That(result.Message, Is.StringStarting(
-				"custom message" + Environment.NewLine +
-				"An unexpected exception type was thrown" + Environment.NewLine +
-				"Expected: System.ArgumentException" + Environment.NewLine +
+				"custom message" + Env.NewLine +
+				"An unexpected exception type was thrown" + Env.NewLine +
+				"Expected: System.ArgumentException" + Env.NewLine +
 				" but was: System.ArgumentOutOfRangeException")); 
 		}
 
@@ -234,8 +235,8 @@ namespace NUnit.Framework.Attributes
 			ITestResult result = TestBuilder.RunTestCase( fixtureType, "TestThrow" );
 			Assert.IsTrue(result.ResultState == ResultState.Failure, "TestThrow should have failed");
 			Assert.AreEqual(
-				"The exception message text was incorrect" + Environment.NewLine +
-				"Expected: not the message" + Environment.NewLine +
+				"The exception message text was incorrect" + Env.NewLine +
+				"Expected: not the message" + Env.NewLine +
 				" but was: the message", 
 				result.Message);
 		}
@@ -247,9 +248,9 @@ namespace NUnit.Framework.Attributes
 			ITestResult result = TestBuilder.RunTestCase( fixtureType, "TestThrowWithUserMessage" );
 			Assert.IsTrue(result.ResultState == ResultState.Failure, "TestThrow should have failed");
 			Assert.AreEqual(
-				"custom message" + Environment.NewLine +
-				"The exception message text was incorrect" + Environment.NewLine +
-				"Expected: not the message" + Environment.NewLine +
+				"custom message" + Env.NewLine +
+				"The exception message text was incorrect" + Env.NewLine +
+				"Expected: not the message" + Env.NewLine +
 				" but was: the message", 
 				result.Message);
 		}
@@ -269,7 +270,7 @@ namespace NUnit.Framework.Attributes
 			Type fixtureType = typeof(TestDoesNotThrowExceptionFixture);
             ITestResult result = TestBuilder.RunTestCase(fixtureType, "TestDoesNotThrowUnspecifiedExceptionWithUserMessage");
             Assert.IsTrue(result.ResultState == ResultState.Failure, "Test method should have failed");
-			Assert.AreEqual("custom message" + Environment.NewLine + "An Exception was expected", result.Message);
+			Assert.AreEqual("custom message" + Env.NewLine + "An Exception was expected", result.Message);
 		}
 
 		[Test]
@@ -287,7 +288,7 @@ namespace NUnit.Framework.Attributes
 			Type fixtureType = typeof(TestDoesNotThrowExceptionFixture);
 			ITestResult result = TestBuilder.RunTestCase( fixtureType, "TestDoesNotThrowExceptionTypeWithUserMessage" );
             Assert.IsTrue(result.ResultState == ResultState.Failure, "Test method should have failed");
-			Assert.AreEqual("custom message" + Environment.NewLine + "System.ArgumentException was expected", result.Message);
+			Assert.AreEqual("custom message" + Env.NewLine + "System.ArgumentException was expected", result.Message);
 		}
 
 		[Test]
@@ -305,7 +306,7 @@ namespace NUnit.Framework.Attributes
 			Type fixtureType = typeof(TestDoesNotThrowExceptionFixture);
 			ITestResult result = TestBuilder.RunTestCase( fixtureType, "TestDoesNotThrowExceptionNameWithUserMessage" );
             Assert.IsTrue(result.ResultState == ResultState.Failure, "Test method should have failed");
-			Assert.AreEqual("custom message" + Environment.NewLine + "System.ArgumentException was expected", result.Message);
+			Assert.AreEqual("custom message" + Env.NewLine + "System.ArgumentException was expected", result.Message);
 		}
 
 		[Test] 

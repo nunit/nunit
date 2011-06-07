@@ -22,8 +22,10 @@
 // ***********************************************************************
 
 using System;
-using System.Security.Principal;
 using NUnit.Framework;
+#if !NETCF
+using System.Security.Principal;
+#endif
 
 namespace NUnit.TestData.TestFixtureData
 {
@@ -367,6 +369,7 @@ namespace NUnit.TestData.TestFixtureData
 		public void Teardown(int j) { }
 	}
 
+#if !NETCF
     [TestFixture]
     public class FixtureThatChangesTheCurrentPrincipal
     {
@@ -378,8 +381,9 @@ namespace NUnit.TestData.TestFixtureData
             System.Threading.Thread.CurrentPrincipal = principal;
         }
     }
+#endif
 
-#if CLR_2_0 || CLR_4_0
+#if (CLR_2_0 || CLR_4_0) && !NETCF
     [TestFixture(typeof(int))]
     [TestFixture(typeof(string))]
     public class GenericFixtureWithProperArgsProvided<T>

@@ -56,7 +56,9 @@ namespace NUnit.Framework.Internal
 
         private static Type GetTestDataType(string typeName)
         {
-            return Type.GetType(string.Format("{0},{1}", typeName, dataAssembly));
+            string qualifiedName = string.Format("{0},{1}", typeName, dataAssembly);
+            Type type = Type.GetType(qualifiedName);
+            return type;
         }
 
         [Test]
@@ -185,6 +187,7 @@ namespace NUnit.Framework.Internal
             TestAssert.IsRunnable(typeof(StaticFixtureWithoutTestFixtureAttribute));
         }
 
+#if !NETCF
         [Test]
         public void CanRunGenericFixtureWithProperArgsProvided()
         {
@@ -234,6 +237,7 @@ namespace NUnit.Framework.Internal
             Assert.That(suite is ParameterizedFixtureSuite);
             Assert.That(suite.Tests.Count, Is.EqualTo(2));
         }
+#endif
 #endif
         
         #region SetUp Signature

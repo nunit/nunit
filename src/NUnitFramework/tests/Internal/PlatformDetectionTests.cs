@@ -111,7 +111,7 @@ namespace NUnit.Framework.Internal
 		[Test, Platform(Exclude="Net-1.0")]
 		public void DetectWinCE()
 		{
-            PlatformID winCE = (PlatformID)Enum.Parse(typeof(PlatformID), "WinCE");
+            PlatformID winCE = (PlatformID)Enum.Parse(typeof(PlatformID), "WinCE", false);
 			CheckOSPlatforms(
                 new OSPlatform(winCE, new Version(1, 0)),
 				"WinCE,Win32,Win" );
@@ -177,7 +177,7 @@ namespace NUnit.Framework.Internal
         public void DetectUnixUnderMicrosoftDotNet()
         {
             CheckOSPlatforms(
-                new OSPlatform(OSPlatform.UnixPlatformID_Microsoft, new Version()),
+                new OSPlatform(OSPlatform.UnixPlatformID_Microsoft, new Version(0,0)),
                 "UNIX,Linux");
         }
 
@@ -186,7 +186,7 @@ namespace NUnit.Framework.Internal
         public void DetectUnixUnderMono()
         {
             CheckOSPlatforms(
-                new OSPlatform(OSPlatform.UnixPlatformID_Mono, new Version()),
+                new OSPlatform(OSPlatform.UnixPlatformID_Mono, new Version(0,0)),
                 "UNIX,Linux");
         }
 

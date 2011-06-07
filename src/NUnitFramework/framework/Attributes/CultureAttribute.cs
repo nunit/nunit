@@ -74,23 +74,15 @@ namespace NUnit.Framework
         /// <returns>True, if the current culture is supported</returns>
         private bool IsCultureSupported()
         {
-            try
+            if (Include != null && !cultureDetector.IsCultureSupported(Include))
             {
-                if (Include != null && !cultureDetector.IsCultureSupported(Include))
-                {
-                    Reason = string.Format("Only supported under culture {0}", Include);
-                    return false;
-                }
-
-                if (Exclude != null && cultureDetector.IsCultureSupported(Exclude))
-                {
-                    Reason = string.Format("Not supported under culture {0}", Exclude);
-                    return false;
-                }
+                Reason = string.Format("Only supported under culture {0}", Include);
+                return false;
             }
-            catch (ArgumentException ex)
+
+            if (Exclude != null && cultureDetector.IsCultureSupported(Exclude))
             {
-                Reason = string.Format("Invalid culture: {0}", ex.ParamName);
+                Reason = string.Format("Not supported under culture {0}", Exclude);
                 return false;
             }
 

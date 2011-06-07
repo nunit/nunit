@@ -48,7 +48,7 @@ namespace NUnit.Framework.Tests
             ITestResult suiteResult = test.Run(TestListener.NULL);
             Assert.AreEqual(ResultState.Failure, suiteResult.ResultState);
             TestResult result = (TestResult)suiteResult.Children[0];
-            Assert.That(result.Message, Is.StringMatching(@"Elapsed time of \d*ms exceeds maximum of 1ms"));
+            Assert.That(result.Message, Contains.Substring("exceeds maximum of 1ms"));
         }
 
         [Test, MaxTime(1000)]
@@ -83,7 +83,7 @@ namespace NUnit.Framework.Tests
             Assert.AreEqual(ResultState.Failure, result.ResultState);
             result = (ITestResult)result.Children[0];
             Assert.AreEqual(ResultState.Error, result.ResultState);
-            Assert.That(result.Message, Is.StringMatching("Exception message"));
+            Assert.That(result.Message, Contains.Substring("Exception message"));
         }
     }
 }

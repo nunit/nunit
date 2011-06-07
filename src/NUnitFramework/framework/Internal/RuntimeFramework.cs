@@ -77,7 +77,10 @@ namespace NUnit.Framework.Internal
                 {
                     Type monoRuntimeType = Type.GetType("Mono.Runtime", false);
                     RuntimeType runtime = monoRuntimeType != null
-                        ? RuntimeType.Mono : RuntimeType.Net;
+                        ? RuntimeType.Mono 
+                        : Environment.OSVersion.Platform == PlatformID.WinCE
+                            ? RuntimeType.NetCF
+                            : RuntimeType.Net;
 
                     if (monoRuntimeType != null)
                     {
@@ -112,12 +115,27 @@ namespace NUnit.Framework.Internal
             {
                 FrameworkList frameworks = new FrameworkList();
 
-		        if (Environment.OSVersion.Platform == PlatformID.Win32NT)
-	                foreach (RuntimeFramework framework in GetAvailableFrameworks(RuntimeType.Net))
-                        frameworks.Add(framework);
+                switch (Environment.OSVersion.Platform)
+                {
+                    case PlatformID.Win32NT:
+                        foreach (RuntimeFramework framework in GetAvailableFrameworks(RuntimeType.Net))
+                            frameworks.Add(framework);
 
-                foreach (RuntimeFramework framework in GetAvailableFrameworks(RuntimeType.Mono))
-                     frameworks.Add(framework);
+                        foreach (RuntimeFramework framework in GetAvailableFrameworks(RuntimeType.Mono))
+                            frameworks.Add(framework);
+
+                        break;
+
+                    case PlatformID.WinCE:
+                        frameworks.Add(RuntimeFramework.CurrentFramework);
+                        break;
+
+                    default: // Assume Linux/Unix
+                        foreach (RuntimeFramework framework in GetAvailableFrameworks(RuntimeType.Mono))
+                            frameworks.Add(framework);
+
+                        break;
+                }
 
                 return frameworks.ToArray(); 
             }
@@ -134,7 +152,7 @@ namespace NUnit.Framework.Internal
         public static RuntimeFramework Parse(string s)
         {
             RuntimeType runtime = RuntimeType.Any;
-            Version version = new Version();
+            Version version = new Version(0,0);
 
             string[] parts = s.Split(new char[] { '-' });
             if (parts.Length == 2)
@@ -171,8 +189,9 @@ namespace NUnit.Framework.Internal
                     return IsMonoInstalled();
                 case RuntimeType.Net:
                     return CurrentFramework.Matches( framework ) || IsDotNetInstalled(framework.Version);
+                // TODO: Special handling for WinCE
                 default:
-                    return false;
+                    return CurrentFramework.Matches( framework );
             }
         }
 

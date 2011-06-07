@@ -32,7 +32,12 @@ namespace NUnit.TestData
         [Test, MaxTime(1)]
         public void MaxTimeExceeded()
         {
+#if NETCF
+            long endTime = DateTime.Now.Ticks + TimeSpan.TicksPerMillisecond * 20;
+            while (endTime > DateTime.Now.Ticks) ;
+#else
             System.Threading.Thread.Sleep(20);
+#endif
         }
     }
 
