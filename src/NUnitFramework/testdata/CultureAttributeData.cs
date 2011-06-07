@@ -39,6 +39,7 @@ namespace NUnit.TestData.CultureAttributeData
 		public void FrenchCanadaTest() { }
 	}
 
+#if !NETCF
     [TestFixture, SetCulture("xx-XX")]
     public class FixtureWithInvalidSetCultureAttribute
     {
@@ -52,4 +53,5 @@ namespace NUnit.TestData.CultureAttributeData
         [Test, SetCulture("xx-XX")]
         public void InvalidCultureSet() { }
     }
+#endif
 }

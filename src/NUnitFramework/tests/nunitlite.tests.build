@@ -28,6 +28,7 @@
 
         <include name="Attributes/*.cs"/>
         <exclude name="Attributes/DatapointTests.cs"/>
+        <exclude name="Attributes/SetCultureAttributeTests.cs" if="${runtime.platform=='netcf'}"/>
         <exclude name="Attributes/TheoryTests.cs"/>
         <exclude name="Attributes/ThreadingTests.cs"/>
 
@@ -40,7 +41,9 @@
         <exclude name="Internal/CallContextTests.cs" />
         <exclude name="Internal/CoreExtensionsTests.cs" />
         <exclude name="Internal/EventQueueTests.cs" />
+        <exclude name="Internal/GenericTestMethodTests.cs" if="${runtime.platform=='netcf'}" />
         <exclude name="Internal/LegacySuiteTests.cs" />
+        <exclude name="Internal/SimpleGenericMethods.cs" if="${runtime.platform=='netcf'}" />
         <exclude name="Internal/UnexpectedExceptionTests.cs" />
         <exclude name="Internal/UnhandledExceptionTests.cs" />
 
@@ -48,6 +51,7 @@
         <exclude name="Syntax/AfterTests.cs" />
         <exclude name="Syntax/ArbitraryConstraintMatching.cs" />
         <exclude name="Syntax/InvalidCodeTests.cs" />
+        <exclude name="Syntax/TestCompiler.cs"/>
 
         <include name="TestUtilities/*.cs"/>
       </sources>

@@ -43,7 +43,7 @@ namespace NUnit.Framework.Internal
 		/// </summary>
 		public CultureDetector()
 		{
-			this.currentCulture = System.Threading.Thread.CurrentThread.CurrentCulture;
+            this.currentCulture = CultureInfo.CurrentCulture;
 		}
 
 		/// <summary>
@@ -81,8 +81,8 @@ namespace NUnit.Framework.Internal
             string include = cultureAttribute.Include;
             string exclude = cultureAttribute.Exclude;
 
-			try
-			{
+            //try
+            //{
 				if (include != null && !IsCultureSupported(include))
 				{
 					reason = string.Format("Only supported under culture {0}", include);
@@ -94,12 +94,12 @@ namespace NUnit.Framework.Internal
 					reason = string.Format("Not supported under culture {0}", exclude);
 					return false;
 				}
-			}
-			catch( ArgumentException ex )
-			{
-				reason = string.Format( "Invalid culture: {0}", ex.ParamName );
-				return false; 
-			}
+            //}
+            //catch( ArgumentException ex )
+            //{
+            //    reason = string.Format( "Invalid culture: {0}", ex.ParamName );
+            //    return false; 
+            //}
 
 			return true;
 		}

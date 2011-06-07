@@ -107,6 +107,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         private void ApplySettingsToExecutionContext()
         {
+#if !NETCF
             string setCulture = (string)test.Properties.Get(PropertyNames.SetCulture);
             if (setCulture != null)
                 TestExecutionContext.CurrentContext.CurrentCulture =
@@ -116,6 +117,7 @@ namespace NUnit.Framework.Internal
             if (setUICulture != null)
                 TestExecutionContext.CurrentContext.CurrentUICulture =
                     new System.Globalization.CultureInfo(setUICulture);
+#endif
 
 #if !NUNITLITE
             if (test.Properties.ContainsKey(PropertyNames.Timeout))

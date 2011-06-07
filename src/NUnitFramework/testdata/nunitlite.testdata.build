@@ -24,6 +24,7 @@
         <patternset refid="source-files"/>
       </sources>
       <references basedir="${current.build.dir}">
+        <include name="mscorlib.dll"/>
         <include name="nunitlite.dll"/>
       </references>
     </csc>

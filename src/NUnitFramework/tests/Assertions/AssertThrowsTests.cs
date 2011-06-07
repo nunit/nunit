@@ -97,8 +97,8 @@ namespace NUnit.Framework.Assertions
 		public void NoExceptionThrown()
 		{
 			expectedMessage =
-				"  Expected: <System.ArgumentException>" + Environment.NewLine +
-				"  But was:  null" + Environment.NewLine;
+				"  Expected: <System.ArgumentException>" + Env.NewLine +
+				"  But was:  null" + Env.NewLine;
 #if CLR_2_0 || CLR_4_0
             Assert.Throws<ArgumentException>(TestDelegates.ThrowsNothing);
 #else
@@ -111,8 +111,8 @@ namespace NUnit.Framework.Assertions
         public void UnrelatedExceptionThrown()
         {
             expectedMessage =
-                "  Expected: <System.ArgumentException>" + Environment.NewLine +
-                "  But was:  <System.ApplicationException>" + Environment.NewLine;
+                "  Expected: <System.ArgumentException>" + Env.NewLine +
+                "  But was:  <System.ApplicationException>" + Env.NewLine;
 #if CLR_2_0 || CLR_4_0
             Assert.Throws<ArgumentException>(TestDelegates.ThrowsApplicationException);
 #else
@@ -125,8 +125,8 @@ namespace NUnit.Framework.Assertions
         public void BaseExceptionThrown()
         {
             expectedMessage =
-                "  Expected: <System.ArgumentException>" + Environment.NewLine +
-                "  But was:  <System.Exception>" + Environment.NewLine;
+                "  Expected: <System.ArgumentException>" + Env.NewLine +
+                "  But was:  <System.Exception>" + Env.NewLine;
 #if CLR_2_0 || CLR_4_0
             Assert.Throws<ArgumentException>(TestDelegates.ThrowsSystemException);
 #else
@@ -139,8 +139,8 @@ namespace NUnit.Framework.Assertions
         public void DerivedExceptionThrown()
         {
             expectedMessage =
-                "  Expected: <System.Exception>" + Environment.NewLine +
-                "  But was:  <System.ArgumentException>" + Environment.NewLine;
+                "  Expected: <System.Exception>" + Env.NewLine +
+                "  But was:  <System.ArgumentException>" + Env.NewLine;
 #if CLR_2_0 || CLR_4_0
             Assert.Throws<Exception>(TestDelegates.ThrowsArgumentException);
 #else

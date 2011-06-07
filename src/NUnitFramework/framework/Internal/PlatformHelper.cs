@@ -97,8 +97,8 @@ namespace NUnit.Framework.Internal
             string include = platformAttribute.Include;
             string exclude = platformAttribute.Exclude;
 
-			try
-			{
+            try
+            {
 				if (include != null && !IsPlatformSupported(include))
 				{
 					reason = string.Format("Only supported on {0}", include);
@@ -110,12 +110,12 @@ namespace NUnit.Framework.Internal
 					reason = string.Format("Not supported on {0}", exclude);
 					return false;
 				}
-			}
-			catch( ArgumentException ex )
-			{
-				reason = string.Format( "Invalid platform name: {0}", ex.ParamName );
-				return false; 
-			}
+            }
+            catch (Exception ex)
+            {
+                reason = ex.Message;
+                return false;
+            }
 
 			return true;
 		}
@@ -218,7 +218,8 @@ namespace NUnit.Framework.Internal
 						versionSpecification = "1.1";
 					break;
 				default:
-					throw new ArgumentException( "Invalid platform name", platform.ToString() );
+                    // TODO: Use ConstraintException here? Or a special exception?
+					throw new Exception( "Invalid platform name: " + platform );
 			}
 
 			if ( nameOK ) 
