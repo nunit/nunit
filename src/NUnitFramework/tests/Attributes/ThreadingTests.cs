@@ -75,6 +75,7 @@ namespace NUnit.Framework.Attributes
 
         [Test]
         [Platform(Exclude = "Mono", Reason = "Runner hangs at end when this is run")]
+        [Platform(Exclude = "Net-1.1,Net-1.0", Reason = "Cancels the run when executed")]
         public void TestWithInfiniteLoopTimesOut()
         {
             ITestResult result = TestBuilder.RunTestCase(

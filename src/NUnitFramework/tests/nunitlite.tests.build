@@ -41,11 +41,18 @@
         <exclude name="Internal/CallContextTests.cs" />
         <exclude name="Internal/CoreExtensionsTests.cs" />
         <exclude name="Internal/EventQueueTests.cs" />
-        <exclude name="Internal/GenericTestMethodTests.cs" if="${runtime.platform=='netcf'}" />
         <exclude name="Internal/LegacySuiteTests.cs" />
-        <exclude name="Internal/SimpleGenericMethods.cs" if="${runtime.platform=='netcf'}" />
         <exclude name="Internal/UnexpectedExceptionTests.cs" />
         <exclude name="Internal/UnhandledExceptionTests.cs" />
+        
+        <exclude name="Internal/DeduceTypeArgsFromArgs.cs" unless="${runtime.version>='2.0'}"/>
+        <exclude name="Internal/GenericTestFixtureTests.cs" unless="${runtime.version>='2.0'}"/>
+        <exclude name="Internal/GenericTestMethodTests.cs" unless="${runtime.version>='2.0'}"/>
+        <exclude name="Internal/SimpleGenericMethods.cs" unless="${runtime.version>='2.0'}"/>
+        <exclude name="Internal/TypeParameterUsedWithTestMethod.cs" unless="${runtime.version>='2.0'}"/>
+        
+        <exclude name="Internal/GenericTestMethodTests.cs" if="${runtime.platform=='netcf'}" />
+        <exclude name="Internal/SimpleGenericMethods.cs" if="${runtime.platform=='netcf'}" />
 
         <include name="Syntax/*.cs" />
         <exclude name="Syntax/AfterTests.cs" />

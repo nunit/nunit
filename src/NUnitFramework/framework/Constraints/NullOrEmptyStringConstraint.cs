@@ -45,13 +45,22 @@ namespace NUnit.Framework.Constraints
         /// <returns>True for success, false for failure</returns>
         public override IConstraintResult Matches(object actual)
         {
+            // NOTE: Do not change this to use string.IsNullOrEmpty
+            // since that won't work in earlier versions of .NET
+
             this.actual = actual;
-
             string actualAsString = actual as string;
-            if (actual != null && actualAsString == null)
-                throw new ArgumentException("Actual value must be a string", "actual");
 
-            bool hasSucceeded = string.IsNullOrEmpty(actualAsString);
+            bool hasSucceeded;
+            if (actual == null)
+                hasSucceeded = true;
+            else
+            {
+                if (actualAsString == null)
+                    throw new ArgumentException("Actual value must be a string", "actual");
+
+                hasSucceeded = actualAsString == string.Empty;
+            }
             return new StandardConstraintResult(hasSucceeded);
         }
 
