@@ -257,6 +257,8 @@ namespace NUnit.Framework.Internal
 			XmlHelper.AddAttribute(thisNode, "type", this.TestKind);
 
 			PopulateTestNode(thisNode, recursive);
+            XmlHelper.AddAttribute(thisNode, "testcasecount", this.TestCaseCount.ToString());
+
 
             if (recursive)
                 foreach (Test test in this.Tests)

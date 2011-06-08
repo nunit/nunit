@@ -133,7 +133,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="actual">A reference to the value to be tested</param>
         /// <returns>True for success, false for failure</returns>
-        public override bool Matches(ref bool actual)
+        public override IConstraintResult Matches(ref bool actual)
         {
             int remainingDelay = delayInMilliseconds;
 
@@ -142,8 +142,9 @@ namespace NUnit.Framework.Constraints
                 remainingDelay -= pollingInterval;
                 Thread.Sleep(pollingInterval);
                 this.actual = actual;
-                if (baseConstraint.Matches(actual))
-                    return true;
+                IConstraintResult result = baseConstraint.Matches(actual);
+                if (result.HasSucceeded)
+                    return result;
             }
 
             if ( remainingDelay > 0 )

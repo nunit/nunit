@@ -122,18 +122,23 @@ namespace NUnit.Framework.Internal
             System.Diagnostics.Stopwatch timer = new System.Diagnostics.Stopwatch();
             timer.Start();
 #endif
+            int testcases = 0;
             foreach (Type testType in testTypes)
             {
                 if (TestFixtureBuilder.CanBuildFrom(testType))
-                    fixtures.Add(TestFixtureBuilder.BuildFrom(testType));
+                {
+                    Test fixture = TestFixtureBuilder.BuildFrom(testType);
+                    fixtures.Add(fixture);
+                    testcases += fixture.TestCaseCount;
+                }
                 else if (names != null && legacySuiteBuilder.CanBuildFrom(testType))
                     fixtures.Add(legacySuiteBuilder.BuildFrom(testType));
             }
 
 #if LOAD_TIMING
-            InternalTrace.Debug("Found {0} fixtures in {1} seconds", fixtures.Count, timer.Elapsed);
+            InternalTrace.Debug("Found {0} fixtures with {1} test cases in {2} seconds", fixtures.Count, testcases, timer.Elapsed);
 #else
-            InternalTrace.Debug("Found {0} fixtures", fixtures.Count);
+            InternalTrace.Debug("Found {0} fixtures with {1} test cases", fixtures.Count, testcases);
 #endif
 
             return fixtures;

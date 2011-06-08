@@ -75,9 +75,11 @@ namespace NUnit.Framework.Builders
             if (type.IsDefined(typeof(TestFixtureAttribute), true))
                 return true;
 
+#if CLR_2_0 || CLR_4_0
             // Generics must have a TestFixtureAttribute
             if (type.IsGenericTypeDefinition)
                 return false;
+#endif
 
 #if NUNITLITE
             return Reflect.HasMethodWithAttribute(type, typeof(NUnit.Framework.TestAttribute), true) ||

@@ -237,7 +237,7 @@ namespace NUnit.Framework
         {
             Constraint constraint = expression.Resolve();
 
-            if (!constraint.Matches(ref actual))
+            if (!constraint.Matches(ref actual).HasSucceeded)
             {
                 MessageWriter writer = new TextMessageWriter(message, args);
                 constraint.WriteMessageTo(writer);
