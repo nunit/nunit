@@ -1,0 +1,95 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{372A3447-D657-40FF-A089-77C19FEC30C8}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>NUnit.Engine</RootNamespace>
+    <AssemblyName>nunit.engine</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <StartupObject>
+    </StartupObject>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\..\bin\vs2008\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\..\bin\vs2008\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Remoting" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Agents\RemoteTestAgent.cs" />
+    <Compile Include="Agents\TestAgent.cs" />
+    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="CallbackHandler.cs" />
+    <Compile Include="FrameworkDriver.cs" />
+    <Compile Include="IFrameworkDriver.cs" />
+    <Compile Include="Internal\AssemblyHelper.cs" />
+    <Compile Include="Internal\AssemblyReader.cs" />
+    <Compile Include="Internal\NUnitConfiguration.cs" />
+    <Compile Include="Internal\PathUtils.cs" />
+    <Compile Include="Internal\RuntimeFrameworkSelector.cs" />
+    <Compile Include="Internal\ServerBase.cs" />
+    <Compile Include="Internal\ServerUtilities.cs" />
+    <Compile Include="Internal\SettingsGroup.cs" />
+    <Compile Include="Internal\XmlHelper.cs" />
+    <Compile Include="IRuntimeFrameworkSelector.cs" />
+    <Compile Include="IService.cs" />
+    <Compile Include="IServiceManager.cs" />
+    <Compile Include="ISettings.cs" />
+    <Compile Include="ITestRunnerFactory.cs" />
+    <Compile Include="Runners\DirectTestRunner.cs" />
+    <Compile Include="Runners\LocalTestRunner.cs" />
+    <Compile Include="Runners\MultipleTestDomainRunner.cs" />
+    <Compile Include="Runners\ProcessRunner.cs" />
+    <Compile Include="Runners\TestDomainRunner.cs" />
+    <Compile Include="RunTestsCallbackHandler.cs" />
+    <Compile Include="RuntimeFramework.cs" />
+    <Compile Include="ServiceContext.cs" />
+    <Compile Include="Services\DefaultTestRunnerFactory.cs" />
+    <Compile Include="Services\DomainManager.cs" />
+    <Compile Include="Services\InProcessTestRunnerFactory.cs" />
+    <Compile Include="Services\ServiceManager.cs" />
+    <Compile Include="Services\SettingsService.cs" />
+    <Compile Include="Services\TestAgency.cs" />
+    <Compile Include="TestEngine.cs" />
+    <None Include="nunit.engine.build" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\nunit.engine.api\nunit.engine.api-vs2008.csproj">
+      <Project>{775FAD50-3623-4922-97C4-DFB29A8BE4C7}</Project>
+      <Name>nunit.engine.api-vs2008</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

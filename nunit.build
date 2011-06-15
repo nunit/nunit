@@ -195,26 +195,33 @@
     <fail if="${runtime.platform=='netcf'}"
       message="The full NUnit framework may not be built for netcf"/>
 
-    <nant target="build" buildfile="src/NUnitFramework/framework/nunit.framework.build"/>
-    <nant target="build" buildfile="src/NUnitFramework/test-assembly/test-assembly.build"/>
-    <nant target="build" buildfile="src/NUnitFramework/tests/nunit.framework.tests.build"/>
-    <nant target="build" buildfile="src/NUnitFramework/direct-runner/direct-runner.build"/>
-    <nant target="build" buildfile="src/NUnitFramework/mock-assembly/mock-assembly.build"/>
+    <nant target="build" buildfile="NUnitFramework/src/framework/nunit.framework.build"/>
+    <nant target="build" buildfile="NUnitFramework/src/testdata/nunit.testdata.build"/>
+    <nant target="build" buildfile="NUnitFramework/src/tests/nunit.framework.tests.build"/>
+    <nant target="build" buildfile="NUnitFramework/src/direct-runner/direct-runner.build"/>
+    <nant target="build" buildfile="NUnitFramework/src/mock-assembly/mock-assembly.build"/>
 
-    <nant target="build" buildfile="src/NUnitEngine/nunit.engine.api/nunit.engine.api.build"/>
-    <nant target="build" buildfile="src/NUnitEngine/nunit.engine/nunit.engine.build"/>
-    <nant target="build" buildfile="src/NUnitEngine/nunit-agent/nunit-agent.build"/>
-    <nant target="build" buildfile="src/NUnitEngine/nunit.engine.tests/nunit.engine.tests.build"/>
+<!--
+    <nant target="build-nunit" buildfile="NUnitFramework/NUnitFramework.build"/>
 
-    <nant target="build" buildfile="src/ConsoleRunner/nunit-console/nunit-console.build"/>
-    <nant target="build" buildfile="src/ConsoleRunner/nunit-console.tests/nunit-console.tests.build"/>
+    <copy todir="${current.build.dir}">
+      <fileset basedir="NUnitFramework/build/${runtime.platform}/${runtime.version}/${build.config}">
+        <include name="nunit.framework.dll"/>
+      </fileset>
+    </copy>
+
+    <nant target="build" buildfile="NUnitEngine/NUnitEngine.build"/>
+
+    <nant target="build" buildfile="NUnitConsole/NUnitConsole.build"/>
+-->
 
   </target>
 
   <target name="build-nunitlite" depends="make-build-dir">
 
-    <nant target="build" buildfile="src/NUnitFramework/framework/nunitlite.build"/>
-    <nant target="build" buildfile="src/NUnitFramework/tests/nunitlite.tests.build"/>
+    <nant target="build" buildfile="NUnitFramework/src/framework/nunitlite.build"/>
+    <nant target="build" buildfile="NUnitFramework/src/testdata/nunitlite.testdata.build"/>
+    <nant target="build" buildfile="NUnitFramework/src/tests/nunitlite.tests.build"/>
 
   </target>
 
@@ -265,7 +272,7 @@
 
     <exec basedir="${current.build.dir}"
           workingdir="${current.build.dir}"
-          program="nunit-console.exe"
+          program="direct-runner.exe"
           managed="strict"
           commandline="${nunit.commandline}" />
 

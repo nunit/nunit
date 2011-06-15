@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<project name="NUnit-Console.Tests" default="build">
+
+  <patternset id="source-files">
+    <include name="*.cs" />
+  </patternset>
+
+  <target name="build">
+    <csc target="library" 
+        output="${current.build.dir}/nunit-console.tests.dll"
+        debug="${build.debug}" define="${build.defines}">
+      <sources>
+        <patternset refid="source-files"/>
+        <include name="../../GeneratedAssemblyInfo.cs"/>
+      </sources>
+      <nowarn>
+        <warning number="1699"/>
+      </nowarn>
+      <references basedir="${current.build.dir}">
+        <include name="nunit.framework.dll"/>
+        <include name="nunit.engine.api.dll"/>
+        <include name="nunit-console.exe"/>
+      </references>
+    </csc>
+  </target>
+
+  <target name="package">
+    <copy todir="${package.src.dir}/nunit-console.tests">
+      <fileset>
+        <patternset refid="source-files"/>
+        <include name="*.csproj"/>
+        <include name="*.build"/>
+        <include name="App.ico"/>
+      </fileset>
+    </copy>
+  </target>
+
+</project>
