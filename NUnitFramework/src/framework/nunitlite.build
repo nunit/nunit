@@ -1,0 +1,104 @@
+<?xml version="1.0"?>
+<project name="NUnitFramework" default="build" basedir=".">
+
+  <patternset id="source-files">
+    <include name="*.cs"/>
+    <exclude name="CollectionAssert.cs"/>
+    <exclude name="FileAssert.cs"/>
+    <exclude name="StringAssert.cs"/>
+
+    <include name="Api/*.cs"/>
+    <exclude name="Api/IPropertySet.cs"/>
+    <exclude name="Api/ITestCaseSourceProvider.cs"/>
+    <exclude name="Api/ITestFilter.cs"/>
+    <exclude name="Api/TestController.cs"/>
+    
+    <include name="Attributes/*.cs"/>
+    <exclude name="Attributes/DatapointAttribute.cs"/>
+    <exclude name="Attributes/DatapointsAttribute.cs"/>
+    <exclude name="Attributes/DatapointSourceAttribute.cs"/>
+    <exclude name="Attributes/RequiredAddinAttribute.cs"/>
+    <exclude name="Attributes/RequiresMTAAttribute.cs"/>
+    <exclude name="Attributes/RequiresSTAAttribute.cs"/>
+    <exclude name="Attributes/RequiresThreadAttribute.cs"/>
+    <exclude name="Attributes/SetCultureAttribute" if="${runtime.platform=='netcf'}"/>
+    <exclude name="Attributes/SetUICultureAttribute" if="${runtime.platform=='netcf'}"/>
+    <exclude name="Attributes/SetUpFixtureAttribute.cs"/>
+    <exclude name="Attributes/SuiteAttribute.cs"/>
+    <exclude name="Attributes/TheoryAttribute.cs"/>
+    <exclude name="Attributes/TimeoutAttribute.cs"/>
+
+    <include name="Constraints/*.cs"/>
+    <include name="Constraints/Operators/*.cs"/>
+    
+    <include name="Exceptions/*.cs"/>
+
+    <include name="Extensibility/IParameterDataProvider.cs"/>
+    <include name="Extensibility/ISuiteBuilder.cs"/>
+    <include name="Extensibility/ITestCaseBuilder.cs"/>
+    <include name="Extensibility/ITestCaseProvider.cs"/>
+
+    <include name="Internal/*.cs"/>
+    <exclude name="Internal/AssemblyReader.cs"/>
+    <exclude name="Internal/AsyncResult.cs"/>
+    <exclude name="Internal/CoreExtensions.cs"/>
+    <exclude name="Internal/DefaultTestAssemblyBuilder.cs"/>
+    <exclude name="Internal/DefaultTestAssemblyRunner.cs"/>
+    <exclude name="Internal/EventListenerTextWriter.cs"/>
+    <exclude name="Internal/EventPump.cs"/>
+    <exclude name="Internal/EventQueue.cs"/>
+    <exclude name="Internal/InternalTrace.cs"/>
+    <exclude name="Internal/Log4NetCapture.cs" if="${runtime.platform=='netcf'}"/>
+    <exclude name="Internal/LogCapture.cs" if="${runtime.platform=='netcf'}"/>
+    <exclude name="Internal/NamespaceTreeBuilder.cs"/>
+    <exclude name="Internal/PropertySet.cs"/>
+    <exclude name="Internal/QueuingEventListener.cs"/>
+    <exclude name="Internal/TestFilter.cs"/>
+    <exclude name="Internal/TestProgressReporter.cs"/>
+
+    <include name="Internal/Builders/*.cs"/>
+    <exclude name="Internal/Builders/DatapointProvider.cs"/>
+    <exclude name="Internal/Builders/LegacySuiteBuilder.cs"/>
+    <exclude name="Internal/Builders/ProviderCache.cs"/>
+    <exclude name="Internal/Builders/SetUpFixtureBuilder.cs"/>
+
+    <include name="Internal/Commands/*.cs"/>
+    <exclude name="Internal/Commands/ThreadedTestCommand.cs"/>
+    
+    <include name="Internal/Extensibility/TestCaseProviders.cs"/>
+    
+    <include name="Internal/Results/*.cs"/>
+    
+    <include name="Internal/Tests/*.cs"/>
+    <exclude name="Internal/Tests/LegacySuite.cs"/>
+    <exclude name="Internal/Tests/SetUpFixture.cs"/>
+
+    <include name="Runner/*.cs"/>
+  </patternset>
+
+  <target name="build">
+
+    <csc target="library"
+        output="${current.build.dir}/nunitlite.dll"
+        doc="${current.build.dir}/nunitlite.xml"
+        keyfile="../../../nunit.snk"
+        debug="${build.debug}" 
+        define="${build.defines};NUNITLITE"
+        warninglevel="${warn}">
+      <nowarn>
+        <warning number="1699" if="${runtime.version>='2.0'}"/>
+      </nowarn>
+      <sources basedir=".">
+        <include name="../CommonAssemblyInfo.cs" />
+        <patternset refid="source-files" />
+      </sources>
+      <references basedir="${current.build.dir}">
+        <include name="mscorlib.dll"/>
+        <include name="System.dll"/>
+        <include name="System.Xml.dll"/>
+      </references>
+    </csc>
+
+  </target>
+
+</project>

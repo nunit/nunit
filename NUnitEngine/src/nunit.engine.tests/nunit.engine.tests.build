@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<project name="NUnit.Engine.Tests" default="build" basedir=".">
+
+  <patternset id="source-files">
+    <include name="*.cs" />
+    <include name="Api/*.cs" />
+    <include name="Internal/*.cs"/>
+    <include name="Services/*.cs"/>
+  </patternset>
+
+  <target name="build">
+
+    <csc target="library"
+        output="${current.build.dir}/nunit.engine.tests.dll"
+        debug="${build.debug}" 
+        define="${build.defines}"
+        keyfile="../../../nunit.snk"
+        warninglevel="${warn}">
+      <sources basedir=".">
+        <include name="../CommonAssemblyInfo.cs" />
+        <patternset refid="source-files" />
+      </sources>
+      <references basedir="${current.build.dir}">
+        <include name="nunit.framework.dll" />
+        <include name="nunit.engine.dll" />
+        <include name="nunit.engine.api.dll" />
+      </references>
+    </csc>
+
+  </target>
+
+  <target name="package">
+    <copy todir="${package.src.dir}/nunit.engine.tests">
+      <fileset>
+        <patternset refid="source-files" />
+        <include name="*.build" />
+        <include name="*.csproj" />
+      </fileset>
+    </copy>
+  </target>
+
+</project>
