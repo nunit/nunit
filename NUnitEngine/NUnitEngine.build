@@ -92,8 +92,6 @@
     value="${path::combine(project.base.dir,'../tools')}"/>
   <property name="partcover.dir"
     value="${path::combine(external.tools.dir, 'PartCover')}"/>
-  <!--<property name="partcover.dir"
-    value="C:\Program Files\PartCover\PartCover .NET 4.0"/>-->
 
 <!-- ***************************************************************** -->
 <!-- *********      Constants used for running tests      ************ -->
@@ -102,7 +100,7 @@
   <!-- Allow setting options at the NAnt command line -->
   <property name="nunit.options" value="" 
     unless="${property::exists('nunit.options')}"/>
-  <!-- Temporary until we can do self-testing -->
+  <!-- Temporary path until we can do self-testing -->
   <property name="nunit.console.program"
     value="C:/Program Files/NUnit 2.5.10/bin/net-1.1/nunit-console.exe"/>
   <property name="nunit.console.args"
