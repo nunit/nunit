@@ -106,8 +106,6 @@
   <property name="nunit.console.args"
     value="nunit.engine.tests.dll -noshadow -process:Single ${nunit.options}"/>
 
-
-
 <!-- ***************************************************************** -->
 <!-- In the optional local.settings.include file, installations may    -->
 <!-- set properties to override the location of external tools.        -->
