@@ -17,6 +17,7 @@
         <include name="../CommonAssemblyInfo.cs" />
         <include name="**/*.cs" />
         <exclude name="Runner/*.cs" />
+        <exclude name="Internal/AssemblyReader.cs"/>
         <exclude name="Internal/NUnitLiteTestAssemblyBuilder.cs"/>
         <exclude name="Internal/NUnitLiteTestAssemblyRunner.cs"/>
         <exclude name="Internal/Builders/NUnitLiteTestCaseBuilder.cs"/>

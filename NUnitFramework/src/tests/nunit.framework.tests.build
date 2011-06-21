@@ -17,6 +17,7 @@
         <include name="Constraints/*.cs" />
 
         <include name="Internal/*.cs"/>
+        <exclude name="Internal/AssemblyReaderTests.cs"/>
         <exclude name="Internal/DeduceTypeArgsFromArgs.cs" unless="${runtime.version>='2.0'}"/>
         <exclude name="Internal/GenericTestFixtureTests.cs" unless="${runtime.version>='2.0'}"/>
         <exclude name="Internal/GenericTestMethodTests.cs" unless="${runtime.version>='2.0'}"/>
