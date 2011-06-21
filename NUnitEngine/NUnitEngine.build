@@ -5,7 +5,8 @@
 **************************************************************************
 * This script is used to build the NUnit Test Engine and it's tests.     *
 *                                                                        *
-* Dependencies:                                                          *        *                                                                        *
+* Dependencies:                                                          *
+*                                                                        *
 *   The engine is built using .NET 1.1 or Mono 1.0 profile and can be    *
 *   used with any version of .NET or Mono.                               *
 *                                                                        *
@@ -55,6 +56,9 @@
     value="${path::combine(project.base.dir,'doc')}"/>
   <property name="project.lib.dir"
     value="${path::combine(project.base.dir,'lib')}"/>
+  <property name="project.deploy.dir"
+    value="${path::combine(project.base.dir,'deploy')}"
+    unless="${property::exists('project.deploy.dir')}"/>
 
 
 <!-- ***************************************************************** -->
@@ -76,13 +80,17 @@
 <!-- *********        Set Default Build Configuration        ********* -->
 <!-- ***************************************************************** -->
 
-  <call target="set-debug-build-config"/>
+  <property name="build.config" value="debug"
+    unless="${property::exists('build.config')}"/>
+  <call target="set-${build.config}-build-config"/>
 
 <!-- ***************************************************************** -->
 <!-- *********     The Engine is built under .NET 1.1        ********* -->
 <!-- ***************************************************************** -->
 
-  <property name="nant.settings.currentframework" value="net-1.1"/>
+  <property name="runtime.config" value="net-1.1"
+    unless="${property::exists('runtime.config')}"/>
+  <property name="nant.settings.currentframework" value="${runtime.config}"/>
 
 <!-- ***************************************************************** -->
 <!-- *********   Define directories for external tools    ************ -->
@@ -164,6 +172,22 @@
     <nant target="build">
       <buildfiles refid="engine.buildfiles" failonerror="true" />
     </nant>
+
+  </target>
+
+<!-- ***************************************************************** -->
+<!-- ***                   Deploy the Engine                       *** -->
+<!-- ***************************************************************** -->
+
+  <target name="deploy" depends="build"
+    description="Deploy the current build for testing">
+
+    <copy todir="${project.deploy.dir}">
+      <fileset basedir="${current.build.dir}">
+        <include name="nunit.*" />
+        <include name="nunit-agent.*" />
+      </fileset>
+    </copy>
 
   </target>
 
