@@ -65,6 +65,9 @@
     value="${path::combine(project.base.dir,'samples')}"/>
   <property name="project.lib.dir"
     value="${path::combine(project.base.dir,'lib')}"/>
+  <property name="project.deploy.dir"
+    value="${path::combine(project.base.dir,'deploy')}"
+    unless="${property::exists('project.deploy.dir')}"/>
 
 
 <!-- ***************************************************************** -->
@@ -88,8 +91,9 @@
 <!-- *********        Set Default Build Configuration        ********* -->
 <!-- ***************************************************************** -->
 
-  <property name="build.config" value="debug"/>
-  <property name="build.defines" value=""/>
+  <property name="build.config" value="debug"
+    unless="${property::exists('build.config')}"/>
+  <call target="set-${build.config}-build-config"/>
 
 <!-- ***************************************************************** -->
 <!-- *********       Set Default Runtime Configuration       ********* -->
@@ -118,7 +122,9 @@
 
   </foreach>
 
-  <call target="set-${default.runtime}-runtime-config" />
+  <property name="runtime.config" value="${default.runtime}"
+    unless="${property::exists('runtime.config')}"/>
+  <call target="set-${runtime.config}-runtime-config" />
 
 <!-- ***************************************************************** -->
 <!-- *********   Define directories for external tools    ************ -->
@@ -282,6 +288,38 @@
     <nant target="build" buildfile="src/tests/nunitlite.tests.build"/>
 
   </target>
+
+<!-- ***************************************************************** -->
+<!-- ***              Targets for Deploying the Build              *** -->
+<!-- ***************************************************************** -->
+
+  <target name="deploy" depends="build"
+    description="Deploy the current build for testing">
+
+    <copy todir="${project.deploy.dir}">
+      <fileset basedir="${current.build.dir}">
+        <include name="nunit.*" />
+        <include name="nunitlite.*" />
+        <include name="direct-runner.*" />
+      </fileset>
+    </copy>
+
+  </target>
+
+<!--
+  <target name="deploy-all"
+    description="Deploy the current config for all supported runtimes">
+
+    <foreach item="String" delim="," 
+        property="framework" in="${installed.frameworks}">
+
+      <call target="set-${framework}-runtime-config"/>
+      <call target="deploy"/>
+
+    </foreach>
+
+  </target>
+ -->
 
 <!-- ***************************************************************** -->
 <!-- ***                 Targets for running tests                 *** -->

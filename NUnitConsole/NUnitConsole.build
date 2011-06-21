@@ -56,7 +56,9 @@
     value="${path::combine(project.base.dir,'doc')}"/>
   <property name="project.lib.dir"
     value="${path::combine(project.base.dir,'lib')}"/>
-
+  <property name="project.deploy.dir"
+    value="${path::combine(project.base.dir,'deploy')}"
+    unless="${property::exists('project.deploy.dir')}"/>
 
 <!-- ***************************************************************** -->
 <!-- *********         Define Packaging Directories          ********* -->
@@ -77,13 +79,17 @@
 <!-- *********        Set Default Build Configuration        ********* -->
 <!-- ***************************************************************** -->
 
-  <call target="set-debug-build-config"/>
+  <property name="build.config" value="debug"
+    unless="${property::exists('build.config')}"/>
+  <call target="set-${build.config}-build-config"/>
 
 <!-- ***************************************************************** -->
 <!-- ********* Building the Console Runner requires .NET 3.5 ********* -->
 <!-- ***************************************************************** -->
 
-  <property name="nant.settings.currentframework" value="net-3.5"/>
+  <property name="runtime.config" value="net-3.5"
+    unless="${property::exists('runtime.config')}"/>
+  <property name="nant.settings.currentframework" value="${runtime.config}"/>
 
 <!-- ***************************************************************** -->
 <!-- *********   Define directories for external tools    ************ -->
@@ -164,6 +170,26 @@
     <nant target="build">
       <buildfiles refid="console.buildfiles" failonerror="true" />
     </nant>
+
+  </target>
+
+<!-- ***************************************************************** -->
+<!-- ***                   Deploy the Console Runner               *** -->
+<!-- ***************************************************************** -->
+
+  <target name="deploy" depends="build"
+    description="Deploy the current build for testing">
+
+    <copy todir="${project.deploy.dir}">
+      <fileset basedir="${current.build.dir}">
+        <include name="nunit-console.*" />
+<!--
+        <include name="nunit.framework.dll" />
+        <include name="nunit.engine.dll" />
+        <include name="nunit.engine.api.dll" />
+-->
+      </fileset>
+    </copy>
 
   </target>
 

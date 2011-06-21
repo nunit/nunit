@@ -3,14 +3,26 @@
 
 <description>
 **************************************************************************
-* This script is used to build the NUnit Framework for any supported     *
-* runtime that is installed on the system. If you are unsure about which *
-* runtimes are avaiable use the list-runtimes or dump-settings target.   *
-* At least one of the supported runtimes and sdk must be installed.      *
+* This script is used to build, deploy, test and package NUnit.          * 
 *                                                                        *
-* Dependencies:                                                          *                                         
+* In order to test the console, engine and framework together, they      *
+* are all built using .NET 3.5. This is not the normal build used for    *
+* packaging the engine, so it must also be tested using under .NET 1.1   *
+* using its own build script. The framework must be tested under all     *
+* the runtimes it supports using its own build script.                   *
 *                                                                        *
-*   The script requires the NAnt 0.90 release or a later version.        *
+* The actual building and deployment steps are delegated to the scripts  *
+* for the individual components: Framework, Engine and Console.          *
+*                                                                        *
+* Dependencies:                                                          *
+*                                                                        *
+*   The individual component source projects must be available. The      *
+*   following scripts are invoked:                                       *
+*        NUnitConsole.build                                              *
+*        NUnitEngine.build                                               *
+*        NUnitFramework.build                                            *
+*                                                                        *
+*   The script requires the NAnt 0.91 release or a later version.        *
 *                                                                        *
 *   To build the windows installer, you must be running on Windows.      *
 *   WiX 3.0 and the WiX tasks for NAnt are required. For a standard WiX  *
@@ -18,19 +30,10 @@
 *   this doesn't work, you should set the environment variable WIX       *
 *   or the property 'wix.dir' to the path where WiX is installed.        *
 *                                                                        *
-*   Running the tests in the NUnit Gui requires NUnit 2.5.2. Set the     *
-*   property 'nunit.dir' or the NUNIT_DIR environment variable to the    *
-*   path where NUnit 2.5.2 is installed.                                 *
+*   PartCover is required to run the 'test-coverage' target.             *
 *                                                                        *
-*   Either NCover or PartCover is required to run the 'test-coverage'    *
-*   target. Set one of the properties 'ncover.dir' or 'partcover.dir'    *
-*   to the directory path where the program is installed or set the      *
-*   NCOVER_DIR or PARTCOVER_DIR environment variables to the same path.  *
+* NOTE: Packaging targets are still under development.                   *
 *                                                                        *
-* NOTE: You may set any of the properties mentioned above either at the  *
-* command line using the NANT -D option or by creating a file called     *
-* 'local.settings.include' and using property elements. Environment      *
-* variable settings take precedence over any property values.            *
 **************************************************************************
 </description>
 
@@ -63,18 +66,78 @@
   <property name="supported.frameworks" 
     value="net-3.5,net-2.0,net-1.1,net-4.0,net-1.0,mono-3.5,mono-2.0,mono-1.0,netcf-3.5,netcf-2.0,netcf-1.0"/>
 
-  <!-- Packages we normally create -->
-  <!--<property name="standard.packages" value="std,mono" />-->
-  <property name="standard.packages" value="std" />
-
-  <!-- Our standard package for general distribution -->
-  <property name="default.package.config" value="std" />
-
   <!-- Set default warning level for compiles -->
   <property name="warn" value="4" unless="${property::exists('warn')}"/>
 
-  <!-- Additional internal properties are set in the include file -->
-  <include buildfile="nunit.common.include"/>
+<!-- ***************************************************************** -->
+<!-- *********          Define Project Directories           ********* -->
+<!-- ***************************************************************** -->
+
+  <!-- Project base dir is nant project base dir -->
+  <property name="project.base.dir"
+    value="${project::get-base-directory()}"/>
+
+  <!-- Other directories are derived from base dir -->
+  <property name="project.build.dir" 
+    value="${path::combine(project.base.dir,'build')}"/>
+  <property name="project.package.dir" 
+    value="${path::combine(project.base.dir,'package')}"/>
+  <property name="project.src.dir"
+    value="${path::combine(project.base.dir, 'src')}"/>
+  <property name="project.doc.dir"
+    value="${path::combine(project.base.dir,'doc')}"/>
+  <property name="project.samples.dir"
+    value="${path::combine(project.base.dir,'samples')}"/>
+  <property name="project.tools.dir"
+    value="${path::combine(project.base.dir,'tools')}"/>
+  <property name="project.lib.dir"
+    value="${path::combine(project.base.dir,'lib')}"/>
+  <property name="project.install.dir"
+    value="${path::combine(project.base.dir, 'install')}"/>
+  <property name="project.deploy.dir"
+    value="${path::combine(project.base.dir, 'deploy')}"/>
+
+
+<!-- ***************************************************************** -->
+<!-- *********         Define Packaging Directories          ********* -->
+<!-- ***************************************************************** -->
+
+  <property name="package.working.dir" 
+    value="${path::combine(project.package.dir,package.name)}"/>
+  <property name="package.bin.dir" 
+    value="${path::combine(package.working.dir,'bin')}"/>
+  <property name="package.doc.dir" 
+    value="${path::combine(package.working.dir,'doc')}"/>
+  <property name="package.samples.dir" 
+    value="${path::combine(package.working.dir,'samples')}"/>
+  <property name="package.src.dir" 
+    value="${path::combine(package.working.dir,'src')}"/>
+  <property name="package.lib.dir" 
+    value="${path::combine(package.working.dir,'lib')}"/>
+  <property name="package.tools.dir"
+    value="${path::combine(package.working.dir,'tools')}"/>
+  <property name="package.install.dir"
+    value="${path::combine(package.working.dir,'install')}"/>
+
+<!-- ***************************************************************** -->
+<!-- *********        Set Default Build Configuration        ********* -->
+<!-- ***************************************************************** -->
+
+  <call target="set-debug-build-config"/>
+
+<!-- ***************************************************************** -->
+<!-- *********           Set Runtime to .NET 3.5             ********* -->
+<!-- ***************************************************************** -->
+
+  <property name="runtime.config" value="net-3.5"/>
+  <property name="nant.settings.currentframework" value="net-3.5"/>
+
+<!-- ***************************************************************** -->
+<!-- In the optional local.settings.include file, installations may    -->
+<!-- set properties to override the location of external tools.        -->
+<!-- ***************************************************************** -->
+
+  <include buildfile="local.settings.include" failonerror="false"/>
 
 <!-- ***************************************************************** -->
 <!-- ***          Targets that set the build configuration         *** -->
@@ -88,72 +151,15 @@
     description="Set config to release for commands that follow"/>
 
 <!-- ***************************************************************** -->
-<!-- ***         Targets that set the runtime configuration        *** -->
-<!-- ***     These must come before actions like build or test     *** -->
-<!-- ***************************************************************** -->
-
-  <target name="net" depends="set-default-dot-net-runtime-config"
-    description="Set runtime to default .NET version"/>
-
-  <target name="net-1.0" depends="set-net-1.0-runtime-config"
-    description="Set runtime to .NET 1.0 for commands that follow"/>
-
-  <target name="net-1.1" depends="set-net-1.1-runtime-config"
-    description="Set runtime to .NET 1.1 for commands that follow"/>
-      
-  <target name="net-2.0" depends="set-net-2.0-runtime-config"
-    description="Set runtime to .NET 2.0 for commands that follow"/>
-      
-  <target name="net-3.5" depends="set-net-3.5-runtime-config"
-    description="Set runtime to .NET 3.5 for commands that follow"/>
-
-  <target name="net-4.0" depends="set-net-4.0-runtime-config"
-    description="Set runtime to .NET 4.0 for commands that follow"/>
-
-  <target name="netcf-1.0" depends="set-netcf-1.0-runtime-config"
-    description="Set runtime to CF 1.0 for commands that follow"/>
-      
-  <target name="netcf-2.0" depends="set-netcf-2.0-runtime-config"
-    description="Set runtime to CF 2.0 for commands that follow"/>
-      
-  <target name="netcf-3.5" depends="set-netcf-3.5-runtime-config"
-    description="Set runtime to CF 3.5 for commands that follow"/>
-      
-  <target name="mono" depends="set-default-mono-runtime-config"
-    description="Set runtime to default Mono version"/>
-
-  <target name="mono-1.0" depends="set-mono-1.0-runtime-config"
-    description="Set runtime to Mono 1.0 for commands that follow"/>
-  
-  <target name="mono-2.0" depends="set-mono-2.0-runtime-config"
-    description="Set runtime to Mono 2.0 for commands that follow"/>
-
-  <target name="mono-3.5" depends="set-mono-3.5-runtime-config"
-    description="Set runtime to Mono 3.5 for commands that follow"/>
-
-<!-- ***************************************************************** -->
 <!-- ***             Targets that clean directories                *** -->
 <!-- ***************************************************************** -->
 
-  <target name="clean" depends="set-build-dir"
+  <target name="clean"
       description="Removes output created by the current build config">
 
-    <delete dir="${current.build.dir}" 
-      if="${directory::exists( current.build.dir )}"/>
-
-    <delete file="src/GeneratedAssemblyInfo.cs"
-      if="${file::exists( 'src/GeneratedAssemblyInfo.cs' )}"/>
-
-  </target>
-
-  <target name="clean-all" 
-      description="Removes output created by all build configs">
- 
-    <delete dir="${project.build.dir}" 
-      if="${directory::exists( project.build.dir )}"/>
-
-    <delete file="src/GeneratedAssemblyInfo.cs"
-      if="${file::exists( 'src/GeneratedAssemblyInfo.cs' )}"/>
+    <nant target="clean-all" buildfile="NUnitFramework/NUnitFramework.build" />
+    <nant target="clean" buildfile="NUnitEngine/NUnitEngine.build" />
+    <nant target="clean" buildfile="NUnitConsole/NUnitConsole.build" />
 
   </target>
 
@@ -168,60 +174,65 @@
 <!-- ***              Targets that perform builds                  *** -->
 <!-- ***************************************************************** -->
 
-  <target name="build-all"
-    description="Build everything, for all supported runtimes">
+  <target name="build" depends="framework,engine,console"
+    description="Build everything, for current config"/>
 
+  <target name="framework" description="Build the NUnit Framework and update references">
 
-    <foreach item="String" delim="," 
-        property="framework" in="${installed.frameworks}">
+    <nant target="build" buildfile="NUnitFramework/NUnitFramework.build" />
 
-      <call target="set-${framework}-runtime-config"/>
-      <call target="build"/>
-
-    </foreach>
-
-  </target>
-
-  <target name="build"
-    description="Build everything, for current runtime and config">
-
-    <call target="build-nunit" unless="${runtime.platform=='netcf'}"/>
-    <call target="build-nunitlite"/>
-
-  </target>
-
-  <target name="build-nunit" depends="make-build-dir">
-
-    <fail if="${runtime.platform=='netcf'}"
-      message="The full NUnit framework may not be built for netcf"/>
-
-    <nant target="build" buildfile="NUnitFramework/src/framework/nunit.framework.build"/>
-    <nant target="build" buildfile="NUnitFramework/src/testdata/nunit.testdata.build"/>
-    <nant target="build" buildfile="NUnitFramework/src/tests/nunit.framework.tests.build"/>
-    <nant target="build" buildfile="NUnitFramework/src/direct-runner/direct-runner.build"/>
-    <nant target="build" buildfile="NUnitFramework/src/mock-assembly/mock-assembly.build"/>
-
-<!--
-    <nant target="build-nunit" buildfile="NUnitFramework/NUnitFramework.build"/>
-
-    <copy todir="${current.build.dir}">
-      <fileset basedir="NUnitFramework/build/${runtime.platform}/${runtime.version}/${build.config}">
+    <copy todir="NUnitEngine/lib">
+      <fileset basedir="NUnitFramework/build/net/3.5/${build.config}">
         <include name="nunit.framework.dll"/>
+        <include name="nunit.framework.pdb"/>
       </fileset>
     </copy>
 
-    <nant target="build" buildfile="NUnitEngine/NUnitEngine.build"/>
-
-    <nant target="build" buildfile="NUnitConsole/NUnitConsole.build"/>
--->
+    <copy todir="NUnitConsole/lib">
+      <fileset basedir="NUnitFramework/build/net/3.5/${build.config}">
+        <include name="nunit.framework.dll"/>
+        <include name="nunit.framework.pdb"/>
+      </fileset>
+    </copy>
 
   </target>
 
-  <target name="build-nunitlite" depends="make-build-dir">
+  <target name="engine" description="Build the NUnit Engine and update references">
 
-    <nant target="build" buildfile="NUnitFramework/src/framework/nunitlite.build"/>
-    <nant target="build" buildfile="NUnitFramework/src/testdata/nunitlite.testdata.build"/>
-    <nant target="build" buildfile="NUnitFramework/src/tests/nunitlite.tests.build"/>
+    <nant target="build" buildfile="NUnitEngine/NUnitEngine.build" />
+
+    <copy todir="NUnitConsole/lib">
+      <fileset basedir="NUnitEngine/build/${build.config}">
+        <include name="nunit.engine.api.dll"/>
+        <include name="nunit.engine.api.pdb"/>
+        <include name="nunit.engine.dll"/>
+        <include name="nunit.engine.pdb"/>
+        <include name="nunit-agent.exe"/>
+        <include name="nunit-agent.pdb"/>
+      </fileset>
+    </copy>
+
+  </target>
+
+  <target name="console" description="Build the Console Runner">
+
+    <nant target="build" buildfile="NUnitConsole/NUnitConsole.build" />
+
+  </target>
+
+<!-- ***************************************************************** -->
+<!-- ***           Deploy the Build to a common directory          *** -->
+<!-- ***************************************************************** -->
+
+  <target name="deploy"
+    description="Deploy the build to a common directory">
+
+    <delete dir="${project.deploy.dir}" 
+      if="${directory::exists( project.deploy.dir )}"/>
+
+    <nant target="deploy" buildfile="NUnitFramework/NUnitFramework.build"/>
+    <nant target="deploy" buildfile="NUnitEngine/NUnitEngine.build"/>
+    <nant target="deploy" buildfile="NUnitConsole/NUnitConsole.build"/>
 
   </target>
 
@@ -229,64 +240,24 @@
 <!-- ***                 Targets for running tests                 *** -->
 <!-- ***************************************************************** -->
 
-  <target name="test" depends="build,run-test"
-    description="Build and run tests for selected config and runtime"/>
+  <target name="test" depends="deploy,run-test"
+    description="Build and run tests for the selected config"/>
 
   <target name="run-test">
 
-    <call target="nunit-test" unless="${runtime.platform=='netcf'}"/>
-    <call target="nunitlite-test"/>
-
-  </target>
-
-  <target name="init-test" depends="set-build-dir">
-
-    <property name="result.file" 
-      value="TestResult-${nant.settings.currentframework}"/>
-
-    <property name="nunit.options" value="" 
-      unless="${property::exists('nunit.options')}"/>
-
-    <!--<property name="nunit.commandline"
-      value="nunit.framework.tests.dll ${nunit.options} -xml:${result.file}.xml"/>-->
-
-    <property name="nunit.commandline"
-      value="nunit.framework.tests.dll ${nunit.options}"/>
-
-  </target>
-
-  <target name="nunit-test" depends="init-test">
-
     <echo message="*"/>
-    <echo message="* Testing the nunit.framework ${runtime.config} ${build.config} build"/>
+    <echo message="* Testing the NUnit ${build.config} build"/>
     <echo message="*"/>
 
-    <!-- We use exec rather than the nunit2 task because we are testing
-         a new build of NUnit which is likely not to be included in the Nant build -->
+    <exec basedir="${project.deploy.dir}"
+          workingdir="${project.deploy.dir}"
+          program="nunit-console.exe">
 
-    <!--<exec basedir="${nunit.console.dir}"
-          workingdir="${current.build.dir}" 
-	  program="nunit-console.exe" 
-          managed="strict"
-	  commandline="${nunit.commandline}" />-->
+      <arg value="nunit-console.tests.dll"/>
+      <arg value="nunit.engine.tests.dll"/>
+      <arg value="nunit.framework.tests.dll"/>
 
-    <exec basedir="${current.build.dir}"
-          workingdir="${current.build.dir}"
-          program="direct-runner.exe"
-          managed="strict"
-          commandline="${nunit.commandline}" />
-
-  </target>
-
-  <target name="nunitlite-test" depends="init-test">
-
-    <echo message="*"/>
-    <echo message="* Testing the NUnitLite ${runtime.config} ${build.config} build"/>
-    <echo message="*"/>
-
-    <exec basedir="${current.build.dir}"
-	  program="nunitlite.tests.exe" 
-          managed="strict" />
+    </exec>
 
   </target>
 
@@ -296,50 +267,6 @@
     <echo message="*"/>
     <echo message="* Starting ${runtime.config} ${build.config} test coverage run"/>
     <echo message="*"/>
-
-    <fail unless="${property::exists('ncover.dir') or property::exists('partcover.dir')}">
-Unable to locate either NCover or PartCover, one of which is needed for
-test coverage. Edit your 'local.settings.include' file to set property
-'ncover.dir' or 'partcover.dir' to the directory where the program is 
-installed. Alternatively, you may set the NCOVER_DIR or PARTCOVER_DIR 
-environment variable.
-    </fail>
-
-    <call target="run-ncover" 
-      if="${property::exists('ncover.dir')}"/>
-
-    <call target="run-partcover" 
-      if="${property::exists('partcover.dir')}"
-      unless="${property::exists('ncover.dir')}"/>
-
-  </target>
-
-  <target name="run-ncover" depends="init-test">
-
-    <fail unless="${property::exists('ncover.dir')}">
-Unable to locate your NCover installation. Set property 'ncover.dir'
-to the directory where it is installed in your 'local.settings.include'
-file or set the NCOVER_DIR environment variable.
-    </fail>
-
-    <property name="ncover.commandline"
-      value="direct-runner.exe ${nunit.commandline} //a nunit.framework //x TestCoverage-${nant.settings.currentframework}.xml"/>
-
-    <exec basedir="${ncover.dir}"
-          workingdir="${current.build.dir}" 
-	  program="NCover.Console.exe" 
-          managed="strict"
-	  commandline="${ncover.commandline}" />
-
-  </target>
-
-  <target name="run-partcover" depends="init-test">
-
-    <fail unless="${property::exists('partcover.dir')}">
-Unable to locate your PartCover installation. Set property 'partcover.dir'
-to the directory where it is installed in your 'local.settings.include'
-file or set the PARTCOVER_DIR environment variable.
-    </fail>
 
     <property name="partcover.commandline"
       value='--target direct-runner.exe --target-args "${nunit.commandline}" --include [nunit.framework]* --output TestCoverage-${nant.settings.currentframework}.xml'/>
@@ -362,50 +289,6 @@ file or set the PARTCOVER_DIR environment variable.
       <call target="test" />
 
     </foreach>
-
-  </target>
-
-  <target name="gui-test" depends="build,run-gui-test"
-    description="Run tests for a build using gui runner"/>
-
-  <target name="run-gui-test">
-
-    <fail unless="${property::exists('nunit.dir')}">
-Unable to locate your NUnit installation. Because NUnit 3.0 has
-not yet reached a stage where it can run its own tests, you must
-set property 'nunit.dir' to a directory where NUnit 2.5 or higher
-is installed in your 'local.settings.include' file or set the 
-NUNIT_DIR environment variable.
-    </fail>
-
-    <call target="nunit-gui-test" unless="${runtime.platform=='netcf'}"/>
-    <call target="nunitlite-gui-test"/>
-
-  </target>
-
-  <target name="nunit-gui-test" depends="init-test">
-
-    <echo message="*"/>
-    <echo message="* Testing the nunit.framework ${runtime.config} ${build.config} build"/>
-    <echo message="*"/>
-
-    <exec basedir="${nunit.dir}/bin/net-2.0" 
-      workingdir="${current.build.dir}" 
-      program="nunit.exe" 
-      commandline="nunit.framework.tests.dll -run"/>
-
-  </target>
-
-  <target name="nunitlite-gui-test" depends="init-test">
-
-    <echo message="*"/>
-    <echo message="* Testing the NUnitite ${runtime.config} ${build.config} build"/>
-    <echo message="*"/>
-
-    <exec basedir="${nunit.dir}/bin/net-2.0" 
-      workingdir="${current.build.dir}" 
-      program="nunit.exe" 
-      commandline="nunitlite.tests.exe -run"/>
 
   </target>
 
@@ -752,6 +635,30 @@ to the correct location.
       </fileset>
     </copy>
 
+  </target>
+
+<!-- ***************************************************************** -->
+<!-- ********* Targets for setting the build configuration *********** -->
+<!-- ***************************************************************** -->
+
+  <target name="set-build-config" description="Set the build config">
+    <call target="set-${build.config}-build-config"/>
+  </target>
+
+  <target name="set-debug-build-config">
+    <property name="build.config" value="debug"/>
+    <property name="build.debug" value="true"/>
+    <property name="build.defines" value="DEBUG,TRACE,${runtime.defines}"
+        dynamic="true"/>
+    <property name="build.suffix" value="-dbg"/>
+  </target>
+	
+  <target name="set-release-build-config">
+    <property name="build.config" value="release"/>
+    <property name="build.debug" value="false"/>
+    <property name="build.defines" value="TRACE,${runtime.defines}"
+	dynamic="true"/>
+    <property name="build.suffix" value=""/>
   </target>
 
 <!-- ***************************************************************** -->
