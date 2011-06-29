@@ -25,14 +25,12 @@ using System;
 using System.IO;
 using System.Threading;
 using System.Diagnostics;
+#if CLR_2_0 || CLR_4_0
+using System.Collections.Generic;
+#else
 using System.Collections;
-using System.Collections.Specialized;
+#endif
 using System.Reflection;
-using System.Runtime.Remoting;
-using System.Runtime.Remoting.Services;
-using System.Runtime.Remoting.Channels;
-using System.Runtime.Remoting.Channels.Tcp;
-using NUnit.Engine;
 using NUnit.Engine.Internal;
 
 namespace NUnit.Engine.Services
@@ -72,27 +70,29 @@ namespace NUnit.Engine.Services
 		#endregion
 
 		#region ServerBase Overrides
-		public override void Stop()
-		{
-			foreach( AgentRecord r in agentData )
-			{
-				if ( !r.Process.HasExited )
-				{
-					if ( r.Agent != null )
-					{
-						r.Agent.Stop();
-						r.Process.WaitForExit(10000);
-					}
+        //public override void Stop()
+        //{
+        //    foreach( KeyValuePair<Guid,AgentRecord> pair in agentData )
+        //    {
+        //        AgentRecord r = pair.Value;
 
-					if ( !r.Process.HasExited )
-						r.Process.Kill();
-				}
-			}
+        //        if ( !r.Process.HasExited )
+        //        {
+        //            if ( r.Agent != null )
+        //            {
+        //                r.Agent.Stop();
+        //                r.Process.WaitForExit(10000);
+        //            }
 
-			agentData.Clear();
+        //            if ( !r.Process.HasExited )
+        //                r.Process.Kill();
+        //        }
+        //    }
 
-			base.Stop ();
-		}
+        //    agentData.Clear();
+
+        //    base.Stop ();
+        //}
 		#endregion
 
 		#region Public Methods - Called by Agents
@@ -253,18 +253,18 @@ namespace NUnit.Engine.Services
         //        agentData.Remove(p.Id);
         //}
 
-		private AgentRecord FindAvailableAgent()
-		{
-			foreach( AgentRecord r in agentData )
-				if ( r.Status == AgentStatus.Ready)
-				{
-                    //log.Debug( "Reusing agent {0}", r.Id );
-					r.Status = AgentStatus.Busy;
-					return r;
-				}
+        //private AgentRecord FindAvailableAgent()
+        //{
+        //    foreach( AgentRecord r in agentData )
+        //        if ( r.Status == AgentStatus.Ready)
+        //        {
+        //            //log.Debug( "Reusing agent {0}", r.Id );
+        //            r.Status = AgentStatus.Busy;
+        //            return r;
+        //        }
 
-			return null;
-		}
+        //    return null;
+        //}
 
 		private ITestAgent CreateRemoteAgent(RuntimeFramework framework, int waitTime, bool enableDebug)
 		{
@@ -412,9 +412,13 @@ namespace NUnit.Engine.Services
 		///  A simple class that tracks data about this
 		///  agencies active and available agents
 		/// </summary>
-		private class AgentDataBase : IEnumerable
+		private class AgentDataBase
 		{
-			private ListDictionary agentData = new ListDictionary();
+#if CLR_2_0 || CLR_4_0
+            private Dictionary<Guid, AgentRecord> agentData = new Dictionary<Guid, AgentRecord>();
+#else
+			private Hashtable agentData = new Hashtable();
+#endif
 
 			public AgentRecord this[Guid id]
 			{
@@ -432,7 +436,11 @@ namespace NUnit.Engine.Services
 			{
 				get
 				{
-					foreach( System.Collections.DictionaryEntry entry in agentData )
+#if CLR_2_0
+                    foreach( KeyValuePair<Guid, AgentRecord> entry in agentData)
+#else
+					foreach( DictionaryEntry entry in agentData )
+#endif
 					{
 						AgentRecord r = (AgentRecord)entry.Value;
 						if ( r.Agent == agent )
@@ -458,41 +466,12 @@ namespace NUnit.Engine.Services
 				agentData.Clear();
 			}
 
-			#region IEnumerable Members
-			public IEnumerator GetEnumerator()
-			{
-				return new AgentDataEnumerator( agentData );
-			}
-			#endregion
-
-			#region Nested Class - AgentDataEnumerator
-			public class AgentDataEnumerator : IEnumerator
-			{
-				IEnumerator innerEnum;
-
-				public AgentDataEnumerator( IDictionary list )
-				{
-					innerEnum = list.GetEnumerator();
-				}
-
-				#region IEnumerator Members
-				public void Reset()
-				{
-					innerEnum.Reset();
-				}
-
-				public object Current
-				{
-					get { return ((DictionaryEntry)innerEnum.Current).Value; }
-				}
-
-				public bool MoveNext()
-				{
-					return innerEnum.MoveNext();
-				}
-				#endregion
-			}
-			#endregion
+            //#region IEnumerable Members
+            //public IEnumerator<KeyValuePair<Guid,AgentRecord>> GetEnumerator()
+            //{
+            //    return agentData.GetEnumerator();
+            //}
+            //#endregion
 		}
 
 		#endregion

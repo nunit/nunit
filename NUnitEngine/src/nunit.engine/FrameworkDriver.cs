@@ -24,7 +24,11 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+#if CLR_2_0 || CLR_4_0
+using System.Collections.Generic;
+#else
 using System.Collections;
+#endif
 using System.Xml;
 using NUnit.Engine.Interfaces;
 
@@ -46,7 +50,11 @@ namespace NUnit.Engine
             this.testController = CreateObject("NUnit.Framework.Api.TestController");
         }
 
+#if CLR_2_0 || CLR_4_0
+        public bool Load(string assemblyFileName, IDictionary<string,object> options)
+#else
         public bool Load(string assemblyFileName, IDictionary options)
+#endif
         {
             CallbackHandler handler = new CallbackHandler();
 
@@ -62,7 +70,11 @@ namespace NUnit.Engine
         {
         }
 
+#if CLR_2_0 || CLR_4_0
+        public XmlNode ExploreTests(string assemblyFileName, IDictionary<string,object> options)
+#else
         public XmlNode ExploreTests(string assemblyFileName, IDictionary options)
+#endif
         {
             CallbackHandler handler = new CallbackHandler();
 
@@ -89,7 +101,11 @@ namespace NUnit.Engine
             return doc.FirstChild;
         }
 
+#if CLR_2_0 || CLR_4_0
+        public TestResult Run(IDictionary<string,object> runOptions)
+#else
         public TestResult Run(IDictionary runOptions)
+#endif
         {
             CallbackHandler handler = new RunTestsCallbackHandler();
 

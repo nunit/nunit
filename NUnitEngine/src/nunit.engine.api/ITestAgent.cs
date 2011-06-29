@@ -7,6 +7,9 @@ namespace NUnit.Engine
     /// </summary>
     public interface ITestAgent
     {
+        /// <summary>
+        /// Gets the agency with which this agent is associated.
+        /// </summary>
         ITestAgency Agency { get; }
 
         /// <summary>

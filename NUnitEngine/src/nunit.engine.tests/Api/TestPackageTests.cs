@@ -26,36 +26,79 @@ using NUnit.Framework;
 
 namespace NUnit.Engine.Api.Tests
 {
-    public class TestPackageTests
+    public class TestPackageTests_SingleAssembly
     {
-        [Test]
-        public void CreateWithSingleFile()
+        private TestPackage package;
+
+        [SetUp]
+        public void CreatePackage()
         {
-            TestPackage package = new TestPackage("test.dll");
-            string[] expected = new string[] { Path.GetFullPath("test.dll") };
-
-            Assert.That(package.Name, Is.EqualTo("test.dll"));
-            Assert.That(package.FullName, Is.EqualTo(Path.GetFullPath("test.dll")));
-            Assert.That(package.TestFiles, Is.EqualTo(expected));
-
-            Assert.That(package.Settings.Count, Is.EqualTo(0));
+            package = new TestPackage("test.dll");
         }
 
         [Test]
-        public void CreateWithMultipleFiles()
+        public void AssemblyPathIsUsedAsFilePath()
         {
-            TestPackage package = new TestPackage(new string[] {"test1.dll", "test2.dll", "test3.dll"});
-            string[] expected = new string[] { 
-                Path.GetFullPath("test1.dll"),
-                Path.GetFullPath("test2.dll"),
-                Path.GetFullPath("test3.dll")
-            };
+            Assert.AreEqual(Path.GetFullPath("test.dll"), package.FilePath);
+        }
 
-            Assert.That(package.Name, Is.EqualTo("test1.dll"));
-            Assert.That(package.FullName, Is.EqualTo(Path.GetFullPath("test1.dll")));
-            Assert.That(package.TestFiles, Is.EqualTo(expected));
+        [Test]
+        public void AssemblyPathIsIncludedInList()
+        {
+            Assert.AreEqual(
+                new string[] { Path.GetFullPath("test.dll") },
+                package.GetAssemblies());
+        }
 
-            Assert.That(package.Settings.Count, Is.EqualTo(0));
+        [Test]
+        public void NoSubPackagesAreCreated()
+        {
+            Assert.False(package.HasSubPackages);
+            Assert.AreEqual(0, package.SubPackages.Length);
+        }
+
+        [Test]
+        public void FileNameIsUsedAsPackageName()
+        {
+            Assert.That(package.Name, Is.EqualTo("test.dll"));
+        }
+    }
+
+    public class TestPackageTests_MultipleAssemblies
+    {
+        private TestPackage package;
+
+        [SetUp]
+        public void CreatePackage()
+        {
+            package = new TestPackage("test1.dll", "test2.dll", "test3.dll");
+        }
+
+        [Test]
+        public void PackageIsAnonymous()
+        {
+            Assert.Null(package.FilePath);
+        }
+
+        [Test]
+        public void SubPackagesAreCreatedForEachAssembly()
+        {
+            Assert.True(package.HasSubPackages);
+            Assert.AreEqual(3, package.SubPackages.Length);
+            Assert.AreEqual(Path.GetFullPath("test1.dll"), package.SubPackages[0].FilePath);
+            Assert.AreEqual(Path.GetFullPath("test2.dll"), package.SubPackages[1].FilePath);
+            Assert.AreEqual(Path.GetFullPath("test3.dll"), package.SubPackages[2].FilePath);
+        }
+
+        [Test]
+        public void AssemblyPathsAreIncludedInList()
+        {
+            string[] expectedAssemblies = new string[] {
+            Path.GetFullPath("test1.dll"),
+            Path.GetFullPath("test2.dll"),
+            Path.GetFullPath("test3.dll") };
+
+            Assert.AreEqual(expectedAssemblies, package.GetAssemblies());
         }
     }
 }

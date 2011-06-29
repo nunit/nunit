@@ -22,14 +22,11 @@
 // ***********************************************************************
 
 using System;
-using System.IO;
-using System.Collections;
 using System.Collections.Specialized;
 using System.Runtime.Remoting;
 using System.Runtime.Remoting.Channels;
 using System.Runtime.Remoting.Channels.Tcp;
 using System.Reflection;
-using System.Diagnostics;
 
 namespace NUnit.Engine.Internal
 {
