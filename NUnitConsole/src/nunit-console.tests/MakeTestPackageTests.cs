@@ -37,8 +37,8 @@ namespace NUnit.ConsoleRunner.Tests
             var options = new ConsoleOptions("test.dll");
             var package = ConsoleRunner.MakeTestPackage(options);
 
-            Assert.AreEqual(1, package.TestFiles.Length);
-            Assert.AreEqual(Path.GetFullPath("test.dll"), package.TestFiles[0]);
+            Assert.AreEqual(1, package.GetAssemblies().Length);
+            Assert.AreEqual(Path.GetFullPath("test.dll"), package.FilePath);
         }
 
         [Test]
@@ -53,7 +53,7 @@ namespace NUnit.ConsoleRunner.Tests
             var options = new ConsoleOptions(names);
             var package = ConsoleRunner.MakeTestPackage(options);
 
-            Assert.AreEqual(expected, package.TestFiles);
+            Assert.AreEqual(expected, package.GetAssemblies());
         }
 
         [Test]
@@ -62,7 +62,11 @@ namespace NUnit.ConsoleRunner.Tests
             var options = new ConsoleOptions("test.dll", "--timeout=50");
             var package = ConsoleRunner.MakeTestPackage(options);
 
+#if CLR_2_0 || CLR_4_0
+            Assert.That(package.Settings.ContainsKey("DefaultTimeout"));
+#else
             Assert.That(package.Settings.Contains("DefaultTimeout"));
+#endif
             Assert.AreEqual(50, package.Settings["DefaultTimeout"]);
         }
 
@@ -72,7 +76,11 @@ namespace NUnit.ConsoleRunner.Tests
             var options = new ConsoleOptions("test.dll", "--process=Separate");
             var package = ConsoleRunner.MakeTestPackage(options);
 
+#if CLR_2_0 || CLR_4_0
+            Assert.That(package.Settings.ContainsKey("ProcessModel"));
+#else
             Assert.That(package.Settings.Contains("ProcessModel"));
+#endif
             Assert.AreEqual(ProcessModel.Separate, package.Settings["ProcessModel"]);
         }
 
@@ -82,7 +90,11 @@ namespace NUnit.ConsoleRunner.Tests
             var options = new ConsoleOptions("test.dll", "--domain=Multiple");
             var package = ConsoleRunner.MakeTestPackage(options);
 
+#if CLR_2_0 || CLR_4_0
+            Assert.That(package.Settings.ContainsKey("DomainUsage"));
+#else
             Assert.That(package.Settings.Contains("DomainUsage"));
+#endif
             Assert.AreEqual(DomainUsage.Multiple, package.Settings["DomainUsage"]);
         }
 
@@ -92,7 +104,11 @@ namespace NUnit.ConsoleRunner.Tests
             var options = new ConsoleOptions("test.dll", "--framework=net-4.0");
             var package = ConsoleRunner.MakeTestPackage(options);
 
+#if CLR_2_0 || CLR_4_0
+            Assert.That(package.Settings.ContainsKey("RuntimeFramework"));
+#else
             Assert.That(package.Settings.Contains("RuntimeFramework"));
+#endif
             Assert.AreEqual("net-4.0", package.Settings["RuntimeFramework"]);
         }
 
@@ -102,7 +118,11 @@ namespace NUnit.ConsoleRunner.Tests
             var options = new ConsoleOptions("test.dll", "--config=Release");
             var package = ConsoleRunner.MakeTestPackage(options);
 
+#if CLR_2_0 || CLR_4_0
+            Assert.That(package.Settings.ContainsKey("ActiveConfig"));
+#else
             Assert.That(package.Settings.Contains("ActiveConfig"));
+#endif
             Assert.AreEqual("Release", package.Settings["ActiveConfig"]);
         }
 
@@ -112,7 +132,11 @@ namespace NUnit.ConsoleRunner.Tests
             var options = new ConsoleOptions("test.dll", "--trace=Error");
             var package = ConsoleRunner.MakeTestPackage(options);
 
+#if CLR_2_0 || CLR_4_0
+            Assert.That(package.Settings.ContainsKey("InternalTraceLevel"));
+#else
             Assert.That(package.Settings.Contains("InternalTraceLevel"));
+#endif
             Assert.AreEqual(InternalTraceLevel.Error, package.Settings["InternalTraceLevel"]);
         }
 
@@ -122,7 +146,11 @@ namespace NUnit.ConsoleRunner.Tests
             var options = new ConsoleOptions("test.dll", "--trace=4");
             var package = ConsoleRunner.MakeTestPackage(options);
 
+#if CLR_2_0 || CLR_4_0
+            Assert.That(package.Settings.ContainsKey("InternalTraceLevel"));
+#else
             Assert.That(package.Settings.Contains("InternalTraceLevel"));
+#endif
             Assert.AreEqual(InternalTraceLevel.Info, package.Settings["InternalTraceLevel"]);
         }
 
@@ -138,7 +166,11 @@ namespace NUnit.ConsoleRunner.Tests
             var options = new ConsoleOptions("test.dll", "--trace=7");
             var package = ConsoleRunner.MakeTestPackage(options);
 
+#if CLR_2_0 || CLR_4_0
+            Assert.That(package.Settings.ContainsKey("InternalTraceLevel"));
+#else
             Assert.That(package.Settings.Contains("InternalTraceLevel"));
+#endif
             Assert.AreEqual((InternalTraceLevel)7, package.Settings["InternalTraceLevel"]);
         }
 

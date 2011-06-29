@@ -25,12 +25,28 @@ using System;
 
 namespace NUnit.Engine
 {
+    /// <summary>
+    /// Interface implemented by all test runners.
+    /// </summary>
     public interface ITestRunner : IDisposable
     {
+        /// <summary>
+        /// Load a TestPackage for possible execution
+        /// </summary>
+        /// <param name="package">The TestPackage to be loaded</param>
+        /// <returns>True on success, otherwise fale</returns>
         bool Load(TestPackage package);
 
+        /// <summary>
+        /// Unload any loaded TestPackage
+        /// </summary>
         void Unload();
 
+        /// <summary>
+        /// Run the tests in a loaded TestPackage
+        /// </summary>
+        /// <param name="filter">A TestFilter used to select tests</param>
+        /// <returns>A TestResult giving the result of the test execution</returns>
         TestResult Run(ITestFilter filter);
     }
 }

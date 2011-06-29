@@ -149,19 +149,19 @@ namespace NUnit.Engine
 
         #endregion
 
-        #region ProjectLoader
-        //private static ProjectService projectService;
-        //public static ProjectService ProjectService
-        //{
-        //    get
-        //    {
-        //        if ( projectService == null )
-        //            projectService = (ProjectService)
-        //                ServiceManager.Services.GetService( typeof( ProjectService ) );
+        #region ProjectService
+        private ProjectService projectService;
+        public ProjectService ProjectService
+        {
+            get
+            {
+                if (projectService == null)
+                    projectService = (ProjectService)
+                        ServiceManager.GetService(typeof(ProjectService));
 
-        //        return projectService;
-        //    }
-        //}
+                return projectService;
+            }
+        }
         #endregion
 
         public void Add(IService service)

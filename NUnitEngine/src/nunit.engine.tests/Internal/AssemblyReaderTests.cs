@@ -64,13 +64,15 @@ namespace NUnit.Engine.Internal.Tests
 		[Test]
 		public void IsValidPeFile()
 		{
-			Assert.IsTrue( rdr.IsValidPeFile );
+            Assert.IsTrue(rdr.IsValidPeFile);
 		}
 
 		[Test]
 		public void IsValidPeFile_Fails()
 		{
-			Assert.IsFalse( new AssemblyReader("nunit.engine.api.xml").IsValidPeFile );
+            string path = AssemblyHelper.GetAssemblyPath(System.Reflection.Assembly.GetAssembly(GetType()));
+            path = Path.Combine(Path.GetDirectoryName(path), "nunit.engine.api.xml");
+            Assert.IsFalse(new AssemblyReader(path).IsValidPeFile);
 		}
 
 		[Test]

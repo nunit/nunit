@@ -21,7 +21,11 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#if CLR_2_0 || CLR_4_0
+using System.Collections.Generic;
+#else
 using System.Collections;
+#endif
 using System.Xml;
 
 namespace NUnit.Engine.Internal
@@ -113,16 +117,26 @@ namespace NUnit.Engine.Internal
 
         #endregion
 
+#if CLR_2_0 || CLR_4_0
+        public static TestResult CombineResults(IList<TestResult> results)
+        {
+            List<XmlNode> nodes = new List<XmlNode>();
+#else
         public static TestResult CombineResults(IList results)
         {
             ArrayList nodes = new ArrayList();
-            foreach(TestResult result in results)
+#endif
+            foreach (TestResult result in results)
                 nodes.Add(result.GetXml());
 
             return new TestResult(CombineResultNodes(nodes));
         }
 
+#if CLR_2_0 || CLR_4_0
+        public static XmlNode CombineResultNodes(IList<XmlNode> results)
+#else
         public static XmlNode CombineResultNodes(IList results)
+#endif
         {
             XmlNode combined = CreateTopLevelElement("test-suite");
 
