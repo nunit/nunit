@@ -1,4 +1,8 @@
-﻿using System.Collections;
+﻿#if CLR_2_0 || CLR_4_0
+using System.Collections.Generic;
+#else
+using System.Collections;
+#endif
 using NUnit.Engine.Internal;
 
 namespace NUnit.Engine.Runners
@@ -9,7 +13,11 @@ namespace NUnit.Engine.Runners
     /// </summary>
     public class MultipleTestDomainRunner : ITestRunner
     {
+#if CLR_2_0 || CLR_4_0
+        private List<ITestRunner> runners = new List<ITestRunner>();
+#else
         private ArrayList runners = new ArrayList();
+#endif
 
         private ServiceContext Services;
 
@@ -24,11 +32,20 @@ namespace NUnit.Engine.Runners
         {
             int count = 0;
 
-            foreach (string testFile in package.TestFiles)
+#if CLR_2_0 || CLR_4_0
+            List<TestPackage> packages = new List<TestPackage>();
+#else
+            ArrayList packages = new ArrayList();
+#endif
+            if (package.HasSubPackages)
+                packages.AddRange(package.SubPackages);
+            else
+                packages.Add(package);
+
+            foreach (TestPackage subPackage in packages)
             {
-                TestPackage subPackage = new TestPackage(testFile);
-                foreach (string key in package.Settings.Keys)
-                    subPackage.Settings[key] = package.Settings[key];
+                //foreach (string key in package.Settings.Keys)
+                //    subPackage.Settings[key] = package.Settings[key];
 
                 ITestRunner runner = new TestDomainRunner(this.Services);
                 runners.Add(runner);
@@ -50,7 +67,11 @@ namespace NUnit.Engine.Runners
 
         public TestResult Run(ITestFilter filter)
         {
+#if CLR_2_0 || CLR_4_0
+            List<TestResult> results = new List<TestResult>();
+#else
             ArrayList results = new ArrayList();
+#endif
 
             foreach (ITestRunner runner in runners)
                 results.Add(runner.Run(filter));

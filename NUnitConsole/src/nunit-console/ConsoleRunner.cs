@@ -139,6 +139,8 @@ namespace NUnit.ConsoleRunner
             try
             {
                 ITestEngine engine = TestEngineActivator.CreateInstance();
+
+                
 #if false
                 result = engine.Run(package, testFilter /*collector, testFilter*/ ).GetXml();
 #else
@@ -212,27 +214,34 @@ namespace NUnit.ConsoleRunner
         // This is public for testing only
         public static TestPackage MakeTestPackage( ConsoleOptions options )
         {
-            TestPackage package = new TestPackage(options.InputFiles);
+            TestPackage package = new TestPackage();
 
-            if (options.processModel != ProcessModel.Default)
-                package.Settings["ProcessModel"] = options.processModel;
+            foreach (string testfile in options.InputFiles)
+            {
+                TestPackage subpackage = new TestPackage(testfile);
 
-            if (options.domainUsage != DomainUsage.Default)
-                package.Settings["DomainUsage"] = options.domainUsage;
+                package.Add(subpackage);
 
-            if (options.framework != null)
-                package.Settings["RuntimeFramework"] = options.framework;
+                if (options.processModel != ProcessModel.Default)
+                    subpackage.Settings["ProcessModel"] = options.processModel;
 
-            if (options.defaultTimeout >= 0)
-                package.Settings["DefaultTimeout"] = options.defaultTimeout;
+                if (options.domainUsage != DomainUsage.Default)
+                    subpackage.Settings["DomainUsage"] = options.domainUsage;
 
-            if (options.internalTraceLevel != InternalTraceLevel.Default)
-                package.Settings["InternalTraceLevel"] = options.internalTraceLevel;
+                if (options.framework != null)
+                    subpackage.Settings["RuntimeFramework"] = options.framework;
 
-            if (options.activeConfig != null)
-                package.Settings["ActiveConfig"] = options.activeConfig;
+                if (options.defaultTimeout >= 0)
+                    subpackage.Settings["DefaultTimeout"] = options.defaultTimeout;
 
-            return package;
+                if (options.internalTraceLevel != InternalTraceLevel.Default)
+                    subpackage.Settings["InternalTraceLevel"] = options.internalTraceLevel;
+
+                if (options.activeConfig != null)
+                    subpackage.Settings["ActiveConfig"] = options.activeConfig;
+            }
+
+            return package.SubPackages.Length == 1 ? package.SubPackages[0] : package;
 		}
 
         private static string CreateXmlOutput(XmlNode result)

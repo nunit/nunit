@@ -6,7 +6,11 @@
 
 using System;
 using System.IO;
+#if CLR_2_0 || CLR_4_0
+using System.Collections.Generic;
+#else
 using System.Collections;
+#endif
 using System.Text;
 using System.Threading;
 using System.Reflection;
@@ -60,8 +64,8 @@ namespace NUnit.Engine.Services
 			//For paralell tests, we need to use distinct application name
         	setup.ApplicationName = "Tests" + "_" + Environment.TickCount;
 
-            FileInfo testFile = package.FullName != null && package.FullName != string.Empty
-                ? new FileInfo(package.FullName)
+            FileInfo testFile = package.FilePath != null && package.FilePath != string.Empty
+                ? new FileInfo(package.FilePath)
                 : null;
 
             string appBase = package.GetSetting("BasePath", string.Empty);
@@ -80,7 +84,7 @@ namespace NUnit.Engine.Services
                     configFile = testFile.Name + ".config";
             }
             else if (appBase == null || appBase == string.Empty)
-                appBase = GetCommonAppBase(package.TestFiles);
+                appBase = GetCommonAppBase(package.GetAssemblies());
 
             setup.ApplicationBase = appBase;
             // TODO: Check whether Mono still needs full path to config file...
@@ -89,7 +93,7 @@ namespace NUnit.Engine.Services
                 : configFile;
 
             if (package.GetSetting("AutoBinPath", true))
-				binPath = GetPrivateBinPath( appBase, package.TestFiles );
+				binPath = GetPrivateBinPath( appBase, package.GetAssemblies() );
 
 			setup.PrivateBinPath = binPath;
 
@@ -301,13 +305,17 @@ namespace NUnit.Engine.Services
 			return domain.FriendlyName.StartsWith( "test-domain-" );
 		}
 
+#if CLR_2_0 || CLR_4_0
+        public static string GetCommonAppBase(IList<string> assemblies)
+#else
         public static string GetCommonAppBase(IList assemblies)
+#endif
         {
             string commonBase = null;
 
             foreach (string assembly in assemblies)
             {
-                string dir = Path.GetFullPath(Path.GetDirectoryName(assembly));
+                string dir = Path.GetDirectoryName(Path.GetFullPath(assembly));
                 if (commonBase == null)
                     commonBase = dir;
                 else while (!PathUtils.SamePathOrUnder(commonBase, dir) && commonBase != null)
@@ -317,10 +325,16 @@ namespace NUnit.Engine.Services
             return commonBase;
         }
 
+#if CLR_2_0 || CLR_4_0
+        public static string GetPrivateBinPath(string basePath, IList<string> assemblies)
+        {
+            List<string> dirList = new List<string>();
+#else
 		public static string GetPrivateBinPath( string basePath, IList assemblies )
 		{
-			StringBuilder sb = new StringBuilder(200);
 			ArrayList dirList = new ArrayList();
+#endif
+            StringBuilder sb = new StringBuilder(200);
 
 			foreach( string assembly in assemblies )
 			{

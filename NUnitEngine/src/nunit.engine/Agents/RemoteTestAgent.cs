@@ -6,13 +6,6 @@
 
 using System;
 using System.Threading;
-using System.Collections;
-using System.IO;
-using System.Reflection;
-using System.Runtime.Remoting;
-using System.Runtime.Remoting.Channels;
-using System.Runtime.Remoting.Channels.Tcp;
-using System.Xml;
 
 namespace NUnit.Engine.Agents
 {

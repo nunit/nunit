@@ -8,7 +8,11 @@ using System;
 using System.IO;
 using System.Text;
 using System.Reflection;
+#if CLR_2_0 || CLR_4_0
+using System.Collections.Generic;
+#else
 using System.Collections;
+#endif
 using System.Runtime.InteropServices;
 
 namespace NUnit.Engine.Internal
@@ -28,7 +32,19 @@ namespace NUnit.Engine.Internal
 
 		#region Public methods
 
-		/// <summary>
+        /// <summary>
+        /// Returns a boolean indicating whether the specified path
+        /// is that of an assembly - that is a dll or exe file.
+        /// </summary>
+        /// <param name="path">Path to a file.</param>
+        /// <returns>True if the file extension is dll or exe, otherwise false.</returns>
+        public static bool IsAssemblyFileType(string path)
+        {
+            string extension = Path.GetExtension(path).ToLower();
+            return extension == ".dll" || extension == ".exe";
+        }
+
+        /// <summary>
 		/// Returns the relative path from a base directory to another
 		/// directory or file.
 		/// </summary>
@@ -86,7 +102,11 @@ namespace NUnit.Engine.Internal
 		/// </summary>
 		public static string Canonicalize( string path )
 		{
+#if CLR_2_0 || CLR_4_0
+            List<string> parts = new List<string>(
+#else
 			ArrayList parts = new ArrayList(
+#endif
 				path.Split( DirectorySeparatorChar, AltDirectorySeparatorChar ) );
 
 			for( int index = 0; index < parts.Count; )
@@ -114,8 +134,12 @@ namespace NUnit.Engine.Internal
             if (parts.Count > 1 && path.Length > 1 && (string)parts[parts.Count - 1] == "")
                 parts.RemoveAt(parts.Count - 1);
 
+#if CLR_2_0 || CLR_4_0
+            return String.Join(DirectorySeparatorChar.ToString(), parts.ToArray());
+#else
             return String.Join(DirectorySeparatorChar.ToString(), (string[])parts.ToArray(typeof(string)));
-		}
+#endif
+        }
 
 		/// <summary>
 		/// True if the two paths are the same or if the second is

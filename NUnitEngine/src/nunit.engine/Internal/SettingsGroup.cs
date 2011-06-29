@@ -22,7 +22,11 @@
 // ***********************************************************************
 
 using System;
+#if CLR_2_0 || CLR_4_0
+using System.Collections.Generic;
+#else
 using System.Collections;
+#endif
 using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
@@ -38,7 +42,11 @@ namespace NUnit.Engine.Internal
     /// </summary>
     public class SettingsGroup : ISettings, IDisposable
     {
+#if CLR_2_0 || CLR_4_0
+        private Dictionary<string, object> storage = new Dictionary<string, object>();
+#else
         private Hashtable storage = new Hashtable();
+#endif
 
         public event SettingsEventHandler Changed;
 
@@ -256,7 +264,11 @@ namespace NUnit.Engine.Internal
         /// <param name="GroupName"></param>
         public void RemoveGroup(string groupName)
         {
+#if CLR_2_0 || CLR_4_0
+            List<string> keysToRemove = new List<string>();
+#else
             ArrayList keysToRemove = new ArrayList();
+#endif
 
             string prefix = groupName;
             if (!prefix.EndsWith("."))
@@ -343,7 +355,11 @@ namespace NUnit.Engine.Internal
             writer.WriteStartElement("NUnitSettings");
             writer.WriteStartElement("Settings");
 
+#if CLR_2_0 || CLR_4_0
+            List<string> keys = new List<string>();
+#else
             ArrayList keys = new ArrayList(storage.Keys);
+#endif
             keys.Sort();
 
             foreach (string name in keys)

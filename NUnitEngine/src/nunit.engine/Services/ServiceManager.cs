@@ -22,7 +22,11 @@
 // ***********************************************************************
 
 using System;
+#if CLR_2_0 || CLR_4_0
+using System.Collections.Generic;
+#else
 using System.Collections;
+#endif
 
 namespace NUnit.Engine.Services
 {
@@ -32,8 +36,13 @@ namespace NUnit.Engine.Services
 	/// </summary>
 	public class ServiceManager : IServiceManager
 	{
+#if CLR_2_0 || CLR_4_0
+        private List<IService> services = new List<IService>();
+        private Dictionary<Type, IService> serviceIndex = new Dictionary<Type, IService>();
+#else
 		private ArrayList services = new ArrayList();
 		private Hashtable serviceIndex = new Hashtable();
+#endif
 
         //static Logger log = InternalTrace.GetLogger(typeof(ServiceManager));
 
@@ -47,7 +56,11 @@ namespace NUnit.Engine.Services
 		{
             IService theService = null;
 
+#if CLR_2_0 || CLR_4_0
+            if (serviceIndex.ContainsKey(serviceType))
+#else
             if (serviceIndex.Contains(serviceType))
+#endif
 			    theService = (IService)serviceIndex[serviceType];
 			else
 				foreach( IService service in services )

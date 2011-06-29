@@ -88,7 +88,7 @@
 <!-- *********     The Engine is built under .NET 1.1        ********* -->
 <!-- ***************************************************************** -->
 
-  <property name="runtime.config" value="net-1.1"
+  <property name="runtime.config" value="net-2.0"
     unless="${property::exists('runtime.config')}"/>
   <property name="nant.settings.currentframework" value="${runtime.config}"/>
 

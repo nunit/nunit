@@ -21,18 +21,29 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
+
 namespace NUnit.Engine
 {
-    /// <summary>
-    /// The ITestAgency interface is implemented by a TestAgency in 
-    /// order to allow TestAgents to register with it.
-    /// </summary>
-    public interface ITestAgency
-    {
-        /// <summary>
-        /// Registers an agent with an agency
-        /// </summary>
-        /// <param name="agent"></param>
-        void Register(ITestAgent agent);
-    }
+	/// <summary>
+	/// The IProjectLoader interface is implemented by any class
+	/// that knows how to load projects in a specific format.
+	/// </summary>
+	public interface IProjectLoader
+	{
+		/// <summary>
+		/// Returns true if the file indicated is one that this
+		/// converter knows how to load.
+		/// </summary>
+		/// <param name="path"></param>
+		/// <returns></returns>
+		bool IsProjectFile( string path );
+
+		/// <summary>
+		/// Loads an external project returning an IProject.
+		/// </summary>
+		/// <param name="path"></param>
+		/// <returns></returns>
+        IProject LoadProject( string path );
+	}
 }

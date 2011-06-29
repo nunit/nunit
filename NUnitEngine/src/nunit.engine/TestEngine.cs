@@ -22,7 +22,11 @@
 // ***********************************************************************
 
 using System;
+#if CLR_2_0 || CLR_4_0
+using System.Collections.Generic;
+#else
 using System.Collections;
+#endif
 using System.IO;
 using System.Xml;
 using NUnit.Engine.Services;
@@ -67,6 +71,7 @@ namespace NUnit.Engine
         {
             Services.Add(new SettingsService());
             Services.Add(new DomainManager());
+            Services.Add(new ProjectService());
             Services.Add(new DefaultTestRunnerFactory());
             Services.Add(new TestAgency());
 
@@ -85,7 +90,11 @@ namespace NUnit.Engine
             // in the future in order to explore tests that
             // are located on a different machine.
             IFrameworkDriver driver = new NUnitFrameworkDriver(AppDomain.CurrentDomain);
-            return driver.ExploreTests(package.TestFiles[0], new Hashtable());
+#if CLR_2_0 || CLR_4_0
+            return driver.ExploreTests((string)package.FilePath, new Dictionary<string,object>());
+#else
+            return driver.ExploreTests((string)package.FilePath, new Hashtable());
+#endif
         }
 
         /// <summary>
@@ -113,6 +122,8 @@ namespace NUnit.Engine
         /// <returns>An ITestRunner, which may be local or remote depending on the package settings.</returns>
         public ITestRunner GetRunner(TestPackage package)
         {
+            Services.ProjectService.ExpandProjectPackages(package);
+
             return Services.TestRunnerFactory.MakeTestRunner(package);
         }
 

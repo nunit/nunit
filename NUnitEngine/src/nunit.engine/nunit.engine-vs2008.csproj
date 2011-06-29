@@ -20,7 +20,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\..\..\bin\vs2008\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;CLR_2_0</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -49,6 +49,12 @@
     <Compile Include="IFrameworkDriver.cs" />
     <Compile Include="Internal\AssemblyHelper.cs" />
     <Compile Include="Internal\AssemblyReader.cs" />
+    <Compile Include="Internal\ProjectConfigList.cs" />
+    <Compile Include="Internal\NUnitProject.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Internal\ProjectConfig.cs" />
+    <Compile Include="IProjectConfig.cs" />
     <Compile Include="Internal\NUnitConfiguration.cs" />
     <Compile Include="Internal\PathUtils.cs" />
     <Compile Include="Internal\RuntimeFrameworkSelector.cs" />
@@ -56,6 +62,9 @@
     <Compile Include="Internal\ServerUtilities.cs" />
     <Compile Include="Internal\SettingsGroup.cs" />
     <Compile Include="Internal\XmlHelper.cs" />
+    <Compile Include="IProjectConfigList.cs" />
+    <Compile Include="IProjectLoader.cs" />
+    <Compile Include="IProject.cs" />
     <Compile Include="IRuntimeFrameworkSelector.cs" />
     <Compile Include="IService.cs" />
     <Compile Include="IServiceManager.cs" />
@@ -63,7 +72,9 @@
     <Compile Include="ITestRunnerFactory.cs" />
     <Compile Include="Runners\DirectTestRunner.cs" />
     <Compile Include="Runners\LocalTestRunner.cs" />
-    <Compile Include="Runners\MultipleTestDomainRunner.cs" />
+    <Compile Include="Runners\MultipleTestDomainRunner.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Runners\ProcessRunner.cs" />
     <Compile Include="Runners\TestDomainRunner.cs" />
     <Compile Include="RunTestsCallbackHandler.cs" />
@@ -72,6 +83,8 @@
     <Compile Include="Services\DefaultTestRunnerFactory.cs" />
     <Compile Include="Services\DomainManager.cs" />
     <Compile Include="Services\InProcessTestRunnerFactory.cs" />
+    <Compile Include="Services\NUnitProjectLoader.cs" />
+    <Compile Include="Services\ProjectService.cs" />
     <Compile Include="Services\ServiceManager.cs" />
     <Compile Include="Services\SettingsService.cs" />
     <Compile Include="Services\TestAgency.cs" />
