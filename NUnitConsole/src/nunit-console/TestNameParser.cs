@@ -4,8 +4,7 @@
 // obtain a copy of the license at http://nunit.org
 // ****************************************************************
 
-using System;
-using System.Collections;
+using System.Collections.Generic;
 
 namespace NUnit.ConsoleRunner
 {
@@ -22,7 +21,7 @@ namespace NUnit.ConsoleRunner
         /// <returns></returns>
         public static string[] Parse(string argument)
         {
-            ArrayList list = new ArrayList();
+            List<string> list = new List<string>();
 
             int index = 0;
             while (index < argument.Length)
@@ -32,7 +31,7 @@ namespace NUnit.ConsoleRunner
                     list.Add(name);
             }
 
-            return (string[])list.ToArray(typeof(string));
+            return list.ToArray();
         }
 
         private static string GetTestName(string argument, ref int index)

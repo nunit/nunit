@@ -55,9 +55,10 @@ namespace NUnit.Engine
         /// results as an XmlNode.
         /// </summary>
         /// <param name="package">The test package to be run.</param>
-        /// <param name="filter">A test filter indicating which tests should run.</param>
+        /// <param name="listener">A test listener to receive progress notifications. Null indicates no progress notifications should be sent.</param>
+        /// <param name="filter">A test filter indicating which tests should run. Null indicates no filtering.</param>
         /// <returns>An XmlNode representing the results of the run.</returns>
-        TestResult Run(TestPackage package, TestFilter filter);
+        TestResult Run(TestPackage package, ITestEventHandler listener, TestFilter filter);
 
         /// <summary>
         /// Returns a runner suitable for running tests in the specified package.

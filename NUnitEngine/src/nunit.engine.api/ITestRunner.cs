@@ -47,6 +47,6 @@ namespace NUnit.Engine
         /// </summary>
         /// <param name="filter">A TestFilter used to select tests</param>
         /// <returns>A TestResult giving the result of the test execution</returns>
-        TestResult Run(ITestFilter filter);
+        TestResult Run(ITestEventHandler listener, ITestFilter filter);
     }
 }

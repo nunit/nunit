@@ -19,11 +19,7 @@ namespace NUnit.Engine
     {
         string Name { get; }
 
-#if CLR_2_0 || CLR_4_0
         System.Collections.Generic.IDictionary<string, object> Settings { get; }
-#else
-        System.Collections.IDictionary Settings { get; }
-#endif
 
         string[] Assemblies { get; }
     }

@@ -26,7 +26,7 @@ using System.Reflection;
 
 namespace NUnit.Engine.Internal
 {
-    public class AssemblyHelper
+    public static class AssemblyHelper
     {
         #region GetAssemblyPath
 

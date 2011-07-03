@@ -186,7 +186,17 @@ namespace NUnit.Framework.Internal
             set { runState = value; }
         }
 
-		/// <summary>
+        /// <summary>
+        /// A string representing the type of test. Used as an attribute
+        /// value in the XML representation of a test and has no other
+        /// function in the framework.
+        /// </summary>
+        public abstract string TestKind
+        {
+            get;
+        }
+
+        /// <summary>
 		/// Gets a count of test cases represented by
 		/// or contained under this test.
 		/// </summary>
@@ -325,16 +335,6 @@ namespace NUnit.Framework.Internal
         {
             get { return fixture; }
             set { fixture = value; }
-        }
-
-        /// <summary>
-        /// A string representing the type of test. Used as an attribute
-        /// value in the XML representation of a test and has no other
-        /// function in the framework.
-        /// </summary>
-        public abstract string TestKind
-        {
-            get;
         }
 
         #endregion

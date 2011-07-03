@@ -43,19 +43,7 @@ namespace NUnit.Engine.Services
 		{
             this.writeable = writeable;
 
-#if CLR_2_0 || CLR_4_0
-            this.settingsFile = System.Configuration.ConfigurationManager.AppSettings["settingsFile"];
-#else
-            this.settingsFile = System.Configuration.ConfigurationSettings.AppSettings["settingsFile"];
-#endif
-
-            if (settingsFile == null)
-            {
-                string applicationDirectory = Path.Combine(
-                    Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                    "NUnit");
-                settingsFile = Path.Combine(applicationDirectory, settingsFileName);
-            }
+            this.settingsFile = Path.Combine(NUnitConfiguration.ApplicationDirectory, settingsFileName);
 
 			if ( File.Exists( settingsFile ) )
 				LoadSettings(settingsFile);

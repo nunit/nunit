@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="ConsoleOptions.cs" />
     <Compile Include="ConsoleRunner.cs" />
+    <Compile Include="TestEventHandler.cs" />
     <Compile Include="Options.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="TestNameParser.cs" />

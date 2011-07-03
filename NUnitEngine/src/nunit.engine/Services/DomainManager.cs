@@ -6,11 +6,7 @@
 
 using System;
 using System.IO;
-#if CLR_2_0 || CLR_4_0
 using System.Collections.Generic;
-#else
-using System.Collections;
-#endif
 using System.Text;
 using System.Threading;
 using System.Reflection;
@@ -305,11 +301,7 @@ namespace NUnit.Engine.Services
 			return domain.FriendlyName.StartsWith( "test-domain-" );
 		}
 
-#if CLR_2_0 || CLR_4_0
         public static string GetCommonAppBase(IList<string> assemblies)
-#else
-        public static string GetCommonAppBase(IList assemblies)
-#endif
         {
             string commonBase = null;
 
@@ -325,15 +317,9 @@ namespace NUnit.Engine.Services
             return commonBase;
         }
 
-#if CLR_2_0 || CLR_4_0
         public static string GetPrivateBinPath(string basePath, IList<string> assemblies)
         {
             List<string> dirList = new List<string>();
-#else
-		public static string GetPrivateBinPath( string basePath, IList assemblies )
-		{
-			ArrayList dirList = new ArrayList();
-#endif
             StringBuilder sb = new StringBuilder(200);
 
 			foreach( string assembly in assemblies )

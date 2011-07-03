@@ -25,11 +25,7 @@ using System;
 using System.IO;
 using System.Threading;
 using System.Diagnostics;
-#if CLR_2_0 || CLR_4_0
 using System.Collections.Generic;
-#else
-using System.Collections;
-#endif
 using System.Reflection;
 using NUnit.Engine.Internal;
 
@@ -352,14 +348,10 @@ namespace NUnit.Engine.Services
             string binDir = GetNUnitBinDirectory(v);
             if (binDir == null) return null;
 
-#if CLR_2_0 || CLR_4_0
             Assembly a = System.Reflection.Assembly.GetEntryAssembly();
             string agentName = v.Major > 1 && a != null && a.GetName().ProcessorArchitecture == ProcessorArchitecture.X86
                 ? "nunit-agent-x86.exe"
                 : "nunit-agent.exe";
-#else
-            string agentName = "nunit-agent.exe";
-#endif
 
             string agentExePath = Path.Combine(binDir, agentName);
             return File.Exists(agentExePath) ? agentExePath : null;
@@ -414,11 +406,7 @@ namespace NUnit.Engine.Services
 		/// </summary>
 		private class AgentDataBase
 		{
-#if CLR_2_0 || CLR_4_0
             private Dictionary<Guid, AgentRecord> agentData = new Dictionary<Guid, AgentRecord>();
-#else
-			private Hashtable agentData = new Hashtable();
-#endif
 
 			public AgentRecord this[Guid id]
 			{
@@ -436,11 +424,7 @@ namespace NUnit.Engine.Services
 			{
 				get
 				{
-#if CLR_2_0
                     foreach( KeyValuePair<Guid, AgentRecord> entry in agentData)
-#else
-					foreach( DictionaryEntry entry in agentData )
-#endif
 					{
 						AgentRecord r = (AgentRecord)entry.Value;
 						if ( r.Agent == agent )
