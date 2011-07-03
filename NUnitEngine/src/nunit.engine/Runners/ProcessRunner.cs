@@ -121,9 +121,9 @@ namespace NUnit.Engine.Runners
             }
 		}
 
-        public TestResult Run(ITestFilter filter)
+        public TestResult Run(ITestEventHandler listener, ITestFilter filter)
         {
-            return this.remoteRunner.Run(filter);
+            return this.remoteRunner.Run(listener, filter);
         }
 
 		#region IDisposable Members

@@ -1,5 +1,5 @@
-﻿// ***********************************************************************
-// Copyright (c) 2010 Charlie Poole
+// ***********************************************************************
+// Copyright (c) 2009 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,31 +21,22 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
-using System.Diagnostics;
-using System.IO;
 using System.Xml;
 
 namespace NUnit.Engine
 {
-    public class RunTestsCallbackHandler : CallbackHandler
-    {
-        private ITestEventHandler listener;
-
-        public RunTestsCallbackHandler(ITestEventHandler listener)
-        {
-            this.listener = listener;
-        }
-
-        public override void ReportProgress(object state)
-        {
-			string report = (string)state;
-
-			XmlDocument doc = new XmlDocument();
-			doc.LoadXml(report);
-			XmlNode topNode = doc.FirstChild;
-
-            listener.OnTestEvent(topNode);
-        }
-    }
+	/// <summary>
+	/// The ITestProgressHandler interface is used to receive notices
+	/// of significant events while a test is running. 
+	/// </summary>
+	public interface ITestEventHandler
+	{
+		/// <summary>
+		/// Handle a progress report, which may include info about
+        /// tests starting or stopping as well as text output to 
+        /// be displayed by the runner.
+		/// </summary>
+		/// <param name="testEvent">An XML progress report.</param>
+		void OnTestEvent(XmlNode testEvent);
+	}
 }

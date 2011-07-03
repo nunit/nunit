@@ -45,5 +45,12 @@ namespace NUnit.Engine.Internal.Tests
             Assert.That(Path.GetFileName(path), Is.EqualTo("nunit.engine.tests.dll").IgnoreCase);
             Assert.That(File.Exists(path));
         }
+
+        [Test]
+        public void GetDirectoryName()
+        {
+            string path = AssemblyHelper.GetDirectoryName(this.GetType().Assembly);
+            Assert.That(File.Exists(Path.Combine(path, "nunit.engine.tests.dll")));
+        }
     }
 }

@@ -37,7 +37,7 @@ namespace NUnit.ConsoleRunner
 	/// </summary>
 	public class ConsoleRunner
     {
-        #region Return Codes
+        #region Console Runner Return Codes
 
         public static readonly int OK = 0;
 		public static readonly int INVALID_ARG = -1;
@@ -47,92 +47,52 @@ namespace NUnit.ConsoleRunner
 
         #endregion
 
+        #region Instance Fields
+
+        private ConsoleOptions options;
+
+        TextWriter outWriter = Console.Out;
+        TextWriter errorWriter = Console.Error;
+
+        private string workDirectory;
+
+        #endregion
+
+        #region Constructor
+
+        public ConsoleRunner(ConsoleOptions options)
+        {
+            this.options = options;
+            this.workDirectory = options.WorkDirectory;
+        }
+
+        #endregion
+
         #region Execute Method
 
         /// <summary>
-        /// Runs a set of tests using the provided options.
+        /// Executes tests according to the provided commandline options.
         /// </summary>
-        /// <param name="options">An instance of ConsoleOptions</param>
         /// <returns></returns>
-        public int Execute( ConsoleOptions options )
+        public int Execute()
 		{
-            // Base directory for test output
-            string workDir = options.WorkDirectory;
-
-            // Redirect Console.Out if requested
-			TextWriter outWriter = Console.Out;
-			bool redirectOutput = options.outputPath != null && options.outputPath != string.Empty;
-			if ( redirectOutput )
-			{
-				StreamWriter outStreamWriter = new StreamWriter( Path.Combine(workDir, options.outputPath) );
-				outStreamWriter.AutoFlush = true;
-				outWriter = outStreamWriter;
-			}
-
-            // Redirect Console.Error if requested
-			TextWriter errorWriter = Console.Error;
-            bool redirectError = options.errorPath != null && options.errorPath != string.Empty;
-			if (redirectError )
-			{
-				StreamWriter errorStreamWriter = new StreamWriter( Path.Combine(workDir, options.errorPath ));
-				errorStreamWriter.AutoFlush = true;
-				errorWriter = errorStreamWriter;
-			}
+            // TODO: We really need options as resolved by engine for most of  these
+            DisplayRequestedOptions();
 
             // Create the test package
             TestPackage package = MakeTestPackage(options);
 
-            // Display key options for the run
-            // TODO: These are requested options - should be options as resolved by engine
-            Console.WriteLine("ProcessModel: {0}    DomainUsage: {1}", options.processModel, options.domainUsage);
-            Console.WriteLine("Execution Runtime: {0}", options.framework == null ? "Not Specified" : options.framework);
-            Console.WriteLine();
+            // TODO: Incorporate this in EventCollector?
+            RedirectOutputAsRequested();
 
-            //testRunner.Load(package);
+            TestEventHandler eventHandler = new TestEventHandler( options, outWriter, errorWriter );
 
-            //if (testRunner.Test == null)
-            //{
-            //    testRunner.Unload();
-            //    Console.Error.WriteLine("Unable to locate fixture {0}", options.fixture);
-            //    return FIXTURE_NOT_FOUND;
-            //}
 
-            //EventCollector collector = new EventCollector( options, outWriter, errorWriter );
-
-            TestFilter testFilter = TestFilter.Empty;
-            //if ( options.run != null && options.run != string.Empty )
-            //{
-            //    Console.WriteLine( "Selected test(s): " + options.run );
-            //    testFilter = new SimpleNameFilter( TestNameParser.Parse(options.run) );
-            //}
-
-            //if ( options.include != null && options.include != string.Empty )
-            //{
-            //    Console.WriteLine( "Included categories: " + options.include );
-            //    TestFilter includeFilter = new CategoryExpression( options.include ).Filter;
-            //    if ( testFilter.IsEmpty )
-            //        testFilter = includeFilter;
-            //    else
-            //        testFilter = new AndFilter( testFilter, includeFilter );
-            //}
-
-            //if ( options.exclude != null && options.exclude != string.Empty )
-            //{
-            //    Console.WriteLine( "Excluded categories: " + options.exclude );
-            //    TestFilter excludeFilter = new NotFilter( new CategoryExpression( options.exclude ).Filter );
-            //    if ( testFilter.IsEmpty )
-            //        testFilter = excludeFilter;
-            //    else if ( testFilter is AndFilter )
-            //        ((AndFilter)testFilter).Add( excludeFilter );
-            //    else
-            //        testFilter = new AndFilter( testFilter, excludeFilter );
-            //}
-
-            //if (testFilter is NotFilter)
-            //    ((NotFilter)testFilter).TopLevel = true;
+            TestFilter testFilter = CreateTestFilter(options);
 
 			XmlNode result = null;
-			string savedDirectory = Environment.CurrentDirectory;
+
+            // Save things that might be messed up by a bad test
 			TextWriter savedOut = Console.Out;
 			TextWriter savedError = Console.Error;
 
@@ -142,28 +102,21 @@ namespace NUnit.ConsoleRunner
 
                 
 #if false
-                result = engine.Run(package, testFilter /*collector, testFilter*/ ).GetXml();
+                result = engine.Run(package, collector, testFilter ).GetXml();
 #else
                 using (ITestRunner runner = engine.GetRunner(package))
                 {
                     if (runner.Load(package))
-                        result = runner.Run(testFilter).GetXml();
+                        result = runner.Run(eventHandler, testFilter).GetXml();
                 }
 #endif
             }
             finally
             {
-                outWriter.Flush();
-                errorWriter.Flush();
-
-                if (redirectOutput)
-                    outWriter.Close();
-                if (redirectError)
-                    errorWriter.Close();
-
-                Environment.CurrentDirectory = savedDirectory;
                 Console.SetOut(savedOut);
                 Console.SetError(savedError);
+
+                RestoreOutput();
             }
 
             //Console.WriteLine();
@@ -177,20 +130,13 @@ namespace NUnit.ConsoleRunner
                 ResultReporter reporter = new ResultReporter(result);
                 reporter.ReportResults();
 
-                //ResultSummarizer summary = new ResultSummarizer(result);
-                //WriteSummaryReport(summary);
-                //if (summary.ErrorsAndFailures > 0 || result.IsError || result.IsFailure)
-                //    WriteErrorsAndFailuresReport(result);
-                //if (summary.TestsNotRun > 0)
-                //    WriteNotRunReport(result);
-
                 if (!options.noxml)
                 {
                     // Write xml output here
                     string xmlResultFile = options.xmlPath == null || options.xmlPath == string.Empty
                         ? "TestResult.xml" : options.xmlPath;
 
-                    using (StreamWriter writer = new StreamWriter(Path.Combine(workDir, xmlResultFile)))
+                    using (StreamWriter writer = new StreamWriter(Path.Combine(workDirectory, xmlResultFile)))
                     {
                         writer.Write(xmlOutput);
                     }
@@ -211,7 +157,56 @@ namespace NUnit.ConsoleRunner
         #endregion
 
         #region Helper Methods
-        // This is public for testing only
+
+        private void DisplayRequestedOptions()
+        {
+            Console.WriteLine("ProcessModel: {0}    DomainUsage: {1}", options.processModel, options.domainUsage);
+            Console.WriteLine("Execution Runtime: {0}", options.framework == null ? "Not Specified" : options.framework);
+            Console.WriteLine();
+
+            if (options.RunList.Length > 0)
+            {
+                Console.WriteLine("Selected test(s):");
+                foreach (string testName in options.RunList)
+                    Console.WriteLine("    " + testName);
+            }
+
+            if (options.include != null && options.include != string.Empty)
+                Console.WriteLine("Included categories: " + options.include);
+
+            if (options.exclude != null && options.exclude != string.Empty)
+                Console.WriteLine("Excluded categories: " + options.exclude);
+        }
+
+        private void RedirectOutputAsRequested()
+        {
+            if (options.outputPath != null)
+            {
+                StreamWriter outStreamWriter = new StreamWriter(Path.Combine(workDirectory, options.outputPath));
+                outStreamWriter.AutoFlush = true;
+                this.outWriter = outStreamWriter;
+            }
+
+            if (options.errorPath != null)
+            {
+                StreamWriter errorStreamWriter = new StreamWriter(Path.Combine(workDirectory, options.errorPath));
+                errorStreamWriter.AutoFlush = true;
+                this.errorWriter = errorStreamWriter;
+            }
+        }
+
+        private void RestoreOutput()
+        {
+            outWriter.Flush();
+            if (options.outputPath != null)
+                outWriter.Close();
+
+            errorWriter.Flush();
+            if (options.errorPath != null)
+                errorWriter.Close();
+        }
+
+        // This is public static for ease of testing
         public static TestPackage MakeTestPackage( ConsoleOptions options )
         {
             TestPackage package = new TestPackage();
@@ -244,6 +239,42 @@ namespace NUnit.ConsoleRunner
             return package.SubPackages.Length == 1 ? package.SubPackages[0] : package;
 		}
 
+        // This is public static for ease of testing
+        public static TestFilter CreateTestFilter(ConsoleOptions options)
+        {
+            // TODO: Implement filtering
+            TestFilter testFilter = TestFilter.Empty;
+            //if (options.RunList.Length > 0)
+            //{
+            //    testFilter = new SimpleNameFilter(TestNameParser.Parse(options.run));
+            //}
+
+            //if (options.include != null && options.include != string.Empty)
+            //{
+            //    TestFilter includeFilter = new CategoryExpression(options.include).Filter;
+            //    if (testFilter.IsEmpty)
+            //        testFilter = includeFilter;
+            //    else
+            //        testFilter = new AndFilter(testFilter, includeFilter);
+            //}
+
+            //if (options.exclude != null && options.exclude != string.Empty)
+            //{
+            //    TestFilter excludeFilter = new NotFilter(new CategoryExpression(options.exclude).Filter);
+            //    if (testFilter.IsEmpty)
+            //        testFilter = excludeFilter;
+            //    else if (testFilter is AndFilter)
+            //        ((AndFilter)testFilter).Add(excludeFilter);
+            //    else
+            //        testFilter = new AndFilter(testFilter, excludeFilter);
+            //}
+
+            //if (testFilter is NotFilter)
+            //    ((NotFilter)testFilter).TopLevel = true;
+
+            return testFilter;
+        }
+
         private static string CreateXmlOutput(XmlNode result)
         {
             StringBuilder builder = new StringBuilder();
@@ -256,79 +287,6 @@ namespace NUnit.ConsoleRunner
             return builder.ToString();
         }
 
-        //private static void WriteSummaryReport(ResultSummary summary)
-        //{
-        //    Console.WriteLine(
-        //        "Tests run: {0}, Errors: {1}, Failures: {2}, Inconclusive: {3}, Time: {4} seconds",
-        //        summary.TestsRun, summary.Errors, summary.Failures, summary.Inconclusive, summary.Time);
-        //    Console.WriteLine(
-        //        "  Not run: {0}, Invalid: {1}, Ignored: {2}, Skipped: {3}",
-        //        summary.TestsNotRun, summary.NotRunnable, summary.Ignored, summary.Skipped);
-        //    Console.WriteLine();
-        //}
-
-        //private void WriteErrorsAndFailuresReport(ITestResult result)
-        //{
-        //    reportIndex = 0;
-        //    Console.WriteLine("Errors and Failures:");
-        //    WriteErrorsAndFailures(result);
-        //    Console.WriteLine();
-        //}
-
-        //private void WriteErrorsAndFailures(ITestResult result)
-        //{
-        //    if (result.Executed)
-        //    {
-        //        if (result.HasResults)
-        //        {
-        //            if (result.IsFailure || result.IsError)
-        //                if (result.FailureSite == FailureSite.SetUp || result.FailureSite == FailureSite.TearDown)
-        //                    WriteSingleResult(result);
-
-        //            foreach (ITestResult childResult in result.Results)
-        //                WriteErrorsAndFailures(childResult);
-        //        }
-        //        else if (result.IsFailure || result.IsError)
-        //        {
-        //            WriteSingleResult(result);
-        //        }
-        //    }
-        //}
-
-        //private void WriteNotRunReport(ITestResult result)
-        //{
-        //    reportIndex = 0;
-        //    Console.WriteLine("Tests Not Run:");
-        //    WriteNotRunResults(result);
-        //    Console.WriteLine();
-        //}
-
-        //private int reportIndex = 0;
-        //private void WriteNotRunResults(ITestResult result)
-        //{
-        //    if (result.HasResults)
-        //        foreach (ITestResult childResult in result.Results)
-        //            WriteNotRunResults(childResult);
-        //    else if (!result.Executed)
-        //        WriteSingleResult( result );
-        //}
-
-        //private void WriteSingleResult( ITestResult result )
-        //{
-        //    string status = result.IsFailure || result.IsError
-        //        ? string.Format("{0} {1}", result.FailureSite, result.ResultState)
-        //        : result.ResultState.ToString();
-
-        //    Console.WriteLine("{0}) {1} : {2}", ++reportIndex, status, result.FullName);
-
-        //    if ( result.Message != null && result.Message != string.Empty )
-        //         Console.WriteLine("   {0}", result.Message);
-
-        //    if (result.StackTrace != null && result.StackTrace != string.Empty)
-        //        Console.WriteLine( result.IsFailure
-        //            ? StackTraceFilter.Filter(result.StackTrace)
-        //            : result.StackTrace + Environment.NewLine );
-        //}
 	    #endregion
 	}
 }

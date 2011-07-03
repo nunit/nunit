@@ -30,11 +30,7 @@ namespace NUnit.Engine
     /// TestEngineActivator creates an instance of the test
     /// engine and returns an ITestEngine interface.
     /// </summary>
-#if CLR_2_0 || CLR_4_0
     public static class TestEngineActivator
-#else
-    public class TestEngineActivator
-#endif
     {
         private static readonly string DefaultAssemblyName = "nunit.engine";
         private static readonly string DefaultTypeName = "NUnit.Engine.TestEngine";

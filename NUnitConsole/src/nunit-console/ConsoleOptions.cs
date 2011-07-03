@@ -118,6 +118,11 @@ namespace NUnit.ConsoleRunner
             get { return inputFiles.ToArray(); }
         }
 
+        public string[] RunList
+        {
+            get { return runList.ToArray(); }
+        }
+
         public IList<string> ErrorMessages
         {
             get { return errorMessages; }

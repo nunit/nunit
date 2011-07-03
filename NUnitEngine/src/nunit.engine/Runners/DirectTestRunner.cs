@@ -22,11 +22,7 @@
 // ***********************************************************************
 
 using System;
-#if CLR_2_0 || CLR_4_0
 using System.Collections.Generic;
-#else
-using System.Collections;
-#endif
 using NUnit.Engine.Internal;
 
 namespace NUnit.Engine.Runners
@@ -37,11 +33,7 @@ namespace NUnit.Engine.Runners
     /// </summary>
     public abstract class DirectTestRunner : ITestRunner
     {
-#if CLR_2_0 || CLR_4_0
         private List<IFrameworkDriver> drivers = new List<IFrameworkDriver>();
-#else
-        private ArrayList drivers = new ArrayList();
-#endif
         private ServiceContext services;
 
         protected AppDomain TestDomain;
@@ -63,22 +55,14 @@ namespace NUnit.Engine.Runners
         {
             this.TestPackage = package;
 
-#if CLR_2_0 || CLR_4_0
             IList<string> files = package.GetAssemblies();
-#else
-            IList files = package.GetAssemblies();
-#endif
             int count = 0;
 
             foreach (string testFile in files)
             {
                 // TODO: Should get the appropriate driver for the file
                 IFrameworkDriver driver = new NUnitFrameworkDriver(TestDomain);
-#if CLR_2_0 || CLR_4_0
                 IDictionary<string, object> options = new Dictionary<string, object>();
-#else
-                IDictionary options = new Hashtable();
-#endif
                 if (driver.Load(testFile, options))
                 {
                     drivers.Add(driver);
@@ -93,19 +77,12 @@ namespace NUnit.Engine.Runners
         {
         }
 
-        public TestResult Run(ITestFilter filter)
+        public TestResult Run(ITestEventHandler listener, ITestFilter filter)
         {
-#if CLR_2_0 || CLR_4_0
             List<TestResult> results = new List<TestResult>();
 
             foreach (NUnitFrameworkDriver driver in drivers)
-                results.Add(driver.Run(new Dictionary<string, object>()));
-#else
-            ArrayList results = new ArrayList();
-
-            foreach (NUnitFrameworkDriver driver in drivers)
-                results.Add(driver.Run(new Hashtable()));
-#endif
+                results.Add(driver.Run(new Dictionary<string, object>(), listener));
 
             switch (results.Count)
             {

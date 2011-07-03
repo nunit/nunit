@@ -22,11 +22,7 @@
 // ***********************************************************************
 
 using System;
-#if CLR_2_0 || CLR_4_0
 using System.Collections.Generic;
-#else
-using System.Collections;
-#endif
 using System.IO;
 using System.Xml;
 using NUnit.Engine.Services;
@@ -90,11 +86,7 @@ namespace NUnit.Engine
             // in the future in order to explore tests that
             // are located on a different machine.
             IFrameworkDriver driver = new NUnitFrameworkDriver(AppDomain.CurrentDomain);
-#if CLR_2_0 || CLR_4_0
             return driver.ExploreTests((string)package.FilePath, new Dictionary<string,object>());
-#else
-            return driver.ExploreTests((string)package.FilePath, new Hashtable());
-#endif
         }
 
         /// <summary>
@@ -104,12 +96,12 @@ namespace NUnit.Engine
         /// <param name="package">A TestPackage.</param>
         /// <param name="filter">A TestFilter (currently ignored)</param>
         /// <returns>An XmlNode representing the test results.</returns>
-        public TestResult Run(TestPackage package, TestFilter filter)
+        public TestResult Run(TestPackage package, ITestEventHandler listener, TestFilter filter)
         {
             using (ITestRunner runner = GetRunner(package))
             {
                 if (runner.Load(package))
-                    return runner.Run(filter);
+                    return runner.Run(listener, filter);
 
                 return null;
             }

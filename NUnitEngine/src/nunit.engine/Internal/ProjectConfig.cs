@@ -5,11 +5,7 @@
 // ****************************************************************
 
 using System;
-#if CLR_2_0 || CLR_4_0
 using System.Collections.Generic;
-#else
-using System.Collections;
-#endif
 using System.IO;
 using System.Xml;
 
@@ -29,11 +25,7 @@ namespace NUnit.Engine.Internal
         /// <summary>
         /// List of the test assemblies in this config
         /// </summary>
-#if CLR_2_0 || CLR_4_0
         private List<string> assemblies;
-#else
-        private ArrayList assemblies;
-#endif
 
 		#endregion
 
@@ -43,11 +35,7 @@ namespace NUnit.Engine.Internal
         {
             this.project = project;
             this.configNode = configNode;
-#if CLR_2_0 || CLR_4_0
             this.assemblies = new List<string>();
-#else
-            this.assemblies = new ArrayList();
-#endif
             foreach (XmlNode node in configNode.SelectNodes("assembly"))
             {
                 string assemblyPath = XmlHelper.GetAttribute(node, "path");
@@ -92,30 +80,17 @@ namespace NUnit.Engine.Internal
         /// </summary>
         public string[] Assemblies
         {
-#if CLR_2_0 || CLR_4_0
             get { return assemblies.ToArray(); }
-#else
-            get { return (string[])assemblies.ToArray(typeof(string)); }
-#endif
         }
 
-#if CLR_2_0 || CLR_4_0
         private IDictionary<string,object> settings;
         public IDictionary<string,object>Settings
-#else
-        private IDictionary settings;
-        public IDictionary Settings
-#endif
         {
             get
             {
                 if (settings == null)
                 {
-#if CLR_2_0 || CLR_4_0
                     settings = new Dictionary<string, object>();
-#else
-                    settings = new Hashtable();
-#endif
 
                     if (EffectiveBasePath != project.ProjectPath)
                         settings["BasePath"] = EffectiveBasePath;

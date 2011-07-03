@@ -22,12 +22,7 @@
 // ***********************************************************************
 
 using System;
-#if CLR_2_0 || CLR_4_0
 using System.Collections.Generic;
-#else
-using System.Collections;
-using System.Collections.Specialized;
-#endif
 using System.IO;
 
 namespace NUnit.Engine
@@ -42,13 +37,8 @@ namespace NUnit.Engine
     public class TestPackage
     {
         private string filePath;
-#if CLR_2_0 || CLR_4_0
         private Dictionary<string, object> settings = new Dictionary<string, object>();
         private List<TestPackage> subPackages = new List<TestPackage>();
-#else
-        private ListDictionary settings = new ListDictionary();
-        private ArrayList subPackages = new ArrayList();
-#endif
 
         #region Constructors
 
@@ -72,11 +62,6 @@ namespace NUnit.Engine
             foreach (string testFile in testFiles)
                 Add(new TestPackage(testFile));
         }
-
-        /// <summary>
-        /// Construct an anonymous TestPackage.
-        /// </summary>
-        public TestPackage() { }
 
         #endregion
 
@@ -104,11 +89,7 @@ namespace NUnit.Engine
         /// </summary>
         public TestPackage[] SubPackages
         {
-#if CLR_2_0 || CLR_4_0
             get { return subPackages.ToArray(); }
-#else
-            get { return (TestPackage[])subPackages.ToArray(typeof(TestPackage)); }
-#endif
         }
 
         /// <summary>
@@ -123,11 +104,7 @@ namespace NUnit.Engine
         /// <summary>
         /// Gets the settings dictionary for this package.
         /// </summary>
-#if CLR_2_0 || CLR_4_0
         public IDictionary<string,object> Settings
-#else
-        public IDictionary Settings
-#endif
         {
             get { return settings; }
         }
@@ -150,11 +127,7 @@ namespace NUnit.Engine
         /// </summary>
         public string[] GetAssemblies()
         {
-#if CLR_2_0 || CLR_4_0
             List<string> assemblies = new List<string>();
-#else
-            ArrayList assemblies = new ArrayList();
-#endif
 
             if (HasSubPackages)
             {
@@ -164,14 +137,9 @@ namespace NUnit.Engine
             else
                 assemblies.Add(FilePath);
 
-#if CLR_2_0 || CLR_4_0
             return assemblies.ToArray();
-#else
-            return (string[])assemblies.ToArray(typeof(string));
-#endif
         }
 
-#if CLR_2_0 || CLR_4_0
         /// <summary>
         /// Return the value of a setting or a default.
         /// </summary>
@@ -184,72 +152,6 @@ namespace NUnit.Engine
                 ? (T)Settings[name]
                 : defaultSetting;
         }
-#else
-        /// <summary>
-        /// Return the value of a setting or a default.
-        /// </summary>
-        /// <param name="name">The name of the setting</param>
-        /// <param name="defaultSetting">The default value</param>
-        /// <returns></returns>
-        public object GetSetting(string name, object defaultSetting)
-        {
-            object setting = settings[name];
-
-            return setting == null ? defaultSetting : setting;
-        }
-
-        /// <summary>
-        /// Return the value of a string setting or a default.
-        /// </summary>
-        /// <param name="name">The name of the setting</param>
-        /// <param name="defaultSetting">The default value</param>
-        /// <returns></returns>
-        public string GetSetting(string name, string defaultSetting)
-        {
-            object setting = settings[name];
-
-            return setting == null ? defaultSetting : (string)setting;
-        }
-
-        /// <summary>
-        /// Return the value of a bool setting or a default.
-        /// </summary>
-        /// <param name="name">The name of the setting</param>
-        /// <param name="defaultSetting">The default value</param>
-        /// <returns></returns>
-        public bool GetSetting(string name, bool defaultSetting)
-        {
-            object setting = settings[name];
-
-            return setting == null ? defaultSetting : (bool)setting;
-        }
-
-        /// <summary>
-        /// Return the value of an int setting or a default.
-        /// </summary>
-        /// <param name="name">The name of the setting</param>
-        /// <param name="defaultSetting">The default value</param>
-        /// <returns></returns>
-        public int GetSetting(string name, int defaultSetting)
-        {
-            object setting = settings[name];
-
-            return setting == null ? defaultSetting : (int)setting;
-        }
-
-        /// <summary>
-        /// Return the value of a enum setting or a default.
-        /// </summary>
-        /// <param name="name">The name of the setting</param>
-        /// <param name="defaultSetting">The default value</param>
-        /// <returns></returns>
-        public System.Enum GetSetting(string name, System.Enum defaultSetting)
-        {
-            object setting = settings[name];
-
-            return setting == null ? defaultSetting : (System.Enum)setting;
-        }
-#endif
 
         #endregion
     }

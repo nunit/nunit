@@ -105,9 +105,9 @@ namespace NUnit.Engine.Agents
                 runner.Unload();
         }
 
-        public TestResult Run(ITestFilter filter)
+        public TestResult Run(ITestEventHandler listener, ITestFilter filter)
         {
-            return runner == null ? null : runner.Run(filter);
+            return runner == null ? null : runner.Run(listener, filter);
         }
 
         #endregion
