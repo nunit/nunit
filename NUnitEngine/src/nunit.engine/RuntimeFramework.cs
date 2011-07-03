@@ -7,11 +7,7 @@
 using System;
 using System.IO;
 using System.Reflection;
-#if CLR_2_0 || CLR_4_0
 using System.Collections.Generic;
-#else
-using System.Collections;
-#endif
 using Microsoft.Win32;
 
 namespace NUnit.Engine
@@ -486,19 +482,9 @@ namespace NUnit.Engine
             }
         }
 
-#if CLR_2_0 || CLR_4_0
         private class FrameworkCollection : List<RuntimeFramework>
         {
         }
-#else
-        private class FrameworkCollection : ArrayList 
-        {
-            public new RuntimeFramework[] ToArray()
-            {
-                return (RuntimeFramework[])ToArray(typeof(RuntimeFramework));
-            }
-        }
-#endif
 
         #endregion
     }

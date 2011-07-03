@@ -22,7 +22,7 @@
 // ***********************************************************************
 
 using System;
-using System.Collections.Specialized;
+using System.Collections;
 using System.Runtime.Remoting;
 using System.Runtime.Remoting.Channels;
 using System.Runtime.Remoting.Channels.Tcp;
@@ -33,7 +33,7 @@ namespace NUnit.Engine.Internal
 	/// <summary>
 	/// Summary description for RemotingUtilities.
 	/// </summary>
-	public class ServerUtilities
+	public static class ServerUtilities
 	{
         //static Logger log = InternalTrace.GetLogger(typeof(ServerUtilities));
 
@@ -45,7 +45,7 @@ namespace NUnit.Engine.Internal
 		/// <returns></returns>
 		private static TcpChannel CreateTcpChannel( string name, int port, int limit )
 		{
-			ListDictionary props = new ListDictionary();
+			Hashtable props = new Hashtable();
 			props.Add( "port", port );
 			props.Add( "name", name );
 			props.Add( "bindTo", "127.0.0.1" );

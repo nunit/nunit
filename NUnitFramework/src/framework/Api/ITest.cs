@@ -53,6 +53,13 @@ namespace NUnit.Framework.Api
 		RunState RunState { get; set; }
 
         /// <summary>
+        /// A string representing the type of test. Used as an attribute
+        /// value in the XML representation of a test and has no other
+        /// function in the framework.
+        /// </summary>
+        string TestKind { get; }
+
+        /// <summary>
         /// Count of the test cases ( 1 if this is a test case )
         /// </summary>
 		int TestCaseCount { get; }

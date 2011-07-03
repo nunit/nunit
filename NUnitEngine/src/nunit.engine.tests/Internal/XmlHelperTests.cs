@@ -22,11 +22,7 @@
 // ***********************************************************************
 
 using System;
-#if CLR_2_0 || CLR_4_0
 using System.Collections.Generic;
-#else
-using System.Collections;
-#endif
 using System.Xml;
 using NUnit.Framework;
 
@@ -112,11 +108,7 @@ namespace NUnit.Engine.Internal.Tests
             XmlHelper.AddAttribute(node2, "result", "Passed");
             XmlHelper.AddAttribute(node2, "passed", "1");
 
-#if CLR_2_0 || CLR_4_0
             List<XmlNode> results = new List<XmlNode>();
-#else
-            ArrayList results = new ArrayList();
-#endif
             results.Add(node1);
             results.Add(node2);
 

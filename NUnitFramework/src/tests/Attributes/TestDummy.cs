@@ -69,6 +69,11 @@ namespace NUnit.Framework.Attributes
             }
         }
 
+        public string TestKind
+        {
+            get { return "dummy-test"; }
+        }
+
         public int TestCaseCount
         {
             get { throw new NotImplementedException(); }

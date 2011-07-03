@@ -85,12 +85,10 @@
   <call target="set-${build.config}-build-config"/>
 
 <!-- ***************************************************************** -->
-<!-- *********     The Engine is built under .NET 1.1        ********* -->
+<!-- *********         The Engine targets .NET 2.0           ********* -->
 <!-- ***************************************************************** -->
 
-  <property name="runtime.config" value="net-2.0"
-    unless="${property::exists('runtime.config')}"/>
-  <property name="nant.settings.currentframework" value="${runtime.config}"/>
+  <property name="nant.settings.currentframework" value= "net-2.0"/>
 
 <!-- ***************************************************************** -->
 <!-- *********   Define directories for external tools    ************ -->
@@ -106,13 +104,15 @@
 <!-- ***************************************************************** -->
 
   <!-- Allow setting options at the NAnt command line -->
-  <property name="nunit.options" value="" 
-    unless="${property::exists('nunit.options')}"/>
-  <!-- Temporary path until we can do self-testing -->
-  <property name="nunit.console.program"
-    value="C:/Program Files/NUnit 2.5.10/bin/net-1.1/nunit-console.exe"/>
-  <property name="nunit.console.args"
-    value="nunit.engine.tests.dll -noshadow -process:Single ${nunit.options}"/>
+  <property name="test.options" value="" 
+    unless="${property::exists('test.runner.options')}"/>
+  <!-- Since the NUnit console runner uses the engine, we run
+       tests under the framework direct-runner, which does not
+       make use of the engine to run tests. -->
+  <property name="test.runner.program"
+    value="direct-runner.exe"/>
+  <property name="test.runner.args"
+    value="nunit.engine.tests.dll ${test.options}"/>
 
 <!-- ***************************************************************** -->
 <!-- In the optional local.settings.include file, installations may    -->
@@ -206,9 +206,8 @@
 
     <exec basedir="${current.build.dir}"
           workingdir="${current.build.dir}"
-          program="${nunit.console.program}"
-          managed="strict"
-          commandline="${nunit.console.args}" />
+          program="${test.runner.program}"
+          commandline="${test.runner.args}" />
 
   </target>
 
@@ -221,16 +220,13 @@
     <echo message="* Starting the NUnitEngine ${build.config} test coverage run"/>
     <echo message="*"/>
 
-    <!-- PartCover must run under .NET 2.0 or greater -->
-    <property name="nant.settings.currentframework" value="net-2.0"/>
-
     <exec basedir="${current.build.dir}"
           workingdir="${current.build.dir}" 
 	  program="${partcover.dir}/PartCover.exe"
           managed="Strict">
 
-      <arg line='--target "${nunit.console.program}"' />
-      <arg line='--target-args "${nunit.console.args}"' />
+      <arg line='--target "${test.runner.program}"' />
+      <arg line='--target-args "${test.runner.args}"' />
       <arg line="--include [nunit.engine]*" />
       <arg line="--include [nunit.engine.api]*" />
       <arg line="--include [nunit-agent]*" />
