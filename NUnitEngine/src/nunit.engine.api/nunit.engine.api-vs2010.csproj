@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NUnit.Engine</RootNamespace>
     <AssemblyName>nunit.engine.api</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -47,6 +47,7 @@
     <Compile Include="ITestAgency.cs" />
     <Compile Include="ITestAgent.cs" />
     <Compile Include="ITestEngine.cs" />
+    <Compile Include="ITestEventHandler.cs" />
     <Compile Include="ITestFilter.cs" />
     <Compile Include="ITestRunner.cs" />
     <Compile Include="ProcessModel.cs" />
