@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NUnit.Engine</RootNamespace>
     <AssemblyName>nunit.engine</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <StartupObject>
     </StartupObject>
@@ -55,12 +55,19 @@
     <Compile Include="Internal\AssemblyHelper.cs" />
     <Compile Include="Internal\AssemblyReader.cs" />
     <Compile Include="Internal\NUnitConfiguration.cs" />
+    <Compile Include="Internal\NUnitProject.cs" />
     <Compile Include="Internal\PathUtils.cs" />
+    <Compile Include="Internal\ProjectConfig.cs" />
+    <Compile Include="Internal\ProjectConfigList.cs" />
     <Compile Include="Internal\RuntimeFrameworkSelector.cs" />
     <Compile Include="Internal\ServerBase.cs" />
     <Compile Include="Internal\ServerUtilities.cs" />
     <Compile Include="Internal\SettingsGroup.cs" />
     <Compile Include="Internal\XmlHelper.cs" />
+    <Compile Include="IProject.cs" />
+    <Compile Include="IProjectConfig.cs" />
+    <Compile Include="IProjectConfigList.cs" />
+    <Compile Include="IProjectLoader.cs" />
     <Compile Include="IRuntimeFrameworkSelector.cs" />
     <Compile Include="IService.cs" />
     <Compile Include="IServiceManager.cs" />
@@ -77,6 +84,8 @@
     <Compile Include="Services\DefaultTestRunnerFactory.cs" />
     <Compile Include="Services\DomainManager.cs" />
     <Compile Include="Services\InProcessTestRunnerFactory.cs" />
+    <Compile Include="Services\NUnitProjectLoader.cs" />
+    <Compile Include="Services\ProjectService.cs" />
     <Compile Include="Services\ServiceManager.cs" />
     <Compile Include="Services\SettingsService.cs" />
     <Compile Include="Services\TestAgency.cs" />
