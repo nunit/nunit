@@ -76,9 +76,7 @@ namespace NUnit.Engine.Runners
             //log.Info("Loading " + package.Name);
 			Unload();
 
-            runtimeFramework = package.Settings["RuntimeFramework"] as RuntimeFramework;
-            if ( runtimeFramework == null )
-                 runtimeFramework = RuntimeFramework.CurrentFramework;
+            this.runtimeFramework = package.GetSetting("RuntimeFramework", RuntimeFramework.CurrentFramework);
 
             bool enableDebug = package.GetSetting("AgentDebug", false);
             //bool enableDebug = true;
