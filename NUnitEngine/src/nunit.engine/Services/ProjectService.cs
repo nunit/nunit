@@ -180,8 +180,8 @@ namespace NUnit.Engine.Services
             {
                 IProject project = LoadProject(package.FilePath);
 
-                string configName = package.Settings["ActiveConfig"] as string;
-                IProjectConfig config = configName != null
+                string configName = package.GetSetting("ActiveConfig", string.Empty);
+                IProjectConfig config = configName != string.Empty
                     ? project.Configs[configName]
                     : project.ActiveConfig;
 
