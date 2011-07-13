@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2010 Charlie Poole
+// Copyright (c) 2011 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -22,51 +22,36 @@
 // ***********************************************************************
 
 using System;
+using System.Xml;
 
 namespace NUnit.Framework.Internal
 {
     /// <summary>
-    /// ParameterizedFixtureSuite serves as a container for the set of test 
-    /// fixtures created from a given Type using various parameters.
+    /// FinalResult is an AsyncResult returned after the action has been completed.
+    /// The object state is represented by a string containing XML.
     /// </summary>
-    public class ParameterizedFixtureSuite : TestSuite
+    [Serializable]
+    public class FinalResult : AsyncResult
     {
-        private Type type;
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FinalResult"/> class
+        /// based on a string containing XML.
+        /// </summary>
+        /// <param name="xmlResult">The result of an operation represented by an XML fragment.</param>
+        /// <param name="synchronous">if set to <c>true</c> [synchronous].</param>
+        public FinalResult(string xmlResult, bool synchronous) : base(xmlResult, true, synchronous) { }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ParameterizedFixtureSuite"/> class.
+        /// Initializes a new instance of the <see cref="FinalResult"/> class
+        /// based on an XmlNode.
         /// </summary>
-        /// <param name="type">The type.</param>
-        public ParameterizedFixtureSuite(Type type) : base(type.Namespace, TypeHelper.GetDisplayName(type)) 
-        {
-            this.type = type;
-        }
+        /// <param name="xmlResult">The result of an operation represented by an XML fragment.</param>
+        /// <param name="synchronous">if set to <c>true</c> [synchronous].</param>
+        public FinalResult(XmlNode xmlResult, bool synchronous) : base(xmlResult.OuterXml, true, synchronous) { }
 
         /// <summary>
-        /// Gets the Type represented by this suite.
+        /// Protected constructor for use by derived classes.
         /// </summary>
-        /// <value>A Sysetm.Type.</value>
-        public Type ParameterizedType
-        {
-            get { return type; }
-        }
-
-        /// <summary>
-        /// Gets the name used for the top-level element in the
-        /// XML representation of this test
-        /// </summary>
-        /// <value></value>
-        public override string XmlElementName
-        {
-            get
-            {
-#if CLR_2_0 || CLR_4_0
-                if (this.ParameterizedType.ContainsGenericParameters)
-                    return "generic-fixture";
-#endif
-                
-                return "parameterized-fixture";
-            }
-        }
+        protected FinalResult() : base(null, true, true) { }
     }
 }

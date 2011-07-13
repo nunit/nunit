@@ -57,7 +57,7 @@ namespace NUnit.Framework.Api
         /// value in the XML representation of a test and has no other
         /// function in the framework.
         /// </summary>
-        string TestKind { get; }
+        //string TestKind { get; }
 
         /// <summary>
         /// Count of the test cases ( 1 if this is a test case )

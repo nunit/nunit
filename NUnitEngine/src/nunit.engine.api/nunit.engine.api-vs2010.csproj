@@ -48,6 +48,7 @@
     <Compile Include="ITestAgent.cs" />
     <Compile Include="ITestEngine.cs" />
     <Compile Include="ITestEventHandler.cs" />
+    <Compile Include="ITestEvents.cs" />
     <Compile Include="ITestFilter.cs" />
     <Compile Include="ITestRunner.cs" />
     <Compile Include="ProcessModel.cs" />

@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2010 Charlie Poole
+// Copyright (c) 2011 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -22,24 +22,25 @@
 // ***********************************************************************
 
 using System;
-using System.Diagnostics;
-using System.IO;
-using System.Xml;
 
-namespace NUnit.Engine
+namespace NUnit.Framework.Internal
 {
-    public class RunTestsCallbackHandler : CallbackHandler
+    /// <summary>
+    /// LoadReport is an AsyncResult returned after an assembly has
+    /// been successfully loaded.
+    /// </summary>
+    [Serializable]
+    public class LoadReport : FinalResult
     {
-        private ITestEventHandler listener;
-
-        public RunTestsCallbackHandler(ITestEventHandler listener)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LoadReport"/> class
+        /// for a particular assembly.
+        /// </summary>
+        /// <param name="assemblyFilename">The name of the assembly that was loaded.</param>
+        /// <param name="testCaseCount">The number of test cases found in the assembly.</param>
+        public LoadReport(string assemblyFilename, int testCaseCount)
         {
-            this.listener = listener;
-        }
-
-        public override void ReportProgress(string state)
-        {
-            listener.OnTestEvent(state);
+            this.xmlResult = string.Format("<loaded assembly=\"{0}\" testcases=\"{1}\"/>", assemblyFilename, testCaseCount);
         }
     }
 }

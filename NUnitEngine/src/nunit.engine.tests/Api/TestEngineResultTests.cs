@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2010 Charlie Poole
+// Copyright (c) 2011 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,25 +21,37 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
-using System.Diagnostics;
-using System.IO;
 using System.Xml;
+using NUnit.Framework;
 
-namespace NUnit.Engine
+namespace NUnit.Engine.Tests
 {
-    public class RunTestsCallbackHandler : CallbackHandler
+    public class TestEngineResultTests
     {
-        private ITestEventHandler listener;
+        private static readonly string message = "This is my message!";
+        private static readonly string xmlText = string.Format("<error message=\"{0}\" />", message);
 
-        public RunTestsCallbackHandler(ITestEventHandler listener)
+        [Test]
+        public void CreateWithXmlString()
         {
-            this.listener = listener;
+            TestEngineResult result = new TestEngineResult(xmlText);
+
+            Assert.AreEqual("error", result.ResultType);
+            Assert.AreEqual(xmlText, result.Text);
+            Assert.AreEqual(message, result.Xml.Attributes["message"].Value);
         }
 
-        public override void ReportProgress(string state)
+        [Test]
+        public void CreateWithXmlNode()
         {
-            listener.OnTestEvent(state);
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml(xmlText);
+            TestEngineResult result = new TestEngineResult(doc.FirstChild);
+
+            Assert.AreEqual("error", result.ResultType);
+            // TODO: The following is not very robust. Should use an XML comparison.
+            Assert.AreEqual(xmlText, result.Text);
+            Assert.AreEqual(message, result.Xml.Attributes["message"].Value);
         }
     }
 }

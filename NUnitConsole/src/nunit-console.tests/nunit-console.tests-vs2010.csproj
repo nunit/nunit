@@ -55,21 +55,21 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\NUnitFramework\src\framework\nunit.framework-vs2010.csproj">
-      <Project>{12B66B03-90F1-4992-BD33-BDF3C69AE49E}</Project>
-      <Name>nunit.framework-vs2008</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\nunit-console\nunit-console-vs2008.csproj">
-      <Project>{0DE218CA-AFB8-423A-9CD2-E22DEAC55C46}</Project>
-      <Name>nunit-console-vs2008</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\NUnitEngine\src\nunit.engine.api\nunit.engine.api-vs2010.csproj">
-      <Project>{775FAD50-3623-4922-97C4-DFB29A8BE4C7}</Project>
-      <Name>nunit.engine.api-vs2008</Name>
-    </ProjectReference>
+    <None Include="nunit-console.tests.build" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="nunit-console.tests.build" />
+    <ProjectReference Include="..\..\..\NUnitEngine\src\nunit.engine.api\nunit.engine.api-vs2010.csproj">
+      <Project>{775FAD50-3623-4922-97C4-DFB29A8BE4C7}</Project>
+      <Name>nunit.engine.api-vs2010</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\NUnitFramework\src\framework\nunit.framework-vs2010.csproj">
+      <Project>{12B66B03-90F1-4992-BD33-BDF3C69AE49E}</Project>
+      <Name>nunit.framework-vs2010</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\nunit-console\nunit-console-vs2010.csproj">
+      <Project>{0DE218CA-AFB8-423A-9CD2-E22DEAC55C46}</Project>
+      <Name>nunit-console-vs2010</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

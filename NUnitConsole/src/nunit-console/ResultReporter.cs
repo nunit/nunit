@@ -23,17 +23,18 @@
 
 using System;
 using System.Xml;
+using NUnit.Engine;
 
 namespace NUnit.ConsoleRunner
 {
     public class ResultReporter
     {
-        XmlNode result;
+        TestEngineResult result;
         ResultSummary summary;
 
         int reportIndex = 0;
 
-        public ResultReporter(XmlNode result)
+        public ResultReporter(TestEngineResult result)
         {
             this.result = result;
             this.summary = new ResultSummary(result);
@@ -77,7 +78,7 @@ namespace NUnit.ConsoleRunner
         {
             this.reportIndex = 0;
             Console.WriteLine("Errors and Failures:");
-            WriteErrorsAndFailures(result);
+            WriteErrorsAndFailures(result.Xml);
             Console.WriteLine();
         }
 
@@ -101,7 +102,7 @@ namespace NUnit.ConsoleRunner
         {
             this.reportIndex = 0;
             Console.WriteLine("Tests Not Run:");
-            WriteNotRunResults(result);
+            WriteNotRunResults(result.Xml);
             Console.WriteLine();
         }
 

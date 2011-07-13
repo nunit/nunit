@@ -96,28 +96,5 @@ namespace NUnit.Engine.Internal.Tests
             XmlNode node = XmlHelper.CreateTopLevelElement("top");
             Assert.That(XmlHelper.GetAttribute(node, "junk", 1.234), Is.EqualTo(1.234));
         }
-
-        [Test] // TODO: This needs more thorough testing
-        public void TestResultsCanBeCombined()
-        {
-            XmlNode node1 = XmlHelper.CreateTopLevelElement("test-case");
-            XmlHelper.AddAttribute(node1, "result", "Passed");
-            XmlHelper.AddAttribute(node1, "passed", "1");
-
-            XmlNode node2 = XmlHelper.CreateTopLevelElement("test-case");
-            XmlHelper.AddAttribute(node2, "result", "Passed");
-            XmlHelper.AddAttribute(node2, "passed", "1");
-
-            List<XmlNode> results = new List<XmlNode>();
-            results.Add(node1);
-            results.Add(node2);
-
-            XmlNode combined = XmlHelper.CombineResultNodes(results);
-
-            Assert.That(combined.Name, Is.EqualTo("test-suite"));
-            Assert.That(combined.Attributes["type"].Value, Is.EqualTo("test-package"));
-            Assert.That(combined.Attributes["result"].Value, Is.EqualTo("Passed"));
-            Assert.That(combined.Attributes["passed"].Value, Is.EqualTo("2"));
-        }
     }
 }

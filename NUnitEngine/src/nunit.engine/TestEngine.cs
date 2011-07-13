@@ -80,7 +80,7 @@ namespace NUnit.Engine
         /// </summary>
         /// <param name="package">A TestPackage.</param>
         /// <returns>An XmlNode representing the tests.</returns>
-        public XmlNode Explore(TestPackage package)
+        public TestEngineResult Explore(TestPackage package)
         {
             // TODO: We will need an agent or remote explorer
             // in the future in order to explore tests that
@@ -96,27 +96,26 @@ namespace NUnit.Engine
         /// <param name="package">A TestPackage.</param>
         /// <param name="filter">A TestFilter (currently ignored)</param>
         /// <returns>An XmlNode representing the test results.</returns>
-        public TestResult Run(TestPackage package, ITestEventHandler listener, TestFilter filter)
+        public TestEngineResult Run(TestPackage package, ITestEventHandler listener, TestFilter filter)
         {
-            using (ITestRunner runner = GetRunner(package))
+            using (ITestRunner runner = GetRunner())
             {
-                if (runner.Load(package))
-                    return runner.Run(listener, filter);
+                var loadResult = runner.Load(package);
 
-                return null;
+                return loadResult.IsError
+                    ? loadResult
+                    : runner.Run(listener, filter);
             }
         }
 
         /// <summary>
-        /// Returns a runner suitable for running tests in the specified package.
+        /// Returns a test runner for use by clients that need to load the
+        /// tests once and run them multiple times.
         /// </summary>
-        /// <param name="package">The TestPackage for which a runner is needed.</param>
-        /// <returns>An ITestRunner, which may be local or remote depending on the package settings.</returns>
-        public ITestRunner GetRunner(TestPackage package)
+        /// <returns>An ITestRunner.</returns>
+        public ITestRunner GetRunner()
         {
-            Services.ProjectService.ExpandProjectPackages(package);
-
-            return Services.TestRunnerFactory.MakeTestRunner(package);
+            return new Runners.MasterTestRunner(Services);
         }
 
         #endregion

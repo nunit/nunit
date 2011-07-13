@@ -45,16 +45,25 @@ namespace NUnit.DirectRunner
             this.testController = CreateObject("NUnit.Framework.Api.TestController");
         }
 
-        public bool Load(string assemblyFileName, IDictionary options)
+        public XmlNode Load(string assemblyFileName, IDictionary options)
         {
             CallbackHandler handler = new CallbackHandler();
 
             CreateObject("NUnit.Framework.Api.TestController+LoadTestsAction",
                 testController, assemblyFileName, options, handler.Callback);
 
-            Debug.Assert(handler.Result is bool, "Returned result was not a bool");
+            Debug.Assert(handler.Result is string, "Returned result was not a string");
 
-            return (bool)handler.Result;
+            XmlDocument doc = new XmlDocument();
+            try
+            {
+                doc.LoadXml((string)handler.Result);
+                return doc.FirstChild;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Returned result was not valid XML", ex);
+            }
         }
 
         public XmlNode ExploreTests(string assemblyFileName, IDictionary options)

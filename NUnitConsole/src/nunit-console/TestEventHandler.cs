@@ -64,8 +64,12 @@ namespace NUnit.ConsoleRunner
 
         #region ITestEventHandler Members
 
-        public void OnTestEvent(XmlNode testEvent)
+        public void OnTestEvent(string report)
         {
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml(report);
+            XmlNode testEvent = doc.FirstChild;
+
             switch (testEvent.Name)
             {
                 case "start":

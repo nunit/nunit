@@ -34,19 +34,32 @@ namespace NUnit.Engine
         /// Load a TestPackage for possible execution
         /// </summary>
         /// <param name="package">The TestPackage to be loaded</param>
-        /// <returns>True on success, otherwise fale</returns>
-        bool Load(TestPackage package);
+        /// <returns>A TestEngineResult.</returns>
+        TestEngineResult Load(TestPackage package);
 
         /// <summary>
-        /// Unload any loaded TestPackage
+        /// Unload any loaded TestPackage. If none is loaded,
+        /// the call is ignored.
         /// </summary>
         void Unload();
 
         /// <summary>
         /// Run the tests in a loaded TestPackage
         /// </summary>
+        /// <param name="listener">An ITestEventHandler to receive events</param>
         /// <param name="filter">A TestFilter used to select tests</param>
-        /// <returns>A TestResult giving the result of the test execution</returns>
-        TestResult Run(ITestEventHandler listener, ITestFilter filter);
+        /// <returns>A TestEngineResult giving the result of the test execution</returns>
+        TestEngineResult Run(ITestEventHandler listener, ITestFilter filter);
+
+        /// <summary>
+        /// Run the tests in a loaded TestPackage, returning separate results
+        /// for each test assembly as an array. This method is primarily intended
+        /// to avoid overhead in consolidating test results when one runner calls
+        /// a subordinate runner.
+        /// </summary>
+        /// <param name="listener">An ITestEventHandler to receive events</param>
+        /// <param name="filter">A TestFilter used to select tests</param>
+        /// <returns>A TestEngineResult[] with separate results for each assembly</returns>
+        TestEngineResult[] RunDirect(ITestEventHandler listener, ITestFilter filter);
     }
 }

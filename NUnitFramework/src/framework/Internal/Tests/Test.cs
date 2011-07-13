@@ -191,7 +191,17 @@ namespace NUnit.Framework.Internal
         /// value in the XML representation of a test and has no other
         /// function in the framework.
         /// </summary>
-        public abstract string TestKind
+        /// <summary>
+        /// A string used as the element name in the XML representation
+        /// of the test result. Has no other function in the framework.
+        /// </summary>
+        //protected abstract string XmlElementName { get; }
+
+        /// <summary>
+        /// Gets the name used for the top-level element in the
+        /// XML representation of this test
+        /// </summary>
+        public abstract string XmlElementName
         {
             get;
         }
@@ -271,21 +281,6 @@ namespace NUnit.Framework.Internal
         /// <param name="recursive">If true, descendant results are included</param>
         /// <returns></returns>
         public abstract XmlNode AddToXml(XmlNode parentNode, bool recursive);
-
-        /// <summary>
-        /// Add standard attributes and members to a test node.
-        /// </summary>
-        /// <param name="thisNode"></param>
-        /// <param name="recursive"></param>
-        protected void PopulateTestNode(XmlNode thisNode, bool recursive)
-        {
-            XmlHelper.AddAttribute(thisNode, "id", this.Id.ToString());
-            XmlHelper.AddAttribute(thisNode, "name", this.Name);
-            XmlHelper.AddAttribute(thisNode, "fullname", this.FullName);
-
-            if (Properties.Count > 0)
-                Properties.AddToXml(thisNode, recursive);
-        }
 
         #endregion
 
@@ -418,6 +413,25 @@ namespace NUnit.Framework.Internal
         {
             get { return this.listener; }
             set { this.listener = value; }
+        }
+
+        #endregion
+
+        #region Protected Methods
+
+        /// <summary>
+        /// Add standard attributes and members to a test node.
+        /// </summary>
+        /// <param name="thisNode"></param>
+        /// <param name="recursive"></param>
+        protected void PopulateTestNode(XmlNode thisNode, bool recursive)
+        {
+            XmlHelper.AddAttribute(thisNode, "id", this.Id.ToString());
+            XmlHelper.AddAttribute(thisNode, "name", this.Name);
+            XmlHelper.AddAttribute(thisNode, "fullname", this.FullName);
+
+            if (Properties.Count > 0)
+                Properties.AddToXml(thisNode, recursive);
         }
 
         #endregion

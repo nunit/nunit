@@ -235,7 +235,7 @@
     <Compile Include="Has.cs" />
     <Compile Include="IExpectException.cs" />
     <Compile Include="Internal\AssemblyHelper.cs" />
-    <Compile Include="Internal\AsyncResult.cs" />
+    <Compile Include="Internal\AsyncResults\AsyncResult.cs" />
     <Compile Include="Internal\Builders\CombinatorialStrategy.cs" />
     <Compile Include="Internal\Builders\CombinatorialTestCaseProvider.cs" />
     <Compile Include="Internal\Builders\CombiningStrategy.cs" />
@@ -282,6 +282,7 @@
     <Compile Include="Internal\Extensibility\TestCaseProviders.cs" />
     <Compile Include="Internal\Extensibility\TestDecoratorCollection.cs" />
     <Compile Include="Internal\Filters\SimpleNameFilter.cs" />
+    <Compile Include="Internal\AsyncResults\FinalResult.cs" />
     <Compile Include="Internal\InternalTrace.cs" />
     <Compile Include="Internal\InvalidTestFixtureException.cs" />
     <Compile Include="Internal\Log4NetCapture.cs" />
@@ -292,6 +293,9 @@
     <Compile Include="Internal\OSPlatform.cs" />
     <Compile Include="Internal\ParameterSet.cs" />
     <Compile Include="Internal\PlatformHelper.cs" />
+    <Compile Include="Internal\AsyncResults\ErrorReport.cs" />
+    <Compile Include="Internal\AsyncResults\LoadReport.cs" />
+    <Compile Include="Internal\AsyncResults\ProgressReport.cs" />
     <Compile Include="Internal\PropertyBag.cs" />
     <Compile Include="Internal\PropertySet.cs" />
     <Compile Include="Internal\QueuingEventListener.cs" />

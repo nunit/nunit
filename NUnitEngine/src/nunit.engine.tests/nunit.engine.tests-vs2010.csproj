@@ -61,13 +61,13 @@
       <Project>{12B66B03-90F1-4992-BD33-BDF3C69AE49E}</Project>
       <Name>nunit.framework-vs2010</Name>
     </ProjectReference>
-    <ProjectReference Include="..\nunit.engine\nunit.engine-vs2008.csproj">
-      <Project>{372A3447-D657-40FF-A089-77C19FEC30C8}</Project>
-      <Name>nunit.engine-vs2008</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\nunit.engine.api\nunit.engine.api-vs2008.csproj">
+    <ProjectReference Include="..\nunit.engine.api\nunit.engine.api-vs2010.csproj">
       <Project>{775FAD50-3623-4922-97C4-DFB29A8BE4C7}</Project>
-      <Name>nunit.engine.api-vs2008</Name>
+      <Name>nunit.engine.api-vs2010</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\nunit.engine\nunit.engine-vs2010.csproj">
+      <Project>{372A3447-D657-40FF-A089-77C19FEC30C8}</Project>
+      <Name>nunit.engine-vs2010</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

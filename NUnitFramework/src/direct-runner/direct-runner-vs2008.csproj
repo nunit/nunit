@@ -23,6 +23,7 @@
     <WarningLevel>4</WarningLevel>
     <Commandlineparameters>nunit.framework.tests.dll -a</Commandlineparameters>
     <Externalconsole>true</Externalconsole>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
