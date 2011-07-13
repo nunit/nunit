@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Xml;
 using NUnit.Engine.Internal;
 
 namespace NUnit.Engine.Runners
@@ -7,7 +10,7 @@ namespace NUnit.Engine.Runners
     /// MultipleTestDomainRunner runs tests using separate
     /// AppDomains for each assembly.
     /// </summary>
-    public class MultipleTestDomainRunner : ITestRunner
+    public class MultipleTestDomainRunner : AbstractTestRunner
     {
         private List<ITestRunner> runners = new List<ITestRunner>();
 
@@ -18,17 +21,22 @@ namespace NUnit.Engine.Runners
             this.Services = services;
         }
 
-        #region ITestRunner Members
+        #region AbstractTestRunner Overrides
 
-        public bool Load(TestPackage package)
+        /// <summary>
+        /// Load a TestPackage for possible execution
+        /// </summary>
+        /// <param name="package">The TestPackage to be loaded</param>
+        /// <returns>A TestEngineResult.</returns>
+        public override TestEngineResult Load(TestPackage package)
         {
-            int count = 0;
-
             List<TestPackage> packages = new List<TestPackage>();
             if (package.HasSubPackages)
                 packages.AddRange(package.SubPackages);
             else
                 packages.Add(package);
+
+            StringBuilder sb = new StringBuilder("<load>");
 
             foreach (TestPackage subPackage in packages)
             {
@@ -38,14 +46,20 @@ namespace NUnit.Engine.Runners
                 ITestRunner runner = new TestDomainRunner(this.Services);
                 runners.Add(runner);
 
-                if (runner.Load(subPackage))
-                    count++;
+                var result = runner.Load(subPackage);
+                sb.Append(result.Text);
             }
 
-            return count == runners.Count;
+            sb.Append("</load>");
+
+            return new TestEngineResult(sb.ToString());
         }
 
-        public void Unload()
+        /// <summary>
+        /// Unload any loaded TestPackage. If none is loaded,
+        /// the call is ignored.
+        /// </summary>
+        public override void Unload()
         {
             foreach (ITestRunner runner in runners)
                 runner.Unload();
@@ -53,31 +67,14 @@ namespace NUnit.Engine.Runners
             runners.Clear();
         }
 
-        public TestResult Run(ITestEventHandler listener, ITestFilter filter)
+        public override TestEngineResult[] RunDirect(ITestEventHandler listener, ITestFilter filter)
         {
-            List<TestResult> results = new List<TestResult>();
+            List<TestEngineResult> results = new List<TestEngineResult>();
 
             foreach (ITestRunner runner in runners)
-                results.Add(runner.Run(listener, filter));
+                results.AddRange(runner.RunDirect(listener, filter));
 
-            switch (results.Count)
-            {
-                case 0:
-                    return null;
-                case 1:
-                    return (TestResult)results[0];
-                default:
-                    return XmlHelper.CombineResults(results);
-            }
-        }
-
-        #endregion
-
-        #region IDisposable Members
-
-        public void Dispose()
-        {
-            Unload();
+            return results.ToArray();
         }
 
         #endregion

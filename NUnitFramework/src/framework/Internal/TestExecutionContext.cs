@@ -230,7 +230,10 @@ namespace NUnit.Framework.Internal
         public static void Restore()
         {
             current.ReverseChanges();
+
+            int latestAsserts = current.AssertCount;
             current = current.prior;
+            current.assertCount += latestAsserts;
         }
 
         #endregion

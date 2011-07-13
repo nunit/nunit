@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
+using System.IO;
 
 namespace NUnit.Framework.Internal
 {
@@ -35,14 +35,16 @@ namespace NUnit.Framework.Internal
         /// Initializes a new instance of the <see cref="TestAssembly"/> class.
         /// </summary>
         /// <param name="path">The path.</param>
-        public TestAssembly(string path) : base(path) { }
+        public TestAssembly(string path) : base(path) 
+        {
+            this.Name = Path.GetFileName(path);
+        }
 
         /// <summary>
-        /// The name used for the top-level element in the
+        /// Gets the name used for the top-level element in the
         /// XML representation of this test
         /// </summary>
-        /// <value></value>
-        public override string TestKind
+        public override string XmlElementName
         {
             get
             {

@@ -1,4 +1,5 @@
 ﻿<NUnitProject>
+  <!--<Settings processModel="Separate"/>-->
   <!--<Config name="Deployed" appbase="deploy">
     <assembly path="nunit-console.tests.dll" />
     <assembly path="nunit.engine.tests.dll" />

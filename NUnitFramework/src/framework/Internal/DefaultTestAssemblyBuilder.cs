@@ -103,6 +103,7 @@ namespace NUnit.Framework.Internal
 
             assembly = Assembly.Load(assemblyName);
 
+            // TODO: Can this ever be null?
             if (assembly == null)
             {
                 InternalTrace.Error("Failed to load assembly " + assemblyName);

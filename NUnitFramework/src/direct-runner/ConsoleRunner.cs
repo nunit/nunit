@@ -43,75 +43,10 @@ namespace NUnit.DirectRunner
 
             try
             {
-                IDictionary loadOptions = new Hashtable();
-                if (commandlineOptions.Load.Count > 0)
-                    loadOptions["LOAD"] = commandlineOptions.Load;
-
-                IDictionary runOptions = new Hashtable();
-                if (commandlineOptions.Run.Count > 0)
-                    runOptions["RUN"] = commandlineOptions.Run;
-
-                AppDomain testDomain = AppDomain.CurrentDomain;
-                if (commandlineOptions.UseAppDomain)
-                    testDomain = CreateDomain(
-                        Path.GetDirectoryName(Path.GetFullPath(commandlineOptions.Parameters[0])));
-
-                FrameworkDriver driver = new FrameworkDriver(testDomain);
-
-                // TODO: For now, ignore all but first assembly
-                string assemblyFilename = commandlineOptions.Parameters[0];
-
                 if (commandlineOptions.ListTests)
-                {
-                    XmlNode testNode = driver.ExploreTests(assemblyFilename, loadOptions);
-
-                    if (testNode == null)
-                    {
-                        Console.WriteLine(
-                            commandlineOptions.Load.Count > 0
-                                ? "Specifed tests not found in assembly {0}"
-                                : "No tests found in assembly {0}",
-                            assemblyFilename);
-                        return;
-                    }
-
-                    string listFile = commandlineOptions.ListFile;
-                    XmlTextWriter testWriter = listFile != null && listFile.Length > 0
-                        ? new XmlTextWriter(listFile, System.Text.Encoding.UTF8)
-                        : new XmlTextWriter(Console.Out);
-                    testWriter.Formatting = Formatting.Indented;
-                    testNode.WriteTo(testWriter);
-                    testWriter.Close();
-                }
+                    ListTests();
                 else
-                {
-                    if (!driver.Load(assemblyFilename, loadOptions))
-                    {
-                        Console.WriteLine(
-                            commandlineOptions.Load.Count > 0
-                                ? "Specifed tests not found in assembly {0}"
-                                : "No tests found in assembly {0}",
-                            assemblyFilename);
-                        return;
-                    }
-
-                    TextWriter savedOut = Console.Out;
-                    TextWriter savedError = Console.Error;
-
-                    //TestEventListener listener = new TestEventListener(options, Console.Out);
-
-                    XmlNode resultNode = driver.Run(runOptions);
-
-                    Console.SetOut(savedOut);
-                    Console.SetError(savedError);
-
-                    XmlTextWriter resultWriter = new XmlTextWriter(commandlineOptions.ResultFile, System.Text.Encoding.UTF8);
-					resultWriter.Formatting = Formatting.Indented;
-                    resultNode.WriteTo(resultWriter);
-                    resultWriter.Close();
-
-                    new ResultReporter(resultNode).ReportResults();
-                }
+                    RunTests();
             }
             catch (Exception ex)
             {
@@ -131,6 +66,93 @@ namespace NUnit.DirectRunner
                     Console.ReadLine();
                 }
             }
+        }
+
+        private void ListTests()
+        {
+            IDictionary loadOptions = new Hashtable();
+            if (commandlineOptions.Load.Count > 0)
+                loadOptions["LOAD"] = commandlineOptions.Load;
+
+            AppDomain testDomain = AppDomain.CurrentDomain;
+            if (commandlineOptions.UseAppDomain)
+                testDomain = CreateDomain(
+                    Path.GetDirectoryName(Path.GetFullPath(commandlineOptions.Parameters[0])));
+
+            FrameworkDriver driver = new FrameworkDriver(testDomain);
+
+            // TODO: For now, ignore all but first assembly
+            string assemblyFilename = commandlineOptions.Parameters[0];
+
+            XmlNode testNode = driver.ExploreTests(assemblyFilename, loadOptions);
+
+            if (testNode.Name == "error")
+            {
+                DisplayErrorMessage(testNode);
+                return;
+            }
+
+            string listFile = commandlineOptions.ListFile;
+            XmlTextWriter testWriter = listFile != null && listFile.Length > 0
+                ? new XmlTextWriter(listFile, System.Text.Encoding.UTF8)
+                : new XmlTextWriter(Console.Out);
+            testWriter.Formatting = Formatting.Indented;
+            testNode.WriteTo(testWriter);
+            testWriter.Close();
+        }
+
+        private void RunTests()
+        {
+            IDictionary loadOptions = new Hashtable();
+            if (commandlineOptions.Load.Count > 0)
+                loadOptions["LOAD"] = commandlineOptions.Load;
+
+            IDictionary runOptions = new Hashtable();
+            if (commandlineOptions.Run.Count > 0)
+                runOptions["RUN"] = commandlineOptions.Run;
+
+            AppDomain testDomain = AppDomain.CurrentDomain;
+            if (commandlineOptions.UseAppDomain)
+                testDomain = CreateDomain(
+                    Path.GetDirectoryName(Path.GetFullPath(commandlineOptions.Parameters[0])));
+
+            FrameworkDriver driver = new FrameworkDriver(testDomain);
+
+            // TODO: For now, ignore all but first assembly
+            string assemblyFilename = commandlineOptions.Parameters[0];
+
+            XmlNode loadReport = driver.Load(assemblyFilename, loadOptions);
+            if (loadReport.Name == "error")
+            {
+                DisplayErrorMessage(loadReport);
+                return;
+            }
+
+            TextWriter savedOut = Console.Out;
+            TextWriter savedError = Console.Error;
+
+            //TestEventListener listener = new TestEventListener(options, Console.Out);
+
+            XmlNode resultNode = driver.Run(runOptions);
+
+            Console.SetOut(savedOut);
+            Console.SetError(savedError);
+
+            XmlTextWriter resultWriter = new XmlTextWriter(commandlineOptions.ResultFile, System.Text.Encoding.UTF8);
+            resultWriter.Formatting = Formatting.Indented;
+            resultNode.WriteTo(resultWriter);
+            resultWriter.Close();
+
+            new ResultReporter(resultNode).ReportResults();
+        }
+
+        private static void DisplayErrorMessage(XmlNode errorReport)
+        {
+            XmlAttribute message = errorReport.Attributes["message"];
+            XmlAttribute stackTrace = errorReport.Attributes["stackTrace"];
+            Console.WriteLine("Load failure: {0}", message == null ? "" : message.Value);
+            if (stackTrace != null)
+                Console.WriteLine(stackTrace.Value);
         }
 
         private static AppDomain CreateDomain(string appBase)

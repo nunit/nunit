@@ -25,6 +25,7 @@ using System;
 using System.Collections;
 using System.IO;
 using System.Reflection;
+using System.Xml;
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Api
@@ -137,16 +138,6 @@ namespace NUnit.Framework.Api
             }
 
             /// <summary>
-            /// Reports the result.
-            /// </summary>
-            /// <param name="result">The result.</param>
-            /// <param name="synchronous">if set to <c>true</c> [synchronous].</param>
-            protected void ReportResult(object result, bool synchronous)
-            {
-                callback(new FinalResult(result, synchronous));
-            }
-
-            /// <summary>
             /// Initialize lifetime service to null so that the instance lives indefinitely.
             /// </summary>
             public override object InitializeLifetimeService()
@@ -174,7 +165,18 @@ namespace NUnit.Framework.Api
             public LoadTestsAction(TestController controller, string assemblyFilename, IDictionary loadOptions, AsyncCallback callback)
                 : base(controller, callback)
             {
-                ReportResult(controller.Runner.Load(assemblyFilename, loadOptions), true);
+                try
+                {
+                    int count = controller.Runner.Load(assemblyFilename, loadOptions)
+                        ? controller.Runner.LoadedTest.TestCaseCount
+                        : 0;
+
+                    callback(new LoadReport(assemblyFilename, count));
+                }
+                catch (Exception ex)
+                {
+                    callback(new ErrorReport(ex));
+                }
             }
         }
 
@@ -197,8 +199,17 @@ namespace NUnit.Framework.Api
             public ExploreTestsAction(TestController controller, string assemblyFilename, IDictionary loadOptions, AsyncCallback callback)
                 : base(controller, callback)
             {
-                if (controller.Runner.Load(assemblyFilename, loadOptions))
-                    ReportResult(controller.Runner.LoadedTest.ToXml(true).OuterXml, true);
+                try
+                {
+                    if (controller.Runner.Load(assemblyFilename, loadOptions))
+                        callback(new FinalResult(controller.Runner.LoadedTest.ToXml(true), true));
+                    else
+                        callback(new ErrorReport("No tests were found"));
+                }
+                catch (Exception ex)
+                {
+                    callback(new ErrorReport(ex));
+                }
             }
         }
 
@@ -216,14 +227,21 @@ namespace NUnit.Framework.Api
             /// Initializes a new instance of the <see cref="GetLoadedTestsAction"/> class.
             /// </summary>
             /// <param name="controller">The controller.</param>
-            /// <param name="callback">The callback.</param>
+            /// <param name="callback">An AsynchCallback to receive the result.</param>
             public GetLoadedTestsAction(TestController controller, AsyncCallback callback)
                 : base(controller, callback)
             {
-                ITest loadedTests = controller.Runner.LoadedTest;
+                try
+                {
+                    ITest loadedTest = controller.Runner.LoadedTest;
 
-                if (loadedTests != null)
-                    ReportResult(loadedTests.ToXml(true).OuterXml, true);
+                    if (loadedTest != null)
+                        callback(new FinalResult(loadedTest.ToXml(true), true));
+                }
+                catch (Exception ex)
+                {
+                    callback(new ErrorReport(ex));
+                }
             }
         }
 
@@ -267,9 +285,16 @@ namespace NUnit.Framework.Api
             public RunTestsAction(TestController controller, IDictionary runOptions, AsyncCallback callback) 
                 : base(controller, callback)
             {
-                ITestResult result = controller.Runner.Run(new TestProgressReporter(callback), runOptions);
+                try
+                {
+                    ITestResult result = controller.Runner.Run(new TestProgressReporter(callback), runOptions);
 
-                ReportResult(result.ToXml(true).OuterXml, true);
+                    callback(new FinalResult(result.ToXml(true), true));
+                }
+                catch (Exception ex)
+                {
+                    callback(new ErrorReport(ex));
+                }
             }
 
             ///// <summary>

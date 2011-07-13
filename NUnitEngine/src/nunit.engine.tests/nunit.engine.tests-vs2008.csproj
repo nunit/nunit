@@ -54,8 +54,10 @@
     <Compile Include="Internal\ServerUtilityTests.cs" />
     <Compile Include="Internal\SettingsGroupTests.cs" />
     <Compile Include="Internal\XmlHelperTests.cs" />
+    <Compile Include="Runners\AbstractTestRunnerTests.cs" />
     <Compile Include="RuntimeFrameworkTests.cs" />
     <Compile Include="Services\DomainManagerTests.cs" />
+    <Compile Include="Api\TestEngineResultTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\nunit.engine\nunit.engine-vs2008.csproj">

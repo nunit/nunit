@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2010 Charlie Poole
+// Copyright (c) 2011 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -22,24 +22,28 @@
 // ***********************************************************************
 
 using System;
-using System.Diagnostics;
-using System.IO;
-using System.Xml;
 
-namespace NUnit.Engine
+namespace NUnit.Framework.Internal
 {
-    public class RunTestsCallbackHandler : CallbackHandler
+    /// <summary>
+    /// ProgressReport is an AsyncResult used when the action is still ongoing.
+    /// The object state is represented by a string containing XML.
+    /// </summary>
+    [Serializable]
+    public class ProgressReport : AsyncResult
     {
-        private ITestEventHandler listener;
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ProgressReport"/> class
+        /// based on a string containing XML.
+        /// </summary>
+        /// <param name="xmlReport">The report, in the form of a string containing XML.</param>
+        public ProgressReport(string xmlReport) : base(xmlReport, false, false) { }
 
-        public RunTestsCallbackHandler(ITestEventHandler listener)
-        {
-            this.listener = listener;
-        }
-
-        public override void ReportProgress(string state)
-        {
-            listener.OnTestEvent(state);
-        }
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ProgressReport"/> class
+        /// based on an XmlNode.
+        /// </summary>
+        /// <param name="xmlReport">The report, in the form of an XmlNode.</param>
+        public ProgressReport(System.Xml.XmlNode xmlReport) : base(xmlReport.OuterXml, false, false) { }
     }
 }

@@ -92,6 +92,9 @@ namespace NUnit.Framework.Internal
         /// <returns></returns>
         public ITestResult Run(ITestListener listener, IDictionary runOptions)
         {
+            if (loadedTest == null)
+                throw new InvalidOperationException("Run was called but no test has been loaded.");
+
             TestExecutionContext.Save();
 
             //ITestCommand rootCommand = TestCommandFactory.MakeCommand(this.loadedTest);

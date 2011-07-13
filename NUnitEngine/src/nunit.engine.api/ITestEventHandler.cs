@@ -36,7 +36,7 @@ namespace NUnit.Engine
         /// tests starting or stopping as well as text output to 
         /// be displayed by the runner.
 		/// </summary>
-		/// <param name="testEvent">An XML progress report.</param>
-		void OnTestEvent(XmlNode testEvent);
+		/// <param name="report">An XML progress report.</param>
+		void OnTestEvent(string report);
 	}
 }

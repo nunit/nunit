@@ -37,9 +37,6 @@ namespace NUnit.Framework.Internal
     public class TestProgressReporter : ITestListener
     {
         private AsyncCallback callback;
-        private StringWriter writer;
-        private XmlTextWriter xml;
-        private StringBuilder sb;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TestProgressReporter"/> class.
@@ -48,12 +45,89 @@ namespace NUnit.Framework.Internal
         public TestProgressReporter(AsyncCallback callback)
         {
             this.callback = callback;
-            this.writer = new System.IO.StringWriter();
-            this.xml = new System.Xml.XmlTextWriter(writer);
-            this.sb = writer.GetStringBuilder();
         }
 
         #region ITestListener Members
+
+        /// <summary>
+        /// Called when a test run has just started
+        /// </summary>
+        /// <param name="test">The test that is starting</param>
+        public void RunStarted(ITest test)
+        {
+            try
+            {
+                string report = string.Format(
+                    "<start type=\"{0}\" id=\"{1}\" name=\"{2}\" fullname=\"{3}\"/>",
+                    //test.TestKind,
+                    test.Id,
+                    XmlHelper.FormatAttributeValue(test.Name),
+                    XmlHelper.FormatAttributeValue(test.FullName));
+
+                callback(new ProgressReport(report));
+            }
+            catch (Exception ex)
+            {
+                InternalTrace.Error("Exception processing " + test.FullName + NUnit.Env.NewLine + ex.ToString());
+            }
+        }
+
+        /// <summary>
+        /// Called when a test has finished. Sends a result summary to the callback.
+        /// to 
+        /// </summary>
+        /// <param name="result">The result of the test</param>
+        public void RunFinished(ITestResult result)
+        {
+            try
+            {
+                callback(new ProgressReport(result.ToXml(false)));
+            }
+            catch (Exception ex)
+            {
+                InternalTrace.Error("Exception processing " + result.FullName + NUnit.Env.NewLine + ex.ToString());
+            }
+        }
+
+        /// <summary>
+        /// Called when a test has just started
+        /// </summary>
+        /// <param name="test">The test that is starting</param>
+        public void SuiteStarted(ITest test)
+        {
+            try
+            {
+                string report = string.Format(
+                    "<start type=\"{0}\" id=\"{1}\" name=\"{2}\" fullname=\"{3}\"/>",
+                    //test.TestKind,
+                    test.Id,
+                    XmlHelper.FormatAttributeValue(test.Name),
+                    XmlHelper.FormatAttributeValue(test.FullName));
+
+                callback(new ProgressReport(report));
+            }
+            catch (Exception ex)
+            {
+                InternalTrace.Error("Exception processing " + test.FullName + NUnit.Env.NewLine + ex.ToString());
+            }
+        }
+
+        /// <summary>
+        /// Called when a test has finished. Sends a result summary to the callback.
+        /// to 
+        /// </summary>
+        /// <param name="result">The result of the test</param>
+        public void SuiteFinished(ITestResult result)
+        {
+            try
+            {
+                callback(new ProgressReport(result.ToXml(false)));
+            }
+            catch (Exception ex)
+            {
+                InternalTrace.Error("Exception processing " + result.FullName + NUnit.Env.NewLine + ex.ToString());
+            }
+        }
 
         /// <summary>
         /// Called when a test has just started
@@ -63,16 +137,16 @@ namespace NUnit.Framework.Internal
         {
             try
             {
-				string report = string.Format(
-					"<start type=\"{0}\" id=\"{1}\" name=\"{2}\" fullname=\"{3}\"/>",
-                    test.TestKind,
-                    test.Id, 
-                    XmlHelper.FormatAttributeValue(test.Name), 
+                string report = string.Format(
+                    "<start type=\"{0}\" id=\"{1}\" name=\"{2}\" fullname=\"{3}\"/>",
+                    //test.TestKind,
+                    test.Id,
+                    XmlHelper.FormatAttributeValue(test.Name),
                     XmlHelper.FormatAttributeValue(test.FullName));
-				                              
-				callback(new ProgressReport(report));
+
+                callback(new ProgressReport(report));
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 InternalTrace.Error("Exception processing " + test.FullName + NUnit.Env.NewLine + ex.ToString());
             }
@@ -87,9 +161,7 @@ namespace NUnit.Framework.Internal
         {
             try
             {
-                sb.Remove(0, sb.Length);
-				result.ToXml(false).WriteTo(xml);
-                callback(new ProgressReport(sb.ToString()));
+                callback(new ProgressReport(result.ToXml(false)));
             }
             catch (Exception ex)
             {
