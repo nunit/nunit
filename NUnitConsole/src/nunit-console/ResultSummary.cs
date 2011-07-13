@@ -23,6 +23,7 @@
 
 using System;
 using System.Xml;
+using NUnit.Engine;
 
 namespace NUnit.ConsoleRunner
 {
@@ -46,23 +47,28 @@ namespace NUnit.ConsoleRunner
 
         public ResultSummary() { }
 
-        public ResultSummary(XmlNode result)
+        public ResultSummary(TestEngineResult result)
         {
-            this.name = GetAttribute(result, "name");
-            this.time = GetAttribute(result, "time", 0.0);
+            XmlNode topNode = result.Xml;
+
+            if (topNode.Name != "test-run")
+                throw new InvalidOperationException("Expected <test-run> as top-level element");
+
+            this.name = GetAttribute(topNode, "name");
+            //this.time = GetAttribute(topNode, "time", 0.0);
             //this.time = double.Parse(result.GetAttribute("time"), System.Globalization.CultureInfo.InvariantCulture);
 
-            Summarize(result);
+            Summarize(topNode);
         }
 
-        private void Summarize(XmlNode result)
+        private void Summarize(XmlNode node)
         {
-            switch (result.Name)
+            switch (node.Name)
             {
                 case "test-case":
                     resultCount++;
 
-                    string resultState = GetAttribute(result, "result");
+                    string resultState = GetAttribute(node, "result");
 
                     switch (resultState)
                     {
@@ -101,7 +107,7 @@ namespace NUnit.ConsoleRunner
                 //case "test-fixture":
                 //case "method-group":
                 default:
-                    foreach (XmlNode childResult in result.ChildNodes)
+                    foreach (XmlNode childResult in node.ChildNodes)
                         Summarize(childResult);
                     break;
             }

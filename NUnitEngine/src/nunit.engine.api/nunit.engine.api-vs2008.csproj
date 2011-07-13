@@ -51,7 +51,8 @@
     <Compile Include="TestEngineActivator.cs" />
     <Compile Include="TestFilter.cs" />
     <Compile Include="TestPackage.cs" />
-    <Compile Include="TestResult.cs" />
+    <Compile Include="TestEngineResult.cs" />
+    <Compile Include="RunTestsResult.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="nunit.engine.api.build" />

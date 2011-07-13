@@ -46,18 +46,18 @@
     <Compile Include="Program.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\nunit.engine\nunit.engine-vs2008.csproj">
-      <Project>{372A3447-D657-40FF-A089-77C19FEC30C8}</Project>
-      <Name>nunit.engine-vs2008</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\nunit.engine.api\nunit.engine.api-vs2008.csproj">
-      <Project>{775FAD50-3623-4922-97C4-DFB29A8BE4C7}</Project>
-      <Name>nunit.engine.api-vs2008</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="app.config" />
     <None Include="nunit-agent.build" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\nunit.engine.api\nunit.engine.api-vs2010.csproj">
+      <Project>{775FAD50-3623-4922-97C4-DFB29A8BE4C7}</Project>
+      <Name>nunit.engine.api-vs2010</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\nunit.engine\nunit.engine-vs2010.csproj">
+      <Project>{372A3447-D657-40FF-A089-77C19FEC30C8}</Project>
+      <Name>nunit.engine-vs2010</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

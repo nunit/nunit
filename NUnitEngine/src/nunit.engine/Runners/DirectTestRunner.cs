@@ -23,6 +23,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text;
+using System.Xml;
 using NUnit.Engine.Internal;
 
 namespace NUnit.Engine.Runners
@@ -31,7 +33,7 @@ namespace NUnit.Engine.Runners
     /// DirectTestRunner is the abstract base for runners 
     /// that deal directly with a framework driver.
     /// </summary>
-    public abstract class DirectTestRunner : ITestRunner
+    public abstract class DirectTestRunner : AbstractTestRunner
     {
         private List<IFrameworkDriver> drivers = new List<IFrameworkDriver>();
         private ServiceContext services;
@@ -49,58 +51,51 @@ namespace NUnit.Engine.Runners
             this.services = services;
         }
 
-        #region ITestRunner Members
+        #region AbstractTestRunner Overrides
 
-        public virtual bool Load(TestPackage package)
+        /// <summary>
+        /// Load a TestPackage for possible execution
+        /// </summary>
+        /// <param name="package">The TestPackage to be loaded</param>
+        /// <returns>A TestEngineResult.</returns>
+        public override TestEngineResult Load(TestPackage package)
         {
             this.TestPackage = package;
+            var loadResults = new List<string>();
 
-            IList<string> files = package.GetAssemblies();
-            int count = 0;
-
-            foreach (string testFile in files)
+            foreach (string testFile in package.GetAssemblies())
             {
                 // TODO: Should get the appropriate driver for the file
                 IFrameworkDriver driver = new NUnitFrameworkDriver(TestDomain);
-                IDictionary<string, object> options = new Dictionary<string, object>();
-                if (driver.Load(testFile, options))
-                {
+                var loadResult = driver.Load(testFile, package.Settings);
+
+                loadResults.Add(loadResult.Text);
+
+                if (!loadResult.IsError)
                     drivers.Add(driver);
-                    count++;
-                }
             }
 
-            return count == files.Count;
+            string element = drivers.Count == loadResults.Count
+                ? "load"
+                : "error";
+
+            StringBuilder sb = new StringBuilder();
+            sb.AppendFormat("<{0}>", element);
+            foreach (string result in loadResults)
+                sb.Append(result);
+            sb.AppendFormat("</{0}>", element);
+
+            return new TestEngineResult(sb.ToString());
         }
 
-        public virtual void Unload()
+        public override TestEngineResult[] RunDirect(ITestEventHandler listener, ITestFilter filter)
         {
-        }
-
-        public TestResult Run(ITestEventHandler listener, ITestFilter filter)
-        {
-            List<TestResult> results = new List<TestResult>();
+            List<TestEngineResult> results = new List<TestEngineResult>();
 
             foreach (NUnitFrameworkDriver driver in drivers)
-                results.Add(driver.Run(new Dictionary<string, object>(), listener));
+                results.Add(driver.Run(this.TestPackage.Settings, listener));
 
-            switch (results.Count)
-            {
-                case 0:
-                    return null;
-                case 1:
-                    return (TestResult)results[0];
-                default:
-                    return XmlHelper.CombineResults(results);
-            }
-        }
-
-        #endregion
-
-        #region IDisposable Members
-
-        public virtual void Dispose()
-        {
+            return results.ToArray();
         }
 
         #endregion

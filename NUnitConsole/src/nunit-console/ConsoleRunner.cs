@@ -90,7 +90,7 @@ namespace NUnit.ConsoleRunner
 
             TestFilter testFilter = CreateTestFilter(options);
 
-			XmlNode result = null;
+			TestEngineResult engineResult = null;
 
             // Save things that might be messed up by a bad test
 			TextWriter savedOut = Console.Out;
@@ -101,13 +101,13 @@ namespace NUnit.ConsoleRunner
                 ITestEngine engine = TestEngineActivator.CreateInstance();
 
                 
-#if false
-                result = engine.Run(package, collector, testFilter ).GetXml();
+#if true
+                engineResult = engine.Run(package, eventHandler, testFilter );
 #else
                 using (ITestRunner runner = engine.GetRunner(package))
                 {
                     if (runner.Load(package))
-                        result = runner.Run(eventHandler, testFilter).GetXml();
+                        engineResult = runner.Run(eventHandler, testFilter);
                 }
 #endif
             }
@@ -123,32 +123,40 @@ namespace NUnit.ConsoleRunner
 
             int returnCode = UNEXPECTED_ERROR;
 
-            if (result != null)
+            switch (engineResult.ResultType)
             {
-                string xmlOutput = CreateXmlOutput(result);
+                case "error":
+                    DisplayErrorMessages(engineResult.Xml);
+                    break;
 
-                ResultReporter reporter = new ResultReporter(result);
-                reporter.ReportResults();
+                case "test-suite":
+                default:
+                    string xmlOutput = CreateXmlOutput(engineResult);
 
-                if (!options.noxml)
-                {
-                    // Write xml output here
-                    string xmlResultFile = options.xmlPath == null || options.xmlPath == string.Empty
-                        ? "TestResult.xml" : options.xmlPath;
+                    ResultReporter reporter = new ResultReporter(engineResult);
+                    reporter.ReportResults();
 
-                    using (StreamWriter writer = new StreamWriter(Path.Combine(workDirectory, xmlResultFile)))
+                    if (!options.noxml)
                     {
-                        writer.Write(xmlOutput);
+                        // Write xml output here
+                        string xmlResultFile = options.xmlPath == null || options.xmlPath == string.Empty
+                            ? "TestResult.xml" : options.xmlPath;
+
+                        using (StreamWriter writer = new StreamWriter(Path.Combine(workDirectory, xmlResultFile)))
+                        {
+                            writer.Write(xmlOutput);
+                        }
                     }
-                }
 
-                returnCode = reporter.Summary.ErrorsAndFailures;
+                    returnCode = reporter.Summary.ErrorsAndFailures;
 
-                //if ( collector.HasExceptions )
-                //{
-                //    collector.WriteExceptions();
-                //    returnCode = UNEXPECTED_ERROR;
-                //}
+                    //if ( collector.HasExceptions )
+                    //{
+                    //    collector.WriteExceptions();
+                    //    returnCode = UNEXPECTED_ERROR;
+                    //}
+
+                    break;
             }
 
             return returnCode;
@@ -275,19 +283,36 @@ namespace NUnit.ConsoleRunner
             return testFilter;
         }
 
-        private static string CreateXmlOutput(XmlNode result)
+        private static string CreateXmlOutput(TestEngineResult result)
         {
             StringBuilder builder = new StringBuilder();
 
             XmlTextWriter writer = new XmlTextWriter(new StringWriter(builder));
             writer.Formatting = Formatting.Indented;
-            result.WriteTo(writer);
+            result.Xml.WriteTo(writer);
             writer.Close();
 
             return builder.ToString();
         }
 
-	    #endregion
+        private static void DisplayErrorMessages(XmlNode errorReport)
+        {
+            XmlAttribute message = errorReport.Attributes["message"];
+            XmlAttribute stackTrace = errorReport.Attributes["stackTrace"];
+
+            if (message != null)
+            {
+                Console.WriteLine("Load failure: {0}", message == null ? "" : message.Value);
+                if (stackTrace != null)
+                    Console.WriteLine(stackTrace.Value);
+            }
+
+            foreach (XmlNode child in errorReport.ChildNodes)
+                if (child.Name == "error")
+                    DisplayErrorMessages(child);
+        }
+        
+        #endregion
 	}
 }
 

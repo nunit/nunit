@@ -93,7 +93,7 @@ namespace NUnit.Engine.Agents
 
         #region ITestRunner Members
 
-        public bool Load(TestPackage package)
+        public TestEngineResult Load(TestPackage package)
         {
             this.runner = Services.TestRunnerFactory.MakeTestRunner(package);
             return runner.Load(package);
@@ -105,9 +105,14 @@ namespace NUnit.Engine.Agents
                 runner.Unload();
         }
 
-        public TestResult Run(ITestEventHandler listener, ITestFilter filter)
+        public TestEngineResult Run(ITestEventHandler listener, ITestFilter filter)
         {
             return runner == null ? null : runner.Run(listener, filter);
+        }
+
+        public TestEngineResult[] RunDirect(ITestEventHandler listener, ITestFilter filter)
+        {
+            return runner == null ? null : runner.RunDirect(listener, filter);
         }
 
         #endregion

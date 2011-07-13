@@ -33,7 +33,7 @@ namespace NUnit.Engine.Runners
 
         #region Overrides
 
-        public override bool Load(TestPackage package)
+        public override TestEngineResult Load(TestPackage package)
         {
             this.TestDomain = Services.DomainManager.CreateDomain(package);
 

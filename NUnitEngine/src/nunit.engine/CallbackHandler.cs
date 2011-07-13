@@ -22,14 +22,15 @@
 // ***********************************************************************
 
 using System;
+using System.Diagnostics;
 
 namespace NUnit.Engine
 {
     public class CallbackHandler : MarshalByRefObject
     {
-        private object result;
+        private TestEngineResult result;
 
-        public object Result
+        public TestEngineResult Result
         {
             get { return result; }
         }
@@ -41,15 +42,17 @@ namespace NUnit.Engine
 
         private void CallbackMethod(IAsyncResult ar)
         {
-            object state = ar.AsyncState;
+            Debug.Assert(ar.AsyncState is string);
+
+            string state = ar.AsyncState as string;
 
             if (ar.IsCompleted)
-                this.result = state;
+                this.result = new TestEngineResult(state);
             else
                 ReportProgress(state);
         }
 
-        public virtual void ReportProgress(object state)
+        public virtual void ReportProgress(string state)
         {
         }
 

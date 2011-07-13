@@ -36,7 +36,7 @@ namespace NUnit.Engine
     /// </summary>
     public class NUnitFrameworkDriver : IFrameworkDriver
     {
-        AppDomain testDomain;
+        AppDomain testDomain; 
 
         object testController;
 
@@ -46,58 +46,47 @@ namespace NUnit.Engine
             this.testController = CreateObject("NUnit.Framework.Api.TestController");
         }
 
-        public bool Load(string assemblyFileName, IDictionary<string,object> options)
+        public TestEngineResult Load(string assemblyFileName, IDictionary<string,object> options)
         {
             CallbackHandler handler = new CallbackHandler();
 
             CreateObject("NUnit.Framework.Api.TestController+LoadTestsAction",
                 testController, assemblyFileName, options, handler.Callback);
 
-            Debug.Assert(handler.Result is bool, "Returned result was not a bool");
-
-            return (bool)handler.Result;
+            return handler.Result;
         }
 
         public void Unload()
         {
         }
 
-        public XmlNode ExploreTests(string assemblyFileName, IDictionary<string,object> options)
+        public TestEngineResult ExploreTests(string assemblyFileName, IDictionary<string,object> options)
         {
             CallbackHandler handler = new CallbackHandler();
 
             CreateObject("NUnit.Framework.Api.TestController+ExploreTestsAction",
                 testController, assemblyFileName, options, handler.Callback);
 
- 			XmlDocument doc = new XmlDocument();
-			doc.LoadXml((string)handler.Result);
-            return doc.FirstChild;
+            return handler.Result;
         }
 
-        public XmlNode GetLoadedTests()
+        public TestEngineResult GetLoadedTests()
         {
             CallbackHandler handler = new CallbackHandler();
 
             CreateObject("NUnit.Framework.Api.TestController+GetLoadedTestsAction",
                 testController, handler.Callback);
 
-            Debug.Assert(handler.Result == null || handler.Result is string,
-                "Returned result was not an XmlNode");
-
-			XmlDocument doc = new XmlDocument();
-			doc.LoadXml((string)handler.Result);
-            return doc.FirstChild;
+            return handler.Result;
         }
 
-        public TestResult Run(IDictionary<string,object> runOptions, ITestEventHandler listener)
+        public TestEngineResult Run(IDictionary<string,object> runOptions, ITestEventHandler listener)
         {
             CallbackHandler handler = new RunTestsCallbackHandler(listener);
 
             CreateObject("NUnit.Framework.Api.TestController+RunTestsAction", testController, runOptions, handler.Callback);
 
-            Debug.Assert(handler.Result is string, "Returned result was not a string");
-
-            return new TestResult((string)handler.Result);
+            return handler.Result;
         }
 
         #region Helper Methods

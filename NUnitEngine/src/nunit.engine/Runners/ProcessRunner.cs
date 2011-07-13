@@ -38,7 +38,7 @@ namespace NUnit.Engine.Runners
 	/// <summary>
 	/// Summary description for ProcessRunner.
 	/// </summary>
-	public class ProcessRunner : ITestRunner//: ProxyTestRunner
+	public class ProcessRunner : AbstractTestRunner
 	{
         //static Logger log = InternalTrace.GetLogger(typeof(ProcessRunner));
 
@@ -71,7 +71,14 @@ namespace NUnit.Engine.Runners
 
         #endregion
 
-        public bool Load(TestPackage package)
+        #region ITestRunner Members
+
+        /// <summary>
+        /// Load a TestPackage for possible execution
+        /// </summary>
+        /// <param name="package">The TestPackage to be loaded</param>
+        /// <returns>A TestEngineResult.</returns>
+        public override TestEngineResult Load(TestPackage package)
 		{
             //log.Info("Loading " + package.Name);
 			Unload();
@@ -93,14 +100,15 @@ namespace NUnit.Engine.Runners
                         enableDebug);
 
                     if (this.agent == null)
-                        return false;
+                        return new TestEngineResult("<error message=\"Unable to acquire remote process agent\"/>");
                 }
 	
 				if (this.remoteRunner == null)
 					this.remoteRunner = agent.CreateRunner();
 
-                loaded = this.remoteRunner.Load(package);
-                return loaded;
+                var result = this.remoteRunner.Load(package);
+                loaded = !result.IsError;
+                return result;
 			}
 			finally
 			{
@@ -109,7 +117,11 @@ namespace NUnit.Engine.Runners
 			}
 		}
 
-        public void Unload()
+        /// <summary>
+        /// Unload any loaded TestPackage. If none is loaded,
+        /// the call is ignored.
+        /// </summary>
+        public override void Unload()
         {
             if (this.remoteRunner != null)
             {
@@ -119,14 +131,26 @@ namespace NUnit.Engine.Runners
             }
 		}
 
-        public TestResult Run(ITestEventHandler listener, ITestFilter filter)
+        /// <summary>
+        /// Run the tests in a loaded TestPackage
+        /// </summary>
+        /// <param name="filter">A TestFilter used to select tests</param>
+        /// <returns>A TestResult giving the result of the test execution</returns>
+        public override TestEngineResult Run(ITestEventHandler listener, ITestFilter filter)
         {
             return this.remoteRunner.Run(listener, filter);
         }
 
-		#region IDisposable Members
+        public override TestEngineResult[] RunDirect(ITestEventHandler listener, ITestFilter filter)
+        {
+            throw new NotImplementedException();
+        }
 
-		public void Dispose()
+        #endregion
+
+        #region IDisposable Members
+
+        public void Dispose()
 		{
             if (this.agent != null)
             {
@@ -137,5 +161,5 @@ namespace NUnit.Engine.Runners
         }
 
 		#endregion
-	}
+    }
 }
