@@ -30,6 +30,8 @@ namespace NUnit.Engine.Runners
         /// <returns>A TestEngineResult.</returns>
         public override TestEngineResult Load(TestPackage package)
         {
+            this.TestPackage = package;
+
             List<TestPackage> packages = new List<TestPackage>();
             if (package.HasSubPackages)
                 packages.AddRange(package.SubPackages);
