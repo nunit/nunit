@@ -43,7 +43,7 @@ namespace NUnit.Engine.Runners.Tests
 
             var startTime = new DateTime(2011, 07, 04, 12, 34, 56);
 
-            XmlNode combined = AbstractTestRunner.MakeTestRunResult(startTime, results).Xml;
+            XmlNode combined = AbstractTestRunner.MakeTestRunResult(new TestPackage("dummy.dll"), startTime, results).Xml;
 
             Assert.That(combined.Name, Is.EqualTo("test-run"));
             Assert.That(combined.Attributes["result"].Value, Is.EqualTo("Passed"));

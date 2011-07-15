@@ -39,7 +39,6 @@ namespace NUnit.Engine.Runners
         private ServiceContext services;
 
         protected AppDomain TestDomain;
-        protected TestPackage TestPackage;
 
         protected ServiceContext Services
         {

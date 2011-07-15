@@ -83,6 +83,8 @@ namespace NUnit.Engine.Runners
             //log.Info("Loading " + package.Name);
 			Unload();
 
+            this.TestPackage = package;
+
             this.runtimeFramework = package.GetSetting("RuntimeFramework", RuntimeFramework.CurrentFramework);
 
             bool enableDebug = package.GetSetting("AgentDebug", false);
