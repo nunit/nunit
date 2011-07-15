@@ -8,6 +8,8 @@ namespace NUnit.Engine.Runners
 {
     public abstract class AbstractTestRunner :ITestRunner
     {
+        protected TestPackage TestPackage;
+
         #region ITestRunner Members
 
         /// <summary>
@@ -36,10 +38,11 @@ namespace NUnit.Engine.Runners
         /// all the &lt;test-assembly&gt; elements returned by the drivers.
         /// </returns>
         public virtual TestEngineResult Run(ITestEventHandler listener, ITestFilter filter)
-        {
+        {           
             DateTime startTime = DateTime.Now;
+            TestEngineResult[] results = RunDirect(listener, filter);
 
-            return MakeTestRunResult(startTime, RunDirect(listener, filter));
+            return MakeTestRunResult(this.TestPackage, startTime, results);
         }
 
         /// <summary>
@@ -73,8 +76,15 @@ namespace NUnit.Engine.Runners
         /// </summary>
         /// <param name="results">The results to be combined into a &lt;test-run&gt; result.</param>
         /// <returns>A TestEngineResult with a single top-level &lt;test-run&gt; element.</returns>
-        public static TestEngineResult MakeTestRunResult(DateTime startTime, IList<TestEngineResult> results)
+        public static TestEngineResult MakeTestRunResult(TestPackage package, DateTime startTime, IList<TestEngineResult> results)
         {
+            bool isProject = false;
+            if (package.HasSubPackages)
+            {
+                string filePath = package.FilePath;
+                isProject = filePath != null && filePath != string.Empty;
+            }
+
             XmlNode resultNode = XmlHelper.CreateTopLevelElement("test-run");
 
             AddEnvironmentElement(resultNode);
@@ -120,8 +130,10 @@ namespace NUnit.Engine.Runners
             }
 
             XmlHelper.AddAttribute(resultNode, "id", "1");
-            //XmlHelper.AddAttribute(combined, "name", package.Name);
-            //XmlHelper.AddAttribute(combined, "fullName", package.FullName);
+            if (package.Name != null && package.Name != string.Empty)
+                XmlHelper.AddAttribute(resultNode, "name", package.Name);
+            if (package.FilePath != null && package.FilePath != string.Empty)
+                XmlHelper.AddAttribute(resultNode, "fullName", package.FilePath);
             XmlHelper.AddAttribute(resultNode, "result", status);
             XmlHelper.AddAttribute(resultNode, "time", time.ToString());
             XmlHelper.AddAttribute(resultNode, "total", total.ToString());

@@ -23,6 +23,8 @@ namespace NUnit.Engine.Runners
         /// <returns>A TestEngineResult.</returns>
         public override TestEngineResult Load(TestPackage package)
         {
+            this.TestPackage = package;
+
             services.ProjectService.ExpandProjectPackages(package);
             this.realRunner = services.TestRunnerFactory.MakeTestRunner(package);
 
@@ -45,7 +47,6 @@ namespace NUnit.Engine.Runners
                 throw new InvalidOperationException("Load must be called before Run");
 
             return realRunner.RunDirect(listener, filter);
-
         }
 
         #endregion
