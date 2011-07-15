@@ -49,43 +49,61 @@ namespace NUnit.ConsoleRunner
 
             // fixture
             this.Add("run=", "Names of the tests to run",
-                v => runList.Add(v));
+                v => runList.Add(RequiredValue(v, "--run")));
+
             this.Add("config=", "Project configuration (e.g.: Debug) to load",
-                v => activeConfig = v);
+                v => activeConfig = RequiredValue(v, "--config"));
+
             this.Add("xml=", "Name of XML output file (Default: TestResult.xml)",
-                v => xmlPath = v);
+                v => xmlPath = RequiredValue(v, "--xml"));
+
             // xmlConsole
+
             this.Add("noxml", "Suppress XML output", 
                 v => noxml = v != null);
+
             this.Add("output|out=", "File to receive test output",
-                v => outputPath = v);
+                v => outputPath = RequiredValue(v, "--output"));
+
             this.Add("err=", "File to receive test error output", 
-                v => errorPath = v);
+                v => errorPath = RequiredValue(v, "--err"));
+
             this.Add("work=", "Work directory for output files", 
-                v => workDir = v);
+                v => workDir = RequiredValue(v, "--work"));
+
             this.Add("labels", "Label each test by name in the output", 
                 v => labels = v != null);
+
             this.Add("trace=", "Set internal trace level (NYI)\nValues: Off, Error, Warning, Info, Verbose",
                 (InternalTraceLevel v) => internalTraceLevel = v);
+
             this.Add("include=", "Comma-separated list of categories to include", 
-                v => include = v);
+                v => include = RequiredValue(v, "--include"));
+
             this.Add("exclude=", "Comma-separated list of categories to exclude", 
-                v => exclude = v);
+                v => exclude = RequiredValue(v, "--exclude"));
+
             this.Add("framework=", "Framework version to be used for tests",
                 v => framework = v);
+
             this.Add("process=", "Process model for tests\nValues: Single, Separate, Multiple",
                 (ProcessModel v) => processModel = v);
+
             this.Add("domain=", "AppDomain usage for tests\nValues: None, Single, Multiple",
                 (DomainUsage v) => domainUsage = v);
+
             // noshadow
             // nothread
             this.Add("timeout=", "Set timeout for each test case in milliseconds",
                 (int v) => defaultTimeout = v);
             this.Add("wait", "Wait for input before closing console window", 
                 v => wait = v != null);
+
             this.Add("noheader|noh", "Suppress display of program information at start of run.",
                 v => noheader = v != null);
+
             // nodots
+
             this.Add("help|h", "Display this message and exit.", 
                 v => help = v != null);
 
@@ -136,26 +154,7 @@ namespace NUnit.ConsoleRunner
         {
             if (!validated)
             {
-                if (activeConfig == "")
-                    RequiredValueError("--config");
-                if (xmlPath == "") 
-                    RequiredValueError("--xml");
-                if (outputPath == "")
-                    RequiredValueError("--output");
-                if (errorPath == "")
-                    RequiredValueError("--err");
-                if (include == "")
-                    RequiredValueError("--include");
-                if (exclude == "")
-                    RequiredValueError("--exclude");
-                if (workDir == "")
-                    RequiredValueError("--work");
-                //if (timeout == "")
-                //    RequiredValueError("--timeout");
-                //else if (timeout != null && !int.TryParse(timeout, out Timeout))
-                //    RequiredIntError("--timeout");
-                //if (trace == "")
-                //    RequiredValueError("--trace");
+                // Additional Checks here
 
                 validated = true;
             }
@@ -166,6 +165,13 @@ namespace NUnit.ConsoleRunner
         #endregion
 
         #region Helper Methods
+
+        private string RequiredValue(string val, string option)
+        {
+            if (val == null || val == string.Empty)
+                errorMessages.Add("Missing required value for option '" + option + "'.");
+            return val;
+        }
 
         private void RequiredValueError(string option)
         {
