@@ -239,7 +239,11 @@
     <Compile Include="IExpectException.cs" />
     <Compile Include="Internal\AssemblyHelper.cs" />
     <Compile Include="Internal\AssemblyReader.cs" />
-    <Compile Include="Internal\AsyncResult.cs" />
+    <Compile Include="Internal\AsyncResults\AsyncResult.cs" />
+    <Compile Include="Internal\AsyncResults\ErrorReport.cs" />
+    <Compile Include="Internal\AsyncResults\FinalResult.cs" />
+    <Compile Include="Internal\AsyncResults\LoadReport.cs" />
+    <Compile Include="Internal\AsyncResults\ProgressReport.cs" />
     <Compile Include="Internal\Builders\CombinatorialStrategy.cs" />
     <Compile Include="Internal\Builders\CombinatorialTestCaseProvider.cs" />
     <Compile Include="Internal\Builders\CombiningStrategy.cs" />

@@ -52,6 +52,8 @@
   <ItemGroup>
     <Compile Include="ConsoleOptions.cs" />
     <Compile Include="ConsoleRunner.cs" />
+    <Compile Include="NUnit2XmlOutputWriter.cs" />
+    <Compile Include="NUnit3XmlOutputWriter.cs" />
     <Compile Include="Options.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="TestEventHandler.cs" />
@@ -60,6 +62,9 @@
     <Compile Include="ResultReporter.cs" />
     <Compile Include="StackTraceFilter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="XmlHelper.cs" />
+    <Compile Include="XmlOutputManager.cs" />
+    <Compile Include="XmlOutputSpecification.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App.ico" />

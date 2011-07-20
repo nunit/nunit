@@ -55,6 +55,7 @@
     <Compile Include="Internal\XmlHelperTests.cs" />
     <Compile Include="RuntimeFrameworkTests.cs" />
     <Compile Include="Services\DomainManagerTests.cs" />
+    <Compile Include="TestEngineResultTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\NUnitFramework\src\framework\nunit.framework-vs2010.csproj">
