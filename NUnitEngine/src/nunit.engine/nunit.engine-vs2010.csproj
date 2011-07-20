@@ -50,7 +50,6 @@
     <Compile Include="Agents\TestAgent.cs" />
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="CallbackHandler.cs" />
-    <Compile Include="FrameworkDriver.cs" />
     <Compile Include="IFrameworkDriver.cs" />
     <Compile Include="Internal\AssemblyHelper.cs" />
     <Compile Include="Internal\AssemblyReader.cs" />
@@ -74,9 +73,14 @@
     <Compile Include="IServiceManager.cs" />
     <Compile Include="ISettings.cs" />
     <Compile Include="ITestRunnerFactory.cs" />
+    <Compile Include="NUnitFrameworkDriver.cs" />
+    <Compile Include="Runners\AbstractTestRunner.cs" />
+    <Compile Include="Runners\AggregatingTestRunner.cs" />
     <Compile Include="Runners\DirectTestRunner.cs" />
     <Compile Include="Runners\LocalTestRunner.cs" />
+    <Compile Include="Runners\MasterTestRunner.cs" />
     <Compile Include="Runners\MultipleTestDomainRunner.cs" />
+    <Compile Include="Runners\MultipleTestProcessRunner.cs" />
     <Compile Include="Runners\ProcessRunner.cs" />
     <Compile Include="Runners\TestDomainRunner.cs" />
     <Compile Include="RunTestsCallbackHandler.cs" />
@@ -91,6 +95,7 @@
     <Compile Include="Services\SettingsService.cs" />
     <Compile Include="Services\TestAgency.cs" />
     <Compile Include="TestEngine.cs" />
+    <Compile Include="TestEngineResult.cs" />
     <None Include="nunit.engine.build" />
   </ItemGroup>
   <ItemGroup>
