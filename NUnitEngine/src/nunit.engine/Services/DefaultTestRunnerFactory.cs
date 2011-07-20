@@ -50,9 +50,9 @@ namespace NUnit.Engine.Services
 
             switch (processModel)
             {
-                //case ProcessModel.Multiple:
-                //    package.Settings.Remove("ProcessModel");
-                //    return new MultipleTestProcessRunner();
+                case ProcessModel.Multiple:
+                    package.Settings.Remove("ProcessModel");
+                    return new MultipleTestProcessRunner(this.ServiceContext);
                 case ProcessModel.Separate:
                     package.Settings.Remove("ProcessModel");
                     return new ProcessRunner(this.ServiceContext);
@@ -74,8 +74,8 @@ namespace NUnit.Engine.Services
 
             switch (processModel)
             {
-                //case ProcessModel.Multiple:
-                //    return runner is MultipleTestProcessRunner;
+                case ProcessModel.Multiple:
+                    return runner is MultipleTestProcessRunner;
                 case ProcessModel.Separate:
                     ProcessRunner processRunner = runner as ProcessRunner;
                     return processRunner != null && processRunner.RuntimeFramework == targetFramework;

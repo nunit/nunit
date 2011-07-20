@@ -60,8 +60,8 @@ namespace NUnit.Engine.Services
 			//For paralell tests, we need to use distinct application name
         	setup.ApplicationName = "Tests" + "_" + Environment.TickCount;
 
-            FileInfo testFile = package.FilePath != null && package.FilePath != string.Empty
-                ? new FileInfo(package.FilePath)
+            FileInfo testFile = package.FullName != null && package.FullName != string.Empty
+                ? new FileInfo(package.FullName)
                 : null;
 
             string appBase = package.GetSetting("BasePath", string.Empty);
@@ -80,7 +80,7 @@ namespace NUnit.Engine.Services
                     configFile = testFile.Name + ".config";
             }
             else if (appBase == null || appBase == string.Empty)
-                appBase = GetCommonAppBase(package.GetAssemblies());
+                appBase = GetCommonAppBase(package.TestFiles);
 
             setup.ApplicationBase = appBase;
             // TODO: Check whether Mono still needs full path to config file...
@@ -89,7 +89,7 @@ namespace NUnit.Engine.Services
                 : configFile;
 
             if (package.GetSetting("AutoBinPath", true))
-				binPath = GetPrivateBinPath( appBase, package.GetAssemblies() );
+				binPath = GetPrivateBinPath( appBase, package.TestFiles );
 
 			setup.PrivateBinPath = binPath;
 

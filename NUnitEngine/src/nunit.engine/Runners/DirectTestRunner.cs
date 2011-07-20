@@ -35,6 +35,7 @@ namespace NUnit.Engine.Runners
     /// </summary>
     public abstract class DirectTestRunner : AbstractTestRunner
     {
+        protected TestPackage package;
         private List<IFrameworkDriver> drivers = new List<IFrameworkDriver>();
         private ServiceContext services;
 
@@ -50,7 +51,7 @@ namespace NUnit.Engine.Runners
             this.services = services;
         }
 
-        #region AbstractTestRunner Overrides
+        #region ITestRunner Members
 
         /// <summary>
         /// Load a TestPackage for possible execution
@@ -59,44 +60,54 @@ namespace NUnit.Engine.Runners
         /// <returns>A TestEngineResult.</returns>
         public override TestEngineResult Load(TestPackage package)
         {
-            this.TestPackage = package;
-            var loadResults = new List<string>();
+            this.package = package;
+            var loadResult = new TestEngineResult();
 
-            foreach (string testFile in package.GetAssemblies())
+            foreach (string testFile in package.TestFiles)
             {
                 // TODO: Should get the appropriate driver for the file
                 IFrameworkDriver driver = new NUnitFrameworkDriver(TestDomain);
-                var loadResult = driver.Load(testFile, package.Settings);
+                var driverResult = driver.Load(testFile, package.Settings);
 
-                loadResults.Add(loadResult.Text);
+                foreach (XmlNode node in driverResult.XmlNodes)
+                    loadResult.Add(node);
 
-                if (!loadResult.IsError)
+                if (!loadResult.HasErrors)
                     drivers.Add(driver);
             }
 
-            string element = drivers.Count == loadResults.Count
-                ? "load"
-                : "error";
-
-            StringBuilder sb = new StringBuilder();
-            sb.AppendFormat("<{0}>", element);
-            foreach (string result in loadResults)
-                sb.Append(result);
-            sb.AppendFormat("</{0}>", element);
-
-            return new TestEngineResult(sb.ToString());
+            return loadResult;
         }
 
-        public override TestEngineResult[] RunDirect(ITestEventHandler listener, ITestFilter filter)
+        /// <summary>
+        /// Run the tests in a loaded TestPackage
+        /// </summary>
+        /// <param name="filter">A TestFilter used to select tests</param>
+        /// <returns>
+        /// A TestEngineResult giving the result of the test execution. The 
+        /// top-level node of the result is &lt;direct-runner&gt; and wraps
+        /// all the &lt;test-assembly&gt; elements returned by the drivers.
+        /// </returns>
+        public override TestEngineResult Run(ITestEventHandler listener, ITestFilter filter)
         {
-            List<TestEngineResult> results = new List<TestEngineResult>();
+            var results = new List<TestEngineResult>();
 
             foreach (NUnitFrameworkDriver driver in drivers)
-                results.Add(driver.Run(this.TestPackage.Settings, listener));
+                results.Add(driver.Run(this.package.Settings, listener));
 
-            return results.ToArray();
+            if (IsProjectPackage(this.package))
+                return TestEngineResult.Aggregate("test-project", this.package, results);
+            else if (results.Count == 1)
+                return results[0];
+            else
+                return TestEngineResult.Wrap("test-wrapper", results);
         }
 
         #endregion
+
+        private bool IsProjectPackage(TestPackage package)
+        {
+            return package.FullName != null && package.FullName != string.Empty && services.ProjectService.IsProjectFile(package.FullName);
+        }
     }
 }

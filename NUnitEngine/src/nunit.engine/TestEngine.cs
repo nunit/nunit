@@ -80,13 +80,13 @@ namespace NUnit.Engine
         /// </summary>
         /// <param name="package">A TestPackage.</param>
         /// <returns>An XmlNode representing the tests.</returns>
-        public TestEngineResult Explore(TestPackage package)
+        public ITestEngineResult Explore(TestPackage package)
         {
             // TODO: We will need an agent or remote explorer
             // in the future in order to explore tests that
             // are located on a different machine.
             IFrameworkDriver driver = new NUnitFrameworkDriver(AppDomain.CurrentDomain);
-            return driver.ExploreTests((string)package.FilePath, new Dictionary<string,object>());
+            return driver.ExploreTests(package.TestFiles, new Dictionary<string,object>());
         }
 
         /// <summary>
@@ -96,13 +96,13 @@ namespace NUnit.Engine
         /// <param name="package">A TestPackage.</param>
         /// <param name="filter">A TestFilter (currently ignored)</param>
         /// <returns>An XmlNode representing the test results.</returns>
-        public TestEngineResult Run(TestPackage package, ITestEventHandler listener, TestFilter filter)
+        public ITestEngineResult Run(TestPackage package, ITestEventHandler listener, TestFilter filter)
         {
             using (ITestRunner runner = GetRunner())
             {
                 var loadResult = runner.Load(package);
 
-                return loadResult.IsError
+                return loadResult.HasErrors
                     ? loadResult
                     : runner.Run(listener, filter);
             }

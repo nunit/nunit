@@ -35,7 +35,7 @@ namespace NUnit.Engine
         /// </summary>
         /// <param name="package">The TestPackage to be loaded</param>
         /// <returns>A TestEngineResult.</returns>
-        TestEngineResult Load(TestPackage package);
+        ITestEngineResult Load(TestPackage package);
 
         /// <summary>
         /// Unload any loaded TestPackage. If none is loaded,
@@ -49,17 +49,6 @@ namespace NUnit.Engine
         /// <param name="listener">An ITestEventHandler to receive events</param>
         /// <param name="filter">A TestFilter used to select tests</param>
         /// <returns>A TestEngineResult giving the result of the test execution</returns>
-        TestEngineResult Run(ITestEventHandler listener, ITestFilter filter);
-
-        /// <summary>
-        /// Run the tests in a loaded TestPackage, returning separate results
-        /// for each test assembly as an array. This method is primarily intended
-        /// to avoid overhead in consolidating test results when one runner calls
-        /// a subordinate runner.
-        /// </summary>
-        /// <param name="listener">An ITestEventHandler to receive events</param>
-        /// <param name="filter">A TestFilter used to select tests</param>
-        /// <returns>A TestEngineResult[] with separate results for each assembly</returns>
-        TestEngineResult[] RunDirect(ITestEventHandler listener, ITestFilter filter);
+        ITestEngineResult Run(ITestEventHandler listener, ITestFilter filter);
     }
 }

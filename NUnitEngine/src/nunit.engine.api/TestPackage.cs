@@ -36,9 +36,9 @@ namespace NUnit.Engine
     [Serializable]
     public class TestPackage
     {
-        private string filePath;
+        private string fullName;
+        private List<string> testFiles = new List<string>();
         private Dictionary<string, object> settings = new Dictionary<string, object>();
-        private List<TestPackage> subPackages = new List<TestPackage>();
 
         #region Constructors
 
@@ -47,9 +47,11 @@ namespace NUnit.Engine
         /// the assembly or project to be used.
         /// </summary>
         /// <param name="filePath">The file path.</param>
-        public TestPackage(string filePath)
+        public TestPackage(string name)
         {
-            this.filePath = Path.GetFullPath(filePath);
+            this.fullName = Path.GetFullPath(name);
+            if (IsAssemblyFileType(name))
+                this.testFiles.Add(this.FullName);
         }
 
         /// <summary>
@@ -60,7 +62,7 @@ namespace NUnit.Engine
         public TestPackage(params string[] testFiles)
         {
             foreach (string testFile in testFiles)
-                Add(new TestPackage(testFile));
+                this.testFiles.Add(Path.GetFullPath(testFile));
         }
 
         #endregion
@@ -72,33 +74,24 @@ namespace NUnit.Engine
         /// </summary>
         public string Name
         {
-            get { return filePath == null ? null : Path.GetFileName(filePath); }
+            get { return fullName == null ? null : Path.GetFileName(fullName); }
         }
 
         /// <summary>
         /// Gets the path to the file containing tests. It may be
         /// an assembly or a recognized project type.
         /// </summary>
-        public string FilePath
+        public string FullName
         {
-            get { return filePath; }
+            get { return fullName; }
         }
 
         /// <summary>
-        /// Gets an array of SubPackages contained in this package.
+        /// Gets an array of the test files contained in this package
         /// </summary>
-        public TestPackage[] SubPackages
+        public string[] TestFiles
         {
-            get { return subPackages.ToArray(); }
-        }
-
-        /// <summary>
-        /// Gets an indicator showing whether this package
-        /// contains any subpackages.
-        /// </summary>
-        public bool HasSubPackages
-        {
-            get { return subPackages.Count > 0; }
+            get { return testFiles.ToArray(); }
         }
 
         /// <summary>
@@ -114,30 +107,12 @@ namespace NUnit.Engine
         #region Public Methods
 
         /// <summary>
-        /// Add a subpackage to the package.
+        /// Add a test file to the package.
         /// </summary>
-        /// <param name="package">The package to be added</param>
-        public void Add(TestPackage package)
+        /// <param name="testFile">The test file to be added</param>
+        public void Add(string testFile)
         {
-            subPackages.Add(package);
-        }
-
-        /// <summary>
-        /// Returns the test assemblies to be loaded by this package
-        /// </summary>
-        public string[] GetAssemblies()
-        {
-            List<string> assemblies = new List<string>();
-
-            if (HasSubPackages)
-            {
-                foreach (TestPackage subPackage in subPackages)
-                    assemblies.AddRange(subPackage.GetAssemblies());
-            }
-            else
-                assemblies.Add(FilePath);
-
-            return assemblies.ToArray();
+            testFiles.Add(testFile);
         }
 
         /// <summary>
@@ -151,6 +126,16 @@ namespace NUnit.Engine
             return Settings.ContainsKey(name)
                 ? (T)Settings[name]
                 : defaultSetting;
+        }
+
+        #endregion
+
+        #region Helper Methods
+
+        private static bool IsAssemblyFileType(string path)
+        {
+            string extension = Path.GetExtension(path).ToLower();
+            return extension == ".dll" || extension == ".exe";
         }
 
         #endregion
