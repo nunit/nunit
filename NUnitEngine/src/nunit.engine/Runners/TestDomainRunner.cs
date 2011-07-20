@@ -31,15 +31,20 @@ namespace NUnit.Engine.Runners
     {
         public TestDomainRunner(ServiceContext services) : base(services) { }
 
-        #region Overrides
+        #region DirectTestRunner Overrides
 
         public override TestEngineResult Load(TestPackage package)
         {
+            this.package = package;
+
             this.TestDomain = Services.DomainManager.CreateDomain(package);
 
             return base.Load(package);
         }
 
+        /// <summary>
+        /// Unload any loaded TestPackage as well as the AppDomain.
+        /// </summary>
         public override void Unload()
         {
             if (this.TestDomain != null)
@@ -47,15 +52,6 @@ namespace NUnit.Engine.Runners
                 Services.DomainManager.Unload(this.TestDomain);
                 this.TestDomain = null;
             }
-        }
-
-        #endregion
-
-        #region IDisposable Members
-
-        public override void Dispose()
-        {
-            Unload();
         }
 
         #endregion

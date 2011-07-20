@@ -47,7 +47,7 @@ namespace NUnit.Engine.Services
                 return package;
 
             foreach (string assembly in project.ActiveConfig.Assemblies)
-                package.Add(new TestPackage(assembly));
+                package.Add(assembly);
 
             return package;
         }
@@ -163,41 +163,26 @@ namespace NUnit.Engine.Services
 		}
 
         /// <summary>
-        /// Recursively expands any TestPackages based on a known
-        /// project format. The package settings are set from
-        /// the project settings and subpackages are created for
-        /// each assembly.
+        /// Expands a TestPackages based on a known project format,
+        /// creating a subpackage for each assembly. The FilePath
+        /// of hte package must be checked to ensure that it is
+        /// a known project format before calling this method.
         /// </summary>
         /// <param name="package">The TestPackage to be expanded</param>
-        public void ExpandProjectPackages(TestPackage package)
+        public void ExpandProjectPackage(TestPackage package)
         {
-            if (package.HasSubPackages)
-            {
-                foreach (TestPackage subPackage in package.SubPackages)
-                    ExpandProjectPackages(subPackage);
-            }
-            else if (IsProjectFile(package.FilePath))
-            {
-                IProject project = LoadProject(package.FilePath);
+            IProject project = LoadProject(package.FullName);
 
-                string configName = package.GetSetting("ActiveConfig", string.Empty);
-                IProjectConfig config = configName != string.Empty
-                    ? project.Configs[configName]
-                    : project.ActiveConfig;
+            string configName = package.GetSetting("ActiveConfig", string.Empty);
+            IProjectConfig config = configName != string.Empty
+                ? project.Configs[configName]
+                : project.ActiveConfig;
 
-                foreach (string key in config.Settings.Keys)
-                    package.Settings[key] = config.Settings[key];
+            foreach (string key in config.Settings.Keys)
+                package.Settings[key] = config.Settings[key];
 
-                foreach (string assembly in config.Assemblies)
-                {
-                    TestPackage subPackage = new TestPackage(assembly);
-
-                    //foreach (string key in package.Settings.Keys)
-                    //    subPackage.Settings[key] = package.Settings[key];
-
-                    package.Add(subPackage);
-                }
-            }
+            foreach (string assembly in config.Assemblies)
+                package.Add(assembly);
         }
 
         #endregion

@@ -37,8 +37,8 @@ namespace NUnit.ConsoleRunner.Tests
             var options = new ConsoleOptions("test.dll");
             var package = ConsoleRunner.MakeTestPackage(options);
 
-            Assert.AreEqual(1, package.GetAssemblies().Length);
-            Assert.AreEqual(Path.GetFullPath("test.dll"), package.FilePath);
+            Assert.AreEqual(1, package.TestFiles.Length);
+            Assert.AreEqual(Path.GetFullPath("test.dll"), package.FullName);
         }
 
         [Test]
@@ -53,7 +53,7 @@ namespace NUnit.ConsoleRunner.Tests
             var options = new ConsoleOptions(names);
             var package = ConsoleRunner.MakeTestPackage(options);
 
-            Assert.AreEqual(expected, package.GetAssemblies());
+            Assert.AreEqual(expected, package.TestFiles);
         }
 
         [Test]

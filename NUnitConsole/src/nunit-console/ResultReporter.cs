@@ -29,12 +29,12 @@ namespace NUnit.ConsoleRunner
 {
     public class ResultReporter
     {
-        TestEngineResult result;
+        ITestEngineResult result;
         ResultSummary summary;
 
         int reportIndex = 0;
 
-        public ResultReporter(TestEngineResult result)
+        public ResultReporter(ITestEngineResult result)
         {
             this.result = result;
             this.summary = new ResultSummary(result);
