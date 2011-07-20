@@ -251,7 +251,7 @@ namespace NUnit.Framework.Internal
             XmlNode thisNode = this.test.AddToXml(parentNode, false);
 
             XmlHelper.AddAttribute(thisNode, "result", ResultState.Status.ToString());
-            if (ResultState.Label != ResultState.Status.ToString())
+            if (ResultState.Label != string.Empty) // && ResultState.Label != ResultState.Status.ToString())
                 XmlHelper.AddAttribute(thisNode, "label", ResultState.Label);
 
             XmlHelper.AddAttribute(thisNode, "time", this.Time.ToString("0.000", System.Globalization.CultureInfo.InvariantCulture));
