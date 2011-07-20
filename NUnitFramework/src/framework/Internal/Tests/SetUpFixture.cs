@@ -71,5 +71,18 @@ namespace NUnit.Framework.Internal
             return methods;
         }
         #endregion
+
+        #region Overrides
+
+        /// <summary>
+        /// Gets the name used for the top-level element in the
+        /// XML representation of this test
+        /// </summary>
+        public override string XmlElementName
+        {
+            get { return "setup-fixture"; }
+        }
+
+        #endregion
     }
 }

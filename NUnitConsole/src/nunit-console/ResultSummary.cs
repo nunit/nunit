@@ -47,18 +47,16 @@ namespace NUnit.ConsoleRunner
 
         public ResultSummary() { }
 
-        public ResultSummary(ITestEngineResult result)
+        public ResultSummary(XmlNode result)
         {
-            XmlNode topNode = result.Xml;
-
-            if (topNode.Name != "test-run")
+            if (result.Name != "test-run")
                 throw new InvalidOperationException("Expected <test-run> as top-level element");
 
-            this.name = GetAttribute(topNode, "name");
+            this.name = GetAttribute(result, "name");
             //this.time = GetAttribute(topNode, "time", 0.0);
             //this.time = double.Parse(result.GetAttribute("time"), System.Globalization.CultureInfo.InvariantCulture);
 
-            Summarize(topNode);
+            Summarize(result);
         }
 
         private void Summarize(XmlNode node)

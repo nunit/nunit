@@ -1,8 +1,25 @@
-// ****************************************************************
-// This is free software licensed under the NUnit license. You
-// may obtain a copy of the license as well as information regarding
-// copyright ownership at http://nunit.org.
-// ****************************************************************
+// ***********************************************************************
+// Copyright (c) 2011 Charlie Poole
+//
+// Permission is hereby granted, free of charge, to any person obtaining
+// a copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to
+// permit persons to whom the Software is furnished to do so, subject to
+// the following conditions:
+// 
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+// ***********************************************************************
 
 using System;
 using System.Collections.Generic;
@@ -20,7 +37,6 @@ namespace NUnit.ConsoleRunner
 	public class ConsoleOptions : NDesk.Options.OptionSet
 	{
         public string activeConfig;
-        public string xmlPath;
         public bool noxml;
         public string outputPath;
         public string errorPath;
@@ -40,6 +56,8 @@ namespace NUnit.ConsoleRunner
         private List<string> inputFiles = new List<string>();
         private List<string> runList = new List<string>();
         private List<string> errorMessages = new List<string>();
+        private List<XmlOutputSpecification> xmlOutputSpecifications = new List<XmlOutputSpecification>();
+
         private bool validated;
 
         public ConsoleOptions(params string[] args)
@@ -48,14 +66,15 @@ namespace NUnit.ConsoleRunner
             // determines the display order for the help.
 
             // fixture
-            this.Add("run=", "Names of the tests to run",
-                v => runList.Add(RequiredValue(v, "--run")));
 
-            this.Add("config=", "Project configuration (e.g.: Debug) to load",
+            this.Add("run=", "Names of the tests to run", 
+                v => runList.Add(RequiredValue(v, "--run"))); 
+
+            this.Add("config=", "Project configuration (e.g.: Debug) to load", 
                 v => activeConfig = RequiredValue(v, "--config"));
 
-            this.Add("xml=", "Name of XML output file (Default: TestResult.xml)",
-                v => xmlPath = RequiredValue(v, "--xml"));
+            this.Add("xml=", "Name of XML output file (Default: TestResult.xml)", 
+                v => xmlOutputSpecifications.Add(new XmlOutputSpecification(RequiredValue(v, "--xml"))));
 
             // xmlConsole
 
@@ -94,8 +113,10 @@ namespace NUnit.ConsoleRunner
 
             // noshadow
             // nothread
+
             this.Add("timeout=", "Set timeout for each test case in milliseconds",
                 (int v) => defaultTimeout = v);
+            
             this.Add("wait", "Wait for input before closing console window", 
                 v => wait = v != null);
 
@@ -146,6 +167,17 @@ namespace NUnit.ConsoleRunner
             get { return errorMessages; }
         }
 
+        public IList<XmlOutputSpecification> XmlOutputSpecifications
+        {
+            get 
+            {
+                if (xmlOutputSpecifications.Count == 0)
+                    xmlOutputSpecifications.Add(new XmlOutputSpecification("TestResult.xml"));
+
+                return xmlOutputSpecifications; 
+            }
+        }
+
         #endregion
 
         #region Public Methods
@@ -173,10 +205,17 @@ namespace NUnit.ConsoleRunner
             return val;
         }
 
-        private void RequiredValueError(string option)
-        {
-            errorMessages.Add("Missing required value for option '" + option + "'.");
-        }
+        //private void RequiredValueError(string option)
+        //{
+        //    if (v == null || v == string.Empty)
+        //        errorMessages.Add("Missing required value for option '" + option + "'.");
+        //    return v;
+        //}
+
+        //private void RequiredValueError(string option)
+        //{
+        //    errorMessages.Add("Missing required value for option '" + option + "'.");
+        //}
 
         private void RequiredIntError(string option)
         {
