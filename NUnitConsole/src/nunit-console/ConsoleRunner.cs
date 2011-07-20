@@ -129,19 +129,15 @@ namespace NUnit.ConsoleRunner
             {
                 string xmlOutput = CreateXmlOutput(engineResult);
 
-                ResultReporter reporter = new ResultReporter(engineResult);
+                ResultReporter reporter = new ResultReporter(engineResult.Xml);
                 reporter.ReportResults();
 
                 if (!options.noxml)
                 {
-                    // Write xml output here
-                    string xmlResultFile = options.xmlPath == null || options.xmlPath == string.Empty
-                        ? "TestResult.xml" : options.xmlPath;
+                    var xmlManager = new XmlOutputManager(engineResult.Xml, options.WorkDirectory);
 
-                    using (StreamWriter writer = new StreamWriter(Path.Combine(workDirectory, xmlResultFile)))
-                    {
-                        writer.Write(xmlOutput);
-                    }
+                    foreach (var outputSpec in options.XmlOutputSpecifications)
+                        xmlManager.WriteXmlOutput(outputSpec);
                 }
 
                 returnCode = reporter.Summary.ErrorsAndFailures;

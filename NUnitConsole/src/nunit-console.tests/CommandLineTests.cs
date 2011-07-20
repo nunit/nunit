@@ -80,7 +80,7 @@ namespace NUnit.ConsoleRunner.Tests
         }
 
         [TestCase("activeConfig", "config")]
-        [TestCase("xmlPath", "xml")]
+        //[TestCase("xmlPath", "xml")]
         [TestCase("outputPath", "output|out")]
         [TestCase("errorPath", "err")]
         [TestCase("include", "include")]
@@ -134,7 +134,7 @@ namespace NUnit.ConsoleRunner.Tests
         }
 
         [TestCase("--config")]
-        [TestCase("--xml")]
+        //[TestCase("--xml")]
         [TestCase("--output")]
         [TestCase("--err")]
         [TestCase("--include")]
@@ -209,7 +209,7 @@ namespace NUnit.ConsoleRunner.Tests
             Assert.True(options.Validate());
             Assert.AreEqual(1, options.InputFiles.Length, "assembly should be set");
             Assert.AreEqual("tests.dll", options.InputFiles[0]);
-            Assert.AreEqual("results.xml", options.xmlPath);
+            Assert.AreEqual("results.xml", options.XmlOutputSpecifications[0].OutputPath);
         }
 
         [Test]
@@ -219,7 +219,7 @@ namespace NUnit.ConsoleRunner.Tests
             Assert.True(options.Validate());
             Assert.AreEqual(1, options.InputFiles.Length, "assembly should be set");
             Assert.AreEqual("tests.dll", options.InputFiles[0]);
-            Assert.AreEqual("C:/nunit/tests/bin/Debug/console-test.xml", options.xmlPath);
+            Assert.AreEqual("C:/nunit/tests/bin/Debug/console-test.xml", options.XmlOutputSpecifications[0].OutputPath);
         }
 
         [Test]
@@ -229,7 +229,7 @@ namespace NUnit.ConsoleRunner.Tests
             Assert.True(options.Validate());
             Assert.AreEqual(1, options.InputFiles.Length, "assembly should be set");
             Assert.AreEqual("tests.dll", options.InputFiles[0]);
-            Assert.AreEqual("C:/nunit/tests/bin/Debug/console-test.xml", options.xmlPath);
+            Assert.AreEqual("C:/nunit/tests/bin/Debug/console-test.xml", options.XmlOutputSpecifications[0].OutputPath);
         }
 
         [Test]

@@ -48,6 +48,7 @@
     <Compile Include="CommandLineTests.cs" />
     <Compile Include="MakeTestPackageTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="XmlOutputSpecificationTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\NUnitEngine\src\nunit.engine.api\nunit.engine.api-vs2008.csproj">

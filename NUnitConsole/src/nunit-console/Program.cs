@@ -70,7 +70,7 @@ namespace NUnit.ConsoleRunner
                 WriteHelpText(options);
                 return ConsoleRunner.OK;
             }
-            
+
             if (!options.Validate())
             {
                 foreach (string message in options.ErrorMessages)
