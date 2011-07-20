@@ -1,7 +1,7 @@
 ﻿// ***********************************************************************
 // Copyright (c) 2011 Charlie Poole
 //
-// Permission is hereby granted, free of charge, to any person obtaining
+// Permission is hereby granted, free of charge, to any person obtainingn
 // a copy of this software and associated documentation files (the
 // "Software"), to deal in the Software without restriction, including
 // without limitation the rights to use, copy, modify, merge, publish,
@@ -21,37 +21,28 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
+using System.Collections.Generic;
+using System.Text;
 using System.Xml;
-using NUnit.Framework;
+using NUnit.Engine.Internal;
 
-namespace NUnit.Engine.Tests
+namespace NUnit.Engine.Runners
 {
-    public class TestEngineResultTests
+    /// <summary>
+    /// MultipleTestDomainRunner runs tests using separate
+    /// AppDomains for each assembly.
+    /// </summary>
+    public class MultipleTestProcessRunner : AggregatingTestRunner
     {
-        private static readonly string message = "This is my message!";
-        private static readonly string xmlText = string.Format("<error message=\"{0}\" />", message);
+        public MultipleTestProcessRunner(ServiceContext services) : base(services) { }
 
-        [Test]
-        public void CreateWithXmlString()
+        #region AggregatingTestRunner Overrides
+
+        protected override AbstractTestRunner CreateRunner(TestPackage package)
         {
-            TestEngineResult result = new TestEngineResult(xmlText);
-
-            Assert.AreEqual("error", result.ResultType);
-            Assert.AreEqual(xmlText, result.Text);
-            Assert.AreEqual(message, result.Xml.Attributes["message"].Value);
+            return new ProcessRunner(this.Services);
         }
-
-        [Test]
-        public void CreateWithXmlNode()
-        {
-            XmlDocument doc = new XmlDocument();
-            doc.LoadXml(xmlText);
-            TestEngineResult result = new TestEngineResult(doc.FirstChild);
-
-            Assert.AreEqual("error", result.ResultType);
-            // TODO: The following is not very robust. Should use an XML comparison.
-            Assert.AreEqual(xmlText, result.Text);
-            Assert.AreEqual(message, result.Xml.Attributes["message"].Value);
-        }
+        #endregion
     }
 }

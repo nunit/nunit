@@ -44,15 +44,15 @@
     <Compile Include="ITestAgency.cs" />
     <Compile Include="ITestAgent.cs" />
     <Compile Include="ITestEngine.cs" />
+    <Compile Include="ITestEngineResult.cs" />
     <Compile Include="ITestFilter.cs" />
     <Compile Include="ITestEventHandler.cs" />
     <Compile Include="ITestRunner.cs" />
     <Compile Include="ProcessModel.cs" />
     <Compile Include="TestEngineActivator.cs" />
+    <Compile Include="TestEngineError.cs" />
     <Compile Include="TestFilter.cs" />
     <Compile Include="TestPackage.cs" />
-    <Compile Include="TestEngineResult.cs" />
-    <Compile Include="RunTestsResult.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="nunit.engine.api.build" />

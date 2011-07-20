@@ -47,7 +47,7 @@ namespace NUnit.ConsoleRunner
 
         public ResultSummary() { }
 
-        public ResultSummary(TestEngineResult result)
+        public ResultSummary(ITestEngineResult result)
         {
             XmlNode topNode = result.Xml;
 

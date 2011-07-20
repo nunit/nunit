@@ -1,7 +1,7 @@
 ﻿// ***********************************************************************
 // Copyright (c) 2011 Charlie Poole
 //
-// Permission is hereby granted, free of charge, to any person obtainingn
+// Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
 // "Software"), to deal in the Software without restriction, including
 // without limitation the rights to use, copy, modify, merge, publish,
@@ -23,26 +23,34 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Xml;
-using NUnit.Engine.Internal;
 
-namespace NUnit.Engine.Runners
+namespace NUnit.Engine
 {
     /// <summary>
-    /// MultipleTestDomainRunner runs tests using separate
-    /// AppDomains for each assembly.
+    /// Interface implemented by classes that return results from
+    /// the test engine. The result info is represented as XML.
     /// </summary>
-    public class MultipleTestDomainRunner : AggregatingTestRunner
+    public interface ITestEngineResult
     {
-        public MultipleTestDomainRunner(ServiceContext services) : base(services) { }
+        /// <summary>
+        /// Gets a flag indicating whether this result contains any
+        /// general errors, excluding test errors or failures.
+        /// </summary>
+        bool HasErrors { get; }
 
-        #region AggregatingTestRunner Overrides
+        /// <summary>
+        /// Gets a list of errors from the result. These are general
+        /// execution errors and don't include test errors or failures.
+        /// </summary>
+        IList<TestEngineError> Errors { get; }
 
-        protected override AbstractTestRunner CreateRunner(TestPackage package)
-        {
-            return new TestDomainRunner(this.Services);
-        }
-        #endregion
+        /// <summary>
+        /// Gets the XML representing a single test result.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">
+        /// If the result is empty or has multiple XML nodes.
+        /// </exception>
+        XmlNode Xml { get; }
     }
 }

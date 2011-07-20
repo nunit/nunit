@@ -54,10 +54,9 @@
     <Compile Include="Internal\ServerUtilityTests.cs" />
     <Compile Include="Internal\SettingsGroupTests.cs" />
     <Compile Include="Internal\XmlHelperTests.cs" />
-    <Compile Include="Runners\AbstractTestRunnerTests.cs" />
     <Compile Include="RuntimeFrameworkTests.cs" />
     <Compile Include="Services\DomainManagerTests.cs" />
-    <Compile Include="Api\TestEngineResultTests.cs" />
+    <Compile Include="TestEngineResultTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\nunit.engine\nunit.engine-vs2008.csproj">
@@ -71,6 +70,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="nunit.engine.tests.build" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Runners\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

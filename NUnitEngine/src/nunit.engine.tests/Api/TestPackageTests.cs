@@ -39,7 +39,7 @@ namespace NUnit.Engine.Api.Tests
         [Test]
         public void AssemblyPathIsUsedAsFilePath()
         {
-            Assert.AreEqual(Path.GetFullPath("test.dll"), package.FilePath);
+            Assert.AreEqual(Path.GetFullPath("test.dll"), package.FullName);
         }
 
         [Test]
@@ -47,14 +47,7 @@ namespace NUnit.Engine.Api.Tests
         {
             Assert.AreEqual(
                 new string[] { Path.GetFullPath("test.dll") },
-                package.GetAssemblies());
-        }
-
-        [Test]
-        public void NoSubPackagesAreCreated()
-        {
-            Assert.False(package.HasSubPackages);
-            Assert.AreEqual(0, package.SubPackages.Length);
+                package.TestFiles);
         }
 
         [Test]
@@ -77,17 +70,7 @@ namespace NUnit.Engine.Api.Tests
         [Test]
         public void PackageIsAnonymous()
         {
-            Assert.Null(package.FilePath);
-        }
-
-        [Test]
-        public void SubPackagesAreCreatedForEachAssembly()
-        {
-            Assert.True(package.HasSubPackages);
-            Assert.AreEqual(3, package.SubPackages.Length);
-            Assert.AreEqual(Path.GetFullPath("test1.dll"), package.SubPackages[0].FilePath);
-            Assert.AreEqual(Path.GetFullPath("test2.dll"), package.SubPackages[1].FilePath);
-            Assert.AreEqual(Path.GetFullPath("test3.dll"), package.SubPackages[2].FilePath);
+            Assert.Null(package.FullName);
         }
 
         [Test]
@@ -98,7 +81,7 @@ namespace NUnit.Engine.Api.Tests
             Path.GetFullPath("test2.dll"),
             Path.GetFullPath("test3.dll") };
 
-            Assert.AreEqual(expectedAssemblies, package.GetAssemblies());
+            Assert.AreEqual(expectedAssemblies, package.TestFiles);
         }
     }
 }

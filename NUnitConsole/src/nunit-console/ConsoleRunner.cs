@@ -90,7 +90,7 @@ namespace NUnit.ConsoleRunner
 
             TestFilter testFilter = CreateTestFilter(options);
 
-			TestEngineResult engineResult = null;
+			ITestEngineResult engineResult = null;
 
             // Save things that might be messed up by a bad test
 			TextWriter savedOut = Console.Out;
@@ -123,40 +123,34 @@ namespace NUnit.ConsoleRunner
 
             int returnCode = UNEXPECTED_ERROR;
 
-            switch (engineResult.ResultType)
+            if (engineResult.HasErrors)
+                DisplayErrorMessages(engineResult);
+            else
             {
-                case "error":
-                    DisplayErrorMessages(engineResult.Xml);
-                    break;
+                string xmlOutput = CreateXmlOutput(engineResult);
 
-                case "test-suite":
-                default:
-                    string xmlOutput = CreateXmlOutput(engineResult);
+                ResultReporter reporter = new ResultReporter(engineResult);
+                reporter.ReportResults();
 
-                    ResultReporter reporter = new ResultReporter(engineResult);
-                    reporter.ReportResults();
+                if (!options.noxml)
+                {
+                    // Write xml output here
+                    string xmlResultFile = options.xmlPath == null || options.xmlPath == string.Empty
+                        ? "TestResult.xml" : options.xmlPath;
 
-                    if (!options.noxml)
+                    using (StreamWriter writer = new StreamWriter(Path.Combine(workDirectory, xmlResultFile)))
                     {
-                        // Write xml output here
-                        string xmlResultFile = options.xmlPath == null || options.xmlPath == string.Empty
-                            ? "TestResult.xml" : options.xmlPath;
-
-                        using (StreamWriter writer = new StreamWriter(Path.Combine(workDirectory, xmlResultFile)))
-                        {
-                            writer.Write(xmlOutput);
-                        }
+                        writer.Write(xmlOutput);
                     }
+                }
 
-                    returnCode = reporter.Summary.ErrorsAndFailures;
+                returnCode = reporter.Summary.ErrorsAndFailures;
 
-                    //if ( collector.HasExceptions )
-                    //{
-                    //    collector.WriteExceptions();
-                    //    returnCode = UNEXPECTED_ERROR;
-                    //}
-
-                    break;
+                //if ( collector.HasExceptions )
+                //{
+                //    collector.WriteExceptions();
+                //    returnCode = UNEXPECTED_ERROR;
+                //}
             }
 
             return returnCode;
@@ -217,34 +211,29 @@ namespace NUnit.ConsoleRunner
         // This is public static for ease of testing
         public static TestPackage MakeTestPackage( ConsoleOptions options )
         {
-            TestPackage package = new TestPackage();
+            TestPackage package = options.InputFiles.Length == 1
+                ? new TestPackage(options.InputFiles[0])
+                : new TestPackage(options.InputFiles);
 
-            foreach (string testfile in options.InputFiles)
-            {
-                TestPackage subpackage = new TestPackage(testfile);
+            if (options.processModel != ProcessModel.Default)
+                package.Settings["ProcessModel"] = options.processModel;
 
-                package.Add(subpackage);
+            if (options.domainUsage != DomainUsage.Default)
+                package.Settings["DomainUsage"] = options.domainUsage;
 
-                if (options.processModel != ProcessModel.Default)
-                    subpackage.Settings["ProcessModel"] = options.processModel;
+            if (options.framework != null)
+                package.Settings["RuntimeFramework"] = options.framework;
 
-                if (options.domainUsage != DomainUsage.Default)
-                    subpackage.Settings["DomainUsage"] = options.domainUsage;
+            if (options.defaultTimeout >= 0)
+                package.Settings["DefaultTimeout"] = options.defaultTimeout;
 
-                if (options.framework != null)
-                    subpackage.Settings["RuntimeFramework"] = options.framework;
+            if (options.internalTraceLevel != InternalTraceLevel.Default)
+                package.Settings["InternalTraceLevel"] = options.internalTraceLevel;
 
-                if (options.defaultTimeout >= 0)
-                    subpackage.Settings["DefaultTimeout"] = options.defaultTimeout;
-
-                if (options.internalTraceLevel != InternalTraceLevel.Default)
-                    subpackage.Settings["InternalTraceLevel"] = options.internalTraceLevel;
-
-                if (options.activeConfig != null)
-                    subpackage.Settings["ActiveConfig"] = options.activeConfig;
-            }
-
-            return package.SubPackages.Length == 1 ? package.SubPackages[0] : package;
+            if (options.activeConfig != null)
+                package.Settings["ActiveConfig"] = options.activeConfig;
+            
+            return package;
 		}
 
         // This is public static for ease of testing
@@ -283,33 +272,30 @@ namespace NUnit.ConsoleRunner
             return testFilter;
         }
 
-        private static string CreateXmlOutput(TestEngineResult result)
+        private static string CreateXmlOutput(ITestEngineResult result)
         {
             StringBuilder builder = new StringBuilder();
 
             XmlTextWriter writer = new XmlTextWriter(new StringWriter(builder));
             writer.Formatting = Formatting.Indented;
+
             result.Xml.WriteTo(writer);
             writer.Close();
 
             return builder.ToString();
         }
 
-        private static void DisplayErrorMessages(XmlNode errorReport)
+        private static void DisplayErrorMessages(ITestEngineResult errorReport)
         {
-            XmlAttribute message = errorReport.Attributes["message"];
-            XmlAttribute stackTrace = errorReport.Attributes["stackTrace"];
-
-            if (message != null)
+            foreach (TestEngineError error in errorReport.Errors)
             {
-                Console.WriteLine("Load failure: {0}", message == null ? "" : message.Value);
-                if (stackTrace != null)
-                    Console.WriteLine(stackTrace.Value);
+                if (error.Message != null)
+                {
+                    Console.WriteLine("Load failure: {0}", error.Message);
+                    if (error.StackTrace != null)
+                        Console.WriteLine(error.StackTrace);
+                }
             }
-
-            foreach (XmlNode child in errorReport.ChildNodes)
-                if (child.Name == "error")
-                    DisplayErrorMessages(child);
         }
         
         #endregion

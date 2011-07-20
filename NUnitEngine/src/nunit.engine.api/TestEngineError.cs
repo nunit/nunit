@@ -21,35 +21,40 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
-using System.Collections.Generic;
-using System.Xml;
-using NUnit.Engine.Internal;
-using NUnit.Framework;
-
-namespace NUnit.Engine.Runners.Tests
+namespace NUnit.Engine
 {
-    public class AbstractTestRunnerTests
+    /// <summary>
+    /// TestEngineError represents an error that occured in 
+    /// executing an API method.
+    /// </summary>
+    public class TestEngineError
     {
-        [Test] // TODO: This needs more thorough testing
-        public void TestResultsCanBeCombined()
+        /// <summary>
+        /// Construct a TestEngineError from a message
+        /// </summary>
+        /// <param name="message">The error message</param>
+        public TestEngineError(string message)
+            : this(message, null) { }
+
+        /// <summary>
+        /// Construct a TestEngineError from a message and stack trace.
+        /// </summary>
+        /// <param name="message">The error message</param>
+        /// <param name="stackTrace">A stack trace, or null</param>
+        public TestEngineError(string message, string stackTrace)
         {
-            var result1 = new TestEngineResult("<test-assembly result=\"Passed\" passed=\"23\"/>");
-            var result2 = new TestEngineResult("<test-assembly result=\"Passed\" passed=\"31\"/>");
-
-            var results = new List<TestEngineResult>();
-            results.Add(result1);
-            results.Add(result2);
-
-            var startTime = new DateTime(2011, 07, 04, 12, 34, 56);
-
-            XmlNode combined = AbstractTestRunner.MakeTestRunResult(new TestPackage("dummy.dll"), startTime, results).Xml;
-
-            Assert.That(combined.Name, Is.EqualTo("test-run"));
-            Assert.That(combined.Attributes["result"].Value, Is.EqualTo("Passed"));
-            Assert.That(combined.Attributes["passed"].Value, Is.EqualTo("54"));
-            Assert.That(combined.Attributes["run-date"].Value, Is.EqualTo("2011-07-04"));
-            Assert.That(combined.Attributes["start-time"].Value, Is.EqualTo("12:34:56"));
+            this.Message = message;
+            this.StackTrace = stackTrace;
         }
+
+        /// <summary>
+        /// Gets the error message from an error
+        /// </summary>
+        public string Message { get; private set; }
+
+        /// <summary>
+        /// Gets the stack trace for an error, if present
+        /// </summary>
+        public string StackTrace { get; private set; }
     }
 }

@@ -42,6 +42,7 @@ namespace NUnit.Engine.Runners
 	{
         //static Logger log = InternalTrace.GetLogger(typeof(ProcessRunner));
 
+        private TestPackage package;
         private ServiceContext services;
         private ITestAgent agent;
         private ITestRunner remoteRunner;
@@ -71,7 +72,7 @@ namespace NUnit.Engine.Runners
 
         #endregion
 
-        #region ITestRunner Members
+        #region AbstractTestRunner Overrides
 
         /// <summary>
         /// Load a TestPackage for possible execution
@@ -83,7 +84,7 @@ namespace NUnit.Engine.Runners
             //log.Info("Loading " + package.Name);
 			Unload();
 
-            this.TestPackage = package;
+            this.package = package;
 
             this.runtimeFramework = package.GetSetting("RuntimeFramework", RuntimeFramework.CurrentFramework);
 
@@ -109,8 +110,8 @@ namespace NUnit.Engine.Runners
 					this.remoteRunner = agent.CreateRunner();
 
                 var result = this.remoteRunner.Load(package);
-                loaded = !result.IsError;
-                return result;
+                loaded = !result.HasErrors;
+                return result as TestEngineResult;
 			}
 			finally
 			{
@@ -120,8 +121,8 @@ namespace NUnit.Engine.Runners
 		}
 
         /// <summary>
-        /// Unload any loaded TestPackage. If none is loaded,
-        /// the call is ignored.
+        /// Unload any loaded TestPackage and clear
+        /// the reference to the remote runner.
         /// </summary>
         public override void Unload()
         {
@@ -140,19 +141,10 @@ namespace NUnit.Engine.Runners
         /// <returns>A TestResult giving the result of the test execution</returns>
         public override TestEngineResult Run(ITestEventHandler listener, ITestFilter filter)
         {
-            return this.remoteRunner.Run(listener, filter);
+            return (TestEngineResult)this.remoteRunner.Run(listener, filter);
         }
 
-        public override TestEngineResult[] RunDirect(ITestEventHandler listener, ITestFilter filter)
-        {
-            throw new NotImplementedException();
-        }
-
-        #endregion
-
-        #region IDisposable Members
-
-        public void Dispose()
+        public override void Dispose()
 		{
             if (this.agent != null)
             {
