@@ -109,9 +109,9 @@ namespace NUnit.Engine.Runners
 				if (this.remoteRunner == null)
 					this.remoteRunner = agent.CreateRunner();
 
-                var result = this.remoteRunner.Load(package);
+                ITestEngineResult result = this.remoteRunner.Load(package);
                 loaded = !result.HasErrors;
-                return result as TestEngineResult;
+                return result as TestEngineResult; // TODO: Remove need for this cast
 			}
 			finally
 			{

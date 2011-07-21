@@ -61,13 +61,13 @@ namespace NUnit.Engine.Runners
         public override TestEngineResult Load(TestPackage package)
         {
             this.package = package;
-            var loadResult = new TestEngineResult();
+            TestEngineResult loadResult = new TestEngineResult();
 
             foreach (string testFile in package.TestFiles)
             {
                 // TODO: Should get the appropriate driver for the file
                 IFrameworkDriver driver = new NUnitFrameworkDriver(TestDomain);
-                var driverResult = driver.Load(testFile, package.Settings);
+                TestEngineResult driverResult = driver.Load(testFile, package.Settings);
 
                 foreach (XmlNode node in driverResult.XmlNodes)
                     loadResult.Add(node);
@@ -90,7 +90,7 @@ namespace NUnit.Engine.Runners
         /// </returns>
         public override TestEngineResult Run(ITestEventHandler listener, ITestFilter filter)
         {
-            var results = new List<TestEngineResult>();
+            List<TestEngineResult> results = new List<TestEngineResult>();
 
             foreach (NUnitFrameworkDriver driver in drivers)
                 results.Add(driver.Run(this.package.Settings, listener));
