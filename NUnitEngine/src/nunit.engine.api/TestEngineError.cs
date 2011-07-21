@@ -29,6 +29,9 @@ namespace NUnit.Engine
     /// </summary>
     public class TestEngineError
     {
+        private string message;
+        private string stackTrace;
+
         /// <summary>
         /// Construct a TestEngineError from a message
         /// </summary>
@@ -43,18 +46,24 @@ namespace NUnit.Engine
         /// <param name="stackTrace">A stack trace, or null</param>
         public TestEngineError(string message, string stackTrace)
         {
-            this.Message = message;
-            this.StackTrace = stackTrace;
+            this.message = message;
+            this.stackTrace = stackTrace;
         }
 
         /// <summary>
         /// Gets the error message from an error
         /// </summary>
-        public string Message { get; private set; }
+        public string Message
+        {
+            get { return message; }
+        }
 
         /// <summary>
         /// Gets the stack trace for an error, if present
         /// </summary>
-        public string StackTrace { get; private set; }
+        public string StackTrace 
+        {
+            get { return stackTrace; }
+        }
     }
 }

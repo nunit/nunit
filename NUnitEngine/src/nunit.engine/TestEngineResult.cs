@@ -54,7 +54,7 @@ namespace NUnit.Engine
         /// <returns>A TestEngineResult wrapping the results.</returns>
         public static TestEngineResult Wrap(string elementName, IList<TestEngineResult> results)
         {
-            var resultNodes = new List<XmlNode>();
+            List<XmlNode> resultNodes = new List<XmlNode>();
 
             foreach (TestEngineResult result in results)
                 foreach (XmlNode node in result.XmlNodes)
@@ -64,7 +64,7 @@ namespace NUnit.Engine
                     else
                         resultNodes.Add(node);
 
-            var wrapperNode = XmlHelper.CreateTopLevelElement(elementName);
+            XmlNode wrapperNode = XmlHelper.CreateTopLevelElement(elementName);
             foreach (XmlNode node in resultNodes)
             {
                 XmlNode import = wrapperNode.OwnerDocument.ImportNode(node, true);
@@ -83,11 +83,11 @@ namespace NUnit.Engine
         /// <returns>A TestEngineResult wrapping the results.</returns>
         public static TestEngineResult Aggregate(string elementName, TestPackage package, IList<TestEngineResult> results)
         {
-            var resultNodes = new List<XmlNode>();
-            foreach (var result in results)
+            List<XmlNode> resultNodes = new List<XmlNode>();
+            foreach (TestEngineResult result in results)
                 resultNodes.AddRange(result.XmlNodes);
 
-            var combinedNode = Aggregate(elementName, package, resultNodes);
+            XmlNode combinedNode = Aggregate(elementName, package, resultNodes);
 
             return new TestEngineResult(combinedNode);
         }
@@ -114,7 +114,7 @@ namespace NUnit.Engine
             int skipped = 0;
             int asserts = 0;
 
-            foreach (var node in nodes)
+            foreach (XmlNode node in nodes)
             {
                 switch (XmlHelper.GetAttribute(node, "result"))
                 {
@@ -222,7 +222,7 @@ namespace NUnit.Engine
         {
             get 
             {
-                var errors = new List<TestEngineError>();
+                List<TestEngineError> errors = new List<TestEngineError>();
 
                 foreach (XmlNode errorNode in Xml.SelectNodes("error"))
                 {
