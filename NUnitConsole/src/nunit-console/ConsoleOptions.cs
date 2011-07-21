@@ -67,42 +67,42 @@ namespace NUnit.ConsoleRunner
 
             // fixture
 
-            this.Add("run=", "Names of the tests to run", 
-                v => runList.Add(RequiredValue(v, "--run"))); 
+            this.Add("run=", "(NYI)Name of a tests to run. This option may be repeated.",
+                v => runList.Add(RequiredValue(v, "--run")));
 
             this.Add("config=", "Project configuration (e.g.: Debug) to load", 
                 v => activeConfig = RequiredValue(v, "--config"));
 
-            this.Add("xml=", "Name of XML output file (Default: TestResult.xml)", 
+            this.Add("xml=", "Name and optional format of an XML output file.\nFormats:\n  --xml:filepath\n  --xml:filepath;format=[nunit3|nunit2]\nThe default format is nunit3. If no option is specified, --xml:TestResult.xml is assumed.\nThis option may be repeated.", 
                 v => xmlOutputSpecifications.Add(new XmlOutputSpecification(RequiredValue(v, "--xml"))));
 
             // xmlConsole
 
-            this.Add("noxml", "Suppress XML output", 
+            this.Add("noxml", "Suppress all XML output, ignoring any --xml options", 
                 v => noxml = v != null);
 
-            this.Add("output|out=", "File to receive test output",
+            this.Add("output|out=", "File to receive output sent to stdout by the test",
                 v => outputPath = RequiredValue(v, "--output"));
 
-            this.Add("err=", "File to receive test error output", 
+            this.Add("err=", "File to receive output sent to stderr by the test", 
                 v => errorPath = RequiredValue(v, "--err"));
 
             this.Add("work=", "Work directory for output files", 
                 v => workDir = RequiredValue(v, "--work"));
 
-            this.Add("labels", "Label each test by name in the output", 
+            this.Add("labels", "(NYI) Label each test by name in the output", 
                 v => labels = v != null);
 
-            this.Add("trace=", "Set internal trace level (NYI)\nValues: Off, Error, Warning, Info, Verbose",
+            this.Add("trace=", "(NYI) Set internal trace level\nValues: Off, Error, Warning, Info, Verbose",
                 (InternalTraceLevel v) => internalTraceLevel = v);
 
-            this.Add("include=", "Comma-separated list of categories to include", 
+            this.Add("include=", "(NYI) Comma-separated list of categories to include", 
                 v => include = RequiredValue(v, "--include"));
 
-            this.Add("exclude=", "Comma-separated list of categories to exclude", 
+            this.Add("exclude=", "(NYI) Comma-separated list of categories to exclude", 
                 v => exclude = RequiredValue(v, "--exclude"));
 
-            this.Add("framework=", "Framework version to be used for tests",
+            this.Add("framework=", "(NYI) Framework version to be used for tests",
                 v => framework = v);
 
             this.Add("process=", "Process model for tests\nValues: Single, Separate, Multiple",
@@ -114,7 +114,7 @@ namespace NUnit.ConsoleRunner
             // noshadow
             // nothread
 
-            this.Add("timeout=", "Set timeout for each test case in milliseconds",
+            this.Add("timeout=", "(NYI) Set timeout for each test case in milliseconds",
                 (int v) => defaultTimeout = v);
             
             this.Add("wait", "Wait for input before closing console window", 
