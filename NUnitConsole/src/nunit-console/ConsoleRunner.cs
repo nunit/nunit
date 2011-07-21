@@ -85,7 +85,7 @@ namespace NUnit.ConsoleRunner
             // TODO: Incorporate this in EventCollector?
             RedirectOutputAsRequested();
 
-            TestEventHandler eventHandler = new TestEventHandler( options, outWriter, errorWriter );
+            TestEventHandler eventHandler = new TestEventHandler(options, outWriter, errorWriter);
 
 
             TestFilter testFilter = CreateTestFilter(options);
@@ -127,8 +127,6 @@ namespace NUnit.ConsoleRunner
                 DisplayErrorMessages(engineResult);
             else
             {
-                string xmlOutput = CreateXmlOutput(engineResult);
-
                 ResultReporter reporter = new ResultReporter(engineResult.Xml);
                 reporter.ReportResults();
 

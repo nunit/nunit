@@ -2,7 +2,10 @@
 <project name="NUnit-Console.Tests" default="build">
 
   <patternset id="source-files">
-    <include name="*.cs" />
+    <include name="Properties/AssemblyInfo.cs" />
+    <include name="CommandLineTests.cs" />
+    <include name="MakeTestPackageTests.cs" />
+    <include name="XmlOutputSpecificationTests.cs"/>
   </patternset>
 
   <target name="build">

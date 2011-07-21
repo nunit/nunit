@@ -36,10 +36,10 @@ namespace NUnit.Engine.Tests
 
         private List<TestEngineResult> MakeResultList()
         {
-            var result1 = new TestEngineResult(resultText1);
-            var result2 = new TestEngineResult(resultText2);
+            TestEngineResult result1 = new TestEngineResult(resultText1);
+            TestEngineResult result2 = new TestEngineResult(resultText2);
 
-            var results = new List<TestEngineResult>();
+            List<TestEngineResult> results = new List<TestEngineResult>();
             results.Add(result1);
             results.Add(result2);
 
@@ -49,7 +49,7 @@ namespace NUnit.Engine.Tests
         [Test]
         public void CanCreateFromXmlString()
         {
-            var result = new TestEngineResult(resultText1);
+            TestEngineResult result = new TestEngineResult(resultText1);
             Assert.True(result.IsSingle);
             Assert.That(result.Xml.Name, Is.EqualTo("test-assembly"));
         }
@@ -57,7 +57,7 @@ namespace NUnit.Engine.Tests
         [Test]
         public void CanCreateFromXmlNode()
         {
-            var node = XmlHelper.CreateTopLevelElement("test-assembly");
+            XmlNode node = XmlHelper.CreateTopLevelElement("test-assembly");
             XmlHelper.AddAttribute(node, "result", "Passed");
             XmlHelper.AddAttribute(node, "total", "23");
             XmlHelper.AddAttribute(node, "passed", "23");
@@ -66,7 +66,7 @@ namespace NUnit.Engine.Tests
             XmlHelper.AddAttribute(node, "skipped", "0");
             XmlHelper.AddAttribute(node, "asserts", "40");
 
-            var result = new TestEngineResult(node);
+            TestEngineResult result = new TestEngineResult(node);
             Assert.True(result.IsSingle);
             Assert.That(result.Xml.OuterXml, Is.EqualTo(resultText1));
         }
@@ -74,7 +74,7 @@ namespace NUnit.Engine.Tests
         [Test]
         public void TestResultsCanBeWrapped()
         {
-            var wrapped = TestEngineResult.Wrap("test-wrapper", MakeResultList());
+            TestEngineResult wrapped = TestEngineResult.Wrap("test-wrapper", MakeResultList());
 
             Assert.True(wrapped.IsSingle);
             Assert.That(wrapped.Xml.Name, Is.EqualTo("test-wrapper"));
@@ -85,12 +85,12 @@ namespace NUnit.Engine.Tests
         [Test]
         public void TestResultsCanBeAggregated()
         {
-            var startTime = new DateTime(2011, 07, 04, 12, 34, 56);
+            DateTime startTime = new DateTime(2011, 07, 04, 12, 34, 56);
 
-            var combined = TestEngineResult.Aggregate("test-run", new TestPackage("dummy.dll"), MakeResultList());
+            TestEngineResult combined = TestEngineResult.Aggregate("test-run", new TestPackage("dummy.dll"), MakeResultList());
             Assert.That(combined.IsSingle);
 
-            var combinedNode = combined.Xml;
+            XmlNode combinedNode = combined.Xml;
 
             Assert.That(combinedNode.Name, Is.EqualTo("test-run"));
             Assert.That(combinedNode.Attributes["result"].Value, Is.EqualTo("Failed"));
@@ -108,7 +108,7 @@ namespace NUnit.Engine.Tests
         [Test]
         public void XmlNodesCanBeAggregated()
         {
-            var startTime = new DateTime(2011, 07, 04, 12, 34, 56);
+            DateTime startTime = new DateTime(2011, 07, 04, 12, 34, 56);
 
             XmlDocument doc1 = new XmlDocument();
             doc1.LoadXml(resultText1);
@@ -116,7 +116,7 @@ namespace NUnit.Engine.Tests
             XmlDocument doc2 = new XmlDocument();
             doc2.LoadXml(resultText2);
 
-            var nodes = new List<XmlNode>();
+            List<XmlNode> nodes = new List<XmlNode>();
             nodes.Add(doc1.FirstChild);
             nodes.Add(doc2.FirstChild);
             

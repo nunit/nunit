@@ -100,7 +100,7 @@ namespace NUnit.Engine
         {
             using (ITestRunner runner = GetRunner())
             {
-                var loadResult = runner.Load(package);
+                ITestEngineResult loadResult = runner.Load(package);
 
                 return loadResult.HasErrors
                     ? loadResult

@@ -46,7 +46,7 @@ namespace NUnit.Engine.Runners
                 packages.Add(subPackage);
             }
 
-            var results = new List<TestEngineResult>();
+            List<TestEngineResult> results = new List<TestEngineResult>();
 
             foreach (TestPackage subPackage in packages)
             {
@@ -82,7 +82,7 @@ namespace NUnit.Engine.Runners
         /// </returns>
         public override TestEngineResult Run(ITestEventHandler listener, ITestFilter filter)
         {
-            var results = new List<TestEngineResult>();
+            List<TestEngineResult> results = new List<TestEngineResult>();
 
             foreach (AbstractTestRunner runner in runners)
                 results.Add(runner.Run(listener, filter));

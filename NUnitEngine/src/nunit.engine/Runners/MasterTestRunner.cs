@@ -28,7 +28,7 @@ namespace NUnit.Engine.Runners
         /// <returns>A TestEngineResult with a single top-level &lt;test-run&gt; element.</returns>
         public static TestEngineResult MakeTestRunResult(TestPackage package, DateTime startTime, TestEngineResult result)
         {
-            var combinedNode = TestEngineResult.Aggregate("test-run", package, result.XmlNodes);
+            XmlNode combinedNode = TestEngineResult.Aggregate("test-run", package, result.XmlNodes);
             InsertEnvironmentElement(combinedNode);
 
             //if (result.Xml.Name == "test-wrapper")
