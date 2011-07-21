@@ -97,6 +97,9 @@ namespace NUnit.ConsoleRunner
                 }
             }
 
+            if (!Directory.Exists(options.WorkDirectory))
+                Directory.CreateDirectory(options.WorkDirectory);
+
             try
             {
                 return new ConsoleRunner(options).Execute();
@@ -169,9 +172,9 @@ namespace NUnit.ConsoleRunner
             Console.WriteLine();
             Console.WriteLine("Runs a set of NUnit tests from the console.");
             Console.WriteLine();
-            //Console.WriteLine("You may specify one or more assemblies or a single");
-            //Console.WriteLine("project file of type .nunit.");
-            //Console.WriteLine();
+            Console.WriteLine("InputFiles:");
+            Console.WriteLine("      One or more assemblies or test projects of a recognized type.");
+            Console.WriteLine();
             Console.WriteLine("Options:");
             options.WriteOptionDescriptions(Console.Out);
             Console.WriteLine();
