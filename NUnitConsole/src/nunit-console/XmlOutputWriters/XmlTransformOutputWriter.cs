@@ -21,23 +21,39 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System.IO;
 using System.Text;
 using System.Xml;
-using NUnit.Engine;
+using System.Xml.Xsl;
 
 namespace NUnit.ConsoleRunner
 {
-    public class NUnit3XmlOutputWriter
+    public class XmlTransformOutputWriter : IXmlOutputWriter
     {
-        public void WriteXmlOutput(XmlNode resultNode, string outputPath)
+        private string xsltFile;
+        private XslCompiledTransform transform = new XslCompiledTransform();
+
+        public XmlTransformOutputWriter(string xsltFile)
         {
-            using (XmlTextWriter writer = new XmlTextWriter(outputPath, Encoding.Default))
+            this.xsltFile = xsltFile;
+            transform.Load(xsltFile);
+        }
+
+        public void WriteXmlOutput(XmlNode result, TextWriter writer)
+        {
+            using (XmlTextWriter xmlWriter = new XmlTextWriter(writer))
             {
-                var doc = resultNode.OwnerDocument;
-                doc.InsertAfter(doc.CreateXmlDeclaration("1.0", "utf-8", "no"), null);
-                writer.Formatting = Formatting.Indented;
-                doc.WriteTo(writer);
-                writer.Close();
+                xmlWriter.Formatting = Formatting.Indented;
+                transform.Transform(result, xmlWriter);
+            }
+        }
+
+        public void WriteXmlOutput(XmlNode result, string outputPath)
+        {
+            using (XmlTextWriter xmlWriter = new XmlTextWriter(outputPath, Encoding.Default))
+            {
+                xmlWriter.Formatting = Formatting.Indented;
+                transform.Transform(result, xmlWriter);
             }
         }
     }
