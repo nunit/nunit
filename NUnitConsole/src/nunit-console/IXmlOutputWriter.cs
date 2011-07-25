@@ -21,51 +21,15 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
 using System.IO;
-using System.Text;
 using System.Xml;
-using NUnit.Engine;
 
 namespace NUnit.ConsoleRunner
 {
-    public class XmlOutputManager
+    public interface IXmlOutputWriter
     {
-        private XmlNode result;
-        private string workDirectory;
+        void WriteXmlOutput(XmlNode resultNode, string outputPath);
 
-        public XmlOutputManager(XmlNode result, string workDirectory)
-        {
-            this.result = result;
-            this.workDirectory = workDirectory;
-        }
-
-        public void WriteXmlOutput(XmlOutputSpecification spec)
-        {
-            string outputPath = Path.Combine(workDirectory, spec.OutputPath);
-            IXmlOutputWriter outputWriter = null;
-
-            switch (spec.Format)
-            {
-                case "nunit3":
-                    outputWriter = new NUnit3XmlOutputWriter();
-                    break;
-
-                case "nunit2":
-                    outputWriter = new NUnit2XmlOutputWriter();
-                    break;
-
-                case "user":
-                    outputWriter = new XmlTransformOutputWriter(spec.Transform);
-                    break;
-
-                default:
-                    throw new ArgumentException(
-                        string.Format("Invalid XML output format '{0}'", spec.Format),
-                        "spec");
-            }
-
-            outputWriter.WriteXmlOutput(result, outputPath);
-        }
+        void WriteXmlOutput(XmlNode resultNode, TextWriter writer);
     }
 }

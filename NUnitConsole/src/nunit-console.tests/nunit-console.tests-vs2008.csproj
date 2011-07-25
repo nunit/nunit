@@ -42,6 +42,10 @@
     <Compile Include="SchemaValidator.cs" />
     <Compile Include="XmlOutputSpecificationTests.cs" />
     <Compile Include="NUnit2XmlValidationTests.cs" />
+    <Compile Include="XmlOutputTest.cs" />
+    <Compile Include="XmlTransformOutputWriterTests.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\NUnitEngine\src\nunit.engine.api\nunit.engine.api-vs2008.csproj">
@@ -59,6 +63,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="nunit-console.tests.build" />
+    <Content Include="TextSummary.xslt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="NUnit2TestResult.xsd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

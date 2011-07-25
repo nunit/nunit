@@ -1,3 +1,4 @@
+﻿using System;
 // ***********************************************************************
 // Copyright (c) 2011 Charlie Poole
 //
@@ -21,25 +22,19 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text;
-using System.Xml;
-using System.Xml.Schema;
 using NUnit.Engine;
 using NUnit.Framework;
 
 namespace NUnit.ConsoleRunner.Tests
 {
-	[TestFixture]
-	public class NUnit2XmlValidationTests : XmlOutputTest
-	{
+    public class XmlTransformOutputWriterTests : XmlOutputTest
+    {
         private ITestEngineResult result;
-        private SchemaValidator validator;
-
-        private static readonly string schemaFile = "NUnit2TestResult.xsd";
+        private string xsltFile;
 
         [TestFixtureSetUp]
         public void Initialize()
@@ -47,7 +42,7 @@ namespace NUnit.ConsoleRunner.Tests
             Uri uri = new Uri(Assembly.GetExecutingAssembly().CodeBase);
             string dir = Path.GetDirectoryName(uri.LocalPath);
 
-            this.validator = new SchemaValidator(Path.Combine(dir, schemaFile));
+            this.xsltFile = Path.Combine(dir, "TextSummary.xslt");
 
             this.result = TestEngine.Run(
                 new TestPackage(Path.Combine(dir, "mock-assembly.dll")), 
@@ -55,41 +50,23 @@ namespace NUnit.ConsoleRunner.Tests
                 TestFilter.Empty);
         }
 
-		[Test,SetCulture("")]
-		public void TestSchemaValidatorInvariantCulture()
-		{
-			runSchemaValidatorTest();
-		}
-
-		[Test,SetCulture("en-US")]
-		public void TestSchemaValidatorUnitedStatesCulture()
-		{
-			runSchemaValidatorTest();
-		}
-
-		[Test,SetCulture("fr-FR")]
-		public void TestSchemaValidatorFrenchCulture()
-		{
-			runSchemaValidatorTest();
-        }
-
-        #region Helper Methods
-
-        private void runSchemaValidatorTest()
+        [Test]
+        public void SummaryTransformTest()
         {
-            StringBuilder output = new StringBuilder();
+            StringWriter writer = new StringWriter();
+            new XmlTransformOutputWriter(xsltFile).WriteXmlOutput(result.Xml, writer);
 
-            new NUnit2XmlOutputWriter().WriteXmlOutput(this.result.Xml, new StringWriter(output));
+            string summary = string.Format(
+                "Tests Run: {0}, Passed: {1}, Failed: {2}, Inconclusive: {3}, Skipped: {4}",
+                result.Xml.Attributes["total"].Value,
+                result.Xml.Attributes["passed"].Value,
+                result.Xml.Attributes["failed"].Value,
+                result.Xml.Attributes["inconclusive"].Value,
+                result.Xml.Attributes["skipped"].Value);
 
-            if (!validator.Validate(new StringReader(output.ToString())))
-            {
-                StringBuilder errors = new StringBuilder("Validation Errors:" + Environment.NewLine);
-                foreach (string error in validator.Errors)
-                    errors.Append("    " + error + Environment.NewLine);
-                Assert.Fail(errors.ToString());
-            }
+            string output = writer.GetStringBuilder().ToString();
+    
+            Assert.That(output, Contains.Substring(summary));
         }
-
-        #endregion
     }
 }

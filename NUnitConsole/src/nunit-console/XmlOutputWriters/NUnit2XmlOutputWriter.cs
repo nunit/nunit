@@ -27,12 +27,14 @@ using System.Globalization;
 using System.Reflection;
 using System.Text;
 using System.Xml;
+using System.IO;
 
 namespace NUnit.ConsoleRunner
 {
-    public class NUnit2XmlOutputWriter
+    public class NUnit2XmlOutputWriter : IXmlOutputWriter
     {
-        private XmlTextWriter xmlWriter;
+        private XmlWriter xmlWriter;
+
         private static Dictionary<string, string> suiteTypes = new Dictionary<string, string>();
         private static Dictionary<string, string> resultStates = new Dictionary<string, string>();
 
@@ -62,9 +64,26 @@ namespace NUnit.ConsoleRunner
 
         public void WriteXmlOutput(XmlNode result, string outputPath)
         {
-            this.xmlWriter = new XmlTextWriter(outputPath, Encoding.Default);
+            using (StreamWriter writer = new StreamWriter(outputPath, false, Encoding.UTF8))
+            {
+                WriteXmlOutput(result, writer);
+            }
+        }
 
-            InitializeXmlFile(result, outputPath);
+        public void WriteXmlOutput(XmlNode result, TextWriter writer)
+        {
+            using (XmlTextWriter xmlWriter = new XmlTextWriter(writer))
+            {
+                xmlWriter.Formatting = Formatting.Indented;
+                WriteXmlOutput(result, xmlWriter);
+            }
+        }
+
+        private void WriteXmlOutput(XmlNode result, XmlWriter xmlWriter)
+        {
+            this.xmlWriter = xmlWriter;
+
+            InitializeXmlFile(result);
 
             foreach (XmlNode child in result.ChildNodes)
                 if (child.Name.StartsWith("test-"))
@@ -73,11 +92,10 @@ namespace NUnit.ConsoleRunner
             TerminateXmlFile();
         }
 
-        private void InitializeXmlFile(XmlNode result, string outputPath)
+        private void InitializeXmlFile(XmlNode result)
         {
             ResultSummary summaryResults = new ResultSummary(result);
 
-            xmlWriter.Formatting = Formatting.Indented;
             xmlWriter.WriteStartDocument(false);
             xmlWriter.WriteComment("This file represents the results of running a test suite");
 

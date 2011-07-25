@@ -29,7 +29,7 @@ namespace NUnit.Engine
     /// <summary>
     /// ITestEngine represents an instance of the test engine.
     /// </summary>
-    public interface ITestEngine
+    public interface ITestEngine : IDisposable
     {
         /// <summary>
         /// Create and initialize the standard set of services

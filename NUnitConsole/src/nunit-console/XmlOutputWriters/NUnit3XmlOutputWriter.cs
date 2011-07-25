@@ -21,51 +21,31 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
-using System.IO;
 using System.Text;
 using System.Xml;
 using NUnit.Engine;
+using System.IO;
 
 namespace NUnit.ConsoleRunner
 {
-    public class XmlOutputManager
+    public class NUnit3XmlOutputWriter : IXmlOutputWriter
     {
-        private XmlNode result;
-        private string workDirectory;
-
-        public XmlOutputManager(XmlNode result, string workDirectory)
+        public void WriteXmlOutput(XmlNode resultNode, string outputPath)
         {
-            this.result = result;
-            this.workDirectory = workDirectory;
+            using (StreamWriter writer = new StreamWriter(outputPath, false, Encoding.UTF8))
+            {
+                WriteXmlOutput(resultNode, writer);
+            }
         }
 
-        public void WriteXmlOutput(XmlOutputSpecification spec)
+        public void WriteXmlOutput(XmlNode resultNode, TextWriter writer)
         {
-            string outputPath = Path.Combine(workDirectory, spec.OutputPath);
-            IXmlOutputWriter outputWriter = null;
-
-            switch (spec.Format)
+            using (XmlTextWriter xmlWriter = new XmlTextWriter(writer))
             {
-                case "nunit3":
-                    outputWriter = new NUnit3XmlOutputWriter();
-                    break;
-
-                case "nunit2":
-                    outputWriter = new NUnit2XmlOutputWriter();
-                    break;
-
-                case "user":
-                    outputWriter = new XmlTransformOutputWriter(spec.Transform);
-                    break;
-
-                default:
-                    throw new ArgumentException(
-                        string.Format("Invalid XML output format '{0}'", spec.Format),
-                        "spec");
+                xmlWriter.Formatting = Formatting.Indented;
+                xmlWriter.WriteStartDocument(false);
+                resultNode.WriteTo(xmlWriter);
             }
-
-            outputWriter.WriteXmlOutput(result, outputPath);
         }
     }
 }

@@ -129,7 +129,7 @@ namespace NUnit.Framework.Constraints
         /// trailing "Constraint" removed. Derived classes may set
         /// this to another name in their constructors.
         /// </summary>
-        public string DisplayName
+        protected string DisplayName
         {
             get
             {
