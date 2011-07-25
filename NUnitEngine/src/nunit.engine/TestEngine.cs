@@ -119,5 +119,14 @@ namespace NUnit.Engine
         }
 
         #endregion
+
+        #region IDisposable Members
+
+        public void Dispose()
+        {
+            Services.ServiceManager.StopAllServices();
+        }
+
+        #endregion
     }
 }
