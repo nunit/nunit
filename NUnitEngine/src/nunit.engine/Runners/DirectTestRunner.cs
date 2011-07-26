@@ -96,11 +96,11 @@ namespace NUnit.Engine.Runners
                 results.Add(driver.Run(this.package.Settings, listener));
 
             if (IsProjectPackage(this.package))
-                return TestEngineResult.Aggregate("test-project", this.package, results);
+                return TestEngineResult.MakeProjectResult(this.package, results);
             else if (results.Count == 1)
                 return results[0];
             else
-                return TestEngineResult.Wrap("test-wrapper", results);
+                return TestEngineResult.Merge(results);
         }
 
         #endregion

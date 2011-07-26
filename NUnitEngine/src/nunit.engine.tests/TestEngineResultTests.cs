@@ -29,22 +29,16 @@ using NUnit.Framework;
 
 namespace NUnit.Engine.Tests
 {
+    [TestFixture]
     public class TestEngineResultTests
     {
         private static readonly string resultText1 = "<test-assembly result=\"Passed\" total=\"23\" passed=\"23\" failed=\"0\" inconclusive=\"0\" skipped=\"0\" asserts=\"40\" />";
         private static readonly string resultText2 = "<test-assembly result=\"Failed\" total=\"42\" passed=\"31\" failed=\"4\" inconclusive=\"5\" skipped=\"2\" asserts=\"53\" />";
 
-        private List<TestEngineResult> MakeResultList()
-        {
-            TestEngineResult result1 = new TestEngineResult(resultText1);
-            TestEngineResult result2 = new TestEngineResult(resultText2);
+        private static readonly TestEngineResult result1 = new TestEngineResult(resultText1);
+        private static readonly TestEngineResult result2 = new TestEngineResult(resultText2);
 
-            List<TestEngineResult> results = new List<TestEngineResult>();
-            results.Add(result1);
-            results.Add(result2);
-
-            return results;
-        }
+        private static readonly TestEngineResult[] twoResults = new TestEngineResult[] { result1, result2 };
 
         [Test]
         public void CanCreateFromXmlString()
@@ -74,7 +68,7 @@ namespace NUnit.Engine.Tests
         [Test]
         public void TestResultsCanBeWrapped()
         {
-            TestEngineResult wrapped = TestEngineResult.Wrap("test-wrapper", MakeResultList());
+            TestEngineResult wrapped = TestEngineResult.Wrap("test-wrapper", new TestEngineResult[] { result1, result2 });
 
             Assert.True(wrapped.IsSingle);
             Assert.That(wrapped.Xml.Name, Is.EqualTo("test-wrapper"));
@@ -83,17 +77,27 @@ namespace NUnit.Engine.Tests
         }
 
         [Test]
-        public void TestResultsCanBeAggregated()
+        public void TestResultsCanBeMerged()
+        {
+            TestEngineResult mergedResult = TestEngineResult.Merge(twoResults);
+
+            Assert.That(mergedResult.XmlNodes.Count, Is.EqualTo(2));
+            Assert.That(mergedResult.XmlNodes[0].OuterXml, Is.EqualTo(resultText1));
+            Assert.That(mergedResult.XmlNodes[1].OuterXml, Is.EqualTo(resultText2));
+        }
+
+        //[Test]
+        public void CanMakeTestRunResult()
         {
             DateTime startTime = new DateTime(2011, 07, 04, 12, 34, 56);
 
-            TestEngineResult combined = TestEngineResult.Aggregate("test-run", new TestPackage("dummy.dll"), MakeResultList());
+            TestEngineResult combined = TestEngineResult.MakeTestRunResult(new TestPackage("dummy.dll"), startTime, result1);
             Assert.That(combined.IsSingle);
 
             XmlNode combinedNode = combined.Xml;
 
             Assert.That(combinedNode.Name, Is.EqualTo("test-run"));
-            Assert.That(combinedNode.Attributes["result"].Value, Is.EqualTo("Failed"));
+            Assert.That(combinedNode.Attributes["result"].Value, Is.EqualTo("Passed"));
             Assert.That(combinedNode.Attributes["total"].Value, Is.EqualTo("65"));
             Assert.That(combinedNode.Attributes["passed"].Value, Is.EqualTo("54"));
             Assert.That(combinedNode.Attributes["failed"].Value, Is.EqualTo("4"));
@@ -101,38 +105,57 @@ namespace NUnit.Engine.Tests
             Assert.That(combinedNode.Attributes["skipped"].Value, Is.EqualTo("2"));
             Assert.That(combinedNode.Attributes["asserts"].Value, Is.EqualTo("93"));
 
-            //Assert.That(combined.Attributes["run-date"].Value, Is.EqualTo("2011-07-04"));
-            //Assert.That(combined.Attributes["start-time"].Value, Is.EqualTo("12:34:56"));
+            Assert.That(combinedNode.Attributes["run-date"].Value, Is.EqualTo("2011-07-04"));
+            Assert.That(combinedNode.Attributes["start-time"].Value, Is.EqualTo("12:34:56"));
         }
 
         [Test]
-        public void XmlNodesCanBeAggregated()
+        public void CanMakeTestSuiteResult()
         {
-            DateTime startTime = new DateTime(2011, 07, 04, 12, 34, 56);
+            TestEngineResult combined = TestEngineResult.MakeProjectResult(new TestPackage("dummy.dll"), twoResults);
+            Assert.That(combined.IsSingle);
 
-            XmlDocument doc1 = new XmlDocument();
-            doc1.LoadXml(resultText1);
+            XmlNode combinedNode = combined.Xml;
 
-            XmlDocument doc2 = new XmlDocument();
-            doc2.LoadXml(resultText2);
-
-            List<XmlNode> nodes = new List<XmlNode>();
-            nodes.Add(doc1.FirstChild);
-            nodes.Add(doc2.FirstChild);
-            
-            XmlNode combined = TestEngineResult.Aggregate("test-run", new TestPackage("dummy.dll"), nodes);
-
-            Assert.That(combined.Name, Is.EqualTo("test-run"));
-            Assert.That(combined.Attributes["result"].Value, Is.EqualTo("Failed"));
-            Assert.That(combined.Attributes["total"].Value, Is.EqualTo("65"));
-            Assert.That(combined.Attributes["passed"].Value, Is.EqualTo("54"));
-            Assert.That(combined.Attributes["failed"].Value, Is.EqualTo("4"));
-            Assert.That(combined.Attributes["inconclusive"].Value, Is.EqualTo("5"));
-            Assert.That(combined.Attributes["skipped"].Value, Is.EqualTo("2"));
-            Assert.That(combined.Attributes["asserts"].Value, Is.EqualTo("93"));
-
-            //Assert.That(combined.Attributes["run-date"].Value, Is.EqualTo("2011-07-04"));
-            //Assert.That(combined.Attributes["start-time"].Value, Is.EqualTo("12:34:56"));
+            Assert.That(combinedNode.Name, Is.EqualTo("test-suite"));
+            Assert.That(combinedNode.Attributes["type"].Value, Is.EqualTo("Project"));
+            Assert.That(combinedNode.Attributes["result"].Value, Is.EqualTo("Failed"));
+            Assert.That(combinedNode.Attributes["total"].Value, Is.EqualTo("65"));
+            Assert.That(combinedNode.Attributes["passed"].Value, Is.EqualTo("54"));
+            Assert.That(combinedNode.Attributes["failed"].Value, Is.EqualTo("4"));
+            Assert.That(combinedNode.Attributes["inconclusive"].Value, Is.EqualTo("5"));
+            Assert.That(combinedNode.Attributes["skipped"].Value, Is.EqualTo("2"));
+            Assert.That(combinedNode.Attributes["asserts"].Value, Is.EqualTo("93"));
         }
+
+        //[Test]
+        //public void XmlNodesCanBeAggregated()
+        //{
+        //    DateTime startTime = new DateTime(2011, 07, 04, 12, 34, 56);
+
+        //    XmlDocument doc1 = new XmlDocument();
+        //    doc1.LoadXml(resultText1);
+
+        //    XmlDocument doc2 = new XmlDocument();
+        //    doc2.LoadXml(resultText2);
+
+        //    List<XmlNode> nodes = new List<XmlNode>();
+        //    nodes.Add(doc1.FirstChild);
+        //    nodes.Add(doc2.FirstChild);
+            
+        //    XmlNode combined = TestEngineResult.Aggregate("test-run", null, new TestPackage("dummy.dll"), nodes);
+
+        //    Assert.That(combined.Name, Is.EqualTo("test-run"));
+        //    Assert.That(combined.Attributes["result"].Value, Is.EqualTo("Failed"));
+        //    Assert.That(combined.Attributes["total"].Value, Is.EqualTo("65"));
+        //    Assert.That(combined.Attributes["passed"].Value, Is.EqualTo("54"));
+        //    Assert.That(combined.Attributes["failed"].Value, Is.EqualTo("4"));
+        //    Assert.That(combined.Attributes["inconclusive"].Value, Is.EqualTo("5"));
+        //    Assert.That(combined.Attributes["skipped"].Value, Is.EqualTo("2"));
+        //    Assert.That(combined.Attributes["asserts"].Value, Is.EqualTo("93"));
+
+        //    //Assert.That(combined.Attributes["run-date"].Value, Is.EqualTo("2011-07-04"));
+        //    //Assert.That(combined.Attributes["start-time"].Value, Is.EqualTo("12:34:56"));
+        //}
     }
 }

@@ -52,20 +52,19 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// Gets the name used for the top-level element in the
-        /// XML representation of this test
+        /// Gets a string representing the type of test
         /// </summary>
         /// <value></value>
-        public override string XmlElementName
+        public override string TestType
         {
             get
             {
 #if CLR_2_0 || CLR_4_0
                 if (this.ParameterizedType.ContainsGenericParameters)
-                    return "generic-fixture";
+                    return "GenericFixture";
 #endif
                 
-                return "parameterized-fixture";
+                return "ParameterizedFixture";
             }
         }
     }
