@@ -73,7 +73,7 @@ namespace NUnit.ConsoleRunner
             this.Add("config=", "Project configuration (e.g.: Debug) to load", 
                 v => activeConfig = RequiredValue(v, "--config"));
 
-            this.Add("xml=", "Name and optional format of an XML output file.\nFormats:\n  --xml:filepath\n  --xml:filepath;format=[nunit3|nunit2]\nThe default format is nunit3. If no option is specified, --xml:TestResult.xml is assumed.\nThis option may be repeated.", 
+            this.Add("xml=", "Name and optional format of an XML output file.\nFormats:\n  --xml:filepath\n  --xml:filepath;format=[nunit3|nunit2]\n  --xml:filepath;transform=xsltfile\nThe default format is nunit3. If no option is specified, --xml:TestResult.xml is assumed.\nThis option may be repeated.", 
                 v => xmlOutputSpecifications.Add(new XmlOutputSpecification(RequiredValue(v, "--xml"))));
 
             // xmlConsole
