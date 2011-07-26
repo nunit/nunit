@@ -8,6 +8,8 @@
     <include name="NUnit2XmlValidationTests.cs" />
     <include name="SchemaValidator.cs" />
     <include name="XmlOutputSpecificationTests.cs"/>
+    <include name="XmlOutputTest.cs" />
+    <include name="XmlTransformOutputWriterTests.cs"/>
   </patternset>
 
   <target name="build">

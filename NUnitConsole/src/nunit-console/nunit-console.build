@@ -5,8 +5,7 @@
     <include name="AssemblyInfo.cs"/>
     <include name="ConsoleOptions.cs"/>
     <include name="ConsoleRunner.cs"/>
-    <include name="NUnit2XmlOutputWriter.cs"/>
-    <include name="NUnit3XmlOutputWriter.cs"/>
+    <include name="IXmlOutputWriter.cs"/>
     <include name="Options.cs"/>
     <include name="Program.cs"/>
     <include name="ResultReporter.cs"/>
@@ -17,6 +16,9 @@
     <include name="XmlHelper.cs"/>
     <include name="XmlOutputManager.cs"/>
     <include name="XmlOutputSpecification.cs"/>
+    <include name="XmlOutputWriters/NUnit2XmlOutputWriter.cs"/>
+    <include name="XmlOutputWriters/NUnit3XmlOutputWriter.cs"/>
+    <include name="XmlOutputWriters/XmlTransformOutputWriter.cs"/>
   </patternset>
 
   <target name="build">
