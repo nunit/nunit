@@ -186,17 +186,7 @@ namespace NUnit.Framework.Internal
             set { runState = value; }
         }
 
-        /// <summary>
-        /// A string representing the type of test. Used as an attribute
-        /// value in the XML representation of a test and has no other
-        /// function in the framework.
         /// </summary>
-        /// <summary>
-        /// A string used as the element name in the XML representation
-        /// of the test result. Has no other function in the framework.
-        /// </summary>
-        //protected abstract string XmlElementName { get; }
-
         /// <summary>
         /// Gets the name used for the top-level element in the
         /// XML representation of this test
@@ -204,6 +194,16 @@ namespace NUnit.Framework.Internal
         public abstract string XmlElementName
         {
             get;
+        }
+
+        /// <summary>
+        /// Gets a string representing the type of test. Used as an attribute
+        /// value in the XML representation of a test and has no other
+        /// function in the framework.
+        /// </summary>
+        public virtual string TestType
+        {
+            get { return this.GetType().Name; }
         }
 
         /// <summary>

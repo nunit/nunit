@@ -253,8 +253,8 @@ namespace NUnit.Framework.Internal
         /// <returns></returns>
         public override System.Xml.XmlNode AddToXml(XmlNode parentNode, bool recursive)
         {
-            XmlNode thisNode = XmlHelper.AddElement(parentNode, XmlElementName);
-            //XmlHelper.AddAttribute(thisNode, "type", this.XmlElementName);
+            XmlNode thisNode = XmlHelper.AddElement(parentNode, "test-suite");
+            XmlHelper.AddAttribute(thisNode, "type", this.TestType);
 
 			PopulateTestNode(thisNode, recursive);
             XmlHelper.AddAttribute(thisNode, "testcasecount", this.TestCaseCount.ToString());

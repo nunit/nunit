@@ -20,7 +20,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.testdata-vs2008", "NU
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4ED1AFCF-4197-4C84-96C5-C131F7DC7A35}"
 	ProjectSection(SolutionItems) = preProject
-		NUnitTests.nunit = NUnitTests.nunit
+		NUnitTestsVS2008.nunit = NUnitTestsVS2008.nunit
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "direct-runner-vs2008", "NUnitFramework\src\direct-runner\direct-runner-vs2008.csproj", "{126DBBB4-1731-4E0D-8937-4F2FAADCA0EF}"

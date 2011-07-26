@@ -23,9 +23,8 @@
 
 using System;
 using System.IO;
-using System.Text;
+using System.Reflection;
 using System.Xml;
-using NUnit.Engine;
 
 namespace NUnit.ConsoleRunner
 {
@@ -56,7 +55,9 @@ namespace NUnit.ConsoleRunner
                     break;
 
                 case "user":
-                    outputWriter = new XmlTransformOutputWriter(spec.Transform);
+                    Uri uri = new Uri(Assembly.GetExecutingAssembly().CodeBase);
+                    string dir = Path.GetDirectoryName(uri.LocalPath);
+                    outputWriter = new XmlTransformOutputWriter(Path.Combine(dir, spec.Transform));
                     break;
 
                 default:

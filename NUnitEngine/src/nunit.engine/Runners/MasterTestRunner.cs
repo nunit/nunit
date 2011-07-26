@@ -17,50 +17,6 @@ namespace NUnit.Engine.Runners
             this.services = services;
         }
 
-        #region Static Methods
-
-        /// <summary>
-        /// Make a &lt;test-run&gt; result from a set of subordinate results. If a
-        /// subordinate result is itself a &lt;test-run&gt; result, then its child
-        /// nodes are used, otherwise the node itself is used.
-        /// </summary>
-        /// <param name="results">The results to be combined into a &lt;test-run&gt; result.</param>
-        /// <returns>A TestEngineResult with a single top-level &lt;test-run&gt; element.</returns>
-        public static TestEngineResult MakeTestRunResult(TestPackage package, DateTime startTime, TestEngineResult result)
-        {
-            XmlNode combinedNode = TestEngineResult.Aggregate("test-run", package, result.XmlNodes);
-            InsertEnvironmentElement(combinedNode);
-
-            //if (result.Xml.Name == "test-wrapper")
-            //    foreach (XmlNode child in result.Xml.ChildNodes)
-            //        assemblyNodes.Add(child);
-            //else
-            //    assemblyNodes.Add(result.Xml);
-
-            XmlHelper.AddAttribute(combinedNode, "run-date", XmlConvert.ToString(startTime, "yyyy-MM-dd"));
-            XmlHelper.AddAttribute(combinedNode, "start-time", XmlConvert.ToString(startTime, "HH:mm:ss"));
-
-            return new TestEngineResult(combinedNode);
-        }
-
-        private static void InsertEnvironmentElement(XmlNode resultNode)
-        {
-            XmlNode env = resultNode.OwnerDocument.CreateElement("environment");
-            resultNode.InsertAfter(env, null);
-            XmlHelper.AddAttribute(env, "nunit-version", Assembly.GetExecutingAssembly().GetName().Version.ToString());
-            XmlHelper.AddAttribute(env, "clr-version", Environment.Version.ToString());
-            XmlHelper.AddAttribute(env, "os-version", Environment.OSVersion.ToString());
-            XmlHelper.AddAttribute(env, "platform", Environment.OSVersion.Platform.ToString());
-            XmlHelper.AddAttribute(env, "cwd", Environment.CurrentDirectory);
-            XmlHelper.AddAttribute(env, "machine-name", Environment.MachineName);
-            XmlHelper.AddAttribute(env, "user", Environment.UserName);
-            XmlHelper.AddAttribute(env, "user-domain", Environment.UserDomainName);
-            XmlHelper.AddAttribute(env, "culture", System.Globalization.CultureInfo.CurrentCulture.ToString());
-            XmlHelper.AddAttribute(env, "uiculture", System.Globalization.CultureInfo.CurrentUICulture.ToString());
-        }
-
-        #endregion
-
         #region AbstractTestRunner Overrides
 
         /// <summary>
@@ -123,7 +79,7 @@ namespace NUnit.Engine.Runners
 
             TestEngineResult result = realRunner.Run(listener, filter);
 
-            return MakeTestRunResult(this.package, startTime, result);
+            return TestEngineResult.MakeTestRunResult(this.package, startTime, result);
         }
 
         #endregion

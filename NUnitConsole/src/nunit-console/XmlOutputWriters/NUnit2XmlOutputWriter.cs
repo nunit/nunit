@@ -35,23 +35,10 @@ namespace NUnit.ConsoleRunner
     {
         private XmlWriter xmlWriter;
 
-        private static Dictionary<string, string> suiteTypes = new Dictionary<string, string>();
         private static Dictionary<string, string> resultStates = new Dictionary<string, string>();
 
         static NUnit2XmlOutputWriter()
         {
-            // TODO: Other types: Namespace, Theory
-            suiteTypes["test-project"] = "Project";
-            suiteTypes["test-assembly"] = "Assembly";
-            suiteTypes["test-suite"] = "test-suite";
-            suiteTypes["test-fixture"] = "TestFixture";
-            suiteTypes["setup-fixture"] = "SetUpFixture";
-            suiteTypes["generic-fixture"] = "GenericFixture";
-            suiteTypes["parameterized-fixture"] = "ParameterizedFixture";
-            suiteTypes["generic-method"] = "GenericMethod";
-            suiteTypes["parameterized-method"] = "ParameterizedMethod";
-            suiteTypes["test-case"] = "TestMethod";
-
             resultStates["Passed"] = "Success";
             resultStates["Failed"] = "Failure";
             resultStates["Failed:Error"] = "Error";
@@ -197,9 +184,7 @@ namespace NUnit.ConsoleRunner
             else
             {
                 xmlWriter.WriteStartElement("test-suite");
-                System.Diagnostics.Debug.Assert(suiteTypes.ContainsKey(result.Name));
-                if (suiteTypes.ContainsKey(result.Name))
-                    xmlWriter.WriteAttributeString("type", suiteTypes[result.Name]);
+                xmlWriter.WriteAttributeString("type", XmlHelper.GetAttribute(result, "type"));
                 string nameAttr = result.Name == "test-assembly" || result.Name == "test-project" ? "fullname" : "name";
                 xmlWriter.WriteAttributeString("name", XmlHelper.GetAttribute(result, nameAttr));
             }
