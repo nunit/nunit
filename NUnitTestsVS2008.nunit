@@ -8,7 +8,7 @@
   <Config name="Debug" appbase="bin/vs2008/Debug">
     <assembly path="nunit-console.tests.dll" />
     <assembly path="nunit.engine.tests.dll" />
-    <!--<assembly path="nunit.framework.tests.dll" />-->
+    <assembly path="nunit.framework.tests.dll" />
   </Config>
   <Config name="Release" appbase="bin/vs2008/Release">
     <assembly path="nunit-console.tests.dll" />

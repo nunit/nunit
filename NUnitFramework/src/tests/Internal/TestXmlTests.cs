@@ -36,22 +36,22 @@ namespace NUnit.Framework.Internal
             Assert.That(testMethod.XmlElementName, 
                 Is.EqualTo("test-case"));
             Assert.That(testFixture.XmlElementName, 
-                Is.EqualTo("test-fixture"));
+                Is.EqualTo("test-suite"));
             Assert.That(testSuite.XmlElementName, 
                 Is.EqualTo("test-suite"));
             Assert.That(new TestAssembly("junk").XmlElementName, 
-                Is.EqualTo("test-assembly"));
+                Is.EqualTo("test-suite"));
 #if CLR_2_0 || CLR_4_0
             Assert.That(new ParameterizedMethodSuite(typeof(DummyFixture).GetMethod("GenericMethod")).XmlElementName,
-                Is.EqualTo("generic-method"));
+                Is.EqualTo("test-suite"));
             Assert.That(new ParameterizedMethodSuite(typeof(DummyFixture).GetMethod("ParameterizedMethod")).XmlElementName,
-                Is.EqualTo("parameterized-method"));
+                Is.EqualTo("test-suite"));
 #if !NUNITLITE
             Assert.That(new ParameterizedFixtureSuite(typeof(DummyFixture)).XmlElementName,
-                Is.EqualTo("parameterized-fixture"));
+                Is.EqualTo("test-suite"));
             Type genericType = typeof(DummyGenericFixture<int>).GetGenericTypeDefinition();
             Assert.That(new ParameterizedFixtureSuite(genericType).XmlElementName,
-                Is.EqualTo("generic-fixture"));
+                Is.EqualTo("test-suite"));
 #endif
 #endif
         }
