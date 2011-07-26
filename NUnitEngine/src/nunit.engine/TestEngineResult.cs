@@ -23,7 +23,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Reflection;
 using System.Xml;
 using NUnit.Engine.Internal;
 
@@ -37,6 +37,9 @@ namespace NUnit.Engine
     [Serializable]
     public class TestEngineResult : ITestEngineResult
     {
+        private static readonly string TEST_SUITE_ELEMENT = "test-suite";
+        private static readonly string PROJECT_SUITE_TYPE = "Project";
+        
         private List<string> xmlText = new List<string>();
 
         [NonSerialized]
@@ -46,32 +49,79 @@ namespace NUnit.Engine
 
         /// <summary>
         /// Wrap a set of results in a single TestEngineResult. The result
-        /// element is used only as a container to pass the results back to 
-        /// the caller and no content aggregation is done.
+        /// element is used as a container to pass the results back to 
+        /// the caller.
         /// </summary>
         /// <param name="elementName">Name to be used for the wrapping element</param>
         /// <param name="results">The results to be wrapped.</param>
         /// <returns>A TestEngineResult wrapping the results.</returns>
         public static TestEngineResult Wrap(string elementName, IList<TestEngineResult> results)
         {
-            List<XmlNode> resultNodes = new List<XmlNode>();
+            XmlNode wrapperNode = XmlHelper.CreateTopLevelElement(elementName);
 
             foreach (TestEngineResult result in results)
                 foreach (XmlNode node in result.XmlNodes)
-                    if (node.Name == "test-wrapper")
-                        foreach (XmlNode child in node.ChildNodes)
-                            resultNodes.Add(child);
-                    else
-                        resultNodes.Add(node);
-
-            XmlNode wrapperNode = XmlHelper.CreateTopLevelElement(elementName);
-            foreach (XmlNode node in resultNodes)
-            {
-                XmlNode import = wrapperNode.OwnerDocument.ImportNode(node, true);
-                wrapperNode.AppendChild(import);
-            }
+                {
+                    XmlNode import = wrapperNode.OwnerDocument.ImportNode(node, true);
+                    wrapperNode.AppendChild(import);
+                }
 
             return new TestEngineResult(wrapperNode);
+        }
+
+        /// <summary>
+        /// Merges multiple test engine results into a single result. The
+        /// result element contains all the XML nodes found in the input.
+        /// </summary>
+        /// <param name="results">A list of TestEngineResults</param>
+        /// <returns>A TestEngineResult merging all the imput results</returns>
+        public static TestEngineResult Merge(IList<TestEngineResult> results)
+        {
+            TestEngineResult mergedResult = new TestEngineResult();
+
+            foreach (TestEngineResult result in results)
+                foreach (XmlNode node in result.XmlNodes)
+                    mergedResult.Add(node);
+
+            return mergedResult;
+        }
+
+        /// <summary>
+        /// Make a top level &lt;test-run&gt; result for a run, based on a
+        /// TestEngineResult that contains all the individual
+        /// assembly and project results.
+        /// </summary>
+        /// <param name="result">A TestEngineResult with xml nodes for each assembly or project</param>
+        /// <returns>A TestEngineResult with a single top-level &lt;test-run&gt; element.</returns>
+        public static TestEngineResult MakeTestRunResult(TestPackage package, DateTime startTime, TestEngineResult result)
+        {
+#if DEBUG
+            foreach (XmlNode node in result.XmlNodes)
+                System.Diagnostics.Debug.Assert(node.Name == "test-suite");
+#endif
+            XmlNode combinedNode = TestEngineResult.Aggregate("test-run", null, package, result.XmlNodes);
+            InsertEnvironmentElement(combinedNode);
+
+            XmlHelper.AddAttribute(combinedNode, "run-date", XmlConvert.ToString(startTime, "yyyy-MM-dd"));
+            XmlHelper.AddAttribute(combinedNode, "start-time", XmlConvert.ToString(startTime, "HH:mm:ss"));
+
+            return new TestEngineResult(combinedNode);
+        }
+
+        private static void InsertEnvironmentElement(XmlNode resultNode)
+        {
+            XmlNode env = resultNode.OwnerDocument.CreateElement("environment");
+            resultNode.InsertAfter(env, null);
+            XmlHelper.AddAttribute(env, "nunit-version", Assembly.GetExecutingAssembly().GetName().Version.ToString());
+            XmlHelper.AddAttribute(env, "clr-version", Environment.Version.ToString());
+            XmlHelper.AddAttribute(env, "os-version", Environment.OSVersion.ToString());
+            XmlHelper.AddAttribute(env, "platform", Environment.OSVersion.Platform.ToString());
+            XmlHelper.AddAttribute(env, "cwd", Environment.CurrentDirectory);
+            XmlHelper.AddAttribute(env, "machine-name", Environment.MachineName);
+            XmlHelper.AddAttribute(env, "user", Environment.UserName);
+            XmlHelper.AddAttribute(env, "user-domain", Environment.UserDomainName);
+            XmlHelper.AddAttribute(env, "culture", System.Globalization.CultureInfo.CurrentCulture.ToString());
+            XmlHelper.AddAttribute(env, "uiculture", System.Globalization.CultureInfo.CurrentUICulture.ToString());
         }
 
         /// <summary>
@@ -81,28 +131,20 @@ namespace NUnit.Engine
         /// </summary>
         /// <param name="results">The results to be wrapped.</param>
         /// <returns>A TestEngineResult wrapping the results.</returns>
-        public static TestEngineResult Aggregate(string elementName, TestPackage package, IList<TestEngineResult> results)
+        public static TestEngineResult MakeProjectResult(TestPackage package, IList<TestEngineResult> assemblyResults)
         {
             List<XmlNode> resultNodes = new List<XmlNode>();
-            foreach (TestEngineResult result in results)
+            foreach (TestEngineResult result in assemblyResults)
                 resultNodes.AddRange(result.XmlNodes);
 
-            XmlNode combinedNode = Aggregate(elementName, package, resultNodes);
+            XmlNode combinedNode = Aggregate(TEST_SUITE_ELEMENT, PROJECT_SUITE_TYPE, package, resultNodes);
 
             return new TestEngineResult(combinedNode);
         }
 
-        public static XmlNode Aggregate(string elementName, TestPackage package, IList<XmlNode> resultNodes)
+        private static XmlNode Aggregate(string elementName, string testType, TestPackage package, IList<XmlNode> resultNodes)
         {
             XmlNode combinedNode = XmlHelper.CreateTopLevelElement(elementName);
-
-            List<XmlNode> nodes = new List<XmlNode>();
-            foreach (XmlNode node in resultNodes)
-                if (node.Name == "test-wrapper")
-                    foreach (XmlNode child in node.ChildNodes)
-                        nodes.Add(child);
-                else
-                    nodes.Add(node);
 
             string status = "Inconclusive";
             double time = 0.0;
@@ -114,7 +156,7 @@ namespace NUnit.Engine
             int skipped = 0;
             int asserts = 0;
 
-            foreach (XmlNode node in nodes)
+            foreach (XmlNode node in resultNodes)
             {
                 switch (XmlHelper.GetAttribute(node, "result"))
                 {
@@ -144,6 +186,8 @@ namespace NUnit.Engine
                 combinedNode.AppendChild(import);
             }
 
+            if (testType != null)
+                XmlHelper.AddAttribute(combinedNode, "type", testType);
             XmlHelper.AddAttribute(combinedNode, "id", "2"); // TODO: Should not be hard-coded
             if (package.Name != null && package.Name != string.Empty)
                 XmlHelper.AddAttribute(combinedNode, "name", package.Name);
