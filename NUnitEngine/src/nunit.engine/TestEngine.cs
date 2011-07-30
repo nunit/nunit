@@ -86,7 +86,7 @@ namespace NUnit.Engine
             // in the future in order to explore tests that
             // are located on a different machine.
             IFrameworkDriver driver = new NUnitFrameworkDriver(AppDomain.CurrentDomain);
-            return driver.ExploreTests(package.TestFiles, new Dictionary<string,object>());
+            return driver.ExploreTests(package.TestFiles, package.Settings);
         }
 
         /// <summary>

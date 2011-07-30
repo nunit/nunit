@@ -25,7 +25,7 @@ using System;
 
 namespace NUnit.ConsoleRunner
 {
-    public class XmlOutputSpecification
+    public class OutputSpecification
     {
         #region Private Fields
 
@@ -37,7 +37,7 @@ namespace NUnit.ConsoleRunner
 
         #region Constructor
 
-        public XmlOutputSpecification(string spec)
+        public OutputSpecification(string spec)
         {
             if (spec == null)
                 throw new NullReferenceException("Output spec may not be null");

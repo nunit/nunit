@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using NDesk.Options;
+using NUnit.Engine;
 
 namespace NUnit.ConsoleRunner
 {
@@ -102,7 +103,8 @@ namespace NUnit.ConsoleRunner
 
             try
             {
-                return new ConsoleRunner(options).Execute();
+                ITestEngine engine = TestEngineActivator.CreateInstance();
+                return new ConsoleRunner(engine, options).Execute();
             }
             catch( FileNotFoundException ex )
             {
@@ -111,7 +113,7 @@ namespace NUnit.ConsoleRunner
             }
             catch( Exception ex )
             {
-                Console.WriteLine( "Unhandled Exception:\n{0}", ex.ToString() );
+                Console.WriteLine( ex.ToString() );
                 return ConsoleRunner.UNEXPECTED_ERROR;
             }
             finally
@@ -177,6 +179,34 @@ namespace NUnit.ConsoleRunner
             Console.WriteLine();
             Console.WriteLine("Options:");
             options.WriteOptionDescriptions(Console.Out);
+            Console.WriteLine();
+            Console.WriteLine("Description:");
+            Console.WriteLine("      By default, this command runs the tests contained in the");
+            Console.WriteLine("      assemblies and projects specified. If the --explore option");
+            Console.WriteLine("      is used, no tests are executed but a description of the tests");
+            Console.WriteLine("      is saved in the specified or default format.");
+            Console.WriteLine();
+            Console.WriteLine("      Several options that specify processing of XML output take");
+            Console.WriteLine("      an output specification as a value. A SPEC may take one of");
+            Console.WriteLine("      the following forms:");
+            Console.WriteLine("          --OPTION:filename");
+            Console.WriteLine("          --OPTION:filename;format=formatname");
+            Console.WriteLine("          --OPTION:filename;transform=xsltfile");
+            Console.WriteLine();
+            Console.WriteLine("      The --result option may use any of the following formats:");
+            Console.WriteLine("          nunit3 - the native XML format for NUnit 3.0");
+            Console.WriteLine("          nunit2 - legacy XML format used by earlier releases of NUnit");
+            Console.WriteLine();
+            Console.WriteLine("      The --explore option may use any of the following formats:");
+            Console.WriteLine("          nunit3 - the native XML format for NUnit 3.0");
+            Console.WriteLine("          cases  - a text file listing the full names of all test cases.");
+            Console.WriteLine("      If --explore is used without any specification following, a list of");
+            Console.WriteLine("      test cases is output to the console.");
+            Console.WriteLine();
+            Console.WriteLine("      If none of the options {--result, --explore, --noxml} is used,");
+            Console.WriteLine("      NUnit saves the results to TestResult.xml in nunit3 format");
+            Console.WriteLine();
+            Console.WriteLine("      Any transforms provided must handle input in the native nunit3 format.");
             Console.WriteLine();
             //Console.WriteLine("Options that take values may use an equal sign, a colon");
             //Console.WriteLine("or a space to separate the option from its value.");

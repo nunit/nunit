@@ -28,7 +28,7 @@ using System.Xml.Xsl;
 
 namespace NUnit.ConsoleRunner
 {
-    public class XmlTransformOutputWriter : IXmlOutputWriter
+    public class XmlTransformOutputWriter : IResultWriter
     {
         private string xsltFile;
         private XslCompiledTransform transform = new XslCompiledTransform();
@@ -39,7 +39,7 @@ namespace NUnit.ConsoleRunner
             transform.Load(xsltFile);
         }
 
-        public void WriteXmlOutput(XmlNode result, TextWriter writer)
+        public void WriteResultFile(XmlNode result, TextWriter writer)
         {
             using (XmlTextWriter xmlWriter = new XmlTextWriter(writer))
             {
@@ -48,7 +48,7 @@ namespace NUnit.ConsoleRunner
             }
         }
 
-        public void WriteXmlOutput(XmlNode result, string outputPath)
+        public void WriteResultFile(XmlNode result, string outputPath)
         {
             using (XmlTextWriter xmlWriter = new XmlTextWriter(outputPath, Encoding.Default))
             {

@@ -24,6 +24,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using NDesk.Options;
 using NUnit.Engine;
 
 namespace NUnit.ConsoleRunner
@@ -34,14 +35,15 @@ namespace NUnit.ConsoleRunner
     /// Options OptionSet class and provides a central location
     /// for defining and parsing options.
     /// </summary>
-	public class ConsoleOptions : NDesk.Options.OptionSet
+	public class ConsoleOptions : OptionSet
 	{
         public string activeConfig;
-        public bool noxml;
+        public bool noresult;
         public string outputPath;
         public string errorPath;
         public string workDir;
         public bool labels;
+        public bool explore;
         public InternalTraceLevel internalTraceLevel;
         public string include;
         public string exclude;
@@ -54,9 +56,10 @@ namespace NUnit.ConsoleRunner
         public bool help;
 
         private List<string> inputFiles = new List<string>();
-        private List<string> runList = new List<string>();
+        private List<string> testList = new List<string>();
         private List<string> errorMessages = new List<string>();
-        private List<XmlOutputSpecification> xmlOutputSpecifications = new List<XmlOutputSpecification>();
+        private List<OutputSpecification> resultOutputSpecifications = new List<OutputSpecification>();
+        private List<OutputSpecification> exploreOutputSpecifications = new List<OutputSpecification>();
 
         private bool validated;
 
@@ -65,65 +68,70 @@ namespace NUnit.ConsoleRunner
             // NOTE: The order in which patterns are added 
             // determines the display order for the help.
 
-            // fixture
+            // Old Options no longer supported:
+            //   fixture
+            //   xmlConsole
+            //   noshadow
+            //   nothread
+            //   nodots
 
-            this.Add("run=", "(NYI)Name of a tests to run. This option may be repeated.",
-                v => runList.Add(RequiredValue(v, "--run")));
+            this.Add("test=", "(NYI)Comma-separated list of {NAMES} of tests to run or explore. This option may be repeated.",
+                v => testList.Add(RequiredValue(v, "--test")));
 
-            this.Add("config=", "Project configuration (e.g.: Debug) to load", 
-                v => activeConfig = RequiredValue(v, "--config"));
-
-            this.Add("xml=", "Name and optional format of an XML output file.\nFormats:\n  --xml:filepath\n  --xml:filepath;format=[nunit3|nunit2]\n  --xml:filepath;transform=xsltfile\nThe default format is nunit3. If no option is specified, --xml:TestResult.xml is assumed.\nThis option may be repeated.", 
-                v => xmlOutputSpecifications.Add(new XmlOutputSpecification(RequiredValue(v, "--xml"))));
-
-            // xmlConsole
-
-            this.Add("noxml", "Suppress all XML output, ignoring any --xml options", 
-                v => noxml = v != null);
-
-            this.Add("output|out=", "File to receive output sent to stdout by the test",
-                v => outputPath = RequiredValue(v, "--output"));
-
-            this.Add("err=", "File to receive output sent to stderr by the test", 
-                v => errorPath = RequiredValue(v, "--err"));
-
-            this.Add("work=", "Work directory for output files", 
-                v => workDir = RequiredValue(v, "--work"));
-
-            this.Add("labels", "(NYI) Label each test by name in the output", 
-                v => labels = v != null);
-
-            this.Add("trace=", "(NYI) Set internal trace level\nValues: Off, Error, Warning, Info, Verbose",
-                (InternalTraceLevel v) => internalTraceLevel = v);
-
-            this.Add("include=", "(NYI) Comma-separated list of categories to include", 
+            this.Add("include=", "(NYI) Comma-separated list of test {CATEGORIES} to be included.",
                 v => include = RequiredValue(v, "--include"));
 
-            this.Add("exclude=", "(NYI) Comma-separated list of categories to exclude", 
+            this.Add("exclude=", "(NYI) Comma-separated list of test {CATEGORIES} to be excluded.",
                 v => exclude = RequiredValue(v, "--exclude"));
 
-            this.Add("framework=", "(NYI) Framework version to be used for tests",
+            this.Add("config=", "{NAME} of a project configuration to load (e.g.: Debug).", 
+                v => activeConfig = RequiredValue(v, "--config"));
+
+            this.Add("work=", "{PATH} of the directory to use for output files.",
+                v => workDir = RequiredValue(v, "--work"));
+
+            this.Add("output|out=", "File {PATH} to contain text output from the tests.",
+                v => outputPath = RequiredValue(v, "--output"));
+
+            this.Add("err=", "File {PATH} to contain error output from the tests.",
+                v => errorPath = RequiredValue(v, "--err"));
+
+            this.Add("result=", "An output {SPEC} for saving the test results.\nThis option may be repeated.", 
+                v => resultOutputSpecifications.Add(new OutputSpecification(RequiredValue(v, "--resultxml"))));
+
+            this.Add("explore:", "Display or save test info rather than running tests. Optionally provide an output {SPEC} for saving the test info. This option may be repeated.", v => 
+                {
+                    explore = true;
+                    if (v != null)
+                        exploreOutputSpecifications.Add(new OutputSpecification(v));
+                });
+
+            this.Add("noresult", "Don't save any test results.", 
+                v => noresult = v != null);
+
+            this.Add("labels", "(NYI) Label each test by name in the console output.", 
+                v => labels = v != null);
+
+            this.Add("trace=", "(NYI) Set internal trace {LEVEL}.\nValues: Off, Error, Warning, Info, Verbose",
+                (InternalTraceLevel v) => internalTraceLevel = v);
+
+            this.Add("framework=", "(NYI) {FRAMEWORK} type/version to use for tests.\nExamples: mono, net-3.5, v4.0, mono-4.0",
                 v => framework = v);
 
-            this.Add("process=", "Process model for tests\nValues: Single, Separate, Multiple",
+            this.Add("process=", "{PROCESS} isolation for test assemblies.\nValues: Single, Separate, Multiple",
                 (ProcessModel v) => processModel = v);
 
-            this.Add("domain=", "AppDomain usage for tests\nValues: None, Single, Multiple",
+            this.Add("domain=", "{DOMAIN} isolation for test assemblies.\nValues: None, Single, Multiple",
                 (DomainUsage v) => domainUsage = v);
 
-            // noshadow
-            // nothread
-
-            this.Add("timeout=", "(NYI) Set timeout for each test case in milliseconds",
+            this.Add("timeout=", "(NYI) Set timeout for each test case in {MILLISECONDS}.",
                 (int v) => defaultTimeout = v);
             
-            this.Add("wait", "Wait for input before closing console window", 
+            this.Add("wait", "Wait for input before closing console window.", 
                 v => wait = v != null);
 
             this.Add("noheader|noh", "Suppress display of program information at start of run.",
                 v => noheader = v != null);
-
-            // nodots
 
             this.Add("help|h", "Display this message and exit.", 
                 v => help = v != null);
@@ -141,10 +149,6 @@ namespace NUnit.ConsoleRunner
                 this.Parse(args);
         }
 
-        //public ConsoleOptions( bool allowForwardSlash, params string[] args )
-        //{
-        //}
-
         #region Properties
 
         public string WorkDirectory
@@ -157,9 +161,9 @@ namespace NUnit.ConsoleRunner
             get { return inputFiles.ToArray(); }
         }
 
-        public string[] RunList
+        public string[] TestList
         {
-            get { return runList.ToArray(); }
+            get { return testList.ToArray(); }
         }
 
         public IList<string> ErrorMessages
@@ -167,15 +171,20 @@ namespace NUnit.ConsoleRunner
             get { return errorMessages; }
         }
 
-        public IList<XmlOutputSpecification> XmlOutputSpecifications
+        public IList<OutputSpecification> ResultOutputSpecifications
         {
             get 
             {
-                if (xmlOutputSpecifications.Count == 0)
-                    xmlOutputSpecifications.Add(new XmlOutputSpecification("TestResult.xml"));
+                if (resultOutputSpecifications.Count == 0)
+                    resultOutputSpecifications.Add(new OutputSpecification("TestResult.xml"));
 
-                return xmlOutputSpecifications; 
+                return resultOutputSpecifications; 
             }
+        }
+
+        public IList<OutputSpecification> ExploreOutputSpecifications
+        {
+            get { return exploreOutputSpecifications; }
         }
 
         #endregion
@@ -204,18 +213,6 @@ namespace NUnit.ConsoleRunner
                 errorMessages.Add("Missing required value for option '" + option + "'.");
             return val;
         }
-
-        //private void RequiredValueError(string option)
-        //{
-        //    if (v == null || v == string.Empty)
-        //        errorMessages.Add("Missing required value for option '" + option + "'.");
-        //    return v;
-        //}
-
-        //private void RequiredValueError(string option)
-        //{
-        //    errorMessages.Add("Missing required value for option '" + option + "'.");
-        //}
 
         private void RequiredIntError(string option)
         {

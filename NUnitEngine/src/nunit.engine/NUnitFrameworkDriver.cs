@@ -65,7 +65,7 @@ namespace NUnit.Engine
             CallbackHandler handler = new CallbackHandler();
 
             CreateObject("NUnit.Framework.Api.TestController+ExploreTestsAction",
-                testController, assemblyFileNames, options, handler.Callback);
+                testController, assemblyFileNames[0], options, handler.Callback);
 
             return handler.Result;
         }

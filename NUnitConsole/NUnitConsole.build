@@ -183,6 +183,8 @@
     <copy todir="${project.deploy.dir}">
       <fileset basedir="${current.build.dir}">
         <include name="nunit-console.*" />
+        <include name="*.xsd"/>
+        <include name="*.xslt"/>
 <!--
         <include name="nunit.framework.dll" />
         <include name="nunit.engine.dll" />

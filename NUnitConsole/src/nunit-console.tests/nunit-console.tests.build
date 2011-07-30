@@ -6,8 +6,8 @@
     <include name="CommandLineTests.cs" />
     <include name="MakeTestPackageTests.cs" />
     <include name="NUnit2XmlValidationTests.cs" />
+    <include name="OutputSpecificationTests.cs"/>
     <include name="SchemaValidator.cs" />
-    <include name="XmlOutputSpecificationTests.cs"/>
     <include name="XmlOutputTest.cs" />
     <include name="XmlTransformOutputWriterTests.cs"/>
   </patternset>
@@ -29,6 +29,13 @@
         <include name="nunit-console.exe"/>
       </references>
     </csc>
+
+    <copy todir="${current.build.dir}">
+      <fileset>
+        <include name="NUnit2TestResult.xsd"/>
+        <include name="TextSummary.xslt"/>
+      </fileset>
+    </copy>
   </target>
 
   <target name="package">
@@ -38,6 +45,7 @@
         <include name="*.csproj"/>
         <include name="*.build"/>
         <include name="NUnit2TestResult.xsd"/>
+        <include name="TextSummary.xslt"/>
         <include name="App.ico"/>
       </fileset>
     </copy>

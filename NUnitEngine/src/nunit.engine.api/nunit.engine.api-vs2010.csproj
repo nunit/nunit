@@ -26,6 +26,7 @@
     <DefineConstants>TRACE;DEBUG;NET_3_5,CLR_2_0</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>..\..\..\bin\vs2010\Debug\nunit.engine.api.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -49,7 +50,6 @@
     <Compile Include="ITestEngine.cs" />
     <Compile Include="ITestEngineResult.cs" />
     <Compile Include="ITestEventHandler.cs" />
-    <Compile Include="ITestEvents.cs" />
     <Compile Include="ITestFilter.cs" />
     <Compile Include="ITestRunner.cs" />
     <Compile Include="ProcessModel.cs" />

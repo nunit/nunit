@@ -21,52 +21,26 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
 using System.IO;
-using System.Reflection;
+using System.Text;
 using System.Xml;
 
 namespace NUnit.ConsoleRunner
 {
-    public class XmlOutputManager
+    public class TestCaseOutputWriter : IResultWriter
     {
-        private XmlNode result;
-        private string workDirectory;
-
-        public XmlOutputManager(XmlNode result, string workDirectory)
+        public void WriteResultFile(XmlNode resultNode, string outputPath)
         {
-            this.result = result;
-            this.workDirectory = workDirectory;
+            using (StreamWriter writer = new StreamWriter(outputPath, false, Encoding.UTF8))
+            {
+                WriteResultFile(resultNode, writer);
+            }
         }
 
-        public void WriteXmlOutput(XmlOutputSpecification spec)
+        public void WriteResultFile(XmlNode resultNode, TextWriter writer)
         {
-            string outputPath = Path.Combine(workDirectory, spec.OutputPath);
-            IXmlOutputWriter outputWriter = null;
-
-            switch (spec.Format)
-            {
-                case "nunit3":
-                    outputWriter = new NUnit3XmlOutputWriter();
-                    break;
-
-                case "nunit2":
-                    outputWriter = new NUnit2XmlOutputWriter();
-                    break;
-
-                case "user":
-                    Uri uri = new Uri(Assembly.GetExecutingAssembly().CodeBase);
-                    string dir = Path.GetDirectoryName(uri.LocalPath);
-                    outputWriter = new XmlTransformOutputWriter(Path.Combine(dir, spec.Transform));
-                    break;
-
-                default:
-                    throw new ArgumentException(
-                        string.Format("Invalid XML output format '{0}'", spec.Format),
-                        "spec");
-            }
-
-            outputWriter.WriteXmlOutput(result, outputPath);
+            foreach (XmlNode node in resultNode.SelectNodes("*/test-case"))
+                writer.WriteLine(node.Attributes["fullname"].Value);
         }
     }
 }

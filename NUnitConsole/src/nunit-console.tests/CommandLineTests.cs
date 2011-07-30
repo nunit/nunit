@@ -52,7 +52,7 @@ namespace NUnit.ConsoleRunner.Tests
         [TestCase("help", "help|h")]
 		[TestCase("wait", "wait")]
         [TestCase("labels", "labels")]
-        [TestCase("noxml", "noxml")]
+        [TestCase("noresult", "noresult")]
 		public void CanRecognizeBooleanOptions(string fieldName, string pattern)
 		{
             string[] prototypes = pattern.Split('|');
@@ -95,13 +95,8 @@ namespace NUnit.ConsoleRunner.Tests
 
             foreach (string option in prototypes)
             {
-                ConsoleOptions options = new ConsoleOptions("-" + option + ":text");
-                Assert.AreEqual("text", (string)field.GetValue(options), "Didn't recognize -" + option + ":text");
-                options = new ConsoleOptions("--" + option + ":text");
+                ConsoleOptions options = new ConsoleOptions("--" + option + ":text");
                 Assert.AreEqual("text", (string)field.GetValue(options), "Didn't recognize --" + option + ":text");
-                options = new ConsoleOptions("/" + option + ":text");
-                Assert.AreEqual("text", (string)field.GetValue(options), "Didn't recognize /" + option + ":text");
-                options = new ConsoleOptions("--" + option + "=");
             }
         }
 
@@ -122,12 +117,8 @@ namespace NUnit.ConsoleRunner.Tests
                 foreach (string name in Enum.GetNames(enumType))
                 {
                     {
-                        ConsoleOptions options = new ConsoleOptions("-" + option + ":" + name);
+                        ConsoleOptions options = new ConsoleOptions("--" + option + ":" + name);
                         Assert.AreEqual(name, field.GetValue(options).ToString(), "Didn't recognize -" + option + ":" + name);
-                        options = new ConsoleOptions("--" + option + ":" + name);
-                        Assert.AreEqual(name, field.GetValue(options).ToString(), "Didn't recognize --" + option + ": + name");
-                        options = new ConsoleOptions("/" + option + ":" + name);
-                        Assert.AreEqual(name, field.GetValue(options).ToString(), "Didn't recognize /" + option + ":" + name);
                     }
                 }
             }
@@ -203,68 +194,127 @@ namespace NUnit.ConsoleRunner.Tests
         }
 
         [Test]
-        public void XmlParameter()
+        public void ResultOptionWithFilePath()
         {
-            ConsoleOptions options = new ConsoleOptions("tests.dll", "-xml:results.xml");
+            ConsoleOptions options = new ConsoleOptions("tests.dll", "-result:results.xml");
             Assert.True(options.Validate());
             Assert.AreEqual(1, options.InputFiles.Length, "assembly should be set");
             Assert.AreEqual("tests.dll", options.InputFiles[0]);
-            Assert.AreEqual("results.xml", options.XmlOutputSpecifications[0].OutputPath);
+
+            OutputSpecification spec = options.ResultOutputSpecifications[0];
+            Assert.AreEqual("results.xml", spec.OutputPath);
+            Assert.AreEqual("nunit3", spec.Format);
+            Assert.Null(spec.Transform);
         }
 
         [Test]
-        public void XmlParameterWithFullPath()
+        public void ResultOptionWithFilePathAndFormat()
         {
-            ConsoleOptions options = new ConsoleOptions("tests.dll", "-xml:C:/nunit/tests/bin/Debug/console-test.xml");
+            ConsoleOptions options = new ConsoleOptions("tests.dll", "-result:results.xml;format=nunit2");
             Assert.True(options.Validate());
             Assert.AreEqual(1, options.InputFiles.Length, "assembly should be set");
             Assert.AreEqual("tests.dll", options.InputFiles[0]);
-            Assert.AreEqual("C:/nunit/tests/bin/Debug/console-test.xml", options.XmlOutputSpecifications[0].OutputPath);
+
+            OutputSpecification spec = options.ResultOutputSpecifications[0];
+            Assert.AreEqual("results.xml", spec.OutputPath);
+            Assert.AreEqual("nunit2", spec.Format);
+            Assert.Null(spec.Transform);
         }
 
         [Test]
-        public void XmlParameterWithFullPathUsingEqualSign()
+        public void ResultOptionWithFilePathAndTransform()
         {
-            ConsoleOptions options = new ConsoleOptions("tests.dll", "-xml=C:/nunit/tests/bin/Debug/console-test.xml");
+            ConsoleOptions options = new ConsoleOptions("tests.dll", "-result:results.xml;transform=transform.xslt");
             Assert.True(options.Validate());
             Assert.AreEqual(1, options.InputFiles.Length, "assembly should be set");
             Assert.AreEqual("tests.dll", options.InputFiles[0]);
-            Assert.AreEqual("C:/nunit/tests/bin/Debug/console-test.xml", options.XmlOutputSpecifications[0].OutputPath);
+
+            OutputSpecification spec = options.ResultOutputSpecifications[0];
+            Assert.AreEqual("results.xml", spec.OutputPath);
+            Assert.AreEqual("user", spec.Format);
+            Assert.AreEqual("transform.xslt", spec.Transform);
         }
 
         [Test]
-        public void FileNameWithoutXmlParameterLooksLikeParameter()
+        public void FileNameWithoutResultOptionLooksLikeParameter()
         {
-            ConsoleOptions options = new ConsoleOptions("tests.dll", "result.xml");
+            ConsoleOptions options = new ConsoleOptions("tests.dll", "results.xml");
             Assert.True(options.Validate());
             Assert.AreEqual(0, options.ErrorMessages.Count);
             Assert.AreEqual(2, options.InputFiles.Length);
         }
 
         [Test]
-        public void XmlParameterWithoutFileNameIsInvalid()
+        public void ResultOptionWithoutFileNameIsInvalid()
         {
-            ConsoleOptions options = new ConsoleOptions("tests.dll", "-xml:");
+            ConsoleOptions options = new ConsoleOptions("tests.dll", "-result:");
             Assert.False(options.Validate(), "Should not be valid");
             Assert.AreEqual(1, options.ErrorMessages.Count, "An error was expected");
         }
 
-        //[Test]
-        //public void HelpTextUsesCorrectDelimiterForPlatform()
-        //{
-        //    var sb = new StringBuilder();
-        //    var writer = new StringWriter(sb);
-        //    new ConsoleOptions().WriteOptionDescriptions(writer);
-        //    var helpText = sb.ToString();
+        [Test]
+        public void ExploreOptionWithoutPath()
+        {
+            ConsoleOptions options = new ConsoleOptions("tests.dll", "-explore");
+            Assert.True(options.Validate());
+            Assert.True(options.explore);
+        }
 
-        //    char delim = System.IO.Path.DirectorySeparatorChar == '/' ? '-' : '/';
+        [Test]
+        public void ExploreOptionWithFilePath()
+        {
+            ConsoleOptions options = new ConsoleOptions("tests.dll", "-explore:results.xml");
+            Assert.True(options.Validate());
+            Assert.AreEqual(1, options.InputFiles.Length, "assembly should be set");
+            Assert.AreEqual("tests.dll", options.InputFiles[0]);
+            Assert.True(options.explore);
 
-        //    string expected = string.Format("{0}output=", delim);
-        //    StringAssert.Contains(expected, helpText);
+            OutputSpecification spec = options.ExploreOutputSpecifications[0];
+            Assert.AreEqual("results.xml", spec.OutputPath);
+            Assert.AreEqual("nunit3", spec.Format);
+            Assert.Null(spec.Transform);
+        }
 
-        //    expected = string.Format("{0}out=", delim);
-        //    StringAssert.Contains(expected, helpText);
-        //}
+        [Test]
+        public void ExploreOptionWithFilePathAndFormat()
+        {
+            ConsoleOptions options = new ConsoleOptions("tests.dll", "-explore:results.xml;format=cases");
+            Assert.True(options.Validate());
+            Assert.AreEqual(1, options.InputFiles.Length, "assembly should be set");
+            Assert.AreEqual("tests.dll", options.InputFiles[0]);
+            Assert.True(options.explore);
+
+            OutputSpecification spec = options.ExploreOutputSpecifications[0];
+            Assert.AreEqual("results.xml", spec.OutputPath);
+            Assert.AreEqual("cases", spec.Format);
+            Assert.Null(spec.Transform);
+        }
+
+        [Test]
+        public void ExploreOptionWithFilePathAndTransform()
+        {
+            ConsoleOptions options = new ConsoleOptions("tests.dll", "-explore:results.xml;transform=myreport.xslt");
+            Assert.True(options.Validate());
+            Assert.AreEqual(1, options.InputFiles.Length, "assembly should be set");
+            Assert.AreEqual("tests.dll", options.InputFiles[0]);
+            Assert.True(options.explore);
+
+            OutputSpecification spec = options.ExploreOutputSpecifications[0];
+            Assert.AreEqual("results.xml", spec.OutputPath);
+            Assert.AreEqual("user", spec.Format);
+            Assert.AreEqual("myreport.xslt", spec.Transform);
+        }
+
+        [Test]
+        public void ExploreOptionWithFilePathUsingEqualSign()
+        {
+            ConsoleOptions options = new ConsoleOptions("tests.dll", "-explore=C:/nunit/tests/bin/Debug/console-test.xml");
+            Assert.True(options.Validate());
+            Assert.True(options.explore);
+            Assert.AreEqual(1, options.InputFiles.Length, "assembly should be set");
+            Assert.AreEqual("tests.dll", options.InputFiles[0]);
+            Assert.AreEqual("C:/nunit/tests/bin/Debug/console-test.xml", options.ExploreOutputSpecifications[0].OutputPath);
+        }
 
         #region Helper Methods
 
