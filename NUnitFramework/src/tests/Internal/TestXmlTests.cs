@@ -31,27 +31,27 @@ namespace NUnit.Framework.Internal
         }
 
         [Test]
-        public void TestKindTests()
+        public void TestTypeTests()
         {
-            Assert.That(testMethod.XmlElementName, 
-                Is.EqualTo("test-case"));
-            Assert.That(testFixture.XmlElementName, 
-                Is.EqualTo("test-suite"));
-            Assert.That(testSuite.XmlElementName, 
-                Is.EqualTo("test-suite"));
-            Assert.That(new TestAssembly("junk").XmlElementName, 
-                Is.EqualTo("test-suite"));
+            Assert.That(testMethod.TestType, 
+                Is.EqualTo("TestMethod"));
+            Assert.That(testFixture.TestType, 
+                Is.EqualTo("TestFixture"));
+            Assert.That(testSuite.TestType, 
+                Is.EqualTo("TestSuite"));
+            Assert.That(new TestAssembly("junk").TestType, 
+                Is.EqualTo("Assembly"));
 #if CLR_2_0 || CLR_4_0
-            Assert.That(new ParameterizedMethodSuite(typeof(DummyFixture).GetMethod("GenericMethod")).XmlElementName,
-                Is.EqualTo("test-suite"));
-            Assert.That(new ParameterizedMethodSuite(typeof(DummyFixture).GetMethod("ParameterizedMethod")).XmlElementName,
-                Is.EqualTo("test-suite"));
+            Assert.That(new ParameterizedMethodSuite(typeof(DummyFixture).GetMethod("GenericMethod")).TestType,
+                Is.EqualTo("GenericMethod"));
+            Assert.That(new ParameterizedMethodSuite(typeof(DummyFixture).GetMethod("ParameterizedMethod")).TestType,
+                Is.EqualTo("ParameterizedMethod"));
 #if !NUNITLITE
-            Assert.That(new ParameterizedFixtureSuite(typeof(DummyFixture)).XmlElementName,
-                Is.EqualTo("test-suite"));
+            Assert.That(new ParameterizedFixtureSuite(typeof(DummyFixture)).TestType,
+                Is.EqualTo("ParameterizedFixture"));
             Type genericType = typeof(DummyGenericFixture<int>).GetGenericTypeDefinition();
-            Assert.That(new ParameterizedFixtureSuite(genericType).XmlElementName,
-                Is.EqualTo("test-suite"));
+            Assert.That(new ParameterizedFixtureSuite(genericType).TestType,
+                Is.EqualTo("GenericFixture"));
 #endif
 #endif
         }
