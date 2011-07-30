@@ -57,10 +57,17 @@ namespace NUnit.Engine
         /// <returns>An ITestEngine.</returns>
         public static ITestEngine CreateInstance(string assemblyName, string typeName)
         {
-            ITestEngine engine = (ITestEngine)
-                AppDomain.CurrentDomain.CreateInstanceAndUnwrap(assemblyName, typeName);
-            engine.InitializeServices();
-            return engine;
+            try
+            {
+                ITestEngine engine = (ITestEngine)
+                    AppDomain.CurrentDomain.CreateInstanceAndUnwrap(assemblyName, typeName);
+                engine.InitializeServices();
+                return engine;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Failed to load the test engine", ex);
+            }
         }
 
         #endregion

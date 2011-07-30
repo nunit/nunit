@@ -55,11 +55,16 @@
     <Compile Include="NUnit2XmlValidationTests.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="OutputSpecificationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SchemaValidator.cs" />
-    <Compile Include="XmlOutputSpecificationTests.cs" />
+    <Compile Include="XmlOutputTest.cs" />
+    <Compile Include="XmlTransformOutputWriterTests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="TextSummary.xslt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="nunit-console.tests.build" />
     <Content Include="NUnit2TestResult.xsd">
       <SubType>Designer</SubType>

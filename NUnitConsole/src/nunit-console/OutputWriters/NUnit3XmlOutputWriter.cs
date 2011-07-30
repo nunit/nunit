@@ -21,15 +21,31 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System.IO;
+using System.Text;
 using System.Xml;
+using NUnit.Engine;
+using System.IO;
 
 namespace NUnit.ConsoleRunner
 {
-    public interface IXmlOutputWriter
+    public class NUnit3XmlOutputWriter : IResultWriter
     {
-        void WriteXmlOutput(XmlNode resultNode, string outputPath);
+        public void WriteResultFile(XmlNode resultNode, string outputPath)
+        {
+            using (StreamWriter writer = new StreamWriter(outputPath, false, Encoding.UTF8))
+            {
+                WriteResultFile(resultNode, writer);
+            }
+        }
 
-        void WriteXmlOutput(XmlNode resultNode, TextWriter writer);
+        public void WriteResultFile(XmlNode resultNode, TextWriter writer)
+        {
+            using (XmlTextWriter xmlWriter = new XmlTextWriter(writer))
+            {
+                xmlWriter.Formatting = Formatting.Indented;
+                xmlWriter.WriteStartDocument(false);
+                resultNode.WriteTo(xmlWriter);
+            }
+        }
     }
 }

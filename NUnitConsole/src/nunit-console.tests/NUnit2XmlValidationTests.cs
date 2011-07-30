@@ -53,6 +53,12 @@ namespace NUnit.ConsoleRunner.Tests
                 new TestPackage(Path.Combine(dir, "mock-assembly.dll")), 
                 TestListener.Null, 
                 TestFilter.Empty);
+
+            foreach (TestEngineError error in result.Errors)
+                Console.WriteLine(error.Message);
+
+            Assert.False(result.HasErrors);
+            Assert.That(result.Xml.Name, Is.EqualTo("test-run"));
         }
 
 		[Test,SetCulture("")]
@@ -79,7 +85,7 @@ namespace NUnit.ConsoleRunner.Tests
         {
             StringBuilder output = new StringBuilder();
 
-            new NUnit2XmlOutputWriter().WriteXmlOutput(this.result.Xml, new StringWriter(output));
+            new NUnit2XmlOutputWriter().WriteResultFile(this.result.Xml, new StringWriter(output));
 
             if (!validator.Validate(new StringReader(output.ToString())))
             {

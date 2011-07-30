@@ -31,7 +31,7 @@ using System.IO;
 
 namespace NUnit.ConsoleRunner
 {
-    public class NUnit2XmlOutputWriter : IXmlOutputWriter
+    public class NUnit2XmlOutputWriter : IResultWriter
     {
         private XmlWriter xmlWriter;
 
@@ -49,15 +49,15 @@ namespace NUnit.ConsoleRunner
             resultStates["Skipped:Invalid"] = "NotRunnable";
         }
 
-        public void WriteXmlOutput(XmlNode result, string outputPath)
+        public void WriteResultFile(XmlNode result, string outputPath)
         {
             using (StreamWriter writer = new StreamWriter(outputPath, false, Encoding.UTF8))
             {
-                WriteXmlOutput(result, writer);
+                WriteResultFile(result, writer);
             }
         }
 
-        public void WriteXmlOutput(XmlNode result, TextWriter writer)
+        public void WriteResultFile(XmlNode result, TextWriter writer)
         {
             using (XmlTextWriter xmlWriter = new XmlTextWriter(writer))
             {

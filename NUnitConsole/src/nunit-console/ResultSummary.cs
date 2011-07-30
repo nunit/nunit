@@ -50,7 +50,7 @@ namespace NUnit.ConsoleRunner
         public ResultSummary(XmlNode result)
         {
             if (result.Name != "test-run")
-                throw new InvalidOperationException("Expected <test-run> as top-level element");
+                throw new InvalidOperationException("Expected <test-run> as top-level element but was <" + result.Name + ">");
 
             this.name = GetAttribute(result, "name");
             //this.time = GetAttribute(topNode, "time", 0.0);

@@ -54,7 +54,7 @@ namespace NUnit.ConsoleRunner.Tests
         public void SummaryTransformTest()
         {
             StringWriter writer = new StringWriter();
-            new XmlTransformOutputWriter(xsltFile).WriteXmlOutput(result.Xml, writer);
+            new XmlTransformOutputWriter(xsltFile).WriteResultFile(result.Xml, writer);
 
             string summary = string.Format(
                 "Tests Run: {0}, Passed: {1}, Failed: {2}, Inconclusive: {3}, Skipped: {4}",

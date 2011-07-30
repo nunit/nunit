@@ -49,10 +49,11 @@ namespace NUnit.ConsoleRunner
 
         #region Instance Fields
 
+        private ITestEngine engine;
         private ConsoleOptions options;
 
-        TextWriter outWriter = Console.Out;
-        TextWriter errorWriter = Console.Error;
+        private TextWriter outWriter = Console.Out;
+        private TextWriter errorWriter = Console.Error;
 
         private string workDirectory;
 
@@ -60,8 +61,9 @@ namespace NUnit.ConsoleRunner
 
         #region Constructor
 
-        public ConsoleRunner(ConsoleOptions options)
+        public ConsoleRunner(ITestEngine engine, ConsoleOptions options)
         {
+            this.engine = engine;
             this.options = options;
             this.workDirectory = options.WorkDirectory;
         }
@@ -76,33 +78,66 @@ namespace NUnit.ConsoleRunner
         /// <returns></returns>
         public int Execute()
 		{
-            // TODO: We really need options as resolved by engine for most of  these
-            DisplayRequestedOptions();
-
             // Create the test package
             TestPackage package = MakeTestPackage(options);
+
+            if (options.explore)
+                return ExploreTests(package);
+            else
+                return RunTests(package);
+        }
+
+        #endregion
+
+        #region Helper Methods
+
+        private int ExploreTests(TestPackage package)
+        {
+            ITestEngineResult engineResult = engine.Explore(package);
+            int returnCode = ConsoleRunner.OK;
+
+            if (engineResult.HasErrors)
+            {
+                DisplayErrorMessages(engineResult);
+                returnCode = ConsoleRunner.UNEXPECTED_ERROR;
+            }
+            else if (options.ExploreOutputSpecifications.Count == 0)
+            {
+                new TestCaseOutputWriter().WriteResultFile(engineResult.Xml, Console.Out);
+            }
+            else
+            {
+                var outputManager = new OutputManager(engineResult.Xml, workDirectory);
+
+                foreach (OutputSpecification spec in options.ExploreOutputSpecifications)
+                    outputManager.WriteTestFile(spec);
+            }
+
+            return returnCode;
+        }
+
+        private int RunTests(TestPackage package)
+        {
+            // TODO: We really need options as resolved by engine for most of  these
+            DisplayRequestedOptions();
 
             // TODO: Incorporate this in EventCollector?
             RedirectOutputAsRequested();
 
             TestEventHandler eventHandler = new TestEventHandler(options, outWriter, errorWriter);
 
-
             TestFilter testFilter = CreateTestFilter(options);
 
-			ITestEngineResult engineResult = null;
+            ITestEngineResult engineResult = null;
 
             // Save things that might be messed up by a bad test
-			TextWriter savedOut = Console.Out;
-			TextWriter savedError = Console.Error;
+            TextWriter savedOut = Console.Out;
+            TextWriter savedError = Console.Error;
 
             try
             {
-                ITestEngine engine = TestEngineActivator.CreateInstance();
-
-                
 #if true
-                engineResult = engine.Run(package, eventHandler, testFilter );
+                engineResult = engine.Run(package, eventHandler, testFilter);
 #else
                 using (ITestRunner runner = engine.GetRunner(package))
                 {
@@ -130,12 +165,12 @@ namespace NUnit.ConsoleRunner
                 ResultReporter reporter = new ResultReporter(engineResult.Xml);
                 reporter.ReportResults();
 
-                if (!options.noxml)
+                if (!options.noresult)
                 {
-                    var xmlManager = new XmlOutputManager(engineResult.Xml, options.WorkDirectory);
+                    var outputManager = new OutputManager(engineResult.Xml, options.WorkDirectory);
 
-                    foreach (var outputSpec in options.XmlOutputSpecifications)
-                        xmlManager.WriteXmlOutput(outputSpec);
+                    foreach (var outputSpec in options.ResultOutputSpecifications)
+                        outputManager.WriteResultFile(outputSpec);
                 }
 
                 returnCode = reporter.Summary.ErrorsAndFailures;
@@ -150,20 +185,16 @@ namespace NUnit.ConsoleRunner
             return returnCode;
         }
 
-        #endregion
-
-        #region Helper Methods
-
         private void DisplayRequestedOptions()
         {
             Console.WriteLine("ProcessModel: {0}    DomainUsage: {1}", options.processModel, options.domainUsage);
             Console.WriteLine("Execution Runtime: {0}", options.framework == null ? "Not Specified" : options.framework);
             Console.WriteLine();
 
-            if (options.RunList.Length > 0)
+            if (options.TestList.Length > 0)
             {
                 Console.WriteLine("Selected test(s):");
-                foreach (string testName in options.RunList)
+                foreach (string testName in options.TestList)
                     Console.WriteLine("    " + testName);
             }
 
