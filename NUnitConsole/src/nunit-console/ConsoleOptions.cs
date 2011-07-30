@@ -24,7 +24,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using NDesk.Options;
+using Mono.Options;
 using NUnit.Engine;
 
 namespace NUnit.ConsoleRunner

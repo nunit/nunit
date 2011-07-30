@@ -126,7 +126,7 @@ namespace NUnit.ConsoleRunner.Tests
             Assert.AreEqual(InternalTraceLevel.Info, package.Settings["InternalTraceLevel"]);
         }
 
-        [Test, ExpectedException(typeof(NDesk.Options.OptionException))]
+        [Test, ExpectedException(typeof(Mono.Options.OptionException))]
         public void EnumOptions_InvalidNamesCauseAnException()
         {
             var options = new ConsoleOptions("test.dll", "--trace=All");
