@@ -108,6 +108,9 @@ namespace NUnit.Framework.Internal
                 TestExecutionContext.CurrentContext.Out = new EventListenerTextWriter(queue, TestOutputType.Out);
                 TestExecutionContext.CurrentContext.Error = new EventListenerTextWriter(queue, TestOutputType.Error);
 
+                if (runOptions.Contains("DefaultTimeout"))
+                    TestExecutionContext.CurrentContext.TestCaseTimeout = (int)runOptions["DefaultTimeout"];
+
                 using (EventPump pump = new EventPump(listener, queue.Events, true))
                 {
                     pump.Start();
