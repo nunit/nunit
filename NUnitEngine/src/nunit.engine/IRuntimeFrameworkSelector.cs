@@ -23,9 +23,9 @@
 
 using System;
 
-namespace NUnit.Engine.Interfaces
+namespace NUnit.Engine
 {
-    interface IRuntimeFrameworkSelector
+    public interface IRuntimeFrameworkSelector
     {
         /// <summary>
         /// Selects a target runtime framework for a TestPackage based on

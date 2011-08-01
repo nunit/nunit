@@ -32,7 +32,9 @@ namespace NUnit.ConsoleRunner.Tests
 {
 	[TestFixture]
 	public class CommandLineTests
-	{
+    {
+        #region General Tests
+
         [Test]
         public void NoInputFiles()
         {
@@ -48,69 +50,95 @@ namespace NUnit.ConsoleRunner.Tests
         //    Assert.AreEqual( Path.DirectorySeparatorChar != '/', options.AllowForwardSlash );
         //}
 
-        [TestCase("noheader", "noheader|noh")]
-        [TestCase("help", "help|h")]
-		[TestCase("wait", "wait")]
-        [TestCase("labels", "labels")]
-        [TestCase("noresult", "noresult")]
-		public void CanRecognizeBooleanOptions(string fieldName, string pattern)
+        [TestCase("NoHeader", "noheader|noh")]
+        [TestCase("ShowHelp", "help|h")]
+		[TestCase("Wait", "wait")]
+        [TestCase("Labels", "labels")]
+		public void CanRecognizeBooleanOptions(string propertyName, string pattern)
 		{
             string[] prototypes = pattern.Split('|');
 
-            FieldInfo field = GetFieldInfo(fieldName);
-            Assert.AreEqual(typeof(bool), field.FieldType, "Field '{0}' is wrong type", fieldName);
+            PropertyInfo property = GetPropertyInfo(propertyName);
+            Assert.AreEqual(typeof(bool), property.PropertyType, "Property '{0}' is wrong type", propertyName);
 
             foreach (string option in prototypes)
             {
                 ConsoleOptions options = new ConsoleOptions("-" + option);
-                Assert.AreEqual(true, (bool)field.GetValue(options), "Didn't recognize -" + option);
+                Assert.AreEqual(true, (bool)property.GetValue(options, null), "Didn't recognize -" + option);
 
                 options = new ConsoleOptions("-" + option + "+");
-                Assert.AreEqual(true, (bool)field.GetValue(options), "Didn't recognize -" + option + "+");
+                Assert.AreEqual(true, (bool)property.GetValue(options, null), "Didn't recognize -" + option + "+");
 
                 options = new ConsoleOptions("-" + option + "-");
-                Assert.AreEqual(false, (bool)field.GetValue(options), "Didn't recognize -" + option + "-");
+                Assert.AreEqual(false, (bool)property.GetValue(options, null), "Didn't recognize -" + option + "-");
 
                 options = new ConsoleOptions("--" + option);
-                Assert.AreEqual(true, (bool)field.GetValue(options), "Didn't recognize --" + option);
+                Assert.AreEqual(true, (bool)property.GetValue(options, null), "Didn't recognize --" + option);
 
                 options = new ConsoleOptions("/" + option);
-                Assert.AreEqual(true, (bool)field.GetValue(options), "Didn't recognize /" + option);
+                Assert.AreEqual(true, (bool)property.GetValue(options, null), "Didn't recognize /" + option);
             }
         }
 
-        [TestCase("activeConfig", "config")]
-        //[TestCase("xmlPath", "xml")]
-        [TestCase("outputPath", "output|out")]
-        [TestCase("errorPath", "err")]
-        [TestCase("include", "include")]
-        [TestCase("exclude", "exclude")]
-        [TestCase("workDir", "work")]
-        public void CanRecognizeStringOptions(string fieldName, string pattern)
+        [TestCase("ActiveConfig",  "config",     new string[] { "Debug" },                          new string[0])]
+        [TestCase("OutputPath",    "output|out", new string[] { "output.txt" },                     new string[0])]
+        [TestCase("ErrorPath",     "err",        new string[] { "error.txt" },                      new string[0])]
+        [TestCase("Include",       "include",    new string[] { "Short,Fast" },                     new string[0])]
+        [TestCase("Exclude",       "exclude",    new string[] { "Long" },                           new string[0])]
+        [TestCase("WorkDirectory", "work",       new string[] { "results" },                        new string[0])]
+        [TestCase("Framework",     "framework",  new string[] { "net-4.0" },                        new string[0])]
+        [TestCase("DomainUsage",   "domain",     new string[] { "None", "Single", "Multiple" },     new string[] { "JUNK" })]
+        [TestCase("ProcessModel",  "process",    new string[] { "Single", "Separate", "Multiple" }, new string[] { "JUNK" })]
+        public void CanRecognizeStringOptions(string propertyName, string pattern, string[] goodValues, string[] badValues)
         {
             string[] prototypes = pattern.Split('|');
 
-            FieldInfo field = GetFieldInfo(fieldName);
-            Assert.AreEqual(typeof(string), field.FieldType);
+            PropertyInfo property = GetPropertyInfo(propertyName);
+            Assert.AreEqual(typeof(string), property.PropertyType);
 
             foreach (string option in prototypes)
             {
-                ConsoleOptions options = new ConsoleOptions("--" + option + ":text");
-                Assert.AreEqual("text", (string)field.GetValue(options), "Didn't recognize --" + option + ":text");
+                foreach (string value in goodValues)
+                {
+                    string optionPlusValue = string.Format("--{0}:{1}", option, value);
+                    ConsoleOptions options = new ConsoleOptions(optionPlusValue);
+                    Assert.True(options.Validate(), "Should be valid: " + optionPlusValue);
+                    Assert.AreEqual(value, (string)property.GetValue(options, null), "Didn't recognize " + optionPlusValue);
+                }
+
+                foreach (string value in badValues)
+                {
+                    string optionPlusValue = string.Format("--{0}:{1}", option, value);
+                    ConsoleOptions options = new ConsoleOptions(optionPlusValue);
+                    Assert.False(options.Validate(), "Should not be valid: " + optionPlusValue);
+                }
             }
         }
 
-        [TestCase("domainUsage", "domain", typeof(DomainUsage))]
-        [TestCase("processModel", "process", typeof(ProcessModel))]
-        [TestCase("internalTraceLevel", "trace", typeof(InternalTraceLevel))]
-        public void CanRecognizeEnumOptions(string fieldName, string pattern, Type enumType)
+        [TestCase("DefaultTimeout", "timeout")]
+        public void CanRecognizeIntOptions(string propertyName, string pattern)
         {
             string[] prototypes = pattern.Split('|');
 
-            FieldInfo field = GetFieldInfo(fieldName);
-            Assert.IsNotNull(field, "Field {0} not found", fieldName);
-            Assert.IsTrue(field.FieldType.IsEnum, "Field {0} is not an enum", fieldName);
-            Assert.AreEqual(enumType, field.FieldType);
+            PropertyInfo property = GetPropertyInfo(propertyName);
+            Assert.AreEqual(typeof(int), property.PropertyType);
+
+            foreach (string option in prototypes)
+            {
+                ConsoleOptions options = new ConsoleOptions("--" + option + ":42");
+                Assert.AreEqual(42, (int)property.GetValue(options, null), "Didn't recognize --" + option + ":text");
+            }
+        }
+
+        [TestCase("InternalTraceLevel", "trace", typeof(InternalTraceLevel))]
+        public void CanRecognizeEnumOptions(string propertyName, string pattern, Type enumType)
+        {
+            string[] prototypes = pattern.Split('|');
+
+            PropertyInfo property = GetPropertyInfo(propertyName);
+            Assert.IsNotNull(property, "Property {0} not found", propertyName);
+            Assert.IsTrue(property.PropertyType.IsEnum, "Property {0} is not an enum", propertyName);
+            Assert.AreEqual(enumType, property.PropertyType);
 
             foreach (string option in prototypes)
             {
@@ -118,7 +146,7 @@ namespace NUnit.ConsoleRunner.Tests
                 {
                     {
                         ConsoleOptions options = new ConsoleOptions("--" + option + ":" + name);
-                        Assert.AreEqual(name, field.GetValue(options).ToString(), "Didn't recognize -" + option + ":" + name);
+                        Assert.AreEqual(name, property.GetValue(options, null).ToString(), "Didn't recognize -" + option + ":" + name);
                     }
                 }
             }
@@ -131,7 +159,7 @@ namespace NUnit.ConsoleRunner.Tests
         [TestCase("--include")]
         [TestCase("--exclude")]
         [TestCase("--work")]
-        //[TestCase("--timeout")]
+        [TestCase("--timeout")]
         //[TestCase("--trace")]
         public void MissingValuesAreReported(string option)
         {
@@ -193,6 +221,44 @@ namespace NUnit.ConsoleRunner.Tests
             Assert.AreEqual("Invalid argument: -assembly:Tests.dll", options.ErrorMessages[1]);
         }
 
+        #endregion
+
+        #region Timeout Option
+
+        [Test]
+        public void TimeoutIsMinusOneIfNoOptionIsProvided()
+        {
+            ConsoleOptions options = new ConsoleOptions("tests.dll");
+            Assert.True(options.Validate());
+            Assert.AreEqual(-1, options.DefaultTimeout);
+        }
+
+        [Test, ExpectedException(typeof(Mono.Options.OptionException))]
+        public void TimeoutThrowsExceptionIfOptionHasNoValue()
+        {
+            ConsoleOptions options = new ConsoleOptions("tests.dll", "-timeout");
+        }
+
+        [Test]
+        public void TimeoutParsesIntValueCorrectly()
+        {
+            ConsoleOptions options = new ConsoleOptions("tests.dll", "-timeout:5000");
+            Assert.True(options.Validate());
+            Assert.AreEqual(5000, options.DefaultTimeout);
+        }
+
+        [Test]
+        public void TimeoutCausesErrorIfValueIsNotInteger()
+        {
+            ConsoleOptions options = new ConsoleOptions("tests.dll", "-timeout:abc");
+            Assert.False(options.Validate());
+            Assert.AreEqual(-1, options.DefaultTimeout);
+        }
+
+        #endregion
+
+        #region Result Option
+
         [Test]
         public void ResultOptionWithFilePath()
         {
@@ -253,11 +319,66 @@ namespace NUnit.ConsoleRunner.Tests
         }
 
         [Test]
+        public void ResultOptionMayBeRepeated()
+        {
+            ConsoleOptions options = new ConsoleOptions("tests.dll", "-result:results.xml", "-result:nunit2results.xml;format=nunit2", "-result:myresult.xml;transform=mytransform.xslt");
+            Assert.True(options.Validate(), "Should be valid");
+
+            var specs = options.ResultOutputSpecifications;
+            Assert.AreEqual(3, specs.Count);
+
+            var spec1 = specs[0];
+            Assert.AreEqual("results.xml", spec1.OutputPath);
+            Assert.AreEqual("nunit3", spec1.Format);
+            Assert.Null(spec1.Transform);
+
+            var spec2 = specs[1];
+            Assert.AreEqual("nunit2results.xml", spec2.OutputPath);
+            Assert.AreEqual("nunit2", spec2.Format);
+            Assert.Null(spec2.Transform);
+
+            var spec3 = specs[2];
+            Assert.AreEqual("myresult.xml", spec3.OutputPath);
+            Assert.AreEqual("user", spec3.Format);
+            Assert.AreEqual("mytransform.xslt", spec3.Transform);
+        }
+
+        [Test]
+        public void DefaultResultSpecification()
+        {
+            var options = new ConsoleOptions("test.dll");
+            Assert.AreEqual(1, options.ResultOutputSpecifications.Count);
+
+            var spec = options.ResultOutputSpecifications[0];
+            Assert.AreEqual("TestResult.xml", spec.OutputPath);
+            Assert.AreEqual("nunit3", spec.Format);
+            Assert.Null(spec.Transform);
+        }
+
+        [Test]
+        public void NoResultSuppressesDefaultResultSpecification()
+        {
+            var options = new ConsoleOptions("test.dll", "-noresult");
+            Assert.AreEqual(0, options.ResultOutputSpecifications.Count);
+        }
+
+        [Test]
+        public void NoResultSuppressesAllResultSpecifications()
+        {
+            var options = new ConsoleOptions("test.dll", "-result:results.xml", "-noresult", "-result:nunit2results.xml;format=nunit2");
+            Assert.AreEqual(0, options.ResultOutputSpecifications.Count);
+        }
+
+        #endregion
+
+        #region Explore Option
+
+        [Test]
         public void ExploreOptionWithoutPath()
         {
             ConsoleOptions options = new ConsoleOptions("tests.dll", "-explore");
             Assert.True(options.Validate());
-            Assert.True(options.explore);
+            Assert.True(options.Explore);
         }
 
         [Test]
@@ -267,7 +388,7 @@ namespace NUnit.ConsoleRunner.Tests
             Assert.True(options.Validate());
             Assert.AreEqual(1, options.InputFiles.Length, "assembly should be set");
             Assert.AreEqual("tests.dll", options.InputFiles[0]);
-            Assert.True(options.explore);
+            Assert.True(options.Explore);
 
             OutputSpecification spec = options.ExploreOutputSpecifications[0];
             Assert.AreEqual("results.xml", spec.OutputPath);
@@ -282,7 +403,7 @@ namespace NUnit.ConsoleRunner.Tests
             Assert.True(options.Validate());
             Assert.AreEqual(1, options.InputFiles.Length, "assembly should be set");
             Assert.AreEqual("tests.dll", options.InputFiles[0]);
-            Assert.True(options.explore);
+            Assert.True(options.Explore);
 
             OutputSpecification spec = options.ExploreOutputSpecifications[0];
             Assert.AreEqual("results.xml", spec.OutputPath);
@@ -297,7 +418,7 @@ namespace NUnit.ConsoleRunner.Tests
             Assert.True(options.Validate());
             Assert.AreEqual(1, options.InputFiles.Length, "assembly should be set");
             Assert.AreEqual("tests.dll", options.InputFiles[0]);
-            Assert.True(options.explore);
+            Assert.True(options.Explore);
 
             OutputSpecification spec = options.ExploreOutputSpecifications[0];
             Assert.AreEqual("results.xml", spec.OutputPath);
@@ -310,11 +431,13 @@ namespace NUnit.ConsoleRunner.Tests
         {
             ConsoleOptions options = new ConsoleOptions("tests.dll", "-explore=C:/nunit/tests/bin/Debug/console-test.xml");
             Assert.True(options.Validate());
-            Assert.True(options.explore);
+            Assert.True(options.Explore);
             Assert.AreEqual(1, options.InputFiles.Length, "assembly should be set");
             Assert.AreEqual("tests.dll", options.InputFiles[0]);
             Assert.AreEqual("C:/nunit/tests/bin/Debug/console-test.xml", options.ExploreOutputSpecifications[0].OutputPath);
         }
+
+        #endregion
 
         #region Helper Methods
 
@@ -323,6 +446,13 @@ namespace NUnit.ConsoleRunner.Tests
             FieldInfo field = typeof(ConsoleOptions).GetField(fieldName);
             Assert.IsNotNull(field, "The field '{0}' is not defined", fieldName);
             return field;
+        }
+
+        private static PropertyInfo GetPropertyInfo(string propertyName)
+        {
+            PropertyInfo property = typeof(ConsoleOptions).GetProperty(propertyName);
+            Assert.IsNotNull(property, "The property '{0}' is not defined", propertyName);
+            return property;
         }
 
         #endregion

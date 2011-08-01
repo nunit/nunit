@@ -50,5 +50,13 @@ namespace NUnit.Engine
         /// <param name="filter">A TestFilter used to select tests</param>
         /// <returns>A TestEngineResult giving the result of the test execution</returns>
         ITestEngineResult Run(ITestEventHandler listener, ITestFilter filter);
+
+        /// <summary>
+        /// Explore a TestPackage and return information about
+        /// the tests found.
+        /// </summary>
+        /// <param name="package">The TestPackage to be explored</param>
+        /// <returns>A TestEngineResult.</returns>
+        ITestEngineResult Explore(TestPackage package);
     }
 }

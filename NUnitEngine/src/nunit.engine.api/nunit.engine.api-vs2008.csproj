@@ -39,7 +39,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
-    <Compile Include="DomainUsage.cs" />
     <Compile Include="InternalTraceLevel.cs" />
     <Compile Include="ITestAgency.cs" />
     <Compile Include="ITestAgent.cs" />
@@ -48,7 +47,6 @@
     <Compile Include="ITestFilter.cs" />
     <Compile Include="ITestEventHandler.cs" />
     <Compile Include="ITestRunner.cs" />
-    <Compile Include="ProcessModel.cs" />
     <Compile Include="TestEngineActivator.cs" />
     <Compile Include="TestEngineError.cs" />
     <Compile Include="TestFilter.cs" />

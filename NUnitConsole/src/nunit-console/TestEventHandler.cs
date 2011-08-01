@@ -102,7 +102,7 @@ namespace NUnit.ConsoleRunner
 
         private void TestStarted(XmlNode startNode)
         {
-            if (options.labels)
+            if (options.Labels)
             {
                 XmlAttribute nameAttr = startNode.Attributes["fullname"];
                 if (nameAttr != null)

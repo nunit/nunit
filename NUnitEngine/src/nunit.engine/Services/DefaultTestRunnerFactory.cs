@@ -34,8 +34,6 @@ namespace NUnit.Engine.Services
     /// </summary>
     public class DefaultTestRunnerFactory : InProcessTestRunnerFactory, ITestRunnerFactory
     {
-        private RuntimeFrameworkSelector selector = new RuntimeFrameworkSelector();        
-        
         /// <summary>
         /// Returns a test runner based on the settings in a TestPackage.
         /// Any setting that is "consumed" by the factory is removed, so
@@ -64,7 +62,7 @@ namespace NUnit.Engine.Services
         public override bool CanReuse(ITestRunner runner, TestPackage package)
         {
             RuntimeFramework currentFramework = RuntimeFramework.CurrentFramework;
-            RuntimeFramework targetFramework = selector.SelectRuntimeFramework(package);
+            RuntimeFramework targetFramework = ServiceContext.RuntimeFrameworkSelector.SelectRuntimeFramework(package);
 
             ProcessModel processModel = (ProcessModel)
                 package.GetSetting("ProcessModel", ProcessModel.Default);
@@ -87,7 +85,7 @@ namespace NUnit.Engine.Services
         private ProcessModel GetTargetProcessModel(TestPackage package)
         {
             RuntimeFramework currentFramework = RuntimeFramework.CurrentFramework;
-            RuntimeFramework targetFramework = selector.SelectRuntimeFramework(package);
+            RuntimeFramework targetFramework = ServiceContext.RuntimeFrameworkSelector.SelectRuntimeFramework(package);
 
             ProcessModel processModel = (ProcessModel)package.GetSetting("ProcessModel", ProcessModel.Default);
             if (processModel == ProcessModel.Default)

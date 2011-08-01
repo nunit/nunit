@@ -6,12 +6,12 @@ namespace NUnit.Engine
 {
     public interface IFrameworkDriver
     {
-        TestEngineResult ExploreTests(string[] assemblyNames, IDictionary<string,object> options);
-
         TestEngineResult Load(string assemblyName, IDictionary<string,object> options);
 
         void Unload();
 
         TestEngineResult Run(IDictionary<string,object> options, ITestEventHandler listener);
+
+        TestEngineResult Explore(string assemblyName, IDictionary<string, object> options);
     }
 }

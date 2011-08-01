@@ -156,31 +156,40 @@ namespace NUnit.Engine
             int skipped = 0;
             int asserts = 0;
 
+            bool isTestRunResult = false;
+
             foreach (XmlNode node in resultNodes)
             {
-                switch (XmlHelper.GetAttribute(node, "result"))
-                {
-                    case "Skipped":
-                        if (status == "Inconclusive")
-                            status = "Skipped";
-                        break;
-                    case "Passed":
-                        if (status != "Failed")
-                            status = "Passed";
-                        break;
-                    case "Failed":
-                        status = "Failed";
-                        break;
-                }
-
                 testcasecount += XmlHelper.GetAttribute(node, "testcasecount", 0);
-                total += XmlHelper.GetAttribute(node, "total", 0);
-                time += XmlHelper.GetAttribute(node, "time", 0.0);
-                passed += XmlHelper.GetAttribute(node, "passed", 0);
-                failed += XmlHelper.GetAttribute(node, "failed", 0);
-                inconclusive += XmlHelper.GetAttribute(node, "inconclusive", 0);
-                skipped += XmlHelper.GetAttribute(node, "skipped", 0);
-                asserts += XmlHelper.GetAttribute(node, "asserts", 0);
+                 
+                XmlAttribute resultAttribute = node.Attributes["result"];
+                if (resultAttribute != null)
+                {
+                    isTestRunResult = true;
+
+                    switch (resultAttribute.Value)
+                    {
+                        case "Skipped":
+                            if (status == "Inconclusive")
+                                status = "Skipped";
+                            break;
+                        case "Passed":
+                            if (status != "Failed")
+                                status = "Passed";
+                            break;
+                        case "Failed":
+                            status = "Failed";
+                            break;
+                    }
+
+                    total += XmlHelper.GetAttribute(node, "total", 0);
+                    time += XmlHelper.GetAttribute(node, "time", 0.0);
+                    passed += XmlHelper.GetAttribute(node, "passed", 0);
+                    failed += XmlHelper.GetAttribute(node, "failed", 0);
+                    inconclusive += XmlHelper.GetAttribute(node, "inconclusive", 0);
+                    skipped += XmlHelper.GetAttribute(node, "skipped", 0);
+                    asserts += XmlHelper.GetAttribute(node, "asserts", 0);
+                }
 
                 XmlNode import = combinedNode.OwnerDocument.ImportNode(node, true);
                 combinedNode.AppendChild(import);
@@ -194,14 +203,18 @@ namespace NUnit.Engine
             if (package.FullName != null && package.FullName != string.Empty)
                 XmlHelper.AddAttribute(combinedNode, "fullname", package.FullName);
             XmlHelper.AddAttribute(combinedNode, "testcasecount", testcasecount.ToString());
-            XmlHelper.AddAttribute(combinedNode, "result", status);
-            XmlHelper.AddAttribute(combinedNode, "time", time.ToString());
-            XmlHelper.AddAttribute(combinedNode, "total", total.ToString());
-            XmlHelper.AddAttribute(combinedNode, "passed", passed.ToString());
-            XmlHelper.AddAttribute(combinedNode, "failed", failed.ToString());
-            XmlHelper.AddAttribute(combinedNode, "inconclusive", inconclusive.ToString());
-            XmlHelper.AddAttribute(combinedNode, "skipped", skipped.ToString());
-            XmlHelper.AddAttribute(combinedNode, "asserts", asserts.ToString());
+
+            if (isTestRunResult)
+            {
+                XmlHelper.AddAttribute(combinedNode, "result", status);
+                XmlHelper.AddAttribute(combinedNode, "time", time.ToString());
+                XmlHelper.AddAttribute(combinedNode, "total", total.ToString());
+                XmlHelper.AddAttribute(combinedNode, "passed", passed.ToString());
+                XmlHelper.AddAttribute(combinedNode, "failed", failed.ToString());
+                XmlHelper.AddAttribute(combinedNode, "inconclusive", inconclusive.ToString());
+                XmlHelper.AddAttribute(combinedNode, "skipped", skipped.ToString());
+                XmlHelper.AddAttribute(combinedNode, "asserts", asserts.ToString());
+            }
 
             return combinedNode;
         }
@@ -286,6 +299,10 @@ namespace NUnit.Engine
         {
             get
             {
+                // xmlNodes might be null after deserialization
+                if (xmlNodes == null)
+                    xmlNodes = new List<XmlNode>();
+
                 for (int i = xmlNodes.Count; i < xmlText.Count; i++)
                 {
                     XmlDocument doc = new XmlDocument();

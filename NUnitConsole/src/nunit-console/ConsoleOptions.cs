@@ -37,31 +37,10 @@ namespace NUnit.ConsoleRunner
     /// </summary>
 	public class ConsoleOptions : OptionSet
 	{
-        public string activeConfig;
-        public bool noresult;
-        public string outputPath;
-        public string errorPath;
-        public string workDir;
-        public bool labels;
-        public bool explore;
-        public InternalTraceLevel internalTraceLevel;
-        public string include;
-        public string exclude;
-        public string framework;
-        public ProcessModel processModel;
-        public DomainUsage domainUsage;
-        public int defaultTimeout = -1;
-        public bool wait;
-        public bool noheader;
-        public bool help;
-
-        private List<string> inputFiles = new List<string>();
-        private List<string> testList = new List<string>();
-        private List<string> errorMessages = new List<string>();
-        private List<OutputSpecification> resultOutputSpecifications = new List<OutputSpecification>();
-        private List<OutputSpecification> exploreOutputSpecifications = new List<OutputSpecification>();
-
         private bool validated;
+        private bool noresult;
+
+        #region Constructor
 
         public ConsoleOptions(params string[] args)
         {
@@ -119,13 +98,13 @@ namespace NUnit.ConsoleRunner
                 v => framework = v);
 
             this.Add("process=", "{PROCESS} isolation for test assemblies.\nValues: Single, Separate, Multiple",
-                (ProcessModel v) => processModel = v);
+                v => processModel = RequiredValue(v, "--process", "Single", "Separate", "Multiple"));
 
             this.Add("domain=", "{DOMAIN} isolation for test assemblies.\nValues: None, Single, Multiple",
-                (DomainUsage v) => domainUsage = v);
+                v => domainUsage = RequiredValue(v, "--domain", "None", "Single", "Multiple"));
 
             this.Add("timeout=", "(NYI) Set timeout for each test case in {MILLISECONDS}.",
-                (int v) => defaultTimeout = v);
+                v => defaultTimeout = RequiredInt(v, "--timeout"));
             
             this.Add("wait", "Wait for input before closing console window.", 
                 v => wait = v != null);
@@ -149,32 +128,132 @@ namespace NUnit.ConsoleRunner
                 this.Parse(args);
         }
 
+        #endregion
+
         #region Properties
 
+        private string activeConfig;
+        public string ActiveConfig
+        {
+            get { return activeConfig; }
+        }
+
+        private string outputPath;
+        public string OutputPath
+        {
+            get { return outputPath; }
+        }
+
+        private string errorPath;
+        public string ErrorPath
+        {
+            get { return errorPath; }
+        }
+
+        private string workDir;
         public string WorkDirectory
         {
             get { return workDir == null ? Environment.CurrentDirectory : workDir; }
         }
 
+        private string include;
+        public string Include
+        {
+            get { return include; }
+        }
+
+        private string exclude;
+        public string Exclude
+        {
+            get { return exclude; }
+        }
+
+        private string framework;
+        public string Framework
+        {
+            get { return framework; }
+        }
+
+        private string processModel;
+        public string ProcessModel
+        {
+            get { return processModel; }
+        }
+
+        private string domainUsage;
+        public string DomainUsage
+        {
+            get { return domainUsage; }
+        }
+
+        private InternalTraceLevel internalTraceLevel;
+        public InternalTraceLevel InternalTraceLevel
+        {
+            get { return internalTraceLevel; }
+        }
+
+        private int defaultTimeout = -1;
+        public int DefaultTimeout
+        {
+            get { return defaultTimeout; }
+        }   
+
+        private bool labels;
+        public bool Labels
+        {
+            get { return labels; }
+        }
+
+        private bool explore;
+        public bool Explore
+        {
+            get { return explore; }
+        }
+
+        private bool wait;
+        public bool Wait
+        {
+            get { return wait; }
+        }
+
+        private bool noheader;
+        public bool NoHeader
+        {
+            get { return noheader; }
+        }
+
+        private bool help;
+        public bool ShowHelp
+        {
+            get { return help; }
+        }
+
+        private List<string> inputFiles = new List<string>();
         public string[] InputFiles
         {
             get { return inputFiles.ToArray(); }
         }
 
+        private List<string> testList = new List<string>();
         public string[] TestList
         {
             get { return testList.ToArray(); }
         }
 
+        private List<string> errorMessages = new List<string>();
         public IList<string> ErrorMessages
         {
             get { return errorMessages; }
         }
 
+        private List<OutputSpecification> resultOutputSpecifications = new List<OutputSpecification>();
         public IList<OutputSpecification> ResultOutputSpecifications
         {
             get 
             {
+                if (noresult)
+                    return new OutputSpecification[0];
+
                 if (resultOutputSpecifications.Count == 0)
                     resultOutputSpecifications.Add(new OutputSpecification("TestResult.xml"));
 
@@ -182,6 +261,7 @@ namespace NUnit.ConsoleRunner
             }
         }
 
+        private List<OutputSpecification> exploreOutputSpecifications = new List<OutputSpecification>();
         public IList<OutputSpecification> ExploreOutputSpecifications
         {
             get { return exploreOutputSpecifications; }
@@ -207,11 +287,48 @@ namespace NUnit.ConsoleRunner
 
         #region Helper Methods
 
-        private string RequiredValue(string val, string option)
+        private string RequiredValue(string val, string option, params string[] validValues)
         {
             if (val == null || val == string.Empty)
                 errorMessages.Add("Missing required value for option '" + option + "'.");
+
+            bool isValid = true;
+
+            if (validValues != null && validValues.Length > 0)
+            {
+                isValid = false;
+
+                foreach (string valid in validValues)
+                    if (string.Compare(valid, val, true) == 0)
+                        isValid = true;
+
+            }
+
+            if (!isValid)
+                errorMessages.Add(string.Format("The value '{0}' is not valid for option '{1}'.", val, option));
+
             return val;
+        }
+
+        private int RequiredInt(string val, string option)
+        {
+            // We have to return something even though the value will 
+            // be ignored if an error is reported. The -1 value seems
+            // like a safe bet in case it isn't ignored due to a bug.
+            int result = -1;
+
+            if (val == null || val == string.Empty)
+                errorMessages.Add("Missing required value for option '" + option + "'.");
+            else 
+            {
+                int r;
+                if (int.TryParse(val, out r))
+                    result = r;
+                else
+                    errorMessages.Add("An int value was exprected for option '{0}' but a value of '{1}' was used");
+            }
+                
+            return result;
         }
 
         private void RequiredIntError(string option)

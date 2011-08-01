@@ -68,7 +68,7 @@ namespace NUnit.Agent
             //log.Info("Adding Services");
             Console.WriteLine("Adding Services");
             engine.Services.Add(settingsService);
-            //engine.Services.Add(new ProjectService());
+            engine.Services.Add(new ProjectService());
             engine.Services.Add(new DomainManager());
             engine.Services.Add(new InProcessTestRunnerFactory());
             //engine.Services.Add( new TestLoader() );
