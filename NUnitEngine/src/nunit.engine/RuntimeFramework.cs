@@ -54,6 +54,11 @@ namespace NUnit.Engine
 		private string displayName;
         #endregion
 
+        static public explicit operator RuntimeFramework(string s)
+        {
+            return Parse(s);
+        }
+
         #region Constructor
 
         /// <summary>

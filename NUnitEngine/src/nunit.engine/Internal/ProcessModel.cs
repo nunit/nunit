@@ -21,13 +21,13 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-namespace NUnit.Engine
+namespace NUnit.Engine.Internal
 {
     /// <summary>
-    /// Represents the manner in which test assemblies use
-    /// AppDomains to provide isolation
+    /// Represents the manner in which test assemblies are
+    /// distributed across processes.
     /// </summary>
-    public enum DomainUsage
+    public enum ProcessModel
     {
         /// <summary>
         /// Use the default setting, depending on the runner
@@ -35,17 +35,15 @@ namespace NUnit.Engine
         /// </summary>
         Default,
         /// <summary>
-        /// Don't create a test domain - run in the primary AppDomain.
-        /// Note that this requires the tests to be available in the
-        /// NUnit appbase or probing path.
-        /// </summary>
-        None,
-        /// <summary>
-        /// Run tests in a single separate test domain
+        /// Run tests directly in the NUnit process
         /// </summary>
         Single,
         /// <summary>
-        /// Run tests in a separate domain per assembly
+        /// Run tests in a single separate process
+        /// </summary>
+        Separate,
+        /// <summary>
+        /// Run tests in a separate process per assembly
         /// </summary>
         Multiple
     }

@@ -63,10 +63,10 @@ namespace NUnit.ConsoleRunner
             
             //log.Info("NUnit-console.exe starting");
 
-			if(!options.noheader)
+			if(!options.NoHeader)
 				WriteHeader();
 
-            if (options.help)
+            if (options.ShowHelp)
             {
                 WriteHelpText(options);
                 return ConsoleRunner.OK;
@@ -118,7 +118,7 @@ namespace NUnit.ConsoleRunner
             }
             finally
             {
-                if(options.wait)
+                if(options.Wait)
                 {
                     Console.Out.WriteLine("\nHit <enter> key to continue");
                     Console.ReadLine();

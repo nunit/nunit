@@ -73,7 +73,7 @@ namespace NUnit.ConsoleRunner.Tests
             var package = ConsoleRunner.MakeTestPackage(options);
 
             Assert.That(package.Settings.ContainsKey("ProcessModel"));
-            Assert.AreEqual(ProcessModel.Separate, package.Settings["ProcessModel"]);
+            Assert.AreEqual("Separate", package.Settings["ProcessModel"]);
         }
 
         [Test]
@@ -83,7 +83,7 @@ namespace NUnit.ConsoleRunner.Tests
             var package = ConsoleRunner.MakeTestPackage(options);
 
             Assert.That(package.Settings.ContainsKey("DomainUsage"));
-            Assert.AreEqual(DomainUsage.Multiple, package.Settings["DomainUsage"]);
+            Assert.AreEqual("Multiple", package.Settings["DomainUsage"]);
         }
 
         [Test]

@@ -26,7 +26,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Collections.Generic;
 using System.Xml;
-using NUnit.Engine.Interfaces;
 
 namespace NUnit.Engine
 {
@@ -60,27 +59,7 @@ namespace NUnit.Engine
         {
         }
 
-        public TestEngineResult ExploreTests(string[] assemblyFileNames, IDictionary<string,object> options)
-        {
-            CallbackHandler handler = new CallbackHandler();
-
-            CreateObject("NUnit.Framework.Api.TestController+ExploreTestsAction",
-                testController, assemblyFileNames[0], options, handler.Callback);
-
-            return handler.Result;
-        }
-
-        public TestEngineResult GetLoadedTests()
-        {
-            CallbackHandler handler = new CallbackHandler();
-
-            CreateObject("NUnit.Framework.Api.TestController+GetLoadedTestsAction",
-                testController, handler.Callback);
-
-            return handler.Result;
-        }
-
-        public TestEngineResult Run(IDictionary<string,object> runOptions, ITestEventHandler listener)
+        public TestEngineResult Run(IDictionary<string, object> runOptions, ITestEventHandler listener)
         {
             CallbackHandler handler = new RunTestsCallbackHandler(listener);
 
@@ -88,6 +67,26 @@ namespace NUnit.Engine
 
             return handler.Result;
         }
+
+        public TestEngineResult Explore(string assemblyFileName, IDictionary<string, object> options)
+        {
+            CallbackHandler handler = new CallbackHandler();
+
+            CreateObject("NUnit.Framework.Api.TestController+ExploreTestsAction",
+                testController, assemblyFileName, options, handler.Callback);
+
+            return handler.Result;
+        }
+
+        //public TestEngineResult GetLoadedTests()
+        //{
+        //    CallbackHandler handler = new CallbackHandler();
+
+        //    CreateObject("NUnit.Framework.Api.TestController+GetLoadedTestsAction",
+        //        testController, handler.Callback);
+
+        //    return handler.Result;
+        //}
 
         #region Helper Methods
 

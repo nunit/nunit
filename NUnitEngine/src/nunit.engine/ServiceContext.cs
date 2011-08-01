@@ -95,6 +95,22 @@ namespace NUnit.Engine
         //        }
         #endregion
 
+        #region RuntimeFrameworkSelector
+
+        private IRuntimeFrameworkSelector selector;
+        public IRuntimeFrameworkSelector RuntimeFrameworkSelector
+        {
+            get
+            {
+                if (selector == null)
+                    selector = (IRuntimeFrameworkSelector)ServiceManager.GetService(typeof(IRuntimeFrameworkSelector));
+
+                return selector;
+            }
+        }
+
+        #endregion
+
         #region TestRunnerFactory
 
         private ITestRunnerFactory testRunnerFactory;

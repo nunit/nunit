@@ -81,7 +81,7 @@ namespace NUnit.ConsoleRunner
             // Create the test package
             TestPackage package = MakeTestPackage(options);
 
-            if (options.explore)
+            if (options.Explore)
                 return ExploreTests(package);
             else
                 return RunTests(package);
@@ -165,13 +165,11 @@ namespace NUnit.ConsoleRunner
                 ResultReporter reporter = new ResultReporter(engineResult.Xml);
                 reporter.ReportResults();
 
-                if (!options.noresult)
-                {
-                    var outputManager = new OutputManager(engineResult.Xml, options.WorkDirectory);
+                // TODO: Inject this?
+                var outputManager = new OutputManager(engineResult.Xml, options.WorkDirectory);
 
-                    foreach (var outputSpec in options.ResultOutputSpecifications)
-                        outputManager.WriteResultFile(outputSpec);
-                }
+                foreach (var outputSpec in options.ResultOutputSpecifications)
+                    outputManager.WriteResultFile(outputSpec);
 
                 returnCode = reporter.Summary.ErrorsAndFailures;
 
@@ -187,8 +185,8 @@ namespace NUnit.ConsoleRunner
 
         private void DisplayRequestedOptions()
         {
-            Console.WriteLine("ProcessModel: {0}    DomainUsage: {1}", options.processModel, options.domainUsage);
-            Console.WriteLine("Execution Runtime: {0}", options.framework == null ? "Not Specified" : options.framework);
+            Console.WriteLine("ProcessModel: {0}    DomainUsage: {1}", options.ProcessModel, options.DomainUsage);
+            Console.WriteLine("Execution Runtime: {0}", options.Framework == null ? "Not Specified" : options.Framework);
             Console.WriteLine();
 
             if (options.TestList.Length > 0)
@@ -198,25 +196,25 @@ namespace NUnit.ConsoleRunner
                     Console.WriteLine("    " + testName);
             }
 
-            if (options.include != null && options.include != string.Empty)
-                Console.WriteLine("Included categories: " + options.include);
+            if (options.Include != null && options.Include != string.Empty)
+                Console.WriteLine("Included categories: " + options.Include);
 
-            if (options.exclude != null && options.exclude != string.Empty)
-                Console.WriteLine("Excluded categories: " + options.exclude);
+            if (options.Exclude != null && options.Exclude != string.Empty)
+                Console.WriteLine("Excluded categories: " + options.Exclude);
         }
 
         private void RedirectOutputAsRequested()
         {
-            if (options.outputPath != null)
+            if (options.OutputPath != null)
             {
-                StreamWriter outStreamWriter = new StreamWriter(Path.Combine(workDirectory, options.outputPath));
+                StreamWriter outStreamWriter = new StreamWriter(Path.Combine(workDirectory, options.OutputPath));
                 outStreamWriter.AutoFlush = true;
                 this.outWriter = outStreamWriter;
             }
 
-            if (options.errorPath != null)
+            if (options.ErrorPath != null)
             {
-                StreamWriter errorStreamWriter = new StreamWriter(Path.Combine(workDirectory, options.errorPath));
+                StreamWriter errorStreamWriter = new StreamWriter(Path.Combine(workDirectory, options.ErrorPath));
                 errorStreamWriter.AutoFlush = true;
                 this.errorWriter = errorStreamWriter;
             }
@@ -225,11 +223,11 @@ namespace NUnit.ConsoleRunner
         private void RestoreOutput()
         {
             outWriter.Flush();
-            if (options.outputPath != null)
+            if (options.OutputPath != null)
                 outWriter.Close();
 
             errorWriter.Flush();
-            if (options.errorPath != null)
+            if (options.ErrorPath != null)
                 errorWriter.Close();
         }
 
@@ -240,23 +238,23 @@ namespace NUnit.ConsoleRunner
                 ? new TestPackage(options.InputFiles[0])
                 : new TestPackage(options.InputFiles);
 
-            if (options.processModel != ProcessModel.Default)
-                package.Settings["ProcessModel"] = options.processModel;
+            if (options.ProcessModel != null)//ProcessModel.Default)
+                package.Settings["ProcessModel"] = options.ProcessModel;
 
-            if (options.domainUsage != DomainUsage.Default)
-                package.Settings["DomainUsage"] = options.domainUsage;
+            if (options.DomainUsage != null)
+                package.Settings["DomainUsage"] = options.DomainUsage;
 
-            if (options.framework != null)
-                package.Settings["RuntimeFramework"] = options.framework;
+            if (options.Framework != null)
+                package.Settings["RuntimeFramework"] = options.Framework;
 
-            if (options.defaultTimeout >= 0)
-                package.Settings["DefaultTimeout"] = options.defaultTimeout;
+            if (options.DefaultTimeout >= 0)
+                package.Settings["DefaultTimeout"] = options.DefaultTimeout;
 
-            if (options.internalTraceLevel != InternalTraceLevel.Default)
-                package.Settings["InternalTraceLevel"] = options.internalTraceLevel;
+            if (options.InternalTraceLevel != InternalTraceLevel.Default)
+                package.Settings["InternalTraceLevel"] = options.InternalTraceLevel;
 
-            if (options.activeConfig != null)
-                package.Settings["ActiveConfig"] = options.activeConfig;
+            if (options.ActiveConfig != null)
+                package.Settings["ActiveConfig"] = options.ActiveConfig;
             
             return package;
 		}

@@ -39,7 +39,7 @@ namespace NUnit.ConsoleRunner
 
         public void WriteResultFile(XmlNode resultNode, TextWriter writer)
         {
-            foreach (XmlNode node in resultNode.SelectNodes("*/test-case"))
+            foreach (XmlNode node in resultNode.SelectNodes("//test-case"))
                 writer.WriteLine(node.Attributes["fullname"].Value);
         }
     }

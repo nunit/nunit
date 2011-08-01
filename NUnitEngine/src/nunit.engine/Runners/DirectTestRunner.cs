@@ -35,23 +35,33 @@ namespace NUnit.Engine.Runners
     /// </summary>
     public abstract class DirectTestRunner : AbstractTestRunner
     {
-        protected TestPackage package;
         private List<IFrameworkDriver> drivers = new List<IFrameworkDriver>();
-        private ServiceContext services;
-
         protected AppDomain TestDomain;
 
-        protected ServiceContext Services
-        {
-            get { return services; }
-        }
+        public DirectTestRunner(ServiceContext services) : base(services) { }
 
-        public DirectTestRunner(ServiceContext services)
-        {
-            this.services = services;
-        }
+        #region AbstractTestRunner Overrides
 
-        #region ITestRunner Members
+        /// <summary>
+        /// Explore a TestPackage and return information about
+        /// the tests found.
+        /// </summary>
+        /// <param name="package">The TestPackage to be explored</param>
+        /// <returns>A TestEngineResult.</returns>
+        public override TestEngineResult Explore(TestPackage package)
+        {
+            this.package = package;
+            List<TestEngineResult> results = new List<TestEngineResult>();
+
+            foreach (string testFile in package.TestFiles)
+            {
+                // TODO: Should get the appropriate driver for the file
+                IFrameworkDriver driver = new NUnitFrameworkDriver(TestDomain);
+                results.Add(driver.Explore(testFile, package.Settings));
+            }
+
+            return MakePackageResult(results);
+        }
 
         /// <summary>
         /// Load a TestPackage for possible execution
@@ -76,7 +86,7 @@ namespace NUnit.Engine.Runners
                     drivers.Add(driver);
             }
 
-            return loadResult;
+            return TestEngineResult.Wrap("load", new TestEngineResult[] { loadResult });
         }
 
         /// <summary>
@@ -95,19 +105,9 @@ namespace NUnit.Engine.Runners
             foreach (NUnitFrameworkDriver driver in drivers)
                 results.Add(driver.Run(this.package.Settings, listener));
 
-            if (IsProjectPackage(this.package))
-                return TestEngineResult.MakeProjectResult(this.package, results);
-            else if (results.Count == 1)
-                return results[0];
-            else
-                return TestEngineResult.Merge(results);
+            return MakePackageResult(results);
         }
 
         #endregion
-
-        private bool IsProjectPackage(TestPackage package)
-        {
-            return package.FullName != null && package.FullName != string.Empty && services.ProjectService.IsProjectFile(package.FullName);
-        }
     }
 }
