@@ -7,8 +7,7 @@ using System;
 using System.IO;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
-using System.Collections;
-using System.Collections.Specialized;
+using System.Collections.Generic;
 using System.Xml;
 using NUnit.Engine;
 
@@ -29,12 +28,12 @@ namespace NUnit.ConsoleRunner
 		private TextWriter outWriter;
 		private TextWriter errorWriter;
 
-        StringCollection messages;
+        private List<string> messages = new List<string>();
 		
         //private bool progress = false;
 		private string currentTestName;
 
-		private ArrayList unhandledExceptions = new ArrayList();
+		private List<Exception> unhandledExceptions = new List<Exception>();
 
 		public TestEventHandler( ConsoleOptions options, TextWriter outWriter, TextWriter errorWriter )
 		{
@@ -114,7 +113,6 @@ namespace NUnit.ConsoleRunner
         {
             if (level++ == 0)
             {
-                messages = new StringCollection();
                 testRunCount = 0;
                 testIgnoreCount = 0;
                 failureCount = 0;

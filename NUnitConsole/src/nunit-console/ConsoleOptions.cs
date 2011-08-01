@@ -103,7 +103,7 @@ namespace NUnit.ConsoleRunner
             this.Add("domain=", "{DOMAIN} isolation for test assemblies.\nValues: None, Single, Multiple",
                 v => domainUsage = RequiredValue(v, "--domain", "None", "Single", "Multiple"));
 
-            this.Add("timeout=", "(NYI) Set timeout for each test case in {MILLISECONDS}.",
+            this.Add("timeout=", "Set timeout for each test case in {MILLISECONDS}.",
                 v => defaultTimeout = RequiredInt(v, "--timeout"));
             
             this.Add("wait", "Wait for input before closing console window.", 
