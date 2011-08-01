@@ -94,7 +94,7 @@ namespace NUnit.ConsoleRunner
             this.Add("trace=", "(NYI) Set internal trace {LEVEL}.\nValues: Off, Error, Warning, Info, Verbose",
                 (InternalTraceLevel v) => internalTraceLevel = v);
 
-            this.Add("framework=", "(NYI) {FRAMEWORK} type/version to use for tests.\nExamples: mono, net-3.5, v4.0, mono-4.0",
+            this.Add("framework=", "{FRAMEWORK} type/version to use for tests.\nExamples: mono, net-3.5, v4.0, 2.0, mono-4.0",
                 v => framework = v);
 
             this.Add("process=", "{PROCESS} isolation for test assemblies.\nValues: Single, Separate, Multiple",

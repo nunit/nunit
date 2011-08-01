@@ -106,14 +106,19 @@ namespace NUnit.ConsoleRunner
                 ITestEngine engine = TestEngineActivator.CreateInstance();
                 return new ConsoleRunner(engine, options).Execute();
             }
-            catch( FileNotFoundException ex )
+            catch (NUnitEngineException ex)
             {
-                Console.WriteLine( ex.Message );
+                Console.WriteLine(ex.Message);
+                return ConsoleRunner.INVALID_ARG;
+            }
+            catch (FileNotFoundException ex)
+            {
+                Console.WriteLine(ex.Message);
                 return ConsoleRunner.FILE_NOT_FOUND;
             }
-            catch( Exception ex )
+            catch (Exception ex)
             {
-                Console.WriteLine( ex.ToString() );
+                Console.WriteLine(ex.ToString());
                 return ConsoleRunner.UNEXPECTED_ERROR;
             }
             finally
