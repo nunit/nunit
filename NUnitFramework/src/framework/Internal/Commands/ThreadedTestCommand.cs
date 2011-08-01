@@ -108,6 +108,8 @@ namespace NUnit.Framework.Internal
             }
             catch (Exception e)
             {
+                if (CurrentResult == null)
+                    CurrentResult = this.Test.MakeTestResult();
                 CurrentResult.RecordException(e);
             }
         }
