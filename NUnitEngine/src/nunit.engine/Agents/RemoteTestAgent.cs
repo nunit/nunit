@@ -93,8 +93,22 @@ namespace NUnit.Engine.Agents
 
         #region ITestRunner Members
 
+        /// <summary>
+        /// Explore a TestPackage and return information about
+        /// the tests found.
+        /// </summary>
+        /// <param name="package">The TestPackage to be explored</param>
+        /// <returns>A TestEngineResult.</returns>
+        public ITestEngineResult Explore(TestPackage package)
+        {
+            this.runner = Services.TestRunnerFactory.MakeTestRunner(package);
+            return runner.Explore(package);
+        }
+
         public ITestEngineResult Load(TestPackage package)
         {
+            //System.Diagnostics.Debug.Assert(false, "Attach debugger if desired");
+
             this.runner = Services.TestRunnerFactory.MakeTestRunner(package);
             return runner.Load(package);
         }

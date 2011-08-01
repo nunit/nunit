@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Collections.Generic;
 
 namespace NUnit.Engine.Runners
 {
@@ -32,7 +33,28 @@ namespace NUnit.Engine.Runners
     /// </summary>
     public abstract class AbstractTestRunner : ITestRunner
     {
+        protected ServiceContext services;
+        protected TestPackage package;
+
+        public AbstractTestRunner(ServiceContext services)
+        {
+            this.services = services;
+        }
+
+        protected ServiceContext Services
+        {
+            get { return services; }
+        }
+
         #region Abstract and Virtual Methods
+
+        /// <summary>
+        /// Explore a TestPackage and return information about
+        /// the tests found.
+        /// </summary>
+        /// <param name="package">The TestPackage to be explored</param>
+        /// <returns>A TestEngineResult.</returns>
+        public abstract TestEngineResult Explore(TestPackage package);
 
         /// <summary>
         /// Load a TestPackage for possible execution. This is
@@ -88,6 +110,17 @@ namespace NUnit.Engine.Runners
             return this.Run(listener, filter);
         }
 
+        /// <summary>
+        /// Explore a TestPackage and return information about
+        /// the tests found.
+        /// </summary>
+        /// <param name="package">The TestPackage to be explored</param>
+        /// <returns>A TestEngineResult.</returns>
+        ITestEngineResult ITestRunner.Explore(TestPackage package)
+        {
+            return this.Explore(package);
+        }
+
         #endregion
 
         #region IDisposable Members
@@ -95,6 +128,28 @@ namespace NUnit.Engine.Runners
         public virtual void Dispose()
         {
             this.Unload();
+        }
+
+        #endregion
+
+        #region Helper Methods
+
+        protected TestEngineResult MakePackageResult(IList<TestEngineResult> results)
+        {
+            if (IsProjectPackage(this.package))
+                return TestEngineResult.MakeProjectResult(this.package, results);
+            else if (results.Count == 1)
+                return results[0];
+            else
+                return TestEngineResult.Merge(results);
+        }
+
+        private bool IsProjectPackage(TestPackage package)
+        {
+            return package != null
+                && package.FullName != null
+                && package.FullName != string.Empty
+                && services.ProjectService.IsProjectFile(package.FullName);
         }
 
         #endregion

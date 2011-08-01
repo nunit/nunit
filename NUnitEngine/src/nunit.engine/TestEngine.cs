@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
+using NUnit.Engine.Internal;
 using NUnit.Engine.Services;
 
 namespace NUnit.Engine
@@ -68,6 +69,7 @@ namespace NUnit.Engine
             Services.Add(new SettingsService());
             Services.Add(new DomainManager());
             Services.Add(new ProjectService());
+            Services.Add(new RuntimeFrameworkSelector());
             Services.Add(new DefaultTestRunnerFactory());
             Services.Add(new TestAgency());
 
@@ -82,11 +84,20 @@ namespace NUnit.Engine
         /// <returns>An XmlNode representing the tests.</returns>
         public ITestEngineResult Explore(TestPackage package)
         {
+#if true
+            using (ITestRunner runner = GetRunner())
+            {
+                return runner.Explore(package);
+            }
+#else
+            Runners.MasterTestRunner.AdjustPackageSettings(package);
+
             // TODO: We will need an agent or remote explorer
             // in the future in order to explore tests that
             // are located on a different machine.
             IFrameworkDriver driver = new NUnitFrameworkDriver(AppDomain.CurrentDomain);
             return driver.ExploreTests(package.TestFiles, package.Settings);
+#endif
         }
 
         /// <summary>

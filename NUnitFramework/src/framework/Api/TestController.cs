@@ -217,33 +217,33 @@ namespace NUnit.Framework.Api
 
         #region GetLoadedTestsAction
 
-        /// <summary>
-        /// GetLoadedTestsAction returns the XML representation
-        /// of a suite of tests, which must have been loaded already.
-        /// </summary>
-        public class GetLoadedTestsAction : TestControllerAction
-        {
-            /// <summary>
-            /// Initializes a new instance of the <see cref="GetLoadedTestsAction"/> class.
-            /// </summary>
-            /// <param name="controller">The controller.</param>
-            /// <param name="callback">An AsynchCallback to receive the result.</param>
-            public GetLoadedTestsAction(TestController controller, AsyncCallback callback)
-                : base(controller, callback)
-            {
-                try
-                {
-                    ITest loadedTest = controller.Runner.LoadedTest;
+        ///// <summary>
+        ///// GetLoadedTestsAction returns the XML representation
+        ///// of a suite of tests, which must have been loaded already.
+        ///// </summary>
+        //public class GetLoadedTestsAction : TestControllerAction
+        //{
+        //    /// <summary>
+        //    /// Initializes a new instance of the <see cref="GetLoadedTestsAction"/> class.
+        //    /// </summary>
+        //    /// <param name="controller">The controller.</param>
+        //    /// <param name="callback">An AsynchCallback to receive the result.</param>
+        //    public GetLoadedTestsAction(TestController controller, AsyncCallback callback)
+        //        : base(controller, callback)
+        //    {
+        //        try
+        //        {
+        //            ITest loadedTest = controller.Runner.LoadedTest;
 
-                    if (loadedTest != null)
-                        callback(new FinalResult(loadedTest.ToXml(true), true));
-                }
-                catch (Exception ex)
-                {
-                    callback(new ErrorReport(ex));
-                }
-            }
-        }
+        //            if (loadedTest != null)
+        //                callback(new FinalResult(loadedTest.ToXml(true), true));
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            callback(new ErrorReport(ex));
+        //        }
+        //    }
+        //}
 
         #endregion
 

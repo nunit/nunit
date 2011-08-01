@@ -31,7 +31,6 @@ using System.Runtime.Remoting.Services;
 using System.Runtime.Remoting.Channels;
 using System.Runtime.Remoting.Channels.Tcp;
 using System.Xml;
-using NUnit.Engine.Interfaces;
 
 namespace NUnit.Engine.Runners
 {
@@ -42,28 +41,14 @@ namespace NUnit.Engine.Runners
 	{
         //static Logger log = InternalTrace.GetLogger(typeof(ProcessRunner));
 
-        private TestPackage package;
-        private ServiceContext services;
         private ITestAgent agent;
         private ITestRunner remoteRunner;
 
         private RuntimeFramework runtimeFramework;
 
-        #region Constructor
-
-        public ProcessRunner(ServiceContext services)
-        {
-            this.services = services;
-        }
-
-        #endregion
+        public ProcessRunner(ServiceContext services) : base(services) { }
 
         #region Properties
-
-        public ServiceContext Services
-        {
-            get { return services; }
-        }
 
         public RuntimeFramework RuntimeFramework
         {
@@ -73,6 +58,27 @@ namespace NUnit.Engine.Runners
         #endregion
 
         #region AbstractTestRunner Overrides
+
+        /// <summary>
+        /// Explore a TestPackage and return information about
+        /// the tests found.
+        /// </summary>
+        /// <param name="package">The TestPackage to be explored</param>
+        /// <returns>A TestEngineResult.</returns>
+        public override TestEngineResult Explore(TestPackage package)
+        {
+            this.package = package;
+
+            this.runtimeFramework = package.GetSetting("RuntimeFramework", RuntimeFramework.CurrentFramework);
+
+            bool enableDebug = package.GetSetting("AgentDebug", false);
+            //bool enableDebug = true;
+
+            CreateAgentAndRunner(enableDebug);
+
+            ITestEngineResult result = this.remoteRunner.Explore(package);
+            return result as TestEngineResult; // TODO: Remove need for this cast
+        }
 
         /// <summary>
         /// Load a TestPackage for possible execution
@@ -95,19 +101,7 @@ namespace NUnit.Engine.Runners
 
 			try
 			{
-                if (this.agent == null)
-                {
-                    this.agent = Services.TestAgency.GetAgent(
-                        runtimeFramework,
-                        30000,
-                        enableDebug);
-
-                    if (this.agent == null)
-                        return new TestEngineResult("<error message=\"Unable to acquire remote process agent\"/>");
-                }
-	
-				if (this.remoteRunner == null)
-					this.remoteRunner = agent.CreateRunner();
+                CreateAgentAndRunner(enableDebug);
 
                 ITestEngineResult result = this.remoteRunner.Load(package);
                 loaded = !result.HasErrors;
@@ -155,5 +149,26 @@ namespace NUnit.Engine.Runners
         }
 
 		#endregion
+
+        #region Helper Methods
+
+        private void CreateAgentAndRunner(bool enableDebug)
+        {
+            if (this.agent == null)
+            {
+                this.agent = Services.TestAgency.GetAgent(
+                    runtimeFramework,
+                    30000,
+                    enableDebug);
+
+                if (this.agent == null)
+                    throw new Exception("Unable to acquire remote process agent");
+            }
+
+            if (this.remoteRunner == null)
+                this.remoteRunner = agent.CreateRunner();
+        }
+
+        #endregion
     }
 }

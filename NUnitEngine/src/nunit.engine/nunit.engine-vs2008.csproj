@@ -45,6 +45,8 @@
     <Compile Include="Agents\TestAgent.cs" />
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="CallbackHandler.cs" />
+    <Compile Include="Internal\DomainUsage.cs" />
+    <Compile Include="Internal\ProcessModel.cs" />
     <Compile Include="NUnitFrameworkDriver.cs" />
     <Compile Include="IFrameworkDriver.cs" />
     <Compile Include="Internal\AssemblyHelper.cs" />
@@ -57,7 +59,7 @@
     <Compile Include="IProjectConfig.cs" />
     <Compile Include="Internal\NUnitConfiguration.cs" />
     <Compile Include="Internal\PathUtils.cs" />
-    <Compile Include="Internal\RuntimeFrameworkSelector.cs" />
+    <Compile Include="Services\RuntimeFrameworkSelector.cs" />
     <Compile Include="Internal\ServerBase.cs" />
     <Compile Include="Internal\ServerUtilities.cs" />
     <Compile Include="Internal\SettingsGroup.cs" />

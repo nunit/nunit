@@ -24,11 +24,11 @@
 using System;
 using System.IO;
 using System.Reflection;
-using NUnit.Engine.Interfaces;
+using NUnit.Engine.Internal;
 
-namespace NUnit.Engine.Internal
+namespace NUnit.Engine.Services
 {
-    public class RuntimeFrameworkSelector : IRuntimeFrameworkSelector
+    public class RuntimeFrameworkSelector : IRuntimeFrameworkSelector, IService
     {
         //static Logger log = InternalTrace.GetLogger(typeof(RuntimeFrameworkSelector));
 
@@ -54,38 +54,32 @@ namespace NUnit.Engine.Internal
 
             RuntimeType targetRuntime = requestedFramework.Runtime;
             Version targetVersion = requestedFramework.FrameworkVersion;
-            //RuntimeType targetRuntime = requestedFramework == null
-            //    ? RuntimeType.Any 
-            //    : requestedFramework.Runtime;
-            //Version targetVersion = requestedFramework == null
-            //    ? RuntimeFramework.DefaultVersion
-            //    : requestedFramework.FrameworkVersion;
 
             if (targetRuntime == RuntimeType.Any)
                 targetRuntime = currentFramework.Runtime;
 
             if (targetVersion == RuntimeFramework.DefaultVersion)
             {
-                //if (ServiceContext.UserSettings.GetSetting("Options.TestLoader.RuntimeSelectionEnabled", true))
-                //    foreach (string assembly in package.TestFiles)
-                //    {
-                //        using (AssemblyReader reader = new AssemblyReader(assembly))
-                //        {
-                //            Version v = new Version(reader.ImageRuntimeVersion.Substring(1));
-                //            //log.Debug("Assembly {0} uses version {1}", assembly, v);
-                //            if (v > targetVersion) targetVersion = v;
-                //        }
-                //    }
-                //else
+                if (services.UserSettings.GetSetting("Options.TestLoader.RuntimeSelectionEnabled", true))
+                    foreach (string assembly in package.TestFiles)
+                    {
+                        using (AssemblyReader reader = new AssemblyReader(assembly))
+                        {
+                            Version v = new Version(reader.ImageRuntimeVersion.Substring(1));
+                            //log.Debug("Assembly {0} uses version {1}", assembly, v);
+                            if (v > targetVersion) targetVersion = v;
+                        }
+                    }
+                else
                     targetVersion = RuntimeFramework.CurrentFramework.ClrVersion;
 
-                //RuntimeFramework checkFramework = new RuntimeFramework(targetRuntime, targetVersion);
-                //if (!checkFramework.IsAvailable || !Services.TestAgency.IsRuntimeVersionSupported(targetVersion))
-                //{
-                //    //log.Debug("Preferred version {0} is not installed or this NUnit installation does not support it", targetVersion);
-                //    if (targetVersion < currentFramework.FrameworkVersion)
-                //        targetVersion = currentFramework.FrameworkVersion;
-                //}
+                RuntimeFramework checkFramework = new RuntimeFramework(targetRuntime, targetVersion);
+                if (!checkFramework.IsAvailable || !ServiceContext.TestAgency.IsRuntimeVersionSupported(targetVersion))
+                {
+                    //log.Debug("Preferred version {0} is not installed or this NUnit installation does not support it", targetVersion);
+                    if (targetVersion < currentFramework.FrameworkVersion)
+                        targetVersion = currentFramework.FrameworkVersion;
+                }
             }
 
             RuntimeFramework targetFramework = new RuntimeFramework(targetRuntime, targetVersion);
@@ -95,5 +89,24 @@ namespace NUnit.Engine.Internal
 
             return targetFramework;
         }
+
+        #region IService Members
+
+        private ServiceContext services;
+        public ServiceContext ServiceContext
+        {
+            get { return services; }
+            set { services = value; }
+        }
+
+        public void InitializeService()
+        {
+        }
+
+        public void UnloadService()
+        {
+        }
+
+        #endregion
     }
 }
