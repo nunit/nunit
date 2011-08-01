@@ -12,6 +12,10 @@ namespace NUnit.Engine.Runners
         private ServiceContext services;
         private AbstractTestRunner realRunner;
 
+        // Count of assemblies and projects passed in package
+        private int assemblyCount;
+        private int projectCount;
+
         public MasterTestRunner(ServiceContext services)
         {
             this.services = services;
@@ -27,10 +31,7 @@ namespace NUnit.Engine.Runners
         /// <returns>A TestEngineResult.</returns>
         public ITestEngineResult Explore(TestPackage package)
         {
-            AdjustPackageSettings(package);
-
-            this.package = package;
-            this.realRunner = GetRealRunner(package);
+            PerformPackageSetup(package);
 
             return this.realRunner.Explore(package);
         }
@@ -42,11 +43,7 @@ namespace NUnit.Engine.Runners
         /// <returns>A TestEngineResult.</returns>
         public ITestEngineResult Load(TestPackage package)
         {
-            AdjustPackageSettings(package);
-
-            this.package = package;
-            this.realRunner = GetRealRunner(package);
-
+            PerformPackageSetup(package);
             return this.realRunner.Load(package);
         }
 
@@ -82,27 +79,66 @@ namespace NUnit.Engine.Runners
 
         #region HelperMethods
 
-        public static void AdjustPackageSettings(TestPackage package)
+        private void PerformPackageSetup(TestPackage package)
         {
-            ConvertSettingToEnum(package, "ProcessModel", typeof(ProcessModel));
-            ConvertSettingToEnum(package, "DomainUsage", typeof(DomainUsage));
+            this.package = package;
+
+            // Convert certain package settings, specified as strings,
+            // to their internal representation before further use.
+            ConvertPackageSetting("ProcessModel");
+            ConvertPackageSetting("DomainUsage");
+            ConvertPackageSetting("RuntimeFramework");
+
+            // Expand projects, updating the count of projects and assemblies
+            ExpandProjects();
+
+            // If there is more than one project or a mix of assemblies and 
+            // projects, AggregatingTestRunner will call MakeTestRunner for
+            // each project or assembly.
+            this.realRunner = projectCount > 1 || projectCount > 0 && assemblyCount > 0
+                ? new AggregatingTestRunner(services)
+                : (AbstractTestRunner)services.TestRunnerFactory.MakeTestRunner(package);
         }
 
-        private static void ConvertSettingToEnum(TestPackage package, string name, Type type)
+        /// <summary>
+        /// Convert a single setting, throwing an NUnitEngineException
+        /// if the setting cannot be converted.
+        /// </summary>
+        /// <param name="name">The name of the setting</param>
+        private void ConvertPackageSetting(string name)
         {
-            if (package.Settings.ContainsKey(name))
+            if (this.package.Settings.ContainsKey(name))
             {
-                string s = package.Settings[name] as string;
-                if (s != null)
-                    package.Settings[name] = Enum.Parse(type, s);
+                string value = package.Settings[name] as string;
+
+                if (value != null)
+                    try
+                    {
+                        switch (name)
+                        {
+                            case "ProcessModel":
+                                package.Settings[name] = Enum.Parse(typeof(ProcessModel), value);
+                                break;
+
+                            case "DomainUsage":
+                                package.Settings[name] = Enum.Parse(typeof(DomainUsage), value);
+                                break;
+
+                            case "RuntimeFramework":
+                                package.Settings[name] = RuntimeFramework.Parse(value);
+                                break;
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        string msg = string.Format("Invalid {0} setting: {1}", name, value);
+                        throw new NUnitEngineException(msg);
+                    }
             }
         }
 
-        private AbstractTestRunner GetRealRunner(TestPackage package)
+        private void ExpandProjects()
         {
-            int projectCount = 0;
-            int assemblyCount = 0;
-
             if (package.TestFiles.Length > 0)
             {
                 foreach (string testFile in package.TestFiles)
@@ -127,12 +163,6 @@ namespace NUnit.Engine.Runners
                 else
                     assemblyCount++;
             }
-
-            if (projectCount > 1 || projectCount > 0 && assemblyCount > 0)
-                return new AggregatingTestRunner(services);
-            else
-                return (AbstractTestRunner)services.TestRunnerFactory.MakeTestRunner(package);
-
         }
 
         #endregion
