@@ -24,6 +24,8 @@ namespace NUnit.ConsoleRunner
         private int failureCount;
         private int level;
 
+        private string pendingLabel;
+
 		private ConsoleOptions options;
 		private TextWriter outWriter;
 		private TextWriter errorWriter;
@@ -71,13 +73,16 @@ namespace NUnit.ConsoleRunner
 
             switch (testEvent.Name)
             {
-                case "start":
-                    XmlAttribute typeAttr = testEvent.Attributes["type"];
-                    if (typeAttr != null)
-                        if (typeAttr.Value == "test-case")
-                            TestStarted(testEvent);
-                        else
-                            SuiteStarted(testEvent);
+                case "start-test":
+                    TestStarted(testEvent);
+                    break;
+
+                case "start-suite":
+                    SuiteStarted(testEvent);
+                    break;
+
+                case "start-run":
+                    //RunStarted(testEvent);
                     break;
 
                 case "test-case":
@@ -101,11 +106,18 @@ namespace NUnit.ConsoleRunner
 
         private void TestStarted(XmlNode startNode)
         {
-            if (options.Labels)
+            if (options.Labels == "On" || options.Labels == "All")
             {
                 XmlAttribute nameAttr = startNode.Attributes["fullname"];
                 if (nameAttr != null)
-                    outWriter.WriteLine("***** {0}", nameAttr.Value);
+                {
+                    string theLabel = string.Format("***** {0}", nameAttr.Value);
+
+                    if (options.Labels == "All")
+                        outWriter.WriteLine(theLabel);
+                    else
+                        pendingLabel = theLabel;
+                }
             }
         }
 
@@ -222,6 +234,12 @@ namespace NUnit.ConsoleRunner
             {
                 default:
                 case "out":
+                    if (pendingLabel != null)
+                    {
+                        outWriter.Flush();
+                        outWriter.WriteLine(pendingLabel);
+                        pendingLabel = null;
+                    }
                     outWriter.Write(text);
                     break;
                 case "error":

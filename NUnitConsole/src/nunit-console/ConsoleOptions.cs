@@ -88,8 +88,8 @@ namespace NUnit.ConsoleRunner
             this.Add("noresult", "Don't save any test results.", 
                 v => noresult = v != null);
 
-            this.Add("labels", "(NYI) Label each test by name in the console output.", 
-                v => labels = v != null);
+            this.Add("labels=", "Specify whether to write test case names to the output. Values: Off, On, All", 
+                v => labels = RequiredValue(v, "--labels", "Off", "On", "All"));
 
             this.Add("trace=", "(NYI) Set internal trace {LEVEL}.\nValues: Off, Error, Warning, Info, Verbose",
                 (InternalTraceLevel v) => internalTraceLevel = v);
@@ -198,8 +198,8 @@ namespace NUnit.ConsoleRunner
             get { return defaultTimeout; }
         }   
 
-        private bool labels;
-        public bool Labels
+        private string labels;
+        public string Labels
         {
             get { return labels; }
         }
