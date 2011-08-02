@@ -1,4 +1,4 @@
-﻿namespace NUnit.Engine
+﻿namespace NUnit.Engine.Internal
 {
     /// <summary>
     /// InternalTraceLevel is an enumeration controlling the
@@ -34,6 +34,11 @@
         /// <summary>
         /// Display debug messages and higher - i.e. all messages
         /// </summary>
-        Debug
+        Debug,
+
+        /// <summary>
+        /// Display debug messages and higher - i.e. all messages
+        /// </summary>
+        Verbose = Debug
     }
 }
