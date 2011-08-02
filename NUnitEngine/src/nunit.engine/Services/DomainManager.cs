@@ -24,7 +24,7 @@ namespace NUnit.Engine.Services
 	/// </summary>
 	public class DomainManager : IService
 	{
-        //static Logger log = InternalTrace.GetLogger(typeof(DomainManager));
+        static Logger log = InternalTrace.GetLogger(typeof(DomainManager));
 
 		#region Properties
 
@@ -116,7 +116,7 @@ namespace NUnit.Engine.Services
                 evidence.AddHost(hash);
             }
 
-            //log.Info("Creating AppDomain " + domainName);
+            log.Info("Creating AppDomain " + domainName);
 
 			AppDomain runnerDomain;
 			
@@ -181,13 +181,13 @@ namespace NUnit.Engine.Services
                     return;
                 }
 
-                //log.Info("Unloading AppDomain " + domainName);
+                log.Info("Unloading AppDomain " + domainName);
 
                 thread = new Thread(new ThreadStart(UnloadOnThread));
                 thread.Start();
                 if (!thread.Join(30000))
                 {
-                    //log.Error("Unable to unload AppDomain {0}, Unload thread timed out", domainName);
+                    log.Error("Unable to unload AppDomain {0}, Unload thread timed out", domainName);
                     thread.Abort();
                 }
             }
@@ -211,7 +211,7 @@ namespace NUnit.Engine.Services
                     // We assume that the tests did something bad and just leave
                     // the orphaned AppDomain "out there". 
                     // TODO: Something useful.
-                    //log.Error("Unable to unload AppDomain " + domainName, ex);
+                    log.Error("Unable to unload AppDomain " + domainName, ex);
                 }
                 finally
                 {

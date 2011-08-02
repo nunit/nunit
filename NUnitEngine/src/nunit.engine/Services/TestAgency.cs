@@ -53,7 +53,7 @@ namespace NUnit.Engine.Services
 	/// </summary>
 	public class TestAgency : ServerBase, ITestAgency, IService
 	{
-        //static Logger log = InternalTrace.GetLogger(typeof(TestAgency));
+        static Logger log = InternalTrace.GetLogger(typeof(TestAgency));
 
 		#region Private Fields
 		private AgentDataBase agentData = new AgentDataBase();
@@ -150,7 +150,7 @@ namespace NUnit.Engine.Services
 
         public ITestAgent GetAgent(RuntimeFramework framework, int waitTime, bool enableDebug)
         {
-            //log.Info("Getting agent for use under {0}", framework);
+            log.Info("Getting agent for use under {0}", framework);
  
             if (!framework.IsAvailable)
                 throw new ArgumentException(
@@ -198,7 +198,7 @@ namespace NUnit.Engine.Services
                     string.Format("NUnit components for version {0} of the CLR are not installed",
                     targetRuntime.ClrVersion.ToString()), "targetRuntime");
 
-            //log.Debug("Using nunit-agent at " + agentExePath);
+            log.Debug("Using nunit-agent at " + agentExePath);
 
 			Process p = new Process();
 			p.StartInfo.UseShellExecute = false;
@@ -235,8 +235,8 @@ namespace NUnit.Engine.Services
 			
             //p.Exited += new EventHandler(OnProcessExit);
             p.Start();
-            //log.Info("Launched Agent process {0} - see nunit-agent_{0}.log", p.Id);
-            //log.Info("Command line: \"{0}\" {1}", p.StartInfo.FileName, p.StartInfo.Arguments);
+            log.Info("Launched Agent process {0} - see nunit-agent_{0}.log", p.Id);
+            log.Info("Command line: \"{0}\" {1}", p.StartInfo.FileName, p.StartInfo.Arguments);
 
 			agentData.Add( new AgentRecord( agentId, p, null, AgentStatus.Starting ) );
 		    return agentId;
@@ -254,7 +254,7 @@ namespace NUnit.Engine.Services
         //    foreach( AgentRecord r in agentData )
         //        if ( r.Status == AgentStatus.Ready)
         //        {
-        //            //log.Debug( "Reusing agent {0}", r.Id );
+        //            log.Debug( "Reusing agent {0}", r.Id );
         //            r.Status = AgentStatus.Busy;
         //            return r;
         //        }
@@ -266,7 +266,7 @@ namespace NUnit.Engine.Services
 		{
             Guid agentId = LaunchAgentProcess(framework, enableDebug);
 
-            //log.Debug( "Waiting for agent {0} to register", agentId.ToString("B") );
+            log.Debug( "Waiting for agent {0} to register", agentId.ToString("B") );
 
             int pollTime = 200;
             bool infinite = waitTime == Timeout.Infinite;
@@ -278,7 +278,7 @@ namespace NUnit.Engine.Services
                 ITestAgent agent = agentData[agentId].Agent;
 				if ( agent != null )
 				{
-                    //log.Debug( "Returning new agent {0}", agentId.ToString("B") );
+                    log.Debug( "Returning new agent {0}", agentId.ToString("B") );
                     return agent;
 				}
 			}

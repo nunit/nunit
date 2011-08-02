@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections.Generic;
+using NUnit.Engine.Internal;
 
 namespace NUnit.Engine.Services
 {
@@ -35,12 +36,12 @@ namespace NUnit.Engine.Services
         private List<IService> services = new List<IService>();
         private Dictionary<Type, IService> serviceIndex = new Dictionary<Type, IService>();
 
-        //static Logger log = InternalTrace.GetLogger(typeof(ServiceManager));
+        static Logger log = InternalTrace.GetLogger(typeof(ServiceManager));
 
 		public void AddService( IService service )
 		{
 			services.Add( service );
-            //log.Debug( "Added " + service.GetType().Name );
+            log.Debug( "Added " + service.GetType().Name );
 		}
 
 		public IService GetService( Type serviceType )
@@ -73,15 +74,15 @@ namespace NUnit.Engine.Services
 		{
 			foreach( IService service in services )
 			{
-                //log.Info( "Initializing " + service.GetType().Name );
-                //try
-                //{
+                log.Info( "Initializing " + service.GetType().Name );
+                try
+                {
                     service.InitializeService();
-                //}
-                //catch (Exception ex)
-                //{
-                //    log.Error("Failed to initialize service", ex);
-                //}
+                }
+                catch (Exception ex)
+                {
+                    log.Error("Failed to initialize service", ex);
+                }
 			}
 		}
 
@@ -93,21 +94,21 @@ namespace NUnit.Engine.Services
             while (--index >= 0)
             {
                 IService service = services[index] as IService;
-                //log.Info( "Stopping " + service.GetType().Name );
-                //try
-                //{
+                log.Info("Stopping " + service.GetType().Name);
+                try
+                {
                     service.UnloadService();
-                //}
-                //catch (Exception ex)
-                //{
-                //    log.Error("Failure stopping service", ex);
-                //}
+                }
+                catch (Exception ex)
+                {
+                    log.Error("Failure stopping service", ex);
+                }
             }
 		}
 
 		public void ClearServices()
 		{
-            //log.Info("Clearing Service list");
+            log.Info("Clearing Service list");
 			services.Clear();
 		}
 	}
