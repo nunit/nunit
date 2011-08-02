@@ -66,7 +66,11 @@ namespace NUnit.Engine
         /// </summary>
         public void InitializeServices()
         {
-            Services.Add(new SettingsService());
+            SettingsService settingsService = new SettingsService(false);
+            InternalTraceLevel level = (InternalTraceLevel)settingsService.GetSetting("Options.InternalTraceLevel", InternalTraceLevel.Default);
+            InternalTrace.Initialize("nunit.engine.%p.log", level);
+
+            Services.Add(settingsService);
             Services.Add(new DomainManager());
             Services.Add(new ProjectService());
             Services.Add(new RuntimeFrameworkSelector());

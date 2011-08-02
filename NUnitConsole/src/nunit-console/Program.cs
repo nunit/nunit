@@ -101,35 +101,37 @@ namespace NUnit.ConsoleRunner
             if (!Directory.Exists(options.WorkDirectory))
                 Directory.CreateDirectory(options.WorkDirectory);
 
-            try
+            using (ITestEngine engine = TestEngineActivator.CreateInstance())
             {
-                ITestEngine engine = TestEngineActivator.CreateInstance();
-                return new ConsoleRunner(engine, options).Execute();
-            }
-            catch (NUnitEngineException ex)
-            {
-                Console.WriteLine(ex.Message);
-                return ConsoleRunner.INVALID_ARG;
-            }
-            catch (FileNotFoundException ex)
-            {
-                Console.WriteLine(ex.Message);
-                return ConsoleRunner.FILE_NOT_FOUND;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.ToString());
-                return ConsoleRunner.UNEXPECTED_ERROR;
-            }
-            finally
-            {
-                if(options.Wait)
+                try
                 {
-                    Console.Out.WriteLine("\nHit <enter> key to continue");
-                    Console.ReadLine();
+                    return new ConsoleRunner(engine, options).Execute();
                 }
+                catch (NUnitEngineException ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    return ConsoleRunner.INVALID_ARG;
+                }
+                catch (FileNotFoundException ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    return ConsoleRunner.FILE_NOT_FOUND;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.ToString());
+                    return ConsoleRunner.UNEXPECTED_ERROR;
+                }
+                finally
+                {
+                    if (options.Wait)
+                    {
+                        Console.Out.WriteLine("\nHit <enter> key to continue");
+                        Console.ReadLine();
+                    }
 
-            //    log.Info( "NUnit-console.exe terminating" );
+                    //    log.Info( "NUnit-console.exe terminating" );
+                }
             }
 		}
 
@@ -139,7 +141,7 @@ namespace NUnit.ConsoleRunner
 			string versionText = executingAssembly.GetName().Version.ToString();
 
             string productName = "NUnit-Console";
-            string copyrightText = "Copyright (C) 2002-2011 Charlie Poole.\r\nCopyright (C) 2002-2004 James W. Newkirk, Michael C. Two, Alexei A. Vorontsov.\r\nCopyright (C) 2000-2002 Philip Craig.\r\nAll Rights Reserved.";
+            string copyrightText = "Copyright (C) 2011 Charlie Poole.\r\nAll Rights Reserved.";
 
             //object[] objectAttrs = executingAssembly.GetCustomAttributes(typeof(AssemblyProductAttribute), false);
             //if ( objectAttrs.Length > 0 )
@@ -162,10 +164,7 @@ namespace NUnit.ConsoleRunner
 			Console.WriteLine();
 
             Console.WriteLine("Runtime Environment - ");
-            //RuntimeFramework framework = RuntimeFramework.CurrentFramework;
             Console.WriteLine(string.Format("   OS Version: {0}", Environment.OSVersion));
-            //Console.WriteLine(string.Format("  CLR Version: {0} ( {1} )",
-            //    Environment.Version, framework.DisplayName));
             Console.WriteLine(string.Format("  CLR Version: {0}",
                 Environment.Version));
 

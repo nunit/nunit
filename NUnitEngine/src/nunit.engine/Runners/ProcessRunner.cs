@@ -31,6 +31,7 @@ using System.Runtime.Remoting.Services;
 using System.Runtime.Remoting.Channels;
 using System.Runtime.Remoting.Channels.Tcp;
 using System.Xml;
+using NUnit.Engine.Internal;
 
 namespace NUnit.Engine.Runners
 {
@@ -39,7 +40,7 @@ namespace NUnit.Engine.Runners
 	/// </summary>
 	public class ProcessRunner : AbstractTestRunner
 	{
-        //static Logger log = InternalTrace.GetLogger(typeof(ProcessRunner));
+        static Logger log = InternalTrace.GetLogger(typeof(ProcessRunner));
 
         private ITestAgent agent;
         private ITestRunner remoteRunner;
@@ -87,7 +88,7 @@ namespace NUnit.Engine.Runners
         /// <returns>A TestEngineResult.</returns>
         public override TestEngineResult Load(TestPackage package)
 		{
-            //log.Info("Loading " + package.Name);
+            log.Info("Loading " + package.Name);
 			Unload();
 
             this.package = package;
@@ -142,7 +143,7 @@ namespace NUnit.Engine.Runners
 		{
             if (this.agent != null)
             {
-                //log.Info("Stopping remote agent");
+                log.Info("Stopping remote agent");
                 agent.Stop();
                 this.agent = null;
             }
