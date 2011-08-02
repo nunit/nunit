@@ -113,34 +113,35 @@ namespace NUnit.ConsoleRunner.Tests
             var package = ConsoleRunner.MakeTestPackage(options);
 
             Assert.That(package.Settings.ContainsKey("InternalTraceLevel"));
-            Assert.AreEqual(InternalTraceLevel.Error, package.Settings["InternalTraceLevel"]);
+            Assert.AreEqual("Error", package.Settings["InternalTraceLevel"]);
         }
 
-        [Test]
-        public void EnumOptions_MayBeSpecifiedAsInts()
-        {
-            var options = new ConsoleOptions("test.dll", "--trace=4");
-            var package = ConsoleRunner.MakeTestPackage(options);
+        //[Test]
+        //public void EnumOptions_MayBeSpecifiedAsInts()
+        //{
+        //    var options = new ConsoleOptions("test.dll", "--trace=4");
+        //    var package = ConsoleRunner.MakeTestPackage(options);
 
-            Assert.That(package.Settings.ContainsKey("InternalTraceLevel"));
-            Assert.AreEqual(InternalTraceLevel.Info, package.Settings["InternalTraceLevel"]);
-        }
+        //    Assert.That(package.Settings.ContainsKey("InternalTraceLevel"));
+        //    Assert.AreEqual("Info", package.Settings["InternalTraceLevel"]);
+        //}
 
-        [Test, ExpectedException(typeof(Mono.Options.OptionException))]
-        public void EnumOptions_InvalidNamesCauseAnException()
-        {
-            var options = new ConsoleOptions("test.dll", "--trace=All");
-        }
+        //[Test]
+        //public void EnumOptions_InvalidNamesCauseAnError()
+        //{
+        //    var options = new ConsoleOptions("test.dll", "--trace=All");
+        //    Assert.False(options.Validate());
+        //}
 
-        [Test]
-        public void EnumOptions_OutOfRangeValuesAreUsedAsIs()
-        {
-            var options = new ConsoleOptions("test.dll", "--trace=7");
-            var package = ConsoleRunner.MakeTestPackage(options);
+        //[Test]
+        //public void EnumOptions_OutOfRangeValuesAreUsedAsIs()
+        //{
+        //    var options = new ConsoleOptions("test.dll", "--trace=7");
+        //    var package = ConsoleRunner.MakeTestPackage(options);
 
-            Assert.That(package.Settings.ContainsKey("InternalTraceLevel"));
-            Assert.AreEqual((InternalTraceLevel)7, package.Settings["InternalTraceLevel"]);
-        }
+        //    Assert.That(package.Settings.ContainsKey("InternalTraceLevel"));
+        //    Assert.AreEqual(7, package.Settings["InternalTraceLevel"]);
+        //}
 
         [Test]
         public void WhenNoOptionsAreSpecified_PackageContainsNoSettngs()

@@ -53,7 +53,6 @@ namespace NUnit.ConsoleRunner.Tests
         [TestCase("NoHeader", "noheader|noh")]
         [TestCase("ShowHelp", "help|h")]
 		[TestCase("Wait", "wait")]
-        [TestCase("Labels", "labels")]
 		public void CanRecognizeBooleanOptions(string propertyName, string pattern)
 		{
             string[] prototypes = pattern.Split('|');
@@ -89,6 +88,8 @@ namespace NUnit.ConsoleRunner.Tests
         [TestCase("Framework",     "framework",  new string[] { "net-4.0" },                        new string[0])]
         [TestCase("DomainUsage",   "domain",     new string[] { "None", "Single", "Multiple" },     new string[] { "JUNK" })]
         [TestCase("ProcessModel",  "process",    new string[] { "Single", "Separate", "Multiple" }, new string[] { "JUNK" })]
+        [TestCase("Labels", "labels",            new string[] { "Off", "On", "All" },               new string[] { "JUNK" })]
+        [TestCase("InternalTraceLevel", "trace", new string[] { "Off", "Error", "Warning", "Info", "Debug", "Verbose" }, new string[] { "JUNK" })]
         public void CanRecognizeStringOptions(string propertyName, string pattern, string[] goodValues, string[] badValues)
         {
             string[] prototypes = pattern.Split('|');
@@ -130,27 +131,27 @@ namespace NUnit.ConsoleRunner.Tests
             }
         }
 
-        [TestCase("InternalTraceLevel", "trace", typeof(InternalTraceLevel))]
-        public void CanRecognizeEnumOptions(string propertyName, string pattern, Type enumType)
-        {
-            string[] prototypes = pattern.Split('|');
+        //[TestCase("InternalTraceLevel", "trace", typeof(InternalTraceLevel))]
+        //public void CanRecognizeEnumOptions(string propertyName, string pattern, Type enumType)
+        //{
+        //    string[] prototypes = pattern.Split('|');
 
-            PropertyInfo property = GetPropertyInfo(propertyName);
-            Assert.IsNotNull(property, "Property {0} not found", propertyName);
-            Assert.IsTrue(property.PropertyType.IsEnum, "Property {0} is not an enum", propertyName);
-            Assert.AreEqual(enumType, property.PropertyType);
+        //    PropertyInfo property = GetPropertyInfo(propertyName);
+        //    Assert.IsNotNull(property, "Property {0} not found", propertyName);
+        //    Assert.IsTrue(property.PropertyType.IsEnum, "Property {0} is not an enum", propertyName);
+        //    Assert.AreEqual(enumType, property.PropertyType);
 
-            foreach (string option in prototypes)
-            {
-                foreach (string name in Enum.GetNames(enumType))
-                {
-                    {
-                        ConsoleOptions options = new ConsoleOptions("--" + option + ":" + name);
-                        Assert.AreEqual(name, property.GetValue(options, null).ToString(), "Didn't recognize -" + option + ":" + name);
-                    }
-                }
-            }
-        }
+        //    foreach (string option in prototypes)
+        //    {
+        //        foreach (string name in Enum.GetNames(enumType))
+        //        {
+        //            {
+        //                ConsoleOptions options = new ConsoleOptions("--" + option + ":" + name);
+        //                Assert.AreEqual(name, property.GetValue(options, null).ToString(), "Didn't recognize -" + option + ":" + name);
+        //            }
+        //        }
+        //    }
+        //}
 
         [TestCase("--config")]
         //[TestCase("--xml")]
@@ -160,7 +161,7 @@ namespace NUnit.ConsoleRunner.Tests
         [TestCase("--exclude")]
         [TestCase("--work")]
         [TestCase("--timeout")]
-        //[TestCase("--trace")]
+        [TestCase("--trace")]
         public void MissingValuesAreReported(string option)
         {
             ConsoleOptions options = new ConsoleOptions(option + "=");

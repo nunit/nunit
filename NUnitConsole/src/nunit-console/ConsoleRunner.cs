@@ -250,7 +250,7 @@ namespace NUnit.ConsoleRunner
             if (options.DefaultTimeout >= 0)
                 package.Settings["DefaultTimeout"] = options.DefaultTimeout;
 
-            if (options.InternalTraceLevel != InternalTraceLevel.Default)
+            if (options.InternalTraceLevel != null)
                 package.Settings["InternalTraceLevel"] = options.InternalTraceLevel;
 
             if (options.ActiveConfig != null)
