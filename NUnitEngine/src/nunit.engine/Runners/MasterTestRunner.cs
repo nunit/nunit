@@ -88,6 +88,7 @@ namespace NUnit.Engine.Runners
             ConvertPackageSetting("ProcessModel");
             ConvertPackageSetting("DomainUsage");
             ConvertPackageSetting("RuntimeFramework");
+            ConvertPackageSetting("InternalTraceLevel");
 
             // Expand projects, updating the count of projects and assemblies
             ExpandProjects();
@@ -122,6 +123,10 @@ namespace NUnit.Engine.Runners
 
                             case "DomainUsage":
                                 package.Settings[name] = Enum.Parse(typeof(DomainUsage), value);
+                                break;
+
+                            case "InternalTraceLevel":
+                                package.Settings[name] = Enum.Parse(typeof(InternalTraceLevel), value);
                                 break;
 
                             case "RuntimeFramework":

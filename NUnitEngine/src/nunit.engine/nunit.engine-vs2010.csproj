@@ -54,6 +54,7 @@
     <Compile Include="Internal\AssemblyHelper.cs" />
     <Compile Include="Internal\AssemblyReader.cs" />
     <Compile Include="Internal\DomainUsage.cs" />
+    <Compile Include="Internal\InternalTraceLevel.cs" />
     <Compile Include="Internal\NUnitConfiguration.cs" />
     <Compile Include="Internal\NUnitProject.cs" />
     <Compile Include="Internal\PathUtils.cs" />

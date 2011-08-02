@@ -91,8 +91,8 @@ namespace NUnit.ConsoleRunner
             this.Add("labels=", "Specify whether to write test case names to the output. Values: Off, On, All", 
                 v => labels = RequiredValue(v, "--labels", "Off", "On", "All"));
 
-            this.Add("trace=", "(NYI) Set internal trace {LEVEL}.\nValues: Off, Error, Warning, Info, Verbose",
-                (InternalTraceLevel v) => internalTraceLevel = v);
+            this.Add("trace=", "Set internal trace {LEVEL}.\nValues: Off, Error, Warning, Info, Verbose (Debug)",
+                v => internalTraceLevel = RequiredValue(v, "--trace", "Off", "Error", "Warning", "Info", "Verbose", "Debug"));
 
             this.Add("framework=", "{FRAMEWORK} type/version to use for tests.\nExamples: mono, net-3.5, v4.0, 2.0, mono-4.0",
                 v => framework = v);
@@ -186,8 +186,8 @@ namespace NUnit.ConsoleRunner
             get { return domainUsage; }
         }
 
-        private InternalTraceLevel internalTraceLevel;
-        public InternalTraceLevel InternalTraceLevel
+        private string internalTraceLevel;
+        public string InternalTraceLevel
         {
             get { return internalTraceLevel; }
         }
