@@ -114,7 +114,7 @@ namespace NUnit.Framework.Internal
                 using (EventPump pump = new EventPump(listener, queue.Events, true))
                 {
                     pump.Start();
-                    return this.loadedTest.Run(listener);
+                    return this.loadedTest.Run(queue);
                 }
             }
             finally
