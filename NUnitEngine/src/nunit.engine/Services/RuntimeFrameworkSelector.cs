@@ -30,7 +30,7 @@ namespace NUnit.Engine.Services
 {
     public class RuntimeFrameworkSelector : IRuntimeFrameworkSelector, IService
     {
-        //static Logger log = InternalTrace.GetLogger(typeof(RuntimeFrameworkSelector));
+        static Logger log = InternalTrace.GetLogger(typeof(RuntimeFrameworkSelector));
 
         /// <summary>
         /// Selects a target runtime framework for a TestPackage based on
@@ -46,11 +46,11 @@ namespace NUnit.Engine.Services
             RuntimeFramework requestedFramework = (RuntimeFramework)package.GetSetting("RuntimeFramework", 
                 new RuntimeFramework(RuntimeType.Any, RuntimeFramework.DefaultVersion));
 
-            //log.Debug("Current framework is {0}", currentFramework);
-            //if (requestedFramework == null)
-            //    log.Debug("No specific framework requested");
-            //else
-            //    log.Debug("Requested framework is {0}", requestedFramework);
+            log.Debug("Current framework is {0}", currentFramework);
+            if (requestedFramework == null)
+                log.Debug("No specific framework requested");
+            else
+                log.Debug("Requested framework is {0}", requestedFramework);
 
             RuntimeType targetRuntime = requestedFramework.Runtime;
             Version targetVersion = requestedFramework.FrameworkVersion;
@@ -66,7 +66,7 @@ namespace NUnit.Engine.Services
                         using (AssemblyReader reader = new AssemblyReader(assembly))
                         {
                             Version v = new Version(reader.ImageRuntimeVersion.Substring(1));
-                            //log.Debug("Assembly {0} uses version {1}", assembly, v);
+                            log.Debug("Assembly {0} uses version {1}", assembly, v);
                             if (v > targetVersion) targetVersion = v;
                         }
                     }
@@ -76,7 +76,7 @@ namespace NUnit.Engine.Services
                 RuntimeFramework checkFramework = new RuntimeFramework(targetRuntime, targetVersion);
                 if (!checkFramework.IsAvailable || !ServiceContext.TestAgency.IsRuntimeVersionSupported(targetVersion))
                 {
-                    //log.Debug("Preferred version {0} is not installed or this NUnit installation does not support it", targetVersion);
+                    log.Debug("Preferred version {0} is not installed or this NUnit installation does not support it", targetVersion);
                     if (targetVersion < currentFramework.FrameworkVersion)
                         targetVersion = currentFramework.FrameworkVersion;
                 }
@@ -85,7 +85,7 @@ namespace NUnit.Engine.Services
             RuntimeFramework targetFramework = new RuntimeFramework(targetRuntime, targetVersion);
             package.Settings["RuntimeFramework"] = targetFramework;
 
-            //log.Debug("Test will use {0} framework", targetFramework);
+            log.Debug("Test will use {0} framework", targetFramework);
 
             return targetFramework;
         }

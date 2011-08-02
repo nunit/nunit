@@ -6,6 +6,7 @@
 
 using System;
 using System.Threading;
+using NUnit.Engine.Internal;
 
 namespace NUnit.Engine.Agents
 {
@@ -18,7 +19,7 @@ namespace NUnit.Engine.Agents
 	/// </summary>
 	public class RemoteTestAgent : TestAgent, ITestRunner
 	{
-        //static Logger log = InternalTrace.GetLogger(typeof(RemoteTestAgent));
+        static Logger log = InternalTrace.GetLogger(typeof(RemoteTestAgent));
 
 		#region Fields
 
@@ -56,16 +57,16 @@ namespace NUnit.Engine.Agents
 
         public override bool Start()
 		{
-            //log.Info("Agent starting");
+            log.Info("Agent starting");
 
 			try
 			{
 				this.Agency.Register( this );
-                //log.Debug( "Registered with TestAgency" );
+                log.Debug( "Registered with TestAgency" );
 			}
 			catch( Exception ex )
 			{
-                //log.Error( "RemoteTestAgent: Failed to register with TestAgency", ex );
+                log.Error( "RemoteTestAgent: Failed to register with TestAgency", ex );
                 return false;
 			}
 
@@ -74,10 +75,10 @@ namespace NUnit.Engine.Agents
 
         public override void Stop()
 		{
-            //log.Info( "Stopping" );
+            log.Info("Stopping");
             // This causes an error in the client because the agent 
             // database is not thread-safe.
-            //if ( agency != null )
+            //if (agency != null)
             //    agency.ReportStatus(this.ProcessId, AgentStatus.Stopping);
 
 

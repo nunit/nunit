@@ -35,7 +35,7 @@ namespace NUnit.Engine.Internal
 	/// </summary>
 	public static class ServerUtilities
 	{
-        //static Logger log = InternalTrace.GetLogger(typeof(ServerUtilities));
+        static Logger log = InternalTrace.GetLogger(typeof(ServerUtilities));
 
 		/// <summary>
 		///  Create a TcpChannel with a given name, on a given port.
@@ -115,7 +115,7 @@ namespace NUnit.Engine.Internal
 					}
 					catch( Exception e )
 					{
-                        //log.Error("Failed to create/register channel", e);
+                        log.Error("Failed to create/register channel", e);
 						System.Threading.Thread.Sleep(300);
 					}
 			}
