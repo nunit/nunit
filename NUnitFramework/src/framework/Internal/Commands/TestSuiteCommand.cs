@@ -157,9 +157,9 @@ namespace NUnit.Framework.Internal
 
             foreach (Test test in Test.Tests)
             {
-                if (test.RunState != RunState.Explicit)
+                if (test.RunState != RunState.Explicit && suite.Filter.Pass(test))
                 {
-                    TestResult childResult = test.Run(suite.Listener);
+                    TestResult childResult = test.Run(suite.Listener, suite.Filter);
 
                     this.suiteResult.AddResult(childResult);
 

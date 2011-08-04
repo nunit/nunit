@@ -54,8 +54,8 @@ namespace NUnit.Framework.Constraints
         public override IConstraintResult Matches(object actual)
         {
             this.actual = actual;
-            if (actual == null)
-                throw new ArgumentNullException("actual");
+
+            Guard.ArgumentNotNull(actual, "actual");
 
             Type actualType = actual as Type;
             if (actualType == null)
