@@ -59,8 +59,7 @@ namespace NUnit.Framework.Constraints
         {
             this.actual = actual;
 
-            if (actual == null)
-                throw new ArgumentNullException("actual");
+            Guard.ArgumentNotNull(actual, "actual");
 
             actualType = actual as Type;
             if (actualType == null)

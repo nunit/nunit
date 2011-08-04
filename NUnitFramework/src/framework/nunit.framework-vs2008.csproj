@@ -232,6 +232,7 @@
     <Compile Include="Extensibility\TestFramework.cs" />
     <Compile Include="FileAssert.cs" />
     <Compile Include="GlobalSettings.cs" />
+    <Compile Include="Guard.cs" />
     <Compile Include="Has.cs" />
     <Compile Include="IExpectException.cs" />
     <Compile Include="Internal\AssemblyHelper.cs" />

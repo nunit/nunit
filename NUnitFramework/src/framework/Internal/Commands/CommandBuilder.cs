@@ -55,8 +55,7 @@ namespace NUnit.Framework.Internal
         /// <returns></returns>
         public static TestCommand MakeTestCommand(TestMethod test)
         {
-            if (test == null)
-                throw new ArgumentNullException("test");
+            Guard.ArgumentNotNull(test, "test");
 
             TestCommand command = new TestCaseCommand(test);
 
@@ -89,13 +88,13 @@ namespace NUnit.Framework.Internal
         /// <returns></returns>
         public static TestCommand MakeTestCommand(TestSuite suite)
         {
-            if (suite == null)
-                throw new ArgumentNullException("suite");
+            Guard.ArgumentNotNull(suite, "suite");
 
             TestCommand command = new TestSuiteCommand(suite);
 
             foreach (Test childTest in suite.Tests)
-                command.Children.Add(MakeTestCommand(childTest));
+                //if (suite.Filter.Pass(childTest))
+                    command.Children.Add(MakeTestCommand(childTest));
 
 #if !NUNITLITE
             if (suite.ShouldRunOnOwnThread)
