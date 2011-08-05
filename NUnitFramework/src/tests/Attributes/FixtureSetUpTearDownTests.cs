@@ -259,7 +259,7 @@ namespace NUnit.Framework.Attributes
         //    suite.Fixture = fixture;
         //    Test test = (Test)suite.Tests[0];
 
-        //    suite.Run(TestListener.NULL, new Filters.NameFilter(test.TestName));
+        //    suite.Run(TestListener.NULL, new NameFilter(test.TestName));
 
         //    Assert.AreEqual(1, fixture.setUpCount);
         //    Assert.AreEqual(1, fixture.tearDownCount);

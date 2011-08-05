@@ -24,6 +24,7 @@
 using System;
 using System.Xml;
 using NUnit.Framework.Api;
+using NUnit.Framework.Internal.Filters;
 
 namespace NUnit.Framework.Internal
 {
@@ -111,7 +112,7 @@ namespace NUnit.Framework.Internal
 
             if (testNodes.Count > 0)
             {
-                Filters.SimpleNameFilter nameFilter = new Filters.SimpleNameFilter();
+                SimpleNameFilter nameFilter = new SimpleNameFilter();
                 foreach (XmlNode testNode in topNode.SelectNodes("tests/test"))
                     nameFilter.Add(testNode.InnerText);
 
@@ -121,28 +122,32 @@ namespace NUnit.Framework.Internal
 
             if (includeNodes.Count > 0)
             {
-                Filters.CategoryFilter includeFilter = new Filters.CategoryFilter();
-                foreach (XmlNode includeNode in includeNodes)
-                    includeFilter.AddCategory(includeNode.InnerText);
+                //CategoryFilter includeFilter = new CategoryFilter();
+                //foreach (XmlNode includeNode in includeNodes)
+                //    includeFilter.AddCategory(includeNode.InnerText);
+
+                // Temporarily just look at the first element
+                XmlNode includeNode = includeNodes[0];
+                TestFilter includeFilter = new CategoryExpression(includeNode.InnerText).Filter;
 
                 if (isEmptyResult)
                     result = includeFilter;
                 else
-                    result = new Filters.AndFilter(result, includeFilter);
+                    result = new AndFilter(result, includeFilter);
                 isEmptyResult = false;
             }
 
             if (excludeNodes.Count > 0)
             {
-                Filters.CategoryFilter categoryFilter = new Filters.CategoryFilter();
+                CategoryFilter categoryFilter = new CategoryFilter();
                 foreach (XmlNode excludeNode in excludeNodes)
                     categoryFilter.AddCategory(excludeNode.InnerText);
-                TestFilter excludeFilter = new Filters.NotFilter(categoryFilter);
+                TestFilter excludeFilter = new NotFilter(categoryFilter);
 
                 if (isEmptyResult)
                     result = excludeFilter;
                 else
-                    result = new Filters.AndFilter(result, excludeFilter);
+                    result = new AndFilter(result, excludeFilter);
                 isEmptyResult = false;
             }
 
