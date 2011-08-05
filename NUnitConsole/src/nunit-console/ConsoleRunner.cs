@@ -266,38 +266,13 @@ namespace NUnit.ConsoleRunner
             foreach (string testName in options.TestList)
                 builder.Tests.Add(testName);
 
-            // TODO: Decide whether to support CategoryExpressions
+            // TODO: Support multiple include / exclude options
 
             if (options.Include != null)
-                foreach (string category in options.Include.Split(','))
-                    builder.Include.Add(category);
+                builder.Include.Add(options.Include);
 
             if (options.Exclude != null)
-                foreach (string category in options.Exclude.Split(','))
-                    builder.Exclude.Add(category);
-
-            //if (options.include != null && options.include != string.Empty)
-            //{
-            //    TestFilter includeFilter = new CategoryExpression(options.include).Filter;
-            //    if (testFilter.IsEmpty)
-            //        testFilter = includeFilter;
-            //    else
-            //        testFilter = new AndFilter(testFilter, includeFilter);
-            //}
-
-            //if (options.exclude != null && options.exclude != string.Empty)
-            //{
-            //    TestFilter excludeFilter = new NotFilter(new CategoryExpression(options.exclude).Filter);
-            //    if (testFilter.IsEmpty)
-            //        testFilter = excludeFilter;
-            //    else if (testFilter is AndFilter)
-            //        ((AndFilter)testFilter).Add(excludeFilter);
-            //    else
-            //        testFilter = new AndFilter(testFilter, excludeFilter);
-            //}
-
-            //if (testFilter is NotFilter)
-            //    ((NotFilter)testFilter).TopLevel = true;
+                builder.Exclude.Add(options.Exclude);
 
             return builder.GetFilter();
         }
