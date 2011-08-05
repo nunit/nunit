@@ -24,6 +24,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using NUnit.Framework.Internal.Filters;
 
 namespace NUnit.Framework.Internal
 {
@@ -35,7 +36,7 @@ namespace NUnit.Framework.Internal
             TestFilter filter = TestFilter.FromXml(
                 "<filter><tests><test>NUnit.Framework.Internal.TestFilterTests+DummyFixture</test></tests></filter>");
 
-            Assert.That(filter, Is.TypeOf<Filters.SimpleNameFilter>());
+            Assert.That(filter, Is.TypeOf<SimpleNameFilter>());
             Assert.That(filter.Match(new TestFixture(typeof(DummyFixture))));
         }
 

@@ -54,13 +54,13 @@ namespace NUnit.ConsoleRunner
             //   nothread
             //   nodots
 
-            this.Add("test=", "(NYI)Comma-separated list of {NAMES} of tests to run or explore. This option may be repeated.",
+            this.Add("test=", "Comma-separated list of {NAMES} of tests to run or explore. This option may be repeated.",
                 v => testList.AddRange(TestNameParser.Parse(RequiredValue(v, "--test"))));
 
-            this.Add("include=", "(NYI) Comma-separated list of test {CATEGORIES} to be included.",
+            this.Add("include=", "Test {CATEGORIES} to be included. May be a single category, a comma-separated list of categories or a category expression.",
                 v => include = RequiredValue(v, "--include"));
 
-            this.Add("exclude=", "(NYI) Comma-separated list of test {CATEGORIES} to be excluded.",
+            this.Add("exclude=", "Test {CATEGORIES} to be excluded. May be a single category, a comma-separated list of categories or a category expression.",
                 v => exclude = RequiredValue(v, "--exclude"));
 
             this.Add("config=", "{NAME} of a project configuration to load (e.g.: Debug).", 
