@@ -56,7 +56,7 @@ namespace NUnit.Engine.Runners
                 this.realRunner.Unload();
         }
 
-        public ITestEngineResult Run(ITestEventHandler listener, ITestFilter filter)
+        public ITestEngineResult Run(ITestEventHandler listener, TestFilter filter)
         {
             DateTime startTime = DateTime.Now;
 

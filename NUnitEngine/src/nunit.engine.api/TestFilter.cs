@@ -22,98 +22,64 @@
 // ***********************************************************************
 
 using System;
+using System.Xml;
 
 namespace NUnit.Engine
 {
     /// <summary>
-    /// Interface to be implemented by filters applied to tests.
-    /// The filter applies when running the test, after it has been
-    /// loaded, since this is the only time an ITest exists.
+    /// Abstract base for all test filters. A filter is represented
+    /// by an XmlNode with &lt;filter&gt; as it's topmost element.
+    /// In the console runner, filters serve only to carry this
+    /// XML representation, as all filtering is done by the engine.
     /// </summary>
     [Serializable]
-    public abstract class TestFilter : ITestFilter
+    public class TestFilter
     {
-        /// <summary>
-        /// Unique Empty filter.
-        /// </summary>
-        public static TestFilter Empty = new EmptyFilter();
+        private string xmlText;
 
-        /// <summary>
-        /// Indicates whether this is the EmptyFilter
-        /// </summary>
-        public bool IsEmpty
+        [NonSerialized]
+        private XmlNode xmlNode;
+
+        public TestFilter(string xmlText)
         {
-            get { return this is TestFilter.EmptyFilter; }
+            this.xmlText = xmlText;
         }
 
-        ///// <summary>
-        ///// Determine if a particular test passes the filter criteria. The default 
-        ///// implementation checks the test itself, its parents and any descendants.
-        ///// 
-        ///// Derived classes may override this method or any of the Match methods
-        ///// to change the behavior of the filter.
-        ///// </summary>
-        ///// <param name="test">The test to which the filter is applied</param>
-        ///// <returns>True if the test passes the filter, otherwise false</returns>
-        //public virtual bool Pass(ITest test)
-        //{
-        //    return Match(test) || MatchParent(test) || MatchDescendant(test);
-        //}
-
-        ///// <summary>
-        ///// Determine whether the test itself matches the filter criteria, without
-        ///// examining either parents or descendants.
-        ///// </summary>
-        ///// <param name="test">The test to which the filter is applied</param>
-        ///// <returns>True if the filter matches the any parent of the test</returns>
-        //public abstract bool Match(ITest test);
-
-        ///// <summary>
-        ///// Determine whether any ancestor of the test mateches the filter criteria
-        ///// </summary>
-        ///// <param name="test">The test to which the filter is applied</param>
-        ///// <returns>True if the filter matches the an ancestor of the test</returns>
-        //protected virtual bool MatchParent(ITest test)
-        //{
-        //    return (test.RunState != RunState.Explicit && test.Parent != null &&
-        //        (Match(test.Parent) || MatchParent(test.Parent)));
-        //}
-
-        ///// <summary>
-        ///// Determine whether any descendant of the test matches the filter criteria.
-        ///// </summary>
-        ///// <param name="test">The test to be matched</param>
-        ///// <returns>True if at least one descendant matches the filter criteria</returns>
-        //protected virtual bool MatchDescendant(ITest test)
-        //{
-        //    if (!test.IsSuite || test.Tests == null)
-        //        return false;
-
-        //    foreach (ITest child in test.Tests)
-        //    {
-        //        if (Match(child) || MatchDescendant(child))
-        //            return true;
-        //    }
-
-        //    return false;
-        //}
+        public TestFilter(XmlNode node)
+        {
+            this.xmlNode = xmlNode;
+            this.xmlText = xmlNode.OuterXml;
+        }
 
         /// <summary>
-        /// Nested class provides an empty filter - one that always
-        /// returns true when called, unless the test is marked explicit.
+        /// The empty filter - one that always passes.
         /// </summary>
-        [Serializable]
-        private class EmptyFilter : TestFilter
-        {
-            //public override bool Match(ITest test)
-            //{
-            //    return test.RunState != RunState.Explicit;
-            //}
+        public static TestFilter Empty = new TestFilter("<filter/>");
 
-            //public override bool Pass(ITest test)
-            //{
-            //    return test.RunState != RunState.Explicit;
-            //}
+        /// <summary>
+        /// Gets the XML representation of this filter as a string.
+        /// </summary>
+        public string Text
+        {
+            get { return xmlText; }
+        }
+
+        /// <summary>
+        /// Gets the XML representation of this filter as an XmlNode
+        /// </summary>
+        public XmlNode Xml 
+        {
+            get
+            {
+                if (xmlNode == null)
+                {
+                    XmlDocument doc = new XmlDocument();
+                    doc.LoadXml(xmlText);
+                    xmlNode = doc.FirstChild;
+                }
+
+                return xmlNode;
+            }
         }
     }
 }

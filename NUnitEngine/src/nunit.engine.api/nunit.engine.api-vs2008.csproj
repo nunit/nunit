@@ -43,7 +43,6 @@
     <Compile Include="ITestAgent.cs" />
     <Compile Include="ITestEngine.cs" />
     <Compile Include="ITestEngineResult.cs" />
-    <Compile Include="ITestFilter.cs" />
     <Compile Include="ITestEventHandler.cs" />
     <Compile Include="ITestRunner.cs" />
     <Compile Include="NUnitEngineException.cs" />

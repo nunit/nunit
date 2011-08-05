@@ -49,7 +49,7 @@ namespace NUnit.Engine
         /// <param name="listener">An ITestEventHandler to receive events</param>
         /// <param name="filter">A TestFilter used to select tests</param>
         /// <returns>A TestEngineResult giving the result of the test execution</returns>
-        ITestEngineResult Run(ITestEventHandler listener, ITestFilter filter);
+        ITestEngineResult Run(ITestEventHandler listener, TestFilter filter);
 
         /// <summary>
         /// Explore a TestPackage and return information about

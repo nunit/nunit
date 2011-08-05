@@ -120,7 +120,7 @@ namespace NUnit.Engine.Agents
                 runner.Unload();
         }
 
-        public ITestEngineResult Run(ITestEventHandler listener, ITestFilter filter)
+        public ITestEngineResult Run(ITestEventHandler listener, TestFilter filter)
         {
             return runner == null ? null : runner.Run(listener, filter);
         }

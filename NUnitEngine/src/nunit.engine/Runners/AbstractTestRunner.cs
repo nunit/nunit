@@ -79,7 +79,7 @@ namespace NUnit.Engine.Runners
         /// <param name="listener">An ITestEventHandler to receive events</param>
         /// <param name="filter">A TestFilter used to select tests</param>
         /// <returns>A TestEngineResult giving the result of the test execution</returns>
-        public abstract TestEngineResult Run(ITestEventHandler listener, ITestFilter filter);
+        public abstract TestEngineResult Run(ITestEventHandler listener, TestFilter filter);
 
         #endregion
 
@@ -105,7 +105,7 @@ namespace NUnit.Engine.Runners
         /// <param name="listener">An ITestEventHandler to receive events</param>
         /// <param name="filter">A TestFilter used to select tests</param>
         /// <returns>An ITestEngineResult giving the result of the test execution</returns>
-        ITestEngineResult ITestRunner.Run(ITestEventHandler listener, ITestFilter filter)
+        ITestEngineResult ITestRunner.Run(ITestEventHandler listener, TestFilter filter)
         {
             return this.Run(listener, filter);
         }

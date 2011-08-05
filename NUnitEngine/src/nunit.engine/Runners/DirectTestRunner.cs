@@ -98,12 +98,12 @@ namespace NUnit.Engine.Runners
         /// top-level node of the result is &lt;direct-runner&gt; and wraps
         /// all the &lt;test-assembly&gt; elements returned by the drivers.
         /// </returns>
-        public override TestEngineResult Run(ITestEventHandler listener, ITestFilter filter)
+        public override TestEngineResult Run(ITestEventHandler listener, TestFilter filter)
         {
             List<TestEngineResult> results = new List<TestEngineResult>();
 
             foreach (NUnitFrameworkDriver driver in drivers)
-                results.Add(driver.Run(this.package.Settings, listener));
+                results.Add(driver.Run(listener, filter));
 
             return MakePackageResult(results);
         }

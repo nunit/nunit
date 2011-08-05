@@ -62,6 +62,7 @@
     <Compile Include="OutputWriters\XmlTransformOutputWriter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="TestEventHandler.cs" />
+    <Compile Include="TestFilterBuilder.cs" />
     <Compile Include="TestNameParser.cs" />
     <Compile Include="ResultSummary.cs" />
     <Compile Include="ResultReporter.cs" />
