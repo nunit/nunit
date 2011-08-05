@@ -77,7 +77,7 @@ namespace NUnit.Framework.Assertions
 		{
 			TestSuite suite = new TestSuite("IgnoredTestFixture");
 			suite.Add( TestBuilder.MakeFixture( typeof( IgnoredTestSuiteFixture ) ) );
-            TestResult result = suite.Run(TestListener.NULL);
+            TestResult result = suite.Run(TestListener.NULL, TestFilter.Empty);
 
 			ITestResult fixtureResult = (ITestResult)result.Children[0];
             Assert.AreEqual(ResultState.Ignored, fixtureResult.ResultState);
@@ -90,7 +90,7 @@ namespace NUnit.Framework.Assertions
 		public void IgnoreWorksFromSetUp()
 		{
 			TestSuite testFixture = TestBuilder.MakeFixture( typeof( IgnoreInSetUpFixture ) );
-            ITestResult fixtureResult = testFixture.Run(TestListener.NULL);
+            ITestResult fixtureResult = testFixture.Run(TestListener.NULL, TestFilter.Empty);
 
             Assert.AreEqual(ResultState.Success, fixtureResult.ResultState);
 

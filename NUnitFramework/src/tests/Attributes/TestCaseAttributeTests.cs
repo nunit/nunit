@@ -204,7 +204,7 @@ namespace NUnit.Framework.Tests
         {
             Test test = (Test)TestBuilder.MakeParameterizedMethodSuite(
                 typeof(TestCaseAttributeFixture), "MethodThrowsExpectedException").Tests[0];
-            ITestResult result = test.Run(TestListener.NULL);
+            ITestResult result = test.Run(TestListener.NULL, TestFilter.Empty);
             Assert.AreEqual(ResultState.Success, result.ResultState);
         }
 
@@ -213,7 +213,7 @@ namespace NUnit.Framework.Tests
         {
             Test test = (Test)TestBuilder.MakeParameterizedMethodSuite(
                 typeof(TestCaseAttributeFixture), "MethodThrowsWrongException").Tests[0];
-            ITestResult result = test.Run(TestListener.NULL);
+            ITestResult result = test.Run(TestListener.NULL, TestFilter.Empty);
             Assert.AreEqual(ResultState.Failure, result.ResultState);
             Assert.That(result.Message, Is.StringStarting("An unexpected exception type was thrown"));
         }
@@ -223,7 +223,7 @@ namespace NUnit.Framework.Tests
         {
             Test test = (Test)TestBuilder.MakeParameterizedMethodSuite(
                 typeof(TestCaseAttributeFixture), "MethodThrowsExpectedExceptionWithWrongMessage").Tests[0];
-            ITestResult result = test.Run(TestListener.NULL);
+            ITestResult result = test.Run(TestListener.NULL, TestFilter.Empty);
             Assert.AreEqual(ResultState.Failure, result.ResultState);
             Assert.That(result.Message, Is.StringStarting("The exception message text was incorrect"));
         }
@@ -233,7 +233,7 @@ namespace NUnit.Framework.Tests
         {
             Test test = (Test)TestBuilder.MakeParameterizedMethodSuite(
                 typeof(TestCaseAttributeFixture), "MethodThrowsNoException").Tests[0];
-            ITestResult result = test.Run(TestListener.NULL);
+            ITestResult result = test.Run(TestListener.NULL, TestFilter.Empty);
             Assert.AreEqual(ResultState.Failure, result.ResultState);
             Assert.AreEqual("System.ArgumentNullException was expected", result.Message);
         }
@@ -243,7 +243,7 @@ namespace NUnit.Framework.Tests
         {
             Test test = (Test)TestBuilder.MakeParameterizedMethodSuite(
                 typeof(TestCaseAttributeFixture), "MethodCallsIgnore").Tests[0];
-            ITestResult result = test.Run(TestListener.NULL);
+            ITestResult result = test.Run(TestListener.NULL, TestFilter.Empty);
             Assert.AreEqual(ResultState.Ignored, result.ResultState);
             Assert.AreEqual("Ignore this", result.Message);
         }

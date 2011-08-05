@@ -10,7 +10,7 @@ namespace NUnit.Engine
 
         void Unload();
 
-        TestEngineResult Run(IDictionary<string,object> options, ITestEventHandler listener);
+        TestEngineResult Run(ITestEventHandler listener, TestFilter filter);
 
         TestEngineResult Explore(string assemblyName, IDictionary<string, object> options);
     }

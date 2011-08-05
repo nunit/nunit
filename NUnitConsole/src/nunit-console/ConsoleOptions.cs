@@ -55,7 +55,7 @@ namespace NUnit.ConsoleRunner
             //   nodots
 
             this.Add("test=", "(NYI)Comma-separated list of {NAMES} of tests to run or explore. This option may be repeated.",
-                v => testList.Add(RequiredValue(v, "--test")));
+                v => testList.AddRange(TestNameParser.Parse(RequiredValue(v, "--test"))));
 
             this.Add("include=", "(NYI) Comma-separated list of test {CATEGORIES} to be included.",
                 v => include = RequiredValue(v, "--include"));

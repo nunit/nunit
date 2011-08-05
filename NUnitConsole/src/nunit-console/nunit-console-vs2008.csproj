@@ -46,6 +46,7 @@
     <Compile Include="TestEventHandler.cs" />
     <Compile Include="Options.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="TestFilterBuilder.cs" />
     <Compile Include="TestNameParser.cs" />
     <Compile Include="ResultSummary.cs" />
     <Compile Include="ResultReporter.cs" />

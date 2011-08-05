@@ -262,12 +262,19 @@ namespace NUnit.ConsoleRunner
         // This is public static for ease of testing
         public static TestFilter CreateTestFilter(ConsoleOptions options)
         {
-            // TODO: Implement filtering
-            TestFilter testFilter = TestFilter.Empty;
-            //if (options.RunList.Length > 0)
-            //{
-            //    testFilter = new SimpleNameFilter(TestNameParser.Parse(options.run));
-            //}
+            TestFilterBuilder builder = new TestFilterBuilder();
+            foreach (string testName in options.TestList)
+                builder.Tests.Add(testName);
+
+            // TODO: Decide whether to support CategoryExpressions
+
+            if (options.Include != null)
+                foreach (string category in options.Include.Split(','))
+                    builder.Include.Add(category);
+
+            if (options.Exclude != null)
+                foreach (string category in options.Exclude.Split(','))
+                    builder.Exclude.Add(category);
 
             //if (options.include != null && options.include != string.Empty)
             //{
@@ -292,7 +299,7 @@ namespace NUnit.ConsoleRunner
             //if (testFilter is NotFilter)
             //    ((NotFilter)testFilter).TopLevel = true;
 
-            return testFilter;
+            return builder.GetFilter();
         }
 
         private static string CreateXmlOutput(ITestEngineResult result)

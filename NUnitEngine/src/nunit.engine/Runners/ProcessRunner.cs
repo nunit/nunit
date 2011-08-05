@@ -134,7 +134,7 @@ namespace NUnit.Engine.Runners
         /// </summary>
         /// <param name="filter">A TestFilter used to select tests</param>
         /// <returns>A TestResult giving the result of the test execution</returns>
-        public override TestEngineResult Run(ITestEventHandler listener, ITestFilter filter)
+        public override TestEngineResult Run(ITestEventHandler listener, TestFilter filter)
         {
             return (TestEngineResult)this.remoteRunner.Run(listener, filter);
         }

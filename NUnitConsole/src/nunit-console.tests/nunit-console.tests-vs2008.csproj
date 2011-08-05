@@ -42,6 +42,9 @@
     <Compile Include="SchemaValidator.cs" />
     <Compile Include="OutputSpecificationTests.cs" />
     <Compile Include="NUnit2XmlValidationTests.cs" />
+    <Compile Include="TestFilterBuilderTests.cs" />
+    <Compile Include="TestFilterTests.cs" />
+    <Compile Include="TestNameParserTests.cs" />
     <Compile Include="XmlHelper.cs" />
     <Compile Include="XmlOutputTest.cs" />
     <Compile Include="XmlTransformOutputWriterTests.cs">

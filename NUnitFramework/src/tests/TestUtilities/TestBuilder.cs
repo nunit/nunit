@@ -83,12 +83,12 @@ namespace NUnit.TestUtilities
 
         public static TestResult RunTestFixture(Type type)
         {
-            return (TestResult)MakeFixture(type).Run(TestListener.NULL);
+            return (TestResult)MakeFixture(type).Run(TestListener.NULL, TestFilter.Empty);
         }
 
         public static TestResult RunTestFixture(object fixture)
         {
-            return (TestResult)MakeFixture(fixture).Run(TestListener.NULL);
+            return (TestResult)MakeFixture(fixture).Run(TestListener.NULL, TestFilter.Empty);
         }
 
         public static ITestResult RunTestCase(Type type, string methodName)
@@ -96,7 +96,7 @@ namespace NUnit.TestUtilities
             Test test = MakeTestCase(type, methodName);
             if (!IsStaticClass(type))
                 test.Fixture = Activator.CreateInstance(type);
-            return test.Run(TestListener.NULL);
+            return test.Run(TestListener.NULL, TestFilter.Empty);
         }
 
         private static bool IsStaticClass(Type type)

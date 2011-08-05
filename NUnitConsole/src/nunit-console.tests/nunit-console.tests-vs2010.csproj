@@ -58,6 +58,10 @@
     <Compile Include="OutputSpecificationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SchemaValidator.cs" />
+    <Compile Include="TestFilterBuilderTests.cs" />
+    <Compile Include="TestFilterTests.cs" />
+    <Compile Include="TestNameParserTests.cs" />
+    <Compile Include="XmlHelper.cs" />
     <Compile Include="XmlOutputTest.cs" />
     <Compile Include="XmlTransformOutputWriterTests.cs" />
   </ItemGroup>

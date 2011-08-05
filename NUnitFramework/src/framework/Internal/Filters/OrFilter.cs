@@ -28,47 +28,71 @@ using NUnit.Framework.Api;
 namespace NUnit.Framework.Internal.Filters
 {
 	/// <summary>
-	/// SimpleName filter selects tests based on their name
+	/// Combines multiple filters so that a test must pass one 
+	/// of them in order to pass this filter.
 	/// </summary>
-    [Serializable]
-    public class SimpleNameFilter : TestFilter
-    {
-        private ArrayList names = new ArrayList();
+	[Serializable]
+	public class OrFilter : TestFilter
+	{
+		private ArrayList filters = new ArrayList();
 
 		/// <summary>
-		/// Construct an empty SimpleNameFilter
+		/// Constructs an empty OrFilter
 		/// </summary>
-        public SimpleNameFilter() { }
-        
-        /// <summary>
-        /// Construct a SimpleNameFilter for a single name
-        /// </summary>
-        /// <param name="namesToAdd">The name the filter will recognize. Separate multiple names with commas.</param>
-		public SimpleNameFilter( string namesToAdd )
-        {
-            Add(namesToAdd);
-        }
+		public OrFilter() { }
 
 		/// <summary>
-		/// Add a name to a SimpleNameFilter
+		/// Constructs an AndFilter from an array of filters
 		/// </summary>
-        /// <param name="name">The name to be added.</param>
-        public void Add(string name)
+		/// <param name="filters"></param>
+		public OrFilter( params ITestFilter[] filters )
 		{
-            Guard.ArgumentNotNullOrEmpty(name, "name");
-
-            names.Add(name);
+			this.filters.AddRange( filters );
 		}
 
 		/// <summary>
-		/// Check whether the filter matches a test
+		/// Adds a filter to the list of filters
+		/// </summary>
+		/// <param name="filter">The filter to be added</param>
+		public void Add( ITestFilter filter )
+		{
+			this.filters.Add( filter );
+		}
+
+		/// <summary>
+		/// Return an array of the composing filters
+		/// </summary>
+		public ITestFilter[] Filters
+		{
+			get
+			{
+				return (ITestFilter[])filters.ToArray(typeof(ITestFilter));
+			}
+		}
+
+		/// <summary>
+		/// Checks whether the OrFilter is matched by a test
 		/// </summary>
 		/// <param name="test">The test to be matched</param>
-		/// <returns>True if it matches, otherwise false</returns>
+		/// <returns>True if any of the component filters pass, otherwise false</returns>
+		public override bool Pass( ITest test )
+		{
+			foreach( ITestFilter filter in filters )
+				if ( filter.Pass( test ) )
+					return true;
+
+			return false;
+		}
+
+		/// <summary>
+		/// Checks whether the OrFilter is matched by a test
+		/// </summary>
+		/// <param name="test">The test to be matched</param>
+		/// <returns>True if any of the component filters match, otherwise false</returns>
 		public override bool Match( ITest test )
 		{
-			foreach( string name in names )
-				if ( test.FullName == name )
+			foreach( TestFilter filter in filters )
+				if ( filter.Match( test ) )
 					return true;
 
 			return false;

@@ -115,7 +115,7 @@ namespace NUnit.Framework.Internal
             IPrincipal principal = Thread.CurrentPrincipal;
 
             TestSuite suite = TestBuilder.MakeFixture( typeof( FixtureThatChangesTheCurrentPrincipal ) );
-            suite.Run(TestListener.NULL);
+            suite.Run(TestListener.NULL, TestFilter.Empty);
             
             Assert.That(
                 Thread.CurrentPrincipal,

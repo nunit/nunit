@@ -52,7 +52,7 @@ namespace NUnit.Framework.Api
         /// <param name="assemblyName">File name of the assembly to load</param>
         /// <param name="options">Dictionary of options to use in loading the test</param>
         /// <returns>True if the load was successful</returns>
-        bool Load(string assemblyName, System.Collections.IDictionary options);
+        bool Load(string assemblyName, System.Collections.IDictionary settings);
 
         /// <summary>
         /// Loads the tests found in an Assembly, returning an 
@@ -61,7 +61,7 @@ namespace NUnit.Framework.Api
         /// <param name="assembly">The assembly to load</param>
         /// <param name="options">Dictionary of options to use in loading the test</param>
         /// <returns>True if the load was successful</returns>
-        bool Load(Assembly assembly, System.Collections.IDictionary options);
+        bool Load(Assembly assembly, System.Collections.IDictionary settings);
 
         ///// <summary>
         ///// Count Test Cases using a filter
@@ -76,7 +76,7 @@ namespace NUnit.Framework.Api
         /// </summary>
         /// <param name="listener">Interface to receive ITestListener notifications.</param>
         /// <param name="runOptions">TODO Comment for runOptions</param>
-        ITestResult Run(ITestListener listener, System.Collections.IDictionary runOptions);
+        ITestResult Run(ITestListener listener, ITestFilter filter);
 
         #endregion
     }
