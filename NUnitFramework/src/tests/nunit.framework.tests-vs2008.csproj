@@ -65,6 +65,7 @@
     <Compile Include="Internal\LegacySuiteTests.cs" />
     <Compile Include="Internal\SetUpTest.cs" />
     <Compile Include="Internal\SimpleGenericMethods.cs" />
+    <Compile Include="Internal\TestFilterTests.cs" />
     <Compile Include="Internal\TestFixtureTests.cs" />
     <Compile Include="Internal\TestMethodSignatureTests.cs" />
     <Compile Include="Internal\TypeParameterUsedWithTestMethod.cs" />

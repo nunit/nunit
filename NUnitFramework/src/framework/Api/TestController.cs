@@ -162,12 +162,12 @@ namespace NUnit.Framework.Api
             /// <param name="assemblyFilename">The assembly filename.</param>
             /// <param name="loadOptions">Options controlling how the tests are loaded</param>
             /// <param name="callback">The callback.</param>
-            public LoadTestsAction(TestController controller, string assemblyFilename, IDictionary loadOptions, AsyncCallback callback)
+            public LoadTestsAction(TestController controller, string assemblyFilename, IDictionary settings, AsyncCallback callback)
                 : base(controller, callback)
             {
                 try
                 {
-                    int count = controller.Runner.Load(assemblyFilename, loadOptions)
+                    int count = controller.Runner.Load(assemblyFilename, settings)
                         ? controller.Runner.LoadedTest.TestCaseCount
                         : 0;
 
@@ -280,14 +280,14 @@ namespace NUnit.Framework.Api
             /// Construct a RunTestsAction and run all tests in the loaded TestSuite.
             /// </summary>
             /// <param name="controller">A TestController holding the TestSuite to run</param>
-            /// <param name="runOptions">TODO Comment for runOptions</param>
+            /// <param name="filterText">A string containing the XML representation of the filter to use</param>
             /// <param name="callback">A callback used to report results</param>
-            public RunTestsAction(TestController controller, IDictionary runOptions, AsyncCallback callback) 
+            public RunTestsAction(TestController controller, string filterText, AsyncCallback callback) 
                 : base(controller, callback)
             {
                 try
                 {
-                    ITestResult result = controller.Runner.Run(new TestProgressReporter(callback), runOptions);
+                    ITestResult result = controller.Runner.Run(new TestProgressReporter(callback), TestFilter.FromXml(filterText));
 
                     callback(new FinalResult(result.ToXml(true), true));
                 }

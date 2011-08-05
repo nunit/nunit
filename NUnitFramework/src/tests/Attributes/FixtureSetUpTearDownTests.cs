@@ -41,7 +41,7 @@ namespace NUnit.Framework.Attributes
 		{
 			TestSuite suite = TestBuilder.MakeFixture( fixture.GetType() );
 			suite.Fixture = fixture;
-            return suite.Run(TestListener.NULL);
+            return suite.Run(TestListener.NULL, TestFilter.Empty);
 		}
 
 		[Test]
@@ -216,7 +216,7 @@ namespace NUnit.Framework.Attributes
 		public void HandleExceptionInFixtureConstructor()
 		{
 			TestSuite suite = TestBuilder.MakeFixture( typeof( ExceptionInConstructor ) );
-            ITestResult result = suite.Run(TestListener.NULL);
+            ITestResult result = suite.Run(TestListener.NULL, TestFilter.Empty);
 
 			Assert.AreEqual(ResultState.Error, result.ResultState);
 			Assert.AreEqual("System.Exception : This was thrown in constructor", result.Message, "TestSuite Message");
@@ -275,15 +275,15 @@ namespace NUnit.Framework.Attributes
 			Test test = (Test)fixtureSuite.Tests[0];
 			suite.Add( fixtureSuite );
 
-            fixtureSuite.Run(TestListener.NULL);
+            fixtureSuite.Run(TestListener.NULL, TestFilter.Empty);
 			Assert.IsFalse( fixture.setupCalled, "TestFixtureSetUp called running fixture" );
 			Assert.IsFalse( fixture.teardownCalled, "TestFixtureTearDown called running fixture" );
 
-            suite.Run(TestListener.NULL);
+            suite.Run(TestListener.NULL, TestFilter.Empty);
 			Assert.IsFalse( fixture.setupCalled, "TestFixtureSetUp called running enclosing suite" );
 			Assert.IsFalse( fixture.teardownCalled, "TestFixtureTearDown called running enclosing suite" );
 
-            test.Run(TestListener.NULL);
+            test.Run(TestListener.NULL, TestFilter.Empty);
 			Assert.IsFalse( fixture.setupCalled, "TestFixtureSetUp called running a test case" );
 			Assert.IsFalse( fixture.teardownCalled, "TestFixtureTearDown called running a test case" );
 		}

@@ -282,6 +282,10 @@
     <Compile Include="Internal\Extensibility\TestCaseBuilderCollection.cs" />
     <Compile Include="Internal\Extensibility\TestCaseProviders.cs" />
     <Compile Include="Internal\Extensibility\TestDecoratorCollection.cs" />
+    <Compile Include="Internal\Filters\AndFilter.cs" />
+    <Compile Include="Internal\Filters\CategoryFilter.cs" />
+    <Compile Include="Internal\Filters\NotFilter.cs" />
+    <Compile Include="Internal\Filters\OrFilter.cs" />
     <Compile Include="Internal\Filters\SimpleNameFilter.cs" />
     <Compile Include="Internal\AsyncResults\FinalResult.cs" />
     <Compile Include="Internal\InternalTrace.cs" />

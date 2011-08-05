@@ -73,6 +73,11 @@ namespace NUnit.Framework.Internal
         private ITestListener listener;
 
         /// <summary>
+        /// The TestFilter for use in running child tests
+        /// </summary>
+        private ITestFilter filter;
+
+        /// <summary>
         /// The System.Type of the fixture for this test suite, if there is one
         /// </summary>
         private Type fixtureType;
@@ -381,9 +386,10 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="listener">An event listener to receive notifications</param>
         /// <returns>A TestResult.</returns>
-        public virtual TestResult Run(ITestListener listener)
+        public virtual TestResult Run(ITestListener listener, ITestFilter filter)
         {
             this.Listener = listener;
+            this.Filter = filter;
 
             TestResult testResult;
 
@@ -413,6 +419,15 @@ namespace NUnit.Framework.Internal
         {
             get { return this.listener; }
             set { this.listener = value; }
+        }
+
+        /// <summary>
+        /// Gets the filter for use in running child tests
+        /// </summary>
+        internal ITestFilter Filter // Temporarily internal
+        {
+            get { return this.filter; }
+            set { this.filter = value; }
         }
 
         #endregion

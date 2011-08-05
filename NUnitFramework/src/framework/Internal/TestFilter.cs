@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Xml;
 using NUnit.Framework.Api;
 
 namespace NUnit.Framework.Internal
@@ -37,15 +38,7 @@ namespace NUnit.Framework.Internal
 		/// <summary>
 		/// Unique Empty filter.
 		/// </summary>
-		public static TestFilter Empty = new EmptyFilter();
-
-		/// <summary>
-		/// Indicates whether this is the EmptyFilter
-		/// </summary>
-		public bool IsEmpty
-		{
-			get { return this is TestFilter.EmptyFilter; }
-		}
+        public static TestFilter Empty = new EmptyFilter();
 
 		/// <summary>
 		/// Determine if a particular test passes the filter criteria. The default 
@@ -76,9 +69,8 @@ namespace NUnit.Framework.Internal
 		/// <returns>True if the filter matches the an ancestor of the test</returns>
 		protected virtual bool MatchParent(ITest test)
 		{
-            return false;
-            //return (test.RunState != RunState.Explicit && test.Parent != null && 
-            //    ( Match(test.Parent) || MatchParent(test.Parent)) );
+            return (test.RunState != RunState.Explicit && test.Parent != null &&
+                (Match(test.Parent) || MatchParent(test.Parent)));
 		}
 
 		/// <summary>
@@ -88,19 +80,75 @@ namespace NUnit.Framework.Internal
 		/// <returns>True if at least one descendant matches the filter criteria</returns>
 		protected virtual bool MatchDescendant(ITest test)
 		{
+            if (test.Tests == null)
+                return false;
+
+            foreach (ITest child in test.Tests)
+            {
+                if (Match(child) || MatchDescendant(child))
+                    return true;
+            }
+
             return false;
-            //if (!test.IsSuite || test.Tests == null)
-            //    return false;
-
-            //foreach (ITest child in test.Tests)
-            //{
-            //    if (Match(child) || MatchDescendant(child))
-            //        return true;
-            //}
-
-            //return false;
 		}
-		
+
+        public static TestFilter FromXml(string xmlText)
+        {
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml(xmlText);
+            XmlNode topNode = doc.FirstChild;
+
+            if (topNode.Name != "filter")
+                throw new Exception("Expected filter element at top level");
+
+            // Initially, an empty filter
+            TestFilter result = TestFilter.Empty;
+            bool isEmptyResult = true;
+
+            XmlNodeList testNodes = topNode.SelectNodes("tests/test");
+            XmlNodeList includeNodes = topNode.SelectNodes("include/category");
+            XmlNodeList excludeNodes = topNode.SelectNodes("exclude/category");
+
+            if (testNodes.Count > 0)
+            {
+                Filters.SimpleNameFilter nameFilter = new Filters.SimpleNameFilter();
+                foreach (XmlNode testNode in topNode.SelectNodes("tests/test"))
+                    nameFilter.Add(testNode.InnerText);
+
+                result = nameFilter;
+                isEmptyResult = false;
+            }
+
+            if (includeNodes.Count > 0)
+            {
+                Filters.CategoryFilter includeFilter = new Filters.CategoryFilter();
+                foreach (XmlNode includeNode in includeNodes)
+                    includeFilter.AddCategory(includeNode.InnerText);
+
+                if (isEmptyResult)
+                    result = includeFilter;
+                else
+                    result = new Filters.AndFilter(result, includeFilter);
+                isEmptyResult = false;
+            }
+
+            if (excludeNodes.Count > 0)
+            {
+                Filters.CategoryFilter categoryFilter = new Filters.CategoryFilter();
+                foreach (XmlNode excludeNode in excludeNodes)
+                    categoryFilter.AddCategory(excludeNode.InnerText);
+                TestFilter excludeFilter = new Filters.NotFilter(categoryFilter);
+
+                if (isEmptyResult)
+                    result = excludeFilter;
+                else
+                    result = new Filters.AndFilter(result, excludeFilter);
+                isEmptyResult = false;
+            }
+
+            return result;
+        }
+
 		/// <summary>
 		/// Nested class provides an empty filter - one that always
 		/// returns true when called, unless the test is marked explicit.

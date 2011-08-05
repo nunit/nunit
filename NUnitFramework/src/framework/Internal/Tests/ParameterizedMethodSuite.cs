@@ -59,7 +59,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="listener"></param>
         /// <returns></returns>
-        public override TestResult Run(ITestListener listener)
+        public override TestResult Run(ITestListener listener, ITestFilter filter)
         {
             if (this.Parent != null)
             {
@@ -73,7 +73,7 @@ namespace NUnit.Framework.Internal
                 }
             }
           
-            return base.Run(listener);
+            return base.Run(listener, filter);
         }
 
         /// <summary>

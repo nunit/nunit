@@ -14,6 +14,7 @@ namespace NUnit.Framework.Internal
         private ITestAssemblyBuilder builder;
         private TestSuite loadedTest;
         private Thread runThread;
+        private IDictionary settings;
 
         #region Constructors
 
@@ -49,11 +50,12 @@ namespace NUnit.Framework.Internal
         /// Loads the tests found in an Assembly
         /// </summary>
         /// <param name="assemblyName">File name of the assembly to load</param>
-        /// <param name="options">Dictionary of option settings for loading the assembly</param>
+        /// <param name="settings">Dictionary of option settings for loading the assembly</param>
         /// <returns>True if the load was successful</returns>
-        public bool Load(string assemblyName, IDictionary options)
+        public bool Load(string assemblyName, IDictionary settings)
         {
-            this.loadedTest = this.builder.Build(assemblyName, options);
+            this.settings = settings;
+            this.loadedTest = this.builder.Build(assemblyName, settings);
             if (loadedTest == null) return false;
 
             return true;
@@ -63,11 +65,12 @@ namespace NUnit.Framework.Internal
         /// Loads the tests found in an Assembly
         /// </summary>
         /// <param name="assembly">The assembly to load</param>
-        /// <param name="options">Dictionary of option settings for loading the assembly</param>
+        /// <param name="settings">Dictionary of option settings for loading the assembly</param>
         /// <returns>True if the load was successful</returns>
-        public bool Load(Assembly assembly, IDictionary options)
+        public bool Load(Assembly assembly, IDictionary settings)
         {
-            this.loadedTest = this.builder.Build(assembly, options);
+            this.settings = settings;
+            this.loadedTest = this.builder.Build(assembly, settings);
             if (loadedTest == null) return false;
 
             return true;
@@ -90,7 +93,7 @@ namespace NUnit.Framework.Internal
         /// <param name="listener">Interface to receive EventListener notifications.</param>
         /// <param name="runOptions">A dictionary containing options for this run</param>
         /// <returns></returns>
-        public ITestResult Run(ITestListener listener, IDictionary runOptions)
+        public ITestResult Run(ITestListener listener, ITestFilter filter)
         {
             if (loadedTest == null)
                 throw new InvalidOperationException("Run was called but no test has been loaded.");
@@ -108,13 +111,14 @@ namespace NUnit.Framework.Internal
                 TestExecutionContext.CurrentContext.Out = new EventListenerTextWriter(queue, TestOutputType.Out);
                 TestExecutionContext.CurrentContext.Error = new EventListenerTextWriter(queue, TestOutputType.Error);
 
-                if (runOptions.Contains("DefaultTimeout"))
-                    TestExecutionContext.CurrentContext.TestCaseTimeout = (int)runOptions["DefaultTimeout"];
+                if (this.settings.Contains("DefaultTimeout"))
+                    TestExecutionContext.CurrentContext.TestCaseTimeout = (int)this.settings["DefaultTimeout"];
 
                 using (EventPump pump = new EventPump(listener, queue.Events, true))
                 {
                     pump.Start();
-                    return this.loadedTest.Run(queue);
+                    
+                    return this.loadedTest.Run(queue, filter);
                 }
             }
             finally
