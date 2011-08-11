@@ -43,7 +43,10 @@ namespace NUnit.Framework.Internal
         /// Overridden to simply set the CurrentResult to the
         /// appropriate Skipped state
         /// </summary>
-        public override TestResult Execute(object TestObject)
+        /// <param name="testObject">The object on which the test should run.</param>
+        /// <param name="arguments">The arguments to be used in running the test or null.</param>
+        /// <returns>A TestResult</returns>
+        public override TestResult Execute(object TestObject, ITestListener listener)
         {
             TestResult testResult = this.Test.MakeTestResult();
 

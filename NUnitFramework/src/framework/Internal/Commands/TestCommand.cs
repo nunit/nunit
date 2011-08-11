@@ -94,8 +94,9 @@ namespace NUnit.Framework.Internal
         /// Runs the test, returning a TestResult.
         /// </summary>
         /// <param name="testObject">The object on which the test should run.</param>
+        /// <param name="arguments">The arguments to use in running the test or null.</param>
         /// <returns>A TestResult</returns>
-        public abstract TestResult Execute(object testObject);
+        public abstract TestResult Execute(object testObject, ITestListener listener);
 
         #endregion
 

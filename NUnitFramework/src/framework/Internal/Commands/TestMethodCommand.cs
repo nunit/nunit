@@ -45,6 +45,8 @@ namespace NUnit.Framework.Internal
         /// </summary>
         internal MethodInfo method;
 
+        internal object[] arguments;
+
         /// <summary>
         /// The SetUp method.
         /// </summary>
@@ -65,30 +67,32 @@ namespace NUnit.Framework.Internal
         public TestMethodCommand(TestCommand innerCommand)
             : base(innerCommand)
         {
-            this.test = Test as TestMethod;            
+            this.test = Test as TestMethod;           
             this.method = test.Method;
+            this.arguments = test.arguments;
+            this.setUpMethods = test.SetUpMethods;
+            this.tearDownMethods = test.TearDownMethods;
         }
 
         /// <summary>
         /// Runs the test, saving a TestResult in
         /// TestExecutionContext.CurrentContext.CurrentResult
         /// </summary>
-        /// <param name="testObject"></param>
-        public override TestResult Execute(object testObject)
+        /// <param name="testObject">The object on which the test should run.</param>
+        /// <param name="arguments">The arguments to be used in running the test or null.</param>
+        /// <returns>A TestResult</returns>
+        public override TestResult Execute(object testObject, ITestListener listener)
         {
             try
             {
                 ApplySettingsToExecutionContext();
 
-                Test parent = test.Parent as Test;
-                if (parent != null)
-                {
-                    testObject = parent.Fixture;
-                    this.setUpMethods = parent.SetUpMethods;
-                    this.tearDownMethods = parent.TearDownMethods;
-                }
+                // This is used in case we are running a parameterized
+                // test case directly, without having crated the fixture
+                if (testObject == null && !method.IsStatic)
+                    testObject = Activator.CreateInstance(method.ReflectedType);
 
-                return innerCommand.Execute(testObject);
+                return innerCommand.Execute(testObject, listener);
             }
             catch (Exception ex)
             {

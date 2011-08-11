@@ -202,18 +202,16 @@ namespace NUnit.Framework.Tests
         [Test]
         public void CanSpecifyExpectedException()
         {
-            Test test = (Test)TestBuilder.MakeParameterizedMethodSuite(
-                typeof(TestCaseAttributeFixture), "MethodThrowsExpectedException").Tests[0];
-            ITestResult result = test.Run(TestListener.NULL, TestFilter.Empty);
+            ITestResult result = TestBuilder.RunTestCase(
+                typeof(TestCaseAttributeFixture), "MethodThrowsExpectedException").Children[0];
             Assert.AreEqual(ResultState.Success, result.ResultState);
         }
 
         [Test]
         public void CanSpecifyExpectedException_WrongException()
         {
-            Test test = (Test)TestBuilder.MakeParameterizedMethodSuite(
-                typeof(TestCaseAttributeFixture), "MethodThrowsWrongException").Tests[0];
-            ITestResult result = test.Run(TestListener.NULL, TestFilter.Empty);
+            ITestResult result = TestBuilder.RunTestCase(
+                typeof(TestCaseAttributeFixture), "MethodThrowsWrongException").Children[0];
             Assert.AreEqual(ResultState.Failure, result.ResultState);
             Assert.That(result.Message, Is.StringStarting("An unexpected exception type was thrown"));
         }
@@ -221,9 +219,8 @@ namespace NUnit.Framework.Tests
         [Test]
         public void CanSpecifyExpectedException_WrongMessage()
         {
-            Test test = (Test)TestBuilder.MakeParameterizedMethodSuite(
-                typeof(TestCaseAttributeFixture), "MethodThrowsExpectedExceptionWithWrongMessage").Tests[0];
-            ITestResult result = test.Run(TestListener.NULL, TestFilter.Empty);
+            ITestResult result = TestBuilder.RunTestCase(
+                typeof(TestCaseAttributeFixture), "MethodThrowsExpectedExceptionWithWrongMessage").Children[0];
             Assert.AreEqual(ResultState.Failure, result.ResultState);
             Assert.That(result.Message, Is.StringStarting("The exception message text was incorrect"));
         }
@@ -231,9 +228,8 @@ namespace NUnit.Framework.Tests
         [Test]
         public void CanSpecifyExpectedException_NoneThrown()
         {
-            Test test = (Test)TestBuilder.MakeParameterizedMethodSuite(
-                typeof(TestCaseAttributeFixture), "MethodThrowsNoException").Tests[0];
-            ITestResult result = test.Run(TestListener.NULL, TestFilter.Empty);
+            ITestResult result = TestBuilder.RunTestCase(
+                typeof(TestCaseAttributeFixture), "MethodThrowsNoException").Children[0];
             Assert.AreEqual(ResultState.Failure, result.ResultState);
             Assert.AreEqual("System.ArgumentNullException was expected", result.Message);
         }
@@ -241,9 +237,8 @@ namespace NUnit.Framework.Tests
         [Test]
         public void IgnoreTakesPrecedenceOverExpectedException()
         {
-            Test test = (Test)TestBuilder.MakeParameterizedMethodSuite(
-                typeof(TestCaseAttributeFixture), "MethodCallsIgnore").Tests[0];
-            ITestResult result = test.Run(TestListener.NULL, TestFilter.Empty);
+            ITestResult result = TestBuilder.RunTestCase(
+                typeof(TestCaseAttributeFixture), "MethodCallsIgnore").Children[0];
             Assert.AreEqual(ResultState.Ignored, result.ResultState);
             Assert.AreEqual("Ignore this", result.Message);
         }

@@ -12,6 +12,6 @@ namespace NUnit.Engine
 
         TestEngineResult Run(ITestEventHandler listener, TestFilter filter);
 
-        TestEngineResult Explore(string assemblyName, IDictionary<string, object> options);
+        TestEngineResult Explore(string assemblyName, IDictionary<string, object> options, TestFilter filter);
     }
 }

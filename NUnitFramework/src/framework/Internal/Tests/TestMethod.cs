@@ -42,34 +42,60 @@ namespace NUnit.Framework.Internal
 	public class TestMethod : Test
 	{
 		#region Fields
+
 		/// <summary>
 		/// The test method
 		/// </summary>
 		internal MethodInfo method;
 
         /// <summary>
-        /// The ExpectedExceptionProcessor for this test, if any
+        /// Indicate whether this test method expects an exception
         /// </summary>
-        internal ExpectedExceptionProcessor exceptionProcessor;
+        private bool exceptionExpected;
 
         /// <summary>
-        /// Arguments to be used in invoking the method
+        /// The exception handler method
         /// </summary>
-	    internal object[] arguments;
+        internal MethodInfo alternateExceptionHandler;
 
         /// <summary>
-        /// The expected result of the method return value
+        /// The type of any expected exception
         /// </summary>
-	    internal object expectedResult;
+        internal Type expectedExceptionType;
+
+        /// <summary>
+        /// The full name of any expected exception type
+        /// </summary>
+        internal string expectedExceptionName;
+
+        /// <summary>
+        /// The value of any message associated with an expected exception
+        /// </summary>
+        internal string expectedExceptionMessage;
+
+        /// <summary>
+        /// A string indicating how to match the expected message
+        /// </summary>
+        internal MessageMatch messageMatchType;
+
+        /// <summary>
+        /// A string containing any user message specified for the expected exception
+        /// </summary>
+        internal string expectedExceptionUserMessage;
 
         /// <summary>
         /// Indicated whether the method has an expected result.
         /// </summary>
 	    internal bool hasExpectedResult;
 
+        /// <summary>
+        /// The result that the test method is expected to return.
+        /// </summary>
+        internal object expectedResult;
+
 		#endregion
 
-		#region Constructors
+		#region Constructor
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TestMethod"/> class.
@@ -88,9 +114,11 @@ namespace NUnit.Framework.Internal
 
             this.method = method;
 		}
+
 		#endregion
 
         #region Properties
+
         /// <summary>
         /// Gets the method.
         /// </summary>
@@ -101,23 +129,66 @@ namespace NUnit.Framework.Internal
 		}
 
         /// <summary>
-        /// Gets or sets the exception processor.
+        /// Flag indicating whether an exception is expected.
         /// </summary>
-        /// <value>The exception processor.</value>
-        public ExpectedExceptionProcessor ExceptionProcessor
+        public bool ExceptionExpected
         {
-            get { return exceptionProcessor; }
-            set { exceptionProcessor = value; }
+            get { return exceptionExpected; }
+            set { exceptionExpected = value; }
+        }
+        /// <summary>
+        /// The Type of any exception that is expected.
+        /// </summary>
+        public System.Type ExpectedExceptionType
+        {
+            get { return expectedExceptionType; }
+            set { expectedExceptionType = value; }
         }
 
         /// <summary>
-        /// Gets a value indicating whether an exception is expected.
+        /// The FullName of any exception that is expected
         /// </summary>
-        /// <value><c>true</c> if an exception is expected; otherwise, <c>false</c>.</value>
-		public bool ExceptionExpected
-		{
-            get { return exceptionProcessor != null; }
-		}
+        public string ExpectedExceptionName
+        {
+            get { return expectedExceptionName; }
+            set { expectedExceptionName = value; }
+        }
+
+        /// <summary>
+        /// The Message of any exception that is expected
+        /// </summary>
+        public string ExpectedExceptionMessage
+        {
+            get { return expectedExceptionMessage; }
+            set { expectedExceptionMessage = value; }
+        }
+
+        /// <summary>
+        ///  Gets or sets the type of match to be performed on the expected message
+        /// </summary>
+        public MessageMatch MessageMatchType
+        {
+            get { return messageMatchType; }
+            set { messageMatchType = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the user message displayed in case of failure
+        /// </summary>
+        public string ExpectedExceptionUserMessage
+        {
+            get { return expectedExceptionUserMessage; }
+            set { expectedExceptionUserMessage = value; }
+        }
+
+        /// <summary>
+        ///  Gets the name of a method to be used as an exception handler
+        /// </summary>
+        public MethodInfo AlternateExceptionHandler
+        {
+            get { return alternateExceptionHandler; }
+            set { alternateExceptionHandler = value; }
+        }
 
         #endregion
 
@@ -156,6 +227,9 @@ namespace NUnit.Framework.Internal
                 int timeout = TestExecutionContext.CurrentContext.TestCaseTimeout;
                 if (Properties.ContainsKey(PropertyNames.Timeout))
                     timeout = (int)Properties.Get(PropertyNames.Timeout);
+                // TODO: Remove this kluge!
+                else if (Parent != null && Parent.Properties.ContainsKey(PropertyNames.Timeout))
+                    timeout = (int)Parent.Properties.Get(PropertyNames.Timeout);
 
                 return timeout > 0;
             }

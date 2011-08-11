@@ -66,7 +66,7 @@ namespace NUnit.Engine.Runners
         /// </summary>
         /// <param name="package">The TestPackage to be explored</param>
         /// <returns>A TestEngineResult.</returns>
-        public override TestEngineResult Explore(TestPackage package)
+        public override TestEngineResult Explore(TestPackage package, TestFilter filter)
         {
             this.package = package;
 
@@ -77,7 +77,7 @@ namespace NUnit.Engine.Runners
 
             CreateAgentAndRunner(enableDebug);
 
-            ITestEngineResult result = this.remoteRunner.Explore(package);
+            ITestEngineResult result = this.remoteRunner.Explore(package, filter);
             return result as TestEngineResult; // TODO: Remove need for this cast
         }
 

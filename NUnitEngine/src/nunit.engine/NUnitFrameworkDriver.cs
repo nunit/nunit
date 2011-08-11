@@ -68,12 +68,12 @@ namespace NUnit.Engine
             return handler.Result;
         }
 
-        public TestEngineResult Explore(string assemblyFileName, IDictionary<string, object> settings)
+        public TestEngineResult Explore(string assemblyFileName, IDictionary<string, object> settings, TestFilter filter)
         {
             CallbackHandler handler = new CallbackHandler();
 
             CreateObject("NUnit.Framework.Api.TestController+ExploreTestsAction",
-                testController, assemblyFileName, settings, handler.Callback);
+                testController, assemblyFileName, settings, filter.Text, handler.Callback);
 
             return handler.Result;
         }

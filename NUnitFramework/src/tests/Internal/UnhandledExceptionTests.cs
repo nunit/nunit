@@ -43,8 +43,7 @@ namespace NUnit.Framework.Tests
         private static void testDummy(string dummyName, bool shouldPass)
         {
             Type fixtureType = typeof(NUnit.TestData.UnhandledExceptionData.UnhandledExceptions);
-            Test test = TestBuilder.MakeTestCase(fixtureType, dummyName);
-            ITestResult result = test.Run(TestListener.NULL, TestFilter.Empty);
+            ITestResult result = TestBuilder.RunTestCase(fixtureType, dummyName);
             if (shouldPass)
                 Assert.IsTrue(result.ResultState == ResultState.Success, "{0} test should have passed", dummyName);
             else

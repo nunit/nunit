@@ -28,64 +28,6 @@ using System.Net.Sockets;
 
 namespace NUnit.Framework.Assertions
 {
-	public class TestFile : IDisposable
-	{
-		private bool _disposedValue = false;
-		private string _resourceName;
-		private string _fileName;
-
-		#region Nested TestFile Utility Class
-		public TestFile(string fileName, string resourceName)
-		{
-			_resourceName = "NUnit.Framework.Tests." + resourceName;
-			_fileName = fileName;
-
-			Assembly a = Assembly.GetExecutingAssembly();
-			using (Stream s = a.GetManifestResourceStream(_resourceName))
-			{
-				if (s == null) throw new Exception("Manifest Resource Stream " + _resourceName + " was not found.");
-
-				byte[] buffer = new byte[1024];
-				using (FileStream fs = File.Create(_fileName))
-				{
-					while(true)
-					{
-						int count = s.Read(buffer, 0, buffer.Length);
-						if(count == 0) break;
-						fs.Write(buffer, 0, count);
-					}
-				}
-			}
-		}
-
-		protected virtual void Dispose(bool disposing)
-		{
-			if (!this._disposedValue)
-			{
-				if (disposing)
-				{
-					if(File.Exists(_fileName))
-					{
-						File.Delete(_fileName);
-					}
-				}
-			}
-			this._disposedValue = true;
-		}
-
-		#region IDisposable Members
-
-		public void Dispose()
-		{
-			// Do not change this code.  Put cleanup code in Dispose(bool disposing) above.
-			Dispose(true);
-			GC.SuppressFinalize(this);
-		}
-
-		#endregion
-	}
-	#endregion
-
 	/// <summary>
 	/// Summary description for FileAssertTests.
 	/// </summary>
@@ -293,8 +235,10 @@ namespace NUnit.Framework.Assertions
 			{
 				using(TestFile tf2 = new TestFile("Test2.txt","TestText2.txt"))
 				{
-					expectedMessage =
-						"  Stream lengths are both 65600. Streams differ at offset 65597." + Environment.NewLine;
+                    expectedMessage = string.Format(
+                        "  Stream lengths are both {0}. Streams differ at offset {1}." + Environment.NewLine,
+                        tf1.FileLength,
+                        tf1.FileLength-2); // TODO: Make this independent of NewLine length
 					FileAssert.AreEqual( "Test1.txt", "Test2.txt" );
 				}
 			}
@@ -449,4 +393,73 @@ namespace NUnit.Framework.Assertions
 
 		#endregion
 	}
+
+    #region TestFile Utility Class
+
+    public class TestFile : IDisposable
+    {
+        private bool _disposedValue = false;
+        private string _resourceName;
+        private string _fileName;
+        private long _fileLength;
+
+        public TestFile(string fileName, string resourceName)
+        {
+            _resourceName = "NUnit.Framework.Tests." + resourceName;
+            _fileName = fileName;
+            _fileLength = 0L;
+
+            Assembly a = Assembly.GetExecutingAssembly();
+            using (Stream s = a.GetManifestResourceStream(_resourceName))
+            {
+                if (s == null) throw new Exception("Manifest Resource Stream " + _resourceName + " was not found.");
+
+                byte[] buffer = new byte[1024];
+                using (FileStream fs = File.Create(_fileName))
+                {
+                    while (true)
+                    {
+                        int count = s.Read(buffer, 0, buffer.Length);
+                        if (count == 0) break;
+                        fs.Write(buffer, 0, count);
+                        _fileLength += count;
+                    }
+                }
+            }
+        }
+
+        public long FileLength
+        {
+            get { return _fileLength; }
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!this._disposedValue)
+            {
+                if (disposing)
+                {
+                    if (File.Exists(_fileName))
+                    {
+                        File.Delete(_fileName);
+                    }
+                }
+            }
+            this._disposedValue = true;
+        }
+
+        #region IDisposable Members
+
+        public void Dispose()
+        {
+            // Do not change this code.  Put cleanup code in Dispose(bool disposing) above.
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        #endregion
+    }
+
+    #endregion
 }
+

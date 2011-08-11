@@ -98,9 +98,11 @@ namespace NUnit.Framework.Internal
             if (loadedTest == null)
                 throw new InvalidOperationException("Run was called but no test has been loaded.");
 
+            TestCommand command = CommandBuilder.MakeTestCommand(this.loadedTest, filter);
+
             TestExecutionContext.Save();
 
-            //ITestCommand rootCommand = TestCommandFactory.MakeCommand(this.loadedTest);
+            //ITestCommand rootCommand = TestCommandFactory.MakeCommand(this.loadedTest, filter);
 
             try
             {
@@ -117,8 +119,8 @@ namespace NUnit.Framework.Internal
                 using (EventPump pump = new EventPump(listener, queue.Events, true))
                 {
                     pump.Start();
-                    
-                    return this.loadedTest.Run(queue, filter);
+
+                    return command.Execute(null, queue);
                 }
             }
             finally

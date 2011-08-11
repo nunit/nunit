@@ -77,9 +77,8 @@ namespace NUnit.Framework.Assertions
 		{
 			TestSuite suite = new TestSuite("IgnoredTestFixture");
 			suite.Add( TestBuilder.MakeFixture( typeof( IgnoredTestSuiteFixture ) ) );
-            TestResult result = suite.Run(TestListener.NULL, TestFilter.Empty);
+            ITestResult fixtureResult = (ITestResult)TestBuilder.RunTest(suite, null).Children[0];
 
-			ITestResult fixtureResult = (ITestResult)result.Children[0];
             Assert.AreEqual(ResultState.Ignored, fixtureResult.ResultState);
 
             foreach (ITestResult testResult in fixtureResult.Children)
@@ -89,8 +88,7 @@ namespace NUnit.Framework.Assertions
 		[Test]
 		public void IgnoreWorksFromSetUp()
 		{
-			TestSuite testFixture = TestBuilder.MakeFixture( typeof( IgnoreInSetUpFixture ) );
-            ITestResult fixtureResult = testFixture.Run(TestListener.NULL, TestFilter.Empty);
+			ITestResult fixtureResult = TestBuilder.RunTestFixture( typeof( IgnoreInSetUpFixture ) );
 
             Assert.AreEqual(ResultState.Success, fixtureResult.ResultState);
 

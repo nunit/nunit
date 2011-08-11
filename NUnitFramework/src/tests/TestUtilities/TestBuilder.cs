@@ -54,16 +54,12 @@ namespace NUnit.TestUtilities
 
         public static TestSuite MakeFixture(object fixture)
         {
-            TestSuite suite = (TestSuite)fixtureBuilder.BuildFrom(fixture.GetType());
-            suite.Fixture = fixture;
-            return suite;
+            return (TestSuite)fixtureBuilder.BuildFrom(fixture.GetType());
         }
 
         public static TestSuite MakeParameterizedMethodSuite(Type type, string methodName)
         {
-            TestSuite suite = (TestSuite)MakeTestCase(type, methodName);
-            suite.Fixture = Activator.CreateInstance(type);
-            return suite;
+            return (TestSuite)MakeTestCase(type, methodName);
         }
 
         public static Test MakeTestCase(Type type, string methodName)
@@ -76,27 +72,49 @@ namespace NUnit.TestUtilities
 
         public static Test MakeTestCase(object fixture, string methodName)
         {
-            Test test = MakeTestCase(fixture.GetType(), methodName);
-            test.Fixture = fixture;
-            return test;
+            return MakeTestCase(fixture.GetType(), methodName);
         }
 
         public static TestResult RunTestFixture(Type type)
         {
-            return (TestResult)MakeFixture(type).Run(TestListener.NULL, TestFilter.Empty);
+            TestSuite suite = MakeFixture(type);
+            TestCommand command = CommandBuilder.MakeTestCommand(suite, TestFilter.Empty);
+            return command.Execute(null, TestListener.NULL);
         }
 
         public static TestResult RunTestFixture(object fixture)
         {
-            return (TestResult)MakeFixture(fixture).Run(TestListener.NULL, TestFilter.Empty);
+            TestSuite suite = MakeFixture(fixture);
+            TestCommand command = CommandBuilder.MakeTestCommand(suite, TestFilter.Empty);
+            return command.Execute(fixture, TestListener.NULL);
+        }
+
+        public static ITestResult RunTestFixture(TestSuite suite)
+        {
+            return RunTest(suite, null);
         }
 
         public static ITestResult RunTestCase(Type type, string methodName)
         {
             Test test = MakeTestCase(type, methodName);
+
+            object testObject = null;
             if (!IsStaticClass(type))
-                test.Fixture = Activator.CreateInstance(type);
-            return test.Run(TestListener.NULL, TestFilter.Empty);
+                testObject = Activator.CreateInstance(type);
+
+            return RunTest(test, testObject);
+        }
+
+        public static ITestResult RunTestCase(object fixture, string methodName)
+        {
+            Test test = MakeTestCase(fixture, methodName);
+            return RunTest(test, fixture);
+        }
+
+        public static ITestResult RunTest(Test test, object testObject)
+        {
+            TestCommand command = CommandBuilder.MakeTestCommand(test, TestFilter.Empty);
+            return command.Execute(testObject, TestListener.NULL);
         }
 
         private static bool IsStaticClass(Type type)

@@ -34,6 +34,7 @@ namespace NUnit.Framework.Internal
     public class ThreadedTestCommand : DelegatingTestCommand
     {
         private object testObject;
+        private ITestListener listener;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ThreadedTestCommand"/> class.
@@ -48,10 +49,13 @@ namespace NUnit.Framework.Internal
         /// Runs the test, saving a TestResult in
         /// TestExecutionContext.CurrentContext.CurrentResult
         /// </summary>
-        /// <param name="testObject"></param>
-        public override TestResult Execute(object testObject)
+        /// <param name="testObject">The object on which the test should run.</param>
+        /// <param name="arguments">The arguments to be used in running the test or null.</param>
+        /// <returns>A TestResult</returns>
+        public override TestResult Execute(object testObject, ITestListener listener)
         {
             this.testObject = testObject;
+            this.listener = listener;
 
             Thread thread = new Thread(new ThreadStart(RunTestProc));
 
@@ -104,7 +108,7 @@ namespace NUnit.Framework.Internal
         {
             try
             {
-                CurrentResult = innerCommand.Execute(testObject);
+                CurrentResult = innerCommand.Execute(testObject, listener);
             }
             catch (Exception e)
             {

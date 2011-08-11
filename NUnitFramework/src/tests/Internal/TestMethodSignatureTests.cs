@@ -33,14 +33,6 @@ namespace NUnit.Framework.Internal
 	public class TestMethodSignatureTests
 	{
         private static Type fixtureType = typeof(TestMethodSignatureFixture);
-		private TestSuite fixture;
-
-		[SetUp]
-		public void CreateFixture()
-		{
-			fixture = TestBuilder.MakeFixture( typeof( TestMethodSignatureFixture ) );
-            fixture.Fixture = Activator.CreateInstance(typeof(TestMethodSignatureFixture));
-		}
 
         [Test]
 		public void InstanceTestMethodIsRunnable()
@@ -141,9 +133,8 @@ namespace NUnit.Framework.Internal
 		[Test]
 		public void TestMethodWithMultipleTestCasesExecutesMultipleTimes()
 		{
-			Test test = TestFinder.Find( "TestMethodWithMultipleTestCases", fixture, false );
-			Assert.That( test.RunState, Is.EqualTo( RunState.Runnable ) );
-            ITestResult result = test.Run(TestListener.NULL, TestFilter.Empty);
+            ITestResult result = TestBuilder.RunTestCase(fixtureType, "TestMethodWithMultipleTestCases");
+
 			Assert.That( result.ResultState, Is.EqualTo(ResultState.Success) );
             ResultSummary summary = new ResultSummary(result);
             Assert.That(summary.TestsRun, Is.EqualTo(3));
@@ -154,7 +145,8 @@ namespace NUnit.Framework.Internal
         {
             string name = "TestMethodWithMultipleTestCases";
             string fullName = typeof (TestMethodSignatureFixture).FullName + "." + name;
-            TestSuite suite = (TestSuite)TestFinder.Find(name, fixture, false);
+
+            TestSuite suite = TestBuilder.MakeParameterizedMethodSuite(fixtureType, name);
             Assert.That(suite.TestCaseCount, Is.EqualTo(3));
 
             ArrayList names = new ArrayList();
@@ -178,7 +170,7 @@ namespace NUnit.Framework.Internal
         [Test]
         public void RunningTestsThroughFixtureGivesCorrectResults()
         {
-            ITestResult result = fixture.Run(TestListener.NULL, TestFilter.Empty);
+            ITestResult result = TestBuilder.RunTestFixture(fixtureType);
             ResultSummary summary = new ResultSummary(result);
 
             Assert.That(

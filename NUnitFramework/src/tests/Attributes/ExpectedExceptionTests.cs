@@ -260,7 +260,7 @@ namespace NUnit.Framework.Attributes
 		{
 			Type fixtureType = typeof(TestDoesNotThrowExceptionFixture);
 			ITestResult result = TestBuilder.RunTestCase( fixtureType, "TestDoesNotThrowUnspecifiedException" );
-			Assert.IsTrue(result.ResultState == ResultState.Failure, "Test method should have failed");
+			Assert.AreEqual(ResultState.Failure, result.ResultState);
 			Assert.AreEqual("An Exception was expected", result.Message);
 		}
 
@@ -401,8 +401,7 @@ namespace NUnit.Framework.Attributes
 		public void ExceptionHandlerIsCalledWhenExceptionMatches_AlternateHandler()
 		{
 			ExceptionHandlerCalledClass fixture = new ExceptionHandlerCalledClass();
-			Test test = TestBuilder.MakeTestCase( fixture, "ThrowsArgumentException_AlternateHandler" );
-            test.Run(TestListener.NULL, TestFilter.Empty);
+			TestBuilder.RunTestCase( fixture, "ThrowsArgumentException_AlternateHandler" );
 			Assert.IsFalse(fixture.HandlerCalled, "Base Handler should not be called" );
 			Assert.IsTrue(fixture.AlternateHandlerCalled, "Alternate Handler should be called" );
 		}
@@ -411,9 +410,8 @@ namespace NUnit.Framework.Attributes
 		public void ExceptionHandlerIsCalledWhenExceptionMatches()
 		{
 			ExceptionHandlerCalledClass fixture = new ExceptionHandlerCalledClass();
-			Test test = TestBuilder.MakeTestCase( fixture, "ThrowsArgumentException" );
-            test.Run(TestListener.NULL, TestFilter.Empty);
-			Assert.IsTrue(fixture.HandlerCalled, "Base Handler should be called");
+			TestBuilder.RunTestCase( fixture, "ThrowsArgumentException" );
+            Assert.IsTrue(fixture.HandlerCalled, "Base Handler should be called");
 			Assert.IsFalse(fixture.AlternateHandlerCalled, "Alternate Handler should not be called");
 		}
 	
@@ -421,8 +419,7 @@ namespace NUnit.Framework.Attributes
 		public void ExceptionHandlerIsNotCalledWhenExceptionDoesNotMatch()
 		{
 			ExceptionHandlerCalledClass fixture = new ExceptionHandlerCalledClass();
-			Test test = TestBuilder.MakeTestCase( fixture, "ThrowsApplicationException" );
-            test.Run(TestListener.NULL, TestFilter.Empty);
+			TestBuilder.RunTestCase( fixture, "ThrowsApplicationException" );
 			Assert.IsFalse( fixture.HandlerCalled, "Base Handler should not be called" );
 			Assert.IsFalse( fixture.AlternateHandlerCalled, "Alternate Handler should not be called" );
 		}
@@ -431,8 +428,7 @@ namespace NUnit.Framework.Attributes
 		public void ExceptionHandlerIsNotCalledWhenExceptionDoesNotMatch_AlternateHandler()
 		{
 			ExceptionHandlerCalledClass fixture = new ExceptionHandlerCalledClass();
-			Test test = TestBuilder.MakeTestCase( fixture, "ThrowsApplicationException_AlternateHandler" );
-            test.Run(TestListener.NULL, TestFilter.Empty);
+            TestBuilder.RunTestCase(fixture, "ThrowsApplicationException_AlternateHandler");
 			Assert.IsFalse(fixture.HandlerCalled, "Base Handler should not be called");
 			Assert.IsFalse(fixture.AlternateHandlerCalled, "Alternate Handler should not be called");
 		}

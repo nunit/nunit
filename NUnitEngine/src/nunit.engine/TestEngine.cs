@@ -86,11 +86,11 @@ namespace NUnit.Engine
         /// </summary>
         /// <param name="package">A TestPackage.</param>
         /// <returns>An XmlNode representing the tests.</returns>
-        public ITestEngineResult Explore(TestPackage package)
+        public ITestEngineResult Explore(TestPackage package, TestFilter filter)
         {
             using (ITestRunner runner = GetRunner())
             {
-                return runner.Explore(package);
+                return runner.Explore(package, filter);
             }
         }
 

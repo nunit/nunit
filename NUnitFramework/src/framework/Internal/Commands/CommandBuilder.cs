@@ -36,14 +36,14 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="test"></param>
         /// <returns></returns>
-        public static TestCommand MakeTestCommand(Test test)
+        public static TestCommand MakeTestCommand(Test test, ITestFilter filter)
         {
             if (test.RunState != RunState.Runnable && test.RunState != RunState.Explicit)
                 return new SkipCommand(test);
 
             TestSuite suite = test as TestSuite;
             if (suite != null)
-                return MakeTestCommand(suite);
+                return MakeTestCommand(suite, filter);
 
             return MakeTestCommand(test as TestMethod);
         }
@@ -59,7 +59,7 @@ namespace NUnit.Framework.Internal
 
             TestCommand command = new TestCaseCommand(test);
 
-            if (test.exceptionProcessor != null)
+            if (test.ExceptionExpected)
                 command = new ExpectedExceptionCommand(command);
 
             command = new SetUpTearDownCommand(command);
@@ -86,15 +86,15 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="suite"></param>
         /// <returns></returns>
-        public static TestCommand MakeTestCommand(TestSuite suite)
+        public static TestCommand MakeTestCommand(TestSuite suite, ITestFilter filter)
         {
             Guard.ArgumentNotNull(suite, "suite");
 
             TestCommand command = new TestSuiteCommand(suite);
 
             foreach (Test childTest in suite.Tests)
-                //if (suite.Filter.Pass(childTest))
-                    command.Children.Add(MakeTestCommand(childTest));
+                if (filter.Pass(childTest))
+                    command.Children.Add(MakeTestCommand(childTest, filter));
 
 #if !NUNITLITE
             if (suite.ShouldRunOnOwnThread)

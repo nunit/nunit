@@ -280,7 +280,6 @@
     <Compile Include="Internal\EventPump.cs" />
     <Compile Include="Internal\EventQueue.cs" />
     <Compile Include="Internal\ExceptionHelper.cs" />
-    <Compile Include="Internal\ExpectedExceptionProcessor.cs" />
     <Compile Include="Internal\Extensibility\EventListenerCollection.cs" />
     <Compile Include="Internal\Extensibility\ExtensionHost.cs" />
     <Compile Include="Internal\Extensibility\ExtensionPoint.cs" />
