@@ -12,6 +12,7 @@ namespace NUnit.Framework.Internal
     {
         private readonly TestSuite suite;
         private readonly Type fixtureType;
+        private readonly Object[] arguments;
         private TestSuiteResult suiteResult;
 
         /// <summary>
@@ -21,15 +22,17 @@ namespace NUnit.Framework.Internal
         public TestSuiteCommand(TestSuite test) : base(test)
         {
             this.suite = test;
-            this.fixtureType = Test.FixtureType;
+            this.fixtureType = test.FixtureType;
+            this.arguments = test.arguments;
         }
 
         /// <summary>
         /// TODO: Documentation needed for method
         /// </summary>
-        /// <param name="testObject"></param>
-        /// <returns></returns>
-        public override TestResult Execute(object testObject)
+        /// <param name="testObject">The object on which the test should run.</param>
+        /// <param name="arguments">The arguments to be used in running the test or null.</param>
+        /// <returns>A TestResult</returns>
+        public override TestResult Execute(object testObject, ITestListener listener)
         {
             this.suiteResult = CurrentResult as TestSuiteResult;
             Debug.Assert(suiteResult != null);
@@ -40,12 +43,8 @@ namespace NUnit.Framework.Internal
             {
                 ApplySettingsToExecutionContext();
 
-                // TODO: Eliminate need for Test.Fixture in child test methods
-                if (fixtureType != null && Test.Fixture == null && !IsStaticClass(fixtureType))
-                    CreateUserFixture();
-
-                if (testObject == null)
-                    testObject = Test.Fixture;
+                if (testObject == null && fixtureType != null && !IsStaticClass(fixtureType))
+                    testObject = Reflect.Construct(fixtureType, arguments);
 
                 DoOneTimeSetUp(testObject);
                 oneTimeSetUpComplete = true;
@@ -53,7 +52,7 @@ namespace NUnit.Framework.Internal
                 // SetUp may have changed some things
                 TestExecutionContext.CurrentContext.Update();
 
-                this.suiteResult = RunChildTests();
+                this.suiteResult = RunChildCommands(testObject, listener);
             }
             catch (Exception ex)
             {
@@ -86,17 +85,6 @@ namespace NUnit.Framework.Internal
                     foreach (MethodInfo method in Test.OneTimeSetUpMethods)
                         Reflect.InvokeMethod(method, method.IsStatic ? null : testObject);
             }
-        }
-
-        /// <summary>
-        /// Creates the user fixture.
-        /// </summary>
-        protected virtual void CreateUserFixture()
-        {
-            if (suite.arguments != null && suite.arguments.Length > 0)
-                Test.Fixture = Reflect.Construct(Test.FixtureType, suite.arguments);
-            else
-                Test.Fixture = Reflect.Construct(Test.FixtureType);
         }
 
         /// <summary>
@@ -151,42 +139,42 @@ namespace NUnit.Framework.Internal
             }
         }
 
-        private TestSuiteResult RunChildTests()
+        //private TestSuiteResult RunChildTests()
+        //{
+        //    this.suiteResult.SetResult(ResultState.Success);
+
+        //    foreach (Test test in Test.Tests)
+        //    {
+        //        if (suite.Filter.Pass(test))
+        //        {
+        //            TestResult childResult = test.Run(suite.Listener, suite.Filter);
+
+        //            this.suiteResult.AddResult(childResult);
+
+        //            if (childResult.ResultState == ResultState.Cancelled)
+        //                break;
+        //        }
+        //    }
+
+        //    return this.suiteResult;
+        //}
+
+        private TestSuiteResult RunChildCommands(object testObject, ITestListener listener)
         {
             this.suiteResult.SetResult(ResultState.Success);
 
-            foreach (Test test in Test.Tests)
+            foreach (TestCommand command in Children)
             {
-                if (suite.Filter.Pass(test))
-                {
-                    TestResult childResult = test.Run(suite.Listener, suite.Filter);
+                TestResult childResult = command.Execute(testObject, listener);
 
-                    this.suiteResult.AddResult(childResult);
+                this.suiteResult.AddResult(childResult);
 
-                    if (childResult.ResultState == ResultState.Cancelled)
-                        break;
-                }
+                if (childResult.ResultState == ResultState.Cancelled)
+                    break;
             }
 
             return this.suiteResult;
         }
-
-        //private TestResult RunChildCommands(object testObject)
-        //{
-        //    Result.SetResult(ResultState.Success);
-
-        //    foreach (TestCommand command in Children)
-        //    {
-        //        TestResult childResult = command.Execute(testObject);
-
-        //        Result.AddResult(childResult);
-
-        //        if (childResult.ResultState == ResultState.Cancelled)
-        //            break;
-        //    }
-
-        //    return Result;
-        //}
 
         private static bool IsStaticClass(Type type)
         {

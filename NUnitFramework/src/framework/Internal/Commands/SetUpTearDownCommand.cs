@@ -43,26 +43,24 @@ namespace NUnit.Framework.Internal
         public SetUpTearDownCommand(TestCommand innerCommand)
             : base(innerCommand)
         {
-            Test parent = Test.Parent as Test;
-            if (parent != null)
-            {
-                this.setUpMethods = parent.SetUpMethods;
-                this.tearDownMethods = parent.TearDownMethods;
-            }
+            this.setUpMethods = Test.SetUpMethods;
+            this.tearDownMethods = Test.TearDownMethods;
         }
 
         /// <summary>
         /// Runs the test, saving a TestResult in
         /// TestExecutionContext.CurrentContext.CurrentResult
         /// </summary>
-        /// <param name="testObject"></param>
-        public override TestResult Execute(object testObject)
+        /// <param name="testObject">The object on which the test should run.</param>
+        /// <param name="arguments">The arguments to be used in running the test or null.</param>
+        /// <returns>A TestResult</returns>
+        public override TestResult Execute(object testObject, ITestListener listener)
         {
             try
             {
                 RunSetUpMethods(testObject);
 
-                CurrentResult = innerCommand.Execute(testObject);
+                CurrentResult = innerCommand.Execute(testObject, listener);
             }
             catch (Exception ex)
             {

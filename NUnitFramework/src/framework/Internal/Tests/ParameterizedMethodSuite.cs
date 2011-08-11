@@ -22,8 +22,6 @@
 // ***********************************************************************
 
 using System.Reflection;
-using System.Text;
-using NUnit.Framework.Api;
 
 namespace NUnit.Framework.Internal
 {
@@ -52,28 +50,6 @@ namespace NUnit.Framework.Internal
         public MethodInfo Method
         {
             get { return method; }
-        }
-
-        /// <summary>
-        /// Override Run, setting Fixture to that of the Parent.
-        /// </summary>
-        /// <param name="listener"></param>
-        /// <returns></returns>
-        public override TestResult Run(ITestListener listener, ITestFilter filter)
-        {
-            if (this.Parent != null)
-            {
-                // TODO: Clean this up
-                TestSuite suite = this.Parent as TestSuite;
-                if (suite != null)
-                {
-                    this.Fixture = suite.Fixture;
-                    this.setUpMethods = suite.SetUpMethods;
-                    this.tearDownMethods = suite.TearDownMethods;
-                }
-            }
-          
-            return base.Run(listener, filter);
         }
 
         /// <summary>

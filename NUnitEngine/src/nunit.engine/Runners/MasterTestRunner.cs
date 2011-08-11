@@ -29,11 +29,11 @@ namespace NUnit.Engine.Runners
         /// </summary>
         /// <param name="package">The TestPackage to be explored</param>
         /// <returns>A TestEngineResult.</returns>
-        public ITestEngineResult Explore(TestPackage package)
+        public ITestEngineResult Explore(TestPackage package, TestFilter filter)
         {
             PerformPackageSetup(package);
 
-            return this.realRunner.Explore(package);
+            return this.realRunner.Explore(package, filter);
         }
 
         /// <summary>

@@ -47,14 +47,16 @@ namespace NUnit.Framework.Internal
         /// Runs the test, saving a TestResult in
         /// TestExecutionContext.CurrentContext.CurrentResult
         /// </summary>
-        /// <param name="testObject"></param>
-        public override TestResult Execute(object testObject)
+        /// <param name="testObject">The object on which the test should run.</param>
+        /// <param name="arguments">The arguments to be used in running the test or null.</param>
+        /// <returns>A TestResult</returns>
+        public override TestResult Execute(object testObject, ITestListener listener)
         {
             int count = repeatCount;
 
             while (count-- > 0)
             {
-                CurrentResult = innerCommand.Execute(testObject);
+                CurrentResult = innerCommand.Execute(testObject, listener);
 
                 // TODO: We may want to change this so that all iterations are run
                 if (CurrentResult.ResultState == ResultState.Failure ||

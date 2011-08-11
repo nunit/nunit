@@ -31,6 +31,7 @@ namespace NUnit.Framework.Internal
     public class TestCaseCommand : TestCommand
     {
         private readonly TestMethod testMethod;
+        private readonly object[] arguments;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TestCaseCommand"/> class.
@@ -39,6 +40,7 @@ namespace NUnit.Framework.Internal
         public TestCaseCommand(Test test) : base(test)
         {
             this.testMethod = test as TestMethod;
+            this.arguments = test.arguments;
         }
 
         /// <summary>
@@ -46,9 +48,9 @@ namespace NUnit.Framework.Internal
         /// TestExecutionContext.CurrentContext.CurrentResult
         /// </summary>
         /// <param name="testObject"></param>
-        public override TestResult Execute(object testObject)
+        public override TestResult Execute(object testObject, ITestListener listener)
         {
-            object result = Reflect.InvokeMethod(testMethod.Method, testObject, testMethod.arguments);
+            object result = Reflect.InvokeMethod(testMethod.Method, testObject, arguments);
 
             if (testMethod.hasExpectedResult)
                 NUnit.Framework.Assert.AreEqual(testMethod.expectedResult, result);

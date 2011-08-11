@@ -68,16 +68,6 @@ namespace NUnit.Framework.Internal
 		private PropertyBag properties;
 
         /// <summary>
-        /// The TestListener for use in running child tests
-        /// </summary>
-        private ITestListener listener;
-
-        /// <summary>
-        /// The TestFilter for use in running child tests
-        /// </summary>
-        private ITestFilter filter;
-
-        /// <summary>
         /// The System.Type of the fixture for this test suite, if there is one
         /// </summary>
         private Type fixtureType;
@@ -88,7 +78,7 @@ namespace NUnit.Framework.Internal
         private object fixture;
 
         /// <summary>
-        /// The SetUp method.
+        /// The SetUp methods.
         /// </summary>
         protected MethodInfo[] setUpMethods;
 
@@ -106,6 +96,11 @@ namespace NUnit.Framework.Internal
         /// The fixture teardown methods for this suite
         /// </summary>
         protected MethodInfo[] fixtureTearDownMethods;
+
+        /// <summary>
+        /// Argument list for use in executing the test.
+        /// </summary>
+        internal object[] arguments;
 
         #endregion
 
@@ -290,6 +285,7 @@ namespace NUnit.Framework.Internal
         #endregion
 
         #region IComparable Members
+
         /// <summary>
         /// Compares this test to another test for sorting purposes
         /// </summary>
@@ -304,6 +300,7 @@ namespace NUnit.Framework.Internal
 
             return this.FullName.CompareTo(other.FullName);
         }
+
         #endregion
 
         #region Other Public Properties
@@ -325,16 +322,6 @@ namespace NUnit.Framework.Internal
         public Type FixtureType
         {
             get { return fixtureType; }
-        }
-
-
-        /// <summary>
-        /// Gets or sets a fixture object for running this test
-        /// </summary>
-        public object Fixture
-        {
-            get { return fixture; }
-            set { fixture = value; }
         }
 
         #endregion
@@ -380,56 +367,6 @@ namespace NUnit.Framework.Internal
             }
         }
 
-        /// <summary>
-        /// Runs the test under a particular filter, sending
-        /// notifications to a listener.
-        /// </summary>
-        /// <param name="listener">An event listener to receive notifications</param>
-        /// <returns>A TestResult.</returns>
-        public virtual TestResult Run(ITestListener listener, ITestFilter filter)
-        {
-            this.Listener = listener;
-            this.Filter = filter;
-
-            TestResult testResult;
-
-            listener.TestStarted(this);
-
-            long startTime = DateTime.Now.Ticks;
-
-            TestCommand command = CommandBuilder.MakeTestCommand(this);
-            testResult = command.Execute(this.Fixture);
-
-            long stopTime = DateTime.Now.Ticks;
-            double time = ((double)(stopTime - startTime)) / (double)TimeSpan.TicksPerSecond;
-            testResult.Time = time;
-
-            listener.TestFinished(testResult);
-            return testResult;
-        }
-
-        #endregion
-
-        #region Protected Properties
-
-        /// <summary>
-        /// Gets the test listener for use in running child tests
-        /// </summary>
-        internal ITestListener Listener // Temporarily internal
-        {
-            get { return this.listener; }
-            set { this.listener = value; }
-        }
-
-        /// <summary>
-        /// Gets the filter for use in running child tests
-        /// </summary>
-        internal ITestFilter Filter // Temporarily internal
-        {
-            get { return this.filter; }
-            set { this.filter = value; }
-        }
-
         #endregion
 
         #region Protected Methods
@@ -452,6 +389,16 @@ namespace NUnit.Framework.Internal
         #endregion
 
         #region Internal Properties
+
+        /// <summary>
+        /// Gets or sets a fixture object for running this test.
+        /// Provided for use by LegacySuiteBuilder.
+        /// </summary>
+        internal object Fixture
+        {
+            get { return fixture; }
+            set { fixture = value; }
+        }
 
         /// <summary>
         /// Gets or sets the IgnoreReason property of the PropertyBag.
@@ -519,10 +466,17 @@ namespace NUnit.Framework.Internal
         /// Gets the set up methods.
         /// </summary>
         /// <returns></returns>
-        internal MethodInfo[] SetUpMethods
+        internal virtual MethodInfo[] SetUpMethods
         {
             get
             {
+                if (setUpMethods == null && this.Parent != null)
+                {
+                    TestSuite suite = this.Parent as TestSuite;
+                    if (suite != null)
+                        setUpMethods = suite.SetUpMethods;
+                }
+
                 return setUpMethods;
             }
         }
@@ -531,10 +485,17 @@ namespace NUnit.Framework.Internal
         /// Gets the tear down methods.
         /// </summary>
         /// <returns></returns>
-        internal MethodInfo[] TearDownMethods
+        internal virtual MethodInfo[] TearDownMethods
         {
             get
             {
+                if (tearDownMethods == null && this.Parent != null)
+                {
+                    TestSuite suite = this.Parent as TestSuite;
+                    if (suite != null)
+                        tearDownMethods = suite.TearDownMethods;
+                }
+
                 return tearDownMethods;
             }
         }
@@ -562,29 +523,7 @@ namespace NUnit.Framework.Internal
                 return fixtureTearDownMethods;
             }
         }
-        #endregion
 
-        #region Nested Classes
-
-#if CLR_2_0 || CLR_4_0
-        /// <summary>
-        /// CategoryList is a collection of strings which derives from List&lt;string&gt;.
-        /// </summary>
-        /// <remarks>
-        /// CategoryList base type is dependent on the .NET CLR it's compiled for. 
-        /// For CLR 2.0/4.0 it's based on a List&lt;string&gt; and for CLR 1.0/1.1 it's based on an ArrayList.
-        /// </remarks>        
-        public class CategoryList : System.Collections.Generic.List<string> { }
-#else
-        /// <summary>
-        /// CategoryList is a collection of strings which derives from ArrayList.
-        /// </summary>
-        /// <remarks>
-        /// CategoryList base type is dependent on the .NET CLR it's compiled for. 
-        /// For CLR 2.0/4.0 it's based on a List&lt;string&gt; and for CLR 1.0/1.1 it's based on an ArrayList.
-        /// </remarks>        
-        public class CategoryList : System.Collections.ArrayList { }
-#endif
         #endregion
     }
 }

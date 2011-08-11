@@ -53,8 +53,9 @@ namespace NUnit.Engine.Runners
         /// the tests found.
         /// </summary>
         /// <param name="package">The TestPackage to be explored</param>
+        /// <param name="filter">The TestFilter to be used to select tests</param>
         /// <returns>A TestEngineResult.</returns>
-        public abstract TestEngineResult Explore(TestPackage package);
+        public abstract TestEngineResult Explore(TestPackage package, TestFilter filter);
 
         /// <summary>
         /// Load a TestPackage for possible execution. This is
@@ -116,9 +117,9 @@ namespace NUnit.Engine.Runners
         /// </summary>
         /// <param name="package">The TestPackage to be explored</param>
         /// <returns>A TestEngineResult.</returns>
-        ITestEngineResult ITestRunner.Explore(TestPackage package)
+        ITestEngineResult ITestRunner.Explore(TestPackage package, TestFilter filter)
         {
-            return this.Explore(package);
+            return this.Explore(package, filter);
         }
 
         #endregion

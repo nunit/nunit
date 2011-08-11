@@ -24,6 +24,7 @@
 using NUnit.Framework.Api;
 using NUnit.Framework.Builders;
 using NUnit.TestData.LegacySuiteData;
+using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Internal
 {
@@ -75,7 +76,7 @@ namespace NUnit.Framework.Internal
             LegacySuiteWithSetUpAndTearDown.SetupCount = LegacySuiteWithSetUpAndTearDown.TeardownCount = 0;
 			Test suite = builder.BuildFrom( typeof( LegacySuiteWithSetUpAndTearDown ) );
             Assert.AreEqual(RunState.Runnable, suite.RunState);
-            suite.Run(TestListener.NULL, TestFilter.Empty);
+            TestBuilder.RunTest(suite, null);
             Assert.AreEqual(1, LegacySuiteWithSetUpAndTearDown.SetupCount);
             Assert.AreEqual(1, LegacySuiteWithSetUpAndTearDown.TeardownCount);
 		}

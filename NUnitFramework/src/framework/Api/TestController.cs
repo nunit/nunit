@@ -196,7 +196,7 @@ namespace NUnit.Framework.Api
             /// <param name="assemblyFilename">The assembly filename.</param>
             /// <param name="loadOptions">Options controlling how the tests are loaded</param>
             /// <param name="callback">The callback.</param>
-            public ExploreTestsAction(TestController controller, string assemblyFilename, IDictionary loadOptions, AsyncCallback callback)
+            public ExploreTestsAction(TestController controller, string assemblyFilename, IDictionary loadOptions, string filterText, AsyncCallback callback)
                 : base(controller, callback)
             {
                 try

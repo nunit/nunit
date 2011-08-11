@@ -48,7 +48,7 @@ namespace NUnit.Engine.Runners
         /// </summary>
         /// <param name="package">The TestPackage to be explored</param>
         /// <returns>A TestEngineResult.</returns>
-        public override TestEngineResult Explore(TestPackage package)
+        public override TestEngineResult Explore(TestPackage package, TestFilter filter)
         {
             this.package = package;
             List<TestEngineResult> results = new List<TestEngineResult>();
@@ -57,7 +57,7 @@ namespace NUnit.Engine.Runners
             {
                 // TODO: Should get the appropriate driver for the file
                 IFrameworkDriver driver = new NUnitFrameworkDriver(TestDomain);
-                results.Add(driver.Explore(testFile, package.Settings));
+                results.Add(driver.Explore(testFile, package.Settings, filter));
             }
 
             return MakePackageResult(results);

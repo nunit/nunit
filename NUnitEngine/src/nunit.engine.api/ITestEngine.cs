@@ -48,7 +48,7 @@ namespace NUnit.Engine
         /// </summary>
         /// <param name="package">The test package to be explored.</param>
         /// <returns>An XmlNode representing the tests.</returns>
-        ITestEngineResult Explore(TestPackage package);
+        ITestEngineResult Explore(TestPackage package, TestFilter filter);
 
         /// <summary>
         /// Runs the tests specified by a test package and returns

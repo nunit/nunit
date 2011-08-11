@@ -191,7 +191,28 @@ namespace NUnit.Framework.Builders
                     (ExpectedExceptionAttribute[])method.GetCustomAttributes(typeof(ExpectedExceptionAttribute), false);
 
                 if (attributes.Length > 0)
-                    testMethod.ExceptionProcessor = new ExpectedExceptionProcessor(testMethod, attributes[0]);
+                {
+                    ExpectedExceptionAttribute attr = attributes[0];
+                    testMethod.ExceptionExpected = true;
+                    testMethod.ExpectedExceptionType = attr.ExpectedException;
+                    testMethod.ExpectedExceptionName = attr.ExpectedExceptionName;
+                    testMethod.ExpectedExceptionMessage = attr.ExpectedMessage;
+                    testMethod.MessageMatchType = attr.MatchType;
+                    testMethod.ExpectedExceptionUserMessage = attr.UserMessage;
+                    string handlerName = attr.Handler;
+                    if (handlerName != null)
+                    {
+                        MethodInfo handler = GetExceptionHandler(testMethod.FixtureType, handlerName);
+                        if (handler != null)
+                            testMethod.AlternateExceptionHandler = handler;
+                        else
+                        {
+                            testMethod.RunState = RunState.NotRunnable;
+                            testMethod.SkipReason = string.Format(
+                                "The specified exception handler {0} was not found", handlerName);
+                        }
+                    }
+                }
             }
 
             if (parms != null)
@@ -217,7 +238,14 @@ namespace NUnit.Framework.Builders
                     testMethod.RunState = RunState.Ignored;
 
                 if (parms.ExpectedExceptionName != null)
-                    testMethod.exceptionProcessor = new ExpectedExceptionProcessor(testMethod, parms);
+                {
+                    //testMethod.ExpectedExceptionData = new ExpectedExceptionData(parms);
+                    testMethod.ExceptionExpected = true;
+                    testMethod.ExpectedExceptionType = parms.ExpectedException;
+                    testMethod.ExpectedExceptionName = parms.ExpectedExceptionName;
+                    testMethod.ExpectedExceptionMessage = parms.ExpectedMessage;
+                    testMethod.MessageMatchType = parms.MatchType;
+                }
 
                 foreach (string key in parms.Properties.Keys)
                     foreach(object value in parms.Properties[key])
@@ -371,6 +399,17 @@ namespace NUnit.Framework.Builders
             return typeArguments;
         }
 #endif
+
+        private static MethodInfo GetExceptionHandler(Type fixtureType, string name)
+        {
+            return fixtureType.GetMethod(
+                name,
+                BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
+                null,
+                new Type[] { typeof(System.Exception) },
+                null);
+        }
+
         #endregion
     }
 }

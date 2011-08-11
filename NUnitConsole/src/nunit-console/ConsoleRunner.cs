@@ -78,22 +78,23 @@ namespace NUnit.ConsoleRunner
         /// <returns></returns>
         public int Execute()
 		{
-            // Create the test package
             TestPackage package = MakeTestPackage(options);
 
+            TestFilter filter = CreateTestFilter(options);
+
             if (options.Explore)
-                return ExploreTests(package);
+                return ExploreTests(package, filter);
             else
-                return RunTests(package);
+                return RunTests(package, filter);
         }
 
         #endregion
 
         #region Helper Methods
 
-        private int ExploreTests(TestPackage package)
+        private int ExploreTests(TestPackage package, TestFilter filter)
         {
-            ITestEngineResult engineResult = engine.Explore(package);
+            ITestEngineResult engineResult = engine.Explore(package, filter);
             int returnCode = ConsoleRunner.OK;
 
             if (engineResult.HasErrors)
@@ -116,7 +117,7 @@ namespace NUnit.ConsoleRunner
             return returnCode;
         }
 
-        private int RunTests(TestPackage package)
+        private int RunTests(TestPackage package, TestFilter filter)
         {
             // TODO: We really need options as resolved by engine for most of  these
             DisplayRequestedOptions();
@@ -125,8 +126,6 @@ namespace NUnit.ConsoleRunner
             RedirectOutputAsRequested();
 
             TestEventHandler eventHandler = new TestEventHandler(options, outWriter, errorWriter);
-
-            TestFilter testFilter = CreateTestFilter(options);
 
             ITestEngineResult engineResult = null;
 
@@ -137,7 +136,7 @@ namespace NUnit.ConsoleRunner
             try
             {
 #if true
-                engineResult = engine.Run(package, eventHandler, testFilter);
+                engineResult = engine.Run(package, eventHandler, filter);
 #else
                 using (ITestRunner runner = engine.GetRunner(package))
                 {

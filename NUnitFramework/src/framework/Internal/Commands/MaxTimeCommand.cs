@@ -48,12 +48,14 @@ namespace NUnit.Framework.Internal
         /// Runs the test, saving a TestResult in
         /// TestExecutionContext.CurrentContext.CurrentResult
         /// </summary>
-        /// <param name="testObject"></param>
-        public override TestResult Execute(object testObject)
+        /// <param name="testObject">The object on which the test should run.</param>
+        /// <param name="arguments">The arguments to be used in running the test or null.</param>
+        /// <returns>A TestResult</returns>
+        public override TestResult Execute(object testObject, ITestListener listener)
         {
             DateTime start = DateTime.Now;
 
-            TestResult testResult = innerCommand.Execute(testObject);
+            TestResult testResult = innerCommand.Execute(testObject, listener);
 
             DateTime stop = DateTime.Now;
             TimeSpan span = stop.Subtract(start);

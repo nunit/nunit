@@ -57,10 +57,10 @@ namespace NUnit.Framework.Internal
         /// </summary>
         protected bool maintainTestOrder;
 
-        /// <summary>
-        /// Arguments for use in creating a parameterized fixture
-        /// </summary>
-        internal object[] arguments;
+        ///// <summary>
+        ///// Arguments for use in creating a parameterized fixture
+        ///// </summary>
+        //internal object[] arguments;
 
         #endregion
 

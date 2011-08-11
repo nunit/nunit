@@ -1,4 +1,5 @@
 ﻿using System;
+using NUnit.Framework.Api;
 
 namespace NUnit.Framework.Internal
 {
@@ -19,10 +20,15 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// TODO: Documentation needed for constructor
         /// </summary>
-        /// <param name="testObject"></param>
-        /// <returns></returns>
-        public override TestResult Execute(object testObject)
+        /// <param name="testObject">The object on which the test should run.</param>
+        /// <param name="arguments">The arguments to be used in running the test or null.</param>
+        /// <returns>A TestResult</returns>
+        public override TestResult Execute(object testObject, ITestListener listener)
         {
+            listener.TestStarted(Test);
+
+            long startTime = DateTime.Now.Ticks;
+
             TestExecutionContext.Save();
 
             TestExecutionContext.CurrentContext.CurrentTest = this.Test;
@@ -30,13 +36,18 @@ namespace NUnit.Framework.Internal
 
             try
             {
-                return innerCommand.Execute(testObject);
+                return innerCommand.Execute(testObject, listener);
             }
                 // TODO: Ensure no exceptions escape
             finally
             {
                 CurrentResult.AssertCount = TestExecutionContext.CurrentContext.AssertCount;
-                this.Test.Fixture = null;
+
+                long stopTime = DateTime.Now.Ticks;
+                double time = ((double)(stopTime - startTime)) / (double)TimeSpan.TicksPerSecond;
+                CurrentResult.Time = time;
+
+                listener.TestFinished(CurrentResult);
 
                 TestExecutionContext.Restore();
             }
