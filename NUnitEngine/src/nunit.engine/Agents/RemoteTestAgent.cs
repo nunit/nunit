@@ -100,10 +100,10 @@ namespace NUnit.Engine.Agents
         /// </summary>
         /// <param name="package">The TestPackage to be explored</param>
         /// <returns>A TestEngineResult.</returns>
-        public ITestEngineResult Explore(TestPackage package)
+        public ITestEngineResult Explore(TestPackage package, TestFilter filter)
         {
             this.runner = Services.TestRunnerFactory.MakeTestRunner(package);
-            return runner.Explore(package);
+            return runner.Explore(package, filter);
         }
 
         public ITestEngineResult Load(TestPackage package)

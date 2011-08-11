@@ -57,6 +57,6 @@ namespace NUnit.Engine
         /// </summary>
         /// <param name="package">The TestPackage to be explored</param>
         /// <returns>A TestEngineResult.</returns>
-        ITestEngineResult Explore(TestPackage package);
+        ITestEngineResult Explore(TestPackage package, TestFilter filter);
     }
 }
