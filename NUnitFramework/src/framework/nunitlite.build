@@ -10,7 +10,6 @@
     <include name="Api/*.cs"/>
     <exclude name="Api/IPropertySet.cs"/>
     <exclude name="Api/ITestCaseSourceProvider.cs"/>
-    <exclude name="Api/ITestFilter.cs"/>
     <exclude name="Api/TestController.cs"/>
     
     <include name="Attributes/*.cs"/>
@@ -53,7 +52,6 @@
     <exclude name="Internal/NamespaceTreeBuilder.cs"/>
     <exclude name="Internal/PropertySet.cs"/>
     <exclude name="Internal/QueuingEventListener.cs"/>
-    <exclude name="Internal/TestFilter.cs"/>
     <exclude name="Internal/TestProgressReporter.cs"/>
 
     <include name="Internal/Builders/*.cs"/>
@@ -68,6 +66,8 @@
     <exclude name="Internal/Commands/CommandRunner.cs"/>
     
     <include name="Internal/Extensibility/TestCaseProviders.cs"/>
+
+    <include name="Internal/Filters/*.cs"/>
     
     <include name="Internal/Results/*.cs"/>
     

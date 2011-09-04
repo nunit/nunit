@@ -92,7 +92,7 @@ namespace NUnit.Framework.Internal
         /// and the listener interface is notified as it progresses.
         /// </summary>
         /// <param name="listener">Interface to receive EventListener notifications.</param>
-        /// <param name="runOptions">A dictionary containing options for this run</param>
+        /// <param name="filter">A test filter used to select tests to be run</param>
         /// <returns></returns>
         public ITestResult Run(ITestListener listener, ITestFilter filter)
         {

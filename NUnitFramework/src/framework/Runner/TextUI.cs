@@ -182,7 +182,7 @@ namespace NUnitLite.Runner
                     if (commandLineOptions.ListTests)
                         ListTests(runner.LoadedTest);
                     else
-                        ReportResults(runner.Run(TestListener.NULL, runOptions));
+                        ReportResults(runner.Run(TestListener.NULL, TestFilter.Empty));
                 }
                 catch (FileNotFoundException ex)
                 {

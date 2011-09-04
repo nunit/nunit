@@ -93,11 +93,12 @@ namespace NUnit.DirectRunner
             return doc.FirstChild;
         }
 
-        public XmlNode Run(IDictionary runOptions)
+        public XmlNode Run()
         {
             CallbackHandler handler = new RunTestsCallbackHandler();
 
-            CreateObject("NUnit.Framework.Api.TestController+RunTestsAction", testController, runOptions, handler.Callback);
+            // NOTE: Filters are not supported in the direct runner
+            CreateObject("NUnit.Framework.Api.TestController+RunTestsAction", testController, "<filter/>", handler.Callback);
 
             Debug.Assert(handler.Result is string, "Returned result was not a string");
 

@@ -122,8 +122,8 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Gets a list of custom decorators for this test.
         /// </summary>
-#if CLxR_2_0 || CLR_4_0
-        public System.Collections.Generic.IList<ICommandDecorator> Decorators
+#if CLR_2_0 || CLR_4_0
+        public System.Collections.Generic.IList<ICommandDecorator> CustomDecorators
 #else
         public System.Collections.IList CustomDecorators
 #endif

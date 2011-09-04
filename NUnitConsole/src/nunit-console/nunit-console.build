@@ -12,6 +12,7 @@
     <include name="ResultSummary.cs"/>
     <include name="StackTraceFilter.cs"/>
     <include name="TestEventHandler.cs"/>
+    <include name="TestFilterBuilder.cs"/>
     <include name="TestNameParser.cs"/>
     <include name="XmlHelper.cs"/>
     <include name="OutputManager.cs"/>

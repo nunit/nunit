@@ -107,9 +107,9 @@ namespace NUnit.DirectRunner
             if (commandlineOptions.Load.Count > 0)
                 loadOptions["LOAD"] = commandlineOptions.Load;
 
-            IDictionary runOptions = new Hashtable();
-            if (commandlineOptions.Run.Count > 0)
-                runOptions["RUN"] = commandlineOptions.Run;
+            //IDictionary runOptions = new Hashtable();
+            //if (commandlineOptions.Run.Count > 0)
+            //    runOptions["RUN"] = commandlineOptions.Run;
 
             AppDomain testDomain = AppDomain.CurrentDomain;
             if (commandlineOptions.UseAppDomain)
@@ -133,7 +133,7 @@ namespace NUnit.DirectRunner
 
             //TestEventListener listener = new TestEventListener(options, Console.Out);
 
-            XmlNode resultNode = driver.Run(runOptions);
+            XmlNode resultNode = driver.Run();
 
             Console.SetOut(savedOut);
             Console.SetError(savedError);

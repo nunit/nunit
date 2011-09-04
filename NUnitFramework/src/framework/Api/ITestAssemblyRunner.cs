@@ -75,7 +75,7 @@ namespace NUnit.Framework.Api
         /// and the listener interface is notified as it progresses.
         /// </summary>
         /// <param name="listener">Interface to receive ITestListener notifications.</param>
-        /// <param name="runOptions">TODO Comment for runOptions</param>
+        /// <param name="filter">A test filter used to select tests to be run</param>
         ITestResult Run(ITestListener listener, ITestFilter filter);
 
         #endregion
