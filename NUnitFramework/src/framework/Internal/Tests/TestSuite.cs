@@ -27,6 +27,7 @@ using System.Threading;
 using System.Reflection;
 using System.Xml;
 using NUnit.Framework.Api;
+using NUnit.Framework.Internal.Commands;
 
 #if CLR_2_0 || CLR_4_0
 using System.Collections.Generic;
@@ -221,6 +222,24 @@ namespace NUnit.Framework.Internal
         public override TestResult MakeTestResult()
         {
             return new TestSuiteResult(this);
+        }
+
+        protected override TestCommand MakeTestCommand(ITestFilter filter)
+        {
+            TestCommand command = new TestSuiteCommand(this);
+
+            foreach (Test childTest in Tests)
+                if (filter.Pass(childTest))
+                    command.Children.Add(childTest.GetTestCommand(filter));
+
+#if !NUNITLITE
+            if (ShouldRunOnOwnThread)
+                command = new ThreadedTestCommand(command);
+#endif
+
+            command = new TestExecutionContextCommand(command);
+
+            return command;
         }
 
         /// <summary>

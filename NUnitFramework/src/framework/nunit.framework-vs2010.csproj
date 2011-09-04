@@ -55,6 +55,7 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Api\ExpectedExceptionData.cs" />
     <Compile Include="Api\IApplyToTest.cs" />
     <Compile Include="Api\IParameterDataSource.cs" />
     <Compile Include="Api\IPropertyBag.cs" />
@@ -258,9 +259,11 @@
     <Compile Include="Internal\Builders\ProviderCache.cs" />
     <Compile Include="Internal\Builders\SequentialStrategy.cs" />
     <Compile Include="Internal\Builders\SetUpFixtureBuilder.cs" />
-    <Compile Include="Internal\Commands\CommandBuilder.cs" />
+    <Compile Include="Internal\Commands\CommandDecoratorList.cs" />
+    <Compile Include="Internal\Commands\CommandStage.cs" />
     <Compile Include="Internal\Commands\DelegatingTestCommand.cs" />
     <Compile Include="Internal\Commands\ExpectedExceptionCommand.cs" />
+    <Compile Include="Internal\Commands\ICommandDecorator.cs" />
     <Compile Include="Internal\Commands\ITestCommand.cs" />
     <Compile Include="Internal\Commands\MaxTimeCommand.cs" />
     <Compile Include="Internal\Commands\RepeatedTestCommand.cs" />
@@ -351,5 +354,8 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Attributes\AttributeHierarchy.txt" />
   </ItemGroup>
 </Project>

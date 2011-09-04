@@ -26,6 +26,7 @@ using System.Reflection;
 using NUnit.Framework.Api;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Extensibility;
+using NUnit.Framework.Internal.Commands;
 
 namespace NUnit.Framework.Builders
 {
@@ -170,7 +171,7 @@ namespace NUnit.Framework.Builders
         /// <returns></returns>
         public static TestMethod BuildSingleTestMethod(MethodInfo method, Test parentSuite, ParameterSet parms)
         {
-            TestMethod testMethod = new TestMethod(method);
+            TestMethod testMethod = new TestMethod(method, parentSuite);
 
             string prefix = method.ReflectedType.FullName;
 
@@ -179,7 +180,7 @@ namespace NUnit.Framework.Builders
             if (parentSuite != null)
             {
                 prefix = parentSuite.FullName;
-                testMethod.FullName = prefix + "." + testMethod.Name;
+                //testMethod.FullName = prefix + "." + testMethod.Name;
             }
 
             if (CheckTestMethodSignature(testMethod, parms))
@@ -187,31 +188,26 @@ namespace NUnit.Framework.Builders
                 if (parms == null)
                     testMethod.ApplyCommonAttributes(method);
 
+                foreach (ICommandDecorator decorator in method.GetCustomAttributes(typeof(ICommandDecorator), true))
+                    testMethod.CustomDecorators.Add(decorator);
+
                 ExpectedExceptionAttribute[] attributes =
                     (ExpectedExceptionAttribute[])method.GetCustomAttributes(typeof(ExpectedExceptionAttribute), false);
 
                 if (attributes.Length > 0)
                 {
                     ExpectedExceptionAttribute attr = attributes[0];
-                    testMethod.ExceptionExpected = true;
-                    testMethod.ExpectedExceptionType = attr.ExpectedException;
-                    testMethod.ExpectedExceptionName = attr.ExpectedExceptionName;
-                    testMethod.ExpectedExceptionMessage = attr.ExpectedMessage;
-                    testMethod.MessageMatchType = attr.MatchType;
-                    testMethod.ExpectedExceptionUserMessage = attr.UserMessage;
                     string handlerName = attr.Handler;
                     if (handlerName != null)
                     {
-                        MethodInfo handler = GetExceptionHandler(testMethod.FixtureType, handlerName);
-                        if (handler != null)
-                            testMethod.AlternateExceptionHandler = handler;
-                        else
+                        if (GetExceptionHandler(testMethod.FixtureType, handlerName) == null)
                         {
                             testMethod.RunState = RunState.NotRunnable;
                             testMethod.SkipReason = string.Format(
                                 "The specified exception handler {0} was not found", handlerName);
                         }
                     }
+                    testMethod.CustomDecorators.Add(new ExpectedExceptionDecorator(attr.ExceptionData));
                 }
             }
 
@@ -234,32 +230,16 @@ namespace NUnit.Framework.Builders
                     testMethod.FullName = prefix + "." + name;
                 }
 
-                if (parms.Ignored)
-                    testMethod.RunState = RunState.Ignored;
-
-                if (parms.ExpectedExceptionName != null)
-                {
-                    //testMethod.ExpectedExceptionData = new ExpectedExceptionData(parms);
-                    testMethod.ExceptionExpected = true;
-                    testMethod.ExpectedExceptionType = parms.ExpectedException;
-                    testMethod.ExpectedExceptionName = parms.ExpectedExceptionName;
-                    testMethod.ExpectedExceptionMessage = parms.ExpectedMessage;
-                    testMethod.MessageMatchType = parms.MatchType;
-                }
-
-                foreach (string key in parms.Properties.Keys)
-                    foreach(object value in parms.Properties[key])
-                        testMethod.Properties.Add(key, value);
-
-                if (testMethod.BuilderException != null)
-                    testMethod.RunState = RunState.NotRunnable;
+                parms.ApplyToTest(testMethod);
             }
 
             return testMethod;
         }
+
 		#endregion
 
         #region Helper Methods
+
         /// <summary>
         /// Helper method that checks the signature of a TestMethod and
         /// any supplied parameters to determine if the test is valid.
@@ -325,7 +305,7 @@ namespace NUnit.Framework.Builders
             }
 
             if (!testMethod.Method.ReturnType.Equals(typeof(void)) &&
-                (parms == null || !parms.HasExpectedResult && parms.ExpectedExceptionName == null))
+                (parms == null || !parms.HasExpectedResult && !parms.ExceptionExpected))
             {
                 testMethod.RunState = RunState.NotRunnable;
                 testMethod.SkipReason = "Method has non-void return value";

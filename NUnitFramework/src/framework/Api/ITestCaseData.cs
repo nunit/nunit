@@ -44,24 +44,9 @@ namespace NUnit.Framework.Api
         object Result { get; }
 
         /// <summary>
-        ///  Gets the expected exception Type
+        /// Gets data about any expected exception.
         /// </summary>
-        Type ExpectedException { get; }
-
-        /// <summary>
-        /// Gets the FullName of the expected exception
-        /// </summary>
-        string ExpectedExceptionName { get; }
-
-        /// <summary>
-        /// Gets  the expected message of the expected exception
-        /// </summary>
-        string ExpectedMessage { get; }
-
-        /// <summary>
-        ///  Gets the type of match to be performed on the expected message
-        /// </summary>
-        MessageMatch MatchType { get; }
+        ExpectedExceptionData ExceptionData { get; }
 
         /// <summary>
         /// Gets the name to be used for the test

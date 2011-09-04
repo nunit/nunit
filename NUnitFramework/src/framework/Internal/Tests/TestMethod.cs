@@ -29,6 +29,7 @@ using System.Text.RegularExpressions;
 using System.Xml;
 using NUnit.Framework;
 using NUnit.Framework.Api;
+using NUnit.Framework.Internal.Commands;
 
 namespace NUnit.Framework.Internal
 {
@@ -49,39 +50,13 @@ namespace NUnit.Framework.Internal
 		internal MethodInfo method;
 
         /// <summary>
-        /// Indicate whether this test method expects an exception
+        /// A list of all decorators applied to the test by attributes or parameterset arguments
         /// </summary>
-        private bool exceptionExpected;
-
-        /// <summary>
-        /// The exception handler method
-        /// </summary>
-        internal MethodInfo alternateExceptionHandler;
-
-        /// <summary>
-        /// The type of any expected exception
-        /// </summary>
-        internal Type expectedExceptionType;
-
-        /// <summary>
-        /// The full name of any expected exception type
-        /// </summary>
-        internal string expectedExceptionName;
-
-        /// <summary>
-        /// The value of any message associated with an expected exception
-        /// </summary>
-        internal string expectedExceptionMessage;
-
-        /// <summary>
-        /// A string indicating how to match the expected message
-        /// </summary>
-        internal MessageMatch messageMatchType;
-
-        /// <summary>
-        /// A string containing any user message specified for the expected exception
-        /// </summary>
-        internal string expectedExceptionUserMessage;
+#if CLR_2_0 || CLR_4_0
+        private System.Collections.Generic.List<ICommandDecorator> decorators = new System.Collections.Generic.List<ICommandDecorator>();
+#else
+        private System.Collections.ArrayList decorators = new System.Collections.ArrayList();
+#endif
 
         /// <summary>
         /// Indicated whether the method has an expected result.
@@ -101,7 +76,14 @@ namespace NUnit.Framework.Internal
         /// Initializes a new instance of the <see cref="TestMethod"/> class.
         /// </summary>
         /// <param name="method">The method to be used as a test.</param>
-		public TestMethod( MethodInfo method ) 
+        public TestMethod(MethodInfo method) : this(method, null) { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TestMethod"/> class.
+        /// </summary>
+        /// <param name="method">The method to be used as a test.</param>
+        /// <param name="parentSuite">The suite or fixture to which the new test will be added</param>
+        public TestMethod(MethodInfo method, Test parentSuite) 
 			: base( method.ReflectedType ) 
 		{
             this.Name = method.Name;
@@ -112,8 +94,17 @@ namespace NUnit.Framework.Internal
             if( method.DeclaringType != method.ReflectedType)
                 this.Name = method.DeclaringType.Name + "." + method.Name;
 
+            // Needed to give proper fullname to test in a parameterized fixture.
+            // Without this, the arguments to the fixture are not included.
+            string prefix = method.ReflectedType.FullName;
+            if (parentSuite != null)
+            {
+                prefix = parentSuite.FullName;
+                this.FullName = prefix + "." + this.Name;
+            }
+
             this.method = method;
-		}
+        }
 
 		#endregion
 
@@ -129,65 +120,15 @@ namespace NUnit.Framework.Internal
 		}
 
         /// <summary>
-        /// Flag indicating whether an exception is expected.
+        /// Gets a list of custom decorators for this test.
         /// </summary>
-        public bool ExceptionExpected
+#if CLxR_2_0 || CLR_4_0
+        public System.Collections.Generic.IList<ICommandDecorator> Decorators
+#else
+        public System.Collections.IList CustomDecorators
+#endif
         {
-            get { return exceptionExpected; }
-            set { exceptionExpected = value; }
-        }
-        /// <summary>
-        /// The Type of any exception that is expected.
-        /// </summary>
-        public System.Type ExpectedExceptionType
-        {
-            get { return expectedExceptionType; }
-            set { expectedExceptionType = value; }
-        }
-
-        /// <summary>
-        /// The FullName of any exception that is expected
-        /// </summary>
-        public string ExpectedExceptionName
-        {
-            get { return expectedExceptionName; }
-            set { expectedExceptionName = value; }
-        }
-
-        /// <summary>
-        /// The Message of any exception that is expected
-        /// </summary>
-        public string ExpectedExceptionMessage
-        {
-            get { return expectedExceptionMessage; }
-            set { expectedExceptionMessage = value; }
-        }
-
-        /// <summary>
-        ///  Gets or sets the type of match to be performed on the expected message
-        /// </summary>
-        public MessageMatch MessageMatchType
-        {
-            get { return messageMatchType; }
-            set { messageMatchType = value; }
-        }
-
-        /// <summary>
-        /// Gets or sets the user message displayed in case of failure
-        /// </summary>
-        public string ExpectedExceptionUserMessage
-        {
-            get { return expectedExceptionUserMessage; }
-            set { expectedExceptionUserMessage = value; }
-        }
-
-        /// <summary>
-        ///  Gets the name of a method to be used as an exception handler
-        /// </summary>
-        public MethodInfo AlternateExceptionHandler
-        {
-            get { return alternateExceptionHandler; }
-            set { alternateExceptionHandler = value; }
+            get { return decorators; }
         }
 
         #endregion
@@ -272,6 +213,48 @@ namespace NUnit.Framework.Internal
         public override string XmlElementName
         {
             get { return "test-case"; }
+        }
+
+        protected override TestCommand MakeTestCommand(ITestFilter filter)
+        {
+            TestCommand command = new TestCaseCommand(this);
+
+            command = ApplyDecoratorsToCommand(command);
+
+            command = new TestExecutionContextCommand(
+                new TestMethodCommand(command));
+
+            return command;
+        }
+
+        #endregion
+
+        #region Helper Methods
+
+        private TestCommand ApplyDecoratorsToCommand(TestCommand command)
+        {
+            CommandDecoratorList decorators = new CommandDecoratorList();
+
+            // Add Standard stuff
+            decorators.Add(new SetUpTearDownDecorator());
+
+#if !NUNITLITE
+            if (ShouldRunOnOwnThread)
+                decorators.Add(new ThreadedTestDecorator());
+#endif
+
+            // Add Decorators supplied by attributes and parameter sets
+            foreach (ICommandDecorator decorator in CustomDecorators)
+                decorators.Add(decorator);
+
+            decorators.OrderByStage();
+
+            foreach (ICommandDecorator decorator in decorators)
+            {
+                command = decorator.Decorate(command);
+            }
+
+            return command;
         }
 
         #endregion

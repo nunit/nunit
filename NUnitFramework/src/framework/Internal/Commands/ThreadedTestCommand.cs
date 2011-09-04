@@ -26,8 +26,30 @@ using System;
 using System.Threading;
 using NUnit.Framework.Api;
 
-namespace NUnit.Framework.Internal
+namespace NUnit.Framework.Internal.Commands
 {
+    public class ThreadedTestDecorator : ICommandDecorator
+    {
+        #region ICommandDecorator Members
+
+        CommandStage ICommandDecorator.Stage
+        {
+            get { return CommandStage.CreateThread; }
+        }
+
+        int ICommandDecorator.Priority
+        {
+            get { return 0; }
+        }
+
+        TestCommand ICommandDecorator.Decorate(TestCommand command)
+        {
+            return new ThreadedTestCommand(command);
+        }
+
+        #endregion
+    }
+
     /// <summary>
     /// TODO: Documentation needed for class
     /// </summary>

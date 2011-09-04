@@ -26,6 +26,7 @@ using System.Threading;
 using System.Reflection;
 using System.Xml;
 using NUnit.Framework.Api;
+using NUnit.Framework.Internal.Commands;
 
 namespace NUnit.Framework.Internal
 {
@@ -101,6 +102,8 @@ namespace NUnit.Framework.Internal
         /// Argument list for use in executing the test.
         /// </summary>
         internal object[] arguments;
+
+        private TestCommand testCommand;
 
         #endregion
 
@@ -334,6 +337,21 @@ namespace NUnit.Framework.Internal
         /// <returns>A TestResult suitable for this type of test.</returns>
         public abstract TestResult MakeTestResult();
 
+        /// <summary>
+        /// Gets a test command to be used in executing this test
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        public TestCommand GetTestCommand(ITestFilter filter)
+        {
+            if (testCommand == null)
+                testCommand = runState != RunState.Runnable && runState != RunState.Explicit
+                    ? new SkipCommand(this)
+                    : MakeTestCommand(filter);
+
+            return testCommand;
+        }
+
         ///// <summary>
         ///// Gets a count of test cases that would be run using
         ///// the specified filter.
@@ -357,7 +375,7 @@ namespace NUnit.Framework.Internal
         /// <param name="provider">An object implementing ICustomAttributeProvider</param>
         public void ApplyCommonAttributes(ICustomAttributeProvider provider)
         {
-            foreach (Attribute attribute in provider.GetCustomAttributes(typeof(TestModificationAttribute), false))
+            foreach (Attribute attribute in provider.GetCustomAttributes(typeof(NUnitAttribute), false))
             {
                 IApplyToTest iApply = attribute as IApplyToTest;
                 if (iApply != null)
@@ -370,6 +388,13 @@ namespace NUnit.Framework.Internal
         #endregion
 
         #region Protected Methods
+
+        /// <summary>
+        /// Make a test command for running this test
+        /// </summary>
+        /// <param name="filter">A test filter used to select child tests for inclusion.</param>
+        /// <returns>A TestCommand, which runs the test when executed.</returns>
+        protected abstract TestCommand MakeTestCommand(ITestFilter filter);
 
         /// <summary>
         /// Add standard attributes and members to a test node.

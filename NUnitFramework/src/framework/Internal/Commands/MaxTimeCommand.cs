@@ -24,7 +24,7 @@
 using System;
 using NUnit.Framework.Api;
 
-namespace NUnit.Framework.Internal
+namespace NUnit.Framework.Internal.Commands
 {
     /// <summary>
     /// TODO: Documentation needed for class

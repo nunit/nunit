@@ -42,6 +42,7 @@ namespace NUnit.Framework
     {
 
         #region Instance Fields
+
         /// <summary>
         /// The argument list to be provided to the test
         /// </summary>
@@ -53,17 +54,9 @@ namespace NUnit.Framework
         private object result;
 
         /// <summary>
-        ///  The expected exception Type
+        /// Data about any expected exception.
         /// </summary>
-        private Type expectedExceptionType;
-
-        /// <summary>
-        /// The FullName of the expected exception
-        /// </summary>
-        private string expectedExceptionName;
-
-        //private string expectedMessage;
-        //private MessageMatch matchType;
+        private ExpectedExceptionData exceptionData;
 
         /// <summary>
         /// The name to be used for the test
@@ -84,6 +77,7 @@ namespace NUnit.Framework
         #endregion
 
         #region Constructors
+
         /// <summary>
         /// Initializes a new instance of the <see cref="T:TestCaseData"/> class.
         /// </summary>
@@ -129,6 +123,7 @@ namespace NUnit.Framework
         #endregion
 
         #region ITestCaseData Members
+
         /// <summary>
         /// Gets the argument list to be provided to the test
         /// </summary>
@@ -146,36 +141,11 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        ///  Gets the expected exception Type
+        /// Gets data about any expected exception.
         /// </summary>
-        public Type ExpectedException
+        public ExpectedExceptionData ExceptionData
         {
-            get { return expectedExceptionType; }
-        }
-
-        /// <summary>
-        /// Gets the FullName of the expected exception
-        /// </summary>
-        public string ExpectedExceptionName
-        {
-            get { return expectedExceptionName; }
-        }
-
-        /// <summary>
-        /// Gets or sets the expected message of the expected exception
-        /// </summary>
-        /// <value>The expected message of the exception.</value>
-        public string ExpectedMessage
-        {
-            get { return null; }
-        }
-
-        /// <summary>
-        ///  Gets or sets the type of match to be performed on the expected message
-        /// </summary>
-        public MessageMatch MatchType
-        {
-            get { return 0; }
+            get { return exceptionData; }
         }
 
         /// <summary>
@@ -212,9 +182,11 @@ namespace NUnit.Framework
                 return properties;
             }
         }
+
         #endregion
 
         #region Fluent Instance Modifiers
+
         /// <summary>
         /// Sets the expected result for the test
         /// </summary>
@@ -233,8 +205,8 @@ namespace NUnit.Framework
         /// <returns>The modified TestCaseData instance</returns>
         public TestCaseData Throws(Type exceptionType)
         {
-            this.expectedExceptionType = exceptionType;
-            this.expectedExceptionName = exceptionType.FullName;
+            //this.expectedExceptionType = exceptionType;
+            exceptionData.ExpectedExceptionName = exceptionType.FullName;
             return this;
         }
 
@@ -245,7 +217,7 @@ namespace NUnit.Framework
         /// <returns>The modified TestCaseData instance</returns>
         public TestCaseData Throws(string exceptionName)
         {
-            this.expectedExceptionName = exceptionName;
+            exceptionData.ExpectedExceptionName = exceptionName;
             return this;
         }
 
@@ -339,6 +311,7 @@ namespace NUnit.Framework
             this.Properties.Set(PropertyNames.SkipReason, reason);
             return this;
         }
+
         #endregion
     }
 }

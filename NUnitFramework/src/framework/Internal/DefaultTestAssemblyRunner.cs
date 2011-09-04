@@ -3,6 +3,7 @@ using System.Collections;
 using System.Reflection;
 using System.Threading;
 using NUnit.Framework.Api;
+using NUnit.Framework.Internal.Commands;
 
 namespace NUnit.Framework.Internal
 {
@@ -98,7 +99,7 @@ namespace NUnit.Framework.Internal
             if (loadedTest == null)
                 throw new InvalidOperationException("Run was called but no test has been loaded.");
 
-            TestCommand command = CommandBuilder.MakeTestCommand(this.loadedTest, filter);
+            TestCommand command = this.loadedTest.GetTestCommand(filter);
 
             TestExecutionContext.Save();
 

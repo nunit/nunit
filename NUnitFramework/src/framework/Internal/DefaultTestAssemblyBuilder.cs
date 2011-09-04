@@ -193,7 +193,7 @@ namespace NUnit.Framework.Internal
 
         private TestSuite BuildTestAssembly(string assemblyName, IList fixtures)
         {
-            TestSuite testAssembly = new TestAssembly(assemblyName);
+            TestSuite testAssembly = new TestAssembly(assembly, assemblyName);
 
             //NamespaceTreeBuilder treeBuilder =
             //    new NamespaceTreeBuilder(testAssembly);

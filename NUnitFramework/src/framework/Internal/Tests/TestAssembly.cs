@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System.IO;
+using System.Reflection;
 
 namespace NUnit.Framework.Internal
 {
@@ -35,7 +36,7 @@ namespace NUnit.Framework.Internal
         /// Initializes a new instance of the <see cref="TestAssembly"/> class.
         /// </summary>
         /// <param name="path">The path.</param>
-        public TestAssembly(string path) : base(path) 
+        public TestAssembly(Assembly assembly, string path) : base(path) 
         {
             this.Name = Path.GetFileName(path);
         }

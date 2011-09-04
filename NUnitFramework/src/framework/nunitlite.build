@@ -64,6 +64,8 @@
 
     <include name="Internal/Commands/*.cs"/>
     <exclude name="Internal/Commands/ThreadedTestCommand.cs"/>
+    <exclude name="Internal/Commands/CommandBuilder.cs"/>
+    <exclude name="Internal/Commands/CommandRunner.cs"/>
     
     <include name="Internal/Extensibility/TestCaseProviders.cs"/>
     
