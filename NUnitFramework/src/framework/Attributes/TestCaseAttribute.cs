@@ -37,10 +37,11 @@ namespace NUnit.Framework
     public class TestCaseAttribute : DataAttribute, ITestCaseData, ITestCaseSource
     {
         private object[] arguments;
-        private Type expectedExceptionType;
-        private string expectedExceptionName;
-        private string expectedMessage;
-        private MessageMatch matchType;
+        private ExpectedExceptionData exceptionData;
+        //private Type expectedExceptionType;
+        //private string expectedExceptionName;
+        //private string expectedMessage;
+        //private MessageMatch matchType;
         private object result;
         private string testName;
         private bool isIgnored;
@@ -108,17 +109,21 @@ namespace NUnit.Framework
         }
 
         /// <summary>
+        /// Gets data about any expected exception for this test case.
+        /// </summary>
+        public ExpectedExceptionData ExceptionData
+        {
+            get { return exceptionData; }
+        }
+
+        /// <summary>
         /// Gets or sets the expected exception.
         /// </summary>
         /// <value>The expected exception.</value>
         public Type ExpectedException
         {
-            get { return expectedExceptionType;  }
-            set
-            {
-                expectedExceptionType = value;
-                expectedExceptionName = expectedExceptionType.FullName;
-            }
+            get { return exceptionData.ExpectedExceptionType; }
+            set { exceptionData.ExpectedExceptionType = value; }
         }
 
         /// <summary>
@@ -127,12 +132,8 @@ namespace NUnit.Framework
         /// <value>The expected name of the exception.</value>
         public string ExpectedExceptionName
         {
-            get { return expectedExceptionName; }
-            set
-            {
-                expectedExceptionName = value;
-                expectedExceptionType = null;
-            }
+            get { return exceptionData.ExpectedExceptionName; }
+            set { exceptionData.ExpectedExceptionName = value; }
         }
 
         /// <summary>
@@ -141,8 +142,8 @@ namespace NUnit.Framework
         /// <value>The expected message of the exception.</value>
         public string ExpectedMessage
         {
-            get { return expectedMessage; }
-         	set { expectedMessage = value; }
+            get { return exceptionData.ExpectedMessage; }
+            set { exceptionData.ExpectedMessage = value; }
         }
 
         /// <summary>
@@ -150,8 +151,8 @@ namespace NUnit.Framework
         /// </summary>
         public MessageMatch MatchType
         {
-            get { return matchType; }
-            set { matchType = value; }
+            get { return exceptionData.MatchType; }
+            set { exceptionData.MatchType = value; }
         }
 
         /// <summary>

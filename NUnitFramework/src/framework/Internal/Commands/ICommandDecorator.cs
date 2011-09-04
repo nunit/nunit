@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2010 Charlie Poole
+// Copyright (c) 2011 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,41 +21,34 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using NUnit.Framework.Api;
+using System;
 
 namespace NUnit.Framework.Internal.Commands
 {
     /// <summary>
-    /// TODO: Documentation needed for class
+    /// ICommandDecorator is implemented by attributes and other
+    /// objects able to decorate a TestCommand, usually by wrapping
+    /// it with an outer command.
     /// </summary>
-    public abstract class DelegatingTestCommand : TestCommand
+    public interface ICommandDecorator
     {
-        /// <summary>TODO: Documentation needed for field</summary>
-        protected TestCommand innerCommand;
+        /// <summary>
+        /// The stage of command execution to which this decorator applies.
+        /// </summary>
+        CommandStage Stage { get; }
 
         /// <summary>
-        /// TODO: Documentation needed for constructor
+        /// The priority of this decorator as compared to other decorators
+        /// in the same Stage. Lower values are applied first.
         /// </summary>
-        /// <param name="innerCommand"></param>
-        protected DelegatingTestCommand(TestCommand innerCommand)
-            : base(innerCommand.Test)
-        {
-            this.innerCommand = innerCommand;
-        }
+        int Priority { get; }
 
         /// <summary>
-        /// TODO: Documentation needed for property
+        /// Decorate a command, usually by wrapping it with another
+        /// command, and return the decorated command.
         /// </summary>
-        public override TestResult CurrentResult
-        {
-            get
-            {
-                return this.innerCommand.CurrentResult;
-            }
-            set
-            {
-                this.innerCommand.CurrentResult = value;
-            }
-        }
+        /// <param name="command">The command to be decorated</param>
+        /// <returns>The decorated command</returns>
+        TestCommand Decorate(TestCommand command);
     }
 }

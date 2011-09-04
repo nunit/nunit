@@ -22,6 +22,8 @@
         <exclude name="Internal/NUnitLiteTestAssemblyRunner.cs"/>
         <exclude name="Internal/Builders/NUnitLiteTestCaseBuilder.cs"/>
         <exclude name="Internal/Builders/NUnitLiteTestFixtureBuilder.cs"/>
+        <exclude name="Internal/Commands/CommandBuilder.cs"/>
+        <exclude name="Internal/Commands/CommandRunner.cs"/>
       </sources>
       <references basedir="${current.build.dir}">
         <include name="System.Configuration.dll"/>

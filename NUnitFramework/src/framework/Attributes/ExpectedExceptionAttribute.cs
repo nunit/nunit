@@ -22,6 +22,9 @@
 // ***********************************************************************
 
 using System;
+using NUnit.Framework.Internal;
+using NUnit.Framework.Internal.Commands;
+using NUnit.Framework.Api;
 
 namespace NUnit.Framework
 {
@@ -31,12 +34,7 @@ namespace NUnit.Framework
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
     public class ExpectedExceptionAttribute : NUnitAttribute
     {
-        private Type expectedException;
-        private string expectedExceptionName;
-        private string expectedMessage;
-        private MessageMatch matchType;
-        private string userMessage;
-        private string handler;
+        private ExpectedExceptionData exceptionData = new ExpectedExceptionData();
 
         /// <summary>
         /// Constructor for a non-specific exception
@@ -51,8 +49,7 @@ namespace NUnit.Framework
         /// <param name="exceptionType">The type of the expected exception</param>
         public ExpectedExceptionAttribute(Type exceptionType)
         {
-            this.expectedException = exceptionType;
-            this.expectedExceptionName = exceptionType.FullName;
+            exceptionData.ExpectedExceptionType = exceptionType;
         }
 
         /// <summary>
@@ -61,7 +58,7 @@ namespace NUnit.Framework
         /// <param name="exceptionName">The full name of the expected exception</param>
         public ExpectedExceptionAttribute(string exceptionName)
         {
-            this.expectedExceptionName = exceptionName;
+            exceptionData.ExpectedExceptionName = exceptionName;
         }
 
         /// <summary>
@@ -69,12 +66,8 @@ namespace NUnit.Framework
         /// </summary>
         public Type ExpectedException
         {
-            get { return expectedException; }
-            set
-            {
-                expectedException = value;
-                expectedExceptionName = expectedException.FullName;
-            }
+            get { return exceptionData.ExpectedExceptionType; }
+            set { exceptionData.ExpectedExceptionType = value; }
         }
 
         /// <summary>
@@ -82,8 +75,8 @@ namespace NUnit.Framework
         /// </summary>
         public string ExpectedExceptionName
         {
-            get { return expectedExceptionName; }
-            set { expectedExceptionName = value; }
+            get { return exceptionData.ExpectedExceptionName; }
+            set { exceptionData.ExpectedExceptionName = value; }
         }
 
         /// <summary>
@@ -91,8 +84,8 @@ namespace NUnit.Framework
         /// </summary>
         public string ExpectedMessage
         {
-            get { return expectedMessage; }
-            set { expectedMessage = value; }
+            get { return exceptionData.ExpectedMessage; }
+            set { exceptionData.ExpectedMessage = value; }
         }
 
         /// <summary>
@@ -100,8 +93,8 @@ namespace NUnit.Framework
         /// </summary>
         public string UserMessage
         {
-            get { return userMessage; }
-            set { userMessage = value; }
+            get { return exceptionData.UserMessage; }
+            set { exceptionData.UserMessage = value; }
         }
 
         /// <summary>
@@ -109,8 +102,8 @@ namespace NUnit.Framework
         /// </summary>
         public MessageMatch MatchType
         {
-            get { return matchType; }
-            set { matchType = value; }
+            get { return exceptionData.MatchType; }
+            set { exceptionData.MatchType = value; }
         }
 
         /// <summary>
@@ -118,8 +111,56 @@ namespace NUnit.Framework
         /// </summary>
         public string Handler
         {
-            get { return handler; }
-            set { handler = value; }
+            get { return exceptionData.HandlerName; }
+            set { exceptionData.HandlerName = value; }
         }
+
+        /// <summary>
+        /// Gets all data about the expected exception.
+        /// </summary>
+        public ExpectedExceptionData ExceptionData
+        {
+            get { return exceptionData; }
+        }
+
+        //#region IApplyToTest Members
+
+        //void IApplyToTest.ApplyToTest(ITest test)
+        //{
+        //    TestMethod testMethod = test as TestMethod;
+        //    if (testMethod != null)
+        //        testMethod.CustomDecorators.Add(new ExpectedExceptionDecorator());
+        //}
+
+        //#endregion
+    }
+
+    public class ExpectedExceptionDecorator : ICommandDecorator
+    {
+        private ExpectedExceptionData exceptionData;
+
+        public ExpectedExceptionDecorator(ExpectedExceptionData exceptionData)
+        {
+            this.exceptionData = exceptionData;
+        }
+
+        #region ICommandDecorator Members
+
+        CommandStage ICommandDecorator.Stage
+        {
+            get { return CommandStage.PostSetUpPreTearDown; }
+        }
+
+        int ICommandDecorator.Priority
+        {
+            get { return 0; }
+        }
+
+        TestCommand ICommandDecorator.Decorate(TestCommand command)
+        {
+            return new ExpectedExceptionCommand(command, exceptionData);
+        }
+
+        #endregion
     }
 }

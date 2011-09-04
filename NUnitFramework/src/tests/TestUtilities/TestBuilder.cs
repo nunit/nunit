@@ -26,8 +26,8 @@ using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.Api;
 using NUnit.Framework.Builders;
-using NUnit.Framework.Extensibility;
 using NUnit.Framework.Internal;
+using NUnit.Framework.Internal.Commands;
 
 namespace NUnit.TestUtilities
 {
@@ -78,14 +78,14 @@ namespace NUnit.TestUtilities
         public static TestResult RunTestFixture(Type type)
         {
             TestSuite suite = MakeFixture(type);
-            TestCommand command = CommandBuilder.MakeTestCommand(suite, TestFilter.Empty);
+            TestCommand command = suite.GetTestCommand(TestFilter.Empty);
             return command.Execute(null, TestListener.NULL);
         }
 
         public static TestResult RunTestFixture(object fixture)
         {
             TestSuite suite = MakeFixture(fixture);
-            TestCommand command = CommandBuilder.MakeTestCommand(suite, TestFilter.Empty);
+            TestCommand command = suite.GetTestCommand(TestFilter.Empty);
             return command.Execute(fixture, TestListener.NULL);
         }
 
@@ -113,7 +113,7 @@ namespace NUnit.TestUtilities
 
         public static ITestResult RunTest(Test test, object testObject)
         {
-            TestCommand command = CommandBuilder.MakeTestCommand(test, TestFilter.Empty);
+            TestCommand command = test.GetTestCommand(TestFilter.Empty);
             return command.Execute(testObject, TestListener.NULL);
         }
 

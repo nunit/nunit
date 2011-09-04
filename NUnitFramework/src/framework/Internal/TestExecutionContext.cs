@@ -32,6 +32,8 @@ using System.Threading;
 using System.Security.Principal;
 #endif
 
+using NUnit.Framework.Api;
+
 namespace NUnit.Framework.Internal
 {
 	/// <summary>

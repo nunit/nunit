@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2010 Charlie Poole
+// Copyright (c) 2011 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -23,50 +23,37 @@
 
 using System;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using System.Threading;
 using NUnit.Framework.Api;
-using System.Text.RegularExpressions;
 
-namespace NUnit.Framework.Internal
+namespace NUnit.Framework.Internal.Commands
 {
     /// <summary>
     /// TODO: Documentation needed for class
     /// </summary>
     public class ExpectedExceptionCommand : DelegatingTestCommand
     {
-        //private readonly ExpectedExceptionProcessor exceptionProcessor;
-        private TestMethod testMethod;
-        private MethodInfo exceptionHandler;
-        private Type expectedExceptionType;
-        private string expectedExceptionName;
-        private string expectedMessage;
-        private MessageMatch matchType;
-        private string userMessage;
+        private ExpectedExceptionData exceptionData;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ExpectedExceptionCommand"/> class.
         /// </summary>
         /// <param name="innerCommand">The inner command.</param>
-        public ExpectedExceptionCommand(TestCommand innerCommand)
+        /// <param name="exceptionData">The exception data.</param>
+        public ExpectedExceptionCommand(TestCommand innerCommand, ExpectedExceptionData exceptionData)
             : base(innerCommand)
         {
-            this.testMethod = (TestMethod)Test;
-            //ExpectedExceptionData exceptionData = testMethod.ExpectedExceptionData;
-
-            this.expectedExceptionType = testMethod.ExpectedExceptionType;
-            this.expectedExceptionName = testMethod.ExpectedExceptionName;
-            this.expectedMessage = testMethod.ExpectedExceptionMessage;
-            this.matchType = testMethod.MessageMatchType;
-            this.userMessage = testMethod.ExpectedExceptionUserMessage;
-            this.exceptionHandler = testMethod.AlternateExceptionHandler;
+            this.exceptionData = exceptionData;
         }
+
 
         /// <summary>
         /// Runs the test, saving a TestResult in
         /// TestExecutionContext.CurrentContext.CurrentResult
         /// </summary>
         /// <param name="testObject">The object on which the test should run.</param>
-        /// <param name="arguments">The arguments to be used in running the test or null.</param>
+        /// <param name="listener">An ITestListener to receive test events.</param>
         /// <returns>A TestResult</returns>
         public override TestResult Execute(object testObject, ITestListener listener)
         {
@@ -112,8 +99,11 @@ namespace NUnit.Framework.Internal
             {
                 if (IsExpectedMessageMatch(exception))
                 {
-                    if (exceptionHandler != null)
-                        Reflect.InvokeMethod(exceptionHandler, testObject, exception);
+                    MethodInfo exceptionMethod = exceptionData.GetExceptionHandler(testObject.GetType());
+                    if (exceptionMethod != null)
+                    {
+                        Reflect.InvokeMethod(exceptionMethod, testObject, exception);
+                    }
                     else
                     {
                         IExpectException handler = testObject as IExpectException;
@@ -147,34 +137,35 @@ namespace NUnit.Framework.Internal
         }
 
         #region Helper Methods
+
         private bool IsExpectedExceptionType(Exception exception)
         {
-            return expectedExceptionName == null ||
-                expectedExceptionName.Equals(exception.GetType().FullName);
+            return exceptionData.ExpectedExceptionName == null ||
+                exceptionData.ExpectedExceptionName.Equals(exception.GetType().FullName);
         }
 
         private bool IsExpectedMessageMatch(Exception exception)
         {
-            if (expectedMessage == null)
+            if (exceptionData.ExpectedMessage == null)
                 return true;
 
-            switch (matchType)
+            switch (exceptionData.MatchType)
             {
                 case MessageMatch.Exact:
                 default:
-                    return expectedMessage.Equals(exception.Message);
+                    return exceptionData.ExpectedMessage.Equals(exception.Message);
                 case MessageMatch.Contains:
-                    return exception.Message.IndexOf(expectedMessage) >= 0;
+                    return exception.Message.IndexOf(exceptionData.ExpectedMessage) >= 0;
                 case MessageMatch.Regex:
-                    return Regex.IsMatch(exception.Message, expectedMessage);
+                    return Regex.IsMatch(exception.Message, exceptionData.ExpectedMessage);
                 case MessageMatch.StartsWith:
-                    return exception.Message.StartsWith(expectedMessage);
+                    return exception.Message.StartsWith(exceptionData.ExpectedMessage);
             }
         }
 
         private string NoExceptionMessage()
         {
-            string expectedType = expectedExceptionName == null ? "An Exception" : expectedExceptionName;
+            string expectedType = exceptionData.ExpectedExceptionName == null ? "An Exception" : exceptionData.ExpectedExceptionName;
             return CombineWithUserMessage(expectedType + " was expected");
         }
 
@@ -182,14 +173,14 @@ namespace NUnit.Framework.Internal
         {
             return CombineWithUserMessage(
                 "An unexpected exception type was thrown" + Env.NewLine +
-                "Expected: " + expectedExceptionName + Env.NewLine +
+                "Expected: " + exceptionData.ExpectedExceptionName + Env.NewLine +
                 " but was: " + exception.GetType().FullName + " : " + exception.Message);
         }
 
         private string WrongTextMessage(Exception exception)
         {
             string expectedText;
-            switch (matchType)
+            switch (exceptionData.MatchType)
             {
                 default:
                 case MessageMatch.Exact:
@@ -208,15 +199,15 @@ namespace NUnit.Framework.Internal
 
             return CombineWithUserMessage(
                 "The exception message text was incorrect" + Env.NewLine +
-                expectedText + expectedMessage + Env.NewLine +
+                expectedText + exceptionData.ExpectedMessage + Env.NewLine +
                 " but was: " + exception.Message);
         }
 
         private string CombineWithUserMessage(string message)
         {
-            if (userMessage == null)
+            if (exceptionData.UserMessage == null)
                 return message;
-            return userMessage + Env.NewLine + message;
+            return exceptionData.UserMessage + Env.NewLine + message;
         }
 
 #if !NETCF_1_0

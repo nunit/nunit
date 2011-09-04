@@ -23,6 +23,9 @@
 
 #if !NUNITLITE
 using System;
+using NUnit.Framework.Internal;
+using NUnit.Framework.Internal.Commands;
+using NUnit.Framework.Api;
 
 namespace NUnit.Framework
 {
@@ -33,7 +36,7 @@ namespace NUnit.Framework
     /// for all contained test methods.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class | AttributeTargets.Assembly, AllowMultiple = false)]
-    public class TimeoutAttribute : PropertyAttribute
+    public class TimeoutAttribute : PropertyAttribute, ICommandDecorator
     {
         /// <summary>
         /// Construct a TimeoutAttribute given a time in milliseconds
@@ -41,6 +44,42 @@ namespace NUnit.Framework
         /// <param name="timeout">The timeout value in milliseconds</param>
         public TimeoutAttribute(int timeout)
             : base(timeout) { }
+
+        #region ICommandDecorator Members
+
+        CommandStage ICommandDecorator.Stage
+        {
+            get { return CommandStage.SetContext; }
+        }
+
+        int ICommandDecorator.Priority
+        {
+            get { return 0; }
+        }
+
+        TestCommand ICommandDecorator.Decorate(TestCommand command)
+        {
+            return new TimeoutCommand(command);
+        }
+
+        #endregion
+
+        #region Nested Command Class
+
+        private class TimeoutCommand : DelegatingTestCommand
+        {
+            public TimeoutCommand(TestCommand command) : base(command) { }
+
+            public override TestResult Execute(object testObject, NUnit.Framework.Api.ITestListener listener)
+            {
+                if (this.Test.Properties.ContainsKey(PropertyNames.Timeout))
+                    TestExecutionContext.CurrentContext.TestCaseTimeout = (int)this.Test.Properties.Get(PropertyNames.Timeout);
+
+                return innerCommand.Execute(testObject, listener);
+            }
+        }
+
+        #endregion
     }
 }
 #endif

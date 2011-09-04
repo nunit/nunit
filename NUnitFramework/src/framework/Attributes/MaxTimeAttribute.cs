@@ -22,6 +22,9 @@
 // ***********************************************************************
 
 using System;
+using NUnit.Framework.Internal.Commands;
+using NUnit.Framework.Api;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Framework
 {
@@ -29,7 +32,7 @@ namespace NUnit.Framework
 	/// Summary description for MaxTimeAttribute.
 	/// </summary>
 	[AttributeUsage( AttributeTargets.Method, AllowMultiple=false, Inherited=false )]
-	public sealed class MaxTimeAttribute : PropertyAttribute
+	public sealed class MaxTimeAttribute : PropertyAttribute, ICommandDecorator
 	{
         /// <summary>
         /// Construct a MaxTimeAttribute, given a time in milliseconds.
@@ -37,5 +40,24 @@ namespace NUnit.Framework
         /// <param name="milliseconds">The maximum elapsed time in milliseconds</param>
 		public MaxTimeAttribute( int milliseconds )
             : base( milliseconds ) { }
-	}
+
+        #region ICommandDecorator Members
+
+        CommandStage ICommandDecorator.Stage
+        {
+            get { return CommandStage.PreSetUpPostTearDown; }
+        }
+
+        int ICommandDecorator.Priority
+        {
+            get { return 0; }
+        }
+
+        TestCommand ICommandDecorator.Decorate(TestCommand command)
+        {
+            return new MaxTimeCommand(command);
+        }
+
+        #endregion
+    }
 }

@@ -23,6 +23,8 @@
 
 using System;
 using NUnit.Framework.Api;
+using NUnit.Framework.Internal;
+using NUnit.Framework.Internal.Commands;
 
 namespace NUnit.Framework
 {
@@ -30,12 +32,52 @@ namespace NUnit.Framework
 	/// Summary description for SetCultureAttribute.
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Class|AttributeTargets.Method|AttributeTargets.Assembly, AllowMultiple=true)]
-	public class SetCultureAttribute : PropertyAttribute
+	public class SetCultureAttribute : PropertyAttribute, ICommandDecorator
 	{
 		/// <summary>
 		/// Construct given the name of a culture
 		/// </summary>
 		/// <param name="culture"></param>
 		public SetCultureAttribute( string culture ) : base( PropertyNames.SetCulture, culture ) { }
-	}
+
+        #region ICommandDecorator Members
+
+        CommandStage ICommandDecorator.Stage
+        {
+            get { return CommandStage.SetContext; }
+        }
+
+        int ICommandDecorator.Priority
+        {
+            get { return 0; }
+        }
+
+        TestCommand ICommandDecorator.Decorate(TestCommand command)
+        {
+            return new SetCultureCommand(command);
+        }
+
+        #endregion
+
+        #region Nested Command Class
+
+        private class SetCultureCommand : DelegatingTestCommand
+        {
+            public SetCultureCommand(TestCommand command) : base(command)
+            {
+            }
+
+            public override TestResult Execute(object testObject, ITestListener listener)
+            {
+                string setCulture = (string)Test.Properties.Get(PropertyNames.SetCulture);
+                if (setCulture != null)
+                    TestExecutionContext.CurrentContext.CurrentCulture =
+                        new System.Globalization.CultureInfo(setCulture);
+
+                return innerCommand.Execute(testObject, listener);
+            }
+        }
+
+        #endregion
+    }
 }

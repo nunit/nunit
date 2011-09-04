@@ -27,6 +27,7 @@ using System.Collections.Specialized;
 using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.Api;
+using NUnit.Framework.Internal.Commands;
 
 namespace NUnit.Framework.Internal
 {
@@ -35,21 +36,19 @@ namespace NUnit.Framework.Internal
     /// other selected parameters needed for constructing
     /// a parameterized test case.
     /// </summary>
-    public class ParameterSet : ITestCaseData
+    public class ParameterSet : ITestCaseData, IApplyToTest
     {
         #region Instance Fields
+
         private RunState runState;
         private Exception providerException;
         private object[] arguments;
         private object[] originalArguments;
-        private System.Type expectedException;
-        private string expectedExceptionName;
-        private string expectedMessage;
-        private MessageMatch matchType;
         private object result;
         private string testName;
         private bool isIgnored;
         private bool hasExpectedResult;
+        private ExpectedExceptionData exceptionData;
 
         /// <summary>
         /// A dictionary of properties, used to add information
@@ -60,6 +59,7 @@ namespace NUnit.Framework.Internal
         #endregion
 
         #region Properties
+
         /// <summary>
         /// The RunState for this set of parameters.
         /// </summary>
@@ -102,41 +102,20 @@ namespace NUnit.Framework.Internal
             get { return originalArguments; }
         }
 
-
         /// <summary>
-        /// The Type of any exception that is expected.
+        /// Gets a flag indicating whether an exception is expected.
         /// </summary>
-        public System.Type ExpectedException
+        public bool ExceptionExpected
         {
-            get { return expectedException; }
-            set { expectedException = value; }
+            get { return exceptionData.ExpectedExceptionName != null; }
         }
 
         /// <summary>
-        /// The FullName of any exception that is expected
+        /// Data about any expected exception
         /// </summary>
-        public string ExpectedExceptionName
+        public ExpectedExceptionData ExceptionData
         {
-            get { return expectedExceptionName; }
-            set { expectedExceptionName = value; }
-        }
-
-        /// <summary>
-        /// The Message of any exception that is expected
-        /// </summary>
-        public string ExpectedMessage
-        {
-            get { return expectedMessage; }
-            set { expectedMessage = value; }
-        }
-
-        /// <summary>
-        ///  Gets or sets the type of match to be performed on the expected message
-        /// </summary>
-        public MessageMatch MatchType
-        {
-            get { return matchType; }
-            set { matchType = value; }
+            get { return exceptionData; }
         }
 
         /// <summary>
@@ -199,6 +178,7 @@ namespace NUnit.Framework.Internal
         #endregion
 
         #region Constructors
+
         /// <summary>
         /// Construct a non-runnable ParameterSet, specifying
         /// the provider exception that made it invalid.
@@ -226,10 +206,7 @@ namespace NUnit.Framework.Internal
         {
             this.RunState = RunState.Runnable;
             this.Arguments = data.Arguments;
-            this.ExpectedException = data.ExpectedException;
-            this.ExpectedExceptionName = data.ExpectedExceptionName;
-            this.ExpectedMessage = data.ExpectedMessage;
-            this.MatchType = data.MatchType;
+            this.exceptionData = data.ExceptionData;
             this.Result = data.Result;
             this.TestName = data.TestName;
             this.Ignored = data.Ignored;
@@ -237,6 +214,35 @@ namespace NUnit.Framework.Internal
             foreach (string key in data.Properties.Keys)
                 this.Properties[key] = data.Properties[key];
         }
+
+        #endregion
+
+        #region IApplyToTest Members
+
+        /// <summary>
+        /// Applies ParameterSet values to the test itself.
+        /// </summary>
+        /// <param name="test">A test.</param>
+        public void ApplyToTest(ITest test)
+        {
+            // This cast is safe because ParameterSet is not used
+            // with any other type of test.
+            TestMethod testMethod = (TestMethod)test;
+
+            if (this.Ignored)
+                testMethod.RunState = RunState.Ignored;
+
+            if (exceptionData.ExpectedExceptionName != null)
+                testMethod.CustomDecorators.Add(new ExpectedExceptionDecorator(this.ExceptionData));
+
+            foreach (string key in Properties.Keys)
+                foreach (object value in Properties[key])
+                    testMethod.Properties.Add(key, value);
+
+            if (testMethod.BuilderException != null)
+                testMethod.RunState = RunState.NotRunnable;
+        }
+
         #endregion
     }
 }

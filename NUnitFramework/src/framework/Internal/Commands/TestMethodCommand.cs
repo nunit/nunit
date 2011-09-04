@@ -26,7 +26,7 @@ using System.Reflection;
 using System.Threading;
 using NUnit.Framework.Api;
 
-namespace NUnit.Framework.Internal
+namespace NUnit.Framework.Internal.Commands
 {
     /// <summary>
     /// TODO: Documentation needed for class
@@ -47,15 +47,15 @@ namespace NUnit.Framework.Internal
 
         internal object[] arguments;
 
-        /// <summary>
-        /// The SetUp method.
-        /// </summary>
-        private MethodInfo[] setUpMethods;
+        ///// <summary>
+        ///// The SetUp method.
+        ///// </summary>
+        //private MethodInfo[] setUpMethods;
 
-        /// <summary>
-        /// The teardown method
-        /// </summary>
-        private MethodInfo[] tearDownMethods;
+        ///// <summary>
+        ///// The teardown method
+        ///// </summary>
+        //private MethodInfo[] tearDownMethods;
 
 
         #endregion
@@ -67,11 +67,11 @@ namespace NUnit.Framework.Internal
         public TestMethodCommand(TestCommand innerCommand)
             : base(innerCommand)
         {
-            this.test = Test as TestMethod;           
+            this.test = Test as TestMethod;
             this.method = test.Method;
-            this.arguments = test.arguments;
-            this.setUpMethods = test.SetUpMethods;
-            this.tearDownMethods = test.TearDownMethods;
+            //this.arguments = test.arguments;
+            //this.setUpMethods = test.SetUpMethods;
+            //this.tearDownMethods = test.TearDownMethods;
         }
 
         /// <summary>
@@ -85,10 +85,10 @@ namespace NUnit.Framework.Internal
         {
             try
             {
-                ApplySettingsToExecutionContext();
+                //ApplySettingsToExecutionContext();
 
                 // This is used in case we are running a parameterized
-                // test case directly, without having crated the fixture
+                // test case directly, without having created the fixture
                 if (testObject == null && !method.IsStatic)
                     testObject = Activator.CreateInstance(method.ReflectedType);
 
@@ -105,28 +105,28 @@ namespace NUnit.Framework.Internal
             }
         }
 
-        /// <summary>
-        /// Applies the culture settings specified on the test
-        /// to the TestExecutionContext.
-        /// </summary>
-        private void ApplySettingsToExecutionContext()
-        {
-#if !NETCF
-            string setCulture = (string)test.Properties.Get(PropertyNames.SetCulture);
-            if (setCulture != null)
-                TestExecutionContext.CurrentContext.CurrentCulture =
-                    new System.Globalization.CultureInfo(setCulture);
+//        /// <summary>
+//        /// Applies the culture settings specified on the test
+//        /// to the TestExecutionContext.
+//        /// </summary>
+//        private void ApplySettingsToExecutionContext()
+//        {
+//#if !NETCF
+//            string setCulture = (string)test.Properties.Get(PropertyNames.SetCulture);
+//            if (setCulture != null)
+//                TestExecutionContext.CurrentContext.CurrentCulture =
+//                    new System.Globalization.CultureInfo(setCulture);
 
-            string setUICulture = (string)test.Properties.Get(PropertyNames.SetUICulture);
-            if (setUICulture != null)
-                TestExecutionContext.CurrentContext.CurrentUICulture =
-                    new System.Globalization.CultureInfo(setUICulture);
-#endif
+//            string setUICulture = (string)test.Properties.Get(PropertyNames.SetUICulture);
+//            if (setUICulture != null)
+//                TestExecutionContext.CurrentContext.CurrentUICulture =
+//                    new System.Globalization.CultureInfo(setUICulture);
+//#endif
 
-#if !NUNITLITE
-            if (test.Properties.ContainsKey(PropertyNames.Timeout))
-                TestExecutionContext.CurrentContext.TestCaseTimeout = (int)test.Properties.Get(PropertyNames.Timeout);
-#endif
-        }
+//#if !NUNITLITE
+//            if (test.Properties.ContainsKey(PropertyNames.Timeout))
+//                TestExecutionContext.CurrentContext.TestCaseTimeout = (int)test.Properties.Get(PropertyNames.Timeout);
+//#endif
+//        }
     }
 }

@@ -24,7 +24,7 @@
 using System;
 using NUnit.Framework.Api;
 
-namespace NUnit.Framework.Internal
+namespace NUnit.Framework.Commands
 {
     /// <summary>
     /// TODO: Documentation needed for class
@@ -41,69 +41,7 @@ namespace NUnit.Framework.Internal
             if (test.RunState != RunState.Runnable && test.RunState != RunState.Explicit)
                 return new SkipCommand(test);
 
-            TestSuite suite = test as TestSuite;
-            if (suite != null)
-                return MakeTestCommand(suite, filter);
-
-            return MakeTestCommand(test as TestMethod);
-        }
-
-        /// <summary>
-        /// TODO: Documentation needed for method
-        /// </summary>
-        /// <param name="test"></param>
-        /// <returns></returns>
-        public static TestCommand MakeTestCommand(TestMethod test)
-        {
-            Guard.ArgumentNotNull(test, "test");
-
-            TestCommand command = new TestCaseCommand(test);
-
-            if (test.ExceptionExpected)
-                command = new ExpectedExceptionCommand(command);
-
-            command = new SetUpTearDownCommand(command);
-
-            if (test.Properties.ContainsKey(PropertyNames.MaxTime))
-                command = new MaxTimeCommand(command);
-
-#if !NUNITLITE
-            if (test.ShouldRunOnOwnThread)
-                command = new ThreadedTestCommand(command);
-#endif
-
-            if (test.Properties.ContainsKey(PropertyNames.RepeatCount))
-                command = new RepeatedTestCommand(command);
-
-            command = new TestExecutionContextCommand(
-                new TestMethodCommand(command));
-
-            return command;
-        }
-
-        /// <summary>
-        /// TODO: Documentation needed for method
-        /// </summary>
-        /// <param name="suite"></param>
-        /// <returns></returns>
-        public static TestCommand MakeTestCommand(TestSuite suite, ITestFilter filter)
-        {
-            Guard.ArgumentNotNull(suite, "suite");
-
-            TestCommand command = new TestSuiteCommand(suite);
-
-            foreach (Test childTest in suite.Tests)
-                if (filter.Pass(childTest))
-                    command.Children.Add(MakeTestCommand(childTest, filter));
-
-#if !NUNITLITE
-            if (suite.ShouldRunOnOwnThread)
-                command = new ThreadedTestCommand(command);
-#endif
-
-            command = new TestExecutionContextCommand(command);
-
-            return command;
+            return test.GetTestCommand(filter);
         }
     }
 }

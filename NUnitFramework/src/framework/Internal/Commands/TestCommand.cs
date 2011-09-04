@@ -29,7 +29,7 @@ using System.Collections.Generic;
 using System.Collections;
 #endif
 
-namespace NUnit.Framework.Internal
+namespace NUnit.Framework.Internal.Commands
 {
     /// <summary>
     /// TestCommand is the base class for all test commands
@@ -52,7 +52,7 @@ namespace NUnit.Framework.Internal
             this.test = test;
         }
 
-        #region Public Properties and Methods
+        #region ITestCommandMembers
 
         /// <summary>
         /// TODO: Documentation needed for property

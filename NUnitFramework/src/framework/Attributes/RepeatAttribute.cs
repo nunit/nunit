@@ -22,6 +22,8 @@
 // ***********************************************************************
 
 using System;
+using NUnit.Framework.Api;
+using NUnit.Framework.Internal.Commands;
 
 namespace NUnit.Framework
 {
@@ -30,7 +32,7 @@ namespace NUnit.Framework
 	/// to run it multiple times.
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Method, AllowMultiple=false)]
-	public class RepeatAttribute : PropertyAttribute
+	public class RepeatAttribute : PropertyAttribute, ICommandDecorator
 	{
         /// <summary>
         /// Construct a RepeatAttribute
@@ -56,5 +58,24 @@ namespace NUnit.Framework
         //{
         //    get { return count; }
         //}
-	}
+
+        #region ICommandDecorator Members
+
+        CommandStage ICommandDecorator.Stage
+        {
+            get { return CommandStage.Repeat; }
+        }
+
+        int ICommandDecorator.Priority
+        {
+            get { return 0; }
+        }
+
+        TestCommand ICommandDecorator.Decorate(TestCommand command)
+        {
+            return new RepeatedTestCommand(command);
+        }
+
+        #endregion
+    }
 }
