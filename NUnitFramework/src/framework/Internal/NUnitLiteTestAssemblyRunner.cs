@@ -3,6 +3,7 @@ using System.Collections;
 using System.Reflection;
 using System.Threading;
 using NUnit.Framework.Api;
+using NUnit.Framework.Internal.Commands;
 
 namespace NUnit.Framework.Internal
 {
@@ -88,11 +89,12 @@ namespace NUnit.Framework.Internal
         /// and the listener interface is notified as it progresses.
         /// </summary>
         /// <param name="listener">Interface to receive EventListener notifications.</param>
-        /// <param name="runOptions">A dictionary containing options for this run</param>
+        /// <param name="filter">A test filter used to select tests to be run</param>
         /// <returns></returns>
-        public ITestResult Run(ITestListener listener, IDictionary runOptions)
+        public ITestResult Run(ITestListener listener, ITestFilter filter)
         {
-            return this.loadedTest.Run(listener);
+            TestCommand command = this.loadedTest.GetTestCommand(filter);
+            return command.Execute(null, listener);
         }
 
         #endregion
