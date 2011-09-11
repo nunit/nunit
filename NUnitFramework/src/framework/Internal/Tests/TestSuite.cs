@@ -63,6 +63,16 @@ namespace NUnit.Framework.Internal
         ///// </summary>
         //internal object[] arguments;
 
+        /// <summary>
+        /// The fixture setup methods for this suite
+        /// </summary>
+        protected MethodInfo[] oneTimeSetUpMethods;
+
+        /// <summary>
+        /// The fixture teardown methods for this suite
+        /// </summary>
+        protected MethodInfo[] oneTimeTearDownMethods;
+
         #endregion
 
 		#region Constructors
@@ -210,6 +220,30 @@ namespace NUnit.Framework.Internal
 				return count;
 			}
 		}
+
+        /// <summary>
+        /// Gets the set up methods.
+        /// </summary>
+        /// <returns></returns>
+        internal MethodInfo[] OneTimeSetUpMethods
+        {
+            get
+            {
+                return oneTimeSetUpMethods;
+            }
+        }
+
+        /// <summary>
+        /// Gets the tear down methods.
+        /// </summary>
+        /// <returns></returns>
+        internal MethodInfo[] OneTimeTearDownMethods
+        {
+            get
+            {
+                return oneTimeTearDownMethods;
+            }
+        }
 
         #endregion
 

@@ -48,11 +48,6 @@ namespace NUnit.Framework.Internal
         private string fullName;
 
         /// <summary>
-        /// Exception that was thrown while trying to build the test
-        /// </summary>
-        private Exception builderException;
-
-        /// <summary>
 		/// Indicates whether the test should be executed
 		/// </summary>
 		private RunState runState;
@@ -87,16 +82,6 @@ namespace NUnit.Framework.Internal
         /// The teardown method
         /// </summary>
         protected MethodInfo[] tearDownMethods;
-
-        /// <summary>
-        /// The fixture setup methods for this suite
-        /// </summary>
-        protected MethodInfo[] fixtureSetUpMethods;
-
-        /// <summary>
-        /// The fixture teardown methods for this suite
-        /// </summary>
-        protected MethodInfo[] fixtureTearDownMethods;
 
         /// <summary>
         /// Argument list for use in executing the test.
@@ -180,7 +165,16 @@ namespace NUnit.Framework.Internal
             set { fullName = value; }
         }
 
-		/// <summary>
+        /// <summary>
+        /// Gets the Type of the fixture used in running this test
+        /// or null if no fixture type is associated with it.
+        /// </summary>
+        public Type FixtureType
+        {
+            get { return fixtureType; }
+        }
+
+        /// <summary>
 		/// Whether or not the test should be run
 		/// </summary>
         public RunState RunState
@@ -306,29 +300,6 @@ namespace NUnit.Framework.Internal
 
         #endregion
 
-        #region Other Public Properties
-
-        /// <summary>
-        /// Gets or sets a builder exception, which was thrown
-        /// when attempting to construct the test.
-        /// </summary>
-        /// <value>The builder exception.</value>
-        public Exception BuilderException
-        {
-            get { return builderException; }
-            set { builderException = value; }
-        }
-
-        /// <summary>
-        /// Gets the Type of the fixture used in running this test
-        /// </summary>
-        public Type FixtureType
-        {
-            get { return fixtureType; }
-        }
-
-        #endregion
-
         #region Other Public Methods
 
         /// <summary>
@@ -425,53 +396,7 @@ namespace NUnit.Framework.Internal
             set { fixture = value; }
         }
 
-        /// <summary>
-        /// Gets or sets the IgnoreReason property of the PropertyBag.
-        /// Provided for the convenience of internal methods.
-        /// </summary>
-        internal string SkipReason
-        {
-            get
-            {
-                return (string)Properties.Get(PropertyNames.SkipReason);
-            }
-            set
-            {
-                Properties.Set(PropertyNames.SkipReason, value);
-            }
-        }
-
-#if !NETCF_1_0
-        /// <summary>
-        /// Gets the ApartmentState property from the PropertyBag.
-        /// Provided for the convenience of internal methods.
-        /// </summary>
-        internal ApartmentState ApartmentState
-        {
-            get
-            {
-                return (ApartmentState)Properties.GetSetting(PropertyNames.ApartmentState, ApartmentState.Unknown);
-            }
-        }
-#endif
-
 #if !NUNITLITE
-        /// <summary>
-        /// Gets the current ApartmentState. Provided to 
-        /// encapsulate CLR version differences.
-        /// </summary>
-        internal ApartmentState CurrentApartmentState
-        {
-            get
-            {
-#if CLR_2_0 || CLR_4_0
-                return Thread.CurrentThread.GetApartmentState();
-#else
-                return Thread.CurrentThread.ApartmentState;
-#endif
-            }
-        }
-
         /// <summary>
         /// Gets a boolean value indicating whether this 
         /// test should run on it's own thread.
@@ -480,9 +405,18 @@ namespace NUnit.Framework.Internal
         {
             get
             {
-                return Properties.GetSetting(PropertyNames.RequiresThread, false)
-                    || ApartmentState != ApartmentState.Unknown
-                    && ApartmentState != CurrentApartmentState;
+                if (Properties.GetSetting(PropertyNames.RequiresThread, false))
+                    return true;
+
+                ApartmentState state = (ApartmentState)Properties.GetSetting(PropertyNames.ApartmentState, ApartmentState.Unknown);
+                if (state == ApartmentState.Unknown)
+                    return false;
+
+#if CLR_2_0 || CLR_4_0
+                return state != Thread.CurrentThread.GetApartmentState();
+#else
+                return state != Thread.CurrentThread.ApartmentState;
+#endif
             }
         }
 #endif
@@ -522,30 +456,6 @@ namespace NUnit.Framework.Internal
                 }
 
                 return tearDownMethods;
-            }
-        }
-
-        /// <summary>
-        /// Gets the set up methods.
-        /// </summary>
-        /// <returns></returns>
-        internal MethodInfo[] OneTimeSetUpMethods
-        {
-            get
-            {
-                return fixtureSetUpMethods;
-            }
-        }
-
-        /// <summary>
-        /// Gets the tear down methods.
-        /// </summary>
-        /// <returns></returns>
-        internal MethodInfo[] OneTimeTearDownMethods
-        {
-            get
-            {
-                return fixtureTearDownMethods;
             }
         }
 

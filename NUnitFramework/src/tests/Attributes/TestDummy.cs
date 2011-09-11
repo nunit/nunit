@@ -57,6 +57,11 @@ namespace NUnit.Framework.Attributes
             get { return "NUnit.Framework.Attributes.TestDummy"; }
         }
 
+        public Type FixtureType
+        {
+            get { return null; }
+        }
+
         public RunState RunState
         {
             get

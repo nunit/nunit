@@ -42,6 +42,12 @@ namespace NUnit.Framework.Api
         public static readonly string SkipReason = "_SKIPREASON";
 
         /// <summary>
+        /// The stack trace from any data provider that threw
+        /// an exception.
+        /// </summary>
+        public static readonly string ProviderStackTrace = "_PROVIDERSTACKTRACE";
+
+        /// <summary>
         /// The culture to be set for a test
         /// </summary>
         public static readonly string SetCulture = "SetCulture";

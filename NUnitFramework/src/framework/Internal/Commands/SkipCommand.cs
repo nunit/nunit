@@ -41,12 +41,12 @@ namespace NUnit.Framework.Internal.Commands
 
         /// <summary>
         /// Overridden to simply set the CurrentResult to the
-        /// appropriate Skipped state
+        /// appropriate Skipped state.
         /// </summary>
         /// <param name="testObject">The object on which the test should run.</param>
-        /// <param name="arguments">The arguments to be used in running the test or null.</param>
+        /// <param name="listener">An ITestListener to receive any events.</param>
         /// <returns>A TestResult</returns>
-        public override TestResult Execute(object TestObject, ITestListener listener)
+        public override TestResult Execute(object testObject, ITestListener listener)
         {
             TestResult testResult = this.Test.MakeTestResult();
 
@@ -54,22 +54,27 @@ namespace NUnit.Framework.Internal.Commands
             {
                 default:
                 case RunState.Skipped:
-                    testResult.SetResult(ResultState.Skipped, Test.SkipReason);
+                    testResult.SetResult(ResultState.Skipped, GetSkipReason());
                     break;
                 case RunState.Ignored:
-                    testResult.SetResult(ResultState.Ignored, Test.SkipReason);
+                    testResult.SetResult(ResultState.Ignored, GetSkipReason());
                     break;
                 case RunState.NotRunnable:
-                    if (Test.BuilderException != null)
-                        testResult.SetResult(ResultState.NotRunnable,
-                            ExceptionHelper.BuildMessage(Test.BuilderException),
-                            ExceptionHelper.BuildStackTrace(Test.BuilderException));
-                    else
-                        testResult.SetResult(ResultState.NotRunnable, Test.SkipReason);
+                    testResult.SetResult(ResultState.NotRunnable, GetSkipReason(), GetProviderStackTrace());
                     break;
             }
 
             return testResult;
+        }
+
+        private string GetSkipReason()
+        {
+            return (string)Test.Properties.Get(PropertyNames.SkipReason);
+        }
+
+        private string GetProviderStackTrace()
+        {
+            return (string)Test.Properties.Get(PropertyNames.ProviderStackTrace);
         }
     }
 }

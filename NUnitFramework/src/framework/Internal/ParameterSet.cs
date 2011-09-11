@@ -41,7 +41,6 @@ namespace NUnit.Framework.Internal
         #region Instance Fields
 
         private RunState runState;
-        private Exception providerException;
         private object[] arguments;
         private object[] originalArguments;
         private object result;
@@ -67,14 +66,6 @@ namespace NUnit.Framework.Internal
         {
             get { return runState; }
             set { runState = value; }
-        }
-
-        /// <summary>
-        /// Holds any exception thrown by the parameter provider
-        /// </summary>
-        public Exception ProviderException
-        {
-            get { return providerException; }
         }
 
         /// <summary>
@@ -186,7 +177,8 @@ namespace NUnit.Framework.Internal
         public ParameterSet(Exception exception)
         {
             this.runState = RunState.NotRunnable;
-            this.providerException = exception;
+            this.Properties.Set(PropertyNames.SkipReason, ExceptionHelper.BuildMessage(exception));
+            this.Properties.Set(PropertyNames.ProviderStackTrace, ExceptionHelper.BuildStackTrace(exception));
         }
 
         /// <summary>
@@ -238,9 +230,6 @@ namespace NUnit.Framework.Internal
             foreach (string key in Properties.Keys)
                 foreach (object value in Properties[key])
                     testMethod.Properties.Add(key, value);
-
-            if (testMethod.BuilderException != null)
-                testMethod.RunState = RunState.NotRunnable;
         }
 
         #endregion

@@ -61,7 +61,7 @@ namespace NUnit.Framework.Builders
                 if (!IsValidFixtureType(type, ref reason))
                 {
                     suite.RunState = RunState.NotRunnable;
-                    suite.SkipReason = reason;
+                    suite.Properties.Set(PropertyNames.SkipReason, reason);
                 }
             }
 
@@ -71,7 +71,7 @@ namespace NUnit.Framework.Builders
             if (method.GetParameters().Length > 0)
             {
                 suite.RunState = RunState.NotRunnable;
-                suite.SkipReason = "Suite property may not be indexed";
+                suite.Properties.Set(PropertyNames.SkipReason, "Suite property may not be indexed");
             }
             // TODO: Stop checking for name
             else if (method.ReturnType.FullName == "NUnit.Framework.Internal.TestSuite")
@@ -94,7 +94,7 @@ namespace NUnit.Framework.Builders
             else
             {
                 suite.RunState = RunState.NotRunnable;
-                suite.SkipReason = "Suite property must return either TestSuite or IEnumerable";
+                suite.Properties.Set(PropertyNames.SkipReason, "Suite property must return either TestSuite or IEnumerable");
             }
 
             return suite;

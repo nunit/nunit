@@ -198,15 +198,11 @@ namespace NUnit.Framework.Builders
                 {
                     ExpectedExceptionAttribute attr = attributes[0];
                     string handlerName = attr.Handler;
-                    if (handlerName != null)
-                    {
-                        if (GetExceptionHandler(testMethod.FixtureType, handlerName) == null)
-                        {
-                            testMethod.RunState = RunState.NotRunnable;
-                            testMethod.SkipReason = string.Format(
-                                "The specified exception handler {0} was not found", handlerName);
-                        }
-                    }
+                    if (handlerName != null && GetExceptionHandler(testMethod.FixtureType, handlerName) == null)
+                        MarkAsNotRunnable(
+                            testMethod, 
+                            string.Format("The specified exception handler {0} was not found", handlerName));
+
                     testMethod.CustomDecorators.Add(new ExpectedExceptionDecorator(attr.ExceptionData));
                 }
             }
@@ -260,24 +256,18 @@ namespace NUnit.Framework.Builders
 		{
             if (testMethod.Method.IsAbstract)
             {
-                testMethod.RunState = RunState.NotRunnable;
-                testMethod.SkipReason = "Method is abstract";
-                return false;
+                return MarkAsNotRunnable(testMethod, "Method is abstract");
             }
 
             if (!testMethod.Method.IsPublic)
             {
-                testMethod.RunState = RunState.NotRunnable;
-                testMethod.SkipReason = "Method is not public";
-                return false;
+                return MarkAsNotRunnable(testMethod, "Method is not public");
             }
 
 #if NETCF
             if (testMethod.Method.IsGenericMethodDefinition)
             {
-                testMethod.RunState = RunState.NotRunnable;
-                testMethod.SkipReason = "Generic test methods are not supported under .NET CF";
-                return false;
+                return MarkAsNotRunnable(testMethod, "Generic test methods are not supported under .NET CF");
             }
 #endif
 
@@ -293,7 +283,6 @@ namespace NUnit.Framework.Builders
                 testMethod.expectedResult = parms.Result;
                 testMethod.hasExpectedResult = parms.HasExpectedResult;
                 testMethod.RunState = parms.RunState;
-                testMethod.BuilderException = parms.ProviderException;
 
                 arglist = parms.Arguments;
 
@@ -307,30 +296,22 @@ namespace NUnit.Framework.Builders
             if (!testMethod.Method.ReturnType.Equals(typeof(void)) &&
                 (parms == null || !parms.HasExpectedResult && !parms.ExceptionExpected))
             {
-                testMethod.RunState = RunState.NotRunnable;
-                testMethod.SkipReason = "Method has non-void return value";
-                return false;
+                return MarkAsNotRunnable(testMethod, "Method has non-void return value");
             }
 
             if (argsProvided > 0 && argsNeeded == 0)
             {
-                testMethod.RunState = RunState.NotRunnable;
-                testMethod.SkipReason = "Arguments provided for method not taking any";
-                return false;
+                return MarkAsNotRunnable(testMethod, "Arguments provided for method not taking any");
             }
 
             if (argsProvided == 0 && argsNeeded > 0)
             {
-                testMethod.RunState = RunState.NotRunnable;
-                testMethod.SkipReason = "No arguments were provided";
-                return false;
+                return MarkAsNotRunnable(testMethod, "No arguments were provided");
             }
 
             if (argsProvided != argsNeeded)
             {
-                testMethod.RunState = RunState.NotRunnable;
-                testMethod.SkipReason = "Wrong number of arguments provided";
-                return false;
+                return MarkAsNotRunnable(testMethod, "Wrong number of arguments provided");
             }
 
 #if (CLR_2_0 || CLR_4_0) && !NETCF
@@ -340,9 +321,7 @@ namespace NUnit.Framework.Builders
                 foreach (object o in typeArguments)
                     if (o == null)
                     {
-                        testMethod.RunState = RunState.NotRunnable;
-                        testMethod.SkipReason = "Unable to determine type arguments for method";
-                        return false;
+                        return MarkAsNotRunnable(testMethod, "Unable to determine type arguments for method");
                     }
 
                 testMethod.method = testMethod.Method.MakeGenericMethod(typeArguments);
@@ -388,6 +367,13 @@ namespace NUnit.Framework.Builders
                 null,
                 new Type[] { typeof(System.Exception) },
                 null);
+        }
+
+        private static bool MarkAsNotRunnable(TestMethod testMethod, string reason)
+        {
+            testMethod.RunState = RunState.NotRunnable;
+            testMethod.Properties.Set(PropertyNames.SkipReason, reason);
+            return false;
         }
 
         #endregion

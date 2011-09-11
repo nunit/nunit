@@ -39,8 +39,8 @@ namespace NUnit.Framework.Internal
         /// <param name="fixtureType">Type of the fixture.</param>
 		public LegacySuite( Type fixtureType ) : base( fixtureType )
 		{
-            this.fixtureSetUpMethods = GetSetUpTearDownMethods( typeof(NUnit.Framework.TestFixtureSetUpAttribute) );
-            this.fixtureTearDownMethods = GetSetUpTearDownMethods( typeof(NUnit.Framework.TestFixtureTearDownAttribute) );
+            this.oneTimeSetUpMethods = GetSetUpTearDownMethods( typeof(NUnit.Framework.TestFixtureSetUpAttribute) );
+            this.oneTimeTearDownMethods = GetSetUpTearDownMethods( typeof(NUnit.Framework.TestFixtureTearDownAttribute) );
         }
 
         private MethodInfo[] GetSetUpTearDownMethods(Type attrType)
@@ -53,7 +53,9 @@ namespace NUnit.Framework.Internal
                      method.GetParameters().Length > 0 ||
                      !method.ReturnType.Equals(typeof(void)))
                 {
-                    this.SkipReason = string.Format("Invalid signature for SetUp or TearDown method: {0}", method.Name);
+                    this.Properties.Set(
+                        PropertyNames.SkipReason,
+                        string.Format("Invalid signature for SetUp or TearDown method: {0}", method.Name));
                     this.RunState = RunState.NotRunnable;
                     break;
                 }
