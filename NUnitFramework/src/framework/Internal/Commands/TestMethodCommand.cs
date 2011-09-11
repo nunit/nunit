@@ -47,17 +47,6 @@ namespace NUnit.Framework.Internal.Commands
 
         internal object[] arguments;
 
-        ///// <summary>
-        ///// The SetUp method.
-        ///// </summary>
-        //private MethodInfo[] setUpMethods;
-
-        ///// <summary>
-        ///// The teardown method
-        ///// </summary>
-        //private MethodInfo[] tearDownMethods;
-
-
         #endregion
 
         /// <summary>
@@ -69,9 +58,6 @@ namespace NUnit.Framework.Internal.Commands
         {
             this.test = Test as TestMethod;
             this.method = test.Method;
-            //this.arguments = test.arguments;
-            //this.setUpMethods = test.SetUpMethods;
-            //this.tearDownMethods = test.TearDownMethods;
         }
 
         /// <summary>
@@ -85,8 +71,6 @@ namespace NUnit.Framework.Internal.Commands
         {
             try
             {
-                //ApplySettingsToExecutionContext();
-
                 // This is used in case we are running a parameterized
                 // test case directly, without having created the fixture
                 if (testObject == null && !method.IsStatic)
@@ -104,29 +88,5 @@ namespace NUnit.Framework.Internal.Commands
                 return CurrentResult;
             }
         }
-
-//        /// <summary>
-//        /// Applies the culture settings specified on the test
-//        /// to the TestExecutionContext.
-//        /// </summary>
-//        private void ApplySettingsToExecutionContext()
-//        {
-//#if !NETCF
-//            string setCulture = (string)test.Properties.Get(PropertyNames.SetCulture);
-//            if (setCulture != null)
-//                TestExecutionContext.CurrentContext.CurrentCulture =
-//                    new System.Globalization.CultureInfo(setCulture);
-
-//            string setUICulture = (string)test.Properties.Get(PropertyNames.SetUICulture);
-//            if (setUICulture != null)
-//                TestExecutionContext.CurrentContext.CurrentUICulture =
-//                    new System.Globalization.CultureInfo(setUICulture);
-//#endif
-
-//#if !NUNITLITE
-//            if (test.Properties.ContainsKey(PropertyNames.Timeout))
-//                TestExecutionContext.CurrentContext.TestCaseTimeout = (int)test.Properties.Get(PropertyNames.Timeout);
-//#endif
-//        }
     }
 }

@@ -21,6 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
+
 namespace NUnit.Framework.Api
 {
 	/// <summary>
@@ -37,27 +39,26 @@ namespace NUnit.Framework.Api
         int Id { get; set; }
 
         /// <summary>
-        /// Gets or sets the name of the test
+        /// Gets the name of the test
         /// </summary>
         string Name { get; }
 
         /// <summary>
-        /// Gets or sets the fully qualified name of the test
+        /// Gets the fully qualified name of the test
         /// </summary>
         string FullName { get; }
+
+        /// <summary>
+        /// Gets the Type of the test fixture, if applicable, or
+        /// null if no fixture type is associated with this test.
+        /// </summary>
+        Type FixtureType { get; }
 
         /// <summary>
         /// Indicates whether the test can be run using
         /// the RunState enum.
         /// </summary>
 		RunState RunState { get; set; }
-
-        /// <summary>
-        /// A string representing the type of test. Used as an attribute
-        /// value in the XML representation of a test and has no other
-        /// function in the framework.
-        /// </summary>
-        //string TestKind { get; }
 
         /// <summary>
         /// Count of the test cases ( 1 if this is a test case )

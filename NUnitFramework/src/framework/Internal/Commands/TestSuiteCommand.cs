@@ -104,8 +104,8 @@ namespace NUnit.Framework.Internal.Commands
         {
             if (fixtureType != null)
             {
-                if (Test.OneTimeSetUpMethods != null)
-                    foreach (MethodInfo method in Test.OneTimeSetUpMethods)
+                if (suite.OneTimeSetUpMethods != null)
+                    foreach (MethodInfo method in suite.OneTimeSetUpMethods)
                         Reflect.InvokeMethod(method, method.IsStatic ? null : testObject);
             }
         }
@@ -120,12 +120,12 @@ namespace NUnit.Framework.Internal.Commands
             {
                 try
                 {
-                    if (Test.OneTimeTearDownMethods != null)
+                    if (suite.OneTimeTearDownMethods != null)
                     {
-                        int index = Test.OneTimeTearDownMethods.Length;
+                        int index = suite.OneTimeTearDownMethods.Length;
                         while (--index >= 0)
                         {
-                            MethodInfo fixtureTearDown = Test.OneTimeTearDownMethods[index];
+                            MethodInfo fixtureTearDown = suite.OneTimeTearDownMethods[index];
                             Reflect.InvokeMethod(fixtureTearDown, fixtureTearDown.IsStatic ? null : testObject);
                         }
                     }

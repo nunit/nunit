@@ -49,8 +49,8 @@ namespace NUnit.Framework.Internal
             if (index > 0)
                 this.Name = this.Name.Substring(index + 1);
             
-			this.fixtureSetUpMethods = GetSetUpTearDownMethods( typeof(NUnit.Framework.SetUpAttribute) );
-			this.fixtureTearDownMethods = GetSetUpTearDownMethods( typeof(NUnit.Framework.TearDownAttribute) );
+			this.oneTimeSetUpMethods = GetSetUpTearDownMethods( typeof(NUnit.Framework.SetUpAttribute) );
+			this.oneTimeTearDownMethods = GetSetUpTearDownMethods( typeof(NUnit.Framework.TearDownAttribute) );
 		}
 
         private MethodInfo[] GetSetUpTearDownMethods(Type attrType)
@@ -63,7 +63,9 @@ namespace NUnit.Framework.Internal
                      method.GetParameters().Length > 0 ||
                      !method.ReturnType.Equals(typeof(void)))
                 {
-                    this.SkipReason = string.Format("Invalid signature for SetUp or TearDown method: {0}", method.Name);
+                    this.Properties.Set(
+                        PropertyNames.SkipReason,
+                        string.Format("Invalid signature for SetUp or TearDown method: {0}", method.Name));
                     this.RunState = RunState.NotRunnable;
                     break;
                 }

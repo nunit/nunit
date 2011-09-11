@@ -85,12 +85,13 @@ namespace NUnit.Framework.Internal.Commands
             thread.CurrentCulture = Thread.CurrentThread.CurrentCulture;
             thread.CurrentUICulture = Thread.CurrentThread.CurrentUICulture;
             
-            // Setting to Unknown causes an error under the Mono 1.0 profile
-            if (Test.ApartmentState != ApartmentState.Unknown)
+            // NOTE: Setting to Unknown causes an error under the Mono 1.0 profile
+            ApartmentState state = (ApartmentState)Test.Properties.GetSetting(PropertyNames.ApartmentState, ApartmentState.Unknown);
+            if (state != ApartmentState.Unknown)
 #if CLR_2_0 || CLR_4_0
-                thread.SetApartmentState(Test.ApartmentState);
+                thread.SetApartmentState(state);
 #else
-                thread.ApartmentState = Test.ApartmentState;
+                thread.ApartmentState = state;
 #endif
 
 #if NUNITLITE

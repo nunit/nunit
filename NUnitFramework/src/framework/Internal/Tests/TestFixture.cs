@@ -49,8 +49,8 @@ namespace NUnit.Framework.Internal
         public TestFixture(Type fixtureType, object[] arguments)
             : base(fixtureType, arguments) 
         {
-            this.fixtureSetUpMethods =      GetSetUpTearDownMethods( typeof(TestFixtureSetUpAttribute) );
-            this.fixtureTearDownMethods =   GetSetUpTearDownMethods( typeof( TestFixtureTearDownAttribute) );
+            this.oneTimeSetUpMethods =      GetSetUpTearDownMethods( typeof(TestFixtureSetUpAttribute) );
+            this.oneTimeTearDownMethods =   GetSetUpTearDownMethods( typeof( TestFixtureTearDownAttribute) );
             this.setUpMethods =             GetSetUpTearDownMethods( typeof(SetUpAttribute) );
             this.tearDownMethods =          GetSetUpTearDownMethods( typeof(TearDownAttribute) );
         }
@@ -65,7 +65,9 @@ namespace NUnit.Framework.Internal
                      method.GetParameters().Length > 0 ||
                      !method.ReturnType.Equals(typeof(void)))
                 {
-                    this.SkipReason = string.Format("Invalid signature for SetUp or TearDown method: {0}", method.Name);
+                    this.Properties.Set(
+                        PropertyNames.SkipReason, 
+                        string.Format("Invalid signature for SetUp or TearDown method: {0}", method.Name));
                     this.RunState = RunState.NotRunnable;
                     break;
                 }
