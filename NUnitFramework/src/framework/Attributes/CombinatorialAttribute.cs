@@ -31,7 +31,7 @@ namespace NUnit.Framework
     /// data provided. Since this is the default, the attribute is
     /// not needed.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited=false)]
     public class CombinatorialAttribute : PropertyAttribute
     {
         /// <summary>

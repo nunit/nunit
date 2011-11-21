@@ -30,7 +30,7 @@ namespace NUnit.Framework
 	/// Attribute used to provide descriptive text about a 
 	/// test case or fixture.
 	/// </summary>
-    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class | AttributeTargets.Assembly, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class | AttributeTargets.Assembly, AllowMultiple = false, Inherited=false)]
     public sealed class DescriptionAttribute : PropertyAttribute
     {
         /// <summary>

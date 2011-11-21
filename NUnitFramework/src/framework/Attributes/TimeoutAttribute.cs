@@ -35,7 +35,7 @@ namespace NUnit.Framework
     /// is exceeded. Used on a method or assembly, sets the default timeout 
     /// for all contained test methods.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class | AttributeTargets.Assembly, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class | AttributeTargets.Assembly, AllowMultiple = false, Inherited=false)]
     public class TimeoutAttribute : PropertyAttribute, ICommandDecorator
     {
         /// <summary>

@@ -31,7 +31,7 @@ namespace NUnit.Framework
     /// <summary>
     /// ExpectedExceptionAttribute
     /// </summary>
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited=false)]
     public class ExpectedExceptionAttribute : NUnitAttribute
     {
         private ExpectedExceptionData exceptionData = new ExpectedExceptionData();

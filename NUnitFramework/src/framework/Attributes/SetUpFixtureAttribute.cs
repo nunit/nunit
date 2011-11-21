@@ -29,7 +29,7 @@ namespace NUnit.Framework
 	/// <summary>
 	/// SetUpFixtureAttribute is used to identify a SetUpFixture
 	/// </summary>
-	[AttributeUsage(AttributeTargets.Class, AllowMultiple=false)]
+	[AttributeUsage(AttributeTargets.Class, AllowMultiple=false, Inherited=true)]
 	public class SetUpFixtureAttribute : NUnitAttribute
 	{
 	}

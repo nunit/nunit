@@ -47,7 +47,7 @@ namespace NUnit.Framework
     /// }
     /// </example>
     /// 
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited=true)]
     public class TheoryAttribute : NUnitAttribute
     {
         //private string description;
