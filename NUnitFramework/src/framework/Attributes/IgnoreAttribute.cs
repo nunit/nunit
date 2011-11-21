@@ -31,7 +31,7 @@ namespace NUnit.Framework
 	/// Ignored tests result in a warning message when the
 	/// tests are run.
 	/// </summary>
-	[AttributeUsage(AttributeTargets.Method|AttributeTargets.Class|AttributeTargets.Assembly, AllowMultiple=false)]
+	[AttributeUsage(AttributeTargets.Method|AttributeTargets.Class|AttributeTargets.Assembly, AllowMultiple=false, Inherited=false)]
 	public class IgnoreAttribute : TestModificationAttribute, IApplyToTest
 	{
 		private string reason;

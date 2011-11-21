@@ -31,7 +31,7 @@ namespace NUnit.Framework
     /// data provided. Arguments will be combined into test cases,
     /// taking the next value of each argument until all are used.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited=false)]
     public class SequentialAttribute : PropertyAttribute
     {
         /// <summary>

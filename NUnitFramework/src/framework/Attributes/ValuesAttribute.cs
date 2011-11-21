@@ -31,7 +31,7 @@ namespace NUnit.Framework
     /// ValuesAttribute is used to provide literal arguments for
     /// an individual parameter of a test.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false, Inherited = true)]
+    [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false, Inherited = false)]
     public class ValuesAttribute : DataAttribute, Api.IParameterDataSource
     {
         /// <summary>
