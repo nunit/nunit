@@ -60,7 +60,7 @@ namespace NUnit.Framework.Internal
                 {
                     OperatingSystem os = Environment.OSVersion;
 
-                    if (os.Platform == PlatformID.Win32NT && os.Version.Major >= 6)
+                    if (os.Platform == PlatformID.Win32NT && os.Version.Major >= 5)
                     {
                         OSVERSIONINFOEX osvi = new OSVERSIONINFOEX();
                         osvi.dwOSVersionInfoSize = (uint)Marshal.SizeOf(osvi);
@@ -285,7 +285,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public bool IsWinXP
         {
-            get { return IsNT5 && version.Minor == 1; }
+            get { return IsNT5 && (version.Minor == 1  || version.Minor == 2 && Product == ProductType.WorkStation); }
         }
 
         /// <summary>
@@ -293,7 +293,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public bool IsWin2003Server
         {
-            get { return IsNT5 && version.Minor == 2; }
+            get { return IsNT5 && version.Minor == 2 && Product == ProductType.Server; }
         }
 
         /// <summary>
@@ -313,11 +313,35 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// Return true if the platform is Windows 2008 Server
+        /// Return true if the platform is Windows 2008 Server (original or R2)
         /// </summary>
         public bool IsWin2008Server
+		{
+			get { return IsNT6 && Product == ProductType.Server; }
+		}
+		
+		/// <summary>
+		/// Return true if the platform is Windows 2008 Server (original)
+		/// </summary>
+		public bool IsWin2008ServerR1
         {
             get { return IsNT6 && version.Minor == 0 && Product == ProductType.Server; }
         }
-    }
+
+	    /// <summary>
+        /// Return true if the platform is Windows 2008 Server R2
+        /// </summary>
+        public bool IsWin2008ServerR2
+        {
+            get { return IsNT6 && version.Minor == 1 && Product == ProductType.Server; }
+        }
+ 
+        /// <summary>
+        /// Return true if the platform is Windows 7
+        /// </summary>
+        public bool IsWindows7
+        {
+            get { return IsNT6 && version.Minor == 1 && Product == ProductType.WorkStation; }
+        }
+	}
 }
