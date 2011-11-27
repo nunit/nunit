@@ -37,6 +37,7 @@ namespace NUnit.Framework.Internal
 	{
 		private ITestListener eventListener;
 		private TestOutputType type;
+		private StringBuilder buffer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EventListenerTextWriter"/> class.
@@ -47,6 +48,7 @@ namespace NUnit.Framework.Internal
 		{
 			this.eventListener = eventListener;
 			this.type = type;
+			this.buffer = new StringBuilder();
 		}
 
         /// <summary>
@@ -55,7 +57,9 @@ namespace NUnit.Framework.Internal
         /// <param name="aChar">A char.</param>
 		override public void Write(char aChar)
 		{
-			this.eventListener.TestOutput( new TestOutput( aChar.ToString(), this.type ) );
+			this.buffer.Append(aChar);
+			if (aChar == '\n')
+				Flush();
 		}
 
         /// <summary>
@@ -64,7 +68,9 @@ namespace NUnit.Framework.Internal
         /// <param name="aString">A string.</param>
 		override public void Write(string aString)
 		{
-			this.eventListener.TestOutput( new TestOutput( aString, this.type ) );
+			this.buffer.Append(aString);
+			if (aString[aString.Length-1] == '\n')
+				Flush();
 		}
 
         /// <summary>
@@ -73,7 +79,9 @@ namespace NUnit.Framework.Internal
         /// <param name="aString">A string.</param>
 		override public void WriteLine(string aString)
 		{
-			this.eventListener.TestOutput( new TestOutput( aString + this.NewLine, this.type ) );
+			this.buffer.Append(aString);
+			this.buffer.Append(this.NewLine);
+			Flush();
 		}
 
         /// <summary>
@@ -87,77 +95,88 @@ namespace NUnit.Framework.Internal
 		{
 			get { return Encoding.Default; }
 		}
+		
+		override public void Flush()
+		{
+			if (buffer.Length > 0)
+			{
+				this.eventListener.TestOutput( new TestOutput( buffer.ToString(), this.type ) );
+				buffer.Length = 0;
+			}
+		}
 	}
 
-    ///// <summary>
-    ///// This wrapper adds buffering to improve cross-domain performance.
-    ///// </summary>
-    //public class BufferedEventListenerTextWriter : TextWriter
-    //{
-    //    private ITestListener listener;
-    //    private TestOutputType type;
-    //    private const int MAX_BUFFER = 1024;
-    //    private StringBuilder sb = new StringBuilder( MAX_BUFFER );
+#if false
+    /// <summary>
+    /// This wrapper adds buffering to improve cross-domain performance.
+    /// </summary>
+    public class BufferedEventListenerTextWriter : TextWriter
+    {
+        private ITestListener listener;
+        private TestOutputType type;
+        private const int MAX_BUFFER = 1024;
+        private StringBuilder sb = new StringBuilder( MAX_BUFFER );
 
-    //    public BufferedEventListenerTextWriter( ITestListener listener, TestOutputType type )
-    //    {
-    //        this.listener = listener;
-    //        this.type = type;
-    //    }
+        public BufferedEventListenerTextWriter( ITestListener listener, TestOutputType type )
+        {
+            this.listener = listener;
+            this.type = type;
+        }
 
-    //    public override Encoding Encoding
-    //    {
-    //        get
-    //        {
-    //            return Encoding.Default;
-    //        }
-    //    }
+        public override Encoding Encoding
+        {
+            get
+            {
+                return Encoding.Default;
+            }
+        }
 	
-    //    override public void Write(char ch)
-    //    {
-    //        lock( sb )
-    //        {
-    //            sb.Append( ch );
-    //            this.CheckBuffer();
-    //        }
-    //    }
+        override public void Write(char ch)
+        {
+            lock( sb )
+            {
+                sb.Append( ch );
+                this.CheckBuffer();
+            }
+        }
 
-    //    override public void Write(string str)
-    //    {
-    //        lock( sb )
-    //        {
-    //            sb.Append( str );
-    //            this.CheckBuffer();
-    //        }
-    //    }
+        override public void Write(string str)
+        {
+            lock( sb )
+            {
+                sb.Append( str );
+                this.CheckBuffer();
+            }
+        }
 
-    //    override public void WriteLine(string str)
-    //    {
-    //        lock( sb )
-    //        {
-    //            sb.Append( str );
-    //            sb.Append( base.NewLine );
-    //            this.CheckBuffer();
-    //        }
-    //    }
+        override public void WriteLine(string str)
+        {
+            lock( sb )
+            {
+                sb.Append( str );
+                sb.Append( base.NewLine );
+                this.CheckBuffer();
+            }
+        }
 
-    //    override public void Flush()
-    //    {
-    //        if ( sb.Length > 0 )
-    //        {
-    //            lock( sb )
-    //            {
-    //                TestOutput output = new TestOutput(sb.ToString(), this.type);
-    //                this.listener.TestOutput( output );
-    //                sb.Length = 0;
-    //            }
-    //        }
-    //    }
+        override public void Flush()
+        {
+            if ( sb.Length > 0 )
+            {
+                lock( sb )
+                {
+                    TestOutput output = new TestOutput(sb.ToString(), this.type);
+                    this.listener.TestOutput( output );
+                    sb.Length = 0;
+                }
+            }
+        }
 
-    //    private void CheckBuffer()
-    //    {
-    //        if ( sb.Length >= MAX_BUFFER )
-    //            this.Flush();
-    //    }
-    //}
+        private void CheckBuffer()
+        {
+            if ( sb.Length >= MAX_BUFFER )
+                this.Flush();
+        }
+    }
+#endif
 }
