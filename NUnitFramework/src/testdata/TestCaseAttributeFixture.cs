@@ -41,6 +41,14 @@ namespace NUnit.TestData.TestCaseAttributeFixture
 		public void MethodHasTestNameSpecified(int x, int y, int z)
 		{}
  
+        [TestCase(2, 3, 4, Category = "XYZ")]
+        public void MethodHasSingleCategory(int x, int y, int z)
+        { }
+ 
+        [TestCase(2, 3, 4, Category = "X,Y,Z")]
+        public void MethodHasMultipleCategories(int x, int y, int z)
+        { }
+ 
 		[TestCase(2, 2000000, Result=4)]
 		public int MethodCausesConversionOverflow(short x, short y)
 		{

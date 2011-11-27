@@ -208,6 +208,28 @@ namespace NUnit.Framework
         }
 
         /// <summary>
+        /// Gets and sets the category for this fixture.
+        /// May be a comma-separated list of categories.
+        /// </summary>
+        public string Category
+        {
+            get { return Properties.Get(PropertyNames.Category) as string; }
+            set 
+			{ 
+				foreach (string cat in value.Split(new char[] { ',' }) )
+					Properties.Add(PropertyNames.Category, cat); 
+			}
+        }
+ 
+        /// <summary>
+        /// Gets a list of categories for this fixture
+        /// </summary>
+        public IList Categories
+        {
+            get { return Properties[PropertyNames.Category] as IList; }
+        }
+ 
+        /// <summary>
         /// NYI
         /// </summary>
         public IPropertyBag Properties
