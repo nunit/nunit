@@ -30,7 +30,7 @@ namespace NUnit.Framework
     /// and/or TearDown methods that apply to all the tests in a
     /// namespace or an assembly.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited=true)]
     public class SetUpAttribute : NUnitAttribute
     { }
 
@@ -39,7 +39,7 @@ namespace NUnit.Framework
     /// and/or TearDown methods that apply to all the tests in a
     /// namespace or an assembly.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited=true)]
     public class PreTestAttribute : NUnitAttribute
     { }
 
@@ -48,7 +48,7 @@ namespace NUnit.Framework
     /// and/or TearDown methods that apply to all the tests in a
     /// namespace or an assembly.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited=true)]
     public class PostTestAttribute : NUnitAttribute
     { }
 }

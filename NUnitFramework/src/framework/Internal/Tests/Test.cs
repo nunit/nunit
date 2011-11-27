@@ -346,7 +346,7 @@ namespace NUnit.Framework.Internal
         /// <param name="provider">An object implementing ICustomAttributeProvider</param>
         public void ApplyCommonAttributes(ICustomAttributeProvider provider)
         {
-            foreach (Attribute attribute in provider.GetCustomAttributes(typeof(NUnitAttribute), false))
+            foreach (Attribute attribute in provider.GetCustomAttributes(typeof(NUnitAttribute), true))
             {
                 IApplyToTest iApply = attribute as IApplyToTest;
                 if (iApply != null)

@@ -32,7 +32,7 @@ namespace NUnit.Framework
 	/// or if it is included by use of a filter. The test will not be
 	/// run simply because an enclosing suite is run.
 	/// </summary>
-	[AttributeUsage(AttributeTargets.Class|AttributeTargets.Method|AttributeTargets.Assembly, AllowMultiple=false)]
+	[AttributeUsage(AttributeTargets.Class|AttributeTargets.Method|AttributeTargets.Assembly, AllowMultiple=false, Inherited=false)]
 	public class ExplicitAttribute : TestModificationAttribute, IApplyToTest
 	{
         private string reason;

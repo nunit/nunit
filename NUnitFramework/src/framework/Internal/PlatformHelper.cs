@@ -41,7 +41,7 @@ namespace NUnit.Framework.Internal
 		/// Comma-delimited list of all supported OS platform constants
 		/// </summary>
 		public static readonly string OSPlatforms =
-			"Win,Win32,Win32S,Win32NT,Win32Windows,WinCE,Win95,Win98,WinMe,NT3,NT4,NT5,NT6,Win2K,WinXP,Win2003Server,Vista,Win2008Server,Unix,Linux";
+			"Win,Win32,Win32S,Win32NT,Win32Windows,WinCE,Win95,Win98,WinMe,NT3,NT4,NT5,NT6,Win2K,WinXP,Win2003Server,Vista,Win2008Server,Win2008ServerR2,Windows7,Unix,Linux";
 		
 		/// <summary>
 		/// Comma-delimited list of all supported Runtime platform constants
@@ -132,112 +132,91 @@ namespace NUnit.Framework.Internal
 				return IsPlatformSupported( platform.Split( new char[] { ',' } ) );
 
 			string platformName = platform.Trim();
-			bool nameOK = false;
+			bool isSupported = false;
 
-			string versionSpecification = null;
-
-			string[] parts = platformName.Split( new char[] { '-' } );
-			if ( parts.Length == 2 )
-			{
-				platformName = parts[0];
-				versionSpecification = parts[1];
-			}
+//			string versionSpecification = null;
+//
+//			string[] parts = platformName.Split( new char[] { '-' } );
+//			if ( parts.Length == 2 )
+//			{
+//				platformName = parts[0];
+//				versionSpecification = parts[1];
+//			}
 
 			switch( platformName.ToUpper() )
 			{
 				case "WIN":
 				case "WIN32":
-					nameOK = os.IsWindows;
+					isSupported = os.IsWindows;
 					break;
 				case "WIN32S":
-                    nameOK = os.IsWin32S;
+                    isSupported = os.IsWin32S;
 					break;
 				case "WIN32WINDOWS":
-					nameOK = os.IsWin32Windows;
+					isSupported = os.IsWin32Windows;
 					break;
 				case "WIN32NT":
-					nameOK = os.IsWin32NT;
+					isSupported = os.IsWin32NT;
 					break;
 				case "WINCE":
-                    nameOK = os.IsWinCE;
+                    isSupported = os.IsWinCE;
 					break;
 				case "WIN95":
-                    nameOK = os.IsWin95;
+                    isSupported = os.IsWin95;
 					break;
 				case "WIN98":
-                    nameOK = os.IsWin98;
+                    isSupported = os.IsWin98;
 					break;
 				case "WINME":
-					nameOK = os.IsWinME;
+					isSupported = os.IsWinME;
 					break;
 				case "NT3":
-                    nameOK = os.IsNT3;
+                    isSupported = os.IsNT3;
 					break;
 				case "NT4":
-                    nameOK = os.IsNT4;
+                    isSupported = os.IsNT4;
 					break;
                 case "NT5":
-                    nameOK = os.IsNT5;
+                    isSupported = os.IsNT5;
                     break;
                 case "WIN2K":
-                    nameOK = os.IsWin2K;
+                    isSupported = os.IsWin2K;
 					break;
 				case "WINXP":
-                    nameOK = os.IsWinXP;
+                    isSupported = os.IsWinXP;
 					break;
 				case "WIN2003SERVER":
-                    nameOK = os.IsWin2003Server;
+                    isSupported = os.IsWin2003Server;
 					break;
                 case "NT6":
-                    nameOK = os.IsNT6;
+                    isSupported = os.IsNT6;
                     break;
                 case "VISTA":
-                    nameOK = os.IsVista;
+                    isSupported = os.IsVista;
                     break;
                 case "WIN2008SERVER":
-                    nameOK = os.IsWin2008Server;
+                    isSupported = os.IsWin2008Server;
                     break;
+				case "WIN2008SERVERR2":
+					isSupported = os.IsWin2008ServerR2;
+					break;
+				case "WINDOWS7":
+					isSupported = os.IsWindows7;
+					break;
                 case "UNIX":
 				case "LINUX":
-                    nameOK = os.IsUnix;
+                    isSupported = os.IsUnix;
 					break;
-				case "NET":
-					nameOK = rt.IsNet;
-					break;
-				case "NETCF":
-					nameOK = rt.IsNetCF;
-					break;
-				case "SSCLI":
-				case "ROTOR":
-					nameOK = rt.IsSSCLI;
-					break;
-				case "MONO":
-                    nameOK = rt.IsMono;
-					// Special handling because Mono 1.0 profile has version 1.1
-					if ( versionSpecification == "1.0" )
-						versionSpecification = "1.1";
-					break;
-				default:
-                    // TODO: Use ConstraintException here? Or a special exception?
-					throw new Exception( "Invalid platform name: " + platform );
+
+			default:
+                    isSupported = IsRuntimeSupported(platformName);
+                    break;
 			}
 
-			if ( nameOK ) 
-			{
-				if ( versionSpecification == null )
-					return true;
+            if (!isSupported)
+			    this.reason = "Only supported on " + platform;
 
-				Version version = new Version( versionSpecification );
-
-				if ( rt.Version.Major == version.Major &&
-					 rt.Version.Minor == version.Minor &&
-				   ( version.Build == -1 || rt.Version.Build == version.Build ) &&
-				   ( version.Revision == -1 || rt.Version.Revision == version.Revision ) )
-						return true;
-			}
-
-			this.reason = "Only supported on " + platform;
-			return false;
+			return isSupported;
 		}
 
 		/// <summary>
@@ -249,5 +228,46 @@ namespace NUnit.Framework.Internal
 		{
 			get { return reason; }
 		}
+
+        private bool IsRuntimeSupported(string platformName)
+        {
+            string versionSpecification = null;
+            string[] parts = platformName.Split(new char[] { '-' });
+            if (parts.Length == 2)
+            {
+                platformName = parts[0];
+                versionSpecification = parts[1];
+            }
+
+            switch (platformName.ToUpper())
+            {
+                case "NET":
+                    return IsRuntimeSupported(RuntimeType.Net, versionSpecification);
+
+                case "NETCF":
+                    return IsRuntimeSupported(RuntimeType.NetCF, versionSpecification);
+
+                case "SSCLI":
+                case "ROTOR":
+                    return IsRuntimeSupported(RuntimeType.SSCLI, versionSpecification);
+
+                case "MONO":
+                    return IsRuntimeSupported(RuntimeType.Mono, versionSpecification);
+
+                default:
+                    throw new ArgumentException("Invalid platform name", platformName);
+            }
+        }
+
+        private bool IsRuntimeSupported(RuntimeType runtime, string versionSpecification)
+        {
+            Version version = versionSpecification == null
+                ? RuntimeFramework.DefaultVersion
+                : new Version(versionSpecification);
+
+            RuntimeFramework target = new RuntimeFramework(runtime, version);
+
+            return rt.Supports(target);
+        }
 	}
 }
