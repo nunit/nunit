@@ -31,7 +31,7 @@ namespace NUnit.Framework
     /// data provided. Arguments will be combined in such a
     /// way that all possible pairs of arguments are used.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited=false)]
     public class PairwiseAttribute : PropertyAttribute
     {
         /// <summary>

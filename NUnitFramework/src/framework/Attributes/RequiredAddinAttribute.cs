@@ -34,7 +34,7 @@ namespace NUnit.Framework
     /// assembly. If the addin is not loaded, the entire assembly is marked
     /// as NotRunnable.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Assembly,AllowMultiple=true)]
+    [AttributeUsage(AttributeTargets.Assembly,AllowMultiple=true, Inherited=false)]
     public class RequiredAddinAttribute : TestModificationAttribute, IApplyToTest
     {
         private string requiredAddin;

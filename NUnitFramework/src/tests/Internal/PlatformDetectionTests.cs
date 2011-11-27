@@ -149,11 +149,19 @@ namespace NUnit.Framework.Internal
 				"WinXP,NT5,Win32NT,Win32,Win,Win-5.1" );
 		}
 
+        [Test]
+        public void DetectWinXPProfessionalX64()
+        {
+                CheckOSPlatforms( 
+                        new OSPlatform( PlatformID.Win32NT, new Version( 5, 2 ), OSPlatform.ProductType.WorkStation ),
+                        "WinXP,NT5,Win32NT,Win32,Win,Win-5.1" );
+        }
+
 		[Test]
 		public void DetectWin2003Server()
 		{
             CheckOSPlatforms(
-                new OSPlatform(PlatformID.Win32NT, new Version(5, 2)),
+                new OSPlatform(PlatformID.Win32NT, new Version(5, 2), OSPlatform.ProductType.Server),
                 "Win2003Server,NT5,Win32NT,Win32,Win,Win-5.2");
         }
 
@@ -166,12 +174,28 @@ namespace NUnit.Framework.Internal
         }
 
         [Test]
-        public void DetectWin2008Server()
+        public void DetectWin2008ServerOriginal()
         {
             CheckOSPlatforms(
                 new OSPlatform(PlatformID.Win32NT, new Version(6, 0), OSPlatform.ProductType.Server),
                 "Win2008Server,NT6,Win32NT,Win32,Win,Win-6.0");
         }
+
+        [Test]
+        public void DetectWin2008ServerR2()
+        {
+            CheckOSPlatforms(
+                new OSPlatform(PlatformID.Win32NT, new Version(6, 1), OSPlatform.ProductType.Server),
+                "Win2008Server,Win2008ServerR2,NT6,Win32NT,Win32,Win,Win-6.0");
+        }
+		
+		[Test]
+		public void DetectWindows7()
+		{
+			CheckOSPlatforms(
+                new OSPlatform(PlatformID.Win32NT, new Version(6, 1), OSPlatform.ProductType.WorkStation),
+                "Windows7,NT6,Win32NT,Win32,Win,Win-6.1");
+		}
 
         [Test]
         public void DetectUnixUnderMicrosoftDotNet()
@@ -210,14 +234,31 @@ namespace NUnit.Framework.Internal
 		public void DetectNet20()
 		{
 			CheckRuntimePlatforms(
-				new RuntimeFramework( RuntimeType.Net, new Version( 2, 0, 40607, 0 ) ),
+				new RuntimeFramework( RuntimeType.Net, new Version( 2, 0, 50727, 0 ) ),
 				"Net,Net-2.0" );
 		}
+		
+		[Test]
+		public void DetectNet30()
+		{
+            CheckRuntimePlatforms(
+                new RuntimeFramework(RuntimeType.Net, new Version(3, 0)),
+                "Net,Net-2.0,Net-3.0");
+		}
+		
         [Test]
+        public void DetectNet35()
+        {
+            CheckRuntimePlatforms(
+                new RuntimeFramework(RuntimeType.Net, new Version(3, 5)),
+                "Net,Net-2.0,Net-3.0,Net-3.5");
+        }
+		
+		[Test]
         public void DetectNet40()
         {
             CheckRuntimePlatforms(
-                new RuntimeFramework(RuntimeType.Net, new Version(4, 0, 20506, 0)),
+                new RuntimeFramework(RuntimeType.Net, new Version(4, 0, 30319, 0)),
                 "Net,Net-4.0");
         }
 
@@ -249,9 +290,33 @@ namespace NUnit.Framework.Internal
 		public void DetectMono20()
 		{
 			CheckRuntimePlatforms(
-				new RuntimeFramework( RuntimeType.Mono, new Version( 2, 0, 40607, 0 ) ),
+				new RuntimeFramework( RuntimeType.Mono, new Version( 2, 0, 50727, 0 ) ),
 				"Mono,Mono-2.0" );
 		}
+
+        [Test]
+        public void DetectMono30()
+        {
+            CheckRuntimePlatforms(
+                new RuntimeFramework(RuntimeType.Mono, new Version(3, 0)),
+                "Mono,Mono-2.0,Mono-3.0");
+        }
+ 
+        [Test]
+        public void DetectMono35()
+        {
+            CheckRuntimePlatforms(
+                new RuntimeFramework(RuntimeType.Mono, new Version(3, 5)),
+                "Mono,Mono-2.0,Mono-3.0,Mono-3.5");
+        }
+ 
+        [Test]
+        public void DetectMono40()
+        {
+            CheckRuntimePlatforms(
+                new RuntimeFramework(RuntimeType.Mono, new Version(4, 0, 30319)),
+                "Mono,Mono-4.0");
+        }
 
 		[Test]
 		public void DetectExactVersion()
@@ -309,7 +374,8 @@ namespace NUnit.Framework.Internal
 		{
 			PlatformAttribute attr = new PlatformAttribute( "Net-1.0,Net11,Mono" );
 			Assert.IsFalse( winXPHelper.IsPlatformSupported( attr ) );
-			Assert.AreEqual( "Invalid platform name: Net11", winXPHelper.Reason );
+			Assert.That( winXPHelper.Reason, Is.StringStarting("Invalid platform name"));
+			Assert.That( winXPHelper.Reason, Is.StringContaining("Net11"));
 		}
 	}
 }

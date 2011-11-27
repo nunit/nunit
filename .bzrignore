@@ -5,6 +5,7 @@ solutions/**/*
 GeneratedAssemblyInfo.cs
 nunit.framework.xml
 *.user
+*.userprefs
 *.db
 bin
 package
@@ -14,6 +15,7 @@ local.settings.include
 mock-assembly.pidb
 deploy
 *.pdb
+*.pidb
 InternalTrace.txt
 TestResult.xml
 *.log

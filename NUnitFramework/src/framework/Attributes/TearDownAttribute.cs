@@ -30,7 +30,7 @@ namespace NUnit.Framework
 	/// immediately after each test is run. The method is 
 	/// guaranteed to be called, even if an exception is thrown.
 	/// </summary>
-	[AttributeUsage(AttributeTargets.Method, AllowMultiple=false)]
+	[AttributeUsage(AttributeTargets.Method, AllowMultiple=false, Inherited=true)]
 	public class TearDownAttribute : NUnitAttribute
 	{}
 }

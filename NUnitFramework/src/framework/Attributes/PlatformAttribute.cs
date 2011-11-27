@@ -31,7 +31,7 @@ namespace NUnit.Framework
     /// PlatformAttribute is used to mark a test fixture or an
     /// individual method as applying to a particular platform only.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method | AttributeTargets.Assembly, AllowMultiple = true)]
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method | AttributeTargets.Assembly, AllowMultiple = true, Inherited=false)]
     public class PlatformAttribute : IncludeExcludeAttribute, IApplyToTest
     {
         private PlatformHelper platformHelper = new PlatformHelper();
