@@ -24,6 +24,7 @@
   </patternset>
 
   <target name="build">
+  
     <csc target="exe" 
         output="${current.build.dir}/nunit-console.exe"
         debug="${build.debug}" define="${build.defines}">
@@ -38,17 +39,24 @@
         <include name="nunit.engine.api.dll"/>
       </references>
     </csc>
+    
+    <copy file="app.config" 
+    	tofile="${current.build.dir}/nunit-console.exe.config"/>
+    
   </target>
 
   <target name="package">
+  
     <copy todir="${package.src.dir}/nunit-console">
       <fileset>
         <patternset refid="source-files"/>
         <include name="*.csproj"/>
         <include name="*.build"/>
         <include name="App.ico"/>
+        <include name="app.config"/>
       </fileset>
     </copy>
+    
   </target>
 
 </project>

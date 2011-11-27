@@ -63,6 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="nunit-console.build" />
+    <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\NUnitEngine\src\nunit.engine.api\nunit.engine.api-vs2008.csproj">
