@@ -55,8 +55,7 @@ namespace NUnit.Framework.Internal.Commands
     /// </summary>
     public class ThreadedTestCommand : DelegatingTestCommand
     {
-        private object testObject;
-        private ITestListener listener;
+        private TestExecutionContext context;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ThreadedTestCommand"/> class.
@@ -74,16 +73,14 @@ namespace NUnit.Framework.Internal.Commands
         /// <param name="testObject">The object on which the test should run.</param>
         /// <param name="arguments">The arguments to be used in running the test or null.</param>
         /// <returns>A TestResult</returns>
-        public override TestResult Execute(object testObject, ITestListener listener)
+        public override TestResult Execute(TestExecutionContext context)
         {
-            this.testObject = testObject;
-            this.listener = listener;
+            this.context = context;
 
             Thread thread = new Thread(new ThreadStart(RunTestProc));
 
-            // TODO: Get this from TestContext?
-            thread.CurrentCulture = Thread.CurrentThread.CurrentCulture;
-            thread.CurrentUICulture = Thread.CurrentThread.CurrentUICulture;
+            thread.CurrentCulture = context.CurrentCulture;
+            thread.CurrentUICulture = context.CurrentUICulture;
             
             // NOTE: Setting to Unknown causes an error under the Mono 1.0 profile
             ApartmentState state = (ApartmentState)Test.Properties.GetSetting(PropertyNames.ApartmentState, ApartmentState.Unknown);
@@ -99,7 +96,7 @@ namespace NUnit.Framework.Internal.Commands
 #else
             InternalTrace.Debug("Starting TestThread");
 
-            int timeout = TestExecutionContext.CurrentContext.TestCaseTimeout;
+            int timeout = context.TestCaseTimeout;
             if (timeout <= 0)
                 timeout = Timeout.Infinite;
 #endif
@@ -116,11 +113,11 @@ namespace NUnit.Framework.Internal.Commands
             if (thread.IsAlive)
             {
                 thread.Abort();
-                CurrentResult.SetResult(ResultState.Failure,
+                context.CurrentResult.SetResult(ResultState.Failure,
                     string.Format("Test exceeded Timeout value of {0}ms", timeout));
             }
 
-            return CurrentResult;
+            return context.CurrentResult;
         }
 
         /// <summary>
@@ -131,13 +128,13 @@ namespace NUnit.Framework.Internal.Commands
         {
             try
             {
-                CurrentResult = innerCommand.Execute(testObject, listener);
+                context.CurrentResult = innerCommand.Execute(context);
             }
             catch (Exception e)
             {
-                if (CurrentResult == null)
-                    CurrentResult = this.Test.MakeTestResult();
-                CurrentResult.RecordException(e);
+                if (context.CurrentResult == null)
+                    context.CurrentResult = this.Test.MakeTestResult();
+                context.CurrentResult.RecordException(e);
             }
         }
     }

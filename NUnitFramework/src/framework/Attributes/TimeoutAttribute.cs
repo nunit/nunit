@@ -70,12 +70,12 @@ namespace NUnit.Framework
         {
             public TimeoutCommand(TestCommand command) : base(command) { }
 
-            public override TestResult Execute(object testObject, NUnit.Framework.Api.ITestListener listener)
+            public override TestResult Execute(TestExecutionContext context)
             {
                 if (this.Test.Properties.ContainsKey(PropertyNames.Timeout))
-                    TestExecutionContext.CurrentContext.TestCaseTimeout = (int)this.Test.Properties.Get(PropertyNames.Timeout);
+                    context.TestCaseTimeout = (int)this.Test.Properties.Get(PropertyNames.Timeout);
 
-                return innerCommand.Execute(testObject, listener);
+                return innerCommand.Execute(context);
             }
         }
 

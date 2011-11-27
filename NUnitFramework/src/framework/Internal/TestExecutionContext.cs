@@ -68,6 +68,16 @@ namespace NUnit.Framework.Internal
         private TestResult currentResult;
 
         /// <summary>
+        /// The object on which tests are currently being executed - i.e. the user fixture object
+        /// </summary>
+        private object testObject;
+
+        /// <summary>
+        /// The event listener currently receiving notifications
+        /// </summary>
+        private ITestListener listener = TestListener.NULL;
+
+        /// <summary>
         /// The number of assertions for the current test
         /// </summary>
         private int assertCount;
@@ -172,6 +182,8 @@ namespace NUnit.Framework.Internal
 
             this.currentTest = other.currentTest;
             this.currentResult = other.currentResult;
+            this.testObject = other.testObject;
+            this.listener = other.listener;
 
 #if !NETCF_1_0
 			this.outWriter = other.outWriter;
@@ -258,6 +270,25 @@ namespace NUnit.Framework.Internal
         {
             get { return currentResult; }
             set { currentResult = value; }
+        }
+
+        /// <summary>
+        /// The current test object - that is the user fixture
+        /// object on which tests are being executed.
+        /// </summary>
+        public object TestObject
+        {
+            get { return testObject; }
+            set { testObject = value; }
+        }
+
+        /// <summary>
+        /// The current test event listener
+        /// </summary>
+        public ITestListener Listener
+        {
+            get { return listener; }
+            set { listener = value; }
         }
 
         /// <summary>

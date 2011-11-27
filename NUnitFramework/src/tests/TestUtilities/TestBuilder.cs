@@ -79,14 +79,34 @@ namespace NUnit.TestUtilities
         {
             TestSuite suite = MakeFixture(type);
             TestCommand command = suite.GetTestCommand(TestFilter.Empty);
-            return command.Execute(null, TestListener.NULL);
+            TestExecutionContext.Save();
+            TestExecutionContext.CurrentContext.TestObject = null;
+            try
+            {
+                return CommandRunner.Execute(command);
+            }
+            finally
+            {
+                TestExecutionContext.Restore();
+            }
         }
 
         public static TestResult RunTestFixture(object fixture)
         {
             TestSuite suite = MakeFixture(fixture);
             TestCommand command = suite.GetTestCommand(TestFilter.Empty);
-            return command.Execute(fixture, TestListener.NULL);
+            //TestExecutionContext context = new TestExecutionContext();
+            //context.TestObject = fixture;
+            TestExecutionContext.Save();
+            TestExecutionContext.CurrentContext.TestObject = fixture;
+            try
+            {
+                return CommandRunner.Execute(command);
+            }
+            finally
+            {
+                TestExecutionContext.Restore();
+            }
         }
 
         public static ITestResult RunTestFixture(TestSuite suite)
@@ -114,7 +134,18 @@ namespace NUnit.TestUtilities
         public static ITestResult RunTest(Test test, object testObject)
         {
             TestCommand command = test.GetTestCommand(TestFilter.Empty);
-            return command.Execute(testObject, TestListener.NULL);
+            //TestExecutionContext context = new TestExecutionContext();
+            //context.TestObject = testObject;
+            TestExecutionContext.Save();
+            TestExecutionContext.CurrentContext.TestObject = testObject;
+            try
+            {
+                return CommandRunner.Execute(command);
+            }
+            finally
+            {
+                TestExecutionContext.Restore();
+            }
         }
 
         private static bool IsStaticClass(Type type)

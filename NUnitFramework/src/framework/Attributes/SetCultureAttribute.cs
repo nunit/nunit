@@ -67,14 +67,13 @@ namespace NUnit.Framework
             {
             }
 
-            public override TestResult Execute(object testObject, ITestListener listener)
+            public override TestResult Execute(TestExecutionContext context)
             {
                 string setCulture = (string)Test.Properties.Get(PropertyNames.SetCulture);
                 if (setCulture != null)
-                    TestExecutionContext.CurrentContext.CurrentCulture =
-                        new System.Globalization.CultureInfo(setCulture);
+                    context.CurrentCulture = new System.Globalization.CultureInfo(setCulture);
 
-                return innerCommand.Execute(testObject, listener);
+                return innerCommand.Execute(context);
             }
         }
 

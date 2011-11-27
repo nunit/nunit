@@ -217,12 +217,9 @@ namespace NUnit.Framework.Internal
 
         protected override TestCommand MakeTestCommand(ITestFilter filter)
         {
-            TestCommand command = new TestCaseCommand(this);
+            TestCommand command = new TestMethodCommand(this);
 
             command = ApplyDecoratorsToCommand(command);
-
-            command = new TestExecutionContextCommand(
-                new TestMethodCommand(command));
 
             return command;
         }
