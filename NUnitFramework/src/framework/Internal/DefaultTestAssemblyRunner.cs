@@ -99,7 +99,8 @@ namespace NUnit.Framework.Internal
             if (loadedTest == null)
                 throw new InvalidOperationException("Run was called but no test has been loaded.");
 
-            TestCommand command = this.loadedTest.GetTestCommand(filter);
+            // TODO: This should be a TestSuiteCommand
+            TestCommand command = (TestCommand)this.loadedTest.GetTestCommand(filter);
 
             TestExecutionContext.Save();
 
@@ -113,6 +114,7 @@ namespace NUnit.Framework.Internal
 
                 TestExecutionContext.CurrentContext.Out = new EventListenerTextWriter(queue, TestOutputType.Out);
                 TestExecutionContext.CurrentContext.Error = new EventListenerTextWriter(queue, TestOutputType.Error);
+                TestExecutionContext.CurrentContext.Listener = queue;
 
                 if (this.settings.Contains("DefaultTimeout"))
                     TestExecutionContext.CurrentContext.TestCaseTimeout = (int)this.settings["DefaultTimeout"];
@@ -121,7 +123,7 @@ namespace NUnit.Framework.Internal
                 {
                     pump.Start();
 
-                    return command.Execute(null, queue);
+                    return CommandRunner.Execute(command);
                 }
             }
             finally

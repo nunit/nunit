@@ -42,20 +42,5 @@ namespace NUnit.Framework.Internal.Commands
         {
             this.innerCommand = innerCommand;
         }
-
-        /// <summary>
-        /// TODO: Documentation needed for property
-        /// </summary>
-        public override TestResult CurrentResult
-        {
-            get
-            {
-                return this.innerCommand.CurrentResult;
-            }
-            set
-            {
-                this.innerCommand.CurrentResult = value;
-            }
-        }
     }
 }

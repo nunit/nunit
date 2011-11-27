@@ -49,20 +49,18 @@ namespace NUnit.Framework.Internal.Commands
 
 
         /// <summary>
-        /// Runs the test, saving a TestResult in
-        /// TestExecutionContext.CurrentContext.CurrentResult
+        /// Runs the test, saving a TestResult in the supplied TestExecutionContext
         /// </summary>
-        /// <param name="testObject">The object on which the test should run.</param>
-        /// <param name="listener">An ITestListener to receive test events.</param>
+        /// <param name="context">The context in which the test is to be run.</param>
         /// <returns>A TestResult</returns>
-        public override TestResult Execute(object testObject, ITestListener listener)
+        public override TestResult Execute(TestExecutionContext context)
         {
             try
             {
-                CurrentResult = innerCommand.Execute(testObject, listener);
+                context.CurrentResult = innerCommand.Execute(context);
 
-                if (CurrentResult.ResultState == ResultState.Success)
-                    ProcessNoException(CurrentResult);
+                if (context.CurrentResult.ResultState == ResultState.Success)
+                    ProcessNoException(context);
             }
             catch (Exception ex)
             {
@@ -70,19 +68,19 @@ namespace NUnit.Framework.Internal.Commands
                 if (ex is ThreadAbortException)
                     Thread.ResetAbort();
 #endif
-                ProcessException(ex, testObject);
+                ProcessException(ex, context);
             }
 
-            return CurrentResult;
+            return context.CurrentResult;
         }
 
         /// <summary>
         /// Handles processing when no exception was thrown.
         /// </summary>
         /// <param name="testResult">The test result.</param>
-        public void ProcessNoException(TestResult testResult)
+        public void ProcessNoException(TestExecutionContext context)
         {
-            testResult.SetResult(ResultState.Failure, NoExceptionMessage());
+            context.CurrentResult.SetResult(ResultState.Failure, NoExceptionMessage());
         }
 
         /// <summary>
@@ -90,7 +88,7 @@ namespace NUnit.Framework.Internal.Commands
         /// </summary>
         /// <param name="exception">The exception.</param>
         /// <param name="testResult">The test result.</param>
-        public void ProcessException(Exception exception, object testObject)
+        public void ProcessException(Exception exception, TestExecutionContext context)
         {
             if (exception is NUnitException)
                 exception = exception.InnerException;
@@ -99,39 +97,39 @@ namespace NUnit.Framework.Internal.Commands
             {
                 if (IsExpectedMessageMatch(exception))
                 {
-                    MethodInfo exceptionMethod = exceptionData.GetExceptionHandler(testObject.GetType());
+                    MethodInfo exceptionMethod = exceptionData.GetExceptionHandler(context.TestObject.GetType());
                     if (exceptionMethod != null)
                     {
-                        Reflect.InvokeMethod(exceptionMethod, testObject, exception);
+                        Reflect.InvokeMethod(exceptionMethod, context.TestObject, exception);
                     }
                     else
                     {
-                        IExpectException handler = testObject as IExpectException;
+                        IExpectException handler = context.TestObject as IExpectException;
                         if (handler != null)
                             handler.HandleException(exception);
                     }
 
-                    CurrentResult.SetResult(ResultState.Success);
+                    context.CurrentResult.SetResult(ResultState.Success);
                 }
                 else
                 {
 #if NETCF_1_0
-                    CurrentResult.SetResult(ResultState.Failure, WrongTextMessage(exception));
+                    context.CurrentResult.SetResult(ResultState.Failure, WrongTextMessage(exception));
 #else
-                    CurrentResult.SetResult(ResultState.Failure, WrongTextMessage(exception), GetStackTrace(exception));
+                    context.CurrentResult.SetResult(ResultState.Failure, WrongTextMessage(exception), GetStackTrace(exception));
 #endif
                 }
             }
             else
             {
-                CurrentResult.RecordException(exception);
+                context.CurrentResult.RecordException(exception);
 
                 // If it shows as an error, change it to a failure due to the wrong type
-                if (CurrentResult.ResultState == ResultState.Error)
+                if (context.CurrentResult.ResultState == ResultState.Error)
 #if NETCF_1_0
-                    CurrentResult.SetResult(ResultState.Failure, WrongTypeMessage(exception));
+                    context.CurrentResult.SetResult(ResultState.Failure, WrongTypeMessage(exception));
 #else
-                    CurrentResult.SetResult(ResultState.Failure, WrongTypeMessage(exception), GetStackTrace(exception));
+                    context.CurrentResult.SetResult(ResultState.Failure, WrongTypeMessage(exception), GetStackTrace(exception));
 #endif
             }
         }

@@ -271,8 +271,6 @@ namespace NUnit.Framework.Internal
                 command = new ThreadedTestCommand(command);
 #endif
 
-            command = new TestExecutionContextCommand(command);
-
             return command;
         }
 

@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2010 Charlie Poole
+// Copyright (c) 2011 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,42 +21,19 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using NUnit.Framework.Api;
+using System;
 
 namespace NUnit.Framework.Internal.Commands
 {
-    /// <summary>
-    /// TODO: Documentation needed for class
-    /// </summary>
-    public class TestCaseCommand : TestCommand
+    public abstract class TestCaseCommand : TestCommand
     {
-        private readonly TestMethod testMethod;
-        private readonly object[] arguments;
+        public TestCaseCommand(Test test) : base(test) { }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TestCaseCommand"/> class.
+        /// Runs the test, returning a TestResult.
         /// </summary>
-        /// <param name="test">The test.</param>
-        public TestCaseCommand(Test test) : base(test)
-        {
-            this.testMethod = test as TestMethod;
-            this.arguments = test.arguments;
-        }
-
-        /// <summary>
-        /// Runs the test, saving a TestResult in
-        /// TestExecutionContext.CurrentContext.CurrentResult
-        /// </summary>
-        /// <param name="testObject"></param>
-        public override TestResult Execute(object testObject, ITestListener listener)
-        {
-            object result = Reflect.InvokeMethod(testMethod.Method, testObject, arguments);
-
-            if (testMethod.hasExpectedResult)
-                NUnit.Framework.Assert.AreEqual(testMethod.expectedResult, result);
-
-            CurrentResult.SetResult(ResultState.Success);
-            return CurrentResult;
-        }
+        /// <param name="context">The TestExecutionContext to be used for running the test.</param>
+        /// <returns>A TestResult</returns>
+        public abstract TestResult Execute(TestExecutionContext context);
     }
 }

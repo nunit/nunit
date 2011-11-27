@@ -46,7 +46,7 @@ namespace NUnit.Framework.Internal.Commands
         /// <param name="testObject">The object on which the test should run.</param>
         /// <param name="listener">An ITestListener to receive any events.</param>
         /// <returns>A TestResult</returns>
-        public override TestResult Execute(object testObject, ITestListener listener)
+        public override TestResult Execute(TestExecutionContext context)
         {
             TestResult testResult = this.Test.MakeTestResult();
 

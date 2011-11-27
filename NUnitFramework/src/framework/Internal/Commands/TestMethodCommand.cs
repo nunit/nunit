@@ -21,9 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
-using System.Reflection;
-using System.Threading;
 using NUnit.Framework.Api;
 
 namespace NUnit.Framework.Internal.Commands
@@ -31,62 +28,35 @@ namespace NUnit.Framework.Internal.Commands
     /// <summary>
     /// TODO: Documentation needed for class
     /// </summary>
-    public class TestMethodCommand : DelegatingTestCommand
+    public class TestMethodCommand : TestCommand
     {
-        #region Fields
+        private readonly TestMethod testMethod;
+        private readonly object[] arguments;
 
         /// <summary>
-        /// The TestMethod for which this is built
+        /// Initializes a new instance of the <see cref="TestCaseCommand"/> class.
         /// </summary>
-        private readonly TestMethod test;
-
-        /// <summary>
-        /// The test method
-        /// </summary>
-        internal MethodInfo method;
-
-        internal object[] arguments;
-
-        #endregion
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TestMethodCommand"/> class.
-        /// </summary>
-        /// <param name="innerCommand">The inner command.</param>
-        public TestMethodCommand(TestCommand innerCommand)
-            : base(innerCommand)
+        /// <param name="test">The test.</param>
+        public TestMethodCommand(Test test) : base(test)
         {
-            this.test = Test as TestMethod;
-            this.method = test.Method;
+            this.testMethod = test as TestMethod;
+            this.arguments = test.arguments;
         }
 
         /// <summary>
         /// Runs the test, saving a TestResult in
         /// TestExecutionContext.CurrentContext.CurrentResult
         /// </summary>
-        /// <param name="testObject">The object on which the test should run.</param>
-        /// <param name="arguments">The arguments to be used in running the test or null.</param>
-        /// <returns>A TestResult</returns>
-        public override TestResult Execute(object testObject, ITestListener listener)
+        /// <param name="testObject"></param>
+        public override TestResult Execute(TestExecutionContext context)
         {
-            try
-            {
-                // This is used in case we are running a parameterized
-                // test case directly, without having created the fixture
-                if (testObject == null && !method.IsStatic)
-                    testObject = Activator.CreateInstance(method.ReflectedType);
+            object result = Reflect.InvokeMethod(testMethod.Method, context.TestObject, arguments);
 
-                return innerCommand.Execute(testObject, listener);
-            }
-            catch (Exception ex)
-            {
-#if !NETCF
-                if (ex is ThreadAbortException)
-                    Thread.ResetAbort();
-#endif
-                CurrentResult.RecordException(ex);
-                return CurrentResult;
-            }
+            if (testMethod.hasExpectedResult)
+                NUnit.Framework.Assert.AreEqual(testMethod.expectedResult, result);
+
+            context.CurrentResult.SetResult(ResultState.Success);
+            return context.CurrentResult;
         }
     }
 }

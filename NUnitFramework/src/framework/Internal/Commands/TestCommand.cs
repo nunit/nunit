@@ -33,12 +33,13 @@ namespace NUnit.Framework.Internal.Commands
 {
     /// <summary>
     /// TestCommand is the base class for all test commands
+    /// in the framework.
     /// </summary>
-    public abstract class TestCommand : ITestCommand
+    public abstract class TestCommand
     {
         private Test test;
 #if CLR_2_0 || CLR_4_0
-        private IList<ITestCommand> children;
+        private IList<TestCommand> children;
 #else
         private IList children;
 #endif
@@ -67,12 +68,12 @@ namespace NUnit.Framework.Internal.Commands
         /// Gets any child TestCommands of this command
         /// </summary>
         /// <value>A list of child TestCommands</value>
-        public IList<ITestCommand> Children
+        public IList<TestCommand> Children
         {
             get 
             { 
                 if (children == null)
-                    children = new List<ITestCommand>();
+                    children = new List<TestCommand>();
 
                 return children;
             }
@@ -93,29 +94,9 @@ namespace NUnit.Framework.Internal.Commands
         /// <summary>
         /// Runs the test, returning a TestResult.
         /// </summary>
-        /// <param name="testObject">The object on which the test should run.</param>
-        /// <param name="arguments">The arguments to use in running the test or null.</param>
+        /// <param name="context">The TestExecutionContext to be used for running the test.</param>
         /// <returns>A TestResult</returns>
-        public abstract TestResult Execute(object testObject, ITestListener listener);
-
-        #endregion
-
-        #region Protected Properties
-
-        /// <summary>
-        /// TODO: Documentation needed for property
-        /// </summary>
-        public virtual TestResult CurrentResult
-        {
-            get
-            {
-                return TestExecutionContext.CurrentContext.CurrentResult;
-            }
-            set
-            {
-                TestExecutionContext.CurrentContext.CurrentResult = value;
-            }
-        }
+        public abstract TestResult Execute(TestExecutionContext context);
 
         #endregion
     }

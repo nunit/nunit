@@ -66,19 +66,17 @@ namespace NUnit.Framework.Internal.Commands
         }
 
         /// <summary>
-        /// Runs the test, saving a TestResult in
-        /// TestExecutionContext.CurrentContext.CurrentResult
+        /// Runs the test, saving a TestResult in the supplied TestExecutionContext.
         /// </summary>
-        /// <param name="testObject">The object on which the test should run.</param>
-        /// <param name="arguments">The arguments to be used in running the test or null.</param>
+        /// <param name="context">The context in which the test should run.</param>
         /// <returns>A TestResult</returns>
-        public override TestResult Execute(object testObject, ITestListener listener)
+        public override TestResult Execute(TestExecutionContext context)
         {
             try
             {
-                RunSetUpMethods(testObject);
+                RunSetUpMethods(context);
 
-                CurrentResult = innerCommand.Execute(testObject, listener);
+                context.CurrentResult = innerCommand.Execute(context);
             }
             catch (Exception ex)
             {
@@ -86,24 +84,24 @@ namespace NUnit.Framework.Internal.Commands
                 if (ex is ThreadAbortException)
                     Thread.ResetAbort();
 #endif
-                CurrentResult.RecordException(ex);
+                context.CurrentResult.RecordException(ex);
             }
             finally
             {
-                RunTearDownMethods(testObject);
+                RunTearDownMethods(context);
             }
 
-            return CurrentResult;
+            return context.CurrentResult;
         }
 
-        private void RunSetUpMethods(object testObject)
+        private void RunSetUpMethods(TestExecutionContext context)
         {
             if (setUpMethods != null)
                 foreach (MethodInfo setUpMethod in setUpMethods)
-                    Reflect.InvokeMethod(setUpMethod, setUpMethod.IsStatic ? null : testObject);
+                    Reflect.InvokeMethod(setUpMethod, setUpMethod.IsStatic ? null : context.TestObject);
         }
 
-        private void RunTearDownMethods(object testObject)
+        private void RunTearDownMethods(TestExecutionContext context)
         {
             try
             {
@@ -111,7 +109,7 @@ namespace NUnit.Framework.Internal.Commands
                 {
                     int index = tearDownMethods.Length;
                     while (--index >= 0)
-                        Reflect.InvokeMethod(tearDownMethods[index], tearDownMethods[index].IsStatic ? null : testObject);
+                        Reflect.InvokeMethod(tearDownMethods[index], tearDownMethods[index].IsStatic ? null : context.TestObject);
                 }
             }
             catch (Exception ex)
@@ -121,16 +119,16 @@ namespace NUnit.Framework.Internal.Commands
 
                 // TODO: Can we move this logic into TestResult itself?
                 string message = "TearDown : " + ExceptionHelper.BuildMessage(ex);
-                if (CurrentResult.Message != null)
-                    message = CurrentResult.Message + NUnit.Env.NewLine + message;
+                if (context.CurrentResult.Message != null)
+                    message = context.CurrentResult.Message + NUnit.Env.NewLine + message;
 
 #if !NETCF_1_0
                 string stackTrace = "--TearDown" + NUnit.Env.NewLine + ExceptionHelper.BuildStackTrace(ex);
-                if (CurrentResult.StackTrace != null)
-                    stackTrace = CurrentResult.StackTrace + NUnit.Env.NewLine + stackTrace;
+                if (context.CurrentResult.StackTrace != null)
+                    stackTrace = context.CurrentResult.StackTrace + NUnit.Env.NewLine + stackTrace;
 
                 // TODO: What about ignore exceptions in teardown?
-                CurrentResult.SetResult(ResultState.Error, message, stackTrace);
+                context.CurrentResult.SetResult(ResultState.Error, message, stackTrace);
 #else
                 Result.SetResult(ResultState.Error, message);
 #endif
