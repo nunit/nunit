@@ -23,9 +23,13 @@
       </references>
     </csc>
 
+    <copy file="app.config" 
+    	tofile="${current.build.dir}/nunit-agent.exe.config"/>
+
   </target>
 
   <target name="package">
+  
     <copy todir="${package.src.dir}/nunit-agent">
       <fileset>
         <patternset refid="source-files" />
@@ -34,6 +38,7 @@
         <include name="app.config" />
       </fileset>
     </copy>
+    
   </target>
 
 </project>
