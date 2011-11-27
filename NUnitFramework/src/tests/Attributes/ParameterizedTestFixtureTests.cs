@@ -179,4 +179,21 @@ namespace NUnit.Framework.Attributes
             Assert.That(testcase.FullName, Is.EqualTo(instance.FullName + ".MethodWithParams(10,20)"));
         }
     }
+
+    public class ParameterizedTestFixtureTests
+    {
+        [Test]
+        public void CanSpecifyCategory()
+        {
+            Test fixture = TestBuilder.MakeFixture(typeof(NUnit.TestData.TestFixtureWithSingleCategory));
+            Assert.AreEqual("XYZ", fixture.Properties.Get(PropertyNames.Category));
+        }
+ 
+        [Test]
+        public void CanSpecifyMultipleCategories()
+        {
+            Test fixture = TestBuilder.MakeFixture(typeof(NUnit.TestData.TestFixtureWithMultipleCategories));
+            Assert.AreEqual(new string[] { "X", "Y", "Z" }, fixture.Properties[PropertyNames.Category]);
+        }
+    }
 }

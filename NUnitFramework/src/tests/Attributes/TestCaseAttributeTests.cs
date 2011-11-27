@@ -200,6 +200,24 @@ namespace NUnit.Framework.Tests
         }
 
         [Test]
+        public void CanSpecifyCategory()
+        {
+            Test test = (Test)TestBuilder.MakeTestCase(
+                typeof(TestCaseAttributeFixture), "MethodHasSingleCategory").Tests[0];
+			IList categories = test.Properties["Category"];
+            Assert.AreEqual(new string[] { "XYZ" }, categories);
+        }
+ 
+        [Test]
+        public void CanSpecifyMultipleCategories()
+        {
+            Test test = (Test)TestBuilder.MakeTestCase(
+                typeof(TestCaseAttributeFixture), "MethodHasMultipleCategories").Tests[0];
+			IList categories = test.Properties["Category"];
+            Assert.AreEqual(new string[] { "X", "Y", "Z" }, categories);
+        }
+ 
+        [Test]
         public void CanSpecifyExpectedException()
         {
             ITestResult result = TestBuilder.RunTestCase(

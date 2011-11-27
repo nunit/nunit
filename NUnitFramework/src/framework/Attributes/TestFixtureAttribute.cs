@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Collections;
 using NUnit.Framework.Api;
 
 namespace NUnit.Framework
@@ -43,6 +44,7 @@ namespace NUnit.Framework
 
         private bool isIgnored;
         private string ignoreReason;
+		private string category;
 
         /// <summary>
         /// Default constructor
@@ -134,6 +136,24 @@ namespace NUnit.Framework
             }
         }
 
+        /// <summary>
+        /// Gets and sets the category for this fixture.
+        /// May be a comma-separated list of categories.
+        /// </summary>
+        public string Category
+        {
+            get { return category; }
+            set { category = value; }
+        }
+ 
+        /// <summary>
+        /// Gets a list of categories for this fixture
+        /// </summary>
+        public IList Categories
+        {
+            get { return category == null ? null : category.Split(','); }
+        }
+ 
 #if CLR_2_0 || CLR_4_0
         /// <summary>
         /// Helper method to split the original argument list
@@ -176,6 +196,10 @@ namespace NUnit.Framework
         {
             if (!test.Properties.ContainsKey(PropertyNames.Description) && description != null)
                 test.Properties.Set(PropertyNames.Description, description);
+			
+			if (category != null)
+				foreach (string cat in category.Split(new char[] { ',' }) )
+					test.Properties.Add(PropertyNames.Category, cat);
         }
 
         #endregion
