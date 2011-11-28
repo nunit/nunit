@@ -94,7 +94,8 @@ namespace NUnit.Framework.Internal
         public ITestResult Run(ITestListener listener, ITestFilter filter)
         {
             TestCommand command = this.loadedTest.GetTestCommand(filter);
-            return command.Execute(null, listener);
+
+            return CommandRunner.Execute(command);
         }
 
         #endregion
