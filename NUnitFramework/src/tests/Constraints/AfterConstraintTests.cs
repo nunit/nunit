@@ -125,6 +125,32 @@ namespace NUnit.Framework.Constraints.Tests
             worker.RunWorkerAsync();
             Assert.That(() => list, Has.Count.EqualTo(1).After(5000, 100));
         }
+		
+		[Test]
+		public void CanTestInitiallyNullReference()
+		{
+			string statusString = null; // object starts off as null
+			
+			var worker = new System.ComponentModel.BackgroundWorker();
+			worker.RunWorkerCompleted += delegate { statusString = "finished"; /* object non-null after work */ };
+			worker.DoWork += delegate { Thread.Sleep(TimeSpan.FromSeconds(1)); /* simulate work */ };
+			worker.RunWorkerAsync();
+			
+			Assert.That(ref statusString, Has.Length.GreaterThan(0).After(3000, 100));
+		}
+		
+		[Test]
+		public void CanTestInitiallyNullDelegate()
+		{
+			string statusString = null; // object starts off as null
+			
+			var worker = new System.ComponentModel.BackgroundWorker();
+			worker.RunWorkerCompleted += delegate { statusString = "finished"; /* object non-null after work */ };
+			worker.DoWork += delegate { Thread.Sleep(TimeSpan.FromSeconds(1)); /* simulate work */ };
+			worker.RunWorkerAsync();
+			
+			Assert.That(() => statusString, Has.Length.GreaterThan(0).After(3000, 100));
+		}
 #endif
 
         private static int setValueTrueDelay;

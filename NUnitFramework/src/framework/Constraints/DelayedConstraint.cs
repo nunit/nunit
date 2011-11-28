@@ -100,9 +100,17 @@ namespace NUnit.Framework.Constraints
                 remainingDelay -= pollingInterval;
                 Thread.Sleep(pollingInterval);
                 actual = del();
-                IConstraintResult result = baseConstraint.Matches(actual);
-                if (result.HasSucceeded)
-                    return result;
+				
+				try
+				{
+	                IConstraintResult result = baseConstraint.Matches(actual);
+	                if (result.HasSucceeded)
+	                    return result;
+				}
+				catch(Exception)
+				{
+					// Ignore any exceptions when polling
+				}
             }
 
             if (remainingDelay > 0)
@@ -128,9 +136,17 @@ namespace NUnit.Framework.Constraints
                 remainingDelay -= pollingInterval;
                 Thread.Sleep(pollingInterval);
                 this.actual = actual;
-                IConstraintResult result = baseConstraint.Matches(actual);
-                if (result.HasSucceeded)
-                    return result;
+				
+				try
+				{
+	                IConstraintResult result = baseConstraint.Matches(actual);
+	                if (result.HasSucceeded)
+	                    return result;
+				}
+				catch(Exception)
+				{
+					// Ignore any exceptions when polling
+				}
             }
 
             if (remainingDelay > 0)
