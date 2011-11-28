@@ -83,10 +83,12 @@ namespace NUnit.Framework.Builders
 
 #if NUNITLITE
             return Reflect.HasMethodWithAttribute(type, typeof(NUnit.Framework.TestAttribute), true) ||
-                   Reflect.HasMethodWithAttribute(type, typeof(NUnit.Framework.TestCaseAttribute), true);
+                   Reflect.HasMethodWithAttribute(type, typeof(NUnit.Framework.TestCaseAttribute), true) ||
+                   Reflect.HasMethodWithAttribute(type, typeof(NUnit.Framework.TestCaseSourceAttribute), true);
 #else
             return Reflect.HasMethodWithAttribute(type, typeof(NUnit.Framework.TestAttribute), true) ||
                    Reflect.HasMethodWithAttribute(type, typeof(NUnit.Framework.TestCaseAttribute), true) ||
+                   Reflect.HasMethodWithAttribute(type, typeof(NUnit.Framework.TestCaseSourceAttribute), true) ||
                    Reflect.HasMethodWithAttribute(type, typeof(NUnit.Framework.TheoryAttribute), true);
 #endif
 		}
