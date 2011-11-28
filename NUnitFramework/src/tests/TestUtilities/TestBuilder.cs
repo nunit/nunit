@@ -28,6 +28,7 @@ using NUnit.Framework.Api;
 using NUnit.Framework.Builders;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Commands;
+using NUnit.Framework.Extensibility;
 
 namespace NUnit.TestUtilities
 {
@@ -36,8 +37,10 @@ namespace NUnit.TestUtilities
     /// </summary>
     public class TestBuilder
     {
-        private static NUnitTestFixtureBuilder fixtureBuilder = new NUnitTestFixtureBuilder();
-        private static NUnitTestCaseBuilder testBuilder = new NUnitTestCaseBuilder();
+		private static ISuiteBuilder fixtureBuilder = (ISuiteBuilder)CoreExtensions.Host.GetExtensionPoint("SuiteBuilders");
+        private static ITestCaseBuilder testBuilder = (ITestCaseBuilder)CoreExtensions.Host.GetExtensionPoint("TestCaseBuilders");
+//        private static NUnitTestFixtureBuilder fixtureBuilder = new NUnitTestFixtureBuilder();
+//        private static NUnitTestCaseBuilder testBuilder = new NUnitTestCaseBuilder();
 
 #if !NUNITLITE
         static TestBuilder()
