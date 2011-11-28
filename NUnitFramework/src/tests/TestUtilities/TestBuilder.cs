@@ -37,10 +37,8 @@ namespace NUnit.TestUtilities
     /// </summary>
     public class TestBuilder
     {
-		private static ISuiteBuilder fixtureBuilder = (ISuiteBuilder)CoreExtensions.Host.GetExtensionPoint("SuiteBuilders");
-        private static ITestCaseBuilder testBuilder = (ITestCaseBuilder)CoreExtensions.Host.GetExtensionPoint("TestCaseBuilders");
-//        private static NUnitTestFixtureBuilder fixtureBuilder = new NUnitTestFixtureBuilder();
-//        private static NUnitTestCaseBuilder testBuilder = new NUnitTestCaseBuilder();
+        private static NUnitTestFixtureBuilder fixtureBuilder = new NUnitTestFixtureBuilder();
+        private static NUnitTestCaseBuilder testBuilder = new NUnitTestCaseBuilder();
 
 #if !NUNITLITE
         static TestBuilder()

@@ -167,7 +167,7 @@ namespace NUnit.Framework.Internal
             if (fixtures.Count == 0)
             {
                 testAssembly.RunState = RunState.NotRunnable;
-                testAssembly.SkipReason = "Has no TestFixtures";
+                testAssembly.Properties.Set(PropertyNames.SkipReason, "Has no TestFixtures");
             }
 
             testAssembly.ApplyCommonAttributes(assembly);

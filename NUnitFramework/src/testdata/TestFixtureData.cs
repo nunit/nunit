@@ -88,11 +88,13 @@ namespace NUnit.TestData.TestFixtureData
         public void SomeTest(int x) { }
     }
  
+#if !NUNITLITE
     public class FixtureWithoutTestFixtureAttributeContainingTheory
     {
         [Theory]
         public void SomeTest(int x) { }
     }
+#endif
  
 #if CLR_2_0 || CLR_4_0
     public static class StaticFixtureWithoutTestFixtureAttribute
