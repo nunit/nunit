@@ -452,6 +452,8 @@ namespace NUnit.Framework.Internal
             {
                 WriteConnector("+/-");
                 WriteExpectedValue(tolerance.Value);
+                if (tolerance.Mode != ToleranceMode.Linear)
+                    Write(" {0}", tolerance.Mode);
             }
 
 			WriteLine();

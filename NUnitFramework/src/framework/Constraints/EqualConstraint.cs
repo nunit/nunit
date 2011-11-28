@@ -349,6 +349,8 @@ namespace NUnit.Framework.Constraints
             {
                 writer.WriteConnector("+/-");
                 writer.WriteExpectedValue(comparer.Tolerance.Value);
+                if (comparer.Tolerance.Mode != ToleranceMode.Linear)
+                    writer.Write(" {0}", comparer.Tolerance.Mode);
             }
 
             if (comparer.IgnoreCase)
