@@ -92,6 +92,41 @@ namespace NUnit.Framework.Constraints.Tests
             Assert.That(DelegateReturningZero, new DelayedConstraint(new EqualConstraint(0), -1));
         }
 
+#if CLR_2_0 || CLR_4_0
+        [Test]
+        public void CanTestContentsOfList()
+        {
+            var worker = new System.ComponentModel.BackgroundWorker();
+            var list = new System.Collections.Generic.List<int>();
+            worker.RunWorkerCompleted += delegate { list.Add(1); };
+            worker.DoWork += delegate { Thread.Sleep(1); };
+            worker.RunWorkerAsync();
+            Assert.That(list, Has.Count.EqualTo(1).After(5000, 100));
+        }
+
+        [Test]
+        public void CanTestContentsOfRefList()
+        {
+            var worker = new System.ComponentModel.BackgroundWorker();
+            var list = new System.Collections.Generic.List<int>();
+            worker.RunWorkerCompleted += delegate { list.Add(1); };
+            worker.DoWork += delegate { Thread.Sleep(1); };
+            worker.RunWorkerAsync();
+            Assert.That(ref list, Has.Count.EqualTo(1).After(5000, 100));
+        }
+
+        [Test]
+        public void CanTestContentsOfDelegateReturningList()
+        {
+            var worker = new System.ComponentModel.BackgroundWorker();
+            var list = new System.Collections.Generic.List<int>();
+            worker.RunWorkerCompleted += delegate { list.Add(1); };
+            worker.DoWork += delegate { Thread.Sleep(1); };
+            worker.RunWorkerAsync();
+            Assert.That(() => list, Has.Count.EqualTo(1).After(5000, 100));
+        }
+#endif
+
         private static int setValueTrueDelay;
 
         private void SetValueTrueAfterDelay(int delay)
