@@ -199,7 +199,7 @@ namespace NUnit.Framework.Constraints.Tests
           Assert.That(value, new EqualConstraint(20000000000000000.0).Within(1).Ulps);
         }
 
-        [ExpectedException(typeof(AssertionException))]
+        [ExpectedException(typeof(AssertionException), ExpectedMessage = "+/- 1 Ulps", MatchType = MessageMatch.Contains)]
         [TestCase(20000000000000008.0)]
         [TestCase(19999999999999992.0)]
         public void FailsOnDoublesOutsideOfUlpTolerance(object value)
@@ -214,7 +214,7 @@ namespace NUnit.Framework.Constraints.Tests
           Assert.That(value, new EqualConstraint(20000000.0f).Within(1).Ulps);
         }
 
-        [ExpectedException(typeof(AssertionException))]
+        [ExpectedException(typeof(AssertionException), ExpectedMessage = "+/- 1 Ulps", MatchType = MessageMatch.Contains)]
         [TestCase(19999996.0f)]
         [TestCase(20000004.0f)]
         public void FailsOnSinglesOutsideOfUlpTolerance(object value)
@@ -231,7 +231,7 @@ namespace NUnit.Framework.Constraints.Tests
             Assert.That(value, new EqualConstraint(10000.0).Within(10.0).Percent);
         }
 
-        [ExpectedException(typeof(AssertionException))]
+        [ExpectedException(typeof(AssertionException), ExpectedMessage = "+/- 10.0d Percent", MatchType = MessageMatch.Contains)]
         [TestCase(8500.0)]
         [TestCase(11500.0)]
         public void FailsOnDoublesOutsideOfRelativeTolerance(object value)
@@ -247,7 +247,7 @@ namespace NUnit.Framework.Constraints.Tests
             Assert.That(value, new EqualConstraint(10000.0f).Within(10.0f).Percent);
         }
 
-        [ExpectedException(typeof(AssertionException))]
+        [ExpectedException(typeof(AssertionException), ExpectedMessage = "+/- 10.0f Percent", MatchType = MessageMatch.Contains)]
         [TestCase(8500.0f)]
         [TestCase(11500.0f)]
         public void FailsOnSinglesOutsideOfRelativeTolerance(object value)
