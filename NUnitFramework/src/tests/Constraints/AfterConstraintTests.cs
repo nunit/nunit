@@ -22,6 +22,8 @@
 // ***********************************************************************
 
 using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Threading;
 
 namespace NUnit.Framework.Constraints.Tests
@@ -96,8 +98,8 @@ namespace NUnit.Framework.Constraints.Tests
         [Test]
         public void CanTestContentsOfList()
         {
-            var worker = new System.ComponentModel.BackgroundWorker();
-            var list = new System.Collections.Generic.List<int>();
+            BackgroundWorker worker = new BackgroundWorker();
+            List<int> list = new System.Collections.Generic.List<int>();
             worker.RunWorkerCompleted += delegate { list.Add(1); };
             worker.DoWork += delegate { Thread.Sleep(1); };
             worker.RunWorkerAsync();
@@ -107,31 +109,33 @@ namespace NUnit.Framework.Constraints.Tests
         [Test]
         public void CanTestContentsOfRefList()
         {
-            var worker = new System.ComponentModel.BackgroundWorker();
-            var list = new System.Collections.Generic.List<int>();
+            BackgroundWorker worker = new BackgroundWorker();
+            List<int> list = new List<int>();
             worker.RunWorkerCompleted += delegate { list.Add(1); };
             worker.DoWork += delegate { Thread.Sleep(1); };
             worker.RunWorkerAsync();
             Assert.That(ref list, Has.Count.EqualTo(1).After(5000, 100));
         }
 
+#if CS_3_0
         [Test]
         public void CanTestContentsOfDelegateReturningList()
         {
-            var worker = new System.ComponentModel.BackgroundWorker();
-            var list = new System.Collections.Generic.List<int>();
+            var worker = new BackgroundWorker();
+            var list = new List<int>();
             worker.RunWorkerCompleted += delegate { list.Add(1); };
             worker.DoWork += delegate { Thread.Sleep(1); };
             worker.RunWorkerAsync();
             Assert.That(() => list, Has.Count.EqualTo(1).After(5000, 100));
         }
+#endif
 		
 		[Test]
 		public void CanTestInitiallyNullReference()
 		{
 			string statusString = null; // object starts off as null
 			
-			var worker = new System.ComponentModel.BackgroundWorker();
+			BackgroundWorker worker = new BackgroundWorker();
 			worker.RunWorkerCompleted += delegate { statusString = "finished"; /* object non-null after work */ };
 			worker.DoWork += delegate { Thread.Sleep(TimeSpan.FromSeconds(1)); /* simulate work */ };
 			worker.RunWorkerAsync();
@@ -139,18 +143,20 @@ namespace NUnit.Framework.Constraints.Tests
 			Assert.That(ref statusString, Has.Length.GreaterThan(0).After(3000, 100));
 		}
 		
+#if CS_3_0
 		[Test]
 		public void CanTestInitiallyNullDelegate()
 		{
 			string statusString = null; // object starts off as null
 			
-			var worker = new System.ComponentModel.BackgroundWorker();
+			BackgroundWorker worker = new BackgroundWorker();
 			worker.RunWorkerCompleted += delegate { statusString = "finished"; /* object non-null after work */ };
 			worker.DoWork += delegate { Thread.Sleep(TimeSpan.FromSeconds(1)); /* simulate work */ };
 			worker.RunWorkerAsync();
 			
 			Assert.That(() => statusString, Has.Length.GreaterThan(0).After(3000, 100));
 		}
+#endif
 #endif
 
         private static int setValueTrueDelay;
