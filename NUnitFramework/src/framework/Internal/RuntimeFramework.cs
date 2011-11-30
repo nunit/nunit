@@ -59,7 +59,7 @@ namespace NUnit.Framework.Internal
         /// DefaultVersion is an empty Version, used to indicate that
         /// NUnit should select the CLR version to use for the test.
         /// </summary>
-        public static readonly Version DefaultVersion = new Version();
+        public static readonly Version DefaultVersion = new Version(0,0);
 
 		private static RuntimeFramework currentFramework;
 		private static RuntimeFramework[] availableFrameworks;
@@ -202,6 +202,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Gets an array of all available frameworks
         /// </summary>
+        // TODO: Special handling for netcf
         public static RuntimeFramework[] AvailableFrameworks
         {
             get
@@ -211,7 +212,9 @@ namespace NUnit.Framework.Internal
                     FrameworkList frameworks = new FrameworkList();
 
                     AppendDotNetFrameworks(frameworks);
+#if !NETCF
                     AppendDefaultMonoFramework(frameworks);
+#endif
                     // NYI
                     //AppendMonoFrameworks(frameworks);
 
@@ -398,11 +401,15 @@ namespace NUnit.Framework.Internal
 
         private static bool IsRuntimeTypeName(string name)
         {
+#if NETCF
+            return Enum.IsDefined(typeof(RuntimeType), name);
+#else
             foreach (string item in Enum.GetNames(typeof(RuntimeType)))
                 if (item.ToLower() == name.ToLower())
                     return true;
 
             return false;
+#endif
         }
 
         private static string GetDefaultDisplayName(RuntimeType runtime, Version version)
@@ -422,7 +429,8 @@ namespace NUnit.Framework.Internal
                   (v1.Build < 0 || v2.Build < 0 || v1.Build == v2.Build) &&
                   (v1.Revision < 0 || v2.Revision < 0 || v1.Revision == v2.Revision);
         }
-		
+
+#if !NETCF
         private static void AppendMonoFrameworks(FrameworkList frameworks)
         {
             if (Environment.OSVersion.Platform == PlatformID.Win32NT)
@@ -512,6 +520,7 @@ namespace NUnit.Framework.Internal
                 }
             }
         }
+#endif
 
         private static void AppendDotNetFrameworks(FrameworkList frameworks)
         {

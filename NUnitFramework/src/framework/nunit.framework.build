@@ -23,7 +23,10 @@
         <exclude name="Internal/Builders/NUnitLiteTestCaseBuilder.cs"/>
         <exclude name="Internal/Builders/NUnitLiteTestFixtureBuilder.cs"/>
         <exclude name="Internal/Commands/CommandBuilder.cs"/>
-        <exclude name="Internal/Commands/CommandRunner.cs"/>
+        <!-- TODO: Remove the following from the tree -->
+        <exclude name="Internal/Commands/OldTestMethodCommand.cs"/>
+        <exclude name="Internal/Commands/TestCaseCommand.cs"/>
+        <exclude name="Internal/Commands/TestExecutionContextCommand.cs"/>
       </sources>
       <references basedir="${current.build.dir}">
         <include name="System.Configuration.dll"/>

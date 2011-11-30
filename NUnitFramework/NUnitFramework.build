@@ -39,7 +39,7 @@
        The first .NET and Mono frameworks found are the
        respective net and mono defaults. -->
   <property name="supported.frameworks" 
-    value="net-4.0,net-3.5,net-2.0,net-1.1,net-1.0,mono-3.5,mono-2.0,mono-1.0,netcf-3.5,netcf-2.0,netcf-1.0"/>
+    value="net-4.0,net-3.5,net-2.0,mono-4.0,mono-3.5,mono-2.0,netcf-3.5,netcf-2.0,netcf-1.0"/>
 
   <!-- Set default warning level for compiles -->
   <property name="warn" value="4" unless="${property::exists('warn')}"/>

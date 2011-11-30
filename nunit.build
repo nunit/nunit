@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project name="NUnit" default="help" basedir=".">
+<project name="NUnit" default="build" basedir=".">
 
 <description>
 **************************************************************************

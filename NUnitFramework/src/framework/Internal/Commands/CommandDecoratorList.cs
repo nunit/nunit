@@ -11,9 +11,17 @@ namespace NUnit.Framework.Internal.Commands
 #if CLR_2_0 || CLR_4_0
     public class CommandDecoratorList : System.Collections.Generic.List<ICommandDecorator>
     {
+        /// <summary>
+        /// Order command decorators by the stage at which they apply.
+        /// </summary>
         public void OrderByStage()
         {
-            Sort((x, y) => x.Stage.CompareTo(y.Stage));
+            Sort(CommandDecoratorComparison);
+        }
+
+        private int CommandDecoratorComparison(ICommandDecorator x, ICommandDecorator y)
+        {
+            return x.Stage.CompareTo(y.Stage);
         }
     }
 #else
@@ -21,7 +29,7 @@ namespace NUnit.Framework.Internal.Commands
     {
         private static CommandDecoratorComparer levelComparer = new CommandDecoratorComparer();
 
-        public void SortByStageAndPriority()
+        public void OrderByStage()
         {
             Sort(levelComparer);
         }
@@ -37,7 +45,7 @@ namespace NUnit.Framework.Internal.Commands
                 if (d1 == null) return -1;
                 if (d2 == null) return +1;
 
-                return d1.Level.CompareTo(d2.Level);
+                return d1.Stage.CompareTo(d2.Stage);
             }
         }
     }
