@@ -81,11 +81,7 @@ namespace NUnit.Engine.Internal
             Writer.WriteLine("{0} {1,-5} [{2,2}] {3}: {4}",
                 DateTime.Now.ToString(TIME_FMT),
                 level == InternalTraceLevel.Verbose ? "Debug" : level.ToString(),
-#if CLR_2_0 || CLR_4_0
                 System.Threading.Thread.CurrentThread.ManagedThreadId,
-#else
-                AppDomain.GetCurrentThreadId(),
-#endif
                 category,
                 message);
 
