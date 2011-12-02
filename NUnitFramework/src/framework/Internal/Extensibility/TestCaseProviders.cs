@@ -21,27 +21,18 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System.Collections.Generic;
 using System.Reflection;
 using NUnit.Framework.Api;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Builders;
-
-#if CLR_2_0 || CLR_4_0
-using System.Collections.Generic;
-#else
-using System.Collections;
-#endif
 
 namespace NUnit.Framework.Extensibility
 {
 #if NUNITLITE
     class TestCaseProviders : ITestCaseProvider
     {
-#if CLR_2_0 || CLR_4_0
         private List<ITestCaseProvider> Extensions = new List<ITestCaseProvider>();
-#else
-        private ArrayList Extensions = new ArrayList();
-#endif
 
         public TestCaseProviders()
         {
@@ -76,15 +67,9 @@ namespace NUnit.Framework.Extensibility
         /// </summary>
         /// <param name="method"></param>
         /// <returns></returns>
-#if CLR_2_0 || CLR_4_0
         public System.Collections.Generic.IEnumerable<ITestCaseData> GetTestCasesFor(MethodInfo method)
         {
             List<ITestCaseData> testcases = new List<ITestCaseData>();
-#else
-        public System.Collections.IEnumerable GetTestCasesFor(MethodInfo method)
-        {
-            ArrayList testcases = new ArrayList();
-#endif
 
             foreach (ITestCaseProvider provider in Extensions)
                 try

@@ -165,7 +165,6 @@ namespace NUnit.Framework
             return new ConstraintExpression().Attribute(expectedType);
         }
 
-#if CLR_2_0 || CLR_4_0
         /// <summary>
         /// Returns a new AttributeConstraint checking for the
         /// presence of a particular attribute on an object.
@@ -174,7 +173,6 @@ namespace NUnit.Framework
         {
             return Attribute(typeof(T));
         }
-#endif
 
         #endregion
 

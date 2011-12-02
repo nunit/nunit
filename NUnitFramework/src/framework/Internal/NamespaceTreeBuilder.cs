@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System.Collections;
+using System.Collections.Generic;
 
 namespace NUnit.Framework.Internal
 {
@@ -37,7 +37,7 @@ namespace NUnit.Framework.Internal
 		/// NamespaceDictionary of all test suites we have created to represent 
         /// namespaces. Used to locate namespace parent suites for fixtures.
 		/// </summary>
-		NamespaceDictionary namespaceSuites  = new NamespaceDictionary();
+		Dictionary<string, TestSuite> namespaceSuites  = new Dictionary<string, TestSuite>();
 
 		/// <summary>
 		/// The root of the test suite being created by this builder.
@@ -78,7 +78,7 @@ namespace NUnit.Framework.Internal
         /// Adds the specified fixtures to the tree.
         /// </summary>
         /// <param name="fixtures">The fixtures to be added.</param>
-		public void Add( IList fixtures )
+		public void Add( IList<TestSuite> fixtures )
 		{
             foreach (TestSuite fixture in fixtures)
                 //if (fixture is SetUpFixture)
@@ -169,25 +169,5 @@ namespace NUnit.Framework.Internal
 		}
 
 		#endregion
-
-        #region NamespaceDictionary Type
-#if CLR_2_0 || CLR_4_0
-        class NamespaceDictionary : System.Collections.Generic.Dictionary<string, TestSuite> { }
-#else
-        class NamespaceDictionary : DictionaryBase
-        {
-            public TestSuite this[string key]
-            {
-                get { return (TestSuite)Dictionary[key]; }
-                set { Dictionary[key] = value; }
-            }
-
-            public bool ContainsKey(string key)
-            {
-                return Dictionary.Contains(key);
-            }
-        }
-#endif
-        #endregion
     }
 }

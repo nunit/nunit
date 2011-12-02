@@ -193,7 +193,6 @@ namespace NUnit.Framework.Internal
             TestAssert.IsRunnable(typeof(FixtureWithNoTests));
         }
 
-#if CLR_2_0 || CLR_4_0
         [Test]
         public void ConstructFromStaticTypeWithoutTestFixtureAttribute()
         {
@@ -256,7 +255,6 @@ namespace NUnit.Framework.Internal
             Assert.That(suite is ParameterizedFixtureSuite);
             Assert.That(suite.Tests.Count, Is.EqualTo(2));
         }
-#endif
 #endif
         
         #region SetUp Signature

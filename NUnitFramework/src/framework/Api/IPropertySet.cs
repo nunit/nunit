@@ -1,10 +1,5 @@
 ﻿using System;
-
-#if CLR_1_0 || CLR_1_1
-using System.Collections;
-#else
 using System.Collections.Generic;
-#endif
 
 namespace NUnit.Framework.Api
 {
@@ -52,17 +47,6 @@ namespace NUnit.Framework.Api
         /// <returns>True if their are values present, otherwise false</returns>
         bool ContainsKey(string key);
 
-#if CLR_1_0 || CLR_1_1
-        /// <summary>
-        /// Gets a collection containing all the keys in the property set
-        /// </summary>
-        ICollection Keys { get; }
-
-        /// <summary>
-        /// Gets an enumerator for all entries in the property set
-        /// </summary>
-        IDictionaryEnumerator GetEnumerator();
-#else
         /// <summary>
         /// Gets a collection containing all the keys in the property set
         /// </summary>
@@ -73,6 +57,5 @@ namespace NUnit.Framework.Api
         /// </summary>
         /// <returns></returns>
         IEnumerator<KeyValuePair<string, object>> GetEnumerator();
-#endif
     }
 }

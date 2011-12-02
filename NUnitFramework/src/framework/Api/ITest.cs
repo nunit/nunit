@@ -86,11 +86,7 @@ namespace NUnit.Framework.Api
         /// Gets this test's child tests
         /// </summary>
         /// <value>A list of child tests</value>
-#if CLR_2_0 || CLR_4_0
         System.Collections.Generic.IList<ITest> Tests { get; }
-#else
-        System.Collections.IList Tests { get; }
-#endif
     }
 }
 

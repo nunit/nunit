@@ -82,10 +82,8 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
         {
             get
             {
-#if CLR_2_0 || CLR_4_0
                 yield return new TestCaseData("a", "a");
                 yield return new TestCaseData("b", "b");
-#endif
 
                 throw new System.Exception("my message");
             }

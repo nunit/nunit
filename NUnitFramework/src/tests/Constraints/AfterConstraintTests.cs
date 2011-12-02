@@ -94,7 +94,6 @@ namespace NUnit.Framework.Constraints.Tests
             Assert.That(DelegateReturningZero, new DelayedConstraint(new EqualConstraint(0), -1));
         }
 
-#if CLR_2_0 || CLR_4_0
         [Test]
         public void CanTestContentsOfList()
         {
@@ -156,7 +155,6 @@ namespace NUnit.Framework.Constraints.Tests
 			
 			Assert.That(() => statusString, Has.Length.GreaterThan(0).After(3000, 100));
 		}
-#endif
 #endif
 
         private static int setValueTrueDelay;

@@ -42,9 +42,7 @@ namespace NUnit.Framework.Constraints.Tests
             string.Empty,
             new object[0],
             new ArrayList(),
-#if CLR_2_0 || CLR_4_0
             new System.Collections.Generic.List<int>()
-#endif  
         };
 
         static object[] FailureData = new object[]

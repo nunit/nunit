@@ -22,12 +22,8 @@
 // ***********************************************************************
 
 using System;
-using NUnit.Framework.Api;
-#if CLR_2_0 || CLR_4_0
 using System.Collections.Generic;
-#else
-using System.Collections;
-#endif
+using NUnit.Framework.Api;
 
 namespace NUnit.Framework.Internal.Commands
 {
@@ -38,11 +34,7 @@ namespace NUnit.Framework.Internal.Commands
     public abstract class TestCommand
     {
         private Test test;
-#if CLR_2_0 || CLR_4_0
         private IList<TestCommand> children;
-#else
-        private IList children;
-#endif
 
         /// <summary>
         /// TODO: Documentation needed for constructor
@@ -63,7 +55,6 @@ namespace NUnit.Framework.Internal.Commands
             get { return test; }
         }
 
-#if CLR_2_0 || CLR_4_0
         /// <summary>
         /// Gets any child TestCommands of this command
         /// </summary>
@@ -78,18 +69,6 @@ namespace NUnit.Framework.Internal.Commands
                 return children;
             }
         }
-#else
-        public IList Children
-        {
-            get 
-            { 
-                if (children == null)
-                    children = new ArrayList();
-
-                return children;
-            }
-        }
-#endif
 
         /// <summary>
         /// Runs the test, returning a TestResult.

@@ -41,7 +41,6 @@ namespace NUnit.Framework.Attributes
             RunTestOnFixture(typeof(SquareRootTest_Method_ArrayOfDouble));
         }
 
-#if CLR_2_0 || CLR_4_0
 #if CS_3_0 || CS_4_0
         [Test]
         public void WorksOnIEnumerableOfT()
@@ -61,6 +60,5 @@ namespace NUnit.Framework.Attributes
         {
             RunTestOnFixture(typeof(SquareRootTest_Method_IEnumerableOfDouble));
         }
-#endif
     }
 }

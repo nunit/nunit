@@ -53,7 +53,6 @@ namespace NUnit.Framework.Syntax
             Assert.That(constraint.Resolve().ToString(), Is.EqualTo("<all <and <custom> <another>>>")); 
         }
 
-#if CLR_2_0 || CLR_4_0
         [Test]
         public void CanMatchPredicate()
         {
@@ -75,7 +74,6 @@ namespace NUnit.Framework.Syntax
             Assert.That(constraint.Resolve().ToString(), Is.EqualTo("<predicate>"));
             Assert.That(42, constraint);
         }
-#endif
 #endif
 
         class CustomConstraint : Constraint

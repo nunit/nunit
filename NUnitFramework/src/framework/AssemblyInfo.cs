@@ -29,9 +29,3 @@ using System.Reflection;
 //
 
 [assembly: CLSCompliant(true)]
-
-#if NET_1_0 || NET_1_1
-[assembly: AssemblyDelaySign(false)]
-[assembly: AssemblyKeyFile("../../../../nunit.snk")]
-[assembly: AssemblyKeyName("")]
-#endif

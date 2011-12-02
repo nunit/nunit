@@ -185,7 +185,6 @@ namespace NUnit.TestData.FixtureSetUpTearDownData
         }
     }
 
-#if CLR_2_0 || CLR_4_0
     [TestFixture]
     public static class StaticClassSetUpAndTearDownFixture
     {
@@ -204,7 +203,6 @@ namespace NUnit.TestData.FixtureSetUpTearDownData
             tearDownCount++;
         }
     }
-#endif
 
     [TestFixture]
 	public class MisbehavingFixture 

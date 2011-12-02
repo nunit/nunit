@@ -252,11 +252,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="method">The method for which data is being provided</param>
         /// <returns></returns>
-#if CLR_2_0 || CLR_4_0
         public System.Collections.Generic.IEnumerable<ITestCaseData> GetTestCasesFor(System.Reflection.MethodInfo method)
-#else
-        public System.Collections.IEnumerable GetTestCasesFor(System.Reflection.MethodInfo method)
-#endif
         {
             ParameterSet parms;
 

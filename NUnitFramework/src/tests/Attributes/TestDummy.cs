@@ -108,11 +108,7 @@ namespace NUnit.Framework.Attributes
             }
         }
 
-#if CLR_2_0 || CLR_4_0
         public System.Collections.Generic.IList<ITest> Tests
-#else
-        public System.Collections.IList Tests
-#endif
         {
             get
             {

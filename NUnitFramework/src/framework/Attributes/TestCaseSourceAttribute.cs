@@ -23,12 +23,10 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 using NUnit.Framework.Api;
 using NUnit.Framework.Internal;
-#if CLR_2_0 || CLR_4_0
-using System.Collections.Generic;
-#endif
 
 namespace NUnit.Framework
 {
@@ -94,15 +92,9 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="method">The method for which data is needed.</param>
         /// <returns></returns>
-#if CLR_2_0 || CLR_4_0
         public IEnumerable<ITestCaseData> GetTestCasesFor(MethodInfo method)
         {
             List<ITestCaseData> data = new List<ITestCaseData>();
-#else
-        public IEnumerable GetTestCasesFor(MethodInfo method)
-        {
-            ArrayList data = new ArrayList();
-#endif
             IEnumerable source = GetTestCaseSource(method);
 
             if (source != null)

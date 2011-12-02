@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Xml;
 using NUnit.Framework.Api;
-
-#if CLR_2_0 || CLR_4_0
-using System.Collections.Generic;
-#endif
 
 namespace NUnit.Framework.Internal
 {
@@ -19,11 +16,7 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public class PropertyBag : IPropertyBag
     {
-#if CLR_2_0 || CLR_4_0
         private Dictionary<string, IList> inner = new Dictionary<string, IList>();
-#else
-        private IDictionary inner = new Hashtable();
-#endif
 
         /// <summary>
         /// Adds a key/value pair to the property set
@@ -32,13 +25,8 @@ namespace NUnit.Framework.Internal
         /// <param name="value">The value</param>
         public void Add(string key, object value)
         {
-#if CLR_2_0 || CLR_4_0
             IList list;
             if (!inner.TryGetValue(key, out list))
-#else
-            IList list = this[key];
-            if (list == null)
-#endif
             {
                 list = new ObjectList();
                 inner.Add(key, list);
@@ -68,17 +56,10 @@ namespace NUnit.Framework.Internal
         /// <returns></returns>
         public object Get(string key)
         {
-#if CLR_2_0 || CLR_4_0
             IList list;
             return inner.TryGetValue(key, out list) && list.Count > 0
                 ? list[0]
                 : null;
-#else
-            IList list = inner[key] as IList;
-            return list != null && list.Count > 0
-                ? list[0]
-                : null;
-#endif
         }
 
         /// <summary>
@@ -170,15 +151,9 @@ namespace NUnit.Framework.Internal
         /// <param name="value"></param>
         public void Remove(string key, object value)
         {
-#if CLR_2_0 || CLR_4_0
             IList list;
             if (inner.TryGetValue(key, out list))
                 list.Remove(value);
-#else
-            IList list = inner[key] as IList;
-            if (list != null)
-                list.Remove(value);
-#endif
         }
 
         /// <summary>
@@ -218,11 +193,7 @@ namespace NUnit.Framework.Internal
         /// </returns>
         public bool ContainsKey(string key)
         {
-#if CLR_2_0 || CLR_4_0
             return inner.ContainsKey(key);
-#else
-            return inner.Contains(key);
-#endif
         }
 
         /// <summary>
@@ -236,13 +207,8 @@ namespace NUnit.Framework.Internal
         /// </returns>
         public bool Contains(string key, object value)
         {
-#if CLR_2_0 || CLR_4_0
             IList list;
             return inner.TryGetValue(key, out list) && list.Contains(value);
-#else
-            IList list = inner[key] as IList;
-            return list != null && list.Contains(value);
-#endif
         }
 
         /// <summary>
@@ -262,11 +228,7 @@ namespace NUnit.Framework.Internal
         /// Gets a collection containing all the keys in the property set
         /// </summary>
         /// <value></value>
-#if CLR_2_0 || CLR_4_0
         public ICollection<string> Keys
-#else
-        public ICollection Keys
-#endif
         {
             get { return inner.Keys; }
         }
@@ -287,13 +249,8 @@ namespace NUnit.Framework.Internal
         {
             get
             {
-#if CLR_2_0 || CLR_4_0
                 IList list;
                 if (!inner.TryGetValue(key, out list))
-#else
-                IList list = inner[key] as IList;
-                if (list == null)
-#endif
                 {
                     list = new ObjectList();
                     inner.Add(key, list);
@@ -352,19 +309,12 @@ namespace NUnit.Framework.Internal
 
         #region Nested PropertyBagEnumerator Class
 
-#if CLR_2_0 || CLR_4_0
-
         /// <summary>
         /// TODO: Documentation needed for class
         /// </summary>
         public class PropertyBagEnumerator : IEnumerator<PropertyEntry>
         {
             private IEnumerator<KeyValuePair<string, IList>> innerEnum;
-#else
-        public class PropertyBagEnumerator : IEnumerator
-        {
-            private IEnumerator innerEnum;
-#endif
             private PropertyBag bag;
             private IEnumerator valueEnum;
 
@@ -386,13 +336,7 @@ namespace NUnit.Framework.Internal
 
                 if (innerEnum.MoveNext())
                 {
-#if CLR_2_0 || CLR_4_0
                     valueEnum = innerEnum.Current.Value.GetEnumerator();
-#else
-                    DictionaryEntry entry = (DictionaryEntry)innerEnum.Current;
-                    IList list = (IList)entry.Value;
-                    valueEnum = list.GetEnumerator();
-#endif
                 }
             }
 
@@ -401,18 +345,13 @@ namespace NUnit.Framework.Internal
                 if (valueEnum == null)
                     throw new InvalidOperationException();
 
-#if CLR_2_0 || CLR_4_0
                 string key = innerEnum.Current.Key;
-#else
-                string key = (string)((DictionaryEntry)innerEnum.Current).Key;
-#endif
 
                 object value = valueEnum.Current;
 
                 return new PropertyEntry(key, value);
             }
 
-#if CLR_2_0 || CLR_4_0
             #region IEnumerator<PropertyEntry> Members
 
             PropertyEntry IEnumerator<PropertyEntry>.Current
@@ -432,7 +371,6 @@ namespace NUnit.Framework.Internal
             }
 
             #endregion
-#endif
 
             #region IEnumerator Members
 
@@ -457,13 +395,7 @@ namespace NUnit.Framework.Internal
                         return false;
                     }
 
-#if CLR_2_0 || CLR_4_0
                     valueEnum = innerEnum.Current.Value.GetEnumerator();
-#else
-                    DictionaryEntry entry = (DictionaryEntry)innerEnum.Current;
-                    IList list = (IList)entry.Value;
-                    valueEnum = list.GetEnumerator();
-#endif
                 }
 
                 return true;

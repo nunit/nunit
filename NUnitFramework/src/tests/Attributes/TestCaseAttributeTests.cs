@@ -158,13 +158,11 @@ namespace NUnit.Framework.Tests
             Assert.AreEqual("b", array[1]);
         }
 
-#if CLR_2_0 || CLR_4_0
         [TestCase(Result = null)]
         public object ResultCanBeNull()
         {
             return null;
         }
-#endif
 
         [TestCase("a", "b")]
         public void HandlesParamsArrayAsSoleArgument(params object[] array)

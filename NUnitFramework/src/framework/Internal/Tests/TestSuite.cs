@@ -22,18 +22,13 @@
 // ***********************************************************************
 
 using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Reflection;
 using System.Xml;
 using NUnit.Framework.Api;
 using NUnit.Framework.Internal.Commands;
-
-#if CLR_2_0 || CLR_4_0
-using System.Collections.Generic;
-#else
-using System.Collections;
-#endif
 
 namespace NUnit.Framework.Internal
 {
@@ -47,11 +42,7 @@ namespace NUnit.Framework.Internal
 		/// <summary>
 		/// Our collection of child tests
 		/// </summary>
-#if CLR_2_0 || CLR_4_0
         private List<ITest> tests = new List<ITest>();
-#else
-        private ArrayList tests = new ArrayList();
-#endif
 
         /// <summary>
         /// Set to true to suppress sorting this suite's contents
@@ -193,11 +184,7 @@ namespace NUnit.Framework.Internal
         /// Gets this test's child tests
         /// </summary>
         /// <value>The list of child tests</value>
-#if CLR_2_0 || CLR_4_0
-        public override System.Collections.Generic.IList<ITest> Tests 
-#else
-        public override System.Collections.IList Tests
-#endif
+        public override IList<ITest> Tests 
 		{
 			get { return tests; }
 		}

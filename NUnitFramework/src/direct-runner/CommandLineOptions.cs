@@ -22,11 +22,9 @@
 // ***********************************************************************
 
 using System;
-using System.Text;
 using System.Collections;
-#if CLR_2_0 || CLR_4_0
 using System.Collections.Generic;
-#endif
+using System.Text;
 
 namespace NUnit.DirectRunner
 {
@@ -47,17 +45,10 @@ namespace NUnit.DirectRunner
 
         private bool error = false;
 
-#if CLR_2_0 || CLR_4_0
         private List<string> loadList = new List<string>();
         private List<string> runList = new List<string>();
         private List<string> invalidOptions = new List<string>();
         private List<string> parameters = new List<string>();
-#else
-        private ArrayList loadList = new ArrayList();
-        private ArrayList runList = new ArrayList();
-        private ArrayList invalidOptions = new ArrayList();
-        private ArrayList parameters = new ArrayList();
-#endif
 
         /// <summary>
         /// Gets a value indicating whether the 'wait' option was used.
@@ -151,11 +142,7 @@ namespace NUnit.DirectRunner
         /// </summary>
         public string[] Parameters
         {
-#if CLR_2_0 || CLR_4_0
             get { return parameters.ToArray(); }
-#else
-            get { return (string[])parameters.ToArray(typeof(string)); }
-#endif
         }
 
         private void ProcessOption(string opt)

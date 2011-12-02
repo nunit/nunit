@@ -82,7 +82,6 @@ namespace NUnit.Framework.Constraints
             return new StandardConstraintResult(hasSucceeded);
         }
 
-#if CLR_2_0 || CLR_4_0
         /// <summary>
         /// Converts an ActualValueDelegate to a TestDelegate
         /// before calling the primary overload.
@@ -94,7 +93,6 @@ namespace NUnit.Framework.Constraints
             TestDelegate testDelegate = new TestDelegate(delegate { del(); });
             return Matches((object)testDelegate);
         }
-#endif
 
         /// <summary>
         /// Write the constraint description to a MessageWriter

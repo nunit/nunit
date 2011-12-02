@@ -41,7 +41,6 @@ namespace NUnit.Framework.Internal
                 Is.EqualTo("TestSuite"));
             Assert.That(new TestAssembly(System.Reflection.Assembly.GetExecutingAssembly(), "junk").TestType, 
                 Is.EqualTo("Assembly"));
-#if CLR_2_0 || CLR_4_0
             Assert.That(new ParameterizedMethodSuite(typeof(DummyFixture).GetMethod("GenericMethod")).TestType,
                 Is.EqualTo("GenericMethod"));
             Assert.That(new ParameterizedMethodSuite(typeof(DummyFixture).GetMethod("ParameterizedMethod")).TestType,
@@ -52,7 +51,6 @@ namespace NUnit.Framework.Internal
             Type genericType = typeof(DummyGenericFixture<int>).GetGenericTypeDefinition();
             Assert.That(new ParameterizedFixtureSuite(genericType).TestType,
                 Is.EqualTo("GenericFixture"));
-#endif
 #endif
         }
 
@@ -163,12 +161,10 @@ namespace NUnit.Framework.Internal
         {
             public void DummyMethod() { }
             public void ParameterizedMethod(int x) { }
-#if CLR_2_0 || CLR_4_0
             public void GenericMethod<T>(T x) { }
-#endif
         }
 
-#if (CLR_2_0 || CLR_4_0) && !NUNITLITE
+#if !NUNITLITE
         public class DummyGenericFixture<T>
         {
         }

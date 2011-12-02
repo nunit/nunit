@@ -94,7 +94,6 @@ namespace NUnit.Framework.Tests
         static object[] InstanceField =
             { new object[] { "InstanceField" } };
 
-#if CLR_2_0 || CLR_4_0
         [Test, TestCaseSource(typeof(DataSourceClass))]
         public void SourceCanBeInstanceOfIEnumerable(string source)
         {
@@ -108,7 +107,6 @@ namespace NUnit.Framework.Tests
                 yield return "DataSourceClass";
             }
         }
-#endif
 
         [Test, TestCaseSource("MyData")]
         public void SourceMayReturnArgumentsAsObjectArray(int n, int d, int q)
@@ -280,7 +278,6 @@ namespace NUnit.Framework.Tests
             {
                 get
                 {
-#if CLR_2_0 || CLR_4_0
                     yield return new TestCaseData(0, 0, 0)
                         .SetName("ThisOneShouldThrow")
                         .SetDescription("Demonstrates use of ExpectedException")
@@ -289,19 +286,6 @@ namespace NUnit.Framework.Tests
                         .Throws(typeof(System.DivideByZeroException));
                     yield return new object[] { 100, 20, 5 };
                     yield return new object[] { 100, 4, 25 };
-#else
-                    ArrayList list = new ArrayList();
-                    list.Add(
-                        new TestCaseData( 0, 0, 0)
-                            .SetName("ThisOneShouldThrow")
-                            .SetDescription("Demonstrates use of ExpectedException")
-							.SetCategory("Junk")
-							.SetProperty("MyProp", "zip")
-							.Throws( typeof (System.DivideByZeroException) ));
-                    list.Add(new object[] { 100, 20, 5 });
-                    list.Add(new object[] {100, 4, 25});
-                    return list;
-#endif
                 }
             }
         }
@@ -325,10 +309,8 @@ namespace NUnit.Framework.Tests
         {
             get
             {
-#if CLR_2_0 || CLR_4_0
                 yield return new TestCaseData("a", "a");
                 yield return new TestCaseData("b", "b");
-#endif
 
                 throw new System.Exception("my message");
             }

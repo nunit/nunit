@@ -25,9 +25,6 @@ using System;
 using System.Collections;
 using System.CodeDom.Compiler;
 using NUnit.Framework.Constraints;
-#if CLR_2_0 || CLR_4_0
-using System.Collections.Generic;
-#endif
 
 namespace NUnit.Framework.Syntax
 {

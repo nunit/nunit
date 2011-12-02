@@ -72,11 +72,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// List of child results
         /// </summary>
-#if CLR_2_0 || CLR_4_0
         private System.Collections.Generic.List<ITestResult> children;
-#else
-        private System.Collections.ArrayList children;
-#endif
 
         #endregion
 
@@ -196,7 +192,6 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Gets the collection of child results.
         /// </summary>
-#if CLR_2_0 || CLR_4_0
         public System.Collections.Generic.IList<ITestResult> Children
         {
             get
@@ -207,18 +202,6 @@ namespace NUnit.Framework.Internal
                 return children;
             }
         }
-#else
-        public System.Collections.IList Children
-        {
-            get 
-            {
-                if (children == null)
-                    children = new System.Collections.ArrayList();
-
-                return children; 
-            }
-        }
-#endif
 
         #endregion
 

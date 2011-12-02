@@ -213,7 +213,6 @@ namespace NUnit.Framework.Assertions
 			CollectionAssert.AreEqual(array1, array2, new AlwaysEqualComparer());
 		}
 
-#if CLR_2_0 || CLR_4_0
         [Test]
         public void AreEqual_UsingIterator()
         {
@@ -228,7 +227,7 @@ namespace NUnit.Framework.Assertions
             yield return 2;
             yield return 3;
         }
-#endif
+
 		#endregion
 
 		#region AreEquivalent

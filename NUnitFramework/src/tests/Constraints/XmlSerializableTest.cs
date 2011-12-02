@@ -25,9 +25,7 @@
 
 using System;
 using System.Collections;
-#if CLR_2_0 || CLR_4_0
 using System.Collections.Generic;
-#endif
 
 namespace NUnit.Framework.Constraints.Tests
 {
@@ -44,18 +42,11 @@ namespace NUnit.Framework.Constraints.Tests
 
         object[] SuccessData = new object[] { 1, "a", new ArrayList() };
 
-#if CLR_2_0 || CLR_4_0
         object[] FailureData = new object[] { 
             new TestCaseData( new Dictionary<string, string>(), "<Dictionary`2>" ),
             new TestCaseData( new InternalClass(), "<InternalClass>" ),
             new TestCaseData( new InternalWithSerializableAttributeClass(), "<InternalWithSerializableAttributeClass>" )
         };
-#else
-		object[] FailureData = new object[] { 
-            new TestCaseData( new InternalClass(), "<InternalClass>" ),
-            new TestCaseData( new InternalWithSerializableAttributeClass(), "<InternalWithSerializableAttributeClass>" )
-        };
-#endif
 
         object[] InvalidData = new object[] { null };
     }

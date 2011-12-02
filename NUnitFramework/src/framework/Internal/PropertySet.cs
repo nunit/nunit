@@ -1,11 +1,6 @@
 ﻿using System;
-using NUnit.Framework.Api;
-
-#if CLR_1_0 || CLR_1_1
-using System.Collections;
-#else
 using System.Collections.Generic;
-#endif
+using NUnit.Framework.Api;
 
 namespace NUnit.Framework.Internal
 {
@@ -57,52 +52,6 @@ namespace NUnit.Framework.Internal
         }
 
 
-#if CLR_1_0 || CLR_1_1
-        public object this[string key]
-        {
-            get
-            {
-                return inner[key];
-            }
-            set
-            {
-                inner[key] = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets a flag indicating whether the specified key is
-        /// present in the property set.
-        /// </summary>
-        /// <param name="key">The key to be checked</param>
-        /// <returns>
-        /// True if their are values present, otherwise false
-        /// </returns>
-        public bool ContainsKey(string key)
-        {
-            return inner.Contains(key);
-        }
-
-        /// <summary>
-        /// Gets a collection containing all the keys in the property set
-        /// </summary>
-        /// <value></value>
-        public ICollection Keys
-        {
-            get { return inner.Keys; }
-        }
-
-        /// <summary>
-        /// Gets an enumerator for all entries in the property set
-        /// </summary>
-        /// <returns></returns>
-        public IDictionaryEnumerator GetEnumerator()
-        {
-            return inner.GetEnumerator();
-        }
-
-        private IDictionary inner = new Hashtable();
-#else
         /// <summary>
         /// Gets or sets the value for a particular key
         /// </summary>
@@ -153,6 +102,5 @@ namespace NUnit.Framework.Internal
         }
 
         private Dictionary<string, object> inner = new Dictionary<string, object>();
-#endif
     }
 }

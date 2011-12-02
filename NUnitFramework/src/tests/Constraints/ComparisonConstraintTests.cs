@@ -23,13 +23,12 @@
 
 using System;
 using System.Collections;
-#if CLR_2_0 || CLR_4_0
 using System.Collections.Generic;
-#endif
 
 namespace NUnit.Framework.Constraints.Tests
 {
     #region ComparisonTest
+
     public abstract class ComparisonConstraintTest : ConstraintTestBaseWithArgumentException
     {
         protected ComparisonConstraint comparisonConstraint;
@@ -53,7 +52,6 @@ namespace NUnit.Framework.Constraints.Tests
             }
         }
 
-#if CLR_2_0 || CLR_4_0
         [Test]
         public void UsesProvidedComparerOfT()
         {
@@ -100,11 +98,12 @@ namespace NUnit.Framework.Constraints.Tests
             comparisonConstraint.Using(comparer).Matches(0);
         }
 #endif
-#endif
     }
+
     #endregion
 
     #region GreaterThan
+
     [TestFixture]
     public class GreaterThanTest : ComparisonConstraintTest
     {
@@ -130,7 +129,6 @@ namespace NUnit.Framework.Constraints.Tests
             Assert.That(actual, Is.GreaterThan(expected));
         }
 
-#if CLR_2_0 || CLR_4_0
         [Test]
         public void CanCompareIComparablesOfT()
         {
@@ -138,11 +136,12 @@ namespace NUnit.Framework.Constraints.Tests
             ClassWithIComparableOfT actual = new ClassWithIComparableOfT(42);
             Assert.That(actual, Is.GreaterThan(expected));
         }
-#endif
     }
+
     #endregion
 
     #region GreaterThanOrEqual
+
     [TestFixture]
     public class GreaterThanOrEqualTest : ComparisonConstraintTest
     {
@@ -168,7 +167,6 @@ namespace NUnit.Framework.Constraints.Tests
             Assert.That(actual, Is.GreaterThanOrEqualTo(expected));
         }
 
-#if CLR_2_0 || CLR_4_0
         [Test]
         public void CanCompareIComparablesOfT()
         {
@@ -176,11 +174,12 @@ namespace NUnit.Framework.Constraints.Tests
             ClassWithIComparableOfT actual = new ClassWithIComparableOfT(42);
             Assert.That(actual, Is.GreaterThanOrEqualTo(expected));
         }
-#endif
     }
+
     #endregion
 
     #region LessThan
+
     [TestFixture]
     public class LessThanTest : ComparisonConstraintTest
     {
@@ -206,7 +205,6 @@ namespace NUnit.Framework.Constraints.Tests
             Assert.That(actual, Is.LessThan(expected));
         }
 
-#if CLR_2_0 || CLR_4_0
         [Test]
         public void CanCompareIComparablesOfT()
         {
@@ -214,11 +212,12 @@ namespace NUnit.Framework.Constraints.Tests
             ClassWithIComparableOfT actual = new ClassWithIComparableOfT(0);
             Assert.That(actual, Is.LessThan(expected));
         }
-#endif
     }
+
     #endregion
 
     #region LessThanOrEqual
+
     [TestFixture]
     public class LessThanOrEqualTest : ComparisonConstraintTest
     {
@@ -244,7 +243,6 @@ namespace NUnit.Framework.Constraints.Tests
             Assert.That(actual, Is.LessThanOrEqualTo(expected));
         }
 
-#if CLR_2_0 || CLR_4_0
         [Test]
         public void CanCompareIComparablesOfT()
         {
@@ -252,11 +250,12 @@ namespace NUnit.Framework.Constraints.Tests
             ClassWithIComparableOfT actual = new ClassWithIComparableOfT(0);
             Assert.That(actual, Is.LessThanOrEqualTo(expected));
         }
-#endif
     }
+
     #endregion
 
     #region RangeConstraint
+
     [TestFixture]
     public class RangeConstraintTest : ConstraintTestBaseWithArgumentException
     {
@@ -295,7 +294,6 @@ namespace NUnit.Framework.Constraints.Tests
             }
         }
 
-#if CLR_2_0 || CLR_4_0
         [Test]
         public void UsesProvidedComparerOfT()
         {
@@ -342,11 +340,12 @@ namespace NUnit.Framework.Constraints.Tests
             Assert.That(rangeConstraint.Using(comparer).Matches(19).HasSucceeded);
         }
 #endif
-#endif
     }
+
     #endregion
 
     #region Test Classes
+
     class ClassWithIComparable : IComparable
     {
         private int val;
@@ -366,7 +365,6 @@ namespace NUnit.Framework.Constraints.Tests
         }
     }
 
-#if CLR_2_0 || CLR_4_0
     class ClassWithIComparableOfT : IComparable<ClassWithIComparableOfT>
     {
         private int val;
@@ -381,6 +379,6 @@ namespace NUnit.Framework.Constraints.Tests
             return val.CompareTo(other.val);
         }
     }
-#endif
+
     #endregion
 }

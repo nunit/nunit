@@ -63,7 +63,6 @@ namespace NUnit.Framework.Syntax
 		}
 	}
 
-#if CLR_2_0 || CLR_4_0
     public abstract class AfterSyntaxTests
     {
         protected bool flag;
@@ -191,5 +190,4 @@ namespace NUnit.Framework.Syntax
             Assert.That(ref greeting, Is.StringEnding("world").After(5000, 200));
         }
     }
-#endif
 }

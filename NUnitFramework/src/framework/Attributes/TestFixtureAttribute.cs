@@ -82,10 +82,8 @@ namespace NUnit.Framework
         {
             get 
             {
-#if CLR_2_0 || CLR_4_0
                 if (!argsInitialized)
                     InitializeArgs();
-#endif
                 return constructorArgs; 
             }
         }
@@ -123,10 +121,8 @@ namespace NUnit.Framework
         {
             get
             {
-#if CLR_2_0 || CLR_4_0
                 if (!argsInitialized)
                     InitializeArgs();
-#endif
                 return typeArgs;
             }
             set 
@@ -154,7 +150,6 @@ namespace NUnit.Framework
             get { return category == null ? null : category.Split(','); }
         }
  
-#if CLR_2_0 || CLR_4_0
         /// <summary>
         /// Helper method to split the original argument list
         /// into type arguments and constructor arguments.
@@ -184,7 +179,6 @@ namespace NUnit.Framework
                 
             argsInitialized = true;
         }
-#endif
 
         #region IApplyToTest Members
 
