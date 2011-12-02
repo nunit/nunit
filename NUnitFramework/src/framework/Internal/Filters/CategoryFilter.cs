@@ -22,8 +22,9 @@
 // ***********************************************************************
 
 using System;
-using System.Text;
 using System.Collections;
+using System.Collections.Generic;
+using System.Text;
 using NUnit.Framework.Api;
 
 namespace NUnit.Framework.Internal.Filters
@@ -36,14 +37,13 @@ namespace NUnit.Framework.Internal.Filters
 	[Serializable]
 	public class CategoryFilter : TestFilter
 	{
-		ArrayList categories;
+        List<string> categories = new List<string>();
 
 		/// <summary>
 		/// Construct an empty CategoryFilter
 		/// </summary>
 		public CategoryFilter()
 		{
-			categories = new ArrayList();
 		}
 
 		/// <summary>
@@ -52,7 +52,6 @@ namespace NUnit.Framework.Internal.Filters
 		/// <param name="name">A category name</param>
 		public CategoryFilter( string name )
 		{
-			categories = new ArrayList();
 			if ( name != null && name != string.Empty )
 				categories.Add( name );
 		}
@@ -63,7 +62,6 @@ namespace NUnit.Framework.Internal.Filters
 		/// <param name="names">An array of category names</param>
 		public CategoryFilter( string[] names )
 		{
-			categories = new ArrayList();
 			if ( names != null )
 				categories.AddRange( names );
 		}
@@ -114,7 +112,7 @@ namespace NUnit.Framework.Internal.Filters
 		/// <summary>
 		/// Gets the list of categories from this filter
 		/// </summary>
-		public IList Categories
+		public IList<string> Categories
 		{
 			get { return categories; }
 		}

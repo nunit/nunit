@@ -22,7 +22,7 @@
 // ***********************************************************************
 
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using NUnit.Framework.Api;
 
 namespace NUnit.Framework.Internal.Filters
@@ -33,7 +33,7 @@ namespace NUnit.Framework.Internal.Filters
     [Serializable]
     public class SimpleNameFilter : TestFilter
     {
-        private ArrayList names = new ArrayList();
+        private List<string> names = new List<string>();
 
 		/// <summary>
 		/// Construct an empty SimpleNameFilter
