@@ -22,7 +22,7 @@
 // ***********************************************************************
 
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 
 namespace NUnit.Framework.Internal
@@ -36,7 +36,7 @@ namespace NUnit.Framework.Internal
         #region Static Members
         private static Random seedGenerator = new Random();
 
-        private static RandomizerDictionary randomizers = new RandomizerDictionary();
+        private static Dictionary<MemberInfo, Randomizer> randomizers = new Dictionary<MemberInfo, Randomizer>();
 
         /// <summary>
         /// Get a random seed for use in creating a randomizer.
@@ -132,11 +132,5 @@ namespace NUnit.Framework.Internal
             return ivals;
         }
         #endregion
-
-#if CLR_2_0 || CLR_4_0
-        class RandomizerDictionary : System.Collections.Generic.Dictionary<MemberInfo, Randomizer> { }
-#else
-        class RandomizerDictionary : Hashtable { }
-#endif
     }
 }

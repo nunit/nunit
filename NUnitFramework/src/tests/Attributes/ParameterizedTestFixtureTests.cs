@@ -92,7 +92,6 @@ namespace NUnit.Framework.Attributes
             Assert.That(x * y, Is.EqualTo(answer));
         }
 
-#if CLR_2_0 || CLR_4_0
         IEnumerable GenerateData()
         {
             for(int i = 1; i <= answer; i++)
@@ -105,7 +104,6 @@ namespace NUnit.Framework.Attributes
         {
             Assert.That(x * y, Is.EqualTo(answer));
         }
-#endif
 
         int[] intvals = new int[] { 1, 2, 3 };
 

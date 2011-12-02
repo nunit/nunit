@@ -22,12 +22,10 @@
 // ***********************************************************************
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Drawing;
-using System.Collections;
-#if CLR_2_0 || CLR_4_0
-using System.Collections.Generic;
-#endif
 
 namespace NUnit.Framework.Constraints.Tests
 {
@@ -159,7 +157,6 @@ namespace NUnit.Framework.Constraints.Tests
                             new Hashtable { { 0, 0 }, { 2, 2 }, { 1, 1 } });
         }
 
-#if CLR_2_0 || CLR_4_0
         [Test]
         public void CanMatchDictionaries_SameOrder()
         {
@@ -187,7 +184,6 @@ namespace NUnit.Framework.Constraints.Tests
             Assert.AreEqual(new Hashtable { { 0, 0 }, { 1, 1 }, { 2, 2 } },
                             new Dictionary<int, int> { { 0, 0 }, { 2, 2 }, { 1, 1 } });
         }
-#endif
 #endif
         #endregion
 
@@ -351,7 +347,6 @@ namespace NUnit.Framework.Constraints.Tests
             }
         }
 
-#if CLR_2_0 || CLR_4_0
         [Test]
         public void UsesProvidedEqualityComparer()
         {
@@ -450,7 +445,6 @@ namespace NUnit.Framework.Constraints.Tests
         {
             Assert.That("hello", Is.EqualTo("HELLO").Using<string>((x,y) => String.Compare(x, y, true)));
         }
-#endif
 #endif
     }
 
@@ -577,7 +571,6 @@ namespace NUnit.Framework.Constraints.Tests
         //    }
         //}
 
-#if CLR_2_0 || CLR_4_0
         [Test]
         public void TestPropertyWithPrivateSetter()
         {
@@ -593,6 +586,5 @@ namespace NUnit.Framework.Constraints.Tests
                 private set { }
             }
         }
-#endif
     }
 }

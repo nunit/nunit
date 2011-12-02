@@ -158,7 +158,7 @@ namespace NUnit.Framework
         #endregion
 
         #region ref Object
-#if CLR_2_0 || CLR_4_0
+
         /// <summary>
         /// Apply a constraint to a referenced value, succeeding if the constraint
         /// is satisfied and throwing an InconclusiveException on failure.
@@ -201,50 +201,7 @@ namespace NUnit.Framework
                 throw new InconclusiveException(writer.ToString());
             }
         }
-#else
-        /// <summary>
-        /// Apply a constraint to a referenced boolean, succeeding if the constraint
-        /// is satisfied and throwing an InconclusiveException on failure.
-        /// </summary>
-        /// <param name="constraint">A Constraint to be applied</param>
-        /// <param name="actual">The actual value to test</param>
-        static public void That(ref bool actual, IResolveConstraint constraint)
-        {
-            Assume.That(ref actual, constraint.Resolve(), null, null);
-        }
 
-        /// <summary>
-        /// Apply a constraint to a referenced value, succeeding if the constraint
-        /// is satisfied and throwing an InconclusiveException on failure.
-        /// </summary>
-        /// <param name="constraint">A Constraint to be applied</param>
-        /// <param name="actual">The actual value to test</param>
-        /// <param name="message">The message that will be displayed on failure</param>
-        static public void That(ref bool actual, IResolveConstraint constraint, string message)
-        {
-            Assume.That(ref actual, constraint.Resolve(), message, null);
-        }
-
-        /// <summary>
-        /// Apply a constraint to a referenced value, succeeding if the constraint
-        /// is satisfied and throwing an InconclusiveException on failure.
-        /// </summary>
-        /// <param name="actual">The actual value to test</param>
-        /// <param name="expression">A Constraint to be applied</param>
-        /// <param name="message">The message that will be displayed on failure</param>
-        /// <param name="args">Arguments to be used in formatting the message</param>
-        static public void That(ref bool actual, IResolveConstraint expression, string message, params object[] args)
-        {
-            Constraint constraint = expression.Resolve();
-
-            if (!constraint.Matches(ref actual).HasSucceeded)
-            {
-                MessageWriter writer = new TextMessageWriter(message, args);
-                constraint.WriteMessageTo(writer);
-                throw new InconclusiveException(writer.ToString());
-            }
-        }
-#endif
         #endregion
 
         #region Boolean

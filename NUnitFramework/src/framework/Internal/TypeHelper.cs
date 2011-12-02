@@ -39,7 +39,6 @@ namespace NUnit.Framework.Internal
         /// <returns>The display name for the Type</returns>
         public static string GetDisplayName(Type type)
         {
-#if CLR_2_0 || CLR_4_0
             if (type.IsGenericParameter)
                 return type.Name;
 
@@ -68,7 +67,7 @@ namespace NUnit.Framework.Internal
 
                 return sb.ToString();
             }
-#endif
+
             int lastdot = type.FullName.LastIndexOf('.');
             return lastdot >= 0 
                 ? type.FullName.Substring(lastdot+1)
@@ -231,7 +230,6 @@ namespace NUnit.Framework.Internal
             }
         }
 
-#if CLR_2_0 || CLR_4_0
         /// <summary>
         /// Creates an instance of a generic Type using the supplied Type arguments
         /// </summary>
@@ -290,6 +288,5 @@ namespace NUnit.Framework.Internal
 
             return false;
         }
-#endif
     }
 }

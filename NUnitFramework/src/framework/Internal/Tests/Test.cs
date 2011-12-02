@@ -246,11 +246,7 @@ namespace NUnit.Framework.Internal
         /// Gets this test's child tests
         /// </summary>
         /// <value>A list of child tests</value>
-#if CLR_2_0 || CLR_4_0
         public abstract System.Collections.Generic.IList<ITest> Tests { get; }
-#else
-        public abstract System.Collections.IList Tests { get; }
-#endif
 
         #endregion
 
@@ -412,11 +408,7 @@ namespace NUnit.Framework.Internal
                 if (state == ApartmentState.Unknown)
                     return false;
 
-#if CLR_2_0 || CLR_4_0
                 return state != Thread.CurrentThread.GetApartmentState();
-#else
-                return state != Thread.CurrentThread.ApartmentState;
-#endif
             }
         }
 #endif

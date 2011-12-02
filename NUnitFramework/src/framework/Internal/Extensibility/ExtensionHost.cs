@@ -22,7 +22,7 @@
 // ***********************************************************************
 
 using System;
-using System.Collections;
+using System.Collections.Generic;
 
 namespace NUnit.Framework.Extensibility
 {
@@ -40,7 +40,7 @@ namespace NUnit.Framework.Extensibility
         /// <summary>
         /// List of extension points on this host
         /// </summary>
-        protected ExtensionPointList extensions = new ExtensionPointList();
+        protected List<ExtensionPoint> extensions = new List<ExtensionPoint>();
 
         /// <summary>
         /// Flags indicating the types of extensions supported by this host

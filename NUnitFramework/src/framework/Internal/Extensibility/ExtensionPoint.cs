@@ -145,17 +145,4 @@ namespace NUnit.Framework.Extensibility
 
 		#endregion
     }
-
-    #region ExtensionPointList
-
-    /// <summary>
-    /// ExtensionPointList represents a collection of extension points in a cross-platform manner.
-    /// </summary>
-#if CLR_2_0 || CLR_4_0
-    public class ExtensionPointList : System.Collections.Generic.List<ExtensionPoint> { }
-#else
-    public class ExtensionPointList : ArrayList { }
-#endif
-
-    #endregion
 }

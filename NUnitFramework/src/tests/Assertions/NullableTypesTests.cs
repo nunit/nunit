@@ -25,7 +25,8 @@ using System;
 
 namespace NUnit.Framework.Assertions
 {
-#if (CLR_2_0 || CLR_4_0) && !MONO
+#if !MONO
+    // TODO: Test with Mono
     [TestFixture, Category("Generics")]
     public class NullableTypesTests
     {

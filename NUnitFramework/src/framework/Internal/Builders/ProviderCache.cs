@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework.Internal;
 
@@ -30,7 +31,7 @@ namespace NUnit.Framework.Builders
 {
     class ProviderCache
     {
-        private static ProviderDictionary instances = new ProviderDictionary();
+        private static Dictionary<CacheEntry, object> instances = new Dictionary<CacheEntry, object>();
 
         public static object GetInstanceOf(Type providerType)
         {
@@ -87,17 +88,5 @@ namespace NUnit.Framework.Builders
                 return providerType.GetHashCode();
             }
         }
-
-#if CLR_2_0 || CLR_4_0
-        class ProviderDictionary : System.Collections.Generic.Dictionary<CacheEntry, object> { }
-#else
-        class ProviderDictionary : Hashtable
-        {           
-            public bool ContainsKey(object key)
-            {
-                return Contains(key);
-            }
-        }
-#endif
     }
 }

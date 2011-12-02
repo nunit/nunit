@@ -243,56 +243,6 @@ namespace NUnit.Framework
 
         #region Assert.That
 
-        #region Object
-
-#if !CLR_2_0 && !CLR_4_0
-        /// <summary>
-        /// Apply a constraint to an actual value, succeeding if the constraint
-        /// is satisfied and throwing an assertion exception on failure.
-        /// </summary>
-        /// <param name="expression">A Constraint to be applied</param>
-        /// <param name="actual">The actual value to test</param>
-        static public void That(object actual, IResolveConstraint expression)
-        {
-            Assert.That(actual, expression, null, null);
-        }
-
-        /// <summary>
-        /// Apply a constraint to an actual value, succeeding if the constraint
-        /// is satisfied and throwing an assertion exception on failure.
-        /// </summary>
-        /// <param name="expression">A Constraint to be applied</param>
-        /// <param name="actual">The actual value to test</param>
-        /// <param name="message">The message that will be displayed on failure</param>
-        static public void That(object actual, IResolveConstraint expression, string message)
-        {
-            Assert.That(actual, expression, message, null);
-        }
-
-        /// <summary>
-        /// Apply a constraint to an actual value, succeeding if the constraint
-        /// is satisfied and throwing an assertion exception on failure.
-        /// </summary>
-        /// <param name="expression">A Constraint expression to be applied</param>
-        /// <param name="actual">The actual value to test</param>
-        /// <param name="message">The message that will be displayed on failure</param>
-        /// <param name="args">Arguments to be used in formatting the message</param>
-        static public void That(object actual, IResolveConstraint expression, string message, params object[] args)
-        {
-            Constraint constraint = expression.Resolve();
-
-            TestExecutionContext.CurrentContext.IncrementAssertCount();
-            if (!constraint.Matches(actual).HasSucceeded)
-            {
-                MessageWriter writer = new TextMessageWriter(message, args);
-                constraint.WriteMessageTo(writer);
-                throw new AssertionException(writer.ToString());
-            }
-        }
-#endif
-
-        #endregion
-
         #region Boolean
 
         /// <summary>
@@ -327,56 +277,6 @@ namespace NUnit.Framework
         {
             Assert.That(condition, Is.True, null, null);
         }
-
-        #endregion
-
-        #region ref Boolean
-
-#if !CLR_2_0 && !CLR_4_0
-        /// <summary>
-        /// Apply a constraint to a referenced boolean, succeeding if the constraint
-        /// is satisfied and throwing an assertion exception on failure.
-        /// </summary>
-        /// <param name="actual">The actual value to test</param>
-        /// <param name="expression">A Constraint to be applied</param>
-        static public void That(ref bool actual, IResolveConstraint expression)
-        {
-            Assert.That(ref actual, expression, null, null);
-        }
-
-        /// <summary>
-        /// Apply a constraint to a referenced value, succeeding if the constraint
-        /// is satisfied and throwing an assertion exception on failure.
-        /// </summary>
-        /// <param name="actual">The actual value to test</param>
-        /// <param name="expression">A Constraint to be applied</param>
-        /// <param name="message">The message that will be displayed on failure</param>
-        static public void That(ref bool actual, IResolveConstraint expression, string message)
-        {
-            Assert.That(ref actual, expression, message, null);
-        }
-
-        /// <summary>
-        /// Apply a constraint to a referenced value, succeeding if the constraint
-        /// is satisfied and throwing an assertion exception on failure.
-        /// </summary>
-        /// <param name="actual">The actual value to test</param>
-        /// <param name="expression">A Constraint to be applied</param>
-        /// <param name="message">The message that will be displayed on failure</param>
-        /// <param name="args">Arguments to be used in formatting the message</param>
-        static public void That(ref bool actual, IResolveConstraint expression, string message, params object[] args)
-        {
-            Constraint constraint = expression.Resolve();
-
-            TestExecutionContext.CurrentContext.IncrementAssertCount();
-            if (!constraint.Matches(ref actual).HasSucceeded)
-            {
-                MessageWriter writer = new TextMessageWriter(message, args);
-                constraint.WriteMessageTo(writer);
-                throw new AssertionException(writer.ToString());
-            }
-        }
-#endif
 
         #endregion
 
@@ -447,7 +347,6 @@ namespace NUnit.Framework
 
         #region Assert.That<T>
 
-#if CLR_2_0 || CLR_4_0
         /// <summary>
         /// Apply a constraint to an actual value, succeeding if the constraint
         /// is satisfied and throwing an assertion exception on failure.
@@ -535,7 +434,6 @@ namespace NUnit.Framework
                 throw new AssertionException(writer.ToString());
             }
         }
-#endif
 
         #endregion
 
@@ -624,7 +522,7 @@ namespace NUnit.Framework
         #endregion
 
         #region Throws<T>
-#if CLR_2_0 || CLR_4_0
+
         /// <summary>
         /// Verifies that a delegate throws a particular exception when called.
         /// </summary>
@@ -657,7 +555,7 @@ namespace NUnit.Framework
         {
             return Throws<T>(code, string.Empty, null);
         }
-#endif
+
         #endregion
 
         #region Catch
@@ -732,7 +630,7 @@ namespace NUnit.Framework
         #endregion
 
         #region Catch<T>
-#if CLR_2_0 || CLR_4_0
+
         /// <summary>
         /// Verifies that a delegate throws an exception of a certain Type
         /// or one derived from it when called and returns it.
@@ -765,7 +663,7 @@ namespace NUnit.Framework
         {
             return (T)Throws(new InstanceOfTypeConstraint(typeof(T)), code);
         }
-#endif
+
         #endregion
 
         #region DoesNotThrow
@@ -1335,7 +1233,6 @@ namespace NUnit.Framework
             AssertDoublesAreEqual(expected, actual, delta, null, null);
         }
 
-#if CLR_2_0 || CLR_4_0
         /// <summary>
         /// Verifies that two doubles are equal considering a delta. If the
         /// expected value is infinity then the delta value is ignored. If 
@@ -1381,7 +1278,6 @@ namespace NUnit.Framework
         {
             AssertDoublesAreEqual(expected, (double)actual, delta, null, null);
         }
-#endif
 
         #endregion
 
@@ -1864,7 +1760,6 @@ namespace NUnit.Framework
             Assert.That(aDouble, Is.NaN ,null, null);
         }
 
-#if CLR_2_0 || CLR_4_0
         /// <summary>
         /// Verifies that the double that is passed in is an <code>NaN</code> value.
         /// If the object is not <code>NaN</code> then an <see cref="AssertionException"/>
@@ -1898,7 +1793,6 @@ namespace NUnit.Framework
         {
             Assert.That(aDouble, Is.NaN ,null, null);
         }
-#endif
 
         #endregion
 
@@ -2139,7 +2033,6 @@ namespace NUnit.Framework
 
         #region IsAssignableFrom<T>
 
-#if CLR_2_0 || CLR_4_0
         /// <summary>
         /// Asserts that an object may be assigned a  value of a given Type.
         /// </summary>
@@ -2170,7 +2063,6 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.AssignableFrom(typeof(T)) ,null, null);
         }
-#endif
 
         #endregion
 
@@ -2211,7 +2103,6 @@ namespace NUnit.Framework
 
         #region IsNotAssignableFrom<T>
 
-#if CLR_2_0 || CLR_4_0
         /// <summary>
         /// Asserts that an object may not be assigned a  value of a given Type.
         /// </summary>
@@ -2242,7 +2133,6 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.Not.AssignableFrom(typeof(T)) ,null, null);
         }
-#endif
 
         #endregion
 
@@ -2283,7 +2173,6 @@ namespace NUnit.Framework
 
         #region IsInstanceOf<T>
 
-#if CLR_2_0 || CLR_4_0
         /// <summary>
         /// Asserts that an object is an instance of a given type.
         /// </summary>
@@ -2314,7 +2203,6 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.InstanceOf(typeof(T)) ,null, null);
         }
-#endif
 
         #endregion
 
@@ -2355,7 +2243,6 @@ namespace NUnit.Framework
 
         #region IsNotInstanceOf<T>
 
-#if CLR_2_0 || CLR_4_0
         /// <summary>
         /// Asserts that an object is not an instance of a given type.
         /// </summary>
@@ -2386,7 +2273,6 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.Not.InstanceOf(typeof(T)) ,null, null);
         }
-#endif
 
         #endregion
 

@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Threading;
 using System.Text;
@@ -52,11 +53,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// A list of all decorators applied to the test by attributes or parameterset arguments
         /// </summary>
-#if CLR_2_0 || CLR_4_0
-        private System.Collections.Generic.List<ICommandDecorator> decorators = new System.Collections.Generic.List<ICommandDecorator>();
-#else
-        private System.Collections.ArrayList decorators = new System.Collections.ArrayList();
-#endif
+        private List<ICommandDecorator> decorators = new System.Collections.Generic.List<ICommandDecorator>();
 
         /// <summary>
         /// Indicated whether the method has an expected result.
@@ -122,11 +119,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Gets a list of custom decorators for this test.
         /// </summary>
-#if CLR_2_0 || CLR_4_0
-        public System.Collections.Generic.IList<ICommandDecorator> CustomDecorators
-#else
-        public System.Collections.IList CustomDecorators
-#endif
+        public IList<ICommandDecorator> CustomDecorators
         {
             get { return decorators; }
         }
@@ -197,11 +190,7 @@ namespace NUnit.Framework.Internal
         /// Gets this test's child tests
         /// </summary>
         /// <value>A list of child tests</value>
-#if CLR_2_0 || CLR_4_0
-        public override System.Collections.Generic.IList<ITest> Tests
-#else
-        public override System.Collections.IList Tests
-#endif
+        public override IList<ITest> Tests
         {
             get { return new ITest[0]; }
         }

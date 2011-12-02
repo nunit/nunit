@@ -119,7 +119,6 @@ namespace NUnit.Framework.Constraints
             return baseConstraint.Matches(actual);
         }
 
-#if CLR_2_0 || CLR_4_0
         /// <summary>
         /// Test whether the constraint is satisfied by a given reference.
         /// Overridden to wait for the specified delay period before
@@ -154,35 +153,6 @@ namespace NUnit.Framework.Constraints
             this.actual = actual;
             return baseConstraint.Matches(actual);
         }
-#else
-        /// <summary>
-        /// Test whether the constraint is satisfied by a given boolean reference.
-        /// Overridden to wait for the specified delay period before
-        /// calling the base constraint with the dereferenced value.
-        /// </summary>
-        /// <param name="actual">A reference to the value to be tested</param>
-        /// <returns>True for success, false for failure</returns>
-        public override IConstraintResult Matches(ref bool actual)
-        {
-            int remainingDelay = delayInMilliseconds;
-
-            while (pollingInterval > 0 && pollingInterval < remainingDelay)
-            {
-                remainingDelay -= pollingInterval;
-                Thread.Sleep(pollingInterval);
-                this.actual = actual;
-                IConstraintResult result = baseConstraint.Matches(actual);
-                if (result.HasSucceeded)
-                    return result;
-            }
-
-            if ( remainingDelay > 0 )
-                Thread.Sleep(remainingDelay);
-            
-            this.actual = actual;
-            return baseConstraint.Matches(actual);
-        }
-#endif
 
         /// <summary>
         /// Write the constraint description to a MessageWriter

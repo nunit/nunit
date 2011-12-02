@@ -23,9 +23,7 @@
 
 using System;
 using System.Collections;
-#if CLR_2_0 || CLR_4_0
 using System.Collections.Generic;
-#endif
 
 namespace NUnit.Framework.Constraints
 {
@@ -53,7 +51,6 @@ namespace NUnit.Framework.Constraints
             return new ComparerAdapter(comparer);
         }
 
-#if CLR_2_0 || CLR_4_0
         /// <summary>
         /// Returns a ComparisonAdapter that wraps an IComparer&lt;T&gt;
         /// </summary>
@@ -69,7 +66,6 @@ namespace NUnit.Framework.Constraints
         {
             return new ComparisonAdapterForComparison<T>(comparer);
         }
-#endif
 
         /// <summary>
         /// Compares two objects
@@ -108,7 +104,6 @@ namespace NUnit.Framework.Constraints
             }
         }
 
-#if CLR_2_0 || CLR_4_0
         /// <summary>
         /// ComparisonAdapter&lt;T&gt; extends ComparisonAdapter and
         /// allows use of an IComparer&lt;T&gt; or Comparison&lt;T&gt;
@@ -167,6 +162,5 @@ namespace NUnit.Framework.Constraints
                 return comparison.Invoke((T)expected, (T)actual);
             }
         }
-#endif
     }
 }

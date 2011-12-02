@@ -85,11 +85,7 @@ namespace NUnit.Framework.Internal.Commands
             // NOTE: Setting to Unknown causes an error under the Mono 1.0 profile
             ApartmentState state = (ApartmentState)Test.Properties.GetSetting(PropertyNames.ApartmentState, ApartmentState.Unknown);
             if (state != ApartmentState.Unknown)
-#if CLR_2_0 || CLR_4_0
                 thread.SetApartmentState(state);
-#else
-                thread.ApartmentState = state;
-#endif
 
 #if NUNITLITE
             int timeout = Timeout.Infinite;

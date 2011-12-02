@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections;
-
-#if CLR_2_0 || CLR_4_0
 using System.Collections.Generic;
-#endif
 
 namespace NUnit.Framework.Api
 {
@@ -15,7 +12,7 @@ namespace NUnit.Framework.Api
     /// may be of any type. Null values are not permitted, since
     /// a null entry represents the absence of the key.
     /// 
-    /// The entries in a PropertyBag re of two kinds: those that
+    /// The entries in a PropertyBag are of two kinds: those that
     /// take a single value and those that take multiple values.
     /// However, the PropertyBag has no knowledge of which entries
     /// fall into each category and the distinction is entirely
@@ -158,21 +155,6 @@ namespace NUnit.Framework.Api
         /// <summary>
         /// Gets a collection containing all the keys in the property set
         /// </summary>
-#if CLR_2_0 || CLR_4_0
         ICollection<string> Keys { get; }
-#else
-        ICollection Keys { get; }
-#endif
     }
-
-    /// <summary>
-    /// The IPropertyEnumerator interface is defined as IEnumerator
-    /// under .NET 1.0 and 1.1 and as IEnumerator&lt;PropertyEntry&gt;
-    /// under later versions.
-    /// </summary>
-#if CLR_2_0 || CLR_4_0
-    public interface IPropertyEnumerator : IEnumerator<PropertyEntry> { }
-#else
-    public interface IPropertyEnumerator : IEnumerator { }
-#endif
 }

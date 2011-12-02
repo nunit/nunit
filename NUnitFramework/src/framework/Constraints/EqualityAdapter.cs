@@ -23,9 +23,7 @@
 
 using System;
 using System.Collections;
-#if CLR_2_0 || CLR_4_0
 using System.Collections.Generic;
-#endif
 
 namespace NUnit.Framework.Constraints
 {
@@ -49,7 +47,6 @@ namespace NUnit.Framework.Constraints
             return new ComparisonAdapterAdapter(ComparisonAdapter.For(comparer));
         }
 
-#if CLR_2_0 || CLR_4_0
         /// <summary>
         /// Returns an EqualityAdapter that wraps an IEqualityComparer.
         /// </summary>
@@ -117,7 +114,6 @@ namespace NUnit.Framework.Constraints
                 return comparer.Equals((T)x, (T)y);
             }
         }
-#endif
 
         class ComparisonAdapterAdapter : EqualityAdapter
         {

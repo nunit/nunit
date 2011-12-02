@@ -31,7 +31,7 @@ namespace NUnit
     /// ObjectList does not attempt to be a general replacement for either of
     /// these classes but only implements what is needed within the framework.
     /// </summary>
-#if CLR_2_0 || CLR_4_0
+    // TODO: Remove this class, which is no longer needed since we don't support .NET 1.x
     public class ObjectList : System.Collections.Generic.List<object>
     {
         /// <summary>
@@ -44,17 +44,4 @@ namespace NUnit
                 Add(item);
         }
     }
-#else
-    public class ObjectList : System.Collections.ArrayList 
-    { 
-        /// <summary>
-        /// Converts the  ArrayList to an object[].
-        /// </summary>
-        /// <returns>The array</returns>
-        public new object[] ToArray()
-        {
-            return (object[])base.ToArray(typeof(object));
-        }
-    }
-#endif
 }

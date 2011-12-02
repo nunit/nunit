@@ -23,9 +23,7 @@
 
 using System;
 using System.Collections;
-#if CLR_2_0 || CLR_4_0
 using System.Collections.Generic;
-#endif
 
 namespace NUnit.Framework.Constraints
 {
@@ -50,6 +48,7 @@ namespace NUnit.Framework.Constraints
         protected CollectionItemsEqualConstraint(object arg) : base(arg) { }
 
         #region Modifiers
+
         /// <summary>
         /// Flag the constraint to ignore case and return self.
         /// </summary>
@@ -73,7 +72,6 @@ namespace NUnit.Framework.Constraints
             return this;
         }
 
-#if CLR_2_0 || CLR_4_0
         /// <summary>
         /// Flag the constraint to use the supplied IComparer object.
         /// </summary>
@@ -117,7 +115,7 @@ namespace NUnit.Framework.Constraints
             this.comparer.ExternalComparer = EqualityAdapter.For(comparer);
             return this;
         }
-#endif
+
         #endregion
 
         /// <summary>

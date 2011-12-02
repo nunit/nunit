@@ -29,9 +29,6 @@ namespace NUnit.Framework.Syntax
     internal class TestCompiler
     {
         private readonly Microsoft.CSharp.CSharpCodeProvider provider;
-#if !CLR_2_0 && !CLR_4_0
-		private readonly ICodeCompiler compiler;
-#endif
 		CompilerParameters options;
 
 		public TestCompiler() : this( null, null ) { }
@@ -41,9 +38,6 @@ namespace NUnit.Framework.Syntax
 		public TestCompiler( string[] assemblyNames, string outputName )
 		{
 			this.provider = new Microsoft.CSharp.CSharpCodeProvider();
-#if !CLR_2_0 && !CLR_4_0
-			this.compiler = provider.CreateCompiler();
-#endif
             this.options = new CompilerParameters();
 
 			if ( assemblyNames != null && assemblyNames.Length > 0 )
@@ -63,11 +57,7 @@ namespace NUnit.Framework.Syntax
 
 		public CompilerResults CompileCode( string code )
 		{
-#if CLR_2_0 || CLR_4_0
 			return provider.CompileAssemblyFromSource( options, code );
-#else
-            return compiler.CompileAssemblyFromSource(options, code);
-#endif
         }
     }
 }

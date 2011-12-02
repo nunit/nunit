@@ -220,11 +220,8 @@ namespace NUnit.Framework.Internal
                 }
 
 
-#if CLR_2_0 || CLR_4_0
                 int threadID = System.Threading.Thread.CurrentThread.ManagedThreadId;
-#else
-                int threadID =AppDomain.GetCurrentThreadId();
-#endif
+
                 if (args != null)
                     message = string.Format(message, args);
                 

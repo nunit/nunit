@@ -48,11 +48,7 @@ namespace NUnit.Framework.Attributes
 
         private static ApartmentState GetApartmentState(Thread thread)
         { 
-#if CLR_2_0 || CLR_4_0
             return thread.GetApartmentState();
-#else
-			return thread.ApartmentState;
-#endif
         }
 
         [SetUp]

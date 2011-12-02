@@ -60,10 +60,8 @@ namespace NUnit.Framework.Internal
         {
             get
             {
-#if CLR_2_0 || CLR_4_0
                 if (this.Method.ContainsGenericParameters)
                     return "GenericMethod";
-#endif
                 
                 return "ParameterizedMethod";
             }

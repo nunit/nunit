@@ -22,11 +22,9 @@
 // ***********************************************************************
 
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Collections;
-#if CLR_2_0 || CLR_4_0
-using System.Collections.Generic;
-#endif
 
 namespace NUnit.Framework.Internal
 {
@@ -64,11 +62,7 @@ namespace NUnit.Framework.Internal
         /// <returns>The array of methods found</returns>
         public static MethodInfo[] GetMethodsWithAttribute(Type fixtureType, Type attributeType, bool inherit)
         {
-#if CLR_2_0 || CLR_4_0
             List<MethodInfo> list = new List<MethodInfo>();
-#else
-            ArrayList list = new ArrayList();
-#endif
 
             foreach (MethodInfo method in fixtureType.GetMethods(AllMembers))
             {
@@ -78,25 +72,13 @@ namespace NUnit.Framework.Internal
 
             list.Sort(new BaseTypesFirstComparer());
 
-#if CLR_2_0 || CLR_4_0
-            return (MethodInfo[])list.ToArray();
-#else
-            return (MethodInfo[])list.ToArray(typeof(MethodInfo));
-#endif
+            return list.ToArray();
         }
 
-#if CLR_2_0 || CLR_4_0
-        private class BaseTypesFirstComparer : System.Collections.Generic.IComparer<MethodInfo>
-#else
-        private class BaseTypesFirstComparer : IComparer
-#endif
+        private class BaseTypesFirstComparer : IComparer<MethodInfo>
         {
             #region IComparer Members
-#if CLR_2_0 || CLR_4_0
             public int Compare(MethodInfo x, MethodInfo y)
-#else
-            public int Compare(object x, object y)
-#endif
             {
                 MethodInfo m1 = x as MethodInfo;
                 MethodInfo m2 = y as MethodInfo;

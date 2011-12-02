@@ -115,7 +115,6 @@ namespace NUnit.Framework
             return Exception.TypeOf(expectedType);
         }
 
-#if CLR_2_0 || CLR_4_0
         /// <summary>
         /// Creates a constraint specifying the exact type of exception expected
         /// </summary>
@@ -123,7 +122,6 @@ namespace NUnit.Framework
         {
             return TypeOf(typeof(T));
         }
-#endif
 
         #endregion
 
@@ -137,7 +135,6 @@ namespace NUnit.Framework
             return Exception.InstanceOf(expectedType);
         }
 
-#if CLR_2_0 || CLR_4_0
         /// <summary>
         /// Creates a constraint specifying the type of exception expected
         /// </summary>
@@ -145,7 +142,6 @@ namespace NUnit.Framework
         {
             return InstanceOf(typeof(T));
         }
-#endif
 
         #endregion
 

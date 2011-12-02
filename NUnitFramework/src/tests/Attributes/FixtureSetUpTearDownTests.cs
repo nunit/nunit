@@ -78,7 +78,7 @@ namespace NUnit.Framework.Attributes
             Assert.AreEqual(1, StaticSetUpAndTearDownFixture.tearDownCount);
         }
 
-#if (CLR_2_0 || CLR_4_0) && !NUNITLITE
+#if !NUNITLITE
         [Test]
         public static void StaticClassSetUpAndTearDownAreCalled()
         {

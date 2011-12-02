@@ -1,8 +1,6 @@
 ﻿using System;
-using NUnit.Framework;
-#if CLR_2_0 || CLR_4_0
 using System.Collections.Generic;
-#endif
+using NUnit.Framework;
 
 namespace NUnit.TestData.DatapointFixture
 {
@@ -44,7 +42,6 @@ namespace NUnit.TestData.DatapointFixture
         public double[] values = new double[] { 0.0, 1.0, -1.0, double.MaxValue, double.PositiveInfinity };
     }
 
-#if CLR_2_0 || CLR_4_0
 #if CS_3_0 || CS_4_0
     public class SquareRootTest_Field_IEnumerableOfDouble : SquareRootTest
     {
@@ -85,7 +82,6 @@ namespace NUnit.TestData.DatapointFixture
             return list;
         }
     }
-#endif
 
     public class SquareRootTest_Property_ArrayOfDouble : SquareRootTest
     {
