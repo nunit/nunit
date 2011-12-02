@@ -22,7 +22,7 @@
 // ***********************************************************************
 
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using NUnit.Framework.Api;
 
 namespace NUnit.Framework.Internal.Filters
@@ -34,7 +34,7 @@ namespace NUnit.Framework.Internal.Filters
 	[Serializable]
 	public class OrFilter : TestFilter
 	{
-		private ArrayList filters = new ArrayList();
+		private List<ITestFilter> filters = new List<ITestFilter>();
 
 		/// <summary>
 		/// Constructs an empty OrFilter
@@ -66,7 +66,7 @@ namespace NUnit.Framework.Internal.Filters
 		{
 			get
 			{
-				return (ITestFilter[])filters.ToArray(typeof(ITestFilter));
+				return filters.ToArray();
 			}
 		}
 
