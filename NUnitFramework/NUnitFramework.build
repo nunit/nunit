@@ -888,8 +888,19 @@
     <property name="runtime.platform" value="mono"/>
     <property name="runtime.version" value="3.5"/>
     <property name="runtime.config" value="mono-3.5"/>
-    <property name="runtime.defines" value="MONO,MONO_3_5,CLR_2_0"/>
+    <property name="runtime.defines" value="MONO,MONO_3_5,CLR_2_0,CS_3_0"/>
     <property name="nant.settings.currentframework" value="mono-3.5"/>
+  </target>
+
+  <target name="set-mono-4.0-runtime-config">
+    <fail unless="${framework::exists('mono-4.0') and framework::sdk-exists('mono-4.0')}"
+      message="The Mono 4.0 SDK is not configured or not installed"/>
+
+    <property name="runtime.platform" value="mono"/>
+    <property name="runtime.version" value="4.0"/>
+    <property name="runtime.config" value="mono-4.0"/>
+    <property name="runtime.defines" value="MONO,MONO_4_0,CLR_4_0,CS_4_0"/>
+    <property name="nant.settings.currentframework" value="mono-4.0"/>
   </target>
 
 <!-- ***************************************************************** -->
