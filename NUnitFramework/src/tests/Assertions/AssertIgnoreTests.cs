@@ -90,7 +90,7 @@ namespace NUnit.Framework.Assertions
 		{
 			ITestResult fixtureResult = TestBuilder.RunTestFixture( typeof( IgnoreInSetUpFixture ) );
 
-            Assert.AreEqual(ResultState.Success, fixtureResult.ResultState);
+            Assert.AreEqual(ResultState.Ignored, fixtureResult.ResultState);
 
             foreach (TestResult testResult in fixtureResult.Children)
                 Assert.AreEqual(ResultState.Ignored, testResult.ResultState);

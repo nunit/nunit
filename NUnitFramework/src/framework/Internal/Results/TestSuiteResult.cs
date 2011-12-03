@@ -117,16 +117,49 @@ namespace NUnit.Framework.Internal
                     if (this.resultState.Status != TestStatus.Failed)
                     {
                         this.resultState = ResultState.Failure;
-                        this.message = "Child test failed";
+                        this.message = "One or more child tests had errors";
                     }
 
                     break;
 
                 case TestStatus.Skipped:
 
+                    switch (result.ResultState.Label)
+                    {
+                        case "Invalid":
+
+                            if (this.ResultState != ResultState.NotRunnable && this.ResultState.Status != TestStatus.Failed)
+                            {
+                                this.resultState = ResultState.Failure;
+                                this.message = "One or more child tests had errors";
+                            }
+
+                            break;
+
+                        case "Ignored":
+
+                            if (this.ResultState.Status == TestStatus.Inconclusive || this.ResultState.Status == TestStatus.Passed)
+                            {
+                                this.resultState = ResultState.Ignored;
+                                this.message = "One or more child tests were ignored";
+                            }
+
+                            break;
+
+                        default:
+
+                            // Tests skipped for other reasons do not change the outcome
+                            // of the containing suite when added.
+
+                            break;
+                    }
+
                     break;
 
                 case TestStatus.Inconclusive:
+
+                    // An inconclusive result does not change the outcome
+                    // of the containing suite when added.
 
                     break;
             }
