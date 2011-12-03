@@ -100,4 +100,18 @@ namespace NUnit.TestData.DatapointFixture
             return new double[] { 0.0, 1.0, -1.0, double.MaxValue, double.PositiveInfinity };
         }
     }
+ 
+    public class SquareRootTest_Iterator_IEnumerableOfDouble : SquareRootTest
+    {
+        [Datapoints]
+        public IEnumerable<double> GetValues()
+        {
+            yield return 0.0;
+
+            yield return 1.0;
+            yield return -1.0;
+            yield return double.MaxValue;
+            yield return double.PositiveInfinity;
+        }
+    }
 }
