@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="ReferenceAssemblies" default="build">
+	<target name="clean">
+		<delete>
+			<fileset>
+				<include name="Libraries/**" />
+				<include name="Tests/**" />
+			</fileset>
+		</delete>
+	</target>
+	
+	<target name="compile-helper">
+		<mkdir dir="Libraries" />
+		<csc target="library" output="Libraries/Helper.dll">
+			<sources>
+				<include name="Helper.cs" />
+			</sources>
+		</csc>
+	</target>
+
+	<target name="compile-test" depends="compile-helper">
+		<mkdir dir="Tests" />
+		<csc target="library" output="Tests/ReferenceTest.dll">
+			<sources>
+				<include name="ReferenceTest.cs" />
+			</sources>
+			<references basedir="Libraries">
+				<include name="Helper.dll" />
+				<include name="${nant::scan-probing-paths('nunit.framework.dll')}" />
+			</references>
+		</csc>
+	</target>
+
+	<target name="build" depends="compile-test">
+		<nunit2>
+			<formatter type="Plain" />
+			<test>
+				<assemblies basedir="Tests">
+					<include name="ReferenceTest.dll" />
+				</assemblies>
+				<references basedir="Libraries">
+					<include name="Helper.dll" />
+				</references>
+			</test>
+		</nunit2>
+	</target>
+</project>
