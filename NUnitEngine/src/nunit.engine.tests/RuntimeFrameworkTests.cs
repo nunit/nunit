@@ -6,8 +6,12 @@ namespace NUnit.Engine.Tests
     [TestFixture]
     public class RuntimeFrameworkTests
     {
-        static RuntimeType currentRuntime = 
-            Type.GetType("Mono.Runtime", false) != null ? RuntimeType.Mono : RuntimeType.Net;
+        static RuntimeType currentRuntime =
+            Type.GetType("Mono.Runtime", false) != null
+                ? RuntimeType.Mono
+                : Environment.OSVersion.Platform == PlatformID.WinCE
+                    ? RuntimeType.NetCF
+                    : RuntimeType.Net;
 
         [Test]
         public void CanGetCurrentFramework()
@@ -45,10 +49,22 @@ namespace NUnit.Engine.Tests
         }
 
         [TestCaseSource("frameworkData")]
-        public void CanCreateNewRuntimeFramework(FrameworkData data)
+        public void CanCreateUsingFrameworkVersion(FrameworkData data)
         {
             RuntimeFramework framework = new RuntimeFramework(data.runtime, data.frameworkVersion);
             Assert.AreEqual(data.runtime, framework.Runtime);
+            Assert.AreEqual(data.frameworkVersion, framework.FrameworkVersion);
+            Assert.AreEqual(data.clrVersion, framework.ClrVersion);
+        }
+
+        [TestCaseSource("frameworkData")]
+        public void CanCreateUsingClrVersion(FrameworkData data)
+        {
+            Assume.That(data.frameworkVersion.Major != 3);
+
+            RuntimeFramework framework = new RuntimeFramework(data.runtime, data.clrVersion);
+            Assert.AreEqual(data.runtime, framework.Runtime);
+            Assert.AreEqual(data.frameworkVersion, framework.FrameworkVersion);
             Assert.AreEqual(data.clrVersion, framework.ClrVersion);
         }
 
@@ -178,27 +194,29 @@ namespace NUnit.Engine.Tests
         }
 
         internal FrameworkData[] frameworkData = new FrameworkData[] {
-            new FrameworkData(RuntimeType.Net, new Version(1,0), new Version(1,0), "net-1.0", "Net 1.0"),
-            new FrameworkData(RuntimeType.Net, new Version(1,0,3705), new Version(1,0,3705), "net-1.0.3705", "Net 1.0.3705"),
-            new FrameworkData(RuntimeType.Net, new Version(1,1), new Version(1,1), "net-1.1", "Net 1.1"),
-            new FrameworkData(RuntimeType.Net, new Version(1,1,4322), new Version(1,1,4322), "net-1.1.4322", "Net 1.1.4322"),
-            new FrameworkData(RuntimeType.Net, new Version(2,0), new Version(2,0), "net-2.0", "Net 2.0"),
-            new FrameworkData(RuntimeType.Net, new Version(2,0,40607), new Version(2,0,40607), "net-2.0.40607", "Net 2.0.40607"),
-            new FrameworkData(RuntimeType.Net, new Version(2,0,50727), new Version(2,0,50727), "net-2.0.50727", "Net 2.0.50727"),
-            new FrameworkData(RuntimeType.Net, new Version(3,0), new Version(2,0), "net-3.0", "Net 3.0"),
-            new FrameworkData(RuntimeType.Net, new Version(3,5), new Version(2,0), "net-3.5", "Net 3.5"),
-            new FrameworkData(RuntimeType.Net, new Version(4,0), new Version(4,0), "net-4.0", "Net 4.0"),
+            new FrameworkData(RuntimeType.Net, new Version(1,0), new Version(1,0,3705), "net-1.0", "Net 1.0"),
+            //new FrameworkData(RuntimeType.Net, new Version(1,0,3705), new Version(1,0,3705), "net-1.0.3705", "Net 1.0.3705"),
+            //new FrameworkData(RuntimeType.Net, new Version(1,0), new Version(1,0,3705), "net-1.0.3705", "Net 1.0.3705"),
+            new FrameworkData(RuntimeType.Net, new Version(1,1), new Version(1,1,4322), "net-1.1", "Net 1.1"),
+            //new FrameworkData(RuntimeType.Net, new Version(1,1,4322), new Version(1,1,4322), "net-1.1.4322", "Net 1.1.4322"),
+            new FrameworkData(RuntimeType.Net, new Version(2,0), new Version(2,0,50727), "net-2.0", "Net 2.0"),
+            //new FrameworkData(RuntimeType.Net, new Version(2,0,40607), new Version(2,0,40607), "net-2.0.40607", "Net 2.0.40607"),
+            //new FrameworkData(RuntimeType.Net, new Version(2,0,50727), new Version(2,0,50727), "net-2.0.50727", "Net 2.0.50727"),
+            new FrameworkData(RuntimeType.Net, new Version(3,0), new Version(2,0,50727), "net-3.0", "Net 3.0"),
+            new FrameworkData(RuntimeType.Net, new Version(3,5), new Version(2,0,50727), "net-3.5", "Net 3.5"),
+            new FrameworkData(RuntimeType.Net, new Version(4,0), new Version(4,0,30319), "net-4.0", "Net 4.0"),
             new FrameworkData(RuntimeType.Net, RuntimeFramework.DefaultVersion, RuntimeFramework.DefaultVersion, "net", "Net"),
-            new FrameworkData(RuntimeType.Mono, new Version(1,0), new Version(1,1), "mono-1.0", "Mono 1.0"),
-            new FrameworkData(RuntimeType.Mono, new Version(2,0), new Version(2,0), "mono-2.0", "Mono 2.0"),
-            new FrameworkData(RuntimeType.Mono, new Version(2,0,50727), new Version(2,0,50727), "mono-2.0.50727", "Mono 2.0.50727"),
-            new FrameworkData(RuntimeType.Mono, new Version(3,5), new Version(2,0), "mono-3.5", "Mono 3.5"),
+            new FrameworkData(RuntimeType.Mono, new Version(1,0), new Version(1,1,4322), "mono-1.0", "Mono 1.0"),
+            new FrameworkData(RuntimeType.Mono, new Version(2,0), new Version(2,0,50727), "mono-2.0", "Mono 2.0"),
+            //new FrameworkData(RuntimeType.Mono, new Version(2,0,50727), new Version(2,0,50727), "mono-2.0.50727", "Mono 2.0.50727"),
+            new FrameworkData(RuntimeType.Mono, new Version(3,5), new Version(2,0,50727), "mono-3.5", "Mono 3.5"),
+            new FrameworkData(RuntimeType.Mono, new Version(4,0), new Version(4,0,30319), "mono-4.0", "Mono 4.0"),
             new FrameworkData(RuntimeType.Mono, RuntimeFramework.DefaultVersion, RuntimeFramework.DefaultVersion, "mono", "Mono"),
-            new FrameworkData(RuntimeType.Any, new Version(1,1), new Version(1,1), "v1.1", "v1.1"),
-            new FrameworkData(RuntimeType.Any, new Version(2,0), new Version(2,0), "v2.0", "v2.0"),
-            new FrameworkData(RuntimeType.Any, new Version(2,0,50727), new Version(2,0,50727), "v2.0.50727", "v2.0.50727"),
-            new FrameworkData(RuntimeType.Any, new Version(3,5), new Version(2,0), "v3.5", "v3.5"),
-            new FrameworkData(RuntimeType.Any, new Version(4,0), new Version(4,0), "v4.0", "v4.0"),
+            new FrameworkData(RuntimeType.Any, new Version(1,1), new Version(1,1,4322), "v1.1", "v1.1"),
+            new FrameworkData(RuntimeType.Any, new Version(2,0), new Version(2,0,50727), "v2.0", "v2.0"),
+            //new FrameworkData(RuntimeType.Any, new Version(2,0,50727), new Version(2,0,50727), "v2.0.50727", "v2.0.50727"),
+            new FrameworkData(RuntimeType.Any, new Version(3,5), new Version(2,0,50727), "v3.5", "v3.5"),
+            new FrameworkData(RuntimeType.Any, new Version(4,0), new Version(4,0,30319), "v4.0", "v4.0"),
             new FrameworkData(RuntimeType.Any, RuntimeFramework.DefaultVersion, RuntimeFramework.DefaultVersion, "any", "Any")
         };
     }

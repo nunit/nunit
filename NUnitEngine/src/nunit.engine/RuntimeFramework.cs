@@ -1,41 +1,58 @@
-// ****************************************************************
-// This is free software licensed under the NUnit license. You
-// may obtain a copy of the license as well as information regarding
-// copyright ownership at http://nunit.org.
-// ****************************************************************
+// ***********************************************************************
+// Copyright (c) 2007 Charlie Poole
+//
+// Permission is hereby granted, free of charge, to any person obtaining
+// a copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to
+// permit persons to whom the Software is furnished to do so, subject to
+// the following conditions:
+// 
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+// ***********************************************************************
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using System.Collections.Generic;
 using Microsoft.Win32;
 
 namespace NUnit.Engine
 {
-	/// <summary>
-	/// Enumeration identifying a common language 
-	/// runtime implementation.
-	/// </summary>
-	public enum RuntimeType
-	{
+    /// <summary>
+    /// Enumeration identifying a common language
+    /// runtime implementation.
+    /// </summary>
+    public enum RuntimeType
+    {
         /// <summary>Any supported runtime framework</summary>
         Any,
-		/// <summary>Microsoft .NET Framework</summary>
-		Net,
-		/// <summary>Microsoft .NET Compact Framework</summary>
-		NetCF,
-		/// <summary>Microsoft Shared Source CLI</summary>
-		SSCLI,
-		/// <summary>Mono</summary>
-		Mono
-	}
+        /// <summary>Microsoft .NET Framework</summary>
+        Net,
+        /// <summary>Microsoft .NET Compact Framework</summary>
+        NetCF,
+        /// <summary>Microsoft Shared Source CLI</summary>
+        SSCLI,
+        /// <summary>Mono</summary>
+        Mono
+    }
 
-	/// <summary>
-	/// RuntimeFramework represents a particular version
-	/// of a common language runtime implementation.
-	/// </summary>
+    /// <summary>
+    /// RuntimeFramework represents a particular version
+    /// of a common language runtime implementation.
+    /// </summary>
     [Serializable]
-	public sealed class RuntimeFramework
+    public sealed class RuntimeFramework
     {
         #region Static and Instance Fields
 
@@ -43,53 +60,74 @@ namespace NUnit.Engine
         /// DefaultVersion is an empty Version, used to indicate that
         /// NUnit should select the CLR version to use for the test.
         /// </summary>
-        public static readonly Version DefaultVersion = new Version();
+        public static readonly Version DefaultVersion = new Version(0, 0);
 
         private static RuntimeFramework currentFramework;
         private static RuntimeFramework[] availableFrameworks;
-      
+        private static Version[] knownVersions = new Version[] {
+            new Version(1, 0, 3705),
+            new Version(1, 1, 4322),
+            new Version(2, 0, 50727),
+            new Version(4, 0, 30319)
+        };
+
         private RuntimeType runtime;
         private Version frameworkVersion;
         private Version clrVersion;
-		private string displayName;
+        private string displayName;
         #endregion
-
-        static public explicit operator RuntimeFramework(string s)
-        {
-            return Parse(s);
-        }
 
         #region Constructor
 
         /// <summary>
-		/// Construct from a runtime type and version
-		/// </summary>
-		/// <param name="runtime">The runtime type of the framework</param>
-		/// <param name="version">The version of the framework</param>
-		public RuntimeFramework( RuntimeType runtime, Version version)
-		{
-			this.runtime = runtime;
-            this.frameworkVersion = this.clrVersion = version;
+        /// Construct from a runtime type and version
+        /// </summary>
+        /// <param name="runtime">The runtime type of the framework</param>
+        /// <param name="version">The version of the framework</param>
+        public RuntimeFramework(RuntimeType runtime, Version version)
+        {
+            this.runtime = runtime;
+
+            if (version.Build < 0)
+                InitFromFrameworkVersion(version);
+            else
+                InitFromClrVersion(version);
 
             if (version.Major == 3)
-                this.clrVersion = new Version(2, 0);
-            else if (runtime == RuntimeType.Mono && version.Major == 1)
-            {
-                if (version.Minor == 0)
-                    this.clrVersion = new Version(1, 1);
-                else if (version.Minor == 1)
-                    this.frameworkVersion = new Version(1, 0);
-            }
-
+                this.clrVersion = new Version(2, 0, 50727);
             this.displayName = GetDefaultDisplayName(runtime, version);
+        }
+
+        private void InitFromFrameworkVersion(Version version)
+        {
+            this.frameworkVersion = this.clrVersion = version;
+            foreach (Version v in knownVersions)
+                if (v.Major == version.Major && v.Minor == version.Minor)
+                {
+                    this.clrVersion = v;
+                    break;
+                }
+
+            if (this.runtime == RuntimeType.Mono && version.Major == 1)
+            {
+                this.frameworkVersion = new Version(1, 0);
+                this.clrVersion = new Version(1, 1, 4322);
+            }
+        }
+
+        private void InitFromClrVersion(Version version)
+        {
+            this.frameworkVersion = new Version(version.Major, version.Minor);
+            this.clrVersion = version;
+            if (runtime == RuntimeType.Mono && version.Major == 1)
+                this.frameworkVersion = new Version(1, 0);
         }
 
         #endregion
 
         #region Properties
-
         /// <summary>
-        /// Static property to return a RuntimeFramework object
+        /// Static method to return a RuntimeFramework object
         /// for the framework that is currently in use.
         /// </summary>
         public static RuntimeFramework CurrentFramework
@@ -101,35 +139,50 @@ namespace NUnit.Engine
                     Type monoRuntimeType = Type.GetType("Mono.Runtime", false);
                     bool isMono = monoRuntimeType != null;
 
-                    RuntimeType runtime = isMono ? RuntimeType.Mono : RuntimeType.Net;
+                    RuntimeType runtime = isMono
+                        ? RuntimeType.Mono
+                        : Environment.OSVersion.Platform == PlatformID.WinCE
+                            ? RuntimeType.NetCF
+                            : RuntimeType.Net;
 
                     int major = Environment.Version.Major;
                     int minor = Environment.Version.Minor;
 
-                    if (isMono && major == 1)
-                        minor = 0;
-
-                    if (major == 2)
+                    if (isMono)
                     {
-                        RegistryKey key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\.NETFramework");
-                        if (key != null)
+                        switch (major)
                         {
-                            string installRoot = key.GetValue("InstallRoot") as string;
-                            if (installRoot != null)
+                            case 1:
+                                minor = 0;
+                                break;
+                            case 2:
+                                major = 3;
+                                minor = 5;
+                                break;
+                        }
+                    }
+                    else /* It's windows */
+                        if (major == 2)
+                        {
+                            RegistryKey key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\.NETFramework");
+                            if (key != null)
                             {
-                                if (Directory.Exists(Path.Combine(installRoot, "v3.5")))
+                                string installRoot = key.GetValue("InstallRoot") as string;
+                                if (installRoot != null)
                                 {
-                                    major = 3;
-                                    minor = 5;
-                                }
-                                else if (Directory.Exists(Path.Combine(installRoot, "v3.0")))
-                                {
-                                    major = 3;
-                                    minor = 0;
+                                    if (Directory.Exists(Path.Combine(installRoot, "v3.5")))
+                                    {
+                                        major = 3;
+                                        minor = 5;
+                                    }
+                                    else if (Directory.Exists(Path.Combine(installRoot, "v3.0")))
+                                    {
+                                        major = 3;
+                                        minor = 0;
+                                    }
                                 }
                             }
                         }
-                    }
 
                     currentFramework = new RuntimeFramework(runtime, new Version(major, minor));
                     currentFramework.clrVersion = Environment.Version;
@@ -150,16 +203,19 @@ namespace NUnit.Engine
         /// <summary>
         /// Gets an array of all available frameworks
         /// </summary>
+        // TODO: Special handling for netcf
         public static RuntimeFramework[] AvailableFrameworks
         {
             get
             {
                 if (availableFrameworks == null)
                 {
-                    FrameworkCollection frameworks = new FrameworkCollection();
+                    List<RuntimeFramework> frameworks = new List<RuntimeFramework>();
 
                     AppendDotNetFrameworks(frameworks);
+#if !NETCF
                     AppendDefaultMonoFramework(frameworks);
+#endif
                     // NYI
                     //AppendMonoFrameworks(frameworks);
 
@@ -285,7 +341,7 @@ namespace NUnit.Engine
             if (target.ClrVersion.Build < 0)
             {
                 foreach (RuntimeFramework framework in AvailableFrameworks)
-                    if (framework.Supports(target) && 
+                    if (framework.Supports(target) &&
                         framework.ClrVersion.Build > result.ClrVersion.Build)
                     {
                         result = framework;
@@ -299,8 +355,8 @@ namespace NUnit.Engine
         /// Overridden to return the short name of the framework
         /// </summary>
         /// <returns></returns>
-		public override string ToString()
-		{
+        public override string ToString()
+        {
             if (this.AllowAnyVersion)
             {
                 return runtime.ToString().ToLower();
@@ -313,23 +369,17 @@ namespace NUnit.Engine
                 else
                     return runtime.ToString().ToLower() + "-" + vstring;
             }
-		}
+        }
 
         /// <summary>
-        /// Returns true if this framework's supports executing under the 
-        /// requested target framework. The target is supported if
-        /// 
-        /// 1. The runtime types are the same or either one is RuntimeType.Any
-        /// 
-        /// 2. All specified (non-negative) components of the CLR version are equal. 
-        /// 
-        /// 3. The major and minor components of the current framework version are
-        ///    greater than or equal to the corresponding target components.
-        ///    
-        /// The last provision allows tests requiring .NET 2.0 to run under the
-        /// 3.0 and 3.5 platforms as well.
+        /// Returns true if the current framework matches the
+        /// one supplied as an argument. Two frameworks match
+        /// if their runtime types are the same or either one
+        /// is RuntimeType.Any and all specified version components
+        /// are equal. Negative (i.e. unspecified) version
+        /// components are ignored.
         /// </summary>
-        /// <param name="target">The RuntimeFramework to be matched.</param>
+        /// <param name="other">The RuntimeFramework to be matched.</param>
         /// <returns>True on match, otherwise false</returns>
         public bool Supports(RuntimeFramework target)
         {
@@ -352,11 +402,15 @@ namespace NUnit.Engine
 
         private static bool IsRuntimeTypeName(string name)
         {
+#if NETCF
+            return Enum.IsDefined(typeof(RuntimeType), name);
+#else
             foreach (string item in Enum.GetNames(typeof(RuntimeType)))
                 if (item.ToLower() == name.ToLower())
                     return true;
 
             return false;
+#endif
         }
 
         private static string GetDefaultDisplayName(RuntimeType runtime, Version version)
@@ -377,7 +431,8 @@ namespace NUnit.Engine
                   (v1.Revision < 0 || v2.Revision < 0 || v1.Revision == v2.Revision);
         }
 
-        private static void AppendMonoFrameworks(FrameworkCollection frameworks)
+#if !NETCF
+        private static void AppendMonoFrameworks(List<RuntimeFramework> frameworks)
         {
             if (Environment.OSVersion.Platform == PlatformID.Win32NT)
                 AppendAllMonoFrameworks(frameworks);
@@ -385,7 +440,7 @@ namespace NUnit.Engine
                 AppendDefaultMonoFramework(frameworks);
         }
 
-        private static void AppendAllMonoFrameworks(FrameworkCollection frameworks)
+        private static void AppendAllMonoFrameworks(List<RuntimeFramework> frameworks)
         {
             // TODO: Find multiple installed Mono versions under Linux
             if (Environment.OSVersion.Platform == PlatformID.Win32NT)
@@ -408,7 +463,7 @@ namespace NUnit.Engine
 
         // This method works for Windows and Linux but currently
         // is only called under Linux.
-        private static void AppendDefaultMonoFramework(FrameworkCollection frameworks)
+        private static void AppendDefaultMonoFramework(List<RuntimeFramework> frameworks)
         {
             string monoPrefix = null;
             string version = null;
@@ -436,7 +491,7 @@ namespace NUnit.Engine
             AppendMonoFramework(frameworks, monoPrefix, version);
         }
 
-        private static void AppendMonoFramework(FrameworkCollection frameworks, string monoPrefix, string version)
+        private static void AppendMonoFramework(List<RuntimeFramework> frameworks, string monoPrefix, string version)
         {
             if (monoPrefix != null)
             {
@@ -466,8 +521,9 @@ namespace NUnit.Engine
                 }
             }
         }
+#endif
 
-        private static void AppendDotNetFrameworks(FrameworkCollection frameworks)
+        private static void AppendDotNetFrameworks(List<RuntimeFramework> frameworks)
         {
             if (Environment.OSVersion.Platform == PlatformID.Win32NT)
             {
@@ -485,10 +541,6 @@ namespace NUnit.Engine
                     }
                 }
             }
-        }
-
-        private class FrameworkCollection : List<RuntimeFramework>
-        {
         }
 
         #endregion
