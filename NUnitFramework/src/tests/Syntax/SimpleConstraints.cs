@@ -61,6 +61,30 @@ namespace NUnit.Framework.Syntax
         }
     }
 
+    public class PositiveTest : SyntaxTest
+    {
+        [SetUp]
+        public void SetUp()
+        {
+            parseTree = "<greaterthan 0>";
+            staticSyntax = Is.Positive;
+            inheritedSyntax = Helper().Positive;
+            builderSyntax = Builder().Positive;
+        }
+    }
+
+    public class NegativeTest : SyntaxTest
+    {
+        [SetUp]
+        public void SetUp()
+        {
+            parseTree = "<lessthan 0>";
+            staticSyntax = Is.Negative;
+            inheritedSyntax = Helper().Negative;
+            builderSyntax = Builder().Negative;
+        }
+    }
+
     public class NaNTest : SyntaxTest
     {
         [SetUp]

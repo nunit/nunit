@@ -273,6 +273,30 @@ namespace NUnit.Framework.Constraints
 
         #endregion
 
+        #region Positive
+ 
+        /// <summary>
+        /// Returns a constraint that tests for a positive value
+        /// </summary>
+        public GreaterThanConstraint Positive
+        {
+            get { return (GreaterThanConstraint)this.Append(new GreaterThanConstraint(0)); }
+        }
+ 
+        #endregion
+ 
+        #region Negative
+ 
+        /// <summary>
+        /// Returns a constraint that tests for a negative value
+        /// </summary>
+        public LessThanConstraint Negative
+        {
+            get { return (LessThanConstraint)this.Append(new LessThanConstraint(0)); }
+        }
+ 
+        #endregion
+
         #region NaN
 
         /// <summary>
