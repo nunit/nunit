@@ -60,5 +60,11 @@ namespace NUnit.Framework.Attributes
         {
             RunTestOnFixture(typeof(SquareRootTest_Method_IEnumerableOfDouble));
         }
+
+        [Test]
+        public void WorksOnEnumeratorReturningIEnumerableOfT()
+        {
+            RunTestOnFixture(typeof(SquareRootTest_Iterator_IEnumerableOfDouble));
+        }
     }
 }

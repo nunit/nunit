@@ -110,18 +110,21 @@ namespace NUnit.Framework.Builders
                             case MemberTypes.Field:
                                 FieldInfo field = member as FieldInfo;
                                 instance = field.IsStatic ? null : ProviderCache.GetInstanceOf(fixtureType);
-                                datapoints.AddRange((ICollection)field.GetValue(instance));
+                                foreach (object data in (IEnumerable)field.GetValue(instance))
+                                    datapoints.Add(data);
                                 break;
                             case MemberTypes.Property:
                                 PropertyInfo property = member as PropertyInfo;
                                 MethodInfo getMethod = property.GetGetMethod(true);
                                 instance = getMethod.IsStatic ? null : ProviderCache.GetInstanceOf(fixtureType);
-                                datapoints.AddRange((ICollection)property.GetValue(instance,null));
+                                foreach (object data in (IEnumerable)property.GetValue(instance,null))
+                                    datapoints.Add(data);
                                 break;
                             case MemberTypes.Method:
                                 MethodInfo method = member as MethodInfo;
                                 instance = method.IsStatic ? null : ProviderCache.GetInstanceOf(fixtureType);
-                                datapoints.AddRange((ICollection)method.Invoke(instance, Type.EmptyTypes));
+                                foreach (object data in (IEnumerable)method.Invoke(instance, Type.EmptyTypes))
+                                    datapoints.Add(data);
                                 break;
                         }
                     }
