@@ -39,6 +39,7 @@ namespace NUnit.Framework
     {
         private readonly string sourceName;
         private readonly Type sourceType;
+        private string category;
 
         /// <summary>
         /// Construct with the name of the method, property or field that will prvide data
@@ -85,6 +86,16 @@ namespace NUnit.Framework
             get { return sourceType;  }
         }
 
+        /// <summary>
+        /// Gets or sets the category associated with this test.
+        /// May be a single category or a comma-separated list.
+        /// </summary>
+        public string Category
+        {
+            get { return category; }
+            set { category = value; }
+        }
+
         #region ITestCaseSource Members
         /// <summary>
         /// Returns a set of ITestCaseDataItems for use as arguments
@@ -103,32 +114,27 @@ namespace NUnit.Framework
 
                 foreach (object item in source)
                 {
+                    ParameterSet parms = new ParameterSet();
+
                     if (item is ITestCaseData)
                     {
                         ITestCaseData testCase = item as ITestCaseData;
-                        data.Add(testCase);
+                        parms = new ParameterSet(testCase);
                     }
                     else if (item is object[])
                     {
-                        ParameterSet parms = new ParameterSet();
                         object[] array = item as object[];
                         parms.Arguments = array.Length == parameters.Length
                             ? array
                             : new object[] { item };
-
-                        data.Add(parms);
                     }
                     //else if (parameters.Length == 1 && parameters[0].ParameterType.IsAssignableFrom(item.GetType()))
                     //{
-                    //    ParameterSet parms = new ParameterSet();
                     //    parms.Arguments = new object[] { item };
-
-                    //    data.Add(parms);
                     //}
                     else if (item is Array)
                     {
                         Array array = item as Array;
-                        ParameterSet parms = new ParameterSet();
 
                         if (array.Rank == 1 && array.Length == parameters.Length)
                         {
@@ -140,15 +146,17 @@ namespace NUnit.Framework
                         {
                             parms.Arguments = new object[] { item };
                         }
-
-                        data.Add(parms);
                     }
                     else
                     {
-                        ParameterSet parms = new ParameterSet();
                         parms.Arguments = new object[] { item };
-                        data.Add(parms);
                     }
+
+                    if (category != null)
+                        foreach (string cat in category.Split(new char[] { ',' }))
+                            parms.Properties.Add(PropertyNames.Category, cat);
+
+                    data.Add(parms);
                 }
             }
 

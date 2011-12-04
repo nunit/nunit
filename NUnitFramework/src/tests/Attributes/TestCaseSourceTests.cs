@@ -140,7 +140,7 @@ namespace NUnit.Framework.Tests
 
         [Test]
         [TestCaseSource("MyData")]
-        [TestCaseSource("MoreData")]
+        [TestCaseSource("MoreData", Category="Extra")]
         [TestCase(12, 0, 0, ExpectedException = typeof(System.DivideByZeroException))]
         public void TestMayUseMultipleSourceAttributes(int n, int d, int q)
         {
