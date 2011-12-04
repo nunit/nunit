@@ -47,7 +47,7 @@ namespace NUnit.DirectRunner
 			
             switch (topNode.Name)
             {
-                case "start":
+                case "start-test":
                     OnTestStart(topNode);
                     break;
                 case "test-case":
@@ -73,7 +73,7 @@ namespace NUnit.DirectRunner
             Debug.Assert(name != null);
             //Debug.Assert(fullname != null);
 
-            //output.WriteLine(name.Value);
+            //output.WriteLine("***** " + name.Value);
         }
 
         private void OnTestCaseFinished(XmlNode testNode)

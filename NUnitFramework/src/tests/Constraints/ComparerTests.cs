@@ -28,6 +28,14 @@ namespace NUnit.Framework.Constraints.Tests
     [TestFixture]
     public class ComparerTests
     {
+        private Tolerance tolerance;
+
+        [SetUp]
+        public void SetUp()
+        {
+            tolerance = Tolerance.Empty;
+        }
+
         [TestCase(4, 4)]
         [TestCase(4.0d, 4.0d)]
         [TestCase(4.0f, 4.0f)]
@@ -42,7 +50,7 @@ namespace NUnit.Framework.Constraints.Tests
         public void EqualItems(object x, object y)
         {
             Assert.That(NUnitComparer.Default.Compare(x, y) == 0);
-            Assert.That(NUnitEqualityComparer.Default.ObjectsEqual(x, y));
+            Assert.That(NUnitEqualityComparer.Default.AreEqual(x, y, ref tolerance));
         }
 
         [TestCase(4, 2)]
@@ -62,8 +70,8 @@ namespace NUnit.Framework.Constraints.Tests
         {
             Assert.That(NUnitComparer.Default.Compare(greater, lesser) > 0);
             Assert.That(NUnitComparer.Default.Compare(lesser, greater) < 0);
-            Assert.False(NUnitEqualityComparer.Default.ObjectsEqual( greater, lesser ));
-            Assert.False(NUnitEqualityComparer.Default.ObjectsEqual( lesser, greater ));
+            Assert.False(NUnitEqualityComparer.Default.AreEqual(greater, lesser, ref tolerance));
+            Assert.False(NUnitEqualityComparer.Default.AreEqual(lesser, greater, ref tolerance));
         }
 
         [TestCase(double.PositiveInfinity)]
@@ -74,7 +82,7 @@ namespace NUnit.Framework.Constraints.Tests
         [TestCase(float.NaN)]
         public void SpecialFloatingPointValues(object x)
         {
-            Assert.That(NUnitEqualityComparer.Default.ObjectsEqual(x, x));
+            Assert.That(NUnitEqualityComparer.Default.AreEqual(x, x, ref tolerance));
         }
     }
 }

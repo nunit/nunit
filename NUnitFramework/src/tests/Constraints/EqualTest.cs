@@ -313,13 +313,13 @@ namespace NUnit.Framework.Constraints.Tests
         }
 
         [ExpectedException(typeof(InvalidOperationException))]
-        [TestCase(1000)]
-        [TestCase(1000U)]
-        [TestCase(1000L)]
-        [TestCase(1000UL)]
-        public void ErrorIfUlpsIsUsedOnIntegralType(object x)
+        [TestCase(1000, 1010)]
+        [TestCase(1000U, 1010U)]
+        [TestCase(1000L, 1010L)]
+        [TestCase(1000UL, 1010UL)]
+        public void ErrorIfUlpsIsUsedOnIntegralType(object x, object y)
         {
-            Assert.That(x, Is.EqualTo(x).Within(2).Ulps);
+            Assert.That(y, Is.EqualTo(x).Within(2).Ulps);
         }
 
         [Test, ExpectedException(typeof(InvalidOperationException))]

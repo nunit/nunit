@@ -40,6 +40,8 @@ namespace NUnit.Framework.Constraints
 
         private readonly object expected;
 
+        private Tolerance tolerance = Tolerance.Empty;
+
         /// <summary>
         /// If true, strings in error messages will be clipped
         /// </summary>
@@ -129,10 +131,10 @@ namespace NUnit.Framework.Constraints
         /// <returns>Self.</returns>
         public EqualConstraint Within(object amount)
         {
-            if (!comparer.Tolerance.IsEmpty)
+            if (!tolerance.IsEmpty)
                 throw new InvalidOperationException("Within modifier may appear only once in a constraint expression");
 
-            comparer.Tolerance = new Tolerance(amount);
+            tolerance = new Tolerance(amount);
             return this;
         }
 
@@ -154,7 +156,7 @@ namespace NUnit.Framework.Constraints
         {
             get
             {
-                comparer.Tolerance = comparer.Tolerance.Ulps;
+                tolerance = tolerance.Ulps;
                 return this;
             }
         }
@@ -169,7 +171,7 @@ namespace NUnit.Framework.Constraints
         {
             get
             {
-                comparer.Tolerance = comparer.Tolerance.Percent;
+                tolerance = tolerance.Percent;
                 return this;
             }
         }
@@ -182,7 +184,7 @@ namespace NUnit.Framework.Constraints
         {
             get
             {
-                comparer.Tolerance = comparer.Tolerance.Days;
+                tolerance = tolerance.Days;
                 return this;
             }
         }
@@ -195,7 +197,7 @@ namespace NUnit.Framework.Constraints
         {
             get
             {
-                comparer.Tolerance = comparer.Tolerance.Hours;
+                tolerance = tolerance.Hours;
                 return this;
             }
         }
@@ -208,7 +210,7 @@ namespace NUnit.Framework.Constraints
         {
             get
             {
-                comparer.Tolerance = comparer.Tolerance.Minutes;
+                tolerance = tolerance.Minutes;
                 return this;
             }
         }
@@ -221,7 +223,7 @@ namespace NUnit.Framework.Constraints
         {
             get
             {
-                comparer.Tolerance = comparer.Tolerance.Seconds;
+                tolerance = tolerance.Seconds;
                 return this;
             }
         }
@@ -234,7 +236,7 @@ namespace NUnit.Framework.Constraints
         {
             get
             {
-                comparer.Tolerance = comparer.Tolerance.Milliseconds;
+                tolerance = tolerance.Milliseconds;
                 return this;
             }
         }
@@ -247,7 +249,7 @@ namespace NUnit.Framework.Constraints
         {
             get
             {
-                comparer.Tolerance = comparer.Tolerance.Ticks;
+                tolerance = tolerance.Ticks;
                 return this;
             }
         }
@@ -320,7 +322,7 @@ namespace NUnit.Framework.Constraints
         {
             this.actual = actual;
 
-            return new StandardConstraintResult(comparer.ObjectsEqual(expected, actual));
+            return new StandardConstraintResult(comparer.AreEqual(expected, actual, ref tolerance));
         }
 
         /// <summary>
@@ -342,12 +344,12 @@ namespace NUnit.Framework.Constraints
         {
             writer.WriteExpectedValue(expected);
 
-            if (comparer.Tolerance != null && !comparer.Tolerance.IsEmpty)
+            if (tolerance != null && !tolerance.IsEmpty)
             {
                 writer.WriteConnector("+/-");
-                writer.WriteExpectedValue(comparer.Tolerance.Value);
-                if (comparer.Tolerance.Mode != ToleranceMode.Linear)
-                    writer.Write(" {0}", comparer.Tolerance.Mode);
+                writer.WriteExpectedValue(tolerance.Value);
+                if (tolerance.Mode != ToleranceMode.Linear)
+                    writer.Write(" {0}", tolerance.Mode);
             }
 
             if (comparer.IgnoreCase)
@@ -362,8 +364,8 @@ namespace NUnit.Framework.Constraints
                 DisplayCollectionDifferences(writer, (ICollection)expected, (ICollection)actual, depth);
             else if (expected is Stream && actual is Stream)
                 DisplayStreamDifferences(writer, (Stream)expected, (Stream)actual, depth);
-            else if (comparer.Tolerance != null)
-                writer.DisplayDifferences(expected, actual, comparer.Tolerance);
+            else if (tolerance != null)
+                writer.DisplayDifferences(expected, actual, tolerance);
             else
                 writer.DisplayDifferences(expected, actual);
         }
@@ -406,28 +408,29 @@ namespace NUnit.Framework.Constraints
         /// <param name="depth">The depth of this failure in a set of nested collections</param>
         private void DisplayCollectionDifferences(MessageWriter writer, ICollection expected, ICollection actual, int depth)
         {
-            int failurePoint = comparer.FailurePoints.Count > depth ? (int)comparer.FailurePoints[depth] : -1;
-
             DisplayCollectionTypesAndSizes(writer, expected, actual, depth);
 
-            if (failurePoint >= 0)
+            if (comparer.FailurePoints.Count > depth)
             {
+                NUnitEqualityComparer.FailurePoint failurePoint = (NUnitEqualityComparer.FailurePoint)comparer.FailurePoints[depth];
+
                 DisplayFailurePoint(writer, expected, actual, failurePoint, depth);
-                if (failurePoint < expected.Count && failurePoint < actual.Count)
+
+                if (failurePoint.ExpectedHasData && failurePoint.ActualHasData)
                     DisplayDifferences(
                         writer,
-                        GetValueFromCollection(expected, (int)failurePoint),
-                        GetValueFromCollection(actual, (int)failurePoint),
+                        failurePoint.ExpectedValue,
+                        failurePoint.ActualValue,
                         ++depth);
-                else if (expected.Count < actual.Count)
+                else if (failurePoint.ActualHasData)
                 {
                     writer.Write("  Extra:    ");
-                    writer.WriteCollectionElements(actual, (int)failurePoint, 3);
+                    writer.WriteCollectionElements(actual, failurePoint.Position, 3);
                 }
                 else
                 {
                     writer.Write("  Missing:  ");
-                    writer.WriteCollectionElements(expected, (int)failurePoint, 3);
+                    writer.WriteCollectionElements(expected, failurePoint.Position, 3);
                 }
             }
         }
@@ -467,7 +470,7 @@ namespace NUnit.Framework.Constraints
         /// <param name="actual">The actual array</param>
         /// <param name="failurePoint">Index of the failure point in the underlying collections</param>
         /// <param name="indent">The indentation level for the message line</param>
-        private void DisplayFailurePoint(MessageWriter writer, ICollection expected, ICollection actual, long failurePoint, int indent)
+        private void DisplayFailurePoint(MessageWriter writer, IEnumerable expected, IEnumerable actual, NUnitEqualityComparer.FailurePoint failurePoint, int indent)
         {
             Array expectedArray = expected as Array;
             Array actualArray = actual as Array;
@@ -482,14 +485,14 @@ namespace NUnit.Framework.Constraints
                     if (expectedArray.GetLength(r) != actualArray.GetLength(r))
                         useOneIndex = false;
 
-            int[] expectedIndices = MsgUtils.GetArrayIndicesFromCollectionIndex(expected, (int)failurePoint);
+            int[] expectedIndices = MsgUtils.GetArrayIndicesFromCollectionIndex(expected, failurePoint.Position);
             if (useOneIndex)
             {
                 writer.WriteMessageLine(indent, ValuesDiffer_1, MsgUtils.GetArrayIndicesAsString(expectedIndices));
             }
             else
             {
-                int[] actualIndices = MsgUtils.GetArrayIndicesFromCollectionIndex(actual, (int)failurePoint);
+                int[] actualIndices = MsgUtils.GetArrayIndicesFromCollectionIndex(actual, failurePoint.Position);
                 writer.WriteMessageLine(indent, ValuesDiffer_2,
                     MsgUtils.GetArrayIndicesAsString(expectedIndices), MsgUtils.GetArrayIndicesAsString(actualIndices));
             }
