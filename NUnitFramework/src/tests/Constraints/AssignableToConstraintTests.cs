@@ -1,4 +1,4 @@
-// ***********************************************************************
+﻿// ***********************************************************************
 // Copyright (c) 2007 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -24,24 +24,25 @@
 namespace NUnit.Framework.Constraints.Tests
 {
     [TestFixture]
-    public class AndTest : ConstraintTestBase
+    public class AssignableToConstraintTests : ConstraintTestBase
     {
         [SetUp]
         public void SetUp()
         {
-            theConstraint = new AndConstraint(new GreaterThanConstraint(40), new LessThanConstraint(50));
-            expectedDescription = "greater than 40 and less than 50";
-            stringRepresentation = "<and <greaterthan 40> <lessthan 50>>";
+            theConstraint = new AssignableToConstraint(typeof(D1));
+            expectedDescription = string.Format("assignable to <{0}>", typeof(D1));
+            stringRepresentation = string.Format("<assignableto {0}>", typeof(D1));
         }
 
-		object[] SuccessData = new object[] { 42 };
+        object[] SuccessData = new object[] { new D1(), new D2() };
 
-        object[] FailureData = new object[] { new object[] { 37, "37" }, new object[] { 53, "53" } };
+        object[] FailureData = new object[] { 
+            new TestCaseData( new B(), "<NUnit.Framework.Constraints.Tests.AssignableToConstraintTests+B>" ) };
 
-		[Test]
-        public void CanCombineTestsWithAndOperator()
-        {
-            Assert.That(42, new GreaterThanConstraint(40) & new LessThanConstraint(50));
-        }
+        class B { }
+
+        class D1 : B { }
+
+        class D2 : D1 { }
     }
 }

@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{EA9871E3-9972-4476-821E-3961C28125E8}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -59,7 +59,24 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Constraints\AssignableFromConstraintTests.cs" />
+    <Compile Include="Constraints\AssignableToConstraintTests.cs" />
+    <Compile Include="Constraints\AttributeExistsConstraintTests.cs" />
+    <Compile Include="Constraints\CollectionOrderedConstraintTests.cs" />
+    <Compile Include="Constraints\AllItemsConstraintTests.cs" />
+    <Compile Include="Constraints\AndConstraintTests.cs" />
+    <Compile Include="Constraints\CollectionEquivalentConstraintTests.cs" />
+    <Compile Include="Constraints\EqualConstraintTests.cs" />
+    <Compile Include="Constraints\ExactTypeConstraintTests.cs" />
+    <Compile Include="Constraints\GreaterThanConstraintTests.cs" />
+    <Compile Include="Constraints\InstanceOfTypeConstraintTests.cs" />
+    <Compile Include="Constraints\LessThanConstraintTests.cs" />
+    <Compile Include="Constraints\LessThanOrEqualConstraintTests.cs" />
+    <Compile Include="Constraints\NotConstraintTests.cs" />
+    <Compile Include="Constraints\NUnitComparerTests.cs" />
     <Compile Include="Constraints\NUnitEqualityComparerTests.cs" />
+    <Compile Include="Constraints\OrConstraintTests.cs" />
+    <Compile Include="Constraints\RangeConstraintTests.cs" />
     <Compile Include="Internal\DeduceTypeArgsFromArgs.cs" />
     <Compile Include="Internal\GenericTestFixtureTests.cs" />
     <Compile Include="Internal\GenericTestMethodTests.cs" />
@@ -122,28 +139,23 @@
     <Compile Include="Attributes\ValueSourceTests.cs" />
     <Compile Include="TestUtilities\CollectionAdapter.cs" />
     <Compile Include="Constraints\AfterConstraintTests.cs" />
-    <Compile Include="Constraints\AndTest.cs" />
     <Compile Include="Constraints\BasicConstraintTests.cs" />
     <Compile Include="Constraints\BinarySerializableTest.cs" />
-    <Compile Include="Constraints\CollectionConstraintTests.cs" />
-    <Compile Include="Constraints\ComparerTests.cs" />
-    <Compile Include="Constraints\ComparisonConstraintTests.cs" />
+    <Compile Include="Constraints\CollectionContainsConstraintTests.cs" />
+    <Compile Include="Constraints\ComparisonConstraintTestBase.cs" />
     <Compile Include="Constraints\ConstraintTestBase.cs" />
     <Compile Include="Constraints\EmptyConstraintTest.cs" />
     <Compile Include="Constraints\EqualTest.cs" />
     <Compile Include="Constraints\FloatingPointNumericsTest.cs" />
     <Compile Include="Constraints\MsgUtilTests.cs" />
-    <Compile Include="Constraints\NotTest.cs" />
     <Compile Include="Constraints\NumericsTest.cs" />
-    <Compile Include="Constraints\OrTest.cs" />
     <Compile Include="Constraints\PathConstraintTests.cs" />
     <Compile Include="Constraints\PropertyTests.cs" />
     <Compile Include="Constraints\ReusableConstraintTests.cs" />
     <Compile Include="Constraints\SameAsTest.cs" />
-    <Compile Include="Constraints\StringConstraintTests.cs" />
+    <Compile Include="Constraints\SubstringConstraintTests.cs" />
     <Compile Include="Constraints\ThrowsConstraintTests.cs" />
     <Compile Include="Constraints\ToStringTests.cs" />
-    <Compile Include="Constraints\TypeConstraintTests.cs" />
     <Compile Include="Constraints\XmlSerializableTest.cs" />
     <Compile Include="Internal\CoreExtensionsTests.cs" />
     <Compile Include="Internal\CultureSettingAndDetectionTests.cs" />
@@ -197,6 +209,9 @@
     <EmbeddedResource Include="TestText2.txt" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Constraints\EndsWithConstraintTests.cs" />
+    <Compile Include="Constraints\GreaterThanOrEqualConstraintTests.cs" />
+    <Compile Include="Constraints\StartsWithConstraintTests.cs" />
     <None Include="nunit.framework.tests.build" />
     <None Include="nunitlite.tests.build" />
   </ItemGroup>

@@ -27,7 +27,7 @@ using NUnit.Framework.Internal;
 namespace NUnit.Framework.Constraints.Tests
 {
     [TestFixture]
-    public class SubstringTest : ConstraintTestBase, IExpectException
+    public class SubstringConstraintTests : ConstraintTestBase, IExpectException
     {
 		[SetUp]
         public void SetUp()
@@ -57,7 +57,7 @@ namespace NUnit.Framework.Constraints.Tests
     }
 
     [TestFixture]
-    public class SubstringTestIgnoringCase : ConstraintTestBase
+    public class SubstringConstraintTestsIgnoringCase : ConstraintTestBase
     {
 		[SetUp]
         public void SetUp()
@@ -74,93 +74,6 @@ namespace NUnit.Framework.Constraints.Tests
             new TestCaseData( "What the hell?", "\"What the hell?\"" ),
             new TestCaseData( string.Empty, "<string.Empty>" ),
             new TestCaseData( null, "null" ) };
-    }
-
-    [TestFixture]
-    public class StartsWithTest : ConstraintTestBase
-    {
-		[SetUp]
-        public void SetUp()
-        {
-            theConstraint = new StartsWithConstraint("hello");
-            expectedDescription = "String starting with \"hello\"";
-            stringRepresentation = "<startswith \"hello\">";
-        }
-
-        object[] SuccessData = new object[] { "hello", "hello there" };
-
-        object[] FailureData = new object[] {
-            new TestCaseData( "goodbye", "\"goodbye\"" ), 
-            new TestCaseData( "HELLO THERE", "\"HELLO THERE\"" ),
-            new TestCaseData( "I said hello", "\"I said hello\"" ),
-            new TestCaseData( "say hello to Fred", "\"say hello to Fred\"" ),
-            new TestCaseData( string.Empty, "<string.Empty>" ),
-            new TestCaseData( null , "null" ) };
-    }
-
-    [TestFixture]
-    public class StartsWithTestIgnoringCase : ConstraintTestBase
-    {
-		[SetUp]
-        public void SetUp()
-        {
-            theConstraint = new StartsWithConstraint("hello").IgnoreCase;
-            expectedDescription = "String starting with \"hello\", ignoring case";
-            stringRepresentation = "<startswith \"hello\">";
-        }
-
-        object[] SuccessData = new object[] { "Hello", "HELLO there" };
-            
-        object[] FailureData = new object[] {
-            new TestCaseData( "goodbye", "\"goodbye\"" ), 
-            new TestCaseData( "What the hell?", "\"What the hell?\"" ),
-            new TestCaseData( "I said hello", "\"I said hello\"" ),
-            new TestCaseData( "say hello to Fred", "\"say hello to Fred\"" ),
-            new TestCaseData( string.Empty, "<string.Empty>" ),
-            new TestCaseData( null , "null" ) };
-    }
-
-    [TestFixture]
-    public class EndsWithTest : ConstraintTestBase
-    {
-		[SetUp]
-        public void SetUp()
-        {
-            theConstraint = new EndsWithConstraint("hello");
-            expectedDescription = "String ending with \"hello\"";
-            stringRepresentation = "<endswith \"hello\">";
-        }
-
-        object[] SuccessData = new object[] { "hello", "I said hello" };
-            
-        object[] FailureData = new object[] {
-            new TestCaseData( "goodbye", "\"goodbye\"" ), 
-            new TestCaseData( "hello there", "\"hello there\"" ),
-            new TestCaseData( "say hello to Fred", "\"say hello to Fred\"" ),
-            new TestCaseData( string.Empty, "<string.Empty>" ),
-            new TestCaseData( null , "null" ) };
-    }
-
-    [TestFixture]
-    public class EndsWithTestIgnoringCase : ConstraintTestBase
-    {
-		[SetUp]
-        public void SetUp()
-        {
-            theConstraint = new EndsWithConstraint("hello").IgnoreCase;
-            expectedDescription = "String ending with \"hello\", ignoring case";
-            stringRepresentation = "<endswith \"hello\">";
-        }
-
-        object[] SuccessData = new object[] { "HELLO", "I said Hello" };
-            
-        object[] FailureData = new object[] {
-            new TestCaseData( "goodbye", "\"goodbye\"" ), 
-            new TestCaseData( "What the hell?", "\"What the hell?\"" ),
-            new TestCaseData( "hello there", "\"hello there\"" ),
-            new TestCaseData( "say hello to Fred", "\"say hello to Fred\"" ),
-            new TestCaseData( string.Empty, "<string.Empty>" ),
-            new TestCaseData( null , "null" ) };
     }
 
     //[TestFixture]
