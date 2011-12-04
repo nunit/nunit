@@ -38,6 +38,52 @@ namespace NUnit.Framework.Constraints
             comparer = new NUnitEqualityComparer();
         }
 
+        [TestCase(4, 4)]
+        [TestCase(4.0d, 4.0d)]
+        [TestCase(4.0f, 4.0f)]
+        [TestCase(4, 4.0d)]
+        [TestCase(4, 4.0f)]
+        [TestCase(4.0d, 4)]
+        [TestCase(4.0d, 4.0f)]
+        [TestCase(4.0f, 4)]
+        [TestCase(4.0f, 4.0d)]
+        [TestCase(SpecialValue.Null, SpecialValue.Null)]
+        [TestCase(null, null)]
+        public void EqualItems(object x, object y)
+        {
+            Assert.That(comparer.AreEqual(x, y, ref tolerance));
+        }
+
+        [TestCase(4, 2)]
+        [TestCase(4.0d, 2.0d)]
+        [TestCase(4.0f, 2.0f)]
+        [TestCase(4, 2.0d)]
+        [TestCase(4, 2.0f)]
+        [TestCase(4.0d, 2)]
+        [TestCase(4.0d, 2.0f)]
+        [TestCase(4.0f, 2)]
+        [TestCase(4.0f, 2.0d)]
+#if !NUNITLITE
+        [TestCase(4, SpecialValue.Null)]
+#endif
+        [TestCase(4, null)]
+        public void UnequalItems(object greater, object lesser)
+        {
+            Assert.False(comparer.AreEqual(greater, lesser, ref tolerance));
+            Assert.False(comparer.AreEqual(lesser, greater, ref tolerance));
+        }
+
+        [TestCase(double.PositiveInfinity, double.PositiveInfinity)]
+        [TestCase(double.NegativeInfinity, double.NegativeInfinity)]
+        [TestCase(double.NaN, double.NaN)]
+        [TestCase(float.PositiveInfinity, float.PositiveInfinity)]
+        [TestCase(float.NegativeInfinity, float.NegativeInfinity)]
+        [TestCase(float.NaN, float.NaN)]
+        public void SpecialFloatingPointValuesCompareAsEqual(object x, object y)
+        {
+            Assert.That(comparer.AreEqual(x, y, ref tolerance));
+        }
+        
         [Test]
         public void CanCompareArrayContainingSelfToSelf()
         {

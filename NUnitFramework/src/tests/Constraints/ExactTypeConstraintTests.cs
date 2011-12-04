@@ -21,47 +21,30 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using NUnit.Framework.Constraints;
-
 namespace NUnit.Framework.Constraints.Tests
 {
     [TestFixture]
-    public class NotTest : ConstraintTestBase
+    public class ExactTypeConstraintTests : ConstraintTestBase
     {
         [SetUp]
         public void SetUp()
         {
-            theConstraint = new NotConstraint( new EqualConstraint(null) );
-            expectedDescription = "not null";
-            stringRepresentation = "<not <equal null>>";
+            theConstraint = new ExactTypeConstraint(typeof(D1));
+            expectedDescription = string.Format("<{0}>", typeof(D1));
+            stringRepresentation = string.Format("<typeof {0}>", typeof(D1));
         }
 
-        object[] SuccessData = new object[] { 42, "Hello" };
-            
-        object[] FailureData = new object [] { new object[] { null, "null" } };
+        object[] SuccessData = new object[] { new D1() };
+        
+        object[] FailureData = new object[] { 
+            new TestCaseData( new B(), "<NUnit.Framework.Constraints.Tests.ExactTypeConstraintTests+B>" ),
+            new TestCaseData( new D2(), "<NUnit.Framework.Constraints.Tests.ExactTypeConstraintTests+D2>" )
+        };
 
-        [Test, ExpectedException(typeof(AssertionException), ExpectedMessage = "ignoring case", MatchType = MessageMatch.Contains)]
-        public void NotHonorsIgnoreCaseUsingConstructors()
-        {
-            Assert.That("abc", new NotConstraint(new EqualConstraint("ABC").IgnoreCase));
-        }
+        class B { }
 
-        [Test,ExpectedException(typeof(AssertionException),ExpectedMessage="ignoring case",MatchType=MessageMatch.Contains)]
-        public void NotHonorsIgnoreCaseUsingPrefixNotation()
-        {
-            Assert.That( "abc", Is.Not.EqualTo( "ABC" ).IgnoreCase );
-        }
+        class D1 : B { }
 
-        [Test,ExpectedException(typeof(AssertionException),ExpectedMessage="+/-",MatchType=MessageMatch.Contains)]
-        public void NotHonorsTolerance()
-        {
-            Assert.That( 4.99d, Is.Not.EqualTo( 5.0d ).Within( .05d ) );
-        }
-
-        [Test]
-        public void CanUseNotOperator()
-        {
-            Assert.That(42, !new EqualConstraint(99));
-        }
+        class D2 : D1 { }
     }
 }

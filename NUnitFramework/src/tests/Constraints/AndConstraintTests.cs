@@ -24,24 +24,24 @@
 namespace NUnit.Framework.Constraints.Tests
 {
     [TestFixture]
-    public class OrTest : ConstraintTestBase
+    public class AndConstraintTests : ConstraintTestBase
     {
         [SetUp]
         public void SetUp()
         {
-            theConstraint = new OrConstraint(new EqualConstraint(42), new EqualConstraint(99));
-            expectedDescription = "42 or 99";
-            stringRepresentation = "<or <equal 42> <equal 99>>";
+            theConstraint = new AndConstraint(new GreaterThanConstraint(40), new LessThanConstraint(50));
+            expectedDescription = "greater than 40 and less than 50";
+            stringRepresentation = "<and <greaterthan 40> <lessthan 50>>";
         }
 
-		object[] SuccessData = new object[] { 99, 42 };
+		object[] SuccessData = new object[] { 42 };
 
-		object[] FailureData = new object[] { new object[] { 37, "37" } };
+        object[] FailureData = new object[] { new object[] { 37, "37" }, new object[] { 53, "53" } };
 
 		[Test]
-        public void CanCombineTestsWithOrOperator()
+        public void CanCombineTestsWithAndOperator()
         {
-            Assert.That(99, new EqualConstraint(42) | new EqualConstraint(99) );
+            Assert.That(42, new GreaterThanConstraint(40) & new LessThanConstraint(50));
         }
     }
 }
