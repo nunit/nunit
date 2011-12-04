@@ -164,7 +164,7 @@ namespace NUnit.Framework.Constraints
         /// <param name="collection">The collection to which the indices apply</param>
         /// <param name="index">Index in the collection</param>
         /// <returns>Array of indices</returns>
-        public static int[] GetArrayIndicesFromCollectionIndex(ICollection collection, int index)
+        public static int[] GetArrayIndicesFromCollectionIndex(IEnumerable collection, int index)
         {
             Array array = collection as Array;
 
