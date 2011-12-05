@@ -444,6 +444,32 @@ namespace NUnit.Framework.Constraints.Tests
         {
             Assert.That("hello", Is.EqualTo("HELLO").Using<string>((x, y) => String.Compare(x, y, true)));
         }
+ 
+        [Test]
+        public void UsesProvidedListComparer()
+        {
+            var list1 = new List<int>() { 2, 3 };
+            var list2 = new List<int>() { 3, 4 };
+ 
+            var list11 = new List<List<int>>() { list1 };
+            var list22 = new List<List<int>>() { list2 };
+            var comparer = new IntListEqualComparer();
+ 
+            Assert.That(list11, new CollectionEquivalentConstraint(list22).Using(comparer));
+        }
+ 
+        public class IntListEqualComparer : IEqualityComparer<List<int>>
+        {
+            public bool Equals(List<int> x, List<int> y)
+            {
+                return x.Count == y.Count;
+            }
+ 
+            public int GetHashCode(List<int> obj)
+            {
+                return obj.Count.GetHashCode();
+            }
+        }
 #endif
     }
 }

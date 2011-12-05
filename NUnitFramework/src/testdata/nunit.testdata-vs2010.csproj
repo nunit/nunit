@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -59,7 +59,6 @@
     <Compile Include="PropertyAttributeTests.cs" />
     <Compile Include="RepeatedTestFixture.cs" />
     <Compile Include="SetUpData.cs" />
-    <Compile Include="SetupFixtureTests.cs" />
     <Compile Include="TestCaseAttributeFixture.cs" />
     <Compile Include="TestCaseSourceAttributeFixture.cs" />
     <Compile Include="TestContextData.cs" />
@@ -70,6 +69,7 @@
     <Compile Include="ThreadingFixture.cs" />
     <Compile Include="UnexpectedExceptionFixture.cs" />
     <Compile Include="UnhandledExceptions.cs" />
+    <Compile Include="SetUpFixtureTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="nunit.testdata.build" />
