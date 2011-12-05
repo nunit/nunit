@@ -18,8 +18,10 @@
         <patternset refid="source-files" />
       </sources>
       <references basedir="${current.build.dir}">
-        <include name="nunit.engine.dll"/>
-        <include name="nunit.engine.api.dll"/>
+        <include name="System.Runtime.Remoting.dll" />
+        <include name="System.Windows.Forms.dll" />
+        <include name="nunit.engine.dll" />
+        <include name="nunit.engine.api.dll" />
       </references>
     </csc>
 

@@ -209,6 +209,9 @@
   <target name="mono-3.5" depends="set-mono-3.5-runtime-config"
     description="Set runtime to Mono 3.5 for commands that follow"/>
 
+  <target name="mono-4.0" depends="set-mono-4.0-runtime-config"
+    description="Set runtime to Mono 4.0 for commands that follow"/>
+
 <!-- ***************************************************************** -->
 <!-- ***             Targets that clean directories                *** -->
 <!-- ***************************************************************** -->
