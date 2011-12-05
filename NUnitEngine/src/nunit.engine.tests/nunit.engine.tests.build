@@ -21,6 +21,8 @@
         <patternset refid="source-files" />
       </sources>
       <references basedir="${current.build.dir}">
+        <include name="System.Drawing.dll" />
+        <include name="System.Runtime.Remoting.dll" />
         <include name="nunit.framework.dll" />
         <include name="nunit.engine.dll" />
         <include name="nunit.engine.api.dll" />

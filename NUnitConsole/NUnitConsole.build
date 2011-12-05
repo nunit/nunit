@@ -87,9 +87,9 @@
 <!-- ********* Building the Console Runner requires .NET 3.5 ********* -->
 <!-- ***************************************************************** -->
 
-  <property name="runtime.config" value="net-3.5"
+  <!--<property name="runtime.config" value="net-3.5"
     unless="${property::exists('runtime.config')}"/>
-  <property name="nant.settings.currentframework" value="${runtime.config}"/>
+  <property name="nant.settings.currentframework" value="${runtime.config}"/>-->
 
 <!-- ***************************************************************** -->
 <!-- *********   Define directories for external tools    ************ -->

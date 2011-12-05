@@ -88,7 +88,7 @@
 <!-- *********         The Engine targets .NET 2.0           ********* -->
 <!-- ***************************************************************** -->
 
-  <property name="nant.settings.currentframework" value= "net-2.0"/>
+  <!--<property name="nant.settings.currentframework" value= "net-2.0"/>-->
 
 <!-- ***************************************************************** -->
 <!-- *********   Define directories for external tools    ************ -->
