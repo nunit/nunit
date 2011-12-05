@@ -123,6 +123,16 @@ namespace NUnit.Framework
                     return test.Name;
                 }
             }
+			
+			public string MethodName
+			{
+				get
+				{
+					return test is TestMethod
+						? ((TestMethod)test).Method.Name
+						: null;
+				}
+			}
 
             /// <summary>
             /// The FullName of the test
