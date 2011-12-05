@@ -24,6 +24,7 @@
 using System;
 using System.Collections;
 using System.Data;
+using System.Linq;
 using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Assertions
@@ -228,6 +229,42 @@ namespace NUnit.Framework.Assertions
             yield return 3;
         }
 
+        [Test]
+        public void AreEqual_UsingIterator_Fails()
+        {
+            int[] array = new int[] { 1, 3, 5 };
+ 
+			AssertionException ex = Assert.Throws<AssertionException>( 
+				delegate { CollectionAssert.AreEqual(array, CountToThree()); } );
+			
+			Assert.That(ex.Message, Contains.Substring("Values differ at index [1]").And.
+			        				ContainsSubstring("Expected: 3").And.
+			            			ContainsSubstring("But was:  2"));
+        }
+ 
+#if NET_3_5 || CLR_4_0
+        [Test]
+        public void AreEqual_UsingLinqQuery()
+        {
+            int[] array = new int[] { 1, 2, 3 };
+ 
+            CollectionAssert.AreEqual(array, array.Select((item) => item));
+        }
+ 
+        [Test]
+        public void AreEqual_UsingLinqQuery_Fails()
+        {
+            int[] array = new int[] { 1, 2, 3 };
+ 
+            AssertionException ex = Assert.Throws<AssertionException>(
+			    delegate { CollectionAssert.AreEqual(array, array.Select((item) => item * 2)); } );
+			
+			Assert.That(ex.Message, Contains.Substring("Values differ at index [0]").And.
+			            			ContainsSubstring("Expected: 1").And.
+			            			ContainsSubstring("But was:  2"));
+        }
+#endif
+		
 		#endregion
 
 		#region AreEquivalent
