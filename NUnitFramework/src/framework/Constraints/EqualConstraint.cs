@@ -362,6 +362,8 @@ namespace NUnit.Framework.Constraints
                 DisplayStringDifferences(writer, (string)expected, (string)actual);
             else if (expected is ICollection && actual is ICollection)
                 DisplayCollectionDifferences(writer, (ICollection)expected, (ICollection)actual, depth);
+			else if (expected is IEnumerable && actual is IEnumerable)
+				DisplayEnumerableDifferences(writer, (IEnumerable)expected, (IEnumerable)actual, depth);
             else if (expected is Stream && actual is Stream)
                 DisplayStreamDifferences(writer, (Stream)expected, (Stream)actual, depth);
             else if (tolerance != null)
@@ -408,7 +410,7 @@ namespace NUnit.Framework.Constraints
         /// <param name="depth">The depth of this failure in a set of nested collections</param>
         private void DisplayCollectionDifferences(MessageWriter writer, ICollection expected, ICollection actual, int depth)
         {
-            DisplayCollectionTypesAndSizes(writer, expected, actual, depth);
+            DisplayTypesAndSizes(writer, expected, actual, depth);
 
             if (comparer.FailurePoints.Count > depth)
             {
@@ -444,15 +446,15 @@ namespace NUnit.Framework.Constraints
         /// <param name="expected">The expected collection or array</param>
         /// <param name="actual">The actual collection or array</param>
         /// <param name="indent">The indentation level for the message line</param>
-        private void DisplayCollectionTypesAndSizes(MessageWriter writer, ICollection expected, ICollection actual, int indent)
+        private void DisplayTypesAndSizes(MessageWriter writer, IEnumerable expected, IEnumerable actual, int indent)
         {
             string sExpected = MsgUtils.GetTypeRepresentation(expected);
-            if (!(expected is Array))
-                sExpected += string.Format(" with {0} elements", expected.Count);
+            if (expected is ICollection && !(expected is Array))
+                   sExpected += string.Format(" with {0} elements", ((ICollection)expected).Count);
 
-            string sActual = MsgUtils.GetTypeRepresentation(actual);
-            if (!(actual is Array))
-                sActual += string.Format(" with {0} elements", actual.Count);
+	        string sActual = MsgUtils.GetTypeRepresentation(actual);
+            if (actual is ICollection && !(actual is Array))
+                sActual += string.Format(" with {0} elements", ((ICollection)actual).Count);
 
             if (sExpected == sActual)
                 writer.WriteMessageLine(indent, CollectionType_1, sExpected);
@@ -515,5 +517,45 @@ namespace NUnit.Framework.Constraints
             return null;
         }
         #endregion
-    }
+
+        #region DisplayEnumerableDifferences
+
+		/// <summary>
+        /// Display the failure information for two IEnumerables that did not match.
+        /// </summary>
+        /// <param name="writer">The MessageWriter on which to display</param>
+        /// <param name="expected">The expected enumeration.</param>
+        /// <param name="actual">The actual enumeration</param>
+        /// <param name="depth">The depth of this failure in a set of nested collections</param>
+        private void DisplayEnumerableDifferences(MessageWriter writer, IEnumerable expected, IEnumerable actual, int depth)
+        {
+            DisplayTypesAndSizes(writer, expected, actual, depth);
+ 
+            if (comparer.FailurePoints.Count > depth)
+            {
+                NUnitEqualityComparer.FailurePoint failurePoint = (NUnitEqualityComparer.FailurePoint)comparer.FailurePoints[depth];
+ 
+                DisplayFailurePoint(writer, expected, actual, failurePoint, depth);
+ 
+                if (failurePoint.ExpectedHasData && failurePoint.ActualHasData)
+                    DisplayDifferences(
+                        writer,
+                        failurePoint.ExpectedValue,
+                        failurePoint.ActualValue,
+                        ++depth);
+                //else if (failurePoint.ActualHasData)
+                //{
+                //    writer.Write("  Extra:    ");
+                //    writer.WriteCollectionElements(actual, failurePoint.Position, 3);
+                //}
+                //else
+                //{
+                //    writer.Write("  Missing:  ");
+                //    writer.WriteCollectionElements(expected, failurePoint.Position, 3);
+                //}
+            }
+        }
+ 
+        #endregion
+	}
 }
