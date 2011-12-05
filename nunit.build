@@ -64,7 +64,7 @@
          The first .NET and Mono frameworks found are the
          respective net and mono defaults. -->
   <property name="supported.frameworks" 
-    value="net-3.5,net-2.0,net-1.1,net-4.0,net-1.0,mono-3.5,mono-2.0,mono-1.0,netcf-3.5,netcf-2.0,netcf-1.0"/>
+    value="net-4.0,net-3.5,net-2.0,mono-4.0,mono-3.5,mono-2.0,netcf-3.5,netcf-2.0,netcf-1.0"/>
 
   <!-- Set default warning level for compiles -->
   <property name="warn" value="4" unless="${property::exists('warn')}"/>
@@ -126,12 +126,34 @@
   <call target="set-debug-build-config"/>
 
 <!-- ***************************************************************** -->
-<!-- *********           Set Runtime to .NET 3.5             ********* -->
+<!-- *********       Set Default Runtime Configuration       ********* -->
 <!-- ***************************************************************** -->
 
-  <property name="runtime.config" value="net-3.5"/>
-  <property name="nant.settings.currentframework" value="net-3.5"/>
+  <foreach item="String" delim="," 
+      property="framework" in="${supported.frameworks}">
 
+    <!-- NOTE: sdk-exists causes an error if the framework is not installed! -->
+    <if test="${framework::exists( framework )}">
+    <if test="${framework::sdk-exists( framework )}">
+      <property name="installed.frameworks" value="${installed.frameworks},${framework}"
+        if="${property::exists('installed.frameworks')}"/>
+      <property name="installed.frameworks" value="${framework}"
+        unless="${property::exists('installed.frameworks')}"/>
+      <property name="default.runtime" value="${framework}"
+        unless="${property::exists('default.runtime')}"/>
+      <property name="default.net.runtime" value="${framework}"
+        if="${string::starts-with(framework,'net')}"
+        unless="${property::exists('default.net.runtime')}"/>
+      <property name="default.mono.runtime" value="${framework}"
+        if="${string::starts-with(framework,'mono')}"
+        unless="${property::exists('default.mono.runtime')}"/>
+    </if>
+    </if>
+
+  </foreach>
+
+  <property name="runtime.config" value="${default.runtime}"/>
+ 
 <!-- ***************************************************************** -->
 <!-- In the optional local.settings.include file, installations may    -->
 <!-- set properties to override the location of external tools.        -->
