@@ -119,7 +119,7 @@ namespace NUnit.Framework.Internal
                 if (this.settings.Contains("DefaultTimeout"))
                     TestExecutionContext.CurrentContext.TestCaseTimeout = (int)this.settings["DefaultTimeout"];
 
-                using (EventPump pump = new EventPump(listener, queue.Events, true))
+                using (EventPump pump = new EventPump(listener, queue.Events))
                 {
                     pump.Start();
 
