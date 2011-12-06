@@ -68,9 +68,12 @@ namespace NUnit.Framework.Internal
         /// <param name="aString">A string.</param>
 		override public void Write(string aString)
 		{
-			this.buffer.Append(aString);
-			if (aString[aString.Length-1] == '\n')
-				Flush();
+			if (aString.Length > 0)
+			{
+				this.buffer.Append(aString);
+				if (aString[aString.Length-1] == '\n')
+					Flush();
+			}
 		}
 
         /// <summary>
