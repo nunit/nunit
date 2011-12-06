@@ -185,6 +185,7 @@
     <Compile Include="TestUtilities\CollectionAdapter.cs" />
     <Compile Include="TestUtilities\TestComparer.cs" />
     <Compile Include="TestUtilities\TestFinder.cs" />
+    <Compile Include="Constraints\ExactCountConstraintTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="TestImage2.jpg" />
