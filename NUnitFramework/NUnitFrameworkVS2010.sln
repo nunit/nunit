@@ -51,7 +51,9 @@ Global
 		{EA9871E3-9972-4476-821E-3961C28125E8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = src\direct-runner\direct-runner-vs2010.csproj
+		StartupItems = $0
+		$0.Item = src\direct-runner\direct-runner-vs2010.csproj
+		$0.Item = src\tests\nunitlite.tests-vs2010.csproj
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

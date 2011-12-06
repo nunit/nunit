@@ -112,7 +112,21 @@ namespace NUnit.Framework.Constraints
         }
 
         #endregion
-
+		
+		#region Exactly(n)
+		
+        /// <summary>
+        /// Returns a ConstraintExpression, which will apply
+        /// the following constraint to all members of a collection,
+        /// succeeding only if a specified number of them succeed.
+        /// </summary>
+        public ConstraintExpression Exactly(int expectedCount)
+        {
+            return this.Append(new ExactCountOperator(expectedCount));
+        }
+		
+		#endregion
+		
         #region Property
 
         /// <summary>

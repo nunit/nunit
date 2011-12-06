@@ -88,7 +88,21 @@ namespace NUnit.Framework
 
         #endregion
 
-        #region Property
+        #region Exactly(n)
+ 
+        /// <summary>
+        /// Returns a ConstraintExpression, which will apply
+        /// the following constraint to all members of a collection,
+        /// succeeding only if a specified number of them succeed.
+        /// </summary>
+        public static ConstraintExpression Exactly(int expectedCount)
+        {
+            return new ConstraintExpression().Exactly(expectedCount);
+        }
+ 
+        #endregion
+
+		#region Property
 
         /// <summary>
         /// Returns a new PropertyConstraintExpression, which will either

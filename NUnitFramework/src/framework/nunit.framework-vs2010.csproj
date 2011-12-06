@@ -346,6 +346,8 @@
     <Compile Include="Internal\Results\TestSuiteResult.cs" />
     <None Include="nunit.framework.build" />
     <None Include="nunitlite.build" />
+    <Compile Include="Constraints\ExactCountConstraint.cs" />
+    <Compile Include="Constraints\Operators\ExactCountOperator.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
