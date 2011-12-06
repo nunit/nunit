@@ -121,6 +121,7 @@ namespace NUnit.Framework.Assertions
 			Assert.IsEmpty( new int[0], "Failed on empty Array" );
 			Assert.IsEmpty( new ArrayList(), "Failed on empty ArrayList" );
 			Assert.IsEmpty( new Hashtable(), "Failed on empty Hashtable" );
+			Assert.IsEmpty( (IEnumerable)new int[0], "Failed on empty IEnumerable" );
 		}
 
 		[Test, ExpectedException(typeof(AssertionException))]
@@ -150,6 +151,15 @@ namespace NUnit.Framework.Assertions
 			Assert.IsEmpty( new int[] { 1, 2, 3 } );
 		}
 
+        [Test, ExpectedException(typeof(AssertionException))]
+        public void IsEmptyFailsOnNonEmptyIEnumerable()
+        {
+            expectedMessage =
+                "  Expected: <empty>" + Environment.NewLine +
+                "  But was:  < 1, 2, 3 >" + Environment.NewLine;
+            Assert.IsEmpty((IEnumerable)new int[] { 1, 2, 3 });
+        }
+ 
 		[Test]
 		public void IsNotEmpty()
 		{
@@ -162,6 +172,7 @@ namespace NUnit.Framework.Assertions
 			Assert.IsNotEmpty( array, "Failed on Array" );
 			Assert.IsNotEmpty( list, "Failed on ArrayList" );
 			Assert.IsNotEmpty( hash, "Failed on Hashtable" );
+			Assert.IsNotEmpty( (IEnumerable)array, "Failed on IEnumerable" );
 		}
 
 		[Test, ExpectedException(typeof(AssertionException))]
@@ -199,6 +210,15 @@ namespace NUnit.Framework.Assertions
 				"  But was:  <empty>" + Env.NewLine;
 			Assert.IsNotEmpty( new Hashtable() );
 		}
+
+        [Test, ExpectedException(typeof(AssertionException))]
+        public void IsNotEmptyFailsOnEmptyIEnumerable()
+        {
+            expectedMessage =
+                "  Expected: not <empty>" + Environment.NewLine +
+                "  But was:  <empty>" + Environment.NewLine;
+            Assert.IsNotEmpty((IEnumerable)new int[0]);
+        }
 #endif
 	}
 }

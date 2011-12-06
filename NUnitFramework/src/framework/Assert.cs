@@ -1838,7 +1838,7 @@ namespace NUnit.Framework
         /// <param name="collection">An array, list or other collection implementing ICollection</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void IsEmpty(ICollection collection, string message, params object[] args)
+        public static void IsEmpty(IEnumerable collection, string message, params object[] args)
         {
             Assert.That(collection, new EmptyCollectionConstraint() ,message, args);
         }
@@ -1847,7 +1847,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="collection">An array, list or other collection implementing ICollection</param>
         /// <param name="message">The message to display in case of failure</param>
-        public static void IsEmpty(ICollection collection, string message)
+        public static void IsEmpty(IEnumerable collection, string message)
         {
             Assert.That(collection, new EmptyCollectionConstraint() ,message, null);
         }
@@ -1855,7 +1855,7 @@ namespace NUnit.Framework
         /// Assert that an array, list or other collection is empty
         /// </summary>
         /// <param name="collection">An array, list or other collection implementing ICollection</param>
-        public static void IsEmpty(ICollection collection)
+        public static void IsEmpty(IEnumerable collection)
         {
             Assert.That(collection, new EmptyCollectionConstraint() ,null, null);
         }
@@ -1906,7 +1906,7 @@ namespace NUnit.Framework
         /// <param name="collection">An array, list or other collection implementing ICollection</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void IsNotEmpty(ICollection collection, string message, params object[] args)
+        public static void IsNotEmpty(IEnumerable collection, string message, params object[] args)
         {
             Assert.That(collection, Is.Not.Empty ,message, args);
         }
@@ -1915,7 +1915,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="collection">An array, list or other collection implementing ICollection</param>
         /// <param name="message">The message to display in case of failure</param>
-        public static void IsNotEmpty(ICollection collection, string message)
+        public static void IsNotEmpty(IEnumerable collection, string message)
         {
             Assert.That(collection, Is.Not.Empty ,message, null);
         }
@@ -1923,7 +1923,7 @@ namespace NUnit.Framework
         /// Assert that an array, list or other collection is not empty
         /// </summary>
         /// <param name="collection">An array, list or other collection implementing ICollection</param>
-        public static void IsNotEmpty(ICollection collection)
+        public static void IsNotEmpty(IEnumerable collection)
         {
             Assert.That(collection, Is.Not.Empty ,null, null);
         }
