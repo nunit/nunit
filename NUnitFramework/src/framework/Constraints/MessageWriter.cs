@@ -149,6 +149,6 @@ namespace NUnit.Framework.Constraints
         /// <param name="collection">The collection containing elements to write.</param>
         /// <param name="start">The starting point of the elements to write</param>
         /// <param name="max">The maximum number of elements to write</param>
-        public abstract void WriteCollectionElements(ICollection collection, int start, int max);
+        public abstract void WriteCollectionElements(IEnumerable collection, int start, int max);
     }
 }
