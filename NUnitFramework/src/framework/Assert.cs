@@ -495,7 +495,7 @@ namespace NUnit.Framework
         /// <param name="args">Arguments to be used in formatting the message</param>
         public static Exception Throws(Type expectedExceptionType, TestDelegate code, string message, params object[] args)
         {
-            return Throws(new ExactTypeConstraint(expectedExceptionType), code, message, args);
+            return Throws(new ExceptionTypeConstraint(expectedExceptionType), code, message, args);
         }
 
         /// <summary>
@@ -506,7 +506,7 @@ namespace NUnit.Framework
         /// <param name="message">The message that will be displayed on failure</param>
         public static Exception Throws(Type expectedExceptionType, TestDelegate code, string message)
         {
-            return Throws(new ExactTypeConstraint(expectedExceptionType), code, message, null);
+            return Throws(new ExceptionTypeConstraint(expectedExceptionType), code, message, null);
         }
 
         /// <summary>
@@ -516,7 +516,7 @@ namespace NUnit.Framework
         /// <param name="code">A TestSnippet delegate</param>
         public static Exception Throws(Type expectedExceptionType, TestDelegate code)
         {
-            return Throws(new ExactTypeConstraint(expectedExceptionType), code, string.Empty, null);
+            return Throws(new ExceptionTypeConstraint(expectedExceptionType), code, string.Empty, null);
         }
 
         #endregion
