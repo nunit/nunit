@@ -101,7 +101,9 @@ namespace NUnit.Framework.Assertions
         {
             expectedMessage =
                 "  Expected: <System.ArgumentException>" + Env.NewLine +
-                "  But was:  <System.ApplicationException>" + Env.NewLine;
+                "  But was:  <System.ApplicationException> (my message)" + Env.NewLine +
+				"  at";
+			matchType = MessageMatch.StartsWith;
 
             Assert.Throws<ArgumentException>(TestDelegates.ThrowsApplicationException);
         }
@@ -111,7 +113,9 @@ namespace NUnit.Framework.Assertions
         {
             expectedMessage =
                 "  Expected: <System.ArgumentException>" + Env.NewLine +
-                "  But was:  <System.Exception>" + Env.NewLine;
+                "  But was:  <System.Exception> (my message)" + Env.NewLine +
+				"  at";
+			matchType = MessageMatch.StartsWith;
 
             Assert.Throws<ArgumentException>(TestDelegates.ThrowsSystemException);
         }
@@ -121,7 +125,10 @@ namespace NUnit.Framework.Assertions
         {
             expectedMessage =
                 "  Expected: <System.Exception>" + Env.NewLine +
-                "  But was:  <System.ArgumentException>" + Env.NewLine;
+                "  But was:  <System.ArgumentException> (myMessage" + Env.NewLine +
+				"Parameter name: myParam)" + Env.NewLine +
+				"  at";
+			matchType = MessageMatch.StartsWith;
 
             Assert.Throws<Exception>(TestDelegates.ThrowsArgumentException);
         }

@@ -33,6 +33,7 @@ namespace NUnit.Framework.Assertions
 	public abstract class MessageChecker : IExpectException
 	{
 		protected string expectedMessage;
+		protected MessageMatch matchType = MessageMatch.Exact;
         protected readonly string NL = NUnit.Env.NewLine;
 
 		[SetUp]
@@ -44,7 +45,24 @@ namespace NUnit.Framework.Assertions
 		public void HandleException( Exception ex )
 		{
 			if ( expectedMessage != null )
-				Assert.That( ex.Message, Is.EqualTo(expectedMessage) );
+            {
+                switch(matchType)
+                {
+                    default:
+                    case MessageMatch.Exact:
+                                        Assert.AreEqual( expectedMessage, ex.Message );
+                        break;
+                    case MessageMatch.Contains:
+                        Assert.That(ex.Message, Is.StringContaining(expectedMessage));
+                        break;
+                    case MessageMatch.StartsWith:
+                        Assert.That(ex.Message, Is.StringStarting(expectedMessage));
+                        break;
+                    case MessageMatch.Regex:
+                        Assert.That(ex.Message, Is.StringMatching(expectedMessage));
+                        break;
+                }
+            }
 		}
 	}
 }

@@ -348,6 +348,7 @@
     <None Include="nunitlite.build" />
     <Compile Include="Constraints\ExactCountConstraint.cs" />
     <Compile Include="Constraints\Operators\ExactCountOperator.cs" />
+    <Compile Include="Constraints\ExceptionTypeConstraint.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

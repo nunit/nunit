@@ -283,6 +283,7 @@
     <Compile Include="Throws.cs" />
     <Compile Include="Constraints\ExactCountConstraint.cs" />
     <Compile Include="Constraints\Operators\ExactCountOperator.cs" />
+    <Compile Include="Constraints\ExceptionTypeConstraint.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="nunitlite.build" />

@@ -1,5 +1,5 @@
-﻿// ***********************************************************************
-// Copyright (c) 2008 Charlie Poole
+// ***********************************************************************
+// Copyright (c) 2011 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -23,36 +23,37 @@
 
 using System;
 
-namespace NUnit.TestUtilities
+namespace NUnit.Framework.Constraints
 {
-    public class TestDelegates
+    /// <summary>
+    /// ExceptionTypeConstraint is a special version of ExactTypeConstraint
+    /// used to provided detailed info about the exception thrown in
+    /// an error message.
+    /// </summary>
+    public class ExceptionTypeConstraint : ExactTypeConstraint
     {
-        public static void ThrowsArgumentException()
-        {
-            throw new ArgumentException("myMessage", "myParam");
-        }
+        /// <summary>
+        /// Constructs an ExceptionTypeConstraint
+        /// </summary>
+        public ExceptionTypeConstraint(Type type) : base(type) { }
 
-        public static void ThrowsApplicationException()
+        /// <summary>
+        /// Write the actual value for a failing constraint test to a
+        /// MessageWriter. Overriden to write additional information 
+        /// in the case of an Exception.
+        /// </summary>
+        /// <param name="writer">The MessageWriter to use</param>
+        public override void WriteActualValueTo(MessageWriter writer)
         {
-            throw new ApplicationException("my message");
-        }
+            Exception ex = actual as Exception;
+            base.WriteActualValueTo(writer);
 
-        public static void ThrowsSystemException()
-        {
-            throw new Exception("my message");
-        }
-
-        public static void ThrowsNothing()
-        {
-        }
-
-        public static void ThrowsDerivedApplicationException()
-        {
-            throw new DerivedApplicationException();
-        }
-
-        public class DerivedApplicationException : ApplicationException
-        {
+            if (ex != null)
+            {
+                writer.WriteLine(" ({0})", ex.Message);
+                writer.Write(ex.StackTrace);
+            }
         }
     }
 }
+
