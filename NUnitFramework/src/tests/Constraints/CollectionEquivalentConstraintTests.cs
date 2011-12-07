@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using NUnit.Framework.Internal;
 using NUnit.TestUtilities;
 
@@ -112,6 +113,52 @@ namespace NUnit.Framework.Constraints.Tests
             Assert.That(new CollectionEquivalentConstraint(set1)
                 .Using<string>((x, y) => String.Compare(x, y, true))
                 .Matches(set2).HasSucceeded);
+        }
+
+        [Test, Platform("Net-3.5,Mono-3.5,Net-4.0,Mono-4.0")]
+        public void WorksWithHashSets()
+        {
+            var hash1 = new HashSet<string>(new string[] { "presto", "abracadabra", "hocuspocus" });
+            var hash2 = new HashSet<string>(new string[] { "abracadabra", "presto", "hocuspocus" });
+
+            Assert.That(new CollectionEquivalentConstraint(hash1).Matches(hash2).HasSucceeded);
+        }
+
+        [Test, Platform("Net-3.5,Mono-3.5,Net-4.0,Mono-4.0")]
+        public void WorksWithHashSetAndArray()
+        {
+            var hash = new HashSet<string>(new string[] { "presto", "abracadabra", "hocuspocus" });
+            var array = new string[] { "abracadabra", "presto", "hocuspocus" };
+
+            var constraint = new CollectionEquivalentConstraint(hash);
+            Assert.That(constraint.Matches(array).HasSucceeded);
+        }
+
+        [Test, Platform("Net-3.5,Mono-3.5,Net-4.0,Mono-4.0")]
+        public void WorksWithArrayAndHashSet()
+        {
+            var hash = new HashSet<string>(new string[] { "presto", "abracadabra", "hocuspocus" });
+            var array = new string[] { "abracadabra", "presto", "hocuspocus" };
+
+            var constraint = new CollectionEquivalentConstraint(array);
+            Assert.That(constraint.Matches(hash).HasSucceeded);
+        }
+
+        [Test, Platform("Net-3.5,Mono-3.5,Net-4.0,Mono-4.0")]
+        public void FailureMessageWithHashSetAndArray()
+        {
+            var hash = new HashSet<string>(new string[] { "presto", "abracadabra", "hocuspocus" });
+            var array = new string[] { "abracadabra", "presto", "hocusfocus" };
+
+            var constraint = new CollectionEquivalentConstraint(hash);
+            Assert.False(constraint.Matches(array).HasSucceeded);
+
+            TextMessageWriter writer = new TextMessageWriter();
+            constraint.WriteMessageTo(writer);
+            Assert.That(writer.ToString(), Is.EqualTo(
+                "  Expected: equivalent to < \"presto\", \"abracadabra\", \"hocuspocus\" >" + Environment.NewLine +
+                "  But was:  < \"abracadabra\", \"presto\", \"hocusfocus\" >" + Environment.NewLine));
+            Console.WriteLine(writer.ToString());
         }
 #endif
     }

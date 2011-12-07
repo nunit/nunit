@@ -264,10 +264,10 @@ namespace NUnit.Framework.Internal
                 Write(Fmt_Null);
             else if (val.GetType().IsArray)
                 WriteArray((Array)val);
-            else if (val is ICollection)
-                WriteCollectionElements((ICollection)val, 0, 10);
             else if (val is string)
                 WriteString((string)val);
+            else if (val is IEnumerable)
+                WriteCollectionElements((IEnumerable)val, 0, 10);
             else if (val is char)
                 WriteChar((char)val);
             else if (val is double)
@@ -291,31 +291,29 @@ namespace NUnit.Framework.Internal
         /// <param name="collection">The collection containing elements to write.</param>
         /// <param name="start">The starting point of the elements to write</param>
         /// <param name="max">The maximum number of elements to write</param>
-		public override void WriteCollectionElements(ICollection collection, int start, int max)
+		public override void WriteCollectionElements(IEnumerable collection, int start, int max)
 		{
-			if ( collection.Count == 0 )
-			{
-				Write(Fmt_EmptyCollection);
-				return;
-			}
-
 			int count = 0;
 			int index = 0;
-			Write("< ");
 
 			foreach (object obj in collection)
 			{
-				if ( index++ >= start )
+				if ( index++ >= start)
 				{
-					if (count > 0)
-						Write(", ");
-					WriteValue(obj);
-					if ( ++count >= max )
-						break;
+                    if (++count > max)
+                        break;
+                    Write(count == 1 ? "< " : ", ");
+                    WriteValue(obj);
 				}
 			}
 
-			if ( index < collection.Count )
+            if (count == 0)
+            {
+                Write(Fmt_EmptyCollection);
+                return;
+            }
+
+            if (count > max)
 				Write("...");
 
 			Write(" >");
