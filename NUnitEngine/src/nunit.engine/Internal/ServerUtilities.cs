@@ -110,7 +110,7 @@ namespace NUnit.Engine.Internal
 					try
 					{
 						channel = CreateTcpChannel( name, port, limit );
-                        ChannelServices.RegisterChannel( channel );
+                        ChannelServices.RegisterChannel( channel, false );
                         break;
 					}
 					catch( Exception e )
