@@ -118,6 +118,11 @@ namespace NUnit.Framework.Internal
 
                 if (this.settings.Contains("DefaultTimeout"))
                     TestExecutionContext.CurrentContext.TestCaseTimeout = (int)this.settings["DefaultTimeout"];
+	
+				if (this.settings.Contains("WorkDirectory"))
+					TestExecutionContext.CurrentContext.WorkDirectory = (string)this.settings["WorkDirectory"];
+				else
+					TestExecutionContext.CurrentContext.WorkDirectory = Environment.CurrentDirectory;
 
                 using (EventPump pump = new EventPump(listener, queue.Events))
                 {
