@@ -14,6 +14,7 @@ using System.Diagnostics;
 using System.Security;
 using System.Security.Permissions;
 using System.Security.Policy;
+using System.Security.Principal;
 using NUnit.Engine.Internal;
 
 namespace NUnit.Engine.Services
@@ -132,6 +133,11 @@ namespace NUnit.Engine.Services
             //}
             //else
             	runnerDomain = AppDomain.CreateDomain(domainName, evidence, setup);
+			
+            // Set PrincipalPolicy for the domain if called for in the settings
+            if ( ServiceContext.UserSettings.GetSetting("Options.TestLoader.SetPrincipalPolicy", false ))
+                runnerDomain.SetPrincipalPolicy((PrincipalPolicy)ServiceContext.UserSettings.GetSetting(
+                    "Options.TestLoader.PrincipalPolicy", PrincipalPolicy.UnauthenticatedPrincipal));
 
             //// HACK: Only pass down our AddinRegistry one level so that tests of NUnit
             //// itself start without any addins defined.
