@@ -153,7 +153,7 @@ namespace NUnit.ConsoleRunner
         private string workDir;
         public string WorkDirectory
         {
-            get { return workDir == null ? Environment.CurrentDirectory : workDir; }
+            get { return workDir; }
         }
 
         private string include;

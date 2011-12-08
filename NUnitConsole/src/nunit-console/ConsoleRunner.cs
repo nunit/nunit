@@ -66,6 +66,8 @@ namespace NUnit.ConsoleRunner
             this.engine = engine;
             this.options = options;
             this.workDirectory = options.WorkDirectory;
+			if (this.workDirectory == null)
+				this.workDirectory = Environment.CurrentDirectory;
         }
 
         #endregion
@@ -254,6 +256,9 @@ namespace NUnit.ConsoleRunner
 
             if (options.ActiveConfig != null)
                 package.Settings["ActiveConfig"] = options.ActiveConfig;
+			
+			if (options.WorkDirectory != null)
+				package.Settings["WorkDirectory"] = options.WorkDirectory;
             
             return package;
 		}
