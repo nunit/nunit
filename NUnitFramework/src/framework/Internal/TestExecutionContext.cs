@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2007 Charlie Poole
+// Copyright (c) 2011 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Collections;
 using System.Collections.Specialized;
 using System.IO;
 using System.Diagnostics;
@@ -66,7 +67,12 @@ namespace NUnit.Framework.Internal
         /// The active TestResult for the current test
         /// </summary>
         private TestResult currentResult;
-
+		
+		/// <summary>
+		/// The work directory to receive test output
+		/// </summary>
+		private string workDirectory;
+		
         /// <summary>
         /// The object on which tests are currently being executed - i.e. the user fixture object
         /// </summary>
@@ -183,6 +189,7 @@ namespace NUnit.Framework.Internal
             this.currentTest = other.currentTest;
             this.currentResult = other.currentResult;
             this.testObject = other.testObject;
+			this.workDirectory = other.workDirectory;
             this.listener = other.listener;
 
 #if !NETCF_1_0
@@ -281,7 +288,13 @@ namespace NUnit.Framework.Internal
             get { return testObject; }
             set { testObject = value; }
         }
-
+		
+		public string WorkDirectory
+		{
+			get { return workDirectory; }
+			set { workDirectory = value; }
+		}
+		
         /// <summary>
         /// The current test event listener
         /// </summary>
