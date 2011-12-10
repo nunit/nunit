@@ -64,7 +64,9 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = src\tests\nunitlite.tests-vs2008.csproj
+		StartupItems = $0
+		$0.Item = src\direct-runner\direct-runner-vs2008.csproj
+		$0.Item = src\tests\nunitlite.tests-vs2008.csproj
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
