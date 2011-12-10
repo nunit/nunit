@@ -51,6 +51,9 @@ namespace NUnit.Framework.Constraints
         public override IConstraintResult Matches(object actual)
         {
             this.actual = actual;
+			
+			if (actual == null)
+				throw new System.ArgumentException("The actual value must be a non-null string, IEnumerable or DirectoryInfo", "actual");
 
             return RealConstraint.Matches(actual);
         }
