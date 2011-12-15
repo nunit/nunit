@@ -161,7 +161,18 @@ namespace NUnit.Engine.Internal
 				path2[length1] == DirectorySeparatorChar;
 		}
 
-		#endregion
+        /// <summary>
+        /// Combines all the arguments into a single path
+        /// </summary>
+        public static string Combine(string path1, params string[] morePaths)
+        {
+            string result = path1;
+            foreach (string path in morePaths)
+                result = Path.Combine(result, path);
+            return result;
+        }
+        
+        #endregion
 
 		#region Helper Methods
 
