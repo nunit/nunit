@@ -133,6 +133,10 @@ namespace NUnit.Framework.Constraints
             Type xType = x.GetType();
             Type yType = y.GetType();
 
+            EqualityAdapter externalComparer = GetExternalComparer(x, y);
+            if (externalComparer != null)
+                return externalComparer.AreEqual(x, y);
+
             if (xType.IsArray && yType.IsArray && !compareAsCollection)
                 return ArraysEqual((Array)x, (Array)y, ref tolerance);
 
@@ -141,10 +145,6 @@ namespace NUnit.Framework.Constraints
 
             //if (x is ICollection && y is ICollection)
             //    return CollectionsEqual((ICollection)x, (ICollection)y, ref tolerance);
-
-            EqualityAdapter externalComparer = GetExternalComparer(x, y);
-            if (externalComparer != null)
-                return externalComparer.AreEqual(x, y);
 
             if (x is IEnumerable && y is IEnumerable && !(x is string && y is string))
                 return EnumerablesEqual((IEnumerable)x, (IEnumerable)y, ref tolerance);

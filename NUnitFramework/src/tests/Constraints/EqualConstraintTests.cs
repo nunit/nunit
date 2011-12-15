@@ -444,20 +444,20 @@ namespace NUnit.Framework.Constraints.Tests
         {
             Assert.That("hello", Is.EqualTo("HELLO").Using<string>((x, y) => String.Compare(x, y, true)));
         }
- 
+
         [Test]
         public void UsesProvidedListComparer()
         {
             var list1 = new List<int>() { 2, 3 };
             var list2 = new List<int>() { 3, 4 };
- 
+
             var list11 = new List<List<int>>() { list1 };
             var list22 = new List<List<int>>() { list2 };
             var comparer = new IntListEqualComparer();
- 
+
             Assert.That(list11, new CollectionEquivalentConstraint(list22).Using(comparer));
         }
- 
+
         public class IntListEqualComparer : IEqualityComparer<List<int>>
         {
             public bool Equals(List<int> x, List<int> y)
@@ -468,6 +468,32 @@ namespace NUnit.Framework.Constraints.Tests
             public int GetHashCode(List<int> obj)
             {
                 return obj.Count.GetHashCode();
+            }
+        }
+
+        [Test]
+        public void UsesProvidedArrayComparer()
+        {
+            var array1 = new int[] { 2, 3 };
+            var array2 = new int[] { 3, 4 };
+
+            var list11 = new List<int[]>() { array1 };
+            var list22 = new List<int[]>() { array2 };
+            var comparer = new IntArrayEqualComparer();
+
+            Assert.That(list11, new CollectionEquivalentConstraint(list22).Using(comparer));
+        }
+
+        public class IntArrayEqualComparer : IEqualityComparer<int[]>
+        {
+            public bool Equals(int[] x, int[] y)
+            {
+                return x.Length == y.Length;
+            }
+
+            public int GetHashCode(int[] obj)
+            {
+                return obj.Length.GetHashCode();
             }
         }
 #endif
