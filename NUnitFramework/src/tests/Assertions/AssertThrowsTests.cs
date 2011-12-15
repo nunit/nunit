@@ -27,7 +27,7 @@ using NUnit.TestUtilities;
 namespace NUnit.Framework.Assertions
 {
 	[TestFixture]
-	public class AssertThrowsTests : MessageChecker
+	public class AssertThrowsTests
 	{
 		[Test]
 		public void CorrectExceptionThrown()
@@ -89,48 +89,41 @@ namespace NUnit.Framework.Assertions
 		[Test, ExpectedException(typeof(AssertionException))]
 		public void NoExceptionThrown()
 		{
-			expectedMessage =
+            ArgumentException ex = Assert.Throws<ArgumentException>(TestDelegates.ThrowsNothing);
+            Assert.That(ex.Message, Is.EqualTo(
 				"  Expected: <System.ArgumentException>" + Env.NewLine +
-				"  But was:  null" + Env.NewLine;
-
-            Assert.Throws<ArgumentException>(TestDelegates.ThrowsNothing);
+				"  But was:  null" + Env.NewLine));
 		}
 
-        [Test, ExpectedException(typeof(AssertionException))]
+        [Test, ExpectedException(typeof(AssertionException)), Platform("Mono")]
         public void UnrelatedExceptionThrown()
         {
-            expectedMessage =
+            ArgumentException ex = Assert.Throws<ArgumentException>(TestDelegates.ThrowsApplicationException);
+            Assert.That(ex.Message, Is.StringStarting(
                 "  Expected: <System.ArgumentException>" + Env.NewLine +
-                "  But was:  <System.ApplicationException> (my message)" + Env.NewLine +
-				"  at";
-			matchType = MessageMatch.StartsWith;
-
-            Assert.Throws<ArgumentException>(TestDelegates.ThrowsApplicationException);
+                "  But was:  <System.ApplicationException> (my message)" + Env.NewLine));
+            Assert.That(ex.Message, Contains.Substring("  at "));
         }
 
         [Test, ExpectedException(typeof(AssertionException))]
         public void BaseExceptionThrown()
         {
-            expectedMessage =
+            ArgumentException ex = Assert.Throws<ArgumentException>(TestDelegates.ThrowsSystemException);
+            Assert.That(ex.Message, Is.StringStarting(
                 "  Expected: <System.ArgumentException>" + Env.NewLine +
-                "  But was:  <System.Exception> (my message)" + Env.NewLine +
-				"  at";
-			matchType = MessageMatch.StartsWith;
-
-            Assert.Throws<ArgumentException>(TestDelegates.ThrowsSystemException);
+                "  But was:  <System.Exception> (my message)" + Env.NewLine));
+            Assert.That(ex.Message, Contains.Substring("  at "));
         }
 
         [Test,ExpectedException(typeof(AssertionException))]
         public void DerivedExceptionThrown()
         {
-            expectedMessage =
+            Exception ex = Assert.Throws<Exception>(TestDelegates.ThrowsArgumentException);
+            Assert.That(ex.Message, Is.StringStarting(
                 "  Expected: <System.Exception>" + Env.NewLine +
                 "  But was:  <System.ArgumentException> (myMessage" + Env.NewLine +
-				"Parameter name: myParam)" + Env.NewLine +
-				"  at";
-			matchType = MessageMatch.StartsWith;
-
-            Assert.Throws<Exception>(TestDelegates.ThrowsArgumentException);
+                "Parameter name: myParam)" + Env.NewLine));
+            Assert.That(ex.Message, Contains.Substring("  at "));
         }
 
         [Test]
