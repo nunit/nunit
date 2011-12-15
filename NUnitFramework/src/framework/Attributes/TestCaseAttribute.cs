@@ -36,16 +36,23 @@ namespace NUnit.Framework
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true, Inherited=false)]
     public class TestCaseAttribute : DataAttribute, ITestCaseData, ITestCaseSource
     {
+        #region Instance variables
+
         private object[] arguments;
         private ExpectedExceptionData exceptionData;
         //private Type expectedExceptionType;
         //private string expectedExceptionName;
         //private string expectedMessage;
         //private MessageMatch matchType;
-        private object result;
+        private object expectedResult;
+        private bool hasExpectedResult;
         private string testName;
         private bool isIgnored;
         private IPropertyBag properties;
+
+        #endregion
+
+        #region Constructors
 
         /// <summary>
         /// Construct a TestCaseAttribute with a list of arguments.
@@ -90,6 +97,10 @@ namespace NUnit.Framework
             this.arguments = new object[] { arg1, arg2, arg3 };
         }
 
+        #endregion
+
+        #region Properties
+
         /// <summary>
         /// Gets the list of arguments to a test case
         /// </summary>
@@ -102,10 +113,22 @@ namespace NUnit.Framework
         /// Gets or sets the expected result.
         /// </summary>
         /// <value>The result.</value>
-        public object Result
+        public object ExpectedResult
         {
-            get { return result; }
-            set { result = value; }
+            get { return expectedResult; }
+            set 
+            { 
+                expectedResult = value;
+                hasExpectedResult = true;
+            }
+        }
+
+        /// <summary>
+        /// Returns true if the expected result has been set
+        /// </summary>
+        public bool HasExpectedResult
+        {
+            get { return hasExpectedResult; }
         }
 
         /// <summary>
@@ -242,6 +265,8 @@ namespace NUnit.Framework
                 return properties;
             }
         }
+
+        #endregion
 
         #region ITestCaseSource Members
 

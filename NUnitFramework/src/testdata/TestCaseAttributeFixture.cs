@@ -49,7 +49,7 @@ namespace NUnit.TestData.TestCaseAttributeFixture
         public void MethodHasMultipleCategories(int x, int y, int z)
         { }
  
-		[TestCase(2, 2000000, Result=4)]
+		[TestCase(2, 2000000, ExpectedResult=4)]
 		public int MethodCausesConversionOverflow(short x, short y)
 		{
 			return x + y;

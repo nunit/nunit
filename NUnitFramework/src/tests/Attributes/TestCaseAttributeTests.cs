@@ -43,9 +43,9 @@ namespace NUnit.Framework.Tests
             Assert.AreEqual(q, n / d);
         }
 
-        [TestCase(12, 3, Result = 4)]
-        [TestCase(12, 2, Result = 6)]
-        [TestCase(12, 4, Result = 3)]
+        [TestCase(12, 3, ExpectedResult = 4)]
+        [TestCase(12, 2, ExpectedResult = 6)]
+        [TestCase(12, 4, ExpectedResult = 3)]
         [TestCase(12, 0, ExpectedException = typeof(System.DivideByZeroException))]
         [TestCase(12, 0, ExpectedExceptionName = "System.DivideByZeroException",
             TestName = "DivisionByZeroThrowsException")]
@@ -54,43 +54,43 @@ namespace NUnit.Framework.Tests
             return n / d;
         }
 
-        [TestCase(2, 2, Result=4)]
+        [TestCase(2, 2, ExpectedResult=4)]
         public double CanConvertIntToDouble(double x, double y)
         {
             return x + y;
         }
 
-        [TestCase("2.2", "3.3", Result = 5.5)]
+        [TestCase("2.2", "3.3", ExpectedResult = 5.5)]
         public decimal CanConvertStringToDecimal(decimal x, decimal y)
         {
             return x + y;
         }
 
-        [TestCase(2.2, 3.3, Result = 5.5)]
+        [TestCase(2.2, 3.3, ExpectedResult = 5.5)]
         public decimal CanConvertDoubleToDecimal(decimal x, decimal y)
         {
             return x + y;
         }
 
-        [TestCase(5, 2, Result = 7)]
+        [TestCase(5, 2, ExpectedResult = 7)]
         public decimal CanConvertIntToDecimal(decimal x, decimal y)
         {
             return x + y;
         }
 
-        [TestCase(5, 2, Result = 7)]
+        [TestCase(5, 2, ExpectedResult = 7)]
         public short CanConvertSmallIntsToShort(short x, short y)
         {
             return (short)(x + y);
         }
 
-        [TestCase(5, 2, Result = 7)]
+        [TestCase(5, 2, ExpectedResult = 7)]
         public byte CanConvertSmallIntsToByte(byte x, byte y)
         {
             return (byte)(x + y);
         }
 
-        [TestCase(5, 2, Result = 7)]
+        [TestCase(5, 2, ExpectedResult = 7)]
         public sbyte CanConvertSmallIntsToSByte(sbyte x, sbyte y)
         {
             return (sbyte)(x + y);
@@ -158,7 +158,7 @@ namespace NUnit.Framework.Tests
             Assert.AreEqual("b", array[1]);
         }
 
-        [TestCase(Result = null)]
+        [TestCase(ExpectedResult = null)]
         public object ResultCanBeNull()
         {
             return null;
