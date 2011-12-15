@@ -237,8 +237,8 @@ namespace NUnit.Tests
 		public static readonly int Tests = 4;
 		public static readonly int Suites = 3;
 		
-		[TestCase(2, 2, Result=4)]
-		[TestCase(9, 11, Result=20)]
+		[TestCase(2, 2, ExpectedResult=4)]
+		[TestCase(9, 11, ExpectedResult=20)]
 		public int MethodWithParameters(int x, int y)
 		{
 			return x+y;

@@ -280,7 +280,7 @@ namespace NUnit.Framework.Builders
             if (parms != null)
             {
                 testMethod.arguments = parms.Arguments;
-                testMethod.expectedResult = parms.Result;
+                testMethod.expectedResult = parms.ExpectedResult;
                 testMethod.hasExpectedResult = parms.HasExpectedResult;
                 testMethod.RunState = parms.RunState;
 

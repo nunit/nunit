@@ -41,7 +41,12 @@ namespace NUnit.Framework.Api
         /// <summary>
         /// Gets the expected result of the test case
         /// </summary>
-        object Result { get; }
+        object ExpectedResult { get; }
+
+        /// <summary>
+        /// Returns true if an expected result has been set
+        /// </summary>
+        bool HasExpectedResult { get; }
 
         /// <summary>
         /// Gets data about any expected exception.

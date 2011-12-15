@@ -113,7 +113,7 @@ namespace NUnit.Framework.Internal
         /// The expected result of the test, which
         /// must match the method return type.
         /// </summary>
-        public object Result
+        public object ExpectedResult
         {
             get { return result; }
             set
@@ -199,7 +199,8 @@ namespace NUnit.Framework.Internal
             this.RunState = RunState.Runnable;
             this.Arguments = data.Arguments;
             this.exceptionData = data.ExceptionData;
-            this.Result = data.Result;
+            if (data.HasExpectedResult)
+                this.ExpectedResult = data.ExpectedResult;
             this.TestName = data.TestName;
             this.Ignored = data.Ignored;
 
