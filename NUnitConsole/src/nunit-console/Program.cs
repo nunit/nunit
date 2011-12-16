@@ -98,9 +98,6 @@ namespace NUnit.ConsoleRunner
                 }
             }
 
-            if (!Directory.Exists(options.WorkDirectory))
-                Directory.CreateDirectory(options.WorkDirectory);
-
             using (ITestEngine engine = TestEngineActivator.CreateInstance())
             {
                 try

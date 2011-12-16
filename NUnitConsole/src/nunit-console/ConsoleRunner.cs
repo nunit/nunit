@@ -68,6 +68,8 @@ namespace NUnit.ConsoleRunner
             this.workDirectory = options.WorkDirectory;
 			if (this.workDirectory == null)
 				this.workDirectory = Environment.CurrentDirectory;
+            else if (!Directory.Exists(this.workDirectory))
+                Directory.CreateDirectory(this.workDirectory);
         }
 
         #endregion
@@ -110,7 +112,7 @@ namespace NUnit.ConsoleRunner
             }
             else
             {
-                var outputManager = new OutputManager(engineResult.Xml, workDirectory);
+                var outputManager = new OutputManager(engineResult.Xml, this.workDirectory);
 
                 foreach (OutputSpecification spec in options.ExploreOutputSpecifications)
                     outputManager.WriteTestFile(spec);
@@ -167,7 +169,7 @@ namespace NUnit.ConsoleRunner
                 reporter.ReportResults();
 
                 // TODO: Inject this?
-                var outputManager = new OutputManager(engineResult.Xml, options.WorkDirectory);
+                var outputManager = new OutputManager(engineResult.Xml, this.workDirectory);
 
                 foreach (var outputSpec in options.ResultOutputSpecifications)
                     outputManager.WriteResultFile(outputSpec);
