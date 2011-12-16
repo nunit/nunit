@@ -12,6 +12,7 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public class NUnitLiteTestAssemblyRunner : ITestAssemblyRunner
     {
+        private IDictionary settings;
         private ITestAssemblyBuilder builder;
         private TestSuite loadedTest;
         //private Thread runThread;
@@ -50,11 +51,12 @@ namespace NUnit.Framework.Internal
         /// Loads the tests found in an Assembly
         /// </summary>
         /// <param name="assemblyName">File name of the assembly to load</param>
-        /// <param name="options">Dictionary of option settings for loading the assembly</param>
+        /// <param name="settings">Dictionary of option settings for loading the assembly</param>
         /// <returns>True if the load was successful</returns>
-        public bool Load(string assemblyName, IDictionary options)
+        public bool Load(string assemblyName, IDictionary settings)
         {
-            this.loadedTest = this.builder.Build(assemblyName, options);
+            this.settings = settings;
+            this.loadedTest = this.builder.Build(assemblyName, settings);
             if (loadedTest == null) return false;
 
             return true;
@@ -64,11 +66,12 @@ namespace NUnit.Framework.Internal
         /// Loads the tests found in an Assembly
         /// </summary>
         /// <param name="assembly">The assembly to load</param>
-        /// <param name="options">Dictionary of option settings for loading the assembly</param>
+        /// <param name="settings">Dictionary of option settings for loading the assembly</param>
         /// <returns>True if the load was successful</returns>
-        public bool Load(Assembly assembly, IDictionary options)
+        public bool Load(Assembly assembly, IDictionary settings)
         {
-            this.loadedTest = this.builder.Build(assembly, options);
+            this.settings = settings;
+            this.loadedTest = this.builder.Build(assembly, settings);
             if (loadedTest == null) return false;
 
             return true;
@@ -93,6 +96,11 @@ namespace NUnit.Framework.Internal
         /// <returns></returns>
         public ITestResult Run(ITestListener listener, ITestFilter filter)
         {
+            if (this.settings.Contains("WorkDirectory"))
+                TestExecutionContext.CurrentContext.WorkDirectory = (string)this.settings["WorkDirectory"];
+            else
+                TestExecutionContext.CurrentContext.WorkDirectory = Environment.CurrentDirectory;
+
             TestCommand command = this.loadedTest.GetTestCommand(filter);
 
             return CommandRunner.Execute(command);
