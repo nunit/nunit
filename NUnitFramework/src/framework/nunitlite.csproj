@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -201,6 +201,7 @@
     <Compile Include="Guard.cs" />
     <Compile Include="Has.cs" />
     <Compile Include="IExpectException.cs" />
+    <Compile Include="Internal\AssemblyHelper.cs" />
     <Compile Include="Internal\Builders\CombinatorialStrategy.cs" />
     <Compile Include="Internal\Builders\CombinatorialTestCaseProvider.cs" />
     <Compile Include="Internal\Builders\CombiningStrategy.cs" />
