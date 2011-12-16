@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -78,9 +78,9 @@
     <None Include="nunit-console.build" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\NUnitEngine\src\nunit.engine.api\nunit.engine.api-vs2010.csproj">
+    <ProjectReference Include="..\..\..\NUnitEngine\src\nunit.engine.api\nunit.engine.api.csproj">
       <Project>{775FAD50-3623-4922-97C4-DFB29A8BE4C7}</Project>
-      <Name>nunit.engine.api-vs2010</Name>
+      <Name>nunit.engine.api</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

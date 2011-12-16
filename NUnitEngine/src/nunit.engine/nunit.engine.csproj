@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -12,20 +12,25 @@
     <AssemblyName>nunit.engine</AssemblyName>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation />
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\bin\vs2008\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <OutputPath>..\..\..\bin\vs2010\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;NET_3_5;CLR_2_0</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\..\bin\vs2008\Release\</OutputPath>
+    <OutputPath>..\..\..\bin\vs2010\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -43,46 +48,41 @@
     <Compile Include="Agents\TestAgent.cs" />
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="CallbackHandler.cs" />
+    <Compile Include="IFrameworkDriver.cs" />
+    <Compile Include="Internal\AssemblyHelper.cs" />
+    <Compile Include="Internal\AssemblyReader.cs" />
     <Compile Include="Internal\DomainUsage.cs" />
     <Compile Include="Internal\InternalTrace.cs" />
     <Compile Include="Internal\InternalTraceLevel.cs" />
     <Compile Include="Internal\InternalTraceWriter.cs" />
     <Compile Include="Internal\Logger.cs" />
-    <Compile Include="Internal\ProcessModel.cs" />
-    <Compile Include="NUnitFrameworkDriver.cs" />
-    <Compile Include="IFrameworkDriver.cs" />
-    <Compile Include="Internal\AssemblyHelper.cs" />
-    <Compile Include="Internal\AssemblyReader.cs" />
-    <Compile Include="Internal\ProjectConfigList.cs" />
-    <Compile Include="Internal\NUnitProject.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Internal\ProjectConfig.cs" />
-    <Compile Include="IProjectConfig.cs" />
     <Compile Include="Internal\NUnitConfiguration.cs" />
+    <Compile Include="Internal\NUnitProject.cs" />
     <Compile Include="Internal\PathUtils.cs" />
-    <Compile Include="Services\RuntimeFrameworkSelector.cs" />
+    <Compile Include="Internal\ProcessModel.cs" />
+    <Compile Include="Internal\ProjectConfig.cs" />
+    <Compile Include="Internal\ProjectConfigList.cs" />
     <Compile Include="Internal\ServerBase.cs" />
     <Compile Include="Internal\ServerUtilities.cs" />
     <Compile Include="Internal\SettingsGroup.cs" />
     <Compile Include="Internal\XmlHelper.cs" />
+    <Compile Include="IProject.cs" />
+    <Compile Include="IProjectConfig.cs" />
     <Compile Include="IProjectConfigList.cs" />
     <Compile Include="IProjectLoader.cs" />
-    <Compile Include="IProject.cs" />
     <Compile Include="IRuntimeFrameworkSelector.cs" />
     <Compile Include="IService.cs" />
     <Compile Include="IServiceManager.cs" />
     <Compile Include="ISettings.cs" />
     <Compile Include="ITestRunnerFactory.cs" />
+    <Compile Include="NUnitFrameworkDriver.cs" />
     <Compile Include="Runners\AbstractTestRunner.cs" />
     <Compile Include="Runners\AggregatingTestRunner.cs" />
     <Compile Include="Runners\DirectTestRunner.cs" />
     <Compile Include="Runners\LocalTestRunner.cs" />
     <Compile Include="Runners\MasterTestRunner.cs" />
+    <Compile Include="Runners\MultipleTestDomainRunner.cs" />
     <Compile Include="Runners\MultipleTestProcessRunner.cs" />
-    <Compile Include="Runners\MultipleTestDomainRunner.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Runners\ProcessRunner.cs" />
     <Compile Include="Runners\TestDomainRunner.cs" />
     <Compile Include="RunTestsCallbackHandler.cs" />
@@ -93,6 +93,7 @@
     <Compile Include="Services\InProcessTestRunnerFactory.cs" />
     <Compile Include="Services\NUnitProjectLoader.cs" />
     <Compile Include="Services\ProjectService.cs" />
+    <Compile Include="Services\RuntimeFrameworkSelector.cs" />
     <Compile Include="Services\ServiceManager.cs" />
     <Compile Include="Services\SettingsService.cs" />
     <Compile Include="Services\TestAgency.cs" />
@@ -101,9 +102,9 @@
     <None Include="nunit.engine.build" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\nunit.engine.api\nunit.engine.api-vs2008.csproj">
+    <ProjectReference Include="..\nunit.engine.api\nunit.engine.api.csproj">
       <Project>{775FAD50-3623-4922-97C4-DFB29A8BE4C7}</Project>
-      <Name>nunit.engine.api-vs2008</Name>
+      <Name>nunit.engine.api-vs2010</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
