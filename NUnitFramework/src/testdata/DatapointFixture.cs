@@ -42,13 +42,11 @@ namespace NUnit.TestData.DatapointFixture
         public double[] values = new double[] { 0.0, 1.0, -1.0, double.MaxValue, double.PositiveInfinity };
     }
 
-#if CS_3_0 || CS_4_0
     public class SquareRootTest_Field_IEnumerableOfDouble : SquareRootTest
     {
         [Datapoints]
         public IEnumerable<double> values = new List<double> { 0.0, 1.0, -1.0, double.MaxValue, double.PositiveInfinity };
     }
-#endif
 
     public class SquareRootTest_Property_IEnumerableOfDouble : SquareRootTest
     {

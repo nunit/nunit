@@ -24,8 +24,11 @@
 using System;
 using System.Collections;
 using System.Data;
-using System.Linq;
 using NUnit.TestUtilities;
+
+#if NET_3_5 || NET_4_0
+using System.Linq;
+#endif
 
 namespace NUnit.Framework.Assertions
 {
@@ -242,7 +245,7 @@ namespace NUnit.Framework.Assertions
 			            			ContainsSubstring("But was:  2"));
         }
  
-#if NET_3_5 || CLR_4_0
+#if NET_3_5 || NET_4_0
         [Test]
         public void AreEqual_UsingLinqQuery()
         {

@@ -22,20 +22,20 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\bin\vs2010\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;CLR_4_0;CS_4_0;NUNITLITE</DefineConstants>
+    <OutputPath>..\..\build\net\2.0\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;NUNITLITE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\..\..\bin\vs2010\Debug\nunitlite.xml</DocumentationFile>
+    <DocumentationFile>..\..\build\net\2.0\Debug\nunitlite.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\..\bin\vs2010\Release\</OutputPath>
-    <DefineConstants>TRACE;CLR_4_0;CS_4_0;NUNITLITE</DefineConstants>
+    <OutputPath>..\..\build\net\2.0\Release\</OutputPath>
+    <DefineConstants>TRACE;NUNITLITE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\..\..\bin\vs2010\Release\nunitlite.XML</DocumentationFile>
+    <DocumentationFile>..\..\build\net\2.0\Release\nunitlite.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />

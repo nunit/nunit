@@ -204,7 +204,6 @@ namespace NUnit.Framework.Constraints.Tests
             }
         }
 
-#if CS_3_0 || CS_4_0
         [Test]
         public void UsesProvidedLambda()
         {
@@ -215,7 +214,6 @@ namespace NUnit.Framework.Constraints.Tests
             Comparison<int> comparer = (x, y) => x.CompareTo(y);
             Assert.That(al, Is.Ordered.Using(comparer));
         }
-#endif
 
         [Test]
         public void IsOrderedBy()

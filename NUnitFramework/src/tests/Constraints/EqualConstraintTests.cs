@@ -133,7 +133,6 @@ namespace NUnit.Framework.Constraints.Tests
 
         #region Dictionary Tests
         // TODO: Move these to a separate fixture
-#if CS_3_0 || CS_4_0
         [Test]
         public void CanMatchHashtables_SameOrder()
         {
@@ -182,7 +181,6 @@ namespace NUnit.Framework.Constraints.Tests
             Assert.AreEqual(new Hashtable { { 0, 0 }, { 1, 1 }, { 2, 2 } },
                             new Dictionary<int, int> { { 0, 0 }, { 2, 2 }, { 1, 1 } });
         }
-#endif
         #endregion
 
 #if !NETCF_1_0
@@ -432,7 +430,6 @@ namespace NUnit.Framework.Constraints.Tests
             }
         }
 
-#if CS_3_0 || CS_4_0
         [Test]
         public void UsesProvidedLambda_IntArgs()
         {
@@ -496,6 +493,5 @@ namespace NUnit.Framework.Constraints.Tests
                 return obj.Length.GetHashCode();
             }
         }
-#endif
     }
 }

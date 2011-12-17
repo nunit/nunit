@@ -116,7 +116,6 @@ namespace NUnit.Framework.Constraints.Tests
             Assert.That(ref list, Has.Count.EqualTo(1).After(5000, 100));
         }
 
-#if CS_3_0 || CS_4_0
         [Test]
         public void CanTestContentsOfDelegateReturningList()
         {
@@ -127,7 +126,6 @@ namespace NUnit.Framework.Constraints.Tests
             worker.RunWorkerAsync();
             Assert.That(() => list, Has.Count.EqualTo(1).After(5000, 100));
         }
-#endif
 		
 		[Test]
 		public void CanTestInitiallyNullReference()
@@ -142,7 +140,6 @@ namespace NUnit.Framework.Constraints.Tests
 			Assert.That(ref statusString, Has.Length.GreaterThan(0).After(3000, 100));
 		}
 		
-#if CS_3_0 || CS_4_0
 		[Test]
 		public void CanTestInitiallyNullDelegate()
 		{
@@ -155,7 +152,6 @@ namespace NUnit.Framework.Constraints.Tests
 			
 			Assert.That(() => statusString, Has.Length.GreaterThan(0).After(3000, 100));
 		}
-#endif
 
         private static int setValueTrueDelay;
 
