@@ -84,7 +84,6 @@ namespace NUnit.Framework.Constraints
 
         #endregion
 
-#if CLR_2_0 || CLR_4_0
         #region Nested IEqualityComparer Adapter
 
         /// <summary>
@@ -224,7 +223,5 @@ namespace NUnit.Framework.Constraints
         }
 
         #endregion
-
-#endif
     }
 }

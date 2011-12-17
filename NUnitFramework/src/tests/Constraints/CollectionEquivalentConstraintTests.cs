@@ -103,7 +103,6 @@ namespace NUnit.Framework.Constraints.Tests
             Assert.That(new CollectionEquivalentConstraint(set1).IgnoreCase.Matches(set2).HasSucceeded);
         }
 
-#if CS_3_0 || CS_4_0
         [Test]
         public void EquivalentHonorsUsing()
         {
@@ -115,6 +114,7 @@ namespace NUnit.Framework.Constraints.Tests
                 .Matches(set2).HasSucceeded);
         }
 
+#if NET_3_5 || NET_4_0
         [Test, Platform("Net-3.5,Mono-3.5,Net-4.0,Mono-4.0")]
         public void WorksWithHashSets()
         {

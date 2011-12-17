@@ -103,13 +103,11 @@ namespace NUnit.Framework.Constraints.Tests
             }
         }
 
-#if CS_3_0 || CS_4_0
         [Test]
         public void UsesProvidedLambda()
         {
             Comparison<int> comparer = (x, y) => x.CompareTo(y);
             Assert.That(rangeConstraint.Using(comparer).Matches(19).HasSucceeded);
         }
-#endif
     }
 }

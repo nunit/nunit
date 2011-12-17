@@ -110,7 +110,6 @@ namespace NUnit.Framework.Syntax
                 expr.Resolve().ToString());
         }
 
-#if CS_3_0 || CS_4_0
         [Test]
         public void DelegateThrowsException()
         {
@@ -148,23 +147,5 @@ namespace NUnit.Framework.Syntax
                 }
             }
         }
-#else
-        [Test]
-        public void DelegateThrowsException()
-        {
-            Assert.That(
-                delegate { Throw(); return; },
-                Throws.Exception);
-        }
-
-        // Encapsulate throw to trick compiler and
-        // avoid unreachable code warning. Can't
-        // use pragma because this is also compiled
-        // under the .NET 1.0 and 1.1 compilers.
-        private void Throw()
-        {
-            throw new ApplicationException();
-        }
-#endif
     }
 }

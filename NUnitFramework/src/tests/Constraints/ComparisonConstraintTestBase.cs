@@ -90,14 +90,12 @@ namespace NUnit.Framework.Constraints.Tests
             }
         }
 
-#if CS_3_0 || CS_4_0
         [Test]
         public void UsesProvidedLambda()
         {
             Comparison<int> comparer = (x, y) => x.CompareTo(y);
             comparisonConstraint.Using(comparer).Matches(0);
         }
-#endif
     }
 
     #endregion

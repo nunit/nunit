@@ -792,7 +792,7 @@
     <property name="runtime.version" value="2.0"/>
     <property name="runtime.config" value="net-2.0"/>
     <property name="runtime.defines" value="MSNET,NET_2_0,CLR_2_0"/>
-    <property name="nant.settings.currentframework" value="net-2.0"/>
+    <!--<property name="nant.settings.currentframework" value="net-2.0"/>-->
   </target>
    
   <target name="set-net-3.0-runtime-config">

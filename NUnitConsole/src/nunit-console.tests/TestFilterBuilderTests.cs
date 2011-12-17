@@ -30,7 +30,7 @@ namespace NUnit.ConsoleRunner.Tests
 {
     public class TestFilterBuilderTests
     {
-        private TestFilterBuilder builder;
+        TestFilterBuilder builder;
 
         [SetUp]
         public void CreateBuilder()

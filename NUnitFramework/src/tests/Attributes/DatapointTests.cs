@@ -41,13 +41,11 @@ namespace NUnit.Framework.Attributes
             RunTestOnFixture(typeof(SquareRootTest_Method_ArrayOfDouble));
         }
 
-#if CS_3_0 || CS_4_0
         [Test]
         public void WorksOnIEnumerableOfT()
         {
             RunTestOnFixture(typeof(SquareRootTest_Field_IEnumerableOfDouble));
         }
-#endif
 
         [Test]
         public void WorksOnPropertyReturningIEnumerableOfT()
