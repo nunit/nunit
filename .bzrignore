@@ -19,3 +19,4 @@ deploy
 InternalTrace.txt
 TestResult.xml
 *.log
+lib
