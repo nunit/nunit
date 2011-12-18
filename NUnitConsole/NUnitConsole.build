@@ -84,14 +84,6 @@
   <call target="set-${build.config}-build-config"/>
 
 <!-- ***************************************************************** -->
-<!-- ********* Building the Console Runner requires .NET 3.5 ********* -->
-<!-- ***************************************************************** -->
-
-  <!--<property name="runtime.config" value="net-3.5"
-    unless="${property::exists('runtime.config')}"/>
-  <property name="nant.settings.currentframework" value="${runtime.config}"/>-->
-
-<!-- ***************************************************************** -->
 <!-- *********   Define directories for external tools    ************ -->
 <!-- ***************************************************************** -->
 
@@ -161,11 +153,25 @@
     <mkdir dir="${current.build.dir}"
       unless="${directory::exists(current.build.dir)}"/>
 
+    <!-- TODO: This should be done at a higher level -->
+    <copy todir="${current.build.dir}"
+      file="../NUnitFramework/build/net/2.0/debug/nunit.framework.dll"/>
+
+    <!-- TODO: This should be done at a higher level -->
+    <copy todir="${current.build.dir}">
+      <fileset basedir="../NUnitEngine/build/debug">
+        <include name="nunit.engine.api.dll" />
+        <include name="nunit.engine.dll" />
+      </fileset>
+    </copy>
+
     <copy todir="${current.build.dir}">
       <fileset basedir="${project.lib.dir}">
         <include name="*"/>
       </fileset>
     </copy>
+
+    <property name="nant.settings.currentframework" value="net-3.5"/>
 
     <nant target="build">
       <buildfiles refid="console.buildfiles" failonerror="true" />
@@ -208,6 +214,8 @@
     <echo message="* Testing the nunit-console ${build.config} build"/>
     <echo message="*"/>
 
+    <property name="nant.settings.currentframework" value="net-2.0"/>
+
     <exec basedir="${current.build.dir}"
           workingdir="${current.build.dir}"
           program="${nunit.console.program}"
@@ -224,6 +232,8 @@
     <echo message="*"/>
     <echo message="* Starting the NUnitConsole ${build.config} test coverage run"/>
     <echo message="*"/>
+
+    <property name="nant.settings.currentframework" value="net-2.0"/>
 
     <exec basedir="${partcover.dir}"
           workingdir="${current.build.dir}" 
