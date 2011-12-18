@@ -37,11 +37,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="direct-runner">
-      <HintPath>..\..\..\NUnitFramework\bin\Debug\direct-runner.exe</HintPath>
+      <HintPath>..\..\..\NUnitFramework\build\net\2.0\debug\direct-runner.exe</HintPath>
     </Reference>
     <Reference Include="nunit.framework, Version=2.6.0.11340, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\NUnitFramework\bin\Debug\nunit.framework.dll</HintPath>
+      <HintPath>..\..\..\NUnitFramework\build\net\2.0\debug\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
