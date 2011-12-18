@@ -173,12 +173,6 @@
   <target name="net" depends="set-default-dot-net-runtime-config"
     description="Set runtime to default .NET version"/>
 
-  <target name="net-1.0" depends="set-net-1.0-runtime-config"
-    description="Set runtime to .NET 1.0 for commands that follow"/>
-
-  <target name="net-1.1" depends="set-net-1.1-runtime-config"
-    description="Set runtime to .NET 1.1 for commands that follow"/>
-      
   <target name="net-2.0" depends="set-net-2.0-runtime-config"
     description="Set runtime to .NET 2.0 for commands that follow"/>
       
@@ -200,9 +194,6 @@
   <target name="mono" depends="set-default-mono-runtime-config"
     description="Set runtime to default Mono version"/>
 
-  <target name="mono-1.0" depends="set-mono-1.0-runtime-config"
-    description="Set runtime to Mono 1.0 for commands that follow"/>
-  
   <target name="mono-2.0" depends="set-mono-2.0-runtime-config"
     description="Set runtime to Mono 2.0 for commands that follow"/>
 
@@ -276,6 +267,8 @@
     <fail if="${runtime.platform=='netcf'}"
       message="The full NUnit framework may not be built for netcf"/>
 
+    <property name="nant.settings.currentframework" value="${build.framework}"/>
+
     <nant target="build" buildfile="src/framework/nunit.framework.build"/>
     <nant target="build" buildfile="src/testdata/nunit.testdata.build"/>
     <nant target="build" buildfile="src/tests/nunit.framework.tests.build"/>
@@ -285,6 +278,8 @@
   </target>
 
   <target name="build-nunitlite" depends="make-build-dir">
+
+    <property name="nant.settings.currentframework" value="${build.framework}"/>
 
     <nant target="build" buildfile="src/framework/nunitlite.build"/>
     <nant target="build" buildfile="src/testdata/nunitlite.testdata.build"/>
@@ -345,6 +340,8 @@
     <echo message="* Testing the nunit.framework ${runtime.config} ${build.config} build"/>
     <echo message="*"/>
 
+    <property name="nant.settings.currentframework" value="${runtime.config}" />
+
     <exec basedir="${current.build.dir}"
           workingdir="${current.build.dir}"
           program="${test.runner.program}"
@@ -358,6 +355,8 @@
     <echo message="*"/>
     <echo message="* Testing the NUnitLite ${runtime.config} ${build.config} build"/>
     <echo message="*"/>
+
+    <property name="nant.settings.currentframework" value="${runtime.config}" />
 
     <exec basedir="${current.build.dir}"
 	  program="nunitlite.tests.exe" 
@@ -381,9 +380,7 @@
     <echo message="* Starting ${runtime.config} ${build.config} NUnit test coverage run"/>
     <echo message="*"/>
 
-    <!-- PartCover must run under .NET 2.0 or greater -->
-    <property name="nant.settings.currentframework" value="net-2.0"
-      unless="${runtime.version >= '2.0'}"/>
+    <property name="nant.settings.currentframework" value="${runtime.config}" />
 
     <exec basedir="${partcover.dir}"
           workingdir="${current.build.dir}"
@@ -405,9 +402,7 @@
     <echo message="* Starting ${runtime.config} ${build.config} NUnit test coverage run"/>
     <echo message="*"/>
 
-    <!-- PartCover must run under .NET 2.0 or greater -->
-    <property name="nant.settings.currentframework" value="net-2.0"
-      unless="${runtime.version >= '2.0'}"/>
+    <property name="nant.settings.currentframework" value="${runtime.config}" />
 
     <exec basedir="${partcover.dir}"
           workingdir="${current.build.dir}"
@@ -762,28 +757,6 @@
     <call target="set-${default.mono.runtime}-runtime-config" />
   </target>
 
-  <target name="set-net-1.0-runtime-config">
-    <fail unless="${framework::exists('net-1.0') and framework::sdk-exists('net-1.0')}"
-      message="The .NET 1.0 SDK is not configured or not installed"/>
-
-    <property name="runtime.platform" value="net"/>
-    <property name="runtime.version" value="1.0"/>
-    <property name="runtime.config" value="net-1.0"/>
-    <property name="runtime.defines" value="MSNET,NET_1_0,CLR_1_0"/>
-    <property name="nant.settings.currentframework" value="net-1.0"/>
-  </target>
-	
-  <target name="set-net-1.1-runtime-config">
-    <fail unless="${framework::exists('net-1.1') and framework::sdk-exists('net-1.1')}"
-      message="The .NET 1.1 SDK is not configured or not installed"/>
-
-    <property name="runtime.platform" value="net"/>
-    <property name="runtime.version" value="1.1"/>
-    <property name="runtime.config" value="net-1.1"/>
-    <property name="runtime.defines" value="MSNET,NET_1_1,CLR_1_1"/>
-    <property name="nant.settings.currentframework" value="net-1.1"/>
-  </target>
-	
   <target name="set-net-2.0-runtime-config">
     <fail unless="${framework::exists('net-2.0') and framework::sdk-exists('net-2.0')}"
       message="The .NET 2.0 SDK is not configured or not installed"/>
@@ -792,29 +765,18 @@
     <property name="runtime.version" value="2.0"/>
     <property name="runtime.config" value="net-2.0"/>
     <property name="runtime.defines" value="MSNET,NET_2_0,CLR_2_0"/>
-    <!--<property name="nant.settings.currentframework" value="net-2.0"/>-->
+    <property name="build.framework" value="net-3.5"/>
   </target>
    
-  <target name="set-net-3.0-runtime-config">
-    <fail unless="${framework::exists('net-3.0') and framework::sdk-exists('net-3.0')}"
-      message="The .NET 3.0 SDK is not configured or not installed"/>
-
-    <property name="runtime.platform" value="net"/>
-    <property name="runtime.version" value="3.0"/>
-    <property name="runtime.config" value="net-3.0"/>
-    <property name="runtime.defines" value="MSNET,NET_3_0,CLR_2_0"/>
-    <property name="nant.settings.currentframework" value="net-3.0"/>
-  </target>
-	
   <target name="set-net-3.5-runtime-config">
     <fail unless="${framework::exists('net-3.5') and framework::sdk-exists('net-3.5')}"
-      message="The .NET 2.0 SDK is not configured or not installed"/>
+      message="The .NET 3.5 SDK is not configured or not installed"/>
 
     <property name="runtime.platform" value="net"/>
     <property name="runtime.version" value="3.5"/>
     <property name="runtime.config" value="net-3.5"/>
     <property name="runtime.defines" value="MSNET,NET_3_5,CLR_2_0,CS_3_0"/>
-    <property name="nant.settings.currentframework" value="net-3.5"/>
+    <property name="build.framework" value="net-3.5"/>
   </target>
  	
   <target name="set-net-4.0-runtime-config">
@@ -825,7 +787,7 @@
     <property name="runtime.version" value="4.0"/>
     <property name="runtime.config" value="net-4.0"/>
     <property name="runtime.defines" value="MSNET,NET_4_0,CLR_4_0,CS_4_0"/>
-    <property name="nant.settings.currentframework" value="net-4.0"/>
+    <property name="build.framework" value="net-4.0"/>
   </target>
  	
   <target name="set-netcf-1.0-runtime-config">
@@ -836,7 +798,7 @@
     <property name="runtime.version" value="1.0"/>
     <property name="runtime.config" value="netcf-1.0"/>
     <property name="runtime.defines" value="NETCF,NETCF_1_0"/>
-    <property name="nant.settings.currentframework" value="netcf-1.0"/>
+    <property name="build.framework" value="netcf-1.0"/>
   </target>
 
   <target name="set-netcf-2.0-runtime-config">
@@ -847,7 +809,7 @@
     <property name="runtime.version" value="2.0"/>
     <property name="runtime.config" value="netcf-2.0"/>
     <property name="runtime.defines" value="NETCF,NETCF_2_0,CLR_2_0"/>
-    <property name="nant.settings.currentframework" value="netcf-2.0"/>
+    <property name="build.framework" value="netcf-2.0"/>
   </target>
 
   <target name="set-netcf-3.5-runtime-config">
@@ -858,19 +820,7 @@
     <property name="runtime.version" value="3.5"/>
     <property name="runtime.config" value="netcf-3.5"/>
     <property name="runtime.defines" value="NETCF,NETCF_3_5,CLR_2_0"/>
-    <property name="nant.settings.currentframework" value="netcf-3.5"/>
-  </target>
-
-  <target name="set-mono-1.0-runtime-config">
-    <fail unless="${framework::exists('mono-1.0') and framework::sdk-exists('mono-1.0')}"
-      message="The Mono 1.0 SDK is not configured or not installed"/>
-
-    <property name="runtime.platform" value="mono"/>
-    <property name="runtime.version" value="1.0"/>
-    <property name="runtime.config" value="mono-1.0"/>
-    <property name="runtime.defines" value="MONO,MONO_1_0,CLR_1_1"/>
-    <property name="runtime.testproj" value="NUnitTests.v1.nunit"/>
-    <property name="nant.settings.currentframework" value="mono-1.0"/>
+    <property name="build.framework" value="netcf-3.5"/>
   </target>
 
   <target name="set-mono-2.0-runtime-config">
@@ -881,7 +831,7 @@
     <property name="runtime.version" value="2.0"/>
     <property name="runtime.config" value="mono-2.0"/>
     <property name="runtime.defines" value="MONO,MONO_2_0,CLR_2_0"/>
-    <property name="nant.settings.currentframework" value="mono-2.0"/>
+    <property name="build.framework" value="mono-3.5"/>
   </target>
 
   <target name="set-mono-3.5-runtime-config">
@@ -892,7 +842,7 @@
     <property name="runtime.version" value="3.5"/>
     <property name="runtime.config" value="mono-3.5"/>
     <property name="runtime.defines" value="MONO,MONO_3_5,CLR_2_0,CS_3_0"/>
-    <property name="nant.settings.currentframework" value="mono-3.5"/>
+    <property name="build.framework" value="mono-3.5"/>
   </target>
 
   <target name="set-mono-4.0-runtime-config">
@@ -903,7 +853,7 @@
     <property name="runtime.version" value="4.0"/>
     <property name="runtime.config" value="mono-4.0"/>
     <property name="runtime.defines" value="MONO,MONO_4_0,CLR_4_0,CS_4_0"/>
-    <property name="nant.settings.currentframework" value="mono-4.0"/>
+    <property name="build.framework" value="mono-4.0"/>
   </target>
 
 <!-- ***************************************************************** -->
