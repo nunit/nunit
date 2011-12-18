@@ -10,6 +10,14 @@
 
   <target name="build">
 
+    <!-- TODO: This should be handled by a higher level script -->
+    <copy todir="${current.build.dir}">
+      <fileset basedir="../../../NUnitFramework/build/net/2.0/Debug">
+        <include name="nunit.framework.dll" />
+        <include name="direct-runner.exe" />
+      </fileset>
+    </copy>
+
     <csc target="library"
         output="${current.build.dir}/nunit.engine.tests.dll"
         debug="${build.debug}" 
