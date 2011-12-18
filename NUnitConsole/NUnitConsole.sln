@@ -1,0 +1,29 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit-console", "src\nunit-console\nunit-console.csproj", "{0DE218CA-AFB8-423A-9CD2-E22DEAC55C46}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit-console.tests", "src\nunit-console.tests\nunit-console.tests.csproj", "{B310A760-8AE1-41CA-81F8-03B12E2FCE30}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0DE218CA-AFB8-423A-9CD2-E22DEAC55C46}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0DE218CA-AFB8-423A-9CD2-E22DEAC55C46}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0DE218CA-AFB8-423A-9CD2-E22DEAC55C46}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0DE218CA-AFB8-423A-9CD2-E22DEAC55C46}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B310A760-8AE1-41CA-81F8-03B12E2FCE30}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B310A760-8AE1-41CA-81F8-03B12E2FCE30}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B310A760-8AE1-41CA-81F8-03B12E2FCE30}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B310A760-8AE1-41CA-81F8-03B12E2FCE30}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = NUnitConsole\src\nunit-console\nunit-console-vs2010.csproj
+	EndGlobalSection
+EndGlobal
