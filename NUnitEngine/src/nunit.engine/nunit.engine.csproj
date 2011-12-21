@@ -40,6 +40,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Remoting" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
   </ItemGroup>
@@ -104,7 +105,7 @@
   <ItemGroup>
     <ProjectReference Include="..\nunit.engine.api\nunit.engine.api.csproj">
       <Project>{775FAD50-3623-4922-97C4-DFB29A8BE4C7}</Project>
-      <Name>nunit.engine.api-vs2010</Name>
+      <Name>nunit.engine.api</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

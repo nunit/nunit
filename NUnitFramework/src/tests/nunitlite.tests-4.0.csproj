@@ -193,7 +193,6 @@
     <EmbeddedResource Include="TestText2.txt" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
     <None Include="nunitlite.tests.build" />
   </ItemGroup>
   <ItemGroup>

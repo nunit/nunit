@@ -80,7 +80,6 @@
     <Compile Include="StackTraceFilter.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
     <None Include="direct-runner.build" />
   </ItemGroup>
   <ItemGroup>

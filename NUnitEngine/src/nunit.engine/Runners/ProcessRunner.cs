@@ -71,6 +71,9 @@ namespace NUnit.Engine.Runners
             this.package = package;
 
             this.runtimeFramework = package.GetSetting("RuntimeFramework", RuntimeFramework.CurrentFramework);
+            // Removing this to avoid passing an engine type to the framework
+            // TODO: Modify settings to use string
+            package.Settings.Remove("RuntimeFramework");
 
             bool enableDebug = package.GetSetting("AgentDebug", false);
             //bool enableDebug = true;
@@ -94,6 +97,9 @@ namespace NUnit.Engine.Runners
             this.package = package;
 
             this.runtimeFramework = package.GetSetting("RuntimeFramework", RuntimeFramework.CurrentFramework);
+            // Removing this to avoid passing an engine type to the framework
+            // TODO: Modify settings to use string
+            package.Settings.Remove("RuntimeFramework");
 
             bool enableDebug = package.GetSetting("AgentDebug", false);
             //bool enableDebug = true;

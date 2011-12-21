@@ -200,7 +200,6 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
-    <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="TestImage1.jpg" />
