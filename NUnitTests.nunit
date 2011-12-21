@@ -1,18 +1,18 @@
 ﻿<NUnitProject>
-  <!--<Settings processModel="Separate"/>-->
+  <Settings processModel="Multiple"/>
   <!--<Config name="Deployed" appbase="deploy">
     <assembly path="nunit-console.tests.dll" />
     <assembly path="nunit.engine.tests.dll" />
     <assembly path="nunit.framework.tests.dll" />
   </Config>-->
-  <Config name="Debug" appbase="bin/vs2010/Debug">
-    <assembly path="nunit-console.tests.dll" />
-    <assembly path="nunit.engine.tests.dll" />
-    <assembly path="nunit.framework.tests.dll" />
+  <Config name="Debug">
+	  <assembly path="NUnitConsole/bin/debug/nunit-console.tests.dll" />
+	  <assembly path="NUnitEngine/bin/debug/nunit.engine.tests.dll" />
+	  <assembly path="NUnitFramework/build/net/2.0/debug/nunit.framework.tests.dll" />
   </Config>
-  <Config name="Release" appbase="bin/vs2010/Release">
-    <assembly path="nunit-console.tests.dll" />
-    <assembly path="nunit.engine.tests.dll" />
-    <assembly path="nunit.framework.tests.dll" />
+  <Config name="Release">
+	  <assembly path="NUnitConsole/bin/release/nunit-console.tests.dll" />
+	  <assembly path="NUnitEngine/bin/release/nunit.engine.tests.dll" />
+	  <assembly path="NUnitFramework/build/net/2.0/release/nunit.framework.tests.dll" />
   </Config>
 </NUnitProject>
