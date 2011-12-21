@@ -112,6 +112,9 @@ namespace NUnit.ConsoleRunner
                 catch (FileNotFoundException ex)
                 {
                     Console.WriteLine(ex.Message);
+#if DEBUG
+                    Console.WriteLine(ex.StackTrace);
+#endif
                     return ConsoleRunner.FILE_NOT_FOUND;
                 }
                 catch (Exception ex)
