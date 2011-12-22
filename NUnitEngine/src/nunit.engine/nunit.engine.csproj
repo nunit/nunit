@@ -35,6 +35,12 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>nunit.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -101,6 +107,7 @@
     <Compile Include="TestEngine.cs" />
     <Compile Include="TestEngineResult.cs" />
     <None Include="nunit.engine.build" />
+    <None Include="nunit.snk" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\nunit.engine.api\nunit.engine.api.csproj">
