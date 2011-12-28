@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2008 Charlie Poole
+// Copyright (c) 2011 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -22,42 +22,44 @@
 // ***********************************************************************
 
 using System;
-using NUnit.Framework;
+using System.Threading;
 
-namespace NUnit.TestData.ThreadingFixture
+namespace NUnit.Framework.Internal
 {
-    [TestFixture]
-    public class ThreadingFixture
+    public class ThreadUtility
     {
-        public bool TearDownWasRun;
-
-        [SetUp]
-        public void SetUp()
+        /// <summary>
+        /// Do our best to Kill a thread
+        /// </summary>
+        /// <param name="thread">The thread to kill</param>
+        public static void Kill(Thread thread)
         {
-            TearDownWasRun = false;
+            Kill(thread, null);
         }
 
-        [TearDown]
-        public void TearDown()
+        /// <summary>
+        /// Do our best to kill a thread, passing state info
+        /// </summary>
+        /// <param name="thread">The thread to kill</param>
+        /// <param name="stateInfo">Info for the ThreadAbortException handler</param>
+        public static void Kill(Thread thread, object stateInfo)
         {
-            TearDownWasRun = true;
+            try
+            {
+                if (stateInfo == null)
+                    thread.Abort();
+                else
+                    thread.Abort(stateInfo);
+            }
+            catch (ThreadStateException)
+            {
+                thread.Resume();
+            }
+
+            if ( (thread.ThreadState & ThreadState.WaitSleepJoin) != 0 )
+                thread.Interrupt();
         }
 
-        [Test, Timeout(50)]
-        public void InfiniteLoopWith50msTimeout()
-        {
-            while (true) { }
-        }
-    }
-
-    [TestFixture, Timeout(50)]
-    public class ThreadingFixtureWithTimeout
-    {
-        [Test]
-        public void Test1() { }
-        [Test]
-        public void Test2WithInfiniteLoop() { while (true) { } }
-        [Test]
-        public void Test3() { }
+        private ThreadUtility() { }
     }
 }
