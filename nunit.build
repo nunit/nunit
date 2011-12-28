@@ -94,7 +94,7 @@
     value="${path::combine(project.base.dir,'lib')}"/>
   <property name="project.install.dir"
     value="${path::combine(project.base.dir, 'install')}"/>
-  <property name="project.deploy.dir"
+  <property name="common.deploy.dir"
     value="${path::combine(project.base.dir, 'deploy')}"/>
 
 
@@ -249,8 +249,8 @@
   <target name="deploy"
     description="Deploy the build to a common directory">
 
-    <delete dir="${project.deploy.dir}" 
-      if="${directory::exists( project.deploy.dir )}"/>
+    <delete dir="${common.deploy.dir}" 
+      if="${directory::exists( common.deploy.dir )}"/>
 
     <nant target="deploy" buildfile="NUnitFramework/NUnitFramework.build"/>
     <nant target="deploy" buildfile="NUnitEngine/NUnitEngine.build"/>
@@ -271,13 +271,15 @@
     <echo message="* Testing the NUnit ${build.config} build"/>
     <echo message="*"/>
 
-    <exec basedir="${project.deploy.dir}"
-          workingdir="${project.deploy.dir}"
+    <exec basedir="${common.deploy.dir}/NUnitConsole"
+          workingdir="${common.deploy.dir}"
           program="nunit-console.exe">
 
-      <arg value="nunit-console.tests.dll"/>
-      <arg value="nunit.engine.tests.dll"/>
-      <arg value="nunit.framework.tests.dll"/>
+      <arg value="NUnitConsole/nunit-console.tests.dll"/>
+      <arg value="NUnitEngine/nunit.engine.tests.dll"/>
+      <arg value="NUnitFramework/2.0/nunit.framework.tests.dll"/>
+      <arg value="NUnitFramework/3.5/nunit.framework.tests.dll"/>
+      <!--<arg value="NUnitFramework/4.0/nunit.framework.tests.dll"/>-->
 
     </exec>
 
