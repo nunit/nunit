@@ -57,9 +57,11 @@
   <property name="project.lib.dir"
     value="${path::combine(project.base.dir,'lib')}"/>
   <property name="project.deploy.dir"
-    value="${path::combine(project.base.dir,'deploy')}"
-    unless="${property::exists('project.deploy.dir')}"/>
-
+    value="${path::combine(project.base.dir,'../deploy/NUnitEngine')}"/>
+  <property name="project.tools.dir"
+    value="${path::combine(project.base.dir,'../tools')}"/>
+  <property name="partcover.dir"
+    value="${path::combine(project.tools.dir, 'PartCover')}"/>
 
 <!-- ***************************************************************** -->
 <!-- *********         Define Packaging Directories          ********* -->
@@ -88,16 +90,20 @@
 <!-- *********         The Engine targets .NET 2.0           ********* -->
 <!-- ***************************************************************** -->
 
-  <property name="nant.settings.currentframework" value= "net-2.0"/>
+  <property name="can.build.net"
+  value="${framework::exists('net-2.0') and framework::sdk-exists('net-2.0')}"/>
 
-<!-- ***************************************************************** -->
-<!-- *********   Define directories for external tools    ************ -->
-<!-- ***************************************************************** -->
+  <property name="can.build.mono"
+  value="${framework::exists('mono-2.0') and framework::sdk-exists('mono-2.0')}"/>
 
-  <property name="external.tools.dir"
-    value="${path::combine(project.base.dir,'../tools')}"/>
-  <property name="partcover.dir"
-    value="${path::combine(external.tools.dir, 'PartCover')}"/>
+  <fail message="Either the net-2.0 or mono-2.0 runtime is required"
+      unless="${can.build.net or can.build.mono}" />
+
+  <property name="nant.settings.currentframework" value= "net-2.0"
+      if="${can.build.net}" />
+
+  <property name="nant.settings.currentframework" value= "mono-2.0"
+      unless="${can.build.net}" />
 
 <!-- ***************************************************************** -->
 <!-- *********      Constants used for running tests      ************ -->
@@ -182,9 +188,12 @@
   <target name="deploy" depends="build"
     description="Deploy the current build for testing">
 
+    <delete dir="${project.deploy.dir}" 
+      if="${directory::exists( project.deploy.dir )}"/>
+
     <copy todir="${project.deploy.dir}">
       <fileset basedir="${current.build.dir}">
-        <include name="nunit.*" />
+        <include name="nunit.engine.*" />
         <include name="nunit-agent.*" />
       </fileset>
     </copy>

@@ -290,25 +290,39 @@ namespace NUnit.Framework
                 parms = new ParameterSet(this);
 
                 // Special handling for params arguments
-                if (argsProvided > argsNeeded)
+                if (argsNeeded > 0 && argsProvided >= argsNeeded - 1)
                 {
                     ParameterInfo lastParameter = parameters[argsNeeded - 1];
                     Type lastParameterType = lastParameter.ParameterType;
+                    Type elementType = lastParameterType.GetElementType();
 
                     if (lastParameterType.IsArray && lastParameter.IsDefined(typeof(ParamArrayAttribute), false))
                     {
-                        object[] newArglist = new object[argsNeeded];
-                        for (int i = 0; i < argsNeeded; i++)
-                            newArglist[i] = parms.Arguments[i];
+                        if (argsProvided == argsNeeded)
+                        {
+                            Type lastArgumentType = parms.Arguments[argsProvided - 1].GetType();
+                            if (!lastParameterType.IsAssignableFrom(lastArgumentType))
+                            {
+                                Array array = Array.CreateInstance(elementType, 1);
+                                array.SetValue(parms.Arguments[argsProvided - 1], 0);
+                                parms.Arguments[argsProvided - 1] = array;
+                            }
+                        }
+                        else
+                        {
+                            object[] newArglist = new object[argsNeeded];
+                            for (int i = 0; i < argsNeeded && i < argsProvided; i++)
+                                newArglist[i] = parms.Arguments[i];
 
-                        int length = argsProvided - argsNeeded + 1;
-                        Array array = Array.CreateInstance(lastParameterType.GetElementType(), length);
-                        for (int i = 0; i < length; i++)
-                            array.SetValue(parms.Arguments[argsNeeded + i - 1], i);
+                            int length = argsProvided - argsNeeded + 1;
+                            Array array = Array.CreateInstance(elementType, length);
+                            for (int i = 0; i < length; i++)
+                                array.SetValue(parms.Arguments[argsNeeded + i - 1], i);
 
-                        newArglist[argsNeeded - 1] = array;
-                        parms.Arguments = newArglist;
-                        argsProvided = argsNeeded;
+                            newArglist[argsNeeded - 1] = array;
+                            parms.Arguments = newArglist;
+                            argsProvided = argsNeeded;
+                        }
                     }
                 }
 

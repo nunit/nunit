@@ -32,7 +32,7 @@ namespace NUnit.Engine
     /// </summary>
     public static class TestEngineActivator
     {
-        private static readonly string DefaultAssemblyName = "nunit.engine, PublicKeyToken=96d09a1eb7f44a77";
+        private static readonly string DefaultAssemblyName = "nunit.engine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL";
         private static readonly string DefaultTypeName = "NUnit.Engine.TestEngine";
 
         #region Public Methods
