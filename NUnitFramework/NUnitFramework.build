@@ -10,7 +10,7 @@
 *                                                                        *
 * Dependencies:                                                          *      
 *                                                                        *
-*   The script requires the NAnt 0.90 release or a later version.        *
+*   The script requires the NAnt 0.91 release or a later version.        *
 *                                                                        *
 *   PartCover is required to run the 'test-coverage' target.             *
 *                                                                        *
@@ -66,9 +66,11 @@
   <property name="project.lib.dir"
     value="${path::combine(project.base.dir,'lib')}"/>
   <property name="project.deploy.dir"
-    value="${path::combine(project.base.dir,'deploy')}"
-    unless="${property::exists('project.deploy.dir')}"/>
-
+    value="${path::combine(project.base.dir,'../deploy/NUnitFramework')}"/>
+  <property name="project.tools.dir"
+    value="${path::combine(project.base.dir,'../tools')}"/>
+  <property name="partcover.dir"
+    value="${path::combine(project.tools.dir, 'PartCover')}"/>
 
 <!-- ***************************************************************** -->
 <!-- *********         Define Packaging Directories          ********* -->
@@ -117,6 +119,15 @@
       <property name="default.mono.runtime" value="${framework}"
         if="${string::starts-with(framework,'mono')}"
         unless="${property::exists('default.mono.runtime')}"/>
+      <property name="default.20.runtime" value="${framework}"
+        if="${string::ends-with(framework,'-2.0')}"
+        unless="${property::exists('default.20.runtime')}"/>
+      <property name="default.35.runtime" value="${framework}"
+        if="${string::ends-with(framework,'-3.5')}"
+        unless="${property::exists('default.35.runtime')}"/>
+      <property name="default.40.runtime" value="${framework}"
+        if="${string::ends-with(framework,'-4.0')}"
+        unless="${property::exists('default.40.runtime')}"/>
     </if>
     </if>
 
@@ -125,15 +136,6 @@
   <property name="runtime.config" value="${default.runtime}"
     unless="${property::exists('runtime.config')}"/>
   <call target="set-${runtime.config}-runtime-config" />
-
-<!-- ***************************************************************** -->
-<!-- *********   Define directories for external tools    ************ -->
-<!-- ***************************************************************** -->
-
-  <property name="external.tools.dir"
-    value="${path::combine(project.base.dir,'../tools')}"/>
-  <property name="partcover.dir"
-    value="${path::combine(external.tools.dir, 'PartCover')}"/>
 
 <!-- ***************************************************************** -->
 <!-- *********      Constants used for running tests      ************ -->
@@ -291,34 +293,43 @@
 <!-- ***              Targets for Deploying the Build              *** -->
 <!-- ***************************************************************** -->
 
-  <target name="deploy" depends="build"
+  <target name="deploy"
+    description="Deploy the current config for .NET 2.0, 3.5 and 4.0">
+
+    <delete dir="${project.deploy.dir}" 
+      if="${directory::exists( project.deploy.dir )}"/>
+
+    <if test="${property::exists('default.20.runtime')}">
+      <call target="set-${default.20.runtime}-runtime-config"/>
+      <call target="deploy-current-config"/>
+    </if>
+
+    <if test="${property::exists('default.35.runtime')}">
+      <call target="set-${default.35.runtime}-runtime-config"/>
+      <call target="deploy-current-config"/>
+    </if>
+
+    <if test="${property::exists('default.40.runtime')}">
+      <call target="set-${default.40.runtime}-runtime-config"/>
+      <call target="deploy-current-config"/>
+    </if>
+
+  </target>
+
+
+  <target name="deploy-current-config" depends="build"
     description="Deploy the current build for testing">
 
-    <copy todir="${project.deploy.dir}">
-      <fileset basedir="${current.build.dir}">
-        <include name="nunit.*" />
-        <include name="nunitlite.*" />
-        <include name="direct-runner.*" />
-        <include name="mock-assembly.*" />
-      </fileset>
-    </copy>
+      <copy todir="${project.deploy.dir}/${runtime.version}">
+        <fileset basedir="${current.build.dir}">
+          <include name="nunit.*" />
+          <include name="nunitlite.*" />
+          <include name="direct-runner.*" />
+          <include name="mock-assembly.*" />
+        </fileset>
+      </copy>
 
   </target>
-
-<!--
-  <target name="deploy-all"
-    description="Deploy the current config for all supported runtimes">
-
-    <foreach item="String" delim="," 
-        property="framework" in="${installed.frameworks}">
-
-      <call target="set-${framework}-runtime-config"/>
-      <call target="deploy"/>
-
-    </foreach>
-
-  </target>
- -->
 
 <!-- ***************************************************************** -->
 <!-- ***                 Targets for running tests                 *** -->
@@ -912,6 +923,24 @@
     <if test="${not property::exists('default.mono.runtime')}">
     <echo>    Mono:    (none)</echo>
     </if>
+    <if test="${property::exists('default.20.runtime')}">
+    <echo>    v2.0:    ${default.20.runtime}</echo>
+    </if>
+    <if test="${not property::exists('default.20.runtime')}">
+    <echo>    v2.0:    (none)</echo>
+    </if>
+    <if test="${property::exists('default.35.runtime')}">
+    <echo>    v3.5:    ${default.35.runtime}</echo>
+    </if>
+    <if test="${not property::exists('default.35.runtime')}">
+    <echo>    v3.5:    (none)</echo>
+    </if>
+    <if test="${property::exists('default.40.runtime')}">
+    <echo>    v4.0:    ${default.40.runtime}</echo>
+    </if>
+    <if test="${not property::exists('default.40.runtime')}">
+    <echo>    v4.0:    (none)</echo>
+    </if>
     <echo></echo>
     <echo>Current Build Settings</echo>
     <echo>  Config:    ${build.config}</echo>
@@ -961,6 +990,24 @@
     </if>
     <if test="${not property::exists('default.mono.runtime')}">
     <echo>        mono          (none)</echo>
+    </if>
+    <if test="${property::exists('default.20.runtime')}">
+    <echo>        v2.0          ${default.20.runtime}</echo>
+    </if>
+    <if test="${not property::exists('default.20.runtime')}">
+    <echo>        v2.0          (none)</echo>
+    </if>
+    <if test="${property::exists('default.35.runtime')}">
+    <echo>        v3.5          ${default.35.runtime}</echo>
+    </if>
+    <if test="${not property::exists('default.35.runtime')}">
+    <echo>        v3.5          (none)</echo>
+    </if>
+    <if test="${property::exists('default.40.runtime')}">
+    <echo>        v4.0          ${default.40.runtime}</echo>
+    </if>
+    <if test="${not property::exists('default.40.runtime')}">
+    <echo>        v4.0          (none)</echo>
     </if>
   </target>
 
