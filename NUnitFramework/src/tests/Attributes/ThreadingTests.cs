@@ -74,10 +74,13 @@ namespace NUnit.Framework.Attributes
         [Platform(Exclude = "Net-1.1,Net-1.0", Reason = "Cancels the run when executed")]
         public void TestWithInfiniteLoopTimesOut()
         {
-            ITestResult result = TestBuilder.RunTestCase(
-                typeof(ThreadingFixture), "InfiniteLoopWith50msTimeout");
+            ThreadingFixture fixture = new ThreadingFixture();
+            TestSuite suite = TestBuilder.MakeFixture(fixture);
+            Test test = TestFinder.Find("InfiniteLoopWith50msTimeout", suite, false);
+            ITestResult result = TestBuilder.RunTest(test, fixture);
             Assert.That(result.ResultState, Is.EqualTo(ResultState.Failure));
             Assert.That(result.Message, Contains.Substring("50ms"));
+            Assert.That(fixture.TearDownWasRun, "TearDown was not run");
         }
 
         //[Test, STAThread]

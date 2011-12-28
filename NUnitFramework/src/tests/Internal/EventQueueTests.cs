@@ -434,11 +434,7 @@ namespace NUnit.Framework.Internal
                 }
                 finally
                 {
-                    consumerThread.Abort();
-                    if ((consumerThread.ThreadState & ThreadState.WaitSleepJoin) != 0)
-                    {
-                        consumerThread.Interrupt();
-                    }
+                    ThreadUtility.Kill(consumerThread);
                 }
 
                 Assert.IsNull(this.myConsumerException);
