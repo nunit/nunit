@@ -30,13 +30,15 @@ namespace NUnit.ConsoleRunner
     public class ResultReporter
     {
         XmlNode result;
+        ConsoleOptions options;
         ResultSummary summary;
 
         int reportIndex = 0;
 
-        public ResultReporter(XmlNode result)
+        public ResultReporter(XmlNode result, ConsoleOptions options)
         {
             this.result = result;
+            this.options = options;
             this.summary = new ResultSummary(result);
         }
 
@@ -51,6 +53,12 @@ namespace NUnit.ConsoleRunner
         /// <param name="result">The result.</param>
         public void ReportResults()
         {
+            if (options.StopOnError && summary.ErrorsAndFailures > 0)
+            {
+                Console.WriteLine("Execution terminated after first error");
+                Console.WriteLine();
+            }
+            
             WriteSummaryReport();
 
             if (summary.ErrorsAndFailures > 0)
