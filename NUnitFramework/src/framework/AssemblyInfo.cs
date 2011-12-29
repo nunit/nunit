@@ -28,4 +28,13 @@ using System.Reflection;
 // Supplementary attributes (to those in CommonAssemblyInfo)
 //
 
+#if NUNITLITE
+[assembly: AssemblyTitle("nunitlite")]
+#else
+[assembly: AssemblyTitle("nunit.framework")]
+#endif
+[assembly: AssemblyDescription("")]
+[assembly: AssemblyConfiguration("")]
+[assembly: AssemblyCulture("")]
+
 [assembly: CLSCompliant(true)]
