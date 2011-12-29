@@ -118,6 +118,8 @@ namespace NUnit.Framework.Internal
 
                 if (this.settings.Contains("DefaultTimeout"))
                     TestExecutionContext.CurrentContext.TestCaseTimeout = (int)this.settings["DefaultTimeout"];
+                if (this.settings.Contains("StopOnError"))
+                    TestExecutionContext.CurrentContext.StopOnError = (bool)this.settings["StopOnError"];
 	
 				if (this.settings.Contains("WorkDirectory"))
 					TestExecutionContext.CurrentContext.WorkDirectory = (string)this.settings["WorkDirectory"];

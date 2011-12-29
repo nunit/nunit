@@ -121,6 +121,9 @@ namespace NUnit.Framework.Internal.Commands
 
                 if (childResult.ResultState == ResultState.Cancelled)
                     break;
+
+                if (childResult.ResultState.Status == TestStatus.Failed && TestExecutionContext.CurrentContext.StopOnError)
+                    break;
             }
 
             return suiteResult;

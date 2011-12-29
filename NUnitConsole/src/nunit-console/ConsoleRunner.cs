@@ -165,7 +165,7 @@ namespace NUnit.ConsoleRunner
                 DisplayErrorMessages(engineResult);
             else
             {
-                ResultReporter reporter = new ResultReporter(engineResult.Xml);
+                ResultReporter reporter = new ResultReporter(engineResult.Xml, options);
                 reporter.ReportResults();
 
                 // TODO: Inject this?
@@ -261,6 +261,9 @@ namespace NUnit.ConsoleRunner
 			
 			if (options.WorkDirectory != null)
 				package.Settings["WorkDirectory"] = options.WorkDirectory;
+
+            if (options.StopOnError)
+                package.Settings["StopOnError"] = true;
             
             return package;
 		}

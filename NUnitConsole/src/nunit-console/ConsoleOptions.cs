@@ -112,6 +112,9 @@ namespace NUnit.ConsoleRunner
             this.Add("noheader|noh", "Suppress display of program information at start of run.",
                 v => noheader = v != null);
 
+            this.Add("stoponerror", "Stop run immediately upon any test failure or error.",
+                v => stopOnError = v != null);
+
             this.Add("help|h", "Display this message and exit.", 
                 v => help = v != null);
 
@@ -202,6 +205,12 @@ namespace NUnit.ConsoleRunner
         public string Labels
         {
             get { return labels; }
+        }
+
+        private bool stopOnError;
+        public bool StopOnError
+        {
+            get { return stopOnError; }
         }
 
         private bool explore;
