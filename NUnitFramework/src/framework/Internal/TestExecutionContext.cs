@@ -88,6 +88,11 @@ namespace NUnit.Framework.Internal
         /// </summary>
         private int assertCount;
 
+        /// <summary>
+        /// Indicates whether execution should terminate after the first error
+        /// </summary>
+        private bool stopOnError;
+
 #if !NETCF_1_0
         /// <summary>
         /// Destination for standard output
@@ -191,6 +196,7 @@ namespace NUnit.Framework.Internal
             this.testObject = other.testObject;
 			this.workDirectory = other.workDirectory;
             this.listener = other.listener;
+            this.stopOnError = other.stopOnError;
 
 #if !NETCF_1_0
 			this.outWriter = other.outWriter;
@@ -289,11 +295,23 @@ namespace NUnit.Framework.Internal
             set { testObject = value; }
         }
 		
+        /// <summary>
+        /// Get or set the working directory
+        /// </summary>
 		public string WorkDirectory
 		{
 			get { return workDirectory; }
 			set { workDirectory = value; }
 		}
+
+        /// <summary>
+        /// Get or set indicator that run should stop on the first error
+        /// </summary>
+        public bool StopOnError
+        {
+            get { return stopOnError; }
+            set { stopOnError = value; }
+        }
 		
         /// <summary>
         /// The current test event listener
