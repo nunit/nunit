@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
 using System.Reflection;
 
 //
@@ -44,5 +43,5 @@ using System.Reflection;
 // You can specify all the values or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
 //
-[assembly: AssemblyVersion("2.9.5")]
-[assembly: AssemblyInformationalVersion("2.9.5")]
+[assembly: AssemblyVersion("2.9.6")]
+[assembly: AssemblyInformationalVersion("2.9.6")]
