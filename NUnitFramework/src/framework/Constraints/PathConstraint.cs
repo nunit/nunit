@@ -89,7 +89,7 @@ namespace NUnit.Framework.Constraints
         /// <returns>The path in standardized form</returns>
         protected string Canonicalize(string path)
         {
-            string[] parts = path.Split(DirectorySeparatorChars);
+            string[] parts = path.Split(DirectorySeparatorChars, StringSplitOptions.RemoveEmptyEntries);
 
             int count = 0;
             bool shifting = false;

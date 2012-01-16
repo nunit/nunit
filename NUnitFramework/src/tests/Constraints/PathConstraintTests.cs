@@ -62,26 +62,31 @@ namespace NUnit.Framework.Constraints.Tests
         [SetUp]
         public void SetUp()
         {
-            theConstraint = new SamePathConstraint(@"/folder1/file.tmp").RespectCase;
-            expectedDescription = @"Path matching ""/folder1/file.tmp""";
-            stringRepresentation = @"<samepath ""/folder1/file.tmp"" respectcase>";
+            theConstraint = new SamePathConstraint(@"/folder1/folder2").RespectCase;
+            expectedDescription = @"Path matching ""/folder1/folder2""";
+            stringRepresentation = @"<samepath ""/folder1/folder2"" respectcase>";
         }
 
         object[] SuccessData = new object[] 
             { 
-                @"/folder1/file.tmp", 
-                @"/folder1/./file.tmp",
-                @"/folder1/folder2/../file.tmp",
-                @"/folder1/./folder2/../file.tmp",
-                @"\folder1\file.tmp"
+                @"/folder1/folder2", 
+				@"/folder1/folder2/",
+                @"/folder1/./folder2",
+                @"/folder1/./folder2/",
+                @"/folder1/junk/../folder2",
+                @"/folder1/junk/../folder2/",
+                @"/folder1/./junk/../folder2",
+                @"/folder1/./junk/../folder2/",
+                @"\folder1\folder2",
+                @"\folder1\folder2\"
             };
         object[] FailureData = new object[] 
             { 
                 new TestCaseData( 123, "123" ),
-                new TestCaseData( @"/folder2/file.tmp", "\"/folder2/file.tmp\"" ),
-                new TestCaseData( @"/folder1/./folder2/../file.temp", "\"/folder1/./folder2/../file.temp\"" ),
-                new TestCaseData( @"/Folder1/File.TMP", "\"/Folder1/File.TMP\"" ),
-                new TestCaseData( @"/FOLDER1/./folder2/../File.TMP", "\"/FOLDER1/./folder2/../File.TMP\"" )
+                new TestCaseData( @"/junk/folder2", "\"/junk/folder2\"" ),
+                new TestCaseData( @"/folder1/./junk/../file.temp", "\"/folder1/./junk/../file.temp\"" ),
+                new TestCaseData( @"/Folder1/FOLDER2", "\"/Folder1/FOLDER2\"" ),
+                new TestCaseData( @"/FOLDER1/./junk/../FOLDER2", "\"/FOLDER1/./junk/../FOLDER2\"" )
             };
     }
 
