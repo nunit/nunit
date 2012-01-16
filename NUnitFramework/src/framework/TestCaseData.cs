@@ -54,30 +54,15 @@ namespace NUnit.Framework
         private object expectedResult;
 
         /// <summary>
-        /// Set to true if the expected result has been set
-        /// </summary>
-        private bool hasExpectedResult;
-
-        /// <summary>
         /// Data about any expected exception.
         /// </summary>
         private ExpectedExceptionData exceptionData;
-
-        /// <summary>
-        /// The name to be used for the test
-        /// </summary>
-        private string testName;
 
         /// <summary>
         /// A dictionary of properties, used to add information
         /// to tests without requiring the class to change.
         /// </summary>
         private IPropertyBag properties;
-
-        /// <summary>
-        /// If true, indicates that the test case is to be ignored
-        /// </summary>
-        bool isIgnored;
 
         #endregion
 
@@ -89,7 +74,9 @@ namespace NUnit.Framework
         /// <param name="args">The arguments.</param>
         public TestCaseData(params object[] args)
         {
-            if (args == null)
+			this.RunState = RunState.Runnable;
+
+			if (args == null)
                 this.arguments = new object[] { null };
             else
                 this.arguments = args;
@@ -101,6 +88,7 @@ namespace NUnit.Framework
         /// <param name="arg">The argument.</param>
         public TestCaseData(object arg)
         {
+			this.RunState = RunState.Runnable;
             this.arguments = new object[] { arg };
         }
 
@@ -111,6 +99,7 @@ namespace NUnit.Framework
         /// <param name="arg2">The second argument.</param>
         public TestCaseData(object arg1, object arg2)
         {
+			this.RunState = RunState.Runnable;
             this.arguments = new object[] { arg1, arg2 };
         }
 
@@ -122,6 +111,7 @@ namespace NUnit.Framework
         /// <param name="arg3">The third argument.</param>
         public TestCaseData(object arg1, object arg2, object arg3)
         {
+			this.RunState = RunState.Runnable;
             this.arguments = new object[] { arg1, arg2, arg3 };
         }
 
@@ -143,15 +133,17 @@ namespace NUnit.Framework
         public object ExpectedResult
         {
             get { return expectedResult; }
+			set
+			{
+				expectedResult = value;
+				HasExpectedResult = true;
+			}
         }
 
         /// <summary>
         /// Returns true if the expected result has been set
         /// </summary>
-        public bool HasExpectedResult
-        {
-            get { return hasExpectedResult; }
-        }
+        public bool HasExpectedResult { get; set; }
 
         /// <summary>
         /// Gets data about any expected exception.
@@ -164,23 +156,12 @@ namespace NUnit.Framework
         /// <summary>
         /// Gets the name to be used for the test
         /// </summary>
-        public string TestName
-        {
-            get { return testName; }
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether this <see cref="ITestCaseData"/> is ignored.
-        /// </summary>
-        /// <value><c>true</c> if ignored; otherwise, <c>false</c>.</value>
-        public bool Ignored
-        {
-            get { return isIgnored; }
-        }
-
-        #endregion
-
-        #region Additional Public Properties
+        public string TestName { get; set; }
+	
+		/// <summary>
+		/// Gets the RunState for this test case.
+		/// </summary>
+		public RunState RunState { get; set; }
 
         /// <summary>
         /// Gets the property dictionary for this test
@@ -207,8 +188,7 @@ namespace NUnit.Framework
         /// <returns>A modified TestCaseData</returns>
         public TestCaseData Returns(object result)
         {
-            this.expectedResult = result;
-            this.hasExpectedResult = true;
+            this.ExpectedResult = result;
             return this;
         }
 
@@ -241,7 +221,7 @@ namespace NUnit.Framework
         /// <returns>The modified TestCaseData instance</returns>
         public TestCaseData SetName(string name)
         {
-            this.testName = name;
+            this.TestName = name;
             return this;
         }
 
@@ -310,9 +290,27 @@ namespace NUnit.Framework
         /// <returns></returns>
         public TestCaseData Ignore()
         {
-            isIgnored = true;
+            this.RunState = RunState.Ignored;
             return this;
         }
+		
+		/// <summary>
+		/// Marks the test case as explicit.
+		/// </summary>
+		public TestCaseData Explicit()	{
+			this.RunState = RunState.Explicit;
+			return this;
+		}
+
+		/// <summary>
+		/// Marks the test case as explicit, specifying the reason.
+		/// </summary>
+		public TestCaseData Explicit(string reason)
+		{
+			this.RunState = RunState.Explicit;
+            this.Properties.Set(PropertyNames.SkipReason, reason);
+			return this;
+		}
 
         /// <summary>
         /// Ignores this TestCase, specifying the reason.
@@ -321,7 +319,7 @@ namespace NUnit.Framework
         /// <returns></returns>
         public TestCaseData Ignore(string reason)
         {
-            isIgnored = true;
+            this.RunState = RunState.Ignored;
             this.Properties.Set(PropertyNames.SkipReason, reason);
             return this;
         }

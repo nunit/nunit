@@ -79,6 +79,10 @@
       <Project>{372A3447-D657-40FF-A089-77C19FEC30C8}</Project>
       <Name>nunit.engine</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\NUnitFramework\src\mock-assembly\mock-assembly-2.0.csproj">
+      <Project>{2E368281-3BA8-4050-B05E-0E0E43F8F446}</Project>
+      <Name>mock-assembly-2.0</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="nunit.engine.tests.build" />

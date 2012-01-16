@@ -34,6 +34,16 @@ namespace NUnit.Framework.Api
     public interface ITestCaseData
     {
         /// <summary>
+        /// Gets the name to be used for the test
+        /// </summary>
+        string TestName { get; }
+		
+		/// <summary>
+		/// Gets the RunState for this test case.
+		/// </summary>
+		RunState RunState { get; }
+
+        /// <summary>
         /// Gets the argument list to be provided to the test
         /// </summary>
         object[] Arguments { get; }
@@ -52,17 +62,6 @@ namespace NUnit.Framework.Api
         /// Gets data about any expected exception.
         /// </summary>
         ExpectedExceptionData ExceptionData { get; }
-
-        /// <summary>
-        /// Gets the name to be used for the test
-        /// </summary>
-        string TestName { get; }
-
-        /// <summary>
-        /// Gets a value indicating whether this <see cref="ITestCaseData"/> is ignored.
-        /// </summary>
-        /// <value><c>true</c> if ignored; otherwise, <c>false</c>.</value>
-        bool Ignored { get; }
 
         /// <summary>
         /// Gets the property dictionary for the test case

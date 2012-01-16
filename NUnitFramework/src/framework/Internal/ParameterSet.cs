@@ -40,12 +40,9 @@ namespace NUnit.Framework.Internal
     {
         #region Instance Fields
 
-        private RunState runState;
         private object[] arguments;
         private object[] originalArguments;
         private object result;
-        private string testName;
-        private bool isIgnored;
         private bool hasExpectedResult;
         private ExpectedExceptionData exceptionData;
 
@@ -62,11 +59,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// The RunState for this set of parameters.
         /// </summary>
-        public RunState RunState
-        {
-            get { return runState; }
-            set { runState = value; }
-        }
+        public RunState RunState { get; set; }
 
         /// <summary>
         /// The arguments to be used in running the test,
@@ -136,21 +129,7 @@ namespace NUnit.Framework.Internal
         /// of the standard generated name containing
         /// the argument list.
         /// </summary>
-        public string TestName
-        {
-            get { return testName; }
-            set { testName = value; }
-        }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether this <see cref="ParameterSet"/> is ignored.
-        /// </summary>
-        /// <value><c>true</c> if ignored; otherwise, <c>false</c>.</value>
-        public bool Ignored
-        {
-            get { return isIgnored; }
-            set { isIgnored = value; }
-        }
+        public string TestName { get; set; }
 
         /// <summary>
         /// Gets the property dictionary for this test
@@ -176,7 +155,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public ParameterSet(Exception exception)
         {
-            this.runState = RunState.NotRunnable;
+            this.RunState = RunState.NotRunnable;
             this.Properties.Set(PropertyNames.SkipReason, ExceptionHelper.BuildMessage(exception));
             this.Properties.Set(PropertyNames.ProviderStackTrace, ExceptionHelper.BuildStackTrace(exception));
         }
@@ -187,7 +166,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public ParameterSet()
         {
-            this.runState = RunState.Runnable;
+            this.RunState = RunState.Runnable;
         }
 
         /// <summary>
@@ -196,14 +175,14 @@ namespace NUnit.Framework.Internal
         /// <param name="data"></param>
         public ParameterSet(ITestCaseData data)
         {
-            this.RunState = RunState.Runnable;
+            this.TestName = data.TestName;
+            this.RunState = data.RunState;
             this.Arguments = data.Arguments;
             this.exceptionData = data.ExceptionData;
-            if (data.HasExpectedResult)
+            
+			if (data.HasExpectedResult)
                 this.ExpectedResult = data.ExpectedResult;
-            this.TestName = data.TestName;
-            this.Ignored = data.Ignored;
-
+			
             foreach (string key in data.Properties.Keys)
                 this.Properties[key] = data.Properties[key];
         }
@@ -218,19 +197,16 @@ namespace NUnit.Framework.Internal
         /// <param name="test">A test.</param>
         public void ApplyToTest(ITest test)
         {
-            // This cast is safe because ParameterSet is not used
-            // with any other type of test.
-            TestMethod testMethod = (TestMethod)test;
-
-            if (this.Ignored)
-                testMethod.RunState = RunState.Ignored;
-
-            if (exceptionData.ExpectedExceptionName != null)
-                testMethod.CustomDecorators.Add(new ExpectedExceptionDecorator(this.ExceptionData));
+            if (this.RunState == RunState.Ignored || this.RunState == RunState.Explicit)
+				test.RunState = this.RunState;
 
             foreach (string key in Properties.Keys)
                 foreach (object value in Properties[key])
-                    testMethod.Properties.Add(key, value);
+                    test.Properties.Add(key, value);
+
+            TestMethod testMethod = test as TestMethod;
+            if (testMethod != null && exceptionData.ExpectedExceptionName != null)
+                testMethod.CustomDecorators.Add(new ExpectedExceptionDecorator(this.ExceptionData));
         }
 
         #endregion

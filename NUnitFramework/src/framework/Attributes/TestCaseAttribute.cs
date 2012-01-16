@@ -40,14 +40,8 @@ namespace NUnit.Framework
 
         private object[] arguments;
         private ExpectedExceptionData exceptionData;
-        //private Type expectedExceptionType;
-        //private string expectedExceptionName;
-        //private string expectedMessage;
-        //private MessageMatch matchType;
         private object expectedResult;
         private bool hasExpectedResult;
-        private string testName;
-        private bool isIgnored;
         private IPropertyBag properties;
 
         #endregion
@@ -61,6 +55,8 @@ namespace NUnit.Framework
         /// <param name="arguments"></param>
         public TestCaseAttribute(params object[] arguments)
         {
+			this.RunState = RunState.Runnable;
+			
          	if (arguments == null)
          		this.arguments = new object[] { null };
          	else
@@ -73,6 +69,7 @@ namespace NUnit.Framework
         /// <param name="arg"></param>
         public TestCaseAttribute(object arg)
         {
+			this.RunState = RunState.Runnable;			
             this.arguments = new object[] { arg };
         }
 
@@ -83,6 +80,7 @@ namespace NUnit.Framework
         /// <param name="arg2"></param>
         public TestCaseAttribute(object arg1, object arg2)
         {
+			this.RunState = RunState.Runnable;			
             this.arguments = new object[] { arg1, arg2 };
         }
 
@@ -94,6 +92,7 @@ namespace NUnit.Framework
         /// <param name="arg3"></param>
         public TestCaseAttribute(object arg1, object arg2, object arg3)
         {
+			this.RunState = RunState.Runnable;			
             this.arguments = new object[] { arg1, arg2, arg3 };
         }
 
@@ -192,41 +191,56 @@ namespace NUnit.Framework
         /// Gets or sets the name of the test.
         /// </summary>
         /// <value>The name of the test.</value>
-        public string TestName
-        {
-            get { return testName; }
-            set { testName = value; }
-        }
+        public string TestName { get; set; }
 
         /// <summary>
         /// Gets or sets the ignored status of the test
         /// </summary>
-        public bool Ignore
-        {
-            get { return isIgnored; }
-            set { isIgnored = value; }
-        }
+        public bool Ignore 
+		{ 
+			get { return this.RunState == RunState.Ignored; }
+			set { this.RunState = value ? RunState.Ignored : RunState.Runnable; } 
+		}
+		
+		/// <summary>
+		/// Gets or sets a value indicating whether this <see cref="NUnit.Framework.TestCaseAttribute"/> is explicit.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if explicit; otherwise, <c>false</c>.
+		/// </value>
+		public bool Explicit 
+		{ 
+			get { return this.RunState == RunState.Explicit; }
+			set { this.RunState = value ? RunState.Explicit : RunState.Runnable; }
+		}
+
+		/// <summary>
+		/// Gets or sets the RunState of this test case.
+		/// </summary>
+		public RunState RunState { get; private set; }
+		
+		/// <summary>
+		/// Gets or sets the reason for not running the test.
+		/// </summary>
+		/// <value>The reason.</value>
+		public string Reason 
+		{ 
+			get { return this.Properties.Get(PropertyNames.SkipReason) as string; }
+			set { this.Properties.Set(PropertyNames.SkipReason, value); }
+		}
 
         /// <summary>
-        /// Gets or sets the ignored status of the test
-        /// </summary>
-        public bool Ignored
-        {
-            get { return isIgnored; }
-            set { isIgnored = value; }
-        }
-
-        /// <summary>
-        /// Gets the ignore reason.
+        /// Gets or sets the ignore reason. When set to a non-null
+        /// non-empty value, the test is marked as ignored.
         /// </summary>
         /// <value>The ignore reason.</value>
         public string IgnoreReason
         {
-            get { return this.Properties.Get(PropertyNames.SkipReason) as string; }
+            get { return this.Reason; }
             set
             {
-                this.Properties.Set(PropertyNames.SkipReason, value);
-                isIgnored = value != null && value != string.Empty;
+				this.RunState = RunState.Ignored;
+                this.Reason = value;
             }
         }
 

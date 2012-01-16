@@ -282,15 +282,37 @@ namespace NUnit.Framework.Tests
         }
 
         [Test]
-        public void CanIgnoreIndividualTestCase()
+        public void CanIgnoreIndividualTestCases()
         {
-            ITestResult result = TestBuilder.RunTestCase(
+            TestSuite test = (TestSuite)TestBuilder.MakeTestCase(
                 typeof(TestCaseAttributeFixture), "MethodWithIgnoredTestCases");
 
-            ResultSummary summary = new ResultSummary(result);
-            Assert.AreEqual(3, summary.ResultCount);
-            Assert.AreEqual(2, summary.Skipped);
-            Assert.That(result.Children, Has.Some.Message.EqualTo("Don't Run Me!"));
-        }
+            Test testCase = TestFinder.Find("MethodWithIgnoredTestCases(1)", test, false);
+            Assert.That(testCase.RunState, Is.EqualTo(RunState.Runnable));
+ 
+            testCase = TestFinder.Find("MethodWithIgnoredTestCases(2)", test, false);
+            Assert.That(testCase.RunState, Is.EqualTo(RunState.Ignored));
+ 
+			testCase = TestFinder.Find("MethodWithIgnoredTestCases(3)", test, false);
+            Assert.That(testCase.RunState, Is.EqualTo(RunState.Ignored));
+            Assert.That(testCase.Properties.GetSetting(PropertyNames.SkipReason, ""), Is.EqualTo("Don't Run Me!"));
+		}
+
+        [Test]
+        public void CanMarkIndividualTestCasesExplicit()
+        {
+            TestSuite test = (TestSuite)TestBuilder.MakeTestCase(
+                typeof(TestCaseAttributeFixture), "MethodWithExplicitTestCases");
+
+            Test testCase = TestFinder.Find("MethodWithExplicitTestCases(1)", test, false);
+            Assert.That(testCase.RunState, Is.EqualTo(RunState.Runnable));
+ 
+            testCase = TestFinder.Find("MethodWithExplicitTestCases(2)", test, false);
+            Assert.That(testCase.RunState, Is.EqualTo(RunState.Explicit));
+ 
+			testCase = TestFinder.Find("MethodWithExplicitTestCases(3)", test, false);
+            Assert.That(testCase.RunState, Is.EqualTo(RunState.Explicit));
+            Assert.That(testCase.Properties.GetSetting(PropertyNames.SkipReason, ""), Is.EqualTo("Connection failing"));
+		}
     }
 }
