@@ -91,5 +91,12 @@ namespace NUnit.TestData.TestCaseAttributeFixture
         public void MethodWithIgnoredTestCases(int num)
         {
         }
+
+        [TestCase(1)]
+        [TestCase(2, Explicit = true)]
+        [TestCase(3, Explicit = true, Reason = "Connection failing")]
+        public void MethodWithExplicitTestCases(int num)
+        {
+        }
     }
 }

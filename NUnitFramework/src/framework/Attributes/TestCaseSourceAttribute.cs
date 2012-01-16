@@ -39,7 +39,6 @@ namespace NUnit.Framework
     {
         private readonly string sourceName;
         private readonly Type sourceType;
-        private string category;
 
         /// <summary>
         /// Construct with the name of the method, property or field that will prvide data
@@ -90,11 +89,7 @@ namespace NUnit.Framework
         /// Gets or sets the category associated with this test.
         /// May be a single category or a comma-separated list.
         /// </summary>
-        public string Category
-        {
-            get { return category; }
-            set { category = value; }
-        }
+        public string Category { get; set; }
 
         #region ITestCaseSource Members
         /// <summary>
@@ -115,12 +110,10 @@ namespace NUnit.Framework
                 foreach (object item in source)
                 {
                     ParameterSet parms = new ParameterSet();
-
-                    if (item is ITestCaseData)
-                    {
-                        ITestCaseData testCase = item as ITestCaseData;
-                        parms = new ParameterSet(testCase);
-                    }
+                    ITestCaseData testCaseData = item as ITestCaseData;
+					
+					if (testCaseData != null)
+						parms = new ParameterSet(testCaseData);
                     else if (item is object[])
                     {
                         object[] array = item as object[];
@@ -152,8 +145,8 @@ namespace NUnit.Framework
                         parms.Arguments = new object[] { item };
                     }
 
-                    if (category != null)
-                        foreach (string cat in category.Split(new char[] { ',' }))
+                    if (this.Category != null)
+                        foreach (string cat in this.Category.Split(new char[] { ',' }))
                             parms.Properties.Add(PropertyNames.Category, cat);
 
                     data.Add(parms);
