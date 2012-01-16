@@ -47,7 +47,7 @@ namespace NUnit.Engine
 
         public TestFilter(XmlNode node)
         {
-            this.xmlNode = xmlNode;
+            this.xmlNode = node;
             this.xmlText = xmlNode.OuterXml;
         }
 
