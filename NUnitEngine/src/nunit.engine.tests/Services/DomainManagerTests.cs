@@ -2,6 +2,7 @@
 using System.IO;
 using NUnit.Framework;
 using NUnit.Engine.Services;
+using NUnit.Tests.Assemblies;
 
 namespace NUnit.Engine.Tests
 {
@@ -71,7 +72,33 @@ namespace NUnit.Engine.Tests
             manager.Unload(domain);
         }
 
-        /// <summary>
+        [Test, Platform("Linux,Net", Reason = "get_SetupInformation() fails on Windows+Mono")]
+		public void AppDomainIsSetUpCorrectly()
+		{
+			ServiceContext context = new ServiceContext();
+			context.Add (new SettingsService());
+			context.Add (new DomainManager());
+			
+			string mockDll = MockAssembly.AssemblyPath;
+			AppDomain domain = context.DomainManager.CreateDomain(new TestPackage(mockDll));
+			AppDomainSetup setup = domain.SetupInformation;
+
+            Assert.That(setup.ApplicationName, Is.StringStarting("Tests_"));
+			Assert.That(setup.ApplicationBase, Is.SamePath(Path.GetDirectoryName(mockDll)), "ApplicationBase");
+			Assert.That( 
+                Path.GetFileName( setup.ConfigurationFile ),
+                Is.EqualTo("mock-assembly.dll.config").IgnoreCase,
+                "ConfigurationFile");
+			Assert.AreEqual( null, setup.PrivateBinPath, "PrivateBinPath" );
+			Assert.That(setup.ShadowCopyDirectories, Is.SamePath(Path.GetDirectoryName(mockDll)), "ShadowCopyDirectories" );
+
+			Assert.That(domain.BaseDirectory, Is.SamePath(Path.GetDirectoryName(mockDll)), "BaseDirectory" );
+            Assert.That(domain.FriendlyName, 
+                Is.EqualTo("test-domain-mock-assembly.dll").IgnoreCase, "FriendlyName");
+			Assert.IsTrue( domain.ShadowCopyFiles, "ShadowCopyFiles" );
+		}	
+
+		/// <summary>
         /// Take a valid Linux filePath and make a valid windows filePath out of it
         /// if we are on Windows. Change slashes to backslashes and, if the
         /// filePath starts with a slash, add C: in front of it.
