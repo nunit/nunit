@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -20,7 +20,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\build\net\3.5\Release\</OutputPath>
+    <OutputPath>..\..\..\bin\Release\net-3.5\</OutputPath>
     <DefineConstants>TRACE;NET_3_5</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -29,10 +29,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <DefineConstants>TRACE;DEBUG;NET_3_5</DefineConstants>
-    <OutputPath>..\..\build\net\3.5\Debug\</OutputPath>
-    <DebugType>none</DebugType>
-    <WarningLevel>4</WarningLevel>
-    <Optimize>false</Optimize>
+    <OutputPath>..\..\..\bin\Debug\net-3.5\</OutputPath>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -42,16 +39,6 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <ItemGroup>
-    <ProjectReference Include="..\framework\nunit.framework-2.0.csproj">
-      <Project>{12B66B03-90F1-4992-BD33-BDF3C69AE49E}</Project>
-      <Name>nunit.framework-2.0</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\testdata\nunit.testdata-2.0.csproj">
-      <Project>{15B64946-4989-4873-915C-3E181772FA03}</Project>
-      <Name>nunit.testdata-2.0</Name>
-    </ProjectReference>
-  </ItemGroup>
   <ItemGroup>
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
@@ -212,5 +199,15 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="nunit.framework.tests.build" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\framework\nunit.framework-3.5.csproj">
+      <Project>{EE7E1D47-C686-496A-81F2-B05F085BC21F}</Project>
+      <Name>nunit.framework-3.5</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\testdata\nunit.testdata-3.5.csproj">
+      <Project>{A59532C1-4C4F-48D8-9792-3BBAC9E39252}</Project>
+      <Name>nunit.testdata-3.5</Name>
+    </ProjectReference>
   </ItemGroup>
 </Project>

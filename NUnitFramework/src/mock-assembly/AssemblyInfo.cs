@@ -28,5 +28,4 @@ using System.Reflection;
 
 [assembly: AssemblyTitle("mock-assembly")]
 [assembly: AssemblyDescription("")]
-[assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCulture("")]

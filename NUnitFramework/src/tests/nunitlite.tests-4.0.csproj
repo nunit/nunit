@@ -37,7 +37,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\build\net\4.0\Debug\</OutputPath>
+    <OutputPath>..\..\..\bin\Debug\net-4.0\</OutputPath>
     <DefineConstants>TRACE;DEBUG;NET_4_0;NUNITLITE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -49,7 +49,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\build\net\4.0\Release\</OutputPath>
+    <OutputPath>..\..\..\bin\Release\net-4.0\</OutputPath>
     <DefineConstants>TRACE;NET_4_0;NUNITLITE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -219,13 +219,13 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\framework\nunitlite-2.0.csproj">
-      <Project>{0BFA7F0A-BC15-40A5-863A-FA9B55AE2FD3}</Project>
-      <Name>nunitlite-2.0</Name>
+    <ProjectReference Include="..\framework\nunitlite-4.0.csproj">
+      <Project>{73A8B041-E719-443D-BF32-7944F117996C}</Project>
+      <Name>nunitlite-4.0</Name>
     </ProjectReference>
-    <ProjectReference Include="..\testdata\nunitlite.testdata-2.0.csproj">
-      <Project>{442DAB16-3063-4FE3-90B6-C29C3D85360D}</Project>
-      <Name>nunitlite.testdata-2.0</Name>
+    <ProjectReference Include="..\testdata\nunitlite.testdata-4.0.csproj">
+      <Project>{34EE6390-F2BB-44F0-BF1E-9CE553DB6672}</Project>
+      <Name>nunitlite.testdata-4.0</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

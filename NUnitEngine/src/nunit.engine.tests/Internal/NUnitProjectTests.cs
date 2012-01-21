@@ -116,11 +116,9 @@ namespace NUnit.Engine.Internal.Tests
             Assert.AreEqual(5, config1.Settings.Count);
             Assert.AreEqual("bin" + SEP + "debug", config1.Settings["BasePath"]);
             Assert.AreEqual(true, config1.Settings["AutoBinPath"]);
-            Assert.AreEqual(ProcessModel.Separate, config1.Settings["ProcessModel"]);
-            Assert.AreEqual(DomainUsage.Multiple, config1.Settings["DomainUsage"]);
-            RuntimeFramework framework = config1.Settings["RuntimeFramework"] as RuntimeFramework;
-            Assert.AreEqual(RuntimeType.Any, framework.Runtime);
-            Assert.AreEqual("2.0", framework.ClrVersion.ToString(2));
+            Assert.AreEqual("Separate", config1.Settings["ProcessModel"]);
+            Assert.AreEqual("Multiple", config1.Settings["DomainUsage"]);
+            Assert.AreEqual("v2.0", config1.Settings["RuntimeFramework"]);
 
             Assert.AreEqual(2, config1.Assemblies.Length);
             Assert.AreEqual(
@@ -133,19 +131,14 @@ namespace NUnit.Engine.Internal.Tests
             IProjectConfig config2 = project.Configs["Release"];
             Assert.AreEqual(5, config2.Settings.Count);
             Assert.AreEqual(true, config2.Settings["AutoBinPath"]);
-            Assert.AreEqual(ProcessModel.Separate, config2.Settings["ProcessModel"]);
-            Assert.AreEqual(DomainUsage.Multiple, config2.Settings["DomainUsage"]);
-            framework = config2.Settings["RuntimeFramework"] as RuntimeFramework;
-            Assert.AreEqual(RuntimeType.Any, framework.Runtime);
-            Assert.AreEqual("4.0", framework.ClrVersion.ToString(2));
+            Assert.AreEqual("Separate", config2.Settings["ProcessModel"]);
+            Assert.AreEqual("Multiple", config2.Settings["DomainUsage"]);
+            Assert.AreEqual("v4.0", config2.Settings["RuntimeFramework"]);
 
             Assert.AreEqual(2, config2.Assemblies.Length);
             Assert.AreEqual(
                 "bin" + SEP + "release",
                 config2.Settings["BasePath"]);
-            framework = config2.Settings["RuntimeFramework"] as RuntimeFramework;
-            Assert.AreEqual(RuntimeType.Any, framework.Runtime);
-            Assert.AreEqual("4.0", framework.ClrVersion.ToString(2));
             Assert.AreEqual(
                 "bin" + SEP + "release" + SEP + "assembly1.dll",
                 config2.Assemblies[0]);

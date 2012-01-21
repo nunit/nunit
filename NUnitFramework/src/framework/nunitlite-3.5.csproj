@@ -22,20 +22,20 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\build\net\3.5\Debug\</OutputPath>
+    <OutputPath>..\..\..\bin\Debug\net-3.5\</OutputPath>
     <DefineConstants>TRACE;DEBUG;NET_3_5;NUNITLITE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\..\build\net\3.5\Debug\nunitlite.xml</DocumentationFile>
+    <DocumentationFile>..\..\..\bin\Debug\net-3.5\nunitlite.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\build\net\3.5\Release\</OutputPath>
+    <OutputPath>..\..\..\bin\Release\net-3.5\</OutputPath>
     <DefineConstants>TRACE;NET_3_5;NUNITLITE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\..\build\net\3.5\Release\nunitlite.xml</DocumentationFile>
+    <DocumentationFile>..\..\..\bin\Release\net-3.5\nunitlite.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />

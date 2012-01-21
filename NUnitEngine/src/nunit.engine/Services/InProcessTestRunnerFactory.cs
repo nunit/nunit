@@ -47,8 +47,9 @@ namespace NUnit.Engine.Services
         /// <returns>A TestRunner</returns>
         public virtual ITestRunner MakeTestRunner(TestPackage package)
         {
-            DomainUsage domainUsage = 
-                (DomainUsage)package.GetSetting("DomainUsage", DomainUsage.Default);
+            DomainUsage domainUsage = (DomainUsage)System.Enum.Parse(
+                typeof(DomainUsage),
+                package.GetSetting("DomainUsage", "Default"));
 
             switch (domainUsage)
             {

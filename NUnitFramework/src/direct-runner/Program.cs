@@ -61,15 +61,33 @@ namespace NUnit.DirectRunner
         {
             Assembly executingAssembly = Assembly.GetExecutingAssembly();
             System.Version version = executingAssembly.GetName().Version;
+            string copyright = "Copyright (C) 2011, Charlie Poole";
+            string title = "NUnit Framework Test Harness";
+            string build = "";
 
-            object[] objectAttrs = executingAssembly.GetCustomAttributes(typeof(AssemblyProductAttribute), false);
-            AssemblyProductAttribute productAttr = (AssemblyProductAttribute)objectAttrs[0];
+            object[] attrs = executingAssembly.GetCustomAttributes(typeof(AssemblyTitleAttribute), false);
+            if (attrs.Length > 0)
+            {
+                AssemblyTitleAttribute titleAttr = (AssemblyTitleAttribute)attrs[0];
+                title = titleAttr.Title;
+            }
 
-            objectAttrs = executingAssembly.GetCustomAttributes(typeof(AssemblyCopyrightAttribute), false);
-            AssemblyCopyrightAttribute copyrightAttr = (AssemblyCopyrightAttribute)objectAttrs[0];
+            attrs = executingAssembly.GetCustomAttributes(typeof(AssemblyCopyrightAttribute), false);
+            if (attrs.Length > 0)
+            {
+                AssemblyCopyrightAttribute copyrightAttr = (AssemblyCopyrightAttribute)attrs[0];
+                copyright = copyrightAttr.Copyright;
+            }
 
-            Console.WriteLine(String.Format("{0} version {1}", productAttr.Product, version.ToString(3)));
-            Console.WriteLine(copyrightAttr.Copyright);
+            attrs = executingAssembly.GetCustomAttributes(typeof(AssemblyConfigurationAttribute), false);
+            if (attrs.Length > 0)
+            {
+                AssemblyConfigurationAttribute configAttr = (AssemblyConfigurationAttribute)attrs[0];
+                build = string.Format("({0})", configAttr.Configuration);
+            }
+
+            Console.WriteLine(String.Format("{0} {1} {2}", title, version.ToString(3), build));
+            Console.WriteLine(copyright);
             Console.WriteLine();
         }
     }

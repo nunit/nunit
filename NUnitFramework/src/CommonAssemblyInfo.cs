@@ -45,3 +45,22 @@ using System.Reflection;
 //
 [assembly: AssemblyVersion("2.9.6")]
 [assembly: AssemblyInformationalVersion("2.9.6")]
+
+#if DEBUG
+#if NET_4_0
+[assembly: AssemblyConfiguration(".NET 4.0 Debug")]
+#elif NET_3_5
+[assembly: AssemblyConfiguration(".NET 3.5 Debug")]
+#else
+[assembly: AssemblyConfiguration(".NET 2.0 Debug")]
+#endif
+#else
+#if NET_4_0
+[assembly: AssemblyConfiguration(".NET 4.0")]
+#elif NET_3_5
+[assembly: AssemblyConfiguration(".NET 3.5")]
+#else
+[assembly: AssemblyConfiguration(".NET 2.0")]
+#endif
+#endif
+

@@ -43,8 +43,10 @@ namespace NUnit.Engine.Services
         public RuntimeFramework SelectRuntimeFramework(TestPackage package)
         {
             RuntimeFramework currentFramework = RuntimeFramework.CurrentFramework;
-            RuntimeFramework requestedFramework = (RuntimeFramework)package.GetSetting("RuntimeFramework", 
-                new RuntimeFramework(RuntimeType.Any, RuntimeFramework.DefaultVersion));
+            string frameworkSetting = package.GetSetting("RuntimeFramework", "");
+            RuntimeFramework requestedFramework = frameworkSetting.Length > 0
+                ? RuntimeFramework.Parse(frameworkSetting)
+                : new RuntimeFramework(RuntimeType.Any, RuntimeFramework.DefaultVersion);
 
             log.Debug("Current framework is {0}", currentFramework);
             if (requestedFramework == null)
@@ -83,7 +85,7 @@ namespace NUnit.Engine.Services
             }
 
             RuntimeFramework targetFramework = new RuntimeFramework(targetRuntime, targetVersion);
-            package.Settings["RuntimeFramework"] = targetFramework;
+            package.Settings["RuntimeFramework"] = targetFramework.ToString();
 
             log.Debug("Test will use {0} framework", targetFramework);
 

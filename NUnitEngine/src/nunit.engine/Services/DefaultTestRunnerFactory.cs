@@ -64,8 +64,9 @@ namespace NUnit.Engine.Services
             RuntimeFramework currentFramework = RuntimeFramework.CurrentFramework;
             RuntimeFramework targetFramework = ServiceContext.RuntimeFrameworkSelector.SelectRuntimeFramework(package);
 
-            ProcessModel processModel = (ProcessModel)
-                package.GetSetting("ProcessModel", ProcessModel.Default);
+            ProcessModel processModel = (ProcessModel)System.Enum.Parse(
+                typeof(ProcessModel),
+                package.GetSetting("ProcessModel", "Default"));
             if (processModel == ProcessModel.Default)
                 if (!currentFramework.Supports(targetFramework))
                     processModel = ProcessModel.Separate;
@@ -87,7 +88,10 @@ namespace NUnit.Engine.Services
             RuntimeFramework currentFramework = RuntimeFramework.CurrentFramework;
             RuntimeFramework targetFramework = ServiceContext.RuntimeFrameworkSelector.SelectRuntimeFramework(package);
 
-            ProcessModel processModel = (ProcessModel)package.GetSetting("ProcessModel", ProcessModel.Default);
+            ProcessModel processModel = (ProcessModel)System.Enum.Parse(
+                typeof(ProcessModel),
+                package.GetSetting("ProcessModel", "Default"));
+
             if (processModel == ProcessModel.Default)
                 if (!currentFramework.Supports(targetFramework))
                     processModel = ProcessModel.Separate;

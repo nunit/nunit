@@ -15,27 +15,27 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{372A3447-D657-40FF-A089-77C19FEC30C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{372A3447-D657-40FF-A089-77C19FEC30C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{372A3447-D657-40FF-A089-77C19FEC30C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{372A3447-D657-40FF-A089-77C19FEC30C8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{775FAD50-3623-4922-97C4-DFB29A8BE4C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{775FAD50-3623-4922-97C4-DFB29A8BE4C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{775FAD50-3623-4922-97C4-DFB29A8BE4C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{775FAD50-3623-4922-97C4-DFB29A8BE4C7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C2A8FC7A-FA64-46EA-AF6D-73D6B371DBF8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C2A8FC7A-FA64-46EA-AF6D-73D6B371DBF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C2A8FC7A-FA64-46EA-AF6D-73D6B371DBF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C2A8FC7A-FA64-46EA-AF6D-73D6B371DBF8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{372A3447-D657-40FF-A089-77C19FEC30C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{372A3447-D657-40FF-A089-77C19FEC30C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{372A3447-D657-40FF-A089-77C19FEC30C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{372A3447-D657-40FF-A089-77C19FEC30C8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D694CB69-6CFB-4762-86C2-EB27B808B282}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D694CB69-6CFB-4762-86C2-EB27B808B282}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D694CB69-6CFB-4762-86C2-EB27B808B282}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D694CB69-6CFB-4762-86C2-EB27B808B282}.Release|Any CPU.Build.0 = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = src\nunit.engine.tests\nunit.engine.tests.csproj
+		{C2A8FC7A-FA64-46EA-AF6D-73D6B371DBF8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2A8FC7A-FA64-46EA-AF6D-73D6B371DBF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2A8FC7A-FA64-46EA-AF6D-73D6B371DBF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2A8FC7A-FA64-46EA-AF6D-73D6B371DBF8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = src\nunit.engine.tests\nunit.engine.tests.csproj
 	EndGlobalSection
 EndGlobal
