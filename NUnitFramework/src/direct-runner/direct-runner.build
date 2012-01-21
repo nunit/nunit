@@ -10,6 +10,7 @@
         warninglevel="${warn}">
       <sources basedir=".">
         <include name="*.cs"/>
+        <include name="../CommonAssemblyInfo.cs"/> 
       </sources>
       <references basedir="${current.build.dir}">
         <include name="nunit.framework.dll"/>

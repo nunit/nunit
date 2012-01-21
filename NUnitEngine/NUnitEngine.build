@@ -57,7 +57,7 @@
   <property name="project.lib.dir"
     value="${path::combine(project.base.dir,'lib')}"/>
   <property name="project.deploy.dir"
-    value="${path::combine(project.base.dir,'../deploy/NUnitEngine')}"/>
+    value="${path::combine(project.base.dir,'../deploy')}"/>
   <property name="project.tools.dir"
     value="${path::combine(project.base.dir,'../tools')}"/>
   <property name="partcover.dir"
@@ -188,13 +188,13 @@
   <target name="deploy" depends="build"
     description="Deploy the current build for testing">
 
-    <delete dir="${project.deploy.dir}" 
-      if="${directory::exists( project.deploy.dir )}"/>
-
     <copy todir="${project.deploy.dir}">
       <fileset basedir="${current.build.dir}">
         <include name="nunit.engine.*" />
         <include name="nunit-agent.*" />
+        <include name="direct-runner.exe" />
+        <include name="nunit.framework.dll" />
+        <include name="mock-assembly.dll" />
       </fileset>
     </copy>
 
@@ -207,6 +207,9 @@
   <target name="test" depends="build,run-test"
     description="Build and run tests for selected config and runtime"/>
 
+  <target name="deploy-test" depends="build,deploy,run-deploy-test"
+    description="Build, deploy and run deployed tests for the selected config and runtime"/>
+
   <target name="run-test">
 
     <echo message="*"/>
@@ -215,6 +218,19 @@
 
     <exec basedir="${current.build.dir}"
           workingdir="${current.build.dir}"
+          program="${test.runner.program}"
+          commandline="${test.runner.args}" />
+
+  </target>
+
+  <target name="run-deploy-test">
+
+    <echo message="*"/>
+    <echo message="* Testing the deployed NUnitEngine ${build.config} build"/>
+    <echo message="*"/>
+
+    <exec basedir="${project.deploy.dir}"
+          workingdir="${project.deploy.dir}"
           program="${test.runner.program}"
           commandline="${test.runner.args}" />
 

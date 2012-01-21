@@ -29,12 +29,13 @@ using System.Reflection;
 //
 
 #if NUNITLITE
-[assembly: AssemblyTitle("nunitlite")]
+[assembly: AssemblyTitle("NUnitLite")]
 #else
-[assembly: AssemblyTitle("nunit.framework")]
+[assembly: AssemblyTitle("NUnit Framework")]
 #endif
+
 [assembly: AssemblyDescription("")]
-[assembly: AssemblyConfiguration("")]
+
 [assembly: AssemblyCulture("")]
 
 [assembly: CLSCompliant(true)]

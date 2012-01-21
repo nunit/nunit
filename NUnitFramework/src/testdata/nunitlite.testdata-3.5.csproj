@@ -37,7 +37,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\build\net\3.5\Debug\</OutputPath>
+    <OutputPath>..\..\..\bin\Debug\net-3.5\</OutputPath>
     <DefineConstants>TRACE;DEBUG;NET_3_5;NUNITLITE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -45,7 +45,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\build\net\3.5\Release\</OutputPath>
+    <OutputPath>..\..\..\bin\Release\net-3.5\</OutputPath>
     <DefineConstants>TRACE;NET_3_5;NUNITLITE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -109,9 +109,9 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\framework\nunitlite-2.0.csproj">
-      <Project>{0BFA7F0A-BC15-40A5-863A-FA9B55AE2FD3}</Project>
-      <Name>nunitlite-2.0</Name>
+    <ProjectReference Include="..\framework\nunitlite-3.5.csproj">
+      <Project>{8C09BB92-C5F6-496C-BEE7-BB16677823D6}</Project>
+      <Name>nunitlite-3.5</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

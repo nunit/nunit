@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -21,7 +21,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\build\net\3.5\Debug\</OutputPath>
+    <OutputPath>..\..\..\bin\Debug\net-3.5\</OutputPath>
     <DefineConstants>TRACE;DEBUG;NET_3_5</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -29,7 +29,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\build\net\2.0\Release\</OutputPath>
+    <OutputPath>..\..\..\bin\Release\net-3.5\</OutputPath>
     <DefineConstants>TRACE;NET_3_5</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -74,9 +74,9 @@
     <None Include="nunit.testdata.build" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\framework\nunit.framework-2.0.csproj">
-      <Project>{12B66B03-90F1-4992-BD33-BDF3C69AE49E}</Project>
-      <Name>nunit.framework-2.0</Name>
+    <ProjectReference Include="..\framework\nunit.framework-3.5.csproj">
+      <Project>{EE7E1D47-C686-496A-81F2-B05F085BC21F}</Project>
+      <Name>nunit.framework-3.5</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

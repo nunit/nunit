@@ -38,8 +38,11 @@
        installed framework found is the default for builds. 
        The first .NET and Mono frameworks found are the
        respective net and mono defaults. -->
+  <!--<property name="supported.frameworks" 
+    value="net-4.0,net-3.5,net-2.0,mono-4.0,mono-3.5,mono-2.0,netcf-3.5,netcf-2.0,netcf-1.0"/>-->
+  <!-- Temporarily disable compact framework builds -->
   <property name="supported.frameworks" 
-    value="net-4.0,net-3.5,net-2.0,mono-4.0,mono-3.5,mono-2.0,netcf-3.5,netcf-2.0,netcf-1.0"/>
+    value="net-4.0,net-3.5,net-2.0,mono-4.0,mono-3.5,mono-2.0"/>
 
   <!-- Set default warning level for compiles -->
   <property name="warn" value="4" unless="${property::exists('warn')}"/>
@@ -66,7 +69,7 @@
   <property name="project.lib.dir"
     value="${path::combine(project.base.dir,'lib')}"/>
   <property name="project.deploy.dir"
-    value="${path::combine(project.base.dir,'../deploy/NUnitFramework')}"/>
+    value="${path::combine(project.base.dir,'../deploy')}"/>
   <property name="project.tools.dir"
     value="${path::combine(project.base.dir,'../tools')}"/>
   <property name="partcover.dir"
@@ -293,34 +296,10 @@
 <!-- ***              Targets for Deploying the Build              *** -->
 <!-- ***************************************************************** -->
 
-  <target name="deploy"
-    description="Deploy the current config for .NET 2.0, 3.5 and 4.0">
-
-    <delete dir="${project.deploy.dir}" 
-      if="${directory::exists( project.deploy.dir )}"/>
-
-    <if test="${property::exists('default.20.runtime')}">
-      <call target="set-${default.20.runtime}-runtime-config"/>
-      <call target="deploy-current-config"/>
-    </if>
-
-    <if test="${property::exists('default.35.runtime')}">
-      <call target="set-${default.35.runtime}-runtime-config"/>
-      <call target="deploy-current-config"/>
-    </if>
-
-    <if test="${property::exists('default.40.runtime')}">
-      <call target="set-${default.40.runtime}-runtime-config"/>
-      <call target="deploy-current-config"/>
-    </if>
-
-  </target>
-
-
-  <target name="deploy-current-config" depends="build"
+  <target name="deploy" depends="build"
     description="Deploy the current build for testing">
 
-      <copy todir="${project.deploy.dir}/${runtime.version}">
+      <copy todir="${project.deploy.dir}/${runtime.config}">
         <fileset basedir="${current.build.dir}">
           <include name="nunit.*" />
           <include name="nunitlite.*" />
@@ -331,11 +310,51 @@
 
   </target>
 
+  <target name="deploy-all"
+    description="Deploy the current config for all supported runtimes">
+
+    <foreach item="String" delim="," 
+        property="framework" in="${installed.frameworks}">
+
+      <call target="set-${framework}-runtime-config"/>
+      <call target="deploy"/>
+
+    </foreach>
+
+  </target>
+
+  <!--<target name="deploy-all"
+    description="Deploy the current config for .NET 2.0, 3.5 and 4.0">
+
+    <delete dir="${project.deploy.dir}" 
+      if="${directory::exists( project.deploy.dir )}"/>
+
+    <if test="${property::exists('default.20.runtime')}">
+      <call target="set-${default.20.runtime}-runtime-config"/>
+      <call target="deploy"/>
+    </if>
+
+    <if test="${property::exists('default.35.runtime')}">
+      <call target="set-${default.35.runtime}-runtime-config"/>
+      <call target="deploy"/>
+    </if>
+
+    <if test="${property::exists('default.40.runtime')}">
+      <call target="set-${default.40.runtime}-runtime-config"/>
+      <call target="deploy"/>
+    </if>
+
+  </target>-->
+
+
 <!-- ***************************************************************** -->
 <!-- ***                 Targets for running tests                 *** -->
 <!-- ***************************************************************** -->
 
   <target name="test" depends="build,run-test"
+    description="Build and run tests for selected config and runtime"/>
+
+  <target name="deploy-test" depends="build,deploy,nunit-deploy-test"
     description="Build and run tests for selected config and runtime"/>
 
   <target name="run-test">
@@ -355,6 +374,22 @@
 
     <exec basedir="${current.build.dir}"
           workingdir="${current.build.dir}"
+          program="${test.runner.program}"
+          commandline="${test.runner.args}"
+          managed="Strict" />
+
+  </target>
+
+  <target name="nunit-deploy-test">
+
+    <echo message="*"/>
+    <echo message="* Testing the deployed nunit.framework ${runtime.config} ${build.config} build"/>
+    <echo message="*"/>
+
+    <property name="nant.settings.currentframework" value="${runtime.config}" />
+
+    <exec basedir="${project.deploy.dir}/${runtime.config}"
+          workingdir="${project.deploy.dir}/${runtime.config}"
           program="${test.runner.program}"
           commandline="${test.runner.args}"
           managed="Strict" />
@@ -775,7 +810,7 @@
     <property name="runtime.platform" value="net"/>
     <property name="runtime.version" value="2.0"/>
     <property name="runtime.config" value="net-2.0"/>
-    <property name="runtime.defines" value="MSNET,NET_2_0,CLR_2_0"/>
+    <property name="runtime.defines" value="MSNET,NET_2_0"/>
     <property name="build.framework" value="net-3.5"/>
   </target>
    
@@ -786,7 +821,7 @@
     <property name="runtime.platform" value="net"/>
     <property name="runtime.version" value="3.5"/>
     <property name="runtime.config" value="net-3.5"/>
-    <property name="runtime.defines" value="MSNET,NET_3_5,CLR_2_0,CS_3_0"/>
+    <property name="runtime.defines" value="MSNET,NET_3_5,CS_3_0"/>
     <property name="build.framework" value="net-3.5"/>
   </target>
  	
@@ -797,7 +832,7 @@
     <property name="runtime.platform" value="net"/>
     <property name="runtime.version" value="4.0"/>
     <property name="runtime.config" value="net-4.0"/>
-    <property name="runtime.defines" value="MSNET,NET_4_0,CLR_4_0,CS_4_0"/>
+    <property name="runtime.defines" value="MSNET,NET_4_0,CS_4_0"/>
     <property name="build.framework" value="net-4.0"/>
   </target>
  	
@@ -819,7 +854,7 @@
     <property name="runtime.platform" value="netcf"/>
     <property name="runtime.version" value="2.0"/>
     <property name="runtime.config" value="netcf-2.0"/>
-    <property name="runtime.defines" value="NETCF,NETCF_2_0,CLR_2_0"/>
+    <property name="runtime.defines" value="NETCF,NETCF_2_0"/>
     <property name="build.framework" value="netcf-2.0"/>
   </target>
 
@@ -830,7 +865,7 @@
     <property name="runtime.platform" value="netcf"/>
     <property name="runtime.version" value="3.5"/>
     <property name="runtime.config" value="netcf-3.5"/>
-    <property name="runtime.defines" value="NETCF,NETCF_3_5,CLR_2_0"/>
+    <property name="runtime.defines" value="NETCF,NETCF_3_5"/>
     <property name="build.framework" value="netcf-3.5"/>
   </target>
 
@@ -841,7 +876,7 @@
     <property name="runtime.platform" value="mono"/>
     <property name="runtime.version" value="2.0"/>
     <property name="runtime.config" value="mono-2.0"/>
-    <property name="runtime.defines" value="MONO,MONO_2_0,CLR_2_0"/>
+    <property name="runtime.defines" value="MONO,MONO_2_0"/>
     <property name="build.framework" value="mono-3.5"/>
   </target>
 
@@ -852,7 +887,7 @@
     <property name="runtime.platform" value="mono"/>
     <property name="runtime.version" value="3.5"/>
     <property name="runtime.config" value="mono-3.5"/>
-    <property name="runtime.defines" value="MONO,MONO_3_5,CLR_2_0,CS_3_0"/>
+    <property name="runtime.defines" value="MONO,MONO_3_5,CS_3_0"/>
     <property name="build.framework" value="mono-3.5"/>
   </target>
 
@@ -863,7 +898,7 @@
     <property name="runtime.platform" value="mono"/>
     <property name="runtime.version" value="4.0"/>
     <property name="runtime.config" value="mono-4.0"/>
-    <property name="runtime.defines" value="MONO,MONO_4_0,CLR_4_0,CS_4_0"/>
+    <property name="runtime.defines" value="MONO,MONO_4_0,CS_4_0"/>
     <property name="build.framework" value="mono-4.0"/>
   </target>
 
@@ -875,12 +910,10 @@
   <target name="set-build-dir"
     depends="set-build-config,set-runtime-config">
 
-    <property name="runtime.platform.dir"
-      value="${path::combine(project.build.dir,runtime.platform)}"/>
-    <property name="runtime.version.dir"
-      value="${path::combine(runtime.platform.dir,runtime.version)}"/>
+    <property name="build.config.dir"
+      value="${path::combine(project.build.dir,build.config)}"/>
     <property name="current.build.dir" 
-      value="${path::combine(runtime.version.dir,build.config)}"/>
+      value="${path::combine(build.config.dir,runtime.config)}"/>
 
   </target>
   

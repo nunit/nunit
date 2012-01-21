@@ -83,13 +83,6 @@ namespace NUnit.Engine.Runners
         {
             this.package = package;
 
-            // Convert certain package settings, specified as strings,
-            // to their internal representation before further use.
-            ConvertPackageSetting("ProcessModel");
-            ConvertPackageSetting("DomainUsage");
-            ConvertPackageSetting("RuntimeFramework");
-            ConvertPackageSetting("InternalTraceLevel");
-
             // Expand projects, updating the count of projects and assemblies
             ExpandProjects();
 
@@ -99,47 +92,6 @@ namespace NUnit.Engine.Runners
             this.realRunner = projectCount > 1 || projectCount > 0 && assemblyCount > 0
                 ? new AggregatingTestRunner(services)
                 : (AbstractTestRunner)services.TestRunnerFactory.MakeTestRunner(package);
-        }
-
-        /// <summary>
-        /// Convert a single setting, throwing an NUnitEngineException
-        /// if the setting cannot be converted.
-        /// </summary>
-        /// <param name="name">The name of the setting</param>
-        private void ConvertPackageSetting(string name)
-        {
-            if (this.package.Settings.ContainsKey(name))
-            {
-                string value = package.Settings[name] as string;
-
-                if (value != null)
-                    try
-                    {
-                        switch (name)
-                        {
-                            case "ProcessModel":
-                                package.Settings[name] = Enum.Parse(typeof(ProcessModel), value);
-                                break;
-
-                            case "DomainUsage":
-                                package.Settings[name] = Enum.Parse(typeof(DomainUsage), value);
-                                break;
-
-                            case "InternalTraceLevel":
-                                package.Settings[name] = Enum.Parse(typeof(InternalTraceLevel), value);
-                                break;
-
-                            case "RuntimeFramework":
-                                package.Settings[name] = RuntimeFramework.Parse(value);
-                                break;
-                        }
-                    }
-                    catch (Exception)
-                    {
-                        string msg = string.Format("Invalid {0} setting: {1}", name, value);
-                        throw new NUnitEngineException(msg);
-                    }
-            }
         }
 
         private void ExpandProjects()

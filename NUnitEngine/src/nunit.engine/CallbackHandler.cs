@@ -26,7 +26,7 @@ using System.Diagnostics;
 
 namespace NUnit.Engine
 {
-    public class CallbackHandler : MarshalByRefObject
+    public class DefaultCallbackHandler : CallbackHandler
     {
         private TestEngineResult result;
 
@@ -35,12 +35,7 @@ namespace NUnit.Engine
             get { return result; }
         }
 
-        public AsyncCallback Callback
-        {
-            get { return new AsyncCallback(CallbackMethod); }
-        }
-
-        private void CallbackMethod(IAsyncResult ar)
+        protected override void ProcessCallback(IAsyncResult ar)
         {
             Debug.Assert(ar.AsyncState is string);
 
@@ -54,11 +49,6 @@ namespace NUnit.Engine
 
         public virtual void ReportProgress(string state)
         {
-        }
-
-        public override object InitializeLifetimeService()
-        {
-            return null;
         }
     }
 }

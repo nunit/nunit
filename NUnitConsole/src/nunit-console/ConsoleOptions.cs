@@ -105,9 +105,12 @@ namespace NUnit.ConsoleRunner
 
             this.Add("timeout=", "Set timeout for each test case in {MILLISECONDS}.",
                 v => defaultTimeout = RequiredInt(v, "--timeout"));
-            
-            this.Add("wait", "Wait for input before closing console window.", 
+
+            this.Add("wait", "Wait for input before closing console window.",
                 v => wait = v != null);
+
+            this.Add("pause", "Pause before run to allow debugging.",
+                v => pause = v != null);
 
             this.Add("noheader|noh", "Suppress display of program information at start of run.",
                 v => noheader = v != null);
@@ -223,6 +226,12 @@ namespace NUnit.ConsoleRunner
         public bool Wait
         {
             get { return wait; }
+        }
+
+        private bool pause;
+        public bool Pause
+        {
+            get { return pause; }
         }
 
         private bool noheader;

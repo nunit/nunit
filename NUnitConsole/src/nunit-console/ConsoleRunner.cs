@@ -24,6 +24,7 @@
 namespace NUnit.ConsoleRunner
 {
 	using System;
+    using System.Collections.Generic;
 	using System.IO;
 	using System.Reflection;
 	using System.Xml;
@@ -264,6 +265,12 @@ namespace NUnit.ConsoleRunner
 
             if (options.StopOnError)
                 package.Settings["StopOnError"] = true;
+
+#if DEBUG
+            //foreach (KeyValuePair<string, object> entry in package.Settings)
+            //    if (!(entry.Value is string || entry.Value is int || entry.Value is bool))
+            //        throw new Exception(string.Format("Package setting {0} is not a valid type", entry.Key));
+#endif
             
             return package;
 		}
