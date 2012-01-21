@@ -5,12 +5,16 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("nunit-console")]
+[assembly: AssemblyTitle("NUnit Console Runner")]
 [assembly: AssemblyDescription("")]
+#if DEBUG
+[assembly: AssemblyConfiguration("Debug")]
+#else
 [assembly: AssemblyConfiguration("")]
+#endif
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("nunit-console")]
-[assembly: AssemblyCopyright("Copyright ©  2011")]
+[assembly: AssemblyProduct("NUnit Console Runner")]
+[assembly: AssemblyCopyright("Copyright (C) 2011, Charlie Poole")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

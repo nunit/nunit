@@ -63,6 +63,12 @@ namespace NUnit.ConsoleRunner
             
             //log.Info("NUnit-console.exe starting");
 
+            if (options.Pause)
+            {
+                Console.WriteLine("Press <Enter> to start run");
+                Console.ReadLine();
+            }
+
 			if(!options.NoHeader)
 				WriteHeader();
 
@@ -138,28 +144,25 @@ namespace NUnit.ConsoleRunner
 		private static void WriteHeader()
 		{
 			Assembly executingAssembly = Assembly.GetExecutingAssembly();
-			string versionText = executingAssembly.GetName().Version.ToString();
+			string versionText = executingAssembly.GetName().Version.ToString(3);
 
-            string productName = "NUnit-Console";
+            string programName = "NUnit Console Runner";
             string copyrightText = "Copyright (C) 2011 Charlie Poole.\r\nAll Rights Reserved.";
+            string configText = "";
 
-            //object[] objectAttrs = executingAssembly.GetCustomAttributes(typeof(AssemblyProductAttribute), false);
-            //if ( objectAttrs.Length > 0 )
-            //    productName = ((AssemblyProductAttribute)objectAttrs[0]).Product;
+            object[] attrs = executingAssembly.GetCustomAttributes(typeof(AssemblyTitleAttribute), false);
+            if (attrs.Length > 0)
+                programName = ((AssemblyTitleAttribute)attrs[0]).Title;
 
-			object[] objectAttrs = executingAssembly.GetCustomAttributes(typeof(AssemblyCopyrightAttribute), false);
-			if ( objectAttrs.Length > 0 )
-				copyrightText = ((AssemblyCopyrightAttribute)objectAttrs[0]).Copyright;
+			attrs = executingAssembly.GetCustomAttributes(typeof(AssemblyCopyrightAttribute), false);
+			if ( attrs.Length > 0 )
+				copyrightText = ((AssemblyCopyrightAttribute)attrs[0]).Copyright;
 
-			objectAttrs = executingAssembly.GetCustomAttributes(typeof(AssemblyConfigurationAttribute), false);
-            if (objectAttrs.Length > 0)
-            {
-                string configText = ((AssemblyConfigurationAttribute)objectAttrs[0]).Configuration;
-                if (configText != "")
-                    versionText += string.Format(" ({0})", configText);
-            }
+			attrs = executingAssembly.GetCustomAttributes(typeof(AssemblyConfigurationAttribute), false);
+            if (attrs.Length > 0)
+                configText = string.Format("({0})", ((AssemblyConfigurationAttribute)attrs[0]).Configuration);
 
-			Console.WriteLine(String.Format("{0} version {1}", productName, versionText));
+			Console.WriteLine(String.Format("{0} {1} {2}", programName, versionText, configText));
 			Console.WriteLine(copyrightText);
 			Console.WriteLine();
 

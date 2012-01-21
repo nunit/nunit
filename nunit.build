@@ -63,8 +63,11 @@
          installed framework found is the default for builds. 
          The first .NET and Mono frameworks found are the
          respective net and mono defaults. -->
+  <!--<property name="supported.frameworks" 
+    value="net-4.0,net-3.5,net-2.0,mono-4.0,mono-3.5,mono-2.0,netcf-3.5,netcf-2.0,netcf-1.0"/>-->
+  <!-- Temporarily remove support for compact framework -->
   <property name="supported.frameworks" 
-    value="net-4.0,net-3.5,net-2.0,mono-4.0,mono-3.5,mono-2.0,netcf-3.5,netcf-2.0,netcf-1.0"/>
+    value="net-4.0,net-3.5,net-2.0,mono-4.0,mono-3.5,mono-2.0"/>
 
   <!-- Set default warning level for compiles -->
   <property name="warn" value="4" unless="${property::exists('warn')}"/>
@@ -197,42 +200,17 @@
 <!-- ***************************************************************** -->
 
   <target name="build" depends="framework,engine,console"
-    description="Build everything, for current config"/>
+    description="Build everything, for current config" />
 
   <target name="framework" description="Build the NUnit Framework and update references">
 
-    <nant target="build" buildfile="NUnitFramework/NUnitFramework.build" />
-
-    <copy todir="NUnitEngine/lib">
-      <fileset basedir="NUnitFramework/build/net/3.5/${build.config}">
-        <include name="nunit.framework.dll"/>
-        <include name="nunit.framework.pdb"/>
-      </fileset>
-    </copy>
-
-    <copy todir="NUnitConsole/lib">
-      <fileset basedir="NUnitFramework/build/net/3.5/${build.config}">
-        <include name="nunit.framework.dll"/>
-        <include name="nunit.framework.pdb"/>
-      </fileset>
-    </copy>
+    <nant target="build-all" buildfile="NUnitFramework/NUnitFramework.build" />
 
   </target>
 
   <target name="engine" description="Build the NUnit Engine and update references">
 
     <nant target="build" buildfile="NUnitEngine/NUnitEngine.build" />
-
-    <copy todir="NUnitConsole/lib">
-      <fileset basedir="NUnitEngine/build/${build.config}">
-        <include name="nunit.engine.api.dll"/>
-        <include name="nunit.engine.api.pdb"/>
-        <include name="nunit.engine.dll"/>
-        <include name="nunit.engine.pdb"/>
-        <include name="nunit-agent.exe"/>
-        <include name="nunit-agent.pdb"/>
-      </fileset>
-    </copy>
 
   </target>
 
@@ -252,9 +230,12 @@
     <delete dir="${common.deploy.dir}" 
       if="${directory::exists( common.deploy.dir )}"/>
 
-    <nant target="deploy" buildfile="NUnitFramework/NUnitFramework.build"/>
+    <nant target="deploy-all" buildfile="NUnitFramework/NUnitFramework.build"/>
     <nant target="deploy" buildfile="NUnitEngine/NUnitEngine.build"/>
     <nant target="deploy" buildfile="NUnitConsole/NUnitConsole.build"/>
+
+    <copy file="NUnitShipTests.nunit"
+      tofile="${common.deploy.dir}/NUnitTests.nunit"/>
 
   </target>
 
@@ -262,26 +243,38 @@
 <!-- ***                 Targets for running tests                 *** -->
 <!-- ***************************************************************** -->
 
-  <target name="test" depends="deploy,run-test"
-    description="Build and run tests for the selected config"/>
-
-  <target name="run-test">
+  <target name="test" depends="deploy"
+    description="Build and run tests for the selected config">
 
     <echo message="*"/>
-    <echo message="* Testing the NUnit ${build.config} build"/>
+    <echo message="* Testing the nunit-console ${build.config} build"/>
     <echo message="*"/>
 
-    <exec basedir="${common.deploy.dir}/NUnitConsole"
+    <property name="nant.settings.currentframework" value="net-2.0"/>
+
+    <exec basedir="${common.deploy.dir}"
           workingdir="${common.deploy.dir}"
-          program="nunit-console.exe">
+          program="nunit-console.exe"
+          managed="Auto"
+          commandline="nunit-console.tests.dll" />
 
-      <arg value="NUnitConsole/nunit-console.tests.dll"/>
-      <arg value="NUnitEngine/nunit.engine.tests.dll"/>
-      <arg value="NUnitFramework/2.0/nunit.framework.tests.dll"/>
-      <arg value="NUnitFramework/3.5/nunit.framework.tests.dll"/>
-      <!--<arg value="NUnitFramework/4.0/nunit.framework.tests.dll"/>-->
+    <echo message="*"/>
+    <echo message="* Testing the NUnitEngine ${build.config} build"/>
+    <echo message="*"/>
 
-    </exec>
+    <exec basedir="${common.deploy.dir}"
+          workingdir="${common.deploy.dir}"
+          program="nunit-console.exe"
+          commandline="nunit.engine.tests.dll" />
+
+    <echo message="*"/>
+    <echo message="* Testing the NUnitFramework ${build.config} build"/>
+    <echo message="*"/>
+
+    <exec basedir="${common.deploy.dir}"
+          workingdir="${common.deploy.dir}/net-2.0"
+          program="nunit-console.exe"
+          commandline="nunit.framework.tests.dll" />
 
   </target>
 

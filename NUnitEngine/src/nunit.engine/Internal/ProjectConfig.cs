@@ -109,15 +109,15 @@ namespace NUnit.Engine.Internal
 
                     string runtime = GetAttribute("runtimeFramework");
                     if (runtime != null)
-                        settings["RuntimeFramework"] = RuntimeFramework.Parse(runtime);
+                        settings["RuntimeFramework"] = runtime;
 
                     string processModel = project.GetSetting("processModel");
                     if (processModel != null)
-                        settings["ProcessModel"] = (ProcessModel)Enum.Parse(typeof(ProcessModel), processModel);
+                        settings["ProcessModel"] = processModel;
 
                     string domainUsage = project.GetSetting("domainUsage");
                     if (domainUsage != null)
-                        settings["DomainUsage"] = (DomainUsage)Enum.Parse(typeof(DomainUsage), domainUsage);
+                        settings["DomainUsage"] = domainUsage;
                 }
 
                 return settings;
