@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -69,7 +69,6 @@
     <Compile Include="Api\ITestResult.cs" />
     <Compile Include="Api\IXmlNodeBuilder.cs" />
     <Compile Include="Api\PropertyEntry.cs" />
-    <Compile Include="Api\PropertyNames.cs" />
     <Compile Include="Api\ResultState.cs" />
     <Compile Include="Api\RunState.cs" />
     <Compile Include="Api\TestController.cs" />
@@ -305,6 +304,7 @@
     <Compile Include="Internal\ParameterSet.cs" />
     <Compile Include="Internal\PlatformHelper.cs" />
     <Compile Include="Internal\PropertyBag.cs" />
+    <Compile Include="Internal\PropertyNames.cs" />
     <Compile Include="Internal\PropertySet.cs" />
     <Compile Include="Internal\QueuingEventListener.cs" />
     <Compile Include="Internal\Randomizer.cs" />

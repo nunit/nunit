@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -69,8 +69,9 @@
     <Compile Include="Api\ITestListener.cs" />
     <Compile Include="Api\ITestResult.cs" />
     <Compile Include="Api\IXmlNodeBuilder.cs" />
+    <Compile Include="MessageMatch.cs" />
     <Compile Include="Api\PropertyEntry.cs" />
-    <Compile Include="Api\PropertyNames.cs" />
+    <Compile Include="Internal\PropertyNames.cs" />
     <Compile Include="Api\ResultState.cs" />
     <Compile Include="Api\RunState.cs" />
     <Compile Include="Api\TestController.cs" />
@@ -335,7 +336,6 @@
     <Compile Include="Iz.cs" />
     <Compile Include="List.cs" />
     <Compile Include="ListMapper.cs" />
-    <Compile Include="MessageMatch.cs" />
     <Compile Include="ObjectList.cs" />
     <Compile Include="SpecialValue.cs" />
     <Compile Include="StringAssert.cs" />
@@ -358,5 +358,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Attributes\AttributeHierarchy.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\api\nunit.framework.api.csproj">
+      <Project>{007279F4-55A2-4B19-8FEB-C8D0AE48AF3E}</Project>
+      <Name>nunit.framework.api</Name>
+    </ProjectReference>
   </ItemGroup>
 </Project>

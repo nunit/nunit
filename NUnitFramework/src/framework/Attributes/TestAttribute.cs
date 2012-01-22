@@ -25,6 +25,7 @@ namespace NUnit.Framework
 {
 	using System;
     using NUnit.Framework.Api;
+    using NUnit.Framework.Internal;
 
 	/// <summary>
 	/// Adding this attribute to a method within a <seealso cref="TestFixtureAttribute"/> 
