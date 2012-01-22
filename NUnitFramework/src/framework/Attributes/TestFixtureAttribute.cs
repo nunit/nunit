@@ -24,6 +24,7 @@
 using System;
 using System.Collections;
 using NUnit.Framework.Api;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Framework
 {

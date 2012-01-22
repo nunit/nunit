@@ -23,7 +23,7 @@
 
 using System;
 
-namespace NUnit.Framework.Api
+namespace NUnit.Framework.Internal
 {
     /// <summary>
     /// The PropertyNames class provides static constants for the

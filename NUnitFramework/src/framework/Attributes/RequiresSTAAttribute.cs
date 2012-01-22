@@ -24,7 +24,7 @@
 #if !NUNITLITE
 using System;
 using System.Threading;
-using NUnit.Framework.Api;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Framework
 {

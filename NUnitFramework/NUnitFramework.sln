@@ -55,6 +55,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.framework.tests-4.0",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunitlite.tests-4.0", "src\tests\nunitlite.tests-4.0.csproj", "{0ED3994A-C301-4C59-AE36-C62976DC28CC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.framework.api", "src\api\nunit.framework.api.csproj", "{007279F4-55A2-4B19-8FEB-C8D0AE48AF3E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -157,6 +159,10 @@ Global
 		{0ED3994A-C301-4C59-AE36-C62976DC28CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0ED3994A-C301-4C59-AE36-C62976DC28CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0ED3994A-C301-4C59-AE36-C62976DC28CC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{007279F4-55A2-4B19-8FEB-C8D0AE48AF3E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{007279F4-55A2-4B19-8FEB-C8D0AE48AF3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{007279F4-55A2-4B19-8FEB-C8D0AE48AF3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{007279F4-55A2-4B19-8FEB-C8D0AE48AF3E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
