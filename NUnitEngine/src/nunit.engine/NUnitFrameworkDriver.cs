@@ -25,6 +25,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Collections.Generic;
+using System.Web.UI;
 using System.Xml;
 
 namespace NUnit.Engine
@@ -47,10 +48,10 @@ namespace NUnit.Engine
 
         public TestEngineResult Load(string assemblyFileName, IDictionary<string,object> settings)
         {
-            DefaultCallbackHandler handler = new DefaultCallbackHandler();
+            CallbackHandler handler = new CallbackHandler();
 
             CreateObject("NUnit.Framework.Api.TestController+LoadTestsAction",
-                testController, assemblyFileName, settings, handler.Callback);
+                testController, assemblyFileName, (System.Collections.IDictionary)settings, handler);
 
             return handler.Result;
         }
@@ -61,19 +62,19 @@ namespace NUnit.Engine
 
         public TestEngineResult Run(ITestEventHandler listener, TestFilter filter)
         {
-            DefaultCallbackHandler handler = new RunTestsCallbackHandler(listener);
+            CallbackHandler handler = new RunTestsCallbackHandler(listener);
 
-            CreateObject("NUnit.Framework.Api.TestController+RunTestsAction", testController, filter.Text, handler.Callback);
+            CreateObject("NUnit.Framework.Api.TestController+RunTestsAction", testController, filter.Text, handler);
 
             return handler.Result;
         }
 
         public TestEngineResult Explore(string assemblyFileName, IDictionary<string, object> settings, TestFilter filter)
         {
-            DefaultCallbackHandler handler = new DefaultCallbackHandler();
+            CallbackHandler handler = new CallbackHandler();
 
             CreateObject("NUnit.Framework.Api.TestController+ExploreTestsAction",
-                testController, assemblyFileName, settings, filter.Text, handler.Callback);
+                testController, assemblyFileName, settings, filter.Text, handler);
 
             return handler.Result;
         }

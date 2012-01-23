@@ -28,7 +28,7 @@ using System.Xml;
 
 namespace NUnit.Engine
 {
-    public class RunTestsCallbackHandler : DefaultCallbackHandler
+    public class RunTestsCallbackHandler : CallbackHandler
     {
         private ITestEventHandler listener;
 

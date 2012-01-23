@@ -30,6 +30,7 @@
       </sources>
       <references basedir="${current.build.dir}">
         <include name="System.Configuration.dll"/>
+		<include name="System.Web.dll"/>
       </references>
     </csc>
 

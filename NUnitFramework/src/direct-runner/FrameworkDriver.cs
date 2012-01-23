@@ -50,7 +50,7 @@ namespace NUnit.DirectRunner
             CallbackHandler handler = new CallbackHandler();
 
             CreateObject("NUnit.Framework.Api.TestController+LoadTestsAction",
-                testController, assemblyFileName, options, handler.Callback);
+                testController, assemblyFileName, options, handler);
 
             Debug.Assert(handler.Result is string, "Returned result was not a string");
 
@@ -71,7 +71,7 @@ namespace NUnit.DirectRunner
             CallbackHandler handler = new CallbackHandler();
 
             CreateObject("NUnit.Framework.Api.TestController+ExploreTestsAction",
-                testController, assemblyFileName, options, handler.Callback);
+                testController, assemblyFileName, options, handler);
 
  			XmlDocument doc = new XmlDocument();
 			doc.LoadXml((string)handler.Result);
@@ -83,7 +83,7 @@ namespace NUnit.DirectRunner
             CallbackHandler handler = new CallbackHandler();
 
             CreateObject("NUnit.Framework.Api.TestController+GetLoadedTestsAction",
-                testController, handler.Callback);
+                testController, handler);
 
             Debug.Assert(handler.Result == null || handler.Result is string,
                 "Returned result was not an XmlNode");
@@ -98,7 +98,7 @@ namespace NUnit.DirectRunner
             CallbackHandler handler = new RunTestsCallbackHandler();
 
             // NOTE: Filters are not supported in the direct runner
-            CreateObject("NUnit.Framework.Api.TestController+RunTestsAction", testController, "<filter/>", handler.Callback);
+            CreateObject("NUnit.Framework.Api.TestController+RunTestsAction", testController, "<filter/>", handler);
 
             Debug.Assert(handler.Result is string, "Returned result was not a string");
 

@@ -26,6 +26,7 @@ using System.Collections;
 using System.IO;
 using System.Reflection;
 using System.Xml;
+using System.Web.UI;
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Api
@@ -124,18 +125,81 @@ namespace NUnit.Framework.Api
         public abstract class TestControllerAction : MarshalByRefObject
         {
             private TestController controller;
-            private AsyncCallback callback;
+            private ICallbackEventHandler handler;
+
+            #region Constructor
 
             /// <summary>
             /// Initializes a new instance of the <see cref="TestControllerAction"/> class.
             /// </summary>
             /// <param name="controller">The controller.</param>
-            /// <param name="callback">The callback.</param>
-            protected TestControllerAction(TestController controller, AsyncCallback callback)
+            /// <param name="_handler">The callback handler.</param>
+            protected TestControllerAction(TestController controller, object _handler)
             {
                 this.controller = controller;
-                this.callback = callback;
+                this.handler = _handler as ICallbackEventHandler;
             }
+
+            #endregion
+
+            #region Properties
+
+            protected ICallbackEventHandler Handler
+            {
+                get { return handler; }
+            }
+
+            #endregion
+
+            #region Methods for Reporting Results
+
+            /// <summary>
+            /// Format and send an error report
+            /// </summary>
+            /// <param name="message">The error message</param>
+            protected void ReportError(string message)
+            {
+                ReportResult(string.Format("<error message=\"{0}\"/>", message));
+            }
+
+            /// <summary>
+            /// Format and send an error report for an exception
+            /// </summary>
+            /// <param name="ex">The exception to be reported</param>
+            protected void ReportError(Exception ex)
+            {
+                if (ex is System.Reflection.TargetInvocationException)
+                    ex = ex.InnerException;
+
+                string msg = ex is System.IO.FileNotFoundException || ex is System.BadImageFormatException
+                    ? string.Format("<error message=\"{0}\"/>", ex.Message)
+                    : string.Format("<error message=\"{0}\" stackTrace=\"{1}\"/>", ex.Message, ex.StackTrace);
+
+                ReportResult(msg);
+            }
+
+            /// <summary>
+            /// Report the result of an operation
+            /// </summary>
+            /// <param name="resultString">A string representing the result</param>
+            protected void ReportResult(string resultString)
+            {
+                handler.RaiseCallbackEvent(resultString);
+            }
+
+
+            /// <summary>
+            /// Report the result of an operation
+            /// </summary>
+            /// <param name="result">A result object implementing IXmlNodeBuilder</param>
+            protected void ReportResult(IXmlNodeBuilder result)
+            {
+                handler.RaiseCallbackEvent(result.ToXml(true).OuterXml);
+            }
+
+            #endregion
+
+            #region Method Overrides
 
             /// <summary>
             /// Initialize lifetime service to null so that the instance lives indefinitely.
@@ -144,6 +208,8 @@ namespace NUnit.Framework.Api
             {
                 return null;
             }
+
+            #endregion
         }
 
         #endregion
@@ -160,10 +226,10 @@ namespace NUnit.Framework.Api
             /// </summary>
             /// <param name="controller">The controller.</param>
             /// <param name="assemblyFilename">The assembly filename.</param>
-            /// <param name="loadOptions">Options controlling how the tests are loaded</param>
-            /// <param name="callback">The callback.</param>
-            public LoadTestsAction(TestController controller, string assemblyFilename, IDictionary settings, AsyncCallback callback)
-                : base(controller, callback)
+            /// <param name="settings">Options controlling how the tests are loaded</param>
+            /// <param name="_handler">The callback handler.</param>
+            public LoadTestsAction(TestController controller, string assemblyFilename, IDictionary settings, object _handler)
+                : base(controller, _handler)
             {
                 try
                 {
@@ -171,11 +237,11 @@ namespace NUnit.Framework.Api
                         ? controller.Runner.LoadedTest.TestCaseCount
                         : 0;
 
-                    callback(new LoadReport(assemblyFilename, count));
+                    ReportResult(string.Format("<loaded assembly=\"{0}\" testcases=\"{1}\"/>", assemblyFilename, count));
                 }
                 catch (Exception ex)
                 {
-                    callback(new ErrorReport(ex));
+                    ReportError(ex);
                 }
             }
         }
@@ -190,31 +256,33 @@ namespace NUnit.Framework.Api
         public class ExploreTestsAction : TestControllerAction
         {
             /// <summary>
-            /// Initializes a new instance of the <see cref="LoadTestsAction"/> class.
+            /// Initializes a new instance of the <see cref="ExplorTestsAction"/> class.
             /// </summary>
             /// <param name="controller">The controller.</param>
             /// <param name="assemblyFilename">The assembly filename.</param>
             /// <param name="loadOptions">Options controlling how the tests are loaded</param>
-            /// <param name="callback">The callback.</param>
-            public ExploreTestsAction(TestController controller, string assemblyFilename, IDictionary loadOptions, string filterText, AsyncCallback callback)
-                : base(controller, callback)
+            /// <param name="filterText">Filter used to control which tests are included</param>
+            /// <param name="_handler">The callback handler.</param>
+            public ExploreTestsAction(TestController controller, string assemblyFilename, IDictionary loadOptions, string filterText, object _handler)
+                : base(controller, _handler)
             {
                 try
                 {
                     if (controller.Runner.Load(assemblyFilename, loadOptions))
-                        callback(new FinalResult(controller.Runner.LoadedTest.ToXml(true), true));
+                        ReportResult(controller.Runner.LoadedTest);
                     else
-                        callback(new ErrorReport("No tests were found"));
+                        ReportError("No tests were found");
                 }
                 catch (Exception ex)
                 {
-                    callback(new ErrorReport(ex));
+                    ReportError(ex);
                 }
             }
         }
 
         #endregion
 
+#if false
         #region GetLoadedTestsAction
 
         ///// <summary>
@@ -268,6 +336,7 @@ namespace NUnit.Framework.Api
         //}
 
         #endregion
+#endif
 
         #region RunTestsAction
 
@@ -281,19 +350,18 @@ namespace NUnit.Framework.Api
             /// </summary>
             /// <param name="controller">A TestController holding the TestSuite to run</param>
             /// <param name="filterText">A string containing the XML representation of the filter to use</param>
-            /// <param name="callback">A callback used to report results</param>
-            public RunTestsAction(TestController controller, string filterText, AsyncCallback callback) 
-                : base(controller, callback)
+            /// <param name="_handler">A callback handler used to report results</param>
+            public RunTestsAction(TestController controller, string filterText, object _handler) 
+                : base(controller, _handler)
             {
                 try
                 {
-                    ITestResult result = controller.Runner.Run(new TestProgressReporter(callback), TestFilter.FromXml(filterText));
-
-                    callback(new FinalResult(result.ToXml(true), true));
+                    ReportResult(
+                        controller.Runner.Run(new TestProgressReporter(Handler), TestFilter.FromXml(filterText)));
                 }
                 catch (Exception ex)
                 {
-                    callback(new ErrorReport(ex));
+                    ReportError(ex);
                 }
             }
 

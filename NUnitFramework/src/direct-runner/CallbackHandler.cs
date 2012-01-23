@@ -22,40 +22,45 @@
 // ***********************************************************************
 
 using System;
+using System.Web.UI;
 
 namespace NUnit.DirectRunner
 {
-    public class CallbackHandler : MarshalByRefObject
+    public class CallbackHandler : MarshalByRefObject, ICallbackEventHandler
     {
-        private object result;
+        private string result;
 
-        public object Result
+        public string Result
         {
             get { return result; }
         }
 
-        public AsyncCallback Callback
-        {
-            get { return new AsyncCallback(CallbackMethod); }
-        }
-
-        private void CallbackMethod(IAsyncResult ar)
-        {
-            object state = ar.AsyncState;
-
-            if (ar.IsCompleted)
-                this.result = state;
-            else
-                ReportProgress(state);
-        }
-
-        public virtual void ReportProgress(object state)
+        public virtual void ReportProgress(string report)
         {
         }
+
+        #region MarshalByRefObject Overrides
 
         public override object InitializeLifetimeService()
         {
             return null;
         }
+
+        #endregion
+
+        #region ICallbackEventHandler Members
+
+        public string GetCallbackResult()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void RaiseCallbackEvent(string eventArgument)
+        {
+            result = eventArgument;
+            ReportProgress(eventArgument);
+        }
+
+        #endregion
     }
 }
