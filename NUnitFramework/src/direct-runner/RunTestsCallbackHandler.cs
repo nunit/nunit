@@ -37,10 +37,8 @@ namespace NUnit.DirectRunner
             this.output = Console.Out;
         }
 
-        public override void ReportProgress(object state)
+        public override void ReportProgress(string report)
         {
-			string report = (string)state;
-
 			XmlDocument doc = new XmlDocument();
 			doc.LoadXml(report);
 			XmlNode topNode = doc.FirstChild;

@@ -32,7 +32,6 @@ namespace NUnit.Engine.Runners
         public ITestEngineResult Explore(TestPackage package, TestFilter filter)
         {
             PerformPackageSetup(package);
-
             return this.realRunner.Explore(package, filter);
         }
 

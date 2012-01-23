@@ -241,11 +241,6 @@
     <Compile Include="IExpectException.cs" />
     <Compile Include="Internal\AssemblyHelper.cs" />
     <Compile Include="Internal\AssemblyReader.cs" />
-    <Compile Include="Internal\AsyncResults\AsyncResult.cs" />
-    <Compile Include="Internal\AsyncResults\ErrorReport.cs" />
-    <Compile Include="Internal\AsyncResults\FinalResult.cs" />
-    <Compile Include="Internal\AsyncResults\LoadReport.cs" />
-    <Compile Include="Internal\AsyncResults\ProgressReport.cs" />
     <Compile Include="Internal\Builders\CombinatorialStrategy.cs" />
     <Compile Include="Internal\Builders\CombinatorialTestCaseProvider.cs" />
     <Compile Include="Internal\Builders\CombiningStrategy.cs" />
@@ -354,15 +349,10 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Configuration" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Attributes\AttributeHierarchy.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\api\nunit.framework.api.csproj">
-      <Project>{007279F4-55A2-4B19-8FEB-C8D0AE48AF3E}</Project>
-      <Name>nunit.framework.api</Name>
-    </ProjectReference>
   </ItemGroup>
 </Project>

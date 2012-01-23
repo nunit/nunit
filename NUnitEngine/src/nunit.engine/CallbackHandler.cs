@@ -23,10 +23,11 @@
 
 using System;
 using System.Diagnostics;
+using System.Web.UI;
 
 namespace NUnit.Engine
 {
-    public class DefaultCallbackHandler : CallbackHandler
+    public class CallbackHandler : MarshalByRefObject, ICallbackEventHandler
     {
         private TestEngineResult result;
 
@@ -35,20 +36,32 @@ namespace NUnit.Engine
             get { return result; }
         }
 
-        protected override void ProcessCallback(IAsyncResult ar)
-        {
-            Debug.Assert(ar.AsyncState is string);
-
-            string state = ar.AsyncState as string;
-
-            if (ar.IsCompleted)
-                this.result = new TestEngineResult(state);
-            else
-                ReportProgress(state);
-        }
-
-        public virtual void ReportProgress(string state)
+        public virtual void ReportProgress(string report)
         {
         }
+
+        #region MarshalByRefObject Overrides
+
+        public override object InitializeLifetimeService()
+        {
+            return null;
+        }
+
+        #endregion
+
+        #region ICallbackEventHandler Members
+
+        public string GetCallbackResult()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void RaiseCallbackEvent(string eventArgument)
+        {
+            result = new TestEngineResult(eventArgument);
+            ReportProgress(eventArgument);
+        }
+
+        #endregion
     }
 }

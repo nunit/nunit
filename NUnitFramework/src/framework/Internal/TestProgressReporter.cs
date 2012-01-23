@@ -24,6 +24,7 @@
 using System;
 using System.IO;
 using System.Text;
+using System.Web.UI;
 using System.Xml;
 using NUnit.Framework.Api;
 
@@ -36,15 +37,15 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public class TestProgressReporter : ITestListener
     {
-        private AsyncCallback callback;
+        private ICallbackEventHandler handler;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TestProgressReporter"/> class.
         /// </summary>
-        /// <param name="callback">The callback to be used for reporting progress.</param>
-        public TestProgressReporter(AsyncCallback callback)
+        /// <param name="handler">The callback handler to be used for reporting progress.</param>
+        public TestProgressReporter(ICallbackEventHandler handler)
         {
-            this.callback = callback;
+            this.handler = handler;
         }
 
         #region ITestListener Members
@@ -63,7 +64,7 @@ namespace NUnit.Framework.Internal
                     XmlHelper.FormatAttributeValue(test.Name),
                     XmlHelper.FormatAttributeValue(test.FullName));
 
-                callback(new ProgressReport(report));
+                handler.RaiseCallbackEvent(report);
             }
             catch (Exception ex)
             {
@@ -80,7 +81,7 @@ namespace NUnit.Framework.Internal
         {
             try
             {
-                callback(new ProgressReport(result.ToXml(false)));
+                handler.RaiseCallbackEvent(result.ToXml(false).OuterXml);
             }
             catch (Exception ex)
             {
@@ -102,7 +103,7 @@ namespace NUnit.Framework.Internal
                     XmlHelper.FormatAttributeValue(test.Name),
                     XmlHelper.FormatAttributeValue(test.FullName));
 
-                callback(new ProgressReport(report));
+                handler.RaiseCallbackEvent(report);
             }
             catch (Exception ex)
             {
@@ -119,7 +120,7 @@ namespace NUnit.Framework.Internal
         {
             try
             {
-                callback(new ProgressReport(result.ToXml(false)));
+                handler.RaiseCallbackEvent(result.ToXml(false).OuterXml);
             }
             catch (Exception ex)
             {
@@ -141,7 +142,7 @@ namespace NUnit.Framework.Internal
                     XmlHelper.FormatAttributeValue(test.Name),
                     XmlHelper.FormatAttributeValue(test.FullName));
 
-                callback(new ProgressReport(report));
+                handler.RaiseCallbackEvent(report);
             }
             catch (Exception ex)
             {
@@ -158,7 +159,7 @@ namespace NUnit.Framework.Internal
         {
             try
             {
-                callback(new ProgressReport(result.ToXml(false)));
+                handler.RaiseCallbackEvent(result.ToXml(false).OuterXml);
             }
             catch (Exception ex)
             {
@@ -176,7 +177,8 @@ namespace NUnit.Framework.Internal
             {			
 				string report = string.Format("<output type=\"{0}\"><text>{1}</text></output>",
 				    testOutput.Type, testOutput.Text);
-				callback(new ProgressReport(report));
+
+				handler.RaiseCallbackEvent(report);
             }
             catch (Exception ex)
             {
