@@ -93,7 +93,7 @@ namespace NUnit.Engine.Services
                 ? Path.Combine(appBase, configFile)
                 : configFile;
 
-            if (package.GetSetting("AutoBinPath", true))
+            if (package.GetSetting("AutoBinPath", binPath == string.Empty))
 				binPath = GetPrivateBinPath( appBase, package.TestFiles );
 
 			setup.PrivateBinPath = binPath;
