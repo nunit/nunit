@@ -56,7 +56,7 @@ namespace NUnit.Engine.Runners
             foreach (string testFile in package.TestFiles)
             {
                 // TODO: Should get the appropriate driver for the file
-                IFrameworkDriver driver = new NUnitFrameworkDriver(TestDomain);
+                IFrameworkDriver driver = Services.DriverFactory.GetDriver(TestDomain, testFile);
                 results.Add(driver.Explore(testFile, package.Settings, filter));
             }
 
@@ -76,7 +76,7 @@ namespace NUnit.Engine.Runners
             foreach (string testFile in package.TestFiles)
             {
                 // TODO: Should get the appropriate driver for the file
-                IFrameworkDriver driver = new NUnitFrameworkDriver(TestDomain);
+                IFrameworkDriver driver = Services.DriverFactory.GetDriver(TestDomain, testFile);
                 TestEngineResult driverResult = driver.Load(testFile, package.Settings);
 
                 foreach (XmlNode node in driverResult.XmlNodes)

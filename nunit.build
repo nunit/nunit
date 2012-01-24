@@ -267,14 +267,21 @@
           program="nunit-console.exe"
           commandline="nunit.engine.tests.dll" />
 
-    <echo message="*"/>
-    <echo message="* Testing the NUnitFramework ${build.config} build"/>
-    <echo message="*"/>
 
-    <exec basedir="${common.deploy.dir}"
-          workingdir="${common.deploy.dir}/net-2.0"
-          program="nunit-console.exe"
-          commandline="nunit.framework.tests.dll" />
+    <foreach item="String" delim="," 
+        property="framework" in="${installed.frameworks}">
+
+
+        <echo message="*"/>
+        <echo message="* Testing the NUnitFramework ${framework} ${build.config} build"/>
+        <echo message="*"/>
+
+        <exec basedir="${common.deploy.dir}"
+              workingdir="${common.deploy.dir}/${framework}"
+              program="nunit-console.exe"
+              commandline="nunit.framework.tests.dll" />
+
+    </foreach>
 
   </target>
 
