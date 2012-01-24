@@ -56,7 +56,10 @@ namespace NUnit.Framework.Constraints
             if (collection != null)
                 return collection.Count == 0;
 
-            return !enumerable.GetEnumerator().MoveNext();
+            foreach (object o in enumerable)
+                return false;
+
+            return true;
         }
 
         /// <summary>
