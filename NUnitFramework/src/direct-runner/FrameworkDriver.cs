@@ -78,21 +78,6 @@ namespace NUnit.DirectRunner
             return doc.FirstChild;
         }
 
-        public XmlNode GetLoadedTests()
-        {
-            CallbackHandler handler = new CallbackHandler();
-
-            CreateObject("NUnit.Framework.Api.TestController+GetLoadedTestsAction",
-                testController, handler);
-
-            Debug.Assert(handler.Result == null || handler.Result is string,
-                "Returned result was not an XmlNode");
-
-			XmlDocument doc = new XmlDocument();
-			doc.LoadXml((string)handler.Result);
-            return doc.FirstChild;
-        }
-
         public XmlNode Run()
         {
             CallbackHandler handler = new RunTestsCallbackHandler();

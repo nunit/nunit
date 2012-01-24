@@ -359,7 +359,7 @@ namespace NUnit.Engine.Services
 		#region IService Members
 
         private ServiceContext services;
-        public ServiceContext ServiceContext 
+        public ServiceContext ServiceContext
         {
             get { return services; }
             set { services = value; }

@@ -75,6 +75,7 @@ namespace NUnit.Engine
             Services.Add(new ProjectService());
             Services.Add(new RuntimeFrameworkSelector());
             Services.Add(new DefaultTestRunnerFactory());
+            Services.Add(new DriverFactory());
             Services.Add(new TestAgency());
 
             Services.ServiceManager.InitializeServices();

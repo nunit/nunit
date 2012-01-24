@@ -111,6 +111,22 @@ namespace NUnit.Engine
 
         #endregion
 
+        #region DriverFactory
+
+        private IDriverFactory driverFactory;
+        public IDriverFactory DriverFactory
+        {
+            get
+            {
+                if (driverFactory == null)
+                    driverFactory = (IDriverFactory)ServiceManager.GetService(typeof(IDriverFactory));
+
+                return driverFactory;
+            }
+        }
+
+        #endregion
+
         #region TestRunnerFactory
 
         private ITestRunnerFactory testRunnerFactory;
