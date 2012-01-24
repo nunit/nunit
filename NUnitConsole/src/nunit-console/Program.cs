@@ -65,8 +65,8 @@ namespace NUnit.ConsoleRunner
 
             if (options.Pause)
             {
-                Console.WriteLine("Press <Enter> to start run");
-                Console.ReadLine();
+                Console.WriteLine("Press any key to continue . . .");
+                Console.ReadKey(true);
             }
 
 			if(!options.NoHeader)
@@ -132,8 +132,8 @@ namespace NUnit.ConsoleRunner
                 {
                     if (options.Wait)
                     {
-                        Console.Out.WriteLine("\nHit <enter> key to continue");
-                        Console.ReadLine();
+                        Console.Out.WriteLine("\nPress any key to continue . . .");
+                        Console.ReadKey(true);
                     }
 
                     //    log.Info( "NUnit-console.exe terminating" );
