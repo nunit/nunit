@@ -71,6 +71,7 @@ namespace NUnit.Agent
             engine.Services.Add(new ProjectService());
             engine.Services.Add(new DomainManager());
             engine.Services.Add(new InProcessTestRunnerFactory());
+            engine.Services.Add(new DriverFactory());
             //engine.Services.Add( new TestLoader() );
 
             // Initialize Services

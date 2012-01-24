@@ -96,6 +96,7 @@
     <Compile Include="ServiceContext.cs" />
     <Compile Include="Services\DefaultTestRunnerFactory.cs" />
     <Compile Include="Services\DomainManager.cs" />
+    <Compile Include="Services\DriverFactory.cs" />
     <Compile Include="Services\InProcessTestRunnerFactory.cs" />
     <Compile Include="Services\NUnitProjectLoader.cs" />
     <Compile Include="Services\ProjectService.cs" />
