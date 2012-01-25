@@ -437,6 +437,56 @@ namespace NUnit.Framework
 
         #endregion
 
+        #region Assert.ByVal
+
+        /// <summary>
+        /// Apply a constraint to an actual value, succeeding if the constraint
+        /// is satisfied and throwing an assertion exception on failure.
+        /// Used as a synonym for That in rare cases where a private setter 
+        /// causes a Visual Basic compilation error.
+        /// </summary>
+        /// <param name="expression">A Constraint to be applied</param>
+        /// <param name="actual">The actual value to test</param>
+        static public void ByVal(object actual, IResolveConstraint expression)
+        {
+            Assert.That(actual, expression, null, null);
+        }
+
+        /// <summary>
+        /// Apply a constraint to an actual value, succeeding if the constraint
+        /// is satisfied and throwing an assertion exception on failure.
+        /// Used as a synonym for That in rare cases where a private setter 
+        /// causes a Visual Basic compilation error.
+        /// </summary>
+        /// <param name="expression">A Constraint to be applied</param>
+        /// <param name="actual">The actual value to test</param>
+        /// <param name="message">The message that will be displayed on failure</param>
+        static public void ByVal(object actual, IResolveConstraint expression, string message)
+        {
+            Assert.That(actual, expression, message, null);
+        }
+
+        /// <summary>
+        /// Apply a constraint to an actual value, succeeding if the constraint
+        /// is satisfied and throwing an assertion exception on failure. 
+        /// Used as a synonym for That in rare cases where a private setter 
+        /// causes a Visual Basic compilation error.
+        /// </summary>
+        /// <remarks>
+        /// This method is provided for use by VB developers needing to test
+        /// the value of properties with private setters.
+        /// </remarks>
+        /// <param name="expression">A Constraint expression to be applied</param>
+        /// <param name="actual">The actual value to test</param>
+        /// <param name="message">The message that will be displayed on failure</param>
+        /// <param name="args">Arguments to be used in formatting the message</param>
+        static public void ByVal(object actual, IResolveConstraint expression, string message, params object[] args)
+        {
+            Assert.That(actual, expression, message, args);
+        }
+
+        #endregion
+
         #region Throws, Catch and DoesNotThrow
 
         #region Throws
