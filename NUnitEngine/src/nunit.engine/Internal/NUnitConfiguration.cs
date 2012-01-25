@@ -191,7 +191,7 @@ namespace NUnit.Engine.Internal
                 if (applicationDirectory == null)
                 {
                     applicationDirectory = Path.Combine(
-                        Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
                         "NUnit");
                 }
 

@@ -38,7 +38,7 @@ namespace NUnit.Engine.Services
 				{
                     shadowCopyPath = ServiceContext.UserSettings.GetSetting("Options.TestLoader.ShadowCopyPath", "");
                     if (shadowCopyPath == "")
-                        shadowCopyPath = PathUtils.Combine(Path.GetTempPath(), "nunit20", "ShadowCopyCache");
+                        shadowCopyPath = PathUtils.Combine(NUnitConfiguration.ApplicationDirectory, "ShadowCopyCache");
                     else
                         shadowCopyPath = Environment.ExpandEnvironmentVariables(shadowCopyPath);
 				}
