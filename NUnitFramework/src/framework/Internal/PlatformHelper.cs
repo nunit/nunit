@@ -41,7 +41,7 @@ namespace NUnit.Framework.Internal
 		/// Comma-delimited list of all supported OS platform constants
 		/// </summary>
 		public static readonly string OSPlatforms =
-			"Win,Win32,Win32S,Win32NT,Win32Windows,WinCE,Win95,Win98,WinMe,NT3,NT4,NT5,NT6,Win2K,WinXP,Win2003Server,Vista,Win2008Server,Win2008ServerR2,Windows7,Unix,Linux";
+			"Win,Win32,Win32S,Win32NT,Win32Windows,WinCE,Win95,Win98,WinMe,NT3,NT4,NT5,NT6,Win2K,WinXP,Win2003Server,Vista,Win2008Server,Win2008ServerR2,Win2012Server,Windows7,Windows8,Unix,Linux";
 		
 		/// <summary>
 		/// Comma-delimited list of all supported Runtime platform constants
@@ -197,12 +197,18 @@ namespace NUnit.Framework.Internal
                 case "WIN2008SERVER":
                     isSupported = os.IsWin2008Server;
                     break;
-				case "WIN2008SERVERR2":
-					isSupported = os.IsWin2008ServerR2;
-					break;
-				case "WINDOWS7":
-					isSupported = os.IsWindows7;
-					break;
+                case "WIN2008SERVERR2":
+                    isSupported = os.IsWin2008ServerR2;
+                    break;
+                case "WIN2012SERVER":
+                    isSupported = os.IsWin2012Server;
+                    break;
+                case "WINDOWS7":
+                    isSupported = os.IsWindows7;
+                    break;
+                case "WINDOWS8":
+                    isSupported = os.IsWindows8;
+                    break;
                 case "UNIX":
 				case "LINUX":
                     isSupported = os.IsUnix;
