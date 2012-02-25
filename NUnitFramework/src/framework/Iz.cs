@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NUNITLITE
 using System;
 
 namespace NUnit.Framework
@@ -34,4 +33,3 @@ namespace NUnit.Framework
     {
     }
 }
-#endif
