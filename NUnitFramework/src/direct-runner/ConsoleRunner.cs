@@ -62,8 +62,8 @@ namespace NUnit.DirectRunner
             {
                 if (commandlineOptions.Wait)
                 {
-                    Console.WriteLine("Press Enter key to continue . . .");
-                    Console.ReadLine();
+                    Console.WriteLine("Press any key to continue . . .");
+                    Console.ReadKey(true);
                 }
             }
         }
