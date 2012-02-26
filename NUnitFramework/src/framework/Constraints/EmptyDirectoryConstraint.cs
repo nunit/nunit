@@ -29,7 +29,7 @@ namespace NUnit.Framework.Constraints
     /// <summary>
     /// EmptyDirectoryConstraint is used to test that a directory is empty
     /// </summary>
-    public class EmptyDirectoryContraint : Constraint
+    public class EmptyDirectoryConstraint : Constraint
     {
         private int files = 0;
         private int subdirs = 0;
