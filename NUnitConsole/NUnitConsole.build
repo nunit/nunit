@@ -68,7 +68,8 @@
 <!-- ***************************************************************** -->
 
   <property name="package.working.dir" 
-    value="${path::combine(project.package.dir,package.name)}"/>
+    value="${path::combine(project.package.dir,package.name)}"
+    unless="${property::exists('package.working.dir')}"/>
   <property name="package.bin.dir" 
     value="${path::combine(package.working.dir,'bin')}"/>
   <property name="package.doc.dir" 
@@ -415,8 +416,11 @@
         <include name="NOTICES.txt"/>
         <include name="*.build"/>
         <include name="nunit.snk"/>
+        <include name="nant"/>
+        <include name="nant.bat"/>
         <include name="CommonAssemblyInfo.cs"/>
         <include name="*.sln"/>
+        <include name="lib/*"/>
       </fileset>
     </copy>
 

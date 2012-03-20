@@ -25,7 +25,7 @@
   <property name="project.name" value="NUnitEngine"/>
 
   <!-- NUnit Package Version - Three digits -->
-  <property name="package.version" value="2.9.5"/>
+  <property name="package.version" value="2.9.6"/>
 
   <!-- Package Configuration (Release, Alpha, Beta, etc.) -->
   <property name="package.configuration" value=""/>
@@ -68,7 +68,8 @@
 <!-- ***************************************************************** -->
 
   <property name="package.working.dir" 
-    value="${path::combine(project.package.dir,package.name)}"/>
+    value="${path::combine(project.package.dir,package.name)}"
+    unless="${property::exists('package.working.dir')}"/>
   <property name="package.bin.dir" 
     value="${path::combine(package.working.dir,'bin')}"/>
   <property name="package.doc.dir" 
@@ -299,7 +300,7 @@
 
     <call target="clean-package-dir"/>
     <call target="copy-license" />
-    <call target="copy-docs"/>
+    <!--<call target="copy-docs"/>-->
     <call target="copy-src"/>
     <call target="copy-libs"/>
 
@@ -397,10 +398,12 @@
       <fileset basedir="${project.base.dir}">
         <include name="LICENSE.txt"/>
         <include name="NOTICES.txt"/>
-        <include name="*.build"/>
+        <include name="NUnitEngine.build"/>
         <include name="nunit.snk"/>
-        <include name="CommonAssemblyInfo.cs"/>
-        <include name="*.sln"/>
+        <include name="NUnitEngine.sln"/>
+        <include name="nant"/>
+        <include name="nant.bat"/>
+        <include name="lib/*"/>
       </fileset>
     </copy>
 
