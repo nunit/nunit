@@ -66,11 +66,13 @@
     <Compile Include="CommandLineOptions.cs" />
     <Compile Include="ConsoleRunner.cs" />
     <Compile Include="FrameworkDriver.cs" />
+    <Compile Include="NUnit2XmlOutputWriter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="ResultReporter.cs" />
     <Compile Include="ResultSummary.cs" />
     <Compile Include="RunTestsCallbackHandler.cs" />
     <Compile Include="StackTraceFilter.cs" />
+    <Compile Include="XmlHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="direct-runner.build" />

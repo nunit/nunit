@@ -41,7 +41,8 @@ namespace NUnit.DirectRunner
         private bool useappdomain = false;
         private bool listTests = false;
         private string listFile = null;
-        private string resultFile = "TestResult.xml";
+        private string v3ResultFile = "TestResult.v3.xml";
+        private string v2ResultFile = "TestResult.v2.xml";
 
         private bool error = false;
 
@@ -92,9 +93,14 @@ namespace NUnit.DirectRunner
             get { return listFile; }
         }
 
-        public string ResultFile
+        public string V3ResultFile
         {
-            get { return resultFile; }
+            get { return v3ResultFile; }
+        }
+
+        public string V2ResultFile
+        {
+            get { return v2ResultFile; }
         }
 
         /// <summary>
@@ -180,8 +186,11 @@ namespace NUnit.DirectRunner
                     listTests = true;
                     listFile = val;
                     break;
-                case "xml":
-                    resultFile = val;
+                case "xml3":
+                    v3ResultFile = val;
+                    break;
+                case "xml2":
+                    v2ResultFile = val;
                     break;
                 case "l":
                 case "labels":
