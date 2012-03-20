@@ -1,0 +1,322 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>nunit.engine.api</name>
+    </assembly>
+    <members>
+        <member name="T:NUnit.Engine.ITestRunner">
+            <summary>
+            Interface implemented by all test runners.
+            </summary>
+        </member>
+        <member name="M:NUnit.Engine.ITestRunner.Load(NUnit.Engine.TestPackage)">
+            <summary>
+            Load a TestPackage for possible execution
+            </summary>
+            <param name="package">The TestPackage to be loaded</param>
+            <returns>A TestEngineResult.</returns>
+        </member>
+        <member name="M:NUnit.Engine.ITestRunner.Unload">
+            <summary>
+            Unload any loaded TestPackage. If none is loaded,
+            the call is ignored.
+            </summary>
+        </member>
+        <member name="M:NUnit.Engine.ITestRunner.Run(NUnit.Engine.ITestEventHandler,NUnit.Engine.TestFilter)">
+            <summary>
+            Run the tests in a loaded TestPackage
+            </summary>
+            <param name="listener">An ITestEventHandler to receive events</param>
+            <param name="filter">A TestFilter used to select tests</param>
+            <returns>A TestEngineResult giving the result of the test execution</returns>
+        </member>
+        <member name="M:NUnit.Engine.ITestRunner.Explore(NUnit.Engine.TestPackage,NUnit.Engine.TestFilter)">
+            <summary>
+            Explore a TestPackage and return information about
+            the tests found.
+            </summary>
+            <param name="package">The TestPackage to be explored</param>
+            <returns>A TestEngineResult.</returns>
+        </member>
+        <member name="T:NUnit.Engine.ITestEventHandler">
+            <summary>
+            The ITestProgressHandler interface is used to receive notices
+            of significant events while a test is running. 
+            </summary>
+        </member>
+        <member name="M:NUnit.Engine.ITestEventHandler.OnTestEvent(System.String)">
+            <summary>
+            Handle a progress report, which may include info about
+            tests starting or stopping as well as text output to 
+            be displayed by the runner.
+            </summary>
+            <param name="report">An XML progress report.</param>
+        </member>
+        <member name="T:NUnit.Engine.TestEngineActivator">
+            <summary>
+            TestEngineActivator creates an instance of the test
+            engine and returns an ITestEngine interface.
+            </summary>
+        </member>
+        <member name="M:NUnit.Engine.TestEngineActivator.CreateInstance">
+            <summary>
+            Create an instance of the test engine using default values
+            for the assembly and type names.
+            </summary>
+            <returns>An ITestEngine.</returns>
+        </member>
+        <member name="M:NUnit.Engine.TestEngineActivator.CreateInstance(System.String,System.String)">
+            <summary>
+            Create an instance of the test engine using provided values
+            for the assembly and type names. This method is intended
+            for use in experimenting with alternate implementations.
+            </summary>
+            <param name="assemblyName">The name of the assembly to be used.</param>
+            <param name="typeName">The name of the Type to be used.</param>
+            <returns>An ITestEngine.</returns>
+        </member>
+        <member name="T:NUnit.Engine.TestFilter">
+            <summary>
+            Abstract base for all test filters. A filter is represented
+            by an XmlNode with &lt;filter&gt; as it's topmost element.
+            In the console runner, filters serve only to carry this
+            XML representation, as all filtering is done by the engine.
+            </summary>
+        </member>
+        <member name="F:NUnit.Engine.TestFilter.Empty">
+            <summary>
+            The empty filter - one that always passes.
+            </summary>
+        </member>
+        <member name="P:NUnit.Engine.TestFilter.Text">
+            <summary>
+            Gets the XML representation of this filter as a string.
+            </summary>
+        </member>
+        <member name="P:NUnit.Engine.TestFilter.Xml">
+            <summary>
+            Gets the XML representation of this filter as an XmlNode
+            </summary>
+        </member>
+        <member name="T:NUnit.Engine.ITestEngineResult">
+            <summary>
+            Interface implemented by classes that return results from
+            the test engine. The result info is represented as XML.
+            </summary>
+        </member>
+        <member name="P:NUnit.Engine.ITestEngineResult.HasErrors">
+            <summary>
+            Gets a flag indicating whether this result contains any
+            general errors, excluding test errors or failures.
+            </summary>
+        </member>
+        <member name="P:NUnit.Engine.ITestEngineResult.Errors">
+            <summary>
+            Gets a list of errors from the result. These are general
+            execution errors and don't include test errors or failures.
+            </summary>
+        </member>
+        <member name="P:NUnit.Engine.ITestEngineResult.Xml">
+            <summary>
+            Gets the XML representing a single test result.
+            </summary>
+            <exception cref="T:System.InvalidOperationException">
+            If the result is empty or has multiple XML nodes.
+            </exception>
+        </member>
+        <member name="T:NUnit.Engine.TestPackage">
+            <summary>
+            TestPackage holds information about a set of tests to
+            be loaded by a TestRunner. Each TestPackage represents
+            tests for a single assembly. Multiple assemblies are
+            represented by use of subpackages.
+            </summary>
+        </member>
+        <member name="M:NUnit.Engine.TestPackage.#ctor(System.String)">
+            <summary>
+            Construct a TestPackage, specifying a file path for
+            the assembly or project to be used.
+            </summary>
+            <param name="filePath">The file path.</param>
+        </member>
+        <member name="M:NUnit.Engine.TestPackage.#ctor(System.String[])">
+            <summary>
+            Construct an anonymous TestPackage that wraps 
+            multiple assemblies or projects as subpackages.
+            </summary>
+            <param name="testFiles"></param>
+        </member>
+        <member name="M:NUnit.Engine.TestPackage.Add(System.String)">
+            <summary>
+            Add a test file to the package.
+            </summary>
+            <param name="testFile">The test file to be added</param>
+        </member>
+        <member name="M:NUnit.Engine.TestPackage.GetSetting``1(System.String,``0)">
+            <summary>
+            Return the value of a setting or a default.
+            </summary>
+            <param name="name">The name of the setting</param>
+            <param name="defaultSetting">The default value</param>
+            <returns></returns>
+        </member>
+        <member name="P:NUnit.Engine.TestPackage.Name">
+            <summary>
+            Gets the name of the package
+            </summary>
+        </member>
+        <member name="P:NUnit.Engine.TestPackage.FullName">
+            <summary>
+            Gets the path to the file containing tests. It may be
+            an assembly or a recognized project type.
+            </summary>
+        </member>
+        <member name="P:NUnit.Engine.TestPackage.TestFiles">
+            <summary>
+            Gets an array of the test files contained in this package
+            </summary>
+        </member>
+        <member name="P:NUnit.Engine.TestPackage.Settings">
+            <summary>
+            Gets the settings dictionary for this package.
+            </summary>
+        </member>
+        <member name="T:NUnit.Engine.ITestEngine">
+            <summary>
+            ITestEngine represents an instance of the test engine.
+            </summary>
+        </member>
+        <member name="M:NUnit.Engine.ITestEngine.InitializeServices">
+            <summary>
+            Create and initialize the standard set of services
+            used in the Engine. This interface is not normally
+            called by user code. Programs linking only to 
+            only to the nunit.engine.api assembly are given a
+            pre-initialized instance of TestEngine. Programs 
+            that link directly to nunit.engine usually do so
+            in order to perform custom initialization.
+            </summary>
+        </member>
+        <member name="M:NUnit.Engine.ITestEngine.Explore(NUnit.Engine.TestPackage,NUnit.Engine.TestFilter)">
+            <summary>
+            Returns an XML representation of the tests contained
+            in a test package.
+            </summary>
+            <param name="package">The test package to be explored.</param>
+            <returns>An XmlNode representing the tests.</returns>
+        </member>
+        <member name="M:NUnit.Engine.ITestEngine.Run(NUnit.Engine.TestPackage,NUnit.Engine.ITestEventHandler,NUnit.Engine.TestFilter)">
+            <summary>
+            Runs the tests specified by a test package and returns
+            results as an XmlNode.
+            </summary>
+            <param name="package">The test package to be run.</param>
+            <param name="listener">A test listener to receive progress notifications. Null indicates no progress notifications should be sent.</param>
+            <param name="filter">A test filter indicating which tests should run. Null indicates no filtering.</param>
+            <returns>An XmlNode representing the results of the run.</returns>
+        </member>
+        <member name="M:NUnit.Engine.ITestEngine.GetRunner">
+            <summary>
+            Returns a test runner instance for use by clients that need to load the
+            tests once and run them multiple times.
+            </summary>
+            <returns>An ITestRunner.</returns>
+        </member>
+        <member name="T:NUnit.Engine.ITestAgent">
+            <summary>
+            The ITestAgent interface is implemented by remote test agents.
+            </summary>
+        </member>
+        <member name="M:NUnit.Engine.ITestAgent.Start">
+            <summary>
+            Starts the agent, performing any required initialization
+            </summary>
+            <returns>True if successful, otherwise false</returns>
+        </member>
+        <member name="M:NUnit.Engine.ITestAgent.Stop">
+            <summary>
+            Stops the agent, releasing any resources
+            </summary>
+        </member>
+        <member name="M:NUnit.Engine.ITestAgent.CreateRunner">
+            <summary>
+             Creates a test runner
+            </summary>
+        </member>
+        <member name="P:NUnit.Engine.ITestAgent.Agency">
+            <summary>
+            Gets the agency with which this agent is associated.
+            </summary>
+        </member>
+        <member name="P:NUnit.Engine.ITestAgent.Id">
+            <summary>
+            Gets a Guid that uniquely identifies this agent.
+            </summary>
+        </member>
+        <member name="T:NUnit.Engine.ITestAgency">
+            <summary>
+            The ITestAgency interface is implemented by a TestAgency in 
+            order to allow TestAgents to register with it.
+            </summary>
+        </member>
+        <member name="M:NUnit.Engine.ITestAgency.Register(NUnit.Engine.ITestAgent)">
+            <summary>
+            Registers an agent with an agency
+            </summary>
+            <param name="agent"></param>
+        </member>
+        <member name="T:NUnit.Engine.TestEngineError">
+            <summary>
+            TestEngineError represents an error that occured in 
+            executing an API method.
+            </summary>
+        </member>
+        <member name="M:NUnit.Engine.TestEngineError.#ctor(System.String)">
+            <summary>
+            Construct a TestEngineError from a message
+            </summary>
+            <param name="message">The error message</param>
+        </member>
+        <member name="M:NUnit.Engine.TestEngineError.#ctor(System.String,System.String)">
+            <summary>
+            Construct a TestEngineError from a message and stack trace.
+            </summary>
+            <param name="message">The error message</param>
+            <param name="stackTrace">A stack trace, or null</param>
+        </member>
+        <member name="P:NUnit.Engine.TestEngineError.Message">
+            <summary>
+            Gets the error message from an error
+            </summary>
+        </member>
+        <member name="P:NUnit.Engine.TestEngineError.StackTrace">
+            <summary>
+            Gets the stack trace for an error, if present
+            </summary>
+        </member>
+        <member name="T:NUnit.Engine.NUnitEngineException">
+            <summary>
+            NUnitEngineException is thrown when the engine has been
+            called with improper values or when a particular facility
+            is not available.
+            </summary>
+        </member>
+        <member name="M:NUnit.Engine.NUnitEngineException.#ctor(System.String)">
+            <summary>
+            Construct with a message
+            </summary>
+        </member>
+        <member name="M:NUnit.Engine.NUnitEngineException.#ctor(System.String,System.Exception)">
+            <summary>
+            Construct with a message and inner exception
+            </summary>
+            <param name="message"></param>
+            <param name="innerException"></param>
+        </member>
+        <member name="M:NUnit.Engine.NUnitEngineException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Serialization constructor
+            </summary>
+        </member>
+    </members>
+</doc>

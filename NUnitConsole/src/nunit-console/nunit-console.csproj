@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -35,18 +35,21 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="nunit.engine">
-      <HintPath>..\..\..\NUnitEngine\bin\Debug\nunit.engine.dll</HintPath>
+    <Reference Include="nunit.engine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\nunit.engine.dll</HintPath>
     </Reference>
-    <Reference Include="nunit.engine.api">
-      <HintPath>..\..\..\NUnitEngine\bin\Debug\nunit.engine.api.dll</HintPath>
+    <Reference Include="nunit.engine.api, Version=1.0.0.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\nunit.engine.api.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework, Version=2.6.0.12017, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="nunit.framework">
-      <HintPath>..\..\..\NUnitEngine\bin\Debug\nunit.framework.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConsoleOptions.cs" />
@@ -75,12 +78,6 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="nunit-console.build" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\NUnitEngine\src\nunit-agent\nunit-agent.csproj">
-      <Project>{C2A8FC7A-FA64-46EA-AF6D-73D6B371DBF8}</Project>
-      <Name>nunit-agent</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
