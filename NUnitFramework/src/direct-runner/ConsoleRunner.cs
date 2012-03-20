@@ -138,10 +138,13 @@ namespace NUnit.DirectRunner
             Console.SetOut(savedOut);
             Console.SetError(savedError);
 
-            XmlTextWriter resultWriter = new XmlTextWriter(commandlineOptions.ResultFile, System.Text.Encoding.UTF8);
-            resultWriter.Formatting = Formatting.Indented;
-            resultNode.WriteTo(resultWriter);
-            resultWriter.Close();
+            XmlTextWriter nunit3ResultWriter = new XmlTextWriter(commandlineOptions.V3ResultFile, System.Text.Encoding.UTF8);
+            nunit3ResultWriter.Formatting = Formatting.Indented;
+            resultNode.WriteTo(nunit3ResultWriter);
+            nunit3ResultWriter.Close();
+
+            NUnit2XmlOutputWriter nunit2ResultWriter = new NUnit2XmlOutputWriter();
+            nunit2ResultWriter.WriteResultFile(resultNode, commandlineOptions.V2ResultFile);
 
             new ResultReporter(resultNode).ReportResults();
         }
