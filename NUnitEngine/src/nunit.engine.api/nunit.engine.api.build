@@ -30,6 +30,7 @@
         <patternset refid="source-files" />
         <include name="*.build" />
         <include name="*.csproj" />
+        <include name="nunit.snk" />
       </fileset>
     </copy>
   </target>

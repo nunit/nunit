@@ -113,10 +113,10 @@
     value="${path::combine(package.working.dir,'doc')}"/>
   <property name="package.samples.dir" 
     value="${path::combine(package.working.dir,'samples')}"/>
-  <property name="package.src.dir" 
+  <!--<property name="package.src.dir" 
     value="${path::combine(package.working.dir,'src')}"/>
-  <property name="package.lib.dir" 
-    value="${path::combine(package.working.dir,'lib')}"/>
+  <property name="package.lib.dir"
+    value="${path::combine(package.working.dir,'lib')}"/>-->
   <property name="package.tools.dir"
     value="${path::combine(package.working.dir,'tools')}"/>
   <property name="package.install.dir"
@@ -620,44 +620,48 @@ to the correct location.
 <!-- ***************************************************************** -->
 
   <target name="copy-src">
-    <delete dir="${package.src.dir}" />
-    <mkdir dir="${package.src.dir}"/>
 
     <copy todir="${package.working.dir}">
       <fileset basedir="${project.base.dir}">
+        <include name="BUILDING.txt"/>
         <include name="LICENSE.txt"/>
+        <include name="nant"/>
+        <include name="nant.bat"/>
         <include name="NOTICES.txt"/>
         <include name="nunit.build"/>
         <include name="nunit.common.include"/>
         <include name="nunit.snk"/>
+        <include name="nunit.sln"/>
+        <include name="NUnitTests.nunit"/>
         <include name="src/CommonAssemblyInfo.cs"/>
         <include name="install/NUnit.Installer.sln"/>
         <include name="install/NUnit.Framework.Installer/*.wixproj"/>
         <include name="install/NUnit.Framework.Installer/*.wxs"/>
         <include name="install/NUnit.Framework.Installer/*.wxi"/>
+        <include name="install/NUnit.Framework.Installer/*.bmp"/>
         <include name="install/NUnit.Framework.Installer/License.rtf"/>
+        <include name="tools/**/*"/>
       </fileset>
     </copy>
 
-    <nant target="package" inheritrefs="true">
-      <buildfiles refid="project.buildfiles" />
-    </nant>
+    <property name="saved.working.dir" value="${package.working.dir}" />
 
-    <mkdir dir="${package.solutions.dir}" />
+    <property name="package.working.dir"
+      value="${path::combine(saved.working.dir,'NUnitFramework')}" />
+    <nant target="copy-src" inheritrefs="true"
+      buildfile="NUnitFramework/NUnitFramework.build" />
 
-    <copy todir="${package.solutions.dir}">
-      <fileset basedir="${project.solutions.dir}">
-        <include name="**/NUnitFramework.sln"/>
-        <include name="**/nunit.framework/nunit.snk"/>
-        <include name="**/nunit.framework/nunit.framework.csproj"/>
-        <include name="**/nunit.framework.tests/nunit.framework.tests.csproj"/>
-        <include name="**/nunitlite/nunit.snk"/>
-        <include name="**/nunitlite/nunitlite.csproj"/>
-        <include name="**/nunitlite.tests/nunitlite.tests.csproj"/>
-        <include name="**/test-assembly/test-assembly.csproj"/>
-        <include name="**/direct-runner/direct-runner.csproj"/>
-      </fileset>
-    </copy>
+    <property name="package.working.dir"
+      value="${path::combine(saved.working.dir,'NUnitEngine')}" />
+    <nant target="copy-src" inheritrefs="true"
+      buildfile="NUnitEngine/NUnitEngine.build" />
+
+    <property name="package.working.dir"
+      value="${path::combine(saved.working.dir,'NUnitConsole')}" />
+    <nant target="copy-src" inheritrefs="true"
+      buildfile="NUnitConsole/NUnitConsole.build" />
+
+    <property name="package.working.dir" value="${saved.working.dir}" />
 
   </target>
 
@@ -689,18 +693,11 @@ to the correct location.
 <!-- ****** Patternsets and Filesets Used by Various Targets  ******** -->
 <!-- ***************************************************************** -->
 
-  <fileset id="project.buildfiles" basedir="${project.src.dir}">
+  <fileset id="project.buildfiles" basedir="${project.base.dir}">
 
-    <!-- Framework -->
-    <include name="framework/nunit.framework.build" />
-    <!-- Framework Tests -->
-    <include name="tests/nunit.framework.tests.build" />
-    <!-- Test Data -->
-    <include name="test-assembly/test-assembly.build" />
-    <!-- Test Runner -->
-    <include name="runner/direct-runner.build" />
-    <!-- Mock Assembly -->
-    <include name="mock-assembly/mock-assembly.build" />
+    <include name="NUnitFramework/NUnitFramework.build" />
+    <include name="NUnitEngine/NUnitEngine.build" />
+    <include name="NUnitConsole/NUnitConsole.build" />
 
   </fileset>
 

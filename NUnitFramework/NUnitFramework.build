@@ -25,7 +25,7 @@
   <property name="project.name" value="NUnitFramework"/>
 
   <!-- NUnit Package Version - Three digits -->
-  <property name="package.version" value="2.9.5"/>
+  <property name="package.version" value="2.9.6"/>
 
   <!-- Package Configuration (Release, Alpha, Beta, etc.) -->
   <property name="package.configuration" value=""/>
@@ -80,7 +80,8 @@
 <!-- ***************************************************************** -->
 
   <property name="package.working.dir" 
-    value="${path::combine(project.package.dir,package.name)}"/>
+    value="${path::combine(project.package.dir,package.name)}"
+    unless="${property::exists('package.working.dir')}"/>
   <property name="package.bin.dir" 
     value="${path::combine(package.working.dir,'bin')}"/>
   <property name="package.doc.dir" 
@@ -595,7 +596,7 @@
   <target name="package-src" depends="clean-package-dir"
     description="Create full source package for developer use">
 
-    <call target="copy-docs"/>
+    <!--<call target="copy-docs"/>-->
     <!--<call target="copy-samples"/>-->
     <call target="copy-src"/>
 
@@ -655,7 +656,7 @@
       </if>
     </foreach>
 
-    <call target="copy-docs" />
+    <!--<call target="copy-docs" />-->
     <!--<call target="copy-samples" />-->
 
   </target>
@@ -734,18 +735,18 @@
     <delete dir="${package.src.dir}" />
     <mkdir dir="${package.src.dir}"/>
 
-    <copy todir="${package.src.dir}">
+    <copy todir="${package.working.dir}">
       <fileset basedir="${project.base.dir}">
         <include name="LICENSE.txt"/>
         <include name="NOTICES.txt"/>
         <include name="NUnitFramework.build"/>
         <include name="nunit.common.include"/>
         <include name="nunit.snk"/>
-        <include name="CommonAssemblyInfo.cs"/>
         <include name="NUnitFramework*.sln"/>
         <include name="NUnitLite*.sln"/>
         <include name="nant"/>
         <include name="nant.bat"/>
+        <include name="src/CommonAssemblyInfo.cs"/>
       </fileset>
     </copy>
 

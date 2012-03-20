@@ -78,15 +78,18 @@ namespace NUnit.Engine.Internal
 
         public static void Log(InternalTraceLevel level, string message, string category, Exception ex)
         {
-            Writer.WriteLine("{0} {1,-5} [{2,2}] {3}: {4}",
+            if (Writer != null)
+            {
+                Writer.WriteLine("{0} {1,-5} [{2,2}] {3}: {4}",
                 DateTime.Now.ToString(TIME_FMT),
                 level == InternalTraceLevel.Verbose ? "Debug" : level.ToString(),
                 System.Threading.Thread.CurrentThread.ManagedThreadId,
                 category,
                 message);
 
-            if (ex != null)
-                Writer.WriteLine(ex.ToString());
+                if (ex != null)
+                    Writer.WriteLine(ex.ToString());
+            }
         }
     }
 }

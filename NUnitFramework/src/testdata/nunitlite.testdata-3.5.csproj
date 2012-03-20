@@ -8,7 +8,7 @@
     <ProjectGuid>{749FF626-F36B-45C1-8A80-AB21A3655292}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>nunitlite.testdata_vs2008</RootNamespace>
+    <RootNamespace>NUnit.TestData</RootNamespace>
     <AssemblyName>nunitlite.testdata</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
