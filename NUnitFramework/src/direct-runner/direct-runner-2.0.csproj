@@ -75,7 +75,9 @@
     <Compile Include="XmlHelper.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="direct-runner.build" />
+    <None Include="direct-runner.build">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">
