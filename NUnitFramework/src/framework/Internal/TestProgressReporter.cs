@@ -50,83 +50,83 @@ namespace NUnit.Framework.Internal
 
         #region ITestListener Members
 
-        /// <summary>
-        /// Called when a test run has just started
-        /// </summary>
-        /// <param name="test">The test that is starting</param>
-        public void RunStarted(ITest test)
-        {
-            try
-            {
-                string report = string.Format(
-                    "<start-run id=\"{0}\" name=\"{1}\" fullname=\"{2}\"/>",
-                    test.Id,
-                    XmlHelper.FormatAttributeValue(test.Name),
-                    XmlHelper.FormatAttributeValue(test.FullName));
+        ///// <summary>
+        ///// Called when a test run has just started
+        ///// </summary>
+        ///// <param name="test">The test that is starting</param>
+        //public void RunStarted(ITest test)
+        //{
+        //    try
+        //    {
+        //        string report = string.Format(
+        //            "<start-run id=\"{0}\" name=\"{1}\" fullname=\"{2}\"/>",
+        //            test.Id,
+        //            XmlHelper.FormatAttributeValue(test.Name),
+        //            XmlHelper.FormatAttributeValue(test.FullName));
 
-                handler.RaiseCallbackEvent(report);
-            }
-            catch (Exception ex)
-            {
-                InternalTrace.Error("Exception processing " + test.FullName + NUnit.Env.NewLine + ex.ToString());
-            }
-        }
+        //        handler.RaiseCallbackEvent(report);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        InternalTrace.Error("Exception processing " + test.FullName + NUnit.Env.NewLine + ex.ToString());
+        //    }
+        //}
 
-        /// <summary>
-        /// Called when a test has finished. Sends a result summary to the callback.
-        /// to 
-        /// </summary>
-        /// <param name="result">The result of the test</param>
-        public void RunFinished(ITestResult result)
-        {
-            try
-            {
-                handler.RaiseCallbackEvent(result.ToXml(false).OuterXml);
-            }
-            catch (Exception ex)
-            {
-                InternalTrace.Error("Exception processing " + result.FullName + NUnit.Env.NewLine + ex.ToString());
-            }
-        }
+        ///// <summary>
+        ///// Called when a test has finished. Sends a result summary to the callback.
+        ///// to 
+        ///// </summary>
+        ///// <param name="result">The result of the test</param>
+        //public void RunFinished(ITestResult result)
+        //{
+        //    try
+        //    {
+        //        handler.RaiseCallbackEvent(result.ToXml(false).OuterXml);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        InternalTrace.Error("Exception processing " + result.FullName + NUnit.Env.NewLine + ex.ToString());
+        //    }
+        //}
 
-        /// <summary>
-        /// Called when a test has just started
-        /// </summary>
-        /// <param name="test">The test that is starting</param>
-        public void SuiteStarted(ITest test)
-        {
-            try
-            {
-                string report = string.Format(
-                    "<start-suite id=\"{0}\" name=\"{1}\" fullname=\"{2}\"/>",
-                    test.Id,
-                    XmlHelper.FormatAttributeValue(test.Name),
-                    XmlHelper.FormatAttributeValue(test.FullName));
+        ///// <summary>
+        ///// Called when a test has just started
+        ///// </summary>
+        ///// <param name="test">The test that is starting</param>
+        //public void SuiteStarted(ITest test)
+        //{
+        //    try
+        //    {
+        //        string report = string.Format(
+        //            "<start-suite id=\"{0}\" name=\"{1}\" fullname=\"{2}\"/>",
+        //            test.Id,
+        //            XmlHelper.FormatAttributeValue(test.Name),
+        //            XmlHelper.FormatAttributeValue(test.FullName));
 
-                handler.RaiseCallbackEvent(report);
-            }
-            catch (Exception ex)
-            {
-                InternalTrace.Error("Exception processing " + test.FullName + NUnit.Env.NewLine + ex.ToString());
-            }
-        }
+        //        handler.RaiseCallbackEvent(report);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        InternalTrace.Error("Exception processing " + test.FullName + NUnit.Env.NewLine + ex.ToString());
+        //    }
+        //}
 
-        /// <summary>
-        /// Called when a test has finished. Sends a result summary to the callback.
-        /// to 
-        /// </summary>
-        /// <param name="result">The result of the test</param>
-        public void SuiteFinished(ITestResult result)
-        {
-            try
-            {
-                handler.RaiseCallbackEvent(result.ToXml(false).OuterXml);
-            }
-            catch (Exception ex)
-            {
-                InternalTrace.Error("Exception processing " + result.FullName + NUnit.Env.NewLine + ex.ToString());
-            }
-        }
+        ///// <summary>
+        ///// Called when a test has finished. Sends a result summary to the callback.
+        ///// to 
+        ///// </summary>
+        ///// <param name="result">The result of the test</param>
+        //public void SuiteFinished(ITestResult result)
+        //{
+        //    try
+        //    {
+        //        handler.RaiseCallbackEvent(result.ToXml(false).OuterXml);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        InternalTrace.Error("Exception processing " + result.FullName + NUnit.Env.NewLine + ex.ToString());
+        //    }
+        //}
 
         /// <summary>
         /// Called when a test has just started
@@ -134,10 +134,15 @@ namespace NUnit.Framework.Internal
         /// <param name="test">The test that is starting</param>
         public void TestStarted(ITest test)
         {
+            string startElement = test is TestSuite
+                ? "start-suite"
+                : "start-test";
+
             try
             {
                 string report = string.Format(
-                    "<start-test id=\"{0}\" name=\"{1}\" fullname=\"{2}\"/>",
+                    "<{0} id=\"{1}\" name=\"{2}\" fullname=\"{3}\"/>",
+                    startElement,
                     test.Id,
                     XmlHelper.FormatAttributeValue(test.Name),
                     XmlHelper.FormatAttributeValue(test.FullName));

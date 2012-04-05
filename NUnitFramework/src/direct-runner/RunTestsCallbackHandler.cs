@@ -48,6 +48,9 @@ namespace NUnit.DirectRunner
                 case "start-test":
                     OnTestStart(topNode);
                     break;
+                case "start-suite":
+                    OnSuiteStart(topNode);
+                    break;
                 case "test-case":
                     OnTestCaseFinished(topNode);
                     break;
@@ -61,6 +64,20 @@ namespace NUnit.DirectRunner
         }
 
         private void OnTestStart(XmlNode startNode)
+        {
+            XmlAttribute id = startNode.Attributes["id"];
+            XmlAttribute name = startNode.Attributes["name"];
+            //XmlAttribute fullname = startNode.Attributes["fullname"];
+            XmlAttribute testcase = startNode.Attributes["testcase"];
+
+            Debug.Assert(id != null);
+            Debug.Assert(name != null);
+            //Debug.Assert(fullname != null);
+
+            //output.WriteLine("***** " + name.Value);
+        }
+
+        private void OnSuiteStart(XmlNode startNode)
         {
             XmlAttribute id = startNode.Attributes["id"];
             XmlAttribute name = startNode.Attributes["name"];
