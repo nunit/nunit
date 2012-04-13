@@ -43,6 +43,7 @@ namespace NUnit.DirectRunner
         private string listFile = null;
         private string v3ResultFile = "TestResult.v3.xml";
         private string v2ResultFile = "TestResult.v2.xml";
+        private bool teamCityServiceMessages;
 
         private bool error = false;
 
@@ -101,6 +102,11 @@ namespace NUnit.DirectRunner
         public string V2ResultFile
         {
             get { return v2ResultFile; }
+        }
+
+        public bool TeamCityServiceMessages
+        {
+            get { return teamCityServiceMessages; }
         }
 
         /// <summary>
@@ -191,6 +197,9 @@ namespace NUnit.DirectRunner
                     break;
                 case "xml2":
                     v2ResultFile = val;
+                    break;
+                case "teamcity":
+                    teamCityServiceMessages = true;
                     break;
                 case "l":
                 case "labels":

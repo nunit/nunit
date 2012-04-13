@@ -81,6 +81,7 @@ namespace NUnit.TestUtilities
             TestSuite suite = MakeFixture(type);
             TestCommand command = suite.GetTestCommand(TestFilter.Empty);
             TestExecutionContext.Save();
+            TestExecutionContext.CurrentContext.Listener = TestListener.NULL;
             TestExecutionContext.CurrentContext.TestObject = null;
             try
             {
@@ -99,6 +100,7 @@ namespace NUnit.TestUtilities
             //TestExecutionContext context = new TestExecutionContext();
             //context.TestObject = fixture;
             TestExecutionContext.Save();
+            TestExecutionContext.CurrentContext.Listener = TestListener.NULL;
             TestExecutionContext.CurrentContext.TestObject = fixture;
             try
             {
@@ -138,6 +140,7 @@ namespace NUnit.TestUtilities
             //TestExecutionContext context = new TestExecutionContext();
             //context.TestObject = testObject;
             TestExecutionContext.Save();
+            TestExecutionContext.CurrentContext.Listener = TestListener.NULL;
             TestExecutionContext.CurrentContext.TestObject = testObject;
             try
             {

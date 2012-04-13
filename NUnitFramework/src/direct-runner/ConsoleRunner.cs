@@ -79,7 +79,7 @@ namespace NUnit.DirectRunner
                 testDomain = CreateDomain(
                     Path.GetDirectoryName(Path.GetFullPath(commandlineOptions.Parameters[0])));
 
-            FrameworkDriver driver = new FrameworkDriver(testDomain);
+            FrameworkDriver driver = new FrameworkDriver(testDomain, false);
 
             // TODO: For now, ignore all but first assembly
             string assemblyFilename = commandlineOptions.Parameters[0];
@@ -116,7 +116,7 @@ namespace NUnit.DirectRunner
                 testDomain = CreateDomain(
                     Path.GetDirectoryName(Path.GetFullPath(commandlineOptions.Parameters[0])));
 
-            FrameworkDriver driver = new FrameworkDriver(testDomain);
+            FrameworkDriver driver = new FrameworkDriver(testDomain, commandlineOptions.TeamCityServiceMessages);
 
             // TODO: For now, ignore all but first assembly
             string assemblyFilename = commandlineOptions.Parameters[0];
@@ -146,7 +146,8 @@ namespace NUnit.DirectRunner
             NUnit2XmlOutputWriter nunit2ResultWriter = new NUnit2XmlOutputWriter();
             nunit2ResultWriter.WriteResultFile(resultNode, commandlineOptions.V2ResultFile);
 
-            new ResultReporter(resultNode).ReportResults();
+            if(!commandlineOptions.TeamCityServiceMessages)
+                new ResultReporter(resultNode).ReportResults();
         }
 
         private static void DisplayErrorMessage(XmlNode errorReport)
