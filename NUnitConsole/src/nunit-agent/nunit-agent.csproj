@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{775FAD50-3623-4922-97C4-DFB29A8BE4C7}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{C2A8FC7A-FA64-46EA-AF6D-73D6B371DBF8}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NUnit.Engine</RootNamespace>
-    <AssemblyName>nunit.engine.api</AssemblyName>
+    <RootNamespace>nunit_agent</RootNamespace>
+    <AssemblyName>nunit-agent</AssemblyName>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <FileUpgradeFlags>
@@ -21,50 +21,42 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <OutputPath>..\..\bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\..\..\bin\Debug\nunit.engine.api.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\..\bin\Release\</OutputPath>
+    <OutputPath>..\..\bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\..\..\bin\Release\nunit.engine.api.xml</DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
-  </PropertyGroup>
-  <PropertyGroup>
-    <AssemblyOriginatorKeyFile>nunit.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.Data" />
+    <Reference Include="System.Runtime.Remoting" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
-    <Compile Include="ITestAgency.cs" />
-    <Compile Include="ITestAgent.cs" />
-    <Compile Include="ITestEngine.cs" />
-    <Compile Include="ITestEngineResult.cs" />
-    <Compile Include="ITestEventHandler.cs" />
-    <Compile Include="ITestRunner.cs" />
-    <Compile Include="NUnitEngineException.cs" />
-    <Compile Include="TestEngineActivator.cs" />
-    <Compile Include="TestEngineError.cs" />
-    <Compile Include="TestFilter.cs" />
-    <Compile Include="TestListener.cs" />
-    <Compile Include="TestPackage.cs" />
+    <Compile Include="Program.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="nunit.engine.api.build" />
-    <None Include="nunit.snk" />
+    <None Include="app.config" />
+    <None Include="nunit-agent.build" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\nunit.engine.api\nunit.engine.api.csproj">
+      <Project>{775FAD50-3623-4922-97C4-DFB29A8BE4C7}</Project>
+      <Name>nunit.engine.api</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\nunit.engine\nunit.engine.csproj">
+      <Project>{372A3447-D657-40FF-A089-77C19FEC30C8}</Project>
+      <Name>nunit.engine</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

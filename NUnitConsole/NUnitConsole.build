@@ -116,7 +116,7 @@
   <property name="nunit.console.program"
     value="nunit-console.exe"/>
   <property name="nunit.console.args"
-    value="nunit-console.tests.dll ${nunit.options}"/>
+    value="..\..\NUnitConsoleTests.nunit ${nunit.options}"/>
 
 <!-- ***************************************************************** -->
 <!-- In the optional local.settings.include file, installations may    -->
@@ -170,14 +170,6 @@
     <!-- TODO: This should be done at a higher level -->
     <copy todir="${current.build.dir}"
       file="../NUnitFramework/build/debug/net-2.0/nunit.framework.dll"/>
-
-    <!-- TODO: This should be done at a higher level -->
-    <copy todir="${current.build.dir}">
-      <fileset basedir="../NUnitEngine/build/debug">
-        <include name="nunit.engine.api.dll" />
-        <include name="nunit.engine.dll" />
-      </fileset>
-    </copy>
 
     <copy todir="${current.build.dir}">
       <fileset basedir="${project.lib.dir}">
@@ -477,7 +469,11 @@
 
   <fileset id="console.buildfiles">
 
-    <include name="src/nunit-console/nunit-console.build" />
+	<include name="src/nunit.engine.api/nunit.engine.api.build" />
+	<include name="src/nunit.engine/nunit.engine.build" />
+	<include name="src/nunit.engine.tests/nunit.engine.tests.build" />
+	<include name="src/nunit-agent/nunit-agent.build" />
+	<include name="src/nunit-console/nunit-console.build" />
     <include name="src/nunit-console.tests/nunit-console.tests.build" />
 
   </fileset>
