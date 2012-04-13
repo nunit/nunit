@@ -21,7 +21,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\bin\Debug\</OutputPath>
+    <OutputPath>..\..\bin\Debug\</OutputPath>
     <DefineConstants>TRACE;DEBUG;CLR_4_0;CS_4_0</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -29,20 +29,12 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\..\bin\Release\</OutputPath>
+    <OutputPath>..\..\bin\Release\</OutputPath>
     <DefineConstants>TRACE;CLR_4_0;CS_4_0</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="nunit.engine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\nunit.engine.dll</HintPath>
-    </Reference>
-    <Reference Include="nunit.engine.api, Version=1.0.0.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\nunit.engine.api.dll</HintPath>
-    </Reference>
     <Reference Include="nunit.framework, Version=2.6.0.12017, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\nunit.framework.dll</HintPath>
@@ -81,6 +73,10 @@
     <ProjectReference Include="..\nunit-console\nunit-console.csproj">
       <Project>{0DE218CA-AFB8-423A-9CD2-E22DEAC55C46}</Project>
       <Name>nunit-console</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\nunit.engine.api\nunit.engine.api.csproj">
+      <Project>{775FAD50-3623-4922-97C4-DFB29A8BE4C7}</Project>
+      <Name>nunit.engine.api</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

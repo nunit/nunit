@@ -71,6 +71,7 @@ namespace NUnit.Engine
             InternalTrace.Initialize("nunit.engine.%p.log", level);
 
             Services.Add(settingsService);
+            Services.Add(new InternalTraceService());
             Services.Add(new DomainManager());
             Services.Add(new ProjectService());
             Services.Add(new RuntimeFrameworkSelector());

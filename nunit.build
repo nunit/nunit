@@ -12,14 +12,13 @@
 * the runtimes it supports using its own build script.                   *
 *                                                                        *
 * The actual building and deployment steps are delegated to the scripts  *
-* for the individual components: Framework, Engine and Console.          *
+* for the individual components: Framework and Console.                  *
 *                                                                        *
 * Dependencies:                                                          *
 *                                                                        *
 *   The individual component source projects must be available. The      *
 *   following scripts are invoked:                                       *
 *        NUnitConsole.build                                              *
-*        NUnitEngine.build                                               *
 *        NUnitFramework.build                                            *
 *                                                                        *
 *   The script requires the NAnt 0.91 release or a later version.        *
@@ -183,7 +182,6 @@
       description="Removes output created by the current build config">
 
     <nant target="clean-all" buildfile="NUnitFramework/NUnitFramework.build" />
-    <nant target="clean" buildfile="NUnitEngine/NUnitEngine.build" />
     <nant target="clean" buildfile="NUnitConsole/NUnitConsole.build" />
 
   </target>
@@ -199,18 +197,12 @@
 <!-- ***              Targets that perform builds                  *** -->
 <!-- ***************************************************************** -->
 
-  <target name="build" depends="framework,engine,console"
+  <target name="build" depends="framework,console"
     description="Build everything, for current config" />
 
   <target name="framework" description="Build the NUnit Framework and update references">
 
     <nant target="build-all" buildfile="NUnitFramework/NUnitFramework.build" />
-
-  </target>
-
-  <target name="engine" description="Build the NUnit Engine and update references">
-
-    <nant target="build" buildfile="NUnitEngine/NUnitEngine.build" />
 
   </target>
 
@@ -231,11 +223,13 @@
       if="${directory::exists( common.deploy.dir )}"/>
 
     <nant target="deploy-all" buildfile="NUnitFramework/NUnitFramework.build"/>
-    <nant target="deploy" buildfile="NUnitEngine/NUnitEngine.build"/>
     <nant target="deploy" buildfile="NUnitConsole/NUnitConsole.build"/>
 
     <copy file="NUnitShipTests.nunit"
       tofile="${common.deploy.dir}/NUnitTests.nunit"/>
+
+    <copy file="${common.deploy.dir}/net-2.0/mock-assembly.dll"
+      tofile="${common.deploy.dir}/mock-assembly.dll"/>
 
   </target>
 
@@ -652,11 +646,6 @@ to the correct location.
       buildfile="NUnitFramework/NUnitFramework.build" />
 
     <property name="package.working.dir"
-      value="${path::combine(saved.working.dir,'NUnitEngine')}" />
-    <nant target="copy-src" inheritrefs="true"
-      buildfile="NUnitEngine/NUnitEngine.build" />
-
-    <property name="package.working.dir"
       value="${path::combine(saved.working.dir,'NUnitConsole')}" />
     <nant target="copy-src" inheritrefs="true"
       buildfile="NUnitConsole/NUnitConsole.build" />
@@ -692,14 +681,6 @@ to the correct location.
 <!-- ***************************************************************** -->
 <!-- ****** Patternsets and Filesets Used by Various Targets  ******** -->
 <!-- ***************************************************************** -->
-
-  <fileset id="project.buildfiles" basedir="${project.base.dir}">
-
-    <include name="NUnitFramework/NUnitFramework.build" />
-    <include name="NUnitEngine/NUnitEngine.build" />
-    <include name="NUnitConsole/NUnitConsole.build" />
-
-  </fileset>
 
   <!-- Files to be copied to source directories -->
   <fileset id="source-files" >
