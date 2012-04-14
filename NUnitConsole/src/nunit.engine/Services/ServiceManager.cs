@@ -62,10 +62,10 @@ namespace NUnit.Engine.Services
 					}
 				}
 
-            //if ( theService == null )
-            //    log.Error( string.Format( "Requested service {0} was not found", serviceType.FullName ) );
-            //else
-            //    log.Debug( string.Format( "Request for service {0} satisfied by {1}", serviceType.Name, theService.GetType().Name ) );
+            if (theService == null)
+                log.Error(string.Format("Requested service {0} was not found", serviceType.FullName));
+            else
+                log.Debug(string.Format("Request for service {0} satisfied by {1}", serviceType.Name, theService.GetType().Name));
 			
 			return theService;
 		}

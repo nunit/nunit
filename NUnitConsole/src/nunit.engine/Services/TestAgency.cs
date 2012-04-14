@@ -167,13 +167,13 @@ namespace NUnit.Engine.Services
 		public void ReleaseAgent( ITestAgent agent )
 		{
 			AgentRecord r = agentData[agent.Id];
-            //if ( r == null )
-            //    log.Error( string.Format( "Unable to release agent {0} - not in database", agent.Id ) );
-            //else
-            //{
-				r.Status = AgentStatus.Ready;
-            //    log.Debug( "Releasing agent " + agent.Id.ToString() );
-            //}
+            if (r == null)
+                log.Error(string.Format("Unable to release agent {0} - not in database", agent.Id));
+            else
+            {
+                r.Status = AgentStatus.Ready;
+                log.Debug("Releasing agent " + agent.Id.ToString());
+            }
 		}
 
         //public void DestroyAgent( ITestAgent agent )

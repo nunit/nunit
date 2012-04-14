@@ -129,7 +129,7 @@ namespace NUnit.Engine.Runners
         {
             if (this.remoteRunner != null)
             {
-                //log.Info("Unloading " + Path.GetFileName(Test.TestName.Name));
+                log.Info("Unloading remote runner");
                 this.remoteRunner.Unload();
                 this.remoteRunner = null;
             }
