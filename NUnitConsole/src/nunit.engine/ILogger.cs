@@ -1,4 +1,4 @@
-// ***********************************************************************
+﻿// ***********************************************************************
 // Copyright (c) 2012 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -22,43 +22,23 @@
 // ***********************************************************************
 
 using System;
-using NUnit.Engine.Services;
 
-namespace NUnit.Engine.Internal
+namespace NUnit.Engine
 {
-    /// <summary>
-	/// Summary description for InternalTrace.
-	/// </summary>
-	public static class InternalTrace
-	{
-        private static bool initialized;
-        private static InternalTraceLevel traceLevel;
-        private static InternalTraceWriter traceWriter;
+    public interface ILogger
+    {
+        void Error(string message);
+        void Error(string message, params object[] args);
 
-        public static void Initialize(string logName, InternalTraceLevel level)
-        {
-            if (!initialized)
-            {
-                traceLevel = level;
+        void Warning(string message);
+        void Warning(string message, params object[] args);
 
-                if (traceWriter == null && traceLevel > InternalTraceLevel.Off)
-                {
-                    traceWriter = new InternalTraceWriter(logName);
-                    traceWriter.WriteLine("InternalTrace: Initializing at level " + traceLevel.ToString());
-                }
+        void Info(string message);
+        void Info(string message, params object[] args);
 
-                initialized = true;
-            }
-        }
+        void Debug(string message);
+        void Debug(string message, params object[] args);
 
-        public static Logger GetLogger(string name)
-		{
-			return new Logger(name, traceLevel, traceWriter);
-		}
-
-		public static Logger GetLogger( Type type )
-		{
-			return GetLogger(type.FullName);
-		}
+        //void Log(InternalTraceLevel level, string message);
     }
 }

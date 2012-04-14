@@ -55,6 +55,7 @@
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="CallbackHandler.cs" />
     <Compile Include="IFrameworkDriver.cs" />
+    <Compile Include="ILogger.cs" />
     <Compile Include="Internal\AssemblyHelper.cs" />
     <Compile Include="Internal\AssemblyReader.cs" />
     <Compile Include="Internal\DomainUsage.cs" />
@@ -98,7 +99,6 @@
     <Compile Include="Services\DomainManager.cs" />
     <Compile Include="Services\DriverFactory.cs" />
     <Compile Include="Services\InProcessTestRunnerFactory.cs" />
-    <Compile Include="Services\InternalTraceService.cs" />
     <Compile Include="Services\NUnitProjectLoader.cs" />
     <Compile Include="Services\ProjectService.cs" />
     <Compile Include="Services\RuntimeFrameworkSelector.cs" />
