@@ -91,7 +91,7 @@
 <!-- ******* The Engine targets .NET 2.0 but is built with 3.5 ******* -->
 <!-- ***************************************************************** -->
 
-  <property name="can.build.net"
+  <!--<property name="can.build.net"
   value="${framework::exists('net-3.5') and framework::sdk-exists('net-3.5')}"/>
 
   <property name="can.build.mono"
@@ -104,7 +104,7 @@
       if="${can.build.net}" />
 
   <property name="nant.settings.currentframework" value= "mono-3.5"
-      unless="${can.build.net}" />
+      unless="${can.build.net}" />-->
 
 <!-- ***************************************************************** -->
 <!-- *********      Constants used for running tests      ************ -->
@@ -116,7 +116,7 @@
   <property name="nunit.console.program"
     value="nunit-console.exe"/>
   <property name="nunit.console.args"
-    value="..\..\NUnitConsoleTests.nunit ${nunit.options}"/>
+    value="nunit-console.tests.dll nunit.engine.tests.dll -config:${build.config} ${nunit.options}"/>
 
 <!-- ***************************************************************** -->
 <!-- In the optional local.settings.include file, installations may    -->
@@ -140,14 +140,19 @@
 <!-- ***             Targets that clean directories                *** -->
 <!-- ***************************************************************** -->
 
+  <target name="clean-all"
+      description="Removes all build output">
+      
+    <delete dir="${project.build.dir}"
+      if="${directory::exists( project.build.dir )}"/>
+      
+  </target>
+  
   <target name="clean"
       description="Removes output for the current build">
 
     <delete dir="${current.build.dir}" 
       if="${directory::exists( current.build.dir )}"/>
-
-    <delete file="src/GeneratedAssemblyInfo.cs"
-      if="${file::exists( 'src/GeneratedAssemblyInfo.cs' )}"/>
 
   </target>
 
@@ -215,7 +220,7 @@
     <echo message="* Testing the nunit-console ${build.config} build"/>
     <echo message="*"/>
 
-    <property name="nant.settings.currentframework" value="net-2.0"/>
+    <!--<property name="nant.settings.currentframework" value="net-2.0"/>-->
 
     <exec basedir="${current.build.dir}"
           workingdir="${current.build.dir}"
@@ -231,7 +236,7 @@
     <echo message="* Testing the deployed nunit-console ${build.config} build"/>
     <echo message="*"/>
 
-    <property name="nant.settings.currentframework" value="net-2.0"/>
+    <!--<property name="nant.settings.currentframework" value="net-2.0"/>-->
 
     <exec basedir="${project.deploy.dir}"
           workingdir="${project.deploy.dir}"
@@ -250,7 +255,7 @@
     <echo message="* Starting the NUnitConsole ${build.config} test coverage run"/>
     <echo message="*"/>
 
-    <property name="nant.settings.currentframework" value="net-2.0"/>
+    <!--<property name="nant.settings.currentframework" value="net-2.0"/>-->
 
     <exec basedir="${partcover.dir}"
           workingdir="${current.build.dir}" 
