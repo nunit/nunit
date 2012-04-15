@@ -167,10 +167,6 @@
     <mkdir dir="${current.build.dir}"
       unless="${directory::exists(current.build.dir)}"/>
 
-    <!-- TODO: This should be done at a higher level -->
-    <copy todir="${current.build.dir}"
-      file="../NUnitFramework/build/debug/net-2.0/nunit.framework.dll"/>
-
     <copy todir="${current.build.dir}">
       <fileset basedir="${project.lib.dir}">
         <include name="*"/>
