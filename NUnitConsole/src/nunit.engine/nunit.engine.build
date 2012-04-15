@@ -26,6 +26,7 @@
         <include name="System.Configuration.dll" />
         <include name="System.Drawing.dll" />
         <include name="System.Runtime.Remoting.dll" />
+        <include name="System.Web.dll" />
         <include name="nunit.engine.api.dll" />
       </references>
     </csc>
