@@ -88,10 +88,11 @@
   <call target="set-${build.config}-build-config"/>
 
 <!-- ***************************************************************** -->
-<!-- ******* The Engine targets .NET 2.0 but is built with 3.5 ******* -->
+<!-- *** The Engine targets .NET 2.0 but must be built using 3.5.  *** -->
+<!-- *** For now, we use .NET by preference if it's available.   . *** -->
 <!-- ***************************************************************** -->
 
-  <!--<property name="can.build.net"
+  <property name="can.build.net"
   value="${framework::exists('net-3.5') and framework::sdk-exists('net-3.5')}"/>
 
   <property name="can.build.mono"
@@ -104,7 +105,7 @@
       if="${can.build.net}" />
 
   <property name="nant.settings.currentframework" value= "mono-3.5"
-      unless="${can.build.net}" />-->
+      unless="${can.build.net}" />
 
 <!-- ***************************************************************** -->
 <!-- *********      Constants used for running tests      ************ -->
