@@ -38,12 +38,12 @@ namespace NUnitLite.Runner
         private static string NL = NUnit.Env.NewLine;
 
         private bool wait = false;
-        private bool nologo = false;
+        private bool noheader = false;
         private bool help = false;
         private bool full = false;
-        private bool listTests = false;
+        private bool explore = false;
 
-        private string listFile;
+        private string exploreFile;
         private string resultFile;
 
         private bool error = false;
@@ -51,6 +51,8 @@ namespace NUnitLite.Runner
         private List<string> tests = new List<string>();
         private List<string> invalidOptions = new List<string>();
         private List<string> parameters = new List<string>();
+
+        #region Properties
 
         /// <summary>
         /// Gets a value indicating whether the 'wait' option was used.
@@ -63,15 +65,15 @@ namespace NUnitLite.Runner
         /// <summary>
         /// Gets a value indicating whether the 'nologo' option was used.
         /// </summary>
-        public bool Nologo
+        public bool NoHeader
         {
-            get { return nologo; }
+            get { return noheader; }
         }
 
         /// <summary>
         /// Gets a value indicating whether the 'help' option was used.
         /// </summary>
-        public bool Help
+        public bool ShowHelp
         {
             get { return help; }
         }
@@ -96,17 +98,25 @@ namespace NUnitLite.Runner
         /// Gets a value indicating whether tests should be listed
         /// rather than run.
         /// </summary>
-        public bool ListTests
+        public bool Explore
         {
-            get { return listTests; }
+            get { return explore; }
         }
 
         /// <summary>
         /// Gets the name of the file to be used for listing tests
         /// </summary>
-        public string ListFile
+        public string ExploreFile
         {
-            get { return listFile; }
+            get { return exploreFile; }
+        }
+
+        /// <summary>
+        /// Gets the name of the file to be used for test results
+        /// </summary>
+        public string ResultFile
+        {
+            get { return resultFile; }
         }
 
         /// <summary>
@@ -116,6 +126,8 @@ namespace NUnitLite.Runner
         {
             get { return tests.Count; }
         }
+
+        #endregion
 
         /// <summary>
         /// Construct a CommandLineOptions object using default option chars
@@ -173,10 +185,12 @@ namespace NUnitLite.Runner
                 case "wait":
                     wait = true;
                     break;
-                case "nologo":
-                    nologo = true;
+                case "noheader":
+                case "noh":
+                    noheader = true;
                     break;
                 case "help":
+                case "h":
                     help = true;
                     break;
                 case "test":
@@ -185,11 +199,11 @@ namespace NUnitLite.Runner
                 case "full":
                     full = true;
                     break;
-                case "list":
-                    listTests = true;
-                    listFile = val;
+                case "explore":
+                    explore = true;
+                    exploreFile = val;
                     break;
-                case "xml":
+                case "result":
                     resultFile = val;
                     break;
                 default:

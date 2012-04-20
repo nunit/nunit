@@ -149,7 +149,7 @@ namespace NUnitLite.Runner
 
             this.commandLineOptions = ProcessArguments( args );
 
-            if (!commandLineOptions.Help && !commandLineOptions.Error)
+            if (!commandLineOptions.ShowHelp && !commandLineOptions.Error)
             {
                 if (commandLineOptions.Wait && !(this is ConsoleUI))
                     writer.WriteLine("Ignoring /wait option - only valid for Console");
@@ -179,10 +179,10 @@ namespace NUnitLite.Runner
                         return;
                     }
 
-                    if (commandLineOptions.ListTests)
-                        ListTests(runner.LoadedTest);
+                    if (commandLineOptions.Explore)
+                        ExploreTests();
                     else
-                        ReportResults(runner.Run(TestListener.NULL, TestFilter.Empty));
+                        RunTests();
                 }
                 catch (FileNotFoundException ex)
                 {
@@ -203,11 +203,26 @@ namespace NUnitLite.Runner
             }
         }
 
-        private void ListTests(ITest test)
+        private void RunTests()
         {
-            XmlNode testNode = test.ToXml(true);
+            ITestResult result = runner.Run(TestListener.NULL, TestFilter.Empty);
+            ReportResults(result);
 
-            string listFile = commandLineOptions.ListFile;
+            string resultFile = commandLineOptions.ResultFile;
+            if (resultFile != null)
+            {
+                XmlTextWriter resultWriter = new XmlTextWriter(resultFile, System.Text.Encoding.UTF8);
+                resultWriter.Formatting = Formatting.Indented;
+                result.ToXml(true).WriteTo(resultWriter);
+                resultWriter.Close();
+            }
+        }
+
+        private void ExploreTests()
+        {
+            XmlNode testNode = runner.LoadedTest.ToXml(true);
+
+            string listFile = commandLineOptions.ExploreFile;
             XmlTextWriter testWriter = listFile != null && listFile.Length > 0
                 ? new XmlTextWriter(listFile, System.Text.Encoding.UTF8)
                 : new XmlTextWriter(Console.Out);
@@ -244,10 +259,10 @@ namespace NUnitLite.Runner
             this.commandLineOptions = new CommandLineOptions();
             commandLineOptions.Parse(args);
 
-            if (!commandLineOptions.Nologo)
+            if (!commandLineOptions.NoHeader)
                 WriteCopyright();
 
-            if (commandLineOptions.Help)
+            if (commandLineOptions.ShowHelp)
                 writer.Write(commandLineOptions.HelpText);
             else if (commandLineOptions.Error)
                 writer.WriteLine(commandLineOptions.ErrorMessage);
