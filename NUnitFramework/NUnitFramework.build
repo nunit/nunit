@@ -14,6 +14,13 @@
 *                                                                        *
 *   PartCover is required to run the 'test-coverage' target.             *
 *                                                                        *
+* The following properties may be set externally:                        *
+*   warn                = compiler warning level (default 4)             *
+*   package.working.dir = working directory for packaging                *
+*   build.config        = config to build (release or debug)             *
+*   runtime.config      = target runtime                                 *
+*   test.options        = test runner options                            *
+*                                                                        *
 **************************************************************************
 </description>
 
@@ -108,7 +115,7 @@
   <foreach item="String" delim="," 
       property="framework" in="${supported.frameworks}">
 
-    <!-- NOTE: sdk-exists causes an error if the framework is not installed! -->
+    <!-- NOTE: sdk-exists causes an error if framework is not installed! -->
     <if test="${framework::exists( framework )}">
     <if test="${framework::sdk-exists( framework )}">
       <property name="installed.frameworks" value="${installed.frameworks},${framework}"
@@ -147,7 +154,7 @@
 
   <!-- Allow setting options at the NAnt command line -->
   <property name="test.options" value="" 
-    unless="${property::exists('test.runner.options')}"/>
+    unless="${property::exists('test.options')}"/>
   <property name="test.runner.program"
     value="direct-runner.exe"/>
   <property name="test.runner.args"
@@ -516,17 +523,17 @@
     <call target="package-src"/>
     <!--<call target="package-docs"/>-->
 
-    <call target="package-full"/>
+    <call target="package-net"/>
     <call target="package-mono"/>
     <call target="package-netcf"/>
 
   </target>
 
-  <target name="package-full"
-      description="Create the complete binary package with all supported runtimes">
+  <target name="package-net"
+      description="Create the .NET binary package">
 
     <property name="package.config" value=""/>
-    <property name="package.runtimes" value="net-4.0+net-3.5+net-2.0+net-1.1+netcf-3.5+netcf-2.0+netcf-1.0"/>
+    <property name="package.runtimes" value="net-4.0+net-3.5+net-2.0"/>
 
     <call target="package"/>
 
