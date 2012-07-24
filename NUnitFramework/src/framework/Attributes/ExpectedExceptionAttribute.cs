@@ -135,10 +135,19 @@ namespace NUnit.Framework
         //#endregion
     }
 
+    /// <summary>
+    /// ExpectedExceptionDecorator applies to a TestCommand and returns
+    /// a success result only if the expected exception is thrown. 
+    /// Otherwise, an appropriate failure result is returned.
+    /// </summary>
     public class ExpectedExceptionDecorator : ICommandDecorator
     {
         private ExpectedExceptionData exceptionData;
 
+        /// <summary>
+        /// Construct an ExpectedExceptionDecorator using specified data.
+        /// </summary>
+        /// <param name="exceptionData">Data describing the expected exception</param>
         public ExpectedExceptionDecorator(ExpectedExceptionData exceptionData)
         {
             this.exceptionData = exceptionData;
