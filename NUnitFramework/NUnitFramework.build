@@ -863,7 +863,7 @@
     <property name="runtime.version" value="2.0"/>
     <property name="runtime.config" value="netcf-2.0"/>
     <property name="runtime.defines" value="NETCF,NETCF_2_0"/>
-    <property name="build.framework" value="netcf-2.0"/>
+    <property name="build.framework" value="netcf-3.5"/>
   </target>
 
   <target name="set-netcf-3.5-runtime-config">
