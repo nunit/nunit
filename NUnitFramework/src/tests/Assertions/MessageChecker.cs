@@ -58,9 +58,11 @@ namespace NUnit.Framework.Assertions
                     case MessageMatch.StartsWith:
                         Assert.That(ex.Message, Is.StringStarting(expectedMessage));
                         break;
+#if !NETCF
                     case MessageMatch.Regex:
                         Assert.That(ex.Message, Is.StringMatching(expectedMessage));
                         break;
+#endif
                 }
             }
 		}

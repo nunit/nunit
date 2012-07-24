@@ -99,7 +99,11 @@ namespace NUnit.Framework.Internal
             if (this.settings.Contains("WorkDirectory"))
                 TestExecutionContext.CurrentContext.WorkDirectory = (string)this.settings["WorkDirectory"];
             else
+#if NETCF
+                TestExecutionContext.CurrentContext.WorkDirectory = Env.DocumentFolder;
+#else
                 TestExecutionContext.CurrentContext.WorkDirectory = Environment.CurrentDirectory;
+#endif
 
             TestCommand command = this.loadedTest.GetTestCommand(filter);
 

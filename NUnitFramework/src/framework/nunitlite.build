@@ -53,6 +53,7 @@
     <exclude name="Internal/PropertySet.cs"/>
     <exclude name="Internal/QueuingEventListener.cs"/>
     <exclude name="Internal/TestProgressReporter.cs"/>
+	<exclude name="Internal/ThreadUtility.cs" if="${runtime.platform=='netcf'}"/>
 
     <include name="Internal/Builders/*.cs"/>
     <exclude name="Internal/Builders/DatapointProvider.cs"/>
