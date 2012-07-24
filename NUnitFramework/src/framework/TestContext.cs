@@ -96,6 +96,7 @@ namespace NUnit.Framework
             }
         }
 
+#if !NETCF
         /// <summary>
         /// Gets the directory containing the current test assembly.
         /// </summary>
@@ -106,6 +107,7 @@ namespace NUnit.Framework
                 return AssemblyHelper.GetAssemblyPath(ec.CurrentTest.FixtureType.Assembly);
             }
         }
+#endif
 
         /// <summary>
         /// Gets the directory to be used for outputing files created

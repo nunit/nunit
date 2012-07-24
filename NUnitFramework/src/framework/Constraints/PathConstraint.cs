@@ -89,7 +89,11 @@ namespace NUnit.Framework.Constraints
         /// <returns>The path in standardized form</returns>
         protected string Canonicalize(string path)
         {
+#if !NETCF
             string[] parts = path.Split(DirectorySeparatorChars, StringSplitOptions.RemoveEmptyEntries);
+#else
+            string[] parts = path.Split(DirectorySeparatorChars);
+#endif
 
             int count = 0;
             bool shifting = false;
@@ -98,6 +102,7 @@ namespace NUnit.Framework.Constraints
                 switch (part)
                 {
                     case ".":
+                    case "":
                         shifting = true;
                         break;
 
