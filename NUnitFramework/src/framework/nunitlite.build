@@ -13,9 +13,6 @@
     <exclude name="Api/TestController.cs"/>
     
     <include name="Attributes/*.cs"/>
-    <exclude name="Attributes/DatapointAttribute.cs"/>
-    <exclude name="Attributes/DatapointsAttribute.cs"/>
-    <exclude name="Attributes/DatapointSourceAttribute.cs"/>
     <exclude name="Attributes/RequiredAddinAttribute.cs"/>
     <exclude name="Attributes/RequiresMTAAttribute.cs"/>
     <exclude name="Attributes/RequiresSTAAttribute.cs"/>
@@ -24,7 +21,6 @@
     <exclude name="Attributes/SetUICultureAttribute.cs" if="${runtime.platform == 'netcf'}"/>
     <exclude name="Attributes/SetUpFixtureAttribute.cs"/>
     <exclude name="Attributes/SuiteAttribute.cs"/>
-    <exclude name="Attributes/TheoryAttribute.cs"/>
     <exclude name="Attributes/TimeoutAttribute.cs"/>
 
     <include name="Constraints/*.cs"/>
@@ -56,9 +52,7 @@
 	<exclude name="Internal/ThreadUtility.cs" if="${runtime.platform=='netcf'}"/>
 
     <include name="Internal/Builders/*.cs"/>
-    <exclude name="Internal/Builders/DatapointProvider.cs"/>
     <exclude name="Internal/Builders/LegacySuiteBuilder.cs"/>
-    <exclude name="Internal/Builders/ProviderCache.cs"/>
     <exclude name="Internal/Builders/SetUpFixtureBuilder.cs"/>
 
     <include name="Internal/Commands/*.cs"/>
@@ -70,8 +64,9 @@
     <exclude name="Internal/Commands/TestExecutionContextCommand.cs"/>
 
     <include name="Internal/Extensibility/TestCaseProviders.cs"/>
+    <include name="Internal/Extensibility/ParameterDataProviders.cs"/>
 
-    <include name="Internal/Filters/*.cs"/>
+	<include name="Internal/Filters/*.cs"/>
     
     <include name="Internal/Results/*.cs"/>
     

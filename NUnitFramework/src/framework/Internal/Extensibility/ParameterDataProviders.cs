@@ -24,13 +24,27 @@
 using System;
 using System.Reflection;
 using System.Collections;
+using System.Collections.Generic;
+using NUnit.Framework.Builders;
 
 namespace NUnit.Framework.Extensibility
 {
+#if NUNITLITE
+    class ParameterDataProviders : IParameterDataProvider
+    {
+        private List<IParameterDataProvider> Extensions = new List<IParameterDataProvider>();
+
+        public ParameterDataProviders()
+        {
+            Extensions.Add(new ParameterDataProvider());
+            Extensions.Add(new DatapointProvider());
+        }
+#else
     class ParameterDataProviders : ExtensionPoint, IParameterDataProvider
     {
         public ParameterDataProviders(ExtensionHost host)
             : base("ParameterDataProviders", host) { }
+#endif
 
         #region IDataPointProvider Members
 
@@ -69,11 +83,13 @@ namespace NUnit.Framework.Extensibility
         }
         #endregion
 
+#if !NUNITLITE
         #region ExtensionPoint Overrides
         protected override bool IsValidExtension(object extension)
         {
             return extension is IParameterDataProvider;
         }
         #endregion
+#endif
     }
 }
