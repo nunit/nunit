@@ -40,7 +40,7 @@ namespace NUnit.Framework.Builders
         #region Static Members
         static IParameterDataProvider dataPointProvider =
 #if NUNITLITE
-            new ParameterDataProvider();
+            new ParameterDataProviders();
 #else
             (IParameterDataProvider)CoreExtensions.Host.GetExtensionPoint("ParameterDataProviders");
 #endif

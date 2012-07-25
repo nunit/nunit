@@ -70,6 +70,9 @@
     <Compile Include="Attributes\CombinatorialAttribute.cs" />
     <Compile Include="Attributes\CultureAttribute.cs" />
     <Compile Include="Attributes\DataAttribute.cs" />
+    <Compile Include="Attributes\DatapointAttribute.cs" />
+    <Compile Include="Attributes\DatapointsAttribute.cs" />
+    <Compile Include="Attributes\DatapointSourceAttribute.cs" />
     <Compile Include="Attributes\DescriptionAttribute.cs" />
     <Compile Include="Attributes\ExpectedExceptionAttribute.cs" />
     <Compile Include="Attributes\ExplicitAttribute.cs" />
@@ -95,6 +98,7 @@
     <Compile Include="Attributes\TestFixtureSetUpAttribute.cs" />
     <Compile Include="Attributes\TestFixtureTearDownAttribute.cs" />
     <Compile Include="Attributes\TestModificationAttribute.cs" />
+    <Compile Include="Attributes\TheoryAttribute.cs" />
     <Compile Include="Attributes\ValuesAttribute.cs" />
     <Compile Include="Attributes\ValueSourceAttribute.cs" />
     <Compile Include="Constraints\AllItemsConstraint.cs" />
@@ -204,10 +208,12 @@
     <Compile Include="Internal\Builders\CombinatorialTestCaseProvider.cs" />
     <Compile Include="Internal\Builders\CombiningStrategy.cs" />
     <Compile Include="Internal\Builders\DataAttributeTestCaseProvider.cs" />
+    <Compile Include="Internal\Builders\DatapointProvider.cs" />
     <Compile Include="Internal\Builders\NUnitTestCaseBuilder.cs" />
     <Compile Include="Internal\Builders\NUnitTestFixtureBuilder.cs" />
     <Compile Include="Internal\Builders\PairwiseStrategy.cs" />
     <Compile Include="Internal\Builders\ParameterDataProvider.cs" />
+    <Compile Include="Internal\Builders\ProviderCache.cs" />
     <Compile Include="Internal\Builders\SequentialStrategy.cs" />
     <Compile Include="Internal\Commands\CommandDecoratorList.cs" />
     <Compile Include="Internal\Commands\CommandRunner.cs" />
@@ -224,6 +230,7 @@
     <Compile Include="Internal\Commands\TestSuiteCommand.cs" />
     <Compile Include="Internal\CultureDetector.cs" />
     <Compile Include="Internal\ExceptionHelper.cs" />
+    <Compile Include="Internal\Extensibility\ParameterDataProviders.cs" />
     <Compile Include="Internal\Extensibility\TestCaseProviders.cs" />
     <Compile Include="Internal\Filters\AndFilter.cs" />
     <Compile Include="Internal\Filters\CategoryExpression.cs" />

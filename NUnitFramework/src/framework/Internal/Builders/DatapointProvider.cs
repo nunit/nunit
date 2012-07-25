@@ -123,7 +123,7 @@ namespace NUnit.Framework.Builders
                             case MemberTypes.Method:
                                 MethodInfo method = member as MethodInfo;
                                 instance = method.IsStatic ? null : ProviderCache.GetInstanceOf(fixtureType);
-                                foreach (object data in (IEnumerable)method.Invoke(instance, Type.EmptyTypes))
+                                foreach (object data in (IEnumerable)method.Invoke(instance, new Type[0]))
                                     datapoints.Add(data);
                                 break;
                         }
@@ -138,10 +138,13 @@ namespace NUnit.Framework.Builders
                     datapoints.Add(true);
                     datapoints.Add(false);
                 }
+#if !NETCF
+                // TODO: Temporarily unsupported under CF
                 else if (parameterType.IsEnum)
                 {
                     datapoints.AddRange(System.Enum.GetValues(parameterType));
                 }
+#endif
             }
 
             return datapoints;

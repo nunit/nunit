@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -65,6 +65,7 @@
     <Compile Include="AttributeInheritanceData.cs" />
     <Compile Include="CategoryAttributeData.cs" />
     <Compile Include="CultureAttributeData.cs" />
+    <Compile Include="DatapointFixture.cs" />
     <Compile Include="DescriptionFixture.cs" />
     <Compile Include="ExpectedExceptionData.cs" />
     <Compile Include="FixtureSetUpTearDownData.cs" />
@@ -78,6 +79,7 @@
     <Compile Include="TestContextData.cs" />
     <Compile Include="TestFixtureData.cs" />
     <Compile Include="TestMethodSignatureFixture.cs" />
+    <Compile Include="TheoryFixture.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="nunitlite.testdata.build">

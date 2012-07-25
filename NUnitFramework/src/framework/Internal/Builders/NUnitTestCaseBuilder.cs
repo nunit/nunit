@@ -67,14 +67,9 @@ namespace NUnit.Framework.Builders
         /// <returns>True if the builder can create a test case from this method</returns>
         public bool CanBuildFrom(MethodInfo method)
         {
-#if NUNITLITE
-            return method.IsDefined(typeof(TestAttribute), false)
-                || method.IsDefined(typeof(ITestCaseSource), false);
-#else
             return method.IsDefined(typeof(TestAttribute), false)
                 || method.IsDefined(typeof(ITestCaseSource), false)
                 || method.IsDefined(typeof(TheoryAttribute), false);
-#endif
         }
 
         /// <summary>
