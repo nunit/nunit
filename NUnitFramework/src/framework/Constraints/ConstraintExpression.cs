@@ -229,7 +229,6 @@ namespace NUnit.Framework.Constraints
 
         #region Matches
 
-#if !NUNITLITE
         /// <summary>
         /// Returns the constraint provided as an argument - used to allow custom
         /// custom constraints to easily participate in the syntax.
@@ -247,7 +246,6 @@ namespace NUnit.Framework.Constraints
         {
             return this.Append(new PredicateConstraint<T>(predicate));
         }
-#endif
 
         #endregion
 
