@@ -281,7 +281,7 @@ namespace NUnit.Framework
         #endregion
 
         #region ActualValueDelegate
-#if !NUNITLITE
+
         /// <summary>
         /// Apply a constraint to an actual value, succeeding if the constraint
         /// is satisfied and throwing an assertion exception on failure.
@@ -325,7 +325,7 @@ namespace NUnit.Framework
                 throw new AssertionException(writer.ToString());
             }
         }
-#endif
+
         #endregion
 
         #region TestDelegate
