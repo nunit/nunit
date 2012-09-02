@@ -64,6 +64,7 @@
     <Compile Include="Assertions\AssertIgnoreTests.cs" />
     <Compile Include="Assertions\AssertInconclusiveTests.cs" />
     <Compile Include="Assertions\AssertPassTests.cs" />
+    <Compile Include="Assertions\AssertThatTests.cs" />
     <Compile Include="Assertions\AssertThrowsTests.cs" />
     <Compile Include="Assertions\AssumeThatTests.cs" />
     <Compile Include="Assertions\CollectionAssertTest.cs" />

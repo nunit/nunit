@@ -67,51 +67,6 @@ namespace NUnit.Framework
 
         #region Assume.That
 
-        #region Object
-        /// <summary>
-        /// Apply a constraint to an actual value, succeeding if the constraint
-        /// is satisfied and throwing an InconclusiveException on failure.
-        /// </summary>
-        /// <param name="expression">A Constraint expression to be applied</param>
-        /// <param name="actual">The actual value to test</param>
-        static public void That(object actual, IResolveConstraint expression)
-        {
-            Assume.That(actual, expression, null, null);
-        }
-
-        /// <summary>
-        /// Apply a constraint to an actual value, succeeding if the constraint
-        /// is satisfied and throwing an InconclusiveException on failure.
-        /// </summary>
-        /// <param name="expression">A Constraint expression to be applied</param>
-        /// <param name="actual">The actual value to test</param>
-        /// <param name="message">The message that will be displayed on failure</param>
-        static public void That(object actual, IResolveConstraint expression, string message)
-        {
-            Assume.That(actual, expression, message, null);
-        }
-
-        /// <summary>
-        /// Apply a constraint to an actual value, succeeding if the constraint
-        /// is satisfied and throwing an InconclusiveException on failure.
-        /// </summary>
-        /// <param name="expression">A Constraint expression to be applied</param>
-        /// <param name="actual">The actual value to test</param>
-        /// <param name="message">The message that will be displayed on failure</param>
-        /// <param name="args">Arguments to be used in formatting the message</param>
-        static public void That(object actual, IResolveConstraint expression, string message, params object[] args)
-        {
-            Constraint constraint = expression.Resolve();
-
-            if (!constraint.Matches(actual).HasSucceeded)
-            {
-                MessageWriter writer = new TextMessageWriter(message, args);
-                constraint.WriteMessageTo(writer);
-                throw new InconclusiveException(writer.ToString());
-            }
-        }
-        #endregion
-
         #region ActualValueDelegate
         /// <summary>
         /// Apply a constraint to an actual value, succeeding if the constraint
@@ -157,53 +112,6 @@ namespace NUnit.Framework
         }
         #endregion
 
-        #region ref Object
-
-        /// <summary>
-        /// Apply a constraint to a referenced value, succeeding if the constraint
-        /// is satisfied and throwing an InconclusiveException on failure.
-        /// </summary>
-        /// <param name="expression">A Constraint expression to be applied</param>
-        /// <param name="actual">The actual value to test</param>
-        static public void That<T>(ref T actual, IResolveConstraint expression)
-        {
-            Assume.That(ref actual, expression.Resolve(), null, null);
-        }
-
-        /// <summary>
-        /// Apply a constraint to a referenced value, succeeding if the constraint
-        /// is satisfied and throwing an InconclusiveException on failure.
-        /// </summary>
-        /// <param name="expression">A Constraint expression to be applied</param>
-        /// <param name="actual">The actual value to test</param>
-        /// <param name="message">The message that will be displayed on failure</param>
-        static public void That<T>(ref T actual, IResolveConstraint expression, string message)
-        {
-            Assume.That(ref actual, expression.Resolve(), message, null);
-        }
-
-        /// <summary>
-        /// Apply a constraint to a referenced value, succeeding if the constraint
-        /// is satisfied and throwing an InconclusiveException on failure.
-        /// </summary>
-        /// <param name="expression">A Constraint expression to be applied</param>
-        /// <param name="actual">The actual value to test</param>
-        /// <param name="message">The message that will be displayed on failure</param>
-        /// <param name="args">Arguments to be used in formatting the message</param>
-        static public void That<T>(ref T actual, IResolveConstraint expression, string message, params object[] args)
-        {
-            Constraint constraint = expression.Resolve();
-
-            if (!constraint.Matches(ref actual).HasSucceeded)
-            {
-                MessageWriter writer = new TextMessageWriter(message, args);
-                constraint.WriteMessageTo(writer);
-                throw new InconclusiveException(writer.ToString());
-            }
-        }
-
-        #endregion
-
         #region Boolean
         /// <summary>
         /// Asserts that a condition is true. If the condition is false the method throws
@@ -239,6 +147,8 @@ namespace NUnit.Framework
         }
         #endregion
 
+        #region TestDelegate
+
         /// <summary>
         /// Asserts that the code represented by a delegate throws an exception
         /// that satisfies the constraint provided.
@@ -249,6 +159,101 @@ namespace NUnit.Framework
         {
             Assume.That((object)code, constraint);
         }
+
+        #endregion
+
+        #endregion
+
+        #region Assume.That<T>
+
+        /// <summary>
+        /// Apply a constraint to an actual value, succeeding if the constraint
+        /// is satisfied and throwing an InconclusiveException on failure.
+        /// </summary>
+        /// <param name="expression">A Constraint to be applied</param>
+        /// <param name="actual">The actual value to test</param>
+        static public void That<T>(T actual, IResolveConstraint expression)
+        {
+            Assume.That(actual, expression, null, null);
+        }
+
+        /// <summary>
+        /// Apply a constraint to an actual value, succeeding if the constraint
+        /// is satisfied and throwing an InconclusiveException on failure.
+        /// </summary>
+        /// <param name="expression">A Constraint to be applied</param>
+        /// <param name="actual">The actual value to test</param>
+        /// <param name="message">The message that will be displayed on failure</param>
+        static public void That<T>(T actual, IResolveConstraint expression, string message)
+        {
+            Assume.That(actual, expression, message, null);
+        }
+
+        /// <summary>
+        /// Apply a constraint to an actual value, succeeding if the constraint
+        /// is satisfied and throwing an InconclusiveException on failure.
+        /// </summary>
+        /// <param name="expression">A Constraint expression to be applied</param>
+        /// <param name="actual">The actual value to test</param>
+        /// <param name="message">The message that will be displayed on failure</param>
+        /// <param name="args">Arguments to be used in formatting the message</param>
+        static public void That<T>(T actual, IResolveConstraint expression, string message, params object[] args)
+        {
+            Constraint constraint = expression.Resolve();
+
+            TestExecutionContext.CurrentContext.IncrementAssertCount();
+            if (!constraint.Matches(actual).HasSucceeded)
+            {
+                MessageWriter writer = new TextMessageWriter(message, args);
+                constraint.WriteMessageTo(writer);
+                throw new InconclusiveException(writer.ToString());
+            }
+        }
+
+        /// <summary>
+        /// Apply a constraint to a referenced value, succeeding if the constraint
+        /// is satisfied and throwing an InconclusiveException on failure.
+        /// </summary>
+        /// <param name="actual">The actual value to test</param>
+        /// <param name="expression">A Constraint to be applied</param>
+        static public void That<T>(ref T actual, IResolveConstraint expression)
+        {
+            Assume.That(ref actual, expression, null, null);
+        }
+
+        /// <summary>
+        /// Apply a constraint to a referenced value, succeeding if the constraint
+        /// is satisfied and throwing an InconclusiveException on failure.
+        /// </summary>
+        /// <param name="actual">The actual value to test</param>
+        /// <param name="expression">A Constraint to be applied</param>
+        /// <param name="message">The message that will be displayed on failure</param>
+        static public void That<T>(ref T actual, IResolveConstraint expression, string message)
+        {
+            Assume.That(ref actual, expression, message, null);
+        }
+
+        /// <summary>
+        /// Apply a constraint to a referenced value, succeeding if the constraint
+        /// is satisfied and throwing an InconclusiveException on failure.
+        /// </summary>
+        /// <param name="actual">The actual value to test</param>
+        /// <param name="expression">A Constraint to be applied</param>
+        /// <param name="message">The message that will be displayed on failure</param>
+        /// <param name="args">Arguments to be used in formatting the message</param>
+        static public void That<T>(ref T actual, IResolveConstraint expression, string message, params object[] args)
+        {
+            Constraint constraint = expression.Resolve();
+
+            TestExecutionContext.CurrentContext.IncrementAssertCount();
+            if (!constraint.Matches(ref actual).HasSucceeded)
+            {
+                MessageWriter writer = new TextMessageWriter(message, args);
+                constraint.WriteMessageTo(writer);
+                throw new InconclusiveException(writer.ToString());
+            }
+        }
+
         #endregion
     }
 }

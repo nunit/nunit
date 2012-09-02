@@ -356,7 +356,4 @@
   <ItemGroup>
     <Content Include="Attributes\AttributeHierarchy.txt" />
   </ItemGroup>
-  <ItemGroup>
-    <WCFMetadata Include="Service References\" />
-  </ItemGroup>
 </Project>
