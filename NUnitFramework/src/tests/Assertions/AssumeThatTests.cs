@@ -115,16 +115,16 @@ namespace NUnit.Framework.Assertions
             Assume.That(2 + 2 == 5);
         }
 
-        [Test, ExpectedException(typeof(InconclusiveException))]
+        [Test, ExpectedException(typeof(InconclusiveException), ExpectedMessage = "message", MatchType = MessageMatch.Contains)]
         public void FailureThrowsInconclusiveException_BooleanWithMessage()
         {
             Assume.That(2 + 2 == 5, "message");
         }
 
-        [Test, ExpectedException(typeof(InconclusiveException))]
+        [Test, ExpectedException(typeof(InconclusiveException), ExpectedMessage = "got 5", MatchType = MessageMatch.Contains)]
         public void FailureThrowsInconclusiveException_BooleanWithMessageAndArgs()
         {
-            Assume.That(2 + 2 == 5, "message", 5);
+            Assume.That(2 + 2 == 5, "got {0}", 5);
         }
 
         [Test, ExpectedException(typeof(InconclusiveException))]
@@ -133,13 +133,13 @@ namespace NUnit.Framework.Assertions
             Assume.That(2 + 2, Is.EqualTo(5));
         }
 
-        [Test, ExpectedException(typeof(InconclusiveException))]
+        [Test, ExpectedException(typeof(InconclusiveException), ExpectedMessage = "Error", MatchType = MessageMatch.Contains)]
         public void FailureThrowsInconclusiveException_ActualAndConstraintWithMessage()
         {
             Assume.That(2 + 2, Is.EqualTo(5), "Error");
         }
 
-        [Test, ExpectedException(typeof(InconclusiveException))]
+        [Test, ExpectedException(typeof(InconclusiveException), ExpectedMessage = "Should be 5", MatchType = MessageMatch.Contains)]
         public void FailureThrowsInconclusiveException_ActualAndConstraintWithMessageAndArgs()
         {
             Assume.That(2 + 2, Is.EqualTo(5), "Should be {0}", 5);
@@ -152,18 +152,18 @@ namespace NUnit.Framework.Assertions
             Assume.That(ref value, Is.True);
         }
 
-        [Test, ExpectedException(typeof(InconclusiveException))]
+        [Test, ExpectedException(typeof(InconclusiveException), ExpectedMessage = "message", MatchType = MessageMatch.Contains)]
         public void FailureThrowsInconclusiveException_ReferenceAndConstraintWithMessage()
         {
             bool value = false;
             Assume.That(ref value, Is.True, "message");
         }
 
-        [Test, ExpectedException(typeof(InconclusiveException))]
+        [Test, ExpectedException(typeof(InconclusiveException), ExpectedMessage = "message is 42", MatchType = MessageMatch.Contains)]
         public void FailureThrowsInconclusiveException_ReferenceAndConstraintWithMessageAndArgs()
         {
             bool value = false;
-            Assume.That(ref value, Is.True, "message", 42);
+            Assume.That(ref value, Is.True, "message is {0}", 42);
         }
 
         [Test, ExpectedException(typeof(InconclusiveException))]
@@ -172,13 +172,13 @@ namespace NUnit.Framework.Assertions
             Assume.That(new Constraints.ActualValueDelegate(ReturnsFive), Is.EqualTo(4));
         }
 
-        [Test, ExpectedException(typeof(InconclusiveException))]
+        [Test, ExpectedException(typeof(InconclusiveException), ExpectedMessage = "Error", MatchType = MessageMatch.Contains)]
         public void FailureThrowsInconclusiveException_DelegateAndConstraintWithMessage()
         {
             Assume.That(new Constraints.ActualValueDelegate(ReturnsFive), Is.EqualTo(4), "Error");
         }
 
-        [Test, ExpectedException(typeof(InconclusiveException))]
+        [Test, ExpectedException(typeof(InconclusiveException), ExpectedMessage = "Should be 4", MatchType = MessageMatch.Contains)]
         public void FailureThrowsInconclusiveException_DelegateAndConstraintWithMessageAndArgs()
         {
             Assume.That(new Constraints.ActualValueDelegate(ReturnsFive), Is.EqualTo(4), "Should be {0}", 4);

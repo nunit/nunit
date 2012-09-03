@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2010 Charlie Poole
+// Copyright (c) 2012 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -24,75 +24,22 @@
 using System;
 using NUnit.Framework.Api;
 using NUnit.Framework.Internal;
+using System.Xml;
 
 namespace NUnit.Framework.Attributes
 {
-    public class TestDummy : ITest
+    public class TestDummy : Test
     {
-        private int id = 1234;
-        private RunState runState;
-        private IPropertyBag properties = new PropertyBag();
+        public TestDummy() : base("TestDummy") { }
 
-        #region ITest Members
-
-        public int Id
-        {
-            get
-            {
-                return id;
-            }
-            set
-            {
-                id = value;
-            }
-        }
-
-        public string Name
-        {
-            get { return "TestDummy"; }
-        }
-
-        public string FullName
-        {
-            get { return "NUnit.Framework.Attributes.TestDummy"; }
-        }
-
-        public Type FixtureType
-        {
-            get { return null; }
-        }
-
-        public RunState RunState
-        {
-            get
-            {
-                return runState;
-            }
-            set
-            {
-                runState = value;
-            }
-        }
+        #region Overrides
 
         public string TestKind
         {
             get { return "dummy-test"; }
         }
 
-        public int TestCaseCount
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        public IPropertyBag Properties
-        {
-            get 
-            { 
-                return properties;
-            }
-        }
-
-        public bool HasChildren
+        public override bool HasChildren
         {
             get
             {
@@ -100,15 +47,7 @@ namespace NUnit.Framework.Attributes
             }
         }
 
-        public ITest Parent
-        {
-            get
-            {
-                return null;
-            }
-        }
-
-        public System.Collections.Generic.IList<ITest> Tests
+        public override System.Collections.Generic.IList<ITest> Tests
         {
             get
             {
@@ -116,18 +55,29 @@ namespace NUnit.Framework.Attributes
             }
         }
 
-        #endregion
-
-        #region IXmlNodeBuilder Members
-
-        public System.Xml.XmlNode ToXml(bool recursive)
+        public override XmlNode AddToXml(XmlNode parentNode, bool recursive)
         {
             throw new NotImplementedException();
         }
 
-        public System.Xml.XmlNode AddToXml(System.Xml.XmlNode parentNode, bool recursive)
+        //public override Internal.WorkItems.WorkItem CreateWorkItem(ITestFilter childFilter)
+        //{
+        //    throw new NotImplementedException();
+        //}
+
+        protected override Internal.Commands.TestCommand MakeTestCommand(ITestFilter filter)
         {
             throw new NotImplementedException();
+        }
+
+        public override TestResult MakeTestResult()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override string XmlElementName
+        {
+            get { throw new NotImplementedException(); }
         }
 
         #endregion
