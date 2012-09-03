@@ -95,7 +95,7 @@ namespace NUnit.Framework.Assertions
 				"  But was:  null" + Env.NewLine));
 		}
 
-        [Test, ExpectedException(typeof(AssertionException)), Platform("Mono")]
+        [Test, ExpectedException(typeof(AssertionException))]
         public void UnrelatedExceptionThrown()
         {
             ArgumentException ex = Assert.Throws<ArgumentException>(TestDelegates.ThrowsApplicationException);

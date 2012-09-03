@@ -22,7 +22,6 @@
 // ***********************************************************************
 
 using System;
-using System.Reflection;
 using NUnit.Framework.Api;
 using NUnit.Framework.Internal;
 using NUnit.TestData.AssertIgnoreData;

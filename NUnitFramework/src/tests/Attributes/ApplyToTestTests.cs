@@ -30,7 +30,7 @@ namespace NUnit.Framework.Attributes
     [TestFixture]
     public class ApplyToTestTests
     {
-        ITest test;
+        Test test;
 
         [SetUp]
         public void SetUp()
