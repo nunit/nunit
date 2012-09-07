@@ -99,6 +99,9 @@ namespace NUnit.Framework.Internal
 			get { return Encoding.Default; }
 		}
 		
+        /// <summary>
+        /// Flushes the text writer buffer
+        /// </summary>
 		override public void Flush()
 		{
 			if (buffer.Length > 0)

@@ -28,6 +28,11 @@ using NUnit.Framework.Api;
 
 namespace NUnit.Framework.Internal.Commands
 {
+    /// <summary>
+    /// SetUpTearDownDecorator decorates a test command by running
+    /// a setup method before the original command and a teardown
+    /// method after it has executed.
+    /// </summary>
     public class SetUpTearDownDecorator : ICommandDecorator
     {
         CommandStage ICommandDecorator.Stage

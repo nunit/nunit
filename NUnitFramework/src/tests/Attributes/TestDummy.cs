@@ -60,12 +60,12 @@ namespace NUnit.Framework.Attributes
             throw new NotImplementedException();
         }
 
-        //public override Internal.WorkItems.WorkItem CreateWorkItem(ITestFilter childFilter)
-        //{
-        //    throw new NotImplementedException();
-        //}
+        public override Internal.WorkItems.WorkItem CreateWorkItem(ITestFilter childFilter)
+        {
+            throw new NotImplementedException();
+        }
 
-        protected override Internal.Commands.TestCommand MakeTestCommand(ITestFilter filter)
+        protected override Internal.Commands.TestCommand MakeTestCommand()
         {
             throw new NotImplementedException();
         }

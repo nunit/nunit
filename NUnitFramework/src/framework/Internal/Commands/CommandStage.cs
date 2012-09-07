@@ -50,10 +50,12 @@ namespace NUnit.Framework.Internal.Commands
         /// the raw test - that is, after any SetUp has run
         /// and before TearDown.
         /// </summary>
-        PostSetUpPreTearDown,
+        BelowSetUpTearDown,
 
         /// <summary>
-        /// Run SetUp and TearDown for the test.
+        /// Run SetUp and TearDown for the test.  This stage is used
+        /// internally by NUnit and should not normally appear
+        /// in user-defined decorators.
         /// </summary>
         SetUpTearDown,
 
@@ -61,31 +63,7 @@ namespace NUnit.Framework.Internal.Commands
         /// Make adjustments needed before and after running 
         /// the entire test - including SetUp and TearDown.
         /// </summary>
-        PreSetUpPostTearDown,
-
-        /// <summary>
-        /// Create any thread needed for execution of the test 
-        /// and destroy it afterwards
-        /// </summary>
-        CreateThread,
-
-        Repeat,
-
-        /// <summary>
-        /// Create the fixture object used for running the test
-        /// and dispose of it afterwards. This stage is used
-        /// internally by NUnit and should not normally appear
-        /// in user-defined decorators.
-        /// </summary>
-        CreateFixture,
-        
-        /// <summary>
-        /// Make changes to the context necessary for 
-        /// running the test. An example of use would
-        /// be to change the CurrentCulture before the
-        /// test and restore it afterwards.
-        /// </summary>
-        SetContext
+        AboveSetUpTearDown
 
         // Note: The context is created here and destroyed
         // after the test has run.

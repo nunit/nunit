@@ -140,7 +140,7 @@ namespace NUnit.Framework.Builders
         public Test BuildParameterizedMethodSuite(MethodInfo method, Test parentSuite)
         {
             ParameterizedMethodSuite methodSuite = new ParameterizedMethodSuite(method);
-            methodSuite.ApplyCommonAttributes(method);
+            methodSuite.ApplyAttributesToTest(method);
 
             foreach (ITestCaseData testcase in testCaseProvider.GetTestCasesFor(method))
             {
@@ -181,7 +181,7 @@ namespace NUnit.Framework.Builders
             if (CheckTestMethodSignature(testMethod, parms))
             {
                 if (parms == null)
-                    testMethod.ApplyCommonAttributes(method);
+                    testMethod.ApplyAttributesToTest(method);
 
                 foreach (ICommandDecorator decorator in method.GetCustomAttributes(typeof(ICommandDecorator), true))
                     testMethod.CustomDecorators.Add(decorator);
@@ -274,9 +274,7 @@ namespace NUnit.Framework.Builders
 
             if (parms != null)
             {
-                testMethod.arguments = parms.Arguments;
-                testMethod.expectedResult = parms.ExpectedResult;
-                testMethod.hasExpectedResult = parms.HasExpectedResult;
+                testMethod.parms = parms;
                 testMethod.RunState = parms.RunState;
 
                 arglist = parms.Arguments;

@@ -46,9 +46,9 @@ namespace NUnit.Framework.Api
 
         #region Properties
 
-        ///// <summary>
-        ///// The Type of any exception that is expected.
-        ///// </summary>
+        /// <summary>
+        /// The Type of any exception that is expected.
+        /// </summary>
         public Type ExpectedExceptionType
         {
             get { return expectedExceptionType; }

@@ -26,6 +26,10 @@ using System.Threading;
 
 namespace NUnit.Framework.Internal
 {
+    /// <summary>
+    /// ThreadUtility provides a set of static methods convenient
+    /// for working with threads.
+    /// </summary>
     public class ThreadUtility
     {
         /// <summary>
@@ -53,6 +57,8 @@ namespace NUnit.Framework.Internal
             }
             catch (ThreadStateException)
             {
+                // Although obsolete, this use of Resume() takes care of
+                // the odd case where a ThreadStateException is received.
                 thread.Resume();
             }
 

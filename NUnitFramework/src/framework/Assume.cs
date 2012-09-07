@@ -201,7 +201,6 @@ namespace NUnit.Framework
         {
             Constraint constraint = expression.Resolve();
 
-            TestExecutionContext.CurrentContext.IncrementAssertCount();
             if (!constraint.Matches(actual).HasSucceeded)
             {
                 MessageWriter writer = new TextMessageWriter(message, args);
@@ -245,7 +244,6 @@ namespace NUnit.Framework
         {
             Constraint constraint = expression.Resolve();
 
-            TestExecutionContext.CurrentContext.IncrementAssertCount();
             if (!constraint.Matches(ref actual).HasSucceeded)
             {
                 MessageWriter writer = new TextMessageWriter(message, args);

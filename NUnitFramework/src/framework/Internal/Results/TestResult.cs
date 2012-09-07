@@ -22,9 +22,6 @@
 // ***********************************************************************
 
 using System;
-using System.Text;
-using System.Collections;
-using System.Globalization;
 using System.Xml;
 using NUnit.Framework.Api;
 
@@ -50,6 +47,7 @@ namespace NUnit.Framework.Internal
 		/// <summary>
 		/// The test that this result pertains to
 		/// </summary>
+        [CLSCompliant(false)]
 		protected readonly ITest test;
 
 		/// <summary>
@@ -91,6 +89,14 @@ namespace NUnit.Framework.Internal
 		#endregion
 
         #region ITestResult Members
+
+        /// <summary>
+        /// Gets the test with which this result is associated.
+        /// </summary>
+        public ITest Test
+        {
+            get { return test; }
+        }
 
         /// <summary>
         /// Gets the ResultState of the test result, which 
@@ -261,6 +267,8 @@ namespace NUnit.Framework.Internal
                 case TestStatus.Passed:
                     break;
                 case TestStatus.Inconclusive:
+                    if (this.message != null)
+                        AddReasonElement(thisNode);
                     break;
             }
 
@@ -272,6 +280,63 @@ namespace NUnit.Framework.Internal
         }
 
         #endregion
+
+        /// <summary>
+        /// Adds a child result to this result, setting this result's
+        /// ResultState to Failure if the child result failed.
+        /// </summary>
+        /// <param name="result">The result to be added</param>
+        public virtual void AddResult(TestResult result)
+        {
+            this.Children.Add(result);
+
+            switch (result.ResultState.Status)
+            {
+                case TestStatus.Passed:
+
+                    if (this.resultState.Status == TestStatus.Inconclusive)
+                        this.SetResult(ResultState.Success);
+
+                    break;
+
+                case TestStatus.Failed:
+
+                    if (this.resultState.Status != TestStatus.Failed)
+                        this.SetResult(ResultState.Failure, "One or more child tests had errors");
+
+                    break;
+
+                case TestStatus.Skipped:
+
+                    switch (result.ResultState.Label)
+                    {
+                        case "Invalid":
+                            if (this.ResultState != ResultState.NotRunnable && this.ResultState.Status != TestStatus.Failed)
+                                this.SetResult(ResultState.Failure, "One or more child tests had errors");
+
+                            break;
+
+                        case "Ignored":
+
+                            if (this.ResultState.Status == TestStatus.Inconclusive || this.ResultState.Status == TestStatus.Passed)
+                                this.SetResult(ResultState.Ignored, "One or more child tests were ignored");
+
+                            break;
+
+                        default:
+
+                            // Tests skipped for other reasons do not change the outcome
+                            // of the containing suite when added.
+
+                            break;
+                    }
+
+                    break;
+
+                default:
+                    break;
+            }
+        }
 
         #region Other Public Methods
 
@@ -369,6 +434,17 @@ namespace NUnit.Framework.Internal
             else
                 SetResult(ResultState.Error, ExceptionHelper.BuildMessage(ex));
 #endif
+        }
+
+        /// <summary>
+        /// Set the test result based on the type of exception thrown
+        /// and the failure site.
+        /// </summary>
+        /// <param name="ex">The exception that was thrown</param>
+        /// <param name="site">The FailureSite</param>
+        public virtual void RecordException(Exception ex, FailureSite site)
+        {
+            RecordException(ex);
         }
 
         #endregion

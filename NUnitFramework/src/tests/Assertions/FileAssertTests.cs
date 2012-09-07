@@ -238,7 +238,7 @@ namespace NUnit.Framework.Assertions
                     expectedMessage = string.Format(
                         "  Stream lengths are both {0}. Streams differ at offset {1}." + Environment.NewLine,
                         tf1.FileLength,
-                        tf1.FileLength-2); // TODO: Make this independent of NewLine length
+                        tf1.FileLength-3); // TODO: Make this independent of NewLine length
 					FileAssert.AreEqual( "Test1.txt", "Test2.txt" );
 				}
 			}

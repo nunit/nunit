@@ -79,7 +79,7 @@ namespace NUnit.DirectRunner
                 testDomain = CreateDomain(
                     Path.GetDirectoryName(Path.GetFullPath(commandlineOptions.Parameters[0])));
 
-            FrameworkDriver driver = new FrameworkDriver(testDomain, false);
+            FrameworkDriver driver = new FrameworkDriver(testDomain);
 
             // TODO: For now, ignore all but first assembly
             string assemblyFilename = commandlineOptions.Parameters[0];
@@ -107,16 +107,16 @@ namespace NUnit.DirectRunner
             if (commandlineOptions.Load.Count > 0)
                 loadOptions["LOAD"] = commandlineOptions.Load;
 
-            //IDictionary runOptions = new Hashtable();
-            //if (commandlineOptions.Run.Count > 0)
-            //    runOptions["RUN"] = commandlineOptions.Run;
+            IDictionary runOptions = new Hashtable();
+            if (commandlineOptions.Run.Count > 0)
+                runOptions["RUN"] = commandlineOptions.Run;
 
             AppDomain testDomain = AppDomain.CurrentDomain;
             if (commandlineOptions.UseAppDomain)
                 testDomain = CreateDomain(
                     Path.GetDirectoryName(Path.GetFullPath(commandlineOptions.Parameters[0])));
 
-            FrameworkDriver driver = new FrameworkDriver(testDomain, commandlineOptions.TeamCityServiceMessages);
+            FrameworkDriver driver = new FrameworkDriver(testDomain);
 
             // TODO: For now, ignore all but first assembly
             string assemblyFilename = commandlineOptions.Parameters[0];
@@ -131,9 +131,8 @@ namespace NUnit.DirectRunner
             TextWriter savedOut = Console.Out;
             TextWriter savedError = Console.Error;
 
-            //TestEventListener listener = new TestEventListener(options, Console.Out);
 
-            XmlNode resultNode = driver.Run();
+            XmlNode resultNode = driver.Run(commandlineOptions);
 
             Console.SetOut(savedOut);
             Console.SetError(savedError);

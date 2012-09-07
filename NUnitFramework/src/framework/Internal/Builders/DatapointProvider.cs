@@ -25,6 +25,7 @@ using System;
 using System.Reflection;
 using System.Collections;
 using NUnit.Framework.Extensibility;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Builders
 {
@@ -138,13 +139,10 @@ namespace NUnit.Framework.Builders
                     datapoints.Add(true);
                     datapoints.Add(false);
                 }
-#if !NETCF
-                // TODO: Temporarily unsupported under CF
                 else if (parameterType.IsEnum)
                 {
-                    datapoints.AddRange(System.Enum.GetValues(parameterType));
+                    datapoints.AddRange(TypeHelper.GetEnumValues(parameterType));
                 }
-#endif
             }
 
             return datapoints;

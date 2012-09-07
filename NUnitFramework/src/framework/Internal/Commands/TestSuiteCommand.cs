@@ -51,8 +51,7 @@ namespace NUnit.Framework.Internal.Commands
         /// <summary>
         /// TODO: Documentation needed for method
         /// </summary>
-        /// <param name="testObject">The object on which the test should run.</param>
-        /// <param name="arguments">The arguments to be used in running the test or null.</param>
+        /// <param name="context">The execution context in which the test should run.</param>
         /// <returns>A TestResult</returns>
         public override TestResult Execute(TestExecutionContext context)
         {
@@ -60,11 +59,22 @@ namespace NUnit.Framework.Internal.Commands
         }
 
         /// <summary>
-        /// Does the one time set up for a suite command.
+        /// Does the one time set up for a suite command. Broadly defined,
+        /// this includes:
+        ///   1. Applying changes specified by attributes to the context
+        ///   2. Constructing the user fixture instance
+        ///   3. Calling the one time setup methods themselves
         /// </summary>
         /// <param name="context">The execution context to use in running the test.</param>
         public virtual void DoOneTimeSetUp(TestExecutionContext context)
         {
+            foreach (NUnitAttribute attr in Test.Attributes)
+            {
+                IApplyToContext iApply = attr as IApplyToContext;
+                if (iApply != null)
+                    iApply.ApplyToContext(context);
+            }
+
             if (fixtureType != null)
             {
                 if (context.TestObject == null && !IsStaticClass(fixtureType))
@@ -84,7 +94,7 @@ namespace NUnit.Framework.Internal.Commands
         {
             if (fixtureType != null)
             {
-                TestSuiteResult suiteResult = context.CurrentResult as TestSuiteResult;
+                TestResult suiteResult = context.CurrentResult;
 
                 try
                 {

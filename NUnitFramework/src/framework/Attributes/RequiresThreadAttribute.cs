@@ -32,7 +32,7 @@ namespace NUnit.Framework
     /// Marks a test that must run on a separate thread.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class | AttributeTargets.Assembly, AllowMultiple = false, Inherited=false)]
-    public class RequiresThreadAttribute : PropertyAttribute
+    public class RequiresThreadAttribute : PropertyAttribute, IApplyToTest
     {
         /// <summary>
         /// Construct a RequiresThreadAttribute
@@ -47,6 +47,12 @@ namespace NUnit.Framework
             : base(true)
         {
             this.Properties.Add(PropertyNames.ApartmentState, apartment);
+        }
+
+        void IApplyToTest.ApplyToTest(Test test)
+        {
+            test.RequiresThread = true;
+            base.ApplyToTest(test);
         }
     }
 }

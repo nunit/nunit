@@ -17,6 +17,7 @@
         <include name="../CommonAssemblyInfo.cs" />
         <include name="**/*.cs" />
         <exclude name="Runner/*.cs" />
+        <exclude name="Runner/OutputWriters/*.cs"/>
         <exclude name="Internal/AssemblyReader.cs"/>
         <exclude name="Internal/NUnitLiteTestAssemblyBuilder.cs"/>
         <exclude name="Internal/NUnitLiteTestAssemblyRunner.cs"/>
@@ -27,7 +28,7 @@
         <exclude name="Internal/Commands/OldTestMethodCommand.cs"/>
         <exclude name="Internal/Commands/TestCaseCommand.cs"/>
         <exclude name="Internal/Commands/TestExecutionContextCommand.cs"/>
-      </sources>
+	  </sources>
       <references basedir="${current.build.dir}">
         <include name="System.Configuration.dll"/>
 		<include name="System.Web.dll"/>

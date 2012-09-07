@@ -71,13 +71,20 @@ namespace NUnit.Framework.Builders
 		{
             if ( type.IsAbstract && !type.IsSealed )
                 return false;
+#if NETCF
+            // No generic fixtures under CF
+            if (type.IsGenericTypeDefinition)
+                return false;
+#endif
 
             if (type.IsDefined(typeof(TestFixtureAttribute), true))
                 return true;
 
+#if !NETCF
             // Generics must have a TestFixtureAttribute
             if (type.IsGenericTypeDefinition)
                 return false;
+#endif
 
             return Reflect.HasMethodWithAttribute(type, typeof(NUnit.Framework.TestAttribute), true) ||
                    Reflect.HasMethodWithAttribute(type, typeof(NUnit.Framework.TestCaseAttribute), true) ||
@@ -93,7 +100,6 @@ namespace NUnit.Framework.Builders
 		public Test BuildFrom(Type type)
 		{
             TestFixtureAttribute[] attrs = GetTestFixtureAttributes(type);
-
             if (type.IsGenericType)
                 return BuildMultipleFixtures(type, attrs);
 
@@ -140,6 +146,7 @@ namespace NUnit.Framework.Builders
             {
                 arguments = (object[])attr.Arguments;
 
+#if !NETCF
                 if (type.ContainsGenericParameters)
                 {
                     Type[] typeArgs = (Type[])attr.TypeArgs;
@@ -149,12 +156,13 @@ namespace NUnit.Framework.Builders
                         type = TypeHelper.MakeGenericType(type, typeArgs);
                     }
                 }
+#endif
             }
 
             this.fixture = new TestFixture(type, arguments);
             CheckTestFixtureIsValid(fixture);
 
-            fixture.ApplyCommonAttributes(type);
+            fixture.ApplyAttributesToTest(type);
 
             if (fixture.RunState == RunState.Runnable && attr != null)
             {

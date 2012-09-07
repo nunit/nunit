@@ -63,15 +63,15 @@ namespace NUnit.Framework.Internal
 	        }
 	    }
 
-        protected static Exception WrapUnserializableException(Exception ex)
-        {
-            string message = string.Format(
-                CultureInfo.InvariantCulture,
-                "(failed to serialize original Exception - original Exception follows){0}{1}",
-                Environment.NewLine,
-                ex);
-            return new Exception(message);
-        }
+        //protected static Exception WrapUnserializableException(Exception ex)
+        //{
+        //    string message = string.Format(
+        //        CultureInfo.InvariantCulture,
+        //        "(failed to serialize original Exception - original Exception follows){0}{1}",
+        //        Environment.NewLine,
+        //        ex);
+        //    return new Exception(message);
+        //}
     }
 
     /// <summary>
@@ -90,6 +90,14 @@ namespace NUnit.Framework.Internal
 			this.test = test;
 		}
 
+        /// <summary>
+        /// Gets a value indicating whether this event is delivered synchronously by the NUnit <see cref="EventPump"/>.
+        /// <para>
+        /// If <c>true</c>, and if <see cref="EventQueue.SetWaitHandleForSynchronizedEvents"/> has been used to 
+        /// set a WaitHandle, <see cref="EventQueue.Enqueue"/> blocks its calling thread until the <see cref="EventPump"/>
+        /// thread has delivered the event and sets the WaitHandle.
+        /// </para>
+        /// </summary>
         public override bool IsSynchronous
         {
             get
@@ -172,6 +180,9 @@ namespace NUnit.Framework.Internal
         private readonly object syncRoot;
         private bool stopped;
 
+        /// <summary>
+        /// Construct a new EventQueue
+        /// </summary>
         public EventQueue()
         {
             this.syncRoot = queue.SyncRoot;
@@ -278,6 +289,9 @@ namespace NUnit.Framework.Internal
             }
         }
 
+        /// <summary>
+        /// Stop processing of the queue
+        /// </summary>
         public void Stop()
         {
             lock (this.syncRoot)

@@ -45,7 +45,7 @@ namespace NUnit.Framework
 
         CommandStage ICommandDecorator.Stage
         {
-            get { return CommandStage.PreSetUpPostTearDown; }
+            get { return CommandStage.AboveSetUpTearDown; }
         }
 
         int ICommandDecorator.Priority

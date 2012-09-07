@@ -144,6 +144,9 @@ namespace NUnit.Framework.Api
 
             #region Properties
 
+            /// <summary>
+            /// Gets the callback event handler for this controller action.
+            /// </summary>
             protected ICallbackEventHandler Handler
             {
                 get { return handler; }
@@ -256,7 +259,7 @@ namespace NUnit.Framework.Api
         public class ExploreTestsAction : TestControllerAction
         {
             /// <summary>
-            /// Initializes a new instance of the <see cref="ExplorTestsAction"/> class.
+            /// Initializes a new instance of the <see cref="ExploreTestsAction"/> class.
             /// </summary>
             /// <param name="controller">The controller.</param>
             /// <param name="assemblyFilename">The assembly filename.</param>

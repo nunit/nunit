@@ -58,9 +58,12 @@ namespace NUnit.Tests
 
 			public static int Categories = MockTestFixture.Categories;
 
+#if !NETCF
             public static string AssemblyPath = AssemblyHelper.GetAssemblyPath(typeof(MockAssembly).Assembly);
+#endif
 		}
 
+#if !NETCF
 		public class MockSuite
 		{
 			[Suite]
@@ -72,6 +75,7 @@ namespace NUnit.Tests
 				}
 			}
 		}
+#endif
 
 		[TestFixture(Description="Fake Test Fixture")]
 		[Category("FixtureCategory")]

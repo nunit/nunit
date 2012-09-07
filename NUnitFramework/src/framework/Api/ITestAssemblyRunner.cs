@@ -50,7 +50,7 @@ namespace NUnit.Framework.Api
         /// indication of whether or not the load succeeded.
         /// </summary>
         /// <param name="assemblyName">File name of the assembly to load</param>
-        /// <param name="options">Dictionary of options to use in loading the test</param>
+        /// <param name="settings">Dictionary of options to use in loading the test</param>
         /// <returns>True if the load was successful</returns>
         bool Load(string assemblyName, System.Collections.IDictionary settings);
 
@@ -59,7 +59,7 @@ namespace NUnit.Framework.Api
         /// indication of whether or not the load succeeded.
         /// </summary>
         /// <param name="assembly">The assembly to load</param>
-        /// <param name="options">Dictionary of options to use in loading the test</param>
+        /// <param name="settings">Dictionary of options to use in loading the test</param>
         /// <returns>True if the load was successful</returns>
         bool Load(Assembly assembly, System.Collections.IDictionary settings);
 

@@ -101,7 +101,7 @@ namespace NUnit.Framework
         /// Modifies a test by adding properties to it.
         /// </summary>
         /// <param name="test">The test to modify</param>
-        public virtual void ApplyToTest(ITest test)
+        public virtual void ApplyToTest(Test test)
         {
             foreach (string key in Properties.Keys)
                 foreach(object value in Properties[key])

@@ -187,7 +187,7 @@ namespace NUnit.Framework
         /// Modifies a test by adding a description, if not already set.
         /// </summary>
         /// <param name="test">The test to modify</param>
-        public void ApplyToTest(ITest test)
+        public void ApplyToTest(Test test)
         {
             if (!test.Properties.ContainsKey(PropertyNames.Description) && description != null)
                 test.Properties.Set(PropertyNames.Description, description);

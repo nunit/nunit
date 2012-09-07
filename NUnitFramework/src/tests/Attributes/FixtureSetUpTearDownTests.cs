@@ -326,8 +326,8 @@ namespace NUnit.Framework.Attributes
         public void TestThatChangesPersistUsingSeparateThread()
         {
             Assert.AreEqual("foo", Thread.CurrentPrincipal.Identity.Name);
-            Assert.AreEqual("en-GB", Thread.CurrentThread.CurrentCulture.Name);
-            Assert.AreEqual("en-GB", Thread.CurrentThread.CurrentUICulture.Name);
+            Assert.AreEqual("en-GB", Thread.CurrentThread.CurrentCulture.Name, "#CurrentCulture");
+            Assert.AreEqual("en-GB", Thread.CurrentThread.CurrentUICulture.Name, "#CurrentUICulture");
         }
     }
 #endif

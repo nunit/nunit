@@ -24,6 +24,7 @@
 using System;
 using System.IO;
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 
 namespace NUnit.Framework.Constraints
@@ -172,40 +173,38 @@ namespace NUnit.Framework.Constraints
                     return ((TimeSpan)x - (TimeSpan)y).Duration() <= amount;
             }
 
-#if !NETCF
             if (FirstImplementsIEquatableOfSecond(xType, yType))
                 return InvokeFirstIEquatableEqualsSecond(x, y);
-            else if (FirstImplementsIEquatableOfSecond(yType, xType))
+            else if (xType != yType && FirstImplementsIEquatableOfSecond(yType, xType))
                 return InvokeFirstIEquatableEqualsSecond(y, x);
-#endif
             
             return x.Equals(y);
         }
 
-#if !NETCF
         private static bool FirstImplementsIEquatableOfSecond(Type first, Type second)
         {
-            Type[] equatableArguments = GetEquatableGenericArguments(first);
-
-            foreach (var xEquatableArgument in equatableArguments)
+            foreach (var xEquatableArgument in GetEquatableGenericArguments(first))
                 if (xEquatableArgument.Equals(second))
                     return true;
 
             return false;
         }
 
-        private static Type[] GetEquatableGenericArguments(Type type)
+        private static IList<Type> GetEquatableGenericArguments(Type type)
         {
-            return Array.ConvertAll(Array.FindAll(type.GetInterfaces(),
-                                    delegate(Type @interface)
-                                    {
-                                        return @interface.IsGenericType &&
-                                               @interface.GetGenericTypeDefinition().Equals(typeof(IEquatable<>));
-                                    }),
-                                    delegate(Type iEquatableInterface)
-                                    {
-                                        return iEquatableInterface.GetGenericArguments()[0];
-                                    });
+            // NOTE: Original implementation used Array.ConvertAll and
+            // Array.FindAll, which don't exist in the compact framework.
+            var genericArgs = new List<Type>();
+
+            foreach (Type @interface in type.GetInterfaces())
+            {
+                if (@interface.IsGenericType && @interface.GetGenericTypeDefinition().Equals(typeof(IEquatable<>)))
+                {
+                    genericArgs.Add(@interface.GetGenericArguments()[0]);
+                }
+            }
+
+            return genericArgs;
         }
 
         private static bool InvokeFirstIEquatableEqualsSecond(object first, object second)
@@ -214,7 +213,6 @@ namespace NUnit.Framework.Constraints
 
             return (bool)equals.Invoke(first, new object[] { second });
         }
-#endif
         
         #endregion
 

@@ -140,6 +140,7 @@
     <Compile Include="Constraints\PropertyTests.cs" />
     <Compile Include="Constraints\RangeConstraintTests.cs" />
     <Compile Include="Constraints\RangeTests.cs" />
+    <Compile Include="Constraints\ReusableConstraintTests.cs" />
     <Compile Include="Constraints\SameAsTest.cs" />
     <Compile Include="Constraints\StartsWithConstraintTests.cs" />
     <Compile Include="Constraints\SubstringConstraintTests.cs" />

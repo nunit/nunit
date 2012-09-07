@@ -43,8 +43,8 @@ namespace NUnit.Framework.Constraints.Tests
         public void ZeroItemsMatchFails()
         {
             expectedMessage =
-                TextMessageWriter.Pfx_Expected + "no item \"Charlie\"" + Environment.NewLine +
-                TextMessageWriter.Pfx_Actual + "< \"Charlie\", \"Fred\", \"Joe\", \"Charlie\" >" + Environment.NewLine;
+                TextMessageWriter.Pfx_Expected + "no item \"Charlie\"" + Env.NewLine +
+                TextMessageWriter.Pfx_Actual + "< \"Charlie\", \"Fred\", \"Joe\", \"Charlie\" >" + Env.NewLine;
             Assert.That(names, new ExactCountConstraint(0, Is.EqualTo("Charlie")));
         }
 
@@ -59,8 +59,8 @@ namespace NUnit.Framework.Constraints.Tests
         public void ExactlyOneItemMatchFails()
         {
             expectedMessage =
-                TextMessageWriter.Pfx_Expected + "exactly one item \"Charlie\"" + Environment.NewLine +
-                TextMessageWriter.Pfx_Actual + "< \"Charlie\", \"Fred\", \"Joe\", \"Charlie\" >" + Environment.NewLine;
+                TextMessageWriter.Pfx_Expected + "exactly one item \"Charlie\"" + Env.NewLine +
+                TextMessageWriter.Pfx_Actual + "< \"Charlie\", \"Fred\", \"Joe\", \"Charlie\" >" + Env.NewLine;
             Assert.That(names, new ExactCountConstraint(1, Is.EqualTo("Charlie")));
         }
 
@@ -75,8 +75,8 @@ namespace NUnit.Framework.Constraints.Tests
         public void ExactlyTwoItemsMatchFails()
         {
             expectedMessage =
-                TextMessageWriter.Pfx_Expected + "exactly 2 items \"Fred\"" + Environment.NewLine +
-                TextMessageWriter.Pfx_Actual + "< \"Charlie\", \"Fred\", \"Joe\", \"Charlie\" >" + Environment.NewLine;
+                TextMessageWriter.Pfx_Expected + "exactly 2 items \"Fred\"" + Env.NewLine +
+                TextMessageWriter.Pfx_Actual + "< \"Charlie\", \"Fred\", \"Joe\", \"Charlie\" >" + Env.NewLine;
             Assert.That(names, new ExactCountConstraint(2, Is.EqualTo("Fred")));
         }
     }

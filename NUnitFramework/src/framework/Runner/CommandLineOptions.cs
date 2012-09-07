@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.IO;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
@@ -42,9 +43,12 @@ namespace NUnitLite.Runner
         private bool help = false;
         private bool full = false;
         private bool explore = false;
+        private bool labelTestsInOutput = false;
 
         private string exploreFile;
         private string resultFile;
+        private string resultFormat;
+        private string outFile;
 
         private bool error = false;
 
@@ -108,7 +112,7 @@ namespace NUnitLite.Runner
         /// </summary>
         public string ExploreFile
         {
-            get { return exploreFile; }
+            get { return ExpandToFullPath(exploreFile); }
         }
 
         /// <summary>
@@ -116,7 +120,46 @@ namespace NUnitLite.Runner
         /// </summary>
         public string ResultFile
         {
-            get { return resultFile; }
+            get { return ExpandToFullPath(resultFile); }
+        }
+
+        /// <summary>
+        /// Gets the format to be used for test results
+        /// </summary>
+        public string ResultFormat
+        {
+            get { return resultFormat; }
+        }
+
+        /// <summary>
+        /// Gets the full path of the file to be used for output
+        /// </summary>
+        public string OutFile
+        {
+            get
+            {
+                return ExpandToFullPath(outFile);
+            }
+        }
+
+        /// <summary>
+        /// Gets a flag indicating whether each test should
+        /// be labeled in the output.
+        /// </summary>
+        public bool LabelTestsInOutput
+        {
+            get { return labelTestsInOutput; }
+        }
+
+        private string ExpandToFullPath(string path)
+        {
+            if (path == null) return null;
+
+#if NETCF
+            return Path.Combine(NUnit.Env.DocumentFolder, path);
+#else
+            return Path.GetFullPath(path);
+#endif
         }
 
         /// <summary>
@@ -206,6 +249,17 @@ namespace NUnitLite.Runner
                 case "result":
                     resultFile = val;
                     break;
+                case "format":
+                    resultFormat = val;
+                    if (resultFormat != "nunit3" && resultFormat != "nunit2")
+                        error = true;
+                    break;
+                case "out":
+                    outFile = val;
+                    break;
+                case "labels":
+                    labelTestsInOutput = true;
+                    break;
                 default:
                     error = true;
                     invalidOptions.Add(opt);
@@ -238,6 +292,8 @@ namespace NUnitLite.Runner
                 StringBuilder sb = new StringBuilder();
                 foreach (string opt in invalidOptions)
                     sb.Append( "Invalid option: " + opt + NL );
+                if (resultFormat != null && resultFormat != "nunit3" && resultFormat != "nunit2")
+                    sb.Append("Invalid result format: " + resultFormat + NL);
                 return sb.ToString();
             }
         }
@@ -258,7 +314,7 @@ namespace NUnitLite.Runner
                 string name = System.Reflection.Assembly.GetEntryAssembly().GetName().Name;
 #endif
 
-                sb.Append(NL + name + " [assemblies] [options]" + NL + NL);
+                sb.Append("Usage: " + name + " [assemblies] [options]" + NL + NL);
                 sb.Append("Runs a set of NUnitLite tests from the console." + NL + NL);
                 sb.Append("You may specify one or more test assemblies by name, without a path or" + NL);
                 sb.Append("extension. They must be in the same in the same directory as the exe" + NL);
@@ -267,14 +323,29 @@ namespace NUnitLite.Runner
                 sb.Append("Options:" + NL);
                 sb.Append("  -test:testname  Provides the name of a test to run. This option may be" + NL);
                 sb.Append("                  repeated. If no test names are given, all tests are run." + NL + NL);
-                sb.Append("  -help           Displays this help" + NL + NL);
-                sb.Append("  -nologo         Suppresses display of the initial message" + NL + NL);
-                sb.Append("  -wait           Waits for a key press before exiting" + NL + NL);
+                sb.Append("  -out:FILE       File to which output is redirected. If this option is not" + NL);
+                sb.Append("                  used, output is to the Console, which means it is lost" + NL);
+                sb.Append("                  on devices without a Console." + NL + NL);
                 sb.Append("  -full           Prints full report of all test results." + NL + NL);
+                sb.Append("  -result:FILE    File to which the xml test result is written." + NL + NL);
+                sb.Append("  -format:FORMAT  Format in which the result is to be written. FORMAT must be" + NL);
+                sb.Append("                  either nunit3 or nunit2. The default is nunit3." + NL + NL);
+                sb.Append("  -explore:FILE  If provided, this option indicates that the tests" + NL);
+                sb.Append("                  should be listed rather than executed. They are listed" + NL);
+                sb.Append("                  to the specified file in XML format." + NL);
+                sb.Append("  -help,-h        Displays this help" + NL + NL);
+                sb.Append("  -noheader,-noh  Suppresses display of the initial message" + NL + NL);
+                sb.Append("  -labels         Displays the name of each test when it starts" + NL + NL);
+                sb.Append("  -wait           Waits for a key press before exiting" + NL + NL);
+                sb.Append("Notes:" + NL);
+                sb.Append(" * File names may be listed by themselves, with a relative path or " + NL);
+                sb.Append("   using an absolute path. Any relative path is based on the current " + NL);
+                sb.Append("   directory or on the Documents folder if running on a under the " + NL);
+                sb.Append("   compact framework." + NL + NL);
                 if (System.IO.Path.DirectorySeparatorChar != '/')
-                    sb.Append("On Windows, options may be prefixed by a '/' character if desired" + NL + NL);
-                sb.Append("Options that take values may use an equal sign or a colon" + NL);
-                sb.Append("to separate the option from its value." + NL + NL);
+                    sb.Append(" * On Windows, options may be prefixed by a '/' character if desired" + NL + NL);
+                sb.Append(" * Options that take values may use an equal sign or a colon" + NL);
+                sb.Append("   to separate the option from its value." + NL + NL);
 
                 return sb.ToString();
             }

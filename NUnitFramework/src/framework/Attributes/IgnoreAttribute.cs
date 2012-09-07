@@ -61,7 +61,7 @@ namespace NUnit.Framework
         /// Modifies a test by marking it as Ignored.
         /// </summary>
         /// <param name="test">The test to modify</param>
-        public void ApplyToTest(ITest test)
+        public void ApplyToTest(Test test)
         {
             if (test.RunState != RunState.NotRunnable)
             {

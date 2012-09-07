@@ -64,6 +64,11 @@ namespace NUnit.Framework.Internal
         private Test currentTest;
 
         /// <summary>
+        /// The time the test began execution
+        /// </summary>
+        private DateTime startTime;
+
+        /// <summary>
         /// The active TestResult for the current test
         /// </summary>
         private TestResult currentResult;
@@ -127,12 +132,12 @@ namespace NUnit.Framework.Internal
         private CultureInfo currentUICulture;
 #endif
 
-#if !NUNITLITE
         /// <summary>
         /// Default timeout for test cases
         /// </summary>
         private int testCaseTimeout;
 
+#if !NUNITLITE
         /// <summary>
         /// Indicates whether logging is enabled
         /// </summary>
@@ -174,9 +179,9 @@ namespace NUnit.Framework.Internal
             this.currentUICulture = CultureInfo.CurrentUICulture;
 #endif
 
-#if !NUNITLITE
             this.testCaseTimeout = 0;
-			this.logging = false;
+#if !NUNITLITE
+            this.logging = false;
 			this.currentDirectory = Environment.CurrentDirectory;
             this.logCapture = new Log4NetCapture();
             this.currentPrincipal = Thread.CurrentPrincipal;
@@ -210,8 +215,8 @@ namespace NUnit.Framework.Internal
             this.currentUICulture = CultureInfo.CurrentUICulture;
 #endif
 
-#if !NUNITLITE
             this.testCaseTimeout = other.testCaseTimeout;
+#if !NUNITLITE
 			this.logging = other.logging;
 			this.currentDirectory = Environment.CurrentDirectory;
             this.logCapture = other.logCapture;
@@ -226,7 +231,10 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// The current context, head of the list of saved contexts.
         /// </summary>
-        private static TestExecutionContext current = new TestExecutionContext();
+#if !NETCF
+        [ThreadStatic]
+#endif
+        private static TestExecutionContext current;
 
         /// <summary>
         /// Gets the current context.
@@ -234,33 +242,22 @@ namespace NUnit.Framework.Internal
         /// <value>The current context.</value>
         public static TestExecutionContext CurrentContext
         {
-            get { return current; }
+            get 
+            {
+                if (current == null)
+                    current = new TestExecutionContext();
+
+                return current; 
+            }
         }
 
         #endregion
 
         #region Static Methods
 
-        /// <summary>
-        /// Saves the old context and makes a fresh one 
-        /// current without changing any settings.
-        /// </summary>
-        public static void Save()
+        internal static void SetCurrentContext(TestExecutionContext ec)
         {
-            TestExecutionContext.current = new TestExecutionContext(current);
-        }
-
-        /// <summary>
-        /// Restores the last saved context and puts
-        /// any saved settings back into effect.
-        /// </summary>
-        public static void Restore()
-        {
-            current.ReverseChanges();
-
-            int latestAsserts = current.AssertCount;
-            current = current.prior;
-            current.assertCount += latestAsserts;
+            current = ec;
         }
 
         #endregion
@@ -274,6 +271,15 @@ namespace NUnit.Framework.Internal
         {
             get { return currentTest; }
             set { currentTest = value; }
+        }
+
+        /// <summary>
+        /// The time the current test started execution
+        /// </summary>
+        public DateTime StartTime
+        {
+            get { return startTime; }
+            set { startTime = value; }
         }
 
         /// <summary>
@@ -316,7 +322,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// The current test event listener
         /// </summary>
-        public ITestListener Listener
+        internal ITestListener Listener
         {
             get { return listener; }
             set { listener = value; }
@@ -326,16 +332,17 @@ namespace NUnit.Framework.Internal
         /// Gets the assert count.
         /// </summary>
         /// <value>The assert count.</value>
-        public int AssertCount
+        internal int AssertCount
         {
             get { return assertCount; }
+            set { assertCount = value; }
         }
 
 #if !NETCF_1_0
         /// <summary>
 		/// Controls where Console.Out is directed
 		/// </summary>
-		public TextWriter Out
+		internal TextWriter Out
 		{
 			get { return outWriter; }
 			set 
@@ -352,7 +359,7 @@ namespace NUnit.Framework.Internal
 		/// <summary>
 		/// Controls where Console.Error is directed
 		/// </summary>
-		public TextWriter Error
+		internal TextWriter Error
 		{
 			get { return errorWriter; }
 			set 
@@ -372,7 +379,7 @@ namespace NUnit.Framework.Internal
         /// Controls whether trace and debug output are written
         /// to the standard output.
         /// </summary>
-        public bool Tracing
+        internal bool Tracing
         {
             get { return tracing; }
             set
@@ -393,7 +400,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Controls where Trace output is directed
         /// </summary>
-		public TextWriter TraceWriter
+		internal TextWriter TraceWriter
 		{
 			get { return traceWriter; }
 			set
@@ -501,6 +508,7 @@ namespace NUnit.Framework.Internal
                 Thread.CurrentPrincipal = this.currentPrincipal;
             }
 		}
+#endif
 
         /// <summary>
         /// Gets or sets the test case timeout vaue
@@ -510,41 +518,54 @@ namespace NUnit.Framework.Internal
             get { return testCaseTimeout; }
             set { testCaseTimeout = value; }
         }
-#endif
 
         #endregion
 
         #region Instance Methods
 
         /// <summary>
-		/// Used to restore settings to their prior
-		/// values before reverting to a prior context.
-		/// </summary>
-		public void ReverseChanges()
-		{ 
-			if ( prior == null )
-				throw new InvalidOperationException( "TestContext: too many Restores" );
+        /// Saves the old context and returns a fresh one 
+        /// with the same settings.
+        /// </summary>
+        public TestExecutionContext Save()
+        {
+            return new TestExecutionContext(this);
+        }
+
+        /// <summary>
+        /// Restores the last saved context and puts
+        /// any saved settings back into effect.
+        /// </summary>
+        public TestExecutionContext Restore()
+        {
+            if (prior == null)
+                throw new InvalidOperationException("TestContext: too many Restores");
 
 #if !NETCF_1_0
-			this.Out = prior.Out;
-			this.Error = prior.Error;
+            this.Out = prior.Out;
+            this.Error = prior.Error;
 #endif
 
 #if !NETCF
             this.Tracing = prior.Tracing;
-			this.CurrentCulture = prior.CurrentCulture;
+            this.CurrentCulture = prior.CurrentCulture;
             this.CurrentUICulture = prior.CurrentUICulture;
 #endif
 
+            this.TestCaseTimeout = prior.TestCaseTimeout;
+
 #if !NUNITLITE
             this.CurrentDirectory = prior.CurrentDirectory;
-            this.TestCaseTimeout = prior.TestCaseTimeout;
 			this.CurrentPrincipal = prior.CurrentPrincipal;
 #endif
-		}
+
+            return prior;
+        }
 
         /// <summary>
-        /// Record any changed values in the current context
+        /// Record any changes in the environment made by
+        /// the test code in the execution context so it
+        /// will be passed on to lower level tests.
         /// </summary>
         public void Update()
         {

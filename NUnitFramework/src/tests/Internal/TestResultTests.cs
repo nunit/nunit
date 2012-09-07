@@ -34,8 +34,8 @@ namespace NUnit.Framework.Internal
 	[TestFixture]
 	public abstract class TestResultTests
 	{
-		protected TestCaseResult testResult;
-        protected TestSuiteResult suiteResult;
+		protected TestResult testResult;
+        protected TestResult suiteResult;
         protected TestMethod test;
 
         protected string ignoredChildMessage = "One or more child tests were ignored";
@@ -48,13 +48,13 @@ namespace NUnit.Framework.Internal
             test.Properties.Set(PropertyNames.Description, "Test description");
             test.Properties.Add(PropertyNames.Category, "Dubious");
             test.Properties.Set("Priority", "low");
-			testResult = (TestCaseResult)test.MakeTestResult();
+			testResult = test.MakeTestResult();
 
             TestSuite suite = new TestSuite(typeof(DummySuite));
             suite.Properties.Set(PropertyNames.Description, "Suite description");
             suite.Properties.Add(PropertyNames.Category, "Fast");
             suite.Properties.Add("Value", 3);
-            suiteResult = (TestSuiteResult)suite.MakeTestResult();
+            suiteResult = suite.MakeTestResult();
 
             SimulateTestRun();
         }
