@@ -22,9 +22,7 @@
 // ***********************************************************************
 
 using System;
-using NUnit.Framework.Api;
 using NUnit.Framework.Internal;
-using NUnit.Framework.Internal.Commands;
 
 namespace NUnit.Framework
 {
@@ -32,50 +30,24 @@ namespace NUnit.Framework
     /// Summary description for SetUICultureAttribute.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method | AttributeTargets.Assembly, AllowMultiple = true, Inherited=true)]
-    public class SetUICultureAttribute : PropertyAttribute, ICommandDecorator
+    public class SetUICultureAttribute : PropertyAttribute, IApplyToContext
     {
+        private string _culture;
+
         /// <summary>
         /// Construct given the name of a culture
         /// </summary>
         /// <param name="culture"></param>
-        public SetUICultureAttribute(string culture) : base("SetUICulture", culture) { }
-
-        #region ICommandDecorator Members
-
-        CommandStage ICommandDecorator.Stage
+        public SetUICultureAttribute(string culture) : base("SetUICulture", culture) 
         {
-            get { return CommandStage.SetContext; }
+            _culture = culture;
         }
 
-        int ICommandDecorator.Priority
+        #region IApplyToContext Members
+
+        void IApplyToContext.ApplyToContext(TestExecutionContext context)
         {
-            get { return 0; }
-        }
-
-        TestCommand ICommandDecorator.Decorate(TestCommand command)
-        {
-            return new SetUICultureCommand(command);
-        }
-
-        #endregion
-
-        #region Nested Command Class
-
-        private class SetUICultureCommand : DelegatingTestCommand
-        {
-            public SetUICultureCommand(TestCommand command)
-                : base(command)
-            {
-            }
-
-            public override TestResult Execute(TestExecutionContext context)
-            {
-                string setUICulture = (string)Test.Properties.Get(PropertyNames.SetUICulture);
-                if (setUICulture != null)
-                    context.CurrentUICulture = new System.Globalization.CultureInfo(setUICulture);
-
-                return innerCommand.Execute(context);
-            }
+            context.CurrentUICulture = new System.Globalization.CultureInfo(_culture);
         }
 
         #endregion

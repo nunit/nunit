@@ -63,7 +63,7 @@ namespace NUnitLite.Tests
             else
             {
                 //            new TcpUI("ferrari", 9000).Execute(args);
-                new ConsoleUI().Execute(args);
+                new TextUI().Execute(args);
             }
         }
     }

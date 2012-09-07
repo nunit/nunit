@@ -36,14 +36,12 @@ namespace NUnit.DirectRunner
     public class FrameworkDriver
     {
         AppDomain testDomain;
-        private readonly bool teamCityServiceMessages;
 
         object testController;
 
-        public FrameworkDriver(AppDomain testDomain, bool teamCityServiceMessages)
+        public FrameworkDriver(AppDomain testDomain)
         {
             this.testDomain = testDomain;
-            this.teamCityServiceMessages = teamCityServiceMessages;
             this.testController = CreateObject("NUnit.Framework.Api.TestController");
         }
 
@@ -80,9 +78,9 @@ namespace NUnit.DirectRunner
             return doc.FirstChild;
         }
 
-        public XmlNode Run()
+        public XmlNode Run(CommandLineOptions options)
         {
-            CallbackHandler handler = teamCityServiceMessages ? new RunTestsCallbackHandler() : new CallbackHandler();
+            CallbackHandler handler = new RunTestsCallbackHandler(options);
 
             // NOTE: Filters are not supported in the direct runner
             CreateObject("NUnit.Framework.Api.TestController+RunTestsAction", testController, "<filter/>", handler);

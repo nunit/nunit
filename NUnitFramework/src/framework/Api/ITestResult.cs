@@ -145,5 +145,13 @@ namespace NUnit.Framework.Api
         {
             get;
         }
+
+        /// <summary>
+        /// Gets the Test to which this result applies.
+        /// </summary>
+        ITest Test
+        {
+            get;
+        }
     }
 }

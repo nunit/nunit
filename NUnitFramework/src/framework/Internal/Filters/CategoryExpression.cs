@@ -30,10 +30,10 @@ namespace NUnit.Framework.Internal.Filters
 	/// CategoryExpression parses strings representing boolean
 	/// combinations of categories according to the following
 	/// grammar:
-	///   CategoryName ::= string not containing any of ',', '&', '+', '-'
+	///   CategoryName ::= string not containing any of ',', '&amp;', '+', '-'
 	///   CategoryFilter ::= CategoryName | CategoryFilter ',' CategoryName
 	///   CategoryPrimitive ::= CategoryFilter | '-' CategoryPrimitive
-	///   CategoryTerm ::= CategoryPrimitive | CategoryTerm '&' CategoryPrimitive
+	///   CategoryTerm ::= CategoryPrimitive | CategoryTerm '&amp;' CategoryPrimitive
 	/// </summary>
 	public class CategoryExpression
 	{
@@ -45,13 +45,20 @@ namespace NUnit.Framework.Internal.Filters
 
 		private TestFilter filter;
 
-		public CategoryExpression(string text) 
+        /// <summary>
+        /// Construct expression from a text string
+        /// </summary>
+        /// <param name="text">The text of the expression</param>
+        public CategoryExpression(string text) 
 		{
 			this.text =  text;
 			this.next = 0;
 		}
 
-		public TestFilter Filter
+        /// <summary>
+        /// Gets the TestFilter represented by the expression
+        /// </summary>
+        public TestFilter Filter
 		{
 			get
 			{
@@ -130,7 +137,7 @@ namespace NUnit.Framework.Internal.Filters
 			return filter;
 		}
 
-		public string GetToken()
+		private string GetToken()
 		{
 			SkipWhiteSpace();
 

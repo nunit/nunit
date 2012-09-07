@@ -157,7 +157,7 @@ namespace NUnit.Framework
 
         CommandStage ICommandDecorator.Stage
         {
-            get { return CommandStage.PostSetUpPreTearDown; }
+            get { return CommandStage.BelowSetUpTearDown; }
         }
 
         int ICommandDecorator.Priority

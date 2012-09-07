@@ -64,7 +64,7 @@ namespace NUnit.Framework.Internal
 		public abstract bool Match(ITest test);
 
 		/// <summary>
-		/// Determine whether any ancestor of the test mateches the filter criteria
+		/// Determine whether any ancestor of the test matches the filter criteria
 		/// </summary>
 		/// <param name="test">The test to which the filter is applied</param>
 		/// <returns>True if the filter matches the an ancestor of the test</returns>
@@ -93,6 +93,12 @@ namespace NUnit.Framework.Internal
             return false;
 		}
 
+#if !NUNITLITE
+        /// <summary>
+        /// Create a TestFilter instance from an xml representation.
+        /// </summary>
+        /// <param name="xmlText"></param>
+        /// <returns></returns>
         public static TestFilter FromXml(string xmlText)
         {
             XmlDocument doc = new XmlDocument();
@@ -153,6 +159,7 @@ namespace NUnit.Framework.Internal
 
             return result;
         }
+#endif
 
 		/// <summary>
 		/// Nested class provides an empty filter - one that always

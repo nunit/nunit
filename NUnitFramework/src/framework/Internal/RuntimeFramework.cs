@@ -211,9 +211,10 @@ namespace NUnit.Framework.Internal
                 if (availableFrameworks == null)
                 {
                     List<RuntimeFramework> frameworks = new List<RuntimeFramework>();
-
+#if NETCF
+                    frameworks.Add(RuntimeFramework.CurrentFramework);
+#else
                     AppendDotNetFrameworks(frameworks);
-#if !NETCF
                     AppendDefaultMonoFramework(frameworks);
 #endif
                     // NYI
@@ -379,7 +380,7 @@ namespace NUnit.Framework.Internal
         /// are equal. Negative (i.e. unspecified) version
         /// components are ignored.
         /// </summary>
-        /// <param name="other">The RuntimeFramework to be matched.</param>
+        /// <param name="target">The RuntimeFramework to be matched.</param>
         /// <returns>True on match, otherwise false</returns>
         public bool Supports(RuntimeFramework target)
         {
@@ -402,15 +403,13 @@ namespace NUnit.Framework.Internal
 
         private static bool IsRuntimeTypeName(string name)
         {
-#if NETCF
-            return Enum.IsDefined(typeof(RuntimeType), name);
-#else
-            foreach (string item in Enum.GetNames(typeof(RuntimeType)))
+            TypeHelper.GetEnumValues(typeof(RuntimeType));
+
+            foreach (string item in TypeHelper.GetEnumNames(typeof(RuntimeType)))
                 if (item.ToLower() == name.ToLower())
                     return true;
 
             return false;
-#endif
         }
 
         private static string GetDefaultDisplayName(RuntimeType runtime, Version version)

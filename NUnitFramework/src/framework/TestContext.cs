@@ -62,10 +62,7 @@ namespace NUnit.Framework
         /// </summary>
         public static TestContext CurrentContext
         {
-            get
-            {
-                return new TestContext(TestExecutionContext.CurrentContext);
-            }
+            get { return new TestContext(TestExecutionContext.CurrentContext); }
         }
 
         /// <summary>
@@ -104,7 +101,7 @@ namespace NUnit.Framework
         {
             get
             {
-                return AssemblyHelper.GetAssemblyPath(ec.CurrentTest.FixtureType.Assembly);
+                return AssemblyHelper.GetDirectoryName(ec.CurrentTest.FixtureType.Assembly);
             }
         }
 #endif
@@ -157,7 +154,8 @@ namespace NUnit.Framework
             }
 
             /// <summary>
-            /// The name of the test.
+            /// The name of the test, which may or may not be
+            /// the same as the method name.
             /// </summary>
             public string Name
             {
@@ -167,6 +165,9 @@ namespace NUnit.Framework
                 }
             }
 			
+            /// <summary>
+            /// The name of the method representing the test.
+            /// </summary>
 			public string MethodName
 			{
 				get

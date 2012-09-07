@@ -24,8 +24,9 @@
 using System;
 using NUnit.Framework;
 using NUnit.Framework.Api;
+using NUnit.Framework.Internal;
 
-namespace NUnitLite
+namespace NUnitLite.Runner
 {
     /// <summary>
     /// Helper class used to summarize the result of a test run
@@ -33,8 +34,13 @@ namespace NUnitLite
     public class ResultSummary
     {
         private int testCount;
+        private int errorCount;
         private int failureCount;
         private int notRunCount;
+        private int inconclusiveCount;
+        private int ignoreCount;
+        private int skipCount;
+        private int invalidCount;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ResultSummary"/> class.
@@ -55,6 +61,15 @@ namespace NUnitLite
         }
 
         /// <summary>
+        /// Gets the error count.
+        /// </summary>
+        /// <value>The error count.</value>
+        public int ErrorCount
+        {
+            get { return errorCount; }
+        }
+
+        /// <summary>
         /// Gets the failure count.
         /// </summary>
         /// <value>The failure count.</value>
@@ -72,6 +87,38 @@ namespace NUnitLite
             get { return notRunCount; }
         }
 
+        /// <summary>
+        /// Gets the ignore count
+        /// </summary>
+        public int IgnoreCount
+        {
+            get { return ignoreCount; }
+        }
+
+        /// <summary>
+        /// Gets the skip count
+        /// </summary>
+        public int SkipCount
+        {
+            get { return skipCount; }
+        }
+
+        /// <summary>
+        /// Gets the invalid count
+        /// </summary>
+        public int InvalidCount
+        {
+            get { return invalidCount; }
+        }
+
+        /// <summary>
+        /// Gets the count of inconclusive results
+        /// </summary>
+        public int InconclusiveCount
+        {
+            get { return inconclusiveCount; }
+        }
+
         private void Visit(ITestResult result)
         {
             if (result.HasChildren)
@@ -85,10 +132,22 @@ namespace NUnitLite
                 switch (result.ResultState.Status)
                 {
                     case TestStatus.Skipped:
+                        if (result.ResultState == ResultState.Ignored)
+                            ignoreCount++;
+                        else if (result.ResultState == ResultState.Skipped)
+                            skipCount++;
+                        else if (result.ResultState == ResultState.NotRunnable)
+                            invalidCount++;
                         notRunCount++;
                         break;
                     case TestStatus.Failed:
-                        failureCount++;
+                        if (result.ResultState == ResultState.Failure)
+                            failureCount++;
+                        else
+                            errorCount++;
+                        break;
+                    case TestStatus.Inconclusive:
+                        inconclusiveCount++;
                         break;
                     default:
                         break;

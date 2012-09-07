@@ -61,10 +61,14 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public override void WriteDescriptionTo(MessageWriter writer)
         {
+#if NETCF_2_0
+            writer.Write("value matching predicate");
+#else
             writer.WritePredicate("value matching");
             writer.Write(predicate.Method.Name.StartsWith("<")
                 ? "lambda expression"
                 : predicate.Method.Name);
+#endif
         }
     }
 }

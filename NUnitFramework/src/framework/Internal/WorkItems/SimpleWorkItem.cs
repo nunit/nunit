@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2010 Charlie Poole
+// Copyright (c) 2012 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -22,19 +22,36 @@
 // ***********************************************************************
 
 using System;
-
-namespace NUnit.Framework.Api
+using System.Threading;
+namespace NUnit.Framework.Internal.WorkItems
 {
     /// <summary>
-    /// The IApplyToTest interface is implemented by self-applying
-    /// attributes that modify the state of a test in some way.
+    /// A SimpleWorkItem represents a single test case and is
+    /// marked as completed immediately upon execution. This
+    /// class is also used for skipped or ignored test suites.
     /// </summary>
-    public interface IApplyToTest
+    public class SimpleWorkItem : WorkItem
     {
         /// <summary>
-        /// Modifies a test as defined for the specific attribute.
+        /// Construct a simple work item for a test.
         /// </summary>
-        /// <param name="test">The test to modify</param>
-        void ApplyToTest(ITest test);
+        /// <param name="test">The test to be executed</param>
+        public SimpleWorkItem(Test test) : base(test) { }
+
+        /// <summary>
+        /// Method that performs actually performs the work.
+        /// </summary>
+        protected override void PerformWork()
+        {
+            try
+            {
+                testResult = Command.Execute(Context);
+            }
+            finally
+            {
+                WorkItemComplete();
+            }
+        }
+
     }
 }

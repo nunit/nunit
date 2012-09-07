@@ -51,14 +51,10 @@ namespace NUnit.Framework.Internal.Commands
         /// <returns>A TestResult</returns>
         public override TestResult Execute(TestExecutionContext context)
         {
-            DateTime start = DateTime.Now;
-
             TestResult testResult = innerCommand.Execute(context);
 
-            DateTime stop = DateTime.Now;
-            TimeSpan span = stop.Subtract(start);
-            testResult.Time = (double)span.Ticks / (double)TimeSpan.TicksPerSecond;
-
+            TimeSpan span = DateTime.Now.Subtract(context.StartTime);
+            testResult.Time = span.TotalSeconds;
 
             if (testResult.ResultState == ResultState.Success)
             {

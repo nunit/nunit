@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2007 Charlie Poole
+// Copyright (c) 2012 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -27,6 +27,7 @@ using System.Reflection;
 using System.Xml;
 using NUnit.Framework.Api;
 using NUnit.Framework.Internal.Commands;
+using NUnit.Framework.Internal.WorkItems;
 
 namespace NUnit.Framework.Internal
 {
@@ -64,7 +65,7 @@ namespace NUnit.Framework.Internal
 		private PropertyBag properties;
 
         /// <summary>
-        /// The System.Type of the fixture for this test suite, if there is one
+        /// The System.Type of the fixture for this test, if there is one
         /// </summary>
         private Type fixtureType;
 
@@ -72,6 +73,12 @@ namespace NUnit.Framework.Internal
         /// The fixture object, if it has been created
         /// </summary>
         private object fixture;
+
+        /// <summary>
+        /// NUnitAttributes applied to the method, class or assembly
+        /// used to implement this test.
+        /// </summary>
+        private NUnitAttribute[] attributes = new NUnitAttribute[0];
 
         /// <summary>
         /// The SetUp methods.
@@ -84,11 +91,11 @@ namespace NUnit.Framework.Internal
         protected MethodInfo[] tearDownMethods;
 
         /// <summary>
-        /// Argument list for use in executing the test.
+        /// True if the test should run on its own thread
         /// </summary>
-        internal object[] arguments;
+        private bool requiresThread;
 
-        private TestCommand testCommand;
+        private bool isAsynchronous;
 
         #endregion
 
@@ -183,7 +190,6 @@ namespace NUnit.Framework.Internal
             set { runState = value; }
         }
 
-        /// </summary>
         /// <summary>
         /// Gets the name used for the top-level element in the
         /// XML representation of this test
@@ -307,17 +313,20 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Gets a test command to be used in executing this test
         /// </summary>
-        /// <param name="filter"></param>
         /// <returns></returns>
-        public TestCommand GetTestCommand(ITestFilter filter)
+        public TestCommand GetTestCommand()
         {
-            if (testCommand == null)
-                testCommand = runState != RunState.Runnable && runState != RunState.Explicit
-                    ? new SkipCommand(this)
-                    : MakeTestCommand(filter);
-
-            return testCommand;
+            return runState == RunState.Runnable || runState == RunState.Explicit
+                ? MakeTestCommand()
+                : new SkipCommand(this);
         }
+
+        /// <summary>
+        /// Creates a WorkItem for executing this test.
+        /// </summary>
+        /// <param name="childFilter">A filter to be used in selecting child tests</param>
+        /// <returns>A new WorkItem</returns>
+        public abstract WorkItem CreateWorkItem(ITestFilter childFilter);
 
         ///// <summary>
         ///// Gets a count of test cases that would be run using
@@ -337,12 +346,15 @@ namespace NUnit.Framework.Internal
         /// Modify a newly constructed test by applying any of NUnit's common
         /// attributes, based on a supplied ICustomAttributeProvider, which is
         /// usually the reflection element from which the test was constructed,
-        /// but may not be in some instances.
+        /// but may not be in some instances. The attributes retrieved are 
+        /// saved for use in subsequent operations.
         /// </summary>
         /// <param name="provider">An object implementing ICustomAttributeProvider</param>
-        public void ApplyCommonAttributes(ICustomAttributeProvider provider)
+        public void ApplyAttributesToTest(ICustomAttributeProvider provider)
         {
-            foreach (Attribute attribute in provider.GetCustomAttributes(typeof(NUnitAttribute), true))
+            this.attributes = (NUnitAttribute[])provider.GetCustomAttributes(typeof(NUnitAttribute), true);
+
+            foreach (Attribute attribute in this.attributes)
             {
                 IApplyToTest iApply = attribute as IApplyToTest;
                 if (iApply != null)
@@ -359,9 +371,8 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Make a test command for running this test
         /// </summary>
-        /// <param name="filter">A test filter used to select child tests for inclusion.</param>
         /// <returns>A TestCommand, which runs the test when executed.</returns>
-        protected abstract TestCommand MakeTestCommand(ITestFilter filter);
+        protected abstract TestCommand MakeTestCommand();
 
         /// <summary>
         /// Add standard attributes and members to a test node.
@@ -391,27 +402,6 @@ namespace NUnit.Framework.Internal
             get { return fixture; }
             set { fixture = value; }
         }
-
-#if !NUNITLITE
-        /// <summary>
-        /// Gets a boolean value indicating whether this 
-        /// test should run on it's own thread.
-        /// </summary>
-        internal virtual bool ShouldRunOnOwnThread
-        {
-            get
-            {
-                if (Properties.GetSetting(PropertyNames.RequiresThread, false))
-                    return true;
-
-                ApartmentState state = (ApartmentState)Properties.GetSetting(PropertyNames.ApartmentState, ApartmentState.Unknown);
-                if (state == ApartmentState.Unknown)
-                    return false;
-
-                return state != Thread.CurrentThread.GetApartmentState();
-            }
-        }
-#endif
 
         /// <summary>
         /// Gets the set up methods.
@@ -449,6 +439,23 @@ namespace NUnit.Framework.Internal
 
                 return tearDownMethods;
             }
+        }
+
+        internal NUnitAttribute[] Attributes
+        {
+            get { return attributes; }
+        }
+
+        internal bool RequiresThread
+        {
+            get { return requiresThread; }
+            set { requiresThread = value; }
+        }
+
+        internal bool IsAsynchronous
+        {
+            get { return isAsynchronous; }
+            set { isAsynchronous = value; }
         }
 
         #endregion

@@ -170,7 +170,7 @@ namespace NUnit.Framework.Internal
                 testAssembly.Properties.Set(PropertyNames.SkipReason, "Has no TestFixtures");
             }
 
-            testAssembly.ApplyCommonAttributes(assembly);
+            testAssembly.ApplyAttributesToTest(assembly);
 
             testAssembly.Properties.Set(PropertyNames.ProcessID, System.Diagnostics.Process.GetCurrentProcess().Id);
             testAssembly.Properties.Set(PropertyNames.AppDomain, AppDomain.CurrentDomain.FriendlyName);

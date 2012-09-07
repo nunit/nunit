@@ -46,7 +46,6 @@
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Api\ExpectedExceptionData.cs" />
-    <Compile Include="Api\IApplyToTest.cs" />
     <Compile Include="Api\IParameterDataSource.cs" />
     <Compile Include="Api\IPropertyBag.cs" />
     <Compile Include="Api\ITest.cs" />
@@ -216,8 +215,8 @@
     <Compile Include="Internal\Builders\ParameterDataProvider.cs" />
     <Compile Include="Internal\Builders\ProviderCache.cs" />
     <Compile Include="Internal\Builders\SequentialStrategy.cs" />
+    <Compile Include="Internal\Commands\ApplyChangesToContextCommand.cs" />
     <Compile Include="Internal\Commands\CommandDecoratorList.cs" />
-    <Compile Include="Internal\Commands\CommandRunner.cs" />
     <Compile Include="Internal\Commands\CommandStage.cs" />
     <Compile Include="Internal\Commands\DelegatingTestCommand.cs" />
     <Compile Include="Internal\Commands\ExpectedExceptionCommand.cs" />
@@ -239,6 +238,8 @@
     <Compile Include="Internal\Filters\NotFilter.cs" />
     <Compile Include="Internal\Filters\OrFilter.cs" />
     <Compile Include="Internal\Filters\SimpleNameFilter.cs" />
+    <Compile Include="Internal\IApplyToContext.cs" />
+    <Compile Include="Internal\IApplyToTest.cs" />
     <Compile Include="Internal\InvalidTestFixtureException.cs" />
     <Compile Include="Internal\Log4NetCapture.cs" />
     <Compile Include="Internal\LogCapture.cs" />
@@ -253,6 +254,7 @@
     <Compile Include="Internal\PropertyNames.cs" />
     <Compile Include="Internal\Randomizer.cs" />
     <Compile Include="Internal\Reflect.cs" />
+    <Compile Include="Internal\Results\FailureSite.cs" />
     <Compile Include="Internal\Results\TestCaseResult.cs" />
     <Compile Include="Internal\Results\TestResult.cs" />
     <Compile Include="Internal\Results\TestSuiteResult.cs" />
@@ -270,7 +272,13 @@
     <Compile Include="Internal\Tests\TestSuite.cs" />
     <Compile Include="Internal\TextCapture.cs" />
     <Compile Include="Internal\TextMessageWriter.cs" />
+    <Compile Include="Internal\ThreadUtility.cs" />
     <Compile Include="Internal\TypeHelper.cs" />
+    <Compile Include="Internal\WorkItems\CompositeWorkItem.cs" />
+    <Compile Include="Internal\WorkItems\CountdownEvent.cs" />
+    <Compile Include="Internal\WorkItems\SimpleWorkItem.cs" />
+    <Compile Include="Internal\WorkItems\WorkItem.cs" />
+    <Compile Include="Internal\WorkItems\WorkItemState.cs" />
     <Compile Include="Internal\XmlHelper.cs" />
     <Compile Include="Is.cs" />
     <Compile Include="ListMapper.cs" />
@@ -279,6 +287,9 @@
     <Compile Include="Runner\CommandLineOptions.cs" />
     <Compile Include="Runner\ConsoleWriter.cs" />
     <Compile Include="Runner\DebugWriter.cs" />
+    <Compile Include="Runner\OutputWriters\NUnit2XmlOutputWriter.cs" />
+    <Compile Include="Runner\OutputWriters\NUnit3XmlOutputWriter.cs" />
+    <Compile Include="Runner\OutputWriters\OutputWriter.cs" />
     <Compile Include="Runner\ResultSummary.cs" />
     <Compile Include="Runner\TcpWriter.cs" />
     <Compile Include="Runner\TextUI.cs" />

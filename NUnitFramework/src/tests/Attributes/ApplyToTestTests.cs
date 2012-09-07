@@ -228,11 +228,11 @@ namespace NUnit.Framework.Attributes
 
         #region RepeatAttribute
 
-        public void RepeatAttributeSetsRepeatCount()
-        {
-            new RepeatAttribute(5).ApplyToTest(test);
-            Assert.That(test.Properties.Get(PropertyNames.RepeatCount), Is.EqualTo(5));
-        }
+        //public void RepeatAttributeSetsRepeatCount()
+        //{
+        //    new RepeatAttribute(5).ApplyToTest(test);
+        //    Assert.That(test.Properties.Get(PropertyNames.RepeatCount), Is.EqualTo(5));
+        //}
 
         #endregion
 

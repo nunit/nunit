@@ -195,7 +195,7 @@ namespace NUnit.Framework.Internal
         /// Applies ParameterSet values to the test itself.
         /// </summary>
         /// <param name="test">A test.</param>
-        public void ApplyToTest(ITest test)
+        public void ApplyToTest(Test test)
         {
             if (this.RunState == RunState.Ignored || this.RunState == RunState.Explicit)
 				test.RunState = this.RunState;

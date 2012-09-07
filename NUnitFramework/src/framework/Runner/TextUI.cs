@@ -29,90 +29,27 @@ using System.Xml;
 using NUnit.Framework;
 using NUnit.Framework.Api;
 using NUnit.Framework.Internal;
+using NUnit.Framework.Internal.Filters;
 
 namespace NUnitLite.Runner
 {
-    /// <summary>
-    /// A version of TextUI that outputs to the console.
-    /// If you use it on a device without a console like
-    /// PocketPC or SmartPhone you won't see anything!
-    /// 
-    /// Call it from your Main like this:
-    ///   new ConsoleUI().Execute(args);
-    /// </summary>
-    public class ConsoleUI : TextUI
-    {
-        /// <summary>
-        /// Construct an instance of ConsoleUI
-        /// </summary>
-#if NETCF_1_0
-        public ConsoleUI() : base(ConsoleWriter.Out) { }
-#else
-        public ConsoleUI() : base(Console.Out) { }
-#endif
-    }
-
-    /// <summary>
-    /// A version of TextUI that writes to a file.
-    /// 
-    /// Call it from your Main like this:
-    ///   new FileUI(filePath).Execute(args);
-    /// </summary>
-    public class FileUI : TextUI
-    {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="FileUI"/> class.
-        /// </summary>
-        /// <param name="path">The path.</param>
-        public FileUI(string path) : base(new StreamWriter(path)) { }
-    }
-
-    /// <summary>
-    /// A version of TextUI that displays to debug.
-    /// 
-    /// Call it from your Main like this:
-    ///   new DebugUI().Execute(args);
-    /// </summary>
-    public class DebugUI : TextUI
-    {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DebugUI"/> class.
-        /// </summary>
-        public DebugUI() : base(DebugWriter.Out) { }
-    }
-
-    /// <summary>
-    /// A version of TextUI that writes to a TcpWriter
-    /// </summary>
-    public class TcpUI : TextUI
-    {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TcpUI"/> class.
-        /// </summary>
-        /// <param name="hostName">Name of the host.</param>
-        /// <param name="port">The port.</param>
-        public TcpUI(string hostName, int port) : base( new TcpWriter(hostName, port) ) { }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TcpUI"/> class.
-        /// </summary>
-        /// <param name="hostName">Name of the host.</param>
-        public TcpUI(string hostName) : this(hostName, 9000) { }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TcpUI"/> class.
-        /// </summary>
-        public TcpUI() : this("localhost", 9000) { }
-    }
-
     /// <summary>
     /// TextUI is a general purpose class that runs tests and
     /// outputs to a TextWriter.
     /// 
     /// Call it from your Main like this:
     ///   new TextUI(textWriter).Execute(args);
+    ///     OR
+    ///   new TextUI().Execute(args);
+    /// The provided TextWriter is used by default, unless the
+    /// arguments to Execute override it using -out. The second
+    /// form uses the Console, provided it exists on the platform.
+    /// 
+    /// NOTE: When running on a platform without a Console, such
+    /// as Windows Phone, the results will simply not appear if
+    /// you fail to specify a file in the call itself or as an option.
     /// </summary>
-    public class TextUI
+    public class TextUI : ITestListener
     {
         private CommandLineOptions commandLineOptions;
         private int reportCount = 0;
@@ -124,12 +61,19 @@ namespace NUnitLite.Runner
         private ITestAssemblyRunner runner;
 
         #region Constructors
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TextUI"/> class.
+        /// </summary>
+        public TextUI() : this(ConsoleWriter.Out) { }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="TextUI"/> class.
         /// </summary>
         /// <param name="writer">The TextWriter to use.</param>
         public TextUI(TextWriter writer)
         {
+            // Set the default writer - may be overridden by the args specified
             this.writer = writer;
             this.runner = new NUnitLiteTestAssemblyRunner(new NUnitLiteTestAssemblyBuilder());
         }
@@ -147,20 +91,40 @@ namespace NUnitLite.Runner
             // test assembly in order for the mechanism to work.
             Assembly callingAssembly = Assembly.GetCallingAssembly();
 
-            this.commandLineOptions = ProcessArguments( args );
+            this.commandLineOptions = new CommandLineOptions();
+            commandLineOptions.Parse(args);
 
-            if (!commandLineOptions.ShowHelp && !commandLineOptions.Error)
+            if (commandLineOptions.OutFile != null)
+                this.writer = new StreamWriter(commandLineOptions.OutFile);
+
+            if (!commandLineOptions.NoHeader)
+                WriteHeader();
+
+            if (commandLineOptions.ShowHelp)
+                writer.Write(commandLineOptions.HelpText);
+            else if (commandLineOptions.Error)
             {
-                if (commandLineOptions.Wait && !(this is ConsoleUI))
+                writer.WriteLine(commandLineOptions.ErrorMessage);
+                writer.WriteLine(commandLineOptions.HelpText);
+            }
+            else
+            {
+                WriteRuntimeEnvironment();
+
+                if (commandLineOptions.Wait && commandLineOptions.OutFile != null)
                     writer.WriteLine("Ignoring /wait option - only valid for Console");
 
                 IDictionary loadOptions = new Hashtable();
                 //if (options.Load.Count > 0)
                 //    loadOptions["LOAD"] = options.Load;
 
-                IDictionary runOptions = new Hashtable();
-                if (commandLineOptions.TestCount > 0)
-                    runOptions["RUN"] = commandLineOptions.Tests;
+                //IDictionary runOptions = new Hashtable();
+                //if (commandLineOptions.TestCount > 0)
+                //    runOptions["RUN"] = commandLineOptions.Tests;
+
+                ITestFilter filter = commandLineOptions.TestCount > 0
+                    ? new SimpleNameFilter(commandLineOptions.Tests)
+                    : TestFilter.Empty;
 
                 try
                 {
@@ -182,7 +146,7 @@ namespace NUnitLite.Runner
                     if (commandLineOptions.Explore)
                         ExploreTests();
                     else
-                        RunTests();
+                        RunTests(filter);
                 }
                 catch (FileNotFoundException ex)
                 {
@@ -194,27 +158,44 @@ namespace NUnitLite.Runner
                 }
                 finally
                 {
-                    if (commandLineOptions.Wait && this is ConsoleUI)
+                    if (commandLineOptions.OutFile == null)
                     {
-                        Console.WriteLine("Press Enter key to continue . . .");
-                        Console.ReadLine();
+                        if (commandLineOptions.Wait)
+                        {
+                            Console.WriteLine("Press Enter key to continue . . .");
+                            Console.ReadLine();
+                        }
+                    }
+                    else
+                    {
+                        writer.Close();
                     }
                 }
             }
         }
 
-        private void RunTests()
+#endregion
+
+        #region Helper Methods
+
+        private void RunTests(ITestFilter filter)
         {
-            ITestResult result = runner.Run(TestListener.NULL, TestFilter.Empty);
+            ITestResult result = runner.Run(this, filter);
             ReportResults(result);
 
             string resultFile = commandLineOptions.ResultFile;
-            if (resultFile != null)
+            string resultFormat = commandLineOptions.ResultFormat;
+            if (resultFile != null || commandLineOptions.ResultFormat != null)
             {
-                XmlTextWriter resultWriter = new XmlTextWriter(resultFile, System.Text.Encoding.UTF8);
-                resultWriter.Formatting = Formatting.Indented;
-                result.ToXml(true).WriteTo(resultWriter);
-                resultWriter.Close();
+                if (resultFile == null)
+                    resultFile = "TestResult.xml";
+
+                if (resultFormat == "nunit2")
+                    new NUnit2XmlOutputWriter().WriteResultFile(result, resultFile);
+                else
+                    new NUnit3XmlOutputWriter().WriteResultFile(result, resultFile);
+                Console.WriteLine();
+                Console.WriteLine("Results saved as {0}.", resultFile);
             }
         }
 
@@ -239,10 +220,10 @@ namespace NUnitLite.Runner
         {
             ResultSummary summary = new ResultSummary(result);
 
-            writer.WriteLine("{0} Tests : {1} Failures, {2} Not Run",
-                summary.TestCount, summary.FailureCount, summary.NotRunCount);
+            writer.WriteLine("{0} Tests : {1} Failures, {2} Errors, {3} Not Run",
+                summary.TestCount, summary.FailureCount, summary.ErrorCount, summary.NotRunCount);
 
-            if (summary.FailureCount > 0)
+            if (summary.FailureCount > 0 || summary.ErrorCount > 0)
                 PrintErrorReport(result);
 
             if (summary.NotRunCount > 0)
@@ -251,26 +232,8 @@ namespace NUnitLite.Runner
             if (commandLineOptions.Full)
                 PrintFullReport(result);
         }
-        #endregion
 
-        #region Helper Methods
-        private CommandLineOptions ProcessArguments(string[] args)
-        {
-            this.commandLineOptions = new CommandLineOptions();
-            commandLineOptions.Parse(args);
-
-            if (!commandLineOptions.NoHeader)
-                WriteCopyright();
-
-            if (commandLineOptions.ShowHelp)
-                writer.Write(commandLineOptions.HelpText);
-            else if (commandLineOptions.Error)
-                writer.WriteLine(commandLineOptions.ErrorMessage);
-
-            return commandLineOptions;
-        }
-
-        private void WriteCopyright()
+        private void WriteHeader()
         {
             Assembly executingAssembly = Assembly.GetExecutingAssembly();
 #if NUNITLITE
@@ -279,7 +242,7 @@ namespace NUnitLite.Runner
             string title = "NUNit Framework";
 #endif
             System.Version version = executingAssembly.GetName().Version;
-            string copyright = "Copyright (C) 2011, Charlie Poole";
+            string copyright = "Copyright (C) 2012, Charlie Poole";
             string build = "";
 
 #if !NETCF_1_0
@@ -308,7 +271,10 @@ namespace NUnitLite.Runner
             writer.WriteLine(String.Format("{0} {1} {2}", title, version.ToString(3), build));
             writer.WriteLine(copyright);
             writer.WriteLine();
+        }
 
+        private void WriteRuntimeEnvironment()
+        {
             string clrPlatform = Type.GetType("Mono.Runtime", false) == null ? ".NET" : "Mono";
             writer.WriteLine("Runtime Environment -");
             writer.WriteLine("    OS Version: {0}", Environment.OSVersion);
@@ -404,6 +370,25 @@ namespace NUnitLite.Runner
                 foreach (ITestResult r in result.Children)
                     PrintAllResults(r, indent + "  ");
         }
+
+        #endregion
+
+        #region ITestListener Members
+
+        public void TestStarted(ITest test)
+        {
+            if (commandLineOptions.LabelTestsInOutput)
+                writer.WriteLine("***** {0}", test.Name);
+        }
+
+        public void TestFinished(ITestResult result)
+        {
+        }
+
+        public void TestOutput(TestOutput testOutput)
+        {
+        }
+
         #endregion
     }
 }

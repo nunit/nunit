@@ -74,7 +74,9 @@
     <exclude name="Internal/Tests/LegacySuite.cs"/>
     <exclude name="Internal/Tests/SetUpFixture.cs"/>
 
-    <include name="Runner/*.cs"/>
+    <include name="Internal/WorkItems/*.cs"/>
+
+    <include name="Runner/**/*.cs"/>
   </patternset>
 
   <target name="build">

@@ -26,7 +26,8 @@ using NUnit.Framework.Api;
 namespace NUnit.Framework.Internal.Commands
 {
     /// <summary>
-    /// TODO: Documentation needed for class
+    /// TestMethodCommand is the lowest level concrete command
+    /// used to run actual test cases.
     /// </summary>
     public class TestMethodCommand : TestCommand
     {
@@ -34,26 +35,31 @@ namespace NUnit.Framework.Internal.Commands
         private readonly object[] arguments;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TestCaseCommand"/> class.
+        /// Initializes a new instance of the <see cref="TestMethodCommand"/> class.
         /// </summary>
         /// <param name="test">The test.</param>
         public TestMethodCommand(Test test) : base(test)
         {
             this.testMethod = test as TestMethod;
-            this.arguments = test.arguments;
+            this.arguments = testMethod.Arguments;
         }
 
         /// <summary>
-        /// Runs the test, saving a TestResult in
-        /// TestExecutionContext.CurrentContext.CurrentResult
+        /// Runs the test, saving a TestResult in the execution context, as
+        /// well as returning it. If the test has an expected result, it
+        /// is asserts on that value. Since failed tests and errors throw
+        /// an exception, this command must be wrapped in an outer command,
+        /// will handle that exception and records the failure. This role
+        /// is usually played by the SetUpTearDown command.
         /// </summary>
-        /// <param name="testObject"></param>
+        /// <param name="context">The execution context</param>
         public override TestResult Execute(TestExecutionContext context)
         {
+            // TODO: Decide if we should handle exceptions here
             object result = Reflect.InvokeMethod(testMethod.Method, context.TestObject, arguments);
 
-            if (testMethod.hasExpectedResult)
-                NUnit.Framework.Assert.AreEqual(testMethod.expectedResult, result);
+            if (testMethod.HasExpectedResult)
+                NUnit.Framework.Assert.AreEqual(testMethod.ExpectedResult, result);
 
             context.CurrentResult.SetResult(ResultState.Success);
             return context.CurrentResult;

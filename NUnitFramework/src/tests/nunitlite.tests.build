@@ -42,6 +42,7 @@
         <exclude name="Internal/CoreExtensionsTests.cs" />
         <exclude name="Internal/EventQueueTests.cs" />
         <exclude name="Internal/LegacySuiteTests.cs" />
+        <exclude name="Internal/TestFilterTests.cs" />
         <exclude name="Internal/UnexpectedExceptionTests.cs" />
         <exclude name="Internal/UnhandledExceptionTests.cs" />
         

@@ -2,20 +2,20 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{74980C78-B8A2-4D64-8DC9-25E13DCE01E0}</ProjectGuid>
+    <ProjectGuid>{80A9EC94-2C42-44AC-9D2C-E1418D712C48}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NUnitLite.Tests</RootNamespace>
+    <RootNamespace>NUnit.Framework.Tests</RootNamespace>
     <AssemblyName>nunitlite.tests</AssemblyName>
     <ProjectTypeGuids>{4D628B5B-2FBC-4AA6-8C16-197242AEB884};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <PlatformFamilyName>PocketPC</PlatformFamilyName>
-    <PlatformID>3C41C503-53EF-4c2a-8DD4-A8217CAD115E</PlatformID>
-    <OSVersion>4.20</OSVersion>
-    <DeployDirSuffix>nunitlite</DeployDirSuffix>
+    <PlatformFamilyName>WindowsCE</PlatformFamilyName>
+    <PlatformID>E2BECB1F-8C8C-41ba-B736-9BE7D946A398</PlatformID>
+    <OSVersion>5.0</OSVersion>
+    <DeployDirSuffix>nunitlite.tests_netcf_3._5</DeployDirSuffix>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
-    <NativePlatformName>Pocket PC 2003</NativePlatformName>
+    <NativePlatformName>Windows CE</NativePlatformName>
     <FormFactorID>
     </FormFactorID>
   </PropertyGroup>
@@ -23,8 +23,8 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\bin\netcf-3.5\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;PocketPC;NETCF;NETCF_3_5;CLR_2_0;NUNITLITE</DefineConstants>
+    <OutputPath>..\..\bin\Debug\netcf-3.5\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;WindowsCE;NETCF;NETCF_3_5;CLR_2_0;NUNITLITE</DefineConstants>
     <NoStdLib>true</NoStdLib>
     <NoConfig>true</NoConfig>
     <ErrorReport>prompt</ErrorReport>
@@ -35,8 +35,8 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\..\bin\netcf-3.5\Release\</OutputPath>
-    <DefineConstants>TRACE;PocketPC;NETCF;NETCF_3_5;CLR_2_0;NUNITLITE</DefineConstants>
+    <OutputPath>..\..\bin\Release\netcf-3.5\</OutputPath>
+    <DefineConstants>TRACE;WindowsCE;NETCF;NETCF_3_5;CLR_2_0;NUNITLITE</DefineConstants>
     <NoStdLib>true</NoStdLib>
     <NoConfig>true</NoConfig>
     <ErrorReport>prompt</ErrorReport>
@@ -47,7 +47,7 @@
   <ItemGroup>
     <Reference Include="mscorlib" />
     <Reference Include="System" />
-    <Reference Include="System.Data" />
+    <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -56,14 +56,11 @@
     <Compile Include="Assertions\ArrayEqualsFailureMessageFixture.cs" />
     <Compile Include="Assertions\ArrayEqualsFixture.cs" />
     <Compile Include="Assertions\ArrayNotEqualFixture.cs" />
-    <Compile Include="Assertions\AssertFailTests.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Assertions\AssertIgnoreTests.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Assertions\AssertFailTests.cs" />
+    <Compile Include="Assertions\AssertIgnoreTests.cs" />
     <Compile Include="Assertions\AssertInconclusiveTests.cs" />
     <Compile Include="Assertions\AssertPassTests.cs" />
+    <Compile Include="Assertions\AssertThatTests.cs" />
     <Compile Include="Assertions\AssertThrowsTests.cs" />
     <Compile Include="Assertions\AssumeThatTests.cs" />
     <Compile Include="Assertions\ConditionAssertTests.cs" />
@@ -76,6 +73,7 @@
     <Compile Include="Attributes\AttributeInheritanceTests.cs" />
     <Compile Include="Attributes\CategoryAttributeTests.cs" />
     <Compile Include="Attributes\CombinatorialTests.cs" />
+    <Compile Include="Attributes\DatapointTests.cs" />
     <Compile Include="Attributes\DescriptionTests.cs" />
     <Compile Include="Attributes\ExpectedExceptionTests.cs" />
     <Compile Include="Attributes\FixtureSetUpTearDownTests.cs" />
@@ -84,49 +82,65 @@
     <Compile Include="Attributes\ParameterizedTestFixtureTests.cs" />
     <Compile Include="Attributes\PropertyAttributeTests.cs" />
     <Compile Include="Attributes\RepeatedTestTests.cs" />
-    <Compile Include="Attributes\TestCaseAttributeTests.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Attributes\TestCaseSourceTests.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Attributes\TestCaseAttributeTests.cs" />
+    <Compile Include="Attributes\TestCaseSourceTests.cs" />
     <Compile Include="Attributes\TestDummy.cs" />
     <Compile Include="Attributes\TestFixtureAttributeTests.cs" />
+    <Compile Include="Attributes\TheoryTests.cs" />
     <Compile Include="Attributes\ValuesAttributeTests.cs" />
     <Compile Include="Attributes\ValueSourceTests.cs" />
-    <Compile Include="Constraints\AndTest.cs" />
+    <Compile Include="Constraints\AllItemsConstraintTests.cs" />
+    <Compile Include="Constraints\AndConstraintTests.cs" />
+    <Compile Include="Constraints\AssignableFromConstraintTests.cs" />
+    <Compile Include="Constraints\AssignableToConstraintTests.cs" />
+    <Compile Include="Constraints\AttributeExistsConstraintTests.cs" />
     <Compile Include="Constraints\BasicConstraintTests.cs" />
     <Compile Include="Constraints\BinarySerializableTest.cs" />
-    <Compile Include="Constraints\CollectionConstraintTests.cs" />
-    <Compile Include="Constraints\ComparerTests.cs" />
-    <Compile Include="Constraints\ComparisonConstraintTests.cs" />
+    <Compile Include="Constraints\CollectionContainsConstraintTests.cs" />
+    <Compile Include="Constraints\CollectionEquivalentConstraintTests.cs" />
+    <Compile Include="Constraints\CollectionOrderedConstraintTests.cs" />
+    <Compile Include="Constraints\ComparisonConstraintTestBase.cs" />
     <Compile Include="Constraints\ConstraintTestBase.cs" />
     <Compile Include="Constraints\EmptyConstraintTest.cs" />
+    <Compile Include="Constraints\EndsWithConstraintTests.cs" />
+    <Compile Include="Constraints\EqualConstraintTests.cs" />
     <Compile Include="Constraints\EqualTest.cs" />
+    <Compile Include="Constraints\ExactCountConstraintTests.cs" />
+    <Compile Include="Constraints\ExactTypeConstraintTests.cs" />
     <Compile Include="Constraints\FloatingPointNumericsTest.cs" />
+    <Compile Include="Constraints\GreaterThanConstraintTests.cs" />
+    <Compile Include="Constraints\GreaterThanOrEqualConstraintTests.cs" />
+    <Compile Include="Constraints\InstanceOfTypeConstraintTests.cs" />
+    <Compile Include="Constraints\LessThanConstraintTests.cs" />
+    <Compile Include="Constraints\LessThanOrEqualConstraintTests.cs" />
     <Compile Include="Constraints\MsgUtilTests.cs" />
-    <Compile Include="Constraints\NotTest.cs" />
+    <Compile Include="Constraints\NotConstraintTests.cs" />
     <Compile Include="Constraints\NumericsTest.cs" />
-    <Compile Include="Constraints\OrTest.cs" />
+    <Compile Include="Constraints\NUnitComparerTests.cs" />
+    <Compile Include="Constraints\NUnitEqualityComparerTests.cs" />
+    <Compile Include="Constraints\OrConstraintTests.cs" />
     <Compile Include="Constraints\PathConstraintTests.cs" />
+    <Compile Include="Constraints\PredicateConstraintTests.cs" />
     <Compile Include="Constraints\PropertyTests.cs" />
+    <Compile Include="Constraints\RangeConstraintTests.cs" />
     <Compile Include="Constraints\RangeTests.cs" />
     <Compile Include="Constraints\ReusableConstraintTests.cs" />
     <Compile Include="Constraints\SameAsTest.cs" />
-    <Compile Include="Constraints\StringConstraintTests.cs" />
+    <Compile Include="Constraints\StartsWithConstraintTests.cs" />
+    <Compile Include="Constraints\SubstringConstraintTests.cs" />
     <Compile Include="Constraints\ThrowsConstraintTests.cs" />
     <Compile Include="Constraints\ToStringTests.cs" />
-    <Compile Include="Constraints\TypeConstraintTests.cs" />
     <Compile Include="Constraints\XmlSerializableTest.cs" />
     <Compile Include="Internal\CultureSettingAndDetectionTests.cs" />
-    <Compile Include="Internal\GenericTestFixtureTests.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Internal\DeduceTypeArgsFromArgs.cs" />
+    <Compile Include="Internal\GenericTestFixtureTests.cs" />
+    <Compile Include="Internal\GenericTestMethodTests.cs" />
     <Compile Include="Internal\PlatformDetectionTests.cs" />
     <Compile Include="Internal\PropertyBagTests.cs" />
     <Compile Include="Internal\RandomizerTests.cs" />
     <Compile Include="Internal\RuntimeFrameworkTests.cs" />
     <Compile Include="Internal\SetUpTest.cs" />
+    <Compile Include="Internal\SimpleGenericMethods.cs" />
     <Compile Include="Internal\TestExecutionContextTests.cs" />
     <Compile Include="Internal\TestFixtureTests.cs" />
     <Compile Include="Internal\TestMethodSignatureTests.cs" />
@@ -148,7 +162,6 @@
     <Compile Include="Syntax\SyntaxTest.cs" />
     <Compile Include="Syntax\ThrowsTests.cs" />
     <Compile Include="Syntax\TypeConstraints.cs" />
-    <Compile Include="..\CommonAssemblyInfo.cs" />
     <Compile Include="TestContextTests.cs" />
     <Compile Include="TestUtilities\AlwaysEqualComparer.cs" />
     <Compile Include="TestUtilities\CollectionAdapter.cs" />
@@ -160,23 +173,30 @@
     <Compile Include="TestUtilities\TestFinder.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\framework\nunitlite-vs2008CF.csproj">
-      <Project>{B41B7A5D-EF79-480D-A56C-D27F2622BB4D}</Project>
-      <Name>nunitlite-vs2008CF</Name>
+    <ProjectReference Include="..\framework\nunitlite-netcf-3.5.csproj">
+      <Project>{5F6CB3DC-5CE5-4C6A-AB23-936DB3B35DCC}</Project>
+      <Name>nunitlite-netcf-3.5</Name>
     </ProjectReference>
-    <ProjectReference Include="..\testdata\nunitlite.testdata-vs2008CF.csproj">
-      <Project>{C82D555A-80AF-46C8-A30B-4624BFCB1C30}</Project>
-      <Name>nunitlite.testdata-vs2008CF</Name>
+    <ProjectReference Include="..\mock-assembly\mock-assembly-netcf-3.5.csproj">
+      <Project>{B0C85907-1103-44F4-ACFF-6A1B9170C0B1}</Project>
+      <Name>mock-assembly-netcf-3.5</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="TestImage1.jpg" />
-    <EmbeddedResource Include="TestImage2.jpg" />
-    <EmbeddedResource Include="TestText1.txt" />
-    <EmbeddedResource Include="TestText2.txt" />
+    <ProjectReference Include="..\testdata\nunitlite.testdata-netcf-3.5.csproj">
+      <Project>{0B7C0B55-6A49-4F32-993E-C9ED6DA0B73C}</Project>
+      <Name>nunitlite.testdata-netcf-3.5</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="nunitlite.tests.build" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="TestImage1.jpg" />
+    <Content Include="TestImage2.jpg" />
+    <Content Include="TestText1.txt" />
+    <Content Include="TestText2.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.targets" />
   <ProjectExtensions>

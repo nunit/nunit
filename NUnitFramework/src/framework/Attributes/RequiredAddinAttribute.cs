@@ -69,7 +69,7 @@ namespace NUnit.Framework
         /// Modifies the test to be skipped if the addin is not available.
         /// </summary>
         /// <param name="test">The test to modify</param>
-        public void ApplyToTest(ITest test)
+        public void ApplyToTest(Test test)
         {
             if (test.RunState != RunState.NotRunnable && !isAddinAvailable)
             {

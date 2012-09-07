@@ -77,7 +77,7 @@ namespace NUnit.Framework.Internal.Commands
         /// <summary>
         /// Handles processing when no exception was thrown.
         /// </summary>
-        /// <param name="testResult">The test result.</param>
+        /// <param name="context">The execution context.</param>
         public void ProcessNoException(TestExecutionContext context)
         {
             context.CurrentResult.SetResult(ResultState.Failure, NoExceptionMessage());
@@ -87,7 +87,7 @@ namespace NUnit.Framework.Internal.Commands
         /// Handles processing when an exception was thrown.
         /// </summary>
         /// <param name="exception">The exception.</param>
-        /// <param name="testResult">The test result.</param>
+        /// <param name="context">The execution context.</param>
         public void ProcessException(Exception exception, TestExecutionContext context)
         {
             if (exception is NUnitException)

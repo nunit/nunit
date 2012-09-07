@@ -29,6 +29,8 @@ using NUnit.Framework.Builders;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Commands;
 using NUnit.Framework.Extensibility;
+using NUnit.Framework.Internal.WorkItems;
+using System.Threading;
 
 namespace NUnit.TestUtilities
 {
@@ -79,42 +81,23 @@ namespace NUnit.TestUtilities
         public static TestResult RunTestFixture(Type type)
         {
             TestSuite suite = MakeFixture(type);
-            TestCommand command = suite.GetTestCommand(TestFilter.Empty);
-            TestExecutionContext.Save();
-            TestExecutionContext.CurrentContext.Listener = TestListener.NULL;
-            TestExecutionContext.CurrentContext.TestObject = null;
-            try
-            {
-                return CommandRunner.Execute(command);
-            }
-            finally
-            {
-                TestExecutionContext.Restore();
-            }
+
+            TestExecutionContext context = new TestExecutionContext();
+            context.TestObject = null;
+
+            CompositeWorkItem work = new CompositeWorkItem(suite, TestFilter.Empty);
+            return ExecuteWorkItem(work, context);
         }
 
         public static TestResult RunTestFixture(object fixture)
         {
             TestSuite suite = MakeFixture(fixture);
-            TestCommand command = suite.GetTestCommand(TestFilter.Empty);
-            //TestExecutionContext context = new TestExecutionContext();
-            //context.TestObject = fixture;
-            TestExecutionContext.Save();
-            TestExecutionContext.CurrentContext.Listener = TestListener.NULL;
-            TestExecutionContext.CurrentContext.TestObject = fixture;
-            try
-            {
-                return CommandRunner.Execute(command);
-            }
-            finally
-            {
-                TestExecutionContext.Restore();
-            }
-        }
 
-        public static ITestResult RunTestFixture(TestSuite suite)
-        {
-            return RunTest(suite, null);
+            TestExecutionContext context = new TestExecutionContext();
+            context.TestObject = fixture;
+
+            WorkItem work = suite.CreateWorkItem(TestFilter.Empty);
+            return ExecuteWorkItem(work, context);
         }
 
         public static ITestResult RunTestCase(Type type, string methodName)
@@ -134,22 +117,51 @@ namespace NUnit.TestUtilities
             return RunTest(test, fixture);
         }
 
+        public static WorkItem RunTestCaseAsync(object fixture, string methodName)
+        {
+            Test test = MakeTestCase(fixture, methodName);
+            return RunTestAsync(test, fixture);
+        }
+
+        public static ITestResult RunTest(Test test)
+        {
+            return RunTest(test, null);
+        }
+
+        public static WorkItem RunTestAsync(Test test)
+        {
+            return RunTestAsync(test, (object)null);
+        }
+
+        public static WorkItem RunTestAsync(Test test, object testObject)
+        {
+            TestExecutionContext context = new TestExecutionContext();
+            context.TestObject = testObject;
+
+            WorkItem work = test.CreateWorkItem(TestFilter.Empty);
+            work.Execute(context);
+
+            return work;
+        }
+
         public static ITestResult RunTest(Test test, object testObject)
         {
-            TestCommand command = test.GetTestCommand(TestFilter.Empty);
-            //TestExecutionContext context = new TestExecutionContext();
-            //context.TestObject = testObject;
-            TestExecutionContext.Save();
-            TestExecutionContext.CurrentContext.Listener = TestListener.NULL;
-            TestExecutionContext.CurrentContext.TestObject = testObject;
-            try
-            {
-                return CommandRunner.Execute(command);
-            }
-            finally
-            {
-                TestExecutionContext.Restore();
-            }
+            TestExecutionContext context = new TestExecutionContext();
+            context.TestObject = testObject;
+
+            WorkItem work = test.CreateWorkItem(TestFilter.Empty);
+            return ExecuteWorkItem(work, context);
+        }
+
+        private static TestResult ExecuteWorkItem(WorkItem work, TestExecutionContext context)
+        {
+            work.Execute(context);
+
+            // TODO: Replace with an event
+            while (work.State != WorkItemState.Complete)
+                Thread.Sleep(1);
+
+            return work.Result;
         }
 
         private static bool IsStaticClass(Type type)

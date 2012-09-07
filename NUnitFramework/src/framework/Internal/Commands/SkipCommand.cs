@@ -43,8 +43,7 @@ namespace NUnit.Framework.Internal.Commands
         /// Overridden to simply set the CurrentResult to the
         /// appropriate Skipped state.
         /// </summary>
-        /// <param name="testObject">The object on which the test should run.</param>
-        /// <param name="listener">An ITestListener to receive any events.</param>
+        /// <param name="context">The execution context for the test</param>
         /// <returns>A TestResult</returns>
         public override TestResult Execute(TestExecutionContext context)
         {

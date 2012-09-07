@@ -1,9 +1,33 @@
-﻿using System;
+﻿// ***********************************************************************
+// Copyright (c) 2012 Charlie Poole
+//
+// Permission is hereby granted, free of charge, to any person obtaining
+// a copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to
+// permit persons to whom the Software is furnished to do so, subject to
+// the following conditions:
+// 
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+// ***********************************************************************
+
+using System;
 using System.Collections;
 using System.Reflection;
 using System.Threading;
 using NUnit.Framework.Api;
 using NUnit.Framework.Internal.Commands;
+using NUnit.Framework.Internal.WorkItems;
 
 namespace NUnit.Framework.Internal
 {
@@ -14,7 +38,6 @@ namespace NUnit.Framework.Internal
     {
         private ITestAssemblyBuilder builder;
         private TestSuite loadedTest;
-        private Thread runThread;
         private IDictionary settings;
 
         #region Constructors
@@ -96,47 +119,38 @@ namespace NUnit.Framework.Internal
         /// <returns></returns>
         public ITestResult Run(ITestListener listener, ITestFilter filter)
         {
+            TestExecutionContext context = new TestExecutionContext();
+
             if (loadedTest == null)
                 throw new InvalidOperationException("Run was called but no test has been loaded.");
 
-            // TODO: This should be a TestSuiteCommand
-            TestCommand command = (TestCommand)this.loadedTest.GetTestCommand(filter);
+            WorkItem workItem = loadedTest.CreateWorkItem(filter);
 
-            TestExecutionContext.Save();
+            QueuingEventListener queue = new QueuingEventListener();
 
-            //ITestCommand rootCommand = TestCommandFactory.MakeCommand(this.loadedTest, filter);
+            context.Out = new EventListenerTextWriter(queue, TestOutputType.Out);
+            context.Error = new EventListenerTextWriter(queue, TestOutputType.Error);
+            context.Listener = queue;
 
-            try
-            {
-                this.runThread = Thread.CurrentThread;
-
-                QueuingEventListener queue = new QueuingEventListener();
-
-                TestExecutionContext.CurrentContext.Out = new EventListenerTextWriter(queue, TestOutputType.Out);
-                TestExecutionContext.CurrentContext.Error = new EventListenerTextWriter(queue, TestOutputType.Error);
-                TestExecutionContext.CurrentContext.Listener = queue;
-
-                if (this.settings.Contains("DefaultTimeout"))
-                    TestExecutionContext.CurrentContext.TestCaseTimeout = (int)this.settings["DefaultTimeout"];
-                if (this.settings.Contains("StopOnError"))
-                    TestExecutionContext.CurrentContext.StopOnError = (bool)this.settings["StopOnError"];
+            if (this.settings.Contains("DefaultTimeout"))
+                context.TestCaseTimeout = (int)this.settings["DefaultTimeout"];
+            if (this.settings.Contains("StopOnError"))
+                context.StopOnError = (bool)this.settings["StopOnError"];
 	
-				if (this.settings.Contains("WorkDirectory"))
-					TestExecutionContext.CurrentContext.WorkDirectory = (string)this.settings["WorkDirectory"];
-				else
-					TestExecutionContext.CurrentContext.WorkDirectory = Environment.CurrentDirectory;
+			if (this.settings.Contains("WorkDirectory"))
+				context.WorkDirectory = (string)this.settings["WorkDirectory"];
+			else
+				context.WorkDirectory = Environment.CurrentDirectory;
 
-                using (EventPump pump = new EventPump(listener, queue.Events))
-                {
-                    pump.Start();
-
-                    return CommandRunner.Execute(command);
-                }
-            }
-            finally
+            using (EventPump pump = new EventPump(listener, queue.Events))
             {
-                this.runThread = null;
-                TestExecutionContext.Restore();
+                pump.Start();
+
+                workItem.Execute(context);
+
+                while (workItem.State != WorkItemState.Complete)
+                    Thread.Sleep(5);
+                return workItem.Result;
             }
         }
 
