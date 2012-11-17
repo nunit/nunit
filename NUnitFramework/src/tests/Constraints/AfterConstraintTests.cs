@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading;
+using ActualValueDelegate = NUnit.Framework.Constraints.ActualValueDelegate<object>;
 
 namespace NUnit.Framework.Constraints.Tests
 {
@@ -52,18 +53,18 @@ namespace NUnit.Framework.Constraints.Tests
 
         object[] InvalidData = new object[] { InvalidDelegate };
 
-        ActualValueDelegate[] SuccessDelegates = new ActualValueDelegate[] { DelegateReturningValue };
-        ActualValueDelegate[] FailureDelegates = new ActualValueDelegate[] { DelegateReturningFalse, DelegateReturningZero };
+        ActualValueDelegate<object>[] SuccessDelegates = new ActualValueDelegate<object>[] { DelegateReturningValue };
+        ActualValueDelegate<object>[] FailureDelegates = new ActualValueDelegate<object>[] { DelegateReturningFalse, DelegateReturningZero };
 
         [Test, TestCaseSource("SuccessDelegates")]
-        public void SucceedsWithGoodDelegates(ActualValueDelegate del)
+        public void SucceedsWithGoodDelegates(ActualValueDelegate<object> del)
         {
             SetValueTrueAfterDelay(300);
             Assert.That(theConstraint.ApplyTo(del).IsSuccess);
         }
 
         [Test, TestCaseSource("FailureDelegates")]
-        public void FailsWithBadDelegates(ActualValueDelegate del)
+        public void FailsWithBadDelegates(ActualValueDelegate<object> del)
         {
             Assert.IsFalse(theConstraint.ApplyTo(del).IsSuccess);
         }

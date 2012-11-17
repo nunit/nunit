@@ -288,7 +288,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="expr">A Constraint expression to be applied</param>
         /// <param name="del">An ActualValueDelegate returning the value to be tested</param>
-        static public void That(ActualValueDelegate del, IResolveConstraint expr)
+        static public void That<T>(ActualValueDelegate<T> del, IResolveConstraint expr)
         {
             Assert.That(del, expr.Resolve(), null, null);
         }
@@ -300,7 +300,7 @@ namespace NUnit.Framework
         /// <param name="expr">A Constraint expression to be applied</param>
         /// <param name="del">An ActualValueDelegate returning the value to be tested</param>
         /// <param name="message">The message that will be displayed on failure</param>
-        static public void That(ActualValueDelegate del, IResolveConstraint expr, string message)
+        static public void That<T>(ActualValueDelegate<T> del, IResolveConstraint expr, string message)
         {
             Assert.That(del, expr.Resolve(), message, null);
         }
@@ -313,7 +313,7 @@ namespace NUnit.Framework
         /// <param name="expr">A Constraint expression to be applied</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        static public void That(ActualValueDelegate del, IResolveConstraint expr, string message, params object[] args)
+        static public void That<T>(ActualValueDelegate<T> del, IResolveConstraint expr, string message, params object[] args)
         {
             Constraint constraint = expr.Resolve();
             
