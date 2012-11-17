@@ -316,12 +316,13 @@ namespace NUnit.Framework
         static public void That(ActualValueDelegate del, IResolveConstraint expr, string message, params object[] args)
         {
             Constraint constraint = expr.Resolve();
-
+            
             IncrementAssertCount();
-            if (!constraint.Matches(del).HasSucceeded)
+            ConstraintResult result = constraint.ApplyTo(del);
+            if (!result.IsSuccess)
             {
                 MessageWriter writer = new TextMessageWriter(message, args);
-                constraint.WriteMessageTo(writer);
+                result.WriteMessageTo(writer);
                 throw new AssertionException(writer.ToString());
             }
         }
@@ -383,10 +384,11 @@ namespace NUnit.Framework
             Constraint constraint = expression.Resolve();
 
             IncrementAssertCount();
-            if (!constraint.Matches(actual).HasSucceeded)
+            ConstraintResult result = constraint.ApplyTo(actual);
+            if (!result.IsSuccess)
             {
                 MessageWriter writer = new TextMessageWriter(message, args);
-                constraint.WriteMessageTo(writer);
+                result.WriteMessageTo(writer);
                 throw new AssertionException(writer.ToString());
             }
         }
@@ -427,10 +429,11 @@ namespace NUnit.Framework
             Constraint constraint = expression.Resolve();
 
             IncrementAssertCount();
-            if (!constraint.Matches(ref actual).HasSucceeded)
+            ConstraintResult result = constraint.ApplyTo(ref actual);
+            if (!result.IsSuccess)
             {
                 MessageWriter writer = new TextMessageWriter(message, args);
-                constraint.WriteMessageTo(writer);
+                result.WriteMessageTo(writer);
                 throw new AssertionException(writer.ToString());
             }
         }

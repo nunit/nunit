@@ -26,11 +26,19 @@ namespace NUnit.Framework.Constraints
     /// <summary>
     /// NullConstraint tests that the actual value is null
     /// </summary>
-    public class NullConstraint : BasicConstraint
+    public class NullConstraint : Constraint
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="T:NullConstraint"/> class.
         /// </summary>
-        public NullConstraint() : base(null, "null") { }
+        public NullConstraint()
+        {
+            this.Description = "null";
+        }
+
+        public override ConstraintResult ApplyTo(object actual)
+        {
+            return new ConstraintResult(this, actual, actual == null);
+        }
     }
 }

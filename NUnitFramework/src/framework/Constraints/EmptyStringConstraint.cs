@@ -29,27 +29,25 @@ namespace NUnit.Framework.Constraints
     public class EmptyStringConstraint : Constraint
     {
         /// <summary>
+        /// The Description of what this constraint tests, for
+        /// use in messages and in the ConstraintResult.
+        /// </summary>
+        public override string Description
+        {
+            get { return "<empty>"; }
+        }
+
+        /// <summary>
         /// Test whether the constraint is satisfied by a given value
         /// </summary>
         /// <param name="actual">The value to be tested</param>
         /// <returns>True for success, false for failure</returns>
-        public override IConstraintResult Matches(object actual)
+        public override ConstraintResult ApplyTo(object actual)
         {
-            this.actual = actual;
-
             string actualAsString = actual as string;
             bool hasSucceeded = actual != null && actualAsString == string.Empty;
 
-            return new StandardConstraintResult(hasSucceeded);
-        }
-
-        /// <summary>
-        /// Write the constraint description to a MessageWriter
-        /// </summary>
-        /// <param name="writer">The writer on which the description is displayed</param>
-        public override void WriteDescriptionTo(MessageWriter writer)
-        {
-            writer.Write("<empty>");
+            return new ConstraintResult(this, actual, hasSucceeded);
         }
     }
 }

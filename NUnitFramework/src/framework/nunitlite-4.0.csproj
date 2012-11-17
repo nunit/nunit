@@ -106,7 +106,6 @@
     <Compile Include="Constraints\AssignableToConstraint.cs" />
     <Compile Include="Constraints\AttributeConstraint.cs" />
     <Compile Include="Constraints\AttributeExistsConstraint.cs" />
-    <Compile Include="Constraints\BasicConstraint.cs" />
     <Compile Include="Constraints\BinaryConstraint.cs" />
     <Compile Include="Constraints\BinarySerializableConstraint.cs" />
     <Compile Include="Constraints\CollectionConstraint.cs" />
@@ -123,6 +122,7 @@
     <Compile Include="Constraints\ConstraintExpression.cs" />
     <Compile Include="Constraints\ConstraintExpressionBase.cs" />
     <Compile Include="Constraints\ConstraintFactory.cs" />
+    <Compile Include="Constraints\ConstraintResult.cs" />
     <Compile Include="Constraints\ContainsConstraint.cs" />
     <Compile Include="Constraints\EmptyCollectionConstraint.cs" />
     <Compile Include="Constraints\EmptyConstraint.cs" />
@@ -130,13 +130,13 @@
     <Compile Include="Constraints\EmptyStringConstraint.cs" />
     <Compile Include="Constraints\EndsWithConstraint.cs" />
     <Compile Include="Constraints\EqualConstraint.cs" />
+    <Compile Include="Constraints\EqualConstraintResult.cs" />
     <Compile Include="Constraints\EqualityAdapter.cs" />
     <Compile Include="Constraints\ExactTypeConstraint.cs" />
     <Compile Include="Constraints\FalseConstraint.cs" />
     <Compile Include="Constraints\FloatingPointNumerics.cs" />
     <Compile Include="Constraints\GreaterThanConstraint.cs" />
     <Compile Include="Constraints\GreaterThanOrEqualConstraint.cs" />
-    <Compile Include="Constraints\IConstraintResult.cs" />
     <Compile Include="Constraints\InstanceOfTypeConstraint.cs" />
     <Compile Include="Constraints\IResolveConstraint.cs" />
     <Compile Include="Constraints\LessThanConstraint.cs" />
@@ -176,7 +176,6 @@
     <Compile Include="Constraints\SamePathConstraint.cs" />
     <Compile Include="Constraints\SamePathOrUnderConstraint.cs" />
     <Compile Include="Constraints\SomeItemsConstraint.cs" />
-    <Compile Include="Constraints\StandardConstraintResult.cs" />
     <Compile Include="Constraints\StartsWithConstraint.cs" />
     <Compile Include="Constraints\StringConstraint.cs" />
     <Compile Include="Constraints\SubstringConstraint.cs" />

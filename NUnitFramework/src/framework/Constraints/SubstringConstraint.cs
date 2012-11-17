@@ -33,7 +33,10 @@ namespace NUnit.Framework.Constraints
         /// Initializes a new instance of the <see cref="T:SubstringConstraint"/> class.
         /// </summary>
         /// <param name="expected">The expected.</param>
-        public SubstringConstraint(string expected) : base(expected) { }
+        public SubstringConstraint(string expected) : base(expected) 
+        {
+            description = "String containing";
+        }
 
         /// <summary>
         /// Test whether the constraint is satisfied by a given value
@@ -48,18 +51,6 @@ namespace NUnit.Framework.Constraints
                 return actual.ToLower().IndexOf(expected.ToLower()) >= 0;
             else
                 return actual.IndexOf(expected) >= 0;
-        }
-
-        /// <summary>
-        /// Write the constraint description to a MessageWriter
-        /// </summary>
-        /// <param name="writer">The writer on which the description is displayed</param>
-        public override void WriteDescriptionTo(MessageWriter writer)
-        {
-            writer.WritePredicate("String containing");
-            writer.WriteExpectedValue(expected);
-            if (this.caseInsensitive)
-                writer.WriteModifier("ignoring case");
         }
     }
 }

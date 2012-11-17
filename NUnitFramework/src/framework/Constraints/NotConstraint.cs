@@ -33,36 +33,22 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="baseConstraint">The base constraint to be negated.</param>
         public NotConstraint(Constraint baseConstraint)
-            : base(baseConstraint) { }
+            : base(baseConstraint) 
+        {
+            this.descriptionPrefix = "not";
+        }
 
         /// <summary>
         /// Test whether the constraint is satisfied by a given value
         /// </summary>
         /// <param name="actual">The value to be tested</param>
         /// <returns>True for if the base constraint fails, false if it succeeds</returns>
-        public override IConstraintResult Matches(object actual)
+        public override ConstraintResult ApplyTo(object actual)
         {
-            this.actual = actual;
-            return new StandardConstraintResult(!baseConstraint.Matches(actual).HasSucceeded);
+            var baseResult = baseConstraint.ApplyTo(actual);
+            return new ConstraintResult(this, baseResult.ActualValue, !baseResult.IsSuccess);
         }
 
-        /// <summary>
-        /// Write the constraint description to a MessageWriter
-        /// </summary>
-        /// <param name="writer">The writer on which the description is displayed</param>
-        public override void WriteDescriptionTo(MessageWriter writer)
-        {
-            writer.WritePredicate("not");
-            baseConstraint.WriteDescriptionTo(writer);
-        }
-
-        /// <summary>
-        /// Write the actual value for a failing constraint test to a MessageWriter.
-        /// </summary>
-        /// <param name="writer">The writer on which the actual value is displayed</param>
-        public override void WriteActualValueTo(MessageWriter writer)
-        {
-            baseConstraint.WriteActualValueTo(writer);
-        }
+        // TODO: May need a special result type
     }
 }

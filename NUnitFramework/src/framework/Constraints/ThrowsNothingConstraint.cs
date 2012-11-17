@@ -31,14 +31,23 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class ThrowsNothingConstraint : Constraint
     {
+        // TODO: This constraint needs tests
         private Exception caughtException;
+
+        /// <summary>
+        /// Gets text describing a constraint
+        /// </summary>
+        public override string Description
+        {
+            get { return "No Exception to be thrown"; }
+        }
 
         /// <summary>
         /// Test whether the constraint is satisfied by a given value
         /// </summary>
         /// <param name="actual">The value to be tested</param>
         /// <returns>True if no exception is thrown, otherwise false</returns>
-        public override IConstraintResult Matches(object actual)
+        public override ConstraintResult ApplyTo(object actual)
         {
             TestDelegate code = actual as TestDelegate;
             if (code == null)
@@ -55,28 +64,7 @@ namespace NUnit.Framework.Constraints
                 caughtException = ex;
             }
 
-            return new StandardConstraintResult(caughtException == null);
-        }
-
-        /// <summary>
-        /// Write the constraint description to a MessageWriter
-        /// </summary>
-        /// <param name="writer">The writer on which the description is displayed</param>
-        public override void WriteDescriptionTo(MessageWriter writer)
-        {
-            writer.Write(string.Format("No Exception to be thrown"));
-        }
-
-        /// <summary>
-        /// Write the actual value for a failing constraint test to a
-        /// MessageWriter. The default implementation simply writes
-        /// the raw value of actual, leaving it to the writer to
-        /// perform any formatting.
-        /// </summary>
-        /// <param name="writer">The writer on which the actual value is displayed</param>
-        public override void WriteActualValueTo(MessageWriter writer)
-        {
-            writer.WriteActualValue(caughtException.GetType());
+            return new ConstraintResult(this, caughtException, caughtException == null);
         }
     }
 }

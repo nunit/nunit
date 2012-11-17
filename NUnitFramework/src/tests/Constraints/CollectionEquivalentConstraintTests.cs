@@ -37,7 +37,7 @@ namespace NUnit.Framework.Constraints.Tests
             ICollection set1 = new ICollectionAdapter("x", "y", "z");
             ICollection set2 = new ICollectionAdapter("x", "y", "z");
 
-            Assert.That(new CollectionEquivalentConstraint(set1).Matches(set2).HasSucceeded);
+            Assert.That(new CollectionEquivalentConstraint(set1).ApplyTo(set2).IsSuccess);
         }
 
         [Test]
@@ -52,10 +52,10 @@ namespace NUnit.Framework.Constraints.Tests
             ICollection set2 = new ICollectionAdapter(array3, array4);
 
             Constraint constraint = new CollectionEquivalentConstraint(set1);
-            Assert.That(constraint.Matches(set2).HasSucceeded);
+            Assert.That(constraint.ApplyTo(set2).IsSuccess);
 
             set2 = new ICollectionAdapter(array4, array3);
-            Assert.That(constraint.Matches(set2).HasSucceeded);
+            Assert.That(constraint.ApplyTo(set2).IsSuccess);
         }
 
         [Test]
@@ -64,7 +64,7 @@ namespace NUnit.Framework.Constraints.Tests
             ICollection set1 = new ICollectionAdapter("x", "y", "z");
             ICollection set2 = new ICollectionAdapter("z", "y", "x");
 
-            Assert.That(new CollectionEquivalentConstraint(set1).Matches(set2).HasSucceeded);
+            Assert.That(new CollectionEquivalentConstraint(set1).ApplyTo(set2).IsSuccess);
         }
 
         [Test]
@@ -73,7 +73,7 @@ namespace NUnit.Framework.Constraints.Tests
             ICollection set1 = new ICollectionAdapter("x", "y", "z");
             ICollection set2 = new ICollectionAdapter("x", "y", "x");
 
-            Assert.False(new CollectionEquivalentConstraint(set1).Matches(set2).HasSucceeded);
+            Assert.False(new CollectionEquivalentConstraint(set1).ApplyTo(set2).IsSuccess);
         }
 
         [Test]
@@ -82,7 +82,7 @@ namespace NUnit.Framework.Constraints.Tests
             ICollection set1 = new ICollectionAdapter("x", "y", "x");
             ICollection set2 = new ICollectionAdapter("x", "y", "z");
 
-            Assert.False(new CollectionEquivalentConstraint(set1).Matches(set2).HasSucceeded);
+            Assert.False(new CollectionEquivalentConstraint(set1).ApplyTo(set2).IsSuccess);
         }
 
         [Test]
@@ -91,7 +91,7 @@ namespace NUnit.Framework.Constraints.Tests
             ICollection set1 = new ICollectionAdapter(null, "x", null, "z");
             ICollection set2 = new ICollectionAdapter("z", null, "x", null);
 
-            Assert.That(new CollectionEquivalentConstraint(set1).Matches(set2).HasSucceeded);
+            Assert.That(new CollectionEquivalentConstraint(set1).ApplyTo(set2).IsSuccess);
         }
 
         [Test]
@@ -100,7 +100,7 @@ namespace NUnit.Framework.Constraints.Tests
             ICollection set1 = new ICollectionAdapter("x", "y", "z");
             ICollection set2 = new ICollectionAdapter("z", "Y", "X");
 
-            Assert.That(new CollectionEquivalentConstraint(set1).IgnoreCase.Matches(set2).HasSucceeded);
+            Assert.That(new CollectionEquivalentConstraint(set1).IgnoreCase.ApplyTo(set2).IsSuccess);
         }
 
         [Test]
@@ -111,7 +111,7 @@ namespace NUnit.Framework.Constraints.Tests
 
             Assert.That(new CollectionEquivalentConstraint(set1)
                 .Using<string>((x, y) => String.Compare(x, y, true))
-                .Matches(set2).HasSucceeded);
+                .ApplyTo(set2).IsSuccess);
         }
 
 #if NET_3_5 || NET_4_0
@@ -121,7 +121,7 @@ namespace NUnit.Framework.Constraints.Tests
             var hash1 = new HashSet<string>(new string[] { "presto", "abracadabra", "hocuspocus" });
             var hash2 = new HashSet<string>(new string[] { "abracadabra", "presto", "hocuspocus" });
 
-            Assert.That(new CollectionEquivalentConstraint(hash1).Matches(hash2).HasSucceeded);
+            Assert.That(new CollectionEquivalentConstraint(hash1).ApplyTo(hash2).IsSuccess);
         }
 
         [Test, Platform("Net-3.5,Mono-3.5,Net-4.0,Mono-4.0")]
@@ -131,7 +131,7 @@ namespace NUnit.Framework.Constraints.Tests
             var array = new string[] { "abracadabra", "presto", "hocuspocus" };
 
             var constraint = new CollectionEquivalentConstraint(hash);
-            Assert.That(constraint.Matches(array).HasSucceeded);
+            Assert.That(constraint.ApplyTo(array).IsSuccess);
         }
 
         [Test, Platform("Net-3.5,Mono-3.5,Net-4.0,Mono-4.0")]
@@ -141,7 +141,7 @@ namespace NUnit.Framework.Constraints.Tests
             var array = new string[] { "abracadabra", "presto", "hocuspocus" };
 
             var constraint = new CollectionEquivalentConstraint(array);
-            Assert.That(constraint.Matches(hash).HasSucceeded);
+            Assert.That(constraint.ApplyTo(hash).IsSuccess);
         }
 
         [Test, Platform("Net-3.5,Mono-3.5,Net-4.0,Mono-4.0")]
@@ -151,10 +151,11 @@ namespace NUnit.Framework.Constraints.Tests
             var array = new string[] { "abracadabra", "presto", "hocusfocus" };
 
             var constraint = new CollectionEquivalentConstraint(hash);
-            Assert.False(constraint.Matches(array).HasSucceeded);
+            var constraintResult = constraint.ApplyTo(array);
+            Assert.False(constraintResult.IsSuccess);
 
             TextMessageWriter writer = new TextMessageWriter();
-            constraint.WriteMessageTo(writer);
+            constraintResult.WriteMessageTo(writer);
             Assert.That(writer.ToString(), Is.EqualTo(
                 "  Expected: equivalent to < \"presto\", \"abracadabra\", \"hocuspocus\" >" + Environment.NewLine +
                 "  But was:  < \"abracadabra\", \"presto\", \"hocusfocus\" >" + Environment.NewLine));

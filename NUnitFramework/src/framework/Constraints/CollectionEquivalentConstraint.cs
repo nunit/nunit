@@ -41,7 +41,16 @@ namespace NUnit.Framework.Constraints
             : base(expected)
         {
             this.expected = expected;
-            this.DisplayName = "equivalent";
+            this.DisplayName = "Equivalent";
+        }
+
+        /// <summary>
+        /// The Description of what this constraint tests, for
+        /// use in messages and in the ConstraintResult.
+        /// </summary>
+        public override string Description
+        {
+            get { return "equivalent to " + MsgUtils.FormatValue(expected); }
         }
 
         /// <summary>
@@ -49,7 +58,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="actual"></param>
         /// <returns></returns>
-        protected override bool doMatch(IEnumerable actual)
+        protected override bool Matches(IEnumerable actual)
         {
             // This is just an optimization
             if (expected is ICollection && actual is ICollection)
@@ -58,16 +67,6 @@ namespace NUnit.Framework.Constraints
 
             CollectionTally tally = Tally(expected);
             return tally.TryRemove(actual) && tally.Count == 0;
-        }
-
-        /// <summary>
-        /// Write a description of this constraint to a MessageWriter
-        /// </summary>
-        /// <param name="writer"></param>
-        public override void WriteDescriptionTo(MessageWriter writer)
-        {
-            writer.WritePredicate("equivalent to");
-            writer.WriteExpectedValue(expected);
         }
     }
 }

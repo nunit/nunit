@@ -30,17 +30,15 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class EmptyConstraint : Constraint
     {
-        private Constraint RealConstraint
+        private Constraint realConstraint;
+
+        /// <summary>
+        /// The Description of what this constraint tests, for
+        /// use in messages and in the ConstraintResult.
+        /// </summary>
+        public override string Description
         {
-            get
-            {
-                if (actual is string)
-                    return new EmptyStringConstraint();
-                else if (actual is System.IO.DirectoryInfo)
-                    return new EmptyDirectoryConstraint();
-                else
-                    return new EmptyCollectionConstraint();
-            }
+            get { return realConstraint == null ? "<empty>" : realConstraint.Description; }
         }
 
         /// <summary>
@@ -48,23 +46,19 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="actual">The value to be tested</param>
         /// <returns>True for success, false for failure</returns>
-        public override IConstraintResult Matches(object actual)
+        public override ConstraintResult ApplyTo(object actual)
         {
-            this.actual = actual;
-			
 			if (actual == null)
 				throw new System.ArgumentException("The actual value must be a non-null string, IEnumerable or DirectoryInfo", "actual");
 
-            return RealConstraint.Matches(actual);
-        }
+            if (actual is string)
+                realConstraint = new EmptyStringConstraint();
+            else if (actual is System.IO.DirectoryInfo)
+                realConstraint = new EmptyDirectoryConstraint();
+            else
+                realConstraint = new EmptyCollectionConstraint();
 
-        /// <summary>
-        /// Write the constraint description to a MessageWriter
-        /// </summary>
-        /// <param name="writer">The writer on which the description is displayed</param>
-        public override void WriteDescriptionTo(MessageWriter writer)
-        {
-            RealConstraint.WriteDescriptionTo(writer);
+            return realConstraint.ApplyTo(actual);
         }
     }
 }

@@ -52,13 +52,26 @@ namespace NUnit.Framework.Constraints
         #region Constraint Overrides
 
         /// <summary>
+        /// Gets text describing a constraint
+        /// </summary>
+        public override string Description
+        {
+            get
+            {
+                return baseConstraint == null
+                    ? "an exception"
+                    : baseConstraint.Description;
+            }
+        }
+
+        /// <summary>
         /// Executes the code of the delegate and captures any exception.
         /// If a non-null base constraint was provided, it applies that
         /// constraint to the exception.
         /// </summary>
         /// <param name="actual">A delegate representing the code to be tested</param>
         /// <returns>True if an exception is thrown and the constraint succeeds, otherwise false</returns>
-        public override IConstraintResult Matches(object actual)
+        public override ConstraintResult ApplyTo(object actual)
         {
             TestDelegate code = actual as TestDelegate;
             if (code == null)
@@ -76,10 +89,12 @@ namespace NUnit.Framework.Constraints
                 caughtException = ex;
             }
 
-            bool hasSucceeded = caughtException != null &&
-                (baseConstraint == null || baseConstraint.Matches(caughtException).HasSucceeded);
-
-            return new StandardConstraintResult(hasSucceeded);
+            return new ThrowsConstraintResult(
+                this, 
+                caughtException,
+                caughtException != null && baseConstraint != null
+                    ? baseConstraint.ApplyTo(caughtException)
+                    : null);
         }
 
         /// <summary>
@@ -88,41 +103,11 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="del"></param>
         /// <returns></returns>
-        public override IConstraintResult Matches(ActualValueDelegate del)
+        public override ConstraintResult ApplyTo(ActualValueDelegate del)
         {
             TestDelegate testDelegate = new TestDelegate(delegate { del(); });
-            return Matches((object)testDelegate);
+            return ApplyTo((object)testDelegate);
         }
-
-        /// <summary>
-        /// Write the constraint description to a MessageWriter
-        /// </summary>
-        /// <param name="writer">The writer on which the description is displayed</param>
-        public override void WriteDescriptionTo(MessageWriter writer)
-        {
-            if (baseConstraint == null)
-                writer.WritePredicate("an exception");
-            else
-                baseConstraint.WriteDescriptionTo(writer);
-        }
-
-        /// <summary>
-        /// Write the actual value for a failing constraint test to a
-        /// MessageWriter. The default implementation simply writes
-        /// the raw value of actual, leaving it to the writer to
-        /// perform any formatting.
-        /// </summary>
-        /// <param name="writer">The writer on which the actual value is displayed</param>
-        public override void WriteActualValueTo(MessageWriter writer)
-        {
-            if (caughtException == null)
-                writer.Write("no exception thrown");
-            else if (baseConstraint != null)
-                baseConstraint.WriteActualValueTo(writer);
-            else
-                writer.WriteActualValue(caughtException);
-        }
-        #endregion
 
         /// <summary>
         /// Returns the string representation of this constraint
@@ -134,5 +119,43 @@ namespace NUnit.Framework.Constraints
 
             return base.GetStringRepresentation();
         }
-    }
+
+        #endregion
+
+        #region Nested Result Class
+
+        class ThrowsConstraintResult : ConstraintResult
+        {
+            private ConstraintResult baseResult;
+
+            public ThrowsConstraintResult(ThrowsConstraint constraint, Exception caughtException, ConstraintResult baseResult)
+                : base(constraint, caughtException)
+            {
+                if (caughtException != null && (baseResult == null || baseResult.IsSuccess))
+                    Status = ConstraintStatus.Success;
+                else
+                    Status = ConstraintStatus.Failure;
+
+                this.baseResult = baseResult;
+            }
+
+            /// <summary>
+            /// Write the actual value for a failing constraint test to a
+            /// MessageWriter. This override only handles the special message
+            /// used when an exception is expected but none is thrown.
+            /// </summary>
+            /// <param name="writer">The writer on which the actual value is displayed</param>
+            public override void WriteActualValueTo(MessageWriter writer)
+            {
+                if (ActualValue == null)
+                    writer.Write("no exception thrown");
+                else if (Status == ConstraintStatus.Failure)
+                    baseResult.WriteActualValueTo(writer);
+                else
+                    writer.WriteActualValue(this);
+            }
+        }
+
+        #endregion
+    }    
 }

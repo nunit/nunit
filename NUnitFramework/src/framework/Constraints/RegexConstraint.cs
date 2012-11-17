@@ -38,7 +38,10 @@ namespace NUnit.Framework.Constraints
         /// Initializes a new instance of the <see cref="T:RegexConstraint"/> class.
         /// </summary>
         /// <param name="pattern">The pattern.</param>
-        public RegexConstraint(string pattern) : base(pattern) { }
+        public RegexConstraint(string pattern) : base(pattern) 
+        {
+            description = "String matching";
+        }
 
         /// <summary>
         /// Test whether the constraint is satisfied by a given value
@@ -53,18 +56,6 @@ namespace NUnit.Framework.Constraints
                     actual,
                     this.expected,
                     this.caseInsensitive ? RegexOptions.IgnoreCase : RegexOptions.None);
-        }
-
-        /// <summary>
-        /// Write the constraint description to a MessageWriter
-        /// </summary>
-        /// <param name="writer">The writer on which the description is displayed</param>
-        public override void WriteDescriptionTo(MessageWriter writer)
-        {
-            writer.WritePredicate("String matching");
-            writer.WriteExpectedValue(this.expected);
-            if (this.caseInsensitive)
-                writer.WriteModifier("ignoring case");
         }
     }
 #endif

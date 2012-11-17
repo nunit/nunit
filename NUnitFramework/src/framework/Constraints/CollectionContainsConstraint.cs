@@ -41,7 +41,16 @@ namespace NUnit.Framework.Constraints
             : base(expected)
         {
             this.expected = expected;
-            this.DisplayName = "contains";
+            this.DisplayName = "Contains";
+        }
+
+        /// <summary>
+        /// The Description of what this constraint tests, for
+        /// use in messages and in the ConstraintResult.
+        /// </summary>
+        public override string Description
+        {
+            get { return "collection containing " + MsgUtils.FormatValue(expected); }
         }
 
         /// <summary>
@@ -49,23 +58,13 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="actual"></param>
         /// <returns></returns>
-        protected override bool doMatch(IEnumerable actual)
+        protected override bool Matches(IEnumerable actual)
         {
             foreach (object obj in actual)
                 if (ItemsEqual(obj, expected))
                     return true;
 
             return false;
-        }
-
-        /// <summary>
-        /// Write a descripton of the constraint to a MessageWriter
-        /// </summary>
-        /// <param name="writer"></param>
-        public override void WriteDescriptionTo(MessageWriter writer)
-        {
-            writer.WritePredicate("collection containing");
-            writer.WriteExpectedValue(expected);
         }
     }
 }

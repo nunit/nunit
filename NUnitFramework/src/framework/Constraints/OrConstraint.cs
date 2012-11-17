@@ -35,28 +35,23 @@ namespace NUnit.Framework.Constraints
         public OrConstraint(Constraint left, Constraint right) : base(left, right) { }
 
         /// <summary>
+        /// Gets text describing a constraint
+        /// </summary>
+        public override string Description
+        {
+            get { return Left.Description + " or " + Right.Description; }
+        }
+
+        /// <summary>
         /// Apply the member constraints to an actual value, succeeding 
         /// succeeding as soon as one of them succeeds.
         /// </summary>
         /// <param name="actual">The actual value</param>
         /// <returns>True if either constraint succeeded</returns>
-        public override IConstraintResult Matches(object actual)
+        public override ConstraintResult ApplyTo(object actual)
         {
-            this.actual = actual;
-
-            bool hasSucceeded = Left.Matches(actual).HasSucceeded || Right.Matches(actual).HasSucceeded;
-            return new StandardConstraintResult(hasSucceeded);
-        }
-
-        /// <summary>
-        /// Write a description for this contraint to a MessageWriter
-        /// </summary>
-        /// <param name="writer">The MessageWriter to receive the description</param>
-        public override void WriteDescriptionTo(MessageWriter writer)
-        {
-            Left.WriteDescriptionTo(writer);
-            writer.WriteConnector("or");
-            Right.WriteDescriptionTo(writer);
+            bool hasSucceeded = Left.ApplyTo(actual).IsSuccess || Right.ApplyTo(actual).IsSuccess;
+            return new ConstraintResult(this, actual, hasSucceeded);
         }
     }
 }

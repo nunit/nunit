@@ -43,32 +43,32 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
-        /// Determines whether the predicate succeeds when applied
-        /// to the actual value.
+        /// Gets text describing a constraint
         /// </summary>
-        public override IConstraintResult Matches(object actual)
+        public override string Description
         {
-            this.actual = actual;
-
-            if (!(actual is T))
-                throw new ArgumentException("The actual value is not of type " + typeof(T).Name, "actual");
-
-            return new StandardConstraintResult(predicate((T)actual));
+            get
+            {
+#if NETCF_2_0
+                return "value matching predicate";
+#else
+                return predicate.Method.Name.StartsWith("<")
+                    ? "value matching lambda expression"
+                    : "value matching " + predicate.Method.Name;
+#endif
+            }
         }
 
         /// <summary>
-        /// Writes the description to a MessageWriter
+        /// Determines whether the predicate succeeds when applied
+        /// to the actual value.
         /// </summary>
-        public override void WriteDescriptionTo(MessageWriter writer)
+        public override ConstraintResult ApplyTo(object actual)
         {
-#if NETCF_2_0
-            writer.Write("value matching predicate");
-#else
-            writer.WritePredicate("value matching");
-            writer.Write(predicate.Method.Name.StartsWith("<")
-                ? "lambda expression"
-                : predicate.Method.Name);
-#endif
+            if (!(actual is T))
+                throw new ArgumentException("The actual value is not of type " + typeof(T).Name, "actual");
+
+            return new ConstraintResult(this, actual, predicate((T)actual));
         }
     }
 }

@@ -44,7 +44,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public CollectionOrderedConstraint()
         {
-            this.DisplayName = "ordered";
+            this.DisplayName = "Ordered";
         }
 
         ///<summary>
@@ -100,11 +100,30 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
+        /// The Description of what this constraint tests, for
+        /// use in messages and in the ConstraintResult.
+        /// </summary>
+        public override string Description
+        {
+            get 
+            { 
+                string desc = propertyName == null
+                    ? "collection ordered"
+                    : "collection ordered by "+ MsgUtils.FormatValue(propertyName);
+
+                if (descending)
+                    desc += ", descending";
+
+                return desc;
+            }
+        }
+
+        /// <summary>
         /// Test whether the collection is ordered
         /// </summary>
         /// <param name="actual"></param>
         /// <returns></returns>
-        protected override bool doMatch(IEnumerable actual)
+        protected override bool Matches(IEnumerable actual)
         {
             object previous = null;
             int index = 0;
@@ -138,24 +157,6 @@ namespace NUnit.Framework.Constraints
             }
 
             return true;
-        }
-
-        /// <summary>
-        /// Write a description of the constraint to a MessageWriter
-        /// </summary>
-        /// <param name="writer"></param>
-        public override void WriteDescriptionTo(MessageWriter writer)
-        {
-            if (propertyName == null)
-                writer.Write("collection ordered");
-            else
-            {
-                writer.WritePredicate("collection ordered by");
-                writer.WriteExpectedValue(propertyName);
-            }
-
-            if (descending)
-                writer.WriteModifier("descending");
         }
 
         /// <summary>

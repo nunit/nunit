@@ -32,7 +32,7 @@ namespace NUnit.Framework.Constraints.Tests
         public void SetUp()
         {
             theConstraint = new NotConstraint( new EqualConstraint(null) );
-            expectedDescription = "not null";
+            expectedDescription = "not equal to null";
             stringRepresentation = "<not <equal null>>";
         }
 

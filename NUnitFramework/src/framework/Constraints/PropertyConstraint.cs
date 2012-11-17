@@ -44,6 +44,7 @@ namespace NUnit.Framework.Constraints
             : base(baseConstraint)
         {
             this.name = name;
+            this.descriptionPrefix = "property " + name;
         }
 
         /// <summary>
@@ -51,10 +52,9 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="actual">The value to be tested</param>
         /// <returns>True for success, false for failure</returns>
-        public override IConstraintResult Matches(object actual)
+        public override ConstraintResult ApplyTo(object actual)
         {
-            this.actual = actual;
-
+            // TODO: Use an error result for null
             Guard.ArgumentNotNull(actual, "actual");
 
             Type actualType = actual as Type;
@@ -64,38 +64,12 @@ namespace NUnit.Framework.Constraints
             PropertyInfo property = actualType.GetProperty(name,
                 BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.GetProperty);
 
+            // TODO: Use an error result here
             if (property == null)
                 throw new ArgumentException(string.Format("Property {0} was not found", name), "name");
 
             propValue = property.GetValue(actual, null);
-            return baseConstraint.Matches(propValue);
-        }
-
-        /// <summary>
-        /// Write the constraint description to a MessageWriter
-        /// </summary>
-        /// <param name="writer">The writer on which the description is displayed</param>
-        public override void WriteDescriptionTo(MessageWriter writer)
-        {
-            writer.WritePredicate("property " + name);
-            if (baseConstraint != null)
-            {
-                if (baseConstraint is EqualConstraint)
-                    writer.WritePredicate("equal to");
-                baseConstraint.WriteDescriptionTo(writer);
-            }
-        }
-
-        /// <summary>
-        /// Write the actual value for a failing constraint test to a
-        /// MessageWriter. The default implementation simply writes
-        /// the raw value of actual, leaving it to the writer to
-        /// perform any formatting.
-        /// </summary>
-        /// <param name="writer">The writer on which the actual value is displayed</param>
-        public override void WriteActualValueTo(MessageWriter writer)
-        {
-            writer.WriteActualValue(propValue);
+            return new ConstraintResult(this, propValue, baseConstraint.ApplyTo(propValue).IsSuccess);
         }
 
         /// <summary>

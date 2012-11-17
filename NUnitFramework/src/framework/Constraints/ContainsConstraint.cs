@@ -38,31 +38,6 @@ namespace NUnit.Framework.Constraints
         Constraint realConstraint;
         bool ignoreCase;
 
-        private Constraint RealConstraint
-        {
-            get
-            {
-                if (realConstraint == null)
-                {
-                    if (actual is string)
-                    {
-                        StringConstraint constraint = new SubstringConstraint((string)expected);
-                        if (this.ignoreCase)
-                            constraint = constraint.IgnoreCase;
-                        this.realConstraint = constraint;
-                    }
-                    else
-                        this.realConstraint = new CollectionContainsConstraint(expected);
-                }
-
-                return realConstraint;
-            }
-            set
-            {
-                realConstraint = value;
-            }
-        }
-
         /// <summary>
         /// Initializes a new instance of the <see cref="ContainsConstraint"/> class.
         /// </summary>
@@ -70,6 +45,15 @@ namespace NUnit.Framework.Constraints
         public ContainsConstraint(object expected)
         {
             this.expected = expected;
+        }
+
+        /// <summary>
+        /// The Description of what this constraint tests, for
+        /// use in messages and in the ConstraintResult.
+        /// </summary>
+        public override string Description
+        {
+            get { return this.realConstraint.Description; }
         }
 
         /// <summary>
@@ -85,19 +69,19 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="actual">The value to be tested</param>
         /// <returns>True for success, false for failure</returns>
-        public override IConstraintResult Matches(object actual)
+        public override ConstraintResult ApplyTo(object actual)
         {
-            this.actual = actual;
-            return this.RealConstraint.Matches(actual);
-        }
+            if (actual is string)
+            {
+                StringConstraint constraint = new SubstringConstraint((string)expected);
+                if (this.ignoreCase)
+                    constraint = constraint.IgnoreCase;
+                this.realConstraint = constraint;
+            }
+            else
+                this.realConstraint = new CollectionContainsConstraint(expected);
 
-        /// <summary>
-        /// Write the constraint description to a MessageWriter
-        /// </summary>
-        /// <param name="writer">The writer on which the description is displayed</param>
-        public override void WriteDescriptionTo(MessageWriter writer)
-        {
-            this.RealConstraint.WriteDescriptionTo(writer);
+            return this.realConstraint.ApplyTo(actual);
         }
     }
 }

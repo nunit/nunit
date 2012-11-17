@@ -76,6 +76,7 @@ namespace NUnit.Framework.Constraints
             this.equalComparisonResult = equalComparisonResult;
             this.greaterComparisonResult = greaterComparisonResult;
             this.predicate = predicate;
+            this.Description = predicate + " " + MsgUtils.FormatValue(expected);
         }
 
         /// <summary>
@@ -83,10 +84,8 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="actual">The value to be tested</param>
         /// <returns>True for success, false for failure</returns>
-        public override IConstraintResult Matches(object actual)
+        public override ConstraintResult ApplyTo(object actual)
         {
-            this.actual = actual;
-
             if (expected == null)
                 throw new ArgumentException("Cannot compare using a null reference", "expected");
 
@@ -96,17 +95,7 @@ namespace NUnit.Framework.Constraints
             int icomp = comparer.Compare(expected, actual);
 
             bool hasSucceeded = icomp < 0 && greaterComparisonResult || icomp == 0 && equalComparisonResult || icomp > 0 && lessComparisonResult;
-            return new StandardConstraintResult(hasSucceeded);
-        }
-
-        /// <summary>
-        /// Write the constraint description to a MessageWriter
-        /// </summary>
-        /// <param name="writer">The writer on which the description is displayed</param>
-        public override void WriteDescriptionTo(MessageWriter writer)
-        {
-            writer.WritePredicate(predicate);
-            writer.WriteExpectedValue(expected);
+            return new ConstraintResult(this, actual, hasSucceeded);
         }
 
         /// <summary>

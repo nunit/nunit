@@ -37,7 +37,7 @@ namespace NUnit.Framework.Constraints.Tests
         public void UsesProvidedIComparer()
         {
             MyComparer comparer = new MyComparer();
-            comparisonConstraint.Using(comparer).Matches(0);
+            comparisonConstraint.Using(comparer).ApplyTo(0);
             Assert.That(comparer.Called, "Comparer was not called");
         }
 
@@ -56,7 +56,7 @@ namespace NUnit.Framework.Constraints.Tests
         public void UsesProvidedComparerOfT()
         {
             MyComparer<int> comparer = new MyComparer<int>();
-            comparisonConstraint.Using(comparer).Matches(0);
+            comparisonConstraint.Using(comparer).ApplyTo(0);
             Assert.That(comparer.Called, "Comparer was not called");
         }
 
@@ -75,7 +75,7 @@ namespace NUnit.Framework.Constraints.Tests
         public void UsesProvidedComparisonOfT()
         {
             MyComparison<int> comparer = new MyComparison<int>();
-            comparisonConstraint.Using(new Comparison<int>(comparer.Compare)).Matches(0);
+            comparisonConstraint.Using(new Comparison<int>(comparer.Compare)).ApplyTo(0);
             Assert.That(comparer.Called, "Comparer was not called");
         }
 
@@ -94,7 +94,7 @@ namespace NUnit.Framework.Constraints.Tests
         public void UsesProvidedLambda()
         {
             Comparison<int> comparer = (x, y) => x.CompareTo(y);
-            comparisonConstraint.Using(comparer).Matches(0);
+            comparisonConstraint.Using(comparer).ApplyTo(0);
         }
     }
 

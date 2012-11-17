@@ -350,7 +350,7 @@ namespace NUnit.Framework.Assertions
 			set2.Add("z");
 
 			expectedMessage = 
-				"  Expected: not < \"x\", \"y\", \"z\" >" + Environment.NewLine +
+				"  Expected: not equal to < \"x\", \"y\", \"z\" >" + Environment.NewLine +
 				"  But was:  < \"x\", \"y\", \"z\" >" + Environment.NewLine;
 			CollectionAssert.AreNotEqual(set1,set2);
 		}

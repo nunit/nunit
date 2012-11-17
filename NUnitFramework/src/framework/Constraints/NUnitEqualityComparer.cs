@@ -347,7 +347,7 @@ namespace NUnit.Framework.Constraints
             }
 
             // TODO: Find a cleaner way to do this
-            return new SamePathConstraint(x.FullName).Matches(y.FullName).HasSucceeded;
+            return new SamePathConstraint(x.FullName).ApplyTo(y.FullName).IsSuccess;
         }
 
         private bool StreamsEqual(Stream x, Stream y)

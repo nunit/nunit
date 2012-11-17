@@ -36,32 +36,19 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="type">The expected Type</param>
         public InstanceOfTypeConstraint(Type type)
-            : base(type)
+            : base(type, "instance of ")
         {
-            this.DisplayName = "instanceof";
+            this.DisplayName = "InstanceOf";
         }
 
         /// <summary>
-        /// Test whether an object is of the specified type or a derived type
+        /// Apply the constraint to an actual value, returning true if it succeeds
         /// </summary>
-        /// <param name="actual">The object to be tested</param>
-        /// <returns>True if the object is of the provided type or derives from it, otherwise false.</returns>
-        public override IConstraintResult Matches(object actual)
+        /// <param name="actual">The actual argument</param>
+        /// <returns>True if the constraint succeeds, otherwise false.</returns>
+        protected override bool Matches(object actual)
         {
-            this.actual = actual;
-            bool hasSucceeded = actual != null && expectedType.IsInstanceOfType(actual);
-
-            return new StandardConstraintResult(hasSucceeded);
-        }
-
-        /// <summary>
-        /// Write a description of this constraint to a MessageWriter
-        /// </summary>
-        /// <param name="writer">The MessageWriter to use</param>
-        public override void WriteDescriptionTo(MessageWriter writer)
-        {
-            writer.WritePredicate("instance of");
-            writer.WriteExpectedValue(expectedType);
+            return actual != null && expectedType.IsInstanceOfType(actual);
         }
     }
 }

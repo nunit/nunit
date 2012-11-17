@@ -103,10 +103,11 @@ namespace NUnit.Framework
         {
             Constraint constraint = expr.Resolve();
 
-            if (!constraint.Matches(del).HasSucceeded)
+            ConstraintResult result = constraint.ApplyTo(del);
+            if (!result.IsSuccess)
             {
                 MessageWriter writer = new TextMessageWriter(message, args);
-                constraint.WriteMessageTo(writer);
+                result.WriteMessageTo(writer);
                 throw new InconclusiveException(writer.ToString());
             }
         }
@@ -201,10 +202,11 @@ namespace NUnit.Framework
         {
             Constraint constraint = expression.Resolve();
 
-            if (!constraint.Matches(actual).HasSucceeded)
+            ConstraintResult result = constraint.ApplyTo(actual);
+            if (!result.IsSuccess)
             {
                 MessageWriter writer = new TextMessageWriter(message, args);
-                constraint.WriteMessageTo(writer);
+                result.WriteMessageTo(writer);
                 throw new InconclusiveException(writer.ToString());
             }
         }
@@ -244,10 +246,11 @@ namespace NUnit.Framework
         {
             Constraint constraint = expression.Resolve();
 
-            if (!constraint.Matches(ref actual).HasSucceeded)
+            ConstraintResult result = constraint.ApplyTo(ref actual);
+            if (!result.IsSuccess)
             {
                 MessageWriter writer = new TextMessageWriter(message, args);
-                constraint.WriteMessageTo(writer);
+                result.WriteMessageTo(writer);
                 throw new InconclusiveException(writer.ToString());
             }
         }

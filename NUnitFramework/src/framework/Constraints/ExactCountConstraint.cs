@@ -43,8 +43,12 @@ namespace NUnit.Framework.Constraints
         public ExactCountConstraint(int expectedCount, Constraint itemConstraint)
             : base(itemConstraint)
         {
-            this.DisplayName = "one";
             this.expectedCount = expectedCount;
+            this.descriptionPrefix = expectedCount == 0
+                ? "no item"
+                : expectedCount == 1
+                    ? "exactly one item"
+                    : string.Format("exactly {0} items", expectedCount);
         }
 
         /// <summary>
@@ -53,41 +57,17 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="actual"></param>
         /// <returns></returns>
-        public override IConstraintResult Matches(object actual)
+        public override ConstraintResult ApplyTo(object actual)
         {
-            this.actual = actual;
-
             if (!(actual is IEnumerable))
                 throw new ArgumentException("The actual value must be an IEnumerable", "actual");
 
             int count = 0;
             foreach (object item in (IEnumerable)actual)
-                if (baseConstraint.Matches(item).HasSucceeded)
+                if (baseConstraint.ApplyTo(item).IsSuccess)
                     count++;
 
-            return new StandardConstraintResult(count == expectedCount);
-        }
-
-        /// <summary>
-        /// Write a description of this constraint to a MessageWriter
-        /// </summary>
-        /// <param name="writer"></param>
-        public override void WriteDescriptionTo(MessageWriter writer)
-        {
-            switch(expectedCount)
-            {
-                case 0:
-                    writer.WritePredicate("no item");
-                    break;
-                case 1:
-                    writer.WritePredicate("exactly one item");
-                    break;
-                default:
-                    writer.WritePredicate("exactly " + expectedCount.ToString() + " items");
-                    break;
-            }
-
-            baseConstraint.WriteDescriptionTo(writer);
+            return new ConstraintResult(this, actual, count == expectedCount);
         }
     }
 }

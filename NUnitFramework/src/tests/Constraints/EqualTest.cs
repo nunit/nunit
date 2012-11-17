@@ -120,11 +120,6 @@ namespace NUnit.Framework.Constraints.Tests
         //                   {HasSucceeded = actual is Color && ((Color) actual).ToArgb() == expectedColor.ToArgb()};
         //    }
 
-        //    public override void WriteDescriptionTo(MessageWriter writer)
-        //    {
-        //        writer.WriteExpectedValue( "same color as " + expectedColor );
-        //    }
-
         //    private class Result : IConstraintResult
         //    {
         //        public bool HasSucceeded { get; set; }

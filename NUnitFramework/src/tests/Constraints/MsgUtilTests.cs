@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2007 Charlie Poole
+// Copyright (c) 2012 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,6 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
+
 // TODO: Remove NUNITLITE conditions
 
 namespace NUnit.Framework.Constraints.Tests
@@ -29,8 +31,81 @@ namespace NUnit.Framework.Constraints.Tests
 	/// Summary description for MsgUtilTests.
 	/// </summary>
 	[TestFixture]
-	public class MsgUtilTests
-	{
+	public static class MsgUtilTests
+    {
+        #region FormatValue
+
+        [Test]
+        public static void FormatValue_IntegerIsWrittenAsIs()
+        {
+            Assert.That(MsgUtils.FormatValue(42), Is.EqualTo("42"));
+        }
+
+        [Test]
+        public static void FormatValue_StringIsWrittenWithQuotes()
+        {
+            Assert.That(MsgUtils.FormatValue("Hello"), Is.EqualTo("\"Hello\""));
+        }
+
+        // This test currently fails because control character replacement is
+        // done at a higher level...
+        // TODO: See if we should do it at a lower level
+        //            [Test]
+        //            public static void ControlCharactersInStringsAreEscaped()
+        //            {
+        //                WriteValue("Best Wishes,\r\n\tCharlie\r\n");
+        //                Assert.That(writer.ToString(), Is.Is.EqualTo("\"Best Wishes,\\r\\n\\tCharlie\\r\\n\""));
+        //            }
+
+        [Test]
+        public static void FormatValue_FloatIsWrittenWithTrailingF()
+        {
+            Assert.That(MsgUtils.FormatValue(0.5f), Is.EqualTo("0.5f"));
+        }
+
+        [Test]
+        public static void FormatValue_FloatIsWrittenToNineDigits()
+        {
+            string s = MsgUtils.FormatValue(0.33333333333333f);
+            int digits = s.Length - 3;   // 0.dddddddddf
+            Assert.That(digits, Is.EqualTo(9));
+        }
+
+        [Test]
+        public static void FormatValue_DoubleIsWrittenWithTrailingD()
+        {
+            Assert.That(MsgUtils.FormatValue(0.5d), Is.EqualTo("0.5d"));
+        }
+
+        [Test]
+        public static void FormatValue_DoubleIsWrittenToSeventeenDigits()
+        {
+            string s = MsgUtils.FormatValue(0.33333333333333333333333333333333333333333333d);
+            Assert.That(s.Length, Is.EqualTo(20)); // add 3 for leading 0, decimal and trailing d
+        }
+
+        [Test]
+        public static void FormatValue_DecimalIsWrittenWithTrailingM()
+        {
+            Assert.That(MsgUtils.FormatValue(0.5m), Is.EqualTo("0.5m"));
+        }
+
+        [Test]
+        public static void FormatValue_DecimalIsWrittenToTwentyNineDigits()
+        {
+            Assert.That(MsgUtils.FormatValue(12345678901234567890123456789m), Is.EqualTo("12345678901234567890123456789m"));
+        }
+
+        [Test]
+        public static void FormatValue_DateTimeTest()
+        {
+            Assert.That(MsgUtils.FormatValue(new DateTime(2007, 7, 4, 9, 15, 30, 123)), Is.EqualTo("2007-07-04 09:15:30.123"));
+        }
+
+        #endregion
+
+        #region EscapeControlChars
+
         [TestCase("\n", "\\n")]
         [TestCase("\n\n", "\\n\\n")]
         [TestCase("\n\n\n", "\\n\\n\\n")]
@@ -56,16 +131,20 @@ namespace NUnit.Framework.Constraints.Tests
         [TestCase("\x2028", "\\x2028", Description = "Line separator character")]
         [TestCase("\x2029", "\\x2029", Description = "Paragraph separator character")]
 #endif
-        public void EscapeControlCharsTest(string input, string expected)
+        public static void EscapeControlCharsTest(string input, string expected)
 		{
             Assert.That( MsgUtils.EscapeControlChars(input), Is.EqualTo(expected) );
 		}
 
         [Test]
-        public void EscapeNullCharInString()
+        public static void EscapeNullCharInString()
         {
             Assert.That(MsgUtils.EscapeControlChars("\0"), Is.EqualTo("\\0"));
         }
+
+        #endregion
+
+        #region ClipString
 
         private const string s52 = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
@@ -74,7 +153,7 @@ namespace NUnit.Framework.Constraints.Tests
         [TestCase(s52, 29, 0, "abcdefghijklmnopqrstuvwxyz...", TestName="ClipAtEnd")]
         [TestCase(s52, 29, 26, "...ABCDEFGHIJKLMNOPQRSTUVWXYZ", TestName="ClipAtStart")]
         [TestCase(s52, 28, 26, "...ABCDEFGHIJKLMNOPQRSTUV...", TestName="ClipAtStartAndEnd")]
-        public void TestClipString(string input, int max, int start, string result)
+        public static void TestClipString(string input, int max, int start, string result)
         {
             System.Console.WriteLine("input=  \"{0}\"", input);
             System.Console.WriteLine("result= \"{0}\"", result);
@@ -82,14 +161,18 @@ namespace NUnit.Framework.Constraints.Tests
         }
 #endif
 
+        #endregion
+
         //[TestCase('\0')]
         //[TestCase('\r')]
         //public void CharacterArgumentTest(char c)
         //{
         //}
 
+        #region ClipExpectedAndActual
+
         [Test]
-        public void ClipExpectedAndActual_StringsFitInLine()
+        public static void ClipExpectedAndActual_StringsFitInLine()
         {
             string eClip = s52;
             string aClip = "abcde";
@@ -105,7 +188,7 @@ namespace NUnit.Framework.Constraints.Tests
         }
 
         [Test]
-        public void ClipExpectedAndActual_StringTailsFitInLine()
+        public static void ClipExpectedAndActual_StringTailsFitInLine()
         {
             string s1 = s52;
             string s2 = s52.Replace('Z', '?');
@@ -114,7 +197,7 @@ namespace NUnit.Framework.Constraints.Tests
         }
 
         [Test]
-        public void ClipExpectedAndActual_StringsDoNotFitInLine()
+        public static void ClipExpectedAndActual_StringsDoNotFitInLine()
         {
             string s1 = s52;
             string s2 = "abcdefghij";
@@ -128,5 +211,7 @@ namespace NUnit.Framework.Constraints.Tests
             Assert.That(s1, Is.EqualTo("...efghijklmnopqrstuvw..."));
             Assert.That(s2, Is.EqualTo("...efghijklmno?qrstuvwxyz"));
         }
-	}
+
+        #endregion
+    }
 }

@@ -39,8 +39,10 @@ namespace NUnit.Framework.Constraints
         public AllItemsConstraint(Constraint itemConstraint)
             : base(itemConstraint)
         {
-            this.DisplayName = "all";
+            this.DisplayName = "All";
+            this.descriptionPrefix = "all items";
         }
+
 
         /// <summary>
         /// Apply the item constraint to each item in the collection,
@@ -48,28 +50,16 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="actual"></param>
         /// <returns></returns>
-        public override IConstraintResult Matches(object actual)
+        public override ConstraintResult ApplyTo(object actual)
         {
-            this.actual = actual;
-
             if (!(actual is IEnumerable))
                 throw new ArgumentException("The actual value must be an IEnumerable", "actual");
 
             foreach (object item in (IEnumerable)actual)
-                if (!baseConstraint.Matches(item).HasSucceeded)
-                    return new StandardConstraintResult(false);
+                if (!baseConstraint.ApplyTo(item).IsSuccess)
+                    return new ConstraintResult(this, actual, ConstraintStatus.Failure);
 
-            return new StandardConstraintResult(true);
-        }
-
-        /// <summary>
-        /// Write a description of this constraint to a MessageWriter
-        /// </summary>
-        /// <param name="writer"></param>
-        public override void WriteDescriptionTo(MessageWriter writer)
-        {
-            writer.WritePredicate("all items");
-            baseConstraint.WriteDescriptionTo(writer);
+            return new ConstraintResult(this, actual, ConstraintStatus.Success);
         }
     }
 }

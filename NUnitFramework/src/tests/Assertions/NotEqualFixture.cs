@@ -38,7 +38,7 @@ namespace NUnit.Framework.Assertions
 		public void NotEqualFails()
 		{
 			expectedMessage =
-				"  Expected: not 5" + Env.NewLine +
+				"  Expected: not equal to 5" + Env.NewLine +
 				"  But was:  5" + Env.NewLine;
 			Assert.AreNotEqual( 5, 5 );
 		}
@@ -53,7 +53,7 @@ namespace NUnit.Framework.Assertions
 		public void NullEqualsNull()
 		{
 			expectedMessage =
-				"  Expected: not null" + Env.NewLine +
+				"  Expected: not equal to null" + Env.NewLine +
 				"  But was:  null" + Env.NewLine;
 			Assert.AreNotEqual( null, null );
 		}
@@ -68,7 +68,7 @@ namespace NUnit.Framework.Assertions
 		public void ArraysNotEqualFails()
 		{
 			expectedMessage =
-				"  Expected: not < 1, 2, 3 >" + Env.NewLine +
+				"  Expected: not equal to < 1, 2, 3 >" + Env.NewLine +
 				"  But was:  < 1, 2, 3 >" + Env.NewLine;
 			Assert.AreNotEqual( new object[] { 1, 2, 3 }, new object[] { 1, 2, 3 } );
 		}

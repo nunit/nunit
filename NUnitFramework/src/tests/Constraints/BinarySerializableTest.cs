@@ -40,7 +40,7 @@ namespace NUnit.Framework.Constraints.Tests
 
         object[] SuccessData = new object[] { 1, "a", new ArrayList(), new InternalWithSerializableAttributeClass() };
         
-        object[] FailureData = new object[] { new TestCaseData( new InternalClass(), "<InternalClass>" ) };
+        object[] FailureData = new object[] { new TestCaseData( new InternalClass(), "<NUnit.Framework.Constraints.Tests.InternalClass>" ) };
 
         object[] InvalidData = new object[] { null };
     }

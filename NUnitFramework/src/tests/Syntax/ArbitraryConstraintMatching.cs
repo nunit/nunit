@@ -76,12 +76,7 @@ namespace NUnit.Framework.Syntax
 
         class CustomConstraint : Constraint
         {
-            public override IConstraintResult Matches(object actual)
-            {
-                throw new NotImplementedException();
-            }
-
-            public override void WriteDescriptionTo(MessageWriter writer)
+            public override ConstraintResult ApplyTo(object actual)
             {
                 throw new NotImplementedException();
             }

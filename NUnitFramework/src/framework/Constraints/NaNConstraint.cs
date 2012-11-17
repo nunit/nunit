@@ -29,26 +29,24 @@ namespace NUnit.Framework.Constraints
     public class NaNConstraint : Constraint
     {
         /// <summary>
+        /// The Description of what this constraint tests, for
+        /// use in messages and in the ConstraintResult.
+        /// </summary>
+        public override string Description
+        {
+            get { return "NaN"; }
+        }
+
+        /// <summary>
         /// Test that the actual value is an NaN
         /// </summary>
         /// <param name="actual"></param>
         /// <returns></returns>
-        public override IConstraintResult Matches(object actual)
+        public override ConstraintResult ApplyTo(object actual)
         {
-            this.actual = actual;
-            bool hasSucceeded = actual is double && double.IsNaN((double)actual)
-                || actual is float && float.IsNaN((float)actual);
-
-            return new StandardConstraintResult(hasSucceeded);
-        }
-
-        /// <summary>
-        /// Write the constraint description to a specified writer
-        /// </summary>
-        /// <param name="writer"></param>
-        public override void WriteDescriptionTo(MessageWriter writer)
-        {
-            writer.Write("NaN");
+            return new ConstraintResult(this, actual, 
+                actual is double && double.IsNaN((double)actual) ||
+                actual is float && float.IsNaN((float)actual));
         }
     }
 }

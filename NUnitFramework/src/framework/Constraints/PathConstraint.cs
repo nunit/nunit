@@ -78,7 +78,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         protected override string GetStringRepresentation()
         {
-            return string.Format("<{0} \"{1}\" {2}>", DisplayName, expected, caseInsensitive ? "ignorecase" : "respectcase");
+            return string.Format("<{0} \"{1}\" {2}>", DisplayName.ToLower(), expected, caseInsensitive ? "ignorecase" : "respectcase");
         }
 
         #region Helper Methods
@@ -130,7 +130,7 @@ namespace NUnit.Framework.Constraints
         /// <returns></returns>
         protected bool IsSamePath(string path1, string path2)
         {
-            return string.Compare(Canonicalize(expected), Canonicalize((string)actual), caseInsensitive) == 0;
+            return string.Compare(Canonicalize(path1), Canonicalize((string)path2), caseInsensitive) == 0;
         }
 
         /// <summary>

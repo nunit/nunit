@@ -40,18 +40,26 @@ namespace NUnit.Framework.Constraints
         private XmlSerializer serializer;
 
         /// <summary>
+        /// Gets text describing a constraint
+        /// </summary>
+        public override string Description
+        {
+            get { return "xml serializable"; }
+        }
+
+        /// <summary>
         /// Test whether the constraint is satisfied by a given value
         /// </summary>
         /// <param name="actual">The value to be tested</param>
         /// <returns>True for success, false for failure</returns>
-        public override IConstraintResult Matches(object actual)
+        public override ConstraintResult ApplyTo(object actual)
         {
-            this.actual = actual;
-
             if(actual == null)
                 throw new ArgumentException();
 
             MemoryStream stream = new MemoryStream();
+
+            bool succeeded = false;
 
             try
             {
@@ -61,39 +69,18 @@ namespace NUnit.Framework.Constraints
 
                 stream.Seek(0, SeekOrigin.Begin);
 
-                object value = serializer.Deserialize(stream);
-
-                return new StandardConstraintResult(value != null);
+                succeeded = serializer.Deserialize(stream) != null;
             }
             catch (NotSupportedException)
             {
-                return new StandardConstraintResult(false);
+                // Ignore and return failure
             }
             catch (InvalidOperationException)
             {
-                return new StandardConstraintResult(false);
+                // Ignore and return failure
             }
-        }
 
-        /// <summary>
-        /// Write the constraint description to a MessageWriter
-        /// </summary>
-        /// <param name="writer">The writer on which the description is displayed</param>
-        public override void WriteDescriptionTo(MessageWriter writer)
-        {
-            writer.Write("xml serializable");
-        }
-
-        /// <summary>
-        /// Write the actual value for a failing constraint test to a
-        /// MessageWriter. The default implementation simply writes
-        /// the raw value of actual, leaving it to the writer to
-        /// perform any formatting.
-        /// </summary>
-        /// <param name="writer">The writer on which the actual value is displayed</param>
-        public override void WriteActualValueTo(MessageWriter writer)
-        {
-            writer.Write("<{0}>", actual.GetType().Name);
+            return new ConstraintResult(this, actual.GetType(), succeeded);
         }
 
         /// <summary>
