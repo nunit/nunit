@@ -43,9 +43,9 @@ namespace NUnit.Framework.Constraints.Tests
         object[] SuccessData = new object[] { 1, "a", new ArrayList() };
 
         object[] FailureData = new object[] { 
-            new TestCaseData( new Dictionary<string, string>(), "<Dictionary`2>" ),
-            new TestCaseData( new InternalClass(), "<InternalClass>" ),
-            new TestCaseData( new InternalWithSerializableAttributeClass(), "<InternalWithSerializableAttributeClass>" )
+            new TestCaseData( new Dictionary<string, string>(), "<System.Collections.Generic.Dictionary`2[System.String,System.String]>" ),
+            new TestCaseData( new InternalClass(), "<NUnit.Framework.Constraints.Tests.InternalClass>" ),
+            new TestCaseData( new InternalWithSerializableAttributeClass(), "<NUnit.Framework.Constraints.Tests.InternalWithSerializableAttributeClass>" )
         };
 
         object[] InvalidData = new object[] { null };

@@ -238,7 +238,7 @@ namespace NUnit.Framework.Assertions
                     expectedMessage = string.Format(
                         "  Stream lengths are both {0}. Streams differ at offset {1}." + Environment.NewLine,
                         tf1.FileLength,
-                        tf1.FileLength-3); // TODO: Make this independent of NewLine length
+                        tf1.OffsetOf('!'));
 					FileAssert.AreEqual( "Test1.txt", "Test2.txt" );
 				}
 			}
@@ -326,7 +326,7 @@ namespace NUnit.Framework.Assertions
 			FileStream expected = null;
 			FileStream actual = null;
 			expectedMessage =
-				"  Expected: not null" + Environment.NewLine +
+				"  Expected: not equal to null" + Environment.NewLine +
 				"  But was:  null" + Environment.NewLine;
 			FileAssert.AreNotEqual( expected, actual );
 		}
@@ -340,7 +340,7 @@ namespace NUnit.Framework.Assertions
 			using(FileStream actual = File.OpenRead("Test2.jpg"))
 			{
 				expectedMessage = 
-					"  Expected: not <System.IO.FileStream>" + Environment.NewLine +
+					"  Expected: not equal to <System.IO.FileStream>" + Environment.NewLine +
 					"  But was:  <System.IO.FileStream>" + Environment.NewLine;
 				FileAssert.AreNotEqual( expected, actual );
 			}
@@ -356,7 +356,7 @@ namespace NUnit.Framework.Assertions
 					FileInfo expected = new FileInfo( "Test1.jpg" );
 					FileInfo actual = new FileInfo( "Test2.jpg" );
 					expectedMessage = 
-						"  Expected: not <System.IO.FileStream>" + Environment.NewLine +
+						"  Expected: not equal to <System.IO.FileStream>" + Environment.NewLine +
 						"  But was:  <System.IO.FileStream>" + Environment.NewLine;
 					FileAssert.AreNotEqual( expected, actual );
 				}
@@ -369,7 +369,7 @@ namespace NUnit.Framework.Assertions
 			using(TestFile tf1 = new TestFile("Test1.jpg","TestImage1.jpg"))
 			{
 				expectedMessage = 
-					"  Expected: not <System.IO.FileStream>" + Environment.NewLine +
+					"  Expected: not equal to <System.IO.FileStream>" + Environment.NewLine +
 					"  But was:  <System.IO.FileStream>" + Environment.NewLine;
 				FileAssert.AreNotEqual( "Test1.jpg", "Test1.jpg" );
 			}
@@ -383,7 +383,7 @@ namespace NUnit.Framework.Assertions
 				using(TestFile tf2 = new TestFile("Test2.txt","TestText1.txt"))
 				{
 					expectedMessage = 
-						"  Expected: not <System.IO.FileStream>" + Environment.NewLine +
+						"  Expected: not equal to <System.IO.FileStream>" + Environment.NewLine +
 						"  But was:  <System.IO.FileStream>" + Environment.NewLine;
 					FileAssert.AreNotEqual( "Test1.txt", "Test2.txt" );
 				}
@@ -431,6 +431,31 @@ namespace NUnit.Framework.Assertions
         public long FileLength
         {
             get { return _fileLength; }
+        }
+
+        public long OffsetOf(char target)
+        {
+            Assembly a = Assembly.GetExecutingAssembly();
+            using (Stream s = a.GetManifestResourceStream(_resourceName))
+            {
+                if (s == null) throw new Exception("Manifest Resource Stream " + _resourceName + " was not found.");
+
+                byte[] buffer = new byte[1024];
+                long offset = 0L;
+
+                while (true)
+                {
+                    int count = s.Read(buffer, 0, buffer.Length);
+                    if (count == 0) break;
+                    foreach( char c in buffer )
+                        if (c == target)
+                            return offset;
+                        else
+                            offset++;
+                }
+
+                return -1L;
+            }
         }
 
         protected virtual void Dispose(bool disposing)

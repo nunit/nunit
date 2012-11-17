@@ -59,13 +59,13 @@ namespace NUnit.Framework.Constraints.Tests
         public void SucceedsWithGoodDelegates(ActualValueDelegate del)
         {
             SetValueTrueAfterDelay(300);
-            Assert.That(theConstraint.Matches(del).HasSucceeded);
+            Assert.That(theConstraint.ApplyTo(del).IsSuccess);
         }
 
         [Test, TestCaseSource("FailureDelegates")]
         public void FailsWithBadDelegates(ActualValueDelegate del)
         {
-            Assert.IsFalse(theConstraint.Matches(del).HasSucceeded);
+            Assert.IsFalse(theConstraint.ApplyTo(del).IsSuccess);
         }
 
         [Test]

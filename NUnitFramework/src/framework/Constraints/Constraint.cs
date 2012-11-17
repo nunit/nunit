@@ -38,78 +38,32 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public abstract class Constraint : IResolveConstraint
     {
-        #region UnsetObject Class
-        /// <summary>
-        /// Class used to detect any derived constraints
-        /// that fail to set the actual value in their
-        /// Matches override.
-        /// </summary>
-        private class UnsetObject
-        {
-            public override string ToString()
-            {
-                return "UNSET";
-            }
-        }
-        #endregion
-
         #region Static and Instance Fields
-        /// <summary>
-        /// Static UnsetObject used to detect derived constraints
-        /// failing to set the actual value.
-        /// </summary>
-        protected static object UNSET = new UnsetObject();
-
-        /// <summary>
-        /// The actual value being tested against a constraint
-        /// </summary>
-        protected object actual = UNSET;
-
-        /// <summary>
-        /// The display name of this Constraint for use by ToString()
-        /// </summary>
-        private string displayName;
-
-        /// <summary>
-        /// Argument fields used by ToString();
-        /// </summary>
-        private readonly int argcnt;
-        private readonly object arg1;
-        private readonly object arg2;
 
         /// <summary>
         /// The builder holding this constraint
         /// </summary>
         private ConstraintBuilder builder;
+
         #endregion
 
-        #region Constructors
-        /// <summary>
-        /// Construct a constraint with no arguments
-        /// </summary>
-        protected Constraint()
-        {
-            argcnt = 0;
-        }
+        #region Constructor
 
         /// <summary>
-        /// Construct a constraint with one argument
+        /// Construct a constraint with optional arguments
         /// </summary>
-        protected Constraint(object arg)
+        /// <param name="args">Arguments to be saved</param>
+        protected Constraint(params object[] args)
         {
-            argcnt = 1;
-            this.arg1 = arg;
+            Arguments = args;
+
+            DisplayName = this.GetType().Name;
+            if (DisplayName.EndsWith("`1") || DisplayName.EndsWith("`2"))
+                DisplayName = DisplayName.Substring(0, DisplayName.Length - 2);
+            if (DisplayName.EndsWith("Constraint"))
+                DisplayName = DisplayName.Substring(0, DisplayName.Length - 10);
         }
 
-        /// <summary>
-        /// Construct a constraint with two arguments
-        /// </summary>
-        protected Constraint(object arg1, object arg2)
-        {
-            argcnt = 2;
-            this.arg1 = arg1;
-            this.arg2 = arg2;
-        }
         #endregion
 
         #region Set Containing ConstraintBuilder
@@ -123,67 +77,49 @@ namespace NUnit.Framework.Constraints
         #endregion
 
         #region Properties
+
         /// <summary>
         /// The display name of this Constraint for use by ToString().
         /// The default value is the name of the constraint with
         /// trailing "Constraint" removed. Derived classes may set
         /// this to another name in their constructors.
         /// </summary>
-        protected string DisplayName
-        {
-            get
-            {
-                if (displayName == null)
-                {
-                    displayName = this.GetType().Name.ToLower();
-                    if (displayName.EndsWith("`1") || displayName.EndsWith("`2"))
-                        displayName = displayName.Substring(0, displayName.Length - 2);
-                    if (displayName.EndsWith("constraint"))
-                        displayName = displayName.Substring(0, displayName.Length - 10);
-                }
+        public string DisplayName { get; protected set; }
 
-                return displayName;
-            }
+        /// <summary>
+        /// The Description of what this constraint tests, for
+        /// use in messages and in the ConstraintResult.
+        /// </summary>
+        public virtual string Description { get; protected set; }
 
-            set { displayName = value; }
-        }
+        /// <summary>
+        /// Arguments provided to this Constraint, for use in
+        /// formatting the description.
+        /// </summary>
+        public object[] Arguments { get; private set; }
+
         #endregion
 
         #region Abstract and Virtual Methods
-        /// <summary>
-        /// Write the failure message to the MessageWriter provided
-        /// as an argument. The default implementation simply passes
-        /// the constraint and the actual value to the writer, which
-        /// then displays the constraint description and the value.
-        /// 
-        /// Constraints that need to provide additional details,
-        /// such as where the error occured can override this.
-        /// </summary>
-        /// <param name="writer">The MessageWriter on which to display the message</param>
-        public virtual void WriteMessageTo(MessageWriter writer)
-        {
-            writer.DisplayDifferences(this);
-        }
 
         /// <summary>
-        /// Test whether the constraint is satisfied by a given value
+        /// Applies the constraint to an actual value, returning a ConstraintResult.
         /// </summary>
         /// <param name="actual">The value to be tested</param>
-        /// <returns>True for success, false for failure</returns>
-        public abstract IConstraintResult Matches(object actual);
+        /// <returns>A ConstraintResult</returns>
+        public abstract ConstraintResult ApplyTo(object actual);
 
         /// <summary>
-        /// Test whether the constraint is satisfied by an
-        /// ActualValueDelegate that returns the value to be tested.
-        /// The default implementation simply evaluates the delegate
-        /// but derived classes may override it to provide for delayed 
-        /// processing.
+        /// Applies the constraint to an ActualValueDelegate that returns 
+        /// the value to be tested. The default implementation simply evaluates 
+        /// the delegate but derived classes may override it to provide for 
+        /// delayed processing.
         /// </summary>
         /// <param name="del">An ActualValueDelegate</param>
-        /// <returns>True for success, false for failure</returns>
-        public virtual IConstraintResult Matches(ActualValueDelegate del)
+        /// <returns>A ConstraintResult</returns>
+        public virtual ConstraintResult ApplyTo(ActualValueDelegate del)
         {
-            return Matches(del());
+            return ApplyTo(del());
         }
 
         /// <summary>
@@ -192,29 +128,12 @@ namespace NUnit.Framework.Constraints
         /// derived classes may override it to provide for delayed processing.
         /// </summary>
         /// <param name="actual">A reference to the value to be tested</param>
-        /// <returns>True for success, false for failure</returns>
-        public virtual IConstraintResult Matches<T>(ref T actual)
+        /// <returns>A ConstraintResult</returns>
+        public virtual ConstraintResult ApplyTo<T>(ref T actual)
         {
-            return Matches(actual);
+            return ApplyTo(actual);
         }
 
-        /// <summary>
-        /// Write the constraint description to a MessageWriter
-        /// </summary>
-        /// <param name="writer">The writer on which the description is displayed</param>
-        public abstract void WriteDescriptionTo(MessageWriter writer);
-
-        /// <summary>
-        /// Write the actual value for a failing constraint test to a
-        /// MessageWriter. The default implementation simply writes
-        /// the raw value of actual, leaving it to the writer to
-        /// perform any formatting.
-        /// </summary>
-        /// <param name="writer">The writer on which the actual value is displayed</param>
-        public virtual void WriteActualValueTo(MessageWriter writer)
-        {
-            writer.WriteActualValue(actual);
-        }
         #endregion
 
         #region ToString Override
@@ -236,16 +155,16 @@ namespace NUnit.Framework.Constraints
         /// <returns></returns>
         protected virtual string GetStringRepresentation()
         {
-            switch (argcnt)
-            {
-                default:
-                case 0:
-                    return string.Format("<{0}>", DisplayName);
-                case 1:
-                    return string.Format("<{0} {1}>", DisplayName, _displayable(arg1));
-                case 2:
-                    return string.Format("<{0} {1} {2}>", DisplayName, _displayable(arg1), _displayable(arg2));
-            }
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+            
+            sb.AppendFormat("<{0}", DisplayName.ToLower());
+
+            foreach (object arg in Arguments)
+                sb.AppendFormat(" {0}", _displayable(arg));
+
+            sb.Append(">");
+
+            return sb.ToString();
         }
 
         private static string _displayable(object o)

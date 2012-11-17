@@ -40,7 +40,16 @@ namespace NUnit.Framework.Constraints
         public CollectionSubsetConstraint(IEnumerable expected) : base(expected)
         {
             this.expected = expected;
-            this.DisplayName = "subsetof";
+            this.DisplayName = "SubsetOf";
+        }
+
+        /// <summary>
+        /// The Description of what this constraint tests, for
+        /// use in messages and in the ConstraintResult.
+        /// </summary>
+        public override string Description
+        {
+            get { return "subset of " + MsgUtils.FormatValue(expected); }
         }
 
         /// <summary>
@@ -49,19 +58,9 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="actual"></param>
         /// <returns></returns>
-        protected override bool doMatch(IEnumerable actual)
+        protected override bool Matches(IEnumerable actual)
         {
             return Tally(expected).TryRemove( actual );
-        }
-        
-        /// <summary>
-        /// Write a description of this constraint to a MessageWriter
-        /// </summary>
-        /// <param name="writer"></param>
-        public override void WriteDescriptionTo(MessageWriter writer)
-        {
-            writer.WritePredicate( "subset of" );
-            writer.WriteExpectedValue(expected);
         }
     }
 }

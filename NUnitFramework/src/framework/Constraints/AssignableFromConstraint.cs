@@ -35,28 +35,16 @@ namespace NUnit.Framework.Constraints
         /// Construct an AssignableFromConstraint for the type provided
         /// </summary>
         /// <param name="type"></param>
-        public AssignableFromConstraint(Type type) : base(type) { }
+        public AssignableFromConstraint(Type type) : base(type, "assignable from ") { }
 
         /// <summary>
-        /// Test whether an object can be assigned from the specified type
+        /// Apply the constraint to an actual value, returning true if it succeeds
         /// </summary>
-        /// <param name="actual">The object to be tested</param>
-        /// <returns>True if the object can be assigned a value of the expected Type, otherwise false.</returns>
-        public override IConstraintResult Matches(object actual)
+        /// <param name="actual">The actual argument</param>
+        /// <returns>True if the constraint succeeds, otherwise false.</returns>
+        protected override bool Matches(object actual)
         {
-            this.actual = actual;
-            bool hasSucceeded = actual != null && actual.GetType().IsAssignableFrom(expectedType);
-            return new StandardConstraintResult(hasSucceeded);
-        }
-
-        /// <summary>
-        /// Write a description of this constraint to a MessageWriter
-        /// </summary>
-        /// <param name="writer">The MessageWriter to use</param>
-        public override void WriteDescriptionTo(MessageWriter writer)
-        {
-            writer.WritePredicate("assignable from");
-            writer.WriteExpectedValue(expectedType);
+            return actual != null && actual.GetType().IsAssignableFrom(expectedType);
         }
     }
 }

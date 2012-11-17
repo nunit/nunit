@@ -40,6 +40,23 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         protected bool caseInsensitive;
 
+        protected string description;
+
+        /// <summary>
+        /// The Description of what this constraint tests, for
+        /// use in messages and in the ConstraintResult.
+        /// </summary>
+        public override string Description
+        {
+            get 
+            { 
+                string desc = string.Format("{0} {1}", description, MsgUtils.FormatValue(expected));
+                if (caseInsensitive)
+                    desc += ", ignoring case";
+                return desc;
+            }
+        }
+
         /// <summary>
         /// Constructs a StringConstraint given an expected value
         /// </summary>
@@ -63,14 +80,12 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="actual">The value to be tested</param>
         /// <returns>True for success, false for failure</returns>
-        public override IConstraintResult Matches(object actual)
+        public override ConstraintResult ApplyTo(object actual)
         {
-            this.actual = actual;
-
             string actualAsString = actual as string;
             bool hasSucceeded = actualAsString != null && Matches(actualAsString);
 
-            return new StandardConstraintResult(hasSucceeded);
+            return new ConstraintResult(this, actual, hasSucceeded);
         }
 
         /// <summary>

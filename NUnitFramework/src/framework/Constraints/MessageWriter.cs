@@ -72,8 +72,8 @@ namespace NUnit.Framework.Constraints
         /// is called by MessageWriter's default implementation of 
         /// WriteMessageTo and provides the generic two-line display. 
         /// </summary>
-        /// <param name="constraint">The constraint that failed</param>
-        public abstract void DisplayDifferences(Constraint constraint);
+        /// <param name="result">The failing constraint result</param>
+        public abstract void DisplayDifferences(ConstraintResult result);
 
         /// <summary>
         /// Display Expected and Actual lines for given values. This
@@ -105,30 +105,6 @@ namespace NUnit.Framework.Constraints
         /// <param name="ignoreCase">If true, case is ignored in locating the point where the strings differ</param>
         /// <param name="clipping">If true, the strings should be clipped to fit the line</param>
         public abstract void DisplayStringDifferences(string expected, string actual, int mismatch, bool ignoreCase, bool clipping);
-
-        /// <summary>
-        /// Writes the text for a connector.
-        /// </summary>
-        /// <param name="connector">The connector.</param>
-        public abstract void WriteConnector(string connector);
-
-        /// <summary>
-        /// Writes the text for a predicate.
-        /// </summary>
-        /// <param name="predicate">The predicate.</param>
-        public abstract void WritePredicate(string predicate);
-
-        /// <summary>
-        /// Writes the text for an expected value.
-        /// </summary>
-        /// <param name="expected">The expected value.</param>
-        public abstract void WriteExpectedValue(object expected);
-
-        /// <summary>
-        /// Writes the text for a modifier
-        /// </summary>
-        /// <param name="modifier">The modifier.</param>
-        public abstract void WriteModifier(string modifier);
 
         /// <summary>
         /// Writes the text for an actual value.

@@ -45,56 +45,61 @@ namespace NUnit.Framework.Constraints
         public AndConstraint(Constraint left, Constraint right) : base(left, right) { }
 
         /// <summary>
+        /// Gets text describing a constraint
+        /// </summary>
+        public override string Description
+        {
+            get { return Left.Description + " and " + Right.Description; }
+        }
+
+        /// <summary>
         /// Apply both member constraints to an actual value, succeeding 
         /// succeeding only if both of them succeed.
         /// </summary>
         /// <param name="actual">The actual value</param>
         /// <returns>True if the constraints both succeeded</returns>
-        public override IConstraintResult Matches(object actual)
+        public override ConstraintResult ApplyTo(object actual)
         {
-            this.actual = actual;
+            var leftResult = Left.ApplyTo(actual);
+            var rightResult = leftResult.IsSuccess
+                ? Right.ApplyTo(actual)
+                : new ConstraintResult(Right, actual);
 
-            failurePoint = Left.Matches(actual).HasSucceeded
-                ? Right.Matches(actual).HasSucceeded
-                    ? FailurePoint.None
-                    : FailurePoint.Right
-                : FailurePoint.Left;
-
-            return new StandardConstraintResult(failurePoint == FailurePoint.None);
+            return new AndConstraintResult(this, actual, leftResult, rightResult);
         }
 
-        /// <summary>
-        /// Write a description for this contraint to a MessageWriter
-        /// </summary>
-        /// <param name="writer">The MessageWriter to receive the description</param>
-        public override void WriteDescriptionTo(MessageWriter writer)
-        {
-            Left.WriteDescriptionTo(writer);
-            writer.WriteConnector("and");
-            Right.WriteDescriptionTo(writer);
-        }
+        #region Nested Result Class
 
-        /// <summary>
-        /// Write the actual value for a failing constraint test to a
-        /// MessageWriter. The default implementation simply writes
-        /// the raw value of actual, leaving it to the writer to
-        /// perform any formatting.
-        /// </summary>
-        /// <param name="writer">The writer on which the actual value is displayed</param>
-        public override void WriteActualValueTo(MessageWriter writer)
+        class AndConstraintResult : ConstraintResult
         {
-            switch (failurePoint)
+            private ConstraintResult leftResult;
+            private ConstraintResult rightResult;
+
+            public AndConstraintResult(AndConstraint constraint, object actual, ConstraintResult leftResult, ConstraintResult rightResult)
+                : base(constraint, actual, leftResult.IsSuccess && rightResult.IsSuccess) 
             {
-                case FailurePoint.Left:
-                    Left.WriteActualValueTo(writer);
-                    break;
-                case FailurePoint.Right:
-                    Right.WriteActualValueTo(writer);
-                    break;
-                default:
+                this.leftResult = leftResult;
+                this.rightResult = rightResult;
+            }
+
+            /// <summary>
+            /// Write the actual value for a failing constraint test to a
+            /// MessageWriter. The default implementation simply writes
+            /// the raw value of actual, leaving it to the writer to
+            /// perform any formatting.
+            /// </summary>
+            /// <param name="writer">The writer on which the actual value is displayed</param>
+            public override void WriteActualValueTo(MessageWriter writer)
+            {
+                if (this.IsSuccess)
                     base.WriteActualValueTo(writer);
-                    break;
+                else if (!leftResult.IsSuccess)
+                    leftResult.WriteActualValueTo(writer);
+                else
+                    rightResult.WriteActualValueTo(writer);
             }
         }
+
+        #endregion
     }
 }

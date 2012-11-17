@@ -34,6 +34,11 @@ namespace NUnit.Framework.Constraints
         protected Constraint baseConstraint;
 
         /// <summary>
+        /// Prefix used in forming the constraint description
+        /// </summary>
+        protected string descriptionPrefix;
+
+        /// <summary>
         /// Construct given a base constraint
         /// </summary>
         /// <param name="resolvable"></param>
@@ -42,6 +47,27 @@ namespace NUnit.Framework.Constraints
         {
             if (resolvable != null)
                 this.baseConstraint = resolvable.Resolve();
+        }
+
+        /// <summary>
+        /// The Description of what this constraint tests, for
+        /// use in messages and in the ConstraintResult.
+        /// </summary>
+        public override string Description
+        {
+            get
+            {
+                System.Text.StringBuilder sb = new System.Text.StringBuilder(descriptionPrefix);
+
+                if (baseConstraint != null)
+                {
+                    sb.AppendFormat(
+                        baseConstraint is EqualConstraint ? " equal to {0}" : " {0}",
+                        baseConstraint.Description);
+                }
+
+                return sb.ToString();
+            }
         }
     }
 }

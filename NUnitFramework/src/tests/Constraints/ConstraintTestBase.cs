@@ -35,9 +35,7 @@ namespace NUnit.Framework.Constraints.Tests
         [Test]
         public void ProvidesProperDescription()
         {
-            TextMessageWriter writer = new TextMessageWriter();
-            theConstraint.WriteDescriptionTo(writer);
-            Assert.That(expectedDescription == writer.ToString());
+            Assert.That(expectedDescription, Is.EqualTo(theConstraint.Description));
         }
 
         [Test]
@@ -52,10 +50,11 @@ namespace NUnit.Framework.Constraints.Tests
         [Test, TestCaseSource("SuccessData")]
         public void SucceedsWithGoodValues(object value)
         {
-            if (!theConstraint.Matches(value).HasSucceeded)
+            var constraintResult = theConstraint.ApplyTo(value);
+            if (!constraintResult.IsSuccess)
             {
                 MessageWriter writer = new TextMessageWriter();
-                theConstraint.WriteMessageTo(writer);
+                constraintResult.WriteMessageTo(writer);
                 Assert.Fail(writer.ToString());
             }
         }
@@ -65,10 +64,11 @@ namespace NUnit.Framework.Constraints.Tests
         {
             string NL = Env.NewLine;
 
-            Assert.IsFalse(theConstraint.Matches(badValue).HasSucceeded);
+            var constraintResult = theConstraint.ApplyTo(badValue);
+            Assert.IsFalse(constraintResult.IsSuccess);
 
             TextMessageWriter writer = new TextMessageWriter();
-            theConstraint.WriteMessageTo(writer);
+            constraintResult.WriteMessageTo(writer);
             Assert.That( writer.ToString(), Is.EqualTo(
                 TextMessageWriter.Pfx_Expected + expectedDescription + NL +
                 TextMessageWriter.Pfx_Actual + message + NL ));
@@ -84,7 +84,7 @@ namespace NUnit.Framework.Constraints.Tests
         [ExpectedException(typeof(ArgumentException))]
         public void InvalidDataThrowsArgumentException(object value)
         {
-            theConstraint.Matches(value);
+            theConstraint.ApplyTo(value);
         }
     }
 
@@ -97,7 +97,7 @@ namespace NUnit.Framework.Constraints.Tests
         [Test, TestCaseSource("InvalidData")]
         public void InvalidDataThrowsException(object value)
         {
-            theConstraint.Matches(value);
+            theConstraint.ApplyTo(value);
         }
     }
 }

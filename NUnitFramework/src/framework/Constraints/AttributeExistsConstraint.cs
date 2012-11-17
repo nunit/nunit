@@ -48,30 +48,31 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
+        /// The Description of what this constraint tests, for
+        /// use in messages and in the ConstraintResult.
+        /// </summary>
+        public override string Description
+        {
+            get { return "type with attribute " + MsgUtils.FormatValue(expectedType); }
+        }
+
+        /// <summary>
         /// Tests whether the object provides the expected attribute.
         /// </summary>
         /// <param name="actual">A Type, MethodInfo, or other ICustomAttributeProvider</param>
         /// <returns>True if the expected attribute is present, otherwise false</returns>
-        public override IConstraintResult Matches(object actual)
+        public override ConstraintResult ApplyTo(object actual)
         {
-            this.actual = actual;
             System.Reflection.ICustomAttributeProvider attrProvider =
                 actual as System.Reflection.ICustomAttributeProvider;
 
             if (attrProvider == null)
                 throw new ArgumentException(string.Format("Actual value {0} does not implement ICustomAttributeProvider", actual), "actual");
 
-            bool hasSucceeded = attrProvider.GetCustomAttributes(expectedType, true).Length > 0;
-            return new StandardConstraintResult(hasSucceeded);
-        }
-
-        /// <summary>
-        /// Writes the description of the constraint to the specified writer
-        /// </summary>
-        public override void WriteDescriptionTo(MessageWriter writer)
-        {
-            writer.WritePredicate("type with attribute");
-            writer.WriteExpectedValue(expectedType);
+            ConstraintResult result = new ConstraintResult(this, actual);
+            result.Status = attrProvider.GetCustomAttributes(expectedType, true).Length > 0
+                ? ConstraintStatus.Success : ConstraintStatus.Failure;
+            return result;
         }
     }
 }

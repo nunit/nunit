@@ -55,20 +55,6 @@ namespace NUnit.Framework.Internal
 		/// </summary>
 		public static readonly int PrefixLength = Pfx_Expected.Length;
 		
-		private static readonly string Fmt_Connector = " {0} ";
-        private static readonly string Fmt_Predicate = "{0} ";
-        //private static readonly string Fmt_Label = "{0}";
-		private static readonly string Fmt_Modifier = ", {0}";
-
-        private static readonly string Fmt_Null = "null";
-        private static readonly string Fmt_EmptyString = "<string.Empty>";
-        private static readonly string Fmt_EmptyCollection = "<empty>";
-
-        private static readonly string Fmt_String = "\"{0}\"";
-        private static readonly string Fmt_Char = "'{0}'";
-		private static readonly string Fmt_DateTime = "yyyy-MM-dd HH:mm:ss.fff";
-        private static readonly string Fmt_ValueType = "{0}";
-        private static readonly string Fmt_Default = "<{0}>";
         #endregion
 
 		private int maxLineLength = DEFAULT_LINE_LENGTH;
@@ -130,11 +116,11 @@ namespace NUnit.Framework.Internal
         /// is called by MessageWriter's default implementation of 
         /// WriteMessageTo and provides the generic two-line display. 
         /// </summary>
-        /// <param name="constraint">The constraint that failed</param>
-        public override void DisplayDifferences(Constraint constraint)
+        /// <param name="result">The result of the constraint that failed</param>
+        public override void DisplayDifferences(ConstraintResult result)
         {
-            WriteExpectedLine(constraint);
-            WriteActualLine(constraint);
+            WriteExpectedLine(result);
+            WriteActualLine(result);
         }
 
 		/// <summary>
@@ -191,9 +177,9 @@ namespace NUnit.Framework.Internal
             mismatch = MsgUtils.FindMismatchPosition(expected, actual, 0, ignoreCase);
 
 			Write( Pfx_Expected );
-			WriteExpectedValue( expected );
+			Write( MsgUtils.FormatValue(expected) );
 			if ( ignoreCase )
-				WriteModifier( "ignoring case" );
+				Write( ", ignoring case" );
 			WriteLine();
 			WriteActualLine( actual );
             //DisplayDifferences(expected, actual);
@@ -203,47 +189,6 @@ namespace NUnit.Framework.Internal
         #endregion
 
         #region Public Methods - Low Level
-		/// <summary>
-		/// Writes the text for a connector.
-		/// </summary>
-		/// <param name="connector">The connector.</param>
-		public override void WriteConnector(string connector)
-        {
-            Write(Fmt_Connector, connector);
-        }
-
-		/// <summary>
-		/// Writes the text for a predicate.
-		/// </summary>
-		/// <param name="predicate">The predicate.</param>
-		public override void WritePredicate(string predicate)
-        {
-            Write(Fmt_Predicate, predicate);
-        }
-
-        //public override void WriteLabel(string label)
-        //{
-        //    Write(Fmt_Label, label);
-        //}
-
-        /// <summary>
-        /// Write the text for a modifier.
-        /// </summary>
-        /// <param name="modifier">The modifier.</param>
-		public override void WriteModifier(string modifier)
-		{
-			Write(Fmt_Modifier, modifier);
-		}
-
-
-		/// <summary>
-		/// Writes the text for an expected value.
-		/// </summary>
-		/// <param name="expected">The expected value.</param>
-		public override void WriteExpectedValue(object expected)
-        {
-            WriteValue(expected);
-        }
 
 		/// <summary>
 		/// Writes the text for an actual value.
@@ -260,28 +205,7 @@ namespace NUnit.Framework.Internal
 		/// <param name="val">The value.</param>
 		public override void WriteValue(object val)
         {
-            if (val == null)
-                Write(Fmt_Null);
-            else if (val.GetType().IsArray)
-                WriteArray((Array)val);
-            else if (val is string)
-                WriteString((string)val);
-            else if (val is IEnumerable)
-                WriteCollectionElements((IEnumerable)val, 0, 10);
-            else if (val is char)
-                WriteChar((char)val);
-            else if (val is double)
-                WriteDouble((double)val);
-            else if (val is float)
-                WriteFloat((float)val);
-            else if (val is decimal)
-                WriteDecimal((decimal)val);
-			else if (val is DateTime)
-				WriteDateTime((DateTime)val);
-            else if (val.GetType().IsValueType)
-                Write(Fmt_ValueType, val);
-            else
-                Write(Fmt_Default, val);
+            Write(MsgUtils.FormatValue(val));
         }
 
         /// <summary>
@@ -291,127 +215,11 @@ namespace NUnit.Framework.Internal
         /// <param name="collection">The collection containing elements to write.</param>
         /// <param name="start">The starting point of the elements to write</param>
         /// <param name="max">The maximum number of elements to write</param>
-		public override void WriteCollectionElements(IEnumerable collection, int start, int max)
-		{
-			int count = 0;
-			int index = 0;
-
-			foreach (object obj in collection)
-			{
-				if ( index++ >= start)
-				{
-                    if (++count > max)
-                        break;
-                    Write(count == 1 ? "< " : ", ");
-                    WriteValue(obj);
-				}
-			}
-
-            if (count == 0)
-            {
-                Write(Fmt_EmptyCollection);
-                return;
-            }
-
-            if (count > max)
-				Write("...");
-
-			Write(" >");
-		}
-
-		private void WriteArray(Array array)
+        public override void WriteCollectionElements(IEnumerable collection, int start, int max)
         {
-			if ( array.Length == 0 )
-			{
-				Write( Fmt_EmptyCollection );
-				return;
-			}
-			
-			int rank = array.Rank;
-            int[] products = new int[rank];
-
-            for (int product = 1, r = rank; --r >= 0; )
-                products[r] = product *= array.GetLength(r);
-
-            int count = 0;
-            foreach (object obj in array)
-            {
-                if (count > 0)
-                    Write(", ");
-
-                bool startSegment = false;
-                for (int r = 0; r < rank; r++)
-                {
-                    startSegment = startSegment || count % products[r] == 0;
-                    if (startSegment) Write("< ");
-                }
-
-                WriteValue(obj);
-
-                ++count;
-
-                bool nextSegment = false;
-                for (int r = 0; r < rank; r++)
-                {
-                    nextSegment = nextSegment || count % products[r] == 0;
-                    if (nextSegment) Write(" >");
-                }
-            }
+            Write(MsgUtils.FormatCollection(collection, start, max));
         }
 
-        private void WriteString(string s)
-        {
-            if (s == string.Empty)
-                Write(Fmt_EmptyString);
-            else
-                Write(Fmt_String, s);
-        }
-
-        private void WriteChar(char c)
-        {
-            Write(Fmt_Char, c);
-        }
-
-        private void WriteDouble(double d)
-        {
-
-            if (double.IsNaN(d) || double.IsInfinity(d))
-                Write(d);
-            else
-            {
-                string s = d.ToString("G17", CultureInfo.InvariantCulture);
-
-                if (s.IndexOf('.') > 0)
-                    Write(s + "d");
-                else
-                    Write(s + ".0d");
-            }
-        }
-
-        private void WriteFloat(float f)
-        {
-            if (float.IsNaN(f) || float.IsInfinity(f))
-                Write(f);
-            else
-            {
-                string s = f.ToString("G9", CultureInfo.InvariantCulture);
-
-                if (s.IndexOf('.') > 0)
-                    Write(s + "f");
-                else
-                    Write(s + ".0f");
-            }
-        }
-
-        private void WriteDecimal(Decimal d)
-        {
-            Write(d.ToString("G29", CultureInfo.InvariantCulture) + "m");
-        }
-
-		private void WriteDateTime(DateTime dt)
-		{
-			Write(dt.ToString(Fmt_DateTime, CultureInfo.InvariantCulture));
-		}
         #endregion
 
         #region Helper Methods
@@ -419,11 +227,10 @@ namespace NUnit.Framework.Internal
         /// Write the generic 'Expected' line for a constraint
         /// </summary>
         /// <param name="constraint">The constraint that failed</param>
-        private void WriteExpectedLine(Constraint constraint)
+        private void WriteExpectedLine(ConstraintResult result)
         {
             Write(Pfx_Expected);
-            constraint.WriteDescriptionTo(this);
-            WriteLine();
+            WriteLine(result.Description);
         }
 
 		/// <summary>
@@ -444,12 +251,12 @@ namespace NUnit.Framework.Internal
 		private void WriteExpectedLine(object expected, Tolerance tolerance)
 		{
 			Write(Pfx_Expected);
-			WriteExpectedValue(expected);
+			Write(MsgUtils.FormatValue(expected));
 
             if (tolerance != null && !tolerance.IsEmpty)
             {
-                WriteConnector("+/-");
-                WriteExpectedValue(tolerance.Value);
+                Write(" +/- ");
+                Write(MsgUtils.FormatValue(tolerance.Value));
                 if (tolerance.Mode != ToleranceMode.Linear)
                     Write(" {0}", tolerance.Mode);
             }
@@ -460,13 +267,14 @@ namespace NUnit.Framework.Internal
 		/// <summary>
 		/// Write the generic 'Actual' line for a constraint
 		/// </summary>
-		/// <param name="constraint">The constraint for which the actual value is to be written</param>
-		private void WriteActualLine(Constraint constraint)
-		{
-			Write(Pfx_Actual);
-			constraint.WriteActualValueTo(this);
-			WriteLine();
-		}
+		/// <param name="result">The ConstraintResult for which the actual value is to be written</param>
+        private void WriteActualLine(ConstraintResult result)
+        {
+            Write(Pfx_Actual);
+            result.WriteActualValueTo(this);
+            WriteLine();
+            //WriteLine(MsgUtils.FormatValue(result.ActualValue));
+        }
 
 		/// <summary>
 		/// Write the generic 'Actual' line for a given value

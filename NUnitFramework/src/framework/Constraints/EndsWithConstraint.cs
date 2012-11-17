@@ -33,7 +33,10 @@ namespace NUnit.Framework.Constraints
         /// Initializes a new instance of the <see cref="T:EndsWithConstraint"/> class.
         /// </summary>
         /// <param name="expected">The expected string</param>
-        public EndsWithConstraint(string expected) : base(expected) { }
+        public EndsWithConstraint(string expected) : base(expected) 
+        {
+            this.description = "String ending with";
+        }
 
         /// <summary>
         /// Test whether the constraint is matched by the actual value.
@@ -50,18 +53,6 @@ namespace NUnit.Framework.Constraints
                 return actual.ToLower().EndsWith(expected.ToLower());
             else
                 return actual.EndsWith(expected);
-        }
-
-        /// <summary>
-        /// Write the constraint description to a MessageWriter
-        /// </summary>
-        /// <param name="writer">The writer on which the description is displayed</param>
-        public override void WriteDescriptionTo(MessageWriter writer)
-        {
-            writer.WritePredicate("String ending with");
-            writer.WriteExpectedValue(expected);
-            if (this.caseInsensitive)
-                writer.WriteModifier("ignoring case");
         }
     }
 }

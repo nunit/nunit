@@ -41,14 +41,21 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
+        /// The Description of what this constraint tests, for
+        /// use in messages and in the ConstraintResult.
+        /// </summary>
+        public override string Description
+        {
+            get { return "same as " + MsgUtils.FormatValue(expected); }
+        }
+
+        /// <summary>
         /// Test whether the constraint is satisfied by a given value
         /// </summary>
         /// <param name="actual">The value to be tested</param>
         /// <returns>True for success, false for failure</returns>
-        public override IConstraintResult Matches(object actual)
+        public override ConstraintResult ApplyTo(object actual)
         {
-            this.actual = actual;
-
 #if NETCF_1_0
             // TODO: THis makes it compile, now make it work.
             bool hasSucceeded = expected.Equals(actual);
@@ -56,17 +63,7 @@ namespace NUnit.Framework.Constraints
             bool hasSucceeded = ReferenceEquals(expected, actual);
 #endif
 
-            return new StandardConstraintResult(hasSucceeded);
-        }
-
-        /// <summary>
-        /// Write the constraint description to a MessageWriter
-        /// </summary>
-        /// <param name="writer">The writer on which the description is displayed</param>
-        public override void WriteDescriptionTo(MessageWriter writer)
-        {
-            writer.WritePredicate("same as");
-            writer.WriteExpectedValue(expected);
+            return new ConstraintResult(this, actual, hasSucceeded);
         }
     }
 }

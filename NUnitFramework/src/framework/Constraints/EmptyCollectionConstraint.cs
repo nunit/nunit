@@ -31,22 +31,22 @@ namespace NUnit.Framework.Constraints
     public class EmptyCollectionConstraint : CollectionConstraint
     {
         /// <summary>
+        /// The Description of what this constraint tests, for
+        /// use in messages and in the ConstraintResult.
+        /// </summary>
+        public override string Description
+        {
+            get { return "<empty>"; }
+        }
+
+        /// <summary>
         /// Check that the collection is empty
         /// </summary>
         /// <param name="collection"></param>
         /// <returns></returns>
-        protected override bool doMatch(IEnumerable collection)
+        protected override bool Matches(IEnumerable collection)
         {
             return IsEmpty(collection);
-        }
-
-        /// <summary>
-        /// Write the constraint description to a MessageWriter
-        /// </summary>
-        /// <param name="writer"></param>
-        public override void WriteDescriptionTo(MessageWriter writer)
-        {
-            writer.Write("<empty>");
         }
     }
 }

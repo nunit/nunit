@@ -67,15 +67,15 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="actual">The value to be tested</param>
         /// <returns>True for success, false for failure</returns>
-        public override IConstraintResult Matches(object actual)
+        public override ConstraintResult ApplyTo(object actual)
         {
-            this.actual = actual;
-
+            // TODO: Use an error result if actual is not IEnumerable
             IEnumerable enumerable = actual as IEnumerable;
             if (enumerable == null)
                 throw new ArgumentException("The actual value must be an IEnumerable", "actual");
+                //return new ConstraintResult(this, actual, "The actual value must be an IEnumerable");
 
-            return new StandardConstraintResult(doMatch(enumerable));
+            return new ConstraintResult(this, actual, Matches(enumerable));
         }
 
         /// <summary>
@@ -83,6 +83,6 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="collection"></param>
         /// <returns></returns>
-        protected abstract bool doMatch(IEnumerable collection);
+        protected abstract bool Matches(IEnumerable collection);
     }
 }

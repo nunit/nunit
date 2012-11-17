@@ -50,29 +50,25 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
+        /// Gets text describing a constraint
+        /// </summary>
+        public override string Description
+        {
+            get { return string.Format("in range ({0},{1})", from, to); }
+        }
+
+        /// <summary>
         /// Test whether the constraint is satisfied by a given value
         /// </summary>
         /// <param name="actual">The value to be tested</param>
         /// <returns>True for success, false for failure</returns>
-        public override IConstraintResult Matches(object actual)
+        public override ConstraintResult ApplyTo(object actual)
         {
-            this.actual = actual;
-
             if ( from == null || to == null || actual == null)
                 throw new ArgumentException( "Cannot compare using a null reference", "actual" );
 
             bool isInsideRange = comparer.Compare(from, actual) <= 0 && comparer.Compare(to, actual) >= 0;
-            return new StandardConstraintResult(isInsideRange);
-        }
-
-        /// <summary>
-        /// Write the constraint description to a MessageWriter
-        /// </summary>
-        /// <param name="writer">The writer on which the description is displayed</param>
-        public override void WriteDescriptionTo(MessageWriter writer)
-        {
-
-            writer.Write("in range ({0},{1})", from, to);
+            return new ConstraintResult(this, actual, isInsideRange);
         }
 
         /// <summary>

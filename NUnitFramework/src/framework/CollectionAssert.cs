@@ -126,7 +126,7 @@ namespace NUnit.Framework
 		/// <param name="args">Arguments to be used in formatting the message</param>
 		public static void AllItemsAreNotNull (IEnumerable collection, string message, params object[] args) 
 		{
-            Assert.That(collection, new AllItemsConstraint(new NotConstraint(new EqualConstraint(null))), message, args);
+            Assert.That(collection, new AllItemsConstraint(new NotConstraint(new NullConstraint())), message, args);
 		}
 		#endregion
 

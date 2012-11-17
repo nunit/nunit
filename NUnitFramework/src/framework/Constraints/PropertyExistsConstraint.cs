@@ -51,14 +51,21 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
+        /// The Description of what this constraint tests, for
+        /// use in messages and in the ConstraintResult.
+        /// </summary>
+        public override string Description
+        {
+            get { return "property " + name; }
+        }
+
+        /// <summary>
         /// Test whether the property exists for a given object
         /// </summary>
         /// <param name="actual">The object to be tested</param>
         /// <returns>True for success, false for failure</returns>
-        public override IConstraintResult Matches(object actual)
+        public override ConstraintResult ApplyTo(object actual)
         {
-            this.actual = actual;
-
             Guard.ArgumentNotNull(actual, "actual");
 
             actualType = actual as Type;
@@ -68,26 +75,7 @@ namespace NUnit.Framework.Constraints
             PropertyInfo property = actualType.GetProperty(name,
                 BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.GetProperty);
 
-            return new StandardConstraintResult(property != null);
-        }
-
-        /// <summary>
-        /// Write the constraint description to a MessageWriter
-        /// </summary>
-        /// <param name="writer">The writer on which the description is displayed</param>
-        public override void WriteDescriptionTo(MessageWriter writer)
-        {
-            writer.Write("property " + name);
-        }
-
-        /// <summary>
-        /// Write the actual value for a failing constraint test to a
-        /// MessageWriter.
-        /// </summary>
-        /// <param name="writer">The writer on which the actual value is displayed</param>
-        public override void WriteActualValueTo(MessageWriter writer)
-        {
-            writer.WriteActualValue(actualType);
+            return new ConstraintResult(this, actualType, property != null);
         }
 
         /// <summary>

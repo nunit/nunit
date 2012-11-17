@@ -42,7 +42,7 @@ namespace NUnit.Framework.Constraints.Tests
         {
             object[] c = new object[] { 1, "hello", null, 3 };
             expectedMessage =
-                TextMessageWriter.Pfx_Expected + "all items not null" + NL +
+                TextMessageWriter.Pfx_Expected + "all items not equal to null" + NL +
                 TextMessageWriter.Pfx_Actual + "< 1, \"hello\", null, 3 >" + NL;
             Assert.That(c, new AllItemsConstraint(new NotConstraint(new EqualConstraint(null))));
         }

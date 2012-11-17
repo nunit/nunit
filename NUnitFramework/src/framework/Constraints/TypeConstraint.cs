@@ -37,24 +37,38 @@ namespace NUnit.Framework.Constraints
         protected Type expectedType;
 
         /// <summary>
+        /// The type of the actual argument to which the constraint was applied
+        /// </summary>
+        protected Type actualType;
+
+        /// <summary>
         /// Construct a TypeConstraint for a given Type
         /// </summary>
-        /// <param name="type"></param>
-        protected TypeConstraint(Type type)
+        /// <param name="type">The expected type for the constraint</param>
+        /// <param name="descriptionPrefix">Prefix used in forming the constraint description</param>
+        protected TypeConstraint(Type type, string descriptionPrefix)
             : base(type)
         {
             this.expectedType = type;
+            this.Description = descriptionPrefix + MsgUtils.FormatValue(expectedType);
         }
 
         /// <summary>
-        /// Write the actual value for a failing constraint test to a
-        /// MessageWriter. TypeConstraints override this method to write
-        /// the name of the type.
+        /// Applies the constraint to an actual value, returning a ConstraintResult.
         /// </summary>
-        /// <param name="writer">The writer on which the actual value is displayed</param>
-        public override void WriteActualValueTo(MessageWriter writer)
+        /// <param name="actual">The value to be tested</param>
+        /// <returns>A ConstraintResult</returns>
+        public override ConstraintResult ApplyTo(object actual)
         {
-            writer.WriteActualValue(actual == null ? null : actual.GetType());
+            actualType = actual == null ? null : actual.GetType();
+            return new ConstraintResult(this, actualType, this.Matches(actual));
         }
+
+        /// <summary>
+        /// Apply the constraint to an actual value, returning true if it succeeds
+        /// </summary>
+        /// <param name="actual">The actual argument</param>
+        /// <returns>True if the constraint succeeds, otherwise false.</returns>
+        protected abstract bool Matches(object actual);
     }
 }

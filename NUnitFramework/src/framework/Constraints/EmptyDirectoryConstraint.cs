@@ -31,18 +31,27 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class EmptyDirectoryConstraint : Constraint
     {
+        // TODO: This is only used by EmptyConstraint and has no tests.
+        // We should test it or drop it.
         private int files = 0;
         private int subdirs = 0;
+
+        /// <summary>
+        /// The Description of what this constraint tests, for
+        /// use in messages and in the ConstraintResult.
+        /// </summary>
+        public override string Description
+        {
+            get { return "an empty directory"; }
+        }
 
         /// <summary>
         /// Test whether the constraint is satisfied by a given value
         /// </summary>
         /// <param name="actual">The value to be tested</param>
         /// <returns>True for success, false for failure</returns>
-        public override IConstraintResult Matches(object actual)
+        public override ConstraintResult ApplyTo(object actual)
         {
-            this.actual = actual;
-
             DirectoryInfo dirInfo = actual as DirectoryInfo;
             if (dirInfo == null)
                 throw new ArgumentException("The actual value must be a DirectoryInfo", "actual");
@@ -51,35 +60,27 @@ namespace NUnit.Framework.Constraints
             subdirs = dirInfo.GetDirectories().Length;
             bool hasSucceeded = files == 0 && subdirs == 0;
 
-            return new StandardConstraintResult(hasSucceeded);
+            return new ConstraintResult(this, actual, hasSucceeded);
         }
 
-        /// <summary>
-        /// Write the constraint description to a MessageWriter
-        /// </summary>
-        /// <param name="writer">The writer on which the description is displayed</param>
-        public override void WriteDescriptionTo(MessageWriter writer)
-        {
-            writer.Write( "An empty directory" );
-        }
-
-        /// <summary>
-        /// Write the actual value for a failing constraint test to a
-        /// MessageWriter. The default implementation simply writes
-        /// the raw value of actual, leaving it to the writer to
-        /// perform any formatting.
-        /// </summary>
-        /// <param name="writer">The writer on which the actual value is displayed</param>
-        public override void WriteActualValueTo(MessageWriter writer)
-        {
-            DirectoryInfo dir = actual as DirectoryInfo;
-            if (dir == null)
-                base.WriteActualValueTo(writer);
-            else
-            {
-                writer.WriteActualValue(dir);
-                writer.Write(" with {0} files and {1} directories", files, subdirs);
-            }
-        }
+        // TODO: Decide if we need a special result for this
+        ///// <summary>
+        ///// Write the actual value for a failing constraint test to a
+        ///// MessageWriter. The default implementation simply writes
+        ///// the raw value of actual, leaving it to the writer to
+        ///// perform any formatting.
+        ///// </summary>
+        ///// <param name="writer">The writer on which the actual value is displayed</param>
+        //public override void WriteActualValueTo(MessageWriter writer)
+        //{
+        //    DirectoryInfo dir = actual as DirectoryInfo;
+        //    if (dir == null)
+        //        base.WriteActualValueTo(writer);
+        //    else
+        //    {
+        //        writer.WriteActualValue(dir);
+        //        writer.Write(" with {0} files and {1} directories", files, subdirs);
+        //    }
+        //}
     }
 }

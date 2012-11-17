@@ -32,6 +32,8 @@ namespace NUnit.Framework.Constraints
     ///</summary>
     public class DelayedConstraint : PrefixConstraint
     {
+        // TODO: Needs error message tests
+
         private readonly int delayInMilliseconds;
         private readonly int pollingInterval;
 
@@ -62,11 +64,19 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
+        /// Gets text describing a constraint
+        /// </summary>
+        public override string Description
+        {
+            get { return string.Format("{0} after {1} millisecond delay", baseConstraint.Description, delayInMilliseconds); }
+        }
+
+        /// <summary>
         /// Test whether the constraint is satisfied by a given value
         /// </summary>
         /// <param name="actual">The value to be tested</param>
         /// <returns>True for if the base constraint fails, false if it succeeds</returns>
-        public override IConstraintResult Matches(object actual)
+        public override ConstraintResult ApplyTo(object actual)
         {
             int remainingDelay = delayInMilliseconds;
 
@@ -74,16 +84,14 @@ namespace NUnit.Framework.Constraints
             {
                 remainingDelay -= pollingInterval;
                 Thread.Sleep(pollingInterval);
-                this.actual = actual;
-                IConstraintResult result = baseConstraint.Matches(actual);
-                if (result.HasSucceeded)
-                    return result;
+                ConstraintResult result = baseConstraint.ApplyTo(actual);
+                if (result.IsSuccess)
+                    return new ConstraintResult(this, actual, true);
             }
 
             if (remainingDelay > 0)
                 Thread.Sleep(remainingDelay);
-            this.actual = actual;
-            return baseConstraint.Matches(actual);
+            return new ConstraintResult(this, actual, baseConstraint.ApplyTo(actual).IsSuccess);
         }
 
         /// <summary>
@@ -91,9 +99,10 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="del">The delegate whose value is to be tested</param>
         /// <returns>True for if the base constraint fails, false if it succeeds</returns>
-        public override IConstraintResult Matches(ActualValueDelegate del)
+        public override ConstraintResult ApplyTo(ActualValueDelegate del)
         {
             int remainingDelay = delayInMilliseconds;
+            object actual;
 
             while (pollingInterval > 0 && pollingInterval < remainingDelay)
             {
@@ -103,10 +112,10 @@ namespace NUnit.Framework.Constraints
 				
 				try
 				{
-	                IConstraintResult result = baseConstraint.Matches(actual);
-	                if (result.HasSucceeded)
-	                    return result;
-				}
+	                ConstraintResult result = baseConstraint.ApplyTo(actual);
+	                if (result.IsSuccess)
+                        return new ConstraintResult(this, actual, true);
+                }
 				catch(Exception)
 				{
 					// Ignore any exceptions when polling
@@ -116,7 +125,7 @@ namespace NUnit.Framework.Constraints
             if (remainingDelay > 0)
                 Thread.Sleep(remainingDelay);
             actual = del();
-            return baseConstraint.Matches(actual);
+            return new ConstraintResult(this, actual, baseConstraint.ApplyTo(actual).IsSuccess);
         }
 
         /// <summary>
@@ -126,7 +135,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="actual">A reference to the value to be tested</param>
         /// <returns>True for success, false for failure</returns>
-        public override IConstraintResult Matches<T>(ref T actual)
+        public override ConstraintResult ApplyTo<T>(ref T actual)
         {
             int remainingDelay = delayInMilliseconds;
 
@@ -134,14 +143,13 @@ namespace NUnit.Framework.Constraints
             {
                 remainingDelay -= pollingInterval;
                 Thread.Sleep(pollingInterval);
-                this.actual = actual;
 				
 				try
 				{
-	                IConstraintResult result = baseConstraint.Matches(actual);
-	                if (result.HasSucceeded)
-	                    return result;
-				}
+	                ConstraintResult result = baseConstraint.ApplyTo(actual);
+	                if (result.IsSuccess)
+                        return new ConstraintResult(this, actual, true);
+                }
 				catch(Exception)
 				{
 					// Ignore any exceptions when polling
@@ -150,27 +158,7 @@ namespace NUnit.Framework.Constraints
 
             if (remainingDelay > 0)
                 Thread.Sleep(remainingDelay);
-            this.actual = actual;
-            return baseConstraint.Matches(actual);
-        }
-
-        /// <summary>
-        /// Write the constraint description to a MessageWriter
-        /// </summary>
-        /// <param name="writer">The writer on which the description is displayed</param>
-        public override void WriteDescriptionTo(MessageWriter writer)
-        {
-            baseConstraint.WriteDescriptionTo(writer);
-            writer.Write(string.Format(" after {0} millisecond delay", delayInMilliseconds));
-        }
-
-        /// <summary>
-        /// Write the actual value for a failing constraint test to a MessageWriter.
-        /// </summary>
-        /// <param name="writer">The writer on which the actual value is displayed</param>
-        public override void WriteActualValueTo(MessageWriter writer)
-        {
-            baseConstraint.WriteActualValueTo(writer);
+            return new ConstraintResult(this, actual, baseConstraint.ApplyTo(actual).IsSuccess);
         }
 
         /// <summary>

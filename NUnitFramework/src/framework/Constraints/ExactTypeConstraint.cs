@@ -36,31 +36,19 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="type">The expected Type.</param>
         public ExactTypeConstraint(Type type)
-            : base(type)
+            : base(type, string.Empty)
         {
-            this.DisplayName = "typeof";
+            this.DisplayName = "TypeOf";
         }
 
         /// <summary>
-        /// Test that an object is of the exact type specified
+        /// Apply the constraint to an actual value, returning true if it succeeds
         /// </summary>
-        /// <param name="actual">The actual value.</param>
-        /// <returns>True if the tested object is of the exact type provided, otherwise false.</returns>
-        public override IConstraintResult Matches(object actual)
+        /// <param name="actual">The actual argument</param>
+        /// <returns>True if the constraint succeeds, otherwise false.</returns>
+        protected override bool Matches(object actual)
         {
-            this.actual = actual;
-            bool hasSucceeded = actual != null && actual.GetType() == expectedType;
-
-            return new StandardConstraintResult(hasSucceeded);
-        }
-
-        /// <summary>
-        /// Write the description of this constraint to a MessageWriter
-        /// </summary>
-        /// <param name="writer">The MessageWriter to use</param>
-        public override void WriteDescriptionTo(MessageWriter writer)
-        {
-            writer.WriteExpectedValue(expectedType);
+            return actual != null && actual.GetType() == expectedType;
         }
     }
 }
