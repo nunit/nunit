@@ -24,6 +24,7 @@
 using NUnit.Framework.Internal;
 using NUnit.TestData;
 using NUnit.TestUtilities;
+using ActualValueDelegate = NUnit.Framework.Constraints.ActualValueDelegate<object>;
 
 namespace NUnit.Framework.Assertions
 {
@@ -90,19 +91,19 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void AssertionPasses_DelegateAndConstraint()
         {
-            Assert.That(new Constraints.ActualValueDelegate(ReturnsFour), Is.EqualTo(4));
+            Assert.That(new ActualValueDelegate(ReturnsFour), Is.EqualTo(4));
         }
 
         [Test]
         public void AssertionPasses_DelegateAndConstraintWithMessage()
         {
-            Assert.That(new Constraints.ActualValueDelegate(ReturnsFour), Is.EqualTo(4), "Message");
+            Assert.That(new ActualValueDelegate(ReturnsFour), Is.EqualTo(4), "Message");
         }
 
         [Test]
         public void AssertionPasses_DelegateAndConstraintWithMessageAndArgs()
         {
-            Assert.That(new Constraints.ActualValueDelegate(ReturnsFour), Is.EqualTo(4), "Should be {0}", 4);
+            Assert.That(new ActualValueDelegate(ReturnsFour), Is.EqualTo(4), "Should be {0}", 4);
         }
 
         private object ReturnsFour()
@@ -170,19 +171,19 @@ namespace NUnit.Framework.Assertions
         [Test, ExpectedException(typeof(AssertionException))]
         public void FailureThrowsAssertionException_DelegateAndConstraint()
         {
-            Assert.That(new Constraints.ActualValueDelegate(ReturnsFive), Is.EqualTo(4));
+            Assert.That(new ActualValueDelegate(ReturnsFive), Is.EqualTo(4));
         }
 
         [Test, ExpectedException(typeof(AssertionException), ExpectedMessage = "Error", MatchType = MessageMatch.Contains)]
         public void FailureThrowsAssertionException_DelegateAndConstraintWithMessage()
         {
-            Assert.That(new Constraints.ActualValueDelegate(ReturnsFive), Is.EqualTo(4), "Error");
+            Assert.That(new ActualValueDelegate(ReturnsFive), Is.EqualTo(4), "Error");
         }
 
         [Test, ExpectedException(typeof(AssertionException), ExpectedMessage = "Should be 4", MatchType = MessageMatch.Contains)]
         public void FailureThrowsAssertionException_DelegateAndConstraintWithMessageAndArgs()
         {
-            Assert.That(new Constraints.ActualValueDelegate(ReturnsFive), Is.EqualTo(4), "Should be {0}", 4);
+            Assert.That(new ActualValueDelegate(ReturnsFive), Is.EqualTo(4), "Should be {0}", 4);
         }
 
         [Test]

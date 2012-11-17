@@ -29,7 +29,7 @@ namespace NUnit.Framework.Constraints
     /// Delegate used to delay evaluation of the actual value
     /// to be used in evaluating a constraint
     /// </summary>
-    public delegate object ActualValueDelegate();
+    public delegate T ActualValueDelegate<T>();
 
     /// <summary>
     /// The Constraint class is the base of all built-in constraints
@@ -117,7 +117,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="del">An ActualValueDelegate</param>
         /// <returns>A ConstraintResult</returns>
-        public virtual ConstraintResult ApplyTo(ActualValueDelegate del)
+        public virtual ConstraintResult ApplyTo<T>(ActualValueDelegate<T> del)
         {
             return ApplyTo(del());
         }

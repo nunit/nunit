@@ -99,7 +99,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="del">The delegate whose value is to be tested</param>
         /// <returns>True for if the base constraint fails, false if it succeeds</returns>
-        public override ConstraintResult ApplyTo(ActualValueDelegate del)
+        public override ConstraintResult ApplyTo<T>(ActualValueDelegate<T> del)
         {
             int remainingDelay = delayInMilliseconds;
             object actual;

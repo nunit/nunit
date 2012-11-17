@@ -23,6 +23,7 @@
 
 using System;
 using NUnit.Framework;
+using ActualValueDelegate = NUnit.Framework.Constraints.ActualValueDelegate<object>;
 
 namespace NUnit.Framework.Assertions
 {
@@ -89,19 +90,19 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void AssumptionPasses_DelegateAndConstraint()
         {
-            Assume.That(new Constraints.ActualValueDelegate(ReturnsFour), Is.EqualTo(4));
+            Assume.That(new Constraints.ActualValueDelegate<object>(ReturnsFour), Is.EqualTo(4));
         }
 
         [Test]
         public void AssumptionPasses_DelegateAndConstraintWithMessage()
         {
-            Assume.That(new Constraints.ActualValueDelegate(ReturnsFour), Is.EqualTo(4), "Message");
+            Assume.That(new Constraints.ActualValueDelegate<object>(ReturnsFour), Is.EqualTo(4), "Message");
         }
 
         [Test]
         public void AssumptionPasses_DelegateAndConstraintWithMessageAndArgs()
         {
-            Assume.That(new Constraints.ActualValueDelegate(ReturnsFour), Is.EqualTo(4), "Should be {0}", 4);
+            Assume.That(new ActualValueDelegate(ReturnsFour), Is.EqualTo(4), "Should be {0}", 4);
         }
 
         private object ReturnsFour()
@@ -169,19 +170,19 @@ namespace NUnit.Framework.Assertions
         [Test, ExpectedException(typeof(InconclusiveException))]
         public void FailureThrowsInconclusiveException_DelegateAndConstraint()
         {
-            Assume.That(new Constraints.ActualValueDelegate(ReturnsFive), Is.EqualTo(4));
+            Assume.That(new ActualValueDelegate(ReturnsFive), Is.EqualTo(4));
         }
 
         [Test, ExpectedException(typeof(InconclusiveException), ExpectedMessage = "Error", MatchType = MessageMatch.Contains)]
         public void FailureThrowsInconclusiveException_DelegateAndConstraintWithMessage()
         {
-            Assume.That(new Constraints.ActualValueDelegate(ReturnsFive), Is.EqualTo(4), "Error");
+            Assume.That(new ActualValueDelegate(ReturnsFive), Is.EqualTo(4), "Error");
         }
 
         [Test, ExpectedException(typeof(InconclusiveException), ExpectedMessage = "Should be 4", MatchType = MessageMatch.Contains)]
         public void FailureThrowsInconclusiveException_DelegateAndConstraintWithMessageAndArgs()
         {
-            Assume.That(new Constraints.ActualValueDelegate(ReturnsFive), Is.EqualTo(4), "Should be {0}", 4);
+            Assume.That(new ActualValueDelegate(ReturnsFive), Is.EqualTo(4), "Should be {0}", 4);
         }
 
         private object ReturnsFive()
