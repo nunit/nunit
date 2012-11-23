@@ -48,12 +48,9 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="actual">The value to be tested</param>
         /// <returns>True for success, false for failure</returns>
-        public override ConstraintResult ApplyTo(object actual)
+        protected override bool Matches(string actual)
         {
-            string actualAsString = actual as string;
-            bool hasSucceeded = actualAsString != null && IsSamePath(expected, actualAsString);
-
-            return new ConstraintResult(this, actual, hasSucceeded);
+            return actual != null & IsSamePath(expected, actual);
         }
     }
 }

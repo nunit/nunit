@@ -26,7 +26,7 @@ namespace NUnit.Framework.Constraints
     /// <summary>
     /// EmptyStringConstraint tests whether a string is empty.
     /// </summary>
-    public class EmptyStringConstraint : Constraint
+    public class EmptyStringConstraint : StringConstraint
     {
         /// <summary>
         /// The Description of what this constraint tests, for
@@ -42,12 +42,9 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="actual">The value to be tested</param>
         /// <returns>True for success, false for failure</returns>
-        public override ConstraintResult ApplyTo(object actual)
+        protected override bool Matches(string actual)
         {
-            string actualAsString = actual as string;
-            bool hasSucceeded = actual != null && actualAsString == string.Empty;
-
-            return new ConstraintResult(this, actual, hasSucceeded);
+            return actual == string.Empty;
         }
     }
 }
