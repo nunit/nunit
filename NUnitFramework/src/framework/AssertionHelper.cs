@@ -91,7 +91,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="expr">A Constraint expression to be applied</param>
         /// <param name="del">An ActualValueDelegate returning the value to be tested</param>
-        public void Expect<T>(ActualValueDelegate<T> del, IResolveConstraint expr)
+        public void Expect<TActual>(ActualValueDelegate<TActual> del, IResolveConstraint expr)
         {
             Assert.That(del, expr.Resolve(), null, null);
         }
@@ -103,7 +103,7 @@ namespace NUnit.Framework
         /// <param name="expr">A Constraint expression to be applied</param>
         /// <param name="del">An ActualValueDelegate returning the value to be tested</param>
         /// <param name="message">The message that will be displayed on failure</param>
-        public void Expect<T>(ActualValueDelegate<T> del, IResolveConstraint expr, string message)
+        public void Expect<TActual>(ActualValueDelegate<TActual> del, IResolveConstraint expr, string message)
         {
             Assert.That(del, expr.Resolve(), message, null);
         }
@@ -116,7 +116,7 @@ namespace NUnit.Framework
         /// <param name="expr">A Constraint expression to be applied</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        public void Expect<T>(ActualValueDelegate<T> del, IResolveConstraint expr, string message, params object[] args)
+        public void Expect<TActual>(ActualValueDelegate<TActual> del, IResolveConstraint expr, string message, params object[] args)
         {
             Assert.That(del, expr, message, args);
         }
@@ -139,7 +139,7 @@ namespace NUnit.Framework
 
         #endregion
 
-        #region Expect<T>
+        #region Expect<TActual>
 
         /// <summary>
         /// Apply a constraint to an actual value, succeeding if the constraint
@@ -147,7 +147,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="expression">A Constraint to be applied</param>
         /// <param name="actual">The actual value to test</param>
-        static public void Expect<T>(T actual, IResolveConstraint expression)
+        static public void Expect<TActual>(TActual actual, IResolveConstraint expression)
         {
             Assert.That(actual, expression, null, null);
         }
@@ -159,7 +159,7 @@ namespace NUnit.Framework
         /// <param name="expression">A Constraint to be applied</param>
         /// <param name="actual">The actual value to test</param>
         /// <param name="message">The message that will be displayed on failure</param>
-        static public void Expect<T>(T actual, IResolveConstraint expression, string message)
+        static public void Expect<TActual>(TActual actual, IResolveConstraint expression, string message)
         {
             Assert.That(actual, expression, message, null);
         }
@@ -172,7 +172,7 @@ namespace NUnit.Framework
         /// <param name="actual">The actual value to test</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        static public void Expect<T>(T actual, IResolveConstraint expression, string message, params object[] args)
+        static public void Expect<TActual>(TActual actual, IResolveConstraint expression, string message, params object[] args)
         {
             Assert.That(actual, expression, message, args);
         }
@@ -183,7 +183,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="actual">The actual value to test</param>
         /// <param name="expression">A Constraint to be applied</param>
-        static public void Expect<T>(ref T actual, IResolveConstraint expression)
+        static public void Expect<TActual>(ref TActual actual, IResolveConstraint expression)
         {
             Assert.That(ref actual, expression, null, null);
         }
@@ -195,7 +195,7 @@ namespace NUnit.Framework
         /// <param name="actual">The actual value to test</param>
         /// <param name="expression">A Constraint to be applied</param>
         /// <param name="message">The message that will be displayed on failure</param>
-        static public void Expect<T>(ref T actual, IResolveConstraint expression, string message)
+        static public void Expect<TActual>(ref TActual actual, IResolveConstraint expression, string message)
         {
             Assert.That(ref actual, expression, message, null);
         }
@@ -208,7 +208,7 @@ namespace NUnit.Framework
         /// <param name="expression">A Constraint to be applied</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        static public void Expect<T>(ref T actual, IResolveConstraint expression, string message, params object[] args)
+        static public void Expect<TActual>(ref TActual actual, IResolveConstraint expression, string message, params object[] args)
         {
             Assert.That(actual, expression, message, args);
         }

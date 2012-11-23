@@ -103,7 +103,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="del"></param>
         /// <returns></returns>
-        public override ConstraintResult ApplyTo<T>(ActualValueDelegate<T> del)
+        public override ConstraintResult ApplyTo<TActual>(ActualValueDelegate<TActual> del)
         {
             TestDelegate testDelegate = new TestDelegate(delegate { del(); });
             return ApplyTo((object)testDelegate);

@@ -30,14 +30,14 @@ namespace NUnit.Framework.Constraints
     /// Predicate constraint wraps a Predicate in a constraint,
     /// returning success if the predicate is true.
     /// </summary>
-    public class PredicateConstraint<T> : Constraint
+    public class PredicateConstraint<TActual> : Constraint
     {
-        readonly Predicate<T> predicate;
+        readonly Predicate<TActual> predicate;
 
         /// <summary>
         /// Construct a PredicateConstraint from a predicate
         /// </summary>
-        public PredicateConstraint(Predicate<T> predicate)
+        public PredicateConstraint(Predicate<TActual> predicate)
         {
             this.predicate = predicate;
         }
@@ -65,10 +65,10 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public override ConstraintResult ApplyTo(object actual)
         {
-            if (!(actual is T))
-                throw new ArgumentException("The actual value is not of type " + typeof(T).Name, "actual");
+            if (!(actual is TActual))
+                throw new ArgumentException("The actual value is not of type " + typeof(TActual).Name, "actual");
 
-            return new ConstraintResult(this, actual, predicate((T)actual));
+            return new ConstraintResult(this, actual, predicate((TActual)actual));
         }
     }
 }

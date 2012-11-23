@@ -294,9 +294,9 @@ namespace NUnit.Framework
         /// Returns a constraint that tests whether the actual
         /// value is of the exact type supplied as an argument.
         /// </summary>
-        public static ExactTypeConstraint TypeOf<T>()
+        public static ExactTypeConstraint TypeOf<TExpected>()
         {
-            return new ExactTypeConstraint(typeof(T));
+            return new ExactTypeConstraint(typeof(TExpected));
         }
 
         #endregion
@@ -316,9 +316,9 @@ namespace NUnit.Framework
         /// Returns a constraint that tests whether the actual value
         /// is of the type supplied as an argument or a derived type.
         /// </summary>
-        public static InstanceOfTypeConstraint InstanceOf<T>()
+        public static InstanceOfTypeConstraint InstanceOf<TExpected>()
         {
-            return new InstanceOfTypeConstraint(typeof(T));
+            return new InstanceOfTypeConstraint(typeof(TExpected));
         }
 
         #endregion
@@ -338,9 +338,9 @@ namespace NUnit.Framework
         /// Returns a constraint that tests whether the actual value
         /// is assignable from the type supplied as an argument.
         /// </summary>
-        public static AssignableFromConstraint AssignableFrom<T>()
+        public static AssignableFromConstraint AssignableFrom<TExpected>()
         {
-            return new AssignableFromConstraint(typeof(T));
+            return new AssignableFromConstraint(typeof(TExpected));
         }
 
         #endregion
@@ -360,9 +360,9 @@ namespace NUnit.Framework
         /// Returns a constraint that tests whether the actual value
         /// is assignable from the type supplied as an argument.
         /// </summary>
-        public static AssignableToConstraint AssignableTo<T>()
+        public static AssignableToConstraint AssignableTo<TExpected>()
         {
-            return new AssignableToConstraint(typeof(T));
+            return new AssignableToConstraint(typeof(TExpected));
         }
 
         #endregion
