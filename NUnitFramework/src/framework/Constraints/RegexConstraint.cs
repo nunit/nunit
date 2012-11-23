@@ -50,9 +50,7 @@ namespace NUnit.Framework.Constraints
         /// <returns>True for success, false for failure</returns>
         protected override bool Matches(string actual)
         {
-            //this.actual = actual;
-
-            return Regex.IsMatch(
+            return actual != null && Regex.IsMatch(
                     actual,
                     this.expected,
                     this.caseInsensitive ? RegexOptions.IgnoreCase : RegexOptions.None);

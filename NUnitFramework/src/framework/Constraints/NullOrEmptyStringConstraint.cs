@@ -28,7 +28,7 @@ namespace NUnit.Framework.Constraints
     /// <summary>
     /// NullEmptyStringConstraint tests whether a string is either null or empty.
     /// </summary>
-    public class NullOrEmptyStringConstraint : Constraint
+    public class NullOrEmptyStringConstraint : StringConstraint
     {
         /// <summary>
         /// Constructs a new NullOrEmptyStringConstraint
@@ -52,16 +52,11 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="actual">The value to be tested</param>
         /// <returns>True for success, false for failure</returns>
-        public override ConstraintResult ApplyTo(object actual)
+        protected override bool Matches(string actual)
         {
-            // NOTE: Do not change this to use string.IsNullOrEmpty
-            // since that won't work in earlier versions of .NET
-
-            string actualAsString = actual as string;
-            if (actual != null && actualAsString == null)
-                throw new ArgumentException("Actual value must be a string", "actual");
-
-            return new ConstraintResult(this, actual, actual == null || actualAsString == string.Empty);
+            // NOTE: If changing this to use string.IsNullOrEmpty
+            // check that it works on all runtimes we build for.
+            return actual == null || actual == string.Empty;
         }
     }
 }

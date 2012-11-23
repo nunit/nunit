@@ -47,12 +47,10 @@ namespace NUnit.Framework.Constraints
         /// <returns></returns>
         protected override bool Matches(string actual)
         {
-            //this.actual = actual;
-
             if (this.caseInsensitive)
-                return actual.ToLower().EndsWith(expected.ToLower());
+                return actual != null && actual.ToLower().EndsWith(expected.ToLower());
             else
-                return actual.EndsWith(expected);
+                return actual != null && actual.EndsWith(expected);
         }
     }
 }

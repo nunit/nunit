@@ -29,7 +29,7 @@ namespace NUnit.Framework.Constraints.Tests
     /// Summary description for PathConstraintTests.
     /// </summary>]
     [TestFixture]
-    public class SamePathTest_Windows : ConstraintTestBase
+    public class SamePathTest_Windows : ConstraintTestBaseWithArgumentException
     {
         [SetUp]
         public void SetUp()
@@ -50,14 +50,17 @@ namespace NUnit.Framework.Constraints.Tests
             };
         object[] FailureData = new object[] 
             { 
-                new TestCaseData( 123, "123" ),
                 new TestCaseData( @"C:\folder2\file.tmp", "\"C:\\folder2\\file.tmp\"" ),
                 new TestCaseData( @"C:\folder1\.\folder2\..\file.temp", "\"C:\\folder1\\.\\folder2\\..\\file.temp\"" )
+            };
+        static object[] InvalidData = new object[]
+            {
+                123
             };
     }
 
     [TestFixture]
-    public class SamePathTest_Linux : ConstraintTestBase
+    public class SamePathTest_Linux : ConstraintTestBaseWithArgumentException
     {
         [SetUp]
         public void SetUp()
@@ -82,16 +85,19 @@ namespace NUnit.Framework.Constraints.Tests
             };
         object[] FailureData = new object[] 
             { 
-                new TestCaseData( 123, "123" ),
                 new TestCaseData( @"/junk/folder2", "\"/junk/folder2\"" ),
                 new TestCaseData( @"/folder1/./junk/../file.temp", "\"/folder1/./junk/../file.temp\"" ),
                 new TestCaseData( @"/Folder1/FOLDER2", "\"/Folder1/FOLDER2\"" ),
                 new TestCaseData( @"/FOLDER1/./junk/../FOLDER2", "\"/FOLDER1/./junk/../FOLDER2\"" )
             };
+        static object[] InvalidData = new object[]
+        {
+            123
+        };
     }
 
     [TestFixture]
-    public class SamePathOrUnderTest_Windows : ConstraintTestBase
+    public class SamePathOrUnderTest_Windows : ConstraintTestBaseWithArgumentException
     {
         [SetUp]
         public void SetUp()
@@ -117,14 +123,17 @@ namespace NUnit.Framework.Constraints.Tests
             };
         object[] FailureData = new object[]
             {
-                new TestCaseData( 123, "123" ),
                 new TestCaseData( @"C:\folder1\folder3", "\"C:\\folder1\\folder3\"" ),
                 new TestCaseData( @"C:\folder1\.\folder2\..\file.temp", "\"C:\\folder1\\.\\folder2\\..\\file.temp\"" )
             };
+        static object[] InvalidData = new object[]
+        {
+            123
+        };
     }
 
     [TestFixture]
-    public class SamePathOrUnderTest_Linux : ConstraintTestBase
+    public class SamePathOrUnderTest_Linux : ConstraintTestBaseWithArgumentException
     {
         [SetUp]
         public void SetUp()
@@ -147,7 +156,6 @@ namespace NUnit.Framework.Constraints.Tests
             };
         object[] FailureData = new object[]
             {
-                new TestCaseData( 123, "123" ),
                 new TestCaseData( "/Folder1/Folder2", "\"/Folder1/Folder2\"" ),
                 new TestCaseData( "/FOLDER1/./junk/../Folder2", "\"/FOLDER1/./junk/../Folder2\"" ),
                 new TestCaseData( "/FOLDER1/./junk/../Folder2/temp/../Folder3", "\"/FOLDER1/./junk/../Folder2/temp/../Folder3\"" ),
@@ -155,5 +163,9 @@ namespace NUnit.Framework.Constraints.Tests
                 new TestCaseData( "/folder1/./folder2/../folder3", "\"/folder1/./folder2/../folder3\"" ),
 				new TestCaseData( "/folder1", "\"/folder1\"" )
             };
+        static object[] InvalidData = new object[]
+        {
+            123
+        };
     }
 }

@@ -31,19 +31,9 @@ namespace NUnit.Framework.Constraints
     /// PathConstraint serves as the abstract base of constraints
     /// that operate on paths and provides several helper methods.
     /// </summary>
-    public abstract class PathConstraint : Constraint
+    public abstract class PathConstraint : StringConstraint
     {
         private static readonly char[] DirectorySeparatorChars = new char[] { '\\', '/' };
-
-        /// <summary>
-        /// The expected path used in the constraint
-        /// </summary>
-        protected string expected;
-
-        /// <summary>
-        /// Flag indicating whether a caseInsensitive comparison should be made
-        /// </summary>
-        protected bool caseInsensitive = Path.DirectorySeparatorChar == '\\';
 
         /// <summary>
         /// Construct a PathConstraint for a give expected path
@@ -53,15 +43,7 @@ namespace NUnit.Framework.Constraints
             : base(expected)
         {
             this.expected = expected;
-        }
-
-        /// <summary>
-        /// Modifies the current instance to be case-insensitve
-        /// and returns it.
-        /// </summary>
-        public PathConstraint IgnoreCase
-        {
-            get { caseInsensitive = true; return this; }
+            this.caseInsensitive = Path.DirectorySeparatorChar == '\\';
         }
 
         /// <summary>

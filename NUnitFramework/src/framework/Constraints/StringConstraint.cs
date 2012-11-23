@@ -21,6 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
+
 namespace NUnit.Framework.Constraints
 {
     /// <summary>
@@ -40,6 +42,9 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         protected bool caseInsensitive;
 
+        /// <summary>
+        /// Description of this constraint
+        /// </summary>
         protected string description;
 
         /// <summary>
@@ -56,6 +61,11 @@ namespace NUnit.Framework.Constraints
                 return desc;
             }
         }
+
+        /// <summary>
+        /// Constructs a StringConstraint without an expected value
+        /// </summary>
+        protected StringConstraint() { }
 
         /// <summary>
         /// Constructs a StringConstraint given an expected value
@@ -83,9 +93,10 @@ namespace NUnit.Framework.Constraints
         public override ConstraintResult ApplyTo(object actual)
         {
             string actualAsString = actual as string;
-            bool hasSucceeded = actualAsString != null && Matches(actualAsString);
+            if (actual != null && actualAsString == null)
+                throw new ArgumentException("Actual value must be a string", "actual");
 
-            return new ConstraintResult(this, actual, hasSucceeded);
+            return new ConstraintResult(this, actual, Matches(actualAsString));
         }
 
         /// <summary>
