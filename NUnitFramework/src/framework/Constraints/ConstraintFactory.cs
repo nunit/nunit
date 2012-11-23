@@ -191,9 +191,9 @@ namespace NUnit.Framework.Constraints
         /// Returns a new AttributeConstraint checking for the
         /// presence of a particular attribute on an object.
         /// </summary>
-        public ResolvableConstraintExpression Attribute<T>()
+        public ResolvableConstraintExpression Attribute<TExpected>()
         {
-            return Attribute(typeof(T));
+            return Attribute(typeof(TExpected));
         }
 
         #endregion
@@ -432,9 +432,9 @@ namespace NUnit.Framework.Constraints
         /// Returns a constraint that tests whether the actual
         /// value is of the exact type supplied as an argument.
         /// </summary>
-        public ExactTypeConstraint TypeOf<T>()
+        public ExactTypeConstraint TypeOf<TExpected>()
         {
-            return new ExactTypeConstraint(typeof(T));
+            return new ExactTypeConstraint(typeof(TExpected));
         }
 
         #endregion
@@ -454,9 +454,9 @@ namespace NUnit.Framework.Constraints
         /// Returns a constraint that tests whether the actual value
         /// is of the type supplied as an argument or a derived type.
         /// </summary>
-        public InstanceOfTypeConstraint InstanceOf<T>()
+        public InstanceOfTypeConstraint InstanceOf<TExpected>()
         {
-            return new InstanceOfTypeConstraint(typeof(T));
+            return new InstanceOfTypeConstraint(typeof(TExpected));
         }
 
         #endregion
@@ -476,9 +476,9 @@ namespace NUnit.Framework.Constraints
         /// Returns a constraint that tests whether the actual value
         /// is assignable from the type supplied as an argument.
         /// </summary>
-        public AssignableFromConstraint AssignableFrom<T>()
+        public AssignableFromConstraint AssignableFrom<TExpected>()
         {
-            return new AssignableFromConstraint(typeof(T));
+            return new AssignableFromConstraint(typeof(TExpected));
         }
 
         #endregion
@@ -498,9 +498,9 @@ namespace NUnit.Framework.Constraints
         /// Returns a constraint that tests whether the actual value
         /// is assignable from the type supplied as an argument.
         /// </summary>
-        public AssignableToConstraint AssignableTo<T>()
+        public AssignableToConstraint AssignableTo<TExpected>()
         {
-            return new AssignableToConstraint(typeof(T));
+            return new AssignableToConstraint(typeof(TExpected));
         }
 
         #endregion

@@ -118,9 +118,9 @@ namespace NUnit.Framework
         /// <summary>
         /// Creates a constraint specifying the exact type of exception expected
         /// </summary>
-        public static ExactTypeConstraint TypeOf<T>()
+        public static ExactTypeConstraint TypeOf<TExpected>()
         {
-            return TypeOf(typeof(T));
+            return TypeOf(typeof(TExpected));
         }
 
         #endregion
@@ -138,9 +138,9 @@ namespace NUnit.Framework
         /// <summary>
         /// Creates a constraint specifying the type of exception expected
         /// </summary>
-        public static InstanceOfTypeConstraint InstanceOf<T>()
+        public static InstanceOfTypeConstraint InstanceOf<TExpected>()
         {
-            return InstanceOf(typeof(T));
+            return InstanceOf(typeof(TExpected));
         }
 
         #endregion
