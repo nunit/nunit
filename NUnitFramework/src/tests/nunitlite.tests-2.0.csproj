@@ -31,7 +31,7 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-	<IntermediateOutputPath>obj\$(Configuration)\net-2.0\</IntermediateOutputPath>
+    <IntermediateOutputPath>obj\$(Configuration)\net-2.0\</IntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -144,6 +144,7 @@
     <Compile Include="Constraints\ReusableConstraintTests.cs" />
     <Compile Include="Constraints\SameAsTest.cs" />
     <Compile Include="Constraints\StartsWithConstraintTests.cs" />
+    <Compile Include="Constraints\StringConstraintTest.cs" />
     <Compile Include="Constraints\SubstringConstraintTests.cs" />
     <Compile Include="Constraints\ThrowsConstraintTests.cs" />
     <Compile Include="Constraints\ToStringTests.cs" />

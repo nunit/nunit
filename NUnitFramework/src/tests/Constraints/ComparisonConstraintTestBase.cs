@@ -29,9 +29,16 @@ namespace NUnit.Framework.Constraints.Tests
 {
     #region ComparisonConstraintTestBase
 
-    public abstract class ComparisonConstraintTestBase : ConstraintTestBaseWithArgumentException
+    public abstract class ComparisonConstraintTestBase : ConstraintTestBase
     {
         protected ComparisonConstraint comparisonConstraint;
+
+        [TestCase(null, ExpectedException = typeof(ArgumentException))]
+        [TestCase("xxx", ExpectedException = typeof(ArgumentException))]
+        public void InvalidDataThrowsException(object data)
+        {
+            theConstraint.ApplyTo(data);
+        }
 
         [Test]
         public void UsesProvidedIComparer()
