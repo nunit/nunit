@@ -76,7 +76,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="actual">The value to be tested</param>
         /// <returns>True for if the base constraint fails, false if it succeeds</returns>
-        public override ConstraintResult ApplyTo(object actual)
+        public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
             int remainingDelay = delayInMilliseconds;
 

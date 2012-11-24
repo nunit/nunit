@@ -61,7 +61,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="actual">A Type, MethodInfo, or other ICustomAttributeProvider</param>
         /// <returns>True if the expected attribute is present, otherwise false</returns>
-        public override ConstraintResult ApplyTo(object actual)
+        public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
             System.Reflection.ICustomAttributeProvider attrProvider =
                 actual as System.Reflection.ICustomAttributeProvider;

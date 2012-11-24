@@ -48,7 +48,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="actual">The actual value</param>
         /// <returns>True if either constraint succeeded</returns>
-        public override ConstraintResult ApplyTo(object actual)
+        public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
             bool hasSucceeded = Left.ApplyTo(actual).IsSuccess || Right.ApplyTo(actual).IsSuccess;
             return new ConstraintResult(this, actual, hasSucceeded);

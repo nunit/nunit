@@ -47,7 +47,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="actual">The value to be tested</param>
         /// <returns>True if no exception is thrown, otherwise false</returns>
-        public override ConstraintResult ApplyTo(object actual)
+        public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
             TestDelegate code = actual as TestDelegate;
             if (code == null)

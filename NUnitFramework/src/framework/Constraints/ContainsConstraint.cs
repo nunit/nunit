@@ -69,7 +69,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="actual">The value to be tested</param>
         /// <returns>True for success, false for failure</returns>
-        public override ConstraintResult ApplyTo(object actual)
+        public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
             if (actual is string)
             {

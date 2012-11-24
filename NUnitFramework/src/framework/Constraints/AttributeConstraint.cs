@@ -57,7 +57,7 @@ namespace NUnit.Framework.Constraints
         /// expected attribute and if its value matches the
         /// additional constraint specified.
         /// </summary>
-        public override ConstraintResult ApplyTo(object actual)
+        public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
             System.Reflection.ICustomAttributeProvider attrProvider =
                 actual as System.Reflection.ICustomAttributeProvider;
