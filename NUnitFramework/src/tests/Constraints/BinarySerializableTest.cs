@@ -45,7 +45,8 @@ namespace NUnit.Framework.Constraints.Tests
         [Test, ExpectedException(typeof(ArgumentNullException))]
         public void NullArgumentThrowsException()
         {
-            theConstraint.ApplyTo(null);
+            object o = null;
+            theConstraint.ApplyTo(o);
         }
     }
 }

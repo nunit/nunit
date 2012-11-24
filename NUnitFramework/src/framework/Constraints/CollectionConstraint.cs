@@ -67,7 +67,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="actual">The value to be tested</param>
         /// <returns>True for success, false for failure</returns>
-        public override ConstraintResult ApplyTo(object actual)
+        public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
             // TODO: Use an error result if actual is not IEnumerable
             IEnumerable enumerable = actual as IEnumerable;

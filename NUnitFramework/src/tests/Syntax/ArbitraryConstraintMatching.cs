@@ -76,7 +76,7 @@ namespace NUnit.Framework.Syntax
 
         class CustomConstraint : Constraint
         {
-            public override ConstraintResult ApplyTo(object actual)
+            public override ConstraintResult ApplyTo<TActual>(TActual actual)
             {
                 throw new NotImplementedException();
             }

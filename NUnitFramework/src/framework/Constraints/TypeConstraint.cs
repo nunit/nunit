@@ -58,7 +58,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="actual">The value to be tested</param>
         /// <returns>A ConstraintResult</returns>
-        public override ConstraintResult ApplyTo(object actual)
+        public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
             actualType = actual == null ? null : actual.GetType();
             return new ConstraintResult(this, actualType, this.Matches(actual));
