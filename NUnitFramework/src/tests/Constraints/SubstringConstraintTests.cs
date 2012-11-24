@@ -27,7 +27,7 @@ using NUnit.Framework.Internal;
 namespace NUnit.Framework.Constraints.Tests
 {
     [TestFixture]
-    public class SubstringConstraintTests : ConstraintTestBase, IExpectException
+    public class SubstringConstraintTests : StringConstraintTests
     {
 		[SetUp]
         public void SetUp()
@@ -45,19 +45,10 @@ namespace NUnit.Framework.Constraints.Tests
             new TestCaseData( "What the hell?", "\"What the hell?\"" ),
             new TestCaseData( string.Empty, "<string.Empty>" ),
             new TestCaseData( null, "null" ) };
-
-        public void HandleException(Exception ex)
-        {
-            string NL = Env.NewLine;
-
-            Assert.That(ex.Message, new EqualConstraint(
-                TextMessageWriter.Pfx_Expected + "String containing \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa...\"" + NL +
-                TextMessageWriter.Pfx_Actual   + "\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...\"" + NL));
-        }
     }
 
     [TestFixture]
-    public class SubstringConstraintTestsIgnoringCase : ConstraintTestBase
+    public class SubstringConstraintTestsIgnoringCase : StringConstraintTests
     {
 		[SetUp]
         public void SetUp()

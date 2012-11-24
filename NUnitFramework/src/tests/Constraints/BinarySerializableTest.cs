@@ -28,7 +28,7 @@ using System.Collections;
 namespace NUnit.Framework.Constraints.Tests
 {
     [TestFixture]
-    public class BinarySerializableTest : ConstraintTestBaseWithArgumentException
+    public class BinarySerializableTest : ConstraintTestBase
     {
 		[SetUp]
         public void SetUp()
@@ -42,7 +42,11 @@ namespace NUnit.Framework.Constraints.Tests
         
         object[] FailureData = new object[] { new TestCaseData( new InternalClass(), "<NUnit.Framework.Constraints.Tests.InternalClass>" ) };
 
-        object[] InvalidData = new object[] { null };
+        [Test, ExpectedException(typeof(ArgumentNullException))]
+        public void NullArgumentThrowsException()
+        {
+            theConstraint.ApplyTo(null);
+        }
     }
 }
 #endif

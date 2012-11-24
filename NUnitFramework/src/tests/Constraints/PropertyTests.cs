@@ -27,12 +27,7 @@ using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints.Tests
 {
-    public class PropertyExistsTest
-#if NUNITLITE
- : ConstraintTestBase
-#else
-        : ConstraintTestBaseWithExceptionTests
-#endif
+    public class PropertyExistsTest : ConstraintTestBase
     {
         [SetUp]
         public void SetUp()
@@ -48,20 +43,17 @@ namespace NUnit.Framework.Constraints.Tests
             new TestCaseData( 42, "<System.Int32>" ),
             new TestCaseData( new System.Collections.ArrayList(), "<System.Collections.ArrayList>" ),
             new TestCaseData( typeof(Int32), "<System.Int32>" ) };
+
 #if !NUNITLITE
-        static object[] InvalidData = new TestCaseData[] 
-        { 
-            new TestCaseData(null).Throws(typeof(ArgumentNullException))
-        };
+        [TestCase(null, ExpectedException = typeof(ArgumentNullException))]
+        public void InvalidDataThrowsException(object value)
+        {
+            theConstraint.ApplyTo(value);
+        }
 #endif
     }
 
-    public class PropertyTest
-#if NUNITLITE
-        : ConstraintTestBase
-#else
-        : ConstraintTestBaseWithExceptionTests
-#endif
+    public class PropertyTest : ConstraintTestBase
     {
         [SetUp]
         public void SetUp()
@@ -76,13 +68,14 @@ namespace NUnit.Framework.Constraints.Tests
         static object[] FailureData = new object[] { 
             new TestCaseData( new int[3], "3" ),
             new TestCaseData( "goodbye", "7" ) };
+
 #if !NUNITLITE
-        static object[] InvalidData = new object[] 
-        { 
-            new TestCaseData(null).Throws(typeof(ArgumentNullException)),
-            new TestCaseData(42).Throws(typeof(ArgumentException)), 
-            new TestCaseData(new System.Collections.ArrayList()).Throws(typeof(ArgumentException))
-        };
+        [TestCase(null, ExpectedException = typeof(ArgumentNullException))]
+        [TestCase(42, ExpectedException = typeof(ArgumentException))]
+        public void InvalidDataThrowsException(object value)
+        {
+            theConstraint.ApplyTo(value);
+        }
 #endif
 
         [Test]

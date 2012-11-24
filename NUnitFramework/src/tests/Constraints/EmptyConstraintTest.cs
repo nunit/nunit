@@ -27,7 +27,7 @@ using System.Collections;
 namespace NUnit.Framework.Constraints.Tests
 {
     [TestFixture]
-    public class EmptyConstraintTest : ConstraintTestBaseWithArgumentException
+    public class EmptyConstraintTest : ConstraintTestBase
     {
         [SetUp]
         public void SetUp()
@@ -51,15 +51,39 @@ namespace NUnit.Framework.Constraints.Tests
             new TestCaseData( new object[] { 1, 2, 3 }, "< 1, 2, 3 >" )
         };
 
-        static object[] InvalidData = new object[]
-            {
-                null,
-                5
-            };
+        [TestCase(null, ExpectedException = typeof(ArgumentException))]
+        [TestCase(5, ExpectedException = typeof(ArgumentException))]
+        public void InvalidDataThrowsException(object data)
+        {
+            theConstraint.ApplyTo(data);
+        }
+
     }
 
     [TestFixture]
-    public class NullOrEmptyStringConstraintTest : ConstraintTestBaseWithArgumentException
+    public class EmptyStringConstraintTest : StringConstraintTests
+    {
+        [SetUp]
+        public void SetUp()
+        {
+            theConstraint = new EmptyStringConstraint();
+            expectedDescription = "<empty>";
+            stringRepresentation = "<emptystring>";
+        }
+
+        static object[] SuccessData = new object[] 
+        {
+            string.Empty,
+        };
+
+        static object[] FailureData = new object[]
+        {
+            new TestCaseData( "Hello", "\"Hello\"" ),
+        };
+    }
+
+    [TestFixture]
+    public class NullOrEmptyStringConstraintTest : StringConstraintTests
     {
         [SetUp]
         public void SetUp()
@@ -79,10 +103,5 @@ namespace NUnit.Framework.Constraints.Tests
         {
             new TestCaseData( "Hello", "\"Hello\"" )
         };
-
-        static object[] InvalidData = new object[]
-            {
-                5
-            };
     }
 }

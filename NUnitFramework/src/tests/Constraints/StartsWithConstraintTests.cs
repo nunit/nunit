@@ -27,7 +27,7 @@ using NUnit.Framework.Internal;
 namespace NUnit.Framework.Constraints.Tests
 {
     [TestFixture]
-    public class StartsWithConstraintTests : ConstraintTestBase
+    public class StartsWithConstraintTests : StringConstraintTests
     {
         [SetUp]
         public void SetUp()
@@ -49,7 +49,7 @@ namespace NUnit.Framework.Constraints.Tests
     }
 
     [TestFixture]
-    public class StartsWithConstraintTestsIgnoringCase : ConstraintTestBase
+    public class StartsWithConstraintTestsIgnoringCase : StringConstraintTests
     {
         [SetUp]
         public void SetUp()

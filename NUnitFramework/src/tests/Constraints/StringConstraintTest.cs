@@ -1,5 +1,5 @@
-// ***********************************************************************
-// Copyright (c) 2007 Charlie Poole
+﻿// ***********************************************************************
+// Copyright (c) 2012 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -22,40 +22,16 @@
 // ***********************************************************************
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
 
 namespace NUnit.Framework.Constraints.Tests
 {
-    [TestFixture]
-    public class LessThanConstraintTests : ComparisonConstraintTestBase
+
+    public abstract class StringConstraintTests : ConstraintTestBase
     {
-        [SetUp]
-        public void SetUp()
+        [Test, ExpectedException(typeof(ArgumentException))]
+        public void NonStringDataThrowsArgumentException()
         {
-            theConstraint = comparisonConstraint = new LessThanConstraint(5);
-            expectedDescription = "less than 5";
-            stringRepresentation = "<lessthan 5>";
-        }
-
-        object[] SuccessData = new object[] { 4, 4.999 };
-
-        object[] FailureData = new object[] { new object[] { 6, "6" }, new object[] { 5, "5" } };
-
-        [Test]
-        public void CanCompareIComparables()
-        {
-            ClassWithIComparable expected = new ClassWithIComparable(42);
-            ClassWithIComparable actual = new ClassWithIComparable(0);
-            Assert.That(actual, Is.LessThan(expected));
-        }
-
-        [Test]
-        public void CanCompareIComparablesOfT()
-        {
-            ClassWithIComparableOfT expected = new ClassWithIComparableOfT(42);
-            ClassWithIComparableOfT actual = new ClassWithIComparableOfT(0);
-            Assert.That(actual, Is.LessThan(expected));
+            theConstraint.ApplyTo(123);
         }
     }
 }

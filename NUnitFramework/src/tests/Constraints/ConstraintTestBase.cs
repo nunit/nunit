@@ -41,7 +41,7 @@ namespace NUnit.Framework.Constraints.Tests
         [Test]
         public void ProvidesProperStringRepresentation()
         {
-            Assert.That(stringRepresentation == theConstraint.ToString());
+            Assert.That(theConstraint.ToString(), Is.EqualTo(stringRepresentation));
         }
     }
 
@@ -72,32 +72,6 @@ namespace NUnit.Framework.Constraints.Tests
             Assert.That( writer.ToString(), Is.EqualTo(
                 TextMessageWriter.Pfx_Expected + expectedDescription + NL +
                 TextMessageWriter.Pfx_Actual + message + NL ));
-        }
-    }
-
-    /// <summary>
-    /// Base class for testing constraints that can throw an ArgumentException
-    /// </summary>
-    public abstract class ConstraintTestBaseWithArgumentException : ConstraintTestBase
-    {
-        [Test, TestCaseSource("InvalidData")]
-        [ExpectedException(typeof(ArgumentException))]
-        public void InvalidDataThrowsArgumentException(object value)
-        {
-            theConstraint.ApplyTo(value);
-        }
-    }
-
-    /// <summary>
-    /// Base class for tests that can throw multiple exceptions. Use
-    /// TestCaseData class to specify the expected exception type.
-    /// </summary>
-    public abstract class ConstraintTestBaseWithExceptionTests : ConstraintTestBase
-    {
-        [Test, TestCaseSource("InvalidData")]
-        public void InvalidDataThrowsException(object value)
-        {
-            theConstraint.ApplyTo(value);
         }
     }
 }

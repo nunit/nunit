@@ -28,7 +28,7 @@ using System.Collections.Generic;
 namespace NUnit.Framework.Constraints.Tests
 {
     [TestFixture]
-    public class RangeConstraintTest : ConstraintTestBaseWithArgumentException
+    public class RangeConstraintTest : ConstraintTestBase
     {
         RangeConstraint rangeConstraint;
 
@@ -44,7 +44,12 @@ namespace NUnit.Framework.Constraints.Tests
 
         object[] FailureData = new object[] { new object[] { 4, "4" }, new object[] { 43, "43" } };
 
-        object[] InvalidData = new object[] { null, "xxx" };
+        [TestCase(null, ExpectedException = typeof(ArgumentException))]
+        [TestCase("xxx", ExpectedException = typeof(ArgumentException))]
+        public void InvalidDataThrowsException(object data)
+        {
+            theConstraint.ApplyTo(data);
+        }
 
         [Test]
         public void UsesProvidedIComparer()

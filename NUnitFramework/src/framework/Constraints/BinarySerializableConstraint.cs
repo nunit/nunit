@@ -54,7 +54,7 @@ namespace NUnit.Framework.Constraints
         public override ConstraintResult ApplyTo(object actual)
         {
             if (actual == null)
-                throw new ArgumentException();
+                throw new ArgumentNullException("actual");
 
             MemoryStream stream = new MemoryStream();
             bool succeeded = false;

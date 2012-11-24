@@ -30,7 +30,7 @@ using System.Collections.Generic;
 namespace NUnit.Framework.Constraints.Tests
 {
     [TestFixture]
-    public class XmlSerializableTest : ConstraintTestBaseWithArgumentException
+    public class XmlSerializableTest : ConstraintTestBase
     {
         [SetUp]
         public void SetUp()
@@ -48,7 +48,11 @@ namespace NUnit.Framework.Constraints.Tests
             new TestCaseData( new InternalWithSerializableAttributeClass(), "<NUnit.Framework.Constraints.Tests.InternalWithSerializableAttributeClass>" )
         };
 
-        object[] InvalidData = new object[] { null };
+        [Test, ExpectedException(typeof(ArgumentNullException))]
+        public void NullArgumentThrowsException()
+        {
+            theConstraint.ApplyTo(null);
+        }
     }
 
     internal class InternalClass

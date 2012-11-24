@@ -42,8 +42,6 @@ namespace NUnit.Framework.Constraints.Tests
 
         object[] FailureData = new object[] { new object[] { 4, "4" }, new object[] { 5, "5" } };
 
-        object[] InvalidData = new object[] { null, "xxx" };
-
         [Test]
         public void CanCompareIComparables()
         {
