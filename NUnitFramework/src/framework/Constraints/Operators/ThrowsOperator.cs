@@ -49,7 +49,7 @@ namespace NUnit.Framework.Constraints
         public override void Reduce(ConstraintBuilder.ConstraintStack stack)
         {
             if (RightContext == null || RightContext is BinaryOperator)
-                stack.Push(new ThrowsConstraint(null));
+                stack.Push(new ThrowsExceptionConstraint());
             else
                 stack.Push(new ThrowsConstraint(stack.Pop()));
         }

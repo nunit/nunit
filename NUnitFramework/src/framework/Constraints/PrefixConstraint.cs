@@ -41,12 +41,13 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Construct given a base constraint
         /// </summary>
-        /// <param name="resolvable"></param>
-        protected PrefixConstraint(IResolveConstraint resolvable)
-            : base(resolvable)
+        /// <param name="baseConstraint"></param>
+        protected PrefixConstraint(IResolveConstraint baseConstraint)
+            : base(baseConstraint)
         {
-            if (resolvable != null)
-                this.baseConstraint = resolvable.Resolve();
+            Guard.ArgumentNotNull(baseConstraint, "baseConstraint");
+
+            this.baseConstraint = baseConstraint.Resolve();
         }
 
         /// <summary>
@@ -57,16 +58,10 @@ namespace NUnit.Framework.Constraints
         {
             get
             {
-                System.Text.StringBuilder sb = new System.Text.StringBuilder(descriptionPrefix);
-
-                if (baseConstraint != null)
-                {
-                    sb.AppendFormat(
-                        baseConstraint is EqualConstraint ? " equal to {0}" : " {0}",
-                        baseConstraint.Description);
-                }
-
-                return sb.ToString();
+                return string.Format(
+                    baseConstraint is EqualConstraint ? "{0} equal to {1}" : "{0} {1}", 
+                    descriptionPrefix, 
+                    baseConstraint.Description);
             }
         }
     }

@@ -1,5 +1,5 @@
-// ***********************************************************************
-// Copyright (c) 2007 Charlie Poole
+﻿// ***********************************************************************
+// Copyright (c) 2012 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,36 +21,30 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-namespace NUnit.Framework.Constraints
+using System;
+using NUnit.TestUtilities;
+
+namespace NUnit.Framework.Constraints.Tests
 {
-    /// <summary>
-    /// BinaryConstraint is the abstract base of all constraints
-    /// that combine two other constraints in some fashion.
-    /// </summary>
-    public abstract class BinaryConstraint : Constraint
+    [TestFixture]
+    public class ThrowsExceptionConstraintTest : ConstraintTestBase
     {
-        /// <summary>
-        /// The first constraint being combined
-        /// </summary>
-        protected Constraint Left;
-        /// <summary>
-        /// The second constraint being combined
-        /// </summary>
-        protected Constraint Right;
-
-        /// <summary>
-        /// Construct a BinaryConstraint from two other constraints
-        /// </summary>
-        /// <param name="left">The first constraint</param>
-        /// <param name="right">The second constraint</param>
-        protected BinaryConstraint(Constraint left, Constraint right)
-            : base(left, right)
+        [SetUp]
+        public void SetUp()
         {
-            Guard.ArgumentNotNull(left, "left");
-            this.Left = left;
-
-            Guard.ArgumentNotNull(right, "right");
-            this.Right = right;
+            theConstraint = new ThrowsExceptionConstraint();
+            expectedDescription = "an exception to be thrown";
+            stringRepresentation = "<throwsexception>";
         }
+
+        static object[] SuccessData = new object[]
+        {
+            new TestDelegate( TestDelegates.ThrowsArgumentException )
+        };
+
+        static object[] FailureData = new object[]
+        {
+            new TestCaseData( new TestDelegate( TestDelegates.ThrowsNothing ), "no exception thrown" ),
+        };
     }
 }

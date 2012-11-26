@@ -26,7 +26,7 @@ using System;
 namespace NUnit.Framework.Constraints
 {
     /// <summary>
-    /// ThrowsConstraint is used to test the exception thrown by 
+    /// ThrowsConstraint is used to test a thrown exception by 
     /// a delegate by applying a constraint to it.
     /// </summary>
     public class ThrowsConstraint : PrefixConstraint
@@ -41,14 +41,6 @@ namespace NUnit.Framework.Constraints
         public ThrowsConstraint(Constraint baseConstraint)
             : base(baseConstraint) { }
 
-        /// <summary>
-        /// Get the actual exception thrown - used by Assert.Throws.
-        /// </summary>
-        public Exception ActualException
-        {
-            get { return caughtException; }
-        }
-
         #region Constraint Overrides
 
         /// <summary>
@@ -56,12 +48,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public override string Description
         {
-            get
-            {
-                return baseConstraint == null
-                    ? "an exception"
-                    : baseConstraint.Description;
-            }
+            get { return baseConstraint.Description; }
         }
 
         /// <summary>
@@ -92,7 +79,7 @@ namespace NUnit.Framework.Constraints
             return new ThrowsConstraintResult(
                 this, 
                 caughtException,
-                caughtException != null && baseConstraint != null
+                caughtException != null
                     ? baseConstraint.ApplyTo(caughtException)
                     : null);
         }
@@ -109,17 +96,6 @@ namespace NUnit.Framework.Constraints
             return ApplyTo((object)testDelegate);
         }
 
-        /// <summary>
-        /// Returns the string representation of this constraint
-        /// </summary>
-        protected override string GetStringRepresentation()
-        {
-            if (baseConstraint == null)
-                return "<throws>";
-
-            return base.GetStringRepresentation();
-        }
-
         #endregion
 
         #region Nested Result Class
@@ -131,7 +107,7 @@ namespace NUnit.Framework.Constraints
             public ThrowsConstraintResult(ThrowsConstraint constraint, Exception caughtException, ConstraintResult baseResult)
                 : base(constraint, caughtException)
             {
-                if (caughtException != null && (baseResult == null || baseResult.IsSuccess))
+                if (caughtException != null && baseResult.IsSuccess)
                     Status = ConstraintStatus.Success;
                 else
                     Status = ConstraintStatus.Failure;
@@ -149,10 +125,8 @@ namespace NUnit.Framework.Constraints
             {
                 if (ActualValue == null)
                     writer.Write("no exception thrown");
-                else if (Status == ConstraintStatus.Failure)
-                    baseResult.WriteActualValueTo(writer);
                 else
-                    writer.WriteActualValue(this);
+                    baseResult.WriteActualValueTo(writer);
             }
         }
 
