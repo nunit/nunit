@@ -543,7 +543,7 @@ namespace NUnit.Framework
         /// Verifies that a delegate throws a particular exception when called.
         /// </summary>
         /// <param name="expectedExceptionType">The exception Type expected</param>
-        /// <param name="code">A TestSnippet delegate</param>
+        /// <param name="code">A TestDelegate</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
         public static Exception Throws(Type expectedExceptionType, TestDelegate code, string message, params object[] args)
@@ -555,7 +555,7 @@ namespace NUnit.Framework
         /// Verifies that a delegate throws a particular exception when called.
         /// </summary>
         /// <param name="expectedExceptionType">The exception Type expected</param>
-        /// <param name="code">A TestSnippet delegate</param>
+        /// <param name="code">A TestDelegate</param>
         /// <param name="message">The message that will be displayed on failure</param>
         public static Exception Throws(Type expectedExceptionType, TestDelegate code, string message)
         {
@@ -566,7 +566,7 @@ namespace NUnit.Framework
         /// Verifies that a delegate throws a particular exception when called.
         /// </summary>
         /// <param name="expectedExceptionType">The exception Type expected</param>
-        /// <param name="code">A TestSnippet delegate</param>
+        /// <param name="code">A TestDelegate</param>
         public static Exception Throws(Type expectedExceptionType, TestDelegate code)
         {
             return Throws(new ExceptionTypeConstraint(expectedExceptionType), code, string.Empty, null);
@@ -580,7 +580,7 @@ namespace NUnit.Framework
         /// Verifies that a delegate throws a particular exception when called.
         /// </summary>
         /// <typeparam name="TActual">Type of the expected exception</typeparam>
-        /// <param name="code">A TestSnippet delegate</param>
+        /// <param name="code">A TestDelegate</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
         public static TActual Throws<TActual>(TestDelegate code, string message, params object[] args) where TActual : Exception
@@ -592,7 +592,7 @@ namespace NUnit.Framework
         /// Verifies that a delegate throws a particular exception when called.
         /// </summary>
         /// <typeparam name="TActual">Type of the expected exception</typeparam>
-        /// <param name="code">A TestSnippet delegate</param>
+        /// <param name="code">A TestDelegate</param>
         /// <param name="message">The message that will be displayed on failure</param>
         public static TActual Throws<TActual>(TestDelegate code, string message) where TActual : Exception
         {
@@ -603,7 +603,7 @@ namespace NUnit.Framework
         /// Verifies that a delegate throws a particular exception when called.
         /// </summary>
         /// <typeparam name="TActual">Type of the expected exception</typeparam>
-        /// <param name="code">A TestSnippet delegate</param>
+        /// <param name="code">A TestDelegate</param>
         public static TActual Throws<TActual>(TestDelegate code) where TActual : Exception
         {
             return Throws<TActual>(code, string.Empty, null);
@@ -724,7 +724,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Verifies that a delegate does not throw an exception
         /// </summary>
-        /// <param name="code">A TestSnippet delegate</param>
+        /// <param name="code">A TestDelegate</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
         public static void DoesNotThrow(TestDelegate code, string message, params object[] args)
@@ -744,7 +744,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Verifies that a delegate does not throw an exception.
         /// </summary>
-        /// <param name="code">A TestSnippet delegate</param>
+        /// <param name="code">A TestDelegate</param>
         /// <param name="message">The message that will be displayed on failure</param>
         public static void DoesNotThrow(TestDelegate code, string message)
         {
@@ -754,7 +754,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Verifies that a delegate does not throw an exception.
         /// </summary>
-        /// <param name="code">A TestSnippet delegate</param>
+        /// <param name="code">A TestDelegate</param>
         public static void DoesNotThrow(TestDelegate code)
         {
             DoesNotThrow(code, string.Empty, null);

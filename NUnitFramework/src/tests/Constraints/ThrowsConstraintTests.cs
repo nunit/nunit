@@ -27,7 +27,7 @@ using NUnit.TestUtilities;
 namespace NUnit.Framework.Constraints.Tests
 {
     [TestFixture]
-    public class ThrowsConstraintTest_ExactType : ConstraintTestBase
+    public class ExceptionConstraintTest_ExactType : ConstraintTestBase
     {
         [SetUp]
         public void SetUp()
@@ -52,7 +52,7 @@ namespace NUnit.Framework.Constraints.Tests
     }
 
     [TestFixture]
-    public class ThrowsConstraintTest_InstanceOfType : ConstraintTestBase
+    public class ExceptionConstraintTest_InstanceOfType : ConstraintTestBase
     {
         [SetUp]
         public void SetUp()
@@ -79,7 +79,7 @@ namespace NUnit.Framework.Constraints.Tests
 
 // TODO: Find a different example for use with NETCF - ArgumentException does not have a ParamName member
 #if !NETCF
-    public class ThrowsConstraintTest_WithConstraint : ConstraintTestBase
+    public class ExceptionConstraintTest_WithConstraint : ConstraintTestBase
     {
         [SetUp]
         public void SetUp()

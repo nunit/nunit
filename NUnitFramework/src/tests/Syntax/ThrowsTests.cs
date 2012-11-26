@@ -34,7 +34,7 @@ namespace NUnit.Framework.Syntax
         {
             IResolveConstraint expr = Throws.Exception;
             Assert.AreEqual(
-                "<throws>",
+                "<throwsexception>",
                 expr.Resolve().ToString());
         }
 

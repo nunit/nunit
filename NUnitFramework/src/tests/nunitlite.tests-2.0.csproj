@@ -147,6 +147,7 @@
     <Compile Include="Constraints\StringConstraintTest.cs" />
     <Compile Include="Constraints\SubstringConstraintTests.cs" />
     <Compile Include="Constraints\ThrowsConstraintTests.cs" />
+    <Compile Include="Constraints\ThrowsExceptionConstraintTests.cs" />
     <Compile Include="Constraints\ToStringTests.cs" />
     <Compile Include="Constraints\XmlSerializableTest.cs" />
     <Compile Include="Internal\CultureSettingAndDetectionTests.cs" />

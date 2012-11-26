@@ -75,10 +75,6 @@ namespace NUnit.Framework.Syntax
 
             c = !Is.Null & !Is.LessThan(5) & !Is.GreaterThan(10);
             Assert.That(c.ToString(), Is.EqualTo(expected).NoClip);
-
-            Constraint x = null;
-            c = !x & !Is.LessThan(5) & !Is.GreaterThan(10);
-            Assert.That(c.ToString(), Is.EqualTo(expected).NoClip);
         }
     }
 }

@@ -50,6 +50,7 @@
     <Compile Include="Constraints\ConstraintResult.cs" />
     <Compile Include="Constraints\EqualConstraintResult.cs" />
     <Compile Include="Constraints\ReusableConstraint.cs" />
+    <Compile Include="Constraints\ThrowsExceptionConstraint.cs" />
     <Compile Include="Internal\Commands\ApplyChangesToContextCommand.cs" />
     <Compile Include="Internal\IApplyToContext.cs" />
     <Compile Include="Internal\IApplyToTest.cs" />

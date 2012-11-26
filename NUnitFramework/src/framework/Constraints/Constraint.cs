@@ -152,7 +152,6 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Returns the string representation of this constraint
         /// </summary>
-        /// <returns></returns>
         protected virtual string GetStringRepresentation()
         {
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
@@ -205,8 +204,8 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public static Constraint operator !(Constraint constraint)
         {
-            IResolveConstraint r = constraint as IResolveConstraint;
-            return new NotConstraint(r == null ? new NullConstraint() : r.Resolve());
+            IResolveConstraint r = (IResolveConstraint)constraint;
+            return new NotConstraint(r.Resolve());
         }
         #endregion
 

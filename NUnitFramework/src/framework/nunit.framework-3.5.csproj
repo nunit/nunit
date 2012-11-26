@@ -203,6 +203,7 @@
     <Compile Include="Constraints\StringConstraint.cs" />
     <Compile Include="Constraints\SubstringConstraint.cs" />
     <Compile Include="Constraints\ThrowsConstraint.cs" />
+    <Compile Include="Constraints\ThrowsExceptionConstraint.cs" />
     <Compile Include="Constraints\ThrowsNothingConstraint.cs" />
     <Compile Include="Constraints\Tolerance.cs" />
     <Compile Include="Constraints\ToleranceMode.cs" />
