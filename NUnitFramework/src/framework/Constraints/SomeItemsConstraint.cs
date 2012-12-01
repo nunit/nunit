@@ -36,7 +36,7 @@ namespace NUnit.Framework.Constraints
         /// Construct a SomeItemsConstraint on top of an existing constraint
         /// </summary>
         /// <param name="itemConstraint"></param>
-        public SomeItemsConstraint(Constraint itemConstraint)
+        public SomeItemsConstraint(IConstraint itemConstraint)
             : base(itemConstraint)
         {
             this.DisplayName = "Some";

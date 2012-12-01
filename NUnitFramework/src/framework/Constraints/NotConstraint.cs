@@ -32,7 +32,7 @@ namespace NUnit.Framework.Constraints
         /// Initializes a new instance of the <see cref="NotConstraint"/> class.
         /// </summary>
         /// <param name="baseConstraint">The base constraint to be negated.</param>
-        public NotConstraint(Constraint baseConstraint)
+        public NotConstraint(IConstraint baseConstraint)
             : base(baseConstraint) 
         {
             this.descriptionPrefix = "not";

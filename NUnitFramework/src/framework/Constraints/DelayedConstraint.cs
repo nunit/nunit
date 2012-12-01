@@ -43,7 +43,7 @@ namespace NUnit.Framework.Constraints
         ///<param name="baseConstraint">The inner constraint two decorate</param>
         ///<param name="delayInMilliseconds">The time interval after which the match is performed</param>
         ///<exception cref="InvalidOperationException">If the value of <paramref name="delayInMilliseconds"/> is less than 0</exception>
-        public DelayedConstraint(Constraint baseConstraint, int delayInMilliseconds)
+        public DelayedConstraint(IConstraint baseConstraint, int delayInMilliseconds)
             : this(baseConstraint, delayInMilliseconds, 0) { }
 
         ///<summary>
@@ -53,7 +53,7 @@ namespace NUnit.Framework.Constraints
         ///<param name="delayInMilliseconds">The time interval after which the match is performed</param>
         ///<param name="pollingInterval">The time interval used for polling</param>
         ///<exception cref="InvalidOperationException">If the value of <paramref name="delayInMilliseconds"/> is less than 0</exception>
-        public DelayedConstraint(Constraint baseConstraint, int delayInMilliseconds, int pollingInterval)
+        public DelayedConstraint(IConstraint baseConstraint, int delayInMilliseconds, int pollingInterval)
             : base(baseConstraint)
         {
             if (delayInMilliseconds < 0)

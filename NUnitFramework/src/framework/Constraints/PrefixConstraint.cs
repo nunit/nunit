@@ -31,7 +31,7 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// The base constraint
         /// </summary>
-        protected Constraint baseConstraint;
+        protected IConstraint baseConstraint;
 
         /// <summary>
         /// Prefix used in forming the constraint description

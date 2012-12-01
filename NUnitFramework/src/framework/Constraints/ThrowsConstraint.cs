@@ -38,7 +38,7 @@ namespace NUnit.Framework.Constraints
         /// using a constraint to be applied to the exception.
         /// </summary>
         /// <param name="baseConstraint">A constraint to apply to the caught exception.</param>
-        public ThrowsConstraint(Constraint baseConstraint)
+        public ThrowsConstraint(IConstraint baseConstraint)
             : base(baseConstraint) { }
 
         #region Constraint Overrides
