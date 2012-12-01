@@ -41,7 +41,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="type"></param>
         /// <param name="baseConstraint"></param>
-        public AttributeConstraint(Type type, Constraint baseConstraint)
+        public AttributeConstraint(Type type, IConstraint baseConstraint)
             : base(baseConstraint)
         {
             this.expectedType = type;

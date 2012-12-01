@@ -40,7 +40,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="expectedCount"></param>
         /// <param name="itemConstraint"></param>
-        public ExactCountConstraint(int expectedCount, Constraint itemConstraint)
+        public ExactCountConstraint(int expectedCount, IConstraint itemConstraint)
             : base(itemConstraint)
         {
             this.expectedCount = expectedCount;

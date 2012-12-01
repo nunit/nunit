@@ -47,7 +47,7 @@ namespace NUnit.Framework.Constraints
         /// to the members of a collection, succeeding if
         /// none of them succeed.
         /// </summary>
-        public override Constraint ApplyPrefix(Constraint constraint)
+        public override IConstraint ApplyPrefix(IConstraint constraint)
         {
             return new ExactCountConstraint(expectedCount, constraint);
         }

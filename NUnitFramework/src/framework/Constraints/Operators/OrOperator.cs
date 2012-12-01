@@ -39,7 +39,7 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Apply the operator to produce an OrConstraint
         /// </summary>
-        public override Constraint ApplyOperator(Constraint left, Constraint right)
+        public override IConstraint ApplyOperator(IConstraint left, IConstraint right)
         {
             return new OrConstraint(left, right);
         }

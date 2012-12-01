@@ -315,10 +315,10 @@ namespace NUnit.Framework
         /// <param name="args">Arguments to be used in formatting the message</param>
         static public void That<TActual>(ActualValueDelegate<TActual> del, IResolveConstraint expr, string message, params object[] args)
         {
-            Constraint constraint = expr.Resolve();
+            var constraint = expr.Resolve();
             
             IncrementAssertCount();
-            ConstraintResult result = constraint.ApplyTo(del);
+            var result = constraint.ApplyTo(del);
             if (!result.IsSuccess)
             {
                 MessageWriter writer = new TextMessageWriter(message, args);
@@ -381,10 +381,10 @@ namespace NUnit.Framework
         /// <param name="args">Arguments to be used in formatting the message</param>
         static public void That<TActual>(TActual actual, IResolveConstraint expression, string message, params object[] args)
         {
-            Constraint constraint = expression.Resolve();
+            var constraint = expression.Resolve();
 
             IncrementAssertCount();
-            ConstraintResult result = constraint.ApplyTo(actual);
+            var result = constraint.ApplyTo(actual);
             if (!result.IsSuccess)
             {
                 MessageWriter writer = new TextMessageWriter(message, args);
@@ -426,10 +426,10 @@ namespace NUnit.Framework
         /// <param name="args">Arguments to be used in formatting the message</param>
         static public void That<TActual>(ref TActual actual, IResolveConstraint expression, string message, params object[] args)
         {
-            Constraint constraint = expression.Resolve();
+            var constraint = expression.Resolve();
 
             IncrementAssertCount();
-            ConstraintResult result = constraint.ApplyTo(ref actual);
+            var result = constraint.ApplyTo(ref actual);
             if (!result.IsSuccess)
             {
                 MessageWriter writer = new TextMessageWriter(message, args);

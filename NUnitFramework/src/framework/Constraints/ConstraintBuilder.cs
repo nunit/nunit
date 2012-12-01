@@ -34,9 +34,10 @@ namespace NUnit.Framework.Constraints
     /// input constraints as well as the results of each
     /// operator applied.
     /// </summary>
-    public class ConstraintBuilder
+    public class ConstraintBuilder : IResolveConstraint
     {
         #region Nested Operator Stack Class
+
         /// <summary>
         /// OperatorStack is a type-safe stack for holding ConstraintOperators
         /// </summary>
@@ -47,7 +48,7 @@ namespace NUnit.Framework.Constraints
             /// <summary>
             /// Initializes a new instance of the <see cref="T:OperatorStack"/> class.
             /// </summary>
-            /// <param name="builder">The builder.</param>
+            /// <param name="builder">The ConstraintBuilder using this stack.</param>
             public OperatorStack(ConstraintBuilder builder)
             {
             }
@@ -88,21 +89,23 @@ namespace NUnit.Framework.Constraints
                 return (ConstraintOperator)stack.Pop();
             }
         }
+
         #endregion
 
         #region Nested Constraint Stack Class
+
         /// <summary>
         /// ConstraintStack is a type-safe stack for holding Constraints
         /// </summary>
         public class ConstraintStack
         {
-            private readonly Stack<Constraint> stack = new Stack<Constraint>();
+            private readonly Stack<IConstraint> stack = new Stack<IConstraint>();
             private readonly ConstraintBuilder builder;
 
             /// <summary>
             /// Initializes a new instance of the <see cref="T:ConstraintStack"/> class.
             /// </summary>
-            /// <param name="builder">The builder.</param>
+            /// <param name="builder">The ConstraintBuilder using this stack.</param>
             public ConstraintStack(ConstraintBuilder builder)
             {
                 this.builder = builder;
@@ -118,50 +121,45 @@ namespace NUnit.Framework.Constraints
             }
 
             /// <summary>
-            /// Gets the topmost constraint without modifying the stack.
-            /// </summary>
-            /// <value>The topmost constraint</value>
-            public Constraint Top
-            {
-                get { return (Constraint)stack.Peek(); }
-            }
-
-            /// <summary>
             /// Pushes the specified constraint. As a side effect,
-            /// the constraint's builder field is set to the 
+            /// the constraint's Builder field is set to the 
             /// ConstraintBuilder owning this stack.
             /// </summary>
             /// <param name="constraint">The constraint.</param>
-            public void Push(Constraint constraint)
+            public void Push(IConstraint constraint)
             {
                 stack.Push(constraint);
-                constraint.SetBuilder( this.builder );
+                constraint.Builder = this.builder;
             }
 
             /// <summary>
-            /// Pops this topmost constrait from the stack.
-            /// As a side effect, the constraint's builder
+            /// Pops this topmost constraint from the stack.
+            /// As a side effect, the constraint's Builder
             /// field is set to null.
             /// </summary>
             /// <returns></returns>
-            public Constraint Pop()
+            public IConstraint Pop()
             {
-                Constraint constraint = (Constraint)stack.Pop();
-                constraint.SetBuilder( null );
+                IConstraint constraint = stack.Pop();
+                constraint.Builder = null;
                 return constraint;
             }
         }
+
         #endregion
 
         #region Instance Fields
+
         private readonly OperatorStack ops;
 
         private readonly ConstraintStack constraints;
 
         private object lastPushed;
+
         #endregion
 
         #region Constructor
+
         /// <summary>
         /// Initializes a new instance of the <see cref="T:ConstraintBuilder"/> class.
         /// </summary>
@@ -170,22 +168,11 @@ namespace NUnit.Framework.Constraints
             this.ops = new OperatorStack(this);
             this.constraints = new ConstraintStack(this);
         }
-        #endregion
 
-        #region Properties
-        /// <summary>
-        /// Gets a value indicating whether this instance is resolvable.
-        /// </summary>
-        /// <value>
-        /// 	<c>true</c> if this instance is resolvable; otherwise, <c>false</c>.
-        /// </value>
-        public bool IsResolvable
-        {
-            get { return lastPushed is Constraint || lastPushed is SelfResolvingOperator; }
-        }
         #endregion
 
         #region Public Methods
+
         /// <summary>
         /// Appends the specified operator to the expression by first
         /// reducing the operator stack and then pushing the new
@@ -217,7 +204,7 @@ namespace NUnit.Framework.Constraints
 
             constraints.Push(constraint);
             lastPushed = constraint;
-            constraint.SetBuilder( this );
+            constraint.Builder = this;
         }
 
         /// <summary>
@@ -253,12 +240,16 @@ namespace NUnit.Framework.Constraints
                 ops.Pop().Reduce(constraints);
         }
 
+        #endregion
+
+        #region IResolveConstraint Implementation
+
         /// <summary>
-        /// Resolves this instance, returning a Constraint. If the builder
+        /// Resolves this instance, returning a Constraint. If the Builder
         /// is not currently in a resolvable state, an exception is thrown.
         /// </summary>
         /// <returns>The resolved constraint</returns>
-        public Constraint Resolve()
+        public IConstraint Resolve()
         {
             if (!IsResolvable)
                 throw new InvalidOperationException("A partial expression may not be resolved");
@@ -271,6 +262,18 @@ namespace NUnit.Framework.Constraints
 
             return constraints.Pop();
         }
+
+        /// <summary>
+        /// Gets a value indicating whether this instance is resolvable.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if this instance is resolvable; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsResolvable
+        {
+            get { return lastPushed is Constraint || lastPushed is SelfResolvingOperator; }
+        }
+
         #endregion
     }
 }

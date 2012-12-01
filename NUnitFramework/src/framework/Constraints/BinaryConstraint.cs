@@ -32,18 +32,18 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// The first constraint being combined
         /// </summary>
-        protected Constraint Left;
+        protected IConstraint Left;
         /// <summary>
         /// The second constraint being combined
         /// </summary>
-        protected Constraint Right;
+        protected IConstraint Right;
 
         /// <summary>
         /// Construct a BinaryConstraint from two other constraints
         /// </summary>
         /// <param name="left">The first constraint</param>
         /// <param name="right">The second constraint</param>
-        protected BinaryConstraint(Constraint left, Constraint right)
+        protected BinaryConstraint(IConstraint left, IConstraint right)
             : base(left, right)
         {
             Guard.ArgumentNotNull(left, "left");

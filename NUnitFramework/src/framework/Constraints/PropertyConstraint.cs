@@ -40,7 +40,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="name">The name.</param>
         /// <param name="baseConstraint">The constraint to apply to the property.</param>
-        public PropertyConstraint(string name, Constraint baseConstraint)
+        public PropertyConstraint(string name, IConstraint baseConstraint)
             : base(baseConstraint)
         {
             this.name = name;

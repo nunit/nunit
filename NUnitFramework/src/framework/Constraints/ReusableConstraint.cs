@@ -29,7 +29,7 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class ReusableConstraint : IResolveConstraint
     {
-        private readonly Constraint constraint;
+        private readonly IConstraint constraint;
 
         /// <summary>
         /// Construct a ReusableConstraint from a constraint expression
@@ -67,9 +67,20 @@ namespace NUnit.Framework.Constraints
         /// Return the top-level constraint for this expression
         /// </summary>
         /// <returns></returns>
-        public Constraint Resolve()
+        public IConstraint Resolve()
         {
             return constraint;
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether this instance is resolvable.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if this instance is resolvable; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsResolvable
+        {
+            get { return ((IResolveConstraint)constraint).IsResolvable; }
         }
 
         #endregion

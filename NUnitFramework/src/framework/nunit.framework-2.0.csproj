@@ -70,6 +70,7 @@
     <Compile Include="Api\ITestResult.cs" />
     <Compile Include="Api\IXmlNodeBuilder.cs" />
     <Compile Include="Constraints\EqualConstraintResult.cs" />
+    <Compile Include="Constraints\IConstraint.cs" />
     <Compile Include="Constraints\ThrowsExceptionConstraint.cs" />
     <Compile Include="Internal\Commands\ApplyChangesToContextCommand.cs" />
     <Compile Include="Internal\IApplyToContext.cs" />

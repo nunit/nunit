@@ -43,7 +43,7 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Returns a constraint that wraps its argument
         /// </summary>
-        public override Constraint ApplyPrefix(Constraint constraint)
+        public override IConstraint ApplyPrefix(IConstraint constraint)
         {
             return constraint;
         }

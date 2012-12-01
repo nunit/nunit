@@ -52,7 +52,7 @@ namespace NUnit.Framework.Constraints
         /// to the members of a collection, succeeding if
         /// they all succeed.
         /// </summary>
-        public override Constraint ApplyPrefix(Constraint constraint)
+        public override IConstraint ApplyPrefix(IConstraint constraint)
         {
             return new AllItemsConstraint(constraint);
         }
@@ -69,7 +69,7 @@ namespace NUnit.Framework.Constraints
         /// to the members of a collection, succeeding if
         /// any of them succeed.
         /// </summary>
-        public override Constraint ApplyPrefix(Constraint constraint)
+        public override IConstraint ApplyPrefix(IConstraint constraint)
         {
             return new SomeItemsConstraint(constraint);
         }
@@ -86,7 +86,7 @@ namespace NUnit.Framework.Constraints
         /// to the members of a collection, succeeding if
         /// none of them succeed.
         /// </summary>
-        public override Constraint ApplyPrefix(Constraint constraint)
+        public override IConstraint ApplyPrefix(IConstraint constraint)
         {
             return new NoItemConstraint(constraint);
         }

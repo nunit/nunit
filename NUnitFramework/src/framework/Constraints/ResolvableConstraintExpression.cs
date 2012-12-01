@@ -65,13 +65,26 @@ namespace NUnit.Framework.Constraints
         }
 
         #region IResolveConstraint Members
+
         /// <summary>
         /// Resolve the current expression to a Constraint
         /// </summary>
-        Constraint IResolveConstraint.Resolve()
+        IConstraint IResolveConstraint.Resolve()
         {
             return builder.Resolve();
         }
+
+        /// <summary>
+        /// Gets a value indicating whether this instance is resolvable.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if this instance is resolvable; otherwise, <c>false</c>.
+        /// </value>
+        bool IResolveConstraint.IsResolvable
+        {
+            get { return builder.IsResolvable; }
+        }
+
         #endregion
     }
 }

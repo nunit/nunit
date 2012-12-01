@@ -36,17 +36,8 @@ namespace NUnit.Framework.Constraints
     /// within NUnit. It provides the operator overloads used to combine 
     /// constraints.
     /// </summary>
-    public abstract class Constraint : IResolveConstraint
+    public abstract class Constraint : IConstraint
     {
-        #region Static and Instance Fields
-
-        /// <summary>
-        /// The builder holding this constraint
-        /// </summary>
-        private ConstraintBuilder builder;
-
-        #endregion
-
         #region Constructor
 
         /// <summary>
@@ -64,16 +55,6 @@ namespace NUnit.Framework.Constraints
                 DisplayName = DisplayName.Substring(0, DisplayName.Length - 10);
         }
 
-        #endregion
-
-        #region Set Containing ConstraintBuilder
-        /// <summary>
-        /// Sets the ConstraintBuilder holding this constraint
-        /// </summary>
-        internal void SetBuilder(ConstraintBuilder builder)
-        {
-            this.builder = builder;
-        }
         #endregion
 
         #region Properties
@@ -97,6 +78,11 @@ namespace NUnit.Framework.Constraints
         /// formatting the description.
         /// </summary>
         public object[] Arguments { get; private set; }
+
+        /// <summary>
+        /// The ConstraintBuilder holding this constraint
+        /// </summary>
+        public ConstraintBuilder Builder { get; set; }
 
         #endregion
 
@@ -137,6 +123,7 @@ namespace NUnit.Framework.Constraints
         #endregion
 
         #region ToString Override
+
         /// <summary>
         /// Default override of ToString returns the constraint DisplayName
         /// followed by any arguments within angle brackets.
@@ -146,7 +133,7 @@ namespace NUnit.Framework.Constraints
         {
             string rep = GetStringRepresentation();
 
-            return this.builder == null ? rep : string.Format("<unresolved {0}>", rep);
+            return this.Builder == null ? rep : string.Format("<unresolved {0}>", rep);
         }
 
         /// <summary>
@@ -173,9 +160,11 @@ namespace NUnit.Framework.Constraints
             string fmt = o is string ? "\"{0}\"" : "{0}";
             return string.Format(System.Globalization.CultureInfo.InvariantCulture, fmt, o);
         }
+
         #endregion
 
         #region Operator Overloads
+
         /// <summary>
         /// This operator creates a constraint that is satisfied only if both 
         /// argument constraints are satisfied.
@@ -207,9 +196,11 @@ namespace NUnit.Framework.Constraints
             IResolveConstraint r = (IResolveConstraint)constraint;
             return new NotConstraint(r.Resolve());
         }
+
         #endregion
 
         #region Binary Operators
+
         /// <summary>
         /// Returns a ConstraintExpression by appending And
         /// to the current constraint.
@@ -218,7 +209,7 @@ namespace NUnit.Framework.Constraints
         {
             get
             {
-                ConstraintBuilder builder = this.builder;
+                ConstraintBuilder builder = this.Builder;
                 if (builder == null)
                 {
                     builder = new ConstraintBuilder();
@@ -248,7 +239,7 @@ namespace NUnit.Framework.Constraints
         {
             get
             {
-                ConstraintBuilder builder = this.builder;
+                ConstraintBuilder builder = this.Builder;
                 if (builder == null)
                 {
                     builder = new ConstraintBuilder();
@@ -260,6 +251,7 @@ namespace NUnit.Framework.Constraints
                 return new ConstraintExpression(builder);
             }
         }
+
         #endregion
 
         #region After Modifier
@@ -273,7 +265,7 @@ namespace NUnit.Framework.Constraints
         public DelayedConstraint After(int delayInMilliseconds)
         {
             return new DelayedConstraint(
-                builder == null ? this : builder.Resolve(),
+                Builder == null ? this : Builder.Resolve(),
                 delayInMilliseconds);
         }
 
@@ -287,19 +279,35 @@ namespace NUnit.Framework.Constraints
         public DelayedConstraint After(int delayInMilliseconds, int pollingInterval)
         {
             return new DelayedConstraint(
-                builder == null ? this : builder.Resolve(),
+                Builder == null ? this : Builder.Resolve(),
                 delayInMilliseconds,
                 pollingInterval);
         }
-
 #endif
+
         #endregion
 
         #region IResolveConstraint Members
-        Constraint IResolveConstraint.Resolve()
+
+        /// <summary>
+        /// Resolves any pending operators and returns the resolved constraint.
+        /// </summary>
+        IConstraint IResolveConstraint.Resolve()
         {
-            return builder == null ? this : builder.Resolve();
+            return Builder == null ? this : Builder.Resolve();
         }
+
+        /// <summary>
+        /// Gets a value indicating whether this instance is resolvable.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if this instance is resolvable; otherwise, <c>false</c>.
+        /// </value>
+        bool IResolveConstraint.IsResolvable
+        {
+            get { return this.Builder == null || this.Builder.IsResolvable; }
+        }
+
         #endregion
     }
 }

@@ -36,8 +36,8 @@ namespace NUnit.Framework.Constraints
         /// <param name="stack"></param>
         public override void Reduce(ConstraintBuilder.ConstraintStack stack)
         {
-            Constraint right = stack.Pop();
-            Constraint left = stack.Pop();
+            IConstraint right = stack.Pop();
+            IConstraint left = stack.Pop();
             stack.Push(ApplyOperator(left, right));
         }
 
@@ -71,6 +71,6 @@ namespace NUnit.Framework.Constraints
         /// Abstract method that produces a constraint by applying
         /// the operator to its left and right constraint arguments.
         /// </summary>
-        public abstract Constraint ApplyOperator(Constraint left, Constraint right);
+        public abstract IConstraint ApplyOperator(IConstraint left, IConstraint right);
     } 
 }
