@@ -71,7 +71,7 @@ namespace NUnit.Framework
         /// <param name="args">Arguments used in formatting the message</param>
         static public void Contains(string expected, string actual, string message, params object[] args)
         {
-            Assert.That(actual, new SubstringConstraint(expected), message, args);
+            Assert.That(actual, Is.StringContaining(expected), message, args);
         }
 
         /// <summary>
@@ -108,7 +108,7 @@ namespace NUnit.Framework
         /// <param name="args">Arguments used in formatting the message</param>
         static public void DoesNotContain(string expected, string actual, string message, params object[] args)
         {
-            Assert.That(actual, new NotConstraint( new SubstringConstraint(expected) ), message, args );
+            Assert.That(actual, Is.Not.StringContaining(expected), message, args );
         }
 
         /// <summary>
@@ -145,7 +145,7 @@ namespace NUnit.Framework
         /// <param name="args">Arguments used in formatting the message</param>
         static public void StartsWith(string expected, string actual, string message, params object[] args)
         {
-            Assert.That(actual, new StartsWithConstraint(expected), message, args);
+            Assert.That(actual, Is.StringStarting(expected), message, args);
         }
 
         /// <summary>
@@ -182,7 +182,7 @@ namespace NUnit.Framework
         /// <param name="args">Arguments used in formatting the message</param>
         static public void DoesNotStartWith(string expected, string actual, string message, params object[] args)
         {
-            Assert.That(actual, new NotConstraint( new StartsWithConstraint(expected) ), message, args);
+            Assert.That(actual, Is.Not.StringStarting(expected), message, args);
         }
 
         /// <summary>
@@ -219,7 +219,7 @@ namespace NUnit.Framework
         /// <param name="args">Arguments used in formatting the message</param>
         static public void EndsWith(string expected, string actual, string message, params object[] args)
         {
-            Assert.That(actual, new EndsWithConstraint(expected), message, args);
+            Assert.That(actual, Is.StringEnding(expected), message, args);
         }
 
         /// <summary>
@@ -256,7 +256,7 @@ namespace NUnit.Framework
         /// <param name="args">Arguments used in formatting the message</param>
         static public void DoesNotEndWith(string expected, string actual, string message, params object[] args)
         {
-            Assert.That(actual, new NotConstraint( new EndsWithConstraint(expected) ), message, args);
+            Assert.That(actual, Is.Not.StringEnding(expected), message, args);
         }
 
         /// <summary>
@@ -292,7 +292,7 @@ namespace NUnit.Framework
         /// <param name="args">Arguments used in formatting the message</param>
         static public void AreEqualIgnoringCase(string expected, string actual, string message, params object[] args)
         {
-            Assert.That(actual, new EqualConstraint(expected).IgnoreCase, message, args);
+            Assert.That(actual, Is.EqualTo(expected).IgnoreCase, message, args);
         }
 
         /// <summary>
@@ -327,7 +327,7 @@ namespace NUnit.Framework
         /// <param name="args">Arguments used in formatting the message</param>
         static public void AreNotEqualIgnoringCase(string expected, string actual, string message, params object[] args)
         {
-            Assert.That(actual, new NotConstraint( new EqualConstraint(expected).IgnoreCase ), message, args);
+            Assert.That(actual, Is.Not.EqualTo(expected).IgnoreCase, message, args);
         }
 
         /// <summary>
@@ -362,7 +362,7 @@ namespace NUnit.Framework
         /// <param name="args">Arguments used in formatting the message</param>
         static public void IsMatch(string pattern, string actual, string message, params object[] args)
         {
-            Assert.That(actual, new RegexConstraint(pattern), message, args);
+            Assert.That(actual, Is.StringMatching(pattern), message, args);
         }
 
         /// <summary>
@@ -397,8 +397,8 @@ namespace NUnit.Framework
         /// <param name="args">Arguments used in formatting the message</param>
         static public void DoesNotMatch(string pattern, string actual, string message, params object[] args)
         {
-            Assert.That(actual, new NotConstraint( new RegexConstraint(pattern) ), message, args);
-        }
+            Assert.That(actual, Is.Not.StringMatching(pattern), message, args);
+        }   
 
         /// <summary>
         /// Asserts that a string does not match an expected regular expression pattern.

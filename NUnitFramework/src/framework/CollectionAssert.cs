@@ -93,7 +93,7 @@ namespace NUnit.Framework
 		/// <param name="args">Arguments to be used in formatting the message</param>
 		public static void AllItemsAreInstancesOfType (IEnumerable collection, Type expectedType, string message, params object[] args)
 		{
-            Assert.That(collection, new AllItemsConstraint(new InstanceOfTypeConstraint(expectedType)), message, args);
+            Assert.That(collection, Is.All.InstanceOf(expectedType), message, args);
 		}
 		#endregion
 
@@ -126,7 +126,7 @@ namespace NUnit.Framework
 		/// <param name="args">Arguments to be used in formatting the message</param>
 		public static void AllItemsAreNotNull (IEnumerable collection, string message, params object[] args) 
 		{
-            Assert.That(collection, new AllItemsConstraint(new NotConstraint(new NullConstraint())), message, args);
+            Assert.That(collection, Is.All.Not.Null, message, args);
 		}
 		#endregion
 
@@ -162,7 +162,7 @@ namespace NUnit.Framework
 		/// <param name="args">Arguments to be used in formatting the message</param>
 		public static void AllItemsAreUnique (IEnumerable collection, string message, params object[] args) 
 		{
-            Assert.That(collection, new UniqueItemsConstraint(), message, args);
+            Assert.That(collection, Is.Unique, message, args);
 		}
 		#endregion
 
@@ -176,8 +176,7 @@ namespace NUnit.Framework
 		/// <param name="actual">The second IEnumerable of objects to be considered</param>
 		public static void AreEqual (IEnumerable expected, IEnumerable actual) 
 		{
-			//AreEqual(expected, actual, null, string.Empty, null);
-            Assert.That(actual, new EqualConstraint(expected));
+			AreEqual(expected, actual, string.Empty, null);
 		}
 
 		/// <summary>
@@ -202,8 +201,7 @@ namespace NUnit.Framework
 		/// <param name="message">The message that will be displayed on failure</param>
 		public static void AreEqual (IEnumerable expected, IEnumerable actual, string message) 
 		{
-			//AreEqual(expected, actual, null, message, null);
-            Assert.That(actual, new EqualConstraint(expected), message);
+			AreEqual(expected, actual, message, null);
 		}
 
 		/// <summary>
@@ -230,8 +228,7 @@ namespace NUnit.Framework
 		/// <param name="args">Arguments to be used in formatting the message</param>
 		public static void AreEqual (IEnumerable expected, IEnumerable actual, string message, params object[] args) 
 		{
-			//AreEqual(expected, actual, null, message, args);
-            Assert.That(actual, new EqualConstraint(expected), message, args);
+            Assert.That(actual, Is.EqualTo(expected), message, args);
 		}
 
 		/// <summary>
@@ -246,7 +243,7 @@ namespace NUnit.Framework
 		/// <param name="args">Arguments to be used in formatting the message</param>
 		public static void AreEqual (IEnumerable expected, IEnumerable actual, IComparer comparer, string message, params object[] args) 
 		{
-            Assert.That(actual, new EqualConstraint(expected).Using(comparer), message, args);
+            Assert.That(actual, Is.EqualTo(expected).Using(comparer), message, args);
 		}
 		#endregion
 
@@ -282,7 +279,7 @@ namespace NUnit.Framework
 		/// <param name="args">Arguments to be used in formatting the message</param>
 		public static void AreEquivalent (IEnumerable expected, IEnumerable actual, string message, params object[] args) 
 		{
-            Assert.That(actual, new CollectionEquivalentConstraint(expected), message, args);
+            Assert.That(actual, Is.EquivalentTo(expected), message, args);
 		}
 		#endregion
 
@@ -295,7 +292,7 @@ namespace NUnit.Framework
 		/// <param name="actual">The second IEnumerable of objects to be considered</param>
 		public static void AreNotEqual (IEnumerable expected, IEnumerable actual)
 		{
-            Assert.That(actual, new NotConstraint(new EqualConstraint(expected)));
+            AreNotEqual(expected, actual, string.Empty, null);
 		}
 
 		/// <summary>
@@ -318,7 +315,7 @@ namespace NUnit.Framework
 		/// <param name="message">The message that will be displayed on failure</param>
 		public static void AreNotEqual (IEnumerable expected, IEnumerable actual, string message)
 		{
-            Assert.That(actual, new NotConstraint(new EqualConstraint(expected)), message);
+            AreNotEqual(expected, actual, message, null);
 		}
 
 		/// <summary>
@@ -343,9 +340,7 @@ namespace NUnit.Framework
 		/// <param name="args">Arguments to be used in formatting the message</param>
 		public static void AreNotEqual (IEnumerable expected, IEnumerable actual, string message, params object[] args) 
 		{
-			//AreNotEqual(expected, actual, null, message, args);
-			//Assert.AreNotEqual( expected, actual, message, args );
-            Assert.That(actual, new NotConstraint(new EqualConstraint(expected)), message, args);
+            Assert.That(actual, Is.Not.EqualTo(expected), message, args);
 		}
 
 		/// <summary>
@@ -359,7 +354,7 @@ namespace NUnit.Framework
 		/// <param name="args">Arguments to be used in formatting the message</param>
 		public static void AreNotEqual (IEnumerable expected, IEnumerable actual, IComparer comparer, string message, params object[] args)
 		{
-			Assert.That(actual, new NotConstraint(new EqualConstraint(expected).Using(comparer)), message, args);
+			Assert.That(actual, Is.Not.EqualTo(expected).Using(comparer), message, args);
 		}
 		#endregion
 
@@ -395,7 +390,7 @@ namespace NUnit.Framework
 		/// <param name="args">Arguments to be used in formatting the message</param>
 		public static void AreNotEquivalent (IEnumerable expected, IEnumerable actual, string message, params object[] args)
 		{
-            Assert.That(actual, new NotConstraint(new CollectionEquivalentConstraint(expected)), message, args);
+            Assert.That(actual, Is.Not.EquivalentTo(expected), message, args);
 		}
 		#endregion
 
@@ -430,7 +425,7 @@ namespace NUnit.Framework
 		/// <param name="args">Arguments to be used in formatting the message</param>
 		public static void Contains (IEnumerable collection, Object actual, string message, params object[] args)
 		{
-            Assert.That(collection, new CollectionContainsConstraint(actual), message, args);
+            Assert.That(collection, Has.Member(actual), message, args);
 		}
 		#endregion
 
@@ -466,7 +461,7 @@ namespace NUnit.Framework
 		/// <param name="args">Arguments to be used in formatting the message</param>
 		public static void DoesNotContain (IEnumerable collection, Object actual, string message, params object[] args)
 		{
-            Assert.That(collection, new NotConstraint( new CollectionContainsConstraint( actual ) ), message, args);
+            Assert.That(collection, Has.No.Member(actual), message, args);
 		}
 		#endregion
 
@@ -502,7 +497,7 @@ namespace NUnit.Framework
 		/// <param name="args">Arguments to be used in formatting the message</param>
 		public static void IsNotSubsetOf (IEnumerable subset, IEnumerable superset, string message, params object[] args)
 		{
-            Assert.That(subset, new NotConstraint(new CollectionSubsetConstraint(superset)), message, args);
+            Assert.That(subset, Is.Not.SubsetOf(superset), message, args);
 		}
 		#endregion
 
@@ -538,7 +533,7 @@ namespace NUnit.Framework
 		/// <param name="args">Arguments to be used in formatting the message</param>
 		public static void IsSubsetOf (IEnumerable subset, IEnumerable superset, string message, params object[] args)
 		{
-            Assert.That(subset, new CollectionSubsetConstraint(superset), message, args);
+            Assert.That(subset, Is.SubsetOf(superset), message, args);
 		}
 		#endregion
 
@@ -551,7 +546,7 @@ namespace NUnit.Framework
         /// <param name="args">Arguments to be used in formatting the message</param>
         public static void IsEmpty(IEnumerable collection, string message, params object[] args)
         {
-            Assert.That(collection, new EmptyConstraint(), message, args);
+            Assert.That(collection, new EmptyCollectionConstraint(), message, args);
         }
 
         /// <summary>
@@ -583,7 +578,7 @@ namespace NUnit.Framework
         /// <param name="args">Arguments to be used in formatting the message</param>
         public static void IsNotEmpty(IEnumerable collection, string message, params object[] args)
         {
-            Assert.That(collection, new NotConstraint(new EmptyConstraint()), message, args);
+            Assert.That(collection, new NotConstraint(new EmptyCollectionConstraint()), message, args);
         }
 
         /// <summary>
@@ -615,7 +610,7 @@ namespace NUnit.Framework
         /// <param name="args">Arguments to be used in formatting the message</param>
         public static void IsOrdered(IEnumerable collection, string message, params object[] args)
         {
-            Assert.That(collection, new CollectionOrderedConstraint(), message, args);
+            Assert.That(collection, Is.Ordered, message, args);
         }
 
         /// <summary>
@@ -646,7 +641,7 @@ namespace NUnit.Framework
         /// <param name="args">Arguments to be used in formatting the message</param>
         public static void IsOrdered(IEnumerable collection, IComparer comparer, string message, params object[] args)
         {
-            Assert.That(collection, new CollectionOrderedConstraint().Using(comparer), message, args);
+            Assert.That(collection, Is.Ordered.Using(comparer), message, args);
         }
 
         /// <summary>
