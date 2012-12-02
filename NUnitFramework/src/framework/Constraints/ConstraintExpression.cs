@@ -31,15 +31,33 @@ namespace NUnit.Framework.Constraints
     /// process of being constructed from a series of syntactic elements.
     /// 
     /// Individual elements are appended to the expression as they are
-    /// reognized. Once an actual Constraint is appended, the expression
-    /// returns a resolvable Constraint.
+    /// reognized. When a constraint is appended, it is returned as the
+    /// value of the operation so that modifiers may be applied. However,
+    /// any partially built expression is attached to the constraint for
+    /// later resolution. When an operator is appended, the partial
+    /// expression is returned. If it's a self-resolving operator, then
+    /// a ResolvableConstraintExpression is returned.
     /// </summary>
-    public class ConstraintExpression : ConstraintExpressionBase
+    public class ConstraintExpression
     {
+        #region Instance Fields
+
+        /// <summary>
+        /// The ConstraintBuilder holding the elements recognized so far
+        /// </summary>
+        protected ConstraintBuilder builder;
+
+        #endregion
+
+        #region Constructors
+
         /// <summary>
         /// Initializes a new instance of the <see cref="T:ConstraintExpression"/> class.
         /// </summary>
-        public ConstraintExpression() { }
+        public ConstraintExpression() 
+        {
+            this.builder = new ConstraintBuilder();
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:ConstraintExpression"/> 
@@ -47,7 +65,66 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="builder">The builder.</param>
         public ConstraintExpression(ConstraintBuilder builder)
-            : base( builder ) { }
+        {
+            this.builder = builder;
+        }
+
+        #endregion
+
+        #region ToString()
+
+        /// <summary>
+        /// Returns a string representation of the expression as it
+        /// currently stands. This should only be used for testing,
+        /// since it has the side-effect of resolving the expression.
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return builder.Resolve().ToString();
+        }
+
+        #endregion
+
+        #region Append Methods
+
+        /// <summary>
+        /// Appends an operator to the expression and returns the
+        /// resulting expression itself.
+        /// </summary>
+        public ConstraintExpression Append(ConstraintOperator op)
+        {
+            builder.Append(op);
+            return this;
+        }
+
+        /// <summary>
+        /// Appends a self-resolving operator to the expression and
+        /// returns a new ResolvableConstraintExpression.
+        /// </summary>
+        public ResolvableConstraintExpression Append(SelfResolvingOperator op)
+        {
+            builder.Append(op);
+            return new ResolvableConstraintExpression(builder);
+        }
+
+        /// <summary>
+        /// Appends a constraint to the expression and returns that
+        /// constraint, which is associated with the current state
+        /// of the expression being built. Note that the constraint
+        /// is not reduced at this time. For example, if there 
+        /// is a NotOperator on the stack we don't reduce and
+        /// return a NotConstraint. The original constraint must
+        /// be returned because it may support modifiers that
+        /// are yet to be applied.
+        /// </summary>
+        public Constraint Append(Constraint constraint)
+        {
+            builder.Append(constraint);
+            return constraint;
+        }
+
+        #endregion
 
         #region Not
 
