@@ -27,9 +27,17 @@ using System.IO;
 
 namespace NUnit.Framework.Constraints
 {
+    /// <summary>
+    /// The EqualConstraintResult class is tailored for formatting
+    /// and displaying the result of an EqualConstraint. 
+    /// </summary>
     public class EqualConstraintResult : ConstraintResult
     {
-        private EqualConstraint equalConstraint;
+        private object expectedValue;
+        private Tolerance tolerance;
+        private bool caseInsensitive;
+        private bool clipStrings;
+        private IList failurePoints;
 
         #region Message Strings
         private static readonly string StringsDiffer_1 =
@@ -50,10 +58,17 @@ namespace NUnit.Framework.Constraints
             "Values differ at expected index {0}, actual index {1}";
         #endregion
 
+        /// <summary>
+        /// Construct an EqualConstraintResult
+        /// </summary>
         public EqualConstraintResult(EqualConstraint constraint, object actual, bool hasSucceeded)
             : base(constraint, actual, hasSucceeded) 
         {
-            this.equalConstraint = constraint;
+            this.expectedValue = constraint.Arguments[0];
+            this.tolerance = constraint.tolerance;
+            this.caseInsensitive = constraint.CaseInsensitive;
+            this.clipStrings = constraint.ClipStrings;
+            this.failurePoints = constraint.FailurePoints;
         }
 
         /// <summary>
@@ -63,7 +78,7 @@ namespace NUnit.Framework.Constraints
         /// <param name="writer">The MessageWriter to write to</param>
         public override void WriteMessageTo(MessageWriter writer)
         {
-            DisplayDifferences(writer, equalConstraint.Arguments[0], ActualValue, 0);
+            DisplayDifferences(writer, expectedValue, ActualValue, 0);
         }
 
         private void DisplayDifferences(MessageWriter writer, object expected, object actual, int depth)
@@ -76,25 +91,23 @@ namespace NUnit.Framework.Constraints
                 DisplayEnumerableDifferences(writer, (IEnumerable)expected, (IEnumerable)actual, depth);
             else if (expected is Stream && actual is Stream)
                 DisplayStreamDifferences(writer, (Stream)expected, (Stream)actual, depth);
-            else if (equalConstraint.tolerance != null)
-                writer.DisplayDifferences(expected, actual, equalConstraint.tolerance);
+            else if (tolerance != null)
+                writer.DisplayDifferences(expected, actual, tolerance);
             else
                 writer.DisplayDifferences(expected, actual);
-            //else
-            //    writer.DisplayDifferences(this);
         }
 
         #region DisplayStringDifferences
         private void DisplayStringDifferences(MessageWriter writer, string expected, string actual)
         {
-            int mismatch = MsgUtils.FindMismatchPosition(expected, actual, 0, equalConstraint.CaseInsensitive);
+            int mismatch = MsgUtils.FindMismatchPosition(expected, actual, 0, caseInsensitive);
 
             if (expected.Length == actual.Length)
                 writer.WriteMessageLine(StringsDiffer_1, expected.Length, mismatch);
             else
                 writer.WriteMessageLine(StringsDiffer_2, expected.Length, actual.Length, mismatch);
 
-            writer.DisplayStringDifferences(expected, actual, mismatch, equalConstraint.CaseInsensitive, equalConstraint.ClipStrings);
+            writer.DisplayStringDifferences(expected, actual, mismatch, caseInsensitive, clipStrings);
         }
         #endregion
 
@@ -103,7 +116,7 @@ namespace NUnit.Framework.Constraints
         {
             if (expected.Length == actual.Length)
             {
-                long offset = (long)equalConstraint.FailurePoints[depth];
+                long offset = (long)failurePoints[depth];
                 writer.WriteMessageLine(StreamsDiffer_1, expected.Length, offset);
             }
             else
@@ -123,9 +136,9 @@ namespace NUnit.Framework.Constraints
         {
             DisplayTypesAndSizes(writer, expected, actual, depth);
 
-            if (equalConstraint.FailurePoints.Count > depth)
+            if (failurePoints.Count > depth)
             {
-                NUnitEqualityComparer.FailurePoint failurePoint = (NUnitEqualityComparer.FailurePoint)equalConstraint.FailurePoints[depth];
+                NUnitEqualityComparer.FailurePoint failurePoint = (NUnitEqualityComparer.FailurePoint)failurePoints[depth];
 
                 DisplayFailurePoint(writer, expected, actual, failurePoint, depth);
 
@@ -242,9 +255,9 @@ namespace NUnit.Framework.Constraints
         {
             DisplayTypesAndSizes(writer, expected, actual, depth);
 
-            if (equalConstraint.FailurePoints.Count > depth)
+            if (failurePoints.Count > depth)
             {
-                NUnitEqualityComparer.FailurePoint failurePoint = (NUnitEqualityComparer.FailurePoint)equalConstraint.FailurePoints[depth];
+                NUnitEqualityComparer.FailurePoint failurePoint = (NUnitEqualityComparer.FailurePoint)failurePoints[depth];
 
                 DisplayFailurePoint(writer, expected, actual, failurePoint, depth);
 

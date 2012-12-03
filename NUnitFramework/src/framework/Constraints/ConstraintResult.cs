@@ -23,11 +23,30 @@
 
 namespace NUnit.Framework.Constraints
 {
+    /// <summary>
+    /// ConstraintStatus represents the status of a ConstraintResult
+    /// returned by a Constraint being applied to an actual value.
+    /// </summary>
     public enum ConstraintStatus
     {
+        /// <summary>
+        /// The status has not yet been set
+        /// </summary>
         Unknown,
+
+        /// <summary>
+        /// The constraint succeeded
+        /// </summary>
         Success,
+
+        /// <summary>
+        /// The constraint failed
+        /// </summary>
         Failure,
+
+        /// <summary>
+        /// An error occured in applying the constraint (reserved for future use)
+        /// </summary>
         Error
     }
 
@@ -45,7 +64,8 @@ namespace NUnit.Framework.Constraints
         /// <param name="actualValue">The actual value to which the Constraint was applied.</param>
         public ConstraintResult(IConstraint constraint, object actualValue)
         {
-            this.Constraint = constraint;
+            this.Name = constraint.DisplayName;
+            this.Description = constraint.Description;
             this.ActualValue = actualValue;
         }
 
@@ -56,9 +76,8 @@ namespace NUnit.Framework.Constraints
         /// <param name="actualValue">The actual value to which the Constraint was applied.</param>
         /// <param name="status">The status of the new ConstraintResult.</param>
         public ConstraintResult(IConstraint constraint, object actualValue, ConstraintStatus status)
+            : this(constraint, actualValue)
         {
-            this.Constraint = constraint;
-            this.ActualValue = actualValue;
             this.Status = status;
         }
 
@@ -69,38 +88,17 @@ namespace NUnit.Framework.Constraints
         /// <param name="actualValue">The actual value to which the Constraint was applied.</param>
         /// <param name="isSuccess">If true, applies a status of Success to the result, otherwise Failure.</param>
         public ConstraintResult(IConstraint constraint, object actualValue, bool isSuccess)
+            : this(constraint, actualValue)
         {
-            this.Constraint = constraint;
-            this.ActualValue = actualValue;
             this.Status = isSuccess ? ConstraintStatus.Success : ConstraintStatus.Failure;
         }
-
-        ///// <summary>
-        ///// Constructs a <see cref="ConstraintResult"/> for a particular <see cref="Constraint"/>,
-        ///// specifying an error message.
-        ///// </summary>
-        ///// <param name="constraint">The Constraint to which this result applies.</param>
-        ///// <param name="actualValue">The actual value to which the Constraint was applied.</param>
-        ///// <param name="errorMessage">A message explaining the error</param>
-        //public ConstraintResult(Constraint constraint, object actualValue, string errorMessage)
-        //{
-        //    this.Constraint = constraint;
-        //    this.ActualValue = actualValue;
-        //    this.Status = ConstraintStatus.Error;
-        //    this.ErrorMessage = errorMessage;
-        //}
 
         #endregion
 
         #region Properties
 
         /// <summary>
-        /// Gets the Constraint to which this result applies.
-        /// </summary>
-        public IConstraint Constraint { get; private set; }
-
-        /// <summary>
-        /// The actual value that were passed to the <see cref="Constraint.Matches(object)"/> method.
+        /// The actual value that was passed to the <see cref="Constraint.ApplyTo&lt;TActual&gt;(TActual)"/> method.
         /// </summary>
         public object ActualValue { get; private set; }
 
@@ -120,21 +118,13 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Display friendly name of the constraint.
         /// </summary>
-        public string Name
-        {
-            get { return Constraint.DisplayName; }
-        }
+        public string Name { get; private set; }
 
         /// <summary>
-        /// Description of the constraint may be affected by the state the constraint hade 
-        /// when <see cref="Constraint.Matches(object)"/> was performed against the actual value.
+        /// Description of the constraint may be affected by the state the constraint had
+        /// when <see cref="Constraint.ApplyTo&lt;TActual&gt;(TActual)"/> was performed against the actual value.
         /// </summary>
-        public string Description
-        {
-            get { return Constraint.Description; }
-        }
-
-        public string ErrorMessage { get; private set; }
+        public string Description { get; private set; }
 
         #endregion
 
