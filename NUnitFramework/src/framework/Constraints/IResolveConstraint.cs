@@ -34,13 +34,5 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <returns></returns>
         IConstraint Resolve();
-
-        /// <summary>
-        /// Gets a value indicating whether this instance is resolvable.
-        /// </summary>
-        /// <value>
-        /// 	<c>true</c> if this instance is resolvable; otherwise, <c>false</c>.
-        /// </value>
-        bool IsResolvable { get; }
     }
 }

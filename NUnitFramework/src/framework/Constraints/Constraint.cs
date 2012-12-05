@@ -297,17 +297,6 @@ namespace NUnit.Framework.Constraints
             return Builder == null ? this : Builder.Resolve();
         }
 
-        /// <summary>
-        /// Gets a value indicating whether this instance is resolvable.
-        /// </summary>
-        /// <value>
-        /// 	<c>true</c> if this instance is resolvable; otherwise, <c>false</c>.
-        /// </value>
-        bool IResolveConstraint.IsResolvable
-        {
-            get { return this.Builder == null || this.Builder.IsResolvable; }
-        }
-
         #endregion
     }
 }
