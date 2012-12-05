@@ -72,17 +72,6 @@ namespace NUnit.Framework.Constraints
             return constraint;
         }
 
-        /// <summary>
-        /// Gets a value indicating whether this instance is resolvable.
-        /// </summary>
-        /// <value>
-        /// 	<c>true</c> if this instance is resolvable; otherwise, <c>false</c>.
-        /// </value>
-        public bool IsResolvable
-        {
-            get { return ((IResolveConstraint)constraint).IsResolvable; }
-        }
-
         #endregion
     }
 }
