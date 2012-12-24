@@ -25,6 +25,7 @@ using System;
 using System.Threading;
 using NUnit.Framework.Internal.Commands;
 using NUnit.Framework.Api;
+using System.Diagnostics;
 
 namespace NUnit.Framework.Internal.WorkItems
 {
@@ -198,6 +199,8 @@ namespace NUnit.Framework.Internal.WorkItems
             _context.Listener.TestStarted(this.Test);
             _context.StartTime = DateTime.Now;
 
+            var startTicks = Stopwatch.GetTimestamp();
+
             TestExecutionContext.SetCurrentContext(_context);
 
             try
@@ -207,7 +210,10 @@ namespace NUnit.Framework.Internal.WorkItems
             finally
             {
                 Result.AssertCount = _context.AssertCount;
-                Result.Time = (DateTime.Now - _context.StartTime).TotalSeconds;
+
+                var tickCount = Stopwatch.GetTimestamp() - startTicks;
+                Result.Time = (double)tickCount / Stopwatch.Frequency;
+                //Result.Time = (DateTime.Now - _context.StartTime).TotalSeconds;
 
                 _context.Listener.TestFinished(Result);
 

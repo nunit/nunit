@@ -23,6 +23,7 @@
 
 using System;
 using NUnit.Framework.Api;
+using System.Diagnostics;
 
 namespace NUnit.Framework.Internal.Commands
 {
@@ -51,10 +52,14 @@ namespace NUnit.Framework.Internal.Commands
         /// <returns>A TestResult</returns>
         public override TestResult Execute(TestExecutionContext context)
         {
+            long startTime = Stopwatch.GetTimestamp();
+
             TestResult testResult = innerCommand.Execute(context);
 
-            TimeSpan span = DateTime.Now.Subtract(context.StartTime);
-            testResult.Time = span.TotalSeconds;
+            //TimeSpan span = DateTime.Now.Subtract(context.StartTime);
+            //testResult.Time = span.TotalSeconds;
+            long tickCount = Stopwatch.GetTimestamp() - startTime;
+            testResult.Time = (double)tickCount / Stopwatch.Frequency;
 
             if (testResult.ResultState == ResultState.Success)
             {
