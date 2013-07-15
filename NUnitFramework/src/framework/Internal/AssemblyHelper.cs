@@ -36,6 +36,16 @@ namespace NUnit.Framework.Internal
         #region GetAssemblyPath
 
         /// <summary>
+        /// Gets the path from which a Type was loaded
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <returns>The path.</returns>
+        public static string GetAssemblyPath(Type type)
+        {
+            return GetAssemblyPath(type.Assembly);
+        }
+
+        /// <summary>
         /// Gets the path from which an assembly was loaded.
         /// </summary>
         /// <param name="assembly">The assembly.</param>

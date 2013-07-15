@@ -107,7 +107,7 @@ namespace NUnit.Framework.Internal
             Exception e = new Exception("Test message for exception thrown from setup");
             SetupAndTearDownExceptionFixture fixture = new SetupAndTearDownExceptionFixture();
             fixture.setupException = e;
-            TestResult suiteResult = TestBuilder.RunTestFixture(fixture);
+            ITestResult suiteResult = TestBuilder.RunTestFixture(fixture);
             Assert.IsTrue(suiteResult.HasChildren, "Fixture test should have child result.");
             TestResult result = (TestResult)suiteResult.Children[0];
             Assert.AreEqual(result.ResultState, ResultState.Error, "Test should be in error state");
@@ -121,9 +121,9 @@ namespace NUnit.Framework.Internal
             Exception e = new Exception("Test message for exception thrown from tear down");
             SetupAndTearDownExceptionFixture fixture = new SetupAndTearDownExceptionFixture();
             fixture.tearDownException = e;
-            TestResult suiteResult = TestBuilder.RunTestFixture(fixture);
+            ITestResult suiteResult = TestBuilder.RunTestFixture(fixture);
             Assert.That(suiteResult.HasChildren, "Fixture test should have child result.");
-            TestResult result = (TestResult)suiteResult.Children[0];
+            ITestResult result = suiteResult.Children[0];
             Assert.AreEqual(result.ResultState, ResultState.Error, "Test should be in error state");
             string expected = string.Format("TearDown : {0} : {1}", e.GetType().FullName, e.Message);
             Assert.AreEqual(expected, result.Message);

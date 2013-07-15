@@ -65,7 +65,7 @@ namespace NUnit.Framework.Attributes
             throw new NotImplementedException();
         }
 
-        protected override Internal.Commands.TestCommand MakeTestCommand()
+        public Internal.Commands.TestCommand MakeTestCommand()
         {
             throw new NotImplementedException();
         }

@@ -248,8 +248,11 @@ namespace NUnit.Framework.Internal
         /// Creates a test command for this suite.
         /// </summary>
         /// <returns></returns>
-        protected override TestCommand MakeTestCommand()
+        public SuiteCommand MakeCommand()
         {
+            if (RunState != RunState.Runnable && RunState != RunState.Explicit)
+                return new SkippedSuiteCommand(this);
+
             return new TestSuiteCommand(this);
         }
 
@@ -260,9 +263,10 @@ namespace NUnit.Framework.Internal
         /// <returns>A new WorkItem</returns>
         public override WorkItem CreateWorkItem(ITestFilter childFilter)
         {
-            return RunState == Api.RunState.Runnable || RunState == Api.RunState.Explicit
-                ? (WorkItem)new CompositeWorkItem(this, childFilter)
-                : (WorkItem)new SimpleWorkItem(this);
+            //return RunState == Api.RunState.Runnable || RunState == Api.RunState.Explicit
+            //    ? (WorkItem)new CompositeWorkItem(this, childFilter)
+            //    : (WorkItem)new SimpleWorkItem(this);
+            return new CompositeWorkItem(this, childFilter);
         }
 
         /// <summary>

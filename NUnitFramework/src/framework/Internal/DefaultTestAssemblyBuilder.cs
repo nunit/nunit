@@ -195,18 +195,23 @@ namespace NUnit.Framework.Internal
         {
             TestSuite testAssembly = new TestAssembly(assembly, assemblyName);
 
-            //NamespaceTreeBuilder treeBuilder =
-            //    new NamespaceTreeBuilder(testAssembly);
-            //treeBuilder.Add(fixtures);
-            //testAssembly = treeBuilder.RootSuite;
-
-            foreach (Test fixture in fixtures)
-                testAssembly.Add(fixture);
-
             if (fixtures.Count == 0)
             {
                 testAssembly.RunState = RunState.NotRunnable;
                 testAssembly.Properties.Set(PropertyNames.SkipReason, "Has no TestFixtures");
+            }
+            else
+            {
+#if true
+                NamespaceTreeBuilder treeBuilder =
+                    new NamespaceTreeBuilder(testAssembly);
+                treeBuilder.Add(fixtures);
+                testAssembly = treeBuilder.RootSuite;
+#else
+                foreach (Test fixture in fixtures)
+                    testAssembly.Add(fixture);
+#endif
+
             }
 
             testAssembly.ApplyAttributesToTest(assembly);

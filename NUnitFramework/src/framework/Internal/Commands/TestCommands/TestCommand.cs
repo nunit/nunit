@@ -39,7 +39,6 @@ namespace NUnit.Framework.Internal.Commands
     public abstract class TestCommand
     {
         private Test test;
-        private System.Collections.Generic.IList<TestCommand> children;
 
         /// <summary>
         /// Construct a TestCommand for a test.
@@ -50,7 +49,7 @@ namespace NUnit.Framework.Internal.Commands
             this.test = test;
         }
 
-        #region ITestCommandMembers
+        #region Public Methods
 
         /// <summary>
         /// Gets the test associated with this command.
@@ -58,21 +57,6 @@ namespace NUnit.Framework.Internal.Commands
         public Test Test
         {
             get { return test; }
-        }
-
-        /// <summary>
-        /// Gets any child TestCommands of this command
-        /// </summary>
-        /// <value>A list of child TestCommands</value>
-        public System.Collections.Generic.IList<TestCommand> Children
-        {
-            get 
-            { 
-                if (children == null)
-                    children = new System.Collections.Generic.List<TestCommand>();
-
-                return children;
-            }
         }
 
         /// <summary>

@@ -23,6 +23,8 @@
 
 using System;
 using System.Threading;
+using NUnit.Framework.Internal.Commands;
+
 namespace NUnit.Framework.Internal.WorkItems
 {
     /// <summary>
@@ -32,11 +34,16 @@ namespace NUnit.Framework.Internal.WorkItems
     /// </summary>
     public class SimpleWorkItem : WorkItem
     {
+        private TestCommand _command;
+
         /// <summary>
         /// Construct a simple work item for a test.
         /// </summary>
         /// <param name="test">The test to be executed</param>
-        public SimpleWorkItem(Test test) : base(test) { }
+        public SimpleWorkItem(TestMethod test) : base(test) 
+        {
+            _command = test.MakeTestCommand();
+        }
 
         /// <summary>
         /// Method that performs actually performs the work.
@@ -45,7 +52,7 @@ namespace NUnit.Framework.Internal.WorkItems
         {
             try
             {
-                testResult = Command.Execute(Context);
+                testResult = _command.Execute(Context);
             }
             finally
             {

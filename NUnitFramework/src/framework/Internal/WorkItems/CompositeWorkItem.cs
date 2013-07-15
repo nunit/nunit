@@ -36,9 +36,8 @@ namespace NUnit.Framework.Internal.WorkItems
     public class CompositeWorkItem : WorkItem
     {
         private TestSuite _suite;
-        private TestSuiteResult _suiteResult;
         private System.Collections.Generic.Queue<WorkItem> _children = new System.Collections.Generic.Queue<WorkItem>();
-        private TestSuiteCommand _suiteCommand;
+        private SuiteCommand _suiteCommand;
 
         private CountdownEvent _childTestCountdown;
 
@@ -52,7 +51,7 @@ namespace NUnit.Framework.Internal.WorkItems
             : base(suite)
         {
             _suite = suite;
-            _suiteCommand = Command as TestSuiteCommand;
+            _suiteCommand = _suite.MakeCommand();
 
             foreach (Test test in _suite.Tests)
                 if (childFilter.Pass(test))
@@ -73,9 +72,21 @@ namespace NUnit.Framework.Internal.WorkItems
 
             PerformOneTimeSetUp();
 
-            if (Result.ResultState.Status == TestStatus.Passed && _children.Count > 0)
+            if (_children.Count > 0)
             {
-                RunChildren();
+                switch (Result.ResultState.Status)
+                {
+                    case TestStatus.Passed:
+                        RunChildren();
+                        break;
+                    case TestStatus.Skipped:
+                    case TestStatus.Inconclusive:
+                        SkipChildren();
+                        break;
+                    case TestStatus.Failed:
+                        MarkChildrenFailed();
+                        break;
+                }
             }
 
             PerformOneTimeTearDown();
@@ -98,7 +109,7 @@ namespace NUnit.Framework.Internal.WorkItems
                 if (ex is NUnitException || ex is System.Reflection.TargetInvocationException)
                     ex = ex.InnerException;
 
-                Result.RecordException(ex, FailureSite.SetUp);
+                Result.RecordException(ex);
             }
         }
 
@@ -129,6 +140,30 @@ namespace NUnit.Framework.Internal.WorkItems
                 childTask.Completed -= new EventHandler(OnChildCompleted);
                 Result.AddResult(childTask.Result);
                 _childTestCountdown.Signal();
+            }
+        }
+
+        private void SkipChildren()
+        {
+            while (_children.Count > 0)
+            {
+                WorkItem child = _children.Dequeue();
+                Test test = child.Test;
+                TestResult result = test.MakeTestResult();
+                result.SetResult(Result.ResultState, Result.Message);
+                Result.AddResult(result);
+            }
+        }
+
+        private void MarkChildrenFailed()
+        {
+            while (_children.Count > 0)
+            {
+                WorkItem child = _children.Dequeue();
+                Test test = child.Test;
+                TestResult result = test.MakeTestResult();
+                result.SetResult(ResultState.Failure, "Parent SetUp Failed");
+                Result.AddResult(result);
             }
         }
 

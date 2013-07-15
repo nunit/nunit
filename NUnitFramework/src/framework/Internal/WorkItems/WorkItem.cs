@@ -45,7 +45,7 @@ namespace NUnit.Framework.Internal.WorkItems
         private Test _test;
 
         // The TestCommand for that test
-        private TestCommand _command;
+        //private TestCommand _command;
 
         /// <summary>
         /// The result of running the test
@@ -65,7 +65,6 @@ namespace NUnit.Framework.Internal.WorkItems
         {
             _test = test;
             testResult = test.MakeTestResult();
-            _command = test.GetTestCommand();
             _state = WorkItemState.Ready;
         }
 
@@ -102,13 +101,13 @@ namespace NUnit.Framework.Internal.WorkItems
             get { return _context; }
         }
 
-        /// <summary>
-        /// The command used to run the test
-        /// </summary>
-        protected TestCommand Command
-        {
-            get { return _command; }
-        }
+        ///// <summary>
+        ///// The command used to run the test
+        ///// </summary>
+        //protected TestCommand Command
+        //{
+        //    get { return _command; }
+        //}
 
         /// <summary>
         /// The test result

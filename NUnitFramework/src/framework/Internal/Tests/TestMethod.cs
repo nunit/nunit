@@ -190,8 +190,11 @@ namespace NUnit.Framework.Internal
         /// Creates a test command for use in running this test.
         /// </summary>
         /// <returns></returns>
-        protected override TestCommand MakeTestCommand()
+        public TestCommand MakeTestCommand()
         {
+            if (RunState != RunState.Runnable && RunState != RunState.Explicit)
+                return new SkipCommand(this);
+
             TestCommand command = new TestMethodCommand(this);
 
             command = ApplyDecoratorsToCommand(command);
