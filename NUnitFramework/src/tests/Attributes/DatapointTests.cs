@@ -10,7 +10,7 @@ namespace NUnit.Framework.Attributes
     {
         private void RunTestOnFixture(Type fixtureType)
         {
-            TestResult result = TestBuilder.RunTestFixture(fixtureType);
+            ITestResult result = TestBuilder.RunTestFixture(fixtureType);
             ResultSummary summary = new ResultSummary(result);
             Assert.That(summary.Passed, Is.EqualTo(2));
             Assert.That(summary.Inconclusive, Is.EqualTo(3));

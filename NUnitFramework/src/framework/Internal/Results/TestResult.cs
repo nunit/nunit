@@ -286,7 +286,7 @@ namespace NUnit.Framework.Internal
         /// ResultState to Failure if the child result failed.
         /// </summary>
         /// <param name="result">The result to be added</param>
-        public virtual void AddResult(TestResult result)
+        public virtual void AddResult(ITestResult result)
         {
             this.Children.Add(result);
 
@@ -436,16 +436,16 @@ namespace NUnit.Framework.Internal
 #endif
         }
 
-        /// <summary>
-        /// Set the test result based on the type of exception thrown
-        /// and the failure site.
-        /// </summary>
-        /// <param name="ex">The exception that was thrown</param>
-        /// <param name="site">The FailureSite</param>
-        public virtual void RecordException(Exception ex, FailureSite site)
-        {
-            RecordException(ex);
-        }
+        ///// <summary>
+        ///// Set the test result based on the type of exception thrown
+        ///// and the failure site.
+        ///// </summary>
+        ///// <param name="ex">The exception that was thrown</param>
+        ///// <param name="site">The FailureSite</param>
+        //public virtual void RecordException(Exception ex, FailureSite site)
+        //{
+        //    RecordException(ex);
+        //}
 
         #endregion
 

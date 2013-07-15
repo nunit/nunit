@@ -312,49 +312,49 @@ namespace NUnit.Framework.Attributes
 		[Test] 
 		public void MethodThrowsException()
 		{
-			TestResult result = TestBuilder.RunTestFixture( typeof( TestThrowsExceptionFixture ) );
+			ITestResult result = TestBuilder.RunTestFixture( typeof( TestThrowsExceptionFixture ) );
             Assert.AreEqual(true, result.ResultState == ResultState.Failure);
 		}
 
 		[Test] 
 		public void MethodThrowsRightExceptionMessage()
 		{
-			TestResult result = TestBuilder.RunTestFixture( typeof( TestThrowsExceptionWithRightMessage ) );
+			ITestResult result = TestBuilder.RunTestFixture( typeof( TestThrowsExceptionWithRightMessage ) );
             Assert.AreEqual(true, result.ResultState == ResultState.Success);
 		}
 
 		[Test]
 		public void MethodThrowsArgumentOutOfRange()
 		{
-			TestResult result = TestBuilder.RunTestFixture( typeof( TestThrowsArgumentOutOfRangeException ) );
+			ITestResult result = TestBuilder.RunTestFixture( typeof( TestThrowsArgumentOutOfRangeException ) );
             Assert.AreEqual(true, result.ResultState == ResultState.Success);
 		}
 
 		[Test] 
 		public void MethodThrowsWrongExceptionMessage()
 		{
-			TestResult result = TestBuilder.RunTestFixture( typeof( TestThrowsExceptionWithWrongMessage ) );
+			ITestResult result = TestBuilder.RunTestFixture( typeof( TestThrowsExceptionWithWrongMessage ) );
             Assert.AreEqual(true, result.ResultState == ResultState.Failure);
 		}
 
 		[Test]
 		public void SetUpThrowsSameException()
 		{
-			TestResult result = TestBuilder.RunTestFixture( typeof( SetUpExceptionTests ) );
+			ITestResult result = TestBuilder.RunTestFixture( typeof( SetUpExceptionTests ) );
             Assert.AreEqual(true, result.ResultState == ResultState.Failure);
 		}
 
 		[Test]
 		public void TearDownThrowsSameException()
 		{
-			TestResult result = TestBuilder.RunTestFixture( typeof( TearDownExceptionTests ) );
+			ITestResult result = TestBuilder.RunTestFixture( typeof( TearDownExceptionTests ) );
             Assert.AreEqual(true, result.ResultState == ResultState.Failure);
 		}
 
 		[Test]
 		public void AssertFailBeforeException() 
 		{ 
-			TestResult suiteResult = TestBuilder.RunTestFixture( typeof (TestAssertsBeforeThrowingException) );
+			ITestResult suiteResult = TestBuilder.RunTestFixture( typeof (TestAssertsBeforeThrowingException) );
 			Assert.AreEqual( ResultState.Failure, suiteResult.ResultState );
             TestResult result = (TestResult)suiteResult.Children[0];
 			Assert.AreEqual( "private message", result.Message );

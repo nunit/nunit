@@ -145,7 +145,7 @@ namespace NUnit.Framework.Attributes
         [Platform(Exclude = "Mono", Reason = "Runner hangs at end when this is run")]
         public void TimeoutCanBeSetOnTestFixture()
         {
-            TestResult suiteResult = TestBuilder.RunTestFixture(typeof(ThreadingFixtureWithTimeout));
+            ITestResult suiteResult = TestBuilder.RunTestFixture(typeof(ThreadingFixtureWithTimeout));
             Assert.That(suiteResult.ResultState, Is.EqualTo(ResultState.Failure));
             ITestResult result = TestFinder.Find("Test2WithInfiniteLoop", suiteResult, false);
             Assert.That(result.ResultState, Is.EqualTo(ResultState.Failure));

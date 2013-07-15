@@ -21,6 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using NUnit.Framework.Api;
 using NUnit.Framework.Internal;
 using NUnit.TestData;
 using NUnit.TestUtilities;
@@ -189,7 +190,7 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void AssertionsAreCountedCorrectly()
         {
-            TestResult result = TestBuilder.RunTestFixture(typeof(AssertCountFixture));
+            ITestResult result = TestBuilder.RunTestFixture(typeof(AssertCountFixture));
 
             int totalCount = 0;
             foreach (TestResult childResult in result.Children)

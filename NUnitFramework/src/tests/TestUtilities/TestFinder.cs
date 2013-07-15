@@ -53,7 +53,7 @@ namespace NUnit.TestUtilities
             return null;
         }
 
-        public static ITestResult Find(string name, TestResult result, bool recursive)
+        public static ITestResult Find(string name, ITestResult result, bool recursive)
         {
             if (result.HasChildren)
             {

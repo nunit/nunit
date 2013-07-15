@@ -21,6 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System.Collections;
 using System.Collections.Generic;
 
 namespace NUnit.Framework.Internal
@@ -78,7 +79,7 @@ namespace NUnit.Framework.Internal
         /// Adds the specified fixtures to the tree.
         /// </summary>
         /// <param name="fixtures">The fixtures to be added.</param>
-		public void Add( IList<TestSuite> fixtures )
+		public void Add( IList fixtures )
 		{
             foreach (TestSuite fixture in fixtures)
                 //if (fixture is SetUpFixture)
