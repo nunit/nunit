@@ -57,6 +57,8 @@ namespace NUnit.Framework.Internal
         /// </returns>
         public TestSuite Build(Assembly assembly, IDictionary options)
         {
+            this.assembly = assembly;
+
             IList fixtureNames = options["LOAD"] as IList;
 
             IList fixtures = GetFixtures(assembly, fixtureNames);
@@ -111,7 +113,9 @@ namespace NUnit.Framework.Internal
             else
             {
                 InternalTrace.Info("Loaded assembly " + assembly.FullName);
+#if !NUNITLITE
                 CoreExtensions.Host.InstallAdhocExtensions(assembly);
+#endif
             }
 
             return assembly;
@@ -138,8 +142,10 @@ namespace NUnit.Framework.Internal
                     fixtures.Add(fixture);
                     testcases += fixture.TestCaseCount;
                 }
+#if !NUNITLITE
                 else if (names != null && legacySuiteBuilder.CanBuildFrom(testType))
                     fixtures.Add(legacySuiteBuilder.BuildFrom(testType));
+#endif
             }
 
 #if LOAD_TIMING
@@ -183,9 +189,12 @@ namespace NUnit.Framework.Internal
             // TODO: This is the only situation in which we currently
             // recognize and load legacy suites. We need to determine 
             // whether to allow them in more places.
+#if !NUNITLITE
             if (legacySuiteBuilder.CanBuildFrom(testType))
                 return (TestSuite)legacySuiteBuilder.BuildFrom(testType);
-            else if (TestFixtureBuilder.CanBuildFrom(testType))
+            else 
+#endif
+            if (TestFixtureBuilder.CanBuildFrom(testType))
                 return BuildTestAssembly(assemblyName,
                     new Test[] { TestFixtureBuilder.BuildFrom(testType) });
             return null;
@@ -202,14 +211,14 @@ namespace NUnit.Framework.Internal
             }
             else
             {
-#if true
+#if NUNITLITE
+                foreach (Test fixture in fixtures)
+                    testAssembly.Add(fixture);
+#else
                 NamespaceTreeBuilder treeBuilder =
                     new NamespaceTreeBuilder(testAssembly);
                 treeBuilder.Add(fixtures);
                 testAssembly = treeBuilder.RootSuite;
-#else
-                foreach (Test fixture in fixtures)
-                    testAssembly.Add(fixture);
 #endif
 
             }

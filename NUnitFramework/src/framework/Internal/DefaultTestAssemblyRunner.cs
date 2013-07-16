@@ -26,7 +26,6 @@ using System.Collections;
 using System.Reflection;
 using System.Threading;
 using NUnit.Framework.Api;
-using NUnit.Framework.Internal.Commands;
 using NUnit.Framework.Internal.WorkItems;
 
 namespace NUnit.Framework.Internal
@@ -124,14 +123,6 @@ namespace NUnit.Framework.Internal
             if (loadedTest == null)
                 throw new InvalidOperationException("Run was called but no test has been loaded.");
 
-            WorkItem workItem = loadedTest.CreateWorkItem(filter);
-
-            QueuingEventListener queue = new QueuingEventListener();
-
-            context.Out = new EventListenerTextWriter(queue, TestOutputType.Out);
-            context.Error = new EventListenerTextWriter(queue, TestOutputType.Error);
-            context.Listener = queue;
-
             if (this.settings.Contains("DefaultTimeout"))
                 context.TestCaseTimeout = (int)this.settings["DefaultTimeout"];
             if (this.settings.Contains("StopOnError"))
@@ -141,6 +132,24 @@ namespace NUnit.Framework.Internal
 				context.WorkDirectory = (string)this.settings["WorkDirectory"];
 			else
 				context.WorkDirectory = Environment.CurrentDirectory;
+
+#if NUNITLITE
+            context.Listener = listener;
+
+            WorkItem workItem = loadedTest.CreateWorkItem(filter);
+            workItem.Execute(context);
+
+            while (workItem.State != WorkItemState.Complete)
+                System.Threading.Thread.Sleep(5);
+            return workItem.Result;
+#else
+            QueuingEventListener queue = new QueuingEventListener();
+
+            context.Out = new EventListenerTextWriter(queue, TestOutputType.Out);
+            context.Error = new EventListenerTextWriter(queue, TestOutputType.Error);
+            context.Listener = queue;
+
+            WorkItem workItem = loadedTest.CreateWorkItem(filter);
 
             using (EventPump pump = new EventPump(listener, queue.Events))
             {
@@ -152,6 +161,7 @@ namespace NUnit.Framework.Internal
                     Thread.Sleep(5);
                 return workItem.Result;
             }
+#endif
         }
 
         #endregion
