@@ -64,6 +64,8 @@
     <Compile Include="Internal\Commands\TestCommands\SkipCommand.cs" />
     <Compile Include="Internal\Commands\TestCommands\TestCommand.cs" />
     <Compile Include="Internal\Commands\TestCommands\TestMethodCommand.cs" />
+    <Compile Include="Internal\DefaultTestAssemblyBuilder.cs" />
+    <Compile Include="Internal\DefaultTestAssemblyRunner.cs" />
     <Compile Include="Internal\IApplyToContext.cs" />
     <Compile Include="Internal\IApplyToTest.cs" />
     <Compile Include="Api\IParameterDataSource.cs" />
@@ -244,13 +246,12 @@
     <Compile Include="Internal\Filters\NotFilter.cs" />
     <Compile Include="Internal\Filters\OrFilter.cs" />
     <Compile Include="Internal\Filters\SimpleNameFilter.cs" />
+    <Compile Include="Internal\InternalTrace.cs" />
     <Compile Include="Internal\InvalidTestFixtureException.cs" />
     <Compile Include="Internal\Log4NetCapture.cs" />
     <Compile Include="Internal\LogCapture.cs" />
     <Compile Include="Internal\MethodHelper.cs" />
     <Compile Include="Internal\NUnitException.cs" />
-    <Compile Include="Internal\NUnitLiteTestAssemblyBuilder.cs" />
-    <Compile Include="Internal\NUnitLiteTestAssemblyRunner.cs" />
     <Compile Include="Internal\OSPlatform.cs" />
     <Compile Include="Internal\ParameterSet.cs" />
     <Compile Include="Internal\PlatformHelper.cs" />
