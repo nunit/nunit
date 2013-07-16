@@ -230,8 +230,6 @@ namespace NUnit.DirectRunner
 
         private void WritePropertiesElement(XmlNode properties)
         {
-            int nprops = 0;
-
             xmlWriter.WriteStartElement("properties");
 
             var items = properties.SelectNodes("property");

@@ -86,6 +86,9 @@
     <Compile Include="Attributes\RandomAttribute.cs" />
     <Compile Include="Attributes\RangeAttribute.cs" />
     <Compile Include="Attributes\RepeatAttribute.cs" />
+    <Compile Include="Attributes\RequiresMTAAtribute.cs" />
+    <Compile Include="Attributes\RequiresSTAAttribute.cs" />
+    <Compile Include="Attributes\RequiresThreadAttribute.cs" />
     <Compile Include="Attributes\SequentialAttribute.cs" />
     <Compile Include="Attributes\SetCultureAttribute.cs" />
     <Compile Include="Attributes\SetUICultureAttribute.cs" />
@@ -99,6 +102,7 @@
     <Compile Include="Attributes\TestFixtureTearDownAttribute.cs" />
     <Compile Include="Attributes\TestModificationAttribute.cs" />
     <Compile Include="Attributes\TheoryAttribute.cs" />
+    <Compile Include="Attributes\TimeoutAttribute.cs" />
     <Compile Include="Attributes\ValuesAttribute.cs" />
     <Compile Include="Attributes\ValueSourceAttribute.cs" />
     <Compile Include="Constraints\AllItemsConstraint.cs" />
@@ -250,7 +254,6 @@
     <Compile Include="Internal\LogCapture.cs" />
     <Compile Include="Internal\MethodHelper.cs" />
     <Compile Include="Internal\NUnitException.cs" />
-    <Compile Include="Internal\NUnitLiteTestAssemblyRunner.cs" />
     <Compile Include="Internal\OSPlatform.cs" />
     <Compile Include="Internal\ParameterSet.cs" />
     <Compile Include="Internal\PlatformHelper.cs" />
