@@ -81,6 +81,7 @@
     <Compile Include="TestFixtureData.cs" />
     <Compile Include="TestMethodSignatureFixture.cs" />
     <Compile Include="TheoryFixture.cs" />
+    <Compile Include="ThreadingFixture.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="nunitlite.testdata.build">

@@ -47,6 +47,10 @@
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Api\ExpectedExceptionData.cs" />
+    <Compile Include="Attributes\RequiresMTAAtribute.cs" />
+    <Compile Include="Attributes\RequiresSTAAttribute.cs" />
+    <Compile Include="Attributes\RequiresThreadAttribute.cs" />
+    <Compile Include="Attributes\TimeoutAttribute.cs" />
     <Compile Include="Constraints\ConstraintResult.cs" />
     <Compile Include="Constraints\EqualConstraintResult.cs" />
     <Compile Include="Constraints\IConstraint.cs" />
