@@ -137,6 +137,8 @@ namespace NUnit.Framework.Internal
         /// </summary>
         private int testCaseTimeout;
 
+        private RandomGenerator random;
+
 #if !NUNITLITE
         /// <summary>
         /// Indicates whether logging is enabled
@@ -326,6 +328,21 @@ namespace NUnit.Framework.Internal
         {
             get { return listener; }
             set { listener = value; }
+        }
+
+        /// <summary>
+        /// Gets the RandomGenerator specific to this Test
+        /// </summary>
+        public RandomGenerator Random
+        {
+            get
+            {
+                if (random == null)
+                {
+                    random = new RandomGenerator(currentTest.Seed);
+                }
+                return random;
+            }
         }
 
         /// <summary>

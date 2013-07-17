@@ -305,6 +305,7 @@
     <Compile Include="Internal\PropertyNames.cs" />
     <Compile Include="Internal\PropertySet.cs" />
     <Compile Include="Internal\QueuingEventListener.cs" />
+    <Compile Include="Internal\RandomGenerator.cs" />
     <Compile Include="Internal\Randomizer.cs" />
     <Compile Include="Internal\Reflect.cs" />
     <Compile Include="Internal\Results\FailureSite.cs" />
