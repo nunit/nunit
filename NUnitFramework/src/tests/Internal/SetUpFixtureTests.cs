@@ -24,13 +24,9 @@ namespace NUnit.Framework.Internal
         public void SetUp()
         {
             TestUtilities.SimpleEventRecorder.Clear();
-#if NUNITLITE
-            builder = new NUnitLiteTestAssemblyBuilder();
-            runner = new NUnitLiteTestAssemblyRunner(builder);
-#else
+            
             builder = new DefaultTestAssemblyBuilder();
             runner = new DefaultTestAssemblyRunner(builder);
-#endif
         }
         #endregion SetUp
 

@@ -38,7 +38,7 @@ namespace NUnit.Framework.Internal
 	public class TestFixtureBuilder
 	{
 #if NUNITLITE
-        private static Extensibility.ISuiteBuilder builder = new NUnitTestFixtureBuilder();
+        private static Extensibility.ISuiteBuilder builder = new NUnit.Framework.Extensibility.SuiteBuilderCollection();
 #else
         private static Extensibility.ISuiteBuilder builder = CoreExtensions.Host.SuiteBuilders;
 #endif

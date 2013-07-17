@@ -75,6 +75,9 @@
     <Compile Include="PropertyAttributeTests.cs" />
     <Compile Include="RepeatedTestFixture.cs" />
     <Compile Include="SetUpData.cs" />
+    <Compile Include="SetUpFixtureData.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="TestCaseAttributeFixture.cs" />
     <Compile Include="TestCaseSourceAttributeFixture.cs" />
     <Compile Include="TestContextData.cs" />

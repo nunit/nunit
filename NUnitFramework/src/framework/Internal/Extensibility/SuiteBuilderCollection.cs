@@ -22,8 +22,9 @@
 // ***********************************************************************
 
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using NUnit.Framework.Internal;
+using NUnit.Framework.Builders;
 
 namespace NUnit.Framework.Extensibility
 {
@@ -35,6 +36,17 @@ namespace NUnit.Framework.Extensibility
 	/// The builders are added to the collection by inserting them at
 	/// the start, as to take precedence over those added earlier. 
 	/// </summary>
+#if NUNITLITE
+    public class SuiteBuilderCollection : ISuiteBuilder
+    {
+        private List<ISuiteBuilder> Extensions = new List<ISuiteBuilder>();
+
+        public SuiteBuilderCollection()
+        {
+            Extensions.Add(new NUnitTestFixtureBuilder());
+            Extensions.Add(new SetUpFixtureBuilder());
+        }
+#else
 	public class SuiteBuilderCollection : ExtensionPoint, ISuiteBuilder
 	{
 		#region Constructor
@@ -44,6 +56,7 @@ namespace NUnit.Framework.Extensibility
 		public SuiteBuilderCollection(IExtensionHost host)
 			: base("SuiteBuilders", host ) { }
 		#endregion
+#endif
 
 		#region ISuiteBuilder Members
 
@@ -76,8 +89,8 @@ namespace NUnit.Framework.Extensibility
 
 		#endregion
 
+#if !NUNITLITE
 		#region ExtensionPoint Overrides
-
         /// <summary>
         /// Determines whether the specified extension is an ISuiteBuilder.
         /// </summary>
@@ -87,5 +100,6 @@ namespace NUnit.Framework.Extensibility
 			return extension is ISuiteBuilder; 
 		}
 		#endregion
+#endif
 	}
 }
