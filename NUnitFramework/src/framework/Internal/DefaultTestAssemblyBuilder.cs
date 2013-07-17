@@ -211,7 +211,7 @@ namespace NUnit.Framework.Internal
             }
             else
             {
-#if NUNITLITE
+#if false
                 foreach (Test fixture in fixtures)
                     testAssembly.Add(fixture);
 #else

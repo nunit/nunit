@@ -93,6 +93,7 @@
     <Compile Include="Attributes\SetCultureAttribute.cs" />
     <Compile Include="Attributes\SetUICultureAttribute.cs" />
     <Compile Include="Attributes\SetUpAttribute.cs" />
+    <Compile Include="Attributes\SetUpFixtureAttribute.cs" />
     <Compile Include="Attributes\TearDownAttribute.cs" />
     <Compile Include="Attributes\TestAttribute.cs" />
     <Compile Include="Attributes\TestCaseAttribute.cs" />
@@ -219,6 +220,7 @@
     <Compile Include="Internal\Builders\ParameterDataProvider.cs" />
     <Compile Include="Internal\Builders\ProviderCache.cs" />
     <Compile Include="Internal\Builders\SequentialStrategy.cs" />
+    <Compile Include="Internal\Builders\SetUpFixtureBuilder.cs" />
     <Compile Include="Internal\Commands\CommandDecoratorList.cs" />
     <Compile Include="Internal\Commands\CommandStage.cs" />
     <Compile Include="Internal\Commands\ICommandDecorator.cs" />
@@ -239,6 +241,7 @@
     <Compile Include="Internal\DefaultTestAssemblyRunner.cs" />
     <Compile Include="Internal\ExceptionHelper.cs" />
     <Compile Include="Internal\Extensibility\ParameterDataProviders.cs" />
+    <Compile Include="Internal\Extensibility\SuiteBuilderCollection.cs" />
     <Compile Include="Internal\Extensibility\TestCaseProviders.cs" />
     <Compile Include="Internal\Filters\AndFilter.cs" />
     <Compile Include="Internal\Filters\CategoryExpression.cs" />
@@ -253,6 +256,7 @@
     <Compile Include="Internal\Log4NetCapture.cs" />
     <Compile Include="Internal\LogCapture.cs" />
     <Compile Include="Internal\MethodHelper.cs" />
+    <Compile Include="Internal\NamespaceTreeBuilder.cs" />
     <Compile Include="Internal\NUnitException.cs" />
     <Compile Include="Internal\OSPlatform.cs" />
     <Compile Include="Internal\ParameterSet.cs" />

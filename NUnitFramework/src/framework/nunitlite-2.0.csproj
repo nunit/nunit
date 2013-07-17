@@ -50,12 +50,14 @@
     <Compile Include="Attributes\RequiresMTAAtribute.cs" />
     <Compile Include="Attributes\RequiresSTAAttribute.cs" />
     <Compile Include="Attributes\RequiresThreadAttribute.cs" />
+    <Compile Include="Attributes\SetUpFixtureAttribute.cs" />
     <Compile Include="Attributes\TimeoutAttribute.cs" />
     <Compile Include="Constraints\ConstraintResult.cs" />
     <Compile Include="Constraints\EqualConstraintResult.cs" />
     <Compile Include="Constraints\IConstraint.cs" />
     <Compile Include="Constraints\ReusableConstraint.cs" />
     <Compile Include="Constraints\ThrowsExceptionConstraint.cs" />
+    <Compile Include="Internal\Builders\SetUpFixtureBuilder.cs" />
     <Compile Include="Internal\Commands\SuiteCommands\SkippedSuiteCommand.cs" />
     <Compile Include="Internal\Commands\SuiteCommands\SuiteCommand.cs" />
     <Compile Include="Internal\Commands\SuiteCommands\TestSuiteCommand.cs" />
@@ -70,6 +72,7 @@
     <Compile Include="Internal\Commands\TestCommands\TestMethodCommand.cs" />
     <Compile Include="Internal\DefaultTestAssemblyBuilder.cs" />
     <Compile Include="Internal\DefaultTestAssemblyRunner.cs" />
+    <Compile Include="Internal\Extensibility\SuiteBuilderCollection.cs" />
     <Compile Include="Internal\IApplyToContext.cs" />
     <Compile Include="Internal\IApplyToTest.cs" />
     <Compile Include="Api\IParameterDataSource.cs" />
@@ -255,6 +258,7 @@
     <Compile Include="Internal\Log4NetCapture.cs" />
     <Compile Include="Internal\LogCapture.cs" />
     <Compile Include="Internal\MethodHelper.cs" />
+    <Compile Include="Internal\NamespaceTreeBuilder.cs" />
     <Compile Include="Internal\NUnitException.cs" />
     <Compile Include="Internal\OSPlatform.cs" />
     <Compile Include="Internal\ParameterSet.cs" />
