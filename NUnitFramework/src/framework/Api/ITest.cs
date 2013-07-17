@@ -83,6 +83,12 @@ namespace NUnit.Framework.Api
         bool HasChildren { get; }
 
         /// <summary>
+        /// Gets the Int value representing the seed for the RandomGenerator
+        /// </summary>
+        /// <value></value>
+        int Seed { get; }
+
+        /// <summary>
         /// Gets this test's child tests
         /// </summary>
         /// <value>A list of child tests</value>

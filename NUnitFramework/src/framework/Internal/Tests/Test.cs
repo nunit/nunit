@@ -47,6 +47,7 @@ namespace NUnit.Framework.Internal
         private int id;
         private string name;
         private string fullName;
+        private int seed;
 
         /// <summary>
 		/// Indicates whether the test should be executed
@@ -246,6 +247,16 @@ namespace NUnit.Framework.Internal
         {
             get { return parent; }
             set { parent = value; }
+        }
+
+        /// <summary>
+        /// Gets or Sets the Int value representing the seed for the RandomGenerator
+        /// </summary>
+        /// <value></value>
+        public int Seed
+        {
+            get { return seed; }
+            set { seed = value; }
         }
 
         /// <summary>

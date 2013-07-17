@@ -118,6 +118,14 @@ namespace NUnit.Framework
         	}
         }
 
+        public RandomGenerator Random
+        {
+            get
+            {
+                return ec.Random;
+            }
+        }
+
         #endregion
 
         #region Nested TestAdapter Class
