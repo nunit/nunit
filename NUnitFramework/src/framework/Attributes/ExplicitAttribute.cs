@@ -34,7 +34,7 @@ namespace NUnit.Framework
 	/// run simply because an enclosing suite is run.
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Class|AttributeTargets.Method|AttributeTargets.Assembly, AllowMultiple=false, Inherited=false)]
-	public class ExplicitAttribute : TestModificationAttribute, IApplyToTest
+    public class ExplicitAttribute : NUnitAttribute, IApplyToTest
 	{
         private string reason;
 

@@ -30,6 +30,10 @@ namespace NUnit.Framework.Internal
     /// <summary>
     /// Randomizer returns a set of random values in a repeatable
     /// way, to allow re-running of tests if necessary.
+    /// 
+    /// This class is an internal framework class used for setting up tests. 
+    /// It is used to generate random test parameters, for an external Randomizer please see
+    /// RandomGenerator which allows for repeatable random during test execution
     /// </summary>
     public class Randomizer : Random
     {
@@ -101,6 +105,30 @@ namespace NUnit.Framework.Internal
 
             for (int index = 0; index < count; index++)
                 rvals[index] = NextDouble();
+
+            return rvals;
+        }
+
+        /// <summary>
+        /// Return an array of random Enums
+        /// </summary>
+        /// <param name="count"></param>
+        /// <param name="enumType"></param>
+        /// <returns></returns>
+        public object[] GetEnums(int count, Type enumType)
+        {
+            if (!enumType.IsEnum)
+                throw new ArgumentException(string.Format("The specified type: {0} was not an enum", enumType));
+
+#if !NETCF && !SILVERLIGHT
+            Array values = Enum.GetValues(enumType);
+#else
+            Array values = TypeHelper.GetEnumValues(enumType);
+#endif
+            object[] rvals = new Enum[count];
+
+            for (int index = 0; index < count; index++)
+                rvals[index] = values.GetValue(Next(values.Length));
 
             return rvals;
         }

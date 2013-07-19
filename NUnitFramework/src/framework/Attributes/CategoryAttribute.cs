@@ -31,7 +31,7 @@ namespace NUnit.Framework
 	/// Attribute used to apply a category to a test
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Class|AttributeTargets.Method|AttributeTargets.Assembly, AllowMultiple=true, Inherited=true)]
-	public class CategoryAttribute : TestModificationAttribute, IApplyToTest
+	public class CategoryAttribute : NUnitAttribute, IApplyToTest
 	{
 		/// <summary>
 		/// The name of the category

@@ -23,7 +23,7 @@ namespace NUnitLite.Tests.Internal
 
             Assert.That(values, Is.Unique);
         }
-        [TestCase(-300,300)]
+        [TestCase(-300,300)] // TODO: Fails occasionally
         public void RandomIntsAreUnique(int min, int max)
         {
            RandomGenerator r = new RandomGenerator(new Random().Next());
@@ -60,7 +60,7 @@ namespace NUnitLite.Tests.Internal
 
         #region Btyes
         [Test]
-        public void RandomBytesAreUnique()
+        public void RandomBytesAreUnique() // TODO: Fails occasionally
         {
             RandomGenerator r = new RandomGenerator(new Random().Next());
             byte[] values = new byte[10];
@@ -70,7 +70,7 @@ namespace NUnitLite.Tests.Internal
             Assert.That(values, Is.Unique);
         }
 
-        [TestCase(byte.MinValue,byte.MaxValue)]
+        [TestCase(byte.MinValue,byte.MaxValue)] // TODO: Fails occasionally
         public void RandomBytesAreUnique(byte min, byte max)
         {
             RandomGenerator r = new RandomGenerator(new Random().Next());
