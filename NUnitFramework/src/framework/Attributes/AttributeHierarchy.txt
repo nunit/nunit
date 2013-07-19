@@ -23,27 +23,26 @@ NUnitAttribute
 	TearDownAttribute             : 
 	TestFixtureSetUpAttribute     : 
 	TestFixtureTearDownAttribute  : 
-	TestModificationAttribute
-		CategoryAttribute         : IApplyToTest
-		ExplicitAttribute         : IApplyToTest
-		IgnoreAttribute           : IApplyToTest
-		IncludeExcludeAttribute
-			CultureAttribute      : IApplyToTest
-			PlatformAttribute     : IApplyToTest
-		PropertyAttribute         : IApplyToTest
-			CombinatorialAttribute:
-			DescriptionAttribute
-			MaxTimeAttribute      : ICommandDecorator
-			PairwiseAttribute     : 
-			RepeatAttribute       : ICommandDecorator
-			RequiresMTAAttribute  : 
-			RequiresSTAAttribute  : 
-			RequiresThreadAttribute : 
-			SequentialAttribute   : 
-			SetCultureAttribute   : ICommandDecorator
-			SetUICultureAttribute : ICommandDecorator
-			TimeoutAttribute      : ICommandDecorator
+	CategoryAttribute			  : IApplyToTest
+	ExplicitAttribute	          : IApplyToTest
+	IgnoreAttribute			      : IApplyToTest
+	IncludeExcludeAttribute
+		CultureAttribute		  : IApplyToTest
+		PlatformAttribute		  : IApplyToTest
+	PropertyAttribute			  : IApplyToTest
+		CombinatorialAttribute
+		DescriptionAttribute
+		MaxTimeAttribute          : ICommandDecorator
+		PairwiseAttribute		  : 
+		RepeatAttribute			  : ICommandDecorator
+		RequiresMTAAttribute 
+		RequiresSTAAttribute 
+		RequiresThreadAttribute 
+		SequentialAttribute
+		SetCultureAttribute       : ICommandDecorator
+		SetUICultureAttribute     : ICommandDecorator
+		TimeoutAttribute          : ICommandDecorator
 		RequiredAddinAttribute    : IApplyToTest
-		TestAttribute             : IApplyToTest
-		TestFixtureAttribute      : IApplyToTest
+	TestAttribute             : IApplyToTest
+	TestFixtureAttribute      : IApplyToTest
 	TheoryAttribute

@@ -63,6 +63,42 @@ namespace NUnit.Framework.Internal
         }
 
         [Test]
+        public void CanGetArrayOfRandomInts()
+        {
+            Randomizer r = new Randomizer();
+
+            int[] ints = r.GetInts(1, 100, 10);
+            Assert.That(ints.Length, Is.EqualTo(10));
+            foreach (int i in ints)
+                Assert.That(i, Is.InRange(1, 100));
+        }
+
+        [Test]
+        public void CanGetArrayOfRandomDoubles()
+        {
+            Randomizer r = new Randomizer();
+
+            double[] doubles = r.GetDoubles(0.5, 1.5, 10);
+            Assert.That(doubles.Length, Is.EqualTo(10));
+            foreach (double d in doubles)
+                Assert.That(d, Is.InRange(0.5, 1.5));
+
+            // Heuristic: Could fail occasionally
+            Assert.That(doubles, Is.Unique);
+        }
+
+        [Test]
+        public void CanGetArrayOfRandomEnums()
+        {
+            Randomizer r = new Randomizer();
+
+            object[] enums = r.GetEnums(10, typeof(AttributeTargets));
+            Assert.That(enums.Length, Is.EqualTo(10));
+            foreach (object e in enums)
+                Assert.That(e, Is.TypeOf(typeof(AttributeTargets)));
+        }
+
+        [Test]
         public void RandomizersWithSameSeedsReturnSameValues()
         {
             Randomizer r1 = new Randomizer(1234);
@@ -127,6 +163,23 @@ namespace NUnit.Framework.Internal
             typeof(RandomizerTests).GetMethod("TestMethod2", BindingFlags.NonPublic | BindingFlags.Instance);
         private void TestMethod2(int x, int y)
         {
+        }
+
+        private int CountUniqueValues(Array array)
+        {
+            int uniqueCount = 0;
+
+            for (int index = 0; index < array.Length; index++)
+            {
+                bool isUnique = true;
+                for (int index2 = 0; index2 < index; index2++)
+                    if (array.GetValue(index).Equals(array.GetValue(index2)))
+                        isUnique = false;
+                if (isUnique)
+                    uniqueCount++;
+            }
+
+            return uniqueCount;
         }
     }
 }
