@@ -22,10 +22,9 @@
 // ***********************************************************************
 
 using System;
-using System.Threading;
-using NUnit.Framework.Internal.Commands;
-using NUnit.Framework.Api;
 using System.Diagnostics;
+using System.Threading;
+using NUnit.Framework.Api;
 
 namespace NUnit.Framework.Internal.WorkItems
 {
@@ -43,9 +42,6 @@ namespace NUnit.Framework.Internal.WorkItems
 
         // The test this WorkItem represents
         private Test _test;
-
-        // The TestCommand for that test
-        //private TestCommand _command;
 
         /// <summary>
         /// The result of running the test
@@ -101,14 +97,6 @@ namespace NUnit.Framework.Internal.WorkItems
             get { return _context; }
         }
 
-        ///// <summary>
-        ///// The command used to run the test
-        ///// </summary>
-        //protected TestCommand Command
-        //{
-        //    get { return _command; }
-        //}
-
         /// <summary>
         /// The test result
         /// </summary>
@@ -129,7 +117,7 @@ namespace NUnit.Framework.Internal.WorkItems
         {
             _context = new TestExecutionContext(context);
 
-#if !NETCF
+#if !NETCF && !SILVERLIGHT
             // Timeout set at a higher level
             int timeout = _context.TestCaseTimeout;
             ApartmentState currentApartment = Thread.CurrentThread.GetApartmentState();
@@ -151,7 +139,7 @@ namespace NUnit.Framework.Internal.WorkItems
 #endif
         }
 
-#if !NETCF
+#if !NETCF && !SILVERLIGHT
         private void RunTestOnOwnThread(int timeout, ApartmentState apartment)
         {
             Thread thread = new Thread(new ThreadStart(RunTest));
@@ -198,9 +186,11 @@ namespace NUnit.Framework.Internal.WorkItems
             _context.Listener.TestStarted(this.Test);
             _context.StartTime = DateTime.Now;
 
-            var startTicks = Stopwatch.GetTimestamp();
-
             TestExecutionContext.SetCurrentContext(_context);
+
+#if !SILVERLIGHT && !NETCF_2_0
+            long startTicks = Stopwatch.GetTimestamp();
+#endif
 
             try
             {
@@ -208,11 +198,15 @@ namespace NUnit.Framework.Internal.WorkItems
             }
             finally
             {
-                Result.AssertCount = _context.AssertCount;
+#if !SILVERLIGHT && !NETCF_2_0
+                long tickCount = Stopwatch.GetTimestamp() - startTicks;
+                double seconds = (double)tickCount / Stopwatch.Frequency;
+                Result.Duration = TimeSpan.FromSeconds(seconds);
+#else
+                Result.Duration = DateTime.Now - Context.StartTime;
+#endif
 
-                var tickCount = Stopwatch.GetTimestamp() - startTicks;
-                Result.Time = (double)tickCount / Stopwatch.Frequency;
-                //Result.Time = (DateTime.Now - _context.StartTime).TotalSeconds;
+                Result.AssertCount = _context.AssertCount;
 
                 _context.Listener.TestFinished(Result);
 

@@ -41,7 +41,7 @@ namespace NUnit.DirectRunner
         private int ignoreCount = 0;
         private int notRunnable = 0;
 
-        private double time = 0.0d;
+        private TimeSpan time = TimeSpan.Zero;
         private string name;
 
         public ResultSummary() { }
@@ -49,7 +49,7 @@ namespace NUnit.DirectRunner
         public ResultSummary(XmlNode result)
         {
             this.name = result.Attributes["name"].Value;
-            this.time = double.Parse(result.Attributes["time"].Value, System.Globalization.CultureInfo.InvariantCulture);
+            this.time = TimeSpan.Parse(result.Attributes["time"].Value);
 
             Summarize(result);
         }
@@ -191,7 +191,7 @@ namespace NUnit.DirectRunner
             get { return ignoreCount; }
         }
 
-        public double Time
+        public TimeSpan Time
         {
             get { return time; }
         }

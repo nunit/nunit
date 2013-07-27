@@ -43,7 +43,7 @@ namespace NUnit.TestUtilities
         private int ignoreCount = 0;
         private int notRunnable = 0;
 
-        private double time = 0.0d;
+        private TimeSpan time = TimeSpan.Zero;
         private string name;
 
         public ResultSummary() { }
@@ -58,7 +58,7 @@ namespace NUnit.TestUtilities
             if (this.name == null)
             {
                 this.name = result.Name;
-                this.time = result.Time;
+                this.time = result.Duration;
             }
 
             if (result.HasChildren)
@@ -189,7 +189,7 @@ namespace NUnit.TestUtilities
             get { return ignoreCount; }
         }
 
-        public double Time
+        public TimeSpan Time
         {
             get { return time; }
         }

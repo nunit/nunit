@@ -69,30 +69,5 @@ namespace NUnit.Framework.Internal
             this.skipCount += result.SkipCount;
             this.inconclusiveCount += result.InconclusiveCount;
         }
-
-        ///// <summary>
-        ///// Set the test result based on the type of exception thrown
-        ///// and the site of the Failure.
-        ///// </summary>
-        ///// <param name="ex">The exception that was thrown</param>
-        ///// <param name="site">The FailureSite</param>
-        //public override void RecordException(Exception ex, FailureSite site)
-        //{
-        //    RecordException(ex);
-
-        //    if (site == FailureSite.SetUp)
-        //    {
-        //        switch (ResultState.Status)
-        //        {
-        //            case TestStatus.Skipped:
-        //                this.skipCount = this.test.TestCaseCount;
-        //                break;
-
-        //            case TestStatus.Failed:
-        //                this.failCount = this.test.TestCaseCount;
-        //                break;
-        //        }
-        //    }
-        //}
     }
 }
