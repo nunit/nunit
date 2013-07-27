@@ -87,7 +87,6 @@
     <Compile Include="Internal\IApplyToContext.cs" />
     <Compile Include="Internal\IApplyToTest.cs" />
     <Compile Include="Internal\RandomGenerator.cs" />
-    <Compile Include="Internal\Results\FailureSite.cs" />
     <Compile Include="Internal\WorkItems\CompositeWorkItem.cs" />
     <Compile Include="Internal\WorkItems\CountdownEvent.cs" />
     <Compile Include="Internal\WorkItems\SimpleWorkItem.cs" />

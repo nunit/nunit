@@ -42,7 +42,7 @@ namespace NUnit.Framework.Internal
 		/// <summary>
 		/// The elapsed time for executing this test
 		/// </summary>
-		private double time = 0.0;
+		private TimeSpan time = TimeSpan.Zero;
 
 		/// <summary>
 		/// The test that this result pertains to
@@ -126,7 +126,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Gets or sets the elapsed time for running the test
         /// </summary>
-        public double Time
+        public TimeSpan Duration
         {
             get { return time; }
             set { time = value; }
@@ -243,7 +243,7 @@ namespace NUnit.Framework.Internal
             if (ResultState.Label != string.Empty) // && ResultState.Label != ResultState.Status.ToString())
                 XmlHelper.AddAttribute(thisNode, "label", ResultState.Label);
 
-            XmlHelper.AddAttribute(thisNode, "time", this.Time.ToString("0.000", System.Globalization.CultureInfo.InvariantCulture));
+            XmlHelper.AddAttribute(thisNode, "time", this.Duration.ToString());
 
             if (this.test is TestSuite)
             {
@@ -435,17 +435,6 @@ namespace NUnit.Framework.Internal
                 SetResult(ResultState.Error, ExceptionHelper.BuildMessage(ex));
 #endif
         }
-
-        ///// <summary>
-        ///// Set the test result based on the type of exception thrown
-        ///// and the failure site.
-        ///// </summary>
-        ///// <param name="ex">The exception that was thrown</param>
-        ///// <param name="site">The FailureSite</param>
-        //public virtual void RecordException(Exception ex, FailureSite site)
-        //{
-        //    RecordException(ex);
-        //}
 
         #endregion
 

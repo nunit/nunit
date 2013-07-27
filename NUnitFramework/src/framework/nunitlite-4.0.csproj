@@ -268,7 +268,6 @@
     <Compile Include="Internal\RandomGenerator.cs" />
     <Compile Include="Internal\Randomizer.cs" />
     <Compile Include="Internal\Reflect.cs" />
-    <Compile Include="Internal\Results\FailureSite.cs" />
     <Compile Include="Internal\Results\TestCaseResult.cs" />
     <Compile Include="Internal\Results\TestResult.cs" />
     <Compile Include="Internal\Results\TestSuiteResult.cs" />

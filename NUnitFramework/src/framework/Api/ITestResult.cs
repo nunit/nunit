@@ -58,7 +58,7 @@ namespace NUnit.Framework.Api
         /// <summary>
         /// Gets the elapsed time for running the test
         /// </summary>
-        double Time
+        TimeSpan Duration
         {
             get;
         }

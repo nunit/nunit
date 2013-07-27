@@ -22,11 +22,9 @@
 // ***********************************************************************
 
 using System;
-using System.Threading;
 using System.Reflection;
 using System.Xml;
 using NUnit.Framework.Api;
-using NUnit.Framework.Internal.Commands;
 using NUnit.Framework.Internal.WorkItems;
 
 namespace NUnit.Framework.Internal
@@ -320,12 +318,6 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <returns>A TestResult suitable for this type of test.</returns>
         public abstract TestResult MakeTestResult();
-
-        // <summary>
-        // Make a test command for running this test
-        // </summary>
-        // <returns>A TestCommand, which runs the test when executed.</returns>
-        //public abstract TestCommand MakeTestCommand();
 
         /// <summary>
         /// Creates a WorkItem for executing this test.
