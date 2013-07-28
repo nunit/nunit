@@ -108,7 +108,7 @@ namespace NUnit.Framework.Builders
                 case 0:
                     return BuildSingleFixture(type, null);
                 case 1:
-                    object[] args = (object[])attrs[0].Arguments;
+                    object[] args = attrs[0].Arguments;
                     return args == null || args.Length == 0
                         ? BuildSingleFixture(type, attrs[0])
                         : BuildMultipleFixtures(type, attrs);
@@ -144,12 +144,33 @@ namespace NUnit.Framework.Builders
 
             if (attr != null)
             {
-                arguments = (object[])attr.Arguments;
+                arguments = attr.Arguments;
 
 #if !NETCF
                 if (type.ContainsGenericParameters)
                 {
-                    Type[] typeArgs = (Type[])attr.TypeArgs;
+                    Type[] typeArgs = attr.TypeArgs;
+                    if (typeArgs.Length == 0)
+                    {
+                        int cnt = 0;
+                        foreach (object o in arguments)
+                            if (o is Type) cnt++;
+                            else break;
+
+                        typeArgs = new Type[cnt];
+                        for (int i = 0; i < cnt; i++)
+                            typeArgs[i] = (Type)arguments[i];
+
+                        if (cnt > 0)
+                        {
+                            object[] args = new object[arguments.Length - cnt];
+                            for (int i = 0; i < args.Length; i++)
+                                args[i] = arguments[cnt + i];
+
+                            arguments = args;
+                        }
+                    }
+
                     if( typeArgs.Length > 0 || 
                         TypeHelper.CanDeduceTypeArgsFromArgs(type, arguments, ref typeArgs))
                     {
@@ -319,9 +340,10 @@ namespace NUnit.Framework.Builders
             // Count and record those attrs with arguments            
             for (int i = 0; i < attrs.Length; i++)
             {
-                TestFixtureAttribute attr = attrs[i];
+                object[] args = attrs[i].Arguments;
+                object[] typeArgs = attrs[i].TypeArgs;
 
-                if (attr.Arguments.Length > 0 || attr.TypeArgs.Length > 0)
+                if (args.Length > 0 || typeArgs != null && typeArgs.Length > 0)
                 {
                     withArgs++;
                     hasArgs[i] = true;
@@ -345,6 +367,7 @@ namespace NUnit.Framework.Builders
 
             return result;
         }
+
 		#endregion
 	}
 }
