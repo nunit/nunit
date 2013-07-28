@@ -41,7 +41,6 @@ namespace NUnit.Framework
         private object[] originalArgs;
         private object[] constructorArgs;
         private Type[] typeArgs;
-        private bool argsInitialized;
 
         private bool isIgnored;
         private string ignoreReason;
@@ -81,12 +80,7 @@ namespace NUnit.Framework
         /// </summary>
         public object[] Arguments
         {
-            get 
-            {
-                if (!argsInitialized)
-                    InitializeArgs();
-                return constructorArgs; 
-            }
+            get { return constructorArgs; }
         }
 
         /// <summary>
@@ -120,17 +114,8 @@ namespace NUnit.Framework
         /// </summary>
         public Type[] TypeArgs
         {
-            get
-            {
-                if (!argsInitialized)
-                    InitializeArgs();
-                return typeArgs;
-            }
-            set 
-            { 
-                typeArgs = value;
-                argsInitialized = true;
-            }
+            get { return typeArgs; }
+            set { typeArgs = value; }
         }
 
         /// <summary>
@@ -151,36 +136,6 @@ namespace NUnit.Framework
             get { return category == null ? null : category.Split(','); }
         }
  
-        /// <summary>
-        /// Helper method to split the original argument list
-        /// into type arguments and constructor arguments.
-        /// This action has to be delayed rather than done in
-        /// the constructor, since TypeArgs may be set by
-        /// menas of a named parameter.
-        /// </summary>
-        private void InitializeArgs()
-        {
-            int typeArgCount = 0;
-
-            if (this.originalArgs != null)
-            {
-                foreach (object o in this.originalArgs)
-                    if (o is Type) typeArgCount++;
-                    else break;
-            }
-
-            this.typeArgs = new Type[typeArgCount];
-            for (int i = 0; i < typeArgCount; i++)
-                this.typeArgs[i] = (Type)this.originalArgs[i];
-
-            int constructorArgCount = originalArgs.Length - typeArgCount;
-            this.constructorArgs = new object[constructorArgCount];
-                for (int i = 0; i < constructorArgCount; i++)
-                    this.constructorArgs[i] = this.originalArgs[typeArgCount + i];
-                
-            argsInitialized = true;
-        }
-
         #region IApplyToTest Members
 
         /// <summary>
