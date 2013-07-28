@@ -81,6 +81,8 @@ namespace NUnit.Framework.Constraints.Tests
             };
         object[] FailureData = new object[] 
             { 
+                new TestCaseData( "folder1/folder2", "\"folder1/folder2\""),
+                new TestCaseData( "//folder1/folder2", "\"//folder1/folder2\""),
                 new TestCaseData( @"/junk/folder2", "\"/junk/folder2\"" ),
                 new TestCaseData( @"/folder1/./junk/../file.temp", "\"/folder1/./junk/../file.temp\"" ),
                 new TestCaseData( @"/Folder1/FOLDER2", "\"/Folder1/FOLDER2\"" ),
