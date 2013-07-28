@@ -71,6 +71,16 @@ namespace NUnit.Framework.Constraints
         /// <returns>The path in standardized form</returns>
         protected string Canonicalize(string path)
         {
+            if (Path.DirectorySeparatorChar != Path.AltDirectorySeparatorChar)
+                path = path.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
+            string leadingSeparators = "";
+            foreach (char c in path)
+            {
+                if (c == Path.DirectorySeparatorChar)
+                    leadingSeparators += c;
+                else break;
+            }
+
 #if !NETCF
             string[] parts = path.Split(DirectorySeparatorChars, StringSplitOptions.RemoveEmptyEntries);
 #else
@@ -101,7 +111,7 @@ namespace NUnit.Framework.Constraints
                 }
             }
 
-            return String.Join(Path.DirectorySeparatorChar.ToString(), parts, 0, count);
+            return leadingSeparators + String.Join(Path.DirectorySeparatorChar.ToString(), parts, 0, count);
         }
 
         /// <summary>
