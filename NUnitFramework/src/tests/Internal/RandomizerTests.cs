@@ -29,16 +29,6 @@ namespace NUnit.Framework.Internal
     public class RandomizerTests
     {
         [Test]
-        public void RandomSeedsAreUnique()
-        {
-            int[] seeds = new int[10];
-            for (int i = 0; i < 10; i++)
-                seeds[i] = Randomizer.InitialSeed;
-
-            Assert.That(seeds, Is.Unique);
-        }
-
-        [Test]
         public void RandomIntsAreUnique()
         {
             Randomizer r = new Randomizer();
