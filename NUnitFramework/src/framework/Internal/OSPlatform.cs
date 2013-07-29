@@ -60,6 +60,10 @@ namespace NUnit.Framework.Internal
                 {
                     OperatingSystem os = Environment.OSVersion;
 
+#if SILVERLIGHT
+                    // TODO: Runtime Silverlight detection?
+                    currentPlatform = new OSPlatform(os.Platform, os.Version);
+#else
                     if (os.Platform == PlatformID.Win32NT && os.Version.Major >= 5)
                     {
                         OSVERSIONINFOEX osvi = new OSVERSIONINFOEX();
@@ -69,6 +73,7 @@ namespace NUnit.Framework.Internal
                     }
                     else
                         currentPlatform = new OSPlatform(os.Platform, os.Version);
+#endif
                 }
 
                 return currentPlatform;
@@ -221,8 +226,26 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public bool IsWinCE
         {
-            get { return (int)platform == 3; } // PlatformID.WinCE not defined in .NET 1.0
+            get { return platform == PlatformID.WinCE; }
         }
+
+#if !NETCF
+        /// <summary>
+        /// Return true if the platform is Xbox
+        /// </summary>
+        public bool IsXbox
+        {
+            get { return platform == PlatformID.Xbox; }
+        }
+
+        /// <summary>
+        /// Return true if the platform is MacOSX
+        /// </summary>
+        public bool IsMacOSX
+        {
+            get { return platform == PlatformID.MacOSX; }
+        }
+#endif
 
         /// <summary>
         /// Return true if the platform is Windows 95

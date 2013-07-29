@@ -41,13 +41,17 @@ namespace NUnit.Framework.Internal
 		/// Comma-delimited list of all supported OS platform constants
 		/// </summary>
 		public static readonly string OSPlatforms =
+#if !NETCF
+            "Win,Win32,Win32S,Win32NT,Win32Windows,WinCE,Win95,Win98,WinMe,NT3,NT4,NT5,NT6,Win2K,WinXP,Win2003Server,Vista,Win2008Server,Win2008ServerR2,Win2012Server,Windows7,Windows8,Unix,Linux,Xbox,MacOSX";
+#else
 			"Win,Win32,Win32S,Win32NT,Win32Windows,WinCE,Win95,Win98,WinMe,NT3,NT4,NT5,NT6,Win2K,WinXP,Win2003Server,Vista,Win2008Server,Win2008ServerR2,Win2012Server,Windows7,Windows8,Unix,Linux";
+#endif
 		
 		/// <summary>
 		/// Comma-delimited list of all supported Runtime platform constants
 		/// </summary>
 		public static readonly string RuntimePlatforms =
-			"Net,NetCF,SSCLI,Rotor,Mono";
+			"Net,NetCF,SSCLI,Rotor,Mono,MonoTouch";
 
 		/// <summary>
 		/// Default constructor uses the operating system and
@@ -213,6 +217,12 @@ namespace NUnit.Framework.Internal
 				case "LINUX":
                     isSupported = os.IsUnix;
 					break;
+                case "XBOX":
+                    isSupported = os.IsXbox;
+                    break;
+                case "MACOSX":
+                    isSupported = os.IsMacOSX;
+                    break;
 
 			default:
                     isSupported = IsRuntimeSupported(platformName);
@@ -259,6 +269,13 @@ namespace NUnit.Framework.Internal
 
                 case "MONO":
                     return IsRuntimeSupported(RuntimeType.Mono, versionSpecification);
+
+                case "SL":
+                case "SILVERLIGHT":
+                    return IsRuntimeSupported(RuntimeType.Silverlight, versionSpecification);
+
+                case "MONOTOUCH":
+                    return IsRuntimeSupported(RuntimeType.MonoTouch, versionSpecification);
 
                 default:
                     throw new ArgumentException("Invalid platform name", platformName);
