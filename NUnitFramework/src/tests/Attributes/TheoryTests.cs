@@ -25,6 +25,7 @@ using System;
 using NUnit.Framework.Internal;
 using NUnit.TestUtilities;
 using NUnit.TestData.TheoryFixture;
+using NUnit.Framework.Api;
 
 namespace NUnit.Framework.Tests
 {
@@ -122,6 +123,14 @@ namespace NUnit.Framework.Tests
         {
             Test test = TestBuilder.MakeTestCase(fixtureType, "TestWithArguments");
             Assert.That(test.TestCaseCount, Is.EqualTo(2));
+        }
+
+        [Theory]
+        public void TheoryFailsIfAllTestsAreInconclusive()
+        {
+            ITestResult result = TestBuilder.RunTestCase(fixtureType, "TestWithAllBadValues");
+            Assert.That(result.ResultState, Is.EqualTo(ResultState.Failure));
+            Assert.That(result.Message, Is.EqualTo("All test cases were inconclusive"));
         }
 
         public class SqrtTests
