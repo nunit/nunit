@@ -44,7 +44,11 @@ namespace NUnit.Framework.Internal
 		/// <summary>Microsoft Shared Source CLI</summary>
 		SSCLI,
 		/// <summary>Mono</summary>
-		Mono
+		Mono,
+        /// <summary>Silverlight</summary>
+        Silverlight,
+        /// <summary>MonoTouch</summary>
+        MonoTouch
 	}
 
 	/// <summary>
@@ -136,14 +140,23 @@ namespace NUnit.Framework.Internal
             {
                 if (currentFramework == null)
                 {
+#if SILVERLIGHT
+                    currentFramework = new RuntimeFramework(
+                        RuntimeType.Silverlight,
+                        new Version(Environment.Version.Major, Environment.Version.Minor));
+#else
                     Type monoRuntimeType = Type.GetType("Mono.Runtime", false);
+                    Type monoTouchType = Type.GetType("MonoTouch.UIKit.UIApplicationDelegate,monotouch");
+                    bool isMonoTouch = monoTouchType != null;
 					bool isMono = monoRuntimeType != null;
 					
-                    RuntimeType runtime = isMono
-                        ? RuntimeType.Mono 
-                        : Environment.OSVersion.Platform == PlatformID.WinCE
-                            ? RuntimeType.NetCF
-                            : RuntimeType.Net;
+                    RuntimeType runtime = isMonoTouch
+                        ? RuntimeType.MonoTouch
+                        : isMono
+                            ? RuntimeType.Mono 
+                            : Environment.OSVersion.Platform == PlatformID.WinCE
+                                ? RuntimeType.NetCF
+                                : RuntimeType.Net;
 
                     int major = Environment.Version.Major;
                     int minor = Environment.Version.Minor;
@@ -194,6 +207,7 @@ namespace NUnit.Framework.Internal
                         if (getDisplayNameMethod != null)
                             currentFramework.displayName = (string)getDisplayNameMethod.Invoke(null, new object[0]);
                     }
+#endif
                 }
 
                 return currentFramework;
@@ -327,6 +341,7 @@ namespace NUnit.Framework.Internal
             return new RuntimeFramework(runtime, version);
         }
 
+#if !NUNITLITE
         /// <summary>
         /// Returns the best available framework that matches a target framework.
         /// If the target framework has a build number specified, then an exact
@@ -351,6 +366,7 @@ namespace NUnit.Framework.Internal
 
             return result;
         }
+#endif
 
         /// <summary>
         /// Overridden to return the short name of the framework
