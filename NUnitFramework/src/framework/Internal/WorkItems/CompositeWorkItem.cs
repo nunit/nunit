@@ -102,7 +102,7 @@ namespace NUnit.Framework.Internal.WorkItems
                 _suiteCommand.DoOneTimeSetUp(Context);
 
                 // SetUp may have changed some things
-                Context.Update();
+                Context.UpdateContext();
             }
             catch (Exception ex)
             {

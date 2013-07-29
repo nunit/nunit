@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2007 Charlie Poole
+// Copyright (c) 2007-2012 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -22,9 +22,9 @@
 // ***********************************************************************
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Collections;
 
 namespace NUnit.Framework.Internal
 {
@@ -77,12 +77,8 @@ namespace NUnit.Framework.Internal
 
         private class BaseTypesFirstComparer : IComparer<MethodInfo>
         {
-            #region IComparer Members
-            public int Compare(MethodInfo x, MethodInfo y)
+            public int Compare(MethodInfo m1, MethodInfo m2)
             {
-                MethodInfo m1 = x as MethodInfo;
-                MethodInfo m2 = y as MethodInfo;
-
                 if (m1 == null || m2 == null) return 0;
 
                 Type m1Type = m1.DeclaringType;
@@ -93,8 +89,6 @@ namespace NUnit.Framework.Internal
 
                 return 1;
             }
-
-            #endregion
         }
 
         /// <summary>

@@ -230,7 +230,6 @@ namespace NUnit.Framework.Internal
             }
         }
 
-#if !NETCF
         /// <summary>
         /// Creates an instance of a generic Type using the supplied Type arguments
         /// </summary>
@@ -289,7 +288,6 @@ namespace NUnit.Framework.Internal
 
             return false;
         }
-#endif
 
         /// <summary>
         /// Gets the values for an enumeration, using Enum.GetTypes
@@ -299,7 +297,7 @@ namespace NUnit.Framework.Internal
         /// <returns></returns>
         public static Array GetEnumValues(Type enumType)
         {
-#if NETCF
+#if NETCF || SILVERLIGHT
             FieldInfo[] fields = enumType.GetFields(BindingFlags.Public | BindingFlags.Static);
 
             Array enumValues = Array.CreateInstance(enumType, fields.Length);
@@ -322,15 +320,15 @@ namespace NUnit.Framework.Internal
         /// <returns></returns>
         public static string[] GetEnumNames(Type enumType)
         {
-#if NETCF
+#if NETCF || SILVERLIGHT
             FieldInfo[] fields = enumType.GetFields(BindingFlags.Public | BindingFlags.Static);
 
-            string[] enumNames = new string[fields.Length];
+            string[] names = new string[fields.Length];
 
             for (int index = 0; index < fields.Length; index++)
-                enumNames[index] =  fields[index].Name;
+                names[index] =  fields[index].Name;
 
-            return enumNames;
+            return names;
 #else
             return Enum.GetNames(enumType);
 #endif

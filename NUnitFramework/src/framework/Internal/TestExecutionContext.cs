@@ -34,6 +34,9 @@ using System.Security.Principal;
 #endif
 
 using NUnit.Framework.Api;
+#if !SILVERLIGHT && !NETCF
+using System.Runtime.Remoting.Messaging;
+#endif
 
 namespace NUnit.Framework.Internal
 {
@@ -50,6 +53,9 @@ namespace NUnit.Framework.Internal
 	/// object on the top of the stack.
 	/// </summary>
 	public class TestExecutionContext
+#if !SILVERLIGHT && !NETCF
+        : ILogicalThreadAffinative
+#endif
 	{
         #region Instance Fields
 
@@ -98,29 +104,14 @@ namespace NUnit.Framework.Internal
         /// </summary>
         private bool stopOnError;
 
-#if !NETCF_1_0
         /// <summary>
-        /// Destination for standard output
+        /// Default timeout for test cases
         /// </summary>
-        private TextWriter outWriter;
+        private int testCaseTimeout;
 
-        /// <summary>
-        /// Destination for standard error
-        /// </summary>
-        private TextWriter errorWriter;
-#endif
+        private RandomGenerator randomGenerator;
 
 #if !NETCF
-        /// <summary>
-		/// Indicates whether trace is enabled
-		/// </summary>
-		private bool tracing;
-
-        /// <summary>
-        /// Destination for Trace output
-        /// </summary>
-        private TextWriter traceWriter;
-
         /// <summary>
         /// The current culture
         /// </summary>
@@ -132,12 +123,27 @@ namespace NUnit.Framework.Internal
         private CultureInfo currentUICulture;
 #endif
 
+#if !NETCF && !SILVERLIGHT
         /// <summary>
-        /// Default timeout for test cases
+        /// Destination for standard output
         /// </summary>
-        private int testCaseTimeout;
+        private TextWriter outWriter;
 
-        private RandomGenerator random;
+        /// <summary>
+        /// Destination for standard error
+        /// </summary>
+        private TextWriter errorWriter;
+
+        /// <summary>
+        /// Indicates whether trace is enabled
+        /// </summary>
+        private bool tracing;
+
+        /// <summary>
+        /// Destination for Trace output
+        /// </summary>
+        private TextWriter traceWriter;
+#endif
 
 #if !NUNITLITE
         /// <summary>
@@ -168,20 +174,20 @@ namespace NUnit.Framework.Internal
         public TestExecutionContext()
 		{
 			this.prior = null;
-
-#if !NETCF_1_0
-			this.outWriter = Console.Out;
-			this.errorWriter = Console.Error;
-#endif
+            this.testCaseTimeout = 0;
 
 #if !NETCF
-            this.traceWriter = null;
-            this.tracing = false;
 			this.currentCulture = CultureInfo.CurrentCulture;
             this.currentUICulture = CultureInfo.CurrentUICulture;
 #endif
 
-            this.testCaseTimeout = 0;
+#if !NETCF && !SILVERLIGHT
+            this.outWriter = Console.Out;
+            this.errorWriter = Console.Error;
+            this.traceWriter = null;
+            this.tracing = false;
+#endif
+
 #if !NUNITLITE
             this.logging = false;
 			this.currentDirectory = Environment.CurrentDirectory;
@@ -204,20 +210,20 @@ namespace NUnit.Framework.Internal
 			this.workDirectory = other.workDirectory;
             this.listener = other.listener;
             this.stopOnError = other.stopOnError;
-
-#if !NETCF_1_0
-			this.outWriter = other.outWriter;
-			this.errorWriter = other.errorWriter;
-#endif
+            this.testCaseTimeout = other.testCaseTimeout;
 
 #if !NETCF
-            this.traceWriter = other.traceWriter;
-            this.tracing = other.tracing;
 			this.currentCulture = CultureInfo.CurrentCulture;
             this.currentUICulture = CultureInfo.CurrentUICulture;
 #endif
 
-            this.testCaseTimeout = other.testCaseTimeout;
+#if !NETCF && !SILVERLIGHT
+            this.outWriter = other.outWriter;
+            this.errorWriter = other.errorWriter;
+            this.traceWriter = other.traceWriter;
+            this.tracing = other.tracing;
+#endif
+
 #if !NUNITLITE
 			this.logging = other.logging;
 			this.currentDirectory = Environment.CurrentDirectory;
@@ -233,10 +239,14 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// The current context, head of the list of saved contexts.
         /// </summary>
+#if SILVERLIGHT || NETCF
 #if !NETCF
         [ThreadStatic]
 #endif
         private static TestExecutionContext current;
+#else
+        private static readonly string CONTEXT_KEY = "NUnit.Framework.TestContext";
+#endif
 
         /// <summary>
         /// Gets the current context.
@@ -246,10 +256,14 @@ namespace NUnit.Framework.Internal
         {
             get 
             {
+#if SILVERLIGHT || NETCF
                 if (current == null)
                     current = new TestExecutionContext();
 
                 return current; 
+#else
+                return CallContext.GetData(CONTEXT_KEY) as TestExecutionContext;
+#endif
             }
         }
 
@@ -259,7 +273,11 @@ namespace NUnit.Framework.Internal
 
         internal static void SetCurrentContext(TestExecutionContext ec)
         {
+#if SILVERLIGHT || NETCF
             current = ec;
+#else
+            CallContext.SetData(CONTEXT_KEY, ec);
+#endif
         }
 
         #endregion
@@ -333,15 +351,15 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Gets the RandomGenerator specific to this Test
         /// </summary>
-        public RandomGenerator Random
+        public RandomGenerator RandomGenerator
         {
             get
             {
-                if (random == null)
+                if (randomGenerator == null)
                 {
-                    random = new RandomGenerator(currentTest.Seed);
+                    randomGenerator = new RandomGenerator(currentTest.Seed);
                 }
-                return random;
+                return randomGenerator;
             }
         }
 
@@ -355,7 +373,44 @@ namespace NUnit.Framework.Internal
             set { assertCount = value; }
         }
 
-#if !NETCF_1_0
+        /// <summary>
+        /// Gets or sets the test case timeout value
+        /// </summary>
+        public int TestCaseTimeout
+        {
+            get { return testCaseTimeout; }
+            set { testCaseTimeout = value; }
+        }
+
+#if !NETCF
+        /// <summary>
+        /// Saves or restores the CurrentCulture
+        /// </summary>
+        public CultureInfo CurrentCulture
+        {
+            get { return currentCulture; }
+            set
+            {
+                currentCulture = value;
+                Thread.CurrentThread.CurrentCulture = currentCulture;
+            }
+        }
+
+        /// <summary>
+        /// Saves or restores the CurrentUICulture
+        /// </summary>
+        public CultureInfo CurrentUICulture
+        {
+            get { return currentUICulture; }
+            set
+            {
+                currentUICulture = value;
+                Thread.CurrentThread.CurrentUICulture = currentUICulture;
+            }
+        }
+#endif
+
+#if !NETCF && !SILVERLIGHT
         /// <summary>
 		/// Controls where Console.Out is directed
 		/// </summary>
@@ -389,9 +444,7 @@ namespace NUnit.Framework.Internal
 				}
 			}
 		}
-#endif
 
-#if !NETCF
         /// <summary>
         /// Controls whether trace and debug output are written
         /// to the standard output.
@@ -445,32 +498,6 @@ namespace NUnit.Framework.Internal
 		{
 			System.Diagnostics.Trace.Listeners.Add( new TextWriterTraceListener( traceWriter, "NUnit" ) );
 		}
-
-        /// <summary>
-        /// Saves or restores the CurrentCulture
-        /// </summary>
-        public CultureInfo CurrentCulture
-        {
-            get { return currentCulture; }
-            set
-            {
-                currentCulture = value;
-                Thread.CurrentThread.CurrentCulture = currentCulture;
-            }
-        }
-
-        /// <summary>
-        /// Saves or restores the CurrentUICulture
-        /// </summary>
-        public CultureInfo CurrentUICulture
-        {
-            get { return currentUICulture; }
-            set
-            {
-                currentUICulture = value;
-                Thread.CurrentThread.CurrentUICulture = currentUICulture;
-            }
-        }
 #endif
 
 #if !NUNITLITE
@@ -527,15 +554,6 @@ namespace NUnit.Framework.Internal
 		}
 #endif
 
-        /// <summary>
-        /// Gets or sets the test case timeout vaue
-        /// </summary>
-        public int TestCaseTimeout
-        {
-            get { return testCaseTimeout; }
-            set { testCaseTimeout = value; }
-        }
-
         #endregion
 
         #region Instance Methods
@@ -558,18 +576,18 @@ namespace NUnit.Framework.Internal
             if (prior == null)
                 throw new InvalidOperationException("TestContext: too many Restores");
 
-#if !NETCF_1_0
-            this.Out = prior.Out;
-            this.Error = prior.Error;
-#endif
+            this.TestCaseTimeout = prior.TestCaseTimeout;
 
 #if !NETCF
-            this.Tracing = prior.Tracing;
             this.CurrentCulture = prior.CurrentCulture;
             this.CurrentUICulture = prior.CurrentUICulture;
 #endif
 
-            this.TestCaseTimeout = prior.TestCaseTimeout;
+#if !NETCF && !SILVERLIGHT
+            this.Out = prior.Out;
+            this.Error = prior.Error;
+            this.Tracing = prior.Tracing;
+#endif
 
 #if !NUNITLITE
             this.CurrentDirectory = prior.CurrentDirectory;
@@ -584,7 +602,7 @@ namespace NUnit.Framework.Internal
         /// the test code in the execution context so it
         /// will be passed on to lower level tests.
         /// </summary>
-        public void Update()
+        public void UpdateContext()
         {
 #if !NETCF
             this.currentCulture = CultureInfo.CurrentCulture;
