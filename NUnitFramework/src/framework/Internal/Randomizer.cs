@@ -29,25 +29,30 @@ namespace NUnit.Framework.Internal
 {
     /// <summary>
     /// Randomizer returns a set of random values in a repeatable
-    /// way, to allow re-running of tests if necessary.
+    /// way, to allow re-running of tests if necessary. 
     /// 
     /// This class is an internal framework class used for setting up tests. 
-    /// It is used to generate random test parameters, for an external Randomizer please see
-    /// RandomGenerator which allows for repeatable random during test execution
+    /// It is used to generate random test parameters, at the time of loading
+    /// the tests. It also generates seeds for use at execution time, when
+    /// creating a RandomGenerator for use by the test.
     /// </summary>
     public class Randomizer : Random
     {
         #region Static Members
-        private static Random seedGenerator = new Random();
+
+        private static int initialSeed = new Random().Next();
+
+        private static Random seedGenerator;
 
         private static Dictionary<MemberInfo, Randomizer> randomizers = new Dictionary<MemberInfo, Randomizer>();
 
         /// <summary>
-        /// Get a random seed for use in creating a randomizer.
+        /// Initial seed used to create randomizers for this run
         /// </summary>
-        public static int RandomSeed
+        public static int InitialSeed
         {
-            get { return seedGenerator.Next(); }
+            get { return initialSeed; }
+            set { initialSeed = value; }
         }
 
         /// <summary>
@@ -62,7 +67,7 @@ namespace NUnit.Framework.Internal
                 return (Randomizer)randomizers[member];
             else
             {
-                Randomizer r = new Randomizer();
+                Randomizer r = CreateRandomizer();
                 randomizers[member] = r;
                 return (Randomizer)r;
             }
@@ -79,18 +84,35 @@ namespace NUnit.Framework.Internal
         {
             return GetRandomizer(parameter.Member);
         }
+
+        /// <summary>
+        /// Create a new Randomizer using the next seed
+        /// available to ensure that each randomizer gives
+        /// a unique sequence of values.
+        /// </summary>
+        /// <returns></returns>
+        public static Randomizer CreateRandomizer()
+        {
+            if (seedGenerator == null)
+                seedGenerator = new Random(initialSeed);
+
+            return new Randomizer(seedGenerator.Next());
+        }
+
         #endregion
 
         #region Constructors
+
         /// <summary>
         /// Construct a randomizer using a random seed
         /// </summary>
-        public Randomizer() : base(RandomSeed) { }
+        public Randomizer() : base(InitialSeed) { }
 
         /// <summary>
         /// Construct a randomizer using a specified seed
         /// </summary>
         public Randomizer(int seed) : base(seed) { }
+
         #endregion
 
         #region Public Methods

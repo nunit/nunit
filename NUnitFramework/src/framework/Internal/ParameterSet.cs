@@ -22,12 +22,7 @@
 // ***********************************************************************
 
 using System;
-using System.Collections;
-using System.Collections.Specialized;
-using System.Reflection;
-using NUnit.Framework;
 using NUnit.Framework.Api;
-using NUnit.Framework.Internal.Commands;
 
 namespace NUnit.Framework.Internal
 {
@@ -197,7 +192,7 @@ namespace NUnit.Framework.Internal
         /// <param name="test">A test.</param>
         public void ApplyToTest(Test test)
         {
-            if (this.RunState == RunState.Ignored || this.RunState == RunState.Explicit)
+            if (this.RunState != RunState.Runnable)
 				test.RunState = this.RunState;
 
             foreach (string key in Properties.Keys)

@@ -33,7 +33,7 @@ namespace NUnit.Framework.Internal
         {
             int[] seeds = new int[10];
             for (int i = 0; i < 10; i++)
-                seeds[i] = Randomizer.RandomSeed;
+                seeds[i] = Randomizer.InitialSeed;
 
             Assert.That(seeds, Is.Unique);
         }

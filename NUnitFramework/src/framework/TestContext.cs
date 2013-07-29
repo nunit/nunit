@@ -122,7 +122,7 @@ namespace NUnit.Framework
         {
             get
             {
-                return ec.Random;
+                return ec.RandomGenerator;
             }
         }
 

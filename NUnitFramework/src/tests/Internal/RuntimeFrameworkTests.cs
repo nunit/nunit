@@ -50,6 +50,7 @@ namespace NUnit.Framework.Internal
             Assert.That(RuntimeFramework.CurrentFramework.ClrVersion.Build, Is.GreaterThan(0));
         }
 
+#if !NUNITLITE
         [Test]
         public void CurrentFrameworkMustBeAvailable()
         {
@@ -69,6 +70,7 @@ namespace NUnit.Framework.Internal
             }
             Assert.That(foundCurrent, "CurrentFramework not listed");
         }
+#endif
 
         [TestCaseSource("frameworkData")]
         public void CanCreateUsingFrameworkVersion(FrameworkData data)

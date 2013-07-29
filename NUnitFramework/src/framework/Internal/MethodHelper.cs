@@ -213,5 +213,16 @@ namespace NUnit.Framework.Internal
                     return c.ToString();
             }
         }
+
+#if NET_4_5
+        /// <summary>
+        /// Returns true if the method specified by the argument
+        /// is an async method.
+        /// </summary>
+        public static bool IsAsyncMethod(MethodInfo method)
+        {
+            return method.IsDefined(typeof(System.Runtime.CompilerServices.AsyncStateMachineAttribute));
+        }
+#endif
     }
 }

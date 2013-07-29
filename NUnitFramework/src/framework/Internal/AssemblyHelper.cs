@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NETCF
 using System;
 using System.Reflection;
 
@@ -35,10 +34,11 @@ namespace NUnit.Framework.Internal
     {
         #region GetAssemblyPath
 
+#if !NETCF
         /// <summary>
-        /// Gets the path from which a Type was loaded
+        /// Gets the path from which the assembly defining a type was loaded.
         /// </summary>
-        /// <param name="type">The type.</param>
+        /// <param name="type">The Type.</param>
         /// <returns>The path.</returns>
         public static string GetAssemblyPath(Type type)
         {
@@ -52,29 +52,20 @@ namespace NUnit.Framework.Internal
         /// <returns>The path.</returns>
         public static string GetAssemblyPath(Assembly assembly)
         {
-            string path = assembly.CodeBase;
-            Uri uri = new Uri(path);
+            string codeBase = assembly.CodeBase;
 
-            // If it wasn't loaded locally, use the Location
-            if (!uri.IsFile)
-                return assembly.Location;
+            if (IsFileUri(codeBase))
+                return GetAssemblyPathFromCodeBase(codeBase);
 
-            if (uri.IsUnc)
-                return path.Substring(Uri.UriSchemeFile.Length + 1);
-
-
-            int start = Uri.UriSchemeFile.Length + Uri.SchemeDelimiter.Length;
-
-            if (path[start] == '/' && path[start + 2] == ':')
-                ++start;
-
-            return path.Substring(start);
+            return assembly.Location;
         }
+#endif
 
         #endregion
 
         #region GetDirectoryName
 
+#if !NETCF
         /// <summary>
         /// Gets the path to the directory from which an assembly was loaded.
         /// </summary>
@@ -84,8 +75,62 @@ namespace NUnit.Framework.Internal
         {
             return System.IO.Path.GetDirectoryName(GetAssemblyPath(assembly));
         }
+#endif
+
+        #endregion
+
+        #region GetAssemblyName
+
+        /// <summary>
+        /// Gets the AssemblyName of an assembly.
+        /// </summary>
+        /// <param name="assembly">The assembly</param>
+        /// <returns>An AssemblyName</returns>
+        public static AssemblyName GetAssemblyName(Assembly assembly)
+        {
+#if SILVERLIGHT
+            return new AssemblyName(assembly.FullName);
+#else
+            return assembly.GetName();
+#endif
+        }
+
+        #endregion
+
+        #region Helper Methods
+
+#if !NETCF
+        private static bool IsFileUri(string uri)
+        {
+            return uri.ToLower().StartsWith(Uri.UriSchemeFile);
+        }
+
+        // Public for testing purposes
+        public static string GetAssemblyPathFromCodeBase(string codeBase)
+        {
+            // Skip over the file:// part
+            int start = Uri.UriSchemeFile.Length + Uri.SchemeDelimiter.Length;
+
+            bool isWindows = System.IO.Path.DirectorySeparatorChar == '\\';
+
+            if (codeBase[start] == '/') // third slash means a local path
+            {
+                // Handle Windows Drive specifications
+                if (isWindows && codeBase[start + 2] == ':')
+                    ++start;
+                // else leave the last slash so path is absolute  
+            }
+            else // It's either a Windows Drive spec or a share
+            {
+                if (!isWindows || codeBase[start + 1] != ':')
+                    start -= 2; // Back up to include two slashes
+            }
+
+            return codeBase.Substring(start);
+        }
+#endif
 
         #endregion
     }
 }
-#endif
+

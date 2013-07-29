@@ -167,7 +167,7 @@ namespace NUnit.Framework.Internal
         #endregion
 
         #region Enums
-#if CLR_2_0
+
         /// <summary>
         /// Return a random enum value representation of the specified Type
         /// </summary>
@@ -178,19 +178,7 @@ namespace NUnit.Framework.Internal
             Array enums = TypeHelper.GetEnumValues(typeof(T));
             return (T)enums.GetValue(Rand.Next(0, enums.Length));
         }
-#else
-        /// <summary>
-        /// Return a random enum value from the specified type
-        /// </summary>
-        /// <param name="enumType"></param>
-        /// <returns> object </returns>
-        public object GetEnum(Type enumType)
-        {
-            Array enums = TypeHelper.GetEnumValues(enumType);
-            return enums.GetValue(Rand.Next(0, enums.Length));
-        }
-#endif
-        #endregion
 
+        #endregion
     }
 }
