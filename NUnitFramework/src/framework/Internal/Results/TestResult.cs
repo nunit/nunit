@@ -265,7 +265,6 @@ namespace NUnit.Framework.Internal
                     AddReasonElement(thisNode);
                     break;
                 case TestStatus.Passed:
-                    break;
                 case TestStatus.Inconclusive:
                     if (this.message != null)
                         AddReasonElement(thisNode);
