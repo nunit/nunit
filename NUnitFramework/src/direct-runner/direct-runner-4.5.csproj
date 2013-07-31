@@ -5,12 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{749FF626-F36B-45C1-8A80-AB21A3655292}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{0AB71103-EE12-4B1C-999D-7B66C26863C8}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NUnit.TestData</RootNamespace>
-    <AssemblyName>nunitlite.testdata</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <RootNamespace>NUnit.DirectRunner</RootNamespace>
+    <AssemblyName>direct-runner</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -31,65 +30,63 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-	  <IntermediateOutputPath>obj\$(Configuration)\net-3.5\</IntermediateOutputPath>
+    <IntermediateOutputPath>obj\$(Configuration)\net-4.5\</IntermediateOutputPath>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\bin\Debug\net-3.5\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;NET_3_5;NUNITLITE</DefineConstants>
+    <OutputPath>..\..\..\bin\Debug\net-4.5\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;NET_4_5</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Commandlineparameters>nunit.framework.tests.dll -a</Commandlineparameters>
+    <Externalconsole>true</Externalconsole>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\..\bin\Release\net-3.5\</OutputPath>
-    <DefineConstants>TRACE;NET_3_5;NUNITLITE</DefineConstants>
+    <OutputPath>..\..\..\bin\Release\net-4.5\</OutputPath>
+    <DefineConstants>TRACE;NET_4_5</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Commandlineparameters>nunit.framework.tests.dll</Commandlineparameters>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
-    <Reference Include="System.Data" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="AssertCountFixture.cs" />
-    <Compile Include="AssertFailFixture.cs" />
-    <Compile Include="AssertIgnoreData.cs" />
-    <Compile Include="AttributeInheritanceData.cs" />
-    <Compile Include="CategoryAttributeData.cs" />
-    <Compile Include="CultureAttributeData.cs" />
-    <Compile Include="DatapointFixture.cs" />
-    <Compile Include="DescriptionFixture.cs" />
-    <Compile Include="ExpectedExceptionData.cs" />
-    <Compile Include="FixtureSetUpTearDownData.cs" />
-    <Compile Include="MaxTimeFixture.cs" />
-    <Compile Include="ParameterizedTestFixture.cs" />
-    <Compile Include="PropertyAttributeTests.cs" />
-    <Compile Include="RepeatedTestFixture.cs" />
-    <Compile Include="SetUpData.cs" />
-    <Compile Include="SetUpFixtureData.cs" />
-    <Compile Include="TestCaseAttributeFixture.cs" />
-    <Compile Include="TestCaseSourceAttributeFixture.cs" />
-    <Compile Include="TestContextData.cs" />
-    <Compile Include="TestFixtureData.cs" />
-    <Compile Include="TestMethodSignatureFixture.cs" />
-    <Compile Include="TheoryFixture.cs" />
-    <Compile Include="ThreadingFixture.cs" />
+    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="CallbackHandler.cs" />
+    <Compile Include="CommandLineOptions.cs" />
+    <Compile Include="ConsoleRunner.cs" />
+    <Compile Include="FrameworkDriver.cs" />
+    <Compile Include="NUnit2XmlOutputWriter.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="ResultReporter.cs" />
+    <Compile Include="ResultSummary.cs" />
+    <Compile Include="RunTestsCallbackHandler.cs" />
+    <Compile Include="StackTraceFilter.cs" />
+    <Compile Include="XmlHelper.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="nunitlite.testdata.build">
-      <SubType>Designer</SubType>
-    </None>
+    <None Include="direct-runner.build" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">
@@ -114,12 +111,11 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\framework\nunitlite-3.5.csproj">
-      <Project>{8C09BB92-C5F6-496C-BEE7-BB16677823D6}</Project>
-      <Name>nunitlite-3.5</Name>
+    <ProjectReference Include="..\framework\nunit.framework-4.5.csproj">
+      <Project>{d209c368-1277-4ea6-a887-aa6eba51ab99}</Project>
+      <Name>nunit.framework-4.5</Name>
     </ProjectReference>
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

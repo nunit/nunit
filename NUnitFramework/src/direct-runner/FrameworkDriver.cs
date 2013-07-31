@@ -98,7 +98,7 @@ namespace NUnit.DirectRunner
         {
             return this.testDomain.CreateInstanceAndUnwrap(
                 "nunit.framework", typeName, false, 0,
-#if !NET_4_0
+#if !NET_4_0 && !NET_4_5
                 null, args, null, null, null );
 #else
                 null, args, null, null );

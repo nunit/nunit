@@ -1,2 +1,2 @@
 #!/bin/sh
-exec /usr/bin/cli ../tools/nant/NAnt.exe "$@"
+exec /usr/bin/cli ../tools/nant/bin/NAnt.exe "$@"

@@ -5,64 +5,48 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{A18A4BB4-2188-464C-9FC0-53C3941789FB}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{5B8B0EAB-3E74-48BB-8231-26E73B2019DC}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NUnit.Framework.Tests</RootNamespace>
-    <AssemblyName>nunitlite.tests</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <AssemblyName>nunit.framework.tests</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <OldToolsVersion>3.5</OldToolsVersion>
     <UpgradeBackupLocation />
-    <PublishUrl>publish\</PublishUrl>
-    <Install>true</Install>
-    <InstallFrom>Disk</InstallFrom>
-    <UpdateEnabled>false</UpdateEnabled>
-    <UpdateMode>Foreground</UpdateMode>
-    <UpdateInterval>7</UpdateInterval>
-    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
-    <UpdatePeriodically>false</UpdatePeriodically>
-    <UpdateRequired>false</UpdateRequired>
-    <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
-    <UseApplicationTrust>false</UseApplicationTrust>
-    <BootstrapperEnabled>true</BootstrapperEnabled>
-	  <IntermediateOutputPath>obj\$(Configuration)\net-3.5\</IntermediateOutputPath>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>..\..\..\bin\Debug\net-3.5\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;NET_3_5;NUNITLITE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <DocumentationFile>
-    </DocumentationFile>
-    <Externalconsole>true</Externalconsole>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <IntermediateOutputPath>obj\$(Configuration)\net-4.5\</IntermediateOutputPath>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\..\bin\Release\net-3.5\</OutputPath>
-    <DefineConstants>TRACE;NET_3_5;NUNITLITE</DefineConstants>
+    <OutputPath>..\..\..\bin\Release\net-4.5\</OutputPath>
+    <DefineConstants>TRACE;NET_4_5</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>
     </DocumentationFile>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Xml" />
-  </ItemGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <DefineConstants>TRACE;DEBUG;NET_4_5</DefineConstants>
+    <OutputPath>..\..\..\bin\Debug\net-4.5\</OutputPath>
+    <DebugType>full</DebugType>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>false</Optimize>
+    <DebugSymbols>true</DebugSymbols>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
   <ItemGroup>
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
@@ -78,12 +62,22 @@
     <Compile Include="Assertions\AssertThatTests.cs" />
     <Compile Include="Assertions\AssertThrowsTests.cs" />
     <Compile Include="Assertions\AssumeThatTests.cs" />
+    <Compile Include="Assertions\CollectionAssertTest.cs" />
     <Compile Include="Assertions\ConditionAssertTests.cs" />
     <Compile Include="Assertions\EqualsFixture.cs" />
+    <Compile Include="Assertions\FileAssertTests.cs" />
+    <Compile Include="Assertions\GreaterEqualFixture.cs" />
+    <Compile Include="Assertions\GreaterFixture.cs" />
+    <Compile Include="Assertions\LessEqualFixture.cs" />
+    <Compile Include="Assertions\LessFixture.cs" />
+    <Compile Include="Assertions\ListContentsTests.cs" />
     <Compile Include="Assertions\MessageChecker.cs" />
     <Compile Include="Assertions\NotEqualFixture.cs" />
     <Compile Include="Assertions\NotSameFixture.cs" />
+    <Compile Include="Assertions\NullableTypesTests.cs" />
     <Compile Include="Assertions\SameFixture.cs" />
+    <Compile Include="Assertions\StringAssertTests.cs" />
+    <Compile Include="Assertions\TypeAssertTest.cs" />
     <Compile Include="Attributes\ApplyToTestTests.cs" />
     <Compile Include="Attributes\AttributeInheritanceTests.cs" />
     <Compile Include="Attributes\CategoryAttributeTests.cs" />
@@ -104,37 +98,36 @@
     <Compile Include="Attributes\TestFixtureAttributeTests.cs" />
     <Compile Include="Attributes\TheoryTests.cs" />
     <Compile Include="Attributes\ThreadingTests.cs" />
-    <Compile Include="Attributes\ValuesAttributeTests.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Attributes\ValuesAttributeTests.cs" />
     <Compile Include="Attributes\ValueSourceTests.cs" />
+    <Compile Include="Constraints\AfterConstraintTests.cs" />
     <Compile Include="Constraints\AllItemsConstraintTests.cs" />
     <Compile Include="Constraints\AndConstraintTests.cs" />
-    <Compile Include="Constraints\AssignableFromConstraintTests.cs" />
     <Compile Include="Constraints\AssignableToConstraintTests.cs" />
     <Compile Include="Constraints\AttributeExistsConstraintTests.cs" />
     <Compile Include="Constraints\BasicConstraintTests.cs" />
     <Compile Include="Constraints\BinarySerializableTest.cs" />
+    <Compile Include="Constraints\AssignableFromConstraintTests.cs" />
     <Compile Include="Constraints\CollectionContainsConstraintTests.cs" />
     <Compile Include="Constraints\CollectionEquivalentConstraintTests.cs" />
     <Compile Include="Constraints\CollectionOrderedConstraintTests.cs" />
     <Compile Include="Constraints\ComparisonConstraintTestBase.cs" />
-    <Compile Include="Constraints\ConstraintTestBase.cs" />
-    <Compile Include="Constraints\EmptyConstraintTest.cs" />
     <Compile Include="Constraints\EndsWithConstraintTests.cs" />
-    <Compile Include="Constraints\EqualConstraintTests.cs" />
-    <Compile Include="Constraints\EqualTest.cs" />
     <Compile Include="Constraints\ExactTypeConstraintTests.cs" />
-    <Compile Include="Constraints\FloatingPointNumericsTest.cs" />
     <Compile Include="Constraints\GreaterThanConstraintTests.cs" />
     <Compile Include="Constraints\GreaterThanOrEqualConstraintTests.cs" />
     <Compile Include="Constraints\InstanceOfTypeConstraintTests.cs" />
     <Compile Include="Constraints\LessThanConstraintTests.cs" />
     <Compile Include="Constraints\LessThanOrEqualConstraintTests.cs" />
+    <Compile Include="Constraints\NUnitComparerTests.cs" />
+    <Compile Include="Constraints\ConstraintTestBase.cs" />
+    <Compile Include="Constraints\EmptyConstraintTest.cs" />
+    <Compile Include="Constraints\EqualConstraintTests.cs" />
+    <Compile Include="Constraints\EqualTest.cs" />
+    <Compile Include="Constraints\FloatingPointNumericsTest.cs" />
     <Compile Include="Constraints\MsgUtilTests.cs" />
     <Compile Include="Constraints\NotConstraintTests.cs" />
     <Compile Include="Constraints\NumericsTest.cs" />
-    <Compile Include="Constraints\NUnitComparerTests.cs" />
     <Compile Include="Constraints\NUnitEqualityComparerTests.cs" />
     <Compile Include="Constraints\OrConstraintTests.cs" />
     <Compile Include="Constraints\PathConstraintTests.cs" />
@@ -142,6 +135,7 @@
     <Compile Include="Constraints\PropertyTests.cs" />
     <Compile Include="Constraints\RangeConstraintTests.cs" />
     <Compile Include="Constraints\RangeTests.cs" />
+    <Compile Include="Constraints\ReusableConstraintTests.cs" />
     <Compile Include="Constraints\SameAsTest.cs" />
     <Compile Include="Constraints\StartsWithConstraintTests.cs" />
     <Compile Include="Constraints\StringConstraintTest.cs" />
@@ -150,10 +144,16 @@
     <Compile Include="Constraints\ThrowsExceptionConstraintTests.cs" />
     <Compile Include="Constraints\ToStringTests.cs" />
     <Compile Include="Constraints\XmlSerializableTest.cs" />
+    <Compile Include="Internal\AsyncTestMethodTests.cs" />
+    <Compile Include="Internal\CallContextTests.cs" />
+    <Compile Include="Internal\CoreExtensionsTests.cs" />
     <Compile Include="Internal\CultureSettingAndDetectionTests.cs" />
     <Compile Include="Internal\DeduceTypeArgsFromArgs.cs" />
+    <Compile Include="Internal\EventQueueTests.cs" />
     <Compile Include="Internal\GenericTestFixtureTests.cs" />
     <Compile Include="Internal\GenericTestMethodTests.cs" />
+    <Compile Include="Internal\LegacySuiteTests.cs" />
+    <Compile Include="Internal\NUnitTestCaseBuilderTests.cs" />
     <Compile Include="Internal\PlatformDetectionTests.cs" />
     <Compile Include="Internal\PropertyBagTests.cs" />
     <Compile Include="Internal\RandomGeneratorTests.cs" />
@@ -163,18 +163,21 @@
     <Compile Include="Internal\SetUpTest.cs" />
     <Compile Include="Internal\SimpleGenericMethods.cs" />
     <Compile Include="Internal\TestExecutionContextTests.cs" />
+    <Compile Include="Internal\TestFilterTests.cs" />
     <Compile Include="Internal\TestFixtureTests.cs" />
     <Compile Include="Internal\TestMethodSignatureTests.cs" />
-    <Compile Include="Internal\TestResultTests.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Internal\TestResultTests.cs" />
     <Compile Include="Internal\TestXmlTests.cs" />
     <Compile Include="Internal\TextMessageWriterTests.cs" />
     <Compile Include="Internal\TypeParameterUsedWithTestMethod.cs" />
-    <Compile Include="NUnitLite.cs" />
+    <Compile Include="Internal\UnexpectedExceptionTests.cs" />
+    <Compile Include="Internal\UnhandledExceptionTests.cs" />
+    <Compile Include="Syntax\AfterTests.cs" />
+    <Compile Include="Syntax\ArbitraryConstraintMatching.cs" />
     <Compile Include="Syntax\CollectionTests.cs" />
     <Compile Include="Syntax\ComparisonTests.cs" />
     <Compile Include="Syntax\EqualityTests.cs" />
+    <Compile Include="Syntax\InvalidCodeTests.cs" />
     <Compile Include="Syntax\OperatorOverrides.cs" />
     <Compile Include="Syntax\OperatorTests.cs" />
     <Compile Include="Syntax\PathConstraintTests.cs" />
@@ -183,66 +186,44 @@
     <Compile Include="Syntax\SimpleConstraints.cs" />
     <Compile Include="Syntax\StringConstraints.cs" />
     <Compile Include="Syntax\SyntaxTest.cs" />
+    <Compile Include="Syntax\TestCompiler.cs" />
     <Compile Include="Syntax\ThrowsTests.cs" />
     <Compile Include="Syntax\TypeConstraints.cs" />
     <Compile Include="TestContextTests.cs" />
+    <Compile Include="TestUtilities\AlwaysEqualComparer.cs" />
+    <Compile Include="TestUtilities\CollectionAdapter.cs" />
     <Compile Include="TestUtilities\ResultSummary.cs" />
     <Compile Include="TestUtilities\TestAssert.cs" />
     <Compile Include="TestUtilities\TestBuilder.cs" />
-    <Compile Include="TestUtilities\TestDelegates.cs" />
-    <Compile Include="TestUtilities\AlwaysEqualComparer.cs" />
-    <Compile Include="TestUtilities\CollectionAdapter.cs" />
     <Compile Include="TestUtilities\TestComparer.cs" />
+    <Compile Include="TestUtilities\TestDelegates.cs" />
     <Compile Include="TestUtilities\TestFinder.cs" />
     <Compile Include="Constraints\ExactCountConstraintTests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="TestImage1.jpg" />
     <EmbeddedResource Include="TestImage2.jpg" />
     <EmbeddedResource Include="TestText1.txt" />
     <EmbeddedResource Include="TestText2.txt" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="nunitlite.tests.build" />
+    <None Include="nunit.framework.tests.build" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="TestImage1.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Properties\" />
-  </ItemGroup>
-  <ItemGroup>
-    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
-      <Visible>False</Visible>
-      <ProductName>Windows Installer 3.1</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\framework\nunitlite-3.5.csproj">
-      <Project>{8C09BB92-C5F6-496C-BEE7-BB16677823D6}</Project>
-      <Name>nunitlite-3.5</Name>
+    <ProjectReference Include="..\framework\nunit.framework-4.5.csproj">
+      <Project>{d209c368-1277-4ea6-a887-aa6eba51ab99}</Project>
+      <Name>nunit.framework-4.5</Name>
     </ProjectReference>
-    <ProjectReference Include="..\testdata\nunitlite.testdata-3.5.csproj">
-      <Project>{749FF626-F36B-45C1-8A80-AB21A3655292}</Project>
-      <Name>nunitlite.testdata-3.5</Name>
+    <ProjectReference Include="..\testdata\nunit.testdata-4.5.csproj">
+      <Project>{e7541163-d7bb-4e9a-a722-d7737b7a2995}</Project>
+      <Name>nunit.testdata-4.5</Name>
     </ProjectReference>
   </ItemGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

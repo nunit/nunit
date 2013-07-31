@@ -21,7 +21,10 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
+using System.Reflection;
 using NUnit.Framework.Api;
+
 
 namespace NUnit.Framework.Internal.Commands
 {
@@ -31,16 +34,21 @@ namespace NUnit.Framework.Internal.Commands
     /// </summary>
     public class TestMethodCommand : TestCommand
     {
+        private const string TaskWaitMethod = "Wait";
+        private const string TaskResultProperty = "Result";
+        private const string SystemAggregateException = "System.AggregateException";
+        private const string InnerExceptionProperty = "InnerExceptions";
+        private const BindingFlags TaskResultPropertyBindingFlags = BindingFlags.GetProperty | BindingFlags.Instance | BindingFlags.Public;
         private readonly TestMethod testMethod;
         private readonly object[] arguments;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TestMethodCommand"/> class.
         /// </summary>
-        /// <param name="test">The test.</param>
-        public TestMethodCommand(Test test) : base(test)
+        /// <param name="testMethod">The test.</param>
+        public TestMethodCommand(TestMethod testMethod) : base(testMethod)
         {
-            this.testMethod = test as TestMethod;
+            this.testMethod = testMethod;
             this.arguments = testMethod.Arguments;
         }
 
@@ -56,13 +64,49 @@ namespace NUnit.Framework.Internal.Commands
         public override TestResult Execute(TestExecutionContext context)
         {
             // TODO: Decide if we should handle exceptions here
-            object result = Reflect.InvokeMethod(testMethod.Method, context.TestObject, arguments);
+            object result = RunTestMethod(context);
 
             if (testMethod.HasExpectedResult)
                 NUnit.Framework.Assert.AreEqual(testMethod.ExpectedResult, result);
 
             context.CurrentResult.SetResult(ResultState.Success);
+            // TODO: Set assert count here?
+            //context.CurrentResult.AssertCount = context.AssertCount
             return context.CurrentResult;
         }
+
+        private object RunTestMethod(TestExecutionContext context)
+        {
+#if NET_4_5
+            if (MethodHelper.IsAsyncMethod(testMethod.Method))
+                return RunAsyncTestMethod(context);
+            else
+#endif
+                return RunNonAsyncTestMethod(context);
+        }
+
+        private object RunNonAsyncTestMethod(TestExecutionContext context)
+        {
+            return Reflect.InvokeMethod(testMethod.Method, context.TestObject, arguments);
+        }
+
+#if NET_4_5
+        private object RunAsyncTestMethod(TestExecutionContext context)
+        {
+            using (AsyncInvocationRegion region = AsyncInvocationRegion.Create(testMethod.Method))
+            {
+                object result = Reflect.InvokeMethod(testMethod.Method, context.TestObject, arguments);
+
+                try
+                {
+                    return region.WaitForPendingOperationsToComplete(result);
+                }
+                catch (Exception e)
+                {
+                    throw new NUnitException("Rethrown", e);
+                }
+            }
+        }
+#endif
     }
 }
