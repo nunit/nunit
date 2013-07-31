@@ -47,7 +47,9 @@ using System.Reflection;
 [assembly: AssemblyInformationalVersion("2.9.6")]
 
 #if DEBUG
-#if NET_4_0
+#if NET_4_5
+[assembly: AssemblyConfiguration(".NET 4.5 Debug")]
+#elif NET_4_0
 [assembly: AssemblyConfiguration(".NET 4.0 Debug")]
 #elif NET_3_5
 [assembly: AssemblyConfiguration(".NET 3.5 Debug")]
@@ -55,7 +57,9 @@ using System.Reflection;
 [assembly: AssemblyConfiguration(".NET 2.0 Debug")]
 #endif
 #else
-#if NET_4_0
+#if NET_4_5
+[assembly: AssemblyConfiguration(".NET 4.5")]
+#elif NET_4_0
 [assembly: AssemblyConfiguration(".NET 4.0")]
 #elif NET_3_5
 [assembly: AssemblyConfiguration(".NET 3.5")]

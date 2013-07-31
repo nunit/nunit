@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2008 Charlie Poole
+// Copyright (c) 2008-2012 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -28,6 +28,10 @@ using NUnit.Framework.Internal;
 using NUnit.Framework.Extensibility;
 using NUnit.Framework.Internal.Commands;
 
+#if NET_4_5
+using System.Threading.Tasks;
+#endif
+
 namespace NUnit.Framework.Builders
 {
     /// <summary>
@@ -44,11 +48,21 @@ namespace NUnit.Framework.Builders
     /// </summary>
     public class NUnitTestCaseBuilder : ITestCaseBuilder2
 	{
+        private Randomizer randomizer;
+
 #if NUNITLITE
         private ITestCaseProvider testCaseProvider = new TestCaseProviders();
 #else
         private ITestCaseProvider testCaseProvider = CoreExtensions.Host.TestCaseProviders;
 #endif
+
+        /// <summary>
+        /// Default no argument constructor for NUnitTestCaseBuilder
+        /// </summary>
+        public NUnitTestCaseBuilder()
+        {
+            randomizer = Randomizer.CreateRandomizer();
+        }
 
         #region ITestCaseBuilder Methods
         /// <summary>
@@ -164,9 +178,11 @@ namespace NUnit.Framework.Builders
         /// <param name="parentSuite">The suite or fixture to which the new test will be added</param>
         /// <param name="parms">The ParameterSet to be used, or null</param>
         /// <returns></returns>
-        public static TestMethod BuildSingleTestMethod(MethodInfo method, Test parentSuite, ParameterSet parms)
+        private TestMethod BuildSingleTestMethod(MethodInfo method, Test parentSuite, ParameterSet parms)
         {
             TestMethod testMethod = new TestMethod(method, parentSuite);
+
+            testMethod.Seed = randomizer.Next();
 
             string prefix = method.ReflectedType.FullName;
 
@@ -260,9 +276,10 @@ namespace NUnit.Framework.Builders
             }
 
 #if NETCF
+            // TODO: Get this to work
             if (testMethod.Method.IsGenericMethodDefinition)
             {
-                return MarkAsNotRunnable(testMethod, "Generic test methods are not supported under .NET CF");
+                return MarkAsNotRunnable(testMethod, "Generic test methods are not yet supported under .NET CF");
             }
 #endif
 
@@ -286,10 +303,27 @@ namespace NUnit.Framework.Builders
                     return false;
             }
 
-            if (!testMethod.Method.ReturnType.Equals(typeof(void)) &&
-                (parms == null || !parms.HasExpectedResult && !parms.ExceptionExpected))
+            Type returnType = testMethod.Method.ReturnType;
+            if (returnType.Equals(typeof(void)))
             {
-                return MarkAsNotRunnable(testMethod, "Method has non-void return value");
+                if (parms != null && parms.HasExpectedResult)
+                    return MarkAsNotRunnable(testMethod, "Method returning void cannot have an expected result");
+            }
+            else
+            {
+#if NET_4_5
+                if (MethodHelper.IsAsyncMethod(testMethod.Method))
+                {
+                    bool returnsGenericTask = returnType.IsGenericType && returnType.GetGenericTypeDefinition() == typeof(Task<>);
+                    if (returnsGenericTask && (parms == null || !parms.HasExpectedResult && !parms.ExceptionExpected))
+                        return MarkAsNotRunnable(testMethod, "Async test method must have Task or void return type when no result is expected");
+                    else if (!returnsGenericTask && parms != null && parms.HasExpectedResult)
+                        return MarkAsNotRunnable(testMethod, "Async test method must have Task<T> return type when a result is expected");
+                }
+                else
+#endif
+                    if (parms == null || !parms.HasExpectedResult && !parms.ExceptionExpected)
+                        return MarkAsNotRunnable(testMethod, "Method has non-void return value, but no result is expected");
             }
 
             if (argsProvided > 0 && argsNeeded == 0)

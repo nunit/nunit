@@ -5,12 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{EE7E1D47-C686-496A-81F2-B05F085BC21F}</ProjectGuid>
+    <ProjectGuid>{D209C368-1277-4EA6-A887-AA6EBA51AB99}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NUnit.Framework</RootNamespace>
     <AssemblyName>nunit.framework</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>nunit.snk</AssemblyOriginatorKeyFile>
@@ -18,27 +17,30 @@
     </FileUpgradeFlags>
     <OldToolsVersion>3.5</OldToolsVersion>
     <UpgradeBackupLocation />
-	  <IntermediateOutputPath>obj\$(Configuration)\net-3.5\</IntermediateOutputPath>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\bin\Debug\net-3.5\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;NET_3_5</DefineConstants>
+    <OutputPath>..\..\..\bin\Debug\net-4.5\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;NET_4_5</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\..\..\bin\Debug\net-3.5\nunit.framework.xml</DocumentationFile>
+    <DocumentationFile>..\..\..\bin\Debug\net-4.5\nunit.framework.xml</DocumentationFile>
     <NoWarn>1699</NoWarn>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\..\bin\Release\net-3.5\</OutputPath>
-    <DefineConstants>TRACE;NET_3_5</DefineConstants>
+    <OutputPath>..\..\build\net\4.5\Release\</OutputPath>
+    <DefineConstants>TRACE;NET_4_5</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\..\..\bin\Release\net-3.5\nunit.framework.xml</DocumentationFile>
+    <DocumentationFile>..\..\build\net\4.5\Release\nunit.framework.xml</DocumentationFile>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -151,7 +153,6 @@
     <Compile Include="Constraints\EmptyStringConstraint.cs" />
     <Compile Include="Constraints\EndsWithConstraint.cs" />
     <Compile Include="Constraints\EqualConstraint.cs" />
-    <Compile Include="Constraints\EqualConstraintResult.cs" />
     <Compile Include="Constraints\EqualityAdapter.cs" />
     <Compile Include="Constraints\ExactTypeConstraint.cs" />
     <Compile Include="Constraints\FalseConstraint.cs" />
@@ -199,6 +200,7 @@
     <Compile Include="Constraints\SamePathConstraint.cs" />
     <Compile Include="Constraints\SamePathOrUnderConstraint.cs" />
     <Compile Include="Constraints\SomeItemsConstraint.cs" />
+    <Compile Include="Constraints\EqualConstraintResult.cs" />
     <Compile Include="Constraints\StartsWithConstraint.cs" />
     <Compile Include="Constraints\StringConstraint.cs" />
     <Compile Include="Constraints\SubstringConstraint.cs" />
@@ -251,21 +253,23 @@
     <Compile Include="Internal\Builders\ProviderCache.cs" />
     <Compile Include="Internal\Builders\SequentialStrategy.cs" />
     <Compile Include="Internal\Builders\SetUpFixtureBuilder.cs" />
-    <Compile Include="Internal\Commands\CommandDecoratorList.cs" />
-    <Compile Include="Internal\Commands\CommandStage.cs" />
-    <Compile Include="Internal\Commands\ICommandDecorator.cs" />
+    <Compile Include="Internal\AsyncInvocationRegion.cs" />
+    <Compile Include="Internal\AsyncSynchronizationContext.cs" />
     <Compile Include="Internal\Commands\SuiteCommands\SkippedSuiteCommand.cs" />
     <Compile Include="Internal\Commands\SuiteCommands\SuiteCommand.cs" />
-    <Compile Include="Internal\Commands\SuiteCommands\TestSuiteCommand.cs" />
     <Compile Include="Internal\Commands\TestCommands\ApplyChangesToContextCommand.cs" />
+    <Compile Include="Internal\Commands\CommandDecoratorList.cs" />
+    <Compile Include="Internal\Commands\CommandStage.cs" />
     <Compile Include="Internal\Commands\TestCommands\DelegatingTestCommand.cs" />
     <Compile Include="Internal\Commands\TestCommands\ExpectedExceptionCommand.cs" />
+    <Compile Include="Internal\Commands\ICommandDecorator.cs" />
     <Compile Include="Internal\Commands\TestCommands\MaxTimeCommand.cs" />
     <Compile Include="Internal\Commands\TestCommands\RepeatedTestCommand.cs" />
     <Compile Include="Internal\Commands\TestCommands\SetUpTearDownCommand.cs" />
     <Compile Include="Internal\Commands\TestCommands\SkipCommand.cs" />
     <Compile Include="Internal\Commands\TestCommands\TestCommand.cs" />
     <Compile Include="Internal\Commands\TestCommands\TestMethodCommand.cs" />
+    <Compile Include="Internal\Commands\SuiteCommands\TestSuiteCommand.cs" />
     <Compile Include="Internal\CoreExtensions.cs" />
     <Compile Include="Internal\CultureDetector.cs" />
     <Compile Include="Internal\DefaultTestAssemblyBuilder.cs" />
@@ -348,7 +352,9 @@
     <Compile Include="Internal\Results\TestCaseResult.cs" />
     <Compile Include="Internal\Results\TestSuiteResult.cs" />
     <None Include="nunit.framework.build" />
-    <None Include="nunitlite.build" />
+    <None Include="nunitlite.build">
+      <SubType>Designer</SubType>
+    </None>
     <Compile Include="Constraints\ExactCountConstraint.cs" />
     <Compile Include="Constraints\Operators\ExactCountOperator.cs" />
     <Compile Include="Constraints\ExceptionTypeConstraint.cs" />
@@ -358,11 +364,9 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web" />
-    <Reference Include="System.Web.Abstractions" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Attributes\AttributeHierarchy.txt" />
   </ItemGroup>
-  <ItemGroup />
 </Project>
