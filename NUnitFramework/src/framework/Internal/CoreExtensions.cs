@@ -47,7 +47,6 @@ namespace NUnit.Framework.Internal
 
 		private SuiteBuilderCollection suiteBuilders;
 		private TestCaseBuilderCollection testBuilders;
-		private TestDecoratorCollection testDecorators;
 		private EventListenerCollection listeners;
 	    private TestCaseProviders testcaseProviders;
         private ParameterDataProviders parameterDataProviders;
@@ -82,14 +81,12 @@ namespace NUnit.Framework.Internal
 		{
 			this.suiteBuilders = new SuiteBuilderCollection(this);
 			this.testBuilders = new TestCaseBuilderCollection(this);
-			this.testDecorators = new TestDecoratorCollection(this);
 			this.listeners = new EventListenerCollection(this);
             this.testcaseProviders = new TestCaseProviders(this);
             this.parameterDataProviders = new ParameterDataProviders(this);
 
 		    extensions.Add(suiteBuilders);
 		    extensions.Add(testBuilders);
-		    extensions.Add(testDecorators);
 		    extensions.Add(listeners);
 		    extensions.Add(testcaseProviders);
             extensions.Add(parameterDataProviders);
@@ -148,11 +145,6 @@ namespace NUnit.Framework.Internal
 		internal ITestCaseBuilder2 TestBuilders
 		{
 			get { return testBuilders; }
-		}
-
-		internal ITestDecorator TestDecorators
-		{
-			get { return testDecorators; }
 		}
 
 		internal ITestListener Listeners

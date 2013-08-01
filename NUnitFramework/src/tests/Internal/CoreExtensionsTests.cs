@@ -58,15 +58,6 @@ namespace NUnit.Framework.Internal
 		}
 
 		[Test]
-		public void HasTestDecoratorsExtensionPoint()
-		{
-			IExtensionPoint ep = host.GetExtensionPoint( "TestDecorators" );
-			Assert.IsNotNull( ep );
-			Assert.AreEqual( "TestDecorators", ep.Name );
-			Assert.AreEqual( typeof( TestDecoratorCollection ), ep.GetType() );
-		}
-
-		[Test]
 		public void HasEventListenerExtensionPoint()
 		{
 			IExtensionPoint ep = host.GetExtensionPoint( "EventListeners" );
@@ -75,75 +66,6 @@ namespace NUnit.Framework.Internal
 			Assert.AreEqual( typeof( EventListenerCollection ), ep.GetType() );
 		}
 
-        //[Test]
-        //public void CanAddDecorator()
-        //{
-        //    DynamicMock mock = new DynamicMock( typeof(ITestDecorator) );
-        //    mock.Expect( "Decorate" );
-
-        //    IExtensionPoint ep = host.GetExtensionPoint("TestDecorators");
-        //    ep.Install(mock.MockInstance);
-
-        //    ITestDecorator decorators = (ITestDecorator)ep;
-        //    decorators.Decorate(null, null);
-
-        //    mock.Verify();
-        //}
-
-        //class MockDecorator : ITestDecorator
-        //{
-        //    private string name;
-        //    private StringBuilder sb;
-
-        //    public MockDecorator(string name, StringBuilder sb)
-        //    {
-        //        this.name = name;
-        //        this.sb = sb;
-        //    }
-
-        //    public Test Decorate(Test test, MemberInfo member)
-        //    {
-        //        sb.Append(name);
-        //        return test;
-        //    }
-        //}
-
-        //[Test]
-        //public void DecoratorsRunInOrderOfPriorities()
-        //{
-        //    StringBuilder sb = new StringBuilder();
-
-        //    ITestDecorator mock0 = new MockDecorator("mock0", sb);
-        //    ITestDecorator mock1 = new MockDecorator("mock1", sb);
-        //    ITestDecorator mock3a = new MockDecorator("mock3a", sb);
-        //    ITestDecorator mock3b = new MockDecorator("mock3b", sb);
-        //    ITestDecorator mock3c = new MockDecorator("mock3c", sb);
-        //    ITestDecorator mock5a = new MockDecorator("mock5a", sb);
-        //    ITestDecorator mock5b = new MockDecorator("mock5b", sb);
-        //    ITestDecorator mock8 = new MockDecorator("mock8", sb);
-        //    ITestDecorator mock9 = new MockDecorator("mock9", sb);
-
-        //    IExtensionPoint2 ep = (IExtensionPoint2)host.GetExtensionPoint("TestDecorators");
-        //    ep.Install(mock8, 8);
-        //    ep.Install(mock5a, 5);
-        //    ep.Install(mock1, 1);
-        //    ep.Install(mock3a, 3);
-        //    ep.Install(mock3b, 3);
-        //    ep.Install(mock9, 9);
-        //    ep.Install(mock3c, 3);
-        //    ep.Install(mock0);
-        //    ep.Install(mock5b, 5);
-
-        //    ITestDecorator decorators = (ITestDecorator)ep;
-        //    decorators.Decorate(null, null);
-        //    Assert.AreEqual("mock0mock1mock3amock3bmock3cmock5amock5bmock8mock9", sb.ToString());
-
-        //    sb.Remove(0, sb.Length);
-        //    decorators.Decorate(null, null);
-        //    Assert.AreEqual("mock0mock1mock3amock3bmock3cmock5amock5bmock8mock9", sb.ToString());
-        //}
-
-        //[Test]
         //public void CanAddSuiteBuilder()
         //{
         //    DynamicMock mock = new DynamicMock( typeof(ISuiteBuilder) );

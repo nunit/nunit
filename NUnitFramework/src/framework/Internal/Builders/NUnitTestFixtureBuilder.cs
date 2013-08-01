@@ -56,7 +56,6 @@ namespace NUnit.Framework.Builders
         private Extensibility.ITestCaseBuilder2 testBuilder = new NUnitTestCaseBuilder();
 #else
         private Extensibility.ITestCaseBuilder2 testBuilder = CoreExtensions.Host.TestBuilders;
-        private Extensibility.ITestDecorator testDecorators = CoreExtensions.Host.TestDecorators;
 #endif
 
 		#endregion
@@ -224,9 +223,7 @@ namespace NUnit.Framework.Builders
 		/// it to the fixture being built. It first checks to see if
 		/// any global TestCaseBuilder addin wants to build the
 		/// test case. If not, it uses the internal builder
-		/// collection maintained by this fixture builder. After
-		/// building the test case, it applies any decorators
-		/// that have been installed.
+		/// collection maintained by this fixture builder.
 		/// 
 		/// The default implementation has no test case builders.
 		/// Derived classes should add builders to the collection
@@ -242,12 +239,7 @@ namespace NUnit.Framework.Builders
                 ? testBuilder.BuildFrom(method, suite)
                 : null;
 #else
-            Test test = testBuilder.BuildFrom( method, suite );
-
-			if ( test != null )
-				test = testDecorators.Decorate( test, method );
-
-			return test;
+            return testBuilder.BuildFrom( method, suite );
 #endif
 		}
 
