@@ -49,8 +49,8 @@ namespace NUnit.Framework.Internal
         public TestFixture(Type fixtureType, object[] arguments)
             : base(fixtureType, arguments) 
         {
-            this.oneTimeSetUpMethods =      GetSetUpTearDownMethods( typeof(TestFixtureSetUpAttribute) );
-            this.oneTimeTearDownMethods =   GetSetUpTearDownMethods( typeof( TestFixtureTearDownAttribute) );
+            this.oneTimeSetUpMethods = GetSetUpTearDownMethods(typeof(TestFixtureSetUpAttribute));
+            this.oneTimeTearDownMethods = GetSetUpTearDownMethods(typeof(TestFixtureTearDownAttribute));
             this.setUpMethods =             GetSetUpTearDownMethods( typeof(SetUpAttribute) );
             this.tearDownMethods =          GetSetUpTearDownMethods( typeof(TearDownAttribute) );
         }

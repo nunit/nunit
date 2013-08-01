@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System.Reflection;
+using NUnit.Framework.Internal.Commands;
 
 namespace NUnit.Framework.Internal
 {
@@ -31,7 +32,8 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public class ParameterizedMethodSuite : TestSuite
     {
-        private MethodInfo method;
+        private MethodInfo _method;
+        private bool _isTheory;
 
         /// <summary>
         /// Construct from a MethodInfo
@@ -40,7 +42,8 @@ namespace NUnit.Framework.Internal
         public ParameterizedMethodSuite(MethodInfo method)
             : base(method.ReflectedType.FullName, method.Name)
         {
-            this.method = method;
+            _method = method;
+            _isTheory = method.IsDefined(typeof(TheoryAttribute), true);
             this.maintainTestOrder = true;
         }
 
@@ -49,7 +52,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public MethodInfo Method
         {
-            get { return method; }
+            get { return _method; }
         }
 
         /// <summary>
@@ -60,7 +63,7 @@ namespace NUnit.Framework.Internal
         {
             get
             {
-                if (method.IsDefined(typeof(TheoryAttribute), true))
+                if (_isTheory)
                     return "Theory";
 
                 if (this.Method.ContainsGenericParameters)
@@ -68,6 +71,23 @@ namespace NUnit.Framework.Internal
                 
                 return "ParameterizedMethod";
             }
+        }
+
+        /// <summary>
+        /// Gets the command to be executed after all the child
+        /// tests are run. Overridden in ParameterizedMethodSuite
+        /// to set the result to failure if all the child tests
+        /// were inconclusive.
+        /// </summary>
+        /// <returns></returns>
+        public override TestCommand GetOneTimeTearDownCommand()
+        {
+            TestCommand command = base.GetOneTimeTearDownCommand();
+
+            if (_isTheory)
+                command = new TheoryResultCommand(command);
+
+            return command;
         }
     }
 }

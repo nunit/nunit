@@ -36,8 +36,10 @@ namespace NUnit.Framework.Internal.WorkItems
     public class CompositeWorkItem : WorkItem
     {
         private TestSuite _suite;
+        private ITestFilter _childFilter;
         private System.Collections.Generic.Queue<WorkItem> _children = new System.Collections.Generic.Queue<WorkItem>();
-        private SuiteCommand _suiteCommand;
+        private TestCommand _setupCommand;
+        private TestCommand _teardownCommand;
 
         private CountdownEvent _childTestCountdown;
 
@@ -51,11 +53,9 @@ namespace NUnit.Framework.Internal.WorkItems
             : base(suite)
         {
             _suite = suite;
-            _suiteCommand = _suite.MakeCommand();
-
-            foreach (Test test in _suite.Tests)
-                if (childFilter.Pass(test))
-                    _children.Enqueue(test.CreateWorkItem(childFilter));
+            _setupCommand = suite.GetOneTimeSetUpCommand();
+            _teardownCommand = suite.GetOneTimeTearDownCommand();
+            _childFilter = childFilter;
         }
 
         /// <summary>
@@ -65,31 +65,57 @@ namespace NUnit.Framework.Internal.WorkItems
         /// </summary>
         protected override void PerformWork()
         {
-            // Assume success, since the result will be inconclusive
-            // if there is no setup method to run or if the
-            // context initialization fails.
-            Result.SetResult(ResultState.Success);
+            if (_suite.HasChildren)
+                foreach (Test test in _suite.Tests)
+                    if (_childFilter.Pass(test))
+                        _children.Enqueue(test.CreateWorkItem(_childFilter));
 
-            PerformOneTimeSetUp();
-
-            if (_children.Count > 0)
+            switch (Test.RunState)
             {
-                switch (Result.ResultState.Status)
-                {
-                    case TestStatus.Passed:
-                        RunChildren();
-                        break;
-                    case TestStatus.Skipped:
-                    case TestStatus.Inconclusive:
-                        SkipChildren();
-                        break;
-                    case TestStatus.Failed:
-                        MarkChildrenFailed();
-                        break;
-                }
+                default:
+                case RunState.Runnable:
+                case RunState.Explicit:
+                    // Assume success, since the result will be inconclusive
+                    // if there is no setup method to run or if the
+                    // context initialization fails.
+                    Result.SetResult(ResultState.Success);
+
+                    PerformOneTimeSetUp();
+
+                    if (_children.Count > 0)
+                        switch (Result.ResultState.Status)
+                        {
+                            case TestStatus.Passed:
+                                RunChildren();
+                                return;
+                                // Just return: completion event will take care
+                                // of TestFixtureTearDown when all tests are done.
+
+                            case TestStatus.Skipped:
+                            case TestStatus.Inconclusive:
+                            case TestStatus.Failed:
+                                SkipChildren();
+                                break;
+                        }
+
+                    PerformOneTimeTearDown();
+                    break;
+
+                case RunState.Skipped:
+                    SkipFixture(ResultState.Skipped, GetSkipReason(), null);
+                    break;
+
+                case RunState.Ignored:
+                    SkipFixture(ResultState.Ignored, GetSkipReason(), null);
+                    break;
+
+                case RunState.NotRunnable:
+                    SkipFixture(ResultState.NotRunnable, GetSkipReason(), GetProviderStackTrace());
+                    break;
             }
 
-            PerformOneTimeTearDown();
+            // Fall through in case no child tests were run.
+            // Otherwise, this is done in the completion event.
             WorkItemComplete();
         }
 
@@ -99,7 +125,7 @@ namespace NUnit.Framework.Internal.WorkItems
         {
             try
             {
-                _suiteCommand.DoOneTimeSetUp(Context);
+                _setupCommand.Execute(Context);
 
                 // SetUp may have changed some things
                 Context.UpdateContext();
@@ -123,47 +149,63 @@ namespace NUnit.Framework.Internal.WorkItems
                 child.Completed += new EventHandler(OnChildCompleted);
                 child.Execute(this.Context);
             }
-
-            _childTestCountdown.Wait();
         }
 
-        private void PerformOneTimeTearDown()
+        private void SkipFixture(ResultState resultState, string message, string stackTrace)
         {
-            _suiteCommand.DoOneTimeTearDown(Context);
-        }
-
-        private void OnChildCompleted(object sender, EventArgs e)
-        {
-            WorkItem childTask = sender as WorkItem;
-            if (childTask != null)
-            {
-                childTask.Completed -= new EventHandler(OnChildCompleted);
-                Result.AddResult(childTask.Result);
-                _childTestCountdown.Signal();
-            }
+            Result.SetResult(resultState, message, stackTrace);
+            SkipChildren();
         }
 
         private void SkipChildren()
         {
             while (_children.Count > 0)
             {
-                WorkItem child = _children.Dequeue();
+                WorkItem child = (WorkItem)_children.Dequeue();
                 Test test = child.Test;
                 TestResult result = test.MakeTestResult();
-                result.SetResult(Result.ResultState, Result.Message);
+                if (Result.ResultState.Status == TestStatus.Failed)
+                    result.SetResult(ResultState.Failure, "TestFixtureSetUp Failed");
+                else
+                    result.SetResult(Result.ResultState, Result.Message);
                 Result.AddResult(result);
             }
         }
 
-        private void MarkChildrenFailed()
+        private void PerformOneTimeTearDown()
         {
-            while (_children.Count > 0)
+            TestExecutionContext.SetCurrentContext(Context);
+            _teardownCommand.Execute(Context);
+        }
+
+        private string GetSkipReason()
+        {
+            return (string)Test.Properties.Get(PropertyNames.SkipReason);
+        }
+
+        private string GetProviderStackTrace()
+        {
+            return (string)Test.Properties.Get(PropertyNames.ProviderStackTrace);
+        }
+
+        private object _completionLock = new object();
+
+        private void OnChildCompleted(object sender, EventArgs e)
+        {
+            lock (_completionLock)
             {
-                WorkItem child = _children.Dequeue();
-                Test test = child.Test;
-                TestResult result = test.MakeTestResult();
-                result.SetResult(ResultState.Failure, "Parent SetUp Failed");
-                Result.AddResult(result);
+                WorkItem childTask = sender as WorkItem;
+                if (childTask != null)
+                {
+                    childTask.Completed -= new EventHandler(OnChildCompleted);
+                    Result.AddResult(childTask.Result);
+                    _childTestCountdown.Signal();
+                    if (_childTestCountdown.CurrentCount == 0)
+                    {
+                        PerformOneTimeTearDown();
+                        WorkItemComplete();
+                    }
+                }
             }
         }
 

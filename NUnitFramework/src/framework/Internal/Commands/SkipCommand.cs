@@ -47,7 +47,7 @@ namespace NUnit.Framework.Internal.Commands
         /// <returns>A TestResult</returns>
         public override TestResult Execute(TestExecutionContext context)
         {
-            TestResult testResult = this.Test.MakeTestResult();
+            TestResult testResult = context.CurrentResult;
 
             switch (Test.RunState)
             {

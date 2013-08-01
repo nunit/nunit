@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !CLR_4_0
+#if !NET_4_0 && !NET_4_5 || SILVERLIGHT
 using System.Threading;
 
 namespace NUnit.Framework.Internal.WorkItems
@@ -45,6 +45,22 @@ namespace NUnit.Framework.Internal.WorkItems
         public CountdownEvent(int initialCount)
         {
             _initialCount = _remainingCount = initialCount;
+        }
+
+        /// <summary>
+        /// Gets the initial count established for the CountdownEvent
+        /// </summary>
+        public int InitialCount
+        {
+            get { return _initialCount; }
+        }
+
+        /// <summary>
+        /// Gets the current count remaining for the CountdownEvent
+        /// </summary>
+        public int CurrentCount
+        {
+            get { return _remainingCount; }
         }
 
         /// <summary>

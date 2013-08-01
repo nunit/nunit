@@ -48,9 +48,9 @@ namespace NUnit.Framework.Internal
             int index = this.Name.LastIndexOf('.');
             if (index > 0)
                 this.Name = this.Name.Substring(index + 1);
-            
-			this.oneTimeSetUpMethods = GetSetUpTearDownMethods( typeof(NUnit.Framework.SetUpAttribute) );
-			this.oneTimeTearDownMethods = GetSetUpTearDownMethods( typeof(NUnit.Framework.TearDownAttribute) );
+
+            this.oneTimeSetUpMethods = GetSetUpTearDownMethods(typeof(NUnit.Framework.SetUpAttribute));
+            this.oneTimeTearDownMethods = GetSetUpTearDownMethods(typeof(NUnit.Framework.TearDownAttribute));
 		}
 
         private MethodInfo[] GetSetUpTearDownMethods(Type attrType)

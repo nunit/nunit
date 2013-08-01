@@ -34,11 +34,6 @@ namespace NUnit.Framework.Internal.Commands
     /// </summary>
     public class TestMethodCommand : TestCommand
     {
-        private const string TaskWaitMethod = "Wait";
-        private const string TaskResultProperty = "Result";
-        private const string SystemAggregateException = "System.AggregateException";
-        private const string InnerExceptionProperty = "InnerExceptions";
-        private const BindingFlags TaskResultPropertyBindingFlags = BindingFlags.GetProperty | BindingFlags.Instance | BindingFlags.Public;
         private readonly TestMethod testMethod;
         private readonly object[] arguments;
 
@@ -71,7 +66,7 @@ namespace NUnit.Framework.Internal.Commands
 
             context.CurrentResult.SetResult(ResultState.Success);
             // TODO: Set assert count here?
-            //context.CurrentResult.AssertCount = context.AssertCount
+            //context.CurrentResult.AssertCount = context.AssertCount;
             return context.CurrentResult;
         }
 
@@ -83,11 +78,6 @@ namespace NUnit.Framework.Internal.Commands
             else
 #endif
                 return RunNonAsyncTestMethod(context);
-        }
-
-        private object RunNonAsyncTestMethod(TestExecutionContext context)
-        {
-            return Reflect.InvokeMethod(testMethod.Method, context.TestObject, arguments);
         }
 
 #if NET_4_5
@@ -108,5 +98,10 @@ namespace NUnit.Framework.Internal.Commands
             }
         }
 #endif
+
+        private object RunNonAsyncTestMethod(TestExecutionContext context)
+        {
+            return Reflect.InvokeMethod(testMethod.Method, context.TestObject, arguments);
+        }
     }
 }

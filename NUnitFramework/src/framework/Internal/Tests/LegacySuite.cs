@@ -39,8 +39,8 @@ namespace NUnit.Framework.Internal
         /// <param name="fixtureType">Type of the fixture.</param>
 		public LegacySuite( Type fixtureType ) : base( fixtureType )
 		{
-            this.oneTimeSetUpMethods = GetSetUpTearDownMethods( typeof(NUnit.Framework.TestFixtureSetUpAttribute) );
-            this.oneTimeTearDownMethods = GetSetUpTearDownMethods( typeof(NUnit.Framework.TestFixtureTearDownAttribute) );
+            this.oneTimeSetUpMethods = GetSetUpTearDownMethods(typeof(NUnit.Framework.TestFixtureSetUpAttribute));
+            this.oneTimeTearDownMethods = GetSetUpTearDownMethods(typeof(NUnit.Framework.TestFixtureTearDownAttribute));
         }
 
         private MethodInfo[] GetSetUpTearDownMethods(Type attrType)
