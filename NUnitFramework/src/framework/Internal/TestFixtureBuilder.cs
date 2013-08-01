@@ -62,14 +62,7 @@ namespace NUnit.Framework.Internal
 		/// <returns>A TestSuite if the fixture can be built, null if not</returns>
 		public static Test BuildFrom( Type type )
 		{
-            Test suite = builder.BuildFrom( type );
-
-#if !NUNITLITE
-			if ( suite != null )
-				suite = CoreExtensions.Host.TestDecorators.Decorate( suite, type );
-#endif
-
-			return suite;
+            return builder.BuildFrom( type );
 		}
 
 		/// <summary>
