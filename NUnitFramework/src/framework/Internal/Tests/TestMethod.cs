@@ -49,7 +49,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// A list of all decorators applied to the test by attributes or parameterset arguments
         /// </summary>
-        private List<ICommandDecorator> decorators = new System.Collections.Generic.List<ICommandDecorator>();
+        private List<ICommandDecorator> decorators = new List<ICommandDecorator>();
 
         /// <summary>
         /// The ParameterSet used to create this test method
@@ -165,6 +165,8 @@ namespace NUnit.Framework.Internal
 
             PopulateTestNode(thisNode, recursive);
 
+            XmlHelper.AddAttribute(thisNode, "seed", this.Seed.ToString());
+
             return thisNode;
         }
 
@@ -190,7 +192,7 @@ namespace NUnit.Framework.Internal
         /// Creates a test command for use in running this test.
         /// </summary>
         /// <returns></returns>
-        public TestCommand MakeTestCommand()
+        public virtual TestCommand MakeTestCommand()
         {
             if (RunState != RunState.Runnable && RunState != RunState.Explicit)
                 return new SkipCommand(this);

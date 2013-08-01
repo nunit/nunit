@@ -14,8 +14,8 @@
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <OldToolsVersion>3.5</OldToolsVersion>
-	  <IntermediateOutputPath>obj\$(Configuration)\net-4.0\</IntermediateOutputPath>
-	  <UpgradeBackupLocation />
+    <IntermediateOutputPath>obj\$(Configuration)\net-4.0\</IntermediateOutputPath>
+    <UpgradeBackupLocation />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -224,21 +224,21 @@
     <Compile Include="Internal\Builders\SetUpFixtureBuilder.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Internal\Commands\ApplyChangesToContextCommand.cs" />
     <Compile Include="Internal\Commands\CommandDecoratorList.cs" />
     <Compile Include="Internal\Commands\CommandStage.cs" />
+    <Compile Include="Internal\Commands\DelegatingTestCommand.cs" />
+    <Compile Include="Internal\Commands\ExpectedExceptionCommand.cs" />
     <Compile Include="Internal\Commands\ICommandDecorator.cs" />
-    <Compile Include="Internal\Commands\SuiteCommands\SkippedSuiteCommand.cs" />
-    <Compile Include="Internal\Commands\SuiteCommands\SuiteCommand.cs" />
-    <Compile Include="Internal\Commands\SuiteCommands\TestSuiteCommand.cs" />
-    <Compile Include="Internal\Commands\TestCommands\ApplyChangesToContextCommand.cs" />
-    <Compile Include="Internal\Commands\TestCommands\DelegatingTestCommand.cs" />
-    <Compile Include="Internal\Commands\TestCommands\ExpectedExceptionCommand.cs" />
-    <Compile Include="Internal\Commands\TestCommands\MaxTimeCommand.cs" />
-    <Compile Include="Internal\Commands\TestCommands\RepeatedTestCommand.cs" />
-    <Compile Include="Internal\Commands\TestCommands\SetUpTearDownCommand.cs" />
-    <Compile Include="Internal\Commands\TestCommands\SkipCommand.cs" />
-    <Compile Include="Internal\Commands\TestCommands\TestCommand.cs" />
-    <Compile Include="Internal\Commands\TestCommands\TestMethodCommand.cs" />
+    <Compile Include="Internal\Commands\MaxTimeCommand.cs" />
+    <Compile Include="Internal\Commands\OneTimeSetUpCommand.cs" />
+    <Compile Include="Internal\Commands\OneTimeTearDownCommand.cs" />
+    <Compile Include="Internal\Commands\RepeatedTestCommand.cs" />
+    <Compile Include="Internal\Commands\SetUpTearDownCommand.cs" />
+    <Compile Include="Internal\Commands\SkipCommand.cs" />
+    <Compile Include="Internal\Commands\TestCommand.cs" />
+    <Compile Include="Internal\Commands\TestMethodCommand.cs" />
+    <Compile Include="Internal\Commands\TheoryResultCommand.cs" />
     <Compile Include="Internal\CultureDetector.cs" />
     <Compile Include="Internal\DefaultTestAssemblyBuilder.cs" />
     <Compile Include="Internal\DefaultTestAssemblyRunner.cs" />
@@ -290,7 +290,6 @@
     <Compile Include="Internal\ThreadUtility.cs" />
     <Compile Include="Internal\TypeHelper.cs" />
     <Compile Include="Internal\WorkItems\CompositeWorkItem.cs" />
-    <Compile Include="Internal\WorkItems\CountdownEvent.cs" />
     <Compile Include="Internal\WorkItems\SimpleWorkItem.cs" />
     <Compile Include="Internal\WorkItems\WorkItem.cs" />
     <Compile Include="Internal\WorkItems\WorkItemState.cs" />

@@ -85,7 +85,7 @@ namespace NUnit.Framework.Internal.Commands
             }
             catch (Exception ex)
             {
-#if !NETCF
+#if !NETCF && !SILVERLIGHT
                 if (ex is ThreadAbortException)
                     Thread.ResetAbort();
 #endif
@@ -132,15 +132,11 @@ namespace NUnit.Framework.Internal.Commands
                 if (context.CurrentResult.Message != null)
                     message = context.CurrentResult.Message + NUnit.Env.NewLine + message;
 
-#if !NETCF_1_0
                 string stackTrace = "--TearDown" + NUnit.Env.NewLine + ExceptionHelper.BuildStackTrace(ex);
                 if (context.CurrentResult.StackTrace != null)
                     stackTrace = context.CurrentResult.StackTrace + NUnit.Env.NewLine + stackTrace;
 
                 context.CurrentResult.SetResult(resultState, message, stackTrace);
-#else
-                Result.SetResult(resultState, message);
-#endif
             }
         }
     }

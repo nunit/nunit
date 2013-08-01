@@ -74,18 +74,12 @@ namespace NUnit.Framework.Internal
         private object fixture;
 
         /// <summary>
-        /// NUnitAttributes applied to the method, class or assembly
-        /// used to implement this test.
-        /// </summary>
-        private NUnitAttribute[] attributes = new NUnitAttribute[0];
-
-        /// <summary>
         /// The SetUp methods.
         /// </summary>
         protected MethodInfo[] setUpMethods;
 
         /// <summary>
-        /// The teardown method
+        /// The teardown methods
         /// </summary>
         protected MethodInfo[] tearDownMethods;
 
@@ -336,16 +330,8 @@ namespace NUnit.Framework.Internal
         /// <param name="provider">An object implementing ICustomAttributeProvider</param>
         public void ApplyAttributesToTest(ICustomAttributeProvider provider)
         {
-            this.attributes = (NUnitAttribute[])provider.GetCustomAttributes(typeof(NUnitAttribute), true);
-
-            foreach (Attribute attribute in this.attributes)
-            {
-                IApplyToTest iApply = attribute as IApplyToTest;
-                if (iApply != null)
-                {
-                    iApply.ApplyToTest(this);
-                }
-            }
+            foreach (IApplyToTest iApply in provider.GetCustomAttributes(typeof(IApplyToTest), true))
+                iApply.ApplyToTest(this);
         }
 
         #endregion
@@ -417,11 +403,6 @@ namespace NUnit.Framework.Internal
 
                 return tearDownMethods;
             }
-        }
-
-        internal NUnitAttribute[] Attributes
-        {
-            get { return attributes; }
         }
 
         internal bool RequiresThread

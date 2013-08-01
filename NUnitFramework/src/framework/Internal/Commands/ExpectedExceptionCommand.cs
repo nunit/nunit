@@ -64,7 +64,7 @@ namespace NUnit.Framework.Internal.Commands
             }
             catch (Exception ex)
             {
-#if !NETCF
+#if !NETCF && !SILVERLIGHT
                 if (ex is ThreadAbortException)
                     Thread.ResetAbort();
 #endif
@@ -113,11 +113,7 @@ namespace NUnit.Framework.Internal.Commands
                 }
                 else
                 {
-#if NETCF_1_0
-                    context.CurrentResult.SetResult(ResultState.Failure, WrongTextMessage(exception));
-#else
                     context.CurrentResult.SetResult(ResultState.Failure, WrongTextMessage(exception), GetStackTrace(exception));
-#endif
                 }
             }
             else
@@ -126,11 +122,7 @@ namespace NUnit.Framework.Internal.Commands
 
                 // If it shows as an error, change it to a failure due to the wrong type
                 if (context.CurrentResult.ResultState == ResultState.Error)
-#if NETCF_1_0
-                    context.CurrentResult.SetResult(ResultState.Failure, WrongTypeMessage(exception));
-#else
                     context.CurrentResult.SetResult(ResultState.Failure, WrongTypeMessage(exception), GetStackTrace(exception));
-#endif
             }
         }
 
@@ -208,7 +200,6 @@ namespace NUnit.Framework.Internal.Commands
             return exceptionData.UserMessage + Env.NewLine + message;
         }
 
-#if !NETCF_1_0
         private string GetStackTrace(Exception exception)
         {
             try
@@ -220,7 +211,6 @@ namespace NUnit.Framework.Internal.Commands
                 return "No stack trace available";
             }
         }
-#endif
 
         #endregion
     }
