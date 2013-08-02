@@ -81,10 +81,12 @@ namespace NUnit.Framework.Attributes
         [Test, Sequential]
         public void RandomTest(
             [Random(32, 212, 5)] int x,
-            [Random(5)] double y)
+            [Random(5)] double y,
+            [Random(5)] AttributeTargets z)
         {
             Assert.That(x,Is.InRange(32,212));
             Assert.That(y,Is.InRange(0.0,1.0));
+            Assert.That(z, Is.TypeOf<AttributeTargets>());
         }
 
         [Test, Sequential]

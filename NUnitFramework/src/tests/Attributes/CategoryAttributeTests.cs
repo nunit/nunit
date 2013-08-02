@@ -73,8 +73,10 @@ namespace NUnit.Framework.Attributes
         public void CanSpecifyOnMethodAndTestCase()
         {
             TestSuite test3 = (TestSuite)fixture.Tests[2];
+            Assert.That(test3.Name, Is.EqualTo("Test3"));
             Assert.That(test3.Properties["Category"], Contains.Item("Top"));
             Test testCase = (Test)test3.Tests[0];
+            Assert.That(testCase.Name, Is.EqualTo("Test3(5)"));
             Assert.That(testCase.Properties["Category"], Contains.Item("Bottom"));
         }
 

@@ -108,8 +108,6 @@ namespace NUnit.Framework.Attributes
 
         #endregion
 
-#if !NUNITLITE
-
         #region CombinatorialAttribute
 
         [Test]
@@ -226,6 +224,8 @@ namespace NUnit.Framework.Attributes
 
         #endregion
 
+#if !NUNITLITE
+
         #region RepeatAttribute
 
         //public void RepeatAttributeSetsRepeatCount()
@@ -291,6 +291,8 @@ namespace NUnit.Framework.Attributes
 
         #endregion
 
+#endif
+
         #region SequentialAttribute
 
         [Test]
@@ -301,6 +303,8 @@ namespace NUnit.Framework.Attributes
         }
 
         #endregion
+
+#if !NETCF
 
         #region SetCultureAttribute
 

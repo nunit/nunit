@@ -369,7 +369,7 @@ namespace NUnit.Framework.Attributes
 				base(message, inner) 
 			{}
 
-#if !NETCF
+#if !NETCF && !SILVERLIGHT
 			protected MyAppException(SerializationInfo info, 
 				StreamingContext context) : base(info,context)
 			{}
