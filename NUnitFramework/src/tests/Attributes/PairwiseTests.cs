@@ -34,12 +34,12 @@ namespace NUnit.Framework.Attributes
         [TestFixture]
         public class LiveTest
         {
-            public Hashtable pairsTested = new Hashtable();
+            private PairCounter pairsTested = new PairCounter();
 
             [TestFixtureSetUp]
             public void TestFixtureSetUp()
             {
-                pairsTested = new Hashtable();
+                pairsTested = new PairCounter();
             }
 
             [TestFixtureTearDown]
@@ -65,7 +65,7 @@ namespace NUnit.Framework.Attributes
         // Test data is taken from various sources. See "Lessons Learned
         // in Software Testing" pp 53-59, for example. For orthogonal cases, see 
         // http://www.freequality.org/sites/www_freequality_org/documents/tools/Tagarray_files/tamatrix.htm
-        static object[] cases = new object[]
+        static internal object[] cases = new object[]
         {
 #if ORIGINAL
             new TestCaseData( new int[] { 2, 4 }, 8, 8 ).SetName("Test 2x4"),
@@ -109,7 +109,7 @@ namespace NUnit.Framework.Attributes
 
             CombiningStrategy strategy = new PairwiseStrategy(sources);
 
-            Hashtable pairs = new Hashtable();
+            PairCounter pairs = new PairCounter();
             int cases = 0;
             foreach (NUnit.Framework.Internal.ParameterSet parms in strategy.GetTestCases())
             {
@@ -135,5 +135,7 @@ namespace NUnit.Framework.Attributes
             //Assert.That(cases, Is.AtMost(targetCases), "Number of test cases exceeded target");
 #endif
         }
+        
+        class PairCounter : System.Collections.Generic.Dictionary<string, object> { }
     }
 }

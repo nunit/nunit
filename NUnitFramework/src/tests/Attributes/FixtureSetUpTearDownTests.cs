@@ -78,7 +78,6 @@ namespace NUnit.Framework.Attributes
             Assert.AreEqual(1, StaticSetUpAndTearDownFixture.tearDownCount);
         }
 
-#if !NUNITLITE
         [Test]
         public static void StaticClassSetUpAndTearDownAreCalled()
         {
@@ -90,7 +89,6 @@ namespace NUnit.Framework.Attributes
             Assert.AreEqual(1, StaticClassSetUpAndTearDownFixture.setUpCount);
             Assert.AreEqual(1, StaticClassSetUpAndTearDownFixture.tearDownCount);
         }
-#endif
 
         [Test]
 		public void OverriddenSetUpAndTearDownAreNotCalled()
@@ -299,7 +297,7 @@ namespace NUnit.Framework.Attributes
         }
 	}
 
-#if !NUNITLITE
+#if !SILVERLIGHT && !NETCF
     [TestFixture]
     class ChangesMadeInFixtureSetUp
     {
