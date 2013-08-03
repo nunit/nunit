@@ -22,9 +22,6 @@
 // ***********************************************************************
 
 using System;
-using System.Text.RegularExpressions;
-using System.Globalization;
-using System.Threading;
 
 namespace NUnit.Framework.Assertions
 {

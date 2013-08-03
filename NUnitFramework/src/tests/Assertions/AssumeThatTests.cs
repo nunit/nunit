@@ -22,8 +22,11 @@
 // ***********************************************************************
 
 using System;
-using NUnit.Framework;
-using ActualValueDelegate = NUnit.Framework.Constraints.ActualValueDelegate<object>;
+using NUnit.Framework.Constraints;
+
+#if NET_4_5
+using System.Threading.Tasks;
+#endif
 
 namespace NUnit.Framework.Assertions
 {
@@ -90,22 +93,22 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void AssumptionPasses_DelegateAndConstraint()
         {
-            Assume.That(new Constraints.ActualValueDelegate<object>(ReturnsFour), Is.EqualTo(4));
+            Assume.That(new ActualValueDelegate<int>(ReturnsFour), Is.EqualTo(4));
         }
 
         [Test]
         public void AssumptionPasses_DelegateAndConstraintWithMessage()
         {
-            Assume.That(new Constraints.ActualValueDelegate<object>(ReturnsFour), Is.EqualTo(4), "Message");
+            Assume.That(new ActualValueDelegate<int>(ReturnsFour), Is.EqualTo(4), "Message");
         }
 
         [Test]
         public void AssumptionPasses_DelegateAndConstraintWithMessageAndArgs()
         {
-            Assume.That(new ActualValueDelegate(ReturnsFour), Is.EqualTo(4), "Should be {0}", 4);
+            Assume.That(new ActualValueDelegate<int>(ReturnsFour), Is.EqualTo(4), "Should be {0}", 4);
         }
 
-        private object ReturnsFour()
+        private int ReturnsFour()
         {
             return 4;
         }
@@ -170,24 +173,59 @@ namespace NUnit.Framework.Assertions
         [Test, ExpectedException(typeof(InconclusiveException))]
         public void FailureThrowsInconclusiveException_DelegateAndConstraint()
         {
-            Assume.That(new ActualValueDelegate(ReturnsFive), Is.EqualTo(4));
+            Assume.That(new ActualValueDelegate<int>(ReturnsFive), Is.EqualTo(4));
         }
 
         [Test, ExpectedException(typeof(InconclusiveException), ExpectedMessage = "Error", MatchType = MessageMatch.Contains)]
         public void FailureThrowsInconclusiveException_DelegateAndConstraintWithMessage()
         {
-            Assume.That(new ActualValueDelegate(ReturnsFive), Is.EqualTo(4), "Error");
+            Assume.That(new ActualValueDelegate<int>(ReturnsFive), Is.EqualTo(4), "Error");
         }
 
         [Test, ExpectedException(typeof(InconclusiveException), ExpectedMessage = "Should be 4", MatchType = MessageMatch.Contains)]
         public void FailureThrowsInconclusiveException_DelegateAndConstraintWithMessageAndArgs()
         {
-            Assume.That(new ActualValueDelegate(ReturnsFive), Is.EqualTo(4), "Should be {0}", 4);
+            Assume.That(new ActualValueDelegate<int>(ReturnsFive), Is.EqualTo(4), "Should be {0}", 4);
         }
 
-        private object ReturnsFive()
+        private int ReturnsFive()
         {
             return 5;
         }
+
+#if NET_4_5
+        [Test]
+        public void AssumeThatSuccess()
+        {
+            Assume.That(async () => await One(), Is.EqualTo(1));
+        }
+
+        [Test]
+        public void AssumeThatFailure()
+        {
+            var exception = Assert.Throws<InconclusiveException>(() =>
+                Assume.That(async () => await One(), Is.EqualTo(2)));
+        }
+
+        [Test]
+        public void AssumeThatError()
+        {
+            var exception = Assert.Throws<InvalidOperationException>(() =>
+                Assume.That(async () => await ThrowExceptionGenericTask(), Is.EqualTo(1)));
+
+            Assert.That(exception.StackTrace, Contains.Substring("ThrowExceptionGenericTask"));
+        }
+
+        private static Task<int> One()
+        {
+            return Task.Run(() => 1);
+        }
+
+        private static async Task<int> ThrowExceptionGenericTask()
+        {
+            await One();
+            throw new InvalidOperationException();
+        }
+#endif
     }
 }

@@ -21,6 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using NUnit.Framework.Internal;
 using System.Collections;
 
 namespace NUnit.Framework.Constraints
@@ -105,6 +106,11 @@ namespace NUnit.Framework.Constraints
         /// <returns>A ConstraintResult</returns>
         public virtual ConstraintResult ApplyTo<TActual>(ActualValueDelegate<TActual> del)
         {
+#if NET_4_5
+            if (AsyncInvocationRegion.IsAsyncOperation(del))
+                using (var region = AsyncInvocationRegion.Create(del))
+                    return ApplyTo(region.WaitForPendingOperationsToComplete(del()));
+#endif
             return ApplyTo(del());
         }
 
