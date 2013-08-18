@@ -99,11 +99,11 @@ namespace NUnit.Framework.Internal
         /// <param name="attributeType">The attribute Type to look for</param>
         /// <param name="inherit">Specifies whether to search the fixture type inheritance chain</param>
         /// <returns>True if found, otherwise false</returns>
-        public static bool HasMethodWithAttribute(Type fixtureType, Type attributeType, bool inherit)
+        public static bool HasMethodWithAttribute(Type fixtureType, Type attributeType)
         {
             foreach (MethodInfo method in fixtureType.GetMethods(AllMembers))
             {
-                if (method.IsDefined(attributeType, inherit))
+                if (method.IsDefined(attributeType, false))
                     return true;
             }
 

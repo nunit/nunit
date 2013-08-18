@@ -117,13 +117,13 @@ namespace NUnit.Framework.Builders
                 return false;
             }
 
-            if (Reflect.HasMethodWithAttribute(type, typeof(NUnit.Framework.SetUpAttribute), true))
+            if (Reflect.HasMethodWithAttribute(type, typeof(NUnit.Framework.SetUpAttribute)))
             {
                 reason = "SetUp method not allowed on a legacy suite";
                 return false;
             }
 
-            if (Reflect.HasMethodWithAttribute(type, typeof(NUnit.Framework.TearDownAttribute), true))
+            if (Reflect.HasMethodWithAttribute(type, typeof(NUnit.Framework.TearDownAttribute)))
             {
                 reason = "TearDown method not allowed on a legacy suite";
                 return false;

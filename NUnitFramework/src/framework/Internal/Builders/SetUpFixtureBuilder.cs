@@ -89,13 +89,13 @@ namespace NUnit.Framework.Builders
                 return false;
             }
 
-            if ( Reflect.HasMethodWithAttribute(type, typeof(NUnit.Framework.TestFixtureSetUpAttribute), true) )
+            if ( Reflect.HasMethodWithAttribute(type, typeof(NUnit.Framework.TestFixtureSetUpAttribute)) )
             {
                 reason = "TestFixtureSetUp method not allowed on a SetUpFixture";
                 return false;
             }
 
-            if ( Reflect.HasMethodWithAttribute(type, typeof(NUnit.Framework.TestFixtureTearDownAttribute), true) )
+            if ( Reflect.HasMethodWithAttribute(type, typeof(NUnit.Framework.TestFixtureTearDownAttribute)) )
             {
                 reason = "TestFixtureTearDown method not allowed on a SetUpFixture";
                 return false;
