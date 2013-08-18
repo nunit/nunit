@@ -22,11 +22,12 @@
 // ***********************************************************************
 
 using System;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
 {
     /// <summary>
-    /// ThrowsConstraint is used to test a thrown exception by 
+    /// ThrowsConstraint is used to test the exception thrown by 
     /// a delegate by applying a constraint to it.
     /// </summary>
     public class ThrowsConstraint : PrefixConstraint
@@ -40,6 +41,14 @@ namespace NUnit.Framework.Constraints
         /// <param name="baseConstraint">A constraint to apply to the caught exception.</param>
         public ThrowsConstraint(IConstraint baseConstraint)
             : base(baseConstraint) { }
+
+        /// <summary>
+        /// Get the actual exception thrown - used by Assert.Throws.
+        /// </summary>
+        public Exception ActualException
+        {
+            get { return caughtException; }
+        }
 
         #region Constraint Overrides
 
@@ -60,21 +69,23 @@ namespace NUnit.Framework.Constraints
         /// <returns>True if an exception is thrown and the constraint succeeds, otherwise false</returns>
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
-            TestDelegate code = actual as TestDelegate;
-            if (code == null)
-                throw new ArgumentException(
-                    string.Format("The actual value must be a TestDelegate but was {0}", actual.GetType().Name), "actual");
+            //TestDelegate code = actual as TestDelegate;
+            //if (code == null)
+            //    throw new ArgumentException(
+            //        string.Format("The actual value must be a TestDelegate but was {0}", actual.GetType().Name), "actual");
 
-            caughtException = null;
+            //caughtException = null;
 
-            try
-            {
-                code();
-            }
-            catch (Exception ex)
-            {
-                caughtException = ex;
-            }
+            //try
+            //{
+            //    code();
+            //}
+            //catch (Exception ex)
+            //{
+            //    caughtException = ex;
+            //}
+
+            caughtException = ExceptionInterceptor.Intercept(actual);
 
             return new ThrowsConstraintResult(
                 this, 
@@ -92,8 +103,9 @@ namespace NUnit.Framework.Constraints
         /// <returns></returns>
         public override ConstraintResult ApplyTo<TActual>(ActualValueDelegate<TActual> del)
         {
-            TestDelegate testDelegate = new TestDelegate(delegate { del(); });
-            return ApplyTo((object)testDelegate);
+            //TestDelegate testDelegate = new TestDelegate(delegate { del(); });
+            //return ApplyTo((object)testDelegate);
+            return ApplyTo(new GenericInvocationDescriptor<TActual>(del));
         }
 
         #endregion
@@ -128,6 +140,122 @@ namespace NUnit.Framework.Constraints
                 else
                     baseResult.WriteActualValueTo(writer);
             }
+        }
+
+        #endregion
+
+        #region ExceptionInterceptor
+
+        internal class ExceptionInterceptor
+        {
+            private ExceptionInterceptor() { }
+
+            internal static Exception Intercept(object invocation)
+            {
+                IInvocationDescriptor invocationDescriptor = GetInvocationDescriptor(invocation);
+
+#if NET_4_5
+                if (AsyncInvocationRegion.IsAsyncOperation(invocationDescriptor.Delegate))
+                {
+                    using (AsyncInvocationRegion region = AsyncInvocationRegion.Create(invocationDescriptor.Delegate))
+                    {
+                        object result = invocationDescriptor.Invoke();
+
+                        try
+                        {
+                            region.WaitForPendingOperationsToComplete(result);
+                            return null;
+                        }
+                        catch (Exception ex)
+                        {
+                            return ex;
+                        }
+                    }
+                }
+                else
+#endif
+                {
+                    try
+                    {
+                        invocationDescriptor.Invoke();
+                        return null;
+                    }
+                    catch (Exception ex)
+                    {
+                        return ex;
+                    }
+                }
+            }
+
+            private static IInvocationDescriptor GetInvocationDescriptor(object actual)
+            {
+                IInvocationDescriptor invocationDescriptor = actual as IInvocationDescriptor;
+
+                if (invocationDescriptor == null)
+                {
+                    TestDelegate testDelegate = actual as TestDelegate;
+
+                    if (testDelegate == null)
+                        throw new ArgumentException(
+                            String.Format("The actual value must be a TestDelegate or ActualValueDelegate but was {0}", actual.GetType().Name),
+                            "actual");
+
+                    invocationDescriptor = new VoidInvocationDescriptor(testDelegate);
+                }
+
+                return invocationDescriptor;
+            }
+        }
+
+        #endregion
+
+        #region InvocationDescriptor
+
+        internal class VoidInvocationDescriptor : IInvocationDescriptor
+        {
+            private readonly TestDelegate _del;
+
+            public VoidInvocationDescriptor(TestDelegate del)
+            {
+                _del = del;
+            }
+
+            public object Invoke()
+            {
+                _del();
+                return null;
+            }
+
+            public Delegate Delegate
+            {
+                get { return _del; }
+            }
+        }
+
+    internal class GenericInvocationDescriptor<T> : IInvocationDescriptor
+    {
+        private readonly ActualValueDelegate<T> _del;
+
+        public GenericInvocationDescriptor(ActualValueDelegate<T> del)
+        {
+            _del = del;
+        }
+
+        public object Invoke()
+        {
+            return _del();
+        }
+
+        public Delegate Delegate
+        {
+            get { return _del; }
+        }
+    }
+
+        internal interface IInvocationDescriptor
+        {
+            object Invoke();
+            Delegate Delegate { get; }
         }
 
         #endregion
