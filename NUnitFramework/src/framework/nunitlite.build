@@ -2,78 +2,8 @@
 <project name="NUnitFramework" default="build" basedir=".">
 
   <patternset id="source-files">
-    <include name="*.cs"/>
-    <exclude name="CollectionAssert.cs"/>
-    <exclude name="FileAssert.cs"/>
-    <exclude name="StringAssert.cs"/>
-
-    <include name="Api/*.cs"/>
-    <exclude name="Api/IPropertySet.cs"/>
-    <exclude name="Api/ITestCaseSourceProvider.cs"/>
-    <exclude name="Api/TestController.cs"/>
-    
-    <include name="Attributes/*.cs"/>
-    <exclude name="Attributes/RequiredAddinAttribute.cs"/>
-    <exclude name="Attributes/RequiresMTAAttribute.cs"/>
-    <exclude name="Attributes/RequiresSTAAttribute.cs"/>
-    <exclude name="Attributes/RequiresThreadAttribute.cs"/>
-    <exclude name="Attributes/SetCultureAttribute.cs" if="${runtime.platform == 'netcf'}"/>
-    <exclude name="Attributes/SetUICultureAttribute.cs" if="${runtime.platform == 'netcf'}"/>
-    <exclude name="Attributes/SuiteAttribute.cs"/>
-    <exclude name="Attributes/TimeoutAttribute.cs"/>
-
-    <include name="Constraints/*.cs"/>
-    <include name="Constraints/Operators/*.cs"/>
+    <include name="**/*.cs"/>
 	  <exclude name="Constraints/SubPathConstraint.cs"/>
-    
-    <include name="Exceptions/*.cs"/>
-
-    <include name="Extensibility/IParameterDataProvider.cs"/>
-    <include name="Extensibility/ISuiteBuilder.cs"/>
-    <include name="Extensibility/ITestCaseBuilder.cs"/>
-    <include name="Extensibility/ITestCaseProvider.cs"/>
-
-    <include name="Internal/*.cs"/>
-    <exclude name="Internal/AssemblyReader.cs"/>
-    <exclude name="Internal/AsyncResult.cs"/>
-    <exclude name="Internal/CoreExtensions.cs"/>
-    <exclude name="Internal/EventListenerTextWriter.cs"/>
-    <exclude name="Internal/EventPump.cs"/>
-    <exclude name="Internal/EventQueue.cs"/>
-    <exclude name="Internal/Log4NetCapture.cs" if="${runtime.platform=='netcf'}"/>
-    <exclude name="Internal/LogCapture.cs" if="${runtime.platform=='netcf'}"/>
-    <exclude name="Internal/PropertySet.cs"/>
-    <exclude name="Internal/QueuingEventListener.cs"/>
-    <exclude name="Internal/TestProgressReporter.cs"/>
-	<exclude name="Internal/ThreadUtility.cs" if="${runtime.platform=='netcf'}"/>
-
-    <include name="Internal/Builders/*.cs"/>
-    <exclude name="Internal/Builders/LegacySuiteBuilder.cs"/>
-
-	  <include name="Internal/Commands/*.cs"/>
-	  <include name="Internal/Commands/TestCommands/*.cs"/>
-	  <include name="Internal/Commands/SuiteCommands/*.cs"/>
-	  <exclude name="Internal/Commands/ThreadedTestCommand.cs"/>
-    <exclude name="Internal/Commands/CommandBuilder.cs"/>
-    <!-- TODO: Remove the following from the tree -->
-    <exclude name="Internal/Commands/OldTestMethodCommand.cs"/>
-    <exclude name="Internal/Commands/TestCaseCommand.cs"/>
-    <exclude name="Internal/Commands/TestExecutionContextCommand.cs"/>
-
-    <include name="Internal/Extensibility/TestCaseProviders.cs"/>
-    <include name="Internal/Extensibility/ParameterDataProviders.cs"/>
-	  <include name="Internal/Extensibility/SuiteBuilderCollection.cs"/>
-
-	<include name="Internal/Filters/*.cs"/>
-    
-    <include name="Internal/Results/*.cs"/>
-    
-    <include name="Internal/Tests/*.cs"/>
-    <exclude name="Internal/Tests/LegacySuite.cs"/>
-
-    <include name="Internal/WorkItems/*.cs"/>
-
-    <include name="Runner/**/*.cs"/>
   </patternset>
 
   <target name="build">

@@ -21,6 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#if !NUNITLITE
 using NUnit.Framework.Api;
 using NUnit.Framework.Builders;
 using NUnit.TestData.LegacySuiteData;
@@ -89,3 +90,4 @@ namespace NUnit.Framework.Internal
         }
 	}
 }
+#endif

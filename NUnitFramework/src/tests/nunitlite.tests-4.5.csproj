@@ -112,6 +112,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Attributes\ValueSourceTests.cs" />
+    <Compile Include="Constraints\DelayedConstraintTests.cs" />
     <Compile Include="Constraints\AllItemsConstraintTests.cs" />
     <Compile Include="Constraints\AndConstraintTests.cs" />
     <Compile Include="Constraints\AssignableFromConstraintTests.cs" />
@@ -146,6 +147,7 @@
     <Compile Include="Constraints\PropertyTests.cs" />
     <Compile Include="Constraints\RangeConstraintTests.cs" />
     <Compile Include="Constraints\RangeTests.cs" />
+    <Compile Include="Constraints\ReusableConstraintTests.cs" />
     <Compile Include="Constraints\SameAsTest.cs" />
     <Compile Include="Constraints\StartsWithConstraintTests.cs" />
     <Compile Include="Constraints\StringConstraintTest.cs" />
@@ -178,6 +180,8 @@
     <Compile Include="Internal\TextMessageWriterTests.cs" />
     <Compile Include="Internal\TypeParameterUsedWithTestMethod.cs" />
     <Compile Include="NUnitLite.cs" />
+    <Compile Include="Syntax\AfterTests.cs" />
+    <Compile Include="Syntax\ArbitraryConstraintMatching.cs" />
     <Compile Include="Syntax\CollectionTests.cs" />
     <Compile Include="Syntax\ComparisonTests.cs" />
     <Compile Include="Syntax\EqualityTests.cs" />

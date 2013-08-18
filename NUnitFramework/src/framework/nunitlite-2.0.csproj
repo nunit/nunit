@@ -53,6 +53,7 @@
     <Compile Include="Attributes\SetUpFixtureAttribute.cs" />
     <Compile Include="Attributes\TimeoutAttribute.cs" />
     <Compile Include="Constraints\ConstraintResult.cs" />
+    <Compile Include="Constraints\DelayedConstraint.cs" />
     <Compile Include="Constraints\EqualConstraintResult.cs" />
     <Compile Include="Constraints\IConstraint.cs" />
     <Compile Include="Constraints\ReusableConstraint.cs" />

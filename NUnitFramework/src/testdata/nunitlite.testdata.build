@@ -3,14 +3,6 @@
 
   <patternset id="source-files">
     <include name="*.cs"/>
-    <exclude name="DatapointFixture.cs"/>
-    <exclude name="LegacySuiteData.cs"/>
-    <exclude name="SetUpFixtureTests.cs"/>
-    <exclude name="TestFixtureExtensionData.cs"/>
-    <exclude name="TheoryFixture.cs"/>
-    <exclude name="ThreadingFixture.cs"/>
-    <exclude name="UnexpectedExceptionFixture.cs"/>
-    <exclude name="UnhandledExceptions.cs"/>
   </patternset>
   
   <target name="build">

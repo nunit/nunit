@@ -21,6 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#if !NUNITLITE
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Assertions
@@ -156,3 +157,4 @@ namespace NUnit.Framework.Assertions
 		}
 	}
 }
+#endif

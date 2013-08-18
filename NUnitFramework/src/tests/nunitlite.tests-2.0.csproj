@@ -78,6 +78,7 @@
     <Compile Include="Assertions\AssertThatTests.cs" />
     <Compile Include="Assertions\AssertThrowsTests.cs" />
     <Compile Include="Assertions\AssumeThatTests.cs" />
+    <Compile Include="Assertions\AsyncThrowsTests.cs" />
     <Compile Include="Assertions\ConditionAssertTests.cs" />
     <Compile Include="Assertions\EqualsFixture.cs" />
     <Compile Include="Assertions\MessageChecker.cs" />
@@ -120,6 +121,7 @@
     <Compile Include="Constraints\CollectionOrderedConstraintTests.cs" />
     <Compile Include="Constraints\ComparisonConstraintTestBase.cs" />
     <Compile Include="Constraints\ConstraintTestBase.cs" />
+    <Compile Include="Constraints\DelayedConstraintTests.cs" />
     <Compile Include="Constraints\EmptyConstraintTest.cs" />
     <Compile Include="Constraints\EndsWithConstraintTests.cs" />
     <Compile Include="Constraints\EqualConstraintTests.cs" />
@@ -173,6 +175,8 @@
     <Compile Include="Internal\TextMessageWriterTests.cs" />
     <Compile Include="Internal\TypeParameterUsedWithTestMethod.cs" />
     <Compile Include="NUnitLite.cs" />
+    <Compile Include="Syntax\AfterTests.cs" />
+    <Compile Include="Syntax\ArbitraryConstraintMatching.cs" />
     <Compile Include="Syntax\CollectionTests.cs" />
     <Compile Include="Syntax\ComparisonTests.cs" />
     <Compile Include="Syntax\EqualityTests.cs" />

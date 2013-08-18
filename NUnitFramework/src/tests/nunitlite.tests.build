@@ -9,60 +9,7 @@
         warninglevel="${warn}">
       <sources>
         <include name="../CommonAssemblyInfo.cs"/>
-        <include name="NUnitLite.cs" />
-        <include name="TestContextTests.cs" />
-
-        <include name="Api/*.cs" />
-
-        <include name="Assertions/*.cs" />
-        <exclude name="Assertions/CollectionAssertTest.cs" />
-        <exclude name="Assertions/FileAssertTests.cs" />
-        <exclude name="Assertions/GreaterEqualFixture.cs" />
-        <exclude name="Assertions/GreaterFixture.cs" />
-        <exclude name="Assertions/LessEqualFixture.cs" />
-        <exclude name="Assertions/LessFixture.cs" />
-        <exclude name="Assertions/ListContentsTests.cs" />
-        <exclude name="Assertions/NullableTypesTests.cs" />
-        <exclude name="Assertions/StringAssertTests.cs" />
-        <exclude name="Assertions/TypeAssertTest.cs" />
-
-        <include name="Attributes/*.cs"/>
-        <exclude name="Attributes/DatapointTests.cs"/>
-        <exclude name="Attributes/SetCultureAttributeTests.cs" if="${runtime.platform=='netcf'}"/>
-        <exclude name="Attributes/TheoryTests.cs"/>
-        <exclude name="Attributes/ThreadingTests.cs"/>
-
-        <include name="Constraints/*.cs" />
-        <exclude name="Constraints/AfterConstraintTests.cs"/>
-        <exclude name="Constraints/ReusableConstraintTests.cs"/>
-
-        <include name="Internal/*.cs"/>
-        <exclude name="Internal/AssemblyReaderTests.cs" />
-        <exclude name="Internal/CallContextTests.cs" />
-        <exclude name="Internal/CoreExtensionsTests.cs" />
-        <exclude name="Internal/EventQueueTests.cs" />
-        <exclude name="Internal/LegacySuiteTests.cs" />
-        <exclude name="Internal/TestFilterTests.cs" />
-        <exclude name="Internal/UnexpectedExceptionTests.cs" />
-        <exclude name="Internal/UnhandledExceptionTests.cs" />
-        
-        <exclude name="Internal/AssemblyReaderTests.cs"/>
-        <exclude name="Internal/DeduceTypeArgsFromArgs.cs" unless="${runtime.version>='2.0'}"/>
-        <exclude name="Internal/GenericTestFixtureTests.cs" unless="${runtime.version>='2.0'}"/>
-        <exclude name="Internal/GenericTestMethodTests.cs" unless="${runtime.version>='2.0'}"/>
-        <exclude name="Internal/SimpleGenericMethods.cs" unless="${runtime.version>='2.0'}"/>
-        <exclude name="Internal/TypeParameterUsedWithTestMethod.cs" unless="${runtime.version>='2.0'}"/>
-        
-        <exclude name="Internal/GenericTestMethodTests.cs" if="${runtime.platform=='netcf'}" />
-        <exclude name="Internal/SimpleGenericMethods.cs" if="${runtime.platform=='netcf'}" />
-
-        <include name="Syntax/*.cs" />
-        <exclude name="Syntax/AfterTests.cs" />
-        <exclude name="Syntax/ArbitraryConstraintMatching.cs" />
-        <exclude name="Syntax/InvalidCodeTests.cs" />
-        <exclude name="Syntax/TestCompiler.cs"/>
-
-        <include name="TestUtilities/*.cs"/>
+        <include name="**/*.cs" />
       </sources>
       <resources prefix="NUnit.Framework.Tests">
         <include name="TestImage1.jpg"/>

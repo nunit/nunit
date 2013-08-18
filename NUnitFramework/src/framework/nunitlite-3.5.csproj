@@ -129,6 +129,7 @@
     <Compile Include="Constraints\ConstraintFactory.cs" />
     <Compile Include="Constraints\ConstraintResult.cs" />
     <Compile Include="Constraints\ContainsConstraint.cs" />
+    <Compile Include="Constraints\DelayedConstraint.cs" />
     <Compile Include="Constraints\EmptyCollectionConstraint.cs" />
     <Compile Include="Constraints\EmptyConstraint.cs" />
     <Compile Include="Constraints\EmptyDirectoryConstraint.cs" />
@@ -178,6 +179,7 @@
     <Compile Include="Constraints\RangeConstraint.cs" />
     <Compile Include="Constraints\RegexConstraint.cs" />
     <Compile Include="Constraints\ResolvableConstraintExpression.cs" />
+    <Compile Include="Constraints\ReusableConstraint.cs" />
     <Compile Include="Constraints\SameAsConstraint.cs" />
     <Compile Include="Constraints\SamePathConstraint.cs" />
     <Compile Include="Constraints\SamePathOrUnderConstraint.cs" />

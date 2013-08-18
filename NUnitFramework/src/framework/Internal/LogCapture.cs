@@ -21,6 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#if !NETCF
 using System.Collections.Specialized;
 using System.Configuration;
 
@@ -65,3 +66,4 @@ namespace NUnit.Framework.Internal
         }
     }
 }
+#endif
