@@ -101,7 +101,6 @@
     <Compile Include="Attributes\ThreadingTests.cs" />
     <Compile Include="Attributes\ValuesAttributeTests.cs" />
     <Compile Include="Attributes\ValueSourceTests.cs" />
-    <Compile Include="Constraints\AfterConstraintTests.cs" />
     <Compile Include="Constraints\AllItemsConstraintTests.cs" />
     <Compile Include="Constraints\AndConstraintTests.cs" />
     <Compile Include="Constraints\AssignableToConstraintTests.cs" />
@@ -113,6 +112,7 @@
     <Compile Include="Constraints\CollectionEquivalentConstraintTests.cs" />
     <Compile Include="Constraints\CollectionOrderedConstraintTests.cs" />
     <Compile Include="Constraints\ComparisonConstraintTestBase.cs" />
+    <Compile Include="Constraints\DelayedConstraintTests.cs" />
     <Compile Include="Constraints\EndsWithConstraintTests.cs" />
     <Compile Include="Constraints\ExactTypeConstraintTests.cs" />
     <Compile Include="Constraints\GreaterThanConstraintTests.cs" />

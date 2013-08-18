@@ -21,6 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#if !NUNITLITE
 using System;
 using System.IO;
 using System.Text;
@@ -195,3 +196,4 @@ namespace NUnit.Framework.Internal
         #endregion
     }
 }
+#endif

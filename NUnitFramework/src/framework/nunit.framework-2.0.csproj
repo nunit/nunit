@@ -58,7 +58,6 @@
     <Compile Include="Api\ExpectedExceptionData.cs" />
     <Compile Include="Api\IParameterDataSource.cs" />
     <Compile Include="Api\IPropertyBag.cs" />
-    <Compile Include="Api\IPropertySet.cs" />
     <Compile Include="Api\ITest.cs" />
     <Compile Include="Api\ITestAssemblyBuilder.cs" />
     <Compile Include="Api\ITestAssemblyRunner.cs" />
@@ -308,7 +307,6 @@
     <Compile Include="Internal\ParameterSet.cs" />
     <Compile Include="Internal\PlatformHelper.cs" />
     <Compile Include="Internal\PropertyBag.cs" />
-    <Compile Include="Internal\PropertySet.cs" />
     <Compile Include="Internal\QueuingEventListener.cs" />
     <Compile Include="Internal\Randomizer.cs" />
     <Compile Include="Internal\Reflect.cs" />

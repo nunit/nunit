@@ -21,6 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#if !NUNITLITE
 using System;
 using NUnit.Framework.Api;
 using NUnit.TestData.UnexpectedExceptionFixture;
@@ -69,3 +70,4 @@ namespace NUnit.Framework.Internal
         }
     }
 }
+#endif

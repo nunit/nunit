@@ -63,9 +63,7 @@ namespace NUnit.Framework.Constraints.Tests
         [TestCase(4.0d, 2.0f)]
         [TestCase(4.0f, 2)]
         [TestCase(4.0f, 2.0d)]
-#if !NUNITLITE
         [TestCase(4, SpecialValue.Null)]
-#endif
         [TestCase(4, null)]
         public void UnequalItems(object greater, object lesser)
         {

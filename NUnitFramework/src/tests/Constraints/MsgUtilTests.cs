@@ -126,11 +126,9 @@ namespace NUnit.Framework.Constraints.Tests
         [TestCase("\b", "\\b")]
         [TestCase("\f", "\\f")]
         [TestCase("\v", "\\v")]
-#if !NUNITLITE
         [TestCase("\x0085", "\\x0085", Description = "Next line character")]
         [TestCase("\x2028", "\\x2028", Description = "Line separator character")]
         [TestCase("\x2029", "\\x2029", Description = "Paragraph separator character")]
-#endif
         public static void EscapeControlCharsTest(string input, string expected)
 		{
             Assert.That( MsgUtils.EscapeControlChars(input), Is.EqualTo(expected) );
@@ -148,7 +146,6 @@ namespace NUnit.Framework.Constraints.Tests
 
         private const string s52 = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-#if !NUNITLITE
         [TestCase(s52, 52, 0, s52, TestName="NoClippingNeeded")]
         [TestCase(s52, 29, 0, "abcdefghijklmnopqrstuvwxyz...", TestName="ClipAtEnd")]
         [TestCase(s52, 29, 26, "...ABCDEFGHIJKLMNOPQRSTUVWXYZ", TestName="ClipAtStart")]
@@ -159,7 +156,6 @@ namespace NUnit.Framework.Constraints.Tests
             System.Console.WriteLine("result= \"{0}\"", result);
             Assert.That(MsgUtils.ClipString(input, max, start), Is.EqualTo(result));
         }
-#endif
 
         #endregion
 

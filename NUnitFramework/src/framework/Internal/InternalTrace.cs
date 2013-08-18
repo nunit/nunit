@@ -216,9 +216,8 @@ namespace NUnit.Framework.Internal
                         // Set the caller's Type name
                         caller = stack.Substring(index1, index2 - index1);
                     }
-#endif
                 }
-
+#endif
 
                 int threadID = System.Threading.Thread.CurrentThread.ManagedThreadId;
 

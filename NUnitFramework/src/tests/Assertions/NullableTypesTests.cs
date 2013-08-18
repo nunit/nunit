@@ -21,11 +21,11 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#if !NUNITLITE && !MONO
 using System;
 
 namespace NUnit.Framework.Assertions
 {
-#if !MONO
     // TODO: Test with Mono
     [TestFixture, Category("Generics")]
     public class NullableTypesTests
@@ -261,5 +261,5 @@ namespace NUnit.Framework.Assertions
             Assert.AreEqual(struct2, two);
         }
     }
-#endif
 }
+#endif
