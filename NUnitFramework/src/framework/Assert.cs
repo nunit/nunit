@@ -299,6 +299,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="expr">A Constraint expression to be applied</param>
         /// <param name="del">An ActualValueDelegate returning the value to be tested</param>
+        /// <param name="expr">A Constraint expression to be applied</param>
         /// <param name="message">The message that will be displayed on failure</param>
         static public void That<TActual>(ActualValueDelegate<TActual> del, IResolveConstraint expr, string message)
         {
@@ -504,6 +505,25 @@ namespace NUnit.Framework
         {
             Exception caughtException = null;
 
+#if NET_4_5
+            if (AsyncInvocationRegion.IsAsyncOperation(code))
+            {
+                using (AsyncInvocationRegion region = AsyncInvocationRegion.Create(code))
+                {
+                    code();
+
+                    try
+                    {
+                        region.WaitForPendingOperationsToComplete(null);
+                    }
+                    catch (Exception e)
+                    {
+                        caughtException = e;
+                    }
+                }
+            }
+            else
+#endif
             try
             {
                 code();
@@ -729,16 +749,17 @@ namespace NUnit.Framework
         /// <param name="args">Arguments to be used in formatting the message</param>
         public static void DoesNotThrow(TestDelegate code, string message, params object[] args)
         {
-            try
-            {
-                code();
-            }
-            catch (Exception ex)
-            {
-                TextMessageWriter writer = new TextMessageWriter(message, args);
-                writer.WriteLine("Unexpected exception: {0}", ex.GetType());
-                Assert.Fail(writer.ToString());
-            }
+            Assert.That(code, new ThrowsNothingConstraint(), message, args);
+            //try
+            //{
+            //    code();
+            //}
+            //catch (Exception ex)
+            //{
+            //    TextMessageWriter writer = new TextMessageWriter(message, args);
+            //    writer.WriteLine("Unexpected exception: {0}", ex.GetType());
+            //    Assert.Fail(writer.ToString());
+            //}
         }
 
         /// <summary>
