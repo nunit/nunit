@@ -203,6 +203,7 @@
     <Compile Include="TestUtilities\TestDelegates.cs" />
     <Compile Include="TestUtilities\TestFinder.cs" />
     <Compile Include="Constraints\ExactCountConstraintTests.cs" />
+    <Compile Include="TestUtilities\UniqueValues.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

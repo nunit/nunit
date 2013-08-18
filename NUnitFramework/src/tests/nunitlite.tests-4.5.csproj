@@ -205,6 +205,7 @@
     <Compile Include="TestUtilities\TestComparer.cs" />
     <Compile Include="TestUtilities\TestFinder.cs" />
     <Compile Include="Constraints\ExactCountConstraintTests.cs" />
+    <Compile Include="TestUtilities\UniqueValues.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="TestImage2.jpg" />
