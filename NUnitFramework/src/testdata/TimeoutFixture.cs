@@ -24,10 +24,10 @@
 using System;
 using NUnit.Framework;
 
-namespace NUnit.TestData.ThreadingFixture
+namespace NUnit.TestData
 {
     [TestFixture]
-    public class ThreadingFixture
+    public class TimeoutFixture
     {
         public bool TearDownWasRun;
 
@@ -51,7 +51,7 @@ namespace NUnit.TestData.ThreadingFixture
     }
 
     [TestFixture, Timeout(50)]
-    public class ThreadingFixtureWithTimeout
+    public class TimeoutFixtureWithTimeoutOnFixture
     {
         [Test]
         public void Test1() { }
