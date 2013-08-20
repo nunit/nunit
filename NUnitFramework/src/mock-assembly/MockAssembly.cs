@@ -94,6 +94,7 @@ namespace NUnit.Tests
             public static readonly int Failures = 1;
             public static readonly int Errors = 1;
 			public static readonly int ErrorsAndFailures = Errors + Failures;
+            public const int Inconclusive = 1;
 
 			public static readonly int Categories = 5;
 		    public static readonly int MockCategoryTests = 2;

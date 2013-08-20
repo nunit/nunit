@@ -108,6 +108,7 @@
     <Compile Include="Attributes\ValuesAttribute.cs" />
     <Compile Include="Attributes\ValueSourceAttribute.cs" />
     <Compile Include="Constraints\AllItemsConstraint.cs" />
+    <Compile Include="Constraints\Operators\AllOperator.cs" />
     <Compile Include="Constraints\AndConstraint.cs" />
     <Compile Include="Constraints\AssignableFromConstraint.cs" />
     <Compile Include="Constraints\AssignableToConstraint.cs" />
@@ -164,11 +165,13 @@
     <Compile Include="Constraints\Operators\BinaryOperator.cs" />
     <Compile Include="Constraints\Operators\CollectionOperator.cs" />
     <Compile Include="Constraints\Operators\ConstraintOperator.cs" />
+    <Compile Include="Constraints\Operators\NoneOperator.cs" />
     <Compile Include="Constraints\Operators\NotOperator.cs" />
     <Compile Include="Constraints\Operators\OrOperator.cs" />
     <Compile Include="Constraints\Operators\PrefixOperator.cs" />
     <Compile Include="Constraints\Operators\PropOperator.cs" />
     <Compile Include="Constraints\Operators\SelfResolvingOperator.cs" />
+    <Compile Include="Constraints\Operators\SomeOperator.cs" />
     <Compile Include="Constraints\Operators\ThrowsOperator.cs" />
     <Compile Include="Constraints\Operators\WithOperator.cs" />
     <Compile Include="Constraints\OrConstraint.cs" />

@@ -56,6 +56,9 @@
     <Compile Include="Constraints\DelayedConstraint.cs" />
     <Compile Include="Constraints\EqualConstraintResult.cs" />
     <Compile Include="Constraints\IConstraint.cs" />
+    <Compile Include="Constraints\Operators\AllOperator.cs" />
+    <Compile Include="Constraints\Operators\NoneOperator.cs" />
+    <Compile Include="Constraints\Operators\SomeOperator.cs" />
     <Compile Include="Constraints\ReusableConstraint.cs" />
     <Compile Include="Constraints\ThrowsExceptionConstraint.cs" />
     <Compile Include="Internal\Builders\SetUpFixtureBuilder.cs" />

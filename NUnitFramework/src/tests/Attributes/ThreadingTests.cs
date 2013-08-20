@@ -21,13 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
 using System.Threading;
-using NUnit.Framework;
-using NUnit.Framework.Api;
 using NUnit.Framework.Internal;
-using NUnit.TestData.ThreadingFixture;
-using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Attributes
 {
@@ -56,48 +51,6 @@ namespace NUnit.Framework.Attributes
         {
             this.setupThread = Thread.CurrentThread;
         }
-
-        [Test, Timeout(50)]
-        public void TestWithTimeoutRunsOnSeparateThread()
-        {
-            Assert.That(Thread.CurrentThread, Is.Not.EqualTo(parentThread));
-        }
-
-        [Test, Timeout(50)]
-        public void TestWithTimeoutRunsSetUpAndTestOnSameThread()
-        {
-            Assert.That(Thread.CurrentThread, Is.EqualTo(setupThread));
-        }
-
-        [Test]
-        [Platform(Exclude = "Mono", Reason = "Runner hangs at end when this is run")]
-        [Platform(Exclude = "Net-1.1,Net-1.0", Reason = "Cancels the run when executed")]
-        public void TestWithInfiniteLoopTimesOut()
-        {
-            ThreadingFixture fixture = new ThreadingFixture();
-            TestSuite suite = TestBuilder.MakeFixture(fixture);
-            Test test = TestFinder.Find("InfiniteLoopWith50msTimeout", suite, false);
-            ITestResult result = TestBuilder.RunTest(test, fixture);
-            Assert.That(result.ResultState, Is.EqualTo(ResultState.Failure));
-            Assert.That(result.Message, Contains.Substring("50ms"));
-            Assert.That(fixture.TearDownWasRun, "TearDown was not run");
-        }
-
-        //[Test, STAThread]
-        //public void TestWithSTAThreadRunsInSTA()
-        //{
-        //    Assert.That(Thread.CurrentThread.ApartmentState, Is.EqualTo(ApartmentState.STA));
-        //    if (parentThreadApartment == ApartmentState.STA)
-        //        Assert.That(Thread.CurrentThread, Is.EqualTo(parentThread));
-        //}
-
-        //[Test, MTAThread]
-        //public void TestWithMTAThreadRunsInMTA()
-        //{
-        //    Assert.That(Thread.CurrentThread.ApartmentState, Is.EqualTo(ApartmentState.MTA));
-        //    if (parentThreadApartment == ApartmentState.MTA)
-        //        Assert.That(Thread.CurrentThread, Is.EqualTo(parentThread));
-        //}
 
         [Test, RequiresSTA]
         public void TestWithRequiresSTARunsInSTA()
@@ -139,17 +92,6 @@ namespace NUnit.Framework.Attributes
         {
             Assert.That(GetApartmentState(Thread.CurrentThread), Is.EqualTo(ApartmentState.MTA));
             Assert.That(Thread.CurrentThread, Is.Not.EqualTo(parentThread));
-        }
-
-        [Test]
-        [Platform(Exclude = "Mono", Reason = "Runner hangs at end when this is run")]
-        public void TimeoutCanBeSetOnTestFixture()
-        {
-            ITestResult suiteResult = TestBuilder.RunTestFixture(typeof(ThreadingFixtureWithTimeout));
-            Assert.That(suiteResult.ResultState, Is.EqualTo(ResultState.Failure));
-            ITestResult result = TestFinder.Find("Test2WithInfiniteLoop", suiteResult, false);
-            Assert.That(result.ResultState, Is.EqualTo(ResultState.Failure));
-            Assert.That(result.Message, Contains.Substring("50ms"));
         }
 
         [TestFixture, RequiresSTA]
