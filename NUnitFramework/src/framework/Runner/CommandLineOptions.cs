@@ -49,12 +49,16 @@ namespace NUnitLite.Runner
         private string resultFile;
         private string resultFormat;
         private string outFile;
+        private string includeCategory;
+        private string excludeCategory;
 
         private bool error = false;
 
         private List<string> tests = new List<string>();
         private List<string> invalidOptions = new List<string>();
         private List<string> parameters = new List<string>();
+
+        private int randomSeed = -1;
 
         #region Properties
 
@@ -143,6 +147,28 @@ namespace NUnitLite.Runner
         }
 
         /// <summary>
+        /// Gets the list of categories to include
+        /// </summary>
+        public string Include
+        {
+            get
+            {
+                return includeCategory;
+            }
+        }
+
+        /// <summary>
+        /// Gets the list of categories to exclude
+        /// </summary>
+        public string Exclude
+        {
+            get
+            {
+                return excludeCategory;
+            }
+        }
+
+        /// <summary>
         /// Gets a flag indicating whether each test should
         /// be labeled in the output.
         /// </summary>
@@ -168,6 +194,17 @@ namespace NUnitLite.Runner
         public int TestCount
         {
             get { return tests.Count; }
+        }
+
+        public int InitialSeed
+        {
+            get
+            {
+                if (randomSeed < 0)
+                    randomSeed = new Random().Next();
+
+                return randomSeed;
+            }
         }
 
         #endregion
@@ -212,8 +249,9 @@ namespace NUnitLite.Runner
             get { return (string[])parameters.ToArray(); }
         }
 
-        private void ProcessOption(string opt)
+        private void ProcessOption(string option)
         {
+            string opt = option;
             int pos = opt.IndexOfAny( new char[] { ':', '=' } );
             string val = string.Empty;
 
@@ -244,27 +282,73 @@ namespace NUnitLite.Runner
                     break;
                 case "explore":
                     explore = true;
-                    exploreFile = val;
+                    if (val == null || val.Length == 0)
+                        val = "tests.xml";
+                    try
+                    {
+                        exploreFile = ExpandToFullPath(val);
+                    }
+                    catch
+                    {
+                        InvalidOption(option);
+                    }
                     break;
                 case "result":
-                    resultFile = val;
+                    if (val == null || val.Length == 0)
+                        val = "TestResult.xml";
+                    try
+                    {
+                        resultFile = ExpandToFullPath(val);
+                    }
+                    catch
+                    {
+                        InvalidOption(option);
+                    }
                     break;
                 case "format":
                     resultFormat = val;
                     if (resultFormat != "nunit3" && resultFormat != "nunit2")
-                        error = true;
+                        InvalidOption(option);
                     break;
                 case "out":
-                    outFile = val;
+                    try
+                    {
+                        outFile = ExpandToFullPath(val);
+                    }
+                    catch
+                    {
+                        InvalidOption(option);
+                    }
                     break;
                 case "labels":
                     labelTestsInOutput = true;
                     break;
+                case "include":
+                    includeCategory = val;
+                    break;
+                case "exclude":
+                    excludeCategory = val;
+                    break;
+                case "seed":
+                    try
+                    {
+                        randomSeed = int.Parse(val);
+                    }
+                    catch
+                    {
+                        InvalidOption(option);
+                    }
+                    break;
                 default:
-                    error = true;
-                    invalidOptions.Add(opt);
+                    InvalidOption(option);
                     break;
             }
+        }
+
+        private void InvalidOption(string option)
+        {
+            error = true;
+            invalidOptions.Add(option);
         }
 
         private void ProcessParameter(string param)
@@ -292,8 +376,6 @@ namespace NUnitLite.Runner
                 StringBuilder sb = new StringBuilder();
                 foreach (string opt in invalidOptions)
                     sb.Append( "Invalid option: " + opt + NL );
-                if (resultFormat != null && resultFormat != "nunit3" && resultFormat != "nunit2")
-                    sb.Append("Invalid result format: " + resultFormat + NL);
                 return sb.ToString();
             }
         }
@@ -308,7 +390,7 @@ namespace NUnitLite.Runner
             {
                 StringBuilder sb = new StringBuilder();
 
-#if PocketPC || WindowsCE || NETCF
+#if PocketPC || WindowsCE || NETCF || SILVERLIGHT
                 string name = "NUnitLite";
 #else
                 string name = System.Reflection.Assembly.GetEntryAssembly().GetName().Name;
@@ -336,6 +418,10 @@ namespace NUnitLite.Runner
                 sb.Append("  -help,-h        Displays this help" + NL + NL);
                 sb.Append("  -noheader,-noh  Suppresses display of the initial message" + NL + NL);
                 sb.Append("  -labels         Displays the name of each test when it starts" + NL + NL);
+                sb.Append("  -seed:SEED      If provided, this option allows you to set the seed for the" + NL);
+                sb.Append("                  random generator in the text context." + NL + NL);
+                sb.Append("  -include:CAT    List of categories to include" + NL + NL);
+                sb.Append("  -exclude:CAT    List of categories to exclude" + NL + NL);
                 sb.Append("  -wait           Waits for a key press before exiting" + NL + NL);
                 sb.Append("Notes:" + NL);
                 sb.Append(" * File names may be listed by themselves, with a relative path or " + NL);

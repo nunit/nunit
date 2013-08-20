@@ -26,7 +26,6 @@ using System.IO;
 using System.Collections;
 using System.Reflection;
 using System.Xml;
-using NUnit.Framework;
 using NUnit.Framework.Api;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Filters;
@@ -137,6 +136,8 @@ namespace NUnitLite.Runner
                     // TODO: For now, ignore all but first assembly
                     Assembly assembly = assemblies[0] as Assembly;
 
+                    Randomizer.InitialSeed = commandLineOptions.InitialSeed;
+
                     if (!runner.Load(assembly, loadOptions))
                     {
                         Console.WriteLine("No tests found in assembly {0}", assembly.GetName().Name);
@@ -146,7 +147,31 @@ namespace NUnitLite.Runner
                     if (commandLineOptions.Explore)
                         ExploreTests();
                     else
+                    {
+                        if (commandLineOptions.Include != null && commandLineOptions.Include != string.Empty)
+                        {
+                            TestFilter includeFilter = new SimpleCategoryExpression(commandLineOptions.Include).Filter;
+
+                            if (filter.IsEmpty)
+                                filter = includeFilter;
+                            else
+                                filter = new AndFilter(filter, includeFilter);
+                        }
+
+                        if (commandLineOptions.Exclude != null && commandLineOptions.Exclude != string.Empty)
+                        {
+                            TestFilter excludeFilter = new NotFilter(new SimpleCategoryExpression(commandLineOptions.Exclude).Filter);
+
+                            if (filter.IsEmpty)
+                                filter = excludeFilter;
+                            else if (filter is AndFilter)
+                                ((AndFilter)filter).Add(excludeFilter);
+                            else
+                                filter = new AndFilter(filter, excludeFilter);
+                        }
+
                         RunTests(filter);
+                    }
                 }
                 catch (FileNotFoundException ex)
                 {

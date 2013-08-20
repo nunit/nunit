@@ -74,6 +74,7 @@
     <Compile Include="Internal\DefaultTestAssemblyBuilder.cs" />
     <Compile Include="Internal\DefaultTestAssemblyRunner.cs" />
     <Compile Include="Internal\Extensibility\SuiteBuilderCollection.cs" />
+    <Compile Include="Internal\Filters\SimpleCategoryExpression.cs" />
     <Compile Include="Internal\IApplyToContext.cs" />
     <Compile Include="Internal\IApplyToTest.cs" />
     <Compile Include="Api\IParameterDataSource.cs" />

@@ -250,6 +250,7 @@
     <Compile Include="Internal\Filters\CategoryFilter.cs" />
     <Compile Include="Internal\Filters\NotFilter.cs" />
     <Compile Include="Internal\Filters\OrFilter.cs" />
+    <Compile Include="Internal\Filters\SimpleCategoryExpression.cs" />
     <Compile Include="Internal\Filters\SimpleNameFilter.cs" />
     <Compile Include="Internal\IApplyToContext.cs" />
     <Compile Include="Internal\IApplyToTest.cs" />
