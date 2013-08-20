@@ -41,6 +41,14 @@ namespace NUnit.Framework.Internal
 		/// </summary>
         public static TestFilter Empty = new EmptyFilter();
 
+        /// <summary>
+        /// Indicates whether this is the EmptyFilter
+        /// </summary>
+        public bool IsEmpty
+        {
+            get { return this is TestFilter.EmptyFilter; }
+        }
+
 		/// <summary>
 		/// Determine if a particular test passes the filter criteria. The default 
 		/// implementation checks the test itself, its parents and any descendants.

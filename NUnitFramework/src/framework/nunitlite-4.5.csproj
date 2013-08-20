@@ -255,10 +255,16 @@
     <Compile Include="Internal\Extensibility\SuiteBuilderCollection.cs" />
     <Compile Include="Internal\Extensibility\TestCaseProviders.cs" />
     <Compile Include="Internal\Filters\AndFilter.cs" />
-    <Compile Include="Internal\Filters\CategoryExpression.cs" />
-    <Compile Include="Internal\Filters\CategoryFilter.cs" />
+    <Compile Include="Internal\Filters\CategoryExpression.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Internal\Filters\CategoryFilter.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Internal\Filters\NotFilter.cs" />
-    <Compile Include="Internal\Filters\OrFilter.cs" />
+    <Compile Include="Internal\Filters\OrFilter.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Internal\Filters\SimpleNameFilter.cs" />
     <Compile Include="Internal\IApplyToContext.cs" />
     <Compile Include="Internal\IApplyToTest.cs" />
@@ -312,6 +318,7 @@
     <Compile Include="Runner\OutputWriters\NUnit2XmlOutputWriter.cs" />
     <Compile Include="Runner\OutputWriters\NUnit3XmlOutputWriter.cs" />
     <Compile Include="Runner\OutputWriters\OutputWriter.cs" />
+    <Compile Include="Internal\Filters\SimpleCategoryExpression.cs" />
     <Compile Include="Runner\ResultSummary.cs" />
     <Compile Include="Runner\TcpWriter.cs" />
     <Compile Include="Runner\TextUI.cs" />
