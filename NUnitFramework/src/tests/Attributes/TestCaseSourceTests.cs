@@ -27,7 +27,7 @@ using NUnit.Framework.Internal;
 using NUnit.TestData.TestCaseSourceAttributeFixture;
 using NUnit.TestUtilities;
 
-namespace NUnit.Framework.Tests
+namespace NUnit.Framework.Attributes
 {
     [TestFixture]
     public class TestCaseSourceTests

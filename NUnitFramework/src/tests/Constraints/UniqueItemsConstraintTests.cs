@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2007 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -21,43 +21,22 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
 {
     [TestFixture]
-    public class XmlSerializableTest : ConstraintTestBase
+    public class UniqueItemsTests : ConstraintTestBase
     {
         [SetUp]
         public void SetUp()
         {
-            theConstraint = new XmlSerializableConstraint();
-            expectedDescription = "xml serializable";
-            stringRepresentation = "<xmlserializable>";
+            theConstraint = new UniqueItemsConstraint();
+            stringRepresentation = "<uniqueitems>";
+            expectedDescription = "all items unique";
         }
 
-        object[] SuccessData = new object[] { 1, "a", new ArrayList() };
-
-        object[] FailureData = new object[] { 
-            new TestCaseData( new Dictionary<string, string>(), "<System.Collections.Generic.Dictionary`2[System.String,System.String]>" ),
-            new TestCaseData( new InternalClass(), "<" + typeof(InternalClass).FullName + ">" ),
-            new TestCaseData( new InternalWithSerializableAttributeClass(), "<" + typeof(InternalWithSerializableAttributeClass).FullName + ">" )
-        };
-
-        [Test, ExpectedException(typeof(ArgumentNullException))]
-        public void NullArgumentThrowsException()
-        {
-            object o = null;
-            theConstraint.ApplyTo(o);
-        }
+        internal object[] SuccessData = new object[] { new int[] { 1, 3, 17, -2, 34 }, new object[0] };
+        internal object[] FailureData = new object[] { new object[] { new int[] { 1, 3, 17, 3, 34 }, "< 1, 3, 17, 3, 34 >" } };
     }
-
-    internal class InternalClass
-    { }
-
-    [Serializable]
-    internal class InternalWithSerializableAttributeClass
-    { }
 }

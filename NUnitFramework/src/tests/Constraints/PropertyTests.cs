@@ -25,9 +25,9 @@
 using System;
 using NUnit.Framework.Internal;
 
-namespace NUnit.Framework.Constraints.Tests
+namespace NUnit.Framework.Constraints
 {
-    public class PropertyExistsTest : ConstraintTestBase
+    public class PropertyExistsTests : ConstraintTestBase
     {
         [SetUp]
         public void SetUp()

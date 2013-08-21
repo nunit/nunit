@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-namespace NUnit.Framework.Constraints.Tests
+namespace NUnit.Framework.Constraints
 {
     [TestFixture]
     public class AttributeExistsConstraintTests : ConstraintTestBase
@@ -37,7 +37,7 @@ namespace NUnit.Framework.Constraints.Tests
         object[] SuccessData = new object[] { typeof(AttributeExistsConstraintTests) };
 
         object[] FailureData = new object[] { 
-            new TestCaseData( typeof(D2), "<NUnit.Framework.Constraints.Tests.AttributeExistsConstraintTests+D2>" ) };
+            new TestCaseData( typeof(D2), "<" + typeof(D2).FullName + ">" ) };
 
         [Test, ExpectedException(typeof(System.ArgumentException))]
         public void NonAttributeThrowsException()

@@ -116,6 +116,7 @@
     <Compile Include="Constraints\CollectionContainsConstraintTests.cs" />
     <Compile Include="Constraints\CollectionEquivalentConstraintTests.cs" />
     <Compile Include="Constraints\CollectionOrderedConstraintTests.cs" />
+    <Compile Include="Constraints\CollectionSubsetConstraintTests.cs" />
     <Compile Include="Constraints\ComparisonConstraintTestBase.cs" />
     <Compile Include="Constraints\DelayedConstraintTests.cs" />
     <Compile Include="Constraints\EndsWithConstraintTests.cs" />
@@ -149,7 +150,9 @@
     <Compile Include="Constraints\ThrowsConstraintTests.cs" />
     <Compile Include="Constraints\ThrowsExceptionConstraintTests.cs" />
     <Compile Include="Constraints\ToStringTests.cs" />
+    <Compile Include="Constraints\UniqueItemsConstraintTests.cs" />
     <Compile Include="Constraints\XmlSerializableTest.cs" />
+    <Compile Include="Internal\AssemblyHelperTests.cs" />
     <Compile Include="Internal\CallContextTests.cs" />
     <Compile Include="Internal\CoreExtensionsTests.cs" />
     <Compile Include="Internal\CultureSettingAndDetectionTests.cs" />

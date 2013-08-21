@@ -24,7 +24,7 @@
 using System;
 using NUnit.TestUtilities;
 
-namespace NUnit.Framework.Constraints.Tests
+namespace NUnit.Framework.Constraints
 {
     [TestFixture]
     public class ExceptionConstraintTest_ExactType : ConstraintTestBase

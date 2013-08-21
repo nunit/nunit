@@ -23,7 +23,7 @@
 
 using System;
 
-namespace NUnit.Framework.Constraints.Tests
+namespace NUnit.Framework.Constraints
 {
     /// <summary>
     /// Summary description for PathConstraintTests.

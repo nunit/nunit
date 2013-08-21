@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-namespace NUnit.Framework.Constraints.Tests
+namespace NUnit.Framework.Constraints
 {
     [TestFixture]
     public class OrConstraintTests : ConstraintTestBase

@@ -25,10 +25,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace NUnit.Framework.Constraints.Tests
+namespace NUnit.Framework.Constraints
 {
     [TestFixture]
-    public class EqualConstraintTest : ConstraintTestBase
+    public class EqualConstraintTests : ConstraintTestBase
     {
         [SetUp]
         public void SetUp()

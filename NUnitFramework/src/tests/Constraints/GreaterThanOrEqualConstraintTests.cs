@@ -25,7 +25,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace NUnit.Framework.Constraints.Tests
+namespace NUnit.Framework.Constraints
 {
     [TestFixture]
     public class GreaterThanOrEqualConstraintTests : ComparisonConstraintTestBase

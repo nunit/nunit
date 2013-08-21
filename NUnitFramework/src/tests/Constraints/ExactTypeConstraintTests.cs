@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-namespace NUnit.Framework.Constraints.Tests
+namespace NUnit.Framework.Constraints
 {
     [TestFixture]
     public class ExactTypeConstraintTests : ConstraintTestBase
@@ -37,8 +37,8 @@ namespace NUnit.Framework.Constraints.Tests
         object[] SuccessData = new object[] { new D1() };
         
         object[] FailureData = new object[] { 
-            new TestCaseData( new B(), "<NUnit.Framework.Constraints.Tests.ExactTypeConstraintTests+B>" ),
-            new TestCaseData( new D2(), "<NUnit.Framework.Constraints.Tests.ExactTypeConstraintTests+D2>" )
+            new TestCaseData( new B(), "<" + typeof(B).FullName + ">" ),
+            new TestCaseData( new D2(), "<" + typeof(D2).FullName + ">" )
         };
 
         class B { }

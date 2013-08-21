@@ -27,10 +27,10 @@ using System.ComponentModel;
 using System.Threading;
 using ActualValueDelegate = NUnit.Framework.Constraints.ActualValueDelegate<object>;
 
-namespace NUnit.Framework.Constraints.Tests
+namespace NUnit.Framework.Constraints
 {
     [TestFixture]
-    public class AfterConstraintTest : ConstraintTestBase
+    public class DelayedConstraintTests : ConstraintTestBase
     {
         private static bool value;
 

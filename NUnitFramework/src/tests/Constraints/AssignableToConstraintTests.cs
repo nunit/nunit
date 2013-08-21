@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-namespace NUnit.Framework.Constraints.Tests
+namespace NUnit.Framework.Constraints
 {
     [TestFixture]
     public class AssignableToConstraintTests : ConstraintTestBase
@@ -37,7 +37,7 @@ namespace NUnit.Framework.Constraints.Tests
         object[] SuccessData = new object[] { new D1(), new D2() };
 
         object[] FailureData = new object[] { 
-            new TestCaseData( new B(), "<NUnit.Framework.Constraints.Tests.AssignableToConstraintTests+B>" ) };
+            new TestCaseData( new B(), "<" + typeof(B).FullName + ">" ) };
 
         class B { }
 

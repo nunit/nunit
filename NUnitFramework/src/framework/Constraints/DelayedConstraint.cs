@@ -23,6 +23,7 @@
 
 using System;
 using System.Threading;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
 {
@@ -97,7 +98,7 @@ namespace NUnit.Framework.Constraints
         /// Test whether the constraint is satisfied by a delegate
         /// </summary>
         /// <param name="del">The delegate whose value is to be tested</param>
-        /// <returns>True for if the base constraint fails, false if it succeeds</returns>
+        /// <returns>A ConstraintResult</returns>
         public override ConstraintResult ApplyTo<TActual>(ActualValueDelegate<TActual> del)
         {
             int remainingDelay = delayInMilliseconds;
@@ -107,7 +108,7 @@ namespace NUnit.Framework.Constraints
             {
                 remainingDelay -= pollingInterval;
                 Thread.Sleep(pollingInterval);
-                actual = del();
+                actual = InvokeDelegate(del);
 				
 				try
 				{
@@ -123,8 +124,20 @@ namespace NUnit.Framework.Constraints
 
             if (remainingDelay > 0)
                 Thread.Sleep(remainingDelay);
-            actual = del();
+            actual = InvokeDelegate(del);
+
             return new ConstraintResult(this, actual, baseConstraint.ApplyTo(actual).IsSuccess);
+        }
+
+        private static object InvokeDelegate<T>(ActualValueDelegate<T> del)
+        {
+#if NET_4_5
+            if (AsyncInvocationRegion.IsAsyncOperation(del))
+                using (AsyncInvocationRegion region = AsyncInvocationRegion.Create(del))
+                    return region.WaitForPendingOperationsToComplete(del());
+#endif
+
+            return del();
         }
 
         /// <summary>

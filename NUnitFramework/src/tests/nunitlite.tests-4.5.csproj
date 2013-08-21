@@ -112,6 +112,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Attributes\ValueSourceTests.cs" />
+    <Compile Include="Constraints\AsyncDelayedConstraintTests.cs" />
+    <Compile Include="Constraints\CollectionSubsetConstraintTests.cs" />
     <Compile Include="Constraints\DelayedConstraintTests.cs" />
     <Compile Include="Constraints\AllItemsConstraintTests.cs" />
     <Compile Include="Constraints\AndConstraintTests.cs" />
@@ -155,7 +157,9 @@
     <Compile Include="Constraints\ThrowsConstraintTests.cs" />
     <Compile Include="Constraints\ThrowsExceptionConstraintTests.cs" />
     <Compile Include="Constraints\ToStringTests.cs" />
+    <Compile Include="Constraints\UniqueItemsConstraintTests.cs" />
     <Compile Include="Constraints\XmlSerializableTest.cs" />
+    <Compile Include="Internal\AssemblyHelperTests.cs" />
     <Compile Include="Internal\AsyncTestMethodTests.cs" />
     <Compile Include="Internal\CultureSettingAndDetectionTests.cs" />
     <Compile Include="Internal\DeduceTypeArgsFromArgs.cs" />
@@ -170,6 +174,7 @@
     <Compile Include="Internal\SetUpFixtureTests.cs" />
     <Compile Include="Internal\SetUpTest.cs" />
     <Compile Include="Internal\SimpleGenericMethods.cs" />
+    <Compile Include="Internal\StackFilterTest.cs" />
     <Compile Include="Internal\TestExecutionContextTests.cs" />
     <Compile Include="Internal\TestFilterTests.cs" />
     <Compile Include="Internal\TestFixtureTests.cs" />

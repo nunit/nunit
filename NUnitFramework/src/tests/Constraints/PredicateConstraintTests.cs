@@ -24,7 +24,7 @@
 #if !NETCF_2_0
 using System;
 
-namespace NUnit.Framework.Constraints.Tests
+namespace NUnit.Framework.Constraints
 {
     [TestFixture]
     public class PredicateConstraintTests : ConstraintTestBase
