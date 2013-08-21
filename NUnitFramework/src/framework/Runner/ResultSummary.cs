@@ -21,10 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
-using NUnit.Framework;
 using NUnit.Framework.Api;
-using NUnit.Framework.Internal;
 
 namespace NUnitLite.Runner
 {
@@ -34,6 +31,7 @@ namespace NUnitLite.Runner
     public class ResultSummary
     {
         private int testCount;
+        private int passCount;
         private int errorCount;
         private int failureCount;
         private int notRunCount;
@@ -58,6 +56,14 @@ namespace NUnitLite.Runner
         public int TestCount
         {
             get { return testCount; }
+        }
+
+        /// <summary>
+        /// Gets the count of passed tests
+        /// </summary>
+        public int PassCount
+        {
+            get { return passCount; }
         }
 
         /// <summary>
@@ -131,6 +137,9 @@ namespace NUnitLite.Runner
                 testCount++;
                 switch (result.ResultState.Status)
                 {
+                    case TestStatus.Passed:
+                        passCount++;
+                        break;
                     case TestStatus.Skipped:
                         if (result.ResultState == ResultState.Ignored)
                             ignoreCount++;
@@ -148,8 +157,6 @@ namespace NUnitLite.Runner
                         break;
                     case TestStatus.Inconclusive:
                         inconclusiveCount++;
-                        break;
-                    default:
                         break;
                 }
 

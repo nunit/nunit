@@ -21,8 +21,9 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System.Xml;
+using System;
 using System.IO;
+using System.Xml;
 using NUnit.Framework.Api;
 
 namespace NUnitLite.Runner
@@ -33,6 +34,14 @@ namespace NUnitLite.Runner
     /// </summary>
     public class NUnit3XmlOutputWriter : OutputWriter
     {
+        private DateTime runStartTime;
+        private XmlWriter xmlWriter;
+
+        public NUnit3XmlOutputWriter(DateTime runStartTime)
+        {
+            this.runStartTime = runStartTime;
+        }
+
         /// <summary>
         /// Writes the test result to the specified TextWriter
         /// </summary>
