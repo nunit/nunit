@@ -276,6 +276,7 @@
     <Compile Include="Internal\Results\TestResult.cs" />
     <Compile Include="Internal\Results\TestSuiteResult.cs" />
     <Compile Include="Internal\RuntimeFramework.cs" />
+    <Compile Include="Internal\StackFilter.cs" />
     <Compile Include="Internal\TestExecutionContext.cs" />
     <Compile Include="Internal\TestFilter.cs" />
     <Compile Include="Internal\TestFixtureBuilder.cs" />
@@ -308,6 +309,7 @@
     <Compile Include="Runner\OutputWriters\NUnit2XmlOutputWriter.cs" />
     <Compile Include="Runner\OutputWriters\NUnit3XmlOutputWriter.cs" />
     <Compile Include="Runner\OutputWriters\OutputWriter.cs" />
+    <Compile Include="Runner\ResultReporter.cs" />
     <Compile Include="Runner\ResultSummary.cs" />
     <Compile Include="Runner\TcpWriter.cs" />
     <Compile Include="Runner\TextUI.cs" />

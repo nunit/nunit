@@ -43,6 +43,7 @@ namespace NUnitLite.Runner
     public class NUnit2XmlOutputWriter : OutputWriter
     {
         private XmlWriter xmlWriter;
+        private DateTime startTime;
 
 #if CLR_2_0 || CLR_4_0
         private static Dictionary<string, string> resultStates = new Dictionary<string, string>();
@@ -60,6 +61,11 @@ namespace NUnitLite.Runner
             resultStates["Skipped"] = "Skipped";
             resultStates["Skipped:Ignored"] = "Ignored";
             resultStates["Skipped:Invalid"] = "NotRunnable";
+        }
+
+        public NUnit2XmlOutputWriter(DateTime startTime)
+        {
+            this.startTime = startTime;
         }
 
         /// <summary>
@@ -113,9 +119,8 @@ namespace NUnitLite.Runner
             xmlWriter.WriteAttributeString("skipped", summaryResults.SkipCount.ToString());
             xmlWriter.WriteAttributeString("invalid", summaryResults.InvalidCount.ToString());
 
-            DateTime now = DateTime.Now;
-            xmlWriter.WriteAttributeString("date", XmlConvert.ToString(now, "yyyy-MM-dd"));
-            xmlWriter.WriteAttributeString("time", XmlConvert.ToString(now, "HH:mm:ss"));
+            xmlWriter.WriteAttributeString("date", XmlConvert.ToString(startTime, "yyyy-MM-dd"));
+            xmlWriter.WriteAttributeString("time", XmlConvert.ToString(startTime, "HH:mm:ss"));
             WriteEnvironment();
             WriteCultureInfo();
         }
