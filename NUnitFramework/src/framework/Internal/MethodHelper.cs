@@ -74,11 +74,7 @@ namespace NUnit.Framework.Internal
         {
             string display = arg == null 
                 ? "null"
-#if NETCF_1_0
-                : Convert.ToString( arg );
-#else
                 : Convert.ToString(arg, System.Globalization.CultureInfo.InvariantCulture);
-#endif
 
             if (arg is double)
             {

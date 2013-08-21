@@ -111,8 +111,6 @@ namespace NUnit.Framework.Internal
             Assert.That(topNode.Attributes["name"].Value, Is.EqualTo(test.Name));
             Assert.That(topNode.Attributes["fullname"].Value, Is.EqualTo(test.FullName));
 
-            // TODO: Replace SelectSingleNode to allow testing under CF 1.0
-#if !NETCF_1_0
             int expectedCount = test.Properties.Count;
             if (expectedCount > 0)
             {
@@ -152,7 +150,6 @@ namespace NUnit.Framework.Internal
                     }
                 }
             }
-#endif
         }
 
         #endregion

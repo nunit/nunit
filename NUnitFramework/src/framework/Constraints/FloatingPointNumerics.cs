@@ -21,8 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NETCF_1_0
-
 using System;
 using System.Runtime.InteropServices;
 
@@ -251,5 +249,3 @@ namespace NUnit.Framework.Constraints
         }
     }
 }
-
-#endif
