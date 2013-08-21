@@ -250,7 +250,6 @@ namespace NUnitLite.Runner
             string copyright = "Copyright (C) 2012, Charlie Poole";
             string build = "";
 
-#if !NETCF_1_0
             object[] attrs = executingAssembly.GetCustomAttributes(typeof(AssemblyTitleAttribute), false);
             if (attrs.Length > 0)
             {
@@ -271,7 +270,6 @@ namespace NUnitLite.Runner
                 AssemblyConfigurationAttribute configAttr = (AssemblyConfigurationAttribute)attrs[0];
                 build = string.Format("({0})", configAttr.Configuration); 
             }
-#endif
 
             writer.WriteLine(String.Format("{0} {1} {2}", title, version.ToString(3), build));
             writer.WriteLine(copyright);

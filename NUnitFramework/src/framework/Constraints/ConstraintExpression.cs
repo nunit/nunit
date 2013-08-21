@@ -439,7 +439,6 @@ namespace NUnit.Framework.Constraints
 
         #region XmlSerializable
 
-#if !NETCF_1_0
         /// <summary>
         /// Returns a constraint that tests whether an object graph is serializable in xml format.
         /// </summary>
@@ -447,7 +446,6 @@ namespace NUnit.Framework.Constraints
         {
             get { return (XmlSerializableConstraint)this.Append(new XmlSerializableConstraint()); }
         }
-#endif
 
         #endregion
 

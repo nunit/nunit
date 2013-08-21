@@ -28,9 +28,7 @@ namespace NUnit.Framework
     /// <summary>
     /// Thrown when a test executes inconclusively.
     /// </summary>
-#if !NETCF_1_0
     [Serializable]
-#endif
     public class InconclusiveException : System.Exception
     {
         /// <param name="message">The error message that explains 

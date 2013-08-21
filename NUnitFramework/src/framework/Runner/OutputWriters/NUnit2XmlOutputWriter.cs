@@ -28,11 +28,7 @@ using System.Xml;
 using System.IO;
 using NUnit.Framework.Api;
 using NUnit.Framework.Internal;
-#if CLR_2_0 || CLR_4_0
 using System.Collections.Generic;
-#else
-using System.Collections.Specialized;
-#endif
 
 namespace NUnitLite.Runner
 {
@@ -45,11 +41,7 @@ namespace NUnitLite.Runner
         private XmlWriter xmlWriter;
         private DateTime startTime;
 
-#if CLR_2_0 || CLR_4_0
         private static Dictionary<string, string> resultStates = new Dictionary<string, string>();
-#else
-        private static StringDictionary resultStates = new StringDictionary();
-#endif
 
         static NUnit2XmlOutputWriter()
         {

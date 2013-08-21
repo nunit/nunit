@@ -406,7 +406,6 @@ namespace NUnit.Framework.Internal
             if (ex is NUnitException)
                 ex = ex.InnerException;
 
-#if !NETCF_1_0
             if (ex is System.Threading.ThreadAbortException)
                 SetResult(ResultState.Cancelled, "Test cancelled by user", ex.StackTrace);
             else if (ex is AssertionException)
@@ -421,18 +420,6 @@ namespace NUnit.Framework.Internal
                 SetResult(ResultState.Error, 
                     ExceptionHelper.BuildMessage(ex), 
                     ExceptionHelper.BuildStackTrace(ex));
-#else
-            if (ex is AssertionException)
-                SetResult(ResultState.Failure, ex.Message);
-            else if (ex is IgnoreException)
-                SetResult(ResultState.Ignored, ex.Message);
-            else if (ex is InconclusiveException)
-                SetResult(ResultState.Inconclusive, ex.Message);
-            else if (ex is SuccessException)
-                SetResult(ResultState.Success, ex.Message);
-            else
-                SetResult(ResultState.Error, ExceptionHelper.BuildMessage(ex));
-#endif
         }
 
         #endregion
@@ -465,12 +452,10 @@ namespace NUnit.Framework.Internal
                 XmlHelper.AddElementWithCDataSection(failureNode, "message", this.Message);
             }
 
-#if !NETCF_1_0
             if (this.StackTrace != null)
             {
                 XmlHelper.AddElementWithCDataSection(failureNode, "stack-trace", this.StackTrace);
             }
-#endif 
 
             return failureNode;
         }

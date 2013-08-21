@@ -38,7 +38,6 @@ namespace NUnit.Framework.Syntax
     }
 #endif
 
-#if !NETCF_1_0
     [TestFixture]
     public class XmlSerializableTest : SyntaxTest
     {
@@ -51,5 +50,4 @@ namespace NUnit.Framework.Syntax
             builderSyntax = Builder().XmlSerializable;
         }
     }
-#endif
 }

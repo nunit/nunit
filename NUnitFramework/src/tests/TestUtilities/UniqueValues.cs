@@ -32,9 +32,7 @@ namespace NUnit.TestUtilities
         [TestCase(1, 1, 1, 1, 1, ExpectedResult = 1)]
         [TestCase(1, 2, 1, 2, 1, ExpectedResult = 2)]
         [TestCase(1, 1, 1, 2, 2, ExpectedResult = 2)]
-#if !NET_1_1
         [TestCase(ExpectedResult = 0)]
-#endif
         public static int CountUniqueValuesTest(params int[] values)
         {
             return UniqueValues.Count(values);
