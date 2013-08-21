@@ -24,10 +24,10 @@
 using System;
 using System.IO;
 
-namespace NUnit.Framework.Constraints.Tests
+namespace NUnit.Framework.Constraints
 {
     [TestFixture]
-    public class EqualTest : IExpectException
+    public class EqualTests : IExpectException
     {
 
         [Test, ExpectedException(typeof(AssertionException))]

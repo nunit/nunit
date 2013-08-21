@@ -21,43 +21,22 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-
 namespace NUnit.Framework.Constraints
 {
     [TestFixture]
-    public class XmlSerializableTest : ConstraintTestBase
+    public class CollectionSubsetConstraintTests : ConstraintTestBase
     {
         [SetUp]
         public void SetUp()
         {
-            theConstraint = new XmlSerializableConstraint();
-            expectedDescription = "xml serializable";
-            stringRepresentation = "<xmlserializable>";
+            theConstraint = new CollectionSubsetConstraint(new int[] { 1, 2, 3, 4, 5 });
+            stringRepresentation = "<subsetof System.Int32[]>";
+            expectedDescription = "subset of < 1, 2, 3, 4, 5 >";
         }
 
-        object[] SuccessData = new object[] { 1, "a", new ArrayList() };
-
-        object[] FailureData = new object[] { 
-            new TestCaseData( new Dictionary<string, string>(), "<System.Collections.Generic.Dictionary`2[System.String,System.String]>" ),
-            new TestCaseData( new InternalClass(), "<" + typeof(InternalClass).FullName + ">" ),
-            new TestCaseData( new InternalWithSerializableAttributeClass(), "<" + typeof(InternalWithSerializableAttributeClass).FullName + ">" )
-        };
-
-        [Test, ExpectedException(typeof(ArgumentNullException))]
-        public void NullArgumentThrowsException()
-        {
-            object o = null;
-            theConstraint.ApplyTo(o);
-        }
+        internal object[] SuccessData = new object[] { new int[] { 1, 3, 5 }, new int[] { 1, 2, 3, 4, 5 } };
+        internal object[] FailureData = new object[] { 
+            new object[] { new int[] { 1, 3, 7 }, "< 1, 3, 7 >" },
+            new object[] { new int[] { 1, 2, 2, 2, 5 }, "< 1, 2, 2, 2, 5 >" } };
     }
-
-    internal class InternalClass
-    { }
-
-    [Serializable]
-    internal class InternalWithSerializableAttributeClass
-    { }
 }

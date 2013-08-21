@@ -23,9 +23,7 @@
 
 using System;
 
-// TODO: Remove NUNITLITE conditions
-
-namespace NUnit.Framework.Constraints.Tests
+namespace NUnit.Framework.Constraints
 {
 	/// <summary>
 	/// Summary description for MsgUtilTests.

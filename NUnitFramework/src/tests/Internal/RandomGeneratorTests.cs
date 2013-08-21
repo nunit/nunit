@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections;
-using NUnit.Framework;
 using NUnit.Framework.Internal;
 using NUnit.TestUtilities;
 
-namespace NUnitLite.Tests.Internal
+namespace NUnit.Framework.Internal
 {
     public static class RandomGeneratorTests
     {

@@ -24,7 +24,7 @@
 using System;
 using NUnit.Framework.Internal;
 
-namespace NUnit.Framework.Constraints.Tests
+namespace NUnit.Framework.Constraints
 {
     public abstract class ConstraintTestBaseNoData
     {

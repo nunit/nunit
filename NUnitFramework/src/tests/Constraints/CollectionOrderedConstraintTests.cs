@@ -27,7 +27,7 @@ using System.Collections.Generic;
 using NUnit.Framework.Internal;
 using NUnit.TestUtilities;
 
-namespace NUnit.Framework.Constraints.Tests
+namespace NUnit.Framework.Constraints
 {
     [TestFixture]
     public class CollectionOrderedConstraintTests : NUnit.Framework.Assertions.MessageChecker

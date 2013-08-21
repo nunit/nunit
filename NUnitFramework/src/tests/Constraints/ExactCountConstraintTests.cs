@@ -26,7 +26,7 @@ using System.Collections;
 using NUnit.Framework.Assertions;
 using NUnit.Framework.Internal;
 
-namespace NUnit.Framework.Constraints.Tests
+namespace NUnit.Framework.Constraints
 {
     public class ExactCountConstraintTests : MessageChecker
     {

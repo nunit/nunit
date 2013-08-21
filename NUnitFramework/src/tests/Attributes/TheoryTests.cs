@@ -27,7 +27,7 @@ using NUnit.TestUtilities;
 using NUnit.TestData.TheoryFixture;
 using NUnit.Framework.Api;
 
-namespace NUnit.Framework.Tests
+namespace NUnit.Framework.Attributes
 {
     public class TheoryTests
     {

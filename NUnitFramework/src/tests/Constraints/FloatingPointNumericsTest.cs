@@ -21,16 +21,14 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NETCF_1_0
-
 using System;
 using System.IO;
 using System.Drawing;
 
-namespace NUnit.Framework.Constraints.Tests
+namespace NUnit.Framework.Constraints
 {
     [TestFixture]
-    public class FloatingPointNumericsTest
+    public class FloatingPointNumericsTests
     {
 
         /// <summary>Tests the floating point value comparison helper</summary>
@@ -124,4 +122,3 @@ namespace NUnit.Framework.Constraints.Tests
 
   }
 }
-#endif

@@ -24,7 +24,7 @@
 using System;
 using System.Collections;
 
-namespace NUnit.Framework.Constraints.Tests
+namespace NUnit.Framework.Constraints
 {
     [TestFixture]
     public class EmptyConstraintTest : ConstraintTestBase

@@ -26,7 +26,7 @@ using System.Collections;
 using NUnit.Framework.Internal;
 using NUnit.TestUtilities;
 
-namespace NUnit.Framework.Constraints.Tests
+namespace NUnit.Framework.Constraints
 {
     [TestFixture]
     public class CollectionContainsConstraintTests
