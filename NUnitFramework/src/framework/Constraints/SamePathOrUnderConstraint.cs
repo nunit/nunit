@@ -50,7 +50,11 @@ namespace NUnit.Framework.Constraints
         /// <returns>True for success, false for failure</returns>
         protected override bool Matches(string actual)
         {
-            return actual != null && IsSamePathOrUnder(expected, actual);
+            if (actual == null) return false;
+
+            string path1 = Canonicalize(expected);
+            string path2 = Canonicalize(actual);
+            return string.Compare(path1, path2, caseInsensitive) == 0 || IsSubPath(path1, path2);
         }
     }
 }

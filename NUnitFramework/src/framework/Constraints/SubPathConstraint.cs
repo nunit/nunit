@@ -1,4 +1,4 @@
-// ***********************************************************************
+﻿// ***********************************************************************
 // Copyright (c) 2008 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -21,18 +21,20 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
+
 namespace NUnit.Framework.Constraints
 {
     /// <summary>
-    /// Summary description for SamePathConstraint.
+    /// SubPathConstraint tests that the actual path is under the expected path
     /// </summary>
-    public class SamePathConstraint : PathConstraint
+    public class SubPathConstraint : PathConstraint
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:SamePathConstraint"/> class.
+        /// Initializes a new instance of the <see cref="T:SubPathConstraint"/> class.
         /// </summary>
         /// <param name="expected">The expected path</param>
-        public SamePathConstraint(string expected) : base(expected) { }
+        public SubPathConstraint(string expected) : base(expected) { }
 
         /// <summary>
         /// The Description of what this constraint tests, for
@@ -40,7 +42,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public override string Description
         {
-            get { return "Path matching " + MsgUtils.FormatValue(expected); }
+            get { return  "Subpath of " + MsgUtils.FormatValue(expected); }
         }
 
         /// <summary>
@@ -50,7 +52,7 @@ namespace NUnit.Framework.Constraints
         /// <returns>True for success, false for failure</returns>
         protected override bool Matches(string actual)
         {
-            return actual != null && string.Compare(Canonicalize(expected), Canonicalize(actual), caseInsensitive) == 0;
+            return actual != null & IsSubPath(Canonicalize(expected), Canonicalize(actual));
         }
     }
 }
