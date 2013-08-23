@@ -238,11 +238,11 @@ namespace NUnit.Framework.Attributes
 
         #region RequiredAddinAttribute
 
-        [Test, Ignore("NYI")]
+        [Test]
         public void RequiredAddinAttributeSkipsTest()
         {
             new RequiredAddinAttribute("JUNK").ApplyToTest(test);
-            Assert.That(test.RunState, Is.EqualTo(RunState.Skipped));
+            Assert.That(test.RunState, Is.EqualTo(RunState.NotRunnable));
         }
 
         #endregion

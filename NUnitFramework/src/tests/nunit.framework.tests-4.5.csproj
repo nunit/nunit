@@ -65,7 +65,7 @@
     <Compile Include="Assertions\AsyncThrowsTests.cs" />
     <Compile Include="Assertions\CollectionAssertTest.cs" />
     <Compile Include="Assertions\ConditionAssertTests.cs" />
-    <Compile Include="Assertions\EqualsFixture.cs" />
+    <Compile Include="Assertions\AssertEqualsTests.cs" />
     <Compile Include="Assertions\FileAssertTests.cs" />
     <Compile Include="Assertions\GreaterEqualFixture.cs" />
     <Compile Include="Assertions\GreaterFixture.cs" />
@@ -113,6 +113,7 @@
     <Compile Include="Constraints\CollectionEquivalentConstraintTests.cs" />
     <Compile Include="Constraints\CollectionOrderedConstraintTests.cs" />
     <Compile Include="Constraints\CollectionSubsetConstraintTests.cs" />
+    <Compile Include="Constraints\CollectionEqualsTests.cs" />
     <Compile Include="Constraints\ComparisonConstraintTestBase.cs" />
     <Compile Include="Constraints\DelayedConstraintTests.cs" />
     <Compile Include="Constraints\EndsWithConstraintTests.cs" />
