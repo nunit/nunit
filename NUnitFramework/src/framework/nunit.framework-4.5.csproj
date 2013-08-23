@@ -315,6 +315,7 @@
     <Compile Include="Internal\Reflect.cs" />
     <Compile Include="Internal\Results\TestResult.cs" />
     <Compile Include="Internal\RuntimeFramework.cs" />
+    <Compile Include="Internal\StackFilter.cs" />
     <Compile Include="Internal\TestExecutionContext.cs" />
     <Compile Include="Internal\TestFilter.cs" />
     <Compile Include="Internal\TestFixtureBuilder.cs" />

@@ -10,7 +10,7 @@ using NUnit.Framework;
 namespace NUnit.Framework.Internal
 {
     [TestFixture]
-    class StackFilterTest
+    class StackFilterTests
     {
         private static readonly string NL = NUnit.Env.NewLine;
 

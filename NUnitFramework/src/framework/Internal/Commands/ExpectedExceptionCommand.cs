@@ -113,7 +113,7 @@ namespace NUnit.Framework.Internal.Commands
                 }
                 else
                 {
-                    context.CurrentResult.SetResult(ResultState.Failure, WrongTextMessage(exception), GetStackTrace(exception));
+                    context.CurrentResult.SetResult(ResultState.Failure, WrongTextMessage(exception), ExceptionHelper.GetStackTrace(exception));
                 }
             }
             else
@@ -122,7 +122,7 @@ namespace NUnit.Framework.Internal.Commands
 
                 // If it shows as an error, change it to a failure due to the wrong type
                 if (context.CurrentResult.ResultState == ResultState.Error)
-                    context.CurrentResult.SetResult(ResultState.Failure, WrongTypeMessage(exception), GetStackTrace(exception));
+                    context.CurrentResult.SetResult(ResultState.Failure, WrongTypeMessage(exception), ExceptionHelper.GetStackTrace(exception));
             }
         }
 
@@ -198,18 +198,6 @@ namespace NUnit.Framework.Internal.Commands
             if (exceptionData.UserMessage == null)
                 return message;
             return exceptionData.UserMessage + Env.NewLine + message;
-        }
-
-        private string GetStackTrace(Exception exception)
-        {
-            try
-            {
-                return exception.StackTrace;
-            }
-            catch (Exception)
-            {
-                return "No stack trace available";
-            }
         }
 
         #endregion

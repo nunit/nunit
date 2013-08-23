@@ -80,7 +80,7 @@ namespace NUnit.Framework.Internal
             return sb.ToString();
         }
 
-        private static string GetStackTrace(Exception exception)
+        public static string GetStackTrace(Exception exception)
         {
             try
             {

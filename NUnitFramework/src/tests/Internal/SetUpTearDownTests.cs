@@ -29,7 +29,7 @@ using NUnit.TestData.SetUpData;
 namespace NUnit.Framework.Internal
 {
 	[TestFixture]
-	public class SetUpTest
+	public class SetUpTearDownTests
 	{	
 		[Test]
 		public void SetUpAndTearDownCounter()
@@ -102,7 +102,7 @@ namespace NUnit.Framework.Internal
         }
 
         [Test]
-        public void SetupRecordsOriginalExceptionThownByTestCase()
+        public void HandleExceptionInSetUp()
         {
             Exception e = new Exception("Test message for exception thrown from setup");
             SetupAndTearDownExceptionFixture fixture = new SetupAndTearDownExceptionFixture();
@@ -113,10 +113,11 @@ namespace NUnit.Framework.Internal
             Assert.AreEqual(result.ResultState, ResultState.Error, "Test should be in error state");
             string expected = string.Format("{0} : {1}", e.GetType().FullName, e.Message);
             Assert.AreEqual(expected, result.Message);
+            Assert.That(result.StackTrace, Contains.Substring(fixture.GetType().FullName)); // Sanity check
         }
 
         [Test]
-        public void TearDownRecordsOriginalExceptionThownByTestCase()
+        public void HandleExceptionInTearDown()
         {
             Exception e = new Exception("Test message for exception thrown from tear down");
             SetupAndTearDownExceptionFixture fixture = new SetupAndTearDownExceptionFixture();
@@ -127,6 +128,27 @@ namespace NUnit.Framework.Internal
             Assert.AreEqual(result.ResultState, ResultState.Error, "Test should be in error state");
             string expected = string.Format("TearDown : {0} : {1}", e.GetType().FullName, e.Message);
             Assert.AreEqual(expected, result.Message);
+            Assert.That(result.StackTrace, Is.StringStarting("--TearDown"));
+            Assert.That(result.StackTrace, Contains.Substring(fixture.GetType().FullName)); // Sanity check
+        }
+
+        [Test]
+        public void HandleExceptionInBothSetUpAndTearDown()
+        {
+            Exception e1 = new Exception("Test message for exception thrown from setup");
+            Exception e2 = new Exception("Test message for exception thrown from tear down");
+            SetupAndTearDownExceptionFixture fixture = new SetupAndTearDownExceptionFixture();
+            fixture.setupException = e1;
+            fixture.tearDownException = e2;
+            ITestResult suiteResult = TestBuilder.RunTestFixture(fixture);
+            Assert.That(suiteResult.HasChildren, "Fixture test should have child result.");
+            ITestResult result = suiteResult.Children[0];
+            Assert.AreEqual(result.ResultState, ResultState.Error, "Test should be in error state");
+            string expected = string.Format("{0} : {1}", e1.GetType().FullName, e1.Message) + Env.NewLine
+                + string.Format("TearDown : {0} : {1}", e2.GetType().FullName, e2.Message);
+            Assert.AreEqual(expected, result.Message);
+            Assert.That(result.StackTrace, Contains.Substring("--TearDown"));
+            Assert.That(result.StackTrace, Contains.Substring(fixture.GetType().FullName)); // Sanity check
         }
 
         public class SetupCallBase

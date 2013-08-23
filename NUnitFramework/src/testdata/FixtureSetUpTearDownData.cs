@@ -208,6 +208,7 @@ namespace NUnit.TestData.FixtureSetUpTearDownData
 	public class MisbehavingFixture 
 	{
 		public bool blowUpInSetUp = false;
+        public bool blowUpInTest = false;
 		public bool blowUpInTearDown = false;
 
 		public int setUpCount = 0;
@@ -239,8 +240,10 @@ namespace NUnit.TestData.FixtureSetUpTearDownData
 		}
 
 		[Test]
-		public void nothingToTest() 
+		public void BlowUpInTest() 
 		{
+            if (blowUpInTest)
+                throw new Exception("This was thrown from a test");
 		}
 	}
 

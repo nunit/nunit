@@ -409,17 +409,48 @@ namespace NUnit.Framework.Internal
             if (ex is System.Threading.ThreadAbortException)
                 SetResult(ResultState.Cancelled, "Test cancelled by user", ex.StackTrace);
             else if (ex is AssertionException)
-                SetResult(ResultState.Failure, ex.Message, ex.StackTrace);
+                SetResult(ResultState.Failure, ex.Message, StackFilter.Filter(ex.StackTrace));
             else if (ex is IgnoreException)
-                SetResult(ResultState.Ignored, ex.Message, ex.StackTrace);
+                SetResult(ResultState.Ignored, ex.Message, StackFilter.Filter(ex.StackTrace));
             else if (ex is InconclusiveException)
-                SetResult(ResultState.Inconclusive, ex.Message, ex.StackTrace);
+                SetResult(ResultState.Inconclusive, ex.Message, StackFilter.Filter(ex.StackTrace));
             else if (ex is SuccessException)
-                SetResult(ResultState.Success, ex.Message, ex.StackTrace);
+                SetResult(ResultState.Success, ex.Message, StackFilter.Filter(ex.StackTrace));
             else
                 SetResult(ResultState.Error, 
                     ExceptionHelper.BuildMessage(ex), 
                     ExceptionHelper.BuildStackTrace(ex));
+        }
+
+        /// <summary>
+        /// RecordTearDownException appends the message and stacktrace
+        /// from an exception arising during teardown of the test
+        /// to any previously recorded information, so that any
+        /// earlier failure information is not lost. Note that
+        /// calling Assert.Ignore, Assert.Inconclusive, etc. during
+        /// teardown is treated as an error. If the current result
+        /// represents a suite, it may show a teardown error even
+        /// though all contained tests passed.
+        /// </summary>
+        /// <param name="ex">The Exception to be recorded</param>
+        public void RecordTearDownException(Exception ex)
+        {
+            if (ex is NUnitException)
+                ex = ex.InnerException;
+
+            ResultState resultState = this.ResultState == ResultState.Cancelled
+                ? ResultState.Cancelled
+                : ResultState.Error;
+
+            string message = "TearDown : " + ExceptionHelper.BuildMessage(ex);
+            if (this.Message != null)
+                message = this.Message + NUnit.Env.NewLine + message;
+
+            string stackTrace = "--TearDown" + NUnit.Env.NewLine + ExceptionHelper.BuildStackTrace(ex);
+            if (this.StackTrace != null)
+                stackTrace = this.StackTrace + NUnit.Env.NewLine + stackTrace;
+
+            SetResult(resultState, message, stackTrace);
         }
 
         #endregion

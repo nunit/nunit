@@ -77,24 +77,7 @@ namespace NUnit.Framework.Internal.Commands
                 }
                 catch (Exception ex)
                 {
-                    // Error in TestFixtureTearDown or Dispose causes the
-                    // suite to be marked as a error, even if
-                    // all the contained tests passed.
-                    NUnitException nex = ex as NUnitException;
-                    if (nex != null)
-                        ex = nex.InnerException;
-
-                    // TODO: Can we move this logic into TestResult itself?
-                    string message = "TearDown : " + ExceptionHelper.BuildMessage(ex);
-                    if (suiteResult.Message != null)
-                        message = suiteResult.Message + NUnit.Env.NewLine + message;
-
-                    string stackTrace = "--TearDown" + NUnit.Env.NewLine + ExceptionHelper.BuildStackTrace(ex);
-                    if (suiteResult.StackTrace != null)
-                        stackTrace = suiteResult.StackTrace + NUnit.Env.NewLine + stackTrace;
-
-                    // TODO: What about ignore exceptions in teardown?
-                    suiteResult.SetResult(ResultState.Error, message, stackTrace);
+                    suiteResult.RecordTearDownException(ex);
                 }
             }
 
