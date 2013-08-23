@@ -121,15 +121,12 @@ namespace NUnit.Framework.Internal
 			get { return initialized; }
 		}
 
-		/// <summary>
-		/// Our AddinRegistry may be set from outside or passed into the domain
-		/// </summary>
 		public IAddinRegistry AddinRegistry
 		{
 			get 
 			{
 				if ( addinRegistry == null )
-					addinRegistry = AppDomain.CurrentDomain.GetData( "AddinRegistry" ) as IAddinRegistry;
+                    addinRegistry = new AddinRegistry();
 
 				return addinRegistry; 
 			}

@@ -376,9 +376,16 @@ namespace NUnit.Framework.Builders
                 for (int argIndex = 0; argIndex < parameters.Length; argIndex++)
                 {
                     if (parameters[argIndex].ParameterType.Equals(typeParameter))
+                    {
+                        // If a null arg is provided, pass null as the Type
+                        // BestCommonType knows how to deal with this
+                        Type argType = arglist[argIndex] != null
+                            ? arglist[argIndex].GetType()
+                            : null;
                         typeArguments[typeIndex] = TypeHelper.BestCommonType(
                             typeArguments[typeIndex],
-                            arglist[argIndex].GetType());
+                            argType);
+                    }
                 }
             }
 

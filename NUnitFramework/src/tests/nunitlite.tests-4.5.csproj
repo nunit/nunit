@@ -74,6 +74,7 @@
     <Compile Include="Assertions\ArrayEqualsFailureMessageFixture.cs" />
     <Compile Include="Assertions\ArrayEqualsFixture.cs" />
     <Compile Include="Assertions\ArrayNotEqualFixture.cs" />
+    <Compile Include="Assertions\AssertEqualsTests.cs" />
     <Compile Include="Assertions\AssertFailTests.cs" />
     <Compile Include="Assertions\AssertIgnoreTests.cs" />
     <Compile Include="Assertions\AssertInconclusiveTests.cs" />
@@ -83,7 +84,6 @@
     <Compile Include="Assertions\AssumeThatTests.cs" />
     <Compile Include="Assertions\AsyncThrowsTests.cs" />
     <Compile Include="Assertions\ConditionAssertTests.cs" />
-    <Compile Include="Assertions\EqualsFixture.cs" />
     <Compile Include="Assertions\MessageChecker.cs" />
     <Compile Include="Assertions\NotEqualFixture.cs" />
     <Compile Include="Assertions\NotSameFixture.cs" />
