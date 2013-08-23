@@ -186,9 +186,7 @@ namespace NUnitLite.Runner
                 writer.WriteLine("   {0}", result.Message);
 
             if (result.StackTrace != null && result.StackTrace != string.Empty)
-                writer.WriteLine(result.ResultState == ResultState.Failure
-                    ? StackFilter.Filter(result.StackTrace)
-                    : result.StackTrace + NUnit.Env.NewLine);
+                writer.WriteLine(result.StackTrace);
         }
 
         #endregion

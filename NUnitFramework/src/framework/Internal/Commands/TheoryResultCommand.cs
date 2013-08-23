@@ -50,7 +50,7 @@ namespace NUnit.Framework.Internal.Commands
             if (theoryResult.ResultState == ResultState.Success)
             {
                 if (!theoryResult.HasChildren)
-                    theoryResult.SetResult(ResultState.Failure, "No test cases were provided", null);
+                    theoryResult.SetResult(ResultState.Failure, "No test cases were provided");
                 else
                 {
                     bool wasInconclusive = true;
@@ -62,7 +62,7 @@ namespace NUnit.Framework.Internal.Commands
                         }
 
                     if (wasInconclusive)
-                        theoryResult.SetResult(ResultState.Failure, "All test cases were inconclusive", null);
+                        theoryResult.SetResult(ResultState.Failure, "All test cases were inconclusive");
                 }
             }
 

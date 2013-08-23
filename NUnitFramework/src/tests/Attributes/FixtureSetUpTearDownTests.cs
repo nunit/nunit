@@ -146,7 +146,7 @@ namespace NUnit.Framework.Attributes
 			Assert.AreEqual( 1, fixture.tearDownCount, "tearDownCOunt" );
 
 			Assert.AreEqual(ResultState.Error, result.ResultState);
-			Assert.AreEqual("System.Exception : This was thrown from fixture setup", result.Message, "TestSuite Message");
+            Assert.AreEqual("System.Exception : This was thrown from fixture setup", result.Message, "TestSuite Message");
 			Assert.IsNotNull(result.StackTrace, "TestSuite StackTrace should not be null");
 
             Assert.AreEqual(1, result.Children.Count, "Child result count");
@@ -187,23 +187,58 @@ namespace NUnit.Framework.Attributes
             Assert.AreEqual(1, result.SkipCount, "SkipCount");
 		}
 
-		[Test]
-		public void HandleErrorInFixtureTearDown() 
-		{
-			MisbehavingFixture fixture = new MisbehavingFixture();
-			fixture.blowUpInTearDown = true;
+        [Test]
+        public void HandleErrorInFixtureTearDown()
+        {
+            MisbehavingFixture fixture = new MisbehavingFixture();
+            fixture.blowUpInTearDown = true;
             ITestResult result = TestBuilder.RunTestFixture(fixture);
             Assert.AreEqual(1, result.Children.Count);
             Assert.AreEqual(ResultState.Error, result.ResultState);
 
-			Assert.AreEqual( 1, fixture.setUpCount, "setUpCount" );
-			Assert.AreEqual( 1, fixture.tearDownCount, "tearDownCOunt" );
+            Assert.AreEqual(1, fixture.setUpCount, "setUpCount");
+            Assert.AreEqual(1, fixture.tearDownCount, "tearDownCOunt");
 
-			Assert.AreEqual("TearDown : System.Exception : This was thrown from fixture teardown", result.Message);
-			Assert.IsNotNull(result.StackTrace, "StackTrace should not be null");
-		}
+            Assert.AreEqual("TearDown : System.Exception : This was thrown from fixture teardown", result.Message);
+            Assert.That(result.StackTrace, Contains.Substring("--TearDown"));
+        }
 
-		[Test]
+        [Test]
+        public void HandleErrorInFixtureTearDownAfterErrorInTest()
+        {
+            MisbehavingFixture fixture = new MisbehavingFixture();
+            fixture.blowUpInTest = true;
+            fixture.blowUpInTearDown = true;
+            ITestResult result = TestBuilder.RunTestFixture(fixture);
+            Assert.AreEqual(1, result.Children.Count);
+            Assert.AreEqual(ResultState.Error, result.ResultState);
+
+            Assert.AreEqual(1, fixture.setUpCount, "setUpCount");
+            Assert.AreEqual(1, fixture.tearDownCount, "tearDownCOunt");
+
+            Assert.AreEqual("One or more child tests had errors" + Env.NewLine + "TearDown : System.Exception : This was thrown from fixture teardown", result.Message);
+            Assert.That(result.StackTrace, Contains.Substring("--TearDown"));
+        }
+
+        [Test]
+        public void HandleErrorInFixtureTearDownAfterErrorInFixtureSetUp()
+        {
+            MisbehavingFixture fixture = new MisbehavingFixture();
+            fixture.blowUpInSetUp = true;
+            fixture.blowUpInTearDown = true;
+            ITestResult result = TestBuilder.RunTestFixture(fixture);
+            Assert.AreEqual(1, result.Children.Count);
+            Assert.AreEqual(ResultState.Error, result.ResultState);
+
+            Assert.AreEqual(1, fixture.setUpCount, "setUpCount");
+            Assert.AreEqual(1, fixture.tearDownCount, "tearDownCOunt");
+
+            Assert.AreEqual("System.Exception : This was thrown from fixture setup" + Env.NewLine + 
+                "TearDown : System.Exception : This was thrown from fixture teardown", result.Message);
+            Assert.That(result.StackTrace, Contains.Substring("--TearDown"));
+        }
+
+        [Test]
 		public void HandleExceptionInFixtureConstructor()
 		{
 			ITestResult result = TestBuilder.RunTestFixture( typeof( ExceptionInConstructor ) );

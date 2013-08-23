@@ -119,24 +119,7 @@ namespace NUnit.Framework.Internal.Commands
             }
             catch (Exception ex)
             {
-                if (ex is NUnitException)
-                    ex = ex.InnerException;
-
-                // TODO: What about ignore exceptions in teardown?
-                ResultState resultState = context.CurrentResult.ResultState == ResultState.Cancelled
-                    ? ResultState.Cancelled
-                    : ResultState.Error;
-
-                // TODO: Can we move this logic into TestResult itself?
-                string message = "TearDown : " + ExceptionHelper.BuildMessage(ex);
-                if (context.CurrentResult.Message != null)
-                    message = context.CurrentResult.Message + NUnit.Env.NewLine + message;
-
-                string stackTrace = "--TearDown" + NUnit.Env.NewLine + ExceptionHelper.BuildStackTrace(ex);
-                if (context.CurrentResult.StackTrace != null)
-                    stackTrace = context.CurrentResult.StackTrace + NUnit.Env.NewLine + stackTrace;
-
-                context.CurrentResult.SetResult(resultState, message, stackTrace);
+                context.CurrentResult.RecordTearDownException(ex);
             }
         }
     }

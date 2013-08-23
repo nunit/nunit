@@ -31,7 +31,11 @@ namespace NUnit.Framework.Internal
             try
             {
                 string line;
-                while ((line = sr.ReadLine()) != null && line.IndexOf("NUnit.Framework.Assert") >= 0)
+                // TODO: Handle Assume and any other verbs
+                // Best way is probably to check first line and
+                // see where the exception was thrown, then
+                // discard all leading lines within the same class.
+                while ((line = sr.ReadLine()) != null && line.IndexOf("at NUnit.Framework.Assert.") >= 0)
                     /*Skip*/
                     ;
 
