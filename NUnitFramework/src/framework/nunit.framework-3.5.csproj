@@ -203,6 +203,7 @@
     <Compile Include="Constraints\SomeItemsConstraint.cs" />
     <Compile Include="Constraints\StartsWithConstraint.cs" />
     <Compile Include="Constraints\StringConstraint.cs" />
+    <Compile Include="Constraints\SubPathConstraint.cs" />
     <Compile Include="Constraints\SubstringConstraint.cs" />
     <Compile Include="Constraints\ThrowsConstraint.cs" />
     <Compile Include="Constraints\ThrowsExceptionConstraint.cs" />

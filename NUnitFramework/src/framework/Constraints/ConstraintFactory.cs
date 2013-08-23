@@ -738,6 +738,19 @@ namespace NUnit.Framework.Constraints
 
         #endregion
 
+        #region SubPath
+
+        /// <summary>
+        /// Returns a constraint that tests whether the path provided 
+        /// is a subpath of the expected path after canonicalization.
+        /// </summary>
+        public SubPathConstraint SubPathOf(string expected)
+        {
+            return new SubPathConstraint(expected);
+        }
+
+        #endregion
+
         #region SamePathOrUnder
 
         /// <summary>

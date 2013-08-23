@@ -115,37 +115,19 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
-        /// Test whether two paths are the same
-        /// </summary>
-        /// <param name="path1">The first path</param>
-        /// <param name="path2">The second path</param>
-        /// <returns></returns>
-        protected bool IsSamePath(string path1, string path2)
-        {
-            return string.Compare(Canonicalize(path1), Canonicalize((string)path2), caseInsensitive) == 0;
-        }
-
-        /// <summary>
-        /// Test whether one path is the same as or under another path
+        /// Test whether one path in canonical form is a subpath of another path
         /// </summary>
         /// <param name="path1">The first path - supposed to be the parent path</param>
         /// <param name="path2">The second path - supposed to be the child path</param>
         /// <returns></returns>
-        protected bool IsSamePathOrUnder(string path1, string path2)
+        protected bool IsSubPath(string path1, string path2)
         {
-            path1 = Canonicalize(path1);
-            path2 = Canonicalize(path2);
-
             int length1 = path1.Length;
             int length2 = path2.Length;
 
-            // if path1 is longer, then path2 can't be under it
-            if (length1 > length2)
+            // if path1 is longer or equal, then path2 can't be a subpath
+            if (length1 >= length2)
                 return false;
-
-            // if lengths are the same, check for equality
-            if (length1 == length2)
-                return string.Compare(path1, path2, caseInsensitive) == 0;
 
             // path 2 is longer than path 1: see if initial parts match
             if (string.Compare(path1, path2.Substring(0, length1), caseInsensitive) != 0)
@@ -155,6 +137,7 @@ namespace NUnit.Framework.Constraints
             return path2[length1 - 1] == Path.DirectorySeparatorChar ||
                 path2[length1] == Path.DirectorySeparatorChar;
         }
+
         #endregion
     }
     #endregion

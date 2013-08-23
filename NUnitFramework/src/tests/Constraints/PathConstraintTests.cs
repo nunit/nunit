@@ -53,6 +53,12 @@ namespace NUnit.Framework.Constraints
                 new TestCaseData( @"C:\folder2\file.tmp", "\"C:\\folder2\\file.tmp\"" ),
                 new TestCaseData( @"C:\folder1\.\folder2\..\file.temp", "\"C:\\folder1\\.\\folder2\\..\\file.temp\"" )
             };
+
+        [Test]
+        public void RootPathEquality()
+        {
+            Assert.That("c:\\", Is.SamePath("C:\\junk\\..\\").IgnoreCase);
+        }
     }
 
     [TestFixture]
@@ -88,6 +94,89 @@ namespace NUnit.Framework.Constraints
                 new TestCaseData( @"/Folder1/FOLDER2", "\"/Folder1/FOLDER2\"" ),
                 new TestCaseData( @"/FOLDER1/./junk/../FOLDER2", "\"/FOLDER1/./junk/../FOLDER2\"" )
             };
+
+        [Test]
+        public void RootPathEquality()
+        {
+            Assert.That("/", Is.SamePath("/junk/../"));
+        }
+    }
+
+    [TestFixture]
+    public class SubPathTest_Windows : ConstraintTestBase
+    {
+        [SetUp]
+        public void SetUp()
+        {
+            theConstraint = new SubPathConstraint(@"C:\folder1\folder2").IgnoreCase;
+            expectedDescription = @"Subpath of ""C:\folder1\folder2""";
+            stringRepresentation = @"<subpath ""C:\folder1\folder2"" ignorecase>";
+        }
+
+        internal object[] SuccessData = new object[]
+            {
+                @"C:\folder1\folder2\folder3",
+                @"C:\folder1\.\folder2\folder3",
+                @"C:\folder1\junk\..\folder2\folder3",
+                @"C:\FOLDER1\.\junk\..\Folder2\temp\..\Folder3",
+                @"C:/folder1/folder2/folder3",
+            };
+        internal object[] FailureData = new object[]
+            {
+                new TestCaseData(@"C:\folder1\folder3", "\"C:\\folder1\\folder3\""),
+                new TestCaseData(@"C:\folder1\.\folder2\..\file.temp", "\"C:\\folder1\\.\\folder2\\..\\file.temp\""),
+                new TestCaseData(@"C:\folder1\folder2", "\"C:\\folder1\\folder2\""),
+                new TestCaseData(@"C:\Folder1\Folder2", "\"C:\\Folder1\\Folder2\""),
+                new TestCaseData(@"C:\folder1\.\folder2", "\"C:\\folder1\\.\\folder2\""),
+                new TestCaseData(@"C:\folder1\junk\..\folder2", "\"C:\\folder1\\junk\\..\\folder2\""),
+                new TestCaseData(@"C:\FOLDER1\.\junk\..\Folder2", "\"C:\\FOLDER1\\.\\junk\\..\\Folder2\""),
+                new TestCaseData(@"C:/folder1/folder2", "\"C:/folder1/folder2\"")
+            };
+
+        [Test]
+        public void SubPathOfRoot()
+        {
+            Assert.That("C:\\junk\\file.temp", new SubPathConstraint("C:\\"));
+        }
+    }
+
+    [TestFixture]
+    public class SubPathTest_Linux : ConstraintTestBase
+    {
+        [SetUp]
+        public void SetUp()
+        {
+            theConstraint = new SubPathConstraint(@"/folder1/folder2").RespectCase;
+            expectedDescription = @"Subpath of ""/folder1/folder2""";
+            stringRepresentation = @"<subpath ""/folder1/folder2"" respectcase>";
+        }
+
+        internal object[] SuccessData = new object[]
+            {
+                @"/folder1/folder2/folder3",
+                @"/folder1/./folder2/folder3",
+                @"/folder1/junk/../folder2/folder3",
+                @"\folder1\folder2\folder3",
+            };
+        internal object[] FailureData = new object[]
+            {
+                new TestCaseData("/Folder1/Folder2", "\"/Folder1/Folder2\""),
+                new TestCaseData("/FOLDER1/./junk/../Folder2", "\"/FOLDER1/./junk/../Folder2\""),
+                new TestCaseData("/FOLDER1/./junk/../Folder2/temp/../Folder3", "\"/FOLDER1/./junk/../Folder2/temp/../Folder3\""),
+                new TestCaseData("/folder1/folder3", "\"/folder1/folder3\""),
+                new TestCaseData("/folder1/./folder2/../folder3", "\"/folder1/./folder2/../folder3\""),
+				new TestCaseData("/folder1", "\"/folder1\""),
+                new TestCaseData("/folder1/folder2", "\"/folder1/folder2\""),
+                new TestCaseData("/folder1/./folder2", "\"/folder1/./folder2\""),
+                new TestCaseData("/folder1/junk/../folder2", "\"/folder1/junk/../folder2\""),
+                new TestCaseData(@"\folder1\folder2", "\"\\folder1\\folder2\"")
+            };
+
+        [Test]
+        public void SubPathOfRoot()
+        {
+            Assert.That("/junk/file.temp", new SubPathConstraint("/"));
+        }
     }
 
     [TestFixture]
