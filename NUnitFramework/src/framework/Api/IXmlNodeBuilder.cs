@@ -13,7 +13,7 @@ namespace NUnit.Framework.Api
         /// </summary>
         /// <param name="recursive">If true, children are included where applicable</param>
         /// <returns>An XmlNode representing the result</returns>
-        System.Xml.XmlNode ToXml(bool recursive);
+        XmlNode ToXml(bool recursive);
 
         /// <summary>
         /// Returns an XmlNode representing the current object after 
@@ -22,6 +22,6 @@ namespace NUnit.Framework.Api
         /// <param name="parentNode">The parent node.</param>
         /// <param name="recursive">If true, children are included, where applicable</param>
         /// <returns></returns>
-        System.Xml.XmlNode AddToXml(System.Xml.XmlNode parentNode, bool recursive);
+        XmlNode AddToXml(XmlNode parentNode, bool recursive);
     }
 }

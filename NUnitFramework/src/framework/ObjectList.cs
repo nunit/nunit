@@ -32,6 +32,7 @@ namespace NUnit
     /// these classes but only implements what is needed within the framework.
     /// </summary>
     // TODO: Remove this class, which is no longer needed since we don't support .NET 1.x
+    [Serializable]
     public class ObjectList : System.Collections.Generic.List<object>
     {
         /// <summary>

@@ -40,13 +40,17 @@ namespace NUnit.Framework.Constraints
         }
 
         [Test]
-        public void CanTestContentsOfArrayList()
+        public void CanTestContentsOfObjectList()
         {
             object item = "xyz";
-            ArrayList list = new ArrayList(new object[] { 123, item, "abc" });
+            var list = new ObjectList();
+            list.Add(123);
+            list.Add(item);
+            list.Add("abc");
             Assert.That(list, new CollectionContainsConstraint(item));
         }
 
+#if !SILVERLIGHT
         [Test]
         public void CanTestContentsOfSortedList()
         {
@@ -58,11 +62,12 @@ namespace NUnit.Framework.Constraints
             Assert.That(list.Values, new CollectionContainsConstraint(item));
             Assert.That(list.Keys, new CollectionContainsConstraint("b"));
         }
+#endif
 
         [Test]
         public void CanTestContentsOfCollectionNotImplementingIList()
         {
-            ICollectionAdapter ints = new ICollectionAdapter(new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 });
+            TestCollection ints = new TestCollection(new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 });
             Assert.That(ints, new CollectionContainsConstraint(9));
         }
 
@@ -77,7 +82,7 @@ namespace NUnit.Framework.Constraints
         public void UsingIsHonored()
         {
             Assert.That(new string[] { "Hello", "World" },
-                new CollectionContainsConstraint("WORLD").Using<string>((x, y) => String.Compare(x, y, true)));
+                new CollectionContainsConstraint("WORLD").Using<string>((x, y) => StringUtil.Compare(x, y, true)));
         }
     }
 }

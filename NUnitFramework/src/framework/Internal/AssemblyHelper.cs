@@ -34,7 +34,7 @@ namespace NUnit.Framework.Internal
     {
         #region GetAssemblyPath
 
-#if !NETCF
+#if !NETCF && !SILVERLIGHT
         /// <summary>
         /// Gets the path from which the assembly defining a type was loaded.
         /// </summary>
@@ -65,7 +65,7 @@ namespace NUnit.Framework.Internal
 
         #region GetDirectoryName
 
-#if !NETCF
+#if !NETCF && !SILVERLIGHT
         /// <summary>
         /// Gets the path to the directory from which an assembly was loaded.
         /// </summary>

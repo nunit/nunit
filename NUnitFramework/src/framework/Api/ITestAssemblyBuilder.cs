@@ -25,6 +25,7 @@ using System;
 using System.Collections;
 using System.Reflection;
 using NUnit.Framework.Internal;
+// TODO: Remove reference to Internal namespace
 
 namespace NUnit.Framework.Api
 {

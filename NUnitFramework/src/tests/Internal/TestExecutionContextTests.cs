@@ -82,8 +82,10 @@ namespace NUnit.Framework.Internal
 #if !NETCF
             currentCulture = CultureInfo.CurrentCulture;
             currentUICulture = CultureInfo.CurrentUICulture;
+#if !SILVERLIGHT
 			currentDirectory = Environment.CurrentDirectory;
             currentPrincipal = Thread.CurrentPrincipal;
+#endif
 #endif
 		}
 
@@ -91,11 +93,13 @@ namespace NUnit.Framework.Internal
 		public void Cleanup()
 		{
 #if !NETCF
-			Environment.CurrentDirectory = currentDirectory;
 			Thread.CurrentThread.CurrentCulture = currentCulture;
             Thread.CurrentThread.CurrentUICulture = currentUICulture;
+#if !SILVERLIGHT
+			Environment.CurrentDirectory = currentDirectory;
             Thread.CurrentPrincipal = currentPrincipal;
 #endif
+#endif 
 
             Assert.That(
                 TestExecutionContext.CurrentContext.CurrentTest.FullName,

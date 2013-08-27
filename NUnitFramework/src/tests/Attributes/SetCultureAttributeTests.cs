@@ -101,7 +101,7 @@ namespace NUnit.Framework.Attributes
         }
 
         [TestFixture, SetCulture("ru-RU"), SetUICulture("ru-RU")]
-        class NestedBehavior
+        public class NestedBehavior
         {
             [Test]
             public void InheritedRussian()

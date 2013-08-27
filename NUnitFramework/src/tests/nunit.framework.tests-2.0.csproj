@@ -198,11 +198,13 @@
     <Compile Include="Syntax\ThrowsTests.cs" />
     <Compile Include="Syntax\TypeConstraints.cs" />
     <Compile Include="TestContextTests.cs" />
-    <Compile Include="TestUtilities\AlwaysEqualComparer.cs" />
-    <Compile Include="TestUtilities\CollectionAdapter.cs" />
+    <Compile Include="TestUtilities\Comparers\AlwaysEqualComparer.cs" />
+    <Compile Include="TestUtilities\Comparers\SimpleEqualityComparer.cs" />
+    <Compile Include="TestUtilities\Comparers\SimpleObjectComparer.cs" />
     <Compile Include="TestUtilities\ResultSummary.cs" />
     <Compile Include="TestUtilities\TestAssert.cs" />
     <Compile Include="TestUtilities\TestBuilder.cs" />
+    <Compile Include="TestUtilities\TestCollection.cs" />
     <Compile Include="TestUtilities\TestComparer.cs" />
     <Compile Include="TestUtilities\TestDelegates.cs" />
     <Compile Include="TestUtilities\TestFinder.cs" />

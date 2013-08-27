@@ -56,8 +56,15 @@ namespace NUnit.Framework.Constraints
             if (dirInfo == null)
                 throw new ArgumentException("The actual value must be a DirectoryInfo", "actual");
 
+#if SILVERLIGHT
+            foreach (FileInfo file in dirInfo.EnumerateFiles())
+                files++;
+            foreach (DirectoryInfo dir in dirInfo.EnumerateDirectories())
+                subdirs++;
+#else
             files = dirInfo.GetFiles().Length;
             subdirs = dirInfo.GetDirectories().Length;
+#endif
             bool hasSucceeded = files == 0 && subdirs == 0;
 
             return new ConstraintResult(this, actual, hasSucceeded);

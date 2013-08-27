@@ -22,7 +22,6 @@
 // ***********************************************************************
 
 using System;
-using System.Xml;
 using NUnit.Framework.Api;
 using NUnit.TestUtilities;
 
@@ -80,17 +79,16 @@ namespace NUnit.Framework.Internal
         {
             XmlNode testNode = testResult.ToXml(true);
 
-            Assert.True(testNode is XmlElement);
             Assert.NotNull(testNode.Attributes["id"]);
             Assert.AreEqual("test-case", testNode.Name);
-            Assert.AreEqual("DummyMethod", testNode.Attributes["name"].Value);
-            Assert.AreEqual("NUnit.Framework.Internal.TestResultTests+DummySuite.DummyMethod", testNode.Attributes["fullname"].Value);
-            
-            Assert.AreEqual("Test description", testNode.SelectSingleNode("properties/property[@name='Description']").Attributes["value"].Value);
-            Assert.AreEqual("Dubious", testNode.SelectSingleNode("properties/property[@name='Category']").Attributes["value"].Value);
-            Assert.AreEqual("low", testNode.SelectSingleNode("properties/property[@name='Priority']").Attributes["value"].Value);
+            Assert.AreEqual("DummyMethod", testNode.Attributes["name"]);
+            Assert.AreEqual("NUnit.Framework.Internal.TestResultTests+DummySuite.DummyMethod", testNode.Attributes["fullname"]);
 
-            Assert.AreEqual(0, testNode.SelectNodes("test-case").Count);
+            Assert.AreEqual("Test description", testNode.FindDescendant("properties/property[@name='Description']").Attributes["value"]);
+            Assert.AreEqual("Dubious", testNode.FindDescendant("properties/property[@name='Category']").Attributes["value"]);
+            Assert.AreEqual("low", testNode.FindDescendant("properties/property[@name='Priority']").Attributes["value"]);
+
+            Assert.AreEqual(0, testNode.FindDescendants("test-case").Count);
         }
 
         [Test]
@@ -98,15 +96,14 @@ namespace NUnit.Framework.Internal
         {
             XmlNode suiteNode = suiteResult.ToXml(true);
 
-            Assert.True(suiteNode is XmlElement);
             Assert.NotNull(suiteNode.Attributes["id"]);
             Assert.AreEqual("test-suite", suiteNode.Name);
-            Assert.AreEqual("TestResultTests+DummySuite", suiteNode.Attributes["name"].Value);
-            Assert.AreEqual("NUnit.Framework.Internal.TestResultTests+DummySuite", suiteNode.Attributes["fullname"].Value);
+            Assert.AreEqual("TestResultTests+DummySuite", suiteNode.Attributes["name"]);
+            Assert.AreEqual("NUnit.Framework.Internal.TestResultTests+DummySuite", suiteNode.Attributes["fullname"]);
 
-            Assert.AreEqual("Suite description", suiteNode.SelectSingleNode("properties/property[@name='Description']").Attributes["value"].Value);
-            Assert.AreEqual("Fast", suiteNode.SelectSingleNode("properties/property[@name='Category']").Attributes["value"].Value);
-            Assert.AreEqual("3", suiteNode.SelectSingleNode("properties/property[@name='Value']").Attributes["value"].Value);
+            Assert.AreEqual("Suite description", suiteNode.FindDescendant("properties/property[@name='Description']").Attributes["value"]);
+            Assert.AreEqual("Fast", suiteNode.FindDescendant("properties/property[@name='Category']").Attributes["value"]);
+            Assert.AreEqual("3", suiteNode.FindDescendant("properties/property[@name='Value']").Attributes["value"]);
         }
 
         protected abstract void SimulateTestRun();
@@ -145,7 +142,7 @@ namespace NUnit.Framework.Internal
         {
             XmlNode testNode = testResult.ToXml(true);
 
-            Assert.AreEqual("Inconclusive", testNode.Attributes["result"].Value);
+            Assert.AreEqual("Inconclusive", testNode.Attributes["result"]);
         }
 
         [Test]
@@ -153,12 +150,12 @@ namespace NUnit.Framework.Internal
         {
             XmlNode suiteNode = suiteResult.ToXml(true);
 
-            Assert.AreEqual("Inconclusive", suiteNode.Attributes["result"].Value);
-            Assert.AreEqual("0", suiteNode.Attributes["passed"].Value);
-            Assert.AreEqual("0", suiteNode.Attributes["failed"].Value);
-            Assert.AreEqual("0", suiteNode.Attributes["skipped"].Value);
-            Assert.AreEqual("1", suiteNode.Attributes["inconclusive"].Value);
-            Assert.AreEqual("0", suiteNode.Attributes["asserts"].Value);
+            Assert.AreEqual("Inconclusive", suiteNode.Attributes["result"]);
+            Assert.AreEqual("0", suiteNode.Attributes["passed"]);
+            Assert.AreEqual("0", suiteNode.Attributes["failed"]);
+            Assert.AreEqual("0", suiteNode.Attributes["skipped"]);
+            Assert.AreEqual("1", suiteNode.Attributes["inconclusive"]);
+            Assert.AreEqual("0", suiteNode.Attributes["asserts"]);
         }
 
         [Test]
@@ -166,7 +163,7 @@ namespace NUnit.Framework.Internal
         {
             XmlNode suiteNode = suiteResult.ToXml(true);
 
-            Assert.AreEqual(1, suiteNode.SelectNodes("test-case").Count);
+            Assert.AreEqual(1, suiteNode.FindDescendants("test-case").Count);
         }
     }
 
@@ -210,15 +207,15 @@ namespace NUnit.Framework.Internal
         {
             XmlNode testNode = testResult.ToXml(true);
 
-            Assert.AreEqual("Passed", testNode.Attributes["result"].Value);
-            Assert.AreEqual("00:00:00.1250000", testNode.Attributes["time"].Value);
-            Assert.AreEqual("2", testNode.Attributes["asserts"].Value);
+            Assert.AreEqual("Passed", testNode.Attributes["result"]);
+            Assert.AreEqual("00:00:00.1250000", testNode.Attributes["time"]);
+            Assert.AreEqual("2", testNode.Attributes["asserts"]);
 
-            XmlNode reason = testNode.SelectSingleNode("reason");
+            XmlNode reason = testNode.FindDescendant("reason");
             Assert.NotNull(reason);
-            Assert.NotNull(reason.SelectSingleNode("message"));
-            Assert.AreEqual("Test passed!", reason.SelectSingleNode("message").InnerText);
-            Assert.Null(reason.SelectSingleNode("stack-trace"));
+            Assert.NotNull(reason.FindDescendant("message"));
+            Assert.AreEqual("Test passed!", reason.FindDescendant("message").TextContent);
+            Assert.Null(reason.FindDescendant("stack-trace"));
         }
 
         [Test]
@@ -226,13 +223,13 @@ namespace NUnit.Framework.Internal
         {
             XmlNode suiteNode = suiteResult.ToXml(true);
 
-            Assert.AreEqual("Passed", suiteNode.Attributes["result"].Value);
-            Assert.AreEqual("00:00:00.1250000", suiteNode.Attributes["time"].Value);
-            Assert.AreEqual("1", suiteNode.Attributes["passed"].Value);
-            Assert.AreEqual("0", suiteNode.Attributes["failed"].Value);
-            Assert.AreEqual("0", suiteNode.Attributes["skipped"].Value);
-            Assert.AreEqual("0", suiteNode.Attributes["inconclusive"].Value);
-            Assert.AreEqual("2", suiteNode.Attributes["asserts"].Value);
+            Assert.AreEqual("Passed", suiteNode.Attributes["result"]);
+            Assert.AreEqual("00:00:00.1250000", suiteNode.Attributes["time"]);
+            Assert.AreEqual("1", suiteNode.Attributes["passed"]);
+            Assert.AreEqual("0", suiteNode.Attributes["failed"]);
+            Assert.AreEqual("0", suiteNode.Attributes["skipped"]);
+            Assert.AreEqual("0", suiteNode.Attributes["inconclusive"]);
+            Assert.AreEqual("2", suiteNode.Attributes["asserts"]);
         }
 
         [Test]
@@ -240,7 +237,7 @@ namespace NUnit.Framework.Internal
         {
             XmlNode suiteNode = suiteResult.ToXml(true);
 
-            Assert.AreEqual(1, suiteNode.SelectNodes("test-case").Count);
+            Assert.AreEqual(1, suiteNode.FindDescendants("test-case").Count);
         }
     }
 
@@ -280,13 +277,13 @@ namespace NUnit.Framework.Internal
         {
             XmlNode testNode = testResult.ToXml(true);
 
-            Assert.AreEqual("Skipped", testNode.Attributes["result"].Value);
-            Assert.AreEqual("Ignored", testNode.Attributes["label"].Value);
-            XmlNode reason = testNode.SelectSingleNode("reason");
+            Assert.AreEqual("Skipped", testNode.Attributes["result"]);
+            Assert.AreEqual("Ignored", testNode.Attributes["label"]);
+            XmlNode reason = testNode.FindDescendant("reason");
             Assert.NotNull(reason);
-            Assert.NotNull(reason.SelectSingleNode("message"));
-            Assert.AreEqual("because", reason.SelectSingleNode("message").InnerText);
-            Assert.Null(reason.SelectSingleNode("stack-trace"));
+            Assert.NotNull(reason.FindDescendant("message"));
+            Assert.AreEqual("because", reason.FindDescendant("message").TextContent);
+            Assert.Null(reason.FindDescendant("stack-trace"));
         }
 
         [Test]
@@ -294,13 +291,13 @@ namespace NUnit.Framework.Internal
         {
             XmlNode suiteNode = suiteResult.ToXml(true);
 
-            Assert.AreEqual("Skipped", suiteNode.Attributes["result"].Value);
-            Assert.AreEqual("Ignored", suiteNode.Attributes["label"].Value);
-            Assert.AreEqual("0", suiteNode.Attributes["passed"].Value);
-            Assert.AreEqual("0", suiteNode.Attributes["failed"].Value);
-            Assert.AreEqual("1", suiteNode.Attributes["skipped"].Value);
-            Assert.AreEqual("0", suiteNode.Attributes["inconclusive"].Value);
-            Assert.AreEqual("0", suiteNode.Attributes["asserts"].Value);
+            Assert.AreEqual("Skipped", suiteNode.Attributes["result"]);
+            Assert.AreEqual("Ignored", suiteNode.Attributes["label"]);
+            Assert.AreEqual("0", suiteNode.Attributes["passed"]);
+            Assert.AreEqual("0", suiteNode.Attributes["failed"]);
+            Assert.AreEqual("1", suiteNode.Attributes["skipped"]);
+            Assert.AreEqual("0", suiteNode.Attributes["inconclusive"]);
+            Assert.AreEqual("0", suiteNode.Attributes["asserts"]);
         }
 
         [Test]
@@ -308,7 +305,7 @@ namespace NUnit.Framework.Internal
         {
             XmlNode suiteNode = suiteResult.ToXml(true);
 
-            Assert.AreEqual(1, suiteNode.SelectNodes("test-case").Count);
+            Assert.AreEqual(1, suiteNode.FindDescendants("test-case").Count);
         }
     }
 
@@ -353,19 +350,19 @@ namespace NUnit.Framework.Internal
         {
             XmlNode testNode = testResult.ToXml(true);
 
-            Assert.AreEqual("Failed", testNode.Attributes["result"].Value);
-            Assert.AreEqual("00:00:00.1250000", testNode.Attributes["time"].Value);
+            Assert.AreEqual("Failed", testNode.Attributes["result"]);
+            Assert.AreEqual("00:00:00.1250000", testNode.Attributes["time"]);
 
-            XmlNode failureNode = testNode.SelectSingleNode("failure");
+            XmlNode failureNode = testNode.FindDescendant("failure");
             Assert.NotNull(failureNode, "No <failure> element found");
 
-            XmlNode messageNode = failureNode.SelectSingleNode("message");
+            XmlNode messageNode = failureNode.FindDescendant("message");
             Assert.NotNull(messageNode, "No <message> element found");
-            Assert.AreEqual("message", messageNode.InnerText);
+            Assert.AreEqual("message", messageNode.TextContent);
 
-            XmlNode stacktraceNode = failureNode.SelectSingleNode("stack-trace");
+            XmlNode stacktraceNode = failureNode.FindDescendant("stack-trace");
             Assert.NotNull(stacktraceNode, "No <stack-trace> element found");
-            Assert.AreEqual("stack trace", stacktraceNode.InnerText);
+            Assert.AreEqual("stack trace", stacktraceNode.TextContent);
         }
 
         [Test]
@@ -373,24 +370,24 @@ namespace NUnit.Framework.Internal
         {
             XmlNode suiteNode = suiteResult.ToXml(true);
 
-            Assert.AreEqual("Failed", suiteNode.Attributes["result"].Value);
-            Assert.AreEqual("00:00:00.1250000", suiteNode.Attributes["time"].Value);
+            Assert.AreEqual("Failed", suiteNode.Attributes["result"]);
+            Assert.AreEqual("00:00:00.1250000", suiteNode.Attributes["time"]);
 
-            XmlNode failureNode = suiteNode.SelectSingleNode("failure");
+            XmlNode failureNode = suiteNode.FindDescendant("failure");
             Assert.NotNull(failureNode, "No <failure> element found");
 
-            XmlNode messageNode = failureNode.SelectSingleNode("message");
+            XmlNode messageNode = failureNode.FindDescendant("message");
             Assert.NotNull(messageNode, "No <message> element found");
-            Assert.AreEqual(failingChildMessage, messageNode.InnerText);
+            Assert.AreEqual(failingChildMessage, messageNode.TextContent);
 
-            XmlNode stacktraceNode = failureNode.SelectSingleNode("stacktrace");
+            XmlNode stacktraceNode = failureNode.FindDescendant("stacktrace");
             Assert.Null(stacktraceNode, "Unexpected <stack-trace> element found");
 
-            Assert.AreEqual("0", suiteNode.Attributes["passed"].Value);
-            Assert.AreEqual("1", suiteNode.Attributes["failed"].Value);
-            Assert.AreEqual("0", suiteNode.Attributes["skipped"].Value);
-            Assert.AreEqual("0", suiteNode.Attributes["inconclusive"].Value);
-            Assert.AreEqual("3", suiteNode.Attributes["asserts"].Value);
+            Assert.AreEqual("0", suiteNode.Attributes["passed"]);
+            Assert.AreEqual("1", suiteNode.Attributes["failed"]);
+           Assert.AreEqual("0", suiteNode.Attributes["skipped"]);
+            Assert.AreEqual("0", suiteNode.Attributes["inconclusive"]);
+            Assert.AreEqual("3", suiteNode.Attributes["asserts"]);
         }
 
         [Test]
@@ -398,7 +395,7 @@ namespace NUnit.Framework.Internal
         {
             XmlNode suiteNode = suiteResult.ToXml(true);
 
-            Assert.AreEqual(1, suiteNode.SelectNodes("test-case").Count);
+            Assert.AreEqual(1, suiteNode.FindDescendants("test-case").Count);
         }
     }
 
@@ -438,13 +435,13 @@ namespace NUnit.Framework.Internal
         {
             XmlNode testNode = testResult.ToXml(true);
 
-            Assert.AreEqual("Inconclusive", testNode.Attributes["result"].Value);
+            Assert.AreEqual("Inconclusive", testNode.Attributes["result"]);
             Assert.IsNull(testNode.Attributes["label"]);
-            XmlNode reason = testNode.SelectSingleNode("reason");
+            XmlNode reason = testNode.FindDescendant("reason");
             Assert.NotNull(reason);
-            Assert.NotNull(reason.SelectSingleNode("message"));
-            Assert.AreEqual("because", reason.SelectSingleNode("message").InnerText);
-            Assert.Null(reason.SelectSingleNode("stack-trace"));
+            Assert.NotNull(reason.FindDescendant("message"));
+            Assert.AreEqual("because", reason.FindDescendant("message").TextContent);
+            Assert.Null(reason.FindDescendant("stack-trace"));
         }
 
         [Test]
@@ -452,13 +449,13 @@ namespace NUnit.Framework.Internal
         {
             XmlNode suiteNode = suiteResult.ToXml(true);
 
-            Assert.AreEqual("Inconclusive", suiteNode.Attributes["result"].Value);
+            Assert.AreEqual("Inconclusive", suiteNode.Attributes["result"]);
             Assert.IsNull(suiteNode.Attributes["label"]);
-            Assert.AreEqual("0", suiteNode.Attributes["passed"].Value);
-            Assert.AreEqual("0", suiteNode.Attributes["failed"].Value);
-            Assert.AreEqual("0", suiteNode.Attributes["skipped"].Value);
-            Assert.AreEqual("1", suiteNode.Attributes["inconclusive"].Value);
-            Assert.AreEqual("0", suiteNode.Attributes["asserts"].Value);
+            Assert.AreEqual("0", suiteNode.Attributes["passed"]);
+            Assert.AreEqual("0", suiteNode.Attributes["failed"]);
+            Assert.AreEqual("0", suiteNode.Attributes["skipped"]);
+            Assert.AreEqual("1", suiteNode.Attributes["inconclusive"]);
+            Assert.AreEqual("0", suiteNode.Attributes["asserts"]);
         }
 
         [Test]
@@ -466,7 +463,7 @@ namespace NUnit.Framework.Internal
         {
             XmlNode suiteNode = suiteResult.ToXml(true);
 
-            Assert.AreEqual(1, suiteNode.SelectNodes("test-case").Count);
+            Assert.AreEqual(1, suiteNode.FindDescendants("test-case").Count);
         }
     }
 
@@ -511,22 +508,22 @@ namespace NUnit.Framework.Internal
         {
             XmlNode suiteNode = suiteResult.ToXml(true);
 
-            Assert.AreEqual("Failed", suiteNode.Attributes["result"].Value);
-            XmlNode failureNode = suiteNode.SelectSingleNode("failure");
+            Assert.AreEqual("Failed", suiteNode.Attributes["result"]);
+            XmlNode failureNode = suiteNode.FindDescendant("failure");
             Assert.NotNull(failureNode, "No failure element found");
 
-            XmlNode messageNode = failureNode.SelectSingleNode("message");
+            XmlNode messageNode = failureNode.FindDescendant("message");
             Assert.NotNull(messageNode, "No message element found");
-            Assert.AreEqual(failingChildMessage, messageNode.InnerText);
+            Assert.AreEqual(failingChildMessage, messageNode.TextContent);
 
-            XmlNode stacktraceNode = failureNode.SelectSingleNode("stacktrace");
+            XmlNode stacktraceNode = failureNode.FindDescendant("stacktrace");
             Assert.Null(stacktraceNode, "There should be no stacktrace");
 
-            Assert.AreEqual("2", suiteNode.Attributes["passed"].Value);
-            Assert.AreEqual("1", suiteNode.Attributes["failed"].Value);
-            Assert.AreEqual("0", suiteNode.Attributes["skipped"].Value);
-            Assert.AreEqual("1", suiteNode.Attributes["inconclusive"].Value);
-            Assert.AreEqual("6", suiteNode.Attributes["asserts"].Value);
+            Assert.AreEqual("2", suiteNode.Attributes["passed"]);
+            Assert.AreEqual("1", suiteNode.Attributes["failed"]);
+            Assert.AreEqual("0", suiteNode.Attributes["skipped"]);
+            Assert.AreEqual("1", suiteNode.Attributes["inconclusive"]);
+            Assert.AreEqual("6", suiteNode.Attributes["asserts"]);
         }
 
         [Test]
@@ -534,7 +531,7 @@ namespace NUnit.Framework.Internal
         {
             XmlNode suiteNode = suiteResult.ToXml(true);
 
-            Assert.AreEqual(4, suiteNode.SelectNodes("test-case").Count);
+            Assert.AreEqual(4, suiteNode.FindDescendants("test-case").Count);
         }
     }
 }

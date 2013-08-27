@@ -23,7 +23,6 @@
 
 using System.Collections.Generic;
 using System.Reflection;
-using System.Xml;
 using NUnit.Framework.Api;
 using NUnit.Framework.Internal.Commands;
 using NUnit.Framework.Internal.WorkItems;
@@ -161,11 +160,11 @@ namespace NUnit.Framework.Internal
         /// <returns></returns>
         public override XmlNode AddToXml(XmlNode parentNode, bool recursive)
         {
-            XmlNode thisNode = XmlHelper.AddElement(parentNode, XmlElementName);
+            XmlNode thisNode = parentNode.AddElement(XmlElementName);
 
             PopulateTestNode(thisNode, recursive);
 
-            XmlHelper.AddAttribute(thisNode, "seed", this.Seed.ToString());
+            thisNode.AddAttribute("seed", this.Seed.ToString());
 
             return thisNode;
         }

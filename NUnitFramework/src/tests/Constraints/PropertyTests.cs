@@ -41,7 +41,7 @@ namespace NUnit.Framework.Constraints
 
         static object[] FailureData = new object[] { 
             new TestCaseData( 42, "<System.Int32>" ),
-            new TestCaseData( new System.Collections.ArrayList(), "<System.Collections.ArrayList>" ),
+            new TestCaseData( new ObjectList(), "<NUnit.ObjectList>" ),
             new TestCaseData( typeof(Int32), "<System.Int32>" ) };
 
 #if !NUNITLITE

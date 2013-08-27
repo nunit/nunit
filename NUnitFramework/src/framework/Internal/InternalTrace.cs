@@ -68,6 +68,8 @@ namespace NUnit.Framework.Internal
         #endregion
 
         #region Static Fields
+
+#if !SILVERLIGHT
         private static string MY_NAME = "NUnit.Framework.Internal.InternalTrace";
         
         private readonly static string NL = NUnit.Env.NewLine;
@@ -76,10 +78,13 @@ namespace NUnit.Framework.Internal
 
         private static StreamWriter writer;
         private static TraceLevel level = TraceLevel.Off;
+#endif
+
         #endregion
 
         #region Static Properties
 
+#if !SILVERLIGHT
         /// <summary>
         /// Gets the writer used to output messages.
         /// </summary>
@@ -88,11 +93,6 @@ namespace NUnit.Framework.Internal
         {
             get 
             {
-                if (writer == null)
-                    writer = new StreamWriter(Console.OpenStandardOutput());
-
-                writer.AutoFlush = true;
-
                 return writer;
             }
         }
@@ -106,11 +106,13 @@ namespace NUnit.Framework.Internal
             get { return level; }
             set { level = value; }
         }
+#endif
 
         #endregion
 
         #region Public Static Methods
 
+#if !SILVERLIGHT
         /// <summary>
         /// Opens the specified log name for writing trace entries.
         /// </summary>
@@ -140,6 +142,7 @@ namespace NUnit.Framework.Internal
 
             writer = null;
         }
+#endif
 
         /// <summary>
         /// Issue a message at the Error level.
@@ -186,6 +189,7 @@ namespace NUnit.Framework.Internal
 
         private static void WriteTrace(TraceLevel level, string message, params object[] args)
         {
+#if !SILVERLIGHT
             if (level <= InternalTrace.Level)
             {
                 string caller = "UNKNOWN";
@@ -231,6 +235,7 @@ namespace NUnit.Framework.Internal
                     caller,
                     message);
             }
+#endif
         }
         #endregion
     }

@@ -145,7 +145,7 @@ namespace NUnit.DirectRunner
             NUnit2XmlOutputWriter nunit2ResultWriter = new NUnit2XmlOutputWriter();
             nunit2ResultWriter.WriteResultFile(resultNode, commandlineOptions.V2ResultFile);
 
-            if(!commandlineOptions.TeamCityServiceMessages)
+            if (!commandlineOptions.TeamCityServiceMessages)
                 new ResultReporter(resultNode).ReportResults();
         }
 

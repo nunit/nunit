@@ -50,7 +50,7 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Comparison objects used in comparisons for some constraints.
         /// </summary>
-        private ArrayList externalComparers = new ArrayList();
+        private List<EqualityAdapter> externalComparers = new List<EqualityAdapter>();
 
         /// <summary>
         /// List of points at which a failure occured.
@@ -94,7 +94,7 @@ namespace NUnit.Framework.Constraints
         /// test for equality. They are applied to members of
         /// collections, in place of NUnit's own logic.
         /// </summary>
-        public IList ExternalComparers
+        public IList<EqualityAdapter> ExternalComparers
         {
             get { return externalComparers; }
         }

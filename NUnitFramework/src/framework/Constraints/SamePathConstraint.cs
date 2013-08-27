@@ -21,6 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using NUnit.Framework.Internal;
+
 namespace NUnit.Framework.Constraints
 {
     /// <summary>
@@ -50,7 +52,7 @@ namespace NUnit.Framework.Constraints
         /// <returns>True for success, false for failure</returns>
         protected override bool Matches(string actual)
         {
-            return actual != null && string.Compare(Canonicalize(expected), Canonicalize(actual), caseInsensitive) == 0;
+            return actual != null && StringUtil.StringsEqual(Canonicalize(expected), Canonicalize(actual), caseInsensitive);
         }
     }
 }

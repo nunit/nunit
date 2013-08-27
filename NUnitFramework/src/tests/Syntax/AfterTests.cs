@@ -68,7 +68,7 @@ namespace NUnit.Framework.Syntax
         protected bool flag;
         protected int num;
         protected object ob1, ob2, ob3;
-        protected ArrayList list;
+        protected ObjectList list;
         protected string greeting;
 
         [SetUp]
@@ -79,7 +79,7 @@ namespace NUnit.Framework.Syntax
             this.ob1 = new object();
             this.ob2 = new object();
             this.ob3 = new object();
-            this.list = new ArrayList();
+            this.list = new ObjectList();
             this.list.Add(1);
             this.list.Add(2);
             this.list.Add(3);

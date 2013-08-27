@@ -58,12 +58,12 @@ namespace NUnit.Tests
 
 			public static int Categories = MockTestFixture.Categories;
 
-#if !NETCF
+#if !NETCF && !SILVERLIGHT
             public static string AssemblyPath = AssemblyHelper.GetAssemblyPath(typeof(MockAssembly).Assembly);
 #endif
 		}
 
-#if !NETCF
+#if !NETCF && !SILVERLIGHT
 		public class MockSuite
 		{
 			[Suite]
@@ -160,7 +160,7 @@ namespace NUnit.Tests
 
             private void MethodThrowsException()
             {
-                throw new ApplicationException("Intentional Exception");
+                throw new Exception("Intentional Exception");
             }
 		}
 	}

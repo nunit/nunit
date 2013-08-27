@@ -21,6 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#if !SILVERLIGHT
 using System;
 using System.IO;
 #if !NETCF
@@ -91,3 +92,4 @@ namespace NUnit.Framework.Constraints
         }
     }
 }
+#endif

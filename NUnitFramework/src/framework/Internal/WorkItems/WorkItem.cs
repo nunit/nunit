@@ -117,15 +117,16 @@ namespace NUnit.Framework.Internal.WorkItems
         {
             _context = new TestExecutionContext(context);
 
-#if !NETCF && !SILVERLIGHT
+#if !SILVERLIGHT
             // Timeout set at a higher level
             int timeout = _context.TestCaseTimeout;
-            ApartmentState currentApartment = Thread.CurrentThread.GetApartmentState();
-            ApartmentState targetApartment = currentApartment;
 
             // Timeout set on this test
             if (Test.Properties.ContainsKey(PropertyNames.Timeout))
                 timeout = (int)Test.Properties.Get(PropertyNames.Timeout);
+
+            ApartmentState currentApartment = Thread.CurrentThread.GetApartmentState();
+            ApartmentState targetApartment = currentApartment;
 
             if (Test.Properties.ContainsKey(PropertyNames.ApartmentState))
                 targetApartment = (ApartmentState)Test.Properties.Get(PropertyNames.ApartmentState);
@@ -139,7 +140,8 @@ namespace NUnit.Framework.Internal.WorkItems
 #endif
         }
 
-#if !NETCF && !SILVERLIGHT
+
+#if !SILVERLIGHT
         private void RunTestOnOwnThread(int timeout, ApartmentState apartment)
         {
             Thread thread = new Thread(new ThreadStart(RunTest));

@@ -69,7 +69,7 @@ namespace NUnit.TestData.TheoryFixture
         }
 
         [Theory]
-        public void TestWithEnumAsArgument(System.Threading.ApartmentState state)
+        public void TestWithEnumAsArgument(System.AttributeTargets targets)
         {
         }
 

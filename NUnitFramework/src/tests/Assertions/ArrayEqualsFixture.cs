@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections;
+using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Assertions
 {
@@ -187,7 +188,7 @@ namespace NUnit.Framework.Assertions
 		public void ArrayAndCollection()
 		{
 			int[] a = new int[] { 1, 2, 3 };
-			ICollection b = new ArrayList( a );
+			ICollection b = new TestCollection( a );
             Assert.AreEqual(a, b);
             Assert.AreEqual(b, a);
             Expect(a, EqualTo(b));

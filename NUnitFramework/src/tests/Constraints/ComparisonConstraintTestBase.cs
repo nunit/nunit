@@ -24,6 +24,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Constraints
 {
@@ -55,7 +56,7 @@ namespace NUnit.Framework.Constraints
             public int Compare(object x, object y)
             {
                 Called = true;
-                return Comparer.Default.Compare(x, y);
+                return SimpleObjectComparer.Default.Compare(x, y);
             }
         }
 

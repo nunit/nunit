@@ -32,7 +32,9 @@ namespace NUnit.Framework.Constraints
     [TestFixture]
     public class DelayedConstraintTests : ConstraintTestBase
     {
-        private static bool value;
+        private static bool boolValue;
+        private static List<int> list;
+        private static string statusString;
 
         [SetUp]
         public void SetUp()
@@ -41,7 +43,9 @@ namespace NUnit.Framework.Constraints
             expectedDescription = "True after 500 millisecond delay";
             stringRepresentation = "<after 500 <equal True>>";
 
-            value = false;
+            boolValue = false;
+            list = new List<int>();
+            statusString = null;
             //SetValueTrueAfterDelay(300);
         }
 
@@ -59,7 +63,7 @@ namespace NUnit.Framework.Constraints
         [Test, TestCaseSource("SuccessDelegates")]
         public void SucceedsWithGoodDelegates(ActualValueDelegate<object> del)
         {
-            SetValueTrueAfterDelay(300);
+            SetValuesAfterDelay(300);
             Assert.That(theConstraint.ApplyTo(del).IsSuccess);
         }
 
@@ -72,15 +76,15 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void SimpleTest()
         {
-            SetValueTrueAfterDelay(500);
+            SetValuesAfterDelay(500);
             Assert.That(DelegateReturningValue, new DelayedConstraint(new EqualConstraint(true), 5000, 200));
         }
 
         [Test]
         public void SimpleTestUsingReference()
         {
-            SetValueTrueAfterDelay(500);
-            Assert.That(ref value, new DelayedConstraint(new EqualConstraint(true), 5000, 200));
+            SetValuesAfterDelay(500);
+            Assert.That(ref boolValue, new DelayedConstraint(new EqualConstraint(true), 5000, 200));
         }
 
         [Test]
@@ -98,75 +102,44 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void CanTestContentsOfList()
         {
-            BackgroundWorker worker = new BackgroundWorker();
-            List<int> list = new System.Collections.Generic.List<int>();
-            worker.RunWorkerCompleted += delegate { list.Add(1); };
-            worker.DoWork += delegate { Thread.Sleep(1); };
-            worker.RunWorkerAsync();
+            SetValuesAfterDelay(1);
             Assert.That(list, Has.Count.EqualTo(1).After(5000, 100));
         }
 
         [Test]
         public void CanTestContentsOfRefList()
         {
-            BackgroundWorker worker = new BackgroundWorker();
-            List<int> list = new List<int>();
-            worker.RunWorkerCompleted += delegate { list.Add(1); };
-            worker.DoWork += delegate { Thread.Sleep(1); };
-            worker.RunWorkerAsync();
+            SetValuesAfterDelay(1);
             Assert.That(ref list, Has.Count.EqualTo(1).After(5000, 100));
         }
 
         [Test]
         public void CanTestContentsOfDelegateReturningList()
         {
-            var worker = new BackgroundWorker();
-            var list = new List<int>();
-            worker.RunWorkerCompleted += delegate { list.Add(1); };
-            worker.DoWork += delegate { Thread.Sleep(1); };
-            worker.RunWorkerAsync();
+            SetValuesAfterDelay(1);
             Assert.That(() => list, Has.Count.EqualTo(1).After(5000, 100));
         }
 		
 		[Test]
 		public void CanTestInitiallyNullReference()
 		{
-			string statusString = null; // object starts off as null
-			
-			BackgroundWorker worker = new BackgroundWorker();
-			worker.RunWorkerCompleted += delegate { statusString = "finished"; /* object non-null after work */ };
-			worker.DoWork += delegate { Thread.Sleep(TimeSpan.FromSeconds(1)); /* simulate work */ };
-			worker.RunWorkerAsync();
-			
+            SetValuesAfterDelay(1000);
 			Assert.That(ref statusString, Has.Length.GreaterThan(0).After(3000, 100));
 		}
 		
 		[Test]
 		public void CanTestInitiallyNullDelegate()
 		{
-			string statusString = null; // object starts off as null
-			
-			BackgroundWorker worker = new BackgroundWorker();
-			worker.RunWorkerCompleted += delegate { statusString = "finished"; /* object non-null after work */ };
-			worker.DoWork += delegate { Thread.Sleep(TimeSpan.FromSeconds(1)); /* simulate work */ };
-			worker.RunWorkerAsync();
-			
+            SetValuesAfterDelay(1000);
 			Assert.That(() => statusString, Has.Length.GreaterThan(0).After(3000, 100));
 		}
 
-        private static int setValueTrueDelay;
-
-        private void SetValueTrueAfterDelay(int delay)
-        {
-            setValueTrueDelay = delay;
-            Thread thread = new Thread(SetValueTrueDelegate);
-            thread.Start();
-        }
+        private static int setValuesDelay;
 
         private static void MethodReturningVoid() { }
         private static TestDelegate InvalidDelegate = new TestDelegate(MethodReturningVoid);
 
-        private static object MethodReturningValue() { return value; }
+        private static object MethodReturningValue() { return boolValue; }
         private static ActualValueDelegate DelegateReturningValue = new ActualValueDelegate(MethodReturningValue);
 
         private static object MethodReturningFalse() { return false; }
@@ -175,11 +148,20 @@ namespace NUnit.Framework.Constraints
         private static object MethodReturningZero() { return 0; }
         private static ActualValueDelegate DelegateReturningZero = new ActualValueDelegate(MethodReturningZero);
 
-        private static void MethodSetsValueTrue()
+        private static void MethodSetsValues()
         {
-            Thread.Sleep(setValueTrueDelay);
-            value = true;
+            Thread.Sleep(setValuesDelay);
+            boolValue = true;
+            list.Add(1);
+            statusString = "Finished";
         }
-        private ThreadStart SetValueTrueDelegate = new ThreadStart(MethodSetsValueTrue);
+        private ThreadStart SetValuesDelegate = new ThreadStart(MethodSetsValues);
+
+        private void SetValuesAfterDelay(int delay)
+        {
+            setValuesDelay = delay;
+            Thread thread = new Thread(SetValuesDelegate);
+            thread.Start();
+        }
     }
 }

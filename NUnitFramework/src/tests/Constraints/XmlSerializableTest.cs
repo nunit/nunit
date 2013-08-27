@@ -21,6 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#if !SILVERLIGHT
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -38,7 +39,7 @@ namespace NUnit.Framework.Constraints
             stringRepresentation = "<xmlserializable>";
         }
 
-        object[] SuccessData = new object[] { 1, "a", new ArrayList() };
+        object[] SuccessData = new object[] { 1, "a", new ObjectList() };
 
         object[] FailureData = new object[] { 
             new TestCaseData( new Dictionary<string, string>(), "<System.Collections.Generic.Dictionary`2[System.String,System.String]>" ),
@@ -61,3 +62,4 @@ namespace NUnit.Framework.Constraints
     internal class InternalWithSerializableAttributeClass
     { }
 }
+#endif

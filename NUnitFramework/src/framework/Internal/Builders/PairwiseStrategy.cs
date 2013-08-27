@@ -644,7 +644,7 @@ namespace NUnit.Framework.Builders
 
 								if (!this.testCases.IsTupleCovered(tuple))
 								{
-									throw new ApplicationException("PairwiseStrategy self-test failed : Not all pairs are covered!");
+									throw new Exception("PairwiseStrategy self-test failed : Not all pairs are covered!");
 								}
 							}
 						}
