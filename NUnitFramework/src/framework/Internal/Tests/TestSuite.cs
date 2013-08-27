@@ -24,7 +24,6 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Xml;
 using NUnit.Framework.Api;
 using NUnit.Framework.Internal.Commands;
 using NUnit.Framework.Internal.WorkItems;
@@ -287,13 +286,13 @@ namespace NUnit.Framework.Internal
         /// <param name="parentNode">The parent node.</param>
         /// <param name="recursive">If true, descendant results are included</param>
         /// <returns></returns>
-        public override System.Xml.XmlNode AddToXml(XmlNode parentNode, bool recursive)
+        public override XmlNode AddToXml(XmlNode parentNode, bool recursive)
         {
-            XmlNode thisNode = XmlHelper.AddElement(parentNode, "test-suite");
-            XmlHelper.AddAttribute(thisNode, "type", this.TestType);
+            XmlNode thisNode = parentNode.AddElement("test-suite");
+            thisNode.AddAttribute("type", this.TestType);
 
 			PopulateTestNode(thisNode, recursive);
-            XmlHelper.AddAttribute(thisNode, "testcasecount", this.TestCaseCount.ToString());
+            thisNode.AddAttribute("testcasecount", this.TestCaseCount.ToString());
 
 
             if (recursive)

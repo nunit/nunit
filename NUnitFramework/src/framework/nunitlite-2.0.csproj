@@ -47,6 +47,7 @@
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Api\ExpectedExceptionData.cs" />
+    <Compile Include="Api\XmlNode.cs" />
     <Compile Include="Attributes\RequiresMTAAtribute.cs" />
     <Compile Include="Attributes\RequiresSTAAttribute.cs" />
     <Compile Include="Attributes\RequiresThreadAttribute.cs" />
@@ -278,6 +279,7 @@
     <Compile Include="Internal\Results\TestSuiteResult.cs" />
     <Compile Include="Internal\RuntimeFramework.cs" />
     <Compile Include="Internal\StackFilter.cs" />
+    <Compile Include="Internal\StringUtil.cs" />
     <Compile Include="Internal\TestExecutionContext.cs" />
     <Compile Include="Internal\TestFilter.cs" />
     <Compile Include="Internal\TestFixtureBuilder.cs" />

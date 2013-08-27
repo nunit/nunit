@@ -22,7 +22,6 @@
 // ***********************************************************************
 
 using System;
-using System.Xml;
 using NUnit.Framework.Api;
 using NUnit.Framework.Internal.Filters;
 
@@ -109,9 +108,9 @@ namespace NUnit.Framework.Internal
         /// <returns></returns>
         public static TestFilter FromXml(string xmlText)
         {
-            XmlDocument doc = new XmlDocument();
+            var doc = new System.Xml.XmlDocument();
             doc.LoadXml(xmlText);
-            XmlNode topNode = doc.FirstChild;
+            var topNode = doc.FirstChild;
 
             if (topNode.Name != "filter")
                 throw new Exception("Expected filter element at top level");
@@ -120,14 +119,14 @@ namespace NUnit.Framework.Internal
             TestFilter result = TestFilter.Empty;
             bool isEmptyResult = true;
 
-            XmlNodeList testNodes = topNode.SelectNodes("tests/test");
-            XmlNodeList includeNodes = topNode.SelectNodes("include/category");
-            XmlNodeList excludeNodes = topNode.SelectNodes("exclude/category");
+            var testNodes = topNode.SelectNodes("tests/test");
+            var includeNodes = topNode.SelectNodes("include/category");
+            var excludeNodes = topNode.SelectNodes("exclude/category");
 
             if (testNodes.Count > 0)
             {
                 SimpleNameFilter nameFilter = new SimpleNameFilter();
-                foreach (XmlNode testNode in topNode.SelectNodes("tests/test"))
+                foreach (System.Xml.XmlNode testNode in topNode.SelectNodes("tests/test"))
                     nameFilter.Add(testNode.InnerText);
 
                 result = nameFilter;
@@ -141,7 +140,7 @@ namespace NUnit.Framework.Internal
                 //    includeFilter.AddCategory(includeNode.InnerText);
 
                 // Temporarily just look at the first element
-                XmlNode includeNode = includeNodes[0];
+                var includeNode = includeNodes[0];
                 TestFilter includeFilter = new CategoryExpression(includeNode.InnerText).Filter;
 
                 if (isEmptyResult)
@@ -154,7 +153,7 @@ namespace NUnit.Framework.Internal
             if (excludeNodes.Count > 0)
             {
                 CategoryFilter categoryFilter = new CategoryFilter();
-                foreach (XmlNode excludeNode in excludeNodes)
+                foreach (System.Xml.XmlNode excludeNode in excludeNodes)
                     categoryFilter.AddCategory(excludeNode.InnerText);
                 TestFilter excludeFilter = new NotFilter(categoryFilter);
 

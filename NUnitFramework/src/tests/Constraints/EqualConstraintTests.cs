@@ -24,6 +24,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using NUnit.Framework.Internal;
+using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Constraints
 {
@@ -168,6 +170,28 @@ namespace NUnit.Framework.Constraints
         public class DictionaryEquality
         {
             [Test]
+            public void CanMatchDictionaries_SameOrder()
+            {
+                Assert.AreEqual(new Dictionary<int, int> { { 0, 0 }, { 1, 1 }, { 2, 2 } },
+                                new Dictionary<int, int> { { 0, 0 }, { 1, 1 }, { 2, 2 } });
+            }
+
+            [Test, ExpectedException(typeof(AssertionException))]
+            public void CanMatchDictionaries_Failure()
+            {
+                Assert.AreEqual(new Dictionary<int, int> { { 0, 0 }, { 1, 1 }, { 2, 2 } },
+                                new Dictionary<int, int> { { 0, 0 }, { 1, 5 }, { 2, 2 } });
+            }
+
+            [Test]
+            public void CanMatchDictionaries_DifferentOrder()
+            {
+                Assert.AreEqual(new Dictionary<int, int> { { 0, 0 }, { 1, 1 }, { 2, 2 } },
+                                new Dictionary<int, int> { { 0, 0 }, { 2, 2 }, { 1, 1 } });
+            }
+
+#if !SILVERLIGHT
+            [Test]
             public void CanMatchHashtables_SameOrder()
             {
                 Assert.AreEqual(new Hashtable { { 0, 0 }, { 1, 1 }, { 2, 2 } },
@@ -189,32 +213,12 @@ namespace NUnit.Framework.Constraints
             }
 
             [Test]
-            public void CanMatchDictionaries_SameOrder()
-            {
-                Assert.AreEqual(new Dictionary<int, int> { { 0, 0 }, { 1, 1 }, { 2, 2 } },
-                                new Dictionary<int, int> { { 0, 0 }, { 1, 1 }, { 2, 2 } });
-            }
-
-            [Test, ExpectedException(typeof(AssertionException))]
-            public void CanMatchDictionaries_Failure()
-            {
-                Assert.AreEqual(new Dictionary<int, int> { { 0, 0 }, { 1, 1 }, { 2, 2 } },
-                                new Dictionary<int, int> { { 0, 0 }, { 1, 5 }, { 2, 2 } });
-            }
-
-            [Test]
-            public void CanMatchDictionaries_DifferentOrder()
-            {
-                Assert.AreEqual(new Dictionary<int, int> { { 0, 0 }, { 1, 1 }, { 2, 2 } },
-                                new Dictionary<int, int> { { 0, 0 }, { 2, 2 }, { 1, 1 } });
-            }
-
-            [Test]
             public void CanMatchHashtableWithDictionary()
             {
                 Assert.AreEqual(new Hashtable { { 0, 0 }, { 1, 1 }, { 2, 2 } },
                                 new Dictionary<int, int> { { 0, 0 }, { 2, 2 }, { 1, 1 } });
             }
+#endif
         }
 
         #endregion
@@ -360,7 +364,7 @@ namespace NUnit.Framework.Constraints
                 public int Compare(object x, object y)
                 {
                     Called = true;
-                    return Comparer.Default.Compare(x, y);
+                    return SimpleObjectComparer.Default.Compare(x, y);
                 }
             }
 
@@ -379,7 +383,7 @@ namespace NUnit.Framework.Constraints
                 bool IEqualityComparer.Equals(object x, object y)
                 {
                     Called = true;
-                    return Comparer.Default.Compare(x, y) == 0;
+                    return SimpleObjectComparer.Default.Compare(x, y) == 0;
                 }
 
                 int IEqualityComparer.GetHashCode(object x)
@@ -459,7 +463,7 @@ namespace NUnit.Framework.Constraints
             [Test]
             public void UsesProvidedLambda_StringArgs()
             {
-                Assert.That("hello", Is.EqualTo("HELLO").Using<string>((x, y) => String.Compare(x, y, true)));
+                Assert.That("hello", Is.EqualTo("HELLO").Using<string>((x, y) => StringUtil.Compare(x, y, true)));
             }
 
             [Test]

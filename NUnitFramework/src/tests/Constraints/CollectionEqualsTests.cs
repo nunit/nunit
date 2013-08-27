@@ -19,8 +19,8 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void CanMatchTwoCollections()
         {
-            ICollection expected = new ICollectionAdapter(1, 2, 3);
-            ICollection actual = new ICollectionAdapter(1, 2, 3);
+            ICollection expected = new TestCollection(1, 2, 3);
+            ICollection actual = new TestCollection(1, 2, 3);
 
             Assert.That(actual, Is.EqualTo(expected));
         }
@@ -28,7 +28,7 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void CanMatchAnArrayWithACollection()
         {
-            ICollection collection = new ICollectionAdapter(1, 2, 3);
+            ICollection collection = new TestCollection(1, 2, 3);
             int[] array = new int[] { 1, 2, 3 };
 
             Assert.That(collection, Is.EqualTo(array));
@@ -39,7 +39,7 @@ namespace NUnit.Framework.Constraints
         public void FailureMatchingArrayAndCollection()
         {
             int[] expected = new int[] { 1, 2, 3 };
-            ICollection actual = new ICollectionAdapter(1, 5, 3);
+            ICollection actual = new TestCollection(1, 5, 3);
 
             Assert.That(actual, Is.EqualTo(expected));
         }
@@ -47,7 +47,7 @@ namespace NUnit.Framework.Constraints
         public void HandleException(Exception ex)
         {
             Assert.That(ex.Message, Is.EqualTo(
-                "  Expected is <System.Int32[3]>, actual is <NUnit.TestUtilities.ICollectionAdapter> with 3 elements" + Env.NewLine +
+                "  Expected is <System.Int32[3]>, actual is <NUnit.TestUtilities.TestCollection> with 3 elements" + Env.NewLine +
                 "  Values differ at index [1]" + Env.NewLine +
                 TextMessageWriter.Pfx_Expected + "2" + Env.NewLine +
                 TextMessageWriter.Pfx_Actual   + "5" + Env.NewLine));

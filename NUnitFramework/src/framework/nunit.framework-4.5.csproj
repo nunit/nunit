@@ -16,7 +16,8 @@
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <OldToolsVersion>3.5</OldToolsVersion>
-    <UpgradeBackupLocation />
+	<IntermediateOutputPath>obj\$(Configuration)\net-4.5\</IntermediateOutputPath>
+	<UpgradeBackupLocation />
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -76,6 +77,7 @@
     <Compile Include="Api\TestController.cs" />
     <Compile Include="Api\TestOutput.cs" />
     <Compile Include="Api\TestStatus.cs" />
+    <Compile Include="Api\XmlNode.cs" />
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Assert.cs" />
     <Compile Include="AssertionHelper.cs" />
@@ -316,6 +318,7 @@
     <Compile Include="Internal\Results\TestResult.cs" />
     <Compile Include="Internal\RuntimeFramework.cs" />
     <Compile Include="Internal\StackFilter.cs" />
+    <Compile Include="Internal\StringUtil.cs" />
     <Compile Include="Internal\TestExecutionContext.cs" />
     <Compile Include="Internal\TestFilter.cs" />
     <Compile Include="Internal\TestFixtureBuilder.cs" />

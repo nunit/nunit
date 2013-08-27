@@ -297,7 +297,7 @@ namespace NUnit.Framework.Constraints
 
         #region BinarySerializable
 
-#if !NETCF
+#if !NETCF && !SILVERLIGHT
         /// <summary>
         /// Returns a constraint that tests whether an object graph is serializable in binary format.
         /// </summary>
@@ -311,6 +311,7 @@ namespace NUnit.Framework.Constraints
 
         #region XmlSerializable
 
+#if !SILVERLIGHT
         /// <summary>
         /// Returns a constraint that tests whether an object graph is serializable in xml format.
         /// </summary>
@@ -318,6 +319,7 @@ namespace NUnit.Framework.Constraints
         {
             get { return new XmlSerializableConstraint(); }
         }
+#endif
 
         #endregion
 

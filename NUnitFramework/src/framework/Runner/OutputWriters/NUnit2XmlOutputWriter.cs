@@ -70,8 +70,12 @@ namespace NUnitLite.Runner
             // NOTE: Under .NET 1.1, XmlTextWriter does not implement IDisposable,
             // but does implement Close(). Hence we cannot use a 'using' clause.
             //using (XmlTextWriter xmlWriter = new XmlTextWriter(writer))
+#if SILVERLIGHT
+            XmlWriter xmlWriter = XmlWriter.Create(writer);
+#else
             XmlTextWriter xmlWriter = new XmlTextWriter(writer);
             xmlWriter.Formatting = Formatting.Indented;
+#endif
 
             try
             {
@@ -130,8 +134,9 @@ namespace NUnitLite.Runner
         private void WriteEnvironment()
         {
             xmlWriter.WriteStartElement("environment");
+            var assemblyName = AssemblyHelper.GetAssemblyName(Assembly.GetExecutingAssembly());
             xmlWriter.WriteAttributeString("nunit-version",
-                                           Assembly.GetExecutingAssembly().GetName().Version.ToString());
+                                           assemblyName.Version.ToString());
             xmlWriter.WriteAttributeString("clr-version",
                                            Environment.Version.ToString());
             xmlWriter.WriteAttributeString("os-version",
@@ -141,12 +146,14 @@ namespace NUnitLite.Runner
 #if !NETCF
             xmlWriter.WriteAttributeString("cwd",
                                            Environment.CurrentDirectory);
+#if !SILVERLIGHT
             xmlWriter.WriteAttributeString("machine-name",
                                            Environment.MachineName);
             xmlWriter.WriteAttributeString("user",
                                            Environment.UserName);
             xmlWriter.WriteAttributeString("user-domain",
                                            Environment.UserDomainName);
+#endif
 #endif
             xmlWriter.WriteEndElement();
         }

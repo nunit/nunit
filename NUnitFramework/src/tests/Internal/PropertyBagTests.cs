@@ -22,7 +22,6 @@
 // ***********************************************************************
 
 using System;
-using System.Xml;
 using NUnit.Framework.Api;
 
 namespace NUnit.Framework.Internal
@@ -196,8 +195,8 @@ namespace NUnit.Framework.Internal
                 Assert.That(node.Name, Is.EqualTo("property"));
                 
                 props[i] = string.Format("{0}={1}",
-                    node.Attributes["name"].Value,
-                    node.Attributes["value"].Value);
+                    node.Attributes["name"],
+                    node.Attributes["value"]);
             }
 
             Assert.That(props,

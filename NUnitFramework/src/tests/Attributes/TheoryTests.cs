@@ -77,7 +77,7 @@ namespace NUnit.Framework.Attributes
         {
             Test test = TestBuilder.MakeTestCase(fixtureType, "TestWithEnumAsArgument");
             TestAssert.IsRunnable(test);
-            Assert.That(test.TestCaseCount, Is.EqualTo(3));
+            Assert.That(test.TestCaseCount, Is.EqualTo(16));
         }
 
         [Theory]

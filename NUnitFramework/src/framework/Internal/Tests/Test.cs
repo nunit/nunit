@@ -23,7 +23,6 @@
 
 using System;
 using System.Reflection;
-using System.Xml;
 using NUnit.Framework.Api;
 using NUnit.Framework.Internal.WorkItems;
 
@@ -268,7 +267,7 @@ namespace NUnit.Framework.Internal
         /// <returns></returns>
         public XmlNode ToXml(bool recursive)
         {
-            XmlNode topNode = XmlHelper.CreateTopLevelElement("dummy");
+            XmlNode topNode = XmlNode.CreateTopLevelElement("dummy");
 
             XmlNode thisNode = AddToXml(topNode, recursive);
 
@@ -345,9 +344,9 @@ namespace NUnit.Framework.Internal
         /// <param name="recursive"></param>
         protected void PopulateTestNode(XmlNode thisNode, bool recursive)
         {
-            XmlHelper.AddAttribute(thisNode, "id", this.Id.ToString());
-            XmlHelper.AddAttribute(thisNode, "name", this.Name);
-            XmlHelper.AddAttribute(thisNode, "fullname", this.FullName);
+            thisNode.AddAttribute("id", this.Id.ToString());
+            thisNode.AddAttribute("name", this.Name);
+            thisNode.AddAttribute("fullname", this.FullName);
 
             if (Properties.Count > 0)
                 Properties.AddToXml(thisNode, recursive);

@@ -62,9 +62,18 @@ namespace NUnit.Framework.Internal
             IList fixtureNames = options["LOAD"] as IList;
 
             IList fixtures = GetFixtures(assembly, fixtureNames);
-            if (fixtures.Count > 0)
-                return BuildTestAssembly(assembly.GetName().Name, fixtures);
 
+            if (fixtures.Count > 0)
+            {
+#if NETCF || SILVERLIGHT
+                AssemblyName assemblyName = AssemblyHelper.GetAssemblyName(assembly);
+                return BuildTestAssembly(assemblyName.Name, fixtures);
+#else   
+                string assemblyPath = AssemblyHelper.GetAssemblyPath(assembly);
+                return BuildTestAssembly(assemblyPath, fixtures);
+#endif
+            }
+            
             return null;
         }
 
@@ -99,16 +108,20 @@ namespace NUnit.Framework.Internal
         {
             Assembly assembly = null;
 
+#if NETCF || SILVERLIGHT
+            return Assembly.Load(path);
+#else
             // Throws if this isn't a managed assembly or if it was built
             // with a later version of the same assembly. 
             AssemblyName assemblyName = AssemblyName.GetAssemblyName(path);
 
             assembly = Assembly.Load(assemblyName);
+#endif
 
             // TODO: Can this ever be null?
             if (assembly == null)
             {
-                InternalTrace.Error("Failed to load assembly " + assemblyName);
+                InternalTrace.Error("Failed to load assembly " + path);
             }
             else
             {
@@ -225,7 +238,9 @@ namespace NUnit.Framework.Internal
 
             testAssembly.ApplyAttributesToTest(assembly);
 
+#if !SILVERLIGHT
             testAssembly.Properties.Set(PropertyNames.ProcessID, System.Diagnostics.Process.GetCurrentProcess().Id);
+#endif
             testAssembly.Properties.Set(PropertyNames.AppDomain, AppDomain.CurrentDomain.FriendlyName);
 
 

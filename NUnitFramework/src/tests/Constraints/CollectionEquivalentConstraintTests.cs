@@ -34,8 +34,8 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void EqualCollectionsAreEquivalent()
         {
-            ICollection set1 = new ICollectionAdapter("x", "y", "z");
-            ICollection set2 = new ICollectionAdapter("x", "y", "z");
+            ICollection set1 = new TestCollection("x", "y", "z");
+            ICollection set2 = new TestCollection("x", "y", "z");
 
             Assert.That(new CollectionEquivalentConstraint(set1).ApplyTo(set2).IsSuccess);
         }
@@ -48,21 +48,21 @@ namespace NUnit.Framework.Constraints
             byte[] array3 = new byte[] { 0x20, 0x44, 0x56, 0x76, 0x1e, 0xff };
             byte[] array4 = new byte[] { 0x42, 0x52, 0x72, 0xef };
 
-            ICollection set1 = new ICollectionAdapter(array1, array2);
-            ICollection set2 = new ICollectionAdapter(array3, array4);
+            ICollection set1 = new TestCollection(array1, array2);
+            ICollection set2 = new TestCollection(array3, array4);
 
             Constraint constraint = new CollectionEquivalentConstraint(set1);
             Assert.That(constraint.ApplyTo(set2).IsSuccess);
 
-            set2 = new ICollectionAdapter(array4, array3);
+            set2 = new TestCollection(array4, array3);
             Assert.That(constraint.ApplyTo(set2).IsSuccess);
         }
 
         [Test]
         public void EquivalentIgnoresOrder()
         {
-            ICollection set1 = new ICollectionAdapter("x", "y", "z");
-            ICollection set2 = new ICollectionAdapter("z", "y", "x");
+            ICollection set1 = new TestCollection("x", "y", "z");
+            ICollection set2 = new TestCollection("z", "y", "x");
 
             Assert.That(new CollectionEquivalentConstraint(set1).ApplyTo(set2).IsSuccess);
         }
@@ -70,8 +70,8 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void EquivalentFailsWithDuplicateElementInActual()
         {
-            ICollection set1 = new ICollectionAdapter("x", "y", "z");
-            ICollection set2 = new ICollectionAdapter("x", "y", "x");
+            ICollection set1 = new TestCollection("x", "y", "z");
+            ICollection set2 = new TestCollection("x", "y", "x");
 
             Assert.False(new CollectionEquivalentConstraint(set1).ApplyTo(set2).IsSuccess);
         }
@@ -79,8 +79,8 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void EquivalentFailsWithDuplicateElementInExpected()
         {
-            ICollection set1 = new ICollectionAdapter("x", "y", "x");
-            ICollection set2 = new ICollectionAdapter("x", "y", "z");
+            ICollection set1 = new TestCollection("x", "y", "x");
+            ICollection set2 = new TestCollection("x", "y", "z");
 
             Assert.False(new CollectionEquivalentConstraint(set1).ApplyTo(set2).IsSuccess);
         }
@@ -88,8 +88,8 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void EquivalentHandlesNull()
         {
-            ICollection set1 = new ICollectionAdapter(null, "x", null, "z");
-            ICollection set2 = new ICollectionAdapter("z", null, "x", null);
+            ICollection set1 = new TestCollection(null, "x", null, "z");
+            ICollection set2 = new TestCollection("z", null, "x", null);
 
             Assert.That(new CollectionEquivalentConstraint(set1).ApplyTo(set2).IsSuccess);
         }
@@ -97,8 +97,8 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void EquivalentHonorsIgnoreCase()
         {
-            ICollection set1 = new ICollectionAdapter("x", "y", "z");
-            ICollection set2 = new ICollectionAdapter("z", "Y", "X");
+            ICollection set1 = new TestCollection("x", "y", "z");
+            ICollection set2 = new TestCollection("z", "Y", "X");
 
             Assert.That(new CollectionEquivalentConstraint(set1).IgnoreCase.ApplyTo(set2).IsSuccess);
         }
@@ -106,11 +106,11 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void EquivalentHonorsUsing()
         {
-            ICollection set1 = new ICollectionAdapter("x", "y", "z");
-            ICollection set2 = new ICollectionAdapter("z", "Y", "X");
+            ICollection set1 = new TestCollection("x", "y", "z");
+            ICollection set2 = new TestCollection("z", "Y", "X");
 
             Assert.That(new CollectionEquivalentConstraint(set1)
-                .Using<string>((x, y) => String.Compare(x, y, true))
+                .Using<string>((x, y) => StringUtil.Compare(x, y, true))
                 .ApplyTo(set2).IsSuccess);
         }
 

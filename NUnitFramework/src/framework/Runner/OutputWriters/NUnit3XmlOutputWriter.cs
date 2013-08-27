@@ -49,20 +49,13 @@ namespace NUnitLite.Runner
         /// <param name="writer">A TextWriter to which the result is written</param>
         public override void WriteResultFile(ITestResult result, TextWriter writer)
         {
-            // NOTE: Under .NET 1.1, XmlTextWriter does not implement IDisposable,
-            // but does implement Close(). Hence we cannot use a 'using' clause.
-            //using (XmlTextWriter xmlWriter = new XmlTextWriter(writer))
-            XmlTextWriter xmlWriter = new XmlTextWriter(writer);
-            xmlWriter.Formatting = Formatting.Indented;
+            XmlWriterSettings settings = new XmlWriterSettings();
+            settings.Indent = true;
 
-            try
+            using (XmlWriter xmlWriter = XmlWriter.Create(writer, settings))
             {
                 xmlWriter.WriteStartDocument(false);
                 result.ToXml(true).WriteTo(xmlWriter);
-            }
-            finally
-            {
-                xmlWriter.Close();
             }
         }
     }

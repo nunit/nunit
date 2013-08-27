@@ -21,6 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using NUnit.Framework.Internal;
+
 namespace NUnit.Framework.Constraints
 {
     /// <summary>
@@ -54,7 +56,7 @@ namespace NUnit.Framework.Constraints
 
             string path1 = Canonicalize(expected);
             string path2 = Canonicalize(actual);
-            return string.Compare(path1, path2, caseInsensitive) == 0 || IsSubPath(path1, path2);
+            return StringUtil.StringsEqual(path1, path2, caseInsensitive) || IsSubPath(path1, path2);
         }
     }
 }

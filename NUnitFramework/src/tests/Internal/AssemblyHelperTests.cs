@@ -45,7 +45,7 @@ namespace NUnit.Framework.Internal
             Assert.That(assemblyName.FullName, Is.EqualTo(THIS_ASSEMBLY_PATH).IgnoreCase);
         }
 
-#if !NETCF
+#if !NETCF && !SILVERLIGHT
         [Test]
         public void GetPathForAssembly()
         {

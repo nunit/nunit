@@ -1,5 +1,5 @@
-// ***********************************************************************
-// Copyright (c) 2007 Charlie Poole
+﻿// ***********************************************************************
+// Copyright (c) 2012 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,61 +21,15 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
-using System.Collections;
-
-namespace NUnit.TestUtilities
+#if SILVERLIGHT
+namespace System
 {
-	/// <summary>
-	/// ICollectionAdapter is used in testing to wrap an array or
-	/// ArrayList, ensuring that only methods of the ICollection
-	/// interface are accessible.
-	/// </summary>
-	class ICollectionAdapter : ICollection
-	{
-		private readonly ICollection inner;
-
-		public ICollectionAdapter(ICollection inner)
-		{
-			this.inner = inner;
-		}
-
-		public ICollectionAdapter(params object[] inner)
-		{
-			this.inner = inner;
-		}
-
-		#region ICollection Members
-
-		public void CopyTo(Array array, int index)
-		{
-			inner.CopyTo(array, index);
-		}
-
-		public int Count
-		{
-			get { return inner.Count; }
-		}
-
-		public bool IsSynchronized
-		{
-			get { return  inner.IsSynchronized; }
-		}
-
-		public object SyncRoot
-		{
-			get { return inner.SyncRoot; }
-		}
-
-		#endregion
-
-		#region IEnumerable Members
-
-		public IEnumerator GetEnumerator()
-		{
-			return inner.GetEnumerator();
-		}
-
-		#endregion
-	}
+    /// <summary>
+    /// Replacement for the SerializableAttribute so we compile
+    /// under Silverlight.
+    /// </summary>
+    public class SerializableAttribute : Attribute
+    {
+    }
 }
+#endif

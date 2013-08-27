@@ -68,6 +68,7 @@
     <Compile Include="Api\ITestListener.cs" />
     <Compile Include="Api\ITestResult.cs" />
     <Compile Include="Api\IXmlNodeBuilder.cs" />
+    <Compile Include="Api\XmlNode.cs" />
     <Compile Include="Constraints\EqualConstraintResult.cs" />
     <Compile Include="Constraints\IConstraint.cs" />
     <Compile Include="Constraints\Operators\AllOperator.cs" />
@@ -92,6 +93,7 @@
     <Compile Include="Internal\IApplyToTest.cs" />
     <Compile Include="Internal\RandomGenerator.cs" />
     <Compile Include="Internal\StackFilter.cs" />
+    <Compile Include="Internal\StringUtil.cs" />
     <Compile Include="Internal\WorkItems\CompositeWorkItem.cs" />
     <Compile Include="Internal\WorkItems\CountdownEvent.cs" />
     <Compile Include="Internal\WorkItems\SimpleWorkItem.cs" />

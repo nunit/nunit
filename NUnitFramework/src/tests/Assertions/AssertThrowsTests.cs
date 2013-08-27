@@ -55,7 +55,7 @@ namespace NUnit.Framework.Assertions
 
             Assert.IsNotNull(ex, "No ArgumentException thrown");
             Assert.That(ex.Message, Is.StringStarting("myMessage"));
-#if !NETCF
+#if !NETCF && !SILVERLIGHT
             Assert.That(ex.ParamName, Is.EqualTo("myParam"));
 #endif
 
@@ -64,7 +64,7 @@ namespace NUnit.Framework.Assertions
 
             Assert.IsNotNull(ex, "No ArgumentException thrown");
             Assert.That(ex.Message, Is.StringStarting("myMessage"));
-#if !NETCF
+#if !NETCF && !SILVERLIGHT
             Assert.That(ex.ParamName, Is.EqualTo("myParam"));
 #endif
 
@@ -73,7 +73,7 @@ namespace NUnit.Framework.Assertions
 
             Assert.IsNotNull(ex, "No ArgumentException thrown");
             Assert.That(ex.Message, Is.StringStarting("myMessage"));
-#if !NETCF
+#if !NETCF && !SILVERLIGHT
             Assert.That(ex.ParamName, Is.EqualTo("myParam"));
 #endif
 
@@ -81,7 +81,7 @@ namespace NUnit.Framework.Assertions
 
             Assert.IsNotNull(ex, "No ArgumentException thrown");
             Assert.That(ex.Message, Is.StringStarting("myMessage"));
-#if !NETCF
+#if !NETCF && !SILVERLIGHT
             Assert.That(ex.ParamName, Is.EqualTo("myParam"));
 #endif
 		}
@@ -98,10 +98,10 @@ namespace NUnit.Framework.Assertions
         [Test, ExpectedException(typeof(AssertionException))]
         public void UnrelatedExceptionThrown()
         {
-            ArgumentException ex = Assert.Throws<ArgumentException>(TestDelegates.ThrowsApplicationException);
+            ArgumentException ex = Assert.Throws<ArgumentException>(TestDelegates.ThrowsNullReferenceException);
             Assert.That(ex.Message, Is.StringStarting(
                 "  Expected: <System.ArgumentException>" + Env.NewLine +
-                "  But was:  <System.ApplicationException> (my message)" + Env.NewLine));
+                "  But was:  <System.NullReferenceException> (my message)" + Env.NewLine));
             Assert.That(ex.Message, Contains.Substring("  at "));
         }
 

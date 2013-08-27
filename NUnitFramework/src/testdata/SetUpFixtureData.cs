@@ -22,7 +22,7 @@
 // ***********************************************************************
 
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
 
@@ -33,14 +33,14 @@ namespace NUnit.TestUtilities
     /// </summary>
     public class SimpleEventRecorder
     {
-        private static System.Collections.Queue _events;
+        private static Queue<string> _events;
 
         /// <summary>
         /// Initializes the <see cref="T:EventRegistrar"/> 'static' class.
         /// </summary>
         static SimpleEventRecorder()
         {
-            _events = new System.Collections.Queue();
+            _events = new Queue<string>();
         }
 
         /// <summary>

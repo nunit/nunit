@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NETCF
+#if !NETCF && !SILVERLIGHT
 using System;
 using System.Collections;
 
@@ -38,7 +38,7 @@ namespace NUnit.Framework.Constraints
             stringRepresentation = "<binaryserializable>";
         }
 
-        object[] SuccessData = new object[] { 1, "a", new ArrayList(), new InternalWithSerializableAttributeClass() };
+        object[] SuccessData = new object[] { 1, "a", new ObjectList(), new InternalWithSerializableAttributeClass() };
         
         object[] FailureData = new object[] { new TestCaseData( new InternalClass(), "<NUnit.Framework.Constraints.InternalClass>" ) };
 

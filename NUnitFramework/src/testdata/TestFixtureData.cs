@@ -387,7 +387,7 @@ namespace NUnit.TestData.TestFixtureData
 		public void Teardown(int j) { }
 	}
 
-#if !NETCF
+#if !NETCF && !SILVERLIGHT
     [TestFixture]
     public class FixtureThatChangesTheCurrentPrincipal
     {

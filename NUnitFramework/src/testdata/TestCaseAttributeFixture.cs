@@ -72,11 +72,11 @@ namespace NUnit.TestData.TestCaseAttributeFixture
         {
         }
 
-        [TestCase(2, 3, 4, ExpectedException = typeof(ApplicationException),
+        [TestCase(2, 3, 4, ExpectedException = typeof(Exception),
             ExpectedMessage="Test Exception")]
         public void MethodThrowsExpectedExceptionWithWrongMessage(int x, int y, int z)
         {
-            throw new ApplicationException("Wrong Test Exception");
+            throw new Exception("Wrong Test Exception");
         }
 
         [TestCase(2, 3, 4, ExpectedException = typeof(ArgumentNullException))]

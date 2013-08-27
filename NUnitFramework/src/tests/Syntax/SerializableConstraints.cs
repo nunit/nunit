@@ -21,6 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#if !SILVERLIGHT
 namespace NUnit.Framework.Syntax
 {
 #if !NETCF
@@ -51,3 +52,4 @@ namespace NUnit.Framework.Syntax
         }
     }
 }
+#endif

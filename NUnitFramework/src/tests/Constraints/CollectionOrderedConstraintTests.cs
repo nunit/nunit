@@ -35,7 +35,7 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void IsOrdered()
         {
-            ArrayList al = new ArrayList();
+            var al = new ObjectList();
             al.Add("x");
             al.Add("y");
             al.Add("z");
@@ -46,7 +46,7 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void IsOrdered_2()
         {
-            ArrayList al = new ArrayList();
+            var al = new ObjectList();
             al.Add(1);
             al.Add(2);
             al.Add(3);
@@ -57,7 +57,7 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void IsOrderedDescending()
         {
-            ArrayList al = new ArrayList();
+            var al = new ObjectList();
             al.Add("z");
             al.Add("y");
             al.Add("x");
@@ -68,7 +68,7 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void IsOrderedDescending_2()
         {
-            ArrayList al = new ArrayList();
+            var al = new ObjectList();
             al.Add(3);
             al.Add(2);
             al.Add(1);
@@ -79,7 +79,7 @@ namespace NUnit.Framework.Constraints
         [Test, ExpectedException(typeof(AssertionException))]
         public void IsOrdered_Fails()
         {
-            ArrayList al = new ArrayList();
+            var al = new ObjectList();
             al.Add("x");
             al.Add("z");
             al.Add("y");
@@ -94,7 +94,7 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void IsOrdered_Allows_adjacent_equal_values()
         {
-            ArrayList al = new ArrayList();
+            var al = new ObjectList();
             al.Add("x");
             al.Add("x");
             al.Add("z");
@@ -106,7 +106,7 @@ namespace NUnit.Framework.Constraints
             ExpectedMessage = "index 1", MatchType = MessageMatch.Contains)]
         public void IsOrdered_Handles_null()
         {
-            ArrayList al = new ArrayList();
+            var al = new ObjectList();
             al.Add("x");
             al.Add(null);
             al.Add("z");
@@ -117,7 +117,7 @@ namespace NUnit.Framework.Constraints
         [Test, ExpectedException(typeof(ArgumentException))]
         public void IsOrdered_TypesMustBeComparable()
         {
-            ArrayList al = new ArrayList();
+            var al = new ObjectList();
             al.Add(1);
             al.Add("x");
 
@@ -127,7 +127,7 @@ namespace NUnit.Framework.Constraints
         [Test, ExpectedException(typeof(ArgumentException))]
         public void IsOrdered_AtLeastOneArgMustImplementIComparable()
         {
-            ArrayList al = new ArrayList();
+            var al = new ObjectList();
             al.Add(new object());
             al.Add(new object());
 
@@ -137,7 +137,7 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void IsOrdered_Handles_custom_comparison()
         {
-            ArrayList al = new ArrayList();
+            var al = new ObjectList();
             al.Add(new object());
             al.Add(new object());
 
@@ -149,7 +149,7 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void IsOrdered_Handles_custom_comparison2()
         {
-            ArrayList al = new ArrayList();
+            var al = new ObjectList();
             al.Add(2);
             al.Add(1);
 
@@ -161,7 +161,7 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void UsesProvidedComparerOfT()
         {
-            ArrayList al = new ArrayList();
+            var al = new ObjectList();
             al.Add(1);
             al.Add(2);
 
@@ -184,7 +184,7 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void UsesProvidedComparisonOfT()
         {
-            ArrayList al = new ArrayList();
+            var al = new ObjectList();
             al.Add(1);
             al.Add(2);
 
@@ -207,7 +207,7 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void UsesProvidedLambda()
         {
-            ArrayList al = new ArrayList();
+            var al = new ObjectList();
             al.Add(1);
             al.Add(2);
 
@@ -218,7 +218,7 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void IsOrderedBy()
         {
-            ArrayList al = new ArrayList();
+            var al = new ObjectList();
             al.Add(new OrderedByTestClass(1));
             al.Add(new OrderedByTestClass(2));
 
@@ -228,17 +228,17 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void IsOrderedBy_Comparer()
         {
-            ArrayList al = new ArrayList();
+            var al = new ObjectList();
             al.Add(new OrderedByTestClass(1));
             al.Add(new OrderedByTestClass(2));
 
-            Assert.That(al, Is.Ordered.By("Value").Using(Comparer.Default));
+            Assert.That(al, Is.Ordered.By("Value").Using(SimpleObjectComparer.Default));
         }
 
         [Test]
         public void IsOrderedBy_Handles_heterogeneous_classes_as_long_as_the_property_is_of_same_type()
         {
-            ArrayList al = new ArrayList();
+            var al = new ObjectList();
             al.Add(new OrderedByTestClass(1));
             al.Add(new OrderedByTestClass2(2));
 

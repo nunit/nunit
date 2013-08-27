@@ -22,7 +22,7 @@
 // ***********************************************************************
 
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using NUnit.Framework.Api;
 using NUnit.TestData.TestMethodSignatureFixture;
 using NUnit.TestUtilities;
@@ -149,8 +149,8 @@ namespace NUnit.Framework.Internal
             TestSuite suite = TestBuilder.MakeParameterizedMethodSuite(fixtureType, name);
             Assert.That(suite.TestCaseCount, Is.EqualTo(3));
 
-            ArrayList names = new ArrayList();
-            ArrayList fullNames = new ArrayList();
+            var names = new List<string>();
+            var fullNames = new List<string>();
 
             foreach (Test test in suite.Tests)
             {

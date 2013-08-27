@@ -22,7 +22,7 @@
 // ***********************************************************************
 
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using NUnit.Framework;
 using NUnit.Framework.Api;
 using NUnit.Framework.Internal;
@@ -142,8 +142,8 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void FixtureInstancesAreNamedCorrectly()
         {
-            ArrayList names = new ArrayList();
-            ArrayList fullnames = new ArrayList();
+            var names = new List<string>();
+            var fullnames = new List<string>();
             foreach (Test test in fixture.Tests)
             {
                 names.Add(test.Name);

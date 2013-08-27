@@ -22,10 +22,9 @@
 // ***********************************************************************
 
 using System;
+using System.Collections.Generic;
 using System.IO;
-using System.Collections;
 using System.Reflection;
-using System.Xml;
 using NUnit.Framework.Api;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Filters;
@@ -96,7 +95,7 @@ namespace NUnitLite.Runner
                 this.writer = new StreamWriter(commandLineOptions.OutFile);
 
             if (!commandLineOptions.NoHeader)
-                WriteHeader();
+                WriteHeader(this.writer);
 
             if (commandLineOptions.ShowHelp)
                 writer.Write(commandLineOptions.HelpText);
@@ -107,16 +106,16 @@ namespace NUnitLite.Runner
             }
             else
             {
-                WriteRuntimeEnvironment();
+                WriteRuntimeEnvironment(this.writer);
 
                 if (commandLineOptions.Wait && commandLineOptions.OutFile != null)
                     writer.WriteLine("Ignoring /wait option - only valid for Console");
 
-                IDictionary loadOptions = new Hashtable();
+                var loadOptions = new Dictionary<string, string>();
                 //if (options.Load.Count > 0)
                 //    loadOptions["LOAD"] = options.Load;
 
-                //IDictionary runOptions = new Hashtable();
+                //var runOptions = new Dictionary<string, string>();
                 //if (commandLineOptions.TestCount > 0)
                 //    runOptions["RUN"] = commandLineOptions.Tests;
 
@@ -139,7 +138,8 @@ namespace NUnitLite.Runner
 
                     if (!runner.Load(assembly, loadOptions))
                     {
-                        Console.WriteLine("No tests found in assembly {0}", assembly.GetName().Name);
+                        var assemblyName = AssemblyHelper.GetAssemblyName(assembly);
+                        Console.WriteLine("No tests found in assembly {0}", assemblyName.Name);
                         return;
                     }
 
@@ -230,23 +230,32 @@ namespace NUnitLite.Runner
             XmlNode testNode = runner.LoadedTest.ToXml(true);
 
             string listFile = commandLineOptions.ExploreFile;
-            XmlTextWriter testWriter = listFile != null && listFile.Length > 0
-                ? new XmlTextWriter(listFile, System.Text.Encoding.UTF8)
-                : new XmlTextWriter(Console.Out);
-            testWriter.Formatting = Formatting.Indented;
+            TextWriter textWriter = listFile != null && listFile.Length > 0
+                ? new StreamWriter(listFile)
+                : Console.Out;
+
+            System.Xml.XmlWriterSettings settings = new System.Xml.XmlWriterSettings();
+            settings.Indent = true;
+            settings.Encoding = System.Text.Encoding.UTF8;
+            System.Xml.XmlWriter testWriter = System.Xml.XmlWriter.Create(textWriter, settings);
+
             testNode.WriteTo(testWriter);
             testWriter.Close();
+
+            Console.WriteLine();
+            Console.WriteLine("Test info saved as {0}.", listFile);
         }
 
-        private void WriteHeader()
+        public static void WriteHeader(TextWriter writer)
         {
             Assembly executingAssembly = Assembly.GetExecutingAssembly();
+            AssemblyName assemblyName = AssemblyHelper.GetAssemblyName(executingAssembly);
 #if NUNITLITE
             string title = "NUnitLite";
 #else
             string title = "NUNit Framework";
 #endif
-            System.Version version = executingAssembly.GetName().Version;
+            System.Version version = assemblyName.Version;
             string copyright = "Copyright (C) 2012, Charlie Poole";
             string build = "";
 
@@ -276,7 +285,7 @@ namespace NUnitLite.Runner
             writer.WriteLine();
         }
 
-        private void WriteRuntimeEnvironment()
+        public static void WriteRuntimeEnvironment(TextWriter writer)
         {
             string clrPlatform = Type.GetType("Mono.Runtime", false) == null ? ".NET" : "Mono";
             writer.WriteLine("Runtime Environment -");

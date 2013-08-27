@@ -41,7 +41,7 @@ namespace NUnit.Framework.Constraints
         {
             string.Empty,
             new object[0],
-            new ArrayList(),
+            new ObjectList(),
             new System.Collections.Generic.List<int>()
         };
 

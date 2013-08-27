@@ -24,7 +24,6 @@
 using System;
 using NUnit.Framework.Api;
 using NUnit.Framework.Internal;
-using System.Xml;
 
 namespace NUnit.Framework.Attributes
 {

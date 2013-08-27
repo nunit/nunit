@@ -180,7 +180,7 @@ namespace NUnit.TestData.ExpectedExceptionData
 		[ExpectedException(typeof(ArgumentOutOfRangeException)) ]
 		public void TestThrow()
 		{
-#if NETCF
+#if NETCF || SILVERLIGHT
 			throw new ArgumentOutOfRangeException("param", "the message");
 #else
 			throw new ArgumentOutOfRangeException("param", "actual value", "the message");
@@ -235,15 +235,15 @@ namespace NUnit.TestData.ExpectedExceptionData
         }
 
         [Test, ExpectedException(typeof(ArgumentException))]
-        public void ThrowsApplicationException()
+        public void ThrowsException()
         {
-            throw new ApplicationException();
+            throw new Exception();
         }
 
         [Test, ExpectedException(typeof(ArgumentException), Handler = "AlternateExceptionHandler")]
-        public void ThrowsApplicationException_AlternateHandler()
+        public void ThrowsException_AlternateHandler()
         {
-            throw new ApplicationException();
+            throw new Exception();
         }
 
         [Test, ExpectedException(typeof(ArgumentException), Handler = "DeliberatelyMissingHandler")]

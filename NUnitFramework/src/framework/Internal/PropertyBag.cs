@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Xml;
 using NUnit.Framework.Api;
 
 namespace NUnit.Framework.Internal
@@ -270,9 +269,9 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="recursive">Not used</param>
         /// <returns>An XmlNode representing the PropertyBag</returns>
-        public System.Xml.XmlNode ToXml(bool recursive)
+        public XmlNode ToXml(bool recursive)
         {
-            XmlNode topNode = XmlHelper.CreateTopLevelElement("dummy");
+            XmlNode topNode = XmlNode.CreateTopLevelElement("dummy");
 
             XmlNode thisNode = AddToXml(topNode, recursive);
 
@@ -286,19 +285,19 @@ namespace NUnit.Framework.Internal
         /// <param name="parentNode">The parent node.</param>
         /// <param name="recursive">Not used</param>
         /// <returns></returns>
-        public System.Xml.XmlNode AddToXml(System.Xml.XmlNode parentNode, bool recursive)
+        public XmlNode AddToXml(XmlNode parentNode, bool recursive)
         {
-            XmlNode properties = XmlHelper.AddElement(parentNode, "properties");
+            XmlNode properties = parentNode.AddElement("properties");
 
             foreach (string key in Keys)
             {
                 foreach (object value in this[key])
                 {
-                    XmlNode prop = XmlHelper.AddElement(properties, "property");
+                    XmlNode prop = properties.AddElement("property");
 
                     // TODO: Format as string
-                    XmlHelper.AddAttribute(prop, "name", key.ToString());
-                    XmlHelper.AddAttribute(prop, "value", value.ToString());
+                    prop.AddAttribute("name", key.ToString());
+                    prop.AddAttribute("value", value.ToString());
                 }
             }
 

@@ -27,7 +27,7 @@ using NUnit.TestUtilities;
 namespace NUnit.Framework.Constraints
 {
     [TestFixture]
-    public class ExceptionConstraintTest_ExactType : ConstraintTestBase
+    public class ThrowsConstraintTest_ExactType : ConstraintTestBase
     {
         [SetUp]
         public void SetUp()
@@ -45,41 +45,41 @@ namespace NUnit.Framework.Constraints
 
         static object[] FailureData = new object[]
         {
-            new TestCaseData( new TestDelegate( TestDelegates.ThrowsApplicationException ), "<System.ApplicationException>" ),
+            new TestCaseData( new TestDelegate( TestDelegates.ThrowsNullReferenceException ), "<System.NullReferenceException>" ),
             new TestCaseData( new TestDelegate( TestDelegates.ThrowsNothing ), "no exception thrown" ),
             new TestCaseData( new TestDelegate( TestDelegates.ThrowsSystemException ), "<System.Exception>" )
         };
     }
 
     [TestFixture]
-    public class ExceptionConstraintTest_InstanceOfType : ConstraintTestBase
+    public class ThrowsConstraintTest_InstanceOfType : ConstraintTestBase
     {
         [SetUp]
         public void SetUp()
         {
             theConstraint = new ThrowsConstraint(
-                new InstanceOfTypeConstraint(typeof(ApplicationException)));
-            expectedDescription = "instance of <System.ApplicationException>";
-            stringRepresentation = "<throws <instanceof System.ApplicationException>>";
+                new InstanceOfTypeConstraint(typeof(TestDelegates.BaseException)));
+            expectedDescription = "instance of <NUnit.TestUtilities.TestDelegates+BaseException>";
+            stringRepresentation = "<throws <instanceof NUnit.TestUtilities.TestDelegates+BaseException>>";
         }
 
         static object[] SuccessData = new object[]
         {
-            new TestDelegate( TestDelegates.ThrowsApplicationException ),
-            new TestDelegate( TestDelegates.ThrowsDerivedApplicationException )
+            new TestDelegate( TestDelegates.ThrowsBaseException ),
+            new TestDelegate( TestDelegates.ThrowsDerivedException )
         };
 
         static object[] FailureData = new object[]
         {
             new TestCaseData( new TestDelegate( TestDelegates.ThrowsArgumentException ), "<System.ArgumentException>" ),
             new TestCaseData( new TestDelegate( TestDelegates.ThrowsNothing ), "no exception thrown" ),
-            new TestCaseData( new TestDelegate( TestDelegates.ThrowsSystemException ), "<System.Exception>" )
+            new TestCaseData( new TestDelegate( TestDelegates.ThrowsNullReferenceException ), "<System.NullReferenceException>" )
         };
     }
 
 // TODO: Find a different example for use with NETCF - ArgumentException does not have a ParamName member
-#if !NETCF
-    public class ExceptionConstraintTest_WithConstraint : ConstraintTestBase
+#if !NETCF && !SILVERLIGHT
+    public class ThrowsConstraintTest_WithConstraint : ConstraintTestBase
     {
         [SetUp]
         public void SetUp()
@@ -99,7 +99,7 @@ namespace NUnit.Framework.Constraints
 
         static object[] FailureData = new object[]
         {
-            new TestCaseData( new TestDelegate( TestDelegates.ThrowsApplicationException ), "<System.ApplicationException>" ),
+            new TestCaseData( new TestDelegate( TestDelegates.ThrowsNullReferenceException ), "<System.NullReferenceException>" ),
             new TestCaseData( new TestDelegate( TestDelegates.ThrowsNothing ), "no exception thrown" ),
             new TestCaseData( new TestDelegate( TestDelegates.ThrowsSystemException ), "<System.Exception>" )
         };
