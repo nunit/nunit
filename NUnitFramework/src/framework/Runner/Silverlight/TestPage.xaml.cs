@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if SILVERLIGHT
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
@@ -72,3 +73,4 @@ namespace NUnitLite.Runner.Silverlight
         #endregion
     }
 }
+#endif

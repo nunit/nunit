@@ -1,4 +1,5 @@
-﻿namespace NUnit.Framework.Internal.Filters
+﻿#if NUNITLITE
+namespace NUnit.Framework.Internal.Filters
 {
     /// <summary>
     /// SimpleCategoryFilter parses a basic string representing a
@@ -41,3 +42,4 @@
         }
     }
 }
+#endif

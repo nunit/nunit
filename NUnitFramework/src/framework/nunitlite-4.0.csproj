@@ -108,6 +108,7 @@
     <Compile Include="Attributes\TimeoutAttribute.cs" />
     <Compile Include="Attributes\ValuesAttribute.cs" />
     <Compile Include="Attributes\ValueSourceAttribute.cs" />
+    <Compile Include="Compatibility\SerializableAttribute.cs" />
     <Compile Include="Constraints\AllItemsConstraint.cs" />
     <Compile Include="Constraints\Operators\AllOperator.cs" />
     <Compile Include="Constraints\AndConstraint.cs" />
@@ -303,7 +304,6 @@
     <Compile Include="Internal\WorkItems\SimpleWorkItem.cs" />
     <Compile Include="Internal\WorkItems\WorkItem.cs" />
     <Compile Include="Internal\WorkItems\WorkItemState.cs" />
-    <Compile Include="Internal\XmlHelper.cs" />
     <Compile Include="Is.cs" />
     <Compile Include="ListMapper.cs" />
     <Compile Include="MessageMatch.cs" />
@@ -327,6 +327,7 @@
     <Compile Include="Constraints\ExceptionTypeConstraint.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="nunit.framework.build" />
     <None Include="nunitlite.build" />
     <None Include="nunit.snk" />
   </ItemGroup>

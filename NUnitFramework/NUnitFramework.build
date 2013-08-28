@@ -45,11 +45,11 @@
        installed framework found is the default for builds. 
        The first .NET and Mono frameworks found are the
        respective net and mono defaults. -->
-  <!--<property name="supported.frameworks" 
-    value="net-4.5,net-4.0,net-3.5,net-2.0,mono-4.0,mono-3.5,mono-2.0,netcf-3.5,netcf-2.0,netcf-1.0"/>-->
-  <!-- Temporarily disable compact framework builds -->
   <property name="supported.frameworks" 
-    value="net-4.5,net-4.0,net-3.5,net-2.0,mono-4.0,mono-3.5,mono-2.0"/>
+    value="net-4.5,net-4.0,net-3.5,net-2.0,mono-4.0,mono-3.5,mono-2.0,netcf-3.5,netcf-2.0,sl-5.0"/>
+  <!-- Temporarily disable compact framework builds -->
+  <!--<property name="supported.frameworks" 
+    value="net-4.5,net-4.0,net-3.5,net-2.0,mono-4.0,mono-3.5,mono-2.0"/>-->
 
   <!-- Set default warning level for compiles -->
   <property name="warn" value="4" unless="${property::exists('warn')}"/>
@@ -216,6 +216,12 @@
   <target name="mono-4.0" depends="set-mono-4.0-runtime-config"
     description="Set runtime to Mono 4.0 for commands that follow"/>
 
+  <target name="sl-5.0" depends="set-silverlight-5.0-runtime-config"
+    description="Set runtime to Silverlight 5.0 for commands that follow"/>
+	
+  <target name="silverlight" depends="set-silverlight-5.0-runtime-config"
+    description="Set runtime to Silverlight 5.0 for commands that follow"/>
+
 <!-- ***************************************************************** -->
 <!-- ***             Targets that clean directories                *** -->
 <!-- ***************************************************************** -->
@@ -270,7 +276,7 @@
   <target name="build"
     description="Build using the current runtime and config">
 
-    <call target="build-nunit" unless="${runtime.platform=='netcf'}"/>
+    <call target="build-nunit" unless="${runtime.platform=='netcf' or runtime.platform=='silverlight'}"/>
     <call target="build-nunitlite"/>
 
   </target>
@@ -367,7 +373,7 @@
 
   <target name="run-test">
 
-    <call target="nunit-test" unless="${runtime.platform=='netcf'}"/>
+    <call target="nunit-test" unless="${runtime.platform=='netcf' or runtime.platform=='silverlight'}"/>
     <call target="nunitlite-test"/>
 
   </target>
@@ -909,6 +915,19 @@
     <property name="runtime.defines" value="MONO,MONO_4_0,CS_4_0"/>
     <property name="build.framework" value="mono-4.0"/>
   </target>
+
+	<target name="set-silverlight-5.0-runtime-config">
+		<fail unless="${framework::exists( 'silverlight-5.0' )}"
+		  message="Silverlight 5.0 is not installed"/>
+
+		<property name="runtime.platform" value="silverlight"/>
+		<property name="runtime.version" value="5.0"/>
+		<property name="runtime.config" value="silverlight-5.0"/>
+		<property name="runtime.defines" value="SILVERLIGHT,SL_5_0,CS_4_0"/>
+		<property name="build.framework" value="silverlight-5.0"/>
+		<property name="build.method" value="msbuild"/>
+		<property name="msbuild.proj.suffix" value="sl-5.0"/>
+	</target>
 
 <!-- ***************************************************************** -->
 <!-- **********           Set the build directory            ********* -->

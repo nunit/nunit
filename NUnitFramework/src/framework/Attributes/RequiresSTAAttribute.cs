@@ -21,6 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#if !SILVERLIGHT
 using System;
 using System.Threading;
 using NUnit.Framework.Internal;
@@ -43,3 +44,4 @@ namespace NUnit.Framework
         }
     }
 }
+#endif

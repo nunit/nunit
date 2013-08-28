@@ -15,8 +15,7 @@
     <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
     <SilverlightVersion>$(TargetFrameworkVersion)</SilverlightVersion>
     <SilverlightApplication>false</SilverlightApplication>
-	<IntermediateOutputPath>obj\$(Configuration)\sl-5.0\</IntermediateOutputPath>
-	<ValidateXaml>true</ValidateXaml>
+    <ValidateXaml>true</ValidateXaml>
     <ThrowErrorsInValidation>true</ThrowErrorsInValidation>
   </PropertyGroup>
   <!-- This property group is only here to support building this project using the 
@@ -312,6 +311,8 @@
     <Compile Include="Internal\WorkItems\WorkItem.cs" />
     <Compile Include="Internal\WorkItems\WorkItemState.cs" />
     <Compile Include="Is.cs" />
+    <Compile Include="Iz.cs" />
+    <Compile Include="List.cs" />
     <Compile Include="ListMapper.cs" />
     <Compile Include="MessageMatch.cs" />
     <Compile Include="ObjectList.cs" />
@@ -341,6 +342,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="nunitlite.build" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Silverlight\$(SilverlightVersion)\Microsoft.Silverlight.CSharp.targets" />
   <ProjectExtensions>

@@ -1,4 +1,4 @@
-﻿#if !SILVERLIGHT
+﻿#if !SILVERLIGHT && false
 using System;
 using System.IO;
 using System.Text;

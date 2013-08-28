@@ -99,6 +99,7 @@
     <Compile Include="Internal\WorkItems\SimpleWorkItem.cs" />
     <Compile Include="Internal\WorkItems\WorkItem.cs" />
     <Compile Include="Internal\WorkItems\WorkItemState.cs" />
+    <Compile Include="Internal\XmlHelper.cs" />
     <Compile Include="MessageMatch.cs" />
     <Compile Include="Api\PropertyEntry.cs" />
     <Compile Include="Internal\PropertyNames.cs" />
@@ -338,7 +339,6 @@
     <Compile Include="Internal\TextMessageWriter.cs" />
     <Compile Include="Internal\ThreadUtility.cs" />
     <Compile Include="Internal\TypeHelper.cs" />
-    <Compile Include="Internal\XmlHelper.cs" />
     <Compile Include="Is.cs" />
     <Compile Include="Iz.cs" />
     <Compile Include="List.cs" />

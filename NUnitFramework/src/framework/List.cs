@@ -22,9 +22,7 @@
 // ***********************************************************************
 
 #if !NUNITLITE
-using System;
 using System.Collections;
-using NUnit.Framework.Constraints;
 
 namespace NUnit.Framework
 {

@@ -52,19 +52,19 @@ namespace NUnitLite.Tests
         //      writer.Close();
         static void Main(string[] args)
         {
-            if (Environment.OSVersion.Platform == PlatformID.WinCE)
-            {
-                string path = System.IO.Path.Combine(NUnit.Env.DocumentFolder, "TestResult.txt");
-                System.IO.TextWriter writer = new System.IO.StreamWriter(path);
-                new TextUI(writer).Execute(args);
-                writer.Close();
-                //            new TcpUI("ppp_peer", 9000).Execute(args);
-            }
-            else
-            {
+            //if (Environment.OSVersion.Platform == PlatformID.WinCE)
+            //{
+            //    string path = System.IO.Path.Combine(NUnit.Env.DocumentFolder, "TestResult.txt");
+            //    System.IO.TextWriter writer = new System.IO.StreamWriter(path);
+            //    new TextUI(writer).Execute(args);
+            //    writer.Close();
+            //    //            new TcpUI("ppp_peer", 9000).Execute(args);
+            //}
+            //else
+            //{
                 //            new TcpUI("ferrari", 9000).Execute(args);
                 new TextUI().Execute(args);
-            }
+            //}
         }
     }
 }
