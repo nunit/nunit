@@ -4,6 +4,7 @@
 // obtain a copy of the license at http://nunit.org
 // ****************************************************************
 
+#if !SILVERLIGHT && !NETCF
 using System;
 using System.Collections;
 using NUnit.Framework.Api;
@@ -174,15 +175,4 @@ namespace NUnit.Framework.Internal
         #endregion NoNamespaceSetupFixture
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
+#endif

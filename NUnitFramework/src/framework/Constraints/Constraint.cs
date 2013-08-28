@@ -148,11 +148,15 @@ namespace NUnit.Framework.Constraints
         protected virtual string GetStringRepresentation()
         {
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
-            
-            sb.AppendFormat("<{0}", DisplayName.ToLower());
+
+            sb.Append("<");
+            sb.Append(DisplayName.ToLower());
 
             foreach (object arg in Arguments)
-                sb.AppendFormat(" {0}", _displayable(arg));
+            {
+                sb.Append(" ");
+                sb.Append(_displayable(arg));
+            }
 
             sb.Append(">");
 

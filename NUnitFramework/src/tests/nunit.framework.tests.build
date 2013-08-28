@@ -10,22 +10,13 @@
       <sources>
         <include name="../CommonAssemblyInfo.cs"/>
         <include name="TestContextTests.cs"/>
-
         <include name="Api/*.cs" />
         <include name="Assertions/*.cs" />
         <include name="Attributes/*.cs"/>
         <include name="Constraints/*.cs" />
-
         <include name="Internal/*.cs"/>
-        <exclude name="Internal/AssemblyReaderTests.cs"/>
-        <exclude name="Internal/DeduceTypeArgsFromArgs.cs" unless="${runtime.version>='2.0'}"/>
-        <exclude name="Internal/GenericTestFixtureTests.cs" unless="${runtime.version>='2.0'}"/>
-        <exclude name="Internal/GenericTestMethodTests.cs" unless="${runtime.version>='2.0'}"/>
-        <exclude name="Internal/SimpleGenericMethods.cs" unless="${runtime.version>='2.0'}"/>
-        <exclude name="Internal/TypeParameterUsedWithTestMethod.cs" unless="${runtime.version>='2.0'}"/>
-
         <include name="Syntax/*.cs" />
-        <include name="TestUtilities/*.cs"/>
+        <include name="TestUtilities/**/*.cs"/>
       </sources>
       <resources prefix="NUnit.Framework.Tests">
         <include name="TestImage1.jpg"/>

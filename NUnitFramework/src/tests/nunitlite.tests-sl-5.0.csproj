@@ -15,8 +15,7 @@
     <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
     <SilverlightVersion>$(TargetFrameworkVersion)</SilverlightVersion>
     <SilverlightApplication>true</SilverlightApplication>
-	<IntermediateOutputPath>obj\$(Configuration)\sl-5.0\</IntermediateOutputPath>
-	<SupportedCultures>
+    <SupportedCultures>
     </SupportedCultures>
     <XapOutputs>true</XapOutputs>
     <GenerateSilverlightManifest>true</GenerateSilverlightManifest>
@@ -134,6 +133,7 @@
     <Compile Include="Constraints\EqualTest.cs" />
     <Compile Include="Constraints\ExactCountConstraintTests.cs" />
     <Compile Include="Constraints\ExactTypeConstraintTests.cs" />
+    <Compile Include="Constraints\FloatingPointNumericsTest.cs" />
     <Compile Include="Constraints\GreaterThanConstraintTests.cs" />
     <Compile Include="Constraints\GreaterThanOrEqualConstraintTests.cs" />
     <Compile Include="Constraints\InstanceOfTypeConstraintTests.cs" />
@@ -180,6 +180,7 @@
     <Compile Include="Internal\RuntimeFrameworkTests.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Internal\SetUpFixtureTests.cs" />
     <Compile Include="Internal\SetUpTearDownTests.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -231,6 +232,8 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
+    <None Include="nunit.framework.tests.build" />
+    <None Include="nunitlite.tests.build" />
     <None Include="Properties\AppManifest.xml" />
   </ItemGroup>
   <ItemGroup>

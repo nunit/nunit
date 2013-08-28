@@ -23,7 +23,6 @@
 
 using System;
 using System.IO;
-using System.Drawing;
 
 namespace NUnit.Framework.Constraints
 {

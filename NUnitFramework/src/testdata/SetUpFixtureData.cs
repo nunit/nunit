@@ -417,6 +417,7 @@ namespace NUnit.TestData.SetupFixture
         }
     }
 
+#if !NETCF
 	namespace Namespace5
 	{
 		[SetUpFixture]
@@ -442,6 +443,7 @@ namespace NUnit.TestData.SetupFixture
 			public void SomeMethod() { }				
 		}
 	}
+#endif
 
     namespace Namespace5
     {

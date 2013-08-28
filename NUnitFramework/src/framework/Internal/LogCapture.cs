@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NETCF
+#if !NETCF && !SILVERLIGHT
 using System.Collections.Specialized;
 using System.Configuration;
 

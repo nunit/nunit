@@ -214,6 +214,7 @@
     <EmbeddedResource Include="TestText2.txt" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="nunit.framework.tests.build" />
     <None Include="nunitlite.tests.build" />
   </ItemGroup>
   <ItemGroup>

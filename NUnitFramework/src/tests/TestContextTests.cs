@@ -87,8 +87,10 @@ namespace NUnit.Framework.Tests
         {
             string workDirectory = TestContext.CurrentContext.WorkDirectory;
             Assert.NotNull(workDirectory);
+            // CF and SL tests may be running on the desktop
+#if !NETCF && !SILVERLIGHT
             Assert.That(Directory.Exists(workDirectory), string.Format("Directory {0} does not exist", workDirectory));
-			Console.WriteLine("Work Directory is " + workDirectory);
+#endif
         }
 
         [Test]

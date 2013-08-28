@@ -3,7 +3,8 @@
 
   <patternset id="source-files">
     <include name="**/*.cs"/>
-	  <exclude name="Constraints/SubPathConstraint.cs"/>
+	  <exclude name="obj/**/*.cs"/>
+	  <exclude name="**/*.xaml.cs"/>
   </patternset>
 
   <target name="build">
@@ -28,7 +29,8 @@
         <include name="mscorlib.dll"/>
         <include name="System.dll"/>
         <include name="System.Xml.dll"/>
-      </references>
+	    <include name="System.Windows.dll" if="${runtime.platform == 'silverlight'}"/>
+	  </references>
     </csc>
 
   </target>

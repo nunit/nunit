@@ -10,6 +10,8 @@
       <sources>
         <include name="../CommonAssemblyInfo.cs"/>
         <include name="**/*.cs" />
+		  <exclude name="App.xaml.cs"/>
+		  <exclude name="obj/**/*.cs"/>
       </sources>
       <resources prefix="NUnit.Framework.Tests">
         <include name="TestImage1.jpg"/>

@@ -56,6 +56,7 @@
     <Compile Include="Assertions\ArrayEqualsFailureMessageFixture.cs" />
     <Compile Include="Assertions\ArrayEqualsFixture.cs" />
     <Compile Include="Assertions\ArrayNotEqualFixture.cs" />
+    <Compile Include="Assertions\AssertEqualsTests.cs" />
     <Compile Include="Assertions\AssertFailTests.cs" />
     <Compile Include="Assertions\AssertIgnoreTests.cs" />
     <Compile Include="Assertions\AssertInconclusiveTests.cs" />
@@ -64,7 +65,6 @@
     <Compile Include="Assertions\AssertThrowsTests.cs" />
     <Compile Include="Assertions\AssumeThatTests.cs" />
     <Compile Include="Assertions\ConditionAssertTests.cs" />
-    <Compile Include="Assertions\EqualsFixture.cs" />
     <Compile Include="Assertions\MessageChecker.cs" />
     <Compile Include="Assertions\NotEqualFixture.cs" />
     <Compile Include="Assertions\NotSameFixture.cs" />
@@ -97,10 +97,13 @@
     <Compile Include="Constraints\BasicConstraintTests.cs" />
     <Compile Include="Constraints\BinarySerializableTest.cs" />
     <Compile Include="Constraints\CollectionContainsConstraintTests.cs" />
+    <Compile Include="Constraints\CollectionEqualsTests.cs" />
     <Compile Include="Constraints\CollectionEquivalentConstraintTests.cs" />
     <Compile Include="Constraints\CollectionOrderedConstraintTests.cs" />
+    <Compile Include="Constraints\CollectionSubsetConstraintTests.cs" />
     <Compile Include="Constraints\ComparisonConstraintTestBase.cs" />
     <Compile Include="Constraints\ConstraintTestBase.cs" />
+    <Compile Include="Constraints\DelayedConstraintTests.cs" />
     <Compile Include="Constraints\EmptyConstraintTest.cs" />
     <Compile Include="Constraints\EndsWithConstraintTests.cs" />
     <Compile Include="Constraints\EqualConstraintTests.cs" />
@@ -127,10 +130,14 @@
     <Compile Include="Constraints\ReusableConstraintTests.cs" />
     <Compile Include="Constraints\SameAsTest.cs" />
     <Compile Include="Constraints\StartsWithConstraintTests.cs" />
+    <Compile Include="Constraints\StringConstraintTest.cs" />
     <Compile Include="Constraints\SubstringConstraintTests.cs" />
     <Compile Include="Constraints\ThrowsConstraintTests.cs" />
+    <Compile Include="Constraints\ThrowsExceptionConstraintTests.cs" />
     <Compile Include="Constraints\ToStringTests.cs" />
+    <Compile Include="Constraints\UniqueItemsConstraintTests.cs" />
     <Compile Include="Constraints\XmlSerializableTest.cs" />
+    <Compile Include="Internal\AssemblyHelperTests.cs" />
     <Compile Include="Internal\CultureSettingAndDetectionTests.cs" />
     <Compile Include="Internal\DeduceTypeArgsFromArgs.cs" />
     <Compile Include="Internal\GenericTestFixtureTests.cs" />
@@ -139,9 +146,11 @@
     <Compile Include="Internal\PropertyBagTests.cs" />
     <Compile Include="Internal\RandomizerTests.cs" />
     <Compile Include="Internal\RuntimeFrameworkTests.cs" />
-    <Compile Include="Internal\SetUpTest.cs" />
+    <Compile Include="Internal\SetUpTearDownTests.cs" />
     <Compile Include="Internal\SimpleGenericMethods.cs" />
+    <Compile Include="Internal\StackFilterTests.cs" />
     <Compile Include="Internal\TestExecutionContextTests.cs" />
+    <Compile Include="Internal\TestFilterTests.cs" />
     <Compile Include="Internal\TestFixtureTests.cs" />
     <Compile Include="Internal\TestMethodSignatureTests.cs" />
     <Compile Include="Internal\TestResultTests.cs" />
@@ -149,6 +158,8 @@
     <Compile Include="Internal\TextMessageWriterTests.cs" />
     <Compile Include="Internal\TypeParameterUsedWithTestMethod.cs" />
     <Compile Include="NUnitLite.cs" />
+    <Compile Include="Syntax\AfterTests.cs" />
+    <Compile Include="Syntax\ArbitraryConstraintMatching.cs" />
     <Compile Include="Syntax\CollectionTests.cs" />
     <Compile Include="Syntax\ComparisonTests.cs" />
     <Compile Include="Syntax\EqualityTests.cs" />
@@ -163,14 +174,17 @@
     <Compile Include="Syntax\ThrowsTests.cs" />
     <Compile Include="Syntax\TypeConstraints.cs" />
     <Compile Include="TestContextTests.cs" />
-    <Compile Include="TestUtilities\AlwaysEqualComparer.cs" />
-    <Compile Include="TestUtilities\CollectionAdapter.cs" />
+    <Compile Include="TestUtilities\Comparers\AlwaysEqualComparer.cs" />
+    <Compile Include="TestUtilities\Comparers\SimpleEqualityComparer.cs" />
+    <Compile Include="TestUtilities\Comparers\SimpleObjectComparer.cs" />
     <Compile Include="TestUtilities\ResultSummary.cs" />
     <Compile Include="TestUtilities\TestAssert.cs" />
     <Compile Include="TestUtilities\TestBuilder.cs" />
+    <Compile Include="TestUtilities\TestCollection.cs" />
     <Compile Include="TestUtilities\TestComparer.cs" />
     <Compile Include="TestUtilities\TestDelegates.cs" />
     <Compile Include="TestUtilities\TestFinder.cs" />
+    <Compile Include="TestUtilities\UniqueValues.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\framework\nunitlite-netcf-3.5.csproj">

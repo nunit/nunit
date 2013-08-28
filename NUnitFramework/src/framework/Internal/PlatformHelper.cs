@@ -217,12 +217,14 @@ namespace NUnit.Framework.Internal
 				case "LINUX":
                     isSupported = os.IsUnix;
 					break;
+#if !NETCF
                 case "XBOX":
                     isSupported = os.IsXbox;
                     break;
                 case "MACOSX":
                     isSupported = os.IsMacOSX;
                     break;
+#endif
 
 			default:
                     isSupported = IsRuntimeSupported(platformName);

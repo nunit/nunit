@@ -15,8 +15,7 @@
     <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
     <SilverlightVersion>$(TargetFrameworkVersion)</SilverlightVersion>
     <SilverlightApplication>false</SilverlightApplication>
-	<IntermediateOutputPath>obj\$(Configuration)\sl-5.0\</IntermediateOutputPath>
-	<ValidateXaml>true</ValidateXaml>
+    <ValidateXaml>true</ValidateXaml>
     <ThrowErrorsInValidation>true</ThrowErrorsInValidation>
   </PropertyGroup>
   <!-- This property group is only here to support building this project using the 
@@ -85,6 +84,9 @@
     <Compile Include="TestFixtureData.cs" />
     <Compile Include="TestMethodSignatureFixture.cs" />
     <Compile Include="TheoryFixture.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="nunitlite.testdata.build" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Silverlight\$(SilverlightVersion)\Microsoft.Silverlight.CSharp.targets" />
   <ProjectExtensions>

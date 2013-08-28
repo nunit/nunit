@@ -347,9 +347,13 @@ namespace NUnit.Framework.Constraints
 
                 if (tolerance != null && !tolerance.IsEmpty)
                 {
-                    sb.AppendFormat(" +/- {0}", MsgUtils.FormatValue(tolerance.Value));
+                    sb.Append(" +/- ");
+                    sb.Append(MsgUtils.FormatValue(tolerance.Value));
                     if (tolerance.Mode != ToleranceMode.Linear)
-                        sb.AppendFormat(" {0}", tolerance.Mode);
+                    {
+                        sb.Append(" ");
+                        sb.Append(tolerance.Mode.ToString());
+                    }
                 }
 
                 if (comparer.IgnoreCase)

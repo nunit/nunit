@@ -21,6 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#if !NETCF && !SILVERLIGHT
 using System;
 using System.Threading;
 using NUnit.Framework;
@@ -87,3 +88,4 @@ namespace NUnit.Framework.Attributes
         }
     }
 }
+#endif

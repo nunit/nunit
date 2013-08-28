@@ -117,7 +117,7 @@ namespace NUnit.Framework.Internal.WorkItems
         {
             _context = new TestExecutionContext(context);
 
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !NETCF
             // Timeout set at a higher level
             int timeout = _context.TestCaseTimeout;
 
@@ -141,7 +141,7 @@ namespace NUnit.Framework.Internal.WorkItems
         }
 
 
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !NETCF
         private void RunTestOnOwnThread(int timeout, ApartmentState apartment)
         {
             Thread thread = new Thread(new ThreadStart(RunTest));

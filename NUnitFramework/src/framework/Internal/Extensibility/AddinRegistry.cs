@@ -4,6 +4,7 @@
 // obtain a copy of the license at http://nunit.org
 // ****************************************************************
 
+#if !NUNITLITE
 using System;
 using System.Collections;
 using System.Reflection;
@@ -60,3 +61,4 @@ namespace NUnit.Framework.Extensibility
 		#endregion
     }
 }
+#endif

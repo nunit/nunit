@@ -83,7 +83,7 @@ namespace NUnit.Framework.Builders
                 return false;
             }
 
-            if (type.GetConstructor(Type.EmptyTypes) == null)
+            if (type.GetConstructor(new Type[0]) == null)
             {
                 reason = string.Format("{0} does not have a valid constructor", type.FullName);
                 return false;

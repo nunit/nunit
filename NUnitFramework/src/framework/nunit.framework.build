@@ -16,19 +16,8 @@
       <sources basedir=".">
         <include name="../CommonAssemblyInfo.cs" />
         <include name="**/*.cs" />
-		<exclude name="Constraints/SubPathConstraint.cs" />
-        <exclude name="Runner/*.cs" />
-        <exclude name="Runner/OutputWriters/*.cs"/>
-        <exclude name="Internal/AssemblyReader.cs"/>
-        <exclude name="Internal/NUnitLiteTestAssemblyBuilder.cs"/>
-        <exclude name="Internal/NUnitLiteTestAssemblyRunner.cs"/>
-        <exclude name="Internal/Builders/NUnitLiteTestCaseBuilder.cs"/>
-        <exclude name="Internal/Builders/NUnitLiteTestFixtureBuilder.cs"/>
-        <exclude name="Internal/Commands/CommandBuilder.cs"/>
-        <!-- TODO: Remove the following from the tree -->
-        <exclude name="Internal/Commands/OldTestMethodCommand.cs"/>
-        <exclude name="Internal/Commands/TestCaseCommand.cs"/>
-        <exclude name="Internal/Commands/TestExecutionContextCommand.cs"/>
+		<exclude name="obj/**/*.cs" />
+        <exclude name="Runner/**/*.cs" />
 	  </sources>
       <references basedir="${current.build.dir}">
         <include name="System.Configuration.dll"/>
