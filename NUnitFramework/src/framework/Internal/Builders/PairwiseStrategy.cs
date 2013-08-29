@@ -38,6 +38,15 @@ namespace NUnit.Framework.Builders
     /// </summary>
 	public class PairwiseStrategy : CombiningStrategy
 	{
+        // NOTE: Terminology in this class is based on the literature
+        // relating to strategies for combining variable features when
+        // creating tests. This terminology is more closely related to
+        // higher level testing than it is to unit tests. See
+        // comments in the code for further explanations.
+
+        /// <summary>
+        /// FleaRand generates random uints
+        /// </summary>
 		internal class FleaRand
 		{
 			private const int FleaRandSize = 256;
@@ -114,9 +123,18 @@ namespace NUnit.Framework.Builders
 			}
 		}
 
+        /// <summary>
+        /// FeatureInfo represents coverage of a single feature,
+        /// represented as a pair of indices, Dimension and Feature.
+        /// In terms of unit testing, Dimension is the index of
+        /// the test parameter and Feature is the index of the
+        /// supplied value in that parameter's list of sources.
+        /// </summary>
 		internal class FeatureInfo
 		{
+#if DEBUG
 			public const string Names = "abcdefghijklmnopqrstuvwxyz";
+#endif
 
 			public readonly int Dimension;
 			public readonly int Feature;
@@ -135,6 +153,14 @@ namespace NUnit.Framework.Builders
 #endif
 		}
 
+        /// <summary>
+        /// A Tuple represents a combination of features, one per test
+        /// parameter, which may be covered by a test case. In the
+        /// PairwiseStrategy, we are only trying to cover pairs
+        /// of features, so the tuples are actually pairs. The
+        /// algorithm will, however, function for triples, etc.
+        /// provided MaxTupleLength is set appropriately.
+        /// </summary>
 		internal class Tuple
 		{
 			private readonly List<FeatureInfo> features = new List<FeatureInfo>();
@@ -151,7 +177,7 @@ namespace NUnit.Framework.Builders
 			{
 				get
 				{
-					return (FeatureInfo)this.features[index];
+					return this.features[index];
 				}
 			}
 
@@ -184,6 +210,10 @@ namespace NUnit.Framework.Builders
 #endif
 		}
 
+        /// <summary>
+        /// TupleCollection is a set of Tuples which are either
+        /// covered by a test or not yet covered.
+        /// </summary>
 		internal class TupleCollection
 		{
 			private readonly List<Tuple> tuples = new List<Tuple>();
@@ -215,6 +245,10 @@ namespace NUnit.Framework.Builders
 			}
 		}
 
+        /// <summary>
+        /// TestCase represents a single test case covering
+        /// a list of features.
+        /// </summary>
 		internal class TestCase
 		{
 			public readonly int[] Features;
@@ -328,7 +362,9 @@ namespace NUnit.Framework.Builders
 			{
 				this.CreateTestCases();
 
+#if DEBUG
 				this.SelfTest();
+#endif
 
 				return this.testCases;
 			}
@@ -628,6 +664,7 @@ namespace NUnit.Framework.Builders
 				}
 			}
 
+#if DEBUG
 			private void SelfTest()
 			{
 				for (int d1 = 0; d1 < this.dimensions.Length - 1; d1++)
@@ -652,6 +689,7 @@ namespace NUnit.Framework.Builders
 				}
 			}
 		}
+#endif
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PairwiseStrategy"/> class.
@@ -666,7 +704,7 @@ namespace NUnit.Framework.Builders
         public override IEnumerable<ITestCaseData> GetTestCases()
         {
             List<ITestCaseData> testCases = new List<ITestCaseData>();
-			ObjectList[] valueSet = CreateValueSet();
+			List<object>[] valueSet = CreateValueSet();
 			int[] dimensions = CreateDimensions(valueSet);
 
 			IEnumerable pairwiseTestCases = new PairwiseTestCaseGenerator(dimensions).GetTestCases();
@@ -688,13 +726,13 @@ namespace NUnit.Framework.Builders
 			return testCases;
 		}
 
-		private ObjectList[] CreateValueSet()
+		private List<object>[] CreateValueSet()
 		{
-			ObjectList[] valueSet = new ObjectList[Sources.Length];
+			var valueSet = new List<object>[Sources.Length];
 
 			for (int i = 0; i < valueSet.Length; i++)
 			{
-				ObjectList values = new ObjectList();
+				var values = new List<object>();
 
 				foreach (object value in Sources[i])
 				{
@@ -707,7 +745,7 @@ namespace NUnit.Framework.Builders
 			return valueSet;
 		}
 
-		private int[] CreateDimensions(ObjectList[] valueSet)
+		private int[] CreateDimensions(List<object>[] valueSet)
 		{
 			int[] dimensions = new int[valueSet.Length];
 

@@ -24,6 +24,7 @@
 #if !NUNITLITE
 using System;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace NUnit.Framework.Extensibility
 {
@@ -35,7 +36,7 @@ namespace NUnit.Framework.Extensibility
 		private static readonly int DEFAULT_LEVEL = 0;
 		private static readonly int MAX_LEVELS = 10;
 
-		private ObjectList[] lists;
+		private List<object>[] lists;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ExtensionsCollection"/> class.
@@ -53,7 +54,7 @@ namespace NUnit.Framework.Extensibility
 			else if ( levels > MAX_LEVELS )
 				levels = MAX_LEVELS;
 
-			lists = new ObjectList[levels];
+			lists = new List<object>[levels];
 		}
 
         /// <summary>
@@ -86,7 +87,7 @@ namespace NUnit.Framework.Extensibility
 					"Value must be between 0 and " + lists.Length );
 
 			if ( lists[level] == null )
-				lists[level] = new ObjectList();
+				lists[level] = new List<object>();
 
 			lists[level].Add( extension );
 		}
@@ -119,7 +120,7 @@ namespace NUnit.Framework.Extensibility
         /// </summary>
 		public class ExtensionsEnumerator : IEnumerator
 		{
-			private ObjectList[] lists;
+			private List<object>[] lists;
 			private IEnumerator listEnum;
 			private int currentLevel;
 
@@ -127,7 +128,7 @@ namespace NUnit.Framework.Extensibility
             /// Initializes a new instance of the <see cref="ExtensionsEnumerator"/> class.
             /// </summary>
             /// <param name="lists">The lists.</param>
-			public ExtensionsEnumerator( ObjectList[] lists )
+			public ExtensionsEnumerator( List<object>[] lists )
 			{
 				this.lists = lists;
 				Reset();

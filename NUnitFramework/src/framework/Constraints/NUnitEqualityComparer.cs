@@ -55,7 +55,7 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// List of points at which a failure occured.
         /// </summary>
-        private ObjectList failurePoints;
+        private List<FailurePoint> failurePoints;
 
         private static readonly int BUFFER_SIZE = 4096;
         #endregion
@@ -108,7 +108,7 @@ namespace NUnit.Framework.Constraints
         /// This generally means that the caller may only make use of
         /// objects it has placed on the list at a particular depthy.
         /// </summary>
-        public IList FailurePoints
+        public IList<FailurePoint> FailurePoints
         {
             get { return failurePoints; }
         }
@@ -120,7 +120,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public bool AreEqual(object x, object y, ref Tolerance tolerance)
         {
-            this.failurePoints = new ObjectList();
+            this.failurePoints = new List<FailurePoint>();
 
             if (x == null && y == null)
                 return true;
@@ -388,8 +388,13 @@ namespace NUnit.Framework.Constraints
                     {
                         if (bufferExpected[count] != bufferActual[count])
                         {
-                            failurePoints.Insert(0, readByte + count);
-                            //FailureMessage.WriteLine("\tIndex : {0}", readByte + count);
+                            FailurePoint fp = new FailurePoint();
+                            fp.Position = readByte + count;
+                            fp.ExpectedHasData = true;
+                            fp.ExpectedValue = bufferExpected[count];
+                            fp.ActualHasData = true;
+                            fp.ActualValue = bufferActual[count];
+                            failurePoints.Insert(0, fp);
                             return false;
                         }
                     }
@@ -417,7 +422,7 @@ namespace NUnit.Framework.Constraints
             /// <summary>
             /// The location of the failure
             /// </summary>
-            public int Position;
+            public long Position;
 
             /// <summary>
             /// The expected value

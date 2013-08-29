@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System.Collections;
+using System.Collections.Generic;
 
 namespace NUnit.Framework.Constraints
 {
@@ -32,7 +33,7 @@ namespace NUnit.Framework.Constraints
     public class CollectionTally
     {
         // Internal list used to track occurences
-        private readonly ObjectList list = new ObjectList();
+        private readonly List<object> list = new List<object>();
 
         private readonly NUnitEqualityComparer comparer;
 

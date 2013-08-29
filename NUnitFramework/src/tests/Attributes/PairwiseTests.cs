@@ -54,7 +54,7 @@ namespace NUnit.Framework.Attributes
                 [Values("+", "-")] string b,
                 [Values("x", "y")] string c)
             {
-                Console.WriteLine("Pairwise: {0} {1} {2}", a, b, c);
+                //Console.WriteLine("Pairwise: {0} {1} {2}", a, b, c);
 
                 pairsTested[a + b] = null;
                 pairsTested[a + c] = null;

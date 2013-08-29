@@ -24,6 +24,7 @@
 using System;
 using System.Reflection;
 using System.Collections;
+using System.Collections.Generic;
 using NUnit.Framework.Extensibility;
 using NUnit.Framework.Internal;
 
@@ -81,7 +82,7 @@ namespace NUnit.Framework.Builders
         /// </returns>
         public System.Collections.IEnumerable GetDataFor(System.Reflection.ParameterInfo parameter)
         {
-            ObjectList datapoints = new ObjectList();
+            var datapoints = new List<object>();
 
             Type parameterType = parameter.ParameterType;
             Type fixtureType = parameter.Member.ReflectedType;
@@ -141,7 +142,8 @@ namespace NUnit.Framework.Builders
                 }
                 else if (parameterType.IsEnum)
                 {
-                    datapoints.AddRange(TypeHelper.GetEnumValues(parameterType));
+                    foreach (object o in TypeHelper.GetEnumValues(parameterType))
+                        datapoints.Add(o);
                 }
             }
 

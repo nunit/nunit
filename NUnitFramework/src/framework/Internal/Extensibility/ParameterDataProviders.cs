@@ -72,7 +72,7 @@ namespace NUnit.Framework.Extensibility
         /// <returns>An IEnumerable providing the required data</returns>
         public IEnumerable GetDataFor(ParameterInfo parameter)
         {
-            ObjectList list = new ObjectList();
+            var list = new List<object>();
 
             foreach (IParameterDataProvider provider in Extensions)
                 if (provider.HasDataFor(parameter))

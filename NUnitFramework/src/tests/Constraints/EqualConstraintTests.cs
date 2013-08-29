@@ -25,7 +25,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework.Internal;
-using NUnit.TestUtilities;
+using NUnit.TestUtilities.Comparers;
 
 namespace NUnit.Framework.Constraints
 {
@@ -352,106 +352,41 @@ namespace NUnit.Framework.Constraints
             [Test]
             public void UsesProvidedIComparer()
             {
-                MyComparer comparer = new MyComparer();
+                var comparer = new ObjectComparer();
                 Assert.That(2 + 2, Is.EqualTo(4).Using(comparer));
-                Assert.That(comparer.Called, "Comparer was not called");
-            }
-
-            class MyComparer : IComparer
-            {
-                public bool Called;
-
-                public int Compare(object x, object y)
-                {
-                    Called = true;
-                    return SimpleObjectComparer.Default.Compare(x, y);
-                }
+                Assert.That(comparer.WasCalled, "Comparer was not called");
             }
 
             [Test]
             public void UsesProvidedEqualityComparer()
             {
-                MyEqualityComparer comparer = new MyEqualityComparer();
+                var comparer = new ObjectEqualityComparer();
                 Assert.That(2 + 2, Is.EqualTo(4).Using(comparer));
                 Assert.That(comparer.Called, "Comparer was not called");
             }
 
-            class MyEqualityComparer : IEqualityComparer
-            {
-                public bool Called;
-
-                bool IEqualityComparer.Equals(object x, object y)
-                {
-                    Called = true;
-                    return SimpleObjectComparer.Default.Compare(x, y) == 0;
-                }
-
-                int IEqualityComparer.GetHashCode(object x)
-                {
-                    return x.GetHashCode();
-                }
-            }
-
             [Test]
-            public void UsesProvidedEqualityComparerOfT()
+            public void UsesProvidedGenericEqualityComparer()
             {
-                MyEqualityComparerOfT<int> comparer = new MyEqualityComparerOfT<int>();
+                var comparer = new GenericEqualityComparer<int>();
                 Assert.That(2 + 2, Is.EqualTo(4).Using(comparer));
-                Assert.That(comparer.Called, "Comparer was not called");
-            }
-
-            class MyEqualityComparerOfT<T> : IEqualityComparer<T>
-            {
-                public bool Called;
-
-                bool IEqualityComparer<T>.Equals(T x, T y)
-                {
-                    Called = true;
-                    return Comparer<T>.Default.Compare(x, y) == 0;
-                }
-
-                int IEqualityComparer<T>.GetHashCode(T x)
-                {
-                    return x.GetHashCode();
-                }
+                Assert.That(comparer.WasCalled, "Comparer was not called");
             }
 
             [Test]
-            public void UsesProvidedComparerOfT()
+            public void UsesProvidedGenericComparer()
             {
-                MyComparer<int> comparer = new MyComparer<int>();
+                var comparer = new GenericComparer<int>();
                 Assert.That(2 + 2, Is.EqualTo(4).Using(comparer));
-                Assert.That(comparer.Called, "Comparer was not called");
-            }
-
-            class MyComparer<T> : IComparer<T>
-            {
-                public bool Called;
-
-                public int Compare(T x, T y)
-                {
-                    Called = true;
-                    return Comparer<T>.Default.Compare(x, y);
-                }
+                Assert.That(comparer.WasCalled, "Comparer was not called");
             }
 
             [Test]
-            public void UsesProvidedComparisonOfT()
+            public void UsesProvidedGenericComparison()
             {
-                MyComparison<int> comparer = new MyComparison<int>();
-                Assert.That(2 + 2, Is.EqualTo(4).Using(new Comparison<int>(comparer.Compare)));
-                Assert.That(comparer.Called, "Comparer was not called");
-            }
-
-            class MyComparison<T>
-            {
-                public bool Called;
-
-                public int Compare(T x, T y)
-                {
-                    Called = true;
-                    return Comparer<T>.Default.Compare(x, y);
-                }
+                var comparer = new GenericComparison<int>();
+                Assert.That(2 + 2, Is.EqualTo(4).Using(comparer.Delegate));
+                Assert.That(comparer.WasCalled, "Comparer was not called");
             }
 
             [Test]

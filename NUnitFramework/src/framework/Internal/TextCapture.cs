@@ -21,6 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#if !NETCF && !SILVERLIGHT
 using System.IO;
 
 namespace NUnit.Framework.Internal
@@ -108,5 +109,5 @@ namespace NUnit.Framework.Internal
         protected abstract void StopCapture();
         #endregion
     }
-
 }
+#endif

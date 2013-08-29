@@ -45,9 +45,12 @@ namespace NUnit.Framework.Internal
         TestExecutionContext setupContext;
 
 #if !NETCF
-        string currentDirectory;
 		CultureInfo currentCulture;
         CultureInfo currentUICulture;
+#endif
+
+#if !NETCF && !SILVERLIGHT
+        string currentDirectory;
         IPrincipal currentPrincipal;
 #endif
 
@@ -82,10 +85,11 @@ namespace NUnit.Framework.Internal
 #if !NETCF
             currentCulture = CultureInfo.CurrentCulture;
             currentUICulture = CultureInfo.CurrentUICulture;
-#if !SILVERLIGHT
+#endif
+
+#if !NETCF && !SILVERLIGHT
 			currentDirectory = Environment.CurrentDirectory;
             currentPrincipal = Thread.CurrentPrincipal;
-#endif
 #endif
 		}
 
@@ -95,11 +99,12 @@ namespace NUnit.Framework.Internal
 #if !NETCF
 			Thread.CurrentThread.CurrentCulture = currentCulture;
             Thread.CurrentThread.CurrentUICulture = currentUICulture;
-#if !SILVERLIGHT
+#endif
+
+#if !NETCF && !SILVERLIGHT
 			Environment.CurrentDirectory = currentDirectory;
             Thread.CurrentPrincipal = currentPrincipal;
 #endif
-#endif 
 
             Assert.That(
                 TestExecutionContext.CurrentContext.CurrentTest.FullName,
@@ -184,7 +189,7 @@ namespace NUnit.Framework.Internal
             Assert.That(TestExecutionContext.CurrentContext.CurrentTest.Properties.Get("Answer"), Is.EqualTo(42));
         }
 
-#if !NUNITLITE
+#if !NETCF && !SILVERLIGHT
         [Test]
         public void SetAndRestoreCurrentDirectory()
         {

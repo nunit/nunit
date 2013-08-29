@@ -24,7 +24,7 @@
 using System;
 using System.Collections;
 using NUnit.Framework.Internal;
-using NUnit.TestUtilities;
+using NUnit.TestUtilities.Collections;
 
 namespace NUnit.Framework.Assertions
 {
@@ -234,7 +234,7 @@ namespace NUnit.Framework.Assertions
         public void ArrayAndCollection_Failure()
         {
             int[] a = new int[] { 1, 2, 3 };
-            var b = new TestCollection(new int[] { 1, 3 });
+            var b = new SimpleObjectCollection(new int[] { 1, 3 });
             Assert.AreEqual(a, b);
         }
 

@@ -23,7 +23,7 @@
 
 using System;
 using System.Collections;
-using NUnit.TestUtilities;
+using NUnit.TestUtilities.Comparers;
 
 namespace NUnit.Framework.Syntax
 {
@@ -68,8 +68,8 @@ namespace NUnit.Framework.Syntax
         [SetUp]
         public void SetUp()
         {
-            IComparer comparer = SimpleObjectComparer.Default;
-            parseTree = "<ordered NUnit.TestUtilities.SimpleObjectComparer>";
+            IComparer comparer = ObjectComparer.Default;
+            parseTree = "<ordered NUnit.TestUtilities.Comparers.ObjectComparer>";
             staticSyntax = Is.Ordered.Using(comparer);
             inheritedSyntax = Helper().Ordered.Using(comparer);
             builderSyntax = Builder().Ordered.Using(comparer);
@@ -81,8 +81,8 @@ namespace NUnit.Framework.Syntax
         [SetUp]
         public void SetUp()
         {
-            IComparer comparer = SimpleObjectComparer.Default;
-            parseTree = "<ordered descending NUnit.TestUtilities.SimpleObjectComparer>";
+            IComparer comparer = ObjectComparer.Default;
+            parseTree = "<ordered descending NUnit.TestUtilities.Comparers.ObjectComparer>";
             staticSyntax = Is.Ordered.Using(comparer).Descending;
             inheritedSyntax = Helper().Ordered.Using(comparer).Descending;
             builderSyntax = Builder().Ordered.Using(comparer).Descending;
@@ -118,10 +118,10 @@ namespace NUnit.Framework.Syntax
         [SetUp]
         public void SetUp()
         {
-            parseTree = "<orderedby SomePropertyName NUnit.TestUtilities.SimpleObjectComparer>";
-            staticSyntax = Is.Ordered.By("SomePropertyName").Using(SimpleObjectComparer.Default);
-            inheritedSyntax = Helper().Ordered.By("SomePropertyName").Using(SimpleObjectComparer.Default);
-            builderSyntax = Builder().Ordered.By("SomePropertyName").Using(SimpleObjectComparer.Default);
+            parseTree = "<orderedby SomePropertyName NUnit.TestUtilities.Comparers.ObjectComparer>";
+            staticSyntax = Is.Ordered.By("SomePropertyName").Using(ObjectComparer.Default);
+            inheritedSyntax = Helper().Ordered.By("SomePropertyName").Using(ObjectComparer.Default);
+            builderSyntax = Builder().Ordered.By("SomePropertyName").Using(ObjectComparer.Default);
         }
     }
 
@@ -130,10 +130,10 @@ namespace NUnit.Framework.Syntax
         [SetUp]
         public void SetUp()
         {
-            parseTree = "<orderedby SomePropertyName descending NUnit.TestUtilities.SimpleObjectComparer>";
-            staticSyntax = Is.Ordered.By("SomePropertyName").Using(SimpleObjectComparer.Default).Descending;
-            inheritedSyntax = Helper().Ordered.By("SomePropertyName").Using(SimpleObjectComparer.Default).Descending;
-            builderSyntax = Builder().Ordered.By("SomePropertyName").Using(SimpleObjectComparer.Default).Descending;
+            parseTree = "<orderedby SomePropertyName descending NUnit.TestUtilities.Comparers.ObjectComparer>";
+            staticSyntax = Is.Ordered.By("SomePropertyName").Using(ObjectComparer.Default).Descending;
+            inheritedSyntax = Helper().Ordered.By("SomePropertyName").Using(ObjectComparer.Default).Descending;
+            builderSyntax = Builder().Ordered.By("SomePropertyName").Using(ObjectComparer.Default).Descending;
         }
     }
 

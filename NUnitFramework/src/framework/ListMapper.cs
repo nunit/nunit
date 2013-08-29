@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 
 namespace NUnit.Framework
@@ -51,7 +52,7 @@ namespace NUnit.Framework
 		/// <returns></returns>
 		public ICollection Property( string name )
 		{
-			ObjectList propList = new ObjectList();
+			var propList = new List<object>();
 			foreach( object item in original )
 			{
 				PropertyInfo property = item.GetType().GetProperty( name, 
