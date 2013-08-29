@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 
 namespace NUnit.Framework.Constraints
@@ -37,7 +38,7 @@ namespace NUnit.Framework.Constraints
         private Tolerance tolerance;
         private bool caseInsensitive;
         private bool clipStrings;
-        private IList failurePoints;
+        private IList<NUnitEqualityComparer.FailurePoint> failurePoints;
 
         #region Message Strings
         private static readonly string StringsDiffer_1 =
@@ -65,7 +66,7 @@ namespace NUnit.Framework.Constraints
             : base(constraint, actual, hasSucceeded) 
         {
             this.expectedValue = constraint.Arguments[0];
-            this.tolerance = constraint.tolerance;
+            this.tolerance = constraint.Tolerance;
             this.caseInsensitive = constraint.CaseInsensitive;
             this.clipStrings = constraint.ClipStrings;
             this.failurePoints = constraint.FailurePoints;
@@ -116,7 +117,7 @@ namespace NUnit.Framework.Constraints
         {
             if (expected.Length == actual.Length)
             {
-                long offset = (long)failurePoints[depth];
+                long offset = failurePoints[depth].Position;
                 writer.WriteMessageLine(StreamsDiffer_1, expected.Length, offset);
             }
             else

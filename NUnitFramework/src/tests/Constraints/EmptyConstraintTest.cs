@@ -41,7 +41,9 @@ namespace NUnit.Framework.Constraints
         {
             string.Empty,
             new object[0],
-            new ObjectList(),
+#if !SILVERLIGHT
+            new ArrayList(),
+#endif
             new System.Collections.Generic.List<int>()
         };
 

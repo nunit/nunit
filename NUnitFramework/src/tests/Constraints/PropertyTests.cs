@@ -23,6 +23,7 @@
 
 // TODO: Remove conditional code
 using System;
+using System.Collections.Generic;
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
@@ -41,7 +42,7 @@ namespace NUnit.Framework.Constraints
 
         static object[] FailureData = new object[] { 
             new TestCaseData( 42, "<System.Int32>" ),
-            new TestCaseData( new ObjectList(), "<NUnit.ObjectList>" ),
+            new TestCaseData( new List<int>(), "<System.Collections.Generic.List`1[System.Int32]>" ),
             new TestCaseData( typeof(Int32), "<System.Int32>" ) };
 
 #if !NUNITLITE

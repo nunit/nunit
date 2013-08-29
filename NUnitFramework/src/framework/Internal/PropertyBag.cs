@@ -27,7 +27,7 @@ namespace NUnit.Framework.Internal
             IList list;
             if (!inner.TryGetValue(key, out list))
             {
-                list = new ObjectList();
+                list = new List<object>();
                 inner.Add(key, list);
             }
             list.Add(value);
@@ -41,7 +41,7 @@ namespace NUnit.Framework.Internal
         /// <param name="value"></param>
         public void Set(string key, object value)
         {
-            IList list = new ObjectList();
+            IList list = new List<object>();
             list.Add(value);
             inner[key] = list;
         }
@@ -251,7 +251,7 @@ namespace NUnit.Framework.Internal
                 IList list;
                 if (!inner.TryGetValue(key, out list))
                 {
-                    list = new ObjectList();
+                    list = new List<object>();
                     inner.Add(key, list);
                 }
                 return list;

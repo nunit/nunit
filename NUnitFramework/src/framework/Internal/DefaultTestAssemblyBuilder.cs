@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using NUnit.Framework.Api;
@@ -136,7 +137,7 @@ namespace NUnit.Framework.Internal
 
         private IList GetFixtures(Assembly assembly, IList names)
         {
-            ObjectList fixtures = new ObjectList();
+            var fixtures = new List<Test>();
             InternalTrace.Debug("Examining assembly for test fixtures");
 
             IList testTypes = GetCandidateFixtureTypes(assembly, names);
@@ -177,7 +178,7 @@ namespace NUnit.Framework.Internal
             if (names == null || names.Count == 0)
                 return types;
 
-            ObjectList result = new ObjectList();
+            var result = new List<Type>();
 
             foreach (string name in names)
             {

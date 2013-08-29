@@ -215,7 +215,7 @@ namespace NUnit.Framework.Internal
         /// <param name="collection">The collection containing elements to write.</param>
         /// <param name="start">The starting point of the elements to write</param>
         /// <param name="max">The maximum number of elements to write</param>
-        public override void WriteCollectionElements(IEnumerable collection, int start, int max)
+        public override void WriteCollectionElements(IEnumerable collection, long start, int max)
         {
             Write(MsgUtils.FormatCollection(collection, start, max));
         }

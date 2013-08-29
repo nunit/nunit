@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2007 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -22,27 +22,60 @@
 // ***********************************************************************
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
 
-namespace NUnit
+namespace NUnit.TestUtilities.Collections
 {
-    /// <summary>
-    /// ObjectList represents a collection of objects. It is implemented 
-    /// as a List&lt;object&gt; in .NET 2.0 or higher and as an ArrayList otherwise.
-    /// ObjectList does not attempt to be a general replacement for either of
-    /// these classes but only implements what is needed within the framework.
-    /// </summary>
-    // TODO: Remove this class, which is no longer needed since we don't support .NET 1.x
-    [Serializable]
-    public class ObjectList : System.Collections.Generic.List<object>
-    {
-        /// <summary>
-        /// Adds a range of values to the collection.
-        /// </summary>
-        /// <param name="collection">The collection.</param>
-        public void AddRange(System.Collections.ICollection collection)
-        {
-            foreach (object item in collection)
-                Add(item);
+	/// <summary>
+	/// SimpleObjectCollection is used in testing to ensure that only
+	/// methods of the ICollection interface are accessible.
+	/// </summary>
+	class SimpleObjectCollection : ICollection
+	{
+        private readonly List<object> contents = new List<object>();
+
+		public SimpleObjectCollection(IEnumerable<object> source)
+		{
+            this.contents = new List<object>(source);
         }
-    }
+
+		public SimpleObjectCollection(params object[] source)
+		{
+            this.contents = new List<object>(source);
+		}
+
+		#region ICollection Members
+
+		public void CopyTo(Array array, int index)
+		{
+			((ICollection)contents).CopyTo(array, index);
+		}
+
+		public int Count
+		{
+			get { return contents.Count; }
+		}
+
+		public bool IsSynchronized
+		{
+			get { return  ((ICollection)contents).IsSynchronized; }
+		}
+
+		public object SyncRoot
+		{
+			get { return ((ICollection)contents).SyncRoot; }
+		}
+
+		#endregion
+
+		#region IEnumerable Members
+
+		public IEnumerator GetEnumerator()
+		{
+			return contents.GetEnumerator();
+		}
+
+		#endregion
+	}
 }

@@ -98,7 +98,7 @@ namespace NUnit.Framework.Constraints
         /// <param name="collection">The collection containing elements to write.</param>
         /// <param name="start">The starting point of the elements to write</param>
         /// <param name="max">The maximum number of elements to write</param>
-        public static string FormatCollection(IEnumerable collection, int start, int max)
+        public static string FormatCollection(IEnumerable collection, long start, int max)
         {
             int count = 0;
             int index = 0;
@@ -341,7 +341,7 @@ namespace NUnit.Framework.Constraints
         /// <param name="collection">The collection to which the indices apply</param>
         /// <param name="index">Index in the collection</param>
         /// <returns>Array of indices</returns>
-        public static int[] GetArrayIndicesFromCollectionIndex(IEnumerable collection, int index)
+        public static int[] GetArrayIndicesFromCollectionIndex(IEnumerable collection, long index)
         {
             Array array = collection as Array;
 
@@ -351,11 +351,11 @@ namespace NUnit.Framework.Constraints
             for (int r = rank; --r > 0; )
             {
                 int l = array.GetLength(r);
-                result[r] = index % l;
+                result[r] = (int)index % l;
                 index /= l;
             }
 
-            result[0] = index;
+            result[0] = (int)index;
             return result;
         }
 

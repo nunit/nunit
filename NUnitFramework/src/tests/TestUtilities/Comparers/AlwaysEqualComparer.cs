@@ -24,7 +24,7 @@
 using System;
 using System.Collections;
 
-namespace NUnit.TestUtilities
+namespace NUnit.TestUtilities.Comparers
 {
     internal class AlwaysEqualComparer : IComparer
     {

@@ -23,8 +23,9 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using NUnit.Framework.Internal;
-using NUnit.TestUtilities;
+using NUnit.TestUtilities.Collections;
 
 namespace NUnit.Framework.Constraints
 {
@@ -43,7 +44,7 @@ namespace NUnit.Framework.Constraints
         public void CanTestContentsOfObjectList()
         {
             object item = "xyz";
-            var list = new ObjectList();
+            var list = new List<object>();
             list.Add(123);
             list.Add(item);
             list.Add("abc");
@@ -67,7 +68,7 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void CanTestContentsOfCollectionNotImplementingIList()
         {
-            TestCollection ints = new TestCollection(new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 });
+            SimpleObjectCollection ints = new SimpleObjectCollection(0, 1, 2, 3, 4, 5, 6, 7, 8, 9);
             Assert.That(ints, new CollectionContainsConstraint(9));
         }
 

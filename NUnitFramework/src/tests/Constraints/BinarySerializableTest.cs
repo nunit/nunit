@@ -23,7 +23,7 @@
 
 #if !NETCF && !SILVERLIGHT
 using System;
-using System.Collections;
+using System.Collections.Generic;
 
 namespace NUnit.Framework.Constraints
 {
@@ -38,7 +38,7 @@ namespace NUnit.Framework.Constraints
             stringRepresentation = "<binaryserializable>";
         }
 
-        object[] SuccessData = new object[] { 1, "a", new ObjectList(), new InternalWithSerializableAttributeClass() };
+        object[] SuccessData = new object[] { 1, "a", new List<int>(), new InternalWithSerializableAttributeClass() };
         
         object[] FailureData = new object[] { new TestCaseData( new InternalClass(), "<NUnit.Framework.Constraints.InternalClass>" ) };
 

@@ -26,6 +26,7 @@ using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework.Internal;
 using NUnit.TestUtilities;
+using NUnit.TestUtilities.Comparers;
 
 namespace NUnit.Framework.Constraints
 {
@@ -35,7 +36,7 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void IsOrdered()
         {
-            var al = new ObjectList();
+            var al = new List<string>();
             al.Add("x");
             al.Add("y");
             al.Add("z");
@@ -46,7 +47,7 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void IsOrdered_2()
         {
-            var al = new ObjectList();
+            var al = new List<int>();
             al.Add(1);
             al.Add(2);
             al.Add(3);
@@ -57,7 +58,7 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void IsOrderedDescending()
         {
-            var al = new ObjectList();
+            var al = new List<string>();
             al.Add("z");
             al.Add("y");
             al.Add("x");
@@ -68,7 +69,7 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void IsOrderedDescending_2()
         {
-            var al = new ObjectList();
+            var al = new List<int>();
             al.Add(3);
             al.Add(2);
             al.Add(1);
@@ -79,7 +80,7 @@ namespace NUnit.Framework.Constraints
         [Test, ExpectedException(typeof(AssertionException))]
         public void IsOrdered_Fails()
         {
-            var al = new ObjectList();
+            var al = new List<string>();
             al.Add("x");
             al.Add("z");
             al.Add("y");
@@ -94,7 +95,7 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void IsOrdered_Allows_adjacent_equal_values()
         {
-            var al = new ObjectList();
+            var al = new List<string>();
             al.Add("x");
             al.Add("x");
             al.Add("z");
@@ -106,7 +107,7 @@ namespace NUnit.Framework.Constraints
             ExpectedMessage = "index 1", MatchType = MessageMatch.Contains)]
         public void IsOrdered_Handles_null()
         {
-            var al = new ObjectList();
+            var al = new List<object>();
             al.Add("x");
             al.Add(null);
             al.Add("z");
@@ -117,7 +118,7 @@ namespace NUnit.Framework.Constraints
         [Test, ExpectedException(typeof(ArgumentException))]
         public void IsOrdered_TypesMustBeComparable()
         {
-            var al = new ObjectList();
+            var al = new List<object>();
             al.Add(1);
             al.Add("x");
 
@@ -127,7 +128,7 @@ namespace NUnit.Framework.Constraints
         [Test, ExpectedException(typeof(ArgumentException))]
         public void IsOrdered_AtLeastOneArgMustImplementIComparable()
         {
-            var al = new ObjectList();
+            var al = new List<object>();
             al.Add(new object());
             al.Add(new object());
 
@@ -137,7 +138,7 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void IsOrdered_Handles_custom_comparison()
         {
-            var al = new ObjectList();
+            var al = new List<object>();
             al.Add(new object());
             al.Add(new object());
 
@@ -149,7 +150,7 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void IsOrdered_Handles_custom_comparison2()
         {
-            var al = new ObjectList();
+            var al = new List<int>();
             al.Add(2);
             al.Add(1);
 
@@ -159,55 +160,33 @@ namespace NUnit.Framework.Constraints
         }
 
         [Test]
-        public void UsesProvidedComparerOfT()
+        public void UsesProvidedGenericComparer()
         {
-            var al = new ObjectList();
+            var al = new List<int>();
             al.Add(1);
             al.Add(2);
 
-            MyComparer<int> comparer = new MyComparer<int>();
+            var comparer = new GenericComparer<int>();
             Assert.That(al, Is.Ordered.Using(comparer));
-            Assert.That(comparer.Called, "Comparer was not called");
-        }
-
-        class MyComparer<T> : IComparer<T>
-        {
-            public bool Called;
-
-            public int Compare(T x, T y)
-            {
-                Called = true;
-                return Comparer<T>.Default.Compare(x, y);
-            }
+            Assert.That(comparer.WasCalled, "Comparer was not called");
         }
 
         [Test]
-        public void UsesProvidedComparisonOfT()
+        public void UsesProvidedGenericComparison()
         {
-            var al = new ObjectList();
+            var al = new List<int>();
             al.Add(1);
             al.Add(2);
 
-            MyComparison<int> comparer = new MyComparison<int>();
-            Assert.That(al, Is.Ordered.Using(new Comparison<int>(comparer.Compare)));
-            Assert.That(comparer.Called, "Comparer was not called");
-        }
-
-        class MyComparison<T>
-        {
-            public bool Called;
-
-            public int Compare(T x, T y)
-            {
-                Called = true;
-                return Comparer<T>.Default.Compare(x, y);
-            }
+            var comparer = new GenericComparison<int>();
+            Assert.That(al, Is.Ordered.Using(comparer.Delegate));
+            Assert.That(comparer.WasCalled, "Comparer was not called");
         }
 
         [Test]
         public void UsesProvidedLambda()
         {
-            var al = new ObjectList();
+            var al = new List<int>();
             al.Add(1);
             al.Add(2);
 
@@ -218,7 +197,7 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void IsOrderedBy()
         {
-            var al = new ObjectList();
+            var al = new List<OrderedByTestClass>();
             al.Add(new OrderedByTestClass(1));
             al.Add(new OrderedByTestClass(2));
 
@@ -228,17 +207,17 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void IsOrderedBy_Comparer()
         {
-            var al = new ObjectList();
+            var al = new List<OrderedByTestClass>();
             al.Add(new OrderedByTestClass(1));
             al.Add(new OrderedByTestClass(2));
 
-            Assert.That(al, Is.Ordered.By("Value").Using(SimpleObjectComparer.Default));
+            Assert.That(al, Is.Ordered.By("Value").Using(ObjectComparer.Default));
         }
 
         [Test]
         public void IsOrderedBy_Handles_heterogeneous_classes_as_long_as_the_property_is_of_same_type()
         {
-            var al = new ObjectList();
+            var al = new List<object>();
             al.Add(new OrderedByTestClass(1));
             al.Add(new OrderedByTestClass2(2));
 

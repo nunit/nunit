@@ -24,6 +24,7 @@
 using System;
 using System.Reflection;
 using System.Collections;
+using System.Collections.Generic;
 using NUnit.Framework.Api;
 using NUnit.Framework.Extensibility;
 using NUnit.Framework.Internal;
@@ -62,7 +63,7 @@ namespace NUnit.Framework.Builders
         /// </returns>
         public IEnumerable GetDataFor(ParameterInfo parameter)
         {
-            ObjectList data = new ObjectList();
+            var data = new List<object>();
 
             foreach (Attribute attr in parameter.GetCustomAttributes(typeof(DataAttribute), false))
             {

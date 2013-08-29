@@ -24,7 +24,7 @@
 using System;
 using System.Collections;
 using NUnit.Framework.Internal;
-using NUnit.TestUtilities;
+using NUnit.TestUtilities.Comparers;
 
 namespace NUnit.Framework.Constraints
 {
@@ -58,22 +58,28 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void AllItemsAreInRange_UsingIComparer()
         {
+            var comparer = new ObjectComparer();
             int[] c = new int[] { 12, 27, 19, 32, 45, 99, 26 };
-            Assert.That(c, new AllItemsConstraint(new RangeConstraint(10, 100).Using(SimpleObjectComparer.Default)));
+            Assert.That(c, new AllItemsConstraint(new RangeConstraint(10, 100).Using(comparer)));
+            Assert.That(comparer.WasCalled);
         }
 
         [Test]
-        public void AllItemsAreInRange_UsingIComparerOfT()
+        public void AllItemsAreInRange_UsingGenericComparer()
         {
+            var comparer = new GenericComparer<int>();
             int[] c = new int[] { 12, 27, 19, 32, 45, 99, 26 };
-            Assert.That(c, new AllItemsConstraint(new RangeConstraint(10, 100).Using(SimpleObjectComparer.Default)));
+            Assert.That(c, new AllItemsConstraint(new RangeConstraint(10, 100).Using(comparer)));
+            Assert.That(comparer.WasCalled);
         }
 
         [Test]
-        public void AllItemsAreInRange_UsingComparisonOfT()
+        public void AllItemsAreInRange_UsingGenericComparison()
         {
+            var comparer = new GenericComparison<int>();
             int[] c = new int[] { 12, 27, 19, 32, 45, 99, 26 };
-            Assert.That(c, new AllItemsConstraint(new RangeConstraint(10, 100).Using(SimpleObjectComparer.Default)));
+            Assert.That(c, new AllItemsConstraint(new RangeConstraint(10, 100).Using(comparer.Delegate)));
+            Assert.That(comparer.WasCalled);
         }
 
         [Test, ExpectedException(typeof(AssertionException))]
@@ -101,6 +107,12 @@ namespace NUnit.Framework.Constraints
                 TextMessageWriter.Pfx_Expected + "all items instance of <System.Char>" + NL +
                 TextMessageWriter.Pfx_Actual + "< 'a', \"b\", 'c' >" + NL;
             Assert.That(c, new AllItemsConstraint(new InstanceOfTypeConstraint(typeof(char))));
+        }
+
+        public void WorksOnICollection()
+        {
+            var c = new NUnit.TestUtilities.Collections.SimpleObjectCollection(1, 2, 3);
+            Assert.That(c, Is.All.Not.Null);
         }
     }
 }

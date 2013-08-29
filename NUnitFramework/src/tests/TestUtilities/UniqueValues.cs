@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using NUnit.Framework;
 
 namespace NUnit.TestUtilities
@@ -8,7 +9,7 @@ namespace NUnit.TestUtilities
     {
         public static int Count(IEnumerable actual)
         {
-            NUnit.ObjectList list = new NUnit.ObjectList();
+            var list = new List<object>();
 
             foreach (object o1 in actual)
                 if (!list.Contains(o1))

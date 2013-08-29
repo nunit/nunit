@@ -24,7 +24,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using NUnit.TestUtilities;
+using NUnit.TestUtilities.Comparers;
 
 namespace NUnit.Framework.Constraints
 {
@@ -55,58 +55,25 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void UsesProvidedIComparer()
         {
-            MyComparer comparer = new MyComparer();
+            var comparer = new ObjectComparer();
             Assert.That(rangeConstraint.Using(comparer).ApplyTo(19).IsSuccess);
-            Assert.That(comparer.Called, "Comparer was not called");
-        }
-
-        class MyComparer : IComparer
-        {
-            public bool Called;
-
-            public int Compare(object x, object y)
-            {
-                Called = true;
-                return SimpleObjectComparer.Default.Compare(x, y);
-            }
+            Assert.That(comparer.WasCalled, "Comparer was not called");
         }
 
         [Test]
-        public void UsesProvidedComparerOfT()
+        public void UsesProvidedGenericComparer()
         {
-            MyComparer<int> comparer = new MyComparer<int>();
+            var comparer = new GenericComparer<int>();
             Assert.That(rangeConstraint.Using(comparer).ApplyTo(19).IsSuccess);
-            Assert.That(comparer.Called, "Comparer was not called");
-        }
-
-        class MyComparer<T> : IComparer<T>
-        {
-            public bool Called;
-
-            public int Compare(T x, T y)
-            {
-                Called = true;
-                return Comparer<T>.Default.Compare(x, y);
-            }
+            Assert.That(comparer.WasCalled, "Comparer was not called");
         }
 
         [Test]
-        public void UsesProvidedComparisonOfT()
+        public void UsesProvidedGenericComparison()
         {
-            MyComparison<int> comparer = new MyComparison<int>();
-            Assert.That(rangeConstraint.Using(new Comparison<int>(comparer.Compare)).ApplyTo(19).IsSuccess);
-            Assert.That(comparer.Called, "Comparer was not called");
-        }
-
-        class MyComparison<T>
-        {
-            public bool Called;
-
-            public int Compare(T x, T y)
-            {
-                Called = true;
-                return Comparer<T>.Default.Compare(x, y);
-            }
+            var comparer = new GenericComparison<int>();
+            Assert.That(rangeConstraint.Using(comparer.Delegate).ApplyTo(19).IsSuccess);
+            Assert.That(comparer.WasCalled, "Comparer was not called");
         }
 
         [Test]

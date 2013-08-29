@@ -39,7 +39,7 @@ namespace NUnit.Framework.Constraints
             stringRepresentation = "<xmlserializable>";
         }
 
-        object[] SuccessData = new object[] { 1, "a", new ObjectList() };
+        object[] SuccessData = new object[] { 1, "a", new List<string>() };
 
         object[] FailureData = new object[] { 
             new TestCaseData( new Dictionary<string, string>(), "<System.Collections.Generic.Dictionary`2[System.String,System.String]>" ),

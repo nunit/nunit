@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System.Collections;
+using System.Collections.Generic;
 
 namespace NUnit.Framework.Constraints
 { 
@@ -47,7 +48,7 @@ namespace NUnit.Framework.Constraints
         /// <returns></returns>
         protected override bool Matches(IEnumerable actual)
         {
-            ObjectList list = new ObjectList();
+            var list = new List<object>();
 
             foreach (object o1 in actual)
             {

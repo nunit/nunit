@@ -51,7 +51,7 @@ namespace NUnitLite.Runner
     {
         private CommandLineOptions commandLineOptions;
 
-        private NUnit.ObjectList assemblies = new NUnit.ObjectList();
+        private List<Assembly> assemblies = new List<Assembly>();
 
         private TextWriter writer;
 
@@ -132,7 +132,7 @@ namespace NUnitLite.Runner
                         assemblies.Add(callingAssembly);
 
                     // TODO: For now, ignore all but first assembly
-                    Assembly assembly = assemblies[0] as Assembly;
+                    Assembly assembly = assemblies[0];
 
                     Randomizer.InitialSeed = commandLineOptions.InitialSeed;
 

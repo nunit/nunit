@@ -28,14 +28,11 @@ using System.IO;
 using System.Diagnostics;
 using System.Globalization;
 using System.Threading;
-
-#if !NUNITLITE
-using System.Security.Principal;
-#endif
-
 using NUnit.Framework.Api;
+
 #if !SILVERLIGHT && !NETCF
 using System.Runtime.Remoting.Messaging;
+using System.Security.Principal;
 #endif
 
 namespace NUnit.Framework.Internal
@@ -48,15 +45,19 @@ namespace NUnit.Framework.Internal
 	/// An internal class is used to hold settings and a stack
 	/// of these objects is pushed and popped as Save and Restore
 	/// are called.
-	/// 
-	/// Static methods for each setting forward to the internal 
-	/// object on the top of the stack.
 	/// </summary>
 	public class TestExecutionContext
 #if !SILVERLIGHT && !NETCF
         : ILogicalThreadAffinative
 #endif
 	{
+        // NOTE: Be very careful when modifying this class. It uses
+        // conditional compilation extensively and you must give 
+        // thought to whether any new features will be supported
+        // on each platform. In particular, instance fields,
+        // properties, initialization and restoration must all
+        // use the same conditions for each feature.
+
         #region Instance Fields
 
         /// <summary>
@@ -125,6 +126,11 @@ namespace NUnit.Framework.Internal
 
 #if !NETCF && !SILVERLIGHT
         /// <summary>
+        /// The current working directory
+        /// </summary>
+        private string currentDirectory;
+
+        /// <summary>
         /// Destination for standard output
         /// </summary>
         private TextWriter outWriter;
@@ -143,25 +149,16 @@ namespace NUnit.Framework.Internal
         /// Destination for Trace output
         /// </summary>
         private TextWriter traceWriter;
-#endif
-
-#if !NUNITLITE
-        /// <summary>
-        /// Indicates whether logging is enabled
-        /// </summary>
-        private bool logging;
-
-		/// <summary>
-		/// The current working directory
-		/// </summary>
-		private string currentDirectory;
-
-		private Log4NetCapture logCapture;
 
         /// <summary>
         /// The current Principal.
         /// </summary>
-		private IPrincipal currentPrincipal;
+        private IPrincipal currentPrincipal;
+
+        /// <summary>
+        /// Our LogCapture object
+        /// </summary>
+        private LogCapture logCapture;
 #endif
 
         #endregion
@@ -186,13 +183,9 @@ namespace NUnit.Framework.Internal
             this.errorWriter = Console.Error;
             this.traceWriter = null;
             this.tracing = false;
-#endif
-
-#if !NUNITLITE
-            this.logging = false;
-			this.currentDirectory = Environment.CurrentDirectory;
-            this.logCapture = new Log4NetCapture();
+            this.currentDirectory = Environment.CurrentDirectory;
             this.currentPrincipal = Thread.CurrentPrincipal;
+            this.logCapture = new Log4NetCapture();
 #endif
         }
 
@@ -222,13 +215,9 @@ namespace NUnit.Framework.Internal
             this.errorWriter = other.errorWriter;
             this.traceWriter = other.traceWriter;
             this.tracing = other.tracing;
-#endif
-
-#if !NUNITLITE
-			this.logging = other.logging;
-			this.currentDirectory = Environment.CurrentDirectory;
-            this.logCapture = other.logCapture;
+            this.currentDirectory = Environment.CurrentDirectory;
             this.currentPrincipal = Thread.CurrentPrincipal;
+            this.logCapture = other.logCapture;
 #endif
         }
 
@@ -239,10 +228,10 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// The current context, head of the list of saved contexts.
         /// </summary>
-#if SILVERLIGHT || NETCF
-#if !NETCF
+#if SILVERLIGHT
         [ThreadStatic]
-#endif
+        private static TestExecutionContext current;
+#elif NETCF
         private static TestExecutionContext current;
 #else
         private static readonly string CONTEXT_KEY = "NUnit.Framework.TestContext";
@@ -267,10 +256,10 @@ namespace NUnit.Framework.Internal
             }
         }
 
-        #endregion
-
-        #region Static Methods
-
+        /// <summary>
+        /// Sets the current context
+        /// </summary>
+        /// <param name="ec">The context to be made current</param>
         internal static void SetCurrentContext(TestExecutionContext ec)
         {
 #if SILVERLIGHT || NETCF
@@ -412,6 +401,19 @@ namespace NUnit.Framework.Internal
 
 #if !NETCF && !SILVERLIGHT
         /// <summary>
+        /// Saves and restores the CurrentDirectory
+        /// </summary>
+        public string CurrentDirectory
+        {
+            get { return currentDirectory; }
+            set
+            {
+                currentDirectory = value;
+                Environment.CurrentDirectory = currentDirectory;
+            }
+        }
+
+        /// <summary>
 		/// Controls where Console.Out is directed
 		/// </summary>
 		internal TextWriter Out
@@ -498,9 +500,20 @@ namespace NUnit.Framework.Internal
 		{
 			System.Diagnostics.Trace.Listeners.Add( new TextWriterTraceListener( traceWriter, "NUnit" ) );
 		}
-#endif
 
-#if !NUNITLITE
+        /// <summary>
+        /// Gets or sets the current <see cref="IPrincipal"/> for the Thread.
+        /// </summary>
+        public IPrincipal CurrentPrincipal
+        {
+            get { return this.currentPrincipal; }
+            set
+            {
+                this.currentPrincipal = value;
+                Thread.CurrentPrincipal = this.currentPrincipal;
+            }
+        }
+
         /// <summary>
         /// Controls whether log output is captured
         /// </summary>
@@ -526,32 +539,6 @@ namespace NUnit.Framework.Internal
             get { return logCapture.Writer; }
             set { logCapture.Writer = value; }
         }
-        
-        /// <summary>
-        /// Saves and restores the CurrentDirectory
-        /// </summary>
-		public string CurrentDirectory
-		{
-			get { return currentDirectory; }
-			set
-			{
-				currentDirectory = value;
-				Environment.CurrentDirectory = currentDirectory;
-			}
-		}
-
-        /// <summary>
-        /// Gets or sets the current <see cref="IPrincipal"/> for the Thread.
-        /// </summary>
-		public IPrincipal CurrentPrincipal
-		{
-		    get { return this.currentPrincipal; }
-            set
-            {
-                this.currentPrincipal = value;
-                Thread.CurrentPrincipal = this.currentPrincipal;
-            }
-		}
 #endif
 
         #endregion
@@ -587,11 +574,8 @@ namespace NUnit.Framework.Internal
             this.Out = prior.Out;
             this.Error = prior.Error;
             this.Tracing = prior.Tracing;
-#endif
-
-#if !NUNITLITE
             this.CurrentDirectory = prior.CurrentDirectory;
-			this.CurrentPrincipal = prior.CurrentPrincipal;
+            this.CurrentPrincipal = prior.CurrentPrincipal;
 #endif
 
             return prior;
@@ -608,7 +592,8 @@ namespace NUnit.Framework.Internal
             this.currentCulture = CultureInfo.CurrentCulture;
             this.currentUICulture = CultureInfo.CurrentUICulture;
 #endif
-#if !NUNITLITE
+
+#if !NETCF && !SILVERLIGHT
             this.currentDirectory = Environment.CurrentDirectory;
             this.currentPrincipal = System.Threading.Thread.CurrentPrincipal;
 #endif

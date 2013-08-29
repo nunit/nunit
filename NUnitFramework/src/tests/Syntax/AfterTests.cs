@@ -23,7 +23,7 @@
 
 using System;
 using System.Threading;
-using System.Collections;
+using System.Collections.Generic;
 
 namespace NUnit.Framework.Syntax
 {
@@ -68,7 +68,7 @@ namespace NUnit.Framework.Syntax
         protected bool flag;
         protected int num;
         protected object ob1, ob2, ob3;
-        protected ObjectList list;
+        protected List<object> list;
         protected string greeting;
 
         [SetUp]
@@ -79,7 +79,7 @@ namespace NUnit.Framework.Syntax
             this.ob1 = new object();
             this.ob2 = new object();
             this.ob3 = new object();
-            this.list = new ObjectList();
+            this.list = new List<object>();
             this.list.Add(1);
             this.list.Add(2);
             this.list.Add(3);

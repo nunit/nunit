@@ -40,7 +40,7 @@ namespace NUnit.Framework.Constraints
 
         private readonly object expected;
 
-        public Tolerance tolerance = Tolerance.Empty;
+        private Tolerance tolerance = Tolerance.Empty;
 
         /// <summary>
         /// NUnitEqualityComparer used to test equality.
@@ -83,6 +83,15 @@ namespace NUnit.Framework.Constraints
 
         #region Properties
 
+        // TODO: Remove public properties 
+        // They are only used by EqualConstraintResult
+        // EqualConstraint should inject them into the constructor.
+
+        public Tolerance Tolerance
+        {
+            get { return tolerance; }
+        }
+
         public bool CaseInsensitive
         {
             get { return comparer.IgnoreCase; }
@@ -90,7 +99,7 @@ namespace NUnit.Framework.Constraints
 
         public bool ClipStrings { get; private set; }
 
-        public IList FailurePoints
+        public IList<NUnitEqualityComparer.FailurePoint> FailurePoints
         {
             get { return comparer.FailurePoints; }
         }
