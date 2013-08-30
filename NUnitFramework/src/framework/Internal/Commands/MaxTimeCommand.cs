@@ -36,13 +36,13 @@ namespace NUnit.Framework.Internal.Commands
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MaxTimeCommand"/> class.
-        /// TODO: Add a comment about where the max time is retrieved.
         /// </summary>
         /// <param name="innerCommand">The inner command.</param>
-        public MaxTimeCommand(TestCommand innerCommand)
+        /// <param name="maxTime">The max time allowed in milliseconds</param>
+        public MaxTimeCommand(TestCommand innerCommand, int maxTime)
             : base(innerCommand)
         {
-            this.maxTime = Test.Properties.GetSetting(PropertyNames.MaxTime, 0);
+            this.maxTime = maxTime;
         }
 
         /// <summary>

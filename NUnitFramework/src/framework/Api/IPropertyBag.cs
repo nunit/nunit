@@ -41,13 +41,8 @@ namespace NUnit.Framework.Api
     ///     Assert.That(bag.GetSetting("Priority", "low"),
     ///       Is.EqualTo("high"));
     /// </summary>
-    public interface IPropertyBag : IXmlNodeBuilder, IEnumerable
+    public interface IPropertyBag : IXmlNodeBuilder
     {
-        /// <summary>
-        /// Get the number of key/value pairs in the property bag
-        /// </summary>
-        int Count { get; }
-
         /// <summary>
         /// Adds a key/value pair to the property bag
         /// </summary>
@@ -72,79 +67,12 @@ namespace NUnit.Framework.Api
         object Get(string key);
 
         /// <summary>
-        /// Gets a single string value for a key, using the first
-        /// one if multiple values are present and returning the
-        /// default value if no entry is found.
-        /// </summary>
-        string GetSetting(string key, string defaultValue);
-
-        /// <summary>
-        /// Gets a single int value for a key, using the first
-        /// one if multiple values are present and returning the
-        /// default value if no entry is found.
-        /// </summary>
-        int GetSetting(string key, int defaultValue);
-
-        /// <summary>
-        /// Gets a single boolean value for a key, using the first
-        /// one if multiple values are present and returning the
-        /// default value if no entry is found.
-        /// </summary>
-        bool GetSetting(string key, bool defaultValue);
-
-        /// <summary>
-        /// Gets a single enum value for a key, using the first
-        /// one if multiple values are present and returning the
-        /// default value if no entry is found.
-        /// </summary>
-        System.Enum GetSetting(string key, System.Enum defaultValue);
-
-        /// <summary>
-        ///  Removes all entries for a key from the property set.
-        ///  If the key is not found, no error occurs.
-        /// </summary>
-        /// <param name="key">The key for which the entries are to be removed</param>
-        void Remove(string key);
-
-        /// <summary>
-        /// Removes a single entry if present. If not found,
-        /// no error occurs.
-        /// </summary>
-        /// <param name="key"></param>
-        /// <param name="value"></param>
-        void Remove(string key, object value);
-
-        /// <summary>
-        /// Removes a specific PropertyEntry. If the entry is not
-        /// found, no errr occurs.
-        /// </summary>
-        /// <param name="entry">The property entry to remove</param>
-        void Remove(PropertyEntry entry);
-
-        /// <summary>
         /// Gets a flag indicating whether the specified key has
         /// any entries in the property set.
         /// </summary>
         /// <param name="key">The key to be checked</param>
         /// <returns>True if their are values present, otherwise false</returns>
         bool ContainsKey(string key);
-
-        /// <summary>
-        /// Gets a flag indicating whether the specified key and
-        /// value are present in the property set.
-        /// </summary>
-        /// <param name="key">The key to be checked</param>
-        /// <param name="value">The value to be checked</param>
-        /// <returns>True if the key and value are present, otherwise false</returns>
-        bool Contains(string key, object value);
-
-        /// <summary>
-        /// Gets a flag indicating whether the specified key and
-        /// value are present in the property set.
-        /// </summary>
-        /// <param name="entry">The property entry to be checked</param>
-        /// <returns>True if the entry is present, otherwise false</returns>
-        bool Contains(PropertyEntry entry);
 
         /// <summary>
         /// Gets or sets the list of values for a particular key

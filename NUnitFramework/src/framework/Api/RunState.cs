@@ -24,11 +24,7 @@
 namespace NUnit.Framework.Api
 {
 	/// <summary>
-	/// The RunState enum indicates whether a test
-    /// can be executed. When used on a TestResult
-    /// it may also indicate whether the test has
-    /// been executed. See individual values for
-    /// restrictions on use.
+	/// The RunState enum indicates whether a test can be executed. 
 	/// </summary>
 	public enum RunState
 	{
@@ -38,16 +34,12 @@ namespace NUnit.Framework.Api
 		NotRunnable, 
 
         /// <summary>
-        /// The test is runnable. This value would 
-        /// normally not appear on a TestResult, since
-        /// it would change to Executed.
+        /// The test is runnable. 
         /// </summary>
 		Runnable,
 
         /// <summary>
-        /// The test can only be run explicitly. Would
-        /// normally not appear on a TestResult, since
-        /// it would change to Executed or Skipped.
+        /// The test can only be run explicitly
         /// </summary>
 		Explicit,
 
@@ -61,8 +53,6 @@ namespace NUnit.Framework.Api
         /// <summary>
         /// The test has been ignored. May appear on
         /// a Test, when the IgnoreAttribute is used.
-        /// Appears on a TestResult in that case or
-        /// if the test is dynamically ignored.
         /// </summary>
 		Ignored
 	}

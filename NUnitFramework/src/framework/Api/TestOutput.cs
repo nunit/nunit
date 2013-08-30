@@ -27,7 +27,7 @@ namespace NUnit.Framework.Api
 
     /// <summary>
     /// The TestOutput class holds a unit of output from 
-    /// a test to either stdOut or stdErr
+    /// a test to stdOut, stdErr, Trace or a logger.
     /// </summary>
 	public class TestOutput
 	{
@@ -78,13 +78,16 @@ namespace NUnit.Framework.Api
 	}
 
     /// <summary>
-    /// Enum representing the output destination
-    /// It uses combinable flags so that a given
-    /// output control can accept multiple types
-    /// of output. Normally, each individual
-    /// output uses a single flag value.
+    /// Enum representing the output destination.
     /// </summary>
-	public enum TestOutputType
+    ///// TODO: Decide if we want to change this to
+    ///// a combinable flag as it was in the past.
+    ///// Old summary:
+    ///// It uses combinable flags so that a given
+    ///// output control can accept multiple types
+    ///// of output. Normally, each individual
+    ///// output uses a single flag value.
+    public enum TestOutputType
 	{
         /// <summary>
         /// Send output to stdOut

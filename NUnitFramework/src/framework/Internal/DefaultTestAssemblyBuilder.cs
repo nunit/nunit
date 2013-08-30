@@ -56,7 +56,7 @@ namespace NUnit.Framework.Internal
         /// <returns>
         /// A TestSuite containing the tests found in the assembly
         /// </returns>
-        public TestSuite Build(Assembly assembly, IDictionary options)
+        public ITest Build(Assembly assembly, IDictionary options)
         {
             this.assembly = assembly;
 
@@ -86,7 +86,7 @@ namespace NUnit.Framework.Internal
         /// <returns>
         /// A TestSuite containing the tests found in the assembly
         /// </returns>
-        public TestSuite Build(string assemblyName, IDictionary options)
+        public ITest Build(string assemblyName, IDictionary options)
         {
             InternalTrace.Debug("Loading {0} in AppDomain {1}", assemblyName, AppDomain.CurrentDomain.FriendlyName);
 

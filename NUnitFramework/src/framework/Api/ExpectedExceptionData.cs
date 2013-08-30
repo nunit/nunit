@@ -36,9 +36,6 @@ namespace NUnit.Framework.Api
 
         private Type expectedExceptionType;
         private string expectedExceptionName;
-        private string expectedMessage;
-        private MessageMatch matchType;
-        private string userMessage;
         private string handlerName;
         private MethodInfo exceptionHandler;
 
@@ -75,29 +72,17 @@ namespace NUnit.Framework.Api
         /// <summary>
         /// The Message of any exception that is expected
         /// </summary>
-        public string ExpectedMessage
-        {
-            get { return expectedMessage; }
-            set { expectedMessage = value; }
-        }
+        public string ExpectedMessage { get; set; }
 
         /// <summary>
         ///  The type of match to be performed on the expected message
         /// </summary>
-        public MessageMatch MatchType
-        {
-            get { return matchType; }
-            set { matchType = value; }
-        }
+        public MessageMatch MatchType { get; set; }
 
         /// <summary>
         /// A user message to be issued in case of error
         /// </summary>
-        public string UserMessage
-        {
-            get { return userMessage; }
-            set { userMessage = value; }
-        }
+        public string UserMessage { get; set; }
 
         /// <summary>
         /// The name of an alternate exception handler to be

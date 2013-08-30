@@ -59,7 +59,7 @@ namespace NUnit.Framework.Internal
             string nameSpace = "NUnit.TestData.SetupFixture.Namespace1";
             IDictionary options = new Hashtable();
             options["LOAD"] = new string[] { nameSpace };
-			Test suite = builder.Build( testAssembly, options );
+			ITest suite = builder.Build( testAssembly, options );
 
             Assert.IsNotNull(suite);
 
@@ -91,7 +91,7 @@ namespace NUnit.Framework.Internal
         public void AssemblySetUpFixtureReplacesAssemblyNodeInTree()
         {
             IDictionary options = new Hashtable();
-            Test suite = builder.Build(testAssembly, options);
+            ITest suite = builder.Build(testAssembly, options);
 
             Assert.IsNotNull(suite);
             Assert.That(suite, Is.InstanceOf<SetUpFixture>());

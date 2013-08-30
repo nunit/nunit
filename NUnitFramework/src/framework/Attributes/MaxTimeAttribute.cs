@@ -34,12 +34,16 @@ namespace NUnit.Framework
 	[AttributeUsage( AttributeTargets.Method, AllowMultiple=false, Inherited=false )]
 	public sealed class MaxTimeAttribute : PropertyAttribute, ICommandDecorator
 	{
+        private int milliseconds;
         /// <summary>
         /// Construct a MaxTimeAttribute, given a time in milliseconds.
         /// </summary>
         /// <param name="milliseconds">The maximum elapsed time in milliseconds</param>
 		public MaxTimeAttribute( int milliseconds )
-            : base( milliseconds ) { }
+            : base( milliseconds )
+        {
+            this.milliseconds = milliseconds;
+        }
 
         #region ICommandDecorator Members
 
@@ -55,7 +59,7 @@ namespace NUnit.Framework
 
         TestCommand ICommandDecorator.Decorate(TestCommand command)
         {
-            return new MaxTimeCommand(command);
+            return new MaxTimeCommand(command, this.milliseconds);
         }
 
         #endregion

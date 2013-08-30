@@ -41,12 +41,6 @@ namespace NUnit.Framework.Internal
         }
 
         [Test]
-        public void CountReflectsNumberOfPairs()
-        {
-            Assert.That(bag.Count, Is.EqualTo(3));
-        }
-
-        [Test]
         public void IndexGetsListOfValues()
         {
             Assert.That(bag["Answer"].Count, Is.EqualTo(1));
@@ -73,14 +67,6 @@ namespace NUnit.Framework.Internal
         }
 
         [Test]
-        public void CanClearTheBag()
-        {
-            bag.Clear();
-            Assert.That(bag.Keys.Count, Is.EqualTo(0));
-            Assert.That(bag.Count, Is.EqualTo(0));
-        }
-
-        [Test]
         public void AllKeysAreListed()
         {
             Assert.That(bag.Keys.Count, Is.EqualTo(2));
@@ -94,57 +80,6 @@ namespace NUnit.Framework.Internal
             Assert.That(bag.ContainsKey("Answer"));
             Assert.That(bag.ContainsKey("Tag"));
             Assert.False(bag.ContainsKey("Target"));
-        }
-
-        [Test]
-        public void ContainsKeyAndValue()
-        {
-            Assert.That(bag.Contains("Answer", 42));
-        }
-
-        [Test]
-        public void ContainsPropertyEntry()
-        {
-            Assert.That(bag.Contains(new PropertyEntry("Answer", 42)));
-        }
-
-        [Test]
-        public void CanRemoveKey()
-        {
-            bag.Remove("Tag");
-            Assert.That(bag.Keys.Count, Is.EqualTo(1));
-            Assert.That(bag.Count, Is.EqualTo(1));
-            Assert.That(bag.Keys, Has.No.Member("Tag"));
-        }
-
-        [Test]
-        public void CanRemoveMissingKeyWithoutError()
-        {
-            bag.Remove("Zip");
-        }
-
-        [Test]
-        public void CanRemoveNameAndValue()
-        {
-            bag.Remove("Tag", "easy");
-            Assert.That(bag["Tag"].Contains("bug"));
-            Assert.False(bag["Tag"].Contains("easy"));
-            Assert.That(bag.Count, Is.EqualTo(2));
-        }
-
-        [Test]
-        public void CanRemoveNameAndMissingValueWithoutError()
-        {
-            bag.Remove("Tag", "wishlist");
-        }
-
-        [Test]
-        public void CanRemovePropertyEntry()
-        {
-            bag.Remove(new PropertyEntry("Tag", "easy"));
-            Assert.That(bag["Tag"].Contains("bug"));
-            Assert.False(bag["Tag"].Contains("easy"));
-            Assert.That(bag.Count, Is.EqualTo(2));
         }
 
         [Test]
@@ -169,16 +104,6 @@ namespace NUnit.Framework.Internal
             bag.Set("Tag", "ZAPPED");
             Assert.That(bag["Tag"].Count, Is.EqualTo(1));
             Assert.That(bag.Get("Tag"), Is.EqualTo("ZAPPED"));
-        }
-
-        [Test]
-        public void EnumeratorReturnsAllEntries()
-        {
-            int count = 0;
-            foreach (PropertyEntry entry in bag)
-                ++count;
-            Assert.That(count, Is.EqualTo(3));
-
         }
 
         [Test]

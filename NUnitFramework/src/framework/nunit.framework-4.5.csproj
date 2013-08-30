@@ -71,7 +71,6 @@
     <Compile Include="Api\ITestListener.cs" />
     <Compile Include="Api\ITestResult.cs" />
     <Compile Include="Api\IXmlNodeBuilder.cs" />
-    <Compile Include="Api\PropertyEntry.cs" />
     <Compile Include="Api\ResultState.cs" />
     <Compile Include="Api\RunState.cs" />
     <Compile Include="Api\TestController.cs" />

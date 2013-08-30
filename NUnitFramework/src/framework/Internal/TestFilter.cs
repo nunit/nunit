@@ -38,7 +38,7 @@ namespace NUnit.Framework.Internal
 		/// <summary>
 		/// Unique Empty filter.
 		/// </summary>
-        public static TestFilter Empty = new EmptyFilter();
+        public readonly static TestFilter Empty = new EmptyFilter();
 
         /// <summary>
         /// Indicates whether this is the EmptyFilter

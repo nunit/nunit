@@ -215,7 +215,7 @@ namespace NUnit.Framework.Attributes
  
 			testCase = TestFinder.Find("MethodWithIgnoredTestCases(3)", test, false);
             Assert.That(testCase.RunState, Is.EqualTo(RunState.Ignored));
-            Assert.That(testCase.Properties.GetSetting(PropertyNames.SkipReason, ""), Is.EqualTo("Don't Run Me!"));
+            Assert.That(testCase.Properties.Get(PropertyNames.SkipReason), Is.EqualTo("Don't Run Me!"));
         }
 
         [Test]
@@ -232,7 +232,7 @@ namespace NUnit.Framework.Attributes
  
 			testCase = TestFinder.Find("MethodWithExplicitTestCases(3)", test, false);
             Assert.That(testCase.RunState, Is.EqualTo(RunState.Explicit));
-            Assert.That(testCase.Properties.GetSetting(PropertyNames.SkipReason, ""), Is.EqualTo("Connection failing"));
+            Assert.That(testCase.Properties.Get(PropertyNames.SkipReason), Is.EqualTo("Connection failing"));
 		}
 
 		[Test]

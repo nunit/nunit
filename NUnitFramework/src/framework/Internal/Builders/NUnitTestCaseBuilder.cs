@@ -351,7 +351,7 @@ namespace NUnit.Framework.Builders
                         return MarkAsNotRunnable(testMethod, "Unable to determine type arguments for method");
                     }
 
-                testMethod.method = testMethod.Method.MakeGenericMethod(typeArguments);
+                testMethod.Method = testMethod.Method.MakeGenericMethod(typeArguments);
                 parameters = testMethod.Method.GetParameters();
            }
 #endif

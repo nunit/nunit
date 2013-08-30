@@ -42,22 +42,16 @@ namespace NUnit.Framework
 	[AttributeUsage(AttributeTargets.Method, AllowMultiple=false, Inherited=false)]
 	public class RepeatAttribute : PropertyAttribute, ICommandDecorator
 	{
+        private int count;
+
         /// <summary>
         /// Construct a RepeatAttribute
         /// </summary>
         /// <param name="count">The number of times to run the test</param>
-        public RepeatAttribute(int count) : base(count) { }
-
-        //private int count;
-
-        ///// <summary>
-        ///// Construct a RepeatAttribute
-        ///// </summary>
-        ///// <param name="count">The number of times to run the test</param>
-        //public RepeatAttribute(int count)
-        //{
-        //    this.count = count;
-        //}
+        public RepeatAttribute(int count) : base(count)
+        {
+            this.count = count;
+        }
 
         ///// <summary>
         ///// Gets the number of times to run the test.
@@ -71,17 +65,19 @@ namespace NUnit.Framework
 
         CommandStage ICommandDecorator.Stage
         {
-            get { return CommandStage.Repeat; }
+            // TODO: Check this
+            get { return CommandStage.AboveSetUpTearDown; }
         }
 
         int ICommandDecorator.Priority
         {
+            // TODO: Check this
             get { return 0; }
         }
 
         TestCommand ICommandDecorator.Decorate(TestCommand command)
         {
-            return new RepeatedTestCommand(command);
+            return new RepeatedTestCommand(command, count);
         }
 
         #endregion

@@ -35,110 +35,15 @@ namespace NUnit.Framework.Internal
     {
         #region Instance Fields
 
-        private object[] arguments;
-        private object[] originalArguments;
-        private object result;
-        private bool hasExpectedResult;
-        private ExpectedExceptionData exceptionData;
+        /// <summary>
+        /// The expected result to be returned
+        /// </summary>
+        private object expectedResult;
 
         /// <summary>
-        /// A dictionary of properties, used to add information
-        /// to tests without requiring the class to change.
+        /// Data about any expected exception.
         /// </summary>
-        private IPropertyBag properties;
-
-        #endregion
-
-        #region Properties
-
-        /// <summary>
-        /// The RunState for this set of parameters.
-        /// </summary>
-        public RunState RunState { get; set; }
-
-        /// <summary>
-        /// The arguments to be used in running the test,
-        /// which must match the method signature.
-        /// </summary>
-        public object[] Arguments
-        {
-            get { return arguments; }
-            set 
-            { 
-                arguments = value;
-
-                if (originalArguments == null)
-                    originalArguments = value;
-            }
-        }
-
-        /// <summary>
-        /// The original arguments provided by the user,
-        /// used for display purposes.
-        /// </summary>
-        public object[] OriginalArguments
-        {
-            get { return originalArguments; }
-        }
-
-        /// <summary>
-        /// Gets a flag indicating whether an exception is expected.
-        /// </summary>
-        public bool ExceptionExpected
-        {
-            get { return exceptionData.ExpectedExceptionName != null; }
-        }
-
-        /// <summary>
-        /// Data about any expected exception
-        /// </summary>
-        public ExpectedExceptionData ExceptionData
-        {
-            get { return exceptionData; }
-        }
-
-        /// <summary>
-        /// The expected result of the test, which
-        /// must match the method return type.
-        /// </summary>
-        public object ExpectedResult
-        {
-            get { return result; }
-            set
-            {
-                result = value;
-                hasExpectedResult = true;
-            }
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether an expected result was specified.
-        /// </summary>
-        public bool HasExpectedResult
-        {
-            get { return hasExpectedResult; }
-        }
-
-        /// <summary>
-        /// A name to be used for this test case in lieu
-        /// of the standard generated name containing
-        /// the argument list.
-        /// </summary>
-        public string TestName { get; set; }
-
-        /// <summary>
-        /// Gets the property dictionary for this test
-        /// </summary>
-        public IPropertyBag Properties
-        {
-            get
-            {
-                if (properties == null)
-                    properties = new PropertyBag();
-
-                return properties;
-            }
-        }
+        protected ExpectedExceptionData exceptionData;
 
         #endregion
 
@@ -151,17 +56,20 @@ namespace NUnit.Framework.Internal
         public ParameterSet(Exception exception)
         {
             this.RunState = RunState.NotRunnable;
+            this.Properties = new PropertyBag();
             this.Properties.Set(PropertyNames.SkipReason, ExceptionHelper.BuildMessage(exception));
             this.Properties.Set(PropertyNames.ProviderStackTrace, ExceptionHelper.BuildStackTrace(exception));
         }
 
         /// <summary>
-        /// Construct an empty parameter set, which
-        /// defaults to being Runnable.
+        /// Construct a parameter set with a list of arguments
         /// </summary>
-        public ParameterSet()
+        /// <param name="args"></param>
+        public ParameterSet(object[] args)
         {
+            this.Arguments = this.OriginalArguments = args;
             this.RunState = RunState.Runnable;
+            this.Properties = new PropertyBag();
         }
 
         /// <summary>
@@ -172,14 +80,87 @@ namespace NUnit.Framework.Internal
         {
             this.TestName = data.TestName;
             this.RunState = data.RunState;
-            this.Arguments = data.Arguments;
+            this.Arguments = this.OriginalArguments = data.Arguments;
             this.exceptionData = data.ExceptionData;
-            
-			if (data.HasExpectedResult)
+
+            if (data.HasExpectedResult)
                 this.ExpectedResult = data.ExpectedResult;
-			
+
+            this.Properties = new PropertyBag();
             foreach (string key in data.Properties.Keys)
                 this.Properties[key] = data.Properties[key];
+        }
+
+        #endregion
+
+        #region ITestCaseData Members
+
+        /// <summary>
+        /// The RunState for this set of parameters.
+        /// </summary>
+        public RunState RunState { get; set; }
+
+        /// <summary>
+        /// The arguments to be used in running the test,
+        /// which must match the method signature.
+        /// </summary>
+        public object[] Arguments { get; internal set; }
+
+        /// <summary>
+        /// The expected result of the test, which
+        /// must match the method return type.
+        /// </summary>
+        public object ExpectedResult
+        {
+            get { return expectedResult; }
+            set
+            {
+                expectedResult = value;
+                HasExpectedResult = true;
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether an expected result was specified.
+        /// </summary>
+        public bool HasExpectedResult { get; set; }
+
+        /// <summary>
+        /// Data about any expected exception
+        /// </summary>
+        public ExpectedExceptionData ExceptionData
+        {
+            get { return exceptionData; }
+        }
+
+        /// <summary>
+        /// A name to be used for this test case in lieu
+        /// of the standard generated name containing
+        /// the argument list.
+        /// </summary>
+        public string TestName { get; set; }
+
+        /// <summary>
+        /// Gets the property dictionary for this test
+        /// </summary>
+        public IPropertyBag Properties { get; private set; }
+
+        #endregion
+
+        #region Other Public Properties
+
+        /// <summary>
+        /// The original arguments provided by the user,
+        /// used for display purposes.
+        /// </summary>
+        public object[] OriginalArguments { get; private set; }
+
+        /// <summary>
+        /// Gets a flag indicating whether an exception is expected.
+        /// </summary>
+        public bool ExceptionExpected
+        {
+            get { return exceptionData.ExpectedExceptionName != null; }
         }
 
         #endregion

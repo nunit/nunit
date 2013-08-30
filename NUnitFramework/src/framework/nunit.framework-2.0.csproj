@@ -101,7 +101,6 @@
     <Compile Include="Internal\WorkItems\WorkItemState.cs" />
     <Compile Include="Internal\XmlHelper.cs" />
     <Compile Include="MessageMatch.cs" />
-    <Compile Include="Api\PropertyEntry.cs" />
     <Compile Include="Internal\PropertyNames.cs" />
     <Compile Include="Api\ResultState.cs" />
     <Compile Include="Api\RunState.cs" />

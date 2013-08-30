@@ -34,13 +34,13 @@ namespace NUnit.Framework.Internal.Commands
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RepeatedTestCommand"/> class.
-        /// TODO: Add a comment about where the repeat count is retrieved. 
         /// </summary>
         /// <param name="innerCommand">The inner command.</param>
-        public RepeatedTestCommand(TestCommand innerCommand)
+        /// <param name="repeatCount">The number of repetitions</param>
+        public RepeatedTestCommand(TestCommand innerCommand, int repeatCount)
             : base(innerCommand)
         {
-            this.repeatCount = Test.Properties.GetSetting(PropertyNames.RepeatCount, 1);
+            this.repeatCount = repeatCount;
         }
 
         /// <summary>
