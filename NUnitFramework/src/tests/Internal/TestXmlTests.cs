@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using NUnit.Framework.Api;
 
 namespace NUnit.Framework.Internal
@@ -110,25 +111,22 @@ namespace NUnit.Framework.Internal
             Assert.That(topNode.Attributes["name"], Is.EqualTo(test.Name));
             Assert.That(topNode.Attributes["fullname"], Is.EqualTo(test.FullName));
 
-            int expectedCount = test.Properties.Count;
-            if (expectedCount > 0)
+            if (test.Properties.Keys.Count > 0)
             {
-                string[] expectedProps = new string[expectedCount];
-                int count = 0;
-                foreach (PropertyEntry entry in test.Properties)
-                    expectedProps[count++] = entry.ToString();
+                var expectedProps = new List<string>();
+                foreach (string key in test.Properties.Keys)
+                    foreach (object value in test.Properties[key])
+                        expectedProps.Add(key + "=" + value.ToString());
 
                 XmlNode propsNode = topNode.FindDescendant("properties");
                 Assert.NotNull(propsNode);
 
-                int actualCount = propsNode.ChildNodes.Count;
-                string[] actualProps = new string[actualCount];
-                for (int i = 0; i < actualCount; i++)
+                var actualProps = new List<string>();
+                foreach (XmlNode node in propsNode.ChildNodes)
                 {
-                    XmlNode node = propsNode.ChildNodes[i];
                     string name = node.Attributes["name"];
                     string value = node.Attributes["value"];
-                    actualProps[i] = name + "=" + value.ToString();
+                    actualProps.Add(name + "=" + value.ToString());
                 }
 
                 Assert.That(actualProps, Is.EquivalentTo(expectedProps));

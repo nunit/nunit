@@ -46,14 +46,16 @@ namespace NUnit.Framework.Attributes
 		[Test]
 		public void CategoryOnFixture()
 		{
-			Assert.That( fixture.Properties.Contains("Category", "DataBase"));
+            Assert.That(fixture.Properties["Category"], Contains.Item("DataBase"));
+            //Assert.That( fixture.Properties.Contains("Category", "DataBase"));
 		}
 
 		[Test]
 		public void CategoryOnTestMethod()
 		{
 			Test test1 = (Test)fixture.Tests[0];
-			Assert.That( test1.Properties.Contains("Category", "Long") );
+            Assert.That(test1.Properties["Category"], Contains.Item("Long"));
+            //Assert.That( test1.Properties.Contains("Category", "Long") );
 		}
 
 		[Test]
@@ -66,7 +68,8 @@ namespace NUnit.Framework.Attributes
 		[Test]
 		public void DerivedCategoryMayBeInherited()
 		{
-			Assert.That(fixture.Properties.Contains("Category", "MyCategory"));
+            Assert.That(fixture.Properties["Category"], Contains.Item("MyCategory"));
+            //Assert.That(fixture.Properties.Contains("Category", "MyCategory"));
 		}
 
         [Test]

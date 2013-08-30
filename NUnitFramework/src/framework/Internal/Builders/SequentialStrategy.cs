@@ -69,8 +69,7 @@ namespace NUnit.Framework.Builders
                 if (!gotData)
                     break;
 
-                ParameterSet parms = new ParameterSet();
-                parms.Arguments = testdata;
+                ParameterSet parms = new ParameterSet(testdata);
                 testCases.Add(parms);
             }
 

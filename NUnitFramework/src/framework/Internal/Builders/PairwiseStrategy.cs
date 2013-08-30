@@ -718,8 +718,7 @@ namespace NUnit.Framework.Builders
 					testData[i] = valueSet[i][pairwiseTestCase.Features[i]];
 				}
 
-                ParameterSet parms = new ParameterSet();
-                parms.Arguments = testData;
+                ParameterSet parms = new ParameterSet(testData);
 				testCases.Add(parms);
 			}
 

@@ -89,14 +89,7 @@ namespace NUnit.Framework
         /// </returns>
         public IEnumerable GetData(ParameterInfo parameter)
         {
-            var data = new List<object>();
-            IEnumerable source = GetDataSource(parameter);
-
-            if (source != null)
-                foreach (object item in source)
-                    data.Add(item);
-
-            return source;
+            return GetDataSource(parameter);
         }
 
         #endregion

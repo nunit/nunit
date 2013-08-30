@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Reflection;
 
 namespace NUnit.Framework.Api
 {
@@ -34,9 +35,9 @@ namespace NUnit.Framework.Api
 	public interface ITest : IXmlNodeBuilder
     {
         /// <summary>
-        /// Gets or sets the id of the test
+        /// Gets the id of the test
         /// </summary>
-        int Id { get; set; }
+        int Id { get; }
 
         /// <summary>
         /// Gets the name of the test
@@ -55,17 +56,22 @@ namespace NUnit.Framework.Api
         Type FixtureType { get; }
 
         /// <summary>
-        /// Indicates whether the test can be run using
-        /// the RunState enum.
+        /// Gets a MethodInfo for the method implementing this test.
+        /// Returns null if the test is not implemented as a method.
         /// </summary>
-		RunState RunState { get; set; }
+        MethodInfo Method { get; }
+
+        /// <summary>
+        /// Gets the RunState of the test, indicating whether it can be run.
+        /// </summary>
+		RunState RunState { get; }
 
         /// <summary>
         /// Count of the test cases ( 1 if this is a test case )
         /// </summary>
-		int TestCaseCount { get; }
+        int TestCaseCount { get; }
 
-		/// <summary>
+        /// <summary>
 		/// Gets the properties of the test
 		/// </summary>
 		IPropertyBag Properties { get; }
@@ -81,12 +87,6 @@ namespace NUnit.Framework.Api
         /// has any descendant tests.
         /// </summary>
         bool HasChildren { get; }
-
-        /// <summary>
-        /// Gets the Int value representing the seed for the RandomGenerator
-        /// </summary>
-        /// <value></value>
-        int Seed { get; }
 
         /// <summary>
         /// Gets this test's child tests

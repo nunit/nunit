@@ -34,11 +34,6 @@ namespace NUnit.Framework.Api
 	public interface ITestFilter
 	{
         /// <summary>
-        /// Indicates whether this is the EmptyFilter
-        /// </summary>
-        bool IsEmpty { get; }
-
-        /// <summary>
 		/// Determine if a particular test passes the filter criteria. Pass
 		/// may examine the parents and/or descendants of a test, depending
 		/// on the semantics of the particular filter

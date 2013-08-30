@@ -109,40 +109,44 @@ namespace NUnit.Framework
 
                 foreach (object item in source)
                 {
-                    ParameterSet parms = new ParameterSet();
+                    ParameterSet parms;
                     ITestCaseData testCaseData = item as ITestCaseData;
-					
-					if (testCaseData != null)
-						parms = new ParameterSet(testCaseData);
-                    else if (item is object[])
-                    {
-                        object[] array = item as object[];
-                        parms.Arguments = array.Length == parameters.Length
-                            ? array
-                            : new object[] { item };
-                    }
-                    //else if (parameters.Length == 1 && parameters[0].ParameterType.IsAssignableFrom(item.GetType()))
-                    //{
-                    //    parms.Arguments = new object[] { item };
-                    //}
-                    else if (item is Array)
-                    {
-                        Array array = item as Array;
 
-                        if (array.Rank == 1 && array.Length == parameters.Length)
+                    if (testCaseData != null)
+                        parms = new ParameterSet(testCaseData);
+                    else
+                    {
+                        object[] args = item as object[];
+                        if (args != null)
                         {
-                            parms.Arguments = new object[array.Length];
-                            for (int i = 0; i < array.Length; i++)
-                                parms.Arguments[i] = (object)array.GetValue(i);
+                            if (args.Length != parameters.Length)
+                                args = new object[] { item };
+                        }
+                        //else if (parameters.Length == 1 && parameters[0].ParameterType.IsAssignableFrom(item.GetType()))
+                        //{
+                        //    args = new object[] { item };
+                        //}
+                        else if (item is Array)
+                        {
+                            Array array = item as Array;
+
+                            if (array.Rank == 1 && array.Length == parameters.Length)
+                            {
+                                args = new object[array.Length];
+                                for (int i = 0; i < array.Length; i++)
+                                    args[i] = (object)array.GetValue(i);
+                            }
+                            else
+                            {
+                                args = new object[] { item };
+                            }
                         }
                         else
                         {
-                            parms.Arguments = new object[] { item };
+                            args = new object[] { item };
                         }
-                    }
-                    else
-                    {
-                        parms.Arguments = new object[] { item };
+
+                        parms = new ParameterSet(args);
                     }
 
                     if (this.Category != null)

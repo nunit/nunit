@@ -119,7 +119,7 @@ namespace NUnitLite.Runner
                 //if (commandLineOptions.TestCount > 0)
                 //    runOptions["RUN"] = commandLineOptions.Tests;
 
-                ITestFilter filter = commandLineOptions.TestCount > 0
+                TestFilter filter = commandLineOptions.TestCount > 0
                     ? new SimpleNameFilter(commandLineOptions.Tests)
                     : TestFilter.Empty;
 

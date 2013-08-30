@@ -145,8 +145,9 @@ namespace NUnitLite.Runner
 
         private void PrintTestProperties(ITest test)
         {
-            foreach (PropertyEntry entry in test.Properties)
-                writer.WriteLine("  {0}: {1}", entry.Name, entry.Value);
+            foreach (string key in test.Properties.Keys)
+                foreach (object value in test.Properties[key])
+                    writer.WriteLine("  {0}: {1}", key, value);
         }
 
         private void PrintAllResults(ITestResult result, string indent)

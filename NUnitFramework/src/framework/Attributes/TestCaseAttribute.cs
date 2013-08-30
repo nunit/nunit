@@ -38,10 +38,8 @@ namespace NUnit.Framework
     {
         #region Instance variables
 
-        private object[] arguments;
         private ExpectedExceptionData exceptionData;
         private object expectedResult;
-        private bool hasExpectedResult;
         private IPropertyBag properties;
 
         #endregion
@@ -58,9 +56,9 @@ namespace NUnit.Framework
 			this.RunState = RunState.Runnable;
 			
          	if (arguments == null)
-         		this.arguments = new object[] { null };
+         		this.Arguments = new object[] { null };
          	else
- 	        	this.arguments = arguments;
+ 	        	this.Arguments = arguments;
         }
 
         /// <summary>
@@ -70,7 +68,7 @@ namespace NUnit.Framework
         public TestCaseAttribute(object arg)
         {
 			this.RunState = RunState.Runnable;			
-            this.arguments = new object[] { arg };
+            this.Arguments = new object[] { arg };
         }
 
         /// <summary>
@@ -81,7 +79,7 @@ namespace NUnit.Framework
         public TestCaseAttribute(object arg1, object arg2)
         {
 			this.RunState = RunState.Runnable;			
-            this.arguments = new object[] { arg1, arg2 };
+            this.Arguments = new object[] { arg1, arg2 };
         }
 
         /// <summary>
@@ -93,7 +91,7 @@ namespace NUnit.Framework
         public TestCaseAttribute(object arg1, object arg2, object arg3)
         {
 			this.RunState = RunState.Runnable;			
-            this.arguments = new object[] { arg1, arg2, arg3 };
+            this.Arguments = new object[] { arg1, arg2, arg3 };
         }
 
         #endregion
@@ -103,10 +101,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Gets the list of arguments to a test case
         /// </summary>
-        public object[] Arguments
-        {
-            get { return arguments; }
-        }
+        public object[] Arguments { get; private set;  }
 
         /// <summary>
         /// Gets or sets the expected result.
@@ -118,17 +113,14 @@ namespace NUnit.Framework
             set 
             { 
                 expectedResult = value;
-                hasExpectedResult = true;
+                HasExpectedResult = true;
             }
         }
 
         /// <summary>
         /// Returns true if the expected result has been set
         /// </summary>
-        public bool HasExpectedResult
-        {
-            get { return hasExpectedResult; }
-        }
+        public bool HasExpectedResult { get; private set; }
 
         /// <summary>
         /// Gets data about any expected exception for this test case.
@@ -256,14 +248,6 @@ namespace NUnit.Framework
 				foreach (string cat in value.Split(new char[] { ',' }) )
 					Properties.Add(PropertyNames.Category, cat); 
 			}
-        }
- 
-        /// <summary>
-        /// Gets a list of categories for this fixture
-        /// </summary>
-        public IList Categories
-        {
-            get { return Properties[PropertyNames.Category] as IList; }
         }
  
         /// <summary>

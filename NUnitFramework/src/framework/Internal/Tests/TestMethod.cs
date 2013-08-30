@@ -43,7 +43,7 @@ namespace NUnit.Framework.Internal
 		/// <summary>
 		/// The test method
 		/// </summary>
-		internal MethodInfo method;
+        //internal MethodInfo method;
 
         /// <summary>
         /// A list of all decorators applied to the test by attributes or parameterset arguments
@@ -71,15 +71,12 @@ namespace NUnit.Framework.Internal
         /// <param name="method">The method to be used as a test.</param>
         /// <param name="parentSuite">The suite or fixture to which the new test will be added</param>
         public TestMethod(MethodInfo method, Test parentSuite) 
-			: base( method.ReflectedType ) 
+			: base( method ) 
 		{
-            this.Name = method.Name;
-            this.FullName += "." + this.Name;
-
             // Disambiguate call to base class methods
             // TODO: This should not be here - it's a presentation issue
-            if( method.DeclaringType != method.ReflectedType)
-                this.Name = method.DeclaringType.Name + "." + method.Name;
+            //if( method.DeclaringType != method.ReflectedType)
+            //    this.Name = method.DeclaringType.Name + "." + method.Name;
 
             // Needed to give proper fullname to test in a parameterized fixture.
             // Without this, the arguments to the fixture are not included.
@@ -90,21 +87,21 @@ namespace NUnit.Framework.Internal
                 this.FullName = prefix + "." + this.Name;
             }
 
-            this.method = method;
+            //this.method = method;
         }
 
 		#endregion
 
         #region Properties
 
-        /// <summary>
-        /// Gets the method.
-        /// </summary>
-        /// <value>The method that performs the test.</value>
-		public MethodInfo Method
-		{
-			get { return method; }
-		}
+        ///// <summary>
+        ///// Gets the method.
+        ///// </summary>
+        ///// <value>The method that performs the test.</value>
+        //public MethodInfo Method
+        //{
+        //    get { return method; }
+        //}
 
         /// <summary>
         /// Gets a list of custom decorators for this test.

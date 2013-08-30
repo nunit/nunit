@@ -22,8 +22,6 @@
 // ***********************************************************************
 
 using System;
-using System.Collections;
-using System.Collections.Specialized;
 using NUnit.Framework.Api;
 using NUnit.Framework.Internal;
 
@@ -33,39 +31,11 @@ namespace NUnit.Framework
     /// <summary>
     /// The TestCaseData class represents a set of arguments
     /// and other parameter info to be used for a parameterized
-    /// test case. It provides a number of instance modifiers
-    /// for use in initializing the test case.
-    /// 
-    /// Note: Instance modifiers are getters that return
-    /// the same instance after modifying it's state.
+    /// test case. It is derived from ParameterSet and adds a
+    /// fluent syntax for use in initializing the test case.
     /// </summary>
-    public class TestCaseData : ITestCaseData
+    public class TestCaseData : ParameterSet
     {
-
-        #region Instance Fields
-
-        /// <summary>
-        /// The argument list to be provided to the test
-        /// </summary>
-        private object[] arguments;
-
-        /// <summary>
-        /// The expected result to be returned
-        /// </summary>
-        private object expectedResult;
-
-        /// <summary>
-        /// Data about any expected exception.
-        /// </summary>
-        private ExpectedExceptionData exceptionData;
-
-        /// <summary>
-        /// A dictionary of properties, used to add information
-        /// to tests without requiring the class to change.
-        /// </summary>
-        private IPropertyBag properties;
-
-        #endregion
 
         #region Constructors
 
@@ -74,13 +44,8 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="args">The arguments.</param>
         public TestCaseData(params object[] args)
+            : base(args == null ? new object[] { null } : args)
         {
-			this.RunState = RunState.Runnable;
-
-			if (args == null)
-                this.arguments = new object[] { null };
-            else
-                this.arguments = args;
         }
 
         /// <summary>
@@ -88,9 +53,8 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="arg">The argument.</param>
         public TestCaseData(object arg)
+            : base(new object[] { arg })
         {
-			this.RunState = RunState.Runnable;
-            this.arguments = new object[] { arg };
         }
 
         /// <summary>
@@ -99,9 +63,8 @@ namespace NUnit.Framework
         /// <param name="arg1">The first argument.</param>
         /// <param name="arg2">The second argument.</param>
         public TestCaseData(object arg1, object arg2)
+            : base(new object[] { arg1, arg2 })
         {
-			this.RunState = RunState.Runnable;
-            this.arguments = new object[] { arg1, arg2 };
         }
 
         /// <summary>
@@ -111,71 +74,8 @@ namespace NUnit.Framework
         /// <param name="arg2">The second argument.</param>
         /// <param name="arg3">The third argument.</param>
         public TestCaseData(object arg1, object arg2, object arg3)
+            : base( new object[] { arg1, arg2, arg3 })
         {
-			this.RunState = RunState.Runnable;
-            this.arguments = new object[] { arg1, arg2, arg3 };
-        }
-
-        #endregion
-
-        #region ITestCaseData Members
-
-        /// <summary>
-        /// Gets the argument list to be provided to the test
-        /// </summary>
-        public object[] Arguments
-        {
-            get { return arguments; }
-        }
-
-        /// <summary>
-        /// Gets the expected result
-        /// </summary>
-        public object ExpectedResult
-        {
-            get { return expectedResult; }
-			set
-			{
-				expectedResult = value;
-				HasExpectedResult = true;
-			}
-        }
-
-        /// <summary>
-        /// Returns true if the expected result has been set
-        /// </summary>
-        public bool HasExpectedResult { get; set; }
-
-        /// <summary>
-        /// Gets data about any expected exception.
-        /// </summary>
-        public ExpectedExceptionData ExceptionData
-        {
-            get { return exceptionData; }
-        }
-
-        /// <summary>
-        /// Gets the name to be used for the test
-        /// </summary>
-        public string TestName { get; set; }
-	
-		/// <summary>
-		/// Gets the RunState for this test case.
-		/// </summary>
-		public RunState RunState { get; set; }
-
-        /// <summary>
-        /// Gets the property dictionary for this test
-        /// </summary>
-        public IPropertyBag Properties
-        {
-            get
-            {
-                if (properties == null)
-                    properties = new NUnit.Framework.Internal.PropertyBag();
-
-                return properties;
-            }
         }
 
         #endregion
@@ -200,7 +100,6 @@ namespace NUnit.Framework
         /// <returns>The modified TestCaseData instance</returns>
         public TestCaseData Throws(Type exceptionType)
         {
-            //this.expectedExceptionType = exceptionType;
             exceptionData.ExpectedExceptionName = exceptionType.FullName;
             return this;
         }
