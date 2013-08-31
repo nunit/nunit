@@ -23,8 +23,10 @@
 
 using System;
 using System.IO;
+using System.Reflection;
 using System.Xml;
 using NUnit.Framework.Api;
+using NUnit.Framework.Internal;
 
 namespace NUnitLite.Runner
 {
@@ -54,9 +56,87 @@ namespace NUnitLite.Runner
 
             using (XmlWriter xmlWriter = XmlWriter.Create(writer, settings))
             {
-                xmlWriter.WriteStartDocument(false);
-                result.ToXml(true).WriteTo(xmlWriter);
+                WriteXmlOutput(result, xmlWriter);
             }
+        }
+
+        private void WriteXmlOutput(ITestResult result, XmlWriter xmlWriter)
+        {
+            this.xmlWriter = xmlWriter;
+
+            InitializeXmlFile(result);
+
+            result.ToXml(true).WriteTo(xmlWriter);
+
+            TerminateXmlFile();
+        }
+
+        private void InitializeXmlFile(ITestResult result)
+        {
+            xmlWriter.WriteStartDocument(false);
+
+            // In order to match the format used by NUnit 3.0, we
+            // wrap the entire result from the framework in a 
+            // <test-run> element.
+            xmlWriter.WriteStartElement("test-run");
+
+            xmlWriter.WriteAttributeString("id", "2"); // TODO: Should not be hard-coded
+            xmlWriter.WriteAttributeString("name", result.Name);
+            xmlWriter.WriteAttributeString("fullname", result.FullName);
+            xmlWriter.WriteAttributeString("testcasecount", result.Test.TestCaseCount.ToString());
+
+            xmlWriter.WriteAttributeString("result", result.ResultState.Status.ToString());
+            if (result.ResultState.Label != string.Empty) // && result.ResultState.Label != ResultState.Status.ToString())
+                xmlWriter.WriteAttributeString("label", result.ResultState.Label);
+
+            xmlWriter.WriteAttributeString("time", result.Duration.ToString());
+
+            xmlWriter.WriteAttributeString("total", (result.PassCount + result.FailCount + result.SkipCount + result.InconclusiveCount).ToString());
+            xmlWriter.WriteAttributeString("passed", result.PassCount.ToString());
+            xmlWriter.WriteAttributeString("failed", result.FailCount.ToString());
+            xmlWriter.WriteAttributeString("inconclusive", result.InconclusiveCount.ToString());
+            xmlWriter.WriteAttributeString("skipped", result.SkipCount.ToString());
+            xmlWriter.WriteAttributeString("asserts", result.AssertCount.ToString());
+
+            xmlWriter.WriteAttributeString("run-date", XmlConvert.ToString(runStartTime, "yyyy-MM-dd"));
+            xmlWriter.WriteAttributeString("start-time", XmlConvert.ToString(runStartTime, "HH:mm:ss"));
+
+            xmlWriter.WriteAttributeString("random-seed", Randomizer.InitialSeed.ToString());
+
+            WriteEnvironmentElement();
+        }
+
+        private void WriteEnvironmentElement()
+        {
+            xmlWriter.WriteStartElement("environment");
+
+            Assembly assembly = Assembly.GetExecutingAssembly();
+            AssemblyName assemblyName = AssemblyHelper.GetAssemblyName(assembly);
+            xmlWriter.WriteAttributeString("nunit-version", assemblyName.Version.ToString());
+
+            xmlWriter.WriteAttributeString("clr-version", Environment.Version.ToString());
+            xmlWriter.WriteAttributeString("os-version", Environment.OSVersion.ToString());
+            xmlWriter.WriteAttributeString("platform", Environment.OSVersion.Platform.ToString());
+#if !NETCF
+            xmlWriter.WriteAttributeString("cwd", Environment.CurrentDirectory);
+#if !SILVERLIGHT
+            xmlWriter.WriteAttributeString("machine-name", Environment.MachineName);
+            xmlWriter.WriteAttributeString("user", Environment.UserName);
+            xmlWriter.WriteAttributeString("user-domain", Environment.UserDomainName);
+#endif
+#endif
+            xmlWriter.WriteAttributeString("culture", System.Globalization.CultureInfo.CurrentCulture.ToString());
+            xmlWriter.WriteAttributeString("uiculture", System.Globalization.CultureInfo.CurrentUICulture.ToString());
+
+            xmlWriter.WriteEndElement();
+        }
+
+        private void TerminateXmlFile()
+        {
+            xmlWriter.WriteEndElement(); // test-run
+            xmlWriter.WriteEndDocument();
+            xmlWriter.Flush();
+            xmlWriter.Close();
         }
     }
 }
