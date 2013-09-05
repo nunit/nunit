@@ -186,9 +186,8 @@ namespace NUnit.DirectRunner
             Debug.Assert(result != null);
             Debug.Assert(time != null);
 
-            Debug.WriteLine(result.Value);
-
-            TimeSpan duration = TimeSpan.FromSeconds(double.Parse(time.Value, CultureInfo.InvariantCulture));
+            // TODO: Handle an error here
+            TimeSpan duration = TimeSpan.Parse(time.Value);
 
             switch (result.Value)
             {
@@ -221,7 +220,7 @@ namespace NUnit.DirectRunner
         private void OnOutput(XmlNode outputNode)
         {
             XmlAttribute type = outputNode.Attributes["type"];
-            XmlNode textNode = outputNode.SelectSingleNode("text");
+            XmlNode textNode = outputNode.Attributes["text"];
 
             Debug.Assert(type != null);
             Debug.Assert(textNode != null);

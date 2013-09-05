@@ -26,7 +26,7 @@ using System.Diagnostics;
 using System.Threading;
 using NUnit.Framework.Api;
 
-namespace NUnit.Framework.Internal.WorkItems
+namespace NUnit.Framework.Internal.Execution
 {
     /// <summary>
     /// A WorkItem may be an individual test case, a fixture or
@@ -34,6 +34,10 @@ namespace NUnit.Framework.Internal.WorkItems
     /// from the abstract WorkItem class, which uses the template
     /// pattern to allow derived classes to perform work in
     /// whatever way is needed.
+    /// 
+    /// A WorkItem is created with a particular TestExecutionContext
+    /// and is responsible for re-establishing that context in the
+    /// current thread before it begins or resumes execution.
     /// </summary>
     public abstract class WorkItem
     {
@@ -46,10 +50,23 @@ namespace NUnit.Framework.Internal.WorkItems
         /// <summary>
         /// The result of running the test
         /// </summary>
-        protected TestResult testResult;
+        protected TestResult _testResult;
 
         // The execution context used by this work item
         private TestExecutionContext _context;
+
+        #region Static Factory Method
+
+        static public WorkItem CreateWorkItem(Test test, TestExecutionContext context, ITestFilter filter)
+        {
+            TestSuite suite = test as TestSuite;
+            if (suite != null)
+                return new CompositeWorkItem(suite, context, filter);
+            else
+                return new SimpleWorkItem((TestMethod)test, context);
+        }
+
+        #endregion
 
         #region Constructor
 
@@ -57,11 +74,13 @@ namespace NUnit.Framework.Internal.WorkItems
         /// Construct a WorkItem for a particular test.
         /// </summary>
         /// <param name="test">The test that the WorkItem will run</param>
-        public WorkItem(Test test)
+        /// <param name="context">The TestExecutionContext in which it will run</param>
+        public WorkItem(Test test, TestExecutionContext context)
         {
             _test = test;
-            testResult = test.MakeTestResult();
+            _testResult = test.MakeTestResult();
             _state = WorkItemState.Ready;
+            _context = context;
         }
 
         #endregion
@@ -102,8 +121,20 @@ namespace NUnit.Framework.Internal.WorkItems
         /// </summary>
         public TestResult Result
         {
-            get { return testResult; }
+            get { return _testResult; }
         }
+
+#if !SILVERLIGHT && !NETCF
+        internal ApartmentState TargetApartment
+        {
+            get 
+            {
+                return Test.Properties.ContainsKey(PropertyNames.ApartmentState)
+                    ? (ApartmentState)_test.Properties.Get(PropertyNames.ApartmentState)
+                    : ApartmentState.Unknown;
+            }
+        }
+#endif
 
         #endregion
 
@@ -113,10 +144,8 @@ namespace NUnit.Framework.Internal.WorkItems
         /// Execute the current work item, including any
         /// child work items.
         /// </summary>
-        public virtual void Execute(TestExecutionContext context)
+        public virtual void Execute()
         {
-            _context = new TestExecutionContext(context);
-
 #if !SILVERLIGHT && !NETCF
             // Timeout set at a higher level
             int timeout = _context.TestCaseTimeout;
@@ -126,13 +155,9 @@ namespace NUnit.Framework.Internal.WorkItems
                 timeout = (int)Test.Properties.Get(PropertyNames.Timeout);
 
             ApartmentState currentApartment = Thread.CurrentThread.GetApartmentState();
-            ApartmentState targetApartment = currentApartment;
 
-            if (Test.Properties.ContainsKey(PropertyNames.ApartmentState))
-                targetApartment = (ApartmentState)Test.Properties.Get(PropertyNames.ApartmentState);
-
-            if (Test.RequiresThread || Test is TestMethod && timeout > 0 || currentApartment != targetApartment)
-                RunTestOnOwnThread(timeout, targetApartment);
+            if (Test.RequiresThread || Test is TestMethod && timeout > 0 || currentApartment != TargetApartment && TargetApartment != ApartmentState.Unknown)
+                RunTestOnOwnThread(timeout, TargetApartment);
             else
                 RunTest();
 #else
@@ -144,6 +169,13 @@ namespace NUnit.Framework.Internal.WorkItems
 #if !SILVERLIGHT && !NETCF
         private void RunTestOnOwnThread(int timeout, ApartmentState apartment)
         {
+            string reason = Test.RequiresThread
+                ? "has RequiresThreadAttribute."
+                : timeout > 0
+                    ? "has Timeout value set."
+                    : "requires a different apartment.";
+            InternalTrace.Debug("Running test on own thread because it " + reason);
+
             Thread thread = new Thread(new ThreadStart(RunTest));
 
             thread.SetApartmentState(apartment);
@@ -188,33 +220,9 @@ namespace NUnit.Framework.Internal.WorkItems
             _context.Listener.TestStarted(this.Test);
             _context.StartTime = DateTime.Now;
 
-            TestExecutionContext.SetCurrentContext(_context);
+            _context.EstablishExecutionEnvironment();
 
-#if !SILVERLIGHT && !NETCF_2_0
-            long startTicks = Stopwatch.GetTimestamp();
-#endif
-
-            try
-            {
-                PerformWork();
-            }
-            finally
-            {
-#if !SILVERLIGHT && !NETCF_2_0
-                long tickCount = Stopwatch.GetTimestamp() - startTicks;
-                double seconds = (double)tickCount / Stopwatch.Frequency;
-                Result.Duration = TimeSpan.FromSeconds(seconds);
-#else
-                Result.Duration = DateTime.Now - Context.StartTime;
-#endif
-
-                Result.AssertCount = _context.AssertCount;
-
-                _context.Listener.TestFinished(Result);
-
-                _context = _context.Restore();
-                _context.AssertCount += Result.AssertCount;
-            }
+            PerformWork();
         }
 
         #endregion
@@ -233,6 +241,25 @@ namespace NUnit.Framework.Internal.WorkItems
         protected void WorkItemComplete()
         {
             _state = WorkItemState.Complete;
+
+            //long tickCount = Stopwatch.GetTimestamp() - Context.StartTicks;
+            //double seconds = (double)tickCount / Stopwatch.Frequency;
+            //Result.Duration = TimeSpan.FromSeconds(seconds);
+
+            Result.Duration = DateTime.Now - Context.StartTime;
+
+            // We add in the assert count from the context. If
+            // this item is for a test case, we are adding the
+            // test assert count to zero. If it's a fixture, we
+            // are adding in any asserts that were run in the
+            // fixture setup or teardown. Each context only
+            // counts the asserts taking place in that context.
+            // Each result accumulates the count from child
+            // results along with it's own asserts.
+            Result.AssertCount += Context.AssertCount;
+
+            _context.Listener.TestFinished(Result);
+
             if (Completed != null)
                 Completed(this, EventArgs.Empty);
         }

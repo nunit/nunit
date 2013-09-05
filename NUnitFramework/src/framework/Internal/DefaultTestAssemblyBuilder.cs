@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using NUnit.Framework.Api;
-using NUnit.Framework.Builders;
 using NUnit.Framework.Extensibility;
+using NUnit.Framework.Internal.Builders;
 
 namespace NUnit.Framework.Internal
 {
@@ -225,16 +225,10 @@ namespace NUnit.Framework.Internal
             }
             else
             {
-#if false
-                foreach (Test fixture in fixtures)
-                    testAssembly.Add(fixture);
-#else
                 NamespaceTreeBuilder treeBuilder =
                     new NamespaceTreeBuilder(testAssembly);
                 treeBuilder.Add(fixtures);
                 testAssembly = treeBuilder.RootSuite;
-#endif
-
             }
 
             testAssembly.ApplyAttributesToTest(assembly);

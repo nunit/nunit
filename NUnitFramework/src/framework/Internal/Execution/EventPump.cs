@@ -26,7 +26,7 @@ using System;
 using System.Threading;
 using NUnit.Framework.Api;
 
-namespace NUnit.Framework.Internal
+namespace NUnit.Framework.Internal.Execution
 {
     /// <summary>
     /// The EventPumpState enum represents the state of an
@@ -206,14 +206,14 @@ namespace NUnit.Framework.Internal
                     Event e = this.events.Dequeue( this.PumpState == EventPumpState.Pumping );
                     if ( e == null )
                         break;
-                    try
+                    try 
                     {
                         e.Send(this.eventListener);
 						e.Send(hostListeners);
                     }
                     catch (Exception ex)
                     {
-                        InternalTrace.Error( "Exception in event handler", ex );
+                        InternalTrace.Error( "Exception in event handler\r\n {0}", ex );
                     }
                     finally
                     {

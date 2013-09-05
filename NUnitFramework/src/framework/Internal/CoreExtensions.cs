@@ -26,9 +26,10 @@ using System;
 using System.IO;
 using System.Collections;
 using System.Reflection;
-using NUnit.Framework.Builders;
+using NUnit.Framework.Internal.Builders;
 using NUnit.Framework.Extensibility;
 using NUnit.Framework.Api;
+using NUnit.Framework.Internal.Extensibility;
 
 namespace NUnit.Framework.Internal
 {

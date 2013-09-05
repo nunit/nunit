@@ -1,7 +1,7 @@
 ﻿#if NET_4_5
 using System.Reflection;
 using NUnit.Framework.Api;
-using NUnit.Framework.Builders;
+using NUnit.Framework.Internal.Builders;
 using NUnit.TestData;
 using NUnit.TestUtilities;
 
@@ -32,7 +32,7 @@ namespace NUnit.Framework.Internal
         [TestCase("AsyncGenericTaskTestCaseWithExpectedException", RunState.Runnable)]
         public void AsyncTestCases(string methodName, RunState expectedState)
         {
-            var suite = TestBuilder.MakeTestCase(fixtureType, methodName);
+            var suite = TestBuilder.MakeParameterizedMethodSuite(fixtureType, methodName);
             var testCase = (Test)suite.Tests[0];
             Assert.That(testCase.RunState, Is.EqualTo(expectedState));
         }

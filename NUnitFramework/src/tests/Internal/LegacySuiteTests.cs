@@ -23,7 +23,7 @@
 
 #if !NUNITLITE
 using NUnit.Framework.Api;
-using NUnit.Framework.Builders;
+using NUnit.Framework.Internal.Builders;
 using NUnit.TestData.LegacySuiteData;
 using NUnit.TestUtilities;
 
@@ -75,9 +75,9 @@ namespace NUnit.Framework.Internal
 		public void SetUpAndTearDownAreCalled()
 		{
             LegacySuiteWithSetUpAndTearDown.SetupCount = LegacySuiteWithSetUpAndTearDown.TeardownCount = 0;
-			Test suite = builder.BuildFrom( typeof( LegacySuiteWithSetUpAndTearDown ) );
+			TestSuite suite = (TestSuite)builder.BuildFrom( typeof( LegacySuiteWithSetUpAndTearDown ) );
             Assert.AreEqual(RunState.Runnable, suite.RunState);
-            TestBuilder.RunTest(suite, null);
+            TestBuilder.RunTestSuite(suite, null);
             Assert.AreEqual(1, LegacySuiteWithSetUpAndTearDown.SetupCount);
             Assert.AreEqual(1, LegacySuiteWithSetUpAndTearDown.TeardownCount);
 		}

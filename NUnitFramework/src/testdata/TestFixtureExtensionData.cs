@@ -25,6 +25,8 @@
 using System;
 using NUnit.Framework;
 
+// TODO: Figure out what this was for or delete it
+
 namespace NUnit.TestData.TestFixtureExtensionData
 {
 	[TestFixture]

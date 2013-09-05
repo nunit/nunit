@@ -29,7 +29,7 @@ using System.Runtime.Serialization;
 using System.Threading;
 using NUnit.Framework.Api;
 
-namespace NUnit.Framework.Internal
+namespace NUnit.Framework.Internal.Execution
 {
 	#region Individual Event Classes
 
@@ -91,21 +91,22 @@ namespace NUnit.Framework.Internal
 			this.test = test;
 		}
 
-        /// <summary>
-        /// Gets a value indicating whether this event is delivered synchronously by the NUnit <see cref="EventPump"/>.
-        /// <para>
-        /// If <c>true</c>, and if <see cref="EventQueue.SetWaitHandleForSynchronizedEvents"/> has been used to 
-        /// set a WaitHandle, <see cref="EventQueue.Enqueue"/> blocks its calling thread until the <see cref="EventPump"/>
-        /// thread has delivered the event and sets the WaitHandle.
-        /// </para>
-        /// </summary>
-        public override bool IsSynchronous
-        {
-            get
-            {
-                return true;
-            }
-        }
+        ///// <summary>
+        ///// Gets a value indicating whether this event is delivered synchronously by the NUnit <see cref="EventPump"/>.
+        ///// <para>
+        ///// If <c>true</c>, and if <see cref="EventQueue.SetWaitHandleForSynchronizedEvents"/> has been used to 
+        ///// set a WaitHandle, <see cref="EventQueue.Enqueue"/> blocks its calling thread until the <see cref="EventPump"/>
+        ///// thread has delivered the event and sets the WaitHandle.
+        ///// </para>
+        ///// </summary>
+        // Keeping this as a synchronous until we rewrite using multiple autoresetevents
+        //public override bool IsSynchronous
+        //{
+        //    get
+        //    {
+        //        return true;
+        //    }
+        //}
 
         /// <summary>
         /// Calls TestStarted on the specified listener.

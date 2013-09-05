@@ -33,6 +33,14 @@ namespace NUnit.Framework.Internal
     /// of Console writes, System.Diagnostics.Trace or various loggers and
     /// NUnit itself traps and processes each of them. For that reason, a
     /// separate internal trace is needed.
+    /// 
+    /// Note:
+    /// InternalTrace uses a global lock to allow multiple threads to write
+    /// trace messages. This can easily make it a bottleneck so it must be 
+    /// used sparingly. Keep the trace Level as low as possible and only
+    /// insert InternalTrace writes where they are needed.
+    /// TODO: add some buffering and a separate writer thread as an option.
+    /// TODO: figure out a way to turn on trace in specific classes only.
     /// </summary>
 	public class InternalTrace
     {
@@ -70,7 +78,7 @@ namespace NUnit.Framework.Internal
         #region Static Fields
 
 #if !SILVERLIGHT
-        private static string MY_NAME = "NUnit.Framework.Internal.InternalTrace";
+        private static readonly string MY_NAME = "NUnit.Framework.Internal.InternalTrace";
         
         private readonly static string NL = NUnit.Env.NewLine;
         private readonly static string TIME_FMT = "HH:mm:ss.fff";
@@ -120,7 +128,7 @@ namespace NUnit.Framework.Internal
         public static void Open(string logName)
         {
             writer = new StreamWriter(
-                new FileStream(logName, FileMode.Append, FileAccess.Write, FileShare.Write));
+                new FileStream(logName, FileMode.Create, FileAccess.Write, FileShare.Write));
         }
 
         /// <summary>
@@ -223,20 +231,34 @@ namespace NUnit.Framework.Internal
                 }
 #endif
 
-                int threadID = System.Threading.Thread.CurrentThread.ManagedThreadId;
+                var thread = System.Threading.Thread.CurrentThread;
+                string threadName = thread.Name;
+                if (threadName == null)
+                    threadName = thread.ManagedThreadId.ToString();
 
                 if (args != null)
                     message = string.Format(message, args);
                 
-                Writer.WriteLine(TRACE_FMT,
+                WriteTraceMessage(string.Format(TRACE_FMT,
                     DateTime.Now.ToString(TIME_FMT),
                     level.ToString(),
-                    threadID,
+                    threadName,
                     caller,
-                    message);
+                    message));
             }
 #endif
         }
+
+#if !SILVERLIGHT
+        private static object _globalLock = new object();
+        private static void WriteTraceMessage(string message)
+        {
+            lock (_globalLock)
+            {
+                Writer.WriteLine(message);
+            }
+        }
+#endif
         #endregion
     }
 }

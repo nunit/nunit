@@ -8,8 +8,9 @@
 using System;
 using System.Collections;
 using System.Reflection;
+using NUnit.Framework.Extensibility;
 
-namespace NUnit.Framework.Extensibility
+namespace NUnit.Framework.Internal.Extensibility
 {
 	/// <summary>
 	/// Summary description for AddinRegistry.

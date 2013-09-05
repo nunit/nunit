@@ -1,5 +1,5 @@
-// ***********************************************************************
-// Copyright (c) 2008 Charlie Poole
+﻿// ***********************************************************************
+// Copyright (c) 2012 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,49 +21,45 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NETCF && !SILVERLIGHT
-using System.Collections.Specialized;
-using System.Configuration;
+using System;
+using System.Threading;
+using NUnit.Framework.Internal.Commands;
 
-namespace NUnit.Framework.Internal
+namespace NUnit.Framework.Internal.Execution
 {
     /// <summary>
-    /// LogCapture is the abstract base for classes that
-    /// capture log info from a specific logging system.
+    /// A SimpleWorkItem represents a single test case and is
+    /// marked as completed immediately upon execution. This
+    /// class is also used for skipped or ignored test suites.
     /// </summary>
-    public abstract class LogCapture : TextCapture
+    public class SimpleWorkItem : WorkItem
     {
-        private string defaultThreshold;
+        private TestCommand _command;
 
         /// <summary>
-        /// The default threshold for log capture
-        /// is read from the config file. If not
-        /// found, we use "Error".
+        /// Construct a simple work item for a test.
         /// </summary>
-        public override string DefaultThreshold
+        /// <param name="test">The test to be executed</param>
+        /// <param name="context">The execution context to be used</param>
+        public SimpleWorkItem(TestMethod test, TestExecutionContext context) : base(test, context) 
         {
-            get
+            _command = test.MakeTestCommand();
+        }
+
+        /// <summary>
+        /// Method that performs actually performs the work.
+        /// </summary>
+        protected override void PerformWork()
+        {
+            try
             {
-                if (defaultThreshold == null)
-                {
-                    defaultThreshold = "Error";
-
-#if !NUNITLITE
-                    NameValueCollection settings = (NameValueCollection)
-                        ConfigurationManager.GetSection("NUnit/TestRunner");
-
-                    if (settings != null)
-                    {
-                        string level = settings["DefaultLogThreshold"];
-                        if (level != null)
-                            defaultThreshold = level;
-                    }
-#endif
-                }
-
-                return defaultThreshold;
+                _testResult = _command.Execute(Context);
+            }
+            finally
+            {
+                WorkItemComplete();
             }
         }
+
     }
 }
-#endif

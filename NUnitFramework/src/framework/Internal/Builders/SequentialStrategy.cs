@@ -27,9 +27,8 @@ using System.Collections.Generic;
 using System.Reflection;
 using NUnit.Framework.Api;
 using NUnit.Framework.Extensibility;
-using NUnit.Framework.Internal;
 
-namespace NUnit.Framework.Builders
+namespace NUnit.Framework.Internal.Builders
 {
     /// <summary>
     /// SequentialStrategy creates test cases by using all of the

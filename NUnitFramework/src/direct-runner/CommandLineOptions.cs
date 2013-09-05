@@ -52,6 +52,8 @@ namespace NUnit.DirectRunner
         private List<string> invalidOptions = new List<string>();
         private List<string> parameters = new List<string>();
 
+        private int numWorkers = 0;
+
         /// <summary>
         /// Gets a value indicating whether the 'wait' option was used.
         /// </summary>
@@ -127,6 +129,14 @@ namespace NUnit.DirectRunner
         }
 
         /// <summary>
+        /// Gets the number of worker threads to use in running tests
+        /// </summary>
+        public int NumWorkers
+        {
+            get { return numWorkers; }
+        }
+
+        /// <summary>
         /// Gets a list of all tests to be run
         /// </summary>
         public IList Run
@@ -157,10 +167,11 @@ namespace NUnit.DirectRunner
             get { return parameters.ToArray(); }
         }
 
-        private void ProcessOption(string opt)
+        private void ProcessOption(string option)
         {
-            int pos = opt.IndexOfAny(new char[] { ':', '=' });
+            int pos = option.IndexOfAny(new char[] { ':', '=' });
             string val = string.Empty;
+            string opt = option;
 
             if (pos >= 0)
             {
@@ -209,9 +220,16 @@ namespace NUnit.DirectRunner
                 case "appdomain":
                     useappdomain = true;
                     break;
+                case "workers":
+                    if (!int.TryParse(val, out numWorkers) || numWorkers <= 0)
+                    {
+                        error = true;
+                        invalidOptions.Add(option);
+                    }
+                    break;
                 default:
                     error = true;
-                    invalidOptions.Add(opt);
+                    invalidOptions.Add(option);
                     break;
             }
         }

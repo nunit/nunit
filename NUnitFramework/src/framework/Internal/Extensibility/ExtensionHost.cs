@@ -24,8 +24,9 @@
 #if !NUNITLITE
 using System;
 using System.Collections.Generic;
+using NUnit.Framework.Extensibility;
 
-namespace NUnit.Framework.Extensibility
+namespace NUnit.Framework.Internal.Extensibility
 {
 	/// <summary>
 	/// ExtensionHost is the abstract base class used for

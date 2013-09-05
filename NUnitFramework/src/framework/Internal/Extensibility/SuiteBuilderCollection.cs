@@ -23,10 +23,10 @@
 
 using System;
 using System.Collections.Generic;
-using NUnit.Framework.Internal;
-using NUnit.Framework.Builders;
+using NUnit.Framework.Extensibility;
+using NUnit.Framework.Internal.Builders;
 
-namespace NUnit.Framework.Extensibility
+namespace NUnit.Framework.Internal.Extensibility
 {
 	/// <summary>
 	/// SuiteBuilderCollection is an ExtensionPoint for SuiteBuilders and

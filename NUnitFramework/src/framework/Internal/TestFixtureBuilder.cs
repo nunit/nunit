@@ -24,8 +24,10 @@
 using System;
 using System.Reflection;
 using NUnit.Framework.Api;
+using NUnit.Framework.Extensibility;
 #if NUNITLITE
-using NUnit.Framework.Builders;
+using NUnit.Framework.Internal.Builders;
+using NUnit.Framework.Internal.Extensibility;
 #endif
 
 namespace NUnit.Framework.Internal
@@ -38,9 +40,9 @@ namespace NUnit.Framework.Internal
 	public class TestFixtureBuilder
 	{
 #if NUNITLITE
-        private static Extensibility.ISuiteBuilder builder = new NUnit.Framework.Extensibility.SuiteBuilderCollection();
+        private static ISuiteBuilder builder = new SuiteBuilderCollection();
 #else
-        private static Extensibility.ISuiteBuilder builder = CoreExtensions.Host.SuiteBuilders;
+        private static ISuiteBuilder builder = CoreExtensions.Host.SuiteBuilders;
 #endif
 
         /// <summary>

@@ -23,10 +23,11 @@
 
 using System;
 using System.Collections;
+using System.IO;
 using System.Reflection;
 using System.Threading;
 using NUnit.Framework.Api;
-using NUnit.Framework.Internal.WorkItems;
+using NUnit.Framework.Internal.Execution;
 
 namespace NUnit.Framework.Internal
 {
@@ -35,9 +36,10 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public class DefaultTestAssemblyRunner : ITestAssemblyRunner
     {
-        private ITestAssemblyBuilder builder;
-        private TestSuite loadedTest;
-        private IDictionary settings;
+        private ITestAssemblyBuilder _builder;
+        private TestSuite _loadedTest;
+        private IDictionary _settings;
+        private AutoResetEvent _runComplete = new AutoResetEvent(false);
 
         #region Constructors
 
@@ -47,7 +49,7 @@ namespace NUnit.Framework.Internal
         /// <param name="builder">The builder.</param>
         public DefaultTestAssemblyRunner(ITestAssemblyBuilder builder)
         {
-            this.builder = builder;
+            _builder = builder;
         }
 
         #endregion
@@ -61,7 +63,7 @@ namespace NUnit.Framework.Internal
         {
             get
             {
-                return this.loadedTest;
+                return _loadedTest;
             }
         }
 
@@ -77,9 +79,9 @@ namespace NUnit.Framework.Internal
         /// <returns>True if the load was successful</returns>
         public bool Load(string assemblyName, IDictionary settings)
         {
-            this.settings = settings;
-            this.loadedTest = (TestSuite)this.builder.Build(assemblyName, settings);
-            if (loadedTest == null) return false;
+            _settings = settings;
+            _loadedTest = (TestSuite)_builder.Build(assemblyName, settings);
+            if (_loadedTest == null) return false;
 
             return true;
         }
@@ -92,9 +94,9 @@ namespace NUnit.Framework.Internal
         /// <returns>True if the load was successful</returns>
         public bool Load(Assembly assembly, IDictionary settings)
         {
-            this.settings = settings;
-            this.loadedTest = (TestSuite)this.builder.Build(assembly, settings);
-            if (loadedTest == null) return false;
+            _settings = settings;
+            _loadedTest = (TestSuite)_builder.Build(assembly, settings);
+            if (_loadedTest == null) return false;
 
             return true;
         }
@@ -118,54 +120,99 @@ namespace NUnit.Framework.Internal
         /// <returns></returns>
         public ITestResult Run(ITestListener listener, ITestFilter filter)
         {
-            TestExecutionContext context = new TestExecutionContext();
-
-            if (loadedTest == null)
+            InternalTrace.Info("Running tests");
+            if (_loadedTest == null)
                 throw new InvalidOperationException("Run was called but no test has been loaded.");
 
-            if (this.settings.Contains("DefaultTimeout"))
-                context.TestCaseTimeout = (int)this.settings["DefaultTimeout"];
-            if (this.settings.Contains("StopOnError"))
-                context.StopOnError = (bool)this.settings["StopOnError"];
-	
-			if (this.settings.Contains("WorkDirectory"))
-				context.WorkDirectory = (string)this.settings["WorkDirectory"];
-			else
-#if NETCF || SILVERLIGHT
-                context.WorkDirectory = Env.DocumentFolder;
-#else
-				context.WorkDirectory = Environment.CurrentDirectory;
-#endif
+            // Save Console.Out and Error for later restoration
+            TextWriter savedOut = Console.Out;
+            TextWriter savedErr = Console.Error;
+
+            TestExecutionContext initialContext = CreateTestExecutionContext();
 
 #if NUNITLITE
-            context.Listener = listener;
+            initialContext.Listener = listener;
 
-            WorkItem workItem = loadedTest.CreateWorkItem(filter);
-            workItem.Execute(context);
+            WorkItem workItem = WorkItem.CreateWorkItem(_loadedTest, initialContext, filter);
+            workItem.Completed += new EventHandler(OnRunCompleted);
+            workItem.Execute();
 
-            while (workItem.State != WorkItemState.Complete)
-                System.Threading.Thread.Sleep(5);
+            _runComplete.WaitOne();
+
             return workItem.Result;
 #else
             QueuingEventListener queue = new QueuingEventListener();
 
-            context.Out = new EventListenerTextWriter(queue, TestOutputType.Out);
-            context.Error = new EventListenerTextWriter(queue, TestOutputType.Error);
-            context.Listener = queue;
+            initialContext.Out = new EventListenerTextWriter(queue, TestOutputType.Out);
+            initialContext.Error = new EventListenerTextWriter(queue, TestOutputType.Error);
+            initialContext.Listener = queue;
 
-            WorkItem workItem = loadedTest.CreateWorkItem(filter);
+            int numWorkers = 0;
+            if (_settings.Contains("NumberOfTestWorkers"))
+                numWorkers = (int)_settings["NumberOfTestWorkers"];
+
+            WorkItemDispatcher dispatcher = null;
+
+            if (numWorkers > 0)
+            {
+                dispatcher = new WorkItemDispatcher(numWorkers);
+                initialContext.Dispatcher = dispatcher;
+            }
+
+            WorkItem workItem = WorkItem.CreateWorkItem(_loadedTest, initialContext, filter);
+            workItem.Completed += new EventHandler(OnRunCompleted);
 
             using (EventPump pump = new EventPump(listener, queue.Events))
             {
                 pump.Start();
 
-                workItem.Execute(context);
+                if (dispatcher != null)
+                {
+                    dispatcher.Dispatch(workItem);
+                    dispatcher.Start();
+                }
+                else
+                    workItem.Execute();
 
-                while (workItem.State != WorkItemState.Complete)
-                    Thread.Sleep(5);
-                return workItem.Result;
+                _runComplete.WaitOne();
             }
+
+            Console.SetOut(savedOut);
+            Console.SetError(savedErr);
+
+            if (dispatcher != null)
+            {
+                dispatcher.Stop();
+                dispatcher = null;
+            }
+
+            return workItem.Result;
 #endif
+        }
+
+        private void OnRunCompleted(object sender, EventArgs e)
+        {
+            _runComplete.Set();
+        }
+
+        private TestExecutionContext CreateTestExecutionContext()
+        {
+            TestExecutionContext context = new TestExecutionContext();
+
+            if (_settings.Contains("DefaultTimeout"))
+                context.TestCaseTimeout = (int)_settings["DefaultTimeout"];
+            if (_settings.Contains("StopOnError"))
+                context.StopOnError = (bool)_settings["StopOnError"];
+
+            if (_settings.Contains("WorkDirectory"))
+                context.WorkDirectory = (string)_settings["WorkDirectory"];
+            else
+#if NETCF || SILVERLIGHT
+                context.WorkDirectory = Env.DocumentFolder;
+#else
+                context.WorkDirectory = Environment.CurrentDirectory;
+#endif
+            return context;
         }
 
         #endregion

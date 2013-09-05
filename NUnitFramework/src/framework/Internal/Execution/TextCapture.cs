@@ -24,7 +24,7 @@
 #if !NETCF && !SILVERLIGHT
 using System.IO;
 
-namespace NUnit.Framework.Internal
+namespace NUnit.Framework.Internal.Execution
 {
     /// <summary>
     /// Abstract base for classes that capture text output

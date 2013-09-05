@@ -288,7 +288,7 @@ namespace NUnit.Framework.Internal
         {
             this.Children.Add(result);
 
-            // TODO: Add AssertCount?
+            //this.AssertCount += result.AssertCount;
 
             switch (result.ResultState.Status)
             {

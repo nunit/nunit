@@ -8,6 +8,7 @@
 using System;
 using System.Collections;
 using NUnit.Framework.Api;
+using NUnit.Framework.Internal.Builders;
 using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Internal

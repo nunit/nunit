@@ -64,7 +64,7 @@ namespace NUnit.DirectRunner
                 "     Not run: {0}, Invalid: {1}, Ignored: {2}, Skipped: {3}",
                 summary.TestsNotRun, summary.NotRunnable, summary.Ignored, summary.Skipped);
             Console.WriteLine(
-                "        Time: {0} seconds", summary.Time);
+                "        Time: {0} seconds", summary.Time.TotalSeconds);
             Console.WriteLine();
         }
 

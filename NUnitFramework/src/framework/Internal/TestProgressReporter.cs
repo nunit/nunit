@@ -181,10 +181,14 @@ namespace NUnit.Framework.Internal
         {
             try
             {			
+#if false
 				string report = string.Format("<output type=\"{0}\"><text>{1}</text></output>",
 				    testOutput.Type, testOutput.Text);
 
 				handler.RaiseCallbackEvent(report);
+#else
+                handler.RaiseCallbackEvent(testOutput.ToXml(false).OuterXml);
+#endif
             }
             catch (Exception ex)
             {

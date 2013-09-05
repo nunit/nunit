@@ -23,14 +23,14 @@
 
 using System;
 using NUnit.Framework.Api;
-using NUnit.Framework.Internal;
+using NUnit.Framework.Extensibility;
 
-namespace NUnit.Framework.Builders
+namespace NUnit.Framework.Internal.Builders
 {
 	/// <summary>
 	/// SetUpFixtureBuilder knows how to build a SetUpFixture.
 	/// </summary>
-	public class SetUpFixtureBuilder : Extensibility.ISuiteBuilder
+	public class SetUpFixtureBuilder : ISuiteBuilder
 	{	
 		#region ISuiteBuilder Members
         /// <summary>

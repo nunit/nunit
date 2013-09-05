@@ -25,9 +25,9 @@
 using System;
 using System.Collections;
 using System.Reflection;
-using NUnit.Framework.Internal;
+using NUnit.Framework.Extensibility;
 
-namespace NUnit.Framework.Extensibility
+namespace NUnit.Framework.Internal.Extensibility
 {
 	/// <summary>
 	/// TestCaseBuilderCollection is an ExtensionPoint for TestCaseBuilders 
