@@ -133,7 +133,7 @@ namespace NUnit.Framework.Internal
 		[Test]
 		public void TestMethodWithMultipleTestCasesExecutesMultipleTimes()
 		{
-            ITestResult result = TestBuilder.RunTestCase(fixtureType, "TestMethodWithMultipleTestCases");
+            ITestResult result = TestBuilder.RunParameterizedMethodSuite(fixtureType, "TestMethodWithMultipleTestCases");
 
 			Assert.That( result.ResultState, Is.EqualTo(ResultState.Success) );
             ResultSummary summary = new ResultSummary(result);

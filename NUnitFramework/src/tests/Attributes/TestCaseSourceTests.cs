@@ -169,7 +169,7 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void CanSpecifyExpectedException()
         {
-            ITestResult result = TestBuilder.RunTestCase(
+            ITestResult result = TestBuilder.RunParameterizedMethodSuite(
                 typeof(TestCaseSourceAttributeFixture), "MethodThrowsExpectedException").Children[0];
             Assert.AreEqual(ResultState.Success, result.ResultState);
         }
@@ -177,7 +177,7 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void CanSpecifyExpectedException_WrongException()
         {
-            ITestResult result = TestBuilder.RunTestCase(
+            ITestResult result = TestBuilder.RunParameterizedMethodSuite(
                 typeof(TestCaseSourceAttributeFixture), "MethodThrowsWrongException").Children[0];
             Assert.AreEqual(ResultState.Failure, result.ResultState);
             Assert.That(result.Message, Is.StringStarting("An unexpected exception type was thrown"));
@@ -186,7 +186,7 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void CanSpecifyExpectedException_NoneThrown()
         {
-            ITestResult result = TestBuilder.RunTestCase(
+            ITestResult result = TestBuilder.RunParameterizedMethodSuite(
                 typeof(TestCaseSourceAttributeFixture), "MethodThrowsNoException").Children[0];
             Assert.AreEqual(ResultState.Failure, result.ResultState);
             Assert.AreEqual("System.ArgumentNullException was expected", result.Message);
@@ -195,7 +195,7 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void IgnoreTakesPrecedenceOverExpectedException()
         {
-            ITestResult result = TestBuilder.RunTestCase(
+            ITestResult result = TestBuilder.RunParameterizedMethodSuite(
                 typeof(TestCaseSourceAttributeFixture), "MethodCallsIgnore").Children[0];
             Assert.AreEqual(ResultState.Ignored, result.ResultState);
             Assert.AreEqual("Ignore this", result.Message);
@@ -204,16 +204,16 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void CanIgnoreIndividualTestCases()
         {
-            TestSuite test = (TestSuite)TestBuilder.MakeTestCase(
+            TestSuite suite = TestBuilder.MakeParameterizedMethodSuite(
                 typeof(TestCaseSourceAttributeFixture), "MethodWithIgnoredTestCases");
 
-            Test testCase = TestFinder.Find("MethodWithIgnoredTestCases(1)", test, false);
+            Test testCase = TestFinder.Find("MethodWithIgnoredTestCases(1)", suite, false);
             Assert.That(testCase.RunState, Is.EqualTo(RunState.Runnable));
  
-            testCase = TestFinder.Find("MethodWithIgnoredTestCases(2)", test, false);
+            testCase = TestFinder.Find("MethodWithIgnoredTestCases(2)", suite, false);
             Assert.That(testCase.RunState, Is.EqualTo(RunState.Ignored));
  
-			testCase = TestFinder.Find("MethodWithIgnoredTestCases(3)", test, false);
+			testCase = TestFinder.Find("MethodWithIgnoredTestCases(3)", suite, false);
             Assert.That(testCase.RunState, Is.EqualTo(RunState.Ignored));
             Assert.That(testCase.Properties.Get(PropertyNames.SkipReason), Is.EqualTo("Don't Run Me!"));
         }
@@ -221,16 +221,16 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void CanMarkIndividualTestCasesExplicit()
         {
-            TestSuite test = (TestSuite)TestBuilder.MakeTestCase(
+            TestSuite suite = TestBuilder.MakeParameterizedMethodSuite(
                 typeof(TestCaseSourceAttributeFixture), "MethodWithExplicitTestCases");
 
-            Test testCase = TestFinder.Find("MethodWithExplicitTestCases(1)", test, false);
+            Test testCase = TestFinder.Find("MethodWithExplicitTestCases(1)", suite, false);
             Assert.That(testCase.RunState, Is.EqualTo(RunState.Runnable));
  
-            testCase = TestFinder.Find("MethodWithExplicitTestCases(2)", test, false);
+            testCase = TestFinder.Find("MethodWithExplicitTestCases(2)", suite, false);
             Assert.That(testCase.RunState, Is.EqualTo(RunState.Explicit));
  
-			testCase = TestFinder.Find("MethodWithExplicitTestCases(3)", test, false);
+			testCase = TestFinder.Find("MethodWithExplicitTestCases(3)", suite, false);
             Assert.That(testCase.RunState, Is.EqualTo(RunState.Explicit));
             Assert.That(testCase.Properties.Get(PropertyNames.SkipReason), Is.EqualTo("Connection failing"));
 		}
@@ -238,10 +238,10 @@ namespace NUnit.Framework.Attributes
 		[Test]
         public void HandlesExceptionInTestCaseSource()
         {
-            Test test = (Test)TestBuilder.MakeParameterizedMethodSuite(
+            var testMethod = (TestMethod)TestBuilder.MakeParameterizedMethodSuite(
                 typeof(TestCaseSourceAttributeFixture), "MethodWithSourceThrowingException").Tests[0];
-            Assert.AreEqual(RunState.NotRunnable, test.RunState);
-            ITestResult result = TestBuilder.RunTest(test, null);
+            Assert.AreEqual(RunState.NotRunnable, testMethod.RunState);
+            ITestResult result = TestBuilder.RunTest(testMethod, null);
             Assert.AreEqual(ResultState.NotRunnable, result.ResultState);
             Assert.AreEqual("System.Exception : my message", result.Message);
         }

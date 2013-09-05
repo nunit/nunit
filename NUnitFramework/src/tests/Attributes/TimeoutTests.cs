@@ -68,8 +68,8 @@ namespace NUnit.Framework.Attributes
         {
             TimeoutFixture fixture = new TimeoutFixture();
             TestSuite suite = TestBuilder.MakeFixture(fixture);
-            Test test = TestFinder.Find("InfiniteLoopWith50msTimeout", suite, false);
-            ITestResult result = TestBuilder.RunTest(test, fixture);
+            TestMethod testMethod = (TestMethod)TestFinder.Find("InfiniteLoopWith50msTimeout", suite, false);
+            ITestResult result = TestBuilder.RunTest(testMethod, fixture);
             Assert.That(result.ResultState, Is.EqualTo(ResultState.Failure));
             Assert.That(result.Message, Contains.Substring("50ms"));
             Assert.That(fixture.TearDownWasRun, "TearDown was not run");

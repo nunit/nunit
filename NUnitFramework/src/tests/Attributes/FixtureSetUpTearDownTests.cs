@@ -28,7 +28,7 @@ using System.Security.Principal;
 using System.Threading;
 using NUnit.Framework.Api;
 using NUnit.Framework.Internal;
-using NUnit.Framework.Builders;
+using NUnit.Framework.Internal.Builders;
 using NUnit.TestData.FixtureSetUpTearDownData;
 using NUnit.TestUtilities;
 
@@ -296,18 +296,18 @@ namespace NUnit.Framework.Attributes
 			IgnoredFixture fixture = new IgnoredFixture();
 			TestSuite suite = new TestSuite("IgnoredFixtureSuite");
 			TestSuite fixtureSuite = TestBuilder.MakeFixture( fixture.GetType() );
-			Test test = (Test)fixtureSuite.Tests[0];
+			TestMethod testMethod = (TestMethod)fixtureSuite.Tests[0];
 			suite.Add( fixtureSuite );
 
-            TestBuilder.RunTest(fixtureSuite, fixture);
+            TestBuilder.RunTestSuite(fixtureSuite, fixture);
 			Assert.IsFalse( fixture.setupCalled, "TestFixtureSetUp called running fixture" );
 			Assert.IsFalse( fixture.teardownCalled, "TestFixtureTearDown called running fixture" );
 
-            TestBuilder.RunTest(suite, fixture);
+            TestBuilder.RunTestSuite(suite, fixture);
 			Assert.IsFalse( fixture.setupCalled, "TestFixtureSetUp called running enclosing suite" );
 			Assert.IsFalse( fixture.teardownCalled, "TestFixtureTearDown called running enclosing suite" );
 
-            TestBuilder.RunTest(test, fixture);
+            TestBuilder.RunTest(testMethod, fixture);
 			Assert.IsFalse( fixture.setupCalled, "TestFixtureSetUp called running a test case" );
 			Assert.IsFalse( fixture.teardownCalled, "TestFixtureTearDown called running a test case" );
 		}
@@ -339,6 +339,7 @@ namespace NUnit.Framework.Attributes
         [TestFixtureSetUp]
         public void TestFixtureSetUp()
         {
+            // TODO: This test requires fixture setup and all tests to run on same thread
             GenericIdentity identity = new GenericIdentity("foo");
             Thread.CurrentPrincipal = new GenericPrincipal(identity, new string[0]);
 

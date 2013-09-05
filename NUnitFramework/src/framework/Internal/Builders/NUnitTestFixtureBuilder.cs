@@ -27,10 +27,9 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Text;
 using NUnit.Framework.Api;
-using NUnit.Framework.Internal;
 using NUnit.Framework.Extensibility;
 
-namespace NUnit.Framework.Builders
+namespace NUnit.Framework.Internal.Builders
 {
 	/// <summary>
 	/// Built-in SuiteBuilder for NUnit TestFixture
@@ -53,9 +52,9 @@ namespace NUnit.Framework.Builders
 		private TestFixture fixture;
 
 #if NUNITLITE
-        private Extensibility.ITestCaseBuilder2 testBuilder = new NUnitTestCaseBuilder();
+        private ITestCaseBuilder2 testBuilder = new NUnitTestCaseBuilder();
 #else
-        private Extensibility.ITestCaseBuilder2 testBuilder = CoreExtensions.Host.TestBuilders;
+        private ITestCaseBuilder2 testBuilder = CoreExtensions.Host.TestBuilders;
 #endif
 
 		#endregion

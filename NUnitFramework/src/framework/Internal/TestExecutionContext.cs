@@ -22,13 +22,12 @@
 // ***********************************************************************
 
 using System;
-using System.Collections;
-using System.Collections.Specialized;
 using System.IO;
 using System.Diagnostics;
 using System.Globalization;
 using System.Threading;
 using NUnit.Framework.Api;
+using NUnit.Framework.Internal.Execution;
 
 #if !SILVERLIGHT && !NETCF
 using System.Runtime.Remoting.Messaging;
@@ -66,31 +65,6 @@ namespace NUnit.Framework.Internal
         public TestExecutionContext prior;
 
         /// <summary>
-        /// The currently executing test
-        /// </summary>
-        private Test currentTest;
-
-        /// <summary>
-        /// The time the test began execution
-        /// </summary>
-        private DateTime startTime;
-
-        /// <summary>
-        /// The active TestResult for the current test
-        /// </summary>
-        private TestResult currentResult;
-		
-		/// <summary>
-		/// The work directory to receive test output
-		/// </summary>
-		private string workDirectory;
-		
-        /// <summary>
-        /// The object on which tests are currently being executed - i.e. the user fixture object
-        /// </summary>
-        private object testObject;
-
-        /// <summary>
         /// The event listener currently receiving notifications
         /// </summary>
         private ITestListener listener = TestListener.NULL;
@@ -99,16 +73,6 @@ namespace NUnit.Framework.Internal
         /// The number of assertions for the current test
         /// </summary>
         private int assertCount;
-
-        /// <summary>
-        /// Indicates whether execution should terminate after the first error
-        /// </summary>
-        private bool stopOnError;
-
-        /// <summary>
-        /// Default timeout for test cases
-        /// </summary>
-        private int testCaseTimeout;
 
         private RandomGenerator randomGenerator;
 
@@ -171,7 +135,7 @@ namespace NUnit.Framework.Internal
         public TestExecutionContext()
 		{
 			this.prior = null;
-            this.testCaseTimeout = 0;
+            this.TestCaseTimeout = 0;
 
 #if !NETCF
 			this.currentCulture = CultureInfo.CurrentCulture;
@@ -197,13 +161,13 @@ namespace NUnit.Framework.Internal
 		{
 			this.prior = other;
 
-            this.currentTest = other.currentTest;
-            this.currentResult = other.currentResult;
-            this.testObject = other.testObject;
-			this.workDirectory = other.workDirectory;
+            this.CurrentTest = other.CurrentTest;
+            this.CurrentResult = other.CurrentResult;
+            this.TestObject = other.TestObject;
+			this.WorkDirectory = other.WorkDirectory;
             this.listener = other.listener;
-            this.stopOnError = other.stopOnError;
-            this.testCaseTimeout = other.testCaseTimeout;
+            this.StopOnError = other.StopOnError;
+            this.TestCaseTimeout = other.TestCaseTimeout;
 
 #if !NETCF
 			this.currentCulture = CultureInfo.CurrentCulture;
@@ -218,6 +182,10 @@ namespace NUnit.Framework.Internal
             this.currentDirectory = Environment.CurrentDirectory;
             this.currentPrincipal = Thread.CurrentPrincipal;
             this.logCapture = other.logCapture;
+#endif
+
+#if !NUNITLITE
+            this.Dispatcher = other.Dispatcher;
 #endif
         }
 
@@ -245,6 +213,11 @@ namespace NUnit.Framework.Internal
         {
             get 
             {
+                // If a user creates a thread then the current context
+                // will be null. This also happens when the compiler
+                // automatically creates threads for async methods.
+                // We create a new context, which is automatically
+                // populated with values taken from the current thread.
 #if SILVERLIGHT || NETCF
                 if (current == null)
                     current = new TestExecutionContext();
@@ -254,19 +227,14 @@ namespace NUnit.Framework.Internal
                 return CallContext.GetData(CONTEXT_KEY) as TestExecutionContext;
 #endif
             }
-        }
-
-        /// <summary>
-        /// Sets the current context
-        /// </summary>
-        /// <param name="ec">The context to be made current</param>
-        internal static void SetCurrentContext(TestExecutionContext ec)
-        {
+            private set 
+            { 
 #if SILVERLIGHT || NETCF
-            current = ec;
+                current = value;
 #else
-            CallContext.SetData(CONTEXT_KEY, ec);
+                CallContext.SetData(CONTEXT_KEY, value);
 #endif
+            }
         }
 
         #endregion
@@ -276,57 +244,33 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Gets or sets the current test
         /// </summary>
-        public Test CurrentTest
-        {
-            get { return currentTest; }
-            set { currentTest = value; }
-        }
+        public Test CurrentTest { get; set; }
 
         /// <summary>
         /// The time the current test started execution
         /// </summary>
-        public DateTime StartTime
-        {
-            get { return startTime; }
-            set { startTime = value; }
-        }
+        public DateTime StartTime { get; set; }
 
         /// <summary>
         /// Gets or sets the current test result
         /// </summary>
-        public TestResult CurrentResult
-        {
-            get { return currentResult; }
-            set { currentResult = value; }
-        }
+        public TestResult CurrentResult { get; set; }
 
         /// <summary>
         /// The current test object - that is the user fixture
         /// object on which tests are being executed.
         /// </summary>
-        public object TestObject
-        {
-            get { return testObject; }
-            set { testObject = value; }
-        }
+        public object TestObject { get; set; }
 		
         /// <summary>
         /// Get or set the working directory
         /// </summary>
-		public string WorkDirectory
-		{
-			get { return workDirectory; }
-			set { workDirectory = value; }
-		}
+		public string WorkDirectory { get; set; }
 
         /// <summary>
         /// Get or set indicator that run should stop on the first error
         /// </summary>
-        public bool StopOnError
-        {
-            get { return stopOnError; }
-            set { stopOnError = value; }
-        }
+        public bool StopOnError { get; set; }
 		
         /// <summary>
         /// The current test event listener
@@ -337,6 +281,13 @@ namespace NUnit.Framework.Internal
             set { listener = value; }
         }
 
+#if !NUNITLITE
+        /// <summary>
+        /// The current WorkItemDispatcher
+        /// </summary>
+        internal WorkItemDispatcher Dispatcher { get; set; }
+#endif
+
         /// <summary>
         /// Gets the RandomGenerator specific to this Test
         /// </summary>
@@ -346,7 +297,7 @@ namespace NUnit.Framework.Internal
             {
                 if (randomGenerator == null)
                 {
-                    randomGenerator = new RandomGenerator(currentTest.Seed);
+                    randomGenerator = new RandomGenerator(CurrentTest.Seed);
                 }
                 return randomGenerator;
             }
@@ -359,19 +310,18 @@ namespace NUnit.Framework.Internal
         internal int AssertCount
         {
             get { return assertCount; }
-            set { assertCount = value; }
         }
 
         /// <summary>
         /// Gets or sets the test case timeout value
         /// </summary>
-        public int TestCaseTimeout
-        {
-            get { return testCaseTimeout; }
-            set { testCaseTimeout = value; }
-        }
+        public int TestCaseTimeout { get; set; }
 
 #if !NETCF
+        // TODO: Put in checks on all of these settings
+        // with side effects so we only change them
+        // if the value is different
+
         /// <summary>
         /// Saves or restores the CurrentCulture
         /// </summary>
@@ -546,47 +496,11 @@ namespace NUnit.Framework.Internal
         #region Instance Methods
 
         /// <summary>
-        /// Saves the old context and returns a fresh one 
-        /// with the same settings.
-        /// </summary>
-        public TestExecutionContext Save()
-        {
-            return new TestExecutionContext(this);
-        }
-
-        /// <summary>
-        /// Restores the last saved context and puts
-        /// any saved settings back into effect.
-        /// </summary>
-        public TestExecutionContext Restore()
-        {
-            if (prior == null)
-                throw new InvalidOperationException("TestContext: too many Restores");
-
-            this.TestCaseTimeout = prior.TestCaseTimeout;
-
-#if !NETCF
-            this.CurrentCulture = prior.CurrentCulture;
-            this.CurrentUICulture = prior.CurrentUICulture;
-#endif
-
-#if !NETCF && !SILVERLIGHT
-            this.Out = prior.Out;
-            this.Error = prior.Error;
-            this.Tracing = prior.Tracing;
-            this.CurrentDirectory = prior.CurrentDirectory;
-            this.CurrentPrincipal = prior.CurrentPrincipal;
-#endif
-
-            return prior;
-        }
-
-        /// <summary>
         /// Record any changes in the environment made by
         /// the test code in the execution context so it
         /// will be passed on to lower level tests.
         /// </summary>
-        public void UpdateContext()
+        public void UpdateContextFromEnvironment()
         {
 #if !NETCF
             this.currentCulture = CultureInfo.CurrentCulture;
@@ -595,16 +509,48 @@ namespace NUnit.Framework.Internal
 
 #if !NETCF && !SILVERLIGHT
             this.currentDirectory = Environment.CurrentDirectory;
-            this.currentPrincipal = System.Threading.Thread.CurrentPrincipal;
+            this.currentPrincipal = Thread.CurrentPrincipal;
 #endif
         }
 
         /// <summary>
-        /// Increments the assert count.
+        /// Set up the execution environment to match a context.
+        /// Note that we may be running on the same thread where the
+        /// context was initially created or on a different thread.
+        /// </summary>
+        public void EstablishExecutionEnvironment()
+        {
+#if !NETCF
+            Thread.CurrentThread.CurrentCulture = this.currentCulture;
+            Thread.CurrentThread.CurrentUICulture = this.currentUICulture;
+#endif
+
+#if !NETCF && !SILVERLIGHT
+            // TODO: We should probably remove this feature, since
+            // it potentially impacts all threads.
+            Environment.CurrentDirectory = this.currentDirectory;
+            Thread.CurrentPrincipal = this.currentPrincipal;
+#endif
+
+            CurrentContext = this;
+        }
+
+        /// <summary>
+        /// Increments the assert count by one.
         /// </summary>
         public void IncrementAssertCount()
         {
             System.Threading.Interlocked.Increment(ref assertCount);
+        }
+
+        /// <summary>
+        /// Increments the assert count by a specified amount.
+        /// </summary>
+        public void IncrementAssertCount(int count)
+        {
+            // TODO: Temporary implementation
+            while(count-- > 0)
+                System.Threading.Interlocked.Increment(ref assertCount);
         }
 
         #endregion

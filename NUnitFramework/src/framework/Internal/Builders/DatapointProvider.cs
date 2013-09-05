@@ -26,9 +26,8 @@ using System.Reflection;
 using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework.Extensibility;
-using NUnit.Framework.Internal;
 
-namespace NUnit.Framework.Builders
+namespace NUnit.Framework.Internal.Builders
 {
     /// <summary>
     /// Provides data from fields marked with the DatapointAttribute or the

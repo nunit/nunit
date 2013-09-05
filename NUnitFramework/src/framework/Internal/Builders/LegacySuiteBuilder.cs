@@ -26,14 +26,14 @@ using System;
 using System.Collections;
 using System.Reflection;
 using NUnit.Framework.Api;
-using NUnit.Framework.Internal;
+using NUnit.Framework.Extensibility;
 
-namespace NUnit.Framework.Builders
+namespace NUnit.Framework.Internal.Builders
 {
 	/// <summary>
 	/// Built-in SuiteBuilder for LegacySuite
 	/// </summary>
-	public class LegacySuiteBuilder : Extensibility.ISuiteBuilder
+	public class LegacySuiteBuilder : ISuiteBuilder
     {
         #region ISuiteBuilderMembers
         /// <summary>

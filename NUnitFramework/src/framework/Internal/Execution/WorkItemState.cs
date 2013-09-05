@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-namespace NUnit.Framework.Internal.WorkItems
+namespace NUnit.Framework.Internal.Execution
 {
     /// <summary>
     /// The current state of a work item

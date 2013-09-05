@@ -31,7 +31,7 @@ using NUnit.Framework.Api;
 
 using ThreadState = System.Threading.ThreadState;
 
-namespace NUnit.Framework.Internal
+namespace NUnit.Framework.Internal.Execution
 {
 	/// <summary>
 	/// Summary description for EventQueueTests.
@@ -525,7 +525,8 @@ namespace NUnit.Framework.Internal
 
             public void TestStarted(ITest test)
             {
-                WriteTrace("TestStarted({0})", test.Name);
+                //WriteTrace("TestStarted({0})", test.Name);
+                WriteTrace("TestStarted");
             }
 
             public void TestFinished(ITestResult result)

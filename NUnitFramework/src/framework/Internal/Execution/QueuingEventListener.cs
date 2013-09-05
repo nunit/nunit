@@ -25,7 +25,7 @@
 using System;
 using NUnit.Framework.Api;
 
-namespace NUnit.Framework.Internal
+namespace NUnit.Framework.Internal.Execution
 {
 	/// <summary>
 	/// QueuingEventListener uses an EventQueue to store any

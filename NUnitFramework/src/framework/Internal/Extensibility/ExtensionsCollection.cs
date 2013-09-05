@@ -26,7 +26,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace NUnit.Framework.Extensibility
+namespace NUnit.Framework.Internal.Extensibility
 {
     /// <summary>
     /// ExtensionsCollection holds multiple extensions of a common type.

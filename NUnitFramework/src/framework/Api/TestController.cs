@@ -29,6 +29,7 @@ using System.Reflection;
 using System.Xml;
 using System.Web.UI;
 using NUnit.Framework.Internal;
+using NUnit.Framework.Internal.Builders;
 
 namespace NUnit.Framework.Api
 {
@@ -366,6 +367,10 @@ namespace NUnit.Framework.Api
                 catch (Exception ex)
                 {
                     ReportError(ex);
+                }
+                finally
+                {
+                    InternalTrace.Flush();
                 }
             }
 

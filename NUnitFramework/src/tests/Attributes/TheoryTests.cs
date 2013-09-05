@@ -48,7 +48,7 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void TheoryWithDatapointsIsRunnable()
         {
-            Test test = TestBuilder.MakeTestCase(fixtureType, "TheoryWithArgumentsAndDatapoints");
+            Test test = TestBuilder.MakeParameterizedMethodSuite(fixtureType, "TheoryWithArgumentsAndDatapoints");
             TestAssert.IsRunnable(test);
             Assert.That(test.TestCaseCount, Is.EqualTo(9));
         }
@@ -56,7 +56,7 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void BooleanArgumentsAreSuppliedAutomatically()
         {
-            Test test = TestBuilder.MakeTestCase(fixtureType, "TestWithBooleanArguments");
+            Test test = TestBuilder.MakeParameterizedMethodSuite(fixtureType, "TestWithBooleanArguments");
             TestAssert.IsRunnable(test);
             Assert.That(test.TestCaseCount, Is.EqualTo(4));
         }
@@ -75,7 +75,7 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void EnumArgumentsAreSuppliedAutomatically()
         {
-            Test test = TestBuilder.MakeTestCase(fixtureType, "TestWithEnumAsArgument");
+            Test test = TestBuilder.MakeParameterizedMethodSuite(fixtureType, "TestWithEnumAsArgument");
             TestAssert.IsRunnable(test);
             Assert.That(test.TestCaseCount, Is.EqualTo(16));
         }
@@ -121,14 +121,14 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void SimpleTestIgnoresDataPoints()
         {
-            Test test = TestBuilder.MakeTestCase(fixtureType, "TestWithArguments");
+            Test test = TestBuilder.MakeParameterizedMethodSuite(fixtureType, "TestWithArguments");
             Assert.That(test.TestCaseCount, Is.EqualTo(2));
         }
 
         [Theory]
         public void TheoryFailsIfAllTestsAreInconclusive()
         {
-            ITestResult result = TestBuilder.RunTestCase(fixtureType, "TestWithAllBadValues");
+            ITestResult result = TestBuilder.RunParameterizedMethodSuite(fixtureType, "TestWithAllBadValues");
             Assert.That(result.ResultState, Is.EqualTo(ResultState.Failure));
             Assert.That(result.Message, Is.EqualTo("All test cases were inconclusive"));
         }

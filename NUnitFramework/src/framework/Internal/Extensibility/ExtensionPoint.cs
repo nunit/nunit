@@ -24,8 +24,9 @@
 #if !NUNITLITE
 using System;
 using System.Collections;
+using NUnit.Framework.Extensibility;
 
-namespace NUnit.Framework.Extensibility
+namespace NUnit.Framework.Internal.Extensibility
 {
 	/// <summary>
 	/// ExtensionPoint is used as a base class for all 

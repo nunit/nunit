@@ -32,7 +32,7 @@ using NUnit.Framework.Internal.Commands;
 using System.Threading.Tasks;
 #endif
 
-namespace NUnit.Framework.Builders
+namespace NUnit.Framework.Internal.Builders
 {
     /// <summary>
     /// Class to build ether a parameterized or a normal NUnitTestMethod.
@@ -51,7 +51,7 @@ namespace NUnit.Framework.Builders
         private Randomizer randomizer;
 
 #if NUNITLITE
-        private ITestCaseProvider testCaseProvider = new TestCaseProviders();
+        private ITestCaseProvider testCaseProvider = new NUnit.Framework.Internal.Extensibility.TestCaseProviders();
 #else
         private ITestCaseProvider testCaseProvider = CoreExtensions.Host.TestCaseProviders;
 #endif

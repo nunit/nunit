@@ -29,7 +29,7 @@ namespace NUnit.Framework.Api
     /// The TestOutput class holds a unit of output from 
     /// a test to stdOut, stdErr, Trace or a logger.
     /// </summary>
-	public class TestOutput
+	public class TestOutput : IXmlNodeBuilder
 	{
 		string text;
 		TestOutputType type;
@@ -75,7 +75,29 @@ namespace NUnit.Framework.Api
 				return this.type;
 			}
 		}
-	}
+
+        #region IXmlNodeBuilder Members
+
+        public XmlNode ToXml(bool recursive)
+        {
+            XmlNode topNode = XmlNode.CreateTopLevelElement("dummy");
+
+            XmlNode thisNode = AddToXml(topNode, recursive);
+
+            return thisNode;
+        }
+
+        public XmlNode AddToXml(XmlNode parentNode, bool recursive)
+        {
+            XmlNode thisNode = parentNode.AddElement("output");
+            thisNode.AddAttribute("type", this.Type.ToString());
+            thisNode.AddAttribute("text", this.Text);
+
+            return thisNode;
+        }
+
+        #endregion
+    }
 
     /// <summary>
     /// Enum representing the output destination.

@@ -24,7 +24,7 @@
 #if !NUNITLITE
 using NUnit.Framework.Api;
 
-namespace NUnit.Framework.Internal
+namespace NUnit.Framework.Internal.Execution
 {
 	using System;
 	using System.IO;

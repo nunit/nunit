@@ -60,7 +60,7 @@ namespace NUnit.TestData
         [Test] // Not Runnable
 		public async Task<int> AsyncTaskResultSuccess()
 		{
-			var result = await ReturnOne();
+            var result = await ReturnOne();
 
 			Assert.AreEqual(1, result);
 
@@ -141,7 +141,7 @@ namespace NUnit.TestData
 		[Test]
 		public async void NestedAsyncVoidSuccess()
 		{
-			var result = await Task.Run(async () => await ReturnOne());
+            var result = await Task.Run(async () => await ReturnOne());
 
 			Assert.AreEqual(1, result);
 		}
@@ -165,7 +165,7 @@ namespace NUnit.TestData
 		[Test]
 		public async Task NestedAsyncTaskSuccess()
 		{
-			var result = await Task.Run(async () => await ReturnOne());
+            var result = await Task.Run(async () => await ReturnOne());
 
 			Assert.AreEqual(1, result);
 		}
@@ -189,7 +189,7 @@ namespace NUnit.TestData
 		[Test]
 		public async Task<int> NestedAsyncTaskResultSuccess()
 		{
-			var result = await Task.Run(async () => await ReturnOne());
+            var result = await Task.Run(async () => await ReturnOne());
 
 			Assert.AreEqual(1, result);
 
@@ -219,12 +219,12 @@ namespace NUnit.TestData
 		[Test]
 		public async void AsyncVoidMultipleSuccess()
 		{
-			var result = await ReturnOne();
+            var result = await ReturnOne();
 
 			Assert.AreEqual(await ReturnOne(), result);
 		}
 
-		[Test]//
+		[Test]
 		public async void AsyncVoidMultipleFailure()
 		{
 			var result = await ReturnOne();
@@ -244,7 +244,7 @@ namespace NUnit.TestData
 		[Test]
 		public async void AsyncTaskMultipleSuccess()
 		{
-			var result = await ReturnOne();
+            var result = await ReturnOne();
 
 			Assert.AreEqual(await ReturnOne(), result);
 		}

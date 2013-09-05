@@ -24,7 +24,7 @@
 #if !NET_4_0 && !NET_4_5 || SILVERLIGHT
 using System.Threading;
 
-namespace NUnit.Framework.Internal.WorkItems
+namespace NUnit.Framework.Internal.Execution
 {
     /// <summary>
     /// A simplified implementation of .NET 4 CountdownEvent

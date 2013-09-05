@@ -27,7 +27,7 @@ using System.IO;
 using System.Reflection;
 using BF = System.Reflection.BindingFlags;
 
-namespace NUnit.Framework.Internal
+namespace NUnit.Framework.Internal.Execution
 {
 	/// <summary>
 	/// Proxy class for operations on a real log4net appender,

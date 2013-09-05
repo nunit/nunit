@@ -25,9 +25,10 @@ using System;
 using System.Reflection;
 using System.Collections;
 using System.Collections.Generic;
-using NUnit.Framework.Builders;
+using NUnit.Framework.Extensibility;
+using NUnit.Framework.Internal.Builders;
 
-namespace NUnit.Framework.Extensibility
+namespace NUnit.Framework.Internal.Extensibility
 {
 #if NUNITLITE
     class ParameterDataProviders : IParameterDataProvider

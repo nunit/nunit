@@ -41,7 +41,7 @@ namespace NUnit.TestUtilities
             TestSuite suite = TestBuilder.MakeFixture(type);
 			Assert.NotNull(suite, "Unable to construct fixture");
             Assert.AreEqual(RunState.Runnable, suite.RunState);
-            ITestResult result = TestBuilder.RunTest(suite);
+            ITestResult result = TestBuilder.RunTestSuite(suite, null);
             Assert.AreEqual(ResultState.Success, result.ResultState);
         }
 
@@ -52,7 +52,7 @@ namespace NUnit.TestUtilities
 
         public static void IsRunnable(Type type, string name, ResultState resultState)
         {
-            Test test = TestBuilder.MakeTestCase(type, name);
+            Test test = TestBuilder.MakeTestFromMethod(type, name);
             Assert.That(test.RunState, Is.EqualTo(RunState.Runnable));
             object testObject = Activator.CreateInstance(type);
             ITestResult result = TestBuilder.RunTest(test, testObject);

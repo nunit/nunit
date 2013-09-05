@@ -22,11 +22,12 @@
 // ***********************************************************************
 
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using NUnit.Framework.Internal.Commands;
 using NUnit.Framework.Api;
 
-namespace NUnit.Framework.Internal.WorkItems
+namespace NUnit.Framework.Internal.Execution
 {
     /// <summary>
     /// A CompositeWorkItem represents a test suite and
@@ -37,7 +38,6 @@ namespace NUnit.Framework.Internal.WorkItems
     {
         private TestSuite _suite;
         private ITestFilter _childFilter;
-        private System.Collections.Generic.Queue<WorkItem> _children = new System.Collections.Generic.Queue<WorkItem>();
         private TestCommand _setupCommand;
         private TestCommand _teardownCommand;
 
@@ -48,9 +48,10 @@ namespace NUnit.Framework.Internal.WorkItems
         /// using a filter to select child tests.
         /// </summary>
         /// <param name="suite">The TestSuite to be executed</param>
+        /// <param name="context">The execution context to be used</param>
         /// <param name="childFilter">A filter used to select child tests</param>
-        public CompositeWorkItem(TestSuite suite, ITestFilter childFilter)
-            : base(suite)
+        public CompositeWorkItem(TestSuite suite, TestExecutionContext context, ITestFilter childFilter)
+            : base(suite, context)
         {
             _suite = suite;
             _setupCommand = suite.GetOneTimeSetUpCommand();
@@ -65,11 +66,6 @@ namespace NUnit.Framework.Internal.WorkItems
         /// </summary>
         protected override void PerformWork()
         {
-            if (_suite.HasChildren)
-                foreach (Test test in _suite.Tests)
-                    if (_childFilter.Pass(test))
-                        _children.Enqueue(test.CreateWorkItem(_childFilter));
-
             switch (Test.RunState)
             {
                 default:
@@ -82,7 +78,7 @@ namespace NUnit.Framework.Internal.WorkItems
 
                     PerformOneTimeSetUp();
 
-                    if (_children.Count > 0)
+                    if (_suite.HasChildren)
                         switch (Result.ResultState.Status)
                         {
                             case TestStatus.Passed:
@@ -97,7 +93,8 @@ namespace NUnit.Framework.Internal.WorkItems
                                 SkipChildren();
                                 break;
                         }
-
+                    // Directly execute the OneTimeFixtureTearDown or tests that
+                    // were skipped, failed or set to inconclusive in one time setup.
                     PerformOneTimeTearDown();
                     break;
 
@@ -114,7 +111,7 @@ namespace NUnit.Framework.Internal.WorkItems
                     break;
             }
 
-            // Fall through in case no child tests were run.
+            // Fall through in case nothing was run.
             // Otherwise, this is done in the completion event.
             WorkItemComplete();
         }
@@ -127,8 +124,8 @@ namespace NUnit.Framework.Internal.WorkItems
             {
                 _setupCommand.Execute(Context);
 
-                // SetUp may have changed some things
-                Context.UpdateContext();
+                // SetUp may have changed some things in the environment
+                Context.UpdateContextFromEnvironment();
             }
             catch (Exception ex)
             {
@@ -141,13 +138,35 @@ namespace NUnit.Framework.Internal.WorkItems
 
         private void RunChildren()
         {
-            _childTestCountdown = new CountdownEvent(_children.Count);
+            var children = new List<WorkItem>();
 
-            while (_children.Count > 0)
+            foreach (Test test in _suite.Tests)
+                if (_childFilter.Pass(test))
+                    children.Add(WorkItem.CreateWorkItem(test, new TestExecutionContext(this.Context), _childFilter));
+
+            if (children.Count > 0)
             {
-                WorkItem child = (WorkItem)_children.Dequeue();
-                child.Completed += new EventHandler(OnChildCompleted);
-                child.Execute(this.Context);
+                _childTestCountdown = new CountdownEvent(children.Count);
+
+                foreach (WorkItem child in children)
+                {
+                    child.Completed += new EventHandler(OnChildCompleted);
+#if NUNITLITE
+                    child.Execute();
+#else
+                    if (Context.Dispatcher == null)
+                        child.Execute();
+                    // For now, run all test cases on the same thread as the fixture
+                    // in order to handle ApartmentState preferences set on the fixture.
+                    else if (child is SimpleWorkItem || child.Test is ParameterizedMethodSuite)
+                    {
+                        InternalTrace.Debug("Executing WorkItem for {0}", child.Test.FullName);
+                        child.Execute();
+                    }
+                    else
+                        Context.Dispatcher.Dispatch(child);
+#endif
+                }
             }
         }
 
@@ -159,23 +178,30 @@ namespace NUnit.Framework.Internal.WorkItems
 
         private void SkipChildren()
         {
-            while (_children.Count > 0)
+            // TODO: Extend this to skip recursively?
+            foreach (Test test in _suite.Tests)
             {
-                WorkItem child = (WorkItem)_children.Dequeue();
-                Test test = child.Test;
-                TestResult result = test.MakeTestResult();
-                if (Result.ResultState.Status == TestStatus.Failed)
-                    result.SetResult(ResultState.Failure, "TestFixtureSetUp Failed");
-                else
-                    result.SetResult(Result.ResultState, Result.Message);
-                Result.AddResult(result);
+                if (_childFilter.Pass(test))
+                {
+                    TestResult result = test.MakeTestResult();
+                    if (Result.ResultState.Status == TestStatus.Failed)
+                        result.SetResult(ResultState.Failure, "TestFixtureSetUp Failed");
+                    else
+                        result.SetResult(Result.ResultState, Result.Message);
+                    Result.AddResult(result);
+                }
             }
         }
 
         private void PerformOneTimeTearDown()
         {
-            TestExecutionContext.SetCurrentContext(Context);
-            _teardownCommand.Execute(Context);
+            // Our child tests or even unrelated tests may have
+            // executed on the same thread since the time that
+            // this test started, so we have to re-establish
+            // the proper execution environment
+            this.Context.EstablishExecutionEnvironment();
+
+            _teardownCommand.Execute(this.Context);
         }
 
         private string GetSkipReason()
@@ -199,6 +225,8 @@ namespace NUnit.Framework.Internal.WorkItems
                 {
                     childTask.Completed -= new EventHandler(OnChildCompleted);
                     Result.AddResult(childTask.Result);
+
+                    // Check to see if all children completed
                     _childTestCountdown.Signal();
                     if (_childTestCountdown.CurrentCount == 0)
                     {

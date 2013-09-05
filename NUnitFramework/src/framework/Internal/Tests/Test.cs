@@ -24,7 +24,7 @@
 using System;
 using System.Reflection;
 using NUnit.Framework.Api;
-using NUnit.Framework.Internal.WorkItems;
+using NUnit.Framework.Internal.Execution;
 
 namespace NUnit.Framework.Internal
 {
@@ -264,13 +264,6 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <returns>A TestResult suitable for this type of test.</returns>
         public abstract TestResult MakeTestResult();
-
-        /// <summary>
-        /// Creates a WorkItem for executing this test.
-        /// </summary>
-        /// <param name="childFilter">A filter to be used in selecting child tests</param>
-        /// <returns>A new WorkItem</returns>
-        public abstract WorkItem CreateWorkItem(ITestFilter childFilter);
 
         /// <summary>
         /// Modify a newly constructed test by applying any of NUnit's common

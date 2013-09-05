@@ -26,9 +26,9 @@ using System.Reflection;
 using System.Collections;
 using NUnit.Framework.Api;
 using NUnit.Framework.Extensibility;
-using NUnit.Framework.Internal;
+using NUnit.Framework.Internal.Extensibility;
 
-namespace NUnit.Framework.Builders
+namespace NUnit.Framework.Internal.Builders
 {
     /// <summary>
     /// CombinatorialTestCaseProvider creates test cases from individual

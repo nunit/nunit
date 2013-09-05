@@ -67,7 +67,7 @@ namespace NUnit.Framework.Internal.Commands
                         // TODO: Pass methods to constructor?
                         MethodInfo fixtureTearDown = suite.oneTimeTearDownMethods[index];
                         if (!fixtureTearDown.IsStatic && context.TestObject == null)
-                            Console.WriteLine("TestObject should not be null!!!");
+                            Console.WriteLine("Null TestObject in fixture teardown for " + Test.FullName);
                         Reflect.InvokeMethod(fixtureTearDown, fixtureTearDown.IsStatic ? null : context.TestObject);
                     }
 

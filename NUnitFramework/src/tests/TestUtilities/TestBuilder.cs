@@ -25,23 +25,20 @@ using System;
 using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.Api;
-using NUnit.Framework.Builders;
+using NUnit.Framework.Internal.Builders;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Commands;
 using NUnit.Framework.Extensibility;
-using NUnit.Framework.Internal.WorkItems;
+using NUnit.Framework.Internal.Execution;
 using System.Threading;
 
 namespace NUnit.TestUtilities
 {
     /// <summary>
-    /// Utility Class used to build NUnit tests for use as test data
+    /// Utility Class used to build and run NUnit tests used as test data
     /// </summary>
     public class TestBuilder
     {
-        private static NUnitTestFixtureBuilder fixtureBuilder = new NUnitTestFixtureBuilder();
-        private static NUnitTestCaseBuilder testBuilder = new NUnitTestCaseBuilder();
-
 #if !NUNITLITE
         static TestBuilder()
         {
@@ -50,100 +47,159 @@ namespace NUnit.TestUtilities
         }
 #endif
 
+        #region Build Tests
+
         public static TestSuite MakeFixture(Type type)
         {
-            return (TestSuite)fixtureBuilder.BuildFrom(type);
+            return (TestSuite)new NUnitTestFixtureBuilder().BuildFrom(type);
         }
 
         public static TestSuite MakeFixture(object fixture)
         {
-            TestSuite suite = (TestSuite)fixtureBuilder.BuildFrom(fixture.GetType());
+            TestSuite suite = MakeFixture(fixture.GetType());
             suite.Fixture = fixture;
             return suite;
         }
 
         public static TestSuite MakeParameterizedMethodSuite(Type type, string methodName)
         {
-            return (TestSuite)MakeTestCase(type, methodName);
+            return (TestSuite)MakeTestFromMethod(type, methodName);
         }
 
-        public static Test MakeTestCase(Type type, string methodName)
+        public static TestSuite MakeParameterizedMethodSuite(object fixture, string methodName)
         {
-            MethodInfo method = type.GetMethod(methodName, BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-            if (method == null)
-                Assert.Fail("Method not found: " + methodName);
-            return testBuilder.BuildFrom(method);
+            var test = MakeTestFromMethod(fixture.GetType(), methodName);
+            Assert.That(test, Is.TypeOf<ParameterizedMethodSuite>());
+
+            test.Fixture = fixture;
+            return (TestSuite)test;
         }
 
-        public static Test MakeTestCase(object fixture, string methodName)
+        public static TestMethod MakeTestCase(Type type, string methodName)
         {
-            Test test = MakeTestCase(fixture.GetType(), methodName);
+            var test = MakeTestFromMethod(type, methodName);
+            Assert.That(test, Is.TypeOf<TestMethod>());
+
+            return (TestMethod)test;
+        }
+
+        public static TestMethod MakeTestCase(object fixture, string methodName)
+        {
+            var test = (TestMethod)MakeTestFromMethod(fixture.GetType(), methodName);
             test.Fixture = fixture;
             return test;
         }
 
+        // Will return either a ParameterizedMethodSuite or an NUnitTestMethod
+        // depending on whether the method takes arguments or not
+        internal static Test MakeTestFromMethod(Type type, string methodName)
+        {
+            MethodInfo method = type.GetMethod(methodName, BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            if (method == null)
+                Assert.Fail("Method not found: " + methodName);
+            return new NUnitTestCaseBuilder().BuildFrom(method);
+        }
+
+        #endregion
+
+        #region Run Tests
+
         public static ITestResult RunTestFixture(Type type)
         {
-            return RunTest(MakeFixture(type), null);
+            return RunTestSuite(MakeFixture(type), null);
         }
 
         public static ITestResult RunTestFixture(object fixture)
         {
-            return RunTest(MakeFixture(fixture), fixture);
+            return RunTestSuite(MakeFixture(fixture), fixture);
         }
 
-        public static ITestResult RunTestCase(Type type, string methodName)
+        public static ITestResult RunParameterizedMethodSuite(Type type, string methodName)
         {
-            Test test = MakeTestCase(type, methodName);
+            var suite = MakeParameterizedMethodSuite(type, methodName);
 
             object testObject = null;
             if (!IsStaticClass(type))
                 testObject = Activator.CreateInstance(type);
 
-            TestMethod testMethod = test as TestMethod;
-            return testMethod != null
-                ? RunTestCase(testMethod, testObject)
-                : RunTest(test, testObject);
+            return RunTestSuite(suite, testObject);
+        }
+
+        public static ITestResult RunTestSuite(TestSuite suite, object testObject)
+        {
+            TestExecutionContext context = new TestExecutionContext();
+            context.TestObject = testObject;
+
+            WorkItem work = WorkItem.CreateWorkItem(suite, context, TestFilter.Empty);
+            work.Execute();
+
+            // TODO: Replace with an event - but not while method is static
+            while (work.State != WorkItemState.Complete)
+                Thread.Sleep(1);
+
+            return work.Result;
+        }
+
+        public static ITestResult RunTestCase(Type type, string methodName)
+        {
+            var testMethod = MakeTestCase(type, methodName);
+
+            object testObject = null;
+            if (!IsStaticClass(type))
+                testObject = Activator.CreateInstance(type);
+
+            return RunTest(testMethod, testObject);
         }
 
         public static ITestResult RunTestCase(object fixture, string methodName)
         {
-            TestMethod testMethod = MakeTestCase(fixture, methodName) as TestMethod;
+            var testMethod = MakeTestCase(fixture, methodName);
 
-            return RunTestCase(testMethod, fixture);
+            return RunTest(testMethod, fixture);
         }
 
-        private static ITestResult RunTestCase(TestMethod testMethod, object fixture)
-        {
-            TestExecutionContext context = new TestExecutionContext();
-            context.CurrentTest = testMethod;
-            context.CurrentResult = testMethod.MakeTestResult();
-            context.TestObject = fixture;
+        // This method can't currently be used. It would be more efficient
+        // to run test cases using the command directly, but that would
+        // cause errors in tests that have a timeout or that require a
+        // separate thread or a specific apartment. Those features are
+        // handled at the level of the WorkItem in the current build.
+        // Therefore, we run all tests, both test cases and fixtures,
+        // by creating a WorkItem and executing it. See the RunTest
+        // method below.
 
-            TestCommand command = testMethod.MakeTestCommand();
+        //public static ITestResult RunTestMethod(TestMethod testMethod, object fixture)
+        //{
+        //    TestExecutionContext context = new TestExecutionContext();
+        //    context.CurrentTest = testMethod;
+        //    context.CurrentResult = testMethod.MakeTestResult();
+        //    context.TestObject = fixture;
 
-            return command.Execute(context);
-        }
+        //    TestCommand command = testMethod.MakeTestCommand();
 
-        public static ITestResult RunTest(Test test)
-        {
-            return RunTest(test, null);
-        }
+        //    return command.Execute(context);
+        //}
+
+        //public static ITestResult RunTest(Test test)
+        //{
+        //    return RunTest(test, null);
+        //}
 
         public static ITestResult RunTest(Test test, object testObject)
         {
             TestExecutionContext context = new TestExecutionContext();
             context.TestObject = testObject;
 
-            WorkItem work = test.CreateWorkItem(TestFilter.Empty);
-            work.Execute(context);
+            WorkItem work = WorkItem.CreateWorkItem(test, context, TestFilter.Empty);
+            work.Execute();
 
-            // TODO: Replace with an event
+            // TODO: Replace with an event - but not while method is static
             while (work.State != WorkItemState.Complete)
                 Thread.Sleep(1);
 
             return work.Result;
         }
+
+        #endregion
 
         private static bool IsStaticClass(Type type)
         {

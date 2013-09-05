@@ -26,7 +26,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using NUnit.Framework.Api;
 using NUnit.Framework.Internal.Commands;
-using NUnit.Framework.Internal.WorkItems;
+using NUnit.Framework.Internal.Execution;
 
 namespace NUnit.Framework.Internal
 {
@@ -246,16 +246,6 @@ namespace NUnit.Framework.Internal
         public override TestResult MakeTestResult()
         {
             return new TestSuiteResult(this);
-        }
-
-        /// <summary>
-        /// Creates a WorkItem for executing this test.
-        /// </summary>
-        /// <param name="childFilter">A filter to be used in selecting child tests</param>
-        /// <returns>A new WorkItem</returns>
-        public override WorkItem CreateWorkItem(ITestFilter childFilter)
-        {
-            return new CompositeWorkItem(this, childFilter);
         }
 
         /// <summary>

@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Xml;
 using System.IO;
 
@@ -70,7 +71,7 @@ namespace NUnit.DirectRunner
 
         private void ListTests()
         {
-            IDictionary loadOptions = new Hashtable();
+            IDictionary loadOptions = new Dictionary<string, object>();
             if (commandlineOptions.Load.Count > 0)
                 loadOptions["LOAD"] = commandlineOptions.Load;
 
@@ -103,13 +104,15 @@ namespace NUnit.DirectRunner
 
         private void RunTests()
         {
-            IDictionary loadOptions = new Hashtable();
+            IDictionary loadOptions = new Dictionary<string, object>();
             if (commandlineOptions.Load.Count > 0)
                 loadOptions["LOAD"] = commandlineOptions.Load;
-
-            IDictionary runOptions = new Hashtable();
+            // The following items are actually runtime options
+            // but are passed when the assembly is loaded.
             if (commandlineOptions.Run.Count > 0)
-                runOptions["RUN"] = commandlineOptions.Run;
+                loadOptions["RUN"] = commandlineOptions.Run;
+            if (commandlineOptions.NumWorkers > 0)
+                loadOptions["NumberOfTestWorkers"] = commandlineOptions.NumWorkers;
 
             AppDomain testDomain = AppDomain.CurrentDomain;
             if (commandlineOptions.UseAppDomain)
