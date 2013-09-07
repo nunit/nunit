@@ -183,7 +183,7 @@ namespace NUnit.Engine
                     }
 
                     total += XmlHelper.GetAttribute(node, "total", 0);
-                    time += XmlHelper.GetAttribute(node, "time", 0.0);
+                    time += TimeSpan.Parse(XmlHelper.GetAttribute(node, "time")).TotalSeconds;
                     passed += XmlHelper.GetAttribute(node, "passed", 0);
                     failed += XmlHelper.GetAttribute(node, "failed", 0);
                     inconclusive += XmlHelper.GetAttribute(node, "inconclusive", 0);

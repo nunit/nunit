@@ -361,8 +361,13 @@ namespace NUnit.Framework.Api
             {
                 try
                 {
-                    ReportResult(
-                        controller.Runner.Run(new TestProgressReporter(Handler), TestFilter.FromXml(filterText)));
+                    ITestResult result = controller.Runner.Run(new TestProgressReporter(Handler), TestFilter.FromXml(filterText));
+
+                    // Ensure that the CallContext of the thread is not polluted
+                    // by our TestExecutionContext, which is not serializable.
+                    TestExecutionContext.ClearCurrentContext();
+
+                    ReportResult(result);
                 }
                 catch (Exception ex)
                 {

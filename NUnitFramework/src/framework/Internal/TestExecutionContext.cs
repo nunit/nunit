@@ -232,9 +232,22 @@ namespace NUnit.Framework.Internal
 #if SILVERLIGHT || NETCF
                 current = value;
 #else
-                CallContext.SetData(CONTEXT_KEY, value);
+                if (value == null)
+                    CallContext.FreeNamedDataSlot(CONTEXT_KEY);
+                else
+                    CallContext.SetData(CONTEXT_KEY, value);
 #endif
             }
+        }
+
+        /// <summary>
+        /// Clear the current context. This is provided to
+        /// prevent "leakage" of the CallContext containing
+        /// the current context back to any runners.
+        /// </summary>
+        public static void ClearCurrentContext()
+        {
+            CurrentContext = null;
         }
 
         #endregion

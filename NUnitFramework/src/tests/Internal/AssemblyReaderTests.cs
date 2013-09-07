@@ -24,12 +24,14 @@
 #if !NUNITLITE
 using System;
 using System.IO;
+using System.Reflection;
 
 namespace NUnit.Framework.Internal
 {
 	[TestFixture]
 	public class AssemblyReaderTests
 	{
+        private static readonly string THIS_ASSEMBLY_PATH = AssemblyHelper.GetAssemblyPath(Assembly.GetExecutingAssembly());
 		private AssemblyReader rdr;
 
 		[SetUp]
@@ -50,13 +52,13 @@ namespace NUnit.Framework.Internal
 		[Test]
 		public void CreateFromPath()
 		{
-			Assert.AreEqual( "nunit.framework.tests.dll", new AssemblyReader( "nunit.framework.tests.dll" ).AssemblyPath );
+            Assert.That(new AssemblyReader(THIS_ASSEMBLY_PATH).AssemblyPath, Is.SamePath(THIS_ASSEMBLY_PATH));
 		}
 
 		[Test]
 		public void CreateFromAssembly()
 		{
-			Assert.That( rdr.AssemblyPath, Is.SamePath(Path.GetFullPath( "nunit.framework.tests.dll" )));
+            Assert.That(rdr.AssemblyPath, Is.SamePath(THIS_ASSEMBLY_PATH));
 		}
 
 		[Test]
