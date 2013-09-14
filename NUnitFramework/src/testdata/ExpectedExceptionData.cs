@@ -262,4 +262,24 @@ namespace NUnit.TestData.ExpectedExceptionData
             AlternateHandlerCalled = true;
         }
     }
+
+    public static class StaticClassWithExpectedExceptions
+    {
+        [Test, ExpectedException(typeof(ArgumentException))]
+        public static void TestSucceedsInStaticClass()
+        {
+            throw new ArgumentException("argument exception");
+        }
+
+        [Test, ExpectedException(typeof(ArgumentException))]
+        public static void TestFailsInStaticClass_NoExceptionThrown()
+        {
+        }
+
+        [Test, ExpectedException(typeof(ArgumentException))]
+        public static void TestFailsInStaticClass_WrongExceptionThrown()
+        {
+            throw new InvalidOperationException("wrong exception");
+        }
+    }
 }
