@@ -63,7 +63,7 @@ namespace NUnit.ConsoleRunner
             
             //log.Info("NUnit-console.exe starting");
 
-            if (options.Pause)
+            if (options.PauseBeforeRun)
             {
                 Console.WriteLine("Press any key to continue . . .");
                 Console.ReadKey(true);
@@ -86,7 +86,7 @@ namespace NUnit.ConsoleRunner
                 return ConsoleRunner.INVALID_ARG;
             }
             
-            if (options.InputFiles.Length == 0)
+            if (options.InputFiles.Count == 0)
             {
                 Console.Error.WriteLine("Error: no inputs specified");
                 return ConsoleRunner.OK;
@@ -130,7 +130,7 @@ namespace NUnit.ConsoleRunner
                 }
                 finally
                 {
-                    if (options.Wait)
+                    if (options.WaitBeforeExit)
                     {
                         Console.Out.WriteLine("\nPress any key to continue . . .");
                         Console.ReadKey(true);
@@ -168,8 +168,7 @@ namespace NUnit.ConsoleRunner
 
             Console.WriteLine("Runtime Environment - ");
             Console.WriteLine(string.Format("   OS Version: {0}", Environment.OSVersion));
-            Console.WriteLine(string.Format("  CLR Version: {0}",
-                Environment.Version));
+            Console.WriteLine(string.Format("  CLR Version: {0}", Environment.Version));
 
             Console.WriteLine();
         }

@@ -27,14 +27,6 @@ namespace NUnit.ConsoleRunner
 {
     public class OutputSpecification
     {
-        #region Private Fields
-
-        private string output;
-        private string format;
-        private string transform;
-
-        #endregion
-
         #region Constructor
 
         public OutputSpecification(string spec)
@@ -43,7 +35,7 @@ namespace NUnit.ConsoleRunner
                 throw new NullReferenceException("Output spec may not be null");
 
             string[] parts = spec.Split(';');
-            this.output = parts[0];
+            this.OutputPath = parts[0];
 
             for (int i = 1; i < parts.Length; i++)
             {
@@ -57,52 +49,43 @@ namespace NUnit.ConsoleRunner
                     case "format":
                         string fmt = opt[1].Trim();
 
-                        if (this.format != null && this.format != fmt)
+                        if (this.Format != null && this.Format != fmt)
                             throw new ArgumentException(
                                 string.Format("Conflicting format options: {0}", spec));
 
-                        this.format = fmt;
+                        this.Format = fmt;
                         break;
 
                     case "transform":
                         string val = opt[1].Trim();
 
-                        if (this.transform != null && this.transform != val)
+                        if (this.Transform != null && this.Transform != val)
                             throw new ArgumentException(
                                 string.Format("Conflicting transform options: {0}", spec));
 
-                        if (this.format != null && this.format != "user")
+                        if (this.Format != null && this.Format != "user")
                             throw new ArgumentException(
                                 string.Format("Conflicting format options: {0}", spec));
 
-                        this.format = "user";
-                        this.transform = opt[1].Trim();
+                        this.Format = "user";
+                        this.Transform = opt[1].Trim();
                         break;
                 }
             }
 
-            if (format == null)
-                format = "nunit3";
+            if (Format == null)
+                Format = "nunit3";
         }
 
         #endregion
 
         #region Properties
 
-        public string OutputPath
-        {
-            get { return output; }
-        }
+        public string OutputPath { get; private set; }
 
-        public string Format
-        {
-            get { return format; }
-        }
+        public string Format { get; private set; }
 
-        public string Transform
-        {
-            get { return transform; }
-        }
+        public string Transform { get; private set; }
 
         #endregion
     }

@@ -106,14 +106,14 @@ namespace NUnit.ConsoleRunner
 
         private void TestStarted(XmlNode startNode)
         {
-            if (options.Labels == "On" || options.Labels == "All")
+            if (options.DisplayTestLabels == "On" || options.DisplayTestLabels == "All")
             {
                 XmlAttribute nameAttr = startNode.Attributes["fullname"];
                 if (nameAttr != null)
                 {
                     string theLabel = string.Format("***** {0}", nameAttr.Value);
 
-                    if (options.Labels == "All")
+                    if (options.DisplayTestLabels == "All")
                         outWriter.WriteLine(theLabel);
                     else
                         pendingLabel = theLabel;
