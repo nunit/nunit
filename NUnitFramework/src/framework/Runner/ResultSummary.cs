@@ -127,7 +127,7 @@ namespace NUnitLite.Runner
 
         private void Visit(ITestResult result)
         {
-            if (result.HasChildren)
+            if (result.Test.IsSuite)
             {
                 foreach (ITestResult r in result.Children)
                     Visit(r);
