@@ -22,74 +22,59 @@
 // ***********************************************************************
 
 using System;
-using System.Diagnostics;
-using System.IO;
 using System.Collections;
 using System.Xml;
 
-namespace NUnit.DirectRunner
+namespace NUnit.Framework.TestHarness
 {
     /// <summary>
-    /// FrameworkController is used by the test-runner to load and run
-    /// tests using the NUnit framework assembly.
+    /// FrameworkDriver is used by the test-runner to load and run
+    /// tests using the NUnit framework assembly. It's a simplified
+    /// version of the FrameworkDriver found in the NUnit engine.
     /// </summary>
     public class FrameworkDriver
     {
         AppDomain testDomain;
+        CommandLineOptions options;
 
         object testController;
 
-        public FrameworkDriver(AppDomain testDomain)
+        public FrameworkDriver(AppDomain testDomain, CommandLineOptions options)
         {
             this.testDomain = testDomain;
-            this.testController = CreateObject("NUnit.Framework.Api.TestController");
+            this.options = options;
+            this.testController = CreateObject("NUnit.Framework.Api.TestController", 
+                options.InternalTraceLevel);
         }
 
-        public XmlNode Load(string assemblyFileName, IDictionary options)
+        public XmlNode Load(string assemblyFileName, IDictionary settings)
         {
             CallbackHandler handler = new CallbackHandler();
 
             CreateObject("NUnit.Framework.Api.TestController+LoadTestsAction",
-                testController, assemblyFileName, options, handler);
+                testController, assemblyFileName, settings, handler);
 
-            Debug.Assert(handler.Result is string, "Returned result was not a string");
-
-            XmlDocument doc = new XmlDocument();
-            try
-            {
-                doc.LoadXml((string)handler.Result);
-                return doc.FirstChild;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Returned result was not valid XML", ex);
-            }
+            return MakeXmlNode(handler.Result);
         }
 
-        public XmlNode ExploreTests(string assemblyFileName, IDictionary options)
+        public XmlNode ExploreTests(string assemblyFileName, IDictionary settings, string filter)
         {
             CallbackHandler handler = new CallbackHandler();
 
+            // TODO: Make use of the filter
             CreateObject("NUnit.Framework.Api.TestController+ExploreTestsAction",
-                testController, assemblyFileName, options, handler);
+                testController, assemblyFileName, settings, filter, handler);
 
- 			XmlDocument doc = new XmlDocument();
-			doc.LoadXml((string)handler.Result);
-            return doc.FirstChild;
+            return MakeXmlNode(handler.Result);
         }
 
-        public XmlNode Run(CommandLineOptions options)
+        public XmlNode Run(string filter)
         {
-            CallbackHandler handler = new RunTestsCallbackHandler(options);
+            CallbackHandler handler = new RunTestsCallbackHandler(options.DisplayTeamCityServiceMessages, options.DisplayTestLabels);
 
-            // NOTE: Filters are not supported in the direct runner
-            CreateObject("NUnit.Framework.Api.TestController+RunTestsAction", testController, "<filter/>", handler);
+            CreateObject("NUnit.Framework.Api.TestController+RunTestsAction", testController, filter, handler);
 
-            Debug.Assert(handler.Result is string, "Returned result was not a string");
-
-			XmlDocument doc = new XmlDocument();
-			doc.LoadXml((string)handler.Result);
-            return doc.FirstChild;
+            return MakeXmlNode(handler.Result);
         }
 
         #region Helper Methods
@@ -103,6 +88,13 @@ namespace NUnit.DirectRunner
 #else
                 null, args, null, null );
 #endif
+        }
+
+        private XmlNode MakeXmlNode(string result)
+        {
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml(result);
+            return doc.FirstChild;
         }
 
         #endregion

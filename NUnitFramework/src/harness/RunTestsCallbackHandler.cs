@@ -28,11 +28,12 @@ using System.IO;
 using System.Threading;
 using System.Xml;
 
-namespace NUnit.DirectRunner
+namespace NUnit.Framework.TestHarness
 {
     public class RunTestsCallbackHandler : CallbackHandler
     {
-        private readonly CommandLineOptions options;
+        private readonly bool teamcity;
+        private readonly string labels;
         private readonly TeamCityServiceMessages teamcityMessages;
 
         private TextWriter output;
@@ -97,12 +98,13 @@ namespace NUnit.DirectRunner
             }
         }
 
-        public RunTestsCallbackHandler(CommandLineOptions options)
+        public RunTestsCallbackHandler(bool teamcity, string labels)
         {
-            this.options = options;
+            this.teamcity = teamcity;
+            this.labels = labels;
             this.output = Console.Out;
 
-            if (options.TeamCityServiceMessages)
+            if (teamcity)
                 teamcityMessages = new TeamCityServiceMessages();
         }
 
@@ -137,7 +139,7 @@ namespace NUnit.DirectRunner
             XmlAttribute name = suiteNode.Attributes["name"];
             XmlAttribute fullname = suiteNode.Attributes["fullname"];
 
-            if (options.TeamCityServiceMessages)
+            if (teamcity)
                 teamcityMessages.TestSuiteStarted(name.Value);
         }
 
@@ -152,7 +154,7 @@ namespace NUnit.DirectRunner
             //Debug.Assert(fullname != null);
             Debug.Assert(result != null);
 
-            if (options.TeamCityServiceMessages)
+            if (teamcity)
                 teamcityMessages.TestSuiteFinished(name.Value);
         }
 
@@ -166,10 +168,10 @@ namespace NUnit.DirectRunner
             Debug.Assert(id != null);
             Debug.Assert(name != null);
 
-            if (options.TeamCityServiceMessages)
+            if (teamcity)
                 teamcityMessages.TestStarted(name.Value);
 
-            if (options.Labels)
+            if (labels == "On" || labels == "All")
                 output.WriteLine("***** {0}", name.Value);
         }
 
@@ -192,23 +194,23 @@ namespace NUnit.DirectRunner
             switch (result.Value)
             {
                 case "Passed":
-                    if (options.TeamCityServiceMessages)
+                    if (teamcity)
                         teamcityMessages.TestFinished(name.Value, duration);
                     break;
                 case "Inconclusive":
-                    if (options.TeamCityServiceMessages)
+                    if (teamcity)
                         teamcityMessages.TestIgnored(name.Value, "Inconclusive");
                     break;
                 case "Skipped":
                     XmlElement reason = testNode["reason"];
-                    if (options.TeamCityServiceMessages)
+                    if (teamcity)
                         teamcityMessages.TestIgnored(name.Value, reason["message"].InnerText);
                     break;
                 case "Failed":
                     XmlElement failure = testNode["failure"];
                     XmlElement message = failure["message"];
                     XmlElement stackTrace = failure["stack-trace"];
-                    if (options.TeamCityServiceMessages)
+                    if (teamcity)
                     {
                         teamcityMessages.TestFailed(name.Value, message.InnerText, stackTrace.InnerText);
                         teamcityMessages.TestFinished(name.Value, duration);
@@ -228,12 +230,12 @@ namespace NUnit.DirectRunner
             switch (type.Value)
             {
                 case "Out":
-                    if (options.TeamCityServiceMessages)
+                    if (teamcity)
                         teamcityMessages.TestOutput(textNode.InnerText);
                     output.Write(textNode.InnerText);
                     break;
                 case "Error":
-                    if (options.TeamCityServiceMessages)
+                    if (teamcity)
                         teamcityMessages.TestError(textNode.InnerText);
                     break;
             }

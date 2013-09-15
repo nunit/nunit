@@ -59,7 +59,7 @@ namespace NUnit.Engine
         /// multiple assemblies or projects as subpackages.
         /// </summary>
         /// <param name="testFiles"></param>
-        public TestPackage(params string[] testFiles)
+        public TestPackage(IList<string> testFiles)
         {
             foreach (string testFile in testFiles)
                 this.testFiles.Add(Path.GetFullPath(testFile));

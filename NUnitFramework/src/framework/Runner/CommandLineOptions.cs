@@ -24,7 +24,6 @@
 using System;
 using System.IO;
 using System.Text;
-using System.Collections;
 using System.Collections.Generic;
 
 namespace NUnitLite.Runner
@@ -36,146 +35,78 @@ namespace NUnitLite.Runner
     public class CommandLineOptions
     {
         private string optionChars;
-        private static string NL = NUnit.Env.NewLine;
+        private static readonly string NL = NUnit.Env.NewLine;
 
-        private bool wait = false;
-        private bool noheader = false;
-        private bool help = false;
-        private bool full = false;
-        private bool explore = false;
-        private bool labelTestsInOutput = false;
-
-        private string exploreFile;
-        private string resultFile;
-        private string resultFormat;
-        private string outFile;
-        private string includeCategory;
-        private string excludeCategory;
-
-        private bool error = false;
-
-        private List<string> tests = new List<string>();
-        private List<string> invalidOptions = new List<string>();
-        private List<string> parameters = new List<string>();
+        private List<string> invalidOptions;
 
         private int randomSeed = -1;
 
+        #region Constructors
+
+        /// <summary>
+        /// Construct a CommandLineOptions object using default option chars
+        /// </summary>
+        public CommandLineOptions()
+            : this(System.IO.Path.DirectorySeparatorChar == '/' ? "-" : "/-") { }
+
+        /// <summary>
+        /// Construct a CommandLineOptions object using specified option chars
+        /// </summary>
+        /// <param name="optionChars"></param>
+        public CommandLineOptions(string optionChars)
+        {
+            this.optionChars = optionChars;
+
+            this.Tests = new List<string>();
+            this.Parameters = new List<string>();
+            this.invalidOptions = new List<string>();
+        }
+
+        #endregion
+
         #region Properties
 
-        /// <summary>
-        /// Gets a value indicating whether the 'wait' option was used.
-        /// </summary>
-        public bool Wait
-        {
-            get { return wait; }
-        }
+        /// <summary>Indicates whether the 'wait' option was used.</summary>
+        public bool Wait { get; private set; }
 
-        /// <summary>
-        /// Gets a value indicating whether the 'nologo' option was used.
-        /// </summary>
-        public bool NoHeader
-        {
-            get { return noheader; }
-        }
+        /// <summary>Indicates whether the 'nologo' option was used.</summary>
+        public bool NoHeader { get; private set; }
 
-        /// <summary>
-        /// Gets a value indicating whether the 'help' option was used.
-        /// </summary>
-        public bool ShowHelp
-        {
-            get { return help; }
-        }
+        /// <summary>Indicates whether the 'help' option was used.</summary>
+        public bool ShowHelp { get; private set; }
 
-        /// <summary>
-        /// Gets a list of all tests specified on the command line
-        /// </summary>
-        public string[] Tests
-        {
-            get { return (string[])tests.ToArray(); }
-        }
+        /// <summary>Indicates whether each test should be labeled in the output.</summary>
+        public bool ShowLabels { get; private set; }
 
-        /// <summary>
-        /// Gets a value indicating whether a full report should be displayed
-        /// </summary>
-        public bool Full
-        {
-            get { return full; }
-        }
+        /// <summary>Indicates whether tests should be listed rather than run.</summary>
+        public bool Explore { get; private set; }
 
-        /// <summary>
-        /// Gets a value indicating whether tests should be listed
-        /// rather than run.
-        /// </summary>
-        public bool Explore
-        {
-            get { return explore; }
-        }
+        /// <summary>Gets the name of the file to be used for listing tests.</summary>
+        public string ExploreFile { get; private set; }
 
-        /// <summary>
-        /// Gets the name of the file to be used for listing tests
-        /// </summary>
-        public string ExploreFile
-        {
-            get { return ExpandToFullPath(exploreFile); }
-        }
+        /// <summary>Gets the name of the file to be used for test results.</summary>
+        public string ResultFile { get; private set; }
 
-        /// <summary>
-        /// Gets the name of the file to be used for test results
-        /// </summary>
-        public string ResultFile
-        {
-            get { return ExpandToFullPath(resultFile); }
-        }
+        /// <summary>Gets the format to be used for test results.</summary>
+        public string ResultFormat { get; private set; }
 
-        /// <summary>
-        /// Gets the format to be used for test results
-        /// </summary>
-        public string ResultFormat
-        {
-            get { return resultFormat; }
-        }
+        /// <summary>Gets the full path of the file to be used for output.</summary>
+        public string OutFile { get; private set; }
 
-        /// <summary>
-        /// Gets the full path of the file to be used for output
-        /// </summary>
-        public string OutFile
-        {
-            get
-            {
-                return ExpandToFullPath(outFile);
-            }
-        }
+        /// <summary>Gets a list of all tests specified on the command line.</summary>
+        public List<string> Tests { get; private set; }
 
-        /// <summary>
-        /// Gets the list of categories to include
-        /// </summary>
-        public string Include
-        {
-            get
-            {
-                return includeCategory;
-            }
-        }
+        /// <summary>Indicates whether we should display TeamCity service messages.</summary>
+        public bool DisplayTeamCityServiceMessages { get; private set; }
 
-        /// <summary>
-        /// Gets the list of categories to exclude
-        /// </summary>
-        public string Exclude
-        {
-            get
-            {
-                return excludeCategory;
-            }
-        }
+        /// <summary>Indicates whether a full report should be displayed.</summary>
+        public bool Full { get; private set; }
 
-        /// <summary>
-        /// Gets a flag indicating whether each test should
-        /// be labeled in the output.
-        /// </summary>
-        public bool LabelTestsInOutput
-        {
-            get { return labelTestsInOutput; }
-        }
+        /// <summary>Gets the list of categories to include.</summary>
+        public string Include { get; private set; }
+
+        /// <summary>Gets the list of categories to exclude.</summary>
+        public string Exclude { get; private set; }
 
         private string ExpandToFullPath(string path)
         {
@@ -186,14 +117,6 @@ namespace NUnitLite.Runner
 #else
             return Path.GetFullPath(path);
 #endif
-        }
-
-        /// <summary>
-        /// Gets the test count
-        /// </summary>
-        public int TestCount
-        {
-            get { return tests.Count; }
         }
 
         public int InitialSeed
@@ -207,163 +130,11 @@ namespace NUnitLite.Runner
             }
         }
 
-        #endregion
+        /// <summary>Gets the parameters provided on the commandline</summary>
+        public List<string> Parameters { get; private set; }
 
-        /// <summary>
-        /// Construct a CommandLineOptions object using default option chars
-        /// </summary>
-        public CommandLineOptions()
-        {
-            this.optionChars = System.IO.Path.DirectorySeparatorChar == '/' ? "-" : "/-";
-        }
-
-        /// <summary>
-        /// Construct a CommandLineOptions object using specified option chars
-        /// </summary>
-        /// <param name="optionChars"></param>
-        public CommandLineOptions(string optionChars)
-        {
-            this.optionChars = optionChars;
-        }
-
-        /// <summary>
-        /// Parse command arguments and initialize option settings accordingly
-        /// </summary>
-        /// <param name="args">The argument list</param>
-        public void Parse(params string[] args)
-        {
-            foreach( string arg in args )
-            {
-                if (optionChars.IndexOf(arg[0]) >= 0 )
-                    ProcessOption(arg);
-                else
-                    ProcessParameter(arg);
-            }
-        }
-
-        /// <summary>
-        ///  Gets the parameters provided on the commandline
-        /// </summary>
-        public string[] Parameters
-        {
-            get { return (string[])parameters.ToArray(); }
-        }
-
-        private void ProcessOption(string option)
-        {
-            string opt = option;
-            int pos = opt.IndexOfAny( new char[] { ':', '=' } );
-            string val = string.Empty;
-
-            if (pos >= 0)
-            {
-                val = opt.Substring(pos + 1);
-                opt = opt.Substring(0, pos);
-            }
-
-            switch (opt.Substring(1))
-            {
-                case "wait":
-                    wait = true;
-                    break;
-                case "noheader":
-                case "noh":
-                    noheader = true;
-                    break;
-                case "help":
-                case "h":
-                    help = true;
-                    break;
-                case "test":
-                    tests.Add(val);
-                    break;
-                case "full":
-                    full = true;
-                    break;
-                case "explore":
-                    explore = true;
-                    if (val == null || val.Length == 0)
-                        val = "tests.xml";
-                    try
-                    {
-                        exploreFile = ExpandToFullPath(val);
-                    }
-                    catch
-                    {
-                        InvalidOption(option);
-                    }
-                    break;
-                case "result":
-                    if (val == null || val.Length == 0)
-                        val = "TestResult.xml";
-                    try
-                    {
-                        resultFile = ExpandToFullPath(val);
-                    }
-                    catch
-                    {
-                        InvalidOption(option);
-                    }
-                    break;
-                case "format":
-                    resultFormat = val;
-                    if (resultFormat != "nunit3" && resultFormat != "nunit2")
-                        InvalidOption(option);
-                    break;
-                case "out":
-                    try
-                    {
-                        outFile = ExpandToFullPath(val);
-                    }
-                    catch
-                    {
-                        InvalidOption(option);
-                    }
-                    break;
-                case "labels":
-                    labelTestsInOutput = true;
-                    break;
-                case "include":
-                    includeCategory = val;
-                    break;
-                case "exclude":
-                    excludeCategory = val;
-                    break;
-                case "seed":
-                    try
-                    {
-                        randomSeed = int.Parse(val);
-                    }
-                    catch
-                    {
-                        InvalidOption(option);
-                    }
-                    break;
-                default:
-                    InvalidOption(option);
-                    break;
-            }
-        }
-
-        private void InvalidOption(string option)
-        {
-            error = true;
-            invalidOptions.Add(option);
-        }
-
-        private void ProcessParameter(string param)
-        {
-            parameters.Add(param);
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether there was an error in parsing the options.
-        /// </summary>
-        /// <value><c>true</c> if error; otherwise, <c>false</c>.</value>
-        public bool Error
-        {
-            get { return error; }
-        }
+        /// <summary>Indicates whether there was an error in parsing the options.</summary>
+        public bool Error { get; private set; }
 
         /// <summary>
         /// Gets the error message.
@@ -371,11 +142,11 @@ namespace NUnitLite.Runner
         /// <value>The error message.</value>
         public string ErrorMessage
         {
-            get 
+            get
             {
                 StringBuilder sb = new StringBuilder();
                 foreach (string opt in invalidOptions)
-                    sb.Append( "Invalid option: " + opt + NL );
+                    sb.Append("Invalid option: " + opt + NL);
                 return sb.ToString();
             }
         }
@@ -436,5 +207,133 @@ namespace NUnitLite.Runner
                 return sb.ToString();
             }
         }
+
+        #endregion
+
+        #region Process Commandline
+
+        /// <summary>
+        /// Parse command arguments and initialize option settings accordingly
+        /// </summary>
+        /// <param name="args">The argument list</param>
+        public void Parse(params string[] args)
+        {
+            foreach( string arg in args )
+            {
+                if (optionChars.IndexOf(arg[0]) >= 0 )
+                    ProcessOption(arg);
+                else
+                    ProcessParameter(arg);
+            }
+        }
+
+        private void ProcessOption(string option)
+        {
+            string opt = option;
+            int pos = opt.IndexOfAny( new char[] { ':', '=' } );
+            string val = string.Empty;
+
+            if (pos >= 0)
+            {
+                val = opt.Substring(pos + 1);
+                opt = opt.Substring(0, pos);
+            }
+
+            switch (opt.Substring(1))
+            {
+                case "wait":
+                    Wait = true;
+                    break;
+                case "noheader":
+                case "noh":
+                    NoHeader = true;
+                    break;
+                case "help":
+                case "h":
+                    ShowHelp = true;
+                    break;
+                case "test":
+                    Tests.Add(val);
+                    break;
+                case "full":
+                    Full = true;
+                    break;
+                case "explore":
+                    Explore = true;
+                    if (val == null || val.Length == 0)
+                        val = "tests.xml";
+                    try
+                    {
+                        ExploreFile = ExpandToFullPath(val);
+                    }
+                    catch
+                    {
+                        InvalidOption(option);
+                    }
+                    break;
+                case "result":
+                    if (val == null || val.Length == 0)
+                        val = "TestResult.xml";
+                    try
+                    {
+                        ResultFile = ExpandToFullPath(val);
+                    }
+                    catch
+                    {
+                        InvalidOption(option);
+                    }
+                    break;
+                case "format":
+                    ResultFormat = val;
+                    if (ResultFormat != "nunit3" && ResultFormat != "nunit2")
+                        InvalidOption(option);
+                    break;
+                case "out":
+                    try
+                    {
+                        OutFile = ExpandToFullPath(val);
+                    }
+                    catch
+                    {
+                        InvalidOption(option);
+                    }
+                    break;
+                case "labels":
+                    ShowLabels = true;
+                    break;
+                case "include":
+                    Include = val;
+                    break;
+                case "exclude":
+                    Exclude = val;
+                    break;
+                case "seed":
+                    try
+                    {
+                        randomSeed = int.Parse(val);
+                    }
+                    catch
+                    {
+                        InvalidOption(option);
+                    }
+                    break;
+                default:
+                    InvalidOption(option);
+                    break;
+            }
+        }
+
+        private void InvalidOption(string option)
+        {
+            Error = true;
+            invalidOptions.Add(option);
+        }
+
+        private void ProcessParameter(string param)
+        {
+            Parameters.Add(param);
+        }
+
+        #endregion
     }
 }

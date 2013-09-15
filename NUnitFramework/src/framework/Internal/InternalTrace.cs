@@ -70,7 +70,11 @@ namespace NUnit.Framework.Internal
             /// <summary>
             /// Report debug entries and above (all entries)
             /// </summary>
-            Debug
+            Debug,
+            /// <summary>
+            /// Verbose is a synonym for Debug
+            /// </summary>
+            Verbose = Debug
         }
 
         #endregion

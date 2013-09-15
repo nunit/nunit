@@ -24,7 +24,7 @@
 using System;
 using System.Xml;
 
-namespace NUnit.DirectRunner
+namespace NUnit.Framework.TestHarness
 {
     public class ResultReporter
     {

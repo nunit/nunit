@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
-<project name="DirectRunner" default="build" basedir=".">
+<project name="TestHarness" default="build" basedir=".">
 
   <target name="build">
 
     <csc target="exe"
-        output="${current.build.dir}/direct-runner.exe"
+        output="${current.build.dir}/test-harness.exe"
         debug="${build.debug}" 
         define="${build.defines}"
         warninglevel="${warn}">
@@ -21,7 +21,7 @@
   </target>
 
   <target name="package">
-    <copy todir="${package.src.dir}/direct-runner">
+    <copy todir="${package.src.dir}/harness">
       <fileset>
         <include name="direct-runner.build"/>
         <include name="*.csproj"/>

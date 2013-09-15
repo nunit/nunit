@@ -25,7 +25,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Mono.Options;
-using NUnit.Engine;
 
 namespace NUnit.ConsoleRunner
 {
@@ -54,80 +53,88 @@ namespace NUnit.ConsoleRunner
             //   nothread
             //   nodots
 
+            // Options to be added:
+            //   teamcity
+            //   workers
+
+            // Select Tests
             this.Add("test=", "Comma-separated list of {NAMES} of tests to run or explore. This option may be repeated.",
-                v => testList.AddRange(TestNameParser.Parse(RequiredValue(v, "--test"))));
+                v => ((List<string>)TestList).AddRange(TestNameParser.Parse(RequiredValue(v, "--test"))));
 
             this.Add("include=", "Test {CATEGORIES} to be included. May be a single category, a comma-separated list of categories or a category expression.",
-                v => include = RequiredValue(v, "--include"));
+                v => Include = RequiredValue(v, "--include"));
 
             this.Add("exclude=", "Test {CATEGORIES} to be excluded. May be a single category, a comma-separated list of categories or a category expression.",
-                v => exclude = RequiredValue(v, "--exclude"));
+                v => Exclude = RequiredValue(v, "--exclude"));
 
             this.Add("config=", "{NAME} of a project configuration to load (e.g.: Debug).", 
-                v => activeConfig = RequiredValue(v, "--config"));
+                v => ActiveConfig = RequiredValue(v, "--config"));
 
+            // Where to Run Tests
+            this.Add("process=", "{PROCESS} isolation for test assemblies.\nValues: Single, Separate, Multiple",
+                v => ProcessModel = RequiredValue(v, "--process", "Single", "Separate", "Multiple"));
+
+            this.Add("domain=", "{DOMAIN} isolation for test assemblies.\nValues: None, Single, Multiple",
+                v => DomainUsage = RequiredValue(v, "--domain", "None", "Single", "Multiple"));
+
+            // How to Run Tests
+            this.Add("framework=", "{FRAMEWORK} type/version to use for tests.\nExamples: mono, net-3.5, v4.0, 2.0, mono-4.0",
+                v => Framework = RequiredValue(v, "--framework"));
+
+            this.Add("timeout=", "Set timeout for each test case in {MILLISECONDS}.",
+                v => defaultTimeout = RequiredInt(v, "--timeout"));
+
+            this.Add("stoponerror", "Stop run immediately upon any test failure or error.",
+                v => StopOnError = v != null);
+
+            this.Add("wait", "Wait for input before closing console window.",
+                v => WaitBeforeExit = v != null);
+
+            this.Add("pause", "Pause before run to allow debugging.",
+                v => PauseBeforeRun = v != null);
+
+            // Output Control
             this.Add("work=", "{PATH} of the directory to use for output files.",
-                v => workDir = RequiredValue(v, "--work"));
+                v => WorkDirectory = RequiredValue(v, "--work"));
 
             this.Add("output|out=", "File {PATH} to contain text output from the tests.",
-                v => outputPath = RequiredValue(v, "--output"));
+                v => OutFile = RequiredValue(v, "--output"));
 
             this.Add("err=", "File {PATH} to contain error output from the tests.",
-                v => errorPath = RequiredValue(v, "--err"));
+                v => ErrFile = RequiredValue(v, "--err"));
 
             this.Add("result=", "An output {SPEC} for saving the test results.\nThis option may be repeated.", 
                 v => resultOutputSpecifications.Add(new OutputSpecification(RequiredValue(v, "--resultxml"))));
 
             this.Add("explore:", "Display or save test info rather than running tests. Optionally provide an output {SPEC} for saving the test info. This option may be repeated.", v => 
                 {
-                    explore = true;
+                    Explore = true;
                     if (v != null)
-                        exploreOutputSpecifications.Add(new OutputSpecification(v));
+                        ExploreOutputSpecifications.Add(new OutputSpecification(v));
                 });
 
             this.Add("noresult", "Don't save any test results.", 
                 v => noresult = v != null);
 
             this.Add("labels=", "Specify whether to write test case names to the output. Values: Off, On, All", 
-                v => labels = RequiredValue(v, "--labels", "Off", "On", "All"));
+                v => DisplayTestLabels = RequiredValue(v, "--labels", "Off", "On", "All"));
 
             this.Add("trace=", "Set internal trace {LEVEL}.\nValues: Off, Error, Warning, Info, Verbose (Debug)",
-                v => internalTraceLevel = RequiredValue(v, "--trace", "Off", "Error", "Warning", "Info", "Verbose", "Debug"));
-
-            this.Add("framework=", "{FRAMEWORK} type/version to use for tests.\nExamples: mono, net-3.5, v4.0, 2.0, mono-4.0",
-                v => framework = v);
-
-            this.Add("process=", "{PROCESS} isolation for test assemblies.\nValues: Single, Separate, Multiple",
-                v => processModel = RequiredValue(v, "--process", "Single", "Separate", "Multiple"));
-
-            this.Add("domain=", "{DOMAIN} isolation for test assemblies.\nValues: None, Single, Multiple",
-                v => domainUsage = RequiredValue(v, "--domain", "None", "Single", "Multiple"));
-
-            this.Add("timeout=", "Set timeout for each test case in {MILLISECONDS}.",
-                v => defaultTimeout = RequiredInt(v, "--timeout"));
-
-            this.Add("wait", "Wait for input before closing console window.",
-                v => wait = v != null);
-
-            this.Add("pause", "Pause before run to allow debugging.",
-                v => pause = v != null);
+                v => InternalTraceLevel = RequiredValue(v, "--trace", "Off", "Error", "Warning", "Info", "Verbose", "Debug"));
 
             this.Add("noheader|noh", "Suppress display of program information at start of run.",
-                v => noheader = v != null);
-
-            this.Add("stoponerror", "Stop run immediately upon any test failure or error.",
-                v => stopOnError = v != null);
+                v => NoHeader = v != null);
 
             this.Add("help|h", "Display this message and exit.", 
-                v => help = v != null);
+                v => ShowHelp = v != null);
 
             // Default
             this.Add("<>", v =>
             {
                 if (v.StartsWith("-") || v.StartsWith("/") && Path.DirectorySeparatorChar != '/')
-                    errorMessages.Add("Invalid argument: " + v);
+                    ErrorMessages.Add("Invalid argument: " + v);
                 else
-                    inputFiles.Add(v);
+                    InputFiles.Add(v);
             });
 
             if (args != null)
@@ -138,131 +145,59 @@ namespace NUnit.ConsoleRunner
 
         #region Properties
 
-        private string activeConfig;
-        public string ActiveConfig
-        {
-            get { return activeConfig; }
-        }
+        // Action to Perform
 
-        private string outputPath;
-        public string OutputPath
-        {
-            get { return outputPath; }
-        }
+        public bool Explore { get; private set; }
 
-        private string errorPath;
-        public string ErrorPath
-        {
-            get { return errorPath; }
-        }
+        public bool ShowHelp { get; private set; }
 
-        private string workDir;
-        public string WorkDirectory
-        {
-            get { return workDir; }
-        }
 
-        private string include;
-        public string Include
-        {
-            get { return include; }
-        }
-
-        private string exclude;
-        public string Exclude
-        {
-            get { return exclude; }
-        }
-
-        private string framework;
-        public string Framework
-        {
-            get { return framework; }
-        }
-
-        private string processModel;
-        public string ProcessModel
-        {
-            get { return processModel; }
-        }
-
-        private string domainUsage;
-        public string DomainUsage
-        {
-            get { return domainUsage; }
-        }
-
-        private string internalTraceLevel;
-        public string InternalTraceLevel
-        {
-            get { return internalTraceLevel; }
-        }
-
-        private int defaultTimeout = -1;
-        public int DefaultTimeout
-        {
-            get { return defaultTimeout; }
-        }   
-
-        private string labels;
-        public string Labels
-        {
-            get { return labels; }
-        }
-
-        private bool stopOnError;
-        public bool StopOnError
-        {
-            get { return stopOnError; }
-        }
-
-        private bool explore;
-        public bool Explore
-        {
-            get { return explore; }
-        }
-
-        private bool wait;
-        public bool Wait
-        {
-            get { return wait; }
-        }
-
-        private bool pause;
-        public bool Pause
-        {
-            get { return pause; }
-        }
-
-        private bool noheader;
-        public bool NoHeader
-        {
-            get { return noheader; }
-        }
-
-        private bool help;
-        public bool ShowHelp
-        {
-            get { return help; }
-        }
+        // Select tests
 
         private List<string> inputFiles = new List<string>();
-        public string[] InputFiles
-        {
-            get { return inputFiles.ToArray(); }
-        }
+        public IList<string> InputFiles { get { return inputFiles; } }
 
         private List<string> testList = new List<string>();
-        public string[] TestList
-        {
-            get { return testList.ToArray(); }
-        }
+        public IList<string> TestList { get { return testList; } }
 
-        private List<string> errorMessages = new List<string>();
-        public IList<string> ErrorMessages
-        {
-            get { return errorMessages; }
-        }
+        public string Include { get; private set; }
+
+        public string Exclude { get; private set; }
+
+        public string ActiveConfig { get; private set; }
+
+        // Where to Run Tests
+
+        public string ProcessModel { get; private set; }
+
+        public string DomainUsage { get; private set; }
+
+        // How to Run Tests
+
+        public string Framework { get; private set; }
+
+        private int defaultTimeout = -1;
+        public int DefaultTimeout { get { return defaultTimeout; } }
+
+        public bool StopOnError { get; private set; }
+
+        public bool WaitBeforeExit { get; private set; }
+
+        public bool PauseBeforeRun { get; private set; }
+
+        // Output Control
+
+        public bool NoHeader { get; private set; }
+
+        public string OutFile { get; private set; }
+
+        public string ErrFile { get; private set; }
+
+        public string DisplayTestLabels { get; private set; }
+
+        public string WorkDirectory { get; private set; }
+
+        public string InternalTraceLevel { get; private set; }
 
         private List<OutputSpecification> resultOutputSpecifications = new List<OutputSpecification>();
         public IList<OutputSpecification> ResultOutputSpecifications
@@ -280,10 +215,12 @@ namespace NUnit.ConsoleRunner
         }
 
         private List<OutputSpecification> exploreOutputSpecifications = new List<OutputSpecification>();
-        public IList<OutputSpecification> ExploreOutputSpecifications
-        {
-            get { return exploreOutputSpecifications; }
-        }
+        public IList<OutputSpecification> ExploreOutputSpecifications { get { return exploreOutputSpecifications; } }
+
+        // Error Processing
+
+        public List<string> errorMessages = new List<string>();
+        public IList<string> ErrorMessages { get { return errorMessages; } }
 
         #endregion
 
@@ -298,7 +235,7 @@ namespace NUnit.ConsoleRunner
                 validated = true;
             }
 
-            return errorMessages.Count == 0;
+            return ErrorMessages.Count == 0;
         }
 
         #endregion
@@ -308,7 +245,7 @@ namespace NUnit.ConsoleRunner
         private string RequiredValue(string val, string option, params string[] validValues)
         {
             if (val == null || val == string.Empty)
-                errorMessages.Add("Missing required value for option '" + option + "'.");
+                ErrorMessages.Add("Missing required value for option '" + option + "'.");
 
             bool isValid = true;
 
@@ -323,7 +260,7 @@ namespace NUnit.ConsoleRunner
             }
 
             if (!isValid)
-                errorMessages.Add(string.Format("The value '{0}' is not valid for option '{1}'.", val, option));
+                ErrorMessages.Add(string.Format("The value '{0}' is not valid for option '{1}'.", val, option));
 
             return val;
         }
@@ -336,48 +273,48 @@ namespace NUnit.ConsoleRunner
             int result = -1;
 
             if (val == null || val == string.Empty)
-                errorMessages.Add("Missing required value for option '" + option + "'.");
+                ErrorMessages.Add("Missing required value for option '" + option + "'.");
             else 
             {
                 int r;
                 if (int.TryParse(val, out r))
                     result = r;
                 else
-                    errorMessages.Add("An int value was exprected for option '{0}' but a value of '{1}' was used");
+                    ErrorMessages.Add("An int value was exprected for option '{0}' but a value of '{1}' was used");
             }
                 
             return result;
         }
 
-        private void RequiredIntError(string option)
-        {
-            errorMessages.Add("An int value is required for option '" + option + "'.");
-        }
+        //private void RequiredIntError(string option)
+        //{
+        //    ErrorMessages.Add("An int value is required for option '" + option + "'.");
+        //}
 
-        private void ProcessIntOption(string v, ref int field)
-        {
-            if (!int.TryParse(v, out field))
-                errorMessages.Add("Invalid argument value: " + v);
-        }
+        //private void ProcessIntOption(string v, ref int field)
+        //{
+        //    if (!int.TryParse(v, out field))
+        //        ErrorMessages.Add("Invalid argument value: " + v);
+        //}
 
-        private void ProcessEnumOption<T>(string v, ref T field)
-        {
-            if (Enum.IsDefined(typeof(T), v))
-                field = (T)Enum.Parse(typeof(T), v);
-            else
-                errorMessages.Add("Invalid argument value: " + v);
-        }
+        //private void ProcessEnumOption<T>(string v, ref T field)
+        //{
+        //    if (Enum.IsDefined(typeof(T), v))
+        //        field = (T)Enum.Parse(typeof(T), v);
+        //    else
+        //        ErrorMessages.Add("Invalid argument value: " + v);
+        //}
 
-        private object ParseEnumOption(Type enumType, string value)
-        {
-            foreach (string name in Enum.GetNames(enumType))
-                if (value.ToLower() == name.ToLower())
-                    return Enum.Parse(enumType, value);
+        //private object ParseEnumOption(Type enumType, string value)
+        //{
+        //    foreach (string name in Enum.GetNames(enumType))
+        //        if (value.ToLower() == name.ToLower())
+        //            return Enum.Parse(enumType, value);
 
-            this.errorMessages.Add(value);
+        //    this.ErrorMessages.Add(value);
 
-            return null;
-        }
+        //    return null;
+        //}
 
         #endregion
     }

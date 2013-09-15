@@ -40,7 +40,7 @@ namespace NUnit.ConsoleRunner.Tests
         {
             ConsoleOptions options = new ConsoleOptions();
             Assert.True(options.Validate());
-            Assert.AreEqual(0, options.InputFiles.Length);
+            Assert.AreEqual(0, options.InputFiles.Count);
         }
 
         //[Test]
@@ -50,10 +50,12 @@ namespace NUnit.ConsoleRunner.Tests
         //    Assert.AreEqual( Path.DirectorySeparatorChar != '/', options.AllowForwardSlash );
         //}
 
-        [TestCase("NoHeader", "noheader|noh")]
         [TestCase("ShowHelp", "help|h")]
-		[TestCase("Wait", "wait")]
-		public void CanRecognizeBooleanOptions(string propertyName, string pattern)
+        [TestCase("StopOnError", "stoponerror")]
+		[TestCase("WaitBeforeExit", "wait")]
+        [TestCase("PauseBeforeRun", "pause")]
+        [TestCase("NoHeader", "noheader|noh")]
+        public void CanRecognizeBooleanOptions(string propertyName, string pattern)
 		{
             string[] prototypes = pattern.Split('|');
 
@@ -79,16 +81,16 @@ namespace NUnit.ConsoleRunner.Tests
             }
         }
 
-        [TestCase("ActiveConfig",  "config",     new string[] { "Debug" },                          new string[0])]
-        [TestCase("OutputPath",    "output|out", new string[] { "output.txt" },                     new string[0])]
+        [TestCase("Include", "include", new string[] { "Short,Fast" }, new string[0])]
+        [TestCase("Exclude", "exclude", new string[] { "Long" }, new string[0])]
+        [TestCase("ActiveConfig", "config", new string[] { "Debug" }, new string[0])]
+        [TestCase("ProcessModel", "process", new string[] { "Single", "Separate", "Multiple" }, new string[] { "JUNK" })]
+        [TestCase("DomainUsage", "domain", new string[] { "None", "Single", "Multiple" }, new string[] { "JUNK" })]
+        [TestCase("Framework", "framework", new string[] { "net-4.0" }, new string[0])]
+        [TestCase("OutputPath", "output|out", new string[] { "output.txt" }, new string[0])]
         [TestCase("ErrorPath",     "err",        new string[] { "error.txt" },                      new string[0])]
-        [TestCase("Include",       "include",    new string[] { "Short,Fast" },                     new string[0])]
-        [TestCase("Exclude",       "exclude",    new string[] { "Long" },                           new string[0])]
         [TestCase("WorkDirectory", "work",       new string[] { "results" },                        new string[0])]
-        [TestCase("Framework",     "framework",  new string[] { "net-4.0" },                        new string[0])]
-        [TestCase("DomainUsage",   "domain",     new string[] { "None", "Single", "Multiple" },     new string[] { "JUNK" })]
-        [TestCase("ProcessModel",  "process",    new string[] { "Single", "Separate", "Multiple" }, new string[] { "JUNK" })]
-        [TestCase("Labels", "labels",            new string[] { "Off", "On", "All" },               new string[] { "JUNK" })]
+        [TestCase("DisplayTestLabels", "labels",            new string[] { "Off", "On", "All" },               new string[] { "JUNK" })]
         [TestCase("InternalTraceLevel", "trace", new string[] { "Off", "Error", "Warning", "Info", "Debug", "Verbose" }, new string[] { "JUNK" })]
         public void CanRecognizeStringOptions(string propertyName, string pattern, string[] goodValues, string[] badValues)
         {
@@ -153,14 +155,17 @@ namespace NUnit.ConsoleRunner.Tests
         //    }
         //}
 
+        [TestCase("--include")]
+        [TestCase("--exclude")]
         [TestCase("--config")]
+        [TestCase("--process")]
+        [TestCase("--domain")]
+        [TestCase("--framework")]
+        [TestCase("--timeout")]
         //[TestCase("--xml")]
         [TestCase("--output")]
         [TestCase("--err")]
-        [TestCase("--include")]
-        [TestCase("--exclude")]
         [TestCase("--work")]
-        [TestCase("--timeout")]
         [TestCase("--trace")]
         public void MissingValuesAreReported(string option)
         {
@@ -174,7 +179,7 @@ namespace NUnit.ConsoleRunner.Tests
         {
             ConsoleOptions options = new ConsoleOptions("nunit.tests.dll");
             Assert.True(options.Validate());
-            Assert.AreEqual(1, options.InputFiles.Length);
+            Assert.AreEqual(1, options.InputFiles.Count);
             Assert.AreEqual("nunit.tests.dll", options.InputFiles[0]);
         }
 
@@ -265,7 +270,7 @@ namespace NUnit.ConsoleRunner.Tests
         {
             ConsoleOptions options = new ConsoleOptions("tests.dll", "-result:results.xml");
             Assert.True(options.Validate());
-            Assert.AreEqual(1, options.InputFiles.Length, "assembly should be set");
+            Assert.AreEqual(1, options.InputFiles.Count, "assembly should be set");
             Assert.AreEqual("tests.dll", options.InputFiles[0]);
 
             OutputSpecification spec = options.ResultOutputSpecifications[0];
@@ -279,7 +284,7 @@ namespace NUnit.ConsoleRunner.Tests
         {
             ConsoleOptions options = new ConsoleOptions("tests.dll", "-result:results.xml;format=nunit2");
             Assert.True(options.Validate());
-            Assert.AreEqual(1, options.InputFiles.Length, "assembly should be set");
+            Assert.AreEqual(1, options.InputFiles.Count, "assembly should be set");
             Assert.AreEqual("tests.dll", options.InputFiles[0]);
 
             OutputSpecification spec = options.ResultOutputSpecifications[0];
@@ -293,7 +298,7 @@ namespace NUnit.ConsoleRunner.Tests
         {
             ConsoleOptions options = new ConsoleOptions("tests.dll", "-result:results.xml;transform=transform.xslt");
             Assert.True(options.Validate());
-            Assert.AreEqual(1, options.InputFiles.Length, "assembly should be set");
+            Assert.AreEqual(1, options.InputFiles.Count, "assembly should be set");
             Assert.AreEqual("tests.dll", options.InputFiles[0]);
 
             OutputSpecification spec = options.ResultOutputSpecifications[0];
@@ -308,7 +313,7 @@ namespace NUnit.ConsoleRunner.Tests
             ConsoleOptions options = new ConsoleOptions("tests.dll", "results.xml");
             Assert.True(options.Validate());
             Assert.AreEqual(0, options.ErrorMessages.Count);
-            Assert.AreEqual(2, options.InputFiles.Length);
+            Assert.AreEqual(2, options.InputFiles.Count);
         }
 
         [Test]
@@ -387,7 +392,7 @@ namespace NUnit.ConsoleRunner.Tests
         {
             ConsoleOptions options = new ConsoleOptions("tests.dll", "-explore:results.xml");
             Assert.True(options.Validate());
-            Assert.AreEqual(1, options.InputFiles.Length, "assembly should be set");
+            Assert.AreEqual(1, options.InputFiles.Count, "assembly should be set");
             Assert.AreEqual("tests.dll", options.InputFiles[0]);
             Assert.True(options.Explore);
 
@@ -402,7 +407,7 @@ namespace NUnit.ConsoleRunner.Tests
         {
             ConsoleOptions options = new ConsoleOptions("tests.dll", "-explore:results.xml;format=cases");
             Assert.True(options.Validate());
-            Assert.AreEqual(1, options.InputFiles.Length, "assembly should be set");
+            Assert.AreEqual(1, options.InputFiles.Count, "assembly should be set");
             Assert.AreEqual("tests.dll", options.InputFiles[0]);
             Assert.True(options.Explore);
 
@@ -417,7 +422,7 @@ namespace NUnit.ConsoleRunner.Tests
         {
             ConsoleOptions options = new ConsoleOptions("tests.dll", "-explore:results.xml;transform=myreport.xslt");
             Assert.True(options.Validate());
-            Assert.AreEqual(1, options.InputFiles.Length, "assembly should be set");
+            Assert.AreEqual(1, options.InputFiles.Count, "assembly should be set");
             Assert.AreEqual("tests.dll", options.InputFiles[0]);
             Assert.True(options.Explore);
 
@@ -433,7 +438,7 @@ namespace NUnit.ConsoleRunner.Tests
             ConsoleOptions options = new ConsoleOptions("tests.dll", "-explore=C:/nunit/tests/bin/Debug/console-test.xml");
             Assert.True(options.Validate());
             Assert.True(options.Explore);
-            Assert.AreEqual(1, options.InputFiles.Length, "assembly should be set");
+            Assert.AreEqual(1, options.InputFiles.Count, "assembly should be set");
             Assert.AreEqual("tests.dll", options.InputFiles[0]);
             Assert.AreEqual("C:/nunit/tests/bin/Debug/console-test.xml", options.ExploreOutputSpecifications[0].OutputPath);
         }

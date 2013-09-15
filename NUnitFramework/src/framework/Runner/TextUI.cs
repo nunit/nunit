@@ -120,7 +120,7 @@ namespace NUnitLite.Runner
                 //if (commandLineOptions.TestCount > 0)
                 //    runOptions["RUN"] = commandLineOptions.Tests;
 
-                TestFilter filter = commandLineOptions.TestCount > 0
+                TestFilter filter = commandLineOptions.Tests.Count > 0
                     ? new SimpleNameFilter(commandLineOptions.Tests)
                     : TestFilter.Empty;
 
@@ -302,7 +302,7 @@ namespace NUnitLite.Runner
 
         public void TestStarted(ITest test)
         {
-            if (commandLineOptions.LabelTestsInOutput)
+            if (commandLineOptions.ShowLabels)
                 writer.WriteLine("***** {0}", test.Name);
         }
 

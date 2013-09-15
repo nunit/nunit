@@ -64,7 +64,7 @@ namespace NUnit.Engine.Api.Tests
         [SetUp]
         public void CreatePackage()
         {
-            package = new TestPackage("test1.dll", "test2.dll", "test3.dll");
+            package = new TestPackage(new string[] { "test1.dll", "test2.dll", "test3.dll" });
         }
 
         [Test]

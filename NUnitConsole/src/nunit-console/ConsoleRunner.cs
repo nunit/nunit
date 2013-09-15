@@ -24,12 +24,9 @@
 namespace NUnit.ConsoleRunner
 {
 	using System;
-    using System.Collections.Generic;
-	using System.IO;
-	using System.Reflection;
-	using System.Xml;
-	using System.Resources;
-	using System.Text;
+    using System.IO;
+    using System.Xml;
+    using System.Text;
     using NUnit.Engine;
 	
 	/// <summary>
@@ -193,7 +190,7 @@ namespace NUnit.ConsoleRunner
             Console.WriteLine("Execution Runtime: {0}", options.Framework == null ? "Not Specified" : options.Framework);
             Console.WriteLine();
 
-            if (options.TestList.Length > 0)
+            if (options.TestList.Count > 0)
             {
                 Console.WriteLine("Selected test(s):");
                 foreach (string testName in options.TestList)
@@ -209,16 +206,16 @@ namespace NUnit.ConsoleRunner
 
         private void RedirectOutputAsRequested()
         {
-            if (options.OutputPath != null)
+            if (options.OutFile != null)
             {
-                StreamWriter outStreamWriter = new StreamWriter(Path.Combine(workDirectory, options.OutputPath));
+                StreamWriter outStreamWriter = new StreamWriter(Path.Combine(workDirectory, options.OutFile));
                 outStreamWriter.AutoFlush = true;
                 this.outWriter = outStreamWriter;
             }
 
-            if (options.ErrorPath != null)
+            if (options.ErrFile != null)
             {
-                StreamWriter errorStreamWriter = new StreamWriter(Path.Combine(workDirectory, options.ErrorPath));
+                StreamWriter errorStreamWriter = new StreamWriter(Path.Combine(workDirectory, options.ErrFile));
                 errorStreamWriter.AutoFlush = true;
                 this.errorWriter = errorStreamWriter;
             }
@@ -227,18 +224,18 @@ namespace NUnit.ConsoleRunner
         private void RestoreOutput()
         {
             outWriter.Flush();
-            if (options.OutputPath != null)
+            if (options.OutFile != null)
                 outWriter.Close();
 
             errorWriter.Flush();
-            if (options.ErrorPath != null)
+            if (options.ErrFile != null)
                 errorWriter.Close();
         }
 
         // This is public static for ease of testing
         public static TestPackage MakeTestPackage( ConsoleOptions options )
         {
-            TestPackage package = options.InputFiles.Length == 1
+            TestPackage package = options.InputFiles.Count == 1
                 ? new TestPackage(options.InputFiles[0])
                 : new TestPackage(options.InputFiles);
 

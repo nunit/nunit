@@ -53,7 +53,7 @@ namespace NUnit.Framework.Internal.Filters
         /// Construct a SimpleNameFilter for an array of names
         /// </summary>
         /// <param name="namesToAdd">The names the filter will recognize.</param>
-        public SimpleNameFilter(string[] namesToAdd)
+        public SimpleNameFilter(IEnumerable<string> namesToAdd)
         {
             foreach (string name in namesToAdd)
                 Add(name);

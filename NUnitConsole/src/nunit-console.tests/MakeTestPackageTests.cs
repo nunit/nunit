@@ -144,7 +144,7 @@ namespace NUnit.ConsoleRunner.Tests
         //}
 
         [Test]
-        public void WhenNoOptionsAreSpecified_PackageContainsNoSettngs()
+        public void WhenNoOptionsAreSpecified_PackageContainsNoSettings()
         {
             var options = new ConsoleOptions("test.dll");
             var package = ConsoleRunner.MakeTestPackage(options);

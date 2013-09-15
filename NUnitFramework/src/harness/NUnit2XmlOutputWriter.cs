@@ -29,7 +29,7 @@ using System.Text;
 using System.Xml;
 using System.IO;
 
-namespace NUnit.DirectRunner
+namespace NUnit.Framework.TestHarness
 {
     public class NUnit2XmlOutputWriter
     {
