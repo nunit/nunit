@@ -176,6 +176,14 @@ namespace NUnit.Framework.Internal
 		public IPropertyBag Properties { get; private set; }
 
         /// <summary>
+        /// Returns true if this is a TestSuite
+        /// </summary>
+        public bool IsSuite
+        {
+            get { return this is TestSuite; }
+        }
+
+        /// <summary>
         /// Gets a bool indicating whether the current test
         /// has any descendant tests.
         /// </summary>

@@ -83,6 +83,11 @@ namespace NUnit.Framework.Api
         ITest Parent { get; }
 
         /// <summary>
+        /// Returns true if this is a test suite
+        /// </summary>
+        bool IsSuite { get; }
+
+        /// <summary>
         /// Gets a bool indicating whether the current test
         /// has any descendant tests.
         /// </summary>
