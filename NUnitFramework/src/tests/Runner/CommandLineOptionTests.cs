@@ -169,7 +169,7 @@ namespace NUnitLite.Runner.Tests
         {
             options.Parse("-labels");
             Assert.That(options.Error, Is.False);
-            Assert.That(options.LabelTestsInOutput, Is.True);
+            Assert.That(options.ShowLabels, Is.True);
         }
 
         [Test]
@@ -213,7 +213,7 @@ namespace NUnitLite.Runner.Tests
         {
             options.Parse("myassembly.dll");
             Assert.That(options.Error, Is.False);
-            Assert.That(options.Parameters.Length, Is.EqualTo(1));
+            Assert.That(options.Parameters.Count, Is.EqualTo(1));
             Assert.That(options.Parameters[0], Is.EqualTo("myassembly.dll"));
         }
 
@@ -222,7 +222,7 @@ namespace NUnitLite.Runner.Tests
         {
             options.Parse("assembly1.dll", "-wait", "assembly2.dll", "assembly3.dll");
             Assert.That(options.Error, Is.False);
-            Assert.That(options.Parameters.Length, Is.EqualTo(3));
+            Assert.That(options.Parameters.Count, Is.EqualTo(3));
             Assert.That(options.Parameters[0], Is.EqualTo("assembly1.dll"));
             Assert.That(options.Parameters[1], Is.EqualTo("assembly2.dll"));
             Assert.That(options.Parameters[2], Is.EqualTo("assembly3.dll"));
@@ -233,7 +233,7 @@ namespace NUnitLite.Runner.Tests
         {
             options.Parse("-test:Some.Class.Name");
             Assert.That(options.Error, Is.False);
-            Assert.That(options.Tests.Length, Is.EqualTo(1));
+            Assert.That(options.Tests.Count, Is.EqualTo(1));
             Assert.That(options.Tests[0], Is.EqualTo("Some.Class.Name"));
         }
 
@@ -242,7 +242,7 @@ namespace NUnitLite.Runner.Tests
         {
             options.Parse("-test:Class1", "-test=Class2", "-test:Class3");
             Assert.That(options.Error, Is.False);
-            Assert.That(options.Tests.Length, Is.EqualTo(3));
+            Assert.That(options.Tests.Count, Is.EqualTo(3));
             Assert.That(options.Tests[0], Is.EqualTo("Class1"));
             Assert.That(options.Tests[1], Is.EqualTo("Class2"));
             Assert.That(options.Tests[2], Is.EqualTo("Class3"));

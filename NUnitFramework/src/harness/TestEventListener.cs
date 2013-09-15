@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2010 Charlie Poole
+// Copyright (c) 2009 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -22,43 +22,44 @@
 // ***********************************************************************
 
 using System;
-using System.Web.UI;
+using System.IO;
+using NUnit.Framework.Api;
 
-namespace NUnit.DirectRunner
+namespace NUnit.Framework.TestHarness
 {
-    public class CallbackHandler : MarshalByRefObject, ICallbackEventHandler
+    class TestEventListener : MarshalByRefObject, ITestListener
     {
-        private string result;
+        CommandLineOptions options;
+        TextWriter outWriter;
 
-        public string Result
+        int level = 0;
+        string prefix = "";
+
+        public TestEventListener(CommandLineOptions options, TextWriter outWriter)
         {
-            get { return result; }
+            this.options = options;
+            this.outWriter = outWriter; 
         }
 
-        public virtual void ReportProgress(string report)
+        #region ITestListener Members
+
+        public void TestStarted(ITest test)
         {
+            level++;
+            prefix = new string('>', level);
+            if(options.DisplayTestLabels == "On" || options.DisplayTestLabels == "All")
+                outWriter.WriteLine("{0} {1}", prefix, test.Name);
         }
 
-        #region MarshalByRefObject Overrides
-
-        public override object InitializeLifetimeService()
+        public void TestFinished(ITestResult result)
         {
-            return null;
+            level--;
+            prefix = new string('>', level);
         }
 
-        #endregion
-
-        #region ICallbackEventHandler Members
-
-        public string GetCallbackResult()
+        public void TestOutput(TestOutput testOutput)
         {
-            throw new NotImplementedException();
-        }
-
-        public void RaiseCallbackEvent(string eventArgument)
-        {
-            result = eventArgument;
-            ReportProgress(eventArgument);
+            outWriter.Write(testOutput.Text);
         }
 
         #endregion

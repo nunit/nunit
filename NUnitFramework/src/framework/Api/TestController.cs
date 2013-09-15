@@ -50,13 +50,12 @@ namespace NUnit.Framework.Api
         /// <summary>
         /// Construct a TestController using the default builder and runner.
         /// </summary>
-        public TestController()
+        public TestController(string traceLevel)
         {
             if (!CoreExtensions.Host.Initialized)
                 CoreExtensions.Host.Initialize();
 
-            // TODO: This should be taken from constructor options
-            InternalTrace.Level = InternalTrace.TraceLevel.Debug;
+            InternalTrace.Level = (InternalTrace.TraceLevel)Enum.Parse(typeof(InternalTrace.TraceLevel), traceLevel);
             InternalTrace.Open("InternalTrace.txt");
 
             this.builder = new DefaultTestAssemblyBuilder();
@@ -69,7 +68,7 @@ namespace NUnit.Framework.Api
         /// </summary>
         /// <param name="runnerType">The Type of the test runner</param>
         /// <param name="builderType">The Type of the test builder</param>
-        public TestController(string runnerType, string builderType)
+        public TestController(string traceLevel, string runnerType, string builderType)
         {
             if (!CoreExtensions.Host.Initialized)
                 CoreExtensions.Host.Initialize();
@@ -265,15 +264,16 @@ namespace NUnit.Framework.Api
             /// </summary>
             /// <param name="controller">The controller.</param>
             /// <param name="assemblyFilename">The assembly filename.</param>
-            /// <param name="loadOptions">Options controlling how the tests are loaded</param>
+            /// <param name="loadSettings">Options controlling how the tests are loaded</param>
             /// <param name="filterText">Filter used to control which tests are included</param>
             /// <param name="_handler">The callback handler.</param>
-            public ExploreTestsAction(TestController controller, string assemblyFilename, IDictionary loadOptions, string filterText, object _handler)
+            public ExploreTestsAction(TestController controller, string assemblyFilename, IDictionary loadSettings, string filterText, object _handler)
                 : base(controller, _handler)
             {
                 try
                 {
-                    if (controller.Runner.Load(assemblyFilename, loadOptions))
+                    // TODO: Make use of the filter
+                    if (controller.Runner.Load(assemblyFilename, loadSettings))
                         ReportResult(controller.Runner.LoadedTest);
                     else
                         ReportError("No tests were found");

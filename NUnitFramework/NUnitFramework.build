@@ -156,7 +156,7 @@
   <property name="test.options" value="" 
     unless="${property::exists('test.options')}"/>
   <property name="test.runner.program"
-    value="direct-runner.exe"/>
+    value="test-harness.exe"/>
   <property name="test.runner.args"
     value="nunit.framework.tests.dll ${test.options}"/>
 
@@ -291,7 +291,7 @@
     <nant target="build" buildfile="src/framework/nunit.framework.build"/>
     <nant target="build" buildfile="src/testdata/nunit.testdata.build"/>
     <nant target="build" buildfile="src/tests/nunit.framework.tests.build"/>
-    <nant target="build" buildfile="src/direct-runner/direct-runner.build"/>
+    <nant target="build" buildfile="src/harness/test-harness.build"/>
     <nant target="build" buildfile="src/mock-assembly/mock-assembly.build"/>
 
   </target>
@@ -317,7 +317,7 @@
         <fileset basedir="${current.build.dir}">
           <include name="nunit.*" />
           <include name="nunitlite.*" />
-          <include name="direct-runner.*" />
+          <include name="test-harness.*" />
           <include name="mock-assembly.*" />
         </fileset>
       </copy>
@@ -685,7 +685,7 @@
       <fileset basedir="${current.build.dir}">
         <include name="nunit.*" />
         <include name="nunitlite.*" />
-        <include name="direct-runner.*" />
+        <include name="test-harness.*" />
       </fileset>
     </copy>
 
@@ -766,7 +766,7 @@
     <nant target="package" buildfile="src/framework/nunit.framework.build" />
     <nant target="package" buildfile="src/tests/nunit.framework.tests.build" />
     <nant target="package" buildfile="src/testdata/nunit.testdata.build" />
-    <nant target="package" buildfile="src/direct-runner/direct-runner.build" />
+    <nant target="package" buildfile="src/harness/test-harness.build" />
     <nant target="package" buildfile="src/mock-assembly/mock-assembly.build" />
 
   </target>

@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2009 Charlie Poole
+// Copyright (c) 2010 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -22,44 +22,43 @@
 // ***********************************************************************
 
 using System;
-using System.IO;
-using NUnit.Framework.Api;
+using System.Web.UI;
 
-namespace NUnit.DirectRunner
+namespace NUnit.Framework.TestHarness
 {
-    class TestEventListener : MarshalByRefObject, ITestListener
+    public class CallbackHandler : MarshalByRefObject, ICallbackEventHandler
     {
-        CommandLineOptions options;
-        TextWriter outWriter;
+        private string result;
 
-        int level = 0;
-        string prefix = "";
-
-        public TestEventListener(CommandLineOptions options, TextWriter outWriter)
+        public string Result
         {
-            this.options = options;
-            this.outWriter = outWriter; 
+            get { return result; }
         }
 
-        #region ITestListener Members
-
-        public void TestStarted(ITest test)
+        public virtual void ReportProgress(string report)
         {
-            level++;
-            prefix = new string('>', level);
-            if(options.Labels)
-                outWriter.WriteLine("{0} {1}", prefix, test.Name);
         }
 
-        public void TestFinished(ITestResult result)
+        #region MarshalByRefObject Overrides
+
+        public override object InitializeLifetimeService()
         {
-            level--;
-            prefix = new string('>', level);
+            return null;
         }
 
-        public void TestOutput(TestOutput testOutput)
+        #endregion
+
+        #region ICallbackEventHandler Members
+
+        public string GetCallbackResult()
         {
-            outWriter.Write(testOutput.Text);
+            throw new NotImplementedException();
+        }
+
+        public void RaiseCallbackEvent(string eventArgument)
+        {
+            result = eventArgument;
+            ReportProgress(eventArgument);
         }
 
         #endregion

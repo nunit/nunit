@@ -24,7 +24,7 @@
 using System.Collections.Generic;
 using System.Xml;
 
-namespace NUnit.DirectRunner
+namespace NUnit.Framework.TestHarness
 {
     /// <summary>
     /// XmlHelper provides static methods for basic XML operations

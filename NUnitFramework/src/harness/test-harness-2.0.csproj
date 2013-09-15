@@ -5,11 +5,12 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{0AB71103-EE12-4B1C-999D-7B66C26863C8}</ProjectGuid>
+    <ProjectGuid>{126DBBB4-1731-4E0D-8937-4F2FAADCA0EF}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NUnit.DirectRunner</RootNamespace>
-    <AssemblyName>direct-runner</AssemblyName>
+    <RootNamespace>NUnit.Framework.TestHarness</RootNamespace>
+    <AssemblyName>test-harness</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -30,42 +31,31 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <IntermediateOutputPath>obj\$(Configuration)\net-4.5\</IntermediateOutputPath>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <TargetFrameworkProfile />
+    <IntermediateOutputPath>obj\$(Configuration)\net-2.0\</IntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\bin\Debug\net-4.5\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;NET_4_5</DefineConstants>
+    <OutputPath>..\..\..\bin\Debug\net-2.0\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;NET_2_0</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Commandlineparameters>nunit.framework.tests.dll -a</Commandlineparameters>
     <Externalconsole>true</Externalconsole>
-    <UseVSHostingProcess>true</UseVSHostingProcess>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\..\bin\Release\net-4.5\</OutputPath>
-    <DefineConstants>TRACE;NET_4_5</DefineConstants>
+    <OutputPath>..\..\..\bin\Release\net-2.0\</OutputPath>
+    <DefineConstants>TRACE;NET_2_0</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Commandlineparameters>nunit.framework.tests.dll</Commandlineparameters>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
     <Reference Include="System.Web" />
-    <Reference Include="System.Xml.Linq">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -78,15 +68,23 @@
     <Compile Include="ConsoleRunner.cs" />
     <Compile Include="FrameworkDriver.cs" />
     <Compile Include="NUnit2XmlOutputWriter.cs" />
+    <Compile Include="Options.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="ResultReporter.cs" />
     <Compile Include="ResultSummary.cs" />
     <Compile Include="RunTestsCallbackHandler.cs" />
     <Compile Include="StackTraceFilter.cs" />
+    <Compile Include="TestFilterBuilder.cs" />
+    <Compile Include="TestNameParser.cs" />
+    <Compile Include="Tests\CommandLineOptionTests.cs" />
+    <Compile Include="Tests\TestFilterBuilderTests.cs" />
+    <Compile Include="Tests\TestNameParserTests.cs" />
     <Compile Include="XmlHelper.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="direct-runner.build" />
+    <None Include="test-harness.build">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">
@@ -111,9 +109,9 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\framework\nunit.framework-4.5.csproj">
-      <Project>{d209c368-1277-4ea6-a887-aa6eba51ab99}</Project>
-      <Name>nunit.framework-4.5</Name>
+    <ProjectReference Include="..\framework\nunit.framework-2.0.csproj">
+      <Project>{12B66B03-90F1-4992-BD33-BDF3C69AE49E}</Project>
+      <Name>nunit.framework-2.0</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
