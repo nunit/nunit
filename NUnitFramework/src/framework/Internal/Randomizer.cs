@@ -40,8 +40,6 @@ namespace NUnit.Framework.Internal
     {
         #region Static Members
 
-        private static int initialSeed = new Random().Next();
-
         private static Random seedGenerator;
 
         private static Dictionary<MemberInfo, Randomizer> randomizers = new Dictionary<MemberInfo, Randomizer>();
@@ -49,11 +47,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Initial seed used to create randomizers for this run
         /// </summary>
-        public static int InitialSeed
-        {
-            get { return initialSeed; }
-            set { initialSeed = value; }
-        }
+        public static int InitialSeed { get; set; }
 
         /// <summary>
         /// Get a randomizer for a particular member, returning
@@ -94,7 +88,7 @@ namespace NUnit.Framework.Internal
         public static Randomizer CreateRandomizer()
         {
             if (seedGenerator == null)
-                seedGenerator = new Random(initialSeed);
+                seedGenerator = new Random(InitialSeed);
 
             return new Randomizer(seedGenerator.Next());
         }

@@ -119,19 +119,9 @@ namespace NUnit.Framework.TestHarness
 
         private int RunTests(FrameworkDriver driver, string testFilter)
         {
-            IDictionary settings = new Dictionary<string, object>();
-            // The following items are actually runtime options
-            // but are passed when the assembly is loaded.
-            // TODO: Pass the settings to the run method
-
-            //if (commandlineOptions.Tests.Count > 0)
-            //    runOptions["RUN"] = commandlineOptions.Tests;
-            if (options.NumWorkers > 0)
-                settings["NumberOfTestWorkers"] = options.NumWorkers;
-            if (options.InternalTraceLevel != "Off")
-                settings["InternalTraceLevel"] = options.InternalTraceLevel;
-
-            XmlNode loadReport = driver.Load(options.AssemblyName, settings);
+            // Run settings are passed when the assembly is loaded and saved by the runner.
+            // TODO: Pass the settings to the run method rather than load.
+            XmlNode loadReport = driver.Load(options.AssemblyName, CreateRunSettings());
             if (loadReport.Name == "error")
             {
                 DisplayErrorMessage(loadReport);
@@ -177,8 +167,8 @@ namespace NUnit.Framework.TestHarness
                 Console.WriteLine("Test standard output saved as {0}", options.OutFile);
             if (options.ErrFile != null)
                 Console.WriteLine("Test error output saved as {0}", options.ErrFile);
-            Console.WriteLine("NUnit 3 Result File Saved as {0}", options.V3ResultFile);
-            Console.WriteLine("NUnit 2 Result File Saved as {0}", options.V2ResultFile);
+            Console.WriteLine("NUnit3 Result File Saved as {0}", options.V3ResultFile);
+            Console.WriteLine("NUnit2 Result File Saved as {0}", options.V2ResultFile);
 
             return OK;
         }
@@ -230,6 +220,22 @@ namespace NUnit.Framework.TestHarness
 
             if (options.Exclude != null && options.Exclude != string.Empty)
                 Console.WriteLine("Excluded categories: " + options.Exclude);
+        }
+
+        private IDictionary CreateRunSettings()
+        {
+            IDictionary settings = new Dictionary<string, object>();
+
+            if (options.NumWorkers > 0)
+                settings["NumberOfTestWorkers"] = options.NumWorkers;
+            if (options.InternalTraceLevel != "Off")
+                settings["InternalTraceLevel"] = options.InternalTraceLevel;
+            if (options.RandomSeed >= 0)
+                settings["RandomSeed"] = options.RandomSeed;
+            if (options.DefaultTimeout >= 0)
+                settings["DefaultTimeout"] = options.DefaultTimeout;
+
+            return settings;
         }
 
         #endregion
