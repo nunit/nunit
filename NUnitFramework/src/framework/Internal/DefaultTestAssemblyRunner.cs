@@ -147,9 +147,13 @@ namespace NUnit.Framework.Internal
             initialContext.Error = new EventListenerTextWriter(queue, TestOutputType.Error);
             initialContext.Listener = queue;
 
-            int numWorkers = 0;
-            if (_settings.Contains("NumberOfTestWorkers"))
-                numWorkers = (int)_settings["NumberOfTestWorkers"];
+            int numWorkers = _settings.Contains("NumberOfTestWorkers")
+                ? (int)_settings["NumberOfTestWorkers"]
+                : 0;
+
+            Randomizer.InitialSeed = _settings.Contains("RandomSeed")
+                ? (int)_settings["RandomSeed"]
+                : new Random().Next();
 
             WorkItemDispatcher dispatcher = null;
 

@@ -65,6 +65,9 @@ namespace NUnit.Framework.TestHarness
             this.Add("workers=", "Specify the {NUMBER} of worker threads to use in running tests. (Default: use main thread)",
                 v => NumWorkers = RequiredInt(v, "--workers"));
 
+            this.Add("seed=", "Specify the random {SEED} to be used in generating test cases.",
+                v => randomSeed = RequiredInt(v, "--seed"));
+
             // Output Control
             this.Add("work=", "{PATH} of the directory to use for output files.",
                 v => WorkDirectory = RequiredValue(v, "--work"));
@@ -154,6 +157,9 @@ namespace NUnit.Framework.TestHarness
         public int DefaultTimeout { get { return defaultTimeout; } }
 
         public int NumWorkers { get; private set; }
+
+        private int randomSeed = -1;
+        public int RandomSeed { get { return randomSeed; } }
 
         // Output Control
 

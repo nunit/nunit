@@ -310,7 +310,6 @@
     <Compile Include="Runner\CommandLineOptions.cs" />
     <Compile Include="Runner\ConsoleWriter.cs" />
     <Compile Include="Runner\DebugWriter.cs" />
-    <Compile Include="Runner\Options.cs" />
     <Compile Include="Runner\OutputWriters\NUnit2XmlOutputWriter.cs" />
     <Compile Include="Runner\OutputWriters\NUnit3XmlOutputWriter.cs" />
     <Compile Include="Runner\OutputWriters\OutputWriter.cs" />

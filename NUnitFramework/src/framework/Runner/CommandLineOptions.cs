@@ -37,10 +37,6 @@ namespace NUnitLite.Runner
         private string optionChars;
         private static readonly string NL = NUnit.Env.NewLine;
 
-        private List<string> invalidOptions;
-
-        private int randomSeed = -1;
-
         #region Constructors
 
         /// <summary>
@@ -119,6 +115,7 @@ namespace NUnitLite.Runner
 #endif
         }
 
+        private int randomSeed = -1;
         public int InitialSeed
         {
             get
@@ -136,6 +133,7 @@ namespace NUnitLite.Runner
         /// <summary>Indicates whether there was an error in parsing the options.</summary>
         public bool Error { get; private set; }
 
+        private List<string> invalidOptions;
         /// <summary>
         /// Gets the error message.
         /// </summary>
@@ -174,8 +172,8 @@ namespace NUnitLite.Runner
                 sb.Append("or on the probing path. If no assemblies are provided, tests in the" + NL);
                 sb.Append("executing assembly itself are run." + NL + NL);
                 sb.Append("Options:" + NL);
-                sb.Append("  -test:testname  Provides the name of a test to run. This option may be" + NL);
-                sb.Append("                  repeated. If no test names are given, all tests are run." + NL + NL);
+                sb.Append("  -test:testname  The name of a test to run or explore. This option may be repeated." + NL);
+                sb.Append("                  If no test names are given, all tests are run." + NL + NL);
                 sb.Append("  -out:FILE       File to which output is redirected. If this option is not" + NL);
                 sb.Append("                  used, output is to the Console, which means it is lost" + NL);
                 sb.Append("                  on devices without a Console." + NL + NL);
@@ -189,8 +187,7 @@ namespace NUnitLite.Runner
                 sb.Append("  -help,-h        Displays this help" + NL + NL);
                 sb.Append("  -noheader,-noh  Suppresses display of the initial message" + NL + NL);
                 sb.Append("  -labels         Displays the name of each test when it starts" + NL + NL);
-                sb.Append("  -seed:SEED      If provided, this option allows you to set the seed for the" + NL);
-                sb.Append("                  random generator in the text context." + NL + NL);
+                sb.Append("  -seed:SEED      Specify the random seed used in generating test cases." + NL + NL);
                 sb.Append("  -include:CAT    List of categories to include" + NL + NL);
                 sb.Append("  -exclude:CAT    List of categories to exclude" + NL + NL);
                 sb.Append("  -wait           Waits for a key press before exiting" + NL + NL);
