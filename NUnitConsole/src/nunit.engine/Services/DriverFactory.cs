@@ -8,9 +8,9 @@ namespace NUnit.Engine.Services
     {
         #region IDriverFactory Members
 
-        public IFrameworkDriver GetDriver(AppDomain domain, string assemblyPath)
+        public IFrameworkDriver GetDriver(AppDomain domain, string assemblyPath, IDictionary<string, object> settings)
         {
-            return new NUnitFrameworkDriver(domain);
+            return new NUnitFrameworkDriver(domain, assemblyPath, settings);
         }
 
         #endregion
@@ -37,6 +37,6 @@ namespace NUnit.Engine.Services
 
     public interface IDriverFactory
     {
-        IFrameworkDriver GetDriver(AppDomain domain, string assemblyPath);
+        IFrameworkDriver GetDriver(AppDomain domain, string assemblyPath, IDictionary<string, object> settings);
     }
 }

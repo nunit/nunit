@@ -116,6 +116,26 @@ namespace NUnit.ConsoleRunner.Tests
             Assert.AreEqual("Error", package.Settings["InternalTraceLevel"]);
         }
 
+        [Test]
+        public void WhenSeedIsSpecified_PackageIncludesIt()
+        {
+            var options = new ConsoleOptions("test.dll", "--seed=1234");
+            var package = ConsoleRunner.MakeTestPackage(options);
+
+            Assert.That(package.Settings.ContainsKey("RandomSeed"));
+            Assert.AreEqual(1234, package.Settings["RandomSeed"]);
+        }
+
+        [Test]
+        public void WhenWorkersIsSpecified_PackageIncludesIt()
+        {
+            var options = new ConsoleOptions("test.dll", "--workers=3");
+            var package = ConsoleRunner.MakeTestPackage(options);
+
+            Assert.That(package.Settings.ContainsKey("NumberOfTestWorkers"));
+            Assert.AreEqual(3, package.Settings["NumberOfTestWorkers"]);
+        }
+
         //[Test]
         //public void EnumOptions_MayBeSpecifiedAsInts()
         //{

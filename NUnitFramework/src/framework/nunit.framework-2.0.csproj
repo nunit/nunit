@@ -24,21 +24,21 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\bin\Debug\net-2.0\</OutputPath>
+    <OutputPath>..\..\bin\Debug\net-2.0\</OutputPath>
     <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\..\..\bin\Debug\net-2.0\nunit.framework.xml</DocumentationFile>
+    <DocumentationFile>..\..\bin\Debug\net-2.0\nunit.framework.xml</DocumentationFile>
     <NoWarn>1699</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\..\bin\Release\net-2.0\</OutputPath>
+    <OutputPath>..\..\bin\Release\net-2.0\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\..\..\bin\Release\net-2.0\nunit.framework.xml</DocumentationFile>
+    <DocumentationFile>..\..\bin\Release\net-2.0\nunit.framework.xml</DocumentationFile>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

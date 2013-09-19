@@ -113,6 +113,10 @@ namespace NUnitLite.Runner
                     writer.WriteLine("Ignoring /wait option - only valid for Console");
 
                 var loadOptions = new Dictionary<string, string>();
+
+                if (commandLineOptions.InitialSeed >= 0)
+                    loadOptions["RandomSeed"] = commandLineOptions.InitialSeed.ToString();
+
                 //if (options.Load.Count > 0)
                 //    loadOptions["LOAD"] = options.Load;
 
@@ -135,7 +139,7 @@ namespace NUnitLite.Runner
                     // TODO: For now, ignore all but first assembly
                     Assembly assembly = assemblies[0];
 
-                    Randomizer.InitialSeed = commandLineOptions.InitialSeed;
+                    //Randomizer.InitialSeed = commandLineOptions.InitialSeed;
 
                     if (!runner.Load(assembly, loadOptions))
                     {

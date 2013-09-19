@@ -29,12 +29,12 @@ namespace NUnit.Engine
 {
     public interface IFrameworkDriver
     {
-        TestEngineResult Load(string assemblyName, IDictionary<string,object> options);
+        TestEngineResult Load();
 
         void Unload();
 
         TestEngineResult Run(ITestEventHandler listener, TestFilter filter);
 
-        TestEngineResult Explore(string assemblyName, IDictionary<string, object> options, TestFilter filter);
+        TestEngineResult Explore(TestFilter filter);
     }
 }

@@ -98,8 +98,13 @@ namespace NUnit.ConsoleRunner
                 if (resultState == "Failed" || resultState == "Error" || resultState == "Cancelled")
                     WriteSingleResult(result);
             }
-            else
+            else if (result.Name=="test-suite")
             {
+                //string resultState = result.Attributes["result"].Value;
+                //if (resultState == "Failed" || resultState == "Error")
+                //    WriteSingleResult(result);
+
+                // TODO: Display failures in fixture setup or teardown
                 foreach (XmlNode childResult in result.ChildNodes)
                     WriteErrorsAndFailures(childResult);
             }

@@ -21,20 +21,20 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\bin\Debug\net-4.0\</OutputPath>
+    <OutputPath>..\..\bin\Debug\net-4.0\</OutputPath>
     <DefineConstants>TRACE;DEBUG;NET_4_0;NUNITLITE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\..\..\bin\Debug\net-4.0\nunitlite.xml</DocumentationFile>
+    <DocumentationFile>..\..\bin\Debug\net-4.0\nunitlite.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\..\bin\Release\net-4.0\</OutputPath>
+    <OutputPath>..\..\bin\Release\net-4.0\</OutputPath>
     <DefineConstants>TRACE;NET_4_0;NUNITLITE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\..\..\bin\Release\net-4.0\nunitlite.xml</DocumentationFile>
+    <DocumentationFile>..\..\bin\Release\net-4.0\nunitlite.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />

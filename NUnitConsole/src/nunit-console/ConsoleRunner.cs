@@ -263,6 +263,12 @@ namespace NUnit.ConsoleRunner
             if (options.StopOnError)
                 package.Settings["StopOnError"] = true;
 
+            if (options.NumWorkers > 0)
+                package.Settings["NumberOfTestWorkers"] = options.NumWorkers;
+
+            if (options.RandomSeed > 0)
+                package.Settings["RandomSeed"] = options.RandomSeed;
+
 #if DEBUG
             //foreach (KeyValuePair<string, object> entry in package.Settings)
             //    if (!(entry.Value is string || entry.Value is int || entry.Value is bool))

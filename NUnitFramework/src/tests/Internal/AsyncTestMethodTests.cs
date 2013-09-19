@@ -70,7 +70,8 @@ namespace NUnit.Framework.Internal
                 yield return new object[] { Method("TaskCheckTestContextWithinTestBody"), ResultState.Success, 2 };
 
                 yield return new object[] { Method("VoidAsyncVoidChildCompletingEarlierThanTest"), ResultState.Success, 0 };
-                yield return new object[] { Method("VoidAsyncVoidChildThrowingImmediately"), ResultState.Success, 0 }; // Race condition?
+                // TODO: The next one fails occasionally. Race condition?
+                yield return new object[] { Method("VoidAsyncVoidChildThrowingImmediately"), ResultState.Success, 0 };
             }
 		}
 

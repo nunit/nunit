@@ -24,33 +24,13 @@ namespace NUnit.Engine.Runners
         /// </summary>
         /// <param name="package">The TestPackage to be explored</param>
         /// <returns>A TestEngineResult.</returns>
-        public override TestEngineResult Explore(TestPackage package, TestFilter filter)
+        public override TestEngineResult Explore(TestFilter filter)
         {
-            this.package = package;
-
-            List<TestPackage> packages = new List<TestPackage>();
-
-            foreach (string testFile in package.TestFiles)
-            {
-                TestPackage subPackage = new TestPackage(testFile);
-                if (Services.ProjectService.IsProjectFile(testFile))
-                    Services.ProjectService.ExpandProjectPackage(subPackage);
-                foreach (string key in package.Settings.Keys)
-                    subPackage.Settings[key] = package.Settings[key];
-                packages.Add(subPackage);
-            }
-
             List<TestEngineResult> results = new List<TestEngineResult>();
 
-            foreach (TestPackage subPackage in packages)
-            {
-                //foreach (string key in package.Settings.Keys)
-                //    subPackage.Settings[key] = package.Settings[key];
-
-                AbstractTestRunner runner = CreateRunner(subPackage);
-                runners.Add(runner);
-                results.Add(runner.Explore(subPackage, filter));
-            }
+            // TODO: Eliminate need for implicit cast to AbstractTestRunner
+            foreach (AbstractTestRunner runner in runners)
+                results.Add(runner.Explore(filter));
 
             return MakePackageResult(results);
         }
@@ -114,6 +94,7 @@ namespace NUnit.Engine.Runners
         {
             List<TestEngineResult> results = new List<TestEngineResult>();
 
+            // TODO: Eliminate need for implicit cast to AbstractTestRunner
             foreach (AbstractTestRunner runner in runners)
                 results.Add(runner.Run(listener, filter));
 

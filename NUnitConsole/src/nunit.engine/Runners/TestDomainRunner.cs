@@ -33,21 +33,6 @@ namespace NUnit.Engine.Runners
 
         #region DirectTestRunner Overrides
 
-        /// <summary>
-        /// Explore a TestPackage and return information about
-        /// the tests found.
-        /// </summary>
-        /// <param name="package">The TestPackage to be explored</param>
-        /// <returns>A TestEngineResult.</returns>
-        public override TestEngineResult Explore(TestPackage package, TestFilter filter)
-        {
-            this.package = package;
-
-            this.TestDomain = Services.DomainManager.CreateDomain(package);
-
-            return base.Explore(package, filter);
-        }
-
         public override TestEngineResult Load(TestPackage package)
         {
             this.package = package;

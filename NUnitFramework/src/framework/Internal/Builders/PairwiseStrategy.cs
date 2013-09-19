@@ -687,8 +687,8 @@ namespace NUnit.Framework.Internal.Builders
 					}
 				}
 			}
-		}
 #endif
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PairwiseStrategy"/> class.

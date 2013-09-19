@@ -36,22 +36,30 @@ namespace NUnit.Engine
     /// </summary>
     public class NUnitFrameworkDriver : IFrameworkDriver
     {
-        AppDomain testDomain; 
+        private static readonly string CONTROLLER_TYPE = "NUnit.Framework.Api.TestController";
+        private static readonly string LOAD_ACTION = CONTROLLER_TYPE + "+LoadTestsAction";
+        private static readonly string EXPLORE_ACTION = CONTROLLER_TYPE + "+ExploreTestsAction";
+        private static readonly string RUN_ACTION = CONTROLLER_TYPE + "+RunTestsAction";
+
+        AppDomain testDomain;
+        string assemblyPath;
+        IDictionary<string, object> settings;
 
         object testController;
 
-        public NUnitFrameworkDriver(AppDomain testDomain)
+        public NUnitFrameworkDriver(AppDomain testDomain, string assemblyPath, IDictionary<string, object> settings)
         {
             this.testDomain = testDomain;
-            this.testController = CreateObject("NUnit.Framework.Api.TestController");
+            this.assemblyPath = assemblyPath;
+            this.settings = settings;
+            this.testController = CreateObject(CONTROLLER_TYPE, assemblyPath, (System.Collections.IDictionary)settings);
         }
 
-        public TestEngineResult Load(string assemblyFileName, IDictionary<string,object> settings)
+        public TestEngineResult Load()
         {
             CallbackHandler handler = new CallbackHandler();
 
-            CreateObject("NUnit.Framework.Api.TestController+LoadTestsAction",
-                testController, assemblyFileName, (System.Collections.IDictionary)settings, handler);
+            CreateObject(LOAD_ACTION, testController, handler);
 
             return handler.Result;
         }
@@ -64,17 +72,16 @@ namespace NUnit.Engine
         {
             CallbackHandler handler = new RunTestsCallbackHandler(listener);
 
-            CreateObject("NUnit.Framework.Api.TestController+RunTestsAction", testController, filter.Text, handler);
+            CreateObject(RUN_ACTION, testController, filter.Text, handler);
 
             return handler.Result;
         }
 
-        public TestEngineResult Explore(string assemblyFileName, IDictionary<string, object> settings, TestFilter filter)
+        public TestEngineResult Explore(TestFilter filter)
         {
             CallbackHandler handler = new CallbackHandler();
 
-            CreateObject("NUnit.Framework.Api.TestController+ExploreTestsAction",
-                testController, assemblyFileName, settings, filter.Text, handler);
+            CreateObject(EXPLORE_ACTION, testController, filter.Text, handler);
 
             return handler.Result;
         }

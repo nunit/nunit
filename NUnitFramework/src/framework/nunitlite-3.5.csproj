@@ -21,21 +21,21 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\bin\Debug\net-3.5\</OutputPath>
+    <OutputPath>..\..\bin\Debug\net-3.5\</OutputPath>
     <DefineConstants>TRACE;DEBUG;NET_3_5;NUNITLITE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\..\..\bin\Debug\net-3.5\nunitlite.xml</DocumentationFile>
+    <DocumentationFile>..\..\bin\Debug\net-3.5\nunitlite.xml</DocumentationFile>
     <IntermediateOutputPath>obj\$(Configuration)\net-3.5\</IntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\..\bin\Release\net-3.5\</OutputPath>
+    <OutputPath>..\..\bin\Release\net-3.5\</OutputPath>
     <DefineConstants>TRACE;NET_3_5;NUNITLITE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\..\..\bin\Release\net-3.5\nunitlite.xml</DocumentationFile>
+    <DocumentationFile>..\..\bin\Release\net-3.5\nunitlite.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />

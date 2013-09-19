@@ -95,7 +95,7 @@ namespace NUnit.Framework.TestHarness
         {
             IDictionary settings = new Dictionary<string, object>();
 
-            XmlNode testNode = driver.ExploreTests(options.AssemblyName, settings, filter);
+            XmlNode testNode = driver.ExploreTests(filter);
 
             if (testNode.Name == "error")
             {
@@ -119,9 +119,7 @@ namespace NUnit.Framework.TestHarness
 
         private int RunTests(FrameworkDriver driver, string testFilter)
         {
-            // Run settings are passed when the assembly is loaded and saved by the runner.
-            // TODO: Pass the settings to the run method rather than load.
-            XmlNode loadReport = driver.Load(options.AssemblyName, CreateRunSettings());
+            XmlNode loadReport = driver.Load();
             if (loadReport.Name == "error")
             {
                 DisplayErrorMessage(loadReport);
@@ -148,6 +146,12 @@ namespace NUnit.Framework.TestHarness
                 Console.SetOut(savedOut);
                 Console.Error.Flush();
                 Console.SetError(savedError);
+            }
+
+            if (resultNode.Name == "error")
+            {
+                DisplayErrorMessage(resultNode);
+                return ConsoleRunner.UNEXPECTED_ERROR;
             }
 
             string resultFile = Path.Combine(workDirectory, options.V3ResultFile);
@@ -177,7 +181,7 @@ namespace NUnit.Framework.TestHarness
         {
             XmlAttribute message = errorReport.Attributes["message"];
             XmlAttribute stackTrace = errorReport.Attributes["stackTrace"];
-            Console.WriteLine("Load failure: {0}", message == null ? "" : message.Value);
+            Console.WriteLine("Error: {0}", message == null ? "" : message.Value);
             if (stackTrace != null)
                 Console.WriteLine(stackTrace.Value);
         }
@@ -220,22 +224,6 @@ namespace NUnit.Framework.TestHarness
 
             if (options.Exclude != null && options.Exclude != string.Empty)
                 Console.WriteLine("Excluded categories: " + options.Exclude);
-        }
-
-        private IDictionary CreateRunSettings()
-        {
-            IDictionary settings = new Dictionary<string, object>();
-
-            if (options.NumWorkers > 0)
-                settings["NumberOfTestWorkers"] = options.NumWorkers;
-            if (options.InternalTraceLevel != "Off")
-                settings["InternalTraceLevel"] = options.InternalTraceLevel;
-            if (options.RandomSeed >= 0)
-                settings["RandomSeed"] = options.RandomSeed;
-            if (options.DefaultTimeout >= 0)
-                settings["DefaultTimeout"] = options.DefaultTimeout;
-
-            return settings;
         }
 
         #endregion

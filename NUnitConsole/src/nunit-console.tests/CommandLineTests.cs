@@ -81,17 +81,17 @@ namespace NUnit.ConsoleRunner.Tests
             }
         }
 
-        [TestCase("Include", "include", new string[] { "Short,Fast" }, new string[0])]
-        [TestCase("Exclude", "exclude", new string[] { "Long" }, new string[0])]
-        [TestCase("ActiveConfig", "config", new string[] { "Debug" }, new string[0])]
-        [TestCase("ProcessModel", "process", new string[] { "Single", "Separate", "Multiple" }, new string[] { "JUNK" })]
-        [TestCase("DomainUsage", "domain", new string[] { "None", "Single", "Multiple" }, new string[] { "JUNK" })]
-        [TestCase("Framework", "framework", new string[] { "net-4.0" }, new string[0])]
-        [TestCase("OutputPath", "output|out", new string[] { "output.txt" }, new string[0])]
-        [TestCase("ErrorPath",     "err",        new string[] { "error.txt" },                      new string[0])]
-        [TestCase("WorkDirectory", "work",       new string[] { "results" },                        new string[0])]
-        [TestCase("DisplayTestLabels", "labels",            new string[] { "Off", "On", "All" },               new string[] { "JUNK" })]
-        [TestCase("InternalTraceLevel", "trace", new string[] { "Off", "Error", "Warning", "Info", "Debug", "Verbose" }, new string[] { "JUNK" })]
+        [TestCase("Include",            "include",    new string[] { "Short,Fast" },                     new string[0])]
+        [TestCase("Exclude",            "exclude",    new string[] { "Long" },                           new string[0])]
+        [TestCase("ActiveConfig",       "config",     new string[] { "Debug" },                          new string[0])]
+        [TestCase("ProcessModel",       "process",    new string[] { "Single", "Separate", "Multiple" }, new string[] { "JUNK" })]
+        [TestCase("DomainUsage",        "domain",     new string[] { "None", "Single", "Multiple" },     new string[] { "JUNK" })]
+        [TestCase("Framework",          "framework",  new string[] { "net-4.0" },                        new string[0])]
+        [TestCase("OutFile",            "output|out", new string[] { "output.txt" },                     new string[0])]
+        [TestCase("ErrFile",            "err",        new string[] { "error.txt" },                      new string[0])]
+        [TestCase("WorkDirectory",      "work",       new string[] { "results" },                        new string[0])]
+        [TestCase("DisplayTestLabels",  "labels",     new string[] { "Off", "On", "All" },               new string[] { "JUNK" })]
+        [TestCase("InternalTraceLevel", "trace",      new string[] { "Off", "Error", "Warning", "Info", "Debug", "Verbose" }, new string[] { "JUNK" })]
         public void CanRecognizeStringOptions(string propertyName, string pattern, string[] goodValues, string[] badValues)
         {
             string[] prototypes = pattern.Split('|');
@@ -119,6 +119,8 @@ namespace NUnit.ConsoleRunner.Tests
         }
 
         [TestCase("DefaultTimeout", "timeout")]
+        [TestCase("RandomSeed", "seed")]
+        [TestCase("NumWorkers", "workers")]
         public void CanRecognizeIntOptions(string propertyName, string pattern)
         {
             string[] prototypes = pattern.Split('|');
