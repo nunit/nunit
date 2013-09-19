@@ -49,13 +49,13 @@ namespace NUnit.Engine.Runners
         #region Abstract and Virtual Methods
 
         /// <summary>
-        /// Explore a TestPackage and return information about
+        /// Explore a loaded TestPackage and return information about
         /// the tests found.
         /// </summary>
         /// <param name="package">The TestPackage to be explored</param>
         /// <param name="filter">The TestFilter to be used to select tests</param>
         /// <returns>A TestEngineResult.</returns>
-        public abstract TestEngineResult Explore(TestPackage package, TestFilter filter);
+        public abstract TestEngineResult Explore(TestFilter filter);
 
         /// <summary>
         /// Load a TestPackage for possible execution. This is
@@ -67,7 +67,7 @@ namespace NUnit.Engine.Runners
 
         /// <summary>
         /// Unload any loaded TestPackage. Overridden in
-        /// derived classes to take any ncessary action.
+        /// derived classes to take any necessary action.
         /// </summary>
         public virtual void Unload()
         {
@@ -112,14 +112,14 @@ namespace NUnit.Engine.Runners
         }
 
         /// <summary>
-        /// Explore a TestPackage and return information about
+        /// Explore a loaded TestPackage and return information about
         /// the tests found.
         /// </summary>
         /// <param name="package">The TestPackage to be explored</param>
         /// <returns>A TestEngineResult.</returns>
-        ITestEngineResult ITestRunner.Explore(TestPackage package, TestFilter filter)
+        ITestEngineResult ITestRunner.Explore(TestFilter filter)
         {
-            return this.Explore(package, filter);
+            return this.Explore(filter);
         }
 
         #endregion

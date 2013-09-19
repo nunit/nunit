@@ -56,8 +56,6 @@
     value="${path::combine(project.base.dir,'doc')}"/>
   <property name="project.lib.dir"
     value="${path::combine(project.base.dir,'lib')}"/>
-  <property name="project.deploy.dir"
-    value="${path::combine(project.base.dir,'../deploy')}"/>
   <property name="project.tools.dir"
     value="${path::combine(project.base.dir,'../tools')}"/>
   <property name="partcover.dir"
@@ -186,34 +184,11 @@
   </target>
 
 <!-- ***************************************************************** -->
-<!-- ***                   Deploy the Console Runner               *** -->
-<!-- ***************************************************************** -->
-
-  <target name="deploy" depends="build"
-    description="Deploy the current build for testing">
-
-    <copy todir="${project.deploy.dir}">
-      <fileset basedir="${current.build.dir}">
-        <include name="nunit-console.*" />
-        <include name="nunit.engine.*" />
-        <include name="nunit-agent.*" />
-        <include name="nunit.framework.dll" /> <!-- TEMPORARY -->
-        <include name="*.xsd"/>
-        <include name="*.xslt"/>
-      </fileset>
-    </copy>
-
-  </target>
-
-<!-- ***************************************************************** -->
 <!-- ***                      Run Tests                            *** -->
 <!-- ***************************************************************** -->
 
   <target name="test" depends="build,run-test"
     description="Build and run tests for selected config and runtime"/>
-
-  <target name="deploy-test" depends="build,deploy,run-deploy-test"
-    description="Build, deploy and run deployed tests for selected config and runtime"/>
 
   <target name="run-test">
 
@@ -225,22 +200,6 @@
 
     <exec basedir="${current.build.dir}"
           workingdir="${current.build.dir}"
-          program="${nunit.console.program}"
-          managed="Auto"
-          commandline="${nunit.console.args}" />
-
-  </target>
-
-  <target name="run-deploy-test">
-
-    <echo message="*"/>
-    <echo message="* Testing the deployed nunit-console ${build.config} build"/>
-    <echo message="*"/>
-
-    <!--<property name="nant.settings.currentframework" value="net-2.0"/>-->
-
-    <exec basedir="${project.deploy.dir}"
-          workingdir="${project.deploy.dir}"
           program="${nunit.console.program}"
           managed="Auto"
           commandline="${nunit.console.args}" />

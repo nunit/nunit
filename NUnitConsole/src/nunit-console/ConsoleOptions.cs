@@ -84,6 +84,12 @@ namespace NUnit.ConsoleRunner
             this.Add("timeout=", "Set timeout for each test case in {MILLISECONDS}.",
                 v => defaultTimeout = RequiredInt(v, "--timeout"));
 
+            this.Add("seed=", "Set the random {SEED} used to generate test cases.",
+                v => randomSeed = RequiredInt(v, "--seed"));
+
+            this.Add("workers=", "Specify the {NUMBER} of worker threads to be used in running tests.",
+                v => numWorkers = RequiredInt(v, "--workers"));
+
             this.Add("stoponerror", "Stop run immediately upon any test failure or error.",
                 v => StopOnError = v != null);
 
@@ -178,6 +184,12 @@ namespace NUnit.ConsoleRunner
 
         private int defaultTimeout = -1;
         public int DefaultTimeout { get { return defaultTimeout; } }
+
+        private int randomSeed = -1;
+        public int RandomSeed { get { return randomSeed; } }
+
+        private int numWorkers = -1;
+        public int NumWorkers { get { return numWorkers; } }
 
         public bool StopOnError { get; private set; }
 

@@ -95,15 +95,14 @@ namespace NUnit.Engine.Agents
         #region ITestRunner Members
 
         /// <summary>
-        /// Explore a TestPackage and return information about
+        /// Explore a loaded TestPackage and return information about
         /// the tests found.
         /// </summary>
         /// <param name="package">The TestPackage to be explored</param>
         /// <returns>A TestEngineResult.</returns>
-        public ITestEngineResult Explore(TestPackage package, TestFilter filter)
+        public ITestEngineResult Explore(TestFilter filter)
         {
-            this.runner = Services.TestRunnerFactory.MakeTestRunner(package);
-            return runner.Explore(package, filter);
+            return runner == null ? null : runner.Explore(filter);
         }
 
         public ITestEngineResult Load(TestPackage package)

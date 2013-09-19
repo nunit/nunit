@@ -68,8 +68,9 @@ namespace NUnit.Engine
         {
             SettingsService settingsService = new SettingsService(false);
 
+            // TODO: Integrate logs for all domains, rather than using %a
             InternalTraceLevel level = (InternalTraceLevel)settingsService.GetSetting("Options.InternalTraceLevel", InternalTraceLevel.Default);
-            InternalTrace.Initialize("nunit.engine.%p.log", level);
+            InternalTrace.Initialize("nunit.engine.%p.%a.log", level);
 
             Services.Add(settingsService);
             Services.Add(new DomainManager());
@@ -92,7 +93,11 @@ namespace NUnit.Engine
         {
             using (ITestRunner runner = GetRunner())
             {
-                return runner.Explore(package, filter);
+                ITestEngineResult loadResult = runner.Load(package);
+
+                return loadResult.HasErrors
+                    ? loadResult
+                    : runner.Explore(filter);
             }
         }
 

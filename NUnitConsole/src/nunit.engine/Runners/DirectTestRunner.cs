@@ -48,17 +48,12 @@ namespace NUnit.Engine.Runners
         /// </summary>
         /// <param name="package">The TestPackage to be explored</param>
         /// <returns>A TestEngineResult.</returns>
-        public override TestEngineResult Explore(TestPackage package, TestFilter filter)
+        public override TestEngineResult Explore(TestFilter filter)
         {
-            this.package = package;
             List<TestEngineResult> results = new List<TestEngineResult>();
 
-            foreach (string testFile in package.TestFiles)
-            {
-                // TODO: Should get the appropriate driver for the file
-                IFrameworkDriver driver = Services.DriverFactory.GetDriver(TestDomain, testFile);
-                results.Add(driver.Explore(testFile, package.Settings, filter));
-            }
+            foreach (IFrameworkDriver driver in drivers)
+                results.Add(driver.Explore(filter));
 
             return MakePackageResult(results);
         }
@@ -76,8 +71,8 @@ namespace NUnit.Engine.Runners
             foreach (string testFile in package.TestFiles)
             {
                 // TODO: Should get the appropriate driver for the file
-                IFrameworkDriver driver = Services.DriverFactory.GetDriver(TestDomain, testFile);
-                TestEngineResult driverResult = driver.Load(testFile, package.Settings);
+                IFrameworkDriver driver = Services.DriverFactory.GetDriver(TestDomain, testFile, package.Settings);
+                TestEngineResult driverResult = driver.Load();
 
                 foreach (XmlNode node in driverResult.XmlNodes)
                     loadResult.Add(node);

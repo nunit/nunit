@@ -66,21 +66,9 @@ namespace NUnit.Engine.Runners
         /// </summary>
         /// <param name="package">The TestPackage to be explored</param>
         /// <returns>A TestEngineResult.</returns>
-        public override TestEngineResult Explore(TestPackage package, TestFilter filter)
+        public override TestEngineResult Explore(TestFilter filter)
         {
-            this.package = package;
-
-            string frameworkSetting = package.GetSetting("RuntimeFramework", "");
-            this.runtimeFramework = frameworkSetting != ""
-                ? RuntimeFramework.Parse(frameworkSetting)
-                : RuntimeFramework.CurrentFramework;
-
-            bool enableDebug = package.GetSetting("AgentDebug", false);
-            //bool enableDebug = true;
-
-            CreateAgentAndRunner(enableDebug);
-
-            ITestEngineResult result = this.remoteRunner.Explore(package, filter);
+            ITestEngineResult result = this.remoteRunner.Explore(filter);
             return result as TestEngineResult; // TODO: Remove need for this cast
         }
 

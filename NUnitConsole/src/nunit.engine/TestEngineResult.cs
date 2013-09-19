@@ -325,6 +325,7 @@ namespace NUnit.Engine
         {
             get 
             {
+                // TODO: Fix this in some way and also allow for a count of zero
                 if (!IsSingle)
                     throw new InvalidOperationException("May not use 'Xml' property on a result with multiple XmlNodes");
                     

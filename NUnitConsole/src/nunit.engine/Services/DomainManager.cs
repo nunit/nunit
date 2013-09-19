@@ -184,7 +184,7 @@ namespace NUnit.Engine.Services
                 string domainName;
                 try
                 {
-                    domainName = domain.FriendlyName;
+                    domainName = "UNKNOWN";//domain.FriendlyName;
                 }
                 catch (AppDomainUnloadedException)
                 {

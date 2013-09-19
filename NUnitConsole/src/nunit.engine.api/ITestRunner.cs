@@ -52,11 +52,11 @@ namespace NUnit.Engine
         ITestEngineResult Run(ITestEventHandler listener, TestFilter filter);
 
         /// <summary>
-        /// Explore a TestPackage and return information about
+        /// Explore a loaded TestPackage and return information about
         /// the tests found.
         /// </summary>
         /// <param name="package">The TestPackage to be explored</param>
         /// <returns>A TestEngineResult.</returns>
-        ITestEngineResult Explore(TestPackage package, TestFilter filter);
+        ITestEngineResult Explore(TestFilter filter);
     }
 }
