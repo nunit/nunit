@@ -123,6 +123,11 @@ namespace NUnit.ConsoleRunner
 #endif
                     return ConsoleRunner.FILE_NOT_FOUND;
                 }
+                catch (DirectoryNotFoundException ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    return ConsoleRunner.FILE_NOT_FOUND;
+                }
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex.ToString());
