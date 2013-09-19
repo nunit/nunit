@@ -68,6 +68,9 @@ namespace NUnit.Framework.TestHarness
             this.Add("seed=", "Specify the random {SEED} to be used in generating test cases.",
                 v => randomSeed = RequiredInt(v, "--seed"));
 
+            this.Add("capture=", "Turn on capture of standard and error output in order to test that it works. The text should be displayed on the console either way.",
+                v => CaptureText = v != null );
+
             // Output Control
             this.Add("work=", "{PATH} of the directory to use for output files.",
                 v => WorkDirectory = RequiredValue(v, "--work"));
@@ -161,6 +164,8 @@ namespace NUnit.Framework.TestHarness
         private int randomSeed = -1;
         public int RandomSeed { get { return randomSeed; } }
 
+        public bool CaptureText { get; private set; }
+
         // Output Control
 
         public bool NoHeader { get; private set; }
@@ -216,6 +221,25 @@ namespace NUnit.Framework.TestHarness
             }
 
             return ErrorMessages.Count == 0;
+        }
+
+        public IDictionary<string, object> CreateDriverSettings()
+        {
+            var settings = new Dictionary<string, object>();
+
+            if (NumWorkers > 0)
+                settings["NumberOfTestWorkers"] = NumWorkers;
+            if (InternalTraceLevel != "Off")
+                settings["InternalTraceLevel"] = InternalTraceLevel;
+            if (RandomSeed >= 0)
+                settings["RandomSeed"] = RandomSeed;
+            if (DefaultTimeout >= 0)
+                settings["DefaultTimeout"] = DefaultTimeout;
+            settings["DisplayTestLabels"] = DisplayTestLabels;
+            settings["DisplayTeamCityServiceMessages"] = DisplayTeamCityServiceMessages;
+            settings["CaptureStandardOutput"] = settings["CaptureStandardError"] = CaptureText;
+
+            return settings;
         }
 
         #endregion

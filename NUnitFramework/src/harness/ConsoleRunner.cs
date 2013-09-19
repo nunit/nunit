@@ -59,10 +59,17 @@ namespace NUnit.Framework.TestHarness
 
         #region Constructor
 
-        public ConsoleRunner(FrameworkDriver driver, CommandLineOptions commandlineOptions)
+        public ConsoleRunner(CommandLineOptions commandlineOptions)
         {
-            this.driver = driver;
             this.options = commandlineOptions;
+
+            string assemblyPath = Path.GetFullPath(options.AssemblyName);
+            AppDomain testDomain = AppDomain.CurrentDomain;
+            if (options.RunInSeparateAppDomain)
+                testDomain = CreateDomain(Path.GetDirectoryName(assemblyPath));
+
+            this.driver = new FrameworkDriver(assemblyPath, testDomain, options.CreateDriverSettings());
+
 
             this.workDirectory = options.WorkDirectory;
             if (this.workDirectory == null)
@@ -224,6 +231,14 @@ namespace NUnit.Framework.TestHarness
 
             if (options.Exclude != null && options.Exclude != string.Empty)
                 Console.WriteLine("Excluded categories: " + options.Exclude);
+        }
+
+        private static AppDomain CreateDomain(string appBase)
+        {
+            AppDomainSetup setup = new AppDomainSetup();
+            setup.ApplicationBase = appBase;
+            AppDomain domain = AppDomain.CreateDomain("test-domain", null, setup);
+            return domain;
         }
 
         #endregion

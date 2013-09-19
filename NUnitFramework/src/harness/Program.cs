@@ -70,16 +70,9 @@ namespace NUnit.Framework.TestHarness
                 return ConsoleRunner.INVALID_ARG;
             }
 
-            string assemblyPath = Path.GetFullPath(options.AssemblyName);
-            AppDomain testDomain = AppDomain.CurrentDomain;
-            if (options.RunInSeparateAppDomain)
-                testDomain = CreateDomain(Path.GetDirectoryName(assemblyPath));
-
-            FrameworkDriver driver = new FrameworkDriver(assemblyPath, testDomain, new System.Collections.Hashtable());
-
             try
             {
-                return new ConsoleRunner(driver, options).Execute();
+                return new ConsoleRunner(options).Execute();
             }
             catch (FileNotFoundException ex)
             {
@@ -165,32 +158,6 @@ namespace NUnit.Framework.TestHarness
             Console.WriteLine();
             Console.WriteLine("      When --help is used anything else on the command line is ignored.");
             Console.WriteLine();
-        }
-
-        private static AppDomain CreateDomain(string appBase)
-        {
-            AppDomainSetup setup = new AppDomainSetup();
-            setup.ApplicationBase = appBase;
-            AppDomain domain = AppDomain.CreateDomain("test-domain", null, setup);
-            return domain;
-        }
-
-        private IDictionary<string, object> CreateDriverSettings(CommandLineOptions options)
-        {
-            var settings = new Dictionary<string, object>();
-
-            if (options.NumWorkers > 0)
-                settings["NumberOfTestWorkers"] = options.NumWorkers;
-            if (options.InternalTraceLevel != "Off")
-                settings["InternalTraceLevel"] = options.InternalTraceLevel;
-            if (options.RandomSeed >= 0)
-                settings["RandomSeed"] = options.RandomSeed;
-            if (options.DefaultTimeout >= 0)
-                settings["DefaultTimeout"] = options.DefaultTimeout;
-            settings["DisplayTestLabels"] = options.DisplayTestLabels;
-            settings["DisplayTeamCityServiceMessages"] = options.DisplayTeamCityServiceMessages;
-
-            return settings;
         }
     }
 }

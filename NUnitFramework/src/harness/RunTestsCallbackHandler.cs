@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
@@ -99,12 +100,12 @@ namespace NUnit.Framework.TestHarness
             }
         }
 
-        public RunTestsCallbackHandler(System.Collections.IDictionary settings)
+        public RunTestsCallbackHandler(IDictionary<string, object> settings)
         {
-            this.teamcity = settings.Contains("DisplayTeamCityServiceMessages")
+            this.teamcity = settings.ContainsKey("DisplayTeamCityServiceMessages")
                 ? (bool)settings["DisplayTeamCityServiceMessages"]
                 : false;
-            this.labels = settings.Contains("DisplayTestLabels")
+            this.labels = settings.ContainsKey("DisplayTestLabels")
                 ? (string)settings["DisplayTestLabels"]
                 : "Off";
             this.output = Console.Out;

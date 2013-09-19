@@ -53,6 +53,7 @@ namespace NUnit.Framework.TestHarness.Tests
         [TestCase("WaitBeforeExit", "wait")]
         [TestCase("NoHeader", "noheader|noh")]
         [TestCase("DisplayTeamCityServiceMessages", "teamcity")]
+        [TestCase("CaptureText", "capture")]
         public void CanRecognizeBooleanOptions(string propertyName, string pattern)
         {
             string[] prototypes = pattern.Split('|');

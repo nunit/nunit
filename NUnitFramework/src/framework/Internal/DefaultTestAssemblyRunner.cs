@@ -148,8 +148,11 @@ namespace NUnit.Framework.Internal
 #else
             QueuingEventListener queue = new QueuingEventListener();
 
-            initialContext.Out = new EventListenerTextWriter(queue, TestOutputType.Out);
-            initialContext.Error = new EventListenerTextWriter(queue, TestOutputType.Error);
+            if (_settings.Contains("CaptureStandardOutput"))
+                initialContext.Out = new EventListenerTextWriter(queue, TestOutputType.Out);
+            if (_settings.Contains("CapureStandardError"))
+                initialContext.Error = new EventListenerTextWriter(queue, TestOutputType.Error);
+
             initialContext.Listener = queue;
 
             int numWorkers = _settings.Contains("NumberOfTestWorkers")
