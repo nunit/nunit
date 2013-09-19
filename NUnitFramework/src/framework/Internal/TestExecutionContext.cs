@@ -543,6 +543,8 @@ namespace NUnit.Framework.Internal
             // it potentially impacts all threads.
             Environment.CurrentDirectory = this.currentDirectory;
             Thread.CurrentPrincipal = this.currentPrincipal;
+            Console.SetOut(this.Out);
+            Console.SetError(this.Error);
 #endif
 
             CurrentContext = this;

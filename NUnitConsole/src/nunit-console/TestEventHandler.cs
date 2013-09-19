@@ -225,7 +225,7 @@ namespace NUnit.ConsoleRunner
                 ? "output"
                 : typeAttr.Value;
 
-            XmlNode textNode = outputNode.SelectSingleNode("text");
+            XmlNode textNode = outputNode.Attributes["text"];
             string text = textNode == null
                 ? string.Empty
                 : textNode.InnerText;

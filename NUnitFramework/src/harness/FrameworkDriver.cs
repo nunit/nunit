@@ -22,7 +22,7 @@
 // ***********************************************************************
 
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using System.Xml;
 
 namespace NUnit.Framework.TestHarness
@@ -41,7 +41,7 @@ namespace NUnit.Framework.TestHarness
 
         AppDomain testDomain;
         string assemblyPath;
-        IDictionary settings;
+        IDictionary<string, object> settings;
 
         object testController;
 
@@ -53,7 +53,7 @@ namespace NUnit.Framework.TestHarness
         /// <param name="assemblyPath">The path to the test assembly</param>
         /// <param name="testDomain">The domain in which the assembly will be loaded</param>
         /// <param name="settings">A dictionary of load and run settings</param>
-        public FrameworkDriver(string assemblyPath, AppDomain testDomain, IDictionary settings)
+        public FrameworkDriver(string assemblyPath, AppDomain testDomain, IDictionary<string, object> settings)
         {
             this.testDomain = testDomain;
             this.assemblyPath = assemblyPath;
