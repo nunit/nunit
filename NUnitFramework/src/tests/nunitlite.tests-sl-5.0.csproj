@@ -44,7 +44,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\bin\Debug\sl-5.0\</OutputPath>
+    <OutputPath>..\..\bin\Debug\sl-5.0\</OutputPath>
     <DefineConstants>TRACE;DEBUG;SILVERLIGHT;SL_5_0;NUNITLITE</DefineConstants>
     <NoStdLib>true</NoStdLib>
     <NoConfig>true</NoConfig>
@@ -54,7 +54,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\..\bin\Release\sl-5.0\</OutputPath>
+    <OutputPath>..\..\bin\Release\sl-5.0\</OutputPath>
     <DefineConstants>TRACE;SILVERLIGHT;SL_5_0;NUNITLITE</DefineConstants>
     <NoStdLib>true</NoStdLib>
     <NoConfig>true</NoConfig>

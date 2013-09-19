@@ -38,6 +38,7 @@ namespace NUnit.Framework.TestHarness
 
         private TextWriter output;
 
+        // TODO: Make this a separate file
         class TeamCityServiceMessages
         {
             readonly TextWriter output = Console.Out;
@@ -98,10 +99,14 @@ namespace NUnit.Framework.TestHarness
             }
         }
 
-        public RunTestsCallbackHandler(bool teamcity, string labels)
+        public RunTestsCallbackHandler(System.Collections.IDictionary settings)
         {
-            this.teamcity = teamcity;
-            this.labels = labels;
+            this.teamcity = settings.Contains("DisplayTeamCityServiceMessages")
+                ? (bool)settings["DisplayTeamCityServiceMessages"]
+                : false;
+            this.labels = settings.Contains("DisplayTestLabels")
+                ? (string)settings["DisplayTestLabels"]
+                : "Off";
             this.output = Console.Out;
 
             if (teamcity)

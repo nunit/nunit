@@ -34,45 +34,56 @@ namespace NUnit.Framework.TestHarness
     /// </summary>
     public class FrameworkDriver
     {
+        private static readonly string CONTROLLER_TYPE = "NUnit.Framework.Api.TestController";
+        private static readonly string LOAD_ACTION = CONTROLLER_TYPE + "+LoadTestsAction";
+        private static readonly string EXPLORE_ACTION = CONTROLLER_TYPE + "+ExploreTestsAction";
+        private static readonly string RUN_ACTION = CONTROLLER_TYPE + "+RunTestsAction";
+
         AppDomain testDomain;
-        CommandLineOptions options;
+        string assemblyPath;
+        IDictionary settings;
 
         object testController;
 
-        public FrameworkDriver(AppDomain testDomain, CommandLineOptions options)
+        /// <summary>
+        /// Construct a FrameworkDriver for a particular assembly in a domain,
+        /// and associate some settings with it. The assembly must reference
+        /// the NUnit framework so that we can remotely create the TestController.
+        /// </summary>
+        /// <param name="assemblyPath">The path to the test assembly</param>
+        /// <param name="testDomain">The domain in which the assembly will be loaded</param>
+        /// <param name="settings">A dictionary of load and run settings</param>
+        public FrameworkDriver(string assemblyPath, AppDomain testDomain, IDictionary settings)
         {
             this.testDomain = testDomain;
-            this.options = options;
-            this.testController = CreateObject("NUnit.Framework.Api.TestController", 
-                options.InternalTraceLevel);
+            this.assemblyPath = assemblyPath;
+            this.settings = settings;
+            this.testController = CreateObject(CONTROLLER_TYPE, assemblyPath, settings);
         }
 
-        public XmlNode Load(string assemblyFileName, IDictionary settings)
+        public XmlNode Load()
         {
             CallbackHandler handler = new CallbackHandler();
 
-            CreateObject("NUnit.Framework.Api.TestController+LoadTestsAction",
-                testController, assemblyFileName, settings, handler);
+            CreateObject(LOAD_ACTION, testController, handler);
 
             return MakeXmlNode(handler.Result);
         }
 
-        public XmlNode ExploreTests(string assemblyFileName, IDictionary settings, string filter)
+        public XmlNode ExploreTests(string filter)
         {
             CallbackHandler handler = new CallbackHandler();
 
-            // TODO: Make use of the filter
-            CreateObject("NUnit.Framework.Api.TestController+ExploreTestsAction",
-                testController, assemblyFileName, settings, filter, handler);
+            CreateObject(EXPLORE_ACTION, testController, filter, handler);
 
             return MakeXmlNode(handler.Result);
         }
 
         public XmlNode Run(string filter)
         {
-            CallbackHandler handler = new RunTestsCallbackHandler(options.DisplayTeamCityServiceMessages, options.DisplayTestLabels);
+            CallbackHandler handler = new RunTestsCallbackHandler(settings);
 
-            CreateObject("NUnit.Framework.Api.TestController+RunTestsAction", testController, filter, handler);
+            CreateObject(RUN_ACTION, testController, filter, handler);
 
             return MakeXmlNode(handler.Result);
         }

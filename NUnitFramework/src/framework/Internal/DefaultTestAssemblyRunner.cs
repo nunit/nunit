@@ -80,6 +80,11 @@ namespace NUnit.Framework.Internal
         public bool Load(string assemblyName, IDictionary settings)
         {
             _settings = settings;
+
+            Randomizer.InitialSeed = settings.Contains("RandomSeed")
+                ? (int)settings["RandomSeed"]
+                : new Random().Next();
+
             _loadedTest = (TestSuite)_builder.Build(assemblyName, settings);
             if (_loadedTest == null) return false;
 
@@ -128,7 +133,7 @@ namespace NUnit.Framework.Internal
             TextWriter savedOut = Console.Out;
             TextWriter savedErr = Console.Error;
 
-            TestExecutionContext initialContext = CreateTestExecutionContext();
+            TestExecutionContext initialContext = CreateTestExecutionContext(_settings);
 
 #if NUNITLITE
             initialContext.Listener = listener;
@@ -150,10 +155,6 @@ namespace NUnit.Framework.Internal
             int numWorkers = _settings.Contains("NumberOfTestWorkers")
                 ? (int)_settings["NumberOfTestWorkers"]
                 : 0;
-
-            Randomizer.InitialSeed = _settings.Contains("RandomSeed")
-                ? (int)_settings["RandomSeed"]
-                : new Random().Next();
 
             WorkItemDispatcher dispatcher = null;
 
@@ -199,17 +200,17 @@ namespace NUnit.Framework.Internal
             _runComplete.Set();
         }
 
-        private TestExecutionContext CreateTestExecutionContext()
+        private static TestExecutionContext CreateTestExecutionContext(IDictionary settings)
         {
             TestExecutionContext context = new TestExecutionContext();
 
-            if (_settings.Contains("DefaultTimeout"))
-                context.TestCaseTimeout = (int)_settings["DefaultTimeout"];
-            if (_settings.Contains("StopOnError"))
-                context.StopOnError = (bool)_settings["StopOnError"];
+            if (settings.Contains("DefaultTimeout"))
+                context.TestCaseTimeout = (int)settings["DefaultTimeout"];
+            if (settings.Contains("StopOnError"))
+                context.StopOnError = (bool)settings["StopOnError"];
 
-            if (_settings.Contains("WorkDirectory"))
-                context.WorkDirectory = (string)_settings["WorkDirectory"];
+            if (settings.Contains("WorkDirectory"))
+                context.WorkDirectory = (string)settings["WorkDirectory"];
             else
 #if NETCF || SILVERLIGHT
                 context.WorkDirectory = Env.DocumentFolder;

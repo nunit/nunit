@@ -39,44 +39,57 @@ namespace NUnit.Framework.Api
     /// framework. All calls are encapsulated in constructors for
     /// this class and its nested classes, which only require the
     /// types of the Common Type System as arguments.
+    /// 
+    /// Note that the controller uses the non-generic ICollection 
+    /// interface by design, for maximum portability.
     /// </summary>
     public class TestController : MarshalByRefObject
     {
-        private ITestAssemblyBuilder builder;
-        private ITestAssemblyRunner runner;
-
         #region Constructors
 
+        // TODO: Remove duplication in the constructors.
         /// <summary>
         /// Construct a TestController using the default builder and runner.
         /// </summary>
-        public TestController(string traceLevel)
+        public TestController(string assemblyPath, IDictionary settings)
         {
-            if (!CoreExtensions.Host.Initialized)
-                CoreExtensions.Host.Initialize();
+            this.Builder = new DefaultTestAssemblyBuilder();
+            this.Runner = new DefaultTestAssemblyRunner(this.Builder);
 
-            InternalTrace.Level = (InternalTrace.TraceLevel)Enum.Parse(typeof(InternalTrace.TraceLevel), traceLevel);
-            InternalTrace.Open("InternalTrace.txt");
-
-            this.builder = new DefaultTestAssemblyBuilder();
-            this.runner = new DefaultTestAssemblyRunner(this.builder);
+            Initialize(assemblyPath, settings);
         }
 
         /// <summary>
         /// Construct a TestController, specifying the types to be used
         /// for the runner and builder.
         /// </summary>
+        /// <param name="assemblyPath">The path to the test assembly</param>
+        /// <param name="settings">A Dictionary of settings to use in loading and running the tests</param>
         /// <param name="runnerType">The Type of the test runner</param>
         /// <param name="builderType">The Type of the test builder</param>
-        public TestController(string traceLevel, string runnerType, string builderType)
+        public TestController(string assemblyPath, IDictionary settings, string runnerType, string builderType)
+        {
+            Assembly myAssembly = Assembly.GetExecutingAssembly();
+            this.Builder = (ITestAssemblyBuilder)myAssembly.CreateInstance(builderType);
+            this.Runner = (ITestAssemblyRunner)myAssembly.CreateInstance(
+                runnerType, false, 0, null, new object[] { this.Builder }, null, null);
+
+            Initialize(assemblyPath, settings);
+        }
+
+        private void Initialize(string assemblyPath, IDictionary settings)
         {
             if (!CoreExtensions.Host.Initialized)
                 CoreExtensions.Host.Initialize();
 
-            Assembly myAssembly = Assembly.GetExecutingAssembly();
-            this.builder = (ITestAssemblyBuilder)myAssembly.CreateInstance(builderType);
-            this.runner = (ITestAssemblyRunner)myAssembly.CreateInstance(
-                runnerType, false, 0, null, new object[] { this.builder }, null, null);
+            this.AssemblyPath = assemblyPath;
+            this.Settings = settings;
+
+            if (settings.Contains("InternalTraceLevel"))
+                InternalTrace.Level = (InternalTrace.TraceLevel)Enum.Parse(typeof(InternalTrace.TraceLevel), (string)settings["InternalTraceLevel"]);
+
+            if (InternalTrace.Level != InternalTrace.TraceLevel.Off)
+                InternalTrace.Open("InternalTrace.txt");
         }
 
         #endregion
@@ -87,19 +100,23 @@ namespace NUnit.Framework.Api
         /// Gets the ITestAssemblyBuilder used by this controller instance.
         /// </summary>
         /// <value>The builder.</value>
-        public ITestAssemblyBuilder Builder
-        {
-            get { return builder; }
-        }
+        public ITestAssemblyBuilder Builder { get; private set; }
 
         /// <summary>
         /// Gets the ITestAssemblyRunner used by this controller instance.
         /// </summary>
         /// <value>The runner.</value>
-        public ITestAssemblyRunner Runner
-        {
-            get { return runner; }
-        }
+        public ITestAssemblyRunner Runner { get; private set; }
+
+        /// <summary>
+        /// Gets the path to the assembly for this TestController
+        /// </summary>
+        public string AssemblyPath { get; private set; }
+
+        /// <summary>
+        /// Gets a dictionary of settings for the TestController
+        /// </summary>
+        public IDictionary Settings { get; private set; }
 
         #endregion
 
@@ -115,6 +132,90 @@ namespace NUnit.Framework.Api
 
         #endregion
 
+        #region Private Action Methods Used by Nested Classes
+
+        private void LoadTests(ICallbackEventHandler handler)
+        {
+            try
+            {
+                int count = Runner.Load(AssemblyPath, Settings)
+                    ? Runner.LoadedTest.TestCaseCount
+                    : 0;
+
+                //TestExecutionContext.ClearCurrentContext();
+                handler.RaiseCallbackEvent(string.Format("<loaded assembly=\"{0}\" testcases=\"{1}\"/>", AssemblyPath, count));
+            }
+            catch (Exception ex)
+            {
+                handler.RaiseCallbackEvent(FormatErrorReport(ex));
+            }
+        }
+
+        private void ExploreTests(ICallbackEventHandler handler)
+        {
+            try
+            {
+                // TODO: Make use of the filter
+                if (Runner.Load(AssemblyPath, Settings))
+                    handler.RaiseCallbackEvent(Runner.LoadedTest.ToXml(true).OuterXml);
+                else
+                    handler.RaiseCallbackEvent(FormatErrorReport("No tests were found"));
+            }
+            catch (Exception ex)
+            {
+                handler.RaiseCallbackEvent(FormatErrorReport(ex));
+            }
+        }
+
+        private void RunTests(ICallbackEventHandler handler, string filter)
+        {
+            try
+            {
+                ITestResult result = Runner.Run(new TestProgressReporter(handler), TestFilter.FromXml(filter));
+
+                // Ensure that the CallContext of the thread is not polluted
+                // by our TestExecutionContext, which is not serializable.
+                TestExecutionContext.ClearCurrentContext();
+
+                handler.RaiseCallbackEvent(result.ToXml(true).OuterXml);
+            }
+            catch (Exception ex)
+            {
+                handler.RaiseCallbackEvent(FormatErrorReport(ex));
+            }
+            finally
+            {
+                InternalTrace.Flush();
+            }
+        }
+
+        #endregion
+
+        #region Format Error Reports
+
+        private static string FormatErrorReport(string message)
+        {
+            return string.Format("<error message=\"{0}\"/>" ,message);
+        }
+
+        private static string FormatErrorReport(string message, string stackTrace)
+        {
+            return string.Format("<error message=\"{0}\" stackTrace=\"{1}\"/>", message, stackTrace);
+        }
+
+        private static string FormatErrorReport(Exception ex)
+        {
+            if (ex is System.Reflection.TargetInvocationException)
+                ex = ex.InnerException;
+
+            string msg = ex is System.IO.FileNotFoundException || ex is System.BadImageFormatException
+                ? FormatErrorReport(ex.Message)
+                : FormatErrorReport(ex.Message, ex.StackTrace);
+            return msg;
+        }
+
+        #endregion
+
         #region Nested Action Classes
 
         #region TestContollerAction
@@ -125,85 +226,7 @@ namespace NUnit.Framework.Api
         /// </summary>
         public abstract class TestControllerAction : MarshalByRefObject
         {
-            private TestController controller;
-            private ICallbackEventHandler handler;
-
-            #region Constructor
-
-            /// <summary>
-            /// Initializes a new instance of the <see cref="TestControllerAction"/> class.
-            /// </summary>
-            /// <param name="controller">The controller.</param>
-            /// <param name="_handler">The callback handler.</param>
-            protected TestControllerAction(TestController controller, object _handler)
-            {
-                this.controller = controller;
-                this.handler = _handler as ICallbackEventHandler;
-            }
-
-            #endregion
-
-            #region Properties
-
-            /// <summary>
-            /// Gets the callback event handler for this controller action.
-            /// </summary>
-            protected ICallbackEventHandler Handler
-            {
-                get { return handler; }
-            }
-
-            #endregion
-
-            #region Methods for Reporting Results
-
-            /// <summary>
-            /// Format and send an error report
-            /// </summary>
-            /// <param name="message">The error message</param>
-            protected void ReportError(string message)
-            {
-                ReportResult(string.Format("<error message=\"{0}\"/>", message));
-            }
-
-            /// <summary>
-            /// Format and send an error report for an exception
-            /// </summary>
-            /// <param name="ex">The exception to be reported</param>
-            protected void ReportError(Exception ex)
-            {
-                if (ex is System.Reflection.TargetInvocationException)
-                    ex = ex.InnerException;
-
-                string msg = ex is System.IO.FileNotFoundException || ex is System.BadImageFormatException
-                    ? string.Format("<error message=\"{0}\"/>", ex.Message)
-                    : string.Format("<error message=\"{0}\" stackTrace=\"{1}\"/>", ex.Message, ex.StackTrace);
-
-                ReportResult(msg);
-            }
-
-            /// <summary>
-            /// Report the result of an operation
-            /// </summary>
-            /// <param name="resultString">A string representing the result</param>
-            protected void ReportResult(string resultString)
-            {
-                handler.RaiseCallbackEvent(resultString);
-            }
-
-
-            /// <summary>
-            /// Report the result of an operation
-            /// </summary>
-            /// <param name="result">A result object implementing IXmlNodeBuilder</param>
-            protected void ReportResult(IXmlNodeBuilder result)
-            {
-                handler.RaiseCallbackEvent(result.ToXml(true).OuterXml);
-            }
-
-            #endregion
-
-            #region Method Overrides
+            #region InitializeLifetimeService
 
             /// <summary>
             /// Initialize lifetime service to null so that the instance lives indefinitely.
@@ -229,24 +252,10 @@ namespace NUnit.Framework.Api
             /// Initializes a new instance of the <see cref="LoadTestsAction"/> class.
             /// </summary>
             /// <param name="controller">The controller.</param>
-            /// <param name="assemblyFilename">The assembly filename.</param>
-            /// <param name="settings">Options controlling how the tests are loaded</param>
-            /// <param name="_handler">The callback handler.</param>
-            public LoadTestsAction(TestController controller, string assemblyFilename, IDictionary settings, object _handler)
-                : base(controller, _handler)
+            /// <param name="handler">The callback handler.</param>
+            public LoadTestsAction(TestController controller, object handler)
             {
-                try
-                {
-                    int count = controller.Runner.Load(assemblyFilename, settings)
-                        ? controller.Runner.LoadedTest.TestCaseCount
-                        : 0;
-
-                    ReportResult(string.Format("<loaded assembly=\"{0}\" testcases=\"{1}\"/>", assemblyFilename, count));
-                }
-                catch (Exception ex)
-                {
-                    ReportError(ex);
-                }
+                controller.LoadTests((ICallbackEventHandler)handler);
             }
         }
 
@@ -262,26 +271,12 @@ namespace NUnit.Framework.Api
             /// <summary>
             /// Initializes a new instance of the <see cref="ExploreTestsAction"/> class.
             /// </summary>
-            /// <param name="controller">The controller.</param>
-            /// <param name="assemblyFilename">The assembly filename.</param>
-            /// <param name="loadSettings">Options controlling how the tests are loaded</param>
-            /// <param name="filterText">Filter used to control which tests are included</param>
-            /// <param name="_handler">The callback handler.</param>
-            public ExploreTestsAction(TestController controller, string assemblyFilename, IDictionary loadSettings, string filterText, object _handler)
-                : base(controller, _handler)
+            /// <param name="controller">The controller for which this action is being performed.</param>
+            /// <param name="filter">Filter used to control which tests are included (NYI)</param>
+            /// <param name="handler">The callback handler.</param>
+            public ExploreTestsAction(TestController controller, string filter, object handler)
             {
-                try
-                {
-                    // TODO: Make use of the filter
-                    if (controller.Runner.Load(assemblyFilename, loadSettings))
-                        ReportResult(controller.Runner.LoadedTest);
-                    else
-                        ReportError("No tests were found");
-                }
-                catch (Exception ex)
-                {
-                    ReportError(ex);
-                }
+                controller.ExploreTests((ICallbackEventHandler)handler);
             }
         }
 
@@ -354,29 +349,11 @@ namespace NUnit.Framework.Api
             /// Construct a RunTestsAction and run all tests in the loaded TestSuite.
             /// </summary>
             /// <param name="controller">A TestController holding the TestSuite to run</param>
-            /// <param name="filterText">A string containing the XML representation of the filter to use</param>
-            /// <param name="_handler">A callback handler used to report results</param>
-            public RunTestsAction(TestController controller, string filterText, object _handler) 
-                : base(controller, _handler)
+            /// <param name="filter">A string containing the XML representation of the filter to use</param>
+            /// <param name="handler">A callback handler used to report results</param>
+            public RunTestsAction(TestController controller, string filter, object handler) 
             {
-                try
-                {
-                    ITestResult result = controller.Runner.Run(new TestProgressReporter(Handler), TestFilter.FromXml(filterText));
-
-                    // Ensure that the CallContext of the thread is not polluted
-                    // by our TestExecutionContext, which is not serializable.
-                    TestExecutionContext.ClearCurrentContext();
-
-                    ReportResult(result);
-                }
-                catch (Exception ex)
-                {
-                    ReportError(ex);
-                }
-                finally
-                {
-                    InternalTrace.Flush();
-                }
+                controller.RunTests((ICallbackEventHandler)handler, filter);
             }
 
             ///// <summary>

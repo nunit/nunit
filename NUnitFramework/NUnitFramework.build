@@ -75,8 +75,6 @@
     value="${path::combine(project.base.dir,'samples')}"/>
   <property name="project.lib.dir"
     value="${path::combine(project.base.dir,'lib')}"/>
-  <property name="project.deploy.dir"
-    value="${path::combine(project.base.dir,'../deploy')}"/>
   <property name="project.tools.dir"
     value="${path::combine(project.base.dir,'../tools')}"/>
   <property name="partcover.dir"
@@ -307,68 +305,10 @@
   </target>
 
 <!-- ***************************************************************** -->
-<!-- ***              Targets for Deploying the Build              *** -->
-<!-- ***************************************************************** -->
-
-  <target name="deploy" depends="build"
-    description="Deploy the current build for testing">
-
-      <copy todir="${project.deploy.dir}/${runtime.config}">
-        <fileset basedir="${current.build.dir}">
-          <include name="nunit.*" />
-          <include name="nunitlite.*" />
-          <include name="test-harness.*" />
-          <include name="mock-assembly.*" />
-        </fileset>
-      </copy>
-
-  </target>
-
-  <target name="deploy-all"
-    description="Deploy the current config for all supported runtimes">
-
-    <foreach item="String" delim="," 
-        property="framework" in="${installed.frameworks}">
-
-      <call target="set-${framework}-runtime-config"/>
-      <call target="deploy"/>
-
-    </foreach>
-
-  </target>
-
-  <!--<target name="deploy-all"
-    description="Deploy the current config for .NET 2.0, 3.5 and 4.0">
-
-    <delete dir="${project.deploy.dir}" 
-      if="${directory::exists( project.deploy.dir )}"/>
-
-    <if test="${property::exists('default.20.runtime')}">
-      <call target="set-${default.20.runtime}-runtime-config"/>
-      <call target="deploy"/>
-    </if>
-
-    <if test="${property::exists('default.35.runtime')}">
-      <call target="set-${default.35.runtime}-runtime-config"/>
-      <call target="deploy"/>
-    </if>
-
-    <if test="${property::exists('default.40.runtime')}">
-      <call target="set-${default.40.runtime}-runtime-config"/>
-      <call target="deploy"/>
-    </if>
-
-  </target>-->
-
-
-<!-- ***************************************************************** -->
 <!-- ***                 Targets for running tests                 *** -->
 <!-- ***************************************************************** -->
 
   <target name="test" depends="build,run-test"
-    description="Build and run tests for selected config and runtime"/>
-
-  <target name="deploy-test" depends="build,deploy,nunit-deploy-test"
     description="Build and run tests for selected config and runtime"/>
 
   <target name="run-test">
@@ -388,22 +328,6 @@
 
     <exec basedir="${current.build.dir}"
           workingdir="${current.build.dir}"
-          program="${test.runner.program}"
-          commandline="${test.runner.args}"
-          managed="Strict" />
-
-  </target>
-
-  <target name="nunit-deploy-test">
-
-    <echo message="*"/>
-    <echo message="* Testing the deployed nunit.framework ${runtime.config} ${build.config} build"/>
-    <echo message="*"/>
-
-    <property name="nant.settings.currentframework" value="${runtime.config}" />
-
-    <exec basedir="${project.deploy.dir}/${runtime.config}"
-          workingdir="${project.deploy.dir}/${runtime.config}"
           program="${test.runner.program}"
           commandline="${test.runner.args}"
           managed="Strict" />
