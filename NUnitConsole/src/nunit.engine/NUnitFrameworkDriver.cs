@@ -37,7 +37,7 @@ namespace NUnit.Engine
     /// </summary>
     public class NUnitFrameworkDriver : IFrameworkDriver
     {
-        private static readonly string CONTROLLER_TYPE = "NUnit.Framework.Api.TestController";
+        private static readonly string CONTROLLER_TYPE = "NUnit.Framework.Api.FrameworkController";
         private static readonly string LOAD_ACTION = CONTROLLER_TYPE + "+LoadTestsAction";
         private static readonly string EXPLORE_ACTION = CONTROLLER_TYPE + "+ExploreTestsAction";
         private static readonly string RUN_ACTION = CONTROLLER_TYPE + "+RunTestsAction";
@@ -48,14 +48,14 @@ namespace NUnit.Engine
         string assemblyPath;
         IDictionary<string, object> settings;
 
-        object testController;
+        object frameworkController;
 
         public NUnitFrameworkDriver(AppDomain testDomain, string assemblyPath, IDictionary<string, object> settings)
         {
             this.testDomain = testDomain;
             this.assemblyPath = assemblyPath;
             this.settings = settings;
-            this.testController = CreateObject(CONTROLLER_TYPE, assemblyPath, (System.Collections.IDictionary)settings);
+            this.frameworkController = CreateObject(CONTROLLER_TYPE, assemblyPath, (System.Collections.IDictionary)settings);
         }
 
         public TestEngineResult Load()
@@ -63,7 +63,7 @@ namespace NUnit.Engine
             CallbackHandler handler = new CallbackHandler();
 
             log.Info("Loading {0} - see separate log file", Path.GetFileName(assemblyPath));
-            CreateObject(LOAD_ACTION, testController, handler);
+            CreateObject(LOAD_ACTION, frameworkController, handler);
 
             return handler.Result;
         }
@@ -77,7 +77,7 @@ namespace NUnit.Engine
             CallbackHandler handler = new RunTestsCallbackHandler(listener);
 
             log.Info("Running {0} - see separate log file", Path.GetFileName(assemblyPath));
-            CreateObject(RUN_ACTION, testController, filter.Text, handler);
+            CreateObject(RUN_ACTION, frameworkController, filter.Text, handler);
 
             return handler.Result;
         }
@@ -87,20 +87,10 @@ namespace NUnit.Engine
             CallbackHandler handler = new CallbackHandler();
 
             log.Info("Exploring {0} - see separate log file", Path.GetFileName(assemblyPath));
-            CreateObject(EXPLORE_ACTION, testController, filter.Text, handler);
+            CreateObject(EXPLORE_ACTION, frameworkController, filter.Text, handler);
 
             return handler.Result;
         }
-
-        //public TestEngineResult GetLoadedTests()
-        //{
-        //    CallbackHandler handler = new CallbackHandler();
-
-        //    CreateObject("NUnit.Framework.Api.TestController+GetLoadedTestsAction",
-        //        testController, handler.Callback);
-
-        //    return handler.Result;
-        //}
 
         #region Helper Methods
 
