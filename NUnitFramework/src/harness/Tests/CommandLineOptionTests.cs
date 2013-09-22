@@ -212,6 +212,28 @@ namespace NUnit.Framework.TestHarness.Tests
 
         #endregion
 
+        #region CreateDriverSettings
+
+        [TestCase("-timeout=50", "DefaultTimeout", 50)]
+        [TestCase("--workers=3", "NumberOfTestWorkers", 3)]
+        [TestCase("--seed=123456789", "RandomSeed", 123456789)]
+        [TestCase("-capture", "CaptureStandardOutput", true)]
+        [TestCase("-capture", "CaptureStandardError", true)]
+        [TestCase("--labels=On", "DisplayTestLabels", "On")]
+        [TestCase("--trace=Debug", "InternalTraceLevel", "Debug")]
+        [TestCase("--work=results", "WorkDirectory", "results")]
+        [TestCase("--teamcity", "DisplayTeamCityServiceMessages", true)]
+        public void CreateDriverSettings<T>(string option, string settingName, T value)
+        {
+            var options = new CommandLineOptions(option);
+            var settings = options.CreateDriverSettings();
+            Assert.That(settings.ContainsKey(settingName), settingName + " not found in settings");
+            Assert.That(settings[settingName], Is.EqualTo(value));
+            Assert.That(value is string || value is bool || value is int, "Settings must be of Type bool, string or int");
+        }
+
+        #endregion
+
         #region Timeout Option
 
         [Test]
