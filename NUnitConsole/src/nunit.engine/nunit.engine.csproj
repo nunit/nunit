@@ -21,7 +21,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\bin\Debug\</OutputPath>
+    <OutputPath>..\..\bin\Debug\</OutputPath>
     <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -29,7 +29,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\bin\Release\</OutputPath>
+    <OutputPath>..\..\bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -55,12 +55,10 @@
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="CallbackHandler.cs" />
     <Compile Include="IFrameworkDriver.cs" />
-    <Compile Include="ILogger.cs" />
     <Compile Include="Internal\AssemblyHelper.cs" />
     <Compile Include="Internal\AssemblyReader.cs" />
     <Compile Include="Internal\DomainUsage.cs" />
     <Compile Include="Internal\InternalTrace.cs" />
-    <Compile Include="Internal\InternalTraceLevel.cs" />
     <Compile Include="Internal\InternalTraceWriter.cs" />
     <Compile Include="Internal\Logger.cs" />
     <Compile Include="Internal\NUnitConfiguration.cs" />

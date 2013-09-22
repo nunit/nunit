@@ -1,11 +1,30 @@
-// ****************************************************************
-// Copyright 2008, Charlie Poole
-// This is free software licensed under the NUnit license. You may
-// obtain a copy of the license at http://nunit.org.
-// ****************************************************************
+// ***********************************************************************
+// Copyright (c) 2008-2013 Charlie Poole
+//
+// Permission is hereby granted, free of charge, to any person obtaining
+// a copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to
+// permit persons to whom the Software is furnished to do so, subject to
+// the following conditions:
+// 
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+// ***********************************************************************
+
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Security.AccessControl;
 
 namespace NUnit.Engine.Internal
 {
@@ -15,38 +34,17 @@ namespace NUnit.Engine.Internal
 	/// </summary>
 	public class InternalTraceWriter : TextWriter
 	{
-        StreamWriter writer;
+        TextWriter writer;
 
-        static string logDirectory;
-        public static string LogDirectory
-        {
-            get
-            {
-                if (logDirectory == null)
-                {
-                    logDirectory = Path.Combine(
-                        NUnitConfiguration.ApplicationDirectory, "logs");
-
-                    if (!Directory.Exists(logDirectory))
-                        Directory.CreateDirectory(logDirectory);
-                }
-
-                return logDirectory;
-            }
-        }
-
-		public InternalTraceWriter(string logName)
+        /// <summary>
+        /// Construct an InternalTraceWriter that writes to a file.
+        /// </summary>
+        /// <param name="logPath">Path to the file to use</param>
+        public InternalTraceWriter(string logPath)
 		{
-			int pId = Process.GetCurrentProcess().Id;
-			string domainName = AppDomain.CurrentDomain.FriendlyName;
-
-			string fileName = logName
-				.Replace("%p", pId.ToString() )
-				.Replace("%a", domainName );
-
-            string logPath = Path.Combine(LogDirectory, fileName);
-            this.writer = new StreamWriter(logPath, true);
-            this.writer.AutoFlush = true;
+            var streamWriter = new StreamWriter(new FileStream(logPath, FileMode.Append, FileAccess.Write, FileShare.Write));
+            streamWriter.AutoFlush = true;
+            this.writer = streamWriter;
 		}
 
         public override System.Text.Encoding Encoding

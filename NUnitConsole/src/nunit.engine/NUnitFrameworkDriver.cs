@@ -27,6 +27,7 @@ using System.IO;
 using System.Collections.Generic;
 using System.Web.UI;
 using System.Xml;
+using NUnit.Engine.Internal;
 
 namespace NUnit.Engine
 {
@@ -40,6 +41,8 @@ namespace NUnit.Engine
         private static readonly string LOAD_ACTION = CONTROLLER_TYPE + "+LoadTestsAction";
         private static readonly string EXPLORE_ACTION = CONTROLLER_TYPE + "+ExploreTestsAction";
         private static readonly string RUN_ACTION = CONTROLLER_TYPE + "+RunTestsAction";
+
+        static ILogger log = InternalTrace.GetLogger("NUnitFrameworkDriver");
 
         AppDomain testDomain;
         string assemblyPath;
@@ -59,6 +62,7 @@ namespace NUnit.Engine
         {
             CallbackHandler handler = new CallbackHandler();
 
+            log.Info("Loading {0} - see separate log file", Path.GetFileName(assemblyPath));
             CreateObject(LOAD_ACTION, testController, handler);
 
             return handler.Result;
@@ -72,6 +76,7 @@ namespace NUnit.Engine
         {
             CallbackHandler handler = new RunTestsCallbackHandler(listener);
 
+            log.Info("Running {0} - see separate log file", Path.GetFileName(assemblyPath));
             CreateObject(RUN_ACTION, testController, filter.Text, handler);
 
             return handler.Result;
@@ -81,6 +86,7 @@ namespace NUnit.Engine
         {
             CallbackHandler handler = new CallbackHandler();
 
+            log.Info("Exploring {0} - see separate log file", Path.GetFileName(assemblyPath));
             CreateObject(EXPLORE_ACTION, testController, filter.Text, handler);
 
             return handler.Result;

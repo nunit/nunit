@@ -21,7 +21,7 @@ namespace NUnit.ConsoleRunner.Tests
             get
             {
                 if (engine == null)
-                    engine = TestEngineActivator.CreateInstance();
+                    engine = TestEngineActivator.CreateInstance(null, InternalTraceLevel.Off);
 
                 return engine;
             }
