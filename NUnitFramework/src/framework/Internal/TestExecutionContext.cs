@@ -26,7 +26,7 @@ using System.IO;
 using System.Diagnostics;
 using System.Globalization;
 using System.Threading;
-using NUnit.Framework.Api;
+using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Execution;
 
 #if !SILVERLIGHT && !NETCF

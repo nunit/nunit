@@ -23,7 +23,7 @@
 
 using System;
 using System.Collections.Generic;
-using NUnit.Framework.Api;
+using NUnit.Framework.Interfaces;
 using NUnit.TestData.TestMethodSignatureFixture;
 using NUnit.TestUtilities;
 

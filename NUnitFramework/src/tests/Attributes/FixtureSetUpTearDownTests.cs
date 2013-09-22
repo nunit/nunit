@@ -26,7 +26,7 @@ using System;
 using System.Security.Principal;
 #endif
 using System.Threading;
-using NUnit.Framework.Api;
+using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Builders;
 using NUnit.TestData.FixtureSetUpTearDownData;

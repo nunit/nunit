@@ -1,5 +1,5 @@
-// ***********************************************************************
-// Copyright (c) 2009 Charlie Poole
+﻿// ***********************************************************************
+// Copyright (c) 2008 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,32 +21,24 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-namespace NUnit.Framework.Api
-{
-	/// <summary>
-	/// The ITestListener interface is used internally to receive 
-	/// notifications of significant events while a test is being 
-    /// run. The events are propogated to clients by means of an
-    /// AsyncCallback. NUnit extensions may also monitor these events.
-	/// </summary>
-	public interface ITestListener
-	{
-		/// <summary>
-		/// Called when a test has just started
-		/// </summary>
-		/// <param name="test">The test that is starting</param>
-		void TestStarted(ITest test);
-			
-		/// <summary>
-		/// Called when a test has finished
-		/// </summary>
-		/// <param name="result">The result of the test</param>
-		void TestFinished(ITestResult result);
+using System;
+using System.Collections;
+using System.Reflection;
 
-		/// <summary>
-		/// Called when the test creates text output.
-		/// </summary>
-		/// <param name="testOutput">A console message</param>
-		void TestOutput(TestOutput testOutput);
-	}
+namespace NUnit.Framework.Interfaces
+{
+    /// <summary>
+    /// The IParameterDataSource interface is implemented by types
+    /// that can provide data for a test method parameter.
+    /// </summary>
+    public interface IParameterDataSource
+    {
+        /// <summary>
+        /// Gets an enumeration of data items for use as arguments
+        /// for a test method parameter.
+        /// </summary>
+        /// <param name="parameter">The parameter for which data is needed</param>
+        /// <returns>An enumeration containing individual data items</returns>
+        IEnumerable GetData(ParameterInfo parameter);
+    }
 }

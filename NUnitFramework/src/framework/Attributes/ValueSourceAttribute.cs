@@ -34,7 +34,7 @@ namespace NUnit.Framework
     /// provide data for one parameter of a test method.
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = true, Inherited = false)]
-    public class ValueSourceAttribute : DataAttribute, Api.IParameterDataSource
+    public class ValueSourceAttribute : DataAttribute, Interfaces.IParameterDataSource
     {
         private readonly string sourceName;
         private readonly Type sourceType;

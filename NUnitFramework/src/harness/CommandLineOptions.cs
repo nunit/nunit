@@ -70,7 +70,7 @@ namespace NUnit.Framework.TestHarness
             this.Add("seed=", "Specify the random {SEED} to be used in generating test cases.",
                 v => randomSeed = RequiredInt(v, "--seed"));
 
-            this.Add("capture=", "Turn on capture of standard and error output in order to test that it works. The text should be displayed on the console either way.",
+            this.Add("capture", "Turn on capture of standard and error output in order to test that it works. The text should be displayed on the console either way.",
                 v => CaptureText = v != null );
 
             // Output Control
@@ -101,7 +101,7 @@ namespace NUnit.Framework.TestHarness
                 v => DisplayTestLabels = RequiredValue(v, "--labels", "Off", "On", "All"));
 
             this.Add("trace=", "Set internal trace {LEVEL}.\nValues: Off, Error, Warning, Info, Verbose (Debug)",
-                v => internalTraceLevel = RequiredValue(v, "--trace", "Off", "Error", "Warning", "Info", "Verbose", "Debug"));
+                v => InternalTraceLevel = RequiredValue(v, "--trace", "Off", "Error", "Warning", "Info", "Verbose", "Debug"));
 
             this.Add("noheader|noh", "Suppress display of program information at start of run.",
                 v => NoHeader = v != null);
@@ -158,14 +158,18 @@ namespace NUnit.Framework.TestHarness
 
         public bool WaitBeforeExit { get; private set; }
 
+        //DriverSetting
         private int defaultTimeout = -1;
         public int DefaultTimeout { get { return defaultTimeout; } }
 
+        //DriverSetting
         public int NumWorkers { get; private set; }
 
+        //DriverSetting
         private int randomSeed = -1;
         public int RandomSeed { get { return randomSeed; } }
 
+        //DriverSetting
         public bool CaptureText { get; private set; }
 
         // Output Control
@@ -176,11 +180,13 @@ namespace NUnit.Framework.TestHarness
 
         public string ErrFile { get; private set; }
 
+        //DriverSetting
         public string DisplayTestLabels { get; private set; }
 
-        private string internalTraceLevel = "Off";
-        public string InternalTraceLevel { get { return internalTraceLevel; } }
+        //DriverSetting
+        public string InternalTraceLevel { get; private set; }
 
+        //DriverSetting
         public string WorkDirectory { get; private set; }
 
         private string v3ResultFile = "TestResult.v3.xml";
@@ -191,6 +197,7 @@ namespace NUnit.Framework.TestHarness
 
         public string ExploreFile { get; private set; }
 
+        //DriverSetting
         public bool DisplayTeamCityServiceMessages { get; private set; }
 
         // Error Processing
@@ -229,19 +236,21 @@ namespace NUnit.Framework.TestHarness
         {
             var settings = new Dictionary<string, object>();
 
-            if (NumWorkers > 0)
-                settings["NumberOfTestWorkers"] = NumWorkers;
-            if (InternalTraceLevel != null && InternalTraceLevel != "Off")
-                settings["InternalTraceLevel"] = InternalTraceLevel;
-            if (RandomSeed >= 0)
-                settings["RandomSeed"] = RandomSeed;
             if (DefaultTimeout >= 0)
                 settings["DefaultTimeout"] = DefaultTimeout;
+            if (NumWorkers > 0)
+                settings["NumberOfTestWorkers"] = NumWorkers;
+            if (RandomSeed >= 0)
+                settings["RandomSeed"] = RandomSeed;
+            if (CaptureText)
+                settings["CaptureStandardOutput"] = settings["CaptureStandardError"] = true;
+
             settings["DisplayTestLabels"] = DisplayTestLabels;
-            settings["DisplayTeamCityServiceMessages"] = DisplayTeamCityServiceMessages;
-            settings["CaptureStandardOutput"] = settings["CaptureStandardError"] = CaptureText;
+            if (InternalTraceLevel != null)
+                settings["InternalTraceLevel"] = InternalTraceLevel;
             if (WorkDirectory != null)
                 settings["WorkDirectory"] = WorkDirectory;
+            settings["DisplayTeamCityServiceMessages"] = DisplayTeamCityServiceMessages;
 
             return settings;
         }

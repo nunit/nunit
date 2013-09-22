@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2008 Charlie Poole
+// Copyright (c) 2010 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -13,7 +13,7 @@
 // included in all copies or substantial portions of the Software.
 // 
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OFn
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
 // NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
 // LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
@@ -22,23 +22,25 @@
 // ***********************************************************************
 
 using System;
-using System.Collections;
 using System.Reflection;
 
-namespace NUnit.Framework.Api
+namespace NUnit.Framework.Interfaces
 {
     /// <summary>
-    /// The IParameterDataSource interface is implemented by types
-    /// that can provide data for a test method parameter.
+    /// ITestCaseSource interface is implemented by Types that know how to 
+    /// return a set of ITestCaseData items for use by a test method.
     /// </summary>
-    public interface IParameterDataSource
+    /// <remarks>
+    /// This method is defined differently depending on the version of .NET.
+    /// </remarks>
+    public interface ITestCaseSource
     {
         /// <summary>
-        /// Gets an enumeration of data items for use as arguments
-        /// for a test method parameter.
+        /// Returns a set of ITestCaseDataItems for use as arguments
+        /// to a parameterized test method.
         /// </summary>
-        /// <param name="parameter">The parameter for which data is needed</param>
-        /// <returns>An enumeration containing individual data items</returns>
-        IEnumerable GetData(ParameterInfo parameter);
+        /// <param name="method">The method for which data is needed.</param>
+        /// <returns></returns>
+        System.Collections.Generic.IEnumerable<ITestCaseData> GetTestCasesFor(MethodInfo method);
     }
 }

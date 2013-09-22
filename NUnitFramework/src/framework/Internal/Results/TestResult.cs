@@ -22,7 +22,7 @@
 // ***********************************************************************
 
 using System;
-using NUnit.Framework.Api;
+using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal
 {

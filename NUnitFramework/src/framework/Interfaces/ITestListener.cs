@@ -1,5 +1,5 @@
-﻿// ***********************************************************************
-// Copyright (c) 2010 Charlie Poole
+// ***********************************************************************
+// Copyright (c) 2009 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,31 +21,32 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-namespace NUnit.Framework.Api
+namespace NUnit.Framework.Interfaces
 {
-    /// <summary>
-    /// The TestStatus enum indicates the result of running a test
-    /// </summary>
-    public enum TestStatus
-    {
-        /// <summary>
-        /// The test was inconclusive
-        /// </summary>
-        Inconclusive,
+	/// <summary>
+	/// The ITestListener interface is used internally to receive 
+	/// notifications of significant events while a test is being 
+    /// run. The events are propogated to clients by means of an
+    /// AsyncCallback. NUnit extensions may also monitor these events.
+	/// </summary>
+	public interface ITestListener
+	{
+		/// <summary>
+		/// Called when a test has just started
+		/// </summary>
+		/// <param name="test">The test that is starting</param>
+		void TestStarted(ITest test);
+			
+		/// <summary>
+		/// Called when a test has finished
+		/// </summary>
+		/// <param name="result">The result of the test</param>
+		void TestFinished(ITestResult result);
 
-        /// <summary>
-        /// The test has skipped 
-        /// </summary>
-        Skipped,
-
-        /// <summary>
-        /// The test succeeded
-        /// </summary>
-        Passed,
-
-        /// <summary>
-        /// The test failed
-        /// </summary>
-        Failed
-    }
+		/// <summary>
+		/// Called when the test creates text output.
+		/// </summary>
+		/// <param name="testOutput">A console message</param>
+		void TestOutput(TestOutput testOutput);
+	}
 }

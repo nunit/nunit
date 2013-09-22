@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-namespace NUnit.Framework.Api
+namespace NUnit.Framework.Interfaces
 {
     /// <summary>
 	/// The ResultState class represents the outcome of running a test.

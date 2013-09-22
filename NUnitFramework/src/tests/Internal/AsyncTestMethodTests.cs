@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Reflection;
 using System.Threading;
-using NUnit.Framework.Api;
+using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Builders;
 using NUnit.TestData;
 using NUnit.TestUtilities;

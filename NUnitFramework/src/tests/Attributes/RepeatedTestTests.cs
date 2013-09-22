@@ -31,7 +31,7 @@
 // #2 requires infrastructure for dynamic test cases first
 using System;
 using System.Reflection;
-using NUnit.Framework.Api;
+using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.TestData.RepeatedTestFixture;
 using NUnit.TestUtilities;

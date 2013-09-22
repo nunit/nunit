@@ -1,4 +1,4 @@
-// ***********************************************************************
+﻿// ***********************************************************************
 // Copyright (c) 2009 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -13,7 +13,7 @@
 // included in all copies or substantial portions of the Software.
 // 
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OFn
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
 // NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
 // LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
@@ -23,49 +23,31 @@
 
 using System;
 using System.Collections;
+using System.Reflection;
 
-namespace NUnit.Framework.Api
+namespace NUnit.Framework.Interfaces
 {
     /// <summary>
-    /// The ITestCaseData interface is implemented by a class
-    /// that is able to return complete testcases for use by
-    /// a parameterized test method.
+    /// The ITestAssemblyBuilder interface is implemented by a class
+    /// that is able to build a suite of tests given an assembly or 
+    /// an assembly filename.
     /// </summary>
-    public interface ITestCaseData
+    public interface ITestAssemblyBuilder
     {
         /// <summary>
-        /// Gets the name to be used for the test
+        /// Build a suite of tests from a provided assembly
         /// </summary>
-        string TestName { get; }
-		
-		/// <summary>
-		/// Gets the RunState for this test case.
-		/// </summary>
-		RunState RunState { get; }
+        /// <param name="assembly">The assembly from which tests are to be built</param>
+        /// <param name="options">A dictionary of options to use in building the suite</param>
+        /// <returns>A TestSuite containing the tests found in the assembly</returns>
+        ITest Build(Assembly assembly, IDictionary options);
 
         /// <summary>
-        /// Gets the argument list to be provided to the test
+        /// Build a suite of tests given the filename of an assembly
         /// </summary>
-        object[] Arguments { get; }
-
-        /// <summary>
-        /// Gets the expected result of the test case
-        /// </summary>
-        object ExpectedResult { get; }
-
-        /// <summary>
-        /// Returns true if an expected result has been set
-        /// </summary>
-        bool HasExpectedResult { get; }
-
-        /// <summary>
-        /// Gets data about any expected exception.
-        /// </summary>
-        ExpectedExceptionData ExceptionData { get; }
-
-        /// <summary>
-        /// Gets the property dictionary for the test case
-        /// </summary>
-        IPropertyBag Properties { get; }
+        /// <param name="assemblyName">The filename of the assembly from which tests are to be built</param>
+        /// <param name="options">A dictionary of options to use in building the suite</param>
+        /// <returns>A TestSuite containing the tests found in the assembly</returns>
+        ITest Build(string assemblyName, IDictionary options);
     }
 }

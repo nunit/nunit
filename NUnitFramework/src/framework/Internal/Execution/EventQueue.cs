@@ -27,7 +27,7 @@ using System.Collections;
 using System.Globalization;
 using System.Runtime.Serialization;
 using System.Threading;
-using NUnit.Framework.Api;
+using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Execution
 {

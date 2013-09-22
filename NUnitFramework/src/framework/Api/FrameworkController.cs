@@ -29,13 +29,14 @@ using System.IO;
 using System.Reflection;
 using System.Xml;
 using System.Web.UI;
+using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Builders;
 
 namespace NUnit.Framework.Api
 {
     /// <summary>
-    /// TestController provides a facade for use in loading, browsing 
+    /// FrameworkController provides a facade for use in loading, browsing 
     /// and running tests without requiring a reference to the NUnit 
     /// framework. All calls are encapsulated in constructors for
     /// this class and its nested classes, which only require the
@@ -44,15 +45,15 @@ namespace NUnit.Framework.Api
     /// Note that the controller uses the non-generic ICollection 
     /// interface by design, for maximum portability.
     /// </summary>
-    public class TestController : MarshalByRefObject
+    public class FrameworkController : MarshalByRefObject
     {
         #region Constructors
 
         // TODO: Remove duplication in the constructors.
         /// <summary>
-        /// Construct a TestController using the default builder and runner.
+        /// Construct a FrameworkController using the default builder and runner.
         /// </summary>
-        public TestController(string assemblyPath, IDictionary settings)
+        public FrameworkController(string assemblyPath, IDictionary settings)
         {
             this.Builder = new DefaultTestAssemblyBuilder();
             this.Runner = new DefaultTestAssemblyRunner(this.Builder);
@@ -61,14 +62,14 @@ namespace NUnit.Framework.Api
         }
 
         /// <summary>
-        /// Construct a TestController, specifying the types to be used
+        /// Construct a FrameworkController, specifying the types to be used
         /// for the runner and builder.
         /// </summary>
         /// <param name="assemblyPath">The path to the test assembly</param>
         /// <param name="settings">A Dictionary of settings to use in loading and running the tests</param>
         /// <param name="runnerType">The Type of the test runner</param>
         /// <param name="builderType">The Type of the test builder</param>
-        public TestController(string assemblyPath, IDictionary settings, string runnerType, string builderType)
+        public FrameworkController(string assemblyPath, IDictionary settings, string runnerType, string builderType)
         {
             Assembly myAssembly = Assembly.GetExecutingAssembly();
             this.Builder = (ITestAssemblyBuilder)myAssembly.CreateInstance(builderType);
@@ -119,12 +120,12 @@ namespace NUnit.Framework.Api
         public ITestAssemblyRunner Runner { get; private set; }
 
         /// <summary>
-        /// Gets the path to the assembly for this TestController
+        /// Gets the path to the assembly for this FrameworkController
         /// </summary>
         public string AssemblyPath { get; private set; }
 
         /// <summary>
-        /// Gets a dictionary of settings for the TestController
+        /// Gets a dictionary of settings for the FrameworkController
         /// </summary>
         public IDictionary Settings { get; private set; }
 
@@ -231,10 +232,10 @@ namespace NUnit.Framework.Api
         #region TestContollerAction
 
         /// <summary>
-        /// TestControllerAction is the base class for all actions
-        /// performed against a TestController.
+        /// FrameworkControllerAction is the base class for all actions
+        /// performed against a FrameworkController.
         /// </summary>
-        public abstract class TestControllerAction : MarshalByRefObject
+        public abstract class FrameworkControllerAction : MarshalByRefObject
         {
             #region InitializeLifetimeService
 
@@ -254,16 +255,16 @@ namespace NUnit.Framework.Api
         #region LoadTestsAction
 
         /// <summary>
-        /// LoadTestsAction loads a test into the TestController
+        /// LoadTestsAction loads a test into the FrameworkController
         /// </summary>
-        public class LoadTestsAction : TestControllerAction
+        public class LoadTestsAction : FrameworkControllerAction
         {
             /// <summary>
             /// Initializes a new instance of the <see cref="LoadTestsAction"/> class.
             /// </summary>
             /// <param name="controller">The controller.</param>
             /// <param name="handler">The callback handler.</param>
-            public LoadTestsAction(TestController controller, object handler)
+            public LoadTestsAction(FrameworkController controller, object handler)
             {
                 controller.LoadTests((ICallbackEventHandler)handler);
             }
@@ -276,7 +277,7 @@ namespace NUnit.Framework.Api
         /// <summary>
         /// ExploreTestsAction returns info about the tests in an assembly
         /// </summary>
-        public class ExploreTestsAction : TestControllerAction
+        public class ExploreTestsAction : FrameworkControllerAction
         {
             /// <summary>
             /// Initializes a new instance of the <see cref="ExploreTestsAction"/> class.
@@ -284,7 +285,7 @@ namespace NUnit.Framework.Api
             /// <param name="controller">The controller for which this action is being performed.</param>
             /// <param name="filter">Filter used to control which tests are included (NYI)</param>
             /// <param name="handler">The callback handler.</param>
-            public ExploreTestsAction(TestController controller, string filter, object handler)
+            public ExploreTestsAction(FrameworkController controller, string filter, object handler)
             {
                 controller.ExploreTests((ICallbackEventHandler)handler);
             }
@@ -299,14 +300,14 @@ namespace NUnit.Framework.Api
         ///// GetLoadedTestsAction returns the XML representation
         ///// of a suite of tests, which must have been loaded already.
         ///// </summary>
-        //public class GetLoadedTestsAction : TestControllerAction
+        //public class GetLoadedTestsAction : FrameworkControllerAction
         //{
         //    /// <summary>
         //    /// Initializes a new instance of the <see cref="GetLoadedTestsAction"/> class.
         //    /// </summary>
         //    /// <param name="controller">The controller.</param>
         //    /// <param name="callback">An AsynchCallback to receive the result.</param>
-        //    public GetLoadedTestsAction(TestController controller, AsyncCallback callback)
+        //    public GetLoadedTestsAction(FrameworkController controller, AsyncCallback callback)
         //        : base(controller, callback)
         //    {
         //        try
@@ -329,16 +330,16 @@ namespace NUnit.Framework.Api
 
         ///// <summary>
         ///// CountTestsAction counts the number of test cases in the loaded TestSuite
-        ///// held by the TestController.
+        ///// held by the FrameworkController.
         ///// </summary>
-        //public class CountTestsAction : TestControllerAction
+        //public class CountTestsAction : FrameworkControllerAction
         //{
         //    /// <summary>
         //    /// Construct a CountsTestAction and perform the count of test cases.
         //    /// </summary>
-        //    /// <param name="controller">A TestController holding the TestSuite whose cases are to be counted</param>
+        //    /// <param name="controller">A FrameworkController holding the TestSuite whose cases are to be counted</param>
         //    /// <param name="callback">An AsyncCallback for reporting the count</param>
-        //    public CountTestsAction(TestController controller, AsyncCallback callback) 
+        //    public CountTestsAction(FrameworkController controller, AsyncCallback callback) 
         //        : base(controller, callback)
         //    {
         //        ReportResult(Runner.CountTestCases(TestFilter.Empty), true);
@@ -351,17 +352,17 @@ namespace NUnit.Framework.Api
         #region RunTestsAction
 
         /// <summary>
-        /// RunTestsAction runs the loaded TestSuite held by the TestController.
+        /// RunTestsAction runs the loaded TestSuite held by the FrameworkController.
         /// </summary>
-        public class RunTestsAction : TestControllerAction
+        public class RunTestsAction : FrameworkControllerAction
         {
             /// <summary>
             /// Construct a RunTestsAction and run all tests in the loaded TestSuite.
             /// </summary>
-            /// <param name="controller">A TestController holding the TestSuite to run</param>
+            /// <param name="controller">A FrameworkController holding the TestSuite to run</param>
             /// <param name="filter">A string containing the XML representation of the filter to use</param>
             /// <param name="handler">A callback handler used to report results</param>
-            public RunTestsAction(TestController controller, string filter, object handler) 
+            public RunTestsAction(FrameworkController controller, string filter, object handler) 
             {
                 controller.RunTests((ICallbackEventHandler)handler, filter);
             }
@@ -369,10 +370,10 @@ namespace NUnit.Framework.Api
             ///// <summary>
             ///// Construct a RunTestsAction and run tests in the loaded TestSuite that pass the supplied filter
             ///// </summary>
-            ///// <param name="controller">A TestController holding the TestSuite to run</param>
+            ///// <param name="controller">A FrameworkController holding the TestSuite to run</param>
             ///// <param name="filter">A TestFilter used to determine which tests should be run</param>
             ///// <param name="result">A callback used to report results</param>
-            //public RunTestsAction(TestController controller, TestFilter filter, AsyncCallback callback) 
+            //public RunTestsAction(FrameworkController controller, TestFilter filter, AsyncCallback callback) 
             //    : base(controller, callback)
             //{
             //    ReportResult(Runner.Run(this, filter), true);

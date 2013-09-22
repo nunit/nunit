@@ -25,7 +25,7 @@ using System;
 using System.Reflection;
 using System.Collections;
 using System.Collections.Generic;
-using NUnit.Framework.Api;
+using NUnit.Framework.Interfaces;
 using NUnit.Framework.Extensibility;
 
 namespace NUnit.Framework.Internal.Builders

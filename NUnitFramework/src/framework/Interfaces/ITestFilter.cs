@@ -1,5 +1,5 @@
-﻿// ***********************************************************************
-// Copyright (c) 2010 Charlie Poole
+// ***********************************************************************
+// Copyright (c) 2007 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -13,7 +13,7 @@
 // included in all copies or substantial portions of the Software.
 // 
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OFn
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
 // NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
 // LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
@@ -23,28 +23,23 @@
 
 using System;
 
-namespace NUnit.Framework.Api
+namespace NUnit.Framework.Interfaces
 {
-    /// <summary>
-    /// The ITestCaseSourceProvider interface is implemented by Types that 
-    /// are able to provide a test case source for use by a test method.
-    /// </summary>
-    public interface IDynamicTestCaseSource
-    {
+    
+	/// <summary>
+	/// Interface to be implemented by filters applied to tests.
+	/// The filter applies when running the test, after it has been
+	/// loaded, since this is the only time an ITest exists.
+	/// </summary>
+	public interface ITestFilter
+	{
         /// <summary>
-        /// Returns a test case source. May be called on a provider
-        /// implementing the source internally or able to create
-        /// a source instance on it's own.
-        /// </summary>
-        /// <returns></returns>
-        ITestCaseSource GetTestCaseSource();
-        
-        /// <summary>
-        /// Returns a test case source based on an instance of a 
-        /// source object.
-        /// </summary>
-        /// <param name="instance"></param>
-        /// <returns></returns>
-        ITestCaseSource GetTestCaseSource(object instance);
-    }
+		/// Determine if a particular test passes the filter criteria. Pass
+		/// may examine the parents and/or descendants of a test, depending
+		/// on the semantics of the particular filter
+		/// </summary>
+		/// <param name="test">The test to which the filter is applied</param>
+		/// <returns>True if the test passes the filter, otherwise false</returns>
+		bool Pass( ITest test );
+	}
 }

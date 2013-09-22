@@ -7,7 +7,7 @@
 #if !SILVERLIGHT && !NETCF
 using System;
 using System.Collections;
-using NUnit.Framework.Api;
+using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Builders;
 using NUnit.TestUtilities;
 

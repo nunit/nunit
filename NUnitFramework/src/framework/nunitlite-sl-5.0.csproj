@@ -58,23 +58,6 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Api\ExpectedExceptionData.cs" />
-    <Compile Include="Api\IParameterDataSource.cs" />
-    <Compile Include="Api\IPropertyBag.cs" />
-    <Compile Include="Api\ITest.cs" />
-    <Compile Include="Api\ITestAssemblyBuilder.cs" />
-    <Compile Include="Api\ITestAssemblyRunner.cs" />
-    <Compile Include="Api\ITestCaseData.cs" />
-    <Compile Include="Api\ITestCaseSource.cs" />
-    <Compile Include="Api\ITestFilter.cs" />
-    <Compile Include="Api\ITestListener.cs" />
-    <Compile Include="Api\ITestResult.cs" />
-    <Compile Include="Api\IXmlNodeBuilder.cs" />
-    <Compile Include="Api\ResultState.cs" />
-    <Compile Include="Api\RunState.cs" />
-    <Compile Include="Api\TestOutput.cs" />
-    <Compile Include="Api\TestStatus.cs" />
-    <Compile Include="Api\XmlNode.cs" />
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Assert.cs" />
     <Compile Include="AssertionHelper.cs" />
@@ -226,6 +209,23 @@
     <Compile Include="Guard.cs" />
     <Compile Include="Has.cs" />
     <Compile Include="IExpectException.cs" />
+    <Compile Include="Interfaces\ExpectedExceptionData.cs" />
+    <Compile Include="Interfaces\IParameterDataSource.cs" />
+    <Compile Include="Interfaces\IPropertyBag.cs" />
+    <Compile Include="Interfaces\ITest.cs" />
+    <Compile Include="Interfaces\ITestAssemblyBuilder.cs" />
+    <Compile Include="Interfaces\ITestAssemblyRunner.cs" />
+    <Compile Include="Interfaces\ITestCaseData.cs" />
+    <Compile Include="Interfaces\ITestCaseSource.cs" />
+    <Compile Include="Interfaces\ITestFilter.cs" />
+    <Compile Include="Interfaces\ITestListener.cs" />
+    <Compile Include="Interfaces\ITestResult.cs" />
+    <Compile Include="Interfaces\IXmlNodeBuilder.cs" />
+    <Compile Include="Interfaces\ResultState.cs" />
+    <Compile Include="Interfaces\RunState.cs" />
+    <Compile Include="Interfaces\TestOutput.cs" />
+    <Compile Include="Interfaces\TestStatus.cs" />
+    <Compile Include="Interfaces\XmlNode.cs" />
     <Compile Include="Internal\AssemblyHelper.cs" />
     <Compile Include="Internal\Builders\CombinatorialStrategy.cs" />
     <Compile Include="Internal\Builders\CombinatorialTestCaseProvider.cs" />

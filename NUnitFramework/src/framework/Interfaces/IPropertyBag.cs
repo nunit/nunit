@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace NUnit.Framework.Api
+namespace NUnit.Framework.Interfaces
 {
     /// <summary>
     /// A PropertyBag represents a collection of name/value pairs

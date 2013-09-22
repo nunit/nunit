@@ -24,7 +24,7 @@
 using System;
 using System.Reflection;
 
-namespace NUnit.Framework.Api
+namespace NUnit.Framework.Interfaces
 {
     /// <summary>
     /// ExpectedExceptionData is a struct used within the framework

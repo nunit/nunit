@@ -22,7 +22,7 @@
 // ***********************************************************************
 
 #if !NUNITLITE
-using NUnit.Framework.Api;
+using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Execution
 {
