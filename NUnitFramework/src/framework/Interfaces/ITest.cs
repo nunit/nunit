@@ -24,7 +24,7 @@
 using System;
 using System.Reflection;
 
-namespace NUnit.Framework.Api
+namespace NUnit.Framework.Interfaces
 {
 	/// <summary>
 	/// Common interface supported by all representations

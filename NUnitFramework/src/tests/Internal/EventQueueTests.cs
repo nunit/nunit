@@ -27,7 +27,7 @@ using System.Collections;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
-using NUnit.Framework.Api;
+using NUnit.Framework.Interfaces;
 
 using ThreadState = System.Threading.ThreadState;
 

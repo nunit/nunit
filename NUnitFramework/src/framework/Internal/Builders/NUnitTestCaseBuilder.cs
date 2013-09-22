@@ -23,7 +23,7 @@
 
 using System;
 using System.Reflection;
-using NUnit.Framework.Api;
+using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Extensibility;
 using NUnit.Framework.Internal.Commands;

@@ -25,7 +25,7 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Xml;
-using NUnit.Framework.Api;
+using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 
 namespace NUnitLite.Runner

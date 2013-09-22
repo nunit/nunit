@@ -23,7 +23,7 @@
 
 using System;
 using System.IO;
-using NUnit.Framework.Api;
+using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.TestHarness
 {

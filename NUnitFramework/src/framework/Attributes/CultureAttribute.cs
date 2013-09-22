@@ -23,7 +23,7 @@
 
 using System;
 using System.Globalization;
-using NUnit.Framework.Api;
+using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework

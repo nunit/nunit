@@ -23,7 +23,7 @@
 
 using System;
 using System.Diagnostics;
-using NUnit.Framework.Api;
+using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Commands
 {

@@ -25,7 +25,7 @@ using System;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading;
-using NUnit.Framework.Api;
+using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Commands
 {

@@ -24,7 +24,7 @@
 namespace NUnit.Framework
 {
 	using System;
-    using NUnit.Framework.Api;
+    using NUnit.Framework.Interfaces;
     using NUnit.Framework.Internal;
 
 	/// <summary>

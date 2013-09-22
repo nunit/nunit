@@ -23,7 +23,7 @@
 
 using System.IO;
 using System.Text;
-using NUnit.Framework.Api;
+using NUnit.Framework.Interfaces;
 
 namespace NUnitLite.Runner
 {

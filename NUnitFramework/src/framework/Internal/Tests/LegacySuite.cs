@@ -25,7 +25,7 @@
 using System;
 using System.Collections;
 using System.Reflection;
-using NUnit.Framework.Api;
+using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal
 {

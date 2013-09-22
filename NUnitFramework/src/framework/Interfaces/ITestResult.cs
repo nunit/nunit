@@ -23,7 +23,7 @@
 
 using System;
 
-namespace NUnit.Framework.Api
+namespace NUnit.Framework.Interfaces
 {
     /// <summary>
     /// The ITestResult interface represents the result of a test.

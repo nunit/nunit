@@ -36,7 +36,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using NUnit.Framework.Api;
+using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Execution
 {

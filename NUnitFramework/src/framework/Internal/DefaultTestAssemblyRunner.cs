@@ -26,7 +26,7 @@ using System.Collections;
 using System.IO;
 using System.Reflection;
 using System.Threading;
-using NUnit.Framework.Api;
+using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Execution;
 
 namespace NUnit.Framework.Internal

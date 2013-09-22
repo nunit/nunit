@@ -1,5 +1,5 @@
-// ***********************************************************************
-// Copyright (c) 2007 Charlie Poole
+﻿// ***********************************************************************
+// Copyright (c) 2010 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,39 +21,31 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-namespace NUnit.Framework.Api
+namespace NUnit.Framework.Interfaces
 {
-	/// <summary>
-	/// The RunState enum indicates whether a test can be executed. 
-	/// </summary>
-	public enum RunState
-	{
+    /// <summary>
+    /// The TestStatus enum indicates the result of running a test
+    /// </summary>
+    public enum TestStatus
+    {
         /// <summary>
-        /// The test is not runnable.
+        /// The test was inconclusive
         /// </summary>
-		NotRunnable, 
+        Inconclusive,
 
         /// <summary>
-        /// The test is runnable. 
+        /// The test has skipped 
         /// </summary>
-		Runnable,
+        Skipped,
 
         /// <summary>
-        /// The test can only be run explicitly
+        /// The test succeeded
         /// </summary>
-		Explicit,
+        Passed,
 
         /// <summary>
-        /// The test has been skipped. This value may
-        /// appear on a Test when certain attributes
-        /// are used to skip the test.
+        /// The test failed
         /// </summary>
-		Skipped,
-
-        /// <summary>
-        /// The test has been ignored. May appear on
-        /// a Test, when the IgnoreAttribute is used.
-        /// </summary>
-		Ignored
-	}
+        Failed
+    }
 }

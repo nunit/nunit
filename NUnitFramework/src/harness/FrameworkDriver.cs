@@ -34,7 +34,7 @@ namespace NUnit.Framework.TestHarness
     /// </summary>
     public class FrameworkDriver
     {
-        private static readonly string CONTROLLER_TYPE = "NUnit.Framework.Api.TestController";
+        private static readonly string CONTROLLER_TYPE = "NUnit.Framework.Api.FrameworkController";
         private static readonly string LOAD_ACTION = CONTROLLER_TYPE + "+LoadTestsAction";
         private static readonly string EXPLORE_ACTION = CONTROLLER_TYPE + "+ExploreTestsAction";
         private static readonly string RUN_ACTION = CONTROLLER_TYPE + "+RunTestsAction";
@@ -48,7 +48,7 @@ namespace NUnit.Framework.TestHarness
         /// <summary>
         /// Construct a FrameworkDriver for a particular assembly in a domain,
         /// and associate some settings with it. The assembly must reference
-        /// the NUnit framework so that we can remotely create the TestController.
+        /// the NUnit framework so that we can remotely create the FrameworkController.
         /// </summary>
         /// <param name="assemblyPath">The path to the test assembly</param>
         /// <param name="testDomain">The domain in which the assembly will be loaded</param>

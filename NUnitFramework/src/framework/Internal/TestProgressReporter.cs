@@ -27,7 +27,7 @@ using System.IO;
 using System.Text;
 using System.Web.UI;
 using System.Xml;
-using NUnit.Framework.Api;
+using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal
 {

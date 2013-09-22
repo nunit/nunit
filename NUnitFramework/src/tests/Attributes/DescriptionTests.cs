@@ -22,7 +22,7 @@
 // ***********************************************************************
 
 using System;
-using NUnit.Framework.Api;
+using NUnit.Framework.Interfaces;
 using NUnit.TestData.DescriptionFixture;
 using NUnit.TestUtilities;
 using NUnit.Framework.Internal;

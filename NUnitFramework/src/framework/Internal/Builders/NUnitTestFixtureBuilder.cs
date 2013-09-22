@@ -26,7 +26,7 @@ using System.Collections;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Text;
-using NUnit.Framework.Api;
+using NUnit.Framework.Interfaces;
 using NUnit.Framework.Extensibility;
 
 namespace NUnit.Framework.Internal.Builders

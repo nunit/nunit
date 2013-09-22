@@ -23,7 +23,7 @@
 
 using System;
 
-namespace NUnit.Framework.Api
+namespace NUnit.Framework.Interfaces
 {
     /// <summary>
     /// XmlNode represents a single node in the XML representation

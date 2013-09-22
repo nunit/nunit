@@ -26,7 +26,7 @@ using System.Globalization;
 using System.Reflection;
 using System.Xml;
 using System.IO;
-using NUnit.Framework.Api;
+using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using System.Collections.Generic;
 
