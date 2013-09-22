@@ -197,7 +197,8 @@ namespace NUnit.ConsoleRunner
             string label = XmlHelper.GetAttribute(result, "label");
             string executed = resultState == "Skipped" ? "False" : "True";
             string success = resultState == "Passed" ? "True" : "False";
-            string time = XmlHelper.GetAttribute(result, "time");
+            var seconds = TimeSpan.Parse(XmlHelper.GetAttribute(result, "time")).TotalSeconds;
+            string time = seconds.ToString("#####0.000", NumberFormatInfo.InvariantInfo);
             string asserts = XmlHelper.GetAttribute(result, "asserts");
 
             if (label != null && label != string.Empty)
