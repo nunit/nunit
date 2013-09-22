@@ -161,25 +161,25 @@ namespace NUnit.Framework.TestHarness
                 return ConsoleRunner.UNEXPECTED_ERROR;
             }
 
-            string resultFile = Path.Combine(workDirectory, options.V3ResultFile);
-            XmlTextWriter nunit3ResultWriter = new XmlTextWriter(resultFile, System.Text.Encoding.UTF8);
+            string v3ResultFile = Path.Combine(workDirectory, options.V3ResultFile);
+            XmlTextWriter nunit3ResultWriter = new XmlTextWriter(v3ResultFile, System.Text.Encoding.UTF8);
             nunit3ResultWriter.Formatting = Formatting.Indented;
             resultNode.WriteTo(nunit3ResultWriter);
             nunit3ResultWriter.Close();
 
-            resultFile = Path.Combine(workDirectory, options.V2ResultFile);
+            string v2ResultFile = Path.Combine(workDirectory, options.V2ResultFile);
             NUnit2XmlOutputWriter nunit2ResultWriter = new NUnit2XmlOutputWriter();
-            nunit2ResultWriter.WriteResultFile(resultNode, resultFile);
+            nunit2ResultWriter.WriteResultFile(resultNode, v2ResultFile);
 
             if (!options.DisplayTeamCityServiceMessages)
                 new ResultReporter(resultNode).ReportResults();
 
             if (options.OutFile != null)
-                Console.WriteLine("Test standard output saved as {0}", options.OutFile);
+                Console.WriteLine("Test standard output saved as {0}", Path.Combine(workDirectory, options.OutFile));
             if (options.ErrFile != null)
-                Console.WriteLine("Test error output saved as {0}", options.ErrFile);
-            Console.WriteLine("NUnit3 Result File Saved as {0}", options.V3ResultFile);
-            Console.WriteLine("NUnit2 Result File Saved as {0}", options.V2ResultFile);
+                Console.WriteLine("Test error output saved as {0}", Path.Combine(workDirectory, options.ErrFile));
+            Console.WriteLine("NUnit3 Result File Saved as {0}", v3ResultFile);
+            Console.WriteLine("NUnit2 Result File Saved as {0}", v2ResultFile);
 
             return OK;
         }

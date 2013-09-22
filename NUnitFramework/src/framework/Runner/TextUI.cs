@@ -112,17 +112,11 @@ namespace NUnitLite.Runner
                 if (commandLineOptions.Wait && commandLineOptions.OutFile != null)
                     writer.WriteLine("Ignoring /wait option - only valid for Console");
 
-                var loadOptions = new Dictionary<string, string>();
-
+                // We only have one commandline option that has to be passed
+                // to the runner, so we do it here for convenience.
+                var runnerSettings = new Dictionary<string, object>();
                 if (commandLineOptions.InitialSeed >= 0)
-                    loadOptions["RandomSeed"] = commandLineOptions.InitialSeed.ToString();
-
-                //if (options.Load.Count > 0)
-                //    loadOptions["LOAD"] = options.Load;
-
-                //var runOptions = new Dictionary<string, string>();
-                //if (commandLineOptions.TestCount > 0)
-                //    runOptions["RUN"] = commandLineOptions.Tests;
+                    runnerSettings["RandomSeed"] = commandLineOptions.InitialSeed;
 
                 TestFilter filter = commandLineOptions.Tests.Count > 0
                     ? new SimpleNameFilter(commandLineOptions.Tests)
@@ -141,7 +135,7 @@ namespace NUnitLite.Runner
 
                     //Randomizer.InitialSeed = commandLineOptions.InitialSeed;
 
-                    if (!runner.Load(assembly, loadOptions))
+                    if (!runner.Load(assembly, runnerSettings))
                     {
                         var assemblyName = AssemblyHelper.GetAssemblyName(assembly);
                         Console.WriteLine("No tests found in assembly {0}", assemblyName.Name);
