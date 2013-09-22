@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.IO;
 using Mono.Options;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.TestHarness
 {

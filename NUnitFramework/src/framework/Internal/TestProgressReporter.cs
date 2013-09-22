@@ -38,6 +38,8 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public class TestProgressReporter : ITestListener
     {
+        static Logger log = InternalTrace.GetLogger("TestProgressReporter");
+
         private ICallbackEventHandler handler;
 
         /// <summary>
@@ -69,7 +71,7 @@ namespace NUnit.Framework.Internal
         //    }
         //    catch (Exception ex)
         //    {
-        //        InternalTrace.Error("Exception processing " + test.FullName + NUnit.Env.NewLine + ex.ToString());
+        //        log.Error("Exception processing " + test.FullName + NUnit.Env.NewLine + ex.ToString());
         //    }
         //}
 
@@ -86,7 +88,7 @@ namespace NUnit.Framework.Internal
         //    }
         //    catch (Exception ex)
         //    {
-        //        InternalTrace.Error("Exception processing " + result.FullName + NUnit.Env.NewLine + ex.ToString());
+        //        log.Error("Exception processing " + result.FullName + NUnit.Env.NewLine + ex.ToString());
         //    }
         //}
 
@@ -108,7 +110,7 @@ namespace NUnit.Framework.Internal
         //    }
         //    catch (Exception ex)
         //    {
-        //        InternalTrace.Error("Exception processing " + test.FullName + NUnit.Env.NewLine + ex.ToString());
+        //        log.Error("Exception processing " + test.FullName + NUnit.Env.NewLine + ex.ToString());
         //    }
         //}
 
@@ -125,7 +127,7 @@ namespace NUnit.Framework.Internal
         //    }
         //    catch (Exception ex)
         //    {
-        //        InternalTrace.Error("Exception processing " + result.FullName + NUnit.Env.NewLine + ex.ToString());
+        //        log.Error("Exception processing " + result.FullName + NUnit.Env.NewLine + ex.ToString());
         //    }
         //}
 
@@ -152,7 +154,7 @@ namespace NUnit.Framework.Internal
             }
             catch (Exception ex)
             {
-                InternalTrace.Error("Exception processing " + test.FullName + NUnit.Env.NewLine + ex.ToString());
+                log.Error("Exception processing " + test.FullName + NUnit.Env.NewLine + ex.ToString());
             }
         }
 
@@ -169,7 +171,7 @@ namespace NUnit.Framework.Internal
             }
             catch (Exception ex)
             {
-                InternalTrace.Error("Exception processing " + result.FullName + NUnit.Env.NewLine + ex.ToString());
+                log.Error("Exception processing " + result.FullName + NUnit.Env.NewLine + ex.ToString());
             }
         }
 
@@ -192,7 +194,7 @@ namespace NUnit.Framework.Internal
             }
             catch (Exception ex)
             {
-                InternalTrace.Error("Exception processing: " + testOutput.ToString() + NUnit.Env.NewLine + ex.ToString());
+                log.Error("Exception processing: " + testOutput.ToString() + NUnit.Env.NewLine + ex.ToString());
             }
 
         }

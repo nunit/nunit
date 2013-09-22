@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2008 Charlie Poole
+// Copyright (c) 2008-2013 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -23,12 +23,11 @@
 
 using System;
 using System.IO;
-using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Internal
 {
-	/// <summary>
-	/// InternalTrace provides static methods used for tracing the execution
+    /// <summary>
+    /// InternalTrace provides facilities for tracing the execution
     /// of the NUnit framework. Tests and classes under test may make use 
     /// of Console writes, System.Diagnostics.Trace or various loggers and
     /// NUnit itself traps and processes each of them. For that reason, a
@@ -42,227 +41,76 @@ namespace NUnit.Framework.Internal
     /// TODO: add some buffering and a separate writer thread as an option.
     /// TODO: figure out a way to turn on trace in specific classes only.
     /// </summary>
-	public class InternalTrace
+    public static class InternalTrace
     {
-        #region TraceLevel Enumeration
+        private static InternalTraceLevel traceLevel = InternalTraceLevel.Off;
+        private static InternalTraceWriter traceWriter;
 
         /// <summary>
-        /// The TraceLevel enumeration defines the verbosity levels supported by InternalTrace.
+        /// Gets a flag indicating whether the InternalTrace is initialized
         /// </summary>
-        public enum TraceLevel
-        {
-            /// <summary>
-            /// All tracing is off.
-            /// </summary>
-            Off,
-            /// <summary>
-            /// Report errors only.
-            /// </summary>
-            Error,
-            /// <summary>
-            /// Report warnings and above.
-            /// </summary>
-            Warning,
-            /// <summary>
-            /// Report informational entries and above.
-            /// </summary>
-            Info,
-            /// <summary>
-            /// Report debug entries and above (all entries)
-            /// </summary>
-            Debug,
-            /// <summary>
-            /// Verbose is a synonym for Debug
-            /// </summary>
-            Verbose = Debug
-        }
+        public static bool Initialized { get; private set; }
 
-        #endregion
-
-        #region Static Fields
-
-#if !SILVERLIGHT
-        private static readonly string MY_NAME = "NUnit.Framework.Internal.InternalTrace";
-        
-        private readonly static string NL = NUnit.Env.NewLine;
-        private readonly static string TIME_FMT = "HH:mm:ss.fff";
-        private readonly static string TRACE_FMT = "{0} {1,-5} [{2,2}] {3} : {4}";
-
-        private static StreamWriter writer;
-        private static TraceLevel level = TraceLevel.Off;
-#endif
-
-        #endregion
-
-        #region Static Properties
-
-#if !SILVERLIGHT
         /// <summary>
-        /// Gets the writer used to output messages.
+        /// Initialize the internal trace facility using the name of the log
+        /// to be written to and the trace level.
         /// </summary>
-        /// <value>The writer.</value>
-        public static StreamWriter Writer
+        /// <param name="logName">The log name</param>
+        /// <param name="level">The trace level</param>
+        public static void Initialize(string logName, InternalTraceLevel level)
         {
-            get 
+            if (!Initialized)
             {
-                return writer;
-            }
-        }
+                traceLevel = level;
 
-        /// <summary>
-        /// Gets or sets the TraceLevel
-        /// </summary>
-        /// <value>The level of messages to write.</value>
-        public static TraceLevel Level
-        {
-            get { return level; }
-            set { level = value; }
-        }
-#endif
-
-        #endregion
-
-        #region Public Static Methods
-
-#if !SILVERLIGHT
-        /// <summary>
-        /// Opens the specified log name for writing trace entries.
-        /// </summary>
-        /// <param name="logName">Name of the log.</param>
-        public static void Open(string logName)
-        {
-            writer = new StreamWriter(
-                new FileStream(logName, FileMode.Create, FileAccess.Write, FileShare.Write));
-        }
-
-        /// <summary>
-        /// Flushes the output writer.
-        /// </summary>
-        public static void Flush()
-        {
-            if (writer != null)
-                writer.Flush();
-        }
-
-        /// <summary>
-        /// Closes the output writer.
-        /// </summary>
-        public static void Close()
-        {
-            if (writer != null)
-                writer.Close();
-
-            writer = null;
-        }
-#endif
-
-        /// <summary>
-        /// Issue a message at the Error level.
-        /// </summary>
-        /// <param name="message">The message.</param>
-        /// <param name="args">The args.</param>
-        public static void Error(string message, params object[] args)
-        {
-            WriteTrace(TraceLevel.Error, message, args);
-        }
-
-        /// <summary>
-        /// Issue a message at the Warning level.
-        /// </summary>
-        /// <param name="message">The message.</param>
-        /// <param name="args">The args.</param>
-        public static void Warning(string message, params object[] args)
-        {
-            WriteTrace(TraceLevel.Warning, message, args);
-        }
-
-        /// <summary>
-        /// Issue a message at the Info level.
-        /// </summary>
-        /// <param name="message">The message.</param>
-        /// <param name="args">The args.</param>
-        public static void Info(string message, params object[] args)
-        {
-            WriteTrace(TraceLevel.Info, message, args);
-        }
-
-        /// <summary>
-        /// Issue a message at the Debug level.
-        /// </summary>
-        /// <param name="message">The message.</param>
-        /// <param name="args">The args.</param>
-        public static void Debug(string message, params object[] args)
-        {
-            WriteTrace(TraceLevel.Debug, message, args);
-        }
-        #endregion
-
-        #region Private WriteTrace Method
-
-        private static void WriteTrace(TraceLevel level, string message, params object[] args)
-        {
-#if !SILVERLIGHT
-            if (level <= InternalTrace.Level)
-            {
-                string caller = "UNKNOWN";
-#if !NETCF
-                string stack = System.Environment.StackTrace;
-                int index1 = stack.LastIndexOf(MY_NAME);
-                if (index1 >= 0)
+                if (traceWriter == null && traceLevel > InternalTraceLevel.Off)
                 {
-                    // Point to stack entry of the caller
-                    index1 = stack.IndexOf(Env.NewLine, index1) + Env.NewLine.Length;
-                    if (index1 >= 0 && index1 < stack.Length)
-                    {
-                        // Skip backwards over method name
-                        int index2 = stack.IndexOf('(', index1);
-                        if (index2 <= 0)
-                            index2 = stack.LastIndexOf('.');
-                        else
-                            index2 = stack.LastIndexOf('.', index2);
-
-                        // Skip over prefix word ('at' in English)
-                        while (index1 < stack.Length && char.IsWhiteSpace(stack[index1])) index1++;
-                        while (index1 < stack.Length && !char.IsWhiteSpace(stack[index1])) index1++;
-                        while (index1 < stack.Length && char.IsWhiteSpace(stack[index1])) index1++;
-
-                        // Skip past namespace, if any
-                        index1 = Math.Max(stack.LastIndexOf('.', index2 - 1) + 1, index1);
-
-                        // Set the caller's Type name
-                        caller = stack.Substring(index1, index2 - index1);
-                    }
+                    traceWriter = new InternalTraceWriter(logName);
+                    traceWriter.WriteLine("InternalTrace: Initializing at level " + traceLevel.ToString());
                 }
-#endif
 
-                var thread = System.Threading.Thread.CurrentThread;
-                string threadName = thread.Name;
-                if (threadName == null)
-                    threadName = thread.ManagedThreadId.ToString();
-
-                if (args != null)
-                    message = string.Format(message, args);
-                
-                WriteTraceMessage(string.Format(TRACE_FMT,
-                    DateTime.Now.ToString(TIME_FMT),
-                    level.ToString(),
-                    threadName,
-                    caller,
-                    message));
+                Initialized = true;
             }
-#endif
+            else
+                traceWriter.WriteLine("InternalTrace: Ignoring attempted re-initialization at level {0}", level);
         }
 
-#if !SILVERLIGHT
-        private static object _globalLock = new object();
-        private static void WriteTraceMessage(string message)
+        /// <summary>
+        /// Initialize the internal trace using a provided TextWriter and level
+        /// </summary>
+        /// <param name="writer">A TextWriter</param>
+        /// <param name="level">The InternalTraceLevel</param>
+        public static void Initialize(TextWriter writer, InternalTraceLevel level)
         {
-            lock (_globalLock)
+            if (!Initialized)
             {
-                Writer.WriteLine(message);
+                traceLevel = level;
+
+                if (traceWriter == null && traceLevel > InternalTraceLevel.Off)
+                {
+                    traceWriter = new InternalTraceWriter(writer);
+                    traceWriter.WriteLine("InternalTrace: Initializing at level " + traceLevel.ToString());
+                }
+
+                Initialized = true;
             }
         }
-#endif
-        #endregion
+
+        /// <summary>
+        /// Get a named Logger
+        /// </summary>
+        /// <returns></returns>
+        public static Logger GetLogger(string name)
+        {
+            return new Logger(name, traceLevel, traceWriter);
+        }
+
+        /// <summary>
+        /// Get a logger named for a particular Type.
+        /// </summary>
+        public static Logger GetLogger(Type type)
+        {
+            return GetLogger(type.FullName);
+        }
     }
 }

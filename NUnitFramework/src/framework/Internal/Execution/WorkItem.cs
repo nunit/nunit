@@ -41,6 +41,8 @@ namespace NUnit.Framework.Internal.Execution
     /// </summary>
     public abstract class WorkItem
     {
+        static Logger log = InternalTrace.GetLogger("WorkItem");
+
         // The current state of the WorkItem
         private WorkItemState _state;
 
@@ -174,7 +176,7 @@ namespace NUnit.Framework.Internal.Execution
                 : timeout > 0
                     ? "has Timeout value set."
                     : "requires a different apartment.";
-            InternalTrace.Debug("Running test on own thread because it " + reason);
+            log.Debug("Running test on own thread because it " + reason);
 
             Thread thread = new Thread(new ThreadStart(RunTest));
 

@@ -58,6 +58,8 @@ namespace NUnit.Framework.Internal.Execution
 	/// </summary>
 	public class EventPump : IDisposable
 	{
+        static Logger log = InternalTrace.GetLogger("EventPump");
+
 		#region Instance Variables
 
         /// <summary>
@@ -213,7 +215,7 @@ namespace NUnit.Framework.Internal.Execution
                     }
                     catch (Exception ex)
                     {
-                        InternalTrace.Error( "Exception in event handler\r\n {0}", ex );
+                        log.Error( "Exception in event handler\r\n {0}", ex );
                     }
                     finally
                     {
@@ -224,7 +226,7 @@ namespace NUnit.Framework.Internal.Execution
             }
             catch (Exception ex)
             {
-                InternalTrace.Error( "Exception in pump thread", ex );
+                log.Error( "Exception in pump thread", ex );
             }
 			finally
 			{

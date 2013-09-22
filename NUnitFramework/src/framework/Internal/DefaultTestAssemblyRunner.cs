@@ -36,6 +36,8 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public class DefaultTestAssemblyRunner : ITestAssemblyRunner
     {
+        static Logger log = InternalTrace.GetLogger("DefaultTestAssemblyRunner");
+
         private ITestAssemblyBuilder _builder;
         private TestSuite _loadedTest;
         private IDictionary _settings;
@@ -125,7 +127,7 @@ namespace NUnit.Framework.Internal
         /// <returns></returns>
         public ITestResult Run(ITestListener listener, ITestFilter filter)
         {
-            InternalTrace.Info("Running tests");
+            log.Info("Running tests");
             if (_loadedTest == null)
                 throw new InvalidOperationException("Run was called but no test has been loaded.");
 

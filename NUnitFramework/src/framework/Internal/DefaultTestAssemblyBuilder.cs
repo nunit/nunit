@@ -15,6 +15,8 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public class DefaultTestAssemblyBuilder : ITestAssemblyBuilder
     {
+        static Logger log = InternalTrace.GetLogger(typeof(DefaultTestAssemblyBuilder));
+
         #region Instance Fields
         /// <summary>
         /// The loaded assembly
@@ -88,7 +90,7 @@ namespace NUnit.Framework.Internal
         /// </returns>
         public ITest Build(string assemblyName, IDictionary options)
         {
-            InternalTrace.Debug("Loading {0} in AppDomain {1}", assemblyName, AppDomain.CurrentDomain.FriendlyName);
+            log.Debug("Loading {0} in AppDomain {1}", assemblyName, AppDomain.CurrentDomain.FriendlyName);
 
             this.assembly = Load(assemblyName);
             if (assembly == null) return null;
@@ -122,11 +124,11 @@ namespace NUnit.Framework.Internal
             // TODO: Can this ever be null?
             if (assembly == null)
             {
-                InternalTrace.Error("Failed to load assembly " + path);
+                log.Error("Failed to load assembly " + path);
             }
             else
             {
-                InternalTrace.Info("Loaded assembly " + assembly.FullName);
+                log.Info("Loaded assembly " + assembly.FullName);
 #if !NUNITLITE
                 CoreExtensions.Host.InstallAdhocExtensions(assembly);
 #endif
@@ -138,11 +140,11 @@ namespace NUnit.Framework.Internal
         private IList GetFixtures(Assembly assembly, IList names)
         {
             var fixtures = new List<Test>();
-            InternalTrace.Debug("Examining assembly for test fixtures");
+            log.Debug("Examining assembly for test fixtures");
 
             IList testTypes = GetCandidateFixtureTypes(assembly, names);
 
-            InternalTrace.Debug("Found {0} classes to examine", testTypes.Count);
+            log.Debug("Found {0} classes to examine", testTypes.Count);
 #if LOAD_TIMING
             System.Diagnostics.Stopwatch timer = new System.Diagnostics.Stopwatch();
             timer.Start();
@@ -163,9 +165,9 @@ namespace NUnit.Framework.Internal
             }
 
 #if LOAD_TIMING
-            InternalTrace.Debug("Found {0} fixtures with {1} test cases in {2} seconds", fixtures.Count, testcases, timer.Elapsed);
+            log.Debug("Found {0} fixtures with {1} test cases in {2} seconds", fixtures.Count, testcases, timer.Elapsed);
 #else
-            InternalTrace.Debug("Found {0} fixtures with {1} test cases", fixtures.Count, testcases);
+            log.Debug("Found {0} fixtures with {1} test cases", fixtures.Count, testcases);
 #endif
 
             return fixtures;

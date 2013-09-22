@@ -24,8 +24,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using Mono.Options;
+using System.Diagnostics;
 
 namespace NUnit.Framework.TestHarness
 {
@@ -229,7 +231,7 @@ namespace NUnit.Framework.TestHarness
 
             if (NumWorkers > 0)
                 settings["NumberOfTestWorkers"] = NumWorkers;
-            if (InternalTraceLevel != "Off")
+            if (InternalTraceLevel != null && InternalTraceLevel != "Off")
                 settings["InternalTraceLevel"] = InternalTraceLevel;
             if (RandomSeed >= 0)
                 settings["RandomSeed"] = RandomSeed;
@@ -238,6 +240,8 @@ namespace NUnit.Framework.TestHarness
             settings["DisplayTestLabels"] = DisplayTestLabels;
             settings["DisplayTeamCityServiceMessages"] = DisplayTeamCityServiceMessages;
             settings["CaptureStandardOutput"] = settings["CaptureStandardError"] = CaptureText;
+            if (WorkDirectory != null)
+                settings["WorkDirectory"] = WorkDirectory;
 
             return settings;
         }

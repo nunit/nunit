@@ -104,7 +104,12 @@ namespace NUnit.ConsoleRunner
                 }
             }
 
-            using (ITestEngine engine = TestEngineActivator.CreateInstance())
+            string workDirectory = options.WorkDirectory ?? Environment.CurrentDirectory;
+            var traceLevel = options.InternalTraceLevel != null
+                ? (InternalTraceLevel)Enum.Parse(typeof(InternalTraceLevel), options.InternalTraceLevel)
+                : InternalTraceLevel.Off;
+
+            using (ITestEngine engine = TestEngineActivator.CreateInstance(workDirectory, traceLevel))
             {
                 try
                 {

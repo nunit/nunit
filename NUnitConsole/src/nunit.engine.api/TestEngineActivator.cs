@@ -22,7 +22,6 @@
 // ***********************************************************************
 
 using System;
-using System.Xml;
 
 namespace NUnit.Engine
 {
@@ -42,9 +41,9 @@ namespace NUnit.Engine
         /// for the assembly and type names.
         /// </summary>
         /// <returns>An ITestEngine.</returns>
-        public static ITestEngine CreateInstance()
+        public static ITestEngine CreateInstance(string workDirectory, InternalTraceLevel traceLevel)
         {
-            return CreateInstance(DefaultAssemblyName, DefaultTypeName);
+            return CreateInstance(DefaultAssemblyName, DefaultTypeName, workDirectory, traceLevel);
         }
 
         /// <summary>
@@ -55,13 +54,13 @@ namespace NUnit.Engine
         /// <param name="assemblyName">The name of the assembly to be used.</param>
         /// <param name="typeName">The name of the Type to be used.</param>
         /// <returns>An ITestEngine.</returns>
-        public static ITestEngine CreateInstance(string assemblyName, string typeName)
+        public static ITestEngine CreateInstance(string assemblyName, string typeName, string workDirectory, InternalTraceLevel traceLevel)
         {
             try
             {
                 ITestEngine engine = (ITestEngine)
                     AppDomain.CurrentDomain.CreateInstanceAndUnwrap(assemblyName, typeName);
-                engine.InitializeServices();
+                engine.InitializeServices(workDirectory, traceLevel);
                 return engine;
             }
             catch (Exception ex)

@@ -40,7 +40,8 @@ namespace NUnit.Engine
         /// that link directly to nunit.engine usually do so
         /// in order to perform custom initialization.
         /// </summary>
-        void InitializeServices();
+        /// <param name="traceLevel">The level of internal tracing</param>
+        void InitializeServices(string workDirectory, InternalTraceLevel traceLevel);
 
         /// <summary>
         /// Returns an XML representation of the tests contained

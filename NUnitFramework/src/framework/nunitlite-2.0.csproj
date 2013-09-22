@@ -23,7 +23,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\..\bin\Debug\net-2.0\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;NUNITLITE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NET_2_0;NUNITLITE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>..\..\bin\Debug\net-2.0\nunitlite.xml</DocumentationFile>
@@ -32,7 +32,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\..\bin\Release\net-2.0\</OutputPath>
-    <DefineConstants>TRACE;NUNITLITE</DefineConstants>
+    <DefineConstants>TRACE;NET_2_0;NUNITLITE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>..\..\bin\Release\net-2.0\nunitlite.xml</DocumentationFile>
@@ -272,7 +272,10 @@
     <Compile Include="Internal\Filters\OrFilter.cs" />
     <Compile Include="Internal\Filters\SimpleNameFilter.cs" />
     <Compile Include="Internal\InternalTrace.cs" />
+    <Compile Include="Internal\InternalTraceLevel.cs" />
+    <Compile Include="Internal\InternalTraceWriter.cs" />
     <Compile Include="Internal\InvalidTestFixtureException.cs" />
+    <Compile Include="Internal\Logger.cs" />
     <Compile Include="Internal\MethodHelper.cs" />
     <Compile Include="Internal\NUnitException.cs" />
     <Compile Include="Internal\OSPlatform.cs" />

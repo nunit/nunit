@@ -46,6 +46,8 @@ namespace NUnit.Framework.Internal.Execution
     /// </summary>
     public class WorkItemDispatcher
     {
+        static Logger log = InternalTrace.GetLogger("WorkItemDispatcher");
+
         private List<TestWorker> _workers = new List<TestWorker>();
         private WorkItemQueue _readyQueue = new WorkItemQueue("ReadyQueue");
 #if STA_QUEUE
@@ -76,7 +78,7 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public void Start()
         {
-            InternalTrace.Info("Starting {0} TestWorkers", _workers.Count);
+            log.Info("Starting {0} TestWorkers", _workers.Count);
 
             foreach (TestWorker worker in _workers)
                 worker.Start();
@@ -87,7 +89,7 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public void Stop()
         {
-            InternalTrace.Info(
+            log.Info(
                 "WorkItemDispatcher stopping\r\n\tDispatched {0} items\r\n\tMax Queue Length: {1}",
                 _itemsDispatched, 
                 _readyQueue.MaxCount);
@@ -104,7 +106,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <param name="work">The item to dispatch</param>
         public void Dispatch(WorkItem work)
         {
-            InternalTrace.Debug("Enqueuing WorkItem for {0}", work.Test.FullName);
+            log.Debug("Enqueuing WorkItem for {0}", work.Test.FullName);
 #if STA_QUEUE
             if (work.TargetApartment == ApartmentState.STA)
                 _staQueue.Enqueue(work);

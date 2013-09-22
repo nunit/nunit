@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Xml;
 using NUnit.Engine.Internal;
@@ -64,13 +65,18 @@ namespace NUnit.Engine
         /// that link directly to nunit.engine usually do so
         /// in order to perform custom initialization.
         /// </summary>
-        public void InitializeServices()
+        public void InitializeServices(string workDirectory, InternalTraceLevel traceLevel)
         {
             SettingsService settingsService = new SettingsService(false);
 
-            // TODO: Integrate logs for all domains, rather than using %a
-            InternalTraceLevel level = (InternalTraceLevel)settingsService.GetSetting("Options.InternalTraceLevel", InternalTraceLevel.Default);
-            InternalTrace.Initialize("nunit.engine.%p.%a.log", level);
+            if (traceLevel == InternalTraceLevel.Default)
+                traceLevel = (InternalTraceLevel)settingsService.GetSetting("Options.InternalTraceLevel", InternalTraceLevel.Off);
+
+            if (traceLevel != InternalTraceLevel.Off)
+            {
+                var logName = string.Format("InternalTrace.{0}.log", Process.GetCurrentProcess().Id);
+                InternalTrace.Initialize(Path.Combine(workDirectory, logName), traceLevel);
+            }
 
             Services.Add(settingsService);
             Services.Add(new DomainManager());
