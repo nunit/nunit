@@ -33,6 +33,8 @@ namespace NUnit.Framework.Internal.Execution
     /// </summary>
     public class TestWorker
     {
+        static Logger log = InternalTrace.GetLogger("TestWorker");
+
         private WorkItemQueue _readyQueue;
         private Thread _workerThread;
         private ApartmentState _apartmentState;
@@ -66,12 +68,12 @@ namespace NUnit.Framework.Internal.Execution
                 if (workItem == null)
                     break;
 
-                InternalTrace.Debug("Processing WorkItem for {0}", workItem.Test.FullName);
+                log.Debug("Processing WorkItem for {0}", workItem.Test.FullName);
                 workItem.Execute();
                 ++_workItemCount;
             }
 
-            InternalTrace.Info("Stopping - {0} WorkItems processed.", _workItemCount);
+            log.Info("Stopping - {0} WorkItems processed.", _workItemCount);
         }
 
         /// <summary>

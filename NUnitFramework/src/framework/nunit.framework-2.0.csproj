@@ -76,6 +76,7 @@
     <Compile Include="Constraints\Operators\SomeOperator.cs" />
     <Compile Include="Constraints\SubPathConstraint.cs" />
     <Compile Include="Constraints\ThrowsExceptionConstraint.cs" />
+    <Compile Include="Internal\InternalTraceLevel.cs" />
     <Compile Include="Internal\Builders\NamespaceTreeBuilder.cs" />
     <Compile Include="Internal\Commands\ApplyChangesToContextCommand.cs" />
     <Compile Include="Internal\Commands\DelegatingTestCommand.cs" />
@@ -108,10 +109,14 @@
     <Compile Include="Internal\Extensibility\AddinRegistry.cs" />
     <Compile Include="Internal\IApplyToContext.cs" />
     <Compile Include="Internal\IApplyToTest.cs" />
+    <Compile Include="Internal\InternalTraceWriter.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Internal\RandomGenerator.cs" />
     <Compile Include="Internal\StackFilter.cs" />
     <Compile Include="Internal\StringUtil.cs" />
     <Compile Include="Internal\XmlHelper.cs" />
+    <Compile Include="Internal\Logger.cs" />
     <Compile Include="MessageMatch.cs" />
     <Compile Include="Internal\PropertyNames.cs" />
     <Compile Include="Api\ResultState.cs" />

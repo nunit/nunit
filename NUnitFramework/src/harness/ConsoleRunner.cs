@@ -68,8 +68,8 @@ namespace NUnit.Framework.TestHarness
             if (options.RunInSeparateAppDomain)
                 testDomain = CreateDomain(Path.GetDirectoryName(assemblyPath));
 
-            this.driver = new FrameworkDriver(assemblyPath, testDomain, options.CreateDriverSettings());
-
+            var driverSettings = options.CreateDriverSettings();
+            this.driver = new FrameworkDriver(assemblyPath, testDomain, driverSettings);
 
             this.workDirectory = options.WorkDirectory;
             if (this.workDirectory == null)

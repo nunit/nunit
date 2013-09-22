@@ -308,7 +308,10 @@
     <Compile Include="Internal\IApplyToContext.cs" />
     <Compile Include="Internal\IApplyToTest.cs" />
     <Compile Include="Internal\InternalTrace.cs" />
+    <Compile Include="Internal\InternalTraceLevel.cs" />
+    <Compile Include="Internal\InternalTraceWriter.cs" />
     <Compile Include="Internal\InvalidTestFixtureException.cs" />
+    <Compile Include="Internal\Logger.cs" />
     <Compile Include="Internal\MethodHelper.cs" />
     <Compile Include="Internal\NUnitException.cs" />
     <Compile Include="Internal\OSPlatform.cs" />

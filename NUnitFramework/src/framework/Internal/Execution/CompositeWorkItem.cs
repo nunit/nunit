@@ -36,6 +36,8 @@ namespace NUnit.Framework.Internal.Execution
     /// </summary>
     public class CompositeWorkItem : WorkItem
     {
+        static Logger log = InternalTrace.GetLogger("CompositeWorkItem");
+
         private TestSuite _suite;
         private ITestFilter _childFilter;
         private TestCommand _setupCommand;
@@ -160,7 +162,7 @@ namespace NUnit.Framework.Internal.Execution
                     // in order to handle ApartmentState preferences set on the fixture.
                     else if (child is SimpleWorkItem || child.Test is ParameterizedMethodSuite)
                     {
-                        InternalTrace.Debug("Executing WorkItem for {0}", child.Test.FullName);
+                        log.Debug("Executing WorkItem for {0}", child.Test.FullName);
                         child.Execute();
                     }
                     else

@@ -24,6 +24,7 @@
 #if !NUNITLITE
 using System;
 using System.Collections;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Xml;
@@ -35,7 +36,7 @@ namespace NUnit.Framework.Api
 {
     /// <summary>
     /// TestController provides a facade for use in loading, browsing 
-    /// and running tests without requiringa reference to the NUnit 
+    /// and running tests without requiring a reference to the NUnit 
     /// framework. All calls are encapsulated in constructors for
     /// this class and its nested classes, which only require the
     /// types of the Common Type System as arguments.
@@ -86,10 +87,19 @@ namespace NUnit.Framework.Api
             this.Settings = settings;
 
             if (settings.Contains("InternalTraceLevel"))
-                InternalTrace.Level = (InternalTrace.TraceLevel)Enum.Parse(typeof(InternalTrace.TraceLevel), (string)settings["InternalTraceLevel"]);
+            {
+                var traceLevel = (InternalTraceLevel)Enum.Parse(typeof(InternalTraceLevel), (string)settings["InternalTraceLevel"]);
 
-            if (InternalTrace.Level != InternalTrace.TraceLevel.Off)
-                InternalTrace.Open("InternalTrace.txt");
+                if (settings.Contains("InternalTraceWriter"))
+                    InternalTrace.Initialize((TextWriter)settings["InternalTraceWriter"], traceLevel);
+                else
+                {
+                    var workDirectory = settings.Contains("WorkDirectory") ? (string)settings["WorkDirectory"] : Environment.CurrentDirectory;
+                    var logName = string.Format("InternalTrace.{0}.{1}.log", Process.GetCurrentProcess().Id, Path.GetFileName(assemblyPath));
+                    //var logName = string.Format("InternalTrace.{0}.log", Process.GetCurrentProcess().Id);
+                    InternalTrace.Initialize(Path.Combine(workDirectory, logName), traceLevel);
+                }
+            }
         }
 
         #endregion
@@ -185,7 +195,7 @@ namespace NUnit.Framework.Api
             }
             finally
             {
-                InternalTrace.Flush();
+                //InternalTrace.Flush();
             }
         }
 
