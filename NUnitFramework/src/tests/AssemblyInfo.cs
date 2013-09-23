@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2007 Charlie Poole
+// Copyright (c) 2011 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,18 +21,15 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
 using System.Reflection;
 
 // Information about this assembly is defined by the following attributes. 
 // Change them to the values specific to your project.
 
 #if NUNITLITE
-[assembly: AssemblyTitle("NUnitLite")]
+[assembly: AssemblyTitle("NUnitLite Tests")]
 #else
-[assembly: AssemblyTitle("NUnit Framework")]
+[assembly: AssemblyTitle("NUnit Framework Tests")]
 #endif
-
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyCulture("")]
-[assembly: CLSCompliant(true)]
