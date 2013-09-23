@@ -39,7 +39,7 @@ namespace NUnit.ConsoleRunner
             this.workDirectory = workDirectory;
         }
 
-        public void WriteResultFile(OutputSpecification spec)
+        public void WriteResultFile(OutputSpecification spec, DateTime startTime)
         {
             string outputPath = Path.Combine(workDirectory, spec.OutputPath);
             IResultWriter outputWriter = null;
@@ -47,11 +47,11 @@ namespace NUnit.ConsoleRunner
             switch (spec.Format)
             {
                 case "nunit3":
-                    outputWriter = new NUnit3XmlOutputWriter();
+                    outputWriter = new NUnit3TestResultWriter(startTime);
                     break;
 
                 case "nunit2":
-                    outputWriter = new NUnit2XmlOutputWriter();
+                    outputWriter = new NUnit2TestResultWriter();
                     break;
 
                 case "user":
@@ -78,7 +78,7 @@ namespace NUnit.ConsoleRunner
             switch (spec.Format)
             {
                 case "nunit3":
-                    outputWriter = new NUnit3XmlOutputWriter();
+                    outputWriter = new NUnit3ExploreOutputWriter();
                     break;
 
                 case "cases":

@@ -136,6 +136,8 @@ namespace NUnit.ConsoleRunner
             TextWriter savedOut = Console.Out;
             TextWriter savedError = Console.Error;
 
+            DateTime startTime = DateTime.Now;
+
             try
             {
 #if true
@@ -171,7 +173,7 @@ namespace NUnit.ConsoleRunner
                 var outputManager = new OutputManager(engineResult.Xml, this.workDirectory);
 
                 foreach (var outputSpec in options.ResultOutputSpecifications)
-                    outputManager.WriteResultFile(outputSpec);
+                    outputManager.WriteResultFile(outputSpec, startTime);
 
                 returnCode = reporter.Summary.ErrorsAndFailures;
 

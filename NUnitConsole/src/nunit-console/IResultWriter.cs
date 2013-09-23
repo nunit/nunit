@@ -21,6 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
 using System.IO;
 using System.Xml;
 
@@ -29,7 +30,5 @@ namespace NUnit.ConsoleRunner
     public interface IResultWriter
     {
         void WriteResultFile(XmlNode resultNode, string outputPath);
-
-        void WriteResultFile(XmlNode resultNode, TextWriter writer);
     }
 }

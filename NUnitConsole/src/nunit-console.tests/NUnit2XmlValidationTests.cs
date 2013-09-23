@@ -85,7 +85,7 @@ namespace NUnit.ConsoleRunner.Tests
         {
             StringBuilder output = new StringBuilder();
 
-            new NUnit2XmlOutputWriter().WriteResultFile(this.result.Xml, new StringWriter(output));
+            new NUnit2TestResultWriter().WriteResultFile(this.result.Xml, new StringWriter(output));
 
             if (!validator.Validate(new StringReader(output.ToString())))
             {
