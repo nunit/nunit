@@ -5,7 +5,7 @@
     <include name="**/*.cs"/>
 	  <exclude name="obj/**/*.cs"/>
 	  <exclude name="**/*.xaml.cs"/>
-	  <!--<exclude name="**/Options.cs"/>-->
+	  <exclude name="**/Options.cs"/>
   </patternset>
 
   <target name="build">
