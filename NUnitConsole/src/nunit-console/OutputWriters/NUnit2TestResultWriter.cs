@@ -31,13 +31,13 @@ using System.IO;
 
 namespace NUnit.ConsoleRunner
 {
-    public class NUnit2XmlOutputWriter : IResultWriter
+    public class NUnit2TestResultWriter : IResultWriter
     {
         private XmlWriter xmlWriter;
 
         private static Dictionary<string, string> resultStates = new Dictionary<string, string>();
 
-        static NUnit2XmlOutputWriter()
+        static NUnit2TestResultWriter()
         {
             resultStates["Passed"] = "Success";
             resultStates["Failed"] = "Failure";
@@ -231,8 +231,6 @@ namespace NUnit.ConsoleRunner
 
         private void WritePropertiesElement(XmlNode properties)
         {
-            int nprops = 0;
-
             xmlWriter.WriteStartElement("properties");
 
             var items = properties.SelectNodes("property");

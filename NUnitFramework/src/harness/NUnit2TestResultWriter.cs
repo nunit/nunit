@@ -31,13 +31,14 @@ using System.IO;
 
 namespace NUnit.Framework.TestHarness
 {
-    public class NUnit2XmlOutputWriter
+    public class NUnit2TestResultWriter
     {
         private XmlWriter xmlWriter;
+        private DateTime startTime;
 
         private static Dictionary<string, string> resultStates = new Dictionary<string, string>();
 
-        static NUnit2XmlOutputWriter()
+        static NUnit2TestResultWriter()
         {
             resultStates["Passed"] = "Success";
             resultStates["Failed"] = "Failure";
@@ -47,6 +48,11 @@ namespace NUnit.Framework.TestHarness
             resultStates["Skipped"] = "Skipped";
             resultStates["Skipped:Ignored"] = "Ignored";
             resultStates["Skipped:Invalid"] = "NotRunnable";
+        }
+
+        public NUnit2TestResultWriter(DateTime startTime)
+        {
+            this.startTime = startTime;
         }
 
         public void WriteResultFile(XmlNode result, string outputPath)
