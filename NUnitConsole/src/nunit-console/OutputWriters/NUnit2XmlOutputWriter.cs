@@ -31,13 +31,13 @@ using System.IO;
 
 namespace NUnit.ConsoleRunner
 {
-    public class NUnit2TestResultWriter : IResultWriter
+    public class NUnit2XmlOutputWriter : IResultWriter
     {
         private XmlWriter xmlWriter;
 
         private static Dictionary<string, string> resultStates = new Dictionary<string, string>();
 
-        static NUnit2TestResultWriter()
+        static NUnit2XmlOutputWriter()
         {
             resultStates["Passed"] = "Success";
             resultStates["Failed"] = "Failure";

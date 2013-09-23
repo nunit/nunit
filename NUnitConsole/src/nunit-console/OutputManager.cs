@@ -47,11 +47,11 @@ namespace NUnit.ConsoleRunner
             switch (spec.Format)
             {
                 case "nunit3":
-                    outputWriter = new NUnit3TestResultWriter(startTime);
+                    outputWriter = new NUnit3XmlOutputWriter();
                     break;
 
                 case "nunit2":
-                    outputWriter = new NUnit2TestResultWriter();
+                    outputWriter = new NUnit2XmlOutputWriter();
                     break;
 
                 case "user":
@@ -78,7 +78,7 @@ namespace NUnit.ConsoleRunner
             switch (spec.Format)
             {
                 case "nunit3":
-                    outputWriter = new NUnit3ExploreOutputWriter();
+                    outputWriter = new NUnit3XmlOutputWriter();
                     break;
 
                 case "cases":

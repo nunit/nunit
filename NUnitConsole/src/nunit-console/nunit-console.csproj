@@ -51,9 +51,9 @@
     <Compile Include="Options.cs" />
     <Compile Include="OutputManager.cs" />
     <Compile Include="OutputSpecification.cs" />
-    <Compile Include="OutputWriters\NUnit2TestResultWriter.cs" />
+    <Compile Include="OutputWriters\NUnit2XmlOutputWriter.cs" />
     <Compile Include="OutputWriters\NUnit3ExploreOutputWriter.cs" />
-    <Compile Include="OutputWriters\NUnit3TestResultWriter.cs" />
+    <Compile Include="OutputWriters\NUnit3XmlOutputWriter.cs" />
     <Compile Include="OutputWriters\TestCaseOutputWriter.cs" />
     <Compile Include="OutputWriters\XmlTransformOutputWriter.cs" />
     <Compile Include="Program.cs" />
