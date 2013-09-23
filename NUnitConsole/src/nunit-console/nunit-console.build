@@ -17,8 +17,8 @@
     <include name="XmlHelper.cs"/>
     <include name="OutputManager.cs"/>
     <include name="OutputSpecification.cs"/>
-    <include name="OutputWriters/NUnit2ResultOutputWriter.cs"/>
-    <include name="OutputWriters/NUnit3ResultOutputWriter.cs"/>
+    <include name="OutputWriters/NUnit2XmlOutputWriter.cs"/>
+    <include name="OutputWriters/NUnit3XmlOutputWriter.cs"/>
     <include name="OutputWriters/TestCaseOutputWriter.cs"/>
     <include name="OutputWriters/XmlTransformOutputWriter.cs"/>
   </patternset>
