@@ -67,7 +67,7 @@ namespace NUnit.ConsoleRunner
             }
 
             outputWriter.WriteResultFile(result, outputPath);
-            Console.WriteLine("Results saved as {0}", outputPath);
+            Console.WriteLine("Results ({0}) saved as {1}", spec.Format, outputPath);
         }
 
         public void WriteTestFile(OutputSpecification spec)
@@ -98,7 +98,7 @@ namespace NUnit.ConsoleRunner
             }
 
             outputWriter.WriteResultFile(result, outputPath);
-            Console.WriteLine("Tests saved as {0}", outputPath);
+            Console.WriteLine("Tests ({0}) saved as {1}", spec.Format, outputPath);
         }
     }
 }
