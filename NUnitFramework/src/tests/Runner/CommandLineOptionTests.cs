@@ -54,6 +54,14 @@ namespace NUnitLite.Runner.Tests
             Assert.That(options.Full, Is.True);
         }
 
+        [Test]
+        public void TestOptionStartingWithTwoHyphens()
+        {
+            options.Parse("--full");
+            Assert.That(options.Error, Is.False);
+            Assert.That(options.Full, Is.True);
+        }
+
 #if !SILVERLIGHT && !NETCF
         [Test]
         public void TestExploreOptionWithNoFileName()
