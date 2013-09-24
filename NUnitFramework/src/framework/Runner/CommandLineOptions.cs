@@ -236,7 +236,11 @@ namespace NUnitLite.Runner
                 opt = opt.Substring(0, pos);
             }
 
-            switch (opt.Substring(1))
+            opt = opt.StartsWith("--")
+                ? opt.Substring(2)
+                : opt.Substring(1);
+
+            switch (opt)
             {
                 case "wait":
                     Wait = true;
