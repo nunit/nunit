@@ -92,21 +92,24 @@ namespace NUnit.ConsoleRunner
 
         private void WriteErrorsAndFailures(XmlNode result)
         {
-            if (result.Name=="test-case")
+            switch(result.Name)
             {
-                string resultState = result.Attributes["result"].Value;
-                if (resultState == "Failed" || resultState == "Error" || resultState == "Cancelled")
-                    WriteSingleResult(result);
-            }
-            else if (result.Name=="test-suite")
-            {
-                //string resultState = result.Attributes["result"].Value;
-                //if (resultState == "Failed" || resultState == "Error")
-                //    WriteSingleResult(result);
+                case "test-case":
+                    string resultState = result.Attributes["result"].Value;
+                    if (resultState == "Failed" || resultState == "Error" || resultState == "Cancelled")
+                        WriteSingleResult(result);
+                    break;
 
-                // TODO: Display failures in fixture setup or teardown
-                foreach (XmlNode childResult in result.ChildNodes)
-                    WriteErrorsAndFailures(childResult);
+                case "test-run":
+                case "test-suite":
+                    //string resultState = result.Attributes["result"].Value;
+                    //if (resultState == "Failed" || resultState == "Error")
+                    //    WriteSingleResult(result);
+
+                    // TODO: Display failures in fixture setup or teardown
+                    foreach (XmlNode childResult in result.ChildNodes)
+                        WriteErrorsAndFailures(childResult);
+                    break;
             }
         }
 

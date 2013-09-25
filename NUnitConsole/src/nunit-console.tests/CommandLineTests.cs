@@ -266,7 +266,7 @@ namespace NUnit.ConsoleRunner.Tests
 
         #endregion
 
-        #region Result Option
+        #region EngineResult Option
 
         [Test]
         public void ResultOptionWithFilePath()

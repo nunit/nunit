@@ -22,43 +22,24 @@
 // ***********************************************************************
 
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
 using System.Text;
-using System.Xml;
-using System.Xml.Schema;
-using NUnit.Engine;
 using NUnit.Framework;
+using NUnit.Framework.Internal;
 
 namespace NUnit.ConsoleRunner.Tests
 {
 	[TestFixture]
 	public class NUnit2XmlValidationTests : XmlOutputTest
 	{
-        private ITestEngineResult result;
         private SchemaValidator validator;
 
         private static readonly string schemaFile = "NUnit2TestResult.xsd";
 
         [TestFixtureSetUp]
-        public void Initialize()
+        public void InitializeValidator()
         {
-            Uri uri = new Uri(Assembly.GetExecutingAssembly().CodeBase);
-            string dir = Path.GetDirectoryName(uri.LocalPath);
-
-            this.validator = new SchemaValidator(Path.Combine(dir, schemaFile));
-
-            this.result = TestEngine.Run(
-                new TestPackage(Path.Combine(dir, "mock-assembly.dll")), 
-                TestListener.Null, 
-                TestFilter.Empty);
-
-            foreach (TestEngineError error in result.Errors)
-                Console.WriteLine(error.Message);
-
-            Assert.False(result.HasErrors);
-            Assert.That(result.Xml.Name, Is.EqualTo("test-run"));
+            this.validator = new SchemaValidator(GetLocalPath(schemaFile));
         }
 
 		[Test,SetCulture("")]
@@ -85,7 +66,7 @@ namespace NUnit.ConsoleRunner.Tests
         {
             StringBuilder output = new StringBuilder();
 
-            new NUnit2XmlOutputWriter().WriteResultFile(this.result.Xml, new StringWriter(output));
+            new NUnit2XmlOutputWriter().WriteResultFile(this.EngineResult.Xml, new StringWriter(output));
 
             if (!validator.Validate(new StringReader(output.ToString())))
             {

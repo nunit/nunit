@@ -78,6 +78,10 @@
       <Project>{775FAD50-3623-4922-97C4-DFB29A8BE4C7}</Project>
       <Name>nunit.engine.api</Name>
     </ProjectReference>
+    <ProjectReference Include="..\nunit.engine\nunit.engine.csproj">
+      <Project>{372a3447-d657-40ff-a089-77c19fec30c8}</Project>
+      <Name>nunit.engine</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
