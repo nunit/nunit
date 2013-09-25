@@ -72,56 +72,7 @@ namespace NUnit.Engine.Services
 		/// <param name="package">The TestPackage to be run</param>
 		public AppDomain CreateDomain( TestPackage package )
 		{
-			AppDomainSetup setup = new AppDomainSetup();
-			 
-			//For paralell tests, we need to use distinct application name
-        	setup.ApplicationName = "Tests" + "_" + Environment.TickCount;
-
-            FileInfo testFile = package.FullName != null && package.FullName != string.Empty
-                ? new FileInfo(package.FullName)
-                : null;
-
-            string appBase = package.GetSetting("BasePath", string.Empty);
-            string configFile = package.GetSetting("ConfigurationFile", string.Empty);
-            string binPath = package.GetSetting("PrivateBinPath", string.Empty);
-
-            if (testFile != null)
-            {
-                if (appBase == null || appBase == string.Empty)
-                    appBase = testFile.DirectoryName;
-
-                if (configFile == null || configFile == string.Empty)
-                    //configFile = Services.ProjectService.CanLoadProject(testFile.Name)
-                    //    ? Path.GetFileNameWithoutExtension(testFile.Name) + ".config"
-                    //    : testFile.Name + ".config";
-                    configFile = testFile.Name + ".config";
-            }
-            else if (appBase == null || appBase == string.Empty)
-                appBase = GetCommonAppBase(package.TestFiles);
-			
-			char lastChar = appBase[appBase.Length - 1];
-            if (lastChar != Path.DirectorySeparatorChar && lastChar != Path.AltDirectorySeparatorChar)
-                appBase += Path.DirectorySeparatorChar;
-
-            setup.ApplicationBase = appBase;
-            // TODO: Check whether Mono still needs full path to config file...
-            setup.ConfigurationFile = appBase != null && configFile != null
-                ? Path.Combine(appBase, configFile)
-                : configFile;
-
-            if (package.GetSetting("AutoBinPath", binPath == string.Empty))
-				binPath = GetPrivateBinPath( appBase, package.TestFiles );
-
-			setup.PrivateBinPath = binPath;
-
-            if (package.GetSetting("ShadowCopyFiles", true))
-            {
-                setup.ShadowCopyFiles = "true";
-                setup.ShadowCopyDirectories = appBase;
-                setup.CachePath = GetCachePath();
-            }
-            else
-                setup.ShadowCopyFiles = "false";
+            AppDomainSetup setup = CreateAppDomainSetup(package);
 
 			string domainName = "test-domain-" + package.Name;
             // Setup the Evidence
@@ -176,6 +127,62 @@ namespace NUnit.Engine.Services
 
 			return runnerDomain;
 		}
+
+        // Made separate and public for testing
+        public AppDomainSetup CreateAppDomainSetup(TestPackage package)
+        {
+            AppDomainSetup setup = new AppDomainSetup();
+
+            //For paralell tests, we need to use distinct application name
+            setup.ApplicationName = "Tests" + "_" + Environment.TickCount;
+
+            FileInfo testFile = package.FullName != null && package.FullName != string.Empty
+                ? new FileInfo(package.FullName)
+                : null;
+
+            string appBase = package.GetSetting("BasePath", string.Empty);
+            string configFile = package.GetSetting("ConfigurationFile", string.Empty);
+            string binPath = package.GetSetting("PrivateBinPath", string.Empty);
+
+            if (testFile != null)
+            {
+                if (appBase == null || appBase == string.Empty)
+                    appBase = testFile.DirectoryName;
+
+                if (configFile == null || configFile == string.Empty)
+                    //configFile = Services.ProjectService.CanLoadProject(testFile.Name)
+                    //    ? Path.GetFileNameWithoutExtension(testFile.Name) + ".config"
+                    //    : testFile.Name + ".config";
+                    configFile = testFile.Name + ".config";
+            }
+            else if (appBase == null || appBase == string.Empty)
+                appBase = GetCommonAppBase(package.TestFiles);
+
+            char lastChar = appBase[appBase.Length - 1];
+            if (lastChar != Path.DirectorySeparatorChar && lastChar != Path.AltDirectorySeparatorChar)
+                appBase += Path.DirectorySeparatorChar;
+
+            setup.ApplicationBase = appBase;
+            // TODO: Check whether Mono still needs full path to config file...
+            setup.ConfigurationFile = appBase != null && configFile != null
+                ? Path.Combine(appBase, configFile)
+                : configFile;
+
+            if (package.GetSetting("AutoBinPath", binPath == string.Empty))
+                binPath = GetPrivateBinPath(appBase, package.TestFiles);
+
+            setup.PrivateBinPath = binPath;
+
+            if (package.GetSetting("ShadowCopyFiles", true))
+            {
+                setup.ShadowCopyFiles = "true";
+                setup.ShadowCopyDirectories = appBase;
+                setup.CachePath = GetCachePath();
+            }
+            else
+                setup.ShadowCopyFiles = "false";
+            return setup;
+        }
 
         public void Unload(AppDomain domain)
         {
