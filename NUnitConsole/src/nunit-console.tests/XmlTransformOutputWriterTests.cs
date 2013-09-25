@@ -1,5 +1,4 @@
-﻿using System;
-// ***********************************************************************
+﻿// ***********************************************************************
 // Copyright (c) 2011 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -22,47 +21,28 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
-using System.Text;
-using NUnit.Engine;
 using NUnit.Framework;
+using NUnit.Framework.Internal;
 
 namespace NUnit.ConsoleRunner.Tests
 {
     public class XmlTransformOutputWriterTests : XmlOutputTest
     {
-        private ITestEngineResult result;
-        private string xsltFile;
-
-        [TestFixtureSetUp]
-        public void Initialize()
-        {
-            Uri uri = new Uri(Assembly.GetExecutingAssembly().CodeBase);
-            string dir = Path.GetDirectoryName(uri.LocalPath);
-
-            this.xsltFile = Path.Combine(dir, "TextSummary.xslt");
-
-            this.result = TestEngine.Run(
-                new TestPackage(Path.Combine(dir, "mock-assembly.dll")), 
-                TestListener.Null, 
-                TestFilter.Empty);
-        }
-
         [Test]
         public void SummaryTransformTest()
         {
+            var transformPath = GetLocalPath("TextSummary.xslt");
             StringWriter writer = new StringWriter();
-            new XmlTransformOutputWriter(xsltFile).WriteResultFile(result.Xml, writer);
+            new XmlTransformOutputWriter(transformPath).WriteResultFile(EngineResult.Xml, writer);
 
             string summary = string.Format(
                 "Tests Run: {0}, Passed: {1}, Failed: {2}, Inconclusive: {3}, Skipped: {4}",
-                result.Xml.Attributes["total"].Value,
-                result.Xml.Attributes["passed"].Value,
-                result.Xml.Attributes["failed"].Value,
-                result.Xml.Attributes["inconclusive"].Value,
-                result.Xml.Attributes["skipped"].Value);
+                EngineResult.Xml.Attributes["total"].Value,
+                EngineResult.Xml.Attributes["passed"].Value,
+                EngineResult.Xml.Attributes["failed"].Value,
+                EngineResult.Xml.Attributes["inconclusive"].Value,
+                EngineResult.Xml.Attributes["skipped"].Value);
 
             string output = writer.GetStringBuilder().ToString();
     
