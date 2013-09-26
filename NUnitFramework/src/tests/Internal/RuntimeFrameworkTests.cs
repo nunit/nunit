@@ -64,28 +64,6 @@ namespace NUnit.Framework.Internal
             Assert.That(RuntimeFramework.CurrentFramework.ClrVersion.Build, Is.GreaterThan(0));
         }
 
-#if !NUNITLITE
-        [Test]
-        public void CurrentFrameworkMustBeAvailable()
-        {
-            Assert.That(RuntimeFramework.CurrentFramework.IsAvailable);
-        }
-
-        [Test]
-        public void CanListAvailableFrameworks()
-        {
-            RuntimeFramework[] available = RuntimeFramework.AvailableFrameworks;
-            Assert.That(available, Has.Length.GreaterThan(0) );
-            bool foundCurrent = false;
-            foreach (RuntimeFramework framework in available)
-            {
-                Console.WriteLine("Available: {0}", framework.DisplayName);
-                foundCurrent |= RuntimeFramework.CurrentFramework.Supports(framework);
-            }
-            Assert.That(foundCurrent, "CurrentFramework not listed");
-        }
-#endif
-
         [TestCaseSource("frameworkData")]
         public void CanCreateUsingFrameworkVersion(FrameworkData data)
         {
