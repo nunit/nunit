@@ -41,8 +41,19 @@ namespace NUnit.Agent
             AgentId = new Guid(args[0]);
             AgencyUrl = args[1];
 
+            bool pause = false, verbose = false;
+            for (int i = 2; i < args.Length; i++)
+                switch (args[i])
+                {
+                    case "--pause":
+                        pause = true;
+                        break;
+                    case "--verbose":
+                        verbose = true;
+                        break;
+                }
 #if DEBUG
-            if (args.Length > 2 && args[2] == "--pause")
+            if (pause)
                 System.Windows.Forms.MessageBox.Show("Attach debugger if desired, then press OK", "NUnit-Agent");
 #endif
 
@@ -54,12 +65,14 @@ namespace NUnit.Agent
             //log.Info("Running under version {0}, {1}", 
             //    Environment.Version, 
             //    RuntimeFramework.CurrentFramework.DisplayName);
-#if DEBUG
-            Console.WriteLine("Agent process {0} starting", Process.GetCurrentProcess().Id);
-            Console.WriteLine("Running under version {0}, {1}",
-                Environment.Version,
-                RuntimeFramework.CurrentFramework.DisplayName);
-#endif
+
+            if (verbose)
+            {
+                Console.WriteLine("Agent process {0} starting", Process.GetCurrentProcess().Id);
+                Console.WriteLine("Running under version {0}, {1}",
+                    Environment.Version,
+                    RuntimeFramework.CurrentFramework.DisplayName);
+            }
 
             // Create TestEngine - this program is
             // conceptually part of  the engine and
@@ -68,9 +81,6 @@ namespace NUnit.Agent
             
             // Custom Service Initialization
             //log.Info("Adding Services");
-#if DEBUG
-            Console.WriteLine("Adding Services");
-#endif
             engine.Services.Add(settingsService);
             engine.Services.Add(new ProjectService());
             engine.Services.Add(new DomainManager());
@@ -80,16 +90,10 @@ namespace NUnit.Agent
 
             // Initialize Services
             //log.Info("Initializing Services");
-#if DEBUG
-            Console.WriteLine("Initializing Services");
-#endif
             engine.Services.ServiceManager.InitializeServices();
 
             Channel = ServerUtilities.GetTcpChannel();
 
-#if DEBUG
-            Console.WriteLine("Connecting to TestAgency at {0}", AgencyUrl);
-#endif
             //log.Info("Connecting to TestAgency at {0}", AgencyUrl);
             try
             {
@@ -103,9 +107,6 @@ namespace NUnit.Agent
 
             if (Channel != null)
             {
-#if DEBUG
-                Console.WriteLine("Starting RemoteTestAgent");
-#endif
                 //log.Info("Starting RemoteTestAgent");
                 RemoteTestAgent agent = new RemoteTestAgent(AgentId, Agency, engine.Services);
 
@@ -113,15 +114,9 @@ namespace NUnit.Agent
                 {
                     if (agent.Start())
                     {
-#if DEBUG
-                        Console.WriteLine("Waiting for stopSignal");
-#endif
                         //log.Debug("Waiting for stopSignal");
                         agent.WaitForStop();
                         //log.Debug("Stop signal received");
-#if DEBUG
-                        Console.WriteLine("Stop signal received");
-#endif
                     }
                     else
                         Console.WriteLine("Failed to start RemoteTestAgent");
@@ -134,9 +129,6 @@ namespace NUnit.Agent
                 }
 
                 //log.Info("Unregistering Channel");
-#if DEBUG
-                Console.WriteLine("Unregistering Channel");
-#endif
                 try
                 {
                     ChannelServices.UnregisterChannel(Channel);
@@ -148,9 +140,8 @@ namespace NUnit.Agent
                 }
             }
 
-#if DEBUG
-            Console.WriteLine("Agent process {0} exiting", Process.GetCurrentProcess().Id);
-#endif
+            if (verbose)
+                Console.WriteLine("Agent process {0} exiting", Process.GetCurrentProcess().Id);
             //log.Info("Agent process {0} exiting", Process.GetCurrentProcess().Id);
             //InternalTrace.Close();
 

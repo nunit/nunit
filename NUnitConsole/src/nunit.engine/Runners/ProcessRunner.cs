@@ -90,13 +90,16 @@ namespace NUnit.Engine.Runners
                 : RuntimeFramework.CurrentFramework;
 
             bool enableDebug = package.GetSetting("AgentDebug", false);
-            //bool enableDebug = true;
+            bool verbose = package.GetSetting("Verbose", false);
+            string agentArgs = string.Empty;
+            if (enableDebug) agentArgs += " --pause";
+            if (verbose) agentArgs += " --verbose";
 
             bool loaded = false;
 
 			try
 			{
-                CreateAgentAndRunner(enableDebug);
+                CreateAgentAndRunner(enableDebug, agentArgs);
 
                 ITestEngineResult result = this.remoteRunner.Load(package);
                 loaded = !result.HasErrors;
@@ -147,14 +150,15 @@ namespace NUnit.Engine.Runners
 
         #region Helper Methods
 
-        private void CreateAgentAndRunner(bool enableDebug)
+        private void CreateAgentAndRunner(bool enableDebug, string agentArgs)
         {
             if (this.agent == null)
             {
                 this.agent = Services.TestAgency.GetAgent(
                     runtimeFramework,
                     30000,
-                    enableDebug);
+                    enableDebug,
+                    agentArgs);
 
                 if (this.agent == null)
                     throw new Exception("Unable to acquire remote process agent");
