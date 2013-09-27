@@ -131,6 +131,9 @@ namespace NUnit.ConsoleRunner
             this.Add("noheader|noh", "Suppress display of program information at start of run.",
                 v => NoHeader = v != null);
 
+            this.Add("verbose|v", "Display additional information as the test runs.",
+                v => Verbose = v != null);
+
             this.Add("help|h", "Display this message and exit.", 
                 v => ShowHelp = v != null);
 
@@ -200,6 +203,8 @@ namespace NUnit.ConsoleRunner
         // Output Control
 
         public bool NoHeader { get; private set; }
+
+        public bool Verbose { get; private set; }
 
         public string OutFile { get; private set; }
 

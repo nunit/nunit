@@ -189,8 +189,17 @@ namespace NUnit.ConsoleRunner
 
         private void DisplayRequestedOptions()
         {
-            Console.WriteLine("ProcessModel: {0}    DomainUsage: {1}", options.ProcessModel, options.DomainUsage);
-            Console.WriteLine("Execution Runtime: {0}", options.Framework == null ? "Not Specified" : options.Framework);
+            Console.WriteLine("Options -");
+            Console.WriteLine("    ProcessModel: {0}    DomainUsage: {1}", options.ProcessModel ?? "Default", options.DomainUsage ?? "Default");
+            Console.WriteLine("    Execution Runtime: {0}", options.Framework ?? "Not Specified");
+            if (options.DefaultTimeout >= 0)
+                Console.WriteLine("    Default timeout: {0}", options.DefaultTimeout);
+            if (options.NumWorkers > 0)
+                Console.WriteLine("    Worker Threads: {0}", options.NumWorkers);
+            Console.WriteLine("    Work Directory: {0}", workDirectory);
+            Console.WriteLine("    Internal Trace: {0}", options.InternalTraceLevel ?? "Off");
+            //if (options.DisplayTeamCityServiceMessages)
+            //    Console.WriteLine("    Display TeamCity Service Messages");
             Console.WriteLine();
 
             if (options.TestList.Count > 0)
@@ -271,6 +280,9 @@ namespace NUnit.ConsoleRunner
 
             if (options.RandomSeed > 0)
                 package.Settings["RandomSeed"] = options.RandomSeed;
+
+            if (options.Verbose)
+                package.Settings["Verbose"] = true;
 
 #if DEBUG
             //foreach (KeyValuePair<string, object> entry in package.Settings)
