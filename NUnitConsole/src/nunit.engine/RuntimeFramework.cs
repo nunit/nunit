@@ -44,7 +44,11 @@ namespace NUnit.Engine
         /// <summary>Microsoft Shared Source CLI</summary>
         SSCLI,
         /// <summary>Mono</summary>
-        Mono
+        Mono,
+        /// <summary>Silverlight</summary>
+        Silverlight,
+        /// <summary>MonoTouch</summary>
+        MonoTouch
     }
 
     /// <summary>
@@ -64,63 +68,93 @@ namespace NUnit.Engine
 
         private static RuntimeFramework currentFramework;
         private static RuntimeFramework[] availableFrameworks;
-        private static Version[] knownVersions = new Version[] {
-            new Version(1, 0, 3705),
-            new Version(1, 1, 4322),
-            new Version(2, 0, 50727),
-            new Version(4, 0, 30319)
-        };
 
-        private RuntimeType runtime;
-        private Version frameworkVersion;
-        private Version clrVersion;
-        private string displayName;
         #endregion
 
         #region Constructor
 
         /// <summary>
-        /// Construct from a runtime type and version
+        /// Construct from a runtime type and version. If the version has
+        /// two parts, it is taken as a framework version. If it has three
+        /// or more, it is taken as a CLR version. In either case, the other
+        /// version is deduced based on the runtime type and provided version.
         /// </summary>
         /// <param name="runtime">The runtime type of the framework</param>
         /// <param name="version">The version of the framework</param>
         public RuntimeFramework(RuntimeType runtime, Version version)
         {
-            this.runtime = runtime;
+            this.Runtime = runtime;
 
             if (version.Build < 0)
                 InitFromFrameworkVersion(version);
             else
                 InitFromClrVersion(version);
 
-            if (version.Major == 3)
-                this.clrVersion = new Version(2, 0, 50727);
-            this.displayName = GetDefaultDisplayName(runtime, version);
+            this.DisplayName = GetDefaultDisplayName(runtime, version);
         }
 
         private void InitFromFrameworkVersion(Version version)
         {
-            this.frameworkVersion = this.clrVersion = version;
-            foreach (Version v in knownVersions)
-                if (v.Major == version.Major && v.Minor == version.Minor)
-                {
-                    this.clrVersion = v;
-                    break;
-                }
+            this.FrameworkVersion = this.ClrVersion = version;
 
-            if (this.runtime == RuntimeType.Mono && version.Major == 1)
-            {
-                this.frameworkVersion = new Version(1, 0);
-                this.clrVersion = new Version(1, 1, 4322);
-            }
+            if (version.Major > 0) // 0 means any version
+                switch (Runtime)
+                {
+                    case RuntimeType.Net:
+                    case RuntimeType.Mono:
+                    case RuntimeType.Any:
+                        switch (version.Major)
+                        {
+                            case 1:
+                                switch (version.Minor)
+                                {
+                                    case 0:
+                                        this.ClrVersion = Runtime == RuntimeType.Mono
+                                            ? new Version(1, 1, 4322)
+                                            : new Version(1, 0, 3705);
+                                        break;
+                                    case 1:
+                                        if (Runtime == RuntimeType.Mono)
+                                            this.FrameworkVersion = new Version(1, 0);
+                                        this.ClrVersion = new Version(1, 1, 4322);
+                                        break;
+                                    default:
+                                        ThrowInvalidFrameworkVersion(version);
+                                        break;
+                                }
+                                break;
+                            case 2:
+                            case 3:
+                                this.ClrVersion = new Version(2, 0, 50727);
+                                break;
+                            case 4:
+                                this.ClrVersion = new Version(4, 0, 30319);
+                                break;
+                            default:
+                                ThrowInvalidFrameworkVersion(version);
+                                break;
+                        }
+                        break;
+
+                    case RuntimeType.Silverlight:
+                        this.ClrVersion = version.Major >= 4
+                            ? new Version(4, 0, 60310)
+                            : new Version(2, 0, 50727);
+                        break;
+                }
+        }
+
+        private static void ThrowInvalidFrameworkVersion(Version version)
+        {
+            throw new ArgumentException("Unknown framework version " + version.ToString(), "version");
         }
 
         private void InitFromClrVersion(Version version)
         {
-            this.frameworkVersion = new Version(version.Major, version.Minor);
-            this.clrVersion = version;
-            if (runtime == RuntimeType.Mono && version.Major == 1)
-                this.frameworkVersion = new Version(1, 0);
+            this.FrameworkVersion = new Version(version.Major, version.Minor);
+            this.ClrVersion = version;
+            if (Runtime == RuntimeType.Mono && version.Major == 1)
+                this.FrameworkVersion = new Version(1, 0);
         }
 
         #endregion
@@ -183,16 +217,20 @@ namespace NUnit.Engine
                                 }
                             }
                         }
+                        else if (major == 4 && Type.GetType("System.Reflection.AssemblyMetadataAttribute") != null)
+                        {
+                            minor = 5;
+                        }
 
                     currentFramework = new RuntimeFramework(runtime, new Version(major, minor));
-                    currentFramework.clrVersion = Environment.Version;
+                    currentFramework.ClrVersion = Environment.Version;
 
                     if (isMono)
                     {
                         MethodInfo getDisplayNameMethod = monoRuntimeType.GetMethod(
                             "GetDisplayName", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.DeclaredOnly | BindingFlags.ExactBinding);
                         if (getDisplayNameMethod != null)
-                            currentFramework.displayName = (string)getDisplayNameMethod.Invoke(null, new object[0]);
+                            currentFramework.DisplayName = (string)getDisplayNameMethod.Invoke(null, new object[0]);
                     }
                 }
 
@@ -247,26 +285,17 @@ namespace NUnit.Engine
         /// <summary>
         /// The type of this runtime framework
         /// </summary>
-        public RuntimeType Runtime
-        {
-            get { return runtime; }
-        }
+        public RuntimeType Runtime { get; private set; }
 
         /// <summary>
         /// The framework version for this runtime framework
         /// </summary>
-        public Version FrameworkVersion
-        {
-            get { return frameworkVersion; }
-        }
+        public Version FrameworkVersion { get; private set; }
 
         /// <summary>
         /// The CLR version for this runtime framework
         /// </summary>
-        public Version ClrVersion
-        {
-            get { return clrVersion; }
-        }
+        public Version ClrVersion { get; private set; }
 
         /// <summary>
         /// Return true if any CLR version may be used in
@@ -274,16 +303,13 @@ namespace NUnit.Engine
         /// </summary>
         public bool AllowAnyVersion
         {
-            get { return this.clrVersion == DefaultVersion; }
+            get { return this.ClrVersion == DefaultVersion; }
         }
 
         /// <summary>
         /// Returns the Display name for this framework
         /// </summary>
-        public string DisplayName
-        {
-            get { return displayName; }
-        }
+        public string DisplayName { get; private set; }
 
         #endregion
 
@@ -359,15 +385,15 @@ namespace NUnit.Engine
         {
             if (this.AllowAnyVersion)
             {
-                return runtime.ToString().ToLower();
+                return Runtime.ToString().ToLower();
             }
             else
             {
-                string vstring = frameworkVersion.ToString();
-                if (runtime == RuntimeType.Any)
+                string vstring = FrameworkVersion.ToString();
+                if (Runtime == RuntimeType.Any)
                     return "v" + vstring;
                 else
-                    return runtime.ToString().ToLower() + "-" + vstring;
+                    return Runtime.ToString().ToLower() + "-" + vstring;
             }
         }
 
@@ -502,47 +528,100 @@ namespace NUnit.Engine
                 if (File.Exists(Path.Combine(monoPrefix, "lib/mono/1.0/mscorlib.dll")))
                 {
                     RuntimeFramework framework = new RuntimeFramework(RuntimeType.Mono, new Version(1, 1, 4322));
-                    framework.displayName = string.Format(displayFmt, "1.0");
+                    framework.DisplayName = string.Format(displayFmt, "1.0");
                     frameworks.Add(framework);
                 }
 
                 if (File.Exists(Path.Combine(monoPrefix, "lib/mono/2.0/mscorlib.dll")))
                 {
                     RuntimeFramework framework = new RuntimeFramework(RuntimeType.Mono, new Version(2, 0, 50727));
-                    framework.displayName = string.Format(displayFmt, "2.0");
+                    framework.DisplayName = string.Format(displayFmt, "2.0");
                     frameworks.Add(framework);
                 }
 
                 if (File.Exists(Path.Combine(monoPrefix, "lib/mono/4.0/mscorlib.dll")))
                 {
                     RuntimeFramework framework = new RuntimeFramework(RuntimeType.Mono, new Version(4, 0, 30319));
-                    framework.displayName = string.Format(displayFmt, "4.0");
+                    framework.DisplayName = string.Format(displayFmt, "4.0");
                     frameworks.Add(framework);
                 }
             }
         }
 #endif
 
+
         private static void AppendDotNetFrameworks(List<RuntimeFramework> frameworks)
         {
             if (Environment.OSVersion.Platform == PlatformID.Win32NT)
             {
-                RegistryKey key = Registry.LocalMachine.OpenSubKey(@"Software\Microsoft\.NETFramework\policy");
+                // Handle Version 1.0, using a different registry key
+                AppendExtremelyOldDotNetFrameworkVersions(frameworks);
+
+                RegistryKey key = Registry.LocalMachine.OpenSubKey(@"Software\Microsoft\NET Framework Setup\NDP");
                 if (key != null)
                 {
                     foreach (string name in key.GetSubKeyNames())
                     {
                         if (name.StartsWith("v"))
                         {
-                            RegistryKey key2 = key.OpenSubKey(name);
-                            foreach (string build in key2.GetValueNames())
-                                frameworks.Add(new RuntimeFramework(RuntimeType.Net, new Version(name.Substring(1) + "." + build)));
+                            var versionKey = key.OpenSubKey(name);
+
+                            if (name == "v4")
+                                // Version 4 and 4.5
+                                AppendDotNetFourFrameworkVersions(frameworks, versionKey);
+                            else
+                                // Versions 1.1 through 3.5
+                                AppendOlderDotNetFrameworkVersion(frameworks, versionKey, new Version(name.Substring(1)));
                         }
                     }
                 }
             }
         }
 
+        private static void AppendExtremelyOldDotNetFrameworkVersions(List<RuntimeFramework> frameworks)
+        {
+            RegistryKey key = Registry.LocalMachine.OpenSubKey(@"Software\Microsoft\.NETFramework\policy\v1.0");
+            if (key != null)
+                foreach (string build in key.GetValueNames())
+                    frameworks.Add(new RuntimeFramework(RuntimeType.Net, new Version("1.0." + build)));
+        }
+
+        private static void AppendOlderDotNetFrameworkVersion(List<RuntimeFramework> frameworks, RegistryKey versionKey, Version version)
+        {
+            if (CheckInstallDword(versionKey))
+                frameworks.Add(new RuntimeFramework(RuntimeType.Net, version));
+        }
+
+        // Note: this method cannot be generalized past V4, because (a)  it has
+        // specific code for detecting .NET 4.5 and (b) we don't know what
+        // microsoft will do in the future
+        private static void AppendDotNetFourFrameworkVersions(List<RuntimeFramework> frameworks, RegistryKey versionKey)
+        {
+            foreach (string profile in new string[] { "Full", "Client" })
+            {
+                var profileKey = versionKey.OpenSubKey(profile);
+                if (CheckInstallDword(profileKey))
+                {
+                    var framework = new RuntimeFramework(RuntimeType.Net, new Version(4, 0));
+                    framework.DisplayName += " - " + profile;
+                    frameworks.Add(framework);
+
+                    var release = (int)profileKey.GetValue("Release", 0);
+                    if (release > 0)
+                    {
+                        framework = new RuntimeFramework(RuntimeType.Net, new Version(4, 5));
+                        framework.DisplayName += " - " + profile;
+                        frameworks.Add(framework);
+                    }
+                }
+            }
+        }
+
+        private static bool CheckInstallDword(RegistryKey key)
+        {
+            return (int)key.GetValue("Install", 0) == 1;
+        }
+        
         #endregion
     }
 }
