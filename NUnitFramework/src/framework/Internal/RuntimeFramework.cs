@@ -230,6 +230,10 @@ namespace NUnit.Framework.Internal
                             }
                         }
                     }
+                    else if (major == 4 && Type.GetType("System.Reflection.AssemblyMetadataAttribute") != null)
+                    {
+                        minor = 5;
+                    }
 
                     currentFramework = new RuntimeFramework(runtime, new Version(major, minor));
                     currentFramework.ClrVersion = Environment.Version;
