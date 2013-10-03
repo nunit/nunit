@@ -30,6 +30,7 @@ namespace NUnit.ConsoleRunner
     public class ResultReporter
     {
         XmlNode result;
+        string testRunResult;
         ConsoleOptions options;
         ResultSummary summary;
 
@@ -38,6 +39,7 @@ namespace NUnit.ConsoleRunner
         public ResultReporter(XmlNode result, ConsoleOptions options)
         {
             this.result = result;
+            this.testRunResult = result.Attributes["result"].Value;
             this.options = options;
             this.summary = new ResultSummary(result);
         }
@@ -61,7 +63,7 @@ namespace NUnit.ConsoleRunner
             
             WriteSummaryReport();
 
-            if (summary.ErrorsAndFailures > 0)
+            if (testRunResult == "Failed")
                 WriteErrorsAndFailuresReport();
 
             if (summary.TestsNotRun > 0)
@@ -71,6 +73,8 @@ namespace NUnit.ConsoleRunner
         private void WriteSummaryReport()
         {
             Console.WriteLine();
+            Console.WriteLine("Test Run Summary -");
+            Console.WriteLine("   Overall result: {0}", testRunResult);
             Console.WriteLine(
                 "   Tests run: {0}, Errors: {1}, Failures: {2}, Inconclusive: {3}",
                 summary.TestsRun, summary.Errors, summary.Failures, summary.Inconclusive);
@@ -85,7 +89,7 @@ namespace NUnit.ConsoleRunner
         private void WriteErrorsAndFailuresReport()
         {
             this.reportIndex = 0;
-            Console.WriteLine("Errors and Failures:");
+            Console.WriteLine("Errors and Failures -");
             WriteErrorsAndFailures(result);
             Console.WriteLine();
         }
@@ -98,26 +102,32 @@ namespace NUnit.ConsoleRunner
                     string resultState = result.Attributes["result"].Value;
                     if (resultState == "Failed" || resultState == "Error" || resultState == "Cancelled")
                         WriteSingleResult(result);
-                    break;
+                    return;
 
                 case "test-run":
-                case "test-suite":
-                    //string resultState = result.Attributes["result"].Value;
-                    //if (resultState == "Failed" || resultState == "Error")
-                    //    WriteSingleResult(result);
+                    break;
 
-                    // TODO: Display failures in fixture setup or teardown
-                    foreach (XmlNode childResult in result.ChildNodes)
-                        WriteErrorsAndFailures(childResult);
+                case "test-suite":
+                    string resultType = result.Attributes["type"].Value;
+                    if (resultType == "Theory")
+                    {
+                        resultState = result.Attributes["result"].Value;
+                        if (resultState == "Failed")
+                            WriteSingleResult(result);
+                    }
                     break;
             }
+
+            // TODO: Display failures in fixture setup or teardown
+            foreach (XmlNode childResult in result.ChildNodes)
+                WriteErrorsAndFailures(childResult);
         }
 
 
         public void WriteNotRunReport()
         {
             this.reportIndex = 0;
-            Console.WriteLine("Tests Not Run:");
+            Console.WriteLine("Tests Not Run -");
             WriteNotRunResults(result);
             Console.WriteLine();
         }

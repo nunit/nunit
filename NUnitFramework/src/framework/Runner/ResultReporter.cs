@@ -65,7 +65,8 @@ namespace NUnitLite.Runner
         {
             PrintSummaryReport();
 
-            if (summary.FailureCount > 0 || summary.ErrorCount > 0)
+            if (this.result.ResultState.Status == TestStatus.Failed)
+            //if (summary.FailureCount > 0 || summary.ErrorCount > 0)
                 PrintErrorReport();
 
             if (summary.NotRunCount > 0)
@@ -80,13 +81,16 @@ namespace NUnitLite.Runner
         /// </summary>
         public void PrintSummaryReport()
         {
+            writer.WriteLine();
+            writer.WriteLine("Test Run Result -");
+            writer.WriteLine("   Overall result: {0}", result.ResultState);
             writer.WriteLine(
-                "Tests run: {0}, Passed: {1}, Errors: {2}, Failures: {3}, Inconclusive: {4}",
+                "   Tests run: {0}, Passed: {1}, Errors: {2}, Failures: {3}, Inconclusive: {4}",
                 summary.TestCount, summary.PassCount, summary.ErrorCount, summary.FailureCount, summary.InconclusiveCount);
             writer.WriteLine(
-                "  Not run: {0}, Invalid: {1}, Ignored: {2}, Skipped: {3}",
+                "     Not run: {0}, Invalid: {1}, Ignored: {2}, Skipped: {3}",
                 summary.NotRunCount, summary.InvalidCount, summary.IgnoreCount, summary.SkipCount);
-            writer.WriteLine("Elapsed time: {0}", result.Duration);
+            writer.WriteLine("   Elapsed time: {0}", result.Duration);
         }
 
         /// <summary>
@@ -96,7 +100,7 @@ namespace NUnitLite.Runner
         {
             reportCount = 0;
             writer.WriteLine();
-            writer.WriteLine("Errors and Failures:");
+            writer.WriteLine("Errors and Failures -");
             PrintErrorResults(this.result);
         }
 
@@ -107,7 +111,7 @@ namespace NUnitLite.Runner
         {
             reportCount = 0;
             writer.WriteLine();
-            writer.WriteLine("Tests Not Run:");
+            writer.WriteLine("Tests Not Run -");
             PrintNotRunResults(this.result);
         }
 
@@ -117,7 +121,7 @@ namespace NUnitLite.Runner
         public void PrintFullReport()
         {
             writer.WriteLine();
-            writer.WriteLine("All Test Results:");
+            writer.WriteLine("All Test Results -");
             PrintAllResults(this.result, " ");
         }
 
@@ -125,13 +129,18 @@ namespace NUnitLite.Runner
 
         private void PrintErrorResults(ITestResult result)
         {
-            if (result.ResultState.Status == TestStatus.Failed)
-                if (!result.HasChildren)
-                    WriteSingleResult(result);
+            if (result.Test.IsSuite)
+            {
+                var suite = result.Test as TestSuite;
+                if (suite.TestType == "Theory")
+                    if (result.ResultState.Status == TestStatus.Failed)
+                        WriteSingleResult(result);
 
-            if (result.HasChildren)
                 foreach (ITestResult childResult in result.Children)
                     PrintErrorResults(childResult);
+            }
+            else if (result.ResultState.Status == TestStatus.Failed)
+                WriteSingleResult(result);
         }
 
         private void PrintNotRunResults(ITestResult result)
