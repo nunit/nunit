@@ -224,7 +224,8 @@ namespace NUnit.Framework.Constraints
             Assert.That(al, Is.Ordered.By("Value"));
         }
 
-        class OrderedByTestClass
+        // Public to avoid a MethodAccessException under CF 2.0
+        public class OrderedByTestClass
         {
             private int myValue;
 
