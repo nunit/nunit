@@ -94,7 +94,7 @@ namespace NUnit.Framework.Attributes
             SquareRootTest(d);
         }
 
-        [Theory]
+        [Theory, Explicit("Used to demonstrate display of failing Theory")]
         public void SquareRootWithAllBadValues(
             [Values(-12.0, -4.0, -9.0)] double d)
         {
