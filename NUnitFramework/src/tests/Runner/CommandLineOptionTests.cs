@@ -82,6 +82,7 @@ namespace NUnitLite.Runner.Tests
         }
 
         [Test]
+        [Platform(Exclude = "Mono", Reason = "No Exception thrown on bad path under Mono. Test should be revised.")]
         public void TestExploreOptionWithBadFileName()
         {
             options.Parse("-explore=MyFile*.xml");
@@ -106,6 +107,7 @@ namespace NUnitLite.Runner.Tests
         }
 
         [Test]
+        [Platform(Exclude = "Mono", Reason = "No Exception thrown on bad path under Mono. Test should be revised.")]
         public void TestResultOptionWithBadFileName()
         {
             options.Parse("-result=MyResult*.xml");
@@ -164,6 +166,7 @@ namespace NUnitLite.Runner.Tests
         }
 
         [Test]
+        [Platform(Exclude = "Mono", Reason = "No Exception thrown on bad path under Mono. Test should be revised.")]
         public void TestOutOptionWithBadFileName()
         {
             options.Parse("-out=my*file.txt");
