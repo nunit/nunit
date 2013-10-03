@@ -29,6 +29,7 @@ namespace NUnit.Framework.TestHarness
     public class ResultReporter
     {
         XmlNode result;
+        string testRunResult;
         ResultSummary summary;
 
         int reportIndex = 0;
@@ -36,6 +37,7 @@ namespace NUnit.Framework.TestHarness
         public ResultReporter(XmlNode result)
         {
             this.result = result;
+            this.testRunResult = result.Attributes["result"].Value;
             this.summary = new ResultSummary(result);
         }
 
@@ -47,7 +49,8 @@ namespace NUnit.Framework.TestHarness
         {
             WriteSummaryReport();
 
-            if (summary.ErrorsAndFailures > 0)
+            if (testRunResult == "Failed" || testRunResult == "Error")
+            //if (summary.ErrorsAndFailures > 0)
                 WriteErrorsAndFailuresReport();
 
             if (summary.TestsNotRun > 0)
@@ -57,6 +60,9 @@ namespace NUnit.Framework.TestHarness
         private void WriteSummaryReport()
         {
             Console.WriteLine();
+            Console.WriteLine("Test Run Summary -");
+            Console.WriteLine(
+                "   Overall result: {0}", testRunResult);
             Console.WriteLine(
                 "   Tests run: {0}, Errors: {1}, Failures: {2}, Inconclusive: {3}",
                 summary.TestsRun, summary.Errors, summary.Failures, summary.Inconclusive);
@@ -71,7 +77,7 @@ namespace NUnit.Framework.TestHarness
         private void WriteErrorsAndFailuresReport()
         {
             this.reportIndex = 0;
-            Console.WriteLine("Errors and Failures:");
+            Console.WriteLine("Errors and Failures -");
             WriteErrorsAndFailures(result);
             Console.WriteLine();
         }
@@ -86,6 +92,17 @@ namespace NUnit.Framework.TestHarness
             }
             else
             {
+                if (result.Name == "test-suite")
+                {
+                    string resultType = result.Attributes["type"].Value;
+                    if (resultType == "Theory")
+                    {
+                        string resultState = result.Attributes["result"].Value;
+                        if (resultState == "Failed")
+                            WriteSingleResult(result);
+                    }
+                }
+
                 foreach (XmlNode childResult in result.ChildNodes)
                     WriteErrorsAndFailures(childResult);
             }
@@ -95,7 +112,7 @@ namespace NUnit.Framework.TestHarness
         public void WriteNotRunReport()
         {
             this.reportIndex = 0;
-            Console.WriteLine("Tests Not Run:");
+            Console.WriteLine("Tests Not Run -");
             WriteNotRunResults(result);
             Console.WriteLine();
         }
