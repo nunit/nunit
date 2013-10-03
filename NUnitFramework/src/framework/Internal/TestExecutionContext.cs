@@ -224,7 +224,14 @@ namespace NUnit.Framework.Internal
 
                 return current; 
 #else
-                return CallContext.GetData(CONTEXT_KEY) as TestExecutionContext;
+                var context = CallContext.GetData(CONTEXT_KEY) as TestExecutionContext;
+                if (context == null) // This can happen on Mono
+                {
+                    context = new TestExecutionContext();
+                    CallContext.SetData(CONTEXT_KEY, context);
+                }
+
+                return context;
 #endif
             }
             private set 
