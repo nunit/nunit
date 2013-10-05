@@ -3,25 +3,12 @@
 
 <description>
 **************************************************************************
-* This script is used to build, deploy, test and package NUnit.          * 
-*                                                                        *
-* In order to test the console, engine and framework together, they      *
-* are all built using .NET 3.5. This is not the normal build used for    *
-* packaging the engine, so it must also be tested using under .NET 1.1   *
-* using its own build script. The framework must be tested under all     *
-* the runtimes it supports using its own build script.                   *
-*                                                                        *
-* The actual building and deployment steps are delegated to the scripts  *
-* for the individual components: Framework and Console.                  *
-*                                                                        *
-* Dependencies:                                                          *
-*                                                                        *
-*   The individual component source projects must be available. The      *
-*   following scripts are invoked:                                       *
-*        NUnitConsole.build                                              *
-*        NUnitFramework.build                                            *
-*                                                                        *
-*   The script requires the NAnt 0.91 release or a later version.        *
+* This script is used to build, deploy, test and package the NUnit       *
+* framework, test engine and console runner. The framework and console   *
+* projects are separate, so this script calls each of those scripts in   *
+* order to build the software and then copies it to a common deployment  *
+* directory to combine the components. The engine is built as a part of  *
+* the console project.                                                   *
 *                                                                        *
 *   To build the windows installer, you must be running on Windows.      *
 *   WiX 3.0 and the WiX tasks for NAnt are required. For a standard WiX  *
@@ -62,49 +49,32 @@
          installed framework found is the default for builds. 
          The first .NET and Mono frameworks found are the
          respective net and mono defaults. -->
-  <!--<property name="supported.frameworks" 
-    value="net-4.0,net-3.5,net-2.0,mono-4.0,mono-3.5,mono-2.0,netcf-3.5,netcf-2.0,netcf-1.0"/>-->
-  <!-- Temporarily remove support for compact framework -->
   <property name="supported.frameworks" 
-    value="net-4.0,net-3.5,net-2.0,mono-4.0,mono-3.5,mono-2.0"/>
+    value="net-4.5,net-4.0,net-3.5,net-2.0,mono-4.0,mono-3.5,mono-2.0,silverlight-5.0,netcf-3.5,netcf-2.0"/>
 
-  <!-- Set default warning level for compiles -->
-  <property name="warn" value="4" unless="${property::exists('warn')}"/>
-
+	<property name="standard.packages" value="std,with-tests,mono"/>
+  
 <!-- ***************************************************************** -->
 <!-- *********          Define Project Directories           ********* -->
 <!-- ***************************************************************** -->
 
-  <!-- Project base dir is nant project base dir -->
   <property name="project.base.dir"
     value="${project::get-base-directory()}"/>
-
-  <!-- Other directories are derived from base dir -->
-  <property name="project.build.dir" 
-    value="${path::combine(project.base.dir,'build')}"/>
   <property name="project.package.dir" 
     value="${path::combine(project.base.dir,'package')}"/>
-  <property name="project.src.dir"
-    value="${path::combine(project.base.dir, 'src')}"/>
-  <property name="project.doc.dir"
-    value="${path::combine(project.base.dir,'doc')}"/>
-  <property name="project.samples.dir"
-    value="${path::combine(project.base.dir,'samples')}"/>
   <property name="project.tools.dir"
     value="${path::combine(project.base.dir,'tools')}"/>
-  <property name="project.lib.dir"
-    value="${path::combine(project.base.dir,'lib')}"/>
   <property name="project.install.dir"
     value="${path::combine(project.base.dir, 'install')}"/>
   <property name="common.deploy.dir"
     value="${path::combine(project.base.dir, 'deploy')}"/>
 
 
-<!-- ***************************************************************** -->
-<!-- *********         Define Packaging Directories          ********* -->
-<!-- ***************************************************************** -->
+	<!-- ***************************************************************** -->
+	<!-- *********         Define Packaging Directories          ********* -->
+	<!-- ***************************************************************** -->
 
-  <property name="package.working.dir" 
+	<property name="package.working.dir" 
     value="${path::combine(project.package.dir,package.name)}"/>
   <property name="package.bin.dir" 
     value="${path::combine(package.working.dir,'bin')}"/>
@@ -121,41 +91,43 @@
   <property name="package.install.dir"
     value="${path::combine(package.working.dir,'install')}"/>
 
+	<!-- ***************************************************************** -->
+	<!-- *********         Define Component Directories          ********* -->
+	<!-- ***************************************************************** -->
+
+	<property name="framework.project.dir"
+			  value="${path::combine(project.base.dir, 'NUnitFramework')}"/>
+	<property name="console.project.dir"
+			  value="${path::combine(project.base.dir, 'NUnitConsole')}"/>
+	<property name="framework.build.dir"
+			  value="${path::combine(framework.project.dir, 'build')}"/>
+	<property name="console.build.dir"
+			  value="${path::combine(console.project.dir, 'build')}"/>
+
 <!-- ***************************************************************** -->
 <!-- *********        Set Default Build Configuration        ********* -->
 <!-- ***************************************************************** -->
 
   <call target="set-debug-build-config"/>
 
-<!-- ***************************************************************** -->
-<!-- *********       Set Default Runtime Configuration       ********* -->
-<!-- ***************************************************************** -->
+	<!-- ***************************************************************** -->
+	<!-- *********       Set List of Available Frameworks        ********* -->
+	<!-- ***************************************************************** -->
 
-  <foreach item="String" delim="," 
-      property="framework" in="${supported.frameworks}">
+	<foreach item="String" delim=","
+		property="framework" in="${supported.frameworks}">
 
-    <!-- NOTE: sdk-exists causes an error if the framework is not installed! -->
-    <if test="${framework::exists( framework )}">
-    <if test="${framework::sdk-exists( framework )}">
-      <property name="installed.frameworks" value="${installed.frameworks},${framework}"
-        if="${property::exists('installed.frameworks')}"/>
-      <property name="installed.frameworks" value="${framework}"
-        unless="${property::exists('installed.frameworks')}"/>
-      <property name="default.runtime" value="${framework}"
-        unless="${property::exists('default.runtime')}"/>
-      <property name="default.net.runtime" value="${framework}"
-        if="${string::starts-with(framework,'net')}"
-        unless="${property::exists('default.net.runtime')}"/>
-      <property name="default.mono.runtime" value="${framework}"
-        if="${string::starts-with(framework,'mono')}"
-        unless="${property::exists('default.mono.runtime')}"/>
-    </if>
-    </if>
-
-  </foreach>
-
-  <property name="runtime.config" value="${default.runtime}"/>
- 
+		<!-- NOTE: sdk-exists causes an error if the framework is not installed! -->
+		<if test="${framework::exists( framework )}">
+			<if test="${framework::sdk-exists( framework )}">
+				<property name="installed.frameworks" value="${installed.frameworks},${framework}"
+				  if="${property::exists('installed.frameworks')}"/>
+				<property name="installed.frameworks" value="${framework}"
+				  unless="${property::exists('installed.frameworks')}"/>
+			</if>
+		</if>
+	</foreach>
+		
 <!-- ***************************************************************** -->
 <!-- In the optional local.settings.include file, installations may    -->
 <!-- set properties to override the location of external tools.        -->
@@ -179,7 +151,7 @@
 <!-- ***************************************************************** -->
 
   <target name="clean"
-      description="Removes output created by the current build config">
+      description="Remove all builds for current config">
 
     <nant target="clean-all" buildfile="NUnitFramework/NUnitFramework.build" />
     <nant target="clean" buildfile="NUnitConsole/NUnitConsole.build" />
@@ -197,18 +169,11 @@
 <!-- ***              Targets that perform builds                  *** -->
 <!-- ***************************************************************** -->
 
-  <target name="build" depends="framework,console"
-    description="Build everything, for current config" />
+  <target name="build"
+    description="Build framework, engine and console for current config">
 
-  <target name="framework" description="Build the NUnit Framework and update references">
-
-    <nant target="build-all" buildfile="NUnitFramework/NUnitFramework.build" />
-
-  </target>
-
-  <target name="console" description="Build the Console Runner">
-
-    <nant target="build" buildfile="NUnitConsole/NUnitConsole.build" />
+    <nant target="build-all" buildfile="${framework.project.dir}/NUnitFramework.build" />
+    <nant target="build" buildfile="${console.project.dir}/NUnitConsole.build" />
 
   </target>
 
@@ -216,70 +181,106 @@
 <!-- ***           Deploy the Build to a common directory          *** -->
 <!-- ***************************************************************** -->
 
-  <target name="deploy"
-    description="Deploy the build to a common directory">
+	<target name="deploy" depends="build"
+	  description="Copy builds for current config to the deploy directory">
 
-    <delete dir="${common.deploy.dir}" 
-      if="${directory::exists( common.deploy.dir )}"/>
+		<delete dir="${common.deploy.dir}"
+		  if="${directory::exists( common.deploy.dir )}"/>
 
-    <nant target="deploy-all" buildfile="NUnitFramework/NUnitFramework.build"/>
-    <nant target="deploy" buildfile="NUnitConsole/NUnitConsole.build"/>
+		<copy todir="${common.deploy.dir}">
+			<fileset basedir="${framework.build.dir}/${build.config}">
+				<include name="**/*"/>
+			</fileset>
+		</copy>
 
-    <copy file="NUnitShipTests.nunit"
-      tofile="${common.deploy.dir}/NUnitTests.nunit"/>
+		<copy todir="${common.deploy.dir}">
+			<fileset basedir="${console.build.dir}/${build.config}">
+				<include name="**/*"/>
+			</fileset>
+		</copy>
 
-    <copy file="${common.deploy.dir}/net-2.0/mock-assembly.dll"
-      tofile="${common.deploy.dir}/mock-assembly.dll"/>
-
-  </target>
-
+	</target>
+	  
 <!-- ***************************************************************** -->
 <!-- ***                 Targets for running tests                 *** -->
 <!-- ***************************************************************** -->
 
-  <target name="test" depends="deploy"
-    description="Build and run tests for the selected config">
+	<target name="test" depends="deploy,test-console, test-engine, test-framework"
+	  description="Build and run tests for the selected config"/>
 
-    <echo message="*"/>
-    <echo message="* Testing the nunit-console ${build.config} build"/>
-    <echo message="*"/>
+	<target name="test-console">
+		<echo message="*"/>
+		<echo message="* Testing the nunit-console ${build.config} build"/>
+		<echo message="*"/>
 
-    <property name="nant.settings.currentframework" value="net-2.0"/>
+		<property name="nant.settings.currentframework" value="net-2.0"/>
 
-    <exec basedir="${common.deploy.dir}"
-          workingdir="${common.deploy.dir}"
-          program="nunit-console.exe"
-          managed="Auto"
-          commandline="nunit-console.tests.dll" />
+		<exec basedir="${common.deploy.dir}"
+			  workingdir="${common.deploy.dir}"
+			  program="nunit-console.exe"
+			  managed="Auto"
+			  failonerror="false"
+			  commandline="nunit-console.tests.dll --work=TestResults --result=nunit-console.tests.xml" />
 
-    <echo message="*"/>
-    <echo message="* Testing the NUnitEngine ${build.config} build"/>
-    <echo message="*"/>
+	</target>
 
-    <exec basedir="${common.deploy.dir}"
-          workingdir="${common.deploy.dir}"
-          program="nunit-console.exe"
-          commandline="nunit.engine.tests.dll" />
+	<target name="test-engine">
 
+		<echo message="*"/>
+		<echo message="* Testing the NUnitEngine ${build.config} build"/>
+		<echo message="*"/>
 
-    <foreach item="String" delim="," 
-        property="framework" in="${installed.frameworks}">
+		<exec basedir="${common.deploy.dir}"
+			  workingdir="${common.deploy.dir}"
+			  program="nunit-console.exe"
+			  managed="auto"
+			  failonerror="false"
+			  commandline="nunit.engine.tests.dll --work=TestResults --result=nunit.engine.tests.xml" />
 
+	</target>
 
-        <echo message="*"/>
-        <echo message="* Testing the NUnitFramework ${framework} ${build.config} build"/>
-        <echo message="*"/>
+	<target name="test-framework">
 
-        <exec basedir="${common.deploy.dir}"
-              workingdir="${common.deploy.dir}/${framework}"
-              program="nunit-console.exe"
-              commandline="nunit.framework.tests.dll" />
+		<foreach item="String" delim=","
+			property="framework" in="${installed.frameworks}">
 
-    </foreach>
+			<property name="nant.settings.currentframework" value="${framework}"/>
+			
+			<property name="family" value="${framework::get-family(framework)}"/>
 
-  </target>
+			<if test="${family=='net' or family=='mono'}">
+				
+				<echo message="*"/>
+				<echo message="* Testing the NUnitFramework ${framework} ${build.config} build"/>
+				<echo message="*"/>
 
-  <target name="test-coverage" depends="build"
+				<exec basedir="${common.deploy.dir}"
+					  workingdir="${common.deploy.dir}/${framework}"
+					  program="nunit-console.exe"
+					  managed="strict"
+					  failonerror="false"
+					  commandline="nunit.framework.tests.dll --work=../TestResults --result=nunit.framework.tests-${framework}.xml" />
+
+			</if>
+
+			<echo message="*"/>
+			<echo message="* Testing the NUnitLite ${framework} ${build.config} build"/>
+			<echo message="*"/>
+
+			<!--Note that we need an absolute path for the xml result when running on netcf-->
+			<exec basedir="${common.deploy.dir}/${framework}"
+				  workingdir="${common.deploy.dir}/${framework}"
+				  program="nunitlite.tests.exe"
+				  managed="strict"
+				  failonerror="false"
+				  commandline="-result=${common.deploy.dir}/TestResults/nunitlite.tests-${framework}.xml" />
+
+		</foreach>
+	
+	</target>
+
+	<!-- NYI-->
+  <!--<target name="test-coverage" depends="build"
     description="Run tests under PartCover to get coverage results">
 
     <echo message="*"/>
@@ -287,7 +288,7 @@
     <echo message="*"/>
 
     <property name="partcover.commandline"
-      value='--target direct-runner.exe --target-args "${nunit.commandline}" --include [nunit.framework]* --output TestCoverage-${nant.settings.currentframework}.xml'/>
+      value='-target direct-runner.exe -target-args "${nunit.commandline}" -include [nunit.framework]* -output TestCoverage-${nant.settings.currentframework}.xml'/>
 
     <exec basedir="${partcover.dir}"
           workingdir="${current.build.dir}" 
@@ -295,49 +296,7 @@
           managed="strict"
 	  commandline="${partcover.commandline}" />
 
-  </target>
-
-  <target name="test-all"
-      description="Build and test all runtimes for current config">
-
-    <foreach item="String" delim="," 
-        property="framework" in="${installed.frameworks}">
-
-      <call target="set-${framework}-runtime-config"/>
-      <call target="test" />
-
-    </foreach>
-
-  </target>
-
-<!-- ***************************************************************** -->
-<!-- *       Build the NUnit samples - not part of normal build    *** -->
-<!-- ***************************************************************** -->
-
-  <!--
-  <property name="samples.bin.dir"
-    value="${path::combine(project.samples.dir, 'bin')}"/>
-
-  <target name="clean-samples" description="Removes the samples build directory">
-    <delete dir="${samples.bin.dir}" />
-  </target>
-
-  <target name="build-samples" depends="build"
-     description="Build the NUnit samples">
-    
-    <mkdir dir="${samples.bin.dir}" unless="${directory::exists(samples.bin.dir)}" />
-
-    <copy todir="${samples.bin.dir}"
-      file="${path::combine(current.build.dir,'nunit.framework.dll')}" />
-    <copy todir="${samples.bin.dir}"
-      file="${path::combine(current.build.dir,'nunit.core.dll')}" />
-
-    <nant target="build">
-      <buildfiles refid="sample.buildfiles" />
-    </nant>
-
-  </target>
-  -->
+  </target>-->
 
 <!-- ***************************************************************** -->
 <!-- ***         Targets for packaging the NUnit distribution      *** -->
@@ -347,8 +306,6 @@
       description="Create all the standard packages for distribution">
       
     <call target="package-src"/>
-
-    <call target="package-docs"/>
 
     <foreach item="String" delim="," 
         property="package.config" in="${standard.packages}">
@@ -369,7 +326,7 @@
       description="Create a package using the current or default config">
 
     <call target="create-zip"/>
-    <call target="create-msi" if="${create.msi}"/>
+    <!--<call target="create-msi" if="${create.msi}"/>-->
 
   </target>
 
@@ -384,8 +341,9 @@
 <!-- ***                   Package as an msi                       *** -->
 <!-- ***************************************************************** -->
 
-  <target name="package-msi" depends="build-install-image,create-msi" 
-    description="Build standard msi file and deploy it to the package dir"/>
+	<!-- NYI -->
+  <!--<target name="package-msi" depends="build-install-image,create-msi" 
+    description="Build standard msi file and deploy it to the package dir"/>-->
 
 <!-- ***************************************************************** -->
 <!-- ***          Create zip from existing install image           *** -->
@@ -393,12 +351,8 @@
 
   <target name="create-zip">
 
-    <property name="zip.file.name" 
-      value="${package.name}-${package.config}${build.suffix}"
-      unless="${package.config==default.package.config}"/>
-    <property name="zip.file.name" 
-      value="${package.name}${build.suffix}"
-      if="${package.config==default.package.config}"/>
+	  <property name="zip.file.name"
+		value="${package.name}${package.suffix}${build.suffix}"/>
 
     <zip ziplevel="9"
         zipfile="${project.package.dir}/${zip.file.name}.zip">
@@ -413,13 +367,14 @@
 <!-- ***          Create msi from existing install image           *** -->
 <!-- ***************************************************************** -->
 
-  <target name="create-msi">
+	<!-- NYI -->
+  <!--<target name="create-msi">
   
     <fail message="MSI can only be built on the Win32 platform" 
       unless="${platform::is-windows()}"/>
 
-    <!--<fail message="MSI can only be built for a Microsoft runtime" 
-      unless="${runtime.platform=='net'}"/>-->
+    <fail message="MSI can only be built for a Microsoft runtime" 
+      unless="${runtime.platform=='net'}"/>
 
     <fail unless="${property::exists('wix.dir')}">
 Unable to locate your WiX installation. Installing WiX normally sets
@@ -461,7 +416,7 @@ to the correct location.
       </sources>
     </light>
 
-  </target>
+  </target>-->
 
 <!-- ***************************************************************** -->
 <!-- ***                  Package source files                     *** -->
@@ -470,11 +425,9 @@ to the correct location.
   <target name="package-src" depends="clean-package-dir"
     description="Create full source package for developer use">
 
-    <call target="copy-docs"/>
-    <!--<call target="copy-samples"/>-->
-    <call target="copy-src"/>
+    <!--<call target="copy-docs"/>-->
 
-    <copy file="LICENSE.txt" todir="${package.working.dir}" />
+    <call target="copy-src"/>
 
     <zip  ziplevel="9"
         zipfile="${project.package.dir}/${package.name}-src.zip">
@@ -485,24 +438,6 @@ to the correct location.
   </target>
 
 <!-- ***************************************************************** -->
-<!-- ***                      Package docs                         *** -->
-<!-- ***************************************************************** -->
-
-  <target name="package-docs" depends="clean-package-dir"
-      description="Create a zip of the docs only">
-
-    <call target="copy-docs"/>
-
-    <zip ziplevel="9"
-        zipfile="${project.package.dir}/${package.name}-docs.zip">
-      <fileset basedir="${package.working.dir}" prefix="${package.name}">
-        <include name="**"/>
-      </fileset>
-    </zip>
-    
-  </target>
-  
-<!-- ***************************************************************** -->
 <!-- ***            Helper targets used for packaging              *** -->
 <!-- ***************************************************************** -->
 
@@ -510,104 +445,67 @@ to the correct location.
 <!-- ***            Build install image for a package              *** -->
 <!-- ***************************************************************** -->
 
-  <target name="build-install-image" depends="clean-package-dir">
+	<target name="build-install-image" depends="clean-package-dir">
 
-    <call target="copy-top-level-files" />
+		<copy todir="${package.working.dir}">
+			<fileset basedir="${project.base.dir}">
+				<include name="LICENSE.txt"/>
+				<include name="NOTICES.txt"/>
+				<include name="CHANGES.txt"/>
+			</fileset>
+		</copy>
 
-    <foreach item="String" delim="+"
-      property="runtime" in="${package.runtimes}">
+		<copy todir="${package.bin.dir}">
+			<fileset basedir="${common.deploy.dir}">
+				<include name="nunit-console.exe"/>
+				<include name="nunit-console.pdb"/>
+				<include name="nunit-console.config"/>
+				<include name="nunit-agent.exe"/>
+				<include name="nunit-agent.pdb"/>
+				<include name="nunit-agent.config"/>
+				<include name="nunit.engine.dll"/>
+				<include name="nunit.engine.pdb"/>
+				<include name="nunit.engine.api.dll"/>
+				<include name="nunit.engine.api.pdb"/>
+				<include name="nunit.engine.api.xml"/>
+				<include name="nunit-console.tests.dll" if="${package.with.tests}"/>
+				<include name="nunit-console.tests.pdb" if="${package.with.tests}"/>
+				<include name="nunit.engine.tests.dll" if="${package.with.tests}"/>
+				<include name="nunit.engine.tests.pdb" if="${package.with.tests}"/>
+				<include name="nunit.framework.dll" if="${package.with.tests}"/>
+				<include name="mock-assembly.dll" if="${package.with.tests}"/>
+				<include name="TextSummary.xslt" if="${package.with.tests}"/>
+				<include name="NUnit2TestResult.xsd" if="${package.with.tests}"/>
+			</fileset>
+		</copy>
 
-      <if test="${framework::exists( runtime )}">
-        <if test="${framework::sdk-exists( runtime )}">
-          <call target="set-${runtime}-runtime-config"/>
-          <call target="copy-bins" />
-        </if>
-      </if>
-    </foreach>
+		<foreach item="String" delim="+"
+		  property="runtime" in="${package.runtimes}">
 
-    <call target="copy-docs" />
-    <!--<call target="copy-samples" />-->
+			<copy todir="${package.bin.dir}/${runtime}">
+				<fileset basedir="${common.deploy.dir}/${runtime}">
+					<include name="nunit.framework.dll"/>
+					<include name="nunit.framework.pdb"/>
+					<include name="nunit.framework.xml"/>
+					<include name="nunit.framework.tests.dll" if="${package.with.tests}"/>
+					<include name="nunit.framework.tests.pdb" if="${package.with.tests}"/>
+					<include name="nunit.testdata.dll" if="${package.with.tests}"/>
+					<include name="nunit.testdata.pdb" if="${package.with.tests}"/>
+					<include name="nunitlite.dll"/>
+					<include name="nunitlite.pdb"/>
+					<include name="nunitlite.xml"/>
+					<include name="nunitlite.tests.exe" if="${package.with.tests}"/>
+					<include name="nunitlite.tests.pdb" if="${package.with.tests}"/>
+					<include name="nunitlite.testdata.dll" if="${package.with.tests}"/>
+					<include name="nunitlite.testdata.pdb" if="${package.with.tests}"/>
+					<include name="mock-assembly.dll" if="${package.with.tests}"/>
+					<include name="mock-assembly.pdb" if="${package.with.tests}"/>
+				</fileset>
+			</copy>
+			
+		</foreach>
 
-  </target>
-
-  <target name="copy-top-level-files">
-
-    <copy todir="${package.working.dir}">
-      <fileset>
-        <include name="LICENSE.txt"/>
-        <include name="NOTICES.txt"/>
-      </fileset>
-    </copy>
-
-  </target>
-
-<!-- ***************************************************************** -->
-<!-- ***           Copy a set of binaries for a package            *** -->
-<!-- ***************************************************************** -->
-
-  <target name="copy-bins" depends="build">
-
-    <mkdir dir="${package.bin.dir}"/>
-    <copy todir="${package.bin.dir}/${runtime.config}">
-      <fileset basedir="${current.build.dir}">
-        <include name="*.dll"/>
-        <include name="*.exe"/>
-        <include name="*.pdb"/>
-        <include name="nunit.framework.xml"/>
-        <include name="nunitlite.xml"/>
-      </fileset>
-    </copy>
-
-  </target>
-  
-<!-- ***************************************************************** -->
-<!-- ***           Copy the documentation for a package            *** -->
-<!-- ***************************************************************** -->
-
-  <target name="copy-docs">
-    <mkdir dir="${package.doc.dir}"/>
-    <copy todir="${package.doc.dir}">
-      <fileset basedir="${project.doc.dir}">
-        <include name="*.html"/>
-	<include name="nunit.css"/>
-        <include name="codeFuncs.js"/>
-        <include name="favicon.ico"/>
-	<include name="files/*"/>
-	<include name="img/*"/>
-        <exclude name="img/thumbs.db"/>
-      </fileset>
-    </copy>
-  </target>
-
-<!-- ***************************************************************** -->
-<!-- ***            Copy sample programs for a package             *** -->
-<!-- ***************************************************************** -->
-
-<!--
-  <target name="copy-samples">
-
-    <mkdir dir="${package.samples.dir}"/>
-
-    <copy todir="${package.samples.dir}">
-      <fileset basedir="${project.samples.dir}">
-        <include name="ReadMe.txt" />
-        <include name="samples.common" />
-        <include name="csharp/CSharp.sln" />
-        <include name="jsharp/jsharp.sln" />
-        <include name="vb/vb-samples.sln" />
-        <include name="cpp/managed/managed-cpp.sln" />
-        <include name="cpp/cpp-cli/cpp-cli.sln" />
-        <include name="Extensibility/Core/CoreExtensibility.sln" />
-        <include name="Extensibility/Core/Install.bat" />
-      </fileset>
-    </copy>
-
-    <nant target="package">
-      <buildfiles refid="sample.buildfiles"  failonerror="true" />
-    </nant>
-
-  </target>
--->
+	</target>
 
 <!-- ***************************************************************** -->
 <!-- ***            Copy the source code for a package             *** -->
@@ -619,6 +517,7 @@ to the correct location.
       <fileset basedir="${project.base.dir}">
         <include name="BUILDING.txt"/>
         <include name="LICENSE.txt"/>
+		  <include name="CHANGES.txt"/>
         <include name="nant"/>
         <include name="nant.bat"/>
         <include name="NOTICES.txt"/>
@@ -628,12 +527,6 @@ to the correct location.
         <include name="nunit.sln"/>
         <include name="NUnitTests.nunit"/>
         <include name="src/CommonAssemblyInfo.cs"/>
-        <include name="install/NUnit.Installer.sln"/>
-        <include name="install/NUnit.Framework.Installer/*.wixproj"/>
-        <include name="install/NUnit.Framework.Installer/*.wxs"/>
-        <include name="install/NUnit.Framework.Installer/*.wxi"/>
-        <include name="install/NUnit.Framework.Installer/*.bmp"/>
-        <include name="install/NUnit.Framework.Installer/License.rtf"/>
         <include name="tools/**/*"/>
       </fileset>
     </copy>
@@ -677,6 +570,38 @@ to the correct location.
 	dynamic="true"/>
     <property name="build.suffix" value=""/>
   </target>
+
+<!-- ***************************************************************** -->
+<!-- ***    Targets for setting the package configuration          *** -->
+<!-- ***************************************************************** -->
+
+	<target name="set-package-config">
+		<call target="set-${package.config}-package-config"/>
+	</target>
+
+	<target name="set-std-package-config">
+		<property name="package.config" value="std"/>
+		<property name="package.runtimes" value="net-4.5+net-4.0+net-3.5+net-2.0+netcf-3.5+netcf-2.0+silverlight-5.0"/>
+		<property name="package.suffix" value=""/>
+		<property name="package.with.tests" value="false"/>
+		<property name="create.msi" value="${platform::is-windows()}"/>
+	</target>
+
+	<target name="set-with-tests-package-config">
+		<property name="package.config" value="std"/>
+		<property name="package.runtimes" value="net-4.5+net-4.0+net-3.5+net-2.0+netcf-3.5+netcf-2.0+silverlight-5.0"/>
+		<property name="package.suffix" value="-with-tests"/>
+		<property name="package.with.tests" value="true"/>
+		<property name="create.msi" value="${platform::is-windows()}"/>
+	</target>
+
+	<target name="set-mono-package-config">
+		<property name="package.config" value="mono"/>
+		<property name="package.runtimes" value="mono-4.0+mono-3.5+mono-2.0"/>
+		<property name="package.suffix" value="-mono"/>
+		<property name="package.with.tests" value="false"/>
+		<property name="create.msi" value="false"/>
+	</target>
 
 <!-- ***************************************************************** -->
 <!-- ****** Patternsets and Filesets Used by Various Targets  ******** -->

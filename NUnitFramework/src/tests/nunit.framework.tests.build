@@ -44,6 +44,8 @@
         <include name="TestText2.txt"/>
         <include name="nunit.framework.tests.build"/>
         <include name="nunitlite.tests.build"/>
+		  <include name="App.xaml"/>
+		  <include name="Properties/*.xml"/>
       </fileset>
     </copy>
   </target>

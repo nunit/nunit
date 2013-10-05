@@ -46,11 +46,8 @@
        The first .NET and Mono frameworks found are the
        respective net and mono defaults. -->
   <property name="supported.frameworks" 
-    value="net-4.5,net-4.0,net-3.5,net-2.0,mono-4.0,mono-3.5,mono-2.0,netcf-3.5,netcf-2.0,sl-5.0"/>
-  <!-- Temporarily disable compact framework builds -->
-  <!--<property name="supported.frameworks" 
-    value="net-4.5,net-4.0,net-3.5,net-2.0,mono-4.0,mono-3.5,mono-2.0"/>-->
-
+    value="net-4.5,net-4.0,net-3.5,net-2.0,mono-4.0,mono-3.5,mono-2.0,netcf-3.5,netcf-2.0,silverlight-5.0"/>
+  
   <!-- Set default warning level for compiles -->
   <property name="warn" value="4" unless="${property::exists('warn')}"/>
 
@@ -115,7 +112,7 @@
 
     <!-- NOTE: sdk-exists causes an error if framework is not installed! -->
     <if test="${framework::exists( framework )}">
-    <if test="${framework::sdk-exists( framework )}">
+    <if test="${framework::get-family( framework ) == 'silverlight' or framework::sdk-exists( framework )}">
       <property name="installed.frameworks" value="${installed.frameworks},${framework}"
         if="${property::exists('installed.frameworks')}"/>
       <property name="installed.frameworks" value="${framework}"
@@ -415,35 +412,6 @@
   </target>
 
 <!-- ***************************************************************** -->
-<!-- *       Build the NUnit samples - not part of normal build    *** -->
-<!-- ***************************************************************** -->
-
-  <!--
-  <property name="samples.bin.dir"
-    value="${path::combine(project.samples.dir, 'bin')}"/>
-
-  <target name="clean-samples" description="Removes the samples build directory">
-    <delete dir="${samples.bin.dir}" />
-  </target>
-
-  <target name="build-samples" depends="build"
-     description="Build the NUnit samples">
-    
-    <mkdir dir="${samples.bin.dir}" unless="${directory::exists(samples.bin.dir)}" />
-
-    <copy todir="${samples.bin.dir}"
-      file="${path::combine(current.build.dir,'nunit.framework.dll')}" />
-    <copy todir="${samples.bin.dir}"
-      file="${path::combine(current.build.dir,'nunit.core.dll')}" />
-
-    <nant target="build">
-      <buildfiles refid="sample.buildfiles" />
-    </nant>
-
-  </target>
-  -->
-
-<!-- ***************************************************************** -->
 <!-- ***         Targets for packaging the NUnit distribution      *** -->
 <!-- ***************************************************************** -->
 
@@ -456,14 +424,16 @@
     <call target="package-net"/>
     <call target="package-mono"/>
     <call target="package-netcf"/>
+	  <call target="package-silverlight"/>
+	  <call target="package-full"/>
 
   </target>
 
   <target name="package-net"
       description="Create the .NET binary package">
 
-    <property name="package.config" value=""/>
-    <property name="package.runtimes" value="net-4.0+net-3.5+net-2.0"/>
+    <property name="package.config" value="-net"/>
+    <property name="package.runtimes" value="net-4.5+net-4.0+net-3.5+net-2.0"/>
 
     <call target="package"/>
 
@@ -473,7 +443,7 @@
       description="Create the mono binary package">
 
     <property name="package.config" value="-mono"/>
-    <property name="package.runtimes" value="mono-3.5+mono-2.0+mono-1.0"/>
+    <property name="package.runtimes" value="mono-4.0+mono-3.5+mono-2.0"/>
 
     <call target="package"/>
 
@@ -483,11 +453,31 @@
       description="Create the netcf binary package">
 
     <property name="package.config" value="-netcf"/>
-    <property name="package.runtimes" value="netcf-3.5+netcf-2.0+netcf-1.0"/>
+    <property name="package.runtimes" value="netcf-3.5+netcf-2.0"/>
 
     <call target="package"/>
 
   </target>
+
+	<target name="package-silverlight"
+		description="Create the silverlight binary package">
+
+		<property name="package.config" value="-silverlight"/>
+		<property name="package.runtimes" value="silverlight-5.0"/>
+
+		<call target="package"/>
+
+	</target>
+
+	<target name="package-full"
+		description="Create the netcf binary package">
+
+		<property name="package.config" value=""/>
+		<property name="package.runtimes" value="net-4.5+net-4.0+net-3.5+net-2.0+silverlight-5.0+netcf-3.5+netcf-2.0"/>
+
+		<call target="package"/>
+
+	</target>
 
 <!-- ***************************************************************** -->
 <!-- ***   Package Using the Currently Selected Package Config     *** -->
@@ -586,7 +576,7 @@
       property="runtime" in="${package.runtimes}">
 
       <if test="${framework::exists( runtime )}">
-        <if test="${framework::sdk-exists( runtime )}">
+        <if test="${runtime=='silverlight-5.0' or framework::sdk-exists( runtime )}">
           <call target="set-${runtime}-runtime-config"/>
           <call target="copy-bins" />
         </if>
@@ -607,6 +597,7 @@
     <mkdir dir="${package.bin.dir}"/>
     <copy todir="${package.bin.dir}/${runtime.config}">
       <fileset basedir="${current.build.dir}">
+		  <include name="mock-assembly.*" />
         <include name="nunit.*" />
         <include name="nunitlite.*" />
         <include name="test-harness.*" />
@@ -633,36 +624,6 @@
       </fileset>
     </copy>
   </target>
-
-<!-- ***************************************************************** -->
-<!-- ***            Copy sample programs for a package             *** -->
-<!-- ***************************************************************** -->
-
-<!--
-  <target name="copy-samples">
-
-    <mkdir dir="${package.samples.dir}"/>
-
-    <copy todir="${package.samples.dir}">
-      <fileset basedir="${project.samples.dir}">
-        <include name="ReadMe.txt" />
-        <include name="samples.common" />
-        <include name="csharp/CSharp.sln" />
-        <include name="jsharp/jsharp.sln" />
-        <include name="vb/vb-samples.sln" />
-        <include name="cpp/managed/managed-cpp.sln" />
-        <include name="cpp/cpp-cli/cpp-cli.sln" />
-        <include name="Extensibility/Core/CoreExtensibility.sln" />
-        <include name="Extensibility/Core/Install.bat" />
-      </fileset>
-    </copy>
-
-    <nant target="package">
-      <buildfiles refid="sample.buildfiles"  failonerror="true" />
-    </nant>
-
-  </target>
--->
 
 <!-- ***************************************************************** -->
 <!-- ***            Copy the source code for a package             *** -->
