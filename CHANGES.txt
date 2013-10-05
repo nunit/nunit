@@ -82,6 +82,12 @@ Bug Fixes
  * 1221712 	When non-existing test method is specified in -test, result is still "Tests run: 1, Passed: 1"
  * 1223294 	System.NullReferenceException thrown when ExpectedExceptionAttribute is used in a static class
  * 1225542 	Standardize commandline options for test harness
+
+Bug Fixes in 2.9.6 But Not Listed Here in the Release
+ * 541699	Silverlight Support
+ * 1222148	/framework switch does not recognize net-4.5
+ * 1228979	Theories with all test cases inconclusive are not reported as failures
+
 	
 NUnit 2.9.5 - July 30, 2010
 
