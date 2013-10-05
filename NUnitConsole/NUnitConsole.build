@@ -5,12 +5,13 @@
 **************************************************************************
 * This script is used to build the NUnit Console runner and tests.       *
 *                                                                        *
-* Dependencies:                                                          *      
+* Dependencies:                                                          *   
 *                                                                        *
 *   Building the runner requires at least .NET 3.5 but it runs under     *
 *   .NET 2.0 or greater.                                                 *
 *                                                                        *
-*   The script requires the NAnt 0.90 release or a later version.        *
+*   The script requires the NAnt 0.92 release with the config file       *
+*   modified in order to run run tests under .NET 4.5.                   *
 *                                                                        *
 *   PartCover is required to run the 'test-coverage' target.             *
 *                                                                        *
@@ -25,7 +26,7 @@
   <property name="project.name" value="NUnitConsole"/>
 
   <!-- NUnit Package Version - Three digits -->
-  <property name="package.version" value="2.9.5"/>
+  <property name="package.version" value="2.9.6"/>
 
   <!-- Package Configuration (Release, Alpha, Beta, etc.) -->
   <property name="package.configuration" value=""/>
@@ -96,7 +97,7 @@
   <property name="can.build.mono"
   value="${framework::exists('mono-3.5') and framework::sdk-exists('mono-3.5')}"/>
 
-  <fail message="Either the net-3.5 or mono-3.5 runtime is required"
+  <fail message="Either the net-3.5 or mono-3.5 runtime is required to build nunit-console"
       unless="${can.build.net or can.build.mono}" />
 
   <property name="nant.settings.currentframework" value= "net-3.5"
@@ -104,6 +105,14 @@
 
   <property name="nant.settings.currentframework" value= "mono-3.5"
       unless="${can.build.net}" />
+
+<!-- ***************************************************************** -->
+<!-- ***     Location of the NUnitFramework project, If Present    *** -->
+<!-- ***            Override in local.settings.include)           *** -->
+<!-- ***************************************************************** -->
+
+	<property name="framework.project.dir"
+		value="${path::combine(project.base.dir, '../NUnitFramework')}"/>
 
 <!-- ***************************************************************** -->
 <!-- *********      Constants used for running tests      ************ -->
@@ -119,7 +128,10 @@
 
 <!-- ***************************************************************** -->
 <!-- In the optional local.settings.include file, installations may    -->
-<!-- set properties to override the location of external tools.        -->
+<!-- set properties to override the location of external tools,        -->
+<!-- the nunit framework assembly, directories, etc.                   -->
+<!--                                                                   -->
+<!-- Copy and edit local.settings.include.template if needed           -->
 <!-- ***************************************************************** -->
 
   <include buildfile="local.settings.include" failonerror="false"/>
@@ -140,7 +152,7 @@
 <!-- ***************************************************************** -->
 
   <target name="clean-all"
-      description="Removes all build output">
+      description="Removes both Debug and Release build output">
       
     <delete dir="${project.build.dir}"
       if="${directory::exists( project.build.dir )}"/>
@@ -166,10 +178,14 @@
 <!-- ***                  Build the Console Runner                 *** -->
 <!-- ***************************************************************** -->
 
-  <target name="build" description="Build nunit-console">
+  <target name="build"
+		  description="Build nunit-console">
 
     <mkdir dir="${current.build.dir}"
       unless="${directory::exists(current.build.dir)}"/>
+
+	  <call target="update-lib-dir"
+			if="${property::exists('auto.update.lib.dir') and auto.update.lib.dir}"/>
 
     <copy todir="${current.build.dir}">
       <fileset basedir="${project.lib.dir}">
@@ -182,6 +198,28 @@
     </nant>
 
   </target>
+
+	<!-- Update framework directories from the last .NET 2.0 or Mono 2.0
+		release build. Note that this looks at builds done with NAnt, 
+		not Visual Studio. -->
+	<target name="update-lib-dir"
+			description="Update lib dir with latest framework build">
+
+		<property name="runtime" value="net-2.0" if="${can.build.net}"/>
+		<property name="runtime" value="mono-2.0" unless="${can.build.net}"/>
+		
+		<if test="${property::exists('framework.project.dir')}">
+			<if test="${directory::exists(framework.project.dir)}">
+				<copy todir="${project.lib.dir}">
+					<fileset basedir="${framework.project.dir}/bin/Release/${runtime}">
+						<include name="nunit.framework.dll"/>
+						<include name="mock-assembly.dll"/>
+					</fileset>
+				</copy>
+			</if>
+		</if>
+		
+	</target>
 
 <!-- ***************************************************************** -->
 <!-- ***                      Run Tests                            *** -->
@@ -374,6 +412,7 @@
         <include name="CommonAssemblyInfo.cs"/>
         <include name="*.sln"/>
         <include name="lib/*"/>
+		  <include name="local.settings.include.sample"/>
       </fileset>
     </copy>
 

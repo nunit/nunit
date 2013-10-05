@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<project name="NUnitConsole" default="build" basedir=".">
+	<!-- ***************************************************************** -->
+	<!-- In the optional local.settings.include file, installations may    -->
+	<!-- set properties to override the location of external tools,        -->
+	<!-- the nunit framework assembly, directories, etc.                   -->
+	<!--                                                                   -->
+	<!-- Do not modify this template when you add local settings, since    -->
+	<!-- it is stored in our source code repository and used by all devs.  -->
+	<!-- Instead, copy this file to 'local.settings.include' and make      -->
+	<!-- changes as needed for your installation.                          -->
+	<!--                                                                   -->
+	<!-- In addition to the properties shown, you may change any that are  -->
+	<!-- set in the NUnitConsole.build file before this file is included,  -->
+	<!-- so long as your changes are consistent.                           -->
+	<!-- ***************************************************************** -->
+
+	<!-- Location of the Tools directory. -->
+	<property name="project.tools.dir"
+		value="${path::combine(project.base.dir, '../tools'}"/>
+
+	<!-- Location of the NUnitFramework project, if present.          -->
+	<!-- This property must have a valid value set in order to use    -->
+	<!-- the update-lib-dir target.                                   -->
+	<property name="framework.project.dir"
+		value="${path::combine(project.base.dir, '../NUnitFramework'}"/>
+
+	<!-- Uncomment the following line to automatically update the     -->
+	<!-- framework assemblies in the lib directory before each build. -->
+	<!-- This can be convenient if you need to switch back and forth  -->
+	<!-- frequently between the framework and console projects.       -->
+	<!--                                                              -->
+	<!-- WARNING: You should not be doing this in most cases. It is   -->
+	<!-- usually best to get a feature working in the framework first -->
+	<!-- and only then add code needed to access it from the console. -->
+	<!--<property name ="auto.update.lib.dir" value="true"/>-->
+</project>

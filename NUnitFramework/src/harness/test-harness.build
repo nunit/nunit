@@ -23,9 +23,10 @@
   <target name="package">
     <copy todir="${package.src.dir}/harness">
       <fileset>
-        <include name="direct-runner.build"/>
+        <include name="test-harness.build"/>
         <include name="*.csproj"/>
         <include name="*.cs"/>
+		  <include name="Tests/*.cs"/>
       </fileset>
     </copy>
   </target>
