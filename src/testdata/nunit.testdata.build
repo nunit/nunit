@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<project name="TestData" default="build" basedir=".">
+
+  <target name="build">
+    <csc target="library" 
+        output="${current.build.dir}/nunit.testdata.dll"
+        debug="${build.debug}" 
+        define="${build.defines}"
+        warninglevel="${warn}">
+      <sources basedir=".">
+        <include name="*.cs"/>
+      </sources>
+      <references basedir="${current.build.dir}">
+        <include name="nunit.framework.dll"/>
+        <include name="nunit.interfaces.dll"/>
+      </references>
+    </csc>
+  </target>
+
+  <target name="package">
+    <copy todir="${package.src.dir}/testdata">
+      <fileset>
+        <include name="*.cs"/>
+        <include name="*.csproj"/>
+        <include name="nunit.testdata.build"/>
+        <include name="nunitlite.testdata.build"/>
+      </fileset>
+    </copy>
+  </target>
+
+</project>
