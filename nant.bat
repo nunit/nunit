@@ -1,2 +1,2 @@
-..\tools\nant\bin\nant.exe %*
+tools\nant\bin\NAnt.exe %*
 
