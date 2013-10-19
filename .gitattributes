@@ -1,0 +1,7 @@
+# Normalize line endings
+* text=auto
+
+
+# Prevent files from being exported
+.gitattributes export-ignore
+.gitignore     export-ignore
