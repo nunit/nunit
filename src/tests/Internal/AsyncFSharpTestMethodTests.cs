@@ -24,15 +24,15 @@ namespace NUnit.Framework.Internal
         {
             get
             {
-                yield return new object[] { Method("async int success"), ResultState.Success, 0 };
+                //yield return new object[] { Method("async int success"), ResultState.Success, 0 };
                 yield return new object[] { Method("async unit success"), ResultState.Success, 0 };
-                yield return new object[] { Method("async tailcall success"), ResultState.Success, 0 };
-                yield return new object[] { Method("async single true assert success"), ResultState.Success, 1 };
-                yield return new object[] { Method("async multiple asserts success"), ResultState.Success, 2 };
-                yield return new object[] { Method("calling into async code success"), ResultState.Success, 0 };
+                //yield return new object[] { Method("async tailcall success"), ResultState.Success, 0 };
+                //yield return new object[] { Method("async single true assert success"), ResultState.Success, 1 };
+                //yield return new object[] { Method("async multiple asserts success"), ResultState.Success, 2 };
+                //yield return new object[] { Method("calling into async code success"), ResultState.Success, 0 };
 
-                yield return new object[] { Method("when throwing exception fails"), ResultState.Failure, 0 };
-                yield return new object[] { Method("async single false assert failure"), ResultState.Failure, 1 };
+                //yield return new object[] { Method("when throwing exception fails"), ResultState.Failure, 0 };
+                //yield return new object[] { Method("async single false assert failure"), ResultState.Failure, 1 };
             }
         }
 
@@ -43,7 +43,8 @@ namespace NUnit.Framework.Internal
             var test = _builder.BuildFrom(method);
             var result = TestBuilder.RunTest(test, _testObject);
 
-            Assert.That(result.ResultState, Is.EqualTo(resultState), "Wrong result state");
+            Assert.That(result.ResultState, Is.EqualTo(resultState),
+                string.Format("Wrong result state; message: {0}", result.Message));
             Assert.That(result.AssertCount, Is.EqualTo(assertionCount), "Wrong assertion count");
         }
 

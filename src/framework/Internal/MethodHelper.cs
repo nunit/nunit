@@ -213,14 +213,22 @@ namespace NUnit.Framework.Internal
 
 #if NET_4_5
         /// <summary>
+        /// Checks whether the method is an asynchronous F# method and therefore
+        /// returning something in the FSharpAsync&lt;T&gt; or FSharpAsync type.
+        /// </summary>
+        public static bool IsFSharpAsyncMethod(MethodInfo method)
+        {
+            return method.ReturnType.GetGenericTypeDefinition() == typeof (FSharpAsync<>);
+        }
+
+        /// <summary>
         /// Returns true if the method specified by the argument
         /// is an async method.
         /// </summary>
         public static bool IsAsyncMethod(MethodInfo method)
         {
             return method.IsDefined(typeof(System.Runtime.CompilerServices.AsyncStateMachineAttribute))
-                || method.ReturnType.GetGenericTypeDefinition() == typeof(FSharpAsync<>)
-                || method.ReturnType.GetGenericTypeDefinition() == typeof(FSharpAsync);
+                || IsFSharpAsyncMethod(method);
         }
 #endif
     }
