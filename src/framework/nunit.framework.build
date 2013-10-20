@@ -8,7 +8,7 @@
         doc="${current.build.dir}/nunit.framework.xml"
         debug="${build.debug}" 
         define="${build.defines}"
-        keyfile="../../../nunit.snk"
+        keyfile="../../nunit.snk"
         warninglevel="${warn}">
       <nowarn>
         <warning number="1699" if="${runtime.version=='2.0'}"/>
