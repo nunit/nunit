@@ -24,6 +24,7 @@
 using System;
 using System.Reflection;
 using System.Text;
+using Microsoft.FSharp.Control;
 
 namespace NUnit.Framework.Internal
 {
@@ -217,7 +218,9 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public static bool IsAsyncMethod(MethodInfo method)
         {
-            return method.IsDefined(typeof(System.Runtime.CompilerServices.AsyncStateMachineAttribute));
+            return method.IsDefined(typeof(System.Runtime.CompilerServices.AsyncStateMachineAttribute))
+                || method.ReturnType.GetGenericTypeDefinition() == typeof(FSharpAsync<>)
+                || method.ReturnType.GetGenericTypeDefinition() == typeof(FSharpAsync);
         }
 #endif
     }
