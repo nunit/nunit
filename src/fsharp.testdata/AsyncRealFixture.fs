@@ -8,7 +8,7 @@ let [<TestCase(ExpectedResult = 1)>] ``async int success`` () =
 let [<Test>] ``async unit success`` () =
   async { return () }
 
-let rec [<Test>] ``async tailcall success`` left =
+let rec [<TestCase([| 5 |])>] ``async tailcall success`` left =
   async {
     if left = 0 then return ()
     else return! ``async tailcall success`` (left - 1) }

@@ -261,6 +261,7 @@ namespace NUnit.Framework.Internal
 
         internal bool RequiresThread { get; set; }
 
+        // TODO: is never assigned
         internal bool IsAsynchronous { get; set; }
 
         #endregion

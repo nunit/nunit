@@ -23,7 +23,6 @@
 
 using System;
 using System.Reflection;
-using Microsoft.FSharp.Control;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Extensibility;
@@ -305,8 +304,7 @@ namespace NUnit.Framework.Internal.Builders
             }
 
             Type returnType = testMethod.Method.ReturnType;
-            if (returnType.Equals(typeof(void))
-                || returnType.Equals(typeof(FSharpAsync<Microsoft.FSharp.Core.Unit>)))
+            if (returnType.Equals(typeof(void)))
             {
                 if (parms != null && parms.HasExpectedResult)
                     return MarkAsNotRunnable(testMethod, "Method returning void cannot have an expected result");
@@ -316,14 +314,14 @@ namespace NUnit.Framework.Internal.Builders
 #if NET_4_5
                 if (MethodHelper.IsAsyncMethod(testMethod.Method))
                 {
-                    bool returnsGenericTask = returnType.IsGenericType 
+                    bool returnsValWrapper = returnType.IsGenericType
                         && (returnType.GetGenericTypeDefinition() == typeof(Task<>)
-                            || returnType.GetGenericTypeDefinition() == typeof(FSharpAsync<>));
+                           || returnType != typeof(Microsoft.FSharp.Control.FSharpAsync<Microsoft.FSharp.Core.Unit>));
 
-                    if (returnsGenericTask && (parms == null || !parms.HasExpectedResult && !parms.ExceptionExpected))
-                        return MarkAsNotRunnable(testMethod, "Async test method must have Task or void return type when no result is expected");
+                    if (returnsValWrapper && (parms == null || !parms.HasExpectedResult && !parms.ExceptionExpected))
+                        return MarkAsNotRunnable(testMethod, "Async test method must have Task or void (C#) or async<unit> (F#) return type when no result is expected");
                     
-                    if (!returnsGenericTask && parms != null && parms.HasExpectedResult)
+                    if (!returnsValWrapper && parms != null && parms.HasExpectedResult)
                         return MarkAsNotRunnable(testMethod, "Async test method must have Task<T> return type when a result is expected");
                 }
                 else

@@ -24,8 +24,6 @@
 using System;
 using System.Reflection;
 using System.Threading;
-using Microsoft.FSharp.Control;
-using Microsoft.FSharp.Core;
 using NUnit.Framework.Interfaces;
 
 
@@ -97,12 +95,13 @@ namespace NUnit.Framework.Internal.Commands
                 var parameters = new[]
                     {
                         res,
-                        //FSharpOption<int>.Some(context.TestCaseTimeout),
-                        FSharpOption<CancellationToken>.None,
-                        FSharpOption<CancellationToken>.None
+                        context.TestCaseTimeout > 0
+                            ? Microsoft.FSharp.Core.FSharpOption<int>.Some(context.TestCaseTimeout)
+                            : Microsoft.FSharp.Core.FSharpOption<int>.None,
+                        Microsoft.FSharp.Core.FSharpOption<CancellationToken>.None
                     };
 
-                return typeof (FSharpAsync)
+                return typeof (Microsoft.FSharp.Control.FSharpAsync)
                     .GetMethod("RunSynchronously")
                     .MakeGenericMethod(
                         testMethod.Method.ReturnType.GenericTypeArguments)

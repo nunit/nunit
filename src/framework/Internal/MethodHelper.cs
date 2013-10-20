@@ -24,7 +24,6 @@
 using System;
 using System.Reflection;
 using System.Text;
-using Microsoft.FSharp.Control;
 
 namespace NUnit.Framework.Internal
 {
@@ -218,7 +217,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public static bool IsFSharpAsyncMethod(MethodInfo method)
         {
-            return method.ReturnType.GetGenericTypeDefinition() == typeof (FSharpAsync<>);
+            return method.ReturnType.GetGenericTypeDefinition() == typeof(Microsoft.FSharp.Control.FSharpAsync<>);
         }
 
         /// <summary>
