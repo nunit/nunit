@@ -12,7 +12,7 @@
         doc="${current.build.dir}/nunit.engine.api.xml"
         debug="${build.debug}" 
         define="${build.defines}"
-        keyfile="../../../nunit.snk"
+        keyfile="../../nunit.snk"
         warninglevel="${warn}">
       <sources basedir=".">
         <include name="../CommonAssemblyInfo.cs" />
