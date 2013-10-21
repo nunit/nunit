@@ -469,6 +469,7 @@
 
   <fileset id="console.buildfiles">
 
+	<include name="src/mock-assembly/mock-assembly.build" />
 	<include name="src/nunit.engine.api/nunit.engine.api.build" />
 	<include name="src/nunit.engine/nunit.engine.build" />
 	<include name="src/nunit.engine.tests/nunit.engine.tests.build" />

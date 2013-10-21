@@ -2,7 +2,7 @@
 using System.IO;
 using NUnit.Framework;
 using NUnit.Engine.Services;
-using NUnit.Tests.Assemblies;
+using NUnit.Engine.Tests.Assemblies;
 
 namespace NUnit.Engine.Tests
 {
