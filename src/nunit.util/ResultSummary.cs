@@ -23,9 +23,8 @@
 
 using System;
 using System.Xml;
-using NUnit.Engine;
 
-namespace NUnit.ConsoleRunner
+namespace NUnit.Util
 {
     /// <summary>
     /// Summary description for ResultSummary.

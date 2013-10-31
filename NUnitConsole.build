@@ -124,7 +124,7 @@
   <property name="nunit.console.program"
     value="nunit-console.exe"/>
   <property name="nunit.console.args"
-    value="nunit-console.tests.dll nunit.engine.tests.dll -config:${build.config} ${nunit.options}"/>
+    value="nunit-console.tests.dll nunit.engine.tests.dll nunit.util.tests.dll -config:${build.config} ${nunit.options}"/>
 
 <!-- ***************************************************************** -->
 <!-- In the optional local.settings.include file, installations may    -->
@@ -473,6 +473,8 @@
 	<include name="src/nunit.engine.api/nunit.engine.api.build" />
 	<include name="src/nunit.engine/nunit.engine.build" />
 	<include name="src/nunit.engine.tests/nunit.engine.tests.build" />
+	<include name="src/nunit.util/nunit.util.build" />
+	<include name="src/nunit.util.tests/nunit.util.tests.build" />
 	<include name="src/nunit-agent/nunit-agent.build" />
 	<include name="src/nunit-console/nunit-console.build" />
     <include name="src/nunit-console.tests/nunit-console.tests.build" />

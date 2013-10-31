@@ -24,11 +24,11 @@
 namespace NUnit.ConsoleRunner
 {
 	using System;
-    using System.Diagnostics;
     using System.IO;
     using System.Xml;
     using System.Text;
     using NUnit.Engine;
+    using NUnit.Util;
 	
 	/// <summary>
 	/// ConsoleRunner provides the nunit-console text-based

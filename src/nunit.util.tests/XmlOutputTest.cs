@@ -10,7 +10,7 @@ using Builder = NUnit.Framework.Internal.DefaultTestAssemblyBuilder;
 using TestListener = NUnit.Framework.Internal.TestListener;
 using TestFilter = NUnit.Framework.Internal.TestFilter;
 
-namespace NUnit.ConsoleRunner.Tests
+namespace NUnit.Util.Tests
 {
     /// <summary>
     /// This is the abstract base for all XML output tests,

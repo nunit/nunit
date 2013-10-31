@@ -1,32 +1,26 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{0DE218CA-AFB8-423A-9CD2-E22DEAC55C46}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{58AB0272-1900-4CFF-BD43-175C46421696}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NUnit.ConsoleRunner</RootNamespace>
-    <AssemblyName>nunit-console</AssemblyName>
+    <RootNamespace>NUnit.Util</RootNamespace>
+    <AssemblyName>nunit.util</AssemblyName>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <FileUpgradeFlags>
-    </FileUpgradeFlags>
-    <OldToolsVersion>3.5</OldToolsVersion>
-    <UpgradeBackupLocation />
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\..\bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Externalconsole>true</Externalconsole>
-    <Commandlineparameters>nunit-console.tests.dll</Commandlineparameters>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -40,38 +34,32 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="nunit.framework">
-      <HintPath>..\..\lib\nunit.framework.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ConsoleOptions.cs" />
-    <Compile Include="ConsoleRunner.cs" />
-    <Compile Include="Program.cs" />
-    <Compile Include="TestEventHandler.cs" />
-    <Compile Include="TestNameParser.cs" />
-    <Compile Include="ResultReporter.cs" />
+    <Compile Include="IResultWriter.cs" />
+    <Compile Include="Options.cs" />
+    <Compile Include="OutputManager.cs" />
+    <Compile Include="OutputSpecification.cs" />
+    <Compile Include="OutputWriters\NUnit2XmlOutputWriter.cs" />
+    <Compile Include="OutputWriters\NUnit3XmlOutputWriter.cs" />
+    <Compile Include="OutputWriters\TestCaseOutputWriter.cs" />
+    <Compile Include="OutputWriters\XmlTransformOutputWriter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="App.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
-    <None Include="nunit-console.build" />
+    <Compile Include="ResultSummary.cs" />
+    <Compile Include="StackTraceFilter.cs" />
+    <Compile Include="TestFilterBuilder.cs" />
+    <Compile Include="XmlHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\nunit.engine.api\nunit.engine.api.csproj">
-      <Project>{775FAD50-3623-4922-97C4-DFB29A8BE4C7}</Project>
+      <Project>{775fad50-3623-4922-97c4-dfb29a8be4c7}</Project>
       <Name>nunit.engine.api</Name>
     </ProjectReference>
-    <ProjectReference Include="..\nunit.util\nunit.util.csproj">
-      <Project>{58ab0272-1900-4cff-bd43-175c46421696}</Project>
-      <Name>nunit.util</Name>
-    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="nunit.util.build" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

@@ -21,37 +21,39 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
-using System.Reflection;
+using System.IO;
 using System.Text;
 using System.Xml;
-using System.IO;
+using System.Xml.Xsl;
 
-namespace NUnit.ConsoleRunner
+namespace NUnit.Util
 {
-    /// <summary>
-    /// NUnit3XmlOutputWriter is responsible for writing the results
-    /// of a test to a file in NUnit 3.0 format.
-    /// </summary>
-    public class NUnit3XmlOutputWriter : IResultWriter
+    public class XmlTransformOutputWriter : IResultWriter
     {
-        public void WriteResultFile(XmlNode resultNode, string outputPath)
+        private string xsltFile;
+        private XslCompiledTransform transform = new XslCompiledTransform();
+
+        public XmlTransformOutputWriter(string xsltFile)
         {
-            using (StreamWriter writer = new StreamWriter(outputPath, false, Encoding.UTF8))
+            this.xsltFile = xsltFile;
+            transform.Load(xsltFile);
+        }
+
+        public void WriteResultFile(XmlNode result, TextWriter writer)
+        {
+            using (XmlTextWriter xmlWriter = new XmlTextWriter(writer))
             {
-                WriteResultFile(resultNode, writer);
+                xmlWriter.Formatting = Formatting.Indented;
+                transform.Transform(result, xmlWriter);
             }
         }
 
-        private void WriteResultFile(XmlNode resultNode, TextWriter writer)
+        public void WriteResultFile(XmlNode result, string outputPath)
         {
-            XmlWriterSettings settings = new XmlWriterSettings();
-            settings.Indent = true;
-
-            using (XmlWriter xmlWriter = XmlWriter.Create(writer, settings))
+            using (XmlTextWriter xmlWriter = new XmlTextWriter(outputPath, Encoding.Default))
             {
-                xmlWriter.WriteStartDocument(false);
-                resultNode.WriteTo(xmlWriter);
+                xmlWriter.Formatting = Formatting.Indented;
+                transform.Transform(result, xmlWriter);
             }
         }
     }

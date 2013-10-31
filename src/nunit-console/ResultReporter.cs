@@ -23,7 +23,7 @@
 
 using System;
 using System.Xml;
-using NUnit.Engine;
+using NUnit.Util;
 
 namespace NUnit.ConsoleRunner
 {

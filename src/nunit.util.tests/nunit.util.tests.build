@@ -1,17 +1,15 @@
 <?xml version="1.0"?>
-<project name="NUnit.Engine.Tests" default="build" basedir=".">
+<project name="NUnit.Util.Tests" default="build" basedir=".">
 
   <patternset id="source-files">
     <include name="*.cs" />
-    <include name="Api/*.cs" />
-    <include name="Internal/*.cs"/>
-    <include name="Services/*.cs"/>
+    <include name="Properties/*.cs" />
   </patternset>
 
   <target name="build">
 
     <csc target="library"
-        output="${current.build.dir}/nunit.engine.tests.dll"
+        output="${current.build.dir}/nunit.util.tests.dll"
         debug="${build.debug}" 
         define="${build.defines}"
         warninglevel="${warn}">
@@ -25,6 +23,7 @@
         <include name="nunit.framework.dll" />
         <include name="nunit.engine.dll" />
         <include name="nunit.engine.api.dll" />
+		  <include name="nunit.util.dll" />
         <include name="mock-assembly.dll" />
       </references>
     </csc>
@@ -32,7 +31,7 @@
   </target>
 
   <target name="package">
-    <copy todir="${package.src.dir}/nunit.engine.tests">
+    <copy todir="${package.src.dir}/nunit.util.tests">
       <fileset>
         <patternset refid="source-files" />
         <include name="*.build" />

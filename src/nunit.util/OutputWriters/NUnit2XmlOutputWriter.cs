@@ -29,7 +29,7 @@ using System.Text;
 using System.Xml;
 using System.IO;
 
-namespace NUnit.ConsoleRunner
+namespace NUnit.Util
 {
     public class NUnit2XmlOutputWriter : IResultWriter
     {

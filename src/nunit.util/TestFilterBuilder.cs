@@ -26,7 +26,7 @@ using System.Collections.Generic;
 using System.Text;
 using NUnit.Engine;
 
-namespace NUnit.ConsoleRunner
+namespace NUnit.Util
 {
     public class TestFilterBuilder
     {

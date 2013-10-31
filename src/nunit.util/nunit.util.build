@@ -1,42 +1,42 @@
 <?xml version="1.0"?>
-<project name="NUnit.Engine.Tests" default="build" basedir=".">
+<project name="NUnitUtil" default="build" basedir=".">
 
   <patternset id="source-files">
-    <include name="*.cs" />
-    <include name="Api/*.cs" />
-    <include name="Internal/*.cs"/>
-    <include name="Services/*.cs"/>
+	  <include name="*.cs" />
+    <include name="OutputWriters/*.cs"/>
+    <include name="Properties/*.cs" />
   </patternset>
 
   <target name="build">
 
     <csc target="library"
-        output="${current.build.dir}/nunit.engine.tests.dll"
+        output="${current.build.dir}/nunit.util.dll"
         debug="${build.debug}" 
         define="${build.defines}"
+        keyfile="../../nunit.snk"
         warninglevel="${warn}">
       <sources basedir=".">
         <include name="../CommonAssemblyInfo.cs" />
         <patternset refid="source-files" />
       </sources>
       <references basedir="${current.build.dir}">
+        <include name="System.Configuration.dll" />
         <include name="System.Drawing.dll" />
         <include name="System.Runtime.Remoting.dll" />
-        <include name="nunit.framework.dll" />
-        <include name="nunit.engine.dll" />
+        <include name="System.Web.dll" />
         <include name="nunit.engine.api.dll" />
-        <include name="mock-assembly.dll" />
       </references>
     </csc>
 
   </target>
 
   <target name="package">
-    <copy todir="${package.src.dir}/nunit.engine.tests">
+    <copy todir="${package.src.dir}/nunit.util">
       <fileset>
         <patternset refid="source-files" />
         <include name="*.build" />
         <include name="*.csproj" />
+        <include name="nunit.snk" />
       </fileset>
     </copy>
   </target>

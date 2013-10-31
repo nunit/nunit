@@ -27,6 +27,7 @@ using System.Reflection;
 using System.Text;
 using NUnit.Engine;
 using NUnit.Framework;
+using NUnit.Util;
 
 namespace NUnit.ConsoleRunner.Tests
 {

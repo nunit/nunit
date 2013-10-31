@@ -21,6 +21,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mock-assembly", "src\mock-assembly\mock-assembly.csproj", "{2E368281-3BA8-4050-B05E-0E0E43F8F446}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.util", "src\nunit.util\nunit.util.csproj", "{58AB0272-1900-4CFF-BD43-175C46421696}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.util.tests", "src\nunit.util.tests\nunit.util.tests.csproj", "{BD8F8BF9-EA14-4BA9-AA3B-93B45EF6AEC3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +59,14 @@ Global
 		{2E368281-3BA8-4050-B05E-0E0E43F8F446}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2E368281-3BA8-4050-B05E-0E0E43F8F446}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2E368281-3BA8-4050-B05E-0E0E43F8F446}.Release|Any CPU.Build.0 = Release|Any CPU
+		{58AB0272-1900-4CFF-BD43-175C46421696}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58AB0272-1900-4CFF-BD43-175C46421696}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{58AB0272-1900-4CFF-BD43-175C46421696}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58AB0272-1900-4CFF-BD43-175C46421696}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BD8F8BF9-EA14-4BA9-AA3B-93B45EF6AEC3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD8F8BF9-EA14-4BA9-AA3B-93B45EF6AEC3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD8F8BF9-EA14-4BA9-AA3B-93B45EF6AEC3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD8F8BF9-EA14-4BA9-AA3B-93B45EF6AEC3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

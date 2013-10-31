@@ -23,7 +23,7 @@
 
 using System;
 
-namespace NUnit.ConsoleRunner
+namespace NUnit.Util
 {
     public class OutputSpecification
     {

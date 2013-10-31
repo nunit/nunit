@@ -26,24 +26,15 @@ using System.Xml;
 using NUnit.Engine;
 using NUnit.Framework;
 
-namespace NUnit.ConsoleRunner.Tests
+namespace NUnit.Engine.Api.Tests
 {
-    public class TestFilterBuilderTests
+    public class TestFilterTests
     {
-        TestFilterBuilder builder;
-
-        [SetUp]
-        public void CreateBuilder()
-        {
-            this.builder = new TestFilterBuilder();
-        }
-
         [Test]
         public void EmptyFilter()
         {
-            TestFilter filter = builder.GetFilter();
-
-            Assert.That(filter.Text, Is.EqualTo("<filter></filter>"));
+            TestFilter filter = TestFilter.Empty;
+            Assert.That(filter.Text, Is.EqualTo("<filter/>"));
             Assert.That(filter.Xml.Name, Is.EqualTo("filter"));
             Assert.That(filter.Xml.ChildNodes.Count, Is.EqualTo(0));
         }
@@ -51,11 +42,9 @@ namespace NUnit.ConsoleRunner.Tests
         [Test]
         public void FilterWithOneTest()
         {
-            builder.Tests.Add("My.Test.Name");
-            TestFilter filter = builder.GetFilter();
-
-            string expectedText = "<filter><tests><test>My.Test.Name</test></tests></filter>";
-            Assert.That(filter.Text, Is.EqualTo(expectedText));
+            string text = "<filter><tests><test>My.Test.Name</test></tests></filter>";
+            TestFilter filter = new TestFilter(text);
+            Assert.That(filter.Text, Is.EqualTo(text));
             Assert.That(filter.Xml.Name, Is.EqualTo("filter"));
             Assert.That(filter.Xml.SelectSingleNode("tests/test").InnerText, Is.EqualTo("My.Test.Name"));
         }
@@ -63,13 +52,9 @@ namespace NUnit.ConsoleRunner.Tests
         [Test]
         public void FilterWithThreeTests()
         {
-            builder.Tests.Add("My.First.Test");
-            builder.Tests.Add("My.Second.Test");
-            builder.Tests.Add("My.Third.Test");
-            TestFilter filter = builder.GetFilter();
-
-            string expectedText = "<filter><tests><test>My.First.Test</test><test>My.Second.Test</test><test>My.Third.Test</test></tests></filter>";
-            Assert.That(filter.Text, Is.EqualTo(expectedText));
+            string text = "<filter><tests><test>My.First.Test</test><test>My.Second.Test</test><test>My.Third.Test</test></tests></filter>";
+            TestFilter filter = new TestFilter(text);
+            Assert.That(filter.Text, Is.EqualTo(text));
             Assert.That(filter.Xml.Name, Is.EqualTo("filter"));
             XmlNodeList testNodes = filter.Xml.SelectNodes("tests/test");
             Assert.That(testNodes.Count, Is.EqualTo(3));

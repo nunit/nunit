@@ -46,18 +46,8 @@
   <ItemGroup>
     <Compile Include="CommandLineTests.cs" />
     <Compile Include="MakeTestPackageTests.cs" />
-    <Compile Include="NUnit2XmlValidationTests.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="OutputSpecificationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SchemaValidator.cs" />
-    <Compile Include="TestFilterBuilderTests.cs" />
-    <Compile Include="TestFilterTests.cs" />
     <Compile Include="TestNameParserTests.cs" />
-    <Compile Include="XmlHelper.cs" />
-    <Compile Include="XmlOutputTest.cs" />
-    <Compile Include="XmlTransformOutputWriterTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="TextSummary.xslt">
@@ -75,12 +65,12 @@
       <Name>nunit-console</Name>
     </ProjectReference>
     <ProjectReference Include="..\nunit.engine.api\nunit.engine.api.csproj">
-      <Project>{775FAD50-3623-4922-97C4-DFB29A8BE4C7}</Project>
+      <Project>{775fad50-3623-4922-97c4-dfb29a8be4c7}</Project>
       <Name>nunit.engine.api</Name>
     </ProjectReference>
-    <ProjectReference Include="..\nunit.engine\nunit.engine.csproj">
-      <Project>{372a3447-d657-40ff-a089-77c19fec30c8}</Project>
-      <Name>nunit.engine</Name>
+    <ProjectReference Include="..\nunit.util\nunit.util.csproj">
+      <Project>{58ab0272-1900-4cff-bd43-175c46421696}</Project>
+      <Name>nunit.util</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
