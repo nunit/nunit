@@ -34,13 +34,6 @@
         <include name="nunit-console.exe"/>
       </references>
     </csc>
-
-    <copy todir="${current.build.dir}">
-      <fileset>
-        <include name="NUnit2TestResult.xsd"/>
-        <include name="TextSummary.xslt"/>
-      </fileset>
-    </copy>
   </target>
 
   <target name="package">
