@@ -84,11 +84,20 @@ namespace NUnit.Framework.Internal
         public static void CanGetRandomBool()
         {
             RandomGenerator r = new RandomGenerator(new Random().Next());
-            bool[] values = new bool[10];
-            for (int i = 0; i < 10; i++)
-                values[i] = r.GetBool();
-            Assert.That(values, Contains.Item(true));
-            Assert.That(values, Contains.Item(false));
+            var haveTrue = false;
+            var haveFalse = false;
+            var attempts = 0;
+            while (!haveTrue && !haveFalse)
+            {
+                if (attempts++ > 10000)
+                {
+                    Assert.Fail("No randomness in 10000 attempts");
+                }
+                if (r.GetBool())
+                    haveTrue = true;
+                else
+                    haveFalse = true;
+            }
         }
 
         public static void CanGetRandomBoolWithProbability()
