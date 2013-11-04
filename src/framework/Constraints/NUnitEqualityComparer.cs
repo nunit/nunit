@@ -169,6 +169,9 @@ namespace NUnit.Framework.Constraints
                 if (x is DateTime && y is DateTime)
                     return ((DateTime)x - (DateTime)y).Duration() <= amount;
 
+                if (x is DateTimeOffset && y is DateTimeOffset)
+                    return ((DateTimeOffset)x - (DateTimeOffset)y).Duration() <= amount;
+
                 if (x is TimeSpan && y is TimeSpan)
                     return ((TimeSpan)x - (TimeSpan)y).Duration() <= amount;
             }
