@@ -39,6 +39,7 @@ namespace NUnit.Framework
     {
         private readonly string sourceName;
         private readonly Type sourceType;
+        private object[] sourceConstructorParameters;
 
         /// <summary>
         /// Construct with the name of the method, property or field that will prvide data
@@ -54,10 +55,11 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="sourceType">The Type that will provide data</param>
         /// <param name="sourceName">The name of the method, property or field that will provide data</param>
-        public TestCaseSourceAttribute(Type sourceType, string sourceName)
+        public TestCaseSourceAttribute(Type sourceType, string sourceName, params object[] constructorParameters)
         {
             this.sourceType = sourceType;
             this.sourceName = sourceName;
+            this.sourceConstructorParameters = constructorParameters;
         }
         
         /// <summary>
@@ -170,7 +172,7 @@ namespace NUnit.Framework
 
             if (this.sourceName == null)
             {
-                return Reflect.Construct(sourceType) as IEnumerable;
+                return Reflect.Construct(sourceType, this.sourceConstructorParameters) as IEnumerable;
             }
 
             MemberInfo[] members = sourceType.GetMember(sourceName,
@@ -178,7 +180,7 @@ namespace NUnit.Framework
             if (members.Length == 1)
             {
                 MemberInfo member = members[0];
-                object sourceobject = Internal.Reflect.Construct(sourceType);
+                object sourceobject = Internal.Reflect.Construct(sourceType, this.sourceConstructorParameters);
                 switch (member.MemberType)
                 {
                     case MemberTypes.Field:
