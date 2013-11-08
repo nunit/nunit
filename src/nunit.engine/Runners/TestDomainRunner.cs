@@ -21,6 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using NUnit.Engine.Services;
+
 namespace NUnit.Engine.Runners
 {
     /// <summary>

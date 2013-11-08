@@ -26,20 +26,24 @@ using NUnit.Engine.Services;
 
 namespace NUnit.Engine
 {
-    public class ServiceContext
+    /// <summary>
+    /// The ServiceContext is used by services, runners and
+    /// external clients to locate the services they need through
+    /// the IServiceLocator interface.
+    /// 
+    /// For internal use by runners and other services, individual
+    /// properties are provided for common services as well.
+    /// </summary>
+    public class ServiceContext : IServiceLocator
     {
+        #region Service Properties
+
         #region ServiceManager
 
-        private IServiceManager serviceManager;
-        public IServiceManager ServiceManager
+        private ServiceManager serviceManager = new ServiceManager();
+        public ServiceManager ServiceManager
         {
-            get
-            {
-                if (serviceManager == null)
-                    serviceManager = new ServiceManager();
-
-                return serviceManager;
-            }
+            get { return serviceManager; }
         }
 
         #endregion
@@ -65,34 +69,20 @@ namespace NUnit.Engine
         private ISettings userSettings;
         public ISettings UserSettings
         {
-            get 
-            { 
-                if ( userSettings == null )
-                    userSettings = (ISettings)ServiceManager.GetService( typeof( ISettings ) );
+            get
+            {
+                if (userSettings == null)
+                    userSettings = (ISettings)ServiceManager.GetService(typeof(ISettings));
 
-        //        // Temporary fix needed to run TestDomain tests in test AppDomain
-        //        // TODO: Figure out how to set up the test domain correctly
-        //        if ( userSettings == null )
-        //            userSettings = new SettingsService();
+                //        // Temporary fix needed to run TestDomain tests in test AppDomain
+                //        // TODO: Figure out how to set up the test domain correctly
+                //        if ( userSettings == null )
+                //            userSettings = new SettingsService();
 
                 return userSettings;
             }
         }
 
-        #endregion
-
-        #region RecentFilesService
-        //        private static RecentFiles recentFiles;
-        //        public static RecentFiles RecentFiles
-        //        {
-        //            get
-        //            {
-        //                if ( recentFiles == null )
-        //                    recentFiles = (RecentFiles)ServiceManager.Services.GetService( typeof( RecentFiles ) );
-
-        //                return recentFiles;
-        //            }
-        //        }
         #endregion
 
         #region RuntimeFrameworkSelector
@@ -196,10 +186,30 @@ namespace NUnit.Engine
         }
         #endregion
 
+        #endregion
+
+        #region Add Method
+
         public void Add(IService service)
         {
             ServiceManager.AddService(service);
             service.ServiceContext = this;
         }
+
+        #endregion
+
+        #region IServiceLocator Explicit Implementation
+
+        T IServiceLocator.GetService<T>()
+        {
+            return ServiceManager.GetService(typeof(T)) as T;
+        }
+
+        object IServiceLocator.GetService(Type serviceType)
+        {
+            return ServiceManager.GetService(serviceType);
+        }
+
+        #endregion
     }
 }

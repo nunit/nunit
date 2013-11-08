@@ -100,10 +100,12 @@ namespace NUnit.Engine.Tests
 		{
             ServiceContext context = new ServiceContext();
             context.Add(new SettingsService());
-            context.Add(new DomainManager());
+            var domainManager = new DomainManager();
+            context.Add(domainManager);
+            context.ServiceManager.InitializeServices();
 
             string mockDll = MockAssembly.AssemblyPath;
-            AppDomainSetup setup = context.DomainManager.CreateAppDomainSetup(new TestPackage(mockDll));
+            AppDomainSetup setup = domainManager.CreateAppDomainSetup(new TestPackage(mockDll));
 
             Assert.That(setup.ApplicationName, Is.StringStarting("Tests_"));
 			Assert.That(setup.ApplicationBase, Is.SamePath(Path.GetDirectoryName(mockDll)), "ApplicationBase");

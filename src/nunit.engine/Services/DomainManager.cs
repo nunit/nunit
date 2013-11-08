@@ -106,8 +106,8 @@ namespace NUnit.Engine.Services
             	runnerDomain = AppDomain.CreateDomain(domainName, evidence, setup);
 			
             // Set PrincipalPolicy for the domain if called for in the settings
-            if ( ServiceContext.UserSettings.GetSetting("Options.TestLoader.SetPrincipalPolicy", false ))
-                runnerDomain.SetPrincipalPolicy((PrincipalPolicy)ServiceContext.UserSettings.GetSetting(
+                if (ServiceContext.UserSettings.GetSetting("Options.TestLoader.SetPrincipalPolicy", false))
+                    runnerDomain.SetPrincipalPolicy((PrincipalPolicy)ServiceContext.UserSettings.GetSetting(
                     "Options.TestLoader.PrincipalPolicy", PrincipalPolicy.UnauthenticatedPrincipal));
 
             //// HACK: Only pass down our AddinRegistry one level so that tests of NUnit
@@ -393,11 +393,8 @@ namespace NUnit.Engine.Services
             // TODO:  Add DomainManager.UnloadService implementation
         }
 
-		public void InitializeService()
-		{
-			// TODO:  Add DomainManager.InitializeService implementation
-		}
+		public void InitializeService() { }
 
-		#endregion
+        #endregion
 	}
 }

@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Api\ServiceLocatorTests.cs" />
     <Compile Include="Api\TestFilterTests.cs" />
     <Compile Include="Api\TestPackageTests.cs" />
     <Compile Include="AssemblyInfo.cs" />

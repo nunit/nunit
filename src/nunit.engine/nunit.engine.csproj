@@ -77,8 +77,6 @@
     <Compile Include="IProjectLoader.cs" />
     <Compile Include="IRuntimeFrameworkSelector.cs" />
     <Compile Include="IService.cs" />
-    <Compile Include="IServiceManager.cs" />
-    <Compile Include="ISettings.cs" />
     <Compile Include="ITestRunnerFactory.cs" />
     <Compile Include="NUnitFrameworkDriver.cs" />
     <Compile Include="Runners\AbstractTestRunner.cs" />

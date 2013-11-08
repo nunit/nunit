@@ -45,6 +45,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -52,6 +53,8 @@
     <Compile Include="ILogger.cs" />
     <Compile Include="ILogging.cs" />
     <Compile Include="InternalTraceLevel.cs" />
+    <Compile Include="IServiceLocator.cs" />
+    <Compile Include="ISettings.cs" />
     <Compile Include="ITestAgency.cs" />
     <Compile Include="ITestAgent.cs" />
     <Compile Include="ITestEngine.cs" />

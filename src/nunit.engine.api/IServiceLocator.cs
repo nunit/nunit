@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2011 Charlie Poole
+// Copyright (c) 2013 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -25,14 +25,22 @@ using System;
 
 namespace NUnit.Engine
 {
-    public interface IServiceManager
+    /// <summary>
+    /// IServiceLocator allows clients to locate any NUnit services
+    /// for which the interface is referenced. In normal use, this
+    /// linits it to those services using interfaces defined in the 
+    /// nunit.engine.api assembly.
+    /// </summary>
+    public interface IServiceLocator
     {
-        void AddService(IService service);
+        /// <summary>
+        /// Return a specified type of service
+        /// </summary>
+        T GetService<T>() where T : class;
 
-        IService GetService(Type serviceType);
-
-        void InitializeServices();
-
-        void StopAllServices();
+        /// <summary>
+        /// Return a specified type of service
+        /// </summary>
+        object GetService(Type serviceType);
     }
 }

@@ -31,20 +31,16 @@ namespace NUnit.Engine.Services
 	/// ServiceManager handles access to all services - global
     /// facilities shared by all instances of TestEngine.
 	/// </summary>
-	public class ServiceManager : IServiceManager
+	public class ServiceManager
 	{
         private List<IService> services = new List<IService>();
         private Dictionary<Type, IService> serviceIndex = new Dictionary<Type, IService>();
 
         static Logger log = InternalTrace.GetLogger(typeof(ServiceManager));
 
-		public void AddService( IService service )
-		{
-			services.Add( service );
-            log.Debug( "Added " + service.GetType().Name );
-		}
+        #region Public Methods
 
-		public IService GetService( Type serviceType )
+        public IService GetService( Type serviceType )
 		{
             IService theService = null;
 
@@ -70,7 +66,13 @@ namespace NUnit.Engine.Services
 			return theService;
 		}
 
-		public void InitializeServices()
+        public void AddService(IService service)
+        {
+            services.Add(service);
+            log.Debug("Added " + service.GetType().Name);
+        }
+
+        public void InitializeServices()
 		{
 			foreach( IService service in services )
 			{
@@ -110,6 +112,8 @@ namespace NUnit.Engine.Services
 		{
             log.Info("Clearing Service list");
 			services.Clear();
-		}
-	}
+        }
+
+        #endregion
+    }
 }

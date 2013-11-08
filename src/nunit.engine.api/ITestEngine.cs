@@ -32,6 +32,11 @@ namespace NUnit.Engine
     public interface ITestEngine : IDisposable
     {
         /// <summary>
+        /// Access the Engine Services
+        /// </summary>
+        IServiceLocator Services { get; }
+
+        /// <summary>
         /// Create and initialize the standard set of services
         /// used in the Engine. This interface is not normally
         /// called by user code. Programs linking only to 
@@ -40,6 +45,7 @@ namespace NUnit.Engine
         /// that link directly to nunit.engine usually do so
         /// in order to perform custom initialization.
         /// </summary>
+        /// <param name="workDirectory">The work directory currently in use</param>
         /// <param name="traceLevel">The level of internal tracing</param>
         void InitializeServices(string workDirectory, InternalTraceLevel traceLevel);
 
@@ -48,6 +54,7 @@ namespace NUnit.Engine
         /// in a test package.
         /// </summary>
         /// <param name="package">The test package to be explored.</param>
+        /// <param name="filter">A filter to be used in exploring tests.</param>
         /// <returns>An XmlNode representing the tests.</returns>
         ITestEngineResult Explore(TestPackage package, TestFilter filter);
 

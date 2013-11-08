@@ -62,7 +62,7 @@ namespace NUnit.Engine.Services
 
             if (targetVersion == RuntimeFramework.DefaultVersion)
             {
-                if (services.UserSettings.GetSetting("Options.TestLoader.RuntimeSelectionEnabled", true))
+                if (ServiceContext.UserSettings.GetSetting("Options.TestLoader.RuntimeSelectionEnabled", true))
                     foreach (string assembly in package.TestFiles)
                     {
                         using (AssemblyReader reader = new AssemblyReader(assembly))

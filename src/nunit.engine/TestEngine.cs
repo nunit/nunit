@@ -57,6 +57,14 @@ namespace NUnit.Engine
         #region ITestEngine Members
 
         /// <summary>
+        /// Access the public Engine Services
+        /// </summary>
+        IServiceLocator ITestEngine.Services
+        {
+            get { return Services; }
+        }
+
+        /// <summary>
         /// Create and initialize the standard set of services
         /// used in the Engine. This interface is not normally
         /// called by user code. Programs linking only to 
