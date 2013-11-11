@@ -129,9 +129,9 @@ namespace NUnit.Framework.Attributes
         [Test, TestCaseSource(typeof(DataSourceClassWithMethod), "GetStuff", "foo")]
         public void SourceCanHaveMethodProducingIEnumerableWithParameters(string source)
         {
-            var items = new[] { "foo1", "foo2", "foo3" };
-            var found = false;
-            for (var i = 0; i < items.Length; i++)
+            string[] items = new[] { "foo1", "foo2", "foo3" };
+            bool found = false;
+            for (int i = 0; i < items.Length; i++)
             {
                 if (items[i] == source)
                 {

@@ -39,7 +39,7 @@ namespace NUnit.Framework
     {
         private readonly string sourceName;
         private readonly Type sourceType;
-        private object[] sourceConstructorParameters;
+        private readonly object[] sourceConstructorParameters;
 
         /// <summary>
         /// Construct with the name of the method, property or field that will prvide data
@@ -55,6 +55,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="sourceType">The Type that will provide data</param>
         /// <param name="sourceName">The name of the method, property or field that will provide data</param>
+        /// <param name="constructorParameters">The constructor parameters to be used when instantiating the <see cref="sourceType"/> instance.</param>
         public TestCaseSourceAttribute(Type sourceType, string sourceName, params object[] constructorParameters)
         {
             this.sourceType = sourceType;

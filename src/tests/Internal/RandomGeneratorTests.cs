@@ -84,9 +84,9 @@ namespace NUnit.Framework.Internal
         public static void CanGetRandomBool()
         {
             RandomGenerator r = new RandomGenerator(new Random().Next());
-            var haveTrue = false;
-            var haveFalse = false;
-            var attempts = 0;
+            bool haveTrue = false;
+            bool haveFalse = false;
+            int attempts = 0;
             while (!haveTrue && !haveFalse)
             {
                 if (attempts++ > 10000)
