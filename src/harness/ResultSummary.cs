@@ -61,9 +61,11 @@ namespace NUnit.Framework.TestHarness
                 case "test-case":
                     resultCount++;
 
-                    string resultState = result.Attributes["result"].Value;
+                    string outcome = result.Attributes["result"].Value;
+                    if (result.Attributes["label"] != null)
+                        outcome = result.Attributes["label"].Value;
 
-                    switch (resultState)
+                    switch (outcome)
                     {
                         case "Passed":
                             successCount++;

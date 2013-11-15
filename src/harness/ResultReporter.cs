@@ -135,6 +135,8 @@ namespace NUnit.Framework.TestHarness
         private void WriteSingleResult(XmlNode result)
         {
             string status = result.Attributes["result"].Value;
+            if (result.Attributes["label"] != null)
+                status = result.Attributes["label"].Value;
             string fullName = result.Attributes["fullname"].Value;
 
             Console.WriteLine("{0}) {1} : {2}", ++reportIndex, status, fullName);
