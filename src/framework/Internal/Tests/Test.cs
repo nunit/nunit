@@ -301,6 +301,7 @@ namespace NUnit.Framework.Internal
             thisNode.AddAttribute("id", this.Id.ToString());
             thisNode.AddAttribute("name", this.Name);
             thisNode.AddAttribute("fullname", this.FullName);
+            thisNode.AddAttribute("runstate", this.RunState.ToString());
 
             if (Properties.Keys.Count > 0)
                 Properties.AddToXml(thisNode, recursive);

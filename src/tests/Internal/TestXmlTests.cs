@@ -110,6 +110,7 @@ namespace NUnit.Framework.Internal
             Assert.That(topNode.Attributes["id"], Is.EqualTo(test.Id.ToString()));
             Assert.That(topNode.Attributes["name"], Is.EqualTo(test.Name));
             Assert.That(topNode.Attributes["fullname"], Is.EqualTo(test.FullName));
+            Assert.That(topNode.Attributes["runstate"], Is.EqualTo(test.RunState.ToString()));
 
             if (test.Properties.Keys.Count > 0)
             {
