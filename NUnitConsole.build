@@ -213,7 +213,6 @@
 				<copy todir="${project.lib.dir}">
 					<fileset basedir="${framework.project.dir}/bin/Release/${runtime}">
 						<include name="nunit.framework.dll"/>
-						<include name="mock-assembly.dll"/>
 					</fileset>
 				</copy>
 			</if>
