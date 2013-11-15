@@ -65,9 +65,12 @@ namespace NUnit.Util
                 case "test-case":
                     resultCount++;
 
-                    string resultState = GetAttribute(node, "result");
+                    string outcome = GetAttribute(node, "result");
+                    string label = GetAttribute(node, "label");
+                    if (label != null)
+                        outcome = label;
 
-                    switch (resultState)
+                    switch (outcome)
                     {
                         case "Passed":
                             successCount++;
