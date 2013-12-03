@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2008 Charlie Poole
+// Copyright (c) 2013 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,34 +21,41 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-namespace NUnit.Framework.Constraints
+using System;
+using System.Collections.Generic;
+using NUnit.Framework.Interfaces;
+
+namespace NUnit.Framework.Internal.Filters
 {
-    /// <summary>
-    /// Modes in which the tolerance value for a comparison can be interpreted.
-    /// </summary>
-    public enum ToleranceMode
+	/// <summary>
+	/// IdFilter selects tests based on their id
+	/// </summary>
+    [Serializable]
+    public class IdFilter : ValueMatchFilter<int>
     {
         /// <summary>
-        /// The tolerance was created with a value, without specifying 
-        /// how the value would be used. This is used to prevent setting
-        /// the mode more than once and is generally changed to Linear
-        /// upon execution of the test.
+        /// Construct an empty IdFilter
         /// </summary>
-        None,
+        public IdFilter() { }
+
         /// <summary>
-        /// The tolerance is used as a numeric range within which
-        /// two compared _values are considered to be equal.
+        /// Construct an IdFilter for a single value
         /// </summary>
-        Linear,
+        /// <param name="id">The id the filter will recognize.</param>
+        public IdFilter(int id) : base (id) { }
+
         /// <summary>
-        /// Interprets the tolerance as the percentage by which
-        /// the two compared _values my deviate from each other.
+        /// Construct a IdFilter for multiple ids
         /// </summary>
-        Percent,
+        /// <param name="ids">The ids the filter will recognize.</param>
+        public IdFilter(IEnumerable<int> ids) : base(ids) { }
+
         /// <summary>
-        /// Compares two _values based in their distance in
-        /// representable numbers.
+        /// Match a test against a single value.
         /// </summary>
-        Ulps
-    }
+        protected override bool Match(ITest test, int id)
+        {
+            return test.Id == id;
+        }
+	}
 }

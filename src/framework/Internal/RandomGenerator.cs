@@ -25,11 +25,11 @@ using System;
 namespace NUnit.Framework.Internal
 {
     /// <summary>
-    /// RandomGenerator returns a set of random values in a repeatable
+    /// RandomGenerator returns a set of random _values in a repeatable
     /// way, to allow re-running of tests if necessary. 
     /// 
     /// This class is internal to the framework but exposed externally to through the TestContext 
-    /// the class is used to allow for obtaining repeatable random values during a tests execution.
+    /// the class is used to allow for obtaining repeatable random _values during a tests execution.
     /// this class should not be used inside the framework only with a TestMethod.
     /// </summary>
     public class RandomGenerator

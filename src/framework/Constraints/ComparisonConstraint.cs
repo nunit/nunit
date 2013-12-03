@@ -28,7 +28,7 @@ using System.Collections.Generic;
 namespace NUnit.Framework.Constraints
 {
     /// <summary>
-    /// Abstract base class for constraints that compare values to
+    /// Abstract base class for constraints that compare _values to
     /// determine if one is greater than, equal to or less than
     /// the other.
     /// </summary>

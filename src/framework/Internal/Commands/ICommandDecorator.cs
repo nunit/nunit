@@ -39,7 +39,7 @@ namespace NUnit.Framework.Internal.Commands
 
         /// <summary>
         /// The priority of this decorator as compared to other decorators
-        /// in the same Stage. Lower values are applied first.
+        /// in the same Stage. Lower _values are applied first.
         /// </summary>
         int Priority { get; }
 

@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2011 Charlie Poole
+// Copyright (c) 2013 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtainingn
 // a copy of this software and associated documentation files (the
@@ -42,35 +42,54 @@ namespace NUnit.Framework.TestHarness
 
         public string GetFilterText()
         {
-            StringBuilder sb = new StringBuilder("<filter>");
+            StringBuilder tests = new StringBuilder();
+            StringBuilder include = new StringBuilder();
+            StringBuilder exclude = new StringBuilder();
 
             if (Tests.Count > 0)
             {
-                sb.Append("<tests>");
+                tests.Append("<tests>");
                 foreach (string test in Tests)
-                    sb.AppendFormat("<test>{0}</test>", test);
-                sb.Append("</tests>");
+                    tests.AppendFormat("<test>{0}</test>", test);
+                tests.Append("</tests>");
             }
 
             if (Include.Count > 0)
             {
-                sb.Append("<include>");
+                include.Append("<cat>");
+                bool needComma = false;
                 foreach (string category in Include)
-                    sb.AppendFormat("<category>{0}</category>", category);
-                sb.Append("</include>");
+                {
+                    if (needComma) include.Append(',');
+                    include.Append(category);
+                    needComma = true;
+                }
+                include.Append("</cat>");
             }
 
             if (Exclude.Count > 0)
             {
-                sb.Append("<exclude>");
+                exclude.Append("<not><cat>");
+                bool needComma = false;
                 foreach (string category in Exclude)
-                    sb.AppendFormat("<category>{0}</category>", category);
-                sb.Append("</exclude>");
+                {
+                    if (needComma) exclude.Append(',');
+                    exclude.Append(category);
+                    needComma = true;
+                }
+                exclude.Append("</cat></not>");
             }
 
-            sb.Append("</filter>");
+            var testFilter = new StringBuilder("<filter>");
+            if (tests.Length > 0)
+                testFilter.Append(tests.ToString());
+            if (include.Length > 0)
+                testFilter.Append(include.ToString());
+            if (exclude.Length > 0)
+                testFilter.Append(exclude.ToString());
+            testFilter.Append("</filter>");
 
-            return sb.ToString();
+            return testFilter.ToString();
         }
 
         public static string CreateTestFilter(CommandLineOptions options)

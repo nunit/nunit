@@ -29,7 +29,7 @@ namespace NUnit.Framework.Constraints
     /// modifies or combines constraints. 
     /// 
     /// Constraint operators use left and right precedence
-    /// values to determine whether the top operator on the
+    /// _values to determine whether the top operator on the
     /// stack should be reduced before pushing a new operator.
     /// </summary>
     public abstract class ConstraintOperator

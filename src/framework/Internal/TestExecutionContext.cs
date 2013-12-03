@@ -217,7 +217,7 @@ namespace NUnit.Framework.Internal
                 // will be null. This also happens when the compiler
                 // automatically creates threads for async methods.
                 // We create a new context, which is automatically
-                // populated with values taken from the current thread.
+                // populated with _values taken from the current thread.
 #if SILVERLIGHT || NETCF
                 if (current == null)
                     current = new TestExecutionContext();

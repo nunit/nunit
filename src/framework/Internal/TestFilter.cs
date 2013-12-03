@@ -25,6 +25,10 @@ using System;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Filters;
 
+#if !NUNITLITE
+using XmlNode = System.Xml.XmlNode;
+#endif
+
 namespace NUnit.Framework.Internal
 {
 	/// <summary>
@@ -115,56 +119,62 @@ namespace NUnit.Framework.Internal
             if (topNode.Name != "filter")
                 throw new Exception("Expected filter element at top level");
 
-            // Initially, an empty filter
-            TestFilter result = TestFilter.Empty;
-            bool isEmptyResult = true;
-
-            var testNodes = topNode.SelectNodes("tests/test");
-            var includeNodes = topNode.SelectNodes("include/category");
-            var excludeNodes = topNode.SelectNodes("exclude/category");
-
-            if (testNodes.Count > 0)
+            switch (topNode.ChildNodes.Count)
             {
-                SimpleNameFilter nameFilter = new SimpleNameFilter();
-                foreach (System.Xml.XmlNode testNode in topNode.SelectNodes("tests/test"))
-                    nameFilter.Add(testNode.InnerText);
+                case 0:
+                    return TestFilter.Empty;
 
-                result = nameFilter;
-                isEmptyResult = false;
+                case 1:
+                    return FromXml(topNode.FirstChild);
+
+                default:
+                    return FromXml(topNode);
             }
+        }
 
-            if (includeNodes.Count > 0)
+        private static readonly char[] COMMA = new char[] { ',' };
+
+        private static TestFilter FromXml(XmlNode xmlNode)
+        {
+            switch (xmlNode.Name)
             {
-                //CategoryFilter includeFilter = new CategoryFilter();
-                //foreach (XmlNode includeNode in includeNodes)
-                //    includeFilter.AddCategory(includeNode.InnerText);
+                case "filter":
+                case "and":
+                    var andFilter = new AndFilter();
+                    foreach (XmlNode childNode in xmlNode.ChildNodes)
+                        andFilter.Add(FromXml(childNode));
+                    return andFilter;
 
-                // Temporarily just look at the first element
-                var includeNode = includeNodes[0];
-                TestFilter includeFilter = new CategoryExpression(includeNode.InnerText).Filter;
+                case "or":
+                    var orFilter = new OrFilter();
+                    foreach (System.Xml.XmlNode childNode in xmlNode.ChildNodes)
+                        orFilter.Add(FromXml(childNode));
+                    return orFilter;
 
-                if (isEmptyResult)
-                    result = includeFilter;
-                else
-                    result = new AndFilter(result, includeFilter);
-                isEmptyResult = false;
+                case "not":
+                    return new NotFilter(FromXml(xmlNode.FirstChild));
+
+                case "id":
+                    var idFilter = new IdFilter();
+                    foreach (string id in xmlNode.InnerText.Split(COMMA))
+                        idFilter.Add(int.Parse(id));
+                    return idFilter;
+
+                case "tests":
+                    var testFilter = new SimpleNameFilter();
+                    foreach (XmlNode childNode in xmlNode.SelectNodes("test"))
+                        testFilter.Add(childNode.InnerText);
+                    return testFilter;
+
+                case "cat":
+                    var catFilter = new CategoryFilter();
+                    foreach (string cat in xmlNode.InnerText.Split(COMMA))
+                        catFilter.AddCategory(cat);
+                    return catFilter;
+
+                default:
+                    throw new ArgumentException("Invalid filter element: " + xmlNode.Name, "xmlNode");
             }
-
-            if (excludeNodes.Count > 0)
-            {
-                CategoryFilter categoryFilter = new CategoryFilter();
-                foreach (System.Xml.XmlNode excludeNode in excludeNodes)
-                    categoryFilter.AddCategory(excludeNode.InnerText);
-                TestFilter excludeFilter = new NotFilter(categoryFilter);
-
-                if (isEmptyResult)
-                    result = excludeFilter;
-                else
-                    result = new AndFilter(result, excludeFilter);
-                isEmptyResult = false;
-            }
-
-            return result;
         }
 #endif
 

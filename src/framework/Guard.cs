@@ -3,7 +3,7 @@
 namespace NUnit.Framework
 {
     /// <summary>
-    /// Class used to guard against unexpected argument values
+    /// Class used to guard against unexpected argument _values
     /// by throwing an appropriate exception.
     /// </summary>
     static class Guard

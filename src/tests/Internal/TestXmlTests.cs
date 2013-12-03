@@ -98,12 +98,12 @@ namespace NUnit.Framework.Internal
 
             //if (test is TestSuite)
             //{
-            //    Assert.That(topNode.Name, Is.EqualTo("test-suite"));
-            //    Assert.That(topNode.Attributes["type"].Value, Is.EqualTo(test.XmlElementName));
+            //    Assert.That(xmlNode.Name, Is.EqualTo("test-suite"));
+            //    Assert.That(xmlNode.Attributes["type"].Value, Is.EqualTo(test.XmlElementName));
             //}
             //else
             //{
-            //    Assert.That(topNode.Name, Is.EqualTo("test-case"));
+            //    Assert.That(xmlNode.Name, Is.EqualTo("test-case"));
             //}
 
             Assert.That(topNode.Name, Is.EqualTo(test.XmlElementName));

@@ -28,7 +28,7 @@ namespace NUnit.Framework
 {
 	/// <summary>
 	/// AssertionHelper is an optional base class for user tests,
-	/// allowing the use of shorter names for constraints and
+	/// allowing the use of shorter ids for constraints and
 	/// asserts and avoiding conflict with the definition of 
 	/// <see cref="Is"/>, from which it inherits much of its
 	/// behavior, in certain mock object frameworks.

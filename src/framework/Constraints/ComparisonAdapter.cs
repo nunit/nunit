@@ -29,7 +29,7 @@ namespace NUnit.Framework.Constraints
 {
     /// <summary>
     /// ComparisonAdapter class centralizes all comparisons of
-    /// values in NUnit, adapting to the use of any provided
+    /// _values in NUnit, adapting to the use of any provided
     /// IComparer, IComparer&lt;T&gt; or Comparison&lt;T&gt;
     /// </summary>
     public abstract class ComparisonAdapter

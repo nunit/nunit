@@ -30,7 +30,7 @@ using NUnit.Framework.Internal;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// RandomAttribute is used to supply a set of random values
+    /// RandomAttribute is used to supply a set of random _values
     /// to a single parameter of a parameterized test.
     /// </summary>
     public class RandomAttribute : ValuesAttribute, IParameterDataSource
@@ -89,7 +89,7 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Get the collection of values to be used as arguments
+        /// Get the collection of _values to be used as arguments
         /// </summary>
         public new IEnumerable GetData(ParameterInfo parameter)
         {
@@ -113,7 +113,7 @@ namespace NUnit.Framework
                     break;
             }
 
-            // Copy the random values into the data array
+            // Copy the random _values into the data array
             // and call the base class which may need to
             // convert them to another type.
             this.data = new object[values.Count];

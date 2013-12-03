@@ -25,9 +25,9 @@ namespace NUnit.Framework.Internal.Commands
 {
     /// <summary>
     /// The CommandStage enumeration represents the defined stages
-    /// of execution for a series of TestCommands. The int values
+    /// of execution for a series of TestCommands. The int _values
     /// of the enum are used to apply decorators in the proper 
-    /// order. Lower values are applied first and are therefore
+    /// order. Lower _values are applied first and are therefore
     /// "closer" to the actual test execution.
     /// </summary>
     /// <remarks>

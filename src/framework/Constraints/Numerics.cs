@@ -26,7 +26,7 @@ using System;
 namespace NUnit.Framework.Constraints
 {
     /// <summary>
-    /// The Numerics class contains common operations on numeric values.
+    /// The Numerics class contains common operations on numeric _values.
     /// </summary>
     public class Numerics
     {
@@ -83,14 +83,14 @@ namespace NUnit.Framework.Constraints
 
         #region Numeric Equality
         /// <summary>
-        /// Test two numeric values for equality, performing the usual numeric 
+        /// Test two numeric _values for equality, performing the usual numeric 
         /// conversions and using a provided or default tolerance. If the tolerance 
         /// provided is Empty, this method may set it to a default tolerance.
         /// </summary>
         /// <param name="expected">The expected value</param>
         /// <param name="actual">The actual value</param>
         /// <param name="tolerance">A reference to the tolerance in effect</param>
-        /// <returns>True if the values are equal</returns>
+        /// <returns>True if the _values are equal</returns>
         public static bool AreEqual(object expected, object actual, ref Tolerance tolerance)
         {
             if (expected is double || actual is double)
@@ -122,7 +122,7 @@ namespace NUnit.Framework.Constraints
             if (double.IsNaN(expected) && double.IsNaN(actual))
                 return true;
 
-            // Handle infinity specially since subtracting two infinite values gives 
+            // Handle infinity specially since subtracting two infinite _values gives 
             // NaN and the following test fails. mono also needs NaN to be handled
             // specially although ms.net could use either method. Also, handle
             // situation where no tolerance is used.
@@ -163,7 +163,7 @@ namespace NUnit.Framework.Constraints
             if (float.IsNaN(expected) && float.IsNaN(actual))
                 return true;
 
-            // handle infinity specially since subtracting two infinite values gives 
+            // handle infinity specially since subtracting two infinite _values gives 
             // NaN and the following test fails. mono also needs NaN to be handled
             // specially although ms.net could use either method.
             if (float.IsInfinity(expected) || float.IsNaN(expected) || float.IsNaN(actual))
@@ -344,11 +344,11 @@ namespace NUnit.Framework.Constraints
 
         #region Numeric Comparisons
         /// <summary>
-        /// Compare two numeric values, performing the usual numeric conversions.
+        /// Compare two numeric _values, performing the usual numeric conversions.
         /// </summary>
         /// <param name="expected">The expected value</param>
         /// <param name="actual">The actual value</param>
-        /// <returns>The relationship of the values to each other</returns>
+        /// <returns>The relationship of the _values to each other</returns>
         public static int Compare(object expected, object actual)
         {
             if (!IsNumericType(expected) || !IsNumericType(actual))

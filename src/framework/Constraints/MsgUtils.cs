@@ -39,7 +39,7 @@ namespace NUnit.Framework.Constraints
         private const string ELLIPSIS = "...";
 
         /// <summary>
-        /// Formatting strings used for expected and actual values
+        /// Formatting strings used for expected and actual _values
         /// </summary>
         private static readonly string Fmt_Null = "null";
         private static readonly string Fmt_EmptyString = "<string.Empty>";

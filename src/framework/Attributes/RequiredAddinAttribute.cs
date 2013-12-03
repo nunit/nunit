@@ -29,7 +29,7 @@ using NUnit.Framework.Internal;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// RequiredAddinAttribute may be used to indicate the names of any addins
+    /// RequiredAddinAttribute may be used to indicate the ids of any addins
     /// that must be present in order to run some or all of the tests in an
     /// assembly. If the addin is not loaded, the entire assembly is marked
     /// as NotRunnable.

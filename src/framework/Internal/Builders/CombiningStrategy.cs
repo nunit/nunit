@@ -31,7 +31,7 @@ namespace NUnit.Framework.Internal.Builders
 {
     /// <summary>
     /// CombiningStrategy is the abstract base for classes that
-    /// know how to combine values provided for individual test
+    /// know how to combine _values provided for individual test
     /// parameters to create a set of test cases.
     /// </summary>
     public abstract class CombiningStrategy

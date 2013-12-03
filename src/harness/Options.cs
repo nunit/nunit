@@ -54,10 +54,10 @@
 // alias, but if they are provided on more than one they must be consistent.
 //
 // Each alias portion may also end with a "key/value separator", which is used
-// to split option values if the option accepts > 1 value.  If not specified,
+// to split option _values if the option accepts > 1 value.  If not specified,
 // it defaults to '=' and ':'.  If specified, it can be any character except
 // '{' and '}' OR the *string* between '{' and '}'.  If no separator should be
-// used (i.e. the separate values should be distinct arguments), then "{}"
+// used (i.e. the separate _values should be distinct arguments), then "{}"
 // should be used as the separator.
 //
 // Options are extracted either from the current option by looking for
@@ -525,7 +525,7 @@ namespace Mono.Options
 			if (item.Names != null && item.Names.Length > 0)
 				return item.Names [0];
 			// This should never happen, as it's invalid for Option to be
-			// constructed w/o any names.
+			// constructed w/o any ids.
 			throw new InvalidOperationException ("Option has no names!");
 		}
 

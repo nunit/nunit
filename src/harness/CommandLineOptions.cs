@@ -32,7 +32,7 @@ using System.Diagnostics;
 namespace NUnit.Framework.TestHarness
 {
     /// <summary>
-    /// The CommandLineOptions class parses and holds the values of
+    /// The CommandLineOptions class parses and holds the _values of
     /// any options entered at the command line.
     /// </summary>
     public class CommandLineOptions : OptionSet

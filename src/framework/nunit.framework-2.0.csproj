@@ -81,6 +81,8 @@
     <Compile Include="Interfaces\TestOutput.cs" />
     <Compile Include="Interfaces\TestStatus.cs" />
     <Compile Include="Interfaces\XmlNode.cs" />
+    <Compile Include="Internal\Filters\IdFilter.cs" />
+    <Compile Include="Internal\Filters\ValueMatchFilter.cs" />
     <Compile Include="Internal\InternalTraceLevel.cs" />
     <Compile Include="Internal\Builders\NamespaceTreeBuilder.cs" />
     <Compile Include="Internal\Commands\ApplyChangesToContextCommand.cs" />

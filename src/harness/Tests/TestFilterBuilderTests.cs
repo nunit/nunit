@@ -46,7 +46,7 @@ namespace NUnit.Framework.TestHarness.Tests
         }
 
         [Test]
-        public void FilterWithOneTest()
+        public void OneTestSelected()
         {
             builder.Tests.Add("My.Test.Name");
             string filterText = builder.GetFilterText();
@@ -56,7 +56,7 @@ namespace NUnit.Framework.TestHarness.Tests
         }
 
         [Test]
-        public void FilterWithThreeTests()
+        public void ThreeTestsSelected()
         {
             builder.Tests.Add("My.First.Test");
             builder.Tests.Add("My.Second.Test");
@@ -64,6 +64,73 @@ namespace NUnit.Framework.TestHarness.Tests
             string filterText = builder.GetFilterText();
 
             string expectedText = "<filter><tests><test>My.First.Test</test><test>My.Second.Test</test><test>My.Third.Test</test></tests></filter>";
+            Assert.That(filterText, Is.EqualTo(expectedText));
+        }
+
+        [Test]
+        public void OneCategoryIncluded()
+        {
+            builder.Include.Add("Dummy");
+            string filterText = builder.GetFilterText();
+
+            string expectedText = "<filter><cat>Dummy</cat></filter>";
+            Assert.That(filterText, Is.EqualTo(expectedText));
+        }
+
+        [Test]
+        public void ThreeCategoriesIncluded()
+        {
+            builder.Include.Add("Dummy");
+            builder.Include.Add("Another");
+            builder.Include.Add("StillAnother");
+            string filterText = builder.GetFilterText();
+
+            string expectedText = "<filter><cat>Dummy,Another,StillAnother</cat></filter>";
+            Assert.That(filterText, Is.EqualTo(expectedText));
+        }
+
+        [Test]
+        public void OneCategoryExcluded()
+        {
+            builder.Exclude.Add("Dummy");
+            string filterText = builder.GetFilterText();
+
+            string expectedText = "<filter><not><cat>Dummy</cat></not></filter>";
+            Assert.That(filterText, Is.EqualTo(expectedText));
+        }
+
+        [Test]
+        public void ThreeCategoriesExcluded()
+        {
+            builder.Exclude.Add("Dummy");
+            builder.Exclude.Add("Another");
+            builder.Exclude.Add("StillAnother");
+            string filterText = builder.GetFilterText();
+
+            string expectedText = "<filter><not><cat>Dummy,Another,StillAnother</cat></not></filter>";
+            Assert.That(filterText, Is.EqualTo(expectedText));
+        }
+
+        [Test]
+        public void OneTestAndOneCategory()
+        {
+            builder.Tests.Add("My.Test.Name");
+            builder.Include.Add("Dummy");
+            string filterText = builder.GetFilterText();
+
+            string expectedText = "<filter><tests><test>My.Test.Name</test></tests><cat>Dummy</cat></filter>";
+            Assert.That(filterText, Is.EqualTo(expectedText));
+        }
+
+        [Test]
+        public void TwoCategoriesIncludedAndOneExcluded()
+        {
+            builder.Include.Add("Dummy");
+            builder.Include.Add("Another");
+            builder.Exclude.Add("Slow");
+            string filterText = builder.GetFilterText();
+
+            string expectedText = "<filter><cat>Dummy,Another</cat><not><cat>Slow</cat></not></filter>";
             Assert.That(filterText, Is.EqualTo(expectedText));
         }
     }

@@ -128,7 +128,7 @@ namespace NUnit.Framework.Internal
 		/// Test to determine if the a particular platform or comma-
 		/// delimited set of platforms is in use.
 		/// </summary>
-		/// <param name="platform">Name of the platform or comma-separated list of platform names</param>
+		/// <param name="platform">Name of the platform or comma-separated list of platform ids</param>
 		/// <returns>True if the platform is in use on the system</returns>
 		public bool IsPlatformSupported( string platform )
 		{

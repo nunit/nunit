@@ -31,7 +31,7 @@ using NUnit.Framework.Extensibility;
 namespace NUnit.Framework.Internal.Builders
 {
     /// <summary>
-    /// ParameterDataProvider supplies individual argument values for
+    /// ParameterDataProvider supplies individual argument _values for
     /// single parameters using attributes derived from DataAttribute.
     /// </summary>
     public class ParameterDataProvider : IParameterDataProvider

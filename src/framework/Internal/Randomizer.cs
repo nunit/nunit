@@ -28,7 +28,7 @@ using System.Reflection;
 namespace NUnit.Framework.Internal
 {
     /// <summary>
-    /// Randomizer returns a set of random values in a repeatable
+    /// Randomizer returns a set of random _values in a repeatable
     /// way, to allow re-running of tests if necessary. 
     /// 
     /// This class is an internal framework class used for setting up tests. 
@@ -52,7 +52,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Get a randomizer for a particular member, returning
         /// one that has already been created if it exists.
-        /// This ensures that the same values are generated
+        /// This ensures that the same _values are generated
         /// each time the tests are reloaded.
         /// </summary>
         public static Randomizer GetRandomizer(MemberInfo member)
@@ -71,7 +71,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Get a randomizer for a particular parameter, returning
         /// one that has already been created if it exists.
-        /// This ensures that the same values are generated
+        /// This ensures that the same _values are generated
         /// each time the tests are reloaded.
         /// </summary>
         public static Randomizer GetRandomizer(ParameterInfo parameter)
@@ -82,7 +82,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Create a new Randomizer using the next seed
         /// available to ensure that each randomizer gives
-        /// a unique sequence of values.
+        /// a unique sequence of _values.
         /// </summary>
         /// <returns></returns>
         public static Randomizer CreateRandomizer()
@@ -150,7 +150,7 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// Return an array of random doubles with values in a specified range.
+        /// Return an array of random doubles with _values in a specified range.
         /// </summary>
         public double[] GetDoubles(double min, double max, int count)
         {
@@ -164,7 +164,7 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// Return an array of random ints with values in a specified range.
+        /// Return an array of random ints with _values in a specified range.
         /// </summary>
         public int[] GetInts(int min, int max, int count)
         {

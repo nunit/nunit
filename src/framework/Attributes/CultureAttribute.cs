@@ -93,7 +93,7 @@ namespace NUnit.Framework
         /// Test to determine if the a particular culture or comma-
         /// delimited set of cultures is in use.
         /// </summary>
-        /// <param name="culture">Name of the culture or comma-separated list of culture names</param>
+        /// <param name="culture">Name of the culture or comma-separated list of culture ids</param>
         /// <returns>True if the culture is in use on the system</returns>
         public bool IsCultureSupported(string culture)
         {

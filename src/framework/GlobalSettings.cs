@@ -26,7 +26,7 @@ using System;
 namespace NUnit.Framework
 {
 	/// <summary>
-	/// GlobalSettings is a place for setting default values used
+	/// GlobalSettings is a place for setting default _values used
 	/// by the framework in performing asserts.
 	/// </summary>
 	public class GlobalSettings

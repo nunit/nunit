@@ -191,7 +191,7 @@ namespace NUnit.Framework.Internal
 						if (sb[0] == 'v') // Last sanity check
 							runtimeVersion = sb.ToString();
 
-						// Could do fixups here for bad values in older files
+						// Could do fixups here for bad _values in older files
 						// like 1.x86, 1.build, etc. But we are only using
 						// the major version anyway
 					}

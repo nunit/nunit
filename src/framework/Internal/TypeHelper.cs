@@ -290,7 +290,7 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// Gets the values for an enumeration, using Enum.GetTypes
+        /// Gets the _values for an enumeration, using Enum.GetTypes
         /// where available, otherwise through reflection.
         /// </summary>
         /// <param name="enumType"></param>
@@ -312,7 +312,7 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// Gets the names of the values for an enumeration, 
+        /// Gets the ids of the _values for an enumeration, 
         /// using Enum.GetNames where available, otherwise
         /// through reflection.
         /// </summary>

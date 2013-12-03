@@ -307,9 +307,11 @@
     <Compile Include="Internal\Filters\AndFilter.cs" />
     <Compile Include="Internal\Filters\CategoryExpression.cs" />
     <Compile Include="Internal\Filters\CategoryFilter.cs" />
+    <Compile Include="Internal\Filters\IdFilter.cs" />
     <Compile Include="Internal\Filters\NotFilter.cs" />
     <Compile Include="Internal\Filters\OrFilter.cs" />
     <Compile Include="Internal\Filters\SimpleNameFilter.cs" />
+    <Compile Include="Internal\Filters\ValueMatchFilter.cs" />
     <Compile Include="Internal\IApplyToContext.cs" />
     <Compile Include="Internal\IApplyToTest.cs" />
     <Compile Include="Internal\InternalTrace.cs" />
