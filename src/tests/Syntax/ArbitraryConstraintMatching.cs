@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Collections.Generic;
 using NUnit.Framework.Constraints;
 
 namespace NUnit.Framework.Syntax
@@ -84,6 +85,30 @@ namespace NUnit.Framework.Syntax
 
         class AnotherConstraint : CustomConstraint
         {
+        }
+
+        [Test]
+        public void ApplyMatchesToProperty()
+        {
+            var unit = new Unit();
+
+            // All forms should pass
+            Assert.That(unit, Has.Property("Items").With.Property("Count").EqualTo(5));
+            Assert.That(unit, Has.Property("Items").With.Count.EqualTo(5));
+            Assert.That(unit, Has.Property("Items").Property("Count").EqualTo(5));
+            Assert.That(unit, Has.Property("Items").Count.EqualTo(5));
+
+            // This is the one the bug refers to
+            Assert.That(unit, Has.Property("Items").Matches(Has.Count.EqualTo(5)));
+        }
+
+        private class Unit
+        {
+            public List<int> Items { get; private set; }
+            public Unit()
+            {
+                Items = new List<int>(new int[] { 1, 2, 3, 4, 5 });
+            }
         }
     }
 }

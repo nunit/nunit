@@ -310,9 +310,9 @@ namespace NUnit.Framework.Constraints
         /// Returns the constraint provided as an argument - used to allow custom
         /// custom constraints to easily participate in the syntax.
         /// </summary>
-        public Constraint Matches(Constraint constraint)
+        public Constraint Matches(IResolveConstraint constraint)
         {
-            return this.Append(constraint);
+            return this.Append((Constraint)constraint.Resolve());
         }
 
         /// <summary>
