@@ -88,7 +88,7 @@ namespace NUnit.Util
 
             xmlWriter.WriteStartElement("test-results");
 
-            xmlWriter.WriteAttributeString("name", XmlHelper.GetAttribute(result, "fullname"));
+            xmlWriter.WriteAttributeString("name", result.GetAttribute("fullname"));
             xmlWriter.WriteAttributeString("total", summaryResults.TestsRun.ToString());
             xmlWriter.WriteAttributeString("errors", summaryResults.Errors.ToString());
             xmlWriter.WriteAttributeString("failures", summaryResults.Failures.ToString());
@@ -98,8 +98,8 @@ namespace NUnit.Util
             xmlWriter.WriteAttributeString("skipped", summaryResults.Skipped.ToString());
             xmlWriter.WriteAttributeString("invalid", summaryResults.NotRunnable.ToString());
 
-            xmlWriter.WriteAttributeString("date", XmlHelper.GetAttribute(result, "run-date"));
-            xmlWriter.WriteAttributeString("time", XmlHelper.GetAttribute(result, "start-time"));
+            xmlWriter.WriteAttributeString("date", result.GetAttribute("run-date"));
+            xmlWriter.WriteAttributeString("time", result.GetAttribute("start-time"));
             WriteEnvironment();
             WriteCultureInfo();
         }
@@ -179,27 +179,27 @@ namespace NUnit.Util
             if (result.Name == "test-case")
             {
                 xmlWriter.WriteStartElement("test-case");
-                xmlWriter.WriteAttributeString("name", XmlHelper.GetAttribute(result, "name"));
+                xmlWriter.WriteAttributeString("name", result.GetAttribute("name"));
             }
             else
             {
                 xmlWriter.WriteStartElement("test-suite");
-                xmlWriter.WriteAttributeString("type", XmlHelper.GetAttribute(result, "type"));
+                xmlWriter.WriteAttributeString("type", result.GetAttribute("type"));
                 string nameAttr = result.Name == "test-assembly" || result.Name == "test-project" ? "fullname" : "name";
-                xmlWriter.WriteAttributeString("name", XmlHelper.GetAttribute(result, nameAttr));
+                xmlWriter.WriteAttributeString("name", result.GetAttribute(nameAttr));
             }
 
-            string description = XmlHelper.GetAttribute(result, "description");
+            string description = result.GetAttribute("description");
             if (description != null)
                 xmlWriter.WriteAttributeString("description", description);
 
-            string resultState = XmlHelper.GetAttribute(result, "result");
-            string label = XmlHelper.GetAttribute(result, "label");
+            string resultState = result.GetAttribute("result");
+            string label = result.GetAttribute("label");
             string executed = resultState == "Skipped" ? "False" : "True";
             string success = resultState == "Passed" ? "True" : "False";
-            var seconds = TimeSpan.Parse(XmlHelper.GetAttribute(result, "time")).TotalSeconds;
+            var seconds = TimeSpan.Parse(result.GetAttribute("time")).TotalSeconds;
             string time = seconds.ToString("#####0.000", NumberFormatInfo.InvariantInfo);
-            string asserts = XmlHelper.GetAttribute(result, "asserts");
+            string asserts = result.GetAttribute("asserts");
 
             if (label != null && label != string.Empty)
                 resultState += ":" + label;
@@ -223,7 +223,7 @@ namespace NUnit.Util
             foreach (XmlNode item in items)
             {
                 xmlWriter.WriteStartElement("category");
-                xmlWriter.WriteAttributeString("name", XmlHelper.GetAttribute(item, "name"));
+                xmlWriter.WriteAttributeString("name", item.GetAttribute("name"));
                 xmlWriter.WriteEndElement();
             }
             xmlWriter.WriteEndElement();
@@ -237,8 +237,8 @@ namespace NUnit.Util
             foreach (XmlNode item in items)
             {
                 xmlWriter.WriteStartElement("property");
-                xmlWriter.WriteAttributeString("name", XmlHelper.GetAttribute(item, "name"));
-                xmlWriter.WriteAttributeString("value", XmlHelper.GetAttribute(item, "value"));
+                xmlWriter.WriteAttributeString("name", item.GetAttribute("name"));
+                xmlWriter.WriteAttributeString("value", item.GetAttribute("value"));
                 xmlWriter.WriteEndElement();
             }
 

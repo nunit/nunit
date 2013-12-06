@@ -24,6 +24,12 @@
 using System.Collections.Generic;
 using System.Xml;
 
+namespace System.Runtime.CompilerServices
+{
+    [AttributeUsage(AttributeTargets.Assembly | AttributeTargets.Class | AttributeTargets.Method)]
+    public sealed class ExtensionAttribute : Attribute { }
+}
+
 namespace NUnit.Util
 {
     /// <summary>
@@ -43,72 +49,22 @@ namespace NUnit.Util
             return doc.FirstChild;
         }
 
-        /// <summary>
-        /// Adds an attribute with a specified name and value to an existing XmlNode.
-        /// </summary>
-        /// <param name="node">The node to which the attribute should be added.</param>
-        /// <param name="name">The name of the attribute.</param>
-        /// <param name="value">The value of the attribute.</param>
-        public static void AddAttribute(XmlNode node, string name, string value)
-        {
-            XmlAttribute attr = node.OwnerDocument.CreateAttribute(name);
-            attr.Value = value;
-            node.Attributes.Append(attr);
-        }
-
-        /// <summary>
-        /// Adds a new element as a child of an existing XmlNode and returns it.
-        /// </summary>
-        /// <param name="node">The node to which the element should be added.</param>
-        /// <param name="name">The element name.</param>
-        /// <returns>The newly created child element</returns>
-        public static XmlNode AddElement(XmlNode node, string name)
-        {
-            XmlNode childNode = node.OwnerDocument.CreateElement(name);
-            node.AppendChild(childNode);
-            return childNode;
-        }
-
-        /// <summary>
-        /// Adds the a new element as a child of an existing node and returns it.
-        /// A CDataSection is added to the new element using the data provided.
-        /// </summary>
-        /// <param name="node">The node to which the element should be added.</param>
-        /// <param name="name">The element name.</param>
-        /// <param name="data">The data for the CDataSection.</param>
-        /// <returns></returns>
-        public static XmlNode AddElementWithCDataSection(XmlNode node, string name, string data)
-        {
-            XmlNode childNode = AddElement(node, name);
-            childNode.AppendChild(node.OwnerDocument.CreateCDataSection(data));
-            return childNode;
-        }
-
         #region Safe Attribute Access
 
-        public static string GetAttribute(XmlNode result, string name)
+        public static string GetAttribute(this XmlNode result, string name)
         {
             XmlAttribute attr = result.Attributes[name];
 
             return attr == null ? null : attr.Value;
         }
 
-        public static int GetAttribute(XmlNode result, string name, int defaultValue)
+        public static int GetAttribute(this XmlNode result, string name, int defaultValue)
         {
             XmlAttribute attr = result.Attributes[name];
 
             return attr == null
                 ? defaultValue
                 : int.Parse(attr.Value, System.Globalization.CultureInfo.InvariantCulture);
-        }
-
-        public static double GetAttribute(XmlNode result, string name, double defaultValue)
-        {
-            XmlAttribute attr = result.Attributes[name];
-
-            return attr == null
-                ? defaultValue
-                : double.Parse(attr.Value, System.Globalization.CultureInfo.InvariantCulture);
         }
 
         #endregion

@@ -25,7 +25,6 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Xml;
-using NUnit.Util;
 
 namespace NUnit.Util
 {

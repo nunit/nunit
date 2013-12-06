@@ -39,7 +39,7 @@ namespace NUnit.ConsoleRunner
         public ResultReporter(XmlNode result, ConsoleOptions options)
         {
             this.result = result;
-            this.testRunResult = result.Attributes["result"].Value;
+            this.testRunResult = result.GetAttribute("result");
             this.options = options;
             this.summary = new ResultSummary(result);
         }
@@ -99,7 +99,7 @@ namespace NUnit.ConsoleRunner
             switch(result.Name)
             {
                 case "test-case":
-                    string resultState = result.Attributes["result"].Value;
+                    string resultState = result.GetAttribute("result");
                     if (resultState == "Failed" || resultState == "Error" || resultState == "Cancelled")
                         WriteSingleResult(result);
                     return;
@@ -108,10 +108,10 @@ namespace NUnit.ConsoleRunner
                     break;
 
                 case "test-suite":
-                    string resultType = result.Attributes["type"].Value;
+                    string resultType = result.GetAttribute("type");
                     if (resultType == "Theory")
                     {
-                        resultState = result.Attributes["result"].Value;
+                        resultState = result.GetAttribute("result");
                         if (resultState == "Failed")
                             WriteSingleResult(result);
                     }
@@ -136,7 +136,7 @@ namespace NUnit.ConsoleRunner
         {
             if (result.Name == "test-case")
             {
-                string resultState = result.Attributes["result"].Value;
+                string resultState = result.GetAttribute("result");
                 if (resultState == "Skipped" || resultState == "Ignored" || resultState == "NotRunnable")
                     WriteSingleResult(result);
             }
@@ -149,10 +149,10 @@ namespace NUnit.ConsoleRunner
 
         private void WriteSingleResult(XmlNode result)
         {
-            string status = result.Attributes["result"].Value;
-            if (result.Attributes["label"] != null)
-                status = result.Attributes["label"].Value;
-            string fullName = result.Attributes["fullname"].Value;
+            string status = result.GetAttribute("label");
+            if (status == null)
+                status = result.GetAttribute("result");
+            string fullName = result.GetAttribute("fullname");
 
             Console.WriteLine("{0}) {1} : {2}", ++reportIndex, status, fullName);
 
