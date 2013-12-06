@@ -24,10 +24,9 @@
 using System;
 using System.IO;
 using NUnit.Framework;
-using NUnit.Engine.Services;
 using NUnit.Engine.Tests.Assemblies;
 
-namespace NUnit.Engine.Tests
+namespace NUnit.Engine.Services.Tests
 {
     public class DomainManagerTests
     {
