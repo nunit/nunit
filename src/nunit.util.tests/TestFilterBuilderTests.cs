@@ -1,7 +1,7 @@
 ﻿// ***********************************************************************
 // Copyright (c) 2011 Charlie Poole
 //
-// Permission is hereby granted, free of charge, to any person obtainingn
+// Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
 // "Software"), to deal in the Software without restriction, including
 // without limitation the rights to use, copy, modify, merge, publish,
@@ -49,7 +49,7 @@ namespace NUnit.Util.Tests
         }
 
         [Test]
-        public void FilterWithOneTest()
+        public void OneTestSelected()
         {
             builder.Tests.Add("My.Test.Name");
             TestFilter filter = builder.GetFilter();
@@ -61,7 +61,7 @@ namespace NUnit.Util.Tests
         }
 
         [Test]
-        public void FilterWithThreeTests()
+        public void ThreeTestsSelected()
         {
             builder.Tests.Add("My.First.Test");
             builder.Tests.Add("My.Second.Test");
@@ -76,6 +76,73 @@ namespace NUnit.Util.Tests
             Assert.That(testNodes[0].InnerText, Is.EqualTo("My.First.Test"));
             Assert.That(testNodes[1].InnerText, Is.EqualTo("My.Second.Test"));
             Assert.That(testNodes[2].InnerText, Is.EqualTo("My.Third.Test"));
+        }
+
+        [Test]
+        public void OneCategoryIncluded()
+        {
+            builder.Include.Add("Dummy");
+            TestFilter filter = builder.GetFilter();
+
+            string expectedText = "<filter><cat>Dummy</cat></filter>";
+            Assert.That(filter.Text, Is.EqualTo(expectedText));
+        }
+
+        [Test]
+        public void ThreeCategoriesIncluded()
+        {
+            builder.Include.Add("Dummy");
+            builder.Include.Add("Another");
+            builder.Include.Add("StillAnother");
+            TestFilter filter = builder.GetFilter();
+
+            string expectedText = "<filter><cat>Dummy,Another,StillAnother</cat></filter>";
+            Assert.That(filter.Text, Is.EqualTo(expectedText));
+        }
+
+        [Test]
+        public void OneCategoryExcluded()
+        {
+            builder.Exclude.Add("Dummy");
+            TestFilter filter = builder.GetFilter();
+
+            string expectedText = "<filter><not><cat>Dummy</cat></not></filter>";
+            Assert.That(filter.Text, Is.EqualTo(expectedText));
+        }
+
+        [Test]
+        public void ThreeCategoriesExcluded()
+        {
+            builder.Exclude.Add("Dummy");
+            builder.Exclude.Add("Another");
+            builder.Exclude.Add("StillAnother");
+            TestFilter filter = builder.GetFilter();
+
+            string expectedText = "<filter><not><cat>Dummy,Another,StillAnother</cat></not></filter>";
+            Assert.That(filter.Text, Is.EqualTo(expectedText));
+        }
+
+        [Test]
+        public void OneTestAndOneCategory()
+        {
+            builder.Tests.Add("My.Test.Name");
+            builder.Include.Add("Dummy");
+            TestFilter filter = builder.GetFilter();
+
+            string expectedText = "<filter><tests><test>My.Test.Name</test></tests><cat>Dummy</cat></filter>";
+            Assert.That(filter.Text, Is.EqualTo(expectedText));
+        }
+
+        [Test]
+        public void TwoCategoriesIncludedAndOneExcluded()
+        {
+            builder.Include.Add("Dummy");
+            builder.Include.Add("Another");
+            builder.Exclude.Add("Slow");
+            TestFilter filter = builder.GetFilter();
+
+            string expectedText = "<filter><cat>Dummy,Another</cat><not><cat>Slow</cat></not></filter>";
+            Assert.That(filter.Text, Is.EqualTo(expectedText));
         }
     }
 }
