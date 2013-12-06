@@ -122,6 +122,14 @@ namespace NUnit.Engine.Runners
             return this.Explore(filter);
         }
 
+        /// <summary>
+        /// Start a run of the tests in the loaded TestPackage. The tests are run
+        /// asynchronously and the listener interface is notified as it progresses.
+        /// </summary>
+        /// <param name="listener">An ITestEventHandler to receive events</param>
+        /// <param name="filter">A TestFilter used to select tests</param>
+        public abstract void BeginRun(ITestEventHandler listener, TestFilter filter);
+
         #endregion
 
         #region IDisposable Members

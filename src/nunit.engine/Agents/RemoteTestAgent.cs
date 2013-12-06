@@ -136,9 +136,28 @@ namespace NUnit.Engine.Agents
                 runner.Unload();
         }
 
+        /// <summary>
+        /// Run the tests in the loaded TestPackage and return a test result. The tests
+        /// are run synchronously and the listener interface is notified as it progresses.
+        /// </summary>
+        /// <param name="listener">An ITestEventHandler to receive events</param>
+        /// <param name="filter">A TestFilter used to select tests</param>
+        /// <returns>A TestEngineResult giving the result of the test execution</returns>
         public ITestEngineResult Run(ITestEventHandler listener, TestFilter filter)
         {
             return runner == null ? null : runner.Run(listener, filter);
+        }
+
+        /// <summary>
+        /// Start a run of the tests in the loaded TestPackage. The tests are run
+        /// asynchronously and the listener interface is notified as it progresses.
+        /// </summary>
+        /// <param name="listener">An ITestEventHandler to receive events</param>
+        /// <param name="filter">A TestFilter used to select tests</param>
+        public void BeginRun(ITestEventHandler listener, TestFilter filter)
+        {
+            if (runner != null)
+                runner.BeginRun(listener, filter);
         }
 
         #endregion

@@ -103,6 +103,29 @@ namespace NUnit.Engine.Runners
             return MakePackageResult(results);
         }
 
+        /// <summary>
+        /// Start a run of the tests in the loaded TestPackage. The tests are run
+        /// asynchronously and the listener interface is notified as it progresses.
+        /// </summary>
+        /// <param name="listener">An ITestEventHandler to receive events</param>
+        /// <param name="filter">A TestFilter used to select tests</param>
+        public override void BeginRun(ITestEventHandler listener, TestFilter filter)
+        {
+            _listener = listener;
+            _filter = filter;
+            var threadStart = new System.Threading.ThreadStart(RunnerProc);
+            System.Threading.Thread runnerThread = new System.Threading.Thread(threadStart);
+            runnerThread.Start();
+        }
+
+        private ITestEventHandler _listener;
+        private TestFilter _filter;
+        private void RunnerProc()
+        {
+            foreach (NUnitFrameworkDriver driver in drivers)
+                driver.Run(_listener, _filter);
+        }
+
         #endregion
     }
 }
