@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2013 Charlie Poole
+// Copyright (c) 2011 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -22,36 +22,70 @@
 // ***********************************************************************
 
 using System;
-using System.IO;
-using NUnit.Engine.Internal;
 
-namespace NUnit.Engine.Services
+namespace NUnit.Engine
 {
-	/// <summary>
-	/// Summary description for UserSettingsService.
-	/// </summary>
-	public class SettingsService : SettingsStore, IService
+	public class RecentFileEntry
 	{
-        public SettingsService() { }
+		public static readonly char Separator = ',';
 
-        public SettingsService(string settingsFile, bool writeable)
-            : base(settingsFile, writeable) { }
+		private string path;
+		
+		private Version clrVersion;
 
-        #region IService Implementation
-
-        public ServiceContext ServiceContext { get; set; }
-
-		public void InitializeService()
+		public RecentFileEntry( string path )
 		{
-            LoadSettings();
-        }
-
-		public void UnloadService()
-		{
-            SaveSettings();
-
-			this.Dispose();
+			this.path = path;
+			this.clrVersion = Environment.Version;
 		}
-		#endregion
+
+		public RecentFileEntry( string path, Version clrVersion )
+		{
+			this.path = path;
+			this.clrVersion = clrVersion;
+		}
+
+		public string Path
+		{
+			get { return path; }
+		}
+
+		public Version CLRVersion
+		{
+			get { return clrVersion; }
+		}
+
+		public bool Exists
+		{
+			get { return path != null && System.IO.File.Exists( path ); }
+		}
+
+		public bool IsCompatibleCLRVersion
+		{
+			get { return clrVersion.Major <= Environment.Version.Major; }
+		}
+
+		public override string ToString()
+		{
+			return Path + Separator + CLRVersion.ToString();
+		}
+
+		public static RecentFileEntry Parse( string text )
+		{
+			int sepIndex = text.LastIndexOf( Separator );
+
+			if ( sepIndex > 0 )
+				try
+				{
+					return new RecentFileEntry( text.Substring( 0, sepIndex ), 
+						new Version( text.Substring( sepIndex + 1 ) ) );
+				}
+				catch
+				{
+					//The last part was not a version, so fall through and return the whole text
+				}
+			
+			return new RecentFileEntry( text );
+		}
 	}
 }

@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2011 Charlie Poole
+// Copyright (c) 2013 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -57,61 +57,13 @@ namespace NUnit.Engine
 		/// <returns>Value of the setting or null</returns>
 		object GetSetting( string settingName );
 
-		/// <summary>
-		/// Load a setting from the storage or return a default value
-		/// </summary>
-		/// <param name="settingName">Name of the setting to load</param>
-		/// <param name="settingName">Value to return if the setting is missing</param>
-		/// <returns>Value of the setting or the default value</returns>
-		object GetSetting( string settingName, object defaultValue );
-
         /// <summary>
-        /// Load an integer setting from the storage or return a default value
+        /// Load a setting from the storage or return a default value
         /// </summary>
         /// <param name="settingName">Name of the setting to load</param>
         /// <param name="defaultValue">Value to return if the setting is missing</param>
         /// <returns>Value of the setting or the default value</returns>
-        int GetSetting(string settingName, int defaultValue);
-
-        /// <summary>
-        /// Load a float setting from the storage or return a default value
-        /// </summary>
-        /// <param name="settingName">Name of the setting to load</param>
-        /// <param name="defaultValue">Value to return if the setting is missing</param>
-        /// <returns>Value of the setting or the default value</returns>
-        float GetSetting(string settingName, float defaultValue);
-
-        /// <summary>
-		/// Load a boolean setting or return a default value
-		/// </summary>
-		/// <param name="settingName">Name of setting to load</param>
-		/// <param name="defaultValue">Value to return if the setting is missing</param>
-		/// <returns>Value of the setting or the default value</returns>
-		bool GetSetting( string settingName, bool defaultValue );
-
-		/// <summary>
-		/// Load a string setting from the storage or return a default value
-		/// </summary>
-		/// <param name="settingName">Name of the setting to load</param>
-		/// <param name="defaultValue">Value to return if the setting is missing</param>
-		/// <returns>Value of the setting or the default value</returns>
-		string GetSetting( string settingName, string defaultValue );
-
-        /// <summary>
-        /// Load an enum setting from the storage or return a default value
-        /// </summary>
-        /// <param name="settingName">Name of the setting to load</param>
-        /// <param name="defaultValue">Value to return if the setting is missing</param>
-        /// <returns>Value of the setting or the default value</returns>
-        System.Enum GetSetting(string settingName, System.Enum defaultValue);
-
-        /// <summary>
-        /// Load a Font setting from the storage or return a default value
-        /// </summary>
-        /// <param name="settingName">Name of the setting to load</param>
-        /// <param name="defaultFont">Value to return if the setting is missing</param>
-        /// <returns>Value of the setting or the default value</returns>
-        System.Drawing.Font GetSetting(string settingName, System.Drawing.Font defaultFont);
+        T GetSetting<T>(string settingName, T defaultValue);
 
         /// <summary>
 		/// Remove a setting from the storage

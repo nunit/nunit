@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Api\RecentFileEntryTests.cs" />
     <Compile Include="Api\ServiceLocatorTests.cs" />
     <Compile Include="Api\TestFilterTests.cs" />
     <Compile Include="Api\TestPackageTests.cs" />
@@ -63,6 +64,7 @@
     <Compile Include="Internal\XmlHelperTests.cs" />
     <Compile Include="RuntimeFrameworkTests.cs" />
     <Compile Include="Services\DomainManagerTests.cs" />
+    <Compile Include="Services\RecentFilesTests.cs" />
     <Compile Include="TestEngineResultTests.cs" />
   </ItemGroup>
   <ItemGroup>

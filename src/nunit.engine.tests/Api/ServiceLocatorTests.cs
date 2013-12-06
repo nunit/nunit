@@ -30,6 +30,7 @@ namespace NUnit.Engine.Api.Tests
         }
 
         [TestCase(typeof(ISettings))]
+        [TestCase(typeof(IRecentFiles))]
         [TestCase(typeof(ITestAgency))]
         public void CanAccessUserSettings(Type serviceType)
         {

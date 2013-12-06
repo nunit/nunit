@@ -62,6 +62,8 @@
     <Compile Include="ITestEventHandler.cs" />
     <Compile Include="ITestRunner.cs" />
     <Compile Include="NUnitEngineException.cs" />
+    <Compile Include="RecentFileEntry.cs" />
+    <Compile Include="IRecentFiles.cs" />
     <Compile Include="TestEngineActivator.cs" />
     <Compile Include="TestEngineError.cs" />
     <Compile Include="TestFilter.cs" />

@@ -70,6 +70,7 @@
     <Compile Include="Internal\ServerBase.cs" />
     <Compile Include="Internal\ServerUtilities.cs" />
     <Compile Include="Internal\SettingsGroup.cs" />
+    <Compile Include="Internal\SettingsStore.cs" />
     <Compile Include="Internal\XmlHelper.cs" />
     <Compile Include="IProject.cs" />
     <Compile Include="IProjectConfig.cs" />
@@ -97,6 +98,7 @@
     <Compile Include="Services\InProcessTestRunnerFactory.cs" />
     <Compile Include="Services\NUnitProjectLoader.cs" />
     <Compile Include="Services\ProjectService.cs" />
+    <Compile Include="Services\RecentFilesService.cs" />
     <Compile Include="Services\RuntimeFrameworkSelector.cs" />
     <Compile Include="Services\ServiceManager.cs" />
     <Compile Include="Services\SettingsService.cs" />
