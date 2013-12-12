@@ -31,10 +31,7 @@ namespace NUnit.Engine
     {
         private TestEngineResult result;
 
-        public TestEngineResult Result
-        {
-            get { return result; }
-        }
+        public string Result { get; private set; }
 
         public virtual void ReportProgress(string report)
         {
@@ -58,7 +55,7 @@ namespace NUnit.Engine
 
         public void RaiseCallbackEvent(string eventArgument)
         {
-            result = new TestEngineResult(eventArgument);
+            Result = eventArgument;
             ReportProgress(eventArgument);
         }
 

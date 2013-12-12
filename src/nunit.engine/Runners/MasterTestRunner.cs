@@ -78,6 +78,17 @@ namespace NUnit.Engine.Runners
         }
 
         /// <summary>
+        /// Count the test cases that would be run under
+        /// the specified filter.
+        /// </summary>
+        /// <param name="filter">A TestFilter</param>
+        /// <returns>The count of test cases</returns>
+        public int CountTestCases(TestFilter filter)
+        {
+            return realRunner.CountTestCases(filter);
+        }
+
+        /// <summary>
         /// Run the tests in the loaded TestPackage and return a test result. The tests
         /// are run synchronously and the listener interface is notified as it progresses.
         /// </summary>

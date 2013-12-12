@@ -33,6 +33,8 @@ namespace NUnit.Engine
 
         void Unload();
 
+        int CountTestCases(TestFilter filter);
+
         TestEngineResult Run(ITestEventHandler listener, TestFilter filter);
 
         TestEngineResult Explore(TestFilter filter);

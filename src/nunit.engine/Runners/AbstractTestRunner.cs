@@ -74,6 +74,14 @@ namespace NUnit.Engine.Runners
         }
 
         /// <summary>
+        /// Count the test cases that would be run under
+        /// the specified filter.
+        /// </summary>
+        /// <param name="filter">A TestFilter</param>
+        /// <returns>The count of test cases</returns>
+        public abstract int CountTestCases(TestFilter filter);
+
+        /// <summary>
         /// Run the tests in a loaded TestPackage. This is the interal
         /// implementation, returning a TestEngineResult.
         /// </summary>

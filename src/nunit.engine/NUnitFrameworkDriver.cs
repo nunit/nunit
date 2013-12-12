@@ -40,6 +40,7 @@ namespace NUnit.Engine
         private static readonly string CONTROLLER_TYPE = "NUnit.Framework.Api.FrameworkController";
         private static readonly string LOAD_ACTION = CONTROLLER_TYPE + "+LoadTestsAction";
         private static readonly string EXPLORE_ACTION = CONTROLLER_TYPE + "+ExploreTestsAction";
+        private static readonly string COUNT_ACTION = CONTROLLER_TYPE + "+CountTestsAction";
         private static readonly string RUN_ACTION = CONTROLLER_TYPE + "+RunTestsAction";
 
         static ILogger log = InternalTrace.GetLogger("NUnitFrameworkDriver");
@@ -65,11 +66,20 @@ namespace NUnit.Engine
             log.Info("Loading {0} - see separate log file", Path.GetFileName(assemblyPath));
             CreateObject(LOAD_ACTION, frameworkController, handler);
 
-            return handler.Result;
+            return new TestEngineResult(handler.Result);
         }
 
         public void Unload()
         {
+        }
+
+        public int CountTestCases(TestFilter filter)
+        {
+            CallbackHandler handler = new CallbackHandler();
+
+            CreateObject(COUNT_ACTION, frameworkController, filter.Text, handler);
+
+            return int.Parse(handler.Result);
         }
 
         public TestEngineResult Run(ITestEventHandler listener, TestFilter filter)
@@ -79,7 +89,7 @@ namespace NUnit.Engine
             log.Info("Running {0} - see separate log file", Path.GetFileName(assemblyPath));
             CreateObject(RUN_ACTION, frameworkController, filter.Text, handler);
 
-            return handler.Result;
+            return new TestEngineResult(handler.Result);
         }
 
         public TestEngineResult Explore(TestFilter filter)
@@ -89,7 +99,7 @@ namespace NUnit.Engine
             log.Info("Exploring {0} - see separate log file", Path.GetFileName(assemblyPath));
             CreateObject(EXPLORE_ACTION, frameworkController, filter.Text, handler);
 
-            return handler.Result;
+            return new TestEngineResult(handler.Result);
         }
 
         #region Helper Methods

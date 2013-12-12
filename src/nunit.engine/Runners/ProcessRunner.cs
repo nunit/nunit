@@ -127,6 +127,17 @@ namespace NUnit.Engine.Runners
 		}
 
         /// <summary>
+        /// Count the test cases that would be run under
+        /// the specified filter.
+        /// </summary>
+        /// <param name="filter">A TestFilter</param>
+        /// <returns>The count of test cases</returns>
+        public override int CountTestCases(TestFilter filter)
+        {
+            return this.remoteRunner.CountTestCases(filter);
+        }
+
+        /// <summary>
         /// Run the tests in a loaded TestPackage
         /// </summary>
         /// <param name="filter">A TestFilter used to select tests</param>

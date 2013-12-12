@@ -85,6 +85,22 @@ namespace NUnit.Engine.Runners
         }
 
         /// <summary>
+        /// Count the test cases that would be run under
+        /// the specified filter.
+        /// </summary>
+        /// <param name="filter">A TestFilter</param>
+        /// <returns>The count of test cases</returns>
+        public override int CountTestCases(TestFilter filter)
+        {
+            int count = 0;
+
+            foreach (IFrameworkDriver driver in drivers)
+                count += driver.CountTestCases(filter);
+
+            return count;
+        }
+
+        /// <summary>
         /// Run the tests in a loaded TestPackage
         /// </summary>
         /// <param name="filter">A TestFilter used to select tests</param>
