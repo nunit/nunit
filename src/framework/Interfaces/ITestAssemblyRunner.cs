@@ -63,12 +63,12 @@ namespace NUnit.Framework.Interfaces
         /// <returns>True if the load was successful</returns>
         bool Load(Assembly assembly, System.Collections.IDictionary settings);
 
-        ///// <summary>
-        ///// Count Test Cases using a filter
-        ///// </summary>
-        ///// <param name="filter">The filter to apply</param>
-        ///// <returns>The number of test cases found</returns>
-        //int CountTestCases(TestFilter filter);
+        /// <summary>
+        /// Count Test Cases using a filter
+        /// </summary>
+        /// <param name="filter">The filter to apply</param>
+        /// <returns>The number of test cases found</returns>
+        int CountTestCases(ITestFilter filter);
 
         /// <summary>
         /// Run selected tests and return a test result. The test is run synchronously,

@@ -108,15 +108,15 @@ namespace NUnit.Framework.Internal
             return true;
         }
 
-        ///// <summary>
-        ///// Count Test Cases using a filter
-        ///// </summary>
-        ///// <param name="filter">The filter to apply</param>
-        ///// <returns>The number of test cases found</returns>
-        //public int CountTestCases(TestFilter filter)
-        //{
-        //    return this.suite.CountTestCases(filter);
-        //}
+        /// <summary>
+        /// Count Test Cases using a filter
+        /// </summary>
+        /// <param name="filter">The filter to apply</param>
+        /// <returns>The number of test cases found</returns>
+        public int CountTestCases(ITestFilter filter)
+        {
+            return CountTestCases(_loadedTest, filter);
+        }
 
         /// <summary>
         /// Run selected tests and return a test result. The test is run synchronously,
@@ -176,7 +176,7 @@ namespace NUnit.Framework.Internal
             {
                 pump.Start();
 
-                if (dispatcher != null)
+                if (dispatcher != null && workItem.IsParallelizable)
                 {
                     dispatcher.Dispatch(workItem);
                     dispatcher.Start();
@@ -223,6 +223,19 @@ namespace NUnit.Framework.Internal
                 context.WorkDirectory = Environment.CurrentDirectory;
 #endif
             return context;
+        }
+
+        private int CountTestCases(ITest test, ITestFilter filter)
+        {
+            if (!test.IsSuite)
+                return 1;
+            
+            int count = 0;
+            foreach (ITest child in test.Tests)
+                if (filter.Pass(child))
+                    count += CountTestCases(child, filter);
+
+            return count;
         }
 
         #endregion

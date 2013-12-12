@@ -200,6 +200,19 @@ namespace NUnit.Framework.Api
             }
         }
 
+        private void CountTests(ICallbackEventHandler handler, string filter)
+        {
+            try
+            {
+                var count = Runner.CountTestCases(TestFilter.FromXml(filter));
+                handler.RaiseCallbackEvent(count.ToString());
+            }
+            catch (Exception ex)
+            {
+                handler.RaiseCallbackEvent(FormatErrorReport(ex));
+            }
+        }
+
         #endregion
 
         #region Format Error Reports
@@ -325,29 +338,29 @@ namespace NUnit.Framework.Api
         //}
 
         #endregion
+#endif
 
         #region CountTestsAction
 
-        ///// <summary>
-        ///// CountTestsAction counts the number of test cases in the loaded TestSuite
-        ///// held by the FrameworkController.
-        ///// </summary>
-        //public class CountTestsAction : FrameworkControllerAction
-        //{
-        //    /// <summary>
-        //    /// Construct a CountsTestAction and perform the count of test cases.
-        //    /// </summary>
-        //    /// <param name="controller">A FrameworkController holding the TestSuite whose cases are to be counted</param>
-        //    /// <param name="callback">An AsyncCallback for reporting the count</param>
-        //    public CountTestsAction(FrameworkController controller, AsyncCallback callback) 
-        //        : base(controller, callback)
-        //    {
-        //        ReportResult(Runner.CountTestCases(TestFilter.Empty), true);
-        //    }
-        //}
+        /// <summary>
+        /// CountTestsAction counts the number of test cases in the loaded TestSuite
+        /// held by the FrameworkController.
+        /// </summary>
+        public class CountTestsAction : FrameworkControllerAction
+        {
+            /// <summary>
+            /// Construct a CountsTestAction and perform the count of test cases.
+            /// </summary>
+            /// <param name="controller">A FrameworkController holding the TestSuite whose cases are to be counted</param>
+            /// <param name="filter">A string containing the XML representation of the filter to use</param>
+            /// <param name="handler">A callback handler used to report results</param>
+            public CountTestsAction(FrameworkController controller, string filter, object handler) 
+            {
+                controller.CountTests((ICallbackEventHandler)handler, filter);
+            }
+        }
 
         #endregion
-#endif
 
         #region RunTestsAction
 
