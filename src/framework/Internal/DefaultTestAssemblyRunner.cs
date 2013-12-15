@@ -176,7 +176,7 @@ namespace NUnit.Framework.Internal
             {
                 pump.Start();
 
-                if (dispatcher != null && workItem.IsParallelizable)
+                if (dispatcher != null)
                 {
                     dispatcher.Dispatch(workItem);
                     dispatcher.Start();
