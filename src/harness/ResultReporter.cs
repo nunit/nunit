@@ -39,6 +39,8 @@ namespace NUnit.Framework.TestHarness
             this.result = result;
             this.testRunResult = result.Attributes["result"].Value;
             this.summary = new ResultSummary(result);
+            if (summary.ResultCount == 0)
+                this.testRunResult += " - No tests found.";
         }
 
         /// <summary>
@@ -47,6 +49,9 @@ namespace NUnit.Framework.TestHarness
         /// <param name="result">The result.</param>
         public void ReportResults()
         {
+            if (summary.ResultCount == 0)
+                Console.WriteLine("Warning: No tests found");
+
             WriteSummaryReport();
 
             if (testRunResult == "Failed" || testRunResult == "Error")

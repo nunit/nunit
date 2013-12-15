@@ -66,18 +66,13 @@ namespace NUnit.Framework.Internal
 
             IList fixtures = GetFixtures(assembly, fixtureNames);
 
-            if (fixtures.Count > 0)
-            {
 #if NETCF || SILVERLIGHT
-                AssemblyName assemblyName = AssemblyHelper.GetAssemblyName(assembly);
-                return BuildTestAssembly(assemblyName.Name, fixtures);
+            AssemblyName assemblyName = AssemblyHelper.GetAssemblyName(assembly);
+            return BuildTestAssembly(assemblyName.Name, fixtures);
 #else   
-                string assemblyPath = AssemblyHelper.GetAssemblyPath(assembly);
-                return BuildTestAssembly(assemblyPath, fixtures);
+            string assemblyPath = AssemblyHelper.GetAssemblyPath(assembly);
+            return BuildTestAssembly(assemblyPath, fixtures);
 #endif
-            }
-            
-            return null;
         }
 
         /// <summary>
@@ -98,10 +93,7 @@ namespace NUnit.Framework.Internal
             IList fixtureNames = options["LOAD"] as IList;
 
             IList fixtures = GetFixtures(assembly, fixtureNames);
-            if (fixtures.Count > 0)
-                return BuildTestAssembly(assemblyName, fixtures);
-
-            return null;
+            return BuildTestAssembly(assemblyName, fixtures);
         }
         #endregion
 
