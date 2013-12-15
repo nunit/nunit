@@ -60,8 +60,11 @@ namespace NUnit.ConsoleRunner
                 Console.WriteLine("Execution terminated after first error");
                 Console.WriteLine();
             }
-            
+
             WriteSummaryReport();
+
+            if (ListAssembliesWithNoTests(result) > 0)
+                Console.WriteLine();
 
             if (testRunResult == "Failed")
                 WriteErrorsAndFailuresReport();
@@ -84,6 +87,34 @@ namespace NUnit.ConsoleRunner
             Console.WriteLine(
                 "        Time: {0} seconds", summary.Time);
             Console.WriteLine();
+        }
+
+        private int ListAssembliesWithNoTests(XmlNode result)
+        {
+            int count = 0;
+
+            switch (result.Name)
+            {
+                case "test-run":
+                    foreach (XmlNode child in result.ChildNodes)
+                        count += ListAssembliesWithNoTests(child);
+                    break;
+
+                case "test-suite":
+                    if (result.GetAttribute("type") == "Assembly")
+                    {
+                        if (result.GetAttribute("total") == "0")
+                            Console.WriteLine("Warning: No tests found in " + result.GetAttribute("name"));
+                        count++;
+                        break;
+                    }
+
+                    foreach (XmlNode child in result.ChildNodes)
+                        count += ListAssembliesWithNoTests(child);
+                    break;
+            }
+
+            return count;
         }
 
         private void WriteErrorsAndFailuresReport()
