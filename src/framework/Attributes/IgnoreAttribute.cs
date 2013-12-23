@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Globalization;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 
@@ -36,6 +37,7 @@ namespace NUnit.Framework
     public class IgnoreAttribute : NUnitAttribute, IApplyToTest
 	{
 		private string reason;
+	    private DateTime? upTo;
 
 		/// <summary>
 		/// Constructs the attribute without giving a reason 
@@ -55,7 +57,19 @@ namespace NUnit.Framework
 			this.reason = reason;
         }
 
-        #region IApplyToTest members
+	    /// <summary>
+	    /// Constructs the attribute giving a reason for ignoring the test and
+	    /// a future date when to stop ignoring the test (marking the test as NotRunnable).
+	    /// </summary>
+	    /// <param name="reason">The reason for ignoring the test</param>
+	    /// <param name="upTo">The date in the future to stop ignoring the test (invariant culture)</param>
+	    public IgnoreAttribute(string reason, string upTo)
+            : this(reason)
+	    {
+	        this.upTo = DateTime.Parse(upTo, CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal);
+	    }
+
+	    #region IApplyToTest members
 
         /// <summary>
         /// Modifies a test by marking it as Ignored.
@@ -65,6 +79,12 @@ namespace NUnit.Framework
         {
             if (test.RunState != RunState.NotRunnable)
             {
+                if (upTo != null && upTo < DateTime.Now)
+                {
+                    test.RunState = RunState.NotRunnable;
+                    return;
+                }
+
                 test.RunState = RunState.Ignored;
                 test.Properties.Set(PropertyNames.SkipReason, reason);
             }

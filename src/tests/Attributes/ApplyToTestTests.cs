@@ -87,6 +87,23 @@ namespace NUnit.Framework.Attributes
             Assert.That(test.Properties.Get(PropertyNames.SkipReason), Is.EqualTo("BECAUSE"));
         }
 
+        [Test]
+        public void IgnoreAttributeIgnoresTestUpToDateSpecified()
+        {
+            new IgnoreAttribute("BECAUSE", "4242-01-01").ApplyToTest(test);
+            Assert.That(test.RunState, Is.EqualTo(RunState.Ignored));
+            Assert.That(test.Properties.Get(PropertyNames.SkipReason), Is.EqualTo("BECAUSE"));
+        }
+
+        [Test]
+        public void IgnoreAttributeWithUpToDateMarksTestAsNonRunnableAfterDatePasses()
+        {
+            new IgnoreAttribute("BECAUSE", "1492-01-01").ApplyToTest(test);
+            Assert.That(test.RunState, Is.EqualTo(RunState.NotRunnable));
+        } 
+
+
+
         #endregion
 
         #region ExplicitAttribute
