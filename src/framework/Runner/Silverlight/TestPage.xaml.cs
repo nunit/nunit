@@ -19,6 +19,9 @@ namespace NUnitLite.Runner.Silverlight
         private ITestAssemblyRunner runner;
         private TextWriter writer;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TestPage"/> class.
+        /// </summary>
         public TestPage()
         {
             InitializeComponent();

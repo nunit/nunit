@@ -59,6 +59,13 @@ namespace NUnit.Framework.Internal.Execution
 
         #region Static Factory Method
 
+        /// <summary>
+        /// Creates a work item.
+        /// </summary>
+        /// <param name="test">The test.</param>
+        /// <param name="context">The text execution context.</param>
+        /// <param name="filter">The test filter.</param>
+        /// <returns></returns>
         static public WorkItem CreateWorkItem(Test test, TestExecutionContext context, ITestFilter filter)
         {
             TestSuite suite = test as TestSuite;

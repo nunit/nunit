@@ -41,6 +41,9 @@ namespace NUnit.Framework.Internal.Extensibility
     {
         private List<ISuiteBuilder> Extensions = new List<ISuiteBuilder>();
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SuiteBuilderCollection"/> class.
+        /// </summary>
         public SuiteBuilderCollection()
         {
             Extensions.Add(new NUnitTestFixtureBuilder());

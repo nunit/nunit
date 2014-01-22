@@ -118,6 +118,12 @@ namespace NUnit.Framework
         	}
         }
 
+        /// <summary>
+        /// Gets the random generator.
+        /// </summary>
+        /// <value>
+        /// The random generator.
+        /// </value>
         public RandomGenerator Random
         {
             get

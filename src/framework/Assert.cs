@@ -299,7 +299,6 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="expr">A Constraint expression to be applied</param>
         /// <param name="del">An ActualValueDelegate returning the value to be tested</param>
-        /// <param name="expr">A Constraint expression to be applied</param>
         /// <param name="message">The message that will be displayed on failure</param>
         static public void That<TActual>(ActualValueDelegate<TActual> del, IResolveConstraint expr, string message)
         {
