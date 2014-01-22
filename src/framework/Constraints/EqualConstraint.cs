@@ -47,25 +47,6 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         private NUnitEqualityComparer comparer = new NUnitEqualityComparer();
 
-        #region Message Strings
-        //private static readonly string StringsDiffer_1 =
-        //    "String lengths are both {0}. Strings differ at index {1}.";
-        //private static readonly string StringsDiffer_2 =
-        //    "Expected string length {0} but was {1}. Strings differ at index {2}.";
-        //private static readonly string StreamsDiffer_1 =
-        //    "Stream lengths are both {0}. Streams differ at offset {1}.";
-        //private static readonly string StreamsDiffer_2 =
-        //    "Expected Stream length {0} but was {1}.";// Streams differ at offset {2}.";
-        //private static readonly string CollectionType_1 =
-        //    "Expected and actual are both {0}";
-        //private static readonly string CollectionType_2 =
-        //    "Expected is {0}, actual is {1}";
-        //private static readonly string ValuesDiffer_1 =
-        //    "Values differ at index {0}";
-        //private static readonly string ValuesDiffer_2 =
-        //    "Values differ at expected index {0}, actual index {1}";
-        #endregion
-
         #endregion
 
         #region Constructor
