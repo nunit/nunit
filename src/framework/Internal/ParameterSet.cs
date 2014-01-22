@@ -128,7 +128,7 @@ namespace NUnit.Framework.Internal
         public ExpectedExceptionData ExceptionData
         {
             get { return _exceptionData; }
-            set { _exceptionData = value; }
+            protected set { _exceptionData = value; }
         }
 
         /// <summary>
