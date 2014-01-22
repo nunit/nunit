@@ -470,8 +470,13 @@ namespace NUnit.Framework
 		/// <summary>
 		/// Asserts that the superset does not contain the subset
 		/// </summary>
+<<<<<<< HEAD
         /// <param name="subset">The IEnumerable subset to be considered</param>
         /// <param name="superset">The IEnumerable superset to be considered</param>
+=======
+      /// <param name="subset">The IEnumerable subset to be considered</param>
+      /// <param name="superset">The IEnumerable superset to be considered</param>
+>>>>>>> 130d2fbfab89c4e737d716ccb0c9460058b5f282
 		public static void IsNotSubsetOf (IEnumerable subset, IEnumerable superset)
 		{
 			IsNotSubsetOf(subset, superset, string.Empty, null);
@@ -480,8 +485,13 @@ namespace NUnit.Framework
 		/// <summary>
 		/// Asserts that the superset does not contain the subset
 		/// </summary>
+<<<<<<< HEAD
         /// <param name="subset">The IEnumerable subset to be considered</param>
         /// <param name="superset">The IEnumerable superset to be considered</param>
+=======
+      /// <param name="subset">The IEnumerable subset to be considered</param>
+      /// <param name="superset">The IEnumerable superset to be considered</param>
+>>>>>>> 130d2fbfab89c4e737d716ccb0c9460058b5f282
 		/// <param name="message">The message that will be displayed on failure</param>
 		public static void IsNotSubsetOf (IEnumerable subset, IEnumerable superset, string message)
 		{
@@ -491,8 +501,13 @@ namespace NUnit.Framework
 		/// <summary>
 		/// Asserts that the superset does not contain the subset
 		/// </summary>
+<<<<<<< HEAD
         /// <param name="subset">The IEnumerable subset to be considered</param>
         /// <param name="superset">The IEnumerable superset to be considered</param>
+=======
+      /// <param name="subset">The IEnumerable subset to be considered</param>
+      /// <param name="superset">The IEnumerable superset to be considered</param>
+>>>>>>> 130d2fbfab89c4e737d716ccb0c9460058b5f282
 		/// <param name="message">The message that will be displayed on failure</param>
 		/// <param name="args">Arguments to be used in formatting the message</param>
 		public static void IsNotSubsetOf (IEnumerable subset, IEnumerable superset, string message, params object[] args)
@@ -506,8 +521,13 @@ namespace NUnit.Framework
 		/// <summary>
 		/// Asserts that the superset contains the subset.
 		/// </summary>
+<<<<<<< HEAD
         /// <param name="subset">The IEnumerable subset to be considered</param>
         /// <param name="superset">The IEnumerable superset to be considered</param>
+=======
+      /// <param name="subset">The IEnumerable subset to be considered</param>
+      /// <param name="superset">The IEnumerable superset to be considered</param>
+>>>>>>> 130d2fbfab89c4e737d716ccb0c9460058b5f282
 		public static void IsSubsetOf (IEnumerable subset, IEnumerable superset)
 		{
 			IsSubsetOf(subset, superset, string.Empty, null);
@@ -516,8 +536,13 @@ namespace NUnit.Framework
 		/// <summary>
 		/// Asserts that the superset contains the subset.
 		/// </summary>
+<<<<<<< HEAD
         /// <param name="subset">The IEnumerable subset to be considered</param>
         /// <param name="superset">The IEnumerable superset to be considered</param>
+=======
+      /// <param name="subset">The IEnumerable subset to be considered</param>
+      /// <param name="superset">The IEnumerable superset to be considered</param>
+>>>>>>> 130d2fbfab89c4e737d716ccb0c9460058b5f282
 		/// <param name="message">The message that will be displayed on failure</param>
 		public static void IsSubsetOf (IEnumerable subset, IEnumerable superset, string message)
 		{
@@ -527,8 +552,13 @@ namespace NUnit.Framework
 		/// <summary>
 		/// Asserts that the superset contains the subset.
 		/// </summary>
+<<<<<<< HEAD
         /// <param name="subset">The IEnumerable subset to be considered</param>
         /// <param name="superset">The IEnumerable superset to be considered</param>
+=======
+      /// <param name="subset">The IEnumerable subset to be considered</param>
+      /// <param name="superset">The IEnumerable superset to be considered</param>
+>>>>>>> 130d2fbfab89c4e737d716ccb0c9460058b5f282
 		/// <param name="message">The message that will be displayed on failure</param>
 		/// <param name="args">Arguments to be used in formatting the message</param>
 		public static void IsSubsetOf (IEnumerable subset, IEnumerable superset, string message, params object[] args)
