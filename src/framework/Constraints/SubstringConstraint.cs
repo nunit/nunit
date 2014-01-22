@@ -35,7 +35,7 @@ namespace NUnit.Framework.Constraints
         /// <param name="expected">The expected.</param>
         public SubstringConstraint(string expected) : base(expected) 
         {
-            description = "String containing";
+            m_description = "String containing";
         }
 
         /// <summary>

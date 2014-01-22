@@ -38,12 +38,9 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// The expected result to be returned
         /// </summary>
-        private object expectedResult;
+        private object _expectedResult;
 
-        /// <summary>
-        /// Data about any expected exception.
-        /// </summary>
-        protected ExpectedExceptionData exceptionData;
+        private ExpectedExceptionData _exceptionData;
 
         #endregion
 
@@ -81,7 +78,7 @@ namespace NUnit.Framework.Internal
             this.TestName = data.TestName;
             this.RunState = data.RunState;
             this.Arguments = this.OriginalArguments = data.Arguments;
-            this.exceptionData = data.ExceptionData;
+            this.ExceptionData = data.ExceptionData;
 
             if (data.HasExpectedResult)
                 this.ExpectedResult = data.ExpectedResult;
@@ -112,10 +109,10 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public object ExpectedResult
         {
-            get { return expectedResult; }
+            get { return _expectedResult; }
             set
             {
-                expectedResult = value;
+                _expectedResult = value;
                 HasExpectedResult = true;
             }
         }
@@ -130,7 +127,17 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public ExpectedExceptionData ExceptionData
         {
-            get { return exceptionData; }
+            get { return _exceptionData; }
+            set { _exceptionData = value; }
+        }
+
+        /// <summary>
+        /// Sets the name of the expected exception.
+        /// </summary>
+        /// <param name="expectedExceptionName">Name of the expected exception.</param>
+        protected void SetExpectedExceptionName(string expectedExceptionName)
+        {
+            _exceptionData.ExpectedExceptionName = expectedExceptionName;
         }
 
         /// <summary>
@@ -160,7 +167,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public bool ExceptionExpected
         {
-            get { return exceptionData.ExpectedExceptionName != null; }
+            get { return ExceptionData.ExpectedExceptionName != null; }
         }
 
         #endregion
@@ -181,7 +188,7 @@ namespace NUnit.Framework.Internal
                     test.Properties.Add(key, value);
 
             TestMethod testMethod = test as TestMethod;
-            if (testMethod != null && exceptionData.ExpectedExceptionName != null)
+            if (testMethod != null && ExceptionData.ExpectedExceptionName != null)
                 testMethod.CustomDecorators.Add(new ExpectedExceptionDecorator(this.ExceptionData));
         }
 

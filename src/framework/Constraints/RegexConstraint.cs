@@ -40,7 +40,7 @@ namespace NUnit.Framework.Constraints
         /// <param name="pattern">The pattern.</param>
         public RegexConstraint(string pattern) : base(pattern) 
         {
-            description = "String matching";
+            m_description = "String matching";
         }
 
         /// <summary>

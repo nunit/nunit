@@ -35,7 +35,7 @@ namespace NUnit.Framework.Constraints
         /// <param name="expected">The expected string</param>
         public StartsWithConstraint(string expected) : base(expected) 
         {
-            description = "String starting with";
+            m_description = "String starting with";
         }
 
         /// <summary>

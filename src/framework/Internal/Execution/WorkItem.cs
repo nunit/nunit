@@ -49,11 +49,6 @@ namespace NUnit.Framework.Internal.Execution
         // The test this WorkItem represents
         private Test _test;
 
-        /// <summary>
-        /// The result of running the test
-        /// </summary>
-        protected TestResult _testResult;
-
         // The execution context used by this work item
         private TestExecutionContext _context;
 
@@ -87,7 +82,7 @@ namespace NUnit.Framework.Internal.Execution
         public WorkItem(Test test, TestExecutionContext context)
         {
             _test = test;
-            _testResult = test.MakeTestResult();
+            Result = test.MakeTestResult();
             _state = WorkItemState.Ready;
             _context = context;
         }
@@ -128,10 +123,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// The test result
         /// </summary>
-        public TestResult Result
-        {
-            get { return _testResult; }
-        }
+        public TestResult Result { get; protected set; }
 
 #if !SILVERLIGHT && !NETCF
         internal ApartmentState TargetApartment
