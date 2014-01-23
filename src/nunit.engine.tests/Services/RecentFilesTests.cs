@@ -37,8 +37,9 @@ namespace NUnit.Engine.Services.Tests
 	[TestFixture]
 	public class RecentFilesTests
 	{
-		static readonly int MAX = RecentFilesService.MaxSize;
-		static readonly int MIN = RecentFilesService.MinSize;
+		private const int MAX = 24;
+		private const int MIN = 0;
+        private const int DEFAULT = 5;
 
 		RecentFilesService recentFiles;
 
@@ -95,7 +96,7 @@ namespace NUnit.Engine.Services.Tests
 		[Test]
 		public void CountDefault()
 		{
-			Assert.AreEqual( RecentFilesService.DefaultSize, recentFiles.MaxFiles );
+			Assert.AreEqual( DEFAULT, recentFiles.MaxFiles );
 		}
 
 		[Test]

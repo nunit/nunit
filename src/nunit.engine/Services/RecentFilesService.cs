@@ -33,9 +33,9 @@ namespace NUnit.Engine.Services
 	{
         private IList<RecentFileEntry> fileEntries = new List<RecentFileEntry>();
 
-		public static readonly int MinSize = 0;
-		public static readonly int MaxSize = 24;
-		public static readonly int DefaultSize = 5;
+		private const int MinSize = 0;
+		private const int MaxSize = 24;
+		private const int DefaultSize = 5;
 
 		#region Properties
 
