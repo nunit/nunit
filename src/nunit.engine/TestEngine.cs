@@ -75,7 +75,7 @@ namespace NUnit.Engine
         /// </summary>
         public void InitializeServices(string workDirectory, InternalTraceLevel traceLevel)
         {
-            SettingsService settingsService = new SettingsService("NUnit30Settings.xml", false);
+            SettingsService settingsService = new SettingsService("NUnit30Settings.xml", true);
 
             if (traceLevel == InternalTraceLevel.Default)
                 traceLevel = (InternalTraceLevel)settingsService.GetSetting("Options.InternalTraceLevel", InternalTraceLevel.Off);
