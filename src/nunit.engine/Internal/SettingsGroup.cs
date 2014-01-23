@@ -37,7 +37,9 @@ namespace NUnit.Engine.Internal
     /// </summary>
     public class SettingsGroup : ISettings, IDisposable
     {
-        private Dictionary<string, object> _settings = new Dictionary<string, object>();
+        static Logger log = InternalTrace.GetLogger("SettingsGroup");
+
+        protected Dictionary<string, object> _settings = new Dictionary<string, object>();
 
         public event SettingsEventHandler Changed;
 
@@ -79,8 +81,11 @@ namespace NUnit.Engine.Internal
 
                 return (T)converter.ConvertFrom(result);
             }
-            catch
+            catch(Exception ex)
             {
+
+                log.Error("Unable to convert setting {0} to {1}", settingName, typeof(T).Name);
+                log.Error(ex.Message);
                 return defaultValue;
             }
         }

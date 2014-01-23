@@ -54,7 +54,7 @@ namespace NUnit.Engine.Internal
         /// <param name="writeable"></param>
         public SettingsStore(string settingsFile, bool writeable)
         {
-            _settingsFile = settingsFile;
+            _settingsFile = Path.GetFullPath(settingsFile);
             _writeable = writeable;
         }
 
@@ -108,7 +108,7 @@ namespace NUnit.Engine.Internal
                 writer.WriteStartElement("NUnitSettings");
                 writer.WriteStartElement("Settings");
 
-                List<string> keys = new List<string>();
+                List<string> keys = new List<string>(_settings.Keys);
                 keys.Sort();
 
                 foreach (string name in keys)
@@ -118,7 +118,8 @@ namespace NUnit.Engine.Internal
                     {
                         writer.WriteStartElement("Setting");
                         writer.WriteAttributeString("name", name);
-                        writer.WriteAttributeString("value", val.ToString());
+                        writer.WriteAttributeString("value", 
+                            TypeDescriptor.GetConverter(val).ConvertToInvariantString(val));
                         writer.WriteEndElement();
                     }
                 }
