@@ -111,7 +111,6 @@ namespace NUnit.Framework.Internal
             AssemblyName assemblyName = AssemblyName.GetAssemblyName(path);
 
             assembly = Assembly.Load(assemblyName);
-#endif
 
             // TODO: Can this ever be null?
             if (assembly == null)
@@ -127,6 +126,7 @@ namespace NUnit.Framework.Internal
             }
 
             return assembly;
+#endif
         }
 
         private IList GetFixtures(Assembly assembly, IList names)
