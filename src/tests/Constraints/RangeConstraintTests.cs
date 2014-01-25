@@ -84,7 +84,7 @@ namespace NUnit.Framework.Constraints
         // Test on Issue #21 - https://github.com/nunit/nunit-framework/issues/21
         [Test]
         [ExpectedException( typeof( ArgumentException ))]
-        public void RangesConstraintShouldFailIfFromIsLessThanTo()
+        public void ShouldThrowExceptionIfFromIsLessThanTo()
         {
             var comparer = new GenericComparer<int>();
             rangeConstraint = new RangeConstraint( 42, 5 );

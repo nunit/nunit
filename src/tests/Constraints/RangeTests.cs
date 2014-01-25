@@ -78,7 +78,7 @@ namespace NUnit.Framework.Constraints
 
         // Test on Issue #21 - https://github.com/nunit/nunit-framework/issues/21
 	    [Test]
-	    public void RangesShouldFailIfFromIsLessThanTo()
+	    public void ShouldThrowExceptionIfFromIsLessThanTo()
 	    {
             Assert.That( 
                 () => Assert.That( 12, Is.InRange( 10, 5 ) ),  
