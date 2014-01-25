@@ -22,8 +22,6 @@
 // ***********************************************************************
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using NUnit.TestUtilities.Comparers;
 
 namespace NUnit.Framework.Constraints
@@ -44,7 +42,7 @@ namespace NUnit.Framework.Constraints
         object[] SuccessData = new object[] { 5, 23, 42 };
 
         object[] FailureData = new object[] { new object[] { 4, "4" }, new object[] { 43, "43" } };
-
+        
         [TestCase(null, ExpectedException = typeof(ArgumentException))]
         [TestCase("xxx", ExpectedException = typeof(ArgumentException))]
         public void InvalidDataThrowsException(object data)
@@ -81,6 +79,16 @@ namespace NUnit.Framework.Constraints
         {
             Comparison<int> comparer = (x, y) => x.CompareTo(y);
             Assert.That(rangeConstraint.Using(comparer).ApplyTo(19).IsSuccess);
+        }
+
+        // Test on Issue #21 - https://github.com/nunit/nunit-framework/issues/21
+        [Test]
+        [ExpectedException( typeof( ArgumentException ))]
+        public void RangesConstraintShouldFailIfFromIsLessThanTo()
+        {
+            var comparer = new GenericComparer<int>();
+            rangeConstraint = new RangeConstraint( 42, 5 );
+            rangeConstraint.Using(comparer).ApplyTo(19);
         }
     }
 }
