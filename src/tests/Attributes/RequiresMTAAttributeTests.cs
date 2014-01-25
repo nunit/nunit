@@ -39,7 +39,7 @@ namespace NUnit.Framework.Tests.Attributes
         [Test]
         public void RequiresMTAAtributeIsInheritable()
         {
-            Attribute[] attributes = Attribute.GetCustomAttributes( GetType(), typeof (RequiresMTAAttribute));
+            Attribute[] attributes = Attribute.GetCustomAttributes( GetType(), typeof( RequiresMTAAttribute ), true );
             Assert.That( attributes, Has.Length.EqualTo( 1 ), "RequiresMTAAttribute was not inherited from the base class" );
         }
     }

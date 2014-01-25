@@ -37,14 +37,14 @@ namespace NUnit.Framework.Tests.Attributes
     }
 
     [TestFixture]
-    public class RequiresThreadAttributeTests : RequiresMTAAttributeBaseTests
+    public class RequiresThreadAttributeTests : RequiresThreadAttributeBaseTests
     {
         // Issue #36 - Make RequiresThread, RequiresSTA, RequiresMTA inheritable
         // https://github.com/nunit/nunit-framework/issues/36
         [Test]
         public void RequiresThreadAttributeIsInheritable()
         {
-            Attribute[] attributes = Attribute.GetCustomAttributes( GetType(), typeof( RequiresThreadAttribute ) );
+            Attribute[] attributes = Attribute.GetCustomAttributes( GetType(), typeof( RequiresThreadAttribute ), true );
             Assert.That( attributes, Has.Length.EqualTo( 1 ), "RequiresThreadAttribute was not inherited from the base class" );
         }
     }
