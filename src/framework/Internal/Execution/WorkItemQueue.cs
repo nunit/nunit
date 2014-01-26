@@ -39,13 +39,23 @@ namespace NUnit.Framework.Internal.Execution
         private bool _stopping;
         private int _maxCount = 0;
 
+        /// <summary>
+        /// Gets the name of the work item queue.
+        /// </summary>
         public string Name { get; private set; }
 
+        /// <summary>
+        /// Gets the maximum number of work items.
+        /// </summary>
         public int MaxCount
         {
             get { return _maxCount; }
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="WorkItemQueue"/> class.
+        /// </summary>
+        /// <param name="name">The name of the queue.</param>
         public WorkItemQueue(string name)
         {
             this.Name = name;

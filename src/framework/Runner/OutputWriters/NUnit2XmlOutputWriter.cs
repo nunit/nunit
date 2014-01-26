@@ -55,6 +55,10 @@ namespace NUnitLite.Runner
             resultStates["Skipped:Invalid"] = "NotRunnable";
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NUnit2XmlOutputWriter"/> class.
+        /// </summary>
+        /// <param name="startTime">The start time.</param>
         public NUnit2XmlOutputWriter(DateTime startTime)
         {
             this.startTime = startTime;

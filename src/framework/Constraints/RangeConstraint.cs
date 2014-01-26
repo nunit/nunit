@@ -41,10 +41,16 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Initializes a new instance of the <see cref="T:RangeConstraint"/> class.
         /// </summary>
-        /// <param name="from">From.</param>
-        /// <param name="to">To.</param>
+        /// <remarks>from must be less than or equal to true</remarks> 
+        /// <param name="from">Inclusive beginning of the range. Must be less than or equal to to.</param>
+        /// <param name="to">Inclusive end of the range. Must be greater than or equal to from.</param>
         public RangeConstraint(IComparable from, IComparable to) : base( from, to )
         {
+            // Issue #21 - https://github.com/nunit/nunit-framework/issues/21
+            // from must be less than or equal to to
+            if ( from.CompareTo( to ) > 0 )
+                throw new ArgumentException( "from must be less than to" );
+
             this.from = from;
             this.to = to;
         }

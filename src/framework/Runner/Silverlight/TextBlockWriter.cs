@@ -38,6 +38,10 @@ namespace NUnitLite.Runner.Silverlight
     {
         private TextBlock textBlock;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TextBlockWriter"/> class.
+        /// </summary>
+        /// <param name="textBlock">The text block.</param>
         public TextBlockWriter(TextBlock textBlock)
         {
             this.textBlock = textBlock;

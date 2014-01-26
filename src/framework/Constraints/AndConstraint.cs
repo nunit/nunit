@@ -28,14 +28,14 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class AndConstraint : BinaryConstraint
     {
-        private enum FailurePoint
-        {
-            None,
-            Left,
-            Right
-        };
+        //private enum FailurePoint
+        //{
+        //    None,
+        //    Left,
+        //    Right
+        //};
 
-        private FailurePoint failurePoint;
+        //private FailurePoint failurePoint;
 
         /// <summary>
         /// Create an AndConstraint from two other constraints

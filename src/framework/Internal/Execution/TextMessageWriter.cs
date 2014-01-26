@@ -226,7 +226,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Write the generic 'Expected' line for a constraint
         /// </summary>
-        /// <param name="constraint">The constraint that failed</param>
+        /// <param name="result">The constraint that failed</param>
         private void WriteExpectedLine(ConstraintResult result)
         {
             Write(Pfx_Expected);

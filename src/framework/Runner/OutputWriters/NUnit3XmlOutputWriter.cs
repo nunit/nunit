@@ -39,6 +39,10 @@ namespace NUnitLite.Runner
         private DateTime runStartTime;
         private XmlWriter xmlWriter;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NUnit3XmlOutputWriter"/> class.
+        /// </summary>
+        /// <param name="runStartTime">The run start time.</param>
         public NUnit3XmlOutputWriter(DateTime runStartTime)
         {
             this.runStartTime = runStartTime;

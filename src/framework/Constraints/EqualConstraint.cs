@@ -47,25 +47,6 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         private NUnitEqualityComparer comparer = new NUnitEqualityComparer();
 
-        #region Message Strings
-        private static readonly string StringsDiffer_1 =
-            "String lengths are both {0}. Strings differ at index {1}.";
-        private static readonly string StringsDiffer_2 =
-            "Expected string length {0} but was {1}. Strings differ at index {2}.";
-        private static readonly string StreamsDiffer_1 =
-            "Stream lengths are both {0}. Streams differ at offset {1}.";
-        private static readonly string StreamsDiffer_2 =
-            "Expected Stream length {0} but was {1}.";// Streams differ at offset {2}.";
-        private static readonly string CollectionType_1 =
-            "Expected and actual are both {0}";
-        private static readonly string CollectionType_2 =
-            "Expected is {0}, actual is {1}";
-        private static readonly string ValuesDiffer_1 =
-            "Values differ at index {0}";
-        private static readonly string ValuesDiffer_2 =
-            "Values differ at expected index {0}, actual index {1}";
-        #endregion
-
         #endregion
 
         #region Constructor
@@ -87,18 +68,42 @@ namespace NUnit.Framework.Constraints
         // They are only used by EqualConstraintResult
         // EqualConstraint should inject them into the constructor.
 
+        /// <summary>
+        /// Gets the tolerance for this comparison.
+        /// </summary>
+        /// <value>
+        /// The tolerance.
+        /// </value>
         public Tolerance Tolerance
         {
             get { return tolerance; }
         }
 
+        /// <summary>
+        /// Gets a value indicating whether to compare case insensitive.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if comparing case insensitive; otherwise, <c>false</c>.
+        /// </value>
         public bool CaseInsensitive
         {
             get { return comparer.IgnoreCase; }
         }
 
+        /// <summary>
+        /// Gets a value indicating whether or not to clip strings.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if set to clip strings otherwise, <c>false</c>.
+        /// </value>
         public bool ClipStrings { get; private set; }
 
+        /// <summary>
+        /// Gets the failure points.
+        /// </summary>
+        /// <value>
+        /// The failure points.
+        /// </value>
         public IList<NUnitEqualityComparer.FailurePoint> FailurePoints
         {
             get { return comparer.FailurePoints; }

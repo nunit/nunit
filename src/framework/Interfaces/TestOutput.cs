@@ -78,6 +78,13 @@ namespace NUnit.Framework.Interfaces
 
         #region IXmlNodeBuilder Members
 
+        /// <summary>
+        /// Returns an XmlNode representing the current object.
+        /// </summary>
+        /// <param name="recursive">If true, children are included where applicable</param>
+        /// <returns>
+        /// An XmlNode representing the result
+        /// </returns>
         public XmlNode ToXml(bool recursive)
         {
             XmlNode topNode = XmlNode.CreateTopLevelElement("dummy");
@@ -87,6 +94,13 @@ namespace NUnit.Framework.Interfaces
             return thisNode;
         }
 
+        /// <summary>
+        /// Returns an XmlNode representing the current object after
+        /// adding it as a child of the supplied parent node.
+        /// </summary>
+        /// <param name="parentNode">The parent node.</param>
+        /// <param name="recursive">If true, children are included, where applicable</param>
+        /// <returns></returns>
         public XmlNode AddToXml(XmlNode parentNode, bool recursive)
         {
             XmlNode thisNode = parentNode.AddElement("output");
