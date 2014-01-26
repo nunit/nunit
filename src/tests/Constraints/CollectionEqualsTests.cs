@@ -74,7 +74,9 @@ namespace NUnit.Framework.Constraints
             new object[] {new Dictionary<int, string> {{ 1, "a" }}, new Dictionary<int, string> {{ 1, "A" }}},
             new object[] {new Dictionary<string, int> {{"a", 1}}, new Dictionary<string, int> {{"A", 1}}},
             new object[] {new Dictionary<int, char> {{ 1, 'A' }}, new Dictionary<int, char> {{ 1, 'a' }}},
-            new object[] {new Dictionary<char, int> {{'A', 1}}, new Dictionary<char, int> {{'a', 1}}}
+            new object[] {new Dictionary<char, int> {{'A', 1}}, new Dictionary<char, int> {{'a', 1}}},
+            new object[] {new List<char> {'A', 'B', 'C'}, new List<char> {'a', 'b', 'c'}},
+            new object[] {new List<string> {"a", "b", "c"}, new List<string> {"A", "B", "C"}},
         };
     }
 }
