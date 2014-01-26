@@ -21,31 +21,73 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#region Using Directives
-
+#if !SILVERLIGHT && !NETCF
 using System;
-using NUnit.Framework;
+using System.Threading;
 
-#endregion
-
-namespace NUnit.Framework.Tests.Attributes
+namespace NUnit.Framework.Attributes
 {
     [TestFixture]
-    [RequiresThread]
-    public class RequiresThreadAttributeBaseTests
+    public class RequiresThreadAttributeTests : ThreadingTests
     {
-    }
-
-    [TestFixture]
-    public class RequiresThreadAttributeTests : RequiresThreadAttributeBaseTests
-    {
-        // Issue #36 - Make RequiresThread, RequiresSTA, RequiresMTA inheritable
-        // https://github.com/nunit/nunit-framework/issues/36
-        [Test]
-        public void RequiresThreadAttributeIsInheritable()
+        private Thread SetupThread { get; set; }
+        
+        [SetUp]
+        public void GetSetUpThreadInfo()
         {
-            Attribute[] attributes = Attribute.GetCustomAttributes( GetType(), typeof( RequiresThreadAttribute ), true );
-            Assert.That( attributes, Has.Length.EqualTo( 1 ), "RequiresThreadAttribute was not inherited from the base class" );
+            SetupThread = Thread.CurrentThread;
+        }
+
+        [Test, RequiresThread]
+        public void TestWithRequiresThreadRunsInSeparateThread()
+        {
+            Assert.That( Thread.CurrentThread, Is.Not.EqualTo( ParentThread ) );
+        }
+
+        [Test, RequiresThread]
+        public void TestWithRequiresThreadRunsSetUpAndTestOnSameThread()
+        {
+            Assert.That( Thread.CurrentThread, Is.EqualTo( SetupThread ) );
+        }
+
+        [Test, RequiresThread( ApartmentState.STA )]
+        public void TestWithRequiresThreadWithSTAArgRunsOnSeparateThreadInSTA()
+        {
+            Assert.That( GetApartmentState( Thread.CurrentThread ), Is.EqualTo( ApartmentState.STA ) );
+            Assert.That( Thread.CurrentThread, Is.Not.EqualTo( ParentThread ) );
+        }
+
+        [Test, RequiresThread( ApartmentState.MTA )]
+        public void TestWithRequiresThreadWithMTAArgRunsOnSeparateThreadInMTA()
+        {
+            Assert.That( GetApartmentState( Thread.CurrentThread ), Is.EqualTo( ApartmentState.MTA ) );
+            Assert.That( Thread.CurrentThread, Is.Not.EqualTo( ParentThread ) );
+        }
+
+        [TestFixture, RequiresThread]
+        public class FixtureRequiresThread
+        {
+            [Test]
+            public void RequiresThreadCanBeSetOnTestFixture()
+            {
+                // TODO: Figure out how to test this
+                //Assert.That(Environment.StackTrace, Contains.Substring("RunTestProc"));
+            }
+        }
+
+        [TestFixture]
+        public class ChildFixtureRequiresThread : FixtureRequiresThread
+        {
+            // Issue #36 - Make RequiresThread, RequiresSTA, RequiresMTA inheritable
+            // https://github.com/nunit/nunit-framework/issues/36
+            [Test]
+            public void RequiresThreadAttributeIsInheritable()
+            {
+                Attribute[] attributes = Attribute.GetCustomAttributes(GetType(), typeof (RequiresThreadAttribute), true);
+                Assert.That(attributes, Has.Length.EqualTo(1),
+                    "RequiresThreadAttribute was not inherited from the base class");
+            }
         }
     }
 }
+#endif

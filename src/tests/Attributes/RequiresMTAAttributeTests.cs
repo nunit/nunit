@@ -21,26 +21,46 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#if !SILVERLIGHT && !NETCF
 using System;
+using System.Threading;
 
-namespace NUnit.Framework.Tests.Attributes
+namespace NUnit.Framework.Attributes
 {
     [TestFixture]
-    [RequiresMTA]
-    public class RequiresMTAAttributeBaseTests
+    public class RequiresMTAAttributeTests : ThreadingTests
     {
-    }
-
-    [TestFixture]
-    public class RequiresMTAAttributeTests : RequiresMTAAttributeBaseTests
-    {
-        // Issue #36 - Make RequiresThread, RequiresSTA, RequiresMTA inheritable
-        // https://github.com/nunit/nunit-framework/issues/36
-        [Test]
-        public void RequiresMTAAtributeIsInheritable()
+        [Test, RequiresMTA]
+        public void TestWithRequiresMTARunsInMTA()
         {
-            Attribute[] attributes = Attribute.GetCustomAttributes( GetType(), typeof( RequiresMTAAttribute ), true );
-            Assert.That( attributes, Has.Length.EqualTo( 1 ), "RequiresMTAAttribute was not inherited from the base class" );
+            Assert.That( GetApartmentState( Thread.CurrentThread ), Is.EqualTo( ApartmentState.MTA ) );
+            if ( ParentThreadApartment == ApartmentState.MTA )
+                Assert.That( Thread.CurrentThread, Is.EqualTo( ParentThread ) );
+        }
+
+        [TestFixture, RequiresMTA]
+        public class FixtureRequiresMTA
+        {
+            [Test]
+            public void RequiresMTACanBeSetOnTestFixture()
+            {
+                Assert.That( GetApartmentState( Thread.CurrentThread ), Is.EqualTo( ApartmentState.MTA ) );
+            }
+        }
+
+        [TestFixture]
+        public class ChildFixtureRequiresMTA : FixtureRequiresMTA
+        {
+            // Issue #36 - Make RequiresThread, RequiresSTA, RequiresMTA inheritable
+            // https://github.com/nunit/nunit-framework/issues/36
+            [Test]
+            public void RequiresMTAAtributeIsInheritable()
+            {
+                Attribute[] attributes = Attribute.GetCustomAttributes(GetType(), typeof (RequiresMTAAttribute), true);
+                Assert.That(attributes, Has.Length.EqualTo(1),
+                    "RequiresMTAAttribute was not inherited from the base class");
+            }
         }
     }
 }
+#endif
