@@ -32,7 +32,7 @@ namespace NUnit.Framework
     /// Marks a test that must run in the STA, causing it
     /// to run in a separate thread if necessary.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class | AttributeTargets.Assembly, AllowMultiple = false, Inherited=false)]
+    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class | AttributeTargets.Assembly, AllowMultiple = false, Inherited=true)]
     public class RequiresSTAAttribute : PropertyAttribute
     {
         /// <summary>

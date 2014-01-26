@@ -23,107 +23,25 @@
 
 #if !SILVERLIGHT && !NETCF
 using System.Threading;
-using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Attributes
 {
     //[Platform(Exclude = "Mono", Reason = "Runner hangs at end when these are run")]
     public class ThreadingTests
     {
-        Thread parentThread;
-        ApartmentState parentThreadApartment;
-
-        Thread setupThread;
+        protected Thread ParentThread { get; private set; }
+        protected ApartmentState ParentThreadApartment { get; private set; }
 
         [TestFixtureSetUp]
         public void GetParentThreadInfo()
         {
-			this.parentThread = Thread.CurrentThread;
-            this.parentThreadApartment = GetApartmentState(parentThread);
+			ParentThread = Thread.CurrentThread;
+            ParentThreadApartment = GetApartmentState(ParentThread);
         }
 
-        private static ApartmentState GetApartmentState(Thread thread)
+        protected static ApartmentState GetApartmentState(Thread thread)
         { 
             return thread.GetApartmentState();
-        }
-
-        [SetUp]
-        public void GetSetUpThreadInfo()
-        {
-            this.setupThread = Thread.CurrentThread;
-        }
-
-        [Test, RequiresSTA]
-        public void TestWithRequiresSTARunsInSTA()
-        {
-            Assert.That(GetApartmentState(Thread.CurrentThread), Is.EqualTo(ApartmentState.STA));
-            if (parentThreadApartment == ApartmentState.STA)
-                Assert.That(Thread.CurrentThread, Is.EqualTo(parentThread));
-        }
-
-        [Test, RequiresMTA]
-        public void TestWithRequiresMTARunsInMTA()
-        {
-            Assert.That(GetApartmentState(Thread.CurrentThread), Is.EqualTo(ApartmentState.MTA));
-            if (parentThreadApartment == ApartmentState.MTA)
-                Assert.That(Thread.CurrentThread, Is.EqualTo(parentThread));
-        }
-
-        [Test, RequiresThread]
-        public void TestWithRequiresThreadRunsInSeparateThread()
-        {
-            Assert.That(Thread.CurrentThread, Is.Not.EqualTo(parentThread));
-        }
-
-        [Test, RequiresThread]
-        public void TestWithRequiresThreadRunsSetUpAndTestOnSameThread()
-        {
-            Assert.That(Thread.CurrentThread, Is.EqualTo(setupThread));
-        }
-
-        [Test, RequiresThread(ApartmentState.STA)]
-        public void TestWithRequiresThreadWithSTAArgRunsOnSeparateThreadInSTA()
-        {
-            Assert.That(GetApartmentState(Thread.CurrentThread), Is.EqualTo(ApartmentState.STA));
-            Assert.That(Thread.CurrentThread, Is.Not.EqualTo(parentThread));
-        }
-
-        [Test, RequiresThread(ApartmentState.MTA)]
-        public void TestWithRequiresThreadWithMTAArgRunsOnSeparateThreadInMTA()
-        {
-            Assert.That(GetApartmentState(Thread.CurrentThread), Is.EqualTo(ApartmentState.MTA));
-            Assert.That(Thread.CurrentThread, Is.Not.EqualTo(parentThread));
-        }
-
-        [TestFixture, RequiresSTA]
-        class FixtureRequiresSTA
-        {
-            [Test]
-            public void RequiresSTACanBeSetOnTestFixture()
-            {
-                Assert.That(GetApartmentState(Thread.CurrentThread), Is.EqualTo(ApartmentState.STA));
-            }
-        }
-
-        [TestFixture, RequiresMTA]
-        class FixtureRequiresMTA
-        {
-            [Test]
-            public void RequiresMTACanBeSetOnTestFixture()
-            {
-                Assert.That(GetApartmentState(Thread.CurrentThread), Is.EqualTo(ApartmentState.MTA));
-            }
-        }
-
-        [TestFixture, RequiresThread]
-        class FixtureRequiresThread
-        {
-            [Test]
-            public void RequiresThreadCanBeSetOnTestFixture()
-            {
-                // TODO: Figure out how to test this
-                //Assert.That(Environment.StackTrace, Contains.Substring("RunTestProc"));
-            }
         }
     }
 }

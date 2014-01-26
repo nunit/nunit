@@ -31,7 +31,7 @@ namespace NUnit.Framework
     /// <summary>
     /// Marks a test that must run on a separate thread.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class | AttributeTargets.Assembly, AllowMultiple = false, Inherited=false)]
+    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class | AttributeTargets.Assembly, AllowMultiple = false, Inherited=true)]
     public class RequiresThreadAttribute : PropertyAttribute, IApplyToTest
     {
         /// <summary>
