@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
 using NUnit.TestUtilities.Collections;
@@ -57,5 +58,23 @@ namespace NUnit.Framework.Constraints
                 TextMessageWriter.Pfx_Expected + "2" + Env.NewLine +
                 TextMessageWriter.Pfx_Actual   + "5" + Env.NewLine));
         }
+
+        [Test]
+        [TestCaseSource( "IgnoreCaseData" )]
+        public void HonorsIgnoreCase( IEnumerable expected, IEnumerable actual )
+        {
+            Assert.That(expected, Is.EqualTo(actual).IgnoreCase);
+        }
+
+        private static readonly object[] IgnoreCaseData =
+        {
+            new object[] {new SimpleObjectCollection("x", "y", "z"),new SimpleObjectCollection("z", "Y", "X")},
+            new object[] {new[] {'A', 'B', 'C'}, new object[] {'a', 'b', 'c'}},
+            new object[] {new[] {"a", "b", "c"}, new object[] {"A", "B", "C"}},
+            new object[] {new Dictionary<int, string> {{ 1, "a" }}, new Dictionary<int, string> {{ 1, "A" }}},
+            new object[] {new Dictionary<string, int> {{"a", 1}}, new Dictionary<string, int> {{"A", 1}}},
+            new object[] {new Dictionary<int, char> {{ 1, 'A' }}, new Dictionary<int, char> {{ 1, 'a' }}},
+            new object[] {new Dictionary<char, int> {{'A', 1}}, new Dictionary<char, int> {{'a', 1}}}
+        };
     }
 }
