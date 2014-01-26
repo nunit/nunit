@@ -59,7 +59,7 @@ namespace NUnit.Framework.Internal.Filters
 		/// <summary>
 		/// Construct a CategoryFilter using an array of category ids
 		/// </summary>
-		/// <param name="ids">An array of category ids</param>
+		/// <param name="names">An array of category ids</param>
 		public CategoryFilter( string[] names )
 		{
 			if ( names != null )

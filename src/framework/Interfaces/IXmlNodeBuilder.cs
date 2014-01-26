@@ -9,7 +9,7 @@ namespace NUnit.Framework.Interfaces
     public interface IXmlNodeBuilder
     {
         /// <summary>
-        /// Returns an XmlNode representating the current object.
+        /// Returns an XmlNode representing the current object.
         /// </summary>
         /// <param name="recursive">If true, children are included where applicable</param>
         /// <returns>An XmlNode representing the result</returns>

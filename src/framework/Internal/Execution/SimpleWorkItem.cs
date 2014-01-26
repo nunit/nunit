@@ -53,7 +53,7 @@ namespace NUnit.Framework.Internal.Execution
         {
             try
             {
-                _testResult = _command.Execute(Context);
+                Result = _command.Execute(Context);
             }
             finally
             {

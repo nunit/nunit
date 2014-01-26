@@ -131,6 +131,12 @@ namespace NUnit.Framework.Interfaces
             }
         }
 
+        /// <summary>
+        /// Gets the outer XML.
+        /// </summary>
+        /// <value>
+        /// The outer XML.
+        /// </value>
         public string OuterXml
         {
             get
@@ -330,6 +336,11 @@ namespace NUnit.Framework.Interfaces
     /// </summary>
     public class AttributeDictionary : System.Collections.Generic.Dictionary<string, string>
     {
+        /// <summary>
+        /// Gets or sets the value associated with the specified key.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <returns></returns>
         public new string this[string key]
         {
             get

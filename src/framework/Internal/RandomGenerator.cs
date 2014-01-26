@@ -74,7 +74,7 @@ namespace NUnit.Framework.Internal
             return Rand.Next();
         }
         /// <summary>
-        /// Get Next Integer within the specified min & max from Random 
+        /// Get Next Integer within the specified min &amp; max from Random 
         /// </summary>
         /// <param name="min"></param>
         /// <param name="max"></param>
@@ -95,7 +95,7 @@ namespace NUnit.Framework.Internal
             return (short)Rand.Next(short.MinValue, short.MaxValue);
         }
         /// <summary>
-        /// Get Next Short within the specified min & max from Random 
+        /// Get Next Short within the specified min &amp; max from Random 
         /// </summary>
         /// <param name="min"></param>
         /// <param name="max"></param>
@@ -116,7 +116,7 @@ namespace NUnit.Framework.Internal
             return (byte)Rand.Next(Byte.MinValue, Byte.MaxValue);
         }
         /// <summary>
-        /// Get Next Byte within the specified min & max from Random
+        /// Get Next Byte within the specified min &amp; max from Random
         /// </summary>
         /// <param name="min"></param>
         /// <param name="max"></param>

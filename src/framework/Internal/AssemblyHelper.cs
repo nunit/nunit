@@ -105,7 +105,12 @@ namespace NUnit.Framework.Internal
             return uri.ToLower().StartsWith(Uri.UriSchemeFile);
         }
 
-        // Public for testing purposes
+        /// <summary>
+        /// Gets the assembly path from code base.
+        /// </summary>
+        /// <remarks>Public for testing purposes</remarks>
+        /// <param name="codeBase">The code base.</param>
+        /// <returns></returns>
         public static string GetAssemblyPathFromCodeBase(string codeBase)
         {
             // Skip over the file:// part

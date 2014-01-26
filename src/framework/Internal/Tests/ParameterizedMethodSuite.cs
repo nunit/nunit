@@ -32,7 +32,6 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public class ParameterizedMethodSuite : TestSuite
     {
-        private MethodInfo _method;
         private bool _isTheory;
 
         /// <summary>
@@ -42,17 +41,9 @@ namespace NUnit.Framework.Internal
         public ParameterizedMethodSuite(MethodInfo method)
             : base(method.ReflectedType.FullName, method.Name)
         {
-            _method = method;
+            Method = method;
             _isTheory = method.IsDefined(typeof(TheoryAttribute), true);
             this.maintainTestOrder = true;
-        }
-
-        /// <summary>
-        /// Gets the MethodInfo for which this suite is being built.
-        /// </summary>
-        public MethodInfo Method
-        {
-            get { return _method; }
         }
 
         /// <summary>
