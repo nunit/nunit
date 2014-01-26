@@ -15,7 +15,7 @@
     <csc target="library"
         output="${current.build.dir}/nunitlite.dll"
         doc="${current.build.dir}/nunitlite.xml"
-        keyfile="../../nunit.snk"
+        keyfile="nunit.snk"
         debug="${build.debug}" 
         define="${build.defines};NUNITLITE"
         warninglevel="${warn}">
