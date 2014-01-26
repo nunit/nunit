@@ -357,12 +357,9 @@ namespace NUnit.TestData
 		}
 
 		private static Task<int> ThrowException()
-		{
-			return Task.Run(() =>
-			{
-				throw new InvalidOperationException();
-				return 1;
-			});
+        {
+            Func<int> throws = () => { throw new InvalidOperationException(); };
+			return Task.Run( throws );
 		}
 	}
 }

@@ -116,6 +116,12 @@ namespace NUnitLite.Runner
         }
 
         private int randomSeed = -1;
+        /// <summary>
+        /// Gets the initial random seed. If the InitialSeed is not set, it will randomly generate a new one.
+        /// </summary>
+        /// <value>
+        /// The initial seed.
+        /// </value>
         public int InitialSeed
         {
             get

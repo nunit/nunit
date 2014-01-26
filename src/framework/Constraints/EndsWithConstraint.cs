@@ -35,7 +35,7 @@ namespace NUnit.Framework.Constraints
         /// <param name="expected">The expected string</param>
         public EndsWithConstraint(string expected) : base(expected) 
         {
-            this.description = "String ending with";
+            this.descriptionText = "String ending with";
         }
 
         /// <summary>

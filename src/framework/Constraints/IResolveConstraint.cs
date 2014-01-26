@@ -24,7 +24,7 @@
 namespace NUnit.Framework.Constraints
 {
     /// <summary>
-    /// The IConstraintExpression interface is implemented by all
+    /// The IResolveConstraint interface is implemented by all
     /// complete and resolvable constraints and expressions.
     /// </summary>
     public interface IResolveConstraint

@@ -124,6 +124,12 @@ namespace NUnit.Framework.Internal
 			get { return initialized; }
 		}
 
+        /// <summary>
+        /// Gets or sets the addin registry.
+        /// </summary>
+        /// <value>
+        /// The addin registry.
+        /// </value>
 		public IAddinRegistry AddinRegistry
 		{
 			get 

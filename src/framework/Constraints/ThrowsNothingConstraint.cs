@@ -70,6 +70,14 @@ namespace NUnit.Framework.Constraints
             return new ConstraintResult(this, caughtException, caughtException == null);
         }
 
+        /// <summary>
+        /// Applies the constraint to an ActualValueDelegate that returns 
+        /// the value to be tested. The default implementation simply evaluates 
+        /// the delegate but derived classes may override it to provide for 
+        /// delayed processing.
+        /// </summary>
+        /// <param name="del">An ActualValueDelegate</param>
+        /// <returns>A ConstraintResult</returns>
         public override ConstraintResult ApplyTo<TActual>(ActualValueDelegate<TActual> del)
         {
             return ApplyTo(new ThrowsConstraint.GenericInvocationDescriptor<TActual>(del));

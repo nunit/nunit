@@ -40,11 +40,6 @@ namespace NUnit.Framework.Internal
 	{
 		#region Fields
 
-		/// <summary>
-		/// The test method
-		/// </summary>
-        //internal MethodInfo method;
-
         /// <summary>
         /// A list of all decorators applied to the test by attributes or parameterset arguments
         /// </summary>

@@ -100,7 +100,7 @@ namespace NUnit.Framework
         /// <returns>The modified TestCaseData instance</returns>
         public TestCaseData Throws(Type exceptionType)
         {
-            exceptionData.ExpectedExceptionName = exceptionType.FullName;
+            SetExpectedExceptionName( exceptionType.FullName );
             return this;
         }
 
@@ -111,7 +111,7 @@ namespace NUnit.Framework
         /// <returns>The modified TestCaseData instance</returns>
         public TestCaseData Throws(string exceptionName)
         {
-            exceptionData.ExpectedExceptionName = exceptionName;
+            SetExpectedExceptionName( exceptionName );
             return this;
         }
 
