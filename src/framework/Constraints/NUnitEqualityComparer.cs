@@ -142,16 +142,32 @@ namespace NUnit.Framework.Constraints
                 return ArraysEqual((Array)x, (Array)y, ref tolerance);
 
             if (x is IDictionary && y is IDictionary)
-                return DictionariesEqual((IDictionary)x, (IDictionary)y, ref tolerance);
+                return DictionariesEqual( (IDictionary)x, (IDictionary)y, ref tolerance );
+
+            // Issue #70 - EquivalentTo isn't compatible with IgnoreCase for dictionaries
+            // IDictionary will eventually try to compare it's key value pairs
+            if (xType.IsGenericType && xType.GetGenericTypeDefinition() == typeof (KeyValuePair<,>) &&
+                yType.IsGenericType && yType.GetGenericTypeDefinition() == typeof (KeyValuePair<,>))
+            {
+                object xKey = xType.GetProperty( "Key" ).GetValue( x, null );
+                object yKey = yType.GetProperty( "Key" ).GetValue( y, null );
+                object xValue = xType.GetProperty( "Value" ).GetValue( x, null );
+                object yValue = yType.GetProperty( "Value" ).GetValue( y, null );
+
+                return AreEqual(xKey, yKey, ref tolerance) && AreEqual(xValue, yValue, ref tolerance);
+            }
 
             //if (x is ICollection && y is ICollection)
             //    return CollectionsEqual((ICollection)x, (ICollection)y, ref tolerance);
 
             if (x is IEnumerable && y is IEnumerable && !(x is string && y is string))
                 return EnumerablesEqual((IEnumerable)x, (IEnumerable)y, ref tolerance);
-
+            
             if (x is string && y is string)
                 return StringsEqual((string)x, (string)y);
+
+            if (x is char && y is char)
+                return CharsEqual((char) x, (char) y);
 
             if (x is Stream && y is Stream)
                 return StreamsEqual((Stream)x, (Stream)y);
@@ -258,10 +274,32 @@ namespace NUnit.Framework.Constraints
             if (!tally.TryRemove(y.Keys) || tally.Count > 0)
                 return false;
 
+            // Comparing IgnoreCase is much more expensive, so only do it if necessary
+            if (IgnoreCase)
+            {
+                foreach (object xKey in x.Keys)
+                {
+                    bool found = false;
+                    foreach (object yKey in y.Keys)
+                    {
+                        if (AreEqual(xKey, yKey, ref tolerance))
+                        {
+                            if (!AreEqual(x[xKey], y[yKey], ref tolerance))
+                                return false;
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (!found)
+                        return false;
+                }
+                return true;
+            }
+            
             foreach (object key in x.Keys)
                 if (!AreEqual(x[key], y[key], ref tolerance))
                     return false;
- 
+
             return true;
         }
 
@@ -302,6 +340,14 @@ namespace NUnit.Framework.Constraints
             string s2 = caseInsensitive ? y.ToLower() : y;
 
             return s1.Equals(s2);
+        }
+
+        private bool CharsEqual(char x, char y)
+        {
+            char c1 = caseInsensitive ? Char.ToLower(x) : x;
+            char c2 = caseInsensitive ? Char.ToLower(y) : y;
+
+            return c1 == c2;
         }
 
         private bool EnumerablesEqual(IEnumerable x, IEnumerable y, ref Tolerance tolerance)
