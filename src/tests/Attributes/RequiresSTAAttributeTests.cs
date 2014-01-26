@@ -21,26 +21,46 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#if !SILVERLIGHT && !NETCF
 using System;
+using System.Threading;
 
-namespace NUnit.Framework.Tests.Attributes
+namespace NUnit.Framework.Attributes
 {
     [TestFixture]
-    [RequiresSTA]
-    public class RequiresSTAAttributeBaseTests
+    public class RequiresSTAAttributeTests : ThreadingTests
     {
-    }
-
-    [TestFixture]
-    public class RequiresSTAAttributeTests : RequiresSTAAttributeBaseTests
-    {
-        // Issue #36 - Make RequiresThread, RequiresSTA, RequiresMTA inheritable
-        // https://github.com/nunit/nunit-framework/issues/36
-        [Test]
-        public void RequiresSTAAtributeIsInheritable()
+        [Test, RequiresSTA]
+        public void TestWithRequiresSTARunsInSTA()
         {
-            Attribute[] attributes = Attribute.GetCustomAttributes( GetType(), typeof( RequiresSTAAttribute ), true );
-            Assert.That( attributes, Has.Length.EqualTo( 1 ), "RequiresSTAAttribute was not inherited from the base class" );
+            Assert.That(GetApartmentState(Thread.CurrentThread), Is.EqualTo(ApartmentState.STA));
+            if (ParentThreadApartment == ApartmentState.STA)
+                Assert.That(Thread.CurrentThread, Is.EqualTo(ParentThread));
+        }
+
+        [TestFixture, RequiresSTA]
+        public class FixtureRequiresSTA
+        {
+            [Test]
+            public void RequiresSTACanBeSetOnTestFixture()
+            {
+                Assert.That( GetApartmentState( Thread.CurrentThread ), Is.EqualTo( ApartmentState.STA ) );
+            }
+        }
+
+        [TestFixture]
+        public class ChildFixtureRequiresSTA : FixtureRequiresSTA
+        {
+            // Issue #36 - Make RequiresThread, RequiresSTA, RequiresMTA inheritable
+            // https://github.com/nunit/nunit-framework/issues/36
+            [Test]
+            public void RequiresSTAAtributeIsInheritable()
+            {
+                Attribute[] attributes = Attribute.GetCustomAttributes(GetType(), typeof (RequiresSTAAttribute), true);
+                Assert.That(attributes, Has.Length.EqualTo(1),
+                    "RequiresSTAAttribute was not inherited from the base class");
+            }
         }
     }
 }
+#endif
