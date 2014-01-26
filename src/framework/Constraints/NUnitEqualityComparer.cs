@@ -274,22 +274,32 @@ namespace NUnit.Framework.Constraints
             if (!tally.TryRemove(y.Keys) || tally.Count > 0)
                 return false;
 
-            foreach (object xKey in x.Keys)
+            // Comparing IgnoreCase is much more expensive, so only do it if necessary
+            if (IgnoreCase)
             {
-                bool found = false;
-                foreach (object yKey in y.Keys)
+                foreach (object xKey in x.Keys)
                 {
-                    if (AreEqual(xKey, yKey, ref tolerance))
+                    bool found = false;
+                    foreach (object yKey in y.Keys)
                     {
-                        if ( !AreEqual( x[xKey], y[yKey], ref tolerance ) )
-                            return false;
-                        found = true;
-                        break;
+                        if (AreEqual(xKey, yKey, ref tolerance))
+                        {
+                            if (!AreEqual(x[xKey], y[yKey], ref tolerance))
+                                return false;
+                            found = true;
+                            break;
+                        }
                     }
+                    if (!found)
+                        return false;
                 }
-                if (!found)
-                    return false;
+                return true;
             }
+            
+            foreach (object key in x.Keys)
+                if (!AreEqual(x[key], y[key], ref tolerance))
+                    return false;
+
             return true;
         }
 
