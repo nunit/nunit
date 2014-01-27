@@ -116,18 +116,16 @@ namespace NUnit.Framework.Internal
             // Skip over the file:// part
             int start = Uri.UriSchemeFile.Length + Uri.SchemeDelimiter.Length;
 
-            bool isWindows = System.IO.Path.DirectorySeparatorChar == '\\';
-
             if (codeBase[start] == '/') // third slash means a local path
             {
                 // Handle Windows Drive specifications
-                if (isWindows && codeBase[start + 2] == ':')
+                if (codeBase[start + 2] == ':')
                     ++start;
                 // else leave the last slash so path is absolute  
             }
             else // It's either a Windows Drive spec or a share
             {
-                if (!isWindows || codeBase[start + 1] != ':')
+                if (codeBase[start + 1] != ':')
                     start -= 2; // Back up to include two slashes
             }
 

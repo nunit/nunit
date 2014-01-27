@@ -74,11 +74,15 @@ namespace NUnit.Framework.Constraints
         {
             if (Path.DirectorySeparatorChar != Path.AltDirectorySeparatorChar)
                 path = path.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
+
             string leadingSeparators = "";
+
             foreach (char c in path)
             {
-                if (c == Path.DirectorySeparatorChar)
-                    leadingSeparators += c;
+	            if (c == Path.DirectorySeparatorChar)
+	            {
+		            leadingSeparators += c;
+	            }
                 else break;
             }
 
