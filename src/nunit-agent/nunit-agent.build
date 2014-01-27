@@ -11,7 +11,6 @@
         output="${current.build.dir}/nunit-agent.exe"
         debug="${build.debug}" 
         define="${build.defines}"
-        keyfile="../../nunit.snk"
         warninglevel="${warn}">
       <sources basedir=".">
         <include name="../CommonAssemblyInfo.cs" />

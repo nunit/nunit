@@ -16,7 +16,6 @@
         output="${current.build.dir}/nunit.engine.dll"
         debug="${build.debug}" 
         define="${build.defines}"
-        keyfile="../../nunit.snk"
         warninglevel="${warn}">
       <sources basedir=".">
         <include name="../CommonAssemblyInfo.cs" />
@@ -39,7 +38,6 @@
         <patternset refid="source-files" />
         <include name="*.build" />
         <include name="*.csproj" />
-        <include name="nunit.snk" />
       </fileset>
     </copy>
   </target>
