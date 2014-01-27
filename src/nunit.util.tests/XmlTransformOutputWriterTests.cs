@@ -23,7 +23,6 @@
 
 using System.IO;
 using NUnit.Framework;
-using NUnit.Framework.Internal;
 
 namespace NUnit.Util.Tests
 {
