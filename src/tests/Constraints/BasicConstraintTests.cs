@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Globalization;
 using NUnit.Framework;
 using NUnit.Framework.Constraints;
 
@@ -98,9 +99,9 @@ namespace NUnit.Framework.Constraints
             new TestCaseData( null, "null" ),
             new TestCaseData( "hello", "\"hello\"" ),
             new TestCaseData( 42, "42" ), 
-            new TestCaseData( double.PositiveInfinity, "Infinity" ),
-            new TestCaseData( double.NegativeInfinity, "-Infinity" ),
-            new TestCaseData( float.PositiveInfinity, "Infinity" ),
-            new TestCaseData( float.NegativeInfinity, "-Infinity" ) };
+            new TestCaseData( double.PositiveInfinity, double.PositiveInfinity.ToString() ),
+            new TestCaseData( double.NegativeInfinity, double.NegativeInfinity.ToString() ),
+            new TestCaseData( float.PositiveInfinity, double.PositiveInfinity.ToString() ),
+            new TestCaseData( float.NegativeInfinity, double.NegativeInfinity.ToString() ) };
     }
 }

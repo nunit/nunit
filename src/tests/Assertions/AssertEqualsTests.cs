@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Globalization;
 
 namespace NUnit.Framework.Assertions
 {
@@ -87,7 +88,7 @@ namespace NUnit.Framework.Assertions
 		{
 			expectedMessage =
 				"  Expected: 1.234d +/- 0.0d" + Env.NewLine +
-				"  But was:  NaN" + Env.NewLine;
+				"  But was:  " + Double.NaN + Env.NewLine;
 			Assert.AreEqual(1.234, Double.NaN, 0.0);
 		}    
 
@@ -97,7 +98,7 @@ namespace NUnit.Framework.Assertions
 		public void NanEqualsFails() 
 		{
 			expectedMessage =
-				"  Expected: NaN" + Env.NewLine +
+				"  Expected: " + Double.NaN + Env.NewLine +
 				"  But was:  1.234d" + Env.NewLine;
 			Assert.AreEqual(Double.NaN, 1.234, 0.0);
 		}     
@@ -124,7 +125,7 @@ namespace NUnit.Framework.Assertions
 		public void PosInfinityNotEquals() 
 		{
 			expectedMessage =
-				"  Expected: Infinity" + Env.NewLine +
+				"  Expected: " + Double.PositiveInfinity + Env.NewLine +
 				"  But was:  1.23d" + Env.NewLine;
 			Assert.AreEqual(Double.PositiveInfinity, 1.23, 0.0);
 		}
@@ -133,8 +134,8 @@ namespace NUnit.Framework.Assertions
 		public void PosInfinityNotEqualsNegInfinity() 
 		{
 			expectedMessage =
-				"  Expected: Infinity" + Env.NewLine +
-				"  But was:  -Infinity" + Env.NewLine;
+				"  Expected: " + Double.PositiveInfinity + Env.NewLine +
+				"  But was:  " + Double.NegativeInfinity + Env.NewLine;
 			Assert.AreEqual(Double.PositiveInfinity, Double.NegativeInfinity, 0.0);
 		}
 
@@ -142,8 +143,8 @@ namespace NUnit.Framework.Assertions
 		public void SinglePosInfinityNotEqualsNegInfinity() 
 		{
 			expectedMessage =
-				"  Expected: Infinity" + Env.NewLine +
-				"  But was:  -Infinity" + Env.NewLine;
+				"  Expected: " + Double.PositiveInfinity + Env.NewLine +
+				"  But was:  " + Double.NegativeInfinity + Env.NewLine;
 			Assert.AreEqual(float.PositiveInfinity, float.NegativeInfinity, (float)0.0);
 		}
 

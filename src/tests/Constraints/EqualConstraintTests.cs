@@ -47,8 +47,8 @@ namespace NUnit.Framework.Constraints
                 new TestCaseData(5, "5"),
                 new TestCaseData(null, "null"),
                 new TestCaseData("Hello", "\"Hello\""),
-                new TestCaseData(double.NaN, "NaN"),
-                new TestCaseData(double.PositiveInfinity, "Infinity")
+                new TestCaseData(double.NaN, double.NaN.ToString()),
+                new TestCaseData(double.PositiveInfinity, double.PositiveInfinity.ToString())
             };
 
         #region DateTimeEquality
