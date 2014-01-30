@@ -104,6 +104,30 @@ namespace NUnit.Framework.Constraints
         }
 
         [Test]
+        [TestCaseSource( "IgnoreCaseData" )]
+        public void HonorsIgnoreCase( IEnumerable expected, IEnumerable actual )
+        {
+            var constraint = new CollectionEquivalentConstraint( expected ).IgnoreCase;
+            var constraintResult = constraint.ApplyTo( actual );
+            if ( !constraintResult.IsSuccess )
+            {
+                MessageWriter writer = new TextMessageWriter();
+                constraintResult.WriteMessageTo( writer );
+                Assert.Fail( writer.ToString() );
+            }
+        }
+
+        private static readonly object[] IgnoreCaseData =
+        {
+            new object[] {new SimpleObjectCollection("x", "y", "z"),new SimpleObjectCollection("z", "Y", "X")},
+            new object[] {new[] {'A', 'B', 'C'}, new object[] {'a', 'c', 'b'}},
+            new object[] {new[] {"a", "b", "c"}, new object[] {"A", "C", "B"}},
+            new object[] {new Dictionary<int, string> {{2, "b"},{ 1, "a" }}, new Dictionary<int, string> {{ 1, "A" },{2,"B"}}},
+            new object[] {new Dictionary<int, char> {{ 1, 'A' }}, new Dictionary<int, char> {{ 1, 'a' }}}
+        };
+
+
+        [Test]
         public void EquivalentHonorsUsing()
         {
             ICollection set1 = new SimpleObjectCollection("x", "y", "z");
