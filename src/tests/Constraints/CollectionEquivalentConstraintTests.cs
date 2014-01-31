@@ -121,9 +121,7 @@ namespace NUnit.Framework.Constraints
         {
             new object[] {new SimpleObjectCollection("x", "y", "z"),new SimpleObjectCollection("z", "Y", "X")},
             new object[] {new[] {'A', 'B', 'C'}, new object[] {'a', 'c', 'b'}},
-            new object[] {new[] {"a", "b", "c"}, new object[] {"A", "C", "B"}},
-            new object[] {new Dictionary<int, string> {{2, "b"},{ 1, "a" }}, new Dictionary<int, string> {{ 1, "A" },{2,"B"}}},
-            new object[] {new Dictionary<int, char> {{ 1, 'A' }}, new Dictionary<int, char> {{ 1, 'a' }}}
+            new object[] {new[] {"a", "b", "c"}, new object[] {"A", "C", "B"}}
         };
 
 
