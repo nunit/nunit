@@ -59,14 +59,14 @@ namespace NUnit.Engine.Runners
         }
 
         /// <summary>
-        /// Load a TestPackage for possible execution
+        /// Load a TestPackage for exploration or execution
         /// </summary>
         /// <param name="package">The TestPackage to be loaded</param>
         /// <returns>A TestEngineResult.</returns>
         public override TestEngineResult Load(TestPackage package)
         {
             this.package = package;
-            TestEngineResult loadResult = new TestEngineResult();
+            List<TestEngineResult> loadResults = new List<TestEngineResult>();
 
             foreach (string testFile in package.TestFiles)
             {
@@ -74,14 +74,13 @@ namespace NUnit.Engine.Runners
                 IFrameworkDriver driver = Services.DriverFactory.GetDriver(TestDomain, testFile, package.Settings);
                 TestEngineResult driverResult = driver.Load();
 
-                foreach (XmlNode node in driverResult.XmlNodes)
-                    loadResult.Add(node);
+                loadResults.Add(driverResult);
 
-                if (!loadResult.HasErrors)
+                if (!driverResult.HasErrors)
                     drivers.Add(driver);
             }
 
-            return TestEngineResult.Wrap("load", new TestEngineResult[] { loadResult });
+            return MakePackageResult(loadResults);
         }
 
         /// <summary>

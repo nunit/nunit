@@ -82,7 +82,7 @@ namespace NUnit.Engine.Internal
         {
             for (int index = 0; index < ConfigNodes.Count; index++)
             {
-                if (XmlHelper.GetAttribute(ConfigNodes[index], "name") == name)
+                if (ConfigNodes[index].GetAttribute("name") == name)
                     return index;
             }
 

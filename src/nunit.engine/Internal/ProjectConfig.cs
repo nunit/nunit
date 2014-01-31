@@ -55,7 +55,7 @@ namespace NUnit.Engine.Internal
             this.assemblies = new List<string>();
             foreach (XmlNode node in configNode.SelectNodes("assembly"))
             {
-                string assemblyPath = XmlHelper.GetAttribute(node, "path");
+                string assemblyPath = node.GetAttribute("path");
                 if (this.EffectiveBasePath != null)
                     assemblyPath = Path.Combine(this.EffectiveBasePath, assemblyPath);
                 this.assemblies.Add(assemblyPath);
@@ -147,7 +147,7 @@ namespace NUnit.Engine.Internal
 
         private string GetAttribute(string name)
         {
-            return XmlHelper.GetAttribute(configNode, name);
+            return configNode.GetAttribute(name);
         }
 
         #endregion

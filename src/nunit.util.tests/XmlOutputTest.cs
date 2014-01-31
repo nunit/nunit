@@ -25,16 +25,18 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using NUnit.Engine;
-using NUnit.Framework;
-
-using Runner = NUnit.Framework.Internal.DefaultTestAssemblyRunner;
-using Builder = NUnit.Framework.Internal.DefaultTestAssemblyBuilder;
-using TestListener = NUnit.Framework.Internal.TestListener;
-using TestFilter = NUnit.Framework.Internal.TestFilter;
 
 namespace NUnit.Util.Tests
 {
+    using Engine;
+    using Engine.Internal;
+    using Framework;
+
+    using Runner = NUnit.Framework.Internal.DefaultTestAssemblyRunner;
+    using Builder = NUnit.Framework.Internal.DefaultTestAssemblyBuilder;
+    using TestListener = NUnit.Framework.Internal.TestListener;
+    using TestFilter = NUnit.Framework.Internal.TestFilter;
+
     /// <summary>
     /// This is the abstract base for all XML output tests,
     /// which need to work on a TestEngineResult. Creating a 
@@ -50,6 +52,7 @@ namespace NUnit.Util.Tests
 
         protected TestEngineResult EngineResult { get; private set; }
 
+        // Method used by deribed classes to get the path to a file name
         protected string GetLocalPath(string fileName)
         {
             return Path.Combine(localDirectory, fileName);
@@ -58,23 +61,32 @@ namespace NUnit.Util.Tests
         [TestFixtureSetUp]
         public void InitializeTestEngineResult()
         {
+            // Save the local directory - used by GetLocalPath
             Uri uri = new Uri(Assembly.GetExecutingAssembly().CodeBase);
             localDirectory = Path.GetDirectoryName(uri.LocalPath);
+
+            // Create a fresh copy of the engine, since we can't use the
+            // one that is running this test.
             engine = TestEngineActivator.CreateInstance(null, InternalTraceLevel.Off);
 
+            // Create a new DefaultAssemblyRunner, which is actually a framework class,
+            // because we can't use the one that's currently running this test.
+            var runner = new Runner(new Builder());
             var assemblyPath = GetLocalPath("mock-assembly.dll");
             var settings = new Dictionary<string, object>();
 
-            var runner = new Runner(new Builder());
+            // Make sure the runner loaded the mock assembly.
             Assert.True(runner.Load(assemblyPath, settings), "Unable to load mock-assembly.dll");
 
-            // Convert our own framework XmlNode to a TestEngineResult
-            var package = new TestPackage(assemblyPath);
-            this.EngineResult = TestEngineResult.MakeTestRunResult(
-                package,
-                DateTime.Now,
-                new TestEngineResult(
-                    runner.Run(TestListener.NULL, TestFilter.Empty).ToXml(true).OuterXml));
+            // Run the tests, saving the result as an XML string
+            var xmlText = runner.Run(TestListener.NULL, TestFilter.Empty).ToXml(true).OuterXml;
+
+            // Create a TestEngineResult from the string, just as the TestEngine does
+            this.EngineResult = new TestEngineResult(xmlText);
+
+            // Add a test-run element to the result, wrapping the xml result to make it
+            // look exactly like a TestEngineResult returned by the engine.
+            this.EngineResult.Aggregate("testRun", "NAME", "FULLNAME");
         }
     }
 }

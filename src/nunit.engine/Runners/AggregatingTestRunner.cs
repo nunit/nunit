@@ -35,6 +35,8 @@ namespace NUnit.Engine.Runners
     /// </summary>
     public class AggregatingTestRunner : AbstractTestRunner
     {
+        // The runners created by the derived class will (at least at the time
+        // of writing this comment) be either TestDomainRunners or ProcessRunners.
         private List<ITestRunner> runners = new List<ITestRunner>();
 
         public AggregatingTestRunner(ServiceContext services) : base(services) { }
@@ -83,15 +85,12 @@ namespace NUnit.Engine.Runners
 
             foreach (TestPackage subPackage in packages)
             {
-                //foreach (string key in package.Settings.Keys)
-                //    subPackage.Settings[key] = package.Settings[key];
-
                 AbstractTestRunner runner = CreateRunner(subPackage);
                 runners.Add(runner);
                 results.Add(runner.Load(subPackage));
             }
 
-            return TestEngineResult.Wrap("load", results);
+            return ResultHelper.Merge(results);
         }
 
         /// <summary>

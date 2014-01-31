@@ -29,20 +29,15 @@ using NUnit.Engine.Internal;
 
 namespace NUnit.Engine.Runners
 {
-    public class MasterTestRunner : ITestRunner
+    public class MasterTestRunner : AbstractTestRunner, ITestRunner
     {
-        private TestPackage package;
-        private ServiceContext services;
         private AbstractTestRunner realRunner;
 
         // Count of assemblies and projects passed in package
         private int assemblyCount;
         private int projectCount;
 
-        public MasterTestRunner(ServiceContext services)
-        {
-            this.services = services;
-        }
+        public MasterTestRunner(ServiceContext services) : base(services) { }
 
         #region AbstractTestRunner Overrides
 
@@ -52,9 +47,9 @@ namespace NUnit.Engine.Runners
         /// </summary>
         /// <param name="package">The TestPackage to be explored</param>
         /// <returns>A TestEngineResult.</returns>
-        public ITestEngineResult Explore(TestFilter filter)
+        public override TestEngineResult Explore(TestFilter filter)
         {
-            return this.realRunner.Explore(filter);
+            return this.realRunner.Explore(filter).Aggregate(TEST_RUN_ELEMENT, package.Name, package.FullName);
         }
 
         /// <summary>
@@ -62,16 +57,16 @@ namespace NUnit.Engine.Runners
         /// </summary>
         /// <param name="package">The TestPackage to be loaded</param>
         /// <returns>A TestEngineResult.</returns>
-        public ITestEngineResult Load(TestPackage package)
+        public override TestEngineResult Load(TestPackage package)
         {
             PerformPackageSetup(package);
-            return this.realRunner.Load(package);
+            return this.realRunner.Load(package).Aggregate(TEST_RUN_ELEMENT, package.Name, package.FullName);
         }
 
         /// <summary>
         /// Unload any loaded TestPackage.
         /// </summary>
-        public void Unload()
+        public override void Unload()
         {
             if (this.realRunner != null)
                 this.realRunner.Unload();
@@ -83,7 +78,7 @@ namespace NUnit.Engine.Runners
         /// </summary>
         /// <param name="filter">A TestFilter</param>
         /// <returns>The count of test cases</returns>
-        public int CountTestCases(TestFilter filter)
+        public override int CountTestCases(TestFilter filter)
         {
             return realRunner.CountTestCases(filter);
         }
@@ -95,13 +90,19 @@ namespace NUnit.Engine.Runners
         /// <param name="listener">An ITestEventHandler to receive events</param>
         /// <param name="filter">A TestFilter used to select tests</param>
         /// <returns>A TestEngineResult giving the result of the test execution</returns>
-        public ITestEngineResult Run(ITestEventHandler listener, TestFilter filter)
+        public override TestEngineResult Run(ITestEventHandler listener, TestFilter filter)
         {
             DateTime startTime = DateTime.Now;
 
-            TestEngineResult result = realRunner.Run(listener, filter);
+            TestEngineResult result = realRunner.Run(listener, filter).Aggregate("test-run", package.Name, package.FullName);
 
-            return TestEngineResult.MakeTestRunResult(this.package, startTime, result);
+            result.Xml.InsertEnvironmentElement();
+
+            result.Xml.AddAttribute("run-date", XmlConvert.ToString(startTime, "yyyy-MM-dd"));
+            result.Xml.AddAttribute("start-time", XmlConvert.ToString(startTime, "HH:mm:ss"));
+
+
+            return result;
         }
 
         /// <summary>
@@ -110,7 +111,7 @@ namespace NUnit.Engine.Runners
         /// </summary>
         /// <param name="listener">An ITestEventHandler to receive events</param>
         /// <param name="filter">A TestFilter used to select tests</param>
-        public void BeginRun(ITestEventHandler listener, TestFilter filter)
+        public override void BeginRun(ITestEventHandler listener, TestFilter filter)
         {
             realRunner.BeginRun(listener, filter);
         }

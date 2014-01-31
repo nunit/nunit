@@ -24,18 +24,29 @@
 using System.Collections.Generic;
 using System.Xml;
 
+namespace System.Runtime.CompilerServices
+{
+    [AttributeUsage(AttributeTargets.Assembly | AttributeTargets.Class | AttributeTargets.Method)]
+    public sealed class ExtensionAttribute : Attribute { }
+}
+
 namespace NUnit.Engine.Internal
 {
     /// <summary>
-    /// XmlHelper provides static methods for basic XML operations
+    /// XmlHelper provides static methods for basic XML operations.
     /// </summary>
+    /// <remarks>
+    /// This helper class is used in various NUnit modules.
+    /// Unused methods are currently commented out in those
+    /// modules that don't make use of them.
+    /// </remarks>
     public static class XmlHelper
     {
         /// <summary>
         /// Creates a new top level element node.
         /// </summary>
         /// <param name="name">The element name.</param>
-        /// <returns></returns>
+        /// <returns>A new XmlNode</returns>
         public static XmlNode CreateTopLevelElement(string name)
         {
             XmlDocument doc = new XmlDocument();
@@ -43,13 +54,20 @@ namespace NUnit.Engine.Internal
             return doc.FirstChild;
         }
 
+        //public static XmlNode CreateXmlNode(string xml)
+        //{
+        //    XmlDocument doc = new XmlDocument();
+        //    doc.LoadXml(xml);
+        //    return doc.FirstChild;
+        //}
+
         /// <summary>
         /// Adds an attribute with a specified name and value to an existing XmlNode.
         /// </summary>
         /// <param name="node">The node to which the attribute should be added.</param>
         /// <param name="name">The name of the attribute.</param>
         /// <param name="value">The value of the attribute.</param>
-        public static void AddAttribute(XmlNode node, string name, string value)
+        public static void AddAttribute(this XmlNode node, string name, string value)
         {
             XmlAttribute attr = node.OwnerDocument.CreateAttribute(name);
             attr.Value = value;
@@ -62,7 +80,7 @@ namespace NUnit.Engine.Internal
         /// <param name="node">The node to which the element should be added.</param>
         /// <param name="name">The element name.</param>
         /// <returns>The newly created child element</returns>
-        public static XmlNode AddElement(XmlNode node, string name)
+        public static XmlNode AddElement(this XmlNode node, string name)
         {
             XmlNode childNode = node.OwnerDocument.CreateElement(name);
             node.AppendChild(childNode);
@@ -77,23 +95,23 @@ namespace NUnit.Engine.Internal
         /// <param name="name">The element name.</param>
         /// <param name="data">The data for the CDataSection.</param>
         /// <returns></returns>
-        public static XmlNode AddElementWithCDataSection(XmlNode node, string name, string data)
+        public static XmlNode AddElementWithCDataSection(this XmlNode node, string name, string data)
         {
-            XmlNode childNode = AddElement(node, name);
+            XmlNode childNode = node.AddElement(name);
             childNode.AppendChild(node.OwnerDocument.CreateCDataSection(data));
             return childNode;
         }
 
         #region Safe Attribute Access
 
-        public static string GetAttribute(XmlNode result, string name)
+        public static string GetAttribute(this XmlNode result, string name)
         {
             XmlAttribute attr = result.Attributes[name];
 
             return attr == null ? null : attr.Value;
         }
 
-        public static int GetAttribute(XmlNode result, string name, int defaultValue)
+        public static int GetAttribute(this XmlNode result, string name, int defaultValue)
         {
             XmlAttribute attr = result.Attributes[name];
 
@@ -102,7 +120,7 @@ namespace NUnit.Engine.Internal
                 : int.Parse(attr.Value, System.Globalization.CultureInfo.InvariantCulture);
         }
 
-        public static double GetAttribute(XmlNode result, string name, double defaultValue)
+        public static double GetAttribute(this XmlNode result, string name, double defaultValue)
         {
             XmlAttribute attr = result.Attributes[name];
 

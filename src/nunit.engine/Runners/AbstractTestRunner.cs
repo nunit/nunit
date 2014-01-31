@@ -26,6 +26,8 @@ using System.Collections.Generic;
 
 namespace NUnit.Engine.Runners
 {
+    using Internal;
+
     /// <summary>
     /// AbstractTestRunner is the base class for all runners
     /// within the NUnit Engine. It implements the ITestRunner
@@ -33,6 +35,10 @@ namespace NUnit.Engine.Runners
     /// </summary>
     public abstract class AbstractTestRunner : ITestRunner
     {
+        protected const string TEST_RUN_ELEMENT = "test-run";
+        private const string TEST_SUITE_ELEMENT = "test-suite";
+        private const string PROJECT_SUITE_TYPE = "Project";
+
         protected ServiceContext services;
         protected TestPackage package;
 
@@ -151,14 +157,24 @@ namespace NUnit.Engine.Runners
 
         #region Helper Methods
 
+        /// <summary>
+        /// Create the proper type of result for a TestPackage, depending on the 
+        /// nature of the package and the number of results. If the package 
+        /// represents an NUnit project, then we should wrap the individual
+        /// assembly results in a project element, even if there is just one
+        /// assembly. Otherwise, we simply merge multiple results into a single
+        /// result for later aggregation by the caller. Delaying aggregation
+        /// ensures that we don't re-create the XmlNodes multiple times as the
+        /// results are serialized from one AppDomain or Process to another.
+        /// </summary>
         protected TestEngineResult MakePackageResult(IList<TestEngineResult> results)
         {
             if (IsProjectPackage(this.package))
-                return TestEngineResult.MakeProjectResult(this.package, results);
+                return ResultHelper.Merge(results).Aggregate(TEST_SUITE_ELEMENT, PROJECT_SUITE_TYPE, package.Name, package.FullName);
             else if (results.Count == 1)
                 return results[0];
             else
-                return TestEngineResult.Merge(results);
+                return ResultHelper.Merge(results);
         }
 
         private bool IsProjectPackage(TestPackage package)

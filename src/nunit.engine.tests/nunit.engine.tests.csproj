@@ -62,6 +62,7 @@
     <Compile Include="Internal\ServerUtilityTests.cs" />
     <Compile Include="Internal\SettingsGroupTests.cs" />
     <Compile Include="Internal\XmlHelperTests.cs" />
+    <Compile Include="ResultHelperTests.cs" />
     <Compile Include="RuntimeFrameworkTests.cs" />
     <Compile Include="Services\DomainManagerTests.cs" />
     <Compile Include="Services\RecentFilesTests.cs" />
@@ -83,6 +84,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="nunit.engine.tests.build" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Runners\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

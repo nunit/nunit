@@ -60,7 +60,7 @@ namespace NUnit.Engine.Internal.Tests
         public void ElementContainsElementWithInnerText()
         {
             XmlNode top = XmlHelper.CreateTopLevelElement("top");
-            XmlNode message = XmlHelper.AddElement(top, "message");
+            XmlNode message = top.AddElement("message");
             message.InnerText = "This is my message";
 
             Assert.That(top.SelectSingleNode("message").InnerText, Is.EqualTo("This is my message"));
@@ -70,7 +70,7 @@ namespace NUnit.Engine.Internal.Tests
         public void ElementContainsElementWithCData()
         {
             XmlNode top = XmlHelper.CreateTopLevelElement("top");
-            XmlHelper.AddElementWithCDataSection(top, "message", "x > 5 && x < 7");
+            top.AddElementWithCDataSection("message", "x > 5 && x < 7");
 
             Assert.That(top.SelectSingleNode("message").InnerText, Is.EqualTo("x > 5 && x < 7"));
         }
@@ -94,7 +94,7 @@ namespace NUnit.Engine.Internal.Tests
         public void SafeAttributeAcessWithDoubleDefaultValue()
         {
             XmlNode node = XmlHelper.CreateTopLevelElement("top");
-            Assert.That(XmlHelper.GetAttribute(node, "junk", 1.234), Is.EqualTo(1.234));
+            Assert.That(node.GetAttribute("junk", 1.234), Is.EqualTo(1.234));
         }
     }
 }

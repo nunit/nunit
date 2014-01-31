@@ -132,7 +132,7 @@ namespace NUnit.Engine.Internal
         public string GetSetting(string name)
         {
             return SettingsNode != null
-                ? XmlHelper.GetAttribute(SettingsNode, name)
+                ? SettingsNode.GetAttribute(name)
                 : null;
         }
 
