@@ -81,12 +81,10 @@ namespace NUnit.Util.Tests
             // Run the tests, saving the result as an XML string
             var xmlText = runner.Run(TestListener.NULL, TestFilter.Empty).ToXml(true).OuterXml;
 
-            // Create a TestEngineResult from the string, just as the TestEngine does
-            this.EngineResult = new TestEngineResult(xmlText);
-
-            // Add a test-run element to the result, wrapping the xml result to make it
-            // look exactly like a TestEngineResult returned by the engine.
-            this.EngineResult.Aggregate("testRun", "NAME", "FULLNAME");
+            // Create a TestEngineResult from the string, just as the TestEngine does,
+            // then add a test-run element to the result, wrapping the result so it
+            // looks just like what the engine would return!
+            this.EngineResult = new TestEngineResult(xmlText).Aggregate("test-run", "NAME", "FULLNAME");
         }
     }
 }

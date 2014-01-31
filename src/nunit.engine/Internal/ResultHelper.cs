@@ -41,7 +41,7 @@ namespace NUnit.Engine.Internal
         /// <summary>
         /// Aggregate the XmlNodes under a TestEngineResult into a single XmlNode.
         /// </summary>
-        /// <param name="result">A TestEngineResult with xml nodes for each assembly or project</param>
+        /// <param name="result">A new TestEngineResult with xml nodes for each assembly or project</param>
         /// <returns>A TestEngineResult with a single top-level element.</returns>
         public static TestEngineResult Aggregate(this TestEngineResult result, string elementName, string suiteType, string name, string fullname)
         {
@@ -51,7 +51,7 @@ namespace NUnit.Engine.Internal
         /// <summary>
         /// Aggregate the XmlNodes under a TestEngineResult into a single XmlNode.
         /// </summary>
-        /// <param name="result">A TestEngineResult with xml nodes for each assembly or project</param>
+        /// <param name="result">A new TestEngineResult with xml nodes for each assembly or project</param>
         /// <returns>A TestEngineResult with a single top-level element.</returns>
         public static TestEngineResult Aggregate(this TestEngineResult result, string elementName, string name, string fullname)
         {
