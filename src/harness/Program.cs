@@ -27,6 +27,8 @@ using System.Reflection;
 using System.IO;
 using Mono.Options;
 using NUnit.Framework.Internal;
+using System.Threading;
+using System.Globalization;
 
 namespace NUnit.Framework.TestHarness
 {
@@ -40,6 +42,8 @@ namespace NUnit.Framework.TestHarness
     {
         static int Main(string[] args)
         {
+            Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
+
             CommandLineOptions options = new CommandLineOptions();
 
             try
