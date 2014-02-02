@@ -130,11 +130,10 @@ namespace NUnit.Framework.Syntax
         [Test]
         public void LambdaThrowsExceptionWithMessage()
         {
-            string expectedExceptionMessage = (new ArgumentNullException()).Message;
             Assert.That(
                 () => new MyClass(null),
                 Throws.InstanceOf<ArgumentNullException>()
-                .And.Message.Matches(expectedExceptionMessage));
+                .And.Message.Matches("null"));
         }
 #endif
 
