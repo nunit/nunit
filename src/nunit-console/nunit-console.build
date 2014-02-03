@@ -3,6 +3,7 @@
 
   <patternset id="source-files">
     <include name="Properties/AssemblyInfo.cs"/>
+    <include name="ColorSetter.cs" />
     <include name="ConsoleOptions.cs"/>
     <include name="ConsoleRunner.cs"/>
     <include name="IResultWriter.cs"/>
