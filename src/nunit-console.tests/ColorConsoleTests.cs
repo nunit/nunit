@@ -27,16 +27,16 @@ using NUnit.Framework;
 namespace NUnit.ConsoleRunner.Tests
 {
     [TestFixture]
-    public class ColorSetterTests
+    public class ColorConsoleTests
     {
         [SetUp]
         public void SetUp()
         {
             var options = new ConsoleOptions( new[] {"--color"} );
-            ColorSetter.Options = options;
+            ColorConsole.Options = options;
 
             // Set to an unknown, unlikely color so that we can test for change
-            Console.ForegroundColor = ConsoleColor.Magenta;
+			Console.ForegroundColor = ConsoleColor.Magenta;
         }
 
         [TearDown]
@@ -48,8 +48,8 @@ namespace NUnit.ConsoleRunner.Tests
         [Test]
         public void TestConstructor()
         {
-            ConsoleColor expected = ColorSetter.GetColor( ColorStyle.Error );
-            using ( new ColorSetter( ColorStyle.Error ) )
+            ConsoleColor expected = ColorConsole.GetColor( ColorStyle.Error );
+            using ( new ColorConsole( ColorStyle.Error ) )
             {
                 Assert.That(Console.ForegroundColor, Is.EqualTo(expected));
             }
@@ -60,22 +60,13 @@ namespace NUnit.ConsoleRunner.Tests
         public void TestNoOption()
         {
             var options = new ConsoleOptions(new[] { "" });
-            ColorSetter.Options = options;
+            ColorConsole.Options = options;
 
-            using (new ColorSetter(ColorStyle.Error))
+            using (new ColorConsole(ColorStyle.Error))
             {
                 Assert.That(Console.ForegroundColor, Is.EqualTo(ConsoleColor.Magenta));
             }
             Assert.That(Console.ForegroundColor, Is.EqualTo(ConsoleColor.Magenta));
-        }
-
-        [TestCase(ColorStyle.Pass, ConsoleColor.Green)]
-        [TestCase(ColorStyle.Failure, ConsoleColor.Red)]
-        [TestCase(ColorStyle.Warning, ConsoleColor.Yellow)]
-        [TestCase(ColorStyle.Error, ConsoleColor.DarkRed)]
-        public void TestGetColor( ColorStyle style, ConsoleColor expected )
-        {
-            Assert.That( ColorSetter.GetColor( style ), Is.EqualTo( expected ) );
         }
     }
 }

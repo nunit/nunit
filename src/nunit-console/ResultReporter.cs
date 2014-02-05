@@ -57,7 +57,7 @@ namespace NUnit.ConsoleRunner
         {
             if (options.StopOnError && summary.ErrorsAndFailures > 0)
             {
-                ColorSetter.WriteLine(ColorStyle.Failure, "Execution terminated after first error");
+                ColorConsole.WriteLine(ColorStyle.Failure, "Execution terminated after first error");
                 Console.WriteLine();
             }
 
@@ -79,16 +79,16 @@ namespace NUnit.ConsoleRunner
                 ? ColorStyle.Pass
                 : ( testRunResult == "Failed" ? ColorStyle.Failure : ColorStyle.Warning );
             Console.WriteLine();
-            ColorSetter.WriteLine(ColorStyle.SectionHeader, "Test Run Summary -");
-            ColorSetter.Write(ColorStyle.Label, "   Overall result: ");
-            ColorSetter.WriteLine(overall, testRunResult);
-            ColorSetter.WriteLine(ColorStyle.Default, String.Format( 
+            ColorConsole.WriteLine(ColorStyle.SectionHeader, "Test Run Summary -");
+            ColorConsole.Write(ColorStyle.Label, "   Overall result: ");
+            ColorConsole.WriteLine(overall, testRunResult);
+            ColorConsole.WriteLine(ColorStyle.Default, String.Format( 
                 "   Tests run: {0}, Errors: {1}, Failures: {2}, Inconclusive: {3}",
                 summary.TestsRun, summary.Errors, summary.Failures, summary.Inconclusive));
-            ColorSetter.WriteLine(ColorStyle.Warning, string.Format( 
+            ColorConsole.WriteLine(ColorStyle.Warning, string.Format( 
                 "     Not run: {0}, Invalid: {1}, Ignored: {2}, Skipped: {3}",
                 summary.TestsNotRun, summary.NotRunnable, summary.Ignored, summary.Skipped));
-            ColorSetter.WriteLine(ColorStyle.Default, string.Format(
+            ColorConsole.WriteLine(ColorStyle.Default, string.Format(
                 "        Time: {0} seconds", summary.Time));
             Console.WriteLine();
         }
@@ -109,7 +109,7 @@ namespace NUnit.ConsoleRunner
                     {
                         if (result.GetAttribute("total") == "0")
                         {
-                            using (new ColorSetter(ColorStyle.Warning))
+                            using (new ColorConsole(ColorStyle.Warning))
                                 Console.WriteLine("Warning: No tests found in " + result.GetAttribute("name"));
                         }
                         count++;
@@ -140,17 +140,17 @@ namespace NUnit.ConsoleRunner
                     string resultState = result.GetAttribute("result");
                     if (resultState == "Failed")
                     {
-                        using (new ColorSetter(ColorStyle.Failure))
+                        using (new ColorConsole(ColorStyle.Failure))
                             WriteSingleResult(result);
                     }
                     else if (resultState == "Error")
                     {
-                        using (new ColorSetter(ColorStyle.Error))
+                        using (new ColorConsole(ColorStyle.Error))
                             WriteSingleResult(result);
                     }
                     else if (resultState == "Cancelled")
                     {
-                        using (new ColorSetter(ColorStyle.Warning))
+                        using (new ColorConsole(ColorStyle.Warning))
                             WriteSingleResult(result);
                     }
                     return;
@@ -165,7 +165,7 @@ namespace NUnit.ConsoleRunner
                         resultState = result.GetAttribute("result");
                         if (resultState == "Failed")
                         {
-                            using (new ColorSetter(ColorStyle.Failure))
+                            using (new ColorConsole(ColorStyle.Failure))
                                 WriteSingleResult(result);
                         }
                     }
@@ -193,7 +193,7 @@ namespace NUnit.ConsoleRunner
                 string resultState = result.GetAttribute("result");
                 if (resultState == "Skipped" || resultState == "Ignored" || resultState == "NotRunnable")
                 {
-                    using (new ColorSetter(ColorStyle.Warning))
+                    using (new ColorConsole(ColorStyle.Warning))
                         WriteSingleResult(result);
                 }
             }

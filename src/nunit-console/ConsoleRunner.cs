@@ -140,7 +140,7 @@ namespace NUnit.ConsoleRunner
 
             try
             {
-                using ( new ColorSetter( ColorStyle.Output ) )
+                using ( new ColorConsole( ColorStyle.Output ) )
 #if true
                 engineResult = engine.Run(package, eventHandler, filter);
 #else
@@ -190,33 +190,33 @@ namespace NUnit.ConsoleRunner
 
         private void DisplayRequestedOptions()
         {
-            ColorSetter.WriteLine(ColorStyle.SectionHeader, "Options -");
-            ColorSetter.WriteLabel("    ProcessModel: ", options.ProcessModel ?? "Default", false);
-            ColorSetter.WriteLabel("    DomainUsage: ", options.DomainUsage ?? "Default", true);
-            ColorSetter.WriteLabel("    Execution Runtime: ", options.Framework ?? "Not Specified", true);
+            ColorConsole.WriteLine(ColorStyle.SectionHeader, "Options -");
+            ColorConsole.WriteLabel("    ProcessModel: ", options.ProcessModel ?? "Default", false);
+            ColorConsole.WriteLabel("    DomainUsage: ", options.DomainUsage ?? "Default", true);
+            ColorConsole.WriteLabel("    Execution Runtime: ", options.Framework ?? "Not Specified", true);
             if (options.DefaultTimeout >= 0)
-                ColorSetter.WriteLabel("    Default timeout: ", options.DefaultTimeout.ToString(), true);
+                ColorConsole.WriteLabel("    Default timeout: ", options.DefaultTimeout.ToString(), true);
             if (options.NumWorkers > 0)
-                ColorSetter.WriteLabel("    Worker Threads: ", options.NumWorkers.ToString(), true);
-            ColorSetter.WriteLabel("    Work Directory: ", workDirectory, true);
-            ColorSetter.WriteLabel("    Internal Trace: ", options.InternalTraceLevel ?? "Off", true);
+                ColorConsole.WriteLabel("    Worker Threads: ", options.NumWorkers.ToString(), true);
+            ColorConsole.WriteLabel("    Work Directory: ", workDirectory, true);
+            ColorConsole.WriteLabel("    Internal Trace: ", options.InternalTraceLevel ?? "Off", true);
             //if (options.DisplayTeamCityServiceMessages)
             //    Console.WriteLine("    Display TeamCity Service Messages");
             Console.WriteLine();
 
             if (options.TestList.Count > 0)
             {
-                ColorSetter.WriteLine(ColorStyle.Label, "Selected test(s):");
-                using (new ColorSetter(ColorStyle.Default))
+                ColorConsole.WriteLine(ColorStyle.Label, "Selected test(s):");
+                using (new ColorConsole(ColorStyle.Default))
                     foreach (string testName in options.TestList)
                         Console.WriteLine("    " + testName);
             }
 
             if (!string.IsNullOrEmpty( options.Include ))
-                ColorSetter.WriteLabel("Included categories: ", options.Include, true);
+                ColorConsole.WriteLabel("Included categories: ", options.Include, true);
 
             if (!string.IsNullOrEmpty( options.Exclude ))
-                ColorSetter.WriteLabel("Excluded categories: ", options.Exclude, true);
+                ColorConsole.WriteLabel("Excluded categories: ", options.Exclude, true);
         }
 
         private void RedirectOutputAsRequested()
@@ -333,9 +333,9 @@ namespace NUnit.ConsoleRunner
             {
                 if (error.Message != null)
                 {
-                    ColorSetter.WriteLine(ColorStyle.Error, "Load failure: " + error.Message);
+                    ColorConsole.WriteLine(ColorStyle.Error, "Load failure: " + error.Message);
                     if (error.StackTrace != null)
-                        ColorSetter.WriteLine(ColorStyle.Error, error.StackTrace);
+                        ColorConsole.WriteLine(ColorStyle.Error, error.StackTrace);
                 }
             }
         }

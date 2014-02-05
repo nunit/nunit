@@ -76,14 +76,14 @@ namespace NUnit.ConsoleRunner
     /// <summary>
     /// Sets the console color in the constructor and resets it in the dispose
     /// </summary>
-    public class ColorSetter : IDisposable
+    public class ColorConsole : IDisposable
     {
         /// <summary>
         /// Gets or sets the options. This must be set at program startup
         /// </summary>
         public static ConsoleOptions Options { private get; set; }
 
-        public ColorSetter( ColorStyle style )
+        public ColorConsole( ColorStyle style )
         {
             if ( Options != null && Options.Color )
                 Console.ForegroundColor = GetColor( style );
@@ -96,7 +96,7 @@ namespace NUnit.ConsoleRunner
         /// <param name="value">The value.</param>
         public static void Write( ColorStyle style, string value )
         {
-            using ( new ColorSetter( style ) )
+            using ( new ColorConsole( style ) )
             {
                 Console.Write( value );
             }
@@ -109,7 +109,7 @@ namespace NUnit.ConsoleRunner
         /// <param name="value">The value.</param>
         public static void WriteLine( ColorStyle style, string value )
         {
-            using (new ColorSetter(style))
+            using (new ColorConsole(style))
             {
                 Console.WriteLine(value);
             }

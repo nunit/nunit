@@ -44,7 +44,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ColorSetterTests.cs" />
+    <Compile Include="ColorConsoleTests.cs" />
+    <Compile Include="ColorStyleTests.cs" />
     <Compile Include="CommandLineTests.cs" />
     <Compile Include="MakeTestPackageTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

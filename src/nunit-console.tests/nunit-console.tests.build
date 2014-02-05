@@ -3,7 +3,8 @@
 
   <patternset id="source-files">
     <include name="Properties/AssemblyInfo.cs" />
-    <include name="ColorSetterTests.cs" />
+    <include name="ColorConsoleTests.cs" />
+    <include name="ColorStyleTests.cs" />
     <include name="CommandLineTests.cs" />
     <include name="MakeTestPackageTests.cs" />
     <include name="NUnit2XmlValidationTests.cs" />

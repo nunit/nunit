@@ -53,7 +53,7 @@ namespace NUnit.ConsoleRunner
                 return ConsoleRunner.INVALID_ARG;
             }
 
-		    ColorSetter.Options = options;
+		    ColorConsole.Options = options;
 
             // Create SettingsService early so we know the trace level right at the start
             //SettingsService settingsService = new SettingsService();
@@ -68,7 +68,7 @@ namespace NUnit.ConsoleRunner
             {
                 if (options.PauseBeforeRun)
                 {
-                    ColorSetter.WriteLine(ColorStyle.Warning, "Press any key to continue . . .");
+                    ColorConsole.WriteLine(ColorStyle.Warning, "Press any key to continue . . .");
                     Console.ReadKey(true);
                 }
 
@@ -83,7 +83,7 @@ namespace NUnit.ConsoleRunner
 
                 if (!options.Validate())
                 {
-                    using (new ColorSetter(ColorStyle.Error))
+                    using (new ColorConsole(ColorStyle.Error))
                     {
                         foreach (string message in options.ErrorMessages)
                             Console.Error.WriteLine(message);
@@ -94,7 +94,7 @@ namespace NUnit.ConsoleRunner
 
                 if (options.InputFiles.Count == 0)
                 {
-                    using (new ColorSetter(ColorStyle.Error))
+                    using (new ColorConsole(ColorStyle.Error))
                         Console.Error.WriteLine("Error: no inputs specified");
                     return ConsoleRunner.OK;
                 }
@@ -106,7 +106,7 @@ namespace NUnit.ConsoleRunner
                     string ext = Path.GetExtension(file);
                     if (ext != ".dll" && ext != ".exe" && ext != ".nunit")
                     {
-                        ColorSetter.WriteLine(ColorStyle.Warning, "File type not known: " + file);
+                        ColorConsole.WriteLine(ColorStyle.Warning, "File type not known: " + file);
                         return ConsoleRunner.INVALID_ARG;
                     }
                 }
@@ -124,32 +124,32 @@ namespace NUnit.ConsoleRunner
                     }
                     catch (NUnitEngineException ex)
                     {
-                        ColorSetter.WriteLine(ColorStyle.Error, ex.Message);
+                        ColorConsole.WriteLine(ColorStyle.Error, ex.Message);
                         return ConsoleRunner.INVALID_ARG;
                     }
                     catch (FileNotFoundException ex)
                     {
-                        ColorSetter.WriteLine(ColorStyle.Error, ex.Message);
+                        ColorConsole.WriteLine(ColorStyle.Error, ex.Message);
 #if DEBUG
-                        ColorSetter.WriteLine(ColorStyle.Error, ex.StackTrace);
+                        ColorConsole.WriteLine(ColorStyle.Error, ex.StackTrace);
 #endif
                         return ConsoleRunner.FILE_NOT_FOUND;
                     }
                     catch (DirectoryNotFoundException ex)
                     {
-                        ColorSetter.WriteLine(ColorStyle.Error, ex.Message);
+                        ColorConsole.WriteLine(ColorStyle.Error, ex.Message);
                         return ConsoleRunner.FILE_NOT_FOUND;
                     }
                     catch (Exception ex)
                     {
-                        ColorSetter.WriteLine(ColorStyle.Error, ex.Message);
+                        ColorConsole.WriteLine(ColorStyle.Error, ex.Message);
                         return ConsoleRunner.UNEXPECTED_ERROR;
                     }
                     finally
                     {
                         if (options.WaitBeforeExit)
                         {
-                            using (new ColorSetter(ColorStyle.Warning))
+                            using (new ColorConsole(ColorStyle.Warning))
                             {
                                 Console.Out.WriteLine("\nPress any key to continue . . .");
                                 Console.ReadKey(true);
@@ -187,33 +187,33 @@ namespace NUnit.ConsoleRunner
             if (attrs.Length > 0)
                 configText = string.Format("({0})", ((AssemblyConfigurationAttribute)attrs[0]).Configuration);
 
-            ColorSetter.WriteLine(ColorStyle.Header, string.Format( "{0} {1} {2}", programName, versionText, configText ));
-            ColorSetter.WriteLine(ColorStyle.SubHeader, copyrightText);
+            ColorConsole.WriteLine(ColorStyle.Header, string.Format( "{0} {1} {2}", programName, versionText, configText ));
+            ColorConsole.WriteLine(ColorStyle.SubHeader, copyrightText);
             Console.WriteLine();
-            ColorSetter.WriteLine(ColorStyle.SectionHeader, "Runtime Environment - ");
-            ColorSetter.WriteLabel("   OS Version: ", Environment.OSVersion.ToString(), true);
-            ColorSetter.WriteLabel("  CLR Version: ", Environment.Version.ToString(), true);
+            ColorConsole.WriteLine(ColorStyle.SectionHeader, "Runtime Environment - ");
+            ColorConsole.WriteLabel("   OS Version: ", Environment.OSVersion.ToString(), true);
+            ColorConsole.WriteLabel("  CLR Version: ", Environment.Version.ToString(), true);
             Console.WriteLine();
         }
 
         private static void WriteHelpText(ConsoleOptions options)
         {
             Console.WriteLine();
-            ColorSetter.WriteLine(ColorStyle.Header, "NUNIT-CONSOLE [inputfiles] [options]");
+            ColorConsole.WriteLine(ColorStyle.Header, "NUNIT-CONSOLE [inputfiles] [options]");
             Console.WriteLine();
-            ColorSetter.WriteLine(ColorStyle.Default, "Runs a set of NUnit tests from the console.");
+            ColorConsole.WriteLine(ColorStyle.Default, "Runs a set of NUnit tests from the console.");
             Console.WriteLine();
-            ColorSetter.WriteLine(ColorStyle.SectionHeader, "InputFiles:");
-            ColorSetter.WriteLine(ColorStyle.Default, "      One or more assemblies or test projects of a recognized type.");
+            ColorConsole.WriteLine(ColorStyle.SectionHeader, "InputFiles:");
+            ColorConsole.WriteLine(ColorStyle.Default, "      One or more assemblies or test projects of a recognized type.");
             Console.WriteLine();
-            ColorSetter.WriteLine(ColorStyle.SectionHeader, "Options:");
-            using (new ColorSetter(ColorStyle.Default))
+            ColorConsole.WriteLine(ColorStyle.SectionHeader, "Options:");
+            using (new ColorConsole(ColorStyle.Default))
             {
                 options.WriteOptionDescriptions(Console.Out);
             }
             Console.WriteLine();
-            ColorSetter.WriteLine(ColorStyle.SectionHeader, "Description:");
-            using (new ColorSetter(ColorStyle.Default))
+            ColorConsole.WriteLine(ColorStyle.SectionHeader, "Description:");
+            using (new ColorConsole(ColorStyle.Default))
             {
                 Console.WriteLine("      By default, this command runs the tests contained in the");
                 Console.WriteLine("      assemblies and projects specified. If the --explore option");
