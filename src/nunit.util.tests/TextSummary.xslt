@@ -36,7 +36,7 @@
     <xsl:value-of select="@skipped"/>
     
     <xsl:text>, Elapsed Time: </xsl:text>
-    <xsl:value-of select="@time"/>
+    <xsl:value-of select="@duration"/>
   </xsl:template>
 
 </xsl:stylesheet>

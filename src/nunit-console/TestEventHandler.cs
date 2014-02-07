@@ -207,7 +207,7 @@ namespace NUnit.ConsoleRunner
         {
             if (--level == 0)
             {
-                XmlAttribute timeAttr = suiteResult.Attributes["time"];
+                XmlAttribute durationAttribute = suiteResult.Attributes["duration"];
 
                 Trace.WriteLine("############################################################################");
 
@@ -230,8 +230,8 @@ namespace NUnit.ConsoleRunner
                 Trace.WriteLine("Ignored tests        : " + testIgnoreCount);
                 Trace.WriteLine("Failed tests         : " + failureCount);
                 Trace.WriteLine("Unhandled exceptions : " + unhandledExceptions.Count);
-                if ( timeAttr != null )
-                Trace.WriteLine("Total time           : " + timeAttr.Value + " seconds");
+                if ( durationAttribute != null )
+                Trace.WriteLine("Total duration       : " + durationAttribute.Value + " seconds");
                 Trace.WriteLine("############################################################################");
             }
         }

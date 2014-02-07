@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Reflection;
 using System.Text;
 using System.Xml;
@@ -125,7 +126,7 @@ namespace NUnit.Engine.Internal
                 combinedNode.AddAttribute("fullname", fullname);
 
             string status = "Inconclusive";
-            TimeSpan duration = TimeSpan.Zero;
+            double totalDuration = 0.0d;
             int testcasecount = 0;
             int total = 0;
             int passed = 0;
@@ -161,12 +162,12 @@ namespace NUnit.Engine.Internal
                     }
 
                     total += node.GetAttribute("total", 0);
-                    var timeString = node.GetAttribute("time");
-                    if (timeString != null)
+                    var durationString = node.GetAttribute("duration");
+                    if (durationString != null)
                     {
-                        TimeSpan timeSpan;
-                        if (TimeSpan.TryParse(timeString, out timeSpan))
-                            duration += timeSpan;
+                        double duration;
+                        if (double.TryParse(durationString, out duration))
+                            totalDuration += duration;
                     }
                     passed += node.GetAttribute("passed", 0);
                     failed += node.GetAttribute("failed", 0);
@@ -184,7 +185,7 @@ namespace NUnit.Engine.Internal
             if (isTestRunResult)
             {
                 combinedNode.AddAttribute("result", status);
-                combinedNode.AddAttribute("time", duration.ToString());
+                combinedNode.AddAttribute("duration", totalDuration.ToString("####0.000000", NumberFormatInfo.InvariantInfo));
                 combinedNode.AddAttribute("total", total.ToString());
                 combinedNode.AddAttribute("passed", passed.ToString());
                 combinedNode.AddAttribute("failed", failed.ToString());

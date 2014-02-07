@@ -85,7 +85,7 @@ namespace NUnit.ConsoleRunner
                 "     Not run: {0}, Invalid: {1}, Ignored: {2}, Skipped: {3}",
                 summary.TestsNotRun, summary.NotRunnable, summary.Ignored, summary.Skipped);
             Console.WriteLine(
-                "        Time: {0} seconds", summary.Time);
+                "    Duration: {0} seconds", summary.Duration.ToString("####0.000"));
             Console.WriteLine();
         }
 

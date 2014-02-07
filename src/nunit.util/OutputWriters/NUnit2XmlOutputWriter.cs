@@ -99,7 +99,8 @@ namespace NUnit.Util
             xmlWriter.WriteAttributeString("invalid", summaryResults.NotRunnable.ToString());
 
             xmlWriter.WriteAttributeString("date", result.GetAttribute("run-date"));
-            xmlWriter.WriteAttributeString("time", result.GetAttribute("start-time"));
+            xmlWriter.WriteAttributeString("start-time", result.GetAttribute("start-time"));
+            xmlWriter.WriteAttributeString("duration", summaryResults.Duration.ToString("####0.000000", NumberFormatInfo.InvariantInfo));
             WriteEnvironment();
             WriteCultureInfo();
         }
@@ -197,13 +198,12 @@ namespace NUnit.Util
             string label = result.GetAttribute("label");
             string executed = resultState == "Skipped" ? "False" : "True";
             string success = resultState == "Passed" ? "True" : "False";
-            var seconds = TimeSpan.Parse(result.GetAttribute("time")).TotalSeconds;
-            string time = seconds.ToString("#####0.000", NumberFormatInfo.InvariantInfo);
+
+            string duration = result.GetAttribute("duration");
             string asserts = result.GetAttribute("asserts");
 
             if (label != null && label != string.Empty)
                 resultState += ":" + label;
-
 
             xmlWriter.WriteAttributeString("executed", executed);
             xmlWriter.WriteAttributeString("result", resultStates[resultState]);
@@ -211,7 +211,7 @@ namespace NUnit.Util
             if (executed == "True")
             {
                 xmlWriter.WriteAttributeString("success", success);
-                xmlWriter.WriteAttributeString("time", time);
+                xmlWriter.WriteAttributeString("duration", duration);
                 xmlWriter.WriteAttributeString("asserts", asserts);
             }
         }

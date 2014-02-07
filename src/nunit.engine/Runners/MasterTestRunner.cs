@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Reflection;
 using System.Xml;
 using NUnit.Engine.Internal;
@@ -100,7 +101,6 @@ namespace NUnit.Engine.Runners
 
             result.Xml.AddAttribute("run-date", XmlConvert.ToString(startTime, "yyyy-MM-dd"));
             result.Xml.AddAttribute("start-time", XmlConvert.ToString(startTime, "HH:mm:ss"));
-
 
             return result;
         }

@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Globalization;
 using System.Xml;
 
 namespace NUnit.Util
@@ -41,7 +42,7 @@ namespace NUnit.Util
         private int ignoreCount = 0;
         private int notRunnable = 0;
 
-        private double time = 0.0d;
+        private double duration = 0.0d;
         private string name;
 
         public ResultSummary() { }
@@ -51,9 +52,8 @@ namespace NUnit.Util
             if (result.Name != "test-run")
                 throw new InvalidOperationException("Expected <test-run> as top-level element but was <" + result.Name + ">");
 
-            this.name = GetAttribute(result, "name");
-            //this.time = GetAttribute(topNode, "time", 0.0);
-            //this.time = double.Parse(result.GetAttribute("time"), System.Globalization.CultureInfo.InvariantCulture);
+            name = GetAttribute(result, "name");
+            duration = GetAttribute(result, "duration", 0.0);
 
             Summarize(result);
         }
@@ -198,9 +198,9 @@ namespace NUnit.Util
             get { return ignoreCount; }
         }
 
-        public double Time
+        public double Duration
         {
-            get { return time; }
+            get { return duration; }
         }
 
         public int TestsNotRun
@@ -229,10 +229,11 @@ namespace NUnit.Util
         {
             var attr = result.Attributes[name];
 
-            if (attr == null)
+            double attributeValue;
+            if (attr == null || !double.TryParse(attr.Value, NumberStyles.Any, CultureInfo.InvariantCulture, out attributeValue))
                 return defaultValue;
 
-            return double.Parse(attr.Value, System.Globalization.CultureInfo.InvariantCulture);
+            return attributeValue;
         }
 
         #endregion
