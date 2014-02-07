@@ -105,7 +105,7 @@ namespace NUnit.Framework.TestHarness
             xmlWriter.WriteAttributeString("invalid", summaryResults.NotRunnable.ToString());
 
             xmlWriter.WriteAttributeString("date", XmlHelper.GetAttribute(result, "run-date"));
-            xmlWriter.WriteAttributeString("time", XmlHelper.GetAttribute(result, "start-time"));
+            xmlWriter.WriteAttributeString("start-time", XmlHelper.GetAttribute(result, "start-time"));
             WriteEnvironment();
             WriteCultureInfo();
         }
@@ -203,8 +203,7 @@ namespace NUnit.Framework.TestHarness
             string label = XmlHelper.GetAttribute(result, "label");
             string executed = resultState == "Skipped" ? "False" : "True";
             string success = resultState == "Passed" ? "True" : "False";
-            var seconds = TimeSpan.Parse(XmlHelper.GetAttribute(result, "time")).TotalSeconds;
-            string time = seconds.ToString("#####0.000", NumberFormatInfo.InvariantInfo);
+            string duration = XmlHelper.GetAttribute(result, "duration");
             string asserts = XmlHelper.GetAttribute(result, "asserts");
 
             if (label != null && label != string.Empty)
@@ -217,7 +216,7 @@ namespace NUnit.Framework.TestHarness
             if (executed == "True")
             {
                 xmlWriter.WriteAttributeString("success", success);
-                xmlWriter.WriteAttributeString("time", time);
+                xmlWriter.WriteAttributeString("duration", duration);
                 xmlWriter.WriteAttributeString("asserts", asserts);
             }
         }

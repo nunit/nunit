@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Globalization;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal
@@ -242,7 +243,7 @@ namespace NUnit.Framework.Internal
             if (ResultState.Label != string.Empty) // && ResultState.Label != ResultState.Status.ToString())
                 thisNode.AddAttribute("label", ResultState.Label);
 
-            thisNode.AddAttribute("time", this.Duration.ToString());
+            thisNode.AddAttribute("duration", this.Duration.TotalSeconds.ToString("####0.000000", NumberFormatInfo.InvariantInfo));
 
             if (this.test is TestSuite)
             {

@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Xml;
@@ -93,7 +94,7 @@ namespace NUnitLite.Runner
             if (result.ResultState.Label != string.Empty) // && result.ResultState.Label != ResultState.Status.ToString())
                 xmlWriter.WriteAttributeString("label", result.ResultState.Label);
 
-            xmlWriter.WriteAttributeString("time", result.Duration.ToString());
+            xmlWriter.WriteAttributeString("duration", result.Duration.TotalSeconds.ToString("####0.000000", NumberFormatInfo.InvariantInfo));
 
             xmlWriter.WriteAttributeString("total", (result.PassCount + result.FailCount + result.SkipCount + result.InconclusiveCount).ToString());
             xmlWriter.WriteAttributeString("passed", result.PassCount.ToString());

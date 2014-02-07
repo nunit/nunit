@@ -111,9 +111,9 @@ namespace NUnitLite.Runner.Tests
         }
 
         [Test]
-        public void TestResults_HasValidTimeAttribute()
+        public void TestResults_HasValidStartTimeAttribute()
         {
-            string timeString = RequiredAttribute(topNode, "time");
+            string timeString = RequiredAttribute(topNode, "start-time");
 #if (CLR_2_0 || CLR_4_0) && !NETCF
             DateTime time;
             Assert.That(DateTime.TryParse(timeString, out time), "Invalid time attribute: {0}", timeString);
@@ -185,14 +185,14 @@ namespace NUnitLite.Runner.Tests
         }
 
         [Test]
-        public void TestSuite_HasValidTimeAttribute()
+        public void TestSuite_HasValidDurationAttribute()
         {
 #if NETCF
-            RequiredAttribute(suiteNode, "time");
+            RequiredAttribute(suiteNode, "duration");
 #else
             double time;
             // NOTE: We use the TryParse overload with 4 args because it's supported in .NET 1.1
-            Assert.That(double.TryParse(RequiredAttribute(suiteNode, "time"),System.Globalization.NumberStyles.Float,null, out time), "Invalid value for time");
+            Assert.That(double.TryParse(RequiredAttribute(suiteNode, "duration"),System.Globalization.NumberStyles.Float,null, out time), "Invalid value for time");
 #endif
         }
 

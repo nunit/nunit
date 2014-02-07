@@ -120,7 +120,7 @@ namespace NUnitLite.Runner
             xmlWriter.WriteAttributeString("invalid", summaryResults.InvalidCount.ToString());
 
             xmlWriter.WriteAttributeString("date", XmlConvert.ToString(startTime, "yyyy-MM-dd"));
-            xmlWriter.WriteAttributeString("time", XmlConvert.ToString(startTime, "HH:mm:ss"));
+            xmlWriter.WriteAttributeString("start-time", XmlConvert.ToString(startTime, "HH:mm:ss"));
             WriteEnvironment();
             WriteCultureInfo();
         }
@@ -229,7 +229,7 @@ namespace NUnitLite.Runner
                 xmlWriter.WriteAttributeString("executed", "True");
                 xmlWriter.WriteAttributeString("result", translatedResult);
                 xmlWriter.WriteAttributeString("success", status == TestStatus.Passed ? "True" : "False");
-                xmlWriter.WriteAttributeString("time", result.Duration.TotalSeconds.ToString());
+                xmlWriter.WriteAttributeString("duration", result.Duration.TotalSeconds.ToString("####0.000000", NumberFormatInfo.InvariantInfo));
                 xmlWriter.WriteAttributeString("asserts", result.AssertCount.ToString());
             }
             else

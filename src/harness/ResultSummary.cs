@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Globalization;
 using System.Xml;
 
 namespace NUnit.Framework.TestHarness
@@ -41,15 +42,15 @@ namespace NUnit.Framework.TestHarness
         private int ignoreCount = 0;
         private int notRunnable = 0;
 
-        private TimeSpan time = TimeSpan.Zero;
+        private double duration = 0.0d;
         private string name;
 
         public ResultSummary() { }
 
         public ResultSummary(XmlNode result)
         {
-            this.name = result.Attributes["name"].Value;
-            this.time = TimeSpan.Parse(result.Attributes["time"].Value);
+            name = GetAttribute(result, "name");
+            duration = GetAttribute(result, "duration", 0.0);
 
             Summarize(result);
         }
@@ -193,9 +194,9 @@ namespace NUnit.Framework.TestHarness
             get { return ignoreCount; }
         }
 
-        public TimeSpan Time
+        public double Duration
         {
-            get { return time; }
+            get { return duration; }
         }
 
         public int TestsNotRun
@@ -207,5 +208,30 @@ namespace NUnit.Framework.TestHarness
         {
             get { return errorCount + failureCount; }
         }
+
+        #region Helper Methods
+
+        public static string GetAttribute(XmlNode result, string name)
+        {
+            var attr = result.Attributes[name];
+
+            if ( attr == null )
+                return null;
+
+            return attr.Value;
+        }
+
+        public static double GetAttribute(XmlNode result, string name, double defaultValue)
+        {
+            var attr = result.Attributes[name];
+
+            double attributeValue;
+            if ( attr == null || !double.TryParse(attr.Value, NumberStyles.Any, CultureInfo.InvariantCulture, out attributeValue) )
+                return defaultValue;
+
+            return attributeValue;
+        }
+
+        #endregion
     }
 }

@@ -92,7 +92,7 @@ namespace NUnit.Framework.TestHarness
             if (label != null)
                 xmlWriter.WriteAttributeString("label", label);
 
-            xmlWriter.WriteAttributeString("time", XmlHelper.GetAttribute(resultNode, "time"));
+            xmlWriter.WriteAttributeString("duration", XmlHelper.GetAttribute(resultNode, "duration"));
 
             xmlWriter.WriteAttributeString("total", XmlHelper.GetAttribute(resultNode, "total"));
             xmlWriter.WriteAttributeString("passed", XmlHelper.GetAttribute(resultNode, "passed"));

@@ -208,7 +208,7 @@ namespace NUnit.Framework.Internal
             XmlNode testNode = testResult.ToXml(true);
 
             Assert.AreEqual("Passed", testNode.Attributes["result"]);
-            Assert.AreEqual("00:00:00.1250000", testNode.Attributes["time"]);
+            Assert.AreEqual("0.125000", testNode.Attributes["duration"]);
             Assert.AreEqual("2", testNode.Attributes["asserts"]);
 
             XmlNode reason = testNode.FindDescendant("reason");
@@ -224,7 +224,7 @@ namespace NUnit.Framework.Internal
             XmlNode suiteNode = suiteResult.ToXml(true);
 
             Assert.AreEqual("Passed", suiteNode.Attributes["result"]);
-            Assert.AreEqual("00:00:00.1250000", suiteNode.Attributes["time"]);
+            Assert.AreEqual("0.125000", suiteNode.Attributes["duration"]);
             Assert.AreEqual("1", suiteNode.Attributes["passed"]);
             Assert.AreEqual("0", suiteNode.Attributes["failed"]);
             Assert.AreEqual("0", suiteNode.Attributes["skipped"]);
@@ -351,7 +351,7 @@ namespace NUnit.Framework.Internal
             XmlNode testNode = testResult.ToXml(true);
 
             Assert.AreEqual("Failed", testNode.Attributes["result"]);
-            Assert.AreEqual("00:00:00.1250000", testNode.Attributes["time"]);
+            Assert.AreEqual("0.125000", testNode.Attributes["duration"]);
 
             XmlNode failureNode = testNode.FindDescendant("failure");
             Assert.NotNull(failureNode, "No <failure> element found");
@@ -371,7 +371,7 @@ namespace NUnit.Framework.Internal
             XmlNode suiteNode = suiteResult.ToXml(true);
 
             Assert.AreEqual("Failed", suiteNode.Attributes["result"]);
-            Assert.AreEqual("00:00:00.1250000", suiteNode.Attributes["time"]);
+            Assert.AreEqual("0.125000", suiteNode.Attributes["duration"]);
 
             XmlNode failureNode = suiteNode.FindDescendant("failure");
             Assert.NotNull(failureNode, "No <failure> element found");

@@ -93,10 +93,10 @@ namespace NUnit.Framework.TestHarness
                 output.WriteLine("##teamcity[testIgnored name='{0}' message='{1}']", Escape(name), Escape(message));
             }
 
-            public void TestFinished(string name, TimeSpan duration)
+            public void TestFinished(string name, double duration)
             {
                 output.WriteLine("##teamcity[testFinished name='{0}' duration='{1}']", Escape(name),
-                                 duration.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
+                                 duration.ToString("####0.000", NumberFormatInfo.InvariantInfo));
             }
         }
 
@@ -187,15 +187,15 @@ namespace NUnit.Framework.TestHarness
             XmlAttribute name = testNode.Attributes["name"];
             //XmlAttribute fullname = testNode.Attributes["fullname"];
             XmlAttribute result = testNode.Attributes["result"];
-            XmlAttribute time = testNode.Attributes["time"];
+            XmlAttribute durationString = testNode.Attributes["duration"];
 
             Debug.Assert(name != null);
             //Debug.Assert(fullname != null);
             Debug.Assert(result != null);
-            Debug.Assert(time != null);
+            Debug.Assert(durationString != null);
 
             // TODO: Handle an error here
-            TimeSpan duration = TimeSpan.Parse(time.Value);
+            double duration = double.Parse(durationString.Value);
 
             switch (result.Value)
             {
