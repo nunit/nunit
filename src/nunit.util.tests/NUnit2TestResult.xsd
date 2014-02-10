@@ -67,8 +67,7 @@
     <xs:attribute name="skipped" type="xs:decimal" use="required" />
     <xs:attribute name="invalid" type="xs:decimal" use="required" />
     <xs:attribute name="date" type="xs:string" use="required" />
-		<xs:attribute name="start-time" type="xs:string" use="required" />
-		<xs:attribute name="duration" type="xs:string" use="required" />
+		<xs:attribute name="time" type="xs:string" use="required" />
 	</xs:complexType>
 	<xs:complexType name="test-caseType">
 		<xs:sequence>
@@ -82,7 +81,7 @@
 		<xs:attribute name="name" type="xs:string" use="required" />
 		<xs:attribute name="description" type="xs:string" use="optional" />
 		<xs:attribute name="success" type="xs:string" use="optional" />
-		<xs:attribute name="duration" type="xs:string" use="optional" />
+		<xs:attribute name="time" type="xs:string" use="optional" />
 		<xs:attribute name="executed" type="xs:string" use="required" />
 		<xs:attribute name="asserts" type="xs:string" use="optional" />
     <xs:attribute name="result" type="xs:string" use="required" />
@@ -101,7 +100,7 @@
 		<xs:attribute name="name" type="xs:string" use="required" />
 		<xs:attribute name="description" type="xs:string" use="optional" />
 		<xs:attribute name="success" type="xs:string" use="optional" />
-    <xs:attribute name="duration" type="xs:string" use="optional" />
+    <xs:attribute name="time" type="xs:string" use="optional" />
 		<xs:attribute name="executed" type="xs:string" use="required" />
 		<xs:attribute name="asserts" type="xs:string" use="optional" />
     <xs:attribute name="result" type="xs:string" use="required" />

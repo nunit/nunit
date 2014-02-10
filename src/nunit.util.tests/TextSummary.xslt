@@ -10,9 +10,9 @@
     <xsl:text>NUnit Version </xsl:text>
     <xsl:value-of select="environment/@nunit-version"/>
     <xsl:text>  </xsl:text>
-    <xsl:value-of select="@run-date"/>
-    <xsl:text>  </xsl:text>
     <xsl:value-of select="@start-time"/>
+    <xsl:text>  </xsl:text>
+    <xsl:value-of select="@end-time"/>
     <xsl:text>&#xD;&#xA;&#xD;&#xA;</xsl:text>
 
     <xsl:text>Runtime Environment -&#xD;&#xA;</xsl:text>

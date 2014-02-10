@@ -99,8 +99,7 @@ namespace NUnit.Util
             xmlWriter.WriteAttributeString("invalid", summaryResults.NotRunnable.ToString());
 
             xmlWriter.WriteAttributeString("date", result.GetAttribute("run-date"));
-            xmlWriter.WriteAttributeString("start-time", result.GetAttribute("start-time"));
-            xmlWriter.WriteAttributeString("duration", summaryResults.Duration.ToString("####0.000000", NumberFormatInfo.InvariantInfo));
+            xmlWriter.WriteAttributeString("time", result.GetAttribute("start-time"));
             WriteEnvironment();
             WriteCultureInfo();
         }
@@ -211,7 +210,7 @@ namespace NUnit.Util
             if (executed == "True")
             {
                 xmlWriter.WriteAttributeString("success", success);
-                xmlWriter.WriteAttributeString("duration", duration);
+                xmlWriter.WriteAttributeString("time", duration);
                 xmlWriter.WriteAttributeString("asserts", asserts);
             }
         }

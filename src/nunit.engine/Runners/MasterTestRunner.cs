@@ -93,14 +93,14 @@ namespace NUnit.Engine.Runners
         /// <returns>A TestEngineResult giving the result of the test execution</returns>
         public override TestEngineResult Run(ITestEventHandler listener, TestFilter filter)
         {
-            DateTime startTime = DateTime.Now;
+            DateTime startTime = DateTime.UtcNow;
 
             TestEngineResult result = realRunner.Run(listener, filter).Aggregate("test-run", package.Name, package.FullName);
 
             result.Xml.InsertEnvironmentElement();
 
-            result.Xml.AddAttribute("run-date", XmlConvert.ToString(startTime, "yyyy-MM-dd"));
-            result.Xml.AddAttribute("start-time", XmlConvert.ToString(startTime, "HH:mm:ss"));
+            result.Xml.AddAttribute("start-time", XmlConvert.ToString(startTime, "u"));
+            result.Xml.AddAttribute("end-time", XmlConvert.ToString(DateTime.UtcNow, "u"));
 
             return result;
         }

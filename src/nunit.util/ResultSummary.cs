@@ -42,6 +42,8 @@ namespace NUnit.Util
         private int ignoreCount = 0;
         private int notRunnable = 0;
 
+        private DateTime startTime = DateTime.MinValue;
+        private DateTime endTime = DateTime.MaxValue;
         private double duration = 0.0d;
         private string name;
 
@@ -54,6 +56,8 @@ namespace NUnit.Util
 
             name = GetAttribute(result, "name");
             duration = GetAttribute(result, "duration", 0.0);
+            startTime = GetAttribute(result, "start-time", DateTime.MinValue);
+            endTime = GetAttribute(result, "end-time", DateTime.MaxValue);
 
             Summarize(result);
         }
@@ -198,6 +202,25 @@ namespace NUnit.Util
             get { return ignoreCount; }
         }
 
+        /// <summary>
+        /// Gets the start time of the test run.
+        /// </summary>
+        public DateTime StartTime
+        {
+            get { return startTime; }
+        }
+
+        /// <summary>
+        /// Gets the end time of the test run.
+        /// </summary>
+        public DateTime EndTime
+        {
+            get { return endTime; }
+        }
+
+        /// <summary>
+        /// Gets the duration of the test run.
+        /// </summary>
         public double Duration
         {
             get { return duration; }
@@ -215,7 +238,7 @@ namespace NUnit.Util
 
         #region Helper Methods
 
-        public static string GetAttribute(XmlNode result, string name)
+        private static string GetAttribute(XmlNode result, string name)
         {
             var attr = result.Attributes[name];
 
@@ -225,7 +248,7 @@ namespace NUnit.Util
             return attr.Value;
         }
 
-        public static double GetAttribute(XmlNode result, string name, double defaultValue)
+        private static double GetAttribute(XmlNode result, string name, double defaultValue)
         {
             var attr = result.Attributes[name];
 
@@ -234,6 +257,19 @@ namespace NUnit.Util
                 return defaultValue;
 
             return attributeValue;
+        }
+
+        private static DateTime GetAttribute(XmlNode result, string name, DateTime defaultValue)
+        {
+            string dateStr = GetAttribute(result, name);
+            if (dateStr == null)
+                return defaultValue;
+
+            DateTime date;
+            if (!DateTime.TryParse(dateStr, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal | DateTimeStyles.AllowWhiteSpaces, out date))
+                return defaultValue;
+
+            return date;
         }
 
         #endregion
