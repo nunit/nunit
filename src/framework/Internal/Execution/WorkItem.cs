@@ -147,6 +147,7 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public virtual void Execute()
         {
+            
 #if !SILVERLIGHT && !NETCF
             // Timeout set at a higher level
             int timeout = _context.TestCaseTimeout;
@@ -219,7 +220,7 @@ namespace NUnit.Framework.Internal.Execution
             _context.CurrentTest = this.Test;
             _context.CurrentResult = this.Result;
             _context.Listener.TestStarted(this.Test);
-            _context.StartTime = DateTime.Now;
+            _context.StartTime = DateTime.UtcNow;
 
             _context.EstablishExecutionEnvironment();
 
@@ -243,11 +244,9 @@ namespace NUnit.Framework.Internal.Execution
         {
             _state = WorkItemState.Complete;
 
-            //long tickCount = Stopwatch.GetTimestamp() - Context.StartTicks;
-            //double seconds = (double)tickCount / Stopwatch.Frequency;
-            //Result.Duration = TimeSpan.FromSeconds(seconds);
-
-            Result.Duration = DateTime.Now - Context.StartTime;
+            Result.StartTime = Context.StartTime;
+            Result.EndTime = DateTime.UtcNow;
+            Result.Duration = Result.EndTime - Result.StartTime;
 
             // We add in the assert count from the context. If
             // this item is for a test case, we are adding the

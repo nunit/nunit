@@ -40,11 +40,17 @@ namespace NUnit.Framework.Internal
         protected string ignoredChildMessage = "One or more child tests were ignored";
         protected string failingChildMessage = "One or more child tests had errors";
 
-        protected TimeSpan expectedDuration = TimeSpan.FromMilliseconds(125);
+        protected TimeSpan expectedDuration;
+	    protected DateTime expectedStart;
+	    protected DateTime expectedEnd;
 
 		[SetUp]
 		public void SetUp()
-		{
+        {
+            expectedDuration = TimeSpan.FromMilliseconds(125);
+		    expectedStart = new DateTime(1968, 4, 8, 15, 05, 30, 250, DateTimeKind.Utc);
+		    expectedEnd = expectedStart + expectedDuration;
+
             test = new TestMethod(typeof(DummySuite).GetMethod("DummyMethod"));
             test.Properties.Set(PropertyNames.Description, "Test description");
             test.Properties.Add(PropertyNames.Category, "Dubious");
@@ -172,7 +178,11 @@ namespace NUnit.Framework.Internal
         protected override void SimulateTestRun()
         {
             testResult.SetResult(ResultState.Success, "Test passed!");
+            testResult.StartTime = expectedStart;
+            testResult.EndTime = expectedEnd;
             testResult.Duration = expectedDuration;
+            suiteResult.StartTime = expectedStart;
+            suiteResult.EndTime = expectedEnd;
             suiteResult.Duration = expectedDuration;
             testResult.AssertCount = 2;
             suiteResult.AddResult(testResult);
@@ -185,6 +195,8 @@ namespace NUnit.Framework.Internal
             Assert.AreEqual(TestStatus.Passed, testResult.ResultState.Status);
             Assert.That(testResult.ResultState.Label, Is.Empty);
             Assert.AreEqual("Test passed!", testResult.Message);
+            Assert.AreEqual(expectedStart, testResult.StartTime);
+            Assert.AreEqual(expectedEnd, testResult.EndTime);
             Assert.AreEqual(expectedDuration, testResult.Duration);
         }
 
@@ -208,6 +220,8 @@ namespace NUnit.Framework.Internal
             XmlNode testNode = testResult.ToXml(true);
 
             Assert.AreEqual("Passed", testNode.Attributes["result"]);
+            Assert.AreEqual("1968-04-08 15:05:30Z", testNode.Attributes["start-time"]);
+            Assert.AreEqual("1968-04-08 15:05:30Z", testNode.Attributes["end-time"]);
             Assert.AreEqual("0.125000", testNode.Attributes["duration"]);
             Assert.AreEqual("2", testNode.Attributes["asserts"]);
 
@@ -224,6 +238,8 @@ namespace NUnit.Framework.Internal
             XmlNode suiteNode = suiteResult.ToXml(true);
 
             Assert.AreEqual("Passed", suiteNode.Attributes["result"]);
+            Assert.AreEqual("1968-04-08 15:05:30Z", suiteNode.Attributes["start-time"]);
+            Assert.AreEqual("1968-04-08 15:05:30Z", suiteNode.Attributes["end-time"]);
             Assert.AreEqual("0.125000", suiteNode.Attributes["duration"]);
             Assert.AreEqual("1", suiteNode.Attributes["passed"]);
             Assert.AreEqual("0", suiteNode.Attributes["failed"]);
@@ -314,7 +330,11 @@ namespace NUnit.Framework.Internal
         protected override void SimulateTestRun()
         {
             testResult.SetResult(ResultState.Failure, "message", "stack trace");
+            testResult.StartTime = expectedStart;
+            testResult.EndTime = expectedEnd;
             testResult.Duration = expectedDuration;
+            suiteResult.StartTime = expectedStart;
+            suiteResult.EndTime = expectedEnd;
             suiteResult.Duration = expectedDuration;
             testResult.AssertCount = 3;
             suiteResult.AddResult(testResult);
@@ -327,6 +347,8 @@ namespace NUnit.Framework.Internal
             Assert.AreEqual(TestStatus.Failed, testResult.ResultState.Status);
             Assert.AreEqual("message", testResult.Message);
             Assert.AreEqual("stack trace", testResult.StackTrace);
+            Assert.AreEqual(expectedStart, testResult.StartTime);
+            Assert.AreEqual(expectedEnd, testResult.EndTime);
             Assert.AreEqual(expectedDuration, testResult.Duration);
         }
 
@@ -351,6 +373,8 @@ namespace NUnit.Framework.Internal
             XmlNode testNode = testResult.ToXml(true);
 
             Assert.AreEqual("Failed", testNode.Attributes["result"]);
+            Assert.AreEqual("1968-04-08 15:05:30Z", testNode.Attributes["start-time"]);
+            Assert.AreEqual("1968-04-08 15:05:30Z", testNode.Attributes["end-time"]);
             Assert.AreEqual("0.125000", testNode.Attributes["duration"]);
 
             XmlNode failureNode = testNode.FindDescendant("failure");
@@ -371,6 +395,8 @@ namespace NUnit.Framework.Internal
             XmlNode suiteNode = suiteResult.ToXml(true);
 
             Assert.AreEqual("Failed", suiteNode.Attributes["result"]);
+            Assert.AreEqual("1968-04-08 15:05:30Z", suiteNode.Attributes["start-time"]);
+            Assert.AreEqual("1968-04-08 15:05:30Z", suiteNode.Attributes["end-time"]);
             Assert.AreEqual("0.125000", suiteNode.Attributes["duration"]);
 
             XmlNode failureNode = suiteNode.FindDescendant("failure");

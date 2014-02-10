@@ -218,7 +218,7 @@ namespace NUnitLite.Runner
                 if (resultFormat == "nunit2")
                     new NUnit2XmlOutputWriter(startTime).WriteResultFile(result, resultFile);
                 else
-                    new NUnit3XmlOutputWriter(startTime).WriteResultFile(result, resultFile);
+                    new NUnit3XmlOutputWriter().WriteResultFile(result, resultFile);
                 Console.WriteLine();
                 Console.WriteLine("Results saved as {0}.", resultFile);
             }

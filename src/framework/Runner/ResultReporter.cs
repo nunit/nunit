@@ -90,6 +90,8 @@ namespace NUnitLite.Runner
             writer.WriteLine(
                 "     Not run: {0}, Invalid: {1}, Ignored: {2}, Skipped: {3}",
                 summary.NotRunCount, summary.InvalidCount, summary.IgnoreCount, summary.SkipCount);
+            writer.WriteLine("     Start time: {0}", result.StartTime.ToString("u"));
+            writer.WriteLine("       End time: {0}", result.EndTime.ToString("u"));
             writer.WriteLine("   Elapsed time: {0}", result.Duration);
         }
 

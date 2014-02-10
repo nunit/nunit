@@ -42,7 +42,7 @@ namespace NUnit.Framework.TestHarness
         private int ignoreCount = 0;
         private int notRunnable = 0;
 
-        private double duration = 0.0d;
+        private TimeSpan time = TimeSpan.Zero;
         private string name;
 
         public ResultSummary() { }
@@ -50,7 +50,8 @@ namespace NUnit.Framework.TestHarness
         public ResultSummary(XmlNode result)
         {
             name = GetAttribute(result, "name");
-            duration = GetAttribute(result, "duration", 0.0);
+            double duration = GetAttribute(result, "duration", 0.0);
+            time = TimeSpan.FromSeconds(duration);
 
             Summarize(result);
         }
@@ -194,9 +195,9 @@ namespace NUnit.Framework.TestHarness
             get { return ignoreCount; }
         }
 
-        public double Duration
+        public TimeSpan Time
         {
-            get { return duration; }
+            get { return time; }
         }
 
         public int TestsNotRun

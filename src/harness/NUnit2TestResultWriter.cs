@@ -105,7 +105,7 @@ namespace NUnit.Framework.TestHarness
             xmlWriter.WriteAttributeString("invalid", summaryResults.NotRunnable.ToString());
 
             xmlWriter.WriteAttributeString("date", XmlHelper.GetAttribute(result, "run-date"));
-            xmlWriter.WriteAttributeString("start-time", XmlHelper.GetAttribute(result, "start-time"));
+            xmlWriter.WriteAttributeString("time", XmlHelper.GetAttribute(result, "start-time"));
             WriteEnvironment();
             WriteCultureInfo();
         }
@@ -216,7 +216,7 @@ namespace NUnit.Framework.TestHarness
             if (executed == "True")
             {
                 xmlWriter.WriteAttributeString("success", success);
-                xmlWriter.WriteAttributeString("duration", duration);
+                xmlWriter.WriteAttributeString("time", duration);
                 xmlWriter.WriteAttributeString("asserts", asserts);
             }
         }
