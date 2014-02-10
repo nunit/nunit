@@ -57,7 +57,7 @@ namespace NUnit.ConsoleRunner
         {
             if (options.StopOnError && summary.ErrorsAndFailures > 0)
             {
-                Console.WriteLine("Execution terminated after first error");
+                ColorConsole.WriteLine(ColorStyle.Failure, "Execution terminated after first error");
                 Console.WriteLine();
             }
 
@@ -75,17 +75,21 @@ namespace NUnit.ConsoleRunner
 
         private void WriteSummaryReport()
         {
+            ColorStyle overall = testRunResult == "Passed"
+                ? ColorStyle.Pass
+                : ( testRunResult == "Failed" ? ColorStyle.Failure : ColorStyle.Warning );
             Console.WriteLine();
-            Console.WriteLine("Test Run Summary -");
-            Console.WriteLine("   Overall result: {0}", testRunResult);
-            Console.WriteLine(
+            ColorConsole.WriteLine(ColorStyle.SectionHeader, "Test Run Summary -");
+            ColorConsole.Write(ColorStyle.Label, "   Overall result: ");
+            ColorConsole.WriteLine(overall, testRunResult);
+            ColorConsole.WriteLine(ColorStyle.Default, String.Format( 
                 "   Tests run: {0}, Errors: {1}, Failures: {2}, Inconclusive: {3}",
-                summary.TestsRun, summary.Errors, summary.Failures, summary.Inconclusive);
-            Console.WriteLine(
+                summary.TestsRun, summary.Errors, summary.Failures, summary.Inconclusive));
+            ColorConsole.WriteLine(ColorStyle.Warning, string.Format( 
                 "     Not run: {0}, Invalid: {1}, Ignored: {2}, Skipped: {3}",
-                summary.TestsNotRun, summary.NotRunnable, summary.Ignored, summary.Skipped);
-            Console.WriteLine(
-                "        Time: {0} seconds", summary.Time);
+                summary.TestsNotRun, summary.NotRunnable, summary.Ignored, summary.Skipped));
+            ColorConsole.WriteLine(ColorStyle.Default, string.Format(
+                "        Time: {0} seconds", summary.Time));
             Console.WriteLine();
         }
 
@@ -104,7 +108,10 @@ namespace NUnit.ConsoleRunner
                     if (result.GetAttribute("type") == "Assembly")
                     {
                         if (result.GetAttribute("total") == "0")
-                            Console.WriteLine("Warning: No tests found in " + result.GetAttribute("name"));
+                        {
+                            using (new ColorConsole(ColorStyle.Warning))
+                                Console.WriteLine("Warning: No tests found in " + result.GetAttribute("name"));
+                        }
                         count++;
                         break;
                     }
@@ -131,8 +138,21 @@ namespace NUnit.ConsoleRunner
             {
                 case "test-case":
                     string resultState = result.GetAttribute("result");
-                    if (resultState == "Failed" || resultState == "Error" || resultState == "Cancelled")
-                        WriteSingleResult(result);
+                    if (resultState == "Failed")
+                    {
+                        using (new ColorConsole(ColorStyle.Failure))
+                            WriteSingleResult(result);
+                    }
+                    else if (resultState == "Error")
+                    {
+                        using (new ColorConsole(ColorStyle.Error))
+                            WriteSingleResult(result);
+                    }
+                    else if (resultState == "Cancelled")
+                    {
+                        using (new ColorConsole(ColorStyle.Warning))
+                            WriteSingleResult(result);
+                    }
                     return;
 
                 case "test-run":
@@ -144,7 +164,10 @@ namespace NUnit.ConsoleRunner
                     {
                         resultState = result.GetAttribute("result");
                         if (resultState == "Failed")
-                            WriteSingleResult(result);
+                        {
+                            using (new ColorConsole(ColorStyle.Failure))
+                                WriteSingleResult(result);
+                        }
                     }
                     break;
             }
@@ -169,7 +192,10 @@ namespace NUnit.ConsoleRunner
             {
                 string resultState = result.GetAttribute("result");
                 if (resultState == "Skipped" || resultState == "Ignored" || resultState == "NotRunnable")
-                    WriteSingleResult(result);
+                {
+                    using (new ColorConsole(ColorStyle.Warning))
+                        WriteSingleResult(result);
+                }
             }
             else
             {

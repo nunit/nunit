@@ -53,6 +53,8 @@ namespace NUnit.ConsoleRunner
                 return ConsoleRunner.INVALID_ARG;
             }
 
+		    ColorConsole.Options = options;
+
             // Create SettingsService early so we know the trace level right at the start
             //SettingsService settingsService = new SettingsService();
             //InternalTraceLevel level = (InternalTraceLevel)settingsService.GetSetting("Options.InternalTraceLevel", InternalTraceLevel.Default);
@@ -62,93 +64,106 @@ namespace NUnit.ConsoleRunner
             //InternalTrace.Initialize("nunit-console_%p.log", level);
             
             //log.Info("NUnit-console.exe starting");
-
-            if (options.PauseBeforeRun)
+		    try
             {
-                Console.WriteLine("Press any key to continue . . .");
-                Console.ReadKey(true);
-            }
-
-			if(!options.NoHeader)
-				WriteHeader();
-
-            if (options.ShowHelp)
-            {
-                WriteHelpText(options);
-                return ConsoleRunner.OK;
-            }
-
-            if (!options.Validate())
-            {
-                foreach (string message in options.ErrorMessages)
-                    Console.Error.WriteLine(message);
-
-                return ConsoleRunner.INVALID_ARG;
-            }
-            
-            if (options.InputFiles.Count == 0)
-            {
-                Console.Error.WriteLine("Error: no inputs specified");
-                return ConsoleRunner.OK;
-            }
-
-            // TODO: Move this to engine
-            foreach (string file in options.InputFiles)
-            {
-                //if (!Services.ProjectService.CanLoadProject(file) && !PathUtils.IsAssemblyFileType(file))
-                string ext = Path.GetExtension(file);
-                if (ext != ".dll" && ext != ".exe" && ext != ".nunit")
+                if (options.PauseBeforeRun)
                 {
-                    Console.WriteLine("File type not known: {0}", file);
-                    return ConsoleRunner.INVALID_ARG;
+                    ColorConsole.WriteLine(ColorStyle.Warning, "Press any key to continue . . .");
+                    Console.ReadKey(true);
                 }
-            }
 
-            string workDirectory = options.WorkDirectory ?? Environment.CurrentDirectory;
-            var traceLevel = options.InternalTraceLevel != null
-                ? (InternalTraceLevel)Enum.Parse(typeof(InternalTraceLevel), options.InternalTraceLevel)
-                : InternalTraceLevel.Off;
+                if (!options.NoHeader)
+                    WriteHeader();
 
-            using (ITestEngine engine = TestEngineActivator.CreateInstance(workDirectory, traceLevel))
-            {
-                try
+                if (options.ShowHelp)
                 {
-                    return new ConsoleRunner(engine, options).Execute();
+                    WriteHelpText(options);
+                    return ConsoleRunner.OK;
                 }
-                catch (NUnitEngineException ex)
+
+                if (!options.Validate())
                 {
-                    Console.WriteLine(ex.Message);
-                    return ConsoleRunner.INVALID_ARG;
-                }
-                catch (FileNotFoundException ex)
-                {
-                    Console.WriteLine(ex.Message);
-#if DEBUG
-                    Console.WriteLine(ex.StackTrace);
-#endif
-                    return ConsoleRunner.FILE_NOT_FOUND;
-                }
-                catch (DirectoryNotFoundException ex)
-                {
-                    Console.WriteLine(ex.Message);
-                    return ConsoleRunner.FILE_NOT_FOUND;
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.ToString());
-                    return ConsoleRunner.UNEXPECTED_ERROR;
-                }
-                finally
-                {
-                    if (options.WaitBeforeExit)
+                    using (new ColorConsole(ColorStyle.Error))
                     {
-                        Console.Out.WriteLine("\nPress any key to continue . . .");
-                        Console.ReadKey(true);
+                        foreach (string message in options.ErrorMessages)
+                            Console.Error.WriteLine(message);
                     }
 
-                    //    log.Info( "NUnit-console.exe terminating" );
+                    return ConsoleRunner.INVALID_ARG;
+                }
+
+                if (options.InputFiles.Count == 0)
+                {
+                    using (new ColorConsole(ColorStyle.Error))
+                        Console.Error.WriteLine("Error: no inputs specified");
+                    return ConsoleRunner.OK;
+                }
+
+                // TODO: Move this to engine
+                foreach (string file in options.InputFiles)
+                {
+                    //if (!Services.ProjectService.CanLoadProject(file) && !PathUtils.IsAssemblyFileType(file))
+                    string ext = Path.GetExtension(file);
+                    if (ext != ".dll" && ext != ".exe" && ext != ".nunit")
+                    {
+                        ColorConsole.WriteLine(ColorStyle.Warning, "File type not known: " + file);
+                        return ConsoleRunner.INVALID_ARG;
+                    }
+                }
+
+                string workDirectory = options.WorkDirectory ?? Environment.CurrentDirectory;
+                var traceLevel = options.InternalTraceLevel != null
+                    ? (InternalTraceLevel)Enum.Parse(typeof(InternalTraceLevel), options.InternalTraceLevel)
+                    : InternalTraceLevel.Off;
+
+                using (ITestEngine engine = TestEngineActivator.CreateInstance(workDirectory, traceLevel))
+                {
+                    try
+                    {
+                        return new ConsoleRunner(engine, options).Execute();
+                    }
+                    catch (NUnitEngineException ex)
+                    {
+                        ColorConsole.WriteLine(ColorStyle.Error, ex.Message);
+                        return ConsoleRunner.INVALID_ARG;
+                    }
+                    catch (FileNotFoundException ex)
+                    {
+                        ColorConsole.WriteLine(ColorStyle.Error, ex.Message);
+#if DEBUG
+                        ColorConsole.WriteLine(ColorStyle.Error, ex.StackTrace);
+#endif
+                        return ConsoleRunner.FILE_NOT_FOUND;
+                    }
+                    catch (DirectoryNotFoundException ex)
+                    {
+                        ColorConsole.WriteLine(ColorStyle.Error, ex.Message);
+                        return ConsoleRunner.FILE_NOT_FOUND;
+                    }
+                    catch (Exception ex)
+                    {
+                        ColorConsole.WriteLine(ColorStyle.Error, ex.Message);
+                        return ConsoleRunner.UNEXPECTED_ERROR;
+                    }
+                    finally
+                    {
+                        if (options.WaitBeforeExit)
+                        {
+                            using (new ColorConsole(ColorStyle.Warning))
+                            {
+                                Console.Out.WriteLine("\nPress any key to continue . . .");
+                                Console.ReadKey(true);
+                            }
+                        }
+
+                        //    log.Info( "NUnit-console.exe terminating" );
+                    }
                 }
             }
+            finally
+            {
+                Console.ResetColor();
+		    }
 		}
 
 		private static void WriteHeader()
@@ -172,61 +187,65 @@ namespace NUnit.ConsoleRunner
             if (attrs.Length > 0)
                 configText = string.Format("({0})", ((AssemblyConfigurationAttribute)attrs[0]).Configuration);
 
-			Console.WriteLine(String.Format("{0} {1} {2}", programName, versionText, configText));
-			Console.WriteLine(copyrightText);
-			Console.WriteLine();
-
-            Console.WriteLine("Runtime Environment - ");
-            Console.WriteLine(string.Format("   OS Version: {0}", Environment.OSVersion));
-            Console.WriteLine(string.Format("  CLR Version: {0}", Environment.Version));
-
+            ColorConsole.WriteLine(ColorStyle.Header, string.Format( "{0} {1} {2}", programName, versionText, configText ));
+            ColorConsole.WriteLine(ColorStyle.SubHeader, copyrightText);
+            Console.WriteLine();
+            ColorConsole.WriteLine(ColorStyle.SectionHeader, "Runtime Environment - ");
+            ColorConsole.WriteLabel("   OS Version: ", Environment.OSVersion.ToString(), true);
+            ColorConsole.WriteLabel("  CLR Version: ", Environment.Version.ToString(), true);
             Console.WriteLine();
         }
 
         private static void WriteHelpText(ConsoleOptions options)
         {
             Console.WriteLine();
-            Console.WriteLine("NUNIT-CONSOLE [inputfiles] [options]");
+            ColorConsole.WriteLine(ColorStyle.Header, "NUNIT-CONSOLE [inputfiles] [options]");
             Console.WriteLine();
-            Console.WriteLine("Runs a set of NUnit tests from the console.");
+            ColorConsole.WriteLine(ColorStyle.Default, "Runs a set of NUnit tests from the console.");
             Console.WriteLine();
-            Console.WriteLine("InputFiles:");
-            Console.WriteLine("      One or more assemblies or test projects of a recognized type.");
+            ColorConsole.WriteLine(ColorStyle.SectionHeader, "InputFiles:");
+            ColorConsole.WriteLine(ColorStyle.Default, "      One or more assemblies or test projects of a recognized type.");
             Console.WriteLine();
-            Console.WriteLine("Options:");
-            options.WriteOptionDescriptions(Console.Out);
+            ColorConsole.WriteLine(ColorStyle.SectionHeader, "Options:");
+            using (new ColorConsole(ColorStyle.Default))
+            {
+                options.WriteOptionDescriptions(Console.Out);
+            }
             Console.WriteLine();
-            Console.WriteLine("Description:");
-            Console.WriteLine("      By default, this command runs the tests contained in the");
-            Console.WriteLine("      assemblies and projects specified. If the --explore option");
-            Console.WriteLine("      is used, no tests are executed but a description of the tests");
-            Console.WriteLine("      is saved in the specified or default format.");
-            Console.WriteLine();
-            Console.WriteLine("      Several options that specify processing of XML output take");
-            Console.WriteLine("      an output specification as a value. A SPEC may take one of");
-            Console.WriteLine("      the following forms:");
-            Console.WriteLine("          --OPTION:filename");
-            Console.WriteLine("          --OPTION:filename;format=formatname");
-            Console.WriteLine("          --OPTION:filename;transform=xsltfile");
-            Console.WriteLine();
-            Console.WriteLine("      The --result option may use any of the following formats:");
-            Console.WriteLine("          nunit3 - the native XML format for NUnit 3.0");
-            Console.WriteLine("          nunit2 - legacy XML format used by earlier releases of NUnit");
-            Console.WriteLine();
-            Console.WriteLine("      The --explore option may use any of the following formats:");
-            Console.WriteLine("          nunit3 - the native XML format for NUnit 3.0");
-            Console.WriteLine("          cases  - a text file listing the full names of all test cases.");
-            Console.WriteLine("      If --explore is used without any specification following, a list of");
-            Console.WriteLine("      test cases is output to the console.");
-            Console.WriteLine();
-            Console.WriteLine("      If none of the options {--result, --explore, --noxml} is used,");
-            Console.WriteLine("      NUnit saves the results to TestResult.xml in nunit3 format");
-            Console.WriteLine();
-            Console.WriteLine("      Any transforms provided must handle input in the native nunit3 format.");
-            Console.WriteLine();
-            //Console.WriteLine("Options that take values may use an equal sign, a colon");
-            //Console.WriteLine("or a space to separate the option from its value.");
-            //Console.WriteLine();
+            ColorConsole.WriteLine(ColorStyle.SectionHeader, "Description:");
+            using (new ColorConsole(ColorStyle.Default))
+            {
+                Console.WriteLine("      By default, this command runs the tests contained in the");
+                Console.WriteLine("      assemblies and projects specified. If the --explore option");
+                Console.WriteLine("      is used, no tests are executed but a description of the tests");
+                Console.WriteLine("      is saved in the specified or default format.");
+                Console.WriteLine();
+                Console.WriteLine("      Several options that specify processing of XML output take");
+                Console.WriteLine("      an output specification as a value. A SPEC may take one of");
+                Console.WriteLine("      the following forms:");
+                Console.WriteLine("          --OPTION:filename");
+                Console.WriteLine("          --OPTION:filename;format=formatname");
+                Console.WriteLine("          --OPTION:filename;transform=xsltfile");
+                Console.WriteLine();
+                Console.WriteLine("      The --result option may use any of the following formats:");
+                Console.WriteLine("          nunit3 - the native XML format for NUnit 3.0");
+                Console.WriteLine("          nunit2 - legacy XML format used by earlier releases of NUnit");
+                Console.WriteLine();
+                Console.WriteLine("      The --explore option may use any of the following formats:");
+                Console.WriteLine("          nunit3 - the native XML format for NUnit 3.0");
+                Console.WriteLine("          cases  - a text file listing the full names of all test cases.");
+                Console.WriteLine("      If --explore is used without any specification following, a list of");
+                Console.WriteLine("      test cases is output to the console.");
+                Console.WriteLine();
+                Console.WriteLine("      If none of the options {--result, --explore, --noxml} is used,");
+                Console.WriteLine("      NUnit saves the results to TestResult.xml in nunit3 format");
+                Console.WriteLine();
+                Console.WriteLine("      Any transforms provided must handle input in the native nunit3 format.");
+                Console.WriteLine();
+                //Console.WriteLine("Options that take values may use an equal sign, a colon");
+                //Console.WriteLine("or a space to separate the option from its value.");
+                //Console.WriteLine();
+            }
         }
 	}
 }
