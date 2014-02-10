@@ -54,10 +54,10 @@ namespace NUnit.Util
             if (result.Name != "test-run")
                 throw new InvalidOperationException("Expected <test-run> as top-level element but was <" + result.Name + ">");
 
-            name = GetAttribute(result, "name");
-            duration = GetAttribute(result, "duration", 0.0);
-            startTime = GetAttribute(result, "start-time", DateTime.MinValue);
-            endTime = GetAttribute(result, "end-time", DateTime.MaxValue);
+            name = result.GetAttribute("name");
+            duration = result.GetAttribute("duration", 0.0);
+            startTime = result.GetAttribute("start-time", DateTime.MinValue);
+            endTime = result.GetAttribute("end-time", DateTime.MaxValue);
 
             Summarize(result);
         }
@@ -69,8 +69,8 @@ namespace NUnit.Util
                 case "test-case":
                     resultCount++;
 
-                    string outcome = GetAttribute(node, "result");
-                    string label = GetAttribute(node, "label");
+                    string outcome = node.GetAttribute("result");
+                    string label = node.GetAttribute("label");
                     if (label != null)
                         outcome = label;
 
@@ -235,43 +235,5 @@ namespace NUnit.Util
         {
             get { return errorCount + failureCount; }
         }
-
-        #region Helper Methods
-
-        private static string GetAttribute(XmlNode result, string name)
-        {
-            var attr = result.Attributes[name];
-
-            if (attr == null)
-                return null;
-
-            return attr.Value;
-        }
-
-        private static double GetAttribute(XmlNode result, string name, double defaultValue)
-        {
-            var attr = result.Attributes[name];
-
-            double attributeValue;
-            if (attr == null || !double.TryParse(attr.Value, NumberStyles.Any, CultureInfo.InvariantCulture, out attributeValue))
-                return defaultValue;
-
-            return attributeValue;
-        }
-
-        private static DateTime GetAttribute(XmlNode result, string name, DateTime defaultValue)
-        {
-            string dateStr = GetAttribute(result, name);
-            if (dateStr == null)
-                return defaultValue;
-
-            DateTime date;
-            if (!DateTime.TryParse(dateStr, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal | DateTimeStyles.AllowWhiteSpaces, out date))
-                return defaultValue;
-
-            return date;
-        }
-
-        #endregion
     }
 }

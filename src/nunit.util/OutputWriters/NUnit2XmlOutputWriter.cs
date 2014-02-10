@@ -98,8 +98,9 @@ namespace NUnit.Util
             xmlWriter.WriteAttributeString("skipped", summaryResults.Skipped.ToString());
             xmlWriter.WriteAttributeString("invalid", summaryResults.NotRunnable.ToString());
 
-            xmlWriter.WriteAttributeString("date", result.GetAttribute("run-date"));
-            xmlWriter.WriteAttributeString("time", result.GetAttribute("start-time"));
+            DateTime start = result.GetAttribute("start-time", DateTime.UtcNow);
+            xmlWriter.WriteAttributeString("date", start.ToString("yyyy-MM-dd"));
+            xmlWriter.WriteAttributeString("time", start.ToString("HH:mm:ss"));
             WriteEnvironment();
             WriteCultureInfo();
         }
@@ -198,7 +199,7 @@ namespace NUnit.Util
             string executed = resultState == "Skipped" ? "False" : "True";
             string success = resultState == "Passed" ? "True" : "False";
 
-            string duration = result.GetAttribute("duration");
+            double duration = result.GetAttribute("duration", 0.0);
             string asserts = result.GetAttribute("asserts");
 
             if (label != null && label != string.Empty)
@@ -210,7 +211,7 @@ namespace NUnit.Util
             if (executed == "True")
             {
                 xmlWriter.WriteAttributeString("success", success);
-                xmlWriter.WriteAttributeString("time", duration);
+                xmlWriter.WriteAttributeString("time", duration.ToString("####0.000"));
                 xmlWriter.WriteAttributeString("asserts", asserts);
             }
         }

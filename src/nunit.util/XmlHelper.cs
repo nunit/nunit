@@ -21,7 +21,9 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Xml;
 
 namespace System.Runtime.CompilerServices
@@ -51,6 +53,12 @@ namespace NUnit.Util
 
         #region Safe Attribute Access
 
+        /// <summary>
+        /// Gets the value of the given attribute.
+        /// </summary>
+        /// <param name="result">The result.</param>
+        /// <param name="name">The name.</param>
+        /// <returns></returns>
         public static string GetAttribute(this XmlNode result, string name)
         {
             XmlAttribute attr = result.Attributes[name];
@@ -58,6 +66,13 @@ namespace NUnit.Util
             return attr == null ? null : attr.Value;
         }
 
+        /// <summary>
+        /// Gets the value of the given attribute as an int.
+        /// </summary>
+        /// <param name="result">The result.</param>
+        /// <param name="name">The name.</param>
+        /// <param name="defaultValue">The default value.</param>
+        /// <returns></returns>
         public static int GetAttribute(this XmlNode result, string name, int defaultValue)
         {
             XmlAttribute attr = result.Attributes[name];
@@ -65,6 +80,44 @@ namespace NUnit.Util
             return attr == null
                 ? defaultValue
                 : int.Parse(attr.Value, System.Globalization.CultureInfo.InvariantCulture);
+        }
+
+        /// <summary>
+        /// Gets the value of the given attribute as a double.
+        /// </summary>
+        /// <param name="result">The result.</param>
+        /// <param name="name">The name.</param>
+        /// <param name="defaultValue">The default value.</param>
+        /// <returns></returns>
+        public static double GetAttribute(this XmlNode result, string name, double defaultValue)
+        {
+            var attr = result.Attributes[name];
+
+            double attributeValue;
+            if ( attr == null || !double.TryParse(attr.Value, NumberStyles.Any, CultureInfo.InvariantCulture, out attributeValue) )
+                return defaultValue;
+
+            return attributeValue;
+        }
+
+        /// <summary>
+        /// Gets the value of the given attribute as a DateTime.
+        /// </summary>
+        /// <param name="result">The result.</param>
+        /// <param name="name">The name.</param>
+        /// <param name="defaultValue">The default value.</param>
+        /// <returns></returns>
+        public static DateTime GetAttribute(this XmlNode result, string name, DateTime defaultValue)
+        {
+            string dateStr = GetAttribute(result, name);
+            if ( dateStr == null )
+                return defaultValue;
+
+            DateTime date;
+            if ( !DateTime.TryParse(dateStr, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal | DateTimeStyles.AllowWhiteSpaces, out date) )
+                return defaultValue;
+
+            return date;
         }
 
         #endregion
