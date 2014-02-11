@@ -203,8 +203,6 @@ namespace NUnitLite.Runner
 
         private void RunTests(ITestFilter filter)
         {
-            DateTime startTime = DateTime.Now;
-
             ITestResult result = runner.Run(this, filter);
             new ResultReporter(result, writer).ReportResults();
 
@@ -216,7 +214,7 @@ namespace NUnitLite.Runner
                     resultFile = "TestResult.xml";
 
                 if (resultFormat == "nunit2")
-                    new NUnit2XmlOutputWriter(startTime).WriteResultFile(result, resultFile);
+                    new NUnit2XmlOutputWriter().WriteResultFile(result, resultFile);
                 else
                     new NUnit3XmlOutputWriter().WriteResultFile(result, resultFile);
                 Console.WriteLine();

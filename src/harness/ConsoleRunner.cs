@@ -137,8 +137,6 @@ namespace NUnit.Framework.TestHarness
             TextWriter savedError = Console.Error;
             XmlNode resultNode;
 
-            DateTime startTime = DateTime.Now;
-
             try
             {
                 if (options.OutFile != null)
@@ -172,7 +170,7 @@ namespace NUnit.Framework.TestHarness
             //nunit3ResultWriter.Close();
 
             string v2ResultFile = Path.Combine(workDirectory, options.V2ResultFile);
-            NUnit2TestResultWriter nunit2ResultWriter = new NUnit2TestResultWriter(startTime);
+            NUnit2TestResultWriter nunit2ResultWriter = new NUnit2TestResultWriter();
             nunit2ResultWriter.WriteResultFile(resultNode, v2ResultFile);
 
             if (!options.DisplayTeamCityServiceMessages)

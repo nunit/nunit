@@ -34,7 +34,6 @@ namespace NUnit.Framework.TestHarness
     public class NUnit2TestResultWriter
     {
         private XmlWriter xmlWriter;
-        private DateTime startTime;
 
         private static Dictionary<string, string> resultStates = new Dictionary<string, string>();
 
@@ -48,11 +47,6 @@ namespace NUnit.Framework.TestHarness
             resultStates["Skipped"] = "Skipped";
             resultStates["Skipped:Ignored"] = "Ignored";
             resultStates["Skipped:Invalid"] = "NotRunnable";
-        }
-
-        public NUnit2TestResultWriter(DateTime startTime)
-        {
-            this.startTime = startTime;
         }
 
         public void WriteResultFile(XmlNode result, string outputPath)
