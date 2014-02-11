@@ -97,7 +97,7 @@ namespace NUnit.Util
             xmlWriter.WriteAttributeString("ignored", summaryResults.Ignored.ToString());
             xmlWriter.WriteAttributeString("skipped", summaryResults.Skipped.ToString());
             xmlWriter.WriteAttributeString("invalid", summaryResults.NotRunnable.ToString());
-
+            
             DateTime start = result.GetAttribute("start-time", DateTime.UtcNow);
             xmlWriter.WriteAttributeString("date", start.ToString("yyyy-MM-dd"));
             xmlWriter.WriteAttributeString("time", start.ToString("HH:mm:ss"));
