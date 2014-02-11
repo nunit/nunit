@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Reflection;
 using System.Xml;
@@ -94,13 +95,16 @@ namespace NUnit.Engine.Runners
         public override TestEngineResult Run(ITestEventHandler listener, TestFilter filter)
         {
             DateTime startTime = DateTime.UtcNow;
+            long startTicks = Stopwatch.GetTimestamp();
 
             TestEngineResult result = realRunner.Run(listener, filter).Aggregate("test-run", package.Name, package.FullName);
 
             result.Xml.InsertEnvironmentElement();
 
+            double duration = (double)(Stopwatch.GetTimestamp() - startTicks) / Stopwatch.Frequency;
             result.Xml.AddAttribute("start-time", XmlConvert.ToString(startTime, "u"));
             result.Xml.AddAttribute("end-time", XmlConvert.ToString(DateTime.UtcNow, "u"));
+            result.Xml.AddAttribute("duration", duration.ToString("0.000000", NumberFormatInfo.InvariantInfo));
 
             return result;
         }
