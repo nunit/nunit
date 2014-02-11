@@ -162,13 +162,7 @@ namespace NUnit.Engine.Internal
                     }
 
                     total += node.GetAttribute("total", 0);
-                    var durationString = node.GetAttribute("duration");
-                    if (durationString != null)
-                    {
-                        double duration;
-                        if (double.TryParse(durationString, out duration))
-                            totalDuration += duration;
-                    }
+                    totalDuration += node.GetAttribute("duration", 0.0);
                     passed += node.GetAttribute("passed", 0);
                     failed += node.GetAttribute("failed", 0);
                     inconclusive += node.GetAttribute("inconclusive", 0);
@@ -185,7 +179,7 @@ namespace NUnit.Engine.Internal
             if (isTestRunResult)
             {
                 combinedNode.AddAttribute("result", status);
-                combinedNode.AddAttribute("duration", totalDuration.ToString("####0.000000", NumberFormatInfo.InvariantInfo));
+                combinedNode.AddAttribute("duration", totalDuration.ToString("0.000000", NumberFormatInfo.InvariantInfo));
                 combinedNode.AddAttribute("total", total.ToString());
                 combinedNode.AddAttribute("passed", passed.ToString());
                 combinedNode.AddAttribute("failed", failed.ToString());

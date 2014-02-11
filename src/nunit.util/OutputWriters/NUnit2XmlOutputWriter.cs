@@ -211,7 +211,7 @@ namespace NUnit.Util
             if (executed == "True")
             {
                 xmlWriter.WriteAttributeString("success", success);
-                xmlWriter.WriteAttributeString("time", duration.ToString("####0.000"));
+                xmlWriter.WriteAttributeString("time", duration.ToString("0.000"));
                 xmlWriter.WriteAttributeString("asserts", asserts);
             }
         }
