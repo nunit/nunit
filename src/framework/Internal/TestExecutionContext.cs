@@ -272,6 +272,11 @@ namespace NUnit.Framework.Internal
         public DateTime StartTime { get; set; }
 
         /// <summary>
+        /// The time the current test started in Ticks
+        /// </summary>
+        public long StartTicks { get; set; }
+
+        /// <summary>
         /// Gets or sets the current test result
         /// </summary>
         public TestResult CurrentResult { get; set; }

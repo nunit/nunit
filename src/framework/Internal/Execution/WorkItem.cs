@@ -221,7 +221,9 @@ namespace NUnit.Framework.Internal.Execution
             _context.CurrentResult = this.Result;
             _context.Listener.TestStarted(this.Test);
             _context.StartTime = DateTime.UtcNow;
-
+#if !NETCF && !SILVERLIGHT
+            _context.StartTicks = Stopwatch.GetTimestamp();
+#endif
             _context.EstablishExecutionEnvironment();
 
             PerformWork();
@@ -246,7 +248,14 @@ namespace NUnit.Framework.Internal.Execution
 
             Result.StartTime = Context.StartTime;
             Result.EndTime = DateTime.UtcNow;
-            Result.Duration = Result.EndTime - Result.StartTime;
+            
+#if !NETCF && !SILVERLIGHT
+            long tickCount = Stopwatch.GetTimestamp() - Context.StartTicks;
+            double seconds = (double)tickCount / Stopwatch.Frequency;
+            Result.Duration = TimeSpan.FromSeconds(seconds);
+#else
+            Result.Duration = DateTime.UtcNow - Context.StartTime;
+#endif
 
             // We add in the assert count from the context. If
             // this item is for a test case, we are adding the
