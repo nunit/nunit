@@ -92,7 +92,7 @@ namespace NUnitLite.Runner
                 summary.NotRunCount, summary.InvalidCount, summary.IgnoreCount, summary.SkipCount);
             writer.WriteLine("     Start time: {0}", result.StartTime.ToString("u"));
             writer.WriteLine("       End time: {0}", result.EndTime.ToString("u"));
-            writer.WriteLine("   Elapsed time: {0}", result.Duration);
+            writer.WriteLine("       Duration: {0} seconds", result.Duration.TotalSeconds.ToString("0.000"));
         }
 
         /// <summary>

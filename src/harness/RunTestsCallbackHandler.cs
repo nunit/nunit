@@ -96,7 +96,7 @@ namespace NUnit.Framework.TestHarness
             public void TestFinished(string name, double duration)
             {
                 output.WriteLine("##teamcity[testFinished name='{0}' duration='{1}']", Escape(name),
-                                 duration.ToString("####0.000", NumberFormatInfo.InvariantInfo));
+                                 duration.ToString("0.000", NumberFormatInfo.InvariantInfo));
             }
         }
 

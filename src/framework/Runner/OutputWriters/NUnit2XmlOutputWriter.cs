@@ -229,7 +229,7 @@ namespace NUnitLite.Runner
                 xmlWriter.WriteAttributeString("executed", "True");
                 xmlWriter.WriteAttributeString("result", translatedResult);
                 xmlWriter.WriteAttributeString("success", status == TestStatus.Passed ? "True" : "False");
-                xmlWriter.WriteAttributeString("time", result.Duration.TotalSeconds.ToString("####0.000", NumberFormatInfo.InvariantInfo));
+                xmlWriter.WriteAttributeString("time", result.Duration.TotalSeconds.ToString("0.000", NumberFormatInfo.InvariantInfo));
                 xmlWriter.WriteAttributeString("asserts", result.AssertCount.ToString());
             }
             else

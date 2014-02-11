@@ -86,7 +86,7 @@ namespace NUnitLite.Runner
 
             xmlWriter.WriteAttributeString("start-time", result.StartTime.ToString("u"));
             xmlWriter.WriteAttributeString("end-time", result.EndTime.ToString("u"));
-            xmlWriter.WriteAttributeString("duration", result.Duration.TotalSeconds.ToString("####0.000000", NumberFormatInfo.InvariantInfo));
+            xmlWriter.WriteAttributeString("duration", result.Duration.TotalSeconds.ToString("0.000000", NumberFormatInfo.InvariantInfo));
 
             xmlWriter.WriteAttributeString("total", (result.PassCount + result.FailCount + result.SkipCount + result.InconclusiveCount).ToString());
             xmlWriter.WriteAttributeString("passed", result.PassCount.ToString());

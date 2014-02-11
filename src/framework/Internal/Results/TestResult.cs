@@ -247,7 +247,7 @@ namespace NUnit.Framework.Internal
 
             thisNode.AddAttribute("start-time", StartTime.ToString("u"));
             thisNode.AddAttribute("end-time", EndTime.ToString("u"));
-            thisNode.AddAttribute("duration", Duration.TotalSeconds.ToString("####0.000000", NumberFormatInfo.InvariantInfo));
+            thisNode.AddAttribute("duration", Duration.TotalSeconds.ToString("0.000000", NumberFormatInfo.InvariantInfo));
 
             if (this.test is TestSuite)
             {
