@@ -21,6 +21,11 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System.Collections;
+using System.Collections.Generic;
+using NUnit.Framework.Internal;
+using NUnit.TestUtilities.Collections;
+
 namespace NUnit.Framework.Constraints
 {
     [TestFixture]
@@ -38,5 +43,27 @@ namespace NUnit.Framework.Constraints
         internal object[] FailureData = new object[] { 
             new object[] { new int[] { 1, 3, 7 }, "< 1, 3, 7 >" },
             new object[] { new int[] { 1, 2, 2, 2, 5 }, "< 1, 2, 2, 2, 5 >" } };
+
+        [Test]
+        [TestCaseSource( "IgnoreCaseData" )]
+        public void HonorsIgnoreCase( IEnumerable expected, IEnumerable actual )
+        {
+            var constraint = new CollectionSubsetConstraint( expected ).IgnoreCase;
+            var constraintResult = constraint.ApplyTo( actual );
+            if ( !constraintResult.IsSuccess )
+            {
+                MessageWriter writer = new TextMessageWriter();
+                constraintResult.WriteMessageTo( writer );
+                Assert.Fail( writer.ToString() );
+            }
+        }
+
+        private static readonly object[] IgnoreCaseData =
+        {
+            new object[] {new SimpleObjectCollection("w", "x", "y", "z"),new SimpleObjectCollection("z", "Y", "X")},
+            new object[] {new[] {'A', 'B', 'C', 'D', 'E'}, new object[] {'a', 'b', 'c'}},
+            new object[] {new[] {"a", "b", "c", "d", "e"}, new object[] {"A", "C", "B"}}
+        };
+
     }
 }

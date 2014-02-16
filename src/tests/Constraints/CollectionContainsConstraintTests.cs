@@ -73,11 +73,26 @@ namespace NUnit.Framework.Constraints
         }
 
         [Test]
-        public void IgnoreCaseIsHonored()
+        [TestCaseSource( "IgnoreCaseData" )]
+        public void IgnoreCaseIsHonored( object expected, IEnumerable actual )
         {
-            Assert.That(new string[] { "Hello", "World" },
-                new CollectionContainsConstraint("WORLD").IgnoreCase);
+            var constraint = new CollectionContainsConstraint( expected ).IgnoreCase;
+            var constraintResult = constraint.ApplyTo( actual );
+            if ( !constraintResult.IsSuccess )
+            {
+                MessageWriter writer = new TextMessageWriter();
+                constraintResult.WriteMessageTo( writer );
+                Assert.Fail( writer.ToString() );
+            }
         }
+
+        private static readonly object[] IgnoreCaseData =
+        {
+            new object[] {"WORLD", new string[] { "Hello", "World" }},
+            new object[] {"z",new SimpleObjectCollection("z", "Y", "X")},
+            new object[] {'A', new object[] {'a', 'b', 'c'}},
+            new object[] {"a", new object[] {"A", "B", "C"}}
+        };
 
         [Test]
         public void UsingIsHonored()

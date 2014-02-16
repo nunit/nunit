@@ -156,6 +156,9 @@ namespace NUnit.Framework.Constraints
             if (x is Stream && y is Stream)
                 return StreamsEqual((Stream)x, (Stream)y);
 
+            if ( x is char && y is char )
+                return CharsEqual( (char)x, (char)y );
+
             if (x is DirectoryInfo && y is DirectoryInfo)
                 return DirectoriesEqual((DirectoryInfo)x, (DirectoryInfo)y);
 
@@ -302,6 +305,14 @@ namespace NUnit.Framework.Constraints
             string s2 = caseInsensitive ? y.ToLower() : y;
 
             return s1.Equals(s2);
+        }
+
+        private bool CharsEqual(char x, char y)
+        {
+            char c1 = caseInsensitive ? Char.ToLower(x) : x;
+            char c2 = caseInsensitive ? Char.ToLower(y) : y;
+
+            return c1 == c2;
         }
 
         private bool EnumerablesEqual(IEnumerable x, IEnumerable y, ref Tolerance tolerance)
