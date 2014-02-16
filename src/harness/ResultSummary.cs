@@ -41,15 +41,19 @@ namespace NUnit.Framework.TestHarness
         private int ignoreCount = 0;
         private int notRunnable = 0;
 
-        private TimeSpan time = TimeSpan.Zero;
+        private DateTime startTime = DateTime.MinValue;
+        private DateTime endTime = DateTime.MaxValue;
+        private double duration = 0.0d;
         private string name;
 
         public ResultSummary() { }
 
         public ResultSummary(XmlNode result)
         {
-            this.name = result.Attributes["name"].Value;
-            this.time = TimeSpan.Parse(result.Attributes["time"].Value);
+            name = XmlHelper.GetAttribute(result, "name");
+            startTime = XmlHelper.GetAttribute(result, "start-time", DateTime.MinValue);
+            endTime = XmlHelper.GetAttribute(result, "end-time", DateTime.MaxValue);
+            duration = XmlHelper.GetAttribute(result, "duration", 0.0);
 
             Summarize(result);
         }
@@ -193,9 +197,28 @@ namespace NUnit.Framework.TestHarness
             get { return ignoreCount; }
         }
 
-        public TimeSpan Time
+        /// <summary>
+        /// Gets the start time of the test run.
+        /// </summary>
+        public DateTime StartTime
         {
-            get { return time; }
+            get { return startTime; }
+        }
+
+        /// <summary>
+        /// Gets the end time of the test run.
+        /// </summary>
+        public DateTime EndTime
+        {
+            get { return endTime; }
+        }
+
+        /// <summary>
+        /// Gets the duration of the test run.
+        /// </summary>
+        public double Duration
+        {
+            get { return duration; }
         }
 
         public int TestsNotRun

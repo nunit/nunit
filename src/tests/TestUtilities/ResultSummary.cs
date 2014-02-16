@@ -21,9 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-    using System;
-    using NUnit.Framework;
-    using NUnit.Framework.Interfaces;
+using System;
+using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 
 namespace NUnit.TestUtilities
@@ -43,7 +42,9 @@ namespace NUnit.TestUtilities
         private int ignoreCount = 0;
         private int notRunnable = 0;
 
-        private TimeSpan time = TimeSpan.Zero;
+        private DateTime startTime = DateTime.MinValue;
+        private DateTime endTime = DateTime.MaxValue;
+        private double duration = 0.0d;
         private string name;
 
         public ResultSummary() { }
@@ -55,10 +56,12 @@ namespace NUnit.TestUtilities
 
         private void Summarize(ITestResult result)
         {
-            if (this.name == null)
+            if (name == null)
             {
-                this.name = result.Name;
-                this.time = result.Duration;
+                name = result.Name;
+                startTime = result.StartTime;
+                endTime = result.EndTime;
+                duration = result.Duration.TotalSeconds;
             }
 
             if (result.HasChildren)
@@ -189,9 +192,28 @@ namespace NUnit.TestUtilities
             get { return ignoreCount; }
         }
 
-        public TimeSpan Time
+        /// <summary>
+        /// Gets the start time of the test run.
+        /// </summary>
+        public DateTime StartTime
         {
-            get { return time; }
+            get { return startTime; }
+        }
+
+        /// <summary>
+        /// Gets the end time of the test run.
+        /// </summary>
+        public DateTime EndTime
+        {
+            get { return endTime; }
+        }
+
+        /// <summary>
+        /// Gets the duration of the test run.
+        /// </summary>
+        public double Duration
+        {
+            get { return duration; }
         }
 
         public int TestsNotRun
