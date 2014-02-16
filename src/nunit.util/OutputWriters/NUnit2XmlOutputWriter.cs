@@ -97,9 +97,10 @@ namespace NUnit.Util
             xmlWriter.WriteAttributeString("ignored", summaryResults.Ignored.ToString());
             xmlWriter.WriteAttributeString("skipped", summaryResults.Skipped.ToString());
             xmlWriter.WriteAttributeString("invalid", summaryResults.NotRunnable.ToString());
-
-            xmlWriter.WriteAttributeString("date", result.GetAttribute("run-date"));
-            xmlWriter.WriteAttributeString("time", result.GetAttribute("start-time"));
+            
+            DateTime start = result.GetAttribute("start-time", DateTime.UtcNow);
+            xmlWriter.WriteAttributeString("date", start.ToString("yyyy-MM-dd"));
+            xmlWriter.WriteAttributeString("time", start.ToString("HH:mm:ss"));
             WriteEnvironment();
             WriteCultureInfo();
         }
@@ -197,13 +198,12 @@ namespace NUnit.Util
             string label = result.GetAttribute("label");
             string executed = resultState == "Skipped" ? "False" : "True";
             string success = resultState == "Passed" ? "True" : "False";
-            var seconds = TimeSpan.Parse(result.GetAttribute("time")).TotalSeconds;
-            string time = seconds.ToString("#####0.000", NumberFormatInfo.InvariantInfo);
+
+            double duration = result.GetAttribute("duration", 0.0);
             string asserts = result.GetAttribute("asserts");
 
             if (label != null && label != string.Empty)
                 resultState += ":" + label;
-
 
             xmlWriter.WriteAttributeString("executed", executed);
             xmlWriter.WriteAttributeString("result", resultStates[resultState]);
@@ -211,7 +211,7 @@ namespace NUnit.Util
             if (executed == "True")
             {
                 xmlWriter.WriteAttributeString("success", success);
-                xmlWriter.WriteAttributeString("time", time);
+                xmlWriter.WriteAttributeString("time", duration.ToString("0.000"));
                 xmlWriter.WriteAttributeString("asserts", asserts);
             }
         }

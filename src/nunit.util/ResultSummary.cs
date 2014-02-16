@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Globalization;
 using System.Xml;
 
 namespace NUnit.Util
@@ -41,7 +42,9 @@ namespace NUnit.Util
         private int ignoreCount = 0;
         private int notRunnable = 0;
 
-        private double time = 0.0d;
+        private DateTime startTime = DateTime.MinValue;
+        private DateTime endTime = DateTime.MaxValue;
+        private double duration = 0.0d;
         private string name;
 
         public ResultSummary() { }
@@ -51,9 +54,10 @@ namespace NUnit.Util
             if (result.Name != "test-run")
                 throw new InvalidOperationException("Expected <test-run> as top-level element but was <" + result.Name + ">");
 
-            this.name = GetAttribute(result, "name");
-            //this.time = GetAttribute(topNode, "time", 0.0);
-            //this.time = double.Parse(result.GetAttribute("time"), System.Globalization.CultureInfo.InvariantCulture);
+            name = result.GetAttribute("name");
+            duration = result.GetAttribute("duration", 0.0);
+            startTime = result.GetAttribute("start-time", DateTime.MinValue);
+            endTime = result.GetAttribute("end-time", DateTime.MaxValue);
 
             Summarize(result);
         }
@@ -65,8 +69,8 @@ namespace NUnit.Util
                 case "test-case":
                     resultCount++;
 
-                    string outcome = GetAttribute(node, "result");
-                    string label = GetAttribute(node, "label");
+                    string outcome = node.GetAttribute("result");
+                    string label = node.GetAttribute("label");
                     if (label != null)
                         outcome = label;
 
@@ -198,9 +202,28 @@ namespace NUnit.Util
             get { return ignoreCount; }
         }
 
-        public double Time
+        /// <summary>
+        /// Gets the start time of the test run.
+        /// </summary>
+        public DateTime StartTime
         {
-            get { return time; }
+            get { return startTime; }
+        }
+
+        /// <summary>
+        /// Gets the end time of the test run.
+        /// </summary>
+        public DateTime EndTime
+        {
+            get { return endTime; }
+        }
+
+        /// <summary>
+        /// Gets the duration of the test run.
+        /// </summary>
+        public double Duration
+        {
+            get { return duration; }
         }
 
         public int TestsNotRun
@@ -212,29 +235,5 @@ namespace NUnit.Util
         {
             get { return errorCount + failureCount; }
         }
-
-        #region Helper Methods
-
-        public static string GetAttribute(XmlNode result, string name)
-        {
-            var attr = result.Attributes[name];
-
-            if (attr == null)
-                return null;
-
-            return attr.Value;
-        }
-
-        public static double GetAttribute(XmlNode result, string name, double defaultValue)
-        {
-            var attr = result.Attributes[name];
-
-            if (attr == null)
-                return defaultValue;
-
-            return double.Parse(attr.Value, System.Globalization.CultureInfo.InvariantCulture);
-        }
-
-        #endregion
     }
 }

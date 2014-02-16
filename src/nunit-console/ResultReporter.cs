@@ -88,8 +88,12 @@ namespace NUnit.ConsoleRunner
             ColorConsole.WriteLine(ColorStyle.Warning, string.Format( 
                 "     Not run: {0}, Invalid: {1}, Ignored: {2}, Skipped: {3}",
                 summary.TestsNotRun, summary.NotRunnable, summary.Ignored, summary.Skipped));
+            ColorConsole.WriteLine(ColorStyle.Default,
+                "  Start time: " + summary.StartTime.ToString("u"));
+            ColorConsole.WriteLine(ColorStyle.Default,
+                "    End time: " + summary.EndTime.ToString("u"));
             ColorConsole.WriteLine(ColorStyle.Default, string.Format(
-                "        Time: {0} seconds", summary.Time));
+                "    Duration: {0} seconds", summary.Duration.ToString("0.000")));
             Console.WriteLine();
         }
 
