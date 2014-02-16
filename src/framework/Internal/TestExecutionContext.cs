@@ -186,6 +186,7 @@ namespace NUnit.Framework.Internal
 
 #if !NUNITLITE
             this.Dispatcher = other.Dispatcher;
+            this.ParallelScope = other.ParallelScope;
 #endif
         }
 
@@ -306,6 +307,11 @@ namespace NUnit.Framework.Internal
         /// The current WorkItemDispatcher
         /// </summary>
         internal WorkItemDispatcher Dispatcher { get; set; }
+
+        /// <summary>
+        /// The ParallelScope to be used by tests running in this context
+        /// </summary>
+        public ParallelScope ParallelScope { get; set; }
 #endif
 
         /// <summary>

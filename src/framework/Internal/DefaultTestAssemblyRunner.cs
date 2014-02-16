@@ -157,16 +157,24 @@ namespace NUnit.Framework.Internal
 
             initialContext.Listener = queue;
 
-            int numWorkers = _settings.Contains("NumberOfTestWorkers")
+            int levelOfParallelization = _settings.Contains("NumberOfTestWorkers")
                 ? (int)_settings["NumberOfTestWorkers"]
-                : 0;
+                : _loadedTest.Properties.ContainsKey(PropertyNames.LevelOfParallelization)
+                    ? (int)_loadedTest.Properties.Get(PropertyNames.LevelOfParallelization)
+                    : Math.Max(Environment.ProcessorCount, 2);
 
             WorkItemDispatcher dispatcher = null;
 
-            if (numWorkers > 0)
+            if (levelOfParallelization > 0)
             {
-                dispatcher = new WorkItemDispatcher(numWorkers);
+                dispatcher = new WorkItemDispatcher(levelOfParallelization);
                 initialContext.Dispatcher = dispatcher;
+                // Assembly does not have IApplyToContext attributes applied
+                // when the test is built, so  we do it here.
+                // TODO: Generalize this
+                if (_loadedTest.Properties.ContainsKey(PropertyNames.ParallelScope))
+                    initialContext.ParallelScope = 
+                        (ParallelScope)_loadedTest.Properties.Get(PropertyNames.ParallelScope) & ~ParallelScope.Self;
             }
 
             WorkItem workItem = WorkItem.CreateWorkItem(_loadedTest, initialContext, filter);

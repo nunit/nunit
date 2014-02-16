@@ -42,6 +42,8 @@ namespace NUnit.Framework.Internal
             IDictionary options = new Hashtable();
             if (nameSpace != null)
                 options["LOAD"] = new string[] { nameSpace };
+            // No need for the overhead of parallel execution here
+            options["NumberOfTestWorkers"] = 0;
 
             if (runner.Load(testAssembly, options))
                 return runner.Run(TestListener.NULL, filter);

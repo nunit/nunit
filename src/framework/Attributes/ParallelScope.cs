@@ -1,5 +1,5 @@
-// ***********************************************************************
-// Copyright (c) 2011 Charlie Poole
+﻿// ***********************************************************************
+// Copyright (c) 2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,17 +21,32 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System.Reflection;
-using NUnit.Framework;
+using System;
 
-// Information about this assembly is defined by the following attributes. 
-// Change them to the _values specific to your project.
-
-#if NUNITLITE
-[assembly: AssemblyTitle("NUnitLite Tests")]
-#else
-[assembly: AssemblyTitle("NUnit Framework Tests")]
-[assembly: Parallelizable(ParallelScope.Fixtures)]
-#endif
-[assembly: AssemblyDescription("")]
-[assembly: AssemblyCulture("")]
+namespace NUnit.Framework
+{
+    /// <summary>
+    /// The ParallelScope enumeration permits specifying the degree to
+    /// which a test and its descendants may be run in parallel.
+    /// </summary>
+    [Flags]
+    public enum ParallelScope
+    {
+        /// <summary>
+        /// No Parallelism is permitted
+        /// </summary>
+        None = 0,
+        /// <summary>
+        /// The test itself may be run in parallel with others at the same level
+        /// </summary>
+        Self = 1,
+        /// <summary>
+        /// Descendants of the test may be run in parallel with one another
+        /// </summary>
+        Children = 2,
+        /// <summary>
+        /// Descendants of the test down to the level of TestFixtures may be run in parallel
+        /// </summary>
+        Fixtures = 4
+    }
+}
