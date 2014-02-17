@@ -64,6 +64,7 @@
     <Compile Include="Constraints\SubPathConstraint.cs" />
     <Compile Include="Constraints\ThrowsExceptionConstraint.cs" />
     <Compile Include="Interfaces\ExpectedExceptionData.cs" />
+    <Compile Include="Interfaces\IParameterDataProvider.cs" />
     <Compile Include="Interfaces\IParameterDataSource.cs" />
     <Compile Include="Interfaces\IPropertyBag.cs" />
     <Compile Include="Interfaces\ITest.cs" />
@@ -81,6 +82,7 @@
     <Compile Include="Interfaces\TestOutput.cs" />
     <Compile Include="Interfaces\TestStatus.cs" />
     <Compile Include="Interfaces\XmlNode.cs" />
+    <Compile Include="Internal\Builders\ParameterDataProviders.cs" />
     <Compile Include="Internal\Filters\IdFilter.cs" />
     <Compile Include="Internal\Filters\ValueMatchFilter.cs" />
     <Compile Include="Internal\InternalTraceLevel.cs" />
@@ -272,7 +274,6 @@
     <Compile Include="Extensibility\IAddinRegistry.cs" />
     <Compile Include="Extensibility\IExtensionHost.cs" />
     <Compile Include="Extensibility\IExtensionPoint.cs" />
-    <Compile Include="Extensibility\IParameterDataProvider.cs" />
     <Compile Include="Extensibility\ISuiteBuilder.cs" />
     <Compile Include="Extensibility\ITestCaseBuilder.cs" />
     <Compile Include="Extensibility\ITestCaseProvider.cs" />
@@ -310,7 +311,6 @@
     <Compile Include="Internal\Extensibility\ExtensionHost.cs" />
     <Compile Include="Internal\Extensibility\ExtensionPoint.cs" />
     <Compile Include="Internal\Extensibility\ExtensionsCollection.cs" />
-    <Compile Include="Internal\Extensibility\ParameterDataProviders.cs" />
     <Compile Include="Internal\Extensibility\SuiteBuilderCollection.cs" />
     <Compile Include="Internal\Extensibility\TestCaseBuilderCollection.cs" />
     <Compile Include="Internal\Extensibility\TestCaseProviders.cs" />

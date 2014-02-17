@@ -87,13 +87,11 @@ namespace NUnit.Framework.Internal
 			this.testBuilders = new TestCaseBuilderCollection(this);
 			this.listeners = new EventListenerCollection(this);
             this.testcaseProviders = new TestCaseProviders(this);
-            this.parameterDataProviders = new ParameterDataProviders(this);
 
 		    extensions.Add(suiteBuilders);
 		    extensions.Add(testBuilders);
 		    extensions.Add(listeners);
 		    extensions.Add(testcaseProviders);
-            extensions.Add(parameterDataProviders);
 
 			this.supportedTypes = ExtensionType.Core;
 
@@ -197,10 +195,6 @@ namespace NUnit.Framework.Internal
             // Install builtin TestCaseProviders
             testcaseProviders.Install(new DataAttributeTestCaseProvider());
             testcaseProviders.Install(new CombinatorialTestCaseProvider());
-
-            // Install builtin ParameterDataProviders
-            parameterDataProviders.Install(new ParameterDataProvider());
-            parameterDataProviders.Install(new DatapointProvider());
 		}
 
         /// <summary>

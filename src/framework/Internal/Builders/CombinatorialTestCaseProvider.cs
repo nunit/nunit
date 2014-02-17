@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
 using System.Reflection;
 using System.Collections;
 using NUnit.Framework.Interfaces;
@@ -37,15 +36,7 @@ namespace NUnit.Framework.Internal.Builders
     /// </summary>
     public class CombinatorialTestCaseProvider : ITestCaseProvider
     {
-        #region Static Members
-        static IParameterDataProvider dataPointProvider =
-#if NUNITLITE
-            new ParameterDataProviders();
-#else
-            (IParameterDataProvider)CoreExtensions.Host.GetExtensionPoint("ParameterDataProviders");
-#endif
-
-        #endregion
+        private IParameterDataProvider dataPointProvider = new ParameterDataProviders();
 
         #region ITestCaseProvider Members
 
