@@ -5,7 +5,7 @@
 **************************************************************************
 * This script is used to build the NUnit Framework for any supported     *
 * runtime that is installed on the system. If you are unsure about which *
-* runtimes are avaiable use the list-runtimes or dump-settings target.   *
+* runtimes are available use the list-runtimes or dump-settings target.   *
 * At least one of the supported runtimes and sdk must be installed.      *
 *                                                                        *
 * Dependencies:                                                          *      
@@ -113,18 +113,27 @@
     <!-- NOTE: sdk-exists causes an error if framework is not installed! -->
     <if test="${framework::exists( framework )}">
     <if test="${framework::get-family( framework ) == 'silverlight' or framework::sdk-exists( framework )}">
+      
+      <!-- create a list of installed frameworks -->
       <property name="installed.frameworks" value="${installed.frameworks},${framework}"
         if="${property::exists('installed.frameworks')}"/>
       <property name="installed.frameworks" value="${framework}"
         unless="${property::exists('installed.frameworks')}"/>
+        
+      <!-- the first overall found installed framework is set as default -->
       <property name="default.runtime" value="${framework}"
         unless="${property::exists('default.runtime')}"/>
+        
+      <!-- the first found installed .NET framework is set as default -->
       <property name="default.net.runtime" value="${framework}"
         if="${string::starts-with(framework,'net')}"
         unless="${property::exists('default.net.runtime')}"/>
+        
+      <!-- the first found installed mono framework is set as default -->
       <property name="default.mono.runtime" value="${framework}"
         if="${string::starts-with(framework,'mono')}"
         unless="${property::exists('default.mono.runtime')}"/>
+      
       <property name="default.20.runtime" value="${framework}"
         if="${string::ends-with(framework,'-2.0')}"
         unless="${property::exists('default.20.runtime')}"/>
@@ -187,14 +196,14 @@
   <target name="net-3.5" depends="set-net-3.5-runtime-config"
     description="Set runtime to .NET 3.5 for commands that follow"/>
 
-	<target name="net-4.0" depends="set-net-4.0-runtime-config"
-	  description="Set runtime to .NET 4.0 for commands that follow"/>
+  <target name="net-4.0" depends="set-net-4.0-runtime-config"
+    description="Set runtime to .NET 4.0 for commands that follow"/>
 
-	<target name="net-4.5" depends="set-net-4.5-runtime-config"
-	  description="Set runtime to .NET 4.5 for commands that follow"/>
+  <target name="net-4.5" depends="set-net-4.5-runtime-config"
+    description="Set runtime to .NET 4.5 for commands that follow"/>
 
-    <target name="netcf-2.0" depends="set-netcf-2.0-runtime-config"
-      description="Set runtime to CF 2.0 for commands that follow"/>
+  <target name="netcf-2.0" depends="set-netcf-2.0-runtime-config"
+    description="Set runtime to CF 2.0 for commands that follow"/>
       
   <target name="netcf-3.5" depends="set-netcf-3.5-runtime-config"
     description="Set runtime to CF 3.5 for commands that follow"/>
@@ -244,10 +253,8 @@
   </target>
 
   <target name="clean-package-dir">
-
-        <delete dir="${package.working.dir}" 
-            if="${directory::exists( package.working.dir )}"/>
-
+    <delete dir="${package.working.dir}" 
+      if="${directory::exists( package.working.dir )}"/>
   </target>
 
 <!-- ***************************************************************** -->
@@ -255,21 +262,18 @@
 <!-- ***************************************************************** -->
 
   <target name="build-all"
-    description="Build the current config for all supported runtimes">
-
+    description="Build the current config for all installed frameworks">
 
     <foreach item="String" delim="," 
         property="framework" in="${installed.frameworks}">
 
       <call target="set-${framework}-runtime-config"/>
       <call target="build"/>
-
     </foreach>
 
   </target>
 
-  <target name="build"
-    description="Build using the current runtime and config">
+  <target name="build" description="Build using the current runtime and config">
 
     <call target="build-nunit" unless="${runtime.platform=='netcf' or runtime.platform=='silverlight'}"/>
     <call target="build-nunitlite"/>
@@ -281,7 +285,7 @@
     <fail if="${runtime.platform=='netcf'}"
       message="The full NUnit framework may not be built for netcf"/>
 
-    <property name="nant.settings.currentframework" value="${build.framework}"/>
+    <property name="nant.settings.currentframework" value="${runtime.config}"/>
 
     <nant target="build" buildfile="src/framework/nunit.framework.build"/>
     <nant target="build" buildfile="src/testdata/nunit.testdata.build"/>
@@ -293,7 +297,7 @@
 
   <target name="build-nunitlite" depends="make-build-dir">
 
-    <property name="nant.settings.currentframework" value="${build.framework}"/>
+    <property name="nant.settings.currentframework" value="${runtime.config}"/>
 
     <nant target="build" buildfile="src/framework/nunitlite.build"/>
     <nant target="build" buildfile="src/testdata/nunitlite.testdata.build"/>
@@ -424,8 +428,8 @@
     <call target="package-net"/>
     <call target="package-mono"/>
     <call target="package-netcf"/>
-	  <call target="package-silverlight"/>
-	  <call target="package-full"/>
+	<call target="package-silverlight"/>
+	<call target="package-full"/>
 
   </target>
 
@@ -667,16 +671,12 @@
   <target name="set-debug-build-config">
     <property name="build.config" value="debug"/>
     <property name="build.debug" value="true"/>
-    <property name="build.defines" value="DEBUG,TRACE,${runtime.defines}"
-        dynamic="true"/>
     <property name="build.suffix" value="-dbg"/>
   </target>
 	
   <target name="set-release-build-config">
     <property name="build.config" value="release"/>
     <property name="build.debug" value="false"/>
-    <property name="build.defines" value="TRACE,${runtime.defines}"
-	dynamic="true"/>
     <property name="build.suffix" value=""/>
   </target>
 
@@ -703,48 +703,36 @@
   </target>
 
   <target name="set-net-2.0-runtime-config">
-    <fail unless="${framework::exists('net-2.0') and framework::sdk-exists('net-2.0')}"
-      message="The .NET 2.0 SDK is not configured or not installed"/>
-
     <property name="runtime.platform" value="net"/>
     <property name="runtime.version" value="2.0"/>
-    <property name="runtime.config" value="net-2.0"/>
-    <property name="runtime.defines" value="MSNET,NET_2_0"/>
-    <property name="build.framework" value="net-3.5"/>
+    <property name="runtime.config" value="net-4.5"/>
+    <property name="msbuild.proj.suffix" value="2.0"/>    
+    <property name="build.command" value="${environment::get-variable('WINDIR')}/Microsoft.NET/Framework/v4.0.30319/msbuild.exe"/>
   </target>
    
   <target name="set-net-3.5-runtime-config">
-    <fail unless="${framework::exists('net-3.5') and framework::sdk-exists('net-3.5')}"
-      message="The .NET 3.5 SDK is not configured or not installed"/>
-
     <property name="runtime.platform" value="net"/>
     <property name="runtime.version" value="3.5"/>
-    <property name="runtime.config" value="net-3.5"/>
-    <property name="runtime.defines" value="MSNET,NET_3_5,CS_3_0"/>
-    <property name="build.framework" value="net-3.5"/>
+    <property name="runtime.config" value="net-4.5"/>
+    <property name="msbuild.proj.suffix" value="3.5"/>   
+    <property name="build.command" value="${environment::get-variable('WINDIR')}/Microsoft.NET/Framework/v4.0.30319/msbuild.exe"/>    
   </target>
 
-	<target name="set-net-4.0-runtime-config">
-		<fail unless="${framework::exists('net-4.0') and framework::sdk-exists('net-4.0')}"
-		  message="The .NET 4.0 SDK is not configured or not installed"/>
+  <target name="set-net-4.0-runtime-config">
+    <property name="runtime.platform" value="net"/>
+    <property name="runtime.version" value="4.0"/>
+    <property name="runtime.config" value="net-4.5"/>
+    <property name="msbuild.proj.suffix" value="4.0"/>    
+    <property name="build.command" value="${environment::get-variable('WINDIR')}/Microsoft.NET/Framework/v4.0.30319/msbuild.exe"/>
+  </target>
 
-		<property name="runtime.platform" value="net"/>
-		<property name="runtime.version" value="4.0"/>
-		<property name="runtime.config" value="net-4.0"/>
-		<property name="runtime.defines" value="MSNET,NET_4_0,CS_4_0"/>
-		<property name="build.framework" value="net-4.0"/>
-	</target>
-
-	<target name="set-net-4.5-runtime-config">
-		<fail unless="${framework::exists('net-4.5') and framework::sdk-exists('net-4.5')}"
-		  message="The .NET 4.5 SDK is not configured or not installed"/>
-
-		<property name="runtime.platform" value="net"/>
-		<property name="runtime.version" value="4.5"/>
-		<property name="runtime.config" value="net-4.5"/>
-		<property name="runtime.defines" value="MSNET,NET_4_5,CS_5_0"/>
-		<property name="build.framework" value="net-4.5"/>
-	</target>
+  <target name="set-net-4.5-runtime-config">
+    <property name="runtime.platform" value="net"/>
+    <property name="runtime.version" value="4.5"/>
+    <property name="runtime.config" value="net-4.5"/>
+    <property name="msbuild.proj.suffix" value="4.5"/> 
+    <property name="build.command" value="${environment::get-variable('WINDIR')}/Microsoft.NET/Framework/v4.0.30319/msbuild.exe"/>
+  </target>
 
   <target name="set-netcf-2.0-runtime-config">
     <fail unless="${framework::exists('netcf-2.0') and framework::sdk-exists('netcf-2.0')}"
@@ -752,9 +740,9 @@
 
     <property name="runtime.platform" value="netcf"/>
     <property name="runtime.version" value="2.0"/>
-    <property name="runtime.config" value="netcf-2.0"/>
-    <property name="runtime.defines" value="NETCF,NETCF_2_0"/>
-    <property name="build.framework" value="netcf-3.5"/>
+    <property name="runtime.config" value="netcf-3.5"/>
+    <property name="msbuild.proj.suffix" value="netcf-2.0"/>
+    <property name="build.command" value="${environment::get-variable('WINDIR')}/Microsoft.NET/Framework/v4.0.30319/msbuild.exe"/>
   </target>
 
   <target name="set-netcf-3.5-runtime-config">
@@ -764,8 +752,8 @@
     <property name="runtime.platform" value="netcf"/>
     <property name="runtime.version" value="3.5"/>
     <property name="runtime.config" value="netcf-3.5"/>
-    <property name="runtime.defines" value="NETCF,NETCF_3_5"/>
-    <property name="build.framework" value="netcf-3.5"/>
+    <property name="msbuild.proj.suffix" value="netcf-3.5"/>
+    <property name="build.command" value="${environment::get-variable('WINDIR')}/Microsoft.NET/Framework/v4.0.30319/msbuild.exe"/>
   </target>
 
   <target name="set-mono-2.0-runtime-config">
@@ -775,8 +763,9 @@
     <property name="runtime.platform" value="mono"/>
     <property name="runtime.version" value="2.0"/>
     <property name="runtime.config" value="mono-2.0"/>
-    <property name="runtime.defines" value="MONO,MONO_2_0"/>
-    <property name="build.framework" value="mono-3.5"/>
+    <property name="msbuild.proj.suffix" value="2.0"/>
+    <property if="${nant.platform.unix}" name="build.command" value="xbuild"/>
+    <property unless="${nant.platform.unix}" name="build.command" value="xbuild.bat"/>
   </target>
 
   <target name="set-mono-3.5-runtime-config">
@@ -786,8 +775,9 @@
     <property name="runtime.platform" value="mono"/>
     <property name="runtime.version" value="3.5"/>
     <property name="runtime.config" value="mono-3.5"/>
-    <property name="runtime.defines" value="MONO,MONO_3_5,CS_3_0"/>
-    <property name="build.framework" value="mono-3.5"/>
+    <property name="msbuild.proj.suffix" value="3.5"/>
+    <property if="${nant.platform.unix}" name="build.command" value="xbuild"/>
+    <property unless="${nant.platform.unix}" name="build.command" value="xbuild.bat"/>
   </target>
 
   <target name="set-mono-4.0-runtime-config">
@@ -797,22 +787,22 @@
     <property name="runtime.platform" value="mono"/>
     <property name="runtime.version" value="4.0"/>
     <property name="runtime.config" value="mono-4.0"/>
-    <property name="runtime.defines" value="MONO,MONO_4_0,CS_4_0"/>
-    <property name="build.framework" value="mono-4.0"/>
+    <property name="msbuild.proj.suffix" value="4.0"/>
+    <property if="${nant.platform.unix}" name="build.command" value="xbuild"/>
+    <property unless="${nant.platform.unix}" name="build.command" value="xbuild.bat"/>
   </target>
 
-	<target name="set-silverlight-5.0-runtime-config">
-		<fail unless="${framework::exists( 'silverlight-5.0' )}"
-		  message="Silverlight 5.0 is not installed"/>
+  <target name="set-silverlight-5.0-runtime-config">
+    <fail unless="${framework::exists( 'silverlight-5.0' )}"
+      message="Silverlight 5.0 is not installed"/>
 
-		<property name="runtime.platform" value="silverlight"/>
-		<property name="runtime.version" value="5.0"/>
-		<property name="runtime.config" value="silverlight-5.0"/>
-		<property name="runtime.defines" value="SILVERLIGHT,SL_5_0,CS_4_0"/>
-		<property name="build.framework" value="silverlight-5.0"/>
-		<property name="build.method" value="msbuild"/>
-		<property name="msbuild.proj.suffix" value="sl-5.0"/>
-	</target>
+    <property name="runtime.platform" value="silverlight"/>
+    <property name="runtime.version" value="5.0"/>
+    <property name="runtime.config" value="silverlight-5.0"/>
+    <property name="build.method" value="msbuild"/>
+    <property name="msbuild.proj.suffix" value="sl-5.0"/>
+    <property name="build.command" value="${environment::get-variable('WINDIR')}/Microsoft.NET/Framework/v4.0.30319/msbuild.exe"/>
+  </target>
 
 <!-- ***************************************************************** -->
 <!-- **********           Set the build directory            ********* -->
@@ -891,7 +881,6 @@
     <echo>  Config:    ${build.config}</echo>
     <echo>  Runtime:   ${runtime.config}</echo>
     <echo>  Build Dir: ${current.build.dir}</echo>
-    <echo>  Defines:   ${build.defines}</echo>
     <echo></echo>
     <echo>Packaging</echo>
     <echo>  Name:      ${package.name}</echo>
@@ -908,8 +897,7 @@
 
   </target>
 
-  <target name="list-runtimes"
-      description="Lists available runtimes for building NUnit">
+  <target name="list-runtimes" description="Lists available runtimes for building NUnit">
     <echo>
     Available runtime frameworks supported for building NUnit:
     </echo>

@@ -2,19 +2,14 @@
 <project name="TestData" default="build" basedir=".">
 
   <target name="build">
-    <csc target="library" 
-        output="${current.build.dir}/nunit.testdata.dll"
-        debug="${build.debug}" 
-        define="${build.defines}"
-        warninglevel="${warn}">
-      <sources basedir=".">
-        <include name="*.cs"/>
-      </sources>
-      <references basedir="${current.build.dir}">
-        <include name="nunit.framework.dll"/>
-        <include name="nunit.interfaces.dll"/>
-      </references>
-    </csc>
+    <exec program="${build.command}" verbose="true">
+        <arg line='"nunit.testdata-${msbuild.proj.suffix}.csproj"' />
+        <arg line="/property:Configuration=${build.config}" />
+        <arg line="/property:OutputPath=${current.build.dir}" />
+        <arg value="/target:Rebuild" />
+        <arg value="/verbosity:normal" />
+    </exec>
+  
   </target>
 
   <target name="package">

@@ -2,35 +2,13 @@
 <project name="NUnitFrameworkTests" default="build" basedir=".">
 
   <target name="build">
-    <csc target="library" 
-        output="${current.build.dir}/nunit.framework.tests.dll"
-        debug="${build.debug}" 
-        define="${build.defines}"
-        warninglevel="${warn}">
-      <sources>
-        <include name="../CommonAssemblyInfo.cs"/>
-        <include name="TestContextTests.cs"/>
-        <include name="Api/*.cs" />
-        <include name="Assertions/*.cs" />
-        <include name="Attributes/*.cs"/>
-        <include name="Constraints/*.cs" />
-        <include name="Internal/*.cs"/>
-        <include name="Syntax/*.cs" />
-        <include name="TestUtilities/**/*.cs"/>
-      </sources>
-      <resources prefix="NUnit.Framework.Tests">
-        <include name="TestImage1.jpg"/>
-        <include name="TestImage2.jpg"/>
-        <include name="TestText1.txt"/>
-        <include name="TestText2.txt"/>
-      </resources>
-      <references basedir="${current.build.dir}">
-        <include name="nunit.framework.dll"/>
-        <include name="nunit.testdata.dll"/>
-        <include name="System.Data.dll"/>
-        <include name="System.Drawing.dll"/>
-      </references>
-    </csc>
+    <exec program="${build.command}" verbose="true">
+        <arg line='"nunit.framework.tests-${msbuild.proj.suffix}.csproj"' />
+        <arg line="/property:Configuration=${build.config}" />
+        <arg line="/property:OutputPath=${current.build.dir}" />
+        <arg value="/target:Rebuild" />
+        <arg value="/verbosity:normal" />
+    </exec>
   </target>
 
   <target name="package">

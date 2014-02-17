@@ -2,33 +2,12 @@
 <project name="NUnitLiteTests" default="build" basedir=".">
  
   <target name="build">
-    <csc target="exe" 
-        output="${current.build.dir}/nunitlite.tests.exe"
-        debug="${build.debug}" 
-        define="${build.defines};NUNITLITE"
-        warninglevel="${warn}">
-      <sources>
-        <include name="../CommonAssemblyInfo.cs"/>
-        <include name="**/*.cs" />
-		  <exclude name="App.xaml.cs"/>
-		  <exclude name="obj/**/*.cs"/>
-      </sources>
-      <resources prefix="NUnit.Framework.Tests">
-        <include name="TestImage1.jpg"/>
-        <include name="TestImage2.jpg"/>
-        <include name="TestText1.txt"/>
-        <include name="TestText2.txt"/>
-      </resources>
-      <references basedir="${current.build.dir}">
-        <include name="nunitlite.dll"/>
-        <include name="nunitlite.testdata.dll"/>
-        <include name="mscorlib.dll"/>
-        <include name="System.dll"/>
-        <include name="System.Xml.dll"/>
-        <include name="System.Data.dll"/>
-        <include name="System.Drawing.dll"/>
-      </references>
-    </csc>
+    <exec program="${build.command}" verbose="true">
+        <arg line='"nunitlite.tests-${msbuild.proj.suffix}.csproj"' />
+        <arg line="/property:Configuration=${build.config}" />
+        <arg line="/property:OutputPath=${current.build.dir}" />
+        <arg value="/target:Rebuild" />
+        <arg value="/verbosity:normal" />
+    </exec>
   </target>
-
 </project>
