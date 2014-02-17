@@ -22,34 +22,61 @@
 // ***********************************************************************
 
 using System;
-using NUnit.Framework.Internal;
+using System.Collections.Generic;
+using NUnit.Framework.Interfaces;
 
-namespace NUnit.Framework.Extensibility
+namespace NUnit.Framework.Internal.Builders
 {
 	/// <summary>
-	/// The ISuiteBuilder interface is exposed by a class that knows how to
-	/// build a suite from one or more Types. 
+	/// SuiteBuilderCollection is an ExtensionPoint for SuiteBuilders and
+	/// implements the ISuiteBuilder interface itself, passing calls 
+	/// on to the individual builders.
+	/// 
+	/// The builders are added to the collection by inserting them at
+	/// the start, as to take precedence over those added earlier. 
 	/// </summary>
-	public interface ISuiteBuilder
-	{
+    public class SuiteBuilderCollection : ISuiteBuilder
+    {
+        private List<ISuiteBuilder> Extensions = new List<ISuiteBuilder>();
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SuiteBuilderCollection"/> class.
+        /// </summary>
+        public SuiteBuilderCollection()
+        {
+            Extensions.Add(new NUnitTestFixtureBuilder());
+            Extensions.Add(new SetUpFixtureBuilder());
+        }
+
+		#region ISuiteBuilder Members
+
 		/// <summary>
 		/// Examine the type and determine if it is suitable for
-		/// this builder to use in building a TestSuite.
-        /// 
-        /// Note that returning false will cause the type to be ignored 
-        /// in loading the tests. If it is desired to load the suite
-        /// but label it as non-runnable, ignored, etc., then this
-        /// method must return true.
-        /// </summary>
+		/// any SuiteBuilder to use in building a TestSuite
+		/// </summary>
 		/// <param name="type">The type of the fixture to be used</param>
 		/// <returns>True if the type can be used to build a TestSuite</returns>
-		bool CanBuildFrom( Type type );
+		public bool CanBuildFrom(Type type)
+		{
+			foreach( ISuiteBuilder builder in Extensions )
+				if ( builder.CanBuildFrom( type ) )
+					return true;
+			return false;
+		}
 
 		/// <summary>
 		/// Build a TestSuite from type provided.
 		/// </summary>
 		/// <param name="type">The type of the fixture to be used</param>
-		/// <returns>A TestSuite</returns>
-		Test BuildFrom( Type type );
+		/// <returns>A TestSuite or null</returns>
+		public Test BuildFrom(Type type)
+		{
+			foreach( ISuiteBuilder builder in Extensions )
+				if ( builder.CanBuildFrom( type ) )
+					return builder.BuildFrom( type );
+			return null;
+		}
+
+		#endregion
 	}
 }

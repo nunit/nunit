@@ -156,7 +156,6 @@
     <Compile Include="Internal\AssemblyHelperTests.cs" />
     <Compile Include="Internal\AsyncTestMethodTests.cs" />
     <Compile Include="Internal\CallContextTests.cs" />
-    <Compile Include="Internal\CoreExtensionsTests.cs" />
     <Compile Include="Internal\CultureSettingAndDetectionTests.cs" />
     <Compile Include="Internal\DeduceTypeArgsFromArgs.cs" />
     <Compile Include="Internal\EventQueueTests.cs" />

@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2008 Charlie Poole
+// Copyright (c) 2007 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,31 +21,35 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System.Reflection;
-using NUnit.Framework.Interfaces;
+using System;
+using NUnit.Framework.Internal;
 
-namespace NUnit.Framework.Extensibility
+namespace NUnit.Framework.Interfaces
 {
-    /// <summary>
-    /// The ITestCaseProvider interface is used by extensions
-    /// that provide data for parameterized tests, along with
-    /// certain flags and other indicators used in the test.
-    /// </summary>
-    public interface ITestCaseProvider
-    {
-        /// <summary>
-        /// Determine whether any test cases are available for a parameterized method.
+	/// <summary>
+	/// The ISuiteBuilder interface is exposed by a class that knows how to
+	/// build a suite from one or more Types. 
+	/// </summary>
+	public interface ISuiteBuilder
+	{
+		/// <summary>
+		/// Examine the type and determine if it is suitable for
+		/// this builder to use in building a TestSuite.
+        /// 
+        /// Note that returning false will cause the type to be ignored 
+        /// in loading the tests. If it is desired to load the suite
+        /// but label it as non-runnable, ignored, etc., then this
+        /// method must return true.
         /// </summary>
-        /// <param name="method">A MethodInfo representing a parameterized test</param>
-        /// <returns>True if any cases are available, otherwise false.</returns>
-        bool HasTestCasesFor(MethodInfo method);
+		/// <param name="type">The type of the fixture to be used</param>
+		/// <returns>True if the type can be used to build a TestSuite</returns>
+		bool CanBuildFrom( Type type );
 
-        /// <summary>
-        /// Return an IEnumerable providing test cases for use in
-        /// running a paramterized test.
-        /// </summary>
-        /// <param name="method"></param>
-        /// <returns></returns>
-        System.Collections.Generic.IEnumerable<ITestCaseData> GetTestCasesFor(MethodInfo method);
-    }
+		/// <summary>
+		/// Build a TestSuite from type provided.
+		/// </summary>
+		/// <param name="type">The type of the fixture to be used</param>
+		/// <returns>A TestSuite</returns>
+		Test BuildFrom( Type type );
+	}
 }

@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using NUnit.Framework.Interfaces;
-using NUnit.Framework.Extensibility;
 using NUnit.Framework.Internal.Builders;
 
 namespace NUnit.Framework.Internal
@@ -120,9 +119,6 @@ namespace NUnit.Framework.Internal
             else
             {
                 log.Info("Loaded assembly " + assembly.FullName);
-#if !NUNITLITE
-                CoreExtensions.Host.InstallAdhocExtensions(assembly);
-#endif
             }
 
             return assembly;

@@ -28,7 +28,6 @@ using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Builders;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Commands;
-using NUnit.Framework.Extensibility;
 using NUnit.Framework.Internal.Execution;
 using System.Threading;
 
@@ -39,14 +38,6 @@ namespace NUnit.TestUtilities
     /// </summary>
     public class TestBuilder
     {
-#if !NUNITLITE
-        static TestBuilder()
-        {
-            if (!CoreExtensions.Host.Initialized)
-                CoreExtensions.Host.Initialize();
-        }
-#endif
-
         #region Build Tests
 
         public static TestSuite MakeFixture(Type type)

@@ -27,7 +27,6 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Text;
 using NUnit.Framework.Interfaces;
-using NUnit.Framework.Extensibility;
 
 namespace NUnit.Framework.Internal.Builders
 {
@@ -51,11 +50,7 @@ namespace NUnit.Framework.Internal.Builders
 		/// </summary>
 		private TestFixture fixture;
 
-#if NUNITLITE
         private ITestCaseBuilder2 testBuilder = new NUnitTestCaseBuilder();
-#else
-        private ITestCaseBuilder2 testBuilder = CoreExtensions.Host.TestBuilders;
-#endif
 
 		#endregion
 
@@ -233,13 +228,9 @@ namespace NUnit.Framework.Internal.Builders
 		/// <returns>A newly constructed Test</returns>
 		private Test BuildTestCase( MethodInfo method, TestSuite suite )
 		{
-#if NUNITLITE
             return testBuilder.CanBuildFrom(method, suite)
                 ? testBuilder.BuildFrom(method, suite)
                 : null;
-#else
-            return testBuilder.BuildFrom( method, suite );
-#endif
 		}
 
         private void CheckTestFixtureIsValid(TestFixture fixture)

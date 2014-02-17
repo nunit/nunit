@@ -24,11 +24,7 @@
 using System;
 using System.Reflection;
 using NUnit.Framework.Interfaces;
-using NUnit.Framework.Extensibility;
-#if NUNITLITE
 using NUnit.Framework.Internal.Builders;
-using NUnit.Framework.Internal.Extensibility;
-#endif
 
 namespace NUnit.Framework.Internal
 {
@@ -39,11 +35,7 @@ namespace NUnit.Framework.Internal
 	/// </summary>
 	public class TestFixtureBuilder
 	{
-#if NUNITLITE
         private static ISuiteBuilder builder = new SuiteBuilderCollection();
-#else
-        private static ISuiteBuilder builder = CoreExtensions.Host.SuiteBuilders;
-#endif
 
         /// <summary>
         /// Determines whether this instance [can build from] the specified type.
