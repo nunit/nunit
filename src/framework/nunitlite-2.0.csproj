@@ -68,12 +68,16 @@
     <Compile Include="Constraints\SubPathConstraint.cs" />
     <Compile Include="Constraints\ThrowsExceptionConstraint.cs" />
     <Compile Include="Interfaces\ExpectedExceptionData.cs" />
+    <Compile Include="Interfaces\IParameterDataProvider.cs" />
     <Compile Include="Interfaces\IParameterDataSource.cs" />
     <Compile Include="Interfaces\IPropertyBag.cs" />
+    <Compile Include="Interfaces\ISuiteBuilder.cs" />
     <Compile Include="Interfaces\ITest.cs" />
     <Compile Include="Interfaces\ITestAssemblyBuilder.cs" />
     <Compile Include="Interfaces\ITestAssemblyRunner.cs" />
+    <Compile Include="Interfaces\ITestCaseBuilder.cs" />
     <Compile Include="Interfaces\ITestCaseData.cs" />
+    <Compile Include="Interfaces\ITestCaseProvider.cs" />
     <Compile Include="Interfaces\ITestCaseSource.cs" />
     <Compile Include="Interfaces\ITestFilter.cs" />
     <Compile Include="Interfaces\ITestListener.cs" />
@@ -85,7 +89,11 @@
     <Compile Include="Interfaces\TestStatus.cs" />
     <Compile Include="Interfaces\XmlNode.cs" />
     <Compile Include="Internal\Builders\NamespaceTreeBuilder.cs" />
+    <Compile Include="Internal\Builders\ParameterDataProviders.cs" />
     <Compile Include="Internal\Builders\SetUpFixtureBuilder.cs" />
+    <Compile Include="Internal\Builders\SuiteBuilderCollection.cs" />
+    <Compile Include="Internal\Builders\TestCaseBuilderCollection.cs" />
+    <Compile Include="Internal\Builders\TestCaseProviders.cs" />
     <Compile Include="Internal\Commands\ApplyChangesToContextCommand.cs" />
     <Compile Include="Internal\Commands\DelegatingTestCommand.cs" />
     <Compile Include="Internal\Commands\ExpectedExceptionCommand.cs" />
@@ -112,7 +120,6 @@
     <Compile Include="Internal\Execution\WorkItemDispatcher.cs" />
     <Compile Include="Internal\Execution\WorkItemQueue.cs" />
     <Compile Include="Internal\Execution\WorkItemState.cs" />
-    <Compile Include="Internal\Extensibility\SuiteBuilderCollection.cs" />
     <Compile Include="Internal\Filters\IdFilter.cs" />
     <Compile Include="Internal\Filters\SimpleCategoryExpression.cs" />
     <Compile Include="Internal\Filters\ValueMatchFilter.cs" />
@@ -246,10 +253,6 @@
     <Compile Include="Exceptions\IgnoreException.cs" />
     <Compile Include="Exceptions\InconclusiveException.cs" />
     <Compile Include="Exceptions\SuccessException.cs" />
-    <Compile Include="Extensibility\IParameterDataProvider.cs" />
-    <Compile Include="Extensibility\ISuiteBuilder.cs" />
-    <Compile Include="Extensibility\ITestCaseBuilder.cs" />
-    <Compile Include="Extensibility\ITestCaseProvider.cs" />
     <Compile Include="GlobalSettings.cs" />
     <Compile Include="Guard.cs" />
     <Compile Include="Has.cs" />
@@ -271,8 +274,6 @@
     <Compile Include="Internal\Commands\ICommandDecorator.cs" />
     <Compile Include="Internal\CultureDetector.cs" />
     <Compile Include="Internal\ExceptionHelper.cs" />
-    <Compile Include="Internal\Extensibility\ParameterDataProviders.cs" />
-    <Compile Include="Internal\Extensibility\TestCaseProviders.cs" />
     <Compile Include="Internal\Filters\AndFilter.cs" />
     <Compile Include="Internal\Filters\CategoryExpression.cs" />
     <Compile Include="Internal\Filters\CategoryFilter.cs" />

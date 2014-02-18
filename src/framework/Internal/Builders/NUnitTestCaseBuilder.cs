@@ -24,8 +24,6 @@
 using System;
 using System.Reflection;
 using NUnit.Framework.Interfaces;
-using NUnit.Framework.Internal;
-using NUnit.Framework.Extensibility;
 using NUnit.Framework.Internal.Commands;
 
 #if NET_4_5
@@ -50,11 +48,7 @@ namespace NUnit.Framework.Internal.Builders
 	{
         private Randomizer randomizer;
 
-#if NUNITLITE
-        private ITestCaseProvider testCaseProvider = new NUnit.Framework.Internal.Extensibility.TestCaseProviders();
-#else
-        private ITestCaseProvider testCaseProvider = CoreExtensions.Host.TestCaseProviders;
-#endif
+        private ITestCaseProvider testCaseProvider = new TestCaseProviders();
 
         /// <summary>
         /// Default no argument constructor for NUnitTestCaseBuilder

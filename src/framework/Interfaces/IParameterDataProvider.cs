@@ -24,7 +24,7 @@
 using System.Collections;
 using System.Reflection;
 
-namespace NUnit.Framework.Extensibility
+namespace NUnit.Framework.Interfaces
 {
     /// <summary>
     /// The IDataPointProvider interface is used by extensions
