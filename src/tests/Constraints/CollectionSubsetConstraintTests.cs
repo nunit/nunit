@@ -45,7 +45,7 @@ namespace NUnit.Framework.Constraints
             new object[] { new int[] { 1, 2, 2, 2, 5 }, "< 1, 2, 2, 2, 5 >" } };
 
         [Test]
-        [TestCaseSource( "IgnoreCaseData" )]
+        [TestCaseSource(typeof(IgnoreCaseDataProvider), "TestCases")]
         public void HonorsIgnoreCase( IEnumerable expected, IEnumerable actual )
         {
             var constraint = new CollectionSubsetConstraint( expected ).IgnoreCase;
@@ -58,13 +58,28 @@ namespace NUnit.Framework.Constraints
             }
         }
 
-        private static readonly object[] IgnoreCaseData =
+        public class IgnoreCaseDataProvider
         {
-            new object[] {new SimpleObjectCollection("w", "x", "y", "z"),new SimpleObjectCollection("z", "Y", "X")},
-            new object[] {new[] {'A', 'B', 'C', 'D', 'E'}, new object[] {'a', 'b', 'c'}},
-            new object[] {new[] {"a", "b", "c", "d", "e"}, new object[] {"A", "C", "B"}},
-            new object[] {new Dictionary<int, string> {{ 1, "a" }, {2, "b"}}, new Dictionary<int, string> {{ 1, "A" }}},
-            new object[] {new Dictionary<int, char> {{ 1, 'A' }, {2, 'B'}}, new Dictionary<int, char> {{ 1, 'a' }}}
-        };
+            public static IEnumerable TestCases
+            {
+                get
+                {
+                    yield return new TestCaseData(new SimpleObjectCollection("w", "x", "y", "z"), new SimpleObjectCollection("z", "Y", "X"));
+                    yield return new TestCaseData(new[] {'A', 'B', 'C', 'D', 'E'}, new object[] {'a', 'b', 'c'});
+                    yield return new TestCaseData(new[] {"a", "b", "c", "d", "e"}, new object[] {"A", "C", "B"});
+                    yield return new TestCaseData(new Dictionary<int, string> {{1, "a"}, {2, "b"}}, new Dictionary<int, string> {{1, "A"}});
+                    yield return new TestCaseData(new Dictionary<int, char> {{1, 'A'}, {2, 'B'}}, new Dictionary<int, char> {{1, 'a'}});
+                    yield return new TestCaseData(new Dictionary<string, int> {{ "b", 2 }, { "a", 1 } }, new Dictionary<string, int> {{"b", 2}});
+                    yield return new TestCaseData(new Dictionary<char, int> {{'A', 1 }, {'B', 2}}, new Dictionary<char, int> {{'a', 1}});
+
+#if !NETCF && !SILVERLIGHT
+                    yield return new TestCaseData(new Hashtable {{1, "a"}, {2, "b"}}, new Hashtable {{1, "A"}});
+                    yield return new TestCaseData(new Hashtable {{1, 'A'}, {2, 'B'}}, new Hashtable {{2, 'b'}});
+                    yield return new TestCaseData(new Hashtable {{"b", 2}, {"a", 1}}, new Hashtable {{"A", 1}});
+                    yield return new TestCaseData(new Hashtable {{'A', 1}, {'B', 2}}, new Hashtable {{'a', 1}});
+#endif
+                }
+            }
+        }
     }
 }
