@@ -62,7 +62,7 @@ namespace NUnit.Framework.Internal
             string nameSpace = "NUnit.TestData.SetupFixture.Namespace1";
             IDictionary options = new Hashtable();
             options["LOAD"] = new string[] { nameSpace };
-			ITest suite = builder.Build( testAssembly, options );
+            ITest suite = builder.Build( testAssembly, options );
 
             Assert.IsNotNull(suite);
 

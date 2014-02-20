@@ -25,17 +25,17 @@ using System;
 
 namespace NUnit.Framework
 {
-	/// <summary>
-	/// LevelOfParallelizationAttribute is used to set the number of worker threads
+    /// <summary>
+    /// LevelOfParallelizationAttribute is used to set the number of worker threads
     /// that may be allocated by the framework for running tests.
-	/// </summary>
-	[AttributeUsage( AttributeTargets.Assembly, AllowMultiple=false, Inherited=false )]
-	public sealed class LevelOfParallelizationAttribute : PropertyAttribute
-	{
+    /// </summary>
+    [AttributeUsage( AttributeTargets.Assembly, AllowMultiple=false, Inherited=false )]
+    public sealed class LevelOfParallelizationAttribute : PropertyAttribute
+    {
         /// <summary>
         /// Construct a LevelOfParallelizationAttribute.
         /// </summary>
         /// <param name="level">The number of worker threads to be created by the framework.</param>
-		public LevelOfParallelizationAttribute( int level ) : base( level ) {  }
+        public LevelOfParallelizationAttribute( int level ) : base( level ) {  }
     }
 }

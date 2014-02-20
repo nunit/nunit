@@ -26,15 +26,15 @@ using NUnit.Framework.Internal;
 
 namespace NUnit.Framework
 {
-	/// <summary>
-	/// ParallelizableAttribute is used to mark tests that may be run in parallel.
-	/// </summary>
-	[AttributeUsage( AttributeTargets.Assembly | AttributeTargets.Class | AttributeTargets.Method, AllowMultiple=false, Inherited=false )]
-	public sealed class ParallelizableAttribute : PropertyAttribute
+    /// <summary>
+    /// ParallelizableAttribute is used to mark tests that may be run in parallel.
+    /// </summary>
+    [AttributeUsage( AttributeTargets.Assembly | AttributeTargets.Class | AttributeTargets.Method, AllowMultiple=false, Inherited=false )]
+    public sealed class ParallelizableAttribute : PropertyAttribute
 #if !NUNITLITE
         , IApplyToContext
 #endif
-	{
+    {
         private ParallelScope _scope;
 
         /// <summary>
