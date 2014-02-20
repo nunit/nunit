@@ -21,28 +21,18 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
-
-namespace NUnit.Framework.Internal.Interfaces
+namespace NUnit.Framework.Interfaces
 {
     /// <summary>
-    /// The IFixtureBuilder interface is exposed by a class that knows how to
-    /// build a TestFixture from one or more Types. In general, it is exposed
-    /// by an attribute, but may be implemented in a helper class used by the
-    /// attribute in some cases.
+    /// IImplyFixture is an empty marker interface used by attributes like
+    /// TestAttribute that cause the class where they are used to be treated
+    /// as a TestFixture even without a TestFixtureAttribute.
+    /// 
+    /// Marker interfaces are not usually considered a good practice, but
+    /// we use it here to avoid cluttering the attribute hierarchy with 
+    /// classes that don't contain any extra implementation.
     /// </summary>
-    public interface IFixtureBuilder
+    public interface IImplyFixture
     {
-        /// <summary>
-        /// Build a TestFixture from type provided. A non-null TestSuite
-        /// must always be returned, since the method is generally called
-        /// because the user has marked the target class as a fixture.
-        /// If something prevents the fixture from being used, it should
-        /// be returned nonetheless, labelled as non-runnable.
-        /// </summary>
-        /// <param name="type">The type of the fixture to be used.</param>
-        /// <returns>A TestFixture object or one derived from TestFixture.</returns>
-        // TODO: This should really return a TestFixture, but that requires changes to the Test hierarchy.
-        TestSuite BuildFrom(Type type);
     }
 }

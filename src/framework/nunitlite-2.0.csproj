@@ -68,6 +68,8 @@
     <Compile Include="Constraints\SubPathConstraint.cs" />
     <Compile Include="Constraints\ThrowsExceptionConstraint.cs" />
     <Compile Include="Interfaces\ExpectedExceptionData.cs" />
+    <Compile Include="Interfaces\IFixtureBuilder.cs" />
+    <Compile Include="Interfaces\IImplyFixture.cs" />
     <Compile Include="Interfaces\IParameterDataProvider.cs" />
     <Compile Include="Interfaces\IParameterDataSource.cs" />
     <Compile Include="Interfaces\IPropertyBag.cs" />
@@ -279,7 +281,6 @@
     <Compile Include="Internal\Filters\NotFilter.cs" />
     <Compile Include="Internal\Filters\OrFilter.cs" />
     <Compile Include="Internal\Filters\SimpleNameFilter.cs" />
-    <Compile Include="Internal\Interfaces\IFixtureBuilder.cs" />
     <Compile Include="Internal\InternalTrace.cs" />
     <Compile Include="Internal\InternalTraceLevel.cs" />
     <Compile Include="Internal\InternalTraceWriter.cs" />

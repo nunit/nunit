@@ -86,7 +86,8 @@
     <Compile Include="Internal\Builders\ParameterDataProviders.cs" />
     <Compile Include="Internal\Filters\IdFilter.cs" />
     <Compile Include="Internal\Filters\ValueMatchFilter.cs" />
-    <Compile Include="Internal\Interfaces\IFixtureBuilder.cs" />
+    <Compile Include="Interfaces\IFixtureBuilder.cs" />
+    <Compile Include="Interfaces\IImplyFixture.cs" />
     <Compile Include="Internal\InternalTraceLevel.cs" />
     <Compile Include="Internal\Builders\NamespaceTreeBuilder.cs" />
     <Compile Include="Internal\Commands\ApplyChangesToContextCommand.cs" />
@@ -358,5 +359,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Attributes\AttributeHierarchy.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Internal\Interfaces\" />
   </ItemGroup>
 </Project>

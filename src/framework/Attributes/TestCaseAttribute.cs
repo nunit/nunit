@@ -34,7 +34,7 @@ namespace NUnit.Framework
     /// and provide them with their arguments.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true, Inherited=false)]
-    public class TestCaseAttribute : DataAttribute, ITestCaseData, ITestCaseSource
+    public class TestCaseAttribute : DataAttribute, ITestCaseData, ITestCaseSource, IImplyFixture
     {
         #region Instance variables
 
@@ -53,12 +53,12 @@ namespace NUnit.Framework
         /// <param name="arguments"></param>
         public TestCaseAttribute(params object[] arguments)
         {
-			this.RunState = RunState.Runnable;
-			
-         	if (arguments == null)
-         		this.Arguments = new object[] { null };
-         	else
- 	        	this.Arguments = arguments;
+            this.RunState = RunState.Runnable;
+            
+            if (arguments == null)
+                this.Arguments = new object[] { null };
+            else
+                this.Arguments = arguments;
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace NUnit.Framework
         /// <param name="arg"></param>
         public TestCaseAttribute(object arg)
         {
-			this.RunState = RunState.Runnable;			
+            this.RunState = RunState.Runnable;			
             this.Arguments = new object[] { arg };
         }
 
@@ -78,7 +78,7 @@ namespace NUnit.Framework
         /// <param name="arg2"></param>
         public TestCaseAttribute(object arg1, object arg2)
         {
-			this.RunState = RunState.Runnable;			
+            this.RunState = RunState.Runnable;			
             this.Arguments = new object[] { arg1, arg2 };
         }
 
@@ -90,7 +90,7 @@ namespace NUnit.Framework
         /// <param name="arg3"></param>
         public TestCaseAttribute(object arg1, object arg2, object arg3)
         {
-			this.RunState = RunState.Runnable;			
+            this.RunState = RunState.Runnable;			
             this.Arguments = new object[] { arg1, arg2, arg3 };
         }
 
@@ -189,37 +189,37 @@ namespace NUnit.Framework
         /// Gets or sets the ignored status of the test
         /// </summary>
         public bool Ignore 
-		{ 
-			get { return this.RunState == RunState.Ignored; }
-			set { this.RunState = value ? RunState.Ignored : RunState.Runnable; } 
-		}
-		
-		/// <summary>
-		/// Gets or sets a value indicating whether this <see cref="NUnit.Framework.TestCaseAttribute"/> is explicit.
-		/// </summary>
-		/// <value>
-		/// <c>true</c> if explicit; otherwise, <c>false</c>.
-		/// </value>
-		public bool Explicit 
-		{ 
-			get { return this.RunState == RunState.Explicit; }
-			set { this.RunState = value ? RunState.Explicit : RunState.Runnable; }
-		}
+        { 
+            get { return this.RunState == RunState.Ignored; }
+            set { this.RunState = value ? RunState.Ignored : RunState.Runnable; } 
+        }
+        
+        /// <summary>
+        /// Gets or sets a value indicating whether this <see cref="NUnit.Framework.TestCaseAttribute"/> is explicit.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if explicit; otherwise, <c>false</c>.
+        /// </value>
+        public bool Explicit 
+        { 
+            get { return this.RunState == RunState.Explicit; }
+            set { this.RunState = value ? RunState.Explicit : RunState.Runnable; }
+        }
 
-		/// <summary>
-		/// Gets or sets the RunState of this test case.
-		/// </summary>
-		public RunState RunState { get; private set; }
-		
-		/// <summary>
-		/// Gets or sets the reason for not running the test.
-		/// </summary>
-		/// <value>The reason.</value>
-		public string Reason 
-		{ 
-			get { return this.Properties.Get(PropertyNames.SkipReason) as string; }
-			set { this.Properties.Set(PropertyNames.SkipReason, value); }
-		}
+        /// <summary>
+        /// Gets or sets the RunState of this test case.
+        /// </summary>
+        public RunState RunState { get; private set; }
+        
+        /// <summary>
+        /// Gets or sets the reason for not running the test.
+        /// </summary>
+        /// <value>The reason.</value>
+        public string Reason 
+        { 
+            get { return this.Properties.Get(PropertyNames.SkipReason) as string; }
+            set { this.Properties.Set(PropertyNames.SkipReason, value); }
+        }
 
         /// <summary>
         /// Gets or sets the ignore reason. When set to a non-null
@@ -231,7 +231,7 @@ namespace NUnit.Framework
             get { return this.Reason; }
             set
             {
-				this.RunState = RunState.Ignored;
+                this.RunState = RunState.Ignored;
                 this.Reason = value;
             }
         }
@@ -244,10 +244,10 @@ namespace NUnit.Framework
         {
             get { return Properties.Get(PropertyNames.Category) as string; }
             set 
-			{ 
-				foreach (string cat in value.Split(new char[] { ',' }) )
-					Properties.Add(PropertyNames.Category, cat); 
-			}
+            { 
+                foreach (string cat in value.Split(new char[] { ',' }) )
+                    Properties.Add(PropertyNames.Category, cat); 
+            }
         }
  
         /// <summary>

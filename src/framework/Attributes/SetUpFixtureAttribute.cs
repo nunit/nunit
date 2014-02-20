@@ -27,7 +27,6 @@ namespace NUnit.Framework
 {
     using Interfaces;
     using Internal;
-    using Internal.Interfaces;
 
     /// <summary>
     /// SetUpFixtureAttribute is used to identify a SetUpFixture

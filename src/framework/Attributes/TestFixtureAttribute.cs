@@ -26,18 +26,17 @@ using System.Collections;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Builders;
-using NUnit.Framework.Internal.Interfaces;
 
 namespace NUnit.Framework
 {
-	/// <example>
-	/// [TestFixture]
-	/// public class ExampleClass 
-	/// {}
-	/// </example>
-	[AttributeUsage(AttributeTargets.Class, AllowMultiple=true, Inherited=true)]
+    /// <example>
+    /// [TestFixture]
+    /// public class ExampleClass 
+    /// {}
+    /// </example>
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple=true, Inherited=true)]
     public class TestFixtureAttribute : NUnitAttribute, IFixtureBuilder, IApplyToTest
-	{
+    {
         private NUnitTestFixtureBuilder builder = new NUnitTestFixtureBuilder();
 
         #region Constructors
@@ -64,9 +63,9 @@ namespace NUnit.Framework
         #region Public Properties
 
         /// <summary>
-		/// Descriptive text for this fixture
-		/// </summary>
-		public string Description { get; set; }
+        /// Descriptive text for this fixture
+        /// </summary>
+        public string Description { get; set; }
 
         /// <summary>
         /// The arguments originally provided to the attribute
@@ -127,10 +126,10 @@ namespace NUnit.Framework
         {
             if (!test.Properties.ContainsKey(PropertyNames.Description) && this.Description != null)
                 test.Properties.Set(PropertyNames.Description, this.Description);
-			
-			if (this.Category != null)
-				foreach (string cat in this.Category.Split(new char[] { ',' }) )
-					test.Properties.Add(PropertyNames.Category, cat);
+            
+            if (this.Category != null)
+                foreach (string cat in this.Category.Split(new char[] { ',' }) )
+                    test.Properties.Add(PropertyNames.Category, cat);
         }
 
         #endregion

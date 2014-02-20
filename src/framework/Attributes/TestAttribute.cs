@@ -49,7 +49,7 @@ namespace NUnit.Framework
 	/// </example>
 	/// 
 	[AttributeUsage(AttributeTargets.Method, AllowMultiple=false, Inherited=true)]
-	public class TestAttribute : NUnitAttribute, IApplyToTest
+	public class TestAttribute : NUnitAttribute, IApplyToTest, IImplyFixture
 	{
 		private string description;
 

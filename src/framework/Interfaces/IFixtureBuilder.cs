@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2009 Charlie Poole
+// Copyright (c) 2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -23,43 +23,28 @@
 
 using System;
 
-namespace NUnit.Framework
+namespace NUnit.Framework.Interfaces
 {
-    using Interfaces;
+    using Internal;
 
     /// <summary>
-    /// Adding this attribute to a method within a <seealso cref="TestFixtureAttribute"/> 
-    /// class makes the method callable from the NUnit test runner. There is a property 
-    /// called Description which is optional which you can provide a more detailed test
-    /// description. This class cannot be inherited.
+    /// The IFixtureBuilder interface is exposed by a class that knows how to
+    /// build a TestFixture from one or more Types. In general, it is exposed
+    /// by an attribute, but may be implemented in a helper class used by the
+    /// attribute in some cases.
     /// </summary>
-    /// 
-    /// <example>
-    /// [TestFixture]
-    /// public class Fixture
-    /// {
-    ///   [Test]
-    ///   public void MethodToTest()
-    ///   {}
-    ///   
-    ///   [Test(Description = "more detailed description")]
-    ///   publc void TestDescriptionMethod()
-    ///   {}
-    /// }
-    /// </example>
-    /// 
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited=true)]
-    public class TheoryAttribute : NUnitAttribute, IImplyFixture
+    public interface IFixtureBuilder
     {
-        //private string description;
-
-        ///// <summary>
-        ///// Descriptive text for this test
-        ///// </summary>
-        //public string Description
-        //{
-        //    get { return description; }
-        //    set { description = value; }
-        //}
+        /// <summary>
+        /// Build a TestFixture from type provided. A non-null TestSuite
+        /// must always be returned, since the method is generally called
+        /// because the user has marked the target class as a fixture.
+        /// If something prevents the fixture from being used, it should
+        /// be returned nonetheless, labelled as non-runnable.
+        /// </summary>
+        /// <param name="type">The type of the fixture to be used.</param>
+        /// <returns>A TestFixture object or one derived from TestFixture.</returns>
+        // TODO: This should really return a TestFixture, but that requires changes to the Test hierarchy.
+        TestSuite BuildFrom(Type type);
     }
 }
