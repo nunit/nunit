@@ -143,6 +143,23 @@ namespace NUnit.Framework.Constraints
 
             if (x is IDictionary && y is IDictionary)
                 return DictionariesEqual((IDictionary)x, (IDictionary)y, ref tolerance);
+            
+            // Issue #70 - EquivalentTo isn't compatible with IgnoreCase for dictionaries
+            if (x is DictionaryEntry && y is DictionaryEntry)
+                return DictionaryEntriesEqual((DictionaryEntry)x, (DictionaryEntry)y, ref tolerance);
+
+            // IDictionary<,> will eventually try to compare it's key value pairs when using CollectionTally
+            if (xType.IsGenericType && xType.GetGenericTypeDefinition() == typeof(KeyValuePair<,>) &&
+                yType.IsGenericType && yType.GetGenericTypeDefinition() == typeof(KeyValuePair<,>))
+            {
+                var keyTolerance = new Tolerance(0);
+                object xKey = xType.GetProperty("Key").GetValue(x, null);
+                object yKey = yType.GetProperty("Key").GetValue(y, null);
+                object xValue = xType.GetProperty("Value").GetValue(x, null);
+                object yValue = yType.GetProperty("Value").GetValue(y, null);
+
+                return AreEqual(xKey, yKey, ref keyTolerance) && AreEqual(xValue, yValue, ref tolerance);
+            }
 
             //if (x is ICollection && y is ICollection)
             //    return CollectionsEqual((ICollection)x, (ICollection)y, ref tolerance);
@@ -266,6 +283,12 @@ namespace NUnit.Framework.Constraints
                     return false;
  
             return true;
+        }
+
+        private bool DictionaryEntriesEqual(DictionaryEntry x, DictionaryEntry y, ref Tolerance tolerance)
+        {
+            var keyTolerance = new Tolerance(0);
+            return AreEqual(x.Key, y.Key, ref keyTolerance) && AreEqual(x.Value, y.Value, ref tolerance);
         }
 
         private bool CollectionsEqual(ICollection x, ICollection y, ref Tolerance tolerance)
