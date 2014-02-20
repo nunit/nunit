@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2007 Charlie Poole
+// Copyright (c) 2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -25,11 +25,74 @@ using System;
 
 namespace NUnit.Framework
 {
-	/// <summary>
-	/// SetUpFixtureAttribute is used to identify a SetUpFixture
-	/// </summary>
-	[AttributeUsage(AttributeTargets.Class, AllowMultiple=false, Inherited=true)]
-	public class SetUpFixtureAttribute : NUnitAttribute
-	{
-	}
+    using Interfaces;
+    using Internal;
+    using Internal.Interfaces;
+
+    /// <summary>
+    /// SetUpFixtureAttribute is used to identify a SetUpFixture
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple=false, Inherited=true)]
+    public class SetUpFixtureAttribute : NUnitAttribute, IFixtureBuilder
+    {
+        #region ISuiteBuilder Members
+
+        /// <summary>
+        /// Build a SetUpFixture from type provided. Normally called for a Type
+        /// on which the attribute has been placed.
+        /// </summary>
+        /// <param name="type">The type of the fixture to be used.</param>
+        /// <returns>A SetUpFixture object as a TestSuite.</returns>
+        public TestSuite BuildFrom(Type type)
+        {
+            SetUpFixture fixture = new SetUpFixture(type);
+
+            if (fixture.RunState != RunState.NotRunnable)
+            {
+                string reason = null;
+                if (!IsValidFixtureType(type, ref reason))
+                {
+                    fixture.RunState = RunState.NotRunnable;
+                    fixture.Properties.Set(PropertyNames.SkipReason, reason);
+                }
+            }
+
+            return fixture;
+        }
+
+        #endregion
+
+        #region Helper Methods
+
+        private bool IsValidFixtureType(Type type, ref string reason)
+        {
+            if (type.IsAbstract)
+            {
+                reason = string.Format("{0} is an abstract class", type.FullName);
+                return false;
+            }
+
+            if (type.GetConstructor(new Type[0]) == null)
+            {
+                reason = string.Format("{0} does not have a valid constructor", type.FullName);
+                return false;
+            }
+
+            if (Reflect.HasMethodWithAttribute(type, typeof(NUnit.Framework.TestFixtureSetUpAttribute)))
+            {
+                reason = "TestFixtureSetUp method not allowed on a SetUpFixture";
+                return false;
+            }
+
+            if (Reflect.HasMethodWithAttribute(type, typeof(NUnit.Framework.TestFixtureTearDownAttribute)))
+            {
+                reason = "TestFixtureTearDown method not allowed on a SetUpFixture";
+                return false;
+            }
+
+            return true;
+        }
+
+        #endregion
+    }
 }

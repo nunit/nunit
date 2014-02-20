@@ -29,19 +29,19 @@ using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Builders
 {
-	/// <summary>
-	/// TestCaseBuilderCollection is an ExtensionPoint for TestCaseBuilders 
-	/// and implements the ITestCaseBuilder interface itself, passing calls 
-	/// on to the individual builders.
-	/// 
-	/// The builders are added to the collection by inserting them at
-	/// the start, as to take precedence over those added earlier. 
-	/// </summary>
-	public class TestCaseBuilderCollection : ITestCaseBuilder2
-	{
+    /// <summary>
+    /// TestCaseBuilderCollection is an ExtensionPoint for TestCaseBuilders 
+    /// and implements the ITestCaseBuilder interface itself, passing calls 
+    /// on to the individual builders.
+    /// 
+    /// The builders are added to the collection by inserting them at
+    /// the start, as to take precedence over those added earlier. 
+    /// </summary>
+    public class TestCaseBuilderCollection : ITestCaseBuilder2
+    {
         private List<ITestCaseBuilder2> Extensions = new List<ITestCaseBuilder2>();
 
-		#region Constructor
+        #region Constructor
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TestCaseBuilderCollection"/> class.
@@ -52,7 +52,7 @@ namespace NUnit.Framework.Internal.Builders
             Extensions.Add(new NUnitTestCaseBuilder());
         }
 
-		#endregion
+        #endregion
 
         #region ITestCaseBuilder Members
         /// <summary>
@@ -135,6 +135,6 @@ namespace NUnit.Framework.Internal.Builders
             return null;
         }
         #endregion
-	}
+    }
 }
 #endif

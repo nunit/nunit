@@ -27,27 +27,19 @@ using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal
 {
-	/// <summary>
-	/// TestFixture is a surrogate for a user test fixture class,
-	/// containing one or more tests.
-	/// </summary>
-	public class TestFixture : TestSuite
-	{
-		#region Constructors
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TestFixture"/> class.
-        /// </summary>
-        /// <param name="fixtureType">Type of the fixture.</param>
-        public TestFixture(Type fixtureType)
-            : this(fixtureType, null) { }
+    /// <summary>
+    /// TestFixture is a surrogate for a user test fixture class,
+    /// containing one or more tests.
+    /// </summary>
+    public class TestFixture : TestSuite
+    {
+        #region Constructor
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TestFixture"/> class.
         /// </summary>
         /// <param name="fixtureType">Type of the fixture.</param>
-        /// <param name="arguments">The arguments.</param>
-        public TestFixture(Type fixtureType, object[] arguments)
-            : base(fixtureType, arguments) 
+        public TestFixture(Type fixtureType) : base(fixtureType)
         {
             this.oneTimeSetUpMethods = GetSetUpTearDownMethods(typeof(TestFixtureSetUpAttribute));
             this.oneTimeTearDownMethods = GetSetUpTearDownMethods(typeof(TestFixtureTearDownAttribute));
@@ -75,5 +67,5 @@ namespace NUnit.Framework.Internal
             return methods;
         }
         #endregion
-	}
+    }
 }

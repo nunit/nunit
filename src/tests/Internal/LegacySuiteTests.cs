@@ -29,12 +29,12 @@ using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Internal
 {
-	/// <summary>
-	/// Summary description for LegacySuiteTests.
-	/// </summary>
-	[TestFixture]
-	public class LegacySuiteTests
-	{
+    /// <summary>
+    /// Summary description for LegacySuiteTests.
+    /// </summary>
+    [TestFixture]
+    public class LegacySuiteTests
+    {
         private LegacySuiteBuilder builder = new LegacySuiteBuilder();
 
         [Test]
@@ -65,15 +65,15 @@ namespace NUnit.Framework.Internal
         }
 
         [Test]
-		public void SetUpAndTearDownAreCalled()
-		{
+        public void SetUpAndTearDownAreCalled()
+        {
             LegacySuiteWithSetUpAndTearDown.SetupCount = LegacySuiteWithSetUpAndTearDown.TeardownCount = 0;
-			TestSuite suite = (TestSuite)builder.BuildFrom( typeof( LegacySuiteWithSetUpAndTearDown ) );
+            TestSuite suite = (TestSuite)builder.BuildFrom( typeof( LegacySuiteWithSetUpAndTearDown ) );
             Assert.AreEqual(RunState.Runnable, suite.RunState);
             TestBuilder.RunTestSuite(suite, null);
             Assert.AreEqual(1, LegacySuiteWithSetUpAndTearDown.SetupCount);
             Assert.AreEqual(1, LegacySuiteWithSetUpAndTearDown.TeardownCount);
-		}
+        }
 
         [Test]
         public void SuitePropertyWithInvalidType()
@@ -81,6 +81,6 @@ namespace NUnit.Framework.Internal
             Test suite = builder.BuildFrom(typeof(LegacySuiteWithInvalidPropertyType));
             Assert.AreEqual(RunState.NotRunnable, suite.RunState);
         }
-	}
+    }
 }
 #endif

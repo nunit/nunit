@@ -26,12 +26,12 @@ using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Interfaces
 {
-	/// <summary>
-	/// The ITestCaseBuilder interface is exposed by a class that knows how to
-	/// build a test case from certain methods. 
-	/// </summary>
-	public interface ITestCaseBuilder
-	{
+    /// <summary>
+    /// The ITestCaseBuilder interface is exposed by a class that knows how to
+    /// build a test case from certain methods. 
+    /// </summary>
+    public interface ITestCaseBuilder
+    {
         /// <summary>
         /// Examine the method and determine if it is suitable for
         /// this builder to use in building a TestCase.

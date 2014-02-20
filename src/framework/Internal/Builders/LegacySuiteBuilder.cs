@@ -29,10 +29,10 @@ using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Builders
 {
-	/// <summary>
-	/// Built-in SuiteBuilder for LegacySuite
-	/// </summary>
-	public class LegacySuiteBuilder : ISuiteBuilder
+    /// <summary>
+    /// Built-in SuiteBuilder for LegacySuite
+    /// </summary>
+    public class LegacySuiteBuilder : ISuiteBuilder
     {
         #region ISuiteBuilderMembers
         /// <summary>
@@ -42,17 +42,17 @@ namespace NUnit.Framework.Internal.Builders
         /// <param name="type">The fixture type to check</param>
         /// <returns>True if the fixture can be built, false if not</returns>
         public bool CanBuildFrom(Type type)
-		{
-			return GetSuiteProperty( type ) != null;
-		}
+        {
+            return GetSuiteProperty( type ) != null;
+        }
 
         /// <summary>
         /// Build a TestSuite from type provided.
         /// </summary>
         /// <param name="type">The type of the fixture to be used</param>
         /// <returns>A TestSuite</returns>
-		public Test BuildFrom( Type type )
-		{
+        public Test BuildFrom( Type type )
+        {
             TestSuite suite = new LegacySuite( type );
 
             if (suite.RunState == RunState.NotRunnable)

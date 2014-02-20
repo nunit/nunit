@@ -1,5 +1,5 @@
-// ***********************************************************************
-// Copyright (c) 2007 Charlie Poole
+﻿// ***********************************************************************
+// Copyright (c) 2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -22,34 +22,27 @@
 // ***********************************************************************
 
 using System;
-using NUnit.Framework.Internal;
 
-namespace NUnit.Framework.Interfaces
+namespace NUnit.Framework.Internal.Interfaces
 {
     /// <summary>
-    /// The ISuiteBuilder interface is exposed by a class that knows how to
-    /// build a suite from one or more Types. 
+    /// The IFixtureBuilder interface is exposed by a class that knows how to
+    /// build a TestFixture from one or more Types. In general, it is exposed
+    /// by an attribute, but may be implemented in a helper class used by the
+    /// attribute in some cases.
     /// </summary>
-    public interface ISuiteBuilder
+    public interface IFixtureBuilder
     {
         /// <summary>
-        /// Examine the type and determine if it is suitable for
-        /// this builder to use in building a TestSuite.
-        /// 
-        /// Note that returning false will cause the type to be ignored 
-        /// in loading the tests. If it is desired to load the suite
-        /// but label it as non-runnable, ignored, etc., then this
-        /// method must return true.
+        /// Build a TestFixture from type provided. A non-null TestSuite
+        /// must always be returned, since the method is generally called
+        /// because the user has marked the target class as a fixture.
+        /// If something prevents the fixture from being used, it should
+        /// be returned nonetheless, labelled as non-runnable.
         /// </summary>
-        /// <param name="type">The type of the fixture to be used</param>
-        /// <returns>True if the type can be used to build a TestSuite</returns>
-        bool CanBuildFrom( Type type );
-
-        /// <summary>
-        /// Build a TestSuite from type provided.
-        /// </summary>
-        /// <param name="type">The type of the fixture to be used</param>
-        /// <returns>A TestSuite</returns>
-        Test BuildFrom( Type type );
+        /// <param name="type">The type of the fixture to be used.</param>
+        /// <returns>A TestFixture object or one derived from TestFixture.</returns>
+        // TODO: This should really return a TestFixture, but that requires changes to the Test hierarchy.
+        TestSuite BuildFrom(Type type);
     }
 }

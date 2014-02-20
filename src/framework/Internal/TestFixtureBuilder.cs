@@ -25,17 +25,18 @@ using System;
 using System.Reflection;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Builders;
+using NUnit.Framework.Internal.Interfaces;
 
 namespace NUnit.Framework.Internal
 {
-	/// <summary>
-	/// TestFixtureBuilder contains static methods for building
-	/// TestFixtures from types. It uses builtin SuiteBuilders
-	/// and any installed extensions to do it.
-	/// </summary>
-	public class TestFixtureBuilder
-	{
-        private static ISuiteBuilder builder = new SuiteBuilderCollection();
+    /// <summary>
+    /// TestFixtureBuilder contains static methods for building
+    /// TestFixtures from types. It uses builtin SuiteBuilders
+    /// and any installed extensions to do it.
+    /// </summary>
+    public static class TestFixtureBuilder
+    {
+        private static ISuiteBuilder builder = new DefaultSuiteBuilder();
 
         /// <summary>
         /// Determines whether this instance [can build from] the specified type.
@@ -44,37 +45,32 @@ namespace NUnit.Framework.Internal
         /// <returns>
         /// 	<c>true</c> if this instance [can build from] the specified type; otherwise, <c>false</c>.
         /// </returns>
-		public static bool CanBuildFrom( Type type )
-		{
+        public static bool CanBuildFrom( Type type )
+        {
             return builder.CanBuildFrom(type);
-		}
+        }
 
-		/// <summary>
-		/// Build a test fixture from a given type.
-		/// </summary>
-		/// <param name="type">The type to be used for the fixture</param>
-		/// <returns>A TestSuite if the fixture can be built, null if not</returns>
-		public static Test BuildFrom( Type type )
-		{
+        /// <summary>
+        /// Build a test fixture from a given type.
+        /// </summary>
+        /// <param name="type">The type to be used for the fixture</param>
+        /// <returns>A TestSuite if the fixture can be built, null if not</returns>
+        public static Test BuildFrom( Type type )
+        {
             return builder.BuildFrom( type );
-		}
+        }
 
-		/// <summary>
-		/// Build a fixture from an object. 
-		/// </summary>
-		/// <param name="fixture">The object to be used for the fixture</param>
-		/// <returns>A TestSuite if fixture type can be built, null if not</returns>
-		public static Test BuildFrom( object fixture )
-		{
-			Test suite = BuildFrom( fixture.GetType() );
-			if( suite != null)
-				suite.Fixture = fixture;
-			return suite;
-		}
-
-		/// <summary>
-		/// Private constructor to prevent instantiation
-		/// </summary>
-		private TestFixtureBuilder() { }
-	}
+        /// <summary>
+        /// Build a fixture from an object. 
+        /// </summary>
+        /// <param name="fixture">The object to be used for the fixture</param>
+        /// <returns>A TestSuite if fixture type can be built, null if not</returns>
+        public static Test BuildFrom( object fixture )
+        {
+            Test suite = BuildFrom( fixture.GetType() );
+            if( suite != null)
+                suite.Fixture = fixture;
+            return suite;
+        }
+    }
 }

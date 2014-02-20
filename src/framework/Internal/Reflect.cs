@@ -28,23 +28,23 @@ using System.Reflection;
 
 namespace NUnit.Framework.Internal
 {
-	/// <summary>
-	/// Helper methods for inspecting a type by reflection. 
-	/// 
-	/// Many of these methods take ICustomAttributeProvider as an 
-	/// argument to avoid duplication, even though certain attributes can 
-	/// only appear on specific types of members, like MethodInfo or Type.
-	/// 
-	/// In the case where a type is being examined for the presence of
-	/// an attribute, interface or named member, the Reflect methods
-	/// operate with the full name of the member being sought. This
-	/// removes the necessity of the caller having a reference to the
-	/// assembly that defines the item being sought and allows the
-	/// NUnit core to inspect assemblies that reference an older
-	/// version of the NUnit framework.
-	/// </summary>
-	public class Reflect
-	{
+    /// <summary>
+    /// Helper methods for inspecting a type by reflection. 
+    /// 
+    /// Many of these methods take ICustomAttributeProvider as an 
+    /// argument to avoid duplication, even though certain attributes can 
+    /// only appear on specific types of members, like MethodInfo or Type.
+    /// 
+    /// In the case where a type is being examined for the presence of
+    /// an attribute, interface or named member, the Reflect methods
+    /// operate with the full name of the member being sought. This
+    /// removes the necessity of the caller having a reference to the
+    /// assembly that defines the item being sought and allows the
+    /// NUnit core to inspect assemblies that reference an older
+    /// version of the NUnit framework.
+    /// </summary>
+    public class Reflect
+    {
         private static readonly BindingFlags AllMembers = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.FlattenHierarchy;
 
         // A zero-length Type array - not provided by System.Type for all CLR versions we support.
@@ -166,48 +166,48 @@ namespace NUnit.Framework.Internal
         #region Invoke Methods
 
         /// <summary>
-		/// Invoke a parameterless method returning void on an object.
-		/// </summary>
-		/// <param name="method">A MethodInfo for the method to be invoked</param>
-		/// <param name="fixture">The object on which to invoke the method</param>
-		public static object InvokeMethod( MethodInfo method, object fixture ) 
-		{
-			return InvokeMethod( method, fixture, null );
-		}
+        /// Invoke a parameterless method returning void on an object.
+        /// </summary>
+        /// <param name="method">A MethodInfo for the method to be invoked</param>
+        /// <param name="fixture">The object on which to invoke the method</param>
+        public static object InvokeMethod( MethodInfo method, object fixture ) 
+        {
+            return InvokeMethod(method, fixture, null);
+        }
 
-		/// <summary>
-		/// Invoke a method, converting any TargetInvocationException to an NUnitException.
-		/// </summary>
-		/// <param name="method">A MethodInfo for the method to be invoked</param>
-		/// <param name="fixture">The object on which to invoke the method</param>
+        /// <summary>
+        /// Invoke a method, converting any TargetInvocationException to an NUnitException.
+        /// </summary>
+        /// <param name="method">A MethodInfo for the method to be invoked</param>
+        /// <param name="fixture">The object on which to invoke the method</param>
         /// <param name="args">The argument list for the method</param>
         /// <returns>The return value from the invoked method</returns>
-		public static object InvokeMethod( MethodInfo method, object fixture, params object[] args )
-		{
-			if(method != null)
-			{
-				try
-				{
-					return method.Invoke( fixture, args );
-				}
-				catch(Exception e)
-				{
+        public static object InvokeMethod( MethodInfo method, object fixture, params object[] args )
+        {
+            if(method != null)
+            {
+                try
+                {
+                    return method.Invoke( fixture, args );
+                }
+                catch(Exception e)
+                {
                     if (e is TargetInvocationException)
                         throw new NUnitException("Rethrown", e.InnerException);
                     else
                         throw new NUnitException("Rethrown", e);
                 }
-			}
+            }
 
-		    return null;
-		}
+            return null;
+        }
 
-		#endregion
+        #endregion
 
-		#region Private Constructor for static-only class
+        #region Private Constructor for static-only class
 
-		private Reflect() { }
+        private Reflect() { }
 
-		#endregion
-	}
+        #endregion
+    }
 }

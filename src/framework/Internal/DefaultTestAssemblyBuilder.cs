@@ -188,22 +188,6 @@ namespace NUnit.Framework.Internal
             return result;
         }
 
-        private TestSuite BuildFromFixtureType(string assemblyName, Type testType)
-        {
-            // TODO: This is the only situation in which we currently
-            // recognize and load legacy suites. We need to determine 
-            // whether to allow them in more places.
-#if !NUNITLITE
-            if (legacySuiteBuilder.CanBuildFrom(testType))
-                return (TestSuite)legacySuiteBuilder.BuildFrom(testType);
-            else 
-#endif
-            if (TestFixtureBuilder.CanBuildFrom(testType))
-                return BuildTestAssembly(assemblyName,
-                    new Test[] { TestFixtureBuilder.BuildFrom(testType) });
-            return null;
-        }
-
         private TestSuite BuildTestAssembly(string assemblyName, IList fixtures)
         {
             TestSuite testAssembly = new TestAssembly(assembly, assemblyName);

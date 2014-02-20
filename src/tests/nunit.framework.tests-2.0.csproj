@@ -233,7 +233,11 @@
     <EmbeddedResource Include="TestText2.txt" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="nunit.framework.tests.build" />
-    <None Include="nunitlite.tests.build" />
+    <None Include="nunit.framework.tests.build">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="nunitlite.tests.build">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
 </Project>

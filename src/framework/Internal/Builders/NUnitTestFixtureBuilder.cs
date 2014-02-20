@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2007 Charlie Poole
+// Copyright (c) 2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -24,20 +24,23 @@
 using System;
 using System.Collections;
 using System.Reflection;
-using System.Text.RegularExpressions;
-using System.Text;
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal.Interfaces;
 
 namespace NUnit.Framework.Internal.Builders
 {
-	/// <summary>
-	/// Built-in SuiteBuilder for NUnit TestFixture
-	/// </summary>
-	public class NUnitTestFixtureBuilder : ISuiteBuilder
+    /// <summary>
+    /// NUnitTestFixtureBuilder is able to build a fixture given
+    /// a class marked with a TestFixtureAttribute or an unmarked
+    /// class containing test methods. In the first case, it is
+    /// called by the attribute and in the second directly by
+    /// NUnitSuiteBuilder.
+    /// </summary>
+    public class NUnitTestFixtureBuilder : IFixtureBuilder
     {
         #region Static Fields
-                
-        static readonly string NO_TYPE_ARGS_MSG = 
+
+        static readonly string NO_TYPE_ARGS_MSG =
             "Fixture type contains generic parameters. You must either provide " +
             "Type arguments or specify constructor arguments that allow NUnit " +
             "to deduce the Type arguments.";
@@ -45,93 +48,46 @@ namespace NUnit.Framework.Internal.Builders
         #endregion
 
         #region Instance Fields
+
         /// <summary>
-		/// The NUnitTestFixture being constructed;
-		/// </summary>
-		private TestFixture fixture;
+        /// The NUnitTestFixture being constructed;
+        /// </summary>
+        private TestFixture fixture;
 
         private ITestCaseBuilder2 testBuilder = new NUnitTestCaseBuilder();
 
-		#endregion
+        #endregion
 
-        #region ISuiteBuilder Methods
-        /// <summary>
-		/// Checks to see if the fixture type has the TestFixtureAttribute
-		/// </summary>
-		/// <param name="type">The fixture type to check</param>
-		/// <returns>True if the fixture can be built, false if not</returns>
-		public bool CanBuildFrom(Type type)
-		{
-            if ( type.IsAbstract && !type.IsSealed )
-                return false;
-#if NETCF
-            // No generic fixtures under CF
-            if (type.IsGenericTypeDefinition)
-                return false;
-#endif
+        #region IFixtureBuilder Members
 
-            if (type.IsDefined(typeof(TestFixtureAttribute), true))
-                return true;
-
-#if !NETCF
-            // Generics must have a TestFixtureAttribute
-            if (type.IsGenericTypeDefinition)
-                return false;
-#endif
-
-            return Reflect.HasMethodWithAttribute(type, typeof(NUnit.Framework.TestAttribute)) ||
-                   Reflect.HasMethodWithAttribute(type, typeof(NUnit.Framework.TestCaseAttribute)) ||
-                   Reflect.HasMethodWithAttribute(type, typeof(NUnit.Framework.TestCaseSourceAttribute)) ||
-                   Reflect.HasMethodWithAttribute(type, typeof(NUnit.Framework.TheoryAttribute));
-		}
-
-		/// <summary>
-		/// Build a TestSuite from type provided.
-		/// </summary>
-		/// <param name="type"></param>
-		/// <returns></returns>
-		public Test BuildFrom(Type type)
-		{
-            TestFixtureAttribute[] attrs = GetTestFixtureAttributes(type);
-            if (type.IsGenericType)
-                return BuildMultipleFixtures(type, attrs);
-
-            switch (attrs.Length)
-            {
-                case 0:
-                    return BuildSingleFixture(type, null);
-                case 1:
-                    object[] args = attrs[0].Arguments;
-                    return args == null || args.Length == 0
-                        ? BuildSingleFixture(type, attrs[0])
-                        : BuildMultipleFixtures(type, attrs);
-                default:
-                    return BuildMultipleFixtures(type, attrs);
-            }
-        }
-		#endregion
-
-		#region Helper Methods
-
-        private Test BuildMultipleFixtures(Type type, TestFixtureAttribute[] attrs)
+        public TestSuite BuildFrom(Type type)
         {
-            TestSuite suite = new ParameterizedFixtureSuite(type);
+            this.fixture = new TestFixture(type);
 
-            if (attrs.Length > 0)
-            {
-                foreach (TestFixtureAttribute attr in attrs)
-                    suite.Add(BuildSingleFixture(type, attr));
-            }
-            else
-            {
-                suite.RunState = RunState.NotRunnable;
-                suite.Properties.Set(PropertyNames.SkipReason, NO_TYPE_ARGS_MSG);
-            }
+            if (fixture.RunState != RunState.NotRunnable)
+                CheckTestFixtureIsValid(fixture);
 
-            return suite;
+            fixture.ApplyAttributesToTest(type);
+
+
+            AddTestCases(type);
+
+            return this.fixture;
         }
 
-        private Test BuildSingleFixture(Type type, TestFixtureAttribute attr)
+        #endregion
+
+        #region Other Public Methods
+
+        /// <summary>
+        /// Overload of BuildFrom called by TestFixtureAttribute. Builds
+        /// a fixture using the provided type and information in the
+        /// properties of the attribute.
+        /// </summary>
+        /// <param name="type">The Type for which to construct a fixture.</param>
+        /// <param name="attr">The attribute marking the fixture Type.</param>
+        /// <returns></returns>
+        public TestSuite BuildFrom(Type type, TestFixtureAttribute attr)
         {
             object[] arguments = null;
 
@@ -164,7 +120,7 @@ namespace NUnit.Framework.Internal.Builders
                         }
                     }
 
-                    if( typeArgs.Length > 0 || 
+                    if (typeArgs.Length > 0 ||
                         TypeHelper.CanDeduceTypeArgsFromArgs(type, arguments, ref typeArgs))
                     {
                         type = TypeHelper.MakeGenericType(type, typeArgs);
@@ -173,80 +129,83 @@ namespace NUnit.Framework.Internal.Builders
 #endif
             }
 
-            this.fixture = new TestFixture(type, arguments);
-            CheckTestFixtureIsValid(fixture);
+            this.fixture = new TestFixture(type);
+            
+            if (arguments != null)
+            {
+                string name = fixture.Name = TypeHelper.GetDisplayName(type, arguments);
+                string nspace = type.Namespace;
+                fixture.FullName = nspace != null && nspace != ""
+                    ? nspace + "." + name
+                    : name;
+                fixture.arguments = arguments;
+            }
+
+            if (fixture.RunState != RunState.NotRunnable)
+                CheckTestFixtureIsValid(fixture);
 
             fixture.ApplyAttributesToTest(type);
-
-            if (fixture.RunState == RunState.Runnable && attr != null)
-            {
-                if (attr.Ignore)
-                {
-                    fixture.RunState = RunState.Ignored;
-                    fixture.Properties.Set(PropertyNames.SkipReason, attr.IgnoreReason);
-                }
-            }
 
             AddTestCases(type);
 
             return this.fixture;
         }
 
+        #endregion
+
+        #region Helper Methods
+
         /// <summary>
-		/// Method to add test cases to the newly constructed fixture.
-		/// </summary>
-		/// <param name="fixtureType"></param>
-		private void AddTestCases( Type fixtureType )
-		{
-			IList methods = fixtureType.GetMethods( 
-				BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static );
+        /// Method to add test cases to the newly constructed fixture.
+        /// </summary>
+        /// <param name="fixtureType"></param>
+        private void AddTestCases(Type fixtureType)
+        {
+            IList methods = fixtureType.GetMethods(
+                BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
 
-			foreach(MethodInfo method in methods)
-			{
-				Test test = BuildTestCase(method, this.fixture);
+            foreach (MethodInfo method in methods)
+            {
+                Test test = BuildTestCase(method, this.fixture);
 
-				if(test != null)
-				{
-					this.fixture.Add( test );
-				}
-			}
-		}
+                if (test != null)
+                {
+                    this.fixture.Add(test);
+                }
+            }
+        }
 
-		/// <summary>
-		/// Method to create a test case from a MethodInfo and add
-		/// it to the fixture being built. It first checks to see if
-		/// any global TestCaseBuilder addin wants to build the
-		/// test case. If not, it uses the internal builder
-		/// collection maintained by this fixture builder.
-		/// 
-		/// The default implementation has no test case builders.
-		/// Derived classes should add builders to the collection
-		/// in their constructor.
-		/// </summary>
-		/// <param name="method">The MethodInfo for which a test is to be created</param>
+        /// <summary>
+        /// Method to create a test case from a MethodInfo and add
+        /// it to the fixture being built. It first checks to see if
+        /// any global TestCaseBuilder addin wants to build the
+        /// test case. If not, it uses the internal builder
+        /// collection maintained by this fixture builder.
+        /// 
+        /// The default implementation has no test case builders.
+        /// Derived classes should add builders to the collection
+        /// in their constructor.
+        /// </summary>
+        /// <param name="method">The MethodInfo for which a test is to be created</param>
         /// <param name="suite">The test suite being built.</param>
-		/// <returns>A newly constructed Test</returns>
-		private Test BuildTestCase( MethodInfo method, TestSuite suite )
-		{
+        /// <returns>A newly constructed Test</returns>
+        private Test BuildTestCase(MethodInfo method, TestSuite suite)
+        {
             return testBuilder.CanBuildFrom(method, suite)
                 ? testBuilder.BuildFrom(method, suite)
                 : null;
-		}
+        }
 
         private void CheckTestFixtureIsValid(TestFixture fixture)
         {
             Type fixtureType = fixture.FixtureType;
-            string reason = null;
 
-            if (fixture.RunState == RunState.NotRunnable)
-                return;
-
-            if (!IsValidFixtureType(fixtureType, ref reason))
+            if (fixtureType.ContainsGenericParameters)
             {
                 fixture.RunState = RunState.NotRunnable;
-                fixture.Properties.Set(PropertyNames.SkipReason, reason);
+                fixture.Properties.Set(PropertyNames.SkipReason, NO_TYPE_ARGS_MSG);
             }
-            else if( !IsStaticClass( fixtureType ) )
+            else if (!IsStaticClass(fixtureType))
             {
                 object[] args = fixture.arguments;
 
@@ -265,7 +224,7 @@ namespace NUnit.Framework.Internal.Builders
                     foreach (object arg in args)
                         argTypes[index++] = arg.GetType();
                 }
-                
+
                 ConstructorInfo ctor = fixtureType.GetConstructor(argTypes);
 
                 if (ctor == null)
@@ -281,75 +240,6 @@ namespace NUnit.Framework.Internal.Builders
             return type.IsAbstract && type.IsSealed;
         }
 
-		/// <summary>
-        /// Check that the fixture type is valid. This method ensures that 
-        /// the type is not abstract and that there is no more than one of 
-        /// each setup or teardown method and that their signatures are correct.
-        /// </summary>
-        /// <param name="fixtureType">The type of the fixture to check</param>
-        /// <param name="reason">A message indicating why the fixture is invalid</param>
-        /// <returns>True if the fixture is valid, false if not</returns>
-        private bool IsValidFixtureType(Type fixtureType, ref string reason)
-        {
-            if ( fixtureType.ContainsGenericParameters )
-            {
-                reason = NO_TYPE_ARGS_MSG;
-                return false;
-            }
-
-            return true;
-        }
-
-        /// <summary>
-        /// Get TestFixtureAttributes following a somewhat obscure
-        /// set of rules to eliminate spurious duplication of fixtures.
-        /// 1. If there are any attributes with args, they are the only
-        ///    ones returned and those without args are ignored.
-        /// 2. No more than one attribute without args is ever returned.
-        /// </summary>
-        private TestFixtureAttribute[] GetTestFixtureAttributes(Type type)
-        {
-            TestFixtureAttribute[] attrs = 
-                (TestFixtureAttribute[])type.GetCustomAttributes(typeof(TestFixtureAttribute), true);
-
-            // Just return - no possibility of duplication
-            if (attrs.Length <= 1)
-                return attrs;
-
-            int withArgs = 0;
-            bool[] hasArgs = new bool[attrs.Length];
-
-            // Count and record those attrs with arguments            
-            for (int i = 0; i < attrs.Length; i++)
-            {
-                object[] args = attrs[i].Arguments;
-                object[] typeArgs = attrs[i].TypeArgs;
-
-                if (args.Length > 0 || typeArgs != null && typeArgs.Length > 0)
-                {
-                    withArgs++;
-                    hasArgs[i] = true;
-                }
-            }
-
-            // If all attributes have args, just return them
-            if (withArgs == attrs.Length)
-                return attrs;
-
-            // If all attributes are without args, just return the first found
-            if (withArgs == 0)
-                return new TestFixtureAttribute[] { attrs[0] };
-
-            // Some of each type, so extract those with args
-            int count = 0;
-            TestFixtureAttribute[] result = new TestFixtureAttribute[withArgs];
-            for (int i = 0; i < attrs.Length; i++)
-                if (hasArgs[i])
-                    result[count++] = attrs[i];
-
-            return result;
-        }
-
-		#endregion
-	}
+        #endregion
+    }
 }
