@@ -56,6 +56,9 @@
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Api\FrameworkController.cs" />
+    <Compile Include="Attributes\LevelOfParallelizationAttribute.cs" />
+    <Compile Include="Attributes\ParallelizableAttribute.cs" />
+    <Compile Include="Attributes\ParallelScope.cs" />
     <Compile Include="Constraints\EqualConstraintResult.cs" />
     <Compile Include="Constraints\IConstraint.cs" />
     <Compile Include="Constraints\Operators\AllOperator.cs" />
@@ -73,6 +76,7 @@
     <Compile Include="Interfaces\ITestCaseData.cs" />
     <Compile Include="Interfaces\ITestCaseSource.cs" />
     <Compile Include="Interfaces\ITestCaseSourceProvider.cs" />
+    <Compile Include="Interfaces\ITestExpectedResult.cs" />
     <Compile Include="Interfaces\ITestFilter.cs" />
     <Compile Include="Interfaces\ITestListener.cs" />
     <Compile Include="Interfaces\ITestResult.cs" />

@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2011 Charlie Poole
+// Copyright (c) 2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,17 +21,21 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System.Reflection;
-using NUnit.Framework;
+using System;
 
-// Information about this assembly is defined by the following attributes. 
-// Change them to the _values specific to your project.
-
-#if NUNITLITE
-[assembly: AssemblyTitle("NUnitLite Tests")]
-#else
-[assembly: AssemblyTitle("NUnit Framework Tests")]
-[assembly: Parallelizable(ParallelScope.Fixtures)]
-#endif
-[assembly: AssemblyDescription("")]
-[assembly: AssemblyCulture("")]
+namespace NUnit.Framework
+{
+    /// <summary>
+    /// LevelOfParallelizationAttribute is used to set the number of worker threads
+    /// that may be allocated by the framework for running tests.
+    /// </summary>
+    [AttributeUsage( AttributeTargets.Assembly, AllowMultiple=false, Inherited=false )]
+    public sealed class LevelOfParallelizationAttribute : PropertyAttribute
+    {
+        /// <summary>
+        /// Construct a LevelOfParallelizationAttribute.
+        /// </summary>
+        /// <param name="level">The number of worker threads to be created by the framework.</param>
+        public LevelOfParallelizationAttribute( int level ) : base( level ) {  }
+    }
+}

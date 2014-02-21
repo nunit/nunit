@@ -1,6 +1,6 @@
-// ***********************************************************************
-// Copyright (c) 2011 Charlie Poole
-//
+﻿// ***********************************************************************
+// Copyright (c) 2014 Rob Prouse
+// 
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
 // "Software"), to deal in the Software without restriction, including
@@ -21,17 +21,23 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System.Reflection;
-using NUnit.Framework;
+namespace NUnit.Framework.Interfaces
+{
+    /// <summary>
+    /// Attributes that implement ITestExpectedResult mark tests with
+    /// return values that are checked against the ExpectedResult if
+    /// HasExpectedResult is true.
+    /// </summary>
+    public interface ITestExpectedResult
+    {
+        /// <summary>
+        /// Gets the expected result of the test case
+        /// </summary>
+        object ExpectedResult { get; }
 
-// Information about this assembly is defined by the following attributes. 
-// Change them to the _values specific to your project.
-
-#if NUNITLITE
-[assembly: AssemblyTitle("NUnitLite Tests")]
-#else
-[assembly: AssemblyTitle("NUnit Framework Tests")]
-[assembly: Parallelizable(ParallelScope.Fixtures)]
-#endif
-[assembly: AssemblyDescription("")]
-[assembly: AssemblyCulture("")]
+        /// <summary>
+        /// Returns true if an expected result has been set
+        /// </summary>
+        bool HasExpectedResult { get; }
+    }
+}

@@ -31,75 +31,98 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public class PropertyNames
     {
+        #region Internal Properties
+
         /// <summary>
-        /// The Description of a test
+        /// The FriendlyName of the AppDomain in which the assembly is running
         /// </summary>
-        public static readonly string Description = "Description";
-        
+        public const string AppDomain = "_APPDOMAIN";
+
         /// <summary>
-        /// The reason a test was not run
+        /// The selected strategy for joining parameter data into test cases
         /// </summary>
-        public static readonly string SkipReason = "_SKIPREASON";
+        public const string JoinType = "_JOINTYPE";
+
+        /// <summary>
+        /// The process ID of the executing assembly
+        /// </summary>
+        public const string ProcessID = "_PID";
 
         /// <summary>
         /// The stack trace from any data provider that threw
         /// an exception.
         /// </summary>
-        public static readonly string ProviderStackTrace = "_PROVIDERSTACKTRACE";
+        public const string ProviderStackTrace = "_PROVIDERSTACKTRACE";
 
         /// <summary>
-        /// The culture to be set for a test
+        /// The reason a test was not run
         /// </summary>
-        public static readonly string SetCulture = "SetCulture";
+        public const string SkipReason = "_SKIPREASON";
 
-        /// <summary>
-        /// The UI culture to be set for a test
-        /// </summary>
-        public static readonly string SetUICulture = "SetUICulture";
+        #endregion
 
-        /// <summary>
-        /// The categories applying to a test
-        /// </summary>
-        public static readonly string Category = "Category";
-
-        /// <summary>
-        /// Indicates that the test should be run on a separate thread
-        /// </summary>
-        public static readonly string RequiresThread = "RequiresThread";
+        #region Standard Properties
 
         /// <summary>
         /// The ApartmentState required for running the test
         /// </summary>
-        public static readonly string ApartmentState = "ApartmentState";
+        public const string ApartmentState = "ApartmentState";
 
         /// <summary>
-        /// The timeout value for the test
+        /// The categories applying to a test
         /// </summary>
-        public static readonly string Timeout = "Timeout";
+        public const string Category = "Category";
 
         /// <summary>
-        /// The number of times the test should be repeated
+        /// The Description of a test
         /// </summary>
-        public static readonly string RepeatCount = "Repeat";
+        public const string Description = "Description";
+
+        /// <summary>
+        /// The number of threads to be used in running tests
+        /// </summary>
+        public const string LevelOfParallelization = "LevelOfParallelization";
 
         /// <summary>
         /// The maximum time in ms, above which the test is considered to have failed
         /// </summary>
-        public static readonly string MaxTime = "MaxTime";
+        public const string MaxTime = "MaxTime";
 
         /// <summary>
-        /// The selected strategy for joining parameter data into test cases
+        /// The ParallelScope associated with a test
         /// </summary>
-        public static readonly string JoinType = "_JOINTYPE";
+        public const string ParallelScope = "ParallelScope";
 
         /// <summary>
-        /// The process ID of the executing assembly
+        /// The number of times the test should be repeated
         /// </summary>
-        public static readonly string ProcessID = "_PID";
-        
+        public const string RepeatCount = "Repeat";
+
         /// <summary>
-        /// The FriendlyName of the AppDomain in which the assembly is running
+        /// Indicates that the test should be run on a separate thread
         /// </summary>
-        public static readonly string AppDomain = "_APPDOMAIN";
+        public const string RequiresThread = "RequiresThread";
+
+        /// <summary>
+        /// The culture to be set for a test
+        /// </summary>
+        public const string SetCulture = "SetCulture";
+
+        /// <summary>
+        /// The UI culture to be set for a test
+        /// </summary>
+        public const string SetUICulture = "SetUICulture";
+
+        /// <summary>
+        /// The timeout value for the test
+        /// </summary>
+        public const string Timeout = "Timeout";
+
+        /// <summary>
+        /// The test will be ignored until the given date
+        /// </summary>
+        public const string IgnoreUntilDate = "IgnoreUntilDate";
+
+        #endregion
     }
 }

@@ -188,6 +188,17 @@ namespace NUnit.Framework.Internal.Builders
                 //testMethod.FullName = prefix + "." + testMethod.Name;
             }
 
+            if (parms == null)
+            {
+                var attrs = method.GetCustomAttributes(typeof(TestAttribute), true);
+                if (attrs.Length > 0)
+                {
+                    var expectedResult = attrs[0] as ITestExpectedResult;
+                    if (expectedResult != null && expectedResult.HasExpectedResult)
+                        parms = new ParameterSet(expectedResult);
+                }
+            }
+
             if (CheckTestMethodSignature(testMethod, parms))
             {
                 if (parms == null)

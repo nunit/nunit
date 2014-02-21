@@ -130,6 +130,12 @@ namespace NUnit.Framework.Internal
 			TestAssert.IsNotRunnable( fixtureType, "TestMethodWithReturnType" );
 		}
 
+        [Test]
+        public void TestMethodWithExpectedReturnTypeIsRunnable()
+        {
+            TestAssert.IsRunnable(fixtureType, "TestMethodWithExpectedReturnType");
+        }
+
 		[Test]
 		public void TestMethodWithMultipleTestCasesExecutesMultipleTimes()
 		{

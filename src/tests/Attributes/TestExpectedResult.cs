@@ -1,6 +1,6 @@
-// ***********************************************************************
-// Copyright (c) 2011 Charlie Poole
-//
+﻿// ***********************************************************************
+// Copyright (c) 2014 Rob Prouse
+// 
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
 // "Software"), to deal in the Software without restriction, including
@@ -21,17 +21,41 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System.Reflection;
-using NUnit.Framework;
+namespace NUnit.Framework.Tests.Attributes
+{
+    [TestFixture]
+    public class TestExpectedResult
+    {
+        [Test(ExpectedResult = 4)]
+        public int CanExpectInt()
+        {
+            return 4;
+        }
 
-// Information about this assembly is defined by the following attributes. 
-// Change them to the _values specific to your project.
+        [Test(ExpectedResult = 4)]
+        public double CanExpectDouble()
+        {
+            return 4.0;
+        }
 
-#if NUNITLITE
-[assembly: AssemblyTitle("NUnitLite Tests")]
-#else
-[assembly: AssemblyTitle("NUnit Framework Tests")]
-[assembly: Parallelizable(ParallelScope.Fixtures)]
-#endif
-[assembly: AssemblyDescription("")]
-[assembly: AssemblyCulture("")]
+        [Test(ExpectedResult = "Hello")]
+        public string CanExpectString()
+        {
+            return "Hello";
+        }
+
+        [Test(ExpectedResult = null)]
+        public object ResultCanBeNull()
+        {
+            return null;
+        }
+
+        [Test(ExpectedResult = 1024)]
+        [TestCase(1, 1, ExpectedResult = 2)]
+        [TestCase(5, 3, ExpectedResult = 8)]
+        public int TestAttributeExpectedResultDoesNotOverrideTestCaseExpectedResult(int x, int y)
+        {
+            return x + y;
+        }
+    }
+}

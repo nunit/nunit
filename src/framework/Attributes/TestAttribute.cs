@@ -23,44 +23,40 @@
 
 namespace NUnit.Framework
 {
-	using System;
+    using System;
     using NUnit.Framework.Interfaces;
     using NUnit.Framework.Internal;
 
-	/// <summary>
-	/// Adding this attribute to a method within a <seealso cref="TestFixtureAttribute"/> 
-	/// class makes the method callable from the NUnit test runner. There is a property 
-	/// called Description which is optional which you can provide a more detailed test
-	/// description. This class cannot be inherited.
-	/// </summary>
-	/// 
-	/// <example>
-	/// [TestFixture]
-	/// public class Fixture
-	/// {
-	///   [Test]
-	///   public void MethodToTest()
-	///   {}
-	///   
-	///   [Test(Description = "more detailed description")]
-	///   publc void TestDescriptionMethod()
-	///   {}
-	/// }
-	/// </example>
-	/// 
-	[AttributeUsage(AttributeTargets.Method, AllowMultiple=false, Inherited=true)]
-	public class TestAttribute : NUnitAttribute, IApplyToTest, IImplyFixture
-	{
-		private string description;
+    /// <summary>
+    /// Adding this attribute to a method within a <seealso cref="TestFixtureAttribute"/> 
+    /// class makes the method callable from the NUnit test runner. There is a property 
+    /// called Description which is optional which you can provide a more detailed test
+    /// description. This class cannot be inherited.
+    /// </summary>
+    /// 
+    /// <example>
+    /// [TestFixture]
+    /// public class Fixture
+    /// {
+    ///   [Test]
+    ///   public void MethodToTest()
+    ///   {}
+    ///   
+    ///   [Test(Description = "more detailed description")]
+    ///   publc void TestDescriptionMethod()
+    ///   {}
+    /// }
+    /// </example>
+    /// 
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple=false, Inherited=true)]
+    public class TestAttribute : NUnitAttribute, IApplyToTest, ITestExpectedResult, IImplyFixture
+    {
+        private object _expectedResult;
 
-		/// <summary>
-		/// Descriptive text for this test
-		/// </summary>
-		public string Description
-		{
-			get { return description; }
-			set { description = value; }
-		}
+        /// <summary>
+        /// Descriptive text for this test
+        /// </summary>
+        public string Description { get; set; }
 
         #region IApplyToTest Members
 
@@ -70,9 +66,33 @@ namespace NUnit.Framework
         /// <param name="test">The test to modify</param>
         public void ApplyToTest(Test test)
         {
-            if (!test.Properties.ContainsKey(PropertyNames.Description) && description != null)
-                test.Properties.Set(PropertyNames.Description, description);
+            if (!test.Properties.ContainsKey(PropertyNames.Description) && Description != null)
+                test.Properties.Set(PropertyNames.Description, Description);
+
         }
+
+        #endregion
+
+        #region ITestExpectedResult Members
+
+        /// <summary>
+        /// Gets or sets the expected result.
+        /// </summary>
+        /// <value>The result.</value>
+        public object ExpectedResult
+        {
+            get { return _expectedResult; }
+            set
+            {
+                _expectedResult = value;
+                HasExpectedResult = true;
+            }
+        }
+
+        /// <summary>
+        /// Returns true if an expected result has been set
+        /// </summary>
+        public bool HasExpectedResult { get; private set; }
 
         #endregion
     }

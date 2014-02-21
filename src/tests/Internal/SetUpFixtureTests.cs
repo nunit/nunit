@@ -42,6 +42,8 @@ namespace NUnit.Framework.Internal
             IDictionary options = new Hashtable();
             if (nameSpace != null)
                 options["LOAD"] = new string[] { nameSpace };
+            // No need for the overhead of parallel execution here
+            options["NumberOfTestWorkers"] = 0;
 
             if (runner.Load(testAssembly, options))
                 return runner.Run(TestListener.NULL, filter);
@@ -60,7 +62,7 @@ namespace NUnit.Framework.Internal
             string nameSpace = "NUnit.TestData.SetupFixture.Namespace1";
             IDictionary options = new Hashtable();
             options["LOAD"] = new string[] { nameSpace };
-			ITest suite = builder.Build( testAssembly, options );
+            ITest suite = builder.Build( testAssembly, options );
 
             Assert.IsNotNull(suite);
 

@@ -80,9 +80,12 @@
     <Compile Include="Attributes\ExplicitAttribute.cs" />
     <Compile Include="Attributes\IgnoreAttribute.cs" />
     <Compile Include="Attributes\IncludeExcludeAttribute.cs" />
+    <Compile Include="Attributes\LevelOfParallelizationAttribute.cs" />
     <Compile Include="Attributes\MaxTimeAttribute.cs" />
     <Compile Include="Attributes\NUnitAttribute.cs" />
     <Compile Include="Attributes\PairwiseAttribute.cs" />
+    <Compile Include="Attributes\ParallelizableAttribute.cs" />
+    <Compile Include="Attributes\ParallelScope.cs" />
     <Compile Include="Attributes\PlatformAttribute.cs" />
     <Compile Include="Attributes\PropertyAttribute.cs" />
     <Compile Include="Attributes\RandomAttribute.cs" />
@@ -225,6 +228,7 @@
     <Compile Include="Interfaces\ITestCaseData.cs" />
     <Compile Include="Interfaces\ITestCaseProvider.cs" />
     <Compile Include="Interfaces\ITestCaseSource.cs" />
+    <Compile Include="Interfaces\ITestExpectedResult.cs" />
     <Compile Include="Interfaces\ITestFilter.cs" />
     <Compile Include="Interfaces\ITestListener.cs" />
     <Compile Include="Interfaces\ITestResult.cs" />
