@@ -56,8 +56,15 @@
   <PropertyGroup Condition="'$(RuntimeConfig)' == ''">
     <RuntimeConfig>$(DefaultFramework)</RuntimeConfig>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(RuntimeConfig)' == 'NET4.5'">
-    <ProjectSuffix>4.5</ProjectSuffix>
+  <PropertyGroup >
+    <ProjectSuffix Condition="'$(RuntimeConfig)'=='NET4.5'">4.5</ProjectSuffix>
+    <ProjectSuffix Condition="'$(RuntimeConfig)'=='NET4.0'">4.0</ProjectSuffix>
+    <ProjectSuffix Condition="'$(RuntimeConfig)'=='NET3.5'">3.5</ProjectSuffix>
+    <ProjectSuffix Condition="'$(RuntimeConfig)'=='NET2.0'">2.0</ProjectSuffix>
+    <ProjectSuffix Condition="'$(RuntimeConfig)'=='mono4.5'">4.5</ProjectSuffix>
+    <ProjectSuffix Condition="'$(RuntimeConfig)'=='mono4.0'">4.0</ProjectSuffix>
+    <ProjectSuffix Condition="'$(RuntimeConfig)'=='mono3.5'">3.5</ProjectSuffix>
+    <ProjectSuffix Condition="'$(RuntimeConfig)'=='mono2.0'">2.0</ProjectSuffix>
   </PropertyGroup>
   <PropertyGroup>
     <BuildConfigDir>$(ProjectBuildDir)\$(Configuration)</BuildConfigDir>
@@ -80,6 +87,7 @@
     <Message Text="  Configuration: $(Configuration)"></Message>
     <Message Text="  Runtime:       $(RuntimeConfig)"></Message>
     <Message Text="  Build dir:     $(CurrentBuildDir)"></Message>
+    <Message Text="  Project suffix:$(ProjectSuffix)"></Message>
     <Message Text=""></Message>
     <Message Text="Packaging"></Message>
     <Message Text="  Name:          $(PackageName)"></Message>
@@ -90,6 +98,7 @@
     <Message Text="    Samples:     $(PackageSamplesDir)"></Message>
     <Message Text="    Source:      $(PackageSourceDir)"></Message>
   </Target>
+  
   <Target Name="Clean">
     <RemoveDir Directories="$(CurrentBuildDir)">
     </RemoveDir>
