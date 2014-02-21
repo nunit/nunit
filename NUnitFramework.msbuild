@@ -56,7 +56,7 @@
   <PropertyGroup Condition="'$(RuntimeConfig)' == ''">
     <RuntimeConfig>$(DefaultFramework)</RuntimeConfig>
   </PropertyGroup>
-  <PropertyGroup >
+  <PropertyGroup>
     <ProjectSuffix Condition="'$(RuntimeConfig)'=='NET4.5'">4.5</ProjectSuffix>
     <ProjectSuffix Condition="'$(RuntimeConfig)'=='NET4.0'">4.0</ProjectSuffix>
     <ProjectSuffix Condition="'$(RuntimeConfig)'=='NET3.5'">3.5</ProjectSuffix>
@@ -113,32 +113,34 @@
     <CallTarget Targets="BuildNUnitLite" />
   </Target>
   <Target Name="BuildNUnit">
-    <MSBuild Targets="Rebuild" Projects="$(ProjectSrcDir)\framework\nunit.framework-$(ProjectSuffix).csproj"
-             Properties="Configuration =$(Configuration);OutputPath =$(CurrentBuildDir)">
+    <MSBuild Targets="Rebuild" Projects="$(ProjectSrcDir)\framework\nunit.framework-$(ProjectSuffix).csproj" Properties="Configuration =$(Configuration);OutputPath =$(CurrentBuildDir)">
     </MSBuild>
-    <MSBuild Targets="Rebuild" Projects="$(ProjectSrcDir)\testdata\nunit.testdata-$(ProjectSuffix).csproj"
-             Properties="Configuration =$(Configuration);OutputPath =$(CurrentBuildDir)">
+    <MSBuild Targets="Rebuild" Projects="$(ProjectSrcDir)\testdata\nunit.testdata-$(ProjectSuffix).csproj" Properties="Configuration =$(Configuration);OutputPath =$(CurrentBuildDir)">
     </MSBuild>
-    <MSBuild Targets="Rebuild" Projects="$(ProjectSrcDir)\tests\nunit.framework.tests-$(ProjectSuffix).csproj"
-             Properties="Configuration =$(Configuration);OutputPath =$(CurrentBuildDir)">
+    <MSBuild Targets="Rebuild" Projects="$(ProjectSrcDir)\tests\nunit.framework.tests-$(ProjectSuffix).csproj" Properties="Configuration =$(Configuration);OutputPath =$(CurrentBuildDir)">
     </MSBuild>
-    <MSBuild Targets="Rebuild" Projects="$(ProjectSrcDir)\harness\test-harness-$(ProjectSuffix).csproj"
-             Properties="Configuration =$(Configuration);OutputPath =$(CurrentBuildDir)">
+    <MSBuild Targets="Rebuild" Projects="$(ProjectSrcDir)\harness\test-harness-$(ProjectSuffix).csproj" Properties="Configuration =$(Configuration);OutputPath =$(CurrentBuildDir)">
     </MSBuild>
-    <MSBuild Targets="Rebuild" Projects="$(ProjectSrcDir)\mock-assembly\mock-assembly-$(ProjectSuffix).csproj"
-             Properties="Configuration =$(Configuration);OutputPath =$(CurrentBuildDir)">
+    <MSBuild Targets="Rebuild" Projects="$(ProjectSrcDir)\mock-assembly\mock-assembly-$(ProjectSuffix).csproj" Properties="Configuration =$(Configuration);OutputPath =$(CurrentBuildDir)">
     </MSBuild>
   </Target>
   <Target Name="BuildNUnitLite">
-    <MSBuild Targets="Rebuild" Projects="$(ProjectSrcDir)\framework\nunitlite-$(ProjectSuffix).csproj"
-             Properties="Configuration =$(Configuration);OutputPath =$(CurrentBuildDir)">
+    <MSBuild Targets="Rebuild" Projects="$(ProjectSrcDir)\framework\nunitlite-$(ProjectSuffix).csproj" Properties="Configuration =$(Configuration);OutputPath =$(CurrentBuildDir)">
     </MSBuild>
-    <MSBuild Targets="Rebuild" Projects="$(ProjectSrcDir)\testdata\nunitlite.testdata-$(ProjectSuffix).csproj"
-             Properties="Configuration =$(Configuration);OutputPath =$(CurrentBuildDir)">
+    <MSBuild Targets="Rebuild" Projects="$(ProjectSrcDir)\testdata\nunitlite.testdata-$(ProjectSuffix).csproj" Properties="Configuration =$(Configuration);OutputPath =$(CurrentBuildDir)">
     </MSBuild>
-    <MSBuild Targets="Rebuild" Projects="$(ProjectSrcDir)\tests\nunitlite.tests-$(ProjectSuffix).csproj"
-             Properties="Configuration =$(Configuration);OutputPath =$(CurrentBuildDir)">
+    <MSBuild Targets="Rebuild" Projects="$(ProjectSrcDir)\tests\nunitlite.tests-$(ProjectSuffix).csproj" Properties="Configuration =$(Configuration);OutputPath =$(CurrentBuildDir)">
     </MSBuild>
   </Target>
-  <Target Name="Test"></Target>
+  <Target Name="Test">
+    <CallTarget Targets="NUnitTest"></CallTarget>
+    <CallTarget Targets="NUnitLiteTest"></CallTarget>
+  </Target>
+  <Target Name="NUnitTest">
+    <Exec WorkingDirectory="$(CurrentBuildDir)" Command="$(CurrentBuildDir)\$(TestRunnerProgram) $(TestRunnerArgs)">
+    </Exec>
+  </Target>
+  <Target Name="NUnitLiteTest">
+    <Exec WorkingDirectory="$(CurrentBuildDir)" Command="$(CurrentBuildDir)\nunitlite.tests.exe"></Exec>
+  </Target>
 </Project>
