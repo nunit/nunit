@@ -140,4 +140,5 @@
              Properties="Configuration =$(Configuration);OutputPath =$(CurrentBuildDir)">
     </MSBuild>
   </Target>
+  <Target Name="Test"></Target>
 </Project>
