@@ -118,6 +118,11 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public const string Timeout = "Timeout";
 
+        /// <summary>
+        /// The test will be ignored until the given date
+        /// </summary>
+        public const string IgnoreUntilDate = "IgnoreUntilDate";
+
         #endregion
     }
 }
