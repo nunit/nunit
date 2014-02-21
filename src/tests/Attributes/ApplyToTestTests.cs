@@ -257,17 +257,6 @@ namespace NUnit.Framework.Attributes
 
         #endregion
 
-        #region RequiredAddinAttribute
-
-        [Test]
-        public void RequiredAddinAttributeSkipsTest()
-        {
-            new RequiredAddinAttribute("JUNK").ApplyToTest(test);
-            Assert.That(test.RunState, Is.EqualTo(RunState.NotRunnable));
-        }
-
-        #endregion
-
         #region RequiresMTAAttribute
 
         [Test]

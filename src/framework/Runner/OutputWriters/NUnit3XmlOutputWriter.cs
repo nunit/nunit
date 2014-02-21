@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Xml;
@@ -36,13 +37,7 @@ namespace NUnitLite.Runner
     /// </summary>
     public class NUnit3XmlOutputWriter : OutputWriter
     {
-        private DateTime runStartTime;
         private XmlWriter xmlWriter;
-
-        public NUnit3XmlOutputWriter(DateTime runStartTime)
-        {
-            this.runStartTime = runStartTime;
-        }
 
         /// <summary>
         /// Writes the test result to the specified TextWriter
@@ -89,7 +84,9 @@ namespace NUnitLite.Runner
             if (result.ResultState.Label != string.Empty) // && result.ResultState.Label != ResultState.Status.ToString())
                 xmlWriter.WriteAttributeString("label", result.ResultState.Label);
 
-            xmlWriter.WriteAttributeString("time", result.Duration.ToString());
+            xmlWriter.WriteAttributeString("start-time", result.StartTime.ToString("u"));
+            xmlWriter.WriteAttributeString("end-time", result.EndTime.ToString("u"));
+            xmlWriter.WriteAttributeString("duration", result.Duration.TotalSeconds.ToString("0.000000", NumberFormatInfo.InvariantInfo));
 
             xmlWriter.WriteAttributeString("total", (result.PassCount + result.FailCount + result.SkipCount + result.InconclusiveCount).ToString());
             xmlWriter.WriteAttributeString("passed", result.PassCount.ToString());
@@ -97,9 +94,6 @@ namespace NUnitLite.Runner
             xmlWriter.WriteAttributeString("inconclusive", result.InconclusiveCount.ToString());
             xmlWriter.WriteAttributeString("skipped", result.SkipCount.ToString());
             xmlWriter.WriteAttributeString("asserts", result.AssertCount.ToString());
-
-            xmlWriter.WriteAttributeString("run-date", XmlConvert.ToString(runStartTime, "yyyy-MM-dd"));
-            xmlWriter.WriteAttributeString("start-time", XmlConvert.ToString(runStartTime, "HH:mm:ss"));
 
             xmlWriter.WriteAttributeString("random-seed", Randomizer.InitialSeed.ToString());
 

@@ -34,7 +34,6 @@ namespace NUnit.Framework.TestHarness
     public class NUnit2TestResultWriter
     {
         private XmlWriter xmlWriter;
-        private DateTime startTime;
 
         private static Dictionary<string, string> resultStates = new Dictionary<string, string>();
 
@@ -48,11 +47,6 @@ namespace NUnit.Framework.TestHarness
             resultStates["Skipped"] = "Skipped";
             resultStates["Skipped:Ignored"] = "Ignored";
             resultStates["Skipped:Invalid"] = "NotRunnable";
-        }
-
-        public NUnit2TestResultWriter(DateTime startTime)
-        {
-            this.startTime = startTime;
         }
 
         public void WriteResultFile(XmlNode result, string outputPath)
@@ -104,8 +98,9 @@ namespace NUnit.Framework.TestHarness
             xmlWriter.WriteAttributeString("skipped", summaryResults.Skipped.ToString());
             xmlWriter.WriteAttributeString("invalid", summaryResults.NotRunnable.ToString());
 
-            xmlWriter.WriteAttributeString("date", XmlHelper.GetAttribute(result, "run-date"));
-            xmlWriter.WriteAttributeString("time", XmlHelper.GetAttribute(result, "start-time"));
+            DateTime start = XmlHelper.GetAttribute(result, "start-time", DateTime.UtcNow);
+            xmlWriter.WriteAttributeString("date", start.ToString("yyyy-MM-dd"));
+            xmlWriter.WriteAttributeString("time", start.ToString("HH:mm:ss"));
             WriteEnvironment();
             WriteCultureInfo();
         }
@@ -203,8 +198,7 @@ namespace NUnit.Framework.TestHarness
             string label = XmlHelper.GetAttribute(result, "label");
             string executed = resultState == "Skipped" ? "False" : "True";
             string success = resultState == "Passed" ? "True" : "False";
-            var seconds = TimeSpan.Parse(XmlHelper.GetAttribute(result, "time")).TotalSeconds;
-            string time = seconds.ToString("#####0.000", NumberFormatInfo.InvariantInfo);
+            double duration = XmlHelper.GetAttribute(result, "duration", 0.0);
             string asserts = XmlHelper.GetAttribute(result, "asserts");
 
             if (label != null && label != string.Empty)
@@ -217,7 +211,7 @@ namespace NUnit.Framework.TestHarness
             if (executed == "True")
             {
                 xmlWriter.WriteAttributeString("success", success);
-                xmlWriter.WriteAttributeString("time", time);
+                xmlWriter.WriteAttributeString("time", duration.ToString("0.000", NumberFormatInfo.InvariantInfo));
                 xmlWriter.WriteAttributeString("asserts", asserts);
             }
         }

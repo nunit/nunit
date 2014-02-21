@@ -37,13 +37,6 @@ namespace NUnit.Framework.Internal
 	{
         private LegacySuiteBuilder builder = new LegacySuiteBuilder();
 
-        [TestFixtureSetUp]
-        public void InitializeBuilders()
-        {
-            if (!CoreExtensions.Host.Initialized)
-                CoreExtensions.Host.Initialize();
-        }
-        
         [Test]
         public void SuiteReturningTestSuite()
         {

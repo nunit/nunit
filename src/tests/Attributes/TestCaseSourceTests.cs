@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System.Collections;
+using System.Collections.Generic;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.TestData.TestCaseSourceAttributeFixture;
@@ -100,11 +101,57 @@ namespace NUnit.Framework.Attributes
             Assert.AreEqual("DataSourceClass", source);
         }
 
+        [Test, TestCaseSource(typeof(DataSourceClass), null, "foo")]
+        public void SourceCanBeInstanceOfIEnumerableWithParameters(string source)
+        {
+            Assert.AreEqual("foo", source);
+        }
+
         class DataSourceClass : IEnumerable
         {
+            public DataSourceClass()
+            {
+            }
+
+            private readonly string enumeratorOverride;
+
+            public DataSourceClass(string enumeratorOverride)
+            {
+                this.enumeratorOverride = enumeratorOverride;
+            }
+
             public IEnumerator GetEnumerator()
             {
-                yield return "DataSourceClass";
+                yield return this.enumeratorOverride ?? "DataSourceClass";
+            }
+        }
+
+        [Test, TestCaseSource(typeof(DataSourceClassWithMethod), "GetStuff", "foo")]
+        public void SourceCanHaveMethodProducingIEnumerableWithParameters(string source)
+        {
+            string[] items = new[] { "foo1", "foo2", "foo3" };
+            bool found = false;
+            for (int i = 0; i < items.Length; i++)
+            {
+                if (items[i] == source)
+                {
+                    found = true;
+                }
+            }
+            Assert.IsTrue(found);
+        }
+
+        class DataSourceClassWithMethod
+        {
+            private readonly string enumeratorPrepend;
+
+            public DataSourceClassWithMethod(string enumeratorPrepend)
+            {
+                this.enumeratorPrepend = enumeratorPrepend;
+            }
+            public IEnumerable<string> GetStuff()
+            {
+                return new[] { enumeratorPrepend + "1", enumeratorPrepend + "2", enumeratorPrepend + "3" };
             }
         }
 

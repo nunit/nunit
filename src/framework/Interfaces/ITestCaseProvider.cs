@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2007 Charlie Poole
+// Copyright (c) 2008 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,38 +21,30 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NUNITLITE
-using System;
+using System.Reflection;
 
-namespace NUnit.Framework.Extensibility
+namespace NUnit.Framework.Interfaces
 {
-	/// <summary>
-	/// The IExtensionHost interface is implemented by each
-	/// of NUnit's Extension hosts. Currently, there is
-	/// only one host, which resides in the test domain.
-	/// </summary>
-	public interface IExtensionHost
-	{
+    /// <summary>
+    /// The ITestCaseProvider interface is used by extensions
+    /// that provide data for parameterized tests, along with
+    /// certain flags and other indicators used in the test.
+    /// </summary>
+    public interface ITestCaseProvider
+    {
         /// <summary>
-        /// Get a list of the ExtensionPoints provided by this host.
+        /// Determine whether any test cases are available for a parameterized method.
         /// </summary>
-        IExtensionPoint[] ExtensionPoints
-        {
-            get;
-        }
+        /// <param name="method">A MethodInfo representing a parameterized test</param>
+        /// <returns>True if any cases are available, otherwise false.</returns>
+        bool HasTestCasesFor(MethodInfo method);
 
         /// <summary>
-		/// Return an extension point by name, if present
-		/// </summary>
-		/// <param name="name">The name of the extension point</param>
-		/// <returns>The extension point, if found, otherwise null</returns>
-		IExtensionPoint GetExtensionPoint( string name );
-
-        /// <summary>
-        /// Gets the ExtensionTypes supported by this host
+        /// Return an IEnumerable providing test cases for use in
+        /// running a paramterized test.
         /// </summary>
-        /// <returns>An enum indicating the ExtensionTypes supported</returns>
-        ExtensionType ExtensionTypes { get; }
-	}
+        /// <param name="method"></param>
+        /// <returns></returns>
+        System.Collections.Generic.IEnumerable<ITestCaseData> GetTestCasesFor(MethodInfo method);
+    }
 }
-#endif

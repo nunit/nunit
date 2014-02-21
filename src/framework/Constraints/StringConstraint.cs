@@ -45,7 +45,7 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Description of this constraint
         /// </summary>
-        protected string description;
+        protected string descriptionText;
 
         /// <summary>
         /// The Description of what this constraint tests, for
@@ -55,7 +55,7 @@ namespace NUnit.Framework.Constraints
         {
             get 
             { 
-                string desc = string.Format("{0} {1}", description, MsgUtils.FormatValue(expected));
+                string desc = string.Format("{0} {1}", descriptionText, MsgUtils.FormatValue(expected));
                 if (caseInsensitive)
                     desc += ", ignoring case";
                 return desc;

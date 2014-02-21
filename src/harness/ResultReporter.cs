@@ -75,7 +75,11 @@ namespace NUnit.Framework.TestHarness
                 "     Not run: {0}, Invalid: {1}, Ignored: {2}, Skipped: {3}",
                 summary.TestsNotRun, summary.NotRunnable, summary.Ignored, summary.Skipped);
             Console.WriteLine(
-                "        Time: {0} seconds", summary.Time.TotalSeconds);
+                "  Start time: {0}", summary.StartTime.ToString("u"));
+            Console.WriteLine(
+                "    End time: {0}", summary.EndTime.ToString("u"));
+            Console.WriteLine(
+                "    Duration: {0} seconds", summary.Duration.ToString("0.000"));
             Console.WriteLine();
         }
 

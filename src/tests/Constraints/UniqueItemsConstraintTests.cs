@@ -21,7 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using NUnit.Framework.Internal;
+using System.Collections;
+using NUnit.TestUtilities.Collections;
 
 namespace NUnit.Framework.Constraints
 {
@@ -38,5 +39,19 @@ namespace NUnit.Framework.Constraints
 
         internal object[] SuccessData = new object[] { new int[] { 1, 3, 17, -2, 34 }, new object[0] };
         internal object[] FailureData = new object[] { new object[] { new int[] { 1, 3, 17, 3, 34 }, "< 1, 3, 17, 3, 34 >" } };
+
+        [Test]
+        [TestCaseSource( "IgnoreCaseData" )]
+        public void HonorsIgnoreCase( IEnumerable actual )
+        {
+            Assert.That( new UniqueItemsConstraint().IgnoreCase.ApplyTo( actual ).IsSuccess, Is.False, "{0} should be unique ignoring case", actual );
+        }
+
+        private static readonly object[] IgnoreCaseData =
+        {
+            new object[] {new SimpleObjectCollection("x", "y", "z", "Z")},
+            new object[] {new[] {'A', 'B', 'C', 'c'}},
+            new object[] {new[] {"a", "b", "c", "C"}}
+        };
     }
 }

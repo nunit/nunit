@@ -23,6 +23,9 @@
 
 namespace NUnit.Framework.Constraints
 {
+    /// <summary>
+    /// Interface for all constraints
+    /// </summary>
     public interface IConstraint : IResolveConstraint
     {
         #region Properties

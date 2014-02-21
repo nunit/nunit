@@ -80,6 +80,11 @@ namespace NUnit.Framework.Internal
             return sb.ToString();
         }
 
+        /// <summary>
+        /// Gets the stack trace of the exception.
+        /// </summary>
+        /// <param name="exception">The exception.</param>
+        /// <returns>A string representation of the stack trace.</returns>
         public static string GetStackTrace(Exception exception)
         {
             try

@@ -36,13 +36,7 @@ namespace NUnit.Framework.TestHarness
     /// </summary>
     public class NUnit3TestResultWriter
     {
-        private DateTime startTime;
         private XmlWriter xmlWriter;
-
-        public NUnit3TestResultWriter(DateTime startTime)
-        {
-            this.startTime = startTime;
-        }
 
         public void WriteResultFile(XmlNode resultNode, string outputPath)
         {
@@ -92,7 +86,9 @@ namespace NUnit.Framework.TestHarness
             if (label != null)
                 xmlWriter.WriteAttributeString("label", label);
 
-            xmlWriter.WriteAttributeString("time", XmlHelper.GetAttribute(resultNode, "time"));
+            xmlWriter.WriteAttributeString("start-time", XmlHelper.GetAttribute(resultNode, "start-time"));
+            xmlWriter.WriteAttributeString("end-time", XmlHelper.GetAttribute(resultNode, "end-time"));
+            xmlWriter.WriteAttributeString("duration", XmlHelper.GetAttribute(resultNode, "duration"));
 
             xmlWriter.WriteAttributeString("total", XmlHelper.GetAttribute(resultNode, "total"));
             xmlWriter.WriteAttributeString("passed", XmlHelper.GetAttribute(resultNode, "passed"));
@@ -101,8 +97,6 @@ namespace NUnit.Framework.TestHarness
             xmlWriter.WriteAttributeString("skipped", XmlHelper.GetAttribute(resultNode, "skipped"));
             xmlWriter.WriteAttributeString("asserts", XmlHelper.GetAttribute(resultNode, "asserts"));
 
-            xmlWriter.WriteAttributeString("run-date", XmlConvert.ToString(startTime, "yyyy-MM-dd"));
-            xmlWriter.WriteAttributeString("start-time", XmlConvert.ToString(startTime, "HH:mm:ss"));
 
             xmlWriter.WriteAttributeString("random-seed", Randomizer.InitialSeed.ToString());
 

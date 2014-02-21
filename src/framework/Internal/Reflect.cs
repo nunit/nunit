@@ -97,7 +97,6 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="fixtureType">The type to examine</param>
         /// <param name="attributeType">The attribute Type to look for</param>
-        /// <param name="inherit">Specifies whether to search the fixture type inheritance chain</param>
         /// <returns>True if found, otherwise false</returns>
         public static bool HasMethodWithAttribute(Type fixtureType, Type attributeType)
         {

@@ -56,26 +56,36 @@ namespace NUnit.Framework.Internal
             this.writer = writer;
         }
 
+        /// <summary>
+        /// Returns the character encoding in which the output is written.
+        /// </summary>
+        /// <returns>The character encoding in which the output is written.</returns>
         public override System.Text.Encoding Encoding
         {
             get { return writer.Encoding; }
         }
 
+        /// <summary>
+        /// Writes a character to the text string or stream.
+        /// </summary>
+        /// <param name="value">The character to write to the text stream.</param>
         public override void Write(char value)
         {
             writer.Write(value);
         }
 
-        public override void Write(string value)
-        {
-            base.Write(value);
-        }
-
-        public override void WriteLine(string value)
+        /// <summary>
+        /// Writes a string followed by a line terminator to the text string or stream.
+        /// </summary>
+        /// <param name="value">The string to write. If <paramref name="value" /> is null, only the line terminator is written.</param>
+	    public override void WriteLine(string value)
         {
             writer.WriteLine(value);
         }
 
+        /// <summary>
+        /// Closes the current writer and releases any system resources associated with the writer.
+        /// </summary>
         public override void Close()
         {
             if (writer != null)
@@ -86,6 +96,9 @@ namespace NUnit.Framework.Internal
             }
         }
 
+        /// <summary>
+        /// Clears all buffers for the current writer and causes any buffered data to be written to the underlying device.
+        /// </summary>
         public override void Flush()
         {
             if ( writer != null )

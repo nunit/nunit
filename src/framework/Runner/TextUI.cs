@@ -203,8 +203,6 @@ namespace NUnitLite.Runner
 
         private void RunTests(ITestFilter filter)
         {
-            DateTime startTime = DateTime.Now;
-
             ITestResult result = runner.Run(this, filter);
             new ResultReporter(result, writer).ReportResults();
 
@@ -216,9 +214,9 @@ namespace NUnitLite.Runner
                     resultFile = "TestResult.xml";
 
                 if (resultFormat == "nunit2")
-                    new NUnit2XmlOutputWriter(startTime).WriteResultFile(result, resultFile);
+                    new NUnit2XmlOutputWriter().WriteResultFile(result, resultFile);
                 else
-                    new NUnit3XmlOutputWriter(startTime).WriteResultFile(result, resultFile);
+                    new NUnit3XmlOutputWriter().WriteResultFile(result, resultFile);
                 Console.WriteLine();
                 Console.WriteLine("Results saved as {0}.", resultFile);
             }
@@ -245,6 +243,10 @@ namespace NUnitLite.Runner
             Console.WriteLine("Test info saved as {0}.", listFile);
         }
 
+        /// <summary>
+        /// Writes the header.
+        /// </summary>
+        /// <param name="writer">The writer.</param>
         public static void WriteHeader(TextWriter writer)
         {
             Assembly executingAssembly = Assembly.GetExecutingAssembly();
@@ -284,6 +286,10 @@ namespace NUnitLite.Runner
             writer.WriteLine();
         }
 
+        /// <summary>
+        /// Writes the runtime environment.
+        /// </summary>
+        /// <param name="writer">The writer.</param>
         public static void WriteRuntimeEnvironment(TextWriter writer)
         {
             string clrPlatform = Type.GetType("Mono.Runtime", false) == null ? ".NET" : "Mono";
@@ -298,16 +304,28 @@ namespace NUnitLite.Runner
 
         #region ITestListener Members
 
+        /// <summary>
+        /// Called when a test has just started
+        /// </summary>
+        /// <param name="test">The test that is starting</param>
         public void TestStarted(ITest test)
         {
             if (commandLineOptions.ShowLabels)
                 writer.WriteLine("***** {0}", test.Name);
         }
 
+        /// <summary>
+        /// Called when a test has finished
+        /// </summary>
+        /// <param name="result">The result of the test</param>
         public void TestFinished(ITestResult result)
         {
         }
 
+        /// <summary>
+        /// Called when the test creates text output.
+        /// </summary>
+        /// <param name="testOutput">A console message</param>
         public void TestOutput(TestOutput testOutput)
         {
         }

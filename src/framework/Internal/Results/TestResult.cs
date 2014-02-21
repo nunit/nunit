@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Globalization;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal
@@ -32,17 +33,13 @@ namespace NUnit.Framework.Internal
     public abstract class TestResult : ITestResult
 	{
 		#region Fields
+
 		/// <summary>
 		/// Indicates the result of the test
 		/// </summary>
         [CLSCompliant(false)]
         protected ResultState resultState;
-
-		/// <summary>
-		/// The elapsed time for executing this test
-		/// </summary>
-		private TimeSpan time = TimeSpan.Zero;
-
+        
 		/// <summary>
 		/// The test that this result pertains to
 		/// </summary>
@@ -125,11 +122,17 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Gets or sets the elapsed time for running the test
         /// </summary>
-        public TimeSpan Duration
-        {
-            get { return time; }
-            set { time = value; }
-        }
+        public TimeSpan Duration { get; set; }
+
+        /// <summary>
+        /// Gets or sets the time the test started running.
+        /// </summary>
+        public DateTime StartTime { get; set; }
+
+        /// <summary>
+        /// Gets or sets the time the test finished running.
+        /// </summary>
+        public DateTime EndTime { get; set; }
 
         /// <summary>
         /// Gets the message associated with a test
@@ -242,7 +245,9 @@ namespace NUnit.Framework.Internal
             if (ResultState.Label != string.Empty) // && ResultState.Label != ResultState.Status.ToString())
                 thisNode.AddAttribute("label", ResultState.Label);
 
-            thisNode.AddAttribute("time", this.Duration.ToString());
+            thisNode.AddAttribute("start-time", StartTime.ToString("u"));
+            thisNode.AddAttribute("end-time", EndTime.ToString("u"));
+            thisNode.AddAttribute("duration", Duration.TotalSeconds.ToString("0.000000", NumberFormatInfo.InvariantInfo));
 
             if (this.test is TestSuite)
             {

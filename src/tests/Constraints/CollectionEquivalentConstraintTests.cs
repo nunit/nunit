@@ -104,6 +104,45 @@ namespace NUnit.Framework.Constraints
         }
 
         [Test]
+        [TestCaseSource(typeof(IgnoreCaseDataProvider), "TestCases")]
+        public void HonorsIgnoreCase( IEnumerable expected, IEnumerable actual )
+        {
+            var constraint = new CollectionEquivalentConstraint( expected ).IgnoreCase;
+            var constraintResult = constraint.ApplyTo( actual );
+            if ( !constraintResult.IsSuccess )
+            {
+                MessageWriter writer = new TextMessageWriter();
+                constraintResult.WriteMessageTo( writer );
+                Assert.Fail( writer.ToString() );
+            }
+        }
+
+        public class IgnoreCaseDataProvider
+        {
+            public static IEnumerable TestCases
+            {
+                get
+                {
+                    yield return new TestCaseData(new SimpleObjectCollection("x", "y", "z"), new SimpleObjectCollection("z", "Y", "X"));
+                    yield return new TestCaseData(new[] {'A', 'B', 'C'}, new object[] {'a', 'c', 'b'});
+                    yield return new TestCaseData(new[] {"a", "b", "c"}, new object[] {"A", "C", "B"});
+                    yield return new TestCaseData(new Dictionary<int, string> {{2, "b"}, {1, "a"}}, new Dictionary<int, string> {{1, "A"}, {2, "b"}});
+                    yield return new TestCaseData(new Dictionary<int, char> {{1, 'A'}}, new Dictionary<int, char> {{1, 'a'}});
+                    yield return new TestCaseData(new Dictionary<string, int> {{ "b", 2 }, { "a", 1 } }, new Dictionary<string, int> {{"A", 1}, {"b", 2}});
+                    yield return new TestCaseData(new Dictionary<char, int> {{'A', 1 }}, new Dictionary<char, int> {{'a', 1}});
+                    
+#if !NETCF && !SILVERLIGHT
+                    yield return new TestCaseData(new Hashtable {{1, "a"}, {2, "b"}}, new Hashtable {{1, "A"},{2, "B"}});
+                    yield return new TestCaseData(new Hashtable {{1, 'A'}, {2, 'B'}}, new Hashtable {{1, 'a'},{2, 'b'}});
+                    yield return new TestCaseData(new Hashtable {{"b", 2}, {"a", 1}}, new Hashtable {{"A", 1}, {"b", 2}});
+                    yield return new TestCaseData(new Hashtable {{'A', 1}}, new Hashtable {{'a', 1}});
+#endif
+                }
+            }
+        }
+
+
+        [Test]
         public void EquivalentHonorsUsing()
         {
             ICollection set1 = new SimpleObjectCollection("x", "y", "z");

@@ -49,16 +49,18 @@ namespace NUnit.Framework.Internal.Execution
         // The test this WorkItem represents
         private Test _test;
 
-        /// <summary>
-        /// The result of running the test
-        /// </summary>
-        protected TestResult _testResult;
-
         // The execution context used by this work item
         private TestExecutionContext _context;
 
         #region Static Factory Method
 
+        /// <summary>
+        /// Creates a work item.
+        /// </summary>
+        /// <param name="test">The test.</param>
+        /// <param name="context">The text execution context.</param>
+        /// <param name="filter">The test filter.</param>
+        /// <returns></returns>
         static public WorkItem CreateWorkItem(Test test, TestExecutionContext context, ITestFilter filter)
         {
             TestSuite suite = test as TestSuite;
@@ -80,7 +82,7 @@ namespace NUnit.Framework.Internal.Execution
         public WorkItem(Test test, TestExecutionContext context)
         {
             _test = test;
-            _testResult = test.MakeTestResult();
+            Result = test.MakeTestResult();
             _state = WorkItemState.Ready;
             _context = context;
         }
@@ -121,10 +123,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// The test result
         /// </summary>
-        public TestResult Result
-        {
-            get { return _testResult; }
-        }
+        public TestResult Result { get; protected set; }
 
 #if !SILVERLIGHT && !NETCF
         internal ApartmentState TargetApartment
@@ -148,6 +147,7 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public virtual void Execute()
         {
+            
 #if !SILVERLIGHT && !NETCF
             // Timeout set at a higher level
             int timeout = _context.TestCaseTimeout;
@@ -220,8 +220,10 @@ namespace NUnit.Framework.Internal.Execution
             _context.CurrentTest = this.Test;
             _context.CurrentResult = this.Result;
             _context.Listener.TestStarted(this.Test);
-            _context.StartTime = DateTime.Now;
-
+            _context.StartTime = DateTime.UtcNow;
+#if !NETCF && !SILVERLIGHT
+            _context.StartTicks = Stopwatch.GetTimestamp();
+#endif
             _context.EstablishExecutionEnvironment();
 
             PerformWork();
@@ -244,11 +246,16 @@ namespace NUnit.Framework.Internal.Execution
         {
             _state = WorkItemState.Complete;
 
-            //long tickCount = Stopwatch.GetTimestamp() - Context.StartTicks;
-            //double seconds = (double)tickCount / Stopwatch.Frequency;
-            //Result.Duration = TimeSpan.FromSeconds(seconds);
-
-            Result.Duration = DateTime.Now - Context.StartTime;
+            Result.StartTime = Context.StartTime;
+            Result.EndTime = DateTime.UtcNow;
+            
+#if !NETCF && !SILVERLIGHT
+            long tickCount = Stopwatch.GetTimestamp() - Context.StartTicks;
+            double seconds = (double)tickCount / Stopwatch.Frequency;
+            Result.Duration = TimeSpan.FromSeconds(seconds);
+#else
+            Result.Duration = DateTime.UtcNow - Context.StartTime;
+#endif
 
             // We add in the assert count from the context. If
             // this item is for a test case, we are adding the

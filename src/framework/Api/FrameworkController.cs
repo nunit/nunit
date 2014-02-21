@@ -81,9 +81,6 @@ namespace NUnit.Framework.Api
 
         private void Initialize(string assemblyPath, IDictionary settings)
         {
-            if (!CoreExtensions.Host.Initialized)
-                CoreExtensions.Host.Initialize();
-
             this.AssemblyPath = assemblyPath;
             this.Settings = settings;
 

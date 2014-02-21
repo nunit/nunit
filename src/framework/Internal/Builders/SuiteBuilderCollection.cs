@@ -23,10 +23,9 @@
 
 using System;
 using System.Collections.Generic;
-using NUnit.Framework.Extensibility;
-using NUnit.Framework.Internal.Builders;
+using NUnit.Framework.Interfaces;
 
-namespace NUnit.Framework.Internal.Extensibility
+namespace NUnit.Framework.Internal.Builders
 {
 	/// <summary>
 	/// SuiteBuilderCollection is an ExtensionPoint for SuiteBuilders and
@@ -36,27 +35,18 @@ namespace NUnit.Framework.Internal.Extensibility
 	/// The builders are added to the collection by inserting them at
 	/// the start, as to take precedence over those added earlier. 
 	/// </summary>
-#if NUNITLITE
     public class SuiteBuilderCollection : ISuiteBuilder
     {
         private List<ISuiteBuilder> Extensions = new List<ISuiteBuilder>();
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SuiteBuilderCollection"/> class.
+        /// </summary>
         public SuiteBuilderCollection()
         {
             Extensions.Add(new NUnitTestFixtureBuilder());
             Extensions.Add(new SetUpFixtureBuilder());
         }
-#else
-	public class SuiteBuilderCollection : ExtensionPoint, ISuiteBuilder
-	{
-		#region Constructor
-		/// <summary>
-		/// Default constructor
-		/// </summary>
-		public SuiteBuilderCollection(IExtensionHost host)
-			: base("SuiteBuilders", host ) { }
-		#endregion
-#endif
 
 		#region ISuiteBuilder Members
 
@@ -88,18 +78,5 @@ namespace NUnit.Framework.Internal.Extensibility
 		}
 
 		#endregion
-
-#if !NUNITLITE
-		#region ExtensionPoint Overrides
-        /// <summary>
-        /// Determines whether the specified extension is an ISuiteBuilder.
-        /// </summary>
-        /// <param name="extension">The extension.</param>
-		protected override bool IsValidExtension(object extension)
-		{
-			return extension is ISuiteBuilder; 
-		}
-		#endregion
-#endif
 	}
 }

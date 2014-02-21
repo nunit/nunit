@@ -35,7 +35,7 @@ namespace NUnit.Framework
     /// On methods, you may also use MTAThreadAttribute
     /// to serve the same purpose.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class | AttributeTargets.Assembly, AllowMultiple = false, Inherited=false)]
+    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class | AttributeTargets.Assembly, AllowMultiple = false, Inherited=true)]
     public class RequiresMTAAttribute : PropertyAttribute
     {
         /// <summary>

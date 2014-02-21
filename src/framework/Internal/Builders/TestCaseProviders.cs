@@ -24,12 +24,9 @@
 using System.Collections.Generic;
 using System.Reflection;
 using NUnit.Framework.Interfaces;
-using NUnit.Framework.Extensibility;
-using NUnit.Framework.Internal.Builders;
 
-namespace NUnit.Framework.Internal.Extensibility
+namespace NUnit.Framework.Internal.Builders
 {
-#if NUNITLITE
     class TestCaseProviders : ITestCaseProvider
     {
         private List<ITestCaseProvider> Extensions = new List<ITestCaseProvider>();
@@ -39,11 +36,6 @@ namespace NUnit.Framework.Internal.Extensibility
             this.Extensions.Add(new DataAttributeTestCaseProvider());
             this.Extensions.Add(new CombinatorialTestCaseProvider());
         }
-#else
-    class TestCaseProviders : ExtensionPoint, ITestCaseProvider
-    {
-        public TestCaseProviders(IExtensionHost host) : base( "TestCaseProviders", host ) { }
-#endif
 
         #region ITestCaseProvider Members
 
@@ -91,14 +83,5 @@ namespace NUnit.Framework.Internal.Extensibility
         }
 
         #endregion
-
-#if !NUNITLITE
-        #region IsValidExtension
-        protected override bool IsValidExtension(object extension)
-        {
-            return extension is ITestCaseProvider;
-        }
-        #endregion
-#endif
     }
 }

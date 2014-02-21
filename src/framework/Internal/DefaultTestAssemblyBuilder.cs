@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using NUnit.Framework.Interfaces;
-using NUnit.Framework.Extensibility;
 using NUnit.Framework.Internal.Builders;
 
 namespace NUnit.Framework.Internal
@@ -111,7 +110,6 @@ namespace NUnit.Framework.Internal
             AssemblyName assemblyName = AssemblyName.GetAssemblyName(path);
 
             assembly = Assembly.Load(assemblyName);
-#endif
 
             // TODO: Can this ever be null?
             if (assembly == null)
@@ -121,12 +119,10 @@ namespace NUnit.Framework.Internal
             else
             {
                 log.Info("Loaded assembly " + assembly.FullName);
-#if !NUNITLITE
-                CoreExtensions.Host.InstallAdhocExtensions(assembly);
-#endif
             }
 
             return assembly;
+#endif
         }
 
         private IList GetFixtures(Assembly assembly, IList names)

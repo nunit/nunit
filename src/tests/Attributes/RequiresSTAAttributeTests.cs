@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2012 Charlie Poole
+// Copyright (c) 2014 Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,45 +21,46 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#if !SILVERLIGHT && !NETCF
 using System;
 using System.Threading;
-using NUnit.Framework.Internal.Commands;
 
-namespace NUnit.Framework.Internal.Execution
+namespace NUnit.Framework.Attributes
 {
-    /// <summary>
-    /// A SimpleWorkItem represents a single test case and is
-    /// marked as completed immediately upon execution. This
-    /// class is also used for skipped or ignored test suites.
-    /// </summary>
-    public class SimpleWorkItem : WorkItem
+    [TestFixture]
+    public class RequiresSTAAttributeTests : ThreadingTests
     {
-        private TestCommand _command;
-
-        /// <summary>
-        /// Construct a simple work item for a test.
-        /// </summary>
-        /// <param name="test">The test to be executed</param>
-        /// <param name="context">The execution context to be used</param>
-        public SimpleWorkItem(TestMethod test, TestExecutionContext context) : base(test, context) 
+        [Test, RequiresSTA]
+        public void TestWithRequiresSTARunsInSTA()
         {
-            _command = test.MakeTestCommand();
+            Assert.That(GetApartmentState(Thread.CurrentThread), Is.EqualTo(ApartmentState.STA));
+            if (ParentThreadApartment == ApartmentState.STA)
+                Assert.That(Thread.CurrentThread, Is.EqualTo(ParentThread));
         }
 
-        /// <summary>
-        /// Method that performs actually performs the work.
-        /// </summary>
-        protected override void PerformWork()
+        [TestFixture, RequiresSTA]
+        public class FixtureRequiresSTA
         {
-            try
+            [Test]
+            public void RequiresSTACanBeSetOnTestFixture()
             {
-                Result = _command.Execute(Context);
-            }
-            finally
-            {
-                WorkItemComplete();
+                Assert.That( GetApartmentState( Thread.CurrentThread ), Is.EqualTo( ApartmentState.STA ) );
             }
         }
 
+        [TestFixture]
+        public class ChildFixtureRequiresSTA : FixtureRequiresSTA
+        {
+            // Issue #36 - Make RequiresThread, RequiresSTA, RequiresMTA inheritable
+            // https://github.com/nunit/nunit-framework/issues/36
+            [Test]
+            public void RequiresSTAAtributeIsInheritable()
+            {
+                Attribute[] attributes = Attribute.GetCustomAttributes(GetType(), typeof (RequiresSTAAttribute), true);
+                Assert.That(attributes, Has.Length.EqualTo(1),
+                    "RequiresSTAAttribute was not inherited from the base class");
+            }
+        }
     }
 }
+#endif

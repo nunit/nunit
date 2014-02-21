@@ -23,11 +23,11 @@
 
 #if !NUNITLITE
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
-using NUnit.Framework.Extensibility;
+using NUnit.Framework.Interfaces;
 
-namespace NUnit.Framework.Internal.Extensibility
+namespace NUnit.Framework.Internal.Builders
 {
 	/// <summary>
 	/// TestCaseBuilderCollection is an ExtensionPoint for TestCaseBuilders 
@@ -37,16 +37,20 @@ namespace NUnit.Framework.Internal.Extensibility
 	/// The builders are added to the collection by inserting them at
 	/// the start, as to take precedence over those added earlier. 
 	/// </summary>
-	public class TestCaseBuilderCollection : ExtensionPoint, ITestCaseBuilder2
+	public class TestCaseBuilderCollection : ITestCaseBuilder2
 	{
+        private List<ITestCaseBuilder2> Extensions = new List<ITestCaseBuilder2>();
+
 		#region Constructor
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TestCaseBuilderCollection"/> class.
         /// </summary>
         /// <param name="host">The host.</param>
-		public TestCaseBuilderCollection(IExtensionHost host)
-			: base("TestCaseBuilders", host) { }
+        public TestCaseBuilderCollection()
+        {
+            Extensions.Add(new NUnitTestCaseBuilder());
+        }
 
 		#endregion
 
@@ -131,22 +135,6 @@ namespace NUnit.Framework.Internal.Extensibility
             return null;
         }
         #endregion
-
-        #region ExtensionPoint Overrides
-
-        /// <summary>
-        /// Determines whether an objext is a valid TestCaseBuilder extension.
-        /// </summary>
-        /// <param name="extension">The extension.</param>
-        /// <returns>
-        /// 	<c>true</c> if the specified extension is a valid TestCaseBuilder; otherwise, <c>false</c>.
-        /// </returns>
-		protected override bool IsValidExtension(object extension)
-		{
-			return extension is ITestCaseBuilder; 
-		}
-
-		#endregion
 	}
 }
 #endif

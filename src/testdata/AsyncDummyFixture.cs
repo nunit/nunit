@@ -81,11 +81,8 @@ namespace NUnit.TestData
 
         private async Task<int> Throw()
         {
-            return await Task.Run(() =>
-            {
-                throw new InvalidOperationException();
-                return 1;
-            });
+            Func<int> thrower = () => { throw new InvalidOperationException(); };
+            return await Task.Run( thrower );
         }
     }
 }

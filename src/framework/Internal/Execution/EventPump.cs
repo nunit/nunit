@@ -200,7 +200,7 @@ namespace NUnit.Framework.Internal.Execution
 		/// </summary>
 		private void PumpThreadProc()
 		{
-			ITestListener hostListeners = CoreExtensions.Host.Listeners;
+            //ITestListener hostListeners = CoreExtensions.Host.Listeners;
             try
             {
                 while (true)
@@ -211,7 +211,7 @@ namespace NUnit.Framework.Internal.Execution
                     try 
                     {
                         e.Send(this.eventListener);
-						e.Send(hostListeners);
+                        //e.Send(hostListeners);
                     }
                     catch (Exception ex)
                     {
