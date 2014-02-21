@@ -101,5 +101,10 @@ namespace NUnit.Framework.Internal
         /// The FriendlyName of the AppDomain in which the assembly is running
         /// </summary>
         public static readonly string AppDomain = "_APPDOMAIN";
+
+        /// <summary>
+        /// The test will be ignored until the given date
+        /// </summary>
+        public static readonly string IgnoreUntilDate = "IgnoreUntilDate";
     }
 }
