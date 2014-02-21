@@ -1,23 +1,134 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <Project DefaultTargets="Build" InitialTargets="" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  **************************************************************************
-  * This script is used to build the NUnit Framework for any supported     *
-  * runtime that is installed on the system. If you are unsure about which *
-  * runtimes are available use the list-runtimes or dump-settings target.   *
-  * At least one of the supported runtimes and sdk must be installed.      *
-  *                                                                        *
-  * Dependencies:                                                          *
-  *                                                                        *
-  *   The script requires the NAnt 0.91 release or a later version.        *
-  *                                                                        *
-  *   PartCover is required to run the 'test-coverage' target.             *
-  *                                                                        *
-  * The following properties may be set externally:                        *
-  *   warn                = compiler warning level (default 4)             *
-  *   package.working.dir = working directory for packaging                *
-  *   build.config        = config to build (release or debug)             *
-  *   runtime.config      = target runtime                                 *
-  *   test.options        = test runner options                            *
-  *                                                                        *
-  **************************************************************************
+  <PropertyGroup Label="Common Properties">
+    <ProjectName>$(MSBuildProjectName)</ProjectName>
+    <PackageVersion>2.9.6</PackageVersion>
+    <PackageConfiguration Label="(Release, Alpha, Beta, ...)" />
+    <PackageName>$(ProjectName)-$(PackageVersion)</PackageName>
+  </PropertyGroup>
+  <PropertyGroup Label="Project Directories">
+    <ProjectBaseDir>$(MSBuildProjectDirectory)</ProjectBaseDir>
+    <ProjectBuildDir>$(ProjectBaseDir)\build</ProjectBuildDir>
+    <ProjectPackageDir>$(ProjectBaseDir)\package</ProjectPackageDir>
+    <ProjectSrcDir>$(ProjectBaseDir)\src</ProjectSrcDir>
+    <ProjectDocDir>$(ProjectBaseDir)\doc</ProjectDocDir>
+    <ProjectSamplesDir>$(ProjectBaseDir)\samples</ProjectSamplesDir>
+    <ProjectLibDir>$(ProjectBaseDir)\lib</ProjectLibDir>
+    <ProjectToolsDir>$(ProjectBaseDir)\..\tools</ProjectToolsDir>
+    <PartCoverDir>$(ProjectToolsDir)\PartCover</PartCoverDir>
+  </PropertyGroup>
+  <PropertyGroup Label="Packaging Directories">
+    <PackageWorkingDir Condition="'$(PackageWorkingDir)' == ''">$(ProjectPackageDir)\$(PackageName)</PackageWorkingDir>
+    <PackageBinDir>$(PackageWorkingDir)\bin</PackageBinDir>
+    <PackageDocDir>$(PackageWorkingDir)\doc</PackageDocDir>
+    <PackageSamplesDir>$(PackageWorkingDir)\samples</PackageSamplesDir>
+    <PackageSrcDir>$(PackageWorkingDir)\src</PackageSrcDir>
+    <PackageLibDir>$(PackageWorkingDir)\lib</PackageLibDir>
+  </PropertyGroup>
+  <PropertyGroup Label="Default Build Configuration">
+    <Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
+  </PropertyGroup>
+  <ItemGroup Label="Supported Frameworks">
+    <SupportedFramework Include="NET4.5">
+    </SupportedFramework>
+    <SupportedFramework Include="NET4.0">
+    </SupportedFramework>
+    <SupportedFramework Include="NET3.5">
+    </SupportedFramework>
+    <SupportedFramework Include="NET2.0">
+    </SupportedFramework>
+    <SupportedFramework Include="mono2.0">
+    </SupportedFramework>
+    <SupportedFramework Include="mono3.5">
+    </SupportedFramework>
+  </ItemGroup>
+  <PropertyGroup Label="Default Frameworks">
+    <!--DefaultNETFramework Condition="'@(SupportedFramework-> '%(Runtime)')' == 'NET' And '$(DefaultNETFramework)' == ''">@(SupportedFramework-> '%(Runtime)')</DefaultNETFramework-->
+    <!--DefaultMonoFramework Condition="'%(Runtime)' == 'mono' And '$(DefaultMonoFramework)' == ''">@(SupportedFramework)</DefaultMonoFramework-->
+    <DefaultFramework>NET4.5</DefaultFramework>
+  </PropertyGroup>
+  <PropertyGroup Label="Properties for running tests">
+    <TestOptions Condition="'$(TestOptions)' == ''"></TestOptions>
+    <TestRunnerProgram>test-harness.exe</TestRunnerProgram>
+    <TestRunnerArgs>nunit.framework.tests.dll $(TestOptions)</TestRunnerArgs>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(RuntimeConfig)' == ''">
+    <RuntimeConfig>$(DefaultFramework)</RuntimeConfig>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(RuntimeConfig)' == 'NET4.5'">
+    <ProjectSuffix>4.5</ProjectSuffix>
+  </PropertyGroup>
+  <PropertyGroup>
+    <BuildConfigDir>$(ProjectBuildDir)\$(Configuration)</BuildConfigDir>
+    <CurrentBuildDir>$(BuildConfigDir)\$(RuntimeConfig)</CurrentBuildDir>
+  </PropertyGroup>
+
+  <Target Name="DumpSettings">
+    <Message Text="Project directories:"></Message>
+    <Message Text="  Base:          $(ProjectBaseDir)"></Message>
+    <Message Text="    Doc:         $(ProjectDocDir)"></Message>
+    <Message Text="    Samples:     $(ProjectSamplesDir)"></Message>
+    <Message Text="    Build:       $(ProjectBuildDir)"></Message>
+    <Message Text="    Package:     $(ProjectPackageDir)"></Message>
+    <Message Text=""></Message>
+    <Message Text="Runtime versions:"></Message>
+    <Message Text="  Supported:     @(SupportedFramework)"></Message>
+    <Message Text="  Default:       $(DefaultFramework)"></Message>
+    <Message Text=""></Message>
+    <Message Text="Current build settings:"></Message>
+    <Message Text="  Configuration: $(Configuration)"></Message>
+    <Message Text="  Runtime:       $(RuntimeConfig)"></Message>
+    <Message Text="  Build dir:     $(CurrentBuildDir)"></Message>
+    <Message Text=""></Message>
+    <Message Text="Packaging"></Message>
+    <Message Text="  Name:          $(PackageName)"></Message>
+    <Message Text="  Version:       $(PackageVersion)"></Message>
+    <Message Text="  Work dir:      $(PackageWorkingDir)"></Message>
+    <Message Text="    Bin:         $(PackageBinDir)"></Message>
+    <Message Text="    Doc:         $(PackageDocDir)"></Message>
+    <Message Text="    Samples:     $(PackageSamplesDir)"></Message>
+    <Message Text="    Source:      $(PackageSourceDir)"></Message>
+  </Target>
+  <Target Name="Clean">
+    <RemoveDir Directories="$(CurrentBuildDir)">
+    </RemoveDir>
+    <Delete Files="$(ProjectSrcDir)\GeneratedAssemblyInfo.cs" />
+  </Target>
+  <Target Name="CleanAll" DependsOnTargets="Clean">
+    <RemoveDir Directories="$(ProjectBuildDir)">
+    </RemoveDir>
+  </Target>
+  <Target Name="Build">
+    <CallTarget Targets="BuildNUnit" />
+    <CallTarget Targets="BuildNUnitLite" />
+  </Target>
+  <Target Name="BuildNUnit">
+    <MSBuild Targets="Rebuild" Projects="$(ProjectSrcDir)\framework\nunit.framework-$(ProjectSuffix).csproj"
+             Properties="Configuration =$(Configuration);OutputPath =$(CurrentBuildDir)">
+    </MSBuild>
+    <MSBuild Targets="Rebuild" Projects="$(ProjectSrcDir)\testdata\nunit.testdata-$(ProjectSuffix).csproj"
+             Properties="Configuration =$(Configuration);OutputPath =$(CurrentBuildDir)">
+    </MSBuild>
+    <MSBuild Targets="Rebuild" Projects="$(ProjectSrcDir)\tests\nunit.framework.tests-$(ProjectSuffix).csproj"
+             Properties="Configuration =$(Configuration);OutputPath =$(CurrentBuildDir)">
+    </MSBuild>
+    <MSBuild Targets="Rebuild" Projects="$(ProjectSrcDir)\harness\test-harness-$(ProjectSuffix).csproj"
+             Properties="Configuration =$(Configuration);OutputPath =$(CurrentBuildDir)">
+    </MSBuild>
+    <MSBuild Targets="Rebuild" Projects="$(ProjectSrcDir)\mock-assembly\mock-assembly-$(ProjectSuffix).csproj"
+             Properties="Configuration =$(Configuration);OutputPath =$(CurrentBuildDir)">
+    </MSBuild>
+  </Target>
+  <Target Name="BuildNUnitLite">
+    <MSBuild Targets="Rebuild" Projects="$(ProjectSrcDir)\framework\nunitlite-$(ProjectSuffix).csproj"
+             Properties="Configuration =$(Configuration);OutputPath =$(CurrentBuildDir)">
+    </MSBuild>
+    <MSBuild Targets="Rebuild" Projects="$(ProjectSrcDir)\testdata\nunitlite.testdata-$(ProjectSuffix).csproj"
+             Properties="Configuration =$(Configuration);OutputPath =$(CurrentBuildDir)">
+    </MSBuild>
+    <MSBuild Targets="Rebuild" Projects="$(ProjectSrcDir)\tests\nunitlite.tests-$(ProjectSuffix).csproj"
+             Properties="Configuration =$(Configuration);OutputPath =$(CurrentBuildDir)">
+    </MSBuild>
+  </Target>
 </Project>

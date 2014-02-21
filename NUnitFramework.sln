@@ -73,6 +73,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution", "Solution", "{65
 		NOTICES.txt = NOTICES.txt
 		NUnitFramework.build = NUnitFramework.build
 		NUnitFramework.msbuild = NUnitFramework.msbuild
+		runbuild.cmd = runbuild.cmd
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SL-5.0", "SL-5.0", "{5C0BC8AB-B491-47E3-AFEC-59A2E15A2C85}"
