@@ -22,11 +22,35 @@
 // ***********************************************************************
 
 #if !NUNITLITE
+using System;
 using System.Collections.Generic;
 using System.Threading;
 
 namespace NUnit.Framework.Internal.Execution
 {
+    /// <summary>
+    /// WorkItemQueueState indicates the current state of a WorkItemQueue
+    /// </summary>
+    public enum WorkItemQueueState
+    {
+        /// <summary>
+        /// The queue is paused
+        /// </summary>
+        Paused,
+        /// <summary>
+        /// The queue is running
+        /// </summary>
+        Running,
+        /// <summary>
+        /// The queue is stopping
+        /// </summary>
+        Stopping,
+        /// <summary>
+        /// The queue has stopped (not currently used)
+        /// </summary>
+        Stopped
+    }
+
     /// <summary>
     /// A WorkItemQueue holds work items that are ready to
     /// be run, either initially or after some dependency
@@ -34,23 +58,10 @@ namespace NUnit.Framework.Internal.Execution
     /// </summary>
     public class WorkItemQueue
     {
+        Logger log = InternalTrace.GetLogger("WorkItemQueue");
+
         private Queue<WorkItem> _innerQueue = new Queue<WorkItem>();
         private object _syncRoot = new object();
-        private bool _stopping;
-        private int _maxCount = 0;
-
-        /// <summary>
-        /// Gets the name of the work item queue.
-        /// </summary>
-        public string Name { get; private set; }
-
-        /// <summary>
-        /// Gets the maximum number of work items.
-        /// </summary>
-        public int MaxCount
-        {
-            get { return _maxCount; }
-        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WorkItemQueue"/> class.
@@ -59,16 +70,44 @@ namespace NUnit.Framework.Internal.Execution
         public WorkItemQueue(string name)
         {
             this.Name = name;
+            this.State = WorkItemQueueState.Paused;
+            this.MaxCount = 0;
+            this.ItemsProcessed = 0;
         }
 
-        // Not currently Used
-        //public void Clear()
-        //{
-        //    lock (this.syncRoot)
-        //    {
-        //        _innerQueue.Clear();
-        //    }
-        //}
+        #region Properties
+
+        /// <summary>
+        /// Gets the name of the work item queue.
+        /// </summary>
+        public string Name { get; private set; }
+
+        /// <summary>
+        /// Gets the total number of items processed so far
+        /// </summary>
+        public int ItemsProcessed { get; private set; }
+
+        /// <summary>
+        /// Gets the maximum number of work items.
+        /// </summary>
+        public int MaxCount { get; private set; }
+
+        /// <summary>
+        /// Gets the current state of the queue
+        /// </summary>
+        public WorkItemQueueState State { get; private set; }
+
+        /// <summary>
+        /// Get a bool indicating whether the queue is empty.
+        /// </summary>
+        public bool IsEmpty
+        {
+            get { return _innerQueue.Count == 0; }
+        }
+
+        #endregion
+
+        #region Public Methods
 
         /// <summary>
         /// Enqueue a WorkItem to be processed
@@ -79,8 +118,8 @@ namespace NUnit.Framework.Internal.Execution
             lock (_syncRoot)
             {
                 _innerQueue.Enqueue(work);
-                if (_innerQueue.Count > _maxCount)
-                    _maxCount = _innerQueue.Count;
+                if (_innerQueue.Count > MaxCount)
+                    MaxCount = _innerQueue.Count;
                 Monitor.PulseAll(_syncRoot);
             }
         }
@@ -93,15 +132,29 @@ namespace NUnit.Framework.Internal.Execution
         {
             lock (_syncRoot)
             {
-                while (_innerQueue.Count == 0)
+                while (_innerQueue.Count == 0 || State != WorkItemQueueState.Running)
                 {
-                    if (_stopping)
+                    if (State == WorkItemQueueState.Stopping)
                         return null;
                     else
                         Monitor.Wait(_syncRoot);
                 }
 
+                ItemsProcessed++;
                 return _innerQueue.Dequeue();
+            }
+        }
+
+        /// <summary>
+        ///  Start or restart processing of items from the queue
+        /// </summary>
+        public void Start()
+        {
+            lock (_syncRoot)
+            {
+                log.Info("{0} starting", Name);
+                State = WorkItemQueueState.Running;
+                Monitor.PulseAll(_syncRoot);
             }
         }
 
@@ -113,10 +166,25 @@ namespace NUnit.Framework.Internal.Execution
         {
             lock (_syncRoot)
             {
-                _stopping = true;
+                log.Info("{0} stopping - {1} WorkItems processed, max size {2}", Name, ItemsProcessed, MaxCount);
+                State = WorkItemQueueState.Stopping;
                 Monitor.PulseAll(_syncRoot);
             }
         }
+
+        /// <summary>
+        /// Pause the queue (at the end of a shift)
+        /// </summary>
+        public void Pause()
+        {
+            lock (_syncRoot)
+            {
+                log.Info("{0} paused", Name);
+                State = WorkItemQueueState.Paused;
+            }
+        }
+
+        #endregion
     }
 }
 #endif

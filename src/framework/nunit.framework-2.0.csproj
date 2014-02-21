@@ -56,6 +56,9 @@
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Api\FrameworkController.cs" />
+    <Compile Include="Attributes\LevelOfParallelizationAttribute.cs" />
+    <Compile Include="Attributes\ParallelizableAttribute.cs" />
+    <Compile Include="Attributes\ParallelScope.cs" />
     <Compile Include="Constraints\EqualConstraintResult.cs" />
     <Compile Include="Constraints\IConstraint.cs" />
     <Compile Include="Constraints\Operators\AllOperator.cs" />

@@ -42,6 +42,16 @@ namespace NUnit.Framework.Internal.Execution
         private int _workItemCount = 0;
 
         /// <summary>
+        /// Event signaled immediately before executing a WorkItem
+        /// </summary>
+        public event EventHandler Busy;
+
+        /// <summary>
+        /// Event signaled immediately after executing a WorkItem
+        /// </summary>
+        public event EventHandler Idle;
+
+        /// <summary>
         /// Construct a new TestWorker.
         /// </summary>
         /// <param name="queue">The queue from which to pull work items</param>
@@ -62,18 +72,24 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         void TestWorkerThreadProc()
         {
+            log.Info("{0} starting ", _workerThread.Name);
+
             for(;;)
             {
                 var workItem = _readyQueue.Dequeue();
                 if (workItem == null)
                     break;
 
-                log.Debug("Processing WorkItem for {0}", workItem.Test.FullName);
+                log.Debug("{0} processing {1}", _workerThread.Name, workItem.Test.Name);
+
+                if (Busy != null) Busy(this, EventArgs.Empty);
                 workItem.Execute();
+                if (Idle != null) Idle(this, EventArgs.Empty);
+
                 ++_workItemCount;
             }
 
-            log.Info("Stopping - {0} WorkItems processed.", _workItemCount);
+            log.Info("{0} stopping - {1} WorkItems processed.", _workerThread.Name, _workItemCount);
         }
 
         /// <summary>

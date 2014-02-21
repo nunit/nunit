@@ -156,13 +156,15 @@ namespace NUnit.Framework.Internal.Execution
 #if NUNITLITE
                     child.Execute();
 #else
-                    if (Context.Dispatcher == null)
-                        child.Execute();
-                    // For now, run all test cases on the same thread as the fixture
-                    // in order to handle ApartmentState preferences set on the fixture.
-                    else if (child is SimpleWorkItem || child.Test is ParameterizedMethodSuite)
+                    // We run child items on the same thread as the parent...
+                    // 1. If there is no dispatcher (NUnitLite or LevelOfParallelism = 0).
+                    // 2. If there is no fixture, and so nothing to do but dispatch grandchildren.
+                    // 3. For now, if this represents a test case. This avoids issues of
+                    // tests that access the fixture state and allows handling ApartmentState
+                    // preferences set on the fixture.
+                    if (Context.Dispatcher == null ||child is SimpleWorkItem || child.Test.FixtureType == null)
                     {
-                        log.Debug("Executing WorkItem for {0}", child.Test.FullName);
+                        log.Debug("Directly executing {0}", child.Test.Name);
                         child.Execute();
                     }
                     else

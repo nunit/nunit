@@ -36,20 +36,20 @@ using System.Security.Principal;
 
 namespace NUnit.Framework.Internal
 {
-	/// <summary>
-	/// Helper class used to save and restore certain static or
-	/// singleton settings in the environment that affect tests 
-	/// or which might be changed by the user tests.
-	/// 
-	/// An internal class is used to hold settings and a stack
-	/// of these objects is pushed and popped as Save and Restore
-	/// are called.
-	/// </summary>
-	public class TestExecutionContext
+    /// <summary>
+    /// Helper class used to save and restore certain static or
+    /// singleton settings in the environment that affect tests 
+    /// or which might be changed by the user tests.
+    /// 
+    /// An internal class is used to hold settings and a stack
+    /// of these objects is pushed and popped as Save and Restore
+    /// are called.
+    /// </summary>
+    public class TestExecutionContext
 #if !SILVERLIGHT && !NETCF
         : ILogicalThreadAffinative
 #endif
-	{
+    {
         // NOTE: Be very careful when modifying this class. It uses
         // conditional compilation extensively and you must give 
         // thought to whether any new features will be supported
@@ -133,12 +133,12 @@ namespace NUnit.Framework.Internal
         /// Initializes a new instance of the <see cref="TestExecutionContext"/> class.
         /// </summary>
         public TestExecutionContext()
-		{
-			this.prior = null;
+        {
+            this.prior = null;
             this.TestCaseTimeout = 0;
 
 #if !NETCF
-			this.currentCulture = CultureInfo.CurrentCulture;
+            this.currentCulture = CultureInfo.CurrentCulture;
             this.currentUICulture = CultureInfo.CurrentUICulture;
 #endif
 
@@ -157,20 +157,20 @@ namespace NUnit.Framework.Internal
         /// Initializes a new instance of the <see cref="TestExecutionContext"/> class.
         /// </summary>
         /// <param name="other">An existing instance of TestExecutionContext.</param>
-		public TestExecutionContext( TestExecutionContext other )
-		{
-			this.prior = other;
+        public TestExecutionContext( TestExecutionContext other )
+        {
+            this.prior = other;
 
             this.CurrentTest = other.CurrentTest;
             this.CurrentResult = other.CurrentResult;
             this.TestObject = other.TestObject;
-			this.WorkDirectory = other.WorkDirectory;
+            this.WorkDirectory = other.WorkDirectory;
             this.listener = other.listener;
             this.StopOnError = other.StopOnError;
             this.TestCaseTimeout = other.TestCaseTimeout;
 
 #if !NETCF
-			this.currentCulture = CultureInfo.CurrentCulture;
+            this.currentCulture = CultureInfo.CurrentCulture;
             this.currentUICulture = CultureInfo.CurrentUICulture;
 #endif
 
@@ -186,6 +186,7 @@ namespace NUnit.Framework.Internal
 
 #if !NUNITLITE
             this.Dispatcher = other.Dispatcher;
+            this.ParallelScope = other.ParallelScope;
 #endif
         }
 
@@ -286,17 +287,17 @@ namespace NUnit.Framework.Internal
         /// object on which tests are being executed.
         /// </summary>
         public object TestObject { get; set; }
-		
+        
         /// <summary>
         /// Get or set the working directory
         /// </summary>
-		public string WorkDirectory { get; set; }
+        public string WorkDirectory { get; set; }
 
         /// <summary>
         /// Get or set indicator that run should stop on the first error
         /// </summary>
         public bool StopOnError { get; set; }
-		
+        
         /// <summary>
         /// The current test event listener
         /// </summary>
@@ -311,6 +312,11 @@ namespace NUnit.Framework.Internal
         /// The current WorkItemDispatcher
         /// </summary>
         internal WorkItemDispatcher Dispatcher { get; set; }
+
+        /// <summary>
+        /// The ParallelScope to be used by tests running in this context
+        /// </summary>
+        public ParallelScope ParallelScope { get; set; }
 #endif
 
         /// <summary>
@@ -389,38 +395,38 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-		/// Controls where Console.Out is directed
-		/// </summary>
-		internal TextWriter Out
-		{
-			get { return outWriter; }
-			set 
-			{
-				if ( outWriter != value )
-				{
-					outWriter = value; 
-					Console.Out.Flush();
-					Console.SetOut( outWriter );
-				}
-			}
-		}
+        /// Controls where Console.Out is directed
+        /// </summary>
+        internal TextWriter Out
+        {
+            get { return outWriter; }
+            set 
+            {
+                if ( outWriter != value )
+                {
+                    outWriter = value; 
+                    Console.Out.Flush();
+                    Console.SetOut( outWriter );
+                }
+            }
+        }
 
-		/// <summary>
-		/// Controls where Console.Error is directed
-		/// </summary>
-		internal TextWriter Error
-		{
-			get { return errorWriter; }
-			set 
-			{
-				if ( errorWriter != value )
-				{
-					errorWriter = value; 
-					Console.Error.Flush();
-					Console.SetError( errorWriter );
-				}
-			}
-		}
+        /// <summary>
+        /// Controls where Console.Error is directed
+        /// </summary>
+        internal TextWriter Error
+        {
+            get { return errorWriter; }
+            set 
+            {
+                if ( errorWriter != value )
+                {
+                    errorWriter = value; 
+                    Console.Error.Flush();
+                    Console.SetError( errorWriter );
+                }
+            }
+        }
 
         /// <summary>
         /// Controls whether trace and debug output are written
@@ -447,34 +453,34 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Controls where Trace output is directed
         /// </summary>
-		internal TextWriter TraceWriter
-		{
-			get { return traceWriter; }
-			set
-			{
-				if ( traceWriter != value )
-				{
-					if ( traceWriter != null  && tracing )
-						StopTracing();
+        internal TextWriter TraceWriter
+        {
+            get { return traceWriter; }
+            set
+            {
+                if ( traceWriter != value )
+                {
+                    if ( traceWriter != null  && tracing )
+                        StopTracing();
 
-					traceWriter = value;
+                    traceWriter = value;
 
-					if ( traceWriter != null && tracing )
-						StartTracing();
-				}
-			}
-		}
+                    if ( traceWriter != null && tracing )
+                        StartTracing();
+                }
+            }
+        }
 
-		private void StopTracing()
-		{
-			traceWriter.Close();
-			System.Diagnostics.Trace.Listeners.Remove( "NUnit" );
-		}
+        private void StopTracing()
+        {
+            traceWriter.Close();
+            System.Diagnostics.Trace.Listeners.Remove( "NUnit" );
+        }
 
-		private void StartTracing()
-		{
-			System.Diagnostics.Trace.Listeners.Add( new TextWriterTraceListener( traceWriter, "NUnit" ) );
-		}
+        private void StartTracing()
+        {
+            System.Diagnostics.Trace.Listeners.Add( new TextWriterTraceListener( traceWriter, "NUnit" ) );
+        }
 
         /// <summary>
         /// Gets or sets the current <see cref="IPrincipal"/> for the Thread.
@@ -581,5 +587,5 @@ namespace NUnit.Framework.Internal
         }
 
         #endregion
-	}
+    }
 }

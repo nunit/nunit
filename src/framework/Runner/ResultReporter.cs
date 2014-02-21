@@ -141,7 +141,7 @@ namespace NUnitLite.Runner
                 foreach (ITestResult childResult in result.Children)
                     PrintErrorResults(childResult);
             }
-            else if (result.ResultState.Status == TestStatus.Failed)
+            else if (result.ResultState.Status == TestStatus.Failed || result.ResultState == ResultState.NotRunnable)
                 WriteSingleResult(result);
         }
 

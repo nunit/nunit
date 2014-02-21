@@ -88,11 +88,13 @@
     <Compile Include="Assertions\NotEqualFixture.cs" />
     <Compile Include="Assertions\NotSameFixture.cs" />
     <Compile Include="Assertions\SameFixture.cs" />
+    <Compile Include="Attributes\ApplyToContextTests.cs" />
     <Compile Include="Attributes\ApplyToTestTests.cs" />
     <Compile Include="Attributes\AttributeInheritanceTests.cs" />
     <Compile Include="Attributes\CategoryAttributeTests.cs" />
     <Compile Include="Attributes\CombinatorialTests.cs" />
     <Compile Include="Attributes\DatapointTests.cs" />
+    <Compile Include="Attributes\DerivedPropertyAttributeTests.cs" />
     <Compile Include="Attributes\DescriptionTests.cs" />
     <Compile Include="Attributes\ExpectedExceptionTests.cs" />
     <Compile Include="Attributes\FixtureSetUpTearDownTests.cs" />

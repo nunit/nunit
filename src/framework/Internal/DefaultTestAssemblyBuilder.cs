@@ -100,11 +100,11 @@ namespace NUnit.Framework.Internal
 
         private Assembly Load(string path)
         {
-            Assembly assembly = null;
-
 #if NETCF || SILVERLIGHT
             return Assembly.Load(path);
 #else
+            Assembly assembly = null;
+
             // Throws if this isn't a managed assembly or if it was built
             // with a later version of the same assembly. 
             AssemblyName assemblyName = AssemblyName.GetAssemblyName(path);
