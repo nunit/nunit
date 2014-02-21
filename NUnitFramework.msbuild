@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" InitialTargets="" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  **************************************************************************
+  * This script is used to build the NUnit Framework for any supported     *
+  * runtime that is installed on the system. If you are unsure about which *
+  * runtimes are available use the list-runtimes or dump-settings target.   *
+  * At least one of the supported runtimes and sdk must be installed.      *
+  *                                                                        *
+  * Dependencies:                                                          *
+  *                                                                        *
+  *   The script requires the NAnt 0.91 release or a later version.        *
+  *                                                                        *
+  *   PartCover is required to run the 'test-coverage' target.             *
+  *                                                                        *
+  * The following properties may be set externally:                        *
+  *   warn                = compiler warning level (default 4)             *
+  *   package.working.dir = working directory for packaging                *
+  *   build.config        = config to build (release or debug)             *
+  *   runtime.config      = target runtime                                 *
+  *   test.options        = test runner options                            *
+  *                                                                        *
+  **************************************************************************
+</Project>

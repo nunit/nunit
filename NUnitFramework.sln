@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30110.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NET-2.0", "NET-2.0", "{F49E75DB-17E6-4B3B-B21B-F98015965737}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.framework.tests-2.0", "src\tests\nunit.framework.tests-2.0.csproj", "{EA9871E3-9972-4476-821E-3961C28125E8}"
@@ -70,6 +72,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution", "Solution", "{65
 		LICENSE.txt = LICENSE.txt
 		NOTICES.txt = NOTICES.txt
 		NUnitFramework.build = NUnitFramework.build
+		NUnitFramework.msbuild = NUnitFramework.msbuild
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SL-5.0", "SL-5.0", "{5C0BC8AB-B491-47E3-AFEC-59A2E15A2C85}"
