@@ -74,18 +74,28 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="data"></param>
         public ParameterSet(ITestCaseData data)
+            : this((ITestExpectedResult)data)
         {
             this.TestName = data.TestName;
             this.RunState = data.RunState;
             this.Arguments = this.OriginalArguments = data.Arguments;
             this.ExceptionData = data.ExceptionData;
 
-            if (data.HasExpectedResult)
-                this.ExpectedResult = data.ExpectedResult;
-
-            this.Properties = new PropertyBag();
             foreach (string key in data.Properties.Keys)
                 this.Properties[key] = data.Properties[key];
+        }
+
+        /// <summary>
+        /// Construct a ParameterSet from an object implementing <see cref="ITestExpectedResult"/>
+        /// </summary>
+        /// <param name="data"></param>
+        public ParameterSet(ITestExpectedResult data)
+        {
+            RunState = RunState.Runnable;
+            if (data.HasExpectedResult)
+                ExpectedResult = data.ExpectedResult;
+
+            Properties = new PropertyBag();
         }
 
         #endregion

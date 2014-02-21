@@ -49,20 +49,16 @@ namespace NUnit.Framework
 	/// </example>
 	/// 
 	[AttributeUsage(AttributeTargets.Method, AllowMultiple=false, Inherited=true)]
-	public class TestAttribute : NUnitAttribute, IApplyToTest
+	public class TestAttribute : NUnitAttribute, IApplyToTest, ITestExpectedResult
 	{
-		private string description;
+	    private object _expectedResult;
 
-		/// <summary>
-		/// Descriptive text for this test
-		/// </summary>
-		public string Description
-		{
-			get { return description; }
-			set { description = value; }
-		}
+	    /// <summary>
+	    /// Descriptive text for this test
+	    /// </summary>
+	    public string Description { get; set; }
 
-        #region IApplyToTest Members
+	    #region IApplyToTest Members
 
         /// <summary>
         /// Modifies a test by adding a description, if not already set.
@@ -70,10 +66,30 @@ namespace NUnit.Framework
         /// <param name="test">The test to modify</param>
         public void ApplyToTest(Test test)
         {
-            if (!test.Properties.ContainsKey(PropertyNames.Description) && description != null)
-                test.Properties.Set(PropertyNames.Description, description);
+            if (!test.Properties.ContainsKey(PropertyNames.Description) && Description != null)
+                test.Properties.Set(PropertyNames.Description, Description);
+
         }
 
         #endregion
-    }
+
+        /// <summary>
+        /// Gets or sets the expected result.
+        /// </summary>
+        /// <value>The result.</value>
+        public object ExpectedResult
+        {
+            get { return _expectedResult; }
+            set
+            {
+                _expectedResult = value;
+                HasExpectedResult = true;
+            }
+        }
+
+	    /// <summary>
+	    /// Returns true if an expected result has been set
+	    /// </summary>
+	    public bool HasExpectedResult { get; private set; }
+	}
 }

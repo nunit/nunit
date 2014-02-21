@@ -29,8 +29,8 @@ namespace NUnit.TestData.TestMethodSignatureFixture
 	[TestFixture]
 	public class TestMethodSignatureFixture
 	{
-		public static int Tests = 19;
-		public static int Runnable = 11;
+		public static int Tests = 20;
+		public static int Runnable = 12;
 		public static int NotRunnable = 8;
 	    public static int Errors = 3;
 	    public static int Failures = 0;
@@ -120,5 +120,11 @@ namespace NUnit.TestData.TestMethodSignatureFixture
 		{
 			return true;
 		}
+
+        [Test(ExpectedResult = true)]
+        public bool TestMethodWithExpectedReturnType()
+        {
+            return true;
+        }
 	}
 }
