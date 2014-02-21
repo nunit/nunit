@@ -1,6 +1,6 @@
-// ***********************************************************************
-// Copyright (c) 2009 Charlie Poole
-//
+﻿// ***********************************************************************
+// Copyright (c) 2014 Rob Prouse
+// 
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
 // "Software"), to deal in the Software without restriction, including
@@ -13,7 +13,7 @@
 // included in all copies or substantial portions of the Software.
 // 
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OFn
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
 // NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
 // LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
@@ -21,41 +21,23 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
-using System.Collections;
-
 namespace NUnit.Framework.Interfaces
 {
     /// <summary>
-    /// The ITestCaseData interface is implemented by a class
-    /// that is able to return complete testcases for use by
-    /// a parameterized test method.
+    /// Attributes that implement ITestExpectedResult mark tests with
+    /// return values that are checked against the ExpectedResult if
+    /// HasExpectedResult is true.
     /// </summary>
-    public interface ITestCaseData : ITestExpectedResult
+    public interface ITestExpectedResult
     {
         /// <summary>
-        /// Gets the name to be used for the test
+        /// Gets the expected result of the test case
         /// </summary>
-        string TestName { get; }
-		
-		/// <summary>
-		/// Gets the RunState for this test case.
-		/// </summary>
-		RunState RunState { get; }
+        object ExpectedResult { get; }
 
         /// <summary>
-        /// Gets the argument list to be provided to the test
+        /// Returns true if an expected result has been set
         /// </summary>
-        object[] Arguments { get; }
-
-        /// <summary>
-        /// Gets data about any expected exception.
-        /// </summary>
-        ExpectedExceptionData ExceptionData { get; }
-
-        /// <summary>
-        /// Gets the property dictionary for the test case
-        /// </summary>
-        IPropertyBag Properties { get; }
+        bool HasExpectedResult { get; }
     }
 }

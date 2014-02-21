@@ -8,3 +8,5 @@
 * OSPlatform and ParameterSet have been moved to nunit.framework.
 
 * AssemblyInfo now returns an array
+
+* TestAttribute can now take an ExpectedResult
