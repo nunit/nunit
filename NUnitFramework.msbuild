@@ -37,42 +37,34 @@
   <PropertyGroup Condition="'$(Framework)'=='net-4.5'">
     <ProjectSuffix>4.5</ProjectSuffix>
     <Runtime>NET</Runtime>
-    <FrameworkBuildDir>NET45</FrameworkBuildDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Framework)'=='net-4.0'">
     <ProjectSuffix>4.0</ProjectSuffix>
     <Runtime>NET</Runtime>
-    <FrameworkBuildDir>NET40</FrameworkBuildDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Framework)'=='net-3.5'">
     <ProjectSuffix>3.5</ProjectSuffix>
     <Runtime>NET</Runtime>
-    <FrameworkBuildDir>NET35</FrameworkBuildDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Framework)'=='net-2.0'">
     <ProjectSuffix>2.0</ProjectSuffix>
     <Runtime>NET</Runtime>
-    <FrameworkBuildDir>NET20</FrameworkBuildDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Framework)'=='mono-4.5'">
     <ProjectSuffix>4.5</ProjectSuffix>
     <Runtime>mono</Runtime>
-    <FrameworkBuildDir>mono45</FrameworkBuildDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Framework)'=='mono-4.0'">
     <ProjectSuffix>4.0</ProjectSuffix>
     <Runtime>mono</Runtime>
-    <FrameworkBuildDir>mono40</FrameworkBuildDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Framework)'=='mono-3.5'">
     <ProjectSuffix>3.5</ProjectSuffix>
     <Runtime>mono</Runtime>
-    <FrameworkBuildDir>mono35</FrameworkBuildDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Framework)'=='mono-2.0'">
     <ProjectSuffix>2.0</ProjectSuffix>
     <Runtime>mono</Runtime>
-    <FrameworkBuildDir>mono20</FrameworkBuildDir>
   </PropertyGroup>
   
   <PropertyGroup Label="Properties for running tests">
@@ -84,7 +76,7 @@
     
   <PropertyGroup>
     <ConfigurationBuildDir>$(ProjectBuildDir)\$(Configuration)</ConfigurationBuildDir>
-    <CurrentBuildDir>$(ConfigurationBuildDir)\$(FrameworkBuildDir)</CurrentBuildDir>
+    <FrameworkBuildDir>$(ConfigurationBuildDir)\$(Framework)</FrameworkBuildDir>
   </PropertyGroup>
 
   <Target Name="DumpSettings">
@@ -103,7 +95,7 @@
     <Message Text="Current build settings:"></Message>
     <Message Text="  Configuration: $(Configuration)"></Message>
     <Message Text="  Framework:     $(Framework)"></Message>
-    <Message Text="  Build dir:     $(CurrentBuildDir)"></Message>
+    <Message Text="  Build dir:     $(FrameworkBuildDir)"></Message>
     <Message Text="  Proj suffix:   $(ProjectSuffix)"></Message>
     <Message Text=""></Message>
     <Message Text=""></Message>
@@ -119,7 +111,7 @@
   </Target>
   
   <Target Name="Clean">
-    <RemoveDir Directories="$(CurrentBuildDir)" Condition="Exists('$(CurrentBuildDir)')">
+    <RemoveDir Directories="$(FrameworkBuildDir)" Condition="Exists('$(FrameworkBuildDir)')">
     </RemoveDir>
     <Delete Files="$(ProjectSrcDir)\GeneratedAssemblyInfo.cs" Condition="Exists('$(ProjectSrcDir)\GeneratedAssemblyInfo.cs')" />
   </Target>
@@ -144,11 +136,11 @@
     <NUnitLiteProject Include="$(ProjectSrcDir)\tests\nunitlite.tests-$(ProjectSuffix).csproj"></NUnitLiteProject>
   </ItemGroup>
   <Target Name="BuildNUnit">
-    <MSBuild Targets="Rebuild" Projects="@(NUnitProject)" Properties="Configuration=$(Configuration); OutputPath=$(CurrentBuildDir)">
+    <MSBuild Targets="Rebuild" Projects="@(NUnitProject)" Properties="Configuration=$(Configuration); OutputPath=$(FrameworkBuildDir)">
     </MSBuild>
   </Target>
   <Target Name="BuildNUnitLite">
-    <MSBuild Targets="Rebuild" Projects="@(NUnitLiteProject)" Properties="Configuration=$(Configuration); OutputPath=$(CurrentBuildDir)">
+    <MSBuild Targets="Rebuild" Projects="@(NUnitLiteProject)" Properties="Configuration=$(Configuration); OutputPath=$(FrameworkBuildDir)">
     </MSBuild>
   </Target>
   <Target Name="Test">
@@ -156,10 +148,10 @@
     <CallTarget Targets="NUnitLiteTest"></CallTarget>
   </Target>
   <Target Name="NUnitTest">
-    <Exec WorkingDirectory="$(CurrentBuildDir)" Command="$(ManagedExeLauncher) $(CurrentBuildDir)\$(TestRunnerProgram) $(TestRunnerArgs)">
+    <Exec WorkingDirectory="$(FrameworkBuildDir)" Command="$(ManagedExeLauncher) $(FrameworkBuildDir)\$(TestRunnerProgram) $(TestRunnerArgs)">
     </Exec>
   </Target>
   <Target Name="NUnitLiteTest">
-    <Exec WorkingDirectory="$(CurrentBuildDir)" Command="$(ManagedExeLauncher) $(CurrentBuildDir)\nunitlite.tests.exe"></Exec>
+    <Exec WorkingDirectory="$(FrameworkBuildDir)" Command="$(ManagedExeLauncher) $(FrameworkBuildDir)\nunitlite.tests.exe"></Exec>
   </Target>
 </Project>
