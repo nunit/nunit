@@ -48,12 +48,7 @@
     <!--DefaultMonoFramework Condition="'%(Runtime)' == 'mono' And '$(DefaultMonoFramework)' == ''">@(SupportedFramework)</DefaultMonoFramework-->
     <DefaultFramework>NET4.5</DefaultFramework>
   </PropertyGroup>
-  <PropertyGroup Label="Properties for running tests">
-    <TestOptions Condition="'$(TestOptions)' == ''"></TestOptions>
-    <ManagedExeLauncher Condition="'$(Runtime)' == 'mono'">mono</ManagedExeLauncher>
-    <TestRunnerProgram>test-harness.exe</TestRunnerProgram>
-    <TestRunnerArgs>nunit.framework.tests.dll $(TestOptions)</TestRunnerArgs>
-  </PropertyGroup>
+  
   <PropertyGroup Condition="'$(RuntimeConfig)' == ''">
     <RuntimeConfig>$(DefaultFramework)</RuntimeConfig>
   </PropertyGroup>
@@ -90,6 +85,12 @@
     <Runtime>mono</Runtime>
   </PropertyGroup>
   
+  <PropertyGroup Label="Properties for running tests">
+    <TestOptions Condition="'$(TestOptions)' == ''"></TestOptions>
+    <ManagedExeLauncher Condition="'$(Runtime)' == 'mono'">mono</ManagedExeLauncher>
+    <TestRunnerProgram>test-harness.exe</TestRunnerProgram>
+    <TestRunnerArgs>nunit.framework.tests.dll $(TestOptions)</TestRunnerArgs>
+  </PropertyGroup>
     
   <PropertyGroup>
     <BuildConfigDir>$(ProjectBuildDir)\$(Configuration)</BuildConfigDir>
