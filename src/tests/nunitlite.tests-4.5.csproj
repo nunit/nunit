@@ -119,6 +119,7 @@
     </Compile>
     <Compile Include="Attributes\ValueSourceTests.cs" />
     <Compile Include="Constraints\AsyncDelayedConstraintTests.cs" />
+    <Compile Include="Constraints\CollectionEqualsTests.cs" />
     <Compile Include="Constraints\CollectionSubsetConstraintTests.cs" />
     <Compile Include="Constraints\DelayedConstraintTests.cs" />
     <Compile Include="Constraints\AllItemsConstraintTests.cs" />
@@ -162,6 +163,7 @@
     <Compile Include="Constraints\SubstringConstraintTests.cs" />
     <Compile Include="Constraints\ThrowsConstraintTests.cs" />
     <Compile Include="Constraints\ThrowsExceptionConstraintTests.cs" />
+    <Compile Include="Constraints\ToleranceTests.cs" />
     <Compile Include="Constraints\ToStringTests.cs" />
     <Compile Include="Constraints\UniqueItemsConstraintTests.cs" />
     <Compile Include="Constraints\XmlSerializableTest.cs" />

@@ -58,7 +58,7 @@ namespace NUnit.Framework.Constraints
 
         private bool ItemsEqual(object expected, object actual)
         {
-            Tolerance tolerance = Tolerance.Empty;
+            Tolerance tolerance = Tolerance.Default;
             return comparer.AreEqual(expected, actual, ref tolerance);
         }
 
