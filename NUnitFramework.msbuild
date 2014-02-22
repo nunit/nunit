@@ -50,6 +50,7 @@
   </PropertyGroup>
   <PropertyGroup Label="Properties for running tests">
     <TestOptions Condition="'$(TestOptions)' == ''"></TestOptions>
+    <ManagedExeLauncher Condition="'$(Runtime)' == 'mono'">mono</ManagedExeLauncher>
     <TestRunnerProgram>test-harness.exe</TestRunnerProgram>
     <TestRunnerArgs>nunit.framework.tests.dll $(TestOptions)</TestRunnerArgs>
   </PropertyGroup>
@@ -157,9 +158,6 @@
     </MSBuild>
   </Target>
   <Target Name="Test">
-    <PropertyGroup>
-      <ManagedExeLauncher Condition="'$(Runtime)' == 'mono'">mono</ManagedExeLauncher>
-    </PropertyGroup>
     <CallTarget Targets="NUnitTest"></CallTarget>
     <CallTarget Targets="NUnitLiteTest"></CallTarget>
   </Target>
