@@ -7,6 +7,7 @@
     <PackageConfiguration Label="(Release, Alpha, Beta, ...)" />
     <PackageName>$(ProjectName)-$(PackageVersion)</PackageName>
   </PropertyGroup>
+  
   <PropertyGroup Label="Project Directories">
     <ProjectBaseDir>$(MSBuildProjectDirectory)</ProjectBaseDir>
     <ProjectBuildDir>$(ProjectBaseDir)\build</ProjectBuildDir>
@@ -15,9 +16,9 @@
     <ProjectDocDir>$(ProjectBaseDir)\doc</ProjectDocDir>
     <ProjectSamplesDir>$(ProjectBaseDir)\samples</ProjectSamplesDir>
     <ProjectLibDir>$(ProjectBaseDir)\lib</ProjectLibDir>
-    <ProjectToolsDir>$(ProjectBaseDir)\..\tools</ProjectToolsDir>
     <PartCoverDir>$(ProjectToolsDir)\PartCover</PartCoverDir>
   </PropertyGroup>
+  
   <PropertyGroup Label="Packaging Directories">
     <PackageWorkingDir Condition="'$(PackageWorkingDir)' == ''">$(ProjectPackageDir)\$(PackageName)</PackageWorkingDir>
     <PackageBinDir>$(PackageWorkingDir)\bin</PackageBinDir>
@@ -26,63 +27,52 @@
     <PackageSrcDir>$(PackageWorkingDir)\src</PackageSrcDir>
     <PackageLibDir>$(PackageWorkingDir)\lib</PackageLibDir>
   </PropertyGroup>
-  <PropertyGroup Label="Default Build Configuration">
+
+  <PropertyGroup Label="Build Configurations">
     <Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
-  </PropertyGroup>
-  <ItemGroup Label="Supported Frameworks">
-    <SupportedFramework Include="NET4.5">
-    </SupportedFramework>
-    <SupportedFramework Include="NET4.0">
-    </SupportedFramework>
-    <SupportedFramework Include="NET3.5">
-    </SupportedFramework>
-    <SupportedFramework Include="NET2.0">
-    </SupportedFramework>
-    <SupportedFramework Include="mono2.0">
-    </SupportedFramework>
-    <SupportedFramework Include="mono3.5">
-    </SupportedFramework>
-  </ItemGroup>
-  <PropertyGroup Label="Default Frameworks">
-    <!--DefaultNETFramework Condition="'@(SupportedFramework-> '%(Runtime)')' == 'NET' And '$(DefaultNETFramework)' == ''">@(SupportedFramework-> '%(Runtime)')</DefaultNETFramework-->
-    <!--DefaultMonoFramework Condition="'%(Runtime)' == 'mono' And '$(DefaultMonoFramework)' == ''">@(SupportedFramework)</DefaultMonoFramework-->
-    <DefaultFramework>NET4.5</DefaultFramework>
+    <DefaultFramework>net-4.5</DefaultFramework>
+    <Framework Condition="'$(Framework)' == ''">$(DefaultFramework)</Framework>
   </PropertyGroup>
   
-  <PropertyGroup Condition="'$(RuntimeConfig)' == ''">
-    <RuntimeConfig>$(DefaultFramework)</RuntimeConfig>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(RuntimeConfig)'=='NET4.5'">
+  <PropertyGroup Condition="'$(Framework)'=='net-4.5'">
     <ProjectSuffix>4.5</ProjectSuffix>
     <Runtime>NET</Runtime>
+    <FrameworkBuildDir>NET45</FrameworkBuildDir>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(RuntimeConfig)'=='NET4.0'">
+  <PropertyGroup Condition="'$(Framework)'=='net-4.0'">
     <ProjectSuffix>4.0</ProjectSuffix>
     <Runtime>NET</Runtime>
+    <FrameworkBuildDir>NET40</FrameworkBuildDir>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(RuntimeConfig)'=='NET3.5'">
+  <PropertyGroup Condition="'$(Framework)'=='net-3.5'">
     <ProjectSuffix>3.5</ProjectSuffix>
     <Runtime>NET</Runtime>
+    <FrameworkBuildDir>NET35</FrameworkBuildDir>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(RuntimeConfig)'=='NET2.0'">
+  <PropertyGroup Condition="'$(Framework)'=='net-2.0'">
     <ProjectSuffix>2.0</ProjectSuffix>
     <Runtime>NET</Runtime>
+    <FrameworkBuildDir>NET20</FrameworkBuildDir>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(RuntimeConfig)'=='mono4.5'">
+  <PropertyGroup Condition="'$(Framework)'=='mono-4.5'">
     <ProjectSuffix>4.5</ProjectSuffix>
     <Runtime>mono</Runtime>
+    <FrameworkBuildDir>mono45</FrameworkBuildDir>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(RuntimeConfig)'=='mono4.0'">
+  <PropertyGroup Condition="'$(Framework)'=='mono-4.0'">
     <ProjectSuffix>4.0</ProjectSuffix>
     <Runtime>mono</Runtime>
+    <FrameworkBuildDir>mono40</FrameworkBuildDir>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(RuntimeConfig)'=='mono3.5'">
+  <PropertyGroup Condition="'$(Framework)'=='mono-3.5'">
     <ProjectSuffix>3.5</ProjectSuffix>
     <Runtime>mono</Runtime>
+    <FrameworkBuildDir>mono35</FrameworkBuildDir>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(RuntimeConfig)'=='mono2.0'">
+  <PropertyGroup Condition="'$(Framework)'=='mono-2.0'">
     <ProjectSuffix>2.0</ProjectSuffix>
     <Runtime>mono</Runtime>
+    <FrameworkBuildDir>mono20</FrameworkBuildDir>
   </PropertyGroup>
   
   <PropertyGroup Label="Properties for running tests">
@@ -93,8 +83,8 @@
   </PropertyGroup>
     
   <PropertyGroup>
-    <BuildConfigDir>$(ProjectBuildDir)\$(Configuration)</BuildConfigDir>
-    <CurrentBuildDir>$(BuildConfigDir)\$(RuntimeConfig)</CurrentBuildDir>
+    <ConfigurationBuildDir>$(ProjectBuildDir)\$(Configuration)</ConfigurationBuildDir>
+    <CurrentBuildDir>$(ConfigurationBuildDir)\$(FrameworkBuildDir)</CurrentBuildDir>
   </PropertyGroup>
 
   <Target Name="DumpSettings">
@@ -105,15 +95,17 @@
     <Message Text="    Build:       $(ProjectBuildDir)"></Message>
     <Message Text="    Package:     $(ProjectPackageDir)"></Message>
     <Message Text=""></Message>
-    <Message Text="Runtime versions:"></Message>
-    <Message Text="  Supported:     @(SupportedFramework)"></Message>
+    <Message Text=""></Message>
+    <Message Text="Frameworks:"></Message>
     <Message Text="  Default:       $(DefaultFramework)"></Message>
+    <Message Text=""></Message>
     <Message Text=""></Message>
     <Message Text="Current build settings:"></Message>
     <Message Text="  Configuration: $(Configuration)"></Message>
-    <Message Text="  Runtime:       $(RuntimeConfig)"></Message>
+    <Message Text="  Framework:     $(Framework)"></Message>
     <Message Text="  Build dir:     $(CurrentBuildDir)"></Message>
-    <Message Text="  Project suffix:$(ProjectSuffix)"></Message>
+    <Message Text="  Proj suffix:   $(ProjectSuffix)"></Message>
+    <Message Text=""></Message>
     <Message Text=""></Message>
     <Message Text="Packaging"></Message>
     <Message Text="  Name:          $(PackageName)"></Message>
@@ -123,15 +115,16 @@
     <Message Text="    Doc:         $(PackageDocDir)"></Message>
     <Message Text="    Samples:     $(PackageSamplesDir)"></Message>
     <Message Text="    Source:      $(PackageSourceDir)"></Message>
+    <Message Text=""></Message>
   </Target>
   
   <Target Name="Clean">
-    <RemoveDir Directories="$(CurrentBuildDir)">
+    <RemoveDir Directories="$(CurrentBuildDir)" Condition="Exists('$(CurrentBuildDir)')">
     </RemoveDir>
-    <Delete Files="$(ProjectSrcDir)\GeneratedAssemblyInfo.cs" />
+    <Delete Files="$(ProjectSrcDir)\GeneratedAssemblyInfo.cs" Condition="Exists('$(ProjectSrcDir)\GeneratedAssemblyInfo.cs')" />
   </Target>
   <Target Name="CleanAll" DependsOnTargets="Clean">
-    <RemoveDir Directories="$(ProjectBuildDir)">
+    <RemoveDir Directories="$(ProjectBuildDir)" Condition="Exists('$(ProjectBuildDir)')" >
     </RemoveDir>
   </Target>
   <Target Name="Build">
