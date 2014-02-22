@@ -56,16 +56,40 @@
   <PropertyGroup Condition="'$(RuntimeConfig)' == ''">
     <RuntimeConfig>$(DefaultFramework)</RuntimeConfig>
   </PropertyGroup>
-  <PropertyGroup>
-    <ProjectSuffix Condition="'$(RuntimeConfig)'=='NET4.5'">4.5</ProjectSuffix>
-    <ProjectSuffix Condition="'$(RuntimeConfig)'=='NET4.0'">4.0</ProjectSuffix>
-    <ProjectSuffix Condition="'$(RuntimeConfig)'=='NET3.5'">3.5</ProjectSuffix>
-    <ProjectSuffix Condition="'$(RuntimeConfig)'=='NET2.0'">2.0</ProjectSuffix>
-    <ProjectSuffix Condition="'$(RuntimeConfig)'=='mono4.5'">4.5</ProjectSuffix>
-    <ProjectSuffix Condition="'$(RuntimeConfig)'=='mono4.0'">4.0</ProjectSuffix>
-    <ProjectSuffix Condition="'$(RuntimeConfig)'=='mono3.5'">3.5</ProjectSuffix>
-    <ProjectSuffix Condition="'$(RuntimeConfig)'=='mono2.0'">2.0</ProjectSuffix>
+  <PropertyGroup Condition="'$(RuntimeConfig)'=='NET4.5'">
+    <ProjectSuffix>4.5</ProjectSuffix>
+    <Runtime>NET</Runtime>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(RuntimeConfig)'=='NET4.0'">
+    <ProjectSuffix>4.0</ProjectSuffix>
+    <Runtime>NET</Runtime>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(RuntimeConfig)'=='NET3.5'">
+    <ProjectSuffix>3.5</ProjectSuffix>
+    <Runtime>NET</Runtime>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(RuntimeConfig)'=='NET2.0'">
+    <ProjectSuffix>2.0</ProjectSuffix>
+    <Runtime>NET</Runtime>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(RuntimeConfig)'=='mono4.5'">
+    <ProjectSuffix>4.5</ProjectSuffix>
+    <Runtime>mono</Runtime>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(RuntimeConfig)'=='mono4.0'">
+    <ProjectSuffix>4.0</ProjectSuffix>
+    <Runtime>mono</Runtime>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(RuntimeConfig)'=='mono3.5'">
+    <ProjectSuffix>3.5</ProjectSuffix>
+    <Runtime>mono</Runtime>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(RuntimeConfig)'=='mono2.0'">
+    <ProjectSuffix>2.0</ProjectSuffix>
+    <Runtime>mono</Runtime>
+  </PropertyGroup>
+  
+    
   <PropertyGroup>
     <BuildConfigDir>$(ProjectBuildDir)\$(Configuration)</BuildConfigDir>
     <CurrentBuildDir>$(BuildConfigDir)\$(RuntimeConfig)</CurrentBuildDir>
@@ -133,14 +157,17 @@
     </MSBuild>
   </Target>
   <Target Name="Test">
+    <PropertyGroup>
+      <ManagedExeLauncher Condition="'$(Runtime)' == 'mono'">mono</ManagedExeLauncher>
+    </PropertyGroup>
     <CallTarget Targets="NUnitTest"></CallTarget>
     <CallTarget Targets="NUnitLiteTest"></CallTarget>
   </Target>
   <Target Name="NUnitTest">
-    <Exec WorkingDirectory="$(CurrentBuildDir)" Command="$(CurrentBuildDir)\$(TestRunnerProgram) $(TestRunnerArgs)">
+    <Exec WorkingDirectory="$(CurrentBuildDir)" Command="$(ManagedExeLauncher) $(CurrentBuildDir)\$(TestRunnerProgram) $(TestRunnerArgs)">
     </Exec>
   </Target>
   <Target Name="NUnitLiteTest">
-    <Exec WorkingDirectory="$(CurrentBuildDir)" Command="$(CurrentBuildDir)\nunitlite.tests.exe"></Exec>
+    <Exec WorkingDirectory="$(CurrentBuildDir)" Command="$(ManagedExeLauncher) $(CurrentBuildDir)\nunitlite.tests.exe"></Exec>
   </Target>
 </Project>
