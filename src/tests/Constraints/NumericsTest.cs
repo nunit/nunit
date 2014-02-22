@@ -35,7 +35,7 @@ namespace NUnit.Framework.Constraints
         public void SetUp()
         {
             tenPercent = new Tolerance(10.0).Percent;
-            zeroTolerance = new Tolerance(0);
+            zeroTolerance = Tolerance.Exact;
         }
 
         [TestCase(123456789)]

@@ -152,7 +152,7 @@ namespace NUnit.Framework.Constraints
             if (xType.IsGenericType && xType.GetGenericTypeDefinition() == typeof(KeyValuePair<,>) &&
                 yType.IsGenericType && yType.GetGenericTypeDefinition() == typeof(KeyValuePair<,>))
             {
-                var keyTolerance = new Tolerance(0);
+                var keyTolerance = Tolerance.Exact;
                 object xKey = xType.GetProperty("Key").GetValue(x, null);
                 object yKey = yType.GetProperty("Key").GetValue(y, null);
                 object xValue = xType.GetProperty("Value").GetValue(x, null);
@@ -287,7 +287,7 @@ namespace NUnit.Framework.Constraints
 
         private bool DictionaryEntriesEqual(DictionaryEntry x, DictionaryEntry y, ref Tolerance tolerance)
         {
-            var keyTolerance = new Tolerance(0);
+            var keyTolerance = Tolerance.Exact;
             return AreEqual(x.Key, y.Key, ref keyTolerance) && AreEqual(x.Value, y.Value, ref tolerance);
         }
 

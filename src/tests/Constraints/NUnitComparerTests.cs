@@ -28,13 +28,11 @@ namespace NUnit.Framework.Constraints
     [TestFixture]
     public class NUnitComparerTests
     {
-        private Tolerance tolerance;
         private NUnitComparer comparer;
 
         [SetUp]
         public void SetUp()
         {
-            tolerance = Tolerance.Empty;
             comparer = new NUnitComparer();
         }
 

@@ -253,7 +253,7 @@ namespace NUnit.Framework.Internal
 			Write(Pfx_Expected);
 			Write(MsgUtils.FormatValue(expected));
 
-            if (tolerance != null && !tolerance.IsEmpty)
+            if (tolerance != null && !tolerance.IsUnsetOrDefault)
             {
                 Write(" +/- ");
                 Write(MsgUtils.FormatValue(tolerance.Value));
