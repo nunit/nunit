@@ -112,24 +112,24 @@
     <CallTarget Targets="BuildNUnit" />
     <CallTarget Targets="BuildNUnitLite" />
   </Target>
+  <ItemGroup>
+    <NUnitProject Include="$(ProjectSrcDir)\framework\nunit.framework-$(ProjectSuffix).csproj"></NUnitProject>
+    <NUnitProject Include="$(ProjectSrcDir)\testdata\nunit.testdata-$(ProjectSuffix).csproj"></NUnitProject>
+    <NUnitProject Include="$(ProjectSrcDir)\tests\nunit.framework.tests-$(ProjectSuffix).csproj"></NUnitProject>
+    <NUnitProject Include="$(ProjectSrcDir)\harness\test-harness-$(ProjectSuffix).csproj"></NUnitProject>
+    <NUnitProject Include="$(ProjectSrcDir)\mock-assembly\mock-assembly-$(ProjectSuffix).csproj"></NUnitProject>
+  </ItemGroup>
+  <ItemGroup>
+    <NUnitLiteProject Include="$(ProjectSrcDir)\framework\nunitlite-$(ProjectSuffix).csproj"></NUnitLiteProject>
+    <NUnitLiteProject Include="$(ProjectSrcDir)\testdata\nunitlite.testdata-$(ProjectSuffix).csproj"></NUnitLiteProject>
+    <NUnitLiteProject Include="$(ProjectSrcDir)\tests\nunitlite.tests-$(ProjectSuffix).csproj"></NUnitLiteProject>
+  </ItemGroup>
   <Target Name="BuildNUnit">
-    <MSBuild Targets="Rebuild" Projects="$(ProjectSrcDir)\framework\nunit.framework-$(ProjectSuffix).csproj" Properties="Configuration =$(Configuration);OutputPath =$(CurrentBuildDir)">
-    </MSBuild>
-    <MSBuild Targets="Rebuild" Projects="$(ProjectSrcDir)\testdata\nunit.testdata-$(ProjectSuffix).csproj" Properties="Configuration =$(Configuration);OutputPath =$(CurrentBuildDir)">
-    </MSBuild>
-    <MSBuild Targets="Rebuild" Projects="$(ProjectSrcDir)\tests\nunit.framework.tests-$(ProjectSuffix).csproj" Properties="Configuration =$(Configuration);OutputPath =$(CurrentBuildDir)">
-    </MSBuild>
-    <MSBuild Targets="Rebuild" Projects="$(ProjectSrcDir)\harness\test-harness-$(ProjectSuffix).csproj" Properties="Configuration =$(Configuration);OutputPath =$(CurrentBuildDir)">
-    </MSBuild>
-    <MSBuild Targets="Rebuild" Projects="$(ProjectSrcDir)\mock-assembly\mock-assembly-$(ProjectSuffix).csproj" Properties="Configuration =$(Configuration);OutputPath =$(CurrentBuildDir)">
+    <MSBuild Targets="Rebuild" Projects="@(NUnitProject)" Properties="Configuration=$(Configuration); OutputPath=$(CurrentBuildDir)">
     </MSBuild>
   </Target>
   <Target Name="BuildNUnitLite">
-    <MSBuild Targets="Rebuild" Projects="$(ProjectSrcDir)\framework\nunitlite-$(ProjectSuffix).csproj" Properties="Configuration =$(Configuration);OutputPath =$(CurrentBuildDir)">
-    </MSBuild>
-    <MSBuild Targets="Rebuild" Projects="$(ProjectSrcDir)\testdata\nunitlite.testdata-$(ProjectSuffix).csproj" Properties="Configuration =$(Configuration);OutputPath =$(CurrentBuildDir)">
-    </MSBuild>
-    <MSBuild Targets="Rebuild" Projects="$(ProjectSrcDir)\tests\nunitlite.tests-$(ProjectSuffix).csproj" Properties="Configuration =$(Configuration);OutputPath =$(CurrentBuildDir)">
+    <MSBuild Targets="Rebuild" Projects="@(NUnitLiteProject)" Properties="Configuration=$(Configuration); OutputPath=$(CurrentBuildDir)">
     </MSBuild>
   </Target>
   <Target Name="Test">
