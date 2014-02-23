@@ -4,7 +4,6 @@
   <PropertyGroup Label="Common Properties">
     <ProjectName>$(MSBuildProjectName)</ProjectName>
     <PackageVersion>2.9.6</PackageVersion>
-    <PackageConfiguration Label="(Release, Alpha, Beta, ...)" />
     <PackageName>$(ProjectName)-$(PackageVersion)</PackageName>
   </PropertyGroup>
   
@@ -13,9 +12,7 @@
     <ProjectBuildDir>$(ProjectBaseDir)\build</ProjectBuildDir>
     <ProjectPackageDir>$(ProjectBaseDir)\package</ProjectPackageDir>
     <ProjectSrcDir>$(ProjectBaseDir)\src</ProjectSrcDir>
-    <ProjectDocDir>$(ProjectBaseDir)\doc</ProjectDocDir>
-    <ProjectSamplesDir>$(ProjectBaseDir)\samples</ProjectSamplesDir>
-    <ProjectLibDir>$(ProjectBaseDir)\lib</ProjectLibDir>
+    <ProjectToolsDir>$(ProjectBaseDir)\tools</ProjectToolsDir>
     <PartCoverDir>$(ProjectToolsDir)\PartCover</PartCoverDir>
   </PropertyGroup>
   
@@ -82,22 +79,18 @@
   <Target Name="DumpSettings">
     <Message Text="Project directories:"></Message>
     <Message Text="  Base:          $(ProjectBaseDir)"></Message>
-    <Message Text="    Doc:         $(ProjectDocDir)"></Message>
-    <Message Text="    Samples:     $(ProjectSamplesDir)"></Message>
     <Message Text="    Build:       $(ProjectBuildDir)"></Message>
     <Message Text="    Package:     $(ProjectPackageDir)"></Message>
-    <Message Text=""></Message>
+    <Message Text="    Tools:       $(ProjectToolsDir)"></Message>
     <Message Text=""></Message>
     <Message Text="Frameworks:"></Message>
     <Message Text="  Default:       $(DefaultFramework)"></Message>
-    <Message Text=""></Message>
     <Message Text=""></Message>
     <Message Text="Current build settings:"></Message>
     <Message Text="  Configuration: $(Configuration)"></Message>
     <Message Text="  Framework:     $(Framework)"></Message>
     <Message Text="  Build dir:     $(FrameworkBuildDir)"></Message>
     <Message Text="  Proj suffix:   $(ProjectSuffix)"></Message>
-    <Message Text=""></Message>
     <Message Text=""></Message>
     <Message Text="Packaging"></Message>
     <Message Text="  Name:          $(PackageName)"></Message>
@@ -106,7 +99,7 @@
     <Message Text="    Bin:         $(PackageBinDir)"></Message>
     <Message Text="    Doc:         $(PackageDocDir)"></Message>
     <Message Text="    Samples:     $(PackageSamplesDir)"></Message>
-    <Message Text="    Source:      $(PackageSourceDir)"></Message>
+    <Message Text="    Source:      $(PackageSrcDir)"></Message>
     <Message Text=""></Message>
   </Target>
   
@@ -119,8 +112,11 @@
     <RemoveDir Directories="$(ProjectBuildDir)" Condition="Exists('$(ProjectBuildDir)')" >
     </RemoveDir>
   </Target>
+  <Target Name="CleanPackageDir">
+    <RemoveDir Directories="$(PackageWorkingDir)" Condition="Exists('$(PackageWorkingDir)')"></RemoveDir>
+  </Target>
   <Target Name="Build">
-    <CallTarget Targets="BuildNUnit" />
+    <CallTarget Targets="BuildNUnit" Condition="'$(runtime)' != 'netcf'" />
     <CallTarget Targets="BuildNUnitLite" />
   </Target>
   <ItemGroup>
@@ -136,6 +132,7 @@
     <NUnitLiteProject Include="$(ProjectSrcDir)\tests\nunitlite.tests-$(ProjectSuffix).csproj"></NUnitLiteProject>
   </ItemGroup>
   <Target Name="BuildNUnit">
+    <Error Condition="'$(runtime)' == 'netcf'" Text="The full NUnit framework cannot be built for $(runtime)"></Error>
     <MSBuild Targets="Rebuild" Projects="@(NUnitProject)" Properties="Configuration=$(Configuration); OutputPath=$(FrameworkBuildDir)">
     </MSBuild>
   </Target>
@@ -144,14 +141,30 @@
     </MSBuild>
   </Target>
   <Target Name="Test">
-    <CallTarget Targets="NUnitTest"></CallTarget>
+    <CallTarget Targets="NUnitTest" Condition="'$(runtime)' != 'netcf'"></CallTarget>
     <CallTarget Targets="NUnitLiteTest"></CallTarget>
   </Target>
   <Target Name="NUnitTest">
+    <Error Condition="'$(runtime)' == 'netcf'" Text="The full NUnit framework cannot be tested under $(runtime)"></Error>
     <Exec WorkingDirectory="$(FrameworkBuildDir)" Command="$(ManagedExeLauncher) $(FrameworkBuildDir)\$(TestRunnerProgram) $(TestRunnerArgs)">
     </Exec>
   </Target>
   <Target Name="NUnitLiteTest">
     <Exec WorkingDirectory="$(FrameworkBuildDir)" Command="$(ManagedExeLauncher) $(FrameworkBuildDir)\nunitlite.tests.exe"></Exec>
+  </Target>
+  <Target Name="TestCoverage">
+    <CallTarget Targets="NUnitCoverage" Condition="'$(runtime)' != 'netcf'"></CallTarget>
+    <CallTarget Targets="NUnitLiteCoverage"></CallTarget>
+  </Target>
+  <Target Name="NUnitCoverage">
+    <Error Condition="'$(runtime)' == 'netcf'" Text="The full NUnit framework cannot be tested under $(runtime)"></Error>
+    <Exec WorkingDirectory="$(FrameworkBuildDir)" 
+          Command='$(ManagedExeLauncher) $(PartCoverDir)\PartCover.exe --target "$(TestRunnerProgram)" --target-args "$(TestRunnerArgs)" --include [nunit.framework]* --output NUnitTestCoverage.xml'>
+    </Exec>
+  </Target>
+  <Target Name="NUnitLiteCoverage">
+    <Exec WorkingDirectory="$(FrameworkBuildDir)"
+          Command='$(ManagedExeLauncher) $(PartCoverDir)\PartCover.exe --target "$(nunitlite.tests.exe)" --include [nunitlite]* --output NUnitLiteTestCoverage.xml'>
+    </Exec>
   </Target>
 </Project>
