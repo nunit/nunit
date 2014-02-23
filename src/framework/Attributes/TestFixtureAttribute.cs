@@ -25,6 +25,8 @@ using System;
 using System.Collections;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
+using NUnit.Framework.Internal.Builders;
+using NUnit.Framework.Internal.Interfaces;
 
 namespace NUnit.Framework
 {
@@ -34,22 +36,16 @@ namespace NUnit.Framework
 	/// {}
 	/// </example>
 	[AttributeUsage(AttributeTargets.Class, AllowMultiple=true, Inherited=true)]
-    public class TestFixtureAttribute : NUnitAttribute, IApplyToTest
+    public class TestFixtureAttribute : NUnitAttribute, IFixtureBuilder, IApplyToTest
 	{
-		private string description;
+        private NUnitTestFixtureBuilder builder = new NUnitTestFixtureBuilder();
 
-        private object[] originalArgs;
-        private object[] constructorArgs;
-        private Type[] typeArgs;
-
-        private bool isIgnored;
-        private string ignoreReason;
-		private string category;
+        #region Constructors
 
         /// <summary>
         /// Default constructor
         /// </summary>
-        public TestFixtureAttribute() : this( null ) { }
+        public TestFixtureAttribute() : this( new object[0] ) { }
         
         /// <summary>
         /// Construct with a object[] representing a set of arguments. 
@@ -59,39 +55,29 @@ namespace NUnit.Framework
         /// <param name="arguments"></param>
         public TestFixtureAttribute(params object[] arguments)
         {
-            this.originalArgs = arguments == null
-                ? new object[0]
-                : arguments;
-            this.constructorArgs = this.originalArgs;
-            this.typeArgs = new Type[0];
+            this.Arguments = arguments;
+            this.TypeArgs = new Type[0];
         }
 
-		/// <summary>
+        #endregion
+
+        #region Public Properties
+
+        /// <summary>
 		/// Descriptive text for this fixture
 		/// </summary>
-		public string Description
-		{
-			get { return description; }
-			set { description = value; }
-		}
+		public string Description { get; set; }
 
         /// <summary>
         /// The arguments originally provided to the attribute
         /// </summary>
-        public object[] Arguments
-        {
-            get { return constructorArgs; }
-        }
+        public object[] Arguments { get; private set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this <see cref="TestFixtureAttribute"/> should be ignored.
         /// </summary>
         /// <value><c>true</c> if ignore; otherwise, <c>false</c>.</value>
-        public bool Ignore
-        {
-            get { return isIgnored; }
-            set { isIgnored = value; }
-        }
+        public bool Ignore { get; set; }
 
         /// <summary>
         /// Gets or sets the ignore reason. May set Ignored as a side effect.
@@ -99,43 +85,38 @@ namespace NUnit.Framework
         /// <value>The ignore reason.</value>
         public string IgnoreReason
         {
-            get { return ignoreReason; }
+            get { return _ignoreReason; }
             set
             {
-                ignoreReason = value;
-                isIgnored = ignoreReason != null && ignoreReason != string.Empty;
+                _ignoreReason = value;
+                Ignore = _ignoreReason != null && _ignoreReason != string.Empty;
             }
         }
+        private string _ignoreReason;
 
         /// <summary>
         /// Get or set the type arguments. If not set
         /// explicitly, any leading arguments that are
         /// Types are taken as type arguments.
         /// </summary>
-        public Type[] TypeArgs
-        {
-            get { return typeArgs; }
-            set { typeArgs = value; }
-        }
+        public Type[] TypeArgs { get; set; }
 
         /// <summary>
         /// Gets and sets the category for this fixture.
         /// May be a comma-separated list of categories.
         /// </summary>
-        public string Category
-        {
-            get { return category; }
-            set { category = value; }
-        }
+        public string Category { get; set; }
  
         /// <summary>
         /// Gets a list of categories for this fixture
         /// </summary>
         public IList Categories
         {
-            get { return category == null ? null : category.Split(','); }
+            get { return this.Category == null ? null : this.Category.Split(','); }
         }
- 
+
+        #endregion
+
         #region IApplyToTest Members
 
         /// <summary>
@@ -144,13 +125,72 @@ namespace NUnit.Framework
         /// <param name="test">The test to modify</param>
         public void ApplyToTest(Test test)
         {
-            if (!test.Properties.ContainsKey(PropertyNames.Description) && description != null)
-                test.Properties.Set(PropertyNames.Description, description);
+            if (!test.Properties.ContainsKey(PropertyNames.Description) && this.Description != null)
+                test.Properties.Set(PropertyNames.Description, this.Description);
 			
-			if (category != null)
-				foreach (string cat in category.Split(new char[] { ',' }) )
+			if (this.Category != null)
+				foreach (string cat in this.Category.Split(new char[] { ',' }) )
 					test.Properties.Add(PropertyNames.Category, cat);
         }
+
+        #endregion
+
+        #region IFixtureBuilder Members
+
+        /// <summary>
+        /// Build a SetUpFixture from type provided. Normally called for a Type
+        /// on which the attribute has been placed.
+        /// </summary>
+        /// <param name="type">The type of the fixture to be used.</param>
+        /// <returns>A SetUpFixture object as a TestSuite.</returns>
+        public TestSuite BuildFrom(Type type)
+        {
+            return builder.BuildFrom(type, this);
+        }
+
+        #endregion
+
+        #region Helper Methods
+
+//        /// <summary>
+//        /// Adjust the originally provided arguments, segregating them
+//        /// into Type arguments and actual arguments.
+//        /// </summary>
+//        private void AdjustArguments(Type type)
+//        {
+//#if !NETCF
+//            if (type.ContainsGenericParameters)
+//            {
+//                Type[] typeArgs = this.TypeArgs;
+//                if (typeArgs.Length == 0)
+//                {
+//                    int cnt = 0;
+//                    foreach (object o in Arguments)
+//                        if (o is Type) cnt++;
+//                        else break;
+
+//                    typeArgs = new Type[cnt];
+//                    for (int i = 0; i < cnt; i++)
+//                        typeArgs[i] = (Type)Arguments[i];
+
+//                    if (cnt > 0)
+//                    {
+//                        object[] args = new object[Arguments.Length - cnt];
+//                        for (int i = 0; i < args.Length; i++)
+//                            args[i] = Arguments[cnt + i];
+
+//                        Arguments = args;
+//                    }
+//                }
+
+//                if (typeArgs.Length > 0 ||
+//                    TypeHelper.CanDeduceTypeArgsFromArgs(type, Arguments, ref TypeArgs))
+//                {
+//                    type = TypeHelper.MakeGenericType(type, typeArgs);
+//                }
+//            }
+//#endif
+        //        }
 
         #endregion
     }

@@ -242,6 +242,7 @@
     <Compile Include="Internal\Builders\CombiningStrategy.cs" />
     <Compile Include="Internal\Builders\DataAttributeTestCaseProvider.cs" />
     <Compile Include="Internal\Builders\DatapointProvider.cs" />
+    <Compile Include="Internal\Builders\DefaultSuiteBuilder.cs" />
     <Compile Include="Internal\Builders\LegacySuiteBuilder.cs" />
     <Compile Include="Internal\Builders\NamespaceTreeBuilder.cs" />
     <Compile Include="Internal\Builders\NUnitTestCaseBuilder.cs" />
@@ -251,10 +252,8 @@
     <Compile Include="Internal\Builders\ParameterDataProviders.cs" />
     <Compile Include="Internal\Builders\ProviderCache.cs" />
     <Compile Include="Internal\Builders\SequentialStrategy.cs" />
-    <Compile Include="Internal\Builders\SetUpFixtureBuilder.cs" />
     <Compile Include="Internal\AsyncInvocationRegion.cs" />
     <Compile Include="Internal\AsyncSynchronizationContext.cs" />
-    <Compile Include="Internal\Builders\SuiteBuilderCollection.cs" />
     <Compile Include="Internal\Builders\TestCaseBuilderCollection.cs" />
     <Compile Include="Internal\Builders\TestCaseProviders.cs" />
     <Compile Include="Internal\Commands\OneTimeSetUpCommand.cs" />
@@ -302,6 +301,7 @@
     <Compile Include="Internal\Filters\ValueMatchFilter.cs" />
     <Compile Include="Internal\IApplyToContext.cs" />
     <Compile Include="Internal\IApplyToTest.cs" />
+    <Compile Include="Internal\Interfaces\IFixtureBuilder.cs" />
     <Compile Include="Internal\InternalTrace.cs" />
     <Compile Include="Internal\InternalTraceLevel.cs" />
     <Compile Include="Internal\InternalTraceWriter.cs" />

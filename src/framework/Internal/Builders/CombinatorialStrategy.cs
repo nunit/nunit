@@ -57,7 +57,7 @@ namespace NUnit.Framework.Internal.Builders
                 {
                     enumerators[index] = Sources[index].GetEnumerator();
                     if (!enumerators[index].MoveNext())
-						return testCases;
+                        return testCases;
                 }
 
                 object[] testdata = new object[Sources.Length];
@@ -66,7 +66,7 @@ namespace NUnit.Framework.Internal.Builders
                     testdata[i] = enumerators[i].Current;
 
                 ParameterSet parms = new ParameterSet(testdata);
-				testCases.Add(parms);
+                testCases.Add(parms);
 
                 index = Sources.Length;
 
@@ -75,7 +75,7 @@ namespace NUnit.Framework.Internal.Builders
                 if (index < 0) break;
             }
 
-			return testCases;
+            return testCases;
         }
     }
 }

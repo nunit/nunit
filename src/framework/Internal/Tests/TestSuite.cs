@@ -33,13 +33,13 @@ namespace NUnit.Framework.Internal
     /// <summary>
     /// TestSuite represents a composite test, which contains other tests.
     /// </summary>
-	public class TestSuite : Test
-	{
-		#region Fields
+    public class TestSuite : Test
+    {
+        #region Fields
 
-		/// <summary>
-		/// Our collection of child tests
-		/// </summary>
+        /// <summary>
+        /// Our collection of child tests
+        /// </summary>
         private List<ITest> tests = new List<ITest>();
 
         /// <summary>
@@ -64,57 +64,45 @@ namespace NUnit.Framework.Internal
 
         #endregion
 
-		#region Constructors
+        #region Constructors
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TestSuite"/> class.
         /// </summary>
         /// <param name="name">The name of the suite.</param>
-		public TestSuite( string name ) 
-			: base( name ) { }
+        public TestSuite( string name ) 
+            : base( name ) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TestSuite"/> class.
         /// </summary>
         /// <param name="parentSuiteName">Name of the parent suite.</param>
         /// <param name="name">The name of the suite.</param>
-		public TestSuite( string parentSuiteName, string name ) 
-			: base( parentSuiteName, name ) { }
+        public TestSuite( string parentSuiteName, string name ) 
+            : base( parentSuiteName, name ) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TestSuite"/> class.
         /// </summary>
         /// <param name="fixtureType">Type of the fixture.</param>
-        public TestSuite(Type fixtureType)
-            : this(fixtureType, null) { }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TestSuite"/> class.
-        /// </summary>
-        /// <param name="fixtureType">Type of the fixture.</param>
-        /// <param name="arguments">The arguments.</param>
-        public TestSuite(Type fixtureType, object[] arguments)
-            : base(fixtureType)
+        public TestSuite(Type fixtureType) : base(fixtureType)
         {
-            string name = TypeHelper.GetDisplayName(fixtureType, arguments);
-            this.Name = name;
-            
-            this.FullName = name;
+            string name = this.Name = TypeHelper.GetDisplayName(fixtureType);
             string nspace = fixtureType.Namespace;
-            if (nspace != null && nspace != "")
-                this.FullName = nspace + "." + name;
-            this.arguments = arguments;
+            this.FullName = nspace != null && nspace != ""
+                ? nspace + "." + name
+                : name;
         }
 
         #endregion
 
-		#region Public Methods
+        #region Public Methods
 
         /// <summary>
         /// Sorts tests under this suite.
         /// </summary>
-		public void Sort()
-		{
+        public void Sort()
+        {
             if (!maintainTestOrder)
             {
                 this.tests.Sort();
@@ -126,7 +114,7 @@ namespace NUnit.Framework.Internal
                         suite.Sort();
                 }
             }
-		}
+        }
 
 #if false
         /// <summary>
@@ -135,38 +123,38 @@ namespace NUnit.Framework.Internal
         /// <param name="comparer">The comparer.</param>
         public void Sort(IComparer comparer)
         {
-			this.tests.Sort(comparer);
+            this.tests.Sort(comparer);
 
-			foreach( Test test in Tests )
-			{
-				TestSuite suite = test as TestSuite;
-				if ( suite != null )
-					suite.Sort(comparer);
-			}
-		}
+            foreach( Test test in Tests )
+            {
+                TestSuite suite = test as TestSuite;
+                if ( suite != null )
+                    suite.Sort(comparer);
+            }
+        }
 #endif
 
         /// <summary>
         /// Adds a test to the suite.
         /// </summary>
         /// <param name="test">The test.</param>
-		public void Add( Test test ) 
-		{
-			test.Parent = this;
-			tests.Add(test);
-		}
+        public void Add( Test test ) 
+        {
+            test.Parent = this;
+            tests.Add(test);
+        }
 
 #if !NUNITLITE
         /// <summary>
         /// Adds a pre-constructed test fixture to the suite.
         /// </summary>
         /// <param name="fixture">The fixture.</param>
-		public void Add( object fixture )
-		{
-			Test test = TestFixtureBuilder.BuildFrom( fixture );
-			if ( test != null )
-				Add( test );
-		}
+        public void Add( object fixture )
+        {
+            Test test = TestFixtureBuilder.BuildFrom( fixture );
+            if ( test != null )
+                Add( test );
+        }
 #endif
 
         /// <summary>
@@ -205,39 +193,39 @@ namespace NUnit.Framework.Internal
 
         #endregion
 
-		#region Properties
+        #region Properties
 
         /// <summary>
         /// Gets this test's child tests
         /// </summary>
         /// <value>The list of child tests</value>
         public override IList<ITest> Tests 
-		{
-			get { return tests; }
-		}
+        {
+            get { return tests; }
+        }
 
         /// <summary>
         /// Gets a count of test cases represented by
         /// or contained under this test.
         /// </summary>
         /// <value></value>
-		public override int TestCaseCount
-		{
-			get
-			{
-				int count = 0;
+        public override int TestCaseCount
+        {
+            get
+            {
+                int count = 0;
 
-				foreach(Test test in Tests)
-				{
-					count += test.TestCaseCount;
-				}
-				return count;
-			}
-		}
+                foreach(Test test in Tests)
+                {
+                    count += test.TestCaseCount;
+                }
+                return count;
+            }
+        }
 
         #endregion
 
-		#region Test Overrides
+        #region Test Overrides
 
         /// <summary>
         /// Overridden to return a TestSuiteResult.
@@ -281,7 +269,7 @@ namespace NUnit.Framework.Internal
             XmlNode thisNode = parentNode.AddElement("test-suite");
             thisNode.AddAttribute("type", this.TestType);
 
-			PopulateTestNode(thisNode, recursive);
+            PopulateTestNode(thisNode, recursive);
             thisNode.AddAttribute("testcasecount", this.TestCaseCount.ToString());
 
 
@@ -292,6 +280,6 @@ namespace NUnit.Framework.Internal
             return thisNode;
         }
 
-		#endregion
+        #endregion
     }
 }

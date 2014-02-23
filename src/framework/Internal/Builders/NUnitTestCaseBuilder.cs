@@ -45,7 +45,7 @@ namespace NUnit.Framework.Internal.Builders
     /// provided, but all four cases are dealt with in lower-level methods
     /// </summary>
     public class NUnitTestCaseBuilder : ITestCaseBuilder2
-	{
+    {
         private Randomizer randomizer;
 
         private ITestCaseProvider testCaseProvider = new TestCaseProviders();
@@ -89,7 +89,7 @@ namespace NUnit.Framework.Internal.Builders
         /// <param name="method">The MethodInfo for which a test is to be built</param>
         /// <returns>A Test representing one or more method invocations</returns>
         public Test BuildFrom(MethodInfo method)
-		{
+        {
             return BuildFrom(method, null);
         }
 
@@ -248,7 +248,7 @@ namespace NUnit.Framework.Internal.Builders
             return testMethod;
         }
 
-		#endregion
+        #endregion
 
         #region Helper Methods
 
@@ -269,7 +269,7 @@ namespace NUnit.Framework.Internal.Builders
         /// <param name="parms">Parameters to be used for this test, or null</param>
         /// <returns>True if the method signature is valid, false if not</returns>
         private static bool CheckTestMethodSignature(TestMethod testMethod, ParameterSet parms)
-		{
+        {
             if (testMethod.Method.IsAbstract)
             {
                 return MarkAsNotRunnable(testMethod, "Method is abstract");
