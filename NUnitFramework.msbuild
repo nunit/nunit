@@ -189,12 +189,13 @@
     <RemoveDir Directories="$(PackageWorkingDir)" Condition="Exists('$(PackageWorkingDir)')"></RemoveDir>
     <MakeDir Directories="$(PackageWorkingDir)"></MakeDir>
   </Target>
-
-  <Target Name="CreatePackageImage" DependsOnTargets="CleanPackageWorkingDir">
-    <ItemGroup>
+  
+   <ItemGroup>
       <BinFiles Include="$(ConfigurationBuildDir)\**\*.*"></BinFiles>
       <TxtFiles Include="LICENSE.txt;NOTICES.txt"></TxtFiles>
     </ItemGroup>
+
+  <Target Name="CreatePackageImage" DependsOnTargets="CleanPackageWorkingDir">
     <!-- Copy root txt files -->
     <Copy DestinationFolder="$(PackageWorkingDir)" SourceFiles="@(TxtFiles)"></Copy>
     <!-- Copy source in zip format already -->
