@@ -116,7 +116,7 @@
     <RemoveDir Directories="$(PackageWorkingDir)" Condition="Exists('$(PackageWorkingDir)')"></RemoveDir>
   </Target>
   <Target Name="Build">
-    <CallTarget Targets="BuildNUnit" Condition="'$(runtime)' != 'netcf'" />
+    <CallTarget Targets="BuildNUnit" Condition="'$(Runtime)' != 'netcf'" />
     <CallTarget Targets="BuildNUnitLite" />
   </Target>
   <ItemGroup>
@@ -132,7 +132,7 @@
     <NUnitLiteProject Include="$(ProjectSrcDir)\tests\nunitlite.tests-$(ProjectSuffix).csproj"></NUnitLiteProject>
   </ItemGroup>
   <Target Name="BuildNUnit">
-    <Error Condition="'$(runtime)' == 'netcf'" Text="The full NUnit framework cannot be built for $(runtime)"></Error>
+    <Error Condition="'$(Runtime)' == 'netcf'" Text="The full NUnit framework cannot be built for $(Runtime)"></Error>
     <MSBuild Targets="Rebuild" Projects="@(NUnitProject)" Properties="Configuration=$(Configuration); OutputPath=$(FrameworkBuildDir)">
     </MSBuild>
   </Target>
@@ -141,11 +141,11 @@
     </MSBuild>
   </Target>
   <Target Name="Test">
-    <CallTarget Targets="NUnitTest" Condition="'$(runtime)' != 'netcf'"></CallTarget>
+    <CallTarget Targets="NUnitTest" Condition="'$(Runtime)' != 'netcf'"></CallTarget>
     <CallTarget Targets="NUnitLiteTest"></CallTarget>
   </Target>
   <Target Name="NUnitTest">
-    <Error Condition="'$(runtime)' == 'netcf'" Text="The full NUnit framework cannot be tested under $(runtime)"></Error>
+    <Error Condition="'$(Runtime)' == 'netcf'" Text="The full NUnit framework cannot be tested under $(Runtime)"></Error>
     <Exec WorkingDirectory="$(FrameworkBuildDir)" Command="$(ManagedExeLauncher) $(FrameworkBuildDir)\$(TestRunnerProgram) $(TestRunnerArgs)">
     </Exec>
   </Target>
@@ -153,11 +153,11 @@
     <Exec WorkingDirectory="$(FrameworkBuildDir)" Command="$(ManagedExeLauncher) $(FrameworkBuildDir)\nunitlite.tests.exe"></Exec>
   </Target>
   <Target Name="TestCoverage">
-    <CallTarget Targets="NUnitCoverage" Condition="'$(runtime)' != 'netcf'"></CallTarget>
+    <CallTarget Targets="NUnitCoverage" Condition="'$(Runtime)' != 'netcf'"></CallTarget>
     <CallTarget Targets="NUnitLiteCoverage"></CallTarget>
   </Target>
   <Target Name="NUnitCoverage">
-    <Error Condition="'$(runtime)' == 'netcf'" Text="The full NUnit framework cannot be tested under $(runtime)"></Error>
+    <Error Condition="'$(Runtime)' == 'netcf'" Text="The full NUnit framework cannot be tested under $(Runtime)"></Error>
     <Exec WorkingDirectory="$(FrameworkBuildDir)" 
           Command='$(ManagedExeLauncher) $(PartCoverDir)\PartCover.exe --target "$(TestRunnerProgram)" --target-args "$(TestRunnerArgs)" --include [nunit.framework]* --output NUnitTestCoverage.xml'>
     </Exec>
