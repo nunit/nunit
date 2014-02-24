@@ -1,2 +1,2 @@
 #!/bin/bash
-runbuild /t:Package
+./runbuild /t:Package
