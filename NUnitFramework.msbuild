@@ -180,10 +180,9 @@
 
   <Target Name="Package" Label="Packages the source code and binaries already built" DependsOnTargets="CreatePackageImage">
     <Exec Command='git init "$(PackageWorkingDir)"' />
-    <Exec Command='cd "$(PackageWorkingDir)"' />
-    <Exec Command="git add -A" />
-    <Exec Command="git commit -m 'Export'" /> 
-    <Exec Command='git archive -o "$(ProjectPackageDir)\$(PackageName).zip" HEAD'></Exec>
+    <Exec WorkingDirectory='$(PackageWorkingDir)' Command="git add -A" />
+    <Exec WorkingDirectory='$(PackageWorkingDir)' Command="git commit -m 'Export'" /> 
+    <Exec WorkingDirectory='$(PackageWorkingDir)' Command='git archive -o "$(ProjectPackageDir)\$(PackageName).zip" HEAD'></Exec>
   </Target>
   
   <Target Name="CleanPackageWorkingDir">
@@ -196,8 +195,11 @@
       <BinFiles Include="$(ConfigurationBuildDir)\**\*.*"></BinFiles>
       <TxtFiles Include="LICENSE.txt;NOTICES.txt"></TxtFiles>
     </ItemGroup>
+    <!-- Copy root txt files -->
     <Copy DestinationFolder="$(PackageWorkingDir)" SourceFiles="@(TxtFiles)"></Copy>
+    <!-- Copy source in zip format already -->
     <Exec Command="git archive -o $(PackageWorkingDir)\src.zip master"></Exec>
+    <!-- Copy all available binaries -->
     <Copy DestinationFiles="@(BinFiles->'$(PackageBinDir)\%(RecursiveDir)%(Filename)%(Extension)')" 
           SourceFiles="@(BinFiles)"></Copy>
   </Target>
