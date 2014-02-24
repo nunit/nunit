@@ -198,7 +198,7 @@
     <!-- Copy root txt files -->
     <Copy DestinationFolder="$(PackageWorkingDir)" SourceFiles="@(TxtFiles)"></Copy>
     <!-- Copy source in zip format already -->
-    <Exec Command="git archive -o $(PackageWorkingDir)\src.zip master"></Exec>
+    <Exec Command="git archive -o $(PackageWorkingDir)\src.zip HEAD"></Exec>
     <!-- Copy all available binaries -->
     <Copy DestinationFiles="@(BinFiles->'$(PackageBinDir)\%(RecursiveDir)%(Filename)%(Extension)')" 
           SourceFiles="@(BinFiles)"></Copy>
