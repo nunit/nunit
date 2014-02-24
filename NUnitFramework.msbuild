@@ -180,8 +180,10 @@
 
   <Target Name="Package" Label="Packages the source code and binaries already built" DependsOnTargets="CreatePackageImage">
     <Exec Command='git init "$(PackageWorkingDir)"' />
-    <Exec WorkingDirectory='$(PackageWorkingDir)' Command="git add -A" />
-    <Exec WorkingDirectory='$(PackageWorkingDir)' Command="git commit -m 'Export'" /> 
+    <Exec WorkingDirectory='$(PackageWorkingDir)' Command='git add -A' />
+    <Exec WorkingDirectory='$(PackageWorkingDir)' Command='git config user.name "temp"' />
+    <Exec WorkingDirectory='$(PackageWorkingDir)' Command='git config user.email "temp@temp.com"' />
+    <Exec WorkingDirectory='$(PackageWorkingDir)' Command='git commit -m "Export"' /> 
     <Exec WorkingDirectory='$(PackageWorkingDir)' Command='git archive -o "$(ProjectPackageDir)\$(PackageName).zip" HEAD'></Exec>
   </Target>
   
