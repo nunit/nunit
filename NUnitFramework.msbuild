@@ -6,7 +6,7 @@
     <PackageVersion>2.9.6</PackageVersion>
     <PackageName>$(ProjectName)-$(PackageVersion)</PackageName>
   </PropertyGroup>
-  
+
   <PropertyGroup Label="Project Directories">
     <ProjectBaseDir>$(MSBuildProjectDirectory)</ProjectBaseDir>
     <ProjectBuildDir>$(ProjectBaseDir)\build</ProjectBuildDir>
@@ -15,7 +15,7 @@
     <ProjectToolsDir>$(ProjectBaseDir)\tools</ProjectToolsDir>
     <PartCoverDir>$(ProjectToolsDir)\PartCover</PartCoverDir>
   </PropertyGroup>
-  
+
   <PropertyGroup Label="Packaging Directories">
     <PackageWorkingDir Condition="'$(PackageWorkingDir)' == ''">$(ProjectPackageDir)\$(PackageName)</PackageWorkingDir>
     <PackageBinDir>$(PackageWorkingDir)\bin</PackageBinDir>
@@ -30,7 +30,7 @@
     <DefaultFramework>net-4.5</DefaultFramework>
     <Framework Condition="'$(Framework)' == ''">$(DefaultFramework)</Framework>
   </PropertyGroup>
-  
+
   <PropertyGroup Condition="'$(Framework)'=='net-4.5'">
     <ProjectSuffix>4.5</ProjectSuffix>
     <Runtime>NET</Runtime>
@@ -63,14 +63,22 @@
     <ProjectSuffix>2.0</ProjectSuffix>
     <Runtime>mono</Runtime>
   </PropertyGroup>
-  
+  <PropertyGroup Condition="'$(Framework)'=='netcf-3.5'">
+    <ProjectSuffix>3.5</ProjectSuffix>
+    <Runtime>netcf</Runtime>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Framework)'=='silverlight-5.0'">
+    <ProjectSuffix>sl-5.0</ProjectSuffix>
+    <Runtime>silverlight</Runtime>
+  </PropertyGroup>
+
   <PropertyGroup Label="Properties for running tests">
     <TestOptions Condition="'$(TestOptions)' == ''"></TestOptions>
     <ManagedExeLauncher Condition="'$(Runtime)' == 'mono'">mono</ManagedExeLauncher>
     <TestRunnerProgram>test-harness.exe</TestRunnerProgram>
     <TestRunnerArgs>nunit.framework.tests.dll $(TestOptions)</TestRunnerArgs>
   </PropertyGroup>
-    
+
   <PropertyGroup>
     <ConfigurationBuildDir>$(ProjectBuildDir)\$(Configuration)</ConfigurationBuildDir>
     <FrameworkBuildDir>$(ConfigurationBuildDir)\$(Framework)</FrameworkBuildDir>
@@ -102,7 +110,7 @@
     <Message Text="    Source:      $(PackageSrcDir)"></Message>
     <Message Text=""></Message>
   </Target>
-  
+
   <Target Name="Clean">
     <RemoveDir Directories="$(FrameworkBuildDir)" Condition="Exists('$(FrameworkBuildDir)')">
     </RemoveDir>
@@ -145,11 +153,13 @@
     <CallTarget Targets="NUnitLiteTest"></CallTarget>
   </Target>
   <Target Name="NUnitTest">
+    <Message Text="Testing NUnitFramework $(Framework) - $(Configuration)"></Message>
     <Error Condition="'$(Runtime)' == 'netcf'" Text="The full NUnit framework cannot be tested under $(Runtime)"></Error>
     <Exec WorkingDirectory="$(FrameworkBuildDir)" Command="$(ManagedExeLauncher) $(FrameworkBuildDir)\$(TestRunnerProgram) $(TestRunnerArgs)">
     </Exec>
   </Target>
   <Target Name="NUnitLiteTest">
+    <Message Text="Testing NUnitLite $(Framework) - $(Configuration)"></Message>
     <Exec WorkingDirectory="$(FrameworkBuildDir)" Command="$(ManagedExeLauncher) $(FrameworkBuildDir)\nunitlite.tests.exe"></Exec>
   </Target>
   <Target Name="TestCoverage">
@@ -158,7 +168,7 @@
   </Target>
   <Target Name="NUnitCoverage">
     <Error Condition="'$(Runtime)' == 'netcf'" Text="The full NUnit framework cannot be tested under $(Runtime)"></Error>
-    <Exec WorkingDirectory="$(FrameworkBuildDir)" 
+    <Exec WorkingDirectory="$(FrameworkBuildDir)"
           Command='$(ManagedExeLauncher) $(PartCoverDir)\PartCover.exe --target "$(TestRunnerProgram)" --target-args "$(TestRunnerArgs)" --include [nunit.framework]* --output NUnitTestCoverage.xml'>
     </Exec>
   </Target>
@@ -166,5 +176,29 @@
     <Exec WorkingDirectory="$(FrameworkBuildDir)"
           Command='$(ManagedExeLauncher) $(PartCoverDir)\PartCover.exe --target "$(nunitlite.tests.exe)" --include [nunitlite]* --output NUnitLiteTestCoverage.xml'>
     </Exec>
+  </Target>
+
+  <Target Name="Package" Label="Packages the source code and binaries already built" DependsOnTargets="CreatePackageImage">
+    <Exec Command='git init "$(PackageWorkingDir)"' />
+    <Exec Command='cd "$(PackageWorkingDir)"' />
+    <Exec Command="git add -A" />
+    <Exec Command="git commit -m 'Export'" /> 
+    <Exec Command='git archive -o "$(ProjectPackageDir)\$(PackageName).zip" HEAD'></Exec>
+  </Target>
+  
+  <Target Name="CleanPackageWorkingDir">
+    <RemoveDir Directories="$(PackageWorkingDir)" Condition="Exists('$(PackageWorkingDir)')"></RemoveDir>
+    <MakeDir Directories="$(PackageWorkingDir)"></MakeDir>
+  </Target>
+
+  <Target Name="CreatePackageImage" DependsOnTargets="CleanPackageWorkingDir">
+    <ItemGroup>
+      <BinFiles Include="$(ConfigurationBuildDir)\**\*.*"></BinFiles>
+      <TxtFiles Include="LICENSE.txt;NOTICES.txt"></TxtFiles>
+    </ItemGroup>
+    <Copy DestinationFolder="$(PackageWorkingDir)" SourceFiles="@(TxtFiles)"></Copy>
+    <Exec Command="git archive -o $(PackageWorkingDir)\src.zip master"></Exec>
+    <Copy DestinationFiles="@(BinFiles->'$(PackageBinDir)\%(RecursiveDir)%(Filename)%(Extension)')" 
+          SourceFiles="@(BinFiles)"></Copy>
   </Target>
 </Project>
