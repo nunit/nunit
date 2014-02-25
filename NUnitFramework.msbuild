@@ -9,6 +9,7 @@
 
   <PropertyGroup Label="Platform-specific properties">
     <IsWindows Condition=" '$(OS)' == 'Windows_NT' ">true</IsWindows>
+    <IsWindows Condition=" '$(OS)' != 'Windows_NT' ">false</IsWindows>
   </PropertyGroup>
 
   <PropertyGroup Label="Project Directories">
@@ -95,6 +96,7 @@
   </PropertyGroup>
 
   <Target Name="DumpSettings">
+    <Message Text="Running on '$(OS)' ('IsWindows' = $(IsWindows))"></Message>
     <Message Text="Project directories:"></Message>
     <Message Text="  Base:          $(ProjectBaseDir)"></Message>
     <Message Text="    Build:       $(ProjectBuildDir)"></Message>
@@ -108,6 +110,7 @@
     <Message Text="Current build settings:"></Message>
     <Message Text="  Configuration: $(Configuration)"></Message>
     <Message Text="  Framework:     $(Framework)"></Message>
+    <Message Text="  Runtime:       $(Runtime)"></Message>
     <Message Text="  Build dir:     $(FrameworkBuildDir)"></Message>
     <Message Text="  Proj. suffix:  $(ProjectSuffix)"></Message>
     <Message Text=""></Message>
