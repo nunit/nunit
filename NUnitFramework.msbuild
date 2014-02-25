@@ -10,6 +10,8 @@
   <PropertyGroup Label="Platform-specific properties">
     <IsWindows Condition=" '$(OS)' == 'Windows_NT' ">true</IsWindows>
     <IsWindows Condition=" '$(OS)' != 'Windows_NT' ">false</IsWindows>
+    <RemoveDir Condition="$(IsWindows)">rmdir /s /q</RemoveDir>
+    <RemoveDir Condition="!$(IsWindows)">rm -rf</RemoveDir>
   </PropertyGroup>
 
   <PropertyGroup Label="Project Directories">
@@ -35,11 +37,6 @@
     <DefaultFramework Condition="$(IsWindows)">net-4.5</DefaultFramework>
     <DefaultFramework Condition="!$(IsWindows)">mono-4.0</DefaultFramework>
     <Framework Condition="'$(Framework)' == ''">$(DefaultFramework)</Framework>
-  </PropertyGroup>
-
-  <PropertyGroup Label="Platform-speficic command">
-    <RemoveDir Condition="$(IsWindows)">rmdir /s /q</RemoveDir>
-    <RemoveDir Condition="!$(IsWindows)">rm -rf</RemoveDir>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Framework)'=='net-4.5'">
@@ -96,31 +93,35 @@
   </PropertyGroup>
 
   <Target Name="DumpSettings">
-    <Message Text="Running on '$(OS)' ('IsWindows' = $(IsWindows))"></Message>
+    <Message Text=" "></Message>
+    <Message Text="Platform-specific properties:"></Message>
+    <Message Text="  Running on '$(OS)' ('IsWindows' = $(IsWindows))"></Message>
+    <Message Text="  RemoveDir command: '$(RemoveDir)'"></Message>
+    <Message Text=" "></Message>
     <Message Text="Project directories:"></Message>
     <Message Text="  Base:          $(ProjectBaseDir)"></Message>
     <Message Text="    Build:       $(ProjectBuildDir)"></Message>
     <Message Text="    Package:     $(ProjectPackageDir)"></Message>
     <Message Text="    Source:      $(ProjectSrcDir)"></Message>
     <Message Text="    Tools:       $(ProjectToolsDir)"></Message>
-    <Message Text=""></Message>
+    <Message Text=" "></Message>
     <Message Text="Frameworks:"></Message>
     <Message Text="  Default:       $(DefaultFramework)"></Message>
-    <Message Text=""></Message>
+    <Message Text=" "></Message>
     <Message Text="Current build settings:"></Message>
     <Message Text="  Configuration: $(Configuration)"></Message>
     <Message Text="  Framework:     $(Framework)"></Message>
     <Message Text="  Runtime:       $(Runtime)"></Message>
     <Message Text="  Build dir:     $(FrameworkBuildDir)"></Message>
     <Message Text="  Proj. suffix:  $(ProjectSuffix)"></Message>
-    <Message Text=""></Message>
+    <Message Text=" "></Message>
     <Message Text="Packaging"></Message>
     <Message Text="  Name:          $(PackageName)"></Message>
     <Message Text="  Version:       $(PackageVersion)"></Message>
     <Message Text="  Work dir:      $(PackageWorkingDir)"></Message>
     <Message Text="    Bin:         $(PackageBinDir)"></Message>
     <Message Text="    Source:      $(PackageSrcDir)"></Message>
-    <Message Text=""></Message>
+    <Message Text=" "></Message>
   </Target>
 
   <Target Name="Clean">
@@ -203,9 +204,9 @@
   </Target>
   
    <ItemGroup Label="Files for packaging">
-      <BinFiles Include="$(ConfigurationBuildDir)\**\*.*"></BinFiles>
-      <TxtFiles Include="LICENSE.txt;NOTICES.txt"></TxtFiles>
-    </ItemGroup>
+     <BinFiles Include="$(ConfigurationBuildDir)\**\*.*"></BinFiles>
+     <TxtFiles Include="LICENSE.txt;NOTICES.txt"></TxtFiles>
+   </ItemGroup>
 
   <Target Name="CreatePackageImage" DependsOnTargets="CleanPackageWorkingDir">
     <!-- Copy root txt files -->
