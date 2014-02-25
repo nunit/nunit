@@ -12,13 +12,13 @@ namespace NUnit.Framework.Internal
 	[TestFixture]
 	public class NUnitAsyncTestMethodTests
 	{
-		private NUnitTestCaseBuilder _builder;
+		private DefaultTestCaseBuilder _builder;
         private object _testObject;
 
 		[SetUp]
 		public void Setup()
 		{
-			_builder = new NUnitTestCaseBuilder();
+			_builder = new DefaultTestCaseBuilder();
             _testObject = new AsyncRealFixture();
 		}
 

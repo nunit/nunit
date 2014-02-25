@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
+using NUnit.Framework.Internal.Builders;
 
 namespace NUnit.Framework
 {
@@ -35,7 +36,7 @@ namespace NUnit.Framework
     /// provide test cases for a test method.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true, Inherited = false)]
-    public class TestCaseSourceAttribute : DataAttribute, ITestCaseSource, IImplyFixture
+    public class TestCaseSourceAttribute : TestCaseBuilderAttribute, ITestBuilder, IImplyFixture
     {
         private readonly string sourceName;
         private readonly Type sourceType;
@@ -108,55 +109,63 @@ namespace NUnit.Framework
 
             if (source != null)
             {
-                ParameterInfo[] parameters = method.GetParameters();
-
-                foreach (object item in source)
+                try
                 {
-                    ParameterSet parms;
-                    ITestCaseData testCaseData = item as ITestCaseData;
+                    ParameterInfo[] parameters = method.GetParameters();
 
-                    if (testCaseData != null)
-                        parms = new ParameterSet(testCaseData);
-                    else
+                    foreach (object item in source)
                     {
-                        object[] args = item as object[];
-                        if (args != null)
-                        {
-                            if (args.Length != parameters.Length)
-                                args = new object[] { item };
-                        }
-                        //else if (parameters.Length == 1 && parameters[0].ParameterType.IsAssignableFrom(item.GetType()))
-                        //{
-                        //    args = new object[] { item };
-                        //}
-                        else if (item is Array)
-                        {
-                            Array array = item as Array;
+                        ParameterSet parms;
+                        ITestCaseData testCaseData = item as ITestCaseData;
 
-                            if (array.Rank == 1 && array.Length == parameters.Length)
+                        if (testCaseData != null)
+                            parms = new ParameterSet(testCaseData);
+                        else
+                        {
+                            object[] args = item as object[];
+                            if (args != null)
                             {
-                                args = new object[array.Length];
-                                for (int i = 0; i < array.Length; i++)
-                                    args[i] = (object)array.GetValue(i);
+                                if (args.Length != parameters.Length)
+                                    args = new object[] { item };
+                            }
+                            //else if (parameters.Length == 1 && parameters[0].ParameterType.IsAssignableFrom(item.GetType()))
+                            //{
+                            //    args = new object[] { item };
+                            //}
+                            else if (item is Array)
+                            {
+                                Array array = item as Array;
+
+                                if (array.Rank == 1 && array.Length == parameters.Length)
+                                {
+                                    args = new object[array.Length];
+                                    for (int i = 0; i < array.Length; i++)
+                                        args[i] = (object)array.GetValue(i);
+                                }
+                                else
+                                {
+                                    args = new object[] { item };
+                                }
                             }
                             else
                             {
                                 args = new object[] { item };
                             }
-                        }
-                        else
-                        {
-                            args = new object[] { item };
+
+                            parms = new ParameterSet(args);
                         }
 
-                        parms = new ParameterSet(args);
+                        if (this.Category != null)
+                            foreach (string cat in this.Category.Split(new char[] { ',' }))
+                                parms.Properties.Add(PropertyNames.Category, cat);
+
+                        data.Add(parms);
                     }
-
-                    if (this.Category != null)
-                        foreach (string cat in this.Category.Split(new char[] { ',' }))
-                            parms.Properties.Add(PropertyNames.Category, cat);
-
-                    data.Add(parms);
+                }
+                catch (Exception ex)
+                {
+                    data.Clear();
+                    data.Add(new ParameterSet(ex));
                 }
             }
 
@@ -202,5 +211,25 @@ namespace NUnit.Framework
         }
         #endregion
 
+        #region ITestBuilder Members
+
+        /// <summary>
+        /// Construct one or more TestMethods from a given MethodInfo,
+        /// using available parameter data.
+        /// </summary>
+        /// <param name="method">The MethodInfo for which tests are to be constructed.</param>
+        /// <param name="suite">The suite to which the tests will be added.</param>
+        /// <returns>One or more TestMethods</returns>
+        public IEnumerable<TestMethod> BuildFrom(MethodInfo method, Test suite)
+        {
+            List<TestMethod> tests = new List<TestMethod>();
+
+            foreach (ParameterSet parms in GetTestCasesFor(method))
+                tests.Add(new NUnitTestCaseBuilder().BuildSingleTestMethod(method, suite, parms));
+
+            return tests;
+        }
+
+        #endregion
     }
 }

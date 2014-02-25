@@ -43,7 +43,7 @@ namespace NUnit.Framework.Interfaces
         /// be returned nonetheless, labelled as non-runnable.
         /// </summary>
         /// <param name="type">The type of the fixture to be used.</param>
-        /// <returns>A TestFixture object or one derived from TestFixture.</returns>
+        /// <returns>A TestSuite object or one derived from TestSuite.</returns>
         // TODO: This should really return a TestFixture, but that requires changes to the Test hierarchy.
         TestSuite BuildFrom(Type type);
     }

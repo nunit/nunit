@@ -1,5 +1,5 @@
-// ***********************************************************************
-// Copyright (c) 2008-2012 Charlie Poole
+﻿// ***********************************************************************
+// Copyright (c) 2008-2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -33,136 +33,12 @@ using System.Threading.Tasks;
 namespace NUnit.Framework.Internal.Builders
 {
     /// <summary>
-    /// Class to build ether a parameterized or a normal NUnitTestMethod.
-    /// There are four cases that the builder must deal with:
-    ///   1. The method needs no params and none are provided
-    ///   2. The method needs params and they are provided
-    ///   3. The method needs no params but they are provided in error
-    ///   4. The method needs params but they are not provided
-    /// This could have been done using two different builders, but it
-    /// turned out to be simpler to have just one. The BuildFrom method
-    /// takes a different branch depending on whether any parameters are
-    /// provided, but all four cases are dealt with in lower-level methods
+    /// NUnitTestCaseBuilder is a utility class used by attributes
+    /// that build test cases.
     /// </summary>
-    public class NUnitTestCaseBuilder : ITestCaseBuilder2
+    public class NUnitTestCaseBuilder
     {
-        private Randomizer randomizer;
-
-        private ITestCaseProvider testCaseProvider = new TestCaseProviders();
-
-        /// <summary>
-        /// Default no argument constructor for NUnitTestCaseBuilder
-        /// </summary>
-        public NUnitTestCaseBuilder()
-        {
-            randomizer = Randomizer.CreateRandomizer();
-        }
-
-        #region ITestCaseBuilder Methods
-        /// <summary>
-        /// Determines if the method can be used to build an NUnit test
-        /// test method of some kind. The method must normally be marked
-        /// with an identifying attriute for this to be true.
-        /// 
-        /// Note that this method does not check that the signature
-        /// of the method for validity. If we did that here, any
-        /// test methods with invalid signatures would be passed
-        /// over in silence in the test run. Since we want such
-        /// methods to be reported, the check for validity is made
-        /// in BuildFrom rather than here.
-        /// </summary>
-        /// <param name="method">A MethodInfo for the method being used as a test method</param>
-        /// <returns>True if the builder can create a test case from this method</returns>
-        public bool CanBuildFrom(MethodInfo method)
-        {
-            return method.IsDefined(typeof(TestAttribute), false)
-                || method.IsDefined(typeof(ITestCaseSource), false)
-                || method.IsDefined(typeof(TheoryAttribute), false);
-        }
-
-        /// <summary>
-        /// Build a Test from the provided MethodInfo. Depending on
-        /// whether the method takes arguments and on the availability
-        /// of test case data, this method may return a single test
-        /// or a group of tests contained in a ParameterizedMethodSuite.
-        /// </summary>
-        /// <param name="method">The MethodInfo for which a test is to be built</param>
-        /// <returns>A Test representing one or more method invocations</returns>
-        public Test BuildFrom(MethodInfo method)
-        {
-            return BuildFrom(method, null);
-        }
-
-        #endregion
-
-        #region ITestCaseBuilder2 Members
-
-        /// <summary>
-        /// Determines if the method can be used to build an NUnit test
-        /// test method of some kind. The method must normally be marked
-        /// with an identifying attriute for this to be true.
-        /// 
-        /// Note that this method does not check that the signature
-        /// of the method for validity. If we did that here, any
-        /// test methods with invalid signatures would be passed
-        /// over in silence in the test run. Since we want such
-        /// methods to be reported, the check for validity is made
-        /// in BuildFrom rather than here.
-        /// </summary>
-        /// <param name="method">A MethodInfo for the method being used as a test method</param>
-        /// <param name="parentSuite">The test suite being built, to which the new test would be added</param>
-        /// <returns>True if the builder can create a test case from this method</returns>
-        public bool CanBuildFrom(MethodInfo method, Test parentSuite)
-        {
-            return CanBuildFrom(method);
-        }
-
-        /// <summary>
-        /// Build a Test from the provided MethodInfo. Depending on
-        /// whether the method takes arguments and on the availability
-        /// of test case data, this method may return a single test
-        /// or a group of tests contained in a ParameterizedMethodSuite.
-        /// </summary>
-        /// <param name="method">The MethodInfo for which a test is to be built</param>
-        /// <param name="parentSuite">The test fixture being populated, or null</param>
-        /// <returns>A Test representing one or more method invocations</returns>
-        public Test BuildFrom(MethodInfo method, Test parentSuite)
-        {
-            return testCaseProvider.HasTestCasesFor(method)
-                ? BuildParameterizedMethodSuite(method, parentSuite)
-                : BuildSingleTestMethod(method, parentSuite, null);
-        }
-
-        #endregion
-
-        #region Implementation
-
-        /// <summary>
-        /// Builds a ParameterizedMetodSuite containing individual
-        /// test cases for each set of parameters provided for
-        /// this method.
-        /// </summary>
-        /// <param name="method">The MethodInfo for which a test is to be built</param>
-        /// <param name="parentSuite">The test suite for which the method is being built</param>
-        /// <returns>A ParameterizedMethodSuite populated with test cases</returns>
-        public Test BuildParameterizedMethodSuite(MethodInfo method, Test parentSuite)
-        {
-            ParameterizedMethodSuite methodSuite = new ParameterizedMethodSuite(method);
-            methodSuite.ApplyAttributesToTest(method);
-
-            foreach (ITestCaseData testcase in testCaseProvider.GetTestCasesFor(method))
-            {
-                ParameterSet parms = testcase as ParameterSet;
-                if (parms == null)
-                    parms = new ParameterSet(testcase);
-
-                TestMethod test = BuildSingleTestMethod(method, parentSuite, parms);
-
-                methodSuite.Add(test);
-            }
-
-            return methodSuite;
-        }
+        private Randomizer randomizer = Randomizer.CreateRandomizer();
 
         /// <summary>
         /// Builds a single NUnitTestMethod, either as a child of the fixture 
@@ -172,7 +48,7 @@ namespace NUnit.Framework.Internal.Builders
         /// <param name="parentSuite">The suite or fixture to which the new test will be added</param>
         /// <param name="parms">The ParameterSet to be used, or null</param>
         /// <returns></returns>
-        private TestMethod BuildSingleTestMethod(MethodInfo method, Test parentSuite, ParameterSet parms)
+        public TestMethod BuildSingleTestMethod(MethodInfo method, Test parentSuite, ParameterSet parms)
         {
             TestMethod testMethod = new TestMethod(method, parentSuite);
 
@@ -216,7 +92,7 @@ namespace NUnit.Framework.Internal.Builders
                     string handlerName = attr.Handler;
                     if (handlerName != null && GetExceptionHandler(testMethod.FixtureType, handlerName) == null)
                         MarkAsNotRunnable(
-                            testMethod, 
+                            testMethod,
                             string.Format("The specified exception handler {0} was not found", handlerName));
 
                     testMethod.CustomDecorators.Add(new ExpectedExceptionDecorator(attr.ExceptionData));
@@ -247,8 +123,6 @@ namespace NUnit.Framework.Internal.Builders
 
             return testMethod;
         }
-
-        #endregion
 
         #region Helper Methods
 
@@ -327,8 +201,8 @@ namespace NUnit.Framework.Internal.Builders
                 }
                 else
 #endif
-                    if (parms == null || !parms.HasExpectedResult && !parms.ExceptionExpected)
-                        return MarkAsNotRunnable(testMethod, "Method has non-void return value, but no result is expected");
+                if (parms == null || !parms.HasExpectedResult && !parms.ExceptionExpected)
+                    return MarkAsNotRunnable(testMethod, "Method has non-void return value, but no result is expected");
             }
 
             if (argsProvided > 0 && argsNeeded == 0)
@@ -358,11 +232,11 @@ namespace NUnit.Framework.Internal.Builders
 
                 testMethod.Method = testMethod.Method.MakeGenericMethod(typeArguments);
                 parameters = testMethod.Method.GetParameters();
-           }
+            }
 #endif
 
-           if (arglist != null && parameters != null)
-               TypeHelper.ConvertArgumentList(arglist, parameters);
+            if (arglist != null && parameters != null)
+                TypeHelper.ConvertArgumentList(arglist, parameters);
 
             return true;
         }

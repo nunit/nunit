@@ -22,10 +22,11 @@
 // ***********************************************************************
 
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
+using NUnit.Framework.Internal.Builders;
 
 namespace NUnit.Framework
 {
@@ -34,7 +35,7 @@ namespace NUnit.Framework
     /// and provide them with their arguments.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true, Inherited=false)]
-    public class TestCaseAttribute : DataAttribute, ITestCaseData, ITestCaseSource, IImplyFixture
+    public class TestCaseAttribute : TestCaseBuilderAttribute, ITestBuilder, ITestCaseData, IImplyFixture
     {
         #region Instance variables
 
@@ -276,6 +277,15 @@ namespace NUnit.Framework
         /// <param name="method">The method for which data is being provided</param>
         /// <returns></returns>
         public System.Collections.Generic.IEnumerable<ITestCaseData> GetTestCasesFor(System.Reflection.MethodInfo method)
+        {           
+            return new ITestCaseData[] { GetParametersForTestCase(method) };
+        }
+
+        #endregion
+
+        #region Helper Methods
+
+        private ParameterSet GetParametersForTestCase(MethodInfo method)
         {
             ParameterSet parms;
 
@@ -344,13 +354,10 @@ namespace NUnit.Framework
             {
                 parms = new ParameterSet(ex);
             }
-            
-            return new ITestCaseData[] { parms };
+
+            return parms;
         }
 
-        #endregion
-
-        #region Helper Methods
         /// <summary>
         /// Performs several special conversions allowed by NUnit in order to
         /// permit arguments with types that cannot be used in the constructor
@@ -398,6 +405,22 @@ namespace NUnit.Framework
                     arglist[i] = Convert.ChangeType(arg, targetType, System.Globalization.CultureInfo.InvariantCulture);
             }
         }
+        #endregion
+
+        #region ITestBuilder Members
+
+        /// <summary>
+        /// Construct one or more TestMethods from a given MethodInfo,
+        /// using available parameter data.
+        /// </summary>
+        /// <param name="method">The MethodInfo for which tests are to be constructed.</param>
+        /// <param name="suite">The suite to which the tests will be added.</param>
+        /// <returns>One or more TestMethods</returns>
+        public IEnumerable<TestMethod> BuildFrom(MethodInfo method, Test suite)
+        {
+            return new TestMethod[] { new NUnitTestCaseBuilder().BuildSingleTestMethod(method, suite, GetParametersForTestCase(method)) };
+        }
+
         #endregion
     }
 }

@@ -1,5 +1,5 @@
-// ***********************************************************************
-// Copyright (c) 2008 Charlie Poole
+﻿// ***********************************************************************
+// Copyright (c) 2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -22,23 +22,18 @@
 // ***********************************************************************
 
 using System;
-using System.Collections;
-using NUnit.Framework.Interfaces;
-using NUnit.Framework.Internal.Builders;
 
 namespace NUnit.Framework
 {
     /// <summary>
-    /// Marks a test to use a combinatorial join of any argument 
-    /// data provided. Since this is the default, the attribute is
-    /// optional.
+    /// The abstract base class for all NUnit attributes that build test cases.
+    /// The derived class should implement one of the test builder interfaces.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
-    public class CombinatorialAttribute : CombiningStrategyAttribute
+    public abstract class TestCaseBuilderAttribute : NUnitAttribute
     {
         /// <summary>
         /// Default constructor
         /// </summary>
-        public CombinatorialAttribute() : base(new CombinatorialStrategy()) { }
+        public TestCaseBuilderAttribute() { }
     }
 }

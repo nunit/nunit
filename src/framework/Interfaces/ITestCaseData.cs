@@ -37,11 +37,11 @@ namespace NUnit.Framework.Interfaces
         /// Gets the name to be used for the test
         /// </summary>
         string TestName { get; }
-		
-		/// <summary>
-		/// Gets the RunState for this test case.
-		/// </summary>
-		RunState RunState { get; }
+        
+        /// <summary>
+        /// Gets the RunState for this test case.
+        /// </summary>
+        RunState RunState { get; }
 
         /// <summary>
         /// Gets the argument list to be provided to the test

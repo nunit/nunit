@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2009 Charlie Poole
+// Copyright (c) 2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -24,8 +24,11 @@
 namespace NUnit.Framework
 {
     using System;
+    using System.Collections.Generic;
+    using System.Reflection;
     using NUnit.Framework.Interfaces;
     using NUnit.Framework.Internal;
+    using NUnit.Framework.Internal.Builders;
 
     /// <summary>
     /// Adding this attribute to a method within a <seealso cref="TestFixtureAttribute"/> 
@@ -49,9 +52,11 @@ namespace NUnit.Framework
     /// </example>
     /// 
     [AttributeUsage(AttributeTargets.Method, AllowMultiple=false, Inherited=true)]
-    public class TestAttribute : NUnitAttribute, IApplyToTest, ITestExpectedResult, IImplyFixture
+    public class TestAttribute : TestCaseBuilderAttribute, ISimpleTestBuilder, IApplyToTest, ITestExpectedResult, IImplyFixture
     {
         private object _expectedResult;
+
+        private NUnitTestCaseBuilder builder = new NUnitTestCaseBuilder();
 
         /// <summary>
         /// Descriptive text for this test
@@ -94,6 +99,21 @@ namespace NUnit.Framework
         /// </summary>
         public bool HasExpectedResult { get; private set; }
 
+        #endregion
+
+        #region ISimpleTestBuilder Members
+
+        /// <summary>
+        /// Construct a TestMethod from a given MethodInfo.
+        /// </summary>
+        /// <param name="method">The MethodInfo for which a test is to be constructed.</param>
+        /// <param name="suite">The suite to which the test will be added.</param>
+        /// <returns>A TestMethod</returns>
+        public TestMethod BuildFrom(MethodInfo method, Test suite)
+        {
+            return builder.BuildSingleTestMethod(method, suite, null);
+        }
+        
         #endregion
     }
 }

@@ -52,6 +52,8 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Attributes\CombiningStrategyAttribute.cs" />
+    <Compile Include="Attributes\FixtureBuilderAttribute.cs" />
     <Compile Include="Attributes\LevelOfParallelizationAttribute.cs" />
     <Compile Include="Attributes\ParallelizableAttribute.cs" />
     <Compile Include="Attributes\ParallelScope.cs" />
@@ -59,6 +61,7 @@
     <Compile Include="Attributes\RequiresSTAAttribute.cs" />
     <Compile Include="Attributes\RequiresThreadAttribute.cs" />
     <Compile Include="Attributes\SetUpFixtureAttribute.cs" />
+    <Compile Include="Attributes\TestCaseBuilderAttribute.cs" />
     <Compile Include="Attributes\TimeoutAttribute.cs" />
     <Compile Include="Constraints\ConstraintResult.cs" />
     <Compile Include="Constraints\DelayedConstraint.cs" />
@@ -71,19 +74,20 @@
     <Compile Include="Constraints\SubPathConstraint.cs" />
     <Compile Include="Constraints\ThrowsExceptionConstraint.cs" />
     <Compile Include="Interfaces\ExpectedExceptionData.cs" />
+    <Compile Include="Interfaces\ICombiningStrategy.cs" />
     <Compile Include="Interfaces\IFixtureBuilder.cs" />
     <Compile Include="Interfaces\IImplyFixture.cs" />
     <Compile Include="Interfaces\IParameterDataProvider.cs" />
     <Compile Include="Interfaces\IParameterDataSource.cs" />
     <Compile Include="Interfaces\IPropertyBag.cs" />
+    <Compile Include="Interfaces\ISimpleTestBuilder.cs" />
     <Compile Include="Interfaces\ISuiteBuilder.cs" />
     <Compile Include="Interfaces\ITest.cs" />
     <Compile Include="Interfaces\ITestAssemblyBuilder.cs" />
     <Compile Include="Interfaces\ITestAssemblyRunner.cs" />
+    <Compile Include="Interfaces\ITestBuilder.cs" />
     <Compile Include="Interfaces\ITestCaseBuilder.cs" />
     <Compile Include="Interfaces\ITestCaseData.cs" />
-    <Compile Include="Interfaces\ITestCaseProvider.cs" />
-    <Compile Include="Interfaces\ITestCaseSource.cs" />
     <Compile Include="Interfaces\ITestExpectedResult.cs" />
     <Compile Include="Interfaces\ITestFilter.cs" />
     <Compile Include="Interfaces\ITestListener.cs" />
@@ -95,10 +99,8 @@
     <Compile Include="Interfaces\TestStatus.cs" />
     <Compile Include="Interfaces\XmlNode.cs" />
     <Compile Include="Internal\Builders\DefaultSuiteBuilder.cs" />
+    <Compile Include="Internal\Builders\DefaultTestCaseBuilder.cs" />
     <Compile Include="Internal\Builders\NamespaceTreeBuilder.cs" />
-    <Compile Include="Internal\Builders\ParameterDataProviders.cs" />
-    <Compile Include="Internal\Builders\TestCaseBuilderCollection.cs" />
-    <Compile Include="Internal\Builders\TestCaseProviders.cs" />
     <Compile Include="Internal\Commands\ApplyChangesToContextCommand.cs" />
     <Compile Include="Internal\Commands\DelegatingTestCommand.cs" />
     <Compile Include="Internal\Commands\ExpectedExceptionCommand.cs" />
@@ -264,9 +266,6 @@
     <Compile Include="IExpectException.cs" />
     <Compile Include="Internal\AssemblyHelper.cs" />
     <Compile Include="Internal\Builders\CombinatorialStrategy.cs" />
-    <Compile Include="Internal\Builders\CombinatorialTestCaseProvider.cs" />
-    <Compile Include="Internal\Builders\CombiningStrategy.cs" />
-    <Compile Include="Internal\Builders\DataAttributeTestCaseProvider.cs" />
     <Compile Include="Internal\Builders\DatapointProvider.cs" />
     <Compile Include="Internal\Builders\NUnitTestCaseBuilder.cs" />
     <Compile Include="Internal\Builders\NUnitTestFixtureBuilder.cs" />
@@ -350,6 +349,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Attributes\AttributeHierarchy.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

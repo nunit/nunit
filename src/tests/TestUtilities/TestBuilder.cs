@@ -88,7 +88,7 @@ namespace NUnit.TestUtilities
             MethodInfo method = type.GetMethod(methodName, BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
             if (method == null)
                 Assert.Fail("Method not found: " + methodName);
-            return new NUnitTestCaseBuilder().BuildFrom(method);
+            return new DefaultTestCaseBuilder().BuildFrom(method);
         }
 
         #endregion

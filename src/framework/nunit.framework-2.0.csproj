@@ -56,9 +56,12 @@
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Api\FrameworkController.cs" />
+    <Compile Include="Attributes\CombiningStrategyAttribute.cs" />
+    <Compile Include="Attributes\FixtureBuilderAttribute.cs" />
     <Compile Include="Attributes\LevelOfParallelizationAttribute.cs" />
     <Compile Include="Attributes\ParallelizableAttribute.cs" />
     <Compile Include="Attributes\ParallelScope.cs" />
+    <Compile Include="Attributes\TestCaseBuilderAttribute.cs" />
     <Compile Include="Constraints\EqualConstraintResult.cs" />
     <Compile Include="Constraints\IConstraint.cs" />
     <Compile Include="Constraints\Operators\AllOperator.cs" />
@@ -67,6 +70,9 @@
     <Compile Include="Constraints\SubPathConstraint.cs" />
     <Compile Include="Constraints\ThrowsExceptionConstraint.cs" />
     <Compile Include="Interfaces\ExpectedExceptionData.cs" />
+    <Compile Include="Interfaces\ICombiningStrategy.cs" />
+    <Compile Include="Interfaces\ISimpleTestBuilder.cs" />
+    <Compile Include="Interfaces\ITestBuilder.cs" />
     <Compile Include="Interfaces\IParameterDataProvider.cs" />
     <Compile Include="Interfaces\IParameterDataSource.cs" />
     <Compile Include="Interfaces\IPropertyBag.cs" />
@@ -74,8 +80,6 @@
     <Compile Include="Interfaces\ITestAssemblyBuilder.cs" />
     <Compile Include="Interfaces\ITestAssemblyRunner.cs" />
     <Compile Include="Interfaces\ITestCaseData.cs" />
-    <Compile Include="Interfaces\ITestCaseSource.cs" />
-    <Compile Include="Interfaces\ITestCaseSourceProvider.cs" />
     <Compile Include="Interfaces\ITestExpectedResult.cs" />
     <Compile Include="Interfaces\ITestFilter.cs" />
     <Compile Include="Interfaces\ITestListener.cs" />
@@ -87,7 +91,7 @@
     <Compile Include="Interfaces\TestStatus.cs" />
     <Compile Include="Interfaces\XmlNode.cs" />
     <Compile Include="Internal\Builders\DefaultSuiteBuilder.cs" />
-    <Compile Include="Internal\Builders\ParameterDataProviders.cs" />
+    <Compile Include="Internal\Builders\NUnitTestCaseBuilder.cs" />
     <Compile Include="Internal\Filters\IdFilter.cs" />
     <Compile Include="Internal\Filters\ValueMatchFilter.cs" />
     <Compile Include="Interfaces\IFixtureBuilder.cs" />
@@ -274,7 +278,6 @@
     <Compile Include="Exceptions\SuccessException.cs" />
     <Compile Include="Interfaces\ISuiteBuilder.cs" />
     <Compile Include="Interfaces\ITestCaseBuilder.cs" />
-    <Compile Include="Interfaces\ITestCaseProvider.cs" />
     <Compile Include="FileAssert.cs" />
     <Compile Include="GlobalSettings.cs" />
     <Compile Include="Guard.cs" />
@@ -283,12 +286,9 @@
     <Compile Include="Internal\AssemblyHelper.cs" />
     <Compile Include="Internal\AssemblyReader.cs" />
     <Compile Include="Internal\Builders\CombinatorialStrategy.cs" />
-    <Compile Include="Internal\Builders\CombinatorialTestCaseProvider.cs" />
-    <Compile Include="Internal\Builders\CombiningStrategy.cs" />
-    <Compile Include="Internal\Builders\DataAttributeTestCaseProvider.cs" />
     <Compile Include="Internal\Builders\DatapointProvider.cs" />
     <Compile Include="Internal\Builders\LegacySuiteBuilder.cs" />
-    <Compile Include="Internal\Builders\NUnitTestCaseBuilder.cs" />
+    <Compile Include="Internal\Builders\DefaultTestCaseBuilder.cs" />
     <Compile Include="Internal\Builders\NUnitTestFixtureBuilder.cs" />
     <Compile Include="Internal\Builders\PairwiseStrategy.cs" />
     <Compile Include="Internal\Builders\ParameterDataProvider.cs" />
@@ -301,8 +301,6 @@
     <Compile Include="Internal\DefaultTestAssemblyBuilder.cs" />
     <Compile Include="Internal\DefaultTestAssemblyRunner.cs" />
     <Compile Include="Internal\ExceptionHelper.cs" />
-    <Compile Include="Internal\Builders\TestCaseBuilderCollection.cs" />
-    <Compile Include="Internal\Builders\TestCaseProviders.cs" />
     <Compile Include="Internal\Filters\AndFilter.cs" />
     <Compile Include="Internal\Filters\CategoryExpression.cs" />
     <Compile Include="Internal\Filters\CategoryFilter.cs" />

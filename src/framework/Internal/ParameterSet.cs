@@ -191,7 +191,7 @@ namespace NUnit.Framework.Internal
         public void ApplyToTest(Test test)
         {
             if (this.RunState != RunState.Runnable)
-				test.RunState = this.RunState;
+                test.RunState = this.RunState;
 
             foreach (string key in Properties.Keys)
                 foreach (object value in Properties[key])

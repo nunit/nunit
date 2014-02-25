@@ -35,7 +35,7 @@ namespace NUnit.Framework
     /// {}
     /// </example>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple=true, Inherited=true)]
-    public class TestFixtureAttribute : NUnitAttribute, IFixtureBuilder, IApplyToTest
+    public class TestFixtureAttribute : FixtureBuilderAttribute, IFixtureBuilder, IApplyToTest
     {
         private NUnitTestFixtureBuilder builder = new NUnitTestFixtureBuilder();
 

@@ -22,7 +22,9 @@
 // ***********************************************************************
 
 using System;
-using NUnit.Framework.Internal;
+using System.Collections;
+using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal.Builders;
 
 namespace NUnit.Framework
 {
@@ -32,11 +34,11 @@ namespace NUnit.Framework
     /// way that all possible pairs of arguments are used.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited=false)]
-    public class PairwiseAttribute : PropertyAttribute
+    public class PairwiseAttribute : CombiningStrategyAttribute
     {
         /// <summary>
         /// Default constructor
         /// </summary>
-        public PairwiseAttribute() : base(PropertyNames.JoinType, "Pairwise") { }
+        public PairwiseAttribute() : base(new PairwiseStrategy()) { }
     }
 }

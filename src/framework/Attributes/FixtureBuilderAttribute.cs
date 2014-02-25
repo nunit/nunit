@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2010 Charlie Poole
+// Copyright (c) 2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -13,7 +13,7 @@
 // included in all copies or substantial portions of the Software.
 // 
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OFn
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
 // NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
 // LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
@@ -22,25 +22,19 @@
 // ***********************************************************************
 
 using System;
-using System.Reflection;
 
-namespace NUnit.Framework.Interfaces
+namespace NUnit.Framework
 {
     /// <summary>
-    /// ITestCaseSource interface is implemented by Types that know how to 
-    /// return a set of ITestCaseData items for use by a test method.
+    /// The abstract base class for all NUnit attributes that build fixtures.
+    /// The derived class should implement IFixtureBuilder. It is not implemented
+    /// by this class to allow for future fixture-building interfaces.
     /// </summary>
-    /// <remarks>
-    /// This method is defined differently depending on the version of .NET.
-    /// </remarks>
-    public interface ITestCaseSource
+    public abstract class FixtureBuilderAttribute : Attribute
     {
         /// <summary>
-        /// Returns a set of ITestCaseDataItems for use as arguments
-        /// to a parameterized test method.
+        /// Default constructor
         /// </summary>
-        /// <param name="method">The method for which data is needed.</param>
-        /// <returns></returns>
-        System.Collections.Generic.IEnumerable<ITestCaseData> GetTestCasesFor(MethodInfo method);
+        public FixtureBuilderAttribute() { }
     }
 }

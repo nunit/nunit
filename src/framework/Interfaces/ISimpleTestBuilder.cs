@@ -1,5 +1,5 @@
-// ***********************************************************************
-// Copyright (c) 2008 Charlie Poole
+﻿// ***********************************************************************
+// Copyright (c) 2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,24 +21,26 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
-using System.Collections;
-using NUnit.Framework.Interfaces;
-using NUnit.Framework.Internal.Builders;
+using System.Collections.Generic;
+using System.Reflection;
+using NUnit.Framework.Internal; // TODO: We shouldn't reference this in the interface
 
-namespace NUnit.Framework
+namespace NUnit.Framework.Interfaces
 {
     /// <summary>
-    /// Marks a test to use a combinatorial join of any argument 
-    /// data provided. Since this is the default, the attribute is
-    /// optional.
+    /// The ISimpleTestBuilder interface is exposed by a class that knows how to
+    /// build a single TestMethod from a suitable MethodInfo Types. In general, 
+    /// it is exposed by an attribute, but may be implemented in a helper class 
+    /// used by the attribute in some cases.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
-    public class CombinatorialAttribute : CombiningStrategyAttribute
+    public interface ISimpleTestBuilder
     {
         /// <summary>
-        /// Default constructor
+        /// Build a TestMethod from the provided MethodInfo.
         /// </summary>
-        public CombinatorialAttribute() : base(new CombinatorialStrategy()) { }
+        /// <param name="method">The method to be used as a test</param>
+        /// <param name="suite">The TestSuite to which the method will be added</param>
+        /// <returns>A TestMethod object</returns>
+        TestMethod BuildFrom(MethodInfo method, Test suite);
     }
 }
