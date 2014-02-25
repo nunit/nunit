@@ -1,13 +1,26 @@
 <?xml version="1.0"?>
 <project name="TestData" default="build" basedir=".">
+
+  <patternset id="source-files">
+    <include name="*.cs"/>
+  </patternset>
   
   <target name="build">
-    <exec program="${build.command}" verbose="true">
-        <arg line='"nunitlite.testdata-${msbuild.proj.suffix}.csproj"' />
-        <arg line="/property:Configuration=${build.config}" />
-        <arg line="/property:OutputPath=${current.build.dir}" />
-        <arg value="/target:Rebuild" />
-        <arg value="/verbosity:normal" />
-    </exec>
+    <csc target="library"
+        output="${current.build.dir}/nunitlite.testdata.dll"
+        debug="${build.debug}"
+        define="${build.defines};NUNITLITE"
+        warninglevel="${warn}">
+      <sources basedir=".">
+        <include name="../CommonAssemblyInfo.cs"/>
+        <patternset refid="source-files"/>
+      </sources>
+      <references basedir="${current.build.dir}">
+        <include name="mscorlib.dll"/>
+		<include name="system.dll"/>
+        <include name="nunitlite.dll"/>
+      </references>
+    </csc>
   </target>
+
 </project>

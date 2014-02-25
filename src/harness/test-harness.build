@@ -2,15 +2,22 @@
 <project name="TestHarness" default="build" basedir=".">
 
   <target name="build">
-    
-    <exec program="${build.command}" verbose="true">
-        <arg line='"test-harness-${msbuild.proj.suffix}.csproj"' />
-        <arg line="/property:Configuration=${build.config}" />
-        <arg line="/property:OutputPath=${current.build.dir}" />
-        <arg value="/target:Rebuild" />
-        <arg value="/verbosity:normal" />
-    </exec>
-  
+
+    <csc target="exe"
+        output="${current.build.dir}/test-harness.exe"
+        debug="${build.debug}" 
+        define="${build.defines}"
+        warninglevel="${warn}">
+      <sources basedir=".">
+        <include name="*.cs"/>
+        <include name="../CommonAssemblyInfo.cs"/> 
+      </sources>
+      <references basedir="${current.build.dir}">
+        <include name="nunit.framework.dll"/>
+		<include name="System.Web.dll"/>
+      </references>
+    </csc>
+
   </target>
 
   <target name="package">

@@ -1,17 +1,38 @@
 <?xml version="1.0"?>
 <project name="NUnitFramework" default="build" basedir=".">
 
+  <patternset id="source-files">
+    <include name="**/*.cs"/>
+	  <exclude name="obj/**/*.cs"/>
+	  <exclude name="**/*.xaml.cs"/>
+	  <exclude name="**/Options.cs"/>
+  </patternset>
+
   <target name="build">
 
     <echo message="Building NUnitLite for runtime platform ${runtime.platform}"/>
-    
-    <exec program="${build.command}" verbose="true">
-        <arg line='"nunitlite-${msbuild.proj.suffix}.csproj"' />
-        <arg line="/property:Configuration=${build.config}" />
-        <arg line="/property:OutputPath=${current.build.dir}" />
-        <arg value="/target:Rebuild" />
-        <arg value="/verbosity:normal" />
-    </exec>
+
+    <csc target="library"
+        output="${current.build.dir}/nunitlite.dll"
+        doc="${current.build.dir}/nunitlite.xml"
+        keyfile="nunit.snk"
+        debug="${build.debug}" 
+        define="${build.defines};NUNITLITE"
+        warninglevel="${warn}">
+      <nowarn>
+        <warning number="1699" if="${runtime.version>='2.0'}"/>
+      </nowarn>
+      <sources basedir=".">
+        <include name="../CommonAssemblyInfo.cs" />
+        <patternset refid="source-files" />
+      </sources>
+      <references basedir="${current.build.dir}">
+        <include name="mscorlib.dll"/>
+        <include name="System.dll"/>
+        <include name="System.Xml.dll"/>
+	    <include name="System.Windows.dll" if="${runtime.platform == 'silverlight'}"/>
+	  </references>
+    </csc>
 
   </target>
 

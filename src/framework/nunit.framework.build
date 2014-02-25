@@ -2,14 +2,28 @@
 <project name="NUnitFramework" default="build" basedir=".">
 
   <target name="build">
-  
-    <exec program="${build.command}" verbose="true">
-        <arg line='"nunit.framework-${msbuild.proj.suffix}.csproj"' />
-        <arg line="/property:Configuration=${build.config}" />
-        <arg line="/property:OutputPath=${current.build.dir}" />
-        <arg value="/target:Rebuild" />
-        <arg value="/verbosity:normal" />
-    </exec>
+
+    <csc target="library"
+        output="${current.build.dir}/nunit.framework.dll"
+        doc="${current.build.dir}/nunit.framework.xml"
+        debug="${build.debug}" 
+        define="${build.defines}"
+        keyfile="nunit.snk"
+        warninglevel="${warn}">
+      <nowarn>
+        <warning number="1699" if="${runtime.version=='2.0'}"/>
+      </nowarn>
+      <sources basedir=".">
+        <include name="../CommonAssemblyInfo.cs" />
+        <include name="**/*.cs" />
+		<exclude name="obj/**/*.cs" />
+        <exclude name="Runner/**/*.cs" />
+	  </sources>
+      <references basedir="${current.build.dir}">
+        <include name="System.Configuration.dll"/>
+		<include name="System.Web.dll"/>
+      </references>
+    </csc>
 
   </target>
 
