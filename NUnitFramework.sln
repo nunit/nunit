@@ -69,12 +69,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunitlite.tests-4.5", "src\
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution", "Solution", "{65C1066B-4BEC-48A0-9456-1F0406448AF5}"
 	ProjectSection(SolutionItems) = preProject
+		BUILDING.txt = BUILDING.txt
+		CHANGES.txt = CHANGES.txt
 		LICENSE.txt = LICENSE.txt
 		NOTICES.txt = NOTICES.txt
 		NUnitFramework.build = NUnitFramework.build
 		NUnitFramework.msbuild = NUnitFramework.msbuild
 		runbuild = runbuild
 		runbuild.cmd = runbuild.cmd
+		runpackage = runpackage
+		runpackage.cmd = runpackage.cmd
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SL-5.0", "SL-5.0", "{5C0BC8AB-B491-47E3-AFEC-59A2E15A2C85}"

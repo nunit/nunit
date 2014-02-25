@@ -7,6 +7,10 @@
     <PackageName>$(ProjectName)-$(PackageVersion)</PackageName>
   </PropertyGroup>
 
+  <PropertyGroup Label="Platform-specific properties">
+    <IsWindows Condition=" '$(OS)' == 'Windows_NT' ">true</IsWindows>
+  </PropertyGroup>
+
   <PropertyGroup Label="Project Directories">
     <ProjectBaseDir>$(MSBuildProjectDirectory)</ProjectBaseDir>
     <ProjectBuildDir>$(ProjectBaseDir)\build</ProjectBuildDir>
@@ -27,8 +31,14 @@
 
   <PropertyGroup Label="Build Configurations">
     <Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
-    <DefaultFramework>net-4.5</DefaultFramework>
+    <DefaultFramework Condition="$(IsWindows)">net-4.5</DefaultFramework>
+    <DefaultFramework Condition="!$(IsWindows)">mono-4.0</DefaultFramework>
     <Framework Condition="'$(Framework)' == ''">$(DefaultFramework)</Framework>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Platform-speficic command">
+    <RemoveDir Condition="$(IsWindows)">rmdir /s /q</RemoveDir>
+    <RemoveDir Condition="!$(IsWindows)">rm -rf</RemoveDir>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Framework)'=='net-4.5'">
@@ -89,6 +99,7 @@
     <Message Text="  Base:          $(ProjectBaseDir)"></Message>
     <Message Text="    Build:       $(ProjectBuildDir)"></Message>
     <Message Text="    Package:     $(ProjectPackageDir)"></Message>
+    <Message Text="    Source:      $(ProjectSrcDir)"></Message>
     <Message Text="    Tools:       $(ProjectToolsDir)"></Message>
     <Message Text=""></Message>
     <Message Text="Frameworks:"></Message>
@@ -98,30 +109,26 @@
     <Message Text="  Configuration: $(Configuration)"></Message>
     <Message Text="  Framework:     $(Framework)"></Message>
     <Message Text="  Build dir:     $(FrameworkBuildDir)"></Message>
-    <Message Text="  Proj suffix:   $(ProjectSuffix)"></Message>
+    <Message Text="  Proj. suffix:  $(ProjectSuffix)"></Message>
     <Message Text=""></Message>
     <Message Text="Packaging"></Message>
     <Message Text="  Name:          $(PackageName)"></Message>
     <Message Text="  Version:       $(PackageVersion)"></Message>
     <Message Text="  Work dir:      $(PackageWorkingDir)"></Message>
     <Message Text="    Bin:         $(PackageBinDir)"></Message>
-    <Message Text="    Doc:         $(PackageDocDir)"></Message>
-    <Message Text="    Samples:     $(PackageSamplesDir)"></Message>
     <Message Text="    Source:      $(PackageSrcDir)"></Message>
     <Message Text=""></Message>
   </Target>
 
   <Target Name="Clean">
-    <RemoveDir Directories="$(FrameworkBuildDir)" Condition="Exists('$(FrameworkBuildDir)')">
-    </RemoveDir>
+    <Exec Command="$(RemoveDir) $(FrameworkBuildDir)" Condition="Exists('$(FrameworkBuildDir)')"></Exec>
     <Delete Files="$(ProjectSrcDir)\GeneratedAssemblyInfo.cs" Condition="Exists('$(ProjectSrcDir)\GeneratedAssemblyInfo.cs')" />
   </Target>
   <Target Name="CleanAll" DependsOnTargets="Clean">
-    <RemoveDir Directories="$(ProjectBuildDir)" Condition="Exists('$(ProjectBuildDir)')" >
-    </RemoveDir>
+    <Exec Command="$(RemoveDir) $(ProjectBuildDir)" Condition="Exists('$(ProjectBuildDir)')" ></Exec>
   </Target>
   <Target Name="CleanPackageDir">
-    <RemoveDir Directories="$(PackageWorkingDir)" Condition="Exists('$(PackageWorkingDir)')"></RemoveDir>
+    <Exec Command="$(RemoveDir) $(PackageWorkingDir)" Condition="Exists('$(PackageWorkingDir)')"></Exec>
   </Target>
   <Target Name="Build">
     <CallTarget Targets="BuildNUnit" Condition="'$(Runtime)' != 'netcf'" />
@@ -188,11 +195,11 @@
   </Target>
   
   <Target Name="CleanPackageWorkingDir">
-    <RemoveDir Directories="$(PackageWorkingDir)" Condition="Exists('$(PackageWorkingDir)')"></RemoveDir>
+    <Exec Command="$(RemoveDir) $(PackageWorkingDir)" Condition="Exists('$(PackageWorkingDir)')"></Exec>
     <MakeDir Directories="$(PackageWorkingDir)"></MakeDir>
   </Target>
   
-   <ItemGroup>
+   <ItemGroup Label="Files for packaging">
       <BinFiles Include="$(ConfigurationBuildDir)\**\*.*"></BinFiles>
       <TxtFiles Include="LICENSE.txt;NOTICES.txt"></TxtFiles>
     </ItemGroup>
