@@ -152,11 +152,11 @@
   </ItemGroup>
   <Target Name="BuildNUnit">
     <Error Condition="'$(Runtime)' == 'netcf'" Text="The full NUnit framework cannot be built for $(Runtime)"></Error>
-    <MSBuild Targets="Rebuild" Projects="@(NUnitProject)" Properties="Configuration=$(Configuration); OutputPath=$(FrameworkBuildDir)">
+    <MSBuild Targets="Rebuild" Projects="@(NUnitProject)" Properties="Configuration=$(Configuration); OutputPath=$(FrameworkBuildDir); Platform=AnyCpu">
     </MSBuild>
   </Target>
   <Target Name="BuildNUnitLite">
-    <MSBuild Targets="Rebuild" Projects="@(NUnitLiteProject)" Properties="Configuration=$(Configuration); OutputPath=$(FrameworkBuildDir)">
+    <MSBuild Targets="Rebuild" Projects="@(NUnitLiteProject)" Properties="Configuration=$(Configuration); OutputPath=$(FrameworkBuildDir); Platform=AnyCpu">
     </MSBuild>
   </Target>
   <Target Name="Test">
