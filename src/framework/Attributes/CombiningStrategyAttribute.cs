@@ -77,7 +77,7 @@ namespace NUnit.Framework
                     sources[i] = _dataProvider.GetDataFor(parameters[i]);
 
                 foreach (var parms in _strategy.GetTestCases(sources))
-                    tests.Add(_builder.BuildSingleTestMethod(method, suite, (ParameterSet)parms));
+                    tests.Add(_builder.BuildTestMethod(method, suite, (ParameterSet)parms));
             }
 
             return tests;

@@ -1,6 +1,6 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2014 Rob Prouse
-// 
+// Copyright (c) 2011 Charlie Poole
+//
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
 // "Software"), to deal in the Software without restriction, including
@@ -21,48 +21,25 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-namespace NUnit.Framework.Tests.Attributes
+using System;
+using System.Collections.Generic;
+
+namespace NUnit.Framework.Interfaces
 {
-    [TestFixture]
-    public class TestExpectedResult
+    /// <summary>
+    /// ICommandDecorator is implemented by attributes and other
+    /// objects able to decorate a TestCommand, usually by wrapping
+    /// it with an outer command. It is used to retrieve the actual
+    /// decorators, thereby permitting one object to supply several
+    /// of them.
+    /// </summary>
+    public interface ICommandDecoratorSource
     {
-        [Test(ExpectedResult = 4)]
-        public int CanExpectInt()
-        {
-            return 4;
-        }
-
-        [Test(ExpectedResult = 4)]
-        public double CanExpectDouble()
-        {
-            return 4.0;
-        }
-
-        [Test(ExpectedResult = "Hello")]
-        public string CanExpectString()
-        {
-            return "Hello";
-        }
-
-        [Test(ExpectedResult = null)]
-        public object ResultCanBeNull()
-        {
-            return null;
-        }
-
-        [Test(ExpectedResult = 1024)]
-        [TestCase(1, 1, ExpectedResult = 2)]
-        [TestCase(5, 3, ExpectedResult = 8)]
-        public int TestAttributeExpectedResultDoesNotOverrideTestCaseExpectedResult(int x, int y)
-        {
-            return x + y;
-        }
-
-        [Test(ExpectedResult = 42), Description("A description")]
-        public int ExpectedResultDoesNotBlockApplyToTestAttributes()
-        {
-            Assert.That(TestContext.CurrentContext.Test.Properties.Get("Description"), Is.EqualTo("A description"));
-            return 42;
-        }
+        /// <summary>
+        /// Gets the command decorators the object is able to supply
+        /// in its current state.
+        /// </summary>
+        /// <returns>Zero or more ICommandDecorators.</returns>
+        IEnumerable<ICommandDecorator> GetDecorators();
     }
 }

@@ -176,7 +176,7 @@ namespace NUnit.Framework.Internal.Builders
             var builders = (ISimpleTestBuilder[])method.GetCustomAttributes(typeof(ISimpleTestBuilder), false);
             return builders.Length > 0
                 ? builders[0].BuildFrom(method, suite)
-                : _nunitTestCaseBuilder.BuildSingleTestMethod(method, suite, null);
+                : _nunitTestCaseBuilder.BuildTestMethod(method, suite, null);
         }
 
         #endregion

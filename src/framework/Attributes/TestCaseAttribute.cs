@@ -418,7 +418,7 @@ namespace NUnit.Framework
         /// <returns>One or more TestMethods</returns>
         public IEnumerable<TestMethod> BuildFrom(MethodInfo method, Test suite)
         {
-            return new TestMethod[] { new NUnitTestCaseBuilder().BuildSingleTestMethod(method, suite, GetParametersForTestCase(method)) };
+            return new TestMethod[] { new NUnitTestCaseBuilder().BuildTestMethod(method, suite, GetParametersForTestCase(method)) };
         }
 
         #endregion

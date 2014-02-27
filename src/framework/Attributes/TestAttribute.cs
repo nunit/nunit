@@ -56,7 +56,7 @@ namespace NUnit.Framework
     {
         private object _expectedResult;
 
-        private NUnitTestCaseBuilder builder = new NUnitTestCaseBuilder();
+        private NUnitTestCaseBuilder _builder = new NUnitTestCaseBuilder();
 
         /// <summary>
         /// Descriptive text for this test
@@ -111,7 +111,7 @@ namespace NUnit.Framework
         /// <returns>A TestMethod</returns>
         public TestMethod BuildFrom(MethodInfo method, Test suite)
         {
-            return builder.BuildSingleTestMethod(method, suite, null);
+            return _builder.BuildTestMethod(method, suite, HasExpectedResult ? new ParameterSet(this) : null);
         }
         
         #endregion

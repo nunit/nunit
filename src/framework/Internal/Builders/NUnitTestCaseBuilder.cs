@@ -48,7 +48,7 @@ namespace NUnit.Framework.Internal.Builders
         /// <param name="parentSuite">The suite or fixture to which the new test will be added</param>
         /// <param name="parms">The ParameterSet to be used, or null</param>
         /// <returns></returns>
-        public TestMethod BuildSingleTestMethod(MethodInfo method, Test parentSuite, ParameterSet parms)
+        public TestMethod BuildTestMethod(MethodInfo method, Test parentSuite, ParameterSet parms)
         {
             TestMethod testMethod = new TestMethod(method, parentSuite);
 
@@ -59,44 +59,12 @@ namespace NUnit.Framework.Internal.Builders
             // Needed to give proper fullname to test in a parameterized fixture.
             // Without this, the arguments to the fixture are not included.
             if (parentSuite != null)
-            {
                 prefix = parentSuite.FullName;
-                //testMethod.FullName = prefix + "." + testMethod.Name;
-            }
-
-            if (parms == null)
-            {
-                var attrs = method.GetCustomAttributes(typeof(TestAttribute), true);
-                if (attrs.Length > 0)
-                {
-                    var expectedResult = attrs[0] as ITestExpectedResult;
-                    if (expectedResult != null && expectedResult.HasExpectedResult)
-                        parms = new ParameterSet(expectedResult);
-                }
-            }
 
             if (CheckTestMethodSignature(testMethod, parms))
             {
-                if (parms == null)
+                if (parms == null || parms.Arguments == null)
                     testMethod.ApplyAttributesToTest(method);
-
-                foreach (ICommandDecorator decorator in method.GetCustomAttributes(typeof(ICommandDecorator), true))
-                    testMethod.CustomDecorators.Add(decorator);
-
-                ExpectedExceptionAttribute[] attributes =
-                    (ExpectedExceptionAttribute[])method.GetCustomAttributes(typeof(ExpectedExceptionAttribute), false);
-
-                if (attributes.Length > 0)
-                {
-                    ExpectedExceptionAttribute attr = attributes[0];
-                    string handlerName = attr.Handler;
-                    if (handlerName != null && GetExceptionHandler(testMethod.FixtureType, handlerName) == null)
-                        MarkAsNotRunnable(
-                            testMethod,
-                            string.Format("The specified exception handler {0} was not found", handlerName));
-
-                    testMethod.CustomDecorators.Add(new ExpectedExceptionDecorator(attr.ExceptionData));
-                }
             }
 
             if (parms != null)

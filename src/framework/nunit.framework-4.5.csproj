@@ -216,6 +216,8 @@
     <Compile Include="Has.cs" />
     <Compile Include="IExpectException.cs" />
     <Compile Include="Interfaces\ExpectedExceptionData.cs" />
+    <Compile Include="Interfaces\ICommandDecorator.cs" />
+    <Compile Include="Interfaces\ICommandDecoratorSource.cs" />
     <Compile Include="Interfaces\IFixtureBuilder.cs" />
     <Compile Include="Interfaces\IImplyFixture.cs" />
     <Compile Include="Interfaces\IParameterDataProvider.cs" />
@@ -263,7 +265,6 @@
     <Compile Include="Internal\Commands\CommandStage.cs" />
     <Compile Include="Internal\Commands\DelegatingTestCommand.cs" />
     <Compile Include="Internal\Commands\ExpectedExceptionCommand.cs" />
-    <Compile Include="Internal\Commands\ICommandDecorator.cs" />
     <Compile Include="Internal\Commands\MaxTimeCommand.cs" />
     <Compile Include="Internal\Commands\RepeatedTestCommand.cs" />
     <Compile Include="Internal\Commands\SetUpTearDownCommand.cs" />
