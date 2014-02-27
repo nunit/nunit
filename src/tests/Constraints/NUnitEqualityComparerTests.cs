@@ -34,7 +34,7 @@ namespace NUnit.Framework.Constraints
         [SetUp]
         public void Setup()
         {
-            tolerance = Tolerance.Empty;
+            tolerance = Tolerance.Default;
             comparer = new NUnitEqualityComparer();
         }
 

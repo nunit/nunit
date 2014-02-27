@@ -131,12 +131,12 @@ namespace NUnit.Framework.Constraints
                 return expected.Equals(actual);
             }
 
-            if (tolerance.IsEmpty && GlobalSettings.DefaultFloatingPointTolerance > 0.0d)
+            if (tolerance.IsUnsetOrDefault && GlobalSettings.DefaultFloatingPointTolerance > 0.0d)
                 tolerance = new Tolerance(GlobalSettings.DefaultFloatingPointTolerance);
 
             switch (tolerance.Mode)
             {
-                case ToleranceMode.None:
+                case ToleranceMode.Unset:
                     return expected.Equals(actual);
 
                 case ToleranceMode.Linear:
@@ -171,12 +171,12 @@ namespace NUnit.Framework.Constraints
                 return expected.Equals(actual);
             }
 
-            if (tolerance.IsEmpty && GlobalSettings.DefaultFloatingPointTolerance > 0.0d)
+            if (tolerance.IsUnsetOrDefault && GlobalSettings.DefaultFloatingPointTolerance > 0.0d)
                 tolerance = new Tolerance(GlobalSettings.DefaultFloatingPointTolerance);
 
             switch (tolerance.Mode)
             {
-                case ToleranceMode.None:
+                case ToleranceMode.Unset:
                     return expected.Equals(actual);
 
                 case ToleranceMode.Linear:
@@ -202,7 +202,7 @@ namespace NUnit.Framework.Constraints
         {
             switch (tolerance.Mode)
             {
-                case ToleranceMode.None:
+                case ToleranceMode.Unset:
                     return expected.Equals(actual);
 
                 case ToleranceMode.Linear:
@@ -229,7 +229,7 @@ namespace NUnit.Framework.Constraints
         {
             switch (tolerance.Mode)
             {
-                case ToleranceMode.None:
+                case ToleranceMode.Unset:
                     return expected.Equals(actual);
 
                 case ToleranceMode.Linear:
@@ -260,7 +260,7 @@ namespace NUnit.Framework.Constraints
         {
             switch (tolerance.Mode)
             {
-                case ToleranceMode.None:
+                case ToleranceMode.Unset:
                     return expected.Equals(actual);
 
                 case ToleranceMode.Linear:
@@ -287,7 +287,7 @@ namespace NUnit.Framework.Constraints
         {
             switch (tolerance.Mode)
             {
-                case ToleranceMode.None:
+                case ToleranceMode.Unset:
                     return expected.Equals(actual);
 
                 case ToleranceMode.Linear:
@@ -318,7 +318,7 @@ namespace NUnit.Framework.Constraints
         {
             switch (tolerance.Mode)
             {
-                case ToleranceMode.None:
+                case ToleranceMode.Unset:
                     return expected.Equals(actual);
 
                 case ToleranceMode.Linear:

@@ -27,7 +27,7 @@ namespace NUnit.Framework.Constraints.Tests
 		public void ConstraintError()
 		{
 			Assert.Throws<InvalidOperationException>(() => 
-				new DelayedConstraint(new EqualConstraint(1), 100).ApplyTo(async () => await Throw()));
+				new DelayedConstraint(new EqualConstraint(1), 100).ApplyTo(new ActualValueDelegate<Task>(async () => await Throw())));
 		}
 
 		[Test]

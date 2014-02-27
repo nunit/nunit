@@ -40,7 +40,7 @@ namespace NUnit.Framework.Constraints
 
         private readonly object expected;
 
-        private Tolerance tolerance = Tolerance.Empty;
+        private Tolerance tolerance = Tolerance.Default;
 
         /// <summary>
         /// NUnitEqualityComparer used to test equality.
@@ -157,7 +157,7 @@ namespace NUnit.Framework.Constraints
         /// <returns>Self.</returns>
         public EqualConstraint Within(object amount)
         {
-            if (!tolerance.IsEmpty)
+            if (!tolerance.IsUnsetOrDefault)
                 throw new InvalidOperationException("Within modifier may appear only once in a constraint expression");
 
             tolerance = new Tolerance(amount);
@@ -359,7 +359,7 @@ namespace NUnit.Framework.Constraints
             { 
                 System.Text.StringBuilder sb = new System.Text.StringBuilder(MsgUtils.FormatValue(expected));
 
-                if (tolerance != null && !tolerance.IsEmpty)
+                if (tolerance != null && !tolerance.IsUnsetOrDefault)
                 {
                     sb.Append(" +/- ");
                     sb.Append(MsgUtils.FormatValue(tolerance.Value));
