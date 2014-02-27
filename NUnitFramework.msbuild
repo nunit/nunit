@@ -76,6 +76,10 @@
     <ProjectSuffix>3.5</ProjectSuffix>
     <Runtime>netcf</Runtime>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Framework)'=='netcf-2.0'">
+    <ProjectSuffix>2.0</ProjectSuffix>
+    <Runtime>netcf</Runtime>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Framework)'=='silverlight-5.0'">
     <ProjectSuffix>sl-5.0</ProjectSuffix>
     <Runtime>silverlight</Runtime>
@@ -133,7 +137,7 @@
     <Exec Command="$(RemoveDir) $(ProjectBuildDir)" Condition="Exists('$(ProjectBuildDir)')" ></Exec>
   </Target>
   <Target Name="Build">
-    <CallTarget Targets="_BuildNUnit" Condition="'$(Runtime)' != 'netcf'" />
+    <CallTarget Targets="_BuildNUnit" Condition="'$(Runtime)' != 'netcf' And '$(Runtime)' != 'silverlight'" />
     <CallTarget Targets="_BuildNUnitLite" />
   </Target>
   <ItemGroup>
@@ -149,7 +153,7 @@
     <NUnitLiteProject Include="$(ProjectSrcDir)\tests\nunitlite.tests-$(ProjectSuffix).csproj"></NUnitLiteProject>
   </ItemGroup>
   <Target Name="_BuildNUnit">
-    <Error Condition="'$(Runtime)' == 'netcf'" Text="The full NUnit framework cannot be built for $(Runtime)"></Error>
+    <Error Condition="'$(Runtime)' == 'netcf' Or $(Runtime)' == 'silverlight'" Text="The full NUnit framework cannot be built for $(Runtime)"></Error>
     <MSBuild Targets="Rebuild" Projects="@(NUnitProject)" Properties="Configuration=$(Configuration); OutputPath=$(FrameworkBuildDir); Platform=AnyCPU">
     </MSBuild>
   </Target>
@@ -158,12 +162,12 @@
     </MSBuild>
   </Target>
   <Target Name="Test">
-    <CallTarget Targets="_NUnitTest" Condition="'$(Runtime)' != 'netcf'"></CallTarget>
+    <CallTarget Targets="_NUnitTest" Condition="'$(Runtime)' != 'netcf' And '$(Runtime)' != 'silverlight'"></CallTarget>
     <CallTarget Targets="_NUnitLiteTest"></CallTarget>
   </Target>
   <Target Name="_NUnitTest">
     <Message Text="Testing NUnitFramework $(Framework) - $(Configuration)"></Message>
-    <Error Condition="'$(Runtime)' == 'netcf'" Text="The full NUnit framework cannot be tested under $(Runtime)"></Error>
+    <Error Condition="'$(Runtime)' == 'netcf' Or '$(Runtime)' == 'silverlight'" Text="The full NUnit framework cannot be tested under $(Runtime)"></Error>
     <Exec WorkingDirectory="$(FrameworkBuildDir)" Command="$(ManagedExeLauncher) $(FrameworkBuildDir)\$(TestRunnerProgram) $(TestRunnerArgs)">
     </Exec>
   </Target>
@@ -215,5 +219,4 @@
     <Copy DestinationFiles="@(BinFiles->'$(PackageBinDir)\%(RecursiveDir)%(Filename)%(Extension)')" 
           SourceFiles="@(BinFiles)"></Copy>
   </Target>
-
 </Project>
