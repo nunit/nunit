@@ -73,11 +73,11 @@
     <Runtime>mono</Runtime>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Framework)'=='netcf-3.5'">
-    <ProjectSuffix>3.5</ProjectSuffix>
+    <ProjectSuffix>netcf-3.5</ProjectSuffix>
     <Runtime>netcf</Runtime>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Framework)'=='netcf-2.0'">
-    <ProjectSuffix>2.0</ProjectSuffix>
+    <ProjectSuffix>netcf-2.0</ProjectSuffix>
     <Runtime>netcf</Runtime>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Framework)'=='silverlight-5.0'">
@@ -232,10 +232,10 @@
     <SupportedFrameworks Include="silverlight-5.0"></SupportedFrameworks>
   </ItemGroup>
   <Target Name="BuildAll">
-    <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="Build" Properties="Framework=%(SupportedFrameworks.Identity)"></MSBuild>
+    <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="Build" Properties="Framework=%(SupportedFrameworks.Identity)" ContinueOnError="true"></MSBuild>
   </Target>
   <Target Name="TestAll">
-    <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="Test" Properties="Framework=%(SupportedFrameworks.Identity)"></MSBuild>
+    <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="Test" Properties="Framework=%(SupportedFrameworks.Identity)" ContinueOnError="true"></MSBuild>
   </Target>
   <Target Name="CleanAll" DependsOnTargets="Clean">
     <Exec Command="$(RemoveDir) $(ProjectBuildDir)" Condition="Exists('$(ProjectBuildDir)')" ></Exec>
