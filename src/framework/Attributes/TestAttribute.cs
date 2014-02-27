@@ -52,7 +52,7 @@ namespace NUnit.Framework
     /// </example>
     /// 
     [AttributeUsage(AttributeTargets.Method, AllowMultiple=false, Inherited=true)]
-    public class TestAttribute : TestCaseBuilderAttribute, ISimpleTestBuilder, IApplyToTest, ITestExpectedResult, IImplyFixture
+    public class TestAttribute : TestCaseBuilderAttribute, ISimpleTestBuilder, IApplyToTest, IImplyFixture
     {
         private object _expectedResult;
 
@@ -111,7 +111,15 @@ namespace NUnit.Framework
         /// <returns>A TestMethod</returns>
         public TestMethod BuildFrom(MethodInfo method, Test suite)
         {
-            return _builder.BuildTestMethod(method, suite, HasExpectedResult ? new ParameterSet(this) : null);
+            ParameterSet parms = null;
+
+            if (this.HasExpectedResult)
+            {
+                parms = new ParameterSet();
+                parms.ExpectedResult = this.ExpectedResult;
+            }
+
+            return _builder.BuildTestMethod(method, suite, parms);
         }
         
         #endregion

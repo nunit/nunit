@@ -34,6 +34,12 @@ namespace NUnit.Framework.Internal.Builders
     /// </summary>
     public class LegacySuiteBuilder : ISuiteBuilder
     {
+        /// <summary>
+        /// Default builder used by legacy builder to create
+        /// the suites included in the legacy suite.
+        /// </summary>
+        ISuiteBuilder _defaultSuiteBuilder = new DefaultSuiteBuilder();
+
         #region ISuiteBuilderMembers
         /// <summary>
         /// Checks to see if the fixture type has the a property
@@ -85,10 +91,15 @@ namespace NUnit.Framework.Internal.Builders
                 foreach (object obj in (IEnumerable)suiteProperty.GetValue(null, new object[0]))
                 {
                     Type objType = obj as Type;
-                    if (objType != null && TestFixtureBuilder.CanBuildFrom(objType))
-                        suite.Add(TestFixtureBuilder.BuildFrom(objType));
+                    if (objType != null && _defaultSuiteBuilder.CanBuildFrom(objType))
+                        suite.Add(_defaultSuiteBuilder.BuildFrom(objType));
                     else
-                        suite.Add(TestFixtureBuilder.BuildFrom(obj));
+                    {
+                        var fixture = _defaultSuiteBuilder.BuildFrom(obj.GetType());
+                        if (fixture != null)
+                            fixture.Fixture = obj;
+                        suite.Add(fixture);
+                    }
                 }
             }
             else

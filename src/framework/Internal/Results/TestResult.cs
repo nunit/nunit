@@ -31,93 +31,58 @@ namespace NUnit.Framework.Internal
     /// The TestResult class represents the result of a test.
     /// </summary>
     public abstract class TestResult : ITestResult
-	{
-		#region Fields
-
-		/// <summary>
-		/// Indicates the result of the test
-		/// </summary>
-        [CLSCompliant(false)]
-        protected ResultState resultState;
-        
-		/// <summary>
-		/// The test that this result pertains to
-		/// </summary>
-        [CLSCompliant(false)]
-		protected readonly ITest test;
-
-		/// <summary>
-		/// The stacktrace at the point of failure
-		/// </summary>
-		private string stackTrace;
-
-		/// <summary>
-		/// Message giving the reason for failure, error or skipping the test
-		/// </summary>
-        [CLSCompliant(false)]
-        protected string message;
-
-		/// <summary>
-		/// Number of asserts executed by this test
-		/// </summary>
-        [CLSCompliant(false)]
-        protected int assertCount = 0;
+    {
+        #region Fields
 
         /// <summary>
         /// List of child results
         /// </summary>
-        private System.Collections.Generic.List<ITestResult> children;
+        private System.Collections.Generic.List<ITestResult> _children;
 
         #endregion
 
-		#region Constructor
+        #region Constructor
 
-		/// <summary>
-		/// Construct a test result given a Test
-		/// </summary>
-		/// <param name="test">The test to be used</param>
-		public TestResult(ITest test)
-		{
-			this.test = test;
-            this.resultState = ResultState.Inconclusive;
-		}
+        /// <summary>
+        /// Construct a test result given a Test
+        /// </summary>
+        /// <param name="test">The test to be used</param>
+        public TestResult(ITest test)
+        {
+            this.Test = test;
+            this.ResultState = ResultState.Inconclusive;
+        }
 
-		#endregion
+        #endregion
 
         #region ITestResult Members
 
         /// <summary>
         /// Gets the test with which this result is associated.
         /// </summary>
-        public ITest Test
-        {
-            get { return test; }
-        }
+        public ITest Test { get; private set; }
 
         /// <summary>
         /// Gets the ResultState of the test result, which 
         /// indicates the success or failure of the test.
         /// </summary>
-        public ResultState ResultState
-        {
-            get { return resultState; }
-        }
+        public ResultState ResultState { get; private set; }
 
         /// <summary>
         /// Gets the name of the test result
         /// </summary>
         public virtual string Name
-		{
-			get { return test.Name; }
-		}
+        {
+            get { return Test.Name; }
+        }
 
         /// <summary>
         /// Gets the full name of the test result
         /// </summary>
         public virtual string FullName
-		{
-			get { return test.FullName; }
-		}
+        {
+            get { return Test.FullName; }
+        }
 
         /// <summary>
         /// Gets or sets the elapsed time for running the test
@@ -138,30 +103,20 @@ namespace NUnit.Framework.Internal
         /// Gets the message associated with a test
         /// failure or with not running the test
         /// </summary>
-        public string Message
-        {
-            get { return message; }
-        }
+        public string Message { get; private set; }
 
         /// <summary>
         /// Gets any stacktrace associated with an
         /// error or failure. Not available in
         /// the Compact Framework 1.0.
         /// </summary>
-        public virtual string StackTrace
-        {
-            get { return stackTrace; }
-        }
+        public virtual string StackTrace { get; private set; }
 
         /// <summary>
         /// Gets or sets the count of asserts executed
         /// when running the test.
         /// </summary>
-        public int AssertCount
-        {
-            get { return assertCount; }
-            set { assertCount = value; }
-        }
+        public int AssertCount { get; set; }
 
         /// <summary>
         /// Gets the number of test cases that failed
@@ -194,7 +149,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public bool HasChildren
         {
-            get { return children != null && children.Count > 0; }
+            get { return _children != null && _children.Count > 0; }
         }
 
         /// <summary>
@@ -204,10 +159,10 @@ namespace NUnit.Framework.Internal
         {
             get
             {
-                if (children == null)
-                    children = new System.Collections.Generic.List<ITestResult>();
+                if (_children == null)
+                    _children = new System.Collections.Generic.List<ITestResult>();
 
-                return children;
+                return _children;
             }
         }
 
@@ -239,7 +194,7 @@ namespace NUnit.Framework.Internal
         public virtual XmlNode AddToXml(XmlNode parentNode, bool recursive)
         {
             // A result node looks like a test node with extra info added
-            XmlNode thisNode = this.test.AddToXml(parentNode, false);
+            XmlNode thisNode = this.Test.AddToXml(parentNode, false);
 
             thisNode.AddAttribute("result", ResultState.Status.ToString());
             if (ResultState.Label != string.Empty) // && ResultState.Label != ResultState.Status.ToString())
@@ -249,7 +204,7 @@ namespace NUnit.Framework.Internal
             thisNode.AddAttribute("end-time", EndTime.ToString("u"));
             thisNode.AddAttribute("duration", Duration.TotalSeconds.ToString("0.000000", NumberFormatInfo.InvariantInfo));
 
-            if (this.test is TestSuite)
+            if (this.Test is TestSuite)
             {
                 thisNode.AddAttribute("total", (PassCount + FailCount + SkipCount + InconclusiveCount).ToString());
                 thisNode.AddAttribute("passed", PassCount.ToString());
@@ -270,7 +225,7 @@ namespace NUnit.Framework.Internal
                     break;
                 case TestStatus.Passed:
                 case TestStatus.Inconclusive:
-                    if (this.message != null)
+                    if (this.Message != null)
                         AddReasonElement(thisNode);
                     break;
             }
@@ -299,14 +254,14 @@ namespace NUnit.Framework.Internal
             {
                 case TestStatus.Passed:
 
-                    if (this.resultState.Status == TestStatus.Inconclusive)
+                    if (this.ResultState.Status == TestStatus.Inconclusive)
                         this.SetResult(ResultState.Success);
 
                     break;
 
                 case TestStatus.Failed:
 
-                    if (this.resultState.Status != TestStatus.Failed)
+                    if (this.ResultState.Status != TestStatus.Failed)
                         this.SetResult(ResultState.Failure, "One or more child tests had errors");
 
                     break;
@@ -372,9 +327,9 @@ namespace NUnit.Framework.Internal
         /// <param name="stackTrace">Stack trace giving the location of the command</param>
         public void SetResult(ResultState resultState, string message, string stackTrace)
         {
-            this.resultState = resultState;
-            this.message = message;
-            this.stackTrace = stackTrace;
+            this.ResultState = resultState;
+            this.Message = message;
+            this.StackTrace = stackTrace;
 
             // Set pseudo-counts for a test case
             //if (IsTestCase(this.test))

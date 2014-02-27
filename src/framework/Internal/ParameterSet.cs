@@ -49,7 +49,11 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Default Constructor creates an empty parameter set
         /// </summary>
-        public ParameterSet() { }
+        public ParameterSet() 
+        {
+            this.RunState = RunState.Runnable;
+            this.Properties = new PropertyBag();
+        }
 
         /// <summary>
         /// Construct a non-runnable ParameterSet, specifying
@@ -67,11 +71,9 @@ namespace NUnit.Framework.Internal
         /// Construct a parameter set with a list of arguments
         /// </summary>
         /// <param name="args"></param>
-        public ParameterSet(object[] args)
+        public ParameterSet(object[] args) : this()
         {
             this.Arguments = this.OriginalArguments = args;
-            this.RunState = RunState.Runnable;
-            this.Properties = new PropertyBag();
         }
 
         /// <summary>
@@ -79,28 +81,17 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="data"></param>
         public ParameterSet(ITestCaseData data)
-            : this((ITestExpectedResult)data)
         {
             this.TestName = data.TestName;
             this.RunState = data.RunState;
             this.Arguments = this.OriginalArguments = data.Arguments;
+            if (data.HasExpectedResult)
+                ExpectedResult = data.ExpectedResult;
             this.ExceptionData = data.ExceptionData;
+            this.Properties = new PropertyBag();
 
             foreach (string key in data.Properties.Keys)
                 this.Properties[key] = data.Properties[key];
-        }
-
-        /// <summary>
-        /// Construct a ParameterSet from an object implementing <see cref="ITestExpectedResult"/>
-        /// </summary>
-        /// <param name="data"></param>
-        public ParameterSet(ITestExpectedResult data)
-        {
-            RunState = RunState.Runnable;
-            if (data.HasExpectedResult)
-                ExpectedResult = data.ExpectedResult;
-
-            Properties = new PropertyBag();
         }
 
         #endregion

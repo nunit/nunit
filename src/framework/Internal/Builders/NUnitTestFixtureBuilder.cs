@@ -53,7 +53,7 @@ namespace NUnit.Framework.Internal.Builders
         /// </summary>
         private TestFixture fixture;
 
-        private ITestCaseBuilder2 testBuilder = new DefaultTestCaseBuilder();
+        private ITestCaseBuilder testBuilder = new DefaultTestCaseBuilder();
 
         #endregion
 

@@ -46,7 +46,7 @@ namespace NUnit.Framework
         private ICombiningStrategy _strategy;
 
         /// <summary>
-        /// Construct a CombiningStrategyAttribute incorporating an objec
+        /// Construct a CombiningStrategyAttribute incorporating an object
         /// that implements ICombiningStrategy.
         /// </summary>
         /// <param name="strategy">Combining strategy to be used</param>
@@ -54,6 +54,15 @@ namespace NUnit.Framework
         {
             _strategy = strategy;
         }
+
+        /// <summary>
+        /// Construct a CombiningStrategyAttribute incorporating an object
+        /// that implements ICombiningStrategy. This constructor is provided
+        /// for CLS compliance.
+        /// </summary>
+        /// <param name="strategy">Combining strategy to be used</param>
+        protected CombiningStrategyAttribute(object strategy)
+            : this((ICombiningStrategy)strategy) { }
 
         #region ITestBuilder Members
 

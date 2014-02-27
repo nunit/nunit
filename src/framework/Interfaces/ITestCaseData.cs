@@ -31,7 +31,7 @@ namespace NUnit.Framework.Interfaces
     /// that is able to return complete testcases for use by
     /// a parameterized test method.
     /// </summary>
-    public interface ITestCaseData : ITestExpectedResult
+    public interface ITestCaseData
     {
         /// <summary>
         /// Gets the name to be used for the test
@@ -47,6 +47,16 @@ namespace NUnit.Framework.Interfaces
         /// Gets the argument list to be provided to the test
         /// </summary>
         object[] Arguments { get; }
+
+        /// <summary>
+        /// Gets the expected result of the test case
+        /// </summary>
+        object ExpectedResult { get; }
+
+        /// <summary>
+        /// Returns true if an expected result has been set
+        /// </summary>
+        bool HasExpectedResult { get; }
 
         /// <summary>
         /// Gets data about any expected exception.

@@ -92,12 +92,6 @@ namespace NUnit.Framework.Internal
         internal object ExpectedResult
         {
             get { return parms != null ? parms.ExpectedResult : null; }
-            set
-            {
-                if (parms == null)
-                    parms = new ParameterSet();
-                parms.ExpectedResult = value;
-            }
         }
 
         internal object[] Arguments

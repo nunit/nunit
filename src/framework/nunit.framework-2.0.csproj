@@ -81,7 +81,6 @@
     <Compile Include="Interfaces\ITestAssemblyBuilder.cs" />
     <Compile Include="Interfaces\ITestAssemblyRunner.cs" />
     <Compile Include="Interfaces\ITestCaseData.cs" />
-    <Compile Include="Interfaces\ITestExpectedResult.cs" />
     <Compile Include="Interfaces\ITestFilter.cs" />
     <Compile Include="Interfaces\ITestListener.cs" />
     <Compile Include="Interfaces\ITestResult.cs" />
@@ -322,7 +321,6 @@
     <Compile Include="Internal\RuntimeFramework.cs" />
     <Compile Include="Internal\TestExecutionContext.cs" />
     <Compile Include="Internal\TestFilter.cs" />
-    <Compile Include="Internal\TestFixtureBuilder.cs" />
     <Compile Include="Internal\TestListener.cs" />
     <Compile Include="Internal\TestProgressReporter.cs" />
     <Compile Include="Internal\Tests\LegacySuite.cs" />
