@@ -133,9 +133,6 @@
     <Exec Command="$(RemoveDir) $(FrameworkBuildDir)" Condition="Exists('$(FrameworkBuildDir)')"></Exec>
     <Delete Files="$(ProjectSrcDir)\GeneratedAssemblyInfo.cs" Condition="Exists('$(ProjectSrcDir)\GeneratedAssemblyInfo.cs')" />
   </Target>
-  <Target Name="CleanAll" DependsOnTargets="Clean">
-    <Exec Command="$(RemoveDir) $(ProjectBuildDir)" Condition="Exists('$(ProjectBuildDir)')" ></Exec>
-  </Target>
   <Target Name="Build">
     <CallTarget Targets="_BuildNUnit" Condition="'$(Runtime)' != 'netcf' And '$(Runtime)' != 'silverlight'" />
     <CallTarget Targets="_BuildNUnitLite" />
@@ -153,7 +150,7 @@
     <NUnitLiteProject Include="$(ProjectSrcDir)\tests\nunitlite.tests-$(ProjectSuffix).csproj"></NUnitLiteProject>
   </ItemGroup>
   <Target Name="_BuildNUnit">
-    <Error Condition="'$(Runtime)' == 'netcf' Or $(Runtime)' == 'silverlight'" Text="The full NUnit framework cannot be built for $(Runtime)"></Error>
+    <Error Condition="'$(Runtime)' == 'netcf' Or '$(Runtime)' == 'silverlight'" Text="The full NUnit framework cannot be built for $(Runtime)"></Error>
     <MSBuild Targets="Rebuild" Projects="@(NUnitProject)" Properties="Configuration=$(Configuration); OutputPath=$(FrameworkBuildDir); Platform=AnyCPU">
     </MSBuild>
   </Target>
@@ -218,5 +215,29 @@
     <!-- Copy all available binaries -->
     <Copy DestinationFiles="@(BinFiles->'$(PackageBinDir)\%(RecursiveDir)%(Filename)%(Extension)')" 
           SourceFiles="@(BinFiles)"></Copy>
+  </Target>
+
+  <!-- Multiple frameworks -->
+  <ItemGroup>
+    <SupportedFrameworks Include="net-4.5"></SupportedFrameworks>
+    <SupportedFrameworks Include="net-4.0"></SupportedFrameworks>
+    <SupportedFrameworks Include="net-3.5"></SupportedFrameworks>
+    <SupportedFrameworks Include="net-2.0"></SupportedFrameworks>
+    <SupportedFrameworks Include="mono-4.5"></SupportedFrameworks>
+    <SupportedFrameworks Include="mono-4.0"></SupportedFrameworks>
+    <SupportedFrameworks Include="mono-3.5"></SupportedFrameworks>
+    <SupportedFrameworks Include="mono-2.0"></SupportedFrameworks>
+    <SupportedFrameworks Include="netcf-3.5"></SupportedFrameworks>
+    <SupportedFrameworks Include="netcf-2.0"></SupportedFrameworks>
+    <SupportedFrameworks Include="silverlight-5.0"></SupportedFrameworks>
+  </ItemGroup>
+  <Target Name="BuildAll">
+    <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="Build" Properties="Framework=%(SupportedFrameworks.Identity)"></MSBuild>
+  </Target>
+  <Target Name="TestAll">
+    <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="Test" Properties="Framework=%(SupportedFrameworks.Identity)"></MSBuild>
+  </Target>
+  <Target Name="CleanAll" DependsOnTargets="Clean">
+    <Exec Command="$(RemoveDir) $(ProjectBuildDir)" Condition="Exists('$(ProjectBuildDir)')" ></Exec>
   </Target>
 </Project>
