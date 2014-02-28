@@ -28,74 +28,73 @@ using NUnit.Framework;
 
 namespace NUnit.Framework.Assertions
 {
-	/// <summary>
-	/// Summary description for ListContentsTests.
-	/// </summary>
-	[TestFixture]
-	public class ListContentsTests : MessageChecker
-	{
-		private static readonly object[] testArray = { "abc", 123, "xyz" };
+    /// <summary>
+    /// Summary description for ListContentsTests.
+    /// </summary>
+    [TestFixture]
+    public class ListContentsTests
+    {
+        private static readonly object[] testArray = { "abc", 123, "xyz" };
 
-		[Test]
-		public void ArraySucceeds()
-		{
-			Assert.Contains( "abc", testArray );
-			Assert.Contains( 123, testArray );
-			Assert.Contains( "xyz", testArray );
-		}
+        [Test]
+        public void ArraySucceeds()
+        {
+            Assert.Contains( "abc", testArray );
+            Assert.Contains( 123, testArray );
+            Assert.Contains( "xyz", testArray );
+        }
 
-		[Test,ExpectedException(typeof(AssertionException))]
-		public void ArrayFails()
-		{
-			expectedMessage =
-				"  Expected: collection containing \"def\"" + Environment.NewLine + 
-				"  But was:  < \"abc\", 123, \"xyz\" >" + Environment.NewLine;	
-			Assert.Contains("def", testArray);
-		}
+        [Test]
+        public void ArrayFails()
+        {
+            var expectedMessage =
+                "  Expected: collection containing \"def\"" + Environment.NewLine + 
+                "  But was:  < \"abc\", 123, \"xyz\" >" + Environment.NewLine;	
+            var ex = Assert.Throws<AssertionException>(() => Assert.Contains("def", testArray));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+        }
 
-		[Test,ExpectedException(typeof(AssertionException))]
-		public void EmptyArrayFails()
-		{
-			expectedMessage =
-				"  Expected: collection containing \"def\"" + Environment.NewLine + 
-				"  But was:  <empty>" + Environment.NewLine;	
-			Assert.Contains( "def", new object[0] );
-		}
+        [Test]
+        public void EmptyArrayFails()
+        {
+            var expectedMessage =
+                "  Expected: collection containing \"def\"" + Environment.NewLine + 
+                "  But was:  <empty>" + Environment.NewLine;	
+            var ex = Assert.Throws<AssertionException>(() => Assert.Contains( "def", new object[0] ));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+        }
 
-		[Test,ExpectedException(typeof(ArgumentException))]
-		public void NullArrayIsError()
-		{
-			Assert.Contains( "def", null );
-		}
+        [Test,ExpectedException(typeof(ArgumentException))]
+        public void NullArrayIsError()
+        {
+            Assert.Contains( "def", null );
+        }
 
-		[Test]
-		public void ArrayListSucceeds()
-		{
-			ArrayList list = new ArrayList( testArray );
+        [Test]
+        public void ArrayListSucceeds()
+        {
+            ArrayList list = new ArrayList( testArray );
 
-			Assert.Contains( "abc", list );
-			Assert.Contains( 123, list );
-			Assert.Contains( "xyz", list );
-		}
+            Assert.Contains( "abc", list );
+            Assert.Contains( 123, list );
+            Assert.Contains( "xyz", list );
+        }
 
-		[Test,ExpectedException(typeof(AssertionException))]
-		public void ArrayListFails()
-		{
-			expectedMessage =
-				"  Expected: collection containing \"def\"" + Environment.NewLine + 
-				"  But was:  < \"abc\", 123, \"xyz\" >" + Environment.NewLine;
-			Assert.Contains( "def", new ArrayList( testArray ) );
-		}
+        [Test]
+        public void ArrayListFails()
+        {
+            var expectedMessage =
+                "  Expected: collection containing \"def\"" + Environment.NewLine + 
+                "  But was:  < \"abc\", 123, \"xyz\" >" + Environment.NewLine;
+            var ex = Assert.Throws<AssertionException>(() => Assert.Contains( "def", new ArrayList( testArray ) ));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+        }
 
-		[Test]
-		public void DifferentTypesMayBeEqual()
-		{
-			// TODO: Better message for this case
-			expectedMessage =
-				"  Expected: collection containing 123.0d" + Environment.NewLine + 
-				"  But was:  < \"abc\", 123, \"xyz\" >" + Environment.NewLine;
-			Assert.Contains( 123.0, new ArrayList( testArray ) );
-		}
-	}
+        [Test]
+        public void DifferentTypesMayBeEqual()
+        {
+            Assert.Contains( 123.0, new ArrayList( testArray ) );
+        }
+    }
 }
 #endif

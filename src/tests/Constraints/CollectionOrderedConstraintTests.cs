@@ -31,7 +31,7 @@ using NUnit.TestUtilities.Comparers;
 namespace NUnit.Framework.Constraints
 {
     [TestFixture]
-    public class CollectionOrderedConstraintTests : NUnit.Framework.Assertions.MessageChecker
+    public class CollectionOrderedConstraintTests
     {
         private readonly string NL = NUnit.Env.NewLine;
 
@@ -79,7 +79,7 @@ namespace NUnit.Framework.Constraints
             Assert.That(al, Is.Ordered.Descending);
         }
 
-        [Test, ExpectedException(typeof(AssertionException))]
+        [Test]
         public void IsOrdered_Fails()
         {
             var al = new List<string>();
@@ -87,11 +87,12 @@ namespace NUnit.Framework.Constraints
             al.Add("z");
             al.Add("y");
 
-            expectedMessage =
+            var expectedMessage =
                 "  Expected: collection ordered" + NL +
                 "  But was:  < \"x\", \"z\", \"y\" >" + NL;
 
-            Assert.That(al, Is.Ordered);
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(al, Is.Ordered));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 
         [Test]
