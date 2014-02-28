@@ -29,16 +29,16 @@ using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Attributes
 {
-	/// <summary>
-	/// Tests for MaxTime decoration.
-	/// </summary>
+    /// <summary>
+    /// Tests for MaxTime decoration.
+    /// </summary>
     [TestFixture]
     public class MaxTimeTests
-	{
-		[Test,MaxTime(1000)]
-		public void MaxTimeNotExceeded()
-		{
-		}
+    {
+        [Test,MaxTime(1000)]
+        public void MaxTimeNotExceeded()
+        {
+        }
 
         // TODO: We need a way to simulate the clock reliably
         [Test]
@@ -51,15 +51,16 @@ namespace NUnit.Framework.Attributes
         }
 
         [Test, MaxTime(1000)]
-        [ExpectedException(typeof(AssertionException), ExpectedMessage = "Intentional Failure")]
         public void FailureReport()
         {
-            Assert.Fail("Intentional Failure");
+            Assert.That(
+                () => Assert.Fail("Intentional Failure"),
+                Throws.TypeOf<AssertionException>().With.Message.EqualTo("Intentional Failure"));
         }
 
         [Test]
         public void FailureReportHasPriorityOverMaxTime()
-		{
+        {
             ITestResult result = TestBuilder.RunTestFixture(typeof(MaxTimeFixtureWithFailure));
             Assert.AreEqual(ResultState.Failure, result.ResultState);
             result = (TestResult)result.Children[0];

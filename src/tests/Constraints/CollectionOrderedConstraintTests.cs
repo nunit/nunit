@@ -106,8 +106,7 @@ namespace NUnit.Framework.Constraints
             Assert.That(al, Is.Ordered);
         }
 
-        [Test, ExpectedException(typeof(ArgumentNullException),
-            ExpectedMessage = "index 1", MatchType = MessageMatch.Contains)]
+        [Test]
         public void IsOrdered_Handles_null()
         {
             var al = new List<object>();
@@ -115,7 +114,8 @@ namespace NUnit.Framework.Constraints
             al.Add(null);
             al.Add("z");
 
-            Assert.That(al, Is.Ordered);
+            var ex = Assert.Throws<ArgumentNullException>(() => Assert.That(al, Is.Ordered));
+            Assert.That(ex.Message, Contains.Substring("index 1"));
         }
 
         [Test, ExpectedException(typeof(ArgumentException))]

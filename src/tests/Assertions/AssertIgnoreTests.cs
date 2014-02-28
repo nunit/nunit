@@ -29,33 +29,39 @@ using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Assertions
 {
-	/// <summary>
-	/// Tests of IgnoreException and Assert.Ignore
-	/// </summary>
-	[TestFixture]
-	public class AssertIgnoreTests
-	{
-        [Test, ExpectedException(typeof(IgnoreException))]
+    /// <summary>
+    /// Tests of IgnoreException and Assert.Ignore
+    /// </summary>
+    [TestFixture]
+    public class AssertIgnoreTests
+    {
+        [Test]
         public void ThrowsIgnoreException()
         {
-            Assert.Ignore();
+            Assert.That(
+                () => Assert.Ignore(),
+                Throws.TypeOf<IgnoreException>());
         }
 
-        [Test, ExpectedException(typeof(IgnoreException), ExpectedMessage = "MESSAGE")]
+        [Test]
         public void ThrowsIgnoreExceptionWithMessage()
         {
-            Assert.Ignore("MESSAGE");
+            Assert.That(
+                () => Assert.Ignore("MESSAGE"),
+                Throws.TypeOf<IgnoreException>().With.Message.EqualTo("MESSAGE"));
         }
 
-        [Test, ExpectedException(typeof(IgnoreException), ExpectedMessage = "MESSAGE: 2+2=4")]
+        [Test]
         public void ThrowsIgnoreExceptionWithMessageAndArgs()
         {
-            Assert.Ignore("MESSAGE: {0}+{1}={2}", 2, 2, 4);
+            Assert.That(
+                () => Assert.Ignore("MESSAGE: {0}+{1}={2}", 2, 2, 4),
+                Throws.TypeOf<IgnoreException>().With.Message.EqualTo("MESSAGE: 2+2=4"));
         }
 
-		[Test]
-		public void IgnoreWorksForTestCase()
-		{
+        [Test]
+        public void IgnoreWorksForTestCase()
+        {
             Type fixtureType = typeof(IgnoredTestCaseFixture);
             ITestResult result = TestBuilder.RunTestCase(fixtureType, "CallsIgnore");
             Assert.AreEqual(ResultState.Ignored, result.ResultState);
@@ -71,81 +77,81 @@ namespace NUnit.Framework.Assertions
             Assert.AreEqual("Ignore me", result.Message);
         }
 
-		[Test]
-		public void IgnoreWorksForTestSuite()
-		{
-			TestSuite suite = new TestSuite("IgnoredTestFixture");
-			suite.Add( TestBuilder.MakeFixture( typeof( IgnoredTestSuiteFixture ) ) );
+        [Test]
+        public void IgnoreWorksForTestSuite()
+        {
+            TestSuite suite = new TestSuite("IgnoredTestFixture");
+            suite.Add( TestBuilder.MakeFixture( typeof( IgnoredTestSuiteFixture ) ) );
             ITestResult fixtureResult = TestBuilder.RunTestSuite(suite, null).Children[0];
 
             Assert.AreEqual(ResultState.Ignored, fixtureResult.ResultState);
 
             foreach (ITestResult testResult in fixtureResult.Children)
                 Assert.AreEqual(ResultState.Ignored, testResult.ResultState);
-		}
+        }
 
-		[Test]
-		public void IgnoreWorksFromSetUp()
-		{
-			ITestResult fixtureResult = TestBuilder.RunTestFixture( typeof( IgnoreInSetUpFixture ) );
+        [Test]
+        public void IgnoreWorksFromSetUp()
+        {
+            ITestResult fixtureResult = TestBuilder.RunTestFixture( typeof( IgnoreInSetUpFixture ) );
 
             // TODO: Decide whether to pass Ignored state to containing fixture
             //Assert.AreEqual(ResultState.Ignored, fixtureResult.ResultState);
 
             foreach (TestResult testResult in fixtureResult.Children)
                 Assert.AreEqual(ResultState.Ignored, testResult.ResultState);
-		}
+        }
 
-		[Test]
-		public void IgnoreWithUserMessage()
-		{
-			try
-			{
-				Assert.Ignore( "my message" );
-			}
-			catch( IgnoreException ex )
-			{
-				Assert.AreEqual( "my message", ex.Message );
-			}
-		}
+        [Test]
+        public void IgnoreWithUserMessage()
+        {
+            try
+            {
+                Assert.Ignore( "my message" );
+            }
+            catch( IgnoreException ex )
+            {
+                Assert.AreEqual( "my message", ex.Message );
+            }
+        }
 
-		[Test]
-		public void IgnoreWithUserMessage_OneArg()
-		{
-			try
-			{
-				Assert.Ignore( "The number is {0}", 5 );
-			}
-			catch( IgnoreException ex )
-			{
-				Assert.AreEqual( "The number is 5", ex.Message );
-			}
-		}
+        [Test]
+        public void IgnoreWithUserMessage_OneArg()
+        {
+            try
+            {
+                Assert.Ignore( "The number is {0}", 5 );
+            }
+            catch( IgnoreException ex )
+            {
+                Assert.AreEqual( "The number is 5", ex.Message );
+            }
+        }
 
-		[Test]
-		public void IgnoreWithUserMessage_ThreeArgs()
-		{
-			try
-			{
-				Assert.Ignore( "The numbers are {0}, {1} and {2}", 1, 2, 3 );
-			}
-			catch( IgnoreException ex )
-			{
-				Assert.AreEqual( "The numbers are 1, 2 and 3", ex.Message );
-			}
-		}
+        [Test]
+        public void IgnoreWithUserMessage_ThreeArgs()
+        {
+            try
+            {
+                Assert.Ignore( "The numbers are {0}, {1} and {2}", 1, 2, 3 );
+            }
+            catch( IgnoreException ex )
+            {
+                Assert.AreEqual( "The numbers are 1, 2 and 3", ex.Message );
+            }
+        }
 
-		[Test]
-		public void IgnoreWithUserMessage_ArrayOfArgs()
-		{
-			try
-			{
-			Assert.Ignore( "The numbers are {0}, {1} and {2}", new object[] { 1, 2, 3 } );
-			}
-			catch( IgnoreException ex )
-			{
-				Assert.AreEqual( "The numbers are 1, 2 and 3", ex.Message );
-			}
-		}
-	}
+        [Test]
+        public void IgnoreWithUserMessage_ArrayOfArgs()
+        {
+            try
+            {
+            Assert.Ignore( "The numbers are {0}, {1} and {2}", new object[] { 1, 2, 3 } );
+            }
+            catch( IgnoreException ex )
+            {
+                Assert.AreEqual( "The numbers are 1, 2 and 3", ex.Message );
+            }
+        }
+    }
 }

@@ -30,22 +30,28 @@ namespace NUnit.Framework.Assertions
     [TestFixture]
     public class AssertFailTests
     {
-        [Test, ExpectedException(typeof(AssertionException))]
+        [Test]
         public void ThrowsAssertionException()
         {
-            Assert.Fail();
+            Assert.That(
+                () => Assert.Fail(),
+                Throws.TypeOf<AssertionException>());
         }
 
-        [Test, ExpectedException(typeof(AssertionException), ExpectedMessage = "MESSAGE")]
+        [Test]
         public void ThrowsAssertionExceptionWithMessage()
         {
-            Assert.Fail("MESSAGE");
+            Assert.That(
+                () => Assert.Fail("MESSAGE"), 
+                Throws.TypeOf<AssertionException>().With.Message.EqualTo("MESSAGE"));
         }
 
-        [Test, ExpectedException(typeof(AssertionException), ExpectedMessage = "MESSAGE: 2+2=4")]
+        [Test]
         public void ThrowsAssertionExceptionWithMessageAndArgs()
         {
-            Assert.Fail("MESSAGE: {0}+{1}={2}", 2, 2, 4);
+            Assert.That(
+                () => Assert.Fail("MESSAGE: {0}+{1}={2}", 2, 2, 4),
+                Throws.TypeOf<AssertionException>().With.Message.EqualTo("MESSAGE: 2+2=4"));
         }
 
         [Test]

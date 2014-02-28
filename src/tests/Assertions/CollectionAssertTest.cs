@@ -725,8 +725,7 @@ namespace NUnit.Framework.Assertions
             CollectionAssert.IsOrdered(al);
         }
 
-        [Test, ExpectedException(typeof(ArgumentNullException),
-            ExpectedMessage = "index 1", MatchType = MessageMatch.Contains)]
+        [Test]
         public void IsOrdered_Handles_null()
         {
             ArrayList al = new ArrayList();
@@ -734,7 +733,8 @@ namespace NUnit.Framework.Assertions
             al.Add(null);
             al.Add("z");
 
-            CollectionAssert.IsOrdered(al);
+            var ex = Assert.Throws<ArgumentNullException>(() => CollectionAssert.IsOrdered(al));
+            Assert.That(ex.Message, Contains.Substring("index 1"));
         }
 
         [Test, ExpectedException(typeof(ArgumentException))]

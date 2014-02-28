@@ -28,22 +28,28 @@ namespace NUnit.Framework.Assertions
     [TestFixture]
     public class AssertPassTests
     {
-        [Test, ExpectedException(typeof(SuccessException))]
+        [Test]
         public void ThrowsSuccessException()
         {
-            Assert.Pass();
+            Assert.That(
+                () => Assert.Pass(),
+                Throws.TypeOf<SuccessException>());
         }
 
-        [Test, ExpectedException(typeof(SuccessException), ExpectedMessage = "MESSAGE")]
+        [Test]
         public void ThrowsSuccessExceptionWithMessage()
         {
-            Assert.Pass("MESSAGE");
+            Assert.That(
+                () => Assert.Pass("MESSAGE"),
+                Throws.TypeOf<SuccessException>().With.Message.EqualTo("MESSAGE"));
         }
 
-        [Test, ExpectedException(typeof(SuccessException), ExpectedMessage = "MESSAGE: 2+2=4")]
+        [Test]
         public void ThrowsSuccessExceptionWithMessageAndArgs()
         {
-            Assert.Pass("MESSAGE: {0}+{1}={2}", 2, 2, 4);
+            Assert.That(
+                () => Assert.Pass("MESSAGE: {0}+{1}={2}", 2, 2, 4),
+                Throws.TypeOf<SuccessException>().With.Message.EqualTo("MESSAGE: 2+2=4"));
         }
 
         [Test]

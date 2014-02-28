@@ -69,8 +69,7 @@ namespace NUnit.Framework.Assertions
             }
         }
 
-        [Test, ExpectedException(typeof(ArgumentException),
-            ExpectedMessage = "not readable", MatchType = MessageMatch.Contains)]
+        [Test]
         public void NonReadableStreamGivesException()
         {
             using (TestFile tf1 = new TestFile("Test1.jpg", "TestImage1.jpg"))
@@ -80,14 +79,14 @@ namespace NUnit.Framework.Assertions
                 {
                     using (FileStream actual = File.OpenWrite("Test2.jpg"))
                     {
-                        FileAssert.AreEqual(expected, actual);
+                        var ex = Assert.Throws<ArgumentException>(() => FileAssert.AreEqual(expected, actual));
+                        Assert.That(ex.Message, Contains.Substring("not readable"));
                     }
                 }
             }
         }
 
-        [Test, ExpectedException(typeof(ArgumentException),
-            ExpectedMessage = "not seekable", MatchType = MessageMatch.Contains)]
+        [Test]
         public void NonSeekableStreamGivesException()
         {
             using (TestFile tf1 = new TestFile("Test1.jpg", "TestImage1.jpg"))
@@ -96,7 +95,8 @@ namespace NUnit.Framework.Assertions
                 {
                     using (FakeStream actual = new FakeStream())
                     {
-                        FileAssert.AreEqual(expected, actual);
+                        var ex = Assert.Throws<ArgumentException>(() => FileAssert.AreEqual(expected, actual));
+                        Assert.That(ex.Message, Contains.Substring("not seekable"));
                     }
                 }
             }
