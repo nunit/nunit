@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <Project DefaultTargets="Build" InitialTargets="" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  
   <PropertyGroup Label="Common Properties">
     <ProjectName>$(MSBuildProjectName)</ProjectName>
     <PackageVersion>2.9.6</PackageVersion>
@@ -72,7 +73,11 @@
     <Runtime>mono</Runtime>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Framework)'=='netcf-3.5'">
-    <ProjectSuffix>3.5</ProjectSuffix>
+    <ProjectSuffix>netcf-3.5</ProjectSuffix>
+    <Runtime>netcf</Runtime>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Framework)'=='netcf-2.0'">
+    <ProjectSuffix>netcf-2.0</ProjectSuffix>
     <Runtime>netcf</Runtime>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Framework)'=='silverlight-5.0'">
@@ -128,15 +133,9 @@
     <Exec Command="$(RemoveDir) $(FrameworkBuildDir)" Condition="Exists('$(FrameworkBuildDir)')"></Exec>
     <Delete Files="$(ProjectSrcDir)\GeneratedAssemblyInfo.cs" Condition="Exists('$(ProjectSrcDir)\GeneratedAssemblyInfo.cs')" />
   </Target>
-  <Target Name="CleanAll" DependsOnTargets="Clean">
-    <Exec Command="$(RemoveDir) $(ProjectBuildDir)" Condition="Exists('$(ProjectBuildDir)')" ></Exec>
-  </Target>
-  <Target Name="CleanPackageDir">
-    <Exec Command="$(RemoveDir) $(PackageWorkingDir)" Condition="Exists('$(PackageWorkingDir)')"></Exec>
-  </Target>
   <Target Name="Build">
-    <CallTarget Targets="BuildNUnit" Condition="'$(Runtime)' != 'netcf'" />
-    <CallTarget Targets="BuildNUnitLite" />
+    <CallTarget Targets="_BuildNUnit" Condition="'$(Runtime)' != 'netcf' And '$(Runtime)' != 'silverlight'" />
+    <CallTarget Targets="_BuildNUnitLite" />
   </Target>
   <ItemGroup>
     <NUnitProject Include="$(ProjectSrcDir)\framework\nunit.framework-$(ProjectSuffix).csproj"></NUnitProject>
@@ -150,46 +149,46 @@
     <NUnitLiteProject Include="$(ProjectSrcDir)\testdata\nunitlite.testdata-$(ProjectSuffix).csproj"></NUnitLiteProject>
     <NUnitLiteProject Include="$(ProjectSrcDir)\tests\nunitlite.tests-$(ProjectSuffix).csproj"></NUnitLiteProject>
   </ItemGroup>
-  <Target Name="BuildNUnit">
-    <Error Condition="'$(Runtime)' == 'netcf'" Text="The full NUnit framework cannot be built for $(Runtime)"></Error>
+  <Target Name="_BuildNUnit">
+    <Error Condition="'$(Runtime)' == 'netcf' Or '$(Runtime)' == 'silverlight'" Text="The full NUnit framework cannot be built for $(Runtime)"></Error>
     <MSBuild Targets="Rebuild" Projects="@(NUnitProject)" Properties="Configuration=$(Configuration); OutputPath=$(FrameworkBuildDir); Platform=AnyCPU">
     </MSBuild>
   </Target>
-  <Target Name="BuildNUnitLite">
+  <Target Name="_BuildNUnitLite">
     <MSBuild Targets="Rebuild" Projects="@(NUnitLiteProject)" Properties="Configuration=$(Configuration); OutputPath=$(FrameworkBuildDir); Platform=AnyCPU">
     </MSBuild>
   </Target>
   <Target Name="Test">
-    <CallTarget Targets="NUnitTest" Condition="'$(Runtime)' != 'netcf'"></CallTarget>
-    <CallTarget Targets="NUnitLiteTest"></CallTarget>
+    <CallTarget Targets="_NUnitTest" Condition="'$(Runtime)' != 'netcf' And '$(Runtime)' != 'silverlight'"></CallTarget>
+    <CallTarget Targets="_NUnitLiteTest"></CallTarget>
   </Target>
-  <Target Name="NUnitTest">
+  <Target Name="_NUnitTest">
     <Message Text="Testing NUnitFramework $(Framework) - $(Configuration)"></Message>
-    <Error Condition="'$(Runtime)' == 'netcf'" Text="The full NUnit framework cannot be tested under $(Runtime)"></Error>
+    <Error Condition="'$(Runtime)' == 'netcf' Or '$(Runtime)' == 'silverlight'" Text="The full NUnit framework cannot be tested under $(Runtime)"></Error>
     <Exec WorkingDirectory="$(FrameworkBuildDir)" Command="$(ManagedExeLauncher) $(FrameworkBuildDir)\$(TestRunnerProgram) $(TestRunnerArgs)">
     </Exec>
   </Target>
-  <Target Name="NUnitLiteTest">
+  <Target Name="_NUnitLiteTest">
     <Message Text="Testing NUnitLite $(Framework) - $(Configuration)"></Message>
     <Exec WorkingDirectory="$(FrameworkBuildDir)" Command="$(ManagedExeLauncher) $(FrameworkBuildDir)\nunitlite.tests.exe"></Exec>
   </Target>
   <Target Name="TestCoverage">
-    <CallTarget Targets="NUnitCoverage" Condition="'$(Runtime)' != 'netcf'"></CallTarget>
-    <CallTarget Targets="NUnitLiteCoverage"></CallTarget>
+    <CallTarget Targets="_NUnitCoverage" Condition="'$(Runtime)' != 'netcf'"></CallTarget>
+    <CallTarget Targets="_NUnitLiteCoverage"></CallTarget>
   </Target>
-  <Target Name="NUnitCoverage">
+  <Target Name="_NUnitCoverage">
     <Error Condition="'$(Runtime)' == 'netcf'" Text="The full NUnit framework cannot be tested under $(Runtime)"></Error>
     <Exec WorkingDirectory="$(FrameworkBuildDir)"
           Command='$(ManagedExeLauncher) $(PartCoverDir)\PartCover.exe --target "$(TestRunnerProgram)" --target-args "$(TestRunnerArgs)" --include [nunit.framework]* --output NUnitTestCoverage.xml'>
     </Exec>
   </Target>
-  <Target Name="NUnitLiteCoverage">
+  <Target Name="_NUnitLiteCoverage">
     <Exec WorkingDirectory="$(FrameworkBuildDir)"
           Command='$(ManagedExeLauncher) $(PartCoverDir)\PartCover.exe --target "$(nunitlite.tests.exe)" --include [nunitlite]* --output NUnitLiteTestCoverage.xml'>
     </Exec>
   </Target>
 
-  <Target Name="Package" Label="Packages the source code and binaries already built" DependsOnTargets="CreatePackageImage">
+  <Target Name="Package" Label="Packages the source code and binaries already built" DependsOnTargets="_CreatePackageImage">
     <Exec Command='git init "$(PackageWorkingDir)"' />
     <Exec WorkingDirectory='$(PackageWorkingDir)' Command='git add -A' />
     <Exec WorkingDirectory='$(PackageWorkingDir)' Command='git config user.name "temp"' />
@@ -198,7 +197,7 @@
     <Exec WorkingDirectory='$(PackageWorkingDir)' Command='git archive -o "$(ProjectPackageDir)\$(PackageName).zip" HEAD'></Exec>
   </Target>
   
-  <Target Name="CleanPackageWorkingDir">
+  <Target Name="_CleanPackageWorkingDir">
     <Exec Command="$(RemoveDir) $(PackageWorkingDir)" Condition="Exists('$(PackageWorkingDir)')"></Exec>
     <MakeDir Directories="$(PackageWorkingDir)"></MakeDir>
   </Target>
@@ -208,7 +207,7 @@
      <TxtFiles Include="LICENSE.txt;NOTICES.txt"></TxtFiles>
    </ItemGroup>
 
-  <Target Name="CreatePackageImage" DependsOnTargets="CleanPackageWorkingDir">
+  <Target Name="_CreatePackageImage" DependsOnTargets="_CleanPackageWorkingDir">
     <!-- Copy root txt files -->
     <Copy DestinationFolder="$(PackageWorkingDir)" SourceFiles="@(TxtFiles)"></Copy>
     <!-- Copy source in zip format already -->
@@ -216,5 +215,29 @@
     <!-- Copy all available binaries -->
     <Copy DestinationFiles="@(BinFiles->'$(PackageBinDir)\%(RecursiveDir)%(Filename)%(Extension)')" 
           SourceFiles="@(BinFiles)"></Copy>
+  </Target>
+
+  <!-- Multiple frameworks -->
+  <ItemGroup>
+    <SupportedFrameworks Include="net-4.5"></SupportedFrameworks>
+    <SupportedFrameworks Include="net-4.0"></SupportedFrameworks>
+    <SupportedFrameworks Include="net-3.5"></SupportedFrameworks>
+    <SupportedFrameworks Include="net-2.0"></SupportedFrameworks>
+    <SupportedFrameworks Include="mono-4.5"></SupportedFrameworks>
+    <SupportedFrameworks Include="mono-4.0"></SupportedFrameworks>
+    <SupportedFrameworks Include="mono-3.5"></SupportedFrameworks>
+    <SupportedFrameworks Include="mono-2.0"></SupportedFrameworks>
+    <SupportedFrameworks Include="netcf-3.5"></SupportedFrameworks>
+    <SupportedFrameworks Include="netcf-2.0"></SupportedFrameworks>
+    <SupportedFrameworks Include="silverlight-5.0"></SupportedFrameworks>
+  </ItemGroup>
+  <Target Name="BuildAll">
+    <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="Build" Properties="Framework=%(SupportedFrameworks.Identity)" ContinueOnError="true"></MSBuild>
+  </Target>
+  <Target Name="TestAll">
+    <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="Test" Properties="Framework=%(SupportedFrameworks.Identity)" ContinueOnError="true"></MSBuild>
+  </Target>
+  <Target Name="CleanAll" DependsOnTargets="Clean">
+    <Exec Command="$(RemoveDir) $(ProjectBuildDir)" Condition="Exists('$(ProjectBuildDir)')" ></Exec>
   </Target>
 </Project>
