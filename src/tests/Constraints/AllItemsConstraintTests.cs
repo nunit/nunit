@@ -31,6 +31,8 @@ namespace NUnit.Framework.Constraints
     [TestFixture]
     public class AllItemsConstraintTests : NUnit.Framework.Assertions.MessageChecker
     {
+        private readonly string NL = NUnit.Env.NewLine;
+
         [Test]
         public void AllItemsAreNotNull()
         {

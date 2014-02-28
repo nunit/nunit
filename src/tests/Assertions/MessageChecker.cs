@@ -25,46 +25,25 @@ using System;
 
 namespace NUnit.Framework.Assertions
 {
-	/// <summary>
-	/// MessageCheckingTest is an abstract base for tests
-	/// that check for an expected message in the exception
-	/// handler.
-	/// </summary>
-	public abstract class MessageChecker : IExpectException
-	{
-		protected string expectedMessage;
-		protected MessageMatch matchType = MessageMatch.Exact;
-        protected readonly string NL = NUnit.Env.NewLine;
+    /// <summary>
+    /// MessageCheckingTest is an abstract base for tests
+    /// that check for an expected message in the exception
+    /// handler.
+    /// </summary>
+    public abstract class MessageChecker : IExpectException
+    {
+        protected string expectedMessage;
 
-		[SetUp]
-		public void SetUp()
-		{
-			expectedMessage = null;
-		}
+        [SetUp]
+        public void SetUp()
+        {
+            expectedMessage = null;
+        }
 
-		public void HandleException( Exception ex )
-		{
-			if ( expectedMessage != null )
-            {
-                switch(matchType)
-                {
-                    default:
-                    case MessageMatch.Exact:
-                                        Assert.AreEqual( expectedMessage, ex.Message );
-                        break;
-                    case MessageMatch.Contains:
-                        Assert.That(ex.Message, Is.StringContaining(expectedMessage));
-                        break;
-                    case MessageMatch.StartsWith:
-                        Assert.That(ex.Message, Is.StringStarting(expectedMessage));
-                        break;
-#if !NETCF
-                    case MessageMatch.Regex:
-                        Assert.That(ex.Message, Is.StringMatching(expectedMessage));
-                        break;
-#endif
-                }
-            }
-		}
-	}
+        public void HandleException( Exception ex )
+        {
+            if ( expectedMessage != null )
+                Assert.AreEqual( expectedMessage, ex.Message );
+        }
+    }
 }

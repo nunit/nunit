@@ -35,190 +35,200 @@ using System.Linq;
 
 namespace NUnit.Framework.Assertions
 {
-	/// <summary>
-	/// Test Library for the NUnit CollectionAssert class.
-	/// </summary>
-	[TestFixture()]
-	public class CollectionAssertTest : MessageChecker
-	{
-		#region AllItemsAreInstancesOfType
-		[Test()]
-		public void ItemsOfType()
-		{
-			ArrayList al = new ArrayList();
-			al.Add("x");
-			al.Add("y");
-			al.Add("z");
-			CollectionAssert.AllItemsAreInstancesOfType(al,typeof(string));
+    /// <summary>
+    /// Test Library for the NUnit CollectionAssert class.
+    /// </summary>
+    [TestFixture()]
+    public class CollectionAssertTest
+    {
+        #region AllItemsAreInstancesOfType
+        [Test()]
+        public void ItemsOfType()
+        {
+            ArrayList al = new ArrayList();
+            al.Add("x");
+            al.Add("y");
+            al.Add("z");
+            CollectionAssert.AllItemsAreInstancesOfType(al,typeof(string));
         }
 
-		[Test,ExpectedException(typeof(AssertionException))]
-		public void ItemsOfTypeFailure()
-		{
-			ArrayList al = new ArrayList();
-			al.Add("x");
-			al.Add("y");
-			al.Add(new object());
+        [Test]
+        public void ItemsOfTypeFailure()
+        {
+            ArrayList al = new ArrayList();
+            al.Add("x");
+            al.Add("y");
+            al.Add(new object());
 
-			expectedMessage =
-				"  Expected: all items instance of <System.String>" + Environment.NewLine +
-				"  But was:  < \"x\", \"y\", <System.Object> >" + Environment.NewLine;
-			CollectionAssert.AllItemsAreInstancesOfType(al,typeof(string));
-		}
-		#endregion
+            var expectedMessage =
+                "  Expected: all items instance of <System.String>" + Environment.NewLine +
+                "  But was:  < \"x\", \"y\", <System.Object> >" + Environment.NewLine;
+            
+            var ex = Assert.Throws<AssertionException>(() => CollectionAssert.AllItemsAreInstancesOfType(al,typeof(string)));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+        }
+        #endregion
 
-		#region AllItemsAreNotNull
-		[Test()]
-		public void ItemsNotNull()
-		{
-			ArrayList al = new ArrayList();
-			al.Add("x");
-			al.Add("y");
-			al.Add("z");
+        #region AllItemsAreNotNull
+        [Test()]
+        public void ItemsNotNull()
+        {
+            ArrayList al = new ArrayList();
+            al.Add("x");
+            al.Add("y");
+            al.Add("z");
 
-			CollectionAssert.AllItemsAreNotNull(al);
-		}
+            CollectionAssert.AllItemsAreNotNull(al);
+        }
 
-		[Test, ExpectedException(typeof(AssertionException))]
-		public void ItemsNotNullFailure()
-		{
-			ArrayList al = new ArrayList();
-			al.Add("x");
-			al.Add(null);
-			al.Add("z");
+        [Test]
+        public void ItemsNotNullFailure()
+        {
+            ArrayList al = new ArrayList();
+            al.Add("x");
+            al.Add(null);
+            al.Add("z");
 
-			expectedMessage =
+            var expectedMessage =
                 "  Expected: all items not null" + Environment.NewLine +
                 "  But was:  < \"x\", null, \"z\" >" + Environment.NewLine;
-			CollectionAssert.AllItemsAreNotNull(al);
-		}
-		#endregion
 
-		#region AllItemsAreUnique
+            var ex = Assert.Throws<AssertionException>(() => CollectionAssert.AllItemsAreNotNull(al));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+        }
+        #endregion
 
-		[Test]
-		public void Unique_WithObjects()
-		{
-			CollectionAssert.AllItemsAreUnique(
+        #region AllItemsAreUnique
+
+        [Test]
+        public void Unique_WithObjects()
+        {
+            CollectionAssert.AllItemsAreUnique(
                 new SimpleObjectCollection(new object(), new object(), new object()));
-		}
+        }
 
-		[Test]
-		public void Unique_WithStrings()
-		{
+        [Test]
+        public void Unique_WithStrings()
+        {
             CollectionAssert.AllItemsAreUnique(new SimpleObjectCollection("x", "y", "z"));
-		}
+        }
 
-		[Test]
-		public void Unique_WithNull()
-		{
+        [Test]
+        public void Unique_WithNull()
+        {
             CollectionAssert.AllItemsAreUnique(new SimpleObjectCollection("x", "y", null, "z"));
-		}
+        }
 
-		[Test,ExpectedException(typeof(AssertionException))]
-		public void UniqueFailure()
-		{
-			expectedMessage =
+        [Test]
+        public void UniqueFailure()
+        {
+            var expectedMessage =
                 "  Expected: all items unique" + Environment.NewLine +
                 "  But was:  < \"x\", \"y\", \"x\" >" + Environment.NewLine;
-            CollectionAssert.AllItemsAreUnique(new SimpleObjectCollection("x", "y", "x"));
-		}
 
-		[Test,ExpectedException(typeof(AssertionException))]
-		public void UniqueFailure_WithTwoNulls()
-		{
+            var ex = Assert.Throws<AssertionException>(() => CollectionAssert.AllItemsAreUnique(new SimpleObjectCollection("x", "y", "x")));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+        }
+
+        [Test,ExpectedException(typeof(AssertionException))]
+        public void UniqueFailure_WithTwoNulls()
+        {
             CollectionAssert.AllItemsAreUnique(new SimpleObjectCollection("x", null, "y", null, "z"));
-		}
+        }
 
-		#endregion
+        #endregion
 
-		#region AreEqual
+        #region AreEqual
 
-		[Test]
-		public void AreEqual()
-		{
-			ArrayList set1 = new ArrayList();
-			ArrayList set2 = new ArrayList();
-			set1.Add("x");
-			set1.Add("y");
-			set1.Add("z");
-			set2.Add("x");
-			set2.Add("y");
-			set2.Add("z");
+        [Test]
+        public void AreEqual()
+        {
+            ArrayList set1 = new ArrayList();
+            ArrayList set2 = new ArrayList();
+            set1.Add("x");
+            set1.Add("y");
+            set1.Add("z");
+            set2.Add("x");
+            set2.Add("y");
+            set2.Add("z");
 
-			CollectionAssert.AreEqual(set1,set2);
-			CollectionAssert.AreEqual(set1,set2,new TestComparer());
+            CollectionAssert.AreEqual(set1,set2);
+            CollectionAssert.AreEqual(set1,set2,new TestComparer());
 
-			Assert.AreEqual(set1,set2);
-		}
+            Assert.AreEqual(set1,set2);
+        }
 
-		[Test,ExpectedException(typeof(AssertionException))]
-		public void AreEqualFailCount()
-		{
-			ArrayList set1 = new ArrayList();
-			ArrayList set2 = new ArrayList();
-			set1.Add("x");
-			set1.Add("y");
-			set1.Add("z");
-			set2.Add("x");
-			set2.Add("y");
-			set2.Add("z");
-			set2.Add("a");
+        [Test]
+        public void AreEqualFailCount()
+        {
+            ArrayList set1 = new ArrayList();
+            ArrayList set2 = new ArrayList();
+            set1.Add("x");
+            set1.Add("y");
+            set1.Add("z");
+            set2.Add("x");
+            set2.Add("y");
+            set2.Add("z");
+            set2.Add("a");
 
-			expectedMessage =
+            var expectedMessage =
                 "  Expected is <System.Collections.ArrayList> with 3 elements, actual is <System.Collections.ArrayList> with 4 elements" + Environment.NewLine +
                 "  Values differ at index [3]" + Environment.NewLine +
                 "  Extra:    < \"a\" >";
-			CollectionAssert.AreEqual(set1,set2,new TestComparer());
-		}
 
-        [Test, ExpectedException(typeof(AssertionException))]
-		public void AreEqualFail()
-		{
-			ArrayList set1 = new ArrayList();
-			ArrayList set2 = new ArrayList();
-			set1.Add("x");
-			set1.Add("y");
-			set1.Add("z");
-			set2.Add("x");
-			set2.Add("y");
-			set2.Add("a");
+            var ex = Assert.Throws<AssertionException>(() => CollectionAssert.AreEqual(set1, set2, new TestComparer()));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+        }
 
-			expectedMessage =
+        [Test]
+        public void AreEqualFail()
+        {
+            ArrayList set1 = new ArrayList();
+            ArrayList set2 = new ArrayList();
+            set1.Add("x");
+            set1.Add("y");
+            set1.Add("z");
+            set2.Add("x");
+            set2.Add("y");
+            set2.Add("a");
+
+            var expectedMessage =
                 "  Expected and actual are both <System.Collections.ArrayList> with 3 elements" + Environment.NewLine +
                 "  Values differ at index [2]" + Environment.NewLine +
                 "  String lengths are both 1. Strings differ at index 0." + Environment.NewLine +
                 "  Expected: \"z\"" + Environment.NewLine +
                 "  But was:  \"a\"" + Environment.NewLine +
                 "  -----------^" + Environment.NewLine;
-			CollectionAssert.AreEqual(set1,set2,new TestComparer());
-		}
 
-		[Test]
-		public void AreEqual_HandlesNull()
-		{
-			object[] set1 = new object[3];
-			object[] set2 = new object[3];
+            var ex = Assert.Throws<AssertionException>(() => CollectionAssert.AreEqual(set1,set2,new TestComparer()));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+        }
 
-			CollectionAssert.AreEqual(set1,set2);
-			CollectionAssert.AreEqual(set1,set2,new TestComparer());
-		}
+        [Test]
+        public void AreEqual_HandlesNull()
+        {
+            object[] set1 = new object[3];
+            object[] set2 = new object[3];
 
-		[Test]
-		public void EnsureComparerIsUsed()
-		{
-			// Create two collections
-			int[] array1 = new int[2];
-			int[] array2 = new int[2];
+            CollectionAssert.AreEqual(set1,set2);
+            CollectionAssert.AreEqual(set1,set2,new TestComparer());
+        }
 
-			array1[0] = 4;
-			array1[1] = 5;
+        [Test]
+        public void EnsureComparerIsUsed()
+        {
+            // Create two collections
+            int[] array1 = new int[2];
+            int[] array2 = new int[2];
 
-			array2[0] = 99;
-			array2[1] = -99;
+            array1[0] = 4;
+            array1[1] = 5;
 
-			CollectionAssert.AreEqual(array1, array2, new AlwaysEqualComparer());
-		}
+            array2[0] = 99;
+            array2[1] = -99;
+
+            CollectionAssert.AreEqual(array1, array2, new AlwaysEqualComparer());
+        }
 
         [Test]
         public void AreEqual_UsingIterator()
@@ -240,12 +250,12 @@ namespace NUnit.Framework.Assertions
         {
             int[] array = new int[] { 1, 3, 5 };
  
-			AssertionException ex = Assert.Throws<AssertionException>( 
-				delegate { CollectionAssert.AreEqual(array, CountToThree()); } );
-			
-			Assert.That(ex.Message, Contains.Substring("Values differ at index [1]").And.
-			        				ContainsSubstring("Expected: 3").And.
-			            			ContainsSubstring("But was:  2"));
+            AssertionException ex = Assert.Throws<AssertionException>( 
+                delegate { CollectionAssert.AreEqual(array, CountToThree()); } );
+            
+            Assert.That(ex.Message, Contains.Substring("Values differ at index [1]").And.
+                                    ContainsSubstring("Expected: 3").And.
+                                    ContainsSubstring("But was:  2"));
         }
  
 #if NET_3_5 || NET_4_0
@@ -263,395 +273,417 @@ namespace NUnit.Framework.Assertions
             int[] array = new int[] { 1, 2, 3 };
  
             AssertionException ex = Assert.Throws<AssertionException>(
-			    delegate { CollectionAssert.AreEqual(array, array.Select((item) => item * 2)); } );
-			
-			Assert.That(ex.Message, Contains.Substring("Values differ at index [0]").And.
-			            			ContainsSubstring("Expected: 1").And.
-			            			ContainsSubstring("But was:  2"));
+                delegate { CollectionAssert.AreEqual(array, array.Select((item) => item * 2)); } );
+            
+            Assert.That(ex.Message, Contains.Substring("Values differ at index [0]").And.
+                                    ContainsSubstring("Expected: 1").And.
+                                    ContainsSubstring("But was:  2"));
         }
 #endif
-		
-		#endregion
+        
+        #endregion
 
-		#region AreEquivalent
+        #region AreEquivalent
 
-		[Test]
-		public void Equivalent()
-		{
+        [Test]
+        public void Equivalent()
+        {
             ICollection set1 = new SimpleObjectCollection("x", "y", "z");
             ICollection set2 = new SimpleObjectCollection("z", "y", "x");
 
-			CollectionAssert.AreEquivalent(set1,set2);
-		}
+            CollectionAssert.AreEquivalent(set1,set2);
+        }
 
-        [Test, ExpectedException(typeof(AssertionException))]
+        [Test]
         public void EquivalentFailOne()
-		{
+        {
             ICollection set1 = new SimpleObjectCollection("x", "y", "z");
             ICollection set2 = new SimpleObjectCollection("x", "y", "x");
 
-			expectedMessage =
+            var expectedMessage =
                 "  Expected: equivalent to < \"x\", \"y\", \"z\" >" + Environment.NewLine +
                 "  But was:  < \"x\", \"y\", \"x\" >" + Environment.NewLine;
-			CollectionAssert.AreEquivalent(set1,set2);
-		}
 
-        [Test, ExpectedException(typeof(AssertionException))]
-        public void EquivalentFailTwo()
-		{
-            ICollection set1 = new SimpleObjectCollection("x", "y", "x");
-            ICollection set2 = new SimpleObjectCollection("x", "y", "z");
-			
-			expectedMessage =
-                "  Expected: equivalent to < \"x\", \"y\", \"x\" >" + Environment.NewLine +
-                "  But was:  < \"x\", \"y\", \"z\" >" + Environment.NewLine;
-			CollectionAssert.AreEquivalent(set1,set2);
-		}
+            var ex = Assert.Throws<AssertionException>(() => CollectionAssert.AreEquivalent(set1,set2));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+        }
 
         [Test]
-		public void AreEquivalentHandlesNull()
-		{
+        public void EquivalentFailTwo()
+        {
+            ICollection set1 = new SimpleObjectCollection("x", "y", "x");
+            ICollection set2 = new SimpleObjectCollection("x", "y", "z");
+            
+            var expectedMessage =
+                "  Expected: equivalent to < \"x\", \"y\", \"x\" >" + Environment.NewLine +
+                "  But was:  < \"x\", \"y\", \"z\" >" + Environment.NewLine;
+
+            var ex = Assert.Throws<AssertionException>(() => CollectionAssert.AreEquivalent(set1,set2));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+        }
+
+        [Test]
+        public void AreEquivalentHandlesNull()
+        {
             ICollection set1 = new SimpleObjectCollection(null, "x", null, "z");
             ICollection set2 = new SimpleObjectCollection("z", null, "x", null);
-			
-			CollectionAssert.AreEquivalent(set1,set2);
-		}
-		#endregion
+            
+            CollectionAssert.AreEquivalent(set1,set2);
+        }
+        #endregion
 
-		#region AreNotEqual
+        #region AreNotEqual
 
-		[Test]
-		public void AreNotEqual()
-		{
-			ArrayList set1 = new ArrayList();
-			ArrayList set2 = new ArrayList();
-			set1.Add("x");
-			set1.Add("y");
-			set1.Add("z");
-			set2.Add("x");
-			set2.Add("y");
-			set2.Add("x");
+        [Test]
+        public void AreNotEqual()
+        {
+            ArrayList set1 = new ArrayList();
+            ArrayList set2 = new ArrayList();
+            set1.Add("x");
+            set1.Add("y");
+            set1.Add("z");
+            set2.Add("x");
+            set2.Add("y");
+            set2.Add("x");
 
-			CollectionAssert.AreNotEqual(set1,set2);
-			CollectionAssert.AreNotEqual(set1,set2,new TestComparer());
-			CollectionAssert.AreNotEqual(set1,set2,"test");
-			CollectionAssert.AreNotEqual(set1,set2,new TestComparer(),"test");
-			CollectionAssert.AreNotEqual(set1,set2,"test {0}","1");
-			CollectionAssert.AreNotEqual(set1,set2,new TestComparer(),"test {0}","1");
-		}
+            CollectionAssert.AreNotEqual(set1,set2);
+            CollectionAssert.AreNotEqual(set1,set2,new TestComparer());
+            CollectionAssert.AreNotEqual(set1,set2,"test");
+            CollectionAssert.AreNotEqual(set1,set2,new TestComparer(),"test");
+            CollectionAssert.AreNotEqual(set1,set2,"test {0}","1");
+            CollectionAssert.AreNotEqual(set1,set2,new TestComparer(),"test {0}","1");
+        }
 
-		[Test, ExpectedException(typeof(AssertionException))]
-		public void AreNotEqual_Fails()
-		{
-			ArrayList set1 = new ArrayList();
-			ArrayList set2 = new ArrayList();
-			set1.Add("x");
-			set1.Add("y");
-			set1.Add("z");
-			set2.Add("x");
-			set2.Add("y");
-			set2.Add("z");
+        [Test]
+        public void AreNotEqual_Fails()
+        {
+            ArrayList set1 = new ArrayList();
+            ArrayList set2 = new ArrayList();
+            set1.Add("x");
+            set1.Add("y");
+            set1.Add("z");
+            set2.Add("x");
+            set2.Add("y");
+            set2.Add("z");
 
-			expectedMessage = 
-				"  Expected: not equal to < \"x\", \"y\", \"z\" >" + Environment.NewLine +
-				"  But was:  < \"x\", \"y\", \"z\" >" + Environment.NewLine;
-			CollectionAssert.AreNotEqual(set1,set2);
-		}
+            var expectedMessage = 
+                "  Expected: not equal to < \"x\", \"y\", \"z\" >" + Environment.NewLine +
+                "  But was:  < \"x\", \"y\", \"z\" >" + Environment.NewLine;
 
-		[Test]
-		public void AreNotEqual_HandlesNull()
-		{
-			object[] set1 = new object[3];
-			ArrayList set2 = new ArrayList();
-			set2.Add("x");
-			set2.Add("y");
-			set2.Add("z");
+            var ex = Assert.Throws<AssertionException>(() => CollectionAssert.AreNotEqual(set1, set2));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+        }
 
-			CollectionAssert.AreNotEqual(set1,set2);
-			CollectionAssert.AreNotEqual(set1,set2,new TestComparer());
-		}
+        [Test]
+        public void AreNotEqual_HandlesNull()
+        {
+            object[] set1 = new object[3];
+            ArrayList set2 = new ArrayList();
+            set2.Add("x");
+            set2.Add("y");
+            set2.Add("z");
 
-		#endregion
+            CollectionAssert.AreNotEqual(set1,set2);
+            CollectionAssert.AreNotEqual(set1,set2,new TestComparer());
+        }
 
-		#region AreNotEquivalent
+        #endregion
 
-		[Test]
-		public void NotEquivalent()
-		{
-			ArrayList set1 = new ArrayList();
-			ArrayList set2 = new ArrayList();
-			
-			set1.Add("x");
-			set1.Add("y");
-			set1.Add("z");
+        #region AreNotEquivalent
 
-			set2.Add("x");
-			set2.Add("y");
-			set2.Add("x");
+        [Test]
+        public void NotEquivalent()
+        {
+            ArrayList set1 = new ArrayList();
+            ArrayList set2 = new ArrayList();
+            
+            set1.Add("x");
+            set1.Add("y");
+            set1.Add("z");
 
-			CollectionAssert.AreNotEquivalent(set1,set2);
-		}
+            set2.Add("x");
+            set2.Add("y");
+            set2.Add("x");
 
-		[Test, ExpectedException(typeof(AssertionException))]
-		public void NotEquivalent_Fails()
-		{
-			ArrayList set1 = new ArrayList();
-			ArrayList set2 = new ArrayList();
-			
-			set1.Add("x");
-			set1.Add("y");
-			set1.Add("z");
+            CollectionAssert.AreNotEquivalent(set1,set2);
+        }
 
-			set2.Add("x");
-			set2.Add("z");
-			set2.Add("y");
+        [Test]
+        public void NotEquivalent_Fails()
+        {
+            ArrayList set1 = new ArrayList();
+            ArrayList set2 = new ArrayList();
+            
+            set1.Add("x");
+            set1.Add("y");
+            set1.Add("z");
 
-			expectedMessage =
-				"  Expected: not equivalent to < \"x\", \"y\", \"z\" >" + Environment.NewLine +
-				"  But was:  < \"x\", \"z\", \"y\" >" + Environment.NewLine;
-			CollectionAssert.AreNotEquivalent(set1,set2);
-		}
+            set2.Add("x");
+            set2.Add("z");
+            set2.Add("y");
 
-		[Test]
-		public void NotEquivalentHandlesNull()
-		{
-			ArrayList set1 = new ArrayList();
-			ArrayList set2 = new ArrayList();
-			
-			set1.Add("x");
-			set1.Add(null);
-			set1.Add("z");
+            var expectedMessage =
+                "  Expected: not equivalent to < \"x\", \"y\", \"z\" >" + Environment.NewLine +
+                "  But was:  < \"x\", \"z\", \"y\" >" + Environment.NewLine;
 
-			set2.Add("x");
-			set2.Add(null);
-			set2.Add("x");
+            var ex = Assert.Throws<AssertionException>(() => CollectionAssert.AreNotEquivalent(set1,set2));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+        }
 
-			CollectionAssert.AreNotEquivalent(set1,set2);
-		}
-		#endregion
+        [Test]
+        public void NotEquivalentHandlesNull()
+        {
+            ArrayList set1 = new ArrayList();
+            ArrayList set2 = new ArrayList();
+            
+            set1.Add("x");
+            set1.Add(null);
+            set1.Add("z");
 
-		#region Contains
-		[Test]
-		public void Contains_IList()
-		{
-			ArrayList al = new ArrayList();
-			al.Add("x");
-			al.Add("y");
-			al.Add("z");
+            set2.Add("x");
+            set2.Add(null);
+            set2.Add("x");
 
-			CollectionAssert.Contains(al,"x");
-		}
+            CollectionAssert.AreNotEquivalent(set1,set2);
+        }
+        #endregion
 
-		[Test]
-		public void Contains_ICollection()
-		{
+        #region Contains
+        [Test]
+        public void Contains_IList()
+        {
+            ArrayList al = new ArrayList();
+            al.Add("x");
+            al.Add("y");
+            al.Add("z");
+
+            CollectionAssert.Contains(al,"x");
+        }
+
+        [Test]
+        public void Contains_ICollection()
+        {
             var ca = new SimpleObjectCollection(new string[] { "x", "y", "z" });
 
-			CollectionAssert.Contains(ca,"x");
-		}
+            CollectionAssert.Contains(ca,"x");
+        }
 
-		[Test, ExpectedException(typeof(AssertionException))]
-		public void ContainsFails_ILIst()
-		{
-			ArrayList al = new ArrayList();
-			al.Add("x");
-			al.Add("y");
-			al.Add("z");
+        [Test]
+        public void ContainsFails_ILIst()
+        {
+            ArrayList al = new ArrayList();
+            al.Add("x");
+            al.Add("y");
+            al.Add("z");
 
-			expectedMessage =
-				"  Expected: collection containing \"a\"" + Environment.NewLine +
-				"  But was:  < \"x\", \"y\", \"z\" >" + Environment.NewLine;
-			CollectionAssert.Contains(al,"a");
-		}
+            var expectedMessage =
+                "  Expected: collection containing \"a\"" + Environment.NewLine +
+                "  But was:  < \"x\", \"y\", \"z\" >" + Environment.NewLine;
 
-		[Test, ExpectedException(typeof(AssertionException))]
-		public void ContainsFails_ICollection()
-		{
+            var ex = Assert.Throws<AssertionException>(() => CollectionAssert.Contains(al,"a"));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+        }
+
+        [Test]
+        public void ContainsFails_ICollection()
+        {
             var ca = new SimpleObjectCollection(new string[] { "x", "y", "z" });
 
-			expectedMessage =
-				"  Expected: collection containing \"a\"" + Environment.NewLine +
-				"  But was:  < \"x\", \"y\", \"z\" >" + Environment.NewLine;
-			CollectionAssert.Contains(ca,"a");
-		}
+            var expectedMessage =
+                "  Expected: collection containing \"a\"" + Environment.NewLine +
+                "  But was:  < \"x\", \"y\", \"z\" >" + Environment.NewLine;
 
-		[Test, ExpectedException(typeof(AssertionException))]
-		public void ContainsFails_EmptyIList()
-		{
-			ArrayList al = new ArrayList();
+            var ex = Assert.Throws<AssertionException>(() => CollectionAssert.Contains(ca,"a"));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+        }
 
-			expectedMessage =
-				"  Expected: collection containing \"x\"" + Environment.NewLine +
-				"  But was:  <empty>" + Environment.NewLine;
-			CollectionAssert.Contains(al,"x");
-		}
+        [Test]
+        public void ContainsFails_EmptyIList()
+        {
+            ArrayList al = new ArrayList();
 
-		[Test, ExpectedException(typeof(AssertionException))]
-		public void ContainsFails_EmptyICollection()
-		{
+            var expectedMessage =
+                "  Expected: collection containing \"x\"" + Environment.NewLine +
+                "  But was:  <empty>" + Environment.NewLine;
+
+            var ex = Assert.Throws<AssertionException>(() => CollectionAssert.Contains(al,"x"));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+        }
+
+        [Test]
+        public void ContainsFails_EmptyICollection()
+        {
             var ca = new SimpleObjectCollection(new object[0]);
 
-			expectedMessage =
-				"  Expected: collection containing \"x\"" + Environment.NewLine +
-				"  But was:  <empty>" + Environment.NewLine;
-			CollectionAssert.Contains(ca,"x");
-		}
+            var expectedMessage =
+                "  Expected: collection containing \"x\"" + Environment.NewLine +
+                "  But was:  <empty>" + Environment.NewLine;
 
-		[Test]
-		public void ContainsNull_IList()
-		{
-			Object[] oa = new object[] { 1, 2, 3, null, 4, 5 };
-			CollectionAssert.Contains( oa, null );
-		}
+            var ex = Assert.Throws<AssertionException>(() => CollectionAssert.Contains(ca,"x"));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+        }
 
-		[Test]
-		public void ContainsNull_ICollection()
-		{
+        [Test]
+        public void ContainsNull_IList()
+        {
+            Object[] oa = new object[] { 1, 2, 3, null, 4, 5 };
+            CollectionAssert.Contains( oa, null );
+        }
+
+        [Test]
+        public void ContainsNull_ICollection()
+        {
             var ca = new SimpleObjectCollection(new object[] { 1, 2, 3, null, 4, 5 });
-			CollectionAssert.Contains( ca, null );
-		}
-		#endregion
+            CollectionAssert.Contains( ca, null );
+        }
+        #endregion
 
-		#region DoesNotContain
-		[Test]
-		public void DoesNotContain()
-		{
-			ArrayList al = new ArrayList();
-			al.Add("x");
-			al.Add("y");
-			al.Add("z");
+        #region DoesNotContain
+        [Test]
+        public void DoesNotContain()
+        {
+            ArrayList al = new ArrayList();
+            al.Add("x");
+            al.Add("y");
+            al.Add("z");
 
-			CollectionAssert.DoesNotContain(al,"a");
-		}
+            CollectionAssert.DoesNotContain(al,"a");
+        }
 
-		[Test]
-		public void DoesNotContain_Empty()
-		{
-			ArrayList al = new ArrayList();
+        [Test]
+        public void DoesNotContain_Empty()
+        {
+            ArrayList al = new ArrayList();
 
-			CollectionAssert.DoesNotContain(al,"x");
-		}
+            CollectionAssert.DoesNotContain(al,"x");
+        }
 
-		[Test,ExpectedException(typeof(AssertionException))]
-		public void DoesNotContain_Fails()
-		{
-			ArrayList al = new ArrayList();
-			al.Add("x");
-			al.Add("y");
-			al.Add("z");
+        [Test]
+        public void DoesNotContain_Fails()
+        {
+            ArrayList al = new ArrayList();
+            al.Add("x");
+            al.Add("y");
+            al.Add("z");
 
-			expectedMessage = 
-				"  Expected: not collection containing \"y\"" + Environment.NewLine +
-				"  But was:  < \"x\", \"y\", \"z\" >" + Environment.NewLine;
-			CollectionAssert.DoesNotContain(al,"y");
-		}
-		#endregion
+            var expectedMessage = 
+                "  Expected: not collection containing \"y\"" + Environment.NewLine +
+                "  But was:  < \"x\", \"y\", \"z\" >" + Environment.NewLine;
 
-		#region IsSubsetOf
-		[Test]
-		public void IsSubsetOf()
-		{
-			ArrayList set1 = new ArrayList();
-			set1.Add("x");
-			set1.Add("y");
-			set1.Add("z");
+            var ex = Assert.Throws<AssertionException>(() => CollectionAssert.DoesNotContain(al,"y"));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+        }
+        #endregion
 
-			ArrayList set2 = new ArrayList();
-			set2.Add("y");
-			set2.Add("z");
+        #region IsSubsetOf
+        [Test]
+        public void IsSubsetOf()
+        {
+            ArrayList set1 = new ArrayList();
+            set1.Add("x");
+            set1.Add("y");
+            set1.Add("z");
 
-			CollectionAssert.IsSubsetOf(set2,set1);
+            ArrayList set2 = new ArrayList();
+            set2.Add("y");
+            set2.Add("z");
+
+            CollectionAssert.IsSubsetOf(set2,set1);
             Assert.That(set2, Is.SubsetOf(set1));
-		}
+        }
 
-		[Test,ExpectedException(typeof(AssertionException))]
-		public void IsSubsetOf_Fails()
-		{
-			ArrayList set1 = new ArrayList();
-			set1.Add("x");
-			set1.Add("y");
-			set1.Add("z");
+        [Test]
+        public void IsSubsetOf_Fails()
+        {
+            ArrayList set1 = new ArrayList();
+            set1.Add("x");
+            set1.Add("y");
+            set1.Add("z");
 
-			ArrayList set2 = new ArrayList();
-			set2.Add("y");
-			set2.Add("z");
-			set2.Add("a");
+            ArrayList set2 = new ArrayList();
+            set2.Add("y");
+            set2.Add("z");
+            set2.Add("a");
 
-			expectedMessage =
-				"  Expected: subset of < \"y\", \"z\", \"a\" >" + Environment.NewLine +
-				"  But was:  < \"x\", \"y\", \"z\" >" + Environment.NewLine;
-			CollectionAssert.IsSubsetOf(set1,set2);
-		}
+            var expectedMessage =
+                "  Expected: subset of < \"y\", \"z\", \"a\" >" + Environment.NewLine +
+                "  But was:  < \"x\", \"y\", \"z\" >" + Environment.NewLine;
 
-		[Test]
-		public void IsSubsetOfHandlesNull()
-		{
-			ArrayList set1 = new ArrayList();
-			set1.Add("x");
-			set1.Add(null);
-			set1.Add("z");
+            var ex = Assert.Throws<AssertionException>(() => CollectionAssert.IsSubsetOf(set1,set2));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+        }
 
-			ArrayList set2 = new ArrayList();
-			set2.Add(null);
-			set2.Add("z");
+        [Test]
+        public void IsSubsetOfHandlesNull()
+        {
+            ArrayList set1 = new ArrayList();
+            set1.Add("x");
+            set1.Add(null);
+            set1.Add("z");
 
-			CollectionAssert.IsSubsetOf(set2,set1);
+            ArrayList set2 = new ArrayList();
+            set2.Add(null);
+            set2.Add("z");
+
+            CollectionAssert.IsSubsetOf(set2,set1);
             Assert.That(set2, Is.SubsetOf(set1));
-		}
-		#endregion
+        }
+        #endregion
 
-		#region IsNotSubsetOf
-		[Test]
-		public void IsNotSubsetOf()
-		{
-			ArrayList set1 = new ArrayList();
-			set1.Add("x");
-			set1.Add("y");
-			set1.Add("z");
+        #region IsNotSubsetOf
+        [Test]
+        public void IsNotSubsetOf()
+        {
+            ArrayList set1 = new ArrayList();
+            set1.Add("x");
+            set1.Add("y");
+            set1.Add("z");
 
-			ArrayList set2 = new ArrayList();
-			set1.Add("y");
-			set1.Add("z");
-			set2.Add("a");
+            ArrayList set2 = new ArrayList();
+            set1.Add("y");
+            set1.Add("z");
+            set2.Add("a");
 
-			CollectionAssert.IsNotSubsetOf(set1,set2);
+            CollectionAssert.IsNotSubsetOf(set1,set2);
             Assert.That(set1, Is.Not.SubsetOf(set2));
-		}
+        }
 
-		[Test,ExpectedException(typeof(AssertionException))]
-		public void IsNotSubsetOf_Fails()
-		{
-			ArrayList set1 = new ArrayList();
-			set1.Add("x");
-			set1.Add("y");
-			set1.Add("z");
+        [Test]
+        public void IsNotSubsetOf_Fails()
+        {
+            ArrayList set1 = new ArrayList();
+            set1.Add("x");
+            set1.Add("y");
+            set1.Add("z");
 
-			ArrayList set2 = new ArrayList();
-			set2.Add("y");
-			set2.Add("z");
+            ArrayList set2 = new ArrayList();
+            set2.Add("y");
+            set2.Add("z");
 
-			expectedMessage =
-				"  Expected: not subset of < \"x\", \"y\", \"z\" >" + Environment.NewLine +
-				"  But was:  < \"y\", \"z\" >" + Environment.NewLine;
-			CollectionAssert.IsNotSubsetOf(set2,set1);
-		}
-		
-		[Test]
-		public void IsNotSubsetOfHandlesNull()
-		{
-			ArrayList set1 = new ArrayList();
-			set1.Add("x");
-			set1.Add(null);
-			set1.Add("z");
+            var expectedMessage =
+                "  Expected: not subset of < \"x\", \"y\", \"z\" >" + Environment.NewLine +
+                "  But was:  < \"y\", \"z\" >" + Environment.NewLine;
 
-			ArrayList set2 = new ArrayList();
-			set1.Add(null);
-			set1.Add("z");
-			set2.Add("a");
+            var ex = Assert.Throws<AssertionException>(() => CollectionAssert.IsNotSubsetOf(set2,set1));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+        }
+        
+        [Test]
+        public void IsNotSubsetOfHandlesNull()
+        {
+            ArrayList set1 = new ArrayList();
+            set1.Add("x");
+            set1.Add(null);
+            set1.Add("z");
 
-			CollectionAssert.IsNotSubsetOf(set1,set2);
-		}
-		#endregion
+            ArrayList set2 = new ArrayList();
+            set1.Add(null);
+            set1.Add("z");
+            set2.Add("a");
+
+            CollectionAssert.IsNotSubsetOf(set1,set2);
+        }
+        #endregion
 
         #region IsOrdered
 
@@ -666,7 +698,7 @@ namespace NUnit.Framework.Assertions
             CollectionAssert.IsOrdered(al);
         }
 
-        [Test, ExpectedException(typeof(AssertionException))]
+        [Test]
         public void IsOrdered_Fails()
         {
             ArrayList al = new ArrayList();
@@ -674,11 +706,12 @@ namespace NUnit.Framework.Assertions
             al.Add("z");
             al.Add("y");
 
-            expectedMessage =
+            var expectedMessage =
                 "  Expected: collection ordered" + Environment.NewLine +
                 "  But was:  < \"x\", \"z\", \"y\" >" + Environment.NewLine;
 
-            CollectionAssert.IsOrdered(al);
+            var ex = Assert.Throws<AssertionException>(() => CollectionAssert.IsOrdered(al));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 
         [Test]

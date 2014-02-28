@@ -23,235 +23,262 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using NUnit.Framework.Internal;
 using NUnit.TestUtilities.Collections;
 
 namespace NUnit.Framework.Assertions
 {
-	/// <summary>
-	/// Summary description for ArrayEqualsFailureMessageFixture.
-	/// </summary>
+    /// <summary>
+    /// Summary description for ArrayEqualsFailureMessageFixture.
+    /// </summary>
+    // TODO: Exact tests of messages are fragile - revisit this
     [TestFixture]
-    public class ArrayEqualsFailureMessageFixture : MessageChecker
+    public class ArrayEqualsFailureMessageFixture
     {
-        [Test, ExpectedException(typeof(AssertionException))]
+        private readonly string NL = NUnit.Env.NewLine;
+
+        [Test]
         public void ArraysHaveDifferentRanks()
         {
             int[] expected = new int[] { 1, 2, 3, 4 };
             int[,] actual = new int[,] { { 1, 2 }, { 3, 4 } };
 
-            expectedMessage =
+            var expectedMessage =
                 "  Expected is <System.Int32[4]>, actual is <System.Int32[2,2]>" + NL;
-            Assert.That(actual, Is.EqualTo(expected));
+
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(actual, Is.EqualTo(expected)));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 
-        [Test, ExpectedException(typeof(AssertionException))]
+        [Test]
         public void ExpectedArrayIsLonger()
         {
             int[] expected = new int[] { 1, 2, 3, 4, 5 };
             int[] actual = new int[] { 1, 2, 3 };
 
-            expectedMessage =
+            var expectedMessage =
                 "  Expected is <System.Int32[5]>, actual is <System.Int32[3]>" + NL +
                 "  Values differ at index [3]" + NL +
                 "  Missing:  < 4, 5 >";
-            Assert.That(actual, Is.EqualTo(expected));
+
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(actual, Is.EqualTo(expected)));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 
-        [Test, ExpectedException(typeof(AssertionException))]
+        [Test]
         public void ActualArrayIsLonger()
         {
             int[] expected = new int[] { 1, 2, 3 };
             int[] actual = new int[] { 1, 2, 3, 4, 5, 6, 7 };
 
-            expectedMessage =
+            var expectedMessage =
                 "  Expected is <System.Int32[3]>, actual is <System.Int32[7]>" + NL +
                 "  Values differ at index [3]" + NL +
                 "  Extra:    < 4, 5, 6... >";
-            Assert.That(actual, Is.EqualTo(expected));
+
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(actual, Is.EqualTo(expected)));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 
-        [Test, ExpectedException(typeof(AssertionException))]
+        [Test]
         public void FailureOnSingleDimensionedArrays()
         {
             int[] expected = new int[] { 1, 2, 3 };
             int[] actual = new int[] { 1, 5, 3 };
 
-            expectedMessage =
+            var expectedMessage =
                 "  Expected and actual are both <System.Int32[3]>" + NL +
                 "  Values differ at index [1]" + NL +
                 TextMessageWriter.Pfx_Expected + "2" + NL +
                 TextMessageWriter.Pfx_Actual + "5" + NL;
-            Assert.That(actual, Is.EqualTo(expected));
+
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(actual, Is.EqualTo(expected)));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 
-        [Test, ExpectedException(typeof(AssertionException))]
+        [Test]
         public void DoubleDimensionedArrays()
         {
             int[,] expected = new int[,] { { 1, 2, 3 }, { 4, 5, 6 } };
             int[,] actual = new int[,] { { 1, 3, 2 }, { 4, 0, 6 } };
 
-            expectedMessage =
+            var expectedMessage =
                 "  Expected and actual are both <System.Int32[2,3]>" + NL +
                 "  Values differ at index [0,1]" + NL +
                 TextMessageWriter.Pfx_Expected + "2" + NL +
                 TextMessageWriter.Pfx_Actual + "3" + NL;
-            Assert.That(actual, Is.EqualTo(expected));
+
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(actual, Is.EqualTo(expected)));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 
-        [Test, ExpectedException(typeof(AssertionException))]
+        [Test]
         public void TripleDimensionedArrays()
         {
             int[, ,] expected = new int[,,] { { { 1, 2 }, { 3, 4 } }, { { 5, 6 }, { 7, 8 } } };
             int[, ,] actual = new int[,,] { { { 1, 2 }, { 3, 4 } }, { { 0, 6 }, { 7, 8 } } };
 
-            expectedMessage =
+            var expectedMessage =
                 "  Expected and actual are both <System.Int32[2,2,2]>" + NL +
                 "  Values differ at index [1,0,0]" + NL +
                 TextMessageWriter.Pfx_Expected + "5" + NL +
                 TextMessageWriter.Pfx_Actual + "0" + NL;
-            Assert.That(actual, Is.EqualTo(expected));
+
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(actual, Is.EqualTo(expected)));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 
-        [Test, ExpectedException(typeof(AssertionException))]
+        [Test]
         public void FiveDimensionedArrays()
         {
             int[, , , ,] expected = new int[2, 2, 2, 2, 2] { { { { { 1, 2 }, { 3, 4 } }, { { 5, 6 }, { 7, 8 } } }, { { { 1, 2 }, { 3, 4 } }, { { 5, 6 }, { 7, 8 } } } }, { { { { 1, 2 }, { 3, 4 } }, { { 5, 6 }, { 7, 8 } } }, { { { 1, 2 }, { 3, 4 } }, { { 5, 6 }, { 7, 8 } } } } };
             int[, , , ,] actual = new int[2, 2, 2, 2, 2] { { { { { 1, 2 }, { 4, 3 } }, { { 5, 6 }, { 7, 8 } } }, { { { 1, 2 }, { 3, 4 } }, { { 5, 6 }, { 7, 8 } } } }, { { { { 1, 2 }, { 3, 4 } }, { { 5, 6 }, { 7, 8 } } }, { { { 1, 2 }, { 3, 4 } }, { { 5, 6 }, { 7, 8 } } } } };
 
-            expectedMessage =
+            var expectedMessage =
                 "  Expected and actual are both <System.Int32[2,2,2,2,2]>" + NL +
                 "  Values differ at index [0,0,0,1,0]" + NL +
                 TextMessageWriter.Pfx_Expected + "3" + NL +
                 TextMessageWriter.Pfx_Actual + "4" + NL;
-            Assert.That(actual, Is.EqualTo(expected));
+
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(actual, Is.EqualTo(expected)));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 
-        [Test, ExpectedException(typeof(AssertionException))]
+        [Test]
         public void JaggedArrays()
         {
             int[][] expected = new int[][] { new int[] { 1, 2, 3 }, new int[] { 4, 5, 6, 7 }, new int[] { 8, 9 } };
             int[][] actual = new int[][] { new int[] { 1, 2, 3 }, new int[] { 4, 5, 0, 7 }, new int[] { 8, 9 } };
 
-            expectedMessage =
+            var expectedMessage =
                 "  Expected and actual are both <System.Int32[3][]>" + NL +
                 "  Values differ at index [1]" + NL +
                 "    Expected and actual are both <System.Int32[4]>" + NL +
                 "    Values differ at index [2]" + NL +
                 TextMessageWriter.Pfx_Expected + "6" + NL +
                 TextMessageWriter.Pfx_Actual + "0" + NL;
-            Assert.That(actual, Is.EqualTo(expected));
+
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(actual, Is.EqualTo(expected)));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 
-        [Test, ExpectedException(typeof(AssertionException))]
+        [Test]
         public void JaggedArrayComparedToSimpleArray()
         {
             int[] expected = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
             int[][] actual = new int[][] { new int[] { 1, 2, 3 }, new int[] { 4, 5, 0, 7 }, new int[] { 8, 9 } };
 
-            expectedMessage =
+            var expectedMessage =
                 "  Expected is <System.Int32[9]>, actual is <System.Int32[3][]>" + NL +
                 "  Values differ at index [0]" + NL +
                 TextMessageWriter.Pfx_Expected + "1" + NL +
                 TextMessageWriter.Pfx_Actual + "< 1, 2, 3 >" + NL;
-            Assert.That(actual, Is.EqualTo(expected));
+
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(actual, Is.EqualTo(expected)));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 
-        [Test, ExpectedException(typeof(AssertionException))]
+        [Test]
         public void ArraysWithDifferentRanksAsCollection()
         {
             int[] expected = new int[] { 1, 2, 3, 4 };
             int[,] actual = new int[,] { { 1, 0 }, { 3, 4 } };
 
-            expectedMessage =
+            var expectedMessage =
                 "  Expected is <System.Int32[4]>, actual is <System.Int32[2,2]>" + NL +
                 "  Values differ at expected index [1], actual index [0,1]" + NL +
                 TextMessageWriter.Pfx_Expected + "2" + NL +
                 TextMessageWriter.Pfx_Actual + "0" + NL;
-            Assert.That(actual, Is.EqualTo(expected).AsCollection);
+
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(actual, Is.EqualTo(expected).AsCollection));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 
-        [Test, ExpectedException(typeof(AssertionException))]
+        [Test]
         public void ArraysWithDifferentDimensionsAsCollection()
         {
             int[,] expected = new int[,] { { 1, 2, 3 }, { 4, 5, 6 } };
             int[,] actual = new int[,] { { 1, 2 }, { 3, 0 }, { 5, 6 } };
 
-            expectedMessage =
+            var expectedMessage =
                 "  Expected is <System.Int32[2,3]>, actual is <System.Int32[3,2]>" + NL +
                 "  Values differ at expected index [1,0], actual index [1,1]" + NL +
                 TextMessageWriter.Pfx_Expected + "4" + NL +
                 TextMessageWriter.Pfx_Actual + "0" + NL;
-            Assert.That(actual, Is.EqualTo(expected).AsCollection);
+
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(actual, Is.EqualTo(expected).AsCollection));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 
-        //		[Test,ExpectedException(typeof(AssertionException))]
-        //		public void ExpectedArrayIsLonger()
-        //		{
-        //			string[] array1 = { "one", "two", "three" };
-        //			string[] array2 = { "one", "two", "three", "four", "five" };
-        //
-        //			expectedMessage =
-        //				"  Expected is <System.String[5]>, actual is <System.String[3]>" + NL +
-        //				"  Values differ at index [3]" + NL +
-        //				"  Missing:  < \"four\", \"five\" >";
-        //			Assert.That(array1, Is.EqualTo(array2));
-        //		}
-
-        [Test, ExpectedException(typeof(AssertionException))]
+        [Test]
         public void SameLengthDifferentContent()
         {
-            string[] array1 = { "one", "two", "three" };
-            string[] array2 = { "one", "two", "ten" };
+            string[] actual = { "one", "two", "three" };
+            string[] expected = { "one", "two", "ten" };
 
-            expectedMessage =
+            var expectedMessage =
                 "  Expected and actual are both <System.String[3]>" + NL +
                 "  Values differ at index [2]" + NL +
                 "  Expected string length 3 but was 5. Strings differ at index 1." + NL +
                 "  Expected: \"ten\"" + NL +
                 "  But was:  \"three\"" + NL +
                 "  ------------^" + NL;
-            Assert.That(array1, Is.EqualTo(array2));
+
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(actual, Is.EqualTo(expected)));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 
-        [Test, ExpectedException(typeof(AssertionException))]
+        [Test]
         public void ArraysDeclaredAsDifferentTypes()
         {
-            string[] array1 = { "one", "two", "three" };
-            object[] array2 = { "one", "three", "two" };
+            string[] actual = { "one", "two", "three" };
+            object[] expected = { "one", "three", "two" };
 
-            expectedMessage =
+            var expectedMessage =
                 "  Expected is <System.Object[3]>, actual is <System.String[3]>" + NL +
                 "  Values differ at index [1]" + NL +
                 "  Expected string length 5 but was 3. Strings differ at index 1." + NL +
                 "  Expected: \"three\"" + NL +
                 "  But was:  \"two\"" + NL +
                 "  ------------^" + NL;
-            Assert.That(array1, Is.EqualTo(array2));
+
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(actual, Is.EqualTo(expected)));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 
-        [Test, ExpectedException(typeof(AssertionException))]
+        [Test]
         public void ArrayAndCollection_Failure()
         {
-            int[] a = new int[] { 1, 2, 3 };
-            var b = new SimpleObjectCollection(new int[] { 1, 3 });
-            Assert.AreEqual(a, b);
+            int[] expected = new int[] { 1, 2, 3 };
+            var actual = new List<int>(new int[] { 1, 3 });
+
+            var expectedMessage =
+                "  Expected is <System.Int32[3]>, actual is <System.Collections.Generic.List`1[System.Int32]> with 2 elements" + NL +
+                "  Values differ at index [1]" + NL +
+                "  Expected: 2" + NL +
+                "  But was:  3" + NL;
+
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(actual, Is.EqualTo(expected).AsCollection));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 
-        [Test, ExpectedException(typeof(AssertionException))]
+        [Test]
         public void DifferentArrayTypesEqualFails()
         {
             string[] array1 = { "one", "two", "three" };
             object[] array2 = { "one", "three", "two" };
 
-            expectedMessage =
+            var expectedMessage =
                 "  Expected is <System.String[3]>, actual is <System.Object[3]>" + NL +
                 "  Values differ at index [1]" + NL +
                 "  Expected string length 3 but was 5. Strings differ at index 1." + NL +
                 "  Expected: \"two\"" + NL +
                 "  But was:  \"three\"" + NL +
                 "  ------------^" + NL;
-            Assert.AreEqual(array1, array2);
+
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(array2, Is.EqualTo(array1)));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
     }
 }

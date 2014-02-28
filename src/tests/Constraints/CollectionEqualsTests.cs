@@ -15,7 +15,7 @@ using Env = NUnit.Env;
 namespace NUnit.Framework.Constraints
 {
     [TestFixture]
-    class CollectionEqualsTests : IExpectException
+    class CollectionEqualsTests
     {
         [Test]
         public void CanMatchTwoCollections()
@@ -41,22 +41,18 @@ namespace NUnit.Framework.Constraints
             Assert.That(array, Is.EqualTo(collection));
         }
 
-        [Test, ExpectedException(typeof(AssertionException))]
+        [Test]
         public void FailureMatchingArrayAndCollection()
         {
             int[] expected = new int[] { 1, 2, 3 };
             ICollection actual = new SimpleObjectCollection(1, 5, 3);
 
-            Assert.That(actual, Is.EqualTo(expected));
-        }
-
-        public void HandleException(Exception ex)
-        {
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(actual, Is.EqualTo(expected)));
             Assert.That(ex.Message, Is.EqualTo(
                 "  Expected is <System.Int32[3]>, actual is <NUnit.TestUtilities.Collections.SimpleObjectCollection> with 3 elements" + Env.NewLine +
                 "  Values differ at index [1]" + Env.NewLine +
                 TextMessageWriter.Pfx_Expected + "2" + Env.NewLine +
-                TextMessageWriter.Pfx_Actual   + "5" + Env.NewLine));
+                TextMessageWriter.Pfx_Actual + "5" + Env.NewLine));
         }
 
         [Test]

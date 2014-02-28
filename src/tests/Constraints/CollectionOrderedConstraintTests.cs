@@ -33,6 +33,8 @@ namespace NUnit.Framework.Constraints
     [TestFixture]
     public class CollectionOrderedConstraintTests : NUnit.Framework.Assertions.MessageChecker
     {
+        private readonly string NL = NUnit.Env.NewLine;
+
         [Test]
         public void IsOrdered()
         {
