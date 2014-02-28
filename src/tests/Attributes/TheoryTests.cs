@@ -22,6 +22,8 @@
 // ***********************************************************************
 
 using System;
+using System.Collections.Generic;
+using System.Reflection;
 using NUnit.Framework.Internal;
 using NUnit.TestUtilities;
 using NUnit.TestData.TheoryFixture;

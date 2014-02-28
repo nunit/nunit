@@ -22,11 +22,13 @@
 // ***********************************************************************
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Reflection;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.TestData.TestCaseAttributeFixture;
 using NUnit.TestUtilities;
-using System.Collections;
 
 namespace NUnit.Framework.Attributes
 {
@@ -97,12 +99,12 @@ namespace NUnit.Framework.Attributes
         }
 
         [Test]
-		public void ConversionOverflowMakesTestNotRunnable()
-		{
-			Test test = (Test)TestBuilder.MakeParameterizedMethodSuite(
-				typeof(TestCaseAttributeFixture), "MethodCausesConversionOverflow").Tests[0];
-			Assert.AreEqual(RunState.NotRunnable, test.RunState);
-		}
+        public void ConversionOverflowMakesTestNotRunnable()
+        {
+            Test test = (Test)TestBuilder.MakeParameterizedMethodSuite(
+                typeof(TestCaseAttributeFixture), "MethodCausesConversionOverflow").Tests[0];
+            Assert.AreEqual(RunState.NotRunnable, test.RunState);
+        }
 
         [TestCase("12-October-1942")]
         public void CanConvertStringToDateTime(DateTime dt)
@@ -128,7 +130,7 @@ namespace NUnit.Framework.Attributes
         [TestCase(null)]
         public void CanPassNullAsFirstArgument(object a)
         {
-        	Assert.IsNull(a);
+            Assert.IsNull(a);
         }
 
         [TestCase(new object[] { 1, "two", 3.0 })]
@@ -205,10 +207,10 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void CanSpecifyDescription()
         {
-			Test test = (Test)TestBuilder.MakeParameterizedMethodSuite(
-				typeof(TestCaseAttributeFixture), "MethodHasDescriptionSpecified").Tests[0];
-			Assert.AreEqual("My Description", test.Properties.Get(PropertyNames.Description));
-		}
+            Test test = (Test)TestBuilder.MakeParameterizedMethodSuite(
+                typeof(TestCaseAttributeFixture), "MethodHasDescriptionSpecified").Tests[0];
+            Assert.AreEqual("My Description", test.Properties.Get(PropertyNames.Description));
+        }
 
         [Test]
         public void CanSpecifyTestName()
@@ -224,7 +226,7 @@ namespace NUnit.Framework.Attributes
         {
             Test test = (Test)TestBuilder.MakeParameterizedMethodSuite(
                 typeof(TestCaseAttributeFixture), "MethodHasSingleCategory").Tests[0];
-			IList categories = test.Properties["Category"];
+            IList categories = test.Properties["Category"];
             Assert.AreEqual(new string[] { "XYZ" }, categories);
         }
  
@@ -233,7 +235,7 @@ namespace NUnit.Framework.Attributes
         {
             Test test = (Test)TestBuilder.MakeParameterizedMethodSuite(
                 typeof(TestCaseAttributeFixture), "MethodHasMultipleCategories").Tests[0];
-			IList categories = test.Properties["Category"];
+            IList categories = test.Properties["Category"];
             Assert.AreEqual(new string[] { "X", "Y", "Z" }, categories);
         }
  
@@ -293,10 +295,10 @@ namespace NUnit.Framework.Attributes
             testCase = TestFinder.Find("MethodWithIgnoredTestCases(2)", suite, false);
             Assert.That(testCase.RunState, Is.EqualTo(RunState.Ignored));
  
-			testCase = TestFinder.Find("MethodWithIgnoredTestCases(3)", suite, false);
+            testCase = TestFinder.Find("MethodWithIgnoredTestCases(3)", suite, false);
             Assert.That(testCase.RunState, Is.EqualTo(RunState.Ignored));
             Assert.That(testCase.Properties.Get(PropertyNames.SkipReason), Is.EqualTo("Don't Run Me!"));
-		}
+        }
 
         [Test]
         public void CanMarkIndividualTestCasesExplicit()
@@ -310,9 +312,9 @@ namespace NUnit.Framework.Attributes
             testCase = TestFinder.Find("MethodWithExplicitTestCases(2)", suite, false);
             Assert.That(testCase.RunState, Is.EqualTo(RunState.Explicit));
  
-			testCase = TestFinder.Find("MethodWithExplicitTestCases(3)", suite, false);
+            testCase = TestFinder.Find("MethodWithExplicitTestCases(3)", suite, false);
             Assert.That(testCase.RunState, Is.EqualTo(RunState.Explicit));
             Assert.That(testCase.Properties.Get(PropertyNames.SkipReason), Is.EqualTo("Connection failing"));
-		}
+        }
     }
 }

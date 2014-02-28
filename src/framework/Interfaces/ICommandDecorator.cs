@@ -1,5 +1,5 @@
-// ***********************************************************************
-// Copyright (c) 2009 Charlie Poole
+﻿// ***********************************************************************
+// Copyright (c) 2011 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -13,7 +13,7 @@
 // included in all copies or substantial portions of the Software.
 // 
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OFn
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
 // NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
 // LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
@@ -22,50 +22,35 @@
 // ***********************************************************************
 
 using System;
-using System.Collections;
+using System.Collections.Generic;
+using NUnit.Framework.Internal.Commands;
 
 namespace NUnit.Framework.Interfaces
 {
     /// <summary>
-    /// The ITestCaseData interface is implemented by a class
-    /// that is able to return complete testcases for use by
-    /// a parameterized test method.
+    /// ICommandDecorator is implemented by attributes and other
+    /// objects able to decorate a TestCommand, usually by wrapping
+    /// it with an outer command.
     /// </summary>
-    public interface ITestCaseData
+    public interface ICommandDecorator
     {
         /// <summary>
-        /// Gets the name to be used for the test
+        /// The stage of command execution to which this decorator applies.
         /// </summary>
-        string TestName { get; }
-        
-        /// <summary>
-        /// Gets the RunState for this test case.
-        /// </summary>
-        RunState RunState { get; }
+        CommandStage Stage { get; }
 
         /// <summary>
-        /// Gets the argument list to be provided to the test
+        /// The priority of this decorator as compared to other decorators
+        /// in the same Stage. Lower _values are applied first.
         /// </summary>
-        object[] Arguments { get; }
+        int Priority { get; }
 
         /// <summary>
-        /// Gets the expected result of the test case
+        /// Decorate a command, usually by wrapping it with another
+        /// command, and return the decorated command.
         /// </summary>
-        object ExpectedResult { get; }
-
-        /// <summary>
-        /// Returns true if an expected result has been set
-        /// </summary>
-        bool HasExpectedResult { get; }
-
-        /// <summary>
-        /// Gets data about any expected exception.
-        /// </summary>
-        ExpectedExceptionData ExceptionData { get; }
-
-        /// <summary>
-        /// Gets the property dictionary for the test case
-        /// </summary>
-        IPropertyBag Properties { get; }
+        /// <param name="command">The command to be decorated</param>
+        /// <returns>The decorated command</returns>
+        TestCommand Decorate(TestCommand command);
     }
 }

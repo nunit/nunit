@@ -105,6 +105,7 @@
     <Compile Include="Attributes\RequiresSTAAttributeTests.cs" />
     <Compile Include="Attributes\RequiresThreadAttributeTests.cs" />
     <Compile Include="Attributes\SetCultureAttributeTests.cs" />
+    <Compile Include="Attributes\TestMethodBuilderTests.cs" />
     <Compile Include="Attributes\TestCaseAttributeTests.cs" />
     <Compile Include="Attributes\TestCaseSourceTests.cs" />
     <Compile Include="Attributes\TestDummy.cs" />

@@ -1,6 +1,6 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2014 Rob Prouse
-// 
+// Copyright (c) 2014 Charlie Poole
+//
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
 // "Software"), to deal in the Software without restriction, including
@@ -21,23 +21,20 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-namespace NUnit.Framework.Interfaces
+using System;
+
+namespace NUnit.Framework
 {
     /// <summary>
-    /// Attributes that implement ITestExpectedResult mark tests with
-    /// return values that are checked against the ExpectedResult if
-    /// HasExpectedResult is true.
+    /// The abstract base class for all NUnit attributes that build fixtures.
+    /// The derived class should implement IFixtureBuilder. It is not implemented
+    /// by this class to allow for future fixture-building interfaces.
     /// </summary>
-    public interface ITestExpectedResult
+    public abstract class FixtureBuilderAttribute : Attribute
     {
         /// <summary>
-        /// Gets the expected result of the test case
+        /// Default constructor
         /// </summary>
-        object ExpectedResult { get; }
-
-        /// <summary>
-        /// Returns true if an expected result has been set
-        /// </summary>
-        bool HasExpectedResult { get; }
+        public FixtureBuilderAttribute() { }
     }
 }

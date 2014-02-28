@@ -23,6 +23,7 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.TestData.TestCaseSourceAttributeFixture;
@@ -260,7 +261,7 @@ namespace NUnit.Framework.Attributes
             testCase = TestFinder.Find("MethodWithIgnoredTestCases(2)", suite, false);
             Assert.That(testCase.RunState, Is.EqualTo(RunState.Ignored));
  
-			testCase = TestFinder.Find("MethodWithIgnoredTestCases(3)", suite, false);
+            testCase = TestFinder.Find("MethodWithIgnoredTestCases(3)", suite, false);
             Assert.That(testCase.RunState, Is.EqualTo(RunState.Ignored));
             Assert.That(testCase.Properties.Get(PropertyNames.SkipReason), Is.EqualTo("Don't Run Me!"));
         }
@@ -277,12 +278,12 @@ namespace NUnit.Framework.Attributes
             testCase = TestFinder.Find("MethodWithExplicitTestCases(2)", suite, false);
             Assert.That(testCase.RunState, Is.EqualTo(RunState.Explicit));
  
-			testCase = TestFinder.Find("MethodWithExplicitTestCases(3)", suite, false);
+            testCase = TestFinder.Find("MethodWithExplicitTestCases(3)", suite, false);
             Assert.That(testCase.RunState, Is.EqualTo(RunState.Explicit));
             Assert.That(testCase.Properties.Get(PropertyNames.SkipReason), Is.EqualTo("Connection failing"));
-		}
+        }
 
-		[Test]
+        [Test]
         public void HandlesExceptionInTestCaseSource()
         {
             var testMethod = (TestMethod)TestBuilder.MakeParameterizedMethodSuite(

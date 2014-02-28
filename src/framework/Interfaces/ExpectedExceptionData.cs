@@ -36,8 +36,6 @@ namespace NUnit.Framework.Interfaces
 
         private Type expectedExceptionType;
         private string expectedExceptionName;
-        private string handlerName;
-        private MethodInfo exceptionHandler;
 
         #endregion
 
@@ -83,45 +81,6 @@ namespace NUnit.Framework.Interfaces
         /// A user message to be issued in case of error
         /// </summary>
         public string UserMessage { get; set; }
-
-        /// <summary>
-        /// The name of an alternate exception handler to be
-        /// used to validate the exception.
-        /// </summary>
-        public string HandlerName
-        {
-            get { return handlerName; }
-            set 
-            { 
-                handlerName = value;
-                exceptionHandler = null;
-            }
-        }
-
-        #endregion
-
-        #region Methods
-
-        /// <summary>
-        /// Returns a MethodInfo for the handler to be used to
-        /// validate any exception thrown.
-        /// </summary>
-        /// <param name="fixtureType">The Type of the fixture.</param>
-        /// <returns>A MethodInfo.</returns>
-        public MethodInfo GetExceptionHandler(Type fixtureType)
-        {
-            if (exceptionHandler == null && handlerName != null)
-            {
-                exceptionHandler = fixtureType.GetMethod(
-                    handlerName,
-                    BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
-                    null,
-                    new Type[] { typeof(System.Exception) },
-                    null);
-            }
-
-            return exceptionHandler;
-        }
 
         #endregion
     };

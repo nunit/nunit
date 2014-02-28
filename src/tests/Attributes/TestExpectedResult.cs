@@ -57,5 +57,12 @@ namespace NUnit.Framework.Tests.Attributes
         {
             return x + y;
         }
+
+        [Test(ExpectedResult = 42), Description("A description")]
+        public int ExpectedResultDoesNotBlockApplyToTestAttributes()
+        {
+            Assert.That(TestContext.CurrentContext.Test.Properties.Get("Description"), Is.EqualTo("A description"));
+            return 42;
+        }
     }
 }

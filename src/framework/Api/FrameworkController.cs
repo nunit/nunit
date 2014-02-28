@@ -221,6 +221,8 @@ namespace NUnit.Framework.Api
 
         private static string FormatErrorReport(string message, string stackTrace)
         {
+            message = System.Security.SecurityElement.Escape(message);
+            stackTrace = System.Security.SecurityElement.Escape(stackTrace);
             return string.Format("<error message=\"{0}\" stackTrace=\"{1}\"/>", message, stackTrace);
         }
 

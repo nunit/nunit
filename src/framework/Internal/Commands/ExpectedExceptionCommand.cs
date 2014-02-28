@@ -99,17 +99,9 @@ namespace NUnit.Framework.Internal.Commands
                 {
                     if (context.TestObject != null)
                     {
-                        MethodInfo exceptionMethod = exceptionData.GetExceptionHandler(context.TestObject.GetType());
-                        if (exceptionMethod != null)
-                        {
-                            Reflect.InvokeMethod(exceptionMethod, context.TestObject, exception);
-                        }
-                        else
-                        {
-                            IExpectException handler = context.TestObject as IExpectException;
-                            if (handler != null)
-                                handler.HandleException(exception);
-                        }
+                        IExpectException handler = context.TestObject as IExpectException;
+                        if (handler != null)
+                            handler.HandleException(exception);
                     }
 
                     context.CurrentResult.SetResult(ResultState.Success);

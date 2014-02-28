@@ -23,7 +23,6 @@
 
 using System;
 using NUnit.Framework.Interfaces;
-using NUnit.Framework.Internal.Interfaces;
 
 namespace NUnit.Framework.Internal.Builders
 {
@@ -66,10 +65,7 @@ namespace NUnit.Framework.Internal.Builders
                 return false;
 #endif
 
-            return Reflect.HasMethodWithAttribute(type, typeof(NUnit.Framework.TestAttribute)) ||
-                   Reflect.HasMethodWithAttribute(type, typeof(NUnit.Framework.TestCaseAttribute)) ||
-                   Reflect.HasMethodWithAttribute(type, typeof(NUnit.Framework.TestCaseSourceAttribute)) ||
-                   Reflect.HasMethodWithAttribute(type, typeof(NUnit.Framework.TheoryAttribute));
+            return Reflect.HasMethodWithAttribute(type, typeof(IImplyFixture));
         }
 
         /// <summary>
