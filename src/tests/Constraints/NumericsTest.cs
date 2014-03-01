@@ -91,22 +91,21 @@ namespace NUnit.Framework.Constraints
         [TestCase((long)11500)]
         [TestCase((ulong)8500)]
         [TestCase((ulong)11500)]
-        [Test, ExpectedException(typeof(AssertionException))]
         public void FailsOnIntegralsOutsideOfPercentage(object value)
         {
-            Assert.IsTrue(Numerics.AreEqual(10000, value, ref tenPercent));
+            Assert.Throws<AssertionException>(() => Assert.IsTrue(Numerics.AreEqual(10000, value, ref tenPercent)));
         }
 
-        [Test, ExpectedException(typeof(AssertionException))]
+        [Test]
         public void FailsOnDecimalBelowPercentage()
         {
-            Assert.IsTrue(Numerics.AreEqual(10000m, 8500m, ref tenPercent));
+            Assert.Throws<AssertionException>(() => Assert.IsTrue(Numerics.AreEqual(10000m, 8500m, ref tenPercent)));
         }
 
-        [Test, ExpectedException(typeof(AssertionException))]
+        [Test]
         public void FailsOnDecimalAbovePercentage()
         {
-            Assert.IsTrue(Numerics.AreEqual(10000m, 11500m, ref tenPercent));
+            Assert.Throws<AssertionException>(() => Assert.IsTrue(Numerics.AreEqual(10000m, 11500m, ref tenPercent)));
         }
     }
 }

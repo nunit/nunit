@@ -42,11 +42,11 @@ namespace NUnit.Framework.Constraints
         
         object[] FailureData = new object[] { new TestCaseData( new InternalClass(), "<NUnit.Framework.Constraints.InternalClass>" ) };
 
-        [Test, ExpectedException(typeof(ArgumentNullException))]
+        [Test]
         public void NullArgumentThrowsException()
         {
             object o = null;
-            theConstraint.ApplyTo(o);
+            Assert.Throws<ArgumentNullException>(() => theConstraint.ApplyTo(o));
         }
     }
 }

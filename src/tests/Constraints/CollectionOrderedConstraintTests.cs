@@ -31,8 +31,10 @@ using NUnit.TestUtilities.Comparers;
 namespace NUnit.Framework.Constraints
 {
     [TestFixture]
-    public class CollectionOrderedConstraintTests : NUnit.Framework.Assertions.MessageChecker
+    public class CollectionOrderedConstraintTests
     {
+        private readonly string NL = NUnit.Env.NewLine;
+
         [Test]
         public void IsOrdered()
         {
@@ -77,7 +79,7 @@ namespace NUnit.Framework.Constraints
             Assert.That(al, Is.Ordered.Descending);
         }
 
-        [Test, ExpectedException(typeof(AssertionException))]
+        [Test]
         public void IsOrdered_Fails()
         {
             var al = new List<string>();
@@ -85,11 +87,12 @@ namespace NUnit.Framework.Constraints
             al.Add("z");
             al.Add("y");
 
-            expectedMessage =
+            var expectedMessage =
                 "  Expected: collection ordered" + NL +
                 "  But was:  < \"x\", \"z\", \"y\" >" + NL;
 
-            Assert.That(al, Is.Ordered);
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(al, Is.Ordered));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 
         [Test]
@@ -103,8 +106,7 @@ namespace NUnit.Framework.Constraints
             Assert.That(al, Is.Ordered);
         }
 
-        [Test, ExpectedException(typeof(ArgumentNullException),
-            ExpectedMessage = "index 1", MatchType = MessageMatch.Contains)]
+        [Test]
         public void IsOrdered_Handles_null()
         {
             var al = new List<object>();
@@ -112,27 +114,28 @@ namespace NUnit.Framework.Constraints
             al.Add(null);
             al.Add("z");
 
-            Assert.That(al, Is.Ordered);
+            var ex = Assert.Throws<ArgumentNullException>(() => Assert.That(al, Is.Ordered));
+            Assert.That(ex.Message, Contains.Substring("index 1"));
         }
 
-        [Test, ExpectedException(typeof(ArgumentException))]
+        [Test]
         public void IsOrdered_TypesMustBeComparable()
         {
             var al = new List<object>();
             al.Add(1);
             al.Add("x");
 
-            Assert.That(al, Is.Ordered);
+            Assert.Throws<ArgumentException>(() => Assert.That(al, Is.Ordered));
         }
 
-        [Test, ExpectedException(typeof(ArgumentException))]
+        [Test]
         public void IsOrdered_AtLeastOneArgMustImplementIComparable()
         {
             var al = new List<object>();
             al.Add(new object());
             al.Add(new object());
 
-            Assert.That(al, Is.Ordered);
+            Assert.Throws<ArgumentException>(() => Assert.That(al, Is.Ordered));
         }
 
         [Test]

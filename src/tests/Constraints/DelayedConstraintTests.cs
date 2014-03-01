@@ -93,10 +93,11 @@ namespace NUnit.Framework.Constraints
             Assert.That(DelegateReturningZero, new DelayedConstraint(new EqualConstraint(0), 0));
         }
 
-        [Test, ExpectedException(typeof(ArgumentException))]
+        [Test]
         public void ThatOverload_DoesNotAcceptNegativeDelayValues()
         {
-            Assert.That(DelegateReturningZero, new DelayedConstraint(new EqualConstraint(0), -1));
+            Assert.Throws<ArgumentException>(
+                () => Assert.That(DelegateReturningZero, new DelayedConstraint(new EqualConstraint(0), -1)));
         }
 
         [Test]

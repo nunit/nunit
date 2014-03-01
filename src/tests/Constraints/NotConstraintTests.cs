@@ -40,22 +40,25 @@ namespace NUnit.Framework.Constraints
             
         object[] FailureData = new object [] { new object[] { null, "null" } };
 
-        [Test, ExpectedException(typeof(AssertionException), ExpectedMessage = "ignoring case", MatchType = MessageMatch.Contains)]
+        [Test]
         public void NotHonorsIgnoreCaseUsingConstructors()
         {
-            Assert.That("abc", new NotConstraint(new EqualConstraint("ABC").IgnoreCase));
+            var ex = Assert.Throws<AssertionException>(() => Assert.That("abc", new NotConstraint(new EqualConstraint("ABC").IgnoreCase)));
+            Assert.That(ex.Message, Contains.Substring("ignoring case"));
         }
 
-        [Test,ExpectedException(typeof(AssertionException),ExpectedMessage="ignoring case",MatchType=MessageMatch.Contains)]
+        [Test]
         public void NotHonorsIgnoreCaseUsingPrefixNotation()
         {
-            Assert.That( "abc", Is.Not.EqualTo( "ABC" ).IgnoreCase );
+            var ex = Assert.Throws<AssertionException>(() => Assert.That( "abc", Is.Not.EqualTo( "ABC" ).IgnoreCase ));
+            Assert.That(ex.Message, Contains.Substring("ignoring case"));
         }
 
-        [Test,ExpectedException(typeof(AssertionException),ExpectedMessage="+/-",MatchType=MessageMatch.Contains)]
+        [Test]
         public void NotHonorsTolerance()
         {
-            Assert.That( 4.99d, Is.Not.EqualTo( 5.0d ).Within( .05d ) );
+            var ex = Assert.Throws<AssertionException>(() => Assert.That( 4.99d, Is.Not.EqualTo( 5.0d ).Within( .05d ) ));
+            Assert.That(ex.Message, Contains.Substring("+/-"));
         }
 
         [Test]

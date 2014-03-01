@@ -26,7 +26,7 @@ using System;
 namespace NUnit.Framework.Assertions
 {
 	[TestFixture]
-	public class NotSameFixture : MessageChecker
+	public class NotSameFixture
 	{
 		private readonly string s1 = "S1";
 		private readonly string s2 = "S2";
@@ -37,13 +37,14 @@ namespace NUnit.Framework.Assertions
 			Assert.AreNotSame(s1, s2);
 		}
 
-		[Test,ExpectedException(typeof(AssertionException))]
+		[Test]
 		public void NotSameFails()
 		{
-			expectedMessage =
+			var expectedMessage =
 				"  Expected: not same as \"S1\"" + Env.NewLine +
 				"  But was:  \"S1\"" + Env.NewLine;
-			Assert.AreNotSame( s1, s1 );
+			var ex = Assert.Throws<AssertionException>(() => Assert.AreNotSame( s1, s1 ));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
 		}
 	}
 }

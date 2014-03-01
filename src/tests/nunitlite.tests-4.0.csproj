@@ -80,7 +80,6 @@
     <Compile Include="Assertions\AssumeThatTests.cs" />
     <Compile Include="Assertions\AsyncThrowsTests.cs" />
     <Compile Include="Assertions\ConditionAssertTests.cs" />
-    <Compile Include="Assertions\MessageChecker.cs" />
     <Compile Include="Assertions\NotEqualFixture.cs" />
     <Compile Include="Assertions\NotSameFixture.cs" />
     <Compile Include="Assertions\SameFixture.cs" />

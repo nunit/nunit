@@ -28,22 +28,28 @@ namespace NUnit.Framework.Assertions
     [TestFixture]
     public class AssertInconclusiveTests
     {
-        [Test, ExpectedException(typeof(InconclusiveException))]
+        [Test]
         public void ThrowsInconclusiveException()
         {
-            Assert.Inconclusive();
+            Assert.That(
+                () => Assert.Inconclusive(),
+                Throws.TypeOf<InconclusiveException>());
         }
 
-        [Test, ExpectedException(typeof(InconclusiveException), ExpectedMessage = "MESSAGE")]
+        [Test]
         public void ThrowsInconclusiveExceptionWithMessage()
         {
-            Assert.Inconclusive("MESSAGE");
+            Assert.That(
+                () => Assert.Inconclusive("MESSAGE"),
+                Throws.TypeOf<InconclusiveException>().With.Message.EqualTo("MESSAGE"));
         }
 
-        [Test, ExpectedException(typeof(InconclusiveException), ExpectedMessage = "MESSAGE: 2+2=4")]
+        [Test]
         public void ThrowsInconclusiveExceptionWithMessageAndArgs()
         {
-            Assert.Inconclusive("MESSAGE: {0}+{1}={2}", 2, 2, 4);
+            Assert.That(
+                () => Assert.Inconclusive("MESSAGE: {0}+{1}={2}", 2, 2, 4),
+                Throws.TypeOf<InconclusiveException>().With.Message.EqualTo("MESSAGE: 2+2=4"));
         }
     }
 }

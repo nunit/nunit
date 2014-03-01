@@ -27,42 +27,58 @@ using System.IO;
 namespace NUnit.Framework.Constraints
 {
     [TestFixture]
-    public class EqualTests : IExpectException
+    public class EqualTests
     {
 
-        [Test, ExpectedException(typeof(AssertionException))]
+        [Test]
         public void FailedStringMatchShowsFailurePosition()
         {
-            Assert.That( "abcdgfe", new EqualConstraint( "abcdefg" ) );
+            CheckExceptionMessage(
+                Assert.Throws<AssertionException>(() =>
+                {
+                    Assert.That("abcdgfe", new EqualConstraint("abcdefg"));
+                }));
         }
 
         static readonly string testString = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
-        [Test, ExpectedException(typeof(AssertionException))]
+        [Test]
         public void LongStringsAreTruncated()
         {
             string expected = testString;
             string actual = testString.Replace('k', 'X');
 
-            Assert.That(actual, new EqualConstraint(expected));
+            CheckExceptionMessage(
+                Assert.Throws<AssertionException>(() =>
+                {
+                    Assert.That(actual, new EqualConstraint(expected));
+                }));
         }
 
-        [Test, ExpectedException(typeof(AssertionException))]
+        [Test]
         public void LongStringsAreTruncatedAtBothEndsIfNecessary()
         {
             string expected = testString;
             string actual = testString.Replace('Z', '?');
 
-            Assert.That(actual, new EqualConstraint(expected));
+            CheckExceptionMessage(
+                Assert.Throws<AssertionException>(() =>
+                {
+                    Assert.That(actual, new EqualConstraint(expected));
+                }));
         }
 
-        [Test, ExpectedException(typeof(AssertionException))]
+        [Test]
         public void LongStringsAreTruncatedAtFrontEndIfNecessary()
         {
             string expected = testString;
             string actual = testString  + "+++++";
 
-            Assert.That(actual, new EqualConstraint(expected));
+            CheckExceptionMessage(
+                Assert.Throws<AssertionException>(() =>
+                {
+                    Assert.That(actual, new EqualConstraint(expected));
+                }));
         }
 
 //        [Test]
@@ -73,7 +89,7 @@ namespace NUnit.Framework.Constraints
 //                Is.EqualTo(System.Drawing.Color.FromArgb(255, 0, 0)));
 //        }
 
-        public void HandleException(Exception ex)
+        public void CheckExceptionMessage(Exception ex)
         {
             string NL = NUnit.Env.NewLine;
 

@@ -138,40 +138,40 @@ namespace NUnit.Framework.Constraints
                 Assert.That(actual, new EqualConstraint(expected).Within(TimeSpan.TicksPerMinute*5).Ticks);
             }
 
-            [Test, ExpectedException(typeof (InvalidOperationException))]
+            [Test]
             public void ErrorIfDaysPrecedesWithin()
             {
-                Assert.That(DateTime.Now, Is.EqualTo(DateTime.Now).Days.Within(5));
+                Assert.Throws<InvalidOperationException>(() => Assert.That(DateTime.Now, Is.EqualTo(DateTime.Now).Days.Within(5)));
             }
 
-            [Test, ExpectedException(typeof (InvalidOperationException))]
+            [Test]
             public void ErrorIfHoursPrecedesWithin()
             {
-                Assert.That(DateTime.Now, Is.EqualTo(DateTime.Now).Hours.Within(5));
+                Assert.Throws<InvalidOperationException>(() => Assert.That(DateTime.Now, Is.EqualTo(DateTime.Now).Hours.Within(5)));
             }
 
-            [Test, ExpectedException(typeof (InvalidOperationException))]
+            [Test]
             public void ErrorIfMinutesPrecedesWithin()
             {
-                Assert.That(DateTime.Now, Is.EqualTo(DateTime.Now).Minutes.Within(5));
+                Assert.Throws<InvalidOperationException>(() => Assert.That(DateTime.Now, Is.EqualTo(DateTime.Now).Minutes.Within(5)));
             }
 
-            [Test, ExpectedException(typeof (InvalidOperationException))]
+            [Test]
             public void ErrorIfSecondsPrecedesWithin()
             {
-                Assert.That(DateTime.Now, Is.EqualTo(DateTime.Now).Seconds.Within(5));
+                Assert.Throws<InvalidOperationException>(() => Assert.That(DateTime.Now, Is.EqualTo(DateTime.Now).Seconds.Within(5)));
             }
 
-            [Test, ExpectedException(typeof (InvalidOperationException))]
+            [Test]
             public void ErrorIfMillisecondsPrecedesWithin()
             {
-                Assert.That(DateTime.Now, Is.EqualTo(DateTime.Now).Milliseconds.Within(5));
+                Assert.Throws<InvalidOperationException>(() => Assert.That(DateTime.Now, Is.EqualTo(DateTime.Now).Milliseconds.Within(5)));
             }
 
-            [Test, ExpectedException(typeof (InvalidOperationException))]
+            [Test]
             public void ErrorIfTicksPrecedesWithin()
             {
-                Assert.That(DateTime.Now, Is.EqualTo(DateTime.Now).Ticks.Within(5));
+                Assert.Throws<InvalidOperationException>(() => Assert.That(DateTime.Now, Is.EqualTo(DateTime.Now).Ticks.Within(5)));
             }
         }
 
@@ -270,11 +270,12 @@ namespace NUnit.Framework.Constraints
                                 new Dictionary<int, int> {{0, 0}, {1, 1}, {2, 2}});
             }
 
-            [Test, ExpectedException(typeof (AssertionException))]
+            [Test]
             public void CanMatchDictionaries_Failure()
             {
-                Assert.AreEqual(new Dictionary<int, int> {{0, 0}, {1, 1}, {2, 2}},
-                                new Dictionary<int, int> {{0, 0}, {1, 5}, {2, 2}});
+                Assert.Throws<AssertionException>(
+                    () => Assert.AreEqual(new Dictionary<int, int> {{0, 0}, {1, 1}, {2, 2}},
+                                          new Dictionary<int, int> {{0, 0}, {1, 5}, {2, 2}}));
             }
 
             [Test]
@@ -292,11 +293,12 @@ namespace NUnit.Framework.Constraints
                                 new Hashtable {{0, 0}, {1, 1}, {2, 2}});
             }
 
-            [Test, ExpectedException(typeof (AssertionException))]
+            [Test]
             public void CanMatchHashtables_Failure()
             {
-                Assert.AreEqual(new Hashtable {{0, 0}, {1, 1}, {2, 2}},
-                                new Hashtable {{0, 0}, {1, 5}, {2, 2}});
+                Assert.Throws<AssertionException>(
+                    () => Assert.AreEqual(new Hashtable {{0, 0}, {1, 1}, {2, 2}},
+                                          new Hashtable {{0, 0}, {1, 5}, {2, 2}}));
             }
 
             [Test]
@@ -339,13 +341,12 @@ namespace NUnit.Framework.Constraints
                 Assert.That(value, new EqualConstraint(20000000000000000.0).Within(1).Ulps);
             }
 
-            [ExpectedException(typeof (AssertionException), ExpectedMessage = "+/- 1 Ulps",
-                MatchType = MessageMatch.Contains)]
             [TestCase(20000000000000008.0)]
             [TestCase(19999999999999992.0)]
             public void FailsOnDoublesOutsideOfUlpTolerance(object value)
             {
-                Assert.That(value, new EqualConstraint(20000000000000000.0).Within(1).Ulps);
+                var ex = Assert.Throws<AssertionException>(() => Assert.That(value, new EqualConstraint(20000000000000000.0).Within(1).Ulps));
+                Assert.That(ex.Message, Contains.Substring("+/- 1 Ulps"));
             }
 
             [TestCase(19999998.0f)]
@@ -355,13 +356,12 @@ namespace NUnit.Framework.Constraints
                 Assert.That(value, new EqualConstraint(20000000.0f).Within(1).Ulps);
             }
 
-            [ExpectedException(typeof (AssertionException), ExpectedMessage = "+/- 1 Ulps",
-                MatchType = MessageMatch.Contains)]
             [TestCase(19999996.0f)]
             [TestCase(20000004.0f)]
             public void FailsOnSinglesOutsideOfUlpTolerance(object value)
             {
-                Assert.That(value, new EqualConstraint(20000000.0f).Within(1).Ulps);
+                var ex = Assert.Throws<AssertionException>(() => Assert.That(value, new EqualConstraint(20000000.0f).Within(1).Ulps));
+                Assert.That(ex.Message, Contains.Substring("+/- 1 Ulps"));
             }
 
             [TestCase(9500.0)]
@@ -372,13 +372,12 @@ namespace NUnit.Framework.Constraints
                 Assert.That(value, new EqualConstraint(10000.0).Within(10.0).Percent);
             }
 
-            [ExpectedException(typeof (AssertionException), ExpectedMessage = "+/- 10.0d Percent",
-                MatchType = MessageMatch.Contains)]
             [TestCase(8500.0)]
             [TestCase(11500.0)]
             public void FailsOnDoublesOutsideOfRelativeTolerance(object value)
             {
-                Assert.That(value, new EqualConstraint(10000.0).Within(10.0).Percent);
+                var ex = Assert.Throws<AssertionException>(() => Assert.That(value, new EqualConstraint(10000.0).Within(10.0).Percent));
+                Assert.That(ex.Message, Contains.Substring("+/- 10.0d Percent"));
             }
 
             [TestCase(9500.0f)]
@@ -389,55 +388,59 @@ namespace NUnit.Framework.Constraints
                 Assert.That(value, new EqualConstraint(10000.0f).Within(10.0f).Percent);
             }
 
-            [ExpectedException(typeof (AssertionException), ExpectedMessage = "+/- 10.0f Percent",
-                MatchType = MessageMatch.Contains)]
             [TestCase(8500.0f)]
             [TestCase(11500.0f)]
             public void FailsOnSinglesOutsideOfRelativeTolerance(object value)
             {
-                Assert.That(value, new EqualConstraint(10000.0f).Within(10.0f).Percent);
+                var ex = Assert.Throws<AssertionException>(() => Assert.That(value, new EqualConstraint(10000.0f).Within(10.0f).Percent));
+                Assert.That(ex.Message, Contains.Substring("+/- 10.0f Percent"));
             }
 
             /// <summary>Applies both the Percent and Ulps modifiers to cause an exception</summary>
-            [Test, ExpectedException(typeof (InvalidOperationException))]
+            [Test]
             public void ErrorWithPercentAndUlpsToleranceModes()
             {
-                EqualConstraint shouldFail = new EqualConstraint(100.0f).Within(10.0f).Percent.Ulps;
+                Assert.Throws<InvalidOperationException>(() =>
+                {
+                    var shouldFail = new EqualConstraint(100.0f).Within(10.0f).Percent.Ulps;
+                });
             }
 
             /// <summary>Applies both the Ulps and Percent modifiers to cause an exception</summary>
-            [Test, ExpectedException(typeof (InvalidOperationException))]
+            [Test]
             public void ErrorWithUlpsAndPercentToleranceModes()
             {
-                EqualConstraint shouldFail = new EqualConstraint(100.0f).Within(10.0f).Ulps.Percent;
+                Assert.Throws<InvalidOperationException>(() =>
+                {
+                    EqualConstraint shouldFail = new EqualConstraint(100.0f).Within(10.0f).Ulps.Percent;
+                });
             }
 
-            [Test, ExpectedException(typeof (InvalidOperationException))]
+            [Test]
             public void ErrorIfPercentPrecedesWithin()
             {
-                Assert.That(1010, Is.EqualTo(1000).Percent.Within(5));
+                Assert.Throws<InvalidOperationException>(() => Assert.That(1010, Is.EqualTo(1000).Percent.Within(5)));
             }
 
-            [Test, ExpectedException(typeof (InvalidOperationException))]
+            [Test]
             public void ErrorIfUlpsPrecedesWithin()
             {
-                Assert.That(1010.0, Is.EqualTo(1000.0).Ulps.Within(5));
+                Assert.Throws<InvalidOperationException>(() => Assert.That(1010.0, Is.EqualTo(1000.0).Ulps.Within(5)));
             }
 
-            [ExpectedException(typeof (InvalidOperationException))]
             [TestCase(1000, 1010)]
             [TestCase(1000U, 1010U)]
             [TestCase(1000L, 1010L)]
             [TestCase(1000UL, 1010UL)]
             public void ErrorIfUlpsIsUsedOnIntegralType(object x, object y)
             {
-                Assert.That(y, Is.EqualTo(x).Within(2).Ulps);
+                Assert.Throws<InvalidOperationException>(() => Assert.That(y, Is.EqualTo(x).Within(2).Ulps));
             }
 
-            [Test, ExpectedException(typeof (InvalidOperationException))]
+            [Test]
             public void ErrorIfUlpsIsUsedOnDecimal()
             {
-                Assert.That(100m, Is.EqualTo(100m).Within(2).Ulps);
+                Assert.Throws<InvalidOperationException>(() => Assert.That(100m, Is.EqualTo(100m).Within(2).Ulps));
             }
         }
 

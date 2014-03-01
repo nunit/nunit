@@ -135,11 +135,10 @@ namespace NUnit.Framework.Attributes
         }
 
         [Test]
-        [ExpectedException(typeof(FormatException))]
         public void IgnoreAttributeWithInvalidDateThrowsException()
         {
             var ignoreAttribute = new IgnoreAttribute();
-            ignoreAttribute.Until = "Thursday the twenty fifth of December";
+            Assert.Throws<FormatException>(() => ignoreAttribute.Until = "Thursday the twenty fifth of December");
         }
 
         [Test]

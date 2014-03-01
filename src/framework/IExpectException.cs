@@ -31,12 +31,12 @@ namespace NUnit.Framework
     /// for test methods marked with the ExpectedException
     /// attribute.
     /// </summary>
-	public interface IExpectException
+    public interface IExpectException
     {
-		/// <summary>
-		/// Method to handle an expected exception
-		/// </summary>
-		/// <param name="ex">The exception to be handled</param>
+        /// <summary>
+        /// Method to handle an expected exception
+        /// </summary>
+        /// <param name="ex">The exception to be handled</param>
         void HandleException(Exception ex);
     }
 }

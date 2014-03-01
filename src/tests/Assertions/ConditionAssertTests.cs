@@ -29,196 +29,206 @@ using NUnit.Framework;
 
 namespace NUnit.Framework.Assertions
 {
-	[TestFixture]
-	public class ConditionAssertTests : MessageChecker
-	{
-		[Test]
-		public void IsTrue()
-		{
-			Assert.IsTrue(true);
-		}
+    [TestFixture]
+    public class ConditionAssertTests
+    {
+        [Test]
+        public void IsTrue()
+        {
+            Assert.IsTrue(true);
+        }
 
-		[Test,ExpectedException(typeof(AssertionException))]
-		public void IsTrueFails()
-		{
-			expectedMessage =
-				"  Expected: True" + Env.NewLine +
-				"  But was:  False" + Env.NewLine;
-			Assert.IsTrue(false);
-		}
+        [Test]
+        public void IsTrueFails()
+        {
+            var expectedMessage =
+                "  Expected: True" + Env.NewLine +
+                "  But was:  False" + Env.NewLine;
+            var ex = Assert.Throws<AssertionException>(() => Assert.IsTrue(false));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+        }
 
-		[Test]
-		public void IsFalse()
-		{
-			Assert.IsFalse(false);
-		}
+        [Test]
+        public void IsFalse()
+        {
+            Assert.IsFalse(false);
+        }
 
-		[Test]
-		[ExpectedException(typeof(AssertionException))]
-		public void IsFalseFails()
-		{
-			expectedMessage =
-				"  Expected: False" + Env.NewLine +
-				"  But was:  True" + Env.NewLine;
-			Assert.IsFalse(true);
-		}
-	
-		[Test]
-		public void IsNull()
-		{
-			Assert.IsNull(null);
-		}
+        [Test]
+        public void IsFalseFails()
+        {
+            var expectedMessage =
+                "  Expected: False" + Env.NewLine +
+                "  But was:  True" + Env.NewLine;
+            var ex = Assert.Throws<AssertionException>(() => Assert.IsFalse(true));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+        }
+    
+        [Test]
+        public void IsNull()
+        {
+            Assert.IsNull(null);
+        }
 
-		[Test]
-		[ExpectedException(typeof(AssertionException))]
-		public void IsNullFails()
-		{
-			String s1 = "S1";
-			expectedMessage =
-				"  Expected: null" + Env.NewLine +
-				"  But was:  \"S1\"" + Env.NewLine;
-			Assert.IsNull(s1);
-		}
-	
-		[Test]
-		public void IsNotNull()
-		{
-			String s1 = "S1";
-			Assert.IsNotNull(s1);
-		}
+        [Test]
+        public void IsNullFails()
+        {
+            String s1 = "S1";
+            var expectedMessage =
+                "  Expected: null" + Env.NewLine +
+                "  But was:  \"S1\"" + Env.NewLine;
+            var ex = Assert.Throws<AssertionException>(() => Assert.IsNull(s1));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+        }
+    
+        [Test]
+        public void IsNotNull()
+        {
+            String s1 = "S1";
+            Assert.IsNotNull(s1);
+        }
 
-		[Test]
-		[ExpectedException(typeof(AssertionException))]
-		public void IsNotNullFails()
-		{
-			expectedMessage =
-				"  Expected: not null" + Env.NewLine +
-				"  But was:  null" + Env.NewLine;
-			Assert.IsNotNull(null);
-		}
-	
+        [Test]
+        public void IsNotNullFails()
+        {
+            var expectedMessage =
+                "  Expected: not null" + Env.NewLine +
+                "  But was:  null" + Env.NewLine;
+            var ex = Assert.Throws<AssertionException>(() => Assert.IsNotNull(null));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+        }
+    
 #if !NUNITLITE
-		[Test]
-		public void IsNaN()
-		{
-			Assert.IsNaN(double.NaN);
-		}
+        [Test]
+        public void IsNaN()
+        {
+            Assert.IsNaN(double.NaN);
+        }
 
-		[Test]
-		[ExpectedException(typeof(AssertionException))]
-		public void IsNaNFails()
-		{
-			expectedMessage =
-				"  Expected: NaN" + Env.NewLine +
-				"  But was:  10.0d" + Env.NewLine;
-			Assert.IsNaN(10.0);
-		}
+        [Test]
+        public void IsNaNFails()
+        {
+            var expectedMessage =
+                "  Expected: NaN" + Env.NewLine +
+                "  But was:  10.0d" + Env.NewLine;
+            var ex = Assert.Throws<AssertionException>(() => Assert.IsNaN(10.0));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+        }
 
-		[Test]
-		public void IsEmpty()
-		{
-			Assert.IsEmpty( "", "Failed on empty String" );
-			Assert.IsEmpty( new int[0], "Failed on empty Array" );
-			Assert.IsEmpty( new ArrayList(), "Failed on empty ArrayList" );
-			Assert.IsEmpty( new Hashtable(), "Failed on empty Hashtable" );
-			Assert.IsEmpty( (IEnumerable)new int[0], "Failed on empty IEnumerable" );
-		}
+        [Test]
+        public void IsEmpty()
+        {
+            Assert.IsEmpty( "", "Failed on empty String" );
+            Assert.IsEmpty( new int[0], "Failed on empty Array" );
+            Assert.IsEmpty( new ArrayList(), "Failed on empty ArrayList" );
+            Assert.IsEmpty( new Hashtable(), "Failed on empty Hashtable" );
+            Assert.IsEmpty( (IEnumerable)new int[0], "Failed on empty IEnumerable" );
+        }
 
-		[Test, ExpectedException(typeof(AssertionException))]
-		public void IsEmptyFailsOnString()
-		{
-			expectedMessage =
-				"  Expected: <empty>" + Env.NewLine +
-				"  But was:  \"Hi!\"" + Env.NewLine;
-			Assert.IsEmpty( "Hi!" );
-		}
+        [Test]
+        public void IsEmptyFailsOnString()
+        {
+            var expectedMessage =
+                "  Expected: <empty>" + Env.NewLine +
+                "  But was:  \"Hi!\"" + Env.NewLine;
+            var ex = Assert.Throws<AssertionException>(() => Assert.IsEmpty( "Hi!" ));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+        }
 
-		[Test, ExpectedException(typeof(AssertionException))]
-		public void IsEmptyFailsOnNullString()
-		{
-			expectedMessage =
-				"  Expected: <empty>" + Env.NewLine +
-				"  But was:  null" + Env.NewLine;
-			Assert.IsEmpty( (string)null );
-		}
+        [Test]
+        public void IsEmptyFailsOnNullString()
+        {
+            var expectedMessage =
+                "  Expected: <empty>" + Env.NewLine +
+                "  But was:  null" + Env.NewLine;
+            var ex = Assert.Throws<AssertionException>(() => Assert.IsEmpty( (string)null ));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+        }
 
-		[Test, ExpectedException(typeof(AssertionException))]
-		public void IsEmptyFailsOnNonEmptyArray()
-		{
-			expectedMessage =
-				"  Expected: <empty>" + Env.NewLine +
-				"  But was:  < 1, 2, 3 >" + Env.NewLine;
-			Assert.IsEmpty( new int[] { 1, 2, 3 } );
-		}
+        [Test]
+        public void IsEmptyFailsOnNonEmptyArray()
+        {
+            var expectedMessage =
+                "  Expected: <empty>" + Env.NewLine +
+                "  But was:  < 1, 2, 3 >" + Env.NewLine;
+            var ex = Assert.Throws<AssertionException>(() => Assert.IsEmpty( new int[] { 1, 2, 3 } ));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+        }
 
-        [Test, ExpectedException(typeof(AssertionException))]
+        [Test]
         public void IsEmptyFailsOnNonEmptyIEnumerable()
         {
-            expectedMessage =
+            var expectedMessage =
                 "  Expected: <empty>" + Environment.NewLine +
                 "  But was:  < 1, 2, 3 >" + Environment.NewLine;
-            Assert.IsEmpty((IEnumerable)new int[] { 1, 2, 3 });
+            var ex = Assert.Throws<AssertionException>(() => Assert.IsEmpty((IEnumerable)new int[] { 1, 2, 3 }));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
  
-		[Test]
-		public void IsNotEmpty()
-		{
-			int[] array = new int[] { 1, 2, 3 };
-			ArrayList list = new ArrayList( array );
-			Hashtable hash = new Hashtable();
-			hash.Add( "array", array );
+        [Test]
+        public void IsNotEmpty()
+        {
+            int[] array = new int[] { 1, 2, 3 };
+            ArrayList list = new ArrayList( array );
+            Hashtable hash = new Hashtable();
+            hash.Add( "array", array );
 
-			Assert.IsNotEmpty( "Hi!", "Failed on String" );
-			Assert.IsNotEmpty( array, "Failed on Array" );
-			Assert.IsNotEmpty( list, "Failed on ArrayList" );
-			Assert.IsNotEmpty( hash, "Failed on Hashtable" );
-			Assert.IsNotEmpty( (IEnumerable)array, "Failed on IEnumerable" );
-		}
+            Assert.IsNotEmpty( "Hi!", "Failed on String" );
+            Assert.IsNotEmpty( array, "Failed on Array" );
+            Assert.IsNotEmpty( list, "Failed on ArrayList" );
+            Assert.IsNotEmpty( hash, "Failed on Hashtable" );
+            Assert.IsNotEmpty( (IEnumerable)array, "Failed on IEnumerable" );
+        }
 
-		[Test, ExpectedException(typeof(AssertionException))]
-		public void IsNotEmptyFailsOnEmptyString()
-		{
-			expectedMessage =
-				"  Expected: not <empty>" + Env.NewLine +
-				"  But was:  <string.Empty>" + Env.NewLine;
-			Assert.IsNotEmpty( "" );
-		}
+        [Test]
+        public void IsNotEmptyFailsOnEmptyString()
+        {
+            var expectedMessage =
+                "  Expected: not <empty>" + Env.NewLine +
+                "  But was:  <string.Empty>" + Env.NewLine;
+            var ex = Assert.Throws<AssertionException>(() => Assert.IsNotEmpty( "" ));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+        }
 
-		[Test, ExpectedException(typeof(AssertionException))]
-		public void IsNotEmptyFailsOnEmptyArray()
-		{
-			expectedMessage =
-				"  Expected: not <empty>" + Env.NewLine +
-				"  But was:  <empty>" + Env.NewLine;
-			Assert.IsNotEmpty( new int[0] );
-		}
+        [Test]
+        public void IsNotEmptyFailsOnEmptyArray()
+        {
+            var expectedMessage =
+                "  Expected: not <empty>" + Env.NewLine +
+                "  But was:  <empty>" + Env.NewLine;
+            var ex = Assert.Throws<AssertionException>(() => Assert.IsNotEmpty( new int[0] ));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+        }
 
-		[Test, ExpectedException(typeof(AssertionException))]
-		public void IsNotEmptyFailsOnEmptyArrayList()
-		{
-			expectedMessage =
-				"  Expected: not <empty>" + Env.NewLine +
-				"  But was:  <empty>" + Env.NewLine;
-			Assert.IsNotEmpty( new ArrayList() );
-		}
+        [Test]
+        public void IsNotEmptyFailsOnEmptyArrayList()
+        {
+            var expectedMessage =
+                "  Expected: not <empty>" + Env.NewLine +
+                "  But was:  <empty>" + Env.NewLine;
+            var ex = Assert.Throws<AssertionException>(() => Assert.IsNotEmpty( new ArrayList() ));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+        }
 
-		[Test, ExpectedException(typeof(AssertionException))]
-		public void IsNotEmptyFailsOnEmptyHashTable()
-		{
-			expectedMessage =
-				"  Expected: not <empty>" + Env.NewLine +
-				"  But was:  <empty>" + Env.NewLine;
-			Assert.IsNotEmpty( new Hashtable() );
-		}
+        [Test]
+        public void IsNotEmptyFailsOnEmptyHashTable()
+        {
+            var expectedMessage =
+                "  Expected: not <empty>" + Env.NewLine +
+                "  But was:  <empty>" + Env.NewLine;
+            var ex = Assert.Throws<AssertionException>(() => Assert.IsNotEmpty( new Hashtable() ));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+        }
 
-        [Test, ExpectedException(typeof(AssertionException))]
+        [Test]
         public void IsNotEmptyFailsOnEmptyIEnumerable()
         {
-            expectedMessage =
+            var expectedMessage =
                 "  Expected: not <empty>" + Environment.NewLine +
                 "  But was:  <empty>" + Environment.NewLine;
-            Assert.IsNotEmpty((IEnumerable)new int[0]);
-        }
+            var ex = Assert.Throws<AssertionException>(() => Assert.IsNotEmpty((IEnumerable)new int[0]));
+                    Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+}
 #endif
-	}
+    }
 }

@@ -26,25 +26,26 @@ using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Assertions
 {
-	[TestFixture]
-	public class StringAssertTests : MessageChecker
-	{
-		[Test]
-		public void Contains()
-		{
-			StringAssert.Contains( "abc", "abc" );
-			StringAssert.Contains( "abc", "***abc" );
-			StringAssert.Contains( "abc", "**abc**" );
-		}
+    [TestFixture]
+    public class StringAssertTests
+    {
+        [Test]
+        public void Contains()
+        {
+            StringAssert.Contains( "abc", "abc" );
+            StringAssert.Contains( "abc", "***abc" );
+            StringAssert.Contains( "abc", "**abc**" );
+        }
 
-        [Test, ExpectedException(typeof(AssertionException))]
-		public void ContainsFails()
-		{
-            expectedMessage =
+        [Test]
+        public void ContainsFails()
+        {
+            var expectedMessage =
                 TextMessageWriter.Pfx_Expected + "String containing \"abc\"" + System.Environment.NewLine +
                 TextMessageWriter.Pfx_Actual + "\"abxcdxbc\"" + System.Environment.NewLine;
-            StringAssert.Contains("abc", "abxcdxbc");
-		}
+            var ex = Assert.Throws<AssertionException>(() => StringAssert.Contains("abc", "abxcdxbc"));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+        }
 
         [Test]
         public void DoesNotContain()
@@ -52,27 +53,28 @@ namespace NUnit.Framework.Assertions
             StringAssert.DoesNotContain("x", "abc");
         }
 
-        [Test, ExpectedException(typeof(AssertionException))]
+        [Test]
         public void DoesNotContainFails()
         {
-            StringAssert.DoesNotContain("abc", "**abc**");
+            Assert.Throws<AssertionException>(() => StringAssert.DoesNotContain("abc", "**abc**"));
         }
 
         [Test]
-		public void StartsWith()
-		{
-			StringAssert.StartsWith( "abc", "abcdef" );
-			StringAssert.StartsWith( "abc", "abc" );
-		}
+        public void StartsWith()
+        {
+            StringAssert.StartsWith( "abc", "abcdef" );
+            StringAssert.StartsWith( "abc", "abc" );
+        }
 
-        [Test, ExpectedException(typeof(AssertionException))]
-		public void StartsWithFails()
-		{
-            expectedMessage =
+        [Test]
+        public void StartsWithFails()
+        {
+            var expectedMessage =
                 TextMessageWriter.Pfx_Expected + "String starting with \"xyz\"" + System.Environment.NewLine +
                 TextMessageWriter.Pfx_Actual + "\"abcxyz\"" + System.Environment.NewLine;
-            StringAssert.StartsWith("xyz", "abcxyz");
-		}
+            var ex = Assert.Throws<AssertionException>(() => StringAssert.StartsWith("xyz", "abcxyz"));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+        }
 
         [Test]
         public void DoesNotStartWith()
@@ -80,27 +82,28 @@ namespace NUnit.Framework.Assertions
             StringAssert.DoesNotStartWith("x", "abc");
         }
 
-        [Test, ExpectedException(typeof(AssertionException))]
+        [Test]
         public void DoesNotStartWithFails()
         {
-            StringAssert.DoesNotStartWith("abc", "abc**");
+            Assert.Throws<AssertionException>(() => StringAssert.DoesNotStartWith("abc", "abc**"));
         }
 
         [Test]
-		public void EndsWith()
-		{
-			StringAssert.EndsWith( "abc", "abc" );
-			StringAssert.EndsWith( "abc", "123abc" );
-		}
+        public void EndsWith()
+        {
+            StringAssert.EndsWith( "abc", "abc" );
+            StringAssert.EndsWith( "abc", "123abc" );
+        }
 
-        [Test, ExpectedException(typeof(AssertionException))]
-		public void EndsWithFails()
-		{
-            expectedMessage =
+        [Test]
+        public void EndsWithFails()
+        {
+            var expectedMessage =
                 TextMessageWriter.Pfx_Expected + "String ending with \"xyz\"" + System.Environment.NewLine +
                 TextMessageWriter.Pfx_Actual + "\"abcdef\"" + System.Environment.NewLine;
-            StringAssert.EndsWith( "xyz", "abcdef" );
-		}
+            var ex = Assert.Throws<AssertionException>(() => StringAssert.EndsWith( "xyz", "abcdef" ));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+        }
 
         [Test]
         public void DoesNotEndWith()
@@ -108,53 +111,55 @@ namespace NUnit.Framework.Assertions
             StringAssert.DoesNotEndWith("x", "abc");
         }
 
-        [Test, ExpectedException(typeof(AssertionException))]
+        [Test]
         public void DoesNotEndWithFails()
         {
-            StringAssert.DoesNotEndWith("abc", "***abc");
+            Assert.Throws<AssertionException>(() => StringAssert.DoesNotEndWith("abc", "***abc"));
         }
 
         [Test]
-		public void CaseInsensitiveCompare()
-		{
-			StringAssert.AreEqualIgnoringCase( "name", "NAME" );
-		}
+        public void CaseInsensitiveCompare()
+        {
+            StringAssert.AreEqualIgnoringCase( "name", "NAME" );
+        }
 
-        [Test, ExpectedException(typeof(AssertionException))]
-		public void CaseInsensitiveCompareFails()
-		{
-            expectedMessage =
+        [Test]
+        public void CaseInsensitiveCompareFails()
+        {
+            var expectedMessage =
                 "  Expected string length 4 but was 5. Strings differ at index 4." + System.Environment.NewLine
                 + TextMessageWriter.Pfx_Expected + "\"Name\", ignoring case" + System.Environment.NewLine
                 + TextMessageWriter.Pfx_Actual   + "\"NAMES\"" + System.Environment.NewLine
                 + "  ---------------^" + System.Environment.NewLine;
-            StringAssert.AreEqualIgnoringCase("Name", "NAMES");
-		}
+            var ex = Assert.Throws<AssertionException>(() => StringAssert.AreEqualIgnoringCase("Name", "NAMES"));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+        }
 
-		[Test]		
-		public void IsMatch()
-		{
-			StringAssert.IsMatch( "a?bc", "12a3bc45" );
-		}
+        [Test]		
+        public void IsMatch()
+        {
+            StringAssert.IsMatch( "a?bc", "12a3bc45" );
+        }
 
-        [Test, ExpectedException(typeof(AssertionException))]
-		public void IsMatchFails()
-		{
-            expectedMessage =
+        [Test]
+        public void IsMatchFails()
+        {
+            var expectedMessage =
                 TextMessageWriter.Pfx_Expected + "String matching \"a?b*c\"" + System.Environment.NewLine +
                 TextMessageWriter.Pfx_Actual + "\"12ab456\"" + System.Environment.NewLine;
-            StringAssert.IsMatch("a?b*c", "12ab456");
-		}
+            var ex = Assert.Throws<AssertionException>(() => StringAssert.IsMatch("a?b*c", "12ab456"));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+        }
 
-		[Test]
-		public void DifferentEncodingsOfSameStringAreNotEqual()
-		{
-			string input = "Hello World";
-			byte[] data = System.Text.Encoding.Unicode.GetBytes( input );
-			string garbage = System.Text.Encoding.UTF8.GetString( data );
+        [Test]
+        public void DifferentEncodingsOfSameStringAreNotEqual()
+        {
+            string input = "Hello World";
+            byte[] data = System.Text.Encoding.Unicode.GetBytes( input );
+            string garbage = System.Text.Encoding.UTF8.GetString( data );
 
-			Assert.AreNotEqual( input, garbage );
-		}
-	}
+            Assert.AreNotEqual( input, garbage );
+        }
+    }
 }
 #endif

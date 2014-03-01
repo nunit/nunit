@@ -117,79 +117,87 @@ namespace NUnit.Framework.Assertions
             return 4;
         }
 
-        [Test, ExpectedException(typeof(AssertionException))]
+        [Test]
         public void FailureThrowsAssertionException_Boolean()
         {
-            Assert.That(2 + 2 == 5);
+            Assert.Throws<AssertionException>(() => Assert.That(2 + 2 == 5));
         }
 
-        [Test, ExpectedException(typeof(AssertionException), ExpectedMessage = "message", MatchType = MessageMatch.Contains)]
+        [Test]
         public void FailureThrowsAssertionException_BooleanWithMessage()
         {
-            Assert.That(2 + 2 == 5, "message");
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(2 + 2 == 5, "message"));
+            Assert.That(ex.Message, Contains.Substring("message"));
         }
 
-        [Test, ExpectedException(typeof(AssertionException), ExpectedMessage = "got 5", MatchType = MessageMatch.Contains)]
+        [Test]
         public void FailureThrowsAssertionException_BooleanWithMessageAndArgs()
         {
-            Assert.That(2 + 2 == 5, "got {0}", 5);
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(2 + 2 == 5, "got {0}", 5));
+            Assert.That(ex.Message, Contains.Substring("got 5"));
         }
 
-        [Test, ExpectedException(typeof(AssertionException))]
+        [Test]
         public void FailureThrowsAssertionException_ActualAndConstraint()
         {
-            Assert.That(2 + 2, Is.EqualTo(5));
+            Assert.Throws<AssertionException>(() => Assert.That(2 + 2, Is.EqualTo(5)));
         }
 
-        [Test, ExpectedException(typeof(AssertionException), ExpectedMessage = "Error", MatchType = MessageMatch.Contains)]
+        [Test]
         public void FailureThrowsAssertionException_ActualAndConstraintWithMessage()
         {
-            Assert.That(2 + 2, Is.EqualTo(5), "Error");
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(2 + 2, Is.EqualTo(5), "Error"));
+            Assert.That(ex.Message, Contains.Substring("Error"));
         }
 
-        [Test, ExpectedException(typeof(AssertionException), ExpectedMessage = "Should be 5", MatchType = MessageMatch.Contains)]
+        [Test]
         public void FailureThrowsAssertionException_ActualAndConstraintWithMessageAndArgs()
         {
-            Assert.That(2 + 2, Is.EqualTo(5), "Should be {0}", 5);
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(2 + 2, Is.EqualTo(5), "Should be {0}", 5));
+            Assert.That(ex.Message, Contains.Substring("Should be 5"));
         }
 
-        [Test, ExpectedException(typeof(AssertionException))]
+        [Test]
         public void FailureThrowsAssertionException_ReferenceAndConstraint()
         {
             bool value = false;
-            Assert.That(ref value, Is.True);
+            Assert.Throws<AssertionException>(() => Assert.That(ref value, Is.True));
         }
 
-        [Test, ExpectedException(typeof(AssertionException), ExpectedMessage = "message", MatchType = MessageMatch.Contains)]
+        [Test]
         public void FailureThrowsAssertionException_ReferenceAndConstraintWithMessage()
         {
             bool value = false;
-            Assert.That(ref value, Is.True, "message");
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(ref value, Is.True, "message"));
+            Assert.That(ex.Message, Contains.Substring("message"));
         }
 
-        [Test, ExpectedException(typeof(AssertionException), ExpectedMessage = "message is 42", MatchType = MessageMatch.Contains)]
+        [Test]
         public void FailureThrowsAssertionException_ReferenceAndConstraintWithMessageAndArgs()
         {
             bool value = false;
-            Assert.That(ref value, Is.True, "message is {0}", 42);
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(ref value, Is.True, "message is {0}", 42));
+            Assert.That(ex.Message, Contains.Substring("message is 42"));
         }
 
-        [Test, ExpectedException(typeof(AssertionException))]
+        [Test]
         public void FailureThrowsAssertionException_DelegateAndConstraint()
         {
-            Assert.That(new ActualValueDelegate<int>(ReturnsFive), Is.EqualTo(4));
+            Assert.Throws<AssertionException>(() => Assert.That(new ActualValueDelegate<int>(ReturnsFive), Is.EqualTo(4)));
         }
 
-        [Test, ExpectedException(typeof(AssertionException), ExpectedMessage = "Error", MatchType = MessageMatch.Contains)]
+        [Test]
         public void FailureThrowsAssertionException_DelegateAndConstraintWithMessage()
         {
-            Assert.That(new ActualValueDelegate<int>(ReturnsFive), Is.EqualTo(4), "Error");
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(new ActualValueDelegate<int>(ReturnsFive), Is.EqualTo(4), "Error"));
+            Assert.That(ex.Message, Contains.Substring("Error"));
         }
 
-        [Test, ExpectedException(typeof(AssertionException), ExpectedMessage = "Should be 4", MatchType = MessageMatch.Contains)]
+        [Test]
         public void FailureThrowsAssertionException_DelegateAndConstraintWithMessageAndArgs()
         {
-            Assert.That(new ActualValueDelegate<int>(ReturnsFive), Is.EqualTo(4), "Should be {0}", 4);
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(new ActualValueDelegate<int>(ReturnsFive), Is.EqualTo(4), "Should be {0}", 4));
+            Assert.That(ex.Message, Contains.Substring("Should be 4"));
         }
 
         [Test]
