@@ -1,3 +1,2 @@
 #!/bin/bash
-chmod +x runbuild
 ./runbuild /t:Package ${1+"$@"}
