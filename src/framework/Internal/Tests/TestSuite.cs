@@ -151,9 +151,12 @@ namespace NUnit.Framework.Internal
         /// <param name="fixture">The fixture.</param>
         public void Add( object fixture )
         {
-            Test test = TestFixtureBuilder.BuildFrom( fixture );
-            if ( test != null )
-                Add( test );
+            Test test = new Builders.DefaultSuiteBuilder().BuildFrom( fixture.GetType() );
+            if (test != null)
+            {
+                test.Fixture = fixture;
+                Add(test);
+            }
         }
 #endif
 

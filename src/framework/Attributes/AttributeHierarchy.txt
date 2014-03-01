@@ -1,48 +1,51 @@
 ﻿Attribute Inheritance             : Interfaces
 
 NUnitAttribute
-    ActionAttribute
-		TestCaseActionAttribute   : 
-		TestSuiteActionAttribute  : 
+	ActionAttribute
+		TestCaseActionAttribute       : 
+		TestSuiteActionAttribute      : 
 	DataAttribute
-		TestCaseAttribute         : ITestCaseData, ITestCaseSource
-		TestCaseSourceAttribute   : ITestCaseSource
-		ValuesAttribute           : IParameterDataSource
-			RandomAttribute       : IParameterDataSource
+		ValuesAttribute               : IParameterDataSource
+			RandomAttribute           : IParameterDataSource
 			RangeAttribute
-		ValueSourceAttribute      : IParameterDataSource
+		ValueSourceAttribute          : IParameterDataSource
 	DatapointAttribute
 	DatapointSourceAttribute
 		DatapointsAttribute
-	ExpectedExceptionAttribute    : 
-	SetUpAttribute                : 
-	PreTestAttribute              : 
-	PostTestAttribute             : 
-	SetUpFixtureAttribute         : 
-	SuiteAttribute                : 
-	TearDownAttribute             : 
-	TestFixtureSetUpAttribute     : 
-	TestFixtureTearDownAttribute  : 
-	CategoryAttribute			  : IApplyToTest
-	ExplicitAttribute	          : IApplyToTest
-	IgnoreAttribute			      : IApplyToTest
+	ExpectedExceptionAttribute        : 
+	FixtureBuilderAttribute
+		TestFixtureAttribute          : IFixtureBuilder, IApplyToTest
+	SetUpAttribute                    : 
+	PreTestAttribute                  : 
+	PostTestAttribute                 : 
+	SetUpFixtureAttribute         
+	SuiteAttribute                
+	TearDownAttribute             
+	TestFixtureSetUpAttribute      
+	TestFixtureTearDownAttribute   
+	CategoryAttribute			      : IApplyToTest
+	ExplicitAttribute	              : IApplyToTest
+	IgnoreAttribute			          : IApplyToTest
 	IncludeExcludeAttribute
-		CultureAttribute		  : IApplyToTest
-		PlatformAttribute		  : IApplyToTest
-	PropertyAttribute			  : IApplyToTest
-		CombinatorialAttribute
+		CultureAttribute		      : IApplyToTest
+		PlatformAttribute		      : IApplyToTest
+	PropertyAttribute			      : IApplyToTest
 		DescriptionAttribute
-		MaxTimeAttribute          : ICommandDecorator
-		PairwiseAttribute		  : 
-		RepeatAttribute			  : ICommandDecorator
+		MaxTimeAttribute              : ICommandDecorator
+		RepeatAttribute			      : ICommandDecorator
 		RequiresMTAAttribute 
 		RequiresSTAAttribute 
 		RequiresThreadAttribute 
-		SequentialAttribute
-		SetCultureAttribute       : ICommandDecorator
-		SetUICultureAttribute     : ICommandDecorator
-		TimeoutAttribute          : ICommandDecorator
-		RequiredAddinAttribute    : IApplyToTest
-	TestAttribute             : IApplyToTest
-	TestFixtureAttribute      : IApplyToTest
-	TheoryAttribute
+		SetCultureAttribute           : ICommandDecorator
+		SetUICultureAttribute         : ICommandDecorator
+		TimeoutAttribute              : ICommandDecorator
+		RequiredAddinAttribute        : IApplyToTest
+	TestCaseBuilderAttribute
+		CombiningStrategyAttribute    : ITestMethodBuilder
+			CombinatorialAttribute
+			PairwiseAttribute		   
+			SequentialAttribute
+		TestAttribute                 : ITestMethodBuilder, IApplyToTest, IImplyFixture
+		TestCaseAttribute             : ITestMethodBuilder, ITestCaseData, ITestCaseSource, IImplyFixture
+		TestCaseSourceAttribute       : ITestMethodBilder, ITestCaseSource, IImplyFixture
+		TheoryAttribute               : ITestMethodBuilder, IImplyFixture

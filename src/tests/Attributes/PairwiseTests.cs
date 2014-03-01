@@ -24,6 +24,7 @@
 using System;
 using System.Collections;
 using NUnit.Framework;
+using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Builders;
 
 namespace NUnit.Framework.Attributes
@@ -107,11 +108,11 @@ namespace NUnit.Framework.Attributes
                     sources[i][j] = featureName + j.ToString();
             }
 
-            CombiningStrategy strategy = new PairwiseStrategy(sources);
+            ICombiningStrategy strategy = new PairwiseStrategy();
 
             PairCounter pairs = new PairCounter();
             int cases = 0;
-            foreach (NUnit.Framework.Internal.ParameterSet parms in strategy.GetTestCases())
+            foreach (NUnit.Framework.Internal.ParameterSet parms in strategy.GetTestCases(sources))
             {
                 for (int i = 1; i < features; i++)
                     for (int j = 0; j < i; j++)

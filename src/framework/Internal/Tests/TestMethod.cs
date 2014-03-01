@@ -36,14 +36,9 @@ namespace NUnit.Framework.Internal
     /// the Test interface might make it easier to process exceptions
     /// in an object that aggregates a TestMethod in the future.
     /// </summary>
-	public class TestMethod : Test
-	{
-		#region Fields
-
-        /// <summary>
-        /// A list of all decorators applied to the test by attributes or parameterset arguments
-        /// </summary>
-        private List<ICommandDecorator> decorators = new List<ICommandDecorator>();
+    public class TestMethod : Test
+    {
+        #region Fields
 
         /// <summary>
         /// The ParameterSet used to create this test method
@@ -52,7 +47,7 @@ namespace NUnit.Framework.Internal
 
         #endregion
 
-		#region Constructor
+        #region Constructor
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TestMethod"/> class.
@@ -66,8 +61,8 @@ namespace NUnit.Framework.Internal
         /// <param name="method">The method to be used as a test.</param>
         /// <param name="parentSuite">The suite or fixture to which the new test will be added</param>
         public TestMethod(MethodInfo method, Test parentSuite) 
-			: base( method ) 
-		{
+            : base( method ) 
+        {
             // Disambiguate call to base class methods
             // TODO: This should not be here - it's a presentation issue
             //if( method.DeclaringType != method.ReflectedType)
@@ -85,26 +80,9 @@ namespace NUnit.Framework.Internal
             //this.method = method;
         }
 
-		#endregion
+        #endregion
 
         #region Properties
-
-        ///// <summary>
-        ///// Gets the method.
-        ///// </summary>
-        ///// <value>The method that performs the test.</value>
-        //public MethodInfo Method
-        //{
-        //    get { return method; }
-        //}
-
-        /// <summary>
-        /// Gets a list of custom decorators for this test.
-        /// </summary>
-        public IList<ICommandDecorator> CustomDecorators
-        {
-            get { return decorators; }
-        }
 
         internal bool HasExpectedResult
         {
@@ -161,7 +139,7 @@ namespace NUnit.Framework.Internal
             return thisNode;
         }
 
-		/// <summary>
+        /// <summary>
         /// Gets this test's child tests
         /// </summary>
         /// <value>A list of child tests</value>
@@ -210,9 +188,15 @@ namespace NUnit.Framework.Internal
             // Add Standard stuff
             decorators.Add(new SetUpTearDownDecorator());
 
-            // Add Decorators supplied by attributes and parameter sets
-            foreach (ICommandDecorator decorator in CustomDecorators)
-                decorators.Add(decorator);
+            // Add Decorators supplied by attributes
+            foreach (ICommandDecoratorSource source in Method.GetCustomAttributes(typeof(ICommandDecoratorSource), true))
+                foreach (ICommandDecorator decorator in source.GetDecorators())
+                    decorators.Add(decorator);
+
+            // Add Decorators from the parameter set
+            if (parms != null)
+                foreach (ICommandDecorator decorator in parms.GetDecorators())
+                    decorators.Add(decorator);
 
             decorators.OrderByStage();
 

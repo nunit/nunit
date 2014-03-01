@@ -22,27 +22,58 @@
 // ***********************************************************************
 
 using System;
+using System.Collections.Generic;
 using NUnit.Framework.Internal.Commands;
 using NUnit.Framework.Interfaces;
-using NUnit.Framework.Internal;
 
 namespace NUnit.Framework
 {
-	/// <summary>
-	/// Summary description for MaxTimeAttribute.
-	/// </summary>
-	[AttributeUsage( AttributeTargets.Method, AllowMultiple=false, Inherited=false )]
-	public sealed class MaxTimeAttribute : PropertyAttribute, ICommandDecorator
-	{
-        private int milliseconds;
+    /// <summary>
+    /// Summary description for MaxTimeAttribute.
+    /// </summary>
+    [AttributeUsage( AttributeTargets.Method, AllowMultiple=false, Inherited=false )]
+    public sealed class MaxTimeAttribute : PropertyAttribute, ICommandDecoratorSource
+    {
+        private int _milliseconds;
         /// <summary>
         /// Construct a MaxTimeAttribute, given a time in milliseconds.
         /// </summary>
         /// <param name="milliseconds">The maximum elapsed time in milliseconds</param>
-		public MaxTimeAttribute( int milliseconds )
+        public MaxTimeAttribute( int milliseconds )
             : base( milliseconds )
         {
-            this.milliseconds = milliseconds;
+            _milliseconds = milliseconds;
+        }
+
+        #region ICommandDecoratorSource Members
+
+        /// <summary>
+        /// Get the available decorators.
+        /// </summary>
+        /// <returns>An array containing a MaxTimeDecorator</returns>
+        public IEnumerable<ICommandDecorator> GetDecorators()
+        {
+            return new ICommandDecorator[] { new MaxTimeDecorator(_milliseconds) };
+        }
+
+        #endregion
+    }
+
+    /// <summary>
+    /// MaxTimeDecorator wraps a series of test commands and checks
+    /// that the execution did not take more than the specified time.
+    /// </summary>
+    public class MaxTimeDecorator : ICommandDecorator
+    {
+        private int _milliseconds;
+
+        /// <summary>
+        /// Construct a MaxTimeDecorator
+        /// </summary>
+        /// <param name="milliseconds">The maximum duration in milliseconds</param>
+        public MaxTimeDecorator(int milliseconds)
+        {
+            _milliseconds = milliseconds;
         }
 
         #region ICommandDecorator Members
@@ -59,7 +90,7 @@ namespace NUnit.Framework
 
         TestCommand ICommandDecorator.Decorate(TestCommand command)
         {
-            return new MaxTimeCommand(command, this.milliseconds);
+            return new MaxTimeCommand(command, _milliseconds);
         }
 
         #endregion

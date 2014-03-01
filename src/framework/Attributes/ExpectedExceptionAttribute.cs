@@ -32,7 +32,7 @@ namespace NUnit.Framework
     /// ExpectedExceptionAttribute
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited=false)]
-    public class ExpectedExceptionAttribute : NUnitAttribute
+    public class ExpectedExceptionAttribute : NUnitAttribute, ICommandDecoratorSource
     {
         private ExpectedExceptionData exceptionData = new ExpectedExceptionData();
 
@@ -107,15 +107,6 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        ///  Gets the name of a method to be used as an exception handler
-        /// </summary>
-        public string Handler
-        {
-            get { return exceptionData.HandlerName; }
-            set { exceptionData.HandlerName = value; }
-        }
-
-        /// <summary>
         /// Gets all data about the expected exception.
         /// </summary>
         public ExpectedExceptionData ExceptionData
@@ -133,6 +124,19 @@ namespace NUnit.Framework
         //}
 
         //#endregion
+
+        #region ICommandDecoratorSource Members
+
+        /// <summary>
+        /// Get the list of decorators.
+        /// </summary>
+        /// <returns>An array containing an ExpectedExceptionDecorator</returns>
+        public System.Collections.Generic.IEnumerable<ICommandDecorator> GetDecorators()
+        {
+            return new ICommandDecorator[] { new ExpectedExceptionDecorator(exceptionData) };
+        }
+
+        #endregion
     }
 
     /// <summary>

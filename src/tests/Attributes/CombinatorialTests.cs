@@ -22,6 +22,10 @@
 // ***********************************************************************
 
 using System;
+using System.Collections.Generic;
+using System.Reflection;
+using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Attributes
 {
@@ -95,6 +99,11 @@ namespace NUnit.Framework.Attributes
             [Random(1)] double y)
         {
             Assert.AreNotEqual(x, y);
+        }
+
+        [Test, Combinatorial]
+        public void CombinatorialIsIgnoredIfThereAreNoArguments()
+        {
         }
     }
 }

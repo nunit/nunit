@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2011 Charlie Poole
+// Copyright (c) 2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -23,32 +23,17 @@
 
 using System;
 
-namespace NUnit.Framework.Internal.Commands
+namespace NUnit.Framework
 {
     /// <summary>
-    /// ICommandDecorator is implemented by attributes and other
-    /// objects able to decorate a TestCommand, usually by wrapping
-    /// it with an outer command.
+    /// The abstract base class for all NUnit attributes that build test cases.
+    /// The derived class should implement one of the test builder interfaces.
     /// </summary>
-    public interface ICommandDecorator
+    public abstract class TestCaseBuilderAttribute : NUnitAttribute
     {
         /// <summary>
-        /// The stage of command execution to which this decorator applies.
+        /// Default constructor
         /// </summary>
-        CommandStage Stage { get; }
-
-        /// <summary>
-        /// The priority of this decorator as compared to other decorators
-        /// in the same Stage. Lower _values are applied first.
-        /// </summary>
-        int Priority { get; }
-
-        /// <summary>
-        /// Decorate a command, usually by wrapping it with another
-        /// command, and return the decorated command.
-        /// </summary>
-        /// <param name="command">The command to be decorated</param>
-        /// <returns>The decorated command</returns>
-        TestCommand Decorate(TestCommand command);
+        public TestCaseBuilderAttribute() { }
     }
 }

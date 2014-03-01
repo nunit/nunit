@@ -25,39 +25,44 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
-using NUnit.Framework.Internal;
 
 namespace NUnit.Framework
 {
     using Interfaces;
+    using Internal;
     using Internal.Builders;
 
     /// <summary>
-    /// Adding this attribute to a method within a <seealso cref="TestFixtureAttribute"/> 
-    /// class makes the method callable from the NUnit test runner. There is a property 
-    /// called Description which is optional which you can provide a more detailed test
-    /// description. This class cannot be inherited.
+    /// Marks a test to use a particular CombiningStrategy to join
+    /// any parameter data provided. Since this is the default, the 
+    /// attribute is optional.
     /// </summary>
-    /// 
-    /// <example>
-    /// [TestFixture]
-    /// public class Fixture
-    /// {
-    ///   [Test]
-    ///   public void MethodToTest()
-    ///   {}
-    ///   
-    ///   [Test(Description = "more detailed description")]
-    ///   publc void TestDescriptionMethod()
-    ///   {}
-    /// }
-    /// </example>
-    /// 
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited=true)]
-    public class TheoryAttribute : TestCaseBuilderAttribute, ITestBuilder, IImplyFixture
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
+    public abstract class CombiningStrategyAttribute : TestCaseBuilderAttribute, ITestBuilder, IApplyToTest
     {
         private NUnitTestCaseBuilder _builder = new NUnitTestCaseBuilder();
-        private IParameterDataProvider _dataProvider = new DatapointProvider();
+        private IParameterDataProvider _dataProvider = new ParameterDataProvider();
+
+        private ICombiningStrategy _strategy;
+
+        /// <summary>
+        /// Construct a CombiningStrategyAttribute incorporating an object
+        /// that implements ICombiningStrategy.
+        /// </summary>
+        /// <param name="strategy">Combining strategy to be used</param>
+        protected CombiningStrategyAttribute(ICombiningStrategy strategy)
+        {
+            _strategy = strategy;
+        }
+
+        /// <summary>
+        /// Construct a CombiningStrategyAttribute incorporating an object
+        /// that implements ICombiningStrategy. This constructor is provided
+        /// for CLS compliance.
+        /// </summary>
+        /// <param name="strategy">Combining strategy to be used</param>
+        protected CombiningStrategyAttribute(object strategy)
+            : this((ICombiningStrategy)strategy) { }
 
         #region ITestBuilder Members
 
@@ -68,7 +73,7 @@ namespace NUnit.Framework
         /// <param name="method">The MethodInfo for which tests are to be constructed.</param>
         /// <param name="suite">The suite to which the tests will be added.</param>
         /// <returns>One or more TestMethods</returns>
-        public IEnumerable<TestMethod> BuildFrom(MethodInfo method, Internal.Test suite)
+        public IEnumerable<TestMethod> BuildFrom(MethodInfo method, Test suite)
         {
             ParameterInfo[] parameters = method.GetParameters();
 
@@ -80,11 +85,29 @@ namespace NUnit.Framework
                 for (int i = 0; i < parameters.Length; i++)
                     sources[i] = _dataProvider.GetDataFor(parameters[i]);
 
-                foreach (var parms in new CombinatorialStrategy().GetTestCases(sources))
+                foreach (var parms in _strategy.GetTestCases(sources))
                     tests.Add(_builder.BuildTestMethod(method, suite, (ParameterSet)parms));
             }
 
             return tests;
+        }
+
+        #endregion
+
+        #region IApplyToTest Members
+
+        /// <summary>
+        /// Modify the test by adding the name of the combining strategy
+        /// to the properties.
+        /// </summary>
+        /// <param name="test">The test to modify</param>
+        public void ApplyToTest(Test test)
+        {
+            var joinType = _strategy.GetType().Name;
+            if (joinType.EndsWith("Strategy"))
+                joinType = joinType.Substring(0, joinType.Length - 8);
+
+            test.Properties.Set(PropertyNames.JoinType, joinType);
         }
 
         #endregion

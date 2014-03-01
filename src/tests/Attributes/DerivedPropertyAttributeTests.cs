@@ -48,15 +48,12 @@ namespace NUnit.Framework.Attributes
             Assert.That(attr.Properties.Get(propName), Is.EqualTo(propValue));
         }
 
-        [TestCase(typeof(CombinatorialAttribute), PropertyNames.JoinType, "Combinatorial")]
-        [TestCase(typeof(PairwiseAttribute), PropertyNames.JoinType, "Pairwise")]
         [TestCase(typeof(ParallelizableAttribute), PropertyNames.ParallelScope, ParallelScope.Self)]
 #if !NETCF && !SILVERLIGHT
         [TestCase(typeof(RequiresMTAAttribute), PropertyNames.ApartmentState, ApartmentState.MTA)]
         [TestCase(typeof(RequiresSTAAttribute), PropertyNames.ApartmentState, ApartmentState.STA)]
         [TestCase(typeof(RequiresThreadAttribute), PropertyNames.RequiresThread, true)]
 #endif
-        [TestCase(typeof(SequentialAttribute), PropertyNames.JoinType, "Sequential")]
         public void ConstructWithNoArgs<T>(Type attrType, string propName, T propValue)
         {
             var attr = Reflect.Construct(attrType) as PropertyAttribute;

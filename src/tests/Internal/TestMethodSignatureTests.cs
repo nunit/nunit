@@ -29,28 +29,28 @@ using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Internal
 {
-	[TestFixture]
-	public class TestMethodSignatureTests
-	{
+    [TestFixture]
+    public class TestMethodSignatureTests
+    {
         private static Type fixtureType = typeof(TestMethodSignatureFixture);
 
         [Test]
-		public void InstanceTestMethodIsRunnable()
-		{
-			TestAssert.IsRunnable( fixtureType, "InstanceTestMethod" );
-		}
+        public void InstanceTestMethodIsRunnable()
+        {
+            TestAssert.IsRunnable( fixtureType, "InstanceTestMethod" );
+        }
 
-		[Test]
-		public void StaticTestMethodIsRunnable()
-		{
-			TestAssert.IsRunnable( fixtureType, "StaticTestMethod" );
-		}
+        [Test]
+        public void StaticTestMethodIsRunnable()
+        {
+            TestAssert.IsRunnable( fixtureType, "StaticTestMethod" );
+        }
 
-		[Test]
-		public void TestMethodWithoutParametersWithArgumentsProvidedIsNotRunnable()
-		{
-			TestAssert.ChildNotRunnable(fixtureType, "TestMethodWithoutParametersWithArgumentsProvided");
-		}
+        [Test]
+        public void TestMethodWithoutParametersWithArgumentsProvidedIsNotRunnable()
+        {
+            TestAssert.ChildNotRunnable(fixtureType, "TestMethodWithoutParametersWithArgumentsProvided");
+        }
 
         [Test]
         public void TestMethodWithArgumentsNotProvidedIsNotRunnable()
@@ -113,22 +113,22 @@ namespace NUnit.Framework.Internal
         }
 
         [Test]
-		public void ProtectedTestMethodIsNotRunnable()
-		{
-			TestAssert.IsNotRunnable( fixtureType, "ProtectedTestMethod" );
-		}
+        public void ProtectedTestMethodIsNotRunnable()
+        {
+            TestAssert.IsNotRunnable( fixtureType, "ProtectedTestMethod" );
+        }
 
-		[Test]
-		public void PrivateTestMethodIsNotRunnable()
-		{
-			TestAssert.IsNotRunnable( fixtureType, "PrivateTestMethod" );
-		}
+        [Test]
+        public void PrivateTestMethodIsNotRunnable()
+        {
+            TestAssert.IsNotRunnable( fixtureType, "PrivateTestMethod" );
+        }
 
-		[Test]
-		public void TestMethodWithReturnTypeIsNotRunnable()
-		{
-			TestAssert.IsNotRunnable( fixtureType, "TestMethodWithReturnType" );
-		}
+        [Test]
+        public void TestMethodWithReturnTypeIsNotRunnable()
+        {
+            TestAssert.IsNotRunnable( fixtureType, "TestMethodWithReturnType" );
+        }
 
         [Test]
         public void TestMethodWithExpectedReturnTypeIsRunnable()
@@ -136,15 +136,15 @@ namespace NUnit.Framework.Internal
             TestAssert.IsRunnable(fixtureType, "TestMethodWithExpectedReturnType");
         }
 
-		[Test]
-		public void TestMethodWithMultipleTestCasesExecutesMultipleTimes()
-		{
+        [Test]
+        public void TestMethodWithMultipleTestCasesExecutesMultipleTimes()
+        {
             ITestResult result = TestBuilder.RunParameterizedMethodSuite(fixtureType, "TestMethodWithMultipleTestCases");
 
-			Assert.That( result.ResultState, Is.EqualTo(ResultState.Success) );
+            Assert.That( result.ResultState, Is.EqualTo(ResultState.Success) );
             ResultSummary summary = new ResultSummary(result);
             Assert.That(summary.TestsRun, Is.EqualTo(3));
-		}
+        }
 
         [Test]
         public void TestMethodWithMultipleTestCasesUsesCorrectNames()

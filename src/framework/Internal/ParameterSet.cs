@@ -31,7 +31,7 @@ namespace NUnit.Framework.Internal
     /// other selected parameters needed for constructing
     /// a parameterized test case.
     /// </summary>
-    public class ParameterSet : ITestCaseData, IApplyToTest
+    public class ParameterSet : ITestCaseData, IApplyToTest, ICommandDecoratorSource
     {
         #region Instance Fields
 
@@ -45,6 +45,15 @@ namespace NUnit.Framework.Internal
         #endregion
 
         #region Constructors
+
+        /// <summary>
+        /// Default Constructor creates an empty parameter set
+        /// </summary>
+        public ParameterSet() 
+        {
+            this.RunState = RunState.Runnable;
+            this.Properties = new PropertyBag();
+        }
 
         /// <summary>
         /// Construct a non-runnable ParameterSet, specifying
@@ -62,11 +71,9 @@ namespace NUnit.Framework.Internal
         /// Construct a parameter set with a list of arguments
         /// </summary>
         /// <param name="args"></param>
-        public ParameterSet(object[] args)
+        public ParameterSet(object[] args) : this()
         {
             this.Arguments = this.OriginalArguments = args;
-            this.RunState = RunState.Runnable;
-            this.Properties = new PropertyBag();
         }
 
         /// <summary>
@@ -74,28 +81,17 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="data"></param>
         public ParameterSet(ITestCaseData data)
-            : this((ITestExpectedResult)data)
         {
             this.TestName = data.TestName;
             this.RunState = data.RunState;
             this.Arguments = this.OriginalArguments = data.Arguments;
+            if (data.HasExpectedResult)
+                ExpectedResult = data.ExpectedResult;
             this.ExceptionData = data.ExceptionData;
+            this.Properties = new PropertyBag();
 
             foreach (string key in data.Properties.Keys)
                 this.Properties[key] = data.Properties[key];
-        }
-
-        /// <summary>
-        /// Construct a ParameterSet from an object implementing <see cref="ITestExpectedResult"/>
-        /// </summary>
-        /// <param name="data"></param>
-        public ParameterSet(ITestExpectedResult data)
-        {
-            RunState = RunState.Runnable;
-            if (data.HasExpectedResult)
-                ExpectedResult = data.ExpectedResult;
-
-            Properties = new PropertyBag();
         }
 
         #endregion
@@ -191,15 +187,30 @@ namespace NUnit.Framework.Internal
         public void ApplyToTest(Test test)
         {
             if (this.RunState != RunState.Runnable)
-				test.RunState = this.RunState;
+                test.RunState = this.RunState;
 
             foreach (string key in Properties.Keys)
                 foreach (object value in Properties[key])
                     test.Properties.Add(key, value);
+        }
 
-            TestMethod testMethod = test as TestMethod;
-            if (testMethod != null && ExceptionData.ExpectedExceptionName != null)
-                testMethod.CustomDecorators.Add(new ExpectedExceptionDecorator(this.ExceptionData));
+        #endregion
+
+        #region ICommandDecoratorSource Members
+
+        /// <summary>
+        /// Get the required decorators.
+        /// </summary>
+        /// <returns>
+        /// An array of decorators, either empty or containing a single 
+        /// ExpectedExceptinDecorator, depending on whether or not
+        /// an exception is expected.
+        /// </returns>
+        public System.Collections.Generic.IEnumerable<ICommandDecorator> GetDecorators()
+        {
+            return ExceptionExpected
+                ? new ICommandDecorator[] { new ExpectedExceptionDecorator(this.ExceptionData) }
+                : new ICommandDecorator[0];
         }
 
         #endregion

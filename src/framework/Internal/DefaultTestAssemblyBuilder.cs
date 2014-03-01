@@ -22,6 +22,11 @@ namespace NUnit.Framework.Internal
         /// </summary>
         Assembly assembly;
 
+        /// <summary>
+        /// The default suite builder used by the test assembly builder.
+        /// </summary>
+        ISuiteBuilder _defaultSuiteBuilder;
+
 #if !NUNITLITE
         /// <summary>
         /// Our LegacySuite builder, which is only used when a 
@@ -39,6 +44,8 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public DefaultTestAssemblyBuilder()
         {
+            _defaultSuiteBuilder = new DefaultSuiteBuilder();
+
 #if !NUNITLITE
             // TODO: Keeping this separate till we can make
             //it work in all situations.
@@ -140,9 +147,9 @@ namespace NUnit.Framework.Internal
             int testcases = 0;
             foreach (Type testType in testTypes)
             {
-                if (TestFixtureBuilder.CanBuildFrom(testType))
+                if (_defaultSuiteBuilder.CanBuildFrom(testType))
                 {
-                    Test fixture = TestFixtureBuilder.BuildFrom(testType);
+                    Test fixture = _defaultSuiteBuilder.BuildFrom(testType);
                     fixtures.Add(fixture);
                     testcases += fixture.TestCaseCount;
                 }

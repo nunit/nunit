@@ -1,5 +1,5 @@
-// ***********************************************************************
-// Copyright (c) 2008 Charlie Poole
+﻿// ***********************************************************************
+// Copyright (c) 2011 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -22,23 +22,24 @@
 // ***********************************************************************
 
 using System;
-using System.Collections;
-using NUnit.Framework.Interfaces;
-using NUnit.Framework.Internal.Builders;
+using System.Collections.Generic;
 
-namespace NUnit.Framework
+namespace NUnit.Framework.Interfaces
 {
     /// <summary>
-    /// Marks a test to use a combinatorial join of any argument 
-    /// data provided. Since this is the default, the attribute is
-    /// optional.
+    /// ICommandDecorator is implemented by attributes and other
+    /// objects able to decorate a TestCommand, usually by wrapping
+    /// it with an outer command. It is used to retrieve the actual
+    /// decorators, thereby permitting one object to supply several
+    /// of them.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
-    public class CombinatorialAttribute : CombiningStrategyAttribute
+    public interface ICommandDecoratorSource
     {
         /// <summary>
-        /// Default constructor
+        /// Gets the command decorators the object is able to supply
+        /// in its current state.
         /// </summary>
-        public CombinatorialAttribute() : base(new CombinatorialStrategy()) { }
+        /// <returns>Zero or more ICommandDecorators.</returns>
+        IEnumerable<ICommandDecorator> GetDecorators();
     }
 }

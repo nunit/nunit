@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
+using NUnit.Framework.Internal.Builders;
 
 namespace NUnit.Framework
 {
@@ -35,11 +36,11 @@ namespace NUnit.Framework
     /// provide test cases for a test method.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true, Inherited = false)]
-    public class TestCaseSourceAttribute : DataAttribute, ITestCaseSource
+    public class TestCaseSourceAttribute : TestCaseBuilderAttribute, ITestBuilder, IImplyFixture
     {
-        private readonly string sourceName;
-        private readonly Type sourceType;
-        private readonly object[] sourceConstructorParameters;
+        private readonly object[] _sourceConstructorParameters;
+
+        private NUnitTestCaseBuilder _builder = new NUnitTestCaseBuilder();
 
         /// <summary>
         /// Construct with the name of the method, property or field that will prvide data
@@ -47,7 +48,7 @@ namespace NUnit.Framework
         /// <param name="sourceName">The name of the method, property or field that will provide data</param>
         public TestCaseSourceAttribute(string sourceName)
         {
-            this.sourceName = sourceName;
+            this.SourceName = sourceName;
         }
 
         /// <summary>
@@ -55,12 +56,12 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="sourceType">The Type that will provide data</param>
         /// <param name="sourceName">The name of the method, property or field that will provide data</param>
-        /// <param name="constructorParameters">The constructor parameters to be used when instantiating the <see cref="sourceType"/> instance.</param>
+        /// <param name="constructorParameters">The constructor parameters to be used when instantiating the sourceType.</param>
         public TestCaseSourceAttribute(Type sourceType, string sourceName, params object[] constructorParameters)
         {
-            this.sourceType = sourceType;
-            this.sourceName = sourceName;
-            this.sourceConstructorParameters = constructorParameters;
+            this.SourceType = sourceType;
+            this.SourceName = sourceName;
+            _sourceConstructorParameters = constructorParameters;
         }
         
         /// <summary>
@@ -69,24 +70,18 @@ namespace NUnit.Framework
         /// <param name="sourceType">The type that will provide data</param>
         public TestCaseSourceAttribute(Type sourceType)
         {
-            this.sourceType = sourceType;
+            this.SourceType = sourceType;
         }
 
         /// <summary>
         /// The name of a the method, property or fiend to be used as a source
         /// </summary>
-        public string SourceName
-        {
-            get { return sourceName; }   
-        }
+        public string SourceName { get; private set; }
 
         /// <summary>
         /// A Type to be used as a source
         /// </summary>
-        public Type SourceType
-        {
-            get { return sourceType;  }
-        }
+        public Type SourceType { get; private set; }
 
         /// <summary>
         /// Gets or sets the category associated with this test.
@@ -108,55 +103,63 @@ namespace NUnit.Framework
 
             if (source != null)
             {
-                ParameterInfo[] parameters = method.GetParameters();
-
-                foreach (object item in source)
+                try
                 {
-                    ParameterSet parms;
-                    ITestCaseData testCaseData = item as ITestCaseData;
+                    ParameterInfo[] parameters = method.GetParameters();
 
-                    if (testCaseData != null)
-                        parms = new ParameterSet(testCaseData);
-                    else
+                    foreach (object item in source)
                     {
-                        object[] args = item as object[];
-                        if (args != null)
-                        {
-                            if (args.Length != parameters.Length)
-                                args = new object[] { item };
-                        }
-                        //else if (parameters.Length == 1 && parameters[0].ParameterType.IsAssignableFrom(item.GetType()))
-                        //{
-                        //    args = new object[] { item };
-                        //}
-                        else if (item is Array)
-                        {
-                            Array array = item as Array;
+                        ParameterSet parms;
+                        ITestCaseData testCaseData = item as ITestCaseData;
 
-                            if (array.Rank == 1 && array.Length == parameters.Length)
+                        if (testCaseData != null)
+                            parms = new ParameterSet(testCaseData);
+                        else
+                        {
+                            object[] args = item as object[];
+                            if (args != null)
                             {
-                                args = new object[array.Length];
-                                for (int i = 0; i < array.Length; i++)
-                                    args[i] = (object)array.GetValue(i);
+                                if (args.Length != parameters.Length)
+                                    args = new object[] { item };
+                            }
+                            //else if (parameters.Length == 1 && parameters[0].ParameterType.IsAssignableFrom(item.GetType()))
+                            //{
+                            //    args = new object[] { item };
+                            //}
+                            else if (item is Array)
+                            {
+                                Array array = item as Array;
+
+                                if (array.Rank == 1 && array.Length == parameters.Length)
+                                {
+                                    args = new object[array.Length];
+                                    for (int i = 0; i < array.Length; i++)
+                                        args[i] = (object)array.GetValue(i);
+                                }
+                                else
+                                {
+                                    args = new object[] { item };
+                                }
                             }
                             else
                             {
                                 args = new object[] { item };
                             }
-                        }
-                        else
-                        {
-                            args = new object[] { item };
+
+                            parms = new ParameterSet(args);
                         }
 
-                        parms = new ParameterSet(args);
+                        if (this.Category != null)
+                            foreach (string cat in this.Category.Split(new char[] { ',' }))
+                                parms.Properties.Add(PropertyNames.Category, cat);
+
+                        data.Add(parms);
                     }
-
-                    if (this.Category != null)
-                        foreach (string cat in this.Category.Split(new char[] { ',' }))
-                            parms.Properties.Add(PropertyNames.Category, cat);
-
-                    data.Add(parms);
+                }
+                catch (Exception ex)
+                {
+                    data.Clear();
+                    data.Add(new ParameterSet(ex));
                 }
             }
 
@@ -167,21 +170,21 @@ namespace NUnit.Framework
         {
             IEnumerable source = null;
 
-            Type sourceType = this.sourceType;
+            Type sourceType = this.SourceType;
             if (sourceType == null)
                 sourceType = method.ReflectedType;
 
-            if (this.sourceName == null)
+            if (this.SourceName == null)
             {
-                return Reflect.Construct(sourceType, this.sourceConstructorParameters) as IEnumerable;
+                return Reflect.Construct(sourceType, _sourceConstructorParameters) as IEnumerable;
             }
 
-            MemberInfo[] members = sourceType.GetMember(sourceName,
+            MemberInfo[] members = sourceType.GetMember(SourceName,
                 BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
             if (members.Length == 1)
             {
                 MemberInfo member = members[0];
-                object sourceobject = Internal.Reflect.Construct(sourceType, this.sourceConstructorParameters);
+                object sourceobject = Internal.Reflect.Construct(sourceType, _sourceConstructorParameters);
                 switch (member.MemberType)
                 {
                     case MemberTypes.Field:
@@ -202,5 +205,25 @@ namespace NUnit.Framework
         }
         #endregion
 
+        #region ITestBuilder Members
+
+        /// <summary>
+        /// Construct one or more TestMethods from a given MethodInfo,
+        /// using available parameter data.
+        /// </summary>
+        /// <param name="method">The MethodInfo for which tests are to be constructed.</param>
+        /// <param name="suite">The suite to which the tests will be added.</param>
+        /// <returns>One or more TestMethods</returns>
+        public IEnumerable<TestMethod> BuildFrom(MethodInfo method, Test suite)
+        {
+            List<TestMethod> tests = new List<TestMethod>();
+
+            foreach (ParameterSet parms in GetTestCasesFor(method))
+                tests.Add(_builder.BuildTestMethod(method, suite, parms));
+
+            return tests;
+        }
+
+        #endregion
     }
 }

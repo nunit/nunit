@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2010 Charlie Poole
+// Copyright (c) 2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -13,7 +13,7 @@
 // included in all copies or substantial portions of the Software.
 // 
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OFn
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
 // NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
 // LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
@@ -21,26 +21,18 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
-using System.Reflection;
-
 namespace NUnit.Framework.Interfaces
 {
     /// <summary>
-    /// ITestCaseSource interface is implemented by Types that know how to 
-    /// return a set of ITestCaseData items for use by a test method.
+    /// IImplyFixture is an empty marker interface used by attributes like
+    /// TestAttribute that cause the class where they are used to be treated
+    /// as a TestFixture even without a TestFixtureAttribute.
+    /// 
+    /// Marker interfaces are not usually considered a good practice, but
+    /// we use it here to avoid cluttering the attribute hierarchy with 
+    /// classes that don't contain any extra implementation.
     /// </summary>
-    /// <remarks>
-    /// This method is defined differently depending on the version of .NET.
-    /// </remarks>
-    public interface ITestCaseSource
+    public interface IImplyFixture
     {
-        /// <summary>
-        /// Returns a set of ITestCaseDataItems for use as arguments
-        /// to a parameterized test method.
-        /// </summary>
-        /// <param name="method">The method for which data is needed.</param>
-        /// <returns></returns>
-        System.Collections.Generic.IEnumerable<ITestCaseData> GetTestCasesFor(MethodInfo method);
     }
 }

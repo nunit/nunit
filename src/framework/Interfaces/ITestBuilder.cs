@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2010 Charlie Poole
+// Copyright (c) 2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -13,7 +13,7 @@
 // included in all copies or substantial portions of the Software.
 // 
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OFn
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
 // NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
 // LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
@@ -21,30 +21,26 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
+using System.Collections.Generic;
+using System.Reflection;
+using NUnit.Framework.Internal; // TODO: We shouldn't reference this in the interface
 
 namespace NUnit.Framework.Interfaces
 {
     /// <summary>
-    /// The ITestCaseSourceProvider interface is implemented by Types that 
-    /// are able to provide a test case source for use by a test method.
+    /// The ITestBuilder interface is exposed by a class that knows how to
+    /// build one or more TestMethods from a MethodInfo. In general, it is exposed
+    /// by an attribute, which has additional information available to provide
+    /// the necessary test parameters to distinguish the test cases built.
     /// </summary>
-    public interface IDynamicTestCaseSource
+    public interface ITestBuilder
     {
         /// <summary>
-        /// Returns a test case source. May be called on a provider
-        /// implementing the source internally or able to create
-        /// a source instance on it's own.
+        /// Build one or more TestMethods from the provided MethodInfo.
         /// </summary>
-        /// <returns></returns>
-        ITestCaseSource GetTestCaseSource();
-        
-        /// <summary>
-        /// Returns a test case source based on an instance of a 
-        /// source object.
-        /// </summary>
-        /// <param name="instance"></param>
-        /// <returns></returns>
-        ITestCaseSource GetTestCaseSource(object instance);
+        /// <param name="method">The method to be used as a test</param>
+        /// <param name="suite">The TestSuite to which the method will be added</param>
+        /// <returns>A TestMethod object</returns>
+        IEnumerable<TestMethod> BuildFrom(MethodInfo method, Test suite);
     }
 }

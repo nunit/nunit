@@ -47,7 +47,7 @@ namespace NUnit.Framework.Internal.Builders
         /// </returns>
         public bool HasDataFor(ParameterInfo parameter)
         {
-            return parameter.IsDefined(typeof(DataAttribute), false);
+            return parameter.IsDefined(typeof(IParameterDataSource), false);
         }
 
         /// <summary>
@@ -63,12 +63,10 @@ namespace NUnit.Framework.Internal.Builders
         {
             var data = new List<object>();
 
-            foreach (Attribute attr in parameter.GetCustomAttributes(typeof(DataAttribute), false))
+            foreach (IParameterDataSource source in parameter.GetCustomAttributes(typeof(IParameterDataSource), false))
             {
-                IParameterDataSource source = attr as IParameterDataSource;
-                if (source != null)
-                    foreach (object item in source.GetData(parameter))
-                        data.Add(item);
+                foreach (object item in source.GetData(parameter))
+                data.Add(item);
             }
 
             return data;

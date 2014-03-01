@@ -22,7 +22,9 @@
 // ***********************************************************************
 
 using System;
-using NUnit.Framework.Internal;
+using System.Collections;
+using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal.Builders;
 
 namespace NUnit.Framework
 {
@@ -32,11 +34,11 @@ namespace NUnit.Framework
     /// taking the next value of each argument until all are used.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited=false)]
-    public class SequentialAttribute : PropertyAttribute
+    public class SequentialAttribute : CombiningStrategyAttribute
     {
         /// <summary>
         /// Default constructor
         /// </summary>
-        public SequentialAttribute() : base(PropertyNames.JoinType, "Sequential") { }
+        public SequentialAttribute() : base(new SequentialStrategy()) { }
     }
 }

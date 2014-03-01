@@ -37,7 +37,7 @@ namespace NUnit.Framework.TestHarness
         public ResultReporter(XmlNode result)
         {
             this.result = result;
-            this.testRunResult = result.Attributes["result"].Value;
+            this.testRunResult = GetStatus(result);
             this.summary = new ResultSummary(result);
             if (summary.ResultCount == 0)
                 this.testRunResult += " - No tests found.";
@@ -143,9 +143,7 @@ namespace NUnit.Framework.TestHarness
 
         private void WriteSingleResult(XmlNode result)
         {
-            string status = result.Attributes["result"].Value;
-            if (result.Attributes["label"] != null)
-                status = result.Attributes["label"].Value;
+            string status = GetStatus(result);
             string fullName = result.Attributes["fullname"].Value;
 
             Console.WriteLine("{0}) {1} : {2}", ++reportIndex, status, fullName);
@@ -174,6 +172,14 @@ namespace NUnit.Framework.TestHarness
                 if (message != null)
                     Console.WriteLine(message.InnerText);
             }
+        }
+
+        private string GetStatus(XmlNode result)
+        {
+            if (result.Attributes["label"] != null)
+                return result.Attributes["label"].Value;
+
+            return result.Attributes["result"].Value;
         }
     }
 }

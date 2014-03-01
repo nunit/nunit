@@ -63,7 +63,7 @@ namespace NUnit.Framework.Internal
         {
             base.AddResult(result);
 
-            this.assertCount += result.AssertCount;
+            this.AssertCount += result.AssertCount;
             this.passCount += result.PassCount;
             this.failCount += result.FailCount;
             this.skipCount += result.SkipCount;
