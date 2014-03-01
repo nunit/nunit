@@ -26,12 +26,12 @@ using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Assertions
 {
-	[TestFixture]
-	public class AssertThrowsTests
-	{
-		[Test]
-		public void CorrectExceptionThrown()
-		{
+    [TestFixture]
+    public class AssertThrowsTests
+    {
+        [Test]
+        public void CorrectExceptionThrown()
+        {
             Assert.Throws(typeof(ArgumentException), TestDelegates.ThrowsArgumentException);
             Assert.Throws(typeof(ArgumentException),
                 delegate { throw new ArgumentException(); });
@@ -47,10 +47,10 @@ namespace NUnit.Framework.Assertions
             //        delegate { throw new ArgumentException(); } );
         }
 
-		[Test]
-		public void CorrectExceptionIsReturnedToMethod()
-		{
-			ArgumentException ex = Assert.Throws(typeof(ArgumentException),
+        [Test]
+        public void CorrectExceptionIsReturnedToMethod()
+        {
+            ArgumentException ex = Assert.Throws(typeof(ArgumentException),
                 new TestDelegate(TestDelegates.ThrowsArgumentException)) as ArgumentException;
 
             Assert.IsNotNull(ex, "No ArgumentException thrown");
@@ -68,7 +68,7 @@ namespace NUnit.Framework.Assertions
             Assert.That(ex.ParamName, Is.EqualTo("myParam"));
 #endif
 
-			ex = Assert.Throws(typeof(ArgumentException), 
+            ex = Assert.Throws(typeof(ArgumentException), 
                 delegate { throw new ArgumentException("myMessage", "myParam"); } ) as ArgumentException;
 
             Assert.IsNotNull(ex, "No ArgumentException thrown");
@@ -84,46 +84,42 @@ namespace NUnit.Framework.Assertions
 #if !NETCF && !SILVERLIGHT
             Assert.That(ex.ParamName, Is.EqualTo("myParam"));
 #endif
-		}
+        }
 
-		[Test, ExpectedException(typeof(AssertionException))]
-		public void NoExceptionThrown()
-		{
-            ArgumentException ex = Assert.Throws<ArgumentException>(TestDelegates.ThrowsNothing);
+        [Test]
+        public void NoExceptionThrown()
+        {
+            var ex = CatchException(() => Assert.Throws<ArgumentException>(TestDelegates.ThrowsNothing));
             Assert.That(ex.Message, Is.EqualTo(
-				"  Expected: <System.ArgumentException>" + Env.NewLine +
-				"  But was:  null" + Env.NewLine));
-		}
+                "  Expected: <System.ArgumentException>" + Env.NewLine +
+                "  But was:  null" + Env.NewLine));
+        }
 
-        [Test, ExpectedException(typeof(AssertionException))]
+        [Test]
         public void UnrelatedExceptionThrown()
         {
-            ArgumentException ex = Assert.Throws<ArgumentException>(TestDelegates.ThrowsNullReferenceException);
+            var ex = CatchException(() => Assert.Throws<ArgumentException>(TestDelegates.ThrowsNullReferenceException));
             Assert.That(ex.Message, Is.StringStarting(
                 "  Expected: <System.ArgumentException>" + Env.NewLine +
-                "  But was:  <System.NullReferenceException> (my message)" + Env.NewLine));
-            Assert.That(ex.Message, Contains.Substring("  at "));
+                "  But was:  <System.NullReferenceException>" + Env.NewLine));
         }
 
-        [Test, ExpectedException(typeof(AssertionException))]
+        [Test]
         public void BaseExceptionThrown()
         {
-            ArgumentException ex = Assert.Throws<ArgumentException>(TestDelegates.ThrowsSystemException);
+            var ex = CatchException(() => Assert.Throws<ArgumentException>(TestDelegates.ThrowsSystemException));
             Assert.That(ex.Message, Is.StringStarting(
                 "  Expected: <System.ArgumentException>" + Env.NewLine +
-                "  But was:  <System.Exception> (my message)" + Env.NewLine));
-            Assert.That(ex.Message, Contains.Substring("  at "));
+                "  But was:  <System.Exception>" + Env.NewLine));
         }
 
-        [Test,ExpectedException(typeof(AssertionException))]
+        [Test]
         public void DerivedExceptionThrown()
         {
-            Exception ex = Assert.Throws<Exception>(TestDelegates.ThrowsArgumentException);
+            var ex = CatchException(() => Assert.Throws<Exception>(TestDelegates.ThrowsArgumentException));
             Assert.That(ex.Message, Is.StringStarting(
                 "  Expected: <System.Exception>" + Env.NewLine +
-                "  But was:  <System.ArgumentException> (myMessage" + Env.NewLine +
-                "Parameter name: myParam)" + Env.NewLine));
-            Assert.That(ex.Message, Contains.Substring("  at "));
+                "  But was:  <System.ArgumentException>" + Env.NewLine));
         }
 
         [Test]
@@ -132,10 +128,24 @@ namespace NUnit.Framework.Assertions
             Assert.DoesNotThrow(TestDelegates.ThrowsNothing);
         }
 
-        [Test, ExpectedException(typeof(AssertionException))]
+        [Test]
         public void DoesNotThrowFails()
         {
-            Assert.DoesNotThrow(TestDelegates.ThrowsArgumentException);
+            var ex = CatchException(() => Assert.DoesNotThrow(TestDelegates.ThrowsArgumentException));
+            Assert.That(ex, Is.Not.Null.With.TypeOf<AssertionException>());
+        }
+
+        private Exception CatchException(TestDelegate del)
+        {
+            try
+            {
+                del();
+                return null;
+            }
+            catch (Exception ex)
+            {
+                return ex;
+            }
         }
     }
 }

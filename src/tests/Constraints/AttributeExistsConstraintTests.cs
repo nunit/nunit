@@ -39,10 +39,10 @@ namespace NUnit.Framework.Constraints
         object[] FailureData = new object[] { 
             new TestCaseData( typeof(D2), "<" + typeof(D2).FullName + ">" ) };
 
-        [Test, ExpectedException(typeof(System.ArgumentException))]
+        [Test]
         public void NonAttributeThrowsException()
         {
-            new AttributeExistsConstraint(typeof(string));
+            Assert.Throws<System.ArgumentException>(() => new AttributeExistsConstraint(typeof(string)));
         }
 
         [Test]

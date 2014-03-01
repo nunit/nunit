@@ -138,40 +138,40 @@ namespace NUnit.Framework.Constraints
                 Assert.That(actual, new EqualConstraint(expected).Within(TimeSpan.TicksPerMinute*5).Ticks);
             }
 
-            [Test, ExpectedException(typeof (InvalidOperationException))]
+            [Test]
             public void ErrorIfDaysPrecedesWithin()
             {
-                Assert.That(DateTime.Now, Is.EqualTo(DateTime.Now).Days.Within(5));
+                Assert.Throws<InvalidOperationException>(() => Assert.That(DateTime.Now, Is.EqualTo(DateTime.Now).Days.Within(5)));
             }
 
-            [Test, ExpectedException(typeof (InvalidOperationException))]
+            [Test]
             public void ErrorIfHoursPrecedesWithin()
             {
-                Assert.That(DateTime.Now, Is.EqualTo(DateTime.Now).Hours.Within(5));
+                Assert.Throws<InvalidOperationException>(() => Assert.That(DateTime.Now, Is.EqualTo(DateTime.Now).Hours.Within(5)));
             }
 
-            [Test, ExpectedException(typeof (InvalidOperationException))]
+            [Test]
             public void ErrorIfMinutesPrecedesWithin()
             {
-                Assert.That(DateTime.Now, Is.EqualTo(DateTime.Now).Minutes.Within(5));
+                Assert.Throws<InvalidOperationException>(() => Assert.That(DateTime.Now, Is.EqualTo(DateTime.Now).Minutes.Within(5)));
             }
 
-            [Test, ExpectedException(typeof (InvalidOperationException))]
+            [Test]
             public void ErrorIfSecondsPrecedesWithin()
             {
-                Assert.That(DateTime.Now, Is.EqualTo(DateTime.Now).Seconds.Within(5));
+                Assert.Throws<InvalidOperationException>(() => Assert.That(DateTime.Now, Is.EqualTo(DateTime.Now).Seconds.Within(5)));
             }
 
-            [Test, ExpectedException(typeof (InvalidOperationException))]
+            [Test]
             public void ErrorIfMillisecondsPrecedesWithin()
             {
-                Assert.That(DateTime.Now, Is.EqualTo(DateTime.Now).Milliseconds.Within(5));
+                Assert.Throws<InvalidOperationException>(() => Assert.That(DateTime.Now, Is.EqualTo(DateTime.Now).Milliseconds.Within(5)));
             }
 
-            [Test, ExpectedException(typeof (InvalidOperationException))]
+            [Test]
             public void ErrorIfTicksPrecedesWithin()
             {
-                Assert.That(DateTime.Now, Is.EqualTo(DateTime.Now).Ticks.Within(5));
+                Assert.Throws<InvalidOperationException>(() => Assert.That(DateTime.Now, Is.EqualTo(DateTime.Now).Ticks.Within(5)));
             }
         }
 
@@ -270,11 +270,12 @@ namespace NUnit.Framework.Constraints
                                 new Dictionary<int, int> {{0, 0}, {1, 1}, {2, 2}});
             }
 
-            [Test, ExpectedException(typeof (AssertionException))]
+            [Test]
             public void CanMatchDictionaries_Failure()
             {
-                Assert.AreEqual(new Dictionary<int, int> {{0, 0}, {1, 1}, {2, 2}},
-                                new Dictionary<int, int> {{0, 0}, {1, 5}, {2, 2}});
+                Assert.Throws<AssertionException>(
+                    () => Assert.AreEqual(new Dictionary<int, int> {{0, 0}, {1, 1}, {2, 2}},
+                                          new Dictionary<int, int> {{0, 0}, {1, 5}, {2, 2}}));
             }
 
             [Test]
@@ -292,11 +293,12 @@ namespace NUnit.Framework.Constraints
                                 new Hashtable {{0, 0}, {1, 1}, {2, 2}});
             }
 
-            [Test, ExpectedException(typeof (AssertionException))]
+            [Test]
             public void CanMatchHashtables_Failure()
             {
-                Assert.AreEqual(new Hashtable {{0, 0}, {1, 1}, {2, 2}},
-                                new Hashtable {{0, 0}, {1, 5}, {2, 2}});
+                Assert.Throws<AssertionException>(
+                    () => Assert.AreEqual(new Hashtable {{0, 0}, {1, 1}, {2, 2}},
+                                          new Hashtable {{0, 0}, {1, 5}, {2, 2}}));
             }
 
             [Test]
@@ -395,45 +397,50 @@ namespace NUnit.Framework.Constraints
             }
 
             /// <summary>Applies both the Percent and Ulps modifiers to cause an exception</summary>
-            [Test, ExpectedException(typeof (InvalidOperationException))]
+            [Test]
             public void ErrorWithPercentAndUlpsToleranceModes()
             {
-                EqualConstraint shouldFail = new EqualConstraint(100.0f).Within(10.0f).Percent.Ulps;
+                Assert.Throws<InvalidOperationException>(() =>
+                {
+                    var shouldFail = new EqualConstraint(100.0f).Within(10.0f).Percent.Ulps;
+                });
             }
 
             /// <summary>Applies both the Ulps and Percent modifiers to cause an exception</summary>
-            [Test, ExpectedException(typeof (InvalidOperationException))]
+            [Test]
             public void ErrorWithUlpsAndPercentToleranceModes()
             {
-                EqualConstraint shouldFail = new EqualConstraint(100.0f).Within(10.0f).Ulps.Percent;
+                Assert.Throws<InvalidOperationException>(() =>
+                {
+                    EqualConstraint shouldFail = new EqualConstraint(100.0f).Within(10.0f).Ulps.Percent;
+                });
             }
 
-            [Test, ExpectedException(typeof (InvalidOperationException))]
+            [Test]
             public void ErrorIfPercentPrecedesWithin()
             {
-                Assert.That(1010, Is.EqualTo(1000).Percent.Within(5));
+                Assert.Throws<InvalidOperationException>(() => Assert.That(1010, Is.EqualTo(1000).Percent.Within(5)));
             }
 
-            [Test, ExpectedException(typeof (InvalidOperationException))]
+            [Test]
             public void ErrorIfUlpsPrecedesWithin()
             {
-                Assert.That(1010.0, Is.EqualTo(1000.0).Ulps.Within(5));
+                Assert.Throws<InvalidOperationException>(() => Assert.That(1010.0, Is.EqualTo(1000.0).Ulps.Within(5)));
             }
 
-            [ExpectedException(typeof (InvalidOperationException))]
             [TestCase(1000, 1010)]
             [TestCase(1000U, 1010U)]
             [TestCase(1000L, 1010L)]
             [TestCase(1000UL, 1010UL)]
             public void ErrorIfUlpsIsUsedOnIntegralType(object x, object y)
             {
-                Assert.That(y, Is.EqualTo(x).Within(2).Ulps);
+                Assert.Throws<InvalidOperationException>(() => Assert.That(y, Is.EqualTo(x).Within(2).Ulps));
             }
 
-            [Test, ExpectedException(typeof (InvalidOperationException))]
+            [Test]
             public void ErrorIfUlpsIsUsedOnDecimal()
             {
-                Assert.That(100m, Is.EqualTo(100m).Within(2).Ulps);
+                Assert.Throws<InvalidOperationException>(() => Assert.That(100m, Is.EqualTo(100m).Within(2).Ulps));
             }
         }
 

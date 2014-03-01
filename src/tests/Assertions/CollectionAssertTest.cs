@@ -130,10 +130,11 @@ namespace NUnit.Framework.Assertions
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 
-        [Test,ExpectedException(typeof(AssertionException))]
+        [Test]
         public void UniqueFailure_WithTwoNulls()
         {
-            CollectionAssert.AllItemsAreUnique(new SimpleObjectCollection("x", null, "y", null, "z"));
+            Assert.Throws<AssertionException>(
+                () => CollectionAssert.AllItemsAreUnique(new SimpleObjectCollection("x", null, "y", null, "z")));
         }
 
         #endregion
@@ -737,24 +738,24 @@ namespace NUnit.Framework.Assertions
             Assert.That(ex.Message, Contains.Substring("index 1"));
         }
 
-        [Test, ExpectedException(typeof(ArgumentException))]
+        [Test]
         public void IsOrdered_ContainedTypesMustBeCompatible()
         {
             ArrayList al = new ArrayList();
             al.Add(1);
             al.Add("x");
 
-            CollectionAssert.IsOrdered(al);
+            Assert.Throws<ArgumentException>(() => CollectionAssert.IsOrdered(al));
         }
 
-        [Test, ExpectedException(typeof(ArgumentException))]
+        [Test]
         public void IsOrdered_TypesMustImplementIComparable()
         {
             ArrayList al = new ArrayList();
             al.Add(new object());
             al.Add(new object());
 
-            CollectionAssert.IsOrdered(al);
+            Assert.Throws<ArgumentException>(() => CollectionAssert.IsOrdered(al));
         }
 
         [Test]

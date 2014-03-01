@@ -64,10 +64,10 @@ namespace NUnit.Framework.Assertions
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 
-        [Test,ExpectedException(typeof(ArgumentException))]
+        [Test]
         public void NullArrayIsError()
         {
-            Assert.Contains( "def", null );
+            Assert.Throws<ArgumentException>(() => Assert.Contains( "def", null ));
         }
 
         [Test]

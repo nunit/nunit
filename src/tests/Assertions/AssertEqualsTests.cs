@@ -160,18 +160,18 @@ namespace NUnit.Framework.Assertions
         }
 
 #if !NETCF
-        [Test,ExpectedException(typeof(InvalidOperationException))]
+        [Test]
         public void EqualsThrowsException()
         {
             object o = new object();
-            Assert.Equals(o, o);
+            Assert.Throws<InvalidOperationException>(() => Assert.Equals(o, o));
         }
 
-        [Test,ExpectedException(typeof(InvalidOperationException))]
+        [Test]
         public void ReferenceEqualsThrowsException()
         {
             object o = new object();
-            Assert.ReferenceEquals(o, o);
+            Assert.Throws<InvalidOperationException>(() => Assert.ReferenceEquals(o, o));
         }
 #endif
         

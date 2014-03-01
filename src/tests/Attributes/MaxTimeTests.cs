@@ -68,12 +68,6 @@ namespace NUnit.Framework.Attributes
             Assert.That(result.Message, Is.EqualTo("Intentional Failure"));
         }
 
-        [Test, MaxTime(1000), ExpectedException]
-        public void ErrorReport()
-        {
-            throw new Exception();
-        }
-
         [Test]
         public void ErrorReportHasPriorityOverMaxTime()
         {

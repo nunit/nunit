@@ -118,24 +118,24 @@ namespace NUnit.Framework.Constraints
             Assert.That(ex.Message, Contains.Substring("index 1"));
         }
 
-        [Test, ExpectedException(typeof(ArgumentException))]
+        [Test]
         public void IsOrdered_TypesMustBeComparable()
         {
             var al = new List<object>();
             al.Add(1);
             al.Add("x");
 
-            Assert.That(al, Is.Ordered);
+            Assert.Throws<ArgumentException>(() => Assert.That(al, Is.Ordered));
         }
 
-        [Test, ExpectedException(typeof(ArgumentException))]
+        [Test]
         public void IsOrdered_AtLeastOneArgMustImplementIComparable()
         {
             var al = new List<object>();
             al.Add(new object());
             al.Add(new object());
 
-            Assert.That(al, Is.Ordered);
+            Assert.Throws<ArgumentException>(() => Assert.That(al, Is.Ordered));
         }
 
         [Test]

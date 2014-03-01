@@ -244,10 +244,11 @@ namespace NUnit.Framework.TestHarness.Tests
             Assert.AreEqual(-1, options.DefaultTimeout);
         }
 
-        [Test, ExpectedException(typeof(Mono.Options.OptionException))]
+        [Test]
         public void TimeoutThrowsExceptionIfOptionHasNoValue()
         {
-            CommandLineOptions options = new CommandLineOptions("tests.dll", "-timeout");
+            Assert.Throws<Mono.Options.OptionException>(
+                () => new CommandLineOptions("tests.dll", "-timeout"));
         }
 
         [Test]

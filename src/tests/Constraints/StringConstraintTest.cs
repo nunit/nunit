@@ -28,10 +28,10 @@ namespace NUnit.Framework.Constraints
 
     public abstract class StringConstraintTests : ConstraintTestBase
     {
-        [Test, ExpectedException(typeof(ArgumentException))]
+        [Test]
         public void NonStringDataThrowsArgumentException()
         {
-            theConstraint.ApplyTo(123);
+            Assert.Throws<ArgumentException>(() => theConstraint.ApplyTo(123));
         }
     }
 }

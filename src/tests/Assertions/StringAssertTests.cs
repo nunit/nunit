@@ -53,10 +53,10 @@ namespace NUnit.Framework.Assertions
             StringAssert.DoesNotContain("x", "abc");
         }
 
-        [Test, ExpectedException(typeof(AssertionException))]
+        [Test]
         public void DoesNotContainFails()
         {
-            StringAssert.DoesNotContain("abc", "**abc**");
+            Assert.Throws<AssertionException>(() => StringAssert.DoesNotContain("abc", "**abc**"));
         }
 
         [Test]
@@ -82,10 +82,10 @@ namespace NUnit.Framework.Assertions
             StringAssert.DoesNotStartWith("x", "abc");
         }
 
-        [Test, ExpectedException(typeof(AssertionException))]
+        [Test]
         public void DoesNotStartWithFails()
         {
-            StringAssert.DoesNotStartWith("abc", "abc**");
+            Assert.Throws<AssertionException>(() => StringAssert.DoesNotStartWith("abc", "abc**"));
         }
 
         [Test]
@@ -111,10 +111,10 @@ namespace NUnit.Framework.Assertions
             StringAssert.DoesNotEndWith("x", "abc");
         }
 
-        [Test, ExpectedException(typeof(AssertionException))]
+        [Test]
         public void DoesNotEndWithFails()
         {
-            StringAssert.DoesNotEndWith("abc", "***abc");
+            Assert.Throws<AssertionException>(() => StringAssert.DoesNotEndWith("abc", "***abc"));
         }
 
         [Test]

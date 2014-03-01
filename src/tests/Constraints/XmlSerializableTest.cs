@@ -47,11 +47,11 @@ namespace NUnit.Framework.Constraints
             new TestCaseData( new InternalWithSerializableAttributeClass(), "<" + typeof(InternalWithSerializableAttributeClass).FullName + ">" )
         };
 
-        [Test, ExpectedException(typeof(ArgumentNullException))]
+        [Test]
         public void NullArgumentThrowsException()
         {
             object o = null;
-            theConstraint.ApplyTo(o);
+            Assert.Throws<ArgumentNullException>(() => theConstraint.ApplyTo(o));
         }
     }
 
