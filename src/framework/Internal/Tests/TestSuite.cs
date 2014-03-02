@@ -47,21 +47,6 @@ namespace NUnit.Framework.Internal
         /// </summary>
         protected bool maintainTestOrder;
 
-        /// <summary>
-        /// The fixture setup methods for this suite
-        /// </summary>
-        protected internal MethodInfo[] oneTimeSetUpMethods;
-
-        /// <summary>
-        /// The fixture teardown methods for this suite
-        /// </summary>
-        protected internal MethodInfo[] oneTimeTearDownMethods;
-
-        /// <summary>
-        /// Argument list for use in creating the fixture.
-        /// </summary>
-        internal object[] arguments;
-
         #endregion
 
         #region Constructors
@@ -93,6 +78,25 @@ namespace NUnit.Framework.Internal
                 ? nspace + "." + name
                 : name;
         }
+
+        #endregion
+
+        #region Public Properties
+
+        /// <summary>
+        /// The one time setup methods for this suite
+        /// </summary>
+        public MethodInfo[] OneTimeSetUpMethods { get; protected set; }
+
+        /// <summary>
+        /// The one time teardown methods for this suite
+        /// </summary>
+        public MethodInfo[] OneTimeTearDownMethods { get; protected set; }
+
+        /// <summary>
+        /// The arguments to use in creating the fixture
+        /// </summary>
+        public object[] Arguments { get; internal set; }
 
         #endregion
 

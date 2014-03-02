@@ -55,6 +55,8 @@
     <Compile Include="Attributes\CombiningStrategyAttribute.cs" />
     <Compile Include="Attributes\FixtureBuilderAttribute.cs" />
     <Compile Include="Attributes\LevelOfParallelizationAttribute.cs" />
+    <Compile Include="Attributes\OneTimeSetUpAttribute.cs" />
+    <Compile Include="Attributes\OneTimeTearDownAttribute.cs" />
     <Compile Include="Attributes\ParallelizableAttribute.cs" />
     <Compile Include="Attributes\ParallelScope.cs" />
     <Compile Include="Attributes\RequiresMTAAtribute.cs" />

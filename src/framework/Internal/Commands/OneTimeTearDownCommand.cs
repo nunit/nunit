@@ -61,11 +61,11 @@ namespace NUnit.Framework.Internal.Commands
             {
                 try
                 {
-                    int index = suite.oneTimeTearDownMethods.Length;
+                    int index = suite.OneTimeTearDownMethods.Length;
                     while (--index >= 0)
                     {
                         // TODO: Pass methods to constructor?
-                        MethodInfo fixtureTearDown = suite.oneTimeTearDownMethods[index];
+                        MethodInfo fixtureTearDown = suite.OneTimeTearDownMethods[index];
                         if (!fixtureTearDown.IsStatic && context.TestObject == null)
                             Console.WriteLine("Null TestObject in fixture teardown for " + Test.FullName);
                         Reflect.InvokeMethod(fixtureTearDown, fixtureTearDown.IsStatic ? null : context.TestObject);

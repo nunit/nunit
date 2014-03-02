@@ -44,7 +44,7 @@ namespace NUnit.Framework.Internal.Commands
         {
             this.suite = suite;
             this.fixtureType = suite.FixtureType;
-            this.arguments = suite.arguments;
+            this.arguments = suite.Arguments;
         }
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace NUnit.Framework.Internal.Commands
                     context.TestObject = suite.Fixture ?? Reflect.Construct(fixtureType, arguments);
 
                 // TODO: Pass methods to constructor?
-                foreach (MethodInfo method in suite.oneTimeSetUpMethods)
+                foreach (MethodInfo method in suite.OneTimeSetUpMethods)
                     Reflect.InvokeMethod(method, method.IsStatic ? null : context.TestObject);
             }
 

@@ -37,13 +37,13 @@ namespace NUnit.Framework.Attributes
         {
             private PairCounter pairsTested = new PairCounter();
 
-            [TestFixtureSetUp]
+            [OneTimeSetUp]
             public void TestFixtureSetUp()
             {
                 pairsTested = new PairCounter();
             }
 
-            [TestFixtureTearDown]
+            [OneTimeTearDown]
             public void TestFixtureTearDown()
             {
                 Assert.That(pairsTested.Count, Is.EqualTo(16));

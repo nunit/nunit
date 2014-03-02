@@ -28,20 +28,20 @@ using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal
 {
-	/// <summary>
-	/// SetUpFixture extends TestSuite and supports
-	/// Setup and TearDown methods.
-	/// </summary>
-	public class SetUpFixture : TestSuite
-	{
-		#region Constructor
+    /// <summary>
+    /// SetUpFixture extends TestSuite and supports
+    /// Setup and TearDown methods.
+    /// </summary>
+    public class SetUpFixture : TestSuite
+    {
+        #region Constructor
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SetUpFixture"/> class.
         /// </summary>
         /// <param name="type">The type.</param>
-		public SetUpFixture( Type type ) : base( type )
-		{
+        public SetUpFixture( Type type ) : base( type )
+        {
             this.Name = type.Namespace;
             if (this.Name == null)
                 this.Name = "[default namespace]";
@@ -49,9 +49,9 @@ namespace NUnit.Framework.Internal
             if (index > 0)
                 this.Name = this.Name.Substring(index + 1);
 
-            this.oneTimeSetUpMethods = GetSetUpTearDownMethods(typeof(NUnit.Framework.SetUpAttribute));
-            this.oneTimeTearDownMethods = GetSetUpTearDownMethods(typeof(NUnit.Framework.TearDownAttribute));
-		}
+            this.OneTimeSetUpMethods = GetSetUpTearDownMethods(typeof(NUnit.Framework.OneTimeSetUpAttribute));
+            this.OneTimeTearDownMethods = GetSetUpTearDownMethods(typeof(NUnit.Framework.OneTimeTearDownAttribute));
+        }
 
         private MethodInfo[] GetSetUpTearDownMethods(Type attrType)
         {

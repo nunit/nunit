@@ -30,7 +30,8 @@ namespace NUnit.Framework
 	/// called before any tests in a fixture are run.
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Method, AllowMultiple=false, Inherited=true)]
-	public class TestFixtureSetUpAttribute : NUnitAttribute
+    [Obsolete("Use OneTimeSetUpAttribute")]
+	public class TestFixtureSetUpAttribute : OneTimeSetUpAttribute
 	{
 	}
 }

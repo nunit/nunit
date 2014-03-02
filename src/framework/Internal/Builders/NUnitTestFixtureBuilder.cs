@@ -147,7 +147,7 @@ namespace NUnit.Framework.Internal.Builders
                 fixture.FullName = nspace != null && nspace != ""
                     ? nspace + "." + name
                     : name;
-                fixture.arguments = arguments;
+                fixture.Arguments = arguments;
             }
 
             if (fixture.RunState != RunState.NotRunnable)
@@ -216,7 +216,7 @@ namespace NUnit.Framework.Internal.Builders
             }
             else if (!IsStaticClass(fixtureType))
             {
-                object[] args = fixture.arguments;
+                object[] args = fixture.Arguments;
 
                 Type[] argTypes;
 

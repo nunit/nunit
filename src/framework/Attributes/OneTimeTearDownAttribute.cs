@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2007 Charlie Poole
+// Copyright (c) 2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,64 +21,17 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
-using NUnit.Framework;
-
-namespace NUnit.TestData.AssertIgnoreData
+namespace NUnit.Framework
 {
-    [TestFixture]
-    public class IgnoredTestCaseFixture
-    {
-        [Test]
-        public void CallsIgnore()
-        {
-            Assert.Ignore("Ignore me");
-        }
+	using System;
 
-        [Test, ExpectedException(typeof(InvalidOperationException))]
-        public void CallsIgnoreWithExpectedException()
-        {
-            Assert.Ignore("Ignore me");
-        }
-    }
-
-    [TestFixture]
-    public class IgnoredTestSuiteFixture
-    {
-        [OneTimeSetUp]
-        public void FixtureSetUp()
-        {
-            Assert.Ignore("Ignore this fixture");
-        }
-
-        [Test]
-        public void ATest()
-        {
-        }
-
-        [Test]
-        public void AnotherTest()
-        {
-        }
-    }
-
-    [TestFixture]
-    public class IgnoreInSetUpFixture
-    {
-        [SetUp]
-        public void SetUp()
-        {
-            Assert.Ignore( "Ignore this test" );
-        }
-
-        [Test]
-        public void Test1()
-        {
-        }
-
-        [Test]
-        public void Test2()
-        {
-        }
-    }
+	/// <summary>
+	/// Attribute used to identify a method that is called once
+	/// after all the child tests have run. The method is 
+	/// guaranteed to be called, even if an exception is thrown.
+	/// </summary>
+	[AttributeUsage(AttributeTargets.Method, AllowMultiple=false, Inherited=true)]
+	public class OneTimeTearDownAttribute : NUnitAttribute
+	{
+	}
 }

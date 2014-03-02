@@ -35,17 +35,17 @@ using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Internal
 {
-	/// <summary>
-	/// Summary description for TestExecutionContextTests.
-	/// </summary>
-	[TestFixture][Property("Question", "Why?")]
-	public class TestExecutionContextTests
-	{
+    /// <summary>
+    /// Summary description for TestExecutionContextTests.
+    /// </summary>
+    [TestFixture][Property("Question", "Why?")]
+    public class TestExecutionContextTests
+    {
         TestExecutionContext fixtureContext;
         TestExecutionContext setupContext;
 
 #if !NETCF
-		CultureInfo originalCulture;
+        CultureInfo originalCulture;
         CultureInfo originalUICulture;
 #endif
 
@@ -54,13 +54,13 @@ namespace NUnit.Framework.Internal
         IPrincipal originalPrincipal;
 #endif
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void OneTimeSetUp()
         {
             fixtureContext = TestExecutionContext.CurrentContext;
         }
 
-        [TestFixtureTearDown]
+        [OneTimeTearDown]
         public void OneTimeTearDown()
         {
             // TODO: We put some tests in one time teardown to verify that
@@ -74,13 +74,13 @@ namespace NUnit.Framework.Internal
             Assert.That(fixtureContext.CurrentTest.Properties.Get("Question"), Is.EqualTo("Why?"));
         }
 
-		/// <summary>
-		/// Since we are testing the mechanism that saves and
-		/// restores contexts, we save manually here
-		/// </summary>
-		[SetUp]
-		public void Initialize()
-		{
+        /// <summary>
+        /// Since we are testing the mechanism that saves and
+        /// restores contexts, we save manually here
+        /// </summary>
+        [SetUp]
+        public void Initialize()
+        {
             setupContext = new TestExecutionContext(TestExecutionContext.CurrentContext);
 #if !NETCF
             originalCulture = CultureInfo.CurrentCulture;
@@ -88,21 +88,21 @@ namespace NUnit.Framework.Internal
 #endif
 
 #if !NETCF && !SILVERLIGHT
-			originalDirectory = Environment.CurrentDirectory;
+            originalDirectory = Environment.CurrentDirectory;
             originalPrincipal = Thread.CurrentPrincipal;
 #endif
-		}
+        }
 
-		[TearDown]
-		public void Cleanup()
-		{
+        [TearDown]
+        public void Cleanup()
+        {
 #if !NETCF
-			Thread.CurrentThread.CurrentCulture = originalCulture;
+            Thread.CurrentThread.CurrentCulture = originalCulture;
             Thread.CurrentThread.CurrentUICulture = originalUICulture;
 #endif
 
 #if !NETCF && !SILVERLIGHT
-			Environment.CurrentDirectory = originalDirectory;
+            Environment.CurrentDirectory = originalDirectory;
             Thread.CurrentPrincipal = originalPrincipal;
 #endif
 

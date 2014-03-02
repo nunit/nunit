@@ -49,7 +49,7 @@ namespace NUnit.TestData.RepeatedTestFixture
 			fixtureSetupCount++;
 		}
 
-		[TestFixtureTearDown]
+		[OneTimeTearDown]
 		public void FixtureTearDown()
 		{
 			fixtureTeardownCount++;
