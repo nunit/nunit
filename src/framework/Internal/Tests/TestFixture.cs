@@ -22,8 +22,6 @@
 // ***********************************************************************
 
 using System;
-using System.Reflection;
-using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal
 {
@@ -41,31 +39,12 @@ namespace NUnit.Framework.Internal
         /// <param name="fixtureType">Type of the fixture.</param>
         public TestFixture(Type fixtureType) : base(fixtureType)
         {
-            this.OneTimeSetUpMethods = GetSetUpTearDownMethods(typeof(OneTimeSetUpAttribute));
-            this.OneTimeTearDownMethods = GetSetUpTearDownMethods(typeof(OneTimeTearDownAttribute));
-            this.setUpMethods =             GetSetUpTearDownMethods( typeof(SetUpAttribute) );
-            this.tearDownMethods =          GetSetUpTearDownMethods( typeof(TearDownAttribute) );
+            CheckSetUpTearDownMethods(typeof(OneTimeSetUpAttribute));
+            CheckSetUpTearDownMethods(typeof(OneTimeTearDownAttribute));
+            CheckSetUpTearDownMethods(typeof(SetUpAttribute));
+            CheckSetUpTearDownMethods(typeof(TearDownAttribute));
         }
 
-        private MethodInfo[] GetSetUpTearDownMethods(Type attrType)
-        {
-            MethodInfo[] methods = Reflect.GetMethodsWithAttribute(FixtureType, attrType, true);
-
-            foreach ( MethodInfo method in methods )
-                if ( method.IsAbstract ||
-                     !method.IsPublic && !method.IsFamily ||
-                     method.GetParameters().Length > 0 ||
-                     !method.ReturnType.Equals(typeof(void)))
-                {
-                    this.Properties.Set(
-                        PropertyNames.SkipReason, 
-                        string.Format("Invalid signature for SetUp or TearDown method: {0}", method.Name));
-                    this.RunState = RunState.NotRunnable;
-                    break;
-                }
-
-            return methods;
-        }
         #endregion
     }
 }

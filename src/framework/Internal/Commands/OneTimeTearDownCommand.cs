@@ -34,8 +34,9 @@ namespace NUnit.Framework.Internal.Commands
     /// </summary>
     public class OneTimeTearDownCommand : TestCommand
     {
-        private readonly TestSuite suite;
-        private readonly Type fixtureType;
+        private readonly TestSuite _suite;
+        private readonly Type _fixtureType;
+        private readonly MethodInfo[] _tearDownMethods;
 
         /// <summary>
         /// Construct a OneTimeTearDownCommand
@@ -44,8 +45,10 @@ namespace NUnit.Framework.Internal.Commands
         public OneTimeTearDownCommand(TestSuite suite)
             : base(suite)
         {
-            this.suite = suite;
-            this.fixtureType = suite.FixtureType;
+            _suite = suite;
+            _fixtureType = suite.FixtureType;
+            if (_fixtureType != null)
+                _tearDownMethods = Reflect.GetMethodsWithAttribute(_fixtureType, typeof(OneTimeTearDownAttribute), true);
         }
 
         /// <summary>
@@ -57,15 +60,15 @@ namespace NUnit.Framework.Internal.Commands
         {
             TestResult suiteResult = context.CurrentResult;
 
-            if (fixtureType != null)
+            if (_fixtureType != null)
             {
                 try
                 {
-                    int index = suite.OneTimeTearDownMethods.Length;
+                    int index = _tearDownMethods.Length;
                     while (--index >= 0)
                     {
                         // TODO: Pass methods to constructor?
-                        MethodInfo fixtureTearDown = suite.OneTimeTearDownMethods[index];
+                        MethodInfo fixtureTearDown = _tearDownMethods[index];
                         if (!fixtureTearDown.IsStatic && context.TestObject == null)
                             Console.WriteLine("Null TestObject in fixture teardown for " + Test.FullName);
                         Reflect.InvokeMethod(fixtureTearDown, fixtureTearDown.IsStatic ? null : context.TestObject);

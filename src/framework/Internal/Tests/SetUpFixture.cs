@@ -22,9 +22,6 @@
 // ***********************************************************************
 
 using System;
-using System.IO;
-using System.Reflection;
-using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal
 {
@@ -49,29 +46,10 @@ namespace NUnit.Framework.Internal
             if (index > 0)
                 this.Name = this.Name.Substring(index + 1);
 
-            this.OneTimeSetUpMethods = GetSetUpTearDownMethods(typeof(NUnit.Framework.OneTimeSetUpAttribute));
-            this.OneTimeTearDownMethods = GetSetUpTearDownMethods(typeof(NUnit.Framework.OneTimeTearDownAttribute));
+            CheckSetUpTearDownMethods(typeof(OneTimeSetUpAttribute));
+            CheckSetUpTearDownMethods(typeof(OneTimeTearDownAttribute));
         }
 
-        private MethodInfo[] GetSetUpTearDownMethods(Type attrType)
-        {
-            MethodInfo[] methods = Reflect.GetMethodsWithAttribute(FixtureType, attrType, true);
-
-            foreach (MethodInfo method in methods)
-                if (method.IsAbstract ||
-                     !method.IsPublic && !method.IsFamily ||
-                     method.GetParameters().Length > 0 ||
-                     !method.ReturnType.Equals(typeof(void)))
-                {
-                    this.Properties.Set(
-                        PropertyNames.SkipReason,
-                        string.Format("Invalid signature for SetUp or TearDown method: {0}", method.Name));
-                    this.RunState = RunState.NotRunnable;
-                    break;
-                }
-
-            return methods;
-        }
         #endregion
     }
 }

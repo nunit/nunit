@@ -43,7 +43,7 @@ namespace NUnit.Framework.Internal
         {
             Method = method;
             _isTheory = method.IsDefined(typeof(TheoryAttribute), true);
-            this.maintainTestOrder = true;
+            this.MaintainTestOrder = true;
         }
 
         /// <summary>

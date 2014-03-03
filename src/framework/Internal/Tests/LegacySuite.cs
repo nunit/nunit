@@ -23,45 +23,22 @@
 
 #if !NUNITLITE
 using System;
-using System.Collections;
-using System.Reflection;
-using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal
 {
-	/// <summary>
-	/// Represents a test suite constructed from a type that has a static Suite property
-	/// </summary>
-	public class LegacySuite : TestSuite
-	{
+    /// <summary>
+    /// Represents a test suite constructed from a type that has a static Suite property
+    /// </summary>
+    public class LegacySuite : TestSuite
+    {
         /// <summary>
         /// Initializes a new instance of the <see cref="LegacySuite"/> class.
         /// </summary>
         /// <param name="fixtureType">Type of the fixture.</param>
-		public LegacySuite( Type fixtureType ) : base( fixtureType )
-		{
-            this.OneTimeSetUpMethods = GetSetUpTearDownMethods(typeof(NUnit.Framework.OneTimeSetUpAttribute));
-            this.OneTimeTearDownMethods = GetSetUpTearDownMethods(typeof(NUnit.Framework.OneTimeTearDownAttribute));
-        }
-
-        private MethodInfo[] GetSetUpTearDownMethods(Type attrType)
+        public LegacySuite( Type fixtureType ) : base( fixtureType )
         {
-            MethodInfo[] methods = Reflect.GetMethodsWithAttribute(FixtureType, attrType, true);
-
-            foreach (MethodInfo method in methods)
-                if (method.IsAbstract ||
-                     !method.IsPublic && !method.IsFamily ||
-                     method.GetParameters().Length > 0 ||
-                     !method.ReturnType.Equals(typeof(void)))
-                {
-                    this.Properties.Set(
-                        PropertyNames.SkipReason,
-                        string.Format("Invalid signature for SetUp or TearDown method: {0}", method.Name));
-                    this.RunState = RunState.NotRunnable;
-                    break;
-                }
-
-            return methods;
+            CheckSetUpTearDownMethods(typeof(OneTimeSetUpAttribute));
+            CheckSetUpTearDownMethods(typeof(OneTimeTearDownAttribute));
         }
     }
 }

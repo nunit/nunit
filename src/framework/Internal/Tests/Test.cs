@@ -24,14 +24,13 @@
 using System;
 using System.Reflection;
 using NUnit.Framework.Interfaces;
-using NUnit.Framework.Internal.Execution;
 
 namespace NUnit.Framework.Internal
 {
-	/// <summary>
-	/// The Test abstract class represents a test within the framework.
-	/// </summary>
-	public abstract class Test : ITest, IComparable
+    /// <summary>
+    /// The Test abstract class represents a test within the framework.
+    /// </summary>
+    public abstract class Test : ITest, IComparable
     {
         #region Fields
 
@@ -56,35 +55,35 @@ namespace NUnit.Framework.Internal
         #region Construction
 
         /// <summary>
-		/// Constructs a test given its name
-		/// </summary>
-		/// <param name="name">The name of the test</param>
-		protected Test( string name )
-		{
-			this.FullName = name;
-			this.Name = name;
+        /// Constructs a test given its name
+        /// </summary>
+        /// <param name="name">The name of the test</param>
+        protected Test( string name )
+        {
+            this.FullName = name;
+            this.Name = name;
             this.Id = unchecked(nextID++);
 
             this.Properties = new PropertyBag();
             this.RunState = RunState.Runnable;
-		}
+        }
 
-		/// <summary>
-		/// Constructs a test given the path through the
-		/// test hierarchy to its parent and a name.
-		/// </summary>
-		/// <param name="pathName">The parent tests full name</param>
-		/// <param name="name">The name of the test</param>
-		protected Test( string pathName, string name ) 
-		{ 
-			this.FullName = pathName == null || pathName == string.Empty 
-				? name : pathName + "." + name;
-			this.Name = name;
+        /// <summary>
+        /// Constructs a test given the path through the
+        /// test hierarchy to its parent and a name.
+        /// </summary>
+        /// <param name="pathName">The parent tests full name</param>
+        /// <param name="name">The name of the test</param>
+        protected Test( string pathName, string name ) 
+        { 
+            this.FullName = pathName == null || pathName == string.Empty 
+                ? name : pathName + "." + name;
+            this.Name = name;
             this.Id = unchecked(nextID++);
 
             this.Properties = new PropertyBag();
             this.RunState = RunState.Runnable;
-		}
+        }
 
         /// <summary>
         ///  TODO: Documentation needed for constructor
@@ -107,9 +106,9 @@ namespace NUnit.Framework.Internal
             this.Method = method;
         }
 
-		#endregion
+        #endregion
 
-		#region ITest Members
+        #region ITest Members
 
         /// <summary>
         /// Gets or sets the id of the test
@@ -141,8 +140,8 @@ namespace NUnit.Framework.Internal
         public MethodInfo Method { get; set; } // public setter needed by NUnitTestCaseBuilder
 
         /// <summary>
-		/// Whether or not the test should be run
-		/// </summary>
+        /// Whether or not the test should be run
+        /// </summary>
         public RunState RunState { get; set; }
 
         /// <summary>
@@ -162,18 +161,18 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-		/// Gets a count of test cases represented by
-		/// or contained under this test.
-		/// </summary>
-		public virtual int TestCaseCount 
-		{ 
-			get { return 1; } 
-		}
+        /// Gets a count of test cases represented by
+        /// or contained under this test.
+        /// </summary>
+        public virtual int TestCaseCount 
+        { 
+            get { return 1; } 
+        }
 
-		/// <summary>
-		/// Gets the properties for this test
-		/// </summary>
-		public IPropertyBag Properties { get; private set; }
+        /// <summary>
+        /// Gets the properties for this test
+        /// </summary>
+        public IPropertyBag Properties { get; private set; }
 
         /// <summary>
         /// Returns true if this is a TestSuite
@@ -220,44 +219,6 @@ namespace NUnit.Framework.Internal
         #endregion
 
         #region Internal Properties
-
-        /// <summary>
-        /// Gets the set up methods.
-        /// </summary>
-        /// <returns></returns>
-        internal virtual MethodInfo[] SetUpMethods
-        {
-            get
-            {
-                if (setUpMethods == null && this.Parent != null)
-                {
-                    Test suite = this.Parent as Test;
-                    if (suite != null)
-                        setUpMethods = suite.SetUpMethods;
-                }
-
-                return setUpMethods;
-            }
-        }
-
-        /// <summary>
-        /// Gets the tear down methods.
-        /// </summary>
-        /// <returns></returns>
-        internal virtual MethodInfo[] TearDownMethods
-        {
-            get
-            {
-                if (tearDownMethods == null && this.Parent != null)
-                {
-                    TestSuite suite = this.Parent as TestSuite;
-                    if (suite != null)
-                        tearDownMethods = suite.TearDownMethods;
-                }
-
-                return tearDownMethods;
-            }
-        }
 
         internal bool RequiresThread { get; set; }
 

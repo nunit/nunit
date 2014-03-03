@@ -26,7 +26,6 @@ using System.Collections.Generic;
 using System.Reflection;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Commands;
-using NUnit.Framework.Internal.Execution;
 
 namespace NUnit.Framework.Internal
 {
@@ -41,11 +40,6 @@ namespace NUnit.Framework.Internal
         /// Our collection of child tests
         /// </summary>
         private List<ITest> tests = new List<ITest>();
-
-        /// <summary>
-        /// Set to true to suppress sorting this suite's contents
-        /// </summary>
-        protected bool maintainTestOrder;
 
         #endregion
 
@@ -81,25 +75,6 @@ namespace NUnit.Framework.Internal
 
         #endregion
 
-        #region Public Properties
-
-        /// <summary>
-        /// The one time setup methods for this suite
-        /// </summary>
-        public MethodInfo[] OneTimeSetUpMethods { get; protected set; }
-
-        /// <summary>
-        /// The one time teardown methods for this suite
-        /// </summary>
-        public MethodInfo[] OneTimeTearDownMethods { get; protected set; }
-
-        /// <summary>
-        /// The arguments to use in creating the fixture
-        /// </summary>
-        public object[] Arguments { get; internal set; }
-
-        #endregion
-
         #region Public Methods
 
         /// <summary>
@@ -107,7 +82,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public void Sort()
         {
-            if (!maintainTestOrder)
+            if (!MaintainTestOrder)
             {
                 this.tests.Sort();
 
@@ -230,6 +205,16 @@ namespace NUnit.Framework.Internal
             }
         }
 
+        /// <summary>
+        /// The arguments to use in creating the fixture
+        /// </summary>
+        public object[] Arguments { get; internal set; }
+
+        /// <summary>
+        /// Set to true to suppress sorting this suite's contents
+        /// </summary>
+        protected bool MaintainTestOrder { get; set; }
+
         #endregion
 
         #region Test Overrides
@@ -285,6 +270,31 @@ namespace NUnit.Framework.Internal
                     test.AddToXml(thisNode, recursive);
 
             return thisNode;
+        }
+
+        #endregion
+
+        #region Helper Methods
+
+        /// <summary>
+        /// Check that setup and teardown methods marked by certain attributes
+        /// meet NUnit's requirements and mark the tests not runnable otherwise.
+        /// </summary>
+        /// <param name="attrType">The attribute type to check for</param>
+        protected void CheckSetUpTearDownMethods(Type attrType)
+        {
+            foreach (MethodInfo method in Reflect.GetMethodsWithAttribute(FixtureType, attrType, true))
+                if (method.IsAbstract ||
+                     !method.IsPublic && !method.IsFamily ||
+                     method.GetParameters().Length > 0 ||
+                     !method.ReturnType.Equals(typeof(void)))
+                {
+                    this.Properties.Set(
+                        PropertyNames.SkipReason,
+                        string.Format("Invalid signature for SetUp or TearDown method: {0}", method.Name));
+                    this.RunState = RunState.NotRunnable;
+                    break;
+                }
         }
 
         #endregion
