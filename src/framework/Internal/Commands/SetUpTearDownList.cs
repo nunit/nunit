@@ -72,6 +72,18 @@ namespace NUnit.Framework.Internal.Commands
 
         #region Helper Methods
 
+        // This method builds a list of nodes that can be used to 
+        // run setup and teardown according to the NUnit specs.
+        // We need to execute setup and teardown methods one level
+        // at a time. However, we can't discover them by reflection
+        // one level at a time, because that would cause overridden
+        // methods to be called twice, once on the base class and
+        // once on the derived class.
+        // 
+        // For that reason, we start with a list of all setup and
+        // teardown methods, found using a single reflection call,
+        // and then descend through the inheritance hierarchy,
+        // adding each method to the appropriate level as we go.
         private static SetUpTearDownNode BuildList(Type fixtureType, IList<MethodInfo> setUpMethods, IList<MethodInfo> tearDownMethods)
         {
             // Create lists of methods for this level only.
