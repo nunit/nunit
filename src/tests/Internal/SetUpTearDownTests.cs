@@ -102,7 +102,7 @@ namespace NUnit.Framework.Internal
         }
 
         [Test]
-        public void BaseSetUpThrowsException()
+        public void FailureInBaseSetUpCausesDerivedSetUpAndTearDownToBeSkipped()
         {
             DerivedClassWithSeparateSetUp fixture = new DerivedClassWithSeparateSetUp();
             fixture.throwInBaseSetUp = true;

@@ -31,11 +31,14 @@ namespace NUnit.TestData.FixtureSetUpTearDownData
     {
         public int setUpCount = 0;
         public int tearDownCount = 0;
+        public bool throwInBaseSetUp = false;
 
         [OneTimeSetUp]
         public virtual void Init()
         {
             setUpCount++;
+            if (throwInBaseSetUp)
+                throw new Exception("Error in base OneTimeSetUp");
         }
 
         [OneTimeTearDown]
@@ -87,7 +90,7 @@ namespace NUnit.TestData.FixtureSetUpTearDownData
     }
 
     [TestFixture]
-    public class DefineInheritSetUpAndTearDown : SetUpAndTearDownFixture
+    public class OverrideSetUpAndTearDown : SetUpAndTearDownFixture
     {
         public int derivedSetUpCount;
         public int derivedTearDownCount;

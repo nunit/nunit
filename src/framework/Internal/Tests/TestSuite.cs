@@ -139,40 +139,6 @@ namespace NUnit.Framework.Internal
         }
 #endif
 
-        /// <summary>
-        /// Gets the command to be executed before any of
-        /// the child tests are run.
-        /// </summary>
-        /// <returns>A TestCommand</returns>
-        public virtual TestCommand GetOneTimeSetUpCommand()
-        {
-            if (RunState != RunState.Runnable && RunState != RunState.Explicit)
-                return new SkipCommand(this);
-
-            TestCommand command = new OneTimeSetUpCommand(this);
-
-            if (this.FixtureType != null)
-            {
-                IApplyToContext[] changes = (IApplyToContext[])this.FixtureType.GetCustomAttributes(typeof(IApplyToContext), true);
-                if (changes.Length > 0)
-                    command = new ApplyChangesToContextCommand(command, changes);
-            }
-
-            return command;
-        }
-
-        /// <summary>
-        /// Gets the command to be executed after all of the
-        /// child tests are run.
-        /// </summary>
-        /// <returns>A TestCommand</returns>
-        public virtual TestCommand GetOneTimeTearDownCommand()
-        {
-            TestCommand command = new OneTimeTearDownCommand(this);
-
-            return command;
-        }
-
         #endregion
 
         #region Properties

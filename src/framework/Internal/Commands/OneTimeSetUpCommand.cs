@@ -36,18 +36,22 @@ namespace NUnit.Framework.Internal.Commands
         private readonly Type _fixtureType;
         private readonly object[] _arguments;
         private readonly MethodInfo[] _setUpMethods;
+        private readonly SetUpTearDownList _setUpTearDown;
 
         /// <summary>
         /// Constructs a OneTimeSetUpComand for a suite
         /// </summary>
         /// <param name="suite">The suite to which the command applies</param>
-        public OneTimeSetUpCommand(TestSuite suite) : base(suite) 
+        /// <param name="setUpTearDown">A SetUpTearDownList for use by the command</param>
+        public OneTimeSetUpCommand(TestSuite suite, SetUpTearDownList setUpTearDown)
+            : base(suite) 
         {
             _suite = suite;
             _fixtureType = suite.FixtureType;
             _arguments = suite.Arguments;
             if (_fixtureType != null)
                 _setUpMethods = Reflect.GetMethodsWithAttribute(_fixtureType, typeof(OneTimeSetUpAttribute), true);
+            _setUpTearDown = setUpTearDown;
         }
 
         /// <summary>
@@ -63,9 +67,7 @@ namespace NUnit.Framework.Internal.Commands
                 if (!IsStaticClass(_fixtureType))
                     context.TestObject = _suite.Fixture ?? Reflect.Construct(_fixtureType, _arguments);
 
-                // TODO: Pass methods to constructor?
-                foreach (MethodInfo method in _setUpMethods)
-                    Reflect.InvokeMethod(method, method.IsStatic ? null : context.TestObject);
+                _setUpTearDown.RunSetUp(context);
             }
 
             return context.CurrentResult;

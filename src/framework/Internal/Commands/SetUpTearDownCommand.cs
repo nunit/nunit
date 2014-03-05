@@ -56,7 +56,7 @@ namespace NUnit.Framework.Internal.Commands
     /// </summary>
     public class SetUpTearDownCommand : DelegatingTestCommand
     {
-        private SetUpTearDownNode _methods;
+        private SetUpTearDownList _methods;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SetUpTearDownCommand"/> class.
@@ -65,7 +65,8 @@ namespace NUnit.Framework.Internal.Commands
         public SetUpTearDownCommand(TestCommand innerCommand)
             : base(innerCommand)
         {
-            _methods = BuildSetUpTearDownList(Test.FixtureType);
+            if (Test.FixtureType != null)
+                _methods = new SetUpTearDownList(Test.FixtureType, typeof(SetUpAttribute), typeof(TearDownAttribute));
         }
 
         /// <summary>
@@ -95,23 +96,6 @@ namespace NUnit.Framework.Internal.Commands
             }
 
             return context.CurrentResult;
-        }
-
-        private SetUpTearDownNode BuildSetUpTearDownList(Type fixtureType)
-        {
-            var node = new SetUpTearDownNode(fixtureType, typeof(SetUpAttribute), typeof(TearDownAttribute));
-
-            var baseType = fixtureType.BaseType;
-            if (baseType != typeof(object) && baseType != null)
-            {
-                var next = BuildSetUpTearDownList(baseType);
-                if (next.HasMethods)
-                    if (!node.HasMethods)
-                        return next;
-                node.Next = next;
-            }
-
-            return node;
         }
     }
 }

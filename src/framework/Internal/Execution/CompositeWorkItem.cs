@@ -56,8 +56,13 @@ namespace NUnit.Framework.Internal.Execution
             : base(suite, context)
         {
             _suite = suite;
-            _setupCommand = suite.GetOneTimeSetUpCommand();
-            _teardownCommand = suite.GetOneTimeTearDownCommand();
+            SetUpTearDownList setUpTearDown = null;
+            if (suite.FixtureType != null)
+                setUpTearDown =  new SetUpTearDownList(
+                    suite.FixtureType, typeof(OneTimeSetUpAttribute), typeof(OneTimeTearDownAttribute));
+
+            _setupCommand = MakeSetUpCommand(suite, setUpTearDown);
+            _teardownCommand = MakeTearDownCommand(suite, setUpTearDown);
             _childFilter = childFilter;
         }
 
@@ -119,6 +124,43 @@ namespace NUnit.Framework.Internal.Execution
         }
 
         #region Helper Methods
+
+        /// <summary>
+        /// Gets the command to be executed before any of
+        /// the child tests are run.
+        /// </summary>
+        /// <returns>A TestCommand</returns>
+        private static TestCommand MakeSetUpCommand(TestSuite suite, SetUpTearDownList setUpTearDown)
+        {
+            if (suite.RunState != RunState.Runnable && suite.RunState != RunState.Explicit)
+                return new SkipCommand(suite);
+
+            TestCommand command = new OneTimeSetUpCommand(suite, setUpTearDown);
+
+            if (suite.FixtureType != null)
+            {
+                IApplyToContext[] changes = (IApplyToContext[])suite.FixtureType.GetCustomAttributes(typeof(IApplyToContext), true);
+                if (changes.Length > 0)
+                    command = new ApplyChangesToContextCommand(command, changes);
+            }
+
+            return command;
+        }
+
+        /// <summary>
+        /// Gets the command to be executed after all of the
+        /// child tests are run.
+        /// </summary>
+        /// <returns>A TestCommand</returns>
+        private static TestCommand MakeTearDownCommand(TestSuite suite, SetUpTearDownList setUpTearDown)
+        {
+            TestCommand command = new OneTimeTearDownCommand(suite, setUpTearDown);
+
+            if (suite.TestType == "Theory")
+                command = new TheoryResultCommand(command);
+
+            return command;
+        }
 
         private void PerformOneTimeSetUp()
         {

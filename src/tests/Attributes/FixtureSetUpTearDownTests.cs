@@ -93,7 +93,7 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void OverriddenSetUpAndTearDownAreNotCalled()
         {
-            DefineInheritSetUpAndTearDown fixture = new DefineInheritSetUpAndTearDown();
+            OverrideSetUpAndTearDown fixture = new OverrideSetUpAndTearDown();
             TestBuilder.RunTestFixture(fixture);
 
             Assert.AreEqual(0, fixture.setUpCount);
@@ -114,6 +114,19 @@ namespace NUnit.Framework.Attributes
             Assert.AreEqual(1, fixture.derivedTearDownCount);
             Assert.That(fixture.baseSetUpCalledFirst, "Base SetUp called first");
             Assert.That(fixture.baseTearDownCalledLast, "Base TearDown called last");
+        }
+
+        [Test]
+        public void FailedBaseSetUpCausesDerivedSetUpAndTeardownToBeSkipped()
+        {
+            DerivedSetUpAndTearDownFixture fixture = new DerivedSetUpAndTearDownFixture();
+            fixture.throwInBaseSetUp = true;
+            TestBuilder.RunTestFixture(fixture);
+
+            Assert.AreEqual(1, fixture.setUpCount);
+            Assert.AreEqual(1, fixture.tearDownCount);
+            Assert.AreEqual(0, fixture.derivedSetUpCount);
+            Assert.AreEqual(0, fixture.derivedTearDownCount);
         }
 
         [Test]

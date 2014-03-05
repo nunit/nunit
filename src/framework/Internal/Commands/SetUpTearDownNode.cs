@@ -22,9 +22,8 @@
 // ***********************************************************************
 
 using System;
+using System.Collections.Generic;
 using System.Reflection;
-using System.Threading;
-using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Commands
 {
@@ -35,20 +34,19 @@ namespace NUnit.Framework.Internal.Commands
     /// </summary>
     public class SetUpTearDownNode
     {
-        private MethodInfo[] _setUpMethods;
-        private MethodInfo[] _tearDownMethods;
+        private IList<MethodInfo> _setUpMethods;
+        private IList<MethodInfo> _tearDownMethods;
         private bool _setUpWasRun;
 
         /// <summary>
         /// Construct a SetUpTearDownNode
         /// </summary>
-        /// <param name="fixtureType">The Type of the fixture to which the node applies</param>
-        /// <param name="setupType">The Type of the attribute used to mark setup methods</param>
-        /// <param name="teardownType">The Type of the attribute used to mark teardown methods</param>
-        public SetUpTearDownNode(Type fixtureType, Type setupType, Type teardownType)
+        /// <param name="setUpMethods">A list of setup methods for this level</param>
+        /// <param name="tearDownMethods">A list teardown methods for this level</param>
+        public SetUpTearDownNode(IList<MethodInfo> setUpMethods, IList<MethodInfo> tearDownMethods)
         {
-            _setUpMethods = Reflect.GetMethodsWithAttribute(fixtureType, setupType, false);
-            _tearDownMethods = Reflect.GetMethodsWithAttribute(fixtureType, teardownType, false);
+            _setUpMethods = setUpMethods;
+            _tearDownMethods = tearDownMethods;
         }
 
         /// <summary>
@@ -63,7 +61,7 @@ namespace NUnit.Framework.Internal.Commands
         /// </summary>
         public bool HasMethods
         {
-            get { return _setUpMethods.Length > 0 || _tearDownMethods.Length > 0; }
+            get { return _setUpMethods.Count > 0 || _tearDownMethods.Count > 0; }
         }
 
         /// <summary>
@@ -99,7 +97,7 @@ namespace NUnit.Framework.Internal.Commands
                 {
                     // Even though we are only running one level at a time, we
                     // run the teardowns in reverse order to provide consistency.
-                    int index = _tearDownMethods.Length;
+                    int index = _tearDownMethods.Count;
                     while (--index >= 0)
                         Reflect.InvokeMethod(_tearDownMethods[index], _tearDownMethods[index].IsStatic ? null : context.TestObject);
                 }

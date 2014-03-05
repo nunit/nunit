@@ -94,6 +94,7 @@
     <Compile Include="Interfaces\XmlNode.cs" />
     <Compile Include="Internal\Builders\DefaultSuiteBuilder.cs" />
     <Compile Include="Internal\Builders\NUnitTestCaseBuilder.cs" />
+    <Compile Include="Internal\Commands\SetUpTearDownList.cs" />
     <Compile Include="Internal\Commands\SetUpTearDownNode.cs" />
     <Compile Include="Internal\Filters\IdFilter.cs" />
     <Compile Include="Internal\Filters\ValueMatchFilter.cs" />
