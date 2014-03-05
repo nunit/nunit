@@ -23,6 +23,7 @@
 
 using System;
 using System.Reflection;
+using System.Threading;
 using NUnit.Framework.Interfaces;
 
 
@@ -41,7 +42,8 @@ namespace NUnit.Framework.Internal.Commands
         /// Initializes a new instance of the <see cref="TestMethodCommand"/> class.
         /// </summary>
         /// <param name="testMethod">The test.</param>
-        public TestMethodCommand(TestMethod testMethod) : base(testMethod)
+        public TestMethodCommand(TestMethod testMethod)
+            : base(testMethod)
         {
             this.testMethod = testMethod;
             this.arguments = testMethod.Arguments;
@@ -74,14 +76,43 @@ namespace NUnit.Framework.Internal.Commands
         private object RunTestMethod(TestExecutionContext context)
         {
 #if NET_4_5
+            if (MethodHelper.IsFSharpAsyncMethod(testMethod.Method))
+                return RunFSharpAsyncMethod(context);
+
             if (MethodHelper.IsAsyncMethod(testMethod.Method))
                 return RunAsyncTestMethod(context);
-            else
 #endif
-                return RunNonAsyncTestMethod(context);
+            return RunNonAsyncTestMethod(context);
         }
 
 #if NET_4_5
+        object RunFSharpAsyncMethod(TestExecutionContext context)
+        {
+            object res = Reflect.InvokeMethod(testMethod.Method, context.TestObject, arguments);
+
+            try
+            {
+                var parameters = new[]
+                    {
+                        res,
+                        context.TestCaseTimeout > 0
+                            ? Microsoft.FSharp.Core.FSharpOption<int>.Some(context.TestCaseTimeout)
+                            : Microsoft.FSharp.Core.FSharpOption<int>.None,
+                        Microsoft.FSharp.Core.FSharpOption<CancellationToken>.None
+                    };
+
+                return typeof (Microsoft.FSharp.Control.FSharpAsync)
+                    .GetMethod("RunSynchronously")
+                    .MakeGenericMethod(
+                        testMethod.Method.ReturnType.GenericTypeArguments)
+                    .Invoke(testMethod.Method.IsStatic ? null : context.TestObject, parameters);
+            }
+            catch (Exception e)
+            {
+                throw new NUnitException("Rethrown", e);
+            }
+        }
+
         private object RunAsyncTestMethod(TestExecutionContext context)
         {
             using (AsyncInvocationRegion region = AsyncInvocationRegion.Create(testMethod.Method))

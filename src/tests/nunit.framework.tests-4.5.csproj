@@ -157,6 +157,7 @@
     <Compile Include="Constraints\UniqueItemsConstraintTests.cs" />
     <Compile Include="Constraints\XmlSerializableTest.cs" />
     <Compile Include="Internal\AssemblyHelperTests.cs" />
+    <Compile Include="Internal\AsyncFSharpTestMethodTests.cs" />
     <Compile Include="Internal\AsyncTestMethodTests.cs" />
     <Compile Include="Internal\CallContextTests.cs" />
     <Compile Include="Internal\CultureSettingAndDetectionTests.cs" />
@@ -243,6 +244,10 @@
     <ProjectReference Include="..\framework\nunit.framework-4.5.csproj">
       <Project>{d209c368-1277-4ea6-a887-aa6eba51ab99}</Project>
       <Name>nunit.framework-4.5</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\fsharp.testdata\nunit.fsharp.testdata.fsproj">
+      <Project>{b6e06509-594f-4544-9ffe-545ac73cb715}</Project>
+      <Name>nunit.fsharp.testdata</Name>
     </ProjectReference>
     <ProjectReference Include="..\testdata\nunit.testdata-4.5.csproj">
       <Project>{e7541163-d7bb-4e9a-a722-d7737b7a2995}</Project>

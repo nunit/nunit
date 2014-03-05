@@ -161,10 +161,14 @@ namespace NUnit.Framework.Internal.Builders
 #if NET_4_5
                 if (MethodHelper.IsAsyncMethod(testMethod.Method))
                 {
-                    bool returnsGenericTask = returnType.IsGenericType && returnType.GetGenericTypeDefinition() == typeof(Task<>);
-                    if (returnsGenericTask && (parms == null || !parms.HasExpectedResult && !parms.ExceptionExpected))
-                        return MarkAsNotRunnable(testMethod, "Async test method must have Task or void return type when no result is expected");
-                    else if (!returnsGenericTask && parms != null && parms.HasExpectedResult)
+                    bool returnsValWrapper = returnType.IsGenericType
+                        && (returnType.GetGenericTypeDefinition() == typeof(Task<>)
+                           || returnType != typeof(Microsoft.FSharp.Control.FSharpAsync<Microsoft.FSharp.Core.Unit>));
+
+                    if (returnsValWrapper && (parms == null || !parms.HasExpectedResult && !parms.ExceptionExpected))
+                        return MarkAsNotRunnable(testMethod, "Async test method must have Task or void (C#) or async<unit> (F#) return type when no result is expected");
+                    
+                    if (!returnsValWrapper && parms != null && parms.HasExpectedResult)
                         return MarkAsNotRunnable(testMethod, "Async test method must have Task<T> return type when a result is expected");
                 }
                 else
