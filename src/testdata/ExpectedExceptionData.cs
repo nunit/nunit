@@ -217,28 +217,6 @@ namespace NUnit.TestData.ExpectedExceptionData
         }
     }
 
-    public class ExceptionHandlerCalledClass : IExpectException
-    {
-        public bool HandlerCalled = false;
-
-        [Test, ExpectedException(typeof(ArgumentException))]
-        public void ThrowsArgumentException()
-        {
-            throw new ArgumentException();
-        }
-
-        [Test, ExpectedException(typeof(ArgumentException))]
-        public void ThrowsException()
-        {
-            throw new Exception();
-        }
-
-        public void HandleException(Exception ex)
-        {
-            HandlerCalled = true;
-        }
-    }
-
     public static class StaticClassWithExpectedExceptions
     {
         [Test, ExpectedException(typeof(ArgumentException))]

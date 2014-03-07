@@ -31,10 +31,6 @@ namespace NUnit.Framework.Internal
 {
     /// <summary>
     /// The TestMethod class represents a Test implemented as a method.
-    /// Because of how exceptions are handled internally, this class
-    /// must incorporate processing of expected exceptions. A change to
-    /// the Test interface might make it easier to process exceptions
-    /// in an object that aggregates a TestMethod in the future.
     /// </summary>
     public class TestMethod : Test
     {

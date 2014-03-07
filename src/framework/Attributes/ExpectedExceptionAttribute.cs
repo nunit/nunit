@@ -114,17 +114,6 @@ namespace NUnit.Framework
             get { return exceptionData; }
         }
 
-        //#region IApplyToTest Members
-
-        //void IApplyToTest.ApplyToTest(ITest test)
-        //{
-        //    TestMethod testMethod = test as TestMethod;
-        //    if (testMethod != null)
-        //        testMethod.CustomDecorators.Add(new ExpectedExceptionDecorator());
-        //}
-
-        //#endregion
-
         #region ICommandDecoratorSource Members
 
         /// <summary>

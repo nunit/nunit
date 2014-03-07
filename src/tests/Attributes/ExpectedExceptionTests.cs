@@ -398,22 +398,6 @@ namespace NUnit.Framework.Attributes
         }
 
         [Test]
-        public void ExceptionHandlerIsCalledWhenExceptionMatches()
-        {
-            ExceptionHandlerCalledClass fixture = new ExceptionHandlerCalledClass();
-            TestBuilder.RunTestCase( fixture, "ThrowsArgumentException" );
-            Assert.IsTrue(fixture.HandlerCalled, "Base Handler should be called");
-        }
-    
-        [Test]
-        public void ExceptionHandlerIsNotCalledWhenExceptionDoesNotMatch()
-        {
-            ExceptionHandlerCalledClass fixture = new ExceptionHandlerCalledClass();
-            TestBuilder.RunTestCase( fixture, "ThrowsException" );
-            Assert.IsFalse( fixture.HandlerCalled, "Base Handler should not be called" );
-        }
-
-        [Test]
         public void TestSucceedsInStaticClass()
         {
             var result = TestBuilder.RunTestCase(typeof(StaticClassWithExpectedExceptions), "TestSucceedsInStaticClass");

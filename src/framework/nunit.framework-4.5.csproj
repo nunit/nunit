@@ -216,7 +216,6 @@
     <Compile Include="GlobalSettings.cs" />
     <Compile Include="Guard.cs" />
     <Compile Include="Has.cs" />
-    <Compile Include="IExpectException.cs" />
     <Compile Include="Interfaces\ExpectedExceptionData.cs" />
     <Compile Include="Interfaces\ICommandDecorator.cs" />
     <Compile Include="Interfaces\ICommandDecoratorSource.cs" />

@@ -96,20 +96,9 @@ namespace NUnit.Framework.Internal.Commands
             if (IsExpectedExceptionType(exception))
             {
                 if (IsExpectedMessageMatch(exception))
-                {
-                    if (context.TestObject != null)
-                    {
-                        IExpectException handler = context.TestObject as IExpectException;
-                        if (handler != null)
-                            handler.HandleException(exception);
-                    }
-
                     context.CurrentResult.SetResult(ResultState.Success);
-                }
                 else
-                {
                     context.CurrentResult.SetResult(ResultState.Failure, WrongTextMessage(exception), ExceptionHelper.GetStackTrace(exception));
-                }
             }
             else
             {
