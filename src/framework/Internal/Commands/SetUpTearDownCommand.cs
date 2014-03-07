@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2010 Charlie Poole
+// Copyright (c) 2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -56,8 +56,7 @@ namespace NUnit.Framework.Internal.Commands
     /// </summary>
     public class SetUpTearDownCommand : DelegatingTestCommand
     {
-        private readonly MethodInfo[] setUpMethods;
-        private readonly MethodInfo[] tearDownMethods;
+        private SetUpTearDownList _methods;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SetUpTearDownCommand"/> class.
@@ -66,8 +65,8 @@ namespace NUnit.Framework.Internal.Commands
         public SetUpTearDownCommand(TestCommand innerCommand)
             : base(innerCommand)
         {
-            this.setUpMethods = Test.SetUpMethods;
-            this.tearDownMethods = Test.TearDownMethods;
+            if (Test.FixtureType != null)
+                _methods = new SetUpTearDownList(Test.FixtureType, typeof(SetUpAttribute), typeof(TearDownAttribute));
         }
 
         /// <summary>
@@ -79,7 +78,7 @@ namespace NUnit.Framework.Internal.Commands
         {
             try
             {
-                RunSetUpMethods(context);
+                _methods.RunSetUp(context);
 
                 context.CurrentResult = innerCommand.Execute(context);
             }
@@ -93,34 +92,10 @@ namespace NUnit.Framework.Internal.Commands
             }
             finally
             {
-                RunTearDownMethods(context);
+                _methods.RunTearDown(context);
             }
 
             return context.CurrentResult;
-        }
-
-        private void RunSetUpMethods(TestExecutionContext context)
-        {
-            if (setUpMethods != null)
-                foreach (MethodInfo setUpMethod in setUpMethods)
-                    Reflect.InvokeMethod(setUpMethod, setUpMethod.IsStatic ? null : context.TestObject);
-        }
-
-        private void RunTearDownMethods(TestExecutionContext context)
-        {
-            try
-            {
-                if (tearDownMethods != null)
-                {
-                    int index = tearDownMethods.Length;
-                    while (--index >= 0)
-                        Reflect.InvokeMethod(tearDownMethods[index], tearDownMethods[index].IsStatic ? null : context.TestObject);
-                }
-            }
-            catch (Exception ex)
-            {
-                context.CurrentResult.RecordTearDownException(ex);
-            }
         }
     }
 }

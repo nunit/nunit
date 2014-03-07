@@ -57,6 +57,8 @@
     </Compile>
     <Compile Include="Api\FrameworkController.cs" />
     <Compile Include="Attributes\CombiningStrategyAttribute.cs" />
+    <Compile Include="Attributes\OneTimeTearDownAttribute.cs" />
+    <Compile Include="Attributes\OneTimeSetUpAttribute.cs" />
     <Compile Include="Attributes\FixtureBuilderAttribute.cs" />
     <Compile Include="Attributes\LevelOfParallelizationAttribute.cs" />
     <Compile Include="Attributes\ParallelizableAttribute.cs" />
@@ -92,6 +94,8 @@
     <Compile Include="Interfaces\XmlNode.cs" />
     <Compile Include="Internal\Builders\DefaultSuiteBuilder.cs" />
     <Compile Include="Internal\Builders\NUnitTestCaseBuilder.cs" />
+    <Compile Include="Internal\Commands\SetUpTearDownList.cs" />
+    <Compile Include="Internal\Commands\SetUpTearDownNode.cs" />
     <Compile Include="Internal\Filters\IdFilter.cs" />
     <Compile Include="Internal\Filters\ValueMatchFilter.cs" />
     <Compile Include="Interfaces\IFixtureBuilder.cs" />

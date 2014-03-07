@@ -80,6 +80,8 @@
     <Compile Include="Attributes\LevelOfParallelizationAttribute.cs" />
     <Compile Include="Attributes\MaxTimeAttribute.cs" />
     <Compile Include="Attributes\NUnitAttribute.cs" />
+    <Compile Include="Attributes\OneTimeSetUpAttribute.cs" />
+    <Compile Include="Attributes\OneTimeTearDownAttribute.cs" />
     <Compile Include="Attributes\PairwiseAttribute.cs" />
     <Compile Include="Attributes\ParallelizableAttribute.cs" />
     <Compile Include="Attributes\ParallelScope.cs" />
@@ -258,6 +260,8 @@
     <Compile Include="Internal\Commands\OneTimeTearDownCommand.cs" />
     <Compile Include="Internal\Commands\RepeatedTestCommand.cs" />
     <Compile Include="Internal\Commands\SetUpTearDownCommand.cs" />
+    <Compile Include="Internal\Commands\SetUpTearDownList.cs" />
+    <Compile Include="Internal\Commands\SetUpTearDownNode.cs" />
     <Compile Include="Internal\Commands\SkipCommand.cs" />
     <Compile Include="Internal\Commands\TestCommand.cs" />
     <Compile Include="Internal\Commands\TestMethodCommand.cs" />

@@ -62,7 +62,7 @@ namespace NUnit.TestUtilities
             foreach (string expected in expectedEvents)
             {
                 string actual = _events.Count > 0 ? _events.Dequeue() as string : null;
-				Assert.AreEqual( expected, actual );
+                Assert.AreEqual( expected, actual );
             }
         }
 
@@ -84,7 +84,7 @@ namespace NUnit.TestData.SetupFixture
         [TestFixture]
         public class SomeTestFixture
         {
-            [TestFixtureSetUp]
+            [OneTimeSetUp]
             public void FixtureSetup()
             {
                 TestUtilities.SimpleEventRecorder.RegisterEvent("FixtureSetup");
@@ -108,7 +108,7 @@ namespace NUnit.TestData.SetupFixture
                 TestUtilities.SimpleEventRecorder.RegisterEvent("TearDown");
             }
 
-            [TestFixtureTearDown]
+            [OneTimeTearDown]
             public void FixtureTearDown()
             {
                 TestUtilities.SimpleEventRecorder.RegisterEvent("FixtureTearDown");
@@ -119,13 +119,13 @@ namespace NUnit.TestData.SetupFixture
         [SetUpFixture]
         public class NUnitNamespaceSetUpFixture
         {
-            [SetUp]
+            [OneTimeSetUp]
             public void DoNamespaceSetUp()
             {
                 TestUtilities.SimpleEventRecorder.RegisterEvent("NamespaceSetup");
             }
 
-            [TearDown]
+            [OneTimeTearDown]
             public void DoNamespaceTearDown()
             {
                 TestUtilities.SimpleEventRecorder.RegisterEvent("NamespaceTearDown");
@@ -143,9 +143,7 @@ namespace NUnit.TestData.SetupFixture
         [TestFixture]
         public class SomeTestFixture
         {
-
-
-            [TestFixtureSetUp]
+            [OneTimeSetUp]
             public void FixtureSetup()
             {
                 TestUtilities.SimpleEventRecorder.RegisterEvent("FixtureSetup");
@@ -169,7 +167,7 @@ namespace NUnit.TestData.SetupFixture
                 TestUtilities.SimpleEventRecorder.RegisterEvent("TearDown");
             }
 
-            [TestFixtureTearDown]
+            [OneTimeTearDown]
             public void FixtureTearDown()
             {
                 TestUtilities.SimpleEventRecorder.RegisterEvent("FixtureTearDown");
@@ -181,9 +179,7 @@ namespace NUnit.TestData.SetupFixture
         [TestFixture]
         public class SomeTestFixture2
         {
-
-
-            [TestFixtureSetUp]
+            [OneTimeSetUp]
             public void FixtureSetup()
             {
                 TestUtilities.SimpleEventRecorder.RegisterEvent("FixtureSetup");
@@ -207,7 +203,7 @@ namespace NUnit.TestData.SetupFixture
                 TestUtilities.SimpleEventRecorder.RegisterEvent("TearDown");
             }
 
-            [TestFixtureTearDown]
+            [OneTimeTearDown]
             public void FixtureTearDown()
             {
                 TestUtilities.SimpleEventRecorder.RegisterEvent("FixtureTearDown");
@@ -218,13 +214,13 @@ namespace NUnit.TestData.SetupFixture
         [SetUpFixture]
         public class NUnitNamespaceSetUpFixture
         {
-            [SetUp]
+            [OneTimeSetUp]
             public void DoNamespaceSetUp()
             {
                 TestUtilities.SimpleEventRecorder.RegisterEvent("NamespaceSetup");
             }
 
-            [TearDown]
+            [OneTimeTearDown]
             public void DoNamespaceTearDown()
             {
                 TestUtilities.SimpleEventRecorder.RegisterEvent("NamespaceTearDown");
@@ -242,7 +238,7 @@ namespace NUnit.TestData.SetupFixture
             [TestFixture]
             public class SomeTestFixture
             {
-                [TestFixtureSetUp]
+                [OneTimeSetUp]
                 public void FixtureSetup()
                 {
                     TestUtilities.SimpleEventRecorder.RegisterEvent("FixtureSetup");
@@ -266,7 +262,7 @@ namespace NUnit.TestData.SetupFixture
                     TestUtilities.SimpleEventRecorder.RegisterEvent("TearDown");
                 }
 
-                [TestFixtureTearDown]
+                [OneTimeTearDown]
                 public void FixtureTearDown()
                 {
                     TestUtilities.SimpleEventRecorder.RegisterEvent("FixtureTearDown");
@@ -277,13 +273,13 @@ namespace NUnit.TestData.SetupFixture
             [SetUpFixture]
             public class NUnitNamespaceSetUpFixture
             {
-                [SetUp]
+                [OneTimeSetUp]
                 public void DoNamespaceSetUp()
                 {
                     TestUtilities.SimpleEventRecorder.RegisterEvent("SubNamespaceSetup");
                 }
 
-                [TearDown]
+                [OneTimeTearDown]
                 public void DoNamespaceTearDown()
                 {
                     TestUtilities.SimpleEventRecorder.RegisterEvent("SubNamespaceTearDown");
@@ -297,7 +293,7 @@ namespace NUnit.TestData.SetupFixture
         [TestFixture]
         public class SomeTestFixture
         {
-            [TestFixtureSetUp]
+            [OneTimeSetUp]
             public void FixtureSetup()
             {
                 TestUtilities.SimpleEventRecorder.RegisterEvent("FixtureSetup");
@@ -321,7 +317,7 @@ namespace NUnit.TestData.SetupFixture
                 TestUtilities.SimpleEventRecorder.RegisterEvent("TearDown");
             }
 
-            [TestFixtureTearDown]
+            [OneTimeTearDown]
             public void FixtureTearDown()
             {
                 TestUtilities.SimpleEventRecorder.RegisterEvent("FixtureTearDown");
@@ -332,13 +328,13 @@ namespace NUnit.TestData.SetupFixture
         [SetUpFixture]
         public class NUnitNamespaceSetUpFixture
         {
-            [SetUp]
+            [OneTimeSetUp]
             public static void DoNamespaceSetUp()
             {
                 TestUtilities.SimpleEventRecorder.RegisterEvent("NamespaceSetup");
             }
 
-            [TearDown]
+            [OneTimeTearDown]
             public void DoNamespaceTearDown()
             {
                 TestUtilities.SimpleEventRecorder.RegisterEvent("NamespaceTearDown");
@@ -352,7 +348,7 @@ namespace NUnit.TestData.SetupFixture
         [TestFixture]
         public class SomeTestFixture
         {
-            [TestFixtureSetUp]
+            [OneTimeSetUp]
             public void FixtureSetup()
             {
                 TestUtilities.SimpleEventRecorder.RegisterEvent("FixtureSetup");
@@ -376,7 +372,7 @@ namespace NUnit.TestData.SetupFixture
                 TestUtilities.SimpleEventRecorder.RegisterEvent("TearDown");
             }
 
-            [TestFixtureTearDown]
+            [OneTimeTearDown]
             public void FixtureTearDown()
             {
                 TestUtilities.SimpleEventRecorder.RegisterEvent("FixtureTearDown");
@@ -387,13 +383,13 @@ namespace NUnit.TestData.SetupFixture
         [SetUpFixture]
         public class NUnitNamespaceSetUpFixture
         {
-            [SetUp]
+            [OneTimeSetUp]
             public void DoNamespaceSetUp()
             {
                 TestUtilities.SimpleEventRecorder.RegisterEvent("NamespaceSetup");
             }
 
-            [TearDown]
+            [OneTimeTearDown]
             public void DoNamespaceTearDown()
             {
                 TestUtilities.SimpleEventRecorder.RegisterEvent("NamespaceTearDown");
@@ -403,13 +399,13 @@ namespace NUnit.TestData.SetupFixture
         [SetUpFixture]
         public class NUnitNamespaceSetUpFixture2
         {
-            [SetUp]
+            [OneTimeSetUp]
             public void DoNamespaceSetUp()
             {
                 TestUtilities.SimpleEventRecorder.RegisterEvent("NamespaceSetup2");
             }
 
-            [TearDown]
+            [OneTimeTearDown]
             public void DoNamespaceTearDown()
             {
                 TestUtilities.SimpleEventRecorder.RegisterEvent("NamespaceTearDown2");
@@ -418,31 +414,31 @@ namespace NUnit.TestData.SetupFixture
     }
 
 #if !NETCF
-	namespace Namespace5
-	{
-		[SetUpFixture]
-		public class CurrentDirectoryRecordingSetUpFixture
-		{
-			[SetUp]
-			public void DoSetUp()
-			{
-				TestUtilities.SimpleEventRecorder.RegisterEvent("SetUp:" + Environment.CurrentDirectory);
-			}
+    namespace Namespace5
+    {
+        [SetUpFixture]
+        public class CurrentDirectoryRecordingSetUpFixture
+        {
+            [OneTimeSetUp]
+            public void DoSetUp()
+            {
+                TestUtilities.SimpleEventRecorder.RegisterEvent("SetUp:" + Environment.CurrentDirectory);
+            }
 
-			[TearDown]
-			public void DoTearDown()
-			{
-				TestUtilities.SimpleEventRecorder.RegisterEvent("TearDown:" + Environment.CurrentDirectory);
-			}
-		}
+            [OneTimeTearDown]
+            public void DoTearDown()
+            {
+                TestUtilities.SimpleEventRecorder.RegisterEvent("TearDown:" + Environment.CurrentDirectory);
+            }
+        }
 
-		[TestFixture]
-		public class SomeFixture
-		{
-			[Test]
-			public void SomeMethod() { }				
-		}
-	}
+        [TestFixture]
+        public class SomeFixture
+        {
+            [Test]
+            public void SomeMethod() { }				
+        }
+    }
 #endif
 
     namespace Namespace5
@@ -451,7 +447,7 @@ namespace NUnit.TestData.SetupFixture
         [TestFixture]
         public class SomeTestFixture
         {
-            [TestFixtureSetUp]
+            [OneTimeSetUp]
             public void FixtureSetup()
             {
                 TestUtilities.SimpleEventRecorder.RegisterEvent("FixtureSetup");
@@ -475,7 +471,7 @@ namespace NUnit.TestData.SetupFixture
                 TestUtilities.SimpleEventRecorder.RegisterEvent("TearDown");
             }
 
-            [TestFixtureTearDown]
+            [OneTimeTearDown]
             public void FixtureTearDown()
             {
                 TestUtilities.SimpleEventRecorder.RegisterEvent("FixtureTearDown");
@@ -486,13 +482,13 @@ namespace NUnit.TestData.SetupFixture
         [SetUpFixture]
         public class NUnitNamespaceSetUpFixture
         {
-            [SetUp]
+            [OneTimeSetUp]
             public static void DoNamespaceSetUp()
             {
                 TestUtilities.SimpleEventRecorder.RegisterEvent("NamespaceSetup");
             }
 
-            [TearDown]
+            [OneTimeTearDown]
             public static void DoNamespaceTearDown()
             {
                 TestUtilities.SimpleEventRecorder.RegisterEvent("NamespaceTearDown");
@@ -504,13 +500,13 @@ namespace NUnit.TestData.SetupFixture
 [SetUpFixture]
 public class NoNamespaceSetupFixture
 {
-    [SetUp]
+    [OneTimeSetUp]
     public void DoNamespaceSetUp()
     {
         NUnit.TestUtilities.SimpleEventRecorder.RegisterEvent("RootNamespaceSetup");
     }
 
-    [TearDown]
+    [OneTimeTearDown]
     public void DoNamespaceTearDown()
     {
         NUnit.TestUtilities.SimpleEventRecorder.RegisterEvent("RootNamespaceTearDown");

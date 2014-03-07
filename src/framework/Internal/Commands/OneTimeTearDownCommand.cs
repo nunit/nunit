@@ -23,7 +23,6 @@
 
 using System;
 using System.Reflection;
-using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Commands
 {
@@ -34,18 +33,20 @@ namespace NUnit.Framework.Internal.Commands
     /// </summary>
     public class OneTimeTearDownCommand : TestCommand
     {
-        private readonly TestSuite suite;
-        private readonly Type fixtureType;
+        private readonly MethodInfo[] _tearDownMethods;
+        private SetUpTearDownList _setUpTearDown;
 
         /// <summary>
         /// Construct a OneTimeTearDownCommand
         /// </summary>
         /// <param name="suite">The test suite to which the command applies</param>
-        public OneTimeTearDownCommand(TestSuite suite)
+        /// <param name="setUpTearDown">A SetUpTearDownList for use by the command</param>
+        public OneTimeTearDownCommand(TestSuite suite, SetUpTearDownList setUpTearDown)
             : base(suite)
         {
-            this.suite = suite;
-            this.fixtureType = suite.FixtureType;
+            if (suite.FixtureType != null)
+                _tearDownMethods = Reflect.GetMethodsWithAttribute(suite.FixtureType, typeof(OneTimeTearDownAttribute), true);
+            _setUpTearDown = setUpTearDown;
         }
 
         /// <summary>
@@ -57,19 +58,11 @@ namespace NUnit.Framework.Internal.Commands
         {
             TestResult suiteResult = context.CurrentResult;
 
-            if (fixtureType != null)
+            if (_setUpTearDown != null)
             {
                 try
                 {
-                    int index = suite.oneTimeTearDownMethods.Length;
-                    while (--index >= 0)
-                    {
-                        // TODO: Pass methods to constructor?
-                        MethodInfo fixtureTearDown = suite.oneTimeTearDownMethods[index];
-                        if (!fixtureTearDown.IsStatic && context.TestObject == null)
-                            Console.WriteLine("Null TestObject in fixture teardown for " + Test.FullName);
-                        Reflect.InvokeMethod(fixtureTearDown, fixtureTearDown.IsStatic ? null : context.TestObject);
-                    }
+                    _setUpTearDown.RunTearDown(context);
 
                     IDisposable disposable = context.TestObject as IDisposable;
                     if (disposable != null)

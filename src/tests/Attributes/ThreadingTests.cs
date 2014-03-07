@@ -32,10 +32,10 @@ namespace NUnit.Framework.Attributes
         protected Thread ParentThread { get; private set; }
         protected ApartmentState ParentThreadApartment { get; private set; }
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void GetParentThreadInfo()
         {
-			ParentThread = Thread.CurrentThread;
+            ParentThread = Thread.CurrentThread;
             ParentThreadApartment = GetApartmentState(ParentThread);
         }
 

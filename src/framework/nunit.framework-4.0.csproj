@@ -62,6 +62,8 @@
     <Compile Include="Attributes\CategoryAttribute.cs" />
     <Compile Include="Attributes\CombinatorialAttribute.cs" />
     <Compile Include="Attributes\CombiningStrategyAttribute.cs" />
+    <Compile Include="Attributes\OneTimeSetUpAttribute.cs" />
+    <Compile Include="Attributes\OneTimeTearDownAttribute.cs" />
     <Compile Include="Attributes\TestCaseBuilderAttribute.cs" />
     <Compile Include="Attributes\FixtureBuilderAttribute.cs" />
     <Compile Include="Attributes\ParallelizableAttribute.cs" />
@@ -262,6 +264,8 @@
     <Compile Include="Internal\Commands\OneTimeTearDownCommand.cs" />
     <Compile Include="Internal\Commands\RepeatedTestCommand.cs" />
     <Compile Include="Internal\Commands\SetUpTearDownCommand.cs" />
+    <Compile Include="Internal\Commands\SetUpTearDownList.cs" />
+    <Compile Include="Internal\Commands\SetUpTearDownNode.cs" />
     <Compile Include="Internal\Commands\SkipCommand.cs" />
     <Compile Include="Internal\Commands\TestCommand.cs" />
     <Compile Include="Internal\Commands\TestMethodCommand.cs" />

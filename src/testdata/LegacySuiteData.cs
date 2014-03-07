@@ -128,13 +128,13 @@ namespace NUnit.TestData.LegacySuiteData
             get { return new TestSuite("EmptySuite"); }
         }
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void SetUpMethod()
         {
             SetupCount++;
         }
 
-        [TestFixtureTearDown]
+        [OneTimeTearDown]
         public void TearDownMethod()
         {
             TeardownCount++;

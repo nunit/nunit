@@ -32,19 +32,26 @@ namespace NUnit.Framework.Internal.Commands
     /// </summary>
     public class OneTimeSetUpCommand : TestCommand
     {
-        private readonly TestSuite suite;
-        private readonly Type fixtureType;
-        private readonly object[] arguments;
+        private readonly TestSuite _suite;
+        private readonly Type _fixtureType;
+        private readonly object[] _arguments;
+        private readonly MethodInfo[] _setUpMethods;
+        private readonly SetUpTearDownList _setUpTearDown;
 
         /// <summary>
         /// Constructs a OneTimeSetUpComand for a suite
         /// </summary>
         /// <param name="suite">The suite to which the command applies</param>
-        public OneTimeSetUpCommand(TestSuite suite) : base(suite) 
+        /// <param name="setUpTearDown">A SetUpTearDownList for use by the command</param>
+        public OneTimeSetUpCommand(TestSuite suite, SetUpTearDownList setUpTearDown)
+            : base(suite) 
         {
-            this.suite = suite;
-            this.fixtureType = suite.FixtureType;
-            this.arguments = suite.arguments;
+            _suite = suite;
+            _fixtureType = suite.FixtureType;
+            _arguments = suite.Arguments;
+            if (_fixtureType != null)
+                _setUpMethods = Reflect.GetMethodsWithAttribute(_fixtureType, typeof(OneTimeSetUpAttribute), true);
+            _setUpTearDown = setUpTearDown;
         }
 
         /// <summary>
@@ -54,15 +61,13 @@ namespace NUnit.Framework.Internal.Commands
         /// <returns>A TestResult</returns>
         public override TestResult Execute(TestExecutionContext context)
         {
-            if (fixtureType != null)
+            if (_fixtureType != null)
             {
                 // Use pre-constructed fixture if available, otherwise construct it
-                if (!IsStaticClass(fixtureType))
-                    context.TestObject = suite.Fixture ?? Reflect.Construct(fixtureType, arguments);
+                if (!IsStaticClass(_fixtureType))
+                    context.TestObject = _suite.Fixture ?? Reflect.Construct(_fixtureType, _arguments);
 
-                // TODO: Pass methods to constructor?
-                foreach (MethodInfo method in suite.oneTimeSetUpMethods)
-                    Reflect.InvokeMethod(method, method.IsStatic ? null : context.TestObject);
+                _setUpTearDown.RunSetUp(context);
             }
 
             return context.CurrentResult;

@@ -45,7 +45,7 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public class Reflect
     {
-        private static readonly BindingFlags AllMembers = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.FlattenHierarchy;
+        private static readonly BindingFlags AllMembers = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static;
 
         // A zero-length Type array - not provided by System.Type for all CLR versions we support.
         private static readonly Type[] EmptyTypes = new Type[0];
@@ -64,7 +64,8 @@ namespace NUnit.Framework.Internal
         {
             List<MethodInfo> list = new List<MethodInfo>();
 
-            foreach (MethodInfo method in fixtureType.GetMethods(AllMembers))
+            var flags = AllMembers | (inherit ? BindingFlags.FlattenHierarchy : BindingFlags.DeclaredOnly);
+            foreach (MethodInfo method in fixtureType.GetMethods(flags))
             {
                 if (method.IsDefined(attributeType, inherit))
                     list.Add(method);
@@ -100,7 +101,7 @@ namespace NUnit.Framework.Internal
         /// <returns>True if found, otherwise false</returns>
         public static bool HasMethodWithAttribute(Type fixtureType, Type attributeType)
         {
-            foreach (MethodInfo method in fixtureType.GetMethods(AllMembers))
+            foreach (MethodInfo method in fixtureType.GetMethods(AllMembers | BindingFlags.FlattenHierarchy))
             {
                 if (method.IsDefined(attributeType, false))
                     return true;

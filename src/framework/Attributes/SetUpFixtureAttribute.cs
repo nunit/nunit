@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Reflection;
 
 namespace NUnit.Framework
 {
@@ -63,31 +64,34 @@ namespace NUnit.Framework
 
         #region Helper Methods
 
-        private bool IsValidFixtureType(Type type, ref string reason)
+        private bool IsValidFixtureType(Type fixtureType, ref string reason)
         {
-            if (type.IsAbstract)
+            if (fixtureType.IsAbstract)
             {
-                reason = string.Format("{0} is an abstract class", type.FullName);
+                reason = string.Format("{0} is an abstract class", fixtureType.FullName);
                 return false;
             }
 
-            if (type.GetConstructor(new Type[0]) == null)
+            if (fixtureType.GetConstructor(new Type[0]) == null)
             {
-                reason = string.Format("{0} does not have a valid constructor", type.FullName);
+                reason = string.Format("{0} does not have a valid constructor", fixtureType.FullName);
                 return false;
             }
 
-            if (Reflect.HasMethodWithAttribute(type, typeof(NUnit.Framework.TestFixtureSetUpAttribute)))
-            {
-                reason = "TestFixtureSetUp method not allowed on a SetUpFixture";
-                return false;
-            }
+            var invalidAttributes = new Type[] { 
+                typeof(SetUpAttribute), 
+                typeof(TearDownAttribute),
+#pragma warning disable 618 // Obsolete Attributes
+                typeof(TestFixtureSetUpAttribute), 
+                typeof(TestFixtureTearDownAttribute) };
+#pragma warning restore
 
-            if (Reflect.HasMethodWithAttribute(type, typeof(NUnit.Framework.TestFixtureTearDownAttribute)))
-            {
-                reason = "TestFixtureTearDown method not allowed on a SetUpFixture";
-                return false;
-            }
+            foreach (Type invalidType in invalidAttributes)
+                if (Reflect.HasMethodWithAttribute(fixtureType, invalidType))
+                {
+                    reason = invalidType.Name + " attribute not allowed in a SetUpFixture";
+                    return false;
+                }
 
             return true;
         }

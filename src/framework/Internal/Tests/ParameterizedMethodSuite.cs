@@ -43,7 +43,7 @@ namespace NUnit.Framework.Internal
         {
             Method = method;
             _isTheory = method.IsDefined(typeof(TheoryAttribute), true);
-            this.maintainTestOrder = true;
+            this.MaintainTestOrder = true;
         }
 
         /// <summary>
@@ -62,23 +62,6 @@ namespace NUnit.Framework.Internal
                 
                 return "ParameterizedMethod";
             }
-        }
-
-        /// <summary>
-        /// Gets the command to be executed after all the child
-        /// tests are run. Overridden in ParameterizedMethodSuite
-        /// to set the result to failure if all the child tests
-        /// were inconclusive.
-        /// </summary>
-        /// <returns></returns>
-        public override TestCommand GetOneTimeTearDownCommand()
-        {
-            TestCommand command = base.GetOneTimeTearDownCommand();
-
-            if (_isTheory)
-                command = new TheoryResultCommand(command);
-
-            return command;
         }
     }
 }

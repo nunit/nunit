@@ -1,5 +1,5 @@
-// ***********************************************************************
-// Copyright (c) 2007 Charlie Poole
+﻿// ***********************************************************************
+// Copyright (c) 2009 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -22,63 +22,48 @@
 // ***********************************************************************
 
 using System;
-using NUnit.Framework;
+using System.Collections.Generic;
+using System.Text;
+using NUnit.Framework.Interfaces;
 
-namespace NUnit.TestData.AssertIgnoreData
+namespace NUnit.Framework.Attributes
 {
-    [TestFixture]
-    public class IgnoredTestCaseFixture
+    public class SetUpFixtureAttributeTests
     {
-        [Test]
-        public void CallsIgnore()
+        [TestCase(typeof(Class1))]
+        [TestCase(typeof(Class2))]
+        [TestCase(typeof(Class3))]
+        [TestCase(typeof(Class4))]
+        public void CertainAttributesAreNotAllowed(Type type)
         {
-            Assert.Ignore("Ignore me");
+            var fixture = new SetUpFixtureAttribute().BuildFrom(type);
+            Assert.That(fixture.RunState, Is.EqualTo(RunState.NotRunnable));
         }
 
-        [Test, ExpectedException(typeof(InvalidOperationException))]
-        public void CallsIgnoreWithExpectedException()
+#pragma warning disable 618 // Obsolete Attributes
+        private class Class1
         {
-            Assert.Ignore("Ignore me");
-        }
-    }
-
-    [TestFixture]
-    public class IgnoredTestSuiteFixture
-    {
-        [OneTimeSetUp]
-        public void FixtureSetUp()
-        {
-            Assert.Ignore("Ignore this fixture");
+            [TestFixtureSetUp]
+            public void SomeMethod() { }
         }
 
-        [Test]
-        public void ATest()
+        private class Class2
         {
+            [TestFixtureTearDown]
+            public void SomeMethod() { }
+        }
+#pragma warning restore
+
+        private class Class3
+        {
+            [SetUp]
+            public void SomeMethod() { }
         }
 
-        [Test]
-        public void AnotherTest()
+        private class Class4
         {
-        }
-    }
-
-    [TestFixture]
-    public class IgnoreInSetUpFixture
-    {
-        [SetUp]
-        public void SetUp()
-        {
-            Assert.Ignore( "Ignore this test" );
-        }
-
-        [Test]
-        public void Test1()
-        {
-        }
-
-        [Test]
-        public void Test2()
-        {
+            [TearDown]
+            public void SomeMethod() { }
         }
     }
 }

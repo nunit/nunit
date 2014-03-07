@@ -22,26 +22,23 @@
 // ***********************************************************************
 
 using System;
-using System.IO;
-using System.Reflection;
-using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal
 {
-	/// <summary>
-	/// SetUpFixture extends TestSuite and supports
-	/// Setup and TearDown methods.
-	/// </summary>
-	public class SetUpFixture : TestSuite
-	{
-		#region Constructor
+    /// <summary>
+    /// SetUpFixture extends TestSuite and supports
+    /// Setup and TearDown methods.
+    /// </summary>
+    public class SetUpFixture : TestSuite
+    {
+        #region Constructor
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SetUpFixture"/> class.
         /// </summary>
         /// <param name="type">The type.</param>
-		public SetUpFixture( Type type ) : base( type )
-		{
+        public SetUpFixture( Type type ) : base( type )
+        {
             this.Name = type.Namespace;
             if (this.Name == null)
                 this.Name = "[default namespace]";
@@ -49,29 +46,10 @@ namespace NUnit.Framework.Internal
             if (index > 0)
                 this.Name = this.Name.Substring(index + 1);
 
-            this.oneTimeSetUpMethods = GetSetUpTearDownMethods(typeof(NUnit.Framework.SetUpAttribute));
-            this.oneTimeTearDownMethods = GetSetUpTearDownMethods(typeof(NUnit.Framework.TearDownAttribute));
-		}
-
-        private MethodInfo[] GetSetUpTearDownMethods(Type attrType)
-        {
-            MethodInfo[] methods = Reflect.GetMethodsWithAttribute(FixtureType, attrType, true);
-
-            foreach (MethodInfo method in methods)
-                if (method.IsAbstract ||
-                     !method.IsPublic && !method.IsFamily ||
-                     method.GetParameters().Length > 0 ||
-                     !method.ReturnType.Equals(typeof(void)))
-                {
-                    this.Properties.Set(
-                        PropertyNames.SkipReason,
-                        string.Format("Invalid signature for SetUp or TearDown method: {0}", method.Name));
-                    this.RunState = RunState.NotRunnable;
-                    break;
-                }
-
-            return methods;
+            CheckSetUpTearDownMethods(typeof(OneTimeSetUpAttribute));
+            CheckSetUpTearDownMethods(typeof(OneTimeTearDownAttribute));
         }
+
         #endregion
     }
 }

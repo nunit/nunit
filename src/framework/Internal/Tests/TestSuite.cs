@@ -26,7 +26,6 @@ using System.Collections.Generic;
 using System.Reflection;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Commands;
-using NUnit.Framework.Internal.Execution;
 
 namespace NUnit.Framework.Internal
 {
@@ -41,26 +40,6 @@ namespace NUnit.Framework.Internal
         /// Our collection of child tests
         /// </summary>
         private List<ITest> tests = new List<ITest>();
-
-        /// <summary>
-        /// Set to true to suppress sorting this suite's contents
-        /// </summary>
-        protected bool maintainTestOrder;
-
-        /// <summary>
-        /// The fixture setup methods for this suite
-        /// </summary>
-        protected internal MethodInfo[] oneTimeSetUpMethods;
-
-        /// <summary>
-        /// The fixture teardown methods for this suite
-        /// </summary>
-        protected internal MethodInfo[] oneTimeTearDownMethods;
-
-        /// <summary>
-        /// Argument list for use in creating the fixture.
-        /// </summary>
-        internal object[] arguments;
 
         #endregion
 
@@ -103,7 +82,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public void Sort()
         {
-            if (!maintainTestOrder)
+            if (!MaintainTestOrder)
             {
                 this.tests.Sort();
 
@@ -160,40 +139,6 @@ namespace NUnit.Framework.Internal
         }
 #endif
 
-        /// <summary>
-        /// Gets the command to be executed before any of
-        /// the child tests are run.
-        /// </summary>
-        /// <returns>A TestCommand</returns>
-        public virtual TestCommand GetOneTimeSetUpCommand()
-        {
-            if (RunState != RunState.Runnable && RunState != RunState.Explicit)
-                return new SkipCommand(this);
-
-            TestCommand command = new OneTimeSetUpCommand(this);
-
-            if (this.FixtureType != null)
-            {
-                IApplyToContext[] changes = (IApplyToContext[])this.FixtureType.GetCustomAttributes(typeof(IApplyToContext), true);
-                if (changes.Length > 0)
-                    command = new ApplyChangesToContextCommand(command, changes);
-            }
-
-            return command;
-        }
-
-        /// <summary>
-        /// Gets the command to be executed after all of the
-        /// child tests are run.
-        /// </summary>
-        /// <returns>A TestCommand</returns>
-        public virtual TestCommand GetOneTimeTearDownCommand()
-        {
-            TestCommand command = new OneTimeTearDownCommand(this);
-
-            return command;
-        }
-
         #endregion
 
         #region Properties
@@ -225,6 +170,16 @@ namespace NUnit.Framework.Internal
                 return count;
             }
         }
+
+        /// <summary>
+        /// The arguments to use in creating the fixture
+        /// </summary>
+        public object[] Arguments { get; internal set; }
+
+        /// <summary>
+        /// Set to true to suppress sorting this suite's contents
+        /// </summary>
+        protected bool MaintainTestOrder { get; set; }
 
         #endregion
 
@@ -281,6 +236,31 @@ namespace NUnit.Framework.Internal
                     test.AddToXml(thisNode, recursive);
 
             return thisNode;
+        }
+
+        #endregion
+
+        #region Helper Methods
+
+        /// <summary>
+        /// Check that setup and teardown methods marked by certain attributes
+        /// meet NUnit's requirements and mark the tests not runnable otherwise.
+        /// </summary>
+        /// <param name="attrType">The attribute type to check for</param>
+        protected void CheckSetUpTearDownMethods(Type attrType)
+        {
+            foreach (MethodInfo method in Reflect.GetMethodsWithAttribute(FixtureType, attrType, true))
+                if (method.IsAbstract ||
+                     !method.IsPublic && !method.IsFamily ||
+                     method.GetParameters().Length > 0 ||
+                     !method.ReturnType.Equals(typeof(void)))
+                {
+                    this.Properties.Set(
+                        PropertyNames.SkipReason,
+                        string.Format("Invalid signature for SetUp or TearDown method: {0}", method.Name));
+                    this.RunState = RunState.NotRunnable;
+                    break;
+                }
         }
 
         #endregion

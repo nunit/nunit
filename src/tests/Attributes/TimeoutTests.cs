@@ -37,10 +37,10 @@ namespace NUnit.Framework.Attributes
         Thread parentThread;
         Thread setupThread;
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void GetParentThreadInfo()
         {
-			this.parentThread = Thread.CurrentThread;
+            this.parentThread = Thread.CurrentThread;
         }
 
         [SetUp]
