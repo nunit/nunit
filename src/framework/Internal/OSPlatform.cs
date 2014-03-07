@@ -328,27 +328,59 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
+        /// Return true if the platform is NT 6.0
+        /// </summary>
+        public bool IsNT60
+        {
+            get { return IsNT6 && version.Minor == 0; }
+        }
+
+        /// <summary>
+        /// Return true if the platform is NT 6.1
+        /// </summary>
+        public bool IsNT61
+        {
+            get { return IsNT6 && version.Minor == 1; }
+        }
+
+        /// <summary>
+        /// Return true if the platform is NT 6.2
+        /// </summary>
+        public bool IsNT62
+        {
+            get { return IsNT6 && version.Minor == 2; }
+        }
+
+        /// <summary>
+        /// Return true if the platform is NT 6.3
+        /// </summary>
+        public bool IsNT63
+        {
+            get { return IsNT6 && version.Minor == 3; }
+        }
+
+        /// <summary>
         /// Return true if the platform is Vista
         /// </summary>
         public bool IsVista
         {
-            get { return IsNT6 && version.Minor == 0 && Product == ProductType.WorkStation; }
+            get { return IsNT60 && Product == ProductType.WorkStation; }
         }
 
         /// <summary>
         /// Return true if the platform is Windows 2008 Server (original or R2)
         /// </summary>
         public bool IsWin2008Server
-		{
-			get { return IsNT6 && Product == ProductType.Server; }
-		}
-		
-		/// <summary>
-		/// Return true if the platform is Windows 2008 Server (original)
-		/// </summary>
-		public bool IsWin2008ServerR1
         {
-            get { return IsNT6 && version.Minor == 0 && Product == ProductType.Server; }
+            get { return IsWin2008ServerR1 || IsWin2008ServerR2; }
+        }
+
+        /// <summary>
+        /// Return true if the platform is Windows 2008 Server (original)
+        /// </summary>
+        public bool IsWin2008ServerR1
+        {
+            get { return IsNT60 && Product == ProductType.Server; }
         }
 
         /// <summary>
@@ -356,15 +388,31 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public bool IsWin2008ServerR2
         {
-            get { return IsNT6 && version.Minor == 1 && Product == ProductType.Server; }
+            get { return IsNT61 && Product == ProductType.Server; }
         }
 
         /// <summary>
-        /// Return true if the platform is Windows 2012 Server
+        /// Return true if the platform is Windows 2012 Server (original or R2)
         /// </summary>
         public bool IsWin2012Server
         {
-            get { return IsNT6 && version.Minor == 2 && Product == ProductType.Server; }
+            get { return IsWin2012ServerR1 || IsWin2012ServerR2; }
+        }
+
+        /// <summary>
+        /// Return true if the platform is Windows 2012 Server (original)
+        /// </summary>
+        public bool IsWin2012ServerR1
+        {
+            get { return IsNT62 && Product == ProductType.Server; }
+        }
+
+        /// <summary>
+        /// Return true if the platform is Windows 2012 Server R2
+        /// </summary>
+        public bool IsWin2012ServerR2
+        {
+            get { return IsNT63 && Product == ProductType.Server; }
         }
 
         /// <summary>
@@ -372,7 +420,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public bool IsWindows7
         {
-            get { return IsNT6 && version.Minor == 1 && Product == ProductType.WorkStation; }
+            get { return IsNT61 && Product == ProductType.WorkStation; }
         }
 
         /// <summary>
@@ -380,7 +428,15 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public bool IsWindows8
         {
-            get { return IsNT6 && version.Minor == 8 && Product == ProductType.WorkStation; }
+            get { return IsNT62 && Product == ProductType.WorkStation; }
+        }
+
+        /// <summary>
+        /// Return true if the platform is Windows 8
+        /// </summary>
+        public bool IsWindows81
+        {
+            get { return IsNT63 && Product == ProductType.WorkStation; }
         }
     }
 }
