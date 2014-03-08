@@ -39,7 +39,6 @@ namespace NUnit.Framework
     {
         #region Instance variables
 
-        private ExpectedExceptionData exceptionData;
         private object expectedResult;
         private IPropertyBag properties;
 
@@ -122,53 +121,6 @@ namespace NUnit.Framework
         /// Returns true if the expected result has been set
         /// </summary>
         public bool HasExpectedResult { get; private set; }
-
-        /// <summary>
-        /// Gets data about any expected exception for this test case.
-        /// </summary>
-        public ExpectedExceptionData ExceptionData
-        {
-            get { return exceptionData; }
-        }
-
-        /// <summary>
-        /// Gets or sets the expected exception.
-        /// </summary>
-        /// <value>The expected exception.</value>
-        public Type ExpectedException
-        {
-            get { return exceptionData.ExpectedExceptionType; }
-            set { exceptionData.ExpectedExceptionType = value; }
-        }
-
-        /// <summary>
-        /// Gets or sets the name the expected exception.
-        /// </summary>
-        /// <value>The expected name of the exception.</value>
-        public string ExpectedExceptionName
-        {
-            get { return exceptionData.ExpectedExceptionName; }
-            set { exceptionData.ExpectedExceptionName = value; }
-        }
-
-        /// <summary>
-        /// Gets or sets the expected message of the expected exception
-        /// </summary>
-        /// <value>The expected message of the exception.</value>
-        public string ExpectedMessage
-        {
-            get { return exceptionData.ExpectedMessage; }
-            set { exceptionData.ExpectedMessage = value; }
-        }
-
-        /// <summary>
-        ///  Gets or sets the type of match to be performed on the expected message
-        /// </summary>
-        public MessageMatch MatchType
-        {
-            get { return exceptionData.MatchType; }
-            set { exceptionData.MatchType = value; }
-        }
 
         /// <summary>
         /// Gets or sets the description.
@@ -263,22 +215,6 @@ namespace NUnit.Framework
 
                 return properties;
             }
-        }
-
-        #endregion
-
-        #region ITestCaseSource Members
-
-        /// <summary>
-        /// Returns an collection containing a single ITestCaseData item,
-        /// constructed from the arguments provided in the constructor and
-        /// possibly converted to match the specified method.
-        /// </summary>
-        /// <param name="method">The method for which data is being provided</param>
-        /// <returns></returns>
-        public System.Collections.Generic.IEnumerable<ITestCaseData> GetTestCasesFor(System.Reflection.MethodInfo method)
-        {           
-            return new ITestCaseData[] { GetParametersForTestCase(method) };
         }
 
         #endregion

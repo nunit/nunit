@@ -70,7 +70,6 @@
     <Compile Include="CultureAttributeData.cs" />
     <Compile Include="DatapointFixture.cs" />
     <Compile Include="DescriptionFixture.cs" />
-    <Compile Include="ExpectedExceptionData.cs" />
     <Compile Include="FixtureSetUpTearDownData.cs" />
     <Compile Include="MaxTimeFixture.cs" />
     <Compile Include="ParameterizedTestFixture.cs" />

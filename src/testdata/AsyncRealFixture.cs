@@ -111,27 +111,6 @@ namespace NUnit.TestData
 			return await Task.Run(() => (object)null);
 		}
 
-		[Test]
-		[ExpectedException(typeof(InvalidOperationException))]
-		public async void AsyncVoidExpectedException()
-		{
-			await ThrowException();
-		}
-
-		[Test]
-		[ExpectedException(typeof(InvalidOperationException))]
-		public async Task AsyncTaskExpectedException()
-		{
-			await ThrowException();
-		}
-
-		[Test] // Not Runnable
-		[ExpectedException(typeof(InvalidOperationException))]
-		public async Task<int> AsyncTaskResultExpectedException()
-		{
-			return await ThrowException();
-		}
-
         [Test]
         public async void AsyncVoidAssertSynchronizationContext()
         {
@@ -312,39 +291,39 @@ namespace NUnit.TestData
             Assert.AreEqual(testName, TestContext.CurrentContext.Test.Name);
         }
 
-        [Test]
-        [ExpectedException(typeof(InvalidOperationException))]
-        public async void VoidAsyncVoidChildCompletingEarlierThanTest()
-        {
-            AsyncVoidMethod();
+        //[Test]
+        //[ExpectedException(typeof(InvalidOperationException))]
+        //public async void VoidAsyncVoidChildCompletingEarlierThanTest()
+        //{
+        //    AsyncVoidMethod();
 
-            await ThrowExceptionIn(TimeSpan.FromSeconds(1));
-        }
+        //    await ThrowExceptionIn(TimeSpan.FromSeconds(1));
+        //}
 
-        [Test]
-        [ExpectedException(typeof(InvalidOperationException))]
-        public async void VoidAsyncVoidChildThrowingImmediately()
-        {
-            AsyncVoidThrowException();
+        //[Test]
+        //[ExpectedException(typeof(InvalidOperationException))]
+        //public async void VoidAsyncVoidChildThrowingImmediately()
+        //{
+        //    AsyncVoidThrowException();
 
-            await Task.Run(() => Assert.Fail("Should never invoke this"));
-        }
+        //    await Task.Run(() => Assert.Fail("Should never invoke this"));
+        //}
 
-        private static async void AsyncVoidThrowException()
-        {
-            await Task.Run(() => { throw new InvalidOperationException(); });
-        }
+        //private static async void AsyncVoidThrowException()
+        //{
+        //    await Task.Run(() => { throw new InvalidOperationException(); });
+        //}
 
-        private static async Task ThrowExceptionIn(TimeSpan delay)
-        {
-            await Task.Delay(delay);
-            throw new InvalidOperationException();
-        }
+        //private static async Task ThrowExceptionIn(TimeSpan delay)
+        //{
+        //    await Task.Delay(delay);
+        //    throw new InvalidOperationException();
+        //}
 
-        private static async void AsyncVoidMethod()
-        {
-            await Task.Yield();
-        }
+        //private static async void AsyncVoidMethod()
+        //{
+        //    await Task.Yield();
+        //}
 
         private static Task<string> GetTestNameFromContext()
         {

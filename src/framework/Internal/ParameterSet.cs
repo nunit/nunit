@@ -40,8 +40,6 @@ namespace NUnit.Framework.Internal
         /// </summary>
         private object _expectedResult;
 
-        private ExpectedExceptionData _exceptionData;
-
         #endregion
 
         #region Constructors
@@ -87,7 +85,6 @@ namespace NUnit.Framework.Internal
             this.Arguments = this.OriginalArguments = data.Arguments;
             if (data.HasExpectedResult)
                 ExpectedResult = data.ExpectedResult;
-            this.ExceptionData = data.ExceptionData;
             this.Properties = new PropertyBag();
 
             foreach (string key in data.Properties.Keys)
@@ -129,24 +126,6 @@ namespace NUnit.Framework.Internal
         public bool HasExpectedResult { get; set; }
 
         /// <summary>
-        /// Data about any expected exception
-        /// </summary>
-        public ExpectedExceptionData ExceptionData
-        {
-            get { return _exceptionData; }
-            protected set { _exceptionData = value; }
-        }
-
-        /// <summary>
-        /// Sets the name of the expected exception.
-        /// </summary>
-        /// <param name="expectedExceptionName">Name of the expected exception.</param>
-        protected void SetExpectedExceptionName(string expectedExceptionName)
-        {
-            _exceptionData.ExpectedExceptionName = expectedExceptionName;
-        }
-
-        /// <summary>
         /// A name to be used for this test case in lieu
         /// of the standard generated name containing
         /// the argument list.
@@ -167,14 +146,6 @@ namespace NUnit.Framework.Internal
         /// used for display purposes.
         /// </summary>
         public object[] OriginalArguments { get; private set; }
-
-        /// <summary>
-        /// Gets a flag indicating whether an exception is expected.
-        /// </summary>
-        public bool ExceptionExpected
-        {
-            get { return ExceptionData.ExpectedExceptionName != null; }
-        }
 
         #endregion
 
@@ -208,9 +179,7 @@ namespace NUnit.Framework.Internal
         /// </returns>
         public System.Collections.Generic.IEnumerable<ICommandDecorator> GetDecorators()
         {
-            return ExceptionExpected
-                ? new ICommandDecorator[] { new ExpectedExceptionDecorator(this.ExceptionData) }
-                : new ICommandDecorator[0];
+            return new ICommandDecorator[0];
         }
 
         #endregion

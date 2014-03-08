@@ -75,7 +75,6 @@
     <Compile Include="Constraints\ReusableConstraint.cs" />
     <Compile Include="Constraints\SubPathConstraint.cs" />
     <Compile Include="Constraints\ThrowsExceptionConstraint.cs" />
-    <Compile Include="Interfaces\ExpectedExceptionData.cs" />
     <Compile Include="Interfaces\ICombiningStrategy.cs" />
     <Compile Include="Interfaces\ICommandDecorator.cs" />
     <Compile Include="Interfaces\ICommandDecoratorSource.cs" />
@@ -106,7 +105,6 @@
     <Compile Include="Internal\Builders\NamespaceTreeBuilder.cs" />
     <Compile Include="Internal\Commands\ApplyChangesToContextCommand.cs" />
     <Compile Include="Internal\Commands\DelegatingTestCommand.cs" />
-    <Compile Include="Internal\Commands\ExpectedExceptionCommand.cs" />
     <Compile Include="Internal\Commands\MaxTimeCommand.cs" />
     <Compile Include="Internal\Commands\OneTimeSetUpCommand.cs" />
     <Compile Include="Internal\Commands\OneTimeTearDownCommand.cs" />
@@ -149,7 +147,6 @@
     <Compile Include="Attributes\DatapointsAttribute.cs" />
     <Compile Include="Attributes\DatapointSourceAttribute.cs" />
     <Compile Include="Attributes\DescriptionAttribute.cs" />
-    <Compile Include="Attributes\ExpectedExceptionAttribute.cs" />
     <Compile Include="Attributes\ExplicitAttribute.cs" />
     <Compile Include="Attributes\IgnoreAttribute.cs" />
     <Compile Include="Attributes\IncludeExcludeAttribute.cs" />

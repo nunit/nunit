@@ -74,7 +74,6 @@
     <Compile Include="Attributes\DatapointsAttribute.cs" />
     <Compile Include="Attributes\DatapointSourceAttribute.cs" />
     <Compile Include="Attributes\DescriptionAttribute.cs" />
-    <Compile Include="Attributes\ExpectedExceptionAttribute.cs" />
     <Compile Include="Attributes\ExplicitAttribute.cs" />
     <Compile Include="Attributes\IgnoreAttribute.cs" />
     <Compile Include="Attributes\IncludeExcludeAttribute.cs" />
@@ -219,7 +218,6 @@
     <Compile Include="GlobalSettings.cs" />
     <Compile Include="Guard.cs" />
     <Compile Include="Has.cs" />
-    <Compile Include="Interfaces\ExpectedExceptionData.cs" />
     <Compile Include="Interfaces\IParameterDataSource.cs" />
     <Compile Include="Interfaces\IPropertyBag.cs" />
     <Compile Include="Interfaces\ISimpleTestBuilder.cs" />
@@ -257,7 +255,6 @@
     <Compile Include="Internal\Commands\CommandDecoratorList.cs" />
     <Compile Include="Internal\Commands\CommandStage.cs" />
     <Compile Include="Internal\Commands\DelegatingTestCommand.cs" />
-    <Compile Include="Internal\Commands\ExpectedExceptionCommand.cs" />
     <Compile Include="Internal\Commands\MaxTimeCommand.cs" />
     <Compile Include="Internal\Commands\OneTimeSetUpCommand.cs" />
     <Compile Include="Internal\Commands\OneTimeTearDownCommand.cs" />

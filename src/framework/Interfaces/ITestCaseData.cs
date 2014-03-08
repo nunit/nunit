@@ -59,11 +59,6 @@ namespace NUnit.Framework.Interfaces
         bool HasExpectedResult { get; }
 
         /// <summary>
-        /// Gets data about any expected exception.
-        /// </summary>
-        ExpectedExceptionData ExceptionData { get; }
-
-        /// <summary>
         /// Gets the property dictionary for the test case
         /// </summary>
         IPropertyBag Properties { get; }

@@ -53,11 +53,11 @@ namespace NUnit.Framework.Constraints
             new TestCaseData( new object[] { 1, 2, 3 }, "< 1, 2, 3 >" )
         };
 
-        [TestCase(null, ExpectedException = typeof(ArgumentException))]
-        [TestCase(5, ExpectedException = typeof(ArgumentException))]
-        public void InvalidDataThrowsException(object data)
+        [TestCase(null)]
+        [TestCase(5)]
+        public void InvalidDataThrowsArgumentException(object data)
         {
-            theConstraint.ApplyTo(data);
+            Assert.Throws<ArgumentException>(() => theConstraint.ApplyTo(data));
         }
 
     }

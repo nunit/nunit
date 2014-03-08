@@ -46,10 +46,10 @@ namespace NUnit.Framework.Constraints
             new TestCaseData( typeof(Int32), "<System.Int32>" ) };
 
 #if !NUNITLITE
-        [TestCase(null, ExpectedException = typeof(ArgumentNullException))]
-        public void InvalidDataThrowsException(object value)
+        public void NullDataThrowsArgumentNullException()
         {
-            theConstraint.ApplyTo(value);
+            object value = null;
+            Assert.Throws<ArgumentNullException>(() => theConstraint.ApplyTo(value));
         }
 #endif
     }
@@ -71,11 +71,16 @@ namespace NUnit.Framework.Constraints
             new TestCaseData( "goodbye", "7" ) };
 
 #if !NUNITLITE
-        [TestCase(null, ExpectedException = typeof(ArgumentNullException))]
-        [TestCase(42, ExpectedException = typeof(ArgumentException))]
-        public void InvalidDataThrowsException(object value)
+        [Test]
+        public void NullDataThrowsArgumentNullException()
         {
-            theConstraint.ApplyTo(value);
+            object value = null;
+            Assert.Throws<ArgumentNullException>(() => theConstraint.ApplyTo(value));
+        }
+        [Test]
+        public void InvalidDataThrowsArgumentException()
+        {
+            Assert.Throws<ArgumentException>(() => theConstraint.ApplyTo(42));
         }
 #endif
 

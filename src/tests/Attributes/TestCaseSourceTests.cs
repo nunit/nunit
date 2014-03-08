@@ -189,7 +189,7 @@ namespace NUnit.Framework.Attributes
         [Test]
         [TestCaseSource("MyData")]
         [TestCaseSource("MoreData", Category="Extra")]
-        [TestCase(12, 0, 0, ExpectedException = typeof(System.DivideByZeroException))]
+        [TestCase(12, 2, 6)]
         public void TestMayUseMultipleSourceAttributes(int n, int d, int q)
         {
             Assert.AreEqual(q, n / d);
@@ -212,32 +212,6 @@ namespace NUnit.Framework.Attributes
         public int SourceMayBeInAnotherClassWithReturn(int n, int d)
         {
             return n / d;
-        }
-
-        [Test]
-        public void CanSpecifyExpectedException()
-        {
-            ITestResult result = TestBuilder.RunParameterizedMethodSuite(
-                typeof(TestCaseSourceAttributeFixture), "MethodThrowsExpectedException").Children[0];
-            Assert.AreEqual(ResultState.Success, result.ResultState);
-        }
-
-        [Test]
-        public void CanSpecifyExpectedException_WrongException()
-        {
-            ITestResult result = TestBuilder.RunParameterizedMethodSuite(
-                typeof(TestCaseSourceAttributeFixture), "MethodThrowsWrongException").Children[0];
-            Assert.AreEqual(ResultState.Failure, result.ResultState);
-            Assert.That(result.Message, Is.StringStarting("An unexpected exception type was thrown"));
-        }
-
-        [Test]
-        public void CanSpecifyExpectedException_NoneThrown()
-        {
-            ITestResult result = TestBuilder.RunParameterizedMethodSuite(
-                typeof(TestCaseSourceAttributeFixture), "MethodThrowsNoException").Children[0];
-            Assert.AreEqual(ResultState.Failure, result.ResultState);
-            Assert.AreEqual("System.ArgumentNullException was expected", result.Message);
         }
 
         [Test]
@@ -348,12 +322,12 @@ namespace NUnit.Framework.Attributes
             {
                 get
                 {
-                    yield return new TestCaseData(0, 0, 0)
-                        .SetName("ThisOneShouldThrow")
-                        .SetDescription("Demonstrates use of ExpectedException")
-                        .SetCategory("Junk")
-                        .SetProperty("MyProp", "zip")
-                        .Throws(typeof(System.DivideByZeroException));
+                    //yield return new TestCaseData(0, 0, 0)
+                    //    .SetName("ThisOneShouldThrow")
+                    //    .SetDescription("Demonstrates use of ExpectedException")
+                    //    .SetCategory("Junk")
+                    //    .SetProperty("MyProp", "zip")
+                    //    .Throws(typeof(System.DivideByZeroException));
                     yield return new object[] { 100, 20, 5 };
                     yield return new object[] { 100, 4, 25 };
                 }
@@ -367,7 +341,7 @@ namespace NUnit.Framework.Attributes
                 get
                 {
                     return new object[] {
-                        new TestCaseData(12, 3).Returns(5).Throws(typeof(AssertionException)).SetName("TC1"),
+                        new TestCaseData(12, 3).Returns(4).SetName("TC1"),
                         new TestCaseData(12, 2).Returns(6).SetName("TC2"),
                         new TestCaseData(12, 4).Returns(3).SetName("TC3")
                     };

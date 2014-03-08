@@ -55,36 +55,6 @@ namespace NUnit.TestData.TestCaseAttributeFixture
             return x + y;
         }
 
-        [TestCase(2, 3, 4, ExpectedException = typeof(ArgumentNullException))]
-        public void MethodThrowsExpectedException(int x, int y, int z)
-        {
-            throw new ArgumentNullException();
-        }
-
-        [TestCase(2, 3, 4, ExpectedException = typeof(ArgumentNullException))]
-        public void MethodThrowsWrongException(int x, int y, int z)
-        {
-            throw new ArgumentException();
-        }
-
-        [TestCase(2, 3, 4, ExpectedException = typeof(ArgumentNullException))]
-        public void MethodThrowsNoException(int x, int y, int z)
-        {
-        }
-
-        [TestCase(2, 3, 4, ExpectedException = typeof(Exception),
-            ExpectedMessage="Test Exception")]
-        public void MethodThrowsExpectedExceptionWithWrongMessage(int x, int y, int z)
-        {
-            throw new Exception("Wrong Test Exception");
-        }
-
-        [TestCase(2, 3, 4, ExpectedException = typeof(ArgumentNullException))]
-        public void MethodCallsIgnore(int x, int y, int z)
-        {
-            Assert.Ignore("Ignore this");
-        }
-
         [TestCase(1)]
         [TestCase(2, Ignore = true)]
         [TestCase(3, IgnoreReason = "Don't Run Me!")]
