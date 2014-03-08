@@ -462,5 +462,41 @@ namespace NUnit.Framework.Internal
             Assert.That( winXPHelper.Reason, Is.StringStarting("Invalid platform name"));
             Assert.That( winXPHelper.Reason, Is.StringContaining("Net11"));
         }
+
+        [Test]
+        public void PlatformAttribute_ProcessBitNess()
+        {
+            PlatformAttribute attr32 = new PlatformAttribute("32-Bit");
+            PlatformAttribute attr64 = new PlatformAttribute("64-Bit");
+            PlatformHelper helper = new PlatformHelper();
+
+            // This test verifies that the two labels are known,
+            // do not cause an error and return consistent results.
+            bool is32Bit = helper.IsPlatformSupported(attr32);
+            bool is64Bit = helper.IsPlatformSupported(attr64);
+            Assert.False(is32Bit & is64Bit, "Cannot be both 32 and 64 bit");
+
+#if NET_4_0 || NET_4_5
+            // For .NET 4.0 and 4.5, we can check further
+            Assert.That(is64Bit, Is.EqualTo(Environment.Is64BitProcess));
+#endif
+        }
+
+#if NET_4_0 || NET_4_5
+        [Test]
+        public void PlatformAttribute_OperatingSystemBitNess()
+        {
+            PlatformAttribute attr32 = new PlatformAttribute("32-Bit-OS");
+            PlatformAttribute attr64 = new PlatformAttribute("64-Bit-OS");
+            PlatformHelper helper = new PlatformHelper();
+
+            // This test verifies that the two labels are known,
+            // do not cause an error and return consistent results.
+            bool is32Bit = helper.IsPlatformSupported(attr32);
+            bool is64Bit = helper.IsPlatformSupported(attr64);
+            Assert.False(is32Bit & is64Bit, "Cannot be both 32 bit and 64 bit");
+            Assert.That(is64Bit, Is.EqualTo(Environment.Is64BitProcess));
+        }
+#endif
     }
 }
