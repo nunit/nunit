@@ -91,6 +91,10 @@
     <TestRunnerProgram>test-harness.exe</TestRunnerProgram>
     <TestRunnerArgs>nunit.framework.tests.dll $(TestOptions)</TestRunnerArgs>
   </PropertyGroup>
+  
+  <PropertyGroup Label="Properties for running NuGet">
+    <RuntimeSelectionSwitch Condition="'$(Runtime)' == 'mono'">--runtime=v4.0.30319</RuntimeSelectionSwitch>
+  </PropertyGroup>
 
   <PropertyGroup>
     <ConfigurationBuildDir>$(ProjectBuildDir)\$(Configuration)</ConfigurationBuildDir>
@@ -134,7 +138,7 @@
     <Delete Files="$(ProjectSrcDir)\GeneratedAssemblyInfo.cs" Condition="Exists('$(ProjectSrcDir)\GeneratedAssemblyInfo.cs')" />
   </Target>
   <Target Name="Build">
-    <Exec Command="$(ManagedExeLauncher) .nuget\NuGet.exe restore NUnitFramework.sln"></Exec>
+    <Exec Command="$(ManagedExeLauncher) $(RuntimeSelectionSwitch) .nuget\NuGet.exe restore NUnitFramework.sln"></Exec>
     <CallTarget Targets="_BuildNUnit" Condition="'$(Runtime)' != 'netcf' And '$(Runtime)' != 'silverlight'" />
     <CallTarget Targets="_BuildNUnitLite" />
   </Target>
