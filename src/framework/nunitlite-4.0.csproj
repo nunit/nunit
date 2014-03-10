@@ -233,6 +233,8 @@
     <Compile Include="Interfaces\TestStatus.cs" />
     <Compile Include="Interfaces\XmlNode.cs" />
     <Compile Include="Internal\AssemblyHelper.cs" />
+    <Compile Include="Internal\AsyncInvocationRegion.cs" />
+    <Compile Include="Internal\AsyncSynchronizationContext.cs" />
     <Compile Include="Internal\Builders\CombinatorialStrategy.cs" />
     <Compile Include="Internal\Builders\DatapointProvider.cs" />
     <Compile Include="Internal\Builders\DefaultSuiteBuilder.cs" />

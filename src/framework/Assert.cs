@@ -504,7 +504,7 @@ namespace NUnit.Framework
         {
             Exception caughtException = null;
 
-#if NET_4_5
+#if NET_4_0 || NET_4_5
             if (AsyncInvocationRegion.IsAsyncOperation(code))
             {
                 using (AsyncInvocationRegion region = AsyncInvocationRegion.Create(code))

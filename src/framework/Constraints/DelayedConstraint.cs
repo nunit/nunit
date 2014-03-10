@@ -131,7 +131,7 @@ namespace NUnit.Framework.Constraints
 
         private static object InvokeDelegate<T>(ActualValueDelegate<T> del)
         {
-#if NET_4_5
+#if NET_4_0 || NET_4_5
             if (AsyncInvocationRegion.IsAsyncOperation(del))
                 using (AsyncInvocationRegion region = AsyncInvocationRegion.Create(del))
                     return region.WaitForPendingOperationsToComplete(del());

@@ -21,15 +21,19 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Constraints;
 using NUnit.Framework.Internal;
 using NUnit.TestData;
 using NUnit.TestUtilities;
 
-#if NET_4_5
+#if NET_4_0 || NET_4_5
+using System;
 using System.Threading.Tasks;
+#endif
+
+#if NET_4_0
+using Task = System.Threading.Tasks.TaskEx;
 #endif
 
 namespace NUnit.Framework.Assertions
@@ -221,7 +225,7 @@ namespace NUnit.Framework.Assertions
             return 5;
         }
 
-#if NET_4_5
+#if NET_4_0 || NET_4_5
         [Test]
         public void AssertThatSuccess()
         {
@@ -273,7 +277,7 @@ namespace NUnit.Framework.Assertions
             throw new InvalidOperationException();
         }
 
-        private static async Task ThrowExceptionTask()
+        private static async System.Threading.Tasks.Task ThrowExceptionTask()
         {
             await One();
             throw new InvalidOperationException();

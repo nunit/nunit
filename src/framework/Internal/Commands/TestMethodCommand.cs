@@ -25,7 +25,6 @@ using System;
 using System.Reflection;
 using NUnit.Framework.Interfaces;
 
-
 namespace NUnit.Framework.Internal.Commands
 {
     /// <summary>
@@ -73,7 +72,7 @@ namespace NUnit.Framework.Internal.Commands
 
         private object RunTestMethod(TestExecutionContext context)
         {
-#if NET_4_5
+#if NET_4_0 || NET_4_5
             if (AsyncInvocationRegion.IsAsyncOperation(testMethod.Method))
                 return RunAsyncTestMethod(context);
             else
@@ -81,7 +80,7 @@ namespace NUnit.Framework.Internal.Commands
                 return RunNonAsyncTestMethod(context);
         }
 
-#if NET_4_5
+#if NET_4_0 || NET_4_5
         private object RunAsyncTestMethod(TestExecutionContext context)
         {
             using (AsyncInvocationRegion region = AsyncInvocationRegion.Create(testMethod.Method))

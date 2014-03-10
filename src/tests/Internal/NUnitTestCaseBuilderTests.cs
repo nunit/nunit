@@ -1,4 +1,4 @@
-﻿#if NET_4_5
+﻿#if NET_4_0 || NET_4_5
 using NUnit.Framework.Interfaces;
 using NUnit.TestData;
 using NUnit.TestUtilities;

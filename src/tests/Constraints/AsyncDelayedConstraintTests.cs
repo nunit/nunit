@@ -1,8 +1,6 @@
-﻿#if NET_4_5
+﻿#if NET_4_0 || NET_4_5
 using System;
 using System.Threading.Tasks;
-using NUnit.Framework;
-using NUnit.Framework.Constraints;
 
 namespace NUnit.Framework.Constraints.Tests
 {
@@ -74,7 +72,11 @@ namespace NUnit.Framework.Constraints.Tests
 
 		private static async Task<int> One()
 		{
+#if NET_4_5
 			return await Task.Run(() => 1);
+# elif NET_4_0
+			return await TaskEx.Run(() => 1);
+#endif
 		}
 
 		private static async Task Throw()

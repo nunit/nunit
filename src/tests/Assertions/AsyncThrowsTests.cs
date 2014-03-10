@@ -21,10 +21,14 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if NET_4_5
+#if NET_4_0 || NET_4_5
 using System;
 using System.Threading.Tasks;
 using NUnit.Framework.Constraints;
+
+#if NET_4_0
+using Task = System.Threading.Tasks.TaskEx;
+#endif
 
 namespace NUnit.Framework.Assertions
 {
@@ -32,11 +36,11 @@ namespace NUnit.Framework.Assertions
 	public class AsyncThrowsTests
 	{
 		private readonly TestDelegate _noThrowsVoid = new TestDelegate(async () => await Task.Yield());
-		private readonly ActualValueDelegate<Task> _noThrowsAsyncTask = async () => await Task.Yield();
-		private readonly ActualValueDelegate<Task<int>> _noThrowsAsyncGenericTask = async () => await ReturnOne();
+		private readonly ActualValueDelegate<System.Threading.Tasks.Task> _noThrowsAsyncTask = async () => await Task.Yield();
+        private readonly ActualValueDelegate<Task<int>> _noThrowsAsyncGenericTask = async () => await ReturnOne();
 		private readonly TestDelegate _throwsAsyncVoid = new TestDelegate(async () => await ThrowAsyncTask());
 		private readonly TestDelegate _throwsSyncVoid = new TestDelegate(async () => { throw new InvalidOperationException(); });
-		private readonly ActualValueDelegate<Task> _throwsAsyncTask = async () => await ThrowAsyncTask();
+        private readonly ActualValueDelegate<System.Threading.Tasks.Task> _throwsAsyncTask = async () => await ThrowAsyncTask();
 		private readonly ActualValueDelegate<Task<int>> _throwsAsyncGenericTask = async () => await ThrowAsyncGenericTask();
 
 		private static ThrowsConstraint ThrowsInvalidOperationExceptionConstraint
@@ -164,19 +168,19 @@ namespace NUnit.Framework.Assertions
 			Assert.Throws<InvalidOperationException>(_throwsSyncVoid);
 		}
 
-        private static async Task ThrowAsyncTask()
+        private static async System.Threading.Tasks.Task ThrowAsyncTask()
 		{
 			await ReturnOne();
 			throw new InvalidOperationException();
 		}
 
-		private static async Task<int> ThrowAsyncGenericTask()
+        private static async System.Threading.Tasks.Task<int> ThrowAsyncGenericTask()
 		{
 			await ThrowAsyncTask();
 			return await ReturnOne();
 		}
 
-		private static Task<int> ReturnOne()
+        private static System.Threading.Tasks.Task<int> ReturnOne()
 		{
 			return Task.Run(() => 1);
 		}
