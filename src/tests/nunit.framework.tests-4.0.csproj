@@ -60,6 +60,7 @@
     <Compile Include="Assertions\AssertThatTests.cs" />
     <Compile Include="Assertions\AssertThrowsTests.cs" />
     <Compile Include="Assertions\AssumeThatTests.cs" />
+    <Compile Include="Assertions\AsyncThrowsTests.cs" />
     <Compile Include="Assertions\CollectionAssertTest.cs" />
     <Compile Include="Assertions\ConditionAssertTests.cs" />
     <Compile Include="Assertions\FileAssertTests.cs" />
@@ -106,6 +107,7 @@
     <Compile Include="Constraints\AllItemsConstraintTests.cs" />
     <Compile Include="Constraints\AndConstraintTests.cs" />
     <Compile Include="Constraints\AssignableToConstraintTests.cs" />
+    <Compile Include="Constraints\AsyncDelayedConstraintTests.cs" />
     <Compile Include="Constraints\AttributeExistsConstraintTests.cs" />
     <Compile Include="Constraints\BasicConstraintTests.cs" />
     <Compile Include="Constraints\BinarySerializableTest.cs" />
@@ -153,6 +155,7 @@
     <Compile Include="Constraints\XmlSerializableTest.cs" />
     <Compile Include="Internal\AssemblyHelperTests.cs" />
     <Compile Include="Internal\AssemblyReaderTests.cs" />
+    <Compile Include="Internal\AsyncTestMethodTests.cs" />
     <Compile Include="Internal\CallContextTests.cs" />
     <Compile Include="Internal\CultureSettingAndDetectionTests.cs" />
     <Compile Include="Internal\DeduceTypeArgsFromArgs.cs" />
@@ -161,6 +164,7 @@
     <Compile Include="Internal\GenericTestFixtureTests.cs" />
     <Compile Include="Internal\GenericTestMethodTests.cs" />
     <Compile Include="Internal\LegacySuiteTests.cs" />
+    <Compile Include="Internal\NUnitTestCaseBuilderTests.cs" />
     <Compile Include="Internal\PlatformDetectionTests.cs" />
     <Compile Include="Internal\PropertyBagTests.cs" />
     <Compile Include="Internal\RandomGeneratorTests.cs" />
@@ -200,7 +204,6 @@
     <Compile Include="Syntax\ThrowsTests.cs" />
     <Compile Include="Syntax\TypeConstraints.cs" />
     <Compile Include="TestContextTests.cs" />
-    <Compile Include="TestUtilities\Collections\SimpleObjectList.cs" />
     <Compile Include="TestUtilities\Collections\SimpleObjectCollection.cs" />
     <Compile Include="TestUtilities\Comparers\AlwaysEqualComparer.cs" />
     <Compile Include="TestUtilities\Comparers\GenericComparer.cs" />

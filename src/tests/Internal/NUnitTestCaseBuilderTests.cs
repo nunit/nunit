@@ -1,7 +1,5 @@
 ﻿#if NET_4_5
-using System.Reflection;
 using NUnit.Framework.Interfaces;
-using NUnit.Framework.Internal.Builders;
 using NUnit.TestData;
 using NUnit.TestUtilities;
 
