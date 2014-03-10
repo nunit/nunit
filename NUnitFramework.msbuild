@@ -138,7 +138,6 @@
     <Delete Files="$(ProjectSrcDir)\GeneratedAssemblyInfo.cs" Condition="Exists('$(ProjectSrcDir)\GeneratedAssemblyInfo.cs')" />
   </Target>
   <Target Name="Build">
-    <Exec Command="mozroots --import --sync" Condition="'$(Runtime)' == 'mono'"></Exec>
     <Exec Command="$(ManagedExeLauncher) $(RuntimeSelectionSwitch) .nuget\NuGet.exe restore NUnitFramework.sln"></Exec>
     <CallTarget Targets="_BuildNUnit" Condition="'$(Runtime)' != 'netcf' And '$(Runtime)' != 'silverlight'" />
     <CallTarget Targets="_BuildNUnitLite" />
