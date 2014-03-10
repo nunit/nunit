@@ -34,12 +34,6 @@ namespace NUnit.TestData.AssertIgnoreData
         {
             Assert.Ignore("Ignore me");
         }
-
-        [Test, ExpectedException(typeof(InvalidOperationException))]
-        public void CallsIgnoreWithExpectedException()
-        {
-            Assert.Ignore("Ignore me");
-        }
     }
 
     [TestFixture]

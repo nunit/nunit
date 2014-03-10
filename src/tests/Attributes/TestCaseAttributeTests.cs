@@ -38,8 +38,6 @@ namespace NUnit.Framework.Attributes
         [TestCase(12, 3, 4)]
         [TestCase(12, 2, 6)]
         [TestCase(12, 4, 3)]
-        [TestCase(12, 0, 0, ExpectedException = typeof(System.DivideByZeroException))]
-        [TestCase(12, 0, 0, ExpectedExceptionName = "System.DivideByZeroException")]
         public void IntegerDivisionWithResultPassedToTest(int n, int d, int q)
         {
             Assert.AreEqual(q, n / d);
@@ -48,9 +46,6 @@ namespace NUnit.Framework.Attributes
         [TestCase(12, 3, ExpectedResult = 4)]
         [TestCase(12, 2, ExpectedResult = 6)]
         [TestCase(12, 4, ExpectedResult = 3)]
-        [TestCase(12, 0, ExpectedException = typeof(System.DivideByZeroException))]
-        [TestCase(12, 0, ExpectedExceptionName = "System.DivideByZeroException",
-            TestName = "DivisionByZeroThrowsException")]
         public int IntegerDivisionWithResultCheckedByNUnit(int n, int d)
         {
             return n / d;
@@ -110,21 +105,6 @@ namespace NUnit.Framework.Attributes
         public void CanConvertStringToDateTime(DateTime dt)
         {
             Assert.AreEqual(1942, dt.Year);
-        }
-
-        [TestCase(42, ExpectedException = typeof(System.Exception),
-                   ExpectedMessage = "Test Exception")]
-        public void CanSpecifyExceptionMessage(int a)
-        {
-            throw new System.Exception("Test Exception");
-        }
-
-        [TestCase(42, ExpectedException = typeof(System.Exception),
-           ExpectedMessage = "Test Exception",
-           MatchType=MessageMatch.StartsWith)]
-        public void CanSpecifyExceptionMessageAndMatchType(int a)
-        {
-            throw new System.Exception("Test Exception thrown here");
         }
 
         [TestCase(null)]
@@ -239,50 +219,6 @@ namespace NUnit.Framework.Attributes
             Assert.AreEqual(new string[] { "X", "Y", "Z" }, categories);
         }
  
-        [Test]
-        public void CanSpecifyExpectedException()
-        {
-            ITestResult result = TestBuilder.RunParameterizedMethodSuite(
-                typeof(TestCaseAttributeFixture), "MethodThrowsExpectedException").Children[0];
-            Assert.AreEqual(ResultState.Success, result.ResultState);
-        }
-
-        [Test]
-        public void CanSpecifyExpectedException_WrongException()
-        {
-            ITestResult result = TestBuilder.RunParameterizedMethodSuite(
-                typeof(TestCaseAttributeFixture), "MethodThrowsWrongException").Children[0];
-            Assert.AreEqual(ResultState.Failure, result.ResultState);
-            Assert.That(result.Message, Is.StringStarting("An unexpected exception type was thrown"));
-        }
-
-        [Test]
-        public void CanSpecifyExpectedException_WrongMessage()
-        {
-            ITestResult result = TestBuilder.RunParameterizedMethodSuite(
-                typeof(TestCaseAttributeFixture), "MethodThrowsExpectedExceptionWithWrongMessage").Children[0];
-            Assert.AreEqual(ResultState.Failure, result.ResultState);
-            Assert.That(result.Message, Is.StringStarting("The exception message text was incorrect"));
-        }
-
-        [Test]
-        public void CanSpecifyExpectedException_NoneThrown()
-        {
-            ITestResult result = TestBuilder.RunParameterizedMethodSuite(
-                typeof(TestCaseAttributeFixture), "MethodThrowsNoException").Children[0];
-            Assert.AreEqual(ResultState.Failure, result.ResultState);
-            Assert.AreEqual("System.ArgumentNullException was expected", result.Message);
-        }
-
-        [Test]
-        public void IgnoreTakesPrecedenceOverExpectedException()
-        {
-            ITestResult result = TestBuilder.RunParameterizedMethodSuite(
-                typeof(TestCaseAttributeFixture), "MethodCallsIgnore").Children[0];
-            Assert.AreEqual(ResultState.Ignored, result.ResultState);
-            Assert.AreEqual("Ignore this", result.Message);
-        }
-
         [Test]
         public void CanIgnoreIndividualTestCases()
         {

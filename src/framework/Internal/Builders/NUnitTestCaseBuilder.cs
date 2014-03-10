@@ -162,14 +162,14 @@ namespace NUnit.Framework.Internal.Builders
                 if (MethodHelper.IsAsyncMethod(testMethod.Method))
                 {
                     bool returnsGenericTask = returnType.IsGenericType && returnType.GetGenericTypeDefinition() == typeof(Task<>);
-                    if (returnsGenericTask && (parms == null || !parms.HasExpectedResult && !parms.ExceptionExpected))
+                    if (returnsGenericTask && (parms == null || !parms.HasExpectedResult))
                         return MarkAsNotRunnable(testMethod, "Async test method must have Task or void return type when no result is expected");
                     else if (!returnsGenericTask && parms != null && parms.HasExpectedResult)
                         return MarkAsNotRunnable(testMethod, "Async test method must have Task<T> return type when a result is expected");
                 }
                 else
 #endif
-                if (parms == null || !parms.HasExpectedResult && !parms.ExceptionExpected)
+                if (parms == null || !parms.HasExpectedResult)
                     return MarkAsNotRunnable(testMethod, "Method has non-void return value, but no result is expected");
             }
 

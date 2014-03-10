@@ -34,11 +34,11 @@ namespace NUnit.Framework.Constraints
     {
         protected ComparisonConstraint comparisonConstraint;
 
-        [TestCase(null, ExpectedException = typeof(ArgumentException))]
-        [TestCase("xxx", ExpectedException = typeof(ArgumentException))]
-        public void InvalidDataThrowsException(object data)
+        [TestCase(null)]
+        [TestCase("xxx")]
+        public void InvalidDataThrowsArgumentException(object data)
         {
-            theConstraint.ApplyTo(data);
+            Assert.Throws<ArgumentException>(() => theConstraint.ApplyTo(data));
         }
 
         [Test]

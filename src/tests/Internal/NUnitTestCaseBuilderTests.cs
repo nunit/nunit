@@ -7,9 +7,9 @@ using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Internal
 {
-	[TestFixture]
-	public class NUnitTestCaseBuilderTests
-	{
+    [TestFixture]
+    public class NUnitTestCaseBuilderTests
+    {
         private static readonly System.Type fixtureType = typeof(AsyncDummyFixture);
 
         [TestCase("AsyncVoid", RunState.Runnable)]
@@ -29,7 +29,6 @@ namespace NUnit.Framework.Internal
         [TestCase("AsyncTaskTestCaseWithExpectedResult", RunState.NotRunnable)]
         [TestCase("AsyncGenericTaskTestCase", RunState.NotRunnable)]
         [TestCase("AsyncGenericTaskTestCaseWithExpectedResult", RunState.Runnable)]
-        [TestCase("AsyncGenericTaskTestCaseWithExpectedException", RunState.Runnable)]
         public void AsyncTestCases(string methodName, RunState expectedState)
         {
             var suite = TestBuilder.MakeParameterizedMethodSuite(fixtureType, methodName);

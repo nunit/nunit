@@ -76,7 +76,6 @@
     <Compile Include="Attributes\DatapointTests.cs" />
     <Compile Include="Attributes\DerivedPropertyAttributeTests.cs" />
     <Compile Include="Attributes\DescriptionTests.cs" />
-    <Compile Include="Attributes\ExpectedExceptionTests.cs" />
     <Compile Include="Attributes\FixtureSetUpTearDownTests.cs" />
     <Compile Include="Attributes\MaxTimeTests.cs" />
     <Compile Include="Attributes\PairwiseTests.cs" />

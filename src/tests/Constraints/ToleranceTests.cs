@@ -43,12 +43,18 @@ namespace NUnit.Framework.Tests.Constraints
             _comparer = new NUnitEqualityComparer();
         }
 
-        [TestCase(2.01d, 2.1d, 0.1d)]
-        [TestCase(2.0d, 2.1d, 0.01d, ExpectedException = typeof(AssertionException))]
-        public void TestGlobalDefaultTolerance(double x, double y, double defaultTolerance)
+        [Test]
+        public void TestGlobalDefaultTolerance_Success()
         {
-            GlobalSettings.DefaultFloatingPointTolerance = defaultTolerance;
-            Assert.AreEqual(x, y);
+            GlobalSettings.DefaultFloatingPointTolerance = 0.1d;
+            Assert.That(2.05d, Is.EqualTo(2.0d));
+        }
+
+        [Test]
+        public void TestGlobalDefaultTolerance_Failure()
+        {
+            GlobalSettings.DefaultFloatingPointTolerance = 0.01d;
+            Assert.That(2.05d, Is.Not.EqualTo(2.0d));
         }
 
         [Test]

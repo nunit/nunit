@@ -43,11 +43,11 @@ namespace NUnit.Framework.Constraints
 
         object[] FailureData = new object[] { new object[] { 4, "4" }, new object[] { 43, "43" } };
         
-        [TestCase(null, ExpectedException = typeof(ArgumentException))]
-        [TestCase("xxx", ExpectedException = typeof(ArgumentException))]
-        public void InvalidDataThrowsException(object data)
+        [TestCase(null)]
+        [TestCase("xxx")]
+        public void InvalidDataThrowsArgumentException(object data)
         {
-            theConstraint.ApplyTo(data);
+            Assert.Throws<ArgumentException>(() => theConstraint.ApplyTo(data));
         }
 
         [Test]

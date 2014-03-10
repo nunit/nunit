@@ -69,15 +69,6 @@ namespace NUnit.Framework.Assertions
         }
 
         [Test]
-        public void IgnoreTakesPrecedenceOverExpectedException()
-        {
-            Type fixtureType = typeof(IgnoredTestCaseFixture);
-            ITestResult result = TestBuilder.RunTestCase(fixtureType, "CallsIgnoreWithExpectedException");
-            Assert.AreEqual(ResultState.Ignored, result.ResultState);
-            Assert.AreEqual("Ignore me", result.Message);
-        }
-
-        [Test]
         public void IgnoreWorksForTestSuite()
         {
             TestSuite suite = new TestSuite("IgnoredTestFixture");

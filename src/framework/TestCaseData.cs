@@ -94,28 +94,6 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Sets the expected exception type for the test
-        /// </summary>
-        /// <param name="exceptionType">Type of the expected exception.</param>
-        /// <returns>The modified TestCaseData instance</returns>
-        public TestCaseData Throws(Type exceptionType)
-        {
-            SetExpectedExceptionName( exceptionType.FullName );
-            return this;
-        }
-
-        /// <summary>
-        /// Sets the expected exception type for the test
-        /// </summary>
-        /// <param name="exceptionName">FullName of the expected exception.</param>
-        /// <returns>The modified TestCaseData instance</returns>
-        public TestCaseData Throws(string exceptionName)
-        {
-            SetExpectedExceptionName( exceptionName );
-            return this;
-        }
-
-        /// <summary>
         /// Sets the name of the test case
         /// </summary>
         /// <returns>The modified TestCaseData instance</returns>
@@ -193,24 +171,24 @@ namespace NUnit.Framework
             this.RunState = RunState.Ignored;
             return this;
         }
-		
-		/// <summary>
-		/// Marks the test case as explicit.
-		/// </summary>
-		public TestCaseData Explicit()	{
-			this.RunState = RunState.Explicit;
-			return this;
-		}
+        
+        /// <summary>
+        /// Marks the test case as explicit.
+        /// </summary>
+        public TestCaseData Explicit()	{
+            this.RunState = RunState.Explicit;
+            return this;
+        }
 
-		/// <summary>
-		/// Marks the test case as explicit, specifying the reason.
-		/// </summary>
-		public TestCaseData Explicit(string reason)
-		{
-			this.RunState = RunState.Explicit;
+        /// <summary>
+        /// Marks the test case as explicit, specifying the reason.
+        /// </summary>
+        public TestCaseData Explicit(string reason)
+        {
+            this.RunState = RunState.Explicit;
             this.Properties.Set(PropertyNames.SkipReason, reason);
-			return this;
-		}
+            return this;
+        }
 
         /// <summary>
         /// Ignores this TestCase, specifying the reason.
