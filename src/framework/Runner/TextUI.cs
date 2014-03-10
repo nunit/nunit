@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using NUnit.Framework.Api;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Builders;
@@ -116,7 +117,7 @@ namespace NUnitLite.Runner
                 // to the runner, so we do it here for convenience.
                 var runnerSettings = new Dictionary<string, object>();
                 if (commandLineOptions.InitialSeed >= 0)
-                    runnerSettings["RandomSeed"] = commandLineOptions.InitialSeed;
+                    runnerSettings[DriverSettings.RandomSeed] = commandLineOptions.InitialSeed;
 
                 TestFilter filter = commandLineOptions.Tests.Count > 0
                     ? new SimpleNameFilter(commandLineOptions.Tests)

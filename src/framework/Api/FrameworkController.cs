@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2009 Charlie Poole
+// Copyright (c) 2009-2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -49,7 +49,6 @@ namespace NUnit.Framework.Api
     {
         #region Constructors
 
-        // TODO: Remove duplication in the constructors.
         /// <summary>
         /// Construct a FrameworkController using the default builder and runner.
         /// </summary>
@@ -63,7 +62,8 @@ namespace NUnit.Framework.Api
 
         /// <summary>
         /// Construct a FrameworkController, specifying the types to be used
-        /// for the runner and builder.
+        /// for the runner and builder. This constructor is provided for
+        /// purposes of development.
         /// </summary>
         /// <param name="assemblyPath">The path to the test assembly</param>
         /// <param name="settings">A Dictionary of settings to use in loading and running the tests</param>
@@ -84,15 +84,15 @@ namespace NUnit.Framework.Api
             this.AssemblyPath = assemblyPath;
             this.Settings = settings;
 
-            if (settings.Contains("InternalTraceLevel"))
+            if (settings.Contains(DriverSettings.InternalTraceLevel))
             {
-                var traceLevel = (InternalTraceLevel)Enum.Parse(typeof(InternalTraceLevel), (string)settings["InternalTraceLevel"]);
+                var traceLevel = (InternalTraceLevel)Enum.Parse(typeof(InternalTraceLevel), (string)settings[DriverSettings.InternalTraceLevel]);
 
                 if (settings.Contains("InternalTraceWriter"))
-                    InternalTrace.Initialize((TextWriter)settings["InternalTraceWriter"], traceLevel);
+                    InternalTrace.Initialize((TextWriter)settings[DriverSettings.InternalTraceWriter], traceLevel);
                 else
                 {
-                    var workDirectory = settings.Contains("WorkDirectory") ? (string)settings["WorkDirectory"] : Environment.CurrentDirectory;
+                    var workDirectory = settings.Contains("WorkDirectory") ? (string)settings[DriverSettings.WorkDirectory] : Environment.CurrentDirectory;
                     var logName = string.Format("InternalTrace.{0}.{1}.log", Process.GetCurrentProcess().Id, Path.GetFileName(assemblyPath));
                     //var logName = string.Format("InternalTrace.{0}.log", Process.GetCurrentProcess().Id);
                     InternalTrace.Initialize(Path.Combine(workDirectory, logName), traceLevel);

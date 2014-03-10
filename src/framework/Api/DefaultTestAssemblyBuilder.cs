@@ -1,12 +1,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using System.Reflection;
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Builders;
 
-namespace NUnit.Framework.Internal
+namespace NUnit.Framework.Api
 {
     /// <summary>
     /// DefaultTestAssemblyBuilder loads a single assembly and builds a TestSuite
@@ -68,7 +68,7 @@ namespace NUnit.Framework.Internal
         {
             this.assembly = assembly;
 
-            IList fixtureNames = options["LOAD"] as IList;
+            IList fixtureNames = options[DriverSettings.LOAD] as IList;
 
             IList fixtures = GetFixtures(assembly, fixtureNames);
 
@@ -96,7 +96,7 @@ namespace NUnit.Framework.Internal
             this.assembly = Load(assemblyName);
             if (assembly == null) return null;
 
-            IList fixtureNames = options["LOAD"] as IList;
+            IList fixtureNames = options[DriverSettings.LOAD] as IList;
 
             IList fixtures = GetFixtures(assembly, fixtureNames);
             return BuildTestAssembly(assemblyName, fixtures);

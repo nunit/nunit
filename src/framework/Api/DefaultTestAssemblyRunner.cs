@@ -27,9 +27,10 @@ using System.IO;
 using System.Reflection;
 using System.Threading;
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Execution;
 
-namespace NUnit.Framework.Internal
+namespace NUnit.Framework.Api
 {
     /// <summary>
     /// Default implementation of ITestAssemblyRunner
@@ -83,8 +84,8 @@ namespace NUnit.Framework.Internal
         {
             _settings = settings;
 
-            Randomizer.InitialSeed = settings.Contains("RandomSeed")
-                ? (int)settings["RandomSeed"]
+            Randomizer.InitialSeed = settings.Contains(DriverSettings.RandomSeed)
+                ? (int)settings[DriverSettings.RandomSeed]
                 : new Random().Next();
 
             _loadedTest = (TestSuite)_builder.Build(assemblyName, settings);
@@ -150,15 +151,15 @@ namespace NUnit.Framework.Internal
 #else
             QueuingEventListener queue = new QueuingEventListener();
 
-            if (_settings.Contains("CaptureStandardOutput"))
+            if (_settings.Contains(DriverSettings.CaptureStandardOutput))
                 initialContext.Out = new EventListenerTextWriter(queue, TestOutputType.Out);
-            if (_settings.Contains("CapureStandardError"))
+            if (_settings.Contains(DriverSettings.CaptureStandardError))
                 initialContext.Error = new EventListenerTextWriter(queue, TestOutputType.Error);
 
             initialContext.Listener = queue;
 
-            int levelOfParallelization = _settings.Contains("NumberOfTestWorkers")
-                ? (int)_settings["NumberOfTestWorkers"]
+            int levelOfParallelization = _settings.Contains(DriverSettings.NumberOfTestWorkers)
+                ? (int)_settings[DriverSettings.NumberOfTestWorkers]
                 : _loadedTest.Properties.ContainsKey(PropertyNames.LevelOfParallelization)
                     ? (int)_loadedTest.Properties.Get(PropertyNames.LevelOfParallelization)
                     : Math.Max(Environment.ProcessorCount, 2);
@@ -217,13 +218,13 @@ namespace NUnit.Framework.Internal
         {
             TestExecutionContext context = new TestExecutionContext();
 
-            if (settings.Contains("DefaultTimeout"))
-                context.TestCaseTimeout = (int)settings["DefaultTimeout"];
-            if (settings.Contains("StopOnError"))
-                context.StopOnError = (bool)settings["StopOnError"];
+            if (settings.Contains(DriverSettings.DefaultTimeout))
+                context.TestCaseTimeout = (int)settings[DriverSettings.DefaultTimeout];
+            if (settings.Contains(DriverSettings.StopOnError))
+                context.StopOnError = (bool)settings[DriverSettings.StopOnError];
 
-            if (settings.Contains("WorkDirectory"))
-                context.WorkDirectory = (string)settings["WorkDirectory"];
+            if (settings.Contains(DriverSettings.WorkDirectory))
+                context.WorkDirectory = (string)settings[DriverSettings.WorkDirectory];
             else
 #if NETCF || SILVERLIGHT
                 context.WorkDirectory = Env.DocumentFolder;

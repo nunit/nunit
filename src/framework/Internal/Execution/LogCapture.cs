@@ -54,7 +54,7 @@ namespace NUnit.Framework.Internal.Execution
 
                     if (settings != null)
                     {
-                        string level = settings["DefaultLogThreshold"];
+                        string level = settings[Api.DriverSettings.DefaultLogThreshold];
                         if (level != null)
                             defaultThreshold = level;
                     }
