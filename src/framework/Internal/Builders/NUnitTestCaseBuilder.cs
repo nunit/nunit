@@ -24,11 +24,6 @@
 using System;
 using System.Reflection;
 using NUnit.Framework.Interfaces;
-using NUnit.Framework.Internal.Commands;
-
-#if NET_4_5
-using System.Threading.Tasks;
-#endif
 
 namespace NUnit.Framework.Internal.Builders
 {
@@ -159,9 +154,9 @@ namespace NUnit.Framework.Internal.Builders
             else
             {
 #if NET_4_5
-                if (MethodHelper.IsAsyncMethod(testMethod.Method))
+                if (AsyncInvocationRegion.IsAsyncOperation(testMethod.Method))
                 {
-                    bool returnsGenericTask = returnType.IsGenericType && returnType.GetGenericTypeDefinition() == typeof(Task<>);
+                    bool returnsGenericTask = returnType.IsGenericType && returnType.GetGenericTypeDefinition() == typeof(System.Threading.Tasks.Task<>);
                     if (returnsGenericTask && (parms == null || !parms.HasExpectedResult))
                         return MarkAsNotRunnable(testMethod, "Async test method must have Task or void return type when no result is expected");
                     else if (!returnsGenericTask && parms != null && parms.HasExpectedResult)
