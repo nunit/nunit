@@ -14,13 +14,13 @@ namespace NUnit.TestData
         [Test]
         public async void AsyncVoid()
         {
-            await Task.Delay(0); // To avoid warning message
+            await Task.Delay(1); // To avoid warning message
         }
 
         [Test]
         public async System.Threading.Tasks.Task AsyncTask()
         {
-            await Task.Yield();
+            await Task.Delay(1);
         }
 
         [Test]

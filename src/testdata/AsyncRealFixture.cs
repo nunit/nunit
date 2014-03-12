@@ -116,7 +116,7 @@ namespace NUnit.TestData
         [Test]
         public async void AsyncVoidAssertSynchronizationContext()
         {
-            await Task.Yield();
+            await Task.Delay(1);
         }
 
 		[Test]

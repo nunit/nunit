@@ -35,8 +35,8 @@ namespace NUnit.Framework.Assertions
 	[TestFixture]
 	public class AsyncThrowsTests
 	{
-		private readonly TestDelegate _noThrowsVoid = new TestDelegate(async () => await Task.Yield());
-		private readonly ActualValueDelegate<System.Threading.Tasks.Task> _noThrowsAsyncTask = async () => await Task.Yield();
+		private readonly TestDelegate _noThrowsVoid = new TestDelegate(async () => await Task.Delay(1));
+		private readonly ActualValueDelegate<System.Threading.Tasks.Task> _noThrowsAsyncTask = async () => await Task.Delay(1);
         private readonly ActualValueDelegate<Task<int>> _noThrowsAsyncGenericTask = async () => await ReturnOne();
 		private readonly TestDelegate _throwsAsyncVoid = new TestDelegate(async () => await ThrowAsyncTask());
 		private readonly TestDelegate _throwsSyncVoid = new TestDelegate(async () => { throw new InvalidOperationException(); });
