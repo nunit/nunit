@@ -74,7 +74,7 @@ namespace NUnit.Framework.Internal.Commands
         private object RunTestMethod(TestExecutionContext context)
         {
 #if NET_4_5
-            if (MethodHelper.IsAsyncMethod(testMethod.Method))
+            if (AsyncInvocationRegion.IsAsyncOperation(testMethod.Method))
                 return RunAsyncTestMethod(context);
             else
 #endif

@@ -24,6 +24,7 @@
 #if NET_4_5
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Threading;
 
@@ -31,7 +32,6 @@ namespace NUnit.Framework.Internal
 {
     internal abstract class AsyncInvocationRegion : IDisposable
     {
-        private static readonly Type AsyncStateMachineAttribute = Type.GetType("System.Runtime.CompilerServices.AsyncStateMachineAttribute");
         private static readonly MethodInfo PreserveStackTraceMethod = typeof(Exception).GetMethod("InternalPreserveStackTrace", BindingFlags.Instance | BindingFlags.NonPublic);
         private static readonly Action<Exception> PreserveStackTrace;
 
@@ -63,7 +63,8 @@ at wrapping a non-async method invocation in an async region was done");
 
         public static bool IsAsyncOperation(MethodInfo method)
         {
-            return AsyncStateMachineAttribute != null && method.IsDefined(AsyncStateMachineAttribute, false);
+            return method.GetCustomAttributes(false)
+                    .Any(attr => "System.Runtime.CompilerServices.AsyncStateMachineAttribute" == attr.GetType().FullName);
         }
 
         public static bool IsAsyncOperation(Delegate @delegate)
