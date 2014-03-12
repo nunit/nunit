@@ -131,7 +131,7 @@
 
   <Target Name="Clean">
     <Exec Command="$(RemoveDir) $(FrameworkBuildDir)" Condition="Exists('$(FrameworkBuildDir)')"></Exec>
-    <Delete Files="$(ProjectSrcDir)/GeneratedAssemblyInfo.cs" Condition="Exists('$(ProjectSrcDir)\GeneratedAssemblyInfo.cs')" />
+    <Delete Files="$(ProjectSrcDir)\GeneratedAssemblyInfo.cs" Condition="Exists('$(ProjectSrcDir)\GeneratedAssemblyInfo.cs')" />
   </Target>
   <Target Name="Build">
     <CallTarget Targets="_BuildNUnit" Condition="'$(Runtime)' != 'netcf' And '$(Runtime)' != 'silverlight'" />
