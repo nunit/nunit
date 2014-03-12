@@ -27,19 +27,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
+using System.Runtime.ExceptionServices;
 
 namespace NUnit.Framework.Internal
 {
     internal abstract class AsyncInvocationRegion : IDisposable
     {
-        private static readonly MethodInfo PreserveStackTraceMethod = typeof(Exception).GetMethod("InternalPreserveStackTrace", BindingFlags.Instance | BindingFlags.NonPublic);
-        private static readonly Action<Exception> PreserveStackTrace;
-
-        static AsyncInvocationRegion()
-        {
-            PreserveStackTrace = (Action<Exception>)Delegate.CreateDelegate(typeof(Action<Exception>), PreserveStackTraceMethod);
-        }
-
         private AsyncInvocationRegion()
         {
         }
@@ -105,13 +98,13 @@ at wrapping a non-async method invocation in an async region was done");
                 try
                 {
                     _currentContext.WaitForPendingOperationsToComplete();
-                    return invocationResult;
                 }
                 catch (Exception e)
                 {
-                    PreserveStackTrace(e);
-                    throw;
+                    ExceptionDispatchInfo.Capture(e).Throw();
                 }
+
+                return invocationResult;
             }
         }
 
@@ -133,8 +126,7 @@ at wrapping a non-async method invocation in an async region was done");
                 {
                     IList<Exception> innerExceptions = GetAllExceptions(e.InnerException);
 
-                    PreserveStackTrace(innerExceptions[0]);
-                    throw innerExceptions[0];
+                    ExceptionDispatchInfo.Capture(innerExceptions[0]).Throw();
                 }
 
                 PropertyInfo taskResultProperty = invocationResult.GetType().GetProperty(TaskResultProperty, TaskResultPropertyBindingFlags);
