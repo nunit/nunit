@@ -90,6 +90,7 @@
     <ManagedExeLauncher Condition="'$(Runtime)' == 'mono'">mono</ManagedExeLauncher>
     <TestRunnerProgram>test-harness.exe</TestRunnerProgram>
     <TestRunnerArgs>nunit.framework.tests.dll $(TestOptions)</TestRunnerArgs>
+    <HarnessSelfTestArgs>--selftest $(TestOptions)</HarnessSelfTestArgs>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -171,6 +172,10 @@
   <Target Name="_NUnitLiteTest">
     <Message Text="Testing NUnitLite $(Framework) - $(Configuration)"></Message>
     <Exec WorkingDirectory="$(FrameworkBuildDir)" Command="$(ManagedExeLauncher) $(FrameworkBuildDir)\nunitlite.tests.exe"></Exec>
+  </Target>
+  <Target Name="SelfTest" Label="Runs harness tests">
+    <Message Text="Testing test-harness $(Framework) - $(Configuration)"></Message>
+    <Exec WorkingDirectory="$(FrameworkBuildDir)" Command="$(ManagedExeLauncher) $(FrameworkBuildDir)\$(TestRunnerProgram) $(HarnessSelfTestArgs)"></Exec>
   </Target>
   <Target Name="TestCoverage">
     <CallTarget Targets="_NUnitCoverage" Condition="'$(Runtime)' != 'netcf'"></CallTarget>
