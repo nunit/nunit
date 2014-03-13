@@ -163,7 +163,7 @@ namespace NUnit.Framework.TestHarness
         public int DefaultTimeout { get { return defaultTimeout; } }
 
         //DriverSetting
-        public int NumWorkers { get; private set; }
+        public int? NumWorkers { get; private set; }
 
         //DriverSetting
         private int randomSeed = -1;
@@ -238,8 +238,8 @@ namespace NUnit.Framework.TestHarness
 
             if (DefaultTimeout >= 0)
                 settings["DefaultTimeout"] = DefaultTimeout;
-            if (NumWorkers > 0)
-                settings["NumberOfTestWorkers"] = NumWorkers;
+            if (NumWorkers.HasValue)
+                settings["NumberOfTestWorkers"] = NumWorkers.Value;
             if (RandomSeed >= 0)
                 settings["RandomSeed"] = RandomSeed;
             if (CaptureText)
