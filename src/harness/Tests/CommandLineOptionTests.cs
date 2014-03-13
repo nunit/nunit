@@ -21,6 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
 using System.Reflection;
 
 namespace NUnit.Framework.TestHarness.Tests
@@ -115,14 +116,14 @@ namespace NUnit.Framework.TestHarness.Tests
             }
         }
 
-        [TestCase("DefaultTimeout", "timeout")]
-        [TestCase("NumWorkers", "workers")]
-        public void CanRecognizeIntOptions(string propertyName, string pattern)
+        [TestCase("DefaultTimeout", "timeout", typeof(int))]
+        [TestCase("NumWorkers", "workers", typeof(int?))]
+        public void CanRecognizeIntOptions(string propertyName, string pattern, Type realType)
         {
             string[] prototypes = pattern.Split('|');
 
             PropertyInfo property = GetPropertyInfo(propertyName);
-            Assert.AreEqual(typeof(int), property.PropertyType);
+            Assert.AreEqual(realType, property.PropertyType);
 
             foreach (string option in prototypes)
             {
@@ -216,6 +217,7 @@ namespace NUnit.Framework.TestHarness.Tests
 
         [TestCase("-timeout=50", "DefaultTimeout", 50)]
         [TestCase("--workers=3", "NumberOfTestWorkers", 3)]
+        [TestCase("--workers=0", "NumberOfTestWorkers", 0)]
         [TestCase("--seed=123456789", "RandomSeed", 123456789)]
         [TestCase("-capture", "CaptureStandardOutput", true)]
         [TestCase("-capture", "CaptureStandardError", true)]
