@@ -156,7 +156,7 @@ at wrapping a non-async method invocation in an async region was done");
                     ExceptionDispatchInfo.Capture(innerExceptions[0]).Throw();
 #elif NET_4_0
                     PreserveStackTrace(innerExceptions[0]);
-                    throw;
+                    throw innerExceptions[0];
 #endif
                 }
 
