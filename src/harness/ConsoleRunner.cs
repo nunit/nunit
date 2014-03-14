@@ -209,7 +209,7 @@ namespace NUnit.Framework.TestHarness
             if (options.DefaultTimeout >= 0)
                 Console.WriteLine("    Default timeout: {0}", options.DefaultTimeout);
             
-            if (options.NumWorkers > 0)
+            if (options.NumWorkers.HasValue)
                 Console.WriteLine("    Worker Threads: {0}", options.NumWorkers);
             
             Console.WriteLine("    Work Directory: {0}", workDirectory);
