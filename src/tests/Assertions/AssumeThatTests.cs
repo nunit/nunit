@@ -226,7 +226,9 @@ namespace NUnit.Framework.Assertions
             var exception = Assert.Throws<InvalidOperationException>(() =>
                 Assume.That(async () => await ThrowExceptionGenericTask(), Is.EqualTo(1)));
 
-            Assert.That(exception.StackTrace, Contains.Substring("ThrowExceptionGenericTask"));
+#if NET_4_5
+        Assert.That(exception.StackTrace, Contains.Substring("ThrowExceptionGenericTask"));
+#endif
         }
 
         private static Task<int> One()
