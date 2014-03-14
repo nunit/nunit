@@ -284,10 +284,10 @@
     <property name="nant.settings.currentframework" value="${build.framework}"/>
 
     <nant target="build" buildfile="src/framework/nunit.framework.build"/>
+    <nant target="build" buildfile="src/mock-assembly/mock-assembly.build"/>
     <nant target="build" buildfile="src/testdata/nunit.testdata.build"/>
     <nant target="build" buildfile="src/tests/nunit.framework.tests.build"/>
     <nant target="build" buildfile="src/harness/test-harness.build"/>
-    <nant target="build" buildfile="src/mock-assembly/mock-assembly.build"/>
 
   </target>
 

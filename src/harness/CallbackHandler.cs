@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2010 Charlie Poole
+// Copyright (c) 2010-2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -28,11 +28,11 @@ namespace NUnit.Framework.TestHarness
 {
     public class CallbackHandler : MarshalByRefObject, ICallbackEventHandler
     {
-        private string result;
+        private string _result;
 
         public string Result
         {
-            get { return result; }
+            get { return _result; }
         }
 
         public virtual void ReportProgress(string report)
@@ -52,12 +52,12 @@ namespace NUnit.Framework.TestHarness
 
         public string GetCallbackResult()
         {
-            throw new NotImplementedException();
+            return _result;
         }
 
         public void RaiseCallbackEvent(string eventArgument)
         {
-            result = eventArgument;
+            _result = eventArgument;
             ReportProgress(eventArgument);
         }
 

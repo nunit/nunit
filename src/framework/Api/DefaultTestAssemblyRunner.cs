@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2012 Charlie Poole
+// Copyright (c) 2012-2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -40,7 +40,7 @@ namespace NUnit.Framework.Api
         static Logger log = InternalTrace.GetLogger("DefaultTestAssemblyRunner");
 
         private ITestAssemblyBuilder _builder;
-        private TestSuite _loadedTest;
+        private ITest _loadedTest;
         private IDictionary _settings;
         private AutoResetEvent _runComplete = new AutoResetEvent(false);
 
@@ -72,7 +72,7 @@ namespace NUnit.Framework.Api
 
         #endregion
 
-        #region Methods
+        #region Public Methods
 
         /// <summary>
         /// Loads the tests found in an Assembly
@@ -80,18 +80,13 @@ namespace NUnit.Framework.Api
         /// <param name="assemblyName">File name of the assembly to load</param>
         /// <param name="settings">Dictionary of option settings for loading the assembly</param>
         /// <returns>True if the load was successful</returns>
-        public bool Load(string assemblyName, IDictionary settings)
+        public ITest Load(string assemblyName, IDictionary settings)
         {
             _settings = settings;
 
-            Randomizer.InitialSeed = settings.Contains(DriverSettings.RandomSeed)
-                ? (int)settings[DriverSettings.RandomSeed]
-                : new Random().Next();
+            Randomizer.InitialSeed = GetInitialSeed(settings);
 
-            _loadedTest = (TestSuite)_builder.Build(assemblyName, settings);
-            if (_loadedTest == null) return false;
-
-            return true;
+            return _loadedTest = _builder.Build(assemblyName, settings);
         }
 
         /// <summary>
@@ -100,13 +95,13 @@ namespace NUnit.Framework.Api
         /// <param name="assembly">The assembly to load</param>
         /// <param name="settings">Dictionary of option settings for loading the assembly</param>
         /// <returns>True if the load was successful</returns>
-        public bool Load(Assembly assembly, IDictionary settings)
+        public ITest Load(Assembly assembly, IDictionary settings)
         {
             _settings = settings;
-            _loadedTest = (TestSuite)_builder.Build(assembly, settings);
-            if (_loadedTest == null) return false;
 
-            return true;
+            Randomizer.InitialSeed = GetInitialSeed(settings);
+
+            return _loadedTest = _builder.Build(assembly, settings);
         }
 
         /// <summary>
@@ -130,7 +125,7 @@ namespace NUnit.Framework.Api
         {
             log.Info("Running tests");
             if (_loadedTest == null)
-                throw new InvalidOperationException("Run was called but no test has been loaded.");
+                throw new InvalidOperationException("The Run method was called but no test has been loaded");
 
             // Save Console.Out and Error for later restoration
             TextWriter savedOut = Console.Out;
@@ -209,6 +204,10 @@ namespace NUnit.Framework.Api
 #endif
         }
 
+        #endregion
+
+        #region Helper Methods
+
         private void OnRunCompleted(object sender, EventArgs e)
         {
             _runComplete.Set();
@@ -245,6 +244,13 @@ namespace NUnit.Framework.Api
                     count += CountTestCases(child, filter);
 
             return count;
+        }
+
+        private static int GetInitialSeed(IDictionary settings)
+        {
+            return settings.Contains(DriverSettings.RandomSeed)
+                ? (int)settings[DriverSettings.RandomSeed]
+                : new Random().Next();
         }
 
         #endregion

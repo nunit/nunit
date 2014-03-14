@@ -1,3 +1,26 @@
+// ***********************************************************************
+// Copyright (c) 2012-2014 Charlie Poole
+//
+// Permission is hereby granted, free of charge, to any person obtaining
+// a copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to
+// permit persons to whom the Software is furnished to do so, subject to
+// the following conditions:
+// 
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+// ***********************************************************************
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -66,19 +89,31 @@ namespace NUnit.Framework.Api
         /// </returns>
         public ITest Build(Assembly assembly, IDictionary options)
         {
+            log.Debug("Loading {0} in AppDomain {1}", assembly.FullName, AppDomain.CurrentDomain.FriendlyName);
+
             this.assembly = assembly;
-
-            IList fixtureNames = options[DriverSettings.LOAD] as IList;
-
-            IList fixtures = GetFixtures(assembly, fixtureNames);
+            TestSuite testAssembly = null;
 
 #if NETCF || SILVERLIGHT
-            AssemblyName assemblyName = AssemblyHelper.GetAssemblyName(assembly);
-            return BuildTestAssembly(assemblyName.Name, fixtures);
-#else   
+            string assemblyPath = AssemblyHelper.GetAssemblyName(assembly).Name;
+#else
             string assemblyPath = AssemblyHelper.GetAssemblyPath(assembly);
-            return BuildTestAssembly(assemblyPath, fixtures);
 #endif
+
+            try
+            {
+                IList fixtureNames = options[DriverSettings.LOAD] as IList;
+                IList fixtures = GetFixtures(assembly, fixtureNames);
+
+                testAssembly = BuildTestAssembly(assemblyPath, fixtures);
+            }
+            catch (Exception ex)
+            {
+                testAssembly.RunState = RunState.NotRunnable;
+                testAssembly.Properties.Set(PropertyNames.SkipReason, ex.Message);
+            }
+
+            return testAssembly;
         }
 
         /// <summary>
@@ -93,13 +128,24 @@ namespace NUnit.Framework.Api
         {
             log.Debug("Loading {0} in AppDomain {1}", assemblyName, AppDomain.CurrentDomain.FriendlyName);
 
-            this.assembly = Load(assemblyName);
-            if (assembly == null) return null;
+            TestSuite testAssembly = new TestAssembly(assemblyName);
 
-            IList fixtureNames = options[DriverSettings.LOAD] as IList;
+            try
+            {
+                this.assembly = Load(assemblyName);
 
-            IList fixtures = GetFixtures(assembly, fixtureNames);
-            return BuildTestAssembly(assemblyName, fixtures);
+                IList fixtureNames = options[DriverSettings.LOAD] as IList;
+
+                IList fixtures = GetFixtures(assembly, fixtureNames);
+                testAssembly = BuildTestAssembly(assemblyName, fixtures);
+            }
+            catch(Exception ex)
+            {
+                testAssembly.RunState = RunState.NotRunnable;
+                testAssembly.Properties.Set(PropertyNames.SkipReason, ex.Message);
+            }
+
+            return testAssembly;
         }
         #endregion
 
@@ -107,7 +153,7 @@ namespace NUnit.Framework.Api
 
         private Assembly Load(string path)
         {
-#if NETCF || SILVERLIGHT
+#if NETCF || SILVERLIGHT 
             return Assembly.Load(path);
 #else
             Assembly assembly = null;
@@ -118,15 +164,16 @@ namespace NUnit.Framework.Api
 
             assembly = Assembly.Load(assemblyName);
 
-            // TODO: Can this ever be null?
-            if (assembly == null)
-            {
-                log.Error("Failed to load assembly " + path);
-            }
-            else
-            {
-                log.Info("Loaded assembly " + assembly.FullName);
-            }
+            //// TODO: Can this ever be null? Check.
+            //if (assembly == null)
+            //{
+            //    log.Error("Failed to load assembly " + path);
+            //    throw new Exception("Unable to load assembly - Load returned null");
+            //}
+            //else
+            //{
+            log.Info("Loaded assembly " + assembly.FullName);
+            //}
 
             return assembly;
 #endif
@@ -197,7 +244,7 @@ namespace NUnit.Framework.Api
 
         private TestSuite BuildTestAssembly(string assemblyName, IList fixtures)
         {
-            TestSuite testAssembly = new TestAssembly(assembly, assemblyName);
+            TestSuite testAssembly = new TestAssembly(assemblyName);
 
             if (fixtures.Count == 0)
             {

@@ -39,7 +39,7 @@ namespace NUnit.Framework.Internal
                 Is.EqualTo("TestFixture"));
             Assert.That(testSuite.TestType, 
                 Is.EqualTo("TestSuite"));
-            Assert.That(new TestAssembly(System.Reflection.Assembly.GetExecutingAssembly(), "junk").TestType, 
+            Assert.That(new TestAssembly("junk").TestType, 
                 Is.EqualTo("Assembly"));
             Assert.That(new ParameterizedMethodSuite(typeof(DummyFixture).GetMethod("GenericMethod")).TestType,
                 Is.EqualTo("GenericMethod"));

@@ -136,7 +136,7 @@ namespace NUnitLite.Runner
 
                     //Randomizer.InitialSeed = commandLineOptions.InitialSeed;
 
-                    if (!runner.Load(assembly, runnerSettings))
+                    if (runner.Load(assembly, runnerSettings) == null)
                     {
                         var assemblyName = AssemblyHelper.GetAssemblyName(assembly);
                         Console.WriteLine("No tests found in assembly {0}", assemblyName.Name);

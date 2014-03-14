@@ -46,7 +46,7 @@ namespace NUnitLite.Runner.Silverlight
 
         private bool LoadTestAssembly()
         {
-            return runner.Load(callingAssembly, new Dictionary<string, string>());
+            return runner.Load(callingAssembly, new Dictionary<string, string>()) != null;
         }
 
         private string GetAssemblyName(Assembly assembly)

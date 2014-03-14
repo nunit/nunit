@@ -42,8 +42,11 @@ namespace NUnit.Framework.Api
     /// this class and its nested classes, which only require the
     /// types of the Common Type System as arguments.
     /// 
-    /// Note that the controller uses the non-generic ICollection 
-    /// interface by design, for maximum portability.
+    /// The controller supports four actions: Load, Explore, Count and Run.
+    /// They are intended to be called by a driver, which should allow for
+    /// proper sequencing of calls. Load must be called before any of the 
+    /// other actions. The driver may support other actions, such as
+    /// reload on run, by combining these calls.
     /// </summary>
     public class FrameworkController : MarshalByRefObject
     {
@@ -146,12 +149,8 @@ namespace NUnit.Framework.Api
         {
             try
             {
-                int count = Runner.Load(AssemblyPath, Settings)
-                    ? Runner.LoadedTest.TestCaseCount
-                    : 0;
-
-                //TestExecutionContext.ClearCurrentContext();
-                handler.RaiseCallbackEvent(string.Format("<loaded assembly=\"{0}\" testcases=\"{1}\"/>", AssemblyPath, count));
+                Runner.Load(AssemblyPath, Settings);
+                handler.RaiseCallbackEvent(Runner.LoadedTest.ToXml(false).OuterXml);
             }
             catch (Exception ex)
             {
@@ -159,15 +158,17 @@ namespace NUnit.Framework.Api
             }
         }
 
-        private void ExploreTests(ICallbackEventHandler handler)
+        private void ExploreTests(ICallbackEventHandler handler, string filter)
         {
             try
             {
+                Guard.ArgumentNotNull(filter, "filter");
+
+                if (Runner.LoadedTest == null)
+                    throw new InvalidOperationException("The Explore method was called but no test has been loaded");
+
                 // TODO: Make use of the filter
-                if (Runner.Load(AssemblyPath, Settings))
-                    handler.RaiseCallbackEvent(Runner.LoadedTest.ToXml(true).OuterXml);
-                else
-                    handler.RaiseCallbackEvent(FormatErrorReport("No tests were found"));
+                handler.RaiseCallbackEvent(Runner.LoadedTest.ToXml(true).OuterXml);
             }
             catch (Exception ex)
             {
@@ -179,6 +180,8 @@ namespace NUnit.Framework.Api
         {
             try
             {
+                Guard.ArgumentNotNull(filter, "filter");
+
                 ITestResult result = Runner.Run(new TestProgressReporter(handler), TestFilter.FromXml(filter));
 
                 // Ensure that the CallContext of the thread is not polluted
@@ -272,7 +275,7 @@ namespace NUnit.Framework.Api
         public class LoadTestsAction : FrameworkControllerAction
         {
             /// <summary>
-            /// Initializes a new instance of the <see cref="LoadTestsAction"/> class.
+            /// LoadTestsAction loads the tests in an assembly.
             /// </summary>
             /// <param name="controller">The controller.</param>
             /// <param name="handler">The callback handler.</param>
@@ -299,7 +302,7 @@ namespace NUnit.Framework.Api
             /// <param name="handler">The callback handler.</param>
             public ExploreTestsAction(FrameworkController controller, string filter, object handler)
             {
-                controller.ExploreTests((ICallbackEventHandler)handler);
+                controller.ExploreTests((ICallbackEventHandler)handler, filter);
             }
         }
 

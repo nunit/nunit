@@ -43,7 +43,7 @@ namespace NUnit.Framework.Internal
             // No need for the overhead of parallel execution here
             options["NumberOfTestWorkers"] = 0;
 
-            if (runner.Load(testAssembly, options))
+            if (runner.Load(testAssembly, options) != null)
                 return runner.Run(TestListener.NULL, filter);
 
             return null;

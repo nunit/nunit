@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2009 Charlie Poole
+// Copyright (c) 2009-2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -106,8 +106,14 @@ namespace NUnit.Framework.TestHarness
 
             if (testNode.Name == "error")
             {
-                DisplayErrorMessage(testNode);
+                DisplayUnexpectedErrorMessage(testNode);
                 return ConsoleRunner.UNEXPECTED_ERROR;
+            }
+
+            if (testNode.Attributes["runstate"].Value == "NotRunnable")
+            {
+                DisplayNotRunnableMessage(testNode);
+                return ConsoleRunner.FILE_NOT_FOUND;
             }
 
             string exploreFile = options.ExploreFile;
@@ -129,7 +135,7 @@ namespace NUnit.Framework.TestHarness
             XmlNode loadReport = driver.Load();
             if (loadReport.Name == "error")
             {
-                DisplayErrorMessage(loadReport);
+                DisplayUnexpectedErrorMessage(loadReport);
                 return ConsoleRunner.UNEXPECTED_ERROR;
             }
 
@@ -157,8 +163,14 @@ namespace NUnit.Framework.TestHarness
 
             if (resultNode.Name == "error")
             {
-                DisplayErrorMessage(resultNode);
+                DisplayUnexpectedErrorMessage(resultNode);
                 return ConsoleRunner.UNEXPECTED_ERROR;
+            }
+
+            if (resultNode.Attributes["runstate"].Value == "NotRunnable")
+            {
+                DisplayNotRunnableMessage(resultNode);
+                return ConsoleRunner.FILE_NOT_FOUND;
             }
 
             string v3ResultFile = Path.Combine(workDirectory, options.V3ResultFile);
@@ -186,11 +198,30 @@ namespace NUnit.Framework.TestHarness
             return OK;
         }
 
-        private static void DisplayErrorMessage(XmlNode errorReport)
+        private static void DisplayNotRunnableMessage(XmlNode resultNode)
+        {
+            var messageText = "Not Runnable: ";
+
+            var messageNode = resultNode.SelectSingleNode("reason/message");
+            if (messageNode != null) // First look for a message element
+            {
+                messageText += messageNode.InnerText;
+            }
+            else // No message Element, so try property value
+            {
+                var propNode = resultNode.SelectSingleNode("properties/property[@name='_SKIPREASON']");
+                if (propNode != null)
+                    messageText += propNode.Attributes["value"].Value;
+            }
+
+            Console.WriteLine(messageText);
+        }
+
+        private static void DisplayUnexpectedErrorMessage(XmlNode errorReport)
         {
             XmlAttribute message = errorReport.Attributes["message"];
             XmlAttribute stackTrace = errorReport.Attributes["stackTrace"];
-            Console.WriteLine("Error: {0}", message == null ? "" : message.Value);
+            Console.WriteLine("Unexpected Error: {0}", message == null ? "" : message.Value);
             if (stackTrace != null)
                 Console.WriteLine(stackTrace.Value);
         }

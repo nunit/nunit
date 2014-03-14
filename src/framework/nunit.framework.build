@@ -16,12 +16,12 @@
       <sources basedir=".">
         <include name="../CommonAssemblyInfo.cs" />
         <include name="**/*.cs" />
-		<exclude name="obj/**/*.cs" />
+        <exclude name="obj/**/*.cs" />
         <exclude name="Runner/**/*.cs" />
 	  </sources>
       <references basedir="${current.build.dir}">
         <include name="System.Configuration.dll"/>
-		<include name="System.Web.dll"/>
+        <include name="System.Web.dll"/>
       </references>
     </csc>
 
