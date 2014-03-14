@@ -225,16 +225,16 @@ namespace NUnit.Framework.Internal.Execution
         private void SkipChildren()
         {
             // TODO: Extend this to skip recursively?
-            foreach (Test test in _suite.Tests)
+            foreach (Test child in _suite.Tests)
             {
-                if (_childFilter.Pass(test))
+                if (_childFilter.Pass(child))
                 {
-                    TestResult result = test.MakeTestResult();
-                    if (Result.ResultState.Status == TestStatus.Failed)
-                        result.SetResult(ResultState.Failure, "TestFixtureSetUp Failed");
-                    else
-                        result.SetResult(Result.ResultState, Result.Message);
-                    Result.AddResult(result);
+                    TestResult childResult = child.MakeTestResult();
+                    var resultState = Result.ResultState.Status == TestStatus.Failed
+                        ? ResultState.Failure // TODO: Converts errors to failures for the child. Should we do this?
+                        : Result.ResultState;
+                    childResult.SetResult(resultState, "TestFixtureSetUp: " + Result.Message);
+                    Result.AddResult(childResult);
                 }
             }
         }
