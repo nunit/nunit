@@ -153,7 +153,7 @@ namespace NUnit.Framework.Internal.Builders
             }
             else
             {
-#if NET_4_5
+#if NET_4_0 || NET_4_5
                 if (AsyncInvocationRegion.IsAsyncOperation(testMethod.Method))
                 {
                     bool returnsGenericTask = returnType.IsGenericType && returnType.GetGenericTypeDefinition() == typeof(System.Threading.Tasks.Task<>);
