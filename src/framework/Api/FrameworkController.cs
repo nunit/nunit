@@ -204,6 +204,11 @@ namespace NUnit.Framework.Api
         {
             try
             {
+                Guard.ArgumentNotNull(filter, "filter");
+
+                if (Runner.LoadedTest == null)
+                    throw new InvalidOperationException("The CountTests method was called but no test has been loaded");
+
                 var count = Runner.CountTestCases(TestFilter.FromXml(filter));
                 handler.RaiseCallbackEvent(count.ToString());
             }

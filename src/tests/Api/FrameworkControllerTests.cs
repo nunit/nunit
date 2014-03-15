@@ -160,6 +160,44 @@ namespace NUnit.Framework.Api
         }
         #endregion
 
+        #region CountTestsAction
+        [Test]
+        public void CountTestsAction_AfterLoad_ReturnsCorrectCount()
+        {
+            new FrameworkController.LoadTestsAction(_controller, _handler);
+            new FrameworkController.CountTestsAction(_controller, EMPTY_FILTER, _handler);
+            Assert.That(_handler.GetCallbackResult(), Is.EqualTo((MockAssembly.Tests-MockAssembly.Explicit).ToString()));
+        }
+
+        [Test]
+        public void CountTestsAction_WithoutLoad_ReturnsError()
+        {
+            new FrameworkController.CountTestsAction(_controller, EMPTY_FILTER, _handler);
+            var result = GetXmlResult();
+
+            Assert.That(result.Name, Is.EqualTo("error"));
+            Assert.That(GetAttribute(result, "message"), Is.EqualTo("The CountTests method was called but no test has been loaded"));
+        }
+
+        [Test]
+        public void CountTestsAction_FileNotFound_ReturnsZero()
+        {
+            var controller = new FrameworkController(MISSING_FILE, _settings);
+            new FrameworkController.LoadTestsAction(controller, _handler);
+            new FrameworkController.CountTestsAction(controller, EMPTY_FILTER, _handler);
+            Assert.That(_handler.GetCallbackResult(), Is.EqualTo("0"));
+        }
+
+        [Test]
+        public void CountTestsAction_BadFile_ReturnsZero()
+        {
+            var controller = new FrameworkController(BAD_FILE, _settings);
+            new FrameworkController.LoadTestsAction(controller, _handler);
+            new FrameworkController.CountTestsAction(controller, EMPTY_FILTER, _handler);
+            Assert.That(_handler.GetCallbackResult(), Is.EqualTo("0"));
+        }
+        #endregion
+
         #region RunTestsAction
         [Test]
         public void RunTestsAction_AfterLoad_ReturnsRunnableSuite()
