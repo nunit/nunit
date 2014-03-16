@@ -31,8 +31,8 @@ using NUnit.Util;
 
 namespace NUnit.ConsoleRunner.Tests
 {
-	[TestFixture]
-	public class CommandLineTests
+    [TestFixture]
+    public class CommandLineTests
     {
         #region General Tests
 
@@ -53,11 +53,11 @@ namespace NUnit.ConsoleRunner.Tests
 
         [TestCase("ShowHelp", "help|h")]
         [TestCase("StopOnError", "stoponerror")]
-		[TestCase("WaitBeforeExit", "wait")]
+        [TestCase("WaitBeforeExit", "wait")]
         [TestCase("PauseBeforeRun", "pause")]
         [TestCase("NoHeader", "noheader|noh")]
         public void CanRecognizeBooleanOptions(string propertyName, string pattern)
-		{
+        {
             Console.WriteLine("Testing " + propertyName);
             string[] prototypes = pattern.Split('|');
 
@@ -243,10 +243,10 @@ namespace NUnit.ConsoleRunner.Tests
             Assert.AreEqual(-1, options.DefaultTimeout);
         }
 
-        [Test, ExpectedException(typeof(Mono.Options.OptionException))]
+        [Test]
         public void TimeoutThrowsExceptionIfOptionHasNoValue()
         {
-            ConsoleOptions options = new ConsoleOptions("tests.dll", "-timeout");
+            Assert.Throws<Mono.Options.OptionException>(() => new ConsoleOptions("tests.dll", "-timeout"));
         }
 
         [Test]

@@ -34,18 +34,6 @@ namespace NUnit.Engine
     public interface ITestEngineResult
     {
         /// <summary>
-        /// Gets a flag indicating whether this result contains any
-        /// general errors, excluding test errors or failures.
-        /// </summary>
-        bool HasErrors { get; }
-
-        /// <summary>
-        /// Gets a list of errors from the result. These are general
-        /// execution errors and don't include test errors or failures.
-        /// </summary>
-        IList<TestEngineError> Errors { get; }
-
-        /// <summary>
         /// Gets the XML representing a single test result.
         /// </summary>
         /// <exception cref="InvalidOperationException">

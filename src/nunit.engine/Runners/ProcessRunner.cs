@@ -95,20 +95,19 @@ namespace NUnit.Engine.Runners
             if (enableDebug) agentArgs += " --pause";
             if (verbose) agentArgs += " --verbose";
 
-            bool loaded = false;
-
 			try
 			{
                 CreateAgentAndRunner(enableDebug, agentArgs);
 
-                ITestEngineResult result = this.remoteRunner.Load(package);
-                loaded = !result.HasErrors;
-                return result as TestEngineResult; // TODO: Remove need for this cast
+                // TODO: Remove need for this cast
+                return this.remoteRunner.Load(package) as TestEngineResult;
 			}
-			finally
+			catch(Exception)
 			{
+                // TODO: Check if this is really needed
                 // Clean up if the load failed
-				if ( !loaded ) Unload();
+				Unload();
+                throw;
 			}
 		}
 

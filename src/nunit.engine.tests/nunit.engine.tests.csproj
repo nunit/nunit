@@ -46,6 +46,7 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Remoting" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -56,6 +57,7 @@
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Internal\AssemblyHelperTests.cs" />
     <Compile Include="Internal\AssemblyReaderTests.cs" />
+    <Compile Include="Internal\NUnitFrameworkDriverTests.cs" />
     <Compile Include="Internal\NUnitProjectTests.cs" />
     <Compile Include="Internal\NUnitProjectXml.cs" />
     <Compile Include="Internal\PathUtilTests.cs" />

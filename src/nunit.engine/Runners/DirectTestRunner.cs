@@ -53,7 +53,7 @@ namespace NUnit.Engine.Runners
             List<TestEngineResult> results = new List<TestEngineResult>();
 
             foreach (IFrameworkDriver driver in drivers)
-                results.Add(driver.Explore(filter));
+                results.Add(new TestEngineResult(driver.Explore(filter)));
 
             return MakePackageResult(results);
         }
@@ -70,14 +70,11 @@ namespace NUnit.Engine.Runners
 
             foreach (string testFile in package.TestFiles)
             {
-                // TODO: Should get the appropriate driver for the file
                 IFrameworkDriver driver = Services.DriverFactory.GetDriver(TestDomain, testFile, package.Settings);
-                TestEngineResult driverResult = driver.Load();
+                TestEngineResult driverResult = new TestEngineResult(driver.Load());
 
                 loadResults.Add(driverResult);
-
-                if (!driverResult.HasErrors)
-                    drivers.Add(driver);
+                drivers.Add(driver);
             }
 
             return MakePackageResult(loadResults);
@@ -113,7 +110,7 @@ namespace NUnit.Engine.Runners
             List<TestEngineResult> results = new List<TestEngineResult>();
 
             foreach (NUnitFrameworkDriver driver in drivers)
-                results.Add(driver.Run(listener, filter));
+                results.Add(new TestEngineResult(driver.Run(listener, filter)));
 
             return MakePackageResult(results);
         }
