@@ -147,102 +147,43 @@ namespace NUnit.Framework.Api
 
         private void LoadTests(ICallbackEventHandler handler)
         {
-            try
-            {
-                Runner.Load(AssemblyPath, Settings);
-                handler.RaiseCallbackEvent(Runner.LoadedTest.ToXml(false).OuterXml);
-            }
-            catch (Exception ex)
-            {
-                handler.RaiseCallbackEvent(FormatErrorReport(ex));
-            }
+            Runner.Load(AssemblyPath, Settings);
+            handler.RaiseCallbackEvent(Runner.LoadedTest.ToXml(false).OuterXml);
         }
 
         private void ExploreTests(ICallbackEventHandler handler, string filter)
         {
-            try
-            {
-                Guard.ArgumentNotNull(filter, "filter");
+            Guard.ArgumentNotNull(filter, "filter");
 
-                if (Runner.LoadedTest == null)
-                    throw new InvalidOperationException("The Explore method was called but no test has been loaded");
+            if (Runner.LoadedTest == null)
+                throw new InvalidOperationException("The Explore method was called but no test has been loaded");
 
-                // TODO: Make use of the filter
-                handler.RaiseCallbackEvent(Runner.LoadedTest.ToXml(true).OuterXml);
-            }
-            catch (Exception ex)
-            {
-                handler.RaiseCallbackEvent(FormatErrorReport(ex));
-            }
+            // TODO: Make use of the filter
+            handler.RaiseCallbackEvent(Runner.LoadedTest.ToXml(true).OuterXml);
         }
 
         private void RunTests(ICallbackEventHandler handler, string filter)
         {
-            try
-            {
-                Guard.ArgumentNotNull(filter, "filter");
+            Guard.ArgumentNotNull(filter, "filter");
 
-                ITestResult result = Runner.Run(new TestProgressReporter(handler), TestFilter.FromXml(filter));
+            ITestResult result = Runner.Run(new TestProgressReporter(handler), TestFilter.FromXml(filter));
 
-                // Ensure that the CallContext of the thread is not polluted
-                // by our TestExecutionContext, which is not serializable.
-                TestExecutionContext.ClearCurrentContext();
+            // Ensure that the CallContext of the thread is not polluted
+            // by our TestExecutionContext, which is not serializable.
+            TestExecutionContext.ClearCurrentContext();
 
-                handler.RaiseCallbackEvent(result.ToXml(true).OuterXml);
-            }
-            catch (Exception ex)
-            {
-                handler.RaiseCallbackEvent(FormatErrorReport(ex));
-            }
-            finally
-            {
-                //InternalTrace.Flush();
-            }
+            handler.RaiseCallbackEvent(result.ToXml(true).OuterXml);
         }
 
         private void CountTests(ICallbackEventHandler handler, string filter)
         {
-            try
-            {
-                Guard.ArgumentNotNull(filter, "filter");
+            Guard.ArgumentNotNull(filter, "filter");
 
-                if (Runner.LoadedTest == null)
-                    throw new InvalidOperationException("The CountTests method was called but no test has been loaded");
+            if (Runner.LoadedTest == null)
+                throw new InvalidOperationException("The CountTests method was called but no test has been loaded");
 
-                var count = Runner.CountTestCases(TestFilter.FromXml(filter));
-                handler.RaiseCallbackEvent(count.ToString());
-            }
-            catch (Exception ex)
-            {
-                handler.RaiseCallbackEvent(FormatErrorReport(ex));
-            }
-        }
-
-        #endregion
-
-        #region Format Error Reports
-
-        private static string FormatErrorReport(string message)
-        {
-            return string.Format("<error message=\"{0}\"/>" ,message);
-        }
-
-        private static string FormatErrorReport(string message, string stackTrace)
-        {
-            message = System.Security.SecurityElement.Escape(message);
-            stackTrace = System.Security.SecurityElement.Escape(stackTrace);
-            return string.Format("<error message=\"{0}\" stackTrace=\"{1}\"/>", message, stackTrace);
-        }
-
-        private static string FormatErrorReport(Exception ex)
-        {
-            if (ex is System.Reflection.TargetInvocationException)
-                ex = ex.InnerException;
-
-            string msg = ex is System.IO.FileNotFoundException || ex is System.BadImageFormatException
-                ? FormatErrorReport(ex.Message)
-                : FormatErrorReport(ex.Message, ex.StackTrace);
-            return msg;
+            var count = Runner.CountTestCases(TestFilter.FromXml(filter));
+            handler.RaiseCallbackEvent(count.ToString());
         }
 
         #endregion
@@ -313,40 +254,6 @@ namespace NUnit.Framework.Api
 
         #endregion
 
-#if false
-        #region GetLoadedTestsAction
-
-        ///// <summary>
-        ///// GetLoadedTestsAction returns the XML representation
-        ///// of a suite of tests, which must have been loaded already.
-        ///// </summary>
-        //public class GetLoadedTestsAction : FrameworkControllerAction
-        //{
-        //    /// <summary>
-        //    /// Initializes a new instance of the <see cref="GetLoadedTestsAction"/> class.
-        //    /// </summary>
-        //    /// <param name="controller">The controller.</param>
-        //    /// <param name="callback">An AsynchCallback to receive the result.</param>
-        //    public GetLoadedTestsAction(FrameworkController controller, AsyncCallback callback)
-        //        : base(controller, callback)
-        //    {
-        //        try
-        //        {
-        //            ITest loadedTest = controller.Runner.LoadedTest;
-
-        //            if (loadedTest != null)
-        //                callback(new FinalResult(loadedTest.ToXml(true), true));
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            callback(new ErrorReport(ex));
-        //        }
-        //    }
-        //}
-
-        #endregion
-#endif
-
         #region CountTestsAction
 
         /// <summary>
@@ -386,18 +293,6 @@ namespace NUnit.Framework.Api
             {
                 controller.RunTests((ICallbackEventHandler)handler, filter);
             }
-
-            ///// <summary>
-            ///// Construct a RunTestsAction and run tests in the loaded TestSuite that pass the supplied filter
-            ///// </summary>
-            ///// <param name="controller">A FrameworkController holding the TestSuite to run</param>
-            ///// <param name="filter">A TestFilter used to determine which tests should be run</param>
-            ///// <param name="result">A callback used to report results</param>
-            //public RunTestsAction(FrameworkController controller, TestFilter filter, AsyncCallback callback) 
-            //    : base(controller, callback)
-            //{
-            //    ReportResult(Runner.Run(this, filter), true);
-            //}
         }
 
         #endregion

@@ -118,13 +118,11 @@ namespace NUnit.Framework.Api
         }
 
         [Test]
-        public void ExploreTestsAction_WithoutLoad_ReturnsError()
+        public void ExploreTestsAction_WithoutLoad_ThrowsInvalidOperationException()
         {
-            new FrameworkController.ExploreTestsAction(_controller, EMPTY_FILTER, _handler);
-            var result = GetXmlResult();
-
-            Assert.That(result.Name, Is.EqualTo("error"));
-            Assert.That(GetAttribute(result, "message"), Is.EqualTo("The Explore method was called but no test has been loaded"));
+            var ex = Assert.Throws<InvalidOperationException>(
+                () => new FrameworkController.ExploreTestsAction(_controller, EMPTY_FILTER, _handler));
+            Assert.That(ex.Message, Is.EqualTo("The Explore method was called but no test has been loaded"));
         }
 
         [Test]
@@ -170,13 +168,11 @@ namespace NUnit.Framework.Api
         }
 
         [Test]
-        public void CountTestsAction_WithoutLoad_ReturnsError()
+        public void CountTestsAction_WithoutLoad_ThrowsInvalidOperation()
         {
-            new FrameworkController.CountTestsAction(_controller, EMPTY_FILTER, _handler);
-            var result = GetXmlResult();
-
-            Assert.That(result.Name, Is.EqualTo("error"));
-            Assert.That(GetAttribute(result, "message"), Is.EqualTo("The CountTests method was called but no test has been loaded"));
+            var ex = Assert.Throws<InvalidOperationException>(
+                () => new FrameworkController.CountTestsAction(_controller, EMPTY_FILTER, _handler));
+            Assert.That(ex.Message, Is.EqualTo("The CountTests method was called but no test has been loaded"));
         }
 
         [Test]
@@ -221,11 +217,9 @@ namespace NUnit.Framework.Api
         [Test]
         public void RunTestsAction_WithoutLoad_ReturnsError()
         {
-            new FrameworkController.RunTestsAction(_controller, EMPTY_FILTER, _handler);
-            var result = GetXmlResult();
-
-            Assert.That(result.Name, Is.EqualTo("error"));
-            Assert.That(GetAttribute(result, "message"), Is.EqualTo("The Run method was called but no test has been loaded"));
+            var ex = Assert.Throws<InvalidOperationException>(
+                () => new FrameworkController.RunTestsAction(_controller, EMPTY_FILTER, _handler));
+            Assert.That(ex.Message, Is.EqualTo("The Run method was called but no test has been loaded"));
         }
 
         [Test]
