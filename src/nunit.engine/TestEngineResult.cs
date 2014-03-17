@@ -48,7 +48,7 @@ namespace NUnit.Engine
     /// 
     /// </summary>
     [Serializable]
-    public class TestEngineResult : ITestEngineResult
+    public class TestEngineResult
     {
         private List<string> _xmlText = new List<string>();
 

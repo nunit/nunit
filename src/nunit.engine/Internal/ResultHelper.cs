@@ -37,6 +37,9 @@ namespace NUnit.Engine.Internal
     /// </summary>
     public static class ResultHelper
     {
+        private const string TEST_SUITE_ELEMENT = "test-suite";
+        private const string PROJECT_SUITE_TYPE = "Project";
+
         #region TestEngineResult extension methods
 
         /// <summary>
@@ -57,6 +60,14 @@ namespace NUnit.Engine.Internal
         public static TestEngineResult Aggregate(this TestEngineResult result, string elementName, string name, string fullname)
         {
             return new TestEngineResult(Aggregate(elementName, name, fullname, result.XmlNodes));
+        }
+
+        /// <summary>
+        /// Aggregate all the separate assembly results of a project as a single node.
+        /// </summary>
+        public static TestEngineResult MakePackageResult(this TestEngineResult result, string name, string fullName)
+        {
+            return Aggregate(result, TEST_SUITE_ELEMENT, PROJECT_SUITE_TYPE, name, fullName);
         }
 
         #endregion

@@ -108,9 +108,9 @@ namespace NUnit.Engine
         {
             using (ITestRunner runner = GetRunner())
             {
-                ITestEngineResult loadResult = runner.Load(package);
+                runner.Load(package);
 
-                return runner.Explore(filter).Xml;
+                return runner.Explore(filter);
             }
         }
 
@@ -125,9 +125,9 @@ namespace NUnit.Engine
         {
             using (ITestRunner runner = GetRunner())
             {
-                ITestEngineResult loadResult = runner.Load(package);
+                runner.Load(package);
 
-                return runner.Run(listener, filter).Xml;
+                return runner.Run(listener, filter);
             }
         }
 

@@ -44,8 +44,8 @@ namespace NUnit.Engine.Services
         /// create the same type of runner.
         /// </summary>
         /// <param name="package">The TestPackage to be loaded and run</param>
-        /// <returns>A TestRunner</returns>
-        public virtual ITestRunner MakeTestRunner(TestPackage package)
+        /// <returns>An ITestEngineRunner</returns>
+        public virtual ITestEngineRunner MakeTestRunner(TestPackage package)
         {
             DomainUsage domainUsage = (DomainUsage)System.Enum.Parse(
                 typeof(DomainUsage),
@@ -64,7 +64,7 @@ namespace NUnit.Engine.Services
             }
         }
 
-        public virtual bool CanReuse(ITestRunner runner, TestPackage package)
+        public virtual bool CanReuse(ITestEngineRunner runner, TestPackage package)
         {
             return false;
         }

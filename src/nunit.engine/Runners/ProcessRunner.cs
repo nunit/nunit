@@ -35,15 +35,15 @@ using NUnit.Engine.Internal;
 
 namespace NUnit.Engine.Runners
 {
-	/// <summary>
-	/// Summary description for ProcessRunner.
-	/// </summary>
-	public class ProcessRunner : AbstractTestRunner
-	{
+    /// <summary>
+    /// Summary description for ProcessRunner.
+    /// </summary>
+    public class ProcessRunner : AbstractTestRunner
+    {
         static Logger log = InternalTrace.GetLogger(typeof(ProcessRunner));
 
         private ITestAgent agent;
-        private ITestRunner remoteRunner;
+        private ITestEngineRunner remoteRunner;
 
         private RuntimeFramework runtimeFramework;
 
@@ -68,7 +68,7 @@ namespace NUnit.Engine.Runners
         /// <returns>A TestEngineResult.</returns>
         public override TestEngineResult Explore(TestFilter filter)
         {
-            ITestEngineResult result = this.remoteRunner.Explore(filter);
+            TestEngineResult result = this.remoteRunner.Explore(filter);
             return result as TestEngineResult; // TODO: Remove need for this cast
         }
 
@@ -78,9 +78,9 @@ namespace NUnit.Engine.Runners
         /// <param name="package">The TestPackage to be loaded</param>
         /// <returns>A TestEngineResult.</returns>
         public override TestEngineResult Load(TestPackage package)
-		{
+        {
             log.Info("Loading " + package.Name);
-			Unload();
+            Unload();
 
             this.package = package;
 
@@ -95,21 +95,21 @@ namespace NUnit.Engine.Runners
             if (enableDebug) agentArgs += " --pause";
             if (verbose) agentArgs += " --verbose";
 
-			try
-			{
+            try
+            {
                 CreateAgentAndRunner(enableDebug, agentArgs);
 
                 // TODO: Remove need for this cast
                 return this.remoteRunner.Load(package) as TestEngineResult;
-			}
-			catch(Exception)
-			{
+            }
+            catch(Exception)
+            {
                 // TODO: Check if this is really needed
                 // Clean up if the load failed
-				Unload();
+                Unload();
                 throw;
-			}
-		}
+            }
+        }
 
         /// <summary>
         /// Unload any loaded TestPackage and clear
@@ -123,7 +123,7 @@ namespace NUnit.Engine.Runners
                 this.remoteRunner.Unload();
                 this.remoteRunner = null;
             }
-		}
+        }
 
         /// <summary>
         /// Count the test cases that would be run under
@@ -158,7 +158,7 @@ namespace NUnit.Engine.Runners
         }
 
         public override void Dispose()
-		{
+        {
             if (this.agent != null)
             {
                 log.Info("Stopping remote agent");
@@ -167,7 +167,7 @@ namespace NUnit.Engine.Runners
             }
         }
 
-		#endregion
+        #endregion
 
         #region Helper Methods
 

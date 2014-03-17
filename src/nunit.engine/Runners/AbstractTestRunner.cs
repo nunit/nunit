@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Xml;
 
 namespace NUnit.Engine.Runners
 {
@@ -33,11 +34,9 @@ namespace NUnit.Engine.Runners
     /// within the NUnit Engine. It implements the ITestRunner
     /// interface, which is used by clients of the engine.
     /// </summary>
-    public abstract class AbstractTestRunner : ITestRunner
+    public abstract class AbstractTestRunner : ITestEngineRunner
     {
         protected const string TEST_RUN_ELEMENT = "test-run";
-        private const string TEST_SUITE_ELEMENT = "test-suite";
-        private const string PROJECT_SUITE_TYPE = "Project";
 
         protected ServiceContext services;
         protected TestPackage package;
@@ -96,46 +95,6 @@ namespace NUnit.Engine.Runners
         /// <returns>A TestEngineResult giving the result of the test execution</returns>
         public abstract TestEngineResult Run(ITestEventHandler listener, TestFilter filter);
 
-        #endregion
-
-        #region ITestRunner Members
-
-        /// <summary>
-        /// Load a TestPackage for possible execution. The 
-        /// explicit implemenation returns an ITestEngineResult
-        /// for consumption by clients.
-        /// </summary>
-        /// <param name="package">The TestPackage to be loaded</param>
-        /// <returns>An ITestEngineResult.</returns>
-        ITestEngineResult ITestRunner.Load(TestPackage package)
-        {
-            return this.Load(package);
-        }
-
-        /// <summary>
-        /// Run the tests in a loaded TestPackage. The explicit
-        /// implementation returns an ITestEngineResult for use
-        /// by external clients.
-        /// </summary>
-        /// <param name="listener">An ITestEventHandler to receive events</param>
-        /// <param name="filter">A TestFilter used to select tests</param>
-        /// <returns>An ITestEngineResult giving the result of the test execution</returns>
-        ITestEngineResult ITestRunner.Run(ITestEventHandler listener, TestFilter filter)
-        {
-            return this.Run(listener, filter);
-        }
-
-        /// <summary>
-        /// Explore a loaded TestPackage and return information about
-        /// the tests found.
-        /// </summary>
-        /// <param name="package">The TestPackage to be explored</param>
-        /// <returns>A TestEngineResult.</returns>
-        ITestEngineResult ITestRunner.Explore(TestFilter filter)
-        {
-            return this.Explore(filter);
-        }
-
         /// <summary>
         /// Start a run of the tests in the loaded TestPackage. The tests are run
         /// asynchronously and the listener interface is notified as it progresses.
@@ -157,27 +116,7 @@ namespace NUnit.Engine.Runners
 
         #region Helper Methods
 
-        /// <summary>
-        /// Create the proper type of result for a TestPackage, depending on the 
-        /// nature of the package and the number of results. If the package 
-        /// represents an NUnit project, then we should wrap the individual
-        /// assembly results in a project element, even if there is just one
-        /// assembly. Otherwise, we simply merge multiple results into a single
-        /// result for later aggregation by the caller. Delaying aggregation
-        /// ensures that we don't re-create the XmlNodes multiple times as the
-        /// results are serialized from one AppDomain or Process to another.
-        /// </summary>
-        protected TestEngineResult MakePackageResult(IList<TestEngineResult> results)
-        {
-            if (IsProjectPackage(this.package))
-                return ResultHelper.Merge(results).Aggregate(TEST_SUITE_ELEMENT, PROJECT_SUITE_TYPE, package.Name, package.FullName);
-            else if (results.Count == 1)
-                return results[0];
-            else
-                return ResultHelper.Merge(results);
-        }
-
-        private bool IsProjectPackage(TestPackage package)
+        protected bool IsProjectPackage(TestPackage package)
         {
             return package != null
                 && package.FullName != null
