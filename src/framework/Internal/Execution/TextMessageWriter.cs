@@ -104,6 +104,9 @@ namespace NUnit.Framework.Internal
             {
                 while (level-- >= 0) Write("  ");
 
+                if(message.Contains("\0"))
+                    message = message.Replace("\0", "\\0");
+
                 if (args != null && args.Length > 0)
                     message = string.Format(message, args);
 
