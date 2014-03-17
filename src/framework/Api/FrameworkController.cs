@@ -50,6 +50,8 @@ namespace NUnit.Framework.Api
     /// </summary>
     public class FrameworkController : MarshalByRefObject
     {
+        private const string LOG_FILE_FORMAT = "InternalTrace.{0}.{1}.log";
+
         #region Constructors
 
         /// <summary>
@@ -91,13 +93,12 @@ namespace NUnit.Framework.Api
             {
                 var traceLevel = (InternalTraceLevel)Enum.Parse(typeof(InternalTraceLevel), (string)settings[DriverSettings.InternalTraceLevel]);
 
-                if (settings.Contains("InternalTraceWriter"))
+                if (settings.Contains(DriverSettings.InternalTraceWriter))
                     InternalTrace.Initialize((TextWriter)settings[DriverSettings.InternalTraceWriter], traceLevel);
                 else
                 {
-                    var workDirectory = settings.Contains("WorkDirectory") ? (string)settings[DriverSettings.WorkDirectory] : Environment.CurrentDirectory;
-                    var logName = string.Format("InternalTrace.{0}.{1}.log", Process.GetCurrentProcess().Id, Path.GetFileName(assemblyPath));
-                    //var logName = string.Format("InternalTrace.{0}.log", Process.GetCurrentProcess().Id);
+                    var workDirectory = settings.Contains(DriverSettings.WorkDirectory) ? (string)settings[DriverSettings.WorkDirectory] : Environment.CurrentDirectory;
+                    var logName = string.Format(LOG_FILE_FORMAT, Process.GetCurrentProcess().Id, Path.GetFileName(assemblyPath));
                     InternalTrace.Initialize(Path.Combine(workDirectory, logName), traceLevel);
                 }
             }
