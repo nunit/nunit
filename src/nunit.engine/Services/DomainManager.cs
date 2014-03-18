@@ -140,9 +140,9 @@ namespace NUnit.Engine.Services
                 ? new FileInfo(package.FullName)
                 : null;
 
-            string appBase = package.GetSetting("BasePath", string.Empty);
-            string configFile = package.GetSetting("ConfigurationFile", string.Empty);
-            string binPath = package.GetSetting("PrivateBinPath", string.Empty);
+            string appBase = package.GetSetting(RunnerSettings.BasePath, string.Empty);
+            string configFile = package.GetSetting(RunnerSettings.ConfigurationFile, string.Empty);
+            string binPath = package.GetSetting(RunnerSettings.PrivateBinPath, string.Empty);
 
             if (testFile != null)
             {
@@ -168,7 +168,7 @@ namespace NUnit.Engine.Services
                 ? Path.Combine(appBase, configFile)
                 : configFile;
 
-            if (package.GetSetting("AutoBinPath", binPath == string.Empty))
+            if (package.GetSetting(RunnerSettings.AutoBinPath, binPath == string.Empty))
                 binPath = GetPrivateBinPath(appBase, package.TestFiles);
 
             setup.PrivateBinPath = binPath;

@@ -49,7 +49,7 @@ namespace NUnit.Engine.Services
         {
             DomainUsage domainUsage = (DomainUsage)System.Enum.Parse(
                 typeof(DomainUsage),
-                package.GetSetting("DomainUsage", "Default"));
+                package.GetSetting(RunnerSettings.DomainUsage, "Default"));
 
             switch (domainUsage)
             {

@@ -87,6 +87,7 @@
     <Compile Include="ITestEngineRunner.cs" />
     <Compile Include="ITestRunnerFactory.cs" />
     <Compile Include="NUnitFrameworkDriver.cs" />
+    <Compile Include="RunnerSettings.cs" />
     <Compile Include="Runners\AbstractTestRunner.cs" />
     <Compile Include="Runners\AggregatingTestRunner.cs" />
     <Compile Include="Runners\DirectTestRunner.cs" />

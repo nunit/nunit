@@ -48,6 +48,7 @@
     <Compile Include="ColorConsole.cs" />
     <Compile Include="ConsoleOptions.cs" />
     <Compile Include="ConsoleRunner.cs" />
+    <Compile Include="PackageSettings.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="TestEventHandler.cs" />
     <Compile Include="TestNameParser.cs" />

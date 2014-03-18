@@ -28,9 +28,9 @@ using System.Xml;
 
 namespace NUnit.Engine.Internal
 {
-	public class ProjectConfig : IProjectConfig
-	{
-		#region Instance Variables
+    public class ProjectConfig : IProjectConfig
+    {
+        #region Instance Variables
 
         private NUnitProject project;
 
@@ -44,9 +44,9 @@ namespace NUnit.Engine.Internal
         /// </summary>
         private List<string> assemblies;
 
-		#endregion
+        #endregion
 
-		#region Constructor
+        #region Constructor
 
         public ProjectConfig(NUnitProject project, XmlNode configNode)
         {
@@ -62,9 +62,9 @@ namespace NUnit.Engine.Internal
             }
         }
 
-		#endregion
+        #endregion
 
-		#region Properties
+        #region Properties
 
         public string Name
         {
@@ -110,38 +110,38 @@ namespace NUnit.Engine.Internal
                     settings = new Dictionary<string, object>();
 
                     if (EffectiveBasePath != project.ProjectPath)
-                        settings["BasePath"] = EffectiveBasePath;
+                        settings[RunnerSettings.BasePath] = EffectiveBasePath;
 
                     string configFile = GetAttribute("configfile");
                     if (configFile != null)
-                        settings["ConfigurationFile"] = configFile;
+                        settings[RunnerSettings.ConfigurationFile] = configFile;
 
                     string binpath = GetAttribute("binpath");
                     if (binpath != null)
-                        settings["PrivateBinPath"] = binpath;
+                        settings[RunnerSettings.PrivateBinPath] = binpath;
 
                     string binpathtype = GetAttribute("binpathtype");
                     if (binpathtype != null && binpathtype.ToLower() == "auto")
-                        settings["AutoBinPath"] = true;
+                        settings[RunnerSettings.AutoBinPath] = true;
 
                     string runtime = GetAttribute("runtimeFramework");
                     if (runtime != null)
-                        settings["RuntimeFramework"] = runtime;
+                        settings[RunnerSettings.RuntimeFramework] = runtime;
 
                     string processModel = project.GetSetting("processModel");
                     if (processModel != null)
-                        settings["ProcessModel"] = processModel;
+                        settings[RunnerSettings.ProcessModel] = processModel;
 
                     string domainUsage = project.GetSetting("domainUsage");
                     if (domainUsage != null)
-                        settings["DomainUsage"] = domainUsage;
+                        settings[RunnerSettings.DomainUsage] = domainUsage;
                 }
 
                 return settings;
             }
         }
 
-		#endregion
+        #endregion
 
         #region Helper Methods
 
