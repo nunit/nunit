@@ -51,6 +51,8 @@
     <Reference Include="System.Configuration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ITestAgency.cs" />
+    <Compile Include="ITestAgent.cs" />
     <Compile Include="Agents\RemoteTestAgent.cs" />
     <Compile Include="Agents\TestAgent.cs" />
     <Compile Include="AssemblyInfo.cs" />
@@ -82,6 +84,7 @@
     <Compile Include="IProjectLoader.cs" />
     <Compile Include="IRuntimeFrameworkSelector.cs" />
     <Compile Include="IService.cs" />
+    <Compile Include="ITestEngineRunner.cs" />
     <Compile Include="ITestRunnerFactory.cs" />
     <Compile Include="NUnitFrameworkDriver.cs" />
     <Compile Include="Runners\AbstractTestRunner.cs" />

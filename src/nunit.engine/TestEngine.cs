@@ -104,15 +104,13 @@ namespace NUnit.Engine
         /// </summary>
         /// <param name="package">A TestPackage.</param>
         /// <returns>An XmlNode representing the tests.</returns>
-        public ITestEngineResult Explore(TestPackage package, TestFilter filter)
+        public XmlNode Explore(TestPackage package, TestFilter filter)
         {
             using (ITestRunner runner = GetRunner())
             {
-                ITestEngineResult loadResult = runner.Load(package);
+                runner.Load(package);
 
-                return loadResult.HasErrors
-                    ? loadResult
-                    : runner.Explore(filter);
+                return runner.Explore(filter);
             }
         }
 
@@ -123,15 +121,13 @@ namespace NUnit.Engine
         /// <param name="package">A TestPackage.</param>
         /// <param name="filter">A TestFilter (currently ignored)</param>
         /// <returns>An XmlNode representing the test results.</returns>
-        public ITestEngineResult Run(TestPackage package, ITestEventHandler listener, TestFilter filter)
+        public XmlNode Run(TestPackage package, ITestEventHandler listener, TestFilter filter)
         {
             using (ITestRunner runner = GetRunner())
             {
-                ITestEngineResult loadResult = runner.Load(package);
+                runner.Load(package);
 
-                return loadResult.HasErrors
-                    ? loadResult
-                    : runner.Run(listener, filter);
+                return runner.Run(listener, filter);
             }
         }
 

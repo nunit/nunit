@@ -28,35 +28,35 @@ using NUnit.Framework;
 
 namespace NUnit.Util.Tests
 {
-	[TestFixture]
-	public class NUnit2XmlValidationTests : XmlOutputTest
-	{
+    [TestFixture]
+    public class NUnit2XmlValidationTests : XmlOutputTest
+    {
         private SchemaValidator validator;
 
         private static readonly string schemaFile = "NUnit2TestResult.xsd";
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void InitializeValidator()
         {
             this.validator = new SchemaValidator(GetLocalPath(schemaFile));
         }
 
-		[Test,SetCulture("")]
-		public void TestSchemaValidatorInvariantCulture()
-		{
-			runSchemaValidatorTest();
-		}
+        [Test,SetCulture("")]
+        public void TestSchemaValidatorInvariantCulture()
+        {
+            runSchemaValidatorTest();
+        }
 
-		[Test,SetCulture("en-US")]
-		public void TestSchemaValidatorUnitedStatesCulture()
-		{
-			runSchemaValidatorTest();
-		}
+        [Test,SetCulture("en-US")]
+        public void TestSchemaValidatorUnitedStatesCulture()
+        {
+            runSchemaValidatorTest();
+        }
 
-		[Test,SetCulture("fr-FR")]
-		public void TestSchemaValidatorFrenchCulture()
-		{
-			runSchemaValidatorTest();
+        [Test,SetCulture("fr-FR")]
+        public void TestSchemaValidatorFrenchCulture()
+        {
+            runSchemaValidatorTest();
         }
 
         #region Helper Methods

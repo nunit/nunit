@@ -42,7 +42,7 @@ namespace NUnit.Engine.Services
         /// </summary>
         /// <param name="package">The TestPackage to be loaded and run</param>
         /// <returns>A TestRunner</returns>
-        public override ITestRunner MakeTestRunner(TestPackage package)
+        public override ITestEngineRunner MakeTestRunner(TestPackage package)
         {
             ProcessModel processModel = GetTargetProcessModel(package);
 
@@ -59,7 +59,7 @@ namespace NUnit.Engine.Services
             }
         }
 
-        public override bool CanReuse(ITestRunner runner, TestPackage package)
+        public override bool CanReuse(ITestEngineRunner runner, TestPackage package)
         {
             RuntimeFramework currentFramework = RuntimeFramework.CurrentFramework;
             RuntimeFramework targetFramework = ServiceContext.RuntimeFrameworkSelector.SelectRuntimeFramework(package);

@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2011 Charlie Poole
+// Copyright (c) 2011-2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -48,7 +48,7 @@ namespace NUnit.Engine
     /// 
     /// </summary>
     [Serializable]
-    public class TestEngineResult : ITestEngineResult
+    public class TestEngineResult
     {
         private List<string> _xmlText = new List<string>();
 
@@ -94,34 +94,6 @@ namespace NUnit.Engine
         public bool IsSingle 
         {
             get { return _xmlText.Count == 1; }
-        }
-
-        /// <summary>
-        /// Gets a flag indicating whether result contains error nodes.
-        /// </summary>
-        public bool HasErrors
-        {
-            get 
-            {
-                return Xml.SelectNodes("error").Count > 0;
-            }
-        }
-
-        public IList<TestEngineError> Errors
-        {
-            get 
-            {
-                List<TestEngineError> errors = new List<TestEngineError>();
-
-                foreach (XmlNode errorNode in Xml.SelectNodes("error"))
-                {
-                    string message = errorNode.GetAttribute("message");
-                    string stackTrace = errorNode.GetAttribute("stackTrace");
-                    errors.Add(new TestEngineError(message, stackTrace));
-                }
-
-                return errors;
-            }
         }
 
         /// <summary>

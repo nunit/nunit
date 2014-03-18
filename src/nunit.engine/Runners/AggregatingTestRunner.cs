@@ -37,7 +37,7 @@ namespace NUnit.Engine.Runners
     {
         // The runners created by the derived class will (at least at the time
         // of writing this comment) be either TestDomainRunners or ProcessRunners.
-        private List<ITestRunner> runners = new List<ITestRunner>();
+        private List<AbstractTestRunner> runners = new List<AbstractTestRunner>();
 
         public AggregatingTestRunner(ServiceContext services) : base(services) { }
 
@@ -57,7 +57,11 @@ namespace NUnit.Engine.Runners
             foreach (AbstractTestRunner runner in runners)
                 results.Add(runner.Explore(filter));
 
-            return MakePackageResult(results);
+            TestEngineResult result = ResultHelper.Merge(results);
+
+            return IsProjectPackage(this.package)
+                ? result.MakePackageResult(package.Name, package.FullName)
+                : result;
         }
 
         /// <summary>
@@ -99,7 +103,7 @@ namespace NUnit.Engine.Runners
         /// </summary>
         public override void Unload()
         {
-            foreach (ITestRunner runner in runners)
+            foreach (AbstractTestRunner runner in runners)
                 runner.Unload();
 
             runners.Clear();
@@ -115,7 +119,7 @@ namespace NUnit.Engine.Runners
         {
             int count = 0;
 
-            foreach (ITestRunner runner in runners)
+            foreach (AbstractTestRunner runner in runners)
                 count += runner.CountTestCases(filter);
 
             return count;
@@ -136,7 +140,11 @@ namespace NUnit.Engine.Runners
             foreach (AbstractTestRunner runner in runners)
                 results.Add(runner.Run(listener, filter));
 
-            return MakePackageResult(results);
+            TestEngineResult result = ResultHelper.Merge(results);
+
+            return IsProjectPackage(this.package)
+                ? result.MakePackageResult(package.Name, package.FullName)
+                : result;
         }
 
         /// <summary>

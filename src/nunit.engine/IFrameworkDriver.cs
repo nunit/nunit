@@ -29,14 +29,32 @@ namespace NUnit.Engine
 {
     public interface IFrameworkDriver
     {
-        TestEngineResult Load();
+        /// <summary>
+        /// Loads the tests in an assembly.
+        /// </summary>
+        /// <returns>An Xml string representing the loaded test</returns>
+        string Load();
 
-        void Unload();
-
+        /// <summary>
+        /// Count the test cases that would be executed.
+        /// </summary>
+        /// <param name="filter">A TestFilter to use in counting the tests</param>
+        /// <returns>The number of test cases counted</returns>
         int CountTestCases(TestFilter filter);
 
-        TestEngineResult Run(ITestEventHandler listener, TestFilter filter);
+        /// <summary>
+        /// Executes the tests in an assembly.
+        /// </summary>
+        /// <param name="listener">An ITestEventHandler that receives progress notices</param>
+        /// <param name="filter">A filter that controls which tests are executed</param>
+        /// <returns>An Xml string representing the result</returns>
+        string Run(ITestEventHandler listener, TestFilter filter);
 
-        TestEngineResult Explore(TestFilter filter);
+        /// <summary>
+        /// Returns information about the tests in an assembly.
+        /// </summary>
+        /// <param name="filter">A filter indicating which tests to include</param>
+        /// <returns>An Xml string representing the tests</returns>
+        string Explore(TestFilter filter);
     }
 }

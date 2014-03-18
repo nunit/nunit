@@ -56,7 +56,7 @@ namespace NUnit.Engine
         /// <param name="package">The test package to be explored.</param>
         /// <param name="filter">A filter to be used in exploring tests.</param>
         /// <returns>An XmlNode representing the tests.</returns>
-        ITestEngineResult Explore(TestPackage package, TestFilter filter);
+        XmlNode Explore(TestPackage package, TestFilter filter);
 
         /// <summary>
         /// Runs the tests specified by a test package and returns
@@ -66,7 +66,7 @@ namespace NUnit.Engine
         /// <param name="listener">A test listener to receive progress notifications. Null indicates no progress notifications should be sent.</param>
         /// <param name="filter">A test filter indicating which tests should run. Null indicates no filtering.</param>
         /// <returns>An XmlNode representing the results of the run.</returns>
-        ITestEngineResult Run(TestPackage package, ITestEventHandler listener, TestFilter filter);
+        XmlNode Run(TestPackage package, ITestEventHandler listener, TestFilter filter);
 
         /// <summary>
         /// Returns a test runner instance for use by clients that need to load the

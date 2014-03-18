@@ -45,68 +45,79 @@ namespace NUnit.Engine
 
         static ILogger log = InternalTrace.GetLogger("NUnitFrameworkDriver");
 
-        AppDomain testDomain;
-        string assemblyPath;
-        IDictionary<string, object> settings;
+        AppDomain _testDomain;
+        string _assemblyPath;
+        IDictionary<string, object> _settings;
 
-        object frameworkController;
+        object _frameworkController;
 
         public NUnitFrameworkDriver(AppDomain testDomain, string assemblyPath, IDictionary<string, object> settings)
         {
-            this.testDomain = testDomain;
-            this.assemblyPath = assemblyPath;
-            this.settings = settings;
-            this.frameworkController = CreateObject(CONTROLLER_TYPE, assemblyPath, (System.Collections.IDictionary)settings);
+            _testDomain = testDomain;
+            _assemblyPath = assemblyPath;
+            _settings = settings;
+            _frameworkController = CreateObject(CONTROLLER_TYPE, assemblyPath, (System.Collections.IDictionary)settings);
         }
 
-        public TestEngineResult Load()
+        /// <summary>
+        /// Loads the tests in an assembly.
+        /// </summary>
+        /// <returns>An Xml string representing the loaded test</returns>
+        public string Load()
         {
             CallbackHandler handler = new CallbackHandler();
 
-            log.Info("Loading {0} - see separate log file", Path.GetFileName(assemblyPath));
-            CreateObject(LOAD_ACTION, frameworkController, handler);
+            log.Info("Loading {0} - see separate log file", Path.GetFileName(_assemblyPath));
+            CreateObject(LOAD_ACTION, _frameworkController, handler);
 
-            return new TestEngineResult(handler.Result);
-        }
-
-        public void Unload()
-        {
+            return handler.Result;
         }
 
         public int CountTestCases(TestFilter filter)
         {
             CallbackHandler handler = new CallbackHandler();
 
-            CreateObject(COUNT_ACTION, frameworkController, filter.Text, handler);
+            CreateObject(COUNT_ACTION, _frameworkController, filter.Text, handler);
 
             return int.Parse(handler.Result);
         }
 
-        public TestEngineResult Run(ITestEventHandler listener, TestFilter filter)
+        /// <summary>
+        /// Executes the tests in an assembly.
+        /// </summary>
+        /// <param name="listener">An ITestEventHandler that receives progress notices</param>
+        /// <param name="filter">A filter that controls which tests are executed</param>
+        /// <returns>An Xml string representing the result</returns>
+        public string Run(ITestEventHandler listener, TestFilter filter)
         {
             CallbackHandler handler = new RunTestsCallbackHandler(listener);
 
-            log.Info("Running {0} - see separate log file", Path.GetFileName(assemblyPath));
-            CreateObject(RUN_ACTION, frameworkController, filter.Text, handler);
+            log.Info("Running {0} - see separate log file", Path.GetFileName(_assemblyPath));
+            CreateObject(RUN_ACTION, _frameworkController, filter.Text, handler);
 
-            return new TestEngineResult(handler.Result);
+            return handler.Result;
         }
 
-        public TestEngineResult Explore(TestFilter filter)
+        /// <summary>
+        /// Returns information about the tests in an assembly.
+        /// </summary>
+        /// <param name="filter">A filter indicating which tests to include</param>
+        /// <returns>An Xml string representing the tests</returns>
+        public string Explore(TestFilter filter)
         {
             CallbackHandler handler = new CallbackHandler();
 
-            log.Info("Exploring {0} - see separate log file", Path.GetFileName(assemblyPath));
-            CreateObject(EXPLORE_ACTION, frameworkController, filter.Text, handler);
+            log.Info("Exploring {0} - see separate log file", Path.GetFileName(_assemblyPath));
+            CreateObject(EXPLORE_ACTION, _frameworkController, filter.Text, handler);
 
-            return new TestEngineResult(handler.Result);
+            return handler.Result;
         }
 
         #region Helper Methods
 
         private object CreateObject(string typeName, params object[] args)
         {
-            return this.testDomain.CreateInstanceAndUnwrap(
+            return _testDomain.CreateInstanceAndUnwrap(
                 "nunit.framework", typeName, false, 0,
 #if !NET_4_0
                 null, args, null, null, null );

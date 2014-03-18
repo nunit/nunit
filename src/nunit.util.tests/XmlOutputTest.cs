@@ -32,8 +32,8 @@ namespace NUnit.Util.Tests
     using Engine.Internal;
     using Framework;
 
-    using Runner = NUnit.Framework.Internal.DefaultTestAssemblyRunner;
-    using Builder = NUnit.Framework.Internal.DefaultTestAssemblyBuilder;
+    using Runner = NUnit.Framework.Api.DefaultTestAssemblyRunner;
+    using Builder = NUnit.Framework.Api.DefaultTestAssemblyBuilder;
     using TestListener = NUnit.Framework.Internal.TestListener;
     using TestFilter = NUnit.Framework.Internal.TestFilter;
 
@@ -58,7 +58,7 @@ namespace NUnit.Util.Tests
             return Path.Combine(localDirectory, fileName);
         }
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void InitializeTestEngineResult()
         {
             // Save the local directory - used by GetLocalPath
@@ -76,7 +76,10 @@ namespace NUnit.Util.Tests
             var settings = new Dictionary<string, object>();
 
             // Make sure the runner loaded the mock assembly.
-            Assert.True(runner.Load(assemblyPath, settings), "Unable to load mock-assembly.dll");
+            Assert.That(
+                runner.Load(assemblyPath, settings).RunState.ToString(),
+                Is.EqualTo("Runnable"), 
+                "Unable to load mock-assembly.dll");
 
             // Run the tests, saving the result as an XML string
             var xmlText = runner.Run(TestListener.NULL, TestFilter.Empty).ToXml(true).OuterXml;

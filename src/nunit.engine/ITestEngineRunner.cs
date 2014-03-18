@@ -22,21 +22,22 @@
 // ***********************************************************************
 
 using System;
-using System.Xml;
 
 namespace NUnit.Engine
 {
     /// <summary>
-    /// Interface implemented by all test runners.
+    /// Interface implemented by all internal test runners in
+    /// the engine, allowing them to pass back TestEngineResults
+    /// to any higher-level runner that calls them.
     /// </summary>
-    public interface ITestRunner : IDisposable
+    public interface ITestEngineRunner : IDisposable
     {
         /// <summary>
         /// Load a TestPackage for possible execution
         /// </summary>
         /// <param name="package">The TestPackage to be loaded</param>
-        /// <returns>An XmlNode representing the loaded package.</returns>
-        XmlNode Load(TestPackage package);
+        /// <returns>A TestEngineResult.</returns>
+        TestEngineResult Load(TestPackage package);
 
         /// <summary>
         /// Unload any loaded TestPackage. If none is loaded,
@@ -58,8 +59,8 @@ namespace NUnit.Engine
         /// </summary>
         /// <param name="listener">An ITestEventHandler to receive events</param>
         /// <param name="filter">A TestFilter used to select tests</param>
-        /// <returns>An XmlNode giving the result of the test execution</returns>
-        XmlNode Run(ITestEventHandler listener, TestFilter filter);
+        /// <returns>A TestEngineResult giving the result of the test execution</returns>
+        TestEngineResult Run(ITestEventHandler listener, TestFilter filter);
 
         /// <summary>
         /// Start a run of the tests in the loaded TestPackage. The tests are run
@@ -70,10 +71,11 @@ namespace NUnit.Engine
         void BeginRun(ITestEventHandler listener, TestFilter filter);
 
         /// <summary>
-        /// Explore a loaded TestPackage and return information about the tests found.
+        /// Explore a loaded TestPackage and return information about
+        /// the tests found.
         /// </summary>
-        /// <param name="filter">The TestFilter to be used in selecting tests to explore.</param>
-        /// <returns>An XmlNode representing the tests fould.</returns>
-        XmlNode Explore(TestFilter filter);
+        /// <param name="package">The TestPackage to be explored</param>
+        /// <returns>A TestEngineResult.</returns>
+        TestEngineResult Explore(TestFilter filter);
     }
 }

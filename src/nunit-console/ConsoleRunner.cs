@@ -23,26 +23,26 @@
 
 namespace NUnit.ConsoleRunner
 {
-	using System;
+    using System;
     using System.IO;
     using System.Xml;
     using System.Text;
     using NUnit.Engine;
     using NUnit.Util;
-	
-	/// <summary>
-	/// ConsoleRunner provides the nunit-console text-based
+    
+    /// <summary>
+    /// ConsoleRunner provides the nunit-console text-based
     /// user interface, running the tests and reporting the results.
-	/// </summary>
-	public class ConsoleRunner
+    /// </summary>
+    public class ConsoleRunner
     {
         #region Console Runner Return Codes
 
         public static readonly int OK = 0;
-		public static readonly int INVALID_ARG = -1;
-		public static readonly int FILE_NOT_FOUND = -2;
-		public static readonly int FIXTURE_NOT_FOUND = -3;
-		public static readonly int UNEXPECTED_ERROR = -100;
+        public static readonly int INVALID_ARG = -1;
+        public static readonly int FILE_NOT_FOUND = -2;
+        public static readonly int FIXTURE_NOT_FOUND = -3;
+        public static readonly int UNEXPECTED_ERROR = -100;
 
         #endregion
 
@@ -65,8 +65,8 @@ namespace NUnit.ConsoleRunner
             this.engine = engine;
             this.options = options;
             this.workDirectory = options.WorkDirectory;
-			if (this.workDirectory == null)
-				this.workDirectory = Environment.CurrentDirectory;
+            if (this.workDirectory == null)
+                this.workDirectory = Environment.CurrentDirectory;
             else if (!Directory.Exists(this.workDirectory))
                 Directory.CreateDirectory(this.workDirectory);
         }
@@ -80,7 +80,7 @@ namespace NUnit.ConsoleRunner
         /// </summary>
         /// <returns></returns>
         public int Execute()
-		{
+        {
             TestPackage package = MakeTestPackage(options);
 
             TestFilter filter = CreateTestFilter(options);
@@ -97,27 +97,21 @@ namespace NUnit.ConsoleRunner
 
         private int ExploreTests(TestPackage package, TestFilter filter)
         {
-            ITestEngineResult engineResult = engine.Explore(package, filter);
-            int returnCode = ConsoleRunner.OK;
+            XmlNode result = engine.Explore(package, filter);
 
-            if (engineResult.HasErrors)
+            if (options.ExploreOutputSpecifications.Count == 0)
             {
-                DisplayErrorMessages(engineResult);
-                returnCode = ConsoleRunner.UNEXPECTED_ERROR;
-            }
-            else if (options.ExploreOutputSpecifications.Count == 0)
-            {
-                new TestCaseOutputWriter().WriteResultFile(engineResult.Xml, Console.Out);
+                new TestCaseOutputWriter().WriteResultFile(result, Console.Out);
             }
             else
             {
-                var outputManager = new OutputManager(engineResult.Xml, this.workDirectory);
+                var outputManager = new OutputManager(result, this.workDirectory);
 
                 foreach (OutputSpecification spec in options.ExploreOutputSpecifications)
                     outputManager.WriteTestFile(spec);
             }
 
-            return returnCode;
+            return ConsoleRunner.OK;
         }
 
         private int RunTests(TestPackage package, TestFilter filter)
@@ -130,7 +124,7 @@ namespace NUnit.ConsoleRunner
 
             TestEventHandler eventHandler = new TestEventHandler(options, outWriter, errorWriter);
 
-            ITestEngineResult engineResult = null;
+            XmlNode result = null;
 
             // Save things that might be messed up by a bad test
             TextWriter savedOut = Console.Out;
@@ -142,7 +136,7 @@ namespace NUnit.ConsoleRunner
             {
                 using ( new ColorConsole( ColorStyle.Output ) )
 #if true
-                engineResult = engine.Run(package, eventHandler, filter);
+                result = engine.Run(package, eventHandler, filter);
 #else
                 using (ITestRunner runner = engine.GetRunner(package))
                 {
@@ -161,31 +155,16 @@ namespace NUnit.ConsoleRunner
 
             //Console.WriteLine();
 
-            int returnCode = UNEXPECTED_ERROR;
+            ResultReporter reporter = new ResultReporter(result, options);
+            reporter.ReportResults();
 
-            if (engineResult.HasErrors)
-                DisplayErrorMessages(engineResult);
-            else
-            {
-                ResultReporter reporter = new ResultReporter(engineResult.Xml, options);
-                reporter.ReportResults();
+            // TODO: Inject this?
+            var outputManager = new OutputManager(result, this.workDirectory);
 
-                // TODO: Inject this?
-                var outputManager = new OutputManager(engineResult.Xml, this.workDirectory);
+            foreach (var outputSpec in options.ResultOutputSpecifications)
+                outputManager.WriteResultFile(outputSpec, startTime);
 
-                foreach (var outputSpec in options.ResultOutputSpecifications)
-                    outputManager.WriteResultFile(outputSpec, startTime);
-
-                returnCode = reporter.Summary.ErrorsAndFailures;
-
-                //if ( collector.HasExceptions )
-                //{
-                //    collector.WriteExceptions();
-                //    returnCode = UNEXPECTED_ERROR;
-                //}
-            }
-
-            return returnCode;
+            return reporter.Summary.ErrorsAndFailures;
         }
 
         private void DisplayRequestedOptions()
@@ -271,9 +250,9 @@ namespace NUnit.ConsoleRunner
 
             if (options.ActiveConfig != null)
                 package.Settings["ActiveConfig"] = options.ActiveConfig;
-			
-			if (options.WorkDirectory != null)
-				package.Settings["WorkDirectory"] = options.WorkDirectory;
+            
+            if (options.WorkDirectory != null)
+                package.Settings["WorkDirectory"] = options.WorkDirectory;
 
             if (options.StopOnError)
                 package.Settings["StopOnError"] = true;
@@ -294,7 +273,7 @@ namespace NUnit.ConsoleRunner
 #endif
             
             return package;
-		}
+        }
 
         // This is public static for ease of testing
         public static TestFilter CreateTestFilter(ConsoleOptions options)
@@ -314,33 +293,7 @@ namespace NUnit.ConsoleRunner
             return builder.GetFilter();
         }
 
-        private static string CreateXmlOutput(ITestEngineResult result)
-        {
-            StringBuilder builder = new StringBuilder();
-
-            XmlTextWriter writer = new XmlTextWriter(new StringWriter(builder));
-            writer.Formatting = Formatting.Indented;
-
-            result.Xml.WriteTo(writer);
-            writer.Close();
-
-            return builder.ToString();
-        }
-
-        private static void DisplayErrorMessages(ITestEngineResult errorReport)
-        {
-            foreach (TestEngineError error in errorReport.Errors)
-            {
-                if (error.Message != null)
-                {
-                    ColorConsole.WriteLine(ColorStyle.Error, "Load failure: " + error.Message);
-                    if (error.StackTrace != null)
-                        ColorConsole.WriteLine(ColorStyle.Error, error.StackTrace);
-                }
-            }
-        }
-        
         #endregion
-	}
+    }
 }
 

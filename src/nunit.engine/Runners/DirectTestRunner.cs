@@ -50,12 +50,14 @@ namespace NUnit.Engine.Runners
         /// <returns>A TestEngineResult.</returns>
         public override TestEngineResult Explore(TestFilter filter)
         {
-            List<TestEngineResult> results = new List<TestEngineResult>();
+            TestEngineResult result = new TestEngineResult();
 
             foreach (IFrameworkDriver driver in drivers)
-                results.Add(driver.Explore(filter));
+                result.Add(driver.Explore(filter));
 
-            return MakePackageResult(results);
+            return IsProjectPackage(this.package)
+                ? result.MakePackageResult(package.Name, package.FullName)
+                : result;
         }
 
         /// <summary>
@@ -66,21 +68,18 @@ namespace NUnit.Engine.Runners
         public override TestEngineResult Load(TestPackage package)
         {
             this.package = package;
-            List<TestEngineResult> loadResults = new List<TestEngineResult>();
+            TestEngineResult result = new TestEngineResult();
 
             foreach (string testFile in package.TestFiles)
             {
-                // TODO: Should get the appropriate driver for the file
                 IFrameworkDriver driver = Services.DriverFactory.GetDriver(TestDomain, testFile, package.Settings);
-                TestEngineResult driverResult = driver.Load();
-
-                loadResults.Add(driverResult);
-
-                if (!driverResult.HasErrors)
-                    drivers.Add(driver);
+                result.Add(driver.Load());
+                drivers.Add(driver);
             }
 
-            return MakePackageResult(loadResults);
+            return IsProjectPackage(this.package)
+                ? result.MakePackageResult(package.Name, package.FullName)
+                : result;
         }
 
         /// <summary>
@@ -110,12 +109,14 @@ namespace NUnit.Engine.Runners
         /// </returns>
         public override TestEngineResult Run(ITestEventHandler listener, TestFilter filter)
         {
-            List<TestEngineResult> results = new List<TestEngineResult>();
+            TestEngineResult result = new TestEngineResult();
 
             foreach (NUnitFrameworkDriver driver in drivers)
-                results.Add(driver.Run(listener, filter));
+                result.Add(driver.Run(listener, filter));
 
-            return MakePackageResult(results);
+            return IsProjectPackage(this.package)
+                ? result.MakePackageResult(package.Name, package.FullName)
+                : result;
         }
 
         /// <summary>

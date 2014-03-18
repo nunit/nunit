@@ -56,10 +56,7 @@
     <Compile Include="InternalTraceLevel.cs" />
     <Compile Include="IServiceLocator.cs" />
     <Compile Include="ISettings.cs" />
-    <Compile Include="ITestAgency.cs" />
-    <Compile Include="ITestAgent.cs" />
     <Compile Include="ITestEngine.cs" />
-    <Compile Include="ITestEngineResult.cs" />
     <Compile Include="ITestEventHandler.cs" />
     <Compile Include="ITestRunner.cs" />
     <Compile Include="NUnitEngineException.cs" />

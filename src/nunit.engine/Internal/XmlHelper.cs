@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2011 Charlie Poole
+// Copyright (c) 2011-2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -54,12 +54,12 @@ namespace NUnit.Engine.Internal
             return doc.FirstChild;
         }
 
-        //public static XmlNode CreateXmlNode(string xml)
-        //{
-        //    XmlDocument doc = new XmlDocument();
-        //    doc.LoadXml(xml);
-        //    return doc.FirstChild;
-        //}
+        public static XmlNode CreateXmlNode(string xml)
+        {
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml(xml);
+            return doc.FirstChild;
+        }
 
         /// <summary>
         /// Adds an attribute with a specified name and value to an existing XmlNode.

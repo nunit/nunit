@@ -122,6 +122,57 @@ namespace NUnit.Engine.Runners
 
         #endregion
 
+        #region ITestRunner Members
+
+        /// <summary>
+        /// Load a TestPackage for possible execution. The 
+        /// explicit implemenation returns an ITestEngineResult
+        /// for consumption by clients.
+        /// </summary>
+        /// <param name="package">The TestPackage to be loaded</param>
+        /// <returns>An XmlNode representing the loaded assembly.</returns>
+        XmlNode ITestRunner.Load(TestPackage package)
+        {
+            return this.Load(package).Xml; ;
+        }
+
+        /// <summary>
+        /// Run the tests in a loaded TestPackage. The explicit
+        /// implementation returns an ITestEngineResult for use
+        /// by external clients.
+        /// </summary>
+        /// <param name="listener">An ITestEventHandler to receive events</param>
+        /// <param name="filter">A TestFilter used to select tests</param>
+        /// <returns>An XmlNode giving the result of the test execution</returns>
+        XmlNode ITestRunner.Run(ITestEventHandler listener, TestFilter filter)
+        {
+            return this.Run(listener, filter).Xml;
+        }
+
+        /// <summary>
+        /// Explore a loaded TestPackage and return information about
+        /// the tests found.
+        /// </summary>
+        /// <param name="package">The TestPackage to be explored</param>
+        /// <returns>An XmlNode representing the tests found.</returns>
+        XmlNode ITestRunner.Explore(TestFilter filter)
+        {
+            return this.Explore(filter).Xml;
+        }
+
+        /// <summary>
+        /// Start a run of the tests in the loaded TestPackage. The tests are run
+        /// asynchronously and the listener interface is notified as it progresses.
+        /// </summary>
+        /// <param name="listener">An ITestEventHandler to receive events</param>
+        /// <param name="filter">A TestFilter used to select tests</param>
+        void ITestRunner.BeginRun(ITestEventHandler listener, TestFilter filter)
+        {
+            this.BeginRun(listener, filter);
+        }
+
+        #endregion
+
         #region IDisposable Members
 
         public void Dispose()

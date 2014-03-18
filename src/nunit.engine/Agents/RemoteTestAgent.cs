@@ -27,71 +27,71 @@ using NUnit.Engine.Internal;
 
 namespace NUnit.Engine.Agents
 {
-	/// <summary>
-	/// RemoteTestAgent represents a remote agent executing in another process
-	/// and communicating with NUnit by TCP. Although it is similar to a
-	/// TestServer, it does not publish a Uri at which clients may connect 
-	/// to it. Rather, it reports back to the sponsoring TestAgency upon 
-	/// startup so that the agency may in turn provide it to clients for use.
-	/// </summary>
-	public class RemoteTestAgent : TestAgent, ITestRunner
-	{
+    /// <summary>
+    /// RemoteTestAgent represents a remote agent executing in another process
+    /// and communicating with NUnit by TCP. Although it is similar to a
+    /// TestServer, it does not publish a Uri at which clients may connect 
+    /// to it. Rather, it reports back to the sponsoring TestAgency upon 
+    /// startup so that the agency may in turn provide it to clients for use.
+    /// </summary>
+    public class RemoteTestAgent : TestAgent, ITestEngineRunner
+    {
         static Logger log = InternalTrace.GetLogger(typeof(RemoteTestAgent));
 
-		#region Fields
+        #region Fields
 
-        private ITestRunner runner;
+        private ITestEngineRunner runner;
 
         private ManualResetEvent stopSignal = new ManualResetEvent(false);
-		
-		#endregion
+        
+        #endregion
 
-		#region Constructor
+        #region Constructor
 
-		/// <summary>
-		/// Construct a RemoteTestAgent
-		/// </summary>
-		public RemoteTestAgent( Guid agentId, ITestAgency agency, ServiceContext services )
+        /// <summary>
+        /// Construct a RemoteTestAgent
+        /// </summary>
+        public RemoteTestAgent( Guid agentId, ITestAgency agency, ServiceContext services )
             : base(agentId, agency, services) 
         {
         }
 
-		#endregion
+        #endregion
 
-		#region Properties
-		public int ProcessId
-		{
-			get { return System.Diagnostics.Process.GetCurrentProcess().Id; }
-		}
-		#endregion
+        #region Properties
+        public int ProcessId
+        {
+            get { return System.Diagnostics.Process.GetCurrentProcess().Id; }
+        }
+        #endregion
 
-		#region Public Methods
+        #region Public Methods
 
-		public override ITestRunner CreateRunner()
-		{
-			return this;
-		}
+        public override ITestEngineRunner CreateRunner()
+        {
+            return this;
+        }
 
         public override bool Start()
-		{
+        {
             log.Info("Agent starting");
 
-			try
-			{
-				this.Agency.Register( this );
+            try
+            {
+                this.Agency.Register( this );
                 log.Debug( "Registered with TestAgency" );
-			}
-			catch( Exception ex )
-			{
+            }
+            catch( Exception ex )
+            {
                 log.Error( "RemoteTestAgent: Failed to register with TestAgency", ex );
                 return false;
-			}
+            }
 
             return true;
-		}
+        }
 
         public override void Stop()
-		{
+        {
             log.Info("Stopping");
             // This causes an error in the client because the agent 
             // database is not thread-safe.
@@ -100,16 +100,16 @@ namespace NUnit.Engine.Agents
 
 
             stopSignal.Set();
-		}
+        }
 
-		public void WaitForStop()
-		{
+        public void WaitForStop()
+        {
             stopSignal.WaitOne();
-		}
+        }
 
-		#endregion
+        #endregion
 
-        #region ITestRunner Members
+        #region ITestEngineRunner Members
 
         /// <summary>
         /// Explore a loaded TestPackage and return information about
@@ -117,12 +117,12 @@ namespace NUnit.Engine.Agents
         /// </summary>
         /// <param name="package">The TestPackage to be explored</param>
         /// <returns>A TestEngineResult.</returns>
-        public ITestEngineResult Explore(TestFilter filter)
+        public TestEngineResult Explore(TestFilter filter)
         {
             return runner == null ? null : runner.Explore(filter);
         }
 
-        public ITestEngineResult Load(TestPackage package)
+        public TestEngineResult Load(TestPackage package)
         {
             //System.Diagnostics.Debug.Assert(false, "Attach debugger if desired");
 
@@ -154,7 +154,7 @@ namespace NUnit.Engine.Agents
         /// <param name="listener">An ITestEventHandler to receive events</param>
         /// <param name="filter">A TestFilter used to select tests</param>
         /// <returns>A TestEngineResult giving the result of the test execution</returns>
-        public ITestEngineResult Run(ITestEventHandler listener, TestFilter filter)
+        public TestEngineResult Run(ITestEventHandler listener, TestFilter filter)
         {
             return runner == null ? null : runner.Run(listener, filter);
         }

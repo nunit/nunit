@@ -26,20 +26,20 @@ using System;
 namespace NUnit.Engine.Agents
 {
     /// <summary>
-	/// Abstract base for all types of TestAgents.
+    /// Abstract base for all types of TestAgents.
     /// A TestAgent provides services of locating,
     /// loading and running tests in a particular
     /// context such as an AppDomain or Process.
-	/// </summary>
-	public abstract class TestAgent : MarshalByRefObject, ITestAgent, IDisposable
-	{
-		#region Private Fields
+    /// </summary>
+    public abstract class TestAgent : MarshalByRefObject, ITestAgent, IDisposable
+    {
+        #region Private Fields
 
-		private ITestAgency agency;
-		private Guid agentId;
+        private ITestAgency agency;
+        private Guid agentId;
         private ServiceContext services;
 
-		#endregion
+        #endregion
 
         #region Constructors
 
@@ -48,14 +48,14 @@ namespace NUnit.Engine.Agents
         /// </summary>
         /// <param name="agentId"></param>
         /// <param name="agency"></param>
-		public TestAgent( Guid agentId, ITestAgency agency, ServiceContext services )
-		{
-			this.agency = agency;
-			this.agentId = agentId;
+        public TestAgent( Guid agentId, ITestAgency agency, ServiceContext services )
+        {
+            this.agency = agency;
+            this.agentId = agentId;
             this.services = services;
-		}
+        }
 
-		#endregion
+        #endregion
 
         #region Protected Properties
 
@@ -76,18 +76,18 @@ namespace NUnit.Engine.Agents
         /// is asssociated. Returns null if the agent is not 
         /// connected to an agency.
         /// </summary>
-		public ITestAgency Agency
-		{
-			get { return agency; }
-		}
+        public ITestAgency Agency
+        {
+            get { return agency; }
+        }
 
         /// <summary>
         /// Gets a Guid that uniquely identifies this agent.
         /// </summary>
         public Guid Id
-		{
-			get { return agentId; }
-		}
+        {
+            get { return agentId; }
+        }
 
         /// <summary>
         /// Starts the agent, performing any required initialization
@@ -103,9 +103,9 @@ namespace NUnit.Engine.Agents
         /// <summary>
         ///  Creates a test runner
         /// </summary>
-        public abstract ITestRunner CreateRunner();
+        public abstract ITestEngineRunner CreateRunner();
 
-		#endregion
+        #endregion
 
         #region IDisposable Members
         /// <summary>
