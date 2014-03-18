@@ -1,0 +1,18 @@
+before_install:
+  - sudo add-apt-repository ppa:directhex/monoxide -y
+  - sudo apt-get update -qq -y
+  - sudo apt-get install mono-devel -qq -y
+
+script: ./runbuild /p:Configuration=Release /p:Framework=$Framework "/t:DumpSettings;CleanAll;Build;Test"
+  
+env:
+  matrix:
+    - Framework="mono-2.0"
+    - Framework="mono-3.5"
+    - Framework="mono-4.0"
+    - Framework="mono-4.5"
+
+matrix:
+  allow_failures:
+    - env: Framework="mono-4.5"
+  fast_finish: true
