@@ -35,8 +35,8 @@ namespace NUnit.ConsoleRunner
     /// Options OptionSet class and provides a central location
     /// for defining and parsing options.
     /// </summary>
-	public class ConsoleOptions : OptionSet
-	{
+    public class ConsoleOptions : OptionSet
+    {
         private bool validated;
         private bool noresult;
 

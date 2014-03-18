@@ -2,7 +2,7 @@
 <project name="NUnitEngine" default="build" basedir=".">
 
   <patternset id="source-files">
-	  <include name="*.cs" />
+      <include name="*.cs" />
     <include name="Agents/*.cs"/>
     <include name="Interfaces/*.cs" />
     <include name="Internal/*.cs" />

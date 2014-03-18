@@ -38,12 +38,12 @@
       </nowarn>
       <references basedir="${current.build.dir}">
         <include name="nunit.engine.api.dll"/>
-		  <include name="nunit.util.dll" />
+          <include name="nunit.util.dll" />
       </references>
     </csc>
     
     <copy file="app.config" 
-    	tofile="${current.build.dir}/nunit-console.exe.config"/>
+        tofile="${current.build.dir}/nunit-console.exe.config"/>
     
   </target>
 

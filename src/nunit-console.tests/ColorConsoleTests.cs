@@ -36,12 +36,12 @@ namespace NUnit.ConsoleRunner.Tests
             ColorConsole.Options = options;
 
             // Set to an unknown, unlikely color so that we can test for change
-			Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.ForegroundColor = ConsoleColor.Magenta;
 
-			if( Console.ForegroundColor != ConsoleColor.Magenta )
-			{
-				Assert.Inconclusive("Color tests are inconclusive because the current console does not support color");
-			}
+            if( Console.ForegroundColor != ConsoleColor.Magenta )
+            {
+                Assert.Inconclusive("Color tests are inconclusive because the current console does not support color");
+            }
         }
 
         [TearDown]

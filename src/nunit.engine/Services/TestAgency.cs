@@ -31,41 +31,41 @@ using NUnit.Engine.Internal;
 
 namespace NUnit.Engine.Services
 {
-	/// <summary>
-	/// Enumeration used to report AgentStatus
-	/// </summary>
-	public enum AgentStatus
-	{
-		Unknown,
-		Starting,
-		Ready,
-		Busy,
-		Stopping
-	}
+    /// <summary>
+    /// Enumeration used to report AgentStatus
+    /// </summary>
+    public enum AgentStatus
+    {
+        Unknown,
+        Starting,
+        Ready,
+        Busy,
+        Stopping
+    }
 
-	/// <summary>
-	/// The TestAgency class provides RemoteTestAgents
-	/// on request and tracks their status. Agents
-	/// are wrapped in an instance of the TestAgent
-	/// class. Multiple agent types are supported
-	/// but only one, ProcessAgent is implemented
-	/// at this time.
-	/// </summary>
-	public class TestAgency : ServerBase, ITestAgency, IService
-	{
+    /// <summary>
+    /// The TestAgency class provides RemoteTestAgents
+    /// on request and tracks their status. Agents
+    /// are wrapped in an instance of the TestAgent
+    /// class. Multiple agent types are supported
+    /// but only one, ProcessAgent is implemented
+    /// at this time.
+    /// </summary>
+    public class TestAgency : ServerBase, ITestAgency, IService
+    {
         static Logger log = InternalTrace.GetLogger(typeof(TestAgency));
 
-		#region Private Fields
-		private AgentDataBase agentData = new AgentDataBase();
-		#endregion
+        #region Private Fields
+        private AgentDataBase agentData = new AgentDataBase();
+        #endregion
 
-		#region Constructors
-		public TestAgency() : this( "TestAgency", 0 ) { }
+        #region Constructors
+        public TestAgency() : this( "TestAgency", 0 ) { }
 
-		public TestAgency( string uri, int port ) : base( uri, port ) { }
-		#endregion
+        public TestAgency( string uri, int port ) : base( uri, port ) { }
+        #endregion
 
-		#region ServerBase Overrides
+        #region ServerBase Overrides
         //public override void Stop()
         //{
         //    foreach( KeyValuePair<Guid,AgentRecord> pair in agentData )
@@ -89,33 +89,33 @@ namespace NUnit.Engine.Services
 
         //    base.Stop ();
         //}
-		#endregion
+        #endregion
 
-		#region Public Methods - Called by Agents
-		public void Register( ITestAgent agent )
-		{
-			AgentRecord r = agentData[agent.Id];
-			if ( r == null )
+        #region Public Methods - Called by Agents
+        public void Register( ITestAgent agent )
+        {
+            AgentRecord r = agentData[agent.Id];
+            if ( r == null )
                 throw new ArgumentException(
                     string.Format("Agent {0} is not in the agency database", agent.Id),
                     "agentId");
             r.Agent = agent;
-		}
+        }
 
-		public void ReportStatus( Guid agentId, AgentStatus status )
-		{
-			AgentRecord r = agentData[agentId];
+        public void ReportStatus( Guid agentId, AgentStatus status )
+        {
+            AgentRecord r = agentData[agentId];
 
-			if ( r == null )
+            if ( r == null )
                 throw new ArgumentException(
                     string.Format("Agent {0} is not in the agency database", agentId),
                     "agentId" );
 
-			r.Status = status;
-		}
-		#endregion
+            r.Status = status;
+        }
+        #endregion
 
-		#region Public Methods - Called by Clients
+        #region Public Methods - Called by Clients
 
         /// <summary>
         /// Returns true if NUnit support for the runtime specified 
@@ -133,10 +133,10 @@ namespace NUnit.Engine.Services
             return GetNUnitBinDirectory(version) != null;
         }
 
-		public ITestAgent GetAgent()
-		{
-			return GetAgent( RuntimeFramework.CurrentFramework, Timeout.Infinite );
-		}
+        public ITestAgent GetAgent()
+        {
+            return GetAgent( RuntimeFramework.CurrentFramework, Timeout.Infinite );
+        }
 
         public ITestAgent GetAgent(int waitTime)
         {
@@ -162,11 +162,11 @@ namespace NUnit.Engine.Services
             //if ( r == null )
             //    r = CreateRemoteAgent(type, framework, waitTime);
             return CreateRemoteAgent(framework, waitTime, enableDebug, agentArgs);
-		}
+        }
 
-		public void ReleaseAgent( ITestAgent agent )
-		{
-			AgentRecord r = agentData[agent.Id];
+        public void ReleaseAgent( ITestAgent agent )
+        {
+            AgentRecord r = agentData[agent.Id];
             if (r == null)
                 log.Error(string.Format("Unable to release agent {0} - not in database", agent.Id));
             else
@@ -174,7 +174,7 @@ namespace NUnit.Engine.Services
                 r.Status = AgentStatus.Ready;
                 log.Debug("Releasing agent " + agent.Id.ToString());
             }
-		}
+        }
 
         //public void DestroyAgent( ITestAgent agent )
         //{
@@ -186,11 +186,11 @@ namespace NUnit.Engine.Services
         //        agentData[r.Id] = null;
         //    }
         //}
-		#endregion
+        #endregion
 
-		#region Helper Methods
-		private Guid LaunchAgentProcess(RuntimeFramework targetRuntime, bool enableDebug, string agentArgs)
-		{
+        #region Helper Methods
+        private Guid LaunchAgentProcess(RuntimeFramework targetRuntime, bool enableDebug, string agentArgs)
+        {
             string agentExePath = GetTestAgentExePath(targetRuntime.ClrVersion);
 
             if (agentExePath == null)
@@ -200,8 +200,8 @@ namespace NUnit.Engine.Services
 
             log.Debug("Using nunit-agent at " + agentExePath);
 
-			Process p = new Process();
-			p.StartInfo.UseShellExecute = false;
+            Process p = new Process();
+            p.StartInfo.UseShellExecute = false;
             Guid agentId = Guid.NewGuid();
             string arglist = agentId.ToString() + " " + ServerUrl + " " + agentArgs;
 
@@ -225,19 +225,19 @@ namespace NUnit.Engine.Services
                     p.StartInfo.Arguments = arglist;
                     break;
                 default:
-				    p.StartInfo.FileName = agentExePath;
+                    p.StartInfo.FileName = agentExePath;
                     p.StartInfo.Arguments = arglist;
                     break;
-			}
-			
+            }
+            
             //p.Exited += new EventHandler(OnProcessExit);
             p.Start();
             log.Info("Launched Agent process {0} - see nunit-agent_{0}.log", p.Id);
             log.Info("Command line: \"{0}\" {1}", p.StartInfo.FileName, p.StartInfo.Arguments);
 
-			agentData.Add( new AgentRecord( agentId, p, null, AgentStatus.Starting ) );
-		    return agentId;
-		}
+            agentData.Add( new AgentRecord( agentId, p, null, AgentStatus.Starting ) );
+            return agentId;
+        }
 
         //private void OnProcessExit(object sender, EventArgs e)
         //{
@@ -259,8 +259,8 @@ namespace NUnit.Engine.Services
         //    return null;
         //}
 
-		private ITestAgent CreateRemoteAgent(RuntimeFramework framework, int waitTime, bool enableDebug, string agentArgs)
-		{
+        private ITestAgent CreateRemoteAgent(RuntimeFramework framework, int waitTime, bool enableDebug, string agentArgs)
+        {
             Guid agentId = LaunchAgentProcess(framework, enableDebug, agentArgs);
 
             log.Debug( "Waiting for agent {0} to register", agentId.ToString("B") );
@@ -268,20 +268,20 @@ namespace NUnit.Engine.Services
             int pollTime = 200;
             bool infinite = waitTime == Timeout.Infinite;
 
-			while( infinite || waitTime > 0 )
-			{
-				Thread.Sleep( pollTime );
-				if ( !infinite ) waitTime -= pollTime;
+            while( infinite || waitTime > 0 )
+            {
+                Thread.Sleep( pollTime );
+                if ( !infinite ) waitTime -= pollTime;
                 ITestAgent agent = agentData[agentId].Agent;
-				if ( agent != null )
-				{
+                if ( agent != null )
+                {
                     log.Debug( "Returning new agent {0}", agentId.ToString("B") );
                     return agent;
-				}
-			}
+                }
+            }
 
-			return null;
-		}
+            return null;
+        }
 
         /// <summary>
         /// Return the NUnit Bin Directory for a particular
@@ -356,7 +356,7 @@ namespace NUnit.Engine.Services
 
         #endregion
 
-		#region IService Members
+        #region IService Members
 
         private ServiceContext services;
         public ServiceContext ServiceContext 
@@ -365,87 +365,87 @@ namespace NUnit.Engine.Services
             set { services = value; }
         }
 
-		public void UnloadService()
-		{
-			this.Stop();
-		}
+        public void UnloadService()
+        {
+            this.Stop();
+        }
 
-		public void InitializeService()
-		{
-			this.Start();
-		}
+        public void InitializeService()
+        {
+            this.Start();
+        }
 
-		#endregion
+        #endregion
 
-		#region Nested Class - AgentRecord
-		private class AgentRecord
-		{
-			public Guid Id;
-			public Process Process;
-			public ITestAgent Agent;
-			public AgentStatus Status;
+        #region Nested Class - AgentRecord
+        private class AgentRecord
+        {
+            public Guid Id;
+            public Process Process;
+            public ITestAgent Agent;
+            public AgentStatus Status;
 
-			public AgentRecord( Guid id, Process p, ITestAgent a, AgentStatus s )
-			{
-				this.Id = id;
-				this.Process = p;
-				this.Agent = a;
-				this.Status = s;
-			}
+            public AgentRecord( Guid id, Process p, ITestAgent a, AgentStatus s )
+            {
+                this.Id = id;
+                this.Process = p;
+                this.Agent = a;
+                this.Status = s;
+            }
 
-		}
-		#endregion
+        }
+        #endregion
 
-		#region Nested Class - AgentDataBase
-		/// <summary>
-		///  A simple class that tracks data about this
-		///  agencies active and available agents
-		/// </summary>
-		private class AgentDataBase
-		{
+        #region Nested Class - AgentDataBase
+        /// <summary>
+        ///  A simple class that tracks data about this
+        ///  agencies active and available agents
+        /// </summary>
+        private class AgentDataBase
+        {
             private Dictionary<Guid, AgentRecord> agentData = new Dictionary<Guid, AgentRecord>();
 
-			public AgentRecord this[Guid id]
-			{
-				get { return (AgentRecord)agentData[id]; }
-				set
-				{
-					if ( value == null )
-						agentData.Remove( id );
-					else
-						agentData[id] = value;
-				}
-			}
+            public AgentRecord this[Guid id]
+            {
+                get { return (AgentRecord)agentData[id]; }
+                set
+                {
+                    if ( value == null )
+                        agentData.Remove( id );
+                    else
+                        agentData[id] = value;
+                }
+            }
 
-			public AgentRecord this[ITestAgent agent]
-			{
-				get
-				{
+            public AgentRecord this[ITestAgent agent]
+            {
+                get
+                {
                     foreach( KeyValuePair<Guid, AgentRecord> entry in agentData)
-					{
-						AgentRecord r = (AgentRecord)entry.Value;
-						if ( r.Agent == agent )
-							return r;
-					}
+                    {
+                        AgentRecord r = (AgentRecord)entry.Value;
+                        if ( r.Agent == agent )
+                            return r;
+                    }
 
-					return null;
-				}
-			}
+                    return null;
+                }
+            }
 
-			public void Add( AgentRecord r )
-			{
-				agentData[r.Id] = r;
-			}
+            public void Add( AgentRecord r )
+            {
+                agentData[r.Id] = r;
+            }
 
             public void Remove(Guid agentId)
             {
                 agentData.Remove(agentId);
             }
 
-			public void Clear()
-			{
-				agentData.Clear();
-			}
+            public void Clear()
+            {
+                agentData.Clear();
+            }
 
             //#region IEnumerable Members
             //public IEnumerator<KeyValuePair<Guid,AgentRecord>> GetEnumerator()
@@ -453,8 +453,8 @@ namespace NUnit.Engine.Services
             //    return agentData.GetEnumerator();
             //}
             //#endregion
-		}
+        }
 
-		#endregion
-	}
+        #endregion
+    }
 }

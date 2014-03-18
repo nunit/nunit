@@ -2,7 +2,7 @@
 <project name="NUnitAgent" default="build" basedir=".">
 
   <patternset id="source-files">
-	  <include name="*.cs" />
+      <include name="*.cs" />
   </patternset>
 
   <target name="build">
@@ -25,7 +25,7 @@
     </csc>
 
     <copy file="app.config" 
-    	tofile="${current.build.dir}/nunit-agent.exe.config"/>
+        tofile="${current.build.dir}/nunit-agent.exe.config"/>
 
   </target>
 

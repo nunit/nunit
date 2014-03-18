@@ -25,25 +25,25 @@ using System;
 
 namespace NUnit.Engine
 {
-	/// <summary>
-	/// The IProjectLoader interface is implemented by any class
-	/// that knows how to load projects in a specific format.
-	/// </summary>
-	public interface IProjectLoader
-	{
-		/// <summary>
-		/// Returns true if the file indicated is one that this
-		/// converter knows how to load.
-		/// </summary>
-		/// <param name="path"></param>
-		/// <returns></returns>
-		bool IsProjectFile( string path );
+    /// <summary>
+    /// The IProjectLoader interface is implemented by any class
+    /// that knows how to load projects in a specific format.
+    /// </summary>
+    public interface IProjectLoader
+    {
+        /// <summary>
+        /// Returns true if the file indicated is one that this
+        /// converter knows how to load.
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        bool IsProjectFile( string path );
 
-		/// <summary>
-		/// Loads an external project returning an IProject.
-		/// </summary>
-		/// <param name="path"></param>
-		/// <returns></returns>
+        /// <summary>
+        /// Loads an external project returning an IProject.
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
         IProject LoadProject( string path );
-	}
+    }
 }

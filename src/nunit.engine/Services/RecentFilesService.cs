@@ -26,93 +26,93 @@ using System.Collections.Generic;
 
 namespace NUnit.Engine.Services
 {
-	/// <summary>
-	/// Summary description for RecentFilesService.
-	/// </summary>
-	public class RecentFilesService : IRecentFiles, IService
-	{
+    /// <summary>
+    /// Summary description for RecentFilesService.
+    /// </summary>
+    public class RecentFilesService : IRecentFiles, IService
+    {
         private IList<RecentFileEntry> fileEntries = new List<RecentFileEntry>();
 
-		private const int MinSize = 0;
-		private const int MaxSize = 24;
-		private const int DefaultSize = 5;
+        private const int MinSize = 0;
+        private const int MaxSize = 24;
+        private const int DefaultSize = 5;
 
-		#region Properties
+        #region Properties
 
         public ServiceContext ServiceContext { get; set; }
 
-		public int Count
-		{
-			get { return fileEntries.Count; }
-		}
+        public int Count
+        {
+            get { return fileEntries.Count; }
+        }
 
-		public int MaxFiles
-		{
-			get 
-			{ 
-				int size = ServiceContext.UserSettings.GetSetting("Gui.RecentProjects.MaxFiles", DefaultSize );
-				
-				if ( size < MinSize ) size = MinSize;
-				if ( size > MaxSize ) size = MaxSize;
-				
-				return size;
-			}
-			set 
-			{ 
-				int oldSize = MaxFiles;
-				int newSize = value;
-				
-				if ( newSize < MinSize ) newSize = MinSize;
-				if ( newSize > MaxSize ) newSize = MaxSize;
+        public int MaxFiles
+        {
+            get 
+            { 
+                int size = ServiceContext.UserSettings.GetSetting("Gui.RecentProjects.MaxFiles", DefaultSize );
+                
+                if ( size < MinSize ) size = MinSize;
+                if ( size > MaxSize ) size = MaxSize;
+                
+                return size;
+            }
+            set 
+            { 
+                int oldSize = MaxFiles;
+                int newSize = value;
+                
+                if ( newSize < MinSize ) newSize = MinSize;
+                if ( newSize > MaxSize ) newSize = MaxSize;
 
-				ServiceContext.UserSettings.SaveSetting( "Gui.RecentProjects.MaxFiles", newSize );
-				if ( newSize < oldSize ) SaveEntriesToSettings();
-			}
-		}
-		#endregion
+                ServiceContext.UserSettings.SaveSetting( "Gui.RecentProjects.MaxFiles", newSize );
+                if ( newSize < oldSize ) SaveEntriesToSettings();
+            }
+        }
+        #endregion
 
-		#region Public Methods
+        #region Public Methods
 
-		public IList<RecentFileEntry> Entries { get { return fileEntries; } }
-		
-		public void Remove( string fileName )
-		{
+        public IList<RecentFileEntry> Entries { get { return fileEntries; } }
+        
+        public void Remove( string fileName )
+        {
             int index = IndexOf(fileName);
             if (index != -1)
                 fileEntries.RemoveAt(index);
         }
 
-		public void SetMostRecent( string fileName )
-		{
-			SetMostRecent( new RecentFileEntry( fileName ) );
-		}
+        public void SetMostRecent( string fileName )
+        {
+            SetMostRecent( new RecentFileEntry( fileName ) );
+        }
 
-		public void SetMostRecent( RecentFileEntry entry )
-		{
-			int index = IndexOf(entry.Path);
+        public void SetMostRecent( RecentFileEntry entry )
+        {
+            int index = IndexOf(entry.Path);
 
-			if(index != -1)
-				fileEntries.RemoveAt(index);
+            if(index != -1)
+                fileEntries.RemoveAt(index);
 
-			fileEntries.Insert( 0, entry );
-			if( fileEntries.Count > MaxFiles )
-				fileEntries.RemoveAt( MaxFiles );
-		}
-		#endregion
+            fileEntries.Insert( 0, entry );
+            if( fileEntries.Count > MaxFiles )
+                fileEntries.RemoveAt( MaxFiles );
+        }
+        #endregion
 
-		#region Helper Methods for saving and restoring the settings
+        #region Helper Methods for saving and restoring the settings
 
-   		private int IndexOf( string fileName )
-		{
-			for( int index = 0; index < Count; index++ )
-				if ( fileEntries[index].Path == fileName )
-					return index;
-			return -1;
-		}
+        private int IndexOf( string fileName )
+        {
+            for( int index = 0; index < Count; index++ )
+                if ( fileEntries[index].Path == fileName )
+                    return index;
+            return -1;
+        }
 
         private void LoadEntriesFromSettings()
-		{
-			fileEntries.Clear();
+        {
+            fileEntries.Clear();
 
             AddEntriesForPrefix("Gui.RecentProjects");
 
@@ -126,7 +126,7 @@ namespace NUnit.Engine.Services
             // Try even older legacy format
             if (fileEntries.Count == 0)
                 AddEntriesForPrefix("RecentProjects");
-		}
+        }
 
         private void AddEntriesForPrefix(string prefix)
         {
@@ -139,45 +139,45 @@ namespace NUnit.Engine.Services
             }
         }
 
-		private void SaveEntriesToSettings()
-		{
-			string prefix = "Gui.RecentProjects";
+        private void SaveEntriesToSettings()
+        {
+            string prefix = "Gui.RecentProjects";
             ISettings settings = ServiceContext.UserSettings;
 
-			while( fileEntries.Count > MaxFiles )
-				fileEntries.RemoveAt( fileEntries.Count - 1 );
+            while( fileEntries.Count > MaxFiles )
+                fileEntries.RemoveAt( fileEntries.Count - 1 );
 
-			for( int index = 0; index < MaxSize; index++ ) 
-			{
-				string keyName = GetRecentFileKey( prefix, index + 1 );
-				if ( index < fileEntries.Count )
-					settings.SaveSetting( keyName, fileEntries[index].Path );
-				else
-					settings.RemoveSetting( keyName );
-			}
+            for( int index = 0; index < MaxSize; index++ ) 
+            {
+                string keyName = GetRecentFileKey( prefix, index + 1 );
+                if ( index < fileEntries.Count )
+                    settings.SaveSetting( keyName, fileEntries[index].Path );
+                else
+                    settings.RemoveSetting( keyName );
+            }
 
             // Remove legacy entries here
             settings.RemoveGroup("RecentProjects");
-		}
+        }
 
-		private string GetRecentFileKey( string prefix, int index )
-		{
-			return string.Format( "{0}.File{1}", prefix, index );
-		}
-		#endregion
+        private string GetRecentFileKey( string prefix, int index )
+        {
+            return string.Format( "{0}.File{1}", prefix, index );
+        }
+        #endregion
 
-		#region IService Members
+        #region IService Members
 
-		public void UnloadService()
-		{
-			SaveEntriesToSettings();
-		}
+        public void UnloadService()
+        {
+            SaveEntriesToSettings();
+        }
 
-		public void InitializeService()
-		{
-			LoadEntriesFromSettings();
-		}
+        public void InitializeService()
+        {
+            LoadEntriesFromSettings();
+        }
 
-		#endregion
-	}
+        #endregion
+    }
 }

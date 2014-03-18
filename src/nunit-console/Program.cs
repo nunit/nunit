@@ -30,16 +30,16 @@ using NUnit.Engine;
 
 namespace NUnit.ConsoleRunner
 {
-	/// <summary>
-	/// This class provides the entry point for the console runner.
-	/// </summary>
-	public class Program
-	{
+    /// <summary>
+    /// This class provides the entry point for the console runner.
+    /// </summary>
+    public class Program
+    {
         //static Logger log = InternalTrace.GetLogger(typeof(Runner));
 
-		[STAThread]
-		public static int Main(string[] args)
-		{
+        [STAThread]
+        public static int Main(string[] args)
+        {
             ConsoleOptions options = new ConsoleOptions();
 
             try
@@ -53,7 +53,7 @@ namespace NUnit.ConsoleRunner
                 return ConsoleRunner.INVALID_ARG;
             }
 
-		    ColorConsole.Options = options;
+            ColorConsole.Options = options;
 
             // Create SettingsService early so we know the trace level right at the start
             //SettingsService settingsService = new SettingsService();
@@ -64,7 +64,7 @@ namespace NUnit.ConsoleRunner
             //InternalTrace.Initialize("nunit-console_%p.log", level);
             
             //log.Info("NUnit-console.exe starting");
-		    try
+            try
             {
                 if (options.PauseBeforeRun)
                 {
@@ -163,13 +163,13 @@ namespace NUnit.ConsoleRunner
             finally
             {
                 Console.ResetColor();
-		    }
-		}
+            }
+        }
 
-		private static void WriteHeader()
-		{
-			Assembly executingAssembly = Assembly.GetExecutingAssembly();
-			string versionText = executingAssembly.GetName().Version.ToString(3);
+        private static void WriteHeader()
+        {
+            Assembly executingAssembly = Assembly.GetExecutingAssembly();
+            string versionText = executingAssembly.GetName().Version.ToString(3);
 
             string programName = "NUnit Console Runner";
             string copyrightText = "Copyright (C) 2011 Charlie Poole.\r\nAll Rights Reserved.";
@@ -179,11 +179,11 @@ namespace NUnit.ConsoleRunner
             if (attrs.Length > 0)
                 programName = ((AssemblyTitleAttribute)attrs[0]).Title;
 
-			attrs = executingAssembly.GetCustomAttributes(typeof(AssemblyCopyrightAttribute), false);
-			if ( attrs.Length > 0 )
-				copyrightText = ((AssemblyCopyrightAttribute)attrs[0]).Copyright;
+            attrs = executingAssembly.GetCustomAttributes(typeof(AssemblyCopyrightAttribute), false);
+            if ( attrs.Length > 0 )
+                copyrightText = ((AssemblyCopyrightAttribute)attrs[0]).Copyright;
 
-			attrs = executingAssembly.GetCustomAttributes(typeof(AssemblyConfigurationAttribute), false);
+            attrs = executingAssembly.GetCustomAttributes(typeof(AssemblyConfigurationAttribute), false);
             if (attrs.Length > 0)
                 configText = string.Format("({0})", ((AssemblyConfigurationAttribute)attrs[0]).Configuration);
 
@@ -247,5 +247,5 @@ namespace NUnit.ConsoleRunner
                 //Console.WriteLine();
             }
         }
-	}
+    }
 }

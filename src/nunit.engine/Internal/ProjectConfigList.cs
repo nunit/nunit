@@ -25,11 +25,11 @@ using System.Xml;
 
 namespace NUnit.Engine.Internal
 {
-	/// <summary>
-	/// Summary description for ProjectConfigList.
-	/// </summary>
-	public class ProjectConfigList : IProjectConfigList
-	{
+    /// <summary>
+    /// Summary description for ProjectConfigList.
+    /// </summary>
+    public class ProjectConfigList : IProjectConfigList
+    {
         private NUnitProject project;
         private XmlNode projectNode;
 
@@ -39,17 +39,17 @@ namespace NUnit.Engine.Internal
             this.projectNode = project.RootNode;
         }
 
-		#region IProjectConfigList Members
+        #region IProjectConfigList Members
 
         public int Count
         {
             get { return ConfigNodes.Count; }
         }
 
-		public IProjectConfig this[int index]
-		{
+        public IProjectConfig this[int index]
+        {
             get { return new Internal.ProjectConfig(project, ConfigNodes[index]); }
-		}
+        }
 
         public IProjectConfig this[string name]
         {
@@ -74,9 +74,9 @@ namespace NUnit.Engine.Internal
             get { return projectNode.SelectSingleNode("Settings"); }
         }
 
-		#endregion
+        #endregion
 
-		#region Private Methods
+        #region Private Methods
 
         private int IndexOf(string name)
         {
@@ -89,6 +89,6 @@ namespace NUnit.Engine.Internal
             return -1;
         }
 
-		#endregion
+        #endregion
     }
 }

@@ -28,12 +28,12 @@ using System.Security.AccessControl;
 
 namespace NUnit.Engine.Internal
 {
-	/// <summary>
-	/// A trace listener that writes to a separate file per domain
-	/// and process using it.
-	/// </summary>
-	public class InternalTraceWriter : TextWriter
-	{
+    /// <summary>
+    /// A trace listener that writes to a separate file per domain
+    /// and process using it.
+    /// </summary>
+    public class InternalTraceWriter : TextWriter
+    {
         TextWriter writer;
 
         /// <summary>
@@ -41,11 +41,11 @@ namespace NUnit.Engine.Internal
         /// </summary>
         /// <param name="logPath">Path to the file to use</param>
         public InternalTraceWriter(string logPath)
-		{
+        {
             var streamWriter = new StreamWriter(new FileStream(logPath, FileMode.Append, FileAccess.Write, FileShare.Write));
             streamWriter.AutoFlush = true;
             this.writer = streamWriter;
-		}
+        }
 
         public override System.Text.Encoding Encoding
         {
@@ -82,5 +82,5 @@ namespace NUnit.Engine.Internal
             if ( writer != null )
                 writer.Flush();
         }
-	}
+    }
 }

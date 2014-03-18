@@ -27,12 +27,12 @@ using NUnit.Engine.Internal;
 
 namespace NUnit.Engine.Services
 {
-	/// <summary>
-	/// ServiceManager handles access to all services - global
+    /// <summary>
+    /// ServiceManager handles access to all services - global
     /// facilities shared by all instances of TestEngine.
-	/// </summary>
-	public class ServiceManager
-	{
+    /// </summary>
+    public class ServiceManager
+    {
         private List<IService> services = new List<IService>();
         private Dictionary<Type, IService> serviceIndex = new Dictionary<Type, IService>();
 
@@ -41,30 +41,30 @@ namespace NUnit.Engine.Services
         #region Public Methods
 
         public IService GetService( Type serviceType )
-		{
+        {
             IService theService = null;
 
             if (serviceIndex.ContainsKey(serviceType))
-			    theService = (IService)serviceIndex[serviceType];
-			else
-				foreach( IService service in services )
-				{
-					// TODO: Does this work on Mono?
-					if( serviceType.IsInstanceOfType( service ) )
-					{
-						serviceIndex[serviceType] = service;
-						theService = service;
-						break;
-					}
-				}
+                theService = (IService)serviceIndex[serviceType];
+            else
+                foreach( IService service in services )
+                {
+                    // TODO: Does this work on Mono?
+                    if( serviceType.IsInstanceOfType( service ) )
+                    {
+                        serviceIndex[serviceType] = service;
+                        theService = service;
+                        break;
+                    }
+                }
 
             if (theService == null)
                 log.Error(string.Format("Requested service {0} was not found", serviceType.FullName));
             else
                 log.Debug(string.Format("Request for service {0} satisfied by {1}", serviceType.Name, theService.GetType().Name));
-			
-			return theService;
-		}
+            
+            return theService;
+        }
 
         public void AddService(IService service)
         {
@@ -73,9 +73,9 @@ namespace NUnit.Engine.Services
         }
 
         public void InitializeServices()
-		{
-			foreach( IService service in services )
-			{
+        {
+            foreach( IService service in services )
+            {
                 log.Info( "Initializing " + service.GetType().Name );
                 try
                 {
@@ -85,14 +85,14 @@ namespace NUnit.Engine.Services
                 {
                     log.Error("Failed to initialize service", ex);
                 }
-			}
-		}
+            }
+        }
 
-		public void StopAllServices()
-		{
-			// Stop services in reverse of initialization order
-			// TODO: Deal with dependencies explicitly
-			int index = services.Count;
+        public void StopAllServices()
+        {
+            // Stop services in reverse of initialization order
+            // TODO: Deal with dependencies explicitly
+            int index = services.Count;
             while (--index >= 0)
             {
                 IService service = services[index] as IService;
@@ -106,12 +106,12 @@ namespace NUnit.Engine.Services
                     log.Error("Failure stopping service", ex);
                 }
             }
-		}
+        }
 
-		public void ClearServices()
-		{
+        public void ClearServices()
+        {
             log.Info("Clearing Service list");
-			services.Clear();
+            services.Clear();
         }
 
         #endregion

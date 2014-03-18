@@ -25,18 +25,18 @@ using System.Xml;
 
 namespace NUnit.Engine
 {
-	/// <summary>
-	/// The ITestProgressHandler interface is used to receive notices
-	/// of significant events while a test is running. 
-	/// </summary>
-	public interface ITestEventHandler
-	{
-		/// <summary>
-		/// Handle a progress report, which may include info about
+    /// <summary>
+    /// The ITestProgressHandler interface is used to receive notices
+    /// of significant events while a test is running. 
+    /// </summary>
+    public interface ITestEventHandler
+    {
+        /// <summary>
+        /// Handle a progress report, which may include info about
         /// tests starting or stopping as well as text output to 
         /// be displayed by the runner.
-		/// </summary>
-		/// <param name="report">An XML progress report.</param>
-		void OnTestEvent(string report);
-	}
+        /// </summary>
+        /// <param name="report">An XML progress report.</param>
+        void OnTestEvent(string report);
+    }
 }

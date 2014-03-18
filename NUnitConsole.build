@@ -111,8 +111,8 @@
 <!-- ***            Override in local.settings.include)           *** -->
 <!-- ***************************************************************** -->
 
-	<property name="framework.project.dir"
-		value="${path::combine(project.base.dir, '../NUnitFramework')}"/>
+    <property name="framework.project.dir"
+        value="${path::combine(project.base.dir, '../NUnitFramework')}"/>
 
 <!-- ***************************************************************** -->
 <!-- *********      Constants used for running tests      ************ -->
@@ -179,13 +179,13 @@
 <!-- ***************************************************************** -->
 
   <target name="build"
-		  description="Build nunit-console">
+          description="Build nunit-console">
 
     <mkdir dir="${current.build.dir}"
       unless="${directory::exists(current.build.dir)}"/>
 
-	  <call target="update-lib-dir"
-			if="${property::exists('auto.update.lib.dir') and auto.update.lib.dir}"/>
+      <call target="update-lib-dir"
+            if="${property::exists('auto.update.lib.dir') and auto.update.lib.dir}"/>
 
     <copy todir="${current.build.dir}">
       <fileset basedir="${project.lib.dir}">
@@ -199,26 +199,26 @@
 
   </target>
 
-	<!-- Update framework directories from the last .NET 2.0 or Mono 2.0
-		release build. Note that this looks at builds done with NAnt, 
-		not Visual Studio. -->
-	<target name="update-lib-dir"
-			description="Update lib dir with latest framework build">
+    <!-- Update framework directories from the last .NET 2.0 or Mono 2.0
+        release build. Note that this looks at builds done with NAnt, 
+        not Visual Studio. -->
+    <target name="update-lib-dir"
+            description="Update lib dir with latest framework build">
 
-		<property name="runtime" value="net-2.0" if="${can.build.net}"/>
-		<property name="runtime" value="mono-2.0" unless="${can.build.net}"/>
-		
-		<if test="${property::exists('framework.project.dir')}">
-			<if test="${directory::exists(framework.project.dir)}">
-				<copy todir="${project.lib.dir}">
-					<fileset basedir="${framework.project.dir}/bin/Release/${runtime}">
-						<include name="nunit.framework.dll"/>
-					</fileset>
-				</copy>
-			</if>
-		</if>
-		
-	</target>
+        <property name="runtime" value="net-2.0" if="${can.build.net}"/>
+        <property name="runtime" value="mono-2.0" unless="${can.build.net}"/>
+        
+        <if test="${property::exists('framework.project.dir')}">
+            <if test="${directory::exists(framework.project.dir)}">
+                <copy todir="${project.lib.dir}">
+                    <fileset basedir="${framework.project.dir}/bin/Release/${runtime}">
+                        <include name="nunit.framework.dll"/>
+                    </fileset>
+                </copy>
+            </if>
+        </if>
+        
+    </target>
 
 <!-- ***************************************************************** -->
 <!-- ***                      Run Tests                            *** -->
@@ -256,7 +256,7 @@
 
     <exec basedir="${partcover.dir}"
           workingdir="${current.build.dir}" 
-	  program="PartCover.exe">
+      program="PartCover.exe">
 
       <arg line='--target "${nunit.console.program}"' />
       <arg line='--target-args "${nunit.console.args}"' />
@@ -382,11 +382,11 @@
     <copy todir="${package.doc.dir}">
       <fileset basedir="${project.doc.dir}">
         <include name="*.html"/>
-	<include name="nunit.css"/>
+    <include name="nunit.css"/>
         <include name="codeFuncs.js"/>
         <include name="favicon.ico"/>
-	<include name="files/*"/>
-	<include name="img/*"/>
+    <include name="files/*"/>
+    <include name="img/*"/>
         <exclude name="img/thumbs.db"/>
       </fileset>
     </copy>
@@ -411,7 +411,7 @@
         <include name="CommonAssemblyInfo.cs"/>
         <include name="*.sln"/>
         <include name="lib/*"/>
-		  <include name="local.settings.include.sample"/>
+          <include name="local.settings.include.sample"/>
       </fileset>
     </copy>
 
@@ -450,14 +450,14 @@
     <property name="build.suffix" value="-dbg"/>
 
   </target>
-	
+    
   <target name="set-release-build-config">
 
     <property name="build.config" value="release"/>
     <property name="current.build.dir" value="${project.build.dir}/release"/>
     <property name="build.debug" value="false"/>
     <property name="build.defines" value="TRACE"
-	dynamic="true"/>
+    dynamic="true"/>
     <property name="build.suffix" value=""/>
 
   </target>
@@ -468,14 +468,14 @@
 
   <fileset id="console.buildfiles">
 
-	<include name="src/mock-assembly/mock-assembly.build" />
-	<include name="src/nunit.engine.api/nunit.engine.api.build" />
-	<include name="src/nunit.engine/nunit.engine.build" />
-	<include name="src/nunit.engine.tests/nunit.engine.tests.build" />
-	<include name="src/nunit.util/nunit.util.build" />
-	<include name="src/nunit.util.tests/nunit.util.tests.build" />
-	<include name="src/nunit-agent/nunit-agent.build" />
-	<include name="src/nunit-console/nunit-console.build" />
+    <include name="src/mock-assembly/mock-assembly.build" />
+    <include name="src/nunit.engine.api/nunit.engine.api.build" />
+    <include name="src/nunit.engine/nunit.engine.build" />
+    <include name="src/nunit.engine.tests/nunit.engine.tests.build" />
+    <include name="src/nunit.util/nunit.util.build" />
+    <include name="src/nunit.util.tests/nunit.util.tests.build" />
+    <include name="src/nunit-agent/nunit-agent.build" />
+    <include name="src/nunit-console/nunit-console.build" />
     <include name="src/nunit-console.tests/nunit-console.tests.build" />
 
   </fileset>

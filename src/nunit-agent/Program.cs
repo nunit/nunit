@@ -32,11 +32,11 @@ using NUnit.Engine.Services;
 
 namespace NUnit.Agent
 {
-	/// <summary>
-	/// Summary description for Program.
-	/// </summary>
-	public class NUnitTestAgent
-	{
+    /// <summary>
+    /// Summary description for Program.
+    /// </summary>
+    public class NUnitTestAgent
+    {
         //static Logger log = InternalTrace.GetLogger(typeof(NUnitTestAgent));
 
         static Guid AgentId;
@@ -50,11 +50,11 @@ namespace NUnit.Agent
         static TcpChannel Channel;
 
         /// <summary>
-		/// The main entry point for the application.
-		/// </summary>
-		[STAThread]
-		public static int Main(string[] args)
-		{
+        /// The main entry point for the application.
+        /// </summary>
+        [STAThread]
+        public static int Main(string[] args)
+        {
             AgentId = new Guid(args[0]);
             AgencyUrl = args[1];
 
@@ -162,7 +162,7 @@ namespace NUnit.Agent
             //log.Info("Agent process {0} exiting", Process.GetCurrentProcess().Id);
             //InternalTrace.Close();
 
-			return 0;
-		}
-	}
+            return 0;
+        }
+    }
 }

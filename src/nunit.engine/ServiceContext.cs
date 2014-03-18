@@ -86,17 +86,17 @@ namespace NUnit.Engine
         #endregion
 
         #region RecentFilesService
-		private IRecentFiles recentFiles;
-		public IRecentFiles RecentFiles
-		{
-			get
-			{
-				if ( recentFiles == null )
-					recentFiles = (IRecentFiles)ServiceManager.GetService( typeof( IRecentFiles ) );
+        private IRecentFiles recentFiles;
+        public IRecentFiles RecentFiles
+        {
+            get
+            {
+                if ( recentFiles == null )
+                    recentFiles = (IRecentFiles)ServiceManager.GetService( typeof( IRecentFiles ) );
 
-				return recentFiles;
-			}
-		}
+                return recentFiles;
+            }
+        }
         #endregion
 
         #region RuntimeFrameworkSelector

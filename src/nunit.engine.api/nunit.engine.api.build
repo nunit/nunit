@@ -2,7 +2,7 @@
 <project name="NUnitEngineApi" default="build" basedir=".">
 
   <patternset id="source-files">
-	  <include name="*.cs" />
+      <include name="*.cs" />
   </patternset>
 
   <target name="build">
