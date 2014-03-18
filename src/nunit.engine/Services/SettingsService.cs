@@ -27,11 +27,11 @@ using NUnit.Engine.Internal;
 
 namespace NUnit.Engine.Services
 {
-	/// <summary>
-	/// Summary description for UserSettingsService.
-	/// </summary>
-	public class SettingsService : SettingsStore, IService
-	{
+    /// <summary>
+    /// Summary description for UserSettingsService.
+    /// </summary>
+    public class SettingsService : SettingsStore, IService
+    {
         public SettingsService() { }
 
         public SettingsService(string settingsFile, bool writeable)
@@ -41,17 +41,17 @@ namespace NUnit.Engine.Services
 
         public ServiceContext ServiceContext { get; set; }
 
-		public void InitializeService()
-		{
+        public void InitializeService()
+        {
             LoadSettings();
         }
 
-		public void UnloadService()
-		{
+        public void UnloadService()
+        {
             SaveSettings();
 
-			this.Dispose();
-		}
-		#endregion
-	}
+            this.Dispose();
+        }
+        #endregion
+    }
 }

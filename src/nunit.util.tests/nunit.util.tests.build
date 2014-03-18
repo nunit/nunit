@@ -23,17 +23,17 @@
         <include name="nunit.framework.dll" />
         <include name="nunit.engine.dll" />
         <include name="nunit.engine.api.dll" />
-		  <include name="nunit.util.dll" />
+          <include name="nunit.util.dll" />
         <include name="mock-assembly.dll" />
       </references>
     </csc>
 
-	  <copy todir="${current.build.dir}">
-		  <fileset>
-			  <include name="NUnit2TestResult.xsd"/>
-			  <include name="TextSummary.xslt"/>
-		  </fileset>
-	  </copy>
+      <copy todir="${current.build.dir}">
+          <fileset>
+              <include name="NUnit2TestResult.xsd"/>
+              <include name="TextSummary.xslt"/>
+          </fileset>
+      </copy>
 
   </target>
 

@@ -25,37 +25,37 @@ using System;
 
 namespace NUnit.Engine
 {
-	public delegate void SettingsEventHandler( object sender, SettingsEventArgs args );
+    public delegate void SettingsEventHandler( object sender, SettingsEventArgs args );
 
-	public class SettingsEventArgs : EventArgs
-	{
-		private string settingName;
+    public class SettingsEventArgs : EventArgs
+    {
+        private string settingName;
 
-		public SettingsEventArgs( string settingName )
-		{
-			this.settingName = settingName;
-		}
+        public SettingsEventArgs( string settingName )
+        {
+            this.settingName = settingName;
+        }
 
-		public string SettingName
-		{
-			get { return settingName; }
-		}
-	}
+        public string SettingName
+        {
+            get { return settingName; }
+        }
+    }
 
-	/// <summary>
-	/// The ISettings interface is used to access all user
-	/// settings and options.
-	/// </summary>
-	public interface ISettings
-	{
-		event SettingsEventHandler Changed;
+    /// <summary>
+    /// The ISettings interface is used to access all user
+    /// settings and options.
+    /// </summary>
+    public interface ISettings
+    {
+        event SettingsEventHandler Changed;
 
-		/// <summary>
-		/// Load a setting from the storage.
-		/// </summary>
-		/// <param name="settingName">Name of the setting to load</param>
-		/// <returns>Value of the setting or null</returns>
-		object GetSetting( string settingName );
+        /// <summary>
+        /// Load a setting from the storage.
+        /// </summary>
+        /// <param name="settingName">Name of the setting to load</param>
+        /// <returns>Value of the setting or null</returns>
+        object GetSetting( string settingName );
 
         /// <summary>
         /// Load a setting from the storage or return a default value
@@ -66,22 +66,22 @@ namespace NUnit.Engine
         T GetSetting<T>(string settingName, T defaultValue);
 
         /// <summary>
-		/// Remove a setting from the storage
-		/// </summary>
-		/// <param name="settingName">Name of the setting to remove</param>
-		void RemoveSetting( string settingName );
+        /// Remove a setting from the storage
+        /// </summary>
+        /// <param name="settingName">Name of the setting to remove</param>
+        void RemoveSetting( string settingName );
 
-		/// <summary>
-		/// Remove an entire group of settings from the storage
-		/// </summary>
-		/// <param name="groupName">Name of the group to remove</param>
-		void RemoveGroup( string groupName );
+        /// <summary>
+        /// Remove an entire group of settings from the storage
+        /// </summary>
+        /// <param name="groupName">Name of the group to remove</param>
+        void RemoveGroup( string groupName );
 
-		/// <summary>
-		/// Save a setting in the storage
-		/// </summary>
-		/// <param name="settingName">Name of the setting to save</param>
-		/// <param name="settingValue">Value to be saved</param>
-		void SaveSetting( string settingName, object settingValue );
-	}
+        /// <summary>
+        /// Save a setting in the storage
+        /// </summary>
+        /// <param name="settingName">Name of the setting to save</param>
+        /// <param name="settingValue">Value to be saved</param>
+        void SaveSetting( string settingName, object settingValue );
+    }
 }

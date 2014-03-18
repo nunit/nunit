@@ -41,7 +41,7 @@ namespace NUnit.Engine.Internal
     /// TODO: figure out a way to turn on trace in specific classes only.
     /// </summary>
     public static class InternalTrace
-	{
+    {
         private static InternalTraceLevel traceLevel;
         private static InternalTraceWriter traceWriter;
 
@@ -75,13 +75,13 @@ namespace NUnit.Engine.Internal
         }
 
         public static Logger GetLogger(string name)
-		{
+        {
             return new Logger(name, traceLevel, traceWriter);
-		}
+        }
 
-		public static Logger GetLogger( Type type )
-		{
+        public static Logger GetLogger( Type type )
+        {
             return GetLogger(type.FullName);
-		}
+        }
     }
 }

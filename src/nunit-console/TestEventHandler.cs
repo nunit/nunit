@@ -31,12 +31,12 @@ using NUnit.Engine;
 
 namespace NUnit.ConsoleRunner
 {
-	/// <summary>
-	/// TestEventHandler processes events from the running
+    /// <summary>
+    /// TestEventHandler processes events from the running
     /// test for the console runner.
-	/// </summary>
-	public class TestEventHandler : MarshalByRefObject, ITestEventHandler
-	{
+    /// </summary>
+    public class TestEventHandler : MarshalByRefObject, ITestEventHandler
+    {
         private int testRunCount;
         private int testIgnoreCount;
         private int failureCount;
@@ -44,28 +44,28 @@ namespace NUnit.ConsoleRunner
 
         private string pendingLabel;
 
-		private ConsoleOptions options;
-		private TextWriter outWriter;
-		private TextWriter errorWriter;
+        private ConsoleOptions options;
+        private TextWriter outWriter;
+        private TextWriter errorWriter;
 
         private List<string> messages = new List<string>();
-		
+        
         //private bool progress = false;
-		private string currentTestName;
+        private string currentTestName;
 
-		private List<Exception> unhandledExceptions = new List<Exception>();
+        private List<Exception> unhandledExceptions = new List<Exception>();
 
-		public TestEventHandler( ConsoleOptions options, TextWriter outWriter, TextWriter errorWriter )
-		{
+        public TestEventHandler( ConsoleOptions options, TextWriter outWriter, TextWriter errorWriter )
+        {
             level = 0;
-			this.options = options;
-			this.outWriter = outWriter;
-			this.errorWriter = errorWriter;
-			this.currentTestName = string.Empty;
+            this.options = options;
+            this.outWriter = outWriter;
+            this.errorWriter = errorWriter;
+            this.currentTestName = string.Empty;
 
             //AppDomain.CurrentDomain.UnhandledException += 
             //    new UnhandledExceptionEventHandler(OnUnhandledException);
-		}
+        }
 
         //public bool HasExceptions
         //{
@@ -291,9 +291,9 @@ namespace NUnit.ConsoleRunner
         //}
 
 
-		public override object InitializeLifetimeService()
-		{
-			return null;
-		}
-	}
+        public override object InitializeLifetimeService()
+        {
+            return null;
+        }
+    }
 }
