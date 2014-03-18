@@ -67,6 +67,35 @@ namespace NUnit.Framework.Internal
                 "  ----------------^" + NL));
         }
 
+        [Test]
+        public void WriteMessageLine_EmbeddedZeroes()
+        {
+            string expected, message;
+
+            expected = message = "here's an embedded zero \0, in me";
+            expected = "  " + expected.Replace("\0", "\\0") + NL;
+
+            writer.WriteMessageLine(0, message, null);
+            message = writer.ToString();
+
+            Expect(message, EqualTo(expected));
+        }
+
+        [Test]
+        public void WriteMessageLine_EmbeddedZeroesAsArgs()
+        {
+            string expected, message, arg0;
+
+            message = "here's an embedded zero {0}, in my args";
+            arg0 = "\0";
+            expected = "  " + string.Format(message, arg0).Replace("\0", "\\0") + NL;
+
+            writer.WriteMessageLine(0, message, arg0);
+            message = writer.ToString();
+
+            Expect(message, EqualTo(expected));
+        }
+
         private string Q(string s)
         {
             return "\"" + s + "\"";
