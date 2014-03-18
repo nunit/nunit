@@ -52,6 +52,9 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Api\DefaultTestAssemblyBuilder.cs" />
+    <Compile Include="Api\DefaultTestAssemblyRunner.cs" />
+    <Compile Include="Api\DriverSettings.cs" />
     <Compile Include="Attributes\CombiningStrategyAttribute.cs" />
     <Compile Include="Attributes\FixtureBuilderAttribute.cs" />
     <Compile Include="Attributes\LevelOfParallelizationAttribute.cs" />
@@ -116,8 +119,6 @@
     <Compile Include="Internal\Commands\TestCommand.cs" />
     <Compile Include="Internal\Commands\TestMethodCommand.cs" />
     <Compile Include="Internal\Commands\TheoryResultCommand.cs" />
-    <Compile Include="Internal\DefaultTestAssemblyBuilder.cs" />
-    <Compile Include="Internal\DefaultTestAssemblyRunner.cs" />
     <Compile Include="Internal\Execution\CompositeWorkItem.cs" />
     <Compile Include="Internal\Execution\CountdownEvent.cs" />
     <Compile Include="Internal\Execution\Log4NetCapture.cs" />

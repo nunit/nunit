@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2009 Charlie Poole
+// Copyright (c) 2009-2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -42,14 +42,18 @@ namespace NUnit.Framework.Api
     /// this class and its nested classes, which only require the
     /// types of the Common Type System as arguments.
     /// 
-    /// Note that the controller uses the non-generic ICollection 
-    /// interface by design, for maximum portability.
+    /// The controller supports four actions: Load, Explore, Count and Run.
+    /// They are intended to be called by a driver, which should allow for
+    /// proper sequencing of calls. Load must be called before any of the 
+    /// other actions. The driver may support other actions, such as
+    /// reload on run, by combining these calls.
     /// </summary>
     public class FrameworkController : MarshalByRefObject
     {
+        private const string LOG_FILE_FORMAT = "InternalTrace.{0}.{1}.log";
+
         #region Constructors
 
-        // TODO: Remove duplication in the constructors.
         /// <summary>
         /// Construct a FrameworkController using the default builder and runner.
         /// </summary>
@@ -63,7 +67,8 @@ namespace NUnit.Framework.Api
 
         /// <summary>
         /// Construct a FrameworkController, specifying the types to be used
-        /// for the runner and builder.
+        /// for the runner and builder. This constructor is provided for
+        /// purposes of development.
         /// </summary>
         /// <param name="assemblyPath">The path to the test assembly</param>
         /// <param name="settings">A Dictionary of settings to use in loading and running the tests</param>
@@ -84,17 +89,16 @@ namespace NUnit.Framework.Api
             this.AssemblyPath = assemblyPath;
             this.Settings = settings;
 
-            if (settings.Contains("InternalTraceLevel"))
+            if (settings.Contains(DriverSettings.InternalTraceLevel))
             {
-                var traceLevel = (InternalTraceLevel)Enum.Parse(typeof(InternalTraceLevel), (string)settings["InternalTraceLevel"]);
+                var traceLevel = (InternalTraceLevel)Enum.Parse(typeof(InternalTraceLevel), (string)settings[DriverSettings.InternalTraceLevel]);
 
-                if (settings.Contains("InternalTraceWriter"))
-                    InternalTrace.Initialize((TextWriter)settings["InternalTraceWriter"], traceLevel);
+                if (settings.Contains(DriverSettings.InternalTraceWriter))
+                    InternalTrace.Initialize((TextWriter)settings[DriverSettings.InternalTraceWriter], traceLevel);
                 else
                 {
-                    var workDirectory = settings.Contains("WorkDirectory") ? (string)settings["WorkDirectory"] : Environment.CurrentDirectory;
-                    var logName = string.Format("InternalTrace.{0}.{1}.log", Process.GetCurrentProcess().Id, Path.GetFileName(assemblyPath));
-                    //var logName = string.Format("InternalTrace.{0}.log", Process.GetCurrentProcess().Id);
+                    var workDirectory = settings.Contains(DriverSettings.WorkDirectory) ? (string)settings[DriverSettings.WorkDirectory] : Environment.CurrentDirectory;
+                    var logName = string.Format(LOG_FILE_FORMAT, Process.GetCurrentProcess().Id, Path.GetFileName(assemblyPath));
                     InternalTrace.Initialize(Path.Combine(workDirectory, logName), traceLevel);
                 }
             }
@@ -144,97 +148,43 @@ namespace NUnit.Framework.Api
 
         private void LoadTests(ICallbackEventHandler handler)
         {
-            try
-            {
-                int count = Runner.Load(AssemblyPath, Settings)
-                    ? Runner.LoadedTest.TestCaseCount
-                    : 0;
-
-                //TestExecutionContext.ClearCurrentContext();
-                handler.RaiseCallbackEvent(string.Format("<loaded assembly=\"{0}\" testcases=\"{1}\"/>", AssemblyPath, count));
-            }
-            catch (Exception ex)
-            {
-                handler.RaiseCallbackEvent(FormatErrorReport(ex));
-            }
+            Runner.Load(AssemblyPath, Settings);
+            handler.RaiseCallbackEvent(Runner.LoadedTest.ToXml(false).OuterXml);
         }
 
-        private void ExploreTests(ICallbackEventHandler handler)
+        private void ExploreTests(ICallbackEventHandler handler, string filter)
         {
-            try
-            {
-                // TODO: Make use of the filter
-                if (Runner.Load(AssemblyPath, Settings))
-                    handler.RaiseCallbackEvent(Runner.LoadedTest.ToXml(true).OuterXml);
-                else
-                    handler.RaiseCallbackEvent(FormatErrorReport("No tests were found"));
-            }
-            catch (Exception ex)
-            {
-                handler.RaiseCallbackEvent(FormatErrorReport(ex));
-            }
+            Guard.ArgumentNotNull(filter, "filter");
+
+            if (Runner.LoadedTest == null)
+                throw new InvalidOperationException("The Explore method was called but no test has been loaded");
+
+            // TODO: Make use of the filter
+            handler.RaiseCallbackEvent(Runner.LoadedTest.ToXml(true).OuterXml);
         }
 
         private void RunTests(ICallbackEventHandler handler, string filter)
         {
-            try
-            {
-                ITestResult result = Runner.Run(new TestProgressReporter(handler), TestFilter.FromXml(filter));
+            Guard.ArgumentNotNull(filter, "filter");
 
-                // Ensure that the CallContext of the thread is not polluted
-                // by our TestExecutionContext, which is not serializable.
-                TestExecutionContext.ClearCurrentContext();
+            ITestResult result = Runner.Run(new TestProgressReporter(handler), TestFilter.FromXml(filter));
 
-                handler.RaiseCallbackEvent(result.ToXml(true).OuterXml);
-            }
-            catch (Exception ex)
-            {
-                handler.RaiseCallbackEvent(FormatErrorReport(ex));
-            }
-            finally
-            {
-                //InternalTrace.Flush();
-            }
+            // Ensure that the CallContext of the thread is not polluted
+            // by our TestExecutionContext, which is not serializable.
+            TestExecutionContext.ClearCurrentContext();
+
+            handler.RaiseCallbackEvent(result.ToXml(true).OuterXml);
         }
 
         private void CountTests(ICallbackEventHandler handler, string filter)
         {
-            try
-            {
-                var count = Runner.CountTestCases(TestFilter.FromXml(filter));
-                handler.RaiseCallbackEvent(count.ToString());
-            }
-            catch (Exception ex)
-            {
-                handler.RaiseCallbackEvent(FormatErrorReport(ex));
-            }
-        }
+            Guard.ArgumentNotNull(filter, "filter");
 
-        #endregion
+            if (Runner.LoadedTest == null)
+                throw new InvalidOperationException("The CountTests method was called but no test has been loaded");
 
-        #region Format Error Reports
-
-        private static string FormatErrorReport(string message)
-        {
-            return string.Format("<error message=\"{0}\"/>" ,message);
-        }
-
-        private static string FormatErrorReport(string message, string stackTrace)
-        {
-            message = System.Security.SecurityElement.Escape(message);
-            stackTrace = System.Security.SecurityElement.Escape(stackTrace);
-            return string.Format("<error message=\"{0}\" stackTrace=\"{1}\"/>", message, stackTrace);
-        }
-
-        private static string FormatErrorReport(Exception ex)
-        {
-            if (ex is System.Reflection.TargetInvocationException)
-                ex = ex.InnerException;
-
-            string msg = ex is System.IO.FileNotFoundException || ex is System.BadImageFormatException
-                ? FormatErrorReport(ex.Message)
-                : FormatErrorReport(ex.Message, ex.StackTrace);
-            return msg;
+            var count = Runner.CountTestCases(TestFilter.FromXml(filter));
+            handler.RaiseCallbackEvent(count.ToString());
         }
 
         #endregion
@@ -272,7 +222,7 @@ namespace NUnit.Framework.Api
         public class LoadTestsAction : FrameworkControllerAction
         {
             /// <summary>
-            /// Initializes a new instance of the <see cref="LoadTestsAction"/> class.
+            /// LoadTestsAction loads the tests in an assembly.
             /// </summary>
             /// <param name="controller">The controller.</param>
             /// <param name="handler">The callback handler.</param>
@@ -299,45 +249,11 @@ namespace NUnit.Framework.Api
             /// <param name="handler">The callback handler.</param>
             public ExploreTestsAction(FrameworkController controller, string filter, object handler)
             {
-                controller.ExploreTests((ICallbackEventHandler)handler);
+                controller.ExploreTests((ICallbackEventHandler)handler, filter);
             }
         }
 
         #endregion
-
-#if false
-        #region GetLoadedTestsAction
-
-        ///// <summary>
-        ///// GetLoadedTestsAction returns the XML representation
-        ///// of a suite of tests, which must have been loaded already.
-        ///// </summary>
-        //public class GetLoadedTestsAction : FrameworkControllerAction
-        //{
-        //    /// <summary>
-        //    /// Initializes a new instance of the <see cref="GetLoadedTestsAction"/> class.
-        //    /// </summary>
-        //    /// <param name="controller">The controller.</param>
-        //    /// <param name="callback">An AsynchCallback to receive the result.</param>
-        //    public GetLoadedTestsAction(FrameworkController controller, AsyncCallback callback)
-        //        : base(controller, callback)
-        //    {
-        //        try
-        //        {
-        //            ITest loadedTest = controller.Runner.LoadedTest;
-
-        //            if (loadedTest != null)
-        //                callback(new FinalResult(loadedTest.ToXml(true), true));
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            callback(new ErrorReport(ex));
-        //        }
-        //    }
-        //}
-
-        #endregion
-#endif
 
         #region CountTestsAction
 
@@ -378,18 +294,6 @@ namespace NUnit.Framework.Api
             {
                 controller.RunTests((ICallbackEventHandler)handler, filter);
             }
-
-            ///// <summary>
-            ///// Construct a RunTestsAction and run tests in the loaded TestSuite that pass the supplied filter
-            ///// </summary>
-            ///// <param name="controller">A FrameworkController holding the TestSuite to run</param>
-            ///// <param name="filter">A TestFilter used to determine which tests should be run</param>
-            ///// <param name="result">A callback used to report results</param>
-            //public RunTestsAction(FrameworkController controller, TestFilter filter, AsyncCallback callback) 
-            //    : base(controller, callback)
-            //{
-            //    ReportResult(Runner.Run(this, filter), true);
-            //}
         }
 
         #endregion

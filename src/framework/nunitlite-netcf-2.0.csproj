@@ -59,6 +59,9 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Api\DefaultTestAssemblyBuilder.cs" />
+    <Compile Include="Api\DefaultTestAssemblyRunner.cs" />
+    <Compile Include="Api\DriverSettings.cs" />
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Assert.cs" />
     <Compile Include="AssertionHelper.cs" />
@@ -263,8 +266,6 @@
     <Compile Include="Internal\Commands\TestMethodCommand.cs" />
     <Compile Include="Internal\Commands\TheoryResultCommand.cs" />
     <Compile Include="Internal\CultureDetector.cs" />
-    <Compile Include="Internal\DefaultTestAssemblyBuilder.cs" />
-    <Compile Include="Internal\DefaultTestAssemblyRunner.cs" />
     <Compile Include="Internal\ExceptionHelper.cs" />
     <Compile Include="Internal\Execution\CompositeWorkItem.cs" />
     <Compile Include="Internal\Execution\CountdownEvent.cs" />

@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2012 Charlie Poole
+// Copyright (c) 2012-2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -27,9 +27,10 @@ using System.IO;
 using System.Reflection;
 using System.Threading;
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Execution;
 
-namespace NUnit.Framework.Internal
+namespace NUnit.Framework.Api
 {
     /// <summary>
     /// Default implementation of ITestAssemblyRunner
@@ -39,7 +40,7 @@ namespace NUnit.Framework.Internal
         static Logger log = InternalTrace.GetLogger("DefaultTestAssemblyRunner");
 
         private ITestAssemblyBuilder _builder;
-        private TestSuite _loadedTest;
+        private ITest _loadedTest;
         private IDictionary _settings;
         private AutoResetEvent _runComplete = new AutoResetEvent(false);
 
@@ -71,7 +72,7 @@ namespace NUnit.Framework.Internal
 
         #endregion
 
-        #region Methods
+        #region Public Methods
 
         /// <summary>
         /// Loads the tests found in an Assembly
@@ -79,18 +80,13 @@ namespace NUnit.Framework.Internal
         /// <param name="assemblyName">File name of the assembly to load</param>
         /// <param name="settings">Dictionary of option settings for loading the assembly</param>
         /// <returns>True if the load was successful</returns>
-        public bool Load(string assemblyName, IDictionary settings)
+        public ITest Load(string assemblyName, IDictionary settings)
         {
             _settings = settings;
 
-            Randomizer.InitialSeed = settings.Contains("RandomSeed")
-                ? (int)settings["RandomSeed"]
-                : new Random().Next();
+            Randomizer.InitialSeed = GetInitialSeed(settings);
 
-            _loadedTest = (TestSuite)_builder.Build(assemblyName, settings);
-            if (_loadedTest == null) return false;
-
-            return true;
+            return _loadedTest = _builder.Build(assemblyName, settings);
         }
 
         /// <summary>
@@ -99,13 +95,13 @@ namespace NUnit.Framework.Internal
         /// <param name="assembly">The assembly to load</param>
         /// <param name="settings">Dictionary of option settings for loading the assembly</param>
         /// <returns>True if the load was successful</returns>
-        public bool Load(Assembly assembly, IDictionary settings)
+        public ITest Load(Assembly assembly, IDictionary settings)
         {
             _settings = settings;
-            _loadedTest = (TestSuite)_builder.Build(assembly, settings);
-            if (_loadedTest == null) return false;
 
-            return true;
+            Randomizer.InitialSeed = GetInitialSeed(settings);
+
+            return _loadedTest = _builder.Build(assembly, settings);
         }
 
         /// <summary>
@@ -129,7 +125,7 @@ namespace NUnit.Framework.Internal
         {
             log.Info("Running tests");
             if (_loadedTest == null)
-                throw new InvalidOperationException("Run was called but no test has been loaded.");
+                throw new InvalidOperationException("The Run method was called but no test has been loaded");
 
             // Save Console.Out and Error for later restoration
             TextWriter savedOut = Console.Out;
@@ -150,15 +146,15 @@ namespace NUnit.Framework.Internal
 #else
             QueuingEventListener queue = new QueuingEventListener();
 
-            if (_settings.Contains("CaptureStandardOutput"))
+            if (_settings.Contains(DriverSettings.CaptureStandardOutput))
                 initialContext.Out = new EventListenerTextWriter(queue, TestOutputType.Out);
-            if (_settings.Contains("CapureStandardError"))
+            if (_settings.Contains(DriverSettings.CaptureStandardError))
                 initialContext.Error = new EventListenerTextWriter(queue, TestOutputType.Error);
 
             initialContext.Listener = queue;
 
-            int levelOfParallelization = _settings.Contains("NumberOfTestWorkers")
-                ? (int)_settings["NumberOfTestWorkers"]
+            int levelOfParallelization = _settings.Contains(DriverSettings.NumberOfTestWorkers)
+                ? (int)_settings[DriverSettings.NumberOfTestWorkers]
                 : _loadedTest.Properties.ContainsKey(PropertyNames.LevelOfParallelization)
                     ? (int)_loadedTest.Properties.Get(PropertyNames.LevelOfParallelization)
                     : Math.Max(Environment.ProcessorCount, 2);
@@ -208,6 +204,10 @@ namespace NUnit.Framework.Internal
 #endif
         }
 
+        #endregion
+
+        #region Helper Methods
+
         private void OnRunCompleted(object sender, EventArgs e)
         {
             _runComplete.Set();
@@ -217,13 +217,13 @@ namespace NUnit.Framework.Internal
         {
             TestExecutionContext context = new TestExecutionContext();
 
-            if (settings.Contains("DefaultTimeout"))
-                context.TestCaseTimeout = (int)settings["DefaultTimeout"];
-            if (settings.Contains("StopOnError"))
-                context.StopOnError = (bool)settings["StopOnError"];
+            if (settings.Contains(DriverSettings.DefaultTimeout))
+                context.TestCaseTimeout = (int)settings[DriverSettings.DefaultTimeout];
+            if (settings.Contains(DriverSettings.StopOnError))
+                context.StopOnError = (bool)settings[DriverSettings.StopOnError];
 
-            if (settings.Contains("WorkDirectory"))
-                context.WorkDirectory = (string)settings["WorkDirectory"];
+            if (settings.Contains(DriverSettings.WorkDirectory))
+                context.WorkDirectory = (string)settings[DriverSettings.WorkDirectory];
             else
 #if NETCF || SILVERLIGHT
                 context.WorkDirectory = Env.DocumentFolder;
@@ -244,6 +244,13 @@ namespace NUnit.Framework.Internal
                     count += CountTestCases(child, filter);
 
             return count;
+        }
+
+        private static int GetInitialSeed(IDictionary settings)
+        {
+            return settings.Contains(DriverSettings.RandomSeed)
+                ? (int)settings[DriverSettings.RandomSeed]
+                : new Random().Next();
         }
 
         #endregion

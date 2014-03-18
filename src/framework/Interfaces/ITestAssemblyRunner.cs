@@ -23,8 +23,9 @@
 
 using System;
 using System.Reflection;
+using NUnit.Framework.Interfaces;
 
-namespace NUnit.Framework.Interfaces
+namespace NUnit.Framework.Api
 {
     /// <summary>
     /// The ITestAssemblyRunner interface is implemented by classes
@@ -51,8 +52,8 @@ namespace NUnit.Framework.Interfaces
         /// </summary>
         /// <param name="assemblyName">File name of the assembly to load</param>
         /// <param name="settings">Dictionary of options to use in loading the test</param>
-        /// <returns>True if the load was successful</returns>
-        bool Load(string assemblyName, System.Collections.IDictionary settings);
+        /// <returns>An ITest representing the loaded tests</returns>
+        ITest Load(string assemblyName, System.Collections.IDictionary settings);
 
         /// <summary>
         /// Loads the tests found in an Assembly, returning an 
@@ -60,8 +61,8 @@ namespace NUnit.Framework.Interfaces
         /// </summary>
         /// <param name="assembly">The assembly to load</param>
         /// <param name="settings">Dictionary of options to use in loading the test</param>
-        /// <returns>True if the load was successful</returns>
-        bool Load(Assembly assembly, System.Collections.IDictionary settings);
+        /// <returns>An ITest representing the loaded tests</returns>
+        ITest Load(Assembly assembly, System.Collections.IDictionary settings);
 
         /// <summary>
         /// Count Test Cases using a filter

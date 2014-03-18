@@ -61,7 +61,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <param name="context">The text execution context.</param>
         /// <param name="filter">The test filter.</param>
         /// <returns></returns>
-        static public WorkItem CreateWorkItem(Test test, TestExecutionContext context, ITestFilter filter)
+        static public WorkItem CreateWorkItem(ITest test, TestExecutionContext context, ITestFilter filter)
         {
             TestSuite suite = test as TestSuite;
             if (suite != null)

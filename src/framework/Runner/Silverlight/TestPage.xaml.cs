@@ -1,10 +1,10 @@
 ﻿#if SILVERLIGHT
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
+using NUnit.Framework.Api;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 
@@ -46,7 +46,7 @@ namespace NUnitLite.Runner.Silverlight
 
         private bool LoadTestAssembly()
         {
-            return runner.Load(callingAssembly, new Dictionary<string, string>());
+            return runner.Load(callingAssembly, new Dictionary<string, string>()) != null;
         }
 
         private string GetAssemblyName(Assembly assembly)

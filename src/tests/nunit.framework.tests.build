@@ -27,8 +27,10 @@
       <references basedir="${current.build.dir}">
         <include name="nunit.framework.dll"/>
         <include name="nunit.testdata.dll"/>
+        <include name="mock-assembly.dll"/>
         <include name="System.Data.dll"/>
         <include name="System.Drawing.dll"/>
+	    <include name="System.Web.dll"/>
       </references>
     </csc>
   </target>
