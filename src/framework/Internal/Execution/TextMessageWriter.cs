@@ -107,7 +107,7 @@ namespace NUnit.Framework.Internal
                 if (args != null && args.Length > 0)
                     message = string.Format(message, args);
 
-                WriteLine(message);
+                WriteLine(MsgUtils.EscapeControlChars(message));
             }
         }
 
