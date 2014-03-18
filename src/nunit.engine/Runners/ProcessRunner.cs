@@ -84,7 +84,7 @@ namespace NUnit.Engine.Runners
 
             this.package = package;
 
-            string frameworkSetting = package.GetSetting("RuntimeFramework", "");
+            string frameworkSetting = package.GetSetting(RunnerSettings.RuntimeFramework, "");
             this.runtimeFramework = frameworkSetting != ""
                 ? RuntimeFramework.Parse(frameworkSetting)
                 : RuntimeFramework.CurrentFramework;

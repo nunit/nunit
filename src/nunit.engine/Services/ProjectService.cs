@@ -26,31 +26,31 @@ using System.IO;
 
 namespace NUnit.Engine.Services
 {
-	/// <summary>
-	/// Summary description for ProjectService.
-	/// </summary>
-	public class ProjectService : IProjectLoader, IService
-	{
-		/// <summary>
-		/// Seed used to generate names for new projects
-		/// </summary>
+    /// <summary>
+    /// Summary description for ProjectService.
+    /// </summary>
+    public class ProjectService : IProjectLoader, IService
+    {
+        /// <summary>
+        /// Seed used to generate names for new projects
+        /// </summary>
         //private int projectSeed = 0;
 
-		/// <summary>
-		/// The extension used for test projects
-		/// </summary>
+        /// <summary>
+        /// The extension used for test projects
+        /// </summary>
         //private static readonly string nunitExtension = ".nunit";
 
-		/// <summary>
-		/// Array of all installed ProjectLoaders
-		/// </summary>
-		IProjectLoader[] loaders = new IProjectLoader[] 
-		{
+        /// <summary>
+        /// Array of all installed ProjectLoaders
+        /// </summary>
+        IProjectLoader[] loaders = new IProjectLoader[] 
+        {
             new NUnitProjectLoader(),
-			//new VisualStudioLoader()
-		};
+            //new VisualStudioLoader()
+        };
 
-		#region Instance Methods
+        #region Instance Methods
 
         public TestPackage MakeTestPackage(IProject project)
         {
@@ -92,7 +92,7 @@ namespace NUnit.Engine.Services
 
         //        if ( !File.Exists( fullPath ) )
         //            throw new FileNotFoundException( string.Format( "Assembly not found: {0}", fullPath ) );
-				
+                
         //        config.Assemblies.Add( fullPath );
         //    }
 
@@ -120,7 +120,7 @@ namespace NUnit.Engine.Services
         //    string fullPath = Path.GetFullPath( assemblyPath );
 
         //    NUnitProject project = new NUnitProject( fullPath );
-			
+            
         //    ProjectConfig config = new ProjectConfig( "Default" );
         //    config.Assemblies.Add( fullPath );
         //    project.Configs.Add( config );
@@ -156,29 +156,29 @@ namespace NUnit.Engine.Services
         //{
         //    project.Save();
         //}
-		#endregion
+        #endregion
 
-		#region IProjectLoader Members
+        #region IProjectLoader Members
 
-		public bool IsProjectFile(string path)
-		{
-			foreach( IProjectLoader loader in loaders )
-				if ( loader.IsProjectFile(path) )
-					return true;
+        public bool IsProjectFile(string path)
+        {
+            foreach( IProjectLoader loader in loaders )
+                if ( loader.IsProjectFile(path) )
+                    return true;
 
-			return false;
-		}
+            return false;
+        }
 
-		public IProject LoadProject(string path)
-		{
-			foreach( IProjectLoader loader in loaders )
-			{
-				if ( loader.IsProjectFile( path ) )
-					return loader.LoadProject( path );
-			}
+        public IProject LoadProject(string path)
+        {
+            foreach( IProjectLoader loader in loaders )
+            {
+                if ( loader.IsProjectFile( path ) )
+                    return loader.LoadProject( path );
+            }
 
-			return null;
-		}
+            return null;
+        }
 
         /// <summary>
         /// Expands a TestPackages based on a known project format,
@@ -191,7 +191,7 @@ namespace NUnit.Engine.Services
         {
             IProject project = LoadProject(package.FullName);
 
-            string configName = package.GetSetting("ActiveConfig", string.Empty);
+            string configName = package.GetSetting(RunnerSettings.ActiveConfig, string.Empty); // Need RunnerSetting
             IProjectConfig config = configName != string.Empty
                 ? project.Configs[configName]
                 : project.ActiveConfig;
@@ -205,7 +205,7 @@ namespace NUnit.Engine.Services
 
         #endregion
 
-		#region IService Members
+        #region IService Members
 
         private ServiceContext services;
         public ServiceContext ServiceContext
@@ -215,15 +215,15 @@ namespace NUnit.Engine.Services
         }
 
         public void InitializeService()
-		{
-			// TODO:  Add ProjectLoader.InitializeService implementation
-		}
+        {
+            // TODO:  Add ProjectLoader.InitializeService implementation
+        }
 
-		public void UnloadService()
-		{
-			// TODO:  Add ProjectLoader.UnloadService implementation
-		}
+        public void UnloadService()
+        {
+            // TODO:  Add ProjectLoader.UnloadService implementation
+        }
 
-		#endregion
-	}
+        #endregion
+    }
 }

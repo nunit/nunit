@@ -66,7 +66,7 @@ namespace NUnit.Engine.Services
 
             ProcessModel processModel = (ProcessModel)System.Enum.Parse(
                 typeof(ProcessModel),
-                package.GetSetting("ProcessModel", "Default"));
+                package.GetSetting(RunnerSettings.ProcessModel, "Default"));
             if (processModel == ProcessModel.Default)
                 if (!currentFramework.Supports(targetFramework))
                     processModel = ProcessModel.Separate;
@@ -90,7 +90,7 @@ namespace NUnit.Engine.Services
 
             ProcessModel processModel = (ProcessModel)System.Enum.Parse(
                 typeof(ProcessModel),
-                package.GetSetting("ProcessModel", "Default"));
+                package.GetSetting(RunnerSettings.ProcessModel, "Default"));
 
             if (processModel == ProcessModel.Default)
                 if (!currentFramework.Supports(targetFramework))

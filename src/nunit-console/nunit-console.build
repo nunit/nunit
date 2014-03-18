@@ -8,6 +8,7 @@
     <include name="ConsoleRunner.cs"/>
     <include name="IResultWriter.cs"/>
     <include name="Options.cs"/>
+    <include name="PackageSettings.cs"/>
     <include name="Program.cs"/>
     <include name="ResultReporter.cs"/>
     <include name="ResultSummary.cs"/>

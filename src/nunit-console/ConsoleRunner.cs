@@ -234,34 +234,34 @@ namespace NUnit.ConsoleRunner
                 : new TestPackage(options.InputFiles);
 
             if (options.ProcessModel != null)//ProcessModel.Default)
-                package.Settings["ProcessModel"] = options.ProcessModel;
+                package.Settings[PackageSettings.ProcessModel] = options.ProcessModel;
 
             if (options.DomainUsage != null)
-                package.Settings["DomainUsage"] = options.DomainUsage;
+                package.Settings[PackageSettings.DomainUsage] = options.DomainUsage;
 
             if (options.Framework != null)
-                package.Settings["RuntimeFramework"] = options.Framework;
+                package.Settings[PackageSettings.RuntimeFramework] = options.Framework;
 
             if (options.DefaultTimeout >= 0)
-                package.Settings["DefaultTimeout"] = options.DefaultTimeout;
+                package.Settings[PackageSettings.DefaultTimeout] = options.DefaultTimeout;
 
             if (options.InternalTraceLevel != null)
-                package.Settings["InternalTraceLevel"] = options.InternalTraceLevel;
+                package.Settings[PackageSettings.InternalTraceLevel] = options.InternalTraceLevel;
 
             if (options.ActiveConfig != null)
-                package.Settings["ActiveConfig"] = options.ActiveConfig;
+                package.Settings[PackageSettings.ActiveConfig] = options.ActiveConfig;
             
             if (options.WorkDirectory != null)
-                package.Settings["WorkDirectory"] = options.WorkDirectory;
+                package.Settings[PackageSettings.WorkDirectory] = options.WorkDirectory;
 
             if (options.StopOnError)
-                package.Settings["StopOnError"] = true;
+                package.Settings[PackageSettings.StopOnError] = true;
 
             if (options.NumWorkers > 0)
-                package.Settings["NumberOfTestWorkers"] = options.NumWorkers;
+                package.Settings[PackageSettings.NumberOfTestWorkers] = options.NumWorkers;
 
             if (options.RandomSeed > 0)
-                package.Settings["RandomSeed"] = options.RandomSeed;
+                package.Settings[PackageSettings.RandomSeed] = options.RandomSeed;
 
             if (options.Verbose)
                 package.Settings["Verbose"] = true;
