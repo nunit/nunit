@@ -60,7 +60,7 @@ namespace NUnit.Framework
         }
 
         #endregion
-                
+
         #region Constructor
 
         /// <summary>
@@ -68,14 +68,14 @@ namespace NUnit.Framework
         /// like to inherit from it to add other static methods. Hence, the
         /// protected constructor disallows any instances of this object. 
         /// </summary>
-        protected FileAssert() {}
+        protected FileAssert() { }
 
         #endregion
 
         #region AreEqual
 
         #region Streams
-        
+
         /// <summary>
         /// Verifies that two Streams are equal.  Two Streams are considered
         /// equal if both are null, or if both have the same value byte for byte.
@@ -87,7 +87,7 @@ namespace NUnit.Framework
         /// <param name="args">Arguments to be used in formatting the message</param>
         static public void AreEqual(Stream expected, Stream actual, string message, params object[] args)
         {
-            Assert.That( actual, Is.EqualTo( expected ), message, args );
+            Assert.That(actual, Is.EqualTo(expected), message, args);
         }
 
         /// <summary>
@@ -98,7 +98,7 @@ namespace NUnit.Framework
         /// <param name="expected">The expected Stream</param>
         /// <param name="actual">The actual Stream</param>
         /// <param name="message">The message to display if objects are not equal</param>
-        static public void AreEqual(Stream expected, Stream actual, string message) 
+        static public void AreEqual(Stream expected, Stream actual, string message)
         {
             AreEqual(expected, actual, message, null);
         }
@@ -110,7 +110,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="expected">The expected Stream</param>
         /// <param name="actual">The actual Stream</param>
-        static public void AreEqual(Stream expected, Stream actual) 
+        static public void AreEqual(Stream expected, Stream actual)
         {
             AreEqual(expected, actual, string.Empty, null);
         }
@@ -132,7 +132,7 @@ namespace NUnit.Framework
             using (FileStream exStream = expected.OpenRead())
             using (FileStream acStream = actual.OpenRead())
             {
-                AreEqual(exStream,acStream,message,args);
+                AreEqual(exStream, acStream, message, args);
             }
         }
 
@@ -144,7 +144,7 @@ namespace NUnit.Framework
         /// <param name="expected">A file containing the value that is expected</param>
         /// <param name="actual">A file containing the actual value</param>
         /// <param name="message">The message to display if objects are not equal</param>
-        static public void AreEqual(FileInfo expected, FileInfo actual, string message) 
+        static public void AreEqual(FileInfo expected, FileInfo actual, string message)
         {
             AreEqual(expected, actual, message, null);
         }
@@ -156,7 +156,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="expected">A file containing the value that is expected</param>
         /// <param name="actual">A file containing the actual value</param>
-        static public void AreEqual(FileInfo expected, FileInfo actual) 
+        static public void AreEqual(FileInfo expected, FileInfo actual)
         {
             AreEqual(expected, actual, string.Empty, null);
         }
@@ -178,7 +178,7 @@ namespace NUnit.Framework
             using (FileStream exStream = File.OpenRead(expected))
             using (FileStream acStream = File.OpenRead(actual))
             {
-                AreEqual(exStream,acStream,message,args);
+                AreEqual(exStream, acStream, message, args);
             }
         }
 
@@ -190,7 +190,7 @@ namespace NUnit.Framework
         /// <param name="expected">The path to a file containing the value that is expected</param>
         /// <param name="actual">The path to a file containing the actual value</param>
         /// <param name="message">The message to display if objects are not equal</param>
-        static public void AreEqual(string expected, string actual, string message) 
+        static public void AreEqual(string expected, string actual, string message)
         {
             AreEqual(expected, actual, message, null);
         }
@@ -202,7 +202,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="expected">The path to a file containing the value that is expected</param>
         /// <param name="actual">The path to a file containing the actual value</param>
-        static public void AreEqual(string expected, string actual) 
+        static public void AreEqual(string expected, string actual)
         {
             AreEqual(expected, actual, string.Empty, null);
         }
@@ -222,9 +222,9 @@ namespace NUnit.Framework
         /// <param name="actual">The actual Stream</param>
         /// <param name="message">The message to be displayed when the two Stream are the same.</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        static public void AreNotEqual( Stream expected, Stream actual, string message, params object[] args)
+        static public void AreNotEqual(Stream expected, Stream actual, string message, params object[] args)
         {
-            Assert.That( actual, Is.Not.EqualTo( expected ), message, args );
+            Assert.That(actual, Is.Not.EqualTo(expected), message, args);
         }
 
         /// <summary>
@@ -234,23 +234,23 @@ namespace NUnit.Framework
         /// <param name="expected">The expected Stream</param>
         /// <param name="actual">The actual Stream</param>
         /// <param name="message">The message to be displayed when the Streams are the same.</param>
-        static public void AreNotEqual(Stream expected, Stream actual, string message) 
+        static public void AreNotEqual(Stream expected, Stream actual, string message)
         {
             AreNotEqual(expected, actual, message, null);
         }
-   
+
         /// <summary>
         /// Asserts that two Streams are not equal. If they are equal
         /// an <see cref="AssertionException"/> is thrown.
         /// </summary>
         /// <param name="expected">The expected Stream</param>
         /// <param name="actual">The actual Stream</param>
-        static public void AreNotEqual(Stream expected, Stream actual) 
+        static public void AreNotEqual(Stream expected, Stream actual)
         {
             AreNotEqual(expected, actual, string.Empty, null);
         }
         #endregion
-        
+
         #region FileInfo
         /// <summary>
         /// Asserts that two files are not equal. If they are equal
@@ -265,7 +265,7 @@ namespace NUnit.Framework
             using (FileStream exStream = expected.OpenRead())
             using (FileStream acStream = actual.OpenRead())
             {
-                AreNotEqual(exStream,acStream,message,args);
+                AreNotEqual(exStream, acStream, message, args);
             }
         }
 
@@ -276,7 +276,7 @@ namespace NUnit.Framework
         /// <param name="expected">A file containing the value that is expected</param>
         /// <param name="actual">A file containing the actual value</param>
         /// <param name="message">The message to display if objects are not equal</param>
-        static public void AreNotEqual(FileInfo expected, FileInfo actual, string message) 
+        static public void AreNotEqual(FileInfo expected, FileInfo actual, string message)
         {
             AreNotEqual(expected, actual, message, null);
         }
@@ -287,13 +287,13 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="expected">A file containing the value that is expected</param>
         /// <param name="actual">A file containing the actual value</param>
-        static public void AreNotEqual(FileInfo expected, FileInfo actual) 
+        static public void AreNotEqual(FileInfo expected, FileInfo actual)
         {
             AreNotEqual(expected, actual, string.Empty, null);
         }
 
         #endregion
-        
+
         #region String
         /// <summary>
         /// Asserts that two files are not equal. If they are equal
@@ -308,7 +308,7 @@ namespace NUnit.Framework
             using (FileStream exStream = File.OpenRead(expected))
             using (FileStream acStream = File.OpenRead(actual))
             {
-                AreNotEqual(exStream,acStream,message,args);
+                AreNotEqual(exStream, acStream, message, args);
             }
         }
 
@@ -319,7 +319,7 @@ namespace NUnit.Framework
         /// <param name="expected">The path to a file containing the value that is expected</param>
         /// <param name="actual">The path to a file containing the actual value</param>
         /// <param name="message">The message to display if objects are not equal</param>
-        static public void AreNotEqual(string expected, string actual, string message) 
+        static public void AreNotEqual(string expected, string actual, string message)
         {
             AreNotEqual(expected, actual, message, null);
         }
@@ -330,7 +330,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="expected">The path to a file containing the value that is expected</param>
         /// <param name="actual">The path to a file containing the actual value</param>
-        static public void AreNotEqual(string expected, string actual) 
+        static public void AreNotEqual(string expected, string actual)
         {
             AreNotEqual(expected, actual, string.Empty, null);
         }
@@ -351,7 +351,7 @@ namespace NUnit.Framework
         /// <param name="args">Arguments to be used in formatting the message</param>
         static public void Exists(FileInfo actual, string message, params object[] args)
         {
-            Assert.That( actual, new FileExistsConstraint(), message, args );
+            Assert.That(actual, new FileExistsConstraint(), message, args);
         }
 
         /// <summary>
