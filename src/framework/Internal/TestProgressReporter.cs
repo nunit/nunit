@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NUNITLITE
+#if !NETCF && !SILVERLIGHT
 using System;
 using System.IO;
 using System.Text;
@@ -184,10 +184,10 @@ namespace NUnit.Framework.Internal
             try
             {			
 #if false
-				string report = string.Format("<output type=\"{0}\"><text>{1}</text></output>",
-				    testOutput.Type, testOutput.Text);
+                string report = string.Format("<output type=\"{0}\"><text>{1}</text></output>",
+                    testOutput.Type, testOutput.Text);
 
-				handler.RaiseCallbackEvent(report);
+                handler.RaiseCallbackEvent(report);
 #else
                 handler.RaiseCallbackEvent(testOutput.ToXml(false).OuterXml);
 #endif

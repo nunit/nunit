@@ -33,7 +33,11 @@ namespace NUnit.Framework.Api
     // Functional tests of the FrameworkController and all subordinate classes
     public class FrameworkControllerTests
     {
-        private const string MOCK_ASSEMBLY = "mock-assembly.dll";
+#if NUNITLITE
+        private const string MOCK_ASSEMBLY = "mock-nunitlite-assembly.dll";
+#else
+        private const string MOCK_ASSEMBLY = "mock-nunit-assembly.dll";
+#endif
         private const string MISSING_FILE = "junk.dll";
         private const string BAD_FILE = "mock-assembly.pdb";
         private const string EMPTY_FILTER = "<filter/>";

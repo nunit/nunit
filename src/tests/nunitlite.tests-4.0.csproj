@@ -79,12 +79,14 @@
     <Reference Include="System.Threading.Tasks">
       <HintPath>..\..\packages\Microsoft.Bcl.1.0.19\lib\net40\System.Threading.Tasks.dll</HintPath>
     </Reference>
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Api\FrameworkControllerTests.cs" />
     <Compile Include="Api\ResultStateTests.cs" />
     <Compile Include="Assertions\ArrayEqualsFailureMessageFixture.cs" />
     <Compile Include="Assertions\ArrayEqualsFixture.cs" />
@@ -277,6 +279,10 @@
     <ProjectReference Include="..\framework\nunitlite-4.0.csproj">
       <Project>{73A8B041-E719-443D-BF32-7944F117996C}</Project>
       <Name>nunitlite-4.0</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\mock-assembly\mock-nunitlite-assembly-4.0.csproj">
+      <Project>{2b797154-2349-4e0a-a3fd-08e620152b9a}</Project>
+      <Name>mock-nunitlite-assembly-4.0</Name>
     </ProjectReference>
     <ProjectReference Include="..\testdata\nunitlite.testdata-4.0.csproj">
       <Project>{34EE6390-F2BB-44F0-BF1E-9CE553DB6672}</Project>

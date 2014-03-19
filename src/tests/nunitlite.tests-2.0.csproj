@@ -61,11 +61,15 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="Api\FrameworkControllerTests.cs">
+      <SubType>Code</SubType>
     </Compile>
     <Compile Include="Api\ResultStateTests.cs" />
     <Compile Include="Assertions\ArrayEqualsFailureMessageFixture.cs" />
@@ -253,6 +257,10 @@
     <ProjectReference Include="..\framework\nunitlite-2.0.csproj">
       <Project>{0BFA7F0A-BC15-40A5-863A-FA9B55AE2FD3}</Project>
       <Name>nunitlite-2.0</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\mock-assembly\mock-nunitlite-assembly-2.0.csproj">
+      <Project>{7be679ef-3853-4e06-b4eb-c4c6808bc3f0}</Project>
+      <Name>mock-nunitlite-assembly-2.0</Name>
     </ProjectReference>
     <ProjectReference Include="..\testdata\nunitlite.testdata-2.0.csproj">
       <Project>{442DAB16-3063-4FE3-90B6-C29C3D85360D}</Project>
