@@ -66,6 +66,7 @@
     <Compile Include="Attributes\ParallelScope.cs" />
     <Compile Include="Attributes\TestCaseBuilderAttribute.cs" />
     <Compile Include="Constraints\EqualConstraintResult.cs" />
+    <Compile Include="Constraints\FileExistsConstraint.cs" />
     <Compile Include="Constraints\IConstraint.cs" />
     <Compile Include="Constraints\Operators\AllOperator.cs" />
     <Compile Include="Constraints\Operators\NoneOperator.cs" />
