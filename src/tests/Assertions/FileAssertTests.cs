@@ -43,7 +43,7 @@ namespace NUnit.Framework.Assertions
         {
             FileStream expected = null;
             FileStream actual = null;
-            FileAssert.AreEqual( expected, actual );
+            FileAssert.AreEqual(expected, actual);
         }
 
         [Test]
@@ -56,49 +56,37 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void AreEqualPassesWithEqualStreams()
         {
-            using (TestFile tf1 = new TestFile("Test1.jpg", "TestImage1.jpg"))
-            using (TestFile tf2 = new TestFile("Test2.jpg", "TestImage1.jpg"))
+            using (new TestFile("Test1.jpg", "TestImage1.jpg"))
+            using (new TestFile("Test2.jpg", "TestImage1.jpg"))
+            using (FileStream expected = File.OpenRead("Test1.jpg"))
+            using (FileStream actual = File.OpenRead("Test2.jpg"))
             {
-                using (FileStream expected = File.OpenRead("Test1.jpg"))
-                {
-                    using (FileStream actual = File.OpenRead("Test2.jpg"))
-                    {
-                        FileAssert.AreEqual(expected, actual);
-                    }
-                }
+                FileAssert.AreEqual(expected, actual);
             }
         }
 
         [Test]
         public void NonReadableStreamGivesException()
         {
-            using (TestFile tf1 = new TestFile("Test1.jpg", "TestImage1.jpg"))
-            using (TestFile tf2 = new TestFile("Test2.jpg", "TestImage1.jpg"))
+            using (new TestFile("Test1.jpg", "TestImage1.jpg"))
+            using (new TestFile("Test2.jpg", "TestImage1.jpg"))
+            using (FileStream expected = File.OpenRead("Test1.jpg"))
+            using (FileStream actual = File.OpenWrite("Test2.jpg"))
             {
-                using (FileStream expected = File.OpenRead("Test1.jpg"))
-                {
-                    using (FileStream actual = File.OpenWrite("Test2.jpg"))
-                    {
-                        var ex = Assert.Throws<ArgumentException>(() => FileAssert.AreEqual(expected, actual));
-                        Assert.That(ex.Message, Contains.Substring("not readable"));
-                    }
-                }
+                var ex = Assert.Throws<ArgumentException>(() => FileAssert.AreEqual(expected, actual));
+                Assert.That(ex.Message, Contains.Substring("not readable"));
             }
         }
 
         [Test]
         public void NonSeekableStreamGivesException()
         {
-            using (TestFile tf1 = new TestFile("Test1.jpg", "TestImage1.jpg"))
+            using (new TestFile("Test1.jpg", "TestImage1.jpg"))
+            using (FileStream expected = File.OpenRead("Test1.jpg"))
+            using (FakeStream actual = new FakeStream())
             {
-                using (FileStream expected = File.OpenRead("Test1.jpg"))
-                {
-                    using (FakeStream actual = new FakeStream())
-                    {
-                        var ex = Assert.Throws<ArgumentException>(() => FileAssert.AreEqual(expected, actual));
-                        Assert.That(ex.Message, Contains.Substring("not seekable"));
-                    }
-                }
+                var ex = Assert.Throws<ArgumentException>(() => FileAssert.AreEqual(expected, actual));
+                Assert.That(ex.Message, Contains.Substring("not seekable"));
             }
         }
 
@@ -113,44 +101,42 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void AreEqualPassesWithFiles()
         {
-            using(TestFile tf1 = new TestFile("Test1.jpg","TestImage1.jpg"))
-            using(TestFile tf2 = new TestFile("Test2.jpg","TestImage1.jpg"))
+            using (new TestFile("Test1.jpg", "TestImage1.jpg"))
+            using (new TestFile("Test2.jpg", "TestImage1.jpg"))
             {
-                FileAssert.AreEqual( "Test1.jpg", "Test2.jpg", "Failed using file names" );
+                FileAssert.AreEqual("Test1.jpg", "Test2.jpg", "Failed using file names");
             }
         }
 
         [Test]
         public void AreEqualPassesUsingSameFileTwice()
         {
-            using(TestFile tf1 = new TestFile("Test1.jpg","TestImage1.jpg"))
+            using (new TestFile("Test1.jpg", "TestImage1.jpg"))
             {
-                FileAssert.AreEqual( "Test1.jpg", "Test1.jpg" );
+                FileAssert.AreEqual("Test1.jpg", "Test1.jpg");
             }
         }
 
         [Test]
         public void AreEqualPassesWithFileInfos()
         {
-            using(TestFile tf1 = new TestFile("Test1.jpg","TestImage1.jpg"))
-            using(TestFile tf2 = new TestFile("Test2.jpg","TestImage1.jpg"))
+            using (new TestFile("Test1.jpg", "TestImage1.jpg"))
+            using (new TestFile("Test2.jpg", "TestImage1.jpg"))
             {
-                FileInfo expected = new FileInfo( "Test1.jpg" );
-                FileInfo actual = new FileInfo( "Test2.jpg" );
-                FileAssert.AreEqual( expected, actual );
-                FileAssert.AreEqual( expected, actual );
+                FileInfo expected = new FileInfo("Test1.jpg");
+                FileInfo actual = new FileInfo("Test2.jpg");
+                FileAssert.AreEqual(expected, actual);
+                FileAssert.AreEqual(expected, actual);
             }
         }
 
         [Test]
         public void AreEqualPassesWithTextFiles()
         {
-            using(TestFile tf1 = new TestFile("Test1.txt","TestText1.txt"))
+            using (new TestFile("Test1.txt", "TestText1.txt"))
+            using (new TestFile("Test2.txt", "TestText1.txt"))
             {
-                using(TestFile tf2 = new TestFile("Test2.txt","TestText1.txt"))
-                {
-                    FileAssert.AreEqual( "Test1.txt", "Test2.txt" );
-                }
+                FileAssert.AreEqual("Test1.txt", "Test2.txt");
             }
         }
         #endregion
@@ -159,17 +145,15 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void AreEqualFailsWhenOneIsNull()
         {
-            using(TestFile tf1 = new TestFile("Test1.jpg","TestImage1.jpg"))
+            using (new TestFile("Test1.jpg", "TestImage1.jpg"))
+            using (FileStream expected = File.OpenRead("Test1.jpg"))
             {
-                using(FileStream expected = File.OpenRead("Test1.jpg"))
-                {
-                    var expectedMessage = 
-                        "  Expected: <System.IO.FileStream>" + Environment.NewLine +
-                        "  But was:  null" + Environment.NewLine;
+                var expectedMessage =
+                    "  Expected: <System.IO.FileStream>" + Environment.NewLine +
+                    "  But was:  null" + Environment.NewLine;
 
-                    var ex = Assert.Throws<AssertionException>(() => FileAssert.AreEqual( expected, null ));
-                    Assert.That(ex.Message, Is.EqualTo(expectedMessage));
-                }
+                var ex = Assert.Throws<AssertionException>(() => FileAssert.AreEqual(expected, null));
+                Assert.That(ex.Message, Is.EqualTo(expectedMessage));
             }
         }
 
@@ -178,40 +162,32 @@ namespace NUnit.Framework.Assertions
         {
             string expectedFile = "Test1.jpg";
             string actualFile = "Test2.jpg";
-            using(TestFile tf1 = new TestFile(expectedFile,"TestImage1.jpg"))
+            using (new TestFile(expectedFile, "TestImage1.jpg"))
+            using (new TestFile(actualFile, "TestImage2.jpg"))
+            using (FileStream expected = File.OpenRead(expectedFile))
+            using (FileStream actual = File.OpenRead(actualFile))
             {
-                using(TestFile tf2 = new TestFile(actualFile,"TestImage2.jpg"))
-                {
-                    using(FileStream expected = File.OpenRead(expectedFile))
-                    {
-                        using(FileStream actual = File.OpenRead(actualFile))
-                        {
-                            var expectedMessage =
-                                string.Format("  Expected Stream length {0} but was {1}." + Environment.NewLine,
-                                    new FileInfo(expectedFile).Length, new FileInfo(actualFile).Length);
-                            var ex = Assert.Throws<AssertionException>(() => FileAssert.AreEqual( expected, actual));
-                            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
-                        }
-                    }
-                }
+                var expectedMessage =
+                    string.Format("  Expected Stream length {0} but was {1}." + Environment.NewLine,
+                        new FileInfo(expectedFile).Length, new FileInfo(actualFile).Length);
+                var ex = Assert.Throws<AssertionException>(() => FileAssert.AreEqual(expected, actual));
+                Assert.That(ex.Message, Is.EqualTo(expectedMessage));
             }
         }
 
         [Test]
         public void AreEqualFailsWithFileInfos()
         {
-            using(TestFile tf1 = new TestFile("Test1.jpg","TestImage1.jpg"))
+            using (new TestFile("Test1.jpg", "TestImage1.jpg"))
+            using (new TestFile("Test2.jpg", "TestImage2.jpg"))
             {
-                using(TestFile tf2 = new TestFile("Test2.jpg","TestImage2.jpg"))
-                {
-                    FileInfo expected = new FileInfo( "Test1.jpg" );
-                    FileInfo actual = new FileInfo( "Test2.jpg" );
-                    var expectedMessage =
-                        string.Format("  Expected Stream length {0} but was {1}." + Environment.NewLine,
-                            expected.Length, actual.Length);
-                    var ex = Assert.Throws<AssertionException>(() => FileAssert.AreEqual( expected, actual ));
-                    Assert.That(ex.Message, Is.EqualTo(expectedMessage));
-                }
+                FileInfo expected = new FileInfo("Test1.jpg");
+                FileInfo actual = new FileInfo("Test2.jpg");
+                var expectedMessage =
+                    string.Format("  Expected Stream length {0} but was {1}." + Environment.NewLine,
+                        expected.Length, actual.Length);
+                var ex = Assert.Throws<AssertionException>(() => FileAssert.AreEqual(expected, actual));
+                Assert.That(ex.Message, Is.EqualTo(expectedMessage));
             }
         }
 
@@ -221,33 +197,29 @@ namespace NUnit.Framework.Assertions
         {
             string expected = "Test1.jpg";
             string actual = "Test2.jpg";
-            using(TestFile tf1 = new TestFile(expected,"TestImage1.jpg"))
+            using (new TestFile(expected, "TestImage1.jpg"))
+            using (new TestFile(actual, "TestImage2.jpg"))
             {
-                using(TestFile tf2 = new TestFile(actual,"TestImage2.jpg"))
-                {
-                    var expectedMessage =
-                        string.Format("  Expected Stream length {0} but was {1}." + Environment.NewLine,
-                            new FileInfo(expected).Length, new FileInfo(actual).Length);
-                    var ex = Assert.Throws<AssertionException>(() => FileAssert.AreEqual( expected, actual ));
-                    Assert.That(ex.Message, Is.EqualTo(expectedMessage));
-                }
+                var expectedMessage =
+                    string.Format("  Expected Stream length {0} but was {1}." + Environment.NewLine,
+                        new FileInfo(expected).Length, new FileInfo(actual).Length);
+                var ex = Assert.Throws<AssertionException>(() => FileAssert.AreEqual(expected, actual));
+                Assert.That(ex.Message, Is.EqualTo(expectedMessage));
             }
         }
 
         [Test]
         public void AreEqualFailsWithTextFilesAfterReadingBothFiles()
         {
-            using(TestFile tf1 = new TestFile("Test1.txt","TestText1.txt"))
+            using (TestFile tf1 = new TestFile("Test1.txt", "TestText1.txt"))
+            using (new TestFile("Test2.txt", "TestText2.txt"))
             {
-                using(TestFile tf2 = new TestFile("Test2.txt","TestText2.txt"))
-                {
-                    var expectedMessage = string.Format(
-                        "  Stream lengths are both {0}. Streams differ at offset {1}." + Environment.NewLine,
-                        tf1.FileLength,
-                        tf1.OffsetOf('!'));
-                    var ex = Assert.Throws<AssertionException>(() => FileAssert.AreEqual( "Test1.txt", "Test2.txt" ));
-                    Assert.That(ex.Message, Is.EqualTo(expectedMessage));
-                }
+                var expectedMessage = string.Format(
+                    "  Stream lengths are both {0}. Streams differ at offset {1}." + Environment.NewLine,
+                    tf1.FileLength,
+                    tf1.OffsetOf('!'));
+                var ex = Assert.Throws<AssertionException>(() => FileAssert.AreEqual("Test1.txt", "Test2.txt"));
+                Assert.That(ex.Message, Is.EqualTo(expectedMessage));
             }
         }
         #endregion
@@ -260,29 +232,23 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void AreNotEqualPassesIfOneIsNull()
         {
-            using(TestFile tf1 = new TestFile("Test1.jpg","TestImage1.jpg"))
+            using (new TestFile("Test1.jpg", "TestImage1.jpg"))
+            using (FileStream expected = File.OpenRead("Test1.jpg"))
             {
-                using(FileStream expected = File.OpenRead("Test1.jpg"))
-                {
-                    FileAssert.AreNotEqual( expected, null );
-                }
+                FileAssert.AreNotEqual(expected, null);
             }
         }
 
         [Test]
         public void AreNotEqualPassesWithStreams()
         {
-            using(TestFile tf1 = new TestFile("Test1.jpg","TestImage1.jpg"))
+            using (new TestFile("Test1.jpg", "TestImage1.jpg"))
+            using (new TestFile("Test2.jpg", "TestImage2.jpg"))
+            using (FileStream expected = File.OpenRead("Test1.jpg"))
             {
-                using(TestFile tf2 = new TestFile("Test2.jpg","TestImage2.jpg"))
+                using (FileStream actual = File.OpenRead("Test2.jpg"))
                 {
-                    using(FileStream expected = File.OpenRead("Test1.jpg"))
-                    {
-                        using(FileStream actual = File.OpenRead("Test2.jpg"))
-                        {
-                            FileAssert.AreNotEqual( expected, actual);
-                        }
-                    }
+                    FileAssert.AreNotEqual(expected, actual);
                 }
             }
         }
@@ -290,38 +256,32 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void AreNotEqualPassesWithFiles()
         {
-            using(TestFile tf1 = new TestFile("Test1.jpg","TestImage1.jpg"))
+            using (new TestFile("Test1.jpg", "TestImage1.jpg"))
+            using (new TestFile("Test2.jpg", "TestImage2.jpg"))
             {
-                using(TestFile tf2 = new TestFile("Test2.jpg","TestImage2.jpg"))
-                {
-                    FileAssert.AreNotEqual( "Test1.jpg", "Test2.jpg" );
-                }
+                FileAssert.AreNotEqual("Test1.jpg", "Test2.jpg");
             }
         }
 
         [Test]
         public void AreNotEqualPassesWithFileInfos()
         {
-            using(TestFile tf1 = new TestFile("Test1.jpg","TestImage1.jpg"))
+            using (new TestFile("Test1.jpg", "TestImage1.jpg"))
+            using (new TestFile("Test2.jpg", "TestImage2.jpg"))
             {
-                using(TestFile tf2 = new TestFile("Test2.jpg","TestImage2.jpg"))
-                {
-                    FileInfo expected = new FileInfo( "Test1.jpg" );
-                    FileInfo actual = new FileInfo( "Test2.jpg" );
-                    FileAssert.AreNotEqual( expected, actual );
-                }
+                FileInfo expected = new FileInfo("Test1.jpg");
+                FileInfo actual = new FileInfo("Test2.jpg");
+                FileAssert.AreNotEqual(expected, actual);
             }
         }
 
         [Test]
         public void AreNotEqualIteratesOverTheEntireFile()
         {
-            using(TestFile tf1 = new TestFile("Test1.txt","TestText1.txt"))
+            using (new TestFile("Test1.txt", "TestText1.txt"))
+            using (new TestFile("Test2.txt", "TestText2.txt"))
             {
-                using(TestFile tf2 = new TestFile("Test2.txt","TestText2.txt"))
-                {
-                    FileAssert.AreNotEqual( "Test1.txt", "Test2.txt" );
-                }
+                FileAssert.AreNotEqual("Test1.txt", "Test2.txt");
             }
         }
         #endregion
@@ -335,22 +295,22 @@ namespace NUnit.Framework.Assertions
             var expectedMessage =
                 "  Expected: not equal to null" + Environment.NewLine +
                 "  But was:  null" + Environment.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => FileAssert.AreNotEqual( expected, actual ));
+            var ex = Assert.Throws<AssertionException>(() => FileAssert.AreNotEqual(expected, actual));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 
         [Test]
         public void AreNotEqualFailsWithStreams()
         {
-            using(TestFile tf1 = new TestFile("Test1.jpg","TestImage1.jpg"))
-            using(TestFile tf2 = new TestFile("Test2.jpg","TestImage1.jpg"))
-            using(FileStream expected = File.OpenRead("Test1.jpg"))
-            using(FileStream actual = File.OpenRead("Test2.jpg"))
+            using (new TestFile("Test1.jpg", "TestImage1.jpg"))
+            using (new TestFile("Test2.jpg", "TestImage1.jpg"))
+            using (FileStream expected = File.OpenRead("Test1.jpg"))
+            using (FileStream actual = File.OpenRead("Test2.jpg"))
             {
-                var expectedMessage = 
+                var expectedMessage =
                     "  Expected: not equal to <System.IO.FileStream>" + Environment.NewLine +
                     "  But was:  <System.IO.FileStream>" + Environment.NewLine;
-                var ex = Assert.Throws<AssertionException>(() => FileAssert.AreNotEqual( expected, actual ));
+                var ex = Assert.Throws<AssertionException>(() => FileAssert.AreNotEqual(expected, actual));
                 Assert.That(ex.Message, Is.EqualTo(expectedMessage));
             }
         }
@@ -358,30 +318,28 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void AreNotEqualFailsWithFileInfos()
         {
-            using(TestFile tf1 = new TestFile("Test1.jpg","TestImage1.jpg"))
+            using (new TestFile("Test1.jpg", "TestImage1.jpg"))
+            using (new TestFile("Test2.jpg", "TestImage1.jpg"))
             {
-                using(TestFile tf2 = new TestFile("Test2.jpg","TestImage1.jpg"))
-                {
-                    FileInfo expected = new FileInfo( "Test1.jpg" );
-                    FileInfo actual = new FileInfo( "Test2.jpg" );
-                    var expectedMessage = 
-                        "  Expected: not equal to <System.IO.FileStream>" + Environment.NewLine +
-                        "  But was:  <System.IO.FileStream>" + Environment.NewLine;
-                    var ex = Assert.Throws<AssertionException>(() => FileAssert.AreNotEqual( expected, actual ));
-                    Assert.That(ex.Message, Is.EqualTo(expectedMessage));
-                }
+                FileInfo expected = new FileInfo("Test1.jpg");
+                FileInfo actual = new FileInfo("Test2.jpg");
+                var expectedMessage =
+                    "  Expected: not equal to <System.IO.FileStream>" + Environment.NewLine +
+                    "  But was:  <System.IO.FileStream>" + Environment.NewLine;
+                var ex = Assert.Throws<AssertionException>(() => FileAssert.AreNotEqual(expected, actual));
+                Assert.That(ex.Message, Is.EqualTo(expectedMessage));
             }
         }
 
         [Test]
         public void AreNotEqualFailsWithFiles()
         {
-            using(TestFile tf1 = new TestFile("Test1.jpg","TestImage1.jpg"))
+            using (new TestFile("Test1.jpg", "TestImage1.jpg"))
             {
-                var expectedMessage = 
+                var expectedMessage =
                     "  Expected: not equal to <System.IO.FileStream>" + Environment.NewLine +
                     "  But was:  <System.IO.FileStream>" + Environment.NewLine;
-                var ex = Assert.Throws<AssertionException>(() => FileAssert.AreNotEqual( "Test1.jpg", "Test1.jpg" ));
+                var ex = Assert.Throws<AssertionException>(() => FileAssert.AreNotEqual("Test1.jpg", "Test1.jpg"));
                 Assert.That(ex.Message, Is.EqualTo(expectedMessage));
             }
         }
@@ -389,19 +347,72 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void AreNotEqualIteratesOverTheEntireFileAndFails()
         {
-            using(TestFile tf1 = new TestFile("Test1.txt","TestText1.txt"))
+            using (new TestFile("Test1.txt", "TestText1.txt"))
+            using (new TestFile("Test2.txt", "TestText1.txt"))
             {
-                using(TestFile tf2 = new TestFile("Test2.txt","TestText1.txt"))
-                {
-                    var expectedMessage = 
-                        "  Expected: not equal to <System.IO.FileStream>" + Environment.NewLine +
-                        "  But was:  <System.IO.FileStream>" + Environment.NewLine;
-                    var ex = Assert.Throws<AssertionException>(() => FileAssert.AreNotEqual( "Test1.txt", "Test2.txt" ));
-                    Assert.That(ex.Message, Is.EqualTo(expectedMessage));
-                }
+                var expectedMessage =
+                    "  Expected: not equal to <System.IO.FileStream>" + Environment.NewLine +
+                    "  But was:  <System.IO.FileStream>" + Environment.NewLine;
+                var ex = Assert.Throws<AssertionException>(() => FileAssert.AreNotEqual("Test1.txt", "Test2.txt"));
+                Assert.That(ex.Message, Is.EqualTo(expectedMessage));
             }
         }
         #endregion
+
+        #endregion
+
+        #region Exists
+
+        [Test]
+        public void ExistsPassesWhenFileInfoExists()
+        {
+            using (new TestFile("Test1.txt", "TestText1.txt"))
+            {
+                var actual = new FileInfo("Test1.txt");
+                FileAssert.Exists(actual);
+            }
+        }
+
+        [Test]
+        public void ExistsPassesWhenStringExists()
+        {
+            using (new TestFile("Test1.txt", "TestText1.txt"))
+            {
+                FileAssert.Exists("Test1.txt");
+            }
+        }
+
+        [Test]
+        public void ExistsFailsWhenFileInfoDoesNotExist()
+        {
+            var expectedMessage = "  File Garbage.txt does not exist." + Environment.NewLine;
+            var ex = Assert.Throws<AssertionException>(() => FileAssert.Exists(new FileInfo("Garbage.txt")));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+        }
+
+        [Test]
+        public void ExistsFailesWhenStringDoesNotExist()
+        {
+            var expectedMessage = "  File Garbage.txt does not exist." + Environment.NewLine;
+            var ex = Assert.Throws<AssertionException>(() => FileAssert.Exists("Garbage.txt"));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+        }
+
+        [Test]
+        public void ExistsFailsWhenFileInfoIsNull()
+        {
+            var expectedMessage = "  Null file does not exist." + Environment.NewLine;
+            var ex = Assert.Throws<AssertionException>(() => FileAssert.Exists((FileInfo)null));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+        }
+
+        [Test]
+        public void ExistsFailesWhenStringIsNull()
+        {
+            var expectedMessage = "  Null file does not exist." + Environment.NewLine;
+            var ex = Assert.Throws<AssertionException>(() => FileAssert.Exists((string)null));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+        }
 
         #endregion
     }
@@ -459,7 +470,7 @@ namespace NUnit.Framework.Assertions
                 {
                     int count = s.Read(buffer, 0, buffer.Length);
                     if (count == 0) break;
-                    foreach( char c in buffer )
+                    foreach (char c in buffer)
                         if (c == target)
                             return offset;
                         else
@@ -472,7 +483,7 @@ namespace NUnit.Framework.Assertions
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!this._disposedValue)
+            if (!_disposedValue)
             {
                 if (disposing)
                 {
@@ -482,7 +493,7 @@ namespace NUnit.Framework.Assertions
                     }
                 }
             }
-            this._disposedValue = true;
+            _disposedValue = true;
         }
 
         #region IDisposable Members

@@ -131,11 +131,9 @@ namespace NUnit.Framework
 		static public void AreEqual(FileInfo expected, FileInfo actual, string message, params object[] args)
 		{
 			using (FileStream exStream = expected.OpenRead())
+			using (FileStream acStream = actual.OpenRead())
 			{
-				using (FileStream acStream = actual.OpenRead())
-				{
-					AreEqual(exStream,acStream,message,args);
-				}
+				AreEqual(exStream,acStream,message,args);
 			}
 		}
 
@@ -179,11 +177,9 @@ namespace NUnit.Framework
 		static public void AreEqual(string expected, string actual, string message, params object[] args)
 		{
 			using (FileStream exStream = File.OpenRead(expected))
+			using (FileStream acStream = File.OpenRead(actual))
 			{
-				using (FileStream acStream = File.OpenRead(actual))
-				{
-					AreEqual(exStream,acStream,message,args);
-				}
+				AreEqual(exStream,acStream,message,args);
 			}
 		}
 
@@ -268,11 +264,9 @@ namespace NUnit.Framework
 		static public void AreNotEqual(FileInfo expected, FileInfo actual, string message, params object[] args)
 		{
 			using (FileStream exStream = expected.OpenRead())
+			using (FileStream acStream = actual.OpenRead())
 			{
-				using (FileStream acStream = actual.OpenRead())
-				{
-					AreNotEqual(exStream,acStream,message,args);
-				}
+				AreNotEqual(exStream,acStream,message,args);
 			}
 		}
 
@@ -313,11 +307,9 @@ namespace NUnit.Framework
 		static public void AreNotEqual(string expected, string actual, string message, params object[] args)
 		{
 			using (FileStream exStream = File.OpenRead(expected))
+			using (FileStream acStream = File.OpenRead(actual))
 			{
-				using (FileStream acStream = File.OpenRead(actual))
-				{
-					AreNotEqual(exStream,acStream,message,args);
-				}
+				AreNotEqual(exStream,acStream,message,args);
 			}
 		}
 
@@ -347,6 +339,82 @@ namespace NUnit.Framework
 		#endregion
 
 		#endregion
-	}
+
+        #region Exists
+
+        #region FileInfo
+        /// <summary>
+        /// Asserts that the file exists. If it does not exist
+        /// an <see cref="AssertionException"/> is thrown.
+        /// </summary>
+        /// <param name="actual">A file containing the actual value</param>
+        /// <param name="message">The message to display if Streams are not equal</param>
+        /// <param name="args">Arguments to be used in formatting the message</param>
+        static public void Exists(FileInfo actual, string message, params object[] args)
+        {
+            Assert.Fail("Incomplete");
+        }
+
+        /// <summary>
+        /// Asserts that the file exists. If it does not exist
+        /// an <see cref="AssertionException"/> is thrown.
+        /// </summary>
+        /// <param name="actual">A file containing the actual value</param>
+        /// <param name="message">The message to display if objects are not equal</param>
+        static public void Exists(FileInfo actual, string message)
+        {
+            Exists(actual, message, null);
+        }
+
+        /// <summary>
+        /// Asserts that the file exists. If it does not exist
+        /// an <see cref="AssertionException"/> is thrown.
+        /// </summary>
+        /// <param name="actual">A file containing the actual value</param>
+        static public void Exists(FileInfo actual)
+        {
+            Exists(actual, string.Empty, null);
+        }
+
+        #endregion
+
+        #region String
+        /// <summary>
+        /// Asserts that the file exists. If it does not exist
+        /// an <see cref="AssertionException"/> is thrown.
+        /// </summary>
+        /// <param name="actual">The path to a file containing the actual value</param>
+        /// <param name="message">The message to display if Streams are not equal</param>
+        /// <param name="args">Arguments to be used in formatting the message</param>
+        static public void Exists(string actual, string message, params object[] args)
+        {
+            Assert.Fail("Incomplete");
+        }
+
+        /// <summary>
+        /// Asserts that the file exists. If it does not exist
+        /// an <see cref="AssertionException"/> is thrown.
+        /// </summary>
+        /// <param name="actual">The path to a file containing the actual value</param>
+        /// <param name="message">The message to display if objects are not equal</param>
+        static public void Exists(string actual, string message)
+        {
+            Exists(actual, message, null);
+        }
+
+        /// <summary>
+        /// Asserts that the file exists. If it does not exist
+        /// an <see cref="AssertionException"/> is thrown.
+        /// </summary>
+        /// <param name="actual">The path to a file containing the actual value</param>
+        static public void Exists(string actual)
+        {
+            Exists(actual, string.Empty, null);
+        }
+
+        #endregion
+
+        #endregion
+    }
 }
 #endif
