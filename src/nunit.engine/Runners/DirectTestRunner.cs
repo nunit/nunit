@@ -111,7 +111,7 @@ namespace NUnit.Engine.Runners
         {
             TestEngineResult result = new TestEngineResult();
 
-            foreach (NUnitFrameworkDriver driver in drivers)
+            foreach (IFrameworkDriver driver in drivers)
                 result.Add(driver.Run(listener, filter));
 
             return IsProjectPackage(this.package)

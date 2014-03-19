@@ -251,9 +251,7 @@ namespace NUnit.Engine
                     List<RuntimeFramework> frameworks = new List<RuntimeFramework>();
 
                     AppendDotNetFrameworks(frameworks);
-#if !NETCF
                     AppendDefaultMonoFramework(frameworks);
-#endif
                     // NYI
                     //AppendMonoFrameworks(frameworks);
 
@@ -428,15 +426,11 @@ namespace NUnit.Engine
 
         private static bool IsRuntimeTypeName(string name)
         {
-#if NETCF
-            return Enum.IsDefined(typeof(RuntimeType), name);
-#else
             foreach (string item in Enum.GetNames(typeof(RuntimeType)))
                 if (item.ToLower() == name.ToLower())
                     return true;
 
             return false;
-#endif
         }
 
         private static string GetDefaultDisplayName(RuntimeType runtime, Version version)
@@ -457,7 +451,6 @@ namespace NUnit.Engine
                   (v1.Revision < 0 || v2.Revision < 0 || v1.Revision == v2.Revision);
         }
 
-#if !NETCF
         private static void AppendMonoFrameworks(List<RuntimeFramework> frameworks)
         {
             if (Environment.OSVersion.Platform == PlatformID.Win32NT)
@@ -547,8 +540,6 @@ namespace NUnit.Engine
                 }
             }
         }
-#endif
-
 
         private static void AppendDotNetFrameworks(List<RuntimeFramework> frameworks)
         {
