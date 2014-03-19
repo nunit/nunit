@@ -387,15 +387,15 @@ namespace NUnit.Framework.Assertions
         {
             var expectedMessage = "  File Garbage.txt does not exist." + Environment.NewLine;
             var ex = Assert.Throws<AssertionException>(() => FileAssert.Exists(new FileInfo("Garbage.txt")));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex.Message, Is.StringStarting(expectedMessage));
         }
 
         [Test]
-        public void ExistsFailesWhenStringDoesNotExist()
+        public void ExistsFailsWhenStringDoesNotExist()
         {
             var expectedMessage = "  File Garbage.txt does not exist." + Environment.NewLine;
             var ex = Assert.Throws<AssertionException>(() => FileAssert.Exists("Garbage.txt"));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex.Message, Is.StringStarting(expectedMessage));
         }
 
         [Test]
@@ -403,15 +403,15 @@ namespace NUnit.Framework.Assertions
         {
             var expectedMessage = "  Null file does not exist." + Environment.NewLine;
             var ex = Assert.Throws<AssertionException>(() => FileAssert.Exists((FileInfo)null));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex.Message, Is.StringStarting(expectedMessage));
         }
 
         [Test]
-        public void ExistsFailesWhenStringIsNull()
+        public void ExistsFailsWhenStringIsNull()
         {
             var expectedMessage = "  Null file does not exist." + Environment.NewLine;
             var ex = Assert.Throws<AssertionException>(() => FileAssert.Exists((string)null));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex.Message, Is.StringStarting(expectedMessage));
         }
 
         #endregion

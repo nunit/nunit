@@ -352,7 +352,8 @@ namespace NUnit.Framework
         /// <param name="args">Arguments to be used in formatting the message</param>
         static public void Exists(FileInfo actual, string message, params object[] args)
         {
-            Assert.Fail("Incomplete");
+            Assert.That(actual, Is.Not.Null, "Null file does not exist.");
+            Assert.That(actual.Exists, Is.True, "File {0} does not exist.", actual.Name );
         }
 
         /// <summary>
@@ -388,7 +389,8 @@ namespace NUnit.Framework
         /// <param name="args">Arguments to be used in formatting the message</param>
         static public void Exists(string actual, string message, params object[] args)
         {
-            Assert.Fail("Incomplete");
+            var fileinfo = string.IsNullOrEmpty(actual) ? null : new FileInfo(actual);
+            Exists(fileinfo, message, args);
         }
 
         /// <summary>
