@@ -422,7 +422,7 @@ namespace NUnit.Framework.Assertions
         #region DoesNotExist
 
         [Test]
-        public void DoesNotExistExistFailsWhenFileInfoExists()
+        public void DoesNotExistFailsWhenFileInfoExists()
         {
             using(new TestFile("Test1.txt", "TestText1.txt"))
             {
