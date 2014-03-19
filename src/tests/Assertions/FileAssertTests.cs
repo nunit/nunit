@@ -386,14 +386,14 @@ namespace NUnit.Framework.Assertions
         public void ExistsFailsWhenFileInfoDoesNotExist()
         {
             var ex = Assert.Throws<AssertionException>(() => FileAssert.Exists(new FileInfo("Garbage.txt")));
-            Assert.That(ex.Message, Is.StringStarting("  Expected: File exists"));
+            Assert.That(ex.Message, Is.StringStarting("  Expected: file exists"));
         }
 
         [Test]
         public void ExistsFailsWhenStringDoesNotExist()
         {
             var ex = Assert.Throws<AssertionException>(() => FileAssert.Exists("Garbage.txt"));
-            Assert.That(ex.Message, Is.StringStarting("  Expected: File exists"));
+            Assert.That(ex.Message, Is.StringStarting("  Expected: file exists"));
         }
 
         [Test]
@@ -414,6 +414,63 @@ namespace NUnit.Framework.Assertions
         public void ExistsFailsWhenStringIsEmpty()
         {
             var ex = Assert.Throws<ArgumentException>(() => FileAssert.Exists(string.Empty));
+            Assert.That(ex.Message, Is.StringStarting("The actual value cannot be an empty string"));
+        }
+
+        #endregion
+
+        #region DoesNotExist
+
+        [Test]
+        public void DoesNotExistExistFailsWhenFileInfoExists()
+        {
+            using(new TestFile("Test1.txt", "TestText1.txt"))
+            {
+                var ex = Assert.Throws<AssertionException>(() => FileAssert.DoesNotExist(new FileInfo("Test1.txt")));
+                Assert.That(ex.Message, Is.StringStarting("  Expected: not file exists"));
+            }
+        }
+
+        [Test]
+        public void DoesNotExistFailsWhenStringExists()
+        {
+            using(new TestFile("Test1.txt", "TestText1.txt"))
+            {
+                var ex = Assert.Throws<AssertionException>(() => FileAssert.DoesNotExist("Test1.txt"));
+                Assert.That(ex.Message, Is.StringStarting("  Expected: not file exists"));
+            }
+        }
+
+        [Test]
+        public void DoesNotExistPassesWhenFileInfoDoesNotExist()
+        {
+            FileAssert.DoesNotExist(new FileInfo("Garbage.txt"));
+        }
+
+        [Test]
+        public void DoesNotExistPassesWhenStringDoesNotExist()
+        {
+            FileAssert.DoesNotExist("Garbage.txt");
+        }
+
+        [Test]
+        public void DoesNotExistFailsWhenFileInfoIsNull()
+        {
+            var ex = Assert.Throws<ArgumentNullException>(() => FileAssert.DoesNotExist((FileInfo)null));
+            Assert.That(ex.Message, Is.StringStarting("The actual value must be a non-null string or FileInfo"));
+        }
+
+        [Test]
+        public void DoesNotExistFailsWhenStringIsNull()
+        {
+            var ex = Assert.Throws<ArgumentNullException>(() => FileAssert.DoesNotExist((string)null));
+            Assert.That(ex.Message, Is.StringStarting("The actual value must be a non-null string or FileInfo"));
+        }
+
+        [Test]
+        public void DoesNotExistFailsWhenStringIsEmpty()
+        {
+            var ex = Assert.Throws<ArgumentException>(() => FileAssert.DoesNotExist(string.Empty));
             Assert.That(ex.Message, Is.StringStarting("The actual value cannot be an empty string"));
         }
 

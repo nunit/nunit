@@ -40,7 +40,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public override string Description
         {
-            get { return "File exists"; }
+            get { return "file exists"; }
         }
 
         /// <summary>

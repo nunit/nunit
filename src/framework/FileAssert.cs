@@ -414,6 +414,82 @@ namespace NUnit.Framework
         #endregion
 
         #endregion
+
+        #region DoesNotExist
+
+        #region FileInfo
+        /// <summary>
+        /// Asserts that the file does not exist. If it does exist
+        /// an <see cref="AssertionException"/> is thrown.
+        /// </summary>
+        /// <param name="actual">A file containing the actual value</param>
+        /// <param name="message">The message to display if Streams are not equal</param>
+        /// <param name="args">Arguments to be used in formatting the message</param>
+        static public void DoesNotExist(FileInfo actual, string message, params object[] args)
+        {
+            Assert.That(actual, new NotConstraint(new FileExistsConstraint()), message, args);
+        }
+
+        /// <summary>
+        /// Asserts that the file does not exist. If it does exist
+        /// an <see cref="AssertionException"/> is thrown.
+        /// </summary>
+        /// <param name="actual">A file containing the actual value</param>
+        /// <param name="message">The message to display if objects are not equal</param>
+        static public void DoesNotExist(FileInfo actual, string message)
+        {
+            DoesNotExist(actual, message, null);
+        }
+
+        /// <summary>
+        /// Asserts that the file does not exist. If it does exist
+        /// an <see cref="AssertionException"/> is thrown.
+        /// </summary>
+        /// <param name="actual">A file containing the actual value</param>
+        static public void DoesNotExist(FileInfo actual)
+        {
+            DoesNotExist(actual, string.Empty, null);
+        }
+
+        #endregion
+
+        #region String
+        /// <summary>
+        /// Asserts that the file does not exist. If it does exist
+        /// an <see cref="AssertionException"/> is thrown.
+        /// </summary>
+        /// <param name="actual">The path to a file containing the actual value</param>
+        /// <param name="message">The message to display if Streams are not equal</param>
+        /// <param name="args">Arguments to be used in formatting the message</param>
+        static public void DoesNotExist(string actual, string message, params object[] args)
+        {
+            Assert.That(actual, new NotConstraint(new FileExistsConstraint()), message, args);
+        }
+
+        /// <summary>
+        /// Asserts that the file does not exist. If it does exist
+        /// an <see cref="AssertionException"/> is thrown.
+        /// </summary>
+        /// <param name="actual">The path to a file containing the actual value</param>
+        /// <param name="message">The message to display if objects are not equal</param>
+        static public void DoesNotExist(string actual, string message)
+        {
+            DoesNotExist(actual, message, null);
+        }
+
+        /// <summary>
+        /// Asserts that the file does not exist. If it does exist
+        /// an <see cref="AssertionException"/> is thrown.
+        /// </summary>
+        /// <param name="actual">The path to a file containing the actual value</param>
+        static public void DoesNotExist(string actual)
+        {
+            DoesNotExist(actual, string.Empty, null);
+        }
+
+        #endregion
+
+        #endregion
     }
 }
 #endif
