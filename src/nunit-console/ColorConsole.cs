@@ -85,7 +85,7 @@ namespace NUnit.ConsoleRunner
 
         public ColorConsole( ColorStyle style )
         {
-            if ( Options != null && Options.Color )
+            if ( Options == null || !Options.NoColor )
                 Console.ForegroundColor = GetColor( style );
         }
 
@@ -171,7 +171,7 @@ namespace NUnit.ConsoleRunner
         /// </summary>
         public void Dispose()
         {
-            if (Options != null && Options.Color)
+            if (Options == null || !Options.NoColor)
                 Console.ResetColor();
         }
 

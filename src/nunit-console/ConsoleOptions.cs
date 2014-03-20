@@ -132,8 +132,8 @@ namespace NUnit.ConsoleRunner
             this.Add("noheader|noh", "Suppress display of program information at start of run.",
                 v => NoHeader = v != null);
 
-            this.Add("color|c", "Displays console output in color.",
-                v => Color = v != null);
+            this.Add("nocolor|noc", "Displays console output without color.",
+                v => NoColor = v != null);
 
             this.Add("verbose|v", "Display additional information as the test runs.",
                 v => Verbose = v != null);
@@ -208,7 +208,7 @@ namespace NUnit.ConsoleRunner
 
         public bool NoHeader { get; private set; }
 
-        public bool Color { get; private set; }
+        public bool NoColor { get; private set; }
 
         public bool Verbose { get; private set; }
 
