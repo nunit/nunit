@@ -75,7 +75,7 @@ namespace NUnit.Framework.Constraints
         object[] SuccessData = new object[] 
             { 
                 @"/folder1/folder2", 
-				@"/folder1/folder2/",
+                @"/folder1/folder2/",
                 @"/folder1/./folder2",
                 @"/folder1/./folder2/",
                 @"/folder1/junk/../folder2",
@@ -165,7 +165,7 @@ namespace NUnit.Framework.Constraints
                 new TestCaseData("/FOLDER1/./junk/../Folder2/temp/../Folder3", "\"/FOLDER1/./junk/../Folder2/temp/../Folder3\""),
                 new TestCaseData("/folder1/folder3", "\"/folder1/folder3\""),
                 new TestCaseData("/folder1/./folder2/../folder3", "\"/folder1/./folder2/../folder3\""),
-				new TestCaseData("/folder1", "\"/folder1\""),
+                new TestCaseData("/folder1", "\"/folder1\""),
                 new TestCaseData("/folder1/folder2", "\"/folder1/folder2\""),
                 new TestCaseData("/folder1/./folder2", "\"/folder1/./folder2\""),
                 new TestCaseData("/folder1/junk/../folder2", "\"/folder1/junk/../folder2\""),
@@ -240,7 +240,7 @@ namespace NUnit.Framework.Constraints
                 new TestCaseData( "/FOLDER1/./junk/../Folder2/temp/../Folder3", "\"/FOLDER1/./junk/../Folder2/temp/../Folder3\"" ),
                 new TestCaseData( "/folder1/folder3", "\"/folder1/folder3\"" ),
                 new TestCaseData( "/folder1/./folder2/../folder3", "\"/folder1/./folder2/../folder3\"" ),
-				new TestCaseData( "/folder1", "\"/folder1\"" )
+                new TestCaseData( "/folder1", "\"/folder1\"" )
             };
     }
 }

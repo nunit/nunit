@@ -80,5 +80,5 @@ namespace NUnit.Framework.Attributes
             Assert.That(attr.Arguments, Is.EqualTo(combinedArgs));
             Assert.That(attr.TypeArgs.Length, Is.EqualTo(0));
         }
-	}
+    }
 }

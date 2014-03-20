@@ -27,12 +27,12 @@ using System.IO;
 
 namespace NUnit.Framework.Internal
 {
-	/// <summary>
-	/// InternalTraceWriter can write to a separate file per domain
-	/// and process using it or feed output to another TextWriter;
-	/// </summary>
-	public class InternalTraceWriter : TextWriter
-	{
+    /// <summary>
+    /// InternalTraceWriter can write to a separate file per domain
+    /// and process using it or feed output to another TextWriter;
+    /// </summary>
+    public class InternalTraceWriter : TextWriter
+    {
         TextWriter writer;
 
         /// <summary>
@@ -40,11 +40,11 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="logPath">Path to the file to use</param>
         public InternalTraceWriter(string logPath)
-		{
+        {
             var streamWriter = new StreamWriter(new FileStream(logPath, FileMode.Append, FileAccess.Write, FileShare.Write));
             streamWriter.AutoFlush = true;
             this.writer = streamWriter;
-		}
+        }
 
         /// <summary>
         /// Construct an InternalTraceWriter that writes to a 
@@ -78,7 +78,7 @@ namespace NUnit.Framework.Internal
         /// Writes a string followed by a line terminator to the text string or stream.
         /// </summary>
         /// <param name="value">The string to write. If <paramref name="value" /> is null, only the line terminator is written.</param>
-	    public override void WriteLine(string value)
+        public override void WriteLine(string value)
         {
             writer.WriteLine(value);
         }
@@ -104,5 +104,5 @@ namespace NUnit.Framework.Internal
             if ( writer != null )
                 writer.Flush();
         }
-	}
+    }
 }

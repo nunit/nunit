@@ -29,43 +29,43 @@ using NUnit.Framework;
 
 namespace NUnit.TestData.TestFixtureExtensionData
 {
-	[TestFixture]
-	public abstract class BaseTestFixture
-	{
-		public bool baseSetup = false;
-		public bool baseTeardown = false;
+    [TestFixture]
+    public abstract class BaseTestFixture
+    {
+        public bool baseSetup = false;
+        public bool baseTeardown = false;
 
         [SetUp]
-		public void SetUp()
-		{ baseSetup = true; }
+        public void SetUp()
+        { baseSetup = true; }
 
         [TearDown]
-		public void TearDown()
-		{ baseTeardown = true; }
-	}
+        public void TearDown()
+        { baseTeardown = true; }
+    }
 
-	public class DerivedTestFixture : BaseTestFixture
-	{
-		[Test]
-		public void Success()
-		{
-			Assert.IsTrue(true);
-		}
-	}
+    public class DerivedTestFixture : BaseTestFixture
+    {
+        [Test]
+        public void Success()
+        {
+            Assert.IsTrue(true);
+        }
+    }
 
-	public class SetUpDerivedTestFixture : BaseTestFixture
-	{
-		[SetUp]
-		public void Init()
-		{
-			base.SetUp();
-		}
+    public class SetUpDerivedTestFixture : BaseTestFixture
+    {
+        [SetUp]
+        public void Init()
+        {
+            base.SetUp();
+        }
 
-		[Test]
-		public void Success()
-		{
-			Assert.IsTrue(true);
-		}
-	}
+        [Test]
+        public void Success()
+        {
+            Assert.IsTrue(true);
+        }
+    }
 }
 #endif

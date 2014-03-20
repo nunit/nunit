@@ -33,20 +33,20 @@ using ThreadState = System.Threading.ThreadState;
 
 namespace NUnit.Framework.Internal.Execution
 {
-	/// <summary>
-	/// Summary description for EventQueueTests.
-	/// </summary>
+    /// <summary>
+    /// Summary description for EventQueueTests.
+    /// </summary>
     [TestFixture]
     public class EventQueueTests
     {
         static readonly Event[] events = {
-				new TestStartedEvent( null ),
-				new TestStartedEvent( null ),
-				new TestFinishedEvent( null ),
-				new TestStartedEvent( null ),
-				new TestFinishedEvent( null ),
-				new TestFinishedEvent( null ),
-			};
+                new TestStartedEvent( null ),
+                new TestStartedEvent( null ),
+                new TestFinishedEvent( null ),
+                new TestStartedEvent( null ),
+                new TestFinishedEvent( null ),
+                new TestFinishedEvent( null ),
+            };
 
         private static void EnqueueEvents(EventQueue q)
         {

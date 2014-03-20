@@ -34,11 +34,11 @@ namespace NUnit.Framework.Constraints
             stringRepresentation = "<or <equal 42> <equal 99>>";
         }
 
-		object[] SuccessData = new object[] { 99, 42 };
+        object[] SuccessData = new object[] { 99, 42 };
 
-		object[] FailureData = new object[] { new object[] { 37, "37" } };
+        object[] FailureData = new object[] { new object[] { 37, "37" } };
 
-		[Test]
+        [Test]
         public void CanCombineTestsWithOrOperator()
         {
             Assert.That(99, new EqualConstraint(42) | new EqualConstraint(99) );

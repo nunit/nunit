@@ -114,8 +114,8 @@ namespace NUnit.Framework
         {
             get
             {
-				return ec.WorkDirectory;
-        	}
+                return ec.WorkDirectory;
+            }
         }
 
         /// <summary>
@@ -178,19 +178,19 @@ namespace NUnit.Framework
                     return test.Name;
                 }
             }
-			
+            
             /// <summary>
             /// The name of the method representing the test.
             /// </summary>
-			public string MethodName
-			{
-				get
-				{
-					return test is TestMethod
-						? ((TestMethod)test).Method.Name
-						: null;
-				}
-			}
+            public string MethodName
+            {
+                get
+                {
+                    return test is TestMethod
+                        ? ((TestMethod)test).Method.Name
+                        : null;
+                }
+            }
 
             /// <summary>
             /// The FullName of the test

@@ -61,7 +61,7 @@ namespace NUnit.Framework.Internal
             Assert.That(Path.GetFileName(path), Is.EqualTo(THIS_ASSEMBLY_PATH).IgnoreCase);
             Assert.That(File.Exists(path));
         }
-		
+        
         // The following tests are only useful to the extent that the test cases
         // match what will actually be provided to the method in production.
         // As currently used, NUnit's codebase can only use the file: schema,

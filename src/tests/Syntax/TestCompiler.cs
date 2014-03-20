@@ -30,35 +30,35 @@ namespace NUnit.Framework.Syntax
     internal class TestCompiler
     {
         private readonly Microsoft.CSharp.CSharpCodeProvider provider;
-		CompilerParameters options;
+        CompilerParameters options;
 
-		public TestCompiler() : this( null, null ) { }
+        public TestCompiler() : this( null, null ) { }
 
-		public TestCompiler( string[] assemblyNames ) : this( assemblyNames, null ) { }
+        public TestCompiler( string[] assemblyNames ) : this( assemblyNames, null ) { }
 
-		public TestCompiler( string[] assemblyNames, string outputName )
-		{
-			this.provider = new Microsoft.CSharp.CSharpCodeProvider();
+        public TestCompiler( string[] assemblyNames, string outputName )
+        {
+            this.provider = new Microsoft.CSharp.CSharpCodeProvider();
             this.options = new CompilerParameters();
 
-			if ( assemblyNames != null && assemblyNames.Length > 0 )
-				options.ReferencedAssemblies.AddRange( assemblyNames );
-			if ( outputName != null )
-				options.OutputAssembly = outputName;
+            if ( assemblyNames != null && assemblyNames.Length > 0 )
+                options.ReferencedAssemblies.AddRange( assemblyNames );
+            if ( outputName != null )
+                options.OutputAssembly = outputName;
 
-			options.IncludeDebugInformation = false;
-			options.TempFiles = new TempFileCollection( ".", false );
-			options.GenerateInMemory = false;
-		}
+            options.IncludeDebugInformation = false;
+            options.TempFiles = new TempFileCollection( ".", false );
+            options.GenerateInMemory = false;
+        }
 
-		public CompilerParameters Options
-		{
-			get { return options; }
-		}
+        public CompilerParameters Options
+        {
+            get { return options; }
+        }
 
-		public CompilerResults CompileCode( string code )
-		{
-			return provider.CompileAssemblyFromSource( options, code );
+        public CompilerResults CompileCode( string code )
+        {
+            return provider.CompileAssemblyFromSource( options, code );
         }
     }
 }

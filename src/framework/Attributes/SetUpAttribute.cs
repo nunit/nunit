@@ -23,7 +23,7 @@
 
 namespace NUnit.Framework
 {
-	using System;
+    using System;
 
     /// <summary>
     /// Attribute used to mark a class that contains one-time SetUp 

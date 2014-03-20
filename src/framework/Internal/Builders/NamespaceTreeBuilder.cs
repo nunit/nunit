@@ -26,80 +26,80 @@ using System.Collections.Generic;
 
 namespace NUnit.Framework.Internal.Builders
 {
-	/// <summary>
-	/// Class that can build a tree of automatic namespace
-	/// suites from a group of fixtures.
-	/// </summary>
-	public class NamespaceTreeBuilder
-	{
-		#region Instance Variables
+    /// <summary>
+    /// Class that can build a tree of automatic namespace
+    /// suites from a group of fixtures.
+    /// </summary>
+    public class NamespaceTreeBuilder
+    {
+        #region Instance Variables
 
-		/// <summary>
-		/// NamespaceDictionary of all test suites we have created to represent 
+        /// <summary>
+        /// NamespaceDictionary of all test suites we have created to represent 
         /// namespaces. Used to locate namespace parent suites for fixtures.
-		/// </summary>
-		Dictionary<string, TestSuite> namespaceSuites  = new Dictionary<string, TestSuite>();
+        /// </summary>
+        Dictionary<string, TestSuite> namespaceSuites  = new Dictionary<string, TestSuite>();
 
-		/// <summary>
-		/// The root of the test suite being created by this builder.
-		/// </summary>
-		TestSuite rootSuite;
+        /// <summary>
+        /// The root of the test suite being created by this builder.
+        /// </summary>
+        TestSuite rootSuite;
 
-		#endregion
+        #endregion
 
-		#region Constructor
+        #region Constructor
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NamespaceTreeBuilder"/> class.
         /// </summary>
         /// <param name="rootSuite">The root suite.</param>
-		public NamespaceTreeBuilder( TestSuite rootSuite )
-		{
-			this.rootSuite = rootSuite;
-		}
+        public NamespaceTreeBuilder( TestSuite rootSuite )
+        {
+            this.rootSuite = rootSuite;
+        }
 
-		#endregion
+        #endregion
 
-		#region Properties
+        #region Properties
 
         /// <summary>
         /// Gets the root entry in the tree created by the NamespaceTreeBuilder.
         /// </summary>
         /// <value>The root suite.</value>
-		public TestSuite RootSuite
-		{
-			get { return rootSuite; }
-		}
+        public TestSuite RootSuite
+        {
+            get { return rootSuite; }
+        }
 
-		#endregion
+        #endregion
 
-		#region Public Methods
+        #region Public Methods
 
         /// <summary>
         /// Adds the specified fixtures to the tree.
         /// </summary>
         /// <param name="fixtures">The fixtures to be added.</param>
-		public void Add( IList fixtures )
-		{
+        public void Add( IList fixtures )
+        {
             foreach (TestSuite fixture in fixtures)
                 //if (fixture is SetUpFixture)
                 //    Add(fixture as SetUpFixture);
                 //else
                     Add( fixture );
-		}
+        }
 
         /// <summary>
         /// Adds the specified fixture to the tree.
         /// </summary>
         /// <param name="fixture">The fixture to be added.</param>
-		public void Add( TestSuite fixture )
-		{
+        public void Add( TestSuite fixture )
+        {
             string ns = fixture.FullName;
             int index = ns.IndexOf("[");
             if (index >= 0) ns = ns.Substring(0, index);
             index = ns.LastIndexOf( '.' );
             ns = index > 0 ? ns.Substring( 0, index ) : string.Empty;
-			TestSuite containingSuite = BuildFromNameSpace( ns );
+            TestSuite containingSuite = BuildFromNameSpace( ns );
 
             if (fixture is SetUpFixture)
             {
@@ -129,16 +129,16 @@ namespace NUnit.Framework.Internal.Builders
                 namespaceSuites[ns] = fixture;
             }
             else
-			    containingSuite.Add( fixture );
-		}
+                containingSuite.Add( fixture );
+        }
 
-		#endregion
+        #endregion
 
-		#region Helper Method
+        #region Helper Method
 
-		private TestSuite BuildFromNameSpace( string ns )
-		{
-			if( ns == null || ns  == "" ) return rootSuite;
+        private TestSuite BuildFromNameSpace( string ns )
+        {
+            if( ns == null || ns  == "" ) return rootSuite;
 
             TestSuite suite = namespaceSuites.ContainsKey(ns)
                 ? namespaceSuites[ns]
@@ -148,27 +148,27 @@ namespace NUnit.Framework.Internal.Builders
                 return suite;
 
             int index = ns.LastIndexOf(".");
-			if( index == -1 )
-			{
-				suite = new TestSuite( ns );
-				if ( rootSuite == null )
-					rootSuite = suite;
-				else
-					rootSuite.Add(suite);
-			}
-			else
-			{
-				string parentNamespace = ns.Substring( 0,index );
-				TestSuite parent = BuildFromNameSpace( parentNamespace );
-				string suiteName = ns.Substring( index+1 );
-				suite = new TestSuite( parentNamespace, suiteName );
-				parent.Add( suite );
-			}
+            if( index == -1 )
+            {
+                suite = new TestSuite( ns );
+                if ( rootSuite == null )
+                    rootSuite = suite;
+                else
+                    rootSuite.Add(suite);
+            }
+            else
+            {
+                string parentNamespace = ns.Substring( 0,index );
+                TestSuite parent = BuildFromNameSpace( parentNamespace );
+                string suiteName = ns.Substring( index+1 );
+                suite = new TestSuite( parentNamespace, suiteName );
+                parent.Add( suite );
+            }
 
             namespaceSuites[ns] = suite;
             return suite;
-		}
+        }
 
-		#endregion
+        #endregion
     }
 }

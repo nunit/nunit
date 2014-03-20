@@ -27,16 +27,16 @@ using NUnit.Framework.Internal;
 
 namespace NUnit.Framework
 {
-	/// <summary>
-	/// Attribute used to apply a category to a test
-	/// </summary>
-	[AttributeUsage(AttributeTargets.Class|AttributeTargets.Method|AttributeTargets.Assembly, AllowMultiple=true, Inherited=true)]
-	public class CategoryAttribute : NUnitAttribute, IApplyToTest
-	{
-		/// <summary>
-		/// The name of the category
-		/// </summary>
-		protected string categoryName;
+    /// <summary>
+    /// Attribute used to apply a category to a test
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Class|AttributeTargets.Method|AttributeTargets.Assembly, AllowMultiple=true, Inherited=true)]
+    public class CategoryAttribute : NUnitAttribute, IApplyToTest
+    {
+        /// <summary>
+        /// The name of the category
+        /// </summary>
+        protected string categoryName;
 
         /// <summary>
         /// Construct attribute for a given category based on
@@ -54,24 +54,24 @@ namespace NUnit.Framework
             this.categoryName = name.Trim();
         }
 
-		/// <summary>
-		/// Protected constructor uses the Type name as the name
-		/// of the category.
-		/// </summary>
-		protected CategoryAttribute()
-		{
-			this.categoryName = this.GetType().Name;
-			if ( categoryName.EndsWith( "Attribute" ) )
-				categoryName = categoryName.Substring( 0, categoryName.Length - 9 );
-		}
+        /// <summary>
+        /// Protected constructor uses the Type name as the name
+        /// of the category.
+        /// </summary>
+        protected CategoryAttribute()
+        {
+            this.categoryName = this.GetType().Name;
+            if ( categoryName.EndsWith( "Attribute" ) )
+                categoryName = categoryName.Substring( 0, categoryName.Length - 9 );
+        }
 
-		/// <summary>
-		/// The name of the category
-		/// </summary>
-		public string Name 
-		{
-			get { return categoryName; }
-		}
+        /// <summary>
+        /// The name of the category
+        /// </summary>
+        public string Name 
+        {
+            get { return categoryName; }
+        }
 
         #region IApplyToTest Members
 

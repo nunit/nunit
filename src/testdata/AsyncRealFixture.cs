@@ -7,109 +7,109 @@ using NUnit.Framework.Internal;
 
 namespace NUnit.TestData
 {
-	public class AsyncRealFixture
-	{
-		[Test]
-		public async void AsyncVoidSuccess()
-		{
+    public class AsyncRealFixture
+    {
+        [Test]
+        public async void AsyncVoidSuccess()
+        {
             var result = await ReturnOne();
 
-			Assert.AreEqual(1, result);
+            Assert.AreEqual(1, result);
         }
 
-		[Test]
-		public async void AsyncVoidFailure()
-		{
-			var result = await ReturnOne();
-
-			Assert.AreEqual(2, result);
-		}
-
-		[Test]
-		public async void AsyncVoidError()
-		{
-			await ThrowException();
-
-			Assert.Fail("Should never get here");
-		}
-
-		[Test]
-		public async Task AsyncTaskSuccess()
-		{
+        [Test]
+        public async void AsyncVoidFailure()
+        {
             var result = await ReturnOne();
 
-			Assert.AreEqual(1, result);
-		}
+            Assert.AreEqual(2, result);
+        }
 
-		[Test]
-		public async Task AsyncTaskFailure()
-		{
-			var result = await ReturnOne();
+        [Test]
+        public async void AsyncVoidError()
+        {
+            await ThrowException();
 
-			Assert.AreEqual(2, result);
-		}
+            Assert.Fail("Should never get here");
+        }
 
-		[Test]
-		public async Task AsyncTaskError()
-		{
-			await ThrowException();
-
-			Assert.Fail("Should never get here");
-		}
-
-        [Test] // Not Runnable
-		public async Task<int> AsyncTaskResultSuccess()
-		{
+        [Test]
+        public async Task AsyncTaskSuccess()
+        {
             var result = await ReturnOne();
 
-			Assert.AreEqual(1, result);
+            Assert.AreEqual(1, result);
+        }
 
-			return result;
-		}
+        [Test]
+        public async Task AsyncTaskFailure()
+        {
+            var result = await ReturnOne();
+
+            Assert.AreEqual(2, result);
+        }
+
+        [Test]
+        public async Task AsyncTaskError()
+        {
+            await ThrowException();
+
+            Assert.Fail("Should never get here");
+        }
 
         [Test] // Not Runnable
-		public async Task<int> AsyncTaskResultFailure()
-		{
-			var result = await ReturnOne();
+        public async Task<int> AsyncTaskResultSuccess()
+        {
+            var result = await ReturnOne();
 
-			Assert.AreEqual(2, result);
+            Assert.AreEqual(1, result);
 
-			return result;
-		}
+            return result;
+        }
 
         [Test] // Not Runnable
-		public async Task<int> AsyncTaskResultError()
-		{
-			await ThrowException();
+        public async Task<int> AsyncTaskResultFailure()
+        {
+            var result = await ReturnOne();
 
-			Assert.Fail("Should never get here");
+            Assert.AreEqual(2, result);
 
-			return 0;
-		}
+            return result;
+        }
 
-		[TestCase(ExpectedResult = 1)]
-		public async Task<int> AsyncTaskResultCheckSuccess()
-		{
-			return await ReturnOne();
-		}
+        [Test] // Not Runnable
+        public async Task<int> AsyncTaskResultError()
+        {
+            await ThrowException();
 
-		[TestCase(ExpectedResult = 2)]
-		public async Task<int> AsyncTaskResultCheckFailure()
-		{
-			return await ReturnOne();
-		}
+            Assert.Fail("Should never get here");
 
-		[TestCase(ExpectedResult = 0)]
-		public async Task<int> AsyncTaskResultCheckError()
-		{
-			return await ThrowException();
-		}
+            return 0;
+        }
 
-		[TestCase(ExpectedResult = null)]
-		public async Task<object> AsyncTaskResultCheckSuccessReturningNull()
-		{
-			return await Task.Run(() => (object)null);
-		}
+        [TestCase(ExpectedResult = 1)]
+        public async Task<int> AsyncTaskResultCheckSuccess()
+        {
+            return await ReturnOne();
+        }
+
+        [TestCase(ExpectedResult = 2)]
+        public async Task<int> AsyncTaskResultCheckFailure()
+        {
+            return await ReturnOne();
+        }
+
+        [TestCase(ExpectedResult = 0)]
+        public async Task<int> AsyncTaskResultCheckError()
+        {
+            return await ThrowException();
+        }
+
+        [TestCase(ExpectedResult = null)]
+        public async Task<object> AsyncTaskResultCheckSuccessReturningNull()
+        {
+            return await Task.Run(() => (object)null);
+        }
 
         [Test]
         public async void AsyncVoidAssertSynchronizationContext()
@@ -117,139 +117,139 @@ namespace NUnit.TestData
             await Task.Yield();
         }
 
-		[Test]
-		public async void NestedAsyncVoidSuccess()
-		{
+        [Test]
+        public async void NestedAsyncVoidSuccess()
+        {
             var result = await Task.Run(async () => await ReturnOne());
 
-			Assert.AreEqual(1, result);
-		}
+            Assert.AreEqual(1, result);
+        }
 
-		[Test]
-		public async void NestedAsyncVoidFailure()
-		{
-			var result = await Task.Run(async () => await ReturnOne());
-
-			Assert.AreEqual(2, result);
-		}
-
-		[Test]
-		public async void NestedAsyncVoidError()
-		{
-			await Task.Run(async () => await ThrowException());
-
-			Assert.Fail("Should not get here");
-		}
-
-		[Test]
-		public async Task NestedAsyncTaskSuccess()
-		{
+        [Test]
+        public async void NestedAsyncVoidFailure()
+        {
             var result = await Task.Run(async () => await ReturnOne());
 
-			Assert.AreEqual(1, result);
-		}
+            Assert.AreEqual(2, result);
+        }
 
-		[Test]
-		public async Task NestedAsyncTaskFailure()
-		{
-			var result = await Task.Run(async () => await ReturnOne());
+        [Test]
+        public async void NestedAsyncVoidError()
+        {
+            await Task.Run(async () => await ThrowException());
 
-			Assert.AreEqual(2, result);
-		}
+            Assert.Fail("Should not get here");
+        }
 
-		[Test]
-		public async Task NestedAsyncTaskError()
-		{
-			await Task.Run(async () => await ThrowException());
-
-			Assert.Fail("Should never get here");
-		}
-
-		[Test]
-		public async Task<int> NestedAsyncTaskResultSuccess()
-		{
+        [Test]
+        public async Task NestedAsyncTaskSuccess()
+        {
             var result = await Task.Run(async () => await ReturnOne());
 
-			Assert.AreEqual(1, result);
+            Assert.AreEqual(1, result);
+        }
 
-			return result;
-		}
+        [Test]
+        public async Task NestedAsyncTaskFailure()
+        {
+            var result = await Task.Run(async () => await ReturnOne());
 
-		[Test]
-		public async Task<int> NestedAsyncTaskResultFailure()
-		{
-			var result = await Task.Run(async () => await ReturnOne());
+            Assert.AreEqual(2, result);
+        }
 
-			Assert.AreEqual(2, result);
+        [Test]
+        public async Task NestedAsyncTaskError()
+        {
+            await Task.Run(async () => await ThrowException());
 
-			return result;
-		}
+            Assert.Fail("Should never get here");
+        }
 
-		[Test]
-		public async Task<int> NestedAsyncTaskResultError()
-		{
-			var result = await Task.Run(async () => await ThrowException());
+        [Test]
+        public async Task<int> NestedAsyncTaskResultSuccess()
+        {
+            var result = await Task.Run(async () => await ReturnOne());
 
-			Assert.Fail("Should never get here");
+            Assert.AreEqual(1, result);
 
-			return result;
-		}
+            return result;
+        }
 
-		[Test]
-		public async void AsyncVoidMultipleSuccess()
-		{
+        [Test]
+        public async Task<int> NestedAsyncTaskResultFailure()
+        {
+            var result = await Task.Run(async () => await ReturnOne());
+
+            Assert.AreEqual(2, result);
+
+            return result;
+        }
+
+        [Test]
+        public async Task<int> NestedAsyncTaskResultError()
+        {
+            var result = await Task.Run(async () => await ThrowException());
+
+            Assert.Fail("Should never get here");
+
+            return result;
+        }
+
+        [Test]
+        public async void AsyncVoidMultipleSuccess()
+        {
             var result = await ReturnOne();
 
-			Assert.AreEqual(await ReturnOne(), result);
-		}
+            Assert.AreEqual(await ReturnOne(), result);
+        }
 
-		[Test]
-		public async void AsyncVoidMultipleFailure()
-		{
-			var result = await ReturnOne();
-
-			Assert.AreEqual(await ReturnOne() + 1, result);
-		}
-
-		[Test]
-		public async void AsyncVoidMultipleError()
-		{
-			var result = await ReturnOne();
-			await ThrowException();
-
-			Assert.Fail("Should never get here");
-		}
-
-		[Test]
-		public async void AsyncTaskMultipleSuccess()
-		{
+        [Test]
+        public async void AsyncVoidMultipleFailure()
+        {
             var result = await ReturnOne();
 
-			Assert.AreEqual(await ReturnOne(), result);
-		}
+            Assert.AreEqual(await ReturnOne() + 1, result);
+        }
 
-		[Test]
-		public async void AsyncTaskMultipleFailure()
-		{
-			var result = await ReturnOne();
+        [Test]
+        public async void AsyncVoidMultipleError()
+        {
+            var result = await ReturnOne();
+            await ThrowException();
 
-			Assert.AreEqual(await ReturnOne() + 1, result);
-		}
+            Assert.Fail("Should never get here");
+        }
 
-		[Test]
-		public async void AsyncTaskMultipleError()
-		{
-			var result = await ReturnOne();
-			await ThrowException();
+        [Test]
+        public async void AsyncTaskMultipleSuccess()
+        {
+            var result = await ReturnOne();
 
-			Assert.Fail("Should never get here");
-		}
+            Assert.AreEqual(await ReturnOne(), result);
+        }
 
-		[TestCase(1, 2)]
-		public async void AsyncVoidTestCaseWithParametersSuccess(int a, int b)
-		{
-			Assert.AreEqual(await ReturnOne(), b - a);
-		}
+        [Test]
+        public async void AsyncTaskMultipleFailure()
+        {
+            var result = await ReturnOne();
+
+            Assert.AreEqual(await ReturnOne() + 1, result);
+        }
+
+        [Test]
+        public async void AsyncTaskMultipleError()
+        {
+            var result = await ReturnOne();
+            await ThrowException();
+
+            Assert.Fail("Should never get here");
+        }
+
+        [TestCase(1, 2)]
+        public async void AsyncVoidTestCaseWithParametersSuccess(int a, int b)
+        {
+            Assert.AreEqual(await ReturnOne(), b - a);
+        }
 
         [Test]
         public async void VoidCheckTestContextAcrossTasks()
@@ -331,15 +331,15 @@ namespace NUnit.TestData
         }
 
         private static Task<int> ReturnOne()
-		{
-			return Task.Run(() => 1);
-		}
+        {
+            return Task.Run(() => 1);
+        }
 
-		private static Task<int> ThrowException()
+        private static Task<int> ThrowException()
         {
             Func<int> throws = () => { throw new InvalidOperationException(); };
-			return Task.Run( throws );
-		}
-	}
+            return Task.Run( throws );
+        }
+    }
 }
 #endif

@@ -34,11 +34,11 @@ namespace NUnit.Framework.Constraints
             stringRepresentation = "<and <greaterthan 40> <lessthan 50>>";
         }
 
-		object[] SuccessData = new object[] { 42 };
+        object[] SuccessData = new object[] { 42 };
 
         object[] FailureData = new object[] { new object[] { 37, "37" }, new object[] { 53, "53" } };
 
-		[Test]
+        [Test]
         public void CanCombineTestsWithAndOperator()
         {
             Assert.That(42, new GreaterThanConstraint(40) & new LessThanConstraint(50));

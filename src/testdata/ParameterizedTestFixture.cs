@@ -39,15 +39,15 @@ namespace NUnit.TestData
         public void MethodWithParams(int x, int y)
         {
         }
-	}
+    }
     
-	[TestFixture(Category = "XYZ")]
-	public class TestFixtureWithSingleCategory
-	{
-	}
-	
-	[TestFixture(Category = "X,Y,Z")]
-	public class TestFixtureWithMultipleCategories
-	{
-	}
+    [TestFixture(Category = "XYZ")]
+    public class TestFixtureWithSingleCategory
+    {
+    }
+    
+    [TestFixture(Category = "X,Y,Z")]
+    public class TestFixtureWithMultipleCategories
+    {
+    }
 }

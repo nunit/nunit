@@ -26,18 +26,18 @@ using NUnit.Framework;
 
 namespace NUnit.TestData.CultureAttributeData
 {
-	[TestFixture, Culture( "en,fr,de" )]
-	public class FixtureWithCultureAttribute
-	{
-		[Test, Culture("en,de")]
-		public void EnglishAndGermanTest() { }
+    [TestFixture, Culture( "en,fr,de" )]
+    public class FixtureWithCultureAttribute
+    {
+        [Test, Culture("en,de")]
+        public void EnglishAndGermanTest() { }
 
-		[Test, Culture("fr")]
-		public void FrenchTest() { }
+        [Test, Culture("fr")]
+        public void FrenchTest() { }
 
-		[Test, Culture("fr-CA")]
-		public void FrenchCanadaTest() { }
-	}
+        [Test, Culture("fr-CA")]
+        public void FrenchCanadaTest() { }
+    }
 
 #if !NETCF
     [TestFixture, SetCulture("xx-XX")]

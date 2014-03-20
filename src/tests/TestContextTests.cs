@@ -36,12 +36,12 @@ namespace NUnit.Framework.Tests
         {
             Assert.That(TestContext.CurrentContext.Test.Name, Is.EqualTo("TestCanAccessItsOwnName"));
         }
-		
-		[TestCase(5)]
-		public void TestCaseCanAccessItsOwnName(int x)
-		{
+        
+        [TestCase(5)]
+        public void TestCaseCanAccessItsOwnName(int x)
+        {
             Assert.That(TestContext.CurrentContext.Test.Name, Is.EqualTo("TestCaseCanAccessItsOwnName(5)"));
-		}
+        }
 
         [Test]
         public void TestCanAccessItsOwnFullName()
@@ -62,12 +62,12 @@ namespace NUnit.Framework.Tests
         {
             Assert.That(TestContext.CurrentContext.Test.MethodName, Is.EqualTo("TestCanAccessItsOwnMethodName"));
         }
-		
-		[TestCase(5)]
-		public void TestCaseCanAccessItsOwnMethodName(int x)
-		{
+        
+        [TestCase(5)]
+        public void TestCaseCanAccessItsOwnMethodName(int x)
+        {
             Assert.That(TestContext.CurrentContext.Test.MethodName, Is.EqualTo("TestCaseCanAccessItsOwnMethodName"));
-		}
+        }
 
         [Test]
         public void TestCanAccessItsOwnId()

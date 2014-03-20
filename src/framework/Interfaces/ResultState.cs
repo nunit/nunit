@@ -24,14 +24,14 @@
 namespace NUnit.Framework.Interfaces
 {
     /// <summary>
-	/// The ResultState class represents the outcome of running a test.
+    /// The ResultState class represents the outcome of running a test.
     /// It contains two pieces of information. The Status of the test
     /// is an enum indicating whether the test passed, failed, was
     /// skipped or was inconclusive. The Label provides a more
     /// detailed breakdown for use by client runners.
-	/// </summary>
-	public class ResultState
-	{
+    /// </summary>
+    public class ResultState
+    {
         private readonly TestStatus status;
         private readonly string label;
 

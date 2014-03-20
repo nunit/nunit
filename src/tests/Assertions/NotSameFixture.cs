@@ -25,26 +25,26 @@ using System;
 
 namespace NUnit.Framework.Assertions
 {
-	[TestFixture]
-	public class NotSameFixture
-	{
-		private readonly string s1 = "S1";
-		private readonly string s2 = "S2";
+    [TestFixture]
+    public class NotSameFixture
+    {
+        private readonly string s1 = "S1";
+        private readonly string s2 = "S2";
 
-		[Test]
-		public void NotSame()
-		{
-			Assert.AreNotSame(s1, s2);
-		}
+        [Test]
+        public void NotSame()
+        {
+            Assert.AreNotSame(s1, s2);
+        }
 
-		[Test]
-		public void NotSameFails()
-		{
-			var expectedMessage =
-				"  Expected: not same as \"S1\"" + Env.NewLine +
-				"  But was:  \"S1\"" + Env.NewLine;
-			var ex = Assert.Throws<AssertionException>(() => Assert.AreNotSame( s1, s1 ));
+        [Test]
+        public void NotSameFails()
+        {
+            var expectedMessage =
+                "  Expected: not same as \"S1\"" + Env.NewLine +
+                "  But was:  \"S1\"" + Env.NewLine;
+            var ex = Assert.Throws<AssertionException>(() => Assert.AreNotSame( s1, s1 ));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
-		}
-	}
+        }
+    }
 }

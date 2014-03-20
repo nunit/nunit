@@ -27,50 +27,50 @@ using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Execution
 {
-	/// <summary>
-	/// QueuingEventListener uses an EventQueue to store any
-	/// events received on its EventListener interface.
-	/// </summary>
-	public class QueuingEventListener : ITestListener
-	{
-		private EventQueue events = new EventQueue();
+    /// <summary>
+    /// QueuingEventListener uses an EventQueue to store any
+    /// events received on its EventListener interface.
+    /// </summary>
+    public class QueuingEventListener : ITestListener
+    {
+        private EventQueue events = new EventQueue();
 
-		/// <summary>
-		/// The EvenQueue created and filled by this listener
-		/// </summary>
-		public EventQueue Events
-		{
-			get { return events; }
-		}
+        /// <summary>
+        /// The EvenQueue created and filled by this listener
+        /// </summary>
+        public EventQueue Events
+        {
+            get { return events; }
+        }
 
-		#region EventListener Methods
-		/// <summary>
-		/// A test has started
-		/// </summary>
-		/// <param name="test">The test that is starting</param>
-		public void TestStarted(ITest test)
-		{
-			events.Enqueue( new TestStartedEvent( test ) );
-		}
+        #region EventListener Methods
+        /// <summary>
+        /// A test has started
+        /// </summary>
+        /// <param name="test">The test that is starting</param>
+        public void TestStarted(ITest test)
+        {
+            events.Enqueue( new TestStartedEvent( test ) );
+        }
 
-		/// <summary>
-		/// A test case finished
-		/// </summary>
-		/// <param name="result">Result of the test case</param>
-		public void TestFinished(ITestResult result)
-		{
-			events.Enqueue( new TestFinishedEvent( result ) );
-		}
+        /// <summary>
+        /// A test case finished
+        /// </summary>
+        /// <param name="result">Result of the test case</param>
+        public void TestFinished(ITestResult result)
+        {
+            events.Enqueue( new TestFinishedEvent( result ) );
+        }
 
         /// <summary>
         /// The test created some text output.
         /// </summary>
         /// <param name="output">A TestOutput message</param>
         public void TestOutput(TestOutput output)
-		{
-			events.Enqueue( new OutputEvent( output ) );
-		}
-		#endregion
-	}
+        {
+            events.Enqueue( new OutputEvent( output ) );
+        }
+        #endregion
+    }
 }
 #endif

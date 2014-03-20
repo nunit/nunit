@@ -109,17 +109,17 @@ namespace NUnit.Framework.Constraints
                 remainingDelay -= pollingInterval;
                 Thread.Sleep(pollingInterval);
                 actual = InvokeDelegate(del);
-				
-				try
-				{
-	                ConstraintResult result = baseConstraint.ApplyTo(actual);
-	                if (result.IsSuccess)
+                
+                try
+                {
+                    ConstraintResult result = baseConstraint.ApplyTo(actual);
+                    if (result.IsSuccess)
                         return new ConstraintResult(this, actual, true);
                 }
-				catch(Exception)
-				{
-					// Ignore any exceptions when polling
-				}
+                catch(Exception)
+                {
+                    // Ignore any exceptions when polling
+                }
             }
 
             if (remainingDelay > 0)
@@ -155,17 +155,17 @@ namespace NUnit.Framework.Constraints
             {
                 remainingDelay -= pollingInterval;
                 Thread.Sleep(pollingInterval);
-				
-				try
-				{
-	                ConstraintResult result = baseConstraint.ApplyTo(actual);
-	                if (result.IsSuccess)
+                
+                try
+                {
+                    ConstraintResult result = baseConstraint.ApplyTo(actual);
+                    if (result.IsSuccess)
                         return new ConstraintResult(this, actual, true);
                 }
-				catch(Exception)
-				{
-					// Ignore any exceptions when polling
-				}
+                catch(Exception)
+                {
+                    // Ignore any exceptions when polling
+                }
             }
 
             if (remainingDelay > 0)

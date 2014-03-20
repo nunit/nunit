@@ -120,20 +120,20 @@ namespace NUnit.Framework.Constraints
             SetValuesAfterDelay(1);
             Assert.That(() => list, Has.Count.EqualTo(1).After(5000, 100));
         }
-		
-		[Test]
-		public void CanTestInitiallyNullReference()
-		{
+        
+        [Test]
+        public void CanTestInitiallyNullReference()
+        {
             SetValuesAfterDelay(1000);
-			Assert.That(ref statusString, Has.Length.GreaterThan(0).After(3000, 100));
-		}
-		
-		[Test]
-		public void CanTestInitiallyNullDelegate()
-		{
+            Assert.That(ref statusString, Has.Length.GreaterThan(0).After(3000, 100));
+        }
+        
+        [Test]
+        public void CanTestInitiallyNullDelegate()
+        {
             SetValuesAfterDelay(1000);
-			Assert.That(() => statusString, Has.Length.GreaterThan(0).After(3000, 100));
-		}
+            Assert.That(() => statusString, Has.Length.GreaterThan(0).After(3000, 100));
+        }
 
         private static int setValuesDelay;
 

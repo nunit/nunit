@@ -23,58 +23,58 @@
 
 namespace NUnit.Framework.Interfaces
 {
-	using System;
+    using System;
 
     /// <summary>
     /// The TestOutput class holds a unit of output from 
     /// a test to stdOut, stdErr, Trace or a logger.
     /// </summary>
-	public class TestOutput : IXmlNodeBuilder
-	{
-		string text;
-		TestOutputType type;
+    public class TestOutput : IXmlNodeBuilder
+    {
+        string text;
+        TestOutputType type;
 
         /// <summary>
         /// Construct with text and an ouput destination type
         /// </summary>
         /// <param name="text">Text to be output</param>
         /// <param name="type">Destination of output</param>
-		public TestOutput(string text, TestOutputType type)
-		{
-			this.text = text;
-			this.type = type;
-		}
+        public TestOutput(string text, TestOutputType type)
+        {
+            this.text = text;
+            this.type = type;
+        }
 
         /// <summary>
         /// Return string representation of the object for debugging
         /// </summary>
         /// <returns></returns>
-		public override string ToString()
-		{
-			return type + ": " + text;
-		}
+        public override string ToString()
+        {
+            return type + ": " + text;
+        }
 
         /// <summary>
         /// Get the text 
         /// </summary>
-		public string Text
-		{
-			get
-			{
-				return this.text;
-			}
-		}
+        public string Text
+        {
+            get
+            {
+                return this.text;
+            }
+        }
 
         /// <summary>
         /// Get the output type
         /// </summary>
-		public TestOutputType Type
-		{
-			get
-			{
-				return this.type;
-			}
-		}
+        public TestOutputType Type
+        {
+            get
+            {
+                return this.type;
+            }
+        }
 
         #region IXmlNodeBuilder Members
 
@@ -124,25 +124,25 @@ namespace NUnit.Framework.Interfaces
     ///// of output. Normally, each individual
     ///// output uses a single flag value.
     public enum TestOutputType
-	{
+    {
         /// <summary>
         /// Send output to stdOut
         /// </summary>
-		Out, 
+        Out, 
         
         /// <summary>
         /// Send output to stdErr
         /// </summary>
         Error,
 
-		/// <summary>
-		/// Send output to Trace
-		/// </summary>
-		Trace,
+        /// <summary>
+        /// Send output to Trace
+        /// </summary>
+        Trace,
 
-		/// <summary>
-		/// Send output to Log
-		/// </summary>
-		Log
-	}
+        /// <summary>
+        /// Send output to Log
+        /// </summary>
+        Log
+    }
 }

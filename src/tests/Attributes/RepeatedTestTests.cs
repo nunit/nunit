@@ -40,73 +40,73 @@ namespace NUnit.Framework.Attributes
 {
     [TestFixture]
     public class RepeatedTestTests
-	{
-		private MethodInfo successMethod;
-		private MethodInfo failOnFirstMethod;
-		private MethodInfo failOnThirdMethod;
+    {
+        private MethodInfo successMethod;
+        private MethodInfo failOnFirstMethod;
+        private MethodInfo failOnThirdMethod;
 
-		[SetUp]
-		public void SetUp()
-		{
-			Type testType = typeof(RepeatSuccessFixture);
-			successMethod = testType.GetMethod ("RepeatSuccess");
-			testType = typeof(RepeatFailOnFirstFixture);
-			failOnFirstMethod = testType.GetMethod("RepeatFailOnFirst");
-			testType = typeof(RepeatFailOnThirdFixture);
-			failOnThirdMethod = testType.GetMethod("RepeatFailOnThird");
-		}
+        [SetUp]
+        public void SetUp()
+        {
+            Type testType = typeof(RepeatSuccessFixture);
+            successMethod = testType.GetMethod ("RepeatSuccess");
+            testType = typeof(RepeatFailOnFirstFixture);
+            failOnFirstMethod = testType.GetMethod("RepeatFailOnFirst");
+            testType = typeof(RepeatFailOnThirdFixture);
+            failOnThirdMethod = testType.GetMethod("RepeatFailOnThird");
+        }
 
-		[Test]
-		public void RepeatSuccess()
-		{
-			Assert.IsNotNull (successMethod);
-			RepeatSuccessFixture fixture = new RepeatSuccessFixture();
+        [Test]
+        public void RepeatSuccess()
+        {
+            Assert.IsNotNull (successMethod);
+            RepeatSuccessFixture fixture = new RepeatSuccessFixture();
             ITestResult result = TestBuilder.RunTestFixture(fixture);
 
             Assert.IsTrue(result.ResultState == ResultState.Success);
-			Assert.AreEqual(1, fixture.FixtureSetupCount);
-			Assert.AreEqual(1, fixture.FixtureTeardownCount);
-			Assert.AreEqual(3, fixture.SetupCount);
-			Assert.AreEqual(3, fixture.TeardownCount);
-			Assert.AreEqual(3, fixture.Count);
-		}
+            Assert.AreEqual(1, fixture.FixtureSetupCount);
+            Assert.AreEqual(1, fixture.FixtureTeardownCount);
+            Assert.AreEqual(3, fixture.SetupCount);
+            Assert.AreEqual(3, fixture.TeardownCount);
+            Assert.AreEqual(3, fixture.Count);
+        }
 
-		[Test]
-		public void RepeatFailOnFirst()
-		{
-			Assert.IsNotNull (failOnFirstMethod);
-			RepeatFailOnFirstFixture fixture = new RepeatFailOnFirstFixture();
+        [Test]
+        public void RepeatFailOnFirst()
+        {
+            Assert.IsNotNull (failOnFirstMethod);
+            RepeatFailOnFirstFixture fixture = new RepeatFailOnFirstFixture();
             ITestResult result = TestBuilder.RunTestFixture(fixture);
 
             Assert.IsFalse(result.ResultState == ResultState.Success);
-			Assert.AreEqual(1, fixture.SetupCount);
-			Assert.AreEqual(1, fixture.TeardownCount);
-			Assert.AreEqual(1, fixture.Count);
-		}
+            Assert.AreEqual(1, fixture.SetupCount);
+            Assert.AreEqual(1, fixture.TeardownCount);
+            Assert.AreEqual(1, fixture.Count);
+        }
 
-		[Test]
-		public void RepeatFailOnThird()
-		{
-			Assert.IsNotNull (failOnThirdMethod);
-			RepeatFailOnThirdFixture fixture = new RepeatFailOnThirdFixture();
+        [Test]
+        public void RepeatFailOnThird()
+        {
+            Assert.IsNotNull (failOnThirdMethod);
+            RepeatFailOnThirdFixture fixture = new RepeatFailOnThirdFixture();
             ITestResult result = TestBuilder.RunTestFixture(fixture);
 
             Assert.IsFalse(result.ResultState == ResultState.Success);
-			Assert.AreEqual(3, fixture.SetupCount);
-			Assert.AreEqual(3, fixture.TeardownCount);
-			Assert.AreEqual(3, fixture.Count);
-		}
+            Assert.AreEqual(3, fixture.SetupCount);
+            Assert.AreEqual(3, fixture.TeardownCount);
+            Assert.AreEqual(3, fixture.Count);
+        }
 
-		[Test]
-		public void IgnoreWorksWithRepeatedTest()
-		{
-			RepeatedTestWithIgnore fixture = new RepeatedTestWithIgnore();
+        [Test]
+        public void IgnoreWorksWithRepeatedTest()
+        {
+            RepeatedTestWithIgnore fixture = new RepeatedTestWithIgnore();
             TestBuilder.RunTestFixture(fixture);
 
-			Assert.AreEqual( 0, fixture.SetupCount );
-			Assert.AreEqual( 0, fixture.TeardownCount );
-			Assert.AreEqual( 0, fixture.Count );
-		}
+            Assert.AreEqual( 0, fixture.SetupCount );
+            Assert.AreEqual( 0, fixture.TeardownCount );
+            Assert.AreEqual( 0, fixture.Count );
+        }
 
         [Test]
         public void CategoryWorksWithRepeatedTest()
@@ -118,6 +118,6 @@ namespace NUnit.Framework.Attributes
             Assert.AreEqual(1, categories.Count);
             Assert.AreEqual("SAMPLE", categories[0]);
         }
-	}
+    }
 }
 #endif

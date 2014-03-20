@@ -189,9 +189,9 @@ namespace NUnit.Framework.Constraints
         }
 
         #endregion
-		
-		#region Exactly(n)
-		
+        
+        #region Exactly(n)
+        
         /// <summary>
         /// Returns a ConstraintExpression, which will apply
         /// the following constraint to all members of a collection,
@@ -201,9 +201,9 @@ namespace NUnit.Framework.Constraints
         {
             return this.Append(new ExactCountOperator(expectedCount));
         }
-		
-		#endregion
-		
+        
+        #endregion
+        
         #region Property
 
         /// <summary>

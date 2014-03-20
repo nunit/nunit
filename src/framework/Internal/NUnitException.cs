@@ -23,51 +23,51 @@
 
 namespace NUnit.Framework.Internal 
 {
-	using System;
+    using System;
 #if !NETCF
-	using System.Runtime.Serialization;
+    using System.Runtime.Serialization;
 #endif
 
-	/// <summary>
-	/// Thrown when an assertion failed. Here to preserve the inner
-	/// exception and hence its stack trace.
-	/// </summary>
+    /// <summary>
+    /// Thrown when an assertion failed. Here to preserve the inner
+    /// exception and hence its stack trace.
+    /// </summary>
 #if !NETCF 
-	[Serializable]
+    [Serializable]
 #endif
-	public class NUnitException : Exception 
-	{
+    public class NUnitException : Exception 
+    {
         /// <summary>
         /// Initializes a new instance of the <see cref="NUnitException"/> class.
         /// </summary>
-		public NUnitException () : base() 
-		{} 
+        public NUnitException () : base() 
+        {} 
 
-		/// <summary>
+        /// <summary>
         /// Initializes a new instance of the <see cref="NUnitException"/> class.
         /// </summary>
-		/// <param name="message">The error message that explains 
-		/// the reason for the exception</param>
-		public NUnitException(string message) : base (message)
-		{}
+        /// <param name="message">The error message that explains 
+        /// the reason for the exception</param>
+        public NUnitException(string message) : base (message)
+        {}
 
-		/// <summary>
+        /// <summary>
         /// Initializes a new instance of the <see cref="NUnitException"/> class.
         /// </summary>
-		/// <param name="message">The error message that explains 
-		/// the reason for the exception</param>
-		/// <param name="inner">The exception that caused the 
-		/// current exception</param>
-		public NUnitException(string message, Exception inner) :
-			base(message, inner) 
-		{}
+        /// <param name="message">The error message that explains 
+        /// the reason for the exception</param>
+        /// <param name="inner">The exception that caused the 
+        /// current exception</param>
+        public NUnitException(string message, Exception inner) :
+            base(message, inner) 
+        {}
 
 #if !NETCF && !SILVERLIGHT
-		/// <summary>
-		/// Serialization Constructor
-		/// </summary>
-		protected NUnitException(SerializationInfo info, 
-			StreamingContext context) : base(info,context){}
+        /// <summary>
+        /// Serialization Constructor
+        /// </summary>
+        protected NUnitException(SerializationInfo info, 
+            StreamingContext context) : base(info,context){}
 #endif
-	}
+    }
 }

@@ -14,7 +14,7 @@
       </sources>
       <references basedir="${current.build.dir}">
         <include name="nunit.framework.dll"/>
-		<include name="System.Web.dll"/>
+        <include name="System.Web.dll"/>
       </references>
     </csc>
 
@@ -26,7 +26,7 @@
         <include name="test-harness.build"/>
         <include name="*.csproj"/>
         <include name="*.cs"/>
-		  <include name="Tests/*.cs"/>
+          <include name="Tests/*.cs"/>
       </fileset>
     </copy>
   </target>

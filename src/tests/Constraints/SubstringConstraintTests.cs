@@ -29,7 +29,7 @@ namespace NUnit.Framework.Constraints
     [TestFixture]
     public class SubstringConstraintTests : StringConstraintTests
     {
-		[SetUp]
+        [SetUp]
         public void SetUp()
         {
             theConstraint = new SubstringConstraint("hello");
@@ -50,7 +50,7 @@ namespace NUnit.Framework.Constraints
     [TestFixture]
     public class SubstringConstraintTestsIgnoringCase : StringConstraintTests
     {
-		[SetUp]
+        [SetUp]
         public void SetUp()
         {
             theConstraint = new SubstringConstraint("hello").IgnoreCase;
