@@ -32,7 +32,7 @@ namespace NUnit.ConsoleRunner.Tests
         [SetUp]
         public void SetUp()
         {
-            var options = new ConsoleOptions( new[] {"--color"} );
+            var options = new ConsoleOptions( new[] {""} );
             ColorConsole.Options = options;
 
             // Set to an unknown, unlikely color so that we can test for change
@@ -62,9 +62,9 @@ namespace NUnit.ConsoleRunner.Tests
         }
 
         [Test]
-        public void TestNoOption()
+        public void TestNoColorOption()
         {
-            var options = new ConsoleOptions(new[] { "" });
+            var options = new ConsoleOptions(new[] { "--nocolor" });
             ColorConsole.Options = options;
 
             using (new ColorConsole(ColorStyle.Error))
