@@ -24,8 +24,12 @@
 using System;
 using NUnit.Framework.Constraints;
 
-#if NET_4_5
+#if NET_4_0 || NET_4_5
 using System.Threading.Tasks;
+#endif
+
+#if NET_4_0
+using Task = System.Threading.Tasks.TaskEx;
 #endif
 
 namespace NUnit.Framework.Assertions
@@ -202,7 +206,7 @@ namespace NUnit.Framework.Assertions
             return 5;
         }
 
-#if NET_4_5
+#if NET_4_0 || NET_4_5
         [Test]
         public void AssumeThatSuccess()
         {
@@ -222,7 +226,9 @@ namespace NUnit.Framework.Assertions
             var exception = Assert.Throws<InvalidOperationException>(() =>
                 Assume.That(async () => await ThrowExceptionGenericTask(), Is.EqualTo(1)));
 
-            Assert.That(exception.StackTrace, Contains.Substring("ThrowExceptionGenericTask"));
+#if NET_4_5
+        Assert.That(exception.StackTrace, Contains.Substring("ThrowExceptionGenericTask"));
+#endif
         }
 
         private static Task<int> One()

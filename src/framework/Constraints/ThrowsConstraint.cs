@@ -154,7 +154,7 @@ namespace NUnit.Framework.Constraints
             {
                 IInvocationDescriptor invocationDescriptor = GetInvocationDescriptor(invocation);
 
-#if NET_4_5
+#if NET_4_0 || NET_4_5
                 if (AsyncInvocationRegion.IsAsyncOperation(invocationDescriptor.Delegate))
                 {
                     using (AsyncInvocationRegion region = AsyncInvocationRegion.Create(invocationDescriptor.Delegate))

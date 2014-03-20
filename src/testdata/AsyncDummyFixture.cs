@@ -1,7 +1,11 @@
-#if NET_4_5
+#if NET_4_0 || NET_4_5
 using System.Threading.Tasks;
 using NUnit.Framework;
 using System;
+
+#if NET_4_0
+using Task = System.Threading.Tasks.TaskEx;
+#endif
 
 namespace NUnit.TestData
 {
@@ -10,13 +14,13 @@ namespace NUnit.TestData
         [Test]
         public async void AsyncVoid()
         {
-            await Task.Delay(0); // To avoid warning message
+            await Task.Delay(1); // To avoid warning message
         }
 
         [Test]
-        public async Task AsyncTask()
+        public async System.Threading.Tasks.Task AsyncTask()
         {
-            await Task.Yield();
+            await Task.Delay(1);
         }
 
         [Test]
@@ -26,7 +30,7 @@ namespace NUnit.TestData
         }
 
         [Test]
-        public Task NonAsyncTask()
+        public System.Threading.Tasks.Task NonAsyncTask()
         {
             return Task.Delay(0);
         }
@@ -50,13 +54,13 @@ namespace NUnit.TestData
         }
 
         [TestCase(4)]
-        public async Task AsyncTaskTestCase(int x)
+        public async System.Threading.Tasks.Task AsyncTaskTestCase(int x)
         {
             await Task.Delay(0);
         }
 
         [TestCase(ExpectedResult = 1)]
-        public async Task AsyncTaskTestCaseWithExpectedResult()
+        public async System.Threading.Tasks.Task AsyncTaskTestCaseWithExpectedResult()
         {
             await Task.Run(() => 1);
         }

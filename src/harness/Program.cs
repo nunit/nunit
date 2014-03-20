@@ -124,8 +124,9 @@ namespace NUnit.Framework.TestHarness
             Console.WriteLine();
 
             Console.WriteLine("Runtime Environment - ");
-            Console.WriteLine(string.Format("   OS Version: {0}", Environment.OSVersion));
-            Console.WriteLine(string.Format("  CLR Version: {0}", Environment.Version));
+            Console.WriteLine(string.Format("        OS Version: {0}", Environment.OSVersion));
+            Console.WriteLine(string.Format("       CLR Version: {0}", Environment.Version));
+            Console.WriteLine(string.Format(" Runtime Framework: {0}", RuntimeFramework.CurrentFramework));
 
             Console.WriteLine();
         }

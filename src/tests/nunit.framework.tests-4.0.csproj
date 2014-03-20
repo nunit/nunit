@@ -60,6 +60,7 @@
     <Compile Include="Assertions\AssertThatTests.cs" />
     <Compile Include="Assertions\AssertThrowsTests.cs" />
     <Compile Include="Assertions\AssumeThatTests.cs" />
+    <Compile Include="Assertions\AsyncThrowsTests.cs" />
     <Compile Include="Assertions\CollectionAssertTest.cs" />
     <Compile Include="Assertions\ConditionAssertTests.cs" />
     <Compile Include="Assertions\FileAssertTests.cs" />
@@ -106,6 +107,7 @@
     <Compile Include="Constraints\AllItemsConstraintTests.cs" />
     <Compile Include="Constraints\AndConstraintTests.cs" />
     <Compile Include="Constraints\AssignableToConstraintTests.cs" />
+    <Compile Include="Constraints\AsyncDelayedConstraintTests.cs" />
     <Compile Include="Constraints\AttributeExistsConstraintTests.cs" />
     <Compile Include="Constraints\BasicConstraintTests.cs" />
     <Compile Include="Constraints\BinarySerializableTest.cs" />
@@ -154,6 +156,7 @@
     <Compile Include="Constraints\XmlSerializableTest.cs" />
     <Compile Include="Internal\AssemblyHelperTests.cs" />
     <Compile Include="Internal\AssemblyReaderTests.cs" />
+    <Compile Include="Internal\AsyncTestMethodTests.cs" />
     <Compile Include="Internal\CallContextTests.cs" />
     <Compile Include="Internal\CultureSettingAndDetectionTests.cs" />
     <Compile Include="Internal\DeduceTypeArgsFromArgs.cs" />
@@ -162,6 +165,7 @@
     <Compile Include="Internal\GenericTestFixtureTests.cs" />
     <Compile Include="Internal\GenericTestMethodTests.cs" />
     <Compile Include="Internal\LegacySuiteTests.cs" />
+    <Compile Include="Internal\NUnitTestCaseBuilderTests.cs" />
     <Compile Include="Internal\PlatformDetectionTests.cs" />
     <Compile Include="Internal\PropertyBagTests.cs" />
     <Compile Include="Internal\RandomGeneratorTests.cs" />
@@ -201,7 +205,6 @@
     <Compile Include="Syntax\ThrowsTests.cs" />
     <Compile Include="Syntax\TypeConstraints.cs" />
     <Compile Include="TestContextTests.cs" />
-    <Compile Include="TestUtilities\Collections\SimpleObjectList.cs" />
     <Compile Include="TestUtilities\Collections\SimpleObjectCollection.cs" />
     <Compile Include="TestUtilities\Comparers\AlwaysEqualComparer.cs" />
     <Compile Include="TestUtilities\Comparers\GenericComparer.cs" />
@@ -219,9 +222,28 @@
     <Compile Include="TestUtilities\UniqueValues.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Threading.Tasks, Version=1.0.12.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.Bcl.Async.1.0.165\lib\net40\Microsoft.Threading.Tasks.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Threading.Tasks.Extensions, Version=1.0.12.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.Bcl.Async.1.0.165\lib\net40\Microsoft.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Threading.Tasks.Extensions.Desktop, Version=1.0.165.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.Bcl.Async.1.0.165\lib\net40\Microsoft.Threading.Tasks.Extensions.Desktop.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Net" />
+    <Reference Include="System.Runtime">
+      <HintPath>..\..\packages\Microsoft.Bcl.1.0.19\lib\net40\System.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Tasks">
+      <HintPath>..\..\packages\Microsoft.Bcl.1.0.19\lib\net40\System.Threading.Tasks.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
   </ItemGroup>
@@ -233,6 +255,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="nunit.framework.tests.build" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\framework\nunit.framework-4.0.csproj">
@@ -244,4 +267,5 @@
       <Name>nunit.testdata-4.0</Name>
     </ProjectReference>
   </ItemGroup>
+  <Import Project="..\..\packages\Microsoft.Bcl.Build.1.0.4\tools\Microsoft.Bcl.Build.targets" />
 </Project>

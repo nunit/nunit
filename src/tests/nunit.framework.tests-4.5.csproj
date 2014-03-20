@@ -157,6 +157,7 @@
     <Compile Include="Constraints\UniqueItemsConstraintTests.cs" />
     <Compile Include="Constraints\XmlSerializableTest.cs" />
     <Compile Include="Internal\AssemblyHelperTests.cs" />
+    <Compile Include="Internal\AssemblyReaderTests.cs" />
     <Compile Include="Internal\AsyncTestMethodTests.cs" />
     <Compile Include="Internal\CallContextTests.cs" />
     <Compile Include="Internal\CultureSettingAndDetectionTests.cs" />
