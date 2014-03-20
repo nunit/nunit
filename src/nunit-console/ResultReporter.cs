@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Globalization;
 using System.Xml;
 using NUnit.Util;
 
@@ -79,21 +80,25 @@ namespace NUnit.ConsoleRunner
                 ? ColorStyle.Pass
                 : ( testRunResult == "Failed" ? ColorStyle.Failure : ColorStyle.Warning );
             Console.WriteLine();
-            ColorConsole.WriteLine(ColorStyle.SectionHeader, "Test Run Summary -");
-            ColorConsole.Write(ColorStyle.Label, "   Overall result: ");
-            ColorConsole.WriteLine(overall, testRunResult);
-            ColorConsole.WriteLine(ColorStyle.Default, String.Format( 
-                "   Tests run: {0}, Errors: {1}, Failures: {2}, Inconclusive: {3}",
-                summary.TestsRun, summary.Errors, summary.Failures, summary.Inconclusive));
-            ColorConsole.WriteLine(ColorStyle.Warning, string.Format( 
-                "     Not run: {0}, Invalid: {1}, Ignored: {2}, Skipped: {3}",
-                summary.TestsNotRun, summary.NotRunnable, summary.Ignored, summary.Skipped));
-            ColorConsole.WriteLine(ColorStyle.Default,
-                "  Start time: " + summary.StartTime.ToString("u"));
-            ColorConsole.WriteLine(ColorStyle.Default,
-                "    End time: " + summary.EndTime.ToString("u"));
-            ColorConsole.WriteLine(ColorStyle.Default, string.Format(
-                "    Duration: {0} seconds", summary.Duration.ToString("0.000")));
+            ColorConsole.WriteLine(ColorStyle.SectionHeader, "Test Run Summary");
+            ColorConsole.WriteLabel("    Overall result: ", testRunResult, overall, true);
+
+            ColorConsole.WriteLabel("   Tests run: ", summary.TestsRun.ToString(CultureInfo.CurrentUICulture), false);
+            ColorConsole.WriteLabel(", Errors: ", summary.Errors.ToString(CultureInfo.CurrentUICulture), false);
+            ColorConsole.WriteLabel(", Failures: ", summary.Failures.ToString(CultureInfo.CurrentUICulture), false);
+            ColorConsole.WriteLabel(", Inconclusive: ", summary.Inconclusive.ToString(CultureInfo.CurrentUICulture), true);
+
+            ColorConsole.WriteLabel("     Not run: ", summary.TestsNotRun.ToString(CultureInfo.CurrentUICulture), false);
+            ColorConsole.WriteLabel(", Invalid: ", summary.NotRunnable.ToString(CultureInfo.CurrentUICulture), false);
+            ColorConsole.WriteLabel(", Ignored: ", summary.Ignored.ToString(CultureInfo.CurrentUICulture), false);
+            ColorConsole.WriteLabel(", Skipped: ", summary.Skipped.ToString(CultureInfo.CurrentUICulture), true);
+
+            ColorConsole.WriteLabel(
+                "  Start time: ", summary.StartTime.ToString("u"), true);
+            ColorConsole.WriteLabel(
+                "    End time: ", summary.EndTime.ToString("u"), true);
+            ColorConsole.WriteLabel(
+                "    Duration: ", string.Format("{0} seconds", summary.Duration.ToString("0.000")), true);
             Console.WriteLine();
         }
 
@@ -113,8 +118,7 @@ namespace NUnit.ConsoleRunner
                     {
                         if (result.GetAttribute("total") == "0")
                         {
-                            using (new ColorConsole(ColorStyle.Warning))
-                                Console.WriteLine("Warning: No tests found in " + result.GetAttribute("name"));
+                            ColorConsole.WriteLine(ColorStyle.Warning, "Warning: No tests found in " + result.GetAttribute("name"));
                         }
                         count++;
                         break;
@@ -131,7 +135,7 @@ namespace NUnit.ConsoleRunner
         private void WriteErrorsAndFailuresReport()
         {
             this.reportIndex = 0;
-            Console.WriteLine("Errors and Failures -");
+            ColorConsole.WriteLine(ColorStyle.SectionHeader, "Errors and Failures");
             WriteErrorsAndFailures(result);
             Console.WriteLine();
         }
@@ -185,7 +189,7 @@ namespace NUnit.ConsoleRunner
         public void WriteNotRunReport()
         {
             this.reportIndex = 0;
-            Console.WriteLine("Tests Not Run -");
+            ColorConsole.WriteLine(ColorStyle.SectionHeader, "Tests Not Run");
             WriteNotRunResults(result);
             Console.WriteLine();
         }

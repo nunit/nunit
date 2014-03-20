@@ -83,10 +83,10 @@ namespace NUnit.ConsoleRunner
         /// </summary>
         public static ConsoleOptions Options { private get; set; }
 
-        public ColorConsole( ColorStyle style )
+        public ColorConsole(ColorStyle style)
         {
-            if ( Options == null || !Options.NoColor )
-                Console.ForegroundColor = GetColor( style );
+            if (Options == null || !Options.NoColor)
+                Console.ForegroundColor = GetColor(style);
         }
 
         /// <summary>
@@ -94,11 +94,11 @@ namespace NUnit.ConsoleRunner
         /// </summary>
         /// <param name="style">The style.</param>
         /// <param name="value">The value.</param>
-        public static void Write( ColorStyle style, string value )
+        public static void Write(ColorStyle style, string value)
         {
-            using ( new ColorConsole( style ) )
+            using (new ColorConsole(style))
             {
-                Console.Write( value );
+                Console.Write(value);
             }
         }
 
@@ -107,7 +107,7 @@ namespace NUnit.ConsoleRunner
         /// </summary>
         /// <param name="style">The style.</param>
         /// <param name="value">The value.</param>
-        public static void WriteLine( ColorStyle style, string value )
+        public static void WriteLine(ColorStyle style, string value)
         {
             using (new ColorConsole(style))
             {
@@ -121,10 +121,22 @@ namespace NUnit.ConsoleRunner
         /// <param name="label">The label.</param>
         /// <param name="option">The option.</param>
         /// <param name="writeLine">if set to <c>true</c> [write line].</param>
-        public static void WriteLabel( string label, string option, bool writeLine )
+        public static void WriteLabel(string label, string option, bool writeLine)
         {
-            Write( ColorStyle.Label, label );
-            Write( ColorStyle.Value, option  );
+            WriteLabel(label, option, ColorStyle.Value, writeLine);
+        }
+
+        /// <summary>
+        /// Writes the label and the option that goes with it and optionally writes a new line.
+        /// </summary>
+        /// <param name="label">The label.</param>
+        /// <param name="option">The option.</param>
+        /// <param name="valueStyle">The color to display the value with</param>
+        /// <param name="writeLine">if set to <c>true</c> [write line].</param>
+        public static void WriteLabel(string label, string option, ColorStyle valueStyle, bool writeLine)
+        {
+            Write(ColorStyle.Label, label);
+            Write(valueStyle, option);
             if (writeLine)
                 Console.WriteLine();
         }
@@ -134,9 +146,9 @@ namespace NUnit.ConsoleRunner
         /// </summary>
         /// <param name="style"></param>
         /// <returns></returns>
-        public static ConsoleColor GetColor( ColorStyle style )
+        public static ConsoleColor GetColor(ColorStyle style)
         {
-            switch ( style )
+            switch (style)
             {
                 case ColorStyle.Header:
                     return ConsoleColor.White;

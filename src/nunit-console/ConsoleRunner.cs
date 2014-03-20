@@ -169,7 +169,7 @@ namespace NUnit.ConsoleRunner
 
         private void DisplayRequestedOptions()
         {
-            ColorConsole.WriteLine(ColorStyle.SectionHeader, "Options -");
+            ColorConsole.WriteLine(ColorStyle.SectionHeader, "Options");
             ColorConsole.WriteLabel("    ProcessModel: ", options.ProcessModel ?? "Default", false);
             ColorConsole.WriteLabel("    DomainUsage: ", options.DomainUsage ?? "Default", true);
             ColorConsole.WriteLabel("    Execution Runtime: ", options.Framework ?? "Not Specified", true);
