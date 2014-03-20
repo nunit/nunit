@@ -26,7 +26,6 @@ namespace NUnit.ConsoleRunner
     using System;
     using System.IO;
     using System.Xml;
-    using System.Text;
     using NUnit.Engine;
     using NUnit.Util;
     
@@ -180,7 +179,7 @@ namespace NUnit.ConsoleRunner
             ColorConsole.WriteLabel("    Work Directory: ", workDirectory, true);
             ColorConsole.WriteLabel("    Internal Trace: ", options.InternalTraceLevel ?? "Off", true);
             //if (options.DisplayTeamCityServiceMessages)
-            //    Console.WriteLine("    Display TeamCity Service Messages");
+            //    ColorConsole.WriteLine("    Display TeamCity Service Messages");
             Console.WriteLine();
 
             if (options.TestList.Count > 0)

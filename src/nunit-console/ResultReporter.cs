@@ -93,12 +93,9 @@ namespace NUnit.ConsoleRunner
             ColorConsole.WriteLabel(", Ignored: ", summary.Ignored.ToString(CultureInfo.CurrentUICulture), false);
             ColorConsole.WriteLabel(", Skipped: ", summary.Skipped.ToString(CultureInfo.CurrentUICulture), true);
 
-            ColorConsole.WriteLabel(
-                "  Start time: ", summary.StartTime.ToString("u"), true);
-            ColorConsole.WriteLabel(
-                "    End time: ", summary.EndTime.ToString("u"), true);
-            ColorConsole.WriteLabel(
-                "    Duration: ", string.Format("{0} seconds", summary.Duration.ToString("0.000")), true);
+            ColorConsole.WriteLabel("  Start time: ", summary.StartTime.ToString("u"), true);
+            ColorConsole.WriteLabel("    End time: ", summary.EndTime.ToString("u"), true);
+            ColorConsole.WriteLabel("    Duration: ", string.Format("{0} seconds", summary.Duration.ToString("0.000")), true);
             Console.WriteLine();
         }
 
