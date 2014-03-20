@@ -10,7 +10,7 @@
 	<s:Boolean x:Key="/Default/CodeStyle/CodeFormatting/CSharpFormat/SPACE_AROUND_MULTIPLICATIVE_OP/@EntryValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeStyle/CodeFormatting/CSharpFormat/STICK_COMMENT/@EntryValue">False</s:Boolean>
 	<s:String x:Key="/Default/CodeStyle/FileHeader/FileHeaderText/@EntryValue">***********************************************************************&#xD;
-Copyright (c) $CURRENT_YEAR$ $USER_NAME$&#xD;
+Copyright (c) $CURRENT_YEAR$ Charlie Poole&#xD;
 &#xD;
 Permission is hereby granted, free of charge, to any person obtaining&#xD;
 a copy of this software and associated documentation files (the&#xD;
