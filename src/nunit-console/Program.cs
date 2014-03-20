@@ -49,7 +49,7 @@ namespace NUnit.ConsoleRunner
             catch (OptionException ex)
             {
                 WriteHeader();
-                Console.WriteLine(ex.Message, ex.OptionName);
+                ColorConsole.WriteLine(ColorStyle.Error, string.Format(ex.Message, ex.OptionName));
                 return ConsoleRunner.INVALID_ARG;
             }
 
@@ -190,7 +190,7 @@ namespace NUnit.ConsoleRunner
             ColorConsole.WriteLine(ColorStyle.Header, string.Format( "{0} {1} {2}", programName, versionText, configText ));
             ColorConsole.WriteLine(ColorStyle.SubHeader, copyrightText);
             Console.WriteLine();
-            ColorConsole.WriteLine(ColorStyle.SectionHeader, "Runtime Environment - ");
+            ColorConsole.WriteLine(ColorStyle.SectionHeader, "Runtime Environment");
             ColorConsole.WriteLabel("   OS Version: ", Environment.OSVersion.ToString(), true);
             ColorConsole.WriteLabel("  CLR Version: ", Environment.Version.ToString(), true);
             Console.WriteLine();
