@@ -34,8 +34,8 @@ namespace NUnit.Framework.Internal
 
         private TextMessageWriter writer;
 
-		[SetUp]
-		public void SetUp()
+        [SetUp]
+        public void SetUp()
         {
             writer = new TextMessageWriter();
         }

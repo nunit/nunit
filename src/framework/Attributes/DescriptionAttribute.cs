@@ -26,10 +26,10 @@ using NUnit.Framework.Internal;
 
 namespace NUnit.Framework
 {
-	/// <summary>
-	/// Attribute used to provide descriptive text about a 
-	/// test case or fixture.
-	/// </summary>
+    /// <summary>
+    /// Attribute used to provide descriptive text about a 
+    /// test case or fixture.
+    /// </summary>
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class | AttributeTargets.Assembly, AllowMultiple = false, Inherited=false)]
     public sealed class DescriptionAttribute : PropertyAttribute
     {

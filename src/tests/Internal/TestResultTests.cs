@@ -27,13 +27,13 @@ using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Internal
 {
-	/// <summary>
-	/// Summary description for TestResultTests.
-	/// </summary>
-	[TestFixture]
-	public abstract class TestResultTests
-	{
-		protected TestResult testResult;
+    /// <summary>
+    /// Summary description for TestResultTests.
+    /// </summary>
+    [TestFixture]
+    public abstract class TestResultTests
+    {
+        protected TestResult testResult;
         protected TestResult suiteResult;
         protected TestMethod test;
 
@@ -41,21 +41,21 @@ namespace NUnit.Framework.Internal
         protected string failingChildMessage = "One or more child tests had errors";
 
         protected TimeSpan expectedDuration;
-	    protected DateTime expectedStart;
-	    protected DateTime expectedEnd;
+        protected DateTime expectedStart;
+        protected DateTime expectedEnd;
 
-		[SetUp]
-		public void SetUp()
+        [SetUp]
+        public void SetUp()
         {
             expectedDuration = TimeSpan.FromMilliseconds(125);
-		    expectedStart = new DateTime(1968, 4, 8, 15, 05, 30, 250, DateTimeKind.Utc);
-		    expectedEnd = expectedStart + expectedDuration;
+            expectedStart = new DateTime(1968, 4, 8, 15, 05, 30, 250, DateTimeKind.Utc);
+            expectedEnd = expectedStart + expectedDuration;
 
             test = new TestMethod(typeof(DummySuite).GetMethod("DummyMethod"));
             test.Properties.Set(PropertyNames.Description, "Test description");
             test.Properties.Add(PropertyNames.Category, "Dubious");
             test.Properties.Set("Priority", "low");
-			testResult = test.MakeTestResult();
+            testResult = test.MakeTestResult();
 
             TestSuite suite = new TestSuite(typeof(DummySuite));
             suite.Properties.Set(PropertyNames.Description, "Suite description");
@@ -266,8 +266,8 @@ namespace NUnit.Framework.Internal
         }
 
         [Test]
-		public void TestResultIsIgnored()
-		{
+        public void TestResultIsIgnored()
+        {
             Assert.AreEqual(ResultState.Ignored, testResult.ResultState);
             Assert.AreEqual(TestStatus.Skipped, testResult.ResultState.Status);
             Assert.AreEqual("Ignored", testResult.ResultState.Label);

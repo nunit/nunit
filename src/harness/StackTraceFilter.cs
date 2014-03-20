@@ -56,9 +56,9 @@ namespace NUnit.Framework.TestHarness
         static bool FilterLine(string line)
         {
             string[] patterns = new string[]
-			{
-				"NUnit.Framework.Assert" 
-			};
+            {
+                "NUnit.Framework.Assert" 
+            };
 
             for (int i = 0; i < patterns.Length; i++)
             {

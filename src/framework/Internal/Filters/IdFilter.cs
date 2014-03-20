@@ -27,9 +27,9 @@ using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Filters
 {
-	/// <summary>
-	/// IdFilter selects tests based on their id
-	/// </summary>
+    /// <summary>
+    /// IdFilter selects tests based on their id
+    /// </summary>
     [Serializable]
     public class IdFilter : ValueMatchFilter<int>
     {
@@ -57,5 +57,5 @@ namespace NUnit.Framework.Internal.Filters
         {
             return test.Id == id;
         }
-	}
+    }
 }

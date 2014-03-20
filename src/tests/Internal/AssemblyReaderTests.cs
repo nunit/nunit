@@ -28,44 +28,44 @@ using System.Reflection;
 
 namespace NUnit.Framework.Internal
 {
-	[TestFixture]
-	public class AssemblyReaderTests
-	{
+    [TestFixture]
+    public class AssemblyReaderTests
+    {
         private static readonly string THIS_ASSEMBLY_PATH = AssemblyHelper.GetAssemblyPath(Assembly.GetExecutingAssembly());
-		private AssemblyReader rdr;
+        private AssemblyReader rdr;
 
-		[SetUp]
-		public void CreateReader()
-		{
-			rdr = new AssemblyReader( this.GetType().Assembly );
-		}
+        [SetUp]
+        public void CreateReader()
+        {
+            rdr = new AssemblyReader( this.GetType().Assembly );
+        }
 
-		[TearDown]
-		public void DisposeReader()
-		{
-			if ( rdr != null )
-				rdr.Dispose();
+        [TearDown]
+        public void DisposeReader()
+        {
+            if ( rdr != null )
+                rdr.Dispose();
 
-			rdr = null;
-		}
+            rdr = null;
+        }
 
-		[Test]
-		public void CreateFromPath()
-		{
+        [Test]
+        public void CreateFromPath()
+        {
             Assert.That(new AssemblyReader(THIS_ASSEMBLY_PATH).AssemblyPath, Is.SamePath(THIS_ASSEMBLY_PATH));
-		}
+        }
 
-		[Test]
-		public void CreateFromAssembly()
-		{
+        [Test]
+        public void CreateFromAssembly()
+        {
             Assert.That(rdr.AssemblyPath, Is.SamePath(THIS_ASSEMBLY_PATH));
-		}
+        }
 
-		[Test]
-		public void IsValidPeFile()
-		{
-			Assert.IsTrue( rdr.IsValidPeFile );
-		}
+        [Test]
+        public void IsValidPeFile()
+        {
+            Assert.IsTrue( rdr.IsValidPeFile );
+        }
 
         //TODO: Needs a non-PE file in the directory
         //[Test]
@@ -75,23 +75,23 @@ namespace NUnit.Framework.Internal
         //    Assert.IsFalse( new AssemblyReader( configFile ).IsValidPeFile );
         //}
 
-		[Test]
-		public void IsDotNetFile()
-		{
-			Assert.IsTrue( rdr.IsDotNetFile );
-		}
+        [Test]
+        public void IsDotNetFile()
+        {
+            Assert.IsTrue( rdr.IsDotNetFile );
+        }
 
-		[Test]
-		public void ImageRuntimeVersion()
-		{
-			string runtimeVersion = rdr.ImageRuntimeVersion;
+        [Test]
+        public void ImageRuntimeVersion()
+        {
+            string runtimeVersion = rdr.ImageRuntimeVersion;
 
-			StringAssert.StartsWith( "v", runtimeVersion );
-			Version version = new Version( runtimeVersion.Substring( 1 ) );
-			// This fails when we force running under a prior version
-			// Assert.LessOrEqual( version, Environment.Version );
-		}
+            StringAssert.StartsWith( "v", runtimeVersion );
+            Version version = new Version( runtimeVersion.Substring( 1 ) );
+            // This fails when we force running under a prior version
+            // Assert.LessOrEqual( version, Environment.Version );
+        }
 
-	}
+    }
 }
 #endif

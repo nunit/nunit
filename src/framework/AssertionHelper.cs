@@ -26,14 +26,14 @@ using NUnit.Framework.Constraints;
 
 namespace NUnit.Framework
 {
-	/// <summary>
-	/// AssertionHelper is an optional base class for user tests,
-	/// allowing the use of shorter ids for constraints and
-	/// asserts and avoiding conflict with the definition of 
-	/// <see cref="Is"/>, from which it inherits much of its
-	/// behavior, in certain mock object frameworks.
-	/// </summary>
-	public class AssertionHelper : ConstraintFactory
+    /// <summary>
+    /// AssertionHelper is an optional base class for user tests,
+    /// allowing the use of shorter ids for constraints and
+    /// asserts and avoiding conflict with the definition of 
+    /// <see cref="Is"/>, from which it inherits much of its
+    /// behavior, in certain mock object frameworks.
+    /// </summary>
+    public class AssertionHelper : ConstraintFactory
     {
         #region Assert
         //private Assertions assert = new Assertions();
@@ -217,14 +217,14 @@ namespace NUnit.Framework
 
         #region Map
         /// <summary>
-		/// Returns a ListMapper based on a collection.
-		/// </summary>
-		/// <param name="original">The original collection</param>
-		/// <returns></returns>
-		public ListMapper Map( ICollection original )
-		{
-			return new ListMapper( original );
-		}
-		#endregion
-	}
+        /// Returns a ListMapper based on a collection.
+        /// </summary>
+        /// <param name="original">The original collection</param>
+        /// <returns></returns>
+        public ListMapper Map( ICollection original )
+        {
+            return new ListMapper( original );
+        }
+        #endregion
+    }
 }

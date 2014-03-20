@@ -26,9 +26,9 @@ using NUnit.Framework;
 
 namespace NUnit.TestData.AssertFailFixture
 {
-	[TestFixture]
-	public class AssertFailFixture
-	{
+    [TestFixture]
+    public class AssertFailFixture
+    {
         [Test]
         public void CallAssertFail()
         {

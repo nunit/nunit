@@ -25,11 +25,11 @@ using System;
 
 namespace NUnit.Framework.Constraints
 {
-	/// <summary>
-	/// Summary description for MsgUtilTests.
-	/// </summary>
-	[TestFixture]
-	public static class MsgUtilTests
+    /// <summary>
+    /// Summary description for MsgUtilTests.
+    /// </summary>
+    [TestFixture]
+    public static class MsgUtilTests
     {
         #region FormatValue
 
@@ -114,7 +114,7 @@ namespace NUnit.Framework.Constraints
         [TestCase("\n\r", "\\n\\r")]
         [TestCase("This is a\rtest message", "This is a\\rtest message")]
         [TestCase("", "")]
-		[TestCase(null, null)]
+        [TestCase(null, null)]
         [TestCase("\t", "\\t")]
         [TestCase("\t\n", "\\t\\n")]
         [TestCase("\\r\\n", "\\\\r\\\\n")]
@@ -128,9 +128,9 @@ namespace NUnit.Framework.Constraints
         [TestCase("\x2028", "\\x2028", Description = "Line separator character")]
         [TestCase("\x2029", "\\x2029", Description = "Paragraph separator character")]
         public static void EscapeControlCharsTest(string input, string expected)
-		{
+        {
             Assert.That( MsgUtils.EscapeControlChars(input), Is.EqualTo(expected) );
-		}
+        }
 
         [Test]
         public static void EscapeNullCharInString()

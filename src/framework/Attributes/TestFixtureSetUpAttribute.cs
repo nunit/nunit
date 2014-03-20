@@ -23,15 +23,15 @@
 
 namespace NUnit.Framework
 {
-	using System;
+    using System;
 
-	/// <summary>
-	/// Attribute used to identify a method that is 
-	/// called before any tests in a fixture are run.
-	/// </summary>
-	[AttributeUsage(AttributeTargets.Method, AllowMultiple=false, Inherited=true)]
+    /// <summary>
+    /// Attribute used to identify a method that is 
+    /// called before any tests in a fixture are run.
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple=false, Inherited=true)]
     [Obsolete("Use OneTimeSetUpAttribute")]
-	public class TestFixtureSetUpAttribute : OneTimeSetUpAttribute
-	{
-	}
+    public class TestFixtureSetUpAttribute : OneTimeSetUpAttribute
+    {
+    }
 }

@@ -48,8 +48,8 @@ namespace NUnit.Framework.Constraints
         /// <returns>True for success, false for failure</returns>
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
-			if (actual == null)
-				throw new System.ArgumentException("The actual value must be a non-null string, IEnumerable or DirectoryInfo", "actual");
+            if (actual == null)
+                throw new System.ArgumentException("The actual value must be a non-null string, IEnumerable or DirectoryInfo", "actual");
 
             if (actual is string)
                 realConstraint = new EmptyStringConstraint();

@@ -34,92 +34,92 @@ using NUnit.Framework;
 
 namespace NUnit.TestData.RepeatedTestFixture
 {
-	[TestFixture]
-	public class RepeatingTestsBase
-	{
-		private int fixtureSetupCount;
-		private int fixtureTeardownCount;
-		private int setupCount;
-		private int teardownCount;
-		protected int count;
+    [TestFixture]
+    public class RepeatingTestsBase
+    {
+        private int fixtureSetupCount;
+        private int fixtureTeardownCount;
+        private int setupCount;
+        private int teardownCount;
+        protected int count;
 
-		[TestFixtureSetUp]
-		public void FixtureSetUp()
-		{
-			fixtureSetupCount++;
-		}
+        [TestFixtureSetUp]
+        public void FixtureSetUp()
+        {
+            fixtureSetupCount++;
+        }
 
-		[OneTimeTearDown]
-		public void FixtureTearDown()
-		{
-			fixtureTeardownCount++;
-		}
+        [OneTimeTearDown]
+        public void FixtureTearDown()
+        {
+            fixtureTeardownCount++;
+        }
 
-		[SetUp]
-		public void SetUp()
-		{
-			setupCount++;
-		}
+        [SetUp]
+        public void SetUp()
+        {
+            setupCount++;
+        }
 
-		[TearDown]
-		public void TearDown()
-		{
-			teardownCount++;
-		}
+        [TearDown]
+        public void TearDown()
+        {
+            teardownCount++;
+        }
 
-		public int FixtureSetupCount
-		{
-			get { return fixtureSetupCount; }
-		}
-		public int FixtureTeardownCount
-		{
-			get { return fixtureTeardownCount; }
-		}
-		public int SetupCount
-		{
-			get { return setupCount; }
-		}
-		public int TeardownCount
-		{
-			get { return teardownCount; }
-		}
-		public int Count
-		{
-			get { return count; }
-		}
-	}
+        public int FixtureSetupCount
+        {
+            get { return fixtureSetupCount; }
+        }
+        public int FixtureTeardownCount
+        {
+            get { return fixtureTeardownCount; }
+        }
+        public int SetupCount
+        {
+            get { return setupCount; }
+        }
+        public int TeardownCount
+        {
+            get { return teardownCount; }
+        }
+        public int Count
+        {
+            get { return count; }
+        }
+    }
 
-	public class RepeatSuccessFixture : RepeatingTestsBase
-	{
-		[Test, Repeat(3)]
-		public void RepeatSuccess()
-		{
-			count++;
-			Assert.IsTrue (true);
-		}
-	}
+    public class RepeatSuccessFixture : RepeatingTestsBase
+    {
+        [Test, Repeat(3)]
+        public void RepeatSuccess()
+        {
+            count++;
+            Assert.IsTrue (true);
+        }
+    }
 
-	public class RepeatFailOnFirstFixture : RepeatingTestsBase
-	{
-		[Test, Repeat(3)]
-		public void RepeatFailOnFirst()
-		{
-			count++;
-			Assert.IsFalse (true);
-		}
-	}
+    public class RepeatFailOnFirstFixture : RepeatingTestsBase
+    {
+        [Test, Repeat(3)]
+        public void RepeatFailOnFirst()
+        {
+            count++;
+            Assert.IsFalse (true);
+        }
+    }
 
-	public class RepeatFailOnThirdFixture : RepeatingTestsBase
-	{
-		[Test, Repeat(3)]
-		public void RepeatFailOnThird()
-		{
-			count++;
+    public class RepeatFailOnThirdFixture : RepeatingTestsBase
+    {
+        [Test, Repeat(3)]
+        public void RepeatFailOnThird()
+        {
+            count++;
 
-			if (count == 3)
-				Assert.IsTrue (false);
-		}
-	}
+            if (count == 3)
+                Assert.IsTrue (false);
+        }
+    }
 
     public class RepeatedTestWithIgnore : RepeatingTestsBase
     {

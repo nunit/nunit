@@ -23,9 +23,9 @@
 
 namespace NUnit.Framework.Internal
 {
-	using System;
+    using System;
 #if !NETCF
-	using System.Runtime.Serialization;
+    using System.Runtime.Serialization;
 #endif
 
     /// <summary>
@@ -33,36 +33,36 @@ namespace NUnit.Framework.Internal
     /// fixture constructor using the provided arguments cannot be found.
     /// </summary>
 #if !NETCF
-	[Serializable]
+    [Serializable]
 #endif
-	public class InvalidTestFixtureException : Exception
-	{
+    public class InvalidTestFixtureException : Exception
+    {
         /// <summary>
         /// Initializes a new instance of the <see cref="InvalidTestFixtureException"/> class.
         /// </summary>
-		public InvalidTestFixtureException() : base() {}
+        public InvalidTestFixtureException() : base() {}
 
         /// <summary>
         /// Initializes a new instance of the <see cref="InvalidTestFixtureException"/> class.
         /// </summary>
         /// <param name="message">The message.</param>
-		public InvalidTestFixtureException(string message) : base(message)
-		{}
+        public InvalidTestFixtureException(string message) : base(message)
+        {}
 
         /// <summary>
         /// Initializes a new instance of the <see cref="InvalidTestFixtureException"/> class.
         /// </summary>
         /// <param name="message">The message.</param>
         /// <param name="inner">The inner.</param>
-		public InvalidTestFixtureException(string message, Exception inner) : base(message, inner)
-		{}
+        public InvalidTestFixtureException(string message, Exception inner) : base(message, inner)
+        {}
 
 #if !NETCF && !SILVERLIGHT
-		/// <summary>
-		/// Serialization Constructor
-		/// </summary>
-		protected InvalidTestFixtureException(SerializationInfo info, 
-			StreamingContext context) : base(info,context){}
+        /// <summary>
+        /// Serialization Constructor
+        /// </summary>
+        protected InvalidTestFixtureException(SerializationInfo info, 
+            StreamingContext context) : base(info,context){}
 #endif
-	}
+    }
 }

@@ -589,5 +589,5 @@ namespace NUnit.Framework.Constraints
         //}
  
         #endregion
-	}
+    }
 }

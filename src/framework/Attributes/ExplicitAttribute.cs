@@ -27,22 +27,22 @@ using NUnit.Framework.Internal;
 
 namespace NUnit.Framework
 {
-	/// <summary>
-	/// ExplicitAttribute marks a test or test fixture so that it will
-	/// only be run if explicitly executed from the gui or command line
-	/// or if it is included by use of a filter. The test will not be
-	/// run simply because an enclosing suite is run.
-	/// </summary>
-	[AttributeUsage(AttributeTargets.Class|AttributeTargets.Method|AttributeTargets.Assembly, AllowMultiple=false, Inherited=false)]
+    /// <summary>
+    /// ExplicitAttribute marks a test or test fixture so that it will
+    /// only be run if explicitly executed from the gui or command line
+    /// or if it is included by use of a filter. The test will not be
+    /// run simply because an enclosing suite is run.
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Class|AttributeTargets.Method|AttributeTargets.Assembly, AllowMultiple=false, Inherited=false)]
     public class ExplicitAttribute : NUnitAttribute, IApplyToTest
-	{
+    {
         private string reason;
 
         /// <summary>
-		/// Default constructor
-		/// </summary>
-		public ExplicitAttribute()
-		{
+        /// Default constructor
+        /// </summary>
+        public ExplicitAttribute()
+        {
             this.reason = "";
         }
 

@@ -26,13 +26,13 @@ using System.Reflection;
 
 namespace NUnit.Framework.Interfaces
 {
-	/// <summary>
-	/// Common interface supported by all representations
-	/// of a test. Only includes informational fields.
-	/// The Run method is specifically excluded to allow
-	/// for data-only representations of a test.
-	/// </summary>
-	public interface ITest : IXmlNodeBuilder
+    /// <summary>
+    /// Common interface supported by all representations
+    /// of a test. Only includes informational fields.
+    /// The Run method is specifically excluded to allow
+    /// for data-only representations of a test.
+    /// </summary>
+    public interface ITest : IXmlNodeBuilder
     {
         /// <summary>
         /// Gets the id of the test
@@ -64,7 +64,7 @@ namespace NUnit.Framework.Interfaces
         /// <summary>
         /// Gets the RunState of the test, indicating whether it can be run.
         /// </summary>
-		RunState RunState { get; }
+        RunState RunState { get; }
 
         /// <summary>
         /// Count of the test cases ( 1 if this is a test case )
@@ -72,9 +72,9 @@ namespace NUnit.Framework.Interfaces
         int TestCaseCount { get; }
 
         /// <summary>
-		/// Gets the properties of the test
-		/// </summary>
-		IPropertyBag Properties { get; }
+        /// Gets the properties of the test
+        /// </summary>
+        IPropertyBag Properties { get; }
 
         /// <summary>
         /// Gets the parent test, if any.

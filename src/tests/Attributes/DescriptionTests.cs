@@ -29,19 +29,19 @@ using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Attributes
 {
-	// TODO: Review to see if we need these tests
+    // TODO: Review to see if we need these tests
 
-	[TestFixture]
-	public class DescriptionTests
-	{
-		static readonly Type FixtureType = typeof( DescriptionFixture );
+    [TestFixture]
+    public class DescriptionTests
+    {
+        static readonly Type FixtureType = typeof( DescriptionFixture );
 
-		[Test]
-		public void ReflectionTest()
-		{
-			Test testCase = TestBuilder.MakeTestCase( FixtureType, "Method" );
-			Assert.AreEqual( RunState.Runnable, testCase.RunState );
-		}
+        [Test]
+        public void ReflectionTest()
+        {
+            Test testCase = TestBuilder.MakeTestCase( FixtureType, "Method" );
+            Assert.AreEqual( RunState.Runnable, testCase.RunState );
+        }
 
         [Test]
         public void Description()
@@ -51,22 +51,22 @@ namespace NUnit.Framework.Attributes
         }
 
         [Test]
-		public void NoDescription()
-		{
-			Test testCase = TestBuilder.MakeTestCase( FixtureType, "NoDescriptionMethod" );
-			Assert.IsNull(testCase.Properties.Get(PropertyNames.Description));
-		}
+        public void NoDescription()
+        {
+            Test testCase = TestBuilder.MakeTestCase( FixtureType, "NoDescriptionMethod" );
+            Assert.IsNull(testCase.Properties.Get(PropertyNames.Description));
+        }
 
-		[Test]
-		public void FixtureDescription()
-		{
-			TestSuite suite = new TestSuite("suite");
-			suite.Add( TestBuilder.MakeFixture( typeof( DescriptionFixture ) ) );
+        [Test]
+        public void FixtureDescription()
+        {
+            TestSuite suite = new TestSuite("suite");
+            suite.Add( TestBuilder.MakeFixture( typeof( DescriptionFixture ) ) );
 
-			TestSuite mockFixtureSuite = (TestSuite)suite.Tests[0];
+            TestSuite mockFixtureSuite = (TestSuite)suite.Tests[0];
 
-			Assert.AreEqual("Fixture Description", mockFixtureSuite.Properties.Get(PropertyNames.Description));
-		}
+            Assert.AreEqual("Fixture Description", mockFixtureSuite.Properties.Get(PropertyNames.Description));
+        }
 
         [Test]
         public void SeparateDescriptionAttribute()

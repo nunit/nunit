@@ -27,19 +27,19 @@ using NUnit.Framework.Internal;
 
 namespace NUnit.Framework
 {
-	/// <summary>
-	/// Summary description for SetCultureAttribute.
-	/// </summary>
-	[AttributeUsage(AttributeTargets.Class|AttributeTargets.Method|AttributeTargets.Assembly, AllowMultiple=false, Inherited=true)]
-	public class SetCultureAttribute : PropertyAttribute, IApplyToContext
-	{
+    /// <summary>
+    /// Summary description for SetCultureAttribute.
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Class|AttributeTargets.Method|AttributeTargets.Assembly, AllowMultiple=false, Inherited=true)]
+    public class SetCultureAttribute : PropertyAttribute, IApplyToContext
+    {
         private string _culture;
 
-		/// <summary>
-		/// Construct given the name of a culture
-		/// </summary>
-		/// <param name="culture"></param>
-		public SetCultureAttribute( string culture ) : base( PropertyNames.SetCulture, culture ) 
+        /// <summary>
+        /// Construct given the name of a culture
+        /// </summary>
+        /// <param name="culture"></param>
+        public SetCultureAttribute( string culture ) : base( PropertyNames.SetCulture, culture ) 
         {
             _culture = culture;
         }

@@ -30,7 +30,7 @@ namespace NUnit.Framework.Constraints
     [TestFixture]
     public class BinarySerializableTest : ConstraintTestBase
     {
-		[SetUp]
+        [SetUp]
         public void SetUp()
         {
             theConstraint = new BinarySerializableConstraint();

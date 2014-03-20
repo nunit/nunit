@@ -27,38 +27,38 @@ using NUnit.Framework.Constraints;
 
 namespace NUnit.Framework
 {
-	/// <summary>
-	/// Basic Asserts on strings.
-	/// </summary>
-	public class StringAssert
-	{
-		#region Equals and ReferenceEquals
+    /// <summary>
+    /// Basic Asserts on strings.
+    /// </summary>
+    public class StringAssert
+    {
+        #region Equals and ReferenceEquals
 
-		/// <summary>
-		/// The Equals method throws an AssertionException. This is done 
-		/// to make sure there is no mistake by calling this function.
-		/// </summary>
-		/// <param name="a"></param>
-		/// <param name="b"></param>
-		[EditorBrowsable(EditorBrowsableState.Never)]
-		public static new bool Equals(object a, object b)
-		{
-			throw new AssertionException("Assert.Equals should not be used for Assertions");
-		}
+        /// <summary>
+        /// The Equals method throws an AssertionException. This is done 
+        /// to make sure there is no mistake by calling this function.
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public static new bool Equals(object a, object b)
+        {
+            throw new AssertionException("Assert.Equals should not be used for Assertions");
+        }
 
-		/// <summary>
-		/// override the default ReferenceEquals to throw an AssertionException. This 
-		/// implementation makes sure there is no mistake in calling this function 
-		/// as part of Assert. 
-		/// </summary>
-		/// <param name="a"></param>
-		/// <param name="b"></param>
-		public static new void ReferenceEquals(object a, object b)
-		{
-			throw new AssertionException("Assert.ReferenceEquals should not be used for Assertions");
-		}
+        /// <summary>
+        /// override the default ReferenceEquals to throw an AssertionException. This 
+        /// implementation makes sure there is no mistake in calling this function 
+        /// as part of Assert. 
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        public static new void ReferenceEquals(object a, object b)
+        {
+            throw new AssertionException("Assert.ReferenceEquals should not be used for Assertions");
+        }
 
-		#endregion
+        #endregion
 
         #region Contains
 

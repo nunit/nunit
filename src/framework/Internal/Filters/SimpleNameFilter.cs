@@ -27,9 +27,9 @@ using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Filters
 {
-	/// <summary>
-	/// SimpleName filter selects tests based on their name
-	/// </summary>
+    /// <summary>
+    /// SimpleName filter selects tests based on their name
+    /// </summary>
     [Serializable]
     public class SimpleNameFilter : ValueMatchFilter<string>
     {
@@ -57,5 +57,5 @@ namespace NUnit.Framework.Internal.Filters
         {
             return test.FullName == value;
         }
-	}
+    }
 }

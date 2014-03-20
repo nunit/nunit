@@ -29,9 +29,9 @@ using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Internal
 {
-	[TestFixture]
-	public class UnexpectedExceptionTests
-	{
+    [TestFixture]
+    public class UnexpectedExceptionTests
+    {
         [Test]
         public void FailRecordsInnerException()
         {

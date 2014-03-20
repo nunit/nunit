@@ -31,23 +31,23 @@ using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Execution
 {
-	#region Individual Event Classes
+    #region Individual Event Classes
 
-	/// <summary>
-	/// NUnit.Core.Event is the abstract base for all stored events.
-	/// An Event is the stored representation of a call to the 
-	/// ITestListener interface and is used to record such calls
-	/// or to queue them for forwarding on another thread or at
-	/// a later time.
-	/// </summary>
-	public abstract class Event
-	{
+    /// <summary>
+    /// NUnit.Core.Event is the abstract base for all stored events.
+    /// An Event is the stored representation of a call to the 
+    /// ITestListener interface and is used to record such calls
+    /// or to queue them for forwarding on another thread or at
+    /// a later time.
+    /// </summary>
+    public abstract class Event
+    {
         /// <summary>
         /// The Send method is implemented by derived classes to send the event to the specified listener.
         /// </summary>
         /// <param name="listener">The listener.</param>
-		abstract public void Send( ITestListener listener );
-	
+        abstract public void Send( ITestListener listener );
+    
         /// <summary>
         /// Gets a value indicating whether this event is delivered synchronously by the NUnit <see cref="EventPump"/>.
         /// <para>
@@ -56,13 +56,13 @@ namespace NUnit.Framework.Internal.Execution
         /// thread has delivered the event and sets the WaitHandle.
         /// </para>
         /// </summary>
-	    public virtual bool IsSynchronous
-	    {
-	        get
-	        {
-	            return false;
-	        }
-	    }
+        public virtual bool IsSynchronous
+        {
+            get
+            {
+                return false;
+            }
+        }
 
         //protected static Exception WrapUnserializableException(Exception ex)
         //{
@@ -79,17 +79,17 @@ namespace NUnit.Framework.Internal.Execution
     /// TestStartedEvent holds information needed to call the TestStarted method.
     /// </summary>
     public class TestStartedEvent : Event
-	{
-		ITest test;
+    {
+        ITest test;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TestStartedEvent"/> class.
         /// </summary>
         /// <param name="test">The test.</param>
-		public TestStartedEvent( ITest test )
-		{
-			this.test = test;
-		}
+        public TestStartedEvent( ITest test )
+        {
+            this.test = test;
+        }
 
         ///// <summary>
         ///// Gets a value indicating whether this event is delivered synchronously by the NUnit <see cref="EventPump"/>.
@@ -113,72 +113,72 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         /// <param name="listener">The listener.</param>
         public override void Send(ITestListener listener)
-		{
-			listener.TestStarted( this.test );
-		}
-	}
+        {
+            listener.TestStarted( this.test );
+        }
+    }
 
     /// <summary>
     /// TestFinishedEvent holds information needed to call the TestFinished method.
     /// </summary>
     public class TestFinishedEvent : Event
-	{
-		ITestResult result;
+    {
+        ITestResult result;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TestFinishedEvent"/> class.
         /// </summary>
         /// <param name="result">The result.</param>
-		public TestFinishedEvent( ITestResult result )
-		{
-			this.result = result;
-		}
+        public TestFinishedEvent( ITestResult result )
+        {
+            this.result = result;
+        }
 
         /// <summary>
         /// Calls TestFinished on the specified listener.
         /// </summary>
         /// <param name="listener">The listener.</param>
         public override void Send(ITestListener listener)
-		{
-			listener.TestFinished( this.result );
-		}
-	}
+        {
+            listener.TestFinished( this.result );
+        }
+    }
 
     /// <summary>
     /// OutputEvent holds information needed to call the TestOutput method.
     /// </summary>
     public class OutputEvent : Event
-	{
-		TestOutput output;
+    {
+        TestOutput output;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="OutputEvent"/> class.
         /// </summary>
         /// <param name="output">The output.</param>
-		public OutputEvent( TestOutput output )
-		{
-			this.output = output;
-		}
+        public OutputEvent( TestOutput output )
+        {
+            this.output = output;
+        }
 
         /// <summary>
         /// Calls TestOutput on the specified listener.
         /// </summary>
         /// <param name="listener">The listener.</param>
         public override void Send(ITestListener listener)
-		{
-			listener.TestOutput( this.output );
-		}
-	}
+        {
+            listener.TestOutput( this.output );
+        }
+    }
 
-	#endregion
+    #endregion
 
-	/// <summary>
-	/// Implements a queue of work items each of which
-	/// is queued as a WaitCallback.
-	/// </summary>
-	public class EventQueue
-	{
-		private readonly Queue queue = new Queue();
+    /// <summary>
+    /// Implements a queue of work items each of which
+    /// is queued as a WaitCallback.
+    /// </summary>
+    public class EventQueue
+    {
+        private readonly Queue queue = new Queue();
         private readonly object syncRoot;
         private bool stopped;
 
@@ -204,16 +204,16 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// Gets the count of items in the queue.
         /// </summary>
-		public int Count
-		{
-			get 
-			{
-				lock( this.syncRoot )
-				{
-					return this.queue.Count; 
-				}
-			}
-		}
+        public int Count
+        {
+            get 
+            {
+                lock( this.syncRoot )
+                {
+                    return this.queue.Count; 
+                }
+            }
+        }
 
         /// <summary>
         /// Sets a handle on which to wait, when <see cref="Enqueue"/> is called
@@ -233,13 +233,13 @@ namespace NUnit.Framework.Internal.Execution
         /// Enqueues the specified event
         /// </summary>
         /// <param name="e">The event to enqueue.</param>
-		public void Enqueue( Event e )
-		{
-			lock( this.syncRoot )
-			{
-				this.queue.Enqueue( e );
-				Monitor.Pulse( this.syncRoot );
-			}
+        public void Enqueue( Event e )
+        {
+            lock( this.syncRoot )
+            {
+                this.queue.Enqueue( e );
+                Monitor.Pulse( this.syncRoot );
+            }
 
             if (this.synchronousEventSent != null && e.IsSynchronous)
             {

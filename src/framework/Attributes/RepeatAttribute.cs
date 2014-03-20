@@ -35,13 +35,13 @@ using NUnit.Framework.Internal.Commands;
 
 namespace NUnit.Framework
 {
-	/// <summary>
-	/// RepeatAttribute may be applied to test case in order
-	/// to run it multiple times.
-	/// </summary>
-	[AttributeUsage(AttributeTargets.Method, AllowMultiple=false, Inherited=false)]
-	public class RepeatAttribute : PropertyAttribute, ICommandDecorator
-	{
+    /// <summary>
+    /// RepeatAttribute may be applied to test case in order
+    /// to run it multiple times.
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple=false, Inherited=false)]
+    public class RepeatAttribute : PropertyAttribute, ICommandDecorator
+    {
         private int count;
 
         /// <summary>

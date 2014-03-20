@@ -26,67 +26,67 @@ using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Execution
 {
-	using System;
-	using System.IO;
-	using System.Text;
+    using System;
+    using System.IO;
+    using System.Text;
 
     /// <summary>
     /// EventListenerTextWriter is a TextWriter that channels output to
     /// the TestOutput method of an ITestListener.
     /// </summary>
-	public class EventListenerTextWriter : TextWriter
-	{
-		private ITestListener eventListener;
-		private TestOutputType type;
-		private StringBuilder buffer;
+    public class EventListenerTextWriter : TextWriter
+    {
+        private ITestListener eventListener;
+        private TestOutputType type;
+        private StringBuilder buffer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EventListenerTextWriter"/> class.
         /// </summary>
         /// <param name="eventListener">The event listener.</param>
         /// <param name="type">The type.</param>
-		public EventListenerTextWriter( ITestListener eventListener, TestOutputType type )
-		{
-			this.eventListener = eventListener;
-			this.type = type;
-			this.buffer = new StringBuilder();
-		}
+        public EventListenerTextWriter( ITestListener eventListener, TestOutputType type )
+        {
+            this.eventListener = eventListener;
+            this.type = type;
+            this.buffer = new StringBuilder();
+        }
 
         /// <summary>
         /// Writes the specified char.
         /// </summary>
         /// <param name="aChar">A char.</param>
-		override public void Write(char aChar)
-		{
-			this.buffer.Append(aChar);
-			if (aChar == '\n')
-				Flush();
-		}
+        override public void Write(char aChar)
+        {
+            this.buffer.Append(aChar);
+            if (aChar == '\n')
+                Flush();
+        }
 
         /// <summary>
         /// Writes the specified string.
         /// </summary>
         /// <param name="aString">A string.</param>
-		override public void Write(string aString)
-		{
-			if (aString.Length > 0)
-			{
-				this.buffer.Append(aString);
-				if (aString[aString.Length-1] == '\n')
-					Flush();
-			}
-		}
+        override public void Write(string aString)
+        {
+            if (aString.Length > 0)
+            {
+                this.buffer.Append(aString);
+                if (aString[aString.Length-1] == '\n')
+                    Flush();
+            }
+        }
 
         /// <summary>
         /// Writes the specified string followed by a NewLine.
         /// </summary>
         /// <param name="aString">A string.</param>
-		override public void WriteLine(string aString)
-		{
-			this.buffer.Append(aString);
-			this.buffer.Append(this.NewLine);
-			Flush();
-		}
+        override public void WriteLine(string aString)
+        {
+            this.buffer.Append(aString);
+            this.buffer.Append(this.NewLine);
+            Flush();
+        }
 
         /// <summary>
         /// When overridden in a derived class, returns the <see cref="T:System.Text.Encoding"/> in which the output is written.
@@ -95,23 +95,23 @@ namespace NUnit.Framework.Internal.Execution
         /// <returns>
         /// The Encoding in which the output is written.
         /// </returns>
-		override public System.Text.Encoding Encoding
-		{
-			get { return Encoding.Default; }
-		}
-		
+        override public System.Text.Encoding Encoding
+        {
+            get { return Encoding.Default; }
+        }
+        
         /// <summary>
         /// Flushes the text writer buffer
         /// </summary>
-		override public void Flush()
-		{
-			if (buffer.Length > 0)
-			{
-				this.eventListener.TestOutput( new TestOutput( buffer.ToString(), this.type ) );
-				buffer.Length = 0;
-			}
-		}
-	}
+        override public void Flush()
+        {
+            if (buffer.Length > 0)
+            {
+                this.eventListener.TestOutput( new TestOutput( buffer.ToString(), this.type ) );
+                buffer.Length = 0;
+            }
+        }
+    }
 
 #if false
     /// <summary>
@@ -137,7 +137,7 @@ namespace NUnit.Framework.Internal.Execution
                 return Encoding.Default;
             }
         }
-	
+    
         override public void Write(char ch)
         {
             lock( sb )

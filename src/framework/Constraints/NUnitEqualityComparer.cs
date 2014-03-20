@@ -447,7 +447,7 @@ namespace NUnit.Framework.Constraints
 
             return true;
         }
-		
+        
         #endregion
 
         #region Nested FailurePoint Class

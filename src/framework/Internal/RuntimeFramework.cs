@@ -29,34 +29,34 @@ using Microsoft.Win32;
 
 namespace NUnit.Framework.Internal
 {
-	/// <summary>
-	/// Enumeration identifying a common language
-	/// runtime implementation.
-	/// </summary>
-	public enum RuntimeType
-	{
+    /// <summary>
+    /// Enumeration identifying a common language
+    /// runtime implementation.
+    /// </summary>
+    public enum RuntimeType
+    {
         /// <summary>Any supported runtime framework</summary>
         Any,
-		/// <summary>Microsoft .NET Framework</summary>
-		Net,
-		/// <summary>Microsoft .NET Compact Framework</summary>
-		NetCF,
-		/// <summary>Microsoft Shared Source CLI</summary>
-		SSCLI,
-		/// <summary>Mono</summary>
-		Mono,
+        /// <summary>Microsoft .NET Framework</summary>
+        Net,
+        /// <summary>Microsoft .NET Compact Framework</summary>
+        NetCF,
+        /// <summary>Microsoft Shared Source CLI</summary>
+        SSCLI,
+        /// <summary>Mono</summary>
+        Mono,
         /// <summary>Silverlight</summary>
         Silverlight,
         /// <summary>MonoTouch</summary>
         MonoTouch
-	}
+    }
 
-	/// <summary>
-	/// RuntimeFramework represents a particular version
-	/// of a common language runtime implementation.
-	/// </summary>
+    /// <summary>
+    /// RuntimeFramework represents a particular version
+    /// of a common language runtime implementation.
+    /// </summary>
     [Serializable]
-	public sealed class RuntimeFramework
+    public sealed class RuntimeFramework
     {
         // NOTE: This version of RuntimeFramework is for use
         // within the NUnit framework assembly. It is simpler
@@ -64,18 +64,18 @@ namespace NUnit.Framework.Internal
         // not need to know what frameworks are available, 
         // only what framework is currently running.
         #region Static and Instance Fields
-		
+        
         /// <summary>
         /// DefaultVersion is an empty Version, used to indicate that
         /// NUnit should select the CLR version to use for the test.
         /// </summary>
         public static readonly Version DefaultVersion = new Version(0,0);
 
-		private static RuntimeFramework currentFramework;
+        private static RuntimeFramework currentFramework;
 
         #endregion
-		
-		#region Constructor
+        
+        #region Constructor
 
         /// <summary>
         /// Construct from a runtime type and version. If the version has
@@ -84,9 +84,9 @@ namespace NUnit.Framework.Internal
         /// version is deduced based on the runtime type and provided version.
         /// </summary>
         /// <param name="runtime">The runtime type of the framework</param>
-		/// <param name="version">The version of the framework</param>
-		public RuntimeFramework( RuntimeType runtime, Version version)
-		{
+        /// <param name="version">The version of the framework</param>
+        public RuntimeFramework( RuntimeType runtime, Version version)
+        {
             this.Runtime = runtime;
 
             if (version.Build < 0)
@@ -182,8 +182,8 @@ namespace NUnit.Framework.Internal
                     Type monoRuntimeType = Type.GetType("Mono.Runtime", false);
                     Type monoTouchType = Type.GetType("MonoTouch.UIKit.UIApplicationDelegate,monotouch");
                     bool isMonoTouch = monoTouchType != null;
-					bool isMono = monoRuntimeType != null;
-					
+                    bool isMono = monoRuntimeType != null;
+                    
                     RuntimeType runtime = isMonoTouch
                         ? RuntimeType.MonoTouch
                         : isMono
@@ -196,20 +196,20 @@ namespace NUnit.Framework.Internal
                     int minor = Environment.Version.Minor;
 
                     if (isMono)
-					{
-						switch (major)
-						{
-						case 1:
-                        	minor = 0;
-							break;
-						case 2:
-							major = 3;
-							minor = 5;
-							break;
-						}
-					}
-					else /* It's windows */
-					if (major == 2)
+                    {
+                        switch (major)
+                        {
+                        case 1:
+                            minor = 0;
+                            break;
+                        case 2:
+                            major = 3;
+                            minor = 5;
+                            break;
+                        }
+                    }
+                    else /* It's windows */
+                    if (major == 2)
                     {
                         RegistryKey key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\.NETFramework");
                         if (key != null)
@@ -326,8 +326,8 @@ namespace NUnit.Framework.Internal
         /// Overridden to return the short name of the framework
         /// </summary>
         /// <returns></returns>
-		public override string ToString()
-		{
+        public override string ToString()
+        {
             if (this.AllowAnyVersion)
             {
                 return Runtime.ToString().ToLower();
@@ -340,7 +340,7 @@ namespace NUnit.Framework.Internal
                 else
                     return Runtime.ToString().ToLower() + "-" + vstring;
             }
-		}
+        }
 
         /// <summary>
         /// Returns true if the current framework matches the
@@ -371,8 +371,8 @@ namespace NUnit.Framework.Internal
         }
 
         #endregion
-		
-		#region Helper Methods
+        
+        #region Helper Methods
 
         private static bool IsRuntimeTypeName(string name)
         {

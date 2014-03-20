@@ -102,7 +102,7 @@ namespace NUnit.Framework
  
         #endregion
 
-		#region Property
+        #region Property
 
         /// <summary>
         /// Returns a new PropertyConstraintExpression, which will either
