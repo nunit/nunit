@@ -35,7 +35,7 @@ namespace NUnit.Engine
     /// NUnitFrameworkDriver is used by the test-runner to load and run
     /// tests using the NUnit framework assembly.
     /// </summary>
-    public class NUnitFrameworkDriver : IFrameworkDriver
+    public class BaseNUnitFrameworkDriver : IFrameworkDriver
     {
         private static readonly string CONTROLLER_TYPE = "NUnit.Framework.Api.FrameworkController";
         private static readonly string LOAD_ACTION = CONTROLLER_TYPE + "+LoadTestsAction";
@@ -46,17 +46,17 @@ namespace NUnit.Engine
         static ILogger log = InternalTrace.GetLogger("NUnitFrameworkDriver");
 
         AppDomain _testDomain;
-        string _assemblyPath;
-        IDictionary<string, object> _settings;
+        string _testAssemblyPath;
+        string _frameworkAssemblyName;
 
         object _frameworkController;
 
-        public NUnitFrameworkDriver(AppDomain testDomain, string assemblyPath, IDictionary<string, object> settings)
+        public BaseNUnitFrameworkDriver(AppDomain testDomain, string frameworkAssemblyName, string testAssemblyPath, IDictionary<string, object> settings)
         {
             _testDomain = testDomain;
-            _assemblyPath = assemblyPath;
-            _settings = settings;
-            _frameworkController = CreateObject(CONTROLLER_TYPE, assemblyPath, (System.Collections.IDictionary)settings);
+            _testAssemblyPath = testAssemblyPath;
+            _frameworkAssemblyName = frameworkAssemblyName;
+            _frameworkController = CreateObject(CONTROLLER_TYPE, testAssemblyPath, (System.Collections.IDictionary)settings);
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace NUnit.Engine
         {
             CallbackHandler handler = new CallbackHandler();
 
-            log.Info("Loading {0} - see separate log file", Path.GetFileName(_assemblyPath));
+            log.Info("Loading {0} - see separate log file", Path.GetFileName(_testAssemblyPath));
             CreateObject(LOAD_ACTION, _frameworkController, handler);
 
             return handler.Result;
@@ -92,7 +92,7 @@ namespace NUnit.Engine
         {
             CallbackHandler handler = new RunTestsCallbackHandler(listener);
 
-            log.Info("Running {0} - see separate log file", Path.GetFileName(_assemblyPath));
+            log.Info("Running {0} - see separate log file", Path.GetFileName(_testAssemblyPath));
             CreateObject(RUN_ACTION, _frameworkController, filter.Text, handler);
 
             return handler.Result;
@@ -107,7 +107,7 @@ namespace NUnit.Engine
         {
             CallbackHandler handler = new CallbackHandler();
 
-            log.Info("Exploring {0} - see separate log file", Path.GetFileName(_assemblyPath));
+            log.Info("Exploring {0} - see separate log file", Path.GetFileName(_testAssemblyPath));
             CreateObject(EXPLORE_ACTION, _frameworkController, filter.Text, handler);
 
             return handler.Result;
@@ -118,7 +118,7 @@ namespace NUnit.Engine
         private object CreateObject(string typeName, params object[] args)
         {
             return _testDomain.CreateInstanceAndUnwrap(
-                "nunit.framework", typeName, false, 0,
+                _frameworkAssemblyName, typeName, false, 0,
 #if !NET_4_0
                 null, args, null, null, null );
 #else
@@ -127,5 +127,21 @@ namespace NUnit.Engine
         }
 
         #endregion
+    }
+
+    public class NUnitFrameworkDriver : BaseNUnitFrameworkDriver
+    {
+        public const string FrameworkName = "nunit.framework";
+
+        public NUnitFrameworkDriver(AppDomain testDomain, string testAssemblyPath, IDictionary<string, object> settings)
+            : base(testDomain, FrameworkName, testAssemblyPath, settings) { }
+    }
+
+    public class NUnitLiteFrameworkDriver : BaseNUnitFrameworkDriver
+    {
+        public const string FrameworkName = "nunitlite";
+
+        public NUnitLiteFrameworkDriver(AppDomain testDomain, string testAssemblyPath, IDictionary<string, object> settings)
+            : base(testDomain, FrameworkName, testAssemblyPath, settings) { }
     }
 }

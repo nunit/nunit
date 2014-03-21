@@ -34,18 +34,20 @@ namespace NUnit.Engine.Internal.Tests
     // Functional tests of the NUnitFrameworkDriver calling into the framework.
     public class NUnitFrameworkDriverTests
     {
-        private const string MOCK_ASSEMBLY = "mock-assembly.dll";
+        private string MOCK_ASSEMBLY = "mock-assembly.dll";
         private const string MISSING_FILE = "junk.dll";
         private const string BAD_FILE = "mock-assembly.pdb";
 
         private IDictionary<string, object> _settings = new Dictionary<string, object>();
         private NUnitFrameworkDriver _driver;
         private ICallbackEventHandler _handler;
+        private string _mockAssemblyPath;
 
         [SetUp]
         public void CreateDriver()
         {
-            _driver = new NUnitFrameworkDriver(AppDomain.CurrentDomain, MOCK_ASSEMBLY, _settings);
+            _mockAssemblyPath = PathUtils.Combine(TestContext.CurrentContext.TestDirectory, MOCK_ASSEMBLY);
+            _driver = new NUnitFrameworkDriver(AppDomain.CurrentDomain, _mockAssemblyPath, _settings);
             _handler = new CallbackEventHandler();
         }
 

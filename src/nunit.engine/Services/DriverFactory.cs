@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
 
 namespace NUnit.Engine.Services
@@ -33,7 +34,22 @@ namespace NUnit.Engine.Services
 
         public IFrameworkDriver GetDriver(AppDomain domain, string assemblyPath, IDictionary<string, object> settings)
         {
-            return new NUnitFrameworkDriver(domain, assemblyPath, settings);
+            // Throws if this isn't a managed assembly or if it was built
+            // with a later version of the same assembly. 
+            AssemblyName assemblyName = AssemblyName.GetAssemblyName(assemblyPath);
+
+            var testAssembly = Assembly.Load(assemblyName);
+
+            foreach(var refAssembly in testAssembly.GetReferencedAssemblies())
+                switch (refAssembly.Name)
+                {
+                    case NUnitFrameworkDriver.FrameworkName:
+                        return new NUnitFrameworkDriver(domain, assemblyPath, settings);
+                    case NUnitLiteFrameworkDriver.FrameworkName:
+                        return new NUnitLiteFrameworkDriver(domain, assemblyPath, settings);
+                }
+
+            throw new NUnitEngineException("Unable to locate driver for " + assemblyPath);
         }
 
         #endregion
