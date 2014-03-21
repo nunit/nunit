@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections;
+using System.IO;
 using System.Web.UI;
 using System.Xml;
 using NUnit.Framework.Internal;
@@ -45,11 +46,13 @@ namespace NUnit.Framework.Api
         private IDictionary _settings = new Hashtable();
         private FrameworkController _controller;
         private ICallbackEventHandler _handler;
+        private string _mockAssemblyPath;
 
         [SetUp]
         public void CreateController()
         {
-            _controller = new FrameworkController(MOCK_ASSEMBLY, _settings);
+            _mockAssemblyPath = Path.Combine(TestContext.CurrentContext.TestDirectory, MOCK_ASSEMBLY);
+            _controller = new FrameworkController(_mockAssemblyPath, _settings);
             _handler = new CallbackEventHandler();
         }
 
@@ -59,7 +62,7 @@ namespace NUnit.Framework.Api
         {
             Assert.That(_controller.Builder, Is.TypeOf<DefaultTestAssemblyBuilder>());
             Assert.That(_controller.Runner, Is.TypeOf<DefaultTestAssemblyRunner>());
-            Assert.That(_controller.AssemblyPath, Is.EqualTo(MOCK_ASSEMBLY));
+            Assert.That(_controller.AssemblyPath, Is.EqualTo(_mockAssemblyPath));
             Assert.That(_controller.Settings, Is.SameAs(_settings));
         }
         #endregion

@@ -187,11 +187,11 @@
   <target name="net-3.5" depends="set-net-3.5-runtime-config"
     description="Set runtime to .NET 3.5 for commands that follow"/>
 
-	<target name="net-4.0" depends="set-net-4.0-runtime-config"
-	  description="Set runtime to .NET 4.0 for commands that follow"/>
+    <target name="net-4.0" depends="set-net-4.0-runtime-config"
+      description="Set runtime to .NET 4.0 for commands that follow"/>
 
-	<target name="net-4.5" depends="set-net-4.5-runtime-config"
-	  description="Set runtime to .NET 4.5 for commands that follow"/>
+    <target name="net-4.5" depends="set-net-4.5-runtime-config"
+      description="Set runtime to .NET 4.5 for commands that follow"/>
 
     <target name="netcf-2.0" depends="set-netcf-2.0-runtime-config"
       description="Set runtime to CF 2.0 for commands that follow"/>
@@ -213,7 +213,7 @@
 
   <target name="sl-5.0" depends="set-silverlight-5.0-runtime-config"
     description="Set runtime to Silverlight 5.0 for commands that follow"/>
-	
+    
   <target name="silverlight" depends="set-silverlight-5.0-runtime-config"
     description="Set runtime to Silverlight 5.0 for commands that follow"/>
 
@@ -271,10 +271,23 @@
   <target name="build"
     description="Build using the current runtime and config">
 
+    <call target="copy-bcl-assemblies" if="${runtime.version=='4.0'}"/>
     <call target="build-nunit" unless="${runtime.platform=='netcf' or runtime.platform=='silverlight'}"/>
     <call target="build-nunitlite"/>
 
   </target>
+
+    <target name="copy-bcl-assemblies" depends="make-build-dir">
+        <copy todir="${current.build.dir}" flatten="true">
+            <fileset basedir=".">
+                <include name="packages/Microsoft.Bcl.Async.1.0.165/lib/net40/Microsoft.Threading.Tasks.dll"/>
+                <include name="packages/Microsoft.Bcl.Async.1.0.165/lib/net40/Microsoft.Threading.Tasks.Extensions.dll"/>
+                <include name="packages/Microsoft.Bcl.Async.1.0.165/lib/net40/Microsoft.Threading.Tasks.Extensions.Desktop.dll"/>
+                <include name="packages/Microsoft.Bcl.1.0.19/lib/net40/System.Threading.Tasks.dll"/>
+                <include name="packages/Microsoft.Bcl.1.0.19/lib/net40/System.Runtime.dll"/>
+            </fileset>
+        </copy>
+    </target>
 
   <target name="build-nunit" depends="make-build-dir">
 
@@ -284,7 +297,7 @@
     <property name="nant.settings.currentframework" value="${build.framework}"/>
 
     <nant target="build" buildfile="src/framework/nunit.framework.build"/>
-    <nant target="build" buildfile="src/mock-assembly/mock-assembly.build"/>
+    <nant target="build" buildfile="src/mock-assembly/mock-nunit-assembly.build"/>
     <nant target="build" buildfile="src/testdata/nunit.testdata.build"/>
     <nant target="build" buildfile="src/tests/nunit.framework.tests.build"/>
     <nant target="build" buildfile="src/harness/test-harness.build"/>
@@ -296,6 +309,8 @@
     <property name="nant.settings.currentframework" value="${build.framework}"/>
 
     <nant target="build" buildfile="src/framework/nunitlite.build"/>
+    <nant target="build" buildfile="src/mock-assembly/mock-nunitlite-assembly.build" 
+        unless="${runtime.platform == 'netcf' or runtime.platform == 'silverlight'}"/>
     <nant target="build" buildfile="src/testdata/nunitlite.testdata.build"/>
     <nant target="build" buildfile="src/tests/nunitlite.tests.build"/>
 
@@ -340,7 +355,7 @@
     <property name="nant.settings.currentframework" value="${runtime.config}" />
 
     <exec basedir="${current.build.dir}"
-	  program="nunitlite.tests.exe" 
+      program="nunitlite.tests.exe" 
           managed="strict" />
 
   </target>
@@ -365,7 +380,7 @@
 
     <exec basedir="${partcover.dir}"
           workingdir="${current.build.dir}"
-	  program="PartCover.exe"
+      program="PartCover.exe"
           managed="Strict">
 
       <arg line='--target "${test.runner.program}"' />
@@ -387,7 +402,7 @@
 
     <exec basedir="${partcover.dir}"
           workingdir="${current.build.dir}"
-	  program="PartCover.exe"
+      program="PartCover.exe"
           managed="Strict">
 
       <arg line='--target nunitlite.tests.exe' />
@@ -424,8 +439,8 @@
     <call target="package-net"/>
     <call target="package-mono"/>
     <call target="package-netcf"/>
-	  <call target="package-silverlight"/>
-	  <call target="package-full"/>
+      <call target="package-silverlight"/>
+      <call target="package-full"/>
 
   </target>
 
@@ -459,25 +474,25 @@
 
   </target>
 
-	<target name="package-silverlight"
-		description="Create the silverlight binary package">
+    <target name="package-silverlight"
+        description="Create the silverlight binary package">
 
-		<property name="package.config" value="-silverlight"/>
-		<property name="package.runtimes" value="silverlight-5.0"/>
+        <property name="package.config" value="-silverlight"/>
+        <property name="package.runtimes" value="silverlight-5.0"/>
 
-		<call target="package"/>
+        <call target="package"/>
 
-	</target>
+    </target>
 
-	<target name="package-full"
-		description="Create the netcf binary package">
+    <target name="package-full"
+        description="Create the netcf binary package">
 
-		<property name="package.config" value=""/>
-		<property name="package.runtimes" value="net-4.5+net-4.0+net-3.5+net-2.0+silverlight-5.0+netcf-3.5+netcf-2.0"/>
+        <property name="package.config" value=""/>
+        <property name="package.runtimes" value="net-4.5+net-4.0+net-3.5+net-2.0+silverlight-5.0+netcf-3.5+netcf-2.0"/>
 
-		<call target="package"/>
+        <call target="package"/>
 
-	</target>
+    </target>
 
 <!-- ***************************************************************** -->
 <!-- ***   Package Using the Currently Selected Package Config     *** -->
@@ -597,7 +612,7 @@
     <mkdir dir="${package.bin.dir}"/>
     <copy todir="${package.bin.dir}/${runtime.config}">
       <fileset basedir="${current.build.dir}">
-		  <include name="mock-assembly.*" />
+          <include name="mock-assembly.*" />
         <include name="nunit.*" />
         <include name="nunitlite.*" />
         <include name="test-harness.*" />
@@ -615,11 +630,11 @@
     <copy todir="${package.doc.dir}">
       <fileset basedir="${project.doc.dir}">
         <include name="*.html"/>
-	<include name="nunit.css"/>
+    <include name="nunit.css"/>
         <include name="codeFuncs.js"/>
         <include name="favicon.ico"/>
-	<include name="files/*"/>
-	<include name="img/*"/>
+    <include name="files/*"/>
+    <include name="img/*"/>
         <exclude name="img/thumbs.db"/>
       </fileset>
     </copy>
@@ -671,12 +686,12 @@
         dynamic="true"/>
     <property name="build.suffix" value="-dbg"/>
   </target>
-	
+    
   <target name="set-release-build-config">
     <property name="build.config" value="release"/>
     <property name="build.debug" value="false"/>
     <property name="build.defines" value="TRACE,${runtime.defines}"
-	dynamic="true"/>
+    dynamic="true"/>
     <property name="build.suffix" value=""/>
   </target>
 
@@ -724,27 +739,27 @@
     <property name="build.framework" value="net-3.5"/>
   </target>
 
-	<target name="set-net-4.0-runtime-config">
-		<fail unless="${framework::exists('net-4.0') and framework::sdk-exists('net-4.0')}"
-		  message="The .NET 4.0 SDK is not configured or not installed"/>
+    <target name="set-net-4.0-runtime-config">
+        <fail unless="${framework::exists('net-4.0') and framework::sdk-exists('net-4.0')}"
+          message="The .NET 4.0 SDK is not configured or not installed"/>
 
-		<property name="runtime.platform" value="net"/>
-		<property name="runtime.version" value="4.0"/>
-		<property name="runtime.config" value="net-4.0"/>
-		<property name="runtime.defines" value="MSNET,NET_4_0,CS_4_0"/>
-		<property name="build.framework" value="net-4.0"/>
-	</target>
+        <property name="runtime.platform" value="net"/>
+        <property name="runtime.version" value="4.0"/>
+        <property name="runtime.config" value="net-4.0"/>
+        <property name="runtime.defines" value="MSNET,NET_4_0,CS_4_0"/>
+        <property name="build.framework" value="net-4.0"/>
+    </target>
 
-	<target name="set-net-4.5-runtime-config">
-		<fail unless="${framework::exists('net-4.5') and framework::sdk-exists('net-4.5')}"
-		  message="The .NET 4.5 SDK is not configured or not installed"/>
+    <target name="set-net-4.5-runtime-config">
+        <fail unless="${framework::exists('net-4.5') and framework::sdk-exists('net-4.5')}"
+          message="The .NET 4.5 SDK is not configured or not installed"/>
 
-		<property name="runtime.platform" value="net"/>
-		<property name="runtime.version" value="4.5"/>
-		<property name="runtime.config" value="net-4.5"/>
-		<property name="runtime.defines" value="MSNET,NET_4_5,CS_5_0"/>
-		<property name="build.framework" value="net-4.5"/>
-	</target>
+        <property name="runtime.platform" value="net"/>
+        <property name="runtime.version" value="4.5"/>
+        <property name="runtime.config" value="net-4.5"/>
+        <property name="runtime.defines" value="MSNET,NET_4_5,CS_5_0"/>
+        <property name="build.framework" value="net-4.5"/>
+    </target>
 
   <target name="set-netcf-2.0-runtime-config">
     <fail unless="${framework::exists('netcf-2.0') and framework::sdk-exists('netcf-2.0')}"
@@ -801,18 +816,18 @@
     <property name="build.framework" value="mono-4.0"/>
   </target>
 
-	<target name="set-silverlight-5.0-runtime-config">
-		<fail unless="${framework::exists( 'silverlight-5.0' )}"
-		  message="Silverlight 5.0 is not installed"/>
+    <target name="set-silverlight-5.0-runtime-config">
+        <fail unless="${framework::exists( 'silverlight-5.0' )}"
+          message="Silverlight 5.0 is not installed"/>
 
-		<property name="runtime.platform" value="silverlight"/>
-		<property name="runtime.version" value="5.0"/>
-		<property name="runtime.config" value="silverlight-5.0"/>
-		<property name="runtime.defines" value="SILVERLIGHT,SL_5_0,CS_4_0"/>
-		<property name="build.framework" value="silverlight-5.0"/>
-		<property name="build.method" value="msbuild"/>
-		<property name="msbuild.proj.suffix" value="sl-5.0"/>
-	</target>
+        <property name="runtime.platform" value="silverlight"/>
+        <property name="runtime.version" value="5.0"/>
+        <property name="runtime.config" value="silverlight-5.0"/>
+        <property name="runtime.defines" value="SILVERLIGHT,SL_5_0,CS_4_0"/>
+        <property name="build.framework" value="silverlight-5.0"/>
+        <property name="build.method" value="msbuild"/>
+        <property name="msbuild.proj.suffix" value="sl-5.0"/>
+    </target>
 
 <!-- ***************************************************************** -->
 <!-- **********           Set the build directory            ********* -->

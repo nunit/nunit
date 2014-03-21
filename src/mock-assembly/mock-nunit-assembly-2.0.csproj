@@ -77,7 +77,8 @@
     <Compile Include="MockAssembly.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="mock-assembly.build" />
+    <None Include="mock-nunitlite-assembly.build" />
+    <None Include="mock-nunit-assembly.build" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\framework\nunit.framework-2.0.csproj">
