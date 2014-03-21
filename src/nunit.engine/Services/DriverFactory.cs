@@ -43,10 +43,10 @@ namespace NUnit.Engine.Services
             foreach(var refAssembly in testAssembly.GetReferencedAssemblies())
                 switch (refAssembly.Name)
                 {
-                    case "nunit.framework":
+                    case NUnitFrameworkDriver.FrameworkName:
                         return new NUnitFrameworkDriver(domain, assemblyPath, settings);
-                    case "nunitlite":
-                        return new NUnitliteFrameworkDriver(domain, assemblyPath, settings);
+                    case NUnitLiteFrameworkDriver.FrameworkName:
+                        return new NUnitLiteFrameworkDriver(domain, assemblyPath, settings);
                 }
 
             throw new NUnitEngineException("Unable to locate driver for " + assemblyPath);

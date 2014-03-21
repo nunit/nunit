@@ -131,13 +131,17 @@ namespace NUnit.Engine
 
     public class NUnitFrameworkDriver : BaseNUnitFrameworkDriver
     {
+        public const string FrameworkName = "nunit.framework";
+
         public NUnitFrameworkDriver(AppDomain testDomain, string testAssemblyPath, IDictionary<string, object> settings)
-            : base(testDomain, "nunit.framework", testAssemblyPath, settings) { }
+            : base(testDomain, FrameworkName, testAssemblyPath, settings) { }
     }
 
-    public class NUnitliteFrameworkDriver : BaseNUnitFrameworkDriver
+    public class NUnitLiteFrameworkDriver : BaseNUnitFrameworkDriver
     {
-        public NUnitliteFrameworkDriver(AppDomain testDomain, string testAssemblyPath, IDictionary<string, object> settings)
-            : base(testDomain, "nunitlite", testAssemblyPath, settings) { }
+        public const string FrameworkName = "nunitlite";
+
+        public NUnitLiteFrameworkDriver(AppDomain testDomain, string testAssemblyPath, IDictionary<string, object> settings)
+            : base(testDomain, FrameworkName, testAssemblyPath, settings) { }
     }
 }
