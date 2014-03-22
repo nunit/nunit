@@ -36,7 +36,13 @@ namespace NUnit.TestData
             long endTime = DateTime.Now.Ticks + TimeSpan.TicksPerMillisecond * 20;
             while (endTime > DateTime.Now.Ticks) ;
 #else
+#if SILVERLIGHT
+            // Silverlight does not have the high resolution StopWatch, so
+            // we need to delay longer than their minimum clock resolution
+            System.Threading.Thread.Sleep(1000);
+#else
             System.Threading.Thread.Sleep(20);
+#endif
 #endif
         }
     }

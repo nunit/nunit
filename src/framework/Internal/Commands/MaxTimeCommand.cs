@@ -68,7 +68,7 @@ namespace NUnit.Framework.Internal.Commands
             double seconds = (double)tickCount / Stopwatch.Frequency;
             testResult.Duration = TimeSpan.FromSeconds(seconds);
 #else
-            testResult.Duration = DateTime.Now - context.StartTime;
+            testResult.Duration = DateTime.UtcNow - context.StartTime;
 #endif
 
             if (testResult.ResultState == ResultState.Success)
