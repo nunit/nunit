@@ -74,6 +74,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="nunit.testdata.build" />
+    <None Include="nunitlite.testdata.build" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\framework\nunit.framework-2.0.csproj">

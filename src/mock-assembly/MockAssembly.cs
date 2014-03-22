@@ -65,7 +65,7 @@ namespace NUnit.Tests
 #endif
         }
 
-#if !NETCF && !SILVERLIGHT
+#if !NUNITLITE
         public class MockSuite
         {
             [Suite]

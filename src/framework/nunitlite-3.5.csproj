@@ -47,6 +47,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -56,6 +57,7 @@
     <Compile Include="Api\DefaultTestAssemblyBuilder.cs" />
     <Compile Include="Api\DefaultTestAssemblyRunner.cs" />
     <Compile Include="Api\DriverSettings.cs" />
+    <Compile Include="Api\FrameworkController.cs" />
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Assert.cs" />
     <Compile Include="AssertionHelper.cs" />
@@ -310,6 +312,7 @@
     <Compile Include="Internal\TestExecutionContext.cs" />
     <Compile Include="Internal\TestFilter.cs" />
     <Compile Include="Internal\TestListener.cs" />
+    <Compile Include="Internal\TestProgressReporter.cs" />
     <Compile Include="Internal\Tests\ParameterizedFixtureSuite.cs" />
     <Compile Include="Internal\Tests\ParameterizedMethodSuite.cs" />
     <Compile Include="Internal\Tests\SetUpFixture.cs" />
@@ -320,6 +323,7 @@
     <Compile Include="Internal\Tests\TestSuite.cs" />
     <Compile Include="Internal\ThreadUtility.cs" />
     <Compile Include="Internal\TypeHelper.cs" />
+    <Compile Include="Internal\XmlHelper.cs" />
     <Compile Include="Is.cs" />
     <Compile Include="ListMapper.cs" />
     <Compile Include="MessageMatch.cs" />

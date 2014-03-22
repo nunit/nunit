@@ -7,8 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunitlite.testdata-netcf-3.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunitlite.tests-netcf-3.5", "src\tests\nunitlite.tests-netcf-3.5.csproj", "{80A9EC94-2C42-44AC-9D2C-E1418D712C48}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mock-assembly-netcf-3.5", "src\mock-assembly\mock-assembly-netcf-3.5.csproj", "{B0C85907-1103-44F4-ACFF-6A1B9170C0B1}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,10 +27,6 @@ Global
 		{80A9EC94-2C42-44AC-9D2C-E1418D712C48}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{80A9EC94-2C42-44AC-9D2C-E1418D712C48}.Release|Any CPU.Build.0 = Release|Any CPU
 		{80A9EC94-2C42-44AC-9D2C-E1418D712C48}.Release|Any CPU.Deploy.0 = Release|Any CPU
-		{B0C85907-1103-44F4-ACFF-6A1B9170C0B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B0C85907-1103-44F4-ACFF-6A1B9170C0B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B0C85907-1103-44F4-ACFF-6A1B9170C0B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B0C85907-1103-44F4-ACFF-6A1B9170C0B1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

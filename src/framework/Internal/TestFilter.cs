@@ -25,7 +25,7 @@ using System;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Filters;
 
-#if !NUNITLITE
+#if !NETCF && !SILVERLIGHT
 using XmlNode = System.Xml.XmlNode;
 #endif
 
@@ -104,7 +104,7 @@ namespace NUnit.Framework.Internal
             return false;
         }
 
-#if !NUNITLITE
+#if !NETCF && !SILVERLIGHT
         /// <summary>
         /// Create a TestFilter instance from an xml representation.
         /// </summary>

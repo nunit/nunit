@@ -206,10 +206,6 @@
       <Project>{BED999D7-F594-4CE4-A037-E40E2B9C1288}</Project>
       <Name>nunitlite-netcf-2.0</Name>
     </ProjectReference>
-    <ProjectReference Include="..\mock-assembly\mock-assembly-netcf-2.0.csproj">
-      <Project>{33EA4538-3452-42ED-92A9-4CC3B25032AD}</Project>
-      <Name>mock-assembly-netcf-2.0</Name>
-    </ProjectReference>
     <ProjectReference Include="..\testdata\nunitlite.testdata-netcf-2.0.csproj">
       <Project>{F67E80E8-DF9F-4C66-9142-5002FA638EB7}</Project>
       <Name>nunitlite.testdata-netcf-2.0</Name>

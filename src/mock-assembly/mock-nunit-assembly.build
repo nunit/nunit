@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
-<project name="MockAssembly" default="build" basedir=".">
+<project name="MockNUnitAssembly" default="build" basedir=".">
 
   <target name="build">
     <csc target="library" 
-      output="${current.build.dir}/mock-assembly.dll" 
+      output="${current.build.dir}/mock-nunit-assembly.dll" 
       debug="${build.debug}" define="${build.defines}"
       warninglevel="${warn}">
       <sources>
@@ -20,7 +20,7 @@
       <fileset>
         <include name="*.cs"/>
         <include name="*.csproj"/>
-        <include name="mock-assembly.build"/>
+        <include name="mock-nunit-assembly.build"/>
       </fileset>
     </copy>
   </target>

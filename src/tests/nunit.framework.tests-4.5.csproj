@@ -51,6 +51,7 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Api\FrameworkControllerTests.cs" />
     <Compile Include="Api\ResultStateTests.cs" />
     <Compile Include="Assertions\ArrayEqualsFailureMessageFixture.cs" />
     <Compile Include="Assertions\ArrayEqualsFixture.cs" />
@@ -228,6 +229,7 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
   </ItemGroup>
@@ -244,6 +246,10 @@
     <ProjectReference Include="..\framework\nunit.framework-4.5.csproj">
       <Project>{d209c368-1277-4ea6-a887-aa6eba51ab99}</Project>
       <Name>nunit.framework-4.5</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\mock-assembly\mock-nunit-assembly-4.5.csproj">
+      <Project>{c3264ff3-e2d7-48d7-93a7-cdc9a827ad9d}</Project>
+      <Name>mock-nunit-assembly-4.5</Name>
     </ProjectReference>
     <ProjectReference Include="..\testdata\nunit.testdata-4.5.csproj">
       <Project>{e7541163-d7bb-4e9a-a722-d7737b7a2995}</Project>

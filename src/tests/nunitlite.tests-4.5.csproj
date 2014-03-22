@@ -64,12 +64,14 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Api\FrameworkControllerTests.cs" />
     <Compile Include="Api\ResultStateTests.cs" />
     <Compile Include="Assertions\ArrayEqualsFailureMessageFixture.cs" />
     <Compile Include="Assertions\ArrayEqualsFixture.cs" />
@@ -262,9 +264,9 @@
       <Project>{22857a11-108d-48c6-9a23-2217d2f2c365}</Project>
       <Name>nunitlite-4.5</Name>
     </ProjectReference>
-    <ProjectReference Include="..\mock-assembly\mock-assembly-4.5.csproj">
-      <Project>{c3264ff3-e2d7-48d7-93a7-cdc9a827ad9d}</Project>
-      <Name>mock-assembly-4.5</Name>
+    <ProjectReference Include="..\mock-assembly\mock-nunitlite-assembly-4.5.csproj">
+      <Project>{8bd8daec-1fbc-4916-bd71-27c31c0e11e4}</Project>
+      <Name>mock-nunitlite-assembly-4.5</Name>
     </ProjectReference>
     <ProjectReference Include="..\testdata\nunitlite.testdata-4.5.csproj">
       <Project>{213eed36-b2a9-4c61-9ecd-ea99da6ec5f4}</Project>

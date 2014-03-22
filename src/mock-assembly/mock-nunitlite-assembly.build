@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<project name="MockNUnitLiteAssembly" default="build" basedir=".">
+
+  <target name="build">
+    <csc target="library" 
+      output="${current.build.dir}/mock-nunitlite-assembly.dll" 
+      debug="${build.debug}" define="${build.defines};NUNITLITE"
+      warninglevel="${warn}">
+      <sources>
+        <include name="*.cs"/>
+      </sources>
+      <references basedir="${current.build.dir}">
+        <include name="nunitlite.dll"/>
+      </references>
+    </csc>
+  </target>
+
+  <target name="package">
+    <copy todir="${package.src.dir}/mock-assembly">
+      <fileset>
+        <include name="*.cs"/>
+        <include name="*.csproj"/>
+        <include name="mock-nunitlite-assembly.build"/>
+      </fileset>
+    </copy>
+  </target>
+
+</project>

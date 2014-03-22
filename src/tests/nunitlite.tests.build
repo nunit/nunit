@@ -12,7 +12,8 @@
         <include name="**/*.cs" />
         <exclude name="App.xaml.cs"/>
         <exclude name="obj/**/*.cs"/>
-        <exclude name="Api/FrameworkControllerTests.cs"/>
+        <exclude name="Api/FrameworkControllerTests.cs" if="${runtime.platform == 'netcf' or runtime.platform == 'silverlight'}"/>
+        <exclude name="Constraints/FileExistsConstraintTests.cs"/>
       </sources>
       <resources prefix="NUnit.Framework.Tests">
         <include name="TestImage1.jpg"/>
@@ -23,11 +24,17 @@
       <references basedir="${current.build.dir}">
         <include name="nunitlite.dll"/>
         <include name="nunitlite.testdata.dll"/>
+        <include name="mock-nunitlite-assembly.dll"/>
+        <include name="Microsoft.Threading.Tasks.dll" if="${runtime.version=='4.0'}"/>
+        <include name="Microsoft.Threading.Tasks.Extensions.dll" if="${runtime.version=='4.0'}"/>
+        <include name="Microsoft.Threading.Tasks.Extensions.Desktop.dll" if="${runtime.version=='4.0'}"/>
+        <include name="System.Threading.Tasks.dll" if="${runtime.version=='4.0'}"/>
+        <include name="System.Runtime.dll" if="${runtime.version=='4.0'}"/>
         <include name="mscorlib.dll"/>
         <include name="System.dll"/>
-        <include name="System.Xml.dll"/>
-        <include name="System.Data.dll"/>
         <include name="System.Drawing.dll"/>
+        <include name="System.Web.dll"/>
+        <include name="System.Xml.dll"/>
       </references>
     </csc>
   </target>
