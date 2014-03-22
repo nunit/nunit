@@ -190,24 +190,74 @@ namespace NUnit.Framework.Internal.Execution
         public virtual void Execute()
         {
             
-#if !SILVERLIGHT && !NETCF
+#if NETCF
+            RunTest();
+#else
             // Timeout set at a higher level
             int timeout = _context.TestCaseTimeout;
 
             // Timeout set on this test
             if (Test.Properties.ContainsKey(PropertyNames.Timeout))
                 timeout = (int)Test.Properties.Get(PropertyNames.Timeout);
+            
+#if SILVERLIGHT
+            if (Test.RequiresThread || Test is TestMethod && timeout > 0)
+                RunTestOnOwnThread(timeout);
+            else
+                RunTest();
 
+#else
             ApartmentState currentApartment = Thread.CurrentThread.GetApartmentState();
 
             if (Test.RequiresThread || Test is TestMethod && timeout > 0 || currentApartment != TargetApartment && TargetApartment != ApartmentState.Unknown)
                 RunTestOnOwnThread(timeout, TargetApartment);
             else
                 RunTest();
-#else
-            RunTest();
+#endif
 #endif
         }
+
+#if SILVERLIGHT
+        private void RunTestOnOwnThread(int timeout)
+        {
+            string reason = Test.RequiresThread ? "has RequiresThreadAttribute." : "has Timeout value set.";
+            log.Debug("Running test on own thread because it " + reason);
+
+            Thread thread = new Thread(RunTest);
+
+            thread.CurrentCulture = Context.CurrentCulture;
+            thread.CurrentUICulture = Context.CurrentUICulture;
+
+            thread.Start();
+
+            if (!Test.IsAsynchronous || timeout > 0)
+            {
+                if (timeout <= 0)
+                    timeout = Timeout.Infinite;
+
+                thread.Join(timeout);
+
+                if (thread.IsAlive)
+                {
+                    ThreadUtility.Kill(thread);
+
+                    // NOTE: Without the use of Join, there is a race condition here.
+                    // The thread sets the result to Cancelled and our code below sets
+                    // it to Failure. In order for the result to be shown as a failure,
+                    // we need to ensure that the following code executes after the
+                    // thread has terminated. There is a risk here: the test code might
+                    // refuse to terminate. However, it's more important to deal with
+                    // the normal rather than a pathological case.
+                    thread.Join();
+
+                    Result.SetResult(ResultState.Failure,
+                        string.Format("Test exceeded Timeout value of {0}ms", timeout));
+
+                    WorkItemComplete();
+                }
+            }
+        }
+#endif
 
 
 #if !SILVERLIGHT && !NETCF
