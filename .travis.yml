@@ -14,5 +14,6 @@ env:
 
 matrix:
   allow_failures:
+    - env: Framework="mono-4.0"
     - env: Framework="mono-4.5"
   fast_finish: true
