@@ -12,27 +12,11 @@ namespace NUnit.TestData
     public class AsyncRealFixture
     {
         [Test]
-        public async void AsyncVoidSuccess()
+        public async void AsyncVoid()
         {
             var result = await ReturnOne();
 
             Assert.AreEqual(1, result);
-        }
-
-        [Test]
-        public async void AsyncVoidFailure()
-        {
-            var result = await ReturnOne();
-
-            Assert.AreEqual(2, result);
-        }
-
-        [Test]
-        public async void AsyncVoidError()
-        {
-            await ThrowException();
-
-            Assert.Fail("Should never get here");
         }
 
         [Test]
@@ -114,36 +98,6 @@ namespace NUnit.TestData
         }
 
         [Test]
-        public async void AsyncVoidAssertSynchronizationContext()
-        {
-            await Task.Delay(1);
-        }
-
-        [Test]
-        public async void NestedAsyncVoidSuccess()
-        {
-            var result = await Task.Run(async () => await ReturnOne());
-
-            Assert.AreEqual(1, result);
-        }
-
-        [Test]
-        public async void NestedAsyncVoidFailure()
-        {
-            var result = await Task.Run(async () => await ReturnOne());
-
-            Assert.AreEqual(2, result);
-        }
-
-        [Test]
-        public async void NestedAsyncVoidError()
-        {
-            await Task.Run(async () => await ThrowException());
-
-            Assert.Fail("Should not get here");
-        }
-
-        [Test]
         public async System.Threading.Tasks.Task NestedAsyncTaskSuccess()
         {
             var result = await Task.Run(async () => await ReturnOne());
@@ -198,7 +152,7 @@ namespace NUnit.TestData
         }
 
         [Test]
-        public async void AsyncVoidMultipleSuccess()
+        public async System.Threading.Tasks.Task AsyncTaskMultipleSuccess()
         {
             var result = await ReturnOne();
 
@@ -206,7 +160,7 @@ namespace NUnit.TestData
         }
 
         [Test]
-        public async void AsyncVoidMultipleFailure()
+        public async System.Threading.Tasks.Task AsyncTaskMultipleFailure()
         {
             var result = await ReturnOne();
 
@@ -214,32 +168,7 @@ namespace NUnit.TestData
         }
 
         [Test]
-        public async void AsyncVoidMultipleError()
-        {
-            var result = await ReturnOne();
-            await ThrowException();
-
-            Assert.Fail("Should never get here");
-        }
-
-        [Test]
-        public async void AsyncTaskMultipleSuccess()
-        {
-            var result = await ReturnOne();
-
-            Assert.AreEqual(await ReturnOne(), result);
-        }
-
-        [Test]
-        public async void AsyncTaskMultipleFailure()
-        {
-            var result = await ReturnOne();
-
-            Assert.AreEqual(await ReturnOne() + 1, result);
-        }
-
-        [Test]
-        public async void AsyncTaskMultipleError()
+        public async System.Threading.Tasks.Task AsyncTaskMultipleError()
         {
             var result = await ReturnOne();
             await ThrowException();
@@ -248,35 +177,15 @@ namespace NUnit.TestData
         }
 
         [TestCase(1, 2)]
-        public async void AsyncVoidTestCaseWithParametersSuccess(int a, int b)
+        public async System.Threading.Tasks.Task AsyncTaskTestCaseWithParametersSuccess(int a, int b)
         {
             Assert.AreEqual(await ReturnOne(), b - a);
-        }
-
-        [Test]
-        public async void VoidCheckTestContextAcrossTasks()
-        {
-            var testName = await GetTestNameFromContext();
-
-            Assert.IsNotNull(testName);
-            Assert.AreEqual(testName, TestContext.CurrentContext.Test.Name);
         }
 
         [Test]
         public async System.Threading.Tasks.Task TaskCheckTestContextAcrossTasks()
         {
             var testName = await GetTestNameFromContext();
-
-            Assert.IsNotNull(testName);
-            Assert.AreEqual(testName, TestContext.CurrentContext.Test.Name);
-        }
-
-        [Test]
-        public async void VoidCheckTestContextWithinTestBody()
-        {
-            var testName = TestContext.CurrentContext.Test.Name;
-
-            await ReturnOne();
 
             Assert.IsNotNull(testName);
             Assert.AreEqual(testName, TestContext.CurrentContext.Test.Name);

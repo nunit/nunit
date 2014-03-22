@@ -259,7 +259,6 @@
     <Compile Include="Internal\Builders\ProviderCache.cs" />
     <Compile Include="Internal\Builders\SequentialStrategy.cs" />
     <Compile Include="Internal\AsyncInvocationRegion.cs" />
-    <Compile Include="Internal\AsyncSynchronizationContext.cs" />
     <Compile Include="Internal\Commands\OneTimeSetUpCommand.cs" />
     <Compile Include="Internal\Commands\OneTimeTearDownCommand.cs" />
     <Compile Include="Internal\Commands\ApplyChangesToContextCommand.cs" />

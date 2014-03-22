@@ -23,7 +23,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Threading;
 using ActualValueDelegate = NUnit.Framework.Constraints.ActualValueDelegate<object>;
 

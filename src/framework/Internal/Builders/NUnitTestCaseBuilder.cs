@@ -33,7 +33,7 @@ namespace NUnit.Framework.Internal.Builders
     /// </summary>
     public class NUnitTestCaseBuilder
     {
-        private Randomizer randomizer = Randomizer.CreateRandomizer();
+        private readonly Randomizer randomizer = Randomizer.CreateRandomizer();
 
         /// <summary>
         /// Builds a single NUnitTestMethod, either as a child of the fixture 
@@ -45,9 +45,10 @@ namespace NUnit.Framework.Internal.Builders
         /// <returns></returns>
         public TestMethod BuildTestMethod(MethodInfo method, Test parentSuite, ParameterSet parms)
         {
-            TestMethod testMethod = new TestMethod(method, parentSuite);
-
-            testMethod.Seed = randomizer.Next();
+            var testMethod = new TestMethod(method, parentSuite)
+            {
+                Seed = randomizer.Next()
+            };
 
             string prefix = method.ReflectedType.FullName;
 
@@ -118,7 +119,7 @@ namespace NUnit.Framework.Internal.Builders
             }
 
 #if NETCF
-            // TODO: Get this to work
+    // TODO: Get this to work
             if (testMethod.Method.IsGenericMethodDefinition)
             {
                 return MarkAsNotRunnable(testMethod, "Generic test methods are not yet supported under .NET CF");
@@ -146,27 +147,33 @@ namespace NUnit.Framework.Internal.Builders
             }
 
             Type returnType = testMethod.Method.ReturnType;
-            if (returnType.Equals(typeof(void)))
+
+#if NET_4_0 || NET_4_5
+            if (AsyncInvocationRegion.IsAsyncOperation(testMethod.Method))
+            {
+                if (returnType == typeof (void))
+                    return MarkAsNotRunnable(testMethod, "Async test method must have non-void return type");
+
+                var returnsGenericTask = returnType.IsGenericType &&
+                                         returnType.GetGenericTypeDefinition() == typeof (System.Threading.Tasks.Task<>);
+
+                if (returnsGenericTask && (parms == null || !parms.HasExpectedResult))
+                    return MarkAsNotRunnable(testMethod,
+                        "Async test method must have non-generic Task return type when no result is expected");
+
+                if (!returnsGenericTask && parms != null && parms.HasExpectedResult)
+                    return MarkAsNotRunnable(testMethod,
+                        "Async test method must have Task<T> return type when a result is expected");
+            }
+            else
+#endif
+            if (returnType == typeof (void))
             {
                 if (parms != null && parms.HasExpectedResult)
                     return MarkAsNotRunnable(testMethod, "Method returning void cannot have an expected result");
             }
-            else
-            {
-#if NET_4_0 || NET_4_5
-                if (AsyncInvocationRegion.IsAsyncOperation(testMethod.Method))
-                {
-                    bool returnsGenericTask = returnType.IsGenericType && returnType.GetGenericTypeDefinition() == typeof(System.Threading.Tasks.Task<>);
-                    if (returnsGenericTask && (parms == null || !parms.HasExpectedResult))
-                        return MarkAsNotRunnable(testMethod, "Async test method must have Task or void return type when no result is expected");
-                    else if (!returnsGenericTask && parms != null && parms.HasExpectedResult)
-                        return MarkAsNotRunnable(testMethod, "Async test method must have Task<T> return type when a result is expected");
-                }
-                else
-#endif
-                if (parms == null || !parms.HasExpectedResult)
-                    return MarkAsNotRunnable(testMethod, "Method has non-void return value, but no result is expected");
-            }
+            else if (parms == null || !parms.HasExpectedResult)
+                return MarkAsNotRunnable(testMethod, "Method has non-void return value, but no result is expected");
 
             if (argsProvided > 0 && argsNeeded == 0)
             {
