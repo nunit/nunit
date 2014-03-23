@@ -31,16 +31,25 @@ namespace NUnit.Framework.Internal
                 yield return new object[] { Method("AsyncTaskFailure"), ResultState.Failure, 1 };
                 yield return new object[] { Method("AsyncTaskError"), ResultState.Error, 0 };
 
-                yield return new object[] { Method("AsyncTaskResultSuccess"), ResultState.NotRunnable, 0 };
-                yield return new object[] { Method("AsyncTaskResultFailure"), ResultState.NotRunnable, 0 };
-                yield return new object[] { Method("AsyncTaskResultError"), ResultState.NotRunnable, 0 };
+                yield return new object[] { Method("TaskSuccess"), ResultState.Success, 1 };
+                yield return new object[] { Method("TaskFailure"), ResultState.Failure, 1 };
+                yield return new object[] { Method("TaskError"), ResultState.Error, 0 };
+
+                yield return new object[] { Method("AsyncTaskResult"), ResultState.NotRunnable, 0 };
+                yield return new object[] { Method("TaskResult"), ResultState.NotRunnable, 0 };
 
                 yield return new object[] { Method("AsyncTaskResultCheckSuccess"), ResultState.Success, 1 };
-                yield return new object[] { Method("AsyncTaskTestCaseWithParametersSuccess"), ResultState.Success, 1 };
-                yield return new object[] { Method("AsyncTaskResultCheckSuccessReturningNull"), ResultState.Success, 1 };
                 yield return new object[] { Method("AsyncTaskResultCheckFailure"), ResultState.Failure, 1 };
                 yield return new object[] { Method("AsyncTaskResultCheckError"), ResultState.Failure, 0 };
 
+                yield return new object[] { Method("TaskResultCheckSuccess"), ResultState.Success, 1 };
+                yield return new object[] { Method("TaskResultCheckFailure"), ResultState.Failure, 1 };
+                yield return new object[] { Method("TaskResultCheckError"), ResultState.Failure, 0 };
+
+                yield return new object[] { Method("AsyncTaskTestCaseWithParametersSuccess"), ResultState.Success, 1 };
+                yield return new object[] { Method("AsyncTaskResultCheckSuccessReturningNull"), ResultState.Success, 1 };
+                yield return new object[] { Method("TaskResultCheckSuccessReturningNull"), ResultState.Success, 1 };
+                
                 yield return new object[] { Method("NestedAsyncTaskSuccess"), ResultState.Success, 1 };
                 yield return new object[] { Method("NestedAsyncTaskFailure"), ResultState.Failure, 1 };
                 yield return new object[] { Method("NestedAsyncTaskError"), ResultState.Error, 0 };
@@ -67,7 +76,7 @@ namespace NUnit.Framework.Internal
 
         private static MethodInfo Method(string name)
         {
-            return typeof (AsyncRealFixture).GetMethod(name);
+            return typeof(AsyncRealFixture).GetMethod(name);
         }
     }
 }

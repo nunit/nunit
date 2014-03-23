@@ -216,7 +216,7 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void AssumeThatFailure()
         {
-            var exception = Assert.Throws<InconclusiveException>(() =>
+            Assert.Throws<InconclusiveException>(() =>
                 Assume.That(async () => await One(), Is.EqualTo(2)));
         }
 

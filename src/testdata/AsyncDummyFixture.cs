@@ -77,6 +77,30 @@ namespace NUnit.TestData
             return await Task.Run(() => 1);
         }
 
+        [TestCase(4)]
+        public System.Threading.Tasks.Task TaskTestCase(int x)
+        {
+            return Task.Delay(0);
+        }
+
+        [TestCase(ExpectedResult = 1)]
+        public System.Threading.Tasks.Task TaskTestCaseWithExpectedResult()
+        {
+            return Task.Run(() => 1);
+        }
+
+        [TestCase(4)]
+        public Task<int> GenericTaskTestCase()
+        {
+            return Task.Run(() => 1);
+        }
+
+        [TestCase(ExpectedResult = 1)]
+        public Task<int> GenericTaskTestCaseWithExpectedResult()
+        {
+            return Task.Run(() => 1);
+        }
+
         private async Task<int> Throw()
         {
             Func<int> thrower = () => { throw new InvalidOperationException(); };
