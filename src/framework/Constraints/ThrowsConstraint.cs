@@ -88,7 +88,7 @@ namespace NUnit.Framework.Constraints
             caughtException = ExceptionInterceptor.Intercept(actual);
 
             return new ThrowsConstraintResult(
-                this, 
+                this,
                 caughtException,
                 caughtException != null
                     ? baseConstraint.ApplyTo(caughtException)
@@ -112,11 +112,13 @@ namespace NUnit.Framework.Constraints
 
         #region Nested Result Class
 
-        class ThrowsConstraintResult : ConstraintResult
+        private class ThrowsConstraintResult : ConstraintResult
         {
-            private ConstraintResult baseResult;
+            private readonly ConstraintResult baseResult;
 
-            public ThrowsConstraintResult(ThrowsConstraint constraint, Exception caughtException, ConstraintResult baseResult)
+            public ThrowsConstraintResult(ThrowsConstraint constraint,
+                Exception caughtException,
+                ConstraintResult baseResult)
                 : base(constraint, caughtException)
             {
                 if (caughtException != null && baseResult.IsSuccess)
@@ -152,12 +154,12 @@ namespace NUnit.Framework.Constraints
 
             internal static Exception Intercept(object invocation)
             {
-                IInvocationDescriptor invocationDescriptor = GetInvocationDescriptor(invocation);
+                var invocationDescriptor = GetInvocationDescriptor(invocation);
 
 #if NET_4_0 || NET_4_5
                 if (AsyncInvocationRegion.IsAsyncOperation(invocationDescriptor.Delegate))
                 {
-                    using (AsyncInvocationRegion region = AsyncInvocationRegion.Create(invocationDescriptor.Delegate))
+                    using (var region = AsyncInvocationRegion.Create(invocationDescriptor.Delegate))
                     {
                         object result = invocationDescriptor.Invoke();
 
@@ -189,15 +191,16 @@ namespace NUnit.Framework.Constraints
 
             private static IInvocationDescriptor GetInvocationDescriptor(object actual)
             {
-                IInvocationDescriptor invocationDescriptor = actual as IInvocationDescriptor;
+                var invocationDescriptor = actual as IInvocationDescriptor;
 
                 if (invocationDescriptor == null)
                 {
-                    TestDelegate testDelegate = actual as TestDelegate;
+                    var testDelegate = actual as TestDelegate;
 
                     if (testDelegate == null)
                         throw new ArgumentException(
-                            String.Format("The actual value must be a TestDelegate or ActualValueDelegate but was {0}", actual.GetType().Name),
+                            String.Format("The actual value must be a TestDelegate or ActualValueDelegate but was {0}",
+                                actual.GetType().Name),
                             "actual");
 
                     invocationDescriptor = new VoidInvocationDescriptor(testDelegate);
@@ -211,7 +214,33 @@ namespace NUnit.Framework.Constraints
 
         #region InvocationDescriptor
 
-        internal class VoidInvocationDescriptor : IInvocationDescriptor
+        internal class GenericInvocationDescriptor<T> : IInvocationDescriptor
+        {
+            private readonly ActualValueDelegate<T> _del;
+
+            public GenericInvocationDescriptor(ActualValueDelegate<T> del)
+            {
+                _del = del;
+            }
+
+            public object Invoke()
+            {
+                return _del();
+            }
+
+            public Delegate Delegate
+            {
+                get { return _del; }
+            }
+        }
+
+        private interface IInvocationDescriptor
+        {
+            Delegate Delegate { get; }
+            object Invoke();
+        }
+
+        private class VoidInvocationDescriptor : IInvocationDescriptor
         {
             private readonly TestDelegate _del;
 
@@ -232,32 +261,6 @@ namespace NUnit.Framework.Constraints
             }
         }
 
-    internal class GenericInvocationDescriptor<T> : IInvocationDescriptor
-    {
-        private readonly ActualValueDelegate<T> _del;
-
-        public GenericInvocationDescriptor(ActualValueDelegate<T> del)
-        {
-            _del = del;
-        }
-
-        public object Invoke()
-        {
-            return _del();
-        }
-
-        public Delegate Delegate
-        {
-            get { return _del; }
-        }
-    }
-
-        internal interface IInvocationDescriptor
-        {
-            object Invoke();
-            Delegate Delegate { get; }
-        }
-
         #endregion
-    }    
+    }
 }

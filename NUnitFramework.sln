@@ -68,6 +68,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution", "Solution", "{65C1066B-4BEC-48A0-9456-1F0406448AF5}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
+		.travis.yml = .travis.yml
 		BUILDING.txt = BUILDING.txt
 		CHANGES.txt = CHANGES.txt
 		LICENSE.txt = LICENSE.txt

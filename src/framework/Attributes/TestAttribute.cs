@@ -55,8 +55,7 @@ namespace NUnit.Framework
     public class TestAttribute : TestCaseBuilderAttribute, ISimpleTestBuilder, IApplyToTest, IImplyFixture
     {
         private object _expectedResult;
-
-        private NUnitTestCaseBuilder _builder = new NUnitTestCaseBuilder();
+        private readonly NUnitTestCaseBuilder _builder = new NUnitTestCaseBuilder();
 
         /// <summary>
         /// Descriptive text for this test

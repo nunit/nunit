@@ -66,11 +66,11 @@ namespace NUnit.Framework.Internal
         public static AsyncInvocationRegion Create(MethodInfo method)
         {
             if (!IsAsyncOperation(method))
-                throw new InvalidOperationException(@"Either asynchronous support is not available or an attempt 
+                throw new ArgumentException(@"Either asynchronous support is not available or an attempt 
 at wrapping a non-async method invocation in an async region was done");
 
             if (method.ReturnType == typeof(void))
-                return new AsyncVoidInvocationRegion();
+                throw new ArgumentException("'async void' methods are not supported, please use 'async Task' instead");
 
             return new AsyncTaskInvocationRegion();
         }
@@ -96,43 +96,6 @@ at wrapping a non-async method invocation in an async region was done");
 
         public virtual void Dispose()
         { }
-
-        private class AsyncVoidInvocationRegion : AsyncInvocationRegion
-        {
-            private readonly SynchronizationContext _previousContext;
-            private readonly AsyncSynchronizationContext _currentContext;
-
-            public AsyncVoidInvocationRegion()
-            {
-                _previousContext = SynchronizationContext.Current;
-                _currentContext = new AsyncSynchronizationContext();
-                SynchronizationContext.SetSynchronizationContext(_currentContext);
-            }
-
-            public override void Dispose()
-            {
-                SynchronizationContext.SetSynchronizationContext(_previousContext);
-            }
-
-            public override object WaitForPendingOperationsToComplete(object invocationResult)
-            {
-                try
-                {
-                    _currentContext.WaitForPendingOperationsToComplete();
-                }
-                catch (Exception e)
-                {
-#if NET_4_5
-                    ExceptionDispatchInfo.Capture(e).Throw();
-#elif NET_4_0
-                    PreserveStackTrace(e);
-                    throw;
-#endif
-                }
-
-                return invocationResult;
-            }
-        }
 
         private class AsyncTaskInvocationRegion : AsyncInvocationRegion
         {

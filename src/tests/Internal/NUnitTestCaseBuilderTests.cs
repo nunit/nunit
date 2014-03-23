@@ -1,4 +1,5 @@
-﻿#if NET_4_0 || NET_4_5
+﻿using System;
+#if NET_4_0 || NET_4_5
 using NUnit.Framework.Interfaces;
 using NUnit.TestData;
 using NUnit.TestUtilities;
@@ -8,9 +9,9 @@ namespace NUnit.Framework.Internal
     [TestFixture]
     public class NUnitTestCaseBuilderTests
     {
-        private static readonly System.Type fixtureType = typeof(AsyncDummyFixture);
+        private readonly Type fixtureType = typeof(AsyncDummyFixture);
 
-        [TestCase("AsyncVoid", RunState.Runnable)]
+        [TestCase("AsyncVoid", RunState.NotRunnable)]
         [TestCase("AsyncTask", RunState.Runnable)]
         [TestCase("AsyncGenericTask", RunState.NotRunnable)]
         [TestCase("NonAsyncTask", RunState.NotRunnable)]
@@ -21,7 +22,7 @@ namespace NUnit.Framework.Internal
             Assert.That(test.RunState, Is.EqualTo(expectedState));
         }
 
-        [TestCase("AsyncVoidTestCase", RunState.Runnable)]
+        [TestCase("AsyncVoidTestCase", RunState.NotRunnable)]
         [TestCase("AsyncVoidTestCaseWithExpectedResult", RunState.NotRunnable)]
         [TestCase("AsyncTaskTestCase", RunState.Runnable)]
         [TestCase("AsyncTaskTestCaseWithExpectedResult", RunState.NotRunnable)]

@@ -35,29 +35,15 @@ namespace NUnit.Framework.Assertions
     [TestFixture]
     public class AsyncThrowsTests
     {
-        private readonly TestDelegate _noThrowsVoid = new TestDelegate(async () => await Task.Delay(1));
+        private readonly TestDelegate _asyncVoid = new TestDelegate(async () => await Task.Delay(1));
         private readonly ActualValueDelegate<System.Threading.Tasks.Task> _noThrowsAsyncTask = async () => await Task.Delay(1);
         private readonly ActualValueDelegate<Task<int>> _noThrowsAsyncGenericTask = async () => await ReturnOne();
-        private readonly TestDelegate _throwsAsyncVoid = new TestDelegate(async () => await ThrowAsyncTask());
-        private readonly TestDelegate _throwsSyncVoid = new TestDelegate(async () => { throw new InvalidOperationException(); });
         private readonly ActualValueDelegate<System.Threading.Tasks.Task> _throwsAsyncTask = async () => await ThrowAsyncTask();
         private readonly ActualValueDelegate<Task<int>> _throwsAsyncGenericTask = async () => await ThrowAsyncGenericTask();
 
         private static ThrowsConstraint ThrowsInvalidOperationExceptionConstraint
         {
             get { return new ThrowsConstraint(new ExactTypeConstraint(typeof(InvalidOperationException))); }
-        }
-
-        [Test]
-        public void ThrowsConstraintVoid()
-        {
-            Assert.That(ThrowsInvalidOperationExceptionConstraint.ApplyTo(_throwsAsyncVoid).IsSuccess);
-        }
-
-        [Test]
-        public void ThrowsConstraintVoidRunSynchronously()
-        {
-            Assert.That(ThrowsInvalidOperationExceptionConstraint.ApplyTo(_throwsSyncVoid).IsSuccess);
         }
 
         [Test]
@@ -73,15 +59,15 @@ namespace NUnit.Framework.Assertions
         }
 
         [Test]
-        public void ThrowsNothingConstraintVoidSuccess()
+        public void ThrowsConstraintAsyncVoid()
         {
-            Assert.That(new ThrowsNothingConstraint().ApplyTo(_noThrowsVoid).IsSuccess);
+            Assert.That(() => ThrowsInvalidOperationExceptionConstraint.ApplyTo(_asyncVoid), Throws.ArgumentException);
         }
 
         [Test]
-        public void ThrowsNothingConstraintVoidFailure()
+        public void ThrowsVoidIsAnError()
         {
-            Assert.That(new ThrowsNothingConstraint().ApplyTo(_throwsAsyncVoid).Status == ConstraintStatus.Failure);
+            Assert.That(() => Assert.That(_asyncVoid, Throws.Nothing), Throws.ArgumentException);
         }
 
         [Test]
@@ -94,18 +80,6 @@ namespace NUnit.Framework.Assertions
         public void ThrowsNothingConstraintTaskFailure()
         {
             Assert.That(new ThrowsNothingConstraint().ApplyTo(_throwsAsyncTask).Status, Is.EqualTo(ConstraintStatus.Failure));
-        }
-
-        [Test]
-        public void AssertThrowsVoid()
-        {
-            Assert.Throws(typeof(InvalidOperationException), _throwsAsyncVoid);
-        }
-
-        [Test]
-        public void AssertThatThrowsVoid()
-        {
-            Assert.That(_throwsAsyncVoid, Throws.TypeOf<InvalidOperationException>());
         }
         
         [Test]
@@ -121,12 +95,6 @@ namespace NUnit.Framework.Assertions
         }
 
         [Test]
-        public void AssertThatThrowsNothingVoidSuccess()
-        {
-            Assert.That(_noThrowsVoid, Throws.Nothing);
-        }
-
-        [Test]
         public void AssertThatThrowsNothingTaskSuccess()
         {
             Assert.That(_noThrowsAsyncTask, Throws.Nothing);
@@ -139,12 +107,6 @@ namespace NUnit.Framework.Assertions
         }
 
         [Test]
-        public void AssertThatThrowsNothingVoidFailure()
-        {
-            Assert.Throws<AssertionException>(() => Assert.That(_throwsAsyncVoid, Throws.Nothing));
-        }
-
-        [Test]
         public void AssertThatThrowsNothingTaskFailure()
         {
             Assert.Throws<AssertionException>(() => Assert.That(_throwsAsyncTask, Throws.Nothing));
@@ -154,18 +116,6 @@ namespace NUnit.Framework.Assertions
         public void AssertThatThrowsNothingGenericTaskFailure()
         {
             Assert.Throws<AssertionException>(() => Assert.That(_throwsAsyncGenericTask, Throws.Nothing));
-        }
-
-        [Test]
-        public void AssertThrowsAsync()
-        {
-            Assert.Throws<InvalidOperationException>(_throwsAsyncVoid);
-        }
-
-        [Test]
-        public void AssertThrowsSync()
-        {
-            Assert.Throws<InvalidOperationException>(_throwsSyncVoid);
         }
 
         private static async System.Threading.Tasks.Task ThrowAsyncTask()

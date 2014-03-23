@@ -507,7 +507,7 @@ namespace NUnit.Framework
 #if NET_4_0 || NET_4_5
             if (AsyncInvocationRegion.IsAsyncOperation(code))
             {
-                using (AsyncInvocationRegion region = AsyncInvocationRegion.Create(code))
+                using (var region = AsyncInvocationRegion.Create(code))
                 {
                     code();
 

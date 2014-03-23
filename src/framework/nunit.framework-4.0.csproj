@@ -244,7 +244,6 @@
     <Compile Include="Internal\AssemblyHelper.cs" />
     <Compile Include="Internal\AssemblyReader.cs" />
     <Compile Include="Internal\AsyncInvocationRegion.cs" />
-    <Compile Include="Internal\AsyncSynchronizationContext.cs" />
     <Compile Include="Internal\Builders\CombinatorialStrategy.cs" />
     <Compile Include="Internal\Builders\DatapointProvider.cs" />
     <Compile Include="Internal\Builders\DefaultTestCaseBuilder.cs" />
