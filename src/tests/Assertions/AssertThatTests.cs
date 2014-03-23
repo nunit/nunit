@@ -229,24 +229,24 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void AssertThatSuccess()
         {
-            Assert.That(async () => await One(), Is.EqualTo(1));
+            Assert.That(async () => await AsyncReturnOne(), Is.EqualTo(1));
         }
 
         [Test]
         public void AssertThatFailure()
         {
-            var exception = Assert.Throws<AssertionException>(() =>
-                Assert.That(async () => await One(), Is.EqualTo(2)));
+            Assert.Throws<AssertionException>(() =>
+                Assert.That(async () => await AsyncReturnOne(), Is.EqualTo(2)));
         }
 
         [Test]
         public void AssertThatErrorTask()
         {
             var exception = Assert.Throws<InvalidOperationException>(() =>
-                Assert.That(async () => await ThrowExceptionTask(), Is.EqualTo(1)));
+                Assert.That(async () => await ThrowInvalidOperationExceptionTask(), Is.EqualTo(1)));
 
 #if NET_4_5
-            Assert.That(exception.StackTrace, Contains.Substring("ThrowExceptionTask"));
+            Assert.That(exception.StackTrace, Contains.Substring("ThrowInvalidOperationExceptionTask"));
 #endif
         }
 
@@ -254,10 +254,10 @@ namespace NUnit.Framework.Assertions
         public void AssertThatErrorGenericTask()
         {
             var exception = Assert.Throws<InvalidOperationException>(() =>
-                Assert.That(async () => await ThrowExceptionGenericTask(), Is.EqualTo(1)));
+                Assert.That(async () => await ThrowInvalidOperationExceptionGenericTask(), Is.EqualTo(1)));
 
 #if NET_4_5
-        Assert.That(exception.StackTrace, Contains.Substring("ThrowExceptionGenericTask"));
+        Assert.That(exception.StackTrace, Contains.Substring("ThrowInvalidOperationExceptionGenericTask"));
 #endif
         }
 
@@ -265,27 +265,27 @@ namespace NUnit.Framework.Assertions
         public void AssertThatErrorVoid()
         {
             var exception = Assert.Throws<InvalidOperationException>(() =>
-                Assert.That(async () => { await ThrowExceptionGenericTask(); }, Is.EqualTo(1)));
+                Assert.That(async () => { await ThrowInvalidOperationExceptionGenericTask(); }, Is.EqualTo(1)));
 
 #if NET_4_5
-        Assert.That(exception.StackTrace, Contains.Substring("ThrowExceptionGenericTask"));
+        Assert.That(exception.StackTrace, Contains.Substring("ThrowInvalidOperationExceptionGenericTask"));
 #endif
         }
 
-        private static Task<int> One()
+        private static Task<int> AsyncReturnOne()
         {
             return Task.Run(() => 1);
         }
 
-        private static async Task<int> ThrowExceptionGenericTask()
+        private static async Task<int> ThrowInvalidOperationExceptionGenericTask()
         {
-            await One();
+            await AsyncReturnOne();
             throw new InvalidOperationException();
         }
 
-        private static async System.Threading.Tasks.Task ThrowExceptionTask()
+        private static async System.Threading.Tasks.Task ThrowInvalidOperationExceptionTask()
         {
-            await One();
+            await AsyncReturnOne();
             throw new InvalidOperationException();
         }
 #endif

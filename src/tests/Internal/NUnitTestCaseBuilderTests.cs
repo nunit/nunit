@@ -14,7 +14,7 @@ namespace NUnit.Framework.Internal
         [TestCase("AsyncVoid", RunState.NotRunnable)]
         [TestCase("AsyncTask", RunState.Runnable)]
         [TestCase("AsyncGenericTask", RunState.NotRunnable)]
-        [TestCase("NonAsyncTask", RunState.NotRunnable)]
+        [TestCase("NonAsyncTask", RunState.Runnable)]
         [TestCase("NonAsyncGenericTask", RunState.NotRunnable)]
         public void AsyncTests(string methodName, RunState expectedState)
         {
@@ -28,6 +28,10 @@ namespace NUnit.Framework.Internal
         [TestCase("AsyncTaskTestCaseWithExpectedResult", RunState.NotRunnable)]
         [TestCase("AsyncGenericTaskTestCase", RunState.NotRunnable)]
         [TestCase("AsyncGenericTaskTestCaseWithExpectedResult", RunState.Runnable)]
+        [TestCase("TaskTestCase", RunState.Runnable)]
+        [TestCase("TaskTestCaseWithExpectedResult", RunState.NotRunnable)]
+        [TestCase("GenericTaskTestCase", RunState.NotRunnable)]
+        [TestCase("GenericTaskTestCaseWithExpectedResult", RunState.Runnable)]
         public void AsyncTestCases(string methodName, RunState expectedState)
         {
             var suite = TestBuilder.MakeParameterizedMethodSuite(fixtureType, methodName);

@@ -36,6 +36,9 @@ namespace NUnit.Framework.Internal
 {
     internal abstract class AsyncInvocationRegion : IDisposable
     {
+        private const string TaskTypeName = "System.Threading.Tasks.Task";
+        private const string AsyncAttributeTypeName = "System.Runtime.CompilerServices.AsyncStateMachineAttribute";
+
 #if NET_4_0
         private static readonly Action<Exception> PreserveStackTrace;
 
@@ -77,8 +80,8 @@ at wrapping a non-async method invocation in an async region was done");
 
         public static bool IsAsyncOperation(MethodInfo method)
         {
-            return method.GetCustomAttributes(false)
-                    .Any(attr => "System.Runtime.CompilerServices.AsyncStateMachineAttribute" == attr.GetType().FullName);
+            return method.ReturnType.FullName.StartsWith(TaskTypeName) ||
+                   method.GetCustomAttributes(false).Any(attr => AsyncAttributeTypeName == attr.GetType().FullName);
         }
 
         public static bool IsAsyncOperation(Delegate @delegate)
