@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NETCF && !SILVERLIGHT
+#if !NETCF 
 using System;
 using System.Threading;
 
@@ -31,8 +31,9 @@ namespace NUnit.Framework.Internal
     /// ThreadUtility provides a set of static methods convenient
     /// for working with threads.
     /// </summary>
-    public class ThreadUtility
+    public static class ThreadUtility
     {
+#if !SILVERLIGHT
         /// <summary>
         /// Do our best to Kill a thread
         /// </summary>
@@ -68,8 +69,23 @@ namespace NUnit.Framework.Internal
             if ( (thread.ThreadState & ThreadState.WaitSleepJoin) != 0 )
                 thread.Interrupt();
         }
-
-        private ThreadUtility() { }
+#else
+        /// <summary>
+        /// Do our best to Kill a thread
+        /// </summary>
+        /// <param name="thread">The thread to kill</param>
+        public static void Kill(Thread thread)
+        {
+            try
+            {
+                thread.Abort();
+            }
+            catch (ThreadStateException)
+            {
+                // Not much else we can do in Silverlight except abort
+            }
+        }
+#endif
     }
 }
 #endif

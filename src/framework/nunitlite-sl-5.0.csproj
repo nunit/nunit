@@ -111,6 +111,7 @@
     <Compile Include="Attributes\TestFixtureSetUpAttribute.cs" />
     <Compile Include="Attributes\TestFixtureTearDownAttribute.cs" />
     <Compile Include="Attributes\TheoryAttribute.cs" />
+    <Compile Include="Attributes\TimeoutAttribute.cs" />
     <Compile Include="Attributes\ValuesAttribute.cs" />
     <Compile Include="Attributes\ValueSourceAttribute.cs" />
     <Compile Include="Compatibility\SerializableAttribute.cs" />
@@ -329,6 +330,7 @@
     <Compile Include="Internal\Tests\TestFixture.cs" />
     <Compile Include="Internal\Tests\TestMethod.cs" />
     <Compile Include="Internal\Tests\TestSuite.cs" />
+    <Compile Include="Internal\ThreadUtility.cs" />
     <Compile Include="Internal\TypeHelper.cs" />
     <Compile Include="Is.cs" />
     <Compile Include="Iz.cs" />
