@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2011 Charlie Poole
+// Copyright (c) 2011-2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtainingn
 // a copy of this software and associated documentation files (the
@@ -39,7 +39,7 @@ namespace NUnit.Engine.Runners
 
         #region AggregatingTestRunner Overrides
 
-        protected override AbstractTestRunner CreateRunner(TestPackage package)
+        protected override ITestEngineRunner CreateRunner(TestPackage package)
         {
             return new TestDomainRunner(this.Services);
         }

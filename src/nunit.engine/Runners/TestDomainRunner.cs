@@ -37,7 +37,7 @@ namespace NUnit.Engine.Runners
 
         public override TestEngineResult Load(TestPackage package)
         {
-            this.package = package;
+            this.TestPackage = package;
 
             this.TestDomain = Services.DomainManager.CreateDomain(package);
 

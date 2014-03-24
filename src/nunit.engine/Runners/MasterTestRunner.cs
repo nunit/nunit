@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2011 Charlie Poole
+// Copyright (c) 2011-2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -33,11 +33,11 @@ namespace NUnit.Engine.Runners
 {
     public class MasterTestRunner : AbstractTestRunner, ITestRunner
     {
-        private AbstractTestRunner realRunner;
+        private ITestEngineRunner _realRunner;
 
         // Count of assemblies and projects passed in package
-        private int assemblyCount;
-        private int projectCount;
+        private int _assemblyCount;
+        private int _projectCount;
 
         public MasterTestRunner(ServiceContext services) : base(services) { }
 
@@ -51,7 +51,7 @@ namespace NUnit.Engine.Runners
         /// <returns>A TestEngineResult.</returns>
         public override TestEngineResult Explore(TestFilter filter)
         {
-            return this.realRunner.Explore(filter).Aggregate(TEST_RUN_ELEMENT, package.Name, package.FullName);
+            return _realRunner.Explore(filter).Aggregate(TEST_RUN_ELEMENT, TestPackage.Name, TestPackage.FullName);
         }
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace NUnit.Engine.Runners
         public override TestEngineResult Load(TestPackage package)
         {
             PerformPackageSetup(package);
-            return this.realRunner.Load(package).Aggregate(TEST_RUN_ELEMENT, package.Name, package.FullName);
+            return _realRunner.Load(package).Aggregate(TEST_RUN_ELEMENT, package.Name, package.FullName);
         }
 
         /// <summary>
@@ -70,8 +70,8 @@ namespace NUnit.Engine.Runners
         /// </summary>
         public override void Unload()
         {
-            if (this.realRunner != null)
-                this.realRunner.Unload();
+            if (_realRunner != null)
+                _realRunner.Unload();
         }
 
         /// <summary>
@@ -82,7 +82,7 @@ namespace NUnit.Engine.Runners
         /// <returns>The count of test cases</returns>
         public override int CountTestCases(TestFilter filter)
         {
-            return realRunner.CountTestCases(filter);
+            return _realRunner.CountTestCases(filter);
         }
 
         /// <summary>
@@ -97,7 +97,7 @@ namespace NUnit.Engine.Runners
             DateTime startTime = DateTime.UtcNow;
             long startTicks = Stopwatch.GetTimestamp();
 
-            TestEngineResult result = realRunner.Run(listener, filter).Aggregate("test-run", package.Name, package.FullName);
+            TestEngineResult result = _realRunner.Run(listener, filter).Aggregate("test-run", TestPackage.Name, TestPackage.FullName);
 
             result.Xml.InsertEnvironmentElement();
 
@@ -117,7 +117,7 @@ namespace NUnit.Engine.Runners
         /// <param name="filter">A TestFilter used to select tests</param>
         public override void BeginRun(ITestEventHandler listener, TestFilter filter)
         {
-            realRunner.BeginRun(listener, filter);
+            _realRunner.BeginRun(listener, filter);
         }
 
         #endregion
@@ -133,7 +133,12 @@ namespace NUnit.Engine.Runners
         /// <returns>An XmlNode representing the loaded assembly.</returns>
         XmlNode ITestRunner.Load(TestPackage package)
         {
-            return this.Load(package).Xml; ;
+            return this.Load(package).Xml;
+        }
+
+        XmlNode ITestRunner.Reload()
+        {
+            return this.Reload().Xml;
         }
 
         /// <summary>
@@ -171,14 +176,23 @@ namespace NUnit.Engine.Runners
             this.BeginRun(listener, filter);
         }
 
+        /// <summary>
+        /// Cancel the ongoing test run. If no test is running,
+        /// the call is ignored.
+        /// </summary>
+        public override void CancelRun()
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
 
         #region IDisposable Members
 
         public void Dispose()
         {
-            if (this.realRunner != null)
-                this.realRunner.Dispose();
+            if (_realRunner != null)
+                _realRunner.Dispose();
         }
 
         #endregion
@@ -187,7 +201,7 @@ namespace NUnit.Engine.Runners
 
         private void PerformPackageSetup(TestPackage package)
         {
-            this.package = package;
+            this.TestPackage = package;
 
             // Expand projects, updating the count of projects and assemblies
             ExpandProjects();
@@ -195,36 +209,36 @@ namespace NUnit.Engine.Runners
             // If there is more than one project or a mix of assemblies and 
             // projects, AggregatingTestRunner will call MakeTestRunner for
             // each project or assembly.
-            this.realRunner = projectCount > 1 || projectCount > 0 && assemblyCount > 0
-                ? new AggregatingTestRunner(services)
-                : (AbstractTestRunner)services.TestRunnerFactory.MakeTestRunner(package);
+            _realRunner = _projectCount > 1 || _projectCount > 0 && _assemblyCount > 0
+                ? new AggregatingTestRunner(Services)
+                : Services.TestRunnerFactory.MakeTestRunner(package);
         }
 
         private void ExpandProjects()
         {
-            if (package.TestFiles.Length > 0)
+            if (TestPackage.TestFiles.Length > 0)
             {
-                foreach (string testFile in package.TestFiles)
+                foreach (string testFile in TestPackage.TestFiles)
                 {
                     TestPackage subPackage = new TestPackage(testFile);
-                    if (services.ProjectService.IsProjectFile(testFile))
+                    if (Services.ProjectService.IsProjectFile(testFile))
                     {
-                        services.ProjectService.ExpandProjectPackage(subPackage);
-                        projectCount++;
+                        Services.ProjectService.ExpandProjectPackage(subPackage);
+                        _projectCount++;
                     }
                     else
-                        assemblyCount++;
+                        _assemblyCount++;
                 }
             }
             else
             {
-                if (services.ProjectService.IsProjectFile(package.FullName))
+                if (Services.ProjectService.IsProjectFile(TestPackage.FullName))
                 {
-                    services.ProjectService.ExpandProjectPackage(package);
-                    projectCount++;
+                    Services.ProjectService.ExpandProjectPackage(TestPackage);
+                    _projectCount++;
                 }
                 else
-                    assemblyCount++;
+                    _assemblyCount++;
             }
         }
 

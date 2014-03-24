@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2011 Charlie Poole
+// Copyright (c) 2011-2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -46,6 +46,13 @@ namespace NUnit.Engine
         void Unload();
 
         /// <summary>
+        /// Reload the loaded test package.
+        /// </summary>
+        /// <returns>A TestEngineResult.</returns>
+        /// <exception cref="InvalidOperationException">If no package is loaded.</exception>
+        TestEngineResult Reload();
+
+        /// <summary>
         /// Count the test cases that would be run under
         /// the specified filter.
         /// </summary>
@@ -69,6 +76,12 @@ namespace NUnit.Engine
         /// <param name="listener">An ITestEventHandler to receive events</param>
         /// <param name="filter">A TestFilter used to select tests</param>
         void BeginRun(ITestEventHandler listener, TestFilter filter);
+
+        /// <summary>
+        /// Cancel the current test run. If no test is running,
+        /// the call is ignored.
+        /// </summary>
+        void CancelRun();
 
         /// <summary>
         /// Explore a loaded TestPackage and return information about

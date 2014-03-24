@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2008 Charlie Poole
+// Copyright (c) 2008-2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -40,7 +40,7 @@ namespace NUnit.Engine.Agents
 
         #region Fields
 
-        private ITestEngineRunner runner;
+        private ITestEngineRunner _runner;
 
         private ManualResetEvent stopSignal = new ManualResetEvent(false);
         
@@ -119,21 +119,32 @@ namespace NUnit.Engine.Agents
         /// <returns>A TestEngineResult.</returns>
         public TestEngineResult Explore(TestFilter filter)
         {
-            return runner == null ? null : runner.Explore(filter);
+            if (_runner == null)
+                throw new InvalidOperationException("RemoteTestAgent: Explore called before Load");
+            
+            return _runner.Explore(filter);
         }
 
         public TestEngineResult Load(TestPackage package)
         {
             //System.Diagnostics.Debug.Assert(false, "Attach debugger if desired");
 
-            this.runner = Services.TestRunnerFactory.MakeTestRunner(package);
-            return runner.Load(package);
+            _runner = Services.TestRunnerFactory.MakeTestRunner(package);
+            return _runner.Load(package);
         }
 
         public void Unload()
         {
-            if (runner != null)
-                runner.Unload();
+            if (_runner != null)
+                _runner.Unload();
+        }
+
+        public TestEngineResult Reload()
+        {
+            if (_runner == null)
+                throw new InvalidOperationException("RemoteTestAgent: Reload called before Load");
+                
+            return _runner.Reload();
         }
 
         /// <summary>
@@ -144,7 +155,10 @@ namespace NUnit.Engine.Agents
         /// <returns>The count of test cases</returns>
         public int CountTestCases(TestFilter filter)
         {
-            return runner.CountTestCases(filter);
+            if (_runner == null)
+                throw new InvalidOperationException("RemoteTestAgent: CountTestCases called before Load");
+
+            return _runner.CountTestCases(filter);
         }
 
         /// <summary>
@@ -156,7 +170,10 @@ namespace NUnit.Engine.Agents
         /// <returns>A TestEngineResult giving the result of the test execution</returns>
         public TestEngineResult Run(ITestEventHandler listener, TestFilter filter)
         {
-            return runner == null ? null : runner.Run(listener, filter);
+            if (_runner == null)
+                throw new InvalidOperationException("RemoteTestAgent: Run called before Load");
+
+            return _runner.Run(listener, filter);
         }
 
         /// <summary>
@@ -167,8 +184,16 @@ namespace NUnit.Engine.Agents
         /// <param name="filter">A TestFilter used to select tests</param>
         public void BeginRun(ITestEventHandler listener, TestFilter filter)
         {
-            if (runner != null)
-                runner.BeginRun(listener, filter);
+            if (_runner == null)
+                throw new InvalidOperationException("RemoteTestAgent: BeginRUn called before Load");
+
+            _runner.BeginRun(listener, filter);
+        }
+
+        public void CancelRun()
+        {
+            if (_runner != null)
+                _runner.CancelRun();
         }
 
         #endregion

@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2011 Charlie Poole
+// Copyright (c) 2011-2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -38,20 +38,20 @@ namespace NUnit.Engine.Runners
     {
         protected const string TEST_RUN_ELEMENT = "test-run";
 
-        protected ServiceContext services;
-        protected TestPackage package;
-
         public AbstractTestRunner(ServiceContext services)
         {
-            this.services = services;
+            this.Services = services;
         }
 
-        protected ServiceContext Services
-        {
-            get { return services; }
-        }
+        #region Properties
 
-        #region Abstract and Virtual Methods
+        protected ServiceContext Services { get; private set; }
+
+        protected TestPackage TestPackage { get; set; }
+
+        #endregion
+
+        #region ITestEngineRunner Members
 
         /// <summary>
         /// Explore a loaded TestPackage and return information about
@@ -69,6 +69,19 @@ namespace NUnit.Engine.Runners
         /// <param name="package">The TestPackage to be loaded</param>
         /// <returns>A TestEngineResult.</returns>
         public abstract TestEngineResult Load(TestPackage package);
+
+        /// <summary>
+        /// Reload the currently loaded test package.
+        /// </summary>
+        /// <returns>A TestEngineResult.</returns>
+        /// <exception cref="InvalidOperationException">If no package has been loaded</exception>
+        public virtual TestEngineResult Reload()
+        {
+            if (this.TestPackage == null)
+                throw new InvalidOperationException("MasterTestRunner: Reload called before Load");
+
+            return Load(TestPackage);
+        }
 
         /// <summary>
         /// Unload any loaded TestPackage. Overridden in
@@ -103,6 +116,12 @@ namespace NUnit.Engine.Runners
         /// <param name="filter">A TestFilter used to select tests</param>
         public abstract void BeginRun(ITestEventHandler listener, TestFilter filter);
 
+        /// <summary>
+        /// Cancel the ongoing test run. If no  test is running,
+        /// the call is ignored.
+        /// </summary>
+        public abstract void CancelRun();
+
         #endregion
 
         #region IDisposable Members
@@ -121,7 +140,7 @@ namespace NUnit.Engine.Runners
             return package != null
                 && package.FullName != null
                 && package.FullName != string.Empty
-                && services.ProjectService.IsProjectFile(package.FullName);
+                && Services.ProjectService.IsProjectFile(package.FullName);
         }
 
         #endregion

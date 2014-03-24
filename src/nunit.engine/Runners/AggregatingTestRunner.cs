@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2011 Charlie Poole
+// Copyright (c) 2011-2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -37,7 +37,7 @@ namespace NUnit.Engine.Runners
     {
         // The runners created by the derived class will (at least at the time
         // of writing this comment) be either TestDomainRunners or ProcessRunners.
-        private List<AbstractTestRunner> runners = new List<AbstractTestRunner>();
+        private List<ITestEngineRunner> _runners = new List<ITestEngineRunner>();
 
         public AggregatingTestRunner(ServiceContext services) : base(services) { }
 
@@ -54,13 +54,13 @@ namespace NUnit.Engine.Runners
             List<TestEngineResult> results = new List<TestEngineResult>();
 
             // TODO: Eliminate need for implicit cast to AbstractTestRunner
-            foreach (AbstractTestRunner runner in runners)
+            foreach (AbstractTestRunner runner in _runners)
                 results.Add(runner.Explore(filter));
 
             TestEngineResult result = ResultHelper.Merge(results);
 
-            return IsProjectPackage(this.package)
-                ? result.MakePackageResult(package.Name, package.FullName)
+            return IsProjectPackage(this.TestPackage)
+                ? result.MakePackageResult(TestPackage.Name, TestPackage.FullName)
                 : result;
         }
 
@@ -71,7 +71,7 @@ namespace NUnit.Engine.Runners
         /// <returns>A TestEngineResult.</returns>
         public override TestEngineResult Load(TestPackage package)
         {
-            this.package = package;
+            this.TestPackage = package;
 
             List<TestPackage> packages = new List<TestPackage>();
 
@@ -89,8 +89,8 @@ namespace NUnit.Engine.Runners
 
             foreach (TestPackage subPackage in packages)
             {
-                AbstractTestRunner runner = CreateRunner(subPackage);
-                runners.Add(runner);
+                var runner = CreateRunner(subPackage);
+                _runners.Add(runner);
                 results.Add(runner.Load(subPackage));
             }
 
@@ -103,10 +103,10 @@ namespace NUnit.Engine.Runners
         /// </summary>
         public override void Unload()
         {
-            foreach (AbstractTestRunner runner in runners)
+            foreach (ITestEngineRunner runner in _runners)
                 runner.Unload();
 
-            runners.Clear();
+            _runners.Clear();
         }
 
         /// <summary>
@@ -119,7 +119,7 @@ namespace NUnit.Engine.Runners
         {
             int count = 0;
 
-            foreach (AbstractTestRunner runner in runners)
+            foreach (ITestEngineRunner runner in _runners)
                 count += runner.CountTestCases(filter);
 
             return count;
@@ -136,14 +136,13 @@ namespace NUnit.Engine.Runners
         {
             List<TestEngineResult> results = new List<TestEngineResult>();
 
-            // TODO: Eliminate need for implicit cast to AbstractTestRunner
-            foreach (AbstractTestRunner runner in runners)
+            foreach (ITestEngineRunner runner in _runners)
                 results.Add(runner.Run(listener, filter));
 
             TestEngineResult result = ResultHelper.Merge(results);
 
-            return IsProjectPackage(this.package)
-                ? result.MakePackageResult(package.Name, package.FullName)
+            return IsProjectPackage(this.TestPackage)
+                ? result.MakePackageResult(TestPackage.Name, TestPackage.FullName)
                 : result;
         }
 
@@ -158,11 +157,20 @@ namespace NUnit.Engine.Runners
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Cancel the ongoing test run. If no test is running,
+        /// the call is ignored.
+        /// </summary>
+        public override void CancelRun()
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
 
-        protected virtual AbstractTestRunner CreateRunner(TestPackage package)
+        protected virtual ITestEngineRunner CreateRunner(TestPackage package)
         {
-            return Services.TestRunnerFactory.MakeTestRunner(package) as AbstractTestRunner;
+            return Services.TestRunnerFactory.MakeTestRunner(package);
         }
     }
 }

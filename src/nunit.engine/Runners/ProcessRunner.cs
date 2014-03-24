@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2011 Charlie Poole
+// Copyright (c) 2011-2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -42,19 +42,14 @@ namespace NUnit.Engine.Runners
     {
         static Logger log = InternalTrace.GetLogger(typeof(ProcessRunner));
 
-        private ITestAgent agent;
-        private ITestEngineRunner remoteRunner;
-
-        private RuntimeFramework runtimeFramework;
+        private ITestAgent _agent;
+        private ITestEngineRunner _remoteRunner;
 
         public ProcessRunner(ServiceContext services) : base(services) { }
 
         #region Properties
 
-        public RuntimeFramework RuntimeFramework
-        {
-            get { return runtimeFramework; }
-        }
+        public RuntimeFramework RuntimeFramework { get; private set; }
 
         #endregion
 
@@ -68,7 +63,7 @@ namespace NUnit.Engine.Runners
         /// <returns>A TestEngineResult.</returns>
         public override TestEngineResult Explore(TestFilter filter)
         {
-            TestEngineResult result = this.remoteRunner.Explore(filter);
+            TestEngineResult result = this._remoteRunner.Explore(filter);
             return result as TestEngineResult; // TODO: Remove need for this cast
         }
 
@@ -82,10 +77,10 @@ namespace NUnit.Engine.Runners
             log.Info("Loading " + package.Name);
             Unload();
 
-            this.package = package;
+            this.TestPackage = package;
 
             string frameworkSetting = package.GetSetting(RunnerSettings.RuntimeFramework, "");
-            this.runtimeFramework = frameworkSetting != ""
+            this.RuntimeFramework = frameworkSetting != ""
                 ? RuntimeFramework.Parse(frameworkSetting)
                 : RuntimeFramework.CurrentFramework;
 
@@ -100,7 +95,7 @@ namespace NUnit.Engine.Runners
                 CreateAgentAndRunner(enableDebug, agentArgs);
 
                 // TODO: Remove need for this cast
-                return this.remoteRunner.Load(package) as TestEngineResult;
+                return _remoteRunner.Load(package) as TestEngineResult;
             }
             catch(Exception)
             {
@@ -117,11 +112,11 @@ namespace NUnit.Engine.Runners
         /// </summary>
         public override void Unload()
         {
-            if (this.remoteRunner != null)
+            if (_remoteRunner != null)
             {
                 log.Info("Unloading remote runner");
-                this.remoteRunner.Unload();
-                this.remoteRunner = null;
+                _remoteRunner.Unload();
+                _remoteRunner = null;
             }
         }
 
@@ -133,7 +128,7 @@ namespace NUnit.Engine.Runners
         /// <returns>The count of test cases</returns>
         public override int CountTestCases(TestFilter filter)
         {
-            return this.remoteRunner.CountTestCases(filter);
+            return _remoteRunner.CountTestCases(filter);
         }
 
         /// <summary>
@@ -143,7 +138,7 @@ namespace NUnit.Engine.Runners
         /// <returns>A TestResult giving the result of the test execution</returns>
         public override TestEngineResult Run(ITestEventHandler listener, TestFilter filter)
         {
-            return (TestEngineResult)this.remoteRunner.Run(listener, filter);
+            return (TestEngineResult)_remoteRunner.Run(listener, filter);
         }
 
         /// <summary>
@@ -154,16 +149,25 @@ namespace NUnit.Engine.Runners
         /// <param name="filter">A TestFilter used to select tests</param>
         public override void BeginRun(ITestEventHandler listener, TestFilter filter)
         {
-            this.remoteRunner.BeginRun(listener, filter);
+            _remoteRunner.BeginRun(listener, filter);
+        }
+
+        /// <summary>
+        /// Cancel the ongoing test run. If no test is running,
+        /// the call is ignored.
+        /// </summary>
+        public override void CancelRun()
+        {
+            throw new NotImplementedException();
         }
 
         public override void Dispose()
         {
-            if (this.agent != null)
+            if (_agent != null)
             {
                 log.Info("Stopping remote agent");
-                agent.Stop();
-                this.agent = null;
+                _agent.Stop();
+                _agent = null;
             }
         }
 
@@ -173,20 +177,20 @@ namespace NUnit.Engine.Runners
 
         private void CreateAgentAndRunner(bool enableDebug, string agentArgs)
         {
-            if (this.agent == null)
+            if (_agent == null)
             {
-                this.agent = Services.TestAgency.GetAgent(
-                    runtimeFramework,
+                _agent = Services.TestAgency.GetAgent(
+                    RuntimeFramework,
                     30000,
                     enableDebug,
                     agentArgs);
 
-                if (this.agent == null)
+                if (_agent == null)
                     throw new Exception("Unable to acquire remote process agent");
             }
 
-            if (this.remoteRunner == null)
-                this.remoteRunner = agent.CreateRunner();
+            if (_remoteRunner == null)
+                _remoteRunner = _agent.CreateRunner();
         }
 
         #endregion

@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2011 Charlie Poole
+// Copyright (c) 2011-2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -35,10 +35,15 @@ namespace NUnit.Engine.Runners
     /// </summary>
     public abstract class DirectTestRunner : AbstractTestRunner
     {
-        private List<IFrameworkDriver> drivers = new List<IFrameworkDriver>();
-        protected AppDomain TestDomain;
+        private List<IFrameworkDriver> _drivers = new List<IFrameworkDriver>();
 
         public DirectTestRunner(ServiceContext services) : base(services) { }
+
+        #region Properties
+
+        protected AppDomain TestDomain { get; set; }
+
+        #endregion
 
         #region AbstractTestRunner Overrides
 
@@ -52,11 +57,11 @@ namespace NUnit.Engine.Runners
         {
             TestEngineResult result = new TestEngineResult();
 
-            foreach (IFrameworkDriver driver in drivers)
+            foreach (IFrameworkDriver driver in _drivers)
                 result.Add(driver.Explore(filter));
 
-            return IsProjectPackage(this.package)
-                ? result.MakePackageResult(package.Name, package.FullName)
+            return IsProjectPackage(this.TestPackage)
+                ? result.MakePackageResult(TestPackage.Name, TestPackage.FullName)
                 : result;
         }
 
@@ -67,17 +72,17 @@ namespace NUnit.Engine.Runners
         /// <returns>A TestEngineResult.</returns>
         public override TestEngineResult Load(TestPackage package)
         {
-            this.package = package;
+            this.TestPackage = package;
             TestEngineResult result = new TestEngineResult();
 
             foreach (string testFile in package.TestFiles)
             {
                 IFrameworkDriver driver = Services.DriverFactory.GetDriver(TestDomain, testFile, package.Settings);
                 result.Add(driver.Load());
-                drivers.Add(driver);
+                _drivers.Add(driver);
             }
 
-            return IsProjectPackage(this.package)
+            return IsProjectPackage(this.TestPackage)
                 ? result.MakePackageResult(package.Name, package.FullName)
                 : result;
         }
@@ -92,7 +97,7 @@ namespace NUnit.Engine.Runners
         {
             int count = 0;
 
-            foreach (IFrameworkDriver driver in drivers)
+            foreach (IFrameworkDriver driver in _drivers)
                 count += driver.CountTestCases(filter);
 
             return count;
@@ -111,11 +116,11 @@ namespace NUnit.Engine.Runners
         {
             TestEngineResult result = new TestEngineResult();
 
-            foreach (IFrameworkDriver driver in drivers)
+            foreach (IFrameworkDriver driver in _drivers)
                 result.Add(driver.Run(listener, filter));
 
-            return IsProjectPackage(this.package)
-                ? result.MakePackageResult(package.Name, package.FullName)
+            return IsProjectPackage(this.TestPackage)
+                ? result.MakePackageResult(TestPackage.Name, TestPackage.FullName)
                 : result;
         }
 
@@ -138,8 +143,17 @@ namespace NUnit.Engine.Runners
         private TestFilter _filter;
         private void RunnerProc()
         {
-            foreach (NUnitFrameworkDriver driver in drivers)
+            foreach (NUnitFrameworkDriver driver in _drivers)
                 driver.Run(_listener, _filter);
+        }
+
+        /// <summary>
+        /// Cancel the ongoing test run. If no test is running
+        /// the call is ignored.
+        /// </summary>
+        public override void CancelRun()
+        {
+            throw new NotImplementedException();
         }
 
         #endregion
