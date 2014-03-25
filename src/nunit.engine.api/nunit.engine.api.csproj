@@ -51,6 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="IFrameworkDriver.cs" />
     <Compile Include="ILogger.cs" />
     <Compile Include="ILogging.cs" />
     <Compile Include="InternalTraceLevel.cs" />
