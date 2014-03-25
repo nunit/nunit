@@ -39,7 +39,7 @@ namespace NUnit.Engine.Runners
         // of writing this comment) be either TestDomainRunners or ProcessRunners.
         private List<ITestEngineRunner> _runners = new List<ITestEngineRunner>();
 
-        public AggregatingTestRunner(ServiceContext services) : base(services) { }
+        public AggregatingTestRunner(ServiceContext services, TestPackage package) : base(services, package) { }
 
         #region AbstractTestRunner Overrides
 
@@ -49,12 +49,11 @@ namespace NUnit.Engine.Runners
         /// </summary>
         /// <param name="package">The TestPackage to be explored</param>
         /// <returns>A TestEngineResult.</returns>
-        public override TestEngineResult Explore(TestFilter filter)
+        protected override TestEngineResult ExploreTests(TestFilter filter)
         {
             List<TestEngineResult> results = new List<TestEngineResult>();
 
-            // TODO: Eliminate need for implicit cast to AbstractTestRunner
-            foreach (AbstractTestRunner runner in _runners)
+            foreach (ITestEngineRunner runner in _runners)
                 results.Add(runner.Explore(filter));
 
             TestEngineResult result = ResultHelper.Merge(results);
@@ -69,19 +68,17 @@ namespace NUnit.Engine.Runners
         /// </summary>
         /// <param name="package">The TestPackage to be loaded</param>
         /// <returns>A TestEngineResult.</returns>
-        public override TestEngineResult Load(TestPackage package)
+        protected override TestEngineResult LoadPackage()
         {
-            this.TestPackage = package;
-
             List<TestPackage> packages = new List<TestPackage>();
 
-            foreach (string testFile in package.TestFiles)
+            foreach (string testFile in TestPackage.TestFiles)
             {
                 TestPackage subPackage = new TestPackage(testFile);
                 if (Services.ProjectService.IsProjectFile(testFile))
                     Services.ProjectService.ExpandProjectPackage(subPackage);
-                foreach (string key in package.Settings.Keys)
-                    subPackage.Settings[key] = package.Settings[key];
+                foreach (string key in TestPackage.Settings.Keys)
+                    subPackage.Settings[key] = TestPackage.Settings[key];
                 packages.Add(subPackage);
             }
 
@@ -91,7 +88,7 @@ namespace NUnit.Engine.Runners
             {
                 var runner = CreateRunner(subPackage);
                 _runners.Add(runner);
-                results.Add(runner.Load(subPackage));
+                results.Add(runner.Load());
             }
 
             return ResultHelper.Merge(results);
@@ -101,7 +98,7 @@ namespace NUnit.Engine.Runners
         /// Unload any loaded TestPackages and clear the
         /// list of runners.
         /// </summary>
-        public override void Unload()
+        public override void UnloadPackage()
         {
             foreach (ITestEngineRunner runner in _runners)
                 runner.Unload();
@@ -115,7 +112,7 @@ namespace NUnit.Engine.Runners
         /// </summary>
         /// <param name="filter">A TestFilter</param>
         /// <returns>The count of test cases</returns>
-        public override int CountTestCases(TestFilter filter)
+        protected override int CountTests(TestFilter filter)
         {
             int count = 0;
 
@@ -132,7 +129,7 @@ namespace NUnit.Engine.Runners
         /// <returns>
         /// A TestEngineResult giving the result of the test execution.
         /// </returns>
-        public override TestEngineResult Run(ITestEventHandler listener, TestFilter filter)
+        protected override TestEngineResult RunTests(ITestEventHandler listener, TestFilter filter)
         {
             List<TestEngineResult> results = new List<TestEngineResult>();
 
@@ -152,7 +149,7 @@ namespace NUnit.Engine.Runners
         /// </summary>
         /// <param name="listener">An ITestEventHandler to receive events</param>
         /// <param name="filter">A TestFilter used to select tests</param>
-        public override void BeginRun(ITestEventHandler listener, TestFilter filter)
+        protected override void RunTestsAsync(ITestEventHandler listener, TestFilter filter)
         {
             throw new NotImplementedException();
         }

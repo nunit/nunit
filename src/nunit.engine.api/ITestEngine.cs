@@ -72,7 +72,8 @@ namespace NUnit.Engine
         /// Returns a test runner instance for use by clients that need to load the
         /// tests once and run them multiple times.
         /// </summary>
+        /// <param name="package">The TestPackage for which the runner is intended.</param>
         /// <returns>An ITestRunner.</returns>
-        ITestRunner GetRunner();
+        ITestRunner GetRunner(TestPackage package);
     }
 }

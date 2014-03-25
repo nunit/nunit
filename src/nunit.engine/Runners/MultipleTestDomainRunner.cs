@@ -35,13 +35,13 @@ namespace NUnit.Engine.Runners
     /// </summary>
     public class MultipleTestDomainRunner : AggregatingTestRunner
     {
-        public MultipleTestDomainRunner(ServiceContext services) : base(services) { }
+        public MultipleTestDomainRunner(ServiceContext services, TestPackage package) : base(services, package) { }
 
         #region AggregatingTestRunner Overrides
 
         protected override ITestEngineRunner CreateRunner(TestPackage package)
         {
-            return new TestDomainRunner(this.Services);
+            return new TestDomainRunner(this.Services, package);
         }
         #endregion
     }

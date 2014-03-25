@@ -36,7 +36,7 @@ namespace NUnit.Engine
         /// </summary>
         /// <param name="package">The TestPackage to be loaded</param>
         /// <returns>An XmlNode representing the loaded package.</returns>
-        XmlNode Load(TestPackage package);
+        XmlNode Load();
 
         /// <summary>
         /// Unload any loaded TestPackage. If none is loaded,

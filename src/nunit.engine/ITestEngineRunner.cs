@@ -37,7 +37,7 @@ namespace NUnit.Engine
         /// </summary>
         /// <param name="package">The TestPackage to be loaded</param>
         /// <returns>A TestEngineResult.</returns>
-        TestEngineResult Load(TestPackage package);
+        TestEngineResult Load();
 
         /// <summary>
         /// Unload any loaded TestPackage. If none is loaded,

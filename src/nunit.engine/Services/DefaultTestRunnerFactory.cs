@@ -50,10 +50,10 @@ namespace NUnit.Engine.Services
             {
                 case ProcessModel.Multiple:
                     package.Settings.Remove("ProcessModel");
-                    return new MultipleTestProcessRunner(this.ServiceContext);
+                    return new MultipleTestProcessRunner(this.ServiceContext, package);
                 case ProcessModel.Separate:
                     package.Settings.Remove("ProcessModel");
-                    return new ProcessRunner(this.ServiceContext);
+                    return new ProcessRunner(this.ServiceContext, package);
                 default:
                     return base.MakeTestRunner(package);
             }

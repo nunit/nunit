@@ -41,6 +41,7 @@ namespace NUnit.Engine.Agents
         #region Fields
 
         private ITestEngineRunner _runner;
+        private TestPackage _package;
 
         private ManualResetEvent stopSignal = new ManualResetEvent(false);
         
@@ -67,8 +68,9 @@ namespace NUnit.Engine.Agents
 
         #region Public Methods
 
-        public override ITestEngineRunner CreateRunner()
+        public override ITestEngineRunner CreateRunner(TestPackage package)
         {
+            _package = package;
             return this;
         }
 
@@ -125,12 +127,12 @@ namespace NUnit.Engine.Agents
             return _runner.Explore(filter);
         }
 
-        public TestEngineResult Load(TestPackage package)
+        public TestEngineResult Load()
         {
             //System.Diagnostics.Debug.Assert(false, "Attach debugger if desired");
 
-            _runner = Services.TestRunnerFactory.MakeTestRunner(package);
-            return _runner.Load(package);
+            _runner = Services.TestRunnerFactory.MakeTestRunner(_package);
+            return _runner.Load();
         }
 
         public void Unload()

@@ -106,9 +106,9 @@ namespace NUnit.Engine
         /// <returns>An XmlNode representing the tests.</returns>
         public XmlNode Explore(TestPackage package, TestFilter filter)
         {
-            using (ITestRunner runner = GetRunner())
+            using (ITestRunner runner = GetRunner(package))
             {
-                runner.Load(package);
+                runner.Load();
 
                 return runner.Explore(filter);
             }
@@ -123,9 +123,9 @@ namespace NUnit.Engine
         /// <returns>An XmlNode representing the test results.</returns>
         public XmlNode Run(TestPackage package, ITestEventHandler listener, TestFilter filter)
         {
-            using (ITestRunner runner = GetRunner())
+            using (ITestRunner runner = GetRunner(package))
             {
-                runner.Load(package);
+                runner.Load();
 
                 return runner.Run(listener, filter);
             }
@@ -136,9 +136,9 @@ namespace NUnit.Engine
         /// tests once and run them multiple times.
         /// </summary>
         /// <returns>An ITestRunner.</returns>
-        public ITestRunner GetRunner()
+        public ITestRunner GetRunner(TestPackage package)
         {
-            return new Runners.MasterTestRunner(Services);
+            return new Runners.MasterTestRunner(Services, package);
         }
 
         #endregion

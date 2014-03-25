@@ -54,6 +54,6 @@ namespace NUnit.Engine
         /// <summary>
         ///  Creates a test runner
         /// </summary>
-        ITestEngineRunner CreateRunner();
+        ITestEngineRunner CreateRunner(TestPackage package);
     }
 }

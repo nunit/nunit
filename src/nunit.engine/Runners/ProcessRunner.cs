@@ -45,7 +45,7 @@ namespace NUnit.Engine.Runners
         private ITestAgent _agent;
         private ITestEngineRunner _remoteRunner;
 
-        public ProcessRunner(ServiceContext services) : base(services) { }
+        public ProcessRunner(ServiceContext services, TestPackage package) : base(services, package) { }
 
         #region Properties
 
@@ -61,7 +61,7 @@ namespace NUnit.Engine.Runners
         /// </summary>
         /// <param name="package">The TestPackage to be explored</param>
         /// <returns>A TestEngineResult.</returns>
-        public override TestEngineResult Explore(TestFilter filter)
+        protected override TestEngineResult ExploreTests(TestFilter filter)
         {
             TestEngineResult result = this._remoteRunner.Explore(filter);
             return result as TestEngineResult; // TODO: Remove need for this cast
@@ -72,20 +72,18 @@ namespace NUnit.Engine.Runners
         /// </summary>
         /// <param name="package">The TestPackage to be loaded</param>
         /// <returns>A TestEngineResult.</returns>
-        public override TestEngineResult Load(TestPackage package)
+        protected override TestEngineResult LoadPackage()
         {
-            log.Info("Loading " + package.Name);
+            log.Info("Loading " + TestPackage.Name);
             Unload();
 
-            this.TestPackage = package;
-
-            string frameworkSetting = package.GetSetting(RunnerSettings.RuntimeFramework, "");
+            string frameworkSetting = TestPackage.GetSetting(RunnerSettings.RuntimeFramework, "");
             this.RuntimeFramework = frameworkSetting != ""
                 ? RuntimeFramework.Parse(frameworkSetting)
                 : RuntimeFramework.CurrentFramework;
 
-            bool enableDebug = package.GetSetting("AgentDebug", false);
-            bool verbose = package.GetSetting("Verbose", false);
+            bool enableDebug = TestPackage.GetSetting("AgentDebug", false);
+            bool verbose = TestPackage.GetSetting("Verbose", false);
             string agentArgs = string.Empty;
             if (enableDebug) agentArgs += " --pause";
             if (verbose) agentArgs += " --verbose";
@@ -94,8 +92,7 @@ namespace NUnit.Engine.Runners
             {
                 CreateAgentAndRunner(enableDebug, agentArgs);
 
-                // TODO: Remove need for this cast
-                return _remoteRunner.Load(package) as TestEngineResult;
+                return _remoteRunner.Load();
             }
             catch(Exception)
             {
@@ -110,7 +107,7 @@ namespace NUnit.Engine.Runners
         /// Unload any loaded TestPackage and clear
         /// the reference to the remote runner.
         /// </summary>
-        public override void Unload()
+        public override void UnloadPackage()
         {
             if (_remoteRunner != null)
             {
@@ -126,7 +123,7 @@ namespace NUnit.Engine.Runners
         /// </summary>
         /// <param name="filter">A TestFilter</param>
         /// <returns>The count of test cases</returns>
-        public override int CountTestCases(TestFilter filter)
+        protected override int CountTests(TestFilter filter)
         {
             return _remoteRunner.CountTestCases(filter);
         }
@@ -136,7 +133,7 @@ namespace NUnit.Engine.Runners
         /// </summary>
         /// <param name="filter">A TestFilter used to select tests</param>
         /// <returns>A TestResult giving the result of the test execution</returns>
-        public override TestEngineResult Run(ITestEventHandler listener, TestFilter filter)
+        protected override TestEngineResult RunTests(ITestEventHandler listener, TestFilter filter)
         {
             return (TestEngineResult)_remoteRunner.Run(listener, filter);
         }
@@ -147,7 +144,7 @@ namespace NUnit.Engine.Runners
         /// </summary>
         /// <param name="listener">An ITestEventHandler to receive events</param>
         /// <param name="filter">A TestFilter used to select tests</param>
-        public override void BeginRun(ITestEventHandler listener, TestFilter filter)
+        protected override void RunTestsAsync(ITestEventHandler listener, TestFilter filter)
         {
             _remoteRunner.BeginRun(listener, filter);
         }
@@ -190,7 +187,7 @@ namespace NUnit.Engine.Runners
             }
 
             if (_remoteRunner == null)
-                _remoteRunner = _agent.CreateRunner();
+                _remoteRunner = _agent.CreateRunner(TestPackage);
         }
 
         #endregion

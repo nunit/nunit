@@ -35,13 +35,13 @@ namespace NUnit.Engine.Runners
     /// </summary>
     public class MultipleTestProcessRunner : AggregatingTestRunner
     {
-        public MultipleTestProcessRunner(ServiceContext services) : base(services) { }
+        public MultipleTestProcessRunner(ServiceContext services, TestPackage package) : base(services, package) { }
 
         #region AggregatingTestRunner Overrides
 
         protected override ITestEngineRunner CreateRunner(TestPackage package)
         {
-            return new ProcessRunner(this.Services);
+            return new ProcessRunner(this.Services, package);
         }
         #endregion
     }
