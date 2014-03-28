@@ -149,7 +149,7 @@ namespace NUnit.Engine.Runners
         /// </summary>
         /// <param name="listener">An ITestEventHandler to receive events</param>
         /// <param name="filter">A TestFilter used to select tests</param>
-        protected override void RunTestsAsync(ITestEventHandler listener, TestFilter filter)
+        protected override void RunTestsAsynchronously(ITestEventHandler listener, TestFilter filter)
         {
             throw new NotImplementedException();
         }

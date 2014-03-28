@@ -129,7 +129,7 @@ namespace NUnit.Engine.Runners
         /// </summary>
         /// <param name="listener">An ITestEventHandler to receive events</param>
         /// <param name="filter">A TestFilter used to select tests</param>
-        protected abstract void RunTestsAsync(ITestEventHandler listener, TestFilter filter);
+        protected abstract void RunTestsAsynchronously(ITestEventHandler listener, TestFilter filter);
 
         #endregion
 
@@ -213,11 +213,11 @@ namespace NUnit.Engine.Runners
         /// </summary>
         /// <param name="listener">An ITestEventHandler to receive events</param>
         /// <param name="filter">A TestFilter used to select tests</param>
-        public void BeginRun(ITestEventHandler listener, TestFilter filter)
+        public void RunAsynchronously(ITestEventHandler listener, TestFilter filter)
         {
             EnsurePackageIsLoaded();
 
-            RunTestsAsync(listener, filter);
+            RunTestsAsynchronously(listener, filter);
         }
 
         /// <summary>

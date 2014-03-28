@@ -34,8 +34,12 @@ namespace NUnit.Engine
         /// <summary>
         /// Load a TestPackage for possible execution
         /// </summary>
-        /// <param name="package">The TestPackage to be loaded</param>
         /// <returns>An XmlNode representing the loaded package.</returns>
+        /// <remarks>
+        /// This method is normally optional, since Explore and Run call
+        /// it automatially when necessary. The method is kept in order
+        /// to make it easier to convert older programs that use it.
+        /// </remarks>
         XmlNode Load();
 
         /// <summary>
@@ -73,7 +77,7 @@ namespace NUnit.Engine
         /// </summary>
         /// <param name="listener">An ITestEventHandler to receive events</param>
         /// <param name="filter">A TestFilter used to select tests</param>
-        void BeginRun(ITestEventHandler listener, TestFilter filter);
+        void RunAsynchronously(ITestEventHandler listener, TestFilter filter);
 
         /// <summary>
         /// Cancel the current test run. If no test is running,

@@ -129,7 +129,7 @@ namespace NUnit.Engine.Runners
         /// </summary>
         /// <param name="listener">An ITestEventHandler to receive events</param>
         /// <param name="filter">A TestFilter used to select tests</param>
-        protected override void RunTestsAsync(ITestEventHandler listener, TestFilter filter)
+        protected override void RunTestsAsynchronously(ITestEventHandler listener, TestFilter filter)
         {
             _listener = listener;
             _filter = filter;
@@ -144,6 +144,9 @@ namespace NUnit.Engine.Runners
         {
             foreach (NUnitFrameworkDriver driver in _drivers)
                 driver.Run(_listener, _filter);
+
+            // TODO: Add something to indicate commpletion?
+            //_listener.OnTestEvent("WHAT SHOULD GO HERE?");
         }
 
         /// <summary>

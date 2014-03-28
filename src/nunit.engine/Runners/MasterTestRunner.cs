@@ -115,9 +115,9 @@ namespace NUnit.Engine.Runners
         /// </summary>
         /// <param name="listener">An ITestEventHandler to receive events</param>
         /// <param name="filter">A TestFilter used to select tests</param>
-        protected override void RunTestsAsync(ITestEventHandler listener, TestFilter filter)
+        protected override void RunTestsAsynchronously(ITestEventHandler listener, TestFilter filter)
         {
-            _realRunner.BeginRun(listener, filter);
+            _realRunner.RunAsynchronously(listener, filter);
         }
 
         /// <summary>
@@ -191,7 +191,7 @@ namespace NUnit.Engine.Runners
         /// <summary>
         /// Dispose of this object.
         /// </summary>
-        public void Dispose()
+        public override void Dispose()
         {
             if (_realRunner != null)
                 _realRunner.Dispose();

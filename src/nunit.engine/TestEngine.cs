@@ -108,8 +108,6 @@ namespace NUnit.Engine
         {
             using (ITestRunner runner = GetRunner(package))
             {
-                runner.Load();
-
                 return runner.Explore(filter);
             }
         }
@@ -125,8 +123,6 @@ namespace NUnit.Engine
         {
             using (ITestRunner runner = GetRunner(package))
             {
-                runner.Load();
-
                 return runner.Run(listener, filter);
             }
         }

@@ -27,6 +27,11 @@ using System.Xml;
 
 namespace NUnit.Engine
 {
+    /// <summary>
+    /// The IFrameworkDriver interface is implemented by a class that
+    /// is able to use an external framework to explore or run tests
+    /// under the engine.
+    /// </summary>
     public interface IFrameworkDriver
     {
         /// <summary>
