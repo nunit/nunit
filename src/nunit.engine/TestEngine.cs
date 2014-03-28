@@ -99,35 +99,6 @@ namespace NUnit.Engine
         }
 
         /// <summary>
-        /// Returns an xml representation of the tests specified
-        /// by a TestPackage.
-        /// </summary>
-        /// <param name="package">A TestPackage.</param>
-        /// <returns>An XmlNode representing the tests.</returns>
-        public XmlNode Explore(TestPackage package, TestFilter filter)
-        {
-            using (ITestRunner runner = GetRunner(package))
-            {
-                return runner.Explore(filter);
-            }
-        }
-
-        /// <summary>
-        /// Runs tests specified in the test package, applying
-        /// the supplied filter.
-        /// </summary>
-        /// <param name="package">A TestPackage.</param>
-        /// <param name="filter">A TestFilter (currently ignored)</param>
-        /// <returns>An XmlNode representing the test results.</returns>
-        public XmlNode Run(TestPackage package, ITestEventHandler listener, TestFilter filter)
-        {
-            using (ITestRunner runner = GetRunner(package))
-            {
-                return runner.Run(listener, filter);
-            }
-        }
-
-        /// <summary>
         /// Returns a test runner for use by clients that need to load the
         /// tests once and run them multiple times.
         /// </summary>

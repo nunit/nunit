@@ -96,7 +96,10 @@ namespace NUnit.ConsoleRunner
 
         private int ExploreTests(TestPackage package, TestFilter filter)
         {
-            XmlNode result = engine.Explore(package, filter);
+            XmlNode result = null;
+
+            using (var runner = engine.GetRunner(package))
+                result = runner.Explore(filter);
 
             if (options.ExploreOutputSpecifications.Count == 0)
             {
@@ -134,15 +137,10 @@ namespace NUnit.ConsoleRunner
             try
             {
                 using ( new ColorConsole( ColorStyle.Output ) )
-#if true
-                result = engine.Run(package, eventHandler, filter);
-#else
                 using (ITestRunner runner = engine.GetRunner(package))
                 {
-                    if (runner.Load(package))
-                        engineResult = runner.Run(eventHandler, testFilter);
+                    result = runner.Run(eventHandler, filter);
                 }
-#endif
             }
             finally
             {
