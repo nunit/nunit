@@ -67,7 +67,7 @@ namespace NUnit.Engine
         /// <param name="listener">An ITestEventHandler to receive events</param>
         /// <param name="filter">A TestFilter used to select tests</param>
         /// <returns>A TestEngineResult giving the result of the test execution</returns>
-        TestEngineResult Run(ITestEventHandler listener, TestFilter filter);
+        TestEngineResult Run(ITestEventListener listener, TestFilter filter);
 
         /// <summary>
         /// Start a run of the tests in the loaded TestPackage. The tests are run
@@ -75,7 +75,7 @@ namespace NUnit.Engine
         /// </summary>
         /// <param name="listener">An ITestEventHandler to receive events</param>
         /// <param name="filter">A TestFilter used to select tests</param>
-        void RunAsynchronously(ITestEventHandler listener, TestFilter filter);
+        void RunAsync(ITestEventListener listener, TestFilter filter);
 
         /// <summary>
         /// Cancel the current test run. If no test is running,

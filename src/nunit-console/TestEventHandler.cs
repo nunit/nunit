@@ -35,7 +35,7 @@ namespace NUnit.ConsoleRunner
     /// TestEventHandler processes events from the running
     /// test for the console runner.
     /// </summary>
-    public class TestEventHandler : MarshalByRefObject, ITestEventHandler
+    public class TestEventHandler : MarshalByRefObject, ITestEventListener
     {
         private int testRunCount;
         private int testIgnoreCount;

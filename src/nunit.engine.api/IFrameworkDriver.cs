@@ -53,7 +53,7 @@ namespace NUnit.Engine
         /// <param name="listener">An ITestEventHandler that receives progress notices</param>
         /// <param name="filter">A filter that controls which tests are executed</param>
         /// <returns>An Xml string representing the result</returns>
-        string Run(ITestEventHandler listener, TestFilter filter);
+        string Run(ITestEventListener listener, TestFilter filter);
 
         /// <summary>
         /// Returns information about the tests in an assembly.

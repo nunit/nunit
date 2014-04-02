@@ -111,7 +111,7 @@ namespace NUnit.Engine.Runners
         /// top-level node of the result is &lt;direct-runner&gt; and wraps
         /// all the &lt;test-assembly&gt; elements returned by the drivers.
         /// </returns>
-        protected override TestEngineResult RunTests(ITestEventHandler listener, TestFilter filter)
+        protected override TestEngineResult RunTests(ITestEventListener listener, TestFilter filter)
         {
             TestEngineResult result = new TestEngineResult();
 
@@ -129,7 +129,7 @@ namespace NUnit.Engine.Runners
         /// </summary>
         /// <param name="listener">An ITestEventHandler to receive events</param>
         /// <param name="filter">A TestFilter used to select tests</param>
-        protected override void RunTestsAsynchronously(ITestEventHandler listener, TestFilter filter)
+        protected override void RunTestsAsynchronously(ITestEventListener listener, TestFilter filter)
         {
             _listener = listener;
             _filter = filter;
@@ -138,7 +138,7 @@ namespace NUnit.Engine.Runners
             runnerThread.Start();
         }
 
-        private ITestEventHandler _listener;
+        private ITestEventListener _listener;
         private TestFilter _filter;
         private void RunnerProc()
         {

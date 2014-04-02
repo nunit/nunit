@@ -92,7 +92,7 @@ namespace NUnit.Engine.Runners
         /// <param name="listener">An ITestEventHandler to receive events</param>
         /// <param name="filter">A TestFilter used to select tests</param>
         /// <returns>A TestEngineResult giving the result of the test execution</returns>
-        protected override TestEngineResult RunTests(ITestEventHandler listener, TestFilter filter)
+        protected override TestEngineResult RunTests(ITestEventListener listener, TestFilter filter)
         {
             DateTime startTime = DateTime.UtcNow;
             long startTicks = Stopwatch.GetTimestamp();
@@ -115,9 +115,9 @@ namespace NUnit.Engine.Runners
         /// </summary>
         /// <param name="listener">An ITestEventHandler to receive events</param>
         /// <param name="filter">A TestFilter used to select tests</param>
-        protected override void RunTestsAsynchronously(ITestEventHandler listener, TestFilter filter)
+        protected override void RunTestsAsynchronously(ITestEventListener listener, TestFilter filter)
         {
-            _realRunner.RunAsynchronously(listener, filter);
+            _realRunner.RunAsync(listener, filter);
         }
 
         /// <summary>
@@ -133,10 +133,10 @@ namespace NUnit.Engine.Runners
 
         #region ITestRunner Explicit Implementation
 
-        // NOTE: Only those methods returning an XmlNode have an
-        // explicit implementation. Other ITestRunner methods
-        // are the same as for the ITestEngineRunner interface
-        // and use the class methods.
+        // NOTE: Only those methods which differ from those in
+        // ITestEngineRunner have an explicit implementation. 
+        // Methods that are the same for both interfaces
+        // use the class methods.
 
         /// <summary>
         /// Load a TestPackage for possible execution. The 
@@ -168,9 +168,18 @@ namespace NUnit.Engine.Runners
         /// <param name="listener">An ITestEventHandler to receive events</param>
         /// <param name="filter">A TestFilter used to select tests</param>
         /// <returns>An XmlNode giving the result of the test execution</returns>
-        XmlNode ITestRunner.Run(ITestEventHandler listener, TestFilter filter)
+        XmlNode ITestRunner.Run(ITestEventListener listener, TestFilter filter)
         {
             return this.Run(listener, filter).Xml;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="filter"></param>
+        void ITestRunner.RunAsync(ITestEventListener listener, TestFilter filter)
+        {
+            this.Run(listener, filter);
         }
 
         /// <summary>

@@ -170,7 +170,7 @@ namespace NUnit.Engine.Agents
         /// <param name="listener">An ITestEventHandler to receive events</param>
         /// <param name="filter">A TestFilter used to select tests</param>
         /// <returns>A TestEngineResult giving the result of the test execution</returns>
-        public TestEngineResult Run(ITestEventHandler listener, TestFilter filter)
+        public TestEngineResult Run(ITestEventListener listener, TestFilter filter)
         {
             if (_runner == null)
                 throw new InvalidOperationException("RemoteTestAgent: Run called before Load");
@@ -184,12 +184,12 @@ namespace NUnit.Engine.Agents
         /// </summary>
         /// <param name="listener">An ITestEventHandler to receive events</param>
         /// <param name="filter">A TestFilter used to select tests</param>
-        public void RunAsynchronously(ITestEventHandler listener, TestFilter filter)
+        public void RunAsync(ITestEventListener listener, TestFilter filter)
         {
             if (_runner == null)
                 throw new InvalidOperationException("RemoteTestAgent: BeginRUn called before Load");
 
-            _runner.RunAsynchronously(listener, filter);
+            _runner.RunAsync(listener, filter);
         }
 
         public void CancelRun()

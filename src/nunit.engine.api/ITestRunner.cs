@@ -66,18 +66,16 @@ namespace NUnit.Engine
         /// Run the tests in the loaded TestPackage and return a test result. The tests
         /// are run synchronously and the listener interface is notified as it progresses.
         /// </summary>
-        /// <param name="listener">An ITestEventHandler to receive events</param>
         /// <param name="filter">A TestFilter used to select tests</param>
         /// <returns>An XmlNode giving the result of the test execution</returns>
-        XmlNode Run(ITestEventHandler listener, TestFilter filter);
+        XmlNode Run(ITestEventListener listener, TestFilter filter);
 
         /// <summary>
         /// Start a run of the tests in the loaded TestPackage. The tests are run
         /// asynchronously and the listener interface is notified as it progresses.
         /// </summary>
-        /// <param name="listener">An ITestEventHandler to receive events</param>
         /// <param name="filter">A TestFilter used to select tests</param>
-        void RunAsynchronously(ITestEventHandler listener, TestFilter filter);
+        void RunAsync(ITestEventListener listener, TestFilter filter);
 
         /// <summary>
         /// Cancel the current test run. If no test is running,

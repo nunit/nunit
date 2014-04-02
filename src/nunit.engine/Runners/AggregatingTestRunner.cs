@@ -129,7 +129,7 @@ namespace NUnit.Engine.Runners
         /// <returns>
         /// A TestEngineResult giving the result of the test execution.
         /// </returns>
-        protected override TestEngineResult RunTests(ITestEventHandler listener, TestFilter filter)
+        protected override TestEngineResult RunTests(ITestEventListener listener, TestFilter filter)
         {
             List<TestEngineResult> results = new List<TestEngineResult>();
 
@@ -149,7 +149,7 @@ namespace NUnit.Engine.Runners
         /// </summary>
         /// <param name="listener">An ITestEventHandler to receive events</param>
         /// <param name="filter">A TestFilter used to select tests</param>
-        protected override void RunTestsAsynchronously(ITestEventHandler listener, TestFilter filter)
+        protected override void RunTestsAsynchronously(ITestEventListener listener, TestFilter filter)
         {
             throw new NotImplementedException();
         }

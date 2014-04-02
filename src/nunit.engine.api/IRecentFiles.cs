@@ -38,22 +38,10 @@ namespace NUnit.Engine
 		int MaxFiles { get; set; }
 
 		/// <summary>
-		/// The current number of saved files
-		/// </summary>
-		int Count { get; }
-
-		/// <summary>
 		/// Get a list of all the file entries
 		/// </summary>
 		/// <returns>The most recent file list</returns>
-		IList<RecentFileEntry> Entries { get; }
-
-		/// <summary>
-		/// Set the most recent file entry, reordering
-		/// the saved names as needed and removing the oldest
-		/// if the max number of files would be exceeded.
-		/// </summary>
-		void SetMostRecent( RecentFileEntry entry );
+		IList<string> Entries { get; }
 
 		/// <summary>
 		/// Set the most recent file name, reordering

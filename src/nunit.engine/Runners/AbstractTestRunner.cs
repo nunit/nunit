@@ -120,7 +120,7 @@ namespace NUnit.Engine.Runners
         /// <param name="listener">An ITestEventHandler to receive events</param>
         /// <param name="filter">A TestFilter used to select tests</param>
         /// <returns>A TestEngineResult giving the result of the test execution</returns>
-        protected abstract TestEngineResult RunTests(ITestEventHandler listener, TestFilter filter);
+        protected abstract TestEngineResult RunTests(ITestEventListener listener, TestFilter filter);
 
         /// <summary>
         /// Start a run of the tests in the loaded TestPackage, returning immediately.
@@ -129,7 +129,7 @@ namespace NUnit.Engine.Runners
         /// </summary>
         /// <param name="listener">An ITestEventHandler to receive events</param>
         /// <param name="filter">A TestFilter used to select tests</param>
-        protected abstract void RunTestsAsynchronously(ITestEventHandler listener, TestFilter filter);
+        protected abstract void RunTestsAsynchronously(ITestEventListener listener, TestFilter filter);
 
         #endregion
 
@@ -199,7 +199,7 @@ namespace NUnit.Engine.Runners
         /// <param name="listener">An ITestEventHandler to receive events</param>
         /// <param name="filter">A TestFilter used to select tests</param>
         /// <returns>A TestEngineResult giving the result of the test execution</returns>
-        public TestEngineResult Run(ITestEventHandler listener, TestFilter filter)
+        public TestEngineResult Run(ITestEventListener listener, TestFilter filter)
         {
             EnsurePackageIsLoaded();
 
@@ -213,7 +213,7 @@ namespace NUnit.Engine.Runners
         /// </summary>
         /// <param name="listener">An ITestEventHandler to receive events</param>
         /// <param name="filter">A TestFilter used to select tests</param>
-        public void RunAsynchronously(ITestEventHandler listener, TestFilter filter)
+        public void RunAsync(ITestEventListener listener, TestFilter filter)
         {
             EnsurePackageIsLoaded();
 

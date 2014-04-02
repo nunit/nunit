@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2011 Charlie Poole
+// Copyright (c) 2011-2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -28,11 +28,15 @@ namespace NUnit.Engine
 {
     /// <summary>
     /// ITestEngine represents an instance of the test engine.
+    /// Clients wanting to discover, explore or run tests start
+    /// require an instance of the engine, which is generally 
+    /// acquired from the TestEngineActivator class.
     /// </summary>
     public interface ITestEngine : IDisposable
     {
         /// <summary>
-        /// Access the Engine Services
+        /// Gets the IServiceLocator interface, which gives access to
+        /// certain services provided by the engine.
         /// </summary>
         IServiceLocator Services { get; }
 
@@ -50,8 +54,8 @@ namespace NUnit.Engine
         void InitializeServices(string workDirectory, InternalTraceLevel traceLevel);
 
         /// <summary>
-        /// Returns a test runner instance for use by clients that need to load the
-        /// tests once and run them multiple times.
+        /// Returns a test runner instance for use by clients in discovering,
+        /// exploring and exeuting tests.
         /// </summary>
         /// <param name="package">The TestPackage for which the runner is intended.</param>
         /// <returns>An ITestRunner.</returns>
