@@ -4,9 +4,6 @@
 // Licensed under the Open Software License version 3.0
 // *****************************************************
 
-using System;
-using NUnit.Framework;
-
 namespace NUnit.Framework.Internal
 {
     [TestFixture]

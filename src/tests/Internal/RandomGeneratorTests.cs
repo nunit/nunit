@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections;
-using NUnit.Framework.Internal;
 using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Internal

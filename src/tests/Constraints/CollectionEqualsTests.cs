@@ -4,13 +4,10 @@
 // Licensed under the Open Software License version 3.0
 // *****************************************************
 
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using NUnit.Framework;
 using NUnit.Framework.Internal;
 using NUnit.TestUtilities.Collections;
-using Env = NUnit.Env;
 
 namespace NUnit.Framework.Constraints
 {

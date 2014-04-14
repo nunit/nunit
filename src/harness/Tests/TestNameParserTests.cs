@@ -4,9 +4,6 @@
 // obtain a copy of the license at http://nunit.org
 // ****************************************************************
 
-using System;
-using NUnit.Framework;
-
 namespace NUnit.Framework.TestHarness.Tests
 {
     public class TestNameParserTests

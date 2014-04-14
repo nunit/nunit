@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace NUnit.Framework.Interfaces
+﻿namespace NUnit.Framework.Interfaces
 {
     /// <summary>
     /// An object implementing IXmlNodeBuilder is able to build 
