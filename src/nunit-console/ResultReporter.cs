@@ -51,9 +51,8 @@ namespace NUnit.ConsoleRunner
         }
 
         /// <summary>
-        /// Reports the results.
+        /// Reports the results to the console
         /// </summary>
-        /// <param name="result">The result.</param>
         public void ReportResults()
         {
             if (options.StopOnError && summary.ErrorsAndFailures > 0)
