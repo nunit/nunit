@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace NUnit.Framework.Internal
+﻿namespace NUnit.Framework.Internal
 {
     /// <summary>
     /// Provides methods to support legacy string comparison methods.
