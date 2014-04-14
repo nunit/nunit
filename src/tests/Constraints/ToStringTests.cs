@@ -4,8 +4,6 @@
 // obtain a copy of the license at http://nunit.org
 // ****************************************************************
 
-using System;
-
 namespace NUnit.Framework.Constraints
 {
     public class ToStringTests
