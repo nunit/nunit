@@ -23,6 +23,7 @@
 
 using System;
 using System.Globalization;
+using System.Text.RegularExpressions;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal
@@ -441,7 +442,7 @@ namespace NUnit.Framework.Internal
 
             if (this.Message != null)
             {
-                failureNode.AddElement("message").TextContent = this.Message;
+                failureNode.AddElement("message").TextContent = EscapeInvalidXmlCharacters(this.Message);
             }
 
             if (this.StackTrace != null)
@@ -450,6 +451,20 @@ namespace NUnit.Framework.Internal
             }
 
             return failureNode;
+        }
+
+        static string EscapeInvalidXmlCharacters(string str)
+        {
+            // Based on the XML spec http://www.w3.org/TR/xml/#charsets
+            // For detailed explanation of the regex see http://mnaoumov.wordpress.com/2014/06/15/escaping-invalid-xml-unicode-characters/
+
+            var invalidXmlCharactersRegex = new Regex("[^\u0009\u000a\u000d\u0020-\ufffd]|([\ud800-\udbff](?![\udc00-\udfff]))|((?<![\ud800-\udbff])[\udc00-\udfff])");
+            return invalidXmlCharactersRegex.Replace(str, match => CharToUnicodeSequence(match.Value[0]));
+        }
+
+        static string CharToUnicodeSequence(char symbol)
+        {
+            return string.Format("\\u{0}", ((int) symbol).ToString("x4"));
         }
 
         #endregion
