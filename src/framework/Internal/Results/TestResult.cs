@@ -107,6 +107,18 @@ namespace NUnit.Framework.Internal
         public string Message { get; private set; }
 
         /// <summary>
+        /// Gets the escaped message associated with a test
+        /// failure or with not running the test
+        /// </summary>
+        public string EscapedMessage
+        {
+            get
+            {
+                return EscapeInvalidXmlCharacters(Message);
+            }
+        }
+
+        /// <summary>
         /// Gets any stacktrace associated with an
         /// error or failure. Not available in
         /// the Compact Framework 1.0.
@@ -427,7 +439,7 @@ namespace NUnit.Framework.Internal
         private XmlNode AddReasonElement(XmlNode targetNode)
         {
             XmlNode reasonNode = targetNode.AddElement("reason");
-            reasonNode.AddElement("message").TextContent = this.Message;
+            reasonNode.AddElement("message").TextContent = this.EscapedMessage;
             return reasonNode;
         }
 
@@ -442,7 +454,7 @@ namespace NUnit.Framework.Internal
 
             if (this.Message != null)
             {
-                failureNode.AddElement("message").TextContent = EscapeInvalidXmlCharacters(this.Message);
+                failureNode.AddElement("message").TextContent = this.EscapedMessage;
             }
 
             if (this.StackTrace != null)
