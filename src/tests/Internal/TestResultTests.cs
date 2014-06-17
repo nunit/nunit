@@ -112,6 +112,34 @@ namespace NUnit.Framework.Internal
             Assert.AreEqual("3", suiteNode.FindDescendant("properties/property[@name='Value']").Attributes["value"]);
         }
 
+        [Test]
+        public void TestResultXmlNodeEscapesInvalidXmlCharacters()
+        {
+            if (ResultState == null)
+                Assert.Ignore("Test ignored because ResultState is not set");
+
+            testResult.SetResult(ResultState, "Invalid Characters: \u0001\u0008\u000b\u001f\ud800; Valid Characters: \u0009\u000a\u000d\u0020\ufffd\ud800\udc00");
+            XmlNode testNode = testResult.ToXml(true);
+            XmlNode reasonNode = testNode.FindDescendant(ReasonNodeName);
+            
+            Assert.That(reasonNode, Is.Not.Null, "No <{0}> element found", ReasonNodeName);
+            
+            XmlNode messageNode = reasonNode.FindDescendant("message");
+            
+            Assert.That(messageNode, Is.Not.Null, "No <message> element found");
+            Assert.That(messageNode.TextContent, Is.EqualTo("Invalid Characters: \\u0001\\u0008\\u000b\\u001f\\ud800; Valid Characters: \u0009\u000a\u000d\u0020\ufffd\ud800\udc00"));
+        }
+
+        protected virtual ResultState ResultState
+        {
+            get { return null; }
+        }
+
+        protected virtual string ReasonNodeName
+        {
+            get { return "reason"; }
+        }
+
         protected abstract void SimulateTestRun();
 
         public class DummySuite
@@ -175,6 +203,11 @@ namespace NUnit.Framework.Internal
 
     public class SuccessResultTests : TestResultTests
     {
+        protected override ResultState ResultState
+        {
+            get { return ResultState.Success; }
+        }
+
         protected override void SimulateTestRun()
         {
             testResult.SetResult(ResultState.Success, "Test passed!");
@@ -302,6 +335,11 @@ namespace NUnit.Framework.Internal
             Assert.Null(reason.FindDescendant("stack-trace"));
         }
 
+        protected override ResultState ResultState
+        {
+            get { return ResultState.Ignored; }
+        }
+
         [Test]
         public void SuiteResultXmlNodeIsIgnored()
         {
@@ -389,6 +427,16 @@ namespace NUnit.Framework.Internal
             Assert.AreEqual("stack trace", stacktraceNode.TextContent);
         }
 
+        protected override ResultState ResultState
+        {
+            get { return ResultState.Failure; }
+        }
+
+        protected override string ReasonNodeName
+        {
+            get { return "failure"; }
+        }
+
         [Test]
         public void SuiteResultXmlNodeIsFailure()
         {
@@ -427,6 +475,11 @@ namespace NUnit.Framework.Internal
 
     public class InconclusiveResultTests : TestResultTests
     {
+        protected override ResultState ResultState
+        {
+            get { return ResultState.Inconclusive; }
+        }
+
         protected override void SimulateTestRun()
         {
             testResult.SetResult(ResultState.Inconclusive, "because");
