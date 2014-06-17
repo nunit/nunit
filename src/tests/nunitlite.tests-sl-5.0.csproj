@@ -115,6 +115,7 @@
     <Compile Include="Attributes\TestMethodBuilderTests.cs" />
     <Compile Include="Attributes\TheoryTests.cs" />
     <Compile Include="Attributes\TimeoutTests.cs" />
+    <Compile Include="Attributes\ValuesAttributeEnumTests.cs" />
     <Compile Include="Attributes\ValuesAttributeTests.cs" />
     <Compile Include="Attributes\ValueSourceTests.cs" />
     <Compile Include="Constraints\AllItemsConstraintTests.cs" />

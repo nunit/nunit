@@ -45,6 +45,15 @@ namespace NUnit.Framework
         protected object[] data;
 
         /// <summary>
+        /// Constructs for use with an Enum parameter. Will pass every enum
+        /// value in to the test.
+        /// </summary>
+        public ValuesAttribute()
+        {
+            data = null;
+        }
+
+        /// <summary>
         /// Construct with one argument
         /// </summary>
         /// <param name="arg1"></param>
@@ -90,11 +99,25 @@ namespace NUnit.Framework
         {
             Type targetType = parameter.ParameterType;
 
+            if (targetType.IsEnum && data == null)
+            {
+                return GetEnumData(targetType);
+            }
+            return GetData(targetType);
+        }
+
+        private IEnumerable GetEnumData(Type targetType)
+        {
+            return Enum.GetValues(targetType);
+        }
+
+        private IEnumerable GetData(Type targetType)
+        {
             for (int i = 0; i < data.Length; i++)
             {
                 object arg = data[i];
 
-                if (arg == null) 
+                if (arg == null)
                     continue;
 
                 if (arg.GetType().FullName == "NUnit.Framework.SpecialValue" &&
