@@ -24,6 +24,7 @@
 using System;
 using System.Collections;
 using System.Reflection;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Framework
 {
@@ -43,6 +44,15 @@ namespace NUnit.Framework
         /// </summary>
         // TODO: This causes a lot of boxing so we should eliminate it
         protected object[] data;
+
+        /// <summary>
+        /// Constructs for use with an Enum parameter. Will pass every enum
+        /// value in to the test.
+        /// </summary>
+        public ValuesAttribute()
+        {
+            data = new object[]{};
+        }
 
         /// <summary>
         /// Construct with one argument
@@ -90,11 +100,24 @@ namespace NUnit.Framework
         {
             Type targetType = parameter.ParameterType;
 
+            if (targetType.IsEnum && data.Length == 0)
+            {
+                return TypeHelper.GetEnumValues(targetType);
+            }
+            if (targetType == typeof(bool) && data.Length == 0)
+            {
+                return new object[] {true, false};
+            }
+            return GetData(targetType);
+        }
+
+        private IEnumerable GetData(Type targetType)
+        {
             for (int i = 0; i < data.Length; i++)
             {
                 object arg = data[i];
 
-                if (arg == null) 
+                if (arg == null)
                     continue;
 
                 if (arg.GetType().FullName == "NUnit.Framework.SpecialValue" &&
