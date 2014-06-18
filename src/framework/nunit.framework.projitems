@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
@@ -9,6 +9,7 @@
     <Import_RootNamespace>NUnit.Framework</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Internal\SimpleCategoryExpression.cs" />
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
@@ -68,6 +69,7 @@
     <Compile Include="Attributes\ValuesAttribute.cs" />
     <Compile Include="Attributes\ValueSourceAttribute.cs" />
     <Compile Include="CollectionAssert.cs" />
+    <Compile Include="Compatibility\SerializableAttribute.cs" />
     <Compile Include="Constraints\AllItemsConstraint.cs" />
     <Compile Include="Constraints\AndConstraint.cs" />
     <Compile Include="Constraints\AssignableFromConstraint.cs" />
@@ -304,14 +306,14 @@
     <Compile Include="Internal\Results\TestCaseResult.cs" />
     <Compile Include="Internal\Results\TestSuiteResult.cs" />
     <None Include="nunit.framework.build" />
-    <None Include="nunitlite.build">
-      <SubType>Designer</SubType>
-    </None>
     <Compile Include="Constraints\ExactCountConstraint.cs" />
     <Compile Include="Constraints\Operators\ExactCountOperator.cs" />
     <Compile Include="Constraints\ExceptionTypeConstraint.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Attributes\AttributeHierarchy.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="nunit.snk" />
   </ItemGroup>
 </Project>

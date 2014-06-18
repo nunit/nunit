@@ -111,13 +111,26 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Universal", "Universal", "{
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "nunit.framework", "src\framework\nunit.framework.shproj", "{BD6A6EE4-F960-4E46-B68A-E0D002C8DEC6}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "nunitlite", "src\framework\nunitlite.shproj", "{4BC19EFF-0267-414C-B047-16EE6EC542C7}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		src\framework\nunit.framework.projitems*{ee7e1d47-c686-496a-81f2-b05f085bc21f}*SharedItemsImports = 4
 		src\framework\nunit.framework.projitems*{bd6a6ee4-f960-4e46-b68a-e0d002c8dec6}*SharedItemsImports = 13
+		src\framework\nunit.framework.projitems*{73a8b041-e719-443d-bf32-7944f117996c}*SharedItemsImports = 4
+		src\framework\nunitlite.projitems*{73a8b041-e719-443d-bf32-7944f117996c}*SharedItemsImports = 4
+		src\framework\nunit.framework.projitems*{8c09bb92-c5f6-496c-bee7-bb16677823d6}*SharedItemsImports = 4
+		src\framework\nunitlite.projitems*{8c09bb92-c5f6-496c-bee7-bb16677823d6}*SharedItemsImports = 4
+		src\framework\nunit.framework.projitems*{22857a11-108d-48c6-9a23-2217d2f2c365}*SharedItemsImports = 4
+		src\framework\nunitlite.projitems*{22857a11-108d-48c6-9a23-2217d2f2c365}*SharedItemsImports = 4
 		src\framework\nunit.framework.projitems*{12b66b03-90f1-4992-bd33-bdf3c69ae49e}*SharedItemsImports = 4
 		src\framework\nunit.framework.projitems*{6a281c98-b74d-403b-8536-966871b992e3}*SharedItemsImports = 4
+		src\framework\nunit.framework.projitems*{0bfa7f0a-bc15-40a5-863a-fa9b55ae2fd3}*SharedItemsImports = 4
+		src\framework\nunitlite.projitems*{0bfa7f0a-bc15-40a5-863a-fa9b55ae2fd3}*SharedItemsImports = 4
+		src\framework\nunitlite.projitems*{4bc19eff-0267-414c-b047-16ee6ec542c7}*SharedItemsImports = 13
 		src\framework\nunit.framework.projitems*{d209c368-1277-4ea6-a887-aa6eba51ab99}*SharedItemsImports = 4
+		src\framework\nunit.framework.projitems*{3deb15f9-e7da-403f-b6d3-a8499310397f}*SharedItemsImports = 4
+		src\framework\nunitlite.projitems*{3deb15f9-e7da-403f-b6d3-a8499310397f}*SharedItemsImports = 4
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -325,6 +338,7 @@ Global
 		{2B797154-2349-4E0A-A3FD-08E620152B9A} = {118DBC26-55ED-43CB-A5E8-94FBCD2750D5}
 		{8BD8DAEC-1FBC-4916-BD71-27C31C0E11E4} = {D2AC1C45-31F4-48A2-A9EF-81685E7CA0F7}
 		{BD6A6EE4-F960-4E46-B68A-E0D002C8DEC6} = {9898E62C-95E1-4901-B31D-8509BF1E40AD}
+		{4BC19EFF-0267-414C-B047-16EE6EC542C7} = {9898E62C-95E1-4901-B31D-8509BF1E40AD}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = src\direct-runner\direct-runner-4.0.csproj
