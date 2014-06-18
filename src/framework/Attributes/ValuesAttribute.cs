@@ -104,6 +104,10 @@ namespace NUnit.Framework
             {
                 return TypeHelper.GetEnumValues(targetType);
             }
+            if (targetType == typeof(bool) && data.Length == 0)
+            {
+                return new object[] {true, false};
+            }
             return GetData(targetType);
         }
 

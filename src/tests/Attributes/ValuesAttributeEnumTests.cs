@@ -42,24 +42,33 @@ namespace NUnit.Framework.Tests.Attributes
     [TestFixture]
     public class ValuesAttributeEnumTests
     {
-        private int _count;
+        private int _countEnums;
+        private int _countBools;
 
         [OneTimeSetUp]
         public void TestFixtureSetup()
         {
-            _count = 0;
+            _countEnums = 0;
+            _countBools = 0;
         }
 
         [OneTimeTearDown]
         public void TestFixtureTeardown()
         {
-            Assert.That(_count, Is.EqualTo(5), "The TestEnumValues method should have been called 5 times");
+            Assert.That(_countEnums, Is.EqualTo(5), "The TestEnumValues method should have been called 5 times");
+            Assert.That(_countBools, Is.EqualTo(2), "The TestBoolValues method should have been called twice");
         }
 
         [Test]
         public void TestEnumValues([Values]EnumValues value)
         {
-            _count++;
+            _countEnums++;
+        }
+
+        [Test]
+        public void TestBoolValues([Values]bool value)
+        {
+            _countBools++;
         }
     }
 }
