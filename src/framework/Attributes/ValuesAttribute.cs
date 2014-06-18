@@ -24,6 +24,7 @@
 using System;
 using System.Collections;
 using System.Reflection;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Framework
 {
@@ -50,7 +51,7 @@ namespace NUnit.Framework
         /// </summary>
         public ValuesAttribute()
         {
-            data = null;
+            data = new object[]{};
         }
 
         /// <summary>
@@ -99,16 +100,11 @@ namespace NUnit.Framework
         {
             Type targetType = parameter.ParameterType;
 
-            if (targetType.IsEnum && data == null)
+            if (targetType.IsEnum && data.Length == 0)
             {
-                return GetEnumData(targetType);
+                return TypeHelper.GetEnumValues(targetType);
             }
             return GetData(targetType);
-        }
-
-        private IEnumerable GetEnumData(Type targetType)
-        {
-            return Enum.GetValues(targetType);
         }
 
         private IEnumerable GetData(Type targetType)
