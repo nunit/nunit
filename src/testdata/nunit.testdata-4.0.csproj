@@ -59,48 +59,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\CommonAssemblyInfo.cs">
-      <Link>CommonAssemblyInfo.cs</Link>
-    </Compile>
-    <Compile Include="AssertCountFixture.cs" />
-    <Compile Include="AssertFailFixture.cs" />
-    <Compile Include="AssertIgnoreData.cs" />
-    <Compile Include="AsyncDummyFixture.cs" />
-    <Compile Include="AsyncRealFixture.cs" />
-    <Compile Include="AttributeInheritanceData.cs" />
-    <Compile Include="CategoryAttributeData.cs" />
-    <Compile Include="CultureAttributeData.cs" />
-    <Compile Include="DatapointFixture.cs" />
-    <Compile Include="DescriptionFixture.cs" />
-    <Compile Include="FixtureSetUpTearDownData.cs" />
-    <Compile Include="LegacySuiteData.cs" />
-    <Compile Include="MaxTimeFixture.cs" />
-    <Compile Include="ParameterizedTestFixture.cs" />
-    <Compile Include="PropertyAttributeTests.cs" />
-    <Compile Include="RepeatedTestFixture.cs" />
-    <Compile Include="SetUpData.cs" />
-    <Compile Include="SetUpFixtureData.cs" />
-    <Compile Include="TestCaseAttributeFixture.cs" />
-    <Compile Include="TestCaseSourceAttributeFixture.cs" />
-    <Compile Include="TestContextData.cs" />
-    <Compile Include="TestFixtureData.cs" />
-    <Compile Include="TestFixtureExtensionData.cs" />
-    <Compile Include="TestMethodSignatureFixture.cs" />
-    <Compile Include="TheoryFixture.cs" />
-    <Compile Include="TimeoutFixture.cs" />
-    <Compile Include="UnexpectedExceptionFixture.cs" />
-    <Compile Include="UnhandledExceptions.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="nunit.testdata.build" />
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\framework\nunit.framework-4.0.csproj">
       <Project>{6A281C98-B74D-403B-8536-966871B992E3}</Project>
       <Name>nunit.framework-4.0</Name>
     </ProjectReference>
   </ItemGroup>
+  <Import Project="nunit.testdata.projitems" Label="Shared" />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="..\..\packages\Microsoft.Bcl.Build.1.0.4\tools\Microsoft.Bcl.Build.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

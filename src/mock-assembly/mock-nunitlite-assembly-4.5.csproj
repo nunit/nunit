@@ -73,21 +73,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\CommonAssemblyInfo.cs">
-      <Link>CommonAssemblyInfo.cs</Link>
-    </Compile>
-    <Compile Include="AssemblyInfo.cs" />
-    <Compile Include="MockAssembly.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="mock-assembly.build" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\framework\nunitlite-4.5.csproj">
       <Project>{22857a11-108d-48c6-9a23-2217d2f2c365}</Project>
       <Name>nunitlite-4.5</Name>
     </ProjectReference>
   </ItemGroup>
+  <Import Project="mock-nunit-assembly.projitems" Label="Shared" />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>

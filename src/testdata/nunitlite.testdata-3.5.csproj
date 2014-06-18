@@ -59,38 +59,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\CommonAssemblyInfo.cs">
-      <Link>CommonAssemblyInfo.cs</Link>
-    </Compile>
-    <Compile Include="AssertCountFixture.cs" />
-    <Compile Include="AssertFailFixture.cs" />
-    <Compile Include="AssertIgnoreData.cs" />
-    <Compile Include="AttributeInheritanceData.cs" />
-    <Compile Include="CategoryAttributeData.cs" />
-    <Compile Include="CultureAttributeData.cs" />
-    <Compile Include="DatapointFixture.cs" />
-    <Compile Include="DescriptionFixture.cs" />
-    <Compile Include="FixtureSetUpTearDownData.cs" />
-    <Compile Include="MaxTimeFixture.cs" />
-    <Compile Include="ParameterizedTestFixture.cs" />
-    <Compile Include="PropertyAttributeTests.cs" />
-    <Compile Include="RepeatedTestFixture.cs" />
-    <Compile Include="SetUpData.cs" />
-    <Compile Include="SetUpFixtureData.cs" />
-    <Compile Include="TestCaseAttributeFixture.cs" />
-    <Compile Include="TestCaseSourceAttributeFixture.cs" />
-    <Compile Include="TestContextData.cs" />
-    <Compile Include="TestFixtureData.cs" />
-    <Compile Include="TestMethodSignatureFixture.cs" />
-    <Compile Include="TheoryFixture.cs" />
-    <Compile Include="TimeoutFixture.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="nunitlite.testdata.build">
-      <SubType>Designer</SubType>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">
       <Visible>False</Visible>
       <ProductName>Microsoft .NET Framework 4 %28x86 and x64%29</ProductName>
@@ -118,6 +86,7 @@
       <Name>nunitlite-3.5</Name>
     </ProjectReference>
   </ItemGroup>
+  <Import Project="nunit.testdata.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

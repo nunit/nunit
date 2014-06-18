@@ -55,39 +55,7 @@
       <Name>nunitlite-sl-5.0</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Properties\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="..\CommonAssemblyInfo.cs">
-      <Link>CommonAssemblyInfo.cs</Link>
-    </Compile>
-    <Compile Include="AssertCountFixture.cs" />
-    <Compile Include="AssertFailFixture.cs" />
-    <Compile Include="AssertIgnoreData.cs" />
-    <Compile Include="AttributeInheritanceData.cs" />
-    <Compile Include="CategoryAttributeData.cs" />
-    <Compile Include="CultureAttributeData.cs" />
-    <Compile Include="DatapointFixture.cs" />
-    <Compile Include="DescriptionFixture.cs" />
-    <Compile Include="FixtureSetUpTearDownData.cs" />
-    <Compile Include="MaxTimeFixture.cs" />
-    <Compile Include="ParameterizedTestFixture.cs" />
-    <Compile Include="PropertyAttributeTests.cs" />
-    <Compile Include="RepeatedTestFixture.cs" />
-    <Compile Include="SetUpData.cs" />
-    <Compile Include="SetUpFixtureData.cs" />
-    <Compile Include="TestCaseAttributeFixture.cs" />
-    <Compile Include="TestCaseSourceAttributeFixture.cs" />
-    <Compile Include="TestContextData.cs" />
-    <Compile Include="TestFixtureData.cs" />
-    <Compile Include="TestMethodSignatureFixture.cs" />
-    <Compile Include="TheoryFixture.cs" />
-    <Compile Include="TimeoutFixture.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="nunitlite.testdata.build" />
-  </ItemGroup>
+  <Import Project="nunit.testdata.projitems" Label="Shared" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Silverlight\$(SilverlightVersion)\Microsoft.Silverlight.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>

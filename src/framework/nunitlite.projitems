@@ -19,6 +19,5 @@
     <Compile Include="Runner\ResultSummary.cs" />
     <Compile Include="Runner\TcpWriter.cs" />
     <Compile Include="Runner\TextUI.cs" />
-    <None Include="nunitlite.build" />
   </ItemGroup>
 </Project>

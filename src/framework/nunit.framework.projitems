@@ -305,12 +305,12 @@
     <Compile Include="Throws.cs" />
     <Compile Include="Internal\Results\TestCaseResult.cs" />
     <Compile Include="Internal\Results\TestSuiteResult.cs" />
-    <None Include="nunit.framework.build" />
     <Compile Include="Constraints\ExactCountConstraint.cs" />
     <Compile Include="Constraints\Operators\ExactCountOperator.cs" />
     <Compile Include="Constraints\ExceptionTypeConstraint.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="$(MSBuildThisFileDirectory)Interfaces\InterfaceChanges.txt" />
     <Content Include="Attributes\AttributeHierarchy.txt" />
   </ItemGroup>
   <ItemGroup>
