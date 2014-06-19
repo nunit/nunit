@@ -4,6 +4,8 @@
 // Licensed under the Open Software License version 3.0
 // *****************************************************
 
+#if NUNITLITE
+
 using System;
 using System.IO;
 using NUnit.Framework;
@@ -284,3 +286,4 @@ namespace NUnitLite.Runner.Tests
 #endif
     }
 }
+#endif

@@ -59,35 +59,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\CommonAssemblyInfo.cs">
-      <Link>CommonAssemblyInfo.cs</Link>
-    </Compile>
-    <Compile Include="AssemblyInfo.cs" />
-    <Compile Include="CallbackHandler.cs" />
-    <Compile Include="CommandLineOptions.cs" />
-    <Compile Include="ConsoleRunner.cs" />
-    <Compile Include="FrameworkDriver.cs" />
-    <Compile Include="NUnit2TestResultWriter.cs" />
-    <Compile Include="NUnit3TestResultWriter.cs" />
-    <Compile Include="Options.cs" />
-    <Compile Include="Program.cs" />
-    <Compile Include="ResultReporter.cs" />
-    <Compile Include="ResultSummary.cs" />
-    <Compile Include="RunTestsCallbackHandler.cs" />
-    <Compile Include="StackTraceFilter.cs" />
-    <Compile Include="TestFilterBuilder.cs" />
-    <Compile Include="TestNameParser.cs" />
-    <Compile Include="Tests\CommandLineOptionTests.cs" />
-    <Compile Include="Tests\TestFilterBuilderTests.cs" />
-    <Compile Include="Tests\TestNameParserTests.cs" />
-    <Compile Include="XmlHelper.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="test-harness.build">
-      <SubType>Designer</SubType>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">
       <Visible>False</Visible>
       <ProductName>Microsoft .NET Framework 4 %28x86 and x64%29</ProductName>
@@ -115,6 +86,7 @@
       <Name>nunit.framework-2.0</Name>
     </ProjectReference>
   </ItemGroup>
+  <Import Project="test-harness.projitems" Label="Shared" />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>4BC19EFF-0267-414C-B047-16EE6EC542C7</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>NUnit.Framework</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Runner\CommandLineOptions.cs" />
+    <Compile Include="Runner\ConsoleWriter.cs" />
+    <Compile Include="Runner\DebugWriter.cs" />
+    <Compile Include="Runner\OutputWriters\NUnit2XmlOutputWriter.cs" />
+    <Compile Include="Runner\OutputWriters\NUnit3XmlOutputWriter.cs" />
+    <Compile Include="Runner\OutputWriters\OutputWriter.cs" />
+    <Compile Include="Runner\ResultReporter.cs" />
+    <Compile Include="Runner\ResultSummary.cs" />
+    <Compile Include="Runner\TcpWriter.cs" />
+    <Compile Include="Runner\TextUI.cs" />
+  </ItemGroup>
+</Project>

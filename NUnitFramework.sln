@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30501.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NET-2.0", "NET-2.0", "{F49E75DB-17E6-4B3B-B21B-F98015965737}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.framework.tests-2.0", "src\tests\nunit.framework.tests-2.0.csproj", "{EA9871E3-9972-4476-821E-3961C28125E8}"
@@ -105,7 +107,73 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mock-nunitlite-assembly-4.0
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mock-nunitlite-assembly-4.5", "src\mock-assembly\mock-nunitlite-assembly-4.5.csproj", "{8BD8DAEC-1FBC-4916-BD71-27C31C0E11E4}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Universal", "Universal", "{9898E62C-95E1-4901-B31D-8509BF1E40AD}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "nunit.framework", "src\framework\nunit.framework.shproj", "{BD6A6EE4-F960-4E46-B68A-E0D002C8DEC6}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "nunitlite", "src\framework\nunitlite.shproj", "{4BC19EFF-0267-414C-B047-16EE6EC542C7}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "test-harness", "src\harness\test-harness.shproj", "{280C9B49-6B3F-4008-A259-DB9FDD419774}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "mock-nunit-assembly", "src\mock-assembly\mock-nunit-assembly.shproj", "{59461868-B402-4574-95C0-0E1145498539}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "nunit.testdata", "src\testdata\nunit.testdata.shproj", "{CAF16052-B4F4-4C3D-B5E6-41CF7859EECE}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "nunit.framework.tests", "src\tests\nunit.framework.tests.shproj", "{5F11254D-CCA9-47C1-8AC5-E1526D178BD3}"
+EndProject
 Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		src\tests\nunit.framework.tests.projitems*{49ff585d-0d65-4bc2-ac46-c716c54f6cbf}*SharedItemsImports = 4
+		src\mock-assembly\mock-nunit-assembly.projitems*{7be679ef-3853-4e06-b4eb-c4c6808bc3f0}*SharedItemsImports = 4
+		src\harness\test-harness.projitems*{280c9b49-6b3f-4008-a259-db9fdd419774}*SharedItemsImports = 13
+		src\framework\nunit.framework.projitems*{ee7e1d47-c686-496a-81f2-b05f085bc21f}*SharedItemsImports = 4
+		src\tests\nunit.framework.tests.projitems*{a4f0c741-6ed4-46c8-ae75-57e1c7197e22}*SharedItemsImports = 4
+		src\harness\test-harness.projitems*{0ab71103-ee12-4b1c-999d-7b66c26863c8}*SharedItemsImports = 4
+		src\framework\nunit.framework.projitems*{bd6a6ee4-f960-4e46-b68a-e0d002c8dec6}*SharedItemsImports = 13
+		src\mock-assembly\mock-nunit-assembly.projitems*{8bd8daec-1fbc-4916-bd71-27c31c0e11e4}*SharedItemsImports = 4
+		src\testdata\nunit.testdata.projitems*{442dab16-3063-4fe3-90b6-c29c3d85360d}*SharedItemsImports = 4
+		src\tests\nunit.framework.tests.projitems*{a5cd398a-4f17-4973-a05f-540c05e04e96}*SharedItemsImports = 4
+		src\mock-assembly\mock-nunit-assembly.projitems*{7c36e4b4-16a7-450b-9919-ba35825f46b6}*SharedItemsImports = 4
+		src\testdata\nunit.testdata.projitems*{a59532c1-4c4f-48d8-9792-3bbac9e39252}*SharedItemsImports = 4
+		src\tests\nunit.framework.tests.projitems*{a18a4bb4-2188-464c-9fc0-53c3941789fb}*SharedItemsImports = 4
+		src\mock-assembly\mock-nunit-assembly.projitems*{59461868-b402-4574-95c0-0e1145498539}*SharedItemsImports = 13
+		src\tests\nunit.framework.tests.projitems*{0b5b1b19-d9d1-4e9c-80ee-37d4f56282c1}*SharedItemsImports = 4
+		src\testdata\nunit.testdata.projitems*{e7541163-d7bb-4e9a-a722-d7737b7a2995}*SharedItemsImports = 4
+		src\mock-assembly\mock-nunit-assembly.projitems*{c3264ff3-e2d7-48d7-93a7-cdc9a827ad9d}*SharedItemsImports = 4
+		src\framework\nunit.framework.projitems*{73a8b041-e719-443d-bf32-7944f117996c}*SharedItemsImports = 4
+		src\framework\nunitlite.projitems*{73a8b041-e719-443d-bf32-7944f117996c}*SharedItemsImports = 4
+		src\framework\nunit.framework.projitems*{8c09bb92-c5f6-496c-bee7-bb16677823d6}*SharedItemsImports = 4
+		src\framework\nunitlite.projitems*{8c09bb92-c5f6-496c-bee7-bb16677823d6}*SharedItemsImports = 4
+		src\mock-assembly\mock-nunit-assembly.projitems*{ddce1ae3-aa0d-4e2d-ad1b-8ca322afa7dd}*SharedItemsImports = 4
+		src\mock-assembly\mock-nunit-assembly.projitems*{2b797154-2349-4e0a-a3fd-08e620152b9a}*SharedItemsImports = 4
+		src\tests\nunit.framework.tests.projitems*{0ed3994a-c301-4c59-ae36-c62976dc28cc}*SharedItemsImports = 4
+		src\framework\nunit.framework.projitems*{22857a11-108d-48c6-9a23-2217d2f2c365}*SharedItemsImports = 4
+		src\framework\nunitlite.projitems*{22857a11-108d-48c6-9a23-2217d2f2c365}*SharedItemsImports = 4
+		src\harness\test-harness.projitems*{c5038911-f8c3-4b55-8b07-2f52c969176d}*SharedItemsImports = 4
+		src\mock-assembly\mock-nunit-assembly.projitems*{2e368281-3ba8-4050-b05e-0e0e43f8f446}*SharedItemsImports = 4
+		src\mock-assembly\mock-nunit-assembly.projitems*{54140ea6-eb39-49ff-ba63-997ebd41ea8f}*SharedItemsImports = 4
+		src\testdata\nunit.testdata.projitems*{749ff626-f36b-45c1-8a80-ab21a3655292}*SharedItemsImports = 4
+		src\harness\test-harness.projitems*{d69735de-4846-4239-b552-a423a8e8ce71}*SharedItemsImports = 4
+		src\testdata\nunit.testdata.projitems*{caf16052-b4f4-4c3d-b5e6-41cf7859eece}*SharedItemsImports = 13
+		src\framework\nunit.framework.projitems*{12b66b03-90f1-4992-bd33-bdf3c69ae49e}*SharedItemsImports = 4
+		src\tests\nunit.framework.tests.projitems*{5b8b0eab-3e74-48bb-8231-26e73b2019dc}*SharedItemsImports = 4
+		src\harness\test-harness.projitems*{126dbbb4-1731-4e0d-8937-4f2faadca0ef}*SharedItemsImports = 4
+		src\tests\nunit.framework.tests.projitems*{ea9871e3-9972-4476-821e-3961c28125e8}*SharedItemsImports = 4
+		src\framework\nunit.framework.projitems*{6a281c98-b74d-403b-8536-966871b992e3}*SharedItemsImports = 4
+		src\framework\nunit.framework.projitems*{0bfa7f0a-bc15-40a5-863a-fa9b55ae2fd3}*SharedItemsImports = 4
+		src\framework\nunitlite.projitems*{0bfa7f0a-bc15-40a5-863a-fa9b55ae2fd3}*SharedItemsImports = 4
+		src\testdata\nunit.testdata.projitems*{34ee6390-f2bb-44f0-bf1e-9ce553db6672}*SharedItemsImports = 4
+		src\framework\nunitlite.projitems*{4bc19eff-0267-414c-b047-16ee6ec542c7}*SharedItemsImports = 13
+		src\testdata\nunit.testdata.projitems*{15b64946-4989-4873-915c-3e181772fa03}*SharedItemsImports = 4
+		src\testdata\nunit.testdata.projitems*{a35e6ad6-6d46-41e1-8db1-a41086793893}*SharedItemsImports = 4
+		src\framework\nunit.framework.projitems*{d209c368-1277-4ea6-a887-aa6eba51ab99}*SharedItemsImports = 4
+		src\testdata\nunit.testdata.projitems*{a76794da-29a4-4d63-9850-e0e363a2fafd}*SharedItemsImports = 4
+		src\framework\nunit.framework.projitems*{3deb15f9-e7da-403f-b6d3-a8499310397f}*SharedItemsImports = 4
+		src\framework\nunitlite.projitems*{3deb15f9-e7da-403f-b6d3-a8499310397f}*SharedItemsImports = 4
+		src\tests\nunit.framework.tests.projitems*{5f11254d-cca9-47c1-8ac5-e1526d178bd3}*SharedItemsImports = 13
+		src\testdata\nunit.testdata.projitems*{213eed36-b2a9-4c61-9ecd-ea99da6ec5f4}*SharedItemsImports = 4
+		src\tests\nunit.framework.tests.projitems*{08d0f53a-cd37-4060-b5a2-bcc202f0de46}*SharedItemsImports = 4
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -279,8 +347,6 @@ Global
 		{442DAB16-3063-4FE3-90B6-C29C3D85360D} = {F49E75DB-17E6-4B3B-B21B-F98015965737}
 		{2E368281-3BA8-4050-B05E-0E0E43F8F446} = {F49E75DB-17E6-4B3B-B21B-F98015965737}
 		{12B66B03-90F1-4992-BD33-BDF3C69AE49E} = {F49E75DB-17E6-4B3B-B21B-F98015965737}
-		{126DBBB4-1731-4E0D-8937-4F2FAADCA0EF} = {F49E75DB-17E6-4B3B-B21B-F98015965737}
-		{7BE679EF-3853-4E06-B4EB-C4C6808BC3F0} = {F49E75DB-17E6-4B3B-B21B-F98015965737}
 		{7C36E4B4-16A7-450B-9919-BA35825F46B6} = {D28FCA4A-D6D8-4CA4-AB57-7D8114D68661}
 		{EE7E1D47-C686-496A-81F2-B05F085BC21F} = {D28FCA4A-D6D8-4CA4-AB57-7D8114D68661}
 		{8C09BB92-C5F6-496C-BEE7-BB16677823D6} = {D28FCA4A-D6D8-4CA4-AB57-7D8114D68661}
@@ -288,8 +354,6 @@ Global
 		{749FF626-F36B-45C1-8A80-AB21A3655292} = {D28FCA4A-D6D8-4CA4-AB57-7D8114D68661}
 		{A5CD398A-4F17-4973-A05F-540C05E04E96} = {D28FCA4A-D6D8-4CA4-AB57-7D8114D68661}
 		{A18A4BB4-2188-464C-9FC0-53C3941789FB} = {D28FCA4A-D6D8-4CA4-AB57-7D8114D68661}
-		{C5038911-F8C3-4B55-8B07-2F52C969176D} = {D28FCA4A-D6D8-4CA4-AB57-7D8114D68661}
-		{54140EA6-EB39-49FF-BA63-997EBD41EA8F} = {D28FCA4A-D6D8-4CA4-AB57-7D8114D68661}
 		{6A281C98-B74D-403B-8536-966871B992E3} = {118DBC26-55ED-43CB-A5E8-94FBCD2750D5}
 		{73A8B041-E719-443D-BF32-7944F117996C} = {118DBC26-55ED-43CB-A5E8-94FBCD2750D5}
 		{DDCE1AE3-AA0D-4E2D-AD1B-8CA322AFA7DD} = {118DBC26-55ED-43CB-A5E8-94FBCD2750D5}
@@ -297,8 +361,6 @@ Global
 		{34EE6390-F2BB-44F0-BF1E-9CE553DB6672} = {118DBC26-55ED-43CB-A5E8-94FBCD2750D5}
 		{08D0F53A-CD37-4060-B5A2-BCC202F0DE46} = {118DBC26-55ED-43CB-A5E8-94FBCD2750D5}
 		{0ED3994A-C301-4C59-AE36-C62976DC28CC} = {118DBC26-55ED-43CB-A5E8-94FBCD2750D5}
-		{D69735DE-4846-4239-B552-A423A8E8CE71} = {118DBC26-55ED-43CB-A5E8-94FBCD2750D5}
-		{2B797154-2349-4E0A-A3FD-08E620152B9A} = {118DBC26-55ED-43CB-A5E8-94FBCD2750D5}
 		{D209C368-1277-4EA6-A887-AA6EBA51AB99} = {D2AC1C45-31F4-48A2-A9EF-81685E7CA0F7}
 		{22857A11-108D-48C6-9A23-2217D2F2C365} = {D2AC1C45-31F4-48A2-A9EF-81685E7CA0F7}
 		{C3264FF3-E2D7-48D7-93A7-CDC9A827AD9D} = {D2AC1C45-31F4-48A2-A9EF-81685E7CA0F7}
@@ -306,11 +368,23 @@ Global
 		{213EED36-B2A9-4C61-9ECD-EA99DA6EC5F4} = {D2AC1C45-31F4-48A2-A9EF-81685E7CA0F7}
 		{5B8B0EAB-3E74-48BB-8231-26E73B2019DC} = {D2AC1C45-31F4-48A2-A9EF-81685E7CA0F7}
 		{49FF585D-0D65-4BC2-AC46-C716C54F6CBF} = {D2AC1C45-31F4-48A2-A9EF-81685E7CA0F7}
-		{0AB71103-EE12-4B1C-999D-7B66C26863C8} = {D2AC1C45-31F4-48A2-A9EF-81685E7CA0F7}
-		{8BD8DAEC-1FBC-4916-BD71-27C31C0E11E4} = {D2AC1C45-31F4-48A2-A9EF-81685E7CA0F7}
 		{3DEB15F9-E7DA-403F-B6D3-A8499310397F} = {5C0BC8AB-B491-47E3-AFEC-59A2E15A2C85}
 		{A76794DA-29A4-4D63-9850-E0E363A2FAFD} = {5C0BC8AB-B491-47E3-AFEC-59A2E15A2C85}
 		{A4F0C741-6ED4-46C8-AE75-57E1C7197E22} = {5C0BC8AB-B491-47E3-AFEC-59A2E15A2C85}
+		{126DBBB4-1731-4E0D-8937-4F2FAADCA0EF} = {F49E75DB-17E6-4B3B-B21B-F98015965737}
+		{C5038911-F8C3-4B55-8B07-2F52C969176D} = {D28FCA4A-D6D8-4CA4-AB57-7D8114D68661}
+		{D69735DE-4846-4239-B552-A423A8E8CE71} = {118DBC26-55ED-43CB-A5E8-94FBCD2750D5}
+		{0AB71103-EE12-4B1C-999D-7B66C26863C8} = {D2AC1C45-31F4-48A2-A9EF-81685E7CA0F7}
+		{7BE679EF-3853-4E06-B4EB-C4C6808BC3F0} = {F49E75DB-17E6-4B3B-B21B-F98015965737}
+		{54140EA6-EB39-49FF-BA63-997EBD41EA8F} = {D28FCA4A-D6D8-4CA4-AB57-7D8114D68661}
+		{2B797154-2349-4E0A-A3FD-08E620152B9A} = {118DBC26-55ED-43CB-A5E8-94FBCD2750D5}
+		{8BD8DAEC-1FBC-4916-BD71-27C31C0E11E4} = {D2AC1C45-31F4-48A2-A9EF-81685E7CA0F7}
+		{BD6A6EE4-F960-4E46-B68A-E0D002C8DEC6} = {9898E62C-95E1-4901-B31D-8509BF1E40AD}
+		{4BC19EFF-0267-414C-B047-16EE6EC542C7} = {9898E62C-95E1-4901-B31D-8509BF1E40AD}
+		{280C9B49-6B3F-4008-A259-DB9FDD419774} = {9898E62C-95E1-4901-B31D-8509BF1E40AD}
+		{59461868-B402-4574-95C0-0E1145498539} = {9898E62C-95E1-4901-B31D-8509BF1E40AD}
+		{CAF16052-B4F4-4C3D-B5E6-41CF7859EECE} = {9898E62C-95E1-4901-B31D-8509BF1E40AD}
+		{5F11254D-CCA9-47C1-8AC5-E1526D178BD3} = {9898E62C-95E1-4901-B31D-8509BF1E40AD}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = src\direct-runner\direct-runner-4.0.csproj
