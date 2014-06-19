@@ -75,7 +75,7 @@
       <Name>nunit.framework-2.0</Name>
     </ProjectReference>
   </ItemGroup>
-  <Import Project="mock-nunit-assembly.projitems" Label="Shared" />
+  <Import Project="mock-nunit-assembly.projitems" Label="Shared" Condition="Exists('mock-nunit-assembly.projitems')" />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>
