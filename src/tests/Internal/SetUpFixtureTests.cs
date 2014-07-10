@@ -5,6 +5,7 @@
 // ****************************************************************
 
 #if !SILVERLIGHT && !NETCF
+using System;
 using System.Collections;
 using NUnit.Framework.Api;
 using NUnit.Framework.Interfaces;
@@ -119,9 +120,9 @@ namespace NUnit.Framework.Internal
         public void NamespaceSetUpMethodsMayBeStatic()
         {
             Assert.That(runTests("NUnit.TestData.SetupFixture.Namespace5").ResultState.Status, Is.EqualTo(TestStatus.Passed));
-            TestUtilities.SimpleEventRecorder.Verify("NamespaceSetup",
+            TestUtilities.SimpleEventRecorder.Verify("SetUp:" + Environment.CurrentDirectory, "NamespaceSetup",
                                     "FixtureSetup", "Setup", "Test", "TearDown", "FixtureTearDown",
-                                  "NamespaceTearDown");
+                                  "NamespaceTearDown", "TearDown:" + Environment.CurrentDirectory);
         }
         #endregion
 
@@ -156,9 +157,9 @@ namespace NUnit.Framework.Internal
         public void WithTwoSetUpFixturesOnlyOneIsUsed()
         {
             Assert.That(runTests("NUnit.TestData.SetupFixture.Namespace4").ResultState.Status, Is.EqualTo(TestStatus.Passed));
-            TestUtilities.SimpleEventRecorder.Verify("NamespaceSetup2",
+            TestUtilities.SimpleEventRecorder.Verify("NamespaceSetup", "NamespaceSetup2",
                                     "FixtureSetup", "Setup", "Test", "TearDown", "FixtureTearDown",
-                                  "NamespaceTearDown2");
+                                  "NamespaceTearDown2", "NamespaceTearDown");
         }
         #endregion TwoSetUpFixtures
 

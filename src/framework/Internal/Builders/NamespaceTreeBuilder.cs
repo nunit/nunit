@@ -110,20 +110,27 @@ namespace NUnit.Framework.Internal.Builders
                 foreach (TestSuite child in containingSuite.Tests)
                     fixture.Add(child);
 
-                // Make the parent of the containing suite point to this
-                // fixture instead
-                // TODO: Get rid of this somehow?
-                TestSuite parent = (TestSuite)containingSuite.Parent;
-                if (parent == null)
-                {
-                    fixture.Name = rootSuite.Name;
-                    rootSuite = fixture;
-                }
-                else
-                {
-                    parent.Tests.Remove(containingSuite);
-                    parent.Add(fixture);
-                }
+				if (containingSuite is SetUpFixture)
+				{
+					containingSuite.Tests.Clear();
+					containingSuite.Add(fixture);
+				}
+				else
+				{
+					// Make the parent of the containing suite point to this
+					// fixture instead
+					// TODO: Get rid of this somehow?
+					TestSuite parent = (TestSuite)containingSuite.Parent;
+					if (parent == null) {
+						fixture.Name = rootSuite.Name;
+						rootSuite = fixture;
+					}
+					else
+					{
+						parent.Tests.Remove(containingSuite);
+						parent.Add(fixture);
+					}
+				}
 
                 // Update the dictionary
                 namespaceSuites[ns] = fixture;
