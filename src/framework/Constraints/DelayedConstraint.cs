@@ -40,7 +40,7 @@ namespace NUnit.Framework.Constraints
         ///<summary>
         /// Creates a new DelayedConstraint
         ///</summary>
-        ///<param name="baseConstraint">The inner constraint two decorate</param>
+        ///<param name="baseConstraint">The inner constraint to decorate</param>
         ///<param name="delayInMilliseconds">The time interval after which the match is performed</param>
         ///<exception cref="InvalidOperationException">If the value of <paramref name="delayInMilliseconds"/> is less than 0</exception>
         public DelayedConstraint(IConstraint baseConstraint, int delayInMilliseconds)
@@ -49,9 +49,9 @@ namespace NUnit.Framework.Constraints
         ///<summary>
         /// Creates a new DelayedConstraint
         ///</summary>
-        ///<param name="baseConstraint">The inner constraint two decorate</param>
-        ///<param name="delayInMilliseconds">The time interval after which the match is performed</param>
-        ///<param name="pollingInterval">The time interval used for polling</param>
+        ///<param name="baseConstraint">The inner constraint to decorate</param>
+        ///<param name="delayInMilliseconds">The time interval after which the match is performed, in milliseconds</param>
+        ///<param name="pollingInterval">The time interval used for polling, in milliseconds</param>
         ///<exception cref="InvalidOperationException">If the value of <paramref name="delayInMilliseconds"/> is less than 0</exception>
         public DelayedConstraint(IConstraint baseConstraint, int delayInMilliseconds, int pollingInterval)
             : base(baseConstraint)
@@ -78,19 +78,26 @@ namespace NUnit.Framework.Constraints
         /// <returns>True for if the base constraint fails, false if it succeeds</returns>
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
-            int remainingDelay = delayInMilliseconds;
+            DateTime now = DateTime.Now;
+            DateTime delayEnd = now + TimeSpan.FromMilliseconds(delayInMilliseconds);
 
-            while (pollingInterval > 0 && pollingInterval < remainingDelay)
+            if (pollingInterval > 0)
             {
-                remainingDelay -= pollingInterval;
-                Thread.Sleep(pollingInterval);
-                ConstraintResult result = baseConstraint.ApplyTo(actual);
-                if (result.IsSuccess)
-                    return new ConstraintResult(this, actual, true);
-            }
+                DateTime nextPoll = now + TimeSpan.FromMilliseconds(pollingInterval);
+                while ((now = DateTime.Now) < delayEnd)
+                {
+                    if (nextPoll > now)
+                        Thread.Sleep((delayEnd < nextPoll ? delayEnd : nextPoll) - now);
+                    nextPoll = now + TimeSpan.FromMilliseconds(pollingInterval);
 
-            if (remainingDelay > 0)
-                Thread.Sleep(remainingDelay);
+                    ConstraintResult result = baseConstraint.ApplyTo(actual);
+                    if (result.IsSuccess)
+                        return new ConstraintResult(this, actual, true);
+                }
+            }
+            if ((now = DateTime.Now) < delayEnd)
+                Thread.Sleep(delayEnd - now);
+
             return new ConstraintResult(this, actual, baseConstraint.ApplyTo(actual).IsSuccess);
         }
 
@@ -101,31 +108,37 @@ namespace NUnit.Framework.Constraints
         /// <returns>A ConstraintResult</returns>
         public override ConstraintResult ApplyTo<TActual>(ActualValueDelegate<TActual> del)
         {
-            int remainingDelay = delayInMilliseconds;
-            object actual;
+            DateTime now = DateTime.Now;
+            DateTime delayEnd = now + TimeSpan.FromMilliseconds(delayInMilliseconds);
 
-            while (pollingInterval > 0 && pollingInterval < remainingDelay)
+            object actual;
+            if (pollingInterval > 0)
             {
-                remainingDelay -= pollingInterval;
-                Thread.Sleep(pollingInterval);
-                actual = InvokeDelegate(del);
-                
-                try
+                DateTime nextPoll = now + TimeSpan.FromMilliseconds(pollingInterval);
+                while ((now = DateTime.Now) < delayEnd)
                 {
-                    ConstraintResult result = baseConstraint.ApplyTo(actual);
-                    if (result.IsSuccess)
-                        return new ConstraintResult(this, actual, true);
-                }
-                catch(Exception)
-                {
-                    // Ignore any exceptions when polling
+                    if (nextPoll > now)
+                        Thread.Sleep((delayEnd < nextPoll ? delayEnd : nextPoll) - now);
+                    nextPoll = now + TimeSpan.FromMilliseconds(pollingInterval);
+
+                    actual = InvokeDelegate(del);
+
+                    try
+                    {
+                        ConstraintResult result = baseConstraint.ApplyTo(actual);
+                        if (result.IsSuccess)
+                            return new ConstraintResult(this, actual, true);
+                    }
+                    catch(Exception)
+                    {
+                        // Ignore any exceptions when polling
+                    }
                 }
             }
+            if ((now = DateTime.Now) < delayEnd)
+                Thread.Sleep(delayEnd - now);
 
-            if (remainingDelay > 0)
-                Thread.Sleep(remainingDelay);
             actual = InvokeDelegate(del);
-
             return new ConstraintResult(this, actual, baseConstraint.ApplyTo(actual).IsSuccess);
         }
 
@@ -149,27 +162,32 @@ namespace NUnit.Framework.Constraints
         /// <returns>True for success, false for failure</returns>
         public override ConstraintResult ApplyTo<TActual>(ref TActual actual)
         {
-            int remainingDelay = delayInMilliseconds;
-
-            while (pollingInterval > 0 && pollingInterval < remainingDelay)
+            DateTime now = DateTime.Now;
+            DateTime delayEnd = now + TimeSpan.FromMilliseconds(delayInMilliseconds);
+            if (pollingInterval > 0)
             {
-                remainingDelay -= pollingInterval;
-                Thread.Sleep(pollingInterval);
-                
-                try
+                DateTime nextPoll = now + TimeSpan.FromMilliseconds(pollingInterval);
+                while ((now = DateTime.Now) < delayEnd)
                 {
-                    ConstraintResult result = baseConstraint.ApplyTo(actual);
-                    if (result.IsSuccess)
-                        return new ConstraintResult(this, actual, true);
-                }
-                catch(Exception)
-                {
-                    // Ignore any exceptions when polling
+                    if (nextPoll > now)
+                        Thread.Sleep((delayEnd < nextPoll ? delayEnd : nextPoll) - now);
+                    nextPoll = now + TimeSpan.FromMilliseconds(pollingInterval);
+
+                    try
+                    {
+                        ConstraintResult result = baseConstraint.ApplyTo(actual);
+                        if (result.IsSuccess)
+                            return new ConstraintResult(this, actual, true);
+                    }
+                    catch(Exception)
+                    {
+                        // Ignore any exceptions when polling
+                    }
                 }
             }
+            if((now = DateTime.Now) < delayEnd)
+                Thread.Sleep(delayEnd - now);
 
-            if (remainingDelay > 0)
-                Thread.Sleep(remainingDelay);
             return new ConstraintResult(this, actual, baseConstraint.ApplyTo(actual).IsSuccess);
         }
 
