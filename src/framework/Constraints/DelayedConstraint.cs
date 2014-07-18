@@ -23,10 +23,17 @@
 
 using System;
 using System.Threading;
+using System.Diagnostics;
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
 {
+#if !NETCF && !SILVERLIGHT
+    using Timestamp = Int64;
+#else
+    using Timestamp = DateTime;
+#endif
+
     ///<summary>
     /// Applies a delay to the match so that a match can be evaluated in the future.
     ///</summary>
@@ -78,25 +85,25 @@ namespace NUnit.Framework.Constraints
         /// <returns>True for if the base constraint fails, false if it succeeds</returns>
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
-            DateTime now = DateTime.Now;
-            DateTime delayEnd = now + TimeSpan.FromMilliseconds(delayInMilliseconds);
+            Timestamp now = GetTimestamp();
+            Timestamp delayEnd = TimestampOffset(now, TimeSpan.FromMilliseconds(delayInMilliseconds));
 
             if (pollingInterval > 0)
             {
-                DateTime nextPoll = now + TimeSpan.FromMilliseconds(pollingInterval);
-                while ((now = DateTime.Now) < delayEnd)
+                Timestamp nextPoll = TimestampOffset(now, TimeSpan.FromMilliseconds(pollingInterval));
+                while ((now = GetTimestamp()) < delayEnd)
                 {
                     if (nextPoll > now)
-                        Thread.Sleep((delayEnd < nextPoll ? delayEnd : nextPoll) - now);
-                    nextPoll = now + TimeSpan.FromMilliseconds(pollingInterval);
+                        Thread.Sleep((int)TimestampDiff(delayEnd < nextPoll ? delayEnd : nextPoll, now).TotalMilliseconds);
+                    nextPoll = TimestampOffset(now, TimeSpan.FromMilliseconds(pollingInterval));
 
                     ConstraintResult result = baseConstraint.ApplyTo(actual);
                     if (result.IsSuccess)
                         return new ConstraintResult(this, actual, true);
                 }
             }
-            if ((now = DateTime.Now) < delayEnd)
-                Thread.Sleep(delayEnd - now);
+            if ((now = GetTimestamp()) < delayEnd)
+                Thread.Sleep((int)TimestampDiff(delayEnd, now).TotalMilliseconds);
 
             return new ConstraintResult(this, actual, baseConstraint.ApplyTo(actual).IsSuccess);
         }
@@ -108,18 +115,18 @@ namespace NUnit.Framework.Constraints
         /// <returns>A ConstraintResult</returns>
         public override ConstraintResult ApplyTo<TActual>(ActualValueDelegate<TActual> del)
         {
-            DateTime now = DateTime.Now;
-            DateTime delayEnd = now + TimeSpan.FromMilliseconds(delayInMilliseconds);
+            Timestamp now = GetTimestamp();
+            Timestamp delayEnd = TimestampOffset(now, TimeSpan.FromMilliseconds(delayInMilliseconds));
 
             object actual;
             if (pollingInterval > 0)
             {
-                DateTime nextPoll = now + TimeSpan.FromMilliseconds(pollingInterval);
-                while ((now = DateTime.Now) < delayEnd)
+                Timestamp nextPoll = TimestampOffset(now, TimeSpan.FromMilliseconds(pollingInterval));
+                while ((now = GetTimestamp()) < delayEnd)
                 {
                     if (nextPoll > now)
-                        Thread.Sleep((delayEnd < nextPoll ? delayEnd : nextPoll) - now);
-                    nextPoll = now + TimeSpan.FromMilliseconds(pollingInterval);
+                        Thread.Sleep((int)TimestampDiff(delayEnd < nextPoll ? delayEnd : nextPoll, now).TotalMilliseconds);
+                    nextPoll = TimestampOffset(now, TimeSpan.FromMilliseconds(pollingInterval));
 
                     actual = InvokeDelegate(del);
 
@@ -135,8 +142,8 @@ namespace NUnit.Framework.Constraints
                     }
                 }
             }
-            if ((now = DateTime.Now) < delayEnd)
-                Thread.Sleep(delayEnd - now);
+            if ((now = GetTimestamp()) < delayEnd)
+                Thread.Sleep((int)TimestampDiff(delayEnd, now).TotalMilliseconds);
 
             actual = InvokeDelegate(del);
             return new ConstraintResult(this, actual, baseConstraint.ApplyTo(actual).IsSuccess);
@@ -162,16 +169,17 @@ namespace NUnit.Framework.Constraints
         /// <returns>True for success, false for failure</returns>
         public override ConstraintResult ApplyTo<TActual>(ref TActual actual)
         {
-            DateTime now = DateTime.Now;
-            DateTime delayEnd = now + TimeSpan.FromMilliseconds(delayInMilliseconds);
+            Timestamp now = GetTimestamp();
+            Timestamp delayEnd = TimestampOffset(now, TimeSpan.FromMilliseconds(delayInMilliseconds));
+
             if (pollingInterval > 0)
             {
-                DateTime nextPoll = now + TimeSpan.FromMilliseconds(pollingInterval);
-                while ((now = DateTime.Now) < delayEnd)
+                Timestamp nextPoll = TimestampOffset(now, TimeSpan.FromMilliseconds(pollingInterval));
+                while ((now = GetTimestamp()) < delayEnd)
                 {
                     if (nextPoll > now)
-                        Thread.Sleep((delayEnd < nextPoll ? delayEnd : nextPoll) - now);
-                    nextPoll = now + TimeSpan.FromMilliseconds(pollingInterval);
+                        Thread.Sleep((int)TimestampDiff(delayEnd < nextPoll ? delayEnd : nextPoll, now).TotalMilliseconds);
+                    nextPoll = TimestampOffset(now, TimeSpan.FromMilliseconds(pollingInterval));
 
                     try
                     {
@@ -185,8 +193,8 @@ namespace NUnit.Framework.Constraints
                     }
                 }
             }
-            if((now = DateTime.Now) < delayEnd)
-                Thread.Sleep(delayEnd - now);
+            if ((now = GetTimestamp()) < delayEnd)
+                Thread.Sleep((int)TimestampDiff(delayEnd, now).TotalMilliseconds);
 
             return new ConstraintResult(this, actual, baseConstraint.ApplyTo(actual).IsSuccess);
         }
@@ -197,6 +205,49 @@ namespace NUnit.Framework.Constraints
         protected override string GetStringRepresentation()
         {
             return string.Format("<after {0} {1}>", delayInMilliseconds, baseConstraint);
+        }
+
+        /// <summary>
+        /// Returns a Timestamp representing the current time
+        /// </summary>
+        /// <returns></returns>
+        private static Timestamp GetTimestamp()
+        {
+#if !NETCF && !SILVERLIGHT
+            return Stopwatch.GetTimestamp();
+#else
+            return DateTime.UtcNow;
+#endif
+        }
+
+        /// <summary>
+        /// Adjusts a Timestamp by a given TimeSpan
+        /// </summary>
+        /// <param name="timestamp"></param>
+        /// <param name="offset"></param>
+        /// <returns></returns>
+        private static Timestamp TimestampOffset(Timestamp timestamp, TimeSpan offset)
+        {
+#if !NETCF && !SILVERLIGHT
+            return timestamp + (long)(offset.TotalSeconds * Stopwatch.Frequency);
+#else
+            return timestamp + offset;
+#endif
+        }
+
+        /// <summary>
+        /// Returns the difference between two Timestamps as a TimeSpan
+        /// </summary>
+        /// <param name="timestamp1"></param>
+        /// <param name="timestamp2"></param>
+        /// <returns></returns>
+        private static TimeSpan TimestampDiff(Timestamp timestamp1, Timestamp timestamp2)
+        {
+#if !NETCF && !SILVERLIGHT
+            return TimeSpan.FromSeconds((double)(timestamp1 - timestamp2) / Stopwatch.Frequency);
+#else
+            return timestamp1 - timestamp2;
+#endif
         }
     }
 }
