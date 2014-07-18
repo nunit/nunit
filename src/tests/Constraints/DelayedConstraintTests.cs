@@ -134,6 +134,95 @@ namespace NUnit.Framework.Constraints
             Assert.That(() => statusString, Has.Length.GreaterThan(0).After(3000, 100));
         }
 
+        [Test]
+        public void ThatBlockingDelegateWhichSucceedsWithoutPolling_ReturnsAfterDelay()
+        {
+            var start = DateTime.UtcNow;
+            Assert.That(() =>
+            {
+                Thread.Sleep(1000);
+                return true;
+            }, Is.True.After(3000));
+
+            var elapsed = DateTime.UtcNow - start;
+            Assert.IsTrue(elapsed.TotalMilliseconds >= 2950 /*wiggle room due to timer resolution*/, elapsed.ToString());
+            Assert.IsTrue(elapsed.TotalMilliseconds < 5000, elapsed.ToString());
+        }
+
+        [Test]
+        public void ThatBlockingDelegateWhichSucceedsWithPolling_ReturnsEarly()
+        {
+            var start = DateTime.UtcNow;
+            Assert.That(() =>
+            {
+                Thread.Sleep(1000);
+                return true;
+            }, Is.True.After(3000, 100));
+
+            var elapsed = DateTime.UtcNow - start;
+            Assert.IsTrue(elapsed.TotalMilliseconds < 1500, elapsed.ToString());
+        }
+
+        [Test]
+        public void ThatBlockingDelegateWhichFailsWithoutPolling_FailsAfterDelay()
+        {
+            var start = DateTime.UtcNow;
+            Assert.Throws<AssertionException>(() => Assert.That(() =>
+            {
+                Thread.Sleep(1000);
+                return false;
+            }, Is.True.After(3000)));
+
+            var elapsed = DateTime.UtcNow - start;
+            Assert.IsTrue(elapsed.TotalMilliseconds >= 2950, elapsed.ToString());
+            Assert.IsTrue(elapsed.TotalMilliseconds < 5000, elapsed.ToString());
+        }
+
+        [Test]
+        public void ThatBlockingDelegateWhichFailsWithPolling_FailsAfterDelay()
+        {
+            var start = DateTime.UtcNow;
+            Assert.Throws<AssertionException>(() => Assert.That(() =>
+            {
+                Thread.Sleep(1000);
+                return false;
+            }, Is.True.After(3000, 100)));
+
+            var elapsed = DateTime.UtcNow - start;
+            Assert.IsTrue(elapsed.TotalMilliseconds >= 2950, elapsed.ToString());
+            Assert.IsTrue(elapsed.TotalMilliseconds < 5000, elapsed.ToString());
+        }
+
+        [Test]
+        public void ThatBlockingDelegateWhichThrowsWithoutPolling_FailsAfterDelay()
+        {
+            var start = DateTime.UtcNow;
+            Assert.Throws<AssertionException>(() => Assert.That(() =>
+            {
+                Thread.Sleep(1000);
+                throw new InvalidOperationException();
+            }, Is.True.After(3000)));
+
+            var elapsed = DateTime.UtcNow - start;
+            Assert.IsTrue(elapsed.TotalMilliseconds >= 2950, elapsed.ToString());
+            Assert.IsTrue(elapsed.TotalMilliseconds < 5000, elapsed.ToString());
+        }
+
+        [Test]
+        public void ThatBlockingDelegateWhichThrowsWithPolling_FailsAfterDelay()
+        {
+            var start = DateTime.UtcNow;
+            Assert.Throws<AssertionException>(() => Assert.That(() =>
+            {
+                Thread.Sleep(1000);
+                throw new InvalidOperationException();
+            }, Is.True.After(3000, 100)));
+
+            var elapsed = DateTime.UtcNow - start;
+            Assert.IsTrue(elapsed.TotalMilliseconds >= 2950, elapsed.ToString());
+            Assert.IsTrue(elapsed.TotalMilliseconds < 5000, elapsed.ToString());
+        }
+
         private static int setValuesDelay;
 
         private static void MethodReturningVoid() { }
