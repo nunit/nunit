@@ -70,6 +70,7 @@
     <Compile Include="Attributes\SetUpFixtureAttribute.cs" />
     <Compile Include="Attributes\TestCaseBuilderAttribute.cs" />
     <Compile Include="Attributes\TimeoutAttribute.cs" />
+    <Compile Include="Compatibility\Stopwatch.cs" />
     <Compile Include="Constraints\ConstraintResult.cs" />
     <Compile Include="Constraints\DelayedConstraint.cs" />
     <Compile Include="Constraints\EqualConstraintResult.cs" />
