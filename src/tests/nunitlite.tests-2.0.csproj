@@ -69,6 +69,7 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Api\TestAssemblyRunnerTests.cs" />
     <Compile Include="Api\FrameworkControllerTests.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -116,6 +117,7 @@
     <Compile Include="Attributes\TheoryTests.cs" />
     <Compile Include="Attributes\ThreadingTests.cs" />
     <Compile Include="Attributes\ValuesAttributeEnumTests.cs" />
+    <Compile Include="Attributes\TimeoutTests.cs" />
     <Compile Include="Attributes\ValuesAttributeTests.cs">
       <SubType>Code</SubType>
     </Compile>

@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2012 Charlie Poole
+// Copyright (c) 2009 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,26 +21,34 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-namespace NUnit.Framework.Internal.Execution
+using System;
+using System.Collections;
+using System.Reflection;
+using NUnit.Framework.Interfaces;
+
+namespace NUnit.Framework.Api
 {
     /// <summary>
-    /// The current state of a work item
+    /// The ITestAssemblyBuilder interface is implemented by a class
+    /// that is able to build a suite of tests given an assembly or 
+    /// an assembly filename.
     /// </summary>
-    public enum WorkItemState
+    public interface ITestAssemblyBuilder
     {
         /// <summary>
-        /// Ready to run or continue
+        /// Build a suite of tests from a provided assembly
         /// </summary>
-        Ready,
+        /// <param name="assembly">The assembly from which tests are to be built</param>
+        /// <param name="options">A dictionary of options to use in building the suite</param>
+        /// <returns>A TestSuite containing the tests found in the assembly</returns>
+        ITest Build(Assembly assembly, IDictionary options);
 
         /// <summary>
-        /// Work Item is executing
+        /// Build a suite of tests given the filename of an assembly
         /// </summary>
-        Running,
-
-        /// <summary>
-        /// Complete
-        /// </summary>
-        Complete
+        /// <param name="assemblyName">The filename of the assembly from which tests are to be built</param>
+        /// <param name="options">A dictionary of options to use in building the suite</param>
+        /// <returns>A TestSuite containing the tests found in the assembly</returns>
+        ITest Build(string assemblyName, IDictionary options);
     }
 }

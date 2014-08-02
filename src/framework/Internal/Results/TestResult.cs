@@ -34,6 +34,8 @@ namespace NUnit.Framework.Internal
     {
         #region Fields
 
+        static Logger log = InternalTrace.GetLogger("TestResult");
+
         /// <summary>
         /// List of child results
         /// </summary>
@@ -250,52 +252,55 @@ namespace NUnit.Framework.Internal
 
             //this.AssertCount += result.AssertCount;
 
-            switch (result.ResultState.Status)
-            {
-                case TestStatus.Passed:
+            // If this result is marked cancelled, don't change it
+            if (this.ResultState != ResultState.Cancelled)
+                switch (result.ResultState.Status)
+                {
+                    case TestStatus.Passed:
 
-                    if (this.ResultState.Status == TestStatus.Inconclusive)
-                        this.SetResult(ResultState.Success);
+                        if (this.ResultState.Status == TestStatus.Inconclusive)
+                            this.SetResult(ResultState.Success);
 
-                    break;
+                        break;
 
-                case TestStatus.Failed:
+                    case TestStatus.Failed:
 
-                    if (this.ResultState.Status != TestStatus.Failed)
-                        this.SetResult(ResultState.Failure, "One or more child tests had errors");
 
-                    break;
+                        if (this.ResultState.Status != TestStatus.Failed)
+                            this.SetResult(ResultState.Failure, "One or more child tests had errors");
 
-                case TestStatus.Skipped:
+                        break;
 
-                    switch (result.ResultState.Label)
-                    {
-                        case "Invalid":
-                            if (this.ResultState != ResultState.NotRunnable && this.ResultState.Status != TestStatus.Failed)
-                                this.SetResult(ResultState.Failure, "One or more child tests had errors");
+                    case TestStatus.Skipped:
 
-                            break;
+                        switch (result.ResultState.Label)
+                        {
+                            case "Invalid":
+                                if (this.ResultState != ResultState.NotRunnable && this.ResultState.Status != TestStatus.Failed)
+                                    this.SetResult(ResultState.Failure, "One or more child tests had errors");
 
-                        case "Ignored":
+                                break;
 
-                            if (this.ResultState.Status == TestStatus.Inconclusive || this.ResultState.Status == TestStatus.Passed)
-                                this.SetResult(ResultState.Ignored, "One or more child tests were ignored");
+                            case "Ignored":
 
-                            break;
+                                if (this.ResultState.Status == TestStatus.Inconclusive || this.ResultState.Status == TestStatus.Passed)
+                                    this.SetResult(ResultState.Ignored, "One or more child tests were ignored");
 
-                        default:
+                                break;
 
-                            // Tests skipped for other reasons do not change the outcome
-                            // of the containing suite when added.
+                            default:
 
-                            break;
-                    }
+                                // Tests skipped for other reasons do not change the outcome
+                                // of the containing suite when added.
 
-                    break;
+                                break;
+                        }
 
-                default:
-                    break;
-            }
+                        break;
+
+                    default:
+                        break;
+                }
         }
 
         #region Other Public Methods

@@ -92,7 +92,8 @@ namespace NUnit.Framework.Internal.Commands
             }
             finally
             {
-                _methods.RunTearDown(context);
+                if (context.ExecutionStatus != TestExecutionStatus.AbortRequested)
+                    _methods.RunTearDown(context);
             }
 
             return context.CurrentResult;

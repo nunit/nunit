@@ -68,6 +68,16 @@ namespace NUnit.Framework.Internal.Execution
         }
 
         /// <summary>
+        /// The name of this worker - also used for the thread
+        /// </summary>
+        public string Name { get { return _workerThread.Name; } }
+
+        /// <summary>
+        /// Indicates whether the worker thread is running
+        /// </summary>
+        public bool IsAlive { get { return _workerThread.IsAlive; } }
+
+        /// <summary>
         /// Our ThreadProc, which pulls and runs tests in a loop
         /// </summary>
         void TestWorkerThreadProc()

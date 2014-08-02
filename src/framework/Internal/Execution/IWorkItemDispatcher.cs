@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2009 Charlie Poole
+// Copyright (c) 2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,33 +21,25 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
-using System.Collections;
-using System.Reflection;
-
-namespace NUnit.Framework.Interfaces
+namespace NUnit.Framework.Internal.Execution
 {
     /// <summary>
-    /// The ITestAssemblyBuilder interface is implemented by a class
-    /// that is able to build a suite of tests given an assembly or 
-    /// an assembly filename.
+    /// An IWorkItemDispatcher handles execution of work items.
     /// </summary>
-    public interface ITestAssemblyBuilder
+    public interface IWorkItemDispatcher
     {
         /// <summary>
-        /// Build a suite of tests from a provided assembly
+        /// Dispatch a single work item for execution. The first
+        /// work item dispatched is saved as the top-level
+        /// work item and used when stopping the run.
         /// </summary>
-        /// <param name="assembly">The assembly from which tests are to be built</param>
-        /// <param name="options">A dictionary of options to use in building the suite</param>
-        /// <returns>A TestSuite containing the tests found in the assembly</returns>
-        ITest Build(Assembly assembly, IDictionary options);
+        /// <param name="work">The item to dispatch</param>
+        void Dispatch(WorkItem work);
 
         /// <summary>
-        /// Build a suite of tests given the filename of an assembly
+        /// Cancel the ongoing run completely.
+        /// If no run is in process, the call has no effect.
         /// </summary>
-        /// <param name="assemblyName">The filename of the assembly from which tests are to be built</param>
-        /// <param name="options">A dictionary of options to use in building the suite</param>
-        /// <returns>A TestSuite containing the tests found in the assembly</returns>
-        ITest Build(string assemblyName, IDictionary options);
+        void CancelRun();
     }
 }

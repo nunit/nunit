@@ -52,11 +52,36 @@ namespace NUnit.Framework.Internal.Execution
         }
 
         [Test]
-        public void StopQueue()
+        public void StopQueue_NoWorkers()
         {
             _queue.Start();
             _queue.Stop();
-            Assert.That(_queue.State, Is.EqualTo(WorkItemQueueState.Stopping));
+            Assert.That(_queue.State, Is.EqualTo(WorkItemQueueState.Stopped));
+        }
+
+        [Test]
+        public void StopQueue_WithWorkers()
+        {
+            var workers = new TestWorker[] {
+                new TestWorker(_queue, "1", ApartmentState.MTA),
+                new TestWorker(_queue, "2", ApartmentState.MTA),
+                new TestWorker(_queue, "3", ApartmentState.MTA)
+            };
+
+            foreach (var worker in workers)
+            {
+                worker.Start();
+                Assert.That(worker.IsAlive, "Worker thread {0} did not start", worker.Name);
+            }
+
+            _queue.Start();
+            _queue.Stop();
+            Assert.That(_queue.State, Is.EqualTo(WorkItemQueueState.Stopped));
+
+            Thread.Sleep(20); // Allow time for workers to stop
+
+            foreach (var worker in workers)
+                Assert.False(worker.IsAlive, "Worker thread {0} did not stop", worker.Name);
         }
 
         [Test]

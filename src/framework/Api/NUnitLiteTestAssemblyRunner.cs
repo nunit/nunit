@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2012 Charlie Poole
+// Copyright (c) 2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,26 +21,43 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-namespace NUnit.Framework.Internal.Execution
+#if NUNITLITE
+using System;
+using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
+using NUnit.Framework.Internal.Execution;
+
+namespace NUnit.Framework.Api
 {
     /// <summary>
-    /// The current state of a work item
+    /// Default NUnitLite implementation of ITestAssemblyRunner
     /// </summary>
-    public enum WorkItemState
+    public class NUnitLiteTestAssemblyRunner : AbstractTestAssemblyRunner
     {
-        /// <summary>
-        /// Ready to run or continue
-        /// </summary>
-        Ready,
+        #region Constructor
 
         /// <summary>
-        /// Work Item is executing
+        /// Construct an NUnitLiteTestAssemblyRunner
         /// </summary>
-        Running,
+        public NUnitLiteTestAssemblyRunner(ITestAssemblyBuilder builder) : base(builder) { }
+
+        #endregion
+
+        #region AbstractTestAssemblyRunner Overrides
 
         /// <summary>
-        /// Complete
+        /// Run selected tests asynchronously, notifying the listener interface as it progresses.
         /// </summary>
-        Complete
+        /// <param name="listener">Interface to receive EventListener notifications.</param>
+        /// <param name="filter">A test filter used to select tests to be run</param>
+        /// <returns></returns>
+        public override void StartRun(ITestListener listener)
+        {
+            Context.Dispatcher = new SimpleWorkItemDispatcher();
+            Context.Dispatcher.Dispatch(TopLevelWorkItem);
+        }
+
+        #endregion
     }
 }
+#endif

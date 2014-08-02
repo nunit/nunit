@@ -26,7 +26,7 @@ namespace NUnitLite.Runner.Silverlight
         {
             InitializeComponent();
 
-            this.runner = new DefaultTestAssemblyRunner(new DefaultTestAssemblyBuilder());
+            this.runner = new NUnitLiteTestAssemblyRunner(new DefaultTestAssemblyBuilder());
             this.callingAssembly = Assembly.GetCallingAssembly();
             this.writer = new TextBlockWriter(this.ScratchArea);
         }

@@ -74,7 +74,7 @@ namespace NUnitLite.Runner
         {
             // Set the default writer - may be overridden by the args specified
             this.writer = writer;
-            this.runner = new DefaultTestAssemblyRunner(new DefaultTestAssemblyBuilder());
+            this.runner = new NUnitLiteTestAssemblyRunner(new DefaultTestAssemblyBuilder());
         }
         #endregion
 

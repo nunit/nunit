@@ -40,9 +40,14 @@ namespace NUnit.Framework.Internal
         /// <param name="thread">The thread to kill</param>
         public static void Kill(Thread thread)
         {
+#if SILVERLIGHT
+            thread.Abort();
+#else
             Kill(thread, null);
+#endif
         }
 
+#if !SILVERLIGHT
         /// <summary>
         /// Do our best to kill a thread, passing state info
         /// </summary>
