@@ -284,7 +284,6 @@ namespace NUnit.Framework.Api
             _runner.StopRun(true);
         }
 
-#if NUNITLITE
         [Test]
         public void CancelRun_WhenTestIsRunning_StopsTest()
         {
@@ -302,7 +301,6 @@ namespace NUnit.Framework.Api
                 Assert.That(_runner.Result.PassCount, Is.LessThan(count));
             }
         }
-#endif
 
         #endregion
     }

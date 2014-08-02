@@ -33,7 +33,6 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public static class ThreadUtility
     {
-#if !SILVERLIGHT
         /// <summary>
         /// Do our best to Kill a thread
         /// </summary>
@@ -73,22 +72,6 @@ namespace NUnit.Framework.Internal
 
             if ( (thread.ThreadState & ThreadState.WaitSleepJoin) != 0 )
                 thread.Interrupt();
-        }
-#else
-        /// <summary>
-        /// Do our best to Kill a thread
-        /// </summary>
-        /// <param name="thread">The thread to kill</param>
-        public static void Kill(Thread thread)
-        {
-            try
-            {
-                thread.Abort();
-            }
-            catch (ThreadStateException)
-            {
-                // Not much else we can do in Silverlight except abort
-            }
         }
 #endif
     }

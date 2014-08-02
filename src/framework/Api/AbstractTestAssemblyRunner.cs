@@ -215,8 +215,8 @@ namespace NUnit.Framework.Api
                     : TestExecutionStatus.StopRequested;
 
 #if !NETCF
-                if (force)
-                    Context.Dispatcher.CancelRun();
+                //if (force)
+                //    Context.Dispatcher.CancelRun();
 #endif
             }
         }
