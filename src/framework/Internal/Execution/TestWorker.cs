@@ -41,6 +41,8 @@ namespace NUnit.Framework.Internal.Execution
 
         private int _workItemCount = 0;
 
+        private bool _running;
+
         /// <summary>
         /// Event signaled immediately before executing a WorkItem
         /// </summary>
@@ -84,22 +86,29 @@ namespace NUnit.Framework.Internal.Execution
         {
             log.Info("{0} starting ", _workerThread.Name);
 
-            for(;;)
+            _running = true;
+
+            try
             {
-                var workItem = _readyQueue.Dequeue();
-                if (workItem == null)
-                    break;
+                while (_running)
+                {
+                    var workItem = _readyQueue.Dequeue();
+                    if (workItem == null)
+                        break;
 
-                log.Debug("{0} processing {1}", _workerThread.Name, workItem.Test.Name);
+                    log.Info("{0} executing {1}", _workerThread.Name, workItem.Test.Name);
 
-                if (Busy != null) Busy(this, EventArgs.Empty);
-                workItem.Execute();
-                if (Idle != null) Idle(this, EventArgs.Empty);
+                    if (Busy != null) Busy(this, EventArgs.Empty);
+                    workItem.Execute();
+                    if (Idle != null) Idle(this, EventArgs.Empty);
 
-                ++_workItemCount;
+                    ++_workItemCount;
+                }
             }
-
-            log.Info("{0} stopping - {1} WorkItems processed.", _workerThread.Name, _workItemCount);
+            finally
+            {
+                log.Info("{0} stopping - {1} WorkItems processed.", _workerThread.Name, _workItemCount);
+            }
         }
 
         /// <summary>
@@ -108,6 +117,18 @@ namespace NUnit.Framework.Internal.Execution
         public void Start()
         {
             _workerThread.Start();
+        }
+
+        /// <summary>
+        /// Stop the thread, either immediately or after finishing the current WorkItem
+        /// </summary>
+        /// <param name="immediate">If true, abort the currently running test.</param>
+        public void Cancel()
+        {
+            _running = false;
+
+            if (_workerThread != null && _workerThread.IsAlive)
+                ThreadUtility.Kill(_workerThread);
         }
     }
 }

@@ -291,7 +291,10 @@ namespace NUnit.Framework.Api
             var count = tests.TestCaseCount;
             _runner.RunAsync(TestListener.NULL, TestFilter.Empty);
             _runner.StopRun(true);
-            _runner.WaitForCompletion(Timeout.Infinite);
+
+            // When cancelling, the completion event may not be signalled,
+            // so we only wait a short time before checking.
+            _runner.WaitForCompletion(5000);
 
             Assert.True(_runner.IsTestComplete, "Test is not complete");
 

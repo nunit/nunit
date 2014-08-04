@@ -55,6 +55,7 @@
     <Compile Include="Api\FrameworkControllerTests.cs" />
     <Compile Include="Api\ResultStateTests.cs" />
     <Compile Include="Api\TestAssemblyRunnerTests.cs" />
+    <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Assertions\ArrayEqualsFailureMessageFixture.cs" />
     <Compile Include="Assertions\ArrayEqualsFixture.cs" />
     <Compile Include="Assertions\ArrayNotEqualFixture.cs" />
@@ -124,7 +125,9 @@
     <Compile Include="Constraints\CollectionSubsetConstraintTests.cs" />
     <Compile Include="Constraints\CollectionEqualsTests.cs" />
     <Compile Include="Constraints\ComparisonConstraintTestBase.cs" />
-    <Compile Include="Constraints\DelayedConstraintTests.cs" />
+    <Compile Include="Constraints\DelayedConstraintTests.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Constraints\EndsWithConstraintTests.cs" />
     <Compile Include="Constraints\ExactTypeConstraintTests.cs" />
     <Compile Include="Constraints\FileExistsConstraintTests.cs" />

@@ -196,10 +196,13 @@ namespace NUnit.Framework.Api
             Runner.RunAsync(new TestProgressReporter(handler), TestFilter.FromXml(filter));
         }
 
-        private void StopRun(ICallbackEventHandler handler, bool force, int timeout)
+        private void StopRun(ICallbackEventHandler handler, bool force)
         {
-            //handler.RaiseCallbackEvent(Runner.StopRun(force, timeout).ToString());
             Runner.StopRun(force);
+        }
+
+        private void WaitForCompletion(ICallbackEventHandler handler, int timeout)
+        {
             handler.RaiseCallbackEvent(Runner.WaitForCompletion(timeout).ToString());
         }
 
@@ -345,16 +348,22 @@ namespace NUnit.Framework.Api
 
         #region WaitAction
 
-        ///// <summary>
-        ///// WaitAction 
-        ///// </summary>
-        //public class WaitAction : FrameworkControllerAction
-        //{
-        //    public WaitAction(FrameworkController controller, int timeout, object handler)
-        //    {
-        //        controller.WaitForCompletion((ICallbackEventHandler)handler, timeout);
-        //    }
-        //}
+        /// <summary>
+        /// WaitAction 
+        /// </summary>
+        public class WaitAction : FrameworkControllerAction
+        {
+            /// <summary>
+            /// Construct a WaitAction and wait for the run to complete
+            /// </summary>
+            /// <param name="controller">A FrameworkController for the test run to wait for</param>
+            /// <param name="timeout">The number of milliseconds to wait for completion</param>
+            /// <param name="handler">A callback handler used to report results</param>
+            public WaitAction(FrameworkController controller, int timeout, object handler)
+            {
+                controller.WaitForCompletion((ICallbackEventHandler)handler, timeout);
+            }
+        }
 
         #endregion
 
@@ -371,12 +380,11 @@ namespace NUnit.Framework.Api
             /// </summary>
             /// <param name="controller">The FrameworkController for which a run is to be stopped.</param>
             /// <param name="force">True the stop should be forced, false for a cooperative stop.</param>
-            /// <param name="timeout">Time to wait for a cooperative stop. Has no effect if force is true.</param>
             /// <param name="handler">>A callback handler used to report results</param>
             /// <remarks>A forced stop will cause threads and processes to be killed as needed.</remarks>
-            public StopRunAction(FrameworkController controller, bool force, int timeout, object handler)
+            public StopRunAction(FrameworkController controller, bool force, object handler)
             {
-                controller.StopRun((ICallbackEventHandler)handler, force, timeout);
+                controller.StopRun((ICallbackEventHandler)handler, force);
             }
         }
 

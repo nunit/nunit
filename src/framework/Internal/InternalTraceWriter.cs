@@ -34,6 +34,7 @@ namespace NUnit.Framework.Internal
     public class InternalTraceWriter : TextWriter
     {
         TextWriter writer;
+        object myLock = new object();
 
         /// <summary>
         /// Construct an InternalTraceWriter that writes to a file.
@@ -71,7 +72,10 @@ namespace NUnit.Framework.Internal
         /// <param name="value">The character to write to the text stream.</param>
         public override void Write(char value)
         {
-            writer.Write(value);
+            lock (myLock)
+            {
+                writer.Write(value);
+            }
         }
 
         /// <summary>
@@ -80,29 +84,32 @@ namespace NUnit.Framework.Internal
         /// <param name="value">The string to write. If <paramref name="value" /> is null, only the line terminator is written.</param>
         public override void WriteLine(string value)
         {
-            writer.WriteLine(value);
-        }
-
-        /// <summary>
-        /// Closes the current writer and releases any system resources associated with the writer.
-        /// </summary>
-        public override void Close()
-        {
-            if (writer != null)
+            lock (myLock)
             {
-                writer.Flush();
-                writer.Close();
-                writer = null;
+                writer.WriteLine(value);
             }
         }
 
-        /// <summary>
-        /// Clears all buffers for the current writer and causes any buffered data to be written to the underlying device.
-        /// </summary>
-        public override void Flush()
-        {
-            if ( writer != null )
-                writer.Flush();
-        }
+        ///// <summary>
+        ///// Closes the current writer and releases any system resources associated with the writer.
+        ///// </summary>
+        //public override void Close()
+        //{
+        //    if (writer != null)
+        //    {
+        //        writer.Flush();
+        //        writer.Close();
+        //        writer = null;
+        //    }
+        //}
+
+        ///// <summary>
+        ///// Clears all buffers for the current writer and causes any buffered data to be written to the underlying device.
+        ///// </summary>
+        //public override void Flush()
+        //{
+        //    if ( writer != null )
+        //        writer.Flush();
+        //}
     }
 }

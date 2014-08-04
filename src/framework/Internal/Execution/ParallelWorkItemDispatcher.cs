@@ -40,9 +40,9 @@ namespace NUnit.Framework.Internal.Execution
         private int _itemsDispatched;
 
         // Our Shifts
-        private WorkShift _firstShift = new WorkShift();
-        private WorkShift _secondShift = new WorkShift();
-        private WorkShift _thirdShift = new WorkShift();
+        private WorkShift _parallelShift = new WorkShift("Parallel");
+        private WorkShift _nonParallelShift = new WorkShift("NonParallel");
+        private WorkShift _nonParallelSTAShift = new WorkShift("NonParallelSTA");
 
         // Our Queues
         private WorkItemQueue _parallelQueue;
@@ -61,7 +61,7 @@ namespace NUnit.Framework.Internal.Execution
         {
             _levelOfParallelism = levelOfParallelism;
 
-            Shifts = new WorkShift[] { _firstShift, _secondShift, _thirdShift };
+            Shifts = new WorkShift[] { _parallelShift, _nonParallelShift, _nonParallelSTAShift };
             foreach (var shift in Shifts)
                 shift.EndOfShift += OnEndOfShift;
         }
@@ -146,12 +146,12 @@ namespace NUnit.Framework.Internal.Execution
                 if (_parallelQueue == null)
                 {
                     _parallelQueue = new WorkItemQueue("ParallelQueue");
-                    _firstShift.AddQueue(_parallelQueue);
+                    _parallelShift.AddQueue(_parallelQueue);
 
                     for (int i = 1; i <= _levelOfParallelism; i++)
                     {
                         string name = string.Format("Worker#" + i.ToString());
-                        _firstShift.Assign(new TestWorker(_parallelQueue, name, ApartmentState.MTA));
+                        _parallelShift.Assign(new TestWorker(_parallelQueue, name, ApartmentState.MTA));
                     }
                 }
 
@@ -166,8 +166,8 @@ namespace NUnit.Framework.Internal.Execution
                 if (_parallelSTAQueue == null)
                 {
                     _parallelSTAQueue = new WorkItemQueue("ParallelSTAQueue");
-                    _firstShift.AddQueue(_parallelSTAQueue);
-                    _firstShift.Assign(new TestWorker(_parallelSTAQueue, "Worker#STA", ApartmentState.STA));
+                    _parallelShift.AddQueue(_parallelSTAQueue);
+                    _parallelShift.Assign(new TestWorker(_parallelSTAQueue, "Worker#STA", ApartmentState.STA));
                 }
 
                 return _parallelSTAQueue;
@@ -181,8 +181,8 @@ namespace NUnit.Framework.Internal.Execution
                 if (_nonParallelQueue == null)
                 {
                     _nonParallelQueue = new WorkItemQueue("NonParallelQueue");
-                    _secondShift.AddQueue(_nonParallelQueue);
-                    _secondShift.Assign(new TestWorker(_nonParallelQueue, "Worker#STA_NP", ApartmentState.MTA));
+                    _nonParallelShift.AddQueue(_nonParallelQueue);
+                    _nonParallelShift.Assign(new TestWorker(_nonParallelQueue, "Worker#STA_NP", ApartmentState.MTA));
                 }
 
                 return _nonParallelQueue;
@@ -196,8 +196,8 @@ namespace NUnit.Framework.Internal.Execution
                 if (_nonParallelSTAQueue == null)
                 {
                     _nonParallelSTAQueue = new WorkItemQueue("NonParallelSTAQueue");
-                    _thirdShift.AddQueue(_nonParallelSTAQueue);
-                    _thirdShift.Assign(new TestWorker(_nonParallelSTAQueue, "Worker#NP_STA", ApartmentState.STA));
+                    _nonParallelSTAShift.AddQueue(_nonParallelSTAQueue);
+                    _nonParallelSTAShift.Assign(new TestWorker(_nonParallelSTAQueue, "Worker#NP_STA", ApartmentState.STA));
                 }
 
                 return _nonParallelSTAQueue;
