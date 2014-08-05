@@ -139,23 +139,12 @@ namespace NUnit.Engine.Runners
         }
 
         /// <summary>
-        /// Start a run of the tests in the loaded TestPackage. The tests are run
-        /// asynchronously and the listener interface is notified as it progresses.
-        /// </summary>
-        /// <param name="listener">An ITestEventHandler to receive events</param>
-        /// <param name="filter">A TestFilter used to select tests</param>
-        protected override void RunTestsAsynchronously(ITestEventListener listener, TestFilter filter)
-        {
-            _remoteRunner.RunAsync(listener, filter);
-        }
-
-        /// <summary>
         /// Cancel the ongoing test run. If no test is running,
         /// the call is ignored.
         /// </summary>
-        public override void CancelRun()
+        public override void StopRun(StopRunLevel level, int timeout)
         {
-            throw new NotImplementedException();
+            _remoteRunner.StopRun(level, timeout);
         }
 
         public override void Dispose()

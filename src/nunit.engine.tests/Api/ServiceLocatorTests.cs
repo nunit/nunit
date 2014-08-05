@@ -13,7 +13,7 @@ namespace NUnit.Engine.Api.Tests
         public void CreateEngine()
         {
             testEngine = new TestEngine();
-            testEngine.InitializeServices(".", InternalTraceLevel.Off);
+            testEngine.InternalTraceLevel = InternalTraceLevel.Off;
         }
 
         private void CheckAccessToService(Type serviceType)

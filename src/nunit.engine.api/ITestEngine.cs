@@ -41,17 +41,29 @@ namespace NUnit.Engine
         IServiceLocator Services { get; }
 
         /// <summary>
-        /// Create and initialize the standard set of services
-        /// used in the Engine. This interface is not normally
-        /// called by user code. Programs linking only to 
+        /// Gets and sets the directory path used by the engine for saving files.
+        /// Some services may ignore changes to this path made after initialization.
+        /// The default value is the current directory.
+        /// </summary>
+        string WorkDirectory { get; set;  }
+
+        /// <summary>
+        /// Gets and sets the InternalTraceLevel used by the engine. Changing this
+        /// setting after initialization will have no effect. The default value
+        /// is the value saved in the NUnit settings.
+        /// </summary>
+        InternalTraceLevel InternalTraceLevel { get; set; }
+
+        /// <summary>
+        /// Create and initialize the standard set of services used in the Engine.
+        /// The
+        /// This interface is not normally called by user code. Programs linking 
         /// only to the nunit.engine.api assembly are given a
         /// pre-initialized instance of TestEngine. Programs 
         /// that link directly to nunit.engine usually do so
         /// in order to perform custom initialization.
         /// </summary>
-        /// <param name="workDirectory">The work directory currently in use</param>
-        /// <param name="traceLevel">The level of internal tracing</param>
-        void InitializeServices(string workDirectory, InternalTraceLevel traceLevel);
+        void InitializeServices();
 
         /// <summary>
         /// Returns a test runner instance for use by clients in discovering,

@@ -42,6 +42,7 @@ namespace NUnit.Engine
         private static readonly string EXPLORE_ACTION = CONTROLLER_TYPE + "+ExploreTestsAction";
         private static readonly string COUNT_ACTION = CONTROLLER_TYPE + "+CountTestsAction";
         private static readonly string RUN_ACTION = CONTROLLER_TYPE + "+RunTestsAction";
+        private static readonly string STOP_RUN_ACTION = CONTROLLER_TYPE + "+StopRunAction";
 
         static ILogger log = InternalTrace.GetLogger("NUnitFrameworkDriver");
 
@@ -96,6 +97,15 @@ namespace NUnit.Engine
             CreateObject(RUN_ACTION, _frameworkController, filter.Text, handler);
 
             return handler.Result;
+        }
+
+        /// <summary>
+        /// Stop the run currently in progress
+        /// </summary>
+        /// <param name="force"></param>
+        public void StopRun(StopRunLevel level, int timeout)
+        {
+            CreateObject(STOP_RUN_ACTION, _frameworkController, (int)level, timeout);
         }
 
         /// <summary>

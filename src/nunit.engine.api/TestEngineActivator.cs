@@ -25,43 +25,44 @@ using System;
 
 namespace NUnit.Engine
 {
+    // This is a preliminary implementation, which requires a specific version of the engine and only
+    // loads it if it can be found in the current AppBase and ProbingPath or in the GAC.
+    //
+    // TODO: Find the engine in established locations known to NUnit or stored in the registry.
+    //
+    // TODO: Find the best available version of the engine.
+
     /// <summary>
-    /// TestEngineActivator creates an instance of the test
-    /// engine and returns an ITestEngine interface.
+    /// TestEngineActivator creates an instance of the test engine and returns an ITestEngine interface.
     /// </summary>
     public static class TestEngineActivator
     {
-        private static readonly string DefaultAssemblyName = "nunit.engine, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL";
-        private static readonly string DefaultTypeName = "NUnit.Engine.TestEngine";
+        private const string DefaultAssemblyName = "nunit.engine, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL";
+        private const string DefaultTypeName = "NUnit.Engine.TestEngine";
 
         #region Public Methods
 
         /// <summary>
-        /// Create an instance of the test engine using default values
-        /// for the assembly and type names.
+        /// Create an instance of the test engine using default values for the assembly and type names.
         /// </summary>
         /// <returns>An ITestEngine.</returns>
-        public static ITestEngine CreateInstance(string workDirectory, InternalTraceLevel traceLevel)
+        public static ITestEngine CreateInstance()
         {
-            return CreateInstance(DefaultAssemblyName, DefaultTypeName, workDirectory, traceLevel);
+            return CreateInstance(DefaultAssemblyName, DefaultTypeName);
         }
 
         /// <summary>
-        /// Create an instance of the test engine using provided values
-        /// for the assembly and type names. This method is intended
-        /// for use in experimenting with alternate implementations.
+        /// Create an instance of the test engine using provided values for the assembly and type names.
+        /// This method is intended for use in experimenting with alternative implementations.
         /// </summary>
         /// <param name="assemblyName">The name of the assembly to be used.</param>
         /// <param name="typeName">The name of the Type to be used.</param>
         /// <returns>An ITestEngine.</returns>
-        public static ITestEngine CreateInstance(string assemblyName, string typeName, string workDirectory, InternalTraceLevel traceLevel)
+        public static ITestEngine CreateInstance(string assemblyName, string typeName)
         {
             try
             {
-                ITestEngine engine = (ITestEngine)
-                    AppDomain.CurrentDomain.CreateInstanceAndUnwrap(assemblyName, typeName);
-                engine.InitializeServices(workDirectory, traceLevel);
-                return engine;
+                return (ITestEngine)AppDomain.CurrentDomain.CreateInstanceAndUnwrap(assemblyName, typeName);
             }
             catch (Exception ex)
             {

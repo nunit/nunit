@@ -96,6 +96,7 @@
     <Compile Include="Runners\MultipleTestProcessRunner.cs" />
     <Compile Include="Runners\ProcessRunner.cs" />
     <Compile Include="Runners\TestDomainRunner.cs" />
+    <Compile Include="TestRun.cs" />
     <Compile Include="RunTestsCallbackHandler.cs" />
     <Compile Include="RuntimeFramework.cs" />
     <Compile Include="ServiceContext.cs" />

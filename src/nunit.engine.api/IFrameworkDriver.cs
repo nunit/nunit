@@ -61,5 +61,7 @@ namespace NUnit.Engine
         /// <param name="filter">A filter indicating which tests to include</param>
         /// <returns>An Xml string representing the tests</returns>
         string Explore(TestFilter filter);
+
+        void StopRun(StopRunLevel level, int timeout);
     }
 }

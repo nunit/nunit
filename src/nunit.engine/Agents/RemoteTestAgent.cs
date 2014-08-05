@@ -184,18 +184,18 @@ namespace NUnit.Engine.Agents
         /// </summary>
         /// <param name="listener">An ITestEventHandler to receive events</param>
         /// <param name="filter">A TestFilter used to select tests</param>
-        public void RunAsync(ITestEventListener listener, TestFilter filter)
+        public void StartRun(ITestEventListener listener, TestFilter filter)
         {
             if (_runner == null)
-                throw new InvalidOperationException("RemoteTestAgent: BeginRUn called before Load");
+                throw new InvalidOperationException("RemoteTestAgent: StartRun called before Load");
 
-            _runner.RunAsync(listener, filter);
+            _runner.StartRun(listener, filter);
         }
 
-        public void CancelRun()
+        public void StopRun(StopRunLevel level, int timeout)
         {
             if (_runner != null)
-                _runner.CancelRun();
+                _runner.StopRun(level, timeout);
         }
 
         #endregion

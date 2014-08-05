@@ -63,9 +63,9 @@
     <Compile Include="NUnitEngineException.cs" />
     <Compile Include="IRecentFiles.cs" />
     <Compile Include="TestEngineActivator.cs" />
-    <Compile Include="TestEngineError.cs" />
     <Compile Include="TestFilter.cs" />
     <Compile Include="TestPackage.cs" />
+    <Compile Include="ITestRun.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="nunit.engine.api.build" />

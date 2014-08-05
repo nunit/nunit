@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Xml;
 
 namespace NUnit.Engine.Runners
@@ -129,7 +130,14 @@ namespace NUnit.Engine.Runners
         /// </summary>
         /// <param name="listener">An ITestEventHandler to receive events</param>
         /// <param name="filter">A TestFilter used to select tests</param>
-        protected abstract void RunTestsAsynchronously(ITestEventListener listener, TestFilter filter);
+        protected virtual void RunTestsAsynchronously(ITestEventListener listener, TestFilter filter)
+        {
+            using (var worker = new BackgroundWorker())
+            {
+                worker.DoWork += (s, ea) => RunTests(listener, filter);
+                worker.RunWorkerAsync();
+            }
+        }
 
         #endregion
 
@@ -213,7 +221,7 @@ namespace NUnit.Engine.Runners
         /// </summary>
         /// <param name="listener">An ITestEventHandler to receive events</param>
         /// <param name="filter">A TestFilter used to select tests</param>
-        public void RunAsync(ITestEventListener listener, TestFilter filter)
+        public void StartRun(ITestEventListener listener, TestFilter filter)
         {
             EnsurePackageIsLoaded();
 
@@ -224,7 +232,7 @@ namespace NUnit.Engine.Runners
         /// Cancel the ongoing test run. If no  test is running,
         /// the call should be ignored.
         /// </summary>
-        public abstract void CancelRun();
+        public abstract void StopRun(StopRunLevel level, int timeout);
 
         #endregion
 

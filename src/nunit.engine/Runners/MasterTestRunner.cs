@@ -41,6 +41,8 @@ namespace NUnit.Engine.Runners
 
         public MasterTestRunner(ServiceContext services, TestPackage package) : base(services, package) { }
 
+        public bool IsTestRunning { get; private set; }
+
         #region AbstractTestRunner Overrides
 
         /// <summary>
@@ -94,6 +96,11 @@ namespace NUnit.Engine.Runners
         /// <returns>A TestEngineResult giving the result of the test execution</returns>
         protected override TestEngineResult RunTests(ITestEventListener listener, TestFilter filter)
         {
+            IsTestRunning = true;
+
+            if (listener != null)
+                listener.OnTestEvent(string.Format("<start-run count='{0}'/>", CountTestCases(filter)));
+
             DateTime startTime = DateTime.UtcNow;
             long startTicks = Stopwatch.GetTimestamp();
 
@@ -106,27 +113,21 @@ namespace NUnit.Engine.Runners
             result.Xml.AddAttribute("end-time", XmlConvert.ToString(DateTime.UtcNow, "u"));
             result.Xml.AddAttribute("duration", duration.ToString("0.000000", NumberFormatInfo.InvariantInfo));
 
-            return result;
-        }
+            IsTestRunning = false;
 
-        /// <summary>
-        /// Start a run of the tests in the loaded TestPackage. The tests are run
-        /// asynchronously and the listener interface is notified as it progresses.
-        /// </summary>
-        /// <param name="listener">An ITestEventHandler to receive events</param>
-        /// <param name="filter">A TestFilter used to select tests</param>
-        protected override void RunTestsAsynchronously(ITestEventListener listener, TestFilter filter)
-        {
-            _realRunner.RunAsync(listener, filter);
+            if (listener != null)
+                listener.OnTestEvent(result.Xml.OuterXml);
+
+            return result;
         }
 
         /// <summary>
         /// Cancel the ongoing test run. If no test is running,
         /// the call is ignored.
         /// </summary>
-        public override void CancelRun()
+        public override void StopRun(StopRunLevel level, int timeout)
         {
-            throw new NotImplementedException();
+            _realRunner.StopRun(level, timeout);
         }
 
         #endregion
@@ -177,9 +178,11 @@ namespace NUnit.Engine.Runners
         /// 
         /// </summary>
         /// <param name="filter"></param>
-        void ITestRunner.RunAsync(ITestEventListener listener, TestFilter filter)
+        ITestRun ITestRunner.RunAsync(ITestEventListener listener, TestFilter filter)
         {
-            this.Run(listener, filter);
+            var testRun = new TestRun(this);
+            testRun.Start(listener, filter);
+            return testRun;
         }
 
         /// <summary>

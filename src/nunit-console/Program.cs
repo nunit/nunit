@@ -111,13 +111,14 @@ namespace NUnit.ConsoleRunner
                     }
                 }
 
-                string workDirectory = options.WorkDirectory ?? Environment.CurrentDirectory;
-                var traceLevel = options.InternalTraceLevel != null
-                    ? (InternalTraceLevel)Enum.Parse(typeof(InternalTraceLevel), options.InternalTraceLevel)
-                    : InternalTraceLevel.Off;
-
-                using (ITestEngine engine = TestEngineActivator.CreateInstance(workDirectory, traceLevel))
+                using (ITestEngine engine = TestEngineActivator.CreateInstance())
                 {
+                    if (options.WorkDirectory != null)
+                        engine.WorkDirectory = options.WorkDirectory;
+
+                    if (options.InternalTraceLevel != null)
+                        engine.InternalTraceLevel = (InternalTraceLevel)Enum.Parse(typeof(InternalTraceLevel), options.InternalTraceLevel);
+
                     try
                     {
                         return new ConsoleRunner(engine, options).Execute();

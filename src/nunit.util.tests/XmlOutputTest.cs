@@ -67,7 +67,8 @@ namespace NUnit.Util.Tests
 
             // Create a fresh copy of the engine, since we can't use the
             // one that is running this test.
-            engine = TestEngineActivator.CreateInstance(null, InternalTraceLevel.Off);
+            engine = TestEngineActivator.CreateInstance();
+            engine.InternalTraceLevel = InternalTraceLevel.Off;
 
             // Create a new DefaultAssemblyRunner, which is actually a framework class,
             // because we can't use the one that's currently running this test.

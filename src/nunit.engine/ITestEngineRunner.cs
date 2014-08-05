@@ -75,13 +75,14 @@ namespace NUnit.Engine
         /// </summary>
         /// <param name="listener">An ITestEventHandler to receive events</param>
         /// <param name="filter">A TestFilter used to select tests</param>
-        void RunAsync(ITestEventListener listener, TestFilter filter);
+        void StartRun(ITestEventListener listener, TestFilter filter);
 
         /// <summary>
         /// Cancel the current test run. If no test is running,
         /// the call is ignored.
         /// </summary>
-        void CancelRun();
+        /// <param name="force">If true, force a stop by cancelling threads if necessary.</param>
+        void StopRun(StopRunLevel level, int timeout);
 
         /// <summary>
         /// Explore a loaded TestPackage and return information about

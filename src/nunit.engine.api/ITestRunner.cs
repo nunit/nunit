@@ -32,6 +32,11 @@ namespace NUnit.Engine
     public interface ITestRunner : IDisposable
     {
         /// <summary>
+        /// Get a flag indicating whether a test is running
+        /// </summary>
+        bool IsTestRunning { get; }
+
+        /// <summary>
         /// Load a TestPackage for possible execution
         /// </summary>
         /// <returns>An XmlNode representing the loaded package.</returns>
@@ -75,13 +80,9 @@ namespace NUnit.Engine
         /// asynchronously and the listener interface is notified as it progresses.
         /// </summary>
         /// <param name="filter">A TestFilter used to select tests</param>
-        void RunAsync(ITestEventListener listener, TestFilter filter);
+        ITestRun RunAsync(ITestEventListener listener, TestFilter filter);
 
-        /// <summary>
-        /// Cancel the current test run. If no test is running,
-        /// the method returns without error.
-        /// </summary>
-        void CancelRun();
+        void StopRun(StopRunLevel level, int timeout);
 
         /// <summary>
         /// Explore a loaded TestPackage and return information about the tests found.
@@ -89,5 +90,12 @@ namespace NUnit.Engine
         /// <param name="filter">The TestFilter to be used in selecting tests to explore.</param>
         /// <returns>An XmlNode representing the tests fould.</returns>
         XmlNode Explore(TestFilter filter);
+    }
+
+    public enum StopRunLevel
+    {
+        Request,
+        Force,
+        RequestThenForce
     }
 }

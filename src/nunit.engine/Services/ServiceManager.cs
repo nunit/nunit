@@ -38,6 +38,8 @@ namespace NUnit.Engine.Services
 
         static Logger log = InternalTrace.GetLogger(typeof(ServiceManager));
 
+        public bool ServicesInitialized { get; private set; }
+
         #region Public Methods
 
         public IService GetService( Type serviceType )
@@ -83,9 +85,12 @@ namespace NUnit.Engine.Services
                 }
                 catch (Exception ex)
                 {
+                    // TODO: Should we pass this exception through?
                     log.Error("Failed to initialize service", ex);
                 }
             }
+
+            this.ServicesInitialized = true;
         }
 
         public void StopAllServices()

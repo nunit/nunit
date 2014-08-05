@@ -38,30 +38,40 @@ namespace NUnit.Engine
     /// </summary>
     public class TestEngine : ITestEngine
     {
-        private ServiceContext services;
+        private bool _servicesInitialized = false;
 
         public TestEngine()
         {
-            this.services = new ServiceContext();
+            this.Services = new ServiceContext();
+            this.WorkDirectory = Environment.CurrentDirectory;
+            this.InternalTraceLevel = InternalTraceLevel.Default;
         }
 
         #region Public Properties
 
-        public ServiceContext Services
-        {
-            get { return services; }
-        }
+        public ServiceContext Services { get; private set; }
+
+        public string WorkDirectory { get; set; }
+
+        public InternalTraceLevel InternalTraceLevel { get; set;  }
 
         #endregion
 
         #region ITestEngine Members
 
         /// <summary>
-        /// Access the public Engine Services
+        /// Access the public IServiceLocator, first initializing
+        /// the services if that has not already been done.
         /// </summary>
         IServiceLocator ITestEngine.Services
         {
-            get { return Services; }
+            get 
+            {
+                if (!this.Services.ServiceManager.ServicesInitialized)
+                    InitializeServices();
+
+                return this.Services; 
+            }
         }
 
         /// <summary>
@@ -73,39 +83,45 @@ namespace NUnit.Engine
         /// that link directly to nunit.engine usually do so
         /// in order to perform custom initialization.
         /// </summary>
-        public void InitializeServices(string workDirectory, InternalTraceLevel traceLevel)
+        public void InitializeServices()
         {
             SettingsService settingsService = new SettingsService("NUnit30Settings.xml", true);
 
-            if (traceLevel == InternalTraceLevel.Default)
-                traceLevel = (InternalTraceLevel)settingsService.GetSetting("Options.InternalTraceLevel", InternalTraceLevel.Off);
+            if (InternalTraceLevel == InternalTraceLevel.Default)
+                InternalTraceLevel = (InternalTraceLevel)settingsService.GetSetting("Options.InternalTraceLevel", InternalTraceLevel.Off);
 
-            if (traceLevel != InternalTraceLevel.Off)
+            if (InternalTraceLevel != InternalTraceLevel.Off)
             {
                 var logName = string.Format("InternalTrace.{0}.log", Process.GetCurrentProcess().Id);
-                InternalTrace.Initialize(Path.Combine(workDirectory, logName), traceLevel);
+                InternalTrace.Initialize(Path.Combine(WorkDirectory, logName), InternalTraceLevel);
             }
 
-            Services.Add(settingsService);
-            services.Add(new RecentFilesService());
-            Services.Add(new DomainManager());
-            Services.Add(new ProjectService());
-            Services.Add(new RuntimeFrameworkSelector());
-            Services.Add(new DefaultTestRunnerFactory());
-            Services.Add(new DriverFactory());
-            Services.Add(new TestAgency());
+            this.Services.Add(settingsService);
+            this.Services.Add(new RecentFilesService());
+            this.Services.Add(new DomainManager());
+            this.Services.Add(new ProjectService());
+            this.Services.Add(new RuntimeFrameworkSelector());
+            this.Services.Add(new DefaultTestRunnerFactory());
+            this.Services.Add(new DriverFactory());
+            this.Services.Add(new TestAgency());
 
-            Services.ServiceManager.InitializeServices();
+            this.Services.ServiceManager.InitializeServices();
+
+            _servicesInitialized = true;
         }
 
         /// <summary>
         /// Returns a test runner for use by clients that need to load the
-        /// tests once and run them multiple times.
+        /// tests once and run them multiple times. If necessary, the
+        /// services are initialized first.
         /// </summary>
         /// <returns>An ITestRunner.</returns>
         public ITestRunner GetRunner(TestPackage package)
         {
-            return new Runners.MasterTestRunner(Services, package);
+            if (!this.Services.ServiceManager.ServicesInitialized)
+                InitializeServices();
+
+            return new Runners.MasterTestRunner(this.Services, package);
         }
 
         #endregion
