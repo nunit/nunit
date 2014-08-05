@@ -294,7 +294,7 @@ namespace NUnit.Framework.Api
 
             // When cancelling, the completion event may not be signalled,
             // so we only wait a short time before checking.
-            _runner.WaitForCompletion(5000);
+            _runner.WaitForCompletion(10000);
 
             Assert.True(_runner.IsTestComplete, "Test is not complete");
 
