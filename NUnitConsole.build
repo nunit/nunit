@@ -26,7 +26,7 @@
   <property name="project.name" value="NUnitConsole"/>
 
   <!-- NUnit Package Version - Three digits -->
-  <property name="package.version" value="2.9.6"/>
+  <property name="package.version" value="2.9.7"/>
 
   <!-- Package Configuration (Release, Alpha, Beta, etc.) -->
   <property name="package.configuration" value=""/>
