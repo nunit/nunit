@@ -33,21 +33,25 @@ namespace NUnit.Framework.Tests.Compatibility
     [TestFixture]
     public class StopwatchTests
     {
+        private const int SLEEP = 100;
+        private const int MIN = (int)(SLEEP * 0.9);
+        private const int MAX = (int)(SLEEP * 1.2);
+
         [Test]
         public void TestStartNewIsRunning()
         {
             var watch = Stopwatch.StartNew();
-            Thread.Sleep(50);
+            Thread.Sleep(SLEEP);
             Assert.That(watch.IsRunning, Is.True);
-            Assert.That(watch.ElapsedMilliseconds, Is.GreaterThanOrEqualTo(50));
-            Assert.That(watch.ElapsedMilliseconds, Is.LessThan(100));
+            Assert.That(watch.ElapsedMilliseconds, Is.GreaterThanOrEqualTo(MIN));
+            Assert.That(watch.ElapsedMilliseconds, Is.LessThan(MAX));
         }
 
         [Test]
         public void TestConstructNewIsNotRunning()
         {
             var watch = new Stopwatch();
-            Thread.Sleep(50);
+            Thread.Sleep(SLEEP);
             Assert.That(watch.IsRunning, Is.False);
             Assert.That(watch.ElapsedMilliseconds, Is.EqualTo(0));
         }
@@ -56,7 +60,7 @@ namespace NUnit.Framework.Tests.Compatibility
         public void TestGetTimestamp()
         {
             var before = Stopwatch.GetTimestamp();
-            Thread.Sleep(50);
+            Thread.Sleep(SLEEP);
             var after = Stopwatch.GetTimestamp();
             Assert.That(before, Is.LessThan(after));
         }
@@ -65,7 +69,7 @@ namespace NUnit.Framework.Tests.Compatibility
         public void TestReset()
         {
             var watch = Stopwatch.StartNew();
-            Thread.Sleep(50);
+            Thread.Sleep(SLEEP);
             watch.Reset();
             Assert.That(watch.IsRunning, Is.False);
             Assert.That(watch.ElapsedMilliseconds, Is.EqualTo(0));
@@ -75,12 +79,12 @@ namespace NUnit.Framework.Tests.Compatibility
         public void TestRestart()
         {
             var watch = Stopwatch.StartNew();
-            Thread.Sleep(50);
+            Thread.Sleep(SLEEP);
             watch.Restart();
-            Thread.Sleep(50);
+            Thread.Sleep(SLEEP);
             Assert.That(watch.IsRunning, Is.True);
-            Assert.That(watch.ElapsedMilliseconds, Is.GreaterThanOrEqualTo(50));
-            Assert.That(watch.ElapsedMilliseconds, Is.LessThan(100));
+            Assert.That(watch.ElapsedMilliseconds, Is.GreaterThanOrEqualTo(MIN));
+            Assert.That(watch.ElapsedMilliseconds, Is.LessThan(MAX));
         }
 
         [Test]
@@ -90,10 +94,10 @@ namespace NUnit.Framework.Tests.Compatibility
             Assert.That(watch.IsRunning, Is.False);
             Assert.That(watch.ElapsedMilliseconds, Is.EqualTo(0));
             watch.Start();
-            Thread.Sleep(50);
+            Thread.Sleep(SLEEP);
             Assert.That(watch.IsRunning, Is.True);
-            Assert.That(watch.ElapsedMilliseconds, Is.GreaterThanOrEqualTo(50));
-            Assert.That(watch.ElapsedMilliseconds, Is.LessThan(100));
+            Assert.That(watch.ElapsedMilliseconds, Is.GreaterThanOrEqualTo(MIN));
+            Assert.That(watch.ElapsedMilliseconds, Is.LessThan(MAX));
         }
 
         [Test]
@@ -101,13 +105,13 @@ namespace NUnit.Framework.Tests.Compatibility
         {
             var watch = Stopwatch.StartNew();
             Assert.That(watch.IsRunning, Is.True);
-            Thread.Sleep(50);
+            Thread.Sleep(SLEEP);
             watch.Stop();
             Assert.That(watch.IsRunning, Is.False);
             var saved = watch.ElapsedMilliseconds;
-            Assert.That(saved, Is.GreaterThanOrEqualTo(50));
-            Assert.That(watch.ElapsedMilliseconds, Is.LessThan(100));
-            Thread.Sleep(50);
+            Assert.That(saved, Is.GreaterThanOrEqualTo(MIN));
+            Assert.That(watch.ElapsedMilliseconds, Is.LessThan(MAX));
+            Thread.Sleep(SLEEP);
             Assert.That(watch.ElapsedMilliseconds, Is.EqualTo(saved));
         }        
 
