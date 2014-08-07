@@ -32,7 +32,7 @@ using NUnit.Tests.Assemblies;
 
 namespace NUnit.Framework.Api
 {
-    // Functional tests of the DefaultTestAssenblyRunner and all subordinate classes
+    // Functional tests of the TestAssenblyRunner and all subordinate classes
     public class TestAssemblyRunnerTests
     {
 #if NUNITLITE

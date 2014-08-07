@@ -201,11 +201,6 @@ namespace NUnit.Framework.Api
             Runner.StopRun(force);
         }
 
-        private void WaitForCompletion(ICallbackEventHandler handler, int timeout)
-        {
-            handler.RaiseCallbackEvent(Runner.WaitForCompletion(timeout).ToString());
-        }
-
         private void CountTests(ICallbackEventHandler handler, string filter)
         {
             Guard.ArgumentNotNull(filter, "filter");
@@ -341,27 +336,6 @@ namespace NUnit.Framework.Api
             public RunAsyncAction(FrameworkController controller, string filter, object handler) 
             {
                 controller.RunAsync((ICallbackEventHandler)handler, filter);
-            }
-        }
-
-        #endregion
-
-        #region WaitAction
-
-        /// <summary>
-        /// WaitAction 
-        /// </summary>
-        public class WaitAction : FrameworkControllerAction
-        {
-            /// <summary>
-            /// Construct a WaitAction and wait for the run to complete
-            /// </summary>
-            /// <param name="controller">A FrameworkController for the test run to wait for</param>
-            /// <param name="timeout">The number of milliseconds to wait for completion</param>
-            /// <param name="handler">A callback handler used to report results</param>
-            public WaitAction(FrameworkController controller, int timeout, object handler)
-            {
-                controller.WaitForCompletion((ICallbackEventHandler)handler, timeout);
             }
         }
 
