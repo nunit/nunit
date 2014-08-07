@@ -4,7 +4,7 @@
   
   <PropertyGroup Label="Common Properties">
     <ProjectName>$(MSBuildProjectName)</ProjectName>
-    <PackageVersion>2.9.6</PackageVersion>
+    <PackageVersion>2.9.7</PackageVersion>
     <PackageName>$(ProjectName)-$(PackageVersion)</PackageName>
   </PropertyGroup>
 

@@ -43,8 +43,8 @@ using System.Reflection;
 // You can specify all the _values or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
 //
-[assembly: AssemblyVersion("2.9.6")]
-[assembly: AssemblyInformationalVersion("2.9.6")]
+[assembly: AssemblyVersion("2.9.7")]
+[assembly: AssemblyInformationalVersion("2.9.7")]
 
 #if DEBUG
 #if NET_4_5
