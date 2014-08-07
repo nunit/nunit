@@ -82,7 +82,11 @@ namespace NUnit.Engine
         /// <param name="filter">A TestFilter used to select tests</param>
         ITestRun RunAsync(ITestEventListener listener, TestFilter filter);
 
-        void StopRun(StopRunLevel level, int timeout);
+        /// <summary>
+        /// Cancel the ongoing test run. If no  test is running, the call is ignored.
+        /// </summary>
+        /// <param name="force">If true, cancel any ongoing test threads, otherwise wait for them to complete.</param>
+        void StopRun(bool force);
 
         /// <summary>
         /// Explore a loaded TestPackage and return information about the tests found.
@@ -90,12 +94,5 @@ namespace NUnit.Engine
         /// <param name="filter">The TestFilter to be used in selecting tests to explore.</param>
         /// <returns>An XmlNode representing the tests fould.</returns>
         XmlNode Explore(TestFilter filter);
-    }
-
-    public enum StopRunLevel
-    {
-        Request,
-        Force,
-        RequestThenForce
     }
 }

@@ -77,14 +77,6 @@ namespace NUnit.Engine
         }
 
         /// <summary>
-        /// Wait for the test run to finish and return the result.
-        /// </summary>
-        public void WaitForCompletion()
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
         /// Stop the current test run. 
         /// </summary>
         /// <param name="force">If true, force the stop by cancelling all threads.</param>

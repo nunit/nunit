@@ -100,12 +100,12 @@ namespace NUnit.Engine
         }
 
         /// <summary>
-        /// Stop the run currently in progress
+        /// Cancel the ongoing test run. If no  test is running, the call is ignored.
         /// </summary>
-        /// <param name="force"></param>
-        public void StopRun(StopRunLevel level, int timeout)
+        /// <param name="force">If true, cancel any ongoing test threads, otherwise wait for them to complete.</param>
+        public void StopRun(bool force)
         {
-            CreateObject(STOP_RUN_ACTION, _frameworkController, (int)level, timeout);
+            CreateObject(STOP_RUN_ACTION, _frameworkController, force);
         }
 
         /// <summary>

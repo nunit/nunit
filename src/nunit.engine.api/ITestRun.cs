@@ -40,11 +40,6 @@ namespace NUnit.Engine
         XmlNode Result { get; }
 
         /// <summary>
-        /// Wait for the test run to finish.
-        /// </summary>
-        void WaitForCompletion();
-
-        /// <summary>
         /// Stop the current test run, specifying whether to force cancellation. 
         /// If no test is running, the method returns without error.
         /// </summary>

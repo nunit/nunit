@@ -32,7 +32,7 @@ namespace NUnit.Util.Tests
     using Engine.Internal;
     using Framework;
 
-    using Runner = NUnit.Framework.Api.DefaultTestAssemblyRunner;
+    using Runner = NUnit.Framework.Api.NUnitTestAssemblyRunner;
     using Builder = NUnit.Framework.Api.DefaultTestAssemblyBuilder;
     using TestListener = NUnit.Framework.Internal.TestListener;
     using TestFilter = NUnit.Framework.Internal.TestFilter;

@@ -173,7 +173,7 @@ namespace NUnit.Engine.Internal.Tests
             if (ex is System.Reflection.TargetInvocationException)
                 ex = ex.InnerException;
             Assert.That(ex, Is.TypeOf<InvalidOperationException>());
-            Assert.That(ex.Message, Is.EqualTo("The CountTests method was called but no test has been loaded"));
+            Assert.That(ex.Message, Is.EqualTo("The CountTestCases method was called but no test has been loaded"));
         }
 
         [Test]

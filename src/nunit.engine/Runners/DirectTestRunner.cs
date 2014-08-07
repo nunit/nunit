@@ -124,13 +124,13 @@ namespace NUnit.Engine.Runners
         }
 
         /// <summary>
-        /// Cancel the ongoing test run. If no test is running
-        /// the call is ignored.
+        /// Cancel the ongoing test run. If no  test is running, the call is ignored.
         /// </summary>
-        public override void StopRun(StopRunLevel level, int timeout)
+        /// <param name="force">If true, cancel any ongoing test threads, otherwise wait for them to complete.</param>
+        public override void StopRun(bool force)
         {
             foreach(var driver in _drivers)
-                driver.StopRun(level, timeout);
+                driver.StopRun(force);
         }
 
         #endregion

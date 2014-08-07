@@ -139,6 +139,12 @@ namespace NUnit.Engine.Runners
             }
         }
 
+        /// <summary>
+        /// Cancel the ongoing test run. If no  test is running, the call is ignored.
+        /// </summary>
+        /// <param name="force">If true, cancel any ongoing test threads, otherwise wait for them to complete.</param>
+        public abstract void StopRun(bool force);
+
         #endregion
 
         #region ITestEngineRunner Members
@@ -227,12 +233,6 @@ namespace NUnit.Engine.Runners
 
             RunTestsAsynchronously(listener, filter);
         }
-
-        /// <summary>
-        /// Cancel the ongoing test run. If no  test is running,
-        /// the call should be ignored.
-        /// </summary>
-        public abstract void StopRun(StopRunLevel level, int timeout);
 
         #endregion
 

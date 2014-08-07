@@ -82,7 +82,7 @@ namespace NUnit.Engine
         /// the call is ignored.
         /// </summary>
         /// <param name="force">If true, force a stop by cancelling threads if necessary.</param>
-        void StopRun(StopRunLevel level, int timeout);
+        void StopRun(bool force);
 
         /// <summary>
         /// Explore a loaded TestPackage and return information about
