@@ -22,8 +22,8 @@
 // ***********************************************************************
 
 using System;
-using System.Diagnostics;
 using System.Threading;
+using NUnit.Framework.Compatibility;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Execution
