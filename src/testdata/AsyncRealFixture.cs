@@ -65,8 +65,6 @@ namespace NUnit.TestData
         public System.Threading.Tasks.Task TaskError()
         {
             throw new InvalidOperationException();
-
-            Assert.Fail("Should never get here");
         }
 
         #endregion

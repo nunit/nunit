@@ -122,7 +122,6 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// Stop the thread, either immediately or after finishing the current WorkItem
         /// </summary>
-        /// <param name="immediate">If true, abort the currently running test.</param>
         public void Cancel()
         {
             _running = false;

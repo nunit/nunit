@@ -215,7 +215,7 @@ namespace NUnit.Framework.Internal.Execution
                 w.Cancel();
 
             foreach (var q in Queues)
-                q.Cancel();
+                q.Stop();
 
             Workers.Clear();
             Queues.Clear();

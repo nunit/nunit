@@ -36,10 +36,10 @@ namespace NUnit.Framework.Api
     /// /// </summary>
     public abstract class AbstractTestAssemblyRunner : ITestAssemblyRunner
     {
-        protected static Logger log = InternalTrace.GetLogger("DefaultTestAssemblyRunner");
+        private static Logger log = InternalTrace.GetLogger("DefaultTestAssemblyRunner");
 
         private ITestAssemblyBuilder _builder;
-        protected ManualResetEvent _runComplete = new ManualResetEvent(false);
+        private ManualResetEvent _runComplete = new ManualResetEvent(false);
 
         #region Constructors
 

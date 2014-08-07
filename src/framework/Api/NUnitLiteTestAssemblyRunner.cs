@@ -49,7 +49,6 @@ namespace NUnit.Framework.Api
         /// Run selected tests asynchronously, notifying the listener interface as it progresses.
         /// </summary>
         /// <param name="listener">Interface to receive EventListener notifications.</param>
-        /// <param name="filter">A test filter used to select tests to be run</param>
         /// <returns></returns>
         public override void StartRun(ITestListener listener)
         {

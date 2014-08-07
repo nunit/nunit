@@ -169,17 +169,6 @@ namespace NUnit.Framework.Internal.Execution
             }
         }
 
-        public void Cancel()
-        {
-            lock (_syncRoot)
-            {
-                log.Info("{0} cancelling", Name);
-
-                State = WorkItemQueueState.Stopped;
-                Monitor.PulseAll(_syncRoot);
-            }
-        }
-
         /// <summary>
         /// Pause the queue for restarting later
         /// </summary>
