@@ -25,6 +25,7 @@ using System;
 using System.IO;
 using System.Text;
 using System.Collections.Generic;
+using NUnit.Framework.Internal;
 
 namespace NUnitLite.Runner
 {
@@ -34,7 +35,7 @@ namespace NUnitLite.Runner
     /// </summary>
     public class CommandLineOptions
     {
-        private string optionChars;
+        private readonly string _optionChars;
         private static readonly string NL = NUnit.Env.NewLine;
 
         #region Constructors
@@ -43,7 +44,7 @@ namespace NUnitLite.Runner
         /// Construct a CommandLineOptions object using default option chars
         /// </summary>
         public CommandLineOptions()
-            : this(System.IO.Path.DirectorySeparatorChar == '/' ? "-" : "/-") { }
+            : this(Path.DirectorySeparatorChar == '/' ? "-" : "/-") { }
 
         /// <summary>
         /// Construct a CommandLineOptions object using specified option chars
@@ -51,11 +52,12 @@ namespace NUnitLite.Runner
         /// <param name="optionChars"></param>
         public CommandLineOptions(string optionChars)
         {
-            this.optionChars = optionChars;
+            _optionChars = optionChars;
 
-            this.Tests = new List<string>();
-            this.Parameters = new List<string>();
-            this.invalidOptions = new List<string>();
+            Tests = new List<string>();
+            Parameters = new List<string>();
+            _invalidOptions = new List<string>();
+            InternalTraceLevel = InternalTraceLevel.Default;
         }
 
         #endregion
@@ -104,6 +106,12 @@ namespace NUnitLite.Runner
         /// <summary>Gets the list of categories to exclude.</summary>
         public string Exclude { get; private set; }
 
+        /// <summary>
+        /// Set internal trace {LEVEL}.
+        /// Values: Off, Error, Warning, Info, Verbose (Debug)
+        /// </summary>
+        public InternalTraceLevel InternalTraceLevel { get; private set; }
+
         private string ExpandToFullPath(string path)
         {
             if (path == null) return null;
@@ -115,7 +123,7 @@ namespace NUnitLite.Runner
 #endif
         }
 
-        private int randomSeed = -1;
+        private int _randomSeed = -1;
         /// <summary>
         /// Gets the initial random seed. If the InitialSeed is not set, it will randomly generate a new one.
         /// </summary>
@@ -126,10 +134,10 @@ namespace NUnitLite.Runner
         {
             get
             {
-                if (randomSeed < 0)
-                    randomSeed = new Random().Next();
+                if (_randomSeed < 0)
+                    _randomSeed = new Random().Next();
 
-                return randomSeed;
+                return _randomSeed;
             }
         }
 
@@ -139,7 +147,7 @@ namespace NUnitLite.Runner
         /// <summary>Indicates whether there was an error in parsing the options.</summary>
         public bool Error { get; private set; }
 
-        private List<string> invalidOptions;
+        private readonly List<string> _invalidOptions;
         /// <summary>
         /// Gets the error message.
         /// </summary>
@@ -149,7 +157,7 @@ namespace NUnitLite.Runner
             get
             {
                 StringBuilder sb = new StringBuilder();
-                foreach (string opt in invalidOptions)
+                foreach (string opt in _invalidOptions)
                     sb.Append("Invalid option: " + opt + NL);
                 return sb.ToString();
             }
@@ -192,6 +200,8 @@ namespace NUnitLite.Runner
                 sb.Append("                  to the specified file in XML format." + NL);
                 sb.Append("  -help,-h        Displays this help" + NL + NL);
                 sb.Append("  -noheader,-noh  Suppresses display of the initial message" + NL + NL);
+                sb.Append("  -trace:level    Set internal trace {LEVEL}." + NL);
+                sb.Append("                  Values: Off, Error, Warning, Info, Verbose" + NL + NL);
                 sb.Append("  -labels         Displays the name of each test when it starts" + NL + NL);
                 sb.Append("  -seed:SEED      Specify the random seed used in generating test cases." + NL + NL);
                 sb.Append("  -include:CAT    List of categories to include" + NL + NL);
@@ -223,7 +233,7 @@ namespace NUnitLite.Runner
         {
             foreach( string arg in args )
             {
-                if (optionChars.IndexOf(arg[0]) >= 0 )
+                if (_optionChars.IndexOf(arg[0]) >= 0 )
                     ProcessOption(arg);
                 else
                     ProcessParameter(arg);
@@ -317,7 +327,17 @@ namespace NUnitLite.Runner
                 case "seed":
                     try
                     {
-                        randomSeed = int.Parse(val);
+                        _randomSeed = int.Parse(val);
+                    }
+                    catch
+                    {
+                        InvalidOption(option);
+                    }
+                    break;
+                case "trace":
+                    try
+                    {
+                        InternalTraceLevel = (InternalTraceLevel)Enum.Parse(typeof(InternalTraceLevel), val, true);
                     }
                     catch
                     {
@@ -333,7 +353,7 @@ namespace NUnitLite.Runner
         private void InvalidOption(string option)
         {
             Error = true;
-            invalidOptions.Add(option);
+            _invalidOptions.Add(option);
         }
 
         private void ProcessParameter(string param)

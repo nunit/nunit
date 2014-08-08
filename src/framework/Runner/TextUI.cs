@@ -119,6 +119,9 @@ namespace NUnitLite.Runner
                 if (commandLineOptions.InitialSeed >= 0)
                     runnerSettings[DriverSettings.RandomSeed] = commandLineOptions.InitialSeed;
 
+                if (commandLineOptions.InternalTraceLevel != InternalTraceLevel.Default)
+                    runnerSettings[DriverSettings.InternalTraceLevel] = commandLineOptions.InternalTraceLevel;
+
                 TestFilter filter = commandLineOptions.Tests.Count > 0
                     ? new SimpleNameFilter(commandLineOptions.Tests)
                     : TestFilter.Empty;
