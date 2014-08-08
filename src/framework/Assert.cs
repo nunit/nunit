@@ -749,16 +749,6 @@ namespace NUnit.Framework
         public static void DoesNotThrow(TestDelegate code, string message, params object[] args)
         {
             Assert.That(code, new ThrowsNothingConstraint(), message, args);
-            //try
-            //{
-            //    code();
-            //}
-            //catch (Exception ex)
-            //{
-            //    TextMessageWriter writer = new TextMessageWriter(message, args);
-            //    writer.WriteLine("Unexpected exception: {0}", ex.GetType());
-            //    Assert.Fail(writer.ToString());
-            //}
         }
 
         /// <summary>

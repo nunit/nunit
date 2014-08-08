@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2009 Charlie Poole
+// Copyright (c) 2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,33 +21,42 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#if NUNITLITE
 using System;
-using System.Collections;
-using System.Reflection;
+using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
+using NUnit.Framework.Internal.Execution;
 
-namespace NUnit.Framework.Interfaces
+namespace NUnit.Framework.Api
 {
     /// <summary>
-    /// The ITestAssemblyBuilder interface is implemented by a class
-    /// that is able to build a suite of tests given an assembly or 
-    /// an assembly filename.
+    /// Default NUnitLite implementation of ITestAssemblyRunner
     /// </summary>
-    public interface ITestAssemblyBuilder
+    public class NUnitLiteTestAssemblyRunner : AbstractTestAssemblyRunner
     {
-        /// <summary>
-        /// Build a suite of tests from a provided assembly
-        /// </summary>
-        /// <param name="assembly">The assembly from which tests are to be built</param>
-        /// <param name="options">A dictionary of options to use in building the suite</param>
-        /// <returns>A TestSuite containing the tests found in the assembly</returns>
-        ITest Build(Assembly assembly, IDictionary options);
+        #region Constructor
 
         /// <summary>
-        /// Build a suite of tests given the filename of an assembly
+        /// Construct an NUnitLiteTestAssemblyRunner
         /// </summary>
-        /// <param name="assemblyName">The filename of the assembly from which tests are to be built</param>
-        /// <param name="options">A dictionary of options to use in building the suite</param>
-        /// <returns>A TestSuite containing the tests found in the assembly</returns>
-        ITest Build(string assemblyName, IDictionary options);
+        public NUnitLiteTestAssemblyRunner(ITestAssemblyBuilder builder) : base(builder) { }
+
+        #endregion
+
+        #region AbstractTestAssemblyRunner Overrides
+
+        /// <summary>
+        /// Run selected tests asynchronously, notifying the listener interface as it progresses.
+        /// </summary>
+        /// <param name="listener">Interface to receive EventListener notifications.</param>
+        /// <returns></returns>
+        public override void StartRun(ITestListener listener)
+        {
+            Context.Dispatcher = new SimpleWorkItemDispatcher();
+            Context.Dispatcher.Dispatch(TopLevelWorkItem);
+        }
+
+        #endregion
     }
 }
+#endif

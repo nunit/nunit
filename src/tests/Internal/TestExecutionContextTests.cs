@@ -44,11 +44,6 @@ namespace NUnit.Framework.Internal
         TestExecutionContext fixtureContext;
         TestExecutionContext setupContext;
 
-#if !NETCF
-        CultureInfo originalCulture;
-        CultureInfo originalUICulture;
-#endif
-
 #if !NETCF && !SILVERLIGHT
         string originalDirectory;
         IPrincipal originalPrincipal;
@@ -112,6 +107,8 @@ namespace NUnit.Framework.Internal
                 "Context at TearDown failed to match that saved from SetUp");
         }
 
+        #region CurrentTest
+
         [Test]
         public void FixtureSetUpCanAccessFixtureName()
         {
@@ -136,34 +133,6 @@ namespace NUnit.Framework.Internal
         {
             Assert.That(fixtureContext.CurrentTest.Properties.Get("Question"), Is.EqualTo("Why?"));
         }
-
-#if !NETCF
-        [Test]
-        public void FixtureSetUpontextReflectsCurrentCulture()
-        {
-            Assert.That(fixtureContext.CurrentCulture, Is.EqualTo(CultureInfo.CurrentCulture));
-        }
-
-        [Test]
-        public void FixtureSetUpContextReflectsCurrentUICulture()
-        {
-            Assert.That(fixtureContext.CurrentUICulture, Is.EqualTo(CultureInfo.CurrentUICulture));
-        }
-#endif
-
-#if !NETCF && !SILVERLIGHT
-        [Test]
-        public void FixtureSetUpContextReflectsCurrentDirectory()
-        {
-            Assert.That(fixtureContext.CurrentDirectory, Is.EqualTo(Environment.CurrentDirectory));
-        }
-
-        [Test]
-        public void FixtureSetUpContextReflectsCurrentPrincipal()
-        {
-            Assert.That(fixtureContext.CurrentPrincipal, Is.EqualTo(Thread.CurrentPrincipal));
-        }
-#endif
 
         [Test]
         public void SetUpCanAccessTestName()
@@ -191,34 +160,6 @@ namespace NUnit.Framework.Internal
             Assert.That(setupContext.CurrentTest.Properties.Get("Answer"), Is.EqualTo(42));
         }
 
-#if !NETCF
-        [Test]
-        public void SetUpContextReflectsCurrentCulture()
-        {
-            Assert.That(setupContext.CurrentCulture, Is.EqualTo(CultureInfo.CurrentCulture));
-        }
-
-        [Test]
-        public void SetUpContextReflectsCurrentUICulture()
-        {
-            Assert.That(setupContext.CurrentUICulture, Is.EqualTo(CultureInfo.CurrentUICulture));
-        }
-#endif
-
-#if !NETCF && !SILVERLIGHT
-        [Test]
-        public void SetUpContextReflectsCurrentDirectory()
-        {
-            Assert.That(setupContext.CurrentDirectory, Is.EqualTo(Environment.CurrentDirectory));
-        }
-
-        [Test]
-        public void SetUpContextReflectsCurrentPrincipal()
-        {
-            Assert.That(setupContext.CurrentPrincipal, Is.EqualTo(Thread.CurrentPrincipal));
-        }
-#endif
-
         [Test]
         public void TestCanAccessItsOwnName()
         {
@@ -245,7 +186,39 @@ namespace NUnit.Framework.Internal
             Assert.That(TestExecutionContext.CurrentContext.CurrentTest.Properties.Get("Answer"), Is.EqualTo(42));
         }
 
+        #endregion
+
+        #region CurrentCulture and CurrentUICulture
+
 #if !NETCF
+        CultureInfo originalCulture;
+        CultureInfo originalUICulture;
+
+        [Test]
+        public void FixtureSetUpontextReflectsCurrentCulture()
+        {
+            Assert.That(fixtureContext.CurrentCulture, Is.EqualTo(CultureInfo.CurrentCulture));
+        }
+
+        [Test]
+        public void FixtureSetUpContextReflectsCurrentUICulture()
+        {
+            Assert.That(fixtureContext.CurrentUICulture, Is.EqualTo(CultureInfo.CurrentUICulture));
+        }
+
+        [Test]
+        public void SetUpContextReflectsCurrentCulture()
+        {
+            Assert.That(setupContext.CurrentCulture, Is.EqualTo(CultureInfo.CurrentCulture));
+        }
+
+        [Test]
+        public void SetUpContextReflectsCurrentUICulture()
+        {
+            Assert.That(setupContext.CurrentUICulture, Is.EqualTo(CultureInfo.CurrentUICulture));
+
+        }
+
         [Test]
         public void TestContextReflectsCurrentCulture()
         {
@@ -257,71 +230,7 @@ namespace NUnit.Framework.Internal
         {
             Assert.That(TestExecutionContext.CurrentContext.CurrentUICulture, Is.EqualTo(CultureInfo.CurrentUICulture));
         }
-#endif
 
-#if !NETCF && !SILVERLIGHT
-        [Test]
-        public void TestContextReflectsCurrentDirectory()
-        {
-            Assert.That(TestExecutionContext.CurrentContext.CurrentDirectory, Is.EqualTo(Environment.CurrentDirectory));
-        }
-
-        [Test]
-        public void TestContextReflectsCurrentPrincipal()
-        {
-            Assert.That(TestExecutionContext.CurrentContext.CurrentPrincipal, Is.EqualTo(Thread.CurrentPrincipal));
-        }
-#endif
-
-#if !NETCF && !SILVERLIGHT
-        [Test]
-        public void SetAndRestoreCurrentDirectory()
-        {
-            var context = new TestExecutionContext(setupContext);
-
-            try
-            {
-                string otherDirectory = System.IO.Path.GetTempPath();
-                if (otherDirectory[otherDirectory.Length - 1] == System.IO.Path.DirectorySeparatorChar)
-                    otherDirectory = otherDirectory.Substring(0, otherDirectory.Length - 1);
-                context.CurrentDirectory = otherDirectory;
-                Assert.AreEqual(otherDirectory, Environment.CurrentDirectory, "Directory was not set");
-                Assert.AreEqual(otherDirectory, context.CurrentDirectory, "Directory not in new context");
-                Assert.AreEqual(setupContext.CurrentDirectory, originalDirectory, "Original context should not change");
-            }
-            finally
-            {
-                setupContext.EstablishExecutionEnvironment();
-            }
-
-            Assert.AreEqual(Environment.CurrentDirectory, originalDirectory, "Directory was not restored");
-            Assert.AreEqual(setupContext.CurrentDirectory, originalDirectory, "Directory not in final context");
-        }
-
-        [Test]
-        public void SetAndRestoreCurrentPrincipal()
-        {
-            var context = new TestExecutionContext(setupContext);
-
-            try
-            {
-                GenericIdentity identity = new GenericIdentity("foo");
-                context.CurrentPrincipal = new GenericPrincipal(identity, new string[0]);
-                Assert.AreEqual("foo", Thread.CurrentPrincipal.Identity.Name, "Principal was not set");
-                Assert.AreEqual("foo", context.CurrentPrincipal.Identity.Name, "Principal not in new context");
-                Assert.AreEqual(setupContext.CurrentPrincipal, originalPrincipal, "Original context should not change");
-            }
-            finally
-            {
-                setupContext.EstablishExecutionEnvironment();
-            }
-
-            Assert.AreEqual(Thread.CurrentPrincipal, originalPrincipal, "Principal was not restored");
-            Assert.AreEqual(setupContext.CurrentPrincipal, originalPrincipal, "Principal not in final context");
-        }
-#endif
-
-#if !NETCF
         [Test]
         public void SetAndRestoreCurrentCulture()
         {
@@ -368,5 +277,139 @@ namespace NUnit.Framework.Internal
             Assert.AreEqual(setupContext.CurrentUICulture, originalUICulture, "UICulture not in final context");
         }
 #endif
+
+        #endregion
+
+        #region CurrentDirectory
+
+#if !NETCF && !SILVERLIGHT
+        [Test]
+        public void FixtureSetUpContextReflectsCurrentDirectory()
+        {
+            Assert.That(fixtureContext.CurrentDirectory, Is.EqualTo(Environment.CurrentDirectory));
+        }
+
+        [Test]
+        public void SetUpContextReflectsCurrentDirectory()
+        {
+            Assert.That(setupContext.CurrentDirectory, Is.EqualTo(Environment.CurrentDirectory));
+        }
+
+        [Test]
+        public void TestContextReflectsCurrentDirectory()
+        {
+            Assert.That(TestExecutionContext.CurrentContext.CurrentDirectory, Is.EqualTo(Environment.CurrentDirectory));
+        }
+
+        [Test]
+        public void SetAndRestoreCurrentDirectory()
+        {
+            var context = new TestExecutionContext(setupContext);
+
+            try
+            {
+                string otherDirectory = System.IO.Path.GetTempPath();
+                if (otherDirectory[otherDirectory.Length - 1] == System.IO.Path.DirectorySeparatorChar)
+                    otherDirectory = otherDirectory.Substring(0, otherDirectory.Length - 1);
+                context.CurrentDirectory = otherDirectory;
+                Assert.AreEqual(otherDirectory, Environment.CurrentDirectory, "Directory was not set");
+                Assert.AreEqual(otherDirectory, context.CurrentDirectory, "Directory not in new context");
+                Assert.AreEqual(setupContext.CurrentDirectory, originalDirectory, "Original context should not change");
+            }
+            finally
+            {
+                setupContext.EstablishExecutionEnvironment();
+            }
+
+            Assert.AreEqual(Environment.CurrentDirectory, originalDirectory, "Directory was not restored");
+            Assert.AreEqual(setupContext.CurrentDirectory, originalDirectory, "Directory not in final context");
+        }
+#endif
+
+        #endregion
+
+        #region CurrentPrincipal
+
+#if !NETCF && !SILVERLIGHT
+        [Test]
+        public void FixtureSetUpContextReflectsCurrentPrincipal()
+        {
+            Assert.That(fixtureContext.CurrentPrincipal, Is.EqualTo(Thread.CurrentPrincipal));
+        }
+
+        [Test]
+        public void SetUpContextReflectsCurrentPrincipal()
+        {
+            Assert.That(setupContext.CurrentPrincipal, Is.EqualTo(Thread.CurrentPrincipal));
+        }
+
+        [Test]
+        public void TestContextReflectsCurrentPrincipal()
+        {
+            Assert.That(TestExecutionContext.CurrentContext.CurrentPrincipal, Is.EqualTo(Thread.CurrentPrincipal));
+        }
+
+        [Test]
+        public void SetAndRestoreCurrentPrincipal()
+        {
+            var context = new TestExecutionContext(setupContext);
+
+            try
+            {
+                GenericIdentity identity = new GenericIdentity("foo");
+                context.CurrentPrincipal = new GenericPrincipal(identity, new string[0]);
+                Assert.AreEqual("foo", Thread.CurrentPrincipal.Identity.Name, "Principal was not set");
+                Assert.AreEqual("foo", context.CurrentPrincipal.Identity.Name, "Principal not in new context");
+                Assert.AreEqual(setupContext.CurrentPrincipal, originalPrincipal, "Original context should not change");
+            }
+            finally
+            {
+                setupContext.EstablishExecutionEnvironment();
+            }
+
+            Assert.AreEqual(Thread.CurrentPrincipal, originalPrincipal, "Principal was not restored");
+            Assert.AreEqual(setupContext.CurrentPrincipal, originalPrincipal, "Principal not in final context");
+        }
+#endif
+
+        #endregion
+
+        #region ExecutionStatus
+
+        [Test]
+        public void ExecutionStatusIsPushedToHigherContext()
+        {
+            var topContext = new TestExecutionContext();
+            var bottomContext = new TestExecutionContext(new TestExecutionContext(new TestExecutionContext(topContext)));
+
+            bottomContext.ExecutionStatus = TestExecutionStatus.StopRequested;
+
+            Assert.That(topContext.ExecutionStatus, Is.EqualTo(TestExecutionStatus.StopRequested));
+        }
+
+        [Test]
+        public void ExecutionStatusIsPulledFromHigherContext()
+        {
+            var topContext = new TestExecutionContext();
+            var bottomContext = new TestExecutionContext(new TestExecutionContext(new TestExecutionContext(topContext)));
+
+            topContext.ExecutionStatus = TestExecutionStatus.AbortRequested;
+
+            Assert.That(bottomContext.ExecutionStatus, Is.EqualTo(TestExecutionStatus.AbortRequested));
+        }
+
+        [Test]
+        public void ExecutionStatusIsPromulgatedAcrossBranches()
+        {
+            var topContext = new TestExecutionContext();
+            var leftContext = new TestExecutionContext(new TestExecutionContext(new TestExecutionContext(topContext)));
+            var rightContext = new TestExecutionContext(new TestExecutionContext(new TestExecutionContext(topContext)));
+
+            leftContext.ExecutionStatus = TestExecutionStatus.StopRequested;
+
+            Assert.That(rightContext.ExecutionStatus, Is.EqualTo(TestExecutionStatus.StopRequested));
+        }
+
+        #endregion
     }
 }

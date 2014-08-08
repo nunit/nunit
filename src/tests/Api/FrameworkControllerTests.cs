@@ -61,7 +61,11 @@ namespace NUnit.Framework.Api
         public void ConstructContoller()
         {
             Assert.That(_controller.Builder, Is.TypeOf<DefaultTestAssemblyBuilder>());
-            Assert.That(_controller.Runner, Is.TypeOf<DefaultTestAssemblyRunner>());
+#if NUNITLITE
+            Assert.That(_controller.Runner, Is.TypeOf<NUnitLiteTestAssemblyRunner>());
+#else
+            Assert.That(_controller.Runner, Is.TypeOf<NUnitTestAssemblyRunner>());
+#endif
             Assert.That(_controller.AssemblyPath, Is.EqualTo(_mockAssemblyPath));
             Assert.That(_controller.Settings, Is.SameAs(_settings));
         }
@@ -179,7 +183,7 @@ namespace NUnit.Framework.Api
         {
             var ex = Assert.Throws<InvalidOperationException>(
                 () => new FrameworkController.CountTestsAction(_controller, EMPTY_FILTER, _handler));
-            Assert.That(ex.Message, Is.EqualTo("The CountTests method was called but no test has been loaded"));
+            Assert.That(ex.Message, Is.EqualTo("The CountTestCases method was called but no test has been loaded"));
         }
 
         [Test]
@@ -218,7 +222,7 @@ namespace NUnit.Framework.Api
             Assert.That(GetAttribute(result, "failed"), Is.EqualTo(MockAssembly.ErrorsAndFailures.ToString()));
             Assert.That(GetAttribute(result, "skipped"), Is.EqualTo((MockAssembly.NotRunnable + MockAssembly.Ignored).ToString()));
             Assert.That(GetAttribute(result, "inconclusive"), Is.EqualTo(MockAssembly.Inconclusive.ToString()));
-            Assert.That(result.SelectNodes("test-suite").Count, Is.GreaterThan(0), "Explore result should have child tests");
+            Assert.That(result.SelectNodes("test-suite").Count, Is.GreaterThan(0), "Run result should have child tests");
         }
 
         [Test]
@@ -259,6 +263,67 @@ namespace NUnit.Framework.Api
             Assert.That(GetAttribute(result, "testcasecount"), Is.EqualTo("0"));
             Assert.That(GetSkipReason(result), Is.StringStarting("Could not load").And.Contains(BAD_FILE));
             Assert.That(result.SelectNodes("test-suite").Count, Is.EqualTo(0), "Load result should not have child tests");
+        }
+        #endregion
+
+        #region RunAsyncAction
+        [Test]
+        public void RunAsyncAction_AfterLoad_ReturnsRunnableSuite()
+        {
+            new FrameworkController.LoadTestsAction(_controller, _handler);
+            new FrameworkController.RunAsyncAction(_controller, EMPTY_FILTER, _handler);
+            //var result = GetXmlResult();
+
+            //Assert.That(result.Name, Is.EqualTo("test-suite"));
+            //Assert.That(GetAttribute(result, "type"), Is.EqualTo("Assembly"));
+            //Assert.That(GetAttribute(result, "runstate"), Is.EqualTo("Runnable"));
+            //Assert.That(GetAttribute(result, "testcasecount"), Is.EqualTo(MockAssembly.Tests.ToString()));
+            //Assert.That(GetAttribute(result, "result"), Is.EqualTo("Failed"));
+            //Assert.That(GetAttribute(result, "passed"), Is.EqualTo(MockAssembly.Success.ToString()));
+            //Assert.That(GetAttribute(result, "failed"), Is.EqualTo(MockAssembly.ErrorsAndFailures.ToString()));
+            //Assert.That(GetAttribute(result, "skipped"), Is.EqualTo((MockAssembly.NotRunnable + MockAssembly.Ignored).ToString()));
+            //Assert.That(GetAttribute(result, "inconclusive"), Is.EqualTo(MockAssembly.Inconclusive.ToString()));
+            //Assert.That(result.SelectNodes("test-suite").Count, Is.GreaterThan(0), "Run result should have child tests");
+        }
+
+        [Test]
+        public void RunAsyncAction_WithoutLoad_ReturnsError()
+        {
+            var ex = Assert.Throws<InvalidOperationException>(
+                () => new FrameworkController.RunAsyncAction(_controller, EMPTY_FILTER, _handler));
+            Assert.That(ex.Message, Is.EqualTo("The Run method was called but no test has been loaded"));
+        }
+
+        [Test]
+        public void RunAsyncAction_FileNotFound_ReturnsNonRunnableSuite()
+        {
+            var controller = new FrameworkController(MISSING_FILE, _settings);
+            new FrameworkController.LoadTestsAction(controller, _handler);
+            new FrameworkController.RunAsyncAction(controller, EMPTY_FILTER, _handler);
+            //var result = GetXmlResult();
+
+            //Assert.That(result.Name, Is.EqualTo("test-suite"));
+            //Assert.That(GetAttribute(result, "type"), Is.EqualTo("Assembly"));
+            //Assert.That(GetAttribute(result, "runstate"), Is.EqualTo("NotRunnable"));
+            //Assert.That(GetAttribute(result, "testcasecount"), Is.EqualTo("0"));
+            //Assert.That(GetSkipReason(result), Is.StringStarting("Could not load").And.Contains(MISSING_FILE));
+            //Assert.That(result.SelectNodes("test-suite").Count, Is.EqualTo(0), "Load result should not have child tests");
+        }
+
+        [Test]
+        public void RunAsyncAction_BadFile_ReturnsNonRunnableSuite()
+        {
+            var controller = new FrameworkController(BAD_FILE, _settings);
+            new FrameworkController.LoadTestsAction(controller, _handler);
+            new FrameworkController.RunAsyncAction(controller, EMPTY_FILTER, _handler);
+            //var result = GetXmlResult();
+
+            //Assert.That(result.Name, Is.EqualTo("test-suite"));
+            //Assert.That(GetAttribute(result, "type"), Is.EqualTo("Assembly"));
+            //Assert.That(GetAttribute(result, "runstate"), Is.EqualTo("NotRunnable"));
+            //Assert.That(GetAttribute(result, "testcasecount"), Is.EqualTo("0"));
+            //Assert.That(GetSkipReason(result), Is.StringStarting("Could not load").And.Contains(BAD_FILE));
+            //Assert.That(result.SelectNodes("test-suite").Count, Is.EqualTo(0), "Load result should not have child tests");
         }
         #endregion
 

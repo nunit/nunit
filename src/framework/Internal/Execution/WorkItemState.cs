@@ -34,9 +34,9 @@ namespace NUnit.Framework.Internal.Execution
         Ready,
 
         /// <summary>
-        /// Waiting for a dependency to complete
+        /// Work Item is executing
         /// </summary>
-        Waiting,
+        Running,
 
         /// <summary>
         /// Complete

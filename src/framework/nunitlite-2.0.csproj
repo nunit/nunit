@@ -54,9 +54,12 @@
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Api\DefaultTestAssemblyBuilder.cs" />
-    <Compile Include="Api\DefaultTestAssemblyRunner.cs" />
+    <Compile Include="Api\AbstractTestAssemblyRunner.cs" />
     <Compile Include="Api\DriverSettings.cs" />
     <Compile Include="Api\FrameworkController.cs" />
+    <Compile Include="Api\ITestAssemblyBuilder.cs" />
+    <Compile Include="Api\ITestAssemblyRunner.cs" />
+    <Compile Include="Api\NUnitLiteTestAssemblyRunner.cs" />
     <Compile Include="Attributes\CombiningStrategyAttribute.cs" />
     <Compile Include="Attributes\FixtureBuilderAttribute.cs" />
     <Compile Include="Attributes\LevelOfParallelizationAttribute.cs" />
@@ -91,8 +94,6 @@
     <Compile Include="Interfaces\ISimpleTestBuilder.cs" />
     <Compile Include="Interfaces\ISuiteBuilder.cs" />
     <Compile Include="Interfaces\ITest.cs" />
-    <Compile Include="Interfaces\ITestAssemblyBuilder.cs" />
-    <Compile Include="Interfaces\ITestAssemblyRunner.cs" />
     <Compile Include="Interfaces\ITestBuilder.cs" />
     <Compile Include="Interfaces\ITestCaseBuilder.cs" />
     <Compile Include="Interfaces\ITestCaseData.cs" />
@@ -123,14 +124,15 @@
     <Compile Include="Internal\Commands\TheoryResultCommand.cs" />
     <Compile Include="Internal\Execution\CompositeWorkItem.cs" />
     <Compile Include="Internal\Execution\CountdownEvent.cs" />
+    <Compile Include="Internal\Execution\IWorkItemDispatcher.cs" />
     <Compile Include="Internal\Execution\Log4NetCapture.cs" />
     <Compile Include="Internal\Execution\LogCapture.cs" />
     <Compile Include="Internal\Execution\SimpleWorkItem.cs" />
+    <Compile Include="Internal\Execution\SimpleWorkItemDispatcher.cs" />
     <Compile Include="Internal\Execution\TestWorker.cs" />
     <Compile Include="Internal\Execution\TextCapture.cs" />
     <Compile Include="Internal\Execution\TextMessageWriter.cs" />
     <Compile Include="Internal\Execution\WorkItem.cs" />
-    <Compile Include="Internal\Execution\WorkItemDispatcher.cs" />
     <Compile Include="Internal\Execution\WorkItemQueue.cs" />
     <Compile Include="Internal\Execution\WorkItemState.cs" />
     <Compile Include="Internal\Filters\IdFilter.cs" />

@@ -189,14 +189,18 @@ namespace NUnit.Framework.Internal
             {
                 try
                 {
-                    return method.Invoke( fixture, args );
+                    return method.Invoke(fixture, args);
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
-                    if (e is TargetInvocationException)
-                        throw new NUnitException("Rethrown", e.InnerException);
-                    else
-                        throw new NUnitException("Rethrown", e);
+                    // No need to wrap or rethrow ThreadAbortException
+                    if (!(e is System.Threading.ThreadAbortException))
+                    {
+                        if (e is TargetInvocationException)
+                            throw new NUnitException("Rethrown", e.InnerException);
+                        else
+                            throw new NUnitException("Rethrown", e);
+                    }
                 }
             }
 

@@ -55,8 +55,10 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Api\AbstractTestAssemblyRunner.cs" />
     <Compile Include="Api\DriverSettings.cs" />
     <Compile Include="Api\FrameworkController.cs" />
+    <Compile Include="Api\NUnitTestAssemblyRunner.cs" />
     <Compile Include="Attributes\CombiningStrategyAttribute.cs" />
     <Compile Include="Attributes\OneTimeTearDownAttribute.cs" />
     <Compile Include="Attributes\OneTimeSetUpAttribute.cs" />
@@ -81,12 +83,13 @@
     <Compile Include="Interfaces\IParameterDataSource.cs" />
     <Compile Include="Interfaces\IPropertyBag.cs" />
     <Compile Include="Interfaces\ITest.cs" />
-    <Compile Include="Interfaces\ITestAssemblyBuilder.cs" />
-    <Compile Include="Interfaces\ITestAssemblyRunner.cs" />
+    <Compile Include="Api\ITestAssemblyBuilder.cs" />
+    <Compile Include="Api\ITestAssemblyRunner.cs" />
     <Compile Include="Interfaces\ITestCaseData.cs" />
     <Compile Include="Interfaces\ITestFilter.cs" />
     <Compile Include="Interfaces\ITestListener.cs" />
     <Compile Include="Interfaces\ITestResult.cs" />
+    <Compile Include="Internal\Execution\IWorkItemDispatcher.cs" />
     <Compile Include="Interfaces\IXmlNodeBuilder.cs" />
     <Compile Include="Interfaces\ResultState.cs" />
     <Compile Include="Interfaces\RunState.cs" />
@@ -97,6 +100,8 @@
     <Compile Include="Internal\Builders\NUnitTestCaseBuilder.cs" />
     <Compile Include="Internal\Commands\SetUpTearDownList.cs" />
     <Compile Include="Internal\Commands\SetUpTearDownNode.cs" />
+    <Compile Include="Internal\Execution\SimpleWorkItemDispatcher.cs" />
+    <Compile Include="Internal\Execution\WorkShift.cs" />
     <Compile Include="Internal\Filters\IdFilter.cs" />
     <Compile Include="Internal\Filters\ValueMatchFilter.cs" />
     <Compile Include="Interfaces\IFixtureBuilder.cs" />
@@ -127,7 +132,7 @@
     <Compile Include="Internal\Execution\TextCapture.cs" />
     <Compile Include="Internal\Execution\TextMessageWriter.cs" />
     <Compile Include="Internal\Execution\WorkItem.cs" />
-    <Compile Include="Internal\Execution\WorkItemDispatcher.cs" />
+    <Compile Include="Internal\Execution\ParallelWorkItemDispatcher.cs" />
     <Compile Include="Internal\Execution\WorkItemQueue.cs" />
     <Compile Include="Internal\Execution\WorkItemState.cs" />
     <Compile Include="Internal\IApplyToContext.cs" />
@@ -301,7 +306,6 @@
     <Compile Include="Interfaces\ICommandDecorator.cs" />
     <Compile Include="Internal\CultureDetector.cs" />
     <Compile Include="Api\DefaultTestAssemblyBuilder.cs" />
-    <Compile Include="Api\DefaultTestAssemblyRunner.cs" />
     <Compile Include="Internal\ExceptionHelper.cs" />
     <Compile Include="Internal\Filters\AndFilter.cs" />
     <Compile Include="Internal\Filters\CategoryExpression.cs" />
@@ -363,7 +367,5 @@
   <ItemGroup>
     <Content Include="Attributes\AttributeHierarchy.txt" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Internal\Interfaces\" />
-  </ItemGroup>
+  <ItemGroup />
 </Project>

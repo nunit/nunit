@@ -42,11 +42,7 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         Running,
         /// <summary>
-        /// The queue is stopping
-        /// </summary>
-        Stopping,
-        /// <summary>
-        /// The queue has stopped (not currently used)
+        /// The queue is stopped
         /// </summary>
         Stopped
     }
@@ -132,14 +128,15 @@ namespace NUnit.Framework.Internal.Execution
         {
             lock (_syncRoot)
             {
-                while (_innerQueue.Count == 0 || State != WorkItemQueueState.Running)
+                while (this.IsEmpty || this.State != WorkItemQueueState.Running)
                 {
-                    if (State == WorkItemQueueState.Stopping)
-                        return null;
-                    else
+                    if (State == WorkItemQueueState.Stopped)
+                        return null; // Tell worker to terminate
+                    else // We are either paused or empty, so wait for something to change
                         Monitor.Wait(_syncRoot);
                 }
 
+                // Queue is running and non-empty
                 ItemsProcessed++;
                 return _innerQueue.Dequeue();
             }
@@ -159,27 +156,26 @@ namespace NUnit.Framework.Internal.Execution
         }
 
         /// <summary>
-        /// Signal the queue to stop. It will not
-        /// actually stop until all items are processed.
+        /// Signal the queue to stop
         /// </summary>
         public void Stop()
         {
             lock (_syncRoot)
             {
                 log.Info("{0} stopping - {1} WorkItems processed, max size {2}", Name, ItemsProcessed, MaxCount);
-                State = WorkItemQueueState.Stopping;
+
+                State = WorkItemQueueState.Stopped;
                 Monitor.PulseAll(_syncRoot);
             }
         }
 
         /// <summary>
-        /// Pause the queue (at the end of a shift)
+        /// Pause the queue for restarting later
         /// </summary>
         public void Pause()
         {
             lock (_syncRoot)
             {
-                log.Info("{0} paused", Name);
                 State = WorkItemQueueState.Paused;
             }
         }

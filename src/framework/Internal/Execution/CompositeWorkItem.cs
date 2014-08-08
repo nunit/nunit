@@ -73,54 +73,59 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         protected override void PerformWork()
         {
-            switch (Test.RunState)
-            {
-                default:
-                case RunState.Runnable:
-                case RunState.Explicit:
-                    // Assume success, since the result will be inconclusive
-                    // if there is no setup method to run or if the
-                    // context initialization fails.
-                    Result.SetResult(ResultState.Success);
+            if (!CheckForCancellation())
+                switch (Test.RunState)
+                {
+                    default:
+                    case RunState.Runnable:
+                    case RunState.Explicit:
+                        // Assume success, since the result will be inconclusive
+                        // if there is no setup method to run or if the
+                        // context initialization fails.
+                        Result.SetResult(ResultState.Success);
 
-                    PerformOneTimeSetUp();
+                        PerformOneTimeSetUp();
 
-                    if (_suite.HasChildren)
-                        switch (Result.ResultState.Status)
-                        {
-                            case TestStatus.Passed:
-                                RunChildren();
-                                return;
-                                // Just return: completion event will take care
-                                // of TestFixtureTearDown when all tests are done.
+                        if (_suite.HasChildren && !CheckForCancellation())
+                            switch (Result.ResultState.Status)
+                            {
+                                case TestStatus.Passed:
+                                    RunChildren();
+                                    return;
+                                    // Just return: completion event will take care
+                                    // of TestFixtureTearDown when all tests are done.
 
-                            case TestStatus.Skipped:
-                            case TestStatus.Inconclusive:
-                            case TestStatus.Failed:
-                                SkipChildren();
-                                break;
-                        }
-                    // Directly execute the OneTimeFixtureTearDown or tests that
-                    // were skipped, failed or set to inconclusive in one time setup.
-                    PerformOneTimeTearDown();
-                    break;
+                                case TestStatus.Skipped:
+                                case TestStatus.Inconclusive:
+                                case TestStatus.Failed:
+                                    SkipChildren();
+                                    break;
+                            }
 
-                case RunState.Skipped:
-                    SkipFixture(ResultState.Skipped, GetSkipReason(), null);
-                    break;
+                        // Directly execute the OneTimeFixtureTearDown for tests that
+                        // were skipped, failed or set to inconclusive in one time setup
+                        // unless we are aborting.
+                        if (Context.ExecutionStatus != TestExecutionStatus.AbortRequested)
+                            PerformOneTimeTearDown();
+                        break;
 
-                case RunState.Ignored:
-                    SkipFixture(ResultState.Ignored, GetSkipReason(), null);
-                    break;
+                    case RunState.Skipped:
+                        SkipFixture(ResultState.Skipped, GetSkipReason(), null);
+                        break;
 
-                case RunState.NotRunnable:
-                    SkipFixture(ResultState.NotRunnable, GetSkipReason(), GetProviderStackTrace());
-                    break;
-            }
+                    case RunState.Ignored:
+                        SkipFixture(ResultState.Ignored, GetSkipReason(), null);
+                        break;
+
+                    case RunState.NotRunnable:
+                        SkipFixture(ResultState.NotRunnable, GetSkipReason(), GetProviderStackTrace());
+                        break;
+                }
 
             // Fall through in case nothing was run.
             // Otherwise, this is done in the completion event.
             WorkItemComplete();
+        
         }
 
         #region Helper Methods
@@ -162,6 +167,17 @@ namespace NUnit.Framework.Internal.Execution
             return command;
         }
 
+        private bool CheckForCancellation()
+        {
+            if (Context.ExecutionStatus != TestExecutionStatus.Running)
+            {
+                Result.SetResult(ResultState.Cancelled, "Test cancelled by user");
+                return true;
+            }
+
+            return false;
+        }
+
         private void PerformOneTimeSetUp()
         {
             try
@@ -190,28 +206,23 @@ namespace NUnit.Framework.Internal.Execution
 
             if (children.Count > 0)
             {
-                _childTestCountdown = new CountdownEvent(children.Count);
+                int childCount = children.Count;
+                _childTestCountdown = new CountdownEvent(childCount);
 
                 foreach (WorkItem child in children)
                 {
+                    if (CheckForCancellation())
+                        break;
+
                     child.Completed += new EventHandler(OnChildCompleted);
-#if NUNITLITE
-                    child.Execute();
-#else
-                    // We run child items on the same thread as the parent...
-                    // 1. If there is no dispatcher (NUnitLite or LevelOfParallelism = 0).
-                    // 2. If there is no fixture, and so nothing to do but dispatch grandchildren.
-                    // 3. For now, if this represents a test case. This avoids issues of
-                    // tests that access the fixture state and allows handling ApartmentState
-                    // preferences set on the fixture.
-                    if (Context.Dispatcher == null ||child is SimpleWorkItem || child.Test.FixtureType == null)
-                    {
-                        log.Debug("Directly executing {0}", child.Test.Name);
-                        child.Execute();
-                    }
-                    else
-                        Context.Dispatcher.Dispatch(child);
-#endif
+                    Context.Dispatcher.Dispatch(child);
+                    childCount--;
+                }
+
+                if (childCount > 0)
+                {
+                    while (childCount-- > 0)
+                        CountDownChildTest();
                 }
             }
         }
@@ -273,13 +284,27 @@ namespace NUnit.Framework.Internal.Execution
                     Result.AddResult(childTask.Result);
 
                     // Check to see if all children completed
-                    _childTestCountdown.Signal();
-                    if (_childTestCountdown.CurrentCount == 0)
-                    {
-                        PerformOneTimeTearDown();
-                        WorkItemComplete();
-                    }
+                    CountDownChildTest();
                 }
+            }
+        }
+
+        private void CountDownChildTest()
+        {
+            _childTestCountdown.Signal();
+            if (_childTestCountdown.CurrentCount == 0)
+            {
+                if (Context.ExecutionStatus != TestExecutionStatus.AbortRequested)
+                    PerformOneTimeTearDown();
+
+                foreach (var childResult in this.Result.Children)
+                    if (childResult.ResultState == ResultState.Cancelled)
+                    {
+                        this.Result.SetResult(ResultState.Cancelled, "Cancelled by user");
+                        break;
+                    }
+
+                WorkItemComplete();
             }
         }
 

@@ -115,7 +115,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// The execution context
         /// </summary>
-        protected TestExecutionContext Context
+        public TestExecutionContext Context
         {
             get { return _context; }
         }
@@ -287,6 +287,7 @@ namespace NUnit.Framework.Internal.Execution
 
                 if (thread.IsAlive)
                 {
+                    log.Debug("Killing thread {0}, which exceeded timeout", thread.ManagedThreadId);
                     ThreadUtility.Kill(thread);
 
                     // NOTE: Without the use of Join, there is a race condition here.
@@ -297,6 +298,8 @@ namespace NUnit.Framework.Internal.Execution
                     // refuse to terminate. However, it's more important to deal with
                     // the normal rather than a pathological case.
                     thread.Join();
+
+                    log.Debug("Changing result from {0} to Timeout Failure", Result.ResultState);
 
                     Result.SetResult(ResultState.Failure,
                         string.Format("Test exceeded Timeout value of {0}ms", timeout));
@@ -318,7 +321,16 @@ namespace NUnit.Framework.Internal.Execution
 #endif
             _context.EstablishExecutionEnvironment();
 
-            PerformWork();
+            _state = WorkItemState.Running;
+
+            try
+            {
+                PerformWork();
+            }
+            catch (ThreadAbortException)
+            {
+                //Result.SetResult(ResultState.Cancelled);
+            }
         }
 
         #endregion

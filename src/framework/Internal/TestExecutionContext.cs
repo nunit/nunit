@@ -37,6 +37,28 @@ using System.Security.Principal;
 namespace NUnit.Framework.Internal
 {
     /// <summary>
+    /// Enumeration indicating whether the tests are 
+    /// running normally or being cancelled.
+    /// </summary>
+    public enum TestExecutionStatus
+    {
+        /// <summary>
+        /// Running normally with no stop requested
+        /// </summary>
+        Running,
+
+        /// <summary>
+        /// A graceful stop has been requested
+        /// </summary>
+        StopRequested,
+
+        /// <summary>
+        /// A forced stop has been requested
+        /// </summary>
+        AbortRequested
+    }
+
+    /// <summary>
     /// Helper class used to save and restore certain static or
     /// singleton settings in the environment that affect tests 
     /// or which might be changed by the user tests.
@@ -62,67 +84,74 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Link to a prior saved context
         /// </summary>
-        public TestExecutionContext prior;
+        private TestExecutionContext _priorContext;
+
+        /// <summary>
+        /// Indicates that a stop has been requested
+        /// </summary>
+        private TestExecutionStatus _executionStatus;
 
         /// <summary>
         /// The event listener currently receiving notifications
         /// </summary>
-        private ITestListener listener = TestListener.NULL;
+        private ITestListener _listener = TestListener.NULL;
 
         /// <summary>
         /// The number of assertions for the current test
         /// </summary>
-        private int assertCount;
+        private int _assertCount;
 
-        private RandomGenerator randomGenerator;
+        private RandomGenerator _randomGenerator;
+
+        private IWorkItemDispatcher _dispatcher;
 
 #if !NETCF
         /// <summary>
         /// The current culture
         /// </summary>
-        private CultureInfo currentCulture;
+        private CultureInfo _currentCulture;
 
         /// <summary>
         /// The current UI culture
         /// </summary>
-        private CultureInfo currentUICulture;
+        private CultureInfo _currentUICulture;
 #endif
 
 #if !NETCF && !SILVERLIGHT
         /// <summary>
         /// The current working directory
         /// </summary>
-        private string currentDirectory;
+        private string _currentDirectory;
 
         /// <summary>
         /// Destination for standard output
         /// </summary>
-        private TextWriter outWriter;
+        private TextWriter _outWriter;
 
         /// <summary>
         /// Destination for standard error
         /// </summary>
-        private TextWriter errorWriter;
+        private TextWriter _errorWriter;
 
         /// <summary>
         /// Indicates whether trace is enabled
         /// </summary>
-        private bool tracing;
+        private bool _tracing;
 
         /// <summary>
         /// Destination for Trace output
         /// </summary>
-        private TextWriter traceWriter;
+        private TextWriter _traceWriter;
 
         /// <summary>
         /// The current Principal.
         /// </summary>
-        private IPrincipal currentPrincipal;
+        private IPrincipal _currentPrincipal;
 
         /// <summary>
         /// Our LogCapture object
         /// </summary>
-        private LogCapture logCapture;
+        private LogCapture _logCapture;
 #endif
 
         #endregion
@@ -134,22 +163,22 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public TestExecutionContext()
         {
-            this.prior = null;
+            _priorContext = null;
             this.TestCaseTimeout = 0;
 
 #if !NETCF
-            this.currentCulture = CultureInfo.CurrentCulture;
-            this.currentUICulture = CultureInfo.CurrentUICulture;
+            _currentCulture = CultureInfo.CurrentCulture;
+            _currentUICulture = CultureInfo.CurrentUICulture;
 #endif
 
 #if !NETCF && !SILVERLIGHT
-            this.outWriter = Console.Out;
-            this.errorWriter = Console.Error;
-            this.traceWriter = null;
-            this.tracing = false;
-            this.currentDirectory = Environment.CurrentDirectory;
-            this.currentPrincipal = Thread.CurrentPrincipal;
-            this.logCapture = new Log4NetCapture();
+            _outWriter = Console.Out;
+            _errorWriter = Console.Error;
+            _traceWriter = null;
+            _tracing = false;
+            _currentDirectory = Environment.CurrentDirectory;
+            _currentPrincipal = Thread.CurrentPrincipal;
+            _logCapture = new Log4NetCapture();
 #endif
         }
 
@@ -159,33 +188,33 @@ namespace NUnit.Framework.Internal
         /// <param name="other">An existing instance of TestExecutionContext.</param>
         public TestExecutionContext( TestExecutionContext other )
         {
-            this.prior = other;
+            _priorContext = other;
 
             this.CurrentTest = other.CurrentTest;
             this.CurrentResult = other.CurrentResult;
             this.TestObject = other.TestObject;
             this.WorkDirectory = other.WorkDirectory;
-            this.listener = other.listener;
+            _listener = other._listener;
             this.StopOnError = other.StopOnError;
             this.TestCaseTimeout = other.TestCaseTimeout;
 
 #if !NETCF
-            this.currentCulture = CultureInfo.CurrentCulture;
-            this.currentUICulture = CultureInfo.CurrentUICulture;
+            _currentCulture = CultureInfo.CurrentCulture;
+            _currentUICulture = CultureInfo.CurrentUICulture;
 #endif
 
 #if !NETCF && !SILVERLIGHT
-            this.outWriter = other.outWriter;
-            this.errorWriter = other.errorWriter;
-            this.traceWriter = other.traceWriter;
-            this.tracing = other.tracing;
-            this.currentDirectory = Environment.CurrentDirectory;
-            this.currentPrincipal = Thread.CurrentPrincipal;
-            this.logCapture = other.logCapture;
+            _outWriter = other._outWriter;
+            _errorWriter = other._errorWriter;
+            _traceWriter = other._traceWriter;
+            _tracing = other._tracing;
+            _currentDirectory = Environment.CurrentDirectory;
+            _currentPrincipal = Thread.CurrentPrincipal;
+            _logCapture = other._logCapture;
 #endif
 
-#if !NUNITLITE
             this.Dispatcher = other.Dispatcher;
+#if !NUNITLITE
             this.ParallelScope = other.ParallelScope;
 #endif
         }
@@ -297,22 +326,56 @@ namespace NUnit.Framework.Internal
         /// Get or set indicator that run should stop on the first error
         /// </summary>
         public bool StopOnError { get; set; }
-        
+
+        /// <summary>
+        /// Gets an enum indicating whether a stop has been requested.
+        /// </summary>
+        public TestExecutionStatus ExecutionStatus
+        {
+            get
+            {
+                // ExecutionStatus may have been set to StopRequested or AbortRequested
+                // in a prior context. If so, reflect the same setting in this context.
+                if (_executionStatus == TestExecutionStatus.Running && _priorContext != null)
+                    _executionStatus = _priorContext.ExecutionStatus;
+
+                return _executionStatus;
+            }
+            set
+            {
+                _executionStatus = value;
+
+                // Push the same setting up to all prior contexts
+                if (_priorContext != null)
+                    _priorContext.ExecutionStatus = value;
+            }
+        }
+
         /// <summary>
         /// The current test event listener
         /// </summary>
         internal ITestListener Listener
         {
-            get { return listener; }
-            set { listener = value; }
+            get { return _listener; }
+            set { _listener = value; }
         }
 
-#if !NUNITLITE
         /// <summary>
         /// The current WorkItemDispatcher
         /// </summary>
-        internal WorkItemDispatcher Dispatcher { get; set; }
+        internal IWorkItemDispatcher Dispatcher 
+        {
+            get
+            {
+                if (_dispatcher == null)
+                    _dispatcher = new SimpleWorkItemDispatcher();
 
+                return _dispatcher;
+            }
+            set { _dispatcher = value;  }
+        }
+
+#if !NUNITLITE
         /// <summary>
         /// The ParallelScope to be used by tests running in this context
         /// </summary>
@@ -326,11 +389,11 @@ namespace NUnit.Framework.Internal
         {
             get
             {
-                if (randomGenerator == null)
+                if (_randomGenerator == null)
                 {
-                    randomGenerator = new RandomGenerator(CurrentTest.Seed);
+                    _randomGenerator = new RandomGenerator(CurrentTest.Seed);
                 }
-                return randomGenerator;
+                return _randomGenerator;
             }
         }
 
@@ -340,7 +403,7 @@ namespace NUnit.Framework.Internal
         /// <value>The assert count.</value>
         internal int AssertCount
         {
-            get { return assertCount; }
+            get { return _assertCount; }
         }
 
         /// <summary>
@@ -358,11 +421,11 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public CultureInfo CurrentCulture
         {
-            get { return currentCulture; }
+            get { return _currentCulture; }
             set
             {
-                currentCulture = value;
-                Thread.CurrentThread.CurrentCulture = currentCulture;
+                _currentCulture = value;
+                Thread.CurrentThread.CurrentCulture = _currentCulture;
             }
         }
 
@@ -371,11 +434,11 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public CultureInfo CurrentUICulture
         {
-            get { return currentUICulture; }
+            get { return _currentUICulture; }
             set
             {
-                currentUICulture = value;
-                Thread.CurrentThread.CurrentUICulture = currentUICulture;
+                _currentUICulture = value;
+                Thread.CurrentThread.CurrentUICulture = _currentUICulture;
             }
         }
 #endif
@@ -386,11 +449,11 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public string CurrentDirectory
         {
-            get { return currentDirectory; }
+            get { return _currentDirectory; }
             set
             {
-                currentDirectory = value;
-                Environment.CurrentDirectory = currentDirectory;
+                _currentDirectory = value;
+                Environment.CurrentDirectory = _currentDirectory;
             }
         }
 
@@ -399,14 +462,14 @@ namespace NUnit.Framework.Internal
         /// </summary>
         internal TextWriter Out
         {
-            get { return outWriter; }
+            get { return _outWriter; }
             set 
             {
-                if ( outWriter != value )
+                if ( _outWriter != value )
                 {
-                    outWriter = value; 
+                    _outWriter = value; 
                     Console.Out.Flush();
-                    Console.SetOut( outWriter );
+                    Console.SetOut( _outWriter );
                 }
             }
         }
@@ -416,14 +479,14 @@ namespace NUnit.Framework.Internal
         /// </summary>
         internal TextWriter Error
         {
-            get { return errorWriter; }
+            get { return _errorWriter; }
             set 
             {
-                if ( errorWriter != value )
+                if ( _errorWriter != value )
                 {
-                    errorWriter = value; 
+                    _errorWriter = value; 
                     Console.Error.Flush();
-                    Console.SetError( errorWriter );
+                    Console.SetError( _errorWriter );
                 }
             }
         }
@@ -434,17 +497,17 @@ namespace NUnit.Framework.Internal
         /// </summary>
         internal bool Tracing
         {
-            get { return tracing; }
+            get { return _tracing; }
             set
             {
-                if (tracing != value)
+                if (_tracing != value)
                 {
-                    if (traceWriter != null && tracing)
+                    if (_traceWriter != null && _tracing)
                         StopTracing();
 
-                    tracing = value;
+                    _tracing = value;
 
-                    if (traceWriter != null && tracing)
+                    if (_traceWriter != null && _tracing)
                         StartTracing();
                 }
             }
@@ -455,17 +518,17 @@ namespace NUnit.Framework.Internal
         /// </summary>
         internal TextWriter TraceWriter
         {
-            get { return traceWriter; }
+            get { return _traceWriter; }
             set
             {
-                if ( traceWriter != value )
+                if ( _traceWriter != value )
                 {
-                    if ( traceWriter != null  && tracing )
+                    if ( _traceWriter != null  && _tracing )
                         StopTracing();
 
-                    traceWriter = value;
+                    _traceWriter = value;
 
-                    if ( traceWriter != null && tracing )
+                    if ( _traceWriter != null && _tracing )
                         StartTracing();
                 }
             }
@@ -473,13 +536,13 @@ namespace NUnit.Framework.Internal
 
         private void StopTracing()
         {
-            traceWriter.Close();
+            _traceWriter.Close();
             System.Diagnostics.Trace.Listeners.Remove( "NUnit" );
         }
 
         private void StartTracing()
         {
-            System.Diagnostics.Trace.Listeners.Add( new TextWriterTraceListener( traceWriter, "NUnit" ) );
+            System.Diagnostics.Trace.Listeners.Add( new TextWriterTraceListener( _traceWriter, "NUnit" ) );
         }
 
         /// <summary>
@@ -487,11 +550,11 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public IPrincipal CurrentPrincipal
         {
-            get { return this.currentPrincipal; }
+            get { return _currentPrincipal; }
             set
             {
-                this.currentPrincipal = value;
-                Thread.CurrentPrincipal = this.currentPrincipal;
+                _currentPrincipal = value;
+                Thread.CurrentPrincipal = _currentPrincipal;
             }
         }
 
@@ -500,8 +563,8 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public bool Logging
         {
-            get { return logCapture.Enabled; }
-            set { logCapture.Enabled = value; }
+            get { return _logCapture.Enabled; }
+            set { _logCapture.Enabled = value; }
         }
 
         /// <summary>
@@ -517,8 +580,8 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public TextWriter LogWriter
         {
-            get { return logCapture.Writer; }
-            set { logCapture.Writer = value; }
+            get { return _logCapture.Writer; }
+            set { _logCapture.Writer = value; }
         }
 #endif
 
@@ -534,13 +597,13 @@ namespace NUnit.Framework.Internal
         public void UpdateContextFromEnvironment()
         {
 #if !NETCF
-            this.currentCulture = CultureInfo.CurrentCulture;
-            this.currentUICulture = CultureInfo.CurrentUICulture;
+            _currentCulture = CultureInfo.CurrentCulture;
+            _currentUICulture = CultureInfo.CurrentUICulture;
 #endif
 
 #if !NETCF && !SILVERLIGHT
-            this.currentDirectory = Environment.CurrentDirectory;
-            this.currentPrincipal = Thread.CurrentPrincipal;
+            _currentDirectory = Environment.CurrentDirectory;
+            _currentPrincipal = Thread.CurrentPrincipal;
 #endif
         }
 
@@ -552,15 +615,15 @@ namespace NUnit.Framework.Internal
         public void EstablishExecutionEnvironment()
         {
 #if !NETCF
-            Thread.CurrentThread.CurrentCulture = this.currentCulture;
-            Thread.CurrentThread.CurrentUICulture = this.currentUICulture;
+            Thread.CurrentThread.CurrentCulture = _currentCulture;
+            Thread.CurrentThread.CurrentUICulture = _currentUICulture;
 #endif
 
 #if !NETCF && !SILVERLIGHT
             // TODO: We should probably remove this feature, since
             // it potentially impacts all threads.
-            Environment.CurrentDirectory = this.currentDirectory;
-            Thread.CurrentPrincipal = this.currentPrincipal;
+            Environment.CurrentDirectory = _currentDirectory;
+            Thread.CurrentPrincipal = _currentPrincipal;
             Console.SetOut(this.Out);
             Console.SetError(this.Error);
 #endif
@@ -573,7 +636,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public void IncrementAssertCount()
         {
-            System.Threading.Interlocked.Increment(ref assertCount);
+            System.Threading.Interlocked.Increment(ref _assertCount);
         }
 
         /// <summary>
@@ -583,7 +646,7 @@ namespace NUnit.Framework.Internal
         {
             // TODO: Temporary implementation
             while(count-- > 0)
-                System.Threading.Interlocked.Increment(ref assertCount);
+                System.Threading.Interlocked.Increment(ref _assertCount);
         }
 
         #endregion

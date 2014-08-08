@@ -53,14 +53,6 @@ namespace NUnit.Framework
             this.count = count;
         }
 
-        ///// <summary>
-        ///// Gets the number of times to run the test.
-        ///// </summary>
-        //public int Count
-        //{
-        //    get { return count; }
-        //}
-
         #region ICommandDecorator Members
 
         CommandStage ICommandDecorator.Stage

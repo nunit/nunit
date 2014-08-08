@@ -325,6 +325,74 @@ namespace NUnit.Framework.Internal
         }
     }
 
+    public class NotRunnableResultTests : TestResultTests
+    {
+        protected override void SimulateTestRun()
+        {
+            testResult.SetResult(ResultState.NotRunnable, "bad test");
+            suiteResult.AddResult(testResult);
+        }
+
+        [Test]
+        public void TestResultIsNotRunnable()
+        {
+            Assert.AreEqual(ResultState.NotRunnable, testResult.ResultState);
+            Assert.AreEqual(TestStatus.Skipped, testResult.ResultState.Status);
+            Assert.AreEqual("Invalid", testResult.ResultState.Label);
+            Assert.AreEqual("bad test", testResult.Message);
+        }
+
+        [Test]
+        public void SuiteResultIsFailure()
+        {
+            Assert.AreEqual(ResultState.Failure, suiteResult.ResultState);
+            Assert.AreEqual(TestStatus.Failed, suiteResult.ResultState.Status);
+            Assert.AreEqual(failingChildMessage, suiteResult.Message);
+
+            Assert.AreEqual(0, suiteResult.PassCount);
+            Assert.AreEqual(0, suiteResult.FailCount);
+            Assert.AreEqual(1, suiteResult.SkipCount);
+            Assert.AreEqual(0, suiteResult.InconclusiveCount);
+            Assert.AreEqual(0, suiteResult.AssertCount);
+        }
+
+        [Test]
+        public void TestResultXmlNodeIsNotRunnable()
+        {
+            XmlNode testNode = testResult.ToXml(true);
+
+            Assert.AreEqual("Skipped", testNode.Attributes["result"]);
+            Assert.AreEqual("Invalid", testNode.Attributes["label"]);
+            XmlNode reason = testNode.FindDescendant("reason");
+            Assert.NotNull(reason);
+            Assert.NotNull(reason.FindDescendant("message"));
+            Assert.AreEqual("bad test", reason.FindDescendant("message").TextContent);
+            Assert.Null(reason.FindDescendant("stack-trace"));
+        }
+
+        [Test]
+        public void SuiteResultXmlNodeIsFailure()
+        {
+            XmlNode suiteNode = suiteResult.ToXml(true);
+
+            Assert.AreEqual("Failed", suiteNode.Attributes["result"]);
+            Assert.Null(suiteNode.Attributes["label"]);
+            Assert.AreEqual("0", suiteNode.Attributes["passed"]);
+            Assert.AreEqual("0", suiteNode.Attributes["failed"]);
+            Assert.AreEqual("1", suiteNode.Attributes["skipped"]);
+            Assert.AreEqual("0", suiteNode.Attributes["inconclusive"]);
+            Assert.AreEqual("0", suiteNode.Attributes["asserts"]);
+        }
+
+        [Test]
+        public void SuiteResultXmlNodeHasOneChildTest()
+        {
+            XmlNode suiteNode = suiteResult.ToXml(true);
+
+            Assert.AreEqual(1, suiteNode.FindDescendants("test-case").Count);
+        }
+    }
+
     public class FailedResultTests : TestResultTests
     {
         protected override void SimulateTestRun()

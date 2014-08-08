@@ -60,7 +60,7 @@ namespace NUnit.Framework.Api
         public FrameworkController(string assemblyPath, IDictionary settings)
         {
             this.Builder = new DefaultTestAssemblyBuilder();
-            this.Runner = new DefaultTestAssemblyRunner(this.Builder);
+            this.Runner = CreateRunner(this.Builder);
 
             Initialize(assemblyPath, settings);
         }
@@ -82,6 +82,15 @@ namespace NUnit.Framework.Api
                 runnerType, false, 0, null, new object[] { this.Builder }, null, null);
 
             Initialize(assemblyPath, settings);
+        }
+
+        private ITestAssemblyRunner CreateRunner(ITestAssemblyBuilder builder)
+        {
+#if NUNITLITE
+            return new NUnitLiteTestAssemblyRunner(builder);
+#else
+            return new NUnitTestAssemblyRunner(builder);
+#endif
         }
 
         private void Initialize(string assemblyPath, IDictionary settings)
@@ -176,12 +185,21 @@ namespace NUnit.Framework.Api
             handler.RaiseCallbackEvent(result.ToXml(true).OuterXml);
         }
 
-        private void CountTests(ICallbackEventHandler handler, string filter)
+        private void RunAsync(ICallbackEventHandler handler, string filter)
         {
             Guard.ArgumentNotNull(filter, "filter");
 
-            if (Runner.LoadedTest == null)
-                throw new InvalidOperationException("The CountTests method was called but no test has been loaded");
+            Runner.RunAsync(new TestProgressReporter(handler), TestFilter.FromXml(filter));
+        }
+
+        private void StopRun(ICallbackEventHandler handler, bool force)
+        {
+            Runner.StopRun(force);
+        }
+
+        private void CountTests(ICallbackEventHandler handler, string filter)
+        {
+            Guard.ArgumentNotNull(filter, "filter");
 
             var count = Runner.CountTestCases(TestFilter.FromXml(filter));
             handler.RaiseCallbackEvent(count.ToString());
@@ -293,6 +311,50 @@ namespace NUnit.Framework.Api
             public RunTestsAction(FrameworkController controller, string filter, object handler) 
             {
                 controller.RunTests((ICallbackEventHandler)handler, filter);
+            }
+        }
+
+        #endregion
+
+        #region RunAsyncAction
+
+        /// <summary>
+        /// RunAsyncAction initiates an asynchronous test run, returning immediately
+        /// </summary>
+        public class RunAsyncAction : FrameworkControllerAction
+        {
+            /// <summary>
+            /// Construct a RunAsyncAction and run all tests in the loaded TestSuite.
+            /// </summary>
+            /// <param name="controller">A FrameworkController holding the TestSuite to run</param>
+            /// <param name="filter">A string containing the XML representation of the filter to use</param>
+            /// <param name="handler">A callback handler used to report results</param>
+            public RunAsyncAction(FrameworkController controller, string filter, object handler) 
+            {
+                controller.RunAsync((ICallbackEventHandler)handler, filter);
+            }
+        }
+
+        #endregion
+
+        #region StopRunAction
+
+        /// <summary>
+        /// StopRunAction stops an ongoing run.
+        /// </summary>
+        public class StopRunAction : FrameworkControllerAction
+        {
+            /// <summary>
+            /// Construct a StopRunAction and stop any ongoing run. If no
+            /// run is in process, no error is raised.
+            /// </summary>
+            /// <param name="controller">The FrameworkController for which a run is to be stopped.</param>
+            /// <param name="force">True the stop should be forced, false for a cooperative stop.</param>
+            /// <param name="handler">>A callback handler used to report results</param>
+            /// <remarks>A forced stop will cause threads and processes to be killed as needed.</remarks>
+            public StopRunAction(FrameworkController controller, bool force, object handler)
+            {
+                controller.StopRun((ICallbackEventHandler)handler, force);
             }
         }
 
