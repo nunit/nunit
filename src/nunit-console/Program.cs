@@ -22,7 +22,6 @@
 // ***********************************************************************
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using Mono.Options;
@@ -173,8 +172,8 @@ namespace NUnit.ConsoleRunner
             string versionText = executingAssembly.GetName().Version.ToString(3);
 
             string programName = "NUnit Console Runner";
-            string copyrightText = "Copyright (C) 2011 Charlie Poole.\r\nAll Rights Reserved.";
-            string configText = "";
+            string copyrightText = "Copyright (C) 2014 Charlie Poole.\r\nAll Rights Reserved.";
+            string configText = String.Empty;
 
             object[] attrs = executingAssembly.GetCustomAttributes(typeof(AssemblyTitleAttribute), false);
             if (attrs.Length > 0)
@@ -185,8 +184,14 @@ namespace NUnit.ConsoleRunner
                 copyrightText = ((AssemblyCopyrightAttribute)attrs[0]).Copyright;
 
             attrs = executingAssembly.GetCustomAttributes(typeof(AssemblyConfigurationAttribute), false);
-            if (attrs.Length > 0)
-                configText = string.Format("({0})", ((AssemblyConfigurationAttribute)attrs[0]).Configuration);
+            if ( attrs.Length > 0 )
+            {
+                string configuration = ( ( AssemblyConfigurationAttribute )attrs[0] ).Configuration;
+                if ( !String.IsNullOrEmpty( configuration ) )
+                {
+                    configText = string.Format( "({0})", ( ( AssemblyConfigurationAttribute )attrs[0] ).Configuration );
+                }
+            }
 
             ColorConsole.WriteLine(ColorStyle.Header, string.Format( "{0} {1} {2}", programName, versionText, configText ));
             ColorConsole.WriteLine(ColorStyle.SubHeader, copyrightText);
