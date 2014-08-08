@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2011 Charlie Poole
+// Copyright (c) 2011-2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -35,10 +35,15 @@ namespace NUnit.Engine.Runners
     /// </summary>
     public abstract class DirectTestRunner : AbstractTestRunner
     {
-        private List<IFrameworkDriver> drivers = new List<IFrameworkDriver>();
-        protected AppDomain TestDomain;
+        private List<IFrameworkDriver> _drivers = new List<IFrameworkDriver>();
 
-        public DirectTestRunner(ServiceContext services) : base(services) { }
+        public DirectTestRunner(ServiceContext services, TestPackage package) : base(services, package) { }
+
+        #region Properties
+
+        protected AppDomain TestDomain { get; set; }
+
+        #endregion
 
         #region AbstractTestRunner Overrides
 
@@ -48,15 +53,15 @@ namespace NUnit.Engine.Runners
         /// </summary>
         /// <param name="package">The TestPackage to be explored</param>
         /// <returns>A TestEngineResult.</returns>
-        public override TestEngineResult Explore(TestFilter filter)
+        protected override TestEngineResult ExploreTests(TestFilter filter)
         {
             TestEngineResult result = new TestEngineResult();
 
-            foreach (IFrameworkDriver driver in drivers)
+            foreach (IFrameworkDriver driver in _drivers)
                 result.Add(driver.Explore(filter));
 
-            return IsProjectPackage(this.package)
-                ? result.MakePackageResult(package.Name, package.FullName)
+            return IsProjectPackage(this.TestPackage)
+                ? result.MakePackageResult(TestPackage.Name, TestPackage.FullName)
                 : result;
         }
 
@@ -65,20 +70,19 @@ namespace NUnit.Engine.Runners
         /// </summary>
         /// <param name="package">The TestPackage to be loaded</param>
         /// <returns>A TestEngineResult.</returns>
-        public override TestEngineResult Load(TestPackage package)
+        protected override TestEngineResult LoadPackage()
         {
-            this.package = package;
             TestEngineResult result = new TestEngineResult();
 
-            foreach (string testFile in package.TestFiles)
+            foreach (string testFile in TestPackage.TestFiles)
             {
-                IFrameworkDriver driver = Services.DriverFactory.GetDriver(TestDomain, testFile, package.Settings);
+                IFrameworkDriver driver = Services.DriverFactory.GetDriver(TestDomain, testFile, TestPackage.Settings);
                 result.Add(driver.Load());
-                drivers.Add(driver);
+                _drivers.Add(driver);
             }
 
-            return IsProjectPackage(this.package)
-                ? result.MakePackageResult(package.Name, package.FullName)
+            return IsProjectPackage(TestPackage)
+                ? result.MakePackageResult(TestPackage.Name, TestPackage.FullName)
                 : result;
         }
 
@@ -88,11 +92,11 @@ namespace NUnit.Engine.Runners
         /// </summary>
         /// <param name="filter">A TestFilter</param>
         /// <returns>The count of test cases</returns>
-        public override int CountTestCases(TestFilter filter)
+        protected override int CountTests(TestFilter filter)
         {
             int count = 0;
 
-            foreach (IFrameworkDriver driver in drivers)
+            foreach (IFrameworkDriver driver in _drivers)
                 count += driver.CountTestCases(filter);
 
             return count;
@@ -107,39 +111,26 @@ namespace NUnit.Engine.Runners
         /// top-level node of the result is &lt;direct-runner&gt; and wraps
         /// all the &lt;test-assembly&gt; elements returned by the drivers.
         /// </returns>
-        public override TestEngineResult Run(ITestEventHandler listener, TestFilter filter)
+        protected override TestEngineResult RunTests(ITestEventListener listener, TestFilter filter)
         {
             TestEngineResult result = new TestEngineResult();
 
-            foreach (IFrameworkDriver driver in drivers)
+            foreach (IFrameworkDriver driver in _drivers)
                 result.Add(driver.Run(listener, filter));
 
-            return IsProjectPackage(this.package)
-                ? result.MakePackageResult(package.Name, package.FullName)
+            return IsProjectPackage(this.TestPackage)
+                ? result.MakePackageResult(TestPackage.Name, TestPackage.FullName)
                 : result;
         }
 
         /// <summary>
-        /// Start a run of the tests in the loaded TestPackage. The tests are run
-        /// asynchronously and the listener interface is notified as it progresses.
+        /// Cancel the ongoing test run. If no  test is running, the call is ignored.
         /// </summary>
-        /// <param name="listener">An ITestEventHandler to receive events</param>
-        /// <param name="filter">A TestFilter used to select tests</param>
-        public override void BeginRun(ITestEventHandler listener, TestFilter filter)
+        /// <param name="force">If true, cancel any ongoing test threads, otherwise wait for them to complete.</param>
+        public override void StopRun(bool force)
         {
-            _listener = listener;
-            _filter = filter;
-            var threadStart = new System.Threading.ThreadStart(RunnerProc);
-            System.Threading.Thread runnerThread = new System.Threading.Thread(threadStart);
-            runnerThread.Start();
-        }
-
-        private ITestEventHandler _listener;
-        private TestFilter _filter;
-        private void RunnerProc()
-        {
-            foreach (NUnitFrameworkDriver driver in drivers)
-                driver.Run(_listener, _filter);
+            foreach(var driver in _drivers)
+                driver.StopRun(force);
         }
 
         #endregion

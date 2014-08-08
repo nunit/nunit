@@ -57,7 +57,6 @@
     <Compile Include="Agents\TestAgent.cs" />
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="CallbackHandler.cs" />
-    <Compile Include="IFrameworkDriver.cs" />
     <Compile Include="Internal\AssemblyHelper.cs" />
     <Compile Include="Internal\AssemblyReader.cs" />
     <Compile Include="Internal\DomainUsage.cs" />
@@ -97,6 +96,7 @@
     <Compile Include="Runners\MultipleTestProcessRunner.cs" />
     <Compile Include="Runners\ProcessRunner.cs" />
     <Compile Include="Runners\TestDomainRunner.cs" />
+    <Compile Include="TestRun.cs" />
     <Compile Include="RunTestsCallbackHandler.cs" />
     <Compile Include="RuntimeFramework.cs" />
     <Compile Include="ServiceContext.cs" />

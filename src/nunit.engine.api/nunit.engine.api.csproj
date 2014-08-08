@@ -51,22 +51,21 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="IFrameworkDriver.cs" />
     <Compile Include="ILogger.cs" />
     <Compile Include="ILogging.cs" />
     <Compile Include="InternalTraceLevel.cs" />
     <Compile Include="IServiceLocator.cs" />
     <Compile Include="ISettings.cs" />
     <Compile Include="ITestEngine.cs" />
-    <Compile Include="ITestEventHandler.cs" />
+    <Compile Include="ITestEventListener.cs" />
     <Compile Include="ITestRunner.cs" />
     <Compile Include="NUnitEngineException.cs" />
-    <Compile Include="RecentFileEntry.cs" />
     <Compile Include="IRecentFiles.cs" />
     <Compile Include="TestEngineActivator.cs" />
-    <Compile Include="TestEngineError.cs" />
     <Compile Include="TestFilter.cs" />
-    <Compile Include="TestListener.cs" />
     <Compile Include="TestPackage.cs" />
+    <Compile Include="ITestRun.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="nunit.engine.api.build" />

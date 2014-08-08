@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2011 Charlie Poole
+// Copyright (c) 2011-2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -32,17 +32,32 @@ namespace NUnit.Engine
     public interface ITestRunner : IDisposable
     {
         /// <summary>
+        /// Get a flag indicating whether a test is running
+        /// </summary>
+        bool IsTestRunning { get; }
+
+        /// <summary>
         /// Load a TestPackage for possible execution
         /// </summary>
-        /// <param name="package">The TestPackage to be loaded</param>
         /// <returns>An XmlNode representing the loaded package.</returns>
-        XmlNode Load(TestPackage package);
+        /// <remarks>
+        /// This method is normally optional, since Explore and Run call
+        /// it automatially when necessary. The method is kept in order
+        /// to make it easier to convert older programs that use it.
+        /// </remarks>
+        XmlNode Load();
 
         /// <summary>
         /// Unload any loaded TestPackage. If none is loaded,
         /// the call is ignored.
         /// </summary>
         void Unload();
+
+        /// <summary>
+        /// Reload the current TestPackage
+        /// </summary>
+        /// <returns>An XmlNode representing the loaded package.</returns>
+        XmlNode Reload();
 
         /// <summary>
         /// Count the test cases that would be run under
@@ -56,18 +71,22 @@ namespace NUnit.Engine
         /// Run the tests in the loaded TestPackage and return a test result. The tests
         /// are run synchronously and the listener interface is notified as it progresses.
         /// </summary>
-        /// <param name="listener">An ITestEventHandler to receive events</param>
         /// <param name="filter">A TestFilter used to select tests</param>
         /// <returns>An XmlNode giving the result of the test execution</returns>
-        XmlNode Run(ITestEventHandler listener, TestFilter filter);
+        XmlNode Run(ITestEventListener listener, TestFilter filter);
 
         /// <summary>
         /// Start a run of the tests in the loaded TestPackage. The tests are run
         /// asynchronously and the listener interface is notified as it progresses.
         /// </summary>
-        /// <param name="listener">An ITestEventHandler to receive events</param>
         /// <param name="filter">A TestFilter used to select tests</param>
-        void BeginRun(ITestEventHandler listener, TestFilter filter);
+        ITestRun RunAsync(ITestEventListener listener, TestFilter filter);
+
+        /// <summary>
+        /// Cancel the ongoing test run. If no  test is running, the call is ignored.
+        /// </summary>
+        /// <param name="force">If true, cancel any ongoing test threads, otherwise wait for them to complete.</param>
+        void StopRun(bool force);
 
         /// <summary>
         /// Explore a loaded TestPackage and return information about the tests found.

@@ -103,7 +103,7 @@ namespace NUnit.Engine.Agents
         /// <summary>
         ///  Creates a test runner
         /// </summary>
-        public abstract ITestEngineRunner CreateRunner();
+        public abstract ITestEngineRunner CreateRunner(TestPackage package);
 
         #endregion
 

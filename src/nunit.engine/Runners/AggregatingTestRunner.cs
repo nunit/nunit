@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2011 Charlie Poole
+// Copyright (c) 2011-2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -37,9 +37,9 @@ namespace NUnit.Engine.Runners
     {
         // The runners created by the derived class will (at least at the time
         // of writing this comment) be either TestDomainRunners or ProcessRunners.
-        private List<AbstractTestRunner> runners = new List<AbstractTestRunner>();
+        private List<ITestEngineRunner> _runners = new List<ITestEngineRunner>();
 
-        public AggregatingTestRunner(ServiceContext services) : base(services) { }
+        public AggregatingTestRunner(ServiceContext services, TestPackage package) : base(services, package) { }
 
         #region AbstractTestRunner Overrides
 
@@ -49,18 +49,17 @@ namespace NUnit.Engine.Runners
         /// </summary>
         /// <param name="package">The TestPackage to be explored</param>
         /// <returns>A TestEngineResult.</returns>
-        public override TestEngineResult Explore(TestFilter filter)
+        protected override TestEngineResult ExploreTests(TestFilter filter)
         {
             List<TestEngineResult> results = new List<TestEngineResult>();
 
-            // TODO: Eliminate need for implicit cast to AbstractTestRunner
-            foreach (AbstractTestRunner runner in runners)
+            foreach (ITestEngineRunner runner in _runners)
                 results.Add(runner.Explore(filter));
 
             TestEngineResult result = ResultHelper.Merge(results);
 
-            return IsProjectPackage(this.package)
-                ? result.MakePackageResult(package.Name, package.FullName)
+            return IsProjectPackage(this.TestPackage)
+                ? result.MakePackageResult(TestPackage.Name, TestPackage.FullName)
                 : result;
         }
 
@@ -69,19 +68,17 @@ namespace NUnit.Engine.Runners
         /// </summary>
         /// <param name="package">The TestPackage to be loaded</param>
         /// <returns>A TestEngineResult.</returns>
-        public override TestEngineResult Load(TestPackage package)
+        protected override TestEngineResult LoadPackage()
         {
-            this.package = package;
-
             List<TestPackage> packages = new List<TestPackage>();
 
-            foreach (string testFile in package.TestFiles)
+            foreach (string testFile in TestPackage.TestFiles)
             {
                 TestPackage subPackage = new TestPackage(testFile);
                 if (Services.ProjectService.IsProjectFile(testFile))
                     Services.ProjectService.ExpandProjectPackage(subPackage);
-                foreach (string key in package.Settings.Keys)
-                    subPackage.Settings[key] = package.Settings[key];
+                foreach (string key in TestPackage.Settings.Keys)
+                    subPackage.Settings[key] = TestPackage.Settings[key];
                 packages.Add(subPackage);
             }
 
@@ -89,9 +86,9 @@ namespace NUnit.Engine.Runners
 
             foreach (TestPackage subPackage in packages)
             {
-                AbstractTestRunner runner = CreateRunner(subPackage);
-                runners.Add(runner);
-                results.Add(runner.Load(subPackage));
+                var runner = CreateRunner(subPackage);
+                _runners.Add(runner);
+                results.Add(runner.Load());
             }
 
             return ResultHelper.Merge(results);
@@ -101,12 +98,12 @@ namespace NUnit.Engine.Runners
         /// Unload any loaded TestPackages and clear the
         /// list of runners.
         /// </summary>
-        public override void Unload()
+        public override void UnloadPackage()
         {
-            foreach (AbstractTestRunner runner in runners)
+            foreach (ITestEngineRunner runner in _runners)
                 runner.Unload();
 
-            runners.Clear();
+            _runners.Clear();
         }
 
         /// <summary>
@@ -115,11 +112,11 @@ namespace NUnit.Engine.Runners
         /// </summary>
         /// <param name="filter">A TestFilter</param>
         /// <returns>The count of test cases</returns>
-        public override int CountTestCases(TestFilter filter)
+        protected override int CountTests(TestFilter filter)
         {
             int count = 0;
 
-            foreach (AbstractTestRunner runner in runners)
+            foreach (ITestEngineRunner runner in _runners)
                 count += runner.CountTestCases(filter);
 
             return count;
@@ -132,37 +129,35 @@ namespace NUnit.Engine.Runners
         /// <returns>
         /// A TestEngineResult giving the result of the test execution.
         /// </returns>
-        public override TestEngineResult Run(ITestEventHandler listener, TestFilter filter)
+        protected override TestEngineResult RunTests(ITestEventListener listener, TestFilter filter)
         {
             List<TestEngineResult> results = new List<TestEngineResult>();
 
-            // TODO: Eliminate need for implicit cast to AbstractTestRunner
-            foreach (AbstractTestRunner runner in runners)
+            foreach (ITestEngineRunner runner in _runners)
                 results.Add(runner.Run(listener, filter));
 
             TestEngineResult result = ResultHelper.Merge(results);
 
-            return IsProjectPackage(this.package)
-                ? result.MakePackageResult(package.Name, package.FullName)
+            return IsProjectPackage(this.TestPackage)
+                ? result.MakePackageResult(TestPackage.Name, TestPackage.FullName)
                 : result;
         }
 
         /// <summary>
-        /// Start a run of the tests in the loaded TestPackage. The tests are run
-        /// asynchronously and the listener interface is notified as it progresses.
+        /// Cancel the ongoing test run. If no  test is running, the call is ignored.
         /// </summary>
-        /// <param name="listener">An ITestEventHandler to receive events</param>
-        /// <param name="filter">A TestFilter used to select tests</param>
-        public override void BeginRun(ITestEventHandler listener, TestFilter filter)
+        /// <param name="force">If true, cancel any ongoing test threads, otherwise wait for them to complete.</param>
+        public override void StopRun(bool force)
         {
-            throw new NotImplementedException();
+            foreach (var runner in _runners)
+                runner.StopRun(force);
         }
 
         #endregion
 
-        protected virtual AbstractTestRunner CreateRunner(TestPackage package)
+        protected virtual ITestEngineRunner CreateRunner(TestPackage package)
         {
-            return Services.TestRunnerFactory.MakeTestRunner(package) as AbstractTestRunner;
+            return Services.TestRunnerFactory.MakeTestRunner(package);
         }
     }
 }

@@ -47,13 +47,13 @@ namespace NUnit.ConsoleRunner
 
         #region Instance Fields
 
-        private ITestEngine engine;
-        private ConsoleOptions options;
+        private ITestEngine _engine;
+        private ConsoleOptions _options;
 
-        private TextWriter outWriter = Console.Out;
-        private TextWriter errorWriter = Console.Error;
+        private TextWriter _outWriter = Console.Out;
+        private TextWriter _errorWriter = Console.Error;
 
-        private string workDirectory;
+        private string _workDirectory;
 
         #endregion
 
@@ -61,13 +61,13 @@ namespace NUnit.ConsoleRunner
 
         public ConsoleRunner(ITestEngine engine, ConsoleOptions options)
         {
-            this.engine = engine;
-            this.options = options;
-            this.workDirectory = options.WorkDirectory;
-            if (this.workDirectory == null)
-                this.workDirectory = Environment.CurrentDirectory;
-            else if (!Directory.Exists(this.workDirectory))
-                Directory.CreateDirectory(this.workDirectory);
+            _engine = engine;
+            _options = options;
+            _workDirectory = options.WorkDirectory;
+            if (_workDirectory == null)
+                _workDirectory = Environment.CurrentDirectory;
+            else if (!Directory.Exists(_workDirectory))
+                Directory.CreateDirectory(_workDirectory);
         }
 
         #endregion
@@ -80,11 +80,11 @@ namespace NUnit.ConsoleRunner
         /// <returns></returns>
         public int Execute()
         {
-            TestPackage package = MakeTestPackage(options);
+            TestPackage package = MakeTestPackage(_options);
 
-            TestFilter filter = CreateTestFilter(options);
+            TestFilter filter = CreateTestFilter(_options);
 
-            if (options.Explore)
+            if (_options.Explore)
                 return ExploreTests(package, filter);
             else
                 return RunTests(package, filter);
@@ -96,17 +96,20 @@ namespace NUnit.ConsoleRunner
 
         private int ExploreTests(TestPackage package, TestFilter filter)
         {
-            XmlNode result = engine.Explore(package, filter);
+            XmlNode result = null;
 
-            if (options.ExploreOutputSpecifications.Count == 0)
+            using (var runner = _engine.GetRunner(package))
+                result = runner.Explore(filter);
+
+            if (_options.ExploreOutputSpecifications.Count == 0)
             {
                 new TestCaseOutputWriter().WriteResultFile(result, Console.Out);
             }
             else
             {
-                var outputManager = new OutputManager(result, this.workDirectory);
+                var outputManager = new OutputManager(result, _workDirectory);
 
-                foreach (OutputSpecification spec in options.ExploreOutputSpecifications)
+                foreach (OutputSpecification spec in _options.ExploreOutputSpecifications)
                     outputManager.WriteTestFile(spec);
             }
 
@@ -121,7 +124,7 @@ namespace NUnit.ConsoleRunner
             // TODO: Incorporate this in EventCollector?
             RedirectOutputAsRequested();
 
-            TestEventHandler eventHandler = new TestEventHandler(options, outWriter, errorWriter);
+            TestEventHandler eventHandler = new TestEventHandler(_options, _outWriter, _errorWriter);
 
             XmlNode result = null;
 
@@ -134,15 +137,10 @@ namespace NUnit.ConsoleRunner
             try
             {
                 using ( new ColorConsole( ColorStyle.Output ) )
-#if true
-                result = engine.Run(package, eventHandler, filter);
-#else
-                using (ITestRunner runner = engine.GetRunner(package))
+                using (ITestRunner runner = _engine.GetRunner(package))
                 {
-                    if (runner.Load(package))
-                        engineResult = runner.Run(eventHandler, testFilter);
+                    result = runner.Run(eventHandler, filter);
                 }
-#endif
             }
             finally
             {
@@ -154,13 +152,13 @@ namespace NUnit.ConsoleRunner
 
             //Console.WriteLine();
 
-            ResultReporter reporter = new ResultReporter(result, options);
+            ResultReporter reporter = new ResultReporter(result, _options);
             reporter.ReportResults();
 
             // TODO: Inject this?
-            var outputManager = new OutputManager(result, this.workDirectory);
+            var outputManager = new OutputManager(result, _workDirectory);
 
-            foreach (var outputSpec in options.ResultOutputSpecifications)
+            foreach (var outputSpec in _options.ResultOutputSpecifications)
                 outputManager.WriteResultFile(outputSpec, startTime);
 
             return reporter.Summary.ErrorsAndFailures;
@@ -169,60 +167,60 @@ namespace NUnit.ConsoleRunner
         private void DisplayRequestedOptions()
         {
             ColorConsole.WriteLine(ColorStyle.SectionHeader, "Options");
-            ColorConsole.WriteLabel("    ProcessModel: ", options.ProcessModel ?? "Default", false);
-            ColorConsole.WriteLabel("    DomainUsage: ", options.DomainUsage ?? "Default", true);
-            ColorConsole.WriteLabel("    Execution Runtime: ", options.Framework ?? "Not Specified", true);
-            if (options.DefaultTimeout >= 0)
-                ColorConsole.WriteLabel("    Default timeout: ", options.DefaultTimeout.ToString(), true);
-            if (options.NumWorkers > 0)
-                ColorConsole.WriteLabel("    Worker Threads: ", options.NumWorkers.ToString(), true);
-            ColorConsole.WriteLabel("    Work Directory: ", workDirectory, true);
-            ColorConsole.WriteLabel("    Internal Trace: ", options.InternalTraceLevel ?? "Off", true);
+            ColorConsole.WriteLabel("    ProcessModel: ", _options.ProcessModel ?? "Default", false);
+            ColorConsole.WriteLabel("    DomainUsage: ", _options.DomainUsage ?? "Default", true);
+            ColorConsole.WriteLabel("    Execution Runtime: ", _options.Framework ?? "Not Specified", true);
+            if (_options.DefaultTimeout >= 0)
+                ColorConsole.WriteLabel("    Default timeout: ", _options.DefaultTimeout.ToString(), true);
+            if (_options.NumWorkers > 0)
+                ColorConsole.WriteLabel("    Worker Threads: ", _options.NumWorkers.ToString(), true);
+            ColorConsole.WriteLabel("    Work Directory: ", _workDirectory, true);
+            ColorConsole.WriteLabel("    Internal Trace: ", _options.InternalTraceLevel ?? "Off", true);
             //if (options.DisplayTeamCityServiceMessages)
             //    ColorConsole.WriteLine("    Display TeamCity Service Messages");
             Console.WriteLine();
 
-            if (options.TestList.Count > 0)
+            if (_options.TestList.Count > 0)
             {
                 ColorConsole.WriteLine(ColorStyle.Label, "Selected test(s):");
                 using (new ColorConsole(ColorStyle.Default))
-                    foreach (string testName in options.TestList)
+                    foreach (string testName in _options.TestList)
                         Console.WriteLine("    " + testName);
             }
 
-            if (!string.IsNullOrEmpty( options.Include ))
-                ColorConsole.WriteLabel("Included categories: ", options.Include, true);
+            if (!string.IsNullOrEmpty( _options.Include ))
+                ColorConsole.WriteLabel("Included categories: ", _options.Include, true);
 
-            if (!string.IsNullOrEmpty( options.Exclude ))
-                ColorConsole.WriteLabel("Excluded categories: ", options.Exclude, true);
+            if (!string.IsNullOrEmpty( _options.Exclude ))
+                ColorConsole.WriteLabel("Excluded categories: ", _options.Exclude, true);
         }
 
         private void RedirectOutputAsRequested()
         {
-            if (options.OutFile != null)
+            if (_options.OutFile != null)
             {
-                StreamWriter outStreamWriter = new StreamWriter(Path.Combine(workDirectory, options.OutFile));
+                var outStreamWriter = new StreamWriter(Path.Combine(_workDirectory, _options.OutFile));
                 outStreamWriter.AutoFlush = true;
-                this.outWriter = outStreamWriter;
+                _outWriter = outStreamWriter;
             }
 
-            if (options.ErrFile != null)
+            if (_options.ErrFile != null)
             {
-                StreamWriter errorStreamWriter = new StreamWriter(Path.Combine(workDirectory, options.ErrFile));
+                var errorStreamWriter = new StreamWriter(Path.Combine(_workDirectory, _options.ErrFile));
                 errorStreamWriter.AutoFlush = true;
-                this.errorWriter = errorStreamWriter;
+                _errorWriter = errorStreamWriter;
             }
         }
 
         private void RestoreOutput()
         {
-            outWriter.Flush();
-            if (options.OutFile != null)
-                outWriter.Close();
+            _outWriter.Flush();
+            if (_options.OutFile != null)
+                _outWriter.Close();
 
-            errorWriter.Flush();
-            if (options.ErrFile != null)
-                errorWriter.Close();
+            _errorWriter.Flush();
+            if (_options.ErrFile != null)
+                _errorWriter.Close();
         }
 
         // This is public static for ease of testing

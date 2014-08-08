@@ -31,7 +31,7 @@ namespace NUnit.Engine.Services
     /// </summary>
     public class RecentFilesService : IRecentFiles, IService
     {
-        private IList<RecentFileEntry> fileEntries = new List<RecentFileEntry>();
+        private IList<string> _fileEntries = new List<string>();
 
         private const int MinSize = 0;
         private const int MaxSize = 24;
@@ -40,11 +40,6 @@ namespace NUnit.Engine.Services
         #region Properties
 
         public ServiceContext ServiceContext { get; set; }
-
-        public int Count
-        {
-            get { return fileEntries.Count; }
-        }
 
         public int MaxFiles
         {
@@ -73,69 +68,41 @@ namespace NUnit.Engine.Services
 
         #region Public Methods
 
-        public IList<RecentFileEntry> Entries { get { return fileEntries; } }
+        public IList<string> Entries { get { return _fileEntries; } }
         
         public void Remove( string fileName )
         {
-            int index = IndexOf(fileName);
-            if (index != -1)
-                fileEntries.RemoveAt(index);
+            _fileEntries.Remove(fileName);
         }
 
-        public void SetMostRecent( string fileName )
+        public void SetMostRecent( string filePath )
         {
-            SetMostRecent( new RecentFileEntry( fileName ) );
-        }
+            _fileEntries.Remove(filePath);
 
-        public void SetMostRecent( RecentFileEntry entry )
-        {
-            int index = IndexOf(entry.Path);
-
-            if(index != -1)
-                fileEntries.RemoveAt(index);
-
-            fileEntries.Insert( 0, entry );
-            if( fileEntries.Count > MaxFiles )
-                fileEntries.RemoveAt( MaxFiles );
+            _fileEntries.Insert( 0, filePath );
+            if( _fileEntries.Count > MaxFiles )
+                _fileEntries.RemoveAt( MaxFiles );
         }
         #endregion
 
         #region Helper Methods for saving and restoring the settings
 
-        private int IndexOf( string fileName )
-        {
-            for( int index = 0; index < Count; index++ )
-                if ( fileEntries[index].Path == fileName )
-                    return index;
-            return -1;
-        }
-
         private void LoadEntriesFromSettings()
         {
-            fileEntries.Clear();
+            _fileEntries.Clear();
 
+            // TODO: Prefix should be provided by caller
             AddEntriesForPrefix("Gui.RecentProjects");
-
-            // Try legacy entries if nothing was found
-            if (fileEntries.Count == 0)
-            {
-                AddEntriesForPrefix("RecentProjects.V2");
-                AddEntriesForPrefix("RecentProjects.V1");
-            }
-
-            // Try even older legacy format
-            if (fileEntries.Count == 0)
-                AddEntriesForPrefix("RecentProjects");
         }
 
         private void AddEntriesForPrefix(string prefix)
         {
             for (int index = 1; index < MaxFiles; index++)
             {
-                if (fileEntries.Count >= MaxFiles) break;
+                if (_fileEntries.Count >= MaxFiles) break;
 
                 string fileSpec = ServiceContext.UserSettings.GetSetting(GetRecentFileKey(prefix, index)) as string;
-                if (fileSpec != null) fileEntries.Add(RecentFileEntry.Parse(fileSpec));
+                if (fileSpec != null) _fileEntries.Add(fileSpec);
             }
         }
 
@@ -144,14 +111,14 @@ namespace NUnit.Engine.Services
             string prefix = "Gui.RecentProjects";
             ISettings settings = ServiceContext.UserSettings;
 
-            while( fileEntries.Count > MaxFiles )
-                fileEntries.RemoveAt( fileEntries.Count - 1 );
+            while( _fileEntries.Count > MaxFiles )
+                _fileEntries.RemoveAt( _fileEntries.Count - 1 );
 
             for( int index = 0; index < MaxSize; index++ ) 
             {
                 string keyName = GetRecentFileKey( prefix, index + 1 );
-                if ( index < fileEntries.Count )
-                    settings.SaveSetting( keyName, fileEntries[index].Path );
+                if ( index < _fileEntries.Count )
+                    settings.SaveSetting( keyName, _fileEntries[index] );
                 else
                     settings.RemoveSetting( keyName );
             }

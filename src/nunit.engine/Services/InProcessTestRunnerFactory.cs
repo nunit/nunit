@@ -55,12 +55,12 @@ namespace NUnit.Engine.Services
             {
                 case DomainUsage.Multiple:
                     package.Settings.Remove("DomainUsage");
-                    return new MultipleTestDomainRunner(ServiceContext);
+                    return new MultipleTestDomainRunner(ServiceContext, package);
                 case DomainUsage.None:
-                    return new LocalTestRunner(ServiceContext);
+                    return new LocalTestRunner(ServiceContext, package);
                 case DomainUsage.Single:
                 default:
-                    return new TestDomainRunner(ServiceContext);
+                    return new TestDomainRunner(ServiceContext, package);
             }
         }
 

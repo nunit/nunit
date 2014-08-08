@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2011 Charlie Poole
+// Copyright (c) 2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,49 +21,33 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Xml;
+
 namespace NUnit.Engine
 {
     /// <summary>
-    /// TestEngineError represents an error that occured in 
-    /// executing an API method.
+    /// The ITestRun class represents an ongoing test run.
     /// </summary>
-    public class TestEngineError
+    public interface ITestRun
     {
-        private string message;
-        private string stackTrace;
+        /// <summary>
+        /// Get the result of the test.
+        /// </summary>
+        /// <returns>An XmlNode representing the test run result</returns>
+        XmlNode Result { get; }
 
         /// <summary>
-        /// Construct a TestEngineError from a message
+        /// Stop the current test run, specifying whether to force cancellation. 
+        /// If no test is running, the method returns without error.
         /// </summary>
-        /// <param name="message">The error message</param>
-        public TestEngineError(string message)
-            : this(message, null) { }
-
-        /// <summary>
-        /// Construct a TestEngineError from a message and stack trace.
-        /// </summary>
-        /// <param name="message">The error message</param>
-        /// <param name="stackTrace">A stack trace, or null</param>
-        public TestEngineError(string message, string stackTrace)
-        {
-            this.message = message;
-            this.stackTrace = stackTrace;
-        }
-
-        /// <summary>
-        /// Gets the error message from an error
-        /// </summary>
-        public string Message
-        {
-            get { return message; }
-        }
-
-        /// <summary>
-        /// Gets the stack trace for an error, if present
-        /// </summary>
-        public string StackTrace 
-        {
-            get { return stackTrace; }
-        }
+        /// <param name="force">If true, force the stop by cancelling all threads.</param>
+        /// <remarks>
+        /// Note that cancelling the threads is intrinsically unsafe and is only
+        /// provided on the assumption that tests do not impact production data.
+        /// </remarks>
+        void Stop(bool force);
     }
 }

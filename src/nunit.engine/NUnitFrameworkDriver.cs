@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2009 Charlie Poole
+// Copyright (c) 2009-2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -42,6 +42,7 @@ namespace NUnit.Engine
         private static readonly string EXPLORE_ACTION = CONTROLLER_TYPE + "+ExploreTestsAction";
         private static readonly string COUNT_ACTION = CONTROLLER_TYPE + "+CountTestsAction";
         private static readonly string RUN_ACTION = CONTROLLER_TYPE + "+RunTestsAction";
+        private static readonly string STOP_RUN_ACTION = CONTROLLER_TYPE + "+StopRunAction";
 
         static ILogger log = InternalTrace.GetLogger("NUnitFrameworkDriver");
 
@@ -88,7 +89,7 @@ namespace NUnit.Engine
         /// <param name="listener">An ITestEventHandler that receives progress notices</param>
         /// <param name="filter">A filter that controls which tests are executed</param>
         /// <returns>An Xml string representing the result</returns>
-        public string Run(ITestEventHandler listener, TestFilter filter)
+        public string Run(ITestEventListener listener, TestFilter filter)
         {
             CallbackHandler handler = new RunTestsCallbackHandler(listener);
 
@@ -96,6 +97,15 @@ namespace NUnit.Engine
             CreateObject(RUN_ACTION, _frameworkController, filter.Text, handler);
 
             return handler.Result;
+        }
+
+        /// <summary>
+        /// Cancel the ongoing test run. If no  test is running, the call is ignored.
+        /// </summary>
+        /// <param name="force">If true, cancel any ongoing test threads, otherwise wait for them to complete.</param>
+        public void StopRun(bool force)
+        {
+            CreateObject(STOP_RUN_ACTION, _frameworkController, force);
         }
 
         /// <summary>

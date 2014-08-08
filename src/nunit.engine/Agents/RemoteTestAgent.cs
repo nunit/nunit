@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2008 Charlie Poole
+// Copyright (c) 2008-2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -40,7 +40,8 @@ namespace NUnit.Engine.Agents
 
         #region Fields
 
-        private ITestEngineRunner runner;
+        private ITestEngineRunner _runner;
+        private TestPackage _package;
 
         private ManualResetEvent stopSignal = new ManualResetEvent(false);
         
@@ -67,8 +68,9 @@ namespace NUnit.Engine.Agents
 
         #region Public Methods
 
-        public override ITestEngineRunner CreateRunner()
+        public override ITestEngineRunner CreateRunner(TestPackage package)
         {
+            _package = package;
             return this;
         }
 
@@ -119,21 +121,32 @@ namespace NUnit.Engine.Agents
         /// <returns>A TestEngineResult.</returns>
         public TestEngineResult Explore(TestFilter filter)
         {
-            return runner == null ? null : runner.Explore(filter);
+            if (_runner == null)
+                throw new InvalidOperationException("RemoteTestAgent: Explore called before Load");
+            
+            return _runner.Explore(filter);
         }
 
-        public TestEngineResult Load(TestPackage package)
+        public TestEngineResult Load()
         {
             //System.Diagnostics.Debug.Assert(false, "Attach debugger if desired");
 
-            this.runner = Services.TestRunnerFactory.MakeTestRunner(package);
-            return runner.Load(package);
+            _runner = Services.TestRunnerFactory.MakeTestRunner(_package);
+            return _runner.Load();
         }
 
         public void Unload()
         {
-            if (runner != null)
-                runner.Unload();
+            if (_runner != null)
+                _runner.Unload();
+        }
+
+        public TestEngineResult Reload()
+        {
+            if (_runner == null)
+                throw new InvalidOperationException("RemoteTestAgent: Reload called before Load");
+                
+            return _runner.Reload();
         }
 
         /// <summary>
@@ -144,7 +157,10 @@ namespace NUnit.Engine.Agents
         /// <returns>The count of test cases</returns>
         public int CountTestCases(TestFilter filter)
         {
-            return runner.CountTestCases(filter);
+            if (_runner == null)
+                throw new InvalidOperationException("RemoteTestAgent: CountTestCases called before Load");
+
+            return _runner.CountTestCases(filter);
         }
 
         /// <summary>
@@ -154,9 +170,12 @@ namespace NUnit.Engine.Agents
         /// <param name="listener">An ITestEventHandler to receive events</param>
         /// <param name="filter">A TestFilter used to select tests</param>
         /// <returns>A TestEngineResult giving the result of the test execution</returns>
-        public TestEngineResult Run(ITestEventHandler listener, TestFilter filter)
+        public TestEngineResult Run(ITestEventListener listener, TestFilter filter)
         {
-            return runner == null ? null : runner.Run(listener, filter);
+            if (_runner == null)
+                throw new InvalidOperationException("RemoteTestAgent: Run called before Load");
+
+            return _runner.Run(listener, filter);
         }
 
         /// <summary>
@@ -165,10 +184,22 @@ namespace NUnit.Engine.Agents
         /// </summary>
         /// <param name="listener">An ITestEventHandler to receive events</param>
         /// <param name="filter">A TestFilter used to select tests</param>
-        public void BeginRun(ITestEventHandler listener, TestFilter filter)
+        public void StartRun(ITestEventListener listener, TestFilter filter)
         {
-            if (runner != null)
-                runner.BeginRun(listener, filter);
+            if (_runner == null)
+                throw new InvalidOperationException("RemoteTestAgent: StartRun called before Load");
+
+            _runner.StartRun(listener, filter);
+        }
+
+        /// <summary>
+        /// Cancel the ongoing test run. If no  test is running, the call is ignored.
+        /// </summary>
+        /// <param name="force">If true, cancel any ongoing test threads, otherwise wait for them to complete.</param>
+        public void StopRun(bool force)
+        {
+            if (_runner != null)
+                _runner.StopRun(force);
         }
 
         #endregion

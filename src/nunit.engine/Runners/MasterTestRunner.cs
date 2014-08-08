@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2011 Charlie Poole
+// Copyright (c) 2011-2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -33,13 +33,15 @@ namespace NUnit.Engine.Runners
 {
     public class MasterTestRunner : AbstractTestRunner, ITestRunner
     {
-        private AbstractTestRunner realRunner;
+        private ITestEngineRunner _realRunner;
 
         // Count of assemblies and projects passed in package
-        private int assemblyCount;
-        private int projectCount;
+        private int _assemblyCount;
+        private int _projectCount;
 
-        public MasterTestRunner(ServiceContext services) : base(services) { }
+        public MasterTestRunner(ServiceContext services, TestPackage package) : base(services, package) { }
+
+        public bool IsTestRunning { get; private set; }
 
         #region AbstractTestRunner Overrides
 
@@ -49,9 +51,9 @@ namespace NUnit.Engine.Runners
         /// </summary>
         /// <param name="package">The TestPackage to be explored</param>
         /// <returns>A TestEngineResult.</returns>
-        public override TestEngineResult Explore(TestFilter filter)
+        protected override TestEngineResult ExploreTests(TestFilter filter)
         {
-            return this.realRunner.Explore(filter).Aggregate(TEST_RUN_ELEMENT, package.Name, package.FullName);
+            return _realRunner.Explore(filter).Aggregate(TEST_RUN_ELEMENT, TestPackage.Name, TestPackage.FullName);
         }
 
         /// <summary>
@@ -59,19 +61,19 @@ namespace NUnit.Engine.Runners
         /// </summary>
         /// <param name="package">The TestPackage to be loaded</param>
         /// <returns>A TestEngineResult.</returns>
-        public override TestEngineResult Load(TestPackage package)
+        protected override TestEngineResult LoadPackage()
         {
-            PerformPackageSetup(package);
-            return this.realRunner.Load(package).Aggregate(TEST_RUN_ELEMENT, package.Name, package.FullName);
+            PerformPackageSetup(TestPackage);
+            return _realRunner.Load().Aggregate(TEST_RUN_ELEMENT, TestPackage.Name, TestPackage.FullName);
         }
 
         /// <summary>
         /// Unload any loaded TestPackage.
         /// </summary>
-        public override void Unload()
+        public override void UnloadPackage()
         {
-            if (this.realRunner != null)
-                this.realRunner.Unload();
+            if (_realRunner != null)
+                _realRunner.Unload();
         }
 
         /// <summary>
@@ -80,9 +82,9 @@ namespace NUnit.Engine.Runners
         /// </summary>
         /// <param name="filter">A TestFilter</param>
         /// <returns>The count of test cases</returns>
-        public override int CountTestCases(TestFilter filter)
+        protected override int CountTests(TestFilter filter)
         {
-            return realRunner.CountTestCases(filter);
+            return _realRunner.CountTestCases(filter);
         }
 
         /// <summary>
@@ -92,12 +94,17 @@ namespace NUnit.Engine.Runners
         /// <param name="listener">An ITestEventHandler to receive events</param>
         /// <param name="filter">A TestFilter used to select tests</param>
         /// <returns>A TestEngineResult giving the result of the test execution</returns>
-        public override TestEngineResult Run(ITestEventHandler listener, TestFilter filter)
+        protected override TestEngineResult RunTests(ITestEventListener listener, TestFilter filter)
         {
+            IsTestRunning = true;
+
+            if (listener != null)
+                listener.OnTestEvent(string.Format("<start-run count='{0}'/>", CountTestCases(filter)));
+
             DateTime startTime = DateTime.UtcNow;
             long startTicks = Stopwatch.GetTimestamp();
 
-            TestEngineResult result = realRunner.Run(listener, filter).Aggregate("test-run", package.Name, package.FullName);
+            TestEngineResult result = _realRunner.Run(listener, filter).Aggregate("test-run", TestPackage.Name, TestPackage.FullName);
 
             result.Xml.InsertEnvironmentElement();
 
@@ -106,23 +113,31 @@ namespace NUnit.Engine.Runners
             result.Xml.AddAttribute("end-time", XmlConvert.ToString(DateTime.UtcNow, "u"));
             result.Xml.AddAttribute("duration", duration.ToString("0.000000", NumberFormatInfo.InvariantInfo));
 
+            IsTestRunning = false;
+
+            if (listener != null)
+                listener.OnTestEvent(result.Xml.OuterXml);
+
             return result;
         }
 
         /// <summary>
-        /// Start a run of the tests in the loaded TestPackage. The tests are run
-        /// asynchronously and the listener interface is notified as it progresses.
+        /// Cancel the ongoing test run. If no  test is running, the call is ignored.
         /// </summary>
-        /// <param name="listener">An ITestEventHandler to receive events</param>
-        /// <param name="filter">A TestFilter used to select tests</param>
-        public override void BeginRun(ITestEventHandler listener, TestFilter filter)
+        /// <param name="force">If true, cancel any ongoing test threads, otherwise wait for them to complete.</param>
+        public override void StopRun(bool force)
         {
-            realRunner.BeginRun(listener, filter);
+            _realRunner.StopRun(force);
         }
 
         #endregion
 
-        #region ITestRunner Members
+        #region ITestRunner Explicit Implementation
+
+        // NOTE: Only those methods which differ from those in
+        // ITestEngineRunner have an explicit implementation. 
+        // Methods that are the same for both interfaces
+        // use the class methods.
 
         /// <summary>
         /// Load a TestPackage for possible execution. The 
@@ -131,9 +146,19 @@ namespace NUnit.Engine.Runners
         /// </summary>
         /// <param name="package">The TestPackage to be loaded</param>
         /// <returns>An XmlNode representing the loaded assembly.</returns>
-        XmlNode ITestRunner.Load(TestPackage package)
+        XmlNode ITestRunner.Load()
         {
-            return this.Load(package).Xml; ;
+            return this.Load().Xml;
+        }
+
+        /// <summary>
+        /// Reload the currently loaded test jpackage.
+        /// </summary>
+        /// <returns>An XmlNode representing the loaded package</returns>
+        /// <exception cref="InvalidOperationException">If no package has been loaded</exception>
+        XmlNode ITestRunner.Reload()
+        {
+            return this.Reload().Xml;
         }
 
         /// <summary>
@@ -144,9 +169,20 @@ namespace NUnit.Engine.Runners
         /// <param name="listener">An ITestEventHandler to receive events</param>
         /// <param name="filter">A TestFilter used to select tests</param>
         /// <returns>An XmlNode giving the result of the test execution</returns>
-        XmlNode ITestRunner.Run(ITestEventHandler listener, TestFilter filter)
+        XmlNode ITestRunner.Run(ITestEventListener listener, TestFilter filter)
         {
             return this.Run(listener, filter).Xml;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="filter"></param>
+        ITestRun ITestRunner.RunAsync(ITestEventListener listener, TestFilter filter)
+        {
+            var testRun = new TestRun(this);
+            testRun.Start(listener, filter);
+            return testRun;
         }
 
         /// <summary>
@@ -160,25 +196,17 @@ namespace NUnit.Engine.Runners
             return this.Explore(filter).Xml;
         }
 
-        /// <summary>
-        /// Start a run of the tests in the loaded TestPackage. The tests are run
-        /// asynchronously and the listener interface is notified as it progresses.
-        /// </summary>
-        /// <param name="listener">An ITestEventHandler to receive events</param>
-        /// <param name="filter">A TestFilter used to select tests</param>
-        void ITestRunner.BeginRun(ITestEventHandler listener, TestFilter filter)
-        {
-            this.BeginRun(listener, filter);
-        }
-
         #endregion
 
         #region IDisposable Members
 
-        public void Dispose()
+        /// <summary>
+        /// Dispose of this object.
+        /// </summary>
+        public override void Dispose()
         {
-            if (this.realRunner != null)
-                this.realRunner.Dispose();
+            if (_realRunner != null)
+                _realRunner.Dispose();
         }
 
         #endregion
@@ -187,7 +215,7 @@ namespace NUnit.Engine.Runners
 
         private void PerformPackageSetup(TestPackage package)
         {
-            this.package = package;
+            this.TestPackage = package;
 
             // Expand projects, updating the count of projects and assemblies
             ExpandProjects();
@@ -195,36 +223,36 @@ namespace NUnit.Engine.Runners
             // If there is more than one project or a mix of assemblies and 
             // projects, AggregatingTestRunner will call MakeTestRunner for
             // each project or assembly.
-            this.realRunner = projectCount > 1 || projectCount > 0 && assemblyCount > 0
-                ? new AggregatingTestRunner(services)
-                : (AbstractTestRunner)services.TestRunnerFactory.MakeTestRunner(package);
+            _realRunner = _projectCount > 1 || _projectCount > 0 && _assemblyCount > 0
+                ? new AggregatingTestRunner(Services, package)
+                : Services.TestRunnerFactory.MakeTestRunner(package);
         }
 
         private void ExpandProjects()
         {
-            if (package.TestFiles.Length > 0)
+            if (TestPackage.TestFiles.Length > 0)
             {
-                foreach (string testFile in package.TestFiles)
+                foreach (string testFile in TestPackage.TestFiles)
                 {
                     TestPackage subPackage = new TestPackage(testFile);
-                    if (services.ProjectService.IsProjectFile(testFile))
+                    if (Services.ProjectService.IsProjectFile(testFile))
                     {
-                        services.ProjectService.ExpandProjectPackage(subPackage);
-                        projectCount++;
+                        Services.ProjectService.ExpandProjectPackage(subPackage);
+                        _projectCount++;
                     }
                     else
-                        assemblyCount++;
+                        _assemblyCount++;
                 }
             }
             else
             {
-                if (services.ProjectService.IsProjectFile(package.FullName))
+                if (Services.ProjectService.IsProjectFile(TestPackage.FullName))
                 {
-                    services.ProjectService.ExpandProjectPackage(package);
-                    projectCount++;
+                    Services.ProjectService.ExpandProjectPackage(TestPackage);
+                    _projectCount++;
                 }
                 else
-                    assemblyCount++;
+                    _assemblyCount++;
             }
         }
 

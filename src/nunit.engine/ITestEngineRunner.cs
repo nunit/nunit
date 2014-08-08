@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2011 Charlie Poole
+// Copyright (c) 2011-2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -37,13 +37,20 @@ namespace NUnit.Engine
         /// </summary>
         /// <param name="package">The TestPackage to be loaded</param>
         /// <returns>A TestEngineResult.</returns>
-        TestEngineResult Load(TestPackage package);
+        TestEngineResult Load();
 
         /// <summary>
         /// Unload any loaded TestPackage. If none is loaded,
         /// the call is ignored.
         /// </summary>
         void Unload();
+
+        /// <summary>
+        /// Reload the loaded test package.
+        /// </summary>
+        /// <returns>A TestEngineResult.</returns>
+        /// <exception cref="InvalidOperationException">If no package is loaded.</exception>
+        TestEngineResult Reload();
 
         /// <summary>
         /// Count the test cases that would be run under
@@ -60,7 +67,7 @@ namespace NUnit.Engine
         /// <param name="listener">An ITestEventHandler to receive events</param>
         /// <param name="filter">A TestFilter used to select tests</param>
         /// <returns>A TestEngineResult giving the result of the test execution</returns>
-        TestEngineResult Run(ITestEventHandler listener, TestFilter filter);
+        TestEngineResult Run(ITestEventListener listener, TestFilter filter);
 
         /// <summary>
         /// Start a run of the tests in the loaded TestPackage. The tests are run
@@ -68,7 +75,14 @@ namespace NUnit.Engine
         /// </summary>
         /// <param name="listener">An ITestEventHandler to receive events</param>
         /// <param name="filter">A TestFilter used to select tests</param>
-        void BeginRun(ITestEventHandler listener, TestFilter filter);
+        void StartRun(ITestEventListener listener, TestFilter filter);
+
+        /// <summary>
+        /// Cancel the current test run. If no test is running,
+        /// the call is ignored.
+        /// </summary>
+        /// <param name="force">If true, force a stop by cancelling threads if necessary.</param>
+        void StopRun(bool force);
 
         /// <summary>
         /// Explore a loaded TestPackage and return information about

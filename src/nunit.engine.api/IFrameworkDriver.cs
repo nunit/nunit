@@ -27,6 +27,11 @@ using System.Xml;
 
 namespace NUnit.Engine
 {
+    /// <summary>
+    /// The IFrameworkDriver interface is implemented by a class that
+    /// is able to use an external framework to explore or run tests
+    /// under the engine.
+    /// </summary>
     public interface IFrameworkDriver
     {
         /// <summary>
@@ -48,7 +53,7 @@ namespace NUnit.Engine
         /// <param name="listener">An ITestEventHandler that receives progress notices</param>
         /// <param name="filter">A filter that controls which tests are executed</param>
         /// <returns>An Xml string representing the result</returns>
-        string Run(ITestEventHandler listener, TestFilter filter);
+        string Run(ITestEventListener listener, TestFilter filter);
 
         /// <summary>
         /// Returns information about the tests in an assembly.
@@ -56,5 +61,11 @@ namespace NUnit.Engine
         /// <param name="filter">A filter indicating which tests to include</param>
         /// <returns>An Xml string representing the tests</returns>
         string Explore(TestFilter filter);
+
+        /// <summary>
+        /// Cancel the ongoing test run. If no  test is running, the call is ignored.
+        /// </summary>
+        /// <param name="force">If true, cancel any ongoing test threads, otherwise wait for them to complete.</param>
+        void StopRun(bool force);
     }
 }
