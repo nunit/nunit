@@ -164,16 +164,7 @@ namespace NUnit.Framework.Api
 
             assembly = Assembly.Load(assemblyName);
 
-            //// TODO: Can this ever be null? Check.
-            //if (assembly == null)
-            //{
-            //    log.Error("Failed to load assembly " + path);
-            //    throw new Exception("Unable to load assembly - Load returned null");
-            //}
-            //else
-            //{
             log.Info("Loaded assembly " + assembly.FullName);
-            //}
 
             return assembly;
 #endif

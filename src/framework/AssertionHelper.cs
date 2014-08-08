@@ -35,14 +35,6 @@ namespace NUnit.Framework
     /// </summary>
     public class AssertionHelper : ConstraintFactory
     {
-        #region Assert
-        //private Assertions assert = new Assertions();
-        //public virtual Assertions Assert
-        //{
-        //    get { return assert; }
-        //}
-        #endregion
-
         #region Expect
 
         #region Boolean

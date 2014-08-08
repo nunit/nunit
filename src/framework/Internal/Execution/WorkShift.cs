@@ -147,20 +147,6 @@ namespace NUnit.Framework.Internal.Execution
             worker.Start();
         }
 
-        ///// <summary>
-        ///// Remove one of the workers assigned to a shift
-        ///// </summary>
-        ///// <param name="worker">The worker to be removed</param>
-        ///// <param name="immediate">If true, abort the worker thread immediately, otherwise wait for test to complete.</param>
-        //public void Remove(TestWorker worker, bool immediate)
-        //{
-        //    if (!Workers.Contains(worker))
-        //        throw new ArgumentException(string.Format("Unable to remove worker {0}: not assigned to {1} shift", worker.Name, _name));
-
-        //    Workers.Remove(worker);
-        //    worker.Stop(immediate);
-        //}
-
         /// <summary>
         /// Start or restart processing for the shift
         /// </summary>
