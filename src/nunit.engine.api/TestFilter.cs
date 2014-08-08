@@ -62,19 +62,19 @@ namespace NUnit.Engine
         /// </summary>
         public static readonly TestFilter Empty = new TestFilter("<filter/>");
 
-       /// <summary>
-       /// Gets the XML representation of this filter as a string.
-       /// </summary>
-       public string Text { get; private set; }
+        /// <summary>
+        /// Gets the XML representation of this filter as a string.
+        /// </summary>
+        public string Text { get; private set; }
 
-       /// <summary>
+        /// <summary>
         /// Gets the XML representation of this filter as an XmlNode
         /// </summary>
-        public XmlNode Xml 
+        public XmlNode Xml
         {
             get
             {
-                if (xmlNode == null)
+                if(xmlNode == null)
                 {
                     XmlDocument doc = new XmlDocument();
                     doc.LoadXml(Text);

@@ -22,14 +22,13 @@
 // ***********************************************************************
 
 using System;
-using System.Diagnostics;
 using System.Web.UI;
 
 namespace NUnit.Engine
 {
     public class CallbackHandler : MarshalByRefObject, ICallbackEventHandler
     {
-       public string Result { get; private set; }
+        public string Result { get; private set; }
 
         public virtual void ReportProgress(string report)
         {

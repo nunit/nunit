@@ -25,15 +25,15 @@ using System;
 
 namespace NUnit.Engine
 {
-   /// <summary>
-   /// Interface for logging within the engine
-   /// </summary>
+    /// <summary>
+    /// Interface for logging within the engine
+    /// </summary>
     public interface ILogger
     {
-       /// <summary>
-       /// Logs the specified message at the error level.
-       /// </summary>
-       /// <param name="message">The message.</param>
+        /// <summary>
+        /// Logs the specified message at the error level.
+        /// </summary>
+        /// <param name="message">The message.</param>
         void Error(string message);
 
         /// <summary>

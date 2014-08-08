@@ -36,7 +36,7 @@ namespace NUnit.Engine
     /// </summary>
     public class TestEngine : ITestEngine
     {
-       public TestEngine()
+        public TestEngine()
         {
             Services = new ServiceContext();
             WorkDirectory = Environment.CurrentDirectory;
@@ -49,7 +49,7 @@ namespace NUnit.Engine
 
         public string WorkDirectory { get; set; }
 
-        public InternalTraceLevel InternalTraceLevel { get; set;  }
+        public InternalTraceLevel InternalTraceLevel { get; set; }
 
         #endregion
 
@@ -61,12 +61,12 @@ namespace NUnit.Engine
         /// </summary>
         IServiceLocator ITestEngine.Services
         {
-            get 
+            get
             {
-                if (!this.Services.ServiceManager.ServicesInitialized)
+                if(!this.Services.ServiceManager.ServicesInitialized)
                     InitializeServices();
 
-                return this.Services; 
+                return this.Services;
             }
         }
 
@@ -83,10 +83,10 @@ namespace NUnit.Engine
         {
             SettingsService settingsService = new SettingsService("NUnit30Settings.xml", true);
 
-            if (InternalTraceLevel == InternalTraceLevel.Default)
+            if(InternalTraceLevel == InternalTraceLevel.Default)
                 InternalTraceLevel = (InternalTraceLevel)settingsService.GetSetting("Options.InternalTraceLevel", InternalTraceLevel.Off);
 
-            if (InternalTraceLevel != InternalTraceLevel.Off)
+            if(InternalTraceLevel != InternalTraceLevel.Off)
             {
                 var logName = string.Format("InternalTrace.{0}.log", Process.GetCurrentProcess().Id);
                 InternalTrace.Initialize(Path.Combine(WorkDirectory, logName), InternalTraceLevel);
@@ -112,7 +112,7 @@ namespace NUnit.Engine
         /// <returns>An ITestRunner.</returns>
         public ITestRunner GetRunner(TestPackage package)
         {
-            if (!this.Services.ServiceManager.ServicesInitialized)
+            if(!this.Services.ServiceManager.ServicesInitialized)
                 InitializeServices();
 
             return new Runners.MasterTestRunner(this.Services, package);
