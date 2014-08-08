@@ -112,6 +112,7 @@
     <Compile Include="Attributes\ValuesAttribute.cs" />
     <Compile Include="Attributes\ValueSourceAttribute.cs" />
     <Compile Include="Compatibility\SerializableAttribute.cs" />
+    <Compile Include="Compatibility\Stopwatch.cs" />
     <Compile Include="Constraints\AllItemsConstraint.cs" />
     <Compile Include="Constraints\Operators\AllOperator.cs" />
     <Compile Include="Constraints\AndConstraint.cs" />
