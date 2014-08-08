@@ -29,9 +29,7 @@ namespace NUnit.Engine
 {
     public class CallbackHandler : MarshalByRefObject, ICallbackEventHandler
     {
-        private TestEngineResult result;
-
-        public string Result { get; private set; }
+       public string Result { get; private set; }
 
         public virtual void ReportProgress(string report)
         {

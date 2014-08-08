@@ -35,36 +35,39 @@ namespace NUnit.Engine
     [Serializable]
     public class TestFilter
     {
-        private string xmlText;
-
         [NonSerialized]
         private XmlNode xmlNode;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TestFilter"/> class.
+        /// </summary>
+        /// <param name="xmlText">The XML text that specifies the filter.</param>
         public TestFilter(string xmlText)
         {
-            this.xmlText = xmlText;
+            Text = xmlText;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TestFilter"/> class.
+        /// </summary>
+        /// <param name="node">The XML node that specifies the filter.</param>
         public TestFilter(XmlNode node)
         {
-            this.xmlNode = node;
-            this.xmlText = xmlNode.OuterXml;
+            xmlNode = node;
+            Text = xmlNode.OuterXml;
         }
 
         /// <summary>
         /// The empty filter - one that always passes.
         /// </summary>
-        public static TestFilter Empty = new TestFilter("<filter/>");
+        public static readonly TestFilter Empty = new TestFilter("<filter/>");
 
-        /// <summary>
-        /// Gets the XML representation of this filter as a string.
-        /// </summary>
-        public string Text
-        {
-            get { return xmlText; }
-        }
+       /// <summary>
+       /// Gets the XML representation of this filter as a string.
+       /// </summary>
+       public string Text { get; private set; }
 
-        /// <summary>
+       /// <summary>
         /// Gets the XML representation of this filter as an XmlNode
         /// </summary>
         public XmlNode Xml 
@@ -74,7 +77,7 @@ namespace NUnit.Engine
                 if (xmlNode == null)
                 {
                     XmlDocument doc = new XmlDocument();
-                    doc.LoadXml(xmlText);
+                    doc.LoadXml(Text);
                     xmlNode = doc.FirstChild;
                 }
 

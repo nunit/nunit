@@ -25,21 +25,31 @@ using System;
 
 namespace NUnit.Engine
 {
+   /// <summary>
+   /// Event handler for settings changes
+   /// </summary>
+   /// <param name="sender">The sender.</param>
+   /// <param name="args">The <see cref="SettingsEventArgs"/> instance containing the event data.</param>
     public delegate void SettingsEventHandler( object sender, SettingsEventArgs args );
 
+    /// <summary>
+    /// Event argument for settings changes
+    /// </summary>
     public class SettingsEventArgs : EventArgs
     {
-        private string settingName;
-
-        public SettingsEventArgs( string settingName )
+       /// <summary>
+       /// Initializes a new instance of the <see cref="SettingsEventArgs"/> class.
+       /// </summary>
+       /// <param name="settingName">Name of the setting that has changed.</param>
+       public SettingsEventArgs( string settingName )
         {
-            this.settingName = settingName;
+            SettingName = settingName;
         }
 
-        public string SettingName
-        {
-            get { return settingName; }
-        }
+       /// <summary>
+       /// Gets the name of the setting that has changed
+       /// </summary>
+       public string SettingName { get; private set; }
     }
 
     /// <summary>
@@ -48,6 +58,9 @@ namespace NUnit.Engine
     /// </summary>
     public interface ISettings
     {
+       /// <summary>
+       /// Occurs when the settings are changed.
+       /// </summary>
         event SettingsEventHandler Changed;
 
         /// <summary>
