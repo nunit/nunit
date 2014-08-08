@@ -47,11 +47,11 @@ namespace NUnit.Engine
         /// the assembly or project to be used.
         /// </summary>
         /// <param name="filePath">The file path.</param>
-        public TestPackage(string name)
+        public TestPackage(string filePath)
         {
-            this.fullName = Path.GetFullPath(name);
-            if (IsAssemblyFileType(name))
-                this.testFiles.Add(this.FullName);
+            fullName = Path.GetFullPath(filePath);
+            if (IsAssemblyFileType(filePath))
+                testFiles.Add(FullName);
         }
 
         /// <summary>
