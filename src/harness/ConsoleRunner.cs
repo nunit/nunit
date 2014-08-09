@@ -195,7 +195,7 @@ namespace NUnit.Framework.TestHarness
             Console.WriteLine("NUnit3 Result File Saved as {0}", v3ResultFile);
             Console.WriteLine("NUnit2 Result File Saved as {0}", v2ResultFile);
 
-            return OK;
+            return int.Parse(resultNode.Attributes["failed"].Value);
         }
 
         private static void DisplayNotRunnableMessage(XmlNode resultNode)
