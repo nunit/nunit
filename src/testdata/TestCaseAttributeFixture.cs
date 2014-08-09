@@ -55,6 +55,16 @@ namespace NUnit.TestData.TestCaseAttributeFixture
             return x + y;
         }
 
+        [TestCase(1, ExpectedResult = 1)]
+        public void VoidTestCaseWithExpectedResult(int value)
+        { }
+
+        [TestCase(2, ExpectedResult = null)]
+        public double? TestCaseWithNullableReturnValueAndNullExpectedResult(object input)
+        {
+            return 2;
+        }
+
         [TestCase(1)]
         [TestCase(2, Ignore = true)]
         [TestCase(3, IgnoreReason = "Don't Run Me!")]
