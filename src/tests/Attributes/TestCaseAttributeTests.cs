@@ -93,12 +93,14 @@ namespace NUnit.Framework.Attributes
             return (sbyte)(x + y);
         }
 
-        [Test]
-        public void ConversionOverflowMakesTestNotRunnable()
+        [TestCase("MethodCausesConversionOverflow", RunState.NotRunnable)]
+        [TestCase("VoidTestCaseWithExpectedResult", RunState.NotRunnable)]
+        [TestCase("TestCaseWithNullableReturnValueAndNullExpectedResult", RunState.Runnable)]
+        public void TestCaseRunnableState(string methodName, RunState expectedState)
         {
-            Test test = (Test)TestBuilder.MakeParameterizedMethodSuite(
-                typeof(TestCaseAttributeFixture), "MethodCausesConversionOverflow").Tests[0];
-            Assert.AreEqual(RunState.NotRunnable, test.RunState);
+            var test = (Test)TestBuilder.MakeParameterizedMethodSuite(
+                typeof(TestCaseAttributeFixture), methodName).Tests[0];
+            Assert.AreEqual(expectedState, test.RunState);
         }
 
         [TestCase("12-October-1942")]
@@ -182,6 +184,25 @@ namespace NUnit.Framework.Attributes
             Assert.AreEqual("a", s1);
             Assert.AreEqual("b", s2);
             Assert.AreEqual("c", array[0]);
+        }
+
+        [TestCase(1)]
+        public void NullableSimpleFormalParametersWithArgument(int? a)
+        {
+            Assert.AreEqual(1, a);
+        }
+
+        [TestCase(null)]
+        public void NullableSimpleFormalParametersWithNullArgument(int? a)
+        {
+            Assert.IsNull(a);
+        }
+
+        [TestCase(null, ExpectedResult = null)]
+        [TestCase(1, ExpectedResult = 1)]
+        public int? TestCaseWithNullableReturnValue(int? a)
+        {
+            return a;
         }
 
         [Test]
