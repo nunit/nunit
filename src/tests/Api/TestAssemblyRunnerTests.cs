@@ -284,7 +284,7 @@ namespace NUnit.Framework.Api
             _runner.StopRun(true);
         }
 
-        [Test]
+        [Test, Explicit("Intermittent failure")]
         public void CancelRun_WhenTestIsRunning_StopsTest()
         {
             var tests = _runner.Load(_slowTestsPath, _settings);
