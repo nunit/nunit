@@ -57,7 +57,7 @@ namespace NUnitLite.Runner
             Tests = new List<string>();
             Parameters = new List<string>();
             _invalidOptions = new List<string>();
-            InternalTraceLevel = InternalTraceLevel.Default;
+            InternalTraceLevel = InternalTraceLevel.Off;
         }
 
         #endregion
