@@ -148,10 +148,6 @@ namespace NUnit.Framework.Internal
         /// </summary>
         private IPrincipal _currentPrincipal;
 
-        /// <summary>
-        /// Our LogCapture object
-        /// </summary>
-        private LogCapture _logCapture;
 #endif
 
         #endregion
@@ -178,7 +174,6 @@ namespace NUnit.Framework.Internal
             _tracing = false;
             _currentDirectory = Environment.CurrentDirectory;
             _currentPrincipal = Thread.CurrentPrincipal;
-            _logCapture = new Log4NetCapture();
 #endif
         }
 
@@ -210,7 +205,6 @@ namespace NUnit.Framework.Internal
             _tracing = other._tracing;
             _currentDirectory = Environment.CurrentDirectory;
             _currentPrincipal = Thread.CurrentPrincipal;
-            _logCapture = other._logCapture;
 #endif
 
             this.Dispatcher = other.Dispatcher;
@@ -558,31 +552,6 @@ namespace NUnit.Framework.Internal
             }
         }
 
-        /// <summary>
-        /// Controls whether log output is captured
-        /// </summary>
-        public bool Logging
-        {
-            get { return _logCapture.Enabled; }
-            set { _logCapture.Enabled = value; }
-        }
-
-        /// <summary>
-        ///  Gets or sets the Log writer, which is actually held by a log4net 
-        ///  TextWriterAppender. When first set, the appender will be created
-        ///  and will thereafter send any log events to the writer.
-        ///  
-        ///  In normal operation, LogWriter is set to an EventListenerTextWriter
-        ///  connected to the EventQueue in the test domain. The events are
-        ///  subsequently captured in the Gui an the output displayed in
-        ///  the Log tab. The application under test does not need to define
-        ///  any additional appenders.
-        /// </summary>
-        public TextWriter LogWriter
-        {
-            get { return _logCapture.Writer; }
-            set { _logCapture.Writer = value; }
-        }
 #endif
 
         #endregion

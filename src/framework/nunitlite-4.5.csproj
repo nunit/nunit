@@ -275,12 +275,9 @@
     <Compile Include="Internal\Execution\CompositeWorkItem.cs" />
     <Compile Include="Internal\Execution\CountdownEvent.cs" />
     <Compile Include="Internal\Execution\IWorkItemDispatcher.cs" />
-    <Compile Include="Internal\Execution\Log4NetCapture.cs" />
-    <Compile Include="Internal\Execution\LogCapture.cs" />
     <Compile Include="Internal\Execution\SimpleWorkItem.cs" />
     <Compile Include="Internal\Execution\SimpleWorkItemDispatcher.cs" />
     <Compile Include="Internal\Execution\TestWorker.cs" />
-    <Compile Include="Internal\Execution\TextCapture.cs" />
     <Compile Include="Internal\Execution\TextMessageWriter.cs" />
     <Compile Include="Internal\Execution\WorkItem.cs" />
     <Compile Include="Internal\Execution\WorkItemQueue.cs" />
