@@ -76,9 +76,6 @@
     <Compile Include="MockAssembly.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="mock-assembly.build" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\framework\nunitlite-4.0.csproj">
       <Project>{73a8b041-e719-443d-bf32-7944f117996c}</Project>
       <Name>nunitlite-4.0</Name>
