@@ -304,7 +304,7 @@ namespace NUnitLite.Runner.Tests
         public void TestDefaultInvalidInternalTraceLevel()
         {
             Assert.That(options.Error, Is.False);
-            Assert.That(options.InternalTraceLevel, Is.EqualTo(InternalTraceLevel.Default));
+            Assert.That(options.InternalTraceLevel, Is.EqualTo(InternalTraceLevel.Off));
         }
     }
 }
