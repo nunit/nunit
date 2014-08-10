@@ -23,6 +23,7 @@
 
 using System;
 using System.Globalization;
+using System.IO;
 
 namespace NUnit.Framework.Assertions
 {
@@ -375,6 +376,27 @@ namespace NUnit.Framework.Assertions
                 "  But was:  2005-06-01 00:00:00.000" + Env.NewLine;
 
             var ex = Assert.Throws<AssertionException>(() => Assert.AreEqual(dt1, dt2));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+        }
+
+        [Test]
+        public void DirectoryInfoEqual()
+        {
+            var one = new DirectoryInfo(Environment.CurrentDirectory);
+            var two = new DirectoryInfo(Environment.CurrentDirectory);
+            Assert.AreEqual(one, two);
+        }
+
+        [Test]
+        public void DirectoryInfoNotEqual()
+        {
+            var one = new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData));
+            var two = new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles));
+            
+            var expectedMessage = System.String.Format(
+                "  Expected: <{0}>{1}  But was:  <{2}>{1}", one.FullName, Env.NewLine, two.FullName );
+
+            var ex = Assert.Throws<AssertionException>(() => Assert.AreEqual(one, two));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 
