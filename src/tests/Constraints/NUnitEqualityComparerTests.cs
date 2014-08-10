@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.IO;
 
 namespace NUnit.Framework.Constraints
 {
@@ -81,7 +82,23 @@ namespace NUnit.Framework.Constraints
         {
             Assert.That(comparer.AreEqual(x, y, ref tolerance));
         }
-        
+
+        [Test]
+        public void SameDirectoriesAreEqual()
+        {
+            var one = new DirectoryInfo(Environment.CurrentDirectory);
+            var two = new DirectoryInfo(Environment.CurrentDirectory);
+            Assert.That(comparer.AreEqual(one, two, ref tolerance));
+        }
+
+        [Test]
+        public void DifferentDirectoriesAreNotEqual()
+        {
+            var one = new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData));
+            var two = new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles));
+            Assert.That(comparer.AreEqual(one, two, ref tolerance), Is.False);
+        }
+
         [Test]
         public void CanCompareArrayContainingSelfToSelf()
         {
