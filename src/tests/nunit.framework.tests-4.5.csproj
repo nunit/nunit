@@ -129,6 +129,7 @@
     <Compile Include="Constraints\DelayedConstraintTests.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Constraints\DirectoryExistsConstraintTests.cs" />
     <Compile Include="Constraints\EndsWithConstraintTests.cs" />
     <Compile Include="Constraints\ExactTypeConstraintTests.cs" />
     <Compile Include="Constraints\FileExistsConstraintTests.cs" />
