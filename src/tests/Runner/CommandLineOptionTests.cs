@@ -7,6 +7,7 @@
 using System;
 using System.IO;
 using NUnit.Framework;
+using NUnit.Framework.Internal;
 using Env = NUnit.Env;
 
 namespace NUnitLite.Runner.Tests
@@ -282,5 +283,28 @@ namespace NUnitLite.Runner.Tests
             Assert.That(options.Include == "3,4");
         }
 #endif
+
+        [Test]
+        public void TestInternalTraceLevelOption([Values]InternalTraceLevel traceLevel)
+        {
+            options.Parse(String.Format("-trace:{0}", traceLevel));
+            Assert.That(options.Error, Is.False);
+            Assert.That(options.InternalTraceLevel, Is.EqualTo(traceLevel));
+        }
+
+        [Test]
+        public void TestInvalidInternalTraceLevelOption()
+        {
+            options.Parse("-trace:bad");
+            Assert.That(options.Error, Is.True);
+            Assert.That(options.ErrorMessage, Is.StringContaining("-trace:bad"));
+        }
+
+        [Test]
+        public void TestDefaultInternalTraceLevel()
+        {
+            Assert.That(options.Error, Is.False);
+            Assert.That(options.InternalTraceLevel, Is.EqualTo(InternalTraceLevel.Off));
+        }
     }
 }

@@ -22,7 +22,9 @@
 // ***********************************************************************
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using NUnit.Framework.Api;
@@ -51,13 +53,11 @@ namespace NUnitLite.Runner
     /// </summary>
     public class TextUI : ITestListener
     {
-        private CommandLineOptions commandLineOptions;
-
-        private List<Assembly> assemblies = new List<Assembly>();
-
-        private TextWriter writer;
-
-        private ITestAssemblyRunner runner;
+        private const string LOG_FILE_FORMAT = "InternalTrace.{0}.{1}.log";
+        private CommandLineOptions _commandLineOptions;
+        private readonly List<Assembly> _assemblies = new List<Assembly>();
+        private TextWriter _writer;
+        private ITestAssemblyRunner _runner;
 
         #region Constructors
 
@@ -73,8 +73,7 @@ namespace NUnitLite.Runner
         public TextUI(TextWriter writer)
         {
             // Set the default writer - may be overridden by the args specified
-            this.writer = writer;
-            this.runner = new NUnitLiteTestAssemblyRunner(new DefaultTestAssemblyBuilder());
+            _writer = writer;
         }
         #endregion
 
@@ -88,68 +87,74 @@ namespace NUnitLite.Runner
         {
             // NOTE: Execute must be directly called from the
             // test assembly in order for the mechanism to work.
-            Assembly callingAssembly = Assembly.GetCallingAssembly();
 
-            this.commandLineOptions = new CommandLineOptions();
-            commandLineOptions.Parse(args);
+            this._commandLineOptions = new CommandLineOptions();
+            _commandLineOptions.Parse(args);
 
-            if (commandLineOptions.OutFile != null)
-                this.writer = new StreamWriter(commandLineOptions.OutFile);
+            if (_commandLineOptions.OutFile != null)
+                this._writer = new StreamWriter(_commandLineOptions.OutFile);
 
-            if (!commandLineOptions.NoHeader)
-                WriteHeader(this.writer);
+            if (!_commandLineOptions.NoHeader)
+                WriteHeader(this._writer);
 
-            if (commandLineOptions.ShowHelp)
-                writer.Write(commandLineOptions.HelpText);
-            else if (commandLineOptions.Error)
+            if (_commandLineOptions.ShowHelp)
+                _writer.Write(_commandLineOptions.HelpText);
+            else if (_commandLineOptions.Error)
             {
-                writer.WriteLine(commandLineOptions.ErrorMessage);
-                writer.WriteLine(commandLineOptions.HelpText);
+                _writer.WriteLine(_commandLineOptions.ErrorMessage);
+                _writer.WriteLine(_commandLineOptions.HelpText);
             }
             else
             {
-                WriteRuntimeEnvironment(this.writer);
+                Assembly callingAssembly = Assembly.GetCallingAssembly();
 
-                if (commandLineOptions.Wait && commandLineOptions.OutFile != null)
-                    writer.WriteLine("Ignoring /wait option - only valid for Console");
+                // We must call this before creating the runner so that any internal logging is initialized
+                InitializeInternalTrace(callingAssembly.Location, _commandLineOptions.InternalTraceLevel);
+
+                _runner = new NUnitLiteTestAssemblyRunner(new DefaultTestAssemblyBuilder());
+
+                WriteRuntimeEnvironment(this._writer);
+
+                if (_commandLineOptions.Wait && _commandLineOptions.OutFile != null)
+                    _writer.WriteLine("Ignoring /wait option - only valid for Console");
 
                 // We only have one commandline option that has to be passed
                 // to the runner, so we do it here for convenience.
                 var runnerSettings = new Dictionary<string, object>();
-                if (commandLineOptions.InitialSeed >= 0)
-                    runnerSettings[DriverSettings.RandomSeed] = commandLineOptions.InitialSeed;
-
-                TestFilter filter = commandLineOptions.Tests.Count > 0
-                    ? new SimpleNameFilter(commandLineOptions.Tests)
+                if (_commandLineOptions.InitialSeed >= 0)
+                    runnerSettings[DriverSettings.RandomSeed] = _commandLineOptions.InitialSeed;
+                
+                TestFilter filter = _commandLineOptions.Tests.Count > 0
+                    ? new SimpleNameFilter(_commandLineOptions.Tests)
                     : TestFilter.Empty;
 
                 try
                 {
-                    foreach (string name in commandLineOptions.Parameters)
-                        assemblies.Add(Assembly.Load(name));
+                    foreach (string name in _commandLineOptions.Parameters)
+                        _assemblies.Add(Assembly.Load(name));
 
-                    if (assemblies.Count == 0)
-                        assemblies.Add(callingAssembly);
+                    if (_assemblies.Count == 0)
+                        _assemblies.Add(callingAssembly);
 
                     // TODO: For now, ignore all but first assembly
-                    Assembly assembly = assemblies[0];
+                    Assembly assembly = _assemblies[0];
 
-                    //Randomizer.InitialSeed = commandLineOptions.InitialSeed;
+                    //Randomizer.InitialSeed = _commandLineOptions.InitialSeed;
 
-                    if (runner.Load(assembly, runnerSettings) == null)
+                    if (_runner.Load(assembly, runnerSettings) == null)
                     {
                         var assemblyName = AssemblyHelper.GetAssemblyName(assembly);
                         Console.WriteLine("No tests found in assembly {0}", assemblyName.Name);
                         return;
                     }
 
-                    if (commandLineOptions.Explore)
+                    if (_commandLineOptions.Explore)
                         ExploreTests();
                     else
                     {
-                        if (commandLineOptions.Include != null && commandLineOptions.Include != string.Empty)
+                        if (_commandLineOptions.Include != null && _commandLineOptions.Include != string.Empty)
                         {
-                            TestFilter includeFilter = new SimpleCategoryExpression(commandLineOptions.Include).Filter;
+                            TestFilter includeFilter = new SimpleCategoryExpression(_commandLineOptions.Include).Filter;
 
                             if (filter.IsEmpty)
                                 filter = includeFilter;
@@ -157,9 +162,9 @@ namespace NUnitLite.Runner
                                 filter = new AndFilter(filter, includeFilter);
                         }
 
-                        if (commandLineOptions.Exclude != null && commandLineOptions.Exclude != string.Empty)
+                        if (_commandLineOptions.Exclude != null && _commandLineOptions.Exclude != string.Empty)
                         {
-                            TestFilter excludeFilter = new NotFilter(new SimpleCategoryExpression(commandLineOptions.Exclude).Filter);
+                            TestFilter excludeFilter = new NotFilter(new SimpleCategoryExpression(_commandLineOptions.Exclude).Filter);
 
                             if (filter.IsEmpty)
                                 filter = excludeFilter;
@@ -174,17 +179,17 @@ namespace NUnitLite.Runner
                 }
                 catch (FileNotFoundException ex)
                 {
-                    writer.WriteLine(ex.Message);
+                    _writer.WriteLine(ex.Message);
                 }
                 catch (Exception ex)
                 {
-                    writer.WriteLine(ex.ToString());
+                    _writer.WriteLine(ex.ToString());
                 }
                 finally
                 {
-                    if (commandLineOptions.OutFile == null)
+                    if (_commandLineOptions.OutFile == null)
                     {
-                        if (commandLineOptions.Wait)
+                        if (_commandLineOptions.Wait)
                         {
                             Console.WriteLine("Press Enter key to continue . . .");
                             Console.ReadLine();
@@ -192,7 +197,7 @@ namespace NUnitLite.Runner
                     }
                     else
                     {
-                        writer.Close();
+                        _writer.Close();
                     }
                 }
             }
@@ -204,12 +209,12 @@ namespace NUnitLite.Runner
 
         private void RunTests(ITestFilter filter)
         {
-            ITestResult result = runner.Run(this, filter);
-            new ResultReporter(result, writer).ReportResults();
+            ITestResult result = _runner.Run(this, filter);
+            new ResultReporter(result, _writer).ReportResults();
 
-            string resultFile = commandLineOptions.ResultFile;
-            string resultFormat = commandLineOptions.ResultFormat;
-            if (resultFile != null || commandLineOptions.ResultFormat != null)
+            string resultFile = _commandLineOptions.ResultFile;
+            string resultFormat = _commandLineOptions.ResultFormat;
+            if (resultFile != null || _commandLineOptions.ResultFormat != null)
             {
                 if (resultFile == null)
                     resultFile = "TestResult.xml";
@@ -225,9 +230,9 @@ namespace NUnitLite.Runner
 
         private void ExploreTests()
         {
-            XmlNode testNode = runner.LoadedTest.ToXml(true);
+            XmlNode testNode = _runner.LoadedTest.ToXml(true);
 
-            string listFile = commandLineOptions.ExploreFile;
+            string listFile = _commandLineOptions.ExploreFile;
             TextWriter textWriter = listFile != null && listFile.Length > 0
                 ? new StreamWriter(listFile)
                 : Console.Out;
@@ -242,6 +247,19 @@ namespace NUnitLite.Runner
 
             Console.WriteLine();
             Console.WriteLine("Test info saved as {0}.", listFile);
+        }
+
+        private void InitializeInternalTrace(string assemblyPath, InternalTraceLevel traceLevel)
+        {
+            if (traceLevel != InternalTraceLevel.Off)
+            {
+#if !SILVERLIGHT
+                var logName = string.Format(LOG_FILE_FORMAT, Process.GetCurrentProcess().Id, Path.GetFileName(assemblyPath));
+#else
+                var logName = string.Format(LOG_FILE_FORMAT, DateTime.Now.ToString("o"), Path.GetFileName(assemblyPath));
+#endif
+                InternalTrace.Initialize(Path.Combine(Environment.CurrentDirectory, logName), traceLevel);
+            }
         }
 
         /// <summary>
@@ -311,8 +329,8 @@ namespace NUnitLite.Runner
         /// <param name="test">The test that is starting</param>
         public void TestStarted(ITest test)
         {
-            if (commandLineOptions.ShowLabels)
-                writer.WriteLine("***** {0}", test.Name);
+            if (_commandLineOptions.ShowLabels)
+                _writer.WriteLine("***** {0}", test.Name);
         }
 
         /// <summary>
