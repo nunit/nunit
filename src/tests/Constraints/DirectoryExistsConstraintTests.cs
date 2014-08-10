@@ -34,66 +34,63 @@ using NUnit.Framework.Constraints;
 namespace NUnit.Framework.Tests.Constraints
 {
     [TestFixture]
-    public class FileExistsConstraintTests
+    public class DirectoryExistsConstraintTests
     {
-        private FileExistsConstraint _constraint;
+        private DirectoryExistsConstraint _constraint;
+        private string _goodDir;
+        private const string GarbageDir = @"Z:\I\hope\this\is\garbage";
 
         [SetUp]
         public void SetUp()
         {
-            _constraint = new FileExistsConstraint();    
+            _constraint = new DirectoryExistsConstraint();
+            _goodDir = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
         }
 
         [Test]
-        public void PassesWhenFileInfoExists()
+        public void PassesWhenDirectoryInfoExists()
         {
-            using(new TestFile("Test1.txt", "TestText1.txt"))
-            {
-                var actual = new FileInfo("Test1.txt");
-                Assert.That(_constraint.ApplyTo(actual).IsSuccess);
-            }
+            var actual = new DirectoryInfo(_goodDir);
+            Assert.That(_constraint.ApplyTo(actual).IsSuccess);
         }
 
         [Test]
         public void PassesWhenStringExists()
         {
-            using(new TestFile("Test1.txt", "TestText1.txt"))
-            {
-                Assert.That(_constraint.ApplyTo("Test1.txt").IsSuccess);
-            }
+            Assert.That(_constraint.ApplyTo(_goodDir).IsSuccess);
         }
 
         [Test]
-        public void FailsWhenFileInfoDoesNotExist()
+        public void FailsWhenDirectoryInfoDoesNotExist()
         {
-            Assert.That(_constraint.ApplyTo(new FileInfo("Garbage.txt")).Status == ConstraintStatus.Failure);
+            Assert.That(_constraint.ApplyTo(new DirectoryInfo(GarbageDir)).Status == ConstraintStatus.Failure);
         }
 
         [Test]
         public void FailsWhenStringDoesNotExist()
         {
-            Assert.That(_constraint.ApplyTo("Garbage.txt").Status == ConstraintStatus.Failure);
+            Assert.That(_constraint.ApplyTo(GarbageDir).Status == ConstraintStatus.Failure);
         }
 
         [Test]
-        public void FailsWhenNotStringOrFileInfo()
+        public void FailsWhenNotStringOrDirectoryInfo()
         {
             var ex = Assert.Throws<ArgumentException>(() => _constraint.ApplyTo(42));
-            Assert.That(ex.Message, Is.StringStarting("The actual value must be a string or FileInfo"));
+            Assert.That(ex.Message, Is.StringStarting("The actual value must be a string or DirectoryInfo"));
         }
 
         [Test]
-        public void FailsWhenFileInfoIsNull()
+        public void FailsWhenDirectoryInfoIsNull()
         {
-            var ex = Assert.Throws<ArgumentNullException>(() => _constraint.ApplyTo((FileInfo)null));
-            Assert.That(ex.Message, Is.StringStarting("The actual value must be a non-null string or FileInfo"));
+            var ex = Assert.Throws<ArgumentNullException>(() => _constraint.ApplyTo((DirectoryInfo)null));
+            Assert.That(ex.Message, Is.StringStarting("The actual value must be a non-null string or DirectoryInfo"));
         }
 
         [Test]
         public void FailsWhenStringIsNull()
         {
             var ex = Assert.Throws<ArgumentNullException>(() => _constraint.ApplyTo((string)null));
-            Assert.That(ex.Message, Is.StringStarting("The actual value must be a non-null string or FileInfo"));
+            Assert.That(ex.Message, Is.StringStarting("The actual value must be a non-null string or DirectoryInfo"));
         }
 
         [Test]
@@ -102,6 +99,7 @@ namespace NUnit.Framework.Tests.Constraints
             var ex = Assert.Throws<ArgumentException>(() => _constraint.ApplyTo(string.Empty));
             Assert.That(ex.Message, Is.StringStarting("The actual value cannot be an empty string"));
         }
+
     }
 }
 #endif
