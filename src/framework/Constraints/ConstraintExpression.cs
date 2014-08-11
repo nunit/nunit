@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections;
+using System.Runtime.CompilerServices;
 
 namespace NUnit.Framework.Constraints
 {
@@ -850,6 +851,21 @@ namespace NUnit.Framework.Constraints
         {
             return (RangeConstraint)this.Append(new RangeConstraint(from, to));
         }
+
+        #endregion
+
+        #region Exist
+        
+#if !NUNITLITE
+        /// <summary>
+        /// Returns a constraint that succeeds if the value
+        /// is a file or directory and it exists.
+        /// </summary>
+        public Constraint Exist
+        {
+            get { return Append(new ExistsConstraint()); }
+        }
+#endif
 
         #endregion
 
