@@ -155,7 +155,7 @@ namespace NUnit.Framework.Internal
             ITestResult result = TestBuilder.RunTestFixture(typeof(FixtureWithInvalidSetCultureAttribute));
             Assert.AreEqual(ResultState.Error, result.ResultState);
             RuntimeFramework current = RuntimeFramework.CurrentFramework;
-            string expectedException = current.Runtime != RuntimeType.Mono && current.ClrVersion.Major == 4
+            string expectedException = current.ClrVersion.Major == 4
               ? "System.Globalization.CultureNotFoundException"
               : "System.ArgumentException";
             Assert.That(result.Message, Is.StringStarting(expectedException));
@@ -168,7 +168,7 @@ namespace NUnit.Framework.Internal
             ITestResult result = TestBuilder.RunTestCase(typeof(FixtureWithInvalidSetCultureAttributeOnTest), "InvalidCultureSet");
             Assert.AreEqual(ResultState.Error, result.ResultState);
             RuntimeFramework current = RuntimeFramework.CurrentFramework;
-            string expectedException = current.Runtime != RuntimeType.Mono && current.ClrVersion.Major == 4
+            string expectedException = current.ClrVersion.Major == 4
               ? "System.Globalization.CultureNotFoundException"
               : "System.ArgumentException";
             Assert.That(result.Message, Is.StringStarting(expectedException));
