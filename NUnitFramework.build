@@ -46,7 +46,7 @@
 	   The first .NET and Mono frameworks found are the
 	   respective net and mono defaults. -->
   <property name="supported.frameworks" 
-	value="net-4.5,net-4.0,net-3.5,net-2.0,mono-4.0,mono-3.5,mono-2.0,netcf-3.5,netcf-2.0,silverlight-5.0"/>
+	value="net-4.5,net-4.0,net-3.5,net-2.0,mono-4.5,mono-4.0,mono-3.5,mono-2.0,netcf-3.5,netcf-2.0,silverlight-5.0"/>
   
   <!-- Set default warning level for compiles -->
   <property name="warn" value="4" unless="${property::exists('warn')}"/>
@@ -210,6 +210,9 @@
 
   <target name="mono-4.0" depends="set-mono-4.0-runtime-config"
 	description="Set runtime to Mono 4.0 for commands that follow"/>
+
+  <target name="mono-4.5" depends="set-mono-4.5-runtime-config"
+	description="Set runtime to Mono 4.5 for commands that follow"/>
 
   <target name="sl-5.0" depends="set-silverlight-5.0-runtime-config"
 	description="Set runtime to Silverlight 5.0 for commands that follow"/>
@@ -460,7 +463,7 @@
 	  description="Create the mono binary package">
 
 	<property name="package.config" value="-mono"/>
-	<property name="package.runtimes" value="mono-4.0+mono-3.5+mono-2.0"/>
+	<property name="package.runtimes" value="mono-4.5+mono-4.0+mono-3.5+mono-2.0"/>
 
 	<call target="package"/>
 
@@ -817,6 +820,17 @@
 	<property name="runtime.config" value="mono-4.0"/>
 	<property name="runtime.defines" value="MONO,MONO_4_0,CS_4_0"/>
 	<property name="build.framework" value="mono-4.0"/>
+  </target>
+
+  <target name="set-mono-4.5-runtime-config">
+	<fail unless="${framework::exists('mono-4.5') and framework::sdk-exists('mono-4.5')}"
+	  message="The Mono 4.5 SDK is not configured or not installed"/>
+
+	<property name="runtime.platform" value="mono"/>
+	<property name="runtime.version" value="4.5"/>
+	<property name="runtime.config" value="mono-4.5"/>
+	<property name="runtime.defines" value="MONO,MONO_4_5,CS_5_0"/>
+	<property name="build.framework" value="mono-4.5"/>
   </target>
 
 	<target name="set-silverlight-5.0-runtime-config">
