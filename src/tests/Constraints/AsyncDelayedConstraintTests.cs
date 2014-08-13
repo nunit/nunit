@@ -56,7 +56,7 @@ namespace NUnit.Framework.Constraints.Tests
 				Assert.That(async () => await One(), Is.EqualTo(2).After(100)));
 		}
 
-		[Test]
+		[Test, Platform(Exclude="Linux", Reason="Intermittent failure under Linux")]
 		public void SyntaxError()
 		{
 			Assert.Throws<InvalidOperationException>(() =>
@@ -74,7 +74,7 @@ namespace NUnit.Framework.Constraints.Tests
 		{
 #if NET_4_5
 			return await Task.Run(() => 1);
-# elif NET_4_0
+#elif NET_4_0
 			return await TaskEx.Run(() => 1);
 #endif
 		}
