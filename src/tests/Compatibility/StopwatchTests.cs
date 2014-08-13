@@ -35,7 +35,7 @@ namespace NUnit.Framework.Tests.Compatibility
     {
         private const int SLEEP = 100;
         private const int MIN = (int)(SLEEP * 0.9);
-        private const int MAX = (int)(SLEEP * 1.2);
+        private const int MAX = (int)(SLEEP * 1.5);
 
         [Test]
         public void TestStartNewIsRunning()
