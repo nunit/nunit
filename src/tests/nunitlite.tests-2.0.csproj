@@ -265,7 +265,7 @@
       <Name>nunitlite-2.0</Name>
     </ProjectReference>
     <ProjectReference Include="..\mock-assembly\mock-nunitlite-assembly-2.0.csproj">
-      <Project>{7be679ef-3853-4e06-b4eb-c4c6808bc3f0}</Project>
+      <Project>{7BE679EF-3853-4E06-B4EB-C4C6808BC3F0}</Project>
       <Name>mock-nunitlite-assembly-2.0</Name>
     </ProjectReference>
     <ProjectReference Include="..\testdata\nunitlite.testdata-2.0.csproj">

@@ -267,15 +267,15 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\framework\nunitlite-4.5.csproj">
-      <Project>{22857a11-108d-48c6-9a23-2217d2f2c365}</Project>
+      <Project>{22857A11-108D-48C6-9A23-2217D2F2C365}</Project>
       <Name>nunitlite-4.5</Name>
     </ProjectReference>
     <ProjectReference Include="..\mock-assembly\mock-nunitlite-assembly-4.5.csproj">
-      <Project>{8bd8daec-1fbc-4916-bd71-27c31c0e11e4}</Project>
+      <Project>{8BD8DAEC-1FBC-4916-BD71-27C31C0E11E4}</Project>
       <Name>mock-nunitlite-assembly-4.5</Name>
     </ProjectReference>
     <ProjectReference Include="..\testdata\nunitlite.testdata-4.5.csproj">
-      <Project>{213eed36-b2a9-4c61-9ecd-ea99da6ec5f4}</Project>
+      <Project>{213EED36-B2A9-4C61-9ECD-EA99DA6EC5F4}</Project>
       <Name>nunitlite.testdata-4.5</Name>
     </ProjectReference>
   </ItemGroup>

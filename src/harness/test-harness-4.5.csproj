@@ -116,7 +116,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\framework\nunit.framework-4.5.csproj">
-      <Project>{d209c368-1277-4ea6-a887-aa6eba51ab99}</Project>
+      <Project>{D209C368-1277-4EA6-A887-AA6EBA51AB99}</Project>
       <Name>nunit.framework-4.5</Name>
     </ProjectReference>
   </ItemGroup>
