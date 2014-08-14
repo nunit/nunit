@@ -366,7 +366,7 @@ Global
 		{A4F0C741-6ED4-46C8-AE75-57E1C7197E22} = {5C0BC8AB-B491-47E3-AFEC-59A2E15A2C85}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = src\harness\test-harness-4.5.csproj
+		StartupItem = src\harness\test-harness-4.0.csproj
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
