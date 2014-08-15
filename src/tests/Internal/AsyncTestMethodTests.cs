@@ -11,16 +11,16 @@ namespace NUnit.Framework.Internal
     [TestFixture]
     public class AsyncTestMethodTests
     {
+        private static readonly bool ON_LINUX = OSPlatform.CurrentPlatform.IsUnix;
+
         private DefaultTestCaseBuilder _builder;
         private object _testObject;
-		private bool _isLinux;
 
         [SetUp]
         public void Setup()
         {
             _builder = new DefaultTestCaseBuilder();
             _testObject = new AsyncRealFixture();
-			_isLinux = OSPlatform.CurrentPlatform.IsUnix;
         }
 
         public IEnumerable TestCases
@@ -69,10 +69,10 @@ namespace NUnit.Framework.Internal
 		/// Private method to return a test case, optionally ignored on the Linux platform.
 		/// We use this since the Platform attribute is not supported on TestCaseData.
 		/// </summary>
-		private TestCaseData GetTestCase(MethodInfo method, ResultState resultState, int assertionCount, bool ignoreLinux)
+		private TestCaseData GetTestCase(MethodInfo method, ResultState resultState, int assertionCount, bool ignoreOnLinux)
 		{
 			var data = new TestCaseData(method, resultState, assertionCount);
-			if (ignoreLinux)
+			if (ON_LINUX && ignoreOnLinux)
 				data = data.Ignore("Intermittent failure on Linux");
 			return data;
 		}
