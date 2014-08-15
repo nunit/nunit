@@ -13,6 +13,8 @@
     <FileAlignment>512</FileAlignment>
     <IntermediateOutputPath>obj\$(Configuration)\net-4.5\</IntermediateOutputPath>
     <TargetFrameworkProfile />
+    <ProductVersion>12.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -44,7 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\framework\nunit.framework-4.5.csproj">
-      <Project>{12b66b03-90f1-4992-bd33-bdf3c69ae49e}</Project>
+      <Project>{D209C368-1277-4EA6-A887-AA6EBA51AB99}</Project>
       <Name>nunit.framework-4.5</Name>
     </ProjectReference>
   </ItemGroup>

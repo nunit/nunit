@@ -12,7 +12,9 @@
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
-	<IntermediateOutputPath>obj\$(Configuration)\net-4.0\</IntermediateOutputPath>
+    <IntermediateOutputPath>obj\$(Configuration)\net-4.0\</IntermediateOutputPath>
+    <ProductVersion>12.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -42,7 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\framework\nunitlite-4.0.csproj">
-      <Project>{73a8b041-e719-443d-bf32-7944f117996c}</Project>
+      <Project>{73A8B041-E719-443D-BF32-7944F117996C}</Project>
       <Name>nunitlite-4.0</Name>
     </ProjectReference>
   </ItemGroup>

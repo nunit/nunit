@@ -78,7 +78,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\framework\nunitlite-2.0.csproj">
-      <Project>{0bfa7f0a-bc15-40a5-863a-fa9b55ae2fd3}</Project>
+      <Project>{0BFA7F0A-BC15-40A5-863A-FA9B55AE2FD3}</Project>
       <Name>nunitlite-2.0</Name>
     </ProjectReference>
   </ItemGroup>
