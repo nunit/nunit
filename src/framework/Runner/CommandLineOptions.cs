@@ -188,9 +188,9 @@ namespace NUnitLite.Runner
                 sb.Append("Options:" + NL);
                 sb.Append("  -test:testname  The name of a test to run or explore. This option may be repeated." + NL);
                 sb.Append("                  If no test names are given, all tests are run." + NL + NL);
-                sb.Append("  -out:FILE       File to which output is redirected. If this option is not" + NL);
-                sb.Append("                  used, output is to the Console, which means it is lost" + NL);
-                sb.Append("                  on devices without a Console." + NL + NL);
+                sb.Append("  -output:FILE    File to which standard output is redirected. If this option" + NL);
+                sb.Append("  -out:FILE       is not used, output is to the Console, which means it is" + NL);
+                sb.Append("                  lost on devices without a Console." + NL + NL);
                 sb.Append("  -full           Prints full report of all test results." + NL + NL);
                 sb.Append("  -result:FILE    File to which the xml test result is written." + NL + NL);
                 sb.Append("  -format:FORMAT  Format in which the result is to be written. FORMAT must be" + NL);
@@ -305,6 +305,7 @@ namespace NUnitLite.Runner
                     if (ResultFormat != "nunit3" && ResultFormat != "nunit2")
                         InvalidOption(option);
                     break;
+                case "output":
                 case "out":
                     try
                     {
