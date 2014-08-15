@@ -35,29 +35,21 @@ namespace NUnitLite.Runner
     /// </summary>
     public class CommandLineOptions
     {
-        private readonly string _optionChars;
         private static readonly string NL = NUnit.Env.NewLine;
 
-        #region Constructors
+        #region Constructor
 
         /// <summary>
-        /// Construct a CommandLineOptions object using default option chars
+        /// Construct a CommandLineOptions object using specified arguments
         /// </summary>
-        public CommandLineOptions()
-            : this(Path.DirectorySeparatorChar == '/' ? "-" : "/-") { }
-
-        /// <summary>
-        /// Construct a CommandLineOptions object using specified option chars
-        /// </summary>
-        /// <param name="optionChars"></param>
-        public CommandLineOptions(string optionChars)
+        public CommandLineOptions(params string[] args)
         {
-            _optionChars = optionChars;
-
             Tests = new List<string>();
             Parameters = new List<string>();
             _invalidOptions = new List<string>();
             InternalTraceLevel = InternalTraceLevel.Off;
+
+            this.Parse(args);
         }
 
         #endregion
@@ -229,11 +221,11 @@ namespace NUnitLite.Runner
         /// Parse command arguments and initialize option settings accordingly
         /// </summary>
         /// <param name="args">The argument list</param>
-        public void Parse(params string[] args)
+        private void Parse(params string[] args)
         {
             foreach( string arg in args )
             {
-                if (_optionChars.IndexOf(arg[0]) >= 0 )
+                if (arg[0] == '-' || arg[0] == '/')
                     ProcessOption(arg);
                 else
                     ProcessParameter(arg);

@@ -15,18 +15,10 @@ namespace NUnitLite.Runner.Tests
     [TestFixture]
     class CommandLineOptionTests
     {
-        private CommandLineOptions options;
-
-        [SetUp]
-        public void CreateOptions()
-        {
-            options = new CommandLineOptions("-");
-        }
-
         [Test]
         public void TestWaitOption()
         {
-            options.Parse( "-wait" );
+            var options = new CommandLineOptions("-wait");
             Assert.That(options.Error, Is.False);
             Assert.That(options.Wait, Is.True);
         }
@@ -34,7 +26,7 @@ namespace NUnitLite.Runner.Tests
         [Test]
         public void TestNoheaderOption()
         {
-            options.Parse("-noheader");
+            var options = new CommandLineOptions("-noheader");
             Assert.That(options.Error, Is.False);
             Assert.That(options.NoHeader, Is.True);
         }
@@ -42,7 +34,7 @@ namespace NUnitLite.Runner.Tests
         [Test]
         public void TestHelpOption()
         {
-            options.Parse("-help");
+            var options = new CommandLineOptions("-help");
             Assert.That(options.Error, Is.False);
             Assert.That(options.ShowHelp, Is.True);
         }
@@ -50,7 +42,7 @@ namespace NUnitLite.Runner.Tests
         [Test]
         public void TestFullOption()
         {
-            options.Parse("-full");
+            var options = new CommandLineOptions("-full");
             Assert.That(options.Error, Is.False);
             Assert.That(options.Full, Is.True);
         }
@@ -58,7 +50,7 @@ namespace NUnitLite.Runner.Tests
         [Test]
         public void TestOptionStartingWithTwoHyphens()
         {
-            options.Parse("--full");
+            var options = new CommandLineOptions("--full");
             Assert.That(options.Error, Is.False);
             Assert.That(options.Full, Is.True);
         }
@@ -67,7 +59,7 @@ namespace NUnitLite.Runner.Tests
         [Test]
         public void TestExploreOptionWithNoFileName()
         {
-            options.Parse("-explore");
+            var options = new CommandLineOptions("-explore");
             Assert.That(options.Error, Is.False);
             Assert.That(options.Explore, Is.True);
             Assert.That(options.ExploreFile, Is.EqualTo(Path.GetFullPath("tests.xml")));
@@ -76,7 +68,7 @@ namespace NUnitLite.Runner.Tests
         [Test]
         public void TestExploreOptionWithGoodFileName()
         {
-            options.Parse("-explore=MyFile.xml");
+            var options = new CommandLineOptions("-explore=MyFile.xml");
             Assert.That(options.Error, Is.False);
             Assert.That(options.Explore, Is.True);
             Assert.That(options.ExploreFile, Is.EqualTo(Path.GetFullPath("MyFile.xml")));
@@ -86,7 +78,7 @@ namespace NUnitLite.Runner.Tests
         [Platform(Exclude = "Mono", Reason = "No Exception thrown on bad path under Mono. Test should be revised.")]
         public void TestExploreOptionWithBadFileName()
         {
-            options.Parse("-explore=MyFile*.xml");
+            var options = new CommandLineOptions("-explore=MyFile*.xml");
             Assert.That(options.Error, Is.True);
             Assert.That(options.ErrorMessage, Is.EqualTo("Invalid option: -explore=MyFile*.xml" + Env.NewLine));
         }
@@ -94,7 +86,7 @@ namespace NUnitLite.Runner.Tests
         [Test]
         public void TestResultOptionWithNoFileName()
         {
-            options.Parse("-result");
+            var options = new CommandLineOptions("-result");
             Assert.That(options.Error, Is.False);
             Assert.That(options.ResultFile, Is.EqualTo(Path.GetFullPath("TestResult.xml")));
         }
@@ -102,7 +94,7 @@ namespace NUnitLite.Runner.Tests
         [Test]
         public void TestResultOptionWithGoodFileName()
         {
-            options.Parse("-result=MyResult.xml");
+            var options = new CommandLineOptions("-result=MyResult.xml");
             Assert.That(options.Error, Is.False);
             Assert.That(options.ResultFile, Is.EqualTo(Path.GetFullPath("MyResult.xml")));
         }
@@ -111,7 +103,7 @@ namespace NUnitLite.Runner.Tests
         [Platform(Exclude = "Mono", Reason = "No Exception thrown on bad path under Mono. Test should be revised.")]
         public void TestResultOptionWithBadFileName()
         {
-            options.Parse("-result=MyResult*.xml");
+            var options = new CommandLineOptions("-result=MyResult*.xml");
             Assert.That(options.Error, Is.True);
             Assert.That(options.ErrorMessage, Is.EqualTo("Invalid option: -result=MyResult*.xml" + Env.NewLine));
         }
@@ -120,7 +112,7 @@ namespace NUnitLite.Runner.Tests
         [Test]
         public void TestNUnit2FormatOption()
         {
-            options.Parse("-format=nunit2");
+            var options = new CommandLineOptions("-format=nunit2");
             Assert.That(options.Error, Is.False);
             Assert.That(options.ResultFormat, Is.EqualTo("nunit2"));
         }
@@ -128,7 +120,7 @@ namespace NUnitLite.Runner.Tests
         [Test]
         public void TestNUnit3FormatOption()
         {
-            options.Parse("-format=nunit3");
+            var options = new CommandLineOptions("-format=nunit3");
             Assert.That(options.Error, Is.False);
             Assert.That(options.ResultFormat, Is.EqualTo("nunit3"));
         }
@@ -136,7 +128,7 @@ namespace NUnitLite.Runner.Tests
         [Test]
         public void TestBadFormatOption()
         {
-            options.Parse("-format=xyz");
+            var options = new CommandLineOptions("-format=xyz");
             Assert.That(options.Error, Is.True);
             Assert.That(options.ErrorMessage, Is.EqualTo("Invalid option: -format=xyz" + Env.NewLine));
         }
@@ -144,7 +136,7 @@ namespace NUnitLite.Runner.Tests
         [Test]
         public void TestMissingFormatOption()
         {
-            options.Parse("-format");
+            var options = new CommandLineOptions("-format");
             Assert.That(options.Error, Is.True);
             Assert.That(options.ErrorMessage, Is.EqualTo("Invalid option: -format" + Env.NewLine));
         }
@@ -153,7 +145,7 @@ namespace NUnitLite.Runner.Tests
         [Test]
         public void TestOutOptionWithGoodFileName()
         {
-            options.Parse("-out=myfile.txt");
+            var options = new CommandLineOptions("-out=myfile.txt");
             Assert.False(options.Error);
             Assert.That(options.OutFile, Is.EqualTo(Path.GetFullPath("myfile.txt")));
         }
@@ -161,7 +153,7 @@ namespace NUnitLite.Runner.Tests
         [Test]
         public void TestOutOptionWithNoFileName()
         {
-            options.Parse("-out=");
+            var options = new CommandLineOptions("-out=");
             Assert.True(options.Error);
             Assert.That(options.ErrorMessage, Is.EqualTo("Invalid option: -out=" + Env.NewLine));
         }
@@ -170,7 +162,7 @@ namespace NUnitLite.Runner.Tests
         [Platform(Exclude = "Mono", Reason = "No Exception thrown on bad path under Mono. Test should be revised.")]
         public void TestOutOptionWithBadFileName()
         {
-            options.Parse("-out=my*file.txt");
+            var options = new CommandLineOptions("-out=my*file.txt");
             Assert.True(options.Error);
             Assert.That(options.ErrorMessage, Is.EqualTo("Invalid option: -out=my*file.txt" + Env.NewLine));
         }
@@ -179,7 +171,7 @@ namespace NUnitLite.Runner.Tests
         [Test]
         public void TestLabelsOption()
         {
-            options.Parse("-labels");
+            var options = new CommandLineOptions("-labels");
             Assert.That(options.Error, Is.False);
             Assert.That(options.ShowLabels, Is.True);
         }
@@ -187,24 +179,15 @@ namespace NUnitLite.Runner.Tests
         [Test]
         public void TestSeedOption()
         {
-            options.Parse("-seed=123456789");
+            var options = new CommandLineOptions("-seed=123456789");
             Assert.False(options.Error);
             Assert.That(options.InitialSeed, Is.EqualTo(123456789));
         }
 
         [Test]
-        public void OptionNotRecognizedUnlessPrecededByOptionChar()
-        {
-            options.Parse( "/wait" );
-            Assert.That(options.Error, Is.False);
-            Assert.That(options.Wait, Is.False);
-            Assert.That(options.Parameters, Contains.Item("/wait"));
-        }
-
-        [Test]
         public void InvalidOptionProducesError()
         {
-            options.Parse( "-junk" );
+            var options = new CommandLineOptions("-junk");
             Assert.That(options.Error);
             Assert.That(options.ErrorMessage, Is.EqualTo("Invalid option: -junk" + Env.NewLine));
         }
@@ -212,7 +195,7 @@ namespace NUnitLite.Runner.Tests
         [Test]
         public void MultipleInvalidOptionsAreListedInErrorMessage()
         {
-            options.Parse( "-junk", "-trash", "something", "-garbage" );
+            var options = new CommandLineOptions("-junk", "-trash", "something", "-garbage");
             Assert.That(options.Error);
             Assert.That(options.ErrorMessage, Is.EqualTo(
                 "Invalid option: -junk" + Env.NewLine +
@@ -223,7 +206,7 @@ namespace NUnitLite.Runner.Tests
         [Test]
         public void SingleParameterIsSaved()
         {
-            options.Parse("myassembly.dll");
+            var options = new CommandLineOptions("myassembly.dll");
             Assert.That(options.Error, Is.False);
             Assert.That(options.Parameters.Count, Is.EqualTo(1));
             Assert.That(options.Parameters[0], Is.EqualTo("myassembly.dll"));
@@ -232,7 +215,7 @@ namespace NUnitLite.Runner.Tests
         [Test]
         public void MultipleParametersAreSaved()
         {
-            options.Parse("assembly1.dll", "-wait", "assembly2.dll", "assembly3.dll");
+            var options = new CommandLineOptions("assembly1.dll", "-wait", "assembly2.dll", "assembly3.dll");
             Assert.That(options.Error, Is.False);
             Assert.That(options.Parameters.Count, Is.EqualTo(3));
             Assert.That(options.Parameters[0], Is.EqualTo("assembly1.dll"));
@@ -243,7 +226,7 @@ namespace NUnitLite.Runner.Tests
         [Test]
         public void TestOptionIsRecognized()
         {
-            options.Parse("-test:Some.Class.Name");
+            var options = new CommandLineOptions("-test:Some.Class.Name");
             Assert.That(options.Error, Is.False);
             Assert.That(options.Tests.Count, Is.EqualTo(1));
             Assert.That(options.Tests[0], Is.EqualTo("Some.Class.Name"));
@@ -252,7 +235,7 @@ namespace NUnitLite.Runner.Tests
         [Test]
         public void MultipleTestOptionsAreRecognized()
         {
-            options.Parse("-test:Class1", "-test=Class2", "-test:Class3");
+            var options = new CommandLineOptions("-test:Class1", "-test=Class2", "-test:Class3");
             Assert.That(options.Error, Is.False);
             Assert.That(options.Tests.Count, Is.EqualTo(3));
             Assert.That(options.Tests[0], Is.EqualTo("Class1"));
@@ -263,21 +246,21 @@ namespace NUnitLite.Runner.Tests
         [Test]
         public void TestIncludeOption()
         {
-            options.Parse("-include:1,2");
+            var options = new CommandLineOptions("-include:1,2");
             Assert.That(options.Error, Is.False);
             Assert.That(options.Include == "1,2");
         }
         [Test]
         public void TestExcludeOption()
         {
-            options.Parse("-exclude:1,2");
+            var options = new CommandLineOptions("-exclude:1,2");
             Assert.That(options.Error, Is.False);
             Assert.That(options.Exclude == "1,2");
         }
         [Test]
         public void TestIncludeExcludeOption()
         {
-            options.Parse("-include:3,4", "-exclude:1,2");
+            var options = new CommandLineOptions("-include:3,4", "-exclude:1,2");
             Assert.That(options.Error, Is.False);
             Assert.That(options.Exclude == "1,2");
             Assert.That(options.Include == "3,4");
@@ -287,7 +270,7 @@ namespace NUnitLite.Runner.Tests
         [Test]
         public void TestInternalTraceLevelOption([Values]InternalTraceLevel traceLevel)
         {
-            options.Parse(String.Format("-trace:{0}", traceLevel));
+            var options = new CommandLineOptions(String.Format("-trace:{0}", traceLevel));
             Assert.That(options.Error, Is.False);
             Assert.That(options.InternalTraceLevel, Is.EqualTo(traceLevel));
         }
@@ -295,7 +278,7 @@ namespace NUnitLite.Runner.Tests
         [Test]
         public void TestInvalidInternalTraceLevelOption()
         {
-            options.Parse("-trace:bad");
+            var options = new CommandLineOptions("-trace:bad");
             Assert.That(options.Error, Is.True);
             Assert.That(options.ErrorMessage, Is.StringContaining("-trace:bad"));
         }
@@ -303,6 +286,7 @@ namespace NUnitLite.Runner.Tests
         [Test]
         public void TestDefaultInternalTraceLevel()
         {
+            var options = new CommandLineOptions();
             Assert.That(options.Error, Is.False);
             Assert.That(options.InternalTraceLevel, Is.EqualTo(InternalTraceLevel.Off));
         }

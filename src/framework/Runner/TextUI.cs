@@ -88,8 +88,7 @@ namespace NUnitLite.Runner
             // NOTE: Execute must be directly called from the
             // test assembly in order for the mechanism to work.
 
-            this._commandLineOptions = new CommandLineOptions();
-            _commandLineOptions.Parse(args);
+            this._commandLineOptions = new CommandLineOptions(args);
 
             if (_commandLineOptions.OutFile != null)
                 this._writer = new StreamWriter(_commandLineOptions.OutFile);
