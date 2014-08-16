@@ -9,50 +9,76 @@ using System.IO;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
 using Env = NUnit.Env;
+using System.Reflection;
 
 namespace NUnitLite.Runner.Tests
 {
     [TestFixture]
     class CommandLineOptionTests
     {
-        [Test]
-        public void TestWaitOption()
+        [TestCase("ShowHelp", "help|h")]
+        [TestCase("Wait", "wait")]
+        [TestCase("NoHeader", "noheader|noh")]
+        [TestCase("Full", "full")]
+        [TestCase("ShowLabels", "labels")]
+        //[TestCase("DisplayTeamCityServiceMessages", "teamcity")]
+        public void CanRecognizeBooleanOptions(string propertyName, string pattern)
         {
-            var options = new CommandLineOptions("-wait");
-            Assert.That(options.Error, Is.False);
-            Assert.That(options.Wait, Is.True);
+            string[] prototypes = pattern.Split('|');
+
+            PropertyInfo property = GetPropertyInfo(propertyName);
+            Assert.AreEqual(typeof(bool), property.PropertyType, "Property '{0}' is wrong type", propertyName);
+
+            foreach (string option in prototypes)
+            {
+                var options = new CommandLineOptions("-" + option);
+                Assert.That(options.ErrorMessages, Is.Empty);
+                Assert.AreEqual(true, (bool)property.GetValue(options, null), "Didn't recognize -" + option);
+
+                options = new CommandLineOptions("--" + option);
+                Assert.That(options.ErrorMessages, Is.Empty);
+                Assert.AreEqual(true, (bool)property.GetValue(options, null), "Didn't recognize --" + option);
+
+                options = new CommandLineOptions("/" + option);
+                Assert.That(options.ErrorMessages, Is.Empty);
+                Assert.AreEqual(true, (bool)property.GetValue(options, null), "Didn't recognize /" + option);
+            }
         }
 
-        [Test]
-        public void TestNoheaderOption()
+        [TestCase("Include", "include", new string[] { "Short,Fast" }, new string[0])]
+        [TestCase("Exclude", "exclude", new string[] { "Long" }, new string[0])]
+        [TestCase("OutFile", "output|out", new string[] { "output.txt" }, new string[0])]
+        //[TestCase("ErrFile", "err", new string[] { "error.txt" }, new string[0])]
+        //[TestCase("WorkDirectory", "work", new string[] { "results" }, new string[0])]
+        //[TestCase("DisplayTestLabels", "labels|l", new string[] { "Off", "On", "All" }, new string[] { "JUNK" })]
+        [TestCase("InternalTraceLevel", "trace", new string[] { "Off", "Error", "Warning", "Info", "Debug", "Verbose" }, new string[] { "JUNK" })]
+        //[TestCase("V2ResultFile", "xml2", new string[] { "v2.xml" }, new string[0])]
+        //[TestCase("V3ResultFile", "xml3", new string[] { "v3.xml" }, new string[0])]
+        public void CanRecognizeStringOptions(string propertyName, string pattern, string[] goodValues, string[] badValues)
         {
-            var options = new CommandLineOptions("-noheader");
-            Assert.That(options.Error, Is.False);
-            Assert.That(options.NoHeader, Is.True);
-        }
+            string[] prototypes = pattern.Split('|');
 
-        [Test]
-        public void TestHelpOption()
-        {
-            var options = new CommandLineOptions("-help");
-            Assert.That(options.Error, Is.False);
-            Assert.That(options.ShowHelp, Is.True);
-        }
+            PropertyInfo property = GetPropertyInfo(propertyName);
+            Assert.AreEqual(typeof(string), property.PropertyType);
 
-        [Test]
-        public void TestFullOption()
-        {
-            var options = new CommandLineOptions("-full");
-            Assert.That(options.Error, Is.False);
-            Assert.That(options.Full, Is.True);
-        }
+            foreach (string option in prototypes)
+            {
+                foreach (string value in goodValues)
+                {
+                    string optionPlusValue = string.Format("-{0}:{1}", option, value);
+                    CommandLineOptions options = new CommandLineOptions(optionPlusValue, "dummy.dll");
+                    Assert.That(options.ErrorMessages, Is.Empty, "Should be valid: " + optionPlusValue);
+                    Assert.AreEqual(value, (string)property.GetValue(options, null), "Didn't recognize " + optionPlusValue);
+                }
 
-        [Test]
-        public void TestOptionStartingWithTwoHyphens()
-        {
-            var options = new CommandLineOptions("--full");
-            Assert.That(options.Error, Is.False);
-            Assert.That(options.Full, Is.True);
+                foreach (string value in badValues)
+                {
+                    string optionPlusValue = string.Format("--{0}:{1}", option, value);
+                    CommandLineOptions options = new CommandLineOptions(optionPlusValue);
+                    Assert.That(options.ErrorMessages, Is.EqualTo(new string[] { 
+                        string.Format("The value '{0}' is not valid for option '{1}'.", value, optionPlusValue) } ));
+                }
+            }
         }
 
 #if !SILVERLIGHT && !NETCF
@@ -60,7 +86,7 @@ namespace NUnitLite.Runner.Tests
         public void TestExploreOptionWithNoFileName()
         {
             var options = new CommandLineOptions("-explore");
-            Assert.That(options.Error, Is.False);
+            Assert.That(options.ErrorMessages, Is.Empty);
             Assert.That(options.Explore, Is.True);
             Assert.That(options.ExploreFile, Is.EqualTo(Path.GetFullPath("tests.xml")));
         }
@@ -69,7 +95,7 @@ namespace NUnitLite.Runner.Tests
         public void TestExploreOptionWithGoodFileName()
         {
             var options = new CommandLineOptions("-explore=MyFile.xml");
-            Assert.That(options.Error, Is.False);
+            Assert.That(options.ErrorMessages, Is.Empty);
             Assert.That(options.Explore, Is.True);
             Assert.That(options.ExploreFile, Is.EqualTo(Path.GetFullPath("MyFile.xml")));
         }
@@ -79,15 +105,15 @@ namespace NUnitLite.Runner.Tests
         public void TestExploreOptionWithBadFileName()
         {
             var options = new CommandLineOptions("-explore=MyFile*.xml");
-            Assert.That(options.Error, Is.True);
-            Assert.That(options.ErrorMessage, Is.EqualTo("Invalid option: -explore=MyFile*.xml" + Env.NewLine));
+            Assert.That(options.ErrorMessages, Is.EqualTo(
+                new string[] { "Invalid option: -explore=MyFile*.xml" } ));
         }
 
         [Test]
         public void TestResultOptionWithNoFileName()
         {
             var options = new CommandLineOptions("-result");
-            Assert.That(options.Error, Is.False);
+            Assert.That(options.ErrorMessages, Is.Empty);
             Assert.That(options.ResultFile, Is.EqualTo(Path.GetFullPath("TestResult.xml")));
         }
 
@@ -95,7 +121,7 @@ namespace NUnitLite.Runner.Tests
         public void TestResultOptionWithGoodFileName()
         {
             var options = new CommandLineOptions("-result=MyResult.xml");
-            Assert.That(options.Error, Is.False);
+            Assert.That(options.ErrorMessages, Is.Empty);
             Assert.That(options.ResultFile, Is.EqualTo(Path.GetFullPath("MyResult.xml")));
         }
 
@@ -104,8 +130,8 @@ namespace NUnitLite.Runner.Tests
         public void TestResultOptionWithBadFileName()
         {
             var options = new CommandLineOptions("-result=MyResult*.xml");
-            Assert.That(options.Error, Is.True);
-            Assert.That(options.ErrorMessage, Is.EqualTo("Invalid option: -result=MyResult*.xml" + Env.NewLine));
+            Assert.That(options.ErrorMessages, 
+                Is.EqualTo(new string[] { "Invalid option: -result=MyResult*.xml" } ));
         }
 #endif
 
@@ -113,7 +139,7 @@ namespace NUnitLite.Runner.Tests
         public void TestNUnit2FormatOption()
         {
             var options = new CommandLineOptions("-format=nunit2");
-            Assert.That(options.Error, Is.False);
+            Assert.That(options.ErrorMessages, Is.Empty);
             Assert.That(options.ResultFormat, Is.EqualTo("nunit2"));
         }
 
@@ -121,7 +147,7 @@ namespace NUnitLite.Runner.Tests
         public void TestNUnit3FormatOption()
         {
             var options = new CommandLineOptions("-format=nunit3");
-            Assert.That(options.Error, Is.False);
+            Assert.That(options.ErrorMessages, Is.Empty);
             Assert.That(options.ResultFormat, Is.EqualTo("nunit3"));
         }
 
@@ -129,58 +155,23 @@ namespace NUnitLite.Runner.Tests
         public void TestBadFormatOption()
         {
             var options = new CommandLineOptions("-format=xyz");
-            Assert.That(options.Error, Is.True);
-            Assert.That(options.ErrorMessage, Is.EqualTo("Invalid option: -format=xyz" + Env.NewLine));
+            Assert.That(options.ErrorMessages, Is.EqualTo(
+                new string[] { "Invalid option: -format=xyz" } ));
         }
 
         [Test]
         public void TestMissingFormatOption()
         {
             var options = new CommandLineOptions("-format");
-            Assert.That(options.Error, Is.True);
-            Assert.That(options.ErrorMessage, Is.EqualTo("Invalid option: -format" + Env.NewLine));
-        }
-
-#if !SILVERLIGHT && !NETCF
-        [Test]
-        public void TestOutOptionWithGoodFileName()
-        {
-            var options = new CommandLineOptions("-out=myfile.txt");
-            Assert.False(options.Error);
-            Assert.That(options.OutFile, Is.EqualTo(Path.GetFullPath("myfile.txt")));
-        }
-
-        [Test]
-        public void TestOutOptionWithNoFileName()
-        {
-            var options = new CommandLineOptions("-out=");
-            Assert.True(options.Error);
-            Assert.That(options.ErrorMessage, Is.EqualTo("Invalid option: -out=" + Env.NewLine));
-        }
-
-        [Test]
-        [Platform(Exclude = "Mono", Reason = "No Exception thrown on bad path under Mono. Test should be revised.")]
-        public void TestOutOptionWithBadFileName()
-        {
-            var options = new CommandLineOptions("-out=my*file.txt");
-            Assert.True(options.Error);
-            Assert.That(options.ErrorMessage, Is.EqualTo("Invalid option: -out=my*file.txt" + Env.NewLine));
-        }
-#endif
-
-        [Test]
-        public void TestLabelsOption()
-        {
-            var options = new CommandLineOptions("-labels");
-            Assert.That(options.Error, Is.False);
-            Assert.That(options.ShowLabels, Is.True);
+            Assert.That(options.ErrorMessages, Is.EqualTo(
+                new string[] { "Invalid option: -format" } ));
         }
 
         [Test]
         public void TestSeedOption()
         {
             var options = new CommandLineOptions("-seed=123456789");
-            Assert.False(options.Error);
+            Assert.That(options.ErrorMessages, Is.Empty);
             Assert.That(options.InitialSeed, Is.EqualTo(123456789));
         }
 
@@ -188,107 +179,74 @@ namespace NUnitLite.Runner.Tests
         public void InvalidOptionProducesError()
         {
             var options = new CommandLineOptions("-junk");
-            Assert.That(options.Error);
-            Assert.That(options.ErrorMessage, Is.EqualTo("Invalid option: -junk" + Env.NewLine));
+            Assert.That(options.ErrorMessages, Is.EqualTo(
+                new string[] { "Invalid option: -junk" } ));
         }
 
         [Test]
         public void MultipleInvalidOptionsAreListedInErrorMessage()
         {
             var options = new CommandLineOptions("-junk", "-trash", "something", "-garbage");
-            Assert.That(options.Error);
-            Assert.That(options.ErrorMessage, Is.EqualTo(
-                "Invalid option: -junk" + Env.NewLine +
-                "Invalid option: -trash" + Env.NewLine +
-                "Invalid option: -garbage" + Env.NewLine));
+            Assert.That(options.ErrorMessages, Is.EqualTo(
+                new string[] {
+                    "Invalid option: -junk",
+                    "Invalid option: -trash",
+                    "Invalid option: -garbage"} ));
         }
 
         [Test]
-        public void SingleParameterIsSaved()
+        public void SingleInputFileIsSaved()
         {
             var options = new CommandLineOptions("myassembly.dll");
-            Assert.That(options.Error, Is.False);
-            Assert.That(options.Parameters.Count, Is.EqualTo(1));
-            Assert.That(options.Parameters[0], Is.EqualTo("myassembly.dll"));
+            Assert.That(options.ErrorMessages, Is.Empty);
+            Assert.That(options.InputFiles, Is.EqualTo(
+                new string[] { "myassembly.dll" } ));
         }
 
         [Test]
-        public void MultipleParametersAreSaved()
+        public void MultipleInputFilesAreSaved()
         {
             var options = new CommandLineOptions("assembly1.dll", "-wait", "assembly2.dll", "assembly3.dll");
-            Assert.That(options.Error, Is.False);
-            Assert.That(options.Parameters.Count, Is.EqualTo(3));
-            Assert.That(options.Parameters[0], Is.EqualTo("assembly1.dll"));
-            Assert.That(options.Parameters[1], Is.EqualTo("assembly2.dll"));
-            Assert.That(options.Parameters[2], Is.EqualTo("assembly3.dll"));
+            Assert.That(options.ErrorMessages, Is.Empty);
+            Assert.That(options.InputFiles, Is.EqualTo(
+                new string[] { "assembly1.dll", "assembly2.dll", "assembly3.dll" } ));
         }
 
         [Test]
         public void TestOptionIsRecognized()
         {
             var options = new CommandLineOptions("-test:Some.Class.Name");
-            Assert.That(options.Error, Is.False);
-            Assert.That(options.Tests.Count, Is.EqualTo(1));
-            Assert.That(options.Tests[0], Is.EqualTo("Some.Class.Name"));
+            Assert.That(options.ErrorMessages, Is.Empty);
+            Assert.That(options.Tests, Is.EqualTo(
+                new string[] { "Some.Class.Name" } ));
         }
 
         [Test]
         public void MultipleTestOptionsAreRecognized()
         {
             var options = new CommandLineOptions("-test:Class1", "-test=Class2", "-test:Class3");
-            Assert.That(options.Error, Is.False);
-            Assert.That(options.Tests.Count, Is.EqualTo(3));
-            Assert.That(options.Tests[0], Is.EqualTo("Class1"));
-            Assert.That(options.Tests[1], Is.EqualTo("Class2"));
-            Assert.That(options.Tests[2], Is.EqualTo("Class3"));
-        }
-#if !SILVERLIGHT
-        [Test]
-        public void TestIncludeOption()
-        {
-            var options = new CommandLineOptions("-include:1,2");
-            Assert.That(options.Error, Is.False);
-            Assert.That(options.Include == "1,2");
-        }
-        [Test]
-        public void TestExcludeOption()
-        {
-            var options = new CommandLineOptions("-exclude:1,2");
-            Assert.That(options.Error, Is.False);
-            Assert.That(options.Exclude == "1,2");
-        }
-        [Test]
-        public void TestIncludeExcludeOption()
-        {
-            var options = new CommandLineOptions("-include:3,4", "-exclude:1,2");
-            Assert.That(options.Error, Is.False);
-            Assert.That(options.Exclude == "1,2");
-            Assert.That(options.Include == "3,4");
-        }
-#endif
-
-        [Test]
-        public void TestInternalTraceLevelOption([Values]InternalTraceLevel traceLevel)
-        {
-            var options = new CommandLineOptions(String.Format("-trace:{0}", traceLevel));
-            Assert.That(options.Error, Is.False);
-            Assert.That(options.InternalTraceLevel, Is.EqualTo(traceLevel));
-        }
-
-        [Test]
-        public void TestInvalidInternalTraceLevelOption()
-        {
-            var options = new CommandLineOptions("-trace:bad");
-            Assert.That(options.Error, Is.True);
-            Assert.That(options.ErrorMessage, Is.StringContaining("-trace:bad"));
+            Assert.That(options.ErrorMessages, Is.Empty);
+            Assert.That(options.Tests, Is.EqualTo(
+                new string[] { "Class1", "Class2", "Class3" } ));
         }
 
         [Test]
         public void TestDefaultInternalTraceLevel()
         {
             var options = new CommandLineOptions();
-            Assert.That(options.Error, Is.False);
-            Assert.That(options.InternalTraceLevel, Is.EqualTo(InternalTraceLevel.Off));
+            Assert.That(options.ErrorMessages, Is.Empty);
+            Assert.That(options.InternalTraceLevel, Is.EqualTo("Off"));
         }
+
+        #region Helper Methods
+
+        private static PropertyInfo GetPropertyInfo(string propertyName)
+        {
+            PropertyInfo property = typeof(CommandLineOptions).GetProperty(propertyName);
+            Assert.IsNotNull(property, "The property '{0}' is not defined", propertyName);
+            return property;
+        }
+
+        #endregion
     }
 }

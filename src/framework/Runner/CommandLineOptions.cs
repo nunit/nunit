@@ -45,9 +45,9 @@ namespace NUnitLite.Runner
         public CommandLineOptions(params string[] args)
         {
             Tests = new List<string>();
-            Parameters = new List<string>();
-            _invalidOptions = new List<string>();
-            InternalTraceLevel = InternalTraceLevel.Off;
+            InputFiles = new List<string>();
+            ErrorMessages = new List<string>();
+            InternalTraceLevel = "Off";
 
             this.Parse(args);
         }
@@ -98,11 +98,8 @@ namespace NUnitLite.Runner
         /// <summary>Gets the list of categories to exclude.</summary>
         public string Exclude { get; private set; }
 
-        /// <summary>
-        /// Set internal trace {LEVEL}.
-        /// Values: Off, Error, Warning, Info, Verbose (Debug)
-        /// </summary>
-        public InternalTraceLevel InternalTraceLevel { get; private set; }
+        /// <summary>Gets the internal trace level.</summary>
+        public string InternalTraceLevel { get; private set; }
 
         private string ExpandToFullPath(string path)
         {
@@ -134,26 +131,10 @@ namespace NUnitLite.Runner
         }
 
         /// <summary>Gets the parameters provided on the commandline</summary>
-        public List<string> Parameters { get; private set; }
+        public List<string> InputFiles { get; private set; }
 
-        /// <summary>Indicates whether there was an error in parsing the options.</summary>
-        public bool Error { get; private set; }
-
-        private readonly List<string> _invalidOptions;
-        /// <summary>
-        /// Gets the error message.
-        /// </summary>
-        /// <value>The error message.</value>
-        public string ErrorMessage
-        {
-            get
-            {
-                StringBuilder sb = new StringBuilder();
-                foreach (string opt in _invalidOptions)
-                    sb.Append("Invalid option: " + opt + NL);
-                return sb.ToString();
-            }
-        }
+        /// <summary>Our list of error messages.</summary>
+        public List<string> ErrorMessages { get; private set; }
 
         /// <summary>
         /// Gets the help text.
@@ -299,14 +280,7 @@ namespace NUnitLite.Runner
                     break;
                 case "output":
                 case "out":
-                    try
-                    {
-                        OutFile = ExpandToFullPath(val);
-                    }
-                    catch
-                    {
-                        InvalidOption(option);
-                    }
+                    OutFile = val;
                     break;
                 case "labels":
                     ShowLabels = true;
@@ -328,14 +302,7 @@ namespace NUnitLite.Runner
                     }
                     break;
                 case "trace":
-                    try
-                    {
-                        InternalTraceLevel = (InternalTraceLevel)Enum.Parse(typeof(InternalTraceLevel), val, true);
-                    }
-                    catch
-                    {
-                        InvalidOption(option);
-                    }
+                    InternalTraceLevel = RequiredValue(val, option, "Off", "Error", "Warning", "Info", "Debug", "Verbose");
                     break;
                 default:
                     InvalidOption(option);
@@ -345,13 +312,66 @@ namespace NUnitLite.Runner
 
         private void InvalidOption(string option)
         {
-            Error = true;
-            _invalidOptions.Add(option);
+            ErrorMessages.Add("Invalid option: " + option);
         }
 
         private void ProcessParameter(string param)
         {
-            Parameters.Add(param);
+            InputFiles.Add(param);
+        }
+
+        #endregion
+
+        #region Helper Methods
+
+        private string RequiredValue(string val, string option, params string[] validValues)
+        {
+            if (val == null || val == string.Empty)
+            {
+                ErrorMessages.Add("Missing required value for option '" + option + "'.");
+                return val;
+            }
+
+
+            bool isValid = true;
+
+            if (validValues != null && validValues.Length > 0)
+            {
+                isValid = false;
+
+                foreach (string valid in validValues)
+                    if (StringUtil.Compare(valid, val, true) == 0)
+                        isValid = true;
+
+            }
+
+            if (!isValid)
+            {
+                ErrorMessages.Add(string.Format("The value '{0}' is not valid for option '{1}'.", val, option));
+            }
+
+            return val;
+        }
+
+        private int RequiredInt(string val, string option)
+        {
+            // We have to return something even though the value will 
+            // be ignored if an error is reported. The -1 value seems
+            // like a safe bet in case it isn't ignored due to a bug.
+            int result = -1;
+
+            if (val == null || val == string.Empty)
+                ErrorMessages.Add("Missing required value for option '" + option + "'.");
+            else
+            {
+                int r;
+                if (int.TryParse(val, out r))
+                    result = r;
+                else
+                    ErrorMessages.Add("An int value was exprected for option '{0}' but a value of '{1}' was used");
+            }
+
+            return result;
         }
 
         #endregion

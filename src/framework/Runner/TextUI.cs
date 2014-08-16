@@ -91,16 +91,18 @@ namespace NUnitLite.Runner
             this._commandLineOptions = new CommandLineOptions(args);
 
             if (_commandLineOptions.OutFile != null)
-                this._writer = new StreamWriter(_commandLineOptions.OutFile);
+                this._writer = new StreamWriter(Path.GetFullPath(_commandLineOptions.OutFile));
 
             if (!_commandLineOptions.NoHeader)
                 WriteHeader(this._writer);
 
             if (_commandLineOptions.ShowHelp)
                 _writer.Write(_commandLineOptions.HelpText);
-            else if (_commandLineOptions.Error)
+            else if (_commandLineOptions.ErrorMessages.Count > 0)
             {
-                _writer.WriteLine(_commandLineOptions.ErrorMessage);
+                foreach(string line in _commandLineOptions.ErrorMessages)
+                    _writer.WriteLine(line);
+
                 _writer.WriteLine(_commandLineOptions.HelpText);
             }
             else
@@ -108,7 +110,8 @@ namespace NUnitLite.Runner
                 Assembly callingAssembly = Assembly.GetCallingAssembly();
 
                 // We must call this before creating the runner so that any internal logging is initialized
-                InitializeInternalTrace(callingAssembly.Location, _commandLineOptions.InternalTraceLevel);
+                InternalTraceLevel level = (InternalTraceLevel)Enum.Parse(typeof(InternalTraceLevel), _commandLineOptions.InternalTraceLevel, true);
+                InitializeInternalTrace(callingAssembly.Location, level);
 
                 _runner = new NUnitLiteTestAssemblyRunner(new DefaultTestAssemblyBuilder());
 
@@ -129,7 +132,7 @@ namespace NUnitLite.Runner
 
                 try
                 {
-                    foreach (string name in _commandLineOptions.Parameters)
+                    foreach (string name in _commandLineOptions.InputFiles)
                         _assemblies.Add(Assembly.Load(name));
 
                     if (_assemblies.Count == 0)
