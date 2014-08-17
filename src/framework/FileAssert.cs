@@ -29,9 +29,9 @@ using NUnit.Framework.Constraints;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// Summary description for FileAssert.
+    /// Asserts on Files
     /// </summary>
-    public class FileAssert
+    public static class FileAssert
     {
         #region Equals and ReferenceEquals
 
@@ -58,17 +58,6 @@ namespace NUnit.Framework
         {
             throw new AssertionException("Assert.ReferenceEquals should not be used for Assertions");
         }
-
-        #endregion
-
-        #region Constructor
-
-        /// <summary>
-        /// We don't actually want any instances of this object, but some people
-        /// like to inherit from it to add other static methods. Hence, the
-        /// protected constructor disallows any instances of this object. 
-        /// </summary>
-        protected FileAssert() { }
 
         #endregion
 

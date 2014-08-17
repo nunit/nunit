@@ -82,6 +82,27 @@ namespace NUnit.Framework.Tests.Constraints
         }
 
         [Test]
+        public void FailsWhenIgnoreFilesIsTrueWithFileString()
+        {
+            using (new TestFile(TEST_FILE, RESOURCE_FILE))
+            {
+                var constraint = new FileOrDirectoryExistsConstraint().IgnoreFiles;
+                Assert.That(constraint.ApplyTo(TEST_FILE).Status == ConstraintStatus.Failure);
+            }
+        }
+
+        [Test]
+        public void FailsWhenIgnoreFilesIsTrueWithFileInfo()
+        {
+            using (new TestFile(TEST_FILE, RESOURCE_FILE))
+            {
+                var constraint = new FileOrDirectoryExistsConstraint().IgnoreFiles;
+                var ex = Assert.Throws<ArgumentException>(() => constraint.ApplyTo(new FileInfo(TEST_FILE)));
+                Assert.That(ex.Message, Is.StringStarting("The actual value must be a string or DirectoryInfo"));
+            }
+        }
+
+        [Test]
         public void FailsWhenIgnoreDirectoriesIsTrueWithDirectoryString()
         {
             var constraint = new FileOrDirectoryExistsConstraint().IgnoreDirectories;

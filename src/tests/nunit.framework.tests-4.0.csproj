@@ -66,6 +66,7 @@
     <Compile Include="Assertions\AsyncThrowsTests.cs" />
     <Compile Include="Assertions\CollectionAssertTest.cs" />
     <Compile Include="Assertions\ConditionAssertTests.cs" />
+    <Compile Include="Assertions\DirectoryAssertTests.cs" />
     <Compile Include="Assertions\FileAssertTests.cs" />
     <Compile Include="Assertions\GreaterEqualFixture.cs" />
     <Compile Include="Assertions\GreaterFixture.cs" />

@@ -77,6 +77,7 @@
     <Compile Include="Constraints\Operators\SomeOperator.cs" />
     <Compile Include="Constraints\SubPathConstraint.cs" />
     <Compile Include="Constraints\ThrowsExceptionConstraint.cs" />
+    <Compile Include="DirectoryAssert.cs" />
     <Compile Include="Does.cs" />
     <Compile Include="Interfaces\ICombiningStrategy.cs" />
     <Compile Include="Interfaces\ICommandDecoratorSource.cs" />
