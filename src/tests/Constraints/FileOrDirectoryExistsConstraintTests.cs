@@ -28,9 +28,10 @@ using NUnit.Framework.Constraints;
 
 namespace NUnit.Framework.Tests.Constraints
 {
-    public class ExistsConstraintTests
+    [TestFixture]
+    public class FileOrDirectoryExistsConstraintTests
     {
-        private ExistsConstraint _constraint;
+        private FileOrDirectoryExistsConstraint _constraint;
         private string _goodDir;
         private const string BAD_DIRECTORY = @"Z:\I\hope\this\is\garbage";
         private const string BAD_FILE = "garbage.txt";
@@ -40,7 +41,7 @@ namespace NUnit.Framework.Tests.Constraints
         [SetUp]
         public void SetUp()
         {
-            _constraint = new ExistsConstraint();
+            _constraint = new FileOrDirectoryExistsConstraint();
             _goodDir = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
         }
 
@@ -83,14 +84,14 @@ namespace NUnit.Framework.Tests.Constraints
         [Test]
         public void FailsWhenIgnoreDirectoriesIsTrueWithDirectoryString()
         {
-            var constraint = new ExistsConstraint(true);
+            var constraint = new FileOrDirectoryExistsConstraint().IgnoreDirectories;
             Assert.That(constraint.ApplyTo(_goodDir).Status == ConstraintStatus.Failure);
         }
 
         [Test]
         public void FailsWhenIgnoreDirectoriesIsTrueWithDirectoryInfo()
         {
-            var constraint = new ExistsConstraint(true);
+            var constraint = new FileOrDirectoryExistsConstraint().IgnoreDirectories;
             var ex = Assert.Throws<ArgumentException>(() => constraint.ApplyTo(new DirectoryInfo(_goodDir)));
             Assert.That(ex.Message, Is.StringStarting("The actual value must be a string or FileInfo"));
         }

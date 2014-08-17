@@ -863,7 +863,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public Constraint Exist
         {
-            get { return Append(new ExistsConstraint()); }
+            get { return Append(new FileOrDirectoryExistsConstraint()); }
         }
 #endif
 

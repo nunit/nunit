@@ -147,9 +147,9 @@
     <Compile Include="Constraints\EqualConstraint.cs" />
     <Compile Include="Constraints\EqualityAdapter.cs" />
     <Compile Include="Constraints\ExactTypeConstraint.cs" />
-    <Compile Include="Constraints\ExistsConstraint.cs" />
     <Compile Include="Constraints\FalseConstraint.cs" />
     <Compile Include="Constraints\FileExistsConstraint.cs" />
+    <Compile Include="Constraints\FileOrDirectoryExistsConstraint.cs" />
     <Compile Include="Constraints\FloatingPointNumerics.cs" />
     <Compile Include="Constraints\GreaterThanConstraint.cs" />
     <Compile Include="Constraints\GreaterThanOrEqualConstraint.cs" />

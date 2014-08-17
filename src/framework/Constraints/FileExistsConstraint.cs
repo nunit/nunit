@@ -23,16 +23,22 @@
 
 #if !NUNITLITE
 using System;
-using System.IO;
 
 namespace NUnit.Framework.Constraints
 {
     /// <summary>
     /// FileExistsConstraint is used to determine if a file exists
     /// </summary>
-    [Obsolete("FileExistsConstraint is deprecated, please use ExistsConstraint instead.")]
-    public class FileExistsConstraint : ExistsConstraint
-    {        
+    [Obsolete("FileExistsConstraint is deprecated, please use FileOrDirectoryExistsConstraint instead.")]
+    public class FileExistsConstraint : FileOrDirectoryExistsConstraint
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FileExistsConstraint"/> class.
+        /// </summary>
+        public FileExistsConstraint() : base(true)
+        {
+        }
+
         #region Overrides of Constraint
 
         /// <summary>

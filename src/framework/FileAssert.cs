@@ -351,7 +351,7 @@ namespace NUnit.Framework
         /// <param name="args">Arguments to be used in formatting the message</param>
         static public void Exists(FileInfo actual, string message, params object[] args)
         {
-            Assert.That(actual, new ExistsConstraint(true), message, args);
+            Assert.That(actual, new FileOrDirectoryExistsConstraint().IgnoreDirectories, message, args);
         }
 
         /// <summary>
@@ -387,7 +387,7 @@ namespace NUnit.Framework
         /// <param name="args">Arguments to be used in formatting the message</param>
         static public void Exists(string actual, string message, params object[] args)
         {
-            Assert.That(actual, new ExistsConstraint(true), message, args);
+            Assert.That(actual, new FileOrDirectoryExistsConstraint().IgnoreDirectories, message, args);
         }
 
         /// <summary>
@@ -427,7 +427,7 @@ namespace NUnit.Framework
         /// <param name="args">Arguments to be used in formatting the message</param>
         static public void DoesNotExist(FileInfo actual, string message, params object[] args)
         {
-            Assert.That(actual, new NotConstraint(new ExistsConstraint(true)), message, args);
+            Assert.That(actual, new NotConstraint(new FileOrDirectoryExistsConstraint().IgnoreDirectories), message, args);
         }
 
         /// <summary>
@@ -463,7 +463,7 @@ namespace NUnit.Framework
         /// <param name="args">Arguments to be used in formatting the message</param>
         static public void DoesNotExist(string actual, string message, params object[] args)
         {
-            Assert.That(actual, new NotConstraint(new ExistsConstraint(true)), message, args);
+            Assert.That(actual, new NotConstraint(new FileOrDirectoryExistsConstraint().IgnoreDirectories), message, args);
         }
 
         /// <summary>

@@ -69,8 +69,8 @@
     <Compile Include="Attributes\TestCaseBuilderAttribute.cs" />
     <Compile Include="Compatibility\Stopwatch.cs" />
     <Compile Include="Constraints\EqualConstraintResult.cs" />
-    <Compile Include="Constraints\ExistsConstraint.cs" />
     <Compile Include="Constraints\FileExistsConstraint.cs" />
+    <Compile Include="Constraints\FileOrDirectoryExistsConstraint.cs" />
     <Compile Include="Constraints\IConstraint.cs" />
     <Compile Include="Constraints\Operators\AllOperator.cs" />
     <Compile Include="Constraints\Operators\NoneOperator.cs" />
