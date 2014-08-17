@@ -21,6 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
 #if !NUNITLITE
 using NUnit.Framework.Constraints;
 
@@ -51,9 +52,9 @@ namespace NUnit.Framework
         /// Returns a constraint that succeeds if the value
         /// is a file or directory and it exists.
         /// </summary>
-        public static ExistsConstraint Exist
+        public static FileOrDirectoryExistsConstraint Exist
         {
-            get { return new ExistsConstraint(); }
+            get { return new FileOrDirectoryExistsConstraint(); }
         }
 
         #endregion

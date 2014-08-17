@@ -28,29 +28,38 @@ using System.IO;
 namespace NUnit.Framework.Constraints
 {
     /// <summary>
-    /// ExistsConstraint is used to determine if a file or directory exists
+    /// FileOrDirectoryExistsConstraint is used to determine if a file or directory exists
     /// </summary>
-    public class ExistsConstraint : Constraint
+    public class FileOrDirectoryExistsConstraint : Constraint
     {
+        private bool _ignoreDirectories;
+
         /// <summary>
         /// If true, the constraint will only check if files exist, not directories
         /// </summary>
-        public bool IgnoreDirectories { get; private set; }
+        public FileOrDirectoryExistsConstraint IgnoreDirectories
+        {
+            get
+            {
+                _ignoreDirectories = true;
+                return this;
+            }
+        }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ExistsConstraint"/> class that
+        /// Initializes a new instance of the <see cref="FileOrDirectoryExistsConstraint"/> class that
         /// will check files and directories.
         /// </summary>
-        public ExistsConstraint(){}
+        public FileOrDirectoryExistsConstraint(){}
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ExistsConstraint"/> class that
+        /// Initializes a new instance of the <see cref="FileOrDirectoryExistsConstraint"/> class that
         /// will only check files if ignoreDirectories is true.
         /// </summary>
         /// <param name="ignoreDirectories">if set to <c>true</c> [ignore directories].</param>
-        public ExistsConstraint(bool ignoreDirectories)
+        public FileOrDirectoryExistsConstraint(bool ignoreDirectories)
         {
-            IgnoreDirectories = ignoreDirectories;
+            _ignoreDirectories = ignoreDirectories;
         }
 
         #region Overrides of Constraint
@@ -61,7 +70,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public override string Description
         {
-            get { return IgnoreDirectories ? "file exists" : "file or directory exists"; }
+            get { return _ignoreDirectories ? "file exists" : "file or directory exists"; }
         }
 
         /// <summary>
@@ -86,7 +95,7 @@ namespace NUnit.Framework.Constraints
             }
 
             var directoryInfo = actual as DirectoryInfo;
-            if (!IgnoreDirectories && directoryInfo != null)
+            if (!_ignoreDirectories && directoryInfo != null)
             {
                 return new ConstraintResult(this, actual, directoryInfo.Exists);
             }
@@ -100,7 +109,7 @@ namespace NUnit.Framework.Constraints
                 throw new ArgumentException("The actual value cannot be an empty string", "actual");
 
             var fileInfo = new FileInfo(str);
-            if (IgnoreDirectories)
+            if (_ignoreDirectories)
             {
                 return new ConstraintResult(this, actual, fileInfo.Exists);
             }
@@ -110,10 +119,11 @@ namespace NUnit.Framework.Constraints
 
         private string ErrorSubstring
         {
-            get { return IgnoreDirectories ? " or FileInfo" : ", FileInfo or DirectoryInfo"; }
+            get { return _ignoreDirectories ? " or FileInfo" : ", FileInfo or DirectoryInfo"; }
         }
 
         #endregion
+         
     }
 }
 #endif
