@@ -47,8 +47,10 @@ namespace NUnitLite.Runner
             Tests = new List<string>();
             InputFiles = new List<string>();
             ErrorMessages = new List<string>();
+
             InternalTraceLevel = "Off";
             DisplayTestLabels = "Off";
+            DefaultTimeout = -1;
 
             this.Parse(args);
         }
@@ -92,6 +94,9 @@ namespace NUnitLite.Runner
 
         /// <summary>Gets a list of all tests specified on the command line.</summary>
         public List<string> Tests { get; private set; }
+
+        /// <summary>The default timeout value to be used for test cases.</summary>
+        public int DefaultTimeout { get; private set; }
 
         /// <summary>Indicates whether we should display TeamCity service messages.</summary>
         public bool DisplayTeamCityServiceMessages { get; private set; }
@@ -311,14 +316,10 @@ namespace NUnitLite.Runner
                     Exclude = val;
                     break;
                 case "seed":
-                    try
-                    {
-                        _randomSeed = int.Parse(val);
-                    }
-                    catch
-                    {
-                        InvalidOption(option);
-                    }
+                    _randomSeed = RequiredInt(val, option);
+                    break;
+                case "timeout":
+                    DefaultTimeout = RequiredInt(val, option);
                     break;
                 case "trace":
                     InternalTraceLevel = RequiredValue(val, option, "Off", "Error", "Warning", "Info", "Debug", "Verbose");

@@ -138,13 +138,7 @@ namespace NUnitLite.Runner
                 if (_commandLineOptions.Wait && _commandLineOptions.OutFile != null)
                     _outWriter.WriteLine("Ignoring /wait option - only valid for Console");
 
-                // Transfer command line options to runner settings
-                var runnerSettings = new Dictionary<string, object>();
-                if (_commandLineOptions.InitialSeed >= 0)
-                    runnerSettings[DriverSettings.RandomSeed] = _commandLineOptions.InitialSeed;
-
-                if (_commandLineOptions.WorkDirectory != null)
-                    runnerSettings[DriverSettings.WorkDirectory] = _commandLineOptions.WorkDirectory;
+                var runSettings = MakeRunSettings(_commandLineOptions);
                 
                 TestFilter filter = _commandLineOptions.Tests.Count > 0
                     ? new SimpleNameFilter(_commandLineOptions.Tests)
@@ -163,7 +157,7 @@ namespace NUnitLite.Runner
 
                     //Randomizer.InitialSeed = _commandLineOptions.InitialSeed;
 
-                    if (_runner.Load(assembly, runnerSettings) == null)
+                    if (_runner.Load(assembly, runSettings) == null)
                     {
                         var assemblyName = AssemblyHelper.GetAssemblyName(assembly);
                         Console.WriteLine("No tests found in assembly {0}", assemblyName.Name);
@@ -343,6 +337,23 @@ namespace NUnitLite.Runner
             writer.WriteLine();
         }
 
+        // Public for testing
+        public static Dictionary<string, object> MakeRunSettings(CommandLineOptions options)
+        {
+            // Transfer command line options to run settings
+            var runSettings = new Dictionary<string, object>();
+
+            if (options.InitialSeed >= 0)
+                runSettings[DriverSettings.RandomSeed] = options.InitialSeed;
+
+            if (options.WorkDirectory != null)
+                runSettings[DriverSettings.WorkDirectory] = Path.GetFullPath(options.WorkDirectory);
+
+            if (options.DefaultTimeout >= 0)
+                runSettings[DriverSettings.DefaultTimeout] = options.DefaultTimeout;
+
+            return runSettings;
+        }
 
         #endregion
 

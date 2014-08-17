@@ -18,6 +18,7 @@ namespace NUnitLite.Runner.Tests
     {
         [TestCase("DisplayTestLabels", "Off")]
         [TestCase("InternalTraceLevel", "Off")]
+        [TestCase("DefaultTimeout", -1)]
         public void TestDefaultSetting<T>(string propertyName, T defaultValue)
         {
             var options = new CommandLineOptions();
@@ -64,9 +65,6 @@ namespace NUnitLite.Runner.Tests
         //[TestCase("V3ResultFile", "xml3", new string[] { "v3.xml" }, new string[0])]
         public void CanRecognizeStringOptions(string propertyName, string pattern, string[] goodValues, string[] badValues)
         {
-            Console.WriteLine("Out: Testing {0}", propertyName);
-            Console.Error.WriteLine("Err: Testing {0}", propertyName);
-
             string[] prototypes = pattern.Split('|');
 
             PropertyInfo property = GetPropertyInfo(propertyName);
@@ -90,6 +88,23 @@ namespace NUnitLite.Runner.Tests
                     Assert.That(options.ErrorMessages, Is.EqualTo(new string[] { 
                         string.Format("The value '{0}' is not valid for option '{1}'.", value, optionPlusValue) } ));
                 }
+            }
+        }
+
+        [TestCase("DefaultTimeout", "timeout", typeof(int))]
+        [TestCase("InitialSeed", "seed", typeof(int))]
+        //[TestCase("NumWorkers", "workers", typeof(int?))]
+        public void CanRecognizeIntOptions(string propertyName, string pattern, Type realType)
+        {
+            string[] prototypes = pattern.Split('|');
+
+            PropertyInfo property = GetPropertyInfo(propertyName);
+            Assert.AreEqual(realType, property.PropertyType);
+
+            foreach (string option in prototypes)
+            {
+                CommandLineOptions options = new CommandLineOptions("--" + option + ":42");
+                Assert.AreEqual(42, (int)property.GetValue(options, null), "Didn't recognize --" + option + ":42");
             }
         }
 
@@ -177,14 +192,6 @@ namespace NUnitLite.Runner.Tests
             var options = new CommandLineOptions("-format");
             Assert.That(options.ErrorMessages, Is.EqualTo(
                 new string[] { "Invalid option: -format" } ));
-        }
-
-        [Test]
-        public void TestSeedOption()
-        {
-            var options = new CommandLineOptions("-seed=123456789");
-            Assert.That(options.ErrorMessages, Is.Empty);
-            Assert.That(options.InitialSeed, Is.EqualTo(123456789));
         }
 
         [Test]
