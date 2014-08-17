@@ -56,7 +56,8 @@ namespace NUnitLite.Runner
         private const string LOG_FILE_FORMAT = "InternalTrace.{0}.{1}.log";
         private CommandLineOptions _commandLineOptions;
         private readonly List<Assembly> _assemblies = new List<Assembly>();
-        private TextWriter _writer;
+        private TextWriter _outWriter;
+        private TextWriter _errWriter;
         private ITestAssemblyRunner _runner;
 
         #region Constructors
@@ -73,7 +74,7 @@ namespace NUnitLite.Runner
         public TextUI(TextWriter writer)
         {
             // Set the default writer - may be overridden by the args specified
-            _writer = writer;
+            _outWriter = writer;
         }
         #endregion
 
@@ -90,20 +91,37 @@ namespace NUnitLite.Runner
 
             this._commandLineOptions = new CommandLineOptions(args);
 
+            string workDirectory = _commandLineOptions.WorkDirectory;
+            if (workDirectory == null)
+                workDirectory = Environment.CurrentDirectory;
+            else if (!Directory.Exists(workDirectory))
+                Directory.CreateDirectory(workDirectory);
+
+#if !SILVERLIGHT
             if (_commandLineOptions.OutFile != null)
-                this._writer = new StreamWriter(Path.GetFullPath(_commandLineOptions.OutFile));
+            {
+                _outWriter = new StreamWriter(Path.Combine(workDirectory, _commandLineOptions.OutFile));
+                Console.SetOut(_outWriter);
+            }
+
+            if (_commandLineOptions.ErrFile != null)
+            {
+                _errWriter = new StreamWriter(Path.Combine(workDirectory, _commandLineOptions.ErrFile));
+                Console.SetError(_errWriter);
+            }
+#endif
 
             if (!_commandLineOptions.NoHeader)
-                WriteHeader(this._writer);
+                WriteHeader(_outWriter);
 
             if (_commandLineOptions.ShowHelp)
-                _writer.Write(_commandLineOptions.HelpText);
+                _outWriter.Write(_commandLineOptions.HelpText);
             else if (_commandLineOptions.ErrorMessages.Count > 0)
             {
                 foreach(string line in _commandLineOptions.ErrorMessages)
-                    _writer.WriteLine(line);
+                    _outWriter.WriteLine(line);
 
-                _writer.WriteLine(_commandLineOptions.HelpText);
+                _outWriter.WriteLine(_commandLineOptions.HelpText);
             }
             else
             {
@@ -115,16 +133,18 @@ namespace NUnitLite.Runner
 
                 _runner = new NUnitLiteTestAssemblyRunner(new DefaultTestAssemblyBuilder());
 
-                WriteRuntimeEnvironment(this._writer);
+                WriteRuntimeEnvironment(_outWriter);
 
                 if (_commandLineOptions.Wait && _commandLineOptions.OutFile != null)
-                    _writer.WriteLine("Ignoring /wait option - only valid for Console");
+                    _outWriter.WriteLine("Ignoring /wait option - only valid for Console");
 
-                // We only have one commandline option that has to be passed
-                // to the runner, so we do it here for convenience.
+                // Transfer command line options to runner settings
                 var runnerSettings = new Dictionary<string, object>();
                 if (_commandLineOptions.InitialSeed >= 0)
                     runnerSettings[DriverSettings.RandomSeed] = _commandLineOptions.InitialSeed;
+
+                if (_commandLineOptions.WorkDirectory != null)
+                    runnerSettings[DriverSettings.WorkDirectory] = _commandLineOptions.WorkDirectory;
                 
                 TestFilter filter = _commandLineOptions.Tests.Count > 0
                     ? new SimpleNameFilter(_commandLineOptions.Tests)
@@ -181,11 +201,11 @@ namespace NUnitLite.Runner
                 }
                 catch (FileNotFoundException ex)
                 {
-                    _writer.WriteLine(ex.Message);
+                    _outWriter.WriteLine(ex.Message);
                 }
                 catch (Exception ex)
                 {
-                    _writer.WriteLine(ex.ToString());
+                    _outWriter.WriteLine(ex.ToString());
                 }
                 finally
                 {
@@ -199,8 +219,11 @@ namespace NUnitLite.Runner
                     }
                     else
                     {
-                        _writer.Close();
+                        _outWriter.Close();
                     }
+
+                    if (_commandLineOptions.ErrFile != null)
+                        _errWriter.Close();
                 }
             }
         }
@@ -212,7 +235,7 @@ namespace NUnitLite.Runner
         private void RunTests(ITestFilter filter)
         {
             ITestResult result = _runner.Run(this, filter);
-            new ResultReporter(result, _writer).ReportResults();
+            new ResultReporter(result, _outWriter).ReportResults();
 
             string resultFile = _commandLineOptions.ResultFile;
             string resultFormat = _commandLineOptions.ResultFormat;
@@ -331,8 +354,10 @@ namespace NUnitLite.Runner
         /// <param name="test">The test that is starting</param>
         public void TestStarted(ITest test)
         {
-            if (_commandLineOptions.ShowLabels)
-                _writer.WriteLine("***** {0}", test.Name);
+            // Display All labels for both "On" and "All" since nunitlite does
+            // not currently intercept text output.
+            if (_commandLineOptions.DisplayTestLabels == "On" || _commandLineOptions.DisplayTestLabels == "All")
+                _outWriter.WriteLine("***** " + test.Name);
         }
 
         /// <summary>

@@ -48,6 +48,7 @@ namespace NUnitLite.Runner
             InputFiles = new List<string>();
             ErrorMessages = new List<string>();
             InternalTraceLevel = "Off";
+            DisplayTestLabels = "Off";
 
             this.Parse(args);
         }
@@ -66,7 +67,7 @@ namespace NUnitLite.Runner
         public bool ShowHelp { get; private set; }
 
         /// <summary>Indicates whether each test should be labeled in the output.</summary>
-        public bool ShowLabels { get; private set; }
+        public string DisplayTestLabels { get; private set; }
 
         /// <summary>Indicates whether tests should be listed rather than run.</summary>
         public bool Explore { get; private set; }
@@ -80,8 +81,14 @@ namespace NUnitLite.Runner
         /// <summary>Gets the format to be used for test results.</summary>
         public string ResultFormat { get; private set; }
 
-        /// <summary>Gets the full path of the file to be used for output.</summary>
+        /// <summary>Gets the full path of the file to be used for standard output.</summary>
         public string OutFile { get; private set; }
+
+        /// <summary>Gets the full path of the file to be used for error output.</summary>
+        public string ErrFile { get; private set; }
+
+        /// <summary>Gets the full path of the directory used for output files./// </summary>
+        public string WorkDirectory { get; private set; }
 
         /// <summary>Gets a list of all tests specified on the command line.</summary>
         public List<string> Tests { get; private set; }
@@ -161,8 +168,12 @@ namespace NUnitLite.Runner
                 sb.Append("Options:" + NL);
                 sb.Append("  -test:testname  The name of a test to run or explore. This option may be repeated." + NL);
                 sb.Append("                  If no test names are given, all tests are run." + NL + NL);
-                sb.Append("  -output:FILE    File to which standard output is redirected. If this option" + NL);
+                sb.Append("  -work:PATH      PATH of the directory to use for output files." + NL + NL);
+                sb.Append("  -output:FILE,   File to which standard output is redirected. If this option" + NL);
                 sb.Append("  -out:FILE       is not used, output is to the Console, which means it is" + NL);
+                sb.Append("                  lost on devices without a Console." + NL + NL);
+                sb.Append("  -err:FILE       File to which error output is redirected. If this option" + NL);
+                sb.Append("                  is not used, output is to the Console, which means it is" + NL);
                 sb.Append("                  lost on devices without a Console." + NL + NL);
                 sb.Append("  -full           Prints full report of all test results." + NL + NL);
                 sb.Append("  -result:FILE    File to which the xml test result is written." + NL + NL);
@@ -173,9 +184,10 @@ namespace NUnitLite.Runner
                 sb.Append("                  to the specified file in XML format." + NL);
                 sb.Append("  -help,-h        Displays this help" + NL + NL);
                 sb.Append("  -noheader,-noh  Suppresses display of the initial message" + NL + NL);
-                sb.Append("  -trace:level    Set internal trace {LEVEL}." + NL);
+                sb.Append("  -trace:LEVEL    Set internal trace {LEVEL}." + NL);
                 sb.Append("                  Values: Off, Error, Warning, Info, Verbose" + NL + NL);
-                sb.Append("  -labels         Displays the name of each test when it starts" + NL + NL);
+                sb.Append("  -labels:VAL,    Specify whether to write test case names to the output." + NL);
+                sb.Append("  -l:VAL          Values: Off, On, All" + NL + NL);
                 sb.Append("  -seed:SEED      Specify the random seed used in generating test cases." + NL + NL);
                 sb.Append("  -include:CAT    List of categories to include" + NL + NL);
                 sb.Append("  -exclude:CAT    List of categories to exclude" + NL + NL);
@@ -278,12 +290,19 @@ namespace NUnitLite.Runner
                     if (ResultFormat != "nunit3" && ResultFormat != "nunit2")
                         InvalidOption(option);
                     break;
+                case "work":
+                    WorkDirectory = RequiredValue(val, option);
+                    break;
                 case "output":
                 case "out":
-                    OutFile = val;
+                    OutFile = RequiredValue(val, option);
+                    break;
+                case "err":
+                    ErrFile = RequiredValue(val, option);
                     break;
                 case "labels":
-                    ShowLabels = true;
+                case "l":
+                    DisplayTestLabels = RequiredValue(val, option, "Off", "On", "All");
                     break;
                 case "include":
                     Include = val;

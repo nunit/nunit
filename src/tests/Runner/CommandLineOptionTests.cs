@@ -16,11 +16,19 @@ namespace NUnitLite.Runner.Tests
     [TestFixture]
     class CommandLineOptionTests
     {
+        [TestCase("DisplayTestLabels", "Off")]
+        [TestCase("InternalTraceLevel", "Off")]
+        public void TestDefaultSetting<T>(string propertyName, T defaultValue)
+        {
+            var options = new CommandLineOptions();
+            Assert.That(options.ErrorMessages, Is.Empty);
+            CheckProperty(options, propertyName, defaultValue);
+        }
+
         [TestCase("ShowHelp", "help|h")]
         [TestCase("Wait", "wait")]
         [TestCase("NoHeader", "noheader|noh")]
         [TestCase("Full", "full")]
-        [TestCase("ShowLabels", "labels")]
         //[TestCase("DisplayTeamCityServiceMessages", "teamcity")]
         public void CanRecognizeBooleanOptions(string propertyName, string pattern)
         {
@@ -48,14 +56,17 @@ namespace NUnitLite.Runner.Tests
         [TestCase("Include", "include", new string[] { "Short,Fast" }, new string[0])]
         [TestCase("Exclude", "exclude", new string[] { "Long" }, new string[0])]
         [TestCase("OutFile", "output|out", new string[] { "output.txt" }, new string[0])]
-        //[TestCase("ErrFile", "err", new string[] { "error.txt" }, new string[0])]
-        //[TestCase("WorkDirectory", "work", new string[] { "results" }, new string[0])]
-        //[TestCase("DisplayTestLabels", "labels|l", new string[] { "Off", "On", "All" }, new string[] { "JUNK" })]
+        [TestCase("ErrFile", "err", new string[] { "error.txt" }, new string[0])]
+        [TestCase("WorkDirectory", "work", new string[] { "results" }, new string[0])]
+        [TestCase("DisplayTestLabels", "labels|l", new string[] { "Off", "On", "All" }, new string[] { "JUNK" })]
         [TestCase("InternalTraceLevel", "trace", new string[] { "Off", "Error", "Warning", "Info", "Debug", "Verbose" }, new string[] { "JUNK" })]
         //[TestCase("V2ResultFile", "xml2", new string[] { "v2.xml" }, new string[0])]
         //[TestCase("V3ResultFile", "xml3", new string[] { "v3.xml" }, new string[0])]
         public void CanRecognizeStringOptions(string propertyName, string pattern, string[] goodValues, string[] badValues)
         {
+            Console.WriteLine("Out: Testing {0}", propertyName);
+            Console.Error.WriteLine("Err: Testing {0}", propertyName);
+
             string[] prototypes = pattern.Split('|');
 
             PropertyInfo property = GetPropertyInfo(propertyName);
@@ -69,6 +80,7 @@ namespace NUnitLite.Runner.Tests
                     CommandLineOptions options = new CommandLineOptions(optionPlusValue, "dummy.dll");
                     Assert.That(options.ErrorMessages, Is.Empty, "Should be valid: " + optionPlusValue);
                     Assert.AreEqual(value, (string)property.GetValue(options, null), "Didn't recognize " + optionPlusValue);
+                    CheckProperty(options, propertyName, value);
                 }
 
                 foreach (string value in badValues)
@@ -230,14 +242,6 @@ namespace NUnitLite.Runner.Tests
                 new string[] { "Class1", "Class2", "Class3" } ));
         }
 
-        [Test]
-        public void TestDefaultInternalTraceLevel()
-        {
-            var options = new CommandLineOptions();
-            Assert.That(options.ErrorMessages, Is.Empty);
-            Assert.That(options.InternalTraceLevel, Is.EqualTo("Off"));
-        }
-
         #region Helper Methods
 
         private static PropertyInfo GetPropertyInfo(string propertyName)
@@ -245,6 +249,13 @@ namespace NUnitLite.Runner.Tests
             PropertyInfo property = typeof(CommandLineOptions).GetProperty(propertyName);
             Assert.IsNotNull(property, "The property '{0}' is not defined", propertyName);
             return property;
+        }
+
+        private static void CheckProperty<T>(CommandLineOptions options, string propertyName, T expectedValue)
+        {
+            var property = GetPropertyInfo(propertyName);
+            Assert.That(property.PropertyType, Is.EqualTo(typeof(T)));
+            Assert.That(property.GetValue(options, null), Is.EqualTo(expectedValue));
         }
 
         #endregion
