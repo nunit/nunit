@@ -163,7 +163,6 @@
     <Compile Include="Internal\CultureSettingAndDetectionTests.cs" />
     <Compile Include="Internal\DeduceTypeArgsFromArgs.cs" />
     <Compile Include="Internal\EventQueueTests.cs" />
-    <Compile Include="Internal\Fakes.cs" />
     <Compile Include="Internal\GenericTestFixtureTests.cs" />
     <Compile Include="Internal\GenericTestMethodTests.cs" />
     <Compile Include="Internal\LegacySuiteTests.cs" />
@@ -213,6 +212,7 @@
     <Compile Include="TestUtilities\Comparers\GenericEqualityComparer.cs" />
     <Compile Include="TestUtilities\Comparers\ObjectComparer.cs" />
     <Compile Include="TestUtilities\Comparers\ObjectEqualityComparer.cs" />
+    <Compile Include="TestUtilities\Fakes.cs" />
     <Compile Include="TestUtilities\ResultSummary.cs" />
     <Compile Include="TestUtilities\TestAssert.cs" />
     <Compile Include="TestUtilities\TestBuilder.cs" />

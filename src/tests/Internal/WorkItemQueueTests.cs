@@ -23,6 +23,7 @@
 
 #if !NUNITLITE
 using System.Threading;
+using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Internal.Execution
 {

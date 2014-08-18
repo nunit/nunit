@@ -30,7 +30,7 @@ namespace NUnitLite.Runner.Tests
         [TestCase("Wait", "wait")]
         [TestCase("NoHeader", "noheader|noh")]
         [TestCase("Full", "full")]
-        //[TestCase("DisplayTeamCityServiceMessages", "teamcity")]
+        [TestCase("DisplayTeamCityServiceMessages", "teamcity")]
         public void CanRecognizeBooleanOptions(string propertyName, string pattern)
         {
             string[] prototypes = pattern.Split('|');

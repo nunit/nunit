@@ -193,7 +193,9 @@ namespace NUnitLite.Runner
                 sb.Append("                  Values: Off, Error, Warning, Info, Verbose" + NL + NL);
                 sb.Append("  -labels:VAL,    Specify whether to write test case names to the output." + NL);
                 sb.Append("  -l:VAL          Values: Off, On, All" + NL + NL);
+                sb.Append("  -teamcity       Running under TeamCity: display service messages as tests are executed" + NL + NL);
                 sb.Append("  -seed:SEED      Specify the random seed used in generating test cases." + NL + NL);
+                sb.Append("  -timeout:VAL     Set timeout for each test case in milliseconds." + NL + NL);
                 sb.Append("  -include:CAT    List of categories to include" + NL + NL);
                 sb.Append("  -exclude:CAT    List of categories to exclude" + NL + NL);
                 sb.Append("  -wait           Waits for a key press before exiting" + NL + NL);
@@ -264,6 +266,9 @@ namespace NUnitLite.Runner
                     break;
                 case "full":
                     Full = true;
+                    break;
+                case "teamcity":
+                    DisplayTeamCityServiceMessages = true;
                     break;
                 case "explore":
                     Explore = true;

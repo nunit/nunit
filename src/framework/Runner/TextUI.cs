@@ -59,6 +59,9 @@ namespace NUnitLite.Runner
         private TextWriter _outWriter;
         private TextWriter _errWriter;
         private ITestAssemblyRunner _runner;
+#if !SILVERLIGHT
+        private TeamCityEventListener _teamCity;
+#endif
 
         #region Constructors
 
@@ -89,7 +92,7 @@ namespace NUnitLite.Runner
             // NOTE: Execute must be directly called from the
             // test assembly in order for the mechanism to work.
 
-            this._commandLineOptions = new CommandLineOptions(args);
+            _commandLineOptions = new CommandLineOptions(args);
 
             string workDirectory = _commandLineOptions.WorkDirectory;
             if (workDirectory == null)
@@ -98,6 +101,9 @@ namespace NUnitLite.Runner
                 Directory.CreateDirectory(workDirectory);
 
 #if !SILVERLIGHT
+            if (_commandLineOptions.DisplayTeamCityServiceMessages)
+                _teamCity = new TeamCityEventListener();
+
             if (_commandLineOptions.OutFile != null)
             {
                 _outWriter = new StreamWriter(Path.Combine(workDirectory, _commandLineOptions.OutFile));
@@ -369,6 +375,11 @@ namespace NUnitLite.Runner
             // not currently intercept text output.
             if (_commandLineOptions.DisplayTestLabels == "On" || _commandLineOptions.DisplayTestLabels == "All")
                 _outWriter.WriteLine("***** " + test.Name);
+
+#if !SILVERLIGHT
+            if (_teamCity != null)
+                _teamCity.TestStarted(test);
+#endif
         }
 
         /// <summary>
@@ -377,6 +388,10 @@ namespace NUnitLite.Runner
         /// <param name="result">The result of the test</param>
         public void TestFinished(ITestResult result)
         {
+#if !SILVERLIGHT
+            if (_teamCity != null)
+                _teamCity.TestFinished(result);
+#endif
         }
 
         /// <summary>
@@ -385,6 +400,10 @@ namespace NUnitLite.Runner
         /// <param name="testOutput">A console message</param>
         public void TestOutput(TestOutput testOutput)
         {
+#if !SILVERLIGHT
+            if (_teamCity != null)
+                _teamCity.TestOutput(testOutput);
+#endif
         }
 
         #endregion
