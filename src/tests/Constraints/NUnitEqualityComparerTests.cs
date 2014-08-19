@@ -95,7 +95,7 @@ namespace NUnit.Framework.Constraints
         public void DifferentDirectoriesAreNotEqual()
         {
             var one = new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData));
-            var two = new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles));
+            var two = new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.Personal));
             Assert.That(comparer.AreEqual(one, two, ref tolerance), Is.False);
         }
 

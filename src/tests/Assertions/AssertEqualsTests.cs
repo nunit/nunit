@@ -391,7 +391,7 @@ namespace NUnit.Framework.Assertions
         public void DirectoryInfoNotEqual()
         {
             var one = new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData));
-            var two = new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles));
+            var two = new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.Personal));
             
             var expectedMessage = System.String.Format(
                 "  Expected: <{0}>{1}  But was:  <{2}>{1}", one.FullName, Env.NewLine, two.FullName );

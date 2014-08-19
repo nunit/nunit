@@ -42,7 +42,7 @@ namespace NUnit.Framework.Assertions
         [SetUp]
         public void SetUp()
         {
-            _goodDir = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
+            _goodDir = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
             _appDataDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
         }
 

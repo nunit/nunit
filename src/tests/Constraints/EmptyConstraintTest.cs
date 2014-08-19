@@ -141,7 +141,7 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void NotEmptyDirectory()
         {
-            var testPath = new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles));
+            var testPath = new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.Personal));
             Assume.That(testPath, Does.Exist);
             Assert.That(testPath, Is.Not.Empty);
         }

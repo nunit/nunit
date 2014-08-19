@@ -42,7 +42,7 @@ namespace NUnit.Framework.Tests.Constraints
         public void SetUp()
         {
             _constraint = new FileOrDirectoryExistsConstraint();
-            _goodDir = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
+            _goodDir = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
         }
 
         [Test]
