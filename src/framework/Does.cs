@@ -21,33 +21,40 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NUNITLITE
 using System;
+#if !NUNITLITE
+using NUnit.Framework.Constraints;
 
-namespace NUnit.Framework.Constraints
+namespace NUnit.Framework
 {
     /// <summary>
-    /// FileExistsConstraint is used to determine if a file exists
+    /// Helper class with properties and methods that supply
+    /// a number of constraints used in Asserts.
     /// </summary>
-    [Obsolete("FileExistsConstraint is deprecated, please use FileOrDirectoryExistsConstraint instead.")]
-    public class FileExistsConstraint : FileOrDirectoryExistsConstraint
+    public class Does
     {
+        #region Not
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="FileExistsConstraint"/> class.
+        /// Returns a ConstraintExpression that negates any
+        /// following constraint.
         /// </summary>
-        public FileExistsConstraint() : base(true)
+        public static ConstraintExpression Not
         {
+            get { return new ConstraintExpression().Not; }
         }
 
-        #region Overrides of Constraint
+        #endregion
+
+        #region Exist
 
         /// <summary>
-        /// The Description of what this constraint tests, for
-        /// use in messages and in the ConstraintResult.
+        /// Returns a constraint that succeeds if the value
+        /// is a file or directory and it exists.
         /// </summary>
-        public override string Description
+        public static FileOrDirectoryExistsConstraint Exist
         {
-            get { return "file exists"; }
+            get { return new FileOrDirectoryExistsConstraint(); }
         }
 
         #endregion

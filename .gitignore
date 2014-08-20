@@ -16,3 +16,4 @@ build
 obj
 package
 deploy
+test-results

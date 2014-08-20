@@ -152,6 +152,7 @@
     <Compile Include="Constraints\ExactTypeConstraint.cs" />
     <Compile Include="Constraints\FalseConstraint.cs" />
     <Compile Include="Constraints\FileExistsConstraint.cs" />
+    <Compile Include="Constraints\FileOrDirectoryExistsConstraint.cs" />
     <Compile Include="Constraints\FloatingPointNumerics.cs" />
     <Compile Include="Constraints\GreaterThanConstraint.cs" />
     <Compile Include="Constraints\GreaterThanOrEqualConstraint.cs" />
@@ -214,6 +215,8 @@
     <Compile Include="Constraints\UniqueItemsConstraint.cs" />
     <Compile Include="Constraints\XmlSerializableConstraint.cs" />
     <Compile Include="Contains.cs" />
+    <Compile Include="DirectoryAssert.cs" />
+    <Compile Include="Does.cs" />
     <Compile Include="Env.cs" />
     <Compile Include="Exceptions\AssertionException.cs" />
     <Compile Include="Exceptions\IgnoreException.cs" />

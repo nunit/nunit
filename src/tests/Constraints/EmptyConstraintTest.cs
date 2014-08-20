@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections;
+using System.IO;
 
 namespace NUnit.Framework.Constraints
 {
@@ -106,4 +107,44 @@ namespace NUnit.Framework.Constraints
             new TestCaseData( "Hello", "\"Hello\"" )
         };
     }
+    
+#if !NUNITLITE
+    [TestFixture]
+    public class EmptyDirectoryConstraintTest
+    {
+        [Test]
+        public void EmptyDirectory()
+        {
+            DirectoryInfo testPath = null;
+            try
+            {
+                var tempPath = Path.GetTempPath();
+                Assume.That(tempPath, Does.Exist);
+
+                testPath = new DirectoryInfo(Path.Combine(tempPath, Guid.NewGuid().ToString()));
+                Assume.That(testPath, Does.Not.Exist);
+
+                testPath.Create();
+                Assume.That(testPath, Does.Exist);
+
+                Assert.That(testPath, Is.Empty);
+            }
+            finally
+            {
+                if (testPath != null)
+                {
+                    testPath.Delete();
+                }
+            }
+        }
+
+        [Test]
+        public void NotEmptyDirectory()
+        {
+            var testPath = new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.Personal));
+            Assume.That(testPath, Does.Exist);
+            Assert.That(testPath, Is.Not.Empty);
+        }
+    }
+#endif
 }

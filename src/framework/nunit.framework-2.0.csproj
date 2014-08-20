@@ -70,12 +70,15 @@
     <Compile Include="Compatibility\Stopwatch.cs" />
     <Compile Include="Constraints\EqualConstraintResult.cs" />
     <Compile Include="Constraints\FileExistsConstraint.cs" />
+    <Compile Include="Constraints\FileOrDirectoryExistsConstraint.cs" />
     <Compile Include="Constraints\IConstraint.cs" />
     <Compile Include="Constraints\Operators\AllOperator.cs" />
     <Compile Include="Constraints\Operators\NoneOperator.cs" />
     <Compile Include="Constraints\Operators\SomeOperator.cs" />
     <Compile Include="Constraints\SubPathConstraint.cs" />
     <Compile Include="Constraints\ThrowsExceptionConstraint.cs" />
+    <Compile Include="DirectoryAssert.cs" />
+    <Compile Include="Does.cs" />
     <Compile Include="Interfaces\ICombiningStrategy.cs" />
     <Compile Include="Interfaces\ICommandDecoratorSource.cs" />
     <Compile Include="Interfaces\ISimpleTestBuilder.cs" />
