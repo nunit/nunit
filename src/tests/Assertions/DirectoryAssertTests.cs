@@ -51,12 +51,6 @@ namespace NUnit.Framework.Assertions
         #region Success Tests
 
         [Test]
-        public void AreEqualPassesWithDirectories()
-        {
-            DirectoryAssert.AreEqual(_goodDir, _goodDir, "Failed using directory names");
-        }
-
-        [Test]
         public void AreEqualPassesWithDirectoryInfos()
         {
             DirectoryInfo expected = new DirectoryInfo(_goodDir);
@@ -65,11 +59,6 @@ namespace NUnit.Framework.Assertions
             DirectoryAssert.AreEqual(expected, actual);
         }
 
-        [Test]
-        public void AreEqualPassesWithTextDirectories()
-        {
-            DirectoryAssert.AreEqual(_goodDir, _goodDir);
-        }
         #endregion
 
         #region Failure Tests
@@ -85,19 +74,7 @@ namespace NUnit.Framework.Assertions
             var ex = Assert.Throws<AssertionException>(() => DirectoryAssert.AreEqual(expected, actual));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
-
-
-        [Test]
-        public void AreEqualFailsWithDirectories()
-        {
-            string expected = _goodDir;
-            string actual = _appDataDir;
-            var expectedMessage =
-                string.Format("  Expected: <{0}>{2}  But was:  <{1}>{2}",
-                    new DirectoryInfo(expected).FullName, new DirectoryInfo(actual).FullName, Environment.NewLine);
-            var ex = Assert.Throws<AssertionException>(() => DirectoryAssert.AreEqual(expected, actual));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
-        }
+        
         #endregion
 
         #endregion
@@ -115,12 +92,6 @@ namespace NUnit.Framework.Assertions
         public void AreNotEqualPassesIfActualIsNull()
         {
             DirectoryAssert.AreNotEqual(null, new DirectoryInfo(_goodDir));
-        }
-
-        [Test]
-        public void AreNotEqualPassesWithDirectories()
-        {
-            DirectoryAssert.AreNotEqual(_goodDir, _appDataDir);
         }
 
         [Test]
@@ -148,16 +119,6 @@ namespace NUnit.Framework.Assertions
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 
-        [Test]
-        public void AreNotEqualFailsWithDirectories()
-        {
-            var expectedMessage = string.Format(
-                "  Expected: not equal to <{0}>{1}  But was:  <{0}>{1}",
-                _goodDir,
-                Environment.NewLine);
-            var ex = Assert.Throws<AssertionException>(() => DirectoryAssert.AreNotEqual(_goodDir, _goodDir));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
-        }
         #endregion
 
         #endregion

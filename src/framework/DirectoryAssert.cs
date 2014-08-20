@@ -106,48 +106,6 @@ namespace NUnit.Framework
 
         #endregion
 
-        #region String
-        /// <summary>
-        /// Verifies that two directories are equal.  Two directories are considered
-        /// equal if both are null, or if both point to the same directory.
-        /// If they are not equal an <see cref="AssertionException"/> is thrown.
-        /// </summary>
-        /// <param name="expected">A directory containing the value that is expected</param>
-        /// <param name="actual">A directory containing the actual value</param>
-        /// <param name="message">The message to display if Streams are not equal</param>
-        /// <param name="args">Arguments to be used in formatting the message</param>
-        static public void AreEqual(string expected, string actual, string message, params object[] args)
-        {
-            AreEqual(new DirectoryInfo(expected), new DirectoryInfo(actual), message, args);
-        }
-
-        /// <summary>
-        /// Verifies that two directories are equal.  Two directories are considered
-        /// equal if both are null, or if both point to the same directory.
-        /// If they are not equal an <see cref="AssertionException"/> is thrown.
-        /// </summary>
-        /// <param name="expected">A directory containing the value that is expected</param>
-        /// <param name="actual">A directory containing the actual value</param>
-        /// <param name="message">The message to display if objects are not equal</param>
-        static public void AreEqual(string expected, string actual, string message)
-        {
-            AreEqual(new DirectoryInfo(expected), new DirectoryInfo(actual), message, null);
-        }
-
-        /// <summary>
-        /// Verifies that two directories are equal.  Two directories are considered
-        /// equal if both are null, or if both point to the same directory.
-        /// If they are not equal an <see cref="AssertionException"/> is thrown.
-        /// </summary>
-        /// <param name="expected">A directory containing the value that is expected</param>
-        /// <param name="actual">A directory containing the actual value</param>
-        static public void AreEqual(string expected, string actual)
-        {
-            AreEqual(new DirectoryInfo(expected), new DirectoryInfo(actual), String.Empty, null);
-        }
-
-        #endregion
-
         #endregion
 
         #region AreNotEqual
@@ -185,45 +143,6 @@ namespace NUnit.Framework
         /// <param name="expected">A directory containing the value that is expected</param>
         /// <param name="actual">A directory containing the actual value</param>
         static public void AreNotEqual(DirectoryInfo expected, DirectoryInfo actual)
-        {
-            AreNotEqual(expected, actual, string.Empty, null);
-        }
-
-        #endregion
-
-        #region String
-        /// <summary>
-        /// Asserts that two directories are not equal. If they are equal
-        /// an <see cref="AssertionException"/> is thrown.
-        /// </summary>
-        /// <param name="expected">The path to a directory containing the value that is expected</param>
-        /// <param name="actual">The path to a directory containing the actual value</param>
-        /// <param name="message">The message to display if directories are not equal</param>
-        /// <param name="args">Arguments to be used in formatting the message</param>
-        static public void AreNotEqual(string expected, string actual, string message, params object[] args)
-        {
-            Assert.AreNotEqual(new DirectoryInfo(expected), new DirectoryInfo(actual), message, args);
-        }
-
-        /// <summary>
-        /// Asserts that two directories are not equal. If they are equal
-        /// an <see cref="AssertionException"/> is thrown.
-        /// </summary>
-        /// <param name="expected">The path to a directory containing the value that is expected</param>
-        /// <param name="actual">The path to a directory containing the actual value</param>
-        /// <param name="message">The message to display if directories are not equal</param>
-        static public void AreNotEqual(string expected, string actual, string message)
-        {
-            AreNotEqual(expected, actual, message, null);
-        }
-
-        /// <summary>
-        /// Asserts that two directories are not equal. If they are equal
-        /// an <see cref="AssertionException"/> is thrown.
-        /// </summary>
-        /// <param name="expected">The path to a directory containing the value that is expected</param>
-        /// <param name="actual">The path to a directory containing the actual value</param>
-        static public void AreNotEqual(string expected, string actual)
         {
             AreNotEqual(expected, actual, string.Empty, null);
         }
