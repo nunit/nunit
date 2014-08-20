@@ -42,13 +42,6 @@ namespace NUnit.Framework.Api
         public const string CaptureStandardOutput = "CaptureStandardOutput";
 
         /// <summary>
-        /// The default log threshold to be captured. Defaults to "Error"
-        /// Use "None" to turn off capture. Other values depend on the
-        /// logging subsystem. Currently, log4net is supported.
-        /// </summary>
-        public const string DefaultLogThreshold = "DefaultLogThreshold";
-
-        /// <summary>
         /// Integer value in milliseconds for the default timeout value
         /// for test cases. If not specified, there is no timeout.
         /// </summary>

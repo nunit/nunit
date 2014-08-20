@@ -134,16 +134,6 @@ namespace NUnit.Framework.Internal
         private TextWriter _errorWriter;
 
         /// <summary>
-        /// Indicates whether trace is enabled
-        /// </summary>
-        private bool _tracing;
-
-        /// <summary>
-        /// Destination for Trace output
-        /// </summary>
-        private TextWriter _traceWriter;
-
-        /// <summary>
         /// The current Principal.
         /// </summary>
         private IPrincipal _currentPrincipal;
@@ -170,8 +160,6 @@ namespace NUnit.Framework.Internal
 #if !NETCF && !SILVERLIGHT
             _outWriter = Console.Out;
             _errorWriter = Console.Error;
-            _traceWriter = null;
-            _tracing = false;
             _currentDirectory = Environment.CurrentDirectory;
             _currentPrincipal = Thread.CurrentPrincipal;
 #endif
@@ -201,8 +189,6 @@ namespace NUnit.Framework.Internal
 #if !NETCF && !SILVERLIGHT
             _outWriter = other._outWriter;
             _errorWriter = other._errorWriter;
-            _traceWriter = other._traceWriter;
-            _tracing = other._tracing;
             _currentDirectory = Environment.CurrentDirectory;
             _currentPrincipal = Thread.CurrentPrincipal;
 #endif
@@ -486,60 +472,6 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// Controls whether trace and debug output are written
-        /// to the standard output.
-        /// </summary>
-        internal bool Tracing
-        {
-            get { return _tracing; }
-            set
-            {
-                if (_tracing != value)
-                {
-                    if (_traceWriter != null && _tracing)
-                        StopTracing();
-
-                    _tracing = value;
-
-                    if (_traceWriter != null && _tracing)
-                        StartTracing();
-                }
-            }
-        }
-
-        /// <summary>
-        /// Controls where Trace output is directed
-        /// </summary>
-        internal TextWriter TraceWriter
-        {
-            get { return _traceWriter; }
-            set
-            {
-                if ( _traceWriter != value )
-                {
-                    if ( _traceWriter != null  && _tracing )
-                        StopTracing();
-
-                    _traceWriter = value;
-
-                    if ( _traceWriter != null && _tracing )
-                        StartTracing();
-                }
-            }
-        }
-
-        private void StopTracing()
-        {
-            _traceWriter.Close();
-            System.Diagnostics.Trace.Listeners.Remove( "NUnit" );
-        }
-
-        private void StartTracing()
-        {
-            System.Diagnostics.Trace.Listeners.Add( new TextWriterTraceListener( _traceWriter, "NUnit" ) );
-        }
-
-        /// <summary>
         /// Gets or sets the current <see cref="IPrincipal"/> for the Thread.
         /// </summary>
         public IPrincipal CurrentPrincipal
@@ -551,7 +483,6 @@ namespace NUnit.Framework.Internal
                 Thread.CurrentPrincipal = _currentPrincipal;
             }
         }
-
 #endif
 
         #endregion

@@ -133,16 +133,6 @@ namespace NUnit.Framework.Interfaces
         /// <summary>
         /// Send output to stdErr
         /// </summary>
-        Error,
-
-        /// <summary>
-        /// Send output to Trace
-        /// </summary>
-        Trace,
-
-        /// <summary>
-        /// Send output to Log
-        /// </summary>
-        Log
+        Error
     }
 }
