@@ -25,6 +25,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Internal.Execution
 {

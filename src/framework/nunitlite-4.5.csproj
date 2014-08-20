@@ -347,6 +347,9 @@
     <Compile Include="Runner\ResultReporter.cs" />
     <Compile Include="Runner\ResultSummary.cs" />
     <Compile Include="Runner\TcpWriter.cs" />
+    <Compile Include="Runner\TeamCityEventListener.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Runner\TextUI.cs" />
     <Compile Include="SpecialValue.cs" />
     <Compile Include="TestCaseData.cs" />

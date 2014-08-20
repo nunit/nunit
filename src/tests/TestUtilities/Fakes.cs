@@ -21,11 +21,14 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-namespace NUnit.Framework.Internal.Execution
-{
-    using System;
-    using BF = System.Reflection.BindingFlags;
+using System;
+using NUnit.Framework.Internal;
+using NUnit.Framework.Internal.Execution;
 
+using BF = System.Reflection.BindingFlags;
+
+namespace NUnit.TestUtilities
+{
     /// <summary>
     /// Fakes provides static methods for creating test dummies of various kinds
     /// </summary>
