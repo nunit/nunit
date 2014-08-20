@@ -21,6 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#if !NUNITLITE
 using System;
 using System.IO;
 
@@ -31,8 +32,6 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class EmptyDirectoryConstraint : Constraint
     {
-        // TODO: This is only used by EmptyConstraint and has no tests.
-        // We should test it or drop it.
         private int files = 0;
         private int subdirs = 0;
 
@@ -55,16 +54,8 @@ namespace NUnit.Framework.Constraints
             DirectoryInfo dirInfo = actual as DirectoryInfo;
             if (dirInfo == null)
                 throw new ArgumentException("The actual value must be a DirectoryInfo", "actual");
-
-#if SILVERLIGHT
-            foreach (FileInfo file in dirInfo.EnumerateFiles())
-                files++;
-            foreach (DirectoryInfo dir in dirInfo.EnumerateDirectories())
-                subdirs++;
-#else
             files = dirInfo.GetFiles().Length;
             subdirs = dirInfo.GetDirectories().Length;
-#endif
             bool hasSucceeded = files == 0 && subdirs == 0;
 
             return new ConstraintResult(this, actual, hasSucceeded);
@@ -91,3 +82,4 @@ namespace NUnit.Framework.Constraints
         //}
     }
 }
+#endif
