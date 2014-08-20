@@ -39,67 +39,6 @@ namespace NUnit.Framework.TestHarness
 
         private TextWriter output;
 
-        // TODO: Make this a separate file
-        class TeamCityServiceMessages
-        {
-            readonly TextWriter output = Console.Out;
-            readonly TextWriter error = Console.Error;
-
-            private static string Escape(string input)
-            {
-                return input.Replace("|", "||")
-                            .Replace("'", "|'")
-                            .Replace("\n", "|n")
-                            .Replace("\r", "|r")
-                            .Replace(char.ConvertFromUtf32(int.Parse("0086", NumberStyles.HexNumber)), "|x")
-                            .Replace(char.ConvertFromUtf32(int.Parse("2028", NumberStyles.HexNumber)), "|l")
-                            .Replace(char.ConvertFromUtf32(int.Parse("2029", NumberStyles.HexNumber)), "|p")
-                            .Replace("[", "|[")
-                            .Replace("]", "|]");
-            }
-
-            public void TestSuiteStarted(string name)
-            {
-                output.WriteLine("##teamcity[testSuiteStarted name='{0}']", Escape(name));
-            }
-
-            public void TestSuiteFinished(string name)
-            {
-                output.WriteLine("##teamcity[testSuiteFinished name='{0}']", Escape(name));
-            }
-
-            public void TestStarted(string name)
-            {
-                output.WriteLine("##teamcity[testStarted name='{0}' captureStandardOutput='true']", Escape(name));
-            }
-
-            public void TestOutput(string text)
-            {
-                output.WriteLine(Escape(text));
-            }
-
-            public void TestError(string text)
-            {
-                error.WriteLine(Escape(text));
-            }
-
-            public void TestFailed(string name, string message, string details)
-            {
-                output.WriteLine("##teamcity[testFailed name='{0}' message='{1}' details='{2}']", Escape(name), Escape(message), Escape(details));
-            }
-
-            public void TestIgnored(string name, string message)
-            {
-                output.WriteLine("##teamcity[testIgnored name='{0}' message='{1}']", Escape(name), Escape(message));
-            }
-
-            public void TestFinished(string name, double duration)
-            {
-                output.WriteLine("##teamcity[testFinished name='{0}' duration='{1}']", Escape(name),
-                                 duration.ToString("0.000", NumberFormatInfo.InvariantInfo));
-            }
-        }
-
         public RunTestsCallbackHandler(IDictionary<string, object> settings)
         {
             this.teamcity = settings.ContainsKey("DisplayTeamCityServiceMessages")

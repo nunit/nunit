@@ -24,6 +24,7 @@
 #if !NUNITLITE
 using System.Text;
 using System.Threading;
+using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Internal.Execution
 {

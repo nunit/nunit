@@ -35,29 +35,24 @@ namespace NUnitLite.Runner
     /// </summary>
     public class CommandLineOptions
     {
-        private readonly string _optionChars;
         private static readonly string NL = NUnit.Env.NewLine;
 
-        #region Constructors
+        #region Constructor
 
         /// <summary>
-        /// Construct a CommandLineOptions object using default option chars
+        /// Construct a CommandLineOptions object using specified arguments
         /// </summary>
-        public CommandLineOptions()
-            : this(Path.DirectorySeparatorChar == '/' ? "-" : "/-") { }
-
-        /// <summary>
-        /// Construct a CommandLineOptions object using specified option chars
-        /// </summary>
-        /// <param name="optionChars"></param>
-        public CommandLineOptions(string optionChars)
+        public CommandLineOptions(params string[] args)
         {
-            _optionChars = optionChars;
-
             Tests = new List<string>();
-            Parameters = new List<string>();
-            _invalidOptions = new List<string>();
-            InternalTraceLevel = InternalTraceLevel.Off;
+            InputFiles = new List<string>();
+            ErrorMessages = new List<string>();
+
+            InternalTraceLevel = "Off";
+            DisplayTestLabels = "Off";
+            DefaultTimeout = -1;
+
+            this.Parse(args);
         }
 
         #endregion
@@ -74,7 +69,7 @@ namespace NUnitLite.Runner
         public bool ShowHelp { get; private set; }
 
         /// <summary>Indicates whether each test should be labeled in the output.</summary>
-        public bool ShowLabels { get; private set; }
+        public string DisplayTestLabels { get; private set; }
 
         /// <summary>Indicates whether tests should be listed rather than run.</summary>
         public bool Explore { get; private set; }
@@ -88,11 +83,20 @@ namespace NUnitLite.Runner
         /// <summary>Gets the format to be used for test results.</summary>
         public string ResultFormat { get; private set; }
 
-        /// <summary>Gets the full path of the file to be used for output.</summary>
+        /// <summary>Gets the full path of the file to be used for standard output.</summary>
         public string OutFile { get; private set; }
+
+        /// <summary>Gets the full path of the file to be used for error output.</summary>
+        public string ErrFile { get; private set; }
+
+        /// <summary>Gets the full path of the directory used for output files./// </summary>
+        public string WorkDirectory { get; private set; }
 
         /// <summary>Gets a list of all tests specified on the command line.</summary>
         public List<string> Tests { get; private set; }
+
+        /// <summary>The default timeout value to be used for test cases.</summary>
+        public int DefaultTimeout { get; private set; }
 
         /// <summary>Indicates whether we should display TeamCity service messages.</summary>
         public bool DisplayTeamCityServiceMessages { get; private set; }
@@ -106,11 +110,8 @@ namespace NUnitLite.Runner
         /// <summary>Gets the list of categories to exclude.</summary>
         public string Exclude { get; private set; }
 
-        /// <summary>
-        /// Set internal trace {LEVEL}.
-        /// Values: Off, Error, Warning, Info, Verbose (Debug)
-        /// </summary>
-        public InternalTraceLevel InternalTraceLevel { get; private set; }
+        /// <summary>Gets the internal trace level.</summary>
+        public string InternalTraceLevel { get; private set; }
 
         private string ExpandToFullPath(string path)
         {
@@ -142,26 +143,10 @@ namespace NUnitLite.Runner
         }
 
         /// <summary>Gets the parameters provided on the commandline</summary>
-        public List<string> Parameters { get; private set; }
+        public List<string> InputFiles { get; private set; }
 
-        /// <summary>Indicates whether there was an error in parsing the options.</summary>
-        public bool Error { get; private set; }
-
-        private readonly List<string> _invalidOptions;
-        /// <summary>
-        /// Gets the error message.
-        /// </summary>
-        /// <value>The error message.</value>
-        public string ErrorMessage
-        {
-            get
-            {
-                StringBuilder sb = new StringBuilder();
-                foreach (string opt in _invalidOptions)
-                    sb.Append("Invalid option: " + opt + NL);
-                return sb.ToString();
-            }
-        }
+        /// <summary>Our list of error messages.</summary>
+        public List<string> ErrorMessages { get; private set; }
 
         /// <summary>
         /// Gets the help text.
@@ -188,9 +173,13 @@ namespace NUnitLite.Runner
                 sb.Append("Options:" + NL);
                 sb.Append("  -test:testname  The name of a test to run or explore. This option may be repeated." + NL);
                 sb.Append("                  If no test names are given, all tests are run." + NL + NL);
-                sb.Append("  -out:FILE       File to which output is redirected. If this option is not" + NL);
-                sb.Append("                  used, output is to the Console, which means it is lost" + NL);
-                sb.Append("                  on devices without a Console." + NL + NL);
+                sb.Append("  -work:PATH      PATH of the directory to use for output files." + NL + NL);
+                sb.Append("  -output:FILE,   File to which standard output is redirected. If this option" + NL);
+                sb.Append("  -out:FILE       is not used, output is to the Console, which means it is" + NL);
+                sb.Append("                  lost on devices without a Console." + NL + NL);
+                sb.Append("  -err:FILE       File to which error output is redirected. If this option" + NL);
+                sb.Append("                  is not used, output is to the Console, which means it is" + NL);
+                sb.Append("                  lost on devices without a Console." + NL + NL);
                 sb.Append("  -full           Prints full report of all test results." + NL + NL);
                 sb.Append("  -result:FILE    File to which the xml test result is written." + NL + NL);
                 sb.Append("  -format:FORMAT  Format in which the result is to be written. FORMAT must be" + NL);
@@ -200,10 +189,13 @@ namespace NUnitLite.Runner
                 sb.Append("                  to the specified file in XML format." + NL);
                 sb.Append("  -help,-h        Displays this help" + NL + NL);
                 sb.Append("  -noheader,-noh  Suppresses display of the initial message" + NL + NL);
-                sb.Append("  -trace:level    Set internal trace {LEVEL}." + NL);
+                sb.Append("  -trace:LEVEL    Set internal trace {LEVEL}." + NL);
                 sb.Append("                  Values: Off, Error, Warning, Info, Verbose" + NL + NL);
-                sb.Append("  -labels         Displays the name of each test when it starts" + NL + NL);
+                sb.Append("  -labels:VAL,    Specify whether to write test case names to the output." + NL);
+                sb.Append("  -l:VAL          Values: Off, On, All" + NL + NL);
+                sb.Append("  -teamcity       Running under TeamCity: display service messages as tests are executed" + NL + NL);
                 sb.Append("  -seed:SEED      Specify the random seed used in generating test cases." + NL + NL);
+                sb.Append("  -timeout:VAL     Set timeout for each test case in milliseconds." + NL + NL);
                 sb.Append("  -include:CAT    List of categories to include" + NL + NL);
                 sb.Append("  -exclude:CAT    List of categories to exclude" + NL + NL);
                 sb.Append("  -wait           Waits for a key press before exiting" + NL + NL);
@@ -229,11 +221,11 @@ namespace NUnitLite.Runner
         /// Parse command arguments and initialize option settings accordingly
         /// </summary>
         /// <param name="args">The argument list</param>
-        public void Parse(params string[] args)
+        private void Parse(params string[] args)
         {
             foreach( string arg in args )
             {
-                if (_optionChars.IndexOf(arg[0]) >= 0 )
+                if (arg[0] == '-' || arg[0] == '/')
                     ProcessOption(arg);
                 else
                     ProcessParameter(arg);
@@ -275,6 +267,9 @@ namespace NUnitLite.Runner
                 case "full":
                     Full = true;
                     break;
+                case "teamcity":
+                    DisplayTeamCityServiceMessages = true;
+                    break;
                 case "explore":
                     Explore = true;
                     if (val == null || val.Length == 0)
@@ -305,18 +300,19 @@ namespace NUnitLite.Runner
                     if (ResultFormat != "nunit3" && ResultFormat != "nunit2")
                         InvalidOption(option);
                     break;
+                case "work":
+                    WorkDirectory = RequiredValue(val, option);
+                    break;
+                case "output":
                 case "out":
-                    try
-                    {
-                        OutFile = ExpandToFullPath(val);
-                    }
-                    catch
-                    {
-                        InvalidOption(option);
-                    }
+                    OutFile = RequiredValue(val, option);
+                    break;
+                case "err":
+                    ErrFile = RequiredValue(val, option);
                     break;
                 case "labels":
-                    ShowLabels = true;
+                case "l":
+                    DisplayTestLabels = RequiredValue(val, option, "Off", "On", "All");
                     break;
                 case "include":
                     Include = val;
@@ -325,24 +321,13 @@ namespace NUnitLite.Runner
                     Exclude = val;
                     break;
                 case "seed":
-                    try
-                    {
-                        _randomSeed = int.Parse(val);
-                    }
-                    catch
-                    {
-                        InvalidOption(option);
-                    }
+                    _randomSeed = RequiredInt(val, option);
+                    break;
+                case "timeout":
+                    DefaultTimeout = RequiredInt(val, option);
                     break;
                 case "trace":
-                    try
-                    {
-                        InternalTraceLevel = (InternalTraceLevel)Enum.Parse(typeof(InternalTraceLevel), val, true);
-                    }
-                    catch
-                    {
-                        InvalidOption(option);
-                    }
+                    InternalTraceLevel = RequiredValue(val, option, "Off", "Error", "Warning", "Info", "Debug", "Verbose");
                     break;
                 default:
                     InvalidOption(option);
@@ -352,13 +337,66 @@ namespace NUnitLite.Runner
 
         private void InvalidOption(string option)
         {
-            Error = true;
-            _invalidOptions.Add(option);
+            ErrorMessages.Add("Invalid option: " + option);
         }
 
         private void ProcessParameter(string param)
         {
-            Parameters.Add(param);
+            InputFiles.Add(param);
+        }
+
+        #endregion
+
+        #region Helper Methods
+
+        private string RequiredValue(string val, string option, params string[] validValues)
+        {
+            if (val == null || val == string.Empty)
+            {
+                ErrorMessages.Add("Missing required value for option '" + option + "'.");
+                return val;
+            }
+
+
+            bool isValid = true;
+
+            if (validValues != null && validValues.Length > 0)
+            {
+                isValid = false;
+
+                foreach (string valid in validValues)
+                    if (StringUtil.Compare(valid, val, true) == 0)
+                        isValid = true;
+
+            }
+
+            if (!isValid)
+            {
+                ErrorMessages.Add(string.Format("The value '{0}' is not valid for option '{1}'.", val, option));
+            }
+
+            return val;
+        }
+
+        private int RequiredInt(string val, string option)
+        {
+            // We have to return something even though the value will 
+            // be ignored if an error is reported. The -1 value seems
+            // like a safe bet in case it isn't ignored due to a bug.
+            int result = -1;
+
+            if (val == null || val == string.Empty)
+                ErrorMessages.Add("Missing required value for option '" + option + "'.");
+            else
+            {
+                int r;
+                if (int.TryParse(val, out r))
+                    result = r;
+                else
+                    ErrorMessages.Add("An int value was exprected for option '{0}' but a value of '{1}' was used");
+            }
+
+            return result;
         }
 
         #endregion
