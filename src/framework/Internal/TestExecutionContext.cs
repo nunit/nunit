@@ -119,11 +119,6 @@ namespace NUnit.Framework.Internal
 
 #if !NETCF && !SILVERLIGHT
         /// <summary>
-        /// The current working directory
-        /// </summary>
-        private string _currentDirectory;
-
-        /// <summary>
         /// Destination for standard output
         /// </summary>
         private TextWriter _outWriter;
@@ -160,7 +155,6 @@ namespace NUnit.Framework.Internal
 #if !NETCF && !SILVERLIGHT
             _outWriter = Console.Out;
             _errorWriter = Console.Error;
-            _currentDirectory = Environment.CurrentDirectory;
             _currentPrincipal = Thread.CurrentPrincipal;
 #endif
         }
@@ -189,7 +183,6 @@ namespace NUnit.Framework.Internal
 #if !NETCF && !SILVERLIGHT
             _outWriter = other._outWriter;
             _errorWriter = other._errorWriter;
-            _currentDirectory = Environment.CurrentDirectory;
             _currentPrincipal = Thread.CurrentPrincipal;
 #endif
 
@@ -425,19 +418,6 @@ namespace NUnit.Framework.Internal
 
 #if !NETCF && !SILVERLIGHT
         /// <summary>
-        /// Saves and restores the CurrentDirectory
-        /// </summary>
-        public string CurrentDirectory
-        {
-            get { return _currentDirectory; }
-            set
-            {
-                _currentDirectory = value;
-                Environment.CurrentDirectory = _currentDirectory;
-            }
-        }
-
-        /// <summary>
         /// Controls where Console.Out is directed
         /// </summary>
         internal TextWriter Out
@@ -502,7 +482,6 @@ namespace NUnit.Framework.Internal
 #endif
 
 #if !NETCF && !SILVERLIGHT
-            _currentDirectory = Environment.CurrentDirectory;
             _currentPrincipal = Thread.CurrentPrincipal;
 #endif
         }
@@ -520,9 +499,6 @@ namespace NUnit.Framework.Internal
 #endif
 
 #if !NETCF && !SILVERLIGHT
-            // TODO: We should probably remove this feature, since
-            // it potentially impacts all threads.
-            Environment.CurrentDirectory = _currentDirectory;
             Thread.CurrentPrincipal = _currentPrincipal;
             Console.SetOut(this.Out);
             Console.SetError(this.Error);
