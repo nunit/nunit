@@ -87,9 +87,9 @@ namespace NUnit.Framework.Api
             QueuingEventListener queue = new QueuingEventListener();
 
             if (Settings.Contains(DriverSettings.CaptureStandardOutput))
-                Context.Out = new EventListenerTextWriter(queue, TestOutputType.Out);
+                Console.SetOut(new EventListenerTextWriter(queue, TestOutputType.Out));
             if (Settings.Contains(DriverSettings.CaptureStandardError))
-                Context.Error = new EventListenerTextWriter(queue, TestOutputType.Error);
+                Console.SetError(new EventListenerTextWriter(queue, TestOutputType.Error));
 
             Context.Listener = queue;
 

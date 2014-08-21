@@ -119,20 +119,9 @@ namespace NUnit.Framework.Internal
 
 #if !NETCF && !SILVERLIGHT
         /// <summary>
-        /// Destination for standard output
-        /// </summary>
-        private TextWriter _outWriter;
-
-        /// <summary>
-        /// Destination for standard error
-        /// </summary>
-        private TextWriter _errorWriter;
-
-        /// <summary>
         /// The current Principal.
         /// </summary>
         private IPrincipal _currentPrincipal;
-
 #endif
 
         #endregion
@@ -153,8 +142,6 @@ namespace NUnit.Framework.Internal
 #endif
 
 #if !NETCF && !SILVERLIGHT
-            _outWriter = Console.Out;
-            _errorWriter = Console.Error;
             _currentPrincipal = Thread.CurrentPrincipal;
 #endif
         }
@@ -181,8 +168,6 @@ namespace NUnit.Framework.Internal
 #endif
 
 #if !NETCF && !SILVERLIGHT
-            _outWriter = other._outWriter;
-            _errorWriter = other._errorWriter;
             _currentPrincipal = Thread.CurrentPrincipal;
 #endif
 
@@ -418,40 +403,6 @@ namespace NUnit.Framework.Internal
 
 #if !NETCF && !SILVERLIGHT
         /// <summary>
-        /// Controls where Console.Out is directed
-        /// </summary>
-        internal TextWriter Out
-        {
-            get { return _outWriter; }
-            set 
-            {
-                if ( _outWriter != value )
-                {
-                    _outWriter = value; 
-                    Console.Out.Flush();
-                    Console.SetOut( _outWriter );
-                }
-            }
-        }
-
-        /// <summary>
-        /// Controls where Console.Error is directed
-        /// </summary>
-        internal TextWriter Error
-        {
-            get { return _errorWriter; }
-            set 
-            {
-                if ( _errorWriter != value )
-                {
-                    _errorWriter = value; 
-                    Console.Error.Flush();
-                    Console.SetError( _errorWriter );
-                }
-            }
-        }
-
-        /// <summary>
         /// Gets or sets the current <see cref="IPrincipal"/> for the Thread.
         /// </summary>
         public IPrincipal CurrentPrincipal
@@ -500,8 +451,6 @@ namespace NUnit.Framework.Internal
 
 #if !NETCF && !SILVERLIGHT
             Thread.CurrentPrincipal = _currentPrincipal;
-            Console.SetOut(this.Out);
-            Console.SetError(this.Error);
 #endif
 
             CurrentContext = this;
