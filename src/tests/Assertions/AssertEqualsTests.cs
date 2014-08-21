@@ -393,8 +393,13 @@ namespace NUnit.Framework.Assertions
             var one = new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData));
             var two = new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.Personal));
             
+#if SILVERLIGHT
+            var expectedMessage = System.String.Format(
+                "  Expected: <{0}>{1}  But was:  <{2}>{1}", one.Name, Env.NewLine, two.Name );
+#else
             var expectedMessage = System.String.Format(
                 "  Expected: <{0}>{1}  But was:  <{2}>{1}", one.FullName, Env.NewLine, two.FullName );
+#endif
 
             var ex = Assert.Throws<AssertionException>(() => Assert.AreEqual(one, two));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
