@@ -184,6 +184,7 @@
     <Compile Include="Internal\TestFilterTests.cs" />
     <Compile Include="Internal\TestFixtureTests.cs" />
     <Compile Include="Internal\TestMethodSignatureTests.cs" />
+    <Compile Include="Internal\TestResultOutputTests.cs" />
     <Compile Include="Internal\TestResultTests.cs" />
     <Compile Include="Internal\TestWorkerTests.cs" />
     <Compile Include="Internal\TestXmlTests.cs" />

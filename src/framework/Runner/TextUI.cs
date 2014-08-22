@@ -78,6 +78,7 @@ namespace NUnitLite.Runner
         {
             // Set the default writer - may be overridden by the args specified
             _outWriter = writer;
+            _errWriter = writer;
         }
         #endregion
 
@@ -343,7 +344,9 @@ namespace NUnitLite.Runner
             writer.WriteLine();
         }
 
-        // Public for testing
+        /// <summary>
+        /// Make the settings for this run - this is public for testing
+        /// </summary>
         public static Dictionary<string, object> MakeRunSettings(CommandLineOptions options)
         {
             // Transfer command line options to run settings

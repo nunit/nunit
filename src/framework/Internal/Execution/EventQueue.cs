@@ -178,6 +178,8 @@ namespace NUnit.Framework.Internal.Execution
     /// </summary>
     public class EventQueue
     {
+        static readonly Logger log = InternalTrace.GetLogger("EventQueue");
+
         private readonly Queue queue = new Queue();
         private readonly object syncRoot;
         private bool stopped;
@@ -238,6 +240,7 @@ namespace NUnit.Framework.Internal.Execution
             lock( this.syncRoot )
             {
                 this.queue.Enqueue( e );
+                
                 Monitor.Pulse( this.syncRoot );
             }
 

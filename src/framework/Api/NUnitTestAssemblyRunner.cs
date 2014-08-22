@@ -39,6 +39,9 @@ namespace NUnit.Framework.Api
         TextWriter _savedOut;
         TextWriter _savedErr;
 
+        // Event Pump
+        EventPump _pump;
+
         #region Constructor
 
         /// <summary>
@@ -93,12 +96,10 @@ namespace NUnit.Framework.Api
 
             Context.Listener = queue;
 
-            using (EventPump pump = new EventPump(listener, queue.Events))
-            {
-                pump.Start();
+            _pump = new EventPump(listener, queue.Events);
+            _pump.Start();
 
-                Context.Dispatcher.Dispatch(TopLevelWorkItem);
-            }
+            Context.Dispatcher.Dispatch(TopLevelWorkItem);
         }
 
         /// <summary>
@@ -106,6 +107,8 @@ namespace NUnit.Framework.Api
         /// </summary>
         protected override void OnRunCompleted(object sender, EventArgs e)
         {
+            _pump.Dispose();
+
             Console.SetOut(_savedOut);
             Console.SetError(_savedErr);
 

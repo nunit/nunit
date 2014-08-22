@@ -162,6 +162,10 @@ namespace NUnit.Framework.TestHarness
                     }
                     break;
             }
+
+            var outputNode = testNode.SelectSingleNode("output");
+            if (outputNode != null)
+                output.Write(outputNode.InnerText);
         }
 
         private void OnOutput(XmlNode outputNode)

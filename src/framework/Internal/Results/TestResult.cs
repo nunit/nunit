@@ -23,6 +23,7 @@
 
 using System;
 using System.Globalization;
+using System.IO;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal
@@ -40,6 +41,8 @@ namespace NUnit.Framework.Internal
         /// List of child results
         /// </summary>
         private System.Collections.Generic.List<ITestResult> _children;
+
+        private StringWriter _outWriter;
 
         #endregion
 
@@ -168,6 +171,30 @@ namespace NUnit.Framework.Internal
             }
         }
 
+        /// <summary>
+        /// Gets a TextWriter, which will write output to be included in the result.
+        /// </summary>
+        public StringWriter OutWriter
+        {
+            get
+            {
+                if (_outWriter == null)
+                    _outWriter = new StringWriter();
+
+                return _outWriter;
+            }
+        }
+
+        /// <summary>
+        /// Gets any text output written to this result.
+        /// </summary>
+        public string Output
+        {
+            get { return _outWriter == null
+                ? string.Empty
+                : _outWriter.ToString();  }
+        }
+
         #endregion
 
         #region IXmlNodeBuilder Members
@@ -231,6 +258,10 @@ namespace NUnit.Framework.Internal
                         AddReasonElement(thisNode);
                     break;
             }
+
+            if (Output.Length > 0)
+                AddOutputElement(thisNode);
+
 
             if (recursive && HasChildren)
                 foreach (TestResult child in Children)
@@ -455,6 +486,14 @@ namespace NUnit.Framework.Internal
             }
 
             return failureNode;
+        }
+
+        private XmlNode AddOutputElement(XmlNode targetNode)
+        {
+            XmlNode outputNode = targetNode.AddElement("output");
+            outputNode.TextContent = this.Output;
+
+            return outputNode;
         }
 
         #endregion

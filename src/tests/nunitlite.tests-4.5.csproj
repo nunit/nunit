@@ -178,6 +178,7 @@
     <Compile Include="Internal\AsyncTestMethodTests.cs" />
     <Compile Include="Internal\CultureSettingAndDetectionTests.cs" />
     <Compile Include="Internal\DeduceTypeArgsFromArgs.cs" />
+    <Compile Include="Internal\TestResultOutputTests.cs" />
     <Compile Include="TestUtilities\Fakes.cs" />
     <Compile Include="Internal\GenericTestFixtureTests.cs" />
     <Compile Include="Internal\GenericTestMethodTests.cs" />
