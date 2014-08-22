@@ -170,12 +170,12 @@ namespace NUnit.Framework.Interfaces
             get;
         }
 
-        ///// <summary>
-        ///// Gets any text output written to this result.
-        ///// </summary>
-        //string Output
-        //{
-        //    get;
-        //}
+        /// <summary>
+        /// Gets any text output written to this result.
+        /// </summary>
+        string Output
+        {
+            get;
+        }
     }
 }

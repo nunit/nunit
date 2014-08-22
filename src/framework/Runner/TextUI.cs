@@ -395,6 +395,9 @@ namespace NUnitLite.Runner
             if (_teamCity != null)
                 _teamCity.TestFinished(result);
 #endif
+
+            if (result.Output.Length > 0)
+                _outWriter.Write(result.Output);
         }
 
         /// <summary>
