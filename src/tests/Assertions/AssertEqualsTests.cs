@@ -24,6 +24,7 @@
 using System;
 using System.Globalization;
 using System.IO;
+using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Assertions
 {
@@ -390,19 +391,20 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void DirectoryInfoNotEqual()
         {
-            var one = new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData));
-            var two = new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.Personal));
-            
+            using (var one = new TestDirectory())
+            using (var two = new TestDirectory())
+            {
 #if SILVERLIGHT
-            var expectedMessage = System.String.Format(
-                "  Expected: <{0}>{1}  But was:  <{2}>{1}", one.Name, Env.NewLine, two.Name );
+                var expectedMessage = System.String.Format(
+                    "  Expected: <{0}>{1}  But was:  <{2}>{1}", one.Directory.Name, Env.NewLine, two.Directory.Name );
 #else
-            var expectedMessage = System.String.Format(
-                "  Expected: <{0}>{1}  But was:  <{2}>{1}", one.FullName, Env.NewLine, two.FullName );
+                var expectedMessage = System.String.Format(
+                    "  Expected: <{0}>{1}  But was:  <{2}>{1}", one.ToString(), Env.NewLine, two.ToString());
 #endif
 
-            var ex = Assert.Throws<AssertionException>(() => Assert.AreEqual(one, two));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+                var ex = Assert.Throws<AssertionException>(() => Assert.AreEqual(one, two));
+                Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+            }
         }
 
         private enum MyEnum

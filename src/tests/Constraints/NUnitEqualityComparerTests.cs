@@ -23,6 +23,7 @@
 
 using System;
 using System.IO;
+using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Constraints
 {
@@ -94,9 +95,11 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void DifferentDirectoriesAreNotEqual()
         {
-            var one = new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData));
-            var two = new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.Personal));
-            Assert.That(comparer.AreEqual(one, two, ref tolerance), Is.False);
+            using (var one = new TestDirectory())
+            using (var two = new TestDirectory())
+            {
+                Assert.That(comparer.AreEqual(one, two, ref tolerance), Is.False);
+            }
         }
 
         [Test]
