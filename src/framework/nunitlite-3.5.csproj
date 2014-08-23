@@ -272,6 +272,7 @@
     <Compile Include="Internal\Execution\SimpleWorkItem.cs" />
     <Compile Include="Internal\Execution\SimpleWorkItemDispatcher.cs" />
     <Compile Include="Internal\Execution\TestWorker.cs" />
+    <Compile Include="Internal\Execution\TextCapture.cs" />
     <Compile Include="Internal\Execution\TextMessageWriter.cs" />
     <Compile Include="Internal\Execution\WorkItem.cs" />
     <Compile Include="Internal\Execution\WorkItemQueue.cs" />
@@ -327,7 +328,6 @@
     <Compile Include="ListMapper.cs" />
     <Compile Include="MessageMatch.cs" />
     <Compile Include="Runner\CommandLineOptions.cs" />
-    <Compile Include="Runner\ConsoleWriter.cs" />
     <Compile Include="Runner\DebugWriter.cs" />
     <Compile Include="Runner\OutputWriters\NUnit2XmlOutputWriter.cs" />
     <Compile Include="Runner\OutputWriters\NUnit3XmlOutputWriter.cs" />

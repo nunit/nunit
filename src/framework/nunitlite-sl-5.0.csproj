@@ -340,7 +340,6 @@
     <Compile Include="ListMapper.cs" />
     <Compile Include="MessageMatch.cs" />
     <Compile Include="Runner\CommandLineOptions.cs" />
-    <Compile Include="Runner\ConsoleWriter.cs" />
     <Compile Include="Runner\DebugWriter.cs" />
     <Compile Include="Runner\OutputWriters\NUnit2XmlOutputWriter.cs" />
     <Compile Include="Runner\OutputWriters\NUnit3XmlOutputWriter.cs" />

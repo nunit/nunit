@@ -68,7 +68,7 @@ namespace NUnitLite.Runner
         /// <summary>
         /// Initializes a new instance of the <see cref="TextUI"/> class.
         /// </summary>
-        public TextUI() : this(ConsoleWriter.Out) { }
+        public TextUI() : this(Console.Out) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TextUI"/> class.
@@ -369,16 +369,11 @@ namespace NUnitLite.Runner
         #region ITestListener Members
 
         /// <summary>
-        /// Called when a test has just started
+        /// Called when a test or suite has just started
         /// </summary>
         /// <param name="test">The test that is starting</param>
         public void TestStarted(ITest test)
         {
-            // Display All labels for both "On" and "All" since nunitlite does
-            // not currently intercept text output.
-            if (_commandLineOptions.DisplayTestLabels == "On" || _commandLineOptions.DisplayTestLabels == "All")
-                _outWriter.WriteLine("***** " + test.Name);
-
 #if !SILVERLIGHT
             if (_teamCity != null)
                 _teamCity.TestStarted(test);
@@ -396,8 +391,23 @@ namespace NUnitLite.Runner
                 _teamCity.TestFinished(result);
 #endif
 
+            bool isSuite = result.Test.IsSuite;
+            var labels = _commandLineOptions.DisplayTestLabels.ToUpper();
+                
+            if (!isSuite && labels == "ALL")
+                WriteTestLabel(result);
+
             if (result.Output.Length > 0)
+            {
+                if (!isSuite && labels == "ON")
+                    WriteTestLabel(result);
                 _outWriter.Write(result.Output);
+            }
+        }
+
+        private void WriteTestLabel(ITestResult result)
+        {
+            _outWriter.WriteLine("***** " + result.Test.Name);
         }
 
         /// <summary>

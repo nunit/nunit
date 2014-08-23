@@ -100,7 +100,7 @@ namespace NUnit.Framework.Api
 
             if (settings.Contains(DriverSettings.InternalTraceLevel))
             {
-                var traceLevel = (InternalTraceLevel)Enum.Parse(typeof(InternalTraceLevel), (string)settings[DriverSettings.InternalTraceLevel]);
+                var traceLevel = (InternalTraceLevel)Enum.Parse(typeof(InternalTraceLevel), (string)settings[DriverSettings.InternalTraceLevel], true);
 
                 if (settings.Contains(DriverSettings.InternalTraceWriter))
                     InternalTrace.Initialize((TextWriter)settings[DriverSettings.InternalTraceWriter], traceLevel);

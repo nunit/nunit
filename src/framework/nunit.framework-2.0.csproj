@@ -105,6 +105,7 @@
     <Compile Include="Internal\Commands\SetUpTearDownList.cs" />
     <Compile Include="Internal\Commands\SetUpTearDownNode.cs" />
     <Compile Include="Internal\Execution\SimpleWorkItemDispatcher.cs" />
+    <Compile Include="Internal\Execution\TextCapture.cs" />
     <Compile Include="Internal\Execution\WorkShift.cs" />
     <Compile Include="Internal\Filters\IdFilter.cs" />
     <Compile Include="Internal\Filters\ValueMatchFilter.cs" />

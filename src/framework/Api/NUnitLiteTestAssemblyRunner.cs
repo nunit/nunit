@@ -23,6 +23,7 @@
 
 #if NUNITLITE
 using System;
+using System.IO;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Execution;
@@ -34,6 +35,9 @@ namespace NUnit.Framework.Api
     /// </summary>
     public class NUnitLiteTestAssemblyRunner : AbstractTestAssemblyRunner
     {
+        TextWriter _savedOut;
+        TextWriter _savedErr;
+
         #region Constructor
 
         /// <summary>
@@ -52,9 +56,27 @@ namespace NUnit.Framework.Api
         /// <returns></returns>
         public override void StartRun(ITestListener listener)
         {
+#if !SILVERLIGHT && !NETCF
+            _savedOut = Console.Out;
+            _savedErr = Console.Error;
+
+            Console.SetOut(new TextCapture(_savedOut));
+            Console.SetError(new TextCapture(_savedErr));
+#endif
+
             Context.Dispatcher = new SimpleWorkItemDispatcher();
             Context.Dispatcher.Dispatch(TopLevelWorkItem);
         }
+
+#if !SILVERLIGHT && !NETCF
+        protected override void OnRunCompleted(object sender, EventArgs e)
+        {
+            Console.SetOut(_savedOut);
+            Console.SetError(_savedErr);
+
+            base.OnRunCompleted(sender, e);
+        }
+#endif
 
         #endregion
     }

@@ -212,7 +212,7 @@ namespace NUnit.Framework.Internal
 
                 return current; 
 #else
-                var context = CallContext.GetData(CONTEXT_KEY) as TestExecutionContext;
+                var context = GetTestExecutionContext();
                 if (context == null) // This can happen on Mono
                 {
                     context = new TestExecutionContext();
@@ -234,6 +234,16 @@ namespace NUnit.Framework.Internal
 #endif
             }
         }
+
+#if !SILVERLIGHT && !NETCF
+        /// <summary>
+        /// Get the current context or return null if none is found.
+        /// </summary>
+        public static TestExecutionContext GetTestExecutionContext()
+        {
+            return CallContext.GetData(CONTEXT_KEY) as TestExecutionContext;
+        }
+#endif
 
         /// <summary>
         /// Clear the current context. This is provided to

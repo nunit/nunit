@@ -98,10 +98,10 @@ namespace NUnit.Framework.TestHarness
                 v => v2ResultFile = RequiredValue(v, "--xml2"));
 
             this.Add("labels|l=", "Specify whether to write test case names to the output. Values: Off, On, All",
-                v => DisplayTestLabels = RequiredValue(v, "--labels", "Off", "On", "All"));
+                v => DisplayTestLabels = RequiredValue(v, "--labels", "Off", "On", "All").ToUpper());
 
             this.Add("trace=", "Set internal trace {LEVEL}.\nValues: Off, Error, Warning, Info, Verbose (Debug)",
-                v => InternalTraceLevel = RequiredValue(v, "--trace", "Off", "Error", "Warning", "Info", "Verbose", "Debug"));
+                v => InternalTraceLevel = RequiredValue(v, "--trace", "Off", "Error", "Warning", "Info", "Verbose", "Debug").ToUpper());
 
             this.Add("noheader|noh", "Suppress display of program information at start of run.",
                 v => NoHeader = v != null);
@@ -245,7 +245,8 @@ namespace NUnit.Framework.TestHarness
             if (CaptureText)
                 settings["CaptureStandardOutput"] = settings["CaptureStandardError"] = true;
 
-            settings["DisplayTestLabels"] = DisplayTestLabels;
+            if (DisplayTestLabels != null)
+                settings["DisplayTestLabels"] = DisplayTestLabels;
             if (InternalTraceLevel != null)
                 settings["InternalTraceLevel"] = InternalTraceLevel;
             if (WorkDirectory != null)
