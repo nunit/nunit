@@ -149,7 +149,9 @@ namespace NUnit.ConsoleRunner
             }
 
             var outputNode = testResult.SelectSingleNode("output");
-            var labels = options.DisplayTestLabels.ToUpperInvariant();
+            var labels = options.DisplayTestLabels != null 
+                ? options.DisplayTestLabels.ToUpperInvariant()
+                : "ON";
 
             if (labels == "ALL")
                 WriteTestLabel(nameAttr.Value);
@@ -165,7 +167,8 @@ namespace NUnit.ConsoleRunner
 
         private void WriteTestLabel(string name)
         {
-            outWriter.WriteLine("***** {0}", name);
+            using (new ColorConsole(ColorStyle.Label))
+                outWriter.WriteLine("***** {0}", name);
         }
 
         public void SuiteFinished(XmlNode suiteResult)
