@@ -50,10 +50,7 @@ namespace NUnit.ConsoleRunner
 
         private List<string> messages = new List<string>();
         
-        //private bool progress = false;
         private string currentTestName;
-
-        private List<Exception> unhandledExceptions = new List<Exception>();
 
         public TestEventHandler( ConsoleOptions options, TextWriter outWriter, TextWriter errorWriter )
         {
@@ -62,24 +59,7 @@ namespace NUnit.ConsoleRunner
             this.outWriter = outWriter;
             this.errorWriter = errorWriter;
             this.currentTestName = string.Empty;
-
-            //AppDomain.CurrentDomain.UnhandledException += 
-            //    new UnhandledExceptionEventHandler(OnUnhandledException);
         }
-
-        //public bool HasExceptions
-        //{
-        //    get { return unhandledExceptions.Count > 0; }
-        //}
-
-        //public void WriteExceptions()
-        //{
-        //    Console.WriteLine();
-        //    Console.WriteLine("Unhandled exceptions:");
-        //    int index = 1;
-        //    foreach( string msg in unhandledExceptions )
-        //        Console.WriteLine( "{0}) {1}", index++, msg );
-        //}
 
         #region ITestEventHandler Members
 
@@ -110,10 +90,6 @@ namespace NUnit.ConsoleRunner
                 case "test-suite":
                     SuiteFinished(testEvent);
                     break;
-
-                case "output":
-                    TestOutput(testEvent);
-                    break;
             }
 
         }
@@ -124,19 +100,7 @@ namespace NUnit.ConsoleRunner
 
         private void TestStarted(XmlNode startNode)
         {
-            if (options.DisplayTestLabels == "On" || options.DisplayTestLabels == "All")
-            {
-                XmlAttribute nameAttr = startNode.Attributes["fullname"];
-                if (nameAttr != null)
-                {
-                    string theLabel = string.Format("***** {0}", nameAttr.Value);
-
-                    if (options.DisplayTestLabels == "All")
-                        outWriter.WriteLine(theLabel);
-                    else
-                        pendingLabel = theLabel;
-                }
-            }
+            // Placeolder for TeamCity output
         }
 
         public void SuiteStarted(XmlNode startNode)
@@ -163,31 +127,15 @@ namespace NUnit.ConsoleRunner
             string resultState = resultAttr == null
                 ? "Unknown"
                 : resultAttr.Value;
+            XmlAttribute nameAttr = testResult.Attributes["fullname"];
 
             switch (resultState)
             {
                 case "Failed":
                     testRunCount++;
                     failureCount++;
-
-                    XmlAttribute nameAttr = testResult.Attributes["fullname"];
-                    
+                  
                     messages.Add(string.Format("{0}) {1} :", failureCount, nameAttr.Value));
-                    //messages.Add(testResult.Message.Trim(Environment.NewLine.ToCharArray()));
-
-                    //string stackTrace = StackTraceFilter.Filter(testResult.StackTrace);
-                    //if (stackTrace != null && stackTrace != string.Empty)
-                    //{
-                    //    string[] trace = stackTrace.Split(System.Environment.NewLine.ToCharArray());
-                    //    foreach (string s in trace)
-                    //    {
-                    //        if (s != string.Empty)
-                    //        {
-                    //            string link = Regex.Replace(s.Trim(), @".* in (.*):line (.*)", "$1($2)");
-                    //            messages.Add(string.Format("at\n{0}", link));
-                    //        }
-                    //    }
-                    //}
                     break;
 
                 case "Inconclusive":
@@ -200,7 +148,24 @@ namespace NUnit.ConsoleRunner
                     break;
             }
 
+            var outputNode = testResult.SelectSingleNode("output");
+            var labels = options.DisplayTestLabels.ToUpperInvariant();
+
+            if (labels == "ALL")
+                WriteTestLabel(nameAttr.Value);
+            if (outputNode != null)
+            {
+                if (labels == "ON")
+                    WriteTestLabel(nameAttr.Value);
+                outWriter.Write(outputNode.InnerText);
+            }
+
             //currentTestName = string.Empty;
+        }
+
+        private void WriteTestLabel(string name)
+        {
+            outWriter.WriteLine("***** {0}", name);
         }
 
         public void SuiteFinished(XmlNode suiteResult)
@@ -229,67 +194,13 @@ namespace NUnit.ConsoleRunner
                 Trace.WriteLine("Executed tests       : " + testRunCount);
                 Trace.WriteLine("Ignored tests        : " + testIgnoreCount);
                 Trace.WriteLine("Failed tests         : " + failureCount);
-                Trace.WriteLine("Unhandled exceptions : " + unhandledExceptions.Count);
                 if ( durationAttribute != null )
                 Trace.WriteLine("Total duration       : " + durationAttribute.Value + " seconds");
                 Trace.WriteLine("############################################################################");
             }
         }
 
-        private void TestOutput(XmlNode outputNode)
-        {
-            XmlAttribute typeAttr = outputNode.Attributes["type"];
-            string type = typeAttr == null
-                ? "output"
-                : typeAttr.Value;
-
-            XmlNode textNode = outputNode.Attributes["text"];
-            string text = textNode == null
-                ? string.Empty
-                : textNode.InnerText;
-
-            switch (type)
-            {
-                default:
-                case "out":
-                    if (pendingLabel != null)
-                    {
-                        outWriter.Flush();
-                        outWriter.WriteLine(pendingLabel);
-                        pendingLabel = null;
-                    }
-                    outWriter.Write(text);
-                    break;
-                case "error":
-                    errorWriter.Write(text);
-                    break;
-            }
-        }
-
         #endregion
-
-        //private void OnUnhandledException(object sender, UnhandledExceptionEventArgs e)
-        //{
-        //    if (e.ExceptionObject.GetType() != typeof(System.Threading.ThreadAbortException))
-        //    {
-        //        this.UnhandledException((Exception)e.ExceptionObject);
-        //    }
-        //}
-
-
-        //public void UnhandledException( Exception exception )
-        //{
-        //    // If we do labels, we already have a newline
-        //    unhandledExceptions.Add(currentTestName + " : " + exception.ToString());
-        //    //if (!options.labels) outWriter.WriteLine();
-        //    string msg = string.Format("##### Unhandled Exception while running {0}", currentTestName);
-        //    //outWriter.WriteLine(msg);
-        //    //outWriter.WriteLine(exception.ToString());
-
-        //    Trace.WriteLine(msg);
-        //    Trace.WriteLine(exception.ToString());
-        //}
-
 
         public override object InitializeLifetimeService()
         {
