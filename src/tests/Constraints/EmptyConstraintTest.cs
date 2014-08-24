@@ -24,6 +24,7 @@
 using System;
 using System.Collections;
 using System.IO;
+using NUnit.Framework.Assertions;
 using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Constraints
@@ -125,7 +126,7 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void NotEmptyDirectory()
         {
-            var testPath = new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.Personal));
+            var testPath = new DirectoryInfo(Environment.CurrentDirectory);
             Assume.That(testPath, Does.Exist);
             Assert.That(testPath, Is.Not.Empty);
         }
