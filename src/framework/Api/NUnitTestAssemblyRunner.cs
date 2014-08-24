@@ -87,15 +87,10 @@ namespace NUnit.Framework.Api
             _savedOut = Console.Out;
             _savedErr = Console.Error;
 
+            Console.SetOut(new TextCapture(Console.Out));
+            Console.SetError(new TextCapture(Console.Error));
+
             QueuingEventListener queue = new QueuingEventListener();
-
-            if (Settings.Contains(DriverSettings.CaptureStandardOutput))
-                Console.SetOut(new TextCapture(Console.Out));
-                //Console.SetOut(new EventListenerTextWriter(queue, TestOutputType.Out));
-            if (Settings.Contains(DriverSettings.CaptureStandardError))
-                Console.SetError(new TextCapture(Console.Error));
-                //Console.SetError(new EventListenerTextWriter(queue, TestOutputType.Error));
-
             Context.Listener = queue;
 
             _pump = new EventPump(listener, queue.Events);

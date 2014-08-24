@@ -70,9 +70,6 @@ namespace NUnit.Framework.TestHarness
             this.Add("seed=", "Specify the random {SEED} to be used in generating test cases.",
                 v => randomSeed = RequiredInt(v, "--seed"));
 
-            this.Add("capture", "Turn on capture of standard and error output in order to test that it works. The text should be displayed on the console either way.",
-                v => CaptureText = v != null );
-
             // Output Control
             this.Add("work=", "{PATH} of the directory to use for output files.",
                 v => WorkDirectory = RequiredValue(v, "--work"));
@@ -98,10 +95,10 @@ namespace NUnit.Framework.TestHarness
                 v => v2ResultFile = RequiredValue(v, "--xml2"));
 
             this.Add("labels|l=", "Specify whether to write test case names to the output. Values: Off, On, All",
-                v => DisplayTestLabels = RequiredValue(v, "--labels", "Off", "On", "All").ToUpper());
+                v => DisplayTestLabels = RequiredValue(v, "--labels", "Off", "On", "All"));
 
             this.Add("trace=", "Set internal trace {LEVEL}.\nValues: Off, Error, Warning, Info, Verbose (Debug)",
-                v => InternalTraceLevel = RequiredValue(v, "--trace", "Off", "Error", "Warning", "Info", "Verbose", "Debug").ToUpper());
+                v => InternalTraceLevel = RequiredValue(v, "--trace", "Off", "Error", "Warning", "Info", "Verbose", "Debug"));
 
             this.Add("noheader|noh", "Suppress display of program information at start of run.",
                 v => NoHeader = v != null);
@@ -168,9 +165,6 @@ namespace NUnit.Framework.TestHarness
         //DriverSetting
         private int randomSeed = -1;
         public int RandomSeed { get { return randomSeed; } }
-
-        //DriverSetting
-        public bool CaptureText { get; private set; }
 
         // Output Control
 
@@ -242,8 +236,6 @@ namespace NUnit.Framework.TestHarness
                 settings["NumberOfTestWorkers"] = NumWorkers.Value;
             if (RandomSeed >= 0)
                 settings["RandomSeed"] = RandomSeed;
-            if (CaptureText)
-                settings["CaptureStandardOutput"] = settings["CaptureStandardError"] = true;
 
             if (DisplayTestLabels != null)
                 settings["DisplayTestLabels"] = DisplayTestLabels;

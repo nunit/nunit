@@ -178,7 +178,7 @@ namespace NUnit.Framework.Internal.Execution
 
             protected override void Producer()
             {
-                Event asynchronousEvent = new OutputEvent(new TestOutput(string.Empty, TestOutputType.Out));
+                Event asynchronousEvent = new TestStartedEvent(new TestSuite("Dummy"));
                 Assert.IsFalse(asynchronousEvent.IsSynchronous);
                 this.q.Enqueue(asynchronousEvent);
                 this.afterEnqueue = true;
@@ -391,7 +391,7 @@ namespace NUnit.Framework.Internal.Execution
             {
                 try
                 {
-                    Event e = new OutputEvent(new TestOutput(this.ProducerThread.Name, TestOutputType.Out));
+                    Event e = new TestStartedEvent(new TestSuite("Dummy"));
                     DateTime start = DateTime.Now;
                     while (DateTime.Now - start <= TimeSpan.FromSeconds(3))
                     {

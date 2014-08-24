@@ -392,7 +392,7 @@ namespace NUnitLite.Runner
 #endif
 
             bool isSuite = result.Test.IsSuite;
-            var labels = _commandLineOptions.DisplayTestLabels.ToUpper();
+            var labels = _commandLineOptions.DisplayTestLabels.ToUpperInvariant();
                 
             if (!isSuite && labels == "ALL")
                 WriteTestLabel(result);
@@ -408,18 +408,6 @@ namespace NUnitLite.Runner
         private void WriteTestLabel(ITestResult result)
         {
             _outWriter.WriteLine("***** " + result.Test.Name);
-        }
-
-        /// <summary>
-        /// Called when the test creates text output.
-        /// </summary>
-        /// <param name="testOutput">A console message</param>
-        public void TestOutput(TestOutput testOutput)
-        {
-#if !SILVERLIGHT
-            if (_teamCity != null)
-                _teamCity.TestOutput(testOutput);
-#endif
         }
 
         #endregion

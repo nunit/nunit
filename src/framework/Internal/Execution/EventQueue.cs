@@ -144,32 +144,6 @@ namespace NUnit.Framework.Internal.Execution
         }
     }
 
-    /// <summary>
-    /// OutputEvent holds information needed to call the TestOutput method.
-    /// </summary>
-    public class OutputEvent : Event
-    {
-        TestOutput output;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="OutputEvent"/> class.
-        /// </summary>
-        /// <param name="output">The output.</param>
-        public OutputEvent( TestOutput output )
-        {
-            this.output = output;
-        }
-
-        /// <summary>
-        /// Calls TestOutput on the specified listener.
-        /// </summary>
-        /// <param name="listener">The listener.</param>
-        public override void Send(ITestListener listener)
-        {
-            listener.TestOutput( this.output );
-        }
-    }
-
     #endregion
 
     /// <summary>

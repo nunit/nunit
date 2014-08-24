@@ -45,7 +45,7 @@ namespace NUnit.Framework.TestHarness
                 ? (bool)settings["DisplayTeamCityServiceMessages"]
                 : false;
             _labels = settings.ContainsKey("DisplayTestLabels")
-                ? ((string)settings["DisplayTestLabels"]).ToUpper()
+                ? ((string)settings["DisplayTestLabels"]).ToUpperInvariant()
                 : "OFF";
             _outWriter = Console.Out;
 
@@ -72,9 +72,6 @@ namespace NUnit.Framework.TestHarness
                     break;
                 case "test-suite":
                     OnSuiteFinished(topNode);
-                    break;
-                case "output":
-                    OnOutput(topNode);
                     break;
             }
         }
@@ -174,28 +171,6 @@ namespace NUnit.Framework.TestHarness
         private void WriteTestLabel(string name)
         {
             _outWriter.WriteLine("***** {0}", name);
-        }
-
-        private void OnOutput(XmlNode outputNode)
-        {
-            XmlAttribute type = outputNode.Attributes["type"];
-            XmlNode textNode = outputNode.Attributes["text"];
-
-            Debug.Assert(type != null);
-            Debug.Assert(textNode != null);
-
-            switch (type.Value)
-            {
-                case "Out":
-                    if (_teamcity)
-                        _teamcityMessages.TestOutput(textNode.InnerText);
-                    _outWriter.Write(textNode.InnerText);
-                    break;
-                case "Error":
-                    if (_teamcity)
-                        _teamcityMessages.TestError(textNode.InnerText);
-                    break;
-            }
         }
     }
 }

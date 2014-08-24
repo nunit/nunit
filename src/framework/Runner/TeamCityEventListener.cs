@@ -12,27 +12,23 @@ namespace NUnitLite.Runner
     public class TeamCityEventListener : ITestListener
     {
         readonly TextWriter _outWriter;
-        readonly TextWriter _errWriter;
 
         /// <summary>
-        /// Default constructor using Console.Out and Console.Error
+        /// Default constructor using Console.Out
         /// </summary>
         /// <remarks>
-        /// This constructor must be called before Console.Out and
-        /// Console.Error are redirected in order to work correctly
-        /// under TeamCity.
+        /// This constructor must be called before Console.Out is
+        /// redirected in order to work correctly under TeamCity.
         /// </remarks>
-        public TeamCityEventListener() : this(Console.Out, Console.Error) { }
+        public TeamCityEventListener() : this(Console.Out) { }
 
         /// <summary>
-        /// Construct a TeamCityEventListener specifying two TextWriters. Used for testing.
+        /// Construct a TeamCityEventListener specifying a TextWriter. Used for testing.
         /// </summary>
         /// <param name="outWriter">The TextWriter to receive normal messages.</param>
-        /// <param name="errWriter">The TextWriter to receive error messages.</param>
-        public TeamCityEventListener(TextWriter outWriter, TextWriter errWriter)
+        public TeamCityEventListener(TextWriter outWriter)
         {
             _outWriter = outWriter;
-            _errWriter = errWriter;
         }
 
         /// <summary>
@@ -76,23 +72,6 @@ namespace NUnitLite.Runner
                 }
         }
 
-        /// <summary>
-        /// Called when the test creates text output.
-        /// </summary>
-        /// <param name="testOutput">A console message</param>
-        public void TestOutput(TestOutput testOutput)
-        {
-            switch (testOutput.Type)
-            {
-                case TestOutputType.Out:
-                    TC_StandardOutput(testOutput.Text);
-                    break;
-                case TestOutputType.Error:
-                    TC_ErrorOutput(testOutput.Text);
-                    break;
-            }
-        }
-
         #region Helper Methods
 
         private void TC_TestSuiteStarted(string name)
@@ -124,16 +103,6 @@ namespace NUnitLite.Runner
         private void TC_TestFailed(string name, string message, string details)
         {
             _outWriter.WriteLine("##teamcity[testFailed name='{0}' message='{1}' details='{2}']", Escape(name), Escape(message), Escape(details));
-        }
-
-        private void TC_StandardOutput(string text)
-        {
-            _outWriter.WriteLine(Escape(text));
-        }
-
-        private void TC_ErrorOutput(string text)
-        {
-            _errWriter.WriteLine(Escape(text));
         }
 
         private static string Escape(string input)

@@ -219,8 +219,6 @@ namespace NUnit.Framework.TestHarness.Tests
         [TestCase("--workers=3", "NumberOfTestWorkers", 3)]
         [TestCase("--workers=0", "NumberOfTestWorkers", 0)]
         [TestCase("--seed=123456789", "RandomSeed", 123456789)]
-        [TestCase("-capture", "CaptureStandardOutput", true)]
-        [TestCase("-capture", "CaptureStandardError", true)]
         [TestCase("--labels=On", "DisplayTestLabels", "On")]
         [TestCase("--trace=Debug", "InternalTraceLevel", "Debug")]
         [TestCase("--work=results", "WorkDirectory", "results")]

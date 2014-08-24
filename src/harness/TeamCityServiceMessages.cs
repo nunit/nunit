@@ -7,7 +7,6 @@ namespace NUnit.Framework.TestHarness
     public class TeamCityServiceMessages
     {
         readonly TextWriter _outWriter;
-        readonly TextWriter _errWriter;
 
         /// <summary>
         /// Default constructor using Console.Out and Console.Error
@@ -17,17 +16,15 @@ namespace NUnit.Framework.TestHarness
         /// Console.Error are redirected in order to work correctly
         /// under TeamCity.
         /// </remarks>
-        public TeamCityServiceMessages() : this(Console.Out, Console.Error) { }
+        public TeamCityServiceMessages() : this(Console.Out) { }
 
         /// <summary>
-        /// Construct a TeamCityEventListener specifying two TextWriters. Used for testing.
+        /// Construct a TeamCityEventListener specifying a TextWriter. Used for testing.
         /// </summary>
         /// <param name="outWriter">The TextWriter to receive normal messages.</param>
-        /// <param name="errWriter">The TextWriter to receive error messages.</param>
-        public TeamCityServiceMessages(TextWriter outWriter, TextWriter errWriter)
+        public TeamCityServiceMessages(TextWriter outWriter)
         {
             _outWriter = outWriter;
-            _errWriter = errWriter;
         }
 
         private static string Escape(string input)
@@ -56,16 +53,6 @@ namespace NUnit.Framework.TestHarness
         public void TestStarted(string name)
         {
             _outWriter.WriteLine("##teamcity[testStarted name='{0}' captureStandardOutput='true']", Escape(name));
-        }
-
-        public void TestOutput(string text)
-        {
-            _outWriter.WriteLine(Escape(text));
-        }
-
-        public void TestError(string text)
-        {
-            _errWriter.WriteLine(Escape(text));
         }
 
         public void TestFailed(string name, string message, string details)
