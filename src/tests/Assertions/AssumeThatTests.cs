@@ -127,14 +127,14 @@ namespace NUnit.Framework.Assertions
         public void FailureThrowsInconclusiveException_BooleanWithMessage()
         {
             var ex = Assert.Throws<InconclusiveException>(() => Assume.That(2 + 2 == 5, "message"));
-            Assert.That(ex.Message, Contains.Substring("message"));
+            Assert.That(ex.Message, Does.Contain("message"));
         }
 
         [Test]
         public void FailureThrowsInconclusiveException_BooleanWithMessageAndArgs()
         {
             var ex = Assert.Throws<InconclusiveException>(() => Assume.That(2 + 2 == 5, "got {0}", 5));
-            Assert.That(ex.Message, Contains.Substring("got 5"));
+            Assert.That(ex.Message, Does.Contain("got 5"));
         }
 
         [Test]
@@ -147,14 +147,14 @@ namespace NUnit.Framework.Assertions
         public void FailureThrowsInconclusiveException_ActualAndConstraintWithMessage()
         {
             var ex = Assert.Throws<InconclusiveException>(() => Assume.That(2 + 2, Is.EqualTo(5), "Error"));
-            Assert.That(ex.Message, Contains.Substring("Error"));
+            Assert.That(ex.Message, Does.Contain("Error"));
         }
 
         [Test]
         public void FailureThrowsInconclusiveException_ActualAndConstraintWithMessageAndArgs()
         {
             var ex = Assert.Throws<InconclusiveException>(() => Assume.That(2 + 2, Is.EqualTo(5), "Should be {0}", 5));
-            Assert.That(ex.Message, Contains.Substring("Should be 5"));
+            Assert.That(ex.Message, Does.Contain("Should be 5"));
         }
 
         [Test]
@@ -169,7 +169,7 @@ namespace NUnit.Framework.Assertions
         {
             bool value = false;
             var ex = Assert.Throws<InconclusiveException>(() => Assume.That(ref value, Is.True, "message"));
-            Assert.That(ex.Message, Contains.Substring("message"));
+            Assert.That(ex.Message, Does.Contain("message"));
         }
 
         [Test]
@@ -177,7 +177,7 @@ namespace NUnit.Framework.Assertions
         {
             bool value = false;
             var ex = Assert.Throws<InconclusiveException>(() => Assume.That(ref value, Is.True, "message is {0}", 42));
-            Assert.That(ex.Message, Contains.Substring("message is 42"));
+            Assert.That(ex.Message, Does.Contain("message is 42"));
         }
 
         [Test]
@@ -190,7 +190,7 @@ namespace NUnit.Framework.Assertions
         public void FailureThrowsInconclusiveException_DelegateAndConstraintWithMessage()
         {
             var ex = Assert.Throws<InconclusiveException>(() => Assume.That(new ActualValueDelegate<int>(ReturnsFive), Is.EqualTo(4), "Error"));
-            Assert.That(ex.Message, Contains.Substring("Error"));
+            Assert.That(ex.Message, Does.Contain("Error"));
         }
 
         [Test]
@@ -198,7 +198,7 @@ namespace NUnit.Framework.Assertions
         {
             var ex = Assert.Throws<InconclusiveException>(
                 () => Assume.That(new ActualValueDelegate<int>(ReturnsFive), Is.EqualTo(4), "Should be {0}", 4));
-            Assert.That(ex.Message, Contains.Substring("Should be 4"));
+            Assert.That(ex.Message, Does.Contain("Should be 4"));
         }
 
         private int ReturnsFive()
@@ -227,7 +227,7 @@ namespace NUnit.Framework.Assertions
                 Assume.That(async () => await ThrowExceptionGenericTask(), Is.EqualTo(1)));
 
 #if NET_4_5
-        Assert.That(exception.StackTrace, Contains.Substring("ThrowExceptionGenericTask"));
+        Assert.That(exception.StackTrace, Does.Contain("ThrowExceptionGenericTask"));
 #endif
         }
 

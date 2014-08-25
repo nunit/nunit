@@ -346,7 +346,7 @@ namespace NUnit.Framework.Constraints
             public void FailsOnDoublesOutsideOfUlpTolerance(object value)
             {
                 var ex = Assert.Throws<AssertionException>(() => Assert.That(value, new EqualConstraint(20000000000000000.0).Within(1).Ulps));
-                Assert.That(ex.Message, Contains.Substring("+/- 1 Ulps"));
+                Assert.That(ex.Message, Does.Contain("+/- 1 Ulps"));
             }
 
             [TestCase(19999998.0f)]
@@ -361,7 +361,7 @@ namespace NUnit.Framework.Constraints
             public void FailsOnSinglesOutsideOfUlpTolerance(object value)
             {
                 var ex = Assert.Throws<AssertionException>(() => Assert.That(value, new EqualConstraint(20000000.0f).Within(1).Ulps));
-                Assert.That(ex.Message, Contains.Substring("+/- 1 Ulps"));
+                Assert.That(ex.Message, Does.Contain("+/- 1 Ulps"));
             }
 
             [TestCase(9500.0)]
@@ -377,7 +377,7 @@ namespace NUnit.Framework.Constraints
             public void FailsOnDoublesOutsideOfRelativeTolerance(object value)
             {
                 var ex = Assert.Throws<AssertionException>(() => Assert.That(value, new EqualConstraint(10000.0).Within(10.0).Percent));
-                Assert.That(ex.Message, Contains.Substring("+/- 10.0d Percent"));
+                Assert.That(ex.Message, Does.Contain("+/- 10.0d Percent"));
             }
 
             [TestCase(9500.0f)]
@@ -393,7 +393,7 @@ namespace NUnit.Framework.Constraints
             public void FailsOnSinglesOutsideOfRelativeTolerance(object value)
             {
                 var ex = Assert.Throws<AssertionException>(() => Assert.That(value, new EqualConstraint(10000.0f).Within(10.0f).Percent));
-                Assert.That(ex.Message, Contains.Substring("+/- 10.0f Percent"));
+                Assert.That(ex.Message, Does.Contain("+/- 10.0f Percent"));
             }
 
             /// <summary>Applies both the Percent and Ulps modifiers to cause an exception</summary>

@@ -150,35 +150,35 @@ namespace NUnit.Framework.Assertions
         public void ExistsFailsWhenDirectoryInfoDoesNotExist()
         {
             var ex = Assert.Throws<AssertionException>(() => DirectoryAssert.Exists(new DirectoryInfo(BAD_DIRECTORY)));
-            Assert.That(ex.Message, Is.StringStarting("  Expected: directory exists"));
+            Assert.That(ex.Message, Does.StartWith("  Expected: directory exists"));
         }
 
         [Test]
         public void ExistsFailsWhenStringDoesNotExist()
         {
             var ex = Assert.Throws<AssertionException>(() => DirectoryAssert.Exists(BAD_DIRECTORY));
-            Assert.That(ex.Message, Is.StringStarting("  Expected: directory exists"));
+            Assert.That(ex.Message, Does.StartWith("  Expected: directory exists"));
         }
 
         [Test]
         public void ExistsFailsWhenDirectoryInfoIsNull()
         {
             var ex = Assert.Throws<ArgumentNullException>(() => DirectoryAssert.Exists((DirectoryInfo)null));
-            Assert.That(ex.Message, Is.StringStarting("The actual value must be a non-null string or DirectoryInfo"));
+            Assert.That(ex.Message, Does.StartWith("The actual value must be a non-null string or DirectoryInfo"));
         }
 
         [Test]
         public void ExistsFailsWhenStringIsNull()
         {
             var ex = Assert.Throws<ArgumentNullException>(() => DirectoryAssert.Exists((string)null));
-            Assert.That(ex.Message, Is.StringStarting("The actual value must be a non-null string or DirectoryInfo"));
+            Assert.That(ex.Message, Does.StartWith("The actual value must be a non-null string or DirectoryInfo"));
         }
 
         [Test]
         public void ExistsFailsWhenStringIsEmpty()
         {
             var ex = Assert.Throws<ArgumentException>(() => DirectoryAssert.Exists(string.Empty));
-            Assert.That(ex.Message, Is.StringStarting("The actual value cannot be an empty string"));
+            Assert.That(ex.Message, Does.StartWith("The actual value cannot be an empty string"));
         }
 
         #endregion
@@ -189,14 +189,14 @@ namespace NUnit.Framework.Assertions
         public void DoesNotExistFailsWhenDirectoryInfoExists()
         {
             var ex = Assert.Throws<AssertionException>(() => DirectoryAssert.DoesNotExist(_goodDir1.Directory));
-            Assert.That(ex.Message, Is.StringStarting("  Expected: not directory exists"));
+            Assert.That(ex.Message, Does.StartWith("  Expected: not directory exists"));
         }
 
         [Test]
         public void DoesNotExistFailsWhenStringExists()
         {
             var ex = Assert.Throws<AssertionException>(() => DirectoryAssert.DoesNotExist(_goodDir1.ToString()));
-            Assert.That(ex.Message, Is.StringStarting("  Expected: not directory exists"));
+            Assert.That(ex.Message, Does.StartWith("  Expected: not directory exists"));
         }
 
         [Test]
@@ -215,21 +215,21 @@ namespace NUnit.Framework.Assertions
         public void DoesNotExistFailsWhenDirectoryInfoIsNull()
         {
             var ex = Assert.Throws<ArgumentNullException>(() => DirectoryAssert.DoesNotExist((DirectoryInfo)null));
-            Assert.That(ex.Message, Is.StringStarting("The actual value must be a non-null string or DirectoryInfo"));
+            Assert.That(ex.Message, Does.StartWith("The actual value must be a non-null string or DirectoryInfo"));
         }
 
         [Test]
         public void DoesNotExistFailsWhenStringIsNull()
         {
             var ex = Assert.Throws<ArgumentNullException>(() => DirectoryAssert.DoesNotExist((string)null));
-            Assert.That(ex.Message, Is.StringStarting("The actual value must be a non-null string or DirectoryInfo"));
+            Assert.That(ex.Message, Does.StartWith("The actual value must be a non-null string or DirectoryInfo"));
         }
 
         [Test]
         public void DoesNotExistFailsWhenStringIsEmpty()
         {
             var ex = Assert.Throws<ArgumentException>(() => DirectoryAssert.DoesNotExist(string.Empty));
-            Assert.That(ex.Message, Is.StringStarting("The actual value cannot be an empty string"));
+            Assert.That(ex.Message, Does.StartWith("The actual value cannot be an empty string"));
         }
 
         #endregion

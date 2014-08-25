@@ -224,7 +224,7 @@ namespace NUnit.Framework.Internal
 //
 //            Assert.That(suite.RunState, Is.EqualTo(RunState.NotRunnable));
 //            Assert.That(suite.Properties.Get(PropertyNames.SkipReason), 
-//                Is.StringStarting("Fixture type contains generic parameters"));
+//                Does.StartWith("Fixture type contains generic parameters"));
 //        }
 
         [Test]
@@ -235,7 +235,7 @@ namespace NUnit.Framework.Internal
 
             Test fixture = (Test)suite.Tests[0];
             Assert.That(fixture.RunState, Is.EqualTo(RunState.NotRunnable));
-            Assert.That((string)fixture.Properties.Get(PropertyNames.SkipReason), Is.StringStarting("Fixture type contains generic parameters"));
+            Assert.That((string)fixture.Properties.Get(PropertyNames.SkipReason), Does.StartWith("Fixture type contains generic parameters"));
         }
 
         [Test]

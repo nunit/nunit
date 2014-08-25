@@ -44,21 +44,21 @@ namespace NUnit.Framework.Constraints
         public void NotHonorsIgnoreCaseUsingConstructors()
         {
             var ex = Assert.Throws<AssertionException>(() => Assert.That("abc", new NotConstraint(new EqualConstraint("ABC").IgnoreCase)));
-            Assert.That(ex.Message, Contains.Substring("ignoring case"));
+            Assert.That(ex.Message, Does.Contain("ignoring case"));
         }
 
         [Test]
         public void NotHonorsIgnoreCaseUsingPrefixNotation()
         {
             var ex = Assert.Throws<AssertionException>(() => Assert.That( "abc", Is.Not.EqualTo( "ABC" ).IgnoreCase ));
-            Assert.That(ex.Message, Contains.Substring("ignoring case"));
+            Assert.That(ex.Message, Does.Contain("ignoring case"));
         }
 
         [Test]
         public void NotHonorsTolerance()
         {
             var ex = Assert.Throws<AssertionException>(() => Assert.That( 4.99d, Is.Not.EqualTo( 5.0d ).Within( .05d ) ));
-            Assert.That(ex.Message, Contains.Substring("+/-"));
+            Assert.That(ex.Message, Does.Contain("+/-"));
         }
 
         [Test]

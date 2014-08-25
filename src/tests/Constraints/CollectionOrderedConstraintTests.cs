@@ -115,7 +115,7 @@ namespace NUnit.Framework.Constraints
             al.Add("z");
 
             var ex = Assert.Throws<ArgumentNullException>(() => Assert.That(al, Is.Ordered));
-            Assert.That(ex.Message, Contains.Substring("index 1"));
+            Assert.That(ex.Message, Does.Contain("index 1"));
         }
 
         [Test]

@@ -131,14 +131,14 @@ namespace NUnit.Framework.Assertions
         public void FailureThrowsAssertionException_BooleanWithMessage()
         {
             var ex = Assert.Throws<AssertionException>(() => Assert.That(2 + 2 == 5, "message"));
-            Assert.That(ex.Message, Contains.Substring("message"));
+            Assert.That(ex.Message, Does.Contain("message"));
         }
 
         [Test]
         public void FailureThrowsAssertionException_BooleanWithMessageAndArgs()
         {
             var ex = Assert.Throws<AssertionException>(() => Assert.That(2 + 2 == 5, "got {0}", 5));
-            Assert.That(ex.Message, Contains.Substring("got 5"));
+            Assert.That(ex.Message, Does.Contain("got 5"));
         }
 
         [Test]
@@ -151,14 +151,14 @@ namespace NUnit.Framework.Assertions
         public void FailureThrowsAssertionException_ActualAndConstraintWithMessage()
         {
             var ex = Assert.Throws<AssertionException>(() => Assert.That(2 + 2, Is.EqualTo(5), "Error"));
-            Assert.That(ex.Message, Contains.Substring("Error"));
+            Assert.That(ex.Message, Does.Contain("Error"));
         }
 
         [Test]
         public void FailureThrowsAssertionException_ActualAndConstraintWithMessageAndArgs()
         {
             var ex = Assert.Throws<AssertionException>(() => Assert.That(2 + 2, Is.EqualTo(5), "Should be {0}", 5));
-            Assert.That(ex.Message, Contains.Substring("Should be 5"));
+            Assert.That(ex.Message, Does.Contain("Should be 5"));
         }
 
         [Test]
@@ -173,7 +173,7 @@ namespace NUnit.Framework.Assertions
         {
             bool value = false;
             var ex = Assert.Throws<AssertionException>(() => Assert.That(ref value, Is.True, "message"));
-            Assert.That(ex.Message, Contains.Substring("message"));
+            Assert.That(ex.Message, Does.Contain("message"));
         }
 
         [Test]
@@ -181,7 +181,7 @@ namespace NUnit.Framework.Assertions
         {
             bool value = false;
             var ex = Assert.Throws<AssertionException>(() => Assert.That(ref value, Is.True, "message is {0}", 42));
-            Assert.That(ex.Message, Contains.Substring("message is 42"));
+            Assert.That(ex.Message, Does.Contain("message is 42"));
         }
 
         [Test]
@@ -194,14 +194,14 @@ namespace NUnit.Framework.Assertions
         public void FailureThrowsAssertionException_DelegateAndConstraintWithMessage()
         {
             var ex = Assert.Throws<AssertionException>(() => Assert.That(new ActualValueDelegate<int>(ReturnsFive), Is.EqualTo(4), "Error"));
-            Assert.That(ex.Message, Contains.Substring("Error"));
+            Assert.That(ex.Message, Does.Contain("Error"));
         }
 
         [Test]
         public void FailureThrowsAssertionException_DelegateAndConstraintWithMessageAndArgs()
         {
             var ex = Assert.Throws<AssertionException>(() => Assert.That(new ActualValueDelegate<int>(ReturnsFive), Is.EqualTo(4), "Should be {0}", 4));
-            Assert.That(ex.Message, Contains.Substring("Should be 4"));
+            Assert.That(ex.Message, Does.Contain("Should be 4"));
         }
 
         [Test]
@@ -246,7 +246,7 @@ namespace NUnit.Framework.Assertions
                 Assert.That(async () => await ThrowInvalidOperationExceptionTask(), Is.EqualTo(1)));
 
 #if NET_4_5
-            Assert.That(exception.StackTrace, Contains.Substring("ThrowInvalidOperationExceptionTask"));
+            Assert.That(exception.StackTrace, Does.Contain("ThrowInvalidOperationExceptionTask"));
 #endif
         }
 
@@ -257,7 +257,7 @@ namespace NUnit.Framework.Assertions
                 Assert.That(async () => await ThrowInvalidOperationExceptionGenericTask(), Is.EqualTo(1)));
 
 #if NET_4_5
-        Assert.That(exception.StackTrace, Contains.Substring("ThrowInvalidOperationExceptionGenericTask"));
+        Assert.That(exception.StackTrace, Does.Contain("ThrowInvalidOperationExceptionGenericTask"));
 #endif
         }
 
@@ -268,7 +268,7 @@ namespace NUnit.Framework.Assertions
                 Assert.That(async () => { await ThrowInvalidOperationExceptionGenericTask(); }, Is.EqualTo(1)));
 
 #if NET_4_5
-        Assert.That(exception.StackTrace, Contains.Substring("ThrowInvalidOperationExceptionGenericTask"));
+        Assert.That(exception.StackTrace, Does.Contain("ThrowInvalidOperationExceptionGenericTask"));
 #endif
         }
 

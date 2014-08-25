@@ -25,39 +25,27 @@ using System;
 
 namespace NUnit.Framework.Syntax
 {
-    public class SubstringTest : SyntaxTest
+    public class ContainsTest : SyntaxTest
     {
         [SetUp]
         public void SetUp()
         {
-            parseTree = @"<substring ""X"">";
-            staticSyntax = Is.StringContaining("X");
-            inheritedSyntax = Helper().ContainsSubstring("X");
-            builderSyntax = Builder().ContainsSubstring("X");
+            parseTree = @"<contains>";
+            staticSyntax = Does.Contain("X");
+            inheritedSyntax = Helper().Contains("X");
+            builderSyntax = Builder().Contains("X");
         }
     }
 
-    public class TextContains : SyntaxTest
+    public class ContainsTest_IgnoreCase : SyntaxTest
     {
         [SetUp]
         public void SetUp()
         {
-            parseTree = @"<substring ""X"">";
-            staticSyntax = Is.StringContaining("X");
-            inheritedSyntax = Helper().ContainsSubstring("X");
-            builderSyntax = Builder().ContainsSubstring("X");
-        }
-    }
-
-    public class SubstringTest_IgnoreCase : SyntaxTest
-    {
-        [SetUp]
-        public void SetUp()
-        {
-            parseTree = @"<substring ""X"">";
-            staticSyntax = Is.StringContaining("X").IgnoreCase;
-            inheritedSyntax = Helper().ContainsSubstring("X").IgnoreCase;
-            builderSyntax = Builder().ContainsSubstring("X").IgnoreCase;
+            parseTree = @"<contains>";
+            staticSyntax = Does.Contain("X").IgnoreCase;
+            inheritedSyntax = Helper().Contains("X").IgnoreCase;
+            builderSyntax = Builder().Contains("X").IgnoreCase;
         }
     }
 
@@ -67,7 +55,7 @@ namespace NUnit.Framework.Syntax
         public void SetUp()
         {
             parseTree = @"<startswith ""X"">";
-            staticSyntax = Is.StringStarting("X");
+            staticSyntax = Does.StartWith("X");
             inheritedSyntax = Helper().StartsWith("X");
             builderSyntax = Builder().StartsWith("X");
         }
@@ -79,7 +67,7 @@ namespace NUnit.Framework.Syntax
         public void SetUp()
         {
             parseTree = @"<startswith ""X"">";
-            staticSyntax = Is.StringStarting("X");
+            staticSyntax = Does.StartWith("X");
             inheritedSyntax = Helper().StartsWith("X");
             builderSyntax = Builder().StartsWith("X");
         }
@@ -91,7 +79,7 @@ namespace NUnit.Framework.Syntax
         public void SetUp()
         {
             parseTree = @"<startswith ""X"">";
-            staticSyntax = Is.StringStarting("X").IgnoreCase;
+            staticSyntax = Does.StartWith("X").IgnoreCase;
             inheritedSyntax = Helper().StartsWith("X").IgnoreCase;
             builderSyntax = Builder().StartsWith("X").IgnoreCase;
         }
@@ -103,19 +91,7 @@ namespace NUnit.Framework.Syntax
         public void SetUp()
         {
             parseTree = @"<endswith ""X"">";
-            staticSyntax = Is.StringEnding("X");
-            inheritedSyntax = Helper().EndsWith("X");
-            builderSyntax = Builder().EndsWith("X");
-        }
-    }
-
-    public class TextEndsWithTest : SyntaxTest
-    {
-        [SetUp]
-        public void SetUp()
-        {
-            parseTree = @"<endswith ""X"">";
-            staticSyntax = Is.StringEnding("X");
+            staticSyntax = Does.EndWith("X");
             inheritedSyntax = Helper().EndsWith("X");
             builderSyntax = Builder().EndsWith("X");
         }
@@ -127,7 +103,7 @@ namespace NUnit.Framework.Syntax
         public void SetUp()
         {
             parseTree = @"<endswith ""X"">";
-            staticSyntax = Is.StringEnding("X").IgnoreCase;
+            staticSyntax = Does.EndWith("X").IgnoreCase;
             inheritedSyntax = Helper().EndsWith("X").IgnoreCase;
             builderSyntax = Builder().EndsWith("X").IgnoreCase;
         }
@@ -140,19 +116,7 @@ namespace NUnit.Framework.Syntax
         public void SetUp()
         {
             parseTree = @"<regex ""X"">";
-            staticSyntax = Is.StringMatching("X");
-            inheritedSyntax = Helper().Matches("X");
-            builderSyntax = Builder().Matches("X");
-        }
-    }
-
-    public class TextMatchesTest : SyntaxTest
-    {
-        [SetUp]
-        public void SetUp()
-        {
-            parseTree = @"<regex ""X"">";
-            staticSyntax = Is.StringMatching("X");
+            staticSyntax = Does.Match("X");
             inheritedSyntax = Helper().Matches("X");
             builderSyntax = Builder().Matches("X");
         }
@@ -164,7 +128,7 @@ namespace NUnit.Framework.Syntax
         public void SetUp()
         {
             parseTree = @"<regex ""X"">";
-            staticSyntax = Is.StringMatching("X").IgnoreCase;
+            staticSyntax = Does.Match("X").IgnoreCase;
             inheritedSyntax = Helper().Matches("X").IgnoreCase;
             builderSyntax = Builder().Matches("X").IgnoreCase;
         }

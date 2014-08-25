@@ -71,7 +71,7 @@ namespace NUnit.Framework.Attributes
             TestMethod testMethod = (TestMethod)TestFinder.Find("InfiniteLoopWith50msTimeout", suite, false);
             ITestResult result = TestBuilder.RunTest(testMethod, fixture);
             Assert.That(result.ResultState, Is.EqualTo(ResultState.Failure));
-            Assert.That(result.Message, Contains.Substring("50ms"));
+            Assert.That(result.Message, Does.Contain("50ms"));
             Assert.That(fixture.TearDownWasRun, "TearDown was not run");
         }
 
@@ -84,7 +84,7 @@ namespace NUnit.Framework.Attributes
             Assert.That(suiteResult.Message, Is.EqualTo("One or more child tests had errors"));
             ITestResult result = TestFinder.Find("Test2WithInfiniteLoop", suiteResult, false);
             Assert.That(result.ResultState, Is.EqualTo(ResultState.Failure));
-            Assert.That(result.Message, Contains.Substring("50ms"));
+            Assert.That(result.Message, Does.Contain("50ms"));
         }
     }
 }

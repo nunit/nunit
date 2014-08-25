@@ -54,7 +54,7 @@ namespace NUnit.Framework.Assertions
                 new TestDelegate(TestDelegates.ThrowsArgumentException)) as ArgumentException;
 
             Assert.IsNotNull(ex, "No ArgumentException thrown");
-            Assert.That(ex.Message, Is.StringStarting("myMessage"));
+            Assert.That(ex.Message, Does.StartWith("myMessage"));
 #if !NETCF && !SILVERLIGHT
             Assert.That(ex.ParamName, Is.EqualTo("myParam"));
 #endif
@@ -63,7 +63,7 @@ namespace NUnit.Framework.Assertions
                 delegate { throw new ArgumentException("myMessage", "myParam"); }) as ArgumentException;
 
             Assert.IsNotNull(ex, "No ArgumentException thrown");
-            Assert.That(ex.Message, Is.StringStarting("myMessage"));
+            Assert.That(ex.Message, Does.StartWith("myMessage"));
 #if !NETCF && !SILVERLIGHT
             Assert.That(ex.ParamName, Is.EqualTo("myParam"));
 #endif
@@ -72,7 +72,7 @@ namespace NUnit.Framework.Assertions
                 delegate { throw new ArgumentException("myMessage", "myParam"); } ) as ArgumentException;
 
             Assert.IsNotNull(ex, "No ArgumentException thrown");
-            Assert.That(ex.Message, Is.StringStarting("myMessage"));
+            Assert.That(ex.Message, Does.StartWith("myMessage"));
 #if !NETCF && !SILVERLIGHT
             Assert.That(ex.ParamName, Is.EqualTo("myParam"));
 #endif
@@ -80,7 +80,7 @@ namespace NUnit.Framework.Assertions
             ex = Assert.Throws<ArgumentException>(TestDelegates.ThrowsArgumentException) as ArgumentException;
 
             Assert.IsNotNull(ex, "No ArgumentException thrown");
-            Assert.That(ex.Message, Is.StringStarting("myMessage"));
+            Assert.That(ex.Message, Does.StartWith("myMessage"));
 #if !NETCF && !SILVERLIGHT
             Assert.That(ex.ParamName, Is.EqualTo("myParam"));
 #endif
@@ -99,7 +99,7 @@ namespace NUnit.Framework.Assertions
         public void UnrelatedExceptionThrown()
         {
             var ex = CatchException(() => Assert.Throws<ArgumentException>(TestDelegates.ThrowsNullReferenceException));
-            Assert.That(ex.Message, Is.StringStarting(
+            Assert.That(ex.Message, Does.StartWith(
                 "  Expected: <System.ArgumentException>" + Env.NewLine +
                 "  But was:  <System.NullReferenceException>" + Env.NewLine));
         }
@@ -108,7 +108,7 @@ namespace NUnit.Framework.Assertions
         public void BaseExceptionThrown()
         {
             var ex = CatchException(() => Assert.Throws<ArgumentException>(TestDelegates.ThrowsSystemException));
-            Assert.That(ex.Message, Is.StringStarting(
+            Assert.That(ex.Message, Does.StartWith(
                 "  Expected: <System.ArgumentException>" + Env.NewLine +
                 "  But was:  <System.Exception>" + Env.NewLine));
         }
@@ -117,7 +117,7 @@ namespace NUnit.Framework.Assertions
         public void DerivedExceptionThrown()
         {
             var ex = CatchException(() => Assert.Throws<Exception>(TestDelegates.ThrowsArgumentException));
-            Assert.That(ex.Message, Is.StringStarting(
+            Assert.That(ex.Message, Does.StartWith(
                 "  Expected: <System.Exception>" + Env.NewLine +
                 "  But was:  <System.ArgumentException>" + Env.NewLine));
         }
