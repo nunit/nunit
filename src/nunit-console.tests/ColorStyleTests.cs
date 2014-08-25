@@ -32,7 +32,7 @@ namespace NUnit.ConsoleRunner.Tests
 		[TestCase(ColorStyle.Pass, ConsoleColor.Green)]
 		[TestCase(ColorStyle.Failure, ConsoleColor.Red)]
 		[TestCase(ColorStyle.Warning, ConsoleColor.Yellow)]
-		[TestCase(ColorStyle.Error, ConsoleColor.DarkRed)]
+		[TestCase(ColorStyle.Error, ConsoleColor.Red)]
 		public void TestGetColor( ColorStyle style, ConsoleColor expected )
 		{
 			Assert.That(ColorConsole.GetColor(style), Is.EqualTo(expected));

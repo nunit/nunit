@@ -159,7 +159,8 @@ namespace NUnit.ConsoleRunner
             {
                 if (labels == "ON")
                     WriteTestLabel(nameAttr.Value);
-                outWriter.Write(outputNode.InnerText);
+
+                WriteTestOutput(outputNode);
             }
 
             //currentTestName = string.Empty;
@@ -167,8 +168,21 @@ namespace NUnit.ConsoleRunner
 
         private void WriteTestLabel(string name)
         {
-            using (new ColorConsole(ColorStyle.Label))
-                outWriter.WriteLine("***** {0}", name);
+            using (new ColorConsole(ColorStyle.SectionHeader))
+                outWriter.WriteLine("=> {0}", name);
+        }
+
+        private void WriteTestOutput(XmlNode outputNode)
+        {
+            using (new ColorConsole(ColorStyle.Output))
+            {
+                outWriter.Write(outputNode.InnerText);
+                // Some labels were being shown on the same line as the previous output
+                if (!outputNode.InnerText.EndsWith("\n"))
+                {
+                    outWriter.WriteLine();
+                }
+            }
         }
 
         public void SuiteFinished(XmlNode suiteResult)
