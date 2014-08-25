@@ -175,30 +175,6 @@ namespace NUnit.Framework.Internal
             }
         }
 
-        /// <summary>
-        /// Called when the test creates text output.
-        /// </summary>
-        /// <param name="testOutput">A console message</param>
-        public void TestOutput(TestOutput testOutput)
-        {
-            try
-            {			
-#if false
-                string report = string.Format("<output type=\"{0}\"><text>{1}</text></output>",
-                    testOutput.Type, testOutput.Text);
-
-                handler.RaiseCallbackEvent(report);
-#else
-                handler.RaiseCallbackEvent(testOutput.ToXml(false).OuterXml);
-#endif
-            }
-            catch (Exception ex)
-            {
-                log.Error("Exception processing: " + testOutput.ToString() + NUnit.Env.NewLine + ex.ToString());
-            }
-
-        }
-
         #endregion
     }
 }

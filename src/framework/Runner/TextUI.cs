@@ -68,7 +68,7 @@ namespace NUnitLite.Runner
         /// <summary>
         /// Initializes a new instance of the <see cref="TextUI"/> class.
         /// </summary>
-        public TextUI() : this(ConsoleWriter.Out) { }
+        public TextUI() : this(Console.Out) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TextUI"/> class.
@@ -78,6 +78,7 @@ namespace NUnitLite.Runner
         {
             // Set the default writer - may be overridden by the args specified
             _outWriter = writer;
+            _errWriter = writer;
         }
         #endregion
 
@@ -343,7 +344,9 @@ namespace NUnitLite.Runner
             writer.WriteLine();
         }
 
-        // Public for testing
+        /// <summary>
+        /// Make the settings for this run - this is public for testing
+        /// </summary>
         public static Dictionary<string, object> MakeRunSettings(CommandLineOptions options)
         {
             // Transfer command line options to run settings
@@ -366,16 +369,11 @@ namespace NUnitLite.Runner
         #region ITestListener Members
 
         /// <summary>
-        /// Called when a test has just started
+        /// Called when a test or suite has just started
         /// </summary>
         /// <param name="test">The test that is starting</param>
         public void TestStarted(ITest test)
         {
-            // Display All labels for both "On" and "All" since nunitlite does
-            // not currently intercept text output.
-            if (_commandLineOptions.DisplayTestLabels == "On" || _commandLineOptions.DisplayTestLabels == "All")
-                _outWriter.WriteLine("***** " + test.Name);
-
 #if !SILVERLIGHT
             if (_teamCity != null)
                 _teamCity.TestStarted(test);
@@ -392,18 +390,26 @@ namespace NUnitLite.Runner
             if (_teamCity != null)
                 _teamCity.TestFinished(result);
 #endif
+
+            bool isSuite = result.Test.IsSuite;
+            var labels = _commandLineOptions.DisplayTestLabels != null
+                ? _commandLineOptions.DisplayTestLabels.ToUpperInvariant()
+                : "ON";
+                
+            if (!isSuite && labels == "ALL")
+                WriteTestLabel(result);
+
+            if (result.Output.Length > 0)
+            {
+                if (!isSuite && labels == "ON")
+                    WriteTestLabel(result);
+                _outWriter.Write(result.Output);
+            }
         }
 
-        /// <summary>
-        /// Called when the test creates text output.
-        /// </summary>
-        /// <param name="testOutput">A console message</param>
-        public void TestOutput(TestOutput testOutput)
+        private void WriteTestLabel(ITestResult result)
         {
-#if !SILVERLIGHT
-            if (_teamCity != null)
-                _teamCity.TestOutput(testOutput);
-#endif
+            _outWriter.WriteLine("***** " + result.Test.Name);
         }
 
         #endregion

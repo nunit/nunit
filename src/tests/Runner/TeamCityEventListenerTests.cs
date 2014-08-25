@@ -13,7 +13,6 @@ namespace NUnitLite.Runner.Tests
     {
         private TeamCityEventListener _teamCity;
         private StringBuilder _output;
-        private StringBuilder _error;
 
         private static readonly string NL = NUnit.Env.NewLine;
 
@@ -23,10 +22,7 @@ namespace NUnitLite.Runner.Tests
             _output = new StringBuilder();
             var outWriter = new StringWriter(_output);
 
-            _error = new StringBuilder();
-            var errWriter = new StringWriter(_error);
-
-            _teamCity = new TeamCityEventListener(outWriter, errWriter);
+            _teamCity = new TeamCityEventListener(outWriter);
         }
 
         [Test]
@@ -36,7 +32,6 @@ namespace NUnitLite.Runner.Tests
 
             Assert.That(_output.ToString(), Is.EqualTo(
                 "##teamcity[testSuiteStarted name='dummy']" + NL));
-            Assert.That(_error.Length, Is.EqualTo(0));
         }
 
         [Test]
@@ -46,7 +41,6 @@ namespace NUnitLite.Runner.Tests
 
             Assert.That(_output.ToString(), Is.EqualTo(
                 "##teamcity[testSuiteFinished name='dummy']" + NL));
-            Assert.That(_error.Length, Is.EqualTo(0));
         }
 
         [Test]
@@ -56,7 +50,6 @@ namespace NUnitLite.Runner.Tests
 
             Assert.That(_output.ToString(), Is.EqualTo(
                 "##teamcity[testStarted name='FakeTestMethod' captureStandardOutput='true']" + NL));
-            Assert.That(_error.Length, Is.EqualTo(0));
         }
 
         [Test]
@@ -69,7 +62,6 @@ namespace NUnitLite.Runner.Tests
 
             Assert.That(_output.ToString(), Is.EqualTo(
                 "##teamcity[testFinished name='FakeTestMethod' duration='1.234']" + NL));
-            Assert.That(_error.Length, Is.EqualTo(0));
         }
 
         [Test]
@@ -81,7 +73,6 @@ namespace NUnitLite.Runner.Tests
 
             Assert.That(_output.ToString(), Is.EqualTo(
                 "##teamcity[testIgnored name='FakeTestMethod' message='Inconclusive']" + NL));
-            Assert.That(_error.Length, Is.EqualTo(0));
         }
 
         [Test]
@@ -93,7 +84,6 @@ namespace NUnitLite.Runner.Tests
 
             Assert.That(_output.ToString(), Is.EqualTo(
                 "##teamcity[testIgnored name='FakeTestMethod' message='Just because']" + NL));
-            Assert.That(_error.Length, Is.EqualTo(0));
         }
 
         [Test]
@@ -107,25 +97,6 @@ namespace NUnitLite.Runner.Tests
             Assert.That(_output.ToString(), Is.EqualTo(
                 "##teamcity[testFailed name='FakeTestMethod' message='Error message' details='Stack trace']" + NL +
                 "##teamcity[testFinished name='FakeTestMethod' duration='1.234']" + NL));
-            Assert.That(_error.Length, Is.EqualTo(0));
-        }
-
-        [Test]
-        public void TestStandardOutput()
-        {
-            _teamCity.TestOutput(new TestOutput("Output to console", TestOutputType.Out));
-
-            Assert.That(_output.ToString(), Is.EqualTo("Output to console" + NL));
-            Assert.That(_error.Length, Is.EqualTo(0));
-        }
-
-        [Test]
-        public void TestErrorOutput()
-        {
-            _teamCity.TestOutput(new TestOutput("This is an error message", TestOutputType.Error));
-
-            Assert.That(_error.ToString(), Is.EqualTo("This is an error message" + NL));
-            Assert.That(_output.Length, Is.EqualTo(0));
         }
 
         private void FakeTestMethod() { }

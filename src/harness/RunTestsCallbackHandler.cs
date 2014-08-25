@@ -33,24 +33,24 @@ namespace NUnit.Framework.TestHarness
 {
     public class RunTestsCallbackHandler : CallbackHandler
     {
-        private readonly bool teamcity;
-        private readonly string labels;
-        private readonly TeamCityServiceMessages teamcityMessages;
+        private readonly bool _teamcity;
+        private readonly string _labels;
+        private readonly TeamCityServiceMessages _teamcityMessages;
 
-        private TextWriter output;
+        private TextWriter _outWriter;
 
         public RunTestsCallbackHandler(IDictionary<string, object> settings)
         {
-            this.teamcity = settings.ContainsKey("DisplayTeamCityServiceMessages")
+            _teamcity = settings.ContainsKey("DisplayTeamCityServiceMessages")
                 ? (bool)settings["DisplayTeamCityServiceMessages"]
                 : false;
-            this.labels = settings.ContainsKey("DisplayTestLabels")
-                ? (string)settings["DisplayTestLabels"]
-                : "Off";
-            this.output = Console.Out;
+            _labels = settings.ContainsKey("DisplayTestLabels")
+                ? ((string)settings["DisplayTestLabels"]).ToUpperInvariant()
+                : "ON";
+            _outWriter = Console.Out;
 
-            if (teamcity)
-                teamcityMessages = new TeamCityServiceMessages();
+            if (_teamcity)
+                _teamcityMessages = new TeamCityServiceMessages();
         }
 
         public override void ReportProgress(string report)
@@ -73,9 +73,6 @@ namespace NUnit.Framework.TestHarness
                 case "test-suite":
                     OnSuiteFinished(topNode);
                     break;
-                case "output":
-                    OnOutput(topNode);
-                    break;
             }
         }
 
@@ -84,8 +81,8 @@ namespace NUnit.Framework.TestHarness
             XmlAttribute name = suiteNode.Attributes["name"];
             XmlAttribute fullname = suiteNode.Attributes["fullname"];
 
-            if (teamcity)
-                teamcityMessages.TestSuiteStarted(name.Value);
+            if (_teamcity)
+                _teamcityMessages.TestSuiteStarted(name.Value);
         }
 
         private void OnSuiteFinished(XmlNode suiteNode)
@@ -99,8 +96,8 @@ namespace NUnit.Framework.TestHarness
             //Debug.Assert(fullname != null);
             Debug.Assert(result != null);
 
-            if (teamcity)
-                teamcityMessages.TestSuiteFinished(name.Value);
+            if (_teamcity)
+                _teamcityMessages.TestSuiteFinished(name.Value);
         }
 
         private void OnTestStart(XmlNode startNode)
@@ -113,11 +110,8 @@ namespace NUnit.Framework.TestHarness
             Debug.Assert(id != null);
             Debug.Assert(name != null);
 
-            if (teamcity)
-                teamcityMessages.TestStarted(name.Value);
-
-            if (labels == "On" || labels == "All")
-                output.WriteLine("***** {0}", name.Value);
+            if (_teamcity)
+                _teamcityMessages.TestStarted(name.Value);
         }
 
         private void OnTestCaseFinished(XmlNode testNode)
@@ -139,51 +133,44 @@ namespace NUnit.Framework.TestHarness
             switch (result.Value)
             {
                 case "Passed":
-                    if (teamcity)
-                        teamcityMessages.TestFinished(name.Value, duration);
+                    if (_teamcity)
+                        _teamcityMessages.TestFinished(name.Value, duration);
                     break;
                 case "Inconclusive":
-                    if (teamcity)
-                        teamcityMessages.TestIgnored(name.Value, "Inconclusive");
+                    if (_teamcity)
+                        _teamcityMessages.TestIgnored(name.Value, "Inconclusive");
                     break;
                 case "Skipped":
                     XmlElement reason = testNode["reason"];
-                    if (teamcity)
-                        teamcityMessages.TestIgnored(name.Value, reason["message"].InnerText);
+                    if (_teamcity)
+                        _teamcityMessages.TestIgnored(name.Value, reason["message"].InnerText);
                     break;
                 case "Failed":
                     XmlElement failure = testNode["failure"];
                     XmlElement message = failure["message"];
                     XmlElement stackTrace = failure["stack-trace"];
-                    if (teamcity)
+                    if (_teamcity)
                     {
-                        teamcityMessages.TestFailed(name.Value, message.InnerText, stackTrace.InnerText);
-                        teamcityMessages.TestFinished(name.Value, duration);
+                        _teamcityMessages.TestFailed(name.Value, message.InnerText, stackTrace.InnerText);
+                        _teamcityMessages.TestFinished(name.Value, duration);
                     }
                     break;
             }
+
+            var outputNode = testNode.SelectSingleNode("output");
+            if (_labels == "ALL")
+                WriteTestLabel(name.Value);
+            if (outputNode != null)
+            {
+                if (_labels == "ON")
+                    WriteTestLabel(name.Value);
+                _outWriter.Write(outputNode.InnerText);
+            }
         }
 
-        private void OnOutput(XmlNode outputNode)
+        private void WriteTestLabel(string name)
         {
-            XmlAttribute type = outputNode.Attributes["type"];
-            XmlNode textNode = outputNode.Attributes["text"];
-
-            Debug.Assert(type != null);
-            Debug.Assert(textNode != null);
-
-            switch (type.Value)
-            {
-                case "Out":
-                    if (teamcity)
-                        teamcityMessages.TestOutput(textNode.InnerText);
-                    output.Write(textNode.InnerText);
-                    break;
-                case "Error":
-                    if (teamcity)
-                        teamcityMessages.TestError(textNode.InnerText);
-                    break;
-            }
+            _outWriter.WriteLine("***** {0}", name);
         }
     }
 }

@@ -232,6 +232,8 @@ namespace NUnit.Framework.Internal.Execution
             {
                 this.PumpState = EventPumpState.Stopped;
                 //pumpThread = null;
+                if (this.events.Count > 0)
+                    log.Error("Event pump thread exiting with {0} events remaining");
             }
         }
         #endregion

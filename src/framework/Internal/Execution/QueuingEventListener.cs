@@ -62,14 +62,6 @@ namespace NUnit.Framework.Internal.Execution
             events.Enqueue( new TestFinishedEvent( result ) );
         }
 
-        /// <summary>
-        /// The test created some text output.
-        /// </summary>
-        /// <param name="output">A TestOutput message</param>
-        public void TestOutput(TestOutput output)
-        {
-            events.Enqueue( new OutputEvent( output ) );
-        }
         #endregion
     }
 }

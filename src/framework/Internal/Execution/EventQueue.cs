@@ -144,32 +144,6 @@ namespace NUnit.Framework.Internal.Execution
         }
     }
 
-    /// <summary>
-    /// OutputEvent holds information needed to call the TestOutput method.
-    /// </summary>
-    public class OutputEvent : Event
-    {
-        TestOutput output;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="OutputEvent"/> class.
-        /// </summary>
-        /// <param name="output">The output.</param>
-        public OutputEvent( TestOutput output )
-        {
-            this.output = output;
-        }
-
-        /// <summary>
-        /// Calls TestOutput on the specified listener.
-        /// </summary>
-        /// <param name="listener">The listener.</param>
-        public override void Send(ITestListener listener)
-        {
-            listener.TestOutput( this.output );
-        }
-    }
-
     #endregion
 
     /// <summary>
@@ -178,6 +152,8 @@ namespace NUnit.Framework.Internal.Execution
     /// </summary>
     public class EventQueue
     {
+        static readonly Logger log = InternalTrace.GetLogger("EventQueue");
+
         private readonly Queue queue = new Queue();
         private readonly object syncRoot;
         private bool stopped;
@@ -238,6 +214,7 @@ namespace NUnit.Framework.Internal.Execution
             lock( this.syncRoot )
             {
                 this.queue.Enqueue( e );
+                
                 Monitor.Pulse( this.syncRoot );
             }
 

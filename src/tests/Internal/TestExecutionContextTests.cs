@@ -280,30 +280,6 @@ namespace NUnit.Framework.Internal
 
         #endregion
 
-        #region CurrentDirectory
-
-#if !NETCF && !SILVERLIGHT
-        [Test]
-        public void FixtureSetUpContextReflectsCurrentDirectory()
-        {
-            Assert.That(fixtureContext.CurrentDirectory, Is.EqualTo(Environment.CurrentDirectory));
-        }
-
-        [Test]
-        public void SetUpContextReflectsCurrentDirectory()
-        {
-            Assert.That(setupContext.CurrentDirectory, Is.EqualTo(Environment.CurrentDirectory));
-        }
-
-        [Test]
-        public void TestContextReflectsCurrentDirectory()
-        {
-            Assert.That(TestExecutionContext.CurrentContext.CurrentDirectory, Is.EqualTo(Environment.CurrentDirectory));
-        }
-#endif
-
-        #endregion
-
         #region CurrentPrincipal
 
 #if !NETCF && !SILVERLIGHT

@@ -42,11 +42,5 @@ namespace NUnit.Framework.Interfaces
         /// </summary>
         /// <param name="result">The result of the test</param>
         void TestFinished(ITestResult result);
-
-        /// <summary>
-        /// Called when the test creates text output.
-        /// </summary>
-        /// <param name="testOutput">A console message</param>
-        void TestOutput(TestOutput testOutput);
     }
 }

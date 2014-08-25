@@ -119,35 +119,9 @@ namespace NUnit.Framework.Internal
 
 #if !NETCF && !SILVERLIGHT
         /// <summary>
-        /// The current working directory
-        /// </summary>
-        private string _currentDirectory;
-
-        /// <summary>
-        /// Destination for standard output
-        /// </summary>
-        private TextWriter _outWriter;
-
-        /// <summary>
-        /// Destination for standard error
-        /// </summary>
-        private TextWriter _errorWriter;
-
-        /// <summary>
-        /// Indicates whether trace is enabled
-        /// </summary>
-        private bool _tracing;
-
-        /// <summary>
-        /// Destination for Trace output
-        /// </summary>
-        private TextWriter _traceWriter;
-
-        /// <summary>
         /// The current Principal.
         /// </summary>
         private IPrincipal _currentPrincipal;
-
 #endif
 
         #endregion
@@ -168,11 +142,6 @@ namespace NUnit.Framework.Internal
 #endif
 
 #if !NETCF && !SILVERLIGHT
-            _outWriter = Console.Out;
-            _errorWriter = Console.Error;
-            _traceWriter = null;
-            _tracing = false;
-            _currentDirectory = Environment.CurrentDirectory;
             _currentPrincipal = Thread.CurrentPrincipal;
 #endif
         }
@@ -199,11 +168,6 @@ namespace NUnit.Framework.Internal
 #endif
 
 #if !NETCF && !SILVERLIGHT
-            _outWriter = other._outWriter;
-            _errorWriter = other._errorWriter;
-            _traceWriter = other._traceWriter;
-            _tracing = other._tracing;
-            _currentDirectory = Environment.CurrentDirectory;
             _currentPrincipal = Thread.CurrentPrincipal;
 #endif
 
@@ -248,7 +212,7 @@ namespace NUnit.Framework.Internal
 
                 return current; 
 #else
-                var context = CallContext.GetData(CONTEXT_KEY) as TestExecutionContext;
+                var context = GetTestExecutionContext();
                 if (context == null) // This can happen on Mono
                 {
                     context = new TestExecutionContext();
@@ -270,6 +234,16 @@ namespace NUnit.Framework.Internal
 #endif
             }
         }
+
+#if !SILVERLIGHT && !NETCF
+        /// <summary>
+        /// Get the current context or return null if none is found.
+        /// </summary>
+        public static TestExecutionContext GetTestExecutionContext()
+        {
+            return CallContext.GetData(CONTEXT_KEY) as TestExecutionContext;
+        }
+#endif
 
         /// <summary>
         /// Clear the current context. This is provided to
@@ -439,107 +413,6 @@ namespace NUnit.Framework.Internal
 
 #if !NETCF && !SILVERLIGHT
         /// <summary>
-        /// Saves and restores the CurrentDirectory
-        /// </summary>
-        public string CurrentDirectory
-        {
-            get { return _currentDirectory; }
-            set
-            {
-                _currentDirectory = value;
-                Environment.CurrentDirectory = _currentDirectory;
-            }
-        }
-
-        /// <summary>
-        /// Controls where Console.Out is directed
-        /// </summary>
-        internal TextWriter Out
-        {
-            get { return _outWriter; }
-            set 
-            {
-                if ( _outWriter != value )
-                {
-                    _outWriter = value; 
-                    Console.Out.Flush();
-                    Console.SetOut( _outWriter );
-                }
-            }
-        }
-
-        /// <summary>
-        /// Controls where Console.Error is directed
-        /// </summary>
-        internal TextWriter Error
-        {
-            get { return _errorWriter; }
-            set 
-            {
-                if ( _errorWriter != value )
-                {
-                    _errorWriter = value; 
-                    Console.Error.Flush();
-                    Console.SetError( _errorWriter );
-                }
-            }
-        }
-
-        /// <summary>
-        /// Controls whether trace and debug output are written
-        /// to the standard output.
-        /// </summary>
-        internal bool Tracing
-        {
-            get { return _tracing; }
-            set
-            {
-                if (_tracing != value)
-                {
-                    if (_traceWriter != null && _tracing)
-                        StopTracing();
-
-                    _tracing = value;
-
-                    if (_traceWriter != null && _tracing)
-                        StartTracing();
-                }
-            }
-        }
-
-        /// <summary>
-        /// Controls where Trace output is directed
-        /// </summary>
-        internal TextWriter TraceWriter
-        {
-            get { return _traceWriter; }
-            set
-            {
-                if ( _traceWriter != value )
-                {
-                    if ( _traceWriter != null  && _tracing )
-                        StopTracing();
-
-                    _traceWriter = value;
-
-                    if ( _traceWriter != null && _tracing )
-                        StartTracing();
-                }
-            }
-        }
-
-        private void StopTracing()
-        {
-            _traceWriter.Close();
-            System.Diagnostics.Trace.Listeners.Remove( "NUnit" );
-        }
-
-        private void StartTracing()
-        {
-            System.Diagnostics.Trace.Listeners.Add( new TextWriterTraceListener( _traceWriter, "NUnit" ) );
-        }
-
-        /// <summary>
         /// Gets or sets the current <see cref="IPrincipal"/> for the Thread.
         /// </summary>
         public IPrincipal CurrentPrincipal
@@ -551,7 +424,6 @@ namespace NUnit.Framework.Internal
                 Thread.CurrentPrincipal = _currentPrincipal;
             }
         }
-
 #endif
 
         #endregion
@@ -571,7 +443,6 @@ namespace NUnit.Framework.Internal
 #endif
 
 #if !NETCF && !SILVERLIGHT
-            _currentDirectory = Environment.CurrentDirectory;
             _currentPrincipal = Thread.CurrentPrincipal;
 #endif
         }
@@ -589,12 +460,7 @@ namespace NUnit.Framework.Internal
 #endif
 
 #if !NETCF && !SILVERLIGHT
-            // TODO: We should probably remove this feature, since
-            // it potentially impacts all threads.
-            Environment.CurrentDirectory = _currentDirectory;
             Thread.CurrentPrincipal = _currentPrincipal;
-            Console.SetOut(this.Out);
-            Console.SetError(this.Error);
 #endif
 
             CurrentContext = this;

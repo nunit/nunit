@@ -30,25 +30,6 @@ namespace NUnit.Framework.Api
     public static class DriverSettings
     {
         /// <summary>
-        /// If true, the framework will capture output to standard error
-        /// and send it to the listener in a TestOutput call.
-        /// </summary>
-        public const string CaptureStandardError = "CaptureStandardError";
-
-        /// <summary>
-        /// If true, the framework will capture output to standard output
-        /// and send it to the listener in a TestOutput call.
-        /// </summary>
-        public const string CaptureStandardOutput = "CaptureStandardOutput";
-
-        /// <summary>
-        /// The default log threshold to be captured. Defaults to "Error"
-        /// Use "None" to turn off capture. Other values depend on the
-        /// logging subsystem. Currently, log4net is supported.
-        /// </summary>
-        public const string DefaultLogThreshold = "DefaultLogThreshold";
-
-        /// <summary>
         /// Integer value in milliseconds for the default timeout value
         /// for test cases. If not specified, there is no timeout.
         /// </summary>

@@ -157,46 +157,6 @@ namespace NUnit.Framework.Internal.Execution
             }
         }
 
-        //[TestFixture]
-        //public class SetWaitHandle_Enqueue_SynchronousTest : ProducerConsumerTest
-        //{
-        //    private EventQueue q;
-        //    private AutoResetEvent waitHandle;
-        //    private volatile bool afterEnqueue;
-
-        //    [Test]
-        //    [Timeout(1000)]
-        //    public void SetWaitHandle_Enqueue_Synchronous()
-        //    {
-        //        using (this.waitHandle = new AutoResetEvent(false))
-        //        {
-        //            this.q = new EventQueue();
-        //            this.q.SetWaitHandleForSynchronizedEvents(this.waitHandle);
-        //            this.afterEnqueue = false;
-        //            this.RunProducerConsumer();
-        //        }
-        //    }
-
-        //    protected override void Producer()
-        //    {
-        //        Event synchronousEvent = new RunStartedEvent(string.Empty, 0);
-        //        Assert.IsTrue(synchronousEvent.IsSynchronous);
-        //        this.q.Enqueue(synchronousEvent);
-        //        this.afterEnqueue = true;
-        //        Thread.MemoryBarrier();
-        //    }
-
-        //    protected override void Consumer()
-        //    {
-        //        this.q.Dequeue(true);
-        //        Thread.Sleep(30);
-        //        Assert.IsFalse(this.afterEnqueue);
-        //        this.waitHandle.Set();
-        //        Thread.Sleep(30);
-        //        Assert.IsTrue(this.afterEnqueue);
-        //    }
-        //}
-
         [TestFixture]
         public class SetWaitHandle_Enqueue_AsynchronousTest : ProducerConsumerTest
         {
@@ -218,7 +178,7 @@ namespace NUnit.Framework.Internal.Execution
 
             protected override void Producer()
             {
-                Event asynchronousEvent = new OutputEvent(new TestOutput(string.Empty, TestOutputType.Trace));
+                Event asynchronousEvent = new TestStartedEvent(new TestSuite("Dummy"));
                 Assert.IsFalse(asynchronousEvent.IsSynchronous);
                 this.q.Enqueue(asynchronousEvent);
                 this.afterEnqueue = true;
@@ -316,58 +276,6 @@ namespace NUnit.Framework.Internal.Execution
             }
         }
 
-        /// <summary>
-        /// Verifies that when
-        /// (1) Traces are captured and fed into the EventListeners, and
-        /// (2) an EventListener writes Traces,
-        /// the Trace / EventPump / EventListener do not deadlock.
-        /// </summary>
-        /// <remarks>
-        /// This mainly simulates the object structure created by RemoteTestRunner.Run.
-        /// </remarks>
-        [Test]
-        [Timeout(1000)]
-        public void TracingEventListenerDoesNotDeadlock()
-        {
-            QueuingEventListener upstreamListener = new QueuingEventListener();
-            EventQueue upstreamListenerQueue = upstreamListener.Events;
-
-            // Install a TraceListener sending TestOutput events to the upstreamListener.
-            // This simulates RemoteTestRunner.StartTextCapture, where TestContext installs such a TraceListener.
-            TextWriter traceWriter = new EventListenerTextWriter(upstreamListener, TestOutputType.Trace);
-            const string TraceListenerName = "TracingEventListenerDoesNotDeadlock";
-            TraceListener feedingTraceToUpstreamListener = new TextWriterTraceListener(traceWriter, TraceListenerName);
-
-            try
-            {
-                Trace.Listeners.Add(feedingTraceToUpstreamListener);
-
-                // downstreamListenerToTrace simulates an EventListener installed e.g. by an Addin, 
-                // which may call Trace within the EventListener methods:
-                TracingEventListener downstreamListenerToTrace = new TracingEventListener();
-                using (EventPump pump = new EventPump(downstreamListenerToTrace, upstreamListenerQueue))
-                {
-                    pump.Name = "TracingEventListenerDoesNotDeadlock";
-                    pump.Start();
-
-                    const int Repetitions = 10;
-                    for (int i = 0; i < Repetitions; i++)
-                    {
-                        foreach (Event e in events)
-                        {
-                            Trace.WriteLine("Before sending {0} event.", e.GetType().Name);
-                            e.Send(upstreamListener);
-                            Trace.WriteLine("After sending {0} event.", e.GetType().Name);
-                        }
-                    }
-                }
-            }
-            finally
-            {
-                Trace.Listeners.Remove(TraceListenerName);
-                feedingTraceToUpstreamListener.Dispose();
-            }
-        }
 
         /// <summary> 
         /// Floods the queue of an EventPump with multiple concurrent event producers.
@@ -483,7 +391,7 @@ namespace NUnit.Framework.Internal.Execution
             {
                 try
                 {
-                    Event e = new OutputEvent(new TestOutput(this.ProducerThread.Name, TestOutputType.Log));
+                    Event e = new TestStartedEvent(new TestSuite("Dummy"));
                     DateTime start = DateTime.Now;
                     while (DateTime.Now - start <= TimeSpan.FromSeconds(3))
                     {
@@ -502,65 +410,6 @@ namespace NUnit.Framework.Internal.Execution
                 {
                     this.Exception = ex;
                 }
-            }
-        }
-
-        private class TracingEventListener : ITestListener
-        {
-            #region EventListener Members
-            //public void RunStarted(string name, int testCount)
-            //{
-            //    WriteTrace("RunStarted({0},{1})", name, testCount);
-            //}
-
-            //public void RunFinished(TestResult result)
-            //{
-            //    WriteTrace("RunFinished({0})", result);
-            //}
-
-            //public void RunFinished(Exception exception)
-            //{
-            //    WriteTrace("RunFinished({0})", exception);
-            //}
-
-            public void TestStarted(ITest test)
-            {
-                //WriteTrace("TestStarted({0})", test.Name);
-                WriteTrace("TestStarted");
-            }
-
-            public void TestFinished(ITestResult result)
-            {
-                WriteTrace("TestFinished({0})", result);
-            }
-
-            //public void SuiteStarted(TestName testName)
-            //{
-            //    WriteTrace("SuiteStarted({0})", testName);
-            //}
-
-            //public void SuiteFinished(TestResult result)
-            //{
-            //    WriteTrace("SuiteFinished({0})", result);
-            //}
-
-            public void UnhandledException(Exception exception)
-            {
-                WriteTrace("UnhandledException({0})", exception);
-            }
-
-            public void TestOutput(TestOutput testOutput)
-            {
-                if (testOutput.Type != TestOutputType.Trace)
-                {
-                    WriteTrace("TestOutput {0}: '{1}'", testOutput.Type, testOutput.Text);
-                }
-            }
-            #endregion
-
-            private static void WriteTrace(string message, params object[] args)
-            {
-                Trace.TraceInformation(message, args);
             }
         }
     }

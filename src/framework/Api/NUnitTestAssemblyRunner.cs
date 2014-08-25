@@ -39,6 +39,9 @@ namespace NUnit.Framework.Api
         TextWriter _savedOut;
         TextWriter _savedErr;
 
+        // Event Pump
+        EventPump _pump;
+
         #region Constructor
 
         /// <summary>
@@ -84,21 +87,16 @@ namespace NUnit.Framework.Api
             _savedOut = Console.Out;
             _savedErr = Console.Error;
 
+            Console.SetOut(new TextCapture(Console.Out));
+            Console.SetError(new TextCapture(Console.Error));
+
             QueuingEventListener queue = new QueuingEventListener();
-
-            if (Settings.Contains(DriverSettings.CaptureStandardOutput))
-                Context.Out = new EventListenerTextWriter(queue, TestOutputType.Out);
-            if (Settings.Contains(DriverSettings.CaptureStandardError))
-                Context.Error = new EventListenerTextWriter(queue, TestOutputType.Error);
-
             Context.Listener = queue;
 
-            using (EventPump pump = new EventPump(listener, queue.Events))
-            {
-                pump.Start();
+            _pump = new EventPump(listener, queue.Events);
+            _pump.Start();
 
-                Context.Dispatcher.Dispatch(TopLevelWorkItem);
-            }
+            Context.Dispatcher.Dispatch(TopLevelWorkItem);
         }
 
         /// <summary>
@@ -106,6 +104,8 @@ namespace NUnit.Framework.Api
         /// </summary>
         protected override void OnRunCompleted(object sender, EventArgs e)
         {
+            _pump.Dispose();
+
             Console.SetOut(_savedOut);
             Console.SetError(_savedErr);
 

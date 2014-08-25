@@ -185,9 +185,7 @@ namespace NUnit.Framework.TestHarness
             NUnit2TestResultWriter nunit2ResultWriter = new NUnit2TestResultWriter();
             nunit2ResultWriter.WriteResultFile(resultNode, v2ResultFile);
 
-            // We are not always getting the TeamCity options output in the web, so make sure they are also going to the build log
-            //if (!options.DisplayTeamCityServiceMessages)
-                new ResultReporter(resultNode).ReportResults();
+            new ResultReporter(resultNode).ReportResults();
 
             if (options.OutFile != null)
                 Console.WriteLine("Test standard output saved as {0}", Path.Combine(workDirectory, options.OutFile));

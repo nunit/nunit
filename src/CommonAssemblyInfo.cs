@@ -29,8 +29,8 @@ using System.Reflection;
 //
 [assembly: AssemblyCompany("NUnit.org")]
 [assembly: AssemblyProduct("NUnit Framework 3.0")]
-[assembly: AssemblyCopyright("Copyright (C) 2011 Charlie Poole")]
-[assembly: AssemblyTrademark("NUnit is a trademark of NUnit.org")]
+[assembly: AssemblyCopyright("Copyright (C) 2014 Charlie Poole")]
+[assembly: AssemblyTrademark("NUnit is a trademark of NUnit Software")]
 
 //
 // Version information for an assembly consists of the following four _values:
@@ -43,8 +43,7 @@ using System.Reflection;
 // You can specify all the _values or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
 //
-[assembly: AssemblyVersion("2.9.7")]
-[assembly: AssemblyInformationalVersion("2.9.7")]
+[assembly: AssemblyVersion("3.0.*")]
 
 #if DEBUG
 #if NET_4_5
@@ -65,6 +64,8 @@ using System.Reflection;
 [assembly: AssemblyConfiguration("Compact Framework 3.5 Debug")]
 #elif NETCF_2_0
 [assembly: AssemblyConfiguration("Compact Framework 2.0 Debug")]
+#else
+[assembly: AssemblyConfifguration("Debug")]
 #endif
 #else
 #if NET_4_5
@@ -85,6 +86,8 @@ using System.Reflection;
 [assembly: AssemblyConfiguration("Compact Framework 3.5")]
 #elif NETCF_2_0
 [assembly: AssemblyConfiguration("Compact Framework 2.0")]
+#else
+[assembly: AssemblyConfiguration("")]
 #endif
 #endif
 

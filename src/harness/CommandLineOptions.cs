@@ -70,9 +70,6 @@ namespace NUnit.Framework.TestHarness
             this.Add("seed=", "Specify the random {SEED} to be used in generating test cases.",
                 v => randomSeed = RequiredInt(v, "--seed"));
 
-            this.Add("capture", "Turn on capture of standard and error output in order to test that it works. The text should be displayed on the console either way.",
-                v => CaptureText = v != null );
-
             // Output Control
             this.Add("work=", "{PATH} of the directory to use for output files.",
                 v => WorkDirectory = RequiredValue(v, "--work"));
@@ -169,9 +166,6 @@ namespace NUnit.Framework.TestHarness
         private int randomSeed = -1;
         public int RandomSeed { get { return randomSeed; } }
 
-        //DriverSetting
-        public bool CaptureText { get; private set; }
-
         // Output Control
 
         public bool NoHeader { get; private set; }
@@ -242,10 +236,9 @@ namespace NUnit.Framework.TestHarness
                 settings["NumberOfTestWorkers"] = NumWorkers.Value;
             if (RandomSeed >= 0)
                 settings["RandomSeed"] = RandomSeed;
-            if (CaptureText)
-                settings["CaptureStandardOutput"] = settings["CaptureStandardError"] = true;
 
-            settings["DisplayTestLabels"] = DisplayTestLabels;
+            if (DisplayTestLabels != null)
+                settings["DisplayTestLabels"] = DisplayTestLabels;
             if (InternalTraceLevel != null)
                 settings["InternalTraceLevel"] = InternalTraceLevel;
             if (WorkDirectory != null)

@@ -127,5 +127,29 @@ namespace NUnit.Framework.Tests
             TestBuilder.RunTestFixture(fixture);
             Assert.That(fixture.stateList, Is.EqualTo("Inconclusive=>=>Skipped:Ignored"));
         }
+
+        private const string SOME_TEXT = "Should go to the result";
+        private static readonly string NL = NUnit.Env.NewLine;
+
+        [Test]
+        public void TestContextOut_WritesToResult()
+        {
+            TestContext.Out.WriteLine(SOME_TEXT);
+            Assert.That(Internal.TestExecutionContext.CurrentContext.CurrentResult.Output, Is.EqualTo(SOME_TEXT + NL));
+        }
+
+        [Test]
+        public void TestContextWrite_WritesToResult()
+        {
+            TestContext.Write(SOME_TEXT);
+            Assert.That(Internal.TestExecutionContext.CurrentContext.CurrentResult.Output, Is.EqualTo(SOME_TEXT));
+        }
+
+        [Test]
+        public void TestContextWriteLine_WritesToResult()
+        {
+            TestContext.WriteLine(SOME_TEXT);
+            Assert.That(Internal.TestExecutionContext.CurrentContext.CurrentResult.Output, Is.EqualTo(SOME_TEXT + NL));
+        }
     }
 }

@@ -25,7 +25,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\..\bin\Debug\net-2.0\</OutputPath>
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NET_2_0</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>..\..\bin\Debug\net-2.0\nunit.framework.xml</DocumentationFile>
@@ -35,7 +35,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\..\bin\Release\net-2.0\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>TRACE;NET_2_0</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>..\..\bin\Release\net-2.0\nunit.framework.xml</DocumentationFile>
@@ -97,7 +97,6 @@
     <Compile Include="Interfaces\IXmlNodeBuilder.cs" />
     <Compile Include="Interfaces\ResultState.cs" />
     <Compile Include="Interfaces\RunState.cs" />
-    <Compile Include="Interfaces\TestOutput.cs" />
     <Compile Include="Interfaces\TestStatus.cs" />
     <Compile Include="Interfaces\XmlNode.cs" />
     <Compile Include="Internal\Builders\DefaultSuiteBuilder.cs" />
@@ -105,6 +104,7 @@
     <Compile Include="Internal\Commands\SetUpTearDownList.cs" />
     <Compile Include="Internal\Commands\SetUpTearDownNode.cs" />
     <Compile Include="Internal\Execution\SimpleWorkItemDispatcher.cs" />
+    <Compile Include="Internal\Execution\TextCapture.cs" />
     <Compile Include="Internal\Execution\WorkShift.cs" />
     <Compile Include="Internal\Filters\IdFilter.cs" />
     <Compile Include="Internal\Filters\ValueMatchFilter.cs" />
@@ -125,7 +125,6 @@
     <Compile Include="Internal\Commands\TheoryResultCommand.cs" />
     <Compile Include="Internal\Execution\CompositeWorkItem.cs" />
     <Compile Include="Internal\Execution\CountdownEvent.cs" />
-    <Compile Include="Internal\Execution\EventListenerTextWriter.cs" />
     <Compile Include="Internal\Execution\EventPump.cs" />
     <Compile Include="Internal\Execution\EventQueue.cs" />
     <Compile Include="Internal\Execution\QueuingEventListener.cs" />

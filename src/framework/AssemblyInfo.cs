@@ -28,9 +28,9 @@ using System.Reflection;
 // Change them to the _values specific to your project.
 
 #if NUNITLITE
-[assembly: AssemblyTitle("NUnitLite")]
+[assembly: AssemblyTitle("NUnitLite Framework Assembly")]
 #else
-[assembly: AssemblyTitle("NUnit Framework")]
+[assembly: AssemblyTitle("NUnit Framework Assembly")]
 #endif
 
 [assembly: AssemblyDescription("")]
