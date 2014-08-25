@@ -55,7 +55,7 @@ namespace NUnit.ConsoleRunner
                 return ConsoleRunner.INVALID_ARG;
             }
 
-            ColorConsole.Options = options;
+            ColorConsole.Enabled = !options.NoColor;
 
             // Create SettingsService early so we know the trace level right at the start
             //SettingsService settingsService = new SettingsService();

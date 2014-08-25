@@ -26,7 +26,6 @@ using NUnit.Framework;
 
 namespace NUnit.ConsoleRunner.Tests
 {
-    using Options;
     using Utilities;
 
     [TestFixture]
@@ -35,8 +34,7 @@ namespace NUnit.ConsoleRunner.Tests
         [SetUp]
         public void SetUp()
         {
-            var options = new ConsoleOptions( new[] {""} );
-            ColorConsole.Options = options;
+            ColorConsole.Enabled = true;
 
             // Set to an unknown, unlikely color so that we can test for change
             Console.ForegroundColor = ConsoleColor.Magenta;
@@ -67,8 +65,7 @@ namespace NUnit.ConsoleRunner.Tests
         [Test]
         public void TestNoColorOption()
         {
-            var options = new ConsoleOptions(new[] { "--nocolor" });
-            ColorConsole.Options = options;
+            ColorConsole.Enabled = false;
 
             using (new ColorConsole(ColorStyle.Error))
             {

@@ -25,8 +25,6 @@ using System;
 
 namespace NUnit.ConsoleRunner.Utilities
 {
-    using Options;
-
     public enum ColorStyle
     {
         /// <summary>
@@ -81,13 +79,14 @@ namespace NUnit.ConsoleRunner.Utilities
     public class ColorConsole : IDisposable
     {
         /// <summary>
-        /// Gets or sets the options. This must be set at program startup
+        /// Gets or sets the Enabled flag, indicating whether color is 
+        /// being used. This must be set at program startup.
         /// </summary>
-        public static ConsoleOptions Options { private get; set; }
+        public static bool Enabled { get; set; }
 
         public ColorConsole(ColorStyle style)
         {
-            if (Options == null || !Options.NoColor)
+            if (ColorConsole.Enabled)
                 Console.ForegroundColor = GetColor(style);
         }
 
@@ -185,7 +184,7 @@ namespace NUnit.ConsoleRunner.Utilities
         /// </summary>
         public void Dispose()
         {
-            if (Options == null || !Options.NoColor)
+            if (ColorConsole.Enabled)
                 Console.ResetColor();
         }
 
