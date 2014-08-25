@@ -21,12 +21,12 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System.IO;
 #if !NUNITLITE
 #region Using Directives
 
 using System;
-using NUnit.Framework;
+using System.IO;
+using NUnit.TestUtilities;
 
 #endregion
 
@@ -35,15 +35,24 @@ namespace NUnit.Framework.Assertions
     [TestFixture]
     public class DirectoryAssertTests
     {
-        private string _goodDir;
-        private string _appDataDir;
+        private TestDirectory _goodDir1;
+        private TestDirectory _goodDir2;
         private const string BAD_DIRECTORY = @"Z:\I\hope\this\is\garbage";
 
         [SetUp]
         public void SetUp()
         {
-            _goodDir = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
-            _appDataDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            _goodDir1 = new TestDirectory();
+            _goodDir2 = new TestDirectory();
+            Assume.That(_goodDir1.Directory, Is.Not.EqualTo(_goodDir2.Directory), "The two good directories are the same");
+            Assume.That(BAD_DIRECTORY, Does.Not.Exist, BAD_DIRECTORY + " exists");
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            if (_goodDir1 != null ) _goodDir1.Dispose();
+            if (_goodDir2 != null ) _goodDir2.Dispose();
         }
 
         #region AreEqual
@@ -53,8 +62,8 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void AreEqualPassesWithDirectoryInfos()
         {
-            DirectoryInfo expected = new DirectoryInfo(_goodDir);
-            DirectoryInfo actual = new DirectoryInfo(_goodDir);
+            var expected = new DirectoryInfo(_goodDir1.ToString());
+            var actual = new DirectoryInfo(_goodDir1.ToString());
             DirectoryAssert.AreEqual(expected, actual);
             DirectoryAssert.AreEqual(expected, actual);
         }
@@ -66,8 +75,8 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void AreEqualFailsWithDirectoryInfos()
         {
-            DirectoryInfo expected = new DirectoryInfo(_goodDir);
-            DirectoryInfo actual = new DirectoryInfo(_appDataDir);
+            var expected = _goodDir1.Directory;
+            var actual = _goodDir2.Directory;
             var expectedMessage =
                 string.Format("  Expected: <{0}>{2}  But was:  <{1}>{2}",
                     expected.FullName, actual.FullName, Environment.NewLine);
@@ -85,20 +94,20 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void AreNotEqualPassesIfExpectedIsNull()
         {
-            DirectoryAssert.AreNotEqual(new DirectoryInfo(_goodDir), null);
+            DirectoryAssert.AreNotEqual(_goodDir1.Directory, null);
         }
 
         [Test]
         public void AreNotEqualPassesIfActualIsNull()
         {
-            DirectoryAssert.AreNotEqual(null, new DirectoryInfo(_goodDir));
+            DirectoryAssert.AreNotEqual(null, _goodDir1.Directory);
         }
 
         [Test]
         public void AreNotEqualPassesWithDirectoryInfos()
         {
-            DirectoryInfo expected = new DirectoryInfo(_goodDir);
-            DirectoryInfo actual = new DirectoryInfo(_appDataDir);
+            var expected = _goodDir1.Directory;
+            var actual = _goodDir2.Directory;
             DirectoryAssert.AreNotEqual(expected, actual);
         }
         #endregion
@@ -108,8 +117,8 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void AreNotEqualFailsWithDirectoryInfos()
         {
-            DirectoryInfo expected = new DirectoryInfo(_goodDir);
-            DirectoryInfo actual = new DirectoryInfo(_goodDir);
+            var expected = new DirectoryInfo(_goodDir1.ToString());
+            var actual = new DirectoryInfo(_goodDir1.ToString());
             var expectedMessage = string.Format(
                 "  Expected: not equal to <{0}>{2}  But was:  <{1}>{2}",
                 expected.FullName,
@@ -128,14 +137,13 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void ExistsPassesWhenDirectoryInfoExists()
         {
-            var actual = new DirectoryInfo(_goodDir);
-            DirectoryAssert.Exists(actual);
+            DirectoryAssert.Exists(_goodDir1.Directory);
         }
 
         [Test]
         public void ExistsPassesWhenStringExists()
         {
-            DirectoryAssert.Exists(_goodDir);
+            DirectoryAssert.Exists(_goodDir1.ToString());
         }
 
         [Test]
@@ -180,14 +188,14 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void DoesNotExistFailsWhenDirectoryInfoExists()
         {
-            var ex = Assert.Throws<AssertionException>(() => DirectoryAssert.DoesNotExist(new DirectoryInfo(_goodDir)));
+            var ex = Assert.Throws<AssertionException>(() => DirectoryAssert.DoesNotExist(_goodDir1.Directory));
             Assert.That(ex.Message, Is.StringStarting("  Expected: not directory exists"));
         }
 
         [Test]
         public void DoesNotExistFailsWhenStringExists()
         {
-            var ex = Assert.Throws<AssertionException>(() => DirectoryAssert.DoesNotExist(_goodDir));
+            var ex = Assert.Throws<AssertionException>(() => DirectoryAssert.DoesNotExist(_goodDir1.ToString()));
             Assert.That(ex.Message, Is.StringStarting("  Expected: not directory exists"));
         }
 

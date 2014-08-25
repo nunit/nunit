@@ -25,6 +25,7 @@ using System;
 using System.IO;
 using NUnit.Framework.Assertions;
 using NUnit.Framework.Constraints;
+using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Tests.Constraints
 {
@@ -32,7 +33,7 @@ namespace NUnit.Framework.Tests.Constraints
     public class FileOrDirectoryExistsConstraintTests
     {
         private FileOrDirectoryExistsConstraint _constraint;
-        private string _goodDir;
+        private TestDirectory _goodDir;
         private const string BAD_DIRECTORY = @"Z:\I\hope\this\is\garbage";
         private const string BAD_FILE = "garbage.txt";
         private const string TEST_FILE = "Test1.txt";
@@ -42,7 +43,14 @@ namespace NUnit.Framework.Tests.Constraints
         public void SetUp()
         {
             _constraint = new FileOrDirectoryExistsConstraint();
-            _goodDir = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+            _goodDir = new TestDirectory();
+            Assume.That(BAD_DIRECTORY, Does.Not.Exist, BAD_DIRECTORY + " exists");
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            if (_goodDir != null) _goodDir.Dispose();
         }
 
         [Test]
@@ -59,7 +67,7 @@ namespace NUnit.Framework.Tests.Constraints
         [Test]
         public void PassesWhenDirectoryInfoExists()
         {
-            var actual = new DirectoryInfo(_goodDir);
+            var actual = _goodDir.Directory;
             Assert.That(_constraint.ApplyTo(actual).IsSuccess);
             Assert.That(actual, Does.Exist);
         }
@@ -77,8 +85,8 @@ namespace NUnit.Framework.Tests.Constraints
         [Test]
         public void PassesWhenDirectoryStringExists()
         {
-            Assert.That(_constraint.ApplyTo(_goodDir).IsSuccess);
-            Assert.That(_goodDir, Does.Exist);
+            Assert.That(_constraint.ApplyTo(_goodDir.ToString()).IsSuccess);
+            Assert.That(_goodDir.ToString(), Does.Exist);
         }
 
         [Test]
@@ -106,14 +114,14 @@ namespace NUnit.Framework.Tests.Constraints
         public void FailsWhenIgnoreDirectoriesIsTrueWithDirectoryString()
         {
             var constraint = new FileOrDirectoryExistsConstraint().IgnoreDirectories;
-            Assert.That(constraint.ApplyTo(_goodDir).Status == ConstraintStatus.Failure);
+            Assert.That(constraint.ApplyTo(_goodDir.ToString()).Status == ConstraintStatus.Failure);
         }
 
         [Test]
         public void FailsWhenIgnoreDirectoriesIsTrueWithDirectoryInfo()
         {
             var constraint = new FileOrDirectoryExistsConstraint().IgnoreDirectories;
-            var ex = Assert.Throws<ArgumentException>(() => constraint.ApplyTo(new DirectoryInfo(_goodDir)));
+            var ex = Assert.Throws<ArgumentException>(() => constraint.ApplyTo(_goodDir.Directory));
             Assert.That(ex.Message, Is.StringStarting("The actual value must be a string or FileInfo"));
         }
 

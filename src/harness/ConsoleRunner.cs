@@ -185,8 +185,7 @@ namespace NUnit.Framework.TestHarness
             NUnit2TestResultWriter nunit2ResultWriter = new NUnit2TestResultWriter();
             nunit2ResultWriter.WriteResultFile(resultNode, v2ResultFile);
 
-            //if (!options.DisplayTeamCityServiceMessages)
-                new ResultReporter(resultNode).ReportResults();
+            new ResultReporter(resultNode).ReportResults();
 
             if (options.OutFile != null)
                 Console.WriteLine("Test standard output saved as {0}", Path.Combine(workDirectory, options.OutFile));

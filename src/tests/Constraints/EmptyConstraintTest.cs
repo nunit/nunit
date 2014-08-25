@@ -24,6 +24,8 @@
 using System;
 using System.Collections;
 using System.IO;
+using NUnit.Framework.Assertions;
+using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Constraints
 {
@@ -115,33 +117,16 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void EmptyDirectory()
         {
-            DirectoryInfo testPath = null;
-            try
+            using (var testDir = new TestDirectory())
             {
-                var tempPath = Path.GetTempPath();
-                Assume.That(tempPath, Does.Exist);
-
-                testPath = new DirectoryInfo(Path.Combine(tempPath, Guid.NewGuid().ToString()));
-                Assume.That(testPath, Does.Not.Exist);
-
-                testPath.Create();
-                Assume.That(testPath, Does.Exist);
-
-                Assert.That(testPath, Is.Empty);
-            }
-            finally
-            {
-                if (testPath != null)
-                {
-                    testPath.Delete();
-                }
+                Assert.That(testDir.Directory, Is.Empty);
             }
         }
 
         [Test]
         public void NotEmptyDirectory()
         {
-            var testPath = new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.Personal));
+            var testPath = new DirectoryInfo(Environment.CurrentDirectory);
             Assume.That(testPath, Does.Exist);
             Assert.That(testPath, Is.Not.Empty);
         }
