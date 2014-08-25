@@ -52,7 +52,7 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public override System.Text.Encoding Encoding
         {
-            get { throw new NotImplementedException(); }
+            get { return _defaultWriter.Encoding; }
         }
 
         /// <summary>
