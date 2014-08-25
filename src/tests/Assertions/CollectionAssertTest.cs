@@ -255,8 +255,8 @@ namespace NUnit.Framework.Assertions
                 delegate { CollectionAssert.AreEqual(array, CountToThree()); } );
             
             Assert.That(ex.Message, Does.Contain("Values differ at index [1]").And.
-                                    Does.Contain("Expected: 3").And.
-                                    Does.Contain("But was:  2"));
+                                    Contains("Expected: 3").And.
+                                    Contains("But was:  2"));
         }
  
 #if NET_3_5 || NET_4_0
@@ -277,8 +277,8 @@ namespace NUnit.Framework.Assertions
                 delegate { CollectionAssert.AreEqual(array, array.Select((item) => item * 2)); } );
             
             Assert.That(ex.Message, Does.Contain("Values differ at index [0]").And.
-                                    Does.Contain("Expected: 1").And.
-                                    Does.Contain("But was:  2"));
+                                    Contains("Expected: 1").And.
+                                    Contains("But was:  2"));
         }
 #endif
         

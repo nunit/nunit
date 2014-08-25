@@ -79,7 +79,7 @@ namespace NUnit.Framework.Tests.Constraints
         public void TestWithinCanOnlyBeUsedOnce()
         {
             Assert.That(() => Is.EqualTo(1.1d).Within(0.5d).Within(0.2d),
-                Throws.TypeOf<InvalidOperationException>().With.Message.Does.Contain("modifier may appear only once"));
+                Throws.TypeOf<InvalidOperationException>().With.Message.Contains("modifier may appear only once"));
         }
 
         [Test]
@@ -87,7 +87,7 @@ namespace NUnit.Framework.Tests.Constraints
         {
             var tolerance = new Tolerance(5);
             Assert.That(() => tolerance.Percent.Ulps,
-                Throws.TypeOf<InvalidOperationException>().With.Message.Does.Contain("multiple tolerance modes"));
+                Throws.TypeOf<InvalidOperationException>().With.Message.Contains("multiple tolerance modes"));
         }
 
         [Test]
@@ -95,7 +95,7 @@ namespace NUnit.Framework.Tests.Constraints
         {
             var tolerance = new Tolerance("Five");
             Assert.That(() => tolerance.Percent,
-                Throws.TypeOf<InvalidOperationException>().With.Message.Does.Contain("numeric tolerance is required"));
+                Throws.TypeOf<InvalidOperationException>().With.Message.Contains("numeric tolerance is required"));
         }
 
         [Test]
@@ -103,7 +103,7 @@ namespace NUnit.Framework.Tests.Constraints
         {
             var tolerance = Tolerance.Default; // which is new Tolerance(0, ToleranceMode.Unset)
             Assert.That(() => tolerance.Percent, 
-                Throws.TypeOf<InvalidOperationException>().With.Message.Does.Contain("Tolerance amount must be specified"));
+                Throws.TypeOf<InvalidOperationException>().With.Message.Contains("Tolerance amount must be specified"));
         }
     }
 }

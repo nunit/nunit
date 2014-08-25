@@ -583,18 +583,6 @@ namespace NUnit.Framework.Constraints
 
         #endregion
 
-        #region Does
-
-        /// <summary>
-        /// A property to give us better reading syntax like Does.Contain
-        /// </summary>
-        public ConstraintFactory Does
-        {
-            get { return this; }
-        }
-
-        #endregion
-
         #region StringContaining
 
         /// <summary>
