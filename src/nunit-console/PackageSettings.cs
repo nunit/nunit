@@ -78,18 +78,6 @@ namespace NUnit.Engine
         #region Settings taken from DriverSettings in the framework
 
         /// <summary>
-        /// If true, the framework will capture output to standard error
-        /// and send it to the listener in a TestOutput call.
-        /// </summary>
-        public const string CaptureStandardError = "CaptureStandardError";
-
-        /// <summary>
-        /// If true, the framework will capture output to standard output
-        /// and send it to the listener in a TestOutput call.
-        /// </summary>
-        public const string CaptureStandardOutput = "CaptureStandardOutput";
-
-        /// <summary>
         /// The default log threshold to be captured. Defaults to "Error"
         /// Use "None" to turn off capture. Other values depend on the
         /// logging subsystem. Currently, log4net is supported.
