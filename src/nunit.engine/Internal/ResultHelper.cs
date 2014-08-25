@@ -137,7 +137,7 @@ namespace NUnit.Engine.Internal
                 combinedNode.AddAttribute("fullname", fullname);
 
             string status = "Inconclusive";
-            double totalDuration = 0.0d;
+            //double totalDuration = 0.0d;
             int testcasecount = 0;
             int total = 0;
             int passed = 0;
