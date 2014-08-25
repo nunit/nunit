@@ -488,7 +488,7 @@ namespace NUnit.Framework.Assertions
             if (message == "")
                 Assert.Fail("Should have thrown an AssertionException");
 
-            Assert.That(message, Contains.Substring("+/- 0.005"));
+            Assert.That(message, Does.Contain("+/- 0.005"));
         }
 
         [Test]
@@ -511,7 +511,7 @@ namespace NUnit.Framework.Assertions
             if ( message == "" )
                 Assert.Fail( "Should have thrown an AssertionException" );
 
-            Assert.That(message, Contains.Substring( "+/- 0.001"));
+            Assert.That(message, Does.Contain( "+/- 0.001"));
         }
 
         [Test]
@@ -538,7 +538,7 @@ namespace NUnit.Framework.Assertions
             if (message == "")
                 Assert.Fail("Should have thrown an AssertionException");
 
-            Assert.That(message, Contains.Substring("+/- 0.005"));
+            Assert.That(message, Does.Contain("+/- 0.005"));
         }
 
         [Test]

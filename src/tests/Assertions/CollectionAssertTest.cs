@@ -254,9 +254,9 @@ namespace NUnit.Framework.Assertions
             AssertionException ex = Assert.Throws<AssertionException>( 
                 delegate { CollectionAssert.AreEqual(array, CountToThree()); } );
             
-            Assert.That(ex.Message, Contains.Substring("Values differ at index [1]").And.
-                                    ContainsSubstring("Expected: 3").And.
-                                    ContainsSubstring("But was:  2"));
+            Assert.That(ex.Message, Does.Contain("Values differ at index [1]").And.
+                                    Does.Contain("Expected: 3").And.
+                                    Does.Contain("But was:  2"));
         }
  
 #if NET_3_5 || NET_4_0
@@ -276,9 +276,9 @@ namespace NUnit.Framework.Assertions
             AssertionException ex = Assert.Throws<AssertionException>(
                 delegate { CollectionAssert.AreEqual(array, array.Select((item) => item * 2)); } );
             
-            Assert.That(ex.Message, Contains.Substring("Values differ at index [0]").And.
-                                    ContainsSubstring("Expected: 1").And.
-                                    ContainsSubstring("But was:  2"));
+            Assert.That(ex.Message, Does.Contain("Values differ at index [0]").And.
+                                    Does.Contain("Expected: 1").And.
+                                    Does.Contain("But was:  2"));
         }
 #endif
         
@@ -735,7 +735,7 @@ namespace NUnit.Framework.Assertions
             al.Add("z");
 
             var ex = Assert.Throws<ArgumentNullException>(() => CollectionAssert.IsOrdered(al));
-            Assert.That(ex.Message, Contains.Substring("index 1"));
+            Assert.That(ex.Message, Does.Contain("index 1"));
         }
 
         [Test]

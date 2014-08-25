@@ -74,7 +74,7 @@ namespace NUnit.Framework.Assertions
             using (FileStream actual = File.OpenWrite("Test2.jpg"))
             {
                 var ex = Assert.Throws<ArgumentException>(() => FileAssert.AreEqual(expected, actual));
-                Assert.That(ex.Message, Contains.Substring("not readable"));
+                Assert.That(ex.Message, Does.Contain("not readable"));
             }
         }
 
@@ -86,7 +86,7 @@ namespace NUnit.Framework.Assertions
             using (FakeStream actual = new FakeStream())
             {
                 var ex = Assert.Throws<ArgumentException>(() => FileAssert.AreEqual(expected, actual));
-                Assert.That(ex.Message, Contains.Substring("not seekable"));
+                Assert.That(ex.Message, Does.Contain("not seekable"));
             }
         }
 

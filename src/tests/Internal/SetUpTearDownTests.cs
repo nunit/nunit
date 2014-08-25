@@ -126,7 +126,7 @@ namespace NUnit.Framework.Internal
             Assert.AreEqual(result.ResultState, ResultState.Error, "Test should be in error state");
             string expected = string.Format("{0} : {1}", e.GetType().FullName, e.Message);
             Assert.AreEqual(expected, result.Message);
-            Assert.That(result.StackTrace, Contains.Substring(fixture.GetType().FullName)); // Sanity check
+            Assert.That(result.StackTrace, Does.Contain(fixture.GetType().FullName)); // Sanity check
         }
 
         [Test]
@@ -142,7 +142,7 @@ namespace NUnit.Framework.Internal
             string expected = string.Format("TearDown : {0} : {1}", e.GetType().FullName, e.Message);
             Assert.AreEqual(expected, result.Message);
             Assert.That(result.StackTrace, Does.StartWith("--TearDown"));
-            Assert.That(result.StackTrace, Contains.Substring(fixture.GetType().FullName)); // Sanity check
+            Assert.That(result.StackTrace, Does.Contain(fixture.GetType().FullName)); // Sanity check
         }
 
         [Test]
@@ -160,8 +160,8 @@ namespace NUnit.Framework.Internal
             string expected = string.Format("{0} : {1}", e1.GetType().FullName, e1.Message) + Env.NewLine
                 + string.Format("TearDown : {0} : {1}", e2.GetType().FullName, e2.Message);
             Assert.AreEqual(expected, result.Message);
-            Assert.That(result.StackTrace, Contains.Substring("--TearDown"));
-            Assert.That(result.StackTrace, Contains.Substring(fixture.GetType().FullName)); // Sanity check
+            Assert.That(result.StackTrace, Does.Contain("--TearDown"));
+            Assert.That(result.StackTrace, Does.Contain(fixture.GetType().FullName)); // Sanity check
         }
 
         public class SetupCallBase

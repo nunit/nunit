@@ -52,6 +52,7 @@ namespace NUnit.Framework
         /// Returns a constraint that succeeds if the actual
         /// value contains the substring supplied as an argument.
         /// </summary>
+        [Obsolete("Deprecated, use Does.Contain")]
         public static SubstringConstraint Substring(string expected)
         {
             return new SubstringConstraint(expected);;
