@@ -71,7 +71,7 @@ namespace NUnit.Framework
         /// <param name="args">Arguments used in formatting the message</param>
         static public void Contains(string expected, string actual, string message, params object[] args)
         {
-            Assert.That(actual, Is.StringContaining(expected), message, args);
+            Assert.That(actual, Does.Contain(expected), message, args);
         }
 
         /// <summary>
@@ -145,7 +145,7 @@ namespace NUnit.Framework
         /// <param name="args">Arguments used in formatting the message</param>
         static public void StartsWith(string expected, string actual, string message, params object[] args)
         {
-            Assert.That(actual, Is.StringStarting(expected), message, args);
+            Assert.That(actual, Does.StartWith(expected), message, args);
         }
 
         /// <summary>
@@ -219,7 +219,7 @@ namespace NUnit.Framework
         /// <param name="args">Arguments used in formatting the message</param>
         static public void EndsWith(string expected, string actual, string message, params object[] args)
         {
-            Assert.That(actual, Is.StringEnding(expected), message, args);
+            Assert.That(actual, Does.EndWith(expected), message, args);
         }
 
         /// <summary>
@@ -362,7 +362,7 @@ namespace NUnit.Framework
         /// <param name="args">Arguments used in formatting the message</param>
         static public void IsMatch(string pattern, string actual, string message, params object[] args)
         {
-            Assert.That(actual, Is.StringMatching(pattern), message, args);
+            Assert.That(actual, Does.Match(pattern), message, args);
         }
 
         /// <summary>

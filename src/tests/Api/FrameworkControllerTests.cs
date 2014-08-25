@@ -95,7 +95,7 @@ namespace NUnit.Framework.Api
             Assert.That(GetAttribute(result, "type"), Is.EqualTo("Assembly"));
             Assert.That(GetAttribute(result, "runstate"), Is.EqualTo("NotRunnable"));
             Assert.That(GetAttribute(result, "testcasecount"), Is.EqualTo("0"));
-            Assert.That(GetSkipReason(result), Is.StringStarting("Could not load").And.Contains(MISSING_FILE));
+            Assert.That(GetSkipReason(result), Does.StartWith("Could not load").And.Contains(MISSING_FILE));
             Assert.That(result.SelectNodes("test-suite").Count, Is.EqualTo(0), "Load result should not have child tests");
         }
 
@@ -108,7 +108,7 @@ namespace NUnit.Framework.Api
             Assert.That(result.Name, Is.EqualTo("test-suite"));
             Assert.That(GetAttribute(result, "type"), Is.EqualTo("Assembly"));
             Assert.That(GetAttribute(result, "runstate"), Is.EqualTo("NotRunnable"));
-            Assert.That(GetSkipReason(result), Is.StringStarting("Could not load").And.Contains(BAD_FILE));
+            Assert.That(GetSkipReason(result), Does.StartWith("Could not load").And.Contains(BAD_FILE));
             Assert.That(result.SelectNodes("test-suite").Count, Is.EqualTo(0), "Load result should not have child tests");
         }
         #endregion
@@ -148,7 +148,7 @@ namespace NUnit.Framework.Api
             Assert.That(GetAttribute(result, "type"), Is.EqualTo("Assembly"));
             Assert.That(GetAttribute(result, "runstate"), Is.EqualTo("NotRunnable"));
             Assert.That(GetAttribute(result, "testcasecount"), Is.EqualTo("0"));
-            Assert.That(GetSkipReason(result), Is.StringStarting("Could not load").And.Contains(MISSING_FILE));
+            Assert.That(GetSkipReason(result), Does.StartWith("Could not load").And.Contains(MISSING_FILE));
             Assert.That(result.SelectNodes("test-suite").Count, Is.EqualTo(0), "Result should not have child tests");
         }
 
@@ -164,7 +164,7 @@ namespace NUnit.Framework.Api
             Assert.That(GetAttribute(result, "type"), Is.EqualTo("Assembly"));
             Assert.That(GetAttribute(result, "runstate"), Is.EqualTo("NotRunnable"));
             Assert.That(GetAttribute(result, "testcasecount"), Is.EqualTo("0"));
-            Assert.That(GetSkipReason(result), Is.StringStarting("Could not load").And.Contains(BAD_FILE));
+            Assert.That(GetSkipReason(result), Does.StartWith("Could not load").And.Contains(BAD_FILE));
             Assert.That(result.SelectNodes("test-suite").Count, Is.EqualTo(0), "Result should not have child tests");
         }
         #endregion
@@ -245,7 +245,7 @@ namespace NUnit.Framework.Api
             Assert.That(GetAttribute(result, "type"), Is.EqualTo("Assembly"));
             Assert.That(GetAttribute(result, "runstate"), Is.EqualTo("NotRunnable"));
             Assert.That(GetAttribute(result, "testcasecount"), Is.EqualTo("0"));
-            Assert.That(GetSkipReason(result), Is.StringStarting("Could not load").And.Contains(MISSING_FILE));
+            Assert.That(GetSkipReason(result), Does.StartWith("Could not load").And.Contains(MISSING_FILE));
             Assert.That(result.SelectNodes("test-suite").Count, Is.EqualTo(0), "Load result should not have child tests");
         }
 
@@ -261,7 +261,7 @@ namespace NUnit.Framework.Api
             Assert.That(GetAttribute(result, "type"), Is.EqualTo("Assembly"));
             Assert.That(GetAttribute(result, "runstate"), Is.EqualTo("NotRunnable"));
             Assert.That(GetAttribute(result, "testcasecount"), Is.EqualTo("0"));
-            Assert.That(GetSkipReason(result), Is.StringStarting("Could not load").And.Contains(BAD_FILE));
+            Assert.That(GetSkipReason(result), Does.StartWith("Could not load").And.Contains(BAD_FILE));
             Assert.That(result.SelectNodes("test-suite").Count, Is.EqualTo(0), "Load result should not have child tests");
         }
         #endregion
@@ -306,7 +306,7 @@ namespace NUnit.Framework.Api
             //Assert.That(GetAttribute(result, "type"), Is.EqualTo("Assembly"));
             //Assert.That(GetAttribute(result, "runstate"), Is.EqualTo("NotRunnable"));
             //Assert.That(GetAttribute(result, "testcasecount"), Is.EqualTo("0"));
-            //Assert.That(GetSkipReason(result), Is.StringStarting("Could not load").And.Contains(MISSING_FILE));
+            //Assert.That(GetSkipReason(result), Does.StartWith("Could not load").And.Contains(MISSING_FILE));
             //Assert.That(result.SelectNodes("test-suite").Count, Is.EqualTo(0), "Load result should not have child tests");
         }
 
@@ -322,7 +322,7 @@ namespace NUnit.Framework.Api
             //Assert.That(GetAttribute(result, "type"), Is.EqualTo("Assembly"));
             //Assert.That(GetAttribute(result, "runstate"), Is.EqualTo("NotRunnable"));
             //Assert.That(GetAttribute(result, "testcasecount"), Is.EqualTo("0"));
-            //Assert.That(GetSkipReason(result), Is.StringStarting("Could not load").And.Contains(BAD_FILE));
+            //Assert.That(GetSkipReason(result), Does.StartWith("Could not load").And.Contains(BAD_FILE));
             //Assert.That(result.SelectNodes("test-suite").Count, Is.EqualTo(0), "Load result should not have child tests");
         }
         #endregion

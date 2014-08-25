@@ -69,6 +69,11 @@ namespace NUnit.Framework.Api
         }
 
 #if !SILVERLIGHT && !NETCF
+        /// <summary>
+        /// Handle the the Completed event for the top level work item
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected override void OnRunCompleted(object sender, EventArgs e)
         {
             Console.SetOut(_savedOut);

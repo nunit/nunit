@@ -158,8 +158,8 @@ namespace NUnit.Framework.Internal
             string expectedException = current.ClrVersion.Major == 4
               ? "System.Globalization.CultureNotFoundException"
               : "System.ArgumentException";
-            Assert.That(result.Message, Is.StringStarting(expectedException));
-            Assert.That(result.Message, Is.StringContaining("xx-XX").IgnoreCase);
+            Assert.That(result.Message, Does.StartWith(expectedException));
+            Assert.That(result.Message, Does.Contain("xx-XX").IgnoreCase);
         }
 
         [Test]
@@ -171,8 +171,8 @@ namespace NUnit.Framework.Internal
             string expectedException = current.ClrVersion.Major == 4
               ? "System.Globalization.CultureNotFoundException"
               : "System.ArgumentException";
-            Assert.That(result.Message, Is.StringStarting(expectedException));
-            Assert.That(result.Message, Is.StringContaining("xx-XX").IgnoreCase);
+            Assert.That(result.Message, Does.StartWith(expectedException));
+            Assert.That(result.Message, Does.Contain("xx-XX").IgnoreCase);
         }
 
         [TestFixture, SetCulture("en-GB")]

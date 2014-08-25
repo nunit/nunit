@@ -85,7 +85,7 @@ namespace NUnit.Framework.Api
             Assert.That(result.Name, Is.EqualTo(MISSING_FILE));
             Assert.That(result.RunState, Is.EqualTo(Interfaces.RunState.NotRunnable));
             Assert.That(result.TestCaseCount, Is.EqualTo(0));
-            Assert.That(result.Properties.Get(PropertyNames.SkipReason), Is.StringStarting("Could not load").And.Contains(MISSING_FILE));
+            Assert.That(result.Properties.Get(PropertyNames.SkipReason), Does.StartWith("Could not load").And.Contains(MISSING_FILE));
         }
 
         [Test]
@@ -98,7 +98,7 @@ namespace NUnit.Framework.Api
             Assert.That(result.Name, Is.EqualTo(BAD_FILE));
             Assert.That(result.RunState, Is.EqualTo(Interfaces.RunState.NotRunnable));
             Assert.That(result.TestCaseCount, Is.EqualTo(0));
-            Assert.That(result.Properties.Get(PropertyNames.SkipReason), Is.StringStarting("Could not load").And.Contains(BAD_FILE));
+            Assert.That(result.Properties.Get(PropertyNames.SkipReason), Does.StartWith("Could not load").And.Contains(BAD_FILE));
         }
         #endregion
 
@@ -170,7 +170,7 @@ namespace NUnit.Framework.Api
             Assert.That(result.Test.RunState, Is.EqualTo(RunState.NotRunnable));
             Assert.That(result.Test.TestCaseCount, Is.EqualTo(0));
             Assert.That(result.ResultState, Is.EqualTo(ResultState.NotRunnable));
-            Assert.That(result.Message, Is.StringStarting("Could not load").And.Contains(MISSING_FILE));
+            Assert.That(result.Message, Does.StartWith("Could not load").And.Contains(MISSING_FILE));
         }
 
         [Test]
@@ -184,7 +184,7 @@ namespace NUnit.Framework.Api
             Assert.That(result.Test.RunState, Is.EqualTo(RunState.NotRunnable));
             Assert.That(result.Test.TestCaseCount, Is.EqualTo(0));
             Assert.That(result.ResultState, Is.EqualTo(ResultState.NotRunnable));
-            Assert.That(result.Message, Is.StringStarting("Could not load").And.Contains(BAD_FILE));
+            Assert.That(result.Message, Does.StartWith("Could not load").And.Contains(BAD_FILE));
         }
         #endregion
 
@@ -229,7 +229,7 @@ namespace NUnit.Framework.Api
             Assert.That(_runner.Result.Test.RunState, Is.EqualTo(RunState.NotRunnable));
             Assert.That(_runner.Result.Test.TestCaseCount, Is.EqualTo(0));
             Assert.That(_runner.Result.ResultState, Is.EqualTo(ResultState.NotRunnable));
-            Assert.That(_runner.Result.Message, Is.StringStarting("Could not load").And.Contains(MISSING_FILE));
+            Assert.That(_runner.Result.Message, Does.StartWith("Could not load").And.Contains(MISSING_FILE));
         }
 
         [Test]
@@ -245,7 +245,7 @@ namespace NUnit.Framework.Api
             Assert.That(_runner.Result.Test.RunState, Is.EqualTo(RunState.NotRunnable));
             Assert.That(_runner.Result.Test.TestCaseCount, Is.EqualTo(0));
             Assert.That(_runner.Result.ResultState, Is.EqualTo(ResultState.NotRunnable));
-            Assert.That(_runner.Result.Message, Is.StringStarting("Could not load").And.Contains(BAD_FILE));
+            Assert.That(_runner.Result.Message, Does.StartWith("Could not load").And.Contains(BAD_FILE));
         }
         #endregion
 

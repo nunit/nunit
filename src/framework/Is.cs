@@ -412,6 +412,7 @@ namespace NUnit.Framework
         /// Returns a constraint that succeeds if the actual
         /// value contains the substring supplied as an argument.
         /// </summary>
+        [Obsolete("Deprecated, use Does.Contain")]
         public static SubstringConstraint StringContaining(string expected)
         {
             return new SubstringConstraint(expected);
@@ -425,6 +426,7 @@ namespace NUnit.Framework
         /// Returns a constraint that succeeds if the actual
         /// value starts with the substring supplied as an argument.
         /// </summary>
+        [Obsolete("Deprecated, use Does.StartWith")]
         public static StartsWithConstraint StringStarting(string expected)
         {
             return new StartsWithConstraint(expected);
@@ -438,6 +440,7 @@ namespace NUnit.Framework
         /// Returns a constraint that succeeds if the actual
         /// value ends with the substring supplied as an argument.
         /// </summary>
+        [Obsolete("Deprecated, use Does.EndWith")]
         public static EndsWithConstraint StringEnding(string expected)
         {
             return new EndsWithConstraint(expected);
@@ -452,6 +455,7 @@ namespace NUnit.Framework
         /// Returns a constraint that succeeds if the actual
         /// value matches the regular expression supplied as an argument.
         /// </summary>
+        [Obsolete("Deprecated, use Does.Match")]
         public static RegexConstraint StringMatching(string pattern)
         {
             return new RegexConstraint(pattern);
