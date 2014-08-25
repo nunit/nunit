@@ -159,7 +159,16 @@ namespace NUnit.ConsoleRunner
             {
                 if (labels == "ON")
                     WriteTestLabel(nameAttr.Value);
-                outWriter.Write(outputNode.InnerText);
+
+                using (new ColorConsole(ColorStyle.Output))
+                {
+                    outWriter.Write(outputNode.InnerText);
+                    // Some labels were being shown on the same line as the previous output
+                    if (!outputNode.InnerText.EndsWith("\n"))
+                    {
+                        outWriter.WriteLine();        
+                    }
+                }
             }
 
             //currentTestName = string.Empty;
