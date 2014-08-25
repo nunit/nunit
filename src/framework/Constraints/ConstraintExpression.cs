@@ -684,6 +684,10 @@ namespace NUnit.Framework.Constraints
             return (CollectionContainsConstraint)this.Append(new CollectionContainsConstraint(expected));
         }
 
+        #endregion
+
+        #region Contains
+
         /// <summary>
         /// Returns a new CollectionContainsConstraint checking for the
         /// presence of a particular object in the collection.
@@ -692,10 +696,6 @@ namespace NUnit.Framework.Constraints
         {
             return (CollectionContainsConstraint)this.Append(new CollectionContainsConstraint(expected));
         }
-
-        #endregion
-
-        #region Contains
 
         /// <summary>
         /// Returns a new ContainsConstraint. This constraint
@@ -710,6 +710,19 @@ namespace NUnit.Framework.Constraints
             return (ContainsConstraint)this.Append(new ContainsConstraint(expected));
         }
 
+        /// <summary>
+        /// Returns a new ContainsConstraint. This constraint
+        /// will, in turn, make use of the appropriate second-level
+        /// constraint, depending on the type of the actual argument. 
+        /// This overload is only used if the item sought is a string,
+        /// since any other type implies that we are looking for a 
+        /// collection member.
+        /// </summary>
+        public ContainsConstraint Contain(string expected)
+        {
+            return (ContainsConstraint)this.Append(new ContainsConstraint(expected));
+        }
+
         #endregion
 
         #region StringContaining
@@ -718,16 +731,7 @@ namespace NUnit.Framework.Constraints
         /// Returns a constraint that succeeds if the actual
         /// value contains the substring supplied as an argument.
         /// </summary>
-        public SubstringConstraint Contain(string expected)
-        {
-            return (SubstringConstraint)this.Append(new SubstringConstraint(expected));
-        }
-
-        /// <summary>
-        /// Returns a constraint that succeeds if the actual
-        /// value contains the substring supplied as an argument.
-        /// </summary>
-        [Obsolete("Deprecated, use Does.Contain")]
+        [Obsolete("Deprecated, use Contains")]
         public SubstringConstraint StringContaining(string expected)
         {
             return (SubstringConstraint)this.Append(new SubstringConstraint(expected));
@@ -737,7 +741,7 @@ namespace NUnit.Framework.Constraints
         /// Returns a constraint that succeeds if the actual
         /// value contains the substring supplied as an argument.
         /// </summary>
-        [Obsolete("Deprecated, use Does.Contain")]
+        [Obsolete("Deprecated, use Contains")]
         public SubstringConstraint ContainsSubstring(string expected)
         {
             return (SubstringConstraint)this.Append(new SubstringConstraint(expected));

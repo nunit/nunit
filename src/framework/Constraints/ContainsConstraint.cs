@@ -34,17 +34,17 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class ContainsConstraint : Constraint
     {
-        readonly object expected;
-        Constraint realConstraint;
-        bool ignoreCase;
+        readonly object _expected;
+        Constraint _realConstraint;
+        bool _ignoreCase;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ContainsConstraint"/> class.
         /// </summary>
-        /// <param name="expected">The expected.</param>
+        /// <param name="expected">The _expected.</param>
         public ContainsConstraint(object expected)
         {
-            this.expected = expected;
+            this._expected = expected;
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public override string Description
         {
-            get { return this.realConstraint.Description; }
+            get { return _realConstraint.Description; }
         }
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public ContainsConstraint IgnoreCase
         {
-            get { this.ignoreCase = true; return this; }
+            get { _ignoreCase = true; return this; }
         }
 
         /// <summary>
@@ -73,15 +73,15 @@ namespace NUnit.Framework.Constraints
         {
             if (actual is string)
             {
-                StringConstraint constraint = new SubstringConstraint((string)expected);
-                if (this.ignoreCase)
+                StringConstraint constraint = new SubstringConstraint((string)_expected);
+                if (_ignoreCase)
                     constraint = constraint.IgnoreCase;
-                this.realConstraint = constraint;
+                _realConstraint = constraint;
             }
             else
-                this.realConstraint = new CollectionContainsConstraint(expected);
+                _realConstraint = new CollectionContainsConstraint(_expected);
 
-            return this.realConstraint.ApplyTo(actual);
+            return _realConstraint.ApplyTo(actual);
         }
     }
 }

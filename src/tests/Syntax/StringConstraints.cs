@@ -25,27 +25,27 @@ using System;
 
 namespace NUnit.Framework.Syntax
 {
-    public class SubstringTest : SyntaxTest
+    public class ContainsTest : SyntaxTest
     {
         [SetUp]
         public void SetUp()
         {
-            parseTree = @"<substring ""X"">";
+            parseTree = @"<contains>";
             staticSyntax = Does.Contain("X");
-            inheritedSyntax = Helper().Contain("X");
-            builderSyntax = Builder().Contain("X");
+            inheritedSyntax = Helper().Contains("X");
+            builderSyntax = Builder().Contains("X");
         }
     }
 
-    public class SubstringTest_IgnoreCase : SyntaxTest
+    public class ContainsTest_IgnoreCase : SyntaxTest
     {
         [SetUp]
         public void SetUp()
         {
-            parseTree = @"<substring ""X"">";
+            parseTree = @"<contains>";
             staticSyntax = Does.Contain("X").IgnoreCase;
-            inheritedSyntax = Helper().Contain("X").IgnoreCase;
-            builderSyntax = Builder().Contain("X").IgnoreCase;
+            inheritedSyntax = Helper().Contains("X").IgnoreCase;
+            builderSyntax = Builder().Contains("X").IgnoreCase;
         }
     }
 

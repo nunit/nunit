@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
 using NUnit.Framework.Constraints;
 
 namespace NUnit.Framework
@@ -63,12 +62,25 @@ namespace NUnit.Framework
         #region Contain
 
         /// <summary>
-        /// Returns a constraint that succeeds if the actual
-        /// value contains the substring supplied as an argument.
+        /// Returns a new CollectionContainsConstraint checking for the
+        /// presence of a particular object in the collection.
         /// </summary>
-        public static SubstringConstraint Contain(string expected)
+        public CollectionContainsConstraint Contain(object expected)
         {
-            return new SubstringConstraint(expected);
+            return new CollectionContainsConstraint(expected);
+        }
+
+        /// <summary>
+        /// Returns a new ContainsConstraint. This constraint
+        /// will, in turn, make use of the appropriate second-level
+        /// constraint, depending on the type of the actual argument. 
+        /// This overload is only used if the item sought is a string,
+        /// since any other type implies that we are looking for a 
+        /// collection member.
+        /// </summary>
+        public static ContainsConstraint Contain(string expected)
+        {
+            return new ContainsConstraint(expected);
         }
 
         #endregion

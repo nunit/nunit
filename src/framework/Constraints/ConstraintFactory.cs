@@ -589,16 +589,7 @@ namespace NUnit.Framework.Constraints
         /// Returns a constraint that succeeds if the actual
         /// value contains the substring supplied as an argument.
         /// </summary>
-        public SubstringConstraint Contain(string expected)
-        {
-            return new SubstringConstraint(expected);
-        }
-
-        /// <summary>
-        /// Returns a constraint that succeeds if the actual
-        /// value contains the substring supplied as an argument.
-        /// </summary>
-        [Obsolete("Deprecated, use Does.Contain")]
+        [Obsolete("Deprecated, use Contains")]
         public SubstringConstraint StringContaining(string expected)
         {
             return new SubstringConstraint(expected);
@@ -608,7 +599,7 @@ namespace NUnit.Framework.Constraints
         /// Returns a constraint that succeeds if the actual
         /// value contains the substring supplied as an argument.
         /// </summary>
-        [Obsolete("Deprecated, use Does.Contain")]
+        [Obsolete("Deprecated, use Contains")]
         public SubstringConstraint ContainsSubstring(string expected)
         {
             return new SubstringConstraint(expected);
