@@ -60,7 +60,7 @@ namespace NUnit.Framework.Internal.Execution
             _worker.Start();
             _queue.Start();
 
-            Assert.That(() => sb.ToString(), Is.EqualTo("BusyExecIdle").After(10));
+            Assert.That(() => sb.ToString(), Is.EqualTo("BusyExecIdle").After(200));
         }
 
         private void FakeMethod() { }
