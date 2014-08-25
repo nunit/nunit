@@ -233,6 +233,7 @@
     <Compile Include="TestUtilities\TestBuilder.cs" />
     <Compile Include="TestUtilities\TestDelegates.cs" />
     <Compile Include="TestUtilities\TestComparer.cs" />
+    <Compile Include="TestUtilities\TestDirectory.cs" />
     <Compile Include="TestUtilities\TestFinder.cs" />
     <Compile Include="Constraints\ExactCountConstraintTests.cs" />
     <Compile Include="TestUtilities\UniqueValues.cs" />

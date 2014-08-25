@@ -300,30 +300,6 @@ namespace NUnit.Framework.Internal
         {
             Assert.That(TestExecutionContext.CurrentContext.CurrentDirectory, Is.EqualTo(Environment.CurrentDirectory));
         }
-
-        [Test]
-        public void SetAndRestoreCurrentDirectory()
-        {
-            var context = new TestExecutionContext(setupContext);
-
-            try
-            {
-                string otherDirectory = System.IO.Path.GetTempPath();
-                if (otherDirectory[otherDirectory.Length - 1] == System.IO.Path.DirectorySeparatorChar)
-                    otherDirectory = otherDirectory.Substring(0, otherDirectory.Length - 1);
-                context.CurrentDirectory = otherDirectory;
-                Assert.AreEqual(otherDirectory, Environment.CurrentDirectory, "Directory was not set");
-                Assert.AreEqual(otherDirectory, context.CurrentDirectory, "Directory not in new context");
-                Assert.AreEqual(setupContext.CurrentDirectory, originalDirectory, "Original context should not change");
-            }
-            finally
-            {
-                setupContext.EstablishExecutionEnvironment();
-            }
-
-            Assert.AreEqual(Environment.CurrentDirectory, originalDirectory, "Directory was not restored");
-            Assert.AreEqual(setupContext.CurrentDirectory, originalDirectory, "Directory not in final context");
-        }
 #endif
 
         #endregion
