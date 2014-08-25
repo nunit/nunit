@@ -26,7 +26,7 @@ using System.IO;
 using System.Reflection;
 using System.Xml;
 
-namespace NUnit.Util
+namespace NUnit.ConsoleRunner
 {
     public class OutputManager
     {

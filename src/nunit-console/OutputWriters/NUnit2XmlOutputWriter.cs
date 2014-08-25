@@ -29,8 +29,10 @@ using System.Text;
 using System.Xml;
 using System.IO;
 
-namespace NUnit.Util
+namespace NUnit.ConsoleRunner
 {
+    using Utilities;
+
     public class NUnit2XmlOutputWriter : IResultWriter
     {
         private XmlWriter xmlWriter;

@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2011 Charlie Poole
+// Copyright (c) 2007 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,31 +21,53 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System.IO;
-using NUnit.Framework;
-
-namespace NUnit.Util.Tests
+namespace NUnit.ConsoleRunner.Utilities
 {
-    public class XmlTransformOutputWriterTests : XmlOutputTest
+    using System;
+    using System.IO;
+
+    /// <summary>
+    /// Summary description for StackTraceFilter.
+    /// </summary>
+    public static class StackTraceFilter
     {
-        [Test]
-        public void SummaryTransformTest()
+        public static string Filter(string stack)
         {
-            var transformPath = GetLocalPath("TextSummary.xslt");
-            StringWriter writer = new StringWriter();
-            new XmlTransformOutputWriter(transformPath).WriteResultFile(EngineResult.Xml, writer);
+            if (stack == null) return null;
+            StringWriter sw = new StringWriter();
+            StringReader sr = new StringReader(stack);
 
-            string summary = string.Format(
-                "Tests Run: {0}, Passed: {1}, Failed: {2}, Inconclusive: {3}, Skipped: {4}",
-                EngineResult.Xml.Attributes["total"].Value,
-                EngineResult.Xml.Attributes["passed"].Value,
-                EngineResult.Xml.Attributes["failed"].Value,
-                EngineResult.Xml.Attributes["inconclusive"].Value,
-                EngineResult.Xml.Attributes["skipped"].Value);
-
-            string output = writer.GetStringBuilder().ToString();
-    
-            Assert.That(output, Contains.Substring(summary));
+            try
+            {
+                string line;
+                while ((line = sr.ReadLine()) != null)
+                {
+                    if (!FilterLine(line))
+                        sw.WriteLine(line.Trim());
+                }
+            }
+            catch (Exception)
+            {
+                return stack;
+            }
+            return sw.ToString();
         }
+
+        static bool FilterLine(string line)
+        {
+            string[] patterns = new string[]
+            {
+                "NUnit.Framework.Assert" 
+            };
+
+            for (int i = 0; i < patterns.Length; i++)
+            {
+                if (line.IndexOf(patterns[i]) > 0)
+                    return true;
+            }
+
+            return false;
+        }
+
     }
 }

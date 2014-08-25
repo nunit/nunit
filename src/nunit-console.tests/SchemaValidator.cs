@@ -28,7 +28,7 @@ using System.Xml;
 using System.Xml.Schema;
 using NUnit.Framework;
 
-namespace NUnit.Util.Tests
+namespace NUnit.ConsoleRunner.Tests
 {
     public class SchemaValidator
     {

@@ -23,8 +23,10 @@
 
 using System;
 
-namespace NUnit.ConsoleRunner
+namespace NUnit.ConsoleRunner.Utilities
 {
+    using Options;
+
     public enum ColorStyle
     {
         /// <summary>

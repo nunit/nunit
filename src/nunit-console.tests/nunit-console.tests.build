@@ -32,7 +32,7 @@
       <references basedir="${current.build.dir}">
         <include name="nunit.framework.dll"/>
         <include name="nunit.engine.api.dll"/>
-          <include name="nunit.util.dll"/>
+        <include name="nunit.engine.dll"/>
         <include name="nunit-console.exe"/>
       </references>
     </csc>

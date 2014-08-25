@@ -25,10 +25,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Mono.Options;
-using NUnit.Util;
 
-namespace NUnit.ConsoleRunner
+namespace NUnit.ConsoleRunner.Options
 {
+    using Utilities;
+
     /// <summary>
     /// ConsoleOptions encapsulates the option settings for
     /// the nunit-console program. It inherits from the Mono

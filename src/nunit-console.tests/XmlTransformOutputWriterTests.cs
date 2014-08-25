@@ -21,14 +21,31 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
 using System.IO;
-using System.Xml;
+using NUnit.Framework;
 
-namespace NUnit.Util
+namespace NUnit.ConsoleRunner.Tests
 {
-    public interface IResultWriter
+    public class XmlTransformOutputWriterTests : XmlOutputTest
     {
-        void WriteResultFile(XmlNode resultNode, string outputPath);
+        [Test]
+        public void SummaryTransformTest()
+        {
+            var transformPath = GetLocalPath("TextSummary.xslt");
+            StringWriter writer = new StringWriter();
+            new XmlTransformOutputWriter(transformPath).WriteResultFile(EngineResult.Xml, writer);
+
+            string summary = string.Format(
+                "Tests Run: {0}, Passed: {1}, Failed: {2}, Inconclusive: {3}, Skipped: {4}",
+                EngineResult.Xml.Attributes["total"].Value,
+                EngineResult.Xml.Attributes["passed"].Value,
+                EngineResult.Xml.Attributes["failed"].Value,
+                EngineResult.Xml.Attributes["inconclusive"].Value,
+                EngineResult.Xml.Attributes["skipped"].Value);
+
+            string output = writer.GetStringBuilder().ToString();
+    
+            Assert.That(output, Contains.Substring(summary));
+        }
     }
 }

@@ -29,6 +29,9 @@ using NUnit.Engine;
 
 namespace NUnit.ConsoleRunner
 {
+    using Options;
+    using Utilities;
+
     /// <summary>
     /// This class provides the entry point for the console runner.
     /// </summary>

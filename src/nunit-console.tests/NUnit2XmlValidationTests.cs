@@ -26,7 +26,7 @@ using System.IO;
 using System.Text;
 using NUnit.Framework;
 
-namespace NUnit.Util.Tests
+namespace NUnit.ConsoleRunner.Tests
 {
     [TestFixture]
     public class NUnit2XmlValidationTests : XmlOutputTest

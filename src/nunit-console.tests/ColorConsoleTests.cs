@@ -26,6 +26,9 @@ using NUnit.Framework;
 
 namespace NUnit.ConsoleRunner.Tests
 {
+    using Options;
+    using Utilities;
+
     [TestFixture]
     public class ColorConsoleTests
     {

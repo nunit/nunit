@@ -24,10 +24,12 @@
 using System;
 using System.Globalization;
 using System.Xml;
-using NUnit.Util;
 
 namespace NUnit.ConsoleRunner
 {
+    using Options;
+    using Utilities;
+
     public class ResultReporter
     {
         XmlNode result;

@@ -21,13 +21,15 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
+using System.IO;
+using System.Xml;
+using NUnit.Engine;
+
 namespace NUnit.ConsoleRunner
 {
-    using System;
-    using System.IO;
-    using System.Xml;
-    using NUnit.Engine;
-    using NUnit.Util;
+    using Options;
+    using Utilities;
     
     /// <summary>
     /// ConsoleRunner provides the nunit-console text-based

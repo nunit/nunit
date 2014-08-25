@@ -31,6 +31,9 @@ using NUnit.Engine;
 
 namespace NUnit.ConsoleRunner
 {
+    using Options;
+    using Utilities;
+
     /// <summary>
     /// TestEventHandler processes events from the running
     /// test for the console runner.
