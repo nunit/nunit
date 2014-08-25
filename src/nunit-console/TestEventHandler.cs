@@ -155,25 +155,23 @@ namespace NUnit.ConsoleRunner
 
                 WriteTestOutput(outputNode);
             }
-
-            //currentTestName = string.Empty;
         }
 
         private void WriteTestLabel(string name)
         {
             using (new ColorConsole(ColorStyle.SectionHeader))
-                outWriter.WriteLine("=> {0}", name);
+                _outWriter.WriteLine("=> {0}", name);
         }
 
         private void WriteTestOutput(XmlNode outputNode)
         {
             using (new ColorConsole(ColorStyle.Output))
             {
-                outWriter.Write(outputNode.InnerText);
+                _outWriter.Write(outputNode.InnerText);
                 // Some labels were being shown on the same line as the previous output
                 if (!outputNode.InnerText.EndsWith("\n"))
                 {
-                    outWriter.WriteLine();
+                    _outWriter.WriteLine();
                 }
             }
         }
