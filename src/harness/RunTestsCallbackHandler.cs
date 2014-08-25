@@ -46,7 +46,7 @@ namespace NUnit.Framework.TestHarness
                 : false;
             _labels = settings.ContainsKey("DisplayTestLabels")
                 ? ((string)settings["DisplayTestLabels"]).ToUpperInvariant()
-                : "OFF";
+                : "ON";
             _outWriter = Console.Out;
 
             if (_teamcity)

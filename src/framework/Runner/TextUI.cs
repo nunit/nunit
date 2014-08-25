@@ -392,7 +392,9 @@ namespace NUnitLite.Runner
 #endif
 
             bool isSuite = result.Test.IsSuite;
-            var labels = _commandLineOptions.DisplayTestLabels.ToUpperInvariant();
+            var labels = _commandLineOptions.DisplayTestLabels != null
+                ? _commandLineOptions.DisplayTestLabels.ToUpperInvariant()
+                : "ON";
                 
             if (!isSuite && labels == "ALL")
                 WriteTestLabel(result);

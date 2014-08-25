@@ -16,7 +16,6 @@ namespace NUnitLite.Runner.Tests
     [TestFixture]
     class CommandLineOptionTests
     {
-        [TestCase("DisplayTestLabels", "Off")]
         [TestCase("InternalTraceLevel", "Off")]
         [TestCase("DefaultTimeout", -1)]
         public void TestDefaultSetting<T>(string propertyName, T defaultValue)

@@ -49,7 +49,6 @@ namespace NUnitLite.Runner
             ErrorMessages = new List<string>();
 
             InternalTraceLevel = "Off";
-            DisplayTestLabels = "Off";
             DefaultTimeout = -1;
 
             this.Parse(args);
