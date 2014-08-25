@@ -167,7 +167,7 @@ namespace NUnit.ConsoleRunner
                 case ColorStyle.Warning:
                     return ConsoleColor.Yellow;
                 case ColorStyle.Error:
-                    return ConsoleColor.DarkRed;
+                    return ConsoleColor.Red;
                 case ColorStyle.Output:
                     return ConsoleColor.Gray;
                 case ColorStyle.Default:
