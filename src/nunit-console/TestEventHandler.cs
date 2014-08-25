@@ -31,7 +31,6 @@ using NUnit.Engine;
 
 namespace NUnit.ConsoleRunner
 {
-    using Options;
     using Utilities;
 
     /// <summary>
@@ -40,28 +39,22 @@ namespace NUnit.ConsoleRunner
     /// </summary>
     public class TestEventHandler : MarshalByRefObject, ITestEventListener
     {
-        private int testRunCount;
-        private int testIgnoreCount;
-        private int failureCount;
-        private int level;
+        private int _testRunCount;
+        private int _testIgnoreCount;
+        private int _failureCount;
+        private int _level;
 
-        private string pendingLabel;
+        private string _displayLabels;
+        private TextWriter _outWriter;
 
-        private ConsoleOptions options;
-        private TextWriter outWriter;
-        private TextWriter errorWriter;
-
-        private List<string> messages = new List<string>();
+        private List<string> _messages = new List<string>();
         
-        private string currentTestName;
 
-        public TestEventHandler( ConsoleOptions options, TextWriter outWriter, TextWriter errorWriter )
+        public TestEventHandler(TextWriter outWriter, string displayLabels)
         {
-            level = 0;
-            this.options = options;
-            this.outWriter = outWriter;
-            this.errorWriter = errorWriter;
-            this.currentTestName = string.Empty;
+            _level = 0;
+            _displayLabels = displayLabels;
+            _outWriter = outWriter;
         }
 
         #region ITestEventHandler Members
@@ -108,11 +101,11 @@ namespace NUnit.ConsoleRunner
 
         public void SuiteStarted(XmlNode startNode)
         {
-            if (level++ == 0)
+            if (_level++ == 0)
             {
-                testRunCount = 0;
-                testIgnoreCount = 0;
-                failureCount = 0;
+                _testRunCount = 0;
+                _testIgnoreCount = 0;
+                _failureCount = 0;
 
                 XmlAttribute nameAttr = startNode.Attributes["fullname"];
                 string suiteName = (nameAttr != null)
@@ -135,32 +128,29 @@ namespace NUnit.ConsoleRunner
             switch (resultState)
             {
                 case "Failed":
-                    testRunCount++;
-                    failureCount++;
+                    _testRunCount++;
+                    _failureCount++;
                   
-                    messages.Add(string.Format("{0}) {1} :", failureCount, nameAttr.Value));
+                    _messages.Add(string.Format("{0}) {1} :", _failureCount, nameAttr.Value));
                     break;
 
                 case "Inconclusive":
                 case "Passed":
-                    testRunCount++;
+                    _testRunCount++;
                     break;
 
                 case "Skipped":
-                    testIgnoreCount++;
+                    _testIgnoreCount++;
                     break;
             }
 
             var outputNode = testResult.SelectSingleNode("output");
-            var labels = options.DisplayTestLabels != null 
-                ? options.DisplayTestLabels.ToUpperInvariant()
-                : "ON";
 
-            if (labels == "ALL")
+            if (_displayLabels == "ALL")
                 WriteTestLabel(nameAttr.Value);
             if (outputNode != null)
             {
-                if (labels == "ON")
+                if (_displayLabels == "ON")
                     WriteTestLabel(nameAttr.Value);
 
                 WriteTestOutput(outputNode);
@@ -190,13 +180,13 @@ namespace NUnit.ConsoleRunner
 
         public void SuiteFinished(XmlNode suiteResult)
         {
-            if (--level == 0)
+            if (--_level == 0)
             {
                 XmlAttribute durationAttribute = suiteResult.Attributes["duration"];
 
                 Trace.WriteLine("############################################################################");
 
-                if (messages.Count == 0)
+                if (_messages.Count == 0)
                 {
                     Trace.WriteLine("##############                 S U C C E S S               #################");
                 }
@@ -204,16 +194,16 @@ namespace NUnit.ConsoleRunner
                 {
                     Trace.WriteLine("##############                F A I L U R E S              #################");
 
-                    foreach (string s in messages)
+                    foreach (string s in _messages)
                     {
                         Trace.WriteLine(s);
                     }
                 }
 
                 Trace.WriteLine("############################################################################");
-                Trace.WriteLine("Executed tests       : " + testRunCount);
-                Trace.WriteLine("Ignored tests        : " + testIgnoreCount);
-                Trace.WriteLine("Failed tests         : " + failureCount);
+                Trace.WriteLine("Executed tests       : " + _testRunCount);
+                Trace.WriteLine("Ignored tests        : " + _testIgnoreCount);
+                Trace.WriteLine("Failed tests         : " + _failureCount);
                 if ( durationAttribute != null )
                 Trace.WriteLine("Total duration       : " + durationAttribute.Value + " seconds");
                 Trace.WriteLine("############################################################################");

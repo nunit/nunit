@@ -310,36 +310,6 @@ namespace NUnit.ConsoleRunner.Options
             return result;
         }
 
-        //private void RequiredIntError(string option)
-        //{
-        //    ErrorMessages.Add("An int value is required for option '" + option + "'.");
-        //}
-
-        //private void ProcessIntOption(string v, ref int field)
-        //{
-        //    if (!int.TryParse(v, out field))
-        //        ErrorMessages.Add("Invalid argument value: " + v);
-        //}
-
-        //private void ProcessEnumOption<T>(string v, ref T field)
-        //{
-        //    if (Enum.IsDefined(typeof(T), v))
-        //        field = (T)Enum.Parse(typeof(T), v);
-        //    else
-        //        ErrorMessages.Add("Invalid argument value: " + v);
-        //}
-
-        //private object ParseEnumOption(Type enumType, string value)
-        //{
-        //    foreach (string name in Enum.GetNames(enumType))
-        //        if (value.ToLower() == name.ToLower())
-        //            return Enum.Parse(enumType, value);
-
-        //    this.ErrorMessages.Add(value);
-
-        //    return null;
-        //}
-
         #endregion
     }
 }

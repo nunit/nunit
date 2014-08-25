@@ -126,7 +126,10 @@ namespace NUnit.ConsoleRunner
             // TODO: Incorporate this in EventCollector?
             RedirectOutputAsRequested();
 
-            TestEventHandler eventHandler = new TestEventHandler(_options, _outWriter, _errorWriter);
+            var labels = _options.DisplayTestLabels != null
+                ? _options.DisplayTestLabels.ToUpperInvariant()
+                : "ON";
+            TestEventHandler eventHandler = new TestEventHandler(_outWriter, labels);
 
             XmlNode result = null;
 
