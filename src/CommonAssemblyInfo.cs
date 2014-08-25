@@ -65,7 +65,7 @@ using System.Reflection;
 #elif NETCF_2_0
 [assembly: AssemblyConfiguration("Compact Framework 2.0 Debug")]
 #else
-[assembly: AssemblyConfifguration("Debug")]
+[assembly: AssemblyConfiguration("Debug")]
 #endif
 #else
 #if NET_4_5
