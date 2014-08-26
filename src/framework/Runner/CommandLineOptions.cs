@@ -261,7 +261,7 @@ namespace NUnitLite.Runner
                     ShowHelp = true;
                     break;
                 case "test":
-                    Tests.Add(val);
+                    Tests.AddRange(TestNameParser.Parse(val));
                     break;
                 case "full":
                     Full = true;

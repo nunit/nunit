@@ -240,6 +240,14 @@ namespace NUnitLite.Runner.Tests
         }
 
         [Test]
+        public void MultipleTestNamesAreRecognized()
+        {
+            var options = new CommandLineOptions("-test:NUnit.Tests.Test1,NUnit.Tests.Test2,NUnit.Tests.Test3");
+            Assert.That(options.Tests, Is.EqualTo(
+                new string[] { "NUnit.Tests.Test1", "NUnit.Tests.Test2", "NUnit.Tests.Test3" }));
+        }
+
+        [Test]
         public void MultipleTestOptionsAreRecognized()
         {
             var options = new CommandLineOptions("-test:Class1", "-test=Class2", "-test:Class3");

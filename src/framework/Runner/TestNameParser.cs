@@ -23,7 +23,7 @@
 
 using System.Collections.Generic;
 
-namespace NUnit.Framework.TestHarness
+namespace NUnitLite.Runner
 {
     /// <summary>
     /// TestNameParser is used to parse the arguments to the 
@@ -32,9 +32,9 @@ namespace NUnit.Framework.TestHarness
     public class TestNameParser
     {
         /// <summary>
-        /// Parse the -run argument and return an array of names
+        /// Parse the -test argument and return an array of names
         /// </summary>
-        /// <param name="names">The list of names to parse</param>
+        /// <param name="names">List of names to be parsed</param>
         /// <returns></returns>
         public static string[] Parse(string names)
         {
