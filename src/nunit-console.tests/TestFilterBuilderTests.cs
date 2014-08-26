@@ -26,7 +26,7 @@ using System.Xml;
 using NUnit.Engine;
 using NUnit.Framework;
 
-namespace NUnit.Util.Tests
+namespace NUnit.ConsoleRunner.Utilities.Tests
 {
     public class TestFilterBuilderTests
     {

@@ -24,7 +24,7 @@
 using System;
 using NUnit.Framework;
 
-namespace NUnit.Util.Tests
+namespace NUnit.ConsoleRunner.Tests
 {
     public class OutputSpecificationTests
     {

@@ -21,39 +21,37 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System.IO;
+using System;
+using System.Reflection;
 using System.Text;
 using System.Xml;
-using System.Xml.Xsl;
+using System.IO;
 
-namespace NUnit.Util
+namespace NUnit.ConsoleRunner
 {
-    public class XmlTransformOutputWriter : IResultWriter
+    /// <summary>
+    /// NUnit3XmlOutputWriter is responsible for writing the results
+    /// of a test to a file in NUnit 3.0 format.
+    /// </summary>
+    public class NUnit3XmlOutputWriter : IResultWriter
     {
-        private string xsltFile;
-        private XslCompiledTransform transform = new XslCompiledTransform();
-
-        public XmlTransformOutputWriter(string xsltFile)
+        public void WriteResultFile(XmlNode resultNode, string outputPath)
         {
-            this.xsltFile = xsltFile;
-            transform.Load(xsltFile);
-        }
-
-        public void WriteResultFile(XmlNode result, TextWriter writer)
-        {
-            using (XmlTextWriter xmlWriter = new XmlTextWriter(writer))
+            using (StreamWriter writer = new StreamWriter(outputPath, false, Encoding.UTF8))
             {
-                xmlWriter.Formatting = Formatting.Indented;
-                transform.Transform(result, xmlWriter);
+                WriteResultFile(resultNode, writer);
             }
         }
 
-        public void WriteResultFile(XmlNode result, string outputPath)
+        private void WriteResultFile(XmlNode resultNode, TextWriter writer)
         {
-            using (XmlTextWriter xmlWriter = new XmlTextWriter(outputPath, Encoding.Default))
+            XmlWriterSettings settings = new XmlWriterSettings();
+            settings.Indent = true;
+
+            using (XmlWriter xmlWriter = XmlWriter.Create(writer, settings))
             {
-                xmlWriter.Formatting = Formatting.Indented;
-                transform.Transform(result, xmlWriter);
+                xmlWriter.WriteStartDocument(false);
+                resultNode.WriteTo(xmlWriter);
             }
         }
     }

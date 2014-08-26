@@ -25,7 +25,7 @@ using System.IO;
 using System.Text;
 using System.Xml;
 
-namespace NUnit.Util
+namespace NUnit.ConsoleRunner
 {
     public class TestCaseOutputWriter : IResultWriter
     {

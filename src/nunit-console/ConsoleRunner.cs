@@ -21,13 +21,15 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
+using System.IO;
+using System.Xml;
+using NUnit.Engine;
+
 namespace NUnit.ConsoleRunner
 {
-    using System;
-    using System.IO;
-    using System.Xml;
-    using NUnit.Engine;
-    using NUnit.Util;
+    using Options;
+    using Utilities;
     
     /// <summary>
     /// ConsoleRunner provides the nunit-console text-based
@@ -124,7 +126,10 @@ namespace NUnit.ConsoleRunner
             // TODO: Incorporate this in EventCollector?
             RedirectOutputAsRequested();
 
-            TestEventHandler eventHandler = new TestEventHandler(_options, _outWriter, _errorWriter);
+            var labels = _options.DisplayTestLabels != null
+                ? _options.DisplayTestLabels.ToUpperInvariant()
+                : "ON";
+            TestEventHandler eventHandler = new TestEventHandler(_outWriter, labels);
 
             XmlNode result = null;
 

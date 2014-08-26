@@ -51,15 +51,27 @@
     <Compile Include="..\CommonVersionInfo.cs">
       <Link>CommonVersionInfo.cs</Link>
     </Compile>
-    <Compile Include="ColorConsole.cs" />
-    <Compile Include="ConsoleOptions.cs" />
+    <Compile Include="Utilities\ColorConsole.cs" />
+    <Compile Include="Options\ConsoleOptions.cs" />
     <Compile Include="ConsoleRunner.cs" />
-    <Compile Include="PackageSettings.cs" />
+    <Compile Include="IResultWriter.cs" />
+    <Compile Include="Options\Options.cs" />
+    <Compile Include="OutputManager.cs" />
+    <Compile Include="OutputSpecification.cs" />
+    <Compile Include="OutputWriters\NUnit2XmlOutputWriter.cs" />
+    <Compile Include="OutputWriters\NUnit3XmlOutputWriter.cs" />
+    <Compile Include="OutputWriters\TestCaseOutputWriter.cs" />
+    <Compile Include="OutputWriters\XmlTransformOutputWriter.cs" />
+    <Compile Include="Utilities\PackageSettings.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="ResultSummary.cs" />
+    <Compile Include="Utilities\StackTraceFilter.cs" />
     <Compile Include="TestEventHandler.cs" />
-    <Compile Include="TestNameParser.cs" />
+    <Compile Include="Utilities\TestFilterBuilder.cs" />
+    <Compile Include="Utilities\TestNameParser.cs" />
     <Compile Include="ResultReporter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utilities\XmlHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App.ico" />
@@ -72,10 +84,6 @@
     <ProjectReference Include="..\nunit.engine.api\nunit.engine.api.csproj">
       <Project>{775FAD50-3623-4922-97C4-DFB29A8BE4C7}</Project>
       <Name>nunit.engine.api</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\nunit.util\nunit.util.csproj">
-      <Project>{58ab0272-1900-4cff-bd43-175c46421696}</Project>
-      <Name>nunit.util</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

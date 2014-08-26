@@ -22,30 +22,13 @@
 // ***********************************************************************
 
 using System;
-using System.Collections.Generic;
+using System.IO;
 using System.Xml;
-using NUnit.Framework;
 
-namespace NUnit.Util.Tests
+namespace NUnit.ConsoleRunner
 {
-    public class XmlHelperTests
+    public interface IResultWriter
     {
-        [Test]
-        public void SingleElement()
-        {
-            XmlNode node = XmlHelper.CreateTopLevelElement("myelement");
-
-            Assert.That(node.Name, Is.EqualTo("myelement"));
-            Assert.That(node.Attributes.Count, Is.EqualTo(0));
-            Assert.That(node.ChildNodes.Count, Is.EqualTo(0));
-        }
-
-        [Test]
-        public void SafeAttributeAccess()
-        {
-            XmlNode node = XmlHelper.CreateTopLevelElement("top");
-
-            Assert.That(node.GetAttribute("junk"), Is.Null);
-        }
+        void WriteResultFile(XmlNode resultNode, string outputPath);
     }
 }

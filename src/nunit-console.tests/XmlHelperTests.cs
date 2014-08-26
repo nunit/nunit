@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2007 Charlie Poole
+// Copyright (c) 2011 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,53 +21,31 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-namespace NUnit.Util
+using System;
+using System.Collections.Generic;
+using System.Xml;
+using NUnit.Framework;
+
+namespace NUnit.ConsoleRunner.Utilities.Tests
 {
-    using System;
-    using System.IO;
-
-    /// <summary>
-    /// Summary description for StackTraceFilter.
-    /// </summary>
-    public class StackTraceFilter
+    public class XmlHelperTests
     {
-        public static string Filter(string stack)
+        [Test]
+        public void SingleElement()
         {
-            if (stack == null) return null;
-            StringWriter sw = new StringWriter();
-            StringReader sr = new StringReader(stack);
+            XmlNode node = XmlHelper.CreateTopLevelElement("myelement");
 
-            try
-            {
-                string line;
-                while ((line = sr.ReadLine()) != null)
-                {
-                    if (!FilterLine(line))
-                        sw.WriteLine(line.Trim());
-                }
-            }
-            catch (Exception)
-            {
-                return stack;
-            }
-            return sw.ToString();
+            Assert.That(node.Name, Is.EqualTo("myelement"));
+            Assert.That(node.Attributes.Count, Is.EqualTo(0));
+            Assert.That(node.ChildNodes.Count, Is.EqualTo(0));
         }
 
-        static bool FilterLine(string line)
+        [Test]
+        public void SafeAttributeAccess()
         {
-            string[] patterns = new string[]
-			{
-				"NUnit.Framework.Assert" 
-			};
+            XmlNode node = XmlHelper.CreateTopLevelElement("top");
 
-            for (int i = 0; i < patterns.Length; i++)
-            {
-                if (line.IndexOf(patterns[i]) > 0)
-                    return true;
-            }
-
-            return false;
+            Assert.That(node.GetAttribute("junk"), Is.Null);
         }
-
     }
 }

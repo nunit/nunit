@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-namespace NUnit.Engine
+namespace NUnit.ConsoleRunner.Utilities
 {
     /// <summary>
     /// PackageSettings is a static class containing constant values that

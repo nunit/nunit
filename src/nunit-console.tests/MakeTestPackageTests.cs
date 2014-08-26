@@ -26,6 +26,8 @@ using NUnit.Framework;
 
 namespace NUnit.ConsoleRunner.Tests
 {
+    using Options;
+
     public class MakeTestPackageTests
     {
         [Test]
