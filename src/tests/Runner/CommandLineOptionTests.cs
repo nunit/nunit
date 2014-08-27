@@ -16,6 +16,8 @@ namespace NUnitLite.Runner.Tests
     [TestFixture]
     class CommandLineOptionTests
     {
+        #region General Tests
+
         [TestCase("InternalTraceLevel", "Off")]
         [TestCase("DefaultTimeout", -1)]
         public void TestDefaultSetting<T>(string propertyName, T defaultValue)
@@ -107,91 +109,167 @@ namespace NUnitLite.Runner.Tests
             }
         }
 
+        #endregion
+
+        #region Explore Option Tests
+
 #if !SILVERLIGHT && !NETCF
         [Test]
-        public void TestExploreOptionWithNoFileName()
+        public void ExploreOptionWithNoFileName()
         {
             var options = new CommandLineOptions("-explore");
             Assert.That(options.ErrorMessages, Is.Empty);
             Assert.That(options.Explore, Is.True);
-            Assert.That(options.ExploreFile, Is.EqualTo(Path.GetFullPath("tests.xml")));
+            Assert.That(options.ExploreOutputSpecifications.Count, Is.EqualTo(0));
         }
 
         [Test]
-        public void TestExploreOptionWithGoodFileName()
+        public void ExploreOptionWithFileName()
         {
             var options = new CommandLineOptions("-explore=MyFile.xml");
             Assert.That(options.ErrorMessages, Is.Empty);
             Assert.That(options.Explore, Is.True);
-            Assert.That(options.ExploreFile, Is.EqualTo(Path.GetFullPath("MyFile.xml")));
+
+            var spec = options.ExploreOutputSpecifications[0];
+            Assert.That(spec.OutputPath, Is.EqualTo("MyFile.xml"));
+            Assert.That(spec.Format, Is.EqualTo("nunit3"));
+            Assert.Null(spec.Transform);
         }
 
         [Test]
-        [Platform(Exclude = "Mono", Reason = "No Exception thrown on bad path under Mono. Test should be revised.")]
-        public void TestExploreOptionWithBadFileName()
+        public void ExploreOptionWithFilePathAndFormat()
         {
-            var options = new CommandLineOptions("-explore=MyFile*.xml");
-            Assert.That(options.ErrorMessages, Is.EqualTo(
-                new string[] { "Invalid option: -explore=MyFile*.xml" } ));
-        }
-
-        [Test]
-        public void TestResultOptionWithNoFileName()
-        {
-            var options = new CommandLineOptions("-result");
+            var options = new CommandLineOptions("-explore:results.xml;format=cases");
             Assert.That(options.ErrorMessages, Is.Empty);
-            Assert.That(options.ResultFile, Is.EqualTo(Path.GetFullPath("TestResult.xml")));
+            Assert.True(options.Explore);
+
+            OutputSpecification spec = options.ExploreOutputSpecifications[0];
+            Assert.That(spec.OutputPath, Is.EqualTo("results.xml"));
+            Assert.That(spec.Format, Is.EqualTo("cases"));
+            Assert.Null(spec.Transform);
         }
 
         [Test]
-        public void TestResultOptionWithGoodFileName()
+        public void ExploreOptionWithFilePathAndTransform()
         {
-            var options = new CommandLineOptions("-result=MyResult.xml");
+            var options = new CommandLineOptions("-explore:results.xml;transform=myreport.xslt");
             Assert.That(options.ErrorMessages, Is.Empty);
-            Assert.That(options.ResultFile, Is.EqualTo(Path.GetFullPath("MyResult.xml")));
+            Assert.True(options.Explore);
+
+            OutputSpecification spec = options.ExploreOutputSpecifications[0];
+            Assert.That(spec.OutputPath, Is.EqualTo("results.xml"));
+            Assert.That(spec.Format, Is.EqualTo("user"));
+            Assert.That(spec.Transform, Is.EqualTo("myreport.xslt"));
         }
 
         [Test]
-        [Platform(Exclude = "Mono", Reason = "No Exception thrown on bad path under Mono. Test should be revised.")]
-        public void TestResultOptionWithBadFileName()
+        public void ExploreOptionMayBeRepeated()
         {
-            var options = new CommandLineOptions("-result=MyResult*.xml");
-            Assert.That(options.ErrorMessages, 
-                Is.EqualTo(new string[] { "Invalid option: -result=MyResult*.xml" } ));
+            var options = new CommandLineOptions("-explore:results.xml", "-explore:nunit2results.xml;format=nunit2", "-explore:myresult.xml;transform=mytransform.xslt");
+            Assert.That(options.ErrorMessages, Is.Empty);
+
+            var specs = options.ExploreOutputSpecifications;
+            Assert.AreEqual(3, specs.Count);
+
+            var spec1 = specs[0];
+            Assert.AreEqual("results.xml", spec1.OutputPath);
+            Assert.AreEqual("nunit3", spec1.Format);
+            Assert.Null(spec1.Transform);
+
+            var spec2 = specs[1];
+            Assert.AreEqual("nunit2results.xml", spec2.OutputPath);
+            Assert.AreEqual("nunit2", spec2.Format);
+            Assert.Null(spec2.Transform);
+
+            var spec3 = specs[2];
+            Assert.AreEqual("myresult.xml", spec3.OutputPath);
+            Assert.AreEqual("user", spec3.Format);
+            Assert.AreEqual("mytransform.xslt", spec3.Transform);
         }
 #endif
 
+        #endregion
+
+        #region Result Option Tests
+
+#if !SILVERLIGHT && !NETCF
         [Test]
-        public void TestNUnit2FormatOption()
+        public void ResultOptionWithNoFileNameDefaultsToTestResultXml()
         {
-            var options = new CommandLineOptions("-format=nunit2");
+            var options = new CommandLineOptions("-result");
             Assert.That(options.ErrorMessages, Is.Empty);
-            Assert.That(options.ResultFormat, Is.EqualTo("nunit2"));
+
+            var spec = options.ResultOutputSpecifications[0];
+            Assert.That(spec.OutputPath, Is.EqualTo("TestResult.xml"));
+            Assert.That(spec.Format, Is.EqualTo("nunit3"));
+            Assert.Null(spec.Transform);
         }
 
         [Test]
-        public void TestNUnit3FormatOption()
+        public void ResultOptionWithFileName()
         {
-            var options = new CommandLineOptions("-format=nunit3");
+            var options = new CommandLineOptions("-result=MyResult.xml");
             Assert.That(options.ErrorMessages, Is.Empty);
-            Assert.That(options.ResultFormat, Is.EqualTo("nunit3"));
+
+            var spec = options.ResultOutputSpecifications[0];
+            Assert.That(spec.OutputPath, Is.EqualTo("MyResult.xml"));
+            Assert.That(spec.Format, Is.EqualTo("nunit3"));
+            Assert.Null(spec.Transform);
         }
 
         [Test]
-        public void TestBadFormatOption()
+        public void ResultOptionWithFilePathAndFormat()
         {
-            var options = new CommandLineOptions("-format=xyz");
-            Assert.That(options.ErrorMessages, Is.EqualTo(
-                new string[] { "Invalid option: -format=xyz" } ));
+            var options = new CommandLineOptions("-result:results.xml;format=nunit2");
+            Assert.That(options.ErrorMessages, Is.Empty);
+
+            OutputSpecification spec = options.ResultOutputSpecifications[0];
+            Assert.AreEqual("results.xml", spec.OutputPath);
+            Assert.AreEqual("nunit2", spec.Format);
+            Assert.Null(spec.Transform);
         }
 
         [Test]
-        public void TestMissingFormatOption()
+        public void ResultOptionWithFilePathAndTransform()
         {
-            var options = new CommandLineOptions("-format");
-            Assert.That(options.ErrorMessages, Is.EqualTo(
-                new string[] { "Invalid option: -format" } ));
+            var options = new CommandLineOptions("-result:results.xml;transform=transform.xslt");
+            Assert.That(options.ErrorMessages, Is.Empty);
+
+            OutputSpecification spec = options.ResultOutputSpecifications[0];
+            Assert.AreEqual("results.xml", spec.OutputPath);
+            Assert.AreEqual("user", spec.Format);
+            Assert.AreEqual("transform.xslt", spec.Transform);
         }
+
+        [Test]
+        public void ResultOptionMayBeRepeated()
+        {
+            var options = new CommandLineOptions("-result:results.xml", "-result:nunit2results.xml;format=nunit2", "-result:myresult.xml;transform=mytransform.xslt");
+            Assert.That(options.ErrorMessages, Is.Empty);
+
+            var specs = options.ResultOutputSpecifications;
+            Assert.AreEqual(3, specs.Count);
+
+            var spec1 = specs[0];
+            Assert.AreEqual("results.xml", spec1.OutputPath);
+            Assert.AreEqual("nunit3", spec1.Format);
+            Assert.Null(spec1.Transform);
+
+            var spec2 = specs[1];
+            Assert.AreEqual("nunit2results.xml", spec2.OutputPath);
+            Assert.AreEqual("nunit2", spec2.Format);
+            Assert.Null(spec2.Transform);
+
+            var spec3 = specs[2];
+            Assert.AreEqual("myresult.xml", spec3.OutputPath);
+            Assert.AreEqual("user", spec3.Format);
+            Assert.AreEqual("mytransform.xslt", spec3.Transform);
+        }
+#endif
+
+        #endregion
+
+        #region Invalid Options
 
         [Test]
         public void InvalidOptionProducesError()
@@ -212,6 +290,10 @@ namespace NUnitLite.Runner.Tests
                     "Invalid option: -garbage"} ));
         }
 
+        #endregion
+
+        #region Input Files
+
         [Test]
         public void SingleInputFileIsSaved()
         {
@@ -229,6 +311,10 @@ namespace NUnitLite.Runner.Tests
             Assert.That(options.InputFiles, Is.EqualTo(
                 new string[] { "assembly1.dll", "assembly2.dll", "assembly3.dll" } ));
         }
+
+        #endregion
+
+        #region Test Option
 
         [Test]
         public void TestOptionIsRecognized()
@@ -255,6 +341,8 @@ namespace NUnitLite.Runner.Tests
             Assert.That(options.Tests, Is.EqualTo(
                 new string[] { "Class1", "Class2", "Class3" } ));
         }
+
+        #endregion
 
         #region Helper Methods
 

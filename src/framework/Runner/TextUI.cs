@@ -55,6 +55,7 @@ namespace NUnitLite.Runner
     {
         private const string LOG_FILE_FORMAT = "InternalTrace.{0}.{1}.log";
         private CommandLineOptions _commandLineOptions;
+        private string _workDirectory;
         private readonly List<Assembly> _assemblies = new List<Assembly>();
         private TextWriter _outWriter;
         private TextWriter _errWriter;
@@ -95,11 +96,11 @@ namespace NUnitLite.Runner
 
             _commandLineOptions = new CommandLineOptions(args);
 
-            string workDirectory = _commandLineOptions.WorkDirectory;
-            if (workDirectory == null)
-                workDirectory = Environment.CurrentDirectory;
-            else if (!Directory.Exists(workDirectory))
-                Directory.CreateDirectory(workDirectory);
+            _workDirectory = _commandLineOptions.WorkDirectory;
+            if (_workDirectory == null)
+                _workDirectory = Environment.CurrentDirectory;
+            else if (!Directory.Exists(_workDirectory))
+                Directory.CreateDirectory(_workDirectory);
 
 #if !SILVERLIGHT
             if (_commandLineOptions.DisplayTeamCityServiceMessages)
@@ -107,13 +108,13 @@ namespace NUnitLite.Runner
 
             if (_commandLineOptions.OutFile != null)
             {
-                _outWriter = new StreamWriter(Path.Combine(workDirectory, _commandLineOptions.OutFile));
+                _outWriter = new StreamWriter(Path.Combine(_workDirectory, _commandLineOptions.OutFile));
                 Console.SetOut(_outWriter);
             }
 
             if (_commandLineOptions.ErrFile != null)
             {
-                _errWriter = new StreamWriter(Path.Combine(workDirectory, _commandLineOptions.ErrFile));
+                _errWriter = new StreamWriter(Path.Combine(_workDirectory, _commandLineOptions.ErrFile));
                 Console.SetError(_errWriter);
             }
 #endif
@@ -235,44 +236,37 @@ namespace NUnitLite.Runner
 
         private void RunTests(ITestFilter filter)
         {
+            var startTime = DateTime.UtcNow;
+
             ITestResult result = _runner.Run(this, filter);
             new ResultReporter(result, _outWriter).ReportResults();
 
-            string resultFile = _commandLineOptions.ResultFile;
-            string resultFormat = _commandLineOptions.ResultFormat;
-            if (resultFile != null || _commandLineOptions.ResultFormat != null)
+            if (_commandLineOptions.ResultOutputSpecifications.Count > 0)
             {
-                if (resultFile == null)
-                    resultFile = "TestResult.xml";
+                var outputManager = new OutputManager(_workDirectory);
 
-                if (resultFormat == "nunit2")
-                    new NUnit2XmlOutputWriter().WriteResultFile(result, resultFile);
-                else
-                    new NUnit3XmlOutputWriter().WriteResultFile(result, resultFile);
-                Console.WriteLine();
-                Console.WriteLine("Results saved as {0}.", resultFile);
+                foreach (var spec in _commandLineOptions.ResultOutputSpecifications)
+                    outputManager.WriteResultFile(result, spec);
             }
         }
 
         private void ExploreTests()
         {
-            XmlNode testNode = _runner.LoadedTest.ToXml(true);
+            ITest testNode = _runner.LoadedTest;
 
-            string listFile = _commandLineOptions.ExploreFile;
-            TextWriter textWriter = listFile != null && listFile.Length > 0
-                ? new StreamWriter(listFile)
-                : Console.Out;
+            var specs = _commandLineOptions.ExploreOutputSpecifications;
 
-            System.Xml.XmlWriterSettings settings = new System.Xml.XmlWriterSettings();
-            settings.Indent = true;
-            settings.Encoding = System.Text.Encoding.UTF8;
-            System.Xml.XmlWriter testWriter = System.Xml.XmlWriter.Create(textWriter, settings);
+            if (specs.Count == 0)
+            {
+                new TestCaseOutputWriter().WriteTestFile(testNode, Console.Out);
+            }
+            else
+            {
+                var outputManager = new OutputManager(_workDirectory);
 
-            testNode.WriteTo(testWriter);
-            testWriter.Close();
-
-            Console.WriteLine();
-            Console.WriteLine("Test info saved as {0}.", listFile);
+                foreach (var spec in _commandLineOptions.ExploreOutputSpecifications)
+                    outputManager.WriteTestFile(testNode, spec);
+            }
         }
 
         private void InitializeInternalTrace(string assemblyPath, InternalTraceLevel traceLevel)

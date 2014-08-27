@@ -47,6 +47,8 @@ namespace NUnitLite.Runner
             Tests = new List<string>();
             InputFiles = new List<string>();
             ErrorMessages = new List<string>();
+            ExploreOutputSpecifications = new List<OutputSpecification>();
+            ResultOutputSpecifications = new List<OutputSpecification>();
 
             InternalTraceLevel = "Off";
             DefaultTimeout = -1;
@@ -73,11 +75,11 @@ namespace NUnitLite.Runner
         /// <summary>Indicates whether tests should be listed rather than run.</summary>
         public bool Explore { get; private set; }
 
-        /// <summary>Gets the name of the file to be used for listing tests.</summary>
-        public string ExploreFile { get; private set; }
+        /// <summary>Gets a List of OutputSpecifications for listing tests.</summary>
+        public List<OutputSpecification> ExploreOutputSpecifications { get; private set; }
 
-        /// <summary>Gets the name of the file to be used for test results.</summary>
-        public string ResultFile { get; private set; }
+        /// <summary>Gets a List of OutputSpecifications for test results.</summary>
+        public List<OutputSpecification> ResultOutputSpecifications { get; private set; }
 
         /// <summary>Gets the format to be used for test results.</summary>
         public string ResultFormat { get; private set; }
@@ -170,8 +172,8 @@ namespace NUnitLite.Runner
                 sb.Append("or on the probing path. If no assemblies are provided, tests in the" + NL);
                 sb.Append("executing assembly itself are run." + NL + NL);
                 sb.Append("Options:" + NL);
-                sb.Append("  -test:testname  The name of a test to run or explore. This option may be repeated." + NL);
-                sb.Append("                  If no test names are given, all tests are run." + NL + NL);
+                sb.Append("  -test:testname  Comma-separated list of the NAMES of tests to run or explore." + NL);
+                sb.Append("                  This option may be repeated. If not used, all tests are run." + NL + NL);
                 sb.Append("  -work:PATH      PATH of the directory to use for output files." + NL + NL);
                 sb.Append("  -output:FILE,   File to which standard output is redirected. If this option" + NL);
                 sb.Append("  -out:FILE       is not used, output is to the Console, which means it is" + NL);
@@ -180,12 +182,13 @@ namespace NUnitLite.Runner
                 sb.Append("                  is not used, output is to the Console, which means it is" + NL);
                 sb.Append("                  lost on devices without a Console." + NL + NL);
                 sb.Append("  -full           Prints full report of all test results." + NL + NL);
-                sb.Append("  -result:FILE    File to which the xml test result is written." + NL + NL);
-                sb.Append("  -format:FORMAT  Format in which the result is to be written. FORMAT must be" + NL);
-                sb.Append("                  either nunit3 or nunit2. The default is nunit3." + NL + NL);
-                sb.Append("  -explore:FILE  If provided, this option indicates that the tests" + NL);
-                sb.Append("                  should be listed rather than executed. They are listed" + NL);
-                sb.Append("                  to the specified file in XML format." + NL);
+                sb.Append("  -result:SPEC    An output SPEC for saving the test results. Note that" + NL);
+                sb.Append("                  NUnitLite does not save the test result unless this" + NL);
+                sb.Append("                  option is used. This option may be repeated." + NL + NL);
+                sb.Append("  -explore[:SPEC] Display or save test info rather than running tests." + NL);
+                sb.Append("                  Optionally provide an output SPEC for saving the test info." + NL);
+                sb.Append("                  If no SPEC is provided, tests are listed to the console" + NL);
+                sb.Append("                  This option may be repeated." + NL + NL);
                 sb.Append("  -help,-h        Displays this help" + NL + NL);
                 sb.Append("  -noheader,-noh  Suppresses display of the initial message" + NL + NL);
                 sb.Append("  -trace:LEVEL    Set internal trace {LEVEL}." + NL);
@@ -207,6 +210,20 @@ namespace NUnitLite.Runner
                     sb.Append(" * On Windows, options may be prefixed by a '/' character if desired" + NL + NL);
                 sb.Append(" * Options that take values may use an equal sign or a colon" + NL);
                 sb.Append("   to separate the option from its value." + NL + NL);
+                sb.Append(" * Several options that specify processing of XML output take" + NL);
+                sb.Append("   an output specification as a value. A SPEC may take one of" + NL);
+                sb.Append("   the following forms:" + NL);
+                sb.Append("       --OPTION:filename" + NL);
+                sb.Append("       --OPTION:filename;format=formatname" + NL);
+                sb.Append("       --OPTION:filename;transform=xsltfile" + NL + NL);
+                sb.Append("   The --result option may use any of the following formats:" + NL);
+                sb.Append("       nunit3 - the native XML format for NUnit 3.0" + NL);
+                sb.Append("       nunit2 - legacy XML format used by earlier releases of NUnit" + NL + NL);
+                sb.Append("   The --explore option may use any of the following formats:" + NL);
+                sb.Append("       nunit3 - the native XML format for NUnit 3.0" + NL);
+                sb.Append("       cases  - a text file listing the full names of all test cases." + NL);
+                sb.Append("   If --explore is used without any specification following, a list of" + NL);
+                sb.Append("   test cases is output to the console." + NL + NL);
 
                 return sb.ToString();
             }
@@ -252,82 +269,79 @@ namespace NUnitLite.Runner
                 case "wait":
                     Wait = true;
                     break;
+
                 case "noheader":
                 case "noh":
                     NoHeader = true;
                     break;
+
                 case "help":
                 case "h":
                     ShowHelp = true;
                     break;
+
                 case "test":
                     Tests.AddRange(TestNameParser.Parse(val));
                     break;
+
                 case "full":
                     Full = true;
                     break;
+
                 case "teamcity":
                     DisplayTeamCityServiceMessages = true;
                     break;
+
                 case "explore":
                     Explore = true;
-                    if (val == null || val.Length == 0)
-                        val = "tests.xml";
-                    try
-                    {
-                        ExploreFile = ExpandToFullPath(val);
-                    }
-                    catch
-                    {
-                        InvalidOption(option);
-                    }
+                    if (val != null && val.Length > 0)
+                        ExploreOutputSpecifications.Add(new OutputSpecification(val));
                     break;
+
                 case "result":
                     if (val == null || val.Length == 0)
                         val = "TestResult.xml";
-                    try
-                    {
-                        ResultFile = ExpandToFullPath(val);
-                    }
-                    catch
-                    {
-                        InvalidOption(option);
-                    }
+                    ResultOutputSpecifications.Add(new OutputSpecification(val));
                     break;
-                case "format":
-                    ResultFormat = val;
-                    if (ResultFormat != "nunit3" && ResultFormat != "nunit2")
-                        InvalidOption(option);
-                    break;
+
                 case "work":
                     WorkDirectory = RequiredValue(val, option);
                     break;
+
                 case "output":
                 case "out":
                     OutFile = RequiredValue(val, option);
                     break;
+
                 case "err":
                     ErrFile = RequiredValue(val, option);
                     break;
+
                 case "labels":
                 case "l":
                     DisplayTestLabels = RequiredValue(val, option, "Off", "On", "All");
                     break;
+
                 case "include":
                     Include = val;
                     break;
+
                 case "exclude":
                     Exclude = val;
                     break;
+
                 case "seed":
                     _randomSeed = RequiredInt(val, option);
                     break;
+
                 case "timeout":
                     DefaultTimeout = RequiredInt(val, option);
                     break;
+
                 case "trace":
                     InternalTraceLevel = RequiredValue(val, option, "Off", "Error", "Warning", "Info", "Debug", "Verbose");
                     break;
+
                 default:
                     InvalidOption(option);
                     break;
