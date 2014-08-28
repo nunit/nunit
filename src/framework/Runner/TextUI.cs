@@ -147,10 +147,8 @@ namespace NUnitLite.Runner
                     _outWriter.WriteLine("Ignoring /wait option - only valid for Console");
 
                 var runSettings = MakeRunSettings(_commandLineOptions);
-                
-                TestFilter filter = _commandLineOptions.Tests.Count > 0
-                    ? new SimpleNameFilter(_commandLineOptions.Tests)
-                    : TestFilter.Empty;
+
+                TestFilter filter = CreateTestFilter(_commandLineOptions);
 
                 try
                 {
@@ -176,28 +174,6 @@ namespace NUnitLite.Runner
                         ExploreTests();
                     else
                     {
-                        if (_commandLineOptions.Include != null && _commandLineOptions.Include != string.Empty)
-                        {
-                            TestFilter includeFilter = new SimpleCategoryExpression(_commandLineOptions.Include).Filter;
-
-                            if (filter.IsEmpty)
-                                filter = includeFilter;
-                            else
-                                filter = new AndFilter(filter, includeFilter);
-                        }
-
-                        if (_commandLineOptions.Exclude != null && _commandLineOptions.Exclude != string.Empty)
-                        {
-                            TestFilter excludeFilter = new NotFilter(new SimpleCategoryExpression(_commandLineOptions.Exclude).Filter);
-
-                            if (filter.IsEmpty)
-                                filter = excludeFilter;
-                            else if (filter is AndFilter)
-                                ((AndFilter)filter).Add(excludeFilter);
-                            else
-                                filter = new AndFilter(filter, excludeFilter);
-                        }
-
                         RunTests(filter);
                     }
                 }
@@ -356,6 +332,38 @@ namespace NUnitLite.Runner
                 runSettings[DriverSettings.DefaultTimeout] = options.DefaultTimeout;
 
             return runSettings;
+        }
+
+        /// <summary>
+        /// Create the test filter for this run - public for testing
+        /// </summary>
+        /// <param name="options"></param>
+        /// <returns></returns>
+        public static TestFilter CreateTestFilter(CommandLineOptions options)
+        {
+            TestFilter namefilter = options.Tests.Count > 0
+                ? new SimpleNameFilter(options.Tests)
+                : TestFilter.Empty;
+
+            TestFilter includeFilter = string.IsNullOrEmpty(options.Include)
+                ? TestFilter.Empty
+                : new SimpleCategoryExpression(options.Include).Filter;
+
+            TestFilter excludeFilter = string.IsNullOrEmpty(options.Exclude)
+                ? TestFilter.Empty
+                : new NotFilter(new SimpleCategoryExpression(options.Exclude).Filter);
+
+            TestFilter catFilter = includeFilter.IsEmpty
+                ? excludeFilter
+                : excludeFilter.IsEmpty
+                    ? includeFilter
+                    : new AndFilter(includeFilter, excludeFilter);
+
+            return namefilter.IsEmpty
+                ? catFilter
+                : catFilter.IsEmpty
+                    ? namefilter
+                    : new AndFilter(namefilter, catFilter);
         }
 
         #endregion
