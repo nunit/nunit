@@ -179,6 +179,10 @@
     <Compile Include="Internal\CultureSettingAndDetectionTests.cs" />
     <Compile Include="Internal\DeduceTypeArgsFromArgs.cs" />
     <Compile Include="Internal\TestResultOutputTests.cs" />
+    <Compile Include="Runner\CreateTestFilterTests.cs" />
+    <Compile Include="Runner\NUnit2XmlOutputWriterTests.cs" />
+    <Compile Include="Runner\OutputSpecificationTests.cs" />
+    <Compile Include="Runner\TestNameParserTests.cs" />
     <Compile Include="TestUtilities\Fakes.cs" />
     <Compile Include="Internal\GenericTestFixtureTests.cs" />
     <Compile Include="Internal\GenericTestMethodTests.cs" />

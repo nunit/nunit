@@ -40,6 +40,22 @@ namespace NUnitLite.Runner
         private XmlWriter xmlWriter;
 
         /// <summary>
+        /// Writes test info to the specified TextWriter
+        /// </summary>
+        /// <param name="test">The test to be written</param>
+        /// <param name="writer">A TextWriter to which the test info is written</param>
+        public override void WriteTestFile(ITest test, TextWriter writer)
+        {
+            XmlWriterSettings settings = new XmlWriterSettings();
+            settings.Indent = true;
+
+            using (XmlWriter xmlWriter = XmlWriter.Create(writer, settings))
+            {
+                test.ToXml(true).WriteTo(xmlWriter);
+            }
+        }
+
+        /// <summary>
         /// Writes the test result to the specified TextWriter
         /// </summary>
         /// <param name="result">The result to be written to a file</param>
@@ -51,11 +67,11 @@ namespace NUnitLite.Runner
 
             using (XmlWriter xmlWriter = XmlWriter.Create(writer, settings))
             {
-                WriteXmlOutput(result, xmlWriter);
+                WriteXmlResultOutput(result, xmlWriter);
             }
         }
 
-        private void WriteXmlOutput(ITestResult result, XmlWriter xmlWriter)
+        private void WriteXmlResultOutput(ITestResult result, XmlWriter xmlWriter)
         {
             this.xmlWriter = xmlWriter;
 

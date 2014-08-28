@@ -332,13 +332,17 @@
     <Compile Include="MessageMatch.cs" />
     <Compile Include="Runner\CommandLineOptions.cs" />
     <Compile Include="Runner\DebugWriter.cs" />
+    <Compile Include="Runner\OutputManager.cs" />
+    <Compile Include="Runner\OutputSpecification.cs" />
     <Compile Include="Runner\OutputWriters\NUnit2XmlOutputWriter.cs" />
     <Compile Include="Runner\OutputWriters\NUnit3XmlOutputWriter.cs" />
     <Compile Include="Runner\OutputWriters\OutputWriter.cs" />
+    <Compile Include="Runner\OutputWriters\TestCaseOutputWriter.cs" />
     <Compile Include="Runner\ResultReporter.cs" />
     <Compile Include="Runner\ResultSummary.cs" />
     <Compile Include="Runner\TcpWriter.cs" />
     <Compile Include="Runner\TeamCityEventListener.cs" />
+    <Compile Include="Runner\TestNameParser.cs" />
     <Compile Include="Runner\TextUI.cs" />
     <Compile Include="SpecialValue.cs" />
     <Compile Include="TestCaseData.cs" />

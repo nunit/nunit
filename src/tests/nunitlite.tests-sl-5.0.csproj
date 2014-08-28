@@ -206,7 +206,11 @@
     <Compile Include="Internal\TextMessageWriterTests.cs" />
     <Compile Include="Internal\TypeParameterUsedWithTestMethod.cs" />
     <Compile Include="Runner\CommandLineOptionTests.cs" />
+    <Compile Include="Runner\CreateTestFilterTests.cs" />
+    <Compile Include="Runner\MakeRunSettingsTests.cs" />
     <Compile Include="Runner\NUnit2XmlOutputWriterTests.cs" />
+    <Compile Include="Runner\OutputSpecificationTests.cs" />
+    <Compile Include="Runner\TestNameParserTests.cs" />
     <Compile Include="Syntax\AfterTests.cs" />
     <Compile Include="Syntax\ArbitraryConstraintMatching.cs" />
     <Compile Include="Syntax\CollectionTests.cs" />

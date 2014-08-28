@@ -48,10 +48,30 @@ namespace NUnitLite.Runner
         }
 
         /// <summary>
+        /// Writes test info to a file
+        /// </summary>
+        /// <param name="result">The test to be written</param>
+        /// <param name="outputPath">Path to the file to which the test info is written</param>
+        public void WriteTestFile(ITest test, string outputPath)
+        {
+            using (StreamWriter writer = new StreamWriter(outputPath, false, Encoding.UTF8))
+            {
+                WriteTestFile(test, writer);
+            }
+        }
+
+        /// <summary>
         /// Abstract method that writes a test result to a TextWriter
         /// </summary>
         /// <param name="result">The result to be written</param>
         /// <param name="writer">A TextWriter to which the result is written</param>
         public abstract void WriteResultFile(ITestResult result, TextWriter writer);
+
+        /// <summary>
+        /// Abstract method that writes test info to a TextWriter
+        /// </summary>
+        /// <param name="result">The test to be written</param>
+        /// <param name="writer">A TextWriter to which the test info is written</param>
+        public abstract void WriteTestFile(ITest test, TextWriter writer);
     }
 }
