@@ -65,7 +65,7 @@ namespace NUnit.Framework.TestHarness
 
             string assemblyPath = Path.GetFullPath(options.AssemblyName);
             AppDomain testDomain = AppDomain.CurrentDomain;
-            if (options.RunInSeparateAppDomain)
+            if (options.DomainUsage == "Single" || options.DomainUsage == "Multiple")
                 testDomain = CreateDomain(Path.GetDirectoryName(assemblyPath));
 
             var driverSettings = options.CreateDriverSettings();
@@ -232,9 +232,7 @@ namespace NUnit.Framework.TestHarness
             if (options.AssemblyName == "test-harness.exe")
                 Console.WriteLine("    Run self-test");
 
-            Console.WriteLine(options.RunInSeparateAppDomain
-                ? "    Use Separate AppDomain"
-                : "    Use Same AppDomain" );
+            Console.WriteLine("    Domain Usage: {0}", options.DomainUsage);
 
             if (options.DefaultTimeout >= 0)
                 Console.WriteLine("    Default timeout: {0}", options.DefaultTimeout);

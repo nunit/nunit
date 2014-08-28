@@ -50,11 +50,9 @@ namespace NUnit.Framework.TestHarness.Tests
         }
 
         [TestCase("ShowHelp", "help|h")]
-        [TestCase("RunInSeparateAppDomain", "appdomain|a")]
         [TestCase("WaitBeforeExit", "wait")]
         [TestCase("NoHeader", "noheader|noh")]
         [TestCase("DisplayTeamCityServiceMessages", "teamcity")]
-        [TestCase("CaptureText", "capture")]
         public void CanRecognizeBooleanOptions(string propertyName, string pattern)
         {
             string[] prototypes = pattern.Split('|');
@@ -90,6 +88,7 @@ namespace NUnit.Framework.TestHarness.Tests
         [TestCase("InternalTraceLevel", "trace", new string[] { "Off", "Error", "Warning", "Info", "Debug", "Verbose" }, new string[] { "JUNK" })]
         [TestCase("V2ResultFile", "xml2", new string[] { "v2.xml" }, new string[0])]
         [TestCase("V3ResultFile", "xml3", new string[] { "v3.xml" }, new string[0])]
+        [TestCase("DomainUsage", "domain", new string[] {"None", "Single", "Multiple"}, new string[] { "JUNK" })]
         public void CanRecognizeStringOptions(string propertyName, string pattern, string[] goodValues, string[] badValues)
         {
             string[] prototypes = pattern.Split('|');
@@ -142,6 +141,7 @@ namespace NUnit.Framework.TestHarness.Tests
         [TestCase("--work")]
         [TestCase("--trace")]
         [TestCase("--test")]
+        [TestCase("--domain")]
         public void MissingValuesAreReported(string option)
         {
             CommandLineOptions options = new CommandLineOptions(option + "=");

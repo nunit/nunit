@@ -52,10 +52,8 @@ namespace NUnit.Framework.TestHarness
                 v => Exclude = RequiredValue(v, "--exclude"));
 
             // Where to Run Tests
-            this.Add("appdomain|a", "Run tests in a separate AppDomain",
-                v => RunInSeparateAppDomain = v != null);
-            //this.Add("domain=", "{DOMAIN} isolation for test assemblies.\nValues: None, Single, Multiple",
-            //    v => DomainUsage = RequiredValue(v, "--domain", "None", "Single", "Multiple"));
+            this.Add("domain=", "{DOMAIN} isolation for test assemblies.\nValues: None, Single, Multiple",
+                v => DomainUsage = RequiredValue(v, "--domain", "None", "Single", "Multiple"));
 
             // How to Run Tests
             this.Add("wait", "Wait for input before closing console window.",
@@ -149,7 +147,7 @@ namespace NUnit.Framework.TestHarness
 
         // Where to Run Tests
 
-        public bool RunInSeparateAppDomain { get; private set; }
+        public string DomainUsage { get; private set; }
 
         // How to Run Tests
 
