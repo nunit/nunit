@@ -67,9 +67,9 @@ namespace NUnit.Framework.Internal
     /// of these objects is pushed and popped as Save and Restore
     /// are called.
     /// </summary>
-    public class TestExecutionContext
+    public class TestExecutionContext : MarshalByRefObject
 #if !SILVERLIGHT && !NETCF
-        : ILogicalThreadAffinative
+        , ILogicalThreadAffinative
 #endif
     {
         // NOTE: Be very careful when modifying this class. It uses
