@@ -25,8 +25,10 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace NUnit.Framework.TestHarness
+namespace NUnit.Framework.TestHarness.Utilities
 {
+    using Options;
+
     public class TestFilterBuilder
     {
         public IList<string> Tests { get; set; }

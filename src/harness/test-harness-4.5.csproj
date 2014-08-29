@@ -74,25 +74,29 @@
     </Compile>
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="CallbackHandler.cs" />
-    <Compile Include="CommandLineOptions.cs" />
+    <Compile Include="IResultWriter.cs" />
+    <Compile Include="Options\CommandLineOptions.cs" />
     <Compile Include="ConsoleRunner.cs" />
     <Compile Include="FrameworkDriver.cs" />
-    <Compile Include="NUnit2TestResultWriter.cs" />
-    <Compile Include="NUnit3TestResultWriter.cs" />
-    <Compile Include="Options.cs" />
+    <Compile Include="OutputManager.cs" />
+    <Compile Include="OutputSpecification.cs" />
+    <Compile Include="OutputWriters\NUnit2TestResultWriter.cs" />
+    <Compile Include="OutputWriters\NUnit3TestResultWriter.cs" />
+    <Compile Include="Options\Options.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="ResultReporter.cs" />
     <Compile Include="ResultSummary.cs" />
     <Compile Include="RunTestsCallbackHandler.cs" />
-    <Compile Include="StackTraceFilter.cs" />
+    <Compile Include="Tests\OutputSpecificationTests.cs" />
+    <Compile Include="Utilities\StackTraceFilter.cs" />
     <Compile Include="TeamCityServiceMessages.cs" />
-    <Compile Include="TestFilterBuilder.cs" />
-    <Compile Include="TestNameParser.cs" />
+    <Compile Include="Utilities\TestFilterBuilder.cs" />
+    <Compile Include="Utilities\TestNameParser.cs" />
     <Compile Include="Tests\CommandLineOptionTests.cs" />
     <Compile Include="Tests\TeamCityServiceMessageTests.cs" />
     <Compile Include="Tests\TestFilterBuilderTests.cs" />
     <Compile Include="Tests\TestNameParserTests.cs" />
-    <Compile Include="XmlHelper.cs" />
+    <Compile Include="Utilities\XmlHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">

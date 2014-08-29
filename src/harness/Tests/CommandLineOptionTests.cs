@@ -24,7 +24,7 @@
 using System;
 using System.Reflection;
 
-namespace NUnit.Framework.TestHarness.Tests
+namespace NUnit.Framework.TestHarness.Options.Tests
 {
     [TestFixture][Category("Options")]
     public class CommandLineOptionTests
@@ -86,8 +86,6 @@ namespace NUnit.Framework.TestHarness.Tests
         [TestCase("WorkDirectory", "work", new string[] { "results" }, new string[0])]
         [TestCase("DisplayTestLabels", "labels|l", new string[] { "Off", "On", "All" }, new string[] { "JUNK" })]
         [TestCase("InternalTraceLevel", "trace", new string[] { "Off", "Error", "Warning", "Info", "Debug", "Verbose" }, new string[] { "JUNK" })]
-        [TestCase("V2ResultFile", "xml2", new string[] { "v2.xml" }, new string[0])]
-        [TestCase("V3ResultFile", "xml3", new string[] { "v3.xml" }, new string[0])]
         [TestCase("DomainUsage", "domain", new string[] {"None", "Single", "Multiple"}, new string[] { "JUNK" })]
         public void CanRecognizeStringOptions(string propertyName, string pattern, string[] goodValues, string[] badValues)
         {
@@ -133,9 +131,8 @@ namespace NUnit.Framework.TestHarness.Tests
 
         [TestCase("--include")]
         [TestCase("--exclude")]
+        [TestCase("--result")]
         [TestCase("--timeout")]
-        [TestCase("--xml2")]
-        [TestCase("--xml3")]
         [TestCase("--output")]
         [TestCase("--err")]
         [TestCase("--work")]
@@ -269,32 +266,89 @@ namespace NUnit.Framework.TestHarness.Tests
 
         #endregion
 
-        #region Result XML Options
+        #region Result Option
 
         [Test]
-        public void Xml2Result()
+        public void ResultOptionWithFilePath()
         {
-            CommandLineOptions options = new CommandLineOptions("tests.dll", "-xml2:results.xml");
-            Assert.True(options.Validate());
-            Assert.AreEqual("tests.dll", options.AssemblyName);
-            Assert.AreEqual("results.xml", options.V2ResultFile);
+            var options = new CommandLineOptions("-result:results.xml");
+
+            OutputSpecification spec = options.ResultOutputSpecifications[0];
+            Assert.AreEqual("results.xml", spec.OutputPath);
+            Assert.AreEqual("nunit3", spec.Format);
+            Assert.Null(spec.Transform);
         }
 
         [Test]
-        public void Xml3Result()
+        public void ResultOptionWithFilePathAndFormat()
         {
-            CommandLineOptions options = new CommandLineOptions("tests.dll", "-xml3:results.xml");
-            Assert.True(options.Validate());
-            Assert.AreEqual("tests.dll", options.AssemblyName);
-            Assert.AreEqual("results.xml", options.V3ResultFile);
+            var options = new CommandLineOptions("-result:results.xml;format=nunit2");
+
+            OutputSpecification spec = options.ResultOutputSpecifications[0];
+            Assert.AreEqual("results.xml", spec.OutputPath);
+            Assert.AreEqual("nunit2", spec.Format);
+            Assert.Null(spec.Transform);
+        }
+
+        [Test]
+        public void ResultOptionWithFilePathAndTransform()
+        {
+            var options = new CommandLineOptions("-result:results.xml;transform=transform.xslt");
+
+            OutputSpecification spec = options.ResultOutputSpecifications[0];
+            Assert.AreEqual("results.xml", spec.OutputPath);
+            Assert.AreEqual("user", spec.Format);
+            Assert.AreEqual("transform.xslt", spec.Transform);
+        }
+
+        [Test]
+        public void ResultOptionMayBeRepeated()
+        {
+            var options = new CommandLineOptions("-result:results.xml", "-result:nunit2results.xml;format=nunit2", "-result:myresult.xml;transform=mytransform.xslt");
+
+            var specs = options.ResultOutputSpecifications;
+            Assert.AreEqual(3, specs.Count);
+
+            var spec1 = specs[0];
+            Assert.AreEqual("results.xml", spec1.OutputPath);
+            Assert.AreEqual("nunit3", spec1.Format);
+            Assert.Null(spec1.Transform);
+
+            var spec2 = specs[1];
+            Assert.AreEqual("nunit2results.xml", spec2.OutputPath);
+            Assert.AreEqual("nunit2", spec2.Format);
+            Assert.Null(spec2.Transform);
+
+            var spec3 = specs[2];
+            Assert.AreEqual("myresult.xml", spec3.OutputPath);
+            Assert.AreEqual("user", spec3.Format);
+            Assert.AreEqual("mytransform.xslt", spec3.Transform);
         }
 
         [Test]
         public void DefaultResultSpecification()
         {
             var options = new CommandLineOptions("test.dll");
-            Assert.AreEqual("TestResult.v3.xml", options.V3ResultFile);
-            Assert.AreEqual("TestResult.v2.xml", options.V2ResultFile);
+            Assert.AreEqual(1, options.ResultOutputSpecifications.Count);
+
+            var spec = options.ResultOutputSpecifications[0];
+            Assert.AreEqual("TestResult.xml", spec.OutputPath);
+            Assert.AreEqual("nunit3", spec.Format);
+            Assert.Null(spec.Transform);
+        }
+
+        [Test]
+        public void NoResultSuppressesDefaultResultSpecification()
+        {
+            var options = new CommandLineOptions("test.dll", "-noresult");
+            Assert.AreEqual(0, options.ResultOutputSpecifications.Count);
+        }
+
+        [Test]
+        public void NoResultSuppressesAllResultSpecifications()
+        {
+            var options = new CommandLineOptions("test.dll", "-result:results.xml", "-noresult", "-result:nunit2results.xml;format=nunit2");
+            Assert.AreEqual(0, options.ResultOutputSpecifications.Count);
         }
 
         #endregion
@@ -304,30 +358,46 @@ namespace NUnit.Framework.TestHarness.Tests
         [Test]
         public void ExploreOptionWithoutPath()
         {
-            CommandLineOptions options = new CommandLineOptions("tests.dll", "-explore");
-            Assert.True(options.Validate());
+            var options = new CommandLineOptions("tests.dll", "-explore");
+            Assert.That(options.ErrorMessages, Is.Empty);
+            Assert.That(options.ExploreOutputSpecifications, Is.Empty);
             Assert.True(options.Explore);
-            Assert.Null(options.ExploreFile);
         }
 
         [Test]
         public void ExploreOptionWithFilePath()
         {
-            CommandLineOptions options = new CommandLineOptions("tests.dll", "-explore:results.xml");
-            Assert.True(options.Validate());
-            Assert.AreEqual("tests.dll", options.AssemblyName);
+            var options = new CommandLineOptions("tests.dll", "-explore:results.xml");
             Assert.True(options.Explore);
-            Assert.That(options.ExploreFile, Is.EqualTo("results.xml"));
+
+            OutputSpecification spec = options.ExploreOutputSpecifications[0];
+            Assert.AreEqual("results.xml", spec.OutputPath);
+            Assert.AreEqual("nunit3", spec.Format);
+            Assert.Null(spec.Transform);
         }
 
         [Test]
-        public void ExploreOptionWithFilePathUsingEqualSign()
+        public void ExploreOptionWithFilePathAndFormat()
         {
-            CommandLineOptions options = new CommandLineOptions("tests.dll", "-explore=C:/nunit/tests/bin/Debug/console-test.xml");
-            Assert.True(options.Validate());
+            var options = new CommandLineOptions("tests.dll", "-explore:results.xml;format=cases");
             Assert.True(options.Explore);
-            Assert.AreEqual("tests.dll", options.AssemblyName);
-            Assert.AreEqual("C:/nunit/tests/bin/Debug/console-test.xml", options.ExploreFile);
+
+            OutputSpecification spec = options.ExploreOutputSpecifications[0];
+            Assert.AreEqual("results.xml", spec.OutputPath);
+            Assert.AreEqual("cases", spec.Format);
+            Assert.Null(spec.Transform);
+        }
+
+        [Test]
+        public void ExploreOptionWithFilePathAndTransform()
+        {
+            var options = new CommandLineOptions("tests.dll", "-explore:results.xml;transform=myreport.xslt");
+            Assert.True(options.Explore);
+
+            OutputSpecification spec = options.ExploreOutputSpecifications[0];
+            Assert.AreEqual("results.xml", spec.OutputPath);
+            Assert.AreEqual("user", spec.Format);
+            Assert.AreEqual("myreport.xslt", spec.Transform);
         }
 
         #endregion

@@ -30,6 +30,8 @@ using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.TestHarness
 {
+    using Options;
+
     /// <summary>
     /// This class is an adoc runner used in testing the framework
     /// by running tests directly, without use of the normal infrastructure

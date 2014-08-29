@@ -29,8 +29,10 @@ using System.Text;
 using Mono.Options;
 using System.Diagnostics;
 
-namespace NUnit.Framework.TestHarness
+namespace NUnit.Framework.TestHarness.Options
 {
+    using Utilities;
+
     /// <summary>
     /// The CommandLineOptions class parses and holds the _values of
     /// any options entered at the command line.
@@ -41,6 +43,8 @@ namespace NUnit.Framework.TestHarness
 
         public CommandLineOptions(params string[] args)
         {
+            this.ExploreOutputSpecifications = new List<OutputSpecification>();
+
             // Select Tests
             this.Add("test=", "Comma-separated list of {NAMES} of tests to run or explore. This option may be repeated.",
                 v => ((List<string>)Tests).AddRange(TestNameParser.Parse(RequiredValue(v, "--test"))));
@@ -83,14 +87,14 @@ namespace NUnit.Framework.TestHarness
                 {
                     Explore = true;
                     if (v != null)
-                        ExploreFile = v;
+                        ExploreOutputSpecifications.Add(new OutputSpecification(v));
                 });
 
-            this.Add("xml3=", "An output {PATH} for saving the test results in nunit3 format. (Default: TestResult.v3.xml)",
-                v => v3ResultFile = RequiredValue(v, "--xml3"));
+            this.Add("result=", "An output {SPEC} for saving the test results.\nThis option may be repeated.",
+                v => _resultOutputSpecifications.Add(new OutputSpecification(RequiredValue(v, "--result"))));
 
-            this.Add("xml2=", "An output {PATH} for saving the test results in nunit2 format. (Default: 'TestResult.v2.xml)",
-                v => v2ResultFile = RequiredValue(v, "--xml2"));
+            this.Add("noresult", "Don't save any test results.",
+                v => NoResult = v != null);
 
             this.Add("labels|l=", "Specify whether to write test case names to the output. Values: Off, On, All",
                 v => DisplayTestLabels = RequiredValue(v, "--labels", "Off", "On", "All"));
@@ -181,13 +185,24 @@ namespace NUnit.Framework.TestHarness
         //DriverSetting
         public string WorkDirectory { get; private set; }
 
-        private string v3ResultFile = "TestResult.v3.xml";
-        public string V3ResultFile { get { return v3ResultFile; } }
+        private List<OutputSpecification> _resultOutputSpecifications = new List<OutputSpecification>();
+        public IList<OutputSpecification> ResultOutputSpecifications
+        {
+            get 
+            {
+                if (NoResult)
+                    return new OutputSpecification[0]; ;
 
-        private string v2ResultFile = "TestResult.v2.xml";
-        public string V2ResultFile { get { return v2ResultFile; } }
+                if (_resultOutputSpecifications.Count == 0)
+                    _resultOutputSpecifications.Add(new OutputSpecification("TestResult.xml"));
 
-        public string ExploreFile { get; private set; }
+                return _resultOutputSpecifications; 
+            }
+        }
+
+        public bool NoResult { get; private set; }
+
+        public IList<OutputSpecification> ExploreOutputSpecifications { get; private set; }
 
         //DriverSetting
         public bool DisplayTeamCityServiceMessages { get; private set; }

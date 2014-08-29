@@ -31,7 +31,9 @@ using System.IO;
 
 namespace NUnit.Framework.TestHarness
 {
-    public class NUnit2TestResultWriter
+    using Utilities;
+
+    public class NUnit2TestResultWriter : IResultWriter
     {
         private XmlWriter xmlWriter;
 
