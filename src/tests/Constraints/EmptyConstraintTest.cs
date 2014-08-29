@@ -87,29 +87,6 @@ namespace NUnit.Framework.Constraints
         };
     }
 
-    [TestFixture]
-    public class NullOrEmptyStringConstraintTest : StringConstraintTests
-    {
-        [SetUp]
-        public void SetUp()
-        {
-            theConstraint = new NullOrEmptyStringConstraint();
-            expectedDescription = "null or empty string";
-            stringRepresentation = "<nullorempty>";
-        }
-
-        static object[] SuccessData = new object[] 
-        {
-            string.Empty,
-            null
-        };
-
-        static object[] FailureData = new object[]
-        {
-            new TestCaseData( "Hello", "\"Hello\"" )
-        };
-    }
-    
 #if !NUNITLITE
     [TestFixture]
     public class EmptyDirectoryConstraintTest

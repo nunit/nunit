@@ -169,7 +169,6 @@
     <Compile Include="Constraints\NoItemConstraint.cs" />
     <Compile Include="Constraints\NotConstraint.cs" />
     <Compile Include="Constraints\NullConstraint.cs" />
-    <Compile Include="Constraints\NullOrEmptyStringConstraint.cs" />
     <Compile Include="Constraints\Numerics.cs" />
     <Compile Include="Constraints\NUnitComparer.cs" />
     <Compile Include="Constraints\NUnitEqualityComparer.cs" />
