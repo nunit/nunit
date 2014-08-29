@@ -26,7 +26,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Xml;
 
-namespace NUnit.Framework.TestHarness
+namespace NUnit.Framework.TestHarness.Utilities
 {
     /// <summary>
     /// XmlHelper provides static methods for basic XML operations

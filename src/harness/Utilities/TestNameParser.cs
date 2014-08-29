@@ -23,7 +23,7 @@
 
 using System.Collections.Generic;
 
-namespace NUnit.Framework.TestHarness
+namespace NUnit.Framework.TestHarness.Utilities
 {
     /// <summary>
     /// TestNameParser is used to parse the arguments to the 

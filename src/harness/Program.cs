@@ -30,6 +30,8 @@ using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.TestHarness
 {
+    using Options;
+
     /// <summary>
     /// This class is an adoc runner used in testing the framework
     /// by running tests directly, without use of the normal infrastructure
@@ -146,6 +148,7 @@ namespace NUnit.Framework.TestHarness
             options.WriteOptionDescriptions(Console.Out);
             Console.WriteLine();
             Console.WriteLine("Description:");
+            Console.WriteLine();
             Console.WriteLine("      By default, this command runs the tests contained in the");
             Console.WriteLine("      assembly specified in the command line. Only one assembly");
             Console.WriteLine("      may be specified.");
@@ -154,6 +157,28 @@ namespace NUnit.Framework.TestHarness
             Console.WriteLine("      the XML description of the tests is displayed on the console");
             Console.WriteLine("      or saved in the file specified with the option.");
             Console.WriteLine();
+            Console.WriteLine("      Several options that specify processing of XML output take");
+            Console.WriteLine("      an output specification as a value. A SPEC may take one of");
+            Console.WriteLine("      the following forms:");
+            Console.WriteLine("          --OPTION:filename");
+            Console.WriteLine("          --OPTION:filename;format=formatname");
+            Console.WriteLine("          --OPTION:filename;transform=xsltfile");
+            Console.WriteLine();
+            Console.WriteLine("      The --result option may use any of the following formats:");
+            Console.WriteLine("          nunit3 - the native XML format for NUnit 3.0");
+            Console.WriteLine("          nunit2 - legacy XML format used by earlier releases of NUnit");
+            Console.WriteLine();
+            Console.WriteLine("      The --explore option may use any of the following formats:");
+            Console.WriteLine("          nunit3 - the native XML format for NUnit 3.0");
+            Console.WriteLine("          cases  - a text file listing the full names of all test cases.");
+            Console.WriteLine("      If --explore is used without any specification following, a list of");
+            Console.WriteLine("      test cases is output to the console.");
+            Console.WriteLine();
+            Console.WriteLine("      If none of the options {--result, --explore, --noresult} is used,");
+            Console.WriteLine("      NUnit saves the results to TestResult.xml in nunit3 format");
+            Console.WriteLine();
+            Console.WriteLine("      Any transforms provided must handle input in the native nunit3 format.");
+            Console.WriteLine();        
             Console.WriteLine("      The --selftest option is equivalent to using test-harness.exe");
             Console.WriteLine("      as the assembly name. No assemblyname should be specified with");
             Console.WriteLine("      this option.");

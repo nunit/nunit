@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-namespace NUnit.Framework.TestHarness
+namespace NUnit.Framework.TestHarness.Utilities
 {
     using System;
     using System.IO;

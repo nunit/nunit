@@ -30,11 +30,13 @@ using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.TestHarness
 {
+    using Utilities;
+
     /// <summary>
     /// NUnit3xmlOutputWriter is responsible for writing the results
     /// of a test to a file in NUnit 3.0 format.
     /// </summary>
-    public class NUnit3TestResultWriter
+    public class NUnit3TestResultWriter : IResultWriter
     {
         private XmlWriter xmlWriter;
 

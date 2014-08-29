@@ -7,7 +7,7 @@
 using System;
 using NUnit.Framework;
 
-namespace NUnit.Framework.TestHarness.Tests
+namespace NUnit.Framework.TestHarness.Utilities.Tests
 {
     public class TestNameParserTests
     {

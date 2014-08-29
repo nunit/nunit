@@ -26,6 +26,8 @@ using System.Xml;
 
 namespace NUnit.Framework.TestHarness
 {
+    using Utilities;
+
     /// <summary>
     /// Summary description for ResultSummary.
     /// </summary>

@@ -75,8 +75,7 @@ namespace NUnit.Framework.TestHarness.Tests
             _teamCity.TestFailed("FakeTestMethod", "Error message", "Stack trace");
 
             Assert.That(_output.ToString(), Is.EqualTo(
-                "##teamcity[testFailed name='FakeTestMethod' message='Error message' details='Stack trace']" + NL +
-                "##teamcity[testFinished name='FakeTestMethod' duration='1.234']" + NL));
+                "##teamcity[testFailed name='FakeTestMethod' message='Error message' details='Stack trace']" + NL ));
         }
 
         private void FakeTestMethod() { }

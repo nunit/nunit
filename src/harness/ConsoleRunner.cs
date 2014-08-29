@@ -29,6 +29,9 @@ using System.IO;
 
 namespace NUnit.Framework.TestHarness
 {
+    using Options;
+    using Utilities;
+
     /// <summary>
     /// ConsoleRunner provides a text-based user interface to the
     /// test harness, similar to that of nunit-console.
@@ -65,7 +68,7 @@ namespace NUnit.Framework.TestHarness
 
             string assemblyPath = Path.GetFullPath(options.AssemblyName);
             AppDomain testDomain = AppDomain.CurrentDomain;
-            if (options.RunInSeparateAppDomain)
+            if (options.DomainUsage == "Single" || options.DomainUsage == "Multiple")
                 testDomain = CreateDomain(Path.GetDirectoryName(assemblyPath));
 
             var driverSettings = options.CreateDriverSettings();
@@ -116,16 +119,12 @@ namespace NUnit.Framework.TestHarness
                 return ConsoleRunner.FILE_NOT_FOUND;
             }
 
-            string exploreFile = options.ExploreFile;
-            XmlTextWriter testWriter = exploreFile != null && exploreFile.Length > 0
-                ? new XmlTextWriter(Path.Combine(workDirectory, exploreFile), System.Text.Encoding.UTF8)
-                : new XmlTextWriter(Console.Out);
-            testWriter.Formatting = Formatting.Indented;
-            testNode.WriteTo(testWriter);
-            testWriter.Close();
+            //if (options.ExploreOutputSpecifications.Count == 0)
 
-            if (exploreFile != null)
-                Console.WriteLine("Tests saved as {0}", options.ExploreFile);
+            var outputManager = new OutputManager(testNode, workDirectory);
+
+            foreach (var spec in options.ExploreOutputSpecifications)
+                outputManager.WriteTestFile(spec);
 
             return ConsoleRunner.OK;
         }
@@ -173,26 +172,17 @@ namespace NUnit.Framework.TestHarness
                 return ConsoleRunner.FILE_NOT_FOUND;
             }
 
-            string v3ResultFile = Path.Combine(workDirectory, options.V3ResultFile);
-            NUnit3TestResultWriter nunit3ResultWriter = new NUnit3TestResultWriter();
-            nunit3ResultWriter.WriteResultFile(resultNode, v3ResultFile);
-            //XmlTextWriter nunit3ResultWriter = new XmlTextWriter(v3ResultFile, System.Text.Encoding.UTF8);
-            //nunit3ResultWriter.Formatting = Formatting.Indented;
-            //resultNode.WriteTo(nunit3ResultWriter);
-            //nunit3ResultWriter.Close();
-
-            string v2ResultFile = Path.Combine(workDirectory, options.V2ResultFile);
-            NUnit2TestResultWriter nunit2ResultWriter = new NUnit2TestResultWriter();
-            nunit2ResultWriter.WriteResultFile(resultNode, v2ResultFile);
-
             new ResultReporter(resultNode).ReportResults();
+
+            var outputManager = new OutputManager(resultNode, workDirectory);
+
+            foreach (var spec in options.ResultOutputSpecifications)
+                outputManager.WriteResultFile(spec);
 
             if (options.OutFile != null)
                 Console.WriteLine("Test standard output saved as {0}", Path.Combine(workDirectory, options.OutFile));
             if (options.ErrFile != null)
                 Console.WriteLine("Test error output saved as {0}", Path.Combine(workDirectory, options.ErrFile));
-            Console.WriteLine("NUnit3 Result File Saved as {0}", v3ResultFile);
-            Console.WriteLine("NUnit2 Result File Saved as {0}", v2ResultFile);
 
             return int.Parse(resultNode.Attributes["failed"].Value);
         }
@@ -232,9 +222,7 @@ namespace NUnit.Framework.TestHarness
             if (options.AssemblyName == "test-harness.exe")
                 Console.WriteLine("    Run self-test");
 
-            Console.WriteLine(options.RunInSeparateAppDomain
-                ? "    Use Separate AppDomain"
-                : "    Use Same AppDomain" );
+            Console.WriteLine("    Domain Usage: {0}", options.DomainUsage);
 
             if (options.DefaultTimeout >= 0)
                 Console.WriteLine("    Default timeout: {0}", options.DefaultTimeout);
