@@ -82,7 +82,7 @@ namespace NUnit.Framework.TestHarness.Options
             this.Add("err=", "File {PATH} to contain error output from the tests.",
                 v => ErrFile = RequiredValue(v, "--err"));
 
-            this.Add("explore:", "Display or save test info rather than running tests. Optionally provide an output {PATH} for saving the test info. This option may be repeated.",
+            this.Add("explore:", "Display or save test info rather than running tests. Optionally provide an output {SPEC} for saving the test info. This option may be repeated.",
                 v =>
                 {
                     Explore = true;
