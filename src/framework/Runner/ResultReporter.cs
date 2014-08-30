@@ -63,6 +63,9 @@ namespace NUnitLite.Runner
         /// </summary>
         public void ReportResults()
         {
+            if (summary.TestCount == 0)
+                writer.WriteLine("Warning: No tests found");
+
             PrintSummaryReport();
 
             if (this.result.ResultState.Status == TestStatus.Failed)

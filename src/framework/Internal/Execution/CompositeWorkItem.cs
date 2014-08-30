@@ -204,7 +204,12 @@ namespace NUnit.Framework.Internal.Execution
                 if (_childFilter.Pass(test))
                     children.Add(WorkItem.CreateWorkItem(test, new TestExecutionContext(this.Context), _childFilter));
 
-            if (children.Count > 0)
+            if (children.Count == 0)
+            {
+                PerformOneTimeTearDown();
+                WorkItemComplete();
+            }
+            else
             {
                 int childCount = children.Count;
                 _childTestCountdown = new CountdownEvent(childCount);
