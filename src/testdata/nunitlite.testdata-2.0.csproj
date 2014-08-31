@@ -67,8 +67,8 @@
     <Compile Include="CultureAttributeData.cs" />
     <Compile Include="DatapointFixture.cs" />
     <Compile Include="DescriptionFixture.cs" />
-    <Compile Include="FixtureSetUpTearDownData.cs" />
     <Compile Include="MaxTimeFixture.cs" />
+    <Compile Include="OneTimeSetUpTearDownData.cs" />
     <Compile Include="ParameterizedTestFixture.cs" />
     <Compile Include="PropertyAttributeTests.cs" />
     <Compile Include="RepeatedTestFixture.cs" />

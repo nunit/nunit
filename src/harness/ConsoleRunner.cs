@@ -244,13 +244,20 @@ namespace NUnit.Framework.TestHarness
                 Console.WriteLine("Selected test(s):");
                 foreach (string testName in options.Tests)
                     Console.WriteLine("    " + testName);
+                Console.WriteLine();
             }
 
             if (options.Include != null && options.Include != string.Empty)
+            {
                 Console.WriteLine("Included categories: " + options.Include);
+                Console.WriteLine();
+            }
 
             if (options.Exclude != null && options.Exclude != string.Empty)
+            {
                 Console.WriteLine("Excluded categories: " + options.Exclude);
+                Console.WriteLine();
+            }
         }
 
         private static AppDomain CreateDomain(string appBase)

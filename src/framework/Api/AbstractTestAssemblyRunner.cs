@@ -186,7 +186,8 @@ namespace NUnit.Framework.Api
 
             CreateTestExecutionContext(listener);
 
-            TopLevelWorkItem = WorkItem.CreateWorkItem(LoadedTest, Context, filter);
+            TopLevelWorkItem = WorkItem.CreateWorkItem(LoadedTest, filter);
+            TopLevelWorkItem.InitializeContext(Context);
             TopLevelWorkItem.Completed += OnRunCompleted;
 
             StartRun(listener);

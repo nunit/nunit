@@ -125,7 +125,14 @@ namespace NUnit.TestData.LegacySuiteData
         [Suite]
         public static TestSuite TheSuite
         {
-            get { return new TestSuite("EmptySuite"); }
+            get 
+            { 
+                var suite = new TestSuite("MockSuite");
+                suite.Add(new FixtureOne());
+                suite.Add(new FixtureTwo());
+                suite.Add(new FixtureThree());
+                return suite;
+            }
         }
 
         [OneTimeSetUp]

@@ -57,33 +57,48 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// Creates a work item.
         /// </summary>
-        /// <param name="test">The test.</param>
-        /// <param name="context">The text execution context.</param>
-        /// <param name="filter">The test filter.</param>
+        /// <param name="test">The test for which this WorkItem is being created.</param>
+        /// <param name="filter">The filter to be used in selecting any child Tests.</param>
         /// <returns></returns>
-        static public WorkItem CreateWorkItem(ITest test, TestExecutionContext context, ITestFilter filter)
+        static public WorkItem CreateWorkItem(ITest test, ITestFilter filter)
         {
             TestSuite suite = test as TestSuite;
             if (suite != null)
-                return new CompositeWorkItem(suite, context, filter);
+                return new CompositeWorkItem(suite, filter);
             else
-                return new SimpleWorkItem((TestMethod)test, context);
+                return new SimpleWorkItem((TestMethod)test);
         }
 
         #endregion
 
-        #region Constructor
+        #region Construction and Initialization
 
         /// <summary>
         /// Construct a WorkItem for a particular test.
         /// </summary>
         /// <param name="test">The test that the WorkItem will run</param>
-        /// <param name="context">The TestExecutionContext in which it will run</param>
-        public WorkItem(Test test, TestExecutionContext context)
+        public WorkItem(Test test)
         {
             _test = test;
             Result = test.MakeTestResult();
             _state = WorkItemState.Ready;
+        }
+
+        /// <summary>
+        /// Initialize the TestExecutionContext. This must be done
+        /// before executing the WorkItem.
+        /// </summary>
+        /// <remarks>
+        /// Originally, the context was provided in the constructor
+        /// but delaying initialization of the context until the item
+        /// is about to be dispatched allows changes in the parent
+        /// context during OneTimeSetUp to be reflected in the child.
+        /// </remarks>
+        /// <param name="context">The TestExecutionContext to use</param>
+        public void InitializeContext(TestExecutionContext context)
+        {
+            Guard.IsValidOperation(_context == null, "The context has already been initialized");
+
             _context = context;
         }
 

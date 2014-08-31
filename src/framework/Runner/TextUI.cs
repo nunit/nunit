@@ -54,7 +54,7 @@ namespace NUnitLite.Runner
     public class TextUI : ITestListener
     {
         private const string LOG_FILE_FORMAT = "InternalTrace.{0}.{1}.log";
-        private CommandLineOptions _commandLineOptions;
+        private CommandLineOptions _options;
         private string _workDirectory;
         private readonly List<Assembly> _assemblies = new List<Assembly>();
         private TextWriter _outWriter;
@@ -94,65 +94,67 @@ namespace NUnitLite.Runner
             // NOTE: Execute must be directly called from the
             // test assembly in order for the mechanism to work.
 
-            _commandLineOptions = new CommandLineOptions(args);
+            _options = new CommandLineOptions(args);
 
-            _workDirectory = _commandLineOptions.WorkDirectory;
+            _workDirectory = _options.WorkDirectory;
             if (_workDirectory == null)
                 _workDirectory = Environment.CurrentDirectory;
             else if (!Directory.Exists(_workDirectory))
                 Directory.CreateDirectory(_workDirectory);
 
 #if !SILVERLIGHT
-            if (_commandLineOptions.DisplayTeamCityServiceMessages)
+            if (_options.DisplayTeamCityServiceMessages)
                 _teamCity = new TeamCityEventListener();
 
-            if (_commandLineOptions.OutFile != null)
+            if (_options.OutFile != null)
             {
-                _outWriter = new StreamWriter(Path.Combine(_workDirectory, _commandLineOptions.OutFile));
+                _outWriter = new StreamWriter(Path.Combine(_workDirectory, _options.OutFile));
                 Console.SetOut(_outWriter);
             }
 
-            if (_commandLineOptions.ErrFile != null)
+            if (_options.ErrFile != null)
             {
-                _errWriter = new StreamWriter(Path.Combine(_workDirectory, _commandLineOptions.ErrFile));
+                _errWriter = new StreamWriter(Path.Combine(_workDirectory, _options.ErrFile));
                 Console.SetError(_errWriter);
             }
 #endif
 
-            if (!_commandLineOptions.NoHeader)
+            if (!_options.NoHeader)
                 WriteHeader(_outWriter);
 
-            if (_commandLineOptions.ShowHelp)
-                _outWriter.Write(_commandLineOptions.HelpText);
-            else if (_commandLineOptions.ErrorMessages.Count > 0)
+            if (_options.ShowHelp)
+                _outWriter.Write(_options.HelpText);
+            else if (_options.ErrorMessages.Count > 0)
             {
-                foreach(string line in _commandLineOptions.ErrorMessages)
+                foreach(string line in _options.ErrorMessages)
                     _outWriter.WriteLine(line);
 
-                _outWriter.WriteLine(_commandLineOptions.HelpText);
+                _outWriter.WriteLine(_options.HelpText);
             }
             else
             {
                 Assembly callingAssembly = Assembly.GetCallingAssembly();
 
                 // We must call this before creating the runner so that any internal logging is initialized
-                InternalTraceLevel level = (InternalTraceLevel)Enum.Parse(typeof(InternalTraceLevel), _commandLineOptions.InternalTraceLevel, true);
+                InternalTraceLevel level = (InternalTraceLevel)Enum.Parse(typeof(InternalTraceLevel), _options.InternalTraceLevel, true);
                 InitializeInternalTrace(callingAssembly.Location, level);
 
                 _runner = new NUnitLiteTestAssemblyRunner(new DefaultTestAssemblyBuilder());
 
+                DisplayRequestedOptions(_outWriter);
+
                 WriteRuntimeEnvironment(_outWriter);
 
-                if (_commandLineOptions.Wait && _commandLineOptions.OutFile != null)
+                if (_options.Wait && _options.OutFile != null)
                     _outWriter.WriteLine("Ignoring /wait option - only valid for Console");
 
-                var runSettings = MakeRunSettings(_commandLineOptions);
+                var runSettings = MakeRunSettings(_options);
 
-                TestFilter filter = CreateTestFilter(_commandLineOptions);
+                TestFilter filter = CreateTestFilter(_options);
 
                 try
                 {
-                    foreach (string name in _commandLineOptions.InputFiles)
+                    foreach (string name in _options.InputFiles)
                         _assemblies.Add(Assembly.Load(name));
 
                     if (_assemblies.Count == 0)
@@ -170,7 +172,7 @@ namespace NUnitLite.Runner
                         return;
                     }
 
-                    if (_commandLineOptions.Explore)
+                    if (_options.Explore)
                         ExploreTests();
                     else
                     {
@@ -187,9 +189,9 @@ namespace NUnitLite.Runner
                 }
                 finally
                 {
-                    if (_commandLineOptions.OutFile == null)
+                    if (_options.OutFile == null)
                     {
-                        if (_commandLineOptions.Wait)
+                        if (_options.Wait)
                         {
                             Console.WriteLine("Press Enter key to continue . . .");
                             Console.ReadLine();
@@ -200,7 +202,7 @@ namespace NUnitLite.Runner
                         _outWriter.Close();
                     }
 
-                    if (_commandLineOptions.ErrFile != null)
+                    if (_options.ErrFile != null)
                         _errWriter.Close();
                 }
             }
@@ -217,11 +219,11 @@ namespace NUnitLite.Runner
             ITestResult result = _runner.Run(this, filter);
             new ResultReporter(result, _outWriter).ReportResults();
 
-            if (_commandLineOptions.ResultOutputSpecifications.Count > 0)
+            if (_options.ResultOutputSpecifications.Count > 0)
             {
                 var outputManager = new OutputManager(_workDirectory);
 
-                foreach (var spec in _commandLineOptions.ResultOutputSpecifications)
+                foreach (var spec in _options.ResultOutputSpecifications)
                     outputManager.WriteResultFile(result, spec);
             }
         }
@@ -230,7 +232,7 @@ namespace NUnitLite.Runner
         {
             ITest testNode = _runner.LoadedTest;
 
-            var specs = _commandLineOptions.ExploreOutputSpecifications;
+            var specs = _options.ExploreOutputSpecifications;
 
             if (specs.Count == 0)
             {
@@ -240,7 +242,7 @@ namespace NUnitLite.Runner
             {
                 var outputManager = new OutputManager(_workDirectory);
 
-                foreach (var spec in _commandLineOptions.ExploreOutputSpecifications)
+                foreach (var spec in _options.ExploreOutputSpecifications)
                     outputManager.WriteTestFile(testNode, spec);
             }
         }
@@ -299,6 +301,43 @@ namespace NUnitLite.Runner
             writer.WriteLine(String.Format("{0} {1} {2}", title, version.ToString(3), build));
             writer.WriteLine(copyright);
             writer.WriteLine();
+        }
+
+        private void DisplayRequestedOptions(TextWriter writer)
+        {
+            writer.WriteLine("Options -");
+
+            if (_options.DefaultTimeout >= 0)
+                writer.WriteLine("    Default timeout: {0}", _options.DefaultTimeout);
+
+            writer.WriteLine("    Work Directory: {0}", _workDirectory);
+
+            writer.WriteLine("    Internal Trace: {0}", _options.InternalTraceLevel);
+
+            if (_options.DisplayTeamCityServiceMessages)
+                writer.WriteLine("    Display TeamCity Service Messages");
+
+            writer.WriteLine();
+
+            if (_options.Tests.Count > 0)
+            {
+                writer.WriteLine("Selected test(s):");
+                foreach (string testName in _options.Tests)
+                    writer.WriteLine("    " + testName);
+                writer.WriteLine();
+            }
+
+            if (!string.IsNullOrEmpty(_options.Include))
+            {
+                writer.WriteLine("Included categories: " + _options.Include);
+                writer.WriteLine();
+            }
+
+            if (!string.IsNullOrEmpty(_options.Exclude))
+            {
+                writer.WriteLine("Excluded categories: " + _options.Exclude);
+                writer.WriteLine();
+            }
         }
 
         /// <summary>
@@ -394,8 +433,8 @@ namespace NUnitLite.Runner
 #endif
 
             bool isSuite = result.Test.IsSuite;
-            var labels = _commandLineOptions.DisplayTestLabels != null
-                ? _commandLineOptions.DisplayTestLabels.ToUpperInvariant()
+            var labels = _options.DisplayTestLabels != null
+                ? _options.DisplayTestLabels.ToUpperInvariant()
                 : "ON";
                 
             if (!isSuite && labels == "ALL")

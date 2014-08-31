@@ -43,6 +43,8 @@ namespace NUnit.Framework.Internal.Execution
         private TestCommand _setupCommand;
         private TestCommand _teardownCommand;
 
+        private List<WorkItem> _children;
+
         private CountdownEvent _childTestCountdown;
 
         /// <summary>
@@ -50,10 +52,8 @@ namespace NUnit.Framework.Internal.Execution
         /// using a filter to select child tests.
         /// </summary>
         /// <param name="suite">The TestSuite to be executed</param>
-        /// <param name="context">The execution context to be used</param>
         /// <param name="childFilter">A filter used to select child tests</param>
-        public CompositeWorkItem(TestSuite suite, TestExecutionContext context, ITestFilter childFilter)
-            : base(suite, context)
+        public CompositeWorkItem(TestSuite suite, ITestFilter childFilter) : base(suite)
         {
             _suite = suite;
             SetUpTearDownList setUpTearDown = null;
@@ -64,7 +64,19 @@ namespace NUnit.Framework.Internal.Execution
             _setupCommand = MakeSetUpCommand(suite, setUpTearDown);
             _teardownCommand = MakeTearDownCommand(suite, setUpTearDown);
             _childFilter = childFilter;
+
+            //CreateChildWorkItems(childFilter);
         }
+
+        //private void CreateChildWorkItems(ITestFilter childFilter)
+        //{
+        //    foreach(ITest child in _suite.Tests)
+        //        if (childFilter.Pass(child))
+        //        {
+        //            CreateWorkItem(child, context, childFilter);
+        //        }
+        //            if (child.IsSuite)
+        //}
 
         /// <summary>
         /// Method that actually performs the work. Overridden
@@ -84,29 +96,34 @@ namespace NUnit.Framework.Internal.Execution
                         // context initialization fails.
                         Result.SetResult(ResultState.Success);
 
-                        PerformOneTimeSetUp();
+                        CreateChildWorkItems();
 
-                        if (_suite.HasChildren && !CheckForCancellation())
-                            switch (Result.ResultState.Status)
-                            {
-                                case TestStatus.Passed:
-                                    RunChildren();
-                                    return;
+                        if (_children.Count > 0)
+                        {
+                            PerformOneTimeSetUp();
+
+                            if (!CheckForCancellation())
+                                switch (Result.ResultState.Status)
+                                {
+                                    case TestStatus.Passed:
+                                        RunChildren();
+                                        return;
                                     // Just return: completion event will take care
                                     // of TestFixtureTearDown when all tests are done.
 
-                                case TestStatus.Skipped:
-                                case TestStatus.Inconclusive:
-                                case TestStatus.Failed:
-                                    SkipChildren();
-                                    break;
-                            }
+                                    case TestStatus.Skipped:
+                                    case TestStatus.Inconclusive:
+                                    case TestStatus.Failed:
+                                        SkipChildren();
+                                        break;
+                                }
 
-                        // Directly execute the OneTimeFixtureTearDown for tests that
-                        // were skipped, failed or set to inconclusive in one time setup
-                        // unless we are aborting.
-                        if (Context.ExecutionStatus != TestExecutionStatus.AbortRequested)
-                            PerformOneTimeTearDown();
+                            // Directly execute the OneTimeFixtureTearDown for tests that
+                            // were skipped, failed or set to inconclusive in one time setup
+                            // unless we are aborting.
+                            if (Context.ExecutionStatus != TestExecutionStatus.AbortRequested)
+                                PerformOneTimeTearDown();
+                        }
                         break;
 
                     case RunState.Skipped:
@@ -198,33 +215,38 @@ namespace NUnit.Framework.Internal.Execution
 
         private void RunChildren()
         {
-            var children = new List<WorkItem>();
+            int childCount = _children.Count;
+            if (childCount == 0)
+                throw new InvalidOperationException("RunChildren called but item has no children");
+
+            _childTestCountdown = new CountdownEvent(childCount);
+
+            foreach (WorkItem child in _children)
+            {
+                if (CheckForCancellation())
+                    break;
+
+                child.Completed += new EventHandler(OnChildCompleted);
+                child.InitializeContext(new TestExecutionContext(Context));
+
+                Context.Dispatcher.Dispatch(child);
+                childCount--;
+            }
+
+            if (childCount > 0)
+            {
+                while (childCount-- > 0)
+                    CountDownChildTest();
+            }
+        }
+
+        private void CreateChildWorkItems()
+        {
+            _children = new List<WorkItem>();
 
             foreach (Test test in _suite.Tests)
                 if (_childFilter.Pass(test))
-                    children.Add(WorkItem.CreateWorkItem(test, new TestExecutionContext(this.Context), _childFilter));
-
-            if (children.Count > 0)
-            {
-                int childCount = children.Count;
-                _childTestCountdown = new CountdownEvent(childCount);
-
-                foreach (WorkItem child in children)
-                {
-                    if (CheckForCancellation())
-                        break;
-
-                    child.Completed += new EventHandler(OnChildCompleted);
-                    Context.Dispatcher.Dispatch(child);
-                    childCount--;
-                }
-
-                if (childCount > 0)
-                {
-                    while (childCount-- > 0)
-                        CountDownChildTest();
-                }
-            }
+                    _children.Add(WorkItem.CreateWorkItem(test, _childFilter));
         }
 
         private void SkipFixture(ResultState resultState, string message, string stackTrace)
@@ -306,6 +328,11 @@ namespace NUnit.Framework.Internal.Execution
 
                 WorkItemComplete();
             }
+        }
+
+        private static bool IsStaticClass(Type type)
+        {
+            return type.IsAbstract && type.IsSealed;
         }
 
         #endregion

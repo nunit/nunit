@@ -24,7 +24,7 @@
 using System;
 using NUnit.Framework;
 
-namespace NUnit.TestData.FixtureSetUpTearDownData
+namespace NUnit.TestData.OneTimeSetUpTearDownData
 {
     [TestFixture]
     public class SetUpAndTearDownFixture
@@ -161,6 +161,9 @@ namespace NUnit.TestData.FixtureSetUpTearDownData
         {
             tearDownCount++;
         }
+
+        [Test]
+        public static void MyTest() { }
     }
 
     [TestFixture]
@@ -186,6 +189,9 @@ namespace NUnit.TestData.FixtureSetUpTearDownData
             derivedTearDownCount++;
             baseTearDownCalledLast = tearDownCount == 0;
         }
+
+        [Test]
+        public static void MyTest() { }
     }
 
     [TestFixture]
@@ -205,6 +211,9 @@ namespace NUnit.TestData.FixtureSetUpTearDownData
         {
             tearDownCount++;
         }
+
+        [Test]
+        public static void MyTest() { }
     }
 
     [TestFixture]
