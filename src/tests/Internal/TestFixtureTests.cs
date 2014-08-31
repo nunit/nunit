@@ -23,7 +23,7 @@
 
 using System;
 using NUnit.Framework.Interfaces;
-using NUnit.TestData.FixtureSetUpTearDownData;
+using NUnit.TestData.OneTimeSetUpTearDownData;
 using NUnit.TestUtilities;
 using NUnit.TestData.TestFixtureData;
 using IgnoredFixture = NUnit.TestData.TestFixtureData.IgnoredFixture;

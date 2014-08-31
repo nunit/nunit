@@ -29,13 +29,13 @@ using System.Threading;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Builders;
-using NUnit.TestData.FixtureSetUpTearDownData;
+using NUnit.TestData.OneTimeSetUpTearDownData;
 using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Attributes
 {
     [TestFixture]
-    public class FixtureSetupTearDownTest
+    public class OneTimeSetupTearDownTest
     {
         [Test]
         public void MakeSureSetUpAndTearDownAreCalled()
