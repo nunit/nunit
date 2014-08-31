@@ -121,7 +121,8 @@ namespace NUnit.TestUtilities
             TestExecutionContext context = new TestExecutionContext();
             context.TestObject = testObject;
 
-            WorkItem work = WorkItem.CreateWorkItem(suite, context, TestFilter.Empty);
+            WorkItem work = WorkItem.CreateWorkItem(suite, TestFilter.Empty);
+            work.InitializeContext(context);
             work.Execute();
 
             // TODO: Replace with an event - but not while method is static
@@ -180,7 +181,8 @@ namespace NUnit.TestUtilities
             TestExecutionContext context = new TestExecutionContext();
             context.TestObject = testObject;
 
-            WorkItem work = WorkItem.CreateWorkItem(test, context, TestFilter.Empty);
+            WorkItem work = WorkItem.CreateWorkItem(test, TestFilter.Empty);
+            work.InitializeContext(context);
             work.Execute();
 
             // TODO: Replace with an event - but not while method is static

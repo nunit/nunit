@@ -40,8 +40,7 @@ namespace NUnit.Framework.Internal.Execution
         /// Construct a simple work item for a test.
         /// </summary>
         /// <param name="test">The test to be executed</param>
-        /// <param name="context">The execution context to be used</param>
-        public SimpleWorkItem(TestMethod test, TestExecutionContext context) : base(test, context) 
+        public SimpleWorkItem(TestMethod test) : base(test) 
         {
             _command = test.MakeTestCommand();
         }

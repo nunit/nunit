@@ -3,8 +3,8 @@
 namespace NUnit.Framework
 {
     /// <summary>
-    /// Class used to guard against unexpected argument _values
-    /// by throwing an appropriate exception.
+    /// Class used to guard against unexpected argument values
+    /// or operations by throwing an appropriate exception.
     /// </summary>
     static class Guard
     {
@@ -30,6 +30,17 @@ namespace NUnit.Framework
 
             if (value == string.Empty)
                 throw new ArgumentException("Argument " + name +" must not be the empty string", name);
+        }
+
+        /// <summary>
+        /// Throws an exception if the specified condition is not met.
+        /// </summary>
+        /// <param name="condition">The condition that must be met</param>
+        /// <param name="message">The exception message to be used</param>
+        public static void IsValidOperation(bool condition, string message)
+        {
+            if (!condition)
+                throw new InvalidOperationException(message);
         }
     }
 }

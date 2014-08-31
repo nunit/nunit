@@ -326,14 +326,14 @@ namespace NUnit.Framework.Attributes
         }
 
         [Test]
-        public void FixtureWithNoTestsShouldCallFixtureSetUpOrTearDown()
+        public void FixtureWithNoTestsShouldNotCallFixtureSetUpOrTearDown()
         {
             FixtureWithNoTests fixture = new FixtureWithNoTests();
 
             TestBuilder.RunTestFixture(fixture);
 
-            Assert.That( fixture.setupCalled, Is.True, "SetUp should be called for a fixture with no tests" );
-            Assert.That( fixture.teardownCalled, Is.True, "TearDown should be called for a fixture with no tests" );
+            Assert.That( fixture.setupCalled, Is.False, "OneTimeSetUp should not be called for a fixture with no tests" );
+            Assert.That( fixture.teardownCalled, Is.False, "OneTimeTearDown should not be called for a fixture with no tests" );
         }
 
         [Test]

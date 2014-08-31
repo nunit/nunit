@@ -109,7 +109,10 @@ namespace NUnit.TestUtilities
         public event System.EventHandler Executed;
 
         public FakeWorkItem(Test test, TestExecutionContext context)
-            : base(test, context) { }
+            : base(test) 
+        {
+            InitializeContext(context);
+        }
 
         public override void Execute()
         {
