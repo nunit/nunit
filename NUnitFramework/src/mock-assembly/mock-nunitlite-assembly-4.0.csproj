@@ -25,7 +25,7 @@
     <IntermediateOutputPath>obj\$(Configuration)\net-4.0\</IntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <OutputPath>..\..\bin\Debug\net-4.0\</OutputPath>
+    <OutputPath>..\..\..\bin\Debug\net-4.0\</OutputPath>
     <BaseAddress>285212672</BaseAddress>
     <ConfigurationOverrideFile>
     </ConfigurationOverrideFile>
@@ -42,7 +42,7 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <OutputPath>..\..\bin\Release\net-4.0\</OutputPath>
+    <OutputPath>..\..\..\bin\Release\net-4.0\</OutputPath>
     <BaseAddress>285212672</BaseAddress>
     <ConfigurationOverrideFile>
     </ConfigurationOverrideFile>

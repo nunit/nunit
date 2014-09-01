@@ -28,25 +28,25 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\bin\Debug\sl-5.0\</OutputPath>
+    <OutputPath>..\..\..\bin\Debug\sl-5.0\</OutputPath>
     <DefineConstants>TRACE;DEBUG;SILVERLIGHT;SL_5_0;NUNITLITE</DefineConstants>
     <NoStdLib>true</NoStdLib>
     <NoConfig>true</NoConfig>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\..\bin\Debug\sl-5.0\nunitlite.xml</DocumentationFile>
+    <DocumentationFile>..\..\..\bin\Debug\sl-5.0\nunitlite.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>full</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\bin\Release\sl-5.0\</OutputPath>
+    <OutputPath>..\..\..\bin\Release\sl-5.0\</OutputPath>
     <DefineConstants>TRACE;SILVERLIGHT;SL_5_0;NUNITLITE</DefineConstants>
     <NoStdLib>true</NoStdLib>
     <NoConfig>true</NoConfig>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DebugSymbols>true</DebugSymbols>
-    <DocumentationFile>..\..\bin\Release\sl-5.0\nunitlite.xml</DocumentationFile>
+    <DocumentationFile>..\..\..\bin\Release\sl-5.0\nunitlite.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>

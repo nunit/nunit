@@ -25,22 +25,22 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\bin\Debug\net-4.5\</OutputPath>
+    <OutputPath>..\..\..\bin\Debug\net-4.5\</OutputPath>
     <DefineConstants>TRACE;DEBUG;NET_4_5</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\..\bin\Debug\net-4.5\nunit.framework.xml</DocumentationFile>
+    <DocumentationFile>..\..\..\bin\Debug\net-4.5\nunit.framework.xml</DocumentationFile>
     <NoWarn>1699</NoWarn>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\bin\Release\net-4.5\</OutputPath>
+    <OutputPath>..\..\..\bin\Release\net-4.5\</OutputPath>
     <DefineConstants>TRACE;NET_4_5</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\..\bin\Release\net-4.5\nunit.framework.xml</DocumentationFile>
+    <DocumentationFile>..\..\..\bin\Release\net-4.5\nunit.framework.xml</DocumentationFile>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

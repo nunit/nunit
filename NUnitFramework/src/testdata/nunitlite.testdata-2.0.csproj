@@ -37,7 +37,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\bin\Debug\net-2.0\</OutputPath>
+    <OutputPath>..\..\..\bin\Debug\net-2.0\</OutputPath>
     <DefineConstants>TRACE;DEBUG;NET_2_0;NUNITLITE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -45,7 +45,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\bin\Release\net-2.0\</OutputPath>
+    <OutputPath>..\..\..\bin\Release\net-2.0\</OutputPath>
     <DefineConstants>TRACE;NET_2_0;NUNITLITE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
