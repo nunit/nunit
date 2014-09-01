@@ -48,7 +48,7 @@
 
   <!-- Other directories are derived from base dir -->
   <property name="project.build.dir" 
-    value="${path::combine(project.base.dir,'build')}"/>
+    value="${path::combine(project.base.dir,'../build')}"/>
   <property name="project.package.dir" 
     value="${path::combine(project.base.dir,'package')}"/>
   <property name="project.src.dir"
@@ -108,7 +108,7 @@
 
 <!-- ***************************************************************** -->
 <!-- ***     Location of the NUnitFramework project, If Present    *** -->
-<!-- ***            Override in local.settings.include)           *** -->
+<!-- ***            Override in local.settings.include)           ***  -->
 <!-- ***************************************************************** -->
 
     <property name="framework.project.dir"
@@ -125,16 +125,6 @@
     value="nunit-console.exe"/>
   <property name="nunit.console.args"
     value="nunit-console.tests.dll nunit.engine.tests.dll -config:${build.config} ${nunit.options}"/>
-
-<!-- ***************************************************************** -->
-<!-- In the optional local.settings.include file, installations may    -->
-<!-- set properties to override the location of external tools,        -->
-<!-- the nunit framework assembly, directories, etc.                   -->
-<!--                                                                   -->
-<!-- Copy and edit local.settings.include.template if needed           -->
-<!-- ***************************************************************** -->
-
-  <include buildfile="local.settings.include" failonerror="false"/>
 
 <!-- ***************************************************************** -->
 <!-- ***          Targets that set the build configuration         *** -->
@@ -184,14 +174,7 @@
     <mkdir dir="${current.build.dir}"
       unless="${directory::exists(current.build.dir)}"/>
 
-      <call target="update-lib-dir"
-            if="${property::exists('auto.update.lib.dir') and auto.update.lib.dir}"/>
-
-    <copy todir="${current.build.dir}">
-      <fileset basedir="${project.lib.dir}">
-        <include name="*"/>
-      </fileset>
-    </copy>
+    <call target="update-framework-assembly"/>
 
     <nant target="build">
       <buildfiles refid="console.buildfiles" failonerror="true" />
@@ -199,25 +182,16 @@
 
   </target>
 
-    <!-- Update framework directories from the last .NET 2.0 or Mono 2.0
-        release build. Note that this looks at builds done with NAnt, 
-        not Visual Studio. -->
-    <target name="update-lib-dir"
-            description="Update lib dir with latest framework build">
+    <!-- Update framework assembly from the last .NET 2.0 or Mono 2.0
+        build. -->
+    <target name="update-framework-assembly">
 
         <property name="runtime" value="net-2.0" if="${can.build.net}"/>
         <property name="runtime" value="mono-2.0" unless="${can.build.net}"/>
-        
-        <if test="${property::exists('framework.project.dir')}">
-            <if test="${directory::exists(framework.project.dir)}">
-                <copy todir="${project.lib.dir}">
-                    <fileset basedir="${framework.project.dir}/bin/Release/${runtime}">
-                        <include name="nunit.framework.dll"/>
-                    </fileset>
-                </copy>
-            </if>
-        </if>
-        
+
+        <copy todir="${current.build.dir}"
+              file="${current.build.dir}/${runtime}/nunit.framework.dll"/>
+
     </target>
 
 <!-- ***************************************************************** -->

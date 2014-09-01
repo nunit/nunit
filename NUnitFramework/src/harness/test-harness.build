@@ -10,6 +10,10 @@
         warninglevel="${warn}">
       <sources basedir=".">
         <include name="*.cs"/>
+        <include name="Options/*.cs"/>
+        <include name="OutputWriters/*.cs"/>
+        <include name="Tests/*.cs"/>
+        <include name="Utilities/*.cs"/>
         <include name="../CommonAssemblyInfo.cs"/> 
       </sources>
       <references basedir="${current.build.dir}">
@@ -26,7 +30,10 @@
         <include name="test-harness.build"/>
         <include name="*.csproj"/>
         <include name="*.cs"/>
-          <include name="Tests/*.cs"/>
+        <include name="Options/*.cs"/>
+        <include name="OutputWriters/*.cs"/>
+        <include name="Tests/*.cs"/>
+        <include name="Utilities/*.cs"/>
       </fileset>
     </copy>
   </target>

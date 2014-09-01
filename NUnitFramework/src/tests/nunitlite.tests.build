@@ -13,7 +13,7 @@
         <exclude name="App.xaml.cs"/>
         <exclude name="obj/**/*.cs"/>
         <exclude name="Api/FrameworkControllerTests.cs" if="${runtime.platform == 'netcf' or runtime.platform == 'silverlight'}"/>
-        <exclude name="Constraints/FileExistsConstraintTests.cs"/>
+        <exclude name="Constraints/FileOrDirectoryExistsConstraintTests.cs"/>
       </sources>
       <resources prefix="NUnit.Framework.Tests">
         <include name="TestImage1.jpg"/>

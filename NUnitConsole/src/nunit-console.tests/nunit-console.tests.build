@@ -19,6 +19,13 @@
   </patternset>
 
   <target name="build">
+	  <copy todir="${current.build.dir}">
+		  <fileset basedir=".">
+			  <include name="NUnit2TestResult.xsd"/>
+			  <include name="TextSummary.xslt"/>
+		  </fileset>
+	  </copy>
+
     <csc target="library" 
         output="${current.build.dir}/nunit-console.tests.dll"
         debug="${build.debug}" define="${build.defines}">

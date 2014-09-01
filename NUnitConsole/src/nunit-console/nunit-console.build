@@ -3,26 +3,26 @@
 
   <patternset id="source-files">
     <include name="Properties/AssemblyInfo.cs"/>
-    <include name="ColorConsole.cs" />
-    <include name="ConsoleOptions.cs"/>
     <include name="ConsoleRunner.cs"/>
     <include name="IResultWriter.cs"/>
-    <include name="Options.cs"/>
-    <include name="PackageSettings.cs"/>
     <include name="Program.cs"/>
     <include name="ResultReporter.cs"/>
     <include name="ResultSummary.cs"/>
-    <include name="StackTraceFilter.cs"/>
     <include name="TestEventHandler.cs"/>
-    <include name="TestFilterBuilder.cs"/>
-    <include name="TestNameParser.cs"/>
-    <include name="XmlHelper.cs"/>
     <include name="OutputManager.cs"/>
     <include name="OutputSpecification.cs"/>
+    <include name="Options/ConsoleOptions.cs"/>
+    <include name="Options/Options.cs"/>
     <include name="OutputWriters/NUnit2XmlOutputWriter.cs"/>
     <include name="OutputWriters/NUnit3XmlOutputWriter.cs"/>
     <include name="OutputWriters/TestCaseOutputWriter.cs"/>
     <include name="OutputWriters/XmlTransformOutputWriter.cs"/>
+    <include name="Utilities/ColorConsole.cs" />
+    <include name="Utilities/PackageSettings.cs"/>
+    <include name="Utilities/StackTraceFilter.cs"/>
+    <include name="Utilities/TestFilterBuilder.cs"/>
+    <include name="Utilities/TestNameParser.cs"/>
+    <include name="Utilities/XmlHelper.cs"/>
   </patternset>
 
   <target name="build">

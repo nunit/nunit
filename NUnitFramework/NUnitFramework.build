@@ -61,7 +61,7 @@
 
   <!-- Other directories are derived from base dir -->
   <property name="project.build.dir" 
-	value="${path::combine(project.base.dir,'build')}"/>
+	value="${path::combine(project.base.dir,'../build')}"/>
   <property name="project.package.dir" 
 	value="${path::combine(project.base.dir,'package')}"/>
   <property name="project.src.dir"
