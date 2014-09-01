@@ -1,2 +1,2 @@
 #!/bin/bash
-xbuild NUnitFramework.msbuild "$@"
+xbuild NUnitFramework/NUnitFramework.msbuild "$@"
