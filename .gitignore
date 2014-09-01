@@ -16,9 +16,5 @@ build
 obj
 package
 deploy
-<<<<<<< HEAD:.gitignore
-test-results
-=======
 lib
-
->>>>>>> nunit-console/master:.gitignore
+test-results
