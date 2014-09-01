@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<project name="NUnit-Console" default="build">
+
+  <patternset id="source-files">
+    <include name="Properties/AssemblyInfo.cs"/>
+    <include name="ColorConsole.cs" />
+    <include name="ConsoleOptions.cs"/>
+    <include name="ConsoleRunner.cs"/>
+    <include name="IResultWriter.cs"/>
+    <include name="Options.cs"/>
+    <include name="PackageSettings.cs"/>
+    <include name="Program.cs"/>
+    <include name="ResultReporter.cs"/>
+    <include name="ResultSummary.cs"/>
+    <include name="StackTraceFilter.cs"/>
+    <include name="TestEventHandler.cs"/>
+    <include name="TestFilterBuilder.cs"/>
+    <include name="TestNameParser.cs"/>
+    <include name="XmlHelper.cs"/>
+    <include name="OutputManager.cs"/>
+    <include name="OutputSpecification.cs"/>
+    <include name="OutputWriters/NUnit2XmlOutputWriter.cs"/>
+    <include name="OutputWriters/NUnit3XmlOutputWriter.cs"/>
+    <include name="OutputWriters/TestCaseOutputWriter.cs"/>
+    <include name="OutputWriters/XmlTransformOutputWriter.cs"/>
+  </patternset>
+
+  <target name="build">
+  
+    <csc target="exe" 
+        output="${current.build.dir}/nunit-console.exe"
+        debug="${build.debug}" define="${build.defines}">
+      <sources>
+        <patternset refid="source-files"/>
+        <include name="../../GeneratedAssemblyInfo.cs"/>
+      </sources>
+      <nowarn>
+        <warning number="1699"/>
+      </nowarn>
+      <references basedir="${current.build.dir}">
+        <include name="nunit.engine.api.dll"/>
+      </references>
+    </csc>
+    
+    <copy file="app.config" 
+        tofile="${current.build.dir}/nunit-console.exe.config"/>
+    
+  </target>
+
+  <target name="package">
+  
+    <copy todir="${package.src.dir}/nunit-console">
+      <fileset>
+        <patternset refid="source-files"/>
+        <include name="*.csproj"/>
+        <include name="*.build"/>
+        <include name="App.ico"/>
+        <include name="app.config"/>
+      </fileset>
+    </copy>
+    
+  </target>
+
+</project>

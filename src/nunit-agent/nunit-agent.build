@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<project name="NUnitAgent" default="build" basedir=".">
+
+  <patternset id="source-files">
+      <include name="*.cs" />
+  </patternset>
+
+  <target name="build">
+
+    <csc target="exe"
+        output="${current.build.dir}/nunit-agent.exe"
+        debug="${build.debug}" 
+        define="${build.defines}"
+        warninglevel="${warn}">
+      <sources basedir=".">
+        <include name="../CommonAssemblyInfo.cs" />
+        <patternset refid="source-files" />
+      </sources>
+      <references basedir="${current.build.dir}">
+        <include name="System.Runtime.Remoting.dll" />
+        <include name="System.Windows.Forms.dll" />
+        <include name="nunit.engine.dll" />
+        <include name="nunit.engine.api.dll" />
+      </references>
+    </csc>
+
+    <copy file="app.config" 
+        tofile="${current.build.dir}/nunit-agent.exe.config"/>
+
+  </target>
+
+  <target name="package">
+  
+    <copy todir="${package.src.dir}/nunit-agent">
+      <fileset>
+        <patternset refid="source-files" />
+        <include name="*.build" />
+        <include name="*.csproj" />
+        <include name="app.config" />
+      </fileset>
+    </copy>
+    
+  </target>
+
+</project>
