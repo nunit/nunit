@@ -1,0 +1,64 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit-console", "nunit-console\nunit-console.csproj", "{0DE218CA-AFB8-423A-9CD2-E22DEAC55C46}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit-console.tests", "nunit-console.tests\nunit-console.tests.csproj", "{B310A760-8AE1-41CA-81F8-03B12E2FCE30}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.engine.api", "nunit.engine.api\nunit.engine.api.csproj", "{775FAD50-3623-4922-97C4-DFB29A8BE4C7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.engine", "nunit.engine\nunit.engine.csproj", "{372A3447-D657-40FF-A089-77C19FEC30C8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.engine.tests", "nunit.engine.tests\nunit.engine.tests.csproj", "{D694CB69-6CFB-4762-86C2-EB27B808B282}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit-agent", "nunit-agent\nunit-agent.csproj", "{C2A8FC7A-FA64-46EA-AF6D-73D6B371DBF8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{147554FB-464E-4E4D-ADD6-B84121AAE2A5}"
+	ProjectSection(SolutionItems) = preProject
+		NUnitConsole.build = NUnitConsole.build
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mock-assembly", "mock-assembly\mock-assembly.csproj", "{2E368281-3BA8-4050-B05E-0E0E43F8F446}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0DE218CA-AFB8-423A-9CD2-E22DEAC55C46}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0DE218CA-AFB8-423A-9CD2-E22DEAC55C46}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0DE218CA-AFB8-423A-9CD2-E22DEAC55C46}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0DE218CA-AFB8-423A-9CD2-E22DEAC55C46}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B310A760-8AE1-41CA-81F8-03B12E2FCE30}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B310A760-8AE1-41CA-81F8-03B12E2FCE30}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B310A760-8AE1-41CA-81F8-03B12E2FCE30}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B310A760-8AE1-41CA-81F8-03B12E2FCE30}.Release|Any CPU.Build.0 = Release|Any CPU
+		{775FAD50-3623-4922-97C4-DFB29A8BE4C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{775FAD50-3623-4922-97C4-DFB29A8BE4C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{775FAD50-3623-4922-97C4-DFB29A8BE4C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{775FAD50-3623-4922-97C4-DFB29A8BE4C7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{372A3447-D657-40FF-A089-77C19FEC30C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{372A3447-D657-40FF-A089-77C19FEC30C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{372A3447-D657-40FF-A089-77C19FEC30C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{372A3447-D657-40FF-A089-77C19FEC30C8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D694CB69-6CFB-4762-86C2-EB27B808B282}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D694CB69-6CFB-4762-86C2-EB27B808B282}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D694CB69-6CFB-4762-86C2-EB27B808B282}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D694CB69-6CFB-4762-86C2-EB27B808B282}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C2A8FC7A-FA64-46EA-AF6D-73D6B371DBF8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2A8FC7A-FA64-46EA-AF6D-73D6B371DBF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2A8FC7A-FA64-46EA-AF6D-73D6B371DBF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2A8FC7A-FA64-46EA-AF6D-73D6B371DBF8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2E368281-3BA8-4050-B05E-0E0E43F8F446}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2E368281-3BA8-4050-B05E-0E0E43F8F446}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2E368281-3BA8-4050-B05E-0E0E43F8F446}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2E368281-3BA8-4050-B05E-0E0E43F8F446}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = NUnitConsole\src\nunit-console\nunit-console-vs2010.csproj
+	EndGlobalSection
+EndGlobal
