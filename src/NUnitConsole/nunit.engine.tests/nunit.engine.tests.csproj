@@ -77,7 +77,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\mock-assembly\mock-assembly.csproj">
-      <Project>{2e368281-3ba8-4050-b05e-0e0e43f8f446}</Project>
+      <Project>{af27c6fb-54f0-4912-b4d6-3d08a3ee70df}</Project>
       <Name>mock-assembly</Name>
     </ProjectReference>
     <ProjectReference Include="..\nunit.engine.api\nunit.engine.api.csproj">

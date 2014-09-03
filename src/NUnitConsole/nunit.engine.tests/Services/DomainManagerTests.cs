@@ -95,8 +95,8 @@ namespace NUnit.Engine.Services.Tests
         }
 
         [Test, Platform("Linux,Net", Reason = "get_SetupInformation() fails on Windows+Mono")]
-		public void AppDomainSetUpCorrect()
-		{
+        public void AppDomainSetUpCorrect()
+        {
             ServiceContext context = new ServiceContext();
             context.Add(new SettingsService());
             var domainManager = new DomainManager();
@@ -107,16 +107,16 @@ namespace NUnit.Engine.Services.Tests
             AppDomainSetup setup = domainManager.CreateAppDomainSetup(new TestPackage(mockDll));
 
             Assert.That(setup.ApplicationName, Is.StringStarting("Tests_"));
-			Assert.That(setup.ApplicationBase, Is.SamePath(Path.GetDirectoryName(mockDll)), "ApplicationBase");
-			Assert.That( 
+            Assert.That(setup.ApplicationBase, Is.SamePath(Path.GetDirectoryName(mockDll)), "ApplicationBase");
+            Assert.That( 
                 Path.GetFileName( setup.ConfigurationFile ),
                 Is.EqualTo("mock-assembly.dll.config").IgnoreCase,
                 "ConfigurationFile");
-			Assert.AreEqual( null, setup.PrivateBinPath, "PrivateBinPath" );
-			Assert.That(setup.ShadowCopyDirectories, Is.SamePath(Path.GetDirectoryName(mockDll)), "ShadowCopyDirectories" );
+            Assert.AreEqual( null, setup.PrivateBinPath, "PrivateBinPath" );
+            Assert.That(setup.ShadowCopyDirectories, Is.SamePath(Path.GetDirectoryName(mockDll)), "ShadowCopyDirectories" );
         }
 
-		/// <summary>
+        /// <summary>
         /// Take a valid Linux filePath and make a valid windows filePath out of it
         /// if we are on Windows. Change slashes to backslashes and, if the
         /// filePath starts with a slash, add C: in front of it.
