@@ -57,13 +57,5 @@ namespace NUnit.Framework.Internal.Filters
         {
             return test.FullName == value;
         }
-
-        /// <summary>
-        /// Return a list of the names matched by the filter - used for testing
-        /// </summary>
-        public IList<string> Names
-        {
-            get { return _values;  }
-        }
     }
 }

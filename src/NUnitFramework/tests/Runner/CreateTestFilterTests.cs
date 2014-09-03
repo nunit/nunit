@@ -42,7 +42,7 @@ namespace NUnitLite.Runner.Tests
         {
             var filter = GetFilter("--test:My.Test.Name");
             Assert.That(filter, Is.TypeOf<SimpleNameFilter>());
-            Assert.That(((SimpleNameFilter)filter).Names,
+            Assert.That(((SimpleNameFilter)filter).Values,
                 Is.EqualTo(new string[] { "My.Test.Name" }));
         }
 
@@ -51,7 +51,7 @@ namespace NUnitLite.Runner.Tests
         {
             var filter = GetFilter("--test:My.First.Test", "--test:My.Second.Test", "--test:My.Third.Test");
             Assert.That(filter, Is.TypeOf<SimpleNameFilter>());
-            Assert.That(((SimpleNameFilter)filter).Names, 
+            Assert.That(((SimpleNameFilter)filter).Values, 
                 Is.EqualTo(new string[] { "My.First.Test", "My.Second.Test", "My.Third.Test" } ));
         }
 
@@ -104,7 +104,7 @@ namespace NUnitLite.Runner.Tests
             Assert.That(filters.Length, Is.EqualTo(2));
 
             Assert.That(filters[0], Is.TypeOf<SimpleNameFilter>());
-            Assert.That(((SimpleNameFilter)filters[0]).Names,
+            Assert.That(((SimpleNameFilter)filters[0]).Values,
                 Is.EqualTo(new string[] { "My.Test.Name" }));
 
             Assert.That(filters[1], Is.TypeOf<CategoryFilter>());

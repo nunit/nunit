@@ -29,15 +29,28 @@ using NUnit.Framework.Interfaces;
 
 namespace NUnitLite.Runner
 {
+    /// <summary>
+    /// OutputManager is responsible for creating output files
+    /// from a test run in various formats.
+    /// </summary>
     public class OutputManager
     {
         private string _workDirectory;
 
+        /// <summary>
+        /// Construct an OutputManager
+        /// </summary>
+        /// <param name="workDirectory">The directory to use for reports</param>
         public OutputManager(string workDirectory)
         {
             _workDirectory = workDirectory;
         }
 
+        /// <summary>
+        /// Write the result of a test run according to a spec.
+        /// </summary>
+        /// <param name="result">The test result</param>
+        /// <param name="spec">An output specification</param>
         public void WriteResultFile(ITestResult result, OutputSpecification spec)
         {
             string outputPath = Path.Combine(_workDirectory, spec.OutputPath);
@@ -69,6 +82,11 @@ namespace NUnitLite.Runner
             Console.WriteLine("Results ({0}) saved as {1}", spec.Format, outputPath);
         }
 
+        /// <summary>
+        /// Write out the result of exploring the tests
+        /// </summary>
+        /// <param name="test">The top-level test</param>
+        /// <param name="spec">An OutputSpecification</param>
         public void WriteTestFile(ITest test, OutputSpecification spec)
         {
             string outputPath = Path.Combine(_workDirectory, spec.OutputPath);

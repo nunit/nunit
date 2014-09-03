@@ -35,8 +35,10 @@ namespace NUnit.Framework.Api
     /// </summary>
     public class NUnitLiteTestAssemblyRunner : AbstractTestAssemblyRunner
     {
+#if !SILVERLIGHT && !NETCF
         TextWriter _savedOut;
         TextWriter _savedErr;
+#endif
 
         #region Constructor
 

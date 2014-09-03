@@ -191,7 +191,7 @@ namespace NUnit.TestData.OneTimeSetUpTearDownData
         }
 
         [Test]
-        public static void MyTest() { }
+        public static void SomeTest() { }
     }
 
     [TestFixture]

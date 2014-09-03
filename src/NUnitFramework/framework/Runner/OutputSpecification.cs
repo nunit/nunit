@@ -33,6 +33,10 @@ namespace NUnitLite.Runner
     {
         #region Constructor
 
+        /// <summary>
+        /// Construct an OutputSpecification from an option value.
+        /// </summary>
+        /// <param name="spec">The option value string.</param>
         public OutputSpecification(string spec)
         {
             if (spec == null)
@@ -85,10 +89,19 @@ namespace NUnitLite.Runner
 
         #region Properties
 
+        /// <summary>
+        /// Gets the path to which output will be written
+        /// </summary>
         public string OutputPath { get; private set; }
 
+        /// <summary>
+        /// Gets the name of the format to be used
+        /// </summary>
         public string Format { get; private set; }
 
+        /// <summary>
+        /// Gets the file name of a transform to be applied
+        /// </summary>
         public string Transform { get; private set; }
 
         #endregion

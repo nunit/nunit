@@ -50,7 +50,7 @@ namespace NUnitLite.Runner
         /// <summary>
         /// Writes test info to a file
         /// </summary>
-        /// <param name="result">The test to be written</param>
+        /// <param name="test">The test to be written</param>
         /// <param name="outputPath">Path to the file to which the test info is written</param>
         public void WriteTestFile(ITest test, string outputPath)
         {
@@ -70,7 +70,7 @@ namespace NUnitLite.Runner
         /// <summary>
         /// Abstract method that writes test info to a TextWriter
         /// </summary>
-        /// <param name="result">The test to be written</param>
+        /// <param name="test">The test to be written</param>
         /// <param name="writer">A TextWriter to which the test info is written</param>
         public abstract void WriteTestFile(ITest test, TextWriter writer);
     }

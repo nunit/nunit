@@ -35,7 +35,12 @@ namespace NUnit.Framework.Internal.Filters
     [Serializable]
     public abstract class ValueMatchFilter<T> : TestFilter
     {
-        protected List<T> _values = new List<T>();
+        private List<T> _values = new List<T>();
+
+        /// <summary>
+        /// Return a list of the values matched by the filter - used for testing
+        /// </summary>
+        public IList<T> Values { get { return _values; } }
 
         /// <summary>
         /// Construct an empty ValueMatchFilter

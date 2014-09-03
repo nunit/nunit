@@ -54,6 +54,11 @@ namespace NUnitLite.Runner
             resultStates["Skipped:Invalid"] = "NotRunnable";
         }
 
+        /// <summary>
+        /// Write info about a test
+        /// </summary>
+        /// <param name="test">The test</param>
+        /// <param name="writer">A TextWriter</param>
         public override void WriteTestFile(ITest test, TextWriter writer)
         {
             throw new NotImplementedException("Explore test output is not supported by the NUnit2 format.");

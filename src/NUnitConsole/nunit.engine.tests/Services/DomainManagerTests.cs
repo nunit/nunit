@@ -106,7 +106,7 @@ namespace NUnit.Engine.Services.Tests
             string mockDll = MockAssembly.AssemblyPath;
             AppDomainSetup setup = domainManager.CreateAppDomainSetup(new TestPackage(mockDll));
 
-            Assert.That(setup.ApplicationName, Is.StringStarting("Tests_"));
+            Assert.That(setup.ApplicationName, Does.StartWith("Tests_"));
             Assert.That(setup.ApplicationBase, Is.SamePath(Path.GetDirectoryName(mockDll)), "ApplicationBase");
             Assert.That( 
                 Path.GetFileName( setup.ConfigurationFile ),
