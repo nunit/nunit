@@ -50,14 +50,6 @@ namespace NUnit.Framework.Api
         /// </summary>
         ISuiteBuilder _defaultSuiteBuilder;
 
-#if !NUNITLITE
-        /// <summary>
-        /// Our LegacySuite builder, which is only used when a 
-        /// fixture has been passed by name on the command line.
-        /// </summary>
-        ISuiteBuilder legacySuiteBuilder;
-#endif
-
         #endregion
 
         #region Constructor
@@ -68,12 +60,6 @@ namespace NUnit.Framework.Api
         public DefaultTestAssemblyBuilder()
         {
             _defaultSuiteBuilder = new DefaultSuiteBuilder();
-
-#if !NUNITLITE
-            // TODO: Keeping this separate till we can make
-            //it work in all situations.
-            legacySuiteBuilder = new LegacySuiteBuilder();
-#endif
         }
 
         #endregion
@@ -191,10 +177,6 @@ namespace NUnit.Framework.Api
                     fixtures.Add(fixture);
                     testcases += fixture.TestCaseCount;
                 }
-#if !NUNITLITE
-                else if (names != null && legacySuiteBuilder.CanBuildFrom(testType))
-                    fixtures.Add(legacySuiteBuilder.BuildFrom(testType));
-#endif
             }
 
 #if LOAD_TIMING

@@ -178,7 +178,6 @@
     <Compile Include="Attributes\SetUICultureAttribute.cs" />
     <Compile Include="Attributes\SetUpAttribute.cs" />
     <Compile Include="Attributes\SetUpFixtureAttribute.cs" />
-    <Compile Include="Attributes\SuiteAttribute.cs" />
     <Compile Include="Attributes\TearDownAttribute.cs" />
     <Compile Include="Attributes\TestAttribute.cs" />
     <Compile Include="Attributes\TestCaseAttribute.cs" />
@@ -293,7 +292,6 @@
     <Compile Include="Internal\AssemblyReader.cs" />
     <Compile Include="Internal\Builders\CombinatorialStrategy.cs" />
     <Compile Include="Internal\Builders\DatapointProvider.cs" />
-    <Compile Include="Internal\Builders\LegacySuiteBuilder.cs" />
     <Compile Include="Internal\Builders\DefaultTestCaseBuilder.cs" />
     <Compile Include="Internal\Builders\NUnitTestFixtureBuilder.cs" />
     <Compile Include="Internal\Builders\PairwiseStrategy.cs" />
@@ -328,7 +326,6 @@
     <Compile Include="Internal\TestFilter.cs" />
     <Compile Include="Internal\TestListener.cs" />
     <Compile Include="Internal\TestProgressReporter.cs" />
-    <Compile Include="Internal\Tests\LegacySuite.cs" />
     <Compile Include="Internal\Tests\ParameterizedFixtureSuite.cs" />
     <Compile Include="Internal\Tests\ParameterizedMethodSuite.cs" />
     <Compile Include="Internal\Tests\SetUpFixture.cs" />

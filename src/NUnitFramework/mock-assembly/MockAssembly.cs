@@ -65,20 +65,6 @@ namespace NUnit.Tests
 #endif
         }
 
-#if !NUNITLITE
-        public class MockSuite
-        {
-            [Suite]
-            public static TestSuite Suite
-            {
-                get
-                {
-                    return new TestSuite( "MockSuite" );
-                }
-            }
-        }
-#endif
-
         [TestFixture(Description="Fake Test Fixture")]
         [Category("FixtureCategory")]
         public class MockTestFixture

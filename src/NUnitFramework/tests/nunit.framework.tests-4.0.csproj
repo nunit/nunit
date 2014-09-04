@@ -169,7 +169,6 @@
     <Compile Include="Internal\EventQueueTests.cs" />
     <Compile Include="Internal\GenericTestFixtureTests.cs" />
     <Compile Include="Internal\GenericTestMethodTests.cs" />
-    <Compile Include="Internal\LegacySuiteTests.cs" />
     <Compile Include="Internal\NUnitTestCaseBuilderTests.cs" />
     <Compile Include="Internal\PlatformDetectionTests.cs" />
     <Compile Include="Internal\PropertyBagTests.cs" />

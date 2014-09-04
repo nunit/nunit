@@ -81,18 +81,6 @@ namespace NUnit.Engine.Tests
             public static string AssemblyPath = AssemblyHelper.GetAssemblyPath(typeof(MockAssembly).Assembly);
         }
 
-        public class MockSuite
-        {
-            [Suite]
-            public static TestSuite Suite
-            {
-                get
-                {
-                    return new TestSuite( "MockSuite" );
-                }
-            }
-        }
-
         [TestFixture(Description="Fake Test Fixture")]
         [Category("FixtureCategory")]
         public class MockTestFixture

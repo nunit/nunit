@@ -206,7 +206,6 @@ namespace NUnit.Framework.Internal
 
         /// <summary>
         /// Gets or sets a fixture object for running this test.
-        /// Provided for use by LegacySuiteBuilder.
         /// </summary>
         public object Fixture { get; set; }
 
