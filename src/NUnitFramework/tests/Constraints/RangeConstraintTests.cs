@@ -85,7 +85,6 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void ShouldThrowExceptionIfFromIsLessThanTo()
         {
-            var comparer = new GenericComparer<int>();
             Assert.Throws<ArgumentException>(() => new RangeConstraint( 42, 5 ));
         }
     }

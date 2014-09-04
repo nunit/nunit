@@ -129,6 +129,7 @@ namespace NUnit.Framework.Assertions
                 "  Expected: greater than 5" + Environment.NewLine +
                 "  But was:  4" + Environment.NewLine;
             var ex = Assert.Throws<AssertionException>(() => Assert.Greater(i2,i1));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 
         [Test]

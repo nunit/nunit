@@ -53,9 +53,6 @@ namespace NUnit.Framework.TestHarness
         private FrameworkDriver driver;
         private CommandLineOptions options;
 
-        private TextWriter outWriter = Console.Out;
-        private TextWriter errorWriter = Console.Error;
-
         private string workDirectory;
 
         #endregion
@@ -103,8 +100,6 @@ namespace NUnit.Framework.TestHarness
 
         private int ExploreTests(FrameworkDriver driver, string filter)
         {
-            IDictionary settings = new Dictionary<string, object>();
-
             XmlNode testNode = driver.ExploreTests(filter);
 
             if (testNode.Name == "error")

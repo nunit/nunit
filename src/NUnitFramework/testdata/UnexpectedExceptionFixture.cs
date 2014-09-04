@@ -51,7 +51,9 @@ namespace NUnit.TestData.UnexpectedExceptionFixture
 
     class CustomException : Exception
     {
+        #pragma warning disable 414
         private CustomType custom;
+        #pragma warning restore 414
 
         public CustomException(string msg, CustomType custom)
             : base(msg)

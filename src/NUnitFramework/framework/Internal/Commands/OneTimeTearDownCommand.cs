@@ -33,7 +33,6 @@ namespace NUnit.Framework.Internal.Commands
     /// </summary>
     public class OneTimeTearDownCommand : TestCommand
     {
-        private readonly MethodInfo[] _tearDownMethods;
         private SetUpTearDownList _setUpTearDown;
 
         /// <summary>
@@ -44,8 +43,6 @@ namespace NUnit.Framework.Internal.Commands
         public OneTimeTearDownCommand(TestSuite suite, SetUpTearDownList setUpTearDown)
             : base(suite)
         {
-            if (suite.FixtureType != null)
-                _tearDownMethods = Reflect.GetMethodsWithAttribute(suite.FixtureType, typeof(OneTimeTearDownAttribute), true);
             _setUpTearDown = setUpTearDown;
         }
 

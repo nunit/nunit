@@ -45,9 +45,11 @@ namespace NUnit.TestData.CategoryAttributeData
         [Test, Category("A-B")]
         public void Test4() { }
 
+#pragma warning disable 414
         private TestCaseData[] Test3Data = new TestCaseData[] {
             new TestCaseData(5).SetCategory("Bottom")
         };
+#pragma warning restore 414
     }
 
     [AttributeUsage(AttributeTargets.Method, AllowMultiple=false, Inherited=false)]

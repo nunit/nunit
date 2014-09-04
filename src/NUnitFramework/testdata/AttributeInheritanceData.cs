@@ -31,7 +31,9 @@ namespace NUnit.TestData.AttributeInheritanceData
     [AttributeUsage(AttributeTargets.Class, AllowMultiple=false)]
     class ConcernAttribute : TestFixtureAttribute
     {
+#pragma warning disable 414
         private Type typeOfConcern;
+#pragma warning restore 414
 
         public ConcernAttribute( Type typeOfConcern )
         {

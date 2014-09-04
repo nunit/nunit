@@ -35,7 +35,9 @@ namespace NUnit.Framework
         , IApplyToContext
 #endif
     {
+#if !NUNITLITE
         private ParallelScope _scope;
+#endif
 
         /// <summary>
         /// Construct a ParallelizableAttribute using default ParallelScope.Self.
@@ -48,7 +50,9 @@ namespace NUnit.Framework
         /// <param name="scope">The ParallelScope associated with this attribute.</param>
         public ParallelizableAttribute(ParallelScope scope) : base()
         {
+#if !NUNITLITE
             _scope = scope;
+#endif
             Properties.Add(PropertyNames.ParallelScope, scope);
         }
 

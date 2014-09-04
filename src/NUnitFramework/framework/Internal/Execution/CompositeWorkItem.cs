@@ -36,7 +36,7 @@ namespace NUnit.Framework.Internal.Execution
     /// </summary>
     public class CompositeWorkItem : WorkItem
     {
-        static Logger log = InternalTrace.GetLogger("CompositeWorkItem");
+//        static Logger log = InternalTrace.GetLogger("CompositeWorkItem");
 
         private TestSuite _suite;
         private ITestFilter _childFilter;

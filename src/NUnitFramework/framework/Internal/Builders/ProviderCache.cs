@@ -66,12 +66,10 @@ namespace NUnit.Framework.Internal.Builders
         class CacheEntry
         {
             private Type providerType;
-            private object[] providerArgs;
 
             public CacheEntry(Type providerType, object[] providerArgs)
             {
                 this.providerType = providerType;
-                this.providerArgs = providerArgs;
             }
 
             public override bool Equals(object obj)

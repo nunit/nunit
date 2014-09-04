@@ -35,7 +35,7 @@ namespace NUnit.Framework.Internal
     {
         #region Fields
 
-        static Logger log = InternalTrace.GetLogger("TestResult");
+//        static Logger log = InternalTrace.GetLogger("TestResult");
 
         /// <summary>
         /// List of child results

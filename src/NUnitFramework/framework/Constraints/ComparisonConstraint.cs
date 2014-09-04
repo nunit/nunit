@@ -50,10 +50,6 @@ namespace NUnit.Framework.Constraints
         /// if true, greater than returns success
         /// </summary>
         protected bool greaterComparisonResult = false;
-        /// <summary>
-        /// The predicate used as a part of the description
-        /// </summary>
-        private readonly string predicate;
 
         /// <summary>
         /// ComparisonAdapter to be used in making the comparison
@@ -75,7 +71,6 @@ namespace NUnit.Framework.Constraints
             this.lessComparisonResult = lessComparisonResult;
             this.equalComparisonResult = equalComparisonResult;
             this.greaterComparisonResult = greaterComparisonResult;
-            this.predicate = predicate;
             this.Description = predicate + " " + MsgUtils.FormatValue(expected);
         }
 

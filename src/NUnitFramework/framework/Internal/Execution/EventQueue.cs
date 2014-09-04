@@ -152,7 +152,7 @@ namespace NUnit.Framework.Internal.Execution
     /// </summary>
     public class EventQueue
     {
-        static readonly Logger log = InternalTrace.GetLogger("EventQueue");
+//        static readonly Logger log = InternalTrace.GetLogger("EventQueue");
 
         private readonly Queue queue = new Queue();
         private readonly object syncRoot;

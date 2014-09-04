@@ -37,7 +37,6 @@ namespace NUnit.Framework.Internal.Execution
 
         private WorkItemQueue _readyQueue;
         private Thread _workerThread;
-        private ApartmentState _apartmentState;
 
         private int _workItemCount = 0;
 
@@ -62,7 +61,6 @@ namespace NUnit.Framework.Internal.Execution
         public TestWorker(WorkItemQueue queue, string name, ApartmentState apartmentState)
         {
             _readyQueue = queue;
-            _apartmentState = apartmentState;
 
             _workerThread = new Thread(new ThreadStart(TestWorkerThreadProc));
             _workerThread.Name = name;

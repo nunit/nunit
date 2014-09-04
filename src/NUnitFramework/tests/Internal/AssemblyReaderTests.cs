@@ -87,7 +87,7 @@ namespace NUnit.Framework.Internal
             string runtimeVersion = rdr.ImageRuntimeVersion;
 
             StringAssert.StartsWith( "v", runtimeVersion );
-            Version version = new Version( runtimeVersion.Substring( 1 ) );
+            new Version( runtimeVersion.Substring( 1 ) );
             // This fails when we force running under a prior version
             // Assert.LessOrEqual( version, Environment.Version );
         }

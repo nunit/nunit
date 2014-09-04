@@ -244,7 +244,7 @@ namespace NUnit.Framework.Attributes
         {
             string current = System.Globalization.CultureInfo.CurrentCulture.Name;
             string other = current == "fr-FR" ? "en-US" : "fr-FR";
-            string cultures = current + "," + "other";
+            string cultures = current + "," + other;
 
             new CultureAttribute(cultures).ApplyToTest(test);
             Assert.That(test.RunState, Is.EqualTo(RunState.Runnable));

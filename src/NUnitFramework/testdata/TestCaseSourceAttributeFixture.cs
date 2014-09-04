@@ -36,8 +36,10 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
             Assert.Ignore("Ignore this");
         }
 
+#pragma warning disable 414
         private static object[] source = new object[] {
             new TestCaseData( 2, 3, 4 ) };
+#pragma warning restore 414
 
         [TestCaseSource("ignored_source")]
         public void MethodWithIgnoredTestCases(int num)

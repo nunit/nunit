@@ -29,18 +29,14 @@ namespace NUnit.TestData.TheoryFixture
     [TestFixture]
     public class TheoryFixture
     {
+#pragma warning disable 414
         [Datapoint]
         private int i0 = 0;
         [Datapoint]
         static int i1 = 1;
+#pragma warning restore 414
         [Datapoint]
         public int i100 = 100;
-
-        private void Dummy()
-        {
-            int x = i0; // Suppress Compiler Warnings
-            int y = i1; //
-        }
 
         [Theory]
         public void TheoryWithNoArguments()

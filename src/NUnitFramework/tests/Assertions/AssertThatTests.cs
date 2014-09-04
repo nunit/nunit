@@ -242,7 +242,10 @@ namespace NUnit.Framework.Assertions
         [Test, Platform(Exclude="Linux", Reason="Intermittent failures on Linux")]
         public void AssertThatErrorTask()
         {
-            var exception = Assert.Throws<InvalidOperationException>(() =>
+#if NET_4_5
+            var exception = 
+#endif
+            Assert.Throws<InvalidOperationException>(() =>
                 Assert.That(async () => await ThrowInvalidOperationExceptionTask(), Is.EqualTo(1)));
 
 #if NET_4_5
@@ -253,7 +256,10 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void AssertThatErrorGenericTask()
         {
-            var exception = Assert.Throws<InvalidOperationException>(() =>
+#if NET_4_5
+            var exception = 
+#endif
+            Assert.Throws<InvalidOperationException>(() =>
                 Assert.That(async () => await ThrowInvalidOperationExceptionGenericTask(), Is.EqualTo(1)));
 
 #if NET_4_5
@@ -264,7 +270,10 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void AssertThatErrorVoid()
         {
-            var exception = Assert.Throws<InvalidOperationException>(() =>
+#if NET_4_5
+            var exception = 
+#endif
+            Assert.Throws<InvalidOperationException>(() =>
                 Assert.That(async () => { await ThrowInvalidOperationExceptionGenericTask(); }, Is.EqualTo(1)));
 
 #if NET_4_5

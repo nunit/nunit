@@ -212,7 +212,6 @@ namespace NUnit.Framework.Internal.Execution
         [Test]
         public void StartAndStopPumpOnEmptyQueue()
         {
-            EventQueue q = new EventQueue();
             using (EventPump pump = new EventPump(TestListener.NULL, new EventQueue()))
             {
                 pump.Name = "StartAndStopPumpOnEmptyQueue";

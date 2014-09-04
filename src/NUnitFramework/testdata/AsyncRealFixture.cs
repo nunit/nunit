@@ -188,7 +188,6 @@ namespace NUnit.TestData
         [Test]
         public async System.Threading.Tasks.Task AsyncTaskMultipleError()
         {
-            var result = await ReturnOne();
             await ThrowException();
 
             Assert.Fail("Should never get here");

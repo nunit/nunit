@@ -40,7 +40,6 @@ namespace NUnit.Framework.TestHarness
         private static readonly string RUN_ACTION = CONTROLLER_TYPE + "+RunTestsAction";
 
         AppDomain testDomain;
-        string assemblyPath;
         IDictionary<string, object> settings;
 
         object testController;
@@ -56,7 +55,6 @@ namespace NUnit.Framework.TestHarness
         public FrameworkDriver(string assemblyPath, AppDomain testDomain, IDictionary<string, object> settings)
         {
             this.testDomain = testDomain;
-            this.assemblyPath = assemblyPath;
             this.settings = settings;
             this.testController = CreateObject(CONTROLLER_TYPE, assemblyPath, settings);
         }

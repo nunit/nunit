@@ -35,7 +35,6 @@ namespace NUnit.Framework.Internal.Commands
         private readonly TestSuite _suite;
         private readonly Type _fixtureType;
         private readonly object[] _arguments;
-        private readonly MethodInfo[] _setUpMethods;
         private readonly SetUpTearDownList _setUpTearDown;
 
         /// <summary>
@@ -49,8 +48,6 @@ namespace NUnit.Framework.Internal.Commands
             _suite = suite;
             _fixtureType = suite.FixtureType;
             _arguments = suite.Arguments;
-            if (_fixtureType != null)
-                _setUpMethods = Reflect.GetMethodsWithAttribute(_fixtureType, typeof(OneTimeSetUpAttribute), true);
             _setUpTearDown = setUpTearDown;
         }
 
