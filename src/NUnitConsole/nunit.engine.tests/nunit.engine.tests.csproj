@@ -76,9 +76,9 @@
       <Project>{12b66b03-90f1-4992-bd33-bdf3c69ae49e}</Project>
       <Name>nunit.framework-2.0</Name>
     </ProjectReference>
-    <ProjectReference Include="..\mock-assembly\mock-assembly.csproj">
-      <Project>{af27c6fb-54f0-4912-b4d6-3d08a3ee70df}</Project>
-      <Name>mock-assembly</Name>
+    <ProjectReference Include="..\..\NUnitFramework\mock-assembly\mock-nunit-assembly-2.0.csproj">
+      <Project>{2e368281-3ba8-4050-b05e-0e0e43f8f446}</Project>
+      <Name>mock-nunit-assembly-2.0</Name>
     </ProjectReference>
     <ProjectReference Include="..\nunit.engine.api\nunit.engine.api.csproj">
       <Project>{775FAD50-3623-4922-97C4-DFB29A8BE4C7}</Project>

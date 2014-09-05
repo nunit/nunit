@@ -156,13 +156,6 @@
 	value="nunit.framework.tests.dll ${test.options}"/>
 
 <!-- ***************************************************************** -->
-<!-- In the optional local.settings.include file, installations may    -->
-<!-- set properties to override the location of external tools.        -->
-<!-- ***************************************************************** -->
-
-  <include buildfile="local.settings.include" failonerror="false"/>
-
-<!-- ***************************************************************** -->
 <!-- ***          Targets that set the build configuration         *** -->
 <!-- ***     These must come before actions like build or test     *** -->
 <!-- ***************************************************************** -->
