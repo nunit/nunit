@@ -38,10 +38,6 @@
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="nunit.framework, Version=2.6.3.13283, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\bin\Debug\net-2.0\nunit.framework.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Remoting" />
@@ -76,6 +72,10 @@
     <Compile Include="TestEngineResultTests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\NUnitFramework\framework\nunit.framework-2.0.csproj">
+      <Project>{12b66b03-90f1-4992-bd33-bdf3c69ae49e}</Project>
+      <Name>nunit.framework-2.0</Name>
+    </ProjectReference>
     <ProjectReference Include="..\mock-assembly\mock-assembly.csproj">
       <Project>{af27c6fb-54f0-4912-b4d6-3d08a3ee70df}</Project>
       <Name>mock-assembly</Name>
