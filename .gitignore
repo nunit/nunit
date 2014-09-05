@@ -18,7 +18,3 @@ package
 deploy
 lib
 test-results
-
-#Nuget Packages
-packages/
-!packages/repositories.config
