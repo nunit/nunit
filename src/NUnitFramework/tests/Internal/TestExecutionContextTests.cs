@@ -363,5 +363,25 @@ namespace NUnit.Framework.Internal
         }
 
         #endregion
+
+        #region Cross-domain Tests
+
+#if !SILVERLIGHT && !NETCF
+        [Test]
+        public void CanCreateObjectInAppDomain()
+        {
+            var domain = AppDomain.CreateDomain("TestCanCreateAppDomain");
+            var obj = domain.CreateInstanceAndUnwrap("nunit.framework.tests", "NUnit.Framework.Internal.TestExecutionContextTests+TestClass");
+
+            Assert.NotNull(obj);
+        }
+
+        [Serializable]
+        private class TestClass
+        {
+        }
+#endif
+
+        #endregion
     }
 }
