@@ -25,6 +25,7 @@ using System;
 using System.IO;
 using System.Diagnostics;
 using System.Globalization;
+using System.Reflection;
 using System.Threading;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Execution;
@@ -69,7 +70,7 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public class TestExecutionContext
 #if !SILVERLIGHT && !NETCF
-        : ILogicalThreadAffinative
+        : MarshalByRefObject, ILogicalThreadAffinative
 #endif
     {
         // NOTE: Be very careful when modifying this class. It uses
@@ -483,6 +484,21 @@ namespace NUnit.Framework.Internal
             while(count-- > 0)
                 System.Threading.Interlocked.Increment(ref _assertCount);
         }
+
+        #endregion
+
+        #region InitializeLifetimeService
+
+#if !SILVERLIGHT && !NETCF
+        /// <summary>
+        /// Obtain lifetime service object
+        /// </summary>
+        /// <returns></returns>
+        public override object InitializeLifetimeService()
+        {
+            return null;
+        }
+#endif
 
         #endregion
     }
