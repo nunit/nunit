@@ -24,7 +24,7 @@
 using System;
 using System.IO;
 using NUnit.Framework;
-using NUnit.Engine.Tests.Assemblies;
+using NUnit.Tests.Assemblies;
 
 namespace NUnit.Engine.Services.Tests
 {
@@ -110,7 +110,7 @@ namespace NUnit.Engine.Services.Tests
             Assert.That(setup.ApplicationBase, Is.SamePath(Path.GetDirectoryName(mockDll)), "ApplicationBase");
             Assert.That( 
                 Path.GetFileName( setup.ConfigurationFile ),
-                Is.EqualTo("mock-assembly.dll.config").IgnoreCase,
+                Is.EqualTo("mock-nunit-assembly.dll.config").IgnoreCase,
                 "ConfigurationFile");
             Assert.AreEqual( null, setup.PrivateBinPath, "PrivateBinPath" );
             Assert.That(setup.ShadowCopyDirectories, Is.SamePath(Path.GetDirectoryName(mockDll)), "ShadowCopyDirectories" );

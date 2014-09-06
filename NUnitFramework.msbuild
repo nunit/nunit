@@ -19,7 +19,7 @@
     <ProjectBaseDir>$(MSBuildProjectDirectory)</ProjectBaseDir>
     <ProjectBuildDir>$(ProjectBaseDir)\build</ProjectBuildDir>
     <ProjectPackageDir>$(ProjectBaseDir)\package</ProjectPackageDir>
-    <ProjectSrcDir>$(ProjectBaseDir)</ProjectSrcDir>
+    <ProjectSrcDir>$(ProjectBaseDir)\src\NUnitFramework</ProjectSrcDir>
     <ProjectToolsDir>$(ProjectBaseDir)\tools</ProjectToolsDir>
     <PartCoverDir>$(ProjectToolsDir)\PartCover</PartCoverDir>
   </PropertyGroup>

@@ -25,7 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Web.UI;
 using System.Xml;
-using NUnit.Engine.Tests.Assemblies;
+using NUnit.Tests.Assemblies;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
 

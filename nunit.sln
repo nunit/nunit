@@ -38,15 +38,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.framework.tests-2.0",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunitlite.tests-2.0", "src\NUnitFramework\tests\nunitlite.tests-2.0.csproj", "{0B5B1B19-D9D1-4E9C-80EE-37D4F56282C1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.engine.api", "src\NUnitConsole\nunit.engine.api\nunit.engine.api.csproj", "{775FAD50-3623-4922-97C4-DFB29A8BE4C7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.engine.api", "src\NUnitEngine\nunit.engine.api\nunit.engine.api.csproj", "{775FAD50-3623-4922-97C4-DFB29A8BE4C7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.engine", "src\NUnitConsole\nunit.engine\nunit.engine.csproj", "{372A3447-D657-40FF-A089-77C19FEC30C8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.engine", "src\NUnitEngine\nunit.engine\nunit.engine.csproj", "{372A3447-D657-40FF-A089-77C19FEC30C8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.engine.tests", "src\NUnitConsole\nunit.engine.tests\nunit.engine.tests.csproj", "{D694CB69-6CFB-4762-86C2-EB27B808B282}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.engine.tests", "src\NUnitEngine\nunit.engine.tests\nunit.engine.tests.csproj", "{D694CB69-6CFB-4762-86C2-EB27B808B282}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mock-assembly", "src\NUnitConsole\mock-assembly\mock-assembly.csproj", "{AF27C6FB-54F0-4912-B4D6-3D08A3EE70DF}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit-agent", "src\NUnitConsole\nunit-agent\nunit-agent.csproj", "{C2A8FC7A-FA64-46EA-AF6D-73D6B371DBF8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit-agent", "src\NUnitEngine\nunit-agent\nunit-agent.csproj", "{C2A8FC7A-FA64-46EA-AF6D-73D6B371DBF8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit-console", "src\NUnitConsole\nunit-console\nunit-console.csproj", "{0DE218CA-AFB8-423A-9CD2-E22DEAC55C46}"
 EndProject
@@ -194,10 +192,6 @@ Global
 		{D694CB69-6CFB-4762-86C2-EB27B808B282}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D694CB69-6CFB-4762-86C2-EB27B808B282}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D694CB69-6CFB-4762-86C2-EB27B808B282}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AF27C6FB-54F0-4912-B4D6-3D08A3EE70DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AF27C6FB-54F0-4912-B4D6-3D08A3EE70DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AF27C6FB-54F0-4912-B4D6-3D08A3EE70DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AF27C6FB-54F0-4912-B4D6-3D08A3EE70DF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C2A8FC7A-FA64-46EA-AF6D-73D6B371DBF8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C2A8FC7A-FA64-46EA-AF6D-73D6B371DBF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C2A8FC7A-FA64-46EA-AF6D-73D6B371DBF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -367,7 +361,6 @@ Global
 		{775FAD50-3623-4922-97C4-DFB29A8BE4C7} = {31B45C4C-206F-4F31-9CC6-33BF11DFEE39}
 		{372A3447-D657-40FF-A089-77C19FEC30C8} = {31B45C4C-206F-4F31-9CC6-33BF11DFEE39}
 		{D694CB69-6CFB-4762-86C2-EB27B808B282} = {31B45C4C-206F-4F31-9CC6-33BF11DFEE39}
-		{AF27C6FB-54F0-4912-B4D6-3D08A3EE70DF} = {31B45C4C-206F-4F31-9CC6-33BF11DFEE39}
 		{C2A8FC7A-FA64-46EA-AF6D-73D6B371DBF8} = {31B45C4C-206F-4F31-9CC6-33BF11DFEE39}
 		{0DE218CA-AFB8-423A-9CD2-E22DEAC55C46} = {576DB1E6-C5EC-4FEF-A826-EC19D8BEE572}
 		{B310A760-8AE1-41CA-81F8-03B12E2FCE30} = {576DB1E6-C5EC-4FEF-A826-EC19D8BEE572}

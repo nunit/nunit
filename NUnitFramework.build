@@ -61,7 +61,7 @@
 
   <!-- Other directories are derived from base dir -->
   <property name="project.build.dir" 
-	value="${path::combine(project.base.dir,'../../build')}"/>
+	value="${path::combine(project.base.dir,'build')}"/>
   <property name="project.package.dir" 
 	value="${path::combine(project.base.dir,'package')}"/>
   <property name="project.src.dir"
@@ -73,7 +73,7 @@
   <property name="project.lib.dir"
 	value="${path::combine(project.base.dir,'lib')}"/>
   <property name="project.tools.dir"
-	value="${path::combine(project.base.dir,'../tools')}"/>
+	value="${path::combine(project.base.dir,'tools')}"/>
   <property name="partcover.dir"
 	value="${path::combine(project.tools.dir, 'PartCover')}"/>
 
@@ -154,13 +154,6 @@
 	value="test-harness.exe"/>
   <property name="test.runner.args"
 	value="nunit.framework.tests.dll ${test.options}"/>
-
-<!-- ***************************************************************** -->
-<!-- In the optional local.settings.include file, installations may    -->
-<!-- set properties to override the location of external tools.        -->
-<!-- ***************************************************************** -->
-
-  <include buildfile="local.settings.include" failonerror="false"/>
 
 <!-- ***************************************************************** -->
 <!-- ***          Targets that set the build configuration         *** -->
@@ -299,12 +292,12 @@
 
 	<property name="nant.settings.currentframework" value="${build.framework}"/>
 
-	<nant target="build" buildfile="framework/nunit.framework.build"/>
-	<nant target="build" buildfile="mock-assembly/mock-nunit-assembly.build"/>
-	<nant target="build" buildfile="testdata/nunit.testdata.build"/>
-	<nant target="build" buildfile="slow-tests/slow-nunit-tests.build"/>
-	<nant target="build" buildfile="tests/nunit.framework.tests.build"/>
-	<nant target="build" buildfile="harness/test-harness.build"/>
+	<nant target="build" buildfile="src/NUnitFramework/framework/nunit.framework.build"/>
+	<nant target="build" buildfile="src/NUnitFramework/mock-assembly/mock-nunit-assembly.build"/>
+	<nant target="build" buildfile="src/NUnitFramework/testdata/nunit.testdata.build"/>
+	<nant target="build" buildfile="src/NUnitFramework/slow-tests/slow-nunit-tests.build"/>
+	<nant target="build" buildfile="src/NUnitFramework/tests/nunit.framework.tests.build"/>
+	<nant target="build" buildfile="src/NUnitFramework/harness/test-harness.build"/>
 
   </target>
 
@@ -312,12 +305,12 @@
 
 	<property name="nant.settings.currentframework" value="${build.framework}"/>
 
-	<nant target="build" buildfile="framework/nunitlite.build"/>
-	<nant target="build" buildfile="mock-assembly/mock-nunitlite-assembly.build" 
+	<nant target="build" buildfile="src/NUnitFramework/framework/nunitlite.build"/>
+	<nant target="build" buildfile="src/NUnitFramework/mock-assembly/mock-nunitlite-assembly.build" 
 		unless="${runtime.platform == 'netcf' or runtime.platform == 'silverlight'}"/>
-	<nant target="build" buildfile="slow-tests/slow-nunitlite-tests.build"/>
-	<nant target="build" buildfile="testdata/nunitlite.testdata.build"/>
-	<nant target="build" buildfile="tests/nunitlite.tests.build"/>
+	<nant target="build" buildfile="src/NUnitFramework/slow-tests/slow-nunitlite-tests.build"/>
+	<nant target="build" buildfile="src/NUnitFramework/testdata/nunitlite.testdata.build"/>
+	<nant target="build" buildfile="src/NUnitFramework/tests/nunitlite.tests.build"/>
 
   </target>
 
@@ -668,12 +661,12 @@
 	  </fileset>
 	</copy>
 
-	<nant target="package" buildfile="framework/nunit.framework.build" />
-	<nant target="package" buildfile="tests/nunit.framework.tests.build" />
-	<nant target="package" buildfile="testdata/nunit.testdata.build" />
-	<nant target="package" buildfile="harness/test-harness.build" />
-	<nant target="package" buildfile="mock-assembly/mock-nunit-assembly.build" />
-	<nant target="package" buildfile="slow-tests/slow-nunit-tests.build" />
+	<nant target="package" buildfile="src/NUnitFramework/framework/nunit.framework.build" />
+	<nant target="package" buildfile="src/NUnitFramework/tests/nunit.framework.tests.build" />
+	<nant target="package" buildfile="src/NUnitFramework/testdata/nunit.testdata.build" />
+	<nant target="package" buildfile="src/NUnitFramework/harness/test-harness.build" />
+	<nant target="package" buildfile="src/NUnitFramework/mock-assembly/mock-nunit-assembly.build" />
+	<nant target="package" buildfile="src/NUnitFramework/slow-tests/slow-nunit-tests.build" />
 
   </target>
 

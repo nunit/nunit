@@ -45,8 +45,11 @@
   </Target>
   -->
   <ItemGroup>
-    <Compile Include="..\CommonAssemblyInfo.cs">
+    <Compile Include="..\..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\FrameworkVersion.cs">
+      <Link>FrameworkVersion.cs</Link>
     </Compile>
     <Compile Include="Api\FrameworkControllerTests.cs" />
     <Compile Include="Api\ResultStateTests.cs" />
@@ -234,22 +237,22 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Net" />
     <Reference Include="System.Runtime">
-      <HintPath>..\packages\Microsoft.Bcl.1.0.19\lib\net40\System.Runtime.dll</HintPath>
+      <HintPath>..\..\..\packages\Microsoft.Bcl.1.0.19\lib\net40\System.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="System.Threading.Tasks">
-      <HintPath>..\packages\Microsoft.Bcl.1.0.19\lib\net40\System.Threading.Tasks.dll</HintPath>
+      <HintPath>..\..\..\packages\Microsoft.Bcl.1.0.19\lib\net40\System.Threading.Tasks.dll</HintPath>
     </Reference>
     <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.Threading.Tasks">
-      <HintPath>..\packages\Microsoft.Bcl.Async.1.0.165\lib\net40\Microsoft.Threading.Tasks.dll</HintPath>
+      <HintPath>..\..\..\packages\Microsoft.Bcl.Async.1.0.165\lib\net40\Microsoft.Threading.Tasks.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Threading.Tasks.Extensions">
-      <HintPath>..\packages\Microsoft.Bcl.Async.1.0.165\lib\net40\Microsoft.Threading.Tasks.Extensions.dll</HintPath>
+      <HintPath>..\..\..\packages\Microsoft.Bcl.Async.1.0.165\lib\net40\Microsoft.Threading.Tasks.Extensions.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Threading.Tasks.Extensions.Desktop">
-      <HintPath>..\packages\Microsoft.Bcl.Async.1.0.165\lib\net40\Microsoft.Threading.Tasks.Extensions.Desktop.dll</HintPath>
+      <HintPath>..\..\..\packages\Microsoft.Bcl.Async.1.0.165\lib\net40\Microsoft.Threading.Tasks.Extensions.Desktop.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -279,5 +282,5 @@
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
-  <Import Project="..\packages\Microsoft.Bcl.Build.1.0.4\tools\Microsoft.Bcl.Build.targets" />
+  <Import Project="..\..\..\packages\Microsoft.Bcl.Build.1.0.4\tools\Microsoft.Bcl.Build.targets" />
 </Project>

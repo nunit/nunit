@@ -23,6 +23,7 @@
 		  <fileset basedir=".">
 			  <include name="NUnit2TestResult.xsd"/>
 			  <include name="TextSummary.xslt"/>
+                          <include name="net-2.0/nunit.framework.dll"/>
 		  </fileset>
 	  </copy>
 
@@ -37,10 +38,10 @@
         <warning number="1699"/>
       </nowarn>
       <references basedir="${current.build.dir}">
-        <include name="nunit.framework.dll"/>
         <include name="nunit.engine.api.dll"/>
         <include name="nunit.engine.dll"/>
         <include name="nunit-console.exe"/>
+        <include name="nunit.framework.dll"/>
       </references>
     </csc>
   </target>

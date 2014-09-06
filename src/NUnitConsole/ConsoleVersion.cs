@@ -24,16 +24,6 @@
 using System.Reflection;
 
 //
-// Common Information about the NUnit Engine and Console assemblies
+// Current version for the NUnit Console
 //
-[assembly: AssemblyCompany("NUnit Software")]
-[assembly: AssemblyProduct("NUnit 3.0")]
-[assembly: AssemblyCopyright("Copyright (C) 2014 Charlie Poole")]
-[assembly: AssemblyTrademark("NUnit is a trademark of NUnit Software")]
-
-#if DEBUG
-[assembly: AssemblyConfiguration("Debug")]
-#else
-[assembly: AssemblyConfiguration("")]
-#endif
-
+[assembly: AssemblyVersion("3.0.*")]

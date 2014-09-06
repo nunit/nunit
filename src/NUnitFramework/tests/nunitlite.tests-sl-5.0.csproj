@@ -69,8 +69,11 @@
     <Reference Include="System.Windows.Browser" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\CommonAssemblyInfo.cs">
+    <Compile Include="..\..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\FrameworkVersion.cs">
+      <Link>FrameworkVersion.cs</Link>
     </Compile>
     <Compile Include="Api\ResultStateTests.cs" />
     <Compile Include="App.xaml.cs">

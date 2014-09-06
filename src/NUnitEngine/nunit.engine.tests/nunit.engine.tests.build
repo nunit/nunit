@@ -10,6 +10,13 @@
 
   <target name="build">
 
+    <copy todir="${current.build.dir}">
+        <fileset basedir="${current.build.dir}/net-2.0">
+            <include name="nunit.framework.dll"/>
+            <include name="mock-nunit-assembly.dll"/>
+        </fileset>
+    </copy>
+
     <csc target="library"
         output="${current.build.dir}/nunit.engine.tests.dll"
         debug="${build.debug}" 
@@ -22,10 +29,10 @@
       <references basedir="${current.build.dir}">
         <include name="System.Drawing.dll" />
         <include name="System.Runtime.Remoting.dll" />
-        <include name="nunit.framework.dll" />
         <include name="nunit.engine.dll" />
         <include name="nunit.engine.api.dll" />
-        <include name="mock-assembly.dll" />
+        <include name="nunit.framework.dll" />
+        <include name="mock-nunit-assembly.dll" />
       </references>
     </csc>
 
