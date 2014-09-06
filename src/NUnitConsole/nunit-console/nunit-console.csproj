@@ -45,11 +45,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\CommonAssemblyInfo.cs">
+    <Compile Include="..\..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="..\CommonVersionInfo.cs">
-      <Link>CommonVersionInfo.cs</Link>
+    <Compile Include="..\ConsoleVersion.cs">
+      <Link>ConsoleVersion.cs</Link>
     </Compile>
     <Compile Include="Utilities\ColorConsole.cs" />
     <Compile Include="Options\ConsoleOptions.cs" />
@@ -81,7 +81,7 @@
     <None Include="nunit-console.build" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\nunit.engine.api\nunit.engine.api.csproj">
+    <ProjectReference Include="..\..\NUnitEngine\nunit.engine.api\nunit.engine.api.csproj">
       <Project>{775FAD50-3623-4922-97C4-DFB29A8BE4C7}</Project>
       <Name>nunit.engine.api</Name>
     </ProjectReference>

@@ -24,6 +24,6 @@
 using System.Reflection;
 
 //
-// Common Versioning for the NUnit Engine and Console assemblies
+// Current version for the NUnit Framework
 //
 [assembly: AssemblyVersion("3.0.*")]

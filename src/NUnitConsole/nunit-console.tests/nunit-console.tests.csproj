@@ -40,11 +40,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\CommonAssemblyInfo.cs">
+    <Compile Include="..\..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="..\CommonVersionInfo.cs">
-      <Link>CommonVersionInfo.cs</Link>
+    <Compile Include="..\ConsoleVersion.cs">
+      <Link>ConsoleVersion.cs</Link>
     </Compile>
     <Compile Include="ColorConsoleTests.cs" />
     <Compile Include="ColorStyleTests.cs" />
@@ -79,11 +79,11 @@
       <Project>{0DE218CA-AFB8-423A-9CD2-E22DEAC55C46}</Project>
       <Name>nunit-console</Name>
     </ProjectReference>
-    <ProjectReference Include="..\nunit.engine.api\nunit.engine.api.csproj">
+    <ProjectReference Include="..\..\NUnitEngine\nunit.engine.api\nunit.engine.api.csproj">
       <Project>{775fad50-3623-4922-97c4-dfb29a8be4c7}</Project>
       <Name>nunit.engine.api</Name>
     </ProjectReference>
-    <ProjectReference Include="..\nunit.engine\nunit.engine.csproj">
+    <ProjectReference Include="..\..\NUnitEngine\nunit.engine\nunit.engine.csproj">
       <Project>{372a3447-d657-40ff-a089-77c19fec30c8}</Project>
       <Name>nunit.engine</Name>
     </ProjectReference>

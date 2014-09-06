@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2011 Charlie Poole
+// Copyright (c) 2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -24,26 +24,12 @@
 using System.Reflection;
 
 //
-// Common Information about the NUnit Framework assembly and associated
-// assemblies like tests is controlled through the following attributes.
+// Common Information for the NUnit assemblies
 //
-[assembly: AssemblyCompany("NUnit.org")]
-[assembly: AssemblyProduct("NUnit Framework 3.0")]
+[assembly: AssemblyCompany("NUnit Software")]
+[assembly: AssemblyProduct("NUnit 3.0")]
 [assembly: AssemblyCopyright("Copyright (C) 2014 Charlie Poole")]
 [assembly: AssemblyTrademark("NUnit is a trademark of NUnit Software")]
-
-//
-// Version information for an assembly consists of the following four _values:
-//
-//      Major Version
-//      Minor Version 
-//      Build Number
-//      Revision
-//
-// You can specify all the _values or you can default the Revision and Build Numbers 
-// by using the '*' as shown below:
-//
-[assembly: AssemblyVersion("3.0.*")]
 
 #if DEBUG
 #if NET_4_5
@@ -90,4 +76,3 @@ using System.Reflection;
 [assembly: AssemblyConfiguration("")]
 #endif
 #endif
-

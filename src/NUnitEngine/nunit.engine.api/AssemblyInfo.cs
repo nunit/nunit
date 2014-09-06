@@ -16,6 +16,3 @@ using System.Runtime.InteropServices;
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("c686a4e8-7c4b-4c9e-88e7-65cd1b90ba1e")]
-
-// The API Assembly is maintained at a fixed version number
-[assembly: AssemblyVersion("3.0.0.0")]
