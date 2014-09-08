@@ -3,7 +3,7 @@ before_install:
   - sudo apt-get update -qq -y
   - sudo apt-get install mono-devel -qq -y
 
-script: ./runbuild /p:Configuration=Release /p:Framework=$Framework "/t:DumpSettings;CleanAll;Build;Test"
+script: ./build /p:Configuration=Release /p:Framework=$Framework "/t:DumpSettings;CleanAll;BuildFramework;TestFramework"
   
 env:
   matrix:

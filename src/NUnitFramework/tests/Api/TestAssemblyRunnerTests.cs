@@ -37,13 +37,14 @@ namespace NUnit.Framework.Api
     {
 #if NUNITLITE
         private const string MOCK_ASSEMBLY = "mock-nunitlite-assembly.dll";
+        private const string BAD_FILE = "mock-nunitlite-assembly.pdb";
         private const string SLOW_TESTS = "slow-nunitlite-tests.dll";
 #else
         private const string MOCK_ASSEMBLY = "mock-nunit-assembly.dll";
+        private const string BAD_FILE = "mock-nunit-assembly.pdb";
         private const string SLOW_TESTS = "slow-nunit-tests.dll";
 #endif
         private const string MISSING_FILE = "junk.dll";
-        private const string BAD_FILE = "mock-assembly.pdb";
 
         private IDictionary _settings = new Hashtable();
         private ITestAssemblyRunner _runner;

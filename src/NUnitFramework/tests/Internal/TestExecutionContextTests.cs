@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2010 Charlie Poole
+// Copyright (c) 2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Reflection;
 using System.Threading;
 using System.Globalization;
 using NUnit.Framework;
@@ -370,7 +371,13 @@ namespace NUnit.Framework.Internal
         [Test]
         public void CanCreateObjectInAppDomain()
         {
-            var domain = AppDomain.CreateDomain("TestCanCreateAppDomain");
+            AppDomain domain = AppDomain.CreateDomain(
+                "TestCanCreateAppDomain", 
+                AppDomain.CurrentDomain.Evidence,
+                AssemblyHelper.GetDirectoryName(Assembly.GetExecutingAssembly()),
+                null,
+                false);
+
             var obj = domain.CreateInstanceAndUnwrap("nunit.framework.tests", "NUnit.Framework.Internal.TestExecutionContextTests+TestClass");
 
             Assert.NotNull(obj);

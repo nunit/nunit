@@ -36,11 +36,12 @@ namespace NUnit.Framework.Api
     {
 #if NUNITLITE
         private const string MOCK_ASSEMBLY = "mock-nunitlite-assembly.dll";
+        private const string BAD_FILE = "mock-nunitlite-assembly.pdb";
 #else
         private const string MOCK_ASSEMBLY = "mock-nunit-assembly.dll";
+        private const string BAD_FILE = "mock-nunit-assembly.pdb";
 #endif
         private const string MISSING_FILE = "junk.dll";
-        private const string BAD_FILE = "mock-assembly.pdb";
         private const string EMPTY_FILTER = "<filter/>";
 
         private IDictionary _settings = new Hashtable();

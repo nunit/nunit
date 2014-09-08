@@ -73,7 +73,7 @@ namespace NUnit.ConsoleRunner.Tests
             // Create a new DefaultAssemblyRunner, which is actually a framework class,
             // because we can't use the one that's currently running this test.
             var runner = new Runner(new Builder());
-            var assemblyPath = GetLocalPath("mock-assembly.dll");
+            var assemblyPath = GetLocalPath("mock-nunit-assembly.dll");
             var settings = new Dictionary<string, object>();
 
             // Make sure the runner loaded the mock assembly.
