@@ -298,5 +298,20 @@ namespace NUnit.Framework.Assertions
             throw new InvalidOperationException();
         }
 #endif
+
+#if !NET_2_0
+        [Test]
+        public void AssertThatWithLambda()
+        {
+            Assert.That(() => true);
+        }
+
+        [Test]
+        public void AssertThatWithFalseLambda()
+        {
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(() => false, "Error"));
+            Assert.That(ex.Message, Does.Contain("Error"));
+        }
+#endif
     }
 }

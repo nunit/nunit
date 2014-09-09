@@ -280,6 +280,43 @@ namespace NUnit.Framework
 
         #endregion
 
+        #region Lambda returning Boolean
+#if !NET_2_0
+        /// <summary>
+        /// Asserts that a condition is true. If the condition is false the method throws
+        /// an <see cref="AssertionException"/>.
+        /// </summary> 
+        /// <param name="condition">A lambda that returns a Boolean</param>
+        /// <param name="message">The message to display if the condition is false</param>
+        /// <param name="args">Arguments to be used in formatting the message</param>
+        static public void That(Func<bool> condition, string message, params object[] args)
+        {
+            Assert.That(condition.Invoke(), Is.True, message, args);
+        }
+
+        /// <summary>
+        /// Asserts that a condition is true. If the condition is false the method throws
+        /// an <see cref="AssertionException"/>.
+        /// </summary>
+        /// <param name="condition">A lambda that returns a Boolean</param>
+        /// <param name="message">The message to display if the condition is false</param>
+        static public void That(Func<bool> condition, string message)
+        {
+            Assert.That(condition.Invoke(), Is.True, message, null);
+        }
+
+        /// <summary>
+        /// Asserts that a condition is true. If the condition is false the method throws
+        /// an <see cref="AssertionException"/>.
+        /// </summary>
+        /// <param name="condition">A lambda that returns a Boolean</param>
+        static public void That(Func<bool> condition)
+        {
+            Assert.That(condition.Invoke(), Is.True, null, null);
+        }
+#endif
+        #endregion
+
         #region ActualValueDelegate
 
         /// <summary>
