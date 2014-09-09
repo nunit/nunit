@@ -76,6 +76,26 @@ namespace NUnit.Framework.Assertions
         {
             Assert.That(2 + 2, Is.EqualTo(4), "Should be {0}", 4);
         }
+        
+#if !NET_2_0
+        [Test]
+        public void AssertionPasses_ActualLambdaAndConstraint()
+        {
+            Assert.That(() => 2 + 2, Is.EqualTo(4));
+        }
+
+        [Test]
+        public void AssertionPasses_ActualLambdaAndConstraintWithMessage()
+        {
+            Assert.That(() => 2 + 2, Is.EqualTo(4), "Should be 4");
+        }
+
+        [Test]
+        public void AssertionPasses_ActualLambdaAndConstraintWithMessageAndArgs()
+        {
+            Assert.That(() => 2 + 2, Is.EqualTo(4), "Should be {0}", 4);
+        }
+#endif
 
         [Test]
         public void AssertionPasses_ReferenceAndConstraint()
@@ -160,6 +180,28 @@ namespace NUnit.Framework.Assertions
             var ex = Assert.Throws<AssertionException>(() => Assert.That(2 + 2, Is.EqualTo(5), "Should be {0}", 5));
             Assert.That(ex.Message, Does.Contain("Should be 5"));
         }
+
+#if !NET_2_0
+        [Test]
+        public void FailureThrowsAssertionException_ActualLambdaAndConstraint()
+        {
+            Assert.Throws<AssertionException>(() => Assert.That(() => 2 + 2, Is.EqualTo(5)));
+        }
+
+        [Test]
+        public void FailureThrowsAssertionException_ActualLambdaAndConstraintWithMessage()
+        {
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(() => 2 + 2, Is.EqualTo(5), "Error"));
+            Assert.That(ex.Message, Does.Contain("Error"));
+        }
+
+        [Test]
+        public void FailureThrowsAssertionException_ActualLambdaAndConstraintWithMessageAndArgs()
+        {
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(() => 2 + 2, Is.EqualTo(5), "Should be {0}", 5));
+            Assert.That(ex.Message, Does.Contain("Should be 5"));
+        }
+#endif
 
         [Test]
         public void FailureThrowsAssertionException_ReferenceAndConstraint()
@@ -296,6 +338,21 @@ namespace NUnit.Framework.Assertions
         {
             await AsyncReturnOne();
             throw new InvalidOperationException();
+        }
+#endif
+
+#if !NET_2_0
+        [Test]
+        public void AssertThatWithLambda()
+        {
+            Assert.That(() => true);
+        }
+
+        [Test]
+        public void AssertThatWithFalseLambda()
+        {
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(() => false, "Error"));
+            Assert.That(ex.Message, Does.Contain("Error"));
         }
 #endif
     }

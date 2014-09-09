@@ -54,6 +54,26 @@ namespace NUnit.Framework.Assertions
         {
             Assume.That(2 + 2 == 4, "Not Equal to {0}", 4);
         }
+        
+#if !NET_2_0
+        [Test]
+        public void AssumptionPasses_BooleanLambda()
+        {
+            Assume.That(() => 2 + 2 == 4);
+        }
+
+        [Test]
+        public void AssumptionPasses_BooleanLambdaWithMessage()
+        {
+            Assume.That(() => 2 + 2 == 4, "Not Equal");
+        }
+
+        [Test]
+        public void AssumptionPasses_BooleanLambdaWithMessageAndArgs()
+        {
+            Assume.That(() => 2 + 2 == 4, "Not Equal to {0}", 4);
+        }
+#endif
 
         [Test]
         public void AssumptionPasses_ActualAndConstraint()
@@ -72,6 +92,26 @@ namespace NUnit.Framework.Assertions
         {
             Assume.That(2 + 2, Is.EqualTo(4), "Should be {0}", 4);
         }
+
+#if !NET_2_0
+        [Test]
+        public void AssumptionPasses_ActualLambdaAndConstraint()
+        {
+            Assume.That(() => 2 + 2, Is.EqualTo(4));
+        }
+
+        [Test]
+        public void AssumptionPasses_ActualLambdaAndConstraintWithMessage()
+        {
+            Assume.That(() => 2 + 2, Is.EqualTo(4), "Should be 4");
+        }
+
+        [Test]
+        public void AssumptionPasses_ActualLambdaAndConstraintWithMessageAndArgs()
+        {
+            Assume.That(() => 2 + 2, Is.EqualTo(4), "Should be {0}", 4);
+        }
+#endif
 
         [Test]
         public void AssumptionPasses_ReferenceAndConstraint()
@@ -136,6 +176,28 @@ namespace NUnit.Framework.Assertions
             var ex = Assert.Throws<InconclusiveException>(() => Assume.That(2 + 2 == 5, "got {0}", 5));
             Assert.That(ex.Message, Does.Contain("got 5"));
         }
+        
+#if !NET_2_0
+        [Test]
+        public void FailureThrowsInconclusiveException_BooleanLambda()
+        {
+            Assert.Throws<InconclusiveException>(() => Assume.That(() => 2 + 2 == 5));
+        }
+
+        [Test]
+        public void FailureThrowsInconclusiveException_BooleanLambdaWithMessage()
+        {
+            var ex = Assert.Throws<InconclusiveException>(() => Assume.That(() => 2 + 2 == 5, "message"));
+            Assert.That(ex.Message, Does.Contain("message"));
+        }
+
+        [Test]
+        public void FailureThrowsInconclusiveException_BooleanLambdaWithMessageAndArgs()
+        {
+            var ex = Assert.Throws<InconclusiveException>(() => Assume.That(() => 2 + 2 == 5, "got {0}", 5));
+            Assert.That(ex.Message, Does.Contain("got 5"));
+        }
+#endif
 
         [Test]
         public void FailureThrowsInconclusiveException_ActualAndConstraint()
@@ -156,6 +218,28 @@ namespace NUnit.Framework.Assertions
             var ex = Assert.Throws<InconclusiveException>(() => Assume.That(2 + 2, Is.EqualTo(5), "Should be {0}", 5));
             Assert.That(ex.Message, Does.Contain("Should be 5"));
         }
+
+#if !NET_2_0
+        [Test]
+        public void FailureThrowsInconclusiveException_ActualLambdaAndConstraint()
+        {
+            Assert.Throws<InconclusiveException>(() => Assume.That(() => 2 + 2, Is.EqualTo(5)));
+        }
+
+        [Test]
+        public void FailureThrowsInconclusiveException_ActualLambdaAndConstraintWithMessage()
+        {
+            var ex = Assert.Throws<InconclusiveException>(() => Assume.That(() => 2 + 2, Is.EqualTo(5), "Error"));
+            Assert.That(ex.Message, Does.Contain("Error"));
+        }
+
+        [Test]
+        public void FailureThrowsInconclusiveException_ActualLambdaAndConstraintWithMessageAndArgs()
+        {
+            var ex = Assert.Throws<InconclusiveException>(() => Assume.That(() => 2 + 2, Is.EqualTo(5), "Should be {0}", 5));
+            Assert.That(ex.Message, Does.Contain("Should be 5"));
+        }
+#endif
 
         [Test]
         public void FailureThrowsInconclusiveException_ReferenceAndConstraint()
