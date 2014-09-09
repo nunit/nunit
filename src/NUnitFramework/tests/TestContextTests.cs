@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System.IO;
+using NUnit.Framework.Interfaces;
 using NUnit.TestData.TestContextData;
 using NUnit.TestUtilities;
 
@@ -158,7 +159,7 @@ namespace NUnit.Framework.Tests
         private const int THE_MEANING_OF_LIFE = 42;
 
         [Test]
-        public void TestStub()
+        public void TestTheMeaningOfLife()
         {
             Assert.That(THE_MEANING_OF_LIFE, Is.EqualTo(42));
         }
@@ -169,10 +170,47 @@ namespace NUnit.Framework.Tests
             TestContext context = TestContext.CurrentContext;
             Assert.That(context, Is.Not.Null);
             Assert.That(context.Test, Is.Not.Null);
-            Assert.That(context.Test.Name, Is.EqualTo("TestStub"));
+            Assert.That(context.Test.Name, Is.EqualTo("TestTheMeaningOfLife"));
             Assert.That(context.Result, Is.Not.Null);
+            Assert.That(context.Result.Outcome, Is.EqualTo(ResultState.Success));
             Assert.That(context.Result.PassCount, Is.EqualTo(1));
             Assert.That(context.Result.FailCount, Is.EqualTo(0));
+        }
+    }
+
+    [TestFixture]
+    public class TestContextOneTimeTearDownTests
+    {
+        [Test]
+        public void TestTruth()
+        {
+            Assert.That(true, Is.True);
+        }
+
+        [Test]
+        public void TestFalsehood()
+        {
+            Assert.That(false, Is.False);
+        }
+
+        [Test, Explicit]
+        public void TestExplicit()
+        {
+            Assert.Pass("Always passes if you run it!");
+        }
+
+        [OneTimeTearDown]
+        public void OneTimeTearDown()
+        {
+            TestContext context = TestContext.CurrentContext;
+            Assert.That(context, Is.Not.Null);
+            Assert.That(context.Test, Is.Not.Null);
+            Assert.That(context.Test.Name, Is.EqualTo("TestContextOneTimeTearDownTests"));
+            Assert.That(context.Result, Is.Not.Null);
+            Assert.That(context.Result.Outcome, Is.EqualTo(ResultState.Success));
+            Assert.That(context.Result.PassCount, Is.EqualTo(2));
+            Assert.That(context.Result.FailCount, Is.EqualTo(0));
+            Assert.That(context.Result.SkipCount, Is.EqualTo(1));
         }
     }
 }
