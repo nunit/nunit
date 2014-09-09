@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
 using System.IO;
 using NUnit.TestData.TestContextData;
 using NUnit.TestUtilities;
@@ -150,6 +149,30 @@ namespace NUnit.Framework.Tests
         {
             TestContext.WriteLine(SOME_TEXT);
             Assert.That(Internal.TestExecutionContext.CurrentContext.CurrentResult.Output, Is.EqualTo(SOME_TEXT + NL));
+        }
+    }
+
+    [TestFixture]
+    public class TestContextTearDownTests
+    {
+        private const int THE_MEANING_OF_LIFE = 42;
+
+        [Test]
+        public void TestStub()
+        {
+            Assert.That(THE_MEANING_OF_LIFE, Is.EqualTo(42));
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            TestContext context = TestContext.CurrentContext;
+            Assert.That(context, Is.Not.Null);
+            Assert.That(context.Test, Is.Not.Null);
+            Assert.That(context.Test.Name, Is.EqualTo("TestStub"));
+            Assert.That(context.Result, Is.Not.Null);
+            Assert.That(context.Result.PassCount, Is.EqualTo(1));
+            Assert.That(context.Result.FailCount, Is.EqualTo(0));
         }
     }
 }

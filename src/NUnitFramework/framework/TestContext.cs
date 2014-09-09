@@ -22,7 +22,6 @@
 // ***********************************************************************
 
 using System;
-using System.Collections;
 using System.IO;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
@@ -36,19 +35,19 @@ namespace NUnit.Framework
     /// </summary>
     public class TestContext
     {
-        private TestExecutionContext ec;
-        private TestAdapter test;
-        private ResultAdapter result;
+        private readonly TestExecutionContext _testExecutionContext;
+        private TestAdapter _test;
+        private ResultAdapter _result;
 
         #region Constructor
 
         /// <summary>
         /// Construct a TestContext for an ExecutionContext
         /// </summary>
-        /// <param name="ec">The ExecutionContext to adapt</param>
-        public TestContext(TestExecutionContext ec)
+        /// <param name="testExecutionContext">The ExecutionContext to adapt</param>
+        public TestContext(TestExecutionContext testExecutionContext)
         {
-            this.ec = ec;
+            _testExecutionContext = testExecutionContext;
         }
 
         #endregion
@@ -79,13 +78,7 @@ namespace NUnit.Framework
         /// </summary>
         public TestAdapter Test
         {
-            get
-            {
-                if (test == null)
-                    test = new TestAdapter(ec.CurrentTest);
-
-                return test;
-            }
+            get { return _test ?? (_test = new TestAdapter(_testExecutionContext.CurrentTest)); }
         }
 
         /// <summary>
@@ -93,13 +86,7 @@ namespace NUnit.Framework
         /// </summary>
         public ResultAdapter Result
         {
-            get
-            {
-                if (result == null)
-                    result = new ResultAdapter(ec.CurrentResult);
-
-                return result;
-            }
+            get { return _result ?? (_result = new ResultAdapter(_testExecutionContext.CurrentResult)); }
         }
 
 #if !NETCF && !SILVERLIGHT
@@ -108,10 +95,7 @@ namespace NUnit.Framework
         /// </summary>
         public string TestDirectory
         {
-            get
-            {
-                return AssemblyHelper.GetDirectoryName(ec.CurrentTest.FixtureType.Assembly);
-            }
+            get { return AssemblyHelper.GetDirectoryName(_testExecutionContext.CurrentTest.FixtureType.Assembly); }
         }
 #endif
 
@@ -121,10 +105,7 @@ namespace NUnit.Framework
         /// </summary>
         public string WorkDirectory
         {
-            get
-            {
-                return ec.WorkDirectory;
-            }
+            get { return _testExecutionContext.WorkDirectory; }
         }
 
         /// <summary>
@@ -135,10 +116,7 @@ namespace NUnit.Framework
         /// </value>
         public RandomGenerator Random
         {
-            get
-            {
-                return ec.RandomGenerator;
-            }
+            get { return _testExecutionContext.RandomGenerator; }
         }
 
         #endregion
@@ -258,7 +236,7 @@ namespace NUnit.Framework
         /// </summary>
         public class TestAdapter
         {
-            private Test test;
+            private readonly Test _test;
 
             #region Constructor
 
@@ -268,7 +246,7 @@ namespace NUnit.Framework
             /// <param name="test">The Test to be adapted</param>
             public TestAdapter(Test test)
             {
-                this.test = test;
+                _test = test;
             }
 
             #endregion
@@ -280,7 +258,7 @@ namespace NUnit.Framework
             /// </summary>
             public int ID
             {
-                get { return test.Id; }
+                get { return _test.Id; }
             }
 
             /// <summary>
@@ -289,10 +267,7 @@ namespace NUnit.Framework
             /// </summary>
             public string Name
             {
-                get
-                {
-                    return test.Name;
-                }
+                get { return _test.Name; }
             }
             
             /// <summary>
@@ -302,8 +277,8 @@ namespace NUnit.Framework
             {
                 get
                 {
-                    return test is TestMethod
-                        ? ((TestMethod)test).Method.Name
+                    return _test is TestMethod
+                        ? _test.Method.Name
                         : null;
                 }
             }
@@ -313,10 +288,7 @@ namespace NUnit.Framework
             /// </summary>
             public string FullName
             {
-                get
-                {
-                    return test.FullName;
-                }
+                get { return _test.FullName; }
             }
 
             /// <summary>
@@ -324,10 +296,7 @@ namespace NUnit.Framework
             /// </summary>
             public IPropertyBag Properties
             {
-                get
-                {
-                    return test.Properties;
-                }
+                get { return _test.Properties; }
             }
 
             #endregion
@@ -343,7 +312,7 @@ namespace NUnit.Framework
         /// </summary>
         public class ResultAdapter
         {
-            private TestResult result;
+            private readonly TestResult _result;
 
             #region Constructor
 
@@ -353,7 +322,7 @@ namespace NUnit.Framework
             /// <param name="result">The TestResult to be adapted</param>
             public ResultAdapter(TestResult result)
             {
-                this.result = result;
+                _result = result;
             }
 
             #endregion
@@ -365,10 +334,62 @@ namespace NUnit.Framework
             /// </summary>
             public ResultState Outcome
             {
-                get
-                {
-                    return result.ResultState;
-                }
+                get { return _result.ResultState; }
+            }
+
+            /// <summary>
+            /// Gets the message associated with a test
+            /// failure or with not running the test
+            /// </summary>
+            public string Message
+            {
+                get { return _result.Message; }
+            }
+
+            /// <summary>
+            /// Gets any stacktrace associated with an
+            /// error or failure. Not available in
+            /// the Compact Framework 1.0.
+            /// </summary>
+            public virtual string StackTrace
+            {
+                get { return _result.StackTrace; }
+            }
+
+            /// <summary>
+            /// Gets the number of test cases that failed
+            /// when running the test and all its children.
+            /// </summary>
+            public int FailCount
+            {
+                get { return _result.FailCount; }
+            }
+
+            /// <summary>
+            /// Gets the number of test cases that passed
+            /// when running the test and all its children.
+            /// </summary>
+            public int PassCount
+            {
+                get { return _result.PassCount; }
+            }
+
+            /// <summary>
+            /// Gets the number of test cases that were skipped
+            /// when running the test and all its children.
+            /// </summary>
+            public int SkipCount
+            {
+                get { return _result.SkipCount; }
+            }
+
+            /// <summary>
+            /// Gets the number of test cases that were inconclusive
+            /// when running the test and all its children.
+            /// </summary>
+            public int InconclusiveCount
+            {
+                get { return _result.InconclusiveCount; }
             }
 
             #endregion
