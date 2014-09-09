@@ -93,6 +93,26 @@ namespace NUnit.Framework.Assertions
             Assume.That(2 + 2, Is.EqualTo(4), "Should be {0}", 4);
         }
 
+#if !NET_2_0
+        [Test]
+        public void AssumptionPasses_ActualLambdaAndConstraint()
+        {
+            Assume.That(() => 2 + 2, Is.EqualTo(4));
+        }
+
+        [Test]
+        public void AssumptionPasses_ActualLambdaAndConstraintWithMessage()
+        {
+            Assume.That(() => 2 + 2, Is.EqualTo(4), "Should be 4");
+        }
+
+        [Test]
+        public void AssumptionPasses_ActualLambdaAndConstraintWithMessageAndArgs()
+        {
+            Assume.That(() => 2 + 2, Is.EqualTo(4), "Should be {0}", 4);
+        }
+#endif
+
         [Test]
         public void AssumptionPasses_ReferenceAndConstraint()
         {
@@ -198,6 +218,28 @@ namespace NUnit.Framework.Assertions
             var ex = Assert.Throws<InconclusiveException>(() => Assume.That(2 + 2, Is.EqualTo(5), "Should be {0}", 5));
             Assert.That(ex.Message, Does.Contain("Should be 5"));
         }
+
+#if !NET_2_0
+        [Test]
+        public void FailureThrowsInconclusiveException_ActualLambdaAndConstraint()
+        {
+            Assert.Throws<InconclusiveException>(() => Assume.That(() => 2 + 2, Is.EqualTo(5)));
+        }
+
+        [Test]
+        public void FailureThrowsInconclusiveException_ActualLambdaAndConstraintWithMessage()
+        {
+            var ex = Assert.Throws<InconclusiveException>(() => Assume.That(() => 2 + 2, Is.EqualTo(5), "Error"));
+            Assert.That(ex.Message, Does.Contain("Error"));
+        }
+
+        [Test]
+        public void FailureThrowsInconclusiveException_ActualLambdaAndConstraintWithMessageAndArgs()
+        {
+            var ex = Assert.Throws<InconclusiveException>(() => Assume.That(() => 2 + 2, Is.EqualTo(5), "Should be {0}", 5));
+            Assert.That(ex.Message, Does.Contain("Should be 5"));
+        }
+#endif
 
         [Test]
         public void FailureThrowsInconclusiveException_ReferenceAndConstraint()
