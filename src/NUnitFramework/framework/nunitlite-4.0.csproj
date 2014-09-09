@@ -25,7 +25,7 @@
     <DefineConstants>TRACE;DEBUG;NET_4_0;NUNITLITE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>$(OutputPath)nunitlite.xml</DocumentationFile>
+    <DocumentationFile>$(OutputPath)\nunitlite.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -34,7 +34,7 @@
     <DefineConstants>TRACE;NET_4_0;NUNITLITE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>$(OutputPath)nunitlite.xml</DocumentationFile>
+    <DocumentationFile>$(OutputPath)\nunitlite.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
