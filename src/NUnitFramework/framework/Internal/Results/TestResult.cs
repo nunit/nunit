@@ -112,8 +112,7 @@ namespace NUnit.Framework.Internal
 
         /// <summary>
         /// Gets any stacktrace associated with an
-        /// error or failure. Not available in
-        /// the Compact Framework 1.0.
+        /// error or failure.
         /// </summary>
         public virtual string StackTrace { get; private set; }
 

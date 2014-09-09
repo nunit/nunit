@@ -21,8 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
 using System.IO;
+using NUnit.Framework.Interfaces;
 using NUnit.TestData.TestContextData;
 using NUnit.TestUtilities;
 
@@ -150,6 +150,90 @@ namespace NUnit.Framework.Tests
         {
             TestContext.WriteLine(SOME_TEXT);
             Assert.That(Internal.TestExecutionContext.CurrentContext.CurrentResult.Output, Is.EqualTo(SOME_TEXT + NL));
+        }
+
+        [Test]
+        public void TestContextStoresFailureInfoForTearDown()
+        {
+            var fixture = new TestTestContextInTearDown();
+            TestBuilder.RunTestFixture(fixture);
+            Assert.That(fixture.FailCount, Is.EqualTo(1));
+            Assert.That(fixture.Message, Is.EqualTo("Deliberate failure"));
+            Assert.That(fixture.StackTrace, Does.Contain("NUnit.TestData.TestContextData.TestTestContextInTearDown.FailingTest"));
+        }
+
+        [Test]
+        public void TestContextStoresFailureInfoForOneTimeTearDown()
+        {
+            var fixture = new TestTestContextInOneTimeTearDown();
+            TestBuilder.RunTestFixture(fixture);
+            Assert.That(fixture.PassCount, Is.EqualTo(2));
+            Assert.That(fixture.FailCount, Is.EqualTo(1));
+            Assert.That(fixture.SkipCount, Is.EqualTo(3));
+            Assert.That(fixture.InconclusiveCount, Is.EqualTo(4));
+            Assert.That(fixture.Message, Is.EqualTo("One or more child tests had errors"));
+            Assert.That(fixture.StackTrace, Is.Null);
+        }
+    }
+
+    [TestFixture]
+    public class TestContextTearDownTests
+    {
+        private const int THE_MEANING_OF_LIFE = 42;
+
+        [Test]
+        public void TestTheMeaningOfLife()
+        {
+            Assert.That(THE_MEANING_OF_LIFE, Is.EqualTo(42));
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            TestContext context = TestContext.CurrentContext;
+            Assert.That(context, Is.Not.Null);
+            Assert.That(context.Test, Is.Not.Null);
+            Assert.That(context.Test.Name, Is.EqualTo("TestTheMeaningOfLife"));
+            Assert.That(context.Result, Is.Not.Null);
+            Assert.That(context.Result.Outcome, Is.EqualTo(ResultState.Success));
+            Assert.That(context.Result.PassCount, Is.EqualTo(1));
+            Assert.That(context.Result.FailCount, Is.EqualTo(0));
+        }
+    }
+
+    [TestFixture]
+    public class TestContextOneTimeTearDownTests
+    {
+        [Test]
+        public void TestTruth()
+        {
+            Assert.That(true, Is.True);
+        }
+
+        [Test]
+        public void TestFalsehood()
+        {
+            Assert.That(false, Is.False);
+        }
+
+        [Test, Explicit]
+        public void TestExplicit()
+        {
+            Assert.Pass("Always passes if you run it!");
+        }
+
+        [OneTimeTearDown]
+        public void OneTimeTearDown()
+        {
+            TestContext context = TestContext.CurrentContext;
+            Assert.That(context, Is.Not.Null);
+            Assert.That(context.Test, Is.Not.Null);
+            Assert.That(context.Test.Name, Is.EqualTo("TestContextOneTimeTearDownTests"));
+            Assert.That(context.Result, Is.Not.Null);
+            Assert.That(context.Result.Outcome, Is.EqualTo(ResultState.Success));
+            Assert.That(context.Result.PassCount, Is.EqualTo(2));
+            Assert.That(context.Result.FailCount, Is.EqualTo(0));
+            Assert.That(context.Result.SkipCount, Is.EqualTo(1));
         }
     }
 }
