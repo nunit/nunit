@@ -61,7 +61,7 @@
 
   <!-- Other directories are derived from base dir -->
   <property name="project.build.dir" 
-	value="${path::combine(project.base.dir,'build')}"/>
+	value="${path::combine(project.base.dir,'nant-build')}"/>
   <property name="project.package.dir" 
 	value="${path::combine(project.base.dir,'package')}"/>
   <property name="project.src.dir"
@@ -308,7 +308,8 @@
 	<nant target="build" buildfile="src/NUnitFramework/framework/nunitlite.build"/>
 	<nant target="build" buildfile="src/NUnitFramework/mock-assembly/mock-nunitlite-assembly.build" 
 		unless="${runtime.platform == 'netcf' or runtime.platform == 'silverlight'}"/>
-	<nant target="build" buildfile="src/NUnitFramework/slow-tests/slow-nunitlite-tests.build"/>
+	<nant target="build" buildfile="src/NUnitFramework/slow-tests/slow-nunitlite-tests.build"
+		unless="${runtime.platform == 'netcf' or runtime.platform == 'silverlight'}"/>
 	<nant target="build" buildfile="src/NUnitFramework/testdata/nunitlite.testdata.build"/>
 	<nant target="build" buildfile="src/NUnitFramework/tests/nunitlite.tests.build"/>
 
