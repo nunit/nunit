@@ -37,7 +37,7 @@ namespace NUnit.Framework
     [AttributeUsage(AttributeTargets.Class, AllowMultiple=true, Inherited=true)]
     public class TestFixtureAttribute : FixtureBuilderAttribute, IFixtureBuilder, IApplyToTest
     {
-        private NUnitTestFixtureBuilder builder = new NUnitTestFixtureBuilder();
+        private readonly NUnitTestFixtureBuilder builder = new NUnitTestFixtureBuilder();
 
         #region Constructors
 
@@ -54,8 +54,8 @@ namespace NUnit.Framework
         /// <param name="arguments"></param>
         public TestFixtureAttribute(params object[] arguments)
         {
-            this.Arguments = arguments;
-            this.TypeArgs = new Type[0];
+            Arguments = arguments;
+            TypeArgs = new Type[0];
         }
 
         #endregion
@@ -66,6 +66,16 @@ namespace NUnit.Framework
         /// Descriptive text for this fixture
         /// </summary>
         public string Description { get; set; }
+
+        /// <summary>
+        /// The author of this fixture
+        /// </summary>
+        public string Author { get; set; }
+
+        /// <summary>
+        /// The type that this fixture is testing
+        /// </summary>
+        public Type TestOf { get; set; }
 
         /// <summary>
         /// The arguments originally provided to the attribute
@@ -88,7 +98,7 @@ namespace NUnit.Framework
             set
             {
                 _ignoreReason = value;
-                Ignore = _ignoreReason != null && _ignoreReason != string.Empty;
+                Ignore = !string.IsNullOrEmpty(_ignoreReason);
             }
         }
         private string _ignoreReason;
@@ -111,7 +121,7 @@ namespace NUnit.Framework
         /// </summary>
         public IList Categories
         {
-            get { return this.Category == null ? null : this.Category.Split(','); }
+            get { return Category == null ? null : Category.Split(','); }
         }
 
         #endregion
@@ -124,11 +134,17 @@ namespace NUnit.Framework
         /// <param name="test">The test to modify</param>
         public void ApplyToTest(Test test)
         {
-            if (!test.Properties.ContainsKey(PropertyNames.Description) && this.Description != null)
-                test.Properties.Set(PropertyNames.Description, this.Description);
+            if (!test.Properties.ContainsKey(PropertyNames.Description) && Description != null)
+                test.Properties.Set(PropertyNames.Description, Description);
+
+            if (!test.Properties.ContainsKey(PropertyNames.Author) && Author != null)
+                test.Properties.Set(PropertyNames.Author, Author);
+
+            if (!test.Properties.ContainsKey(PropertyNames.TestOf) && TestOf != null)
+                test.Properties.Set(PropertyNames.TestOf, TestOf.FullName);
             
-            if (this.Category != null)
-                foreach (string cat in this.Category.Split(new char[] { ',' }) )
+            if (Category != null)
+                foreach (string cat in Category.Split(new[] { ',' }) )
                     test.Properties.Add(PropertyNames.Category, cat);
         }
 

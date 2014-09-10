@@ -52,6 +52,7 @@
     <Compile Include="AssertFailFixture.cs" />
     <Compile Include="AssertIgnoreData.cs" />
     <Compile Include="AttributeInheritanceData.cs" />
+    <Compile Include="AuthorFixture.cs" />
     <Compile Include="CategoryAttributeData.cs" />
     <Compile Include="CultureAttributeData.cs" />
     <Compile Include="DatapointFixture.cs" />
@@ -68,6 +69,7 @@
     <Compile Include="TestFixtureData.cs" />
     <Compile Include="TestFixtureExtensionData.cs" />
     <Compile Include="TestMethodSignatureFixture.cs" />
+    <Compile Include="TestOfFixture.cs" />
     <Compile Include="TheoryFixture.cs" />
     <Compile Include="TimeoutFixture.cs" />
     <Compile Include="UnexpectedExceptionFixture.cs" />

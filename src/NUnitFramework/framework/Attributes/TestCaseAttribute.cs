@@ -40,6 +40,7 @@ namespace NUnit.Framework
         #region Instance variables
 
         private object expectedResult;
+        private Type _typeOf;
         private IPropertyBag properties;
 
         #endregion
@@ -128,8 +129,30 @@ namespace NUnit.Framework
         /// <value>The description.</value>
         public string Description
         {
-            get { return this.Properties.Get(PropertyNames.Description) as string; }
-            set { this.Properties.Set(PropertyNames.Description, value); }
+            get { return Properties.Get(PropertyNames.Description) as string; }
+            set { Properties.Set(PropertyNames.Description, value); }
+        }
+
+        /// <summary>
+        /// The author of this test
+        /// </summary>
+        public string Author
+        {
+            get { return Properties.Get(PropertyNames.Author) as string; }
+            set { Properties.Set(PropertyNames.Author, value); }
+        }
+
+        /// <summary>
+        /// The type that this test is testing
+        /// </summary>
+        public Type TestOf
+        {
+            get { return _typeOf; }
+            set
+            {
+                _typeOf = value;
+                Properties.Set(PropertyNames.TestOf, value.FullName);
+            }
         }
 
         /// <summary>

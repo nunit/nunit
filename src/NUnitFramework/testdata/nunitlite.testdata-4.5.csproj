@@ -74,6 +74,7 @@
     <Compile Include="AsyncDummyFixture.cs" />
     <Compile Include="AsyncRealFixture.cs" />
     <Compile Include="AttributeInheritanceData.cs" />
+    <Compile Include="AuthorFixture.cs" />
     <Compile Include="CategoryAttributeData.cs" />
     <Compile Include="CultureAttributeData.cs" />
     <Compile Include="DatapointFixture.cs" />
@@ -92,6 +93,7 @@
     <Compile Include="TestContextData.cs" />
     <Compile Include="TestFixtureData.cs" />
     <Compile Include="TestMethodSignatureFixture.cs" />
+    <Compile Include="TestOfFixture.cs" />
     <Compile Include="TheoryFixture.cs" />
     <Compile Include="TimeoutFixture.cs" />
   </ItemGroup>
