@@ -182,7 +182,7 @@ namespace NUnit.Tests
         }
     }
 
-    [TestFixture, Ignore]
+    [TestFixture, Ignore("BECAUSE")]
     public class IgnoredFixture
     {
         public static readonly int Tests = 3;

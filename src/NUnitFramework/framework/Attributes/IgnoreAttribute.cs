@@ -41,15 +41,6 @@ namespace NUnit.Framework
         private string _until;
 
         /// <summary>
-        /// Constructs the attribute without giving a reason 
-        /// for ignoring the test.
-        /// </summary>
-        public IgnoreAttribute()
-        {
-            _reason = String.Empty;
-        }
-
-        /// <summary>
         /// Constructs the attribute giving a reason for ignoring the test
         /// </summary>
         /// <param name="reason">The reason for ignoring the test</param>
@@ -94,9 +85,8 @@ namespace NUnit.Framework
                     if (_untilDate.Value > DateTime.Now)
                     {
                         test.RunState = RunState.Ignored;
-                        if (String.IsNullOrEmpty(_reason))
-                            _reason = string.Format("Ignoring until {0}", _untilDate.Value.ToString("u"));
-                        test.Properties.Set(PropertyNames.SkipReason, _reason);
+                        string reason = string.Format("Ignoring until {0}. {1}", _untilDate.Value.ToString("u"), _reason);
+                        test.Properties.Set(PropertyNames.SkipReason, reason);
                     }
                     test.Properties.Set(PropertyNames.IgnoreUntilDate, _untilDate.Value.ToString("u") );
 
