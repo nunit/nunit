@@ -62,6 +62,16 @@ namespace NUnit.Framework
         /// </summary>
         public string Description { get; set; }
 
+        /// <summary>
+        /// The author of this test
+        /// </summary>
+        public string Author { get; set; }
+
+        /// <summary>
+        /// The type that this test is testing
+        /// </summary>
+        public Type TestOf { get; set; }
+
         #region IApplyToTest Members
 
         /// <summary>
@@ -72,6 +82,12 @@ namespace NUnit.Framework
         {
             if (!test.Properties.ContainsKey(PropertyNames.Description) && Description != null)
                 test.Properties.Set(PropertyNames.Description, Description);
+
+            if (!test.Properties.ContainsKey(PropertyNames.Author) && Author != null)
+                test.Properties.Set(PropertyNames.Author, Author);
+
+            if (!test.Properties.ContainsKey(PropertyNames.TestOf) && TestOf != null)
+                test.Properties.Set(PropertyNames.TestOf, TestOf.FullName);
 
         }
 

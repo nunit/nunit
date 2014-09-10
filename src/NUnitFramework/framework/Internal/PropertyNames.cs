@@ -64,6 +64,11 @@ namespace NUnit.Framework.Internal
         #region Standard Properties
 
         /// <summary>
+        /// The author of the tests
+        /// </summary>
+        public const string Author = "Author";
+
+        /// <summary>
         /// The ApartmentState required for running the test
         /// </summary>
         public const string ApartmentState = "ApartmentState";
@@ -112,6 +117,11 @@ namespace NUnit.Framework.Internal
         /// The UI culture to be set for a test
         /// </summary>
         public const string SetUICulture = "SetUICulture";
+
+        /// <summary>
+        /// The type that is under test
+        /// </summary>
+        public const string TestOf = "TestOf";
 
         /// <summary>
         /// The timeout value for the test
