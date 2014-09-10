@@ -75,7 +75,7 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void IgnoreAttributeIgnoresTest()
         {
-            new IgnoreAttribute().ApplyToTest(test);
+            new IgnoreAttribute("BECAUSE").ApplyToTest(test);
             Assert.That(test.RunState, Is.EqualTo(RunState.Ignored));
         }
 
@@ -114,37 +114,28 @@ namespace NUnit.Framework.Attributes
             Assert.That(test.RunState, Is.EqualTo(RunState.Runnable));
         }
 
-        [Test]
-        public void IgnoreAttributeWithReasonDoesNotOverwriteTheReason()
+        [TestCase("4242-01-01")]
+        [TestCase("4242-01-01 00:00:00Z")]
+        [TestCase("4242-01-01 00:00:00")]
+        public void IgnoreAttributeUntilSetsTheReason(string date)
         {
             var ignoreAttribute = new IgnoreAttribute("BECAUSE");
-            ignoreAttribute.Until = "4242-01-01";
-            ignoreAttribute.ApplyToTest(test);
-            Assert.That(test.Properties.Get(PropertyNames.SkipReason), Is.EqualTo("BECAUSE"));
-        }
-
-        [TestCase("4242-01-01", "Ignoring until 4242-01-01 00:00:00Z")]
-        [TestCase("4242-01-01 00:00:00Z", "Ignoring until 4242-01-01 00:00:00Z")]
-        [TestCase("4242-01-01 00:00:00", "Ignoring until 4242-01-01 00:00:00Z")]
-        public void IgnoreAttributeWithoutReasonSetsTheReason(string date, string reason)
-        {
-            var ignoreAttribute = new IgnoreAttribute();
             ignoreAttribute.Until = date;
             ignoreAttribute.ApplyToTest(test);
-            Assert.That(test.Properties.Get(PropertyNames.SkipReason), Is.EqualTo("Ignoring until 4242-01-01 00:00:00Z"));
+            Assert.That(test.Properties.Get(PropertyNames.SkipReason), Is.EqualTo("Ignoring until 4242-01-01 00:00:00Z. BECAUSE"));
         }
 
         [Test]
         public void IgnoreAttributeWithInvalidDateThrowsException()
         {
-            var ignoreAttribute = new IgnoreAttribute();
+            var ignoreAttribute = new IgnoreAttribute("BECAUSE");
             Assert.Throws<FormatException>(() => ignoreAttribute.Until = "Thursday the twenty fifth of December");
         }
 
         [Test]
         public void IgnoreAttributeWithUntilAddsIgnoreUntilDateProperty()
         {
-            var ignoreAttribute = new IgnoreAttribute();
+            var ignoreAttribute = new IgnoreAttribute("BECAUSE");
             ignoreAttribute.Until = "4242-01-01";
             ignoreAttribute.ApplyToTest(test);
             Assert.That(test.Properties.Get(PropertyNames.IgnoreUntilDate), Is.EqualTo("4242-01-01 00:00:00Z"));
@@ -153,7 +144,7 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void IgnoreAttributeWithUntilAddsIgnoreUntilDatePropertyPastUntilDate()
         {
-            var ignoreAttribute = new IgnoreAttribute();
+            var ignoreAttribute = new IgnoreAttribute("BECAUSE");
             ignoreAttribute.Until = "1242-01-01";
             ignoreAttribute.ApplyToTest(test);
             Assert.That(test.Properties.Get(PropertyNames.IgnoreUntilDate), Is.EqualTo("1242-01-01 00:00:00Z"));
