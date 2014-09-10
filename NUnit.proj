@@ -315,24 +315,14 @@
 	</Target>
 
 	<!-- Supported frameworks -->
-	<ItemGroup Condition="$(IsWindows)">
+	<ItemGroup>
 		<SupportedFrameworks Include="net-4.5"></SupportedFrameworks>
 		<SupportedFrameworks Include="net-4.0"></SupportedFrameworks>
 		<SupportedFrameworks Include="net-3.5"></SupportedFrameworks>
 		<SupportedFrameworks Include="net-2.0"></SupportedFrameworks>
-		<SupportedFrameworks Include="mono-4.5"></SupportedFrameworks>
-		<SupportedFrameworks Include="mono-4.0"></SupportedFrameworks>
-		<SupportedFrameworks Include="mono-3.5"></SupportedFrameworks>
-		<SupportedFrameworks Include="mono-2.0"></SupportedFrameworks>
 		<!--<SupportedFrameworks Include="netcf-3.5"></SupportedFrameworks>
 		<SupportedFrameworks Include="netcf-2.0"></SupportedFrameworks>-->
-		<SupportedFrameworks Include="silverlight-5.0"></SupportedFrameworks>
-	</ItemGroup>
-	<ItemGroup Condition="!$(IsWindows)">
-		<SupportedFrameworks Include="mono-4.5"></SupportedFrameworks>
-		<SupportedFrameworks Include="mono-4.0"></SupportedFrameworks>
-		<SupportedFrameworks Include="mono-3.5"></SupportedFrameworks>
-		<SupportedFrameworks Include="mono-2.0"></SupportedFrameworks>
+		<SupportedFrameworks Condition="$(IsWindows)" Include="silverlight-5.0"></SupportedFrameworks>
 	</ItemGroup>
 	
 	<!-- Lists of Projects -->
