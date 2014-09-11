@@ -34,7 +34,7 @@
     <NoConfig>true</NoConfig>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\..\..\bin\Debug\sl-5.0\nunitlite.xml</DocumentationFile>
+    <DocumentationFile>$(OutputPath)\nunitlite.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>full</DebugType>
@@ -46,7 +46,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DebugSymbols>true</DebugSymbols>
-    <DocumentationFile>..\..\..\bin\Release\sl-5.0\nunitlite.xml</DocumentationFile>
+    <DocumentationFile>$(OutputPath)\nunitlite.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
@@ -375,7 +375,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="nunit.snk" />
-    <None Include="nunitlite.build" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Attributes\AttributeHierarchy.txt" />

@@ -119,7 +119,6 @@
     <Compile Include="Services\TestAgency.cs" />
     <Compile Include="TestEngine.cs" />
     <Compile Include="TestEngineResult.cs" />
-    <None Include="nunit.engine.build" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\nunit.engine.api\nunit.engine.api.csproj">

@@ -90,9 +90,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="nunit.engine.tests.build" />
-  </ItemGroup>
-  <ItemGroup>
     <Folder Include="Runners\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

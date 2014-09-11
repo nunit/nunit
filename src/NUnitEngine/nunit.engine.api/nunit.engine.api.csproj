@@ -25,7 +25,7 @@
     <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\..\..\bin\Debug\nunit.engine.api.xml</DocumentationFile>
+    <DocumentationFile>$(OutputPath)nunit.engine.api.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -34,7 +34,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\..\..\bin\Release\nunit.engine.api.xml</DocumentationFile>
+    <DocumentationFile>$(OutputPath)nunit.engine.api.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>false</SignAssembly>
@@ -72,9 +72,6 @@
     <Compile Include="TestFilter.cs" />
     <Compile Include="TestPackage.cs" />
     <Compile Include="ITestRun.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="nunit.engine.api.build" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

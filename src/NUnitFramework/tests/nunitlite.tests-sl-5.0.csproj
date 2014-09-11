@@ -255,8 +255,6 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
-    <None Include="nunit.framework.tests.build" />
-    <None Include="nunitlite.tests.build" />
     <None Include="Properties\AppManifest.xml" />
   </ItemGroup>
   <ItemGroup>

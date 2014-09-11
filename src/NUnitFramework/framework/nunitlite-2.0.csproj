@@ -26,7 +26,7 @@
     <DefineConstants>TRACE;DEBUG;NET_2_0;NUNITLITE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\..\..\bin\Debug\net-2.0\nunitlite.xml</DocumentationFile>
+    <DocumentationFile>$(OutputPath)\nunitlite.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -35,7 +35,7 @@
     <DefineConstants>TRACE;NET_2_0;NUNITLITE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\..\..\bin\Release\net-2.0\nunitlite.xml</DocumentationFile>
+    <DocumentationFile>$(OutputPath)\nunitlite.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
@@ -355,9 +355,6 @@
     <Compile Include="Constraints\ExceptionTypeConstraint.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="nunitlite.build">
-      <SubType>Designer</SubType>
-    </None>
     <None Include="nunit.snk" />
   </ItemGroup>
   <ItemGroup>
