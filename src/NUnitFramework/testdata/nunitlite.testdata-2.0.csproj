@@ -86,11 +86,6 @@
     <Compile Include="TimeoutFixture.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="nunitlite.testdata.build">
-      <SubType>Designer</SubType>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">
       <Visible>False</Visible>
       <ProductName>Microsoft .NET Framework 4 %28x86 and x64%29</ProductName>

@@ -245,14 +245,6 @@
     <EmbeddedResource Include="TestText2.txt" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="nunit.framework.tests.build">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="nunitlite.tests.build">
-      <SubType>Designer</SubType>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup>

@@ -91,7 +91,6 @@
     <Compile Include="UnhandledExceptions.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="nunit.testdata.build" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

@@ -373,7 +373,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="nunit.snk" />
-    <None Include="nunitlite.build" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Attributes\AttributeHierarchy.txt" />

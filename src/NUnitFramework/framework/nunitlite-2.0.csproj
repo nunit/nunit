@@ -353,9 +353,6 @@
     <Compile Include="Constraints\ExceptionTypeConstraint.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="nunitlite.build">
-      <SubType>Designer</SubType>
-    </None>
     <None Include="nunit.snk" />
   </ItemGroup>
   <ItemGroup>

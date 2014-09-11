@@ -64,7 +64,6 @@
     <Content Include="TextSummary.xslt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Include="nunit-console.tests.build" />
     <Content Include="NUnit2TestResult.xsd">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
