@@ -27,8 +27,5 @@
     <file src="$builddir$\nunit.engine.api.dll" target="tools" />
     <file src="$builddir$\nunit.engine.api.xml" target="tools" />
     <file src="$builddir$\nunit.engine.dll" target="tools" />
-    <!-- Is this needed? -->
-    <file src="$builddir$\nunit.framework.dll" target="tools" />
-    <file src="$builddir$\nunit.framework.xml" target="tools" />
   </files>
 </package>
