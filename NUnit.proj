@@ -102,8 +102,8 @@
 	<PropertyGroup Label="Properties for running tests">
 		<TestOptions Condition="'$(TestOptions)' == ''"></TestOptions>
 		<ManagedExeLauncher Condition="'$(Runtime)' == 'mono'">mono</ManagedExeLauncher>
-		<TestHarnessProgram>test-harness.exe</TestHarnessProgram>
-		<ConsoleRunnerProgram>nunit-console.exe</ConsoleRunnerProgram>
+		<TestHarnessProgram>$(FrameworkBuildDir)\test-harness.exe</TestHarnessProgram>
+		<ConsoleRunnerProgram>$(ConsoleBuildDir)\nunit-console.exe</ConsoleRunnerProgram>
 		<TestRunnerArgs>nunit.framework.tests.dll $(TestOptions)</TestRunnerArgs>
 		<HarnessSelfTestArgs>--selftest $(TestOptions)</HarnessSelfTestArgs>
 	</PropertyGroup>
@@ -245,7 +245,7 @@
 		<Error Condition="'$(Runtime)' == 'netcf' Or '$(Runtime)' == 'silverlight'"
 			Text="The full NUnit framework cannot be tested under $(Runtime)" />
 		<Exec WorkingDirectory="$(FrameworkBuildDir)" 
-			Command="$(ManagedExeLauncher) $(FrameworkBuildDir)\$(TestHarnessProgram) $(TestRunnerArgs)" />
+			Command="$(ManagedExeLauncher) $(TestHarnessProgram) $(TestRunnerArgs)" />
 	</Target>
 	
 	<Target Name="_NUnitLiteTest" Label="Test NUnitLite for the current config">
@@ -256,15 +256,17 @@
 	<Target Name="TestHarness" Label="Run the harness self-tests">
 		<Message Text="Testing test-harness $(Framework) - $(Configuration)" />
 		<Exec WorkingDirectory="$(FrameworkBuildDir)"
-			Command="$(ManagedExeLauncher) $(FrameworkBuildDir)\$(TestHarnessProgram) $(HarnessSelfTestArgs)" />
+			Command="$(ManagedExeLauncher) $(TestHarnessProgram) $(HarnessSelfTestArgs)" />
 	</Target>
 
 	<Target Name="TestEngine" Label ="Run the engine tests">
-		<Exec WorkingDirectory="$(EngineBuildDir)" Command="$(ManagedExeLauncher) $(ConsoleRunnerProgram) nunit.engine.tests.dll" />
+		<Exec WorkingDirectory="$(EngineBuildDir)"
+		  Command="$(ManagedExeLauncher) $(ConsoleRunnerProgram) nunit.engine.tests.dll" />
 	</Target>
 	
 	<Target Name="TestConsole" Label="Run the console tests">
-		<Exec WorkingDirectory="$(ConsoleBuildDir)" Command="$(ManagedExeLauncher) $(ConsoleRunnerProgram) nunit-console.tests.dll" />
+		<Exec WorkingDirectory="$(ConsoleBuildDir)"
+		  Command="$(ManagedExeLauncher) $(ConsoleRunnerProgram) nunit-console.tests.dll" />
 	</Target>
 	
 	<!-- *********************************************************************** -->

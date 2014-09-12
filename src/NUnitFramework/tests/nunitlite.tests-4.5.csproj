@@ -50,7 +50,6 @@
     <NoWarn>0414</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\..\..\bin\Release\net-4.5\</OutputPath>
     <DefineConstants>TRACE;NET_4_5;NUNITLITE</DefineConstants>
@@ -60,6 +59,7 @@
     </DocumentationFile>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>false</Prefer32Bit>
+    <NoWarn>0414</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />

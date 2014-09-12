@@ -19,7 +19,6 @@
     <IntermediateOutputPath>obj\$(Configuration)\net-2.0\</IntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\..\..\bin\Release\net-2.0\</OutputPath>
     <DefineConstants>TRACE;NET_2_0</DefineConstants>
@@ -27,6 +26,7 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>
     </DocumentationFile>
+    <NoWarn>0414</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <DefineConstants>TRACE;DEBUG;NET_2_0</DefineConstants>
@@ -251,15 +251,15 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\framework\nunit.framework-2.0.csproj">
-      <Project>{12b66b03-90f1-4992-bd33-bdf3c69ae49e}</Project>
+      <Project>{12B66B03-90F1-4992-BD33-BDF3C69AE49E}</Project>
       <Name>nunit.framework-2.0</Name>
     </ProjectReference>
     <ProjectReference Include="..\mock-assembly\mock-nunit-assembly-2.0.csproj">
-      <Project>{2e368281-3ba8-4050-b05e-0e0e43f8f446}</Project>
+      <Project>{2E368281-3BA8-4050-B05E-0E0E43F8F446}</Project>
       <Name>mock-nunit-assembly-2.0</Name>
     </ProjectReference>
     <ProjectReference Include="..\testdata\nunit.testdata-2.0.csproj">
-      <Project>{15b64946-4989-4873-915c-3e181772fa03}</Project>
+      <Project>{15B64946-4989-4873-915C-3E181772FA03}</Project>
       <Name>nunit.testdata-2.0</Name>
     </ProjectReference>
   </ItemGroup>
