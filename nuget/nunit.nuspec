@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>NUnit3</id>
+    <title>NUnit Version 3</title>
+    <version>$version$</version>
+    <authors>Charlie Poole</authors>
+    <owners>Charlie Poole</owners>
+    <licenseUrl>http://nunit.org/nuget/license.html</licenseUrl>
+    <projectUrl>http://nunit.org</projectUrl>
+    <iconUrl>http://nunit.org/nuget/nunit_32x32.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <summary>NUnit is a unit-testing framework for all .Net languages with a strong TDD focus.</summary>
+    <description>NUnit 3.0 will not run properly in 2.6 runners nor in most 3rd-party runners.&#10;&#13;NUnit features a fluent assert syntax, parameterized, generic and theory tests and is user-extensible. A number of runners, both from the NUnit project and by third parties, are able to execute NUnit tests.&#10;&#13;This package includes only the framework assembly. You will need to install the NUnit.Runners package unless you are using a third-party runner.&#10;&#13;This is an alpha release and is not intended for production use.</description>
+    <releaseNotes>NUnit 3.0 will not run properly in 2.6 runners nor in most 3rd-party runners.&#10;&#13;This package includes only the framework assembly. You will need to install the NUnit.Runners package or download the runner from NUnit.org.&#10;&#13;This is an alpha release and is not intended for production use.</releaseNotes>
+    <language>en-US</language>
+    <tags>nunit test testing tdd framework fluent assert theory plugin addin</tags>
+    <copyright>Copyright 2014</copyright>
+    <dependencies>
+      <group targetFramework="net40">
+        <dependency id="Microsoft.Bcl.Async" version="1.0.165" />
+      </group>
+      <!-- This is required otherwise 4.5 will pull in the 4.0 dependencies -->
+      <group targetFramework="net45" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="LICENSE.txt" />
+    <file src="src\NUnitFramework\CHANGES.txt" />
+    <file src="$builddir$\net-2.0\nunit.framework.dll" target="lib\net20" />
+    <file src="$builddir$\net-2.0\nunit.framework.xml" target="lib\net20" />
+    <file src="$builddir$\net-3.5\nunit.framework.dll" target="lib\net35" />
+    <file src="$builddir$\net-3.5\nunit.framework.xml" target="lib\net35" />
+    <file src="$builddir$\net-4.0\nunit.framework.dll" target="lib\net40" />
+    <file src="$builddir$\net-4.0\nunit.framework.xml" target="lib\net40" />
+    <file src="$builddir$\net-4.5\nunit.framework.dll" target="lib\net45" />
+    <file src="$builddir$\net-4.5\nunit.framework.xml" target="lib\net45" />
+  </files>
+</package>

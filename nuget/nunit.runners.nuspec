@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>NUnit3.Runners</id>
+    <title>NUnit Runers Version 3</title>
+    <version>$version$</version>
+    <authors>Charlie Poole</authors>
+    <owners>Charlie Poole</owners>
+    <licenseUrl>http://nunit.org/nuget/license.html</licenseUrl>
+    <projectUrl>http://nunit.org</projectUrl>
+    <iconUrl>http://nunit.org/nuget/nunit_32x32.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <summary>Runners for version 3.0 of the NUnit unit-testing framework.</summary>
+    <description>Runners for version 3.0 of the NUnit unit-testing framework.&#10;&#13;These runners will not run 2.6 tests properly.&#10;&#13;This is an alpha release and is not intended for production use.</description>
+    <releaseNotes>Version 3.0 of the NUnit console will not run 2.6 tests properly.&#10;&#13;This is an alpha release and is not intended for production use.</releaseNotes>
+    <language>en-US</language>
+    <tags>nunit test testing tdd runner</tags>
+    <copyright>Copyright 2014</copyright>
+  </metadata>
+  <files>
+    <file src="LICENSE.txt" />
+    <file src="src\NUnitConsole\CHANGES.txt" />
+    <file src="$builddir$\nunit-agent.exe" target="tools" />
+    <file src="$builddir$\nunit-agent.exe.config" target="tools" />
+    <file src="$builddir$\nunit-console.exe" target="tools" />
+    <file src="$builddir$\nunit-console.exe.config" target="tools" />
+    <file src="$builddir$\nunit.engine.api.dll" target="tools" />
+    <file src="$builddir$\nunit.engine.api.xml" target="tools" />
+    <file src="$builddir$\nunit.engine.dll" target="tools" />
+    <!-- Is this needed? -->
+    <file src="$builddir$\nunit.framework.dll" target="tools" />
+    <file src="$builddir$\nunit.framework.xml" target="tools" />
+  </files>
+</package>
