@@ -8,8 +8,9 @@
 	
 	<PropertyGroup Label="Common Properties">
 		<ProjectName>$(MSBuildProjectName)</ProjectName>
-		<PackageVersion>2.9.7</PackageVersion>
-		<PackageName>$(ProjectName)-$(PackageVersion)</PackageName>
+		<PackageVersion>3.0.0</PackageVersion>
+		<PackageModifier>-alpha</PackageModifier>
+		<PackageName>$(ProjectName)-$(PackageVersion)$(PackageModifier)</PackageName>
 	</PropertyGroup>
 
 	<PropertyGroup Label="Platform-specific properties">
@@ -30,6 +31,7 @@
 		<ConsoleSrcDir>$(ProjectSrcDir)\NUnitConsole</ConsoleSrcDir>
 		<ProjectToolsDir>$(ProjectBaseDir)\tools</ProjectToolsDir>
 		<PartCoverDir>$(ProjectToolsDir)\PartCover</PartCoverDir>
+		<NuspecDirectory>$(ProjectBaseDir)\nuget</NuspecDirectory>
 	</PropertyGroup>
 
 	<PropertyGroup Label="Default Build Settings">
@@ -103,44 +105,56 @@
 		<ConsoleRunner>$(ConsoleBuildDir)\nunit-console.exe</ConsoleRunner>
 	</PropertyGroup>
 
+	<PropertyGroup Label="Properties for building NuGet packages">
+		<NugetExecutable>$(ProjectToolsDir)\nuget.exe</NugetExecutable>
+		<NugetVersion>$(PackageVersion)$(PackageModifier)</NugetVersion>
+		<NugetOutput>$(ConfigurationBuildDir)</NugetOutput>
+	</PropertyGroup>
+
 	<!-- *********************************************************************** -->
 	<!--                        Dump Settings Target                             -->
 	<!-- *********************************************************************** -->
 	
 	<Target Name="DumpSettings">
-		<Message Text=" "></Message>
-		<Message Text="Platform-specific properties:"></Message>
-		<Message Text="  Running on '$(OS)' ('IsWindows' = $(IsWindows))"></Message>
-		<Message Text="  RemoveDir command: '$(RemoveDir)'"></Message>
-		<Message Text=" "></Message>
-		<Message Text="Project Directories:"></Message>
-		<Message Text="  Base:              $(ProjectBaseDir)"></Message>
-		<Message Text="  Build:             $(ProjectBuildDir)"></Message>
-		<Message Text="  Package:           $(ProjectPackageDir)"></Message>
-		<Message Text="  Source:            $(ProjectSrcDir)"></Message>
-		<Message Text="    Framework:       $(FrameworkSrcDir)"></Message>
-		<Message Text="    Engine:          $(EngineSrcDir)"></Message>
-		<Message Text="    Console:         $(ConsoleSrcDir)"></Message>
-		<Message Text="  Tools:             $(ProjectToolsDir)"></Message>
-		<Message Text=" "></Message>
-		<Message Text="Build Settings:"></Message>
-		<Message Text="  Configuration:     $(Configuration)"></Message>
-		<Message Text="  Current Framework: $(Framework)"></Message>
-		<Message Text="    Runtime:         $(Runtime)"></Message>
-		<Message Text="    Proj. suffix:    $(ProjectSuffix)"></Message>
-		<Message Text=" "></Message>
-		<Message Text="Output Directories:"></Message>
-		<Message Text="  Framework:         $(FrameworkBuildDir)"></Message>
-		<Message Text="  Engine:            $(EngineBuildDir)"></Message>
-		<Message Text="  Console:           $(ConsoleBuildDir)"></Message>
-		<Message Text=" "></Message>
-		<Message Text="Packaging"></Message>
-		<Message Text="  Name:          $(PackageName)"></Message>
-		<Message Text="  Version:       $(PackageVersion)"></Message>
-		<Message Text="  Work dir:      $(PackageWorkingDir)"></Message>
-		<Message Text="    Bin:         $(PackageBinDir)"></Message>
-		<Message Text="    Source:      $(PackageSrcDir)"></Message>
-		<Message Text=" "></Message>
+		<Message Text=" " />
+		<Message Text="Platform-specific properties:" />
+		<Message Text="  Running on '$(OS)' ('IsWindows' = $(IsWindows))" />
+		<Message Text="  RemoveDir command: '$(RemoveDir)'" />
+		<Message Text=" " />
+		<Message Text="Project Directories:" />
+		<Message Text="  Base:              $(ProjectBaseDir)" />
+		<Message Text="  Build:             $(ProjectBuildDir)" />
+		<Message Text="  Package:           $(ProjectPackageDir)" />
+		<Message Text="  Source:            $(ProjectSrcDir)" />
+		<Message Text="    Framework:       $(FrameworkSrcDir)" />
+		<Message Text="    Engine:          $(EngineSrcDir)" />
+		<Message Text="    Console:         $(ConsoleSrcDir)" />
+		<Message Text="  Tools:             $(ProjectToolsDir)" />
+		<Message Text="  NuSpecs:           $(NuspecDirectory)" />
+		<Message Text=" " />
+		<Message Text="Build Settings:" />
+		<Message Text="  Configuration:     $(Configuration)" />
+		<Message Text="  Current Framework: $(Framework)" />
+		<Message Text="    Runtime:         $(Runtime)" />
+		<Message Text="    Proj. suffix:    $(ProjectSuffix)" />
+		<Message Text=" " />
+		<Message Text="Output Directories:" />
+		<Message Text="  Framework:         $(FrameworkBuildDir)" />
+		<Message Text="  Engine:            $(EngineBuildDir)" />
+		<Message Text="  Console:           $(ConsoleBuildDir)" />
+		<Message Text=" " />
+		<Message Text="Packaging" />
+		<Message Text="  Name:              $(PackageName)" />
+		<Message Text="  Version:           $(PackageVersion)" />
+		<Message Text="  Work dir:          $(PackageWorkingDir)" />
+		<Message Text="    Bin:             $(PackageBinDir)" />
+		<Message Text="    Source:          $(PackageSrcDir)" />
+		<Message Text=" " />
+		<Message Text="NuGet" />
+		<Message Text="  Exe:               $(NugetExecutable)" />
+		<Message Text="  Version:           $(NugetVersion)" />
+		<Message Text="  Output:            $(NugetOutput)" />
+		<Message Text=" " />
 	</Target>
 
 	<!-- *********************************************************************** -->
@@ -190,7 +204,6 @@
 		<CallTarget Targets="BuildNUnit" Condition="'$(Runtime)' != 'netcf' And '$(Runtime)' != 'silverlight'" />
 		<CallTarget Targets="BuildNUnitLite" />
 	</Target>
-	
 	
 	<Target Name="BuildNUnit" Label="Build all full framework projects for the current config and runtime">
 		<Error Condition="'$(Runtime)' == 'netcf' Or '$(Runtime)' == 'silverlight'"
@@ -291,6 +304,28 @@
 		<Message Text="******************************************************************" />
 	  <Exec WorkingDirectory="$(ConsoleBuildDir)"
 	    Command="$(ManagedExeLauncher) $(ConsoleRunner) nunit.engine.tests.dll nunit-console.tests.dll $(TestOptions)" />
+	</Target>
+
+	<!-- *********************************************************************** -->
+	<!--                        NuGet Packaging Targets                          -->
+	<!-- *********************************************************************** -->
+
+	<Target Name="PackageNuGetAll"
+		Label="Packages all NuGet packages"
+		DependsOnTargets="PackageNuGetFramework;PackageNuGetRunners" />
+  
+	<Target Name="PackageNuGetFramework"
+		Label="Packages the NUnit NuGet package"
+		DependsOnTargets="_BuildNUnit;_NUnitTest">
+		<Exec WorkingDirectory="$(ProjectBaseDir)"
+		      Command="$(ManagedExeLauncher) &quot;$(NugetExecutable)&quot; pack $(NuspecDirectory)\nunit.nuspec -BasePath &quot;$(ProjectBaseDir)&quot; -OutputDirectory &quot;$(NugetOutput)&quot; -Properties version=$(NugetVersion);builddir=$(ConfigurationBuildDir)" />
+	</Target>
+  
+	<Target Name="PackageNuGetRunners" 
+		Label="Packages the NUnit.Runners NuGet package"
+		DependsOnTargets="BuildConsole;BuildEngine;TestConsole;TestEngine">
+		<Exec WorkingDirectory="$(ProjectBaseDir)"
+		      Command="$(ManagedExeLauncher) &quot;$(NugetExecutable)&quot; pack $(NuspecDirectory)\nunit.runners.nuspec -NoPackageAnalysis -BasePath &quot;$(ProjectBaseDir)&quot; -OutputDirectory &quot;$(NugetOutput)&quot; -Properties version=$(NugetVersion);builddir=$(ConfigurationBuildDir)" />
 	</Target>
 	
 	<!-- *********************************************************************** -->
