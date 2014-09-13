@@ -191,7 +191,7 @@ namespace NUnit.Engine.Services
         #region Helper Methods
         private Guid LaunchAgentProcess(RuntimeFramework targetRuntime, bool enableDebug, string agentArgs)
         {
-            string agentExePath = GetTestAgentExePath(targetRuntime.ClrVersion);
+            string agentExePath = GetTestAgentExePath(targetRuntime.ClrVersion, targetRuntime.Requires32Bit);
 
             if (agentExePath == null)
                 throw new ArgumentException(
@@ -340,13 +340,12 @@ namespace NUnit.Engine.Services
             return null;
         }
 
-        private static string GetTestAgentExePath(Version v)
+        private static string GetTestAgentExePath(Version v, bool requires32Bit)
         {
             string binDir = GetNUnitBinDirectory(v);
             if (binDir == null) return null;
 
-            Assembly a = System.Reflection.Assembly.GetEntryAssembly();
-            string agentName = v.Major > 1 && a != null && a.GetName().ProcessorArchitecture == ProcessorArchitecture.X86
+            string agentName = v.Major > 1 && requires32Bit
                 ? "nunit-agent-x86.exe"
                 : "nunit-agent.exe";
 

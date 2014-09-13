@@ -83,14 +83,15 @@ namespace NUnit.Engine
         /// <param name="version">The version of the framework</param>
         public RuntimeFramework(RuntimeType runtime, Version version)
         {
-            this.Runtime = runtime;
+            Runtime = runtime;
+            Requires32Bit = false;
 
             if (version.Build < 0)
                 InitFromFrameworkVersion(version);
             else
                 InitFromClrVersion(version);
 
-            this.DisplayName = GetDefaultDisplayName(runtime, version);
+            DisplayName = GetDefaultDisplayName(runtime, version);
         }
 
         private void InitFromFrameworkVersion(Version version)
@@ -284,6 +285,11 @@ namespace NUnit.Engine
         /// The type of this runtime framework
         /// </summary>
         public RuntimeType Runtime { get; private set; }
+
+        /// <summary>
+        /// If true, we must use a 32 bit test runner, if false, AnyCPU is fine.
+        /// </summary>
+        public bool Requires32Bit { get; set; }
 
         /// <summary>
         /// The framework version for this runtime framework

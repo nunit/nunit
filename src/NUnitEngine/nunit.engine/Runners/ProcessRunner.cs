@@ -63,8 +63,7 @@ namespace NUnit.Engine.Runners
         /// <returns>A TestEngineResult.</returns>
         protected override TestEngineResult ExploreTests(TestFilter filter)
         {
-            TestEngineResult result = this._remoteRunner.Explore(filter);
-            return result as TestEngineResult; // TODO: Remove need for this cast
+            return _remoteRunner.Explore(filter);
         }
 
         /// <summary>
@@ -81,6 +80,15 @@ namespace NUnit.Engine.Runners
             this.RuntimeFramework = frameworkSetting != ""
                 ? RuntimeFramework.Parse(frameworkSetting)
                 : RuntimeFramework.CurrentFramework;
+            
+            foreach (var file in TestPackage.TestFiles)
+            {
+                using (var reader = new AssemblyReader(file))
+                {
+                    if (reader.ShouldRun32Bit)
+                        RuntimeFramework.Requires32Bit = true;
+                }
+            }
 
             bool enableDebug = TestPackage.GetSetting("AgentDebug", false);
             bool verbose = TestPackage.GetSetting("Verbose", false);
