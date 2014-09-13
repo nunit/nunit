@@ -7,8 +7,7 @@ before_script:
   ./build /p:Configuration=Release /p:Framework=$Framework "/t:DumpSettings;CleanAll"
 
 script: 
-  ./build /p:Configuration=Release /p:Framework=$Framework /t:Build &
-  ./build /p:Configuration=Release /p:Framework=$Framework /t:Test
+  ./build /p:Configuration=Release /p:Framework=$Framework /t:Build ;  ./build /p:Configuration=Release /p:Framework=$Framework /t:Test
   
 env:
   matrix:
