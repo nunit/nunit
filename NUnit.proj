@@ -187,10 +187,10 @@
 		<MSBuild Targets="Clean" Projects="@(EngineProjects)" Properties="Configuration=$(Configuration); Platform=AnyCPU" />
 		<MSBuild Targets="Clean" Projects="$(EngineSrcDir)\mock-cpp-clr\mock-cpp-clr-x86.vcxproj"
 			 Properties="Configuration=$(Configuration); Platform=Win32"
-			 Condition="'$(Runtime)' == 'NET'" />
+			 Condition="'$(Runtime)' == 'NET' And $(IsWindows)" />
 		<MSBuild Targets="Clean" Projects="$(EngineSrcDir)\mock-cpp-clr\mock-cpp-clr-x64.vcxproj"
 			 Properties="Configuration=$(Configuration); Platform=x64"
-			 Condition="'$(Runtime)' == 'NET'" />
+			 Condition="'$(Runtime)' == 'NET' And $(IsWindows)" />
 	</Target>
 
 	<Target Name="CleanConsole" Label="Clean all console runner projects for the current config">
@@ -234,10 +234,10 @@
 			Properties="Configuration=$(Configuration); Platform=AnyCPU" />
 		<MSBuild Targets="Build" Projects="$(EngineSrcDir)\mock-cpp-clr\mock-cpp-clr-x86.vcxproj" 
 			 Properties="Configuration=$(Configuration); Platform=Win32"
-			 Condition="'$(Runtime)' == 'NET'" />
+			 Condition="'$(Runtime)' == 'NET' And $(IsWindows)" />
 		<MSBuild Targets="Build" Projects="$(EngineSrcDir)\mock-cpp-clr\mock-cpp-clr-x64.vcxproj" 
 			 Properties="Configuration=$(Configuration); Platform=x64"
-			 Condition="'$(Runtime)' == 'NET'" />
+			 Condition="'$(Runtime)' == 'NET' And $(IsWindows)" />
 	</Target>
 
 	<Target Name="BuildConsole" Label="Build all console projects for the current config">
