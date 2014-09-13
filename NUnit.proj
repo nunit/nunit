@@ -32,11 +32,9 @@
 		<PartCoverDir>$(ProjectToolsDir)\PartCover</PartCoverDir>
 	</PropertyGroup>
 
-	<PropertyGroup Label="Build Settings">
+	<PropertyGroup Label="Default Build Settings">
 		<Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
-		<DefaultFramework Condition="$(IsWindows)">net-2.0</DefaultFramework>
-		<DefaultFramework Condition="!$(IsWindows)">mono-2.0</DefaultFramework>
-		<Framework Condition="'$(Framework)' == ''">$(DefaultFramework)</Framework>
+		<Framework Condition="'$(Framework)' == ''">net-4.5</Framework>
 	</PropertyGroup>
 
 	<PropertyGroup Label="Subdirectories">
@@ -102,10 +100,7 @@
 	<PropertyGroup Label="Properties for running tests">
 		<TestOptions Condition="'$(TestOptions)' == ''"></TestOptions>
 		<ManagedExeLauncher Condition="'$(Runtime)' == 'mono'">mono</ManagedExeLauncher>
-		<TestHarnessProgram>$(FrameworkBuildDir)\test-harness.exe</TestHarnessProgram>
-		<ConsoleRunnerProgram>$(ConsoleBuildDir)\nunit-console.exe</ConsoleRunnerProgram>
-		<TestRunnerArgs>$(Framework)/nunit.framework.tests.dll $(TestOptions)</TestRunnerArgs>
-		<HarnessSelfTestArgs>--selftest $(TestOptions)</HarnessSelfTestArgs>
+		<ConsoleRunner>$(ConsoleBuildDir)\nunit-console.exe</ConsoleRunner>
 	</PropertyGroup>
 
 	<!-- *********************************************************************** -->
@@ -130,7 +125,6 @@
 		<Message Text=" "></Message>
 		<Message Text="Build Settings:"></Message>
 		<Message Text="  Configuration:     $(Configuration)"></Message>
-		<Message Text="  Default Framework: $(DefaultFramework)"></Message>
 		<Message Text="  Current Framework: $(Framework)"></Message>
 		<Message Text="    Runtime:         $(Runtime)"></Message>
 		<Message Text="    Proj. suffix:    $(ProjectSuffix)"></Message>
@@ -193,19 +187,19 @@
 	</Target>
 
 	<Target Name="BuildFramework" Label="Build the framework for the current config and runtime">
-		<CallTarget Targets="_BuildNUnit" Condition="'$(Runtime)' != 'netcf' And '$(Runtime)' != 'silverlight'" />
-		<CallTarget Targets="_BuildNUnitLite" />
+		<CallTarget Targets="BuildNUnit" Condition="'$(Runtime)' != 'netcf' And '$(Runtime)' != 'silverlight'" />
+		<CallTarget Targets="BuildNUnitLite" />
 	</Target>
 	
 	
-	<Target Name="_BuildNUnit" Label="Build all full framework projects for the current config and runtime">
+	<Target Name="BuildNUnit" Label="Build all full framework projects for the current config and runtime">
 		<Error Condition="'$(Runtime)' == 'netcf' Or '$(Runtime)' == 'silverlight'"
 			Text="The full NUnit framework cannot be built for $(Runtime)" />
 		<MSBuild Targets="Build" Projects="@(NUnitProjects)" 
 			Properties="Configuration=$(Configuration); Platform=AnyCPU" />
 	</Target>
 	
-	<Target Name="_BuildNUnitLite" Label="Build all NUnitLite projects for the current config and runime">
+	<Target Name="BuildNUnitLite" Label="Build all NUnitLite projects for the current config and runime">
 		<MSBuild Targets="Build" Projects="@(NUnitLiteProjects)"
 			Properties="Configuration=$(Configuration); Platform=AnyCPU" />
 	</Target>
@@ -231,8 +225,8 @@
 			DependsOnTargets="TestAllFrameworks;TestEngine;TestConsole" />
 	
 	<Target Name="TestFramework" Label="Test the framework for the current config and runtime">
-		<CallTarget Targets="_NUnitTest" Condition="'$(Runtime)' != 'netcf' And '$(Runtime)' != 'silverlight'" />
-		<CallTarget Targets="_NUnitLiteTest" />
+		<CallTarget Targets="TestNUnit" Condition="'$(Runtime)' != 'netcf' And '$(Runtime)' != 'silverlight'" />
+		<CallTarget Targets="TestNUnitLite" />
 	</Target>
 	
 	<Target Name="TestAllFrameworks" Label="Test the framework for the current config and all runtimes">
@@ -240,33 +234,32 @@
 			Properties="Framework=%(SupportedFrameworks.Identity)" ContinueOnError="true" />
 	</Target>
 	
-	<Target Name="_NUnitTest" Label="Test the full framework for the current config">
+	<Target Name="TestNUnit" Label="Test the full framework for the current config">
 		<Message Text="Testing NUnitFramework $(Framework) - $(Configuration)" />
 		<Error Condition="'$(Runtime)' == 'netcf' Or '$(Runtime)' == 'silverlight'"
 			Text="The full NUnit framework cannot be tested under $(Runtime)" />
 		<Exec WorkingDirectory="$(ConsoleBuildDir)" 
-			Command="$(ManagedExeLauncher) $(ConsoleRunnerProgram) $(TestRunnerArgs)" />
+			Command="$(ManagedExeLauncher) $(ConsoleRunner) $(Framework)/nunit.framework.tests.dll $(TestOptions)" />
 	</Target>
 	
-	<Target Name="_NUnitLiteTest" Label="Test NUnitLite for the current config">
+	<Target Name="TestNUnitLite" Label="Test NUnitLite for the current config">
 		<Message Text="Testing NUnitLite $(Framework) - $(Configuration)" />
-		<Exec WorkingDirectory="$(FrameworkBuildDir)" Command="$(ManagedExeLauncher) $(FrameworkBuildDir)\nunitlite.tests.exe" />
+		<Exec WorkingDirectory="$(FrameworkBuildDir)" Command="$(ManagedExeLauncher) $(FrameworkBuildDir)\nunitlite.tests.exe $(TestOptions)" />
 	</Target>
 	
-	<Target Name="TestHarness" Label="Run the harness self-tests">
-		<Message Text="Testing test-harness $(Framework) - $(Configuration)" />
-		<Exec WorkingDirectory="$(FrameworkBuildDir)"
-			Command="$(ManagedExeLauncher) $(TestHarnessProgram) $(HarnessSelfTestArgs)" />
-	</Target>
-
 	<Target Name="TestEngine" Label ="Run the engine tests">
 		<Exec WorkingDirectory="$(EngineBuildDir)"
-		  Command="$(ManagedExeLauncher) $(ConsoleRunnerProgram) nunit.engine.tests.dll" />
+		  Command="$(ManagedExeLauncher) $(ConsoleRunner) nunit.engine.tests.dll $(TestOptions)" />
 	</Target>
 	
 	<Target Name="TestConsole" Label="Run the console tests">
 		<Exec WorkingDirectory="$(ConsoleBuildDir)"
-		  Command="$(ManagedExeLauncher) $(ConsoleRunnerProgram) nunit-console.tests.dll" />
+		  Command="$(ManagedExeLauncher) $(ConsoleRunner) nunit-console.tests.dll $(TestOptions)" />
+	</Target>
+	
+	<Target Name="TestRunners" Label="Run the engine and console tests together">
+	  <Exec WorkingDirectory="$(ConsoleBuildDir)"
+	    Command="$(ManagedExeLauncher) $(ConsoleRunner) nunit.engine.tests.dll nunit-console.tests.dll $(TestOptions)" />
 	</Target>
 	
 	<!-- *********************************************************************** -->
@@ -281,7 +274,7 @@
 	<Target Name="_NUnitCoverage">
 		<Error Condition="'$(Runtime)' == 'netcf'" Text="The full NUnit framework cannot be tested under $(Runtime)"></Error>
 		<Exec WorkingDirectory="$(FrameworkBuildDir)"
-			  Command='$(ManagedExeLauncher) $(PartCoverDir)\PartCover.exe --target "$(TestHarnessProgram)" --target-args "$(TestRunnerArgs)" --include [nunit.framework]* --output NUnitTestCoverage.xml'>
+			  Command='$(ManagedExeLauncher) $(PartCoverDir)\PartCover.exe --target "$(ConsoleRunner)" --target-args "$(Framework)/nunit.framework.tests.dll $(TestOptions)" --include [nunit.framework]* --output NUnitTestCoverage.xml'>
 		</Exec>
 	</Target>
 	
@@ -342,7 +335,6 @@
 		<NUnitProjects Include="$(FrameworkSrcDir)\testdata\nunit.testdata-$(ProjectSuffix).csproj"></NUnitProjects>
 		<NUnitProjects Include="$(FrameworkSrcDir)\slow-tests\slow-nunit-tests-$(ProjectSuffix).csproj"></NUnitProjects>
 		<NUnitProjects Include="$(FrameworkSrcDir)\tests\nunit.framework.tests-$(ProjectSuffix).csproj"></NUnitProjects>
-		<NUnitProjects Include="$(FrameworkSrcDir)\harness\test-harness-$(ProjectSuffix).csproj"></NUnitProjects>
 	</ItemGroup>
 	
 	<ItemGroup>
