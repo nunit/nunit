@@ -104,7 +104,7 @@
 		<ManagedExeLauncher Condition="'$(Runtime)' == 'mono'">mono</ManagedExeLauncher>
 		<TestHarnessProgram>$(FrameworkBuildDir)\test-harness.exe</TestHarnessProgram>
 		<ConsoleRunnerProgram>$(ConsoleBuildDir)\nunit-console.exe</ConsoleRunnerProgram>
-		<TestRunnerArgs>nunit.framework.tests.dll $(TestOptions)</TestRunnerArgs>
+		<TestRunnerArgs>$(Framework)/nunit.framework.tests.dll $(TestOptions)</TestRunnerArgs>
 		<HarnessSelfTestArgs>--selftest $(TestOptions)</HarnessSelfTestArgs>
 	</PropertyGroup>
 
@@ -244,8 +244,8 @@
 		<Message Text="Testing NUnitFramework $(Framework) - $(Configuration)" />
 		<Error Condition="'$(Runtime)' == 'netcf' Or '$(Runtime)' == 'silverlight'"
 			Text="The full NUnit framework cannot be tested under $(Runtime)" />
-		<Exec WorkingDirectory="$(FrameworkBuildDir)" 
-			Command="$(ManagedExeLauncher) $(TestHarnessProgram) $(TestRunnerArgs)" />
+		<Exec WorkingDirectory="$(ConsoleBuildDir)" 
+			Command="$(ManagedExeLauncher) $(ConsoleRunnerProgram) $(TestRunnerArgs)" />
 	</Target>
 	
 	<Target Name="_NUnitLiteTest" Label="Test NUnitLite for the current config">
