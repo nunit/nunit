@@ -139,6 +139,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "nuget", "nuget", "{A972031D
 		nuget\nunit.runners.nuspec = nuget\nunit.runners.nuspec
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit-agent-x86", "src\NUnitEngine\nunit-agent\nunit-agent-x86.csproj", "{28B605B2-E2E9-417E-8369-49E263F1F31B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -357,6 +359,10 @@ Global
 		{A4F0C741-6ED4-46C8-AE75-57E1C7197E22}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A4F0C741-6ED4-46C8-AE75-57E1C7197E22}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A4F0C741-6ED4-46C8-AE75-57E1C7197E22}.Release|Any CPU.Build.0 = Release|Any CPU
+		{28B605B2-E2E9-417E-8369-49E263F1F31B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{28B605B2-E2E9-417E-8369-49E263F1F31B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{28B605B2-E2E9-417E-8369-49E263F1F31B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{28B605B2-E2E9-417E-8369-49E263F1F31B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -421,5 +427,6 @@ Global
 		{A76794DA-29A4-4D63-9850-E0E363A2FAFD} = {A21BFC37-44FC-41A0-B6E7-6F949F45A635}
 		{A4F0C741-6ED4-46C8-AE75-57E1C7197E22} = {A21BFC37-44FC-41A0-B6E7-6F949F45A635}
 		{A972031D-2F61-4183-AF75-99EE1A9F6B32} = {49D441DF-39FD-4F4D-AECA-86CF8EFE23AF}
+		{28B605B2-E2E9-417E-8369-49E263F1F31B} = {31B45C4C-206F-4F31-9CC6-33BF11DFEE39}
 	EndGlobalSection
 EndGlobal

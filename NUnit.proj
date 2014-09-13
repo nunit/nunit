@@ -245,7 +245,7 @@
 	
 	<Target Name="TestFramework" Label="Test the framework for the current config and runtime">
 		<CallTarget Targets="_NUnitTest" Condition="'$(Runtime)' != 'netcf' And '$(Runtime)' != 'silverlight'" />
-		<CallTarget Targets="_NUnitLiteTest" />
+		<CallTarget Targets="_NUnitLiteTest" Condition="'$(Runtime)' != 'netcf' And '$(Runtime)' != 'silverlight'" />
 	</Target>
 	
 	<Target Name="TestAllFrameworks" Label="Test the framework for the current config and all runtimes">
@@ -392,6 +392,7 @@
 		<EngineProjects Include="$(EngineSrcDir)\nunit.engine.api\nunit.engine.api.csproj" />
 		<EngineProjects Include="$(EngineSrcDir)\nunit.engine\nunit.engine.csproj" />
 		<EngineProjects Include="$(EngineSrcDir)\nunit-agent\nunit-agent.csproj" />
+		<EngineProjects Include="$(EngineSrcDir)\nunit-agent\nunit-agent-x86.csproj" />
 		<EngineProjects Include="$(EngineSrcDir)\nunit.engine.tests\nunit.engine.tests.csproj" />
 	</ItemGroup>
 
