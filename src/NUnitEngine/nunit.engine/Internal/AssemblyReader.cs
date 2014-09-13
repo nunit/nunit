@@ -33,29 +33,49 @@ namespace NUnit.Engine.Internal
     /// </summary>
     public class AssemblyReader : IDisposable
     {
-        private string assemblyPath;
+        private readonly string assemblyPath;
         private BinaryReader rdr;
         private FileStream fs;
 
-        UInt16 dos_magic = 0xffff;
-        UInt32 pe_signature = 0xffffffff;
-        UInt16 numberOfSections;
-        UInt16 optionalHeaderSize;
-        UInt16 peType;
-        UInt32 numDataDirectoryEntries;
+        private UInt16 dos_magic = 0xffff;
+        private UInt32 pe_signature = 0xffffffff;
+        private UInt16 numberOfSections;
+        private UInt16 optionalHeaderSize;
+        private PEType peType;
+        private UInt32 numDataDirectoryEntries;
+        private CorFlags corFlags;
 
-        private uint peHeader = 0;
-        private uint fileHeader = 0;
-        private uint optionalHeader = 0;
-        private uint dataDirectory = 0;
-        private uint dataSections = 0;
+        private uint peHeader;
+        private uint fileHeader;
+        private uint optionalHeader;
+        private uint dataDirectory;
+        private uint dataSections;
 
         private struct DataSection
         {
-            public uint virtualAddress;
-            public uint virtualSize;
-            public uint fileOffset;
+            public uint VirtualAddress;
+            public uint VirtualSize;
+            public uint FileOffset;
         };
+
+        private enum PEType : ushort
+        {
+            PE32 = 0x10b,
+            PE32Plus = 0x20b
+        }
+
+        [Flags]
+        private enum CorFlags : uint
+        {
+            // CorHdr.h
+            COMIMAGE_FLAGS_ILONLY            = 0x00000001,
+            COMIMAGE_FLAGS_32BITREQUIRED     = 0x00000002,
+            COMIMAGE_FLAGS_IL_LIBRARY        = 0x00000004,
+            COMIMAGE_FLAGS_STRONGNAMESIGNED  = 0x00000008,
+            COMIMAGE_FLAGS_NATIVE_ENTRYPOINT = 0x00000010,
+            COMIMAGE_FLAGS_TRACKDEBUGDATA    = 0x00010000,
+            COMIMAGE_FLAGS_32BITPREFERRED    = 0x00020000,
+        }
 
         private DataSection[] sections;
 
@@ -84,9 +104,9 @@ namespace NUnit.Engine.Internal
                 optionalHeader = fileHeader + 20;
 
                 fs.Position = optionalHeader;
-                peType = rdr.ReadUInt16();
+                peType = (PEType)rdr.ReadUInt16();
 
-                dataDirectory = peType == 0x20b
+                dataDirectory = peType == PEType.PE32Plus
                     ? optionalHeader + 112
                     : optionalHeader + 96;
 
@@ -106,14 +126,45 @@ namespace NUnit.Engine.Internal
                 for( int i = 0; i < numberOfSections; i++ )
                 {
                     fs.Position += 8;
-                    sections[i].virtualSize = rdr.ReadUInt32();
-                    sections[i].virtualAddress = rdr.ReadUInt32();
+                    sections[i].VirtualSize = rdr.ReadUInt32();
+                    sections[i].VirtualAddress = rdr.ReadUInt32();
                     uint rawDataSize = rdr.ReadUInt32();
-                    sections[i].fileOffset = rdr.ReadUInt32();
-                    if ( sections[i].virtualSize == 0 )
-                        sections[i].virtualSize = rawDataSize;
+                    sections[i].FileOffset = rdr.ReadUInt32();
+                    if ( sections[i].VirtualSize == 0 )
+                        sections[i].VirtualSize = rawDataSize;
 
                     fs.Position += 16;
+                }
+
+                if (IsDotNetFile)
+                {
+                    uint rva = DataDirectoryRva(14);
+                    if (rva != 0)
+                    {
+                        fs.Position = RvaToLfa(rva) + 8;
+                        uint metadata = rdr.ReadUInt32();
+                        fs.Position = RvaToLfa(metadata);
+                        if (rdr.ReadUInt32() == 0x424a5342)
+                        {
+                            // Copy string representing runtime version
+                            fs.Position += 12;
+                            StringBuilder sb = new StringBuilder();
+                            char c;
+                            while ((c = rdr.ReadChar()) != '\0')
+                                sb.Append(c);
+
+                            if (sb[0] == 'v') // Last sanity check
+                                ImageRuntimeVersion = sb.ToString();
+
+                            // Could do fixups here for bad values in older files
+                            // like 1.x86, 1.build, etc. But we are only using
+                            // the major version anyway
+
+                            // Jump back and find the CorFlags
+                            fs.Position = RvaToLfa(rva) + 16;
+                            corFlags = (CorFlags)rdr.ReadUInt32();
+                        }
+                    }
                 }
             }
         }
@@ -124,11 +175,11 @@ namespace NUnit.Engine.Internal
             return rdr.ReadUInt32();
         }
 
-        private uint RvaToLfa( uint rva )
+        private uint RvaToLfa(uint rva)
         {
-            for( int i = 0; i < numberOfSections; i++ )
-                if ( rva >= sections[i].virtualAddress && rva < sections[i].virtualAddress + sections[i].virtualSize )
-                    return rva - sections[i].virtualAddress + sections[i].fileOffset;
+            foreach (var section in sections)
+                if (rva >= section.VirtualAddress && rva < section.VirtualAddress + section.VirtualSize)
+                    return rva - section.VirtualAddress + section.FileOffset;
 
             return 0;
         }
@@ -148,47 +199,22 @@ namespace NUnit.Engine.Internal
             get { return IsValidPeFile && numDataDirectoryEntries > 14 && DataDirectoryRva(14) != 0; }
         }
 
-        public bool Is64BitImage
+        /// <summary>
+        /// Will return true if the assembly is 32 bit, or if it prefers to run 32-bit
+        /// </summary>
+        public bool ShouldRun32Bit
         {
-            get { return peType == 0x20b; }
-        }
-
-        public string ImageRuntimeVersion
-        {
-            get 
+            get
             {
-                string runtimeVersion = string.Empty;
+                // C++/CLI
+                if ((corFlags & CorFlags.COMIMAGE_FLAGS_NATIVE_ENTRYPOINT) != 0)
+                    return peType != PEType.PE32Plus;
 
-                if (this.IsDotNetFile)
-                {
-                    uint rva = DataDirectoryRva(14);
-                    if (rva != 0)
-                    {
-                        fs.Position = RvaToLfa(rva) + 8;
-                        uint metadata = rdr.ReadUInt32();
-                        fs.Position = RvaToLfa(metadata);
-                        if (rdr.ReadUInt32() == 0x424a5342)
-                        {
-                            // Copy string representing runtime version
-                            fs.Position += 12;
-                            StringBuilder sb = new StringBuilder();
-                            char c;
-                            while ((c = rdr.ReadChar()) != '\0')
-                                sb.Append(c);
-
-                            if (sb[0] == 'v') // Last sanity check
-                                runtimeVersion = sb.ToString();
-
-                            // Could do fixups here for bad values in older files
-                            // like 1.x86, 1.build, etc. But we are only using
-                            // the major version anyway
-                        }
-                    }
-                }
-
-                return runtimeVersion; 
+                return peType != PEType.PE32Plus && (corFlags & CorFlags.COMIMAGE_FLAGS_32BITREQUIRED) != 0;
             }
         }
+
+        public string ImageRuntimeVersion { get; private set; }
 
         public void Dispose()
         {

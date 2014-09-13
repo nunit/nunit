@@ -59,7 +59,7 @@ namespace NUnit.Agent
             AgencyUrl = args[1];
             
 #if DEBUG
-            bool pause = false
+            bool pause = false;
 #endif
             bool verbose = false;
             for (int i = 2; i < args.Length; i++)
