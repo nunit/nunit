@@ -92,5 +92,20 @@ namespace NUnit.Engine.Internal.Tests
 			// Assert.LessOrEqual( version, Environment.Version );
 		}
 
+	    [Test]
+	    public void Is64BitCSharpAssembly()
+        {
+            string path = AssemblyHelper.GetAssemblyPath(System.Reflection.Assembly.GetAssembly(GetType()));
+            path = Path.Combine(Path.GetDirectoryName(path), "nunit-agent.exe");
+            Assert.That(new AssemblyReader(path).Is64BitImage, Is.True);
+	    }
+
+        [Test]
+        public void Is32BitCSharpAssembly()
+        {
+            string path = AssemblyHelper.GetAssemblyPath(System.Reflection.Assembly.GetAssembly(GetType()));
+            path = Path.Combine(Path.GetDirectoryName(path), "nunit-agent-x86.exe");
+            Assert.That(new AssemblyReader(path).Is64BitImage, Is.False);
+        }
 	}
 }
