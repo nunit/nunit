@@ -159,6 +159,7 @@ $RECYCLE.BIN/
 # NUnit Specific
 # =========================
 
+.~
 *.userprefs
 *.StyleCop
 *.sdf
