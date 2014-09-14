@@ -6,6 +6,7 @@
 *.pidb
 *.StyleCop
 *.log
+*.*~
 GeneratedAssemblyInfo.cs
 StyleCop.Cache
 local.settings.include
