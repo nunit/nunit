@@ -92,5 +92,38 @@ namespace NUnit.Engine.Internal.Tests
 			// Assert.LessOrEqual( version, Environment.Version );
 		}
 
+	    [Test]
+	    public void ShouldRun32BitAnyCpuCSharpAssembly()
+        {
+            string path = AssemblyHelper.GetAssemblyPath(System.Reflection.Assembly.GetAssembly(GetType()));
+            path = Path.Combine(Path.GetDirectoryName(path), "nunit-agent.exe");
+            Assert.That(new AssemblyReader(path).ShouldRun32Bit, Is.False);
+	    }
+
+        [Test]
+        public void ShouldRun32Bit32BitCSharpAssembly()
+        {
+            string path = AssemblyHelper.GetAssemblyPath(System.Reflection.Assembly.GetAssembly(GetType()));
+            path = Path.Combine(Path.GetDirectoryName(path), "nunit-agent-x86.exe");
+            Assert.That(new AssemblyReader(path).ShouldRun32Bit, Is.True);
+        }
+
+        [Test]
+        public void ShouldRun32Bit64BitCppAssembly()
+        {
+            string path = AssemblyHelper.GetAssemblyPath(System.Reflection.Assembly.GetAssembly(GetType()));
+            path = Path.Combine(Path.GetDirectoryName(path), "mock-cpp-clr-x64.dll");
+            Assume.That(path, Does.Exist);
+            Assert.That(new AssemblyReader(path).ShouldRun32Bit, Is.False);
+        }
+
+        [Test]
+        public void ShouldRun32Bit32BitCppAssembly()
+        {
+            string path = AssemblyHelper.GetAssemblyPath(System.Reflection.Assembly.GetAssembly(GetType()));
+            path = Path.Combine(Path.GetDirectoryName(path), "mock-cpp-clr-x86.dll");
+            Assume.That(path, Does.Exist);
+            Assert.That(new AssemblyReader(path).ShouldRun32Bit, Is.True);
+        }
 	}
 }

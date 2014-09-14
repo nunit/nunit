@@ -133,22 +133,7 @@ namespace NUnit.Engine.Services
             return GetNUnitBinDirectory(version) != null;
         }
 
-        public ITestAgent GetAgent()
-        {
-            return GetAgent( RuntimeFramework.CurrentFramework, Timeout.Infinite );
-        }
-
-        public ITestAgent GetAgent(int waitTime)
-        {
-            return GetAgent(RuntimeFramework.CurrentFramework, waitTime);
-        }
-
-        public ITestAgent GetAgent(RuntimeFramework framework, int waitTime)
-        {
-            return GetAgent(framework, waitTime, false, string.Empty);
-        }
-
-        public ITestAgent GetAgent(RuntimeFramework framework, int waitTime, bool enableDebug, string agentArgs)
+        public ITestAgent GetAgent(RuntimeFramework framework, int waitTime, bool enableDebug, string agentArgs, bool requires32Bit)
         {
             log.Info("Getting agent for use under {0}", framework);
  
@@ -161,7 +146,7 @@ namespace NUnit.Engine.Services
             //AgentRecord r = FindAvailableRemoteAgent(type);
             //if ( r == null )
             //    r = CreateRemoteAgent(type, framework, waitTime);
-            return CreateRemoteAgent(framework, waitTime, enableDebug, agentArgs);
+            return CreateRemoteAgent(framework, waitTime, enableDebug, agentArgs, requires32Bit);
         }
 
         public void ReleaseAgent( ITestAgent agent )
@@ -189,9 +174,9 @@ namespace NUnit.Engine.Services
         #endregion
 
         #region Helper Methods
-        private Guid LaunchAgentProcess(RuntimeFramework targetRuntime, bool enableDebug, string agentArgs)
+        private Guid LaunchAgentProcess(RuntimeFramework targetRuntime, bool enableDebug, string agentArgs, bool requires32Bit)
         {
-            string agentExePath = GetTestAgentExePath(targetRuntime.ClrVersion);
+            string agentExePath = GetTestAgentExePath(targetRuntime.ClrVersion, requires32Bit);
 
             if (agentExePath == null)
                 throw new ArgumentException(
@@ -259,9 +244,9 @@ namespace NUnit.Engine.Services
         //    return null;
         //}
 
-        private ITestAgent CreateRemoteAgent(RuntimeFramework framework, int waitTime, bool enableDebug, string agentArgs)
+        private ITestAgent CreateRemoteAgent(RuntimeFramework framework, int waitTime, bool enableDebug, string agentArgs, bool requires32Bit)
         {
-            Guid agentId = LaunchAgentProcess(framework, enableDebug, agentArgs);
+            Guid agentId = LaunchAgentProcess(framework, enableDebug, agentArgs, requires32Bit);
 
             log.Debug( "Waiting for agent {0} to register", agentId.ToString("B") );
 
@@ -340,13 +325,12 @@ namespace NUnit.Engine.Services
             return null;
         }
 
-        private static string GetTestAgentExePath(Version v)
+        private static string GetTestAgentExePath(Version v, bool requires32Bit)
         {
             string binDir = GetNUnitBinDirectory(v);
             if (binDir == null) return null;
 
-            Assembly a = System.Reflection.Assembly.GetEntryAssembly();
-            string agentName = v.Major > 1 && a != null && a.GetName().ProcessorArchitecture == ProcessorArchitecture.X86
+            string agentName = v.Major > 1 && requires32Bit
                 ? "nunit-agent-x86.exe"
                 : "nunit-agent.exe";
 

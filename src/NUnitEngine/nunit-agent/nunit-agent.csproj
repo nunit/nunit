@@ -8,7 +8,7 @@
     <ProjectGuid>{C2A8FC7A-FA64-46EA-AF6D-73D6B371DBF8}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>nunit_agent</RootNamespace>
+    <RootNamespace>nunit.agent</RootNamespace>
     <AssemblyName>nunit-agent</AssemblyName>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
