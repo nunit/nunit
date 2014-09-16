@@ -107,6 +107,7 @@
     <Compile Include="Assertions\NotEqualFixture.cs" />
     <Compile Include="Assertions\NotSameFixture.cs" />
     <Compile Include="Assertions\SameFixture.cs" />
+    <Compile Include="Attributes\ActionAttributeTests.cs" />
     <Compile Include="Attributes\ApplyToContextTests.cs" />
     <Compile Include="Attributes\ApplyToTestTests.cs" />
     <Compile Include="Attributes\AttributeInheritanceTests.cs" />

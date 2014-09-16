@@ -29,10 +29,14 @@ using NUnit.Framework;
 namespace NUnit.TestUtilities
 {
     /// <summary>
-    /// A helper to Verify that Setup/Teardown 'events' occur, and that they are in the correct order...
+    /// A static helper to Verify that Setup/Teardown 'events' occur, and that they are in the correct order...
     /// </summary>
-    public class SimpleEventRecorder
+    public static class SimpleEventRecorder
     {
+        // Because it is static, this class can only be used by one fixture at a time.
+        // Currently, only one fixture uses it, if more use it, they should not be run in parallel.
+        // TODO: Create a utility that can be used by multiple fixtures
+
         private static Queue<string> _events;
 
         /// <summary>

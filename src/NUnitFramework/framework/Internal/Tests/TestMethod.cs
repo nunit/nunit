@@ -182,7 +182,7 @@ namespace NUnit.Framework.Internal
             CommandDecoratorList decorators = new CommandDecoratorList();
 
             // Add Standard stuff
-            decorators.Add(new SetUpTearDownDecorator());
+            decorators.Add(new SetUpTearDownDecorator(this));
 
             // Add Decorators supplied by attributes
             foreach (ICommandDecoratorSource source in Method.GetCustomAttributes(typeof(ICommandDecoratorSource), true))

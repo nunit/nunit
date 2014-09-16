@@ -71,13 +71,13 @@ namespace NUnit.Framework.Internal.Commands
         public void RunSetUp(TestExecutionContext context)
         {
             // We have not yet run this level
-            this._setUpWasRun = false;
+            _setUpWasRun = false;
 
             if (Next != null)
                 Next.RunSetUp(context);
 
             // No exception, proceed with this level
-            this._setUpWasRun = true;
+            _setUpWasRun = true;
 
             foreach (MethodInfo setUpMethod in _setUpMethods)
                 Reflect.InvokeMethod(setUpMethod, setUpMethod.IsStatic ? null : context.TestObject);
@@ -92,7 +92,7 @@ namespace NUnit.Framework.Internal.Commands
         {
             // As of NUnit 3.0, we will only run teardown at a given
             // inheritance level if we actually ran setup at that level.
-            if (this._setUpWasRun)
+            if (_setUpWasRun)
                 try
                 {
                     // Even though we are only running one level at a time, we

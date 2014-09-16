@@ -57,6 +57,7 @@
     <Compile Include="..\FrameworkVersion.cs">
       <Link>FrameworkVersion.cs</Link>
     </Compile>
+    <Compile Include="ActionTargets.cs" />
     <Compile Include="Api\AbstractTestAssemblyRunner.cs" />
     <Compile Include="Api\DefaultTestAssemblyBuilder.cs" />
     <Compile Include="Api\DriverSettings.cs" />
@@ -74,6 +75,7 @@
     <Compile Include="Attributes\CombiningStrategyAttribute.cs" />
     <Compile Include="Attributes\OneTimeSetUpAttribute.cs" />
     <Compile Include="Attributes\OneTimeTearDownAttribute.cs" />
+    <Compile Include="Attributes\TestActionAttribute.cs" />
     <Compile Include="Attributes\TestCaseBuilderAttribute.cs" />
     <Compile Include="Attributes\FixtureBuilderAttribute.cs" />
     <Compile Include="Attributes\ParallelizableAttribute.cs" />
@@ -340,6 +342,7 @@
     <Compile Include="Internal\TypeHelper.cs" />
     <Compile Include="Internal\XmlHelper.cs" />
     <Compile Include="Is.cs" />
+    <Compile Include="ITestAction.cs" />
     <Compile Include="Iz.cs" />
     <Compile Include="List.cs" />
     <Compile Include="ListMapper.cs" />

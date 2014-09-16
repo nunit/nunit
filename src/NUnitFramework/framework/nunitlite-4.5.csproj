@@ -59,6 +59,7 @@
     <Compile Include="..\FrameworkVersion.cs">
       <Link>FrameworkVersion.cs</Link>
     </Compile>
+    <Compile Include="ActionTargets.cs" />
     <Compile Include="Api\AbstractTestAssemblyRunner.cs" />
     <Compile Include="Api\DefaultTestAssemblyBuilder.cs" />
     <Compile Include="Api\DriverSettings.cs" />
@@ -108,6 +109,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Attributes\TearDownAttribute.cs" />
+    <Compile Include="Attributes\TestActionAttribute.cs" />
     <Compile Include="Attributes\TestAttribute.cs" />
     <Compile Include="Attributes\TestCaseAttribute.cs" />
     <Compile Include="Attributes\TestCaseBuilderAttribute.cs" />
@@ -341,6 +343,7 @@
     <Compile Include="Internal\TypeHelper.cs" />
     <Compile Include="Internal\XmlHelper.cs" />
     <Compile Include="Is.cs" />
+    <Compile Include="ITestAction.cs" />
     <Compile Include="ListMapper.cs" />
     <Compile Include="MessageMatch.cs" />
     <Compile Include="Runner\CommandLineOptions.cs" />

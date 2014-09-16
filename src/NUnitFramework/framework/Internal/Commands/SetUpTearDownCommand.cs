@@ -22,12 +22,13 @@
 // ***********************************************************************
 
 using System;
-using System.Reflection;
+using System.Collections.Generic;
 using System.Threading;
-using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Commands
 {
+    using Interfaces;
+
     /// <summary>
     /// SetUpTearDownDecorator decorates a test command by running
     /// a setup method before the original command and a teardown
@@ -35,6 +36,13 @@ namespace NUnit.Framework.Internal.Commands
     /// </summary>
     public class SetUpTearDownDecorator : ICommandDecorator
     {
+        private TestMethod _testMethod;
+
+        public SetUpTearDownDecorator(TestMethod testMethod)
+        {
+            _testMethod = testMethod;
+        }
+
         CommandStage ICommandDecorator.Stage
         {
             get { return CommandStage.SetUpTearDown; }
@@ -47,7 +55,7 @@ namespace NUnit.Framework.Internal.Commands
 
         TestCommand ICommandDecorator.Decorate(TestCommand command)
         {
-            return new SetUpTearDownCommand(command);
+            return new SetUpTearDownCommand(_testMethod, command);
         }
     }
 
@@ -57,16 +65,22 @@ namespace NUnit.Framework.Internal.Commands
     public class SetUpTearDownCommand : DelegatingTestCommand
     {
         private SetUpTearDownList _methods;
+        private IList<TestActionItem> _actions = new List<TestActionItem>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SetUpTearDownCommand"/> class.
         /// </summary>
+        /// <param name="testMethod">The TestMethod to which this command applies</param>
         /// <param name="innerCommand">The inner command.</param>
-        public SetUpTearDownCommand(TestCommand innerCommand)
+        public SetUpTearDownCommand(TestMethod testMethod, TestCommand innerCommand)
             : base(innerCommand)
         {
             if (Test.FixtureType != null)
                 _methods = new SetUpTearDownList(Test.FixtureType, typeof(SetUpAttribute), typeof(TearDownAttribute));
+
+            foreach (ITestAction action in testMethod.Method.GetCustomAttributes(typeof(ITestAction), true))
+                if (action.Targets == ActionTargets.Test || action.Targets == ActionTargets.Default)
+                    _actions.Add(new TestActionItem(action));
         }
 
         /// <summary>
@@ -79,6 +93,8 @@ namespace NUnit.Framework.Internal.Commands
             try
             {
                 _methods.RunSetUp(context);
+
+                RunBeforeActions(context);
 
                 context.CurrentResult = innerCommand.Execute(context);
             }
@@ -93,10 +109,51 @@ namespace NUnit.Framework.Internal.Commands
             finally
             {
                 if (context.ExecutionStatus != TestExecutionStatus.AbortRequested)
+                {
+                    RunAfterActions(context);
+
                     _methods.RunTearDown(context);
+                }
             }
 
             return context.CurrentResult;
+        }
+
+        private void RunBeforeActions(TestExecutionContext context)
+        {
+            for (int i = 0; i < _actions.Count; i++)
+            {
+                _actions[i].BeforeTest(Test);
+            }
+        }
+
+        private void RunAfterActions(TestExecutionContext context)
+        {
+            for (int i = _actions.Count; i > 0; )
+                _actions[--i].AfterTest(Test);
+        }
+    }
+
+    public class TestActionItem
+    {
+        private ITestAction _action;
+        private bool _beforeTestWasRun;
+
+        public TestActionItem(ITestAction action)
+        {
+            _action = action;
+        }
+
+        public void BeforeTest(Interfaces.ITest test)
+        {
+            _beforeTestWasRun = true;
+            _action.BeforeTest(test);
+        }
+
+        public void AfterTest(Interfaces.ITest test)
+        {
+            if (_beforeTestWasRun)
+                _action.AfterTest(test);
         }
     }
 }
