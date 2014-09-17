@@ -35,6 +35,16 @@ namespace NUnit.Framework.Internal
     {
         #region Fields
 
+        /// <summary>
+        /// Error message for when child tests have errors
+        /// </summary>
+        public static readonly string CHILD_ERRORS_MESSAGE = "One or more child tests had errors";
+
+        /// <summary>
+        /// Error message for when child tests are ignored
+        /// </summary>
+        public static readonly string CHILD_IGNORE_MESSAGE = "One or more child tests were ignored";
+
 //        static Logger log = InternalTrace.GetLogger("TestResult");
 
         /// <summary>
@@ -297,7 +307,7 @@ namespace NUnit.Framework.Internal
 
 
                         if (this.ResultState.Status != TestStatus.Failed)
-                            this.SetResult(ResultState.Failure, "One or more child tests had errors");
+                            this.SetResult(ResultState.Failure, CHILD_ERRORS_MESSAGE);
 
                         break;
 
@@ -307,14 +317,14 @@ namespace NUnit.Framework.Internal
                         {
                             case "Invalid":
                                 if (this.ResultState != ResultState.NotRunnable && this.ResultState.Status != TestStatus.Failed)
-                                    this.SetResult(ResultState.Failure, "One or more child tests had errors");
+                                    this.SetResult(ResultState.Failure, CHILD_ERRORS_MESSAGE);
 
                                 break;
 
                             case "Ignored":
 
                                 if (this.ResultState.Status == TestStatus.Inconclusive || this.ResultState.Status == TestStatus.Passed)
-                                    this.SetResult(ResultState.Ignored, "One or more child tests were ignored");
+                                    this.SetResult(ResultState.Ignored, CHILD_IGNORE_MESSAGE);
 
                                 break;
 
