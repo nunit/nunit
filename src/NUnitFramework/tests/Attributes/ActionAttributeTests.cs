@@ -42,34 +42,13 @@ namespace NUnit.Framework.Tests
         // different runtimes, so we now look only at the relative position
         // of before and after actions with respect to the test.
 
+        private static readonly string ASSEMBLY_PATH = AssemblyHelper.GetAssemblyPath(typeof(ActionAttributeFixture));
+        private static readonly string ASSEMBLY_NAME = System.IO.Path.GetFileName(ASSEMBLY_PATH);
+
         private ITestResult _result = null;
         private int _case1 = -1;
         private int _case2 = -1;
         private int _simpleTest = -1;
-        private int _firstTest;
-        private int _lastTest;
-
-        private readonly string[] _suiteSites = new string[]
-        {
-            "Assembly",
-            "BaseSetupFixture",
-            "SetupFixture",
-            "BaseInterface",
-            "BaseFixture",
-            "Interface",
-            "Fixture"
-        };
-
-        private readonly string[] _parameterizedTestOutput = new string[]
-        {
-            "SomeTest-Case1",
-            "SomeTest-Case2"
-        };
-
-        private readonly string[] _testOutput = new string[]
-        {
-            "SomeTestNotParameterized",
-        };
 
         [OneTimeSetUp]
         public void Setup()
@@ -87,14 +66,12 @@ namespace NUnit.Framework.Tests
             // No need for the overhead of parallel execution here
             options["NumberOfTestWorkers"] = 0;
 
-            Assert.NotNull(runner.Load(AssemblyHelper.GetAssemblyPath(typeof(ActionAttributeFixture)), options), "Assembly not loaded");
+            Assert.NotNull(runner.Load(ASSEMBLY_PATH, options), "Assembly not loaded");
 
             _result = runner.Run(TestListener.NULL, TestFilter.Empty);
             _case1 = ActionAttributeFixture.Events.IndexOf("CaseOne");
             _case2 = ActionAttributeFixture.Events.IndexOf("CaseTwo");
             _simpleTest = ActionAttributeFixture.Events.IndexOf("SimpleTest");
-            _firstTest = Math.Min(Math.Min(_case1, _case2), _simpleTest);
-            _lastTest = Math.Max(Math.Max(_case1, _case2), _simpleTest);
 
             Assert.That(_case1, Is.GreaterThanOrEqualTo(0), "CaseOne did not execute");
             Assert.That(_case2, Is.GreaterThanOrEqualTo(0), "CaseTwo did not execute");
@@ -114,8 +91,8 @@ namespace NUnit.Framework.Tests
         public void ExpectedOutput_InCorrectOrder()
         {
             string[] expectedResults = new string[] {
-//                "AssemblySuite.Before.false.false",
-//                "AssemblySite.Before.false.false",
+                ASSEMBLY_NAME + ".OnAssembly.Before.Suite",
+                ASSEMBLY_NAME + ".OnAssembly.Before.Default",
 //                "BaseSetupFixtureSuite.Before.true.false",
 //                "BaseSetupFixtureSite.Before.true.false",
 //                "SetupFixtureSuite.Before.true.false",
@@ -206,15 +183,15 @@ namespace NUnit.Framework.Tests
                 //"InterfaceSite.After.true.false",
                 //"InterfaceSuite.After.true.false",
                 "ActionAttributeFixture.OnBaseFixture.After.Default",
-                "ActionAttributeFixture.OnBaseFixture.After.Suite"
+                "ActionAttributeFixture.OnBaseFixture.After.Suite",
                 //"BaseInterfaceSite.After.true.false",
                 //"BaseInterfaceSuite.After.true.false",
                 //"SetupFixtureSite.After.true.false",
                 //"SetupFixtureSuite.After.true.false",
                 //"BaseSetupFixtureSite.After.true.false",
                 //"BaseSetupFixtureSuite.After.true.false",
-                //"AssemblySite.After.false.false",
-                //"AssemblySuite.After.false.false"
+                ASSEMBLY_NAME + ".OnAssembly.After.Default",
+                ASSEMBLY_NAME + ".OnAssembly.After.Suite"
             };
 
             foreach (var item in expectedResults)
@@ -223,33 +200,64 @@ namespace NUnit.Framework.Tests
         }
 
         [Test]
-        public void CaseOneIsWrappedByAttributesOnMethod()
+        public void AttributesOnAssembly()
+        {
+            var numEvents = ActionAttributeFixture.Events.Count;
+            CheckBeforeAfterPair(0, numEvents - 1, ASSEMBLY_NAME, "OnAssembly");
+            CheckBeforeAfterPair(1, numEvents - 2, ASSEMBLY_NAME, "OnAssembly");
+        }
+
+        [Test]
+        public void AttributesOnBaseSetUpFixture()
+        {
+            var numEvents = ActionAttributeFixture.Events.Count;
+            CheckBeforeAfterPair(2, numEvents - 3, "ActionAttributeTests", "OnBaseSetupFixture");
+            CheckBeforeAfterPair(3, numEvents - 4, "ActionAttributeTests", "OnBaseSetupFixture");
+        }
+
+        [Test]
+        public void AttributesOnSetUpFixture()
+        {
+            var numEvents = ActionAttributeFixture.Events.Count;
+            CheckBeforeAfterPair(4, numEvents - 5, "ActionAttributeTests", "OnSetupFixture");
+            CheckBeforeAfterPair(5, numEvents - 6, "ActionAttributeTests", "OnSetupFixture");
+        }
+
+        [Test]
+        public void AttributesOnBaseFixture()
+        {
+            var numEvents = ActionAttributeFixture.Events.Count;
+            CheckBeforeAfterPair(6, numEvents - 7, "ActionAttributeFixture", "OnBaseFixture");
+            CheckBeforeAfterPair(7, numEvents - 8, "ActionAttributeFixture", "OnBaseFixture");
+        }
+
+        [Test]
+        public void AttributesOnFixture()
+        {
+            var numEvents = ActionAttributeFixture.Events.Count;
+            CheckBeforeAfterPair(8, numEvents - 9, "ActionAttributeFixture", "OnFixture");
+            CheckBeforeAfterPair(9, numEvents - 10, "ActionAttributeFixture", "OnFixture");
+        }
+
+        [Test]
+        public void AttributesOnMethod_CaseOne()
         {
             CheckBeforeAfterPair(_case1 - 1, _case1 + 1, "CaseOne", "OnMethod");
             CheckBeforeAfterPair(_case1 - 2, _case1 + 2, "CaseOne", "OnMethod");
         }
 
         [Test]
-        public void CaseTwoIsWrappedByAttributesOnMethod()
+        public void AttributesOnMethod_CaseTwo()
         {
             CheckBeforeAfterPair(_case2 - 1, _case2 + 1, "CaseTwo", "OnMethod");
             CheckBeforeAfterPair(_case2 - 2, _case2 + 2, "CaseTwo", "OnMethod");
         }
 
         [Test]
-        public void SimpleTestIsWrappedByAttributesOnMethod()
+        public void AttributesOnMethod_SimpleTest()
         {
             CheckBeforeAfterPair(_simpleTest - 1, _simpleTest + 1, "SimpleTest", "OnMethod");
             CheckBeforeAfterPair(_simpleTest - 2, _simpleTest + 2, "SimpleTest", "OnMethod");
-        }
-
-        [Test]
-        public void TestAttributesOnFixture()
-        {
-            CheckBeforeAfterPair(_firstTest - 3, _lastTest + 3, "ActionAttributeFixture", "OnFixture");
-            CheckBeforeAfterPair(_firstTest - 4, _lastTest + 4, "ActionAttributeFixture", "OnFixture");
-            CheckBeforeAfterPair(_firstTest - 5, _lastTest + 5, "ActionAttributeFixture", "OnBaseFixture");
-            CheckBeforeAfterPair(_firstTest - 6, _lastTest + 6, "ActionAttributeFixture", "OnBaseFixture");
         }
 
         private void CheckBeforeAfterPair(int index1, int index2, string testName, string tag)

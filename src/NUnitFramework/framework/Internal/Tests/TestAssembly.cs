@@ -33,14 +33,32 @@ namespace NUnit.Framework.Internal
     public class TestAssembly : TestSuite
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="TestAssembly"/> class.
+        /// Initializes a new instance of the <see cref="TestAssembly"/> class
+        /// specifying the Assembly and the path from which it was loaded.
+        /// </summary>
+        /// <param name="assembly">The assembly this test represents.</param>
+        /// <param name="path">The path used to load the assembly.</param>
+        public TestAssembly(Assembly assembly, string path)
+            : base(path)
+        {
+            this.Assembly = assembly;
+            this.Name = Path.GetFileName(path);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TestAssembly"/> class
+        /// for a path which could not be loaded.
         /// </summary>
         /// <param name="path">The path used to load the assembly.</param>
-        public TestAssembly(string path)
-            : base(path) 
+        public TestAssembly(string path) : base(path)
         {
             this.Name = Path.GetFileName(path);
         }
+
+        /// <summary>
+        /// Gets the Assembly represented by this instance.
+        /// </summary>
+        public Assembly Assembly { get; private set; }
 
         /// <summary>
         /// Gets the name used for the top-level element in the

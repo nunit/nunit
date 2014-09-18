@@ -58,6 +58,14 @@ namespace NUnit.Framework.Internal.Execution
             _suite = suite;
             SetUpTearDownList setUpTearDown = null;
             var actions = new List<TestActionItem>();
+            var testAssembly = suite as TestAssembly;
+            if (testAssembly != null)
+            {
+                var allActions = ActionsHelper.GetActionsFromAttributeProvider(testAssembly.Assembly);
+                foreach (ITestAction action in allActions)
+                    if (action.Targets == ActionTargets.Suite || action.Targets == ActionTargets.Default)
+                        actions.Add(new TestActionItem(action));
+            }
             if (suite.FixtureType != null)
             {
                 setUpTearDown = new SetUpTearDownList(

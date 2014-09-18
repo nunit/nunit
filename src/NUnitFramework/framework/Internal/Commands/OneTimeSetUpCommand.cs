@@ -69,10 +69,11 @@ namespace NUnit.Framework.Internal.Commands
                     context.TestObject = _suite.Fixture ?? Reflect.Construct(_fixtureType, _arguments);
 
                 _setUpTearDown.RunSetUp(context);
-
-                for (int i = 0; i < _actions.Count; i++)
-                    _actions[i].BeforeTest(Test);
             }
+
+
+            for (int i = 0; i < _actions.Count; i++)
+                _actions[i].BeforeTest(Test);
 
             return context.CurrentResult;
         }

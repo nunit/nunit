@@ -59,23 +59,21 @@ namespace NUnit.Framework.Internal.Commands
         {
             TestResult suiteResult = context.CurrentResult;
 
-            if (_setUpTearDown != null)
+            try
             {
-                try
-                {
-                    for (int i = _actions.Count; i > 0; )
-                        _actions[--i].AfterTest(Test);
+                for (int i = _actions.Count; i > 0; )
+                    _actions[--i].AfterTest(Test);
 
+                if (_setUpTearDown != null)
                     _setUpTearDown.RunTearDown(context);
 
-                    IDisposable disposable = context.TestObject as IDisposable;
-                    if (disposable != null)
-                        disposable.Dispose();
-                }
-                catch (Exception ex)
-                {
-                    suiteResult.RecordTearDownException(ex);
-                }
+                IDisposable disposable = context.TestObject as IDisposable;
+                if (disposable != null)
+                    disposable.Dispose();
+            }
+            catch (Exception ex)
+            {
+                suiteResult.RecordTearDownException(ex);
             }
 
             return suiteResult;

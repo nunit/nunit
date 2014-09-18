@@ -65,6 +65,7 @@ namespace NUnit.Framework.Api
         #endregion
 
         #region Build Methods
+
         /// <summary>
         /// Build a suite of tests from a provided assembly
         /// </summary>
@@ -77,29 +78,13 @@ namespace NUnit.Framework.Api
         {
             log.Debug("Loading {0} in AppDomain {1}", assembly.FullName, AppDomain.CurrentDomain.FriendlyName);
 
-            this.assembly = assembly;
-            TestSuite testAssembly = null;
-
 #if NETCF || SILVERLIGHT
             string assemblyPath = AssemblyHelper.GetAssemblyName(assembly).Name;
 #else
             string assemblyPath = AssemblyHelper.GetAssemblyPath(assembly);
 #endif
 
-            try
-            {
-                IList fixtureNames = options[DriverSettings.LOAD] as IList;
-                IList fixtures = GetFixtures(assembly, fixtureNames);
-
-                testAssembly = BuildTestAssembly(assemblyPath, fixtures);
-            }
-            catch (Exception ex)
-            {
-                testAssembly.RunState = RunState.NotRunnable;
-                testAssembly.Properties.Set(PropertyNames.SkipReason, ex.Message);
-            }
-
-            return testAssembly;
+            return Build(assembly, assemblyPath, options);
         }
 
         /// <summary>
@@ -114,25 +99,45 @@ namespace NUnit.Framework.Api
         {
             log.Debug("Loading {0} in AppDomain {1}", assemblyName, AppDomain.CurrentDomain.FriendlyName);
 
-            TestSuite testAssembly = new TestAssembly(assemblyName);
+            TestSuite testAssembly = null;
 
             try
             {
-                this.assembly = Load(assemblyName);
-
-                IList fixtureNames = options[DriverSettings.LOAD] as IList;
-
-                IList fixtures = GetFixtures(assembly, fixtureNames);
-                testAssembly = BuildTestAssembly(assemblyName, fixtures);
+                var assembly = Load(assemblyName);
+                testAssembly = Build(assembly, assemblyName, options);
             }
             catch(Exception ex)
             {
+                testAssembly = new TestAssembly(assemblyName);
                 testAssembly.RunState = RunState.NotRunnable;
                 testAssembly.Properties.Set(PropertyNames.SkipReason, ex.Message);
             }
 
             return testAssembly;
         }
+
+        private TestSuite Build(Assembly assembly, string assemblyPath, IDictionary options)
+        {
+            this.assembly = assembly;
+            TestSuite testAssembly = null;
+
+            try
+            {
+                IList fixtureNames = options[DriverSettings.LOAD] as IList;
+                IList fixtures = GetFixtures(assembly, fixtureNames);
+
+                testAssembly = BuildTestAssembly(assembly, assemblyPath, fixtures);
+            }
+            catch (Exception ex)
+            {
+                testAssembly = new TestAssembly(assemblyPath);
+                testAssembly.RunState = RunState.NotRunnable;
+                testAssembly.Properties.Set(PropertyNames.SkipReason, ex.Message);
+            }
+
+            return testAssembly;
+        }
+
         #endregion
 
         #region Helper Methods
@@ -215,9 +220,9 @@ namespace NUnit.Framework.Api
             return result;
         }
 
-        private TestSuite BuildTestAssembly(string assemblyName, IList fixtures)
+        private TestSuite BuildTestAssembly(Assembly assembly, string assemblyName, IList fixtures)
         {
-            TestSuite testAssembly = new TestAssembly(assemblyName);
+            TestSuite testAssembly = new TestAssembly(assembly, assemblyName);
 
             if (fixtures.Count == 0)
             {
