@@ -245,6 +245,7 @@
     <Compile Include="Interfaces\RunState.cs" />
     <Compile Include="Interfaces\TestStatus.cs" />
     <Compile Include="Interfaces\XmlNode.cs" />
+    <Compile Include="Internal\ActionsHelper.cs" />
     <Compile Include="Internal\AssemblyHelper.cs" />
     <Compile Include="Internal\AsyncInvocationRegion.cs" />
     <Compile Include="Internal\Builders\CombinatorialStrategy.cs" />

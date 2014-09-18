@@ -57,12 +57,20 @@ namespace NUnit.Framework.Internal.Execution
         {
             _suite = suite;
             SetUpTearDownList setUpTearDown = null;
+            var actions = new List<TestActionItem>();
             if (suite.FixtureType != null)
-                setUpTearDown =  new SetUpTearDownList(
+            {
+                setUpTearDown = new SetUpTearDownList(
                     suite.FixtureType, typeof(OneTimeSetUpAttribute), typeof(OneTimeTearDownAttribute));
 
-            _setupCommand = MakeSetUpCommand(suite, setUpTearDown);
-            _teardownCommand = MakeTearDownCommand(suite, setUpTearDown);
+                var allActions = ActionsHelper.GetActionsFromTypesAttributes(suite.FixtureType);
+                foreach (ITestAction action in allActions)
+                    if (action.Targets == ActionTargets.Suite || action.Targets == ActionTargets.Default)
+                        actions.Add(new TestActionItem(action));
+            }
+
+            _setupCommand = MakeSetUpCommand(suite, setUpTearDown, actions);
+            _teardownCommand = MakeTearDownCommand(suite, setUpTearDown, actions);
             _childFilter = childFilter;
 
             //CreateChildWorkItems(childFilter);
@@ -152,12 +160,12 @@ namespace NUnit.Framework.Internal.Execution
         /// the child tests are run.
         /// </summary>
         /// <returns>A TestCommand</returns>
-        private static TestCommand MakeSetUpCommand(TestSuite suite, SetUpTearDownList setUpTearDown)
+        private static TestCommand MakeSetUpCommand(TestSuite suite, SetUpTearDownList setUpTearDown, List<TestActionItem> actions)
         {
             if (suite.RunState != RunState.Runnable && suite.RunState != RunState.Explicit)
                 return new SkipCommand(suite);
 
-            TestCommand command = new OneTimeSetUpCommand(suite, setUpTearDown);
+            TestCommand command = new OneTimeSetUpCommand(suite, setUpTearDown, actions);
 
             if (suite.FixtureType != null)
             {
@@ -174,9 +182,9 @@ namespace NUnit.Framework.Internal.Execution
         /// child tests are run.
         /// </summary>
         /// <returns>A TestCommand</returns>
-        private static TestCommand MakeTearDownCommand(TestSuite suite, SetUpTearDownList setUpTearDown)
+        private static TestCommand MakeTearDownCommand(TestSuite suite, SetUpTearDownList setUpTearDown, List<TestActionItem> actions)
         {
-            TestCommand command = new OneTimeTearDownCommand(suite, setUpTearDown);
+            TestCommand command = new OneTimeTearDownCommand(suite, setUpTearDown, actions);
 
             if (suite.TestType == "Theory")
                 command = new TheoryResultCommand(command);

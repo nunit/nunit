@@ -46,6 +46,8 @@ namespace NUnit.Framework.Tests
         private int _case1 = -1;
         private int _case2 = -1;
         private int _simpleTest = -1;
+        private int _firstTest;
+        private int _lastTest;
 
         private readonly string[] _suiteSites = new string[]
         {
@@ -81,7 +83,7 @@ namespace NUnit.Framework.Tests
             ActionAttributeFixture.ClearResults();
 
             IDictionary options = new Hashtable();
-            options["LOAD"] = new string[] { typeof(ActionAttributeFixture).FullName };
+            options["LOAD"] = new string[] { "NUnit.TestData.ActionAttributeTests" };
             // No need for the overhead of parallel execution here
             options["NumberOfTestWorkers"] = 0;
 
@@ -91,6 +93,8 @@ namespace NUnit.Framework.Tests
             _case1 = ActionAttributeFixture.Events.IndexOf("CaseOne");
             _case2 = ActionAttributeFixture.Events.IndexOf("CaseTwo");
             _simpleTest = ActionAttributeFixture.Events.IndexOf("SimpleTest");
+            _firstTest = Math.Min(Math.Min(_case1, _case2), _simpleTest);
+            _lastTest = Math.Max(Math.Max(_case1, _case2), _simpleTest);
 
             Assert.That(_case1, Is.GreaterThanOrEqualTo(0), "CaseOne did not execute");
             Assert.That(_case2, Is.GreaterThanOrEqualTo(0), "CaseTwo did not execute");
@@ -118,12 +122,12 @@ namespace NUnit.Framework.Tests
 //                "SetupFixtureSite.Before.true.false",
 //                "BaseInterfaceSuite.Before.true.false",
 //                "BaseInterfaceSite.Before.true.false",
-//                "BaseFixtureSuite.Before.true.false",
-//                "BaseFixtureSite.Before.true.false",
+                "ActionAttributeFixture.OnBaseFixture.Before.Suite",
+                "ActionAttributeFixture.OnBaseFixture.Before.Default",
 //                "InterfaceSuite.Before.true.false",
 //                "InterfaceSite.Before.true.false",
-//                "FixtureSuite.Before.true.false",
-//                "FixtureSite.Before.true.false",
+                "ActionAttributeFixture.OnFixture.Before.Suite",
+                "ActionAttributeFixture.OnFixture.Before.Default",
 //                "ParameterizedSuite.Before.false",
 //#if DEFAULT_APPLIES_TO_TESTCASE
 //                "ParameterizedSite.Before.false",
@@ -135,15 +139,15 @@ namespace NUnit.Framework.Tests
 //                "BaseFixtureTest.Before.true.true",
 //                "InterfaceTest.Before.true.true",
 //                "FixtureTest.Before.true.true",
-                "CaseOne Action=ParameterizedTest Phase=Before Target=Test",
+                "CaseOne.OnMethod.Before.Test",
 #if !DEFAULT_APPLIES_TO_TESTCASE
-                "CaseOne Action=ParameterizedSite Phase=Before Target=Default",
+                "CaseOne.OnMethod.Before.Default",
 #endif
                 "CaseOne",
 #if !DEFAULT_APPLIES_TO_TESTCASE
-                "CaseOne Action=ParameterizedSite Phase=After Target=Default",
+                "CaseOne.OnMethod.After.Default",
 #endif
-                "CaseOne Action=ParameterizedTest Phase=After Target=Test",
+                "CaseOne.OnMethod.After.Test",
 //                "FixtureTest.After.true.true",
 //                "InterfaceTest.After.true.true",
 //                "BaseFixtureTest.After.true.true",
@@ -158,15 +162,15 @@ namespace NUnit.Framework.Tests
 //                "BaseFixtureTest.Before.true.true",
 //                "InterfaceTest.Before.true.true",
 //                "FixtureTest.Before.true.true",
-                "CaseTwo Action=ParameterizedTest Phase=Before Target=Test",
+                "CaseTwo.OnMethod.Before.Test",
 #if !DEFAULT_APPLIES_TO_TESTCASE
-                "CaseTwo Action=ParameterizedSite Phase=Before Target=Default",
+                "CaseTwo.OnMethod.Before.Default",
 #endif
                 "CaseTwo",
 #if !DEFAULT_APPLIES_TO_TESTCASE
-                "CaseTwo Action=ParameterizedSite Phase=After Target=Default",
+                "CaseTwo.OnMethod.After.Default",
 #endif
-                "CaseTwo Action=ParameterizedTest Phase=After Target=Test",
+                "CaseTwo.OnMethod.After.Test",
 //                "FixtureTest.After.true.true",
 //                "InterfaceTest.After.true.true",
 //                "BaseFixtureTest.After.true.true",
@@ -185,11 +189,11 @@ namespace NUnit.Framework.Tests
 //                "BaseFixtureTest.Before.true.true",
 //                "InterfaceTest.Before.true.true",
 //                "FixtureTest.Before.true.true",
-                "SimpleTest Action=MethodTest Phase=Before Target=Test",
-                "SimpleTest Action=MethodSite Phase=Before Target=Default",
+                "SimpleTest.OnMethod.Before.Test",
+                "SimpleTest.OnMethod.Before.Default",
                 "SimpleTest",
-                "SimpleTest Action=MethodSite Phase=After Target=Default",
-                "SimpleTest Action=MethodTest Phase=After Target=Test"
+                "SimpleTest.OnMethod.After.Default",
+                "SimpleTest.OnMethod.After.Test",
                 //"FixtureTest.After.true.true",
                 //"InterfaceTest.After.true.true",
                 //"BaseFixtureTest.After.true.true",
@@ -197,12 +201,12 @@ namespace NUnit.Framework.Tests
                 //"SetupFixtureTest.After.true.true",
                 //"BaseSetupFixtureTest.After.true.true",
                 //"AssemblyTest.After.true.true",
-                //"FixtureSite.After.true.false",
-                //"FixtureSuite.After.true.false",
+                "ActionAttributeFixture.OnFixture.After.Default",
+                "ActionAttributeFixture.OnFixture.After.Suite",
                 //"InterfaceSite.After.true.false",
                 //"InterfaceSuite.After.true.false",
-                //"BaseFixtureSite.After.true.false",
-                //"BaseFixtureSuite.After.true.false",
+                "ActionAttributeFixture.OnBaseFixture.After.Default",
+                "ActionAttributeFixture.OnBaseFixture.After.Suite"
                 //"BaseInterfaceSite.After.true.false",
                 //"BaseInterfaceSuite.After.true.false",
                 //"SetupFixtureSite.After.true.false",
@@ -215,48 +219,50 @@ namespace NUnit.Framework.Tests
 
             foreach (var item in expectedResults)
                 Assert.That(ActionAttributeFixture.Events, Contains.Item(item));
+            //Assert.That(ActionAttributeFixture.Events, Is.EquivalentTo(expectedResults));
         }
 
         [Test]
         public void CaseOneIsWrappedByAttributesOnMethod()
         {
-            CheckBeforeAfterPair(_case1 - 1, _case1 + 1, "CaseOne");
-            CheckBeforeAfterPair(_case1 - 2, _case1 + 2, "CaseOne");
+            CheckBeforeAfterPair(_case1 - 1, _case1 + 1, "CaseOne", "OnMethod");
+            CheckBeforeAfterPair(_case1 - 2, _case1 + 2, "CaseOne", "OnMethod");
         }
 
         [Test]
         public void CaseTwoIsWrappedByAttributesOnMethod()
         {
-            CheckBeforeAfterPair(_case2 - 1, _case2 + 1, "CaseTwo");
-            CheckBeforeAfterPair(_case2 - 2, _case2 + 2, "CaseTwo");
+            CheckBeforeAfterPair(_case2 - 1, _case2 + 1, "CaseTwo", "OnMethod");
+            CheckBeforeAfterPair(_case2 - 2, _case2 + 2, "CaseTwo", "OnMethod");
         }
 
         [Test]
         public void SimpleTestIsWrappedByAttributesOnMethod()
         {
-            CheckBeforeAfterPair(_simpleTest - 1, _simpleTest + 1, "SimpleTest");
-            CheckBeforeAfterPair(_simpleTest - 2, _simpleTest + 2, "SimpleTest");
+            CheckBeforeAfterPair(_simpleTest - 1, _simpleTest + 1, "SimpleTest", "OnMethod");
+            CheckBeforeAfterPair(_simpleTest - 2, _simpleTest + 2, "SimpleTest", "OnMethod");
         }
 
-        private void CheckBeforeAfterPair(int index1, int index2, string testName)
+        [Test]
+        public void TestAttributesOnFixture()
+        {
+            CheckBeforeAfterPair(_firstTest - 3, _lastTest + 3, "ActionAttributeFixture", "OnFixture");
+            CheckBeforeAfterPair(_firstTest - 4, _lastTest + 4, "ActionAttributeFixture", "OnFixture");
+            CheckBeforeAfterPair(_firstTest - 5, _lastTest + 5, "ActionAttributeFixture", "OnBaseFixture");
+            CheckBeforeAfterPair(_firstTest - 6, _lastTest + 6, "ActionAttributeFixture", "OnBaseFixture");
+        }
+
+        private void CheckBeforeAfterPair(int index1, int index2, string testName, string tag)
         {
             var event1 = ActionAttributeFixture.Events[index1];
             var event2 = ActionAttributeFixture.Events[index2];
 
-            Assert.That(event1, Contains.Substring("Action="));
-            int index = event1.IndexOf("Action=") + 7;
-            var action1 = event1.Substring(index, event1.IndexOf(' ', index) - index);
+            Assert.That(event1, Does.StartWith(testName + "." + tag + ".Before"));
+            Assert.That(event2, Does.StartWith(testName + "." + tag + ".After"));
 
-            Assert.That(event1, Contains.Substring("Target="));
-            index = event1.IndexOf("Target=") + 7;
+            int index = event1.LastIndexOf('.');
             var target1 = event1.Substring(index); // Target is last in string
-
-            Assert.That(event1, Contains.Substring("Phase=Before"));
-            Assert.That(event2, Contains.Substring("Phase=After"));
-            Assert.That(event1, Does.StartWith(testName));
-            Assert.That(event2, Does.StartWith(testName));
-            Assert.That(event2, Contains.Substring("Action=" + action1), "Event mismatch");
-            Assert.That(event2, Contains.Substring("Target=" + target1), "Event mismatch");
+            Assert.That(event2, Does.EndWith(target1), "Event mismatch");
         }
     }
 }

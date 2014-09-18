@@ -29,31 +29,31 @@ using NUnit.Framework;
 using NUnit.Framework.Interfaces;
 using NUnit.TestData.ActionAttributeTests;
 
-//[assembly: SampleAction("AssemblySuite", ActionTargets.Suite)]
-//[assembly: SampleAction("AssemblyTest", ActionTargets.Test)]
-//[assembly: SampleAction("AssemblySite")]
+[assembly: TaggedAction("OnAssembly", ActionTargets.Suite)]
+[assembly: TaggedAction("OnAssembly", ActionTargets.Test)]
+[assembly: TaggedAction("OnAssembly")]
 
 namespace NUnit.TestData.ActionAttributeTests
 {
-    //[SetUpFixture]
-    //[SampleAction("SetupFixtureSuite", ActionTargets.Suite)]
-    //[SampleAction("SetupFixtureTest", ActionTargets.Test)]
-    //[SampleAction("SetupFixtureSite")]
+    [SetUpFixture]
+    [TaggedAction("OnSetupFixture", ActionTargets.Suite)]
+    [TaggedAction("OnSetupFixture", ActionTargets.Test)]
+    [TaggedAction("OnSetupFixture")]
     public class SetupFixture : BaseSetupFixture
     {
     }
 
-    //[SampleAction("BaseSetupFixtureSuite", ActionTargets.Suite)]
-    //[SampleAction("BaseSetupFixtureTest", ActionTargets.Test)]
-    //[SampleAction("BaseSetupFixtureSite")]
+    [TaggedAction("OnBaseSetupFixture", ActionTargets.Suite)]
+    [TaggedAction("OnBaseSetupFixture", ActionTargets.Test)]
+    [TaggedAction("OnBaseSetupFixture")]
     public abstract class BaseSetupFixture
     {
     }
 
     [TestFixture]
-    //[SampleAction("FixtureSuite", ActionTargets.Suite)]
-    //[SampleAction("FixtureTest", ActionTargets.Test)]
-    //[SampleAction("FixtureSite")]
+    [TaggedAction("OnFixture", ActionTargets.Suite)]
+    [TaggedAction("OnFixture", ActionTargets.Test)]
+    [TaggedAction("OnFixture")]
     public class ActionAttributeFixture : BaseActionAttributeFixture, IWithAction
     {
         public static List<string> Events { get; private set; }
@@ -72,59 +72,60 @@ namespace NUnit.TestData.ActionAttributeTests
 
         [TestCase("One", TestName="CaseOne")]
         [TestCase("Two", TestName="CaseTwo")]
-        //[SampleAction("ParameterizedSuite", ActionTargets.Suite)] // Applies to parameterized suite
-        [NamedAction("ParameterizedTest", ActionTargets.Test)] // Applies to each case
-        [NamedAction("ParameterizedSite")]                     // Ditto
+        [TaggedAction("OnMethod", ActionTargets.Suite)] // Applies to parameterized suite
+        [TaggedAction("OnMethod", ActionTargets.Test)] // Applies to each case
+        [TaggedAction("OnMethod")]                     // Ditto
         public void ParameterizedTest(string message)
         {
             ((IWithAction)this).Events.Add("Case" + message);
         }
 
         [Test]
-        [NamedAction("MethodSuite", ActionTargets.Suite)] // Ignored in this context
-        [NamedAction("MethodTest", ActionTargets.Test)]
-        [NamedAction("MethodSite")]
+        [TaggedAction("OnMethod", ActionTargets.Suite)] // Ignored in this context
+        [TaggedAction("OnMethod", ActionTargets.Test)]
+        [TaggedAction("OnMethod")]
         public void SimpleTest()
         {
             ((IWithAction)this).Events.Add("SimpleTest");
         }
     }
 
-    //[SampleAction("BaseFixtureSuite", ActionTargets.Suite)]
-    //[SampleAction("BaseFixtureTest", ActionTargets.Test)]
-    //[SampleAction("BaseFixtureSite")]
+    [TaggedAction("OnBaseFixture", ActionTargets.Suite)]
+    [TaggedAction("OnBaseFixture", ActionTargets.Test)]
+    [TaggedAction("OnBaseFixture")]
     public abstract class BaseActionAttributeFixture : IBaseWithAction
     {
     }
 
-    //[SampleAction("InterfaceSuite", ActionTargets.Suite)]
-    //[SampleAction("InterfaceTest", ActionTargets.Test)]
-    //[SampleAction("InterfaceSite")]
+    //[TaggedAction("InterfaceSuite", ActionTargets.Suite)]
+    //[TaggedAction("InterfaceTest", ActionTargets.Test)]
+    //[TaggedAction("InterfaceSite")]
     public interface IWithAction
     {
         List<string> Events { get; }
     }
 
-    //[SampleAction("BaseInterfaceSuite", ActionTargets.Suite)]
-    //[SampleAction("BaseInterfaceTest", ActionTargets.Test)]
-    //[SampleAction("BaseInterfaceSite")]
+    //[TaggedAction("BaseInterfaceSuite", ActionTargets.Suite)]
+    //[TaggedAction("BaseInterfaceTest", ActionTargets.Test)]
+    //[TaggedAction("BaseInterfaceSite")]
     public interface IBaseWithAction
     {
     }
 
-    public class NamedActionAttribute : TestActionAttribute
+    [AttributeUsage(AttributeTargets.Assembly | AttributeTargets.Class | AttributeTargets.Method, AllowMultiple=true, Inherited=true)]
+    public class TaggedActionAttribute : TestActionAttribute
     {
-        private readonly string _name = null;
+        private readonly string _tag = null;
         private readonly ActionTargets _targets = ActionTargets.Default;
 
-        public NamedActionAttribute(string name)
+        public TaggedActionAttribute(string tag)
         {
-            _name = name;
+            _tag = tag;
         }
 
-        public NamedActionAttribute(string name, ActionTargets targets)
+        public TaggedActionAttribute(string tag, ActionTargets targets)
         {
-            _name = name;
+            _tag = tag;
             _targets = targets;
         }
 
@@ -145,7 +146,7 @@ namespace NUnit.TestData.ActionAttributeTests
 
         private void AddResult(string phase, ITest test)
         {
-            string message = string.Format("{0} Action={1} Phase={2} Target={3}", test.Name, _name, phase, _targets);
+            string message = string.Format("{0}.{1}.{2}.{3}", test.Name, _tag, phase, _targets);
 
             if(ActionAttributeFixture.Events != null)
                 ActionAttributeFixture.Events.Add(message);

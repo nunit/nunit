@@ -100,6 +100,7 @@
     <Compile Include="Interfaces\ITestFilter.cs" />
     <Compile Include="Interfaces\ITestListener.cs" />
     <Compile Include="Interfaces\ITestResult.cs" />
+    <Compile Include="Internal\ActionsHelper.cs" />
     <Compile Include="Internal\Execution\IWorkItemDispatcher.cs" />
     <Compile Include="Interfaces\IXmlNodeBuilder.cs" />
     <Compile Include="Interfaces\ResultState.cs" />

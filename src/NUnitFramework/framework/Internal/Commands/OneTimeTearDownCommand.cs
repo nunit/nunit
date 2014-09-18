@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 
 namespace NUnit.Framework.Internal.Commands
@@ -34,16 +35,19 @@ namespace NUnit.Framework.Internal.Commands
     public class OneTimeTearDownCommand : TestCommand
     {
         private SetUpTearDownList _setUpTearDown;
+        private List<TestActionItem> _actions;
 
         /// <summary>
         /// Construct a OneTimeTearDownCommand
         /// </summary>
         /// <param name="suite">The test suite to which the command applies</param>
         /// <param name="setUpTearDown">A SetUpTearDownList for use by the command</param>
-        public OneTimeTearDownCommand(TestSuite suite, SetUpTearDownList setUpTearDown)
+        /// <param name="actions">A List of TestActionItems to be run before teardown.</param>
+        public OneTimeTearDownCommand(TestSuite suite, SetUpTearDownList setUpTearDown, List<TestActionItem> actions)
             : base(suite)
         {
             _setUpTearDown = setUpTearDown;
+            _actions = actions;
         }
 
         /// <summary>
@@ -59,6 +63,9 @@ namespace NUnit.Framework.Internal.Commands
             {
                 try
                 {
+                    for (int i = _actions.Count; i > 0; )
+                        _actions[--i].AfterTest(Test);
+
                     _setUpTearDown.RunTearDown(context);
 
                     IDisposable disposable = context.TestObject as IDisposable;

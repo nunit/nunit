@@ -78,7 +78,7 @@ namespace NUnit.Framework.Internal.Commands
             if (Test.FixtureType != null)
                 _methods = new SetUpTearDownList(Test.FixtureType, typeof(SetUpAttribute), typeof(TearDownAttribute));
 
-            foreach (ITestAction action in testMethod.Method.GetCustomAttributes(typeof(ITestAction), true))
+            foreach (ITestAction action in ActionsHelper.GetActionsFromAttributeProvider(testMethod.Method))
                 if (action.Targets == ActionTargets.Test || action.Targets == ActionTargets.Default)
                     _actions.Add(new TestActionItem(action));
         }
@@ -122,9 +122,7 @@ namespace NUnit.Framework.Internal.Commands
         private void RunBeforeActions(TestExecutionContext context)
         {
             for (int i = 0; i < _actions.Count; i++)
-            {
                 _actions[i].BeforeTest(Test);
-            }
         }
 
         private void RunAfterActions(TestExecutionContext context)

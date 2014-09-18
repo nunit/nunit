@@ -61,8 +61,6 @@ namespace NUnit.Framework.Internal
             if (attributeProvider == null)
                 return new ITestAction[0];
 
-            //var targets = (ITestAction[])attributeProvider.GetCustomAttributes(typeof(ITestAction), false);
-
             var actions = new List<ITestAction>((ITestAction[])attributeProvider.GetCustomAttributes(typeof(ITestAction), false));
             actions.Sort(SortByTargetDescending);
 
