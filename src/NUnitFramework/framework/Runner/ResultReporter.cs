@@ -136,10 +136,12 @@ namespace NUnitLite.Runner
         {
             if (result.Test.IsSuite)
             {
-                var suite = result.Test as TestSuite;
-                if (suite.TestType == "Theory")
-                    if (result.ResultState.Status == TestStatus.Failed)
+                if (result.ResultState.Status == TestStatus.Failed)
+                {
+                    var suite = result.Test as TestSuite;
+                    if (suite.TestType == "Theory" || result.Message != TestResult.CHILD_ERRORS_MESSAGE)
                         WriteSingleResult(result);
+                }
 
                 foreach (ITestResult childResult in result.Children)
                     PrintErrorResults(childResult);
