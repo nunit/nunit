@@ -31,18 +31,25 @@ namespace NUnit.ConsoleRunner.Tests
     [TestFixture]
     public class ColorConsoleTests
     {
+        private ColorStyle _testStyle;
+
         [SetUp]
         public void SetUp()
         {
+            // Find a test color that is different than the console color
+            if (Console.ForegroundColor != ColorConsole.GetColor( ColorStyle.Error ))
+                _testStyle = ColorStyle.Error;
+            else if (Console.ForegroundColor != ColorConsole.GetColor( ColorStyle.Pass ))
+                _testStyle = ColorStyle.Pass;
+            else
+                Assert.Inconclusive("Could not find a color to test with");
+
             ColorConsole.Enabled = true;
 
             // Set to an unknown, unlikely color so that we can test for change
             Console.ForegroundColor = ConsoleColor.Magenta;
 
-            if( Console.ForegroundColor != ConsoleColor.Magenta )
-            {
-                Assert.Inconclusive("Color tests are inconclusive because the current console does not support color");
-            }
+            Assume.That(Console.ForegroundColor, Is.EqualTo(ConsoleColor.Magenta), "Color tests cannot be run because the current console does not support color");
         }
 
         [TearDown]
@@ -54,8 +61,8 @@ namespace NUnit.ConsoleRunner.Tests
         [Test]
         public void TestConstructor()
         {
-            ConsoleColor expected = ColorConsole.GetColor( ColorStyle.Error );
-            using ( new ColorConsole( ColorStyle.Error ) )
+            ConsoleColor expected = ColorConsole.GetColor(_testStyle);
+            using(new ColorConsole(_testStyle))
             {
                 Assert.That(Console.ForegroundColor, Is.EqualTo(expected));
             }
@@ -67,7 +74,7 @@ namespace NUnit.ConsoleRunner.Tests
         {
             ColorConsole.Enabled = false;
 
-            using (new ColorConsole(ColorStyle.Error))
+            using(new ColorConsole(_testStyle))
             {
                 Assert.That(Console.ForegroundColor, Is.EqualTo(ConsoleColor.Magenta));
             }
