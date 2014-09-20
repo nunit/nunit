@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2012 Charlie Poole
+// Copyright (c) 2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,44 +21,48 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
-using System.Threading;
-using NUnit.Framework.Internal.Commands;
 
-namespace NUnit.Framework.Internal.Execution
+namespace NUnit.Framework.Internal.Commands
 {
     /// <summary>
-    /// A SimpleWorkItem represents a single test case and is
-    /// marked as completed immediately upon execution. This
-    /// class is also used for skipped or ignored test suites.
+    /// TestActionItem represents a single execution of an
+    /// ITestAction. It is used to track whether the BeforeTest
+    /// method has been called and suppress calling the
+    /// AfterTest method if it has not.
     /// </summary>
-    public class SimpleWorkItem : WorkItem
+    public class TestActionItem
     {
-        private TestCommand _command;
+        private ITestAction _action;
+        private bool _beforeTestWasRun;
 
         /// <summary>
-        /// Construct a simple work item for a test.
+        /// Construct a TestActionItem
         /// </summary>
-        /// <param name="test">The test to be executed</param>
-        public SimpleWorkItem(TestMethod test) : base(test) 
+        /// <param name="action">The ITestAction to be included</param>
+        public TestActionItem(ITestAction action)
         {
-            _command = CommandBuilder.MakeTestCommand(test);
+            _action = action;
         }
 
         /// <summary>
-        /// Method that performs actually performs the work.
+        /// Run the BeforeTest method of the action and remember that it has been run.
         /// </summary>
-        protected override void PerformWork()
+        /// <param name="test">The test to which the action applies</param>
+        public void BeforeTest(Interfaces.ITest test)
         {
-            try
-            {
-                Result = _command.Execute(Context);
-            }
-            finally
-            {
-                WorkItemComplete();
-            }
+            _beforeTestWasRun = true;
+            _action.BeforeTest(test);
         }
 
+        /// <summary>
+        /// Run the AfterTest action, but only if the BeforeTest
+        /// action was actually run.
+        /// </summary>
+        /// <param name="test">The test to which the action applies</param>
+        public void AfterTest(Interfaces.ITest test)
+        {
+            if (_beforeTestWasRun)
+                _action.AfterTest(test);
+        }
     }
 }

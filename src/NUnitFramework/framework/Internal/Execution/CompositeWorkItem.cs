@@ -56,7 +56,7 @@ namespace NUnit.Framework.Internal.Execution
         public CompositeWorkItem(TestSuite suite, ITestFilter childFilter) : base(suite)
         {
             _suite = suite;
-            SetUpTearDownList setUpTearDown = null;
+            List<SetUpTearDownItem> setUpTearDown = null;
             var actions = new List<TestActionItem>();
             var testAssembly = suite as TestAssembly;
             if (testAssembly != null)
@@ -66,9 +66,9 @@ namespace NUnit.Framework.Internal.Execution
                     if (action.Targets == ActionTargets.Suite || action.Targets == ActionTargets.Default)
                         actions.Add(new TestActionItem(action));
             }
-            if (suite.FixtureType != null)
+            else if (suite.FixtureType != null)
             {
-                setUpTearDown = new SetUpTearDownList(
+                setUpTearDown = CommandBuilder.BuildSetUpTearDownList(
                     suite.FixtureType, typeof(OneTimeSetUpAttribute), typeof(OneTimeTearDownAttribute));
 
                 var allActions = ActionsHelper.GetActionsFromTypesAttributes(suite.FixtureType);
@@ -77,22 +77,10 @@ namespace NUnit.Framework.Internal.Execution
                         actions.Add(new TestActionItem(action));
             }
 
-            _setupCommand = MakeSetUpCommand(suite, setUpTearDown, actions);
-            _teardownCommand = MakeTearDownCommand(suite, setUpTearDown, actions);
+            _setupCommand = CommandBuilder.MakeOneTimeSetUpCommand(suite, setUpTearDown, actions);
+            _teardownCommand = CommandBuilder.MakeOneTimeTearDownCommand(suite, setUpTearDown, actions);
             _childFilter = childFilter;
-
-            //CreateChildWorkItems(childFilter);
         }
-
-        //private void CreateChildWorkItems(ITestFilter childFilter)
-        //{
-        //    foreach(ITest child in _suite.Tests)
-        //        if (childFilter.Pass(child))
-        //        {
-        //            CreateWorkItem(child, context, childFilter);
-        //        }
-        //            if (child.IsSuite)
-        //}
 
         /// <summary>
         /// Method that actually performs the work. Overridden
@@ -162,43 +150,6 @@ namespace NUnit.Framework.Internal.Execution
         }
 
         #region Helper Methods
-
-        /// <summary>
-        /// Gets the command to be executed before any of
-        /// the child tests are run.
-        /// </summary>
-        /// <returns>A TestCommand</returns>
-        private static TestCommand MakeSetUpCommand(TestSuite suite, SetUpTearDownList setUpTearDown, List<TestActionItem> actions)
-        {
-            if (suite.RunState != RunState.Runnable && suite.RunState != RunState.Explicit)
-                return new SkipCommand(suite);
-
-            TestCommand command = new OneTimeSetUpCommand(suite, setUpTearDown, actions);
-
-            if (suite.FixtureType != null)
-            {
-                IApplyToContext[] changes = (IApplyToContext[])suite.FixtureType.GetCustomAttributes(typeof(IApplyToContext), true);
-                if (changes.Length > 0)
-                    command = new ApplyChangesToContextCommand(command, changes);
-            }
-
-            return command;
-        }
-
-        /// <summary>
-        /// Gets the command to be executed after all of the
-        /// child tests are run.
-        /// </summary>
-        /// <returns>A TestCommand</returns>
-        private static TestCommand MakeTearDownCommand(TestSuite suite, SetUpTearDownList setUpTearDown, List<TestActionItem> actions)
-        {
-            TestCommand command = new OneTimeTearDownCommand(suite, setUpTearDown, actions);
-
-            if (suite.TestType == "Theory")
-                command = new TheoryResultCommand(command);
-
-            return command;
-        }
 
         private bool CheckForCancellation()
         {

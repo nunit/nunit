@@ -28,11 +28,10 @@ using System.Reflection;
 namespace NUnit.Framework.Internal.Commands
 {
     /// <summary>
-    /// SetUpTearDownNode holds the setup and teardown methods
-    /// for a single level of the hierarchy, together with
-    /// a pointer to the next level.
+    /// SetUpTearDownItem holds the setup and teardown methods
+    /// for a single level of the inheritance hierarchy.
     /// </summary>
-    public class SetUpTearDownNode
+    public class SetUpTearDownItem
     {
         private IList<MethodInfo> _setUpMethods;
         private IList<MethodInfo> _tearDownMethods;
@@ -43,21 +42,15 @@ namespace NUnit.Framework.Internal.Commands
         /// </summary>
         /// <param name="setUpMethods">A list of setup methods for this level</param>
         /// <param name="tearDownMethods">A list teardown methods for this level</param>
-        public SetUpTearDownNode(IList<MethodInfo> setUpMethods, IList<MethodInfo> tearDownMethods)
+        public SetUpTearDownItem(IList<MethodInfo> setUpMethods, IList<MethodInfo> tearDownMethods)
         {
             _setUpMethods = setUpMethods;
             _tearDownMethods = tearDownMethods;
         }
 
         /// <summary>
-        /// Reference to the next level SetUpTearDownNode or null
-        /// </summary>
-        public SetUpTearDownNode Next { get; set; }
-
-        /// <summary>
         ///  Returns true if this level has any methods at all.
-        ///  This flag is used to discard levels that do nothing
-        ///  with the exception of the topmost level.
+        ///  This flag is used to discard levels that do nothing.
         /// </summary>
         public bool HasMethods
         {
@@ -65,18 +58,11 @@ namespace NUnit.Framework.Internal.Commands
         }
 
         /// <summary>
-        /// Run SetUp on this level after running that for the next lower level.
+        /// Run SetUp on this level.
         /// </summary>
         /// <param name="context">The execution context to use for running.</param>
         public void RunSetUp(TestExecutionContext context)
         {
-            // We have not yet run this level
-            _setUpWasRun = false;
-
-            if (Next != null)
-                Next.RunSetUp(context);
-
-            // No exception, proceed with this level
             _setUpWasRun = true;
 
             foreach (MethodInfo setUpMethod in _setUpMethods)
@@ -84,8 +70,7 @@ namespace NUnit.Framework.Internal.Commands
         }
 
         /// <summary>
-        /// Run TearDown for this level and follow up by running
-        /// the next level (base class) teardown.
+        /// Run TearDown for this level.
         /// </summary>
         /// <param name="context"></param>
         public void RunTearDown(TestExecutionContext context)
@@ -105,9 +90,6 @@ namespace NUnit.Framework.Internal.Commands
                 {
                     context.CurrentResult.RecordTearDownException(ex);
                 }
-
-            if (Next != null)
-                Next.RunTearDown(context);
         }
     }
 }

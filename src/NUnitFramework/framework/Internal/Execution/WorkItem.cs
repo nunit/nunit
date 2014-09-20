@@ -97,7 +97,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <param name="context">The TestExecutionContext to use</param>
         public void InitializeContext(TestExecutionContext context)
         {
-            Guard.IsValidOperation(_context == null, "The context has already been initialized");
+            Guard.OperationVaild(_context == null, "The context has already been initialized");
 
             _context = context;
         }

@@ -32,7 +32,7 @@ namespace NUnit.Framework
     /// Summary description for MaxTimeAttribute.
     /// </summary>
     [AttributeUsage( AttributeTargets.Method, AllowMultiple=false, Inherited=false )]
-    public sealed class MaxTimeAttribute : PropertyAttribute, ICommandDecoratorSource
+    public sealed class MaxTimeAttribute : PropertyAttribute, ICommandDecorator
     {
         private int _milliseconds;
         /// <summary>
@@ -45,48 +45,7 @@ namespace NUnit.Framework
             _milliseconds = milliseconds;
         }
 
-        #region ICommandDecoratorSource Members
-
-        /// <summary>
-        /// Get the available decorators.
-        /// </summary>
-        /// <returns>An array containing a MaxTimeDecorator</returns>
-        public IEnumerable<ICommandDecorator> GetDecorators()
-        {
-            return new ICommandDecorator[] { new MaxTimeDecorator(_milliseconds) };
-        }
-
-        #endregion
-    }
-
-    /// <summary>
-    /// MaxTimeDecorator wraps a series of test commands and checks
-    /// that the execution did not take more than the specified time.
-    /// </summary>
-    public class MaxTimeDecorator : ICommandDecorator
-    {
-        private int _milliseconds;
-
-        /// <summary>
-        /// Construct a MaxTimeDecorator
-        /// </summary>
-        /// <param name="milliseconds">The maximum duration in milliseconds</param>
-        public MaxTimeDecorator(int milliseconds)
-        {
-            _milliseconds = milliseconds;
-        }
-
         #region ICommandDecorator Members
-
-        CommandStage ICommandDecorator.Stage
-        {
-            get { return CommandStage.AboveSetUpTearDown; }
-        }
-
-        int ICommandDecorator.Priority
-        {
-            get { return 0; }
-        }
 
         TestCommand ICommandDecorator.Decorate(TestCommand command)
         {

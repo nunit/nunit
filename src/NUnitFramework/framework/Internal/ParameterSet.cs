@@ -31,7 +31,7 @@ namespace NUnit.Framework.Internal
     /// other selected parameters needed for constructing
     /// a parameterized test case.
     /// </summary>
-    public class ParameterSet : ITestCaseData, IApplyToTest, ICommandDecoratorSource
+    public class ParameterSet : ITestCaseData, IApplyToTest
     {
         #region Instance Fields
 
@@ -163,23 +163,6 @@ namespace NUnit.Framework.Internal
             foreach (string key in Properties.Keys)
                 foreach (object value in Properties[key])
                     test.Properties.Add(key, value);
-        }
-
-        #endregion
-
-        #region ICommandDecoratorSource Members
-
-        /// <summary>
-        /// Get the required decorators.
-        /// </summary>
-        /// <returns>
-        /// An array of decorators, either empty or containing a single 
-        /// ExpectedExceptinDecorator, depending on whether or not
-        /// an exception is expected.
-        /// </returns>
-        public System.Collections.Generic.IEnumerable<ICommandDecorator> GetDecorators()
-        {
-            return new ICommandDecorator[0];
         }
 
         #endregion

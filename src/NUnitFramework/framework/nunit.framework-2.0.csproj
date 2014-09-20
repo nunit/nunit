@@ -87,7 +87,6 @@
     <Compile Include="DirectoryAssert.cs" />
     <Compile Include="Does.cs" />
     <Compile Include="Interfaces\ICombiningStrategy.cs" />
-    <Compile Include="Interfaces\ICommandDecoratorSource.cs" />
     <Compile Include="Interfaces\ISimpleTestBuilder.cs" />
     <Compile Include="Interfaces\ITestBuilder.cs" />
     <Compile Include="Interfaces\IParameterDataProvider.cs" />
@@ -101,6 +100,10 @@
     <Compile Include="Interfaces\ITestListener.cs" />
     <Compile Include="Interfaces\ITestResult.cs" />
     <Compile Include="Internal\ActionsHelper.cs" />
+    <Compile Include="Internal\Commands\SetUpTearDownItem.cs" />
+    <Compile Include="Internal\Commands\TestActionCommand.cs" />
+    <Compile Include="Internal\Commands\TestActionItem.cs" />
+    <Compile Include="Internal\Execution\CommandBuilder.cs" />
     <Compile Include="Internal\Execution\IWorkItemDispatcher.cs" />
     <Compile Include="Interfaces\IXmlNodeBuilder.cs" />
     <Compile Include="Interfaces\ResultState.cs" />
@@ -109,8 +112,6 @@
     <Compile Include="Interfaces\XmlNode.cs" />
     <Compile Include="Internal\Builders\DefaultSuiteBuilder.cs" />
     <Compile Include="Internal\Builders\NUnitTestCaseBuilder.cs" />
-    <Compile Include="Internal\Commands\SetUpTearDownList.cs" />
-    <Compile Include="Internal\Commands\SetUpTearDownNode.cs" />
     <Compile Include="Internal\Execution\SimpleWorkItemDispatcher.cs" />
     <Compile Include="Internal\Execution\TextCapture.cs" />
     <Compile Include="Internal\Execution\WorkShift.cs" />
@@ -307,7 +308,6 @@
     <Compile Include="Internal\Builders\ParameterDataProvider.cs" />
     <Compile Include="Internal\Builders\ProviderCache.cs" />
     <Compile Include="Internal\Builders\SequentialStrategy.cs" />
-    <Compile Include="Internal\Commands\CommandDecoratorList.cs" />
     <Compile Include="Internal\Commands\CommandStage.cs" />
     <Compile Include="Interfaces\ICommandDecorator.cs" />
     <Compile Include="Internal\CultureDetector.cs" />

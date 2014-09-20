@@ -32,21 +32,22 @@ namespace NUnit.Framework.Internal.Commands
     /// <summary>
     /// TODO: Documentation needed for class
     /// </summary>
-    public class SetUpTearDownCommand : DelegatingTestCommand
+    public class TestActionCommand : DelegatingTestCommand
     {
-        private IList<SetUpTearDownItem> _setUpTearDownItems;
+        private IList<TestActionItem> _actions = new List<TestActionItem>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SetUpTearDownCommand"/> class.
         /// </summary>
         /// <param name="innerCommand">The inner command.</param>
-        public SetUpTearDownCommand(TestCommand innerCommand)
+        public TestActionCommand(TestCommand innerCommand)
             : base(innerCommand)
         {
-            Guard.ArgumentValid(innerCommand.Test is TestMethod, "SetUpTearDownCommand may only apply to a TestMethod", "innerCommand");
-            Guard.OperationVaild(Test.FixtureType != null, "TestMethod must have a non-null FixtureType");
+            Guard.ArgumentValid(innerCommand.Test is TestMethod, "TestActionCommand may only apply to a TestMethod", "innerCommand");
 
-            _setUpTearDownItems = Execution.CommandBuilder.BuildSetUpTearDownList(Test.FixtureType, typeof(SetUpAttribute), typeof(TearDownAttribute));
+            foreach (ITestAction action in ActionsHelper.GetActionsFromAttributeProvider(((TestMethod)Test).Method))
+                if (action.Targets == ActionTargets.Test || action.Targets == ActionTargets.Default)
+                    _actions.Add(new TestActionItem(action));
         }
 
         /// <summary>
@@ -58,8 +59,8 @@ namespace NUnit.Framework.Internal.Commands
         {
             try
             {
-                for (int i = _setUpTearDownItems.Count; i > 0;)
-                    _setUpTearDownItems[--i].RunSetUp(context);
+                for (int i = 0; i < _actions.Count; i++)
+                    _actions[i].BeforeTest(Test);
 
                 context.CurrentResult = innerCommand.Execute(context);
             }
@@ -74,10 +75,8 @@ namespace NUnit.Framework.Internal.Commands
             finally
             {
                 if (context.ExecutionStatus != TestExecutionStatus.AbortRequested)
-                {
-                    for(int i = 0; i < _setUpTearDownItems.Count; i++)
-                        _setUpTearDownItems[i].RunTearDown(context);
-                }
+                    for (int i = _actions.Count; i > 0; )
+                        _actions[--i].AfterTest(Test);
             }
 
             return context.CurrentResult;

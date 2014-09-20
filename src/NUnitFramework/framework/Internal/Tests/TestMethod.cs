@@ -153,57 +153,6 @@ namespace NUnit.Framework.Internal
             get { return "test-case"; }
         }
 
-        /// <summary>
-        /// Creates a test command for use in running this test.
-        /// </summary>
-        /// <returns></returns>
-        public virtual TestCommand MakeTestCommand()
-        {
-            if (RunState != RunState.Runnable && RunState != RunState.Explicit)
-                return new SkipCommand(this);
-
-            TestCommand command = new TestMethodCommand(this);
-
-            command = ApplyDecoratorsToCommand(command);
-
-            IApplyToContext[] changes = (IApplyToContext[])this.Method.GetCustomAttributes(typeof(IApplyToContext), true);
-            if (changes.Length > 0)
-                command = new ApplyChangesToContextCommand(command, changes);
-
-            return command;
-        }
-
-        #endregion
-
-        #region Helper Methods
-
-        private TestCommand ApplyDecoratorsToCommand(TestCommand command)
-        {
-            CommandDecoratorList decorators = new CommandDecoratorList();
-
-            // Add Standard stuff
-            decorators.Add(new SetUpTearDownDecorator(this));
-
-            // Add Decorators supplied by attributes
-            foreach (ICommandDecoratorSource source in Method.GetCustomAttributes(typeof(ICommandDecoratorSource), true))
-                foreach (ICommandDecorator decorator in source.GetDecorators())
-                    decorators.Add(decorator);
-
-            // Add Decorators from the parameter set
-            if (parms != null)
-                foreach (ICommandDecorator decorator in parms.GetDecorators())
-                    decorators.Add(decorator);
-
-            decorators.OrderByStage();
-
-            foreach (ICommandDecorator decorator in decorators)
-            {
-                command = decorator.Decorate(command);
-            }
-
-            return command;
-        }
-
         #endregion
     }
 }

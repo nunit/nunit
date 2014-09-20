@@ -34,19 +34,19 @@ namespace NUnit.Framework.Internal.Commands
     /// </summary>
     public class OneTimeTearDownCommand : TestCommand
     {
-        private SetUpTearDownList _setUpTearDown;
+        private List<SetUpTearDownItem> _setUpTearDownItems;
         private List<TestActionItem> _actions;
 
         /// <summary>
         /// Construct a OneTimeTearDownCommand
         /// </summary>
         /// <param name="suite">The test suite to which the command applies</param>
-        /// <param name="setUpTearDown">A SetUpTearDownList for use by the command</param>
+        /// <param name="setUpTearDownItems">A SetUpTearDownList for use by the command</param>
         /// <param name="actions">A List of TestActionItems to be run before teardown.</param>
-        public OneTimeTearDownCommand(TestSuite suite, SetUpTearDownList setUpTearDown, List<TestActionItem> actions)
+        public OneTimeTearDownCommand(TestSuite suite, List<SetUpTearDownItem> setUpTearDownItems, List<TestActionItem> actions)
             : base(suite)
         {
-            _setUpTearDown = setUpTearDown;
+            _setUpTearDownItems = setUpTearDownItems;
             _actions = actions;
         }
 
@@ -64,8 +64,9 @@ namespace NUnit.Framework.Internal.Commands
                 for (int i = _actions.Count; i > 0; )
                     _actions[--i].AfterTest(Test);
 
-                if (_setUpTearDown != null)
-                    _setUpTearDown.RunTearDown(context);
+                if (_setUpTearDownItems != null)
+                    foreach(var item in _setUpTearDownItems)
+                        item.RunTearDown(context);
 
                 IDisposable disposable = context.TestObject as IDisposable;
                 if (disposable != null)

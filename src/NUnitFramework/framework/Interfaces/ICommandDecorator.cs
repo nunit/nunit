@@ -35,17 +35,6 @@ namespace NUnit.Framework.Interfaces
     public interface ICommandDecorator
     {
         /// <summary>
-        /// The stage of command execution to which this decorator applies.
-        /// </summary>
-        CommandStage Stage { get; }
-
-        /// <summary>
-        /// The priority of this decorator as compared to other decorators
-        /// in the same Stage. Lower _values are applied first.
-        /// </summary>
-        int Priority { get; }
-
-        /// <summary>
         /// Decorate a command, usually by wrapping it with another
         /// command, and return the decorated command.
         /// </summary>
