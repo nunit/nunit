@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using NUnit.Framework.Compatibility;
 using NUnit.Framework.Interfaces;
@@ -51,6 +52,8 @@ namespace NUnit.Framework.Internal.Execution
 
         // The execution context used by this work item
         private TestExecutionContext _context;
+
+        private List<ITestAction> _actions = new List<ITestAction>();
 
         #region Static Factory Method
 
@@ -97,9 +100,16 @@ namespace NUnit.Framework.Internal.Execution
         /// <param name="context">The TestExecutionContext to use</param>
         public void InitializeContext(TestExecutionContext context)
         {
-            Guard.OperationVaild(_context == null, "The context has already been initialized");
+            Guard.OperationValid(_context == null, "The context has already been initialized");
 
             _context = context;
+
+            if (Test is TestAssembly)
+                _actions.AddRange(ActionsHelper.GetActionsFromAttributeProvider(((TestAssembly)Test).Assembly));
+            else if (Test is ParameterizedMethodSuite)
+                _actions.AddRange(ActionsHelper.GetActionsFromAttributeProvider(((ParameterizedMethodSuite)Test).Method));
+            else if (Test.FixtureType != null)
+                _actions.AddRange(ActionsHelper.GetActionsFromTypesAttributes(Test.FixtureType));
         }
 
         #endregion
@@ -133,6 +143,14 @@ namespace NUnit.Framework.Internal.Execution
         public TestExecutionContext Context
         {
             get { return _context; }
+        }
+
+        /// <summary>
+        /// The test actions to be performed before and after this test
+        /// </summary>
+        public List<ITestAction> Actions
+        {
+            get { return _actions;  }
         }
 
 #if !NUNITLITE

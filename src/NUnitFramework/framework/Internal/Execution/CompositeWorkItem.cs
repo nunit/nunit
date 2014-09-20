@@ -56,29 +56,6 @@ namespace NUnit.Framework.Internal.Execution
         public CompositeWorkItem(TestSuite suite, ITestFilter childFilter) : base(suite)
         {
             _suite = suite;
-            List<SetUpTearDownItem> setUpTearDown = null;
-            var actions = new List<TestActionItem>();
-            var testAssembly = suite as TestAssembly;
-            if (testAssembly != null)
-            {
-                var allActions = ActionsHelper.GetActionsFromAttributeProvider(testAssembly.Assembly);
-                foreach (ITestAction action in allActions)
-                    if (action.Targets == ActionTargets.Suite || action.Targets == ActionTargets.Default)
-                        actions.Add(new TestActionItem(action));
-            }
-            else if (suite.FixtureType != null)
-            {
-                setUpTearDown = CommandBuilder.BuildSetUpTearDownList(
-                    suite.FixtureType, typeof(OneTimeSetUpAttribute), typeof(OneTimeTearDownAttribute));
-
-                var allActions = ActionsHelper.GetActionsFromTypesAttributes(suite.FixtureType);
-                foreach (ITestAction action in allActions)
-                    if (action.Targets == ActionTargets.Suite || action.Targets == ActionTargets.Default)
-                        actions.Add(new TestActionItem(action));
-            }
-
-            _setupCommand = CommandBuilder.MakeOneTimeSetUpCommand(suite, setUpTearDown, actions);
-            _teardownCommand = CommandBuilder.MakeOneTimeTearDownCommand(suite, setUpTearDown, actions);
             _childFilter = childFilter;
         }
 
@@ -89,6 +66,11 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         protected override void PerformWork()
         {
+            // Inititialize actions, setup and teardown
+            // We can't do this in the constructor because 
+            // the context is not available at that point.
+            InitializeSetUpAndTearDownCommands();
+
             if (!CheckForCancellation())
                 switch (Test.RunState)
                 {
@@ -160,6 +142,23 @@ namespace NUnit.Framework.Internal.Execution
             }
 
             return false;
+        }
+
+        private void InitializeSetUpAndTearDownCommands()
+        {
+            List<SetUpTearDownItem> setUpTearDownItems = _suite.FixtureType != null
+                ? CommandBuilder.BuildSetUpTearDownList(_suite.FixtureType, typeof(OneTimeSetUpAttribute), typeof(OneTimeTearDownAttribute))
+                : new List<SetUpTearDownItem>();
+
+            var actionItems = new List<TestActionItem>();
+            foreach (ITestAction action in Actions)
+                if (action.Targets == ActionTargets.Suite || action.Targets == ActionTargets.Default && !(Test is ParameterizedMethodSuite))
+                    actionItems.Add(new TestActionItem(action));
+                else // It's a Test target item
+                    Context.UpstreamActions.Add(action);
+
+            _setupCommand = CommandBuilder.MakeOneTimeSetUpCommand(_suite, setUpTearDownItems, actionItems);
+            _teardownCommand = CommandBuilder.MakeOneTimeTearDownCommand(_suite, setUpTearDownItems, actionItems);
         }
 
         private void PerformOneTimeSetUp()

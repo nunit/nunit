@@ -86,8 +86,10 @@ namespace NUnit.Framework.Internal.Execution
             // Command to execute test
             TestCommand command = new TestMethodCommand(test);
 
-            // Wrap in TestActionCommand and SetUpTearDownCommand
+            // Wrap in TestActionCommand
             command = new TestActionCommand(command);
+
+            // Wrap in SetUpTearDownCommand
             command = new SetUpTearDownCommand(command);
 
             // Add commands from Decorators supplied by attributes

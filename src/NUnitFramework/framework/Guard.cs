@@ -49,7 +49,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="condition">The condition that must be met</param>
         /// <param name="message">The exception message to be used</param>
-        public static void OperationVaild(bool condition, string message)
+        public static void OperationValid(bool condition, string message)
         {
             if (!condition)
                 throw new InvalidOperationException(message);

@@ -97,22 +97,22 @@ namespace NUnit.TestData.ActionAttributeTests
     {
     }
 
-    //[TaggedAction("InterfaceSuite", ActionTargets.Suite)]
-    //[TaggedAction("InterfaceTest", ActionTargets.Test)]
-    //[TaggedAction("InterfaceSite")]
+    [TaggedAction("OnInterface", ActionTargets.Suite)]
+    [TaggedAction("OnInterface", ActionTargets.Test)]
+    [TaggedAction("OnInterface")]
     public interface IWithAction
     {
         List<string> Events { get; }
     }
 
-    //[TaggedAction("BaseInterfaceSuite", ActionTargets.Suite)]
-    //[TaggedAction("BaseInterfaceTest", ActionTargets.Test)]
-    //[TaggedAction("BaseInterfaceSite")]
+    [TaggedAction("OnBaseInterface", ActionTargets.Suite)]
+    [TaggedAction("OnBaseInterface", ActionTargets.Test)]
+    [TaggedAction("OnBaseInterface")]
     public interface IBaseWithAction
     {
     }
 
-    [AttributeUsage(AttributeTargets.Assembly | AttributeTargets.Class | AttributeTargets.Method, AllowMultiple=true, Inherited=true)]
+    [AttributeUsage(AttributeTargets.Assembly | AttributeTargets.Class | AttributeTargets.Interface | AttributeTargets.Method, AllowMultiple=true, Inherited=true)]
     public class TaggedActionAttribute : TestActionAttribute
     {
         private readonly string _tag = null;

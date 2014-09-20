@@ -44,7 +44,7 @@ namespace NUnit.Framework.Internal.Commands
             : base(innerCommand)
         {
             Guard.ArgumentValid(innerCommand.Test is TestMethod, "SetUpTearDownCommand may only apply to a TestMethod", "innerCommand");
-            Guard.OperationVaild(Test.FixtureType != null, "TestMethod must have a non-null FixtureType");
+            Guard.OperationValid(Test.FixtureType != null, "TestMethod must have a non-null FixtureType");
 
             _setUpTearDownItems = Execution.CommandBuilder.BuildSetUpTearDownList(Test.FixtureType, typeof(SetUpAttribute), typeof(TearDownAttribute));
         }

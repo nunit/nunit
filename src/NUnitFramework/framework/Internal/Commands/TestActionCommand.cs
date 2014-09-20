@@ -37,17 +37,13 @@ namespace NUnit.Framework.Internal.Commands
         private IList<TestActionItem> _actions = new List<TestActionItem>();
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SetUpTearDownCommand"/> class.
+        /// Initializes a new instance of the <see cref="TestActionCommand"/> class.
         /// </summary>
         /// <param name="innerCommand">The inner command.</param>
         public TestActionCommand(TestCommand innerCommand)
             : base(innerCommand)
         {
             Guard.ArgumentValid(innerCommand.Test is TestMethod, "TestActionCommand may only apply to a TestMethod", "innerCommand");
-
-            foreach (ITestAction action in ActionsHelper.GetActionsFromAttributeProvider(((TestMethod)Test).Method))
-                if (action.Targets == ActionTargets.Test || action.Targets == ActionTargets.Default)
-                    _actions.Add(new TestActionItem(action));
         }
 
         /// <summary>
@@ -57,6 +53,14 @@ namespace NUnit.Framework.Internal.Commands
         /// <returns>A TestResult</returns>
         public override TestResult Execute(TestExecutionContext context)
         {
+            foreach (ITestAction action in context.UpstreamActions)
+                if (action.Targets == ActionTargets.Test)
+                    _actions.Add(new TestActionItem(action));
+
+            foreach (ITestAction action in ActionsHelper.GetActionsFromAttributeProvider(((TestMethod)Test).Method))
+                if (action.Targets == ActionTargets.Test || action.Targets == ActionTargets.Default)
+                    _actions.Add(new TestActionItem(action));
+
             try
             {
                 for (int i = 0; i < _actions.Count; i++)
