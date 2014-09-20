@@ -234,7 +234,7 @@ namespace NUnit.Framework.Tests
             Assert.That(context.Result.PassCount, Is.EqualTo(2));
             Assert.That(context.Result.FailCount, Is.EqualTo(0));
             // TODO: Should we be counting Explicit?
-            //Assert.That(context.Result.SkipCount, Is.EqualTo(1));
+            Assert.That(context.Result.SkipCount, Is.EqualTo(0));
         }
     }
 }
