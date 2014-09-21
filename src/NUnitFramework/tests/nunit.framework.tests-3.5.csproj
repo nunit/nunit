@@ -82,6 +82,7 @@
     <Compile Include="Assertions\SameFixture.cs" />
     <Compile Include="Assertions\StringAssertTests.cs" />
     <Compile Include="Assertions\TypeAssertTest.cs" />
+    <Compile Include="Attributes\ActionAttributeTests.cs" />
     <Compile Include="Attributes\ApplyToContextTests.cs" />
     <Compile Include="Attributes\ApplyToTestTests.cs" />
     <Compile Include="Attributes\AttributeInheritanceTests.cs" />

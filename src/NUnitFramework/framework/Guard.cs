@@ -33,11 +33,23 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Throws an exception if the specified condition is not met.
+        /// Throws an ArgumentException if the specified condition is not met.
         /// </summary>
         /// <param name="condition">The condition that must be met</param>
         /// <param name="message">The exception message to be used</param>
-        public static void IsValidOperation(bool condition, string message)
+        /// <param name="paramName">The name of the argument</param>
+        public static void ArgumentValid(bool condition, string message, string paramName)
+        {
+            if (!condition)
+                throw new ArgumentException(message, paramName);
+        }
+
+        /// <summary>
+        /// Throws an InvalidOperationException if the specified condition is not met.
+        /// </summary>
+        /// <param name="condition">The condition that must be met</param>
+        /// <param name="message">The exception message to be used</param>
+        public static void OperationValid(bool condition, string message)
         {
             if (!condition)
                 throw new InvalidOperationException(message);

@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2007 Charlie Poole
+// Copyright (c) 2012 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -23,35 +23,24 @@
 
 using System;
 using System.Collections.Generic;
-using NUnit.Framework.Internal.Commands;
-using NUnit.Framework.Interfaces;
+using System.Text;
 
 namespace NUnit.Framework
 {
+    using Interfaces;
+
     /// <summary>
-    /// Summary description for MaxTimeAttribute.
+    /// Provide actions to execute before and after tests.
     /// </summary>
-    [AttributeUsage( AttributeTargets.Method, AllowMultiple=false, Inherited=false )]
-    public sealed class MaxTimeAttribute : PropertyAttribute, ICommandDecorator
+    [AttributeUsage(AttributeTargets.Assembly | AttributeTargets.Class | AttributeTargets.Interface | AttributeTargets.Method, AllowMultiple = true, Inherited = true)]
+    public abstract class TestActionAttribute : Attribute, ITestAction
     {
-        private int _milliseconds;
-        /// <summary>
-        /// Construct a MaxTimeAttribute, given a time in milliseconds.
-        /// </summary>
-        /// <param name="milliseconds">The maximum elapsed time in milliseconds</param>
-        public MaxTimeAttribute( int milliseconds )
-            : base( milliseconds )
+        public virtual void BeforeTest(ITest test) { }
+        public virtual void AfterTest(ITest test) { }
+        
+        public virtual ActionTargets Targets
         {
-            _milliseconds = milliseconds;
+            get { return ActionTargets.Default; }
         }
-
-        #region ICommandDecorator Members
-
-        TestCommand ICommandDecorator.Decorate(TestCommand command)
-        {
-            return new MaxTimeCommand(command, _milliseconds);
-        }
-
-        #endregion
     }
 }

@@ -42,7 +42,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <param name="test">The test to be executed</param>
         public SimpleWorkItem(TestMethod test) : base(test) 
         {
-            _command = test.MakeTestCommand();
+            _command = CommandBuilder.MakeTestCommand(test);
         }
 
         /// <summary>

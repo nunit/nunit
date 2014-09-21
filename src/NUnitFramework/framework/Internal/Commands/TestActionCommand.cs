@@ -30,24 +30,21 @@ namespace NUnit.Framework.Internal.Commands
     using Interfaces;
 
     /// <summary>
-    /// SetUpTearDownCommand runs any SetUp methods for a suite,
-    /// runs the test and then runs any TearDown methods.
+    /// TestActionCommand runs the BeforeTest actions for a test,
+    /// then runs the test and finally runs the AfterTestActions.
     /// </summary>
-    public class SetUpTearDownCommand : DelegatingTestCommand
+    public class TestActionCommand : DelegatingTestCommand
     {
-        private IList<SetUpTearDownItem> _setUpTearDownItems;
+        private IList<TestActionItem> _actions = new List<TestActionItem>();
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SetUpTearDownCommand"/> class.
+        /// Initializes a new instance of the <see cref="TestActionCommand"/> class.
         /// </summary>
         /// <param name="innerCommand">The inner command.</param>
-        public SetUpTearDownCommand(TestCommand innerCommand)
+        public TestActionCommand(TestCommand innerCommand)
             : base(innerCommand)
         {
-            Guard.ArgumentValid(innerCommand.Test is TestMethod, "SetUpTearDownCommand may only apply to a TestMethod", "innerCommand");
-            Guard.OperationValid(Test.FixtureType != null, "TestMethod must have a non-null FixtureType");
-
-            _setUpTearDownItems = Execution.CommandBuilder.BuildSetUpTearDownList(Test.FixtureType, typeof(SetUpAttribute), typeof(TearDownAttribute));
+            Guard.ArgumentValid(innerCommand.Test is TestMethod, "TestActionCommand may only apply to a TestMethod", "innerCommand");
         }
 
         /// <summary>
@@ -57,10 +54,18 @@ namespace NUnit.Framework.Internal.Commands
         /// <returns>A TestResult</returns>
         public override TestResult Execute(TestExecutionContext context)
         {
+            foreach (ITestAction action in context.UpstreamActions)
+                if (action.Targets == ActionTargets.Test)
+                    _actions.Add(new TestActionItem(action));
+
+            foreach (ITestAction action in ActionsHelper.GetActionsFromAttributeProvider(((TestMethod)Test).Method))
+                if (action.Targets == ActionTargets.Test || action.Targets == ActionTargets.Default)
+                    _actions.Add(new TestActionItem(action));
+
             try
             {
-                for (int i = _setUpTearDownItems.Count; i > 0;)
-                    _setUpTearDownItems[--i].RunSetUp(context);
+                for (int i = 0; i < _actions.Count; i++)
+                    _actions[i].BeforeTest(Test);
 
                 context.CurrentResult = innerCommand.Execute(context);
             }
@@ -75,10 +80,8 @@ namespace NUnit.Framework.Internal.Commands
             finally
             {
                 if (context.ExecutionStatus != TestExecutionStatus.AbortRequested)
-                {
-                    for(int i = 0; i < _setUpTearDownItems.Count; i++)
-                        _setUpTearDownItems[i].RunTearDown(context);
-                }
+                    for (int i = _actions.Count - 1; i >= 0; i--)
+                        _actions[i].AfterTest(Test);
             }
 
             return context.CurrentResult;

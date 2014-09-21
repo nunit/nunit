@@ -23,6 +23,7 @@
 
 using System;
 using System.IO;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Reflection;
@@ -136,6 +137,7 @@ namespace NUnit.Framework.Internal
         {
             _priorContext = null;
             this.TestCaseTimeout = 0;
+            this.UpstreamActions = new List<ITestAction>();
 
 #if !NETCF
             _currentCulture = CultureInfo.CurrentCulture;
@@ -162,6 +164,7 @@ namespace NUnit.Framework.Internal
             _listener = other._listener;
             this.StopOnError = other.StopOnError;
             this.TestCaseTimeout = other.TestCaseTimeout;
+            this.UpstreamActions = new List<ITestAction>(other.UpstreamActions);
 
 #if !NETCF
             _currentCulture = CultureInfo.CurrentCulture;
@@ -379,6 +382,11 @@ namespace NUnit.Framework.Internal
         /// Gets or sets the test case timeout value
         /// </summary>
         public int TestCaseTimeout { get; set; }
+
+        /// <summary>
+        /// Gets a list of ITestActions set by upstream tests
+        /// </summary>
+        public List<ITestAction> UpstreamActions { get; private set; }
 
 #if !NETCF
         // TODO: Put in checks on all of these settings

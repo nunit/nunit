@@ -47,6 +47,7 @@
     <Compile Include="..\FrameworkVersion.cs">
       <Link>FrameworkVersion.cs</Link>
     </Compile>
+    <Compile Include="ActionAttributeFixture.cs" />
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="AssertCountFixture.cs" />
     <Compile Include="AssertFailFixture.cs" />
@@ -75,10 +76,6 @@
     <Compile Include="UnexpectedExceptionFixture.cs" />
     <Compile Include="UnhandledExceptions.cs" />
     <Compile Include="SetUpFixtureData.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="nunit.testdata.build" />
-    <None Include="nunitlite.testdata.build" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />

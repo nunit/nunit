@@ -59,11 +59,12 @@ namespace NUnit.TestUtilities
 
         public static TestSuite MakeParameterizedMethodSuite(object fixture, string methodName)
         {
-            var test = MakeTestFromMethod(fixture.GetType(), methodName);
+            var test = MakeTestFromMethod(fixture.GetType(), methodName) as ParameterizedMethodSuite;
             Assert.That(test, Is.TypeOf<ParameterizedMethodSuite>());
 
-            test.Fixture = fixture;
-            return (TestSuite)test;
+            TestSuite suite = test as TestSuite;
+            suite.Fixture = fixture;
+            return suite;
         }
 
         public static TestMethod MakeTestCase(Type type, string methodName)
@@ -72,13 +73,6 @@ namespace NUnit.TestUtilities
             Assert.That(test, Is.TypeOf<TestMethod>());
 
             return (TestMethod)test;
-        }
-
-        public static TestMethod MakeTestCase(object fixture, string methodName)
-        {
-            var test = (TestMethod)MakeTestFromMethod(fixture.GetType(), methodName);
-            test.Fixture = fixture;
-            return test;
         }
 
         // Will return either a ParameterizedMethodSuite or an NUnitTestMethod
@@ -145,7 +139,7 @@ namespace NUnit.TestUtilities
 
         public static ITestResult RunTestCase(object fixture, string methodName)
         {
-            var testMethod = MakeTestCase(fixture, methodName);
+            var testMethod = MakeTestCase(fixture.GetType(), methodName);
 
             return RunTest(testMethod, fixture);
         }
