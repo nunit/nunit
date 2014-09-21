@@ -32,7 +32,7 @@ namespace NUnit.Framework.Internal.Commands
     /// </summary>
     public class TestActionItem
     {
-        private ITestAction _action;
+        private readonly ITestAction _action;
         private bool _beforeTestWasRun;
 
         /// <summary>

@@ -30,7 +30,8 @@ namespace NUnit.Framework.Internal.Commands
     using Interfaces;
 
     /// <summary>
-    /// TODO: Documentation needed for class
+    /// TestActionCommand runs the BeforeTest actions for a test,
+    /// then runs the test and finally runs the AfterTestActions.
     /// </summary>
     public class TestActionCommand : DelegatingTestCommand
     {
@@ -79,8 +80,8 @@ namespace NUnit.Framework.Internal.Commands
             finally
             {
                 if (context.ExecutionStatus != TestExecutionStatus.AbortRequested)
-                    for (int i = _actions.Count; i > 0; )
-                        _actions[--i].AfterTest(Test);
+                    for (int i = _actions.Count - 1; i >= 0; i--)
+                        _actions[i].AfterTest(Test);
             }
 
             return context.CurrentResult;

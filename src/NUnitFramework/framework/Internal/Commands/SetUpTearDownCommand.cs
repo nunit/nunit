@@ -30,7 +30,8 @@ namespace NUnit.Framework.Internal.Commands
     using Interfaces;
 
     /// <summary>
-    /// TODO: Documentation needed for class
+    /// SetUpTearDownCommand runs any SetUp methods for a suite,
+    /// runs the test and then runs any TearDown methods.
     /// </summary>
     public class SetUpTearDownCommand : DelegatingTestCommand
     {
