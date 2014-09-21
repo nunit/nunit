@@ -113,6 +113,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "nuget", "nuget", "{A972031D-2F61-4183-AF75-99EE1A9F6B32}"
 	ProjectSection(SolutionItems) = preProject
 		nuget\nunit.nuspec = nuget\nunit.nuspec
+		nuget\nunitlite.nuspec = nuget\nunitlite.nuspec
 		nuget\nunit.runners.nuspec = nuget\nunit.runners.nuspec
 	EndProjectSection
 EndProject

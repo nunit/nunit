@@ -200,6 +200,23 @@
 			Properties="Framework=%(SupportedFrameworks.Identity)" ContinueOnError="true" />
 	</Target>
 
+	<Target Name="BuildAllNUnit" Label="Build the NUnit framework for the current config and all runtimes">
+		<MSBuild Projects="$(MSBuildProjectFullPath)" Targets="_BuildNunit"
+			 Properties="Framework=%(SupportedFrameworks.Identity)" 
+			 ContinueOnError="true" />
+	</Target>
+
+	<Target Name="_BuildNunit" Label="Build the framework for the current config and runtime">
+		<CallTarget Targets="BuildNUnit" Condition="'$(Runtime)' != 'netcf' And '$(Runtime)' != 'silverlight'" />
+	</Target>
+
+	<Target Name="BuildAllNUnitLite" Label="Build the NUnitLite framework for the current config and all runtimes">
+		<MSBuild Projects="$(MSBuildProjectFullPath)" Targets="BuildNUnitLite"
+			 Properties="Framework=%(SupportedFrameworks.Identity)"
+			 ContinueOnError="true" />
+	</Target>
+
+
 	<Target Name="BuildFramework" Label="Build the framework for the current config and runtime">
 		<CallTarget Targets="BuildNUnit" Condition="'$(Runtime)' != 'netcf' And '$(Runtime)' != 'silverlight'" />
 		<CallTarget Targets="BuildNUnitLite" />
@@ -240,6 +257,24 @@
 	<Target Name="TestAllFrameworks" Label="Test the framework for the current config and all runtimes">
 		<MSBuild Projects="$(MSBuildProjectFullPath)" Targets="_TestFramework"
 			Properties="Framework=%(SupportedFrameworks.Identity)" ContinueOnError="true" />
+	</Target>
+
+	<Target Name="TestAllNUnit" Label="Test the NUnit framework for the current config and all runtimes">
+		<MSBuild Projects="$(MSBuildProjectFullPath)" Targets="_TestAllNUnit"
+			Properties="Framework=%(SupportedFrameworks.Identity)" ContinueOnError="true" />
+	</Target>
+
+	<Target Name="_TestAllNUnit" Label="Test the NUnit framework for the current config conditionally, for use by TestAllNUnit">
+		<CallTarget Targets="_TestNUnit" Condition="'$(Runtime)' != 'netcf' And '$(Runtime)' != 'silverlight'" />
+	</Target>
+
+	<Target Name="TestAllNUnitLite" Label="Test the NUnitLite framework for the current config and all runtimes">
+		<MSBuild Projects="$(MSBuildProjectFullPath)" Targets="_TestAllNUnitLite"
+			Properties="Framework=%(SupportedFrameworks.Identity)" ContinueOnError="true" />
+	</Target>
+
+	<Target Name="_TestAllNUnitLite" Label="Test the NUnitLite framework for the current config conditionally, for use by TestAllNUnitLite">
+		<CallTarget Targets="_TestNUnitLite" Condition="'$(Runtime)' != 'netcf' And '$(Runtime)' != 'silverlight'" />
 	</Target>
 	
 	<Target Name="TestFramework" Label="Test the framework for the current config and runtime">
@@ -312,18 +347,25 @@
 
 	<Target Name="PackageNuGetAll"
 		Label="Packages all NuGet packages"
-		DependsOnTargets="PackageNuGetFramework;PackageNuGetRunners" />
+		DependsOnTargets="PackageNuGetNUnit;PackageNuGetNUnitLite;PackageNuGetRunners" />
   
-	<Target Name="PackageNuGetFramework"
+	<Target Name="PackageNuGetNUnit"
 		Label="Packages the NUnit NuGet package"
-		DependsOnTargets="_BuildNUnit;_NUnitTest">
+		DependsOnTargets="BuildAllNUnit;TestAllNUnit">
 		<Exec WorkingDirectory="$(ProjectBaseDir)"
 		      Command="$(ManagedExeLauncher) &quot;$(NugetExecutable)&quot; pack $(NuspecDirectory)\nunit.nuspec -BasePath &quot;$(ProjectBaseDir)&quot; -OutputDirectory &quot;$(NugetOutput)&quot; -Properties version=$(NugetVersion);builddir=$(ConfigurationBuildDir)" />
+	</Target>
+
+	<Target Name="PackageNuGetNUnitLite"
+		Label="Packages the NUnitlite NuGet package"
+		DependsOnTargets="BuildAllNUnitLite;TestAllNUnitLite">
+		<Exec WorkingDirectory="$(ProjectBaseDir)"
+		      Command="$(ManagedExeLauncher) &quot;$(NugetExecutable)&quot; pack $(NuspecDirectory)\nunitlite.nuspec -BasePath &quot;$(ProjectBaseDir)&quot; -OutputDirectory &quot;$(NugetOutput)&quot; -Properties version=$(NugetVersion);builddir=$(ConfigurationBuildDir)" />
 	</Target>
   
 	<Target Name="PackageNuGetRunners" 
 		Label="Packages the NUnit.Runners NuGet package"
-		DependsOnTargets="BuildConsole;BuildEngine;TestConsole;TestEngine">
+		DependsOnTargets="BuildConsole;BuildEngine;TestEngineAndConsole">
 		<Exec WorkingDirectory="$(ProjectBaseDir)"
 		      Command="$(ManagedExeLauncher) &quot;$(NugetExecutable)&quot; pack $(NuspecDirectory)\nunit.runners.nuspec -NoPackageAnalysis -BasePath &quot;$(ProjectBaseDir)&quot; -OutputDirectory &quot;$(NugetOutput)&quot; -Properties version=$(NugetVersion);builddir=$(ConfigurationBuildDir)" />
 	</Target>
