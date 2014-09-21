@@ -56,27 +56,8 @@ namespace NUnit.Framework.Internal.Execution
         public CompositeWorkItem(TestSuite suite, ITestFilter childFilter) : base(suite)
         {
             _suite = suite;
-            SetUpTearDownList setUpTearDown = null;
-            if (suite.FixtureType != null)
-                setUpTearDown =  new SetUpTearDownList(
-                    suite.FixtureType, typeof(OneTimeSetUpAttribute), typeof(OneTimeTearDownAttribute));
-
-            _setupCommand = MakeSetUpCommand(suite, setUpTearDown);
-            _teardownCommand = MakeTearDownCommand(suite, setUpTearDown);
             _childFilter = childFilter;
-
-            //CreateChildWorkItems(childFilter);
         }
-
-        //private void CreateChildWorkItems(ITestFilter childFilter)
-        //{
-        //    foreach(ITest child in _suite.Tests)
-        //        if (childFilter.Pass(child))
-        //        {
-        //            CreateWorkItem(child, context, childFilter);
-        //        }
-        //            if (child.IsSuite)
-        //}
 
         /// <summary>
         /// Method that actually performs the work. Overridden
@@ -85,6 +66,11 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         protected override void PerformWork()
         {
+            // Inititialize actions, setup and teardown
+            // We can't do this in the constructor because 
+            // the context is not available at that point.
+            InitializeSetUpAndTearDownCommands();
+
             if (!CheckForCancellation())
                 switch (Test.RunState)
                 {
@@ -147,43 +133,6 @@ namespace NUnit.Framework.Internal.Execution
 
         #region Helper Methods
 
-        /// <summary>
-        /// Gets the command to be executed before any of
-        /// the child tests are run.
-        /// </summary>
-        /// <returns>A TestCommand</returns>
-        private static TestCommand MakeSetUpCommand(TestSuite suite, SetUpTearDownList setUpTearDown)
-        {
-            if (suite.RunState != RunState.Runnable && suite.RunState != RunState.Explicit)
-                return new SkipCommand(suite);
-
-            TestCommand command = new OneTimeSetUpCommand(suite, setUpTearDown);
-
-            if (suite.FixtureType != null)
-            {
-                IApplyToContext[] changes = (IApplyToContext[])suite.FixtureType.GetCustomAttributes(typeof(IApplyToContext), true);
-                if (changes.Length > 0)
-                    command = new ApplyChangesToContextCommand(command, changes);
-            }
-
-            return command;
-        }
-
-        /// <summary>
-        /// Gets the command to be executed after all of the
-        /// child tests are run.
-        /// </summary>
-        /// <returns>A TestCommand</returns>
-        private static TestCommand MakeTearDownCommand(TestSuite suite, SetUpTearDownList setUpTearDown)
-        {
-            TestCommand command = new OneTimeTearDownCommand(suite, setUpTearDown);
-
-            if (suite.TestType == "Theory")
-                command = new TheoryResultCommand(command);
-
-            return command;
-        }
-
         private bool CheckForCancellation()
         {
             if (Context.ExecutionStatus != TestExecutionStatus.Running)
@@ -193,6 +142,23 @@ namespace NUnit.Framework.Internal.Execution
             }
 
             return false;
+        }
+
+        private void InitializeSetUpAndTearDownCommands()
+        {
+            List<SetUpTearDownItem> setUpTearDownItems = _suite.FixtureType != null
+                ? CommandBuilder.BuildSetUpTearDownList(_suite.FixtureType, typeof(OneTimeSetUpAttribute), typeof(OneTimeTearDownAttribute))
+                : new List<SetUpTearDownItem>();
+
+            var actionItems = new List<TestActionItem>();
+            foreach (ITestAction action in Actions)
+                if (action.Targets == ActionTargets.Suite || action.Targets == ActionTargets.Default && !(Test is ParameterizedMethodSuite))
+                    actionItems.Add(new TestActionItem(action));
+                else // It's a Test target item
+                    Context.UpstreamActions.Add(action);
+
+            _setupCommand = CommandBuilder.MakeOneTimeSetUpCommand(_suite, setUpTearDownItems, actionItems);
+            _teardownCommand = CommandBuilder.MakeOneTimeTearDownCommand(_suite, setUpTearDownItems, actionItems);
         }
 
         private void PerformOneTimeSetUp()

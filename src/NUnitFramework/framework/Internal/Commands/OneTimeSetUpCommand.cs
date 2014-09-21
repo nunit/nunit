@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 
 namespace NUnit.Framework.Internal.Commands
@@ -35,20 +36,23 @@ namespace NUnit.Framework.Internal.Commands
         private readonly TestSuite _suite;
         private readonly Type _fixtureType;
         private readonly object[] _arguments;
-        private readonly SetUpTearDownList _setUpTearDown;
+        private readonly List<SetUpTearDownItem> _setUpTearDown;
+        private readonly List<TestActionItem> _actions;
 
         /// <summary>
         /// Constructs a OneTimeSetUpComand for a suite
         /// </summary>
         /// <param name="suite">The suite to which the command applies</param>
         /// <param name="setUpTearDown">A SetUpTearDownList for use by the command</param>
-        public OneTimeSetUpCommand(TestSuite suite, SetUpTearDownList setUpTearDown)
+        /// <param name="actions">A List of TestActionItems to be run after Setup</param>
+        public OneTimeSetUpCommand(TestSuite suite, List<SetUpTearDownItem> setUpTearDown, List<TestActionItem> actions)
             : base(suite) 
         {
             _suite = suite;
             _fixtureType = suite.FixtureType;
             _arguments = suite.Arguments;
             _setUpTearDown = setUpTearDown;
+            _actions = actions;
         }
 
         /// <summary>
@@ -64,8 +68,13 @@ namespace NUnit.Framework.Internal.Commands
                 if (!IsStaticClass(_fixtureType))
                     context.TestObject = _suite.Fixture ?? Reflect.Construct(_fixtureType, _arguments);
 
-                _setUpTearDown.RunSetUp(context);
+                for (int i = _setUpTearDown.Count; i > 0; )
+                    _setUpTearDown[--i].RunSetUp(context);
             }
+
+
+            for (int i = 0; i < _actions.Count; i++)
+                _actions[i].BeforeTest(Test);
 
             return context.CurrentResult;
         }

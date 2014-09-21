@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2010 Charlie Poole
+// Copyright (c) 2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,55 +21,48 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System.IO;
-using System.Reflection;
 
-namespace NUnit.Framework.Internal
+namespace NUnit.Framework.Internal.Commands
 {
     /// <summary>
-    /// TestAssembly is a TestSuite that represents the execution
-    /// of tests in a managed assembly.
+    /// TestActionItem represents a single execution of an
+    /// ITestAction. It is used to track whether the BeforeTest
+    /// method has been called and suppress calling the
+    /// AfterTest method if it has not.
     /// </summary>
-    public class TestAssembly : TestSuite
+    public class TestActionItem
     {
+        private readonly ITestAction _action;
+        private bool _beforeTestWasRun;
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="TestAssembly"/> class
-        /// specifying the Assembly and the path from which it was loaded.
+        /// Construct a TestActionItem
         /// </summary>
-        /// <param name="assembly">The assembly this test represents.</param>
-        /// <param name="path">The path used to load the assembly.</param>
-        public TestAssembly(Assembly assembly, string path)
-            : base(path)
+        /// <param name="action">The ITestAction to be included</param>
+        public TestActionItem(ITestAction action)
         {
-            this.Assembly = assembly;
-            this.Name = Path.GetFileName(path);
+            _action = action;
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TestAssembly"/> class
-        /// for a path which could not be loaded.
+        /// Run the BeforeTest method of the action and remember that it has been run.
         /// </summary>
-        /// <param name="path">The path used to load the assembly.</param>
-        public TestAssembly(string path) : base(path)
+        /// <param name="test">The test to which the action applies</param>
+        public void BeforeTest(Interfaces.ITest test)
         {
-            this.Name = Path.GetFileName(path);
+            _beforeTestWasRun = true;
+            _action.BeforeTest(test);
         }
 
         /// <summary>
-        /// Gets the Assembly represented by this instance.
+        /// Run the AfterTest action, but only if the BeforeTest
+        /// action was actually run.
         /// </summary>
-        public Assembly Assembly { get; private set; }
-
-        /// <summary>
-        /// Gets the name used for the top-level element in the
-        /// XML representation of this test
-        /// </summary>
-        public override string TestType
+        /// <param name="test">The test to which the action applies</param>
+        public void AfterTest(Interfaces.ITest test)
         {
-            get
-            {
-                return "Assembly";
-            }
+            if (_beforeTestWasRun)
+                _action.AfterTest(test);
         }
     }
 }

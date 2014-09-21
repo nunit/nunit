@@ -1,5 +1,5 @@
-// ***********************************************************************
-// Copyright (c) 2007 Charlie Poole
+﻿// ***********************************************************************
+// Copyright (c) 2012 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -22,36 +22,34 @@
 // ***********************************************************************
 
 using System;
-using System.Collections.Generic;
-using NUnit.Framework.Internal.Commands;
-using NUnit.Framework.Interfaces;
+using System.Reflection;
 
 namespace NUnit.Framework
 {
+    using Interfaces;
+
     /// <summary>
-    /// Summary description for MaxTimeAttribute.
+    /// When implemented by an attribute, this interface implemented to provide actions to execute before and after tests.
     /// </summary>
-    [AttributeUsage( AttributeTargets.Method, AllowMultiple=false, Inherited=false )]
-    public sealed class MaxTimeAttribute : PropertyAttribute, ICommandDecorator
+    public interface ITestAction
     {
-        private int _milliseconds;
         /// <summary>
-        /// Construct a MaxTimeAttribute, given a time in milliseconds.
+        /// Executed before each test is run
         /// </summary>
-        /// <param name="milliseconds">The maximum elapsed time in milliseconds</param>
-        public MaxTimeAttribute( int milliseconds )
-            : base( milliseconds )
-        {
-            _milliseconds = milliseconds;
-        }
+        /// <param name="test">The test that is going to be run.</param>
+        void BeforeTest(ITest test);
 
-        #region ICommandDecorator Members
+        /// <summary>
+        /// Executed after each test is run
+        /// </summary>
+        /// <param name="test">The test that has just been run.</param>
+        void AfterTest(ITest test);
 
-        TestCommand ICommandDecorator.Decorate(TestCommand command)
-        {
-            return new MaxTimeCommand(command, _milliseconds);
-        }
 
-        #endregion
+        /// <summary>
+        /// Provides the target for the action attribute
+        /// </summary>
+        /// <returns>The target for the action attribute</returns>
+        ActionTargets Targets { get; }
     }
 }

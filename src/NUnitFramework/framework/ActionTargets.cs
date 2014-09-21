@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2011 Charlie Poole
+// Copyright (c) 2012 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -22,24 +22,28 @@
 // ***********************************************************************
 
 using System;
-using System.Collections.Generic;
 
-namespace NUnit.Framework.Interfaces
+namespace NUnit.Framework
 {
     /// <summary>
-    /// ICommandDecorator is implemented by attributes and other
-    /// objects able to decorate a TestCommand, usually by wrapping
-    /// it with an outer command. It is used to retrieve the actual
-    /// decorators, thereby permitting one object to supply several
-    /// of them.
+    /// The different targets a test action attribute can be applied to
     /// </summary>
-    public interface ICommandDecoratorSource
+    [Flags]
+    public enum ActionTargets
     {
         /// <summary>
-        /// Gets the command decorators the object is able to supply
-        /// in its current state.
+        /// Default target, which is determined by where the action attribute is attached
         /// </summary>
-        /// <returns>Zero or more ICommandDecorators.</returns>
-        IEnumerable<ICommandDecorator> GetDecorators();
+        Default = 0,
+
+        /// <summary>
+        /// Target a individual test case
+        /// </summary>
+        Test = 1,
+
+        /// <summary>
+        /// Target a suite of test cases
+        /// </summary>
+        Suite = 2
     }
 }
