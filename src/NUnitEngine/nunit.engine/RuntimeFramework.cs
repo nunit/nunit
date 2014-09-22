@@ -83,14 +83,14 @@ namespace NUnit.Engine
         /// <param name="version">The version of the framework</param>
         public RuntimeFramework(RuntimeType runtime, Version version)
         {
-            this.Runtime = runtime;
+            Runtime = runtime;
 
             if (version.Build < 0)
                 InitFromFrameworkVersion(version);
             else
                 InitFromClrVersion(version);
 
-            this.DisplayName = GetDefaultDisplayName(runtime, version);
+            DisplayName = GetDefaultDisplayName(runtime, version);
         }
 
         private void InitFromFrameworkVersion(Version version)

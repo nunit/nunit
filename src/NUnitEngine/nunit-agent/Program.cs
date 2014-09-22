@@ -57,14 +57,19 @@ namespace NUnit.Agent
         {
             AgentId = new Guid(args[0]);
             AgencyUrl = args[1];
-
-            bool pause = false, verbose = false;
+            
+#if DEBUG
+            bool pause = false;
+#endif
+            bool verbose = false;
             for (int i = 2; i < args.Length; i++)
                 switch (args[i])
                 {
+#if DEBUG
                     case "--pause":
                         pause = true;
                         break;
+#endif
                     case "--verbose":
                         verbose = true;
                         break;

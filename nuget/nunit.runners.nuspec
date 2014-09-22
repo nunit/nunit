@@ -22,6 +22,8 @@
     <file src="src\NUnitConsole\CHANGES.txt" />
     <file src="$builddir$\nunit-agent.exe" target="tools" />
     <file src="$builddir$\nunit-agent.exe.config" target="tools" />
+    <file src="$builddir$\nunit-agent-x86.exe" target="tools" />
+    <file src="$builddir$\nunit-agent-x86.exe.config" target="tools" />
     <file src="$builddir$\nunit-console.exe" target="tools" />
     <file src="$builddir$\nunit-console.exe.config" target="tools" />
     <file src="$builddir$\nunit.engine.api.dll" target="tools" />

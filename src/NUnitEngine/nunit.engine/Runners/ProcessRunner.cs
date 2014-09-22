@@ -63,8 +63,7 @@ namespace NUnit.Engine.Runners
         /// <returns>A TestEngineResult.</returns>
         protected override TestEngineResult ExploreTests(TestFilter filter)
         {
-            TestEngineResult result = this._remoteRunner.Explore(filter);
-            return result as TestEngineResult; // TODO: Remove need for this cast
+            return _remoteRunner.Explore(filter);
         }
 
         /// <summary>
@@ -82,6 +81,16 @@ namespace NUnit.Engine.Runners
                 ? RuntimeFramework.Parse(frameworkSetting)
                 : RuntimeFramework.CurrentFramework;
 
+            bool requires32Bit = false;
+            foreach (var file in TestPackage.TestFiles)
+            {
+                using (var reader = new AssemblyReader(file))
+                {
+                    if (reader.ShouldRun32Bit)
+                        requires32Bit = true;
+                }
+            }
+
             bool enableDebug = TestPackage.GetSetting("AgentDebug", false);
             bool verbose = TestPackage.GetSetting("Verbose", false);
             string agentArgs = string.Empty;
@@ -90,7 +99,7 @@ namespace NUnit.Engine.Runners
 
             try
             {
-                CreateAgentAndRunner(enableDebug, agentArgs);
+                CreateAgentAndRunner(enableDebug, agentArgs, requires32Bit);
 
                 return _remoteRunner.Load();
             }
@@ -161,7 +170,7 @@ namespace NUnit.Engine.Runners
 
         #region Helper Methods
 
-        private void CreateAgentAndRunner(bool enableDebug, string agentArgs)
+        private void CreateAgentAndRunner(bool enableDebug, string agentArgs, bool requires32Bit)
         {
             if (_agent == null)
             {
@@ -169,7 +178,8 @@ namespace NUnit.Engine.Runners
                     RuntimeFramework,
                     30000,
                     enableDebug,
-                    agentArgs);
+                    agentArgs,
+                    requires32Bit);
 
                 if (_agent == null)
                     throw new Exception("Unable to acquire remote process agent");
