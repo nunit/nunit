@@ -179,6 +179,12 @@
 
 	<Target Name="CleanEngine" Label="Clean all engine projects for the current config">
 		<MSBuild Targets="Clean" Projects="@(EngineProjects)" Properties="Configuration=$(Configuration); Platform=AnyCPU" />
+		<MSBuild Targets="Clean" Projects="$(EngineSrcDir)\mock-cpp-clr\mock-cpp-clr-x86.vcxproj"
+			 Properties="Configuration=$(Configuration); Platform=Win32"
+			 Condition="'$(Runtime)' == 'NET' And $(IsWindows)" />
+		<MSBuild Targets="Clean" Projects="$(EngineSrcDir)\mock-cpp-clr\mock-cpp-clr-x64.vcxproj"
+			 Properties="Configuration=$(Configuration); Platform=x64"
+			 Condition="'$(Runtime)' == 'NET' And $(IsWindows)" />
 	</Target>
 
 	<Target Name="CleanConsole" Label="Clean all console runner projects for the current config">
@@ -237,6 +243,12 @@
 	<Target Name="BuildEngine" Label="Build all engine projects for the current config">
 		<MSBuild Targets="Build" Projects="@(EngineProjects)"
 			Properties="Configuration=$(Configuration); Platform=AnyCPU" />
+		<MSBuild Targets="Build" Projects="$(EngineSrcDir)\mock-cpp-clr\mock-cpp-clr-x86.vcxproj" 
+			 Properties="Configuration=$(Configuration); Platform=Win32"
+			 Condition="'$(Runtime)' == 'NET' And $(IsWindows)" />
+		<MSBuild Targets="Build" Projects="$(EngineSrcDir)\mock-cpp-clr\mock-cpp-clr-x64.vcxproj" 
+			 Properties="Configuration=$(Configuration); Platform=x64"
+			 Condition="'$(Runtime)' == 'NET' And $(IsWindows)" />
 	</Target>
 
 	<Target Name="BuildConsole" Label="Build all console projects for the current config">
@@ -250,7 +262,7 @@
 
 	<Target Name="TestAll" Label="Run tests for all framework builds, the engine and the console"
 			DependsOnTargets="TestAllFrameworks;TestEngine;TestConsole" />
-	
+      
 	<Target Name="Test" Label="Run tests for the current framework, engine and console"
 			DependsOnTargets="TestFramework;TestEngine;TestConsole" />
 
@@ -459,6 +471,7 @@
 		<EngineProjects Include="$(EngineSrcDir)\nunit.engine.api\nunit.engine.api.csproj" />
 		<EngineProjects Include="$(EngineSrcDir)\nunit.engine\nunit.engine.csproj" />
 		<EngineProjects Include="$(EngineSrcDir)\nunit-agent\nunit-agent.csproj" />
+		<EngineProjects Include="$(EngineSrcDir)\nunit-agent\nunit-agent-x86.csproj" />
 		<EngineProjects Include="$(EngineSrcDir)\nunit.engine.tests\nunit.engine.tests.csproj" />
 	</ItemGroup>
 
