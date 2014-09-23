@@ -37,6 +37,7 @@
 	<PropertyGroup Label="Default Build Settings">
 		<Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
 		<Framework Condition="'$(Framework)' == ''">net-4.5</Framework>
+		<ConfigSuffix Condition=" '$(Configuration)' == 'Debug' ">-dbg</ConfigSuffix>
 	</PropertyGroup>
 
 	<PropertyGroup Label="Subdirectories">
@@ -107,8 +108,7 @@
 
 	<PropertyGroup Label="Properties for building NuGet packages">
 		<NugetExecutable>$(ProjectToolsDir)\nuget.exe</NugetExecutable>
-		<NugetVersion>$(PackageVersion)$(PackageModifier)</NugetVersion>
-		<NugetOutput>$(ConfigurationBuildDir)</NugetOutput>
+		<NugetVersion>$(PackageVersion)$(PackageModifier)$(ConfigSuffix)</NugetVersion>
 	</PropertyGroup>
 
 	<!-- *********************************************************************** -->
@@ -153,7 +153,6 @@
 		<Message Text="NuGet" />
 		<Message Text="  Exe:               $(NugetExecutable)" />
 		<Message Text="  Version:           $(NugetVersion)" />
-		<Message Text="  Output:            $(NugetOutput)" />
 		<Message Text=" " />
 	</Target>
 
@@ -262,7 +261,7 @@
 
 	<Target Name="TestAll" Label="Run tests for all framework builds, the engine and the console"
 			DependsOnTargets="TestAllFrameworks;TestEngine;TestConsole" />
-      
+	  
 	<Target Name="Test" Label="Run tests for the current framework, engine and console"
 			DependsOnTargets="TestFramework;TestEngine;TestConsole" />
 
@@ -350,38 +349,9 @@
 		<Message Text="* Testing the Engine and Console Runner - $(Configuration)" />
 		<Message Text="******************************************************************" />
 	  <Exec WorkingDirectory="$(ConsoleBuildDir)"
-	    Command="$(ManagedExeLauncher) $(ConsoleRunner) nunit.engine.tests.dll nunit-console.tests.dll $(TestOptions)" />
+		Command="$(ManagedExeLauncher) $(ConsoleRunner) nunit.engine.tests.dll nunit-console.tests.dll $(TestOptions)" />
 	</Target>
 
-	<!-- *********************************************************************** -->
-	<!--                        NuGet Packaging Targets                          -->
-	<!-- *********************************************************************** -->
-
-	<Target Name="PackageNuGetAll"
-		Label="Packages all NuGet packages"
-		DependsOnTargets="PackageNuGetNUnit;PackageNuGetNUnitLite;PackageNuGetRunners" />
-  
-	<Target Name="PackageNuGetNUnit"
-		Label="Packages the NUnit NuGet package"
-		DependsOnTargets="BuildAllNUnit;TestAllNUnit">
-		<Exec WorkingDirectory="$(ProjectBaseDir)"
-		      Command="$(ManagedExeLauncher) &quot;$(NugetExecutable)&quot; pack $(NuspecDirectory)\nunit.nuspec -BasePath &quot;$(ProjectBaseDir)&quot; -OutputDirectory &quot;$(NugetOutput)&quot; -Properties version=$(NugetVersion);builddir=$(ConfigurationBuildDir)" />
-	</Target>
-
-	<Target Name="PackageNuGetNUnitLite"
-		Label="Packages the NUnitlite NuGet package"
-		DependsOnTargets="BuildAllNUnitLite;TestAllNUnitLite">
-		<Exec WorkingDirectory="$(ProjectBaseDir)"
-		      Command="$(ManagedExeLauncher) &quot;$(NugetExecutable)&quot; pack $(NuspecDirectory)\nunitlite.nuspec -BasePath &quot;$(ProjectBaseDir)&quot; -OutputDirectory &quot;$(NugetOutput)&quot; -Properties version=$(NugetVersion);builddir=$(ConfigurationBuildDir)" />
-	</Target>
-  
-	<Target Name="PackageNuGetRunners" 
-		Label="Packages the NUnit.Runners NuGet package"
-		DependsOnTargets="BuildConsole;BuildEngine;TestEngineAndConsole">
-		<Exec WorkingDirectory="$(ProjectBaseDir)"
-		      Command="$(ManagedExeLauncher) &quot;$(NugetExecutable)&quot; pack $(NuspecDirectory)\nunit.runners.nuspec -NoPackageAnalysis -BasePath &quot;$(ProjectBaseDir)&quot; -OutputDirectory &quot;$(NugetOutput)&quot; -Properties version=$(NugetVersion);builddir=$(ConfigurationBuildDir)" />
-	</Target>
-	
 	<!-- *********************************************************************** -->
 	<!--                           Coverage Targets                              -->
 	<!-- *********************************************************************** -->
@@ -406,50 +376,123 @@
 
 	<!-- *********************************************************************** -->
 	<!--                          Packaging Targets                              -->
+	<!--                                                                         -->
+		<!--                              WARNING                                    -->
+	<!--                                                                         -->
+	<!--   Packaging is decoupled from the Build by design. It's up to whoever   -->
+		<!--   creates the package to first make sure that the build is up to date.  -->
 	<!-- *********************************************************************** -->
 	
-	<Target Name="Package" Label="Packages the source code and binaries already built" DependsOnTargets="_CreatePackageImage">
+	<Target Name="Package" Label="Packages the source code and binaries already built"
+		DependsOnTargets="PackageSource;PackageBinaries;PackageNuGet">
+	</Target>
+
+	<Target Name="PackageSource" Label="Packages the source code as a zip" DependsOnTargets="_CreateProjectPackageDir">
+		<Message Text="******************************************************************" />
+		<Message Text="* Creating the source code package as $(PackageName)-src.zip)" />
+		<Message Text="******************************************************************" />
+
+		<Exec Command='git archive -o "$(ProjectPackageDir)\$(PackageName)-src.zip" HEAD' />
+	</Target>
+
+	<Target Name="PackageBinaries" Label="Packages the binaries as a zip" DependsOnTargets="_CreatePackageImage">
+		<Message Text="******************************************************************" />
+		<Message Text="* Creating the binary $(Configuration) package as $(PackageName)$(ConfigSuffix).zip" />
+		<Message Text="******************************************************************" />
+
 		<Exec Command='git init "$(PackageWorkingDir)"' />
 		<Exec WorkingDirectory='$(PackageWorkingDir)' Command='git add -A' />
 		<Exec WorkingDirectory='$(PackageWorkingDir)' Command='git config user.name "temp"' />
 		<Exec WorkingDirectory='$(PackageWorkingDir)' Command='git config user.email "temp@temp.com"' />
 		<Exec WorkingDirectory='$(PackageWorkingDir)' Command='git commit -m "Export"' /> 
-		<Exec WorkingDirectory='$(PackageWorkingDir)' Command='git archive -o "$(ProjectPackageDir)\$(PackageName).zip" HEAD'></Exec>
+		<Exec WorkingDirectory='$(PackageWorkingDir)' 
+			Command='git archive -o "$(ProjectPackageDir)\$(PackageName)$(ConfigSuffix).zip" HEAD'></Exec>
 	</Target>
-  
-	<Target Name="_CleanPackageWorkingDir">
-		<Exec Command="$(RemoveDir) $(PackageWorkingDir)" Condition="Exists('$(PackageWorkingDir)')"></Exec>
-		<MakeDir Directories="$(PackageWorkingDir)"></MakeDir>
-	</Target>
-  
-	 <ItemGroup Label="Files for packaging">
-		 <BinFiles Include="$(ConfigurationBuildDir)\**\*.*"></BinFiles>
-		 <TxtFiles Include="LICENSE.txt;NOTICES.txt"></TxtFiles>
-	 </ItemGroup>
 
+	<Target Name="PackageNuGet" Label="Creates all NuGet packages"
+		DependsOnTargets="PackageNuGetNUnit;PackageNuGetNUnitLite;PackageNuGetConsole" />
+  
+	<Target Name="PackageNuGetNUnit" Label="Creates the NUnit Framework NuGet package"
+			DependsOnTargets="_CreateProjectPackageDir">
+		<Message Text="******************************************************************" />
+		<Message Text="* Creating the nunit Nuget $(Configuration) package" />
+		<Message Text="******************************************************************" />
+
+		<Exec WorkingDirectory="$(ProjectBaseDir)"
+			  Command="$(ManagedExeLauncher) &quot;$(NugetExecutable)&quot; pack $(NuspecDirectory)\nunit.nuspec -BasePath &quot;$(ProjectBaseDir)&quot; -OutputDirectory &quot;$(ProjectPackageDir)&quot; -Properties version=$(NugetVersion);builddir=$(ConfigurationBuildDir)" />
+
+	</Target>
+  
+	<Target Name="PackageNuGetNUnitLite" Label="Creates the NUnitlite NuGet package"
+			DependsOnTargets="_CreateProjectPackageDir">
+		<Message Text="******************************************************************" />
+		<Message Text="* Creating the nunitlite Nuget $(Configuration) package" />
+		<Message Text="******************************************************************" />
+
+		<Exec WorkingDirectory="$(ProjectBaseDir)"
+			  Command="$(ManagedExeLauncher) &quot;$(NugetExecutable)&quot; pack $(NuspecDirectory)\nunitlite.nuspec -BasePath &quot;$(ProjectBaseDir)&quot; -OutputDirectory &quot;$(ProjectPackageDir)&quot; -Properties version=$(NugetVersion);builddir=$(ConfigurationBuildDir)" />
+
+	</Target>
+  
+	<Target Name="PackageNuGetConsole" Label="Creates the NUnit.Console NuGet package"
+			DependsOnTargets="_CreateProjectPackageDir">
+		<Message Text="******************************************************************" />
+		<Message Text="* Creating the NUnit.Console Nuget $(Configuration) package" />
+		<Message Text="******************************************************************" />
+
+		<Exec WorkingDirectory="$(ProjectBaseDir)"
+			  Command="$(ManagedExeLauncher) &quot;$(NugetExecutable)&quot; pack $(NuspecDirectory)\nunit.console.nuspec -NoPackageAnalysis -BasePath &quot;$(ProjectBaseDir)&quot; -OutputDirectory &quot;$(ProjectPackageDir)&quot; -Properties version=$(NugetVersion);builddir=$(ConfigurationBuildDir)" />
+
+	</Target>
+	
 	<Target Name="_CreatePackageImage" DependsOnTargets="_CleanPackageWorkingDir">
-		<!-- Copy root txt files -->
-		<Copy DestinationFolder="$(PackageWorkingDir)" SourceFiles="@(TxtFiles)"></Copy>
-		<!-- Copy source in zip format already -->
-		<Exec Command="git archive -o $(PackageWorkingDir)\src.zip HEAD"></Exec>
-		<!-- Copy all available binaries -->
+
+		<!-- Copy root txt files to root -->
+		<Copy DestinationFolder="$(PackageWorkingDir)" SourceFiles="@(RootFiles)" />
+
+		<!-- Copy binaries to bin directory -->
 		<Copy DestinationFiles="@(BinFiles->'$(PackageBinDir)\%(RecursiveDir)%(Filename)%(Extension)')" 
 			  SourceFiles="@(BinFiles)"></Copy>
+
 	</Target>
 
-	<!-- Supported frameworks -->
-	<ItemGroup>
-		<SupportedFrameworks Include="net-4.5"></SupportedFrameworks>
-		<SupportedFrameworks Include="net-4.0"></SupportedFrameworks>
-		<SupportedFrameworks Include="net-3.5"></SupportedFrameworks>
-		<SupportedFrameworks Include="net-2.0"></SupportedFrameworks>
-		<!--<SupportedFrameworks Include="netcf-3.5"></SupportedFrameworks>
-		<SupportedFrameworks Include="netcf-2.0"></SupportedFrameworks>-->
-		<SupportedFrameworks Condition="$(IsWindows)" Include="sl-5.0"></SupportedFrameworks>
+	<Target Name="_CreateProjectPackageDir">
+		<MakeDir Directories="$(ProjectPackageDir)"  Condition="!Exists(ProjectPackageDir)"/>
+	</Target>
+
+	<Target Name="_CleanPackageWorkingDir">
+		<Exec Command="$(RemoveDir) $(PackageWorkingDir)" Condition="Exists('$(PackageWorkingDir)')" />
+		<MakeDir Directories="$(PackageWorkingDir)" />
+	</Target>
+  
+	<!-- *********************************************************************** -->
+	<!--                       Lists For Use by Targets                          -->
+	<!-- *********************************************************************** -->
+
+	<ItemGroup Label="Files for packaging in root">
+		<RootFiles Include="LICENSE.txt;NOTICES.txt;CHANGES.txt" />
+	</ItemGroup>
+
+	<ItemGroup Label="Files for packaging in bin directory">
+		<BinFiles Include="$(ConfigurationBuildDir)\**\*.dll" />
+		<BinFiles Include="$(ConfigurationBuildDir)\**\*.exe" />
+		<BinFiles Include="$(ConfigurationBuildDir)\**\*.pdb" Condition="'$(Configuration)' == 'Debug'" />
+		<BinFiles Include="$(ConfigurationBuildDir)\**\*.xml" />
+		<BinFiles Include="$(ConfigurationBuildDir)\**\*.config" />
+		<BinFiles Include="$(ConfigurationBuildDir)\NUnit2TestResult.xsd" />
+	</ItemGroup>
+
+	<ItemGroup Label="Supported Frameworks">
+		<SupportedFrameworks Include="net-4.5" />
+		<SupportedFrameworks Include="net-4.0" />
+		<SupportedFrameworks Include="net-3.5" />
+		<SupportedFrameworks Include="net-2.0" />
+		<!--<SupportedFrameworks Condition="$(IsWindows)" Include="netcf-3.5" />
+		<SupportedFrameworks Condition="$(IsWindows)" Include="netcf-2.0" />-->
+		<SupportedFrameworks Condition="$(IsWindows)" Include="sl-5.0" />
 	</ItemGroup>
 	
-	<!-- Lists of Projects -->
-	<ItemGroup>
+	<ItemGroup Label="Projects for building the full framework">
 		<NUnitProjects Include="$(FrameworkSrcDir)\framework\nunit.framework-$(ProjectSuffix).csproj"></NUnitProjects>
 		<NUnitProjects Include="$(FrameworkSrcDir)\mock-assembly\mock-nunit-assembly-$(ProjectSuffix).csproj"></NUnitProjects>
 		<NUnitProjects Include="$(FrameworkSrcDir)\testdata\nunit.testdata-$(ProjectSuffix).csproj"></NUnitProjects>
@@ -457,7 +500,7 @@
 		<NUnitProjects Include="$(FrameworkSrcDir)\tests\nunit.framework.tests-$(ProjectSuffix).csproj"></NUnitProjects>
 	</ItemGroup>
 	
-	<ItemGroup>
+	<ItemGroup Label="Projects for building the nunitlite framework">
 		<NUnitLiteProjects Include="$(FrameworkSrcDir)\framework\nunitlite-$(ProjectSuffix).csproj"></NUnitLiteProjects>
 		<NUnitLiteProjects Include="$(FrameworkSrcDir)\mock-assembly\mock-nunitlite-assembly-$(ProjectSuffix).csproj"
 							Condition="'$(Runtime)' != 'netcf' And '$(Runtime)' != 'silverlight'"></NUnitLiteProjects>
@@ -467,7 +510,7 @@
 		<NUnitLiteProjects Include="$(FrameworkSrcDir)\tests\nunitlite.tests-$(ProjectSuffix).csproj"></NUnitLiteProjects>
 	</ItemGroup>
 	
-	<ItemGroup>
+	<ItemGroup Label="Projects for building the engine">
 		<EngineProjects Include="$(EngineSrcDir)\nunit.engine.api\nunit.engine.api.csproj" />
 		<EngineProjects Include="$(EngineSrcDir)\nunit.engine\nunit.engine.csproj" />
 		<EngineProjects Include="$(EngineSrcDir)\nunit-agent\nunit-agent.csproj" />
@@ -475,7 +518,7 @@
 		<EngineProjects Include="$(EngineSrcDir)\nunit.engine.tests\nunit.engine.tests.csproj" />
 	</ItemGroup>
 
-	<ItemGroup>
+	<ItemGroup Label="Projects for building the console runner">
 		<ConsoleProjects Include="$(ConsoleSrcDir)\nunit-console\nunit-console.csproj" />
 		<ConsoleProjects Include="$(ConsoleSrcDir)\nunit-console.tests\nunit-console.tests.csproj" />
 	</ItemGroup>
