@@ -109,7 +109,6 @@
 	<PropertyGroup Label="Properties for building NuGet packages">
 		<NugetExecutable>$(ProjectToolsDir)\nuget.exe</NugetExecutable>
 		<NugetVersion>$(PackageVersion)$(PackageModifier)$(ConfigSuffix)</NugetVersion>
-		<NugetOutput>$(ConfigurationBuildDir)</NugetOutput>
 	</PropertyGroup>
 
 	<!-- *********************************************************************** -->
@@ -154,7 +153,6 @@
 		<Message Text="NuGet" />
 		<Message Text="  Exe:               $(NugetExecutable)" />
 		<Message Text="  Version:           $(NugetVersion)" />
-		<Message Text="  Output:            $(NugetOutput)" />
 		<Message Text=" " />
 	</Target>
 
@@ -263,7 +261,7 @@
 
 	<Target Name="TestAll" Label="Run tests for all framework builds, the engine and the console"
 			DependsOnTargets="TestAllFrameworks;TestEngine;TestConsole" />
-      
+	  
 	<Target Name="Test" Label="Run tests for the current framework, engine and console"
 			DependsOnTargets="TestFramework;TestEngine;TestConsole" />
 
@@ -351,7 +349,7 @@
 		<Message Text="* Testing the Engine and Console Runner - $(Configuration)" />
 		<Message Text="******************************************************************" />
 	  <Exec WorkingDirectory="$(ConsoleBuildDir)"
-	    Command="$(ManagedExeLauncher) $(ConsoleRunner) nunit.engine.tests.dll nunit-console.tests.dll $(TestOptions)" />
+		Command="$(ManagedExeLauncher) $(ConsoleRunner) nunit.engine.tests.dll nunit-console.tests.dll $(TestOptions)" />
 	</Target>
 
 	<!-- *********************************************************************** -->
@@ -379,10 +377,10 @@
 	<!-- *********************************************************************** -->
 	<!--                          Packaging Targets                              -->
 	<!--                                                                         -->
-        <!--                              WARNING                                    -->
+		<!--                              WARNING                                    -->
 	<!--                                                                         -->
 	<!--   Packaging is decoupled from the Build by design. It's up to whoever   -->
-        <!--   creates the package to first make sure that the build is up to date.  -->
+		<!--   creates the package to first make sure that the build is up to date.  -->
 	<!-- *********************************************************************** -->
 	
 	<Target Name="Package" Label="Packages the source code and binaries already built"
@@ -412,35 +410,38 @@
 	</Target>
 
 	<Target Name="PackageNuGet" Label="Creates all NuGet packages"
-		DependsOnTargets="PackageNuGetNUnit;PackageNuGetNUnitLite;PackageNuGetRunners" />
+		DependsOnTargets="PackageNuGetNUnit;PackageNuGetNUnitLite;PackageNuGetConsole" />
   
-	<Target Name="PackageNuGetNUnit" Label="Creates the NUnit Framework NuGet package">
+	<Target Name="PackageNuGetNUnit" Label="Creates the NUnit Framework NuGet package"
+			DependsOnTargets="_CreateProjectPackageDir">
 		<Message Text="******************************************************************" />
 		<Message Text="* Creating the nunit Nuget $(Configuration) package" />
 		<Message Text="******************************************************************" />
 
 		<Exec WorkingDirectory="$(ProjectBaseDir)"
-		      Command="$(ManagedExeLauncher) &quot;$(NugetExecutable)&quot; pack $(NuspecDirectory)\nunit.nuspec -BasePath &quot;$(ProjectBaseDir)&quot; -OutputDirectory &quot;$(NugetOutput)&quot; -Properties version=$(NugetVersion);builddir=$(ConfigurationBuildDir)" />
+			  Command="$(ManagedExeLauncher) &quot;$(NugetExecutable)&quot; pack $(NuspecDirectory)\nunit.nuspec -BasePath &quot;$(ProjectBaseDir)&quot; -OutputDirectory &quot;$(ProjectPackageDir)&quot; -Properties version=$(NugetVersion);builddir=$(ConfigurationBuildDir)" />
 
 	</Target>
   
-	<Target Name="PackageNuGetNUnitLite" Label="Creates the NUnitlite NuGet package">
+	<Target Name="PackageNuGetNUnitLite" Label="Creates the NUnitlite NuGet package"
+			DependsOnTargets="_CreateProjectPackageDir">
 		<Message Text="******************************************************************" />
 		<Message Text="* Creating the nunitlite Nuget $(Configuration) package" />
 		<Message Text="******************************************************************" />
 
 		<Exec WorkingDirectory="$(ProjectBaseDir)"
-		      Command="$(ManagedExeLauncher) &quot;$(NugetExecutable)&quot; pack $(NuspecDirectory)\nunitlite.nuspec -BasePath &quot;$(ProjectBaseDir)&quot; -OutputDirectory &quot;$(NugetOutput)&quot; -Properties version=$(NugetVersion);builddir=$(ConfigurationBuildDir)" />
+			  Command="$(ManagedExeLauncher) &quot;$(NugetExecutable)&quot; pack $(NuspecDirectory)\nunitlite.nuspec -BasePath &quot;$(ProjectBaseDir)&quot; -OutputDirectory &quot;$(ProjectPackageDir)&quot; -Properties version=$(NugetVersion);builddir=$(ConfigurationBuildDir)" />
 
 	</Target>
   
-	<Target Name="PackageNuGetRunners" Label="Creates the NUnit.Runners NuGet package">
+	<Target Name="PackageNuGetConsole" Label="Creates the NUnit.Console NuGet package"
+			DependsOnTargets="_CreateProjectPackageDir">
 		<Message Text="******************************************************************" />
-		<Message Text="* Creating the nunit.runners Nuget $(Configuration) package" />
+		<Message Text="* Creating the NUnit.Console Nuget $(Configuration) package" />
 		<Message Text="******************************************************************" />
 
 		<Exec WorkingDirectory="$(ProjectBaseDir)"
-		      Command="$(ManagedExeLauncher) &quot;$(NugetExecutable)&quot; pack $(NuspecDirectory)\nunit.runners.nuspec -NoPackageAnalysis -BasePath &quot;$(ProjectBaseDir)&quot; -OutputDirectory &quot;$(NugetOutput)&quot; -Properties version=$(NugetVersion);builddir=$(ConfigurationBuildDir)" />
+			  Command="$(ManagedExeLauncher) &quot;$(NugetExecutable)&quot; pack $(NuspecDirectory)\nunit.console.nuspec -NoPackageAnalysis -BasePath &quot;$(ProjectBaseDir)&quot; -OutputDirectory &quot;$(ProjectPackageDir)&quot; -Properties version=$(NugetVersion);builddir=$(ConfigurationBuildDir)" />
 
 	</Target>
 	
@@ -468,11 +469,11 @@
 	<!--                       Lists For Use by Targets                          -->
 	<!-- *********************************************************************** -->
 
- 	<ItemGroup Label="Files for packaging in root">
+	<ItemGroup Label="Files for packaging in root">
 		<RootFiles Include="LICENSE.txt;NOTICES.txt;CHANGES.txt" />
 	</ItemGroup>
 
- 	<ItemGroup Label="Files for packaging in bin directory">
+	<ItemGroup Label="Files for packaging in bin directory">
 		<BinFiles Include="$(ConfigurationBuildDir)\**\*.dll" />
 		<BinFiles Include="$(ConfigurationBuildDir)\**\*.exe" />
 		<BinFiles Include="$(ConfigurationBuildDir)\**\*.pdb" Condition="'$(Configuration)' == 'Debug'" />
