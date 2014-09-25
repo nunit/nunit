@@ -25,6 +25,7 @@ using System.Xml;
 
 namespace NUnit.Engine.Tests
 {
+    using Common;
     using Framework;
     using Internal;
 

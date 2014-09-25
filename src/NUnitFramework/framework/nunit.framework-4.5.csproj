@@ -344,7 +344,6 @@
     <Compile Include="Internal\Tests\TestSuite.cs" />
     <Compile Include="Internal\ThreadUtility.cs" />
     <Compile Include="Internal\TypeHelper.cs" />
-    <Compile Include="Internal\XmlHelper.cs" />
     <Compile Include="Is.cs" />
     <Compile Include="ITestAction.cs" />
     <Compile Include="Iz.cs" />

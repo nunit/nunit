@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2011-2014 Charlie Poole
+// Copyright (c) 2010-2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,7 +21,9 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Xml;
 
 namespace System.Runtime.CompilerServices
@@ -30,16 +32,11 @@ namespace System.Runtime.CompilerServices
     public sealed class ExtensionAttribute : Attribute { }
 }
 
-namespace NUnit.Engine.Internal
+namespace NUnit.Common
 {
     /// <summary>
     /// XmlHelper provides static methods for basic XML operations.
     /// </summary>
-    /// <remarks>
-    /// This helper class is used in various NUnit modules.
-    /// Unused methods are currently commented out in those
-    /// modules that don't make use of them.
-    /// </remarks>
     public static class XmlHelper
     {
         /// <summary>
@@ -104,6 +101,12 @@ namespace NUnit.Engine.Internal
 
         #region Safe Attribute Access
 
+        /// <summary>
+        /// Gets the value of the given attribute.
+        /// </summary>
+        /// <param name="result">The result.</param>
+        /// <param name="name">The name.</param>
+        /// <returns></returns>
         public static string GetAttribute(this XmlNode result, string name)
         {
             XmlAttribute attr = result.Attributes[name];
@@ -111,6 +114,13 @@ namespace NUnit.Engine.Internal
             return attr == null ? null : attr.Value;
         }
 
+        /// <summary>
+        /// Gets the value of the given attribute as an int.
+        /// </summary>
+        /// <param name="result">The result.</param>
+        /// <param name="name">The name.</param>
+        /// <param name="defaultValue">The default value.</param>
+        /// <returns></returns>
         public static int GetAttribute(this XmlNode result, string name, int defaultValue)
         {
             XmlAttribute attr = result.Attributes[name];
@@ -120,6 +130,13 @@ namespace NUnit.Engine.Internal
                 : int.Parse(attr.Value, System.Globalization.CultureInfo.InvariantCulture);
         }
 
+        /// <summary>
+        /// Gets the value of the given attribute as a double.
+        /// </summary>
+        /// <param name="result">The result.</param>
+        /// <param name="name">The name.</param>
+        /// <param name="defaultValue">The default value.</param>
+        /// <returns></returns>
         public static double GetAttribute(this XmlNode result, string name, double defaultValue)
         {
             XmlAttribute attr = result.Attributes[name];
@@ -127,6 +144,26 @@ namespace NUnit.Engine.Internal
             return attr == null
                 ? defaultValue
                 : double.Parse(attr.Value, System.Globalization.CultureInfo.InvariantCulture);
+        }
+
+        /// <summary>
+        /// Gets the value of the given attribute as a DateTime.
+        /// </summary>
+        /// <param name="result">The result.</param>
+        /// <param name="name">The name.</param>
+        /// <param name="defaultValue">The default value.</param>
+        /// <returns></returns>
+        public static DateTime GetAttribute(this XmlNode result, string name, DateTime defaultValue)
+        {
+            string dateStr = GetAttribute(result, name);
+            if (dateStr == null)
+                return defaultValue;
+
+            DateTime date;
+            if (!DateTime.TryParse(dateStr, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal | DateTimeStyles.AllowWhiteSpaces, out date))
+                return defaultValue;
+
+            return date;
         }
 
         #endregion

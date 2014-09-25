@@ -152,7 +152,6 @@
     <Compile Include="Internal\RandomGenerator.cs" />
     <Compile Include="Internal\StackFilter.cs" />
     <Compile Include="Internal\StringUtil.cs" />
-    <Compile Include="Internal\XmlHelper.cs" />
     <Compile Include="Internal\Logger.cs" />
     <Compile Include="ITestAction.cs" />
     <Compile Include="MessageMatch.cs" />

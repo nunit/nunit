@@ -45,6 +45,9 @@
     <Compile Include="..\..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="..\..\Common\XmlHelper.cs">
+      <Link>Common\XmlHelper.cs</Link>
+    </Compile>
     <Compile Include="..\ConsoleVersion.cs">
       <Link>ConsoleVersion.cs</Link>
     </Compile>
@@ -68,7 +71,6 @@
     <Compile Include="Utilities\TestNameParser.cs" />
     <Compile Include="ResultReporter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Utilities\XmlHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App.ico" />

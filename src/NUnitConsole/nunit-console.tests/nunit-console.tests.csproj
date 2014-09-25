@@ -56,7 +56,6 @@
     <Compile Include="SchemaValidator.cs" />
     <Compile Include="TestFilterBuilderTests.cs" />
     <Compile Include="TestNameParserTests.cs" />
-    <Compile Include="XmlHelperTests.cs" />
     <Compile Include="XmlOutputTest.cs" />
     <Compile Include="XmlTransformOutputWriterTests.cs" />
   </ItemGroup>
@@ -70,6 +69,10 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\NUnitEngine\nunit.engine\nunit.engine.csproj">
+      <Project>{372a3447-d657-40ff-a089-77c19fec30c8}</Project>
+      <Name>nunit.engine</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\NUnitFramework\framework\nunit.framework-2.0.csproj">
       <Project>{12B66B03-90F1-4992-BD33-BDF3C69AE49E}</Project>
       <Name>nunit.framework-2.0</Name>
@@ -81,10 +84,6 @@
     <ProjectReference Include="..\..\NUnitEngine\nunit.engine.api\nunit.engine.api.csproj">
       <Project>{775FAD50-3623-4922-97C4-DFB29A8BE4C7}</Project>
       <Name>nunit.engine.api</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\NUnitEngine\nunit.engine\nunit.engine.csproj">
-      <Project>{372A3447-D657-40FF-A089-77C19FEC30C8}</Project>
-      <Name>nunit.engine</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

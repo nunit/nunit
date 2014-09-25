@@ -26,7 +26,7 @@ using System.Collections.Generic;
 using System.Xml;
 using NUnit.Framework;
 
-namespace NUnit.Engine.Internal.Tests
+namespace NUnit.Common.Utilities.Tests
 {
     public class XmlHelperTests
     {

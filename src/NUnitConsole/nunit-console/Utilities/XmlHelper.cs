@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2011 Charlie Poole
+// Copyright (c) 2010-2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -49,6 +49,54 @@ namespace NUnit.ConsoleRunner.Utilities
             XmlDocument doc = new XmlDocument();
             doc.LoadXml( "<" + name + "/>" );
             return doc.FirstChild;
+        }
+
+        public static XmlNode CreateXmlNode(string xml)
+        {
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml(xml);
+            return doc.FirstChild;
+        }
+
+        /// <summary>
+        /// Adds an attribute with a specified name and value to an existing XmlNode.
+        /// </summary>
+        /// <param name="node">The node to which the attribute should be added.</param>
+        /// <param name="name">The name of the attribute.</param>
+        /// <param name="value">The value of the attribute.</param>
+        public static void AddAttribute(this XmlNode node, string name, string value)
+        {
+            XmlAttribute attr = node.OwnerDocument.CreateAttribute(name);
+            attr.Value = value;
+            node.Attributes.Append(attr);
+        }
+
+        /// <summary>
+        /// Adds a new element as a child of an existing XmlNode and returns it.
+        /// </summary>
+        /// <param name="node">The node to which the element should be added.</param>
+        /// <param name="name">The element name.</param>
+        /// <returns>The newly created child element</returns>
+        public static XmlNode AddElement(this XmlNode node, string name)
+        {
+            XmlNode childNode = node.OwnerDocument.CreateElement(name);
+            node.AppendChild(childNode);
+            return childNode;
+        }
+
+        /// <summary>
+        /// Adds the a new element as a child of an existing node and returns it.
+        /// A CDataSection is added to the new element using the data provided.
+        /// </summary>
+        /// <param name="node">The node to which the element should be added.</param>
+        /// <param name="name">The element name.</param>
+        /// <param name="data">The data for the CDataSection.</param>
+        /// <returns></returns>
+        public static XmlNode AddElementWithCDataSection(this XmlNode node, string name, string data)
+        {
+            XmlNode childNode = node.AddElement(name);
+            childNode.AppendChild(node.OwnerDocument.CreateCDataSection(data));
+            return childNode;
         }
 
         #region Safe Attribute Access
@@ -110,11 +158,11 @@ namespace NUnit.ConsoleRunner.Utilities
         public static DateTime GetAttribute(this XmlNode result, string name, DateTime defaultValue)
         {
             string dateStr = GetAttribute(result, name);
-            if ( dateStr == null )
+            if (dateStr == null)
                 return defaultValue;
 
             DateTime date;
-            if ( !DateTime.TryParse(dateStr, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal | DateTimeStyles.AllowWhiteSpaces, out date) )
+            if (!DateTime.TryParse(dateStr, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal | DateTimeStyles.AllowWhiteSpaces, out date))
                 return defaultValue;
 
             return date;

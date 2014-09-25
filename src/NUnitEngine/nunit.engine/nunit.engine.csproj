@@ -47,6 +47,9 @@
     <Compile Include="..\..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="..\..\Common\XmlHelper.cs">
+      <Link>Common\XmlHelper.cs</Link>
+    </Compile>
     <Compile Include="..\EngineVersion.cs">
       <Link>EngineVersion.cs</Link>
     </Compile>
@@ -75,7 +78,6 @@
     <Compile Include="Internal\ServerUtilities.cs" />
     <Compile Include="Internal\SettingsGroup.cs" />
     <Compile Include="Internal\SettingsStore.cs" />
-    <Compile Include="Internal\XmlHelper.cs" />
     <Compile Include="IProject.cs" />
     <Compile Include="IProjectConfig.cs" />
     <Compile Include="IProjectConfigList.cs" />

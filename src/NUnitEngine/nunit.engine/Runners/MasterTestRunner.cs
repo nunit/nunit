@@ -27,6 +27,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Reflection;
 using System.Xml;
+using NUnit.Common;
 using NUnit.Engine.Internal;
 
 namespace NUnit.Engine.Runners

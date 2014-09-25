@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System.Xml;
+using NUnit.Common;
 
 namespace NUnit.Engine.Internal
 {
