@@ -23,27 +23,27 @@
 
 using System.Collections.Generic;
 
-namespace NUnitLite.Runner
+namespace NUnit.Common
 {
     /// <summary>
     /// TestNameParser is used to parse the arguments to the 
-    /// -test option, separating testnames at the correct point.
+    /// -run option, separating testnames at the correct point.
     /// </summary>
     public class TestNameParser
     {
         /// <summary>
-        /// Parse the -test argument and return an array of names
+        /// Parse the -run argument and return an array of argument
         /// </summary>
-        /// <param name="names">List of names to be parsed</param>
+        /// <param name="argument">argument</param>
         /// <returns></returns>
-        public static string[] Parse(string names)
+        public static string[] Parse(string argument)
         {
             List<string> list = new List<string>();
 
             int index = 0;
-            while (index < names.Length)
+            while (index < argument.Length)
             {
-                string name = GetTestName(names, ref index);
+                string name = GetTestName(argument, ref index);
                 if (name != null && name != string.Empty)
                     list.Add(name);
             }

@@ -7,7 +7,7 @@
 using System;
 using NUnit.Framework;
 
-namespace NUnitLite.Runner.Tests
+namespace NUnit.Common.Tests
 {
     public class TestNameParserTests
     {

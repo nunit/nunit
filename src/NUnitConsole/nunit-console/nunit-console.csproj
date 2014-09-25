@@ -45,6 +45,9 @@
     <Compile Include="..\..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="..\..\Common\TestNameParser.cs">
+      <Link>Common\TestNameParser.cs</Link>
+    </Compile>
     <Compile Include="..\..\Common\XmlHelper.cs">
       <Link>Common\XmlHelper.cs</Link>
     </Compile>
@@ -68,7 +71,6 @@
     <Compile Include="Utilities\StackTraceFilter.cs" />
     <Compile Include="TestEventHandler.cs" />
     <Compile Include="Utilities\TestFilterBuilder.cs" />
-    <Compile Include="Utilities\TestNameParser.cs" />
     <Compile Include="ResultReporter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -24,7 +24,7 @@
 using System;
 using NUnit.Framework;
 
-namespace NUnit.ConsoleRunner.Utilities.Tests
+namespace NUnit.Common.Tests
 {
     public class TestNameParserTests
     {
