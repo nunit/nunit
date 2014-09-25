@@ -28,6 +28,7 @@ using NUnit.Engine;
 
 namespace NUnit.ConsoleRunner
 {
+    using Common;
     using Options;
     using Utilities;
     

@@ -22,10 +22,12 @@
 // ***********************************************************************
 
 using System;
-using NUnit.Framework;
 
 namespace NUnit.ConsoleRunner.Tests
 {
+    using Common;
+    using Framework;
+
     public class OutputSpecificationTests
     {
         [Test]

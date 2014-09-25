@@ -23,7 +23,7 @@
 
 using System;
 
-namespace NUnitLite.Runner
+namespace NUnit.Common
 {
     /// <summary>
     /// OutputSpecification encapsulates a file output path and format

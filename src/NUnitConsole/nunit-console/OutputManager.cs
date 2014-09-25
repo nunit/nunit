@@ -28,6 +28,8 @@ using System.Xml;
 
 namespace NUnit.ConsoleRunner
 {
+    using Common;
+
     public class OutputManager
     {
         private XmlNode result;
