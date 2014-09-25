@@ -24,7 +24,6 @@
 using System;
 using System.Globalization;
 using System.Xml;
-using NUnit.Framework.Internal;
 
 namespace NUnit.ConsoleRunner
 {
@@ -33,6 +32,11 @@ namespace NUnit.ConsoleRunner
 
     public class ResultReporter
     {
+        /// <summary>
+        /// Error message for when child tests have errors
+        /// </summary>
+        private static readonly string CHILD_ERRORS_MESSAGE = "One or more child tests had errors";
+
         XmlNode result;
         string testRunResult;
         ConsoleOptions options;
@@ -179,7 +183,7 @@ namespace NUnit.ConsoleRunner
                         {
                             XmlNode message = result.SelectSingleNode("failure/message");
                             // There should always be a message node, but just in case...
-                            if (message == null || message.InnerText != TestResult.CHILD_ERRORS_MESSAGE)
+                            if (message == null || message.InnerText != CHILD_ERRORS_MESSAGE)
                                 using (new ColorConsole(ColorStyle.Error))
                                     WriteSingleResult(result);
                         }
