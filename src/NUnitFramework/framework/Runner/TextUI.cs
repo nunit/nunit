@@ -124,12 +124,14 @@ namespace NUnitLite.Runner
                 Console.SetError(_errWriter);
             }
 #endif
+            if (_options.NoColor)
+                ColorConsole.Enabled = false;
 
             if (!_options.NoHeader)
                 WriteHeader(_outWriter);
 
             if (_options.ShowHelp)
-                _outWriter.Write(_options.HelpText);
+                WriteHelpText();
             else if (_options.ErrorMessages.Count > 0)
             {
                 foreach(string line in _options.ErrorMessages)
@@ -307,6 +309,66 @@ namespace NUnitLite.Runner
             writer.WriteLine(ColorStyle.Header, String.Format("{0} {1} {2}", title, version.ToString(3), build));
             writer.WriteLine(ColorStyle.SubHeader, copyright);
             writer.WriteLine();
+        }
+
+        private void WriteHelpText()
+        {
+            // TODO: The Silverlight code is just a placeholder. Figure out how to do it correctly.
+#if SILVERLIGHT
+            string name = "NUNITLITE";
+#else
+            string name = Assembly.GetEntryAssembly().GetName().Name.ToUpper();
+#endif
+            _outWriter.WriteLine(ColorStyle.Header, "Usage: " + name + " [assembly] [options]");
+            _outWriter.WriteLine();
+            _outWriter.WriteLine(ColorStyle.Help, "Runs a set of NUnitLite tests from the console.");
+            _outWriter.WriteLine();
+
+            _outWriter.WriteLine(ColorStyle.SectionHeader, "Assembly:");
+            _outWriter.WriteLine(ColorStyle.Help, "      An alternate assembly from which to execute tests. Normally, the tests");
+            _outWriter.WriteLine(ColorStyle.Help, "      contained in the executable test assembly itself are run. An alternate");
+            _outWriter.WriteLine(ColorStyle.Help, "      assembly is specified using the assembly name, without any path or.");
+            _outWriter.WriteLine(ColorStyle.Help, "      extension. It must be in the same in the same directory as the executable");
+            _outWriter.WriteLine(ColorStyle.Help, "      or on the probing path.");
+            _outWriter.WriteLine();
+
+            _outWriter.WriteLine(ColorStyle.SectionHeader, "Options:");
+            _outWriter.Write(ColorStyle.Help, _options.HelpText);
+
+            _outWriter.WriteLine(ColorStyle.SectionHeader, "Notes:");
+            using (new ColorConsole(ColorStyle.Help))
+            {
+                _outWriter.WriteLine("    * File names may be listed by themselves, with a relative path or ");
+                _outWriter.WriteLine("      using an absolute path. Any relative path is based on the current ");
+                _outWriter.WriteLine("      directory or on the Documents folder if running on a under the ");
+                _outWriter.WriteLine("      compact framework.");
+                _outWriter.WriteLine();
+                if (System.IO.Path.DirectorySeparatorChar != '/')
+                {
+                    _outWriter.WriteLine("    * On Windows, options may be prefixed by a '/' character if desired");
+                    _outWriter.WriteLine();
+                }
+                _outWriter.WriteLine("    * Options that take values may use an equal sign or a colon");
+                _outWriter.WriteLine("      to separate the option from its value.");
+                _outWriter.WriteLine();
+                _outWriter.WriteLine("    * Several options that specify processing of XML output take");
+                _outWriter.WriteLine("      an output specification as a value. A SPEC may take one of");
+                _outWriter.WriteLine("      the following forms:");
+                _outWriter.WriteLine("          --OPTION:filename");
+                _outWriter.WriteLine("          --OPTION:filename;format=formatname");
+                _outWriter.WriteLine("          --OPTION:filename;transform=xsltfile");
+                _outWriter.WriteLine();
+                _outWriter.WriteLine("      The --result option may use any of the following formats:");
+                _outWriter.WriteLine("          nunit3 - the native XML format for NUnit 3.0");
+                _outWriter.WriteLine("          nunit2 - legacy XML format used by earlier releases of NUnit");
+                _outWriter.WriteLine();
+                _outWriter.WriteLine("      The --explore option may use any of the following formats:");
+                _outWriter.WriteLine("          nunit3 - the native XML format for NUnit 3.0");
+                _outWriter.WriteLine("          cases  - a text file listing the full names of all test cases.");
+                _outWriter.WriteLine("      If --explore is used without any specification following, a list of");
+                _outWriter.WriteLine("      test cases is output to the console.");
+                _outWriter.WriteLine();
+            }
         }
 
         private void DisplayRequestedOptions(ExtendedTextWriter writer)

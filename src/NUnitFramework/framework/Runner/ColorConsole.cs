@@ -78,6 +78,8 @@ namespace NUnitLite.Runner
                             return ConsoleColor.Red;
                         case ColorStyle.Output:
                             return ConsoleColor.DarkGray;
+                        case ColorStyle.Help:
+                            return ConsoleColor.DarkGray;
                         case ColorStyle.Default:
                         default:
                             return ConsoleColor.Green;
@@ -105,6 +107,8 @@ namespace NUnitLite.Runner
                         case ColorStyle.Error:
                             return ConsoleColor.Red;
                         case ColorStyle.Output:
+                            return ConsoleColor.DarkGray;
+                        case ColorStyle.Help:
                             return ConsoleColor.DarkGray;
                         case ColorStyle.Default:
                         default:
@@ -134,6 +138,8 @@ namespace NUnitLite.Runner
                             return ConsoleColor.Red;
                         case ColorStyle.Output:
                             return ConsoleColor.Gray;
+                        case ColorStyle.Help:
+                            return ConsoleColor.Green;
                         case ColorStyle.Default:
                         default:
                             return ConsoleColor.Green;

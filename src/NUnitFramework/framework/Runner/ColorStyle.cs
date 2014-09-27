@@ -49,6 +49,10 @@ namespace NUnitLite.Runner
         /// </summary>
         Output,
         /// <summary>
+        /// Color for help text
+        /// </summary>
+        Help,
+        /// <summary>
         /// Color for labels
         /// </summary>
         Label,
