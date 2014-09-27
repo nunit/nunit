@@ -57,7 +57,7 @@ namespace NUnitLite.Runner
         private CommandLineOptions _options;
         private string _workDirectory;
         private readonly List<Assembly> _assemblies = new List<Assembly>();
-        private TextWriter _outWriter;
+        private ExtendedTextWriter _outWriter;
         private TextWriter _errWriter;
         private ITestAssemblyRunner _runner;
 #if !SILVERLIGHT
@@ -69,7 +69,10 @@ namespace NUnitLite.Runner
         /// <summary>
         /// Initializes a new instance of the <see cref="TextUI"/> class.
         /// </summary>
-        public TextUI() : this(Console.Out) { }
+        public TextUI() : this(Console.Out)
+        {
+            ColorConsole.Enabled = true;
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TextUI"/> class.
@@ -78,8 +81,9 @@ namespace NUnitLite.Runner
         public TextUI(TextWriter writer)
         {
             // Set the default writer - may be overridden by the args specified
-            _outWriter = writer;
-            _errWriter = writer;
+            _outWriter = new ExtendedTextWriter(writer);
+            _errWriter = new ExtendedTextWriter(writer);
+            ColorConsole.Enabled = false;
         }
         #endregion
 
@@ -108,8 +112,10 @@ namespace NUnitLite.Runner
 
             if (_options.OutFile != null)
             {
-                _outWriter = new StreamWriter(Path.Combine(_workDirectory, _options.OutFile));
+                _outWriter = new ExtendedTextWriter(new StreamWriter(
+                        Path.Combine(_workDirectory, _options.OutFile)));
                 Console.SetOut(_outWriter);
+                ColorConsole.Enabled = false;
             }
 
             if (_options.ErrFile != null)
@@ -181,11 +187,11 @@ namespace NUnitLite.Runner
                 }
                 catch (FileNotFoundException ex)
                 {
-                    _outWriter.WriteLine(ex.Message);
+                    _outWriter.WriteLine(ColorStyle.Error, ex.Message);
                 }
                 catch (Exception ex)
                 {
-                    _outWriter.WriteLine(ex.ToString());
+                    _outWriter.WriteLine(ColorStyle.Error, ex.ToString());
                 }
                 finally
                 {
@@ -193,7 +199,7 @@ namespace NUnitLite.Runner
                     {
                         if (_options.Wait)
                         {
-                            Console.WriteLine("Press Enter key to continue . . .");
+                            _outWriter.WriteLine(ColorStyle.Label, "Press Enter key to continue . . .");
                             Console.ReadLine();
                         }
                     }
@@ -264,7 +270,7 @@ namespace NUnitLite.Runner
         /// Writes the header.
         /// </summary>
         /// <param name="writer">The writer.</param>
-        public static void WriteHeader(TextWriter writer)
+        public static void WriteHeader(ExtendedTextWriter writer)
         {
             Assembly executingAssembly = Assembly.GetExecutingAssembly();
             AssemblyName assemblyName = AssemblyHelper.GetAssemblyName(executingAssembly);
@@ -298,44 +304,44 @@ namespace NUnitLite.Runner
                 build = string.Format("({0})", configAttr.Configuration); 
             }
 
-            writer.WriteLine(String.Format("{0} {1} {2}", title, version.ToString(3), build));
-            writer.WriteLine(copyright);
+            writer.WriteLine(ColorStyle.Header, String.Format("{0} {1} {2}", title, version.ToString(3), build));
+            writer.WriteLine(ColorStyle.SubHeader, copyright);
             writer.WriteLine();
         }
 
-        private void DisplayRequestedOptions(TextWriter writer)
+        private void DisplayRequestedOptions(ExtendedTextWriter writer)
         {
-            writer.WriteLine("Options -");
+            writer.WriteLine(ColorStyle.SectionHeader, "Options -");
 
             if (_options.DefaultTimeout >= 0)
-                writer.WriteLine("    Default timeout: {0}", _options.DefaultTimeout);
+                writer.WriteLabelLine("    Default timeout: ", _options.DefaultTimeout);
 
-            writer.WriteLine("    Work Directory: {0}", _workDirectory);
+            writer.WriteLabelLine("    Work Directory: ", _workDirectory);
 
-            writer.WriteLine("    Internal Trace: {0}", _options.InternalTraceLevel);
+            writer.WriteLabelLine("    Internal Trace: ", _options.InternalTraceLevel);
 
             if (_options.DisplayTeamCityServiceMessages)
-                writer.WriteLine("    Display TeamCity Service Messages");
+                writer.WriteLine(ColorStyle.Value, "    Display TeamCity Service Messages");
 
             writer.WriteLine();
 
             if (_options.Tests.Count > 0)
             {
-                writer.WriteLine("Selected test(s):");
+                writer.WriteLine(ColorStyle.SectionHeader, "Selected test(s) -");
                 foreach (string testName in _options.Tests)
-                    writer.WriteLine("    " + testName);
+                    writer.WriteLine(ColorStyle.Value, "    " + testName);
                 writer.WriteLine();
             }
 
             if (!string.IsNullOrEmpty(_options.Include))
             {
-                writer.WriteLine("Included categories: " + _options.Include);
+                writer.WriteLabelLine("Included categories: ", _options.Include);
                 writer.WriteLine();
             }
 
             if (!string.IsNullOrEmpty(_options.Exclude))
             {
-                writer.WriteLine("Excluded categories: " + _options.Exclude);
+                writer.WriteLabelLine("Excluded categories: ", _options.Exclude);
                 writer.WriteLine();
             }
         }
@@ -344,12 +350,11 @@ namespace NUnitLite.Runner
         /// Writes the runtime environment.
         /// </summary>
         /// <param name="writer">The writer.</param>
-        public static void WriteRuntimeEnvironment(TextWriter writer)
+        public static void WriteRuntimeEnvironment(ExtendedTextWriter writer)
         {
-            string clrPlatform = Type.GetType("Mono.Runtime", false) == null ? ".NET" : "Mono";
-            writer.WriteLine("Runtime Environment -");
-            writer.WriteLine("    OS Version: {0}", Environment.OSVersion);
-            writer.WriteLine("  {0} Version: {1}", clrPlatform, Environment.Version);
+            writer.WriteLine(ColorStyle.SectionHeader, "Runtime Environment -");
+            writer.WriteLabelLine("   OS Version: ", Environment.OSVersion);
+            writer.WriteLabelLine("  CLR Version: ", Environment.Version);
             writer.WriteLine();
         }
 
@@ -444,13 +449,15 @@ namespace NUnitLite.Runner
             {
                 if (!isSuite && labels == "ON")
                     WriteTestLabel(result);
-                _outWriter.Write(result.Output);
+                _outWriter.Write(ColorStyle.Output, result.Output);
+                if (!result.Output.EndsWith("\n"))
+                    _outWriter.WriteLine();
             }
         }
 
         private void WriteTestLabel(ITestResult result)
         {
-            _outWriter.WriteLine("***** " + result.Test.Name);
+            _outWriter.WriteLine(ColorStyle.SectionHeader, "=> " + result.Test.Name);
         }
 
         #endregion

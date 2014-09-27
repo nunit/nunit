@@ -130,15 +130,17 @@ namespace NUnitLite.Runner
 
         private static string Escape(string input)
         {
-            return input.Replace("|", "||")
-                        .Replace("'", "|'")
-                        .Replace("\n", "|n")
-                        .Replace("\r", "|r")
-                        .Replace(char.ConvertFromUtf32(int.Parse("0086", NumberStyles.HexNumber)), "|x")
-                        .Replace(char.ConvertFromUtf32(int.Parse("2028", NumberStyles.HexNumber)), "|l")
-                        .Replace(char.ConvertFromUtf32(int.Parse("2029", NumberStyles.HexNumber)), "|p")
-                        .Replace("[", "|[")
-                        .Replace("]", "|]");
+            return input != null
+                ? input.Replace("|", "||")
+                       .Replace("'", "|'")
+                       .Replace("\n", "|n")
+                       .Replace("\r", "|r")
+                       .Replace(char.ConvertFromUtf32(int.Parse("0086", NumberStyles.HexNumber)), "|x")
+                       .Replace(char.ConvertFromUtf32(int.Parse("2028", NumberStyles.HexNumber)), "|l")
+                       .Replace(char.ConvertFromUtf32(int.Parse("2029", NumberStyles.HexNumber)), "|p")
+                       .Replace("[", "|[")
+                       .Replace("]", "|]")
+                : null;
         }
 
         #endregion
