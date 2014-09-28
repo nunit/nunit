@@ -23,6 +23,7 @@
 
 using System;
 using System.Globalization;
+using System.Collections.Generic;
 using System.Text;
 
 namespace NUnit.Framework.Internal
@@ -44,12 +45,10 @@ namespace NUnit.Framework.Internal
             StringBuilder sb = new StringBuilder();
             sb.AppendFormat(CultureInfo.CurrentCulture, "{0} : {1}", exception.GetType().ToString(), exception.Message);
 
-            Exception inner = exception.InnerException;
-            while (inner != null)
+            foreach (Exception inner in FlattenExceptionHierarchy(exception))
             {
                 sb.Append(NUnit.Env.NewLine);
                 sb.AppendFormat(CultureInfo.CurrentCulture, "  ----> {0} : {1}", inner.GetType().ToString(), inner.Message);
-                inner = inner.InnerException;
             }
 
             return sb.ToString();
@@ -65,16 +64,13 @@ namespace NUnit.Framework.Internal
         {
             StringBuilder sb = new StringBuilder(GetStackTrace(exception));
 
-            Exception inner = exception.InnerException;
-            while (inner != null)
+            foreach (Exception inner in FlattenExceptionHierarchy(exception))
             {
                 sb.Append(NUnit.Env.NewLine);
                 sb.Append("--");
                 sb.Append(inner.GetType().Name);
                 sb.Append(NUnit.Env.NewLine);
                 sb.Append(GetStackTrace(inner));
-
-                inner = inner.InnerException;
             }
 
             return sb.ToString();
@@ -95,6 +91,30 @@ namespace NUnit.Framework.Internal
             {
                 return "No stack trace available";
             }
+        }
+
+        private static List<Exception> FlattenExceptionHierarchy(Exception exception)
+        {
+            var result = new List<Exception>();
+
+#if !NET_2_0 && !NET_3_5
+            if (exception is AggregateException)
+            {
+                var aggregateException = (exception as AggregateException);
+                result.AddRange(aggregateException.InnerExceptions);
+
+                foreach (var innerException in aggregateException.InnerExceptions)
+                    result.AddRange(FlattenExceptionHierarchy(innerException));
+            }
+            else
+#endif
+            if (exception.InnerException != null)
+            {
+                result.Add(exception.InnerException);
+                result.AddRange(FlattenExceptionHierarchy(exception.InnerException));
+            }
+
+            return result;
         }
     }
 }
