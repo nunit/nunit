@@ -200,7 +200,11 @@ namespace NUnit.Framework.Api
         /// <returns>True if the run completed, otherwise false</returns>
         public bool WaitForCompletion(int timeout)
         {
+#if NETCF // NETCF: Try to unify.
+            return _runComplete.WaitOne(timeout, false);
+#else
             return _runComplete.WaitOne(timeout);
+#endif
         }
 
         /// <summary>
@@ -242,11 +246,7 @@ namespace NUnit.Framework.Api
             if (Settings.Contains(DriverSettings.WorkDirectory))
                 Context.WorkDirectory = (string)Settings[DriverSettings.WorkDirectory];
             else
-#if NETCF || SILVERLIGHT
-                Context.WorkDirectory = Env.DocumentFolder;
-#else
-                Context.WorkDirectory = Environment.CurrentDirectory;
-#endif
+                Context.WorkDirectory = Env.DefaultWorkDirectory;
 
             // Overriding runners may replace this
             Context.Listener = listener;

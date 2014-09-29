@@ -74,8 +74,14 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public void CancelRun()
         {
+#if NETCF
+            // NETCF: Check if this can be done better
+            if (_runnerThread != null)
+                _runnerThread.Abort();
+#else
             if (_runnerThread != null && _runnerThread.IsAlive)
                 ThreadUtility.Kill(_runnerThread);
+#endif
         }
 
         #endregion

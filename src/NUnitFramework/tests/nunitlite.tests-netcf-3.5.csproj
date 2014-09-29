@@ -52,6 +52,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\CommonAssemblyInfo.cs">
+      <Link>CommonAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\FrameworkVersion.cs">
+      <Link>FrameworkVersion.cs</Link>
+    </Compile>
     <Compile Include="Api\ResultStateTests.cs" />
     <Compile Include="Assertions\ArrayEqualsFailureMessageFixture.cs" />
     <Compile Include="Assertions\ArrayEqualsFixture.cs" />
@@ -76,7 +82,6 @@
     <Compile Include="Attributes\DatapointTests.cs" />
     <Compile Include="Attributes\DerivedPropertyAttributeTests.cs" />
     <Compile Include="Attributes\DescriptionTests.cs" />
-    <Compile Include="Attributes\FixtureSetUpTearDownTests.cs" />
     <Compile Include="Attributes\MaxTimeTests.cs" />
     <Compile Include="Attributes\PairwiseTests.cs" />
     <Compile Include="Attributes\ParameterizedTestFixtureTests.cs" />
@@ -188,6 +193,7 @@
     <Compile Include="TestUtilities\TestBuilder.cs" />
     <Compile Include="TestUtilities\TestComparer.cs" />
     <Compile Include="TestUtilities\TestDelegates.cs" />
+    <Compile Include="TestUtilities\TestDirectory.cs" />
     <Compile Include="TestUtilities\TestFinder.cs" />
     <Compile Include="TestUtilities\UniqueValues.cs" />
   </ItemGroup>
@@ -200,9 +206,6 @@
       <Project>{0B7C0B55-6A49-4F32-993E-C9ED6DA0B73C}</Project>
       <Name>nunitlite.testdata-netcf-3.5</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="nunitlite.tests.build" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="TestImage1.jpg" />

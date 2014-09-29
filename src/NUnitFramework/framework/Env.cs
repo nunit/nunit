@@ -52,5 +52,13 @@ namespace NUnit
 #else
         public static string DocumentFolder = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
 #endif
+        /// <summary>
+        /// Directory used for file output if not specified on commandline.
+        /// </summary>
+#if SILVERLIGHT || PocketPC || WindowsCE || NETCF
+        public static readonly string DefaultWorkDirectory = DocumentFolder;
+#else
+        public static readonly string DefaultWorkDirectory = Environment.CurrentDirectory;
+#endif
     }
 }
