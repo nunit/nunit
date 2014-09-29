@@ -152,10 +152,27 @@ namespace NUnit.Framework.Internal.Execution
 
             var actionItems = new List<TestActionItem>();
             foreach (ITestAction action in Actions)
-                if (action.Targets == ActionTargets.Suite || action.Targets == ActionTargets.Default && !(Test is ParameterizedMethodSuite))
+            {
+                // Special handling here for ParameterizedMethodSuite is a bit ugly. However,
+                // it is needed because Tests are not supposed to know anything about Action
+                // Attributes (or any attribute) and Attributes don't know where they were
+                // initially applied unless we tell them. 
+                //
+                // ParameterizedMethodSuites and individual test cases both use the same 
+                // MethodInfo as a source of attributes. We handle the Test and Default targets
+                // in the test case, so we don't want to doubly handle it here.
+                bool applyToSuite = (action.Targets & ActionTargets.Suite) == ActionTargets.Suite 
+                    || action.Targets == ActionTargets.Default && !(Test is ParameterizedMethodSuite);
+
+                bool applyToTest = (action.Targets & ActionTargets.Test) == ActionTargets.Test 
+                    && !(Test is ParameterizedMethodSuite);
+
+                if (applyToSuite)
                     actionItems.Add(new TestActionItem(action));
-                else // It's a Test target item
+
+                if (applyToTest)
                     Context.UpstreamActions.Add(action);
+            }
 
             _setupCommand = CommandBuilder.MakeOneTimeSetUpCommand(_suite, setUpTearDownItems, actionItems);
             _teardownCommand = CommandBuilder.MakeOneTimeTearDownCommand(_suite, setUpTearDownItems, actionItems);
