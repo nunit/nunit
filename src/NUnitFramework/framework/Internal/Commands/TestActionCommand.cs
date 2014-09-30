@@ -54,12 +54,20 @@ namespace NUnit.Framework.Internal.Commands
         /// <returns>A TestResult</returns>
         public override TestResult Execute(TestExecutionContext context)
         {
+            // In the current implementation, upstream actions only apply to tests. If that should change in the future,
+            // then actions would have to be tested for here. For now we simply assert it in Debug. We allow 
+            // ActionTargets.Default, because it is passed down by ParameterizedMethodSuite.
             foreach (ITestAction action in context.UpstreamActions)
-                if (action.Targets == ActionTargets.Test)
-                    _actions.Add(new TestActionItem(action));
+            {
+                System.Diagnostics.Debug.Assert(
+                    action.Targets == ActionTargets.Default || (action.Targets & ActionTargets.Test) == ActionTargets.Test,
+                    "Invalid target on upstream action: " + action.Targets.ToString());
+
+                _actions.Add(new TestActionItem(action));
+            }
 
             foreach (ITestAction action in ActionsHelper.GetActionsFromAttributeProvider(((TestMethod)Test).Method))
-                if (action.Targets == ActionTargets.Test || action.Targets == ActionTargets.Default)
+                if (action.Targets == ActionTargets.Default || (action.Targets & ActionTargets.Test) == ActionTargets.Test)
                     _actions.Add(new TestActionItem(action));
 
             try
