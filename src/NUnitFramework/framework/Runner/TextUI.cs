@@ -57,7 +57,7 @@ namespace NUnitLite.Runner
         private CommandLineOptions _options;
         private string _workDirectory;
         private readonly List<Assembly> _assemblies = new List<Assembly>();
-        private TextWriter _outWriter;
+        private ExtendedTextWriter _outWriter;
         private TextWriter _errWriter;
         private ITestAssemblyRunner _runner;
 #if !SILVERLIGHT
@@ -69,7 +69,10 @@ namespace NUnitLite.Runner
         /// <summary>
         /// Initializes a new instance of the <see cref="TextUI"/> class.
         /// </summary>
-        public TextUI() : this(Console.Out) { }
+        public TextUI() : this(Console.Out)
+        {
+            ColorConsole.Enabled = true;
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TextUI"/> class.
@@ -78,8 +81,9 @@ namespace NUnitLite.Runner
         public TextUI(TextWriter writer)
         {
             // Set the default writer - may be overridden by the args specified
-            _outWriter = writer;
-            _errWriter = writer;
+            _outWriter = new ExtendedTextWriter(writer);
+            _errWriter = new ExtendedTextWriter(writer);
+            ColorConsole.Enabled = false;
         }
         #endregion
 
@@ -108,8 +112,10 @@ namespace NUnitLite.Runner
 
             if (_options.OutFile != null)
             {
-                _outWriter = new StreamWriter(Path.Combine(_workDirectory, _options.OutFile));
+                _outWriter = new ExtendedTextWriter(new StreamWriter(
+                        Path.Combine(_workDirectory, _options.OutFile)));
                 Console.SetOut(_outWriter);
+                ColorConsole.Enabled = false;
             }
 
             if (_options.ErrFile != null)
@@ -118,12 +124,14 @@ namespace NUnitLite.Runner
                 Console.SetError(_errWriter);
             }
 #endif
+            if (_options.NoColor)
+                ColorConsole.Enabled = false;
 
             if (!_options.NoHeader)
                 WriteHeader(_outWriter);
 
             if (_options.ShowHelp)
-                _outWriter.Write(_options.HelpText);
+                WriteHelpText();
             else if (_options.ErrorMessages.Count > 0)
             {
                 foreach(string line in _options.ErrorMessages)
@@ -181,11 +189,11 @@ namespace NUnitLite.Runner
                 }
                 catch (FileNotFoundException ex)
                 {
-                    _outWriter.WriteLine(ex.Message);
+                    _outWriter.WriteLine(ColorStyle.Error, ex.Message);
                 }
                 catch (Exception ex)
                 {
-                    _outWriter.WriteLine(ex.ToString());
+                    _outWriter.WriteLine(ColorStyle.Error, ex.ToString());
                 }
                 finally
                 {
@@ -193,7 +201,7 @@ namespace NUnitLite.Runner
                     {
                         if (_options.Wait)
                         {
-                            Console.WriteLine("Press Enter key to continue . . .");
+                            _outWriter.WriteLine(ColorStyle.Label, "Press Enter key to continue . . .");
                             Console.ReadLine();
                         }
                     }
@@ -264,7 +272,7 @@ namespace NUnitLite.Runner
         /// Writes the header.
         /// </summary>
         /// <param name="writer">The writer.</param>
-        public static void WriteHeader(TextWriter writer)
+        public static void WriteHeader(ExtendedTextWriter writer)
         {
             Assembly executingAssembly = Assembly.GetExecutingAssembly();
             AssemblyName assemblyName = AssemblyHelper.GetAssemblyName(executingAssembly);
@@ -298,44 +306,104 @@ namespace NUnitLite.Runner
                 build = string.Format("({0})", configAttr.Configuration); 
             }
 
-            writer.WriteLine(String.Format("{0} {1} {2}", title, version.ToString(3), build));
-            writer.WriteLine(copyright);
+            writer.WriteLine(ColorStyle.Header, String.Format("{0} {1} {2}", title, version.ToString(3), build));
+            writer.WriteLine(ColorStyle.SubHeader, copyright);
             writer.WriteLine();
         }
 
-        private void DisplayRequestedOptions(TextWriter writer)
+        private void WriteHelpText()
         {
-            writer.WriteLine("Options -");
+            // TODO: The Silverlight code is just a placeholder. Figure out how to do it correctly.
+#if SILVERLIGHT
+            string name = "NUNITLITE";
+#else
+            string name = Assembly.GetEntryAssembly().GetName().Name.ToUpper();
+#endif
+            _outWriter.WriteLine(ColorStyle.Header, "Usage: " + name + " [assembly] [options]");
+            _outWriter.WriteLine();
+            _outWriter.WriteLine(ColorStyle.Help, "Runs a set of NUnitLite tests from the console.");
+            _outWriter.WriteLine();
+
+            _outWriter.WriteLine(ColorStyle.SectionHeader, "Assembly:");
+            _outWriter.WriteLine(ColorStyle.Help, "      An alternate assembly from which to execute tests. Normally, the tests");
+            _outWriter.WriteLine(ColorStyle.Help, "      contained in the executable test assembly itself are run. An alternate");
+            _outWriter.WriteLine(ColorStyle.Help, "      assembly is specified using the assembly name, without any path or.");
+            _outWriter.WriteLine(ColorStyle.Help, "      extension. It must be in the same in the same directory as the executable");
+            _outWriter.WriteLine(ColorStyle.Help, "      or on the probing path.");
+            _outWriter.WriteLine();
+
+            _outWriter.WriteLine(ColorStyle.SectionHeader, "Options:");
+            _outWriter.Write(ColorStyle.Help, _options.HelpText);
+
+            _outWriter.WriteLine(ColorStyle.SectionHeader, "Notes:");
+            using (new ColorConsole(ColorStyle.Help))
+            {
+                _outWriter.WriteLine("    * File names may be listed by themselves, with a relative path or ");
+                _outWriter.WriteLine("      using an absolute path. Any relative path is based on the current ");
+                _outWriter.WriteLine("      directory or on the Documents folder if running on a under the ");
+                _outWriter.WriteLine("      compact framework.");
+                _outWriter.WriteLine();
+                if (System.IO.Path.DirectorySeparatorChar != '/')
+                {
+                    _outWriter.WriteLine("    * On Windows, options may be prefixed by a '/' character if desired");
+                    _outWriter.WriteLine();
+                }
+                _outWriter.WriteLine("    * Options that take values may use an equal sign or a colon");
+                _outWriter.WriteLine("      to separate the option from its value.");
+                _outWriter.WriteLine();
+                _outWriter.WriteLine("    * Several options that specify processing of XML output take");
+                _outWriter.WriteLine("      an output specification as a value. A SPEC may take one of");
+                _outWriter.WriteLine("      the following forms:");
+                _outWriter.WriteLine("          --OPTION:filename");
+                _outWriter.WriteLine("          --OPTION:filename;format=formatname");
+                _outWriter.WriteLine("          --OPTION:filename;transform=xsltfile");
+                _outWriter.WriteLine();
+                _outWriter.WriteLine("      The --result option may use any of the following formats:");
+                _outWriter.WriteLine("          nunit3 - the native XML format for NUnit 3.0");
+                _outWriter.WriteLine("          nunit2 - legacy XML format used by earlier releases of NUnit");
+                _outWriter.WriteLine();
+                _outWriter.WriteLine("      The --explore option may use any of the following formats:");
+                _outWriter.WriteLine("          nunit3 - the native XML format for NUnit 3.0");
+                _outWriter.WriteLine("          cases  - a text file listing the full names of all test cases.");
+                _outWriter.WriteLine("      If --explore is used without any specification following, a list of");
+                _outWriter.WriteLine("      test cases is output to the console.");
+                _outWriter.WriteLine();
+            }
+        }
+
+        private void DisplayRequestedOptions(ExtendedTextWriter writer)
+        {
+            writer.WriteLine(ColorStyle.SectionHeader, "Options -");
 
             if (_options.DefaultTimeout >= 0)
-                writer.WriteLine("    Default timeout: {0}", _options.DefaultTimeout);
+                writer.WriteLabelLine("    Default timeout: ", _options.DefaultTimeout);
 
-            writer.WriteLine("    Work Directory: {0}", _workDirectory);
+            writer.WriteLabelLine("    Work Directory: ", _workDirectory);
 
-            writer.WriteLine("    Internal Trace: {0}", _options.InternalTraceLevel);
+            writer.WriteLabelLine("    Internal Trace: ", _options.InternalTraceLevel);
 
             if (_options.DisplayTeamCityServiceMessages)
-                writer.WriteLine("    Display TeamCity Service Messages");
+                writer.WriteLine(ColorStyle.Value, "    Display TeamCity Service Messages");
 
             writer.WriteLine();
 
             if (_options.Tests.Count > 0)
             {
-                writer.WriteLine("Selected test(s):");
+                writer.WriteLine(ColorStyle.SectionHeader, "Selected test(s) -");
                 foreach (string testName in _options.Tests)
-                    writer.WriteLine("    " + testName);
+                    writer.WriteLine(ColorStyle.Value, "    " + testName);
                 writer.WriteLine();
             }
 
             if (!string.IsNullOrEmpty(_options.Include))
             {
-                writer.WriteLine("Included categories: " + _options.Include);
+                writer.WriteLabelLine("Included categories: ", _options.Include);
                 writer.WriteLine();
             }
 
             if (!string.IsNullOrEmpty(_options.Exclude))
             {
-                writer.WriteLine("Excluded categories: " + _options.Exclude);
+                writer.WriteLabelLine("Excluded categories: ", _options.Exclude);
                 writer.WriteLine();
             }
         }
@@ -344,12 +412,11 @@ namespace NUnitLite.Runner
         /// Writes the runtime environment.
         /// </summary>
         /// <param name="writer">The writer.</param>
-        public static void WriteRuntimeEnvironment(TextWriter writer)
+        public static void WriteRuntimeEnvironment(ExtendedTextWriter writer)
         {
-            string clrPlatform = Type.GetType("Mono.Runtime", false) == null ? ".NET" : "Mono";
-            writer.WriteLine("Runtime Environment -");
-            writer.WriteLine("    OS Version: {0}", Environment.OSVersion);
-            writer.WriteLine("  {0} Version: {1}", clrPlatform, Environment.Version);
+            writer.WriteLine(ColorStyle.SectionHeader, "Runtime Environment -");
+            writer.WriteLabelLine("   OS Version: ", Environment.OSVersion);
+            writer.WriteLabelLine("  CLR Version: ", Environment.Version);
             writer.WriteLine();
         }
 
@@ -444,13 +511,15 @@ namespace NUnitLite.Runner
             {
                 if (!isSuite && labels == "ON")
                     WriteTestLabel(result);
-                _outWriter.Write(result.Output);
+                _outWriter.Write(ColorStyle.Output, result.Output);
+                if (!result.Output.EndsWith("\n"))
+                    _outWriter.WriteLine();
             }
         }
 
         private void WriteTestLabel(ITestResult result)
         {
-            _outWriter.WriteLine("***** " + result.Test.Name);
+            _outWriter.WriteLine(ColorStyle.SectionHeader, "=> " + result.Test.Name);
         }
 
         #endregion

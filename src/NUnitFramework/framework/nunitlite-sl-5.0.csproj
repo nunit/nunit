@@ -347,8 +347,17 @@
     <Compile Include="List.cs" />
     <Compile Include="ListMapper.cs" />
     <Compile Include="MessageMatch.cs" />
+    <Compile Include="Runner\ColorConsole.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Runner\ColorStyle.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Runner\CommandLineOptions.cs" />
     <Compile Include="Runner\DebugWriter.cs" />
+    <Compile Include="Runner\ExtendedTextWriter.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Runner\OutputManager.cs" />
     <Compile Include="Runner\OutputSpecification.cs" />
     <Compile Include="Runner\OutputWriters\NUnit2XmlOutputWriter.cs" />

@@ -17,7 +17,7 @@ namespace NUnitLite.Runner.Silverlight
     {
         private Assembly callingAssembly;
         private ITestAssemblyRunner runner;
-        private TextWriter writer;
+        private ExtendedTextWriter writer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TestPage"/> class.
@@ -28,7 +28,7 @@ namespace NUnitLite.Runner.Silverlight
 
             this.runner = new NUnitLiteTestAssemblyRunner(new DefaultTestAssemblyBuilder());
             this.callingAssembly = Assembly.GetCallingAssembly();
-            this.writer = new TextBlockWriter(this.ScratchArea);
+            this.writer = new ExtendedTextWriter(new TextBlockWriter(this.ScratchArea));
         }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)

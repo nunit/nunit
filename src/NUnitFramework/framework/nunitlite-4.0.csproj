@@ -338,8 +338,11 @@
     <Compile Include="ITestAction.cs" />
     <Compile Include="ListMapper.cs" />
     <Compile Include="MessageMatch.cs" />
+    <Compile Include="Runner\ColorConsole.cs" />
+    <Compile Include="Runner\ColorStyle.cs" />
     <Compile Include="Runner\CommandLineOptions.cs" />
     <Compile Include="Runner\DebugWriter.cs" />
+    <Compile Include="Runner\ExtendedTextWriter.cs" />
     <Compile Include="Runner\OutputManager.cs" />
     <Compile Include="Runner\OutputSpecification.cs" />
     <Compile Include="Runner\OutputWriters\NUnit2XmlOutputWriter.cs" />
