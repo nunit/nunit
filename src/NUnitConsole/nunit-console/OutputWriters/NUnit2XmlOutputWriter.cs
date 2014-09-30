@@ -28,7 +28,6 @@ using System.Reflection;
 using System.Text;
 using System.Xml;
 using System.IO;
-using NUnit.Common;
 
 namespace NUnit.ConsoleRunner
 {

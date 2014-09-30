@@ -24,10 +24,11 @@
 using System;
 using System.Globalization;
 using System.Xml;
-using NUnit.Common;
 
 namespace NUnit.ConsoleRunner
 {
+    using Utilities;
+
     /// <summary>
     /// Summary description for ResultSummary.
     /// </summary>

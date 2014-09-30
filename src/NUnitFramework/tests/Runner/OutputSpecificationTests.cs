@@ -22,7 +22,6 @@
 // ***********************************************************************
 
 using System;
-using NUnit.Common;
 using NUnit.Framework;
 
 namespace NUnitLite.Runner.Tests

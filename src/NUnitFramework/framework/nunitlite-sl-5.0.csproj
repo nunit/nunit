@@ -65,10 +65,10 @@
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="..\..\Common\OutputSpecification.cs">
-      <Link>Common\OutputSpecification.cs</Link>
+      <Link>Runner\OutputSpecification.cs</Link>
     </Compile>
     <Compile Include="..\..\Common\TestNameParser.cs">
-      <Link>Common\TestNameParser.cs</Link>
+      <Link>Runner\TestNameParser.cs</Link>
     </Compile>
     <Compile Include="..\FrameworkVersion.cs">
       <Link>FrameworkVersion.cs</Link>

@@ -25,7 +25,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
-using NUnit.Common;
 
 namespace NUnit.Engine.Internal
 {

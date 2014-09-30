@@ -22,7 +22,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\..\..\bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NUNIT_ENGINE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -48,7 +48,7 @@
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="..\..\Common\XmlHelper.cs">
-      <Link>Common\XmlHelper.cs</Link>
+      <Link>Internal\XmlHelper.cs</Link>
     </Compile>
     <Compile Include="..\EngineVersion.cs">
       <Link>EngineVersion.cs</Link>

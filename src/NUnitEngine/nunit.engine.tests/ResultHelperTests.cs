@@ -26,7 +26,6 @@ using System.Xml;
 
 namespace NUnit.Engine.Internal.Tests
 {
-    using Common;
     using Framework;
 
     public class ResultHelperTests

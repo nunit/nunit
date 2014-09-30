@@ -32,7 +32,13 @@ namespace System.Runtime.CompilerServices
     public sealed class ExtensionAttribute : Attribute { }
 }
 
+#if NUNIT_CONSOLE
+namespace NUnit.ConsoleRunner.Utilities
+#elif NUNIT_ENGINE
+namespace NUnit.Engine.Internal
+#else
 namespace NUnit.Common
+#endif
 {
     /// <summary>
     /// XmlHelper provides static methods for basic XML operations.

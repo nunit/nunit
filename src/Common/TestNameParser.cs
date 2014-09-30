@@ -23,7 +23,13 @@
 
 using System.Collections.Generic;
 
+#if NUNIT_CONSOLE
+namespace NUnit.ConsoleRunner.Utilities
+#elif NUNITLITE
+namespace NUnitLite.Runner
+#else
 namespace NUnit.Common
+#endif
 {
     /// <summary>
     /// TestNameParser is used to parse the arguments to the 

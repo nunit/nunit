@@ -25,7 +25,6 @@ using System;
 using System.IO;
 using System.Text;
 using System.Collections.Generic;
-using NUnit.Common;
 using NUnit.Framework.Internal;
 
 namespace NUnitLite.Runner

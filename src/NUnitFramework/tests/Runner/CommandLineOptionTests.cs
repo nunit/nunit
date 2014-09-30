@@ -7,7 +7,6 @@
 using System;
 using System.IO;
 using System.Reflection;
-using NUnit.Common;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
 using Env = NUnit.Env;

@@ -25,7 +25,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Mono.Options;
-using NUnit.Common;
 
 namespace NUnit.ConsoleRunner.Options
 {

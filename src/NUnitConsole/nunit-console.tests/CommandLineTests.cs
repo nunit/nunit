@@ -28,7 +28,6 @@ using System.Text;
 
 namespace NUnit.ConsoleRunner.Tests
 {
-    using Common;
     using Engine;
     using Framework;
     using Options;
