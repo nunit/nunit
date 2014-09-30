@@ -42,8 +42,13 @@ namespace NUnit.Framework.Tests
         // different runtimes, so we now look only at the relative position
         // of before and after actions with respect to the test.
 
+#if NETCF
+        private static readonly string ASSEMBLY_NAME = "nunitlite.testdata";
+        private static readonly string ASSEMBLY_PATH = "nunitlite.testdata";
+#else
         private static readonly string ASSEMBLY_PATH = AssemblyHelper.GetAssemblyPath(typeof(ActionAttributeFixture));
         private static readonly string ASSEMBLY_NAME = System.IO.Path.GetFileName(ASSEMBLY_PATH);
+#endif
 
         private ITestResult _result = null;
         private int index = -1;
@@ -67,6 +72,7 @@ namespace NUnit.Framework.Tests
             options["NumberOfTestWorkers"] = 0;
 
             Assert.NotNull(runner.Load(ASSEMBLY_PATH, options), "Assembly not loaded");
+            Assert.That(runner.LoadedTest.RunState, Is.EqualTo(RunState.Runnable));
 
             _result = runner.Run(TestListener.NULL, TestFilter.Empty);
         }

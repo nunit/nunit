@@ -128,13 +128,6 @@ namespace NUnit.Framework.Constraints
         }
         
         [Test]
-        public void CanTestInitiallyNullReference()
-        {
-            SetValuesAfterDelay(SLEEP);
-            Assert.That(ref statusString, Is.Not.Null.And.Length.GreaterThan(0).After(AFTER, POLLING));
-        }
-        
-        [Test]
         public void CanTestInitiallyNullDelegate()
         {
             SetValuesAfterDelay(SLEEP);
@@ -142,6 +135,13 @@ namespace NUnit.Framework.Constraints
         }
 
 #if !NETCF // NETCF: Not clear why these fail, research and either include clarify in docs
+        [Test]
+        public void CanTestInitiallyNullReference()
+        {
+            SetValuesAfterDelay(SLEEP);
+            Assert.That(ref statusString, Is.Not.Null.And.Length.GreaterThan(0).After(AFTER, POLLING));
+        }
+        
         [Test]
         public void ThatBlockingDelegateWhichSucceedsWithoutPolling_ReturnsAfterDelay()
         {

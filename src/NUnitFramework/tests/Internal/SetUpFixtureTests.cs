@@ -4,10 +4,11 @@
 // obtain a copy of the license at http://nunit.org
 // ****************************************************************
 
-#if !SILVERLIGHT && !NETCF
 using System.Collections;
 using NUnit.Framework.Api;
 using NUnit.Framework.Interfaces;
+
+// TODO: Figure out how to make test work in NETCF and SILVERLIGHT, since they support SetUpFixture
 
 namespace NUnit.Framework.Internal
 {
@@ -180,4 +181,3 @@ namespace NUnit.Framework.Internal
         #endregion NoNamespaceSetupFixture
     }
 }
-#endif

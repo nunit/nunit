@@ -57,10 +57,13 @@
     <Compile Include="..\FrameworkVersion.cs">
       <Link>FrameworkVersion.cs</Link>
     </Compile>
+    <Compile Include="ActionAttributeFixture.cs" />
+    <Compile Include="AssemblyInfo.cs" />
     <Compile Include="AssertCountFixture.cs" />
     <Compile Include="AssertFailFixture.cs" />
     <Compile Include="AssertIgnoreData.cs" />
     <Compile Include="AttributeInheritanceData.cs" />
+    <Compile Include="AuthorFixture.cs" />
     <Compile Include="CategoryAttributeData.cs" />
     <Compile Include="CultureAttributeData.cs" />
     <Compile Include="DatapointFixture.cs" />
@@ -76,6 +79,7 @@
     <Compile Include="TestContextData.cs" />
     <Compile Include="TestFixtureData.cs" />
     <Compile Include="TestMethodSignatureFixture.cs" />
+    <Compile Include="TestOfFixture.cs" />
     <Compile Include="TheoryFixture.cs" />
   </ItemGroup>
   <ItemGroup>
