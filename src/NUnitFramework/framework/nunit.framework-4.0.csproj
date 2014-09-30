@@ -24,7 +24,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\..\..\bin\Debug\net-4.0\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;NET_4_0</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NUNIT_FRAMEWORK;NET_4_0</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>$(OutputPath)\nunit.framework.xml</DocumentationFile>
@@ -34,7 +34,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\..\..\bin\Release\net-4.0\</OutputPath>
-    <DefineConstants>TRACE;NET_4_0</DefineConstants>
+    <DefineConstants>TRACE;NUNIT_FRAMEWORK;NET_4_0</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>$(OutputPath)\nunit.framework.xml</DocumentationFile>
@@ -53,6 +53,21 @@
   <ItemGroup>
     <Compile Include="..\..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\Logging\ILogger.cs">
+      <Link>Internal\ILogger.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\Logging\InternalTrace.cs">
+      <Link>Internal\InternalTrace.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\Logging\InternalTraceLevel.cs">
+      <Link>Internal\InternalTraceLevel.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\Logging\InternalTraceWriter.cs">
+      <Link>Internal\InternalTraceWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\Logging\Logger.cs">
+      <Link>Internal\Logger.cs</Link>
     </Compile>
     <Compile Include="..\FrameworkVersion.cs">
       <Link>FrameworkVersion.cs</Link>
@@ -308,11 +323,7 @@
     <Compile Include="Internal\Filters\ValueMatchFilter.cs" />
     <Compile Include="Internal\IApplyToContext.cs" />
     <Compile Include="Internal\IApplyToTest.cs" />
-    <Compile Include="Internal\InternalTrace.cs" />
-    <Compile Include="Internal\InternalTraceLevel.cs" />
-    <Compile Include="Internal\InternalTraceWriter.cs" />
     <Compile Include="Internal\InvalidTestFixtureException.cs" />
-    <Compile Include="Internal\Logger.cs" />
     <Compile Include="Internal\MethodHelper.cs" />
     <Compile Include="Internal\NUnitException.cs" />
     <Compile Include="Internal\OSPlatform.cs" />

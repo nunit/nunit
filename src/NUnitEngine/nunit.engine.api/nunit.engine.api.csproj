@@ -22,7 +22,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\..\..\bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NUNIT_ENGINE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>$(OutputPath)nunit.engine.api.xml</DocumentationFile>
@@ -31,7 +31,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\..\..\bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>TRACE;NUNIT_ENGINE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>$(OutputPath)nunit.engine.api.xml</DocumentationFile>
@@ -46,14 +46,18 @@
     <Compile Include="..\..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="..\..\Common\Logging\ILogger.cs">
+      <Link>ILogger.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\Logging\InternalTraceLevel.cs">
+      <Link>InternalTraceLevel.cs</Link>
+    </Compile>
     <Compile Include="..\EngineApiVersion.cs">
       <Link>EngineApiVersion.cs</Link>
     </Compile>
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="IFrameworkDriver.cs" />
-    <Compile Include="ILogger.cs" />
     <Compile Include="ILogging.cs" />
-    <Compile Include="InternalTraceLevel.cs" />
     <Compile Include="IServiceLocator.cs" />
     <Compile Include="ISettings.cs" />
     <Compile Include="ITestEngine.cs" />

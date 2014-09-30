@@ -47,6 +47,15 @@
     <Compile Include="..\..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="..\..\Common\Logging\InternalTrace.cs">
+      <Link>Internal\InternalTrace.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\Logging\InternalTraceWriter.cs">
+      <Link>Internal\InternalTraceWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\Logging\Logger.cs">
+      <Link>Internal\Logger.cs</Link>
+    </Compile>
     <Compile Include="..\..\Common\XmlHelper.cs">
       <Link>Internal\XmlHelper.cs</Link>
     </Compile>
@@ -62,9 +71,6 @@
     <Compile Include="Internal\AssemblyHelper.cs" />
     <Compile Include="Internal\AssemblyReader.cs" />
     <Compile Include="Internal\DomainUsage.cs" />
-    <Compile Include="Internal\InternalTrace.cs" />
-    <Compile Include="Internal\InternalTraceWriter.cs" />
-    <Compile Include="Internal\Logger.cs" />
     <Compile Include="Internal\NUnitConfiguration.cs" />
     <Compile Include="Internal\NUnitProject.cs" />
     <Compile Include="Internal\PathUtils.cs" />
