@@ -22,7 +22,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\..\..\bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NUNIT_ENGINE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -30,7 +30,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\..\..\bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>TRACE;NUNIT_ENGINE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -49,6 +49,12 @@
     <Compile Include="..\..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="..\..\Common\tests\AssemblyHelperTests.cs">
+      <Link>Internal\AssemblyHelperTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\tests\XmlHelperTests.cs">
+      <Link>Internal\XmlHelperTests.cs</Link>
+    </Compile>
     <Compile Include="..\EngineVersion.cs">
       <Link>EngineVersion.cs</Link>
     </Compile>
@@ -56,7 +62,6 @@
     <Compile Include="Api\TestFilterTests.cs" />
     <Compile Include="Api\TestPackageTests.cs" />
     <Compile Include="AssemblyInfo.cs" />
-    <Compile Include="Internal\AssemblyHelperTests.cs" />
     <Compile Include="Internal\AssemblyReaderTests.cs" />
     <Compile Include="Internal\NUnitFrameworkDriverTests.cs" />
     <Compile Include="Internal\NUnitProjectTests.cs" />
@@ -64,7 +69,6 @@
     <Compile Include="Internal\PathUtilTests.cs" />
     <Compile Include="Internal\ServerUtilityTests.cs" />
     <Compile Include="Internal\SettingsGroupTests.cs" />
-    <Compile Include="Internal\XmlHelperTests.cs" />
     <Compile Include="ResultHelperTests.cs" />
     <Compile Include="RuntimeFrameworkTests.cs" />
     <Compile Include="Services\DomainManagerTests.cs" />

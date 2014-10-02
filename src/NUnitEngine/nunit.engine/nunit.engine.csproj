@@ -47,19 +47,19 @@
     <Compile Include="..\..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="..\..\Common\AssemblyHelper.cs">
+    <Compile Include="..\..\Common\nunit\AssemblyHelper.cs">
       <Link>Internal\AssemblyHelper.cs</Link>
     </Compile>
-    <Compile Include="..\..\Common\Logging\InternalTrace.cs">
+    <Compile Include="..\..\Common\nunit\Logging\InternalTrace.cs">
       <Link>Internal\InternalTrace.cs</Link>
     </Compile>
-    <Compile Include="..\..\Common\Logging\InternalTraceWriter.cs">
+    <Compile Include="..\..\Common\nunit\Logging\InternalTraceWriter.cs">
       <Link>Internal\InternalTraceWriter.cs</Link>
     </Compile>
-    <Compile Include="..\..\Common\Logging\Logger.cs">
+    <Compile Include="..\..\Common\nunit\Logging\Logger.cs">
       <Link>Internal\Logger.cs</Link>
     </Compile>
-    <Compile Include="..\..\Common\XmlHelper.cs">
+    <Compile Include="..\..\Common\nunit\XmlHelper.cs">
       <Link>Internal\XmlHelper.cs</Link>
     </Compile>
     <Compile Include="..\EngineVersion.cs">

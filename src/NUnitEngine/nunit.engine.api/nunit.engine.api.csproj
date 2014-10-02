@@ -46,10 +46,10 @@
     <Compile Include="..\..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="..\..\Common\Logging\ILogger.cs">
+    <Compile Include="..\..\Common\nunit\Logging\ILogger.cs">
       <Link>ILogger.cs</Link>
     </Compile>
-    <Compile Include="..\..\Common\Logging\InternalTraceLevel.cs">
+    <Compile Include="..\..\Common\nunit\Logging\InternalTraceLevel.cs">
       <Link>InternalTraceLevel.cs</Link>
     </Compile>
     <Compile Include="..\EngineApiVersion.cs">

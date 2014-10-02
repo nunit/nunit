@@ -22,7 +22,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\..\..\bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;CLR_4_0;CS_4_0</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NUNIT_CONSOLE;CLR_4_0;CS_4_0</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -30,7 +30,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\..\..\bin\Release\</OutputPath>
-    <DefineConstants>TRACE;CLR_4_0;CS_4_0</DefineConstants>
+    <DefineConstants>TRACE;NUNIT_CONSOLE;CLR_4_0;CS_4_0</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -43,6 +43,15 @@
     <Compile Include="..\..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="..\..\Common\tests\OutputSpecificationTests.cs">
+      <Link>OutputSpecificationTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\tests\TestNameParserTests.cs">
+      <Link>TestNameParserTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\tests\XmlHelperTests.cs">
+      <Link>XmlHelperTests.cs</Link>
+    </Compile>
     <Compile Include="..\ConsoleVersion.cs">
       <Link>ConsoleVersion.cs</Link>
     </Compile>
@@ -51,11 +60,9 @@
     <Compile Include="CommandLineTests.cs" />
     <Compile Include="MakeTestPackageTests.cs" />
     <Compile Include="NUnit2XmlValidationTests.cs" />
-    <Compile Include="OutputSpecificationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SchemaValidator.cs" />
     <Compile Include="TestFilterBuilderTests.cs" />
-    <Compile Include="TestNameParserTests.cs" />
     <Compile Include="XmlOutputTest.cs" />
     <Compile Include="XmlTransformOutputWriterTests.cs" />
   </ItemGroup>

@@ -52,28 +52,28 @@
     <Compile Include="..\..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="..\..\Common\AssemblyHelper.cs">
+    <Compile Include="..\..\Common\nunit\AssemblyHelper.cs">
       <Link>Internal\AssemblyHelper.cs</Link>
     </Compile>
-    <Compile Include="..\..\Common\Logging\ILogger.cs">
+    <Compile Include="..\..\Common\nunit\Logging\ILogger.cs">
       <Link>Internal\ILogger.cs</Link>
     </Compile>
-    <Compile Include="..\..\Common\Logging\InternalTrace.cs">
+    <Compile Include="..\..\Common\nunit\Logging\InternalTrace.cs">
       <Link>Internal\InternalTrace.cs</Link>
     </Compile>
-    <Compile Include="..\..\Common\Logging\InternalTraceLevel.cs">
+    <Compile Include="..\..\Common\nunit\Logging\InternalTraceLevel.cs">
       <Link>Internal\InternalTraceLevel.cs</Link>
     </Compile>
-    <Compile Include="..\..\Common\Logging\InternalTraceWriter.cs">
+    <Compile Include="..\..\Common\nunit\Logging\InternalTraceWriter.cs">
       <Link>Internal\InternalTraceWriter.cs</Link>
     </Compile>
-    <Compile Include="..\..\Common\Logging\Logger.cs">
+    <Compile Include="..\..\Common\nunit\Logging\Logger.cs">
       <Link>Internal\Logger.cs</Link>
     </Compile>
-    <Compile Include="..\..\Common\OutputSpecification.cs">
+    <Compile Include="..\..\Common\nunit\OutputSpecification.cs">
       <Link>Runner\OutputSpecification.cs</Link>
     </Compile>
-    <Compile Include="..\..\Common\TestNameParser.cs">
+    <Compile Include="..\..\Common\nunit\TestNameParser.cs">
       <Link>Runner\TestNameParser.cs</Link>
     </Compile>
     <Compile Include="..\FrameworkVersion.cs">

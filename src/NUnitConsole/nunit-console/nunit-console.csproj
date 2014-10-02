@@ -45,13 +45,13 @@
     <Compile Include="..\..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="..\..\Common\OutputSpecification.cs">
+    <Compile Include="..\..\Common\nunit\OutputSpecification.cs">
       <Link>Utilities\OutputSpecification.cs</Link>
     </Compile>
-    <Compile Include="..\..\Common\TestNameParser.cs">
+    <Compile Include="..\..\Common\nunit\TestNameParser.cs">
       <Link>Utilities\TestNameParser.cs</Link>
     </Compile>
-    <Compile Include="..\..\Common\XmlHelper.cs">
+    <Compile Include="..\..\Common\nunit\XmlHelper.cs">
       <Link>Utilities\XmlHelper.cs</Link>
     </Compile>
     <Compile Include="..\ConsoleVersion.cs">
