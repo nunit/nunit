@@ -24,6 +24,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 
 namespace NUnit.Engine
 {
@@ -51,7 +52,7 @@ namespace NUnit.Engine
         {
             fullName = Path.GetFullPath(filePath);
             if (IsAssemblyFileType(filePath))
-                testFiles.Add(FullName);
+                Add(FullName);
         }
 
         /// <summary>
@@ -62,7 +63,7 @@ namespace NUnit.Engine
         public TestPackage(IList<string> testFiles)
         {
             foreach (string testFile in testFiles)
-                this.testFiles.Add(Path.GetFullPath(testFile));
+                Add(Path.GetFullPath(testFile));
         }
 
         #endregion
@@ -112,7 +113,8 @@ namespace NUnit.Engine
         /// <param name="testFile">The test file to be added</param>
         public void Add(string testFile)
         {
-            testFiles.Add(testFile);
+            if(!UsesUnsupportedNUnitVersion(testFile))
+                testFiles.Add(testFile);
         }
 
         /// <summary>
@@ -136,6 +138,34 @@ namespace NUnit.Engine
         {
             string extension = Path.GetExtension(path).ToLower();
             return extension == ".dll" || extension == ".exe";
+        }
+
+        /// <summary>
+        /// Checks to see if the given assembly references a pre-v3
+        /// version of the framework
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        private static bool UsesUnsupportedNUnitVersion( string path )
+        {
+            if ( !IsAssemblyFileType( path ) || !File.Exists( path ) )
+                return false;    // We can't check, so we don't know
+
+            var testAssembly = Assembly.ReflectionOnlyLoadFrom( path );
+
+            foreach(AssemblyName an in testAssembly.GetReferencedAssemblies())
+            {
+                if((an.Name == "nunit.framework" ||
+                    an.Name == "nunitlite") &&
+                    an.Version.Major < 3)
+                {
+                    // How do I get an error displayed to the user???
+                    //Console.WriteLine("Skipped loading assembly {0} because it references an unsupported version of the nunit.framework, {1}",
+                    //    testAssembly.GetName().Name, an.Version);
+                    return true;
+                }
+            }
+            return false;
         }
 
         #endregion
