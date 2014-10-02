@@ -30,11 +30,21 @@ namespace NUnit.Engine.Internal.Tests
     [TestFixture]
     public class AssemblyHelperTests
     {
+        private static readonly string THIS_ASSEMBLY_NAME = "nunit.engine.tests";
+        private static readonly string THIS_ASSEMBLY_PATH = THIS_ASSEMBLY_NAME + ".dll";
+
+        public void GetNameForAssembly()
+        {
+            var assemblyName = AssemblyHelper.GetAssemblyName(this.GetType().Assembly);
+            Assert.That(assemblyName.Name, Is.EqualTo(THIS_ASSEMBLY_NAME).IgnoreCase);
+            Assert.That(assemblyName.FullName, Is.EqualTo(THIS_ASSEMBLY_PATH).IgnoreCase);
+        }
+
         [Test]
         public void GetPathForAssembly()
         {
             string path = AssemblyHelper.GetAssemblyPath(this.GetType().Assembly);
-            Assert.That(Path.GetFileName(path), Is.EqualTo("nunit.engine.tests.dll").IgnoreCase);
+            Assert.That(Path.GetFileName(path), Is.EqualTo(THIS_ASSEMBLY_PATH).IgnoreCase);
             Assert.That(File.Exists(path));
         }
 
@@ -42,7 +52,7 @@ namespace NUnit.Engine.Internal.Tests
         public void GetPathForType()
         {
             string path = AssemblyHelper.GetAssemblyPath(this.GetType());
-            Assert.That(Path.GetFileName(path), Is.EqualTo("nunit.engine.tests.dll").IgnoreCase);
+            Assert.That(Path.GetFileName(path), Is.EqualTo(THIS_ASSEMBLY_PATH).IgnoreCase);
             Assert.That(File.Exists(path));
         }
 
@@ -50,7 +60,7 @@ namespace NUnit.Engine.Internal.Tests
         public void GetDirectoryName()
         {
             string path = AssemblyHelper.GetDirectoryName(this.GetType().Assembly);
-            Assert.That(File.Exists(Path.Combine(path, "nunit.engine.tests.dll")));
+            Assert.That(File.Exists(Path.Combine(path, THIS_ASSEMBLY_PATH)));
         }
     }
 }

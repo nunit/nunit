@@ -53,6 +53,9 @@
     <Compile Include="..\..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="..\..\Common\AssemblyHelper.cs">
+      <Link>Internal\AssemblyHelper.cs</Link>
+    </Compile>
     <Compile Include="..\..\Common\Logging\ILogger.cs">
       <Link>Internal\ILogger.cs</Link>
     </Compile>
@@ -299,7 +302,6 @@
     <Compile Include="GlobalSettings.cs" />
     <Compile Include="Guard.cs" />
     <Compile Include="Has.cs" />
-    <Compile Include="Internal\AssemblyHelper.cs" />
     <Compile Include="Internal\Builders\CombinatorialStrategy.cs" />
     <Compile Include="Internal\Builders\DatapointProvider.cs" />
     <Compile Include="Internal\Builders\NUnitTestCaseBuilder.cs" />
