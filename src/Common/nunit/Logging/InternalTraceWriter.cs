@@ -102,14 +102,16 @@ namespace Unit.Common
             writer.WriteLine(value);
         }
 
-        public override void Close()
+        protected override void Dispose(bool disposing)
         {
-            if (writer != null)
+            if (disposing && writer != null)
             {
                 writer.Flush();
-                writer.Close();
+                writer.Dispose();
                 writer = null;
             }
+
+            base.Dispose(disposing);
         }
 
         public override void Flush()
