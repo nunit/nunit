@@ -26,7 +26,13 @@ using System.Diagnostics;
 using System.IO;
 using System.Security.AccessControl;
 
+#if NUNIT_ENGINE
 namespace NUnit.Engine.Internal
+#elif NUNIT_FRAMEWORK || NUNITLITE
+namespace NUnit.Framework.Internal
+#else
+namespace Unit.Common
+#endif
 {
     /// <summary>
     /// A trace listener that writes to a separate file per domain
@@ -35,6 +41,7 @@ namespace NUnit.Engine.Internal
     public class InternalTraceWriter : TextWriter
     {
         TextWriter writer;
+        object myLock = new object();
 
         /// <summary>
         /// Construct an InternalTraceWriter that writes to a file.
@@ -47,19 +54,47 @@ namespace NUnit.Engine.Internal
             this.writer = streamWriter;
         }
 
+        /// <summary>
+        /// Construct an InternalTraceWriter that writes to a 
+        /// TextWriter provided by the caller.
+        /// </summary>
+        /// <param name="writer"></param>
+        public InternalTraceWriter(TextWriter writer)
+        {
+            this.writer = writer;
+        }
+
+        /// <summary>
+        /// Returns the character encoding in which the output is written.
+        /// </summary>
+        /// <returns>The character encoding in which the output is written.</returns>
         public override System.Text.Encoding Encoding
         {
             get { return writer.Encoding; }
         }
 
+        /// <summary>
+        /// Writes a character to the text string or stream.
+        /// </summary>
+        /// <param name="value">The character to write to the text stream.</param>
         public override void Write(char value)
         {
-            writer.Write(value);
+            lock (myLock)
+            {
+                writer.Write(value);
+            }
         }
 
+        /// <summary>
+        /// Writes a string followed by a line terminator to the text string or stream.
+        /// </summary>
+        /// <param name="value">The string to write. If <paramref name="value" /> is null, only the line terminator is written.</param>
         public override void Write(string value)
         {
-            base.Write(value);
+            lock (myLock)
+            {
+                base.Write(value);
+            }
         }
 
         public override void WriteLine(string value)
@@ -67,14 +102,16 @@ namespace NUnit.Engine.Internal
             writer.WriteLine(value);
         }
 
-        public override void Close()
+        protected override void Dispose(bool disposing)
         {
-            if (writer != null)
+            if (disposing && writer != null)
             {
                 writer.Flush();
-                writer.Close();
+                writer.Dispose();
                 writer = null;
             }
+
+            base.Dispose(disposing);
         }
 
         public override void Flush()

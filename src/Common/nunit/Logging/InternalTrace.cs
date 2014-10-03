@@ -24,7 +24,13 @@
 using System;
 using System.IO;
 
+#if NUNIT_ENGINE
+namespace NUnit.Engine.Internal
+#elif NUNIT_FRAMEWORK || NUNITLITE
 namespace NUnit.Framework.Internal
+#else
+namespace NUnit.Common
+#endif
 {
     /// <summary>
     /// InternalTrace provides facilities for tracing the execution
@@ -43,7 +49,7 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public static class InternalTrace
     {
-        private static InternalTraceLevel traceLevel = InternalTraceLevel.Off;
+        private static InternalTraceLevel traceLevel;
         private static InternalTraceWriter traceWriter;
 
         /// <summary>
@@ -66,7 +72,7 @@ namespace NUnit.Framework.Internal
                 if (traceWriter == null && traceLevel > InternalTraceLevel.Off)
                 {
                     traceWriter = new InternalTraceWriter(logName);
-                    traceWriter.WriteLine("InternalTrace: Initializing at level " + traceLevel.ToString());
+                    traceWriter.WriteLine("InternalTrace: Initializing at level {0}", traceLevel);
                 }
 
                 Initialized = true;

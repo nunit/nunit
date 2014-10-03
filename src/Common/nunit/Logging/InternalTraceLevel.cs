@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2011 Charlie Poole
+// Copyright (c) 2012 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,36 +21,53 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
-using System.IO;
-using NUnit.Framework;
-
-namespace NUnit.Engine.Internal.Tests
+#if NUNIT_ENGINE
+namespace NUnit.Engine
+#elif NUNIT_FRAMEWORK || NUNITLITE
+namespace NUnit.Framework.Internal
+#else
+namespace NUnit.Common
+#endif
 {
-    [TestFixture]
-    public class AssemblyHelperTests
+    /// <summary>
+    /// InternalTraceLevel is an enumeration controlling the
+    /// level of detailed presented in the internal log.
+    /// </summary>
+    public enum InternalTraceLevel
     {
-        [Test]
-        public void GetPathForAssembly()
-        {
-            string path = AssemblyHelper.GetAssemblyPath(this.GetType().Assembly);
-            Assert.That(Path.GetFileName(path), Is.EqualTo("nunit.engine.tests.dll").IgnoreCase);
-            Assert.That(File.Exists(path));
-        }
+        /// <summary>
+        /// Use the default settings as specified by the user.
+        /// </summary>
+        Default,
 
-        [Test]
-        public void GetPathForType()
-        {
-            string path = AssemblyHelper.GetAssemblyPath(this.GetType());
-            Assert.That(Path.GetFileName(path), Is.EqualTo("nunit.engine.tests.dll").IgnoreCase);
-            Assert.That(File.Exists(path));
-        }
+        /// <summary>
+        /// Do not display any trace messages
+        /// </summary>
+        Off,
 
-        [Test]
-        public void GetDirectoryName()
-        {
-            string path = AssemblyHelper.GetDirectoryName(this.GetType().Assembly);
-            Assert.That(File.Exists(Path.Combine(path, "nunit.engine.tests.dll")));
-        }
+        /// <summary>
+        /// Display Error messages only
+        /// </summary>
+        Error,
+
+        /// <summary>
+        /// Display Warning level and higher messages
+        /// </summary>
+        Warning,
+
+        /// <summary>
+        /// Display informational and higher messages
+        /// </summary>
+        Info,
+
+        /// <summary>
+        /// Display debug messages and higher - i.e. all messages
+        /// </summary>
+        Debug,
+
+        /// <summary>
+        /// Display debug messages and higher - i.e. all messages
+        /// </summary>
+        Verbose = Debug
     }
 }

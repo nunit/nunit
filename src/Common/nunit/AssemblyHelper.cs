@@ -24,7 +24,13 @@
 using System;
 using System.Reflection;
 
+#if NUNIT_ENGINE
+namespace NUnit.Engine.Internal
+#elif NUNIT_FRAMEWORK || NUNITLITE
 namespace NUnit.Framework.Internal
+#else
+namespace NUnit.Common
+#endif
 {
     /// <summary>
     /// AssemblyHelper provides static methods for working 
