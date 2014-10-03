@@ -22,30 +22,45 @@
 // ***********************************************************************
 
 using System;
-using System.Collections.Generic;
-using System.Xml;
+using System.IO;
 using NUnit.Framework;
 
-namespace NUnit.ConsoleRunner.Utilities.Tests
+namespace NUnit.Engine.Internal.Tests
 {
-    public class XmlHelperTests
+    [TestFixture]
+    public class AssemblyHelperTests
     {
-        [Test]
-        public void SingleElement()
-        {
-            XmlNode node = XmlHelper.CreateTopLevelElement("myelement");
+        private static readonly string THIS_ASSEMBLY_NAME = "nunit.engine.tests";
+        private static readonly string THIS_ASSEMBLY_PATH = THIS_ASSEMBLY_NAME + ".dll";
 
-            Assert.That(node.Name, Is.EqualTo("myelement"));
-            Assert.That(node.Attributes.Count, Is.EqualTo(0));
-            Assert.That(node.ChildNodes.Count, Is.EqualTo(0));
+        public void GetNameForAssembly()
+        {
+            var assemblyName = AssemblyHelper.GetAssemblyName(this.GetType().Assembly);
+            Assert.That(assemblyName.Name, Is.EqualTo(THIS_ASSEMBLY_NAME).IgnoreCase);
+            Assert.That(assemblyName.FullName, Is.EqualTo(THIS_ASSEMBLY_PATH).IgnoreCase);
         }
 
         [Test]
-        public void SafeAttributeAccess()
+        public void GetPathForAssembly()
         {
-            XmlNode node = XmlHelper.CreateTopLevelElement("top");
+            string path = AssemblyHelper.GetAssemblyPath(this.GetType().Assembly);
+            Assert.That(Path.GetFileName(path), Is.EqualTo(THIS_ASSEMBLY_PATH).IgnoreCase);
+            Assert.That(File.Exists(path));
+        }
 
-            Assert.That(node.GetAttribute("junk"), Is.Null);
+        [Test]
+        public void GetPathForType()
+        {
+            string path = AssemblyHelper.GetAssemblyPath(this.GetType());
+            Assert.That(Path.GetFileName(path), Is.EqualTo(THIS_ASSEMBLY_PATH).IgnoreCase);
+            Assert.That(File.Exists(path));
+        }
+
+        [Test]
+        public void GetDirectoryName()
+        {
+            string path = AssemblyHelper.GetDirectoryName(this.GetType().Assembly);
+            Assert.That(File.Exists(Path.Combine(path, THIS_ASSEMBLY_PATH)));
         }
     }
 }

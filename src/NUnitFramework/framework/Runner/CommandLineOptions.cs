@@ -63,8 +63,11 @@ namespace NUnitLite.Runner
         /// <summary>Indicates whether the 'wait' option was used.</summary>
         public bool Wait { get; private set; }
 
-        /// <summary>Indicates whether the 'nologo' option was used.</summary>
+        /// <summary>Indicates whether the 'noheader' option was used.</summary>
         public bool NoHeader { get; private set; }
+
+        /// <summary>Indicates whether the 'nocolor' option was used.</summary>
+        public bool NoColor { get; private set; }
 
         /// <summary>Indicates whether the 'help' option was used.</summary>
         public bool ShowHelp { get; private set; }
@@ -159,71 +162,38 @@ namespace NUnitLite.Runner
             {
                 StringBuilder sb = new StringBuilder();
 
-#if PocketPC || WindowsCE || NETCF || SILVERLIGHT
-                string name = "NUnitLite";
-#else
-                string name = System.Reflection.Assembly.GetEntryAssembly().GetName().Name;
-#endif
-
-                sb.Append("Usage: " + name + " [assemblies] [options]" + NL + NL);
-                sb.Append("Runs a set of NUnitLite tests from the console." + NL + NL);
-                sb.Append("You may specify one or more test assemblies by name, without a path or" + NL);
-                sb.Append("extension. They must be in the same in the same directory as the exe" + NL);
-                sb.Append("or on the probing path. If no assemblies are provided, tests in the" + NL);
-                sb.Append("executing assembly itself are run." + NL + NL);
-                sb.Append("Options:" + NL);
-                sb.Append("  -test:testname  Comma-separated list of the NAMES of tests to run or explore." + NL);
-                sb.Append("                  This option may be repeated. If not used, all tests are run." + NL + NL);
-                sb.Append("  -work:PATH      PATH of the directory to use for output files." + NL + NL);
-                sb.Append("  -output:FILE,   File to which standard output is redirected. If this option" + NL);
-                sb.Append("  -out:FILE       is not used, output is to the Console, which means it is" + NL);
-                sb.Append("                  lost on devices without a Console." + NL + NL);
-                sb.Append("  -err:FILE       File to which error output is redirected. If this option" + NL);
-                sb.Append("                  is not used, output is to the Console, which means it is" + NL);
-                sb.Append("                  lost on devices without a Console." + NL + NL);
-                sb.Append("  -full           Prints full report of all test results." + NL + NL);
-                sb.Append("  -result:SPEC    An output SPEC for saving the test results. Note that" + NL);
-                sb.Append("                  NUnitLite does not save the test result unless this" + NL);
-                sb.Append("                  option is used. This option may be repeated." + NL + NL);
-                sb.Append("  -explore[:SPEC] Display or save test info rather than running tests." + NL);
-                sb.Append("                  Optionally provide an output SPEC for saving the test info." + NL);
-                sb.Append("                  If no SPEC is provided, tests are listed to the console" + NL);
-                sb.Append("                  This option may be repeated." + NL + NL);
-                sb.Append("  -help,-h        Displays this help" + NL + NL);
-                sb.Append("  -noheader,-noh  Suppresses display of the initial message" + NL + NL);
-                sb.Append("  -trace:LEVEL    Set internal trace {LEVEL}." + NL);
-                sb.Append("                  Values: Off, Error, Warning, Info, Verbose" + NL + NL);
-                sb.Append("  -labels:VAL,    Specify whether to write test case names to the output." + NL);
-                sb.Append("  -l:VAL          Values: Off, On, All" + NL + NL);
-                sb.Append("  -teamcity       Running under TeamCity: display service messages as tests are executed" + NL + NL);
-                sb.Append("  -seed:SEED      Specify the random seed used in generating test cases." + NL + NL);
-                sb.Append("  -timeout:VAL     Set timeout for each test case in milliseconds." + NL + NL);
-                sb.Append("  -include:CAT    List of categories to include" + NL + NL);
-                sb.Append("  -exclude:CAT    List of categories to exclude" + NL + NL);
-                sb.Append("  -wait           Waits for a key press before exiting" + NL + NL);
-                sb.Append("Notes:" + NL);
-                sb.Append(" * File names may be listed by themselves, with a relative path or " + NL);
-                sb.Append("   using an absolute path. Any relative path is based on the current " + NL);
-                sb.Append("   directory or on the Documents folder if running on a under the " + NL);
-                sb.Append("   compact framework." + NL + NL);
-                if (System.IO.Path.DirectorySeparatorChar != '/')
-                    sb.Append(" * On Windows, options may be prefixed by a '/' character if desired" + NL + NL);
-                sb.Append(" * Options that take values may use an equal sign or a colon" + NL);
-                sb.Append("   to separate the option from its value." + NL + NL);
-                sb.Append(" * Several options that specify processing of XML output take" + NL);
-                sb.Append("   an output specification as a value. A SPEC may take one of" + NL);
-                sb.Append("   the following forms:" + NL);
-                sb.Append("       --OPTION:filename" + NL);
-                sb.Append("       --OPTION:filename;format=formatname" + NL);
-                sb.Append("       --OPTION:filename;transform=xsltfile" + NL + NL);
-                sb.Append("   The --result option may use any of the following formats:" + NL);
-                sb.Append("       nunit3 - the native XML format for NUnit 3.0" + NL);
-                sb.Append("       nunit2 - legacy XML format used by earlier releases of NUnit" + NL + NL);
-                sb.Append("   The --explore option may use any of the following formats:" + NL);
-                sb.Append("       nunit3 - the native XML format for NUnit 3.0" + NL);
-                sb.Append("       cases  - a text file listing the full names of all test cases." + NL);
-                sb.Append("   If --explore is used without any specification following, a list of" + NL);
-                sb.Append("   test cases is output to the console." + NL + NL);
+                sb.Append("      -test:testname  Comma-separated list of the NAMES of tests to run or" + NL);
+                sb.Append("                      explore. This option may be repeated. If not used," + NL);
+                sb.Append("                      all tests are run." + NL + NL);
+                sb.Append("      -work:PATH      PATH of the directory to use for output files." + NL + NL);
+                sb.Append("      -output:FILE,   File to which standard output is redirected. If this" + NL);
+                sb.Append("      -out:FILE       option is not used, output is to the Console, which means" + NL);
+                sb.Append("                      it is lost on devices without a Console." + NL + NL);
+                sb.Append("      -err:FILE       File to which error output is redirected. If this option" + NL);
+                sb.Append("                      is not used, output is to the Console, which means it is" + NL);
+                sb.Append("                      lost on devices without a Console." + NL + NL);
+                sb.Append("      -full           Prints full report of all test results." + NL + NL);
+                sb.Append("      -result:SPEC    An output SPEC for saving the test results. Note that" + NL);
+                sb.Append("                      NUnitLite does not save the test result unless this" + NL);
+                sb.Append("                      option is used. This option may be repeated." + NL + NL);
+                sb.Append("      -explore[:SPEC] Display or save test info rather than running tests." + NL);
+                sb.Append("                      Optionally provide an output SPEC for saving the result." + NL);
+                sb.Append("                      If no SPEC is provided, tests are listed to the console" + NL);
+                sb.Append("                      This option may be repeated." + NL + NL);
+                sb.Append("      -help,-h        Displays this help" + NL + NL);
+                sb.Append("      -noheader,-noh  Suppresses display of the initial message" + NL + NL);
+                sb.Append("      -nocolor,-noc   Display console output without color." + NL + NL);
+                sb.Append("      -trace:LEVEL    Set internal trace {LEVEL}." + NL);
+                sb.Append("                      Values: Off, Error, Warning, Info, Verbose" + NL + NL);
+                sb.Append("      -labels:VAL,    Specify whether to write test case names to the output." + NL);
+                sb.Append("      -l:VAL          Values: Off, On, All" + NL + NL);
+                sb.Append("      -teamcity       Running under TeamCity: display service messages as the" + NL);
+                sb.Append("                      tests are executed." + NL + NL);
+                sb.Append("      -seed:SEED      Specify the random seed used in generating test cases." + NL + NL);
+                sb.Append("      -timeout:VAL     Set timeout for each test case in milliseconds." + NL + NL);
+                sb.Append("      -include:CAT    List of categories to include." + NL + NL);
+                sb.Append("      -exclude:CAT    List of categories to exclude." + NL + NL);
+                sb.Append("      -wait           Waits for a key press before exiting." + NL + NL);
 
                 return sb.ToString();
             }
@@ -273,6 +243,11 @@ namespace NUnitLite.Runner
                 case "noheader":
                 case "noh":
                     NoHeader = true;
+                    break;
+
+                case "nocolor":
+                case "noc":
+                    NoColor = true;
                     break;
 
                 case "help":

@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2012 Charlie Poole
+// Copyright (c) 2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,47 +21,60 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-namespace NUnit.Engine
+namespace NUnitLite.Runner
 {
     /// <summary>
-    /// InternalTraceLevel is an enumeration controlling the
-    /// level of detailed presented in the internal log.
+    /// ColorStyle enumerates the various styles used in the console display
     /// </summary>
-    public enum InternalTraceLevel
+    public enum ColorStyle
     {
         /// <summary>
-        /// Use the default settings as specified by the user.
+        /// Color for headers
+        /// </summary>
+        Header,
+        /// <summary>
+        /// Color for sub-headers
+        /// </summary>
+        SubHeader,
+        /// <summary>
+        /// Color for each of the section headers
+        /// </summary>
+        SectionHeader,
+        /// <summary>
+        /// The default color for items that don't fit into the other categories
         /// </summary>
         Default,
-
         /// <summary>
-        /// Do not display any trace messages
+        /// Test output
         /// </summary>
-        Off,
-
+        Output,
         /// <summary>
-        /// Display Error messages only
+        /// Color for help text
         /// </summary>
-        Error,
-
+        Help,
         /// <summary>
-        /// Display Warning level and higher messages
+        /// Color for labels
+        /// </summary>
+        Label,
+        /// <summary>
+        /// Color for values, usually go beside labels
+        /// </summary>
+        Value,
+        /// <summary>
+        /// Color for passed tests
+        /// </summary>
+        Pass,
+        /// <summary>
+        /// Color for failed tests
+        /// </summary>
+        Failure,
+        /// <summary>
+        /// Color for warnings, ignored or skipped tests
         /// </summary>
         Warning,
-
         /// <summary>
-        /// Display informational and higher messages
+        /// Color for errors and exceptions
         /// </summary>
-        Info,
-
-        /// <summary>
-        /// Display debug messages and higher - i.e. all messages
-        /// </summary>
-        Debug,
-
-        /// <summary>
-        /// Display debug messages and higher - i.e. all messages
-        /// </summary>
-        Verbose = Debug
+        Error
     }
 }

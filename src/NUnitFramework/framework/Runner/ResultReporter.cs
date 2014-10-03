@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System.IO;
+using System.Globalization;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 
@@ -32,7 +33,7 @@ namespace NUnitLite.Runner
     /// </summary>
     public class ResultReporter
     {
-        private TextWriter writer;
+        private ExtendedTextWriter _writer;
         private ITestResult result;
         private ResultSummary summary;
         private int reportCount = 0;
@@ -42,10 +43,10 @@ namespace NUnitLite.Runner
         /// </summary>
         /// <param name="result">The top-level result being reported</param>
         /// <param name="writer">A TextWriter to which the report is written</param>
-        public ResultReporter(ITestResult result, TextWriter writer)
+        public ResultReporter(ITestResult result, ExtendedTextWriter writer)
         {
             this.result = result;
-            this.writer = writer;
+            this._writer = writer;
 
             this.summary = new ResultSummary(this.result);
         }
@@ -64,7 +65,7 @@ namespace NUnitLite.Runner
         public void ReportResults()
         {
             if (summary.TestCount == 0)
-                writer.WriteLine("Warning: No tests found");
+                _writer.WriteLine(ColorStyle.Warning, "Warning: No tests found");
 
             PrintSummaryReport();
 
@@ -84,18 +85,31 @@ namespace NUnitLite.Runner
         /// </summary>
         public void PrintSummaryReport()
         {
-            writer.WriteLine();
-            writer.WriteLine("Test Run Result -");
-            writer.WriteLine("   Overall result: {0}", result.ResultState);
-            writer.WriteLine(
-                "   Tests run: {0}, Passed: {1}, Errors: {2}, Failures: {3}, Inconclusive: {4}",
-                summary.TestCount, summary.PassCount, summary.ErrorCount, summary.FailureCount, summary.InconclusiveCount);
-            writer.WriteLine(
-                "     Not run: {0}, Invalid: {1}, Ignored: {2}, Skipped: {3}",
-                summary.NotRunCount, summary.InvalidCount, summary.IgnoreCount, summary.SkipCount);
-            writer.WriteLine("     Start time: {0}", result.StartTime.ToString("u"));
-            writer.WriteLine("       End time: {0}", result.EndTime.ToString("u"));
-            writer.WriteLine("       Duration: {0} seconds", result.Duration.TotalSeconds.ToString("0.000"));
+            var status = result.ResultState.Status;
+            ColorStyle overall = status == TestStatus.Passed
+                ? ColorStyle.Pass
+                : status == TestStatus.Failed
+                    ? ColorStyle.Failure
+                    : ColorStyle.Warning;
+
+            _writer.WriteLine();
+            _writer.WriteLine(ColorStyle.SectionHeader, "Test Run Result -");
+            _writer.WriteLabelLine("   Overall result: ", result.ResultState, overall);
+
+            _writer.WriteLabel("   Tests run: ", summary.TestCount.ToString(CultureInfo.CurrentUICulture));
+            _writer.WriteLabel(", Passed: ", summary.PassCount.ToString(CultureInfo.CurrentUICulture));
+            _writer.WriteLabel(", Errors: ", summary.ErrorCount.ToString(CultureInfo.CurrentUICulture));
+            _writer.WriteLabel(", Failures: ", summary.FailureCount.ToString(CultureInfo.CurrentUICulture));
+            _writer.WriteLabelLine(", Inconclusive: ", summary.InconclusiveCount.ToString(CultureInfo.CurrentUICulture));
+            
+            _writer.WriteLabel("     Not run: ", summary.NotRunCount.ToString(CultureInfo.CurrentUICulture));
+            _writer.WriteLabel(", Invalid: ",summary.InvalidCount.ToString(CultureInfo.CurrentUICulture));
+            _writer.WriteLabel(", Ignored: ", summary.IgnoreCount.ToString(CultureInfo.CurrentUICulture));
+            _writer.WriteLabelLine(", Skipped: ", summary.SkipCount.ToString(CultureInfo.CurrentUICulture));
+
+            _writer.WriteLabelLine("     Start time: ", result.StartTime.ToString("u"));
+            _writer.WriteLabelLine("       End time: ", result.EndTime.ToString("u"));
+            _writer.WriteLabelLine("       Duration: ", result.Duration.TotalSeconds.ToString("0.000") + " seconds");
         }
 
         /// <summary>
@@ -104,8 +118,8 @@ namespace NUnitLite.Runner
         public void PrintErrorReport()
         {
             reportCount = 0;
-            writer.WriteLine();
-            writer.WriteLine("Errors and Failures -");
+            _writer.WriteLine();
+            _writer.WriteLine(ColorStyle.SectionHeader, "Errors and Failures -");
             PrintErrorResults(this.result);
         }
 
@@ -115,8 +129,8 @@ namespace NUnitLite.Runner
         public void PrintNotRunReport()
         {
             reportCount = 0;
-            writer.WriteLine();
-            writer.WriteLine("Tests Not Run -");
+            _writer.WriteLine();
+            _writer.WriteLine(ColorStyle.SectionHeader, "Tests Not Run -");
             PrintNotRunResults(this.result);
         }
 
@@ -125,8 +139,8 @@ namespace NUnitLite.Runner
         /// </summary>
         public void PrintFullReport()
         {
-            writer.WriteLine();
-            writer.WriteLine("All Test Results -");
+            _writer.WriteLine();
+            _writer.WriteLine(ColorStyle.SectionHeader, "All Test Results -");
             PrintAllResults(this.result, " ");
         }
 
@@ -140,6 +154,7 @@ namespace NUnitLite.Runner
                 {
                     var suite = result.Test as TestSuite;
                     if (suite.TestType == "Theory" || result.Message != TestResult.CHILD_ERRORS_MESSAGE)
+                        using (new ColorConsole(ColorStyle.Failure))
                         WriteSingleResult(result);
                 }
 
@@ -147,7 +162,8 @@ namespace NUnitLite.Runner
                     PrintErrorResults(childResult);
             }
             else if (result.ResultState.Status == TestStatus.Failed || result.ResultState == ResultState.NotRunnable)
-                WriteSingleResult(result);
+                using (new ColorConsole(ColorStyle.Failure))
+                    WriteSingleResult(result);
         }
 
         private void PrintNotRunResults(ITestResult result)
@@ -156,38 +172,43 @@ namespace NUnitLite.Runner
                 foreach (ITestResult childResult in result.Children)
                     PrintNotRunResults(childResult);
             else if (result.ResultState.Status == TestStatus.Skipped)
-                WriteSingleResult(result);
+                using (new ColorConsole(ColorStyle.Warning))
+                    WriteSingleResult(result);
         }
 
         private void PrintTestProperties(ITest test)
         {
             foreach (string key in test.Properties.Keys)
                 foreach (object value in test.Properties[key])
-                    writer.WriteLine("  {0}: {1}", key, value);
+                    _writer.WriteLabelLine(string.Format("  {0}: ", key), value);
         }
 
         private void PrintAllResults(ITestResult result, string indent)
         {
             string status = null;
+            ColorStyle style = ColorStyle.Default;
             switch (result.ResultState.Status)
             {
                 case TestStatus.Failed:
                     status = "FAIL";
+                    style = ColorStyle.Failure;
                     break;
                 case TestStatus.Skipped:
                     status = "SKIP";
+                    style = ColorStyle.Warning;
                     break;
                 case TestStatus.Inconclusive:
                     status = "INC ";
                     break;
                 case TestStatus.Passed:
                     status = "OK  ";
+                    style = ColorStyle.Pass;
                     break;
             }
 
-            writer.Write(status);
-            writer.Write(indent);
-            writer.WriteLine(result.Name);
+            _writer.Write(style, status);
+            _writer.Write(indent);
+            _writer.WriteLine(status, result.Name);
 
             if (result.HasChildren)
                 foreach (ITestResult childResult in result.Children)
@@ -196,14 +217,14 @@ namespace NUnitLite.Runner
 
         private void WriteSingleResult(ITestResult result)
         {
-            writer.WriteLine();
-            writer.WriteLine("{0}) {1} ({2})", ++reportCount, result.Name, result.FullName);
+            _writer.WriteLine();
+            _writer.WriteLine("{0}) {1} ({2})", ++reportCount, result.Name, result.FullName);
 
             if (result.Message != null && result.Message != string.Empty)
-                writer.WriteLine("   {0}", result.Message);
+                _writer.WriteLine("   {0}", result.Message);
 
             if (result.StackTrace != null && result.StackTrace != string.Empty)
-                writer.WriteLine(result.StackTrace);
+                _writer.WriteLine(result.StackTrace);
         }
 
         #endregion

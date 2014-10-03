@@ -47,6 +47,56 @@ namespace NUnit.Framework.Internal
         }
 
         [Test]
+        public void FailRecordsNestedInnerException()
+        {
+            string expectedMessage =
+                "System.Exception : Outer Exception" + Environment.NewLine +
+                "  ----> System.Exception : Inner Exception" + Environment.NewLine +
+                "  ----> System.Exception : Inner Inner Exception";
+
+            ITestResult result = TestBuilder.RunTestCase(
+                typeof(UnexpectedExceptionFixture),
+                "ThrowsWithNestedInnerException");
+
+            Assert.AreEqual(ResultState.Error, result.ResultState);
+            Assert.AreEqual(expectedMessage, result.Message);
+        }
+
+#if !NET_2_0 && !NET_3_5
+        [Test]
+        public void FailRecordsInnerExceptionsAsPartOfAggregateException()
+        {
+            string expectedMessage =
+                "System.AggregateException : Outer Aggregate Exception" + Environment.NewLine +
+                "  ----> System.Exception : Inner Exception 1 of 2" + Environment.NewLine +
+                "  ----> System.Exception : Inner Exception 2 of 2";
+
+            ITestResult result = TestBuilder.RunTestCase(
+                typeof(UnexpectedExceptionFixture),
+                "ThrowsWithAggregateException");
+
+            Assert.AreEqual(ResultState.Error, result.ResultState);
+            Assert.AreEqual(expectedMessage, result.Message);
+        }
+
+        [Test]
+        public void FailRecordsNestedInnerExceptionAsPartOfAggregateException()
+        {
+            string expectedMessage =
+                "System.AggregateException : Outer Aggregate Exception" + Environment.NewLine +
+                "  ----> System.Exception : Inner Exception" + Environment.NewLine +
+                "  ----> System.Exception : Inner Inner Exception";
+
+            ITestResult result = TestBuilder.RunTestCase(
+                typeof(UnexpectedExceptionFixture),
+                "ThrowsWithAggregateExceptionContainingNestedInnerException");
+
+            Assert.AreEqual(ResultState.Error, result.ResultState);
+            Assert.AreEqual(expectedMessage, result.Message);
+        }
+#endif
+
+        [Test]
         public void BadStackTraceIsHandled()
         {
             ITestResult result = TestBuilder.RunTestCase(

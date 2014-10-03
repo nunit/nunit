@@ -37,6 +37,32 @@ namespace NUnit.TestData.UnexpectedExceptionFixture
         }
 
         [Test]
+        public void ThrowsWithNestedInnerException()
+        {
+            throw new Exception("Outer Exception",
+                new Exception("Inner Exception",
+                    new Exception("Inner Inner Exception")));
+        }
+
+#if !NET_2_0 && !NET_3_5
+        [Test]
+        public void ThrowsWithAggregateException()
+        {
+            throw new AggregateException("Outer Aggregate Exception", 
+                new Exception("Inner Exception 1 of 2"),
+                new Exception("Inner Exception 2 of 2"));
+        }
+
+        [Test]
+        public void ThrowsWithAggregateExceptionContainingNestedInnerException()
+        {
+            throw new AggregateException("Outer Aggregate Exception",
+                new Exception("Inner Exception",
+                    new Exception("Inner Inner Exception")));
+        }
+#endif
+
+        [Test]
         public void ThrowsWithBadStackTrace()
         {
             throw new ExceptionWithBadStackTrace("thrown by me");

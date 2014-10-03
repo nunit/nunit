@@ -29,6 +29,7 @@ using NUnit.Framework;
 using NUnit.Framework.Interfaces;
 using NUnit.TestData.ActionAttributeTests;
 
+[assembly: TaggedAction("OnAssembly", ActionTargets.Suite | ActionTargets.Test)]
 [assembly: TaggedAction("OnAssembly", ActionTargets.Suite)]
 [assembly: TaggedAction("OnAssembly", ActionTargets.Test)]
 [assembly: TaggedAction("OnAssembly")]
@@ -36,6 +37,7 @@ using NUnit.TestData.ActionAttributeTests;
 namespace NUnit.TestData.ActionAttributeTests
 {
     [SetUpFixture]
+    [TaggedAction("OnSetupFixture", ActionTargets.Suite | ActionTargets.Test)]
     [TaggedAction("OnSetupFixture", ActionTargets.Suite)]
     [TaggedAction("OnSetupFixture", ActionTargets.Test)]
     [TaggedAction("OnSetupFixture")]
@@ -43,6 +45,7 @@ namespace NUnit.TestData.ActionAttributeTests
     {
     }
 
+    [TaggedAction("OnBaseSetupFixture", ActionTargets.Suite | ActionTargets.Test)]
     [TaggedAction("OnBaseSetupFixture", ActionTargets.Suite)]
     [TaggedAction("OnBaseSetupFixture", ActionTargets.Test)]
     [TaggedAction("OnBaseSetupFixture")]
@@ -51,6 +54,7 @@ namespace NUnit.TestData.ActionAttributeTests
     }
 
     [TestFixture]
+    [TaggedAction("OnFixture", ActionTargets.Suite | ActionTargets.Test)]
     [TaggedAction("OnFixture", ActionTargets.Suite)]
     [TaggedAction("OnFixture", ActionTargets.Test)]
     [TaggedAction("OnFixture")]
@@ -72,6 +76,7 @@ namespace NUnit.TestData.ActionAttributeTests
 
         [TestCase("One", TestName="CaseOne")]
         [TestCase("Two", TestName="CaseTwo")]
+        [TaggedAction("OnMethod", ActionTargets.Suite | ActionTargets.Test)] // Applies to both suite and test
         [TaggedAction("OnMethod", ActionTargets.Suite)] // Applies to parameterized suite
         [TaggedAction("OnMethod", ActionTargets.Test)] // Applies to each case
         [TaggedAction("OnMethod")]                     // Ditto
@@ -81,7 +86,8 @@ namespace NUnit.TestData.ActionAttributeTests
         }
 
         [Test]
-        [TaggedAction("OnMethod", ActionTargets.Suite)] // Ignored in this context
+        [TaggedAction("OnMethod", ActionTargets.Suite | ActionTargets.Test)] // Suite is Ignored on a simple method
+        [TaggedAction("OnMethod", ActionTargets.Suite)]
         [TaggedAction("OnMethod", ActionTargets.Test)]
         [TaggedAction("OnMethod")]
         public void SimpleTest()
@@ -90,6 +96,7 @@ namespace NUnit.TestData.ActionAttributeTests
         }
     }
 
+    [TaggedAction("OnBaseFixture", ActionTargets.Suite | ActionTargets.Test)]
     [TaggedAction("OnBaseFixture", ActionTargets.Suite)]
     [TaggedAction("OnBaseFixture", ActionTargets.Test)]
     [TaggedAction("OnBaseFixture")]
@@ -97,6 +104,7 @@ namespace NUnit.TestData.ActionAttributeTests
     {
     }
 
+    [TaggedAction("OnInterface", ActionTargets.Suite | ActionTargets.Test)]
     [TaggedAction("OnInterface", ActionTargets.Suite)]
     [TaggedAction("OnInterface", ActionTargets.Test)]
     [TaggedAction("OnInterface")]
@@ -105,6 +113,7 @@ namespace NUnit.TestData.ActionAttributeTests
         List<string> Events { get; }
     }
 
+    [TaggedAction("OnBaseInterface", ActionTargets.Suite | ActionTargets.Test)]
     [TaggedAction("OnBaseInterface", ActionTargets.Suite)]
     [TaggedAction("OnBaseInterface", ActionTargets.Test)]
     [TaggedAction("OnBaseInterface")]

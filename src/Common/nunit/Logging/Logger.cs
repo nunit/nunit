@@ -24,7 +24,13 @@
 using System;
 using System.IO;
 
+#if NUNIT_ENGINE
 namespace NUnit.Engine.Internal
+#elif NUNIT_FRAMEWORK || NUNITLITE
+namespace NUnit.Framework.Internal
+#else
+namespace NUnit.Common
+#endif
 {
     public class Logger : ILogger
     {
@@ -36,6 +42,12 @@ namespace NUnit.Engine.Internal
         private InternalTraceLevel maxLevel;
         private TextWriter writer;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Logger"/> class.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <param name="level">The log level.</param>
+        /// <param name="writer">The writer where logs are sent.</param>
         public Logger(string name, InternalTraceLevel level, TextWriter writer)
         {
             this.maxLevel = level;
@@ -47,11 +59,20 @@ namespace NUnit.Engine.Internal
         }
 
         #region Error
+        /// <summary>
+        /// Logs the message at error level.
+        /// </summary>
+        /// <param name="message">The message.</param>
         public void Error(string message)
         {
             Log(InternalTraceLevel.Error, message);
         }
 
+        /// <summary>
+        /// Logs the message at error level.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <param name="args">The message arguments.</param>
         public void Error(string message, params object[] args)
         {
             Log(InternalTraceLevel.Error, message, args);
@@ -67,11 +88,20 @@ namespace NUnit.Engine.Internal
         #endregion
 
         #region Warning
+        /// <summary>
+        /// Logs the message at warm level.
+        /// </summary>
+        /// <param name="message">The message.</param>
         public void Warning(string message)
         {
             Log(InternalTraceLevel.Warning, message);
         }
 
+        /// <summary>
+        /// Logs the message at warning level.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <param name="args">The message arguments.</param>
         public void Warning(string message, params object[] args)
         {
             Log(InternalTraceLevel.Warning, message, args);
@@ -79,11 +109,20 @@ namespace NUnit.Engine.Internal
         #endregion
 
         #region Info
+        /// <summary>
+        /// Logs the message at info level.
+        /// </summary>
+        /// <param name="message">The message.</param>
         public void Info(string message)
         {
             Log(InternalTraceLevel.Info, message);
         }
 
+        /// <summary>
+        /// Logs the message at info level.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <param name="args">The message arguments.</param>
         public void Info(string message, params object[] args)
         {
             Log(InternalTraceLevel.Info, message, args);
@@ -91,11 +130,20 @@ namespace NUnit.Engine.Internal
         #endregion
 
         #region Debug
+        /// <summary>
+        /// Logs the message at debug level.
+        /// </summary>
+        /// <param name="message">The message.</param>
         public void Debug(string message)
         {
             Log(InternalTraceLevel.Verbose, message);
         }
 
+        /// <summary>
+        /// Logs the message at debug level.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <param name="args">The message arguments.</param>
         public void Debug(string message, params object[] args)
         {
             Log(InternalTraceLevel.Verbose, message, args);

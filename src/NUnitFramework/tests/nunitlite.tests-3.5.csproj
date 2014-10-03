@@ -69,6 +69,15 @@
     <Compile Include="..\..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="..\..\Common\tests\AssemblyHelperTests.cs">
+      <Link>Internal\AssemblyHelperTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\tests\OutputSpecificationTests.cs">
+      <Link>Runner\OutputSpecificationTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\tests\TestNameParserTests.cs">
+      <Link>Runner\TestNameParserTests.cs</Link>
+    </Compile>
     <Compile Include="..\FrameworkVersion.cs">
       <Link>FrameworkVersion.cs</Link>
     </Compile>
@@ -176,7 +185,6 @@
     <Compile Include="Constraints\ToStringTests.cs" />
     <Compile Include="Constraints\UniqueItemsConstraintTests.cs" />
     <Compile Include="Constraints\XmlSerializableTest.cs" />
-    <Compile Include="Internal\AssemblyHelperTests.cs" />
     <Compile Include="Internal\CultureSettingAndDetectionTests.cs" />
     <Compile Include="Internal\DeduceTypeArgsFromArgs.cs" />
     <Compile Include="Internal\GenericTestFixtureTests.cs" />
@@ -204,9 +212,7 @@
     <Compile Include="Runner\CreateTestFilterTests.cs" />
     <Compile Include="Runner\MakeRunSettingsTests.cs" />
     <Compile Include="Runner\NUnit2XmlOutputWriterTests.cs" />
-    <Compile Include="Runner\OutputSpecificationTests.cs" />
     <Compile Include="Runner\TeamCityEventListenerTests.cs" />
-    <Compile Include="Runner\TestNameParserTests.cs" />
     <Compile Include="Syntax\AfterTests.cs" />
     <Compile Include="Syntax\ArbitraryConstraintMatching.cs" />
     <Compile Include="Syntax\CollectionTests.cs" />
