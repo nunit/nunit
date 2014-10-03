@@ -22,7 +22,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\..\..\bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NUNIT_ENGINE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -30,7 +30,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\..\..\bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>TRACE;NUNIT_ENGINE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -47,6 +47,21 @@
     <Compile Include="..\..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="..\..\Common\nunit\AssemblyHelper.cs">
+      <Link>Internal\AssemblyHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\Logging\InternalTrace.cs">
+      <Link>Internal\InternalTrace.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\Logging\InternalTraceWriter.cs">
+      <Link>Internal\InternalTraceWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\Logging\Logger.cs">
+      <Link>Internal\Logger.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\XmlHelper.cs">
+      <Link>Internal\XmlHelper.cs</Link>
+    </Compile>
     <Compile Include="..\EngineVersion.cs">
       <Link>EngineVersion.cs</Link>
     </Compile>
@@ -56,12 +71,8 @@
     <Compile Include="Agents\TestAgent.cs" />
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="CallbackHandler.cs" />
-    <Compile Include="Internal\AssemblyHelper.cs" />
     <Compile Include="Internal\AssemblyReader.cs" />
     <Compile Include="Internal\DomainUsage.cs" />
-    <Compile Include="Internal\InternalTrace.cs" />
-    <Compile Include="Internal\InternalTraceWriter.cs" />
-    <Compile Include="Internal\Logger.cs" />
     <Compile Include="Internal\NUnitConfiguration.cs" />
     <Compile Include="Internal\NUnitProject.cs" />
     <Compile Include="Internal\PathUtils.cs" />
@@ -75,7 +86,6 @@
     <Compile Include="Internal\ServerUtilities.cs" />
     <Compile Include="Internal\SettingsGroup.cs" />
     <Compile Include="Internal\SettingsStore.cs" />
-    <Compile Include="Internal\XmlHelper.cs" />
     <Compile Include="IProject.cs" />
     <Compile Include="IProjectConfig.cs" />
     <Compile Include="IProjectConfigList.cs" />

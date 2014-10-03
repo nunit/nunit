@@ -147,8 +147,8 @@ namespace NUnit.Framework.Internal
                     "<{0} id=\"{1}\" name=\"{2}\" fullname=\"{3}\"/>",
                     startElement,
                     test.Id,
-                    XmlHelper.FormatAttributeValue(test.Name),
-                    XmlHelper.FormatAttributeValue(test.FullName));
+                    FormatAttributeValue(test.Name),
+                    FormatAttributeValue(test.FullName));
 
                 handler.RaiseCallbackEvent(report);
             }
@@ -173,6 +173,26 @@ namespace NUnit.Framework.Internal
             {
                 log.Error("Exception processing " + result.FullName + NUnit.Env.NewLine + ex.ToString());
             }
+        }
+
+        #endregion
+
+        #region Helper Methods
+
+        /// <summary>
+        /// Makes a string safe for use as an attribute, replacing
+        /// characters characters that can't be used with their
+        /// corresponding xml representations.
+        /// </summary>
+        /// <param name="original">The string to be used</param>
+        /// <returns>A new string with the _values replaced</returns>
+        private static string FormatAttributeValue(string original)
+        {
+            return original
+                .Replace("\"", "&quot;")
+                .Replace("'", "&apos;")
+                .Replace("<", "&lt;")
+                .Replace(">", "&gt;");
         }
 
         #endregion

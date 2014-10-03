@@ -22,7 +22,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\..\..\bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NUNIT_CONSOLE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Externalconsole>true</Externalconsole>
@@ -32,7 +32,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\..\..\bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>TRACE;NUNIT_CONSOLE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -45,6 +45,15 @@
     <Compile Include="..\..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="..\..\Common\nunit\OutputSpecification.cs">
+      <Link>Utilities\OutputSpecification.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\TestNameParser.cs">
+      <Link>Utilities\TestNameParser.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\XmlHelper.cs">
+      <Link>Utilities\XmlHelper.cs</Link>
+    </Compile>
     <Compile Include="..\ConsoleVersion.cs">
       <Link>ConsoleVersion.cs</Link>
     </Compile>
@@ -54,7 +63,6 @@
     <Compile Include="IResultWriter.cs" />
     <Compile Include="Options\Options.cs" />
     <Compile Include="OutputManager.cs" />
-    <Compile Include="OutputSpecification.cs" />
     <Compile Include="OutputWriters\NUnit2XmlOutputWriter.cs" />
     <Compile Include="OutputWriters\NUnit3XmlOutputWriter.cs" />
     <Compile Include="OutputWriters\TestCaseOutputWriter.cs" />
@@ -65,10 +73,8 @@
     <Compile Include="Utilities\StackTraceFilter.cs" />
     <Compile Include="TestEventHandler.cs" />
     <Compile Include="Utilities\TestFilterBuilder.cs" />
-    <Compile Include="Utilities\TestNameParser.cs" />
     <Compile Include="ResultReporter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Utilities\XmlHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App.ico" />

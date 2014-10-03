@@ -6,10 +6,10 @@
 
 using System;
 using System.IO;
+using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
 using Env = NUnit.Env;
-using System.Reflection;
 
 namespace NUnitLite.Runner.Tests
 {

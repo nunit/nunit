@@ -23,7 +23,13 @@
 
 using System;
 
+#if NUNIT_ENGINE
 namespace NUnit.Engine
+#elif NUNIT_FRAMEWORK || NUNITLITE
+namespace NUnit.Framework.Internal
+#else
+namespace NUnit.Common
+#endif
 {
     /// <summary>
     /// Interface for logging within the engine
