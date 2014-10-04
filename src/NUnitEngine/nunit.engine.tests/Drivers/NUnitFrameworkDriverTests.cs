@@ -37,7 +37,6 @@ namespace NUnit.Engine.Drivers.Tests
     {
         private string MOCK_ASSEMBLY = "mock-nunit-assembly.dll";
         private const string MISSING_FILE = "junk.dll";
-        private const string BAD_FILE = "mock-nunit-assembly.pdb";
 
         private IDictionary<string, object> _settings = new Dictionary<string, object>();
         private NUnitFrameworkDriver _driver;
@@ -80,19 +79,6 @@ namespace NUnit.Engine.Drivers.Tests
             Assert.That(result.GetAttribute("testcasecount"), Is.EqualTo(MockAssembly.Tests.ToString()));
             Assert.That(result.SelectNodes("test-suite").Count, Is.EqualTo(0), "Load result should not have child tests");
         }
-
-        [Test]
-        public void Load_BadFile_ReturnsNonRunnableSuite()
-        {
-            var result = XmlHelper.CreateXmlNode(
-                new NUnitFrameworkDriver(AppDomain.CurrentDomain, BAD_FILE, _settings).Load());
-
-            Assert.That(result.Name, Is.EqualTo("test-suite"));
-            Assert.That(result.GetAttribute("type"), Is.EqualTo("Assembly"));
-            Assert.That(result.GetAttribute("runstate"), Is.EqualTo("NotRunnable"));
-            Assert.That(GetSkipReason(result), Contains.Substring(BAD_FILE).And.StartsWith("Could not load"));
-            Assert.That(result.SelectNodes("test-suite").Count, Is.EqualTo(0), "Load result should not have child tests");
-        }
         #endregion
 
         #region Explore
@@ -117,21 +103,6 @@ namespace NUnit.Engine.Drivers.Tests
                 ex = ex.InnerException;
             Assert.That(ex, Is.TypeOf<InvalidOperationException>());
             Assert.That(ex.Message, Is.EqualTo("The Explore method was called but no test has been loaded"));
-        }
-
-        [Test]
-        public void ExploreTestsAction_BadFile_ReturnsNonRunnableSuite()
-        {
-            var driver = new NUnitFrameworkDriver(AppDomain.CurrentDomain, BAD_FILE, _settings);
-            driver.Load();
-            var result = XmlHelper.CreateXmlNode(driver.Explore(TestFilter.Empty));
-
-            Assert.That(result.Name, Is.EqualTo("test-suite"));
-            Assert.That(result.GetAttribute("type"), Is.EqualTo("Assembly"));
-            Assert.That(result.GetAttribute("runstate"), Is.EqualTo("NotRunnable"));
-            Assert.That(result.GetAttribute("testcasecount"), Is.EqualTo("0"));
-            Assert.That(GetSkipReason(result), Contains.Substring(BAD_FILE).And.StartsWith("Could not load"));
-            Assert.That(result.SelectNodes("test-suite").Count, Is.EqualTo(0), "Result should not have child tests");
         }
         #endregion
 
@@ -181,21 +152,6 @@ namespace NUnit.Engine.Drivers.Tests
                 ex = ex.InnerException;
             Assert.That(ex, Is.TypeOf<InvalidOperationException>());
             Assert.That(ex.Message, Is.EqualTo("The Run method was called but no test has been loaded"));
-        }
-
-        [Test]
-        public void RunTestsAction_BadFile_ReturnsNonRunnableSuite()
-        {
-            var driver = new NUnitFrameworkDriver(AppDomain.CurrentDomain, BAD_FILE, _settings);
-            driver.Load();
-            var result = XmlHelper.CreateXmlNode(driver.Run(new NullListener(), TestFilter.Empty));
-
-            Assert.That(result.Name, Is.EqualTo("test-suite"));
-            Assert.That(result.GetAttribute("type"), Is.EqualTo("Assembly"));
-            Assert.That(result.GetAttribute("runstate"), Is.EqualTo("NotRunnable"));
-            Assert.That(result.GetAttribute("testcasecount"), Is.EqualTo("0"));
-            Assert.That(GetSkipReason(result), Contains.Substring(BAD_FILE).And.StartsWith("Could not load"));
-            Assert.That(result.SelectNodes("test-suite").Count, Is.EqualTo(0), "Load result should not have child tests");
         }
         #endregion
 
