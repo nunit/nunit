@@ -49,13 +49,9 @@ namespace NUnit.Framework.Constraints
         {
             get
             {
-#if NETCF_2_0
-                return "value matching predicate";
-#else
                 return predicate.Method.Name.StartsWith("<")
                     ? "value matching lambda expression"
                     : "value matching " + predicate.Method.Name;
-#endif
             }
         }
 

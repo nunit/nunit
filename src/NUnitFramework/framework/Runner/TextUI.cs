@@ -330,7 +330,7 @@ namespace NUnitLite.Runner
         private void WriteHelpText()
         {
             // TODO: The Silverlight code is just a placeholder. Figure out how to do it correctly.
-#if SILVERLIGHT
+#if SILVERLIGHT || NETCF
             string name = "NUNITLITE";
 #else
             string name = Assembly.GetEntryAssembly().GetName().Name.ToUpper();

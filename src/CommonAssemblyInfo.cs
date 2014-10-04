@@ -48,8 +48,6 @@ using System.Reflection;
 [assembly: AssemblyConfiguration("Silverlight 3.0 Debug")]
 #elif NETCF_3_5
 [assembly: AssemblyConfiguration("Compact Framework 3.5 Debug")]
-#elif NETCF_2_0
-[assembly: AssemblyConfiguration("Compact Framework 2.0 Debug")]
 #else
 [assembly: AssemblyConfiguration("Debug")]
 #endif
@@ -70,8 +68,6 @@ using System.Reflection;
 [assembly: AssemblyConfiguration("Silverlight 3.0")]
 #elif NETCF_3_5
 [assembly: AssemblyConfiguration("Compact Framework 3.5")]
-#elif NETCF_2_0
-[assembly: AssemblyConfiguration("Compact Framework 2.0")]
 #else
 [assembly: AssemblyConfiguration("")]
 #endif
