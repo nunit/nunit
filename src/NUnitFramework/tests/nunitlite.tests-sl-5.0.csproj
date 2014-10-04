@@ -201,7 +201,6 @@
     <Compile Include="Internal\RuntimeFrameworkTests.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Internal\SetUpFixtureTests.cs" />
     <Compile Include="Internal\SetUpTearDownTests.cs">
       <SubType>Code</SubType>
     </Compile>

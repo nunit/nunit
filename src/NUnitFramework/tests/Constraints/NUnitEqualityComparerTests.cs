@@ -87,8 +87,8 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void SameDirectoriesAreEqual()
         {
-            var one = new DirectoryInfo(Environment.CurrentDirectory);
-            var two = new DirectoryInfo(Environment.CurrentDirectory);
+            var one = new DirectoryInfo(Env.DocumentFolder);
+            var two = new DirectoryInfo(Env.DocumentFolder);
             Assert.That(comparer.AreEqual(one, two, ref tolerance));
         }
 

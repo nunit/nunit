@@ -53,14 +53,19 @@ namespace NUnitLite.Runner
     /// </summary>
     public class TextUI : ITestListener
     {
+#if NETCF // NETCF: Any harm in using txt everywhere?
+        // Some mobiles don't have an Open With menu item
+        private const string LOG_FILE_FORMAT = "InternalTrace.{0}.{1}.txt";
+#else
         private const string LOG_FILE_FORMAT = "InternalTrace.{0}.{1}.log";
+#endif
         private CommandLineOptions _options;
         private string _workDirectory;
         private readonly List<Assembly> _assemblies = new List<Assembly>();
         private ExtendedTextWriter _outWriter;
         private TextWriter _errWriter;
         private ITestAssemblyRunner _runner;
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !NETCF
         private TeamCityEventListener _teamCity;
 #endif
 
@@ -102,13 +107,15 @@ namespace NUnitLite.Runner
 
             _workDirectory = _options.WorkDirectory;
             if (_workDirectory == null)
-                _workDirectory = Environment.CurrentDirectory;
+                _workDirectory = NUnit.Env.DefaultWorkDirectory;
             else if (!Directory.Exists(_workDirectory))
                 Directory.CreateDirectory(_workDirectory);
 
 #if !SILVERLIGHT
+#if !NETCF
             if (_options.DisplayTeamCityServiceMessages)
                 _teamCity = new TeamCityEventListener();
+#endif
 
             if (_options.OutFile != null)
             {
@@ -145,7 +152,11 @@ namespace NUnitLite.Runner
 
                 // We must call this before creating the runner so that any internal logging is initialized
                 InternalTraceLevel level = (InternalTraceLevel)Enum.Parse(typeof(InternalTraceLevel), _options.InternalTraceLevel, true);
+#if NETCF  // NETCF: Try to unify
+                InitializeInternalTrace(callingAssembly.GetName().CodeBase, level);
+#else
                 InitializeInternalTrace(callingAssembly.Location, level);
+#endif
 
                 _runner = new NUnitLiteTestAssemblyRunner(new DefaultTestAssemblyBuilder());
 
@@ -264,7 +275,12 @@ namespace NUnitLite.Runner
 #else
                 var logName = string.Format(LOG_FILE_FORMAT, DateTime.Now.ToString("o"), Path.GetFileName(assemblyPath));
 #endif
+
+#if NETCF // NETCF: Try to encapsulate this
+                InternalTrace.Initialize(Path.Combine(NUnit.Env.DocumentFolder, logName), traceLevel);
+#else
                 InternalTrace.Initialize(Path.Combine(Environment.CurrentDirectory, logName), traceLevel);
+#endif
             }
         }
 
@@ -314,7 +330,7 @@ namespace NUnitLite.Runner
         private void WriteHelpText()
         {
             // TODO: The Silverlight code is just a placeholder. Figure out how to do it correctly.
-#if SILVERLIGHT
+#if SILVERLIGHT || NETCF
             string name = "NUNITLITE";
 #else
             string name = Assembly.GetEntryAssembly().GetName().Name.ToUpper();
@@ -482,7 +498,7 @@ namespace NUnitLite.Runner
         /// <param name="test">The test that is starting</param>
         public void TestStarted(ITest test)
         {
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !NETCF
             if (_teamCity != null)
                 _teamCity.TestStarted(test);
 #endif
@@ -494,14 +510,18 @@ namespace NUnitLite.Runner
         /// <param name="result">The result of the test</param>
         public void TestFinished(ITestResult result)
         {
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !NETCF
             if (_teamCity != null)
                 _teamCity.TestFinished(result);
 #endif
 
             bool isSuite = result.Test.IsSuite;
             var labels = _options.DisplayTestLabels != null
+#if NETCF   // NETCF: Unify if possible
+                ? _options.DisplayTestLabels.ToUpper()
+#else
                 ? _options.DisplayTestLabels.ToUpperInvariant()
+#endif
                 : "ON";
                 
             if (!isSuite && labels == "ALL")

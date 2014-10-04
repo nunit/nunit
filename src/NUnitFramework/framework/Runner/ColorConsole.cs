@@ -39,13 +39,13 @@ namespace NUnitLite.Runner
 
         public ColorConsole(ColorStyle style)
         {
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !NETCF
             if (ColorConsole.Enabled)
                 Console.ForegroundColor = GetColor(style);
 #endif
         }
 
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !NETCF
         /// <summary>
         /// By using styles, we can keep everything consistent
         /// </summary>
@@ -155,7 +155,7 @@ namespace NUnitLite.Runner
         /// </summary>
         public void Dispose()
         {
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !NETCF
             if (ColorConsole.Enabled)
                 Console.ResetColor();
 #endif

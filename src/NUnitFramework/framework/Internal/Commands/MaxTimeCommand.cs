@@ -57,13 +57,13 @@ namespace NUnit.Framework.Internal.Commands
             // normally performed at a higher level. Most likely,
             // we should move the maxtime calculation to the
             // higher level eventually.
-#if !SILVERLIGHT && !NETCF_2_0
+#if !SILVERLIGHT
             long startTicks = Stopwatch.GetTimestamp();
 #endif
 
             TestResult testResult = innerCommand.Execute(context);
 
-#if !SILVERLIGHT && !NETCF_2_0
+#if !SILVERLIGHT
             long tickCount = Stopwatch.GetTimestamp() - startTicks;
             double seconds = (double)tickCount / Stopwatch.Frequency;
             testResult.Duration = TimeSpan.FromSeconds(seconds);

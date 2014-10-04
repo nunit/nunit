@@ -59,13 +59,48 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\CommonAssemblyInfo.cs">
+      <Link>CommonAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\AssemblyHelper.cs">
+      <Link>Internal\AssemblyHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\Logging\ILogger.cs">
+      <Link>Internal\ILogger.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\Logging\InternalTrace.cs">
+      <Link>Internal\InternalTrace.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\Logging\InternalTraceLevel.cs">
+      <Link>Internal\InternalTraceLevel.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\Logging\InternalTraceWriter.cs">
+      <Link>Internal\InternalTraceWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\Logging\Logger.cs">
+      <Link>Internal\Logger.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\OutputSpecification.cs">
+      <Link>Runner\OutputSpecification.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\TestNameParser.cs">
+      <Link>Runner\TestNameParser.cs</Link>
+    </Compile>
+    <Compile Include="..\FrameworkVersion.cs">
+      <Link>FrameworkVersion.cs</Link>
+    </Compile>
+    <Compile Include="ActionTargets.cs" />
+    <Compile Include="Api\AbstractTestAssemblyRunner.cs" />
     <Compile Include="Api\DefaultTestAssemblyBuilder.cs" />
-    <Compile Include="Api\DefaultTestAssemblyRunner.cs" />
     <Compile Include="Api\DriverSettings.cs" />
+    <Compile Include="Api\ITestAssemblyBuilder.cs" />
+    <Compile Include="Api\ITestAssemblyRunner.cs" />
+    <Compile Include="Api\NUnitLiteTestAssemblyRunner.cs" />
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Assert.cs" />
     <Compile Include="AssertionHelper.cs" />
     <Compile Include="Assume.cs" />
+    <Compile Include="Attributes\AuthorAttribute.cs" />
     <Compile Include="Attributes\CategoryAttribute.cs" />
     <Compile Include="Attributes\CombinatorialAttribute.cs" />
     <Compile Include="Attributes\CombiningStrategyAttribute.cs" />
@@ -96,6 +131,7 @@
     <Compile Include="Attributes\SetUpAttribute.cs" />
     <Compile Include="Attributes\SetUpFixtureAttribute.cs" />
     <Compile Include="Attributes\TearDownAttribute.cs" />
+    <Compile Include="Attributes\TestActionAttribute.cs" />
     <Compile Include="Attributes\TestAttribute.cs" />
     <Compile Include="Attributes\TestCaseAttribute.cs" />
     <Compile Include="Attributes\TestCaseBuilderAttribute.cs" />
@@ -103,9 +139,13 @@
     <Compile Include="Attributes\TestFixtureAttribute.cs" />
     <Compile Include="Attributes\TestFixtureSetUpAttribute.cs" />
     <Compile Include="Attributes\TestFixtureTearDownAttribute.cs" />
+    <Compile Include="Attributes\TestOfAttribute.cs" />
     <Compile Include="Attributes\TheoryAttribute.cs" />
+    <Compile Include="Attributes\TimeoutAttribute.cs" />
     <Compile Include="Attributes\ValuesAttribute.cs" />
     <Compile Include="Attributes\ValueSourceAttribute.cs" />
+    <Compile Include="Compatibility\SerializableAttribute.cs" />
+    <Compile Include="Compatibility\Stopwatch.cs" />
     <Compile Include="Constraints\AllItemsConstraint.cs" />
     <Compile Include="Constraints\AndConstraint.cs" />
     <Compile Include="Constraints\AssignableFromConstraint.cs" />
@@ -156,7 +196,6 @@
     <Compile Include="Constraints\NoItemConstraint.cs" />
     <Compile Include="Constraints\NotConstraint.cs" />
     <Compile Include="Constraints\NullConstraint.cs" />
-    <Compile Include="Constraints\NullOrEmptyStringConstraint.cs" />
     <Compile Include="Constraints\Numerics.cs" />
     <Compile Include="Constraints\NUnitComparer.cs" />
     <Compile Include="Constraints\NUnitEqualityComparer.cs" />
@@ -204,6 +243,7 @@
     <Compile Include="Constraints\UniqueItemsConstraint.cs" />
     <Compile Include="Constraints\XmlSerializableConstraint.cs" />
     <Compile Include="Contains.cs" />
+    <Compile Include="Does.cs" />
     <Compile Include="Env.cs" />
     <Compile Include="Exceptions\AssertionException.cs" />
     <Compile Include="Exceptions\IgnoreException.cs" />
@@ -214,7 +254,6 @@
     <Compile Include="Has.cs" />
     <Compile Include="Interfaces\ICombiningStrategy.cs" />
     <Compile Include="Interfaces\ICommandDecorator.cs" />
-    <Compile Include="Interfaces\ICommandDecoratorSource.cs" />
     <Compile Include="Interfaces\IFixtureBuilder.cs" />
     <Compile Include="Interfaces\IImplyFixture.cs" />
     <Compile Include="Interfaces\IParameterDataProvider.cs" />
@@ -223,8 +262,6 @@
     <Compile Include="Interfaces\ISimpleTestBuilder.cs" />
     <Compile Include="Interfaces\ISuiteBuilder.cs" />
     <Compile Include="Interfaces\ITest.cs" />
-    <Compile Include="Interfaces\ITestAssemblyBuilder.cs" />
-    <Compile Include="Interfaces\ITestAssemblyRunner.cs" />
     <Compile Include="Interfaces\ITestBuilder.cs" />
     <Compile Include="Interfaces\ITestCaseBuilder.cs" />
     <Compile Include="Interfaces\ITestCaseData.cs" />
@@ -234,10 +271,9 @@
     <Compile Include="Interfaces\IXmlNodeBuilder.cs" />
     <Compile Include="Interfaces\ResultState.cs" />
     <Compile Include="Interfaces\RunState.cs" />
-    <Compile Include="Interfaces\TestOutput.cs" />
     <Compile Include="Interfaces\TestStatus.cs" />
     <Compile Include="Interfaces\XmlNode.cs" />
-    <Compile Include="Internal\AssemblyHelper.cs" />
+    <Compile Include="Internal\ActionsHelper.cs" />
     <Compile Include="Internal\Builders\CombinatorialStrategy.cs" />
     <Compile Include="Internal\Builders\DatapointProvider.cs" />
     <Compile Include="Internal\Builders\DefaultSuiteBuilder.cs" />
@@ -250,7 +286,6 @@
     <Compile Include="Internal\Builders\ProviderCache.cs" />
     <Compile Include="Internal\Builders\SequentialStrategy.cs" />
     <Compile Include="Internal\Commands\ApplyChangesToContextCommand.cs" />
-    <Compile Include="Internal\Commands\CommandDecoratorList.cs" />
     <Compile Include="Internal\Commands\CommandStage.cs" />
     <Compile Include="Internal\Commands\DelegatingTestCommand.cs" />
     <Compile Include="Internal\Commands\MaxTimeCommand.cs" />
@@ -258,28 +293,27 @@
     <Compile Include="Internal\Commands\OneTimeTearDownCommand.cs" />
     <Compile Include="Internal\Commands\RepeatedTestCommand.cs" />
     <Compile Include="Internal\Commands\SetUpTearDownCommand.cs" />
-    <Compile Include="Internal\Commands\SetUpTearDownList.cs" />
-    <Compile Include="Internal\Commands\SetUpTearDownNode.cs" />
+    <Compile Include="Internal\Commands\SetUpTearDownItem.cs" />
     <Compile Include="Internal\Commands\SkipCommand.cs" />
+    <Compile Include="Internal\Commands\TestActionCommand.cs" />
+    <Compile Include="Internal\Commands\TestActionItem.cs" />
     <Compile Include="Internal\Commands\TestCommand.cs" />
     <Compile Include="Internal\Commands\TestMethodCommand.cs" />
     <Compile Include="Internal\Commands\TheoryResultCommand.cs" />
     <Compile Include="Internal\CultureDetector.cs" />
     <Compile Include="Internal\ExceptionHelper.cs" />
+    <Compile Include="Internal\Execution\CommandBuilder.cs" />
     <Compile Include="Internal\Execution\CompositeWorkItem.cs" />
     <Compile Include="Internal\Execution\CountdownEvent.cs" />
-    <Compile Include="Internal\Execution\EventListenerTextWriter.cs" />
     <Compile Include="Internal\Execution\EventPump.cs" />
     <Compile Include="Internal\Execution\EventQueue.cs" />
-    <Compile Include="Internal\Execution\Log4NetCapture.cs" />
-    <Compile Include="Internal\Execution\LogCapture.cs" />
+    <Compile Include="Internal\Execution\IWorkItemDispatcher.cs" />
     <Compile Include="Internal\Execution\QueuingEventListener.cs" />
     <Compile Include="Internal\Execution\SimpleWorkItem.cs" />
+    <Compile Include="Internal\Execution\SimpleWorkItemDispatcher.cs" />
     <Compile Include="Internal\Execution\TestWorker.cs" />
-    <Compile Include="Internal\Execution\TextCapture.cs" />
     <Compile Include="Internal\Execution\TextMessageWriter.cs" />
     <Compile Include="Internal\Execution\WorkItem.cs" />
-    <Compile Include="Internal\Execution\WorkItemDispatcher.cs" />
     <Compile Include="Internal\Execution\WorkItemQueue.cs" />
     <Compile Include="Internal\Execution\WorkItemState.cs" />
     <Compile Include="Internal\Filters\AndFilter.cs" />
@@ -292,11 +326,7 @@
     <Compile Include="Internal\Filters\ValueMatchFilter.cs" />
     <Compile Include="Internal\IApplyToContext.cs" />
     <Compile Include="Internal\IApplyToTest.cs" />
-    <Compile Include="Internal\InternalTrace.cs" />
-    <Compile Include="Internal\InternalTraceLevel.cs" />
-    <Compile Include="Internal\InternalTraceWriter.cs" />
     <Compile Include="Internal\InvalidTestFixtureException.cs" />
-    <Compile Include="Internal\Logger.cs" />
     <Compile Include="Internal\MethodHelper.cs" />
     <Compile Include="Internal\NUnitException.cs" />
     <Compile Include="Internal\OSPlatform.cs" />
@@ -325,17 +355,22 @@
     <Compile Include="Internal\Tests\TestMethod.cs" />
     <Compile Include="Internal\Tests\TestSuite.cs" />
     <Compile Include="Internal\TypeHelper.cs" />
-    <Compile Include="Internal\XmlHelper.cs" />
     <Compile Include="Is.cs" />
+    <Compile Include="ITestAction.cs" />
     <Compile Include="Iz.cs" />
+    <Compile Include="List.cs" />
     <Compile Include="ListMapper.cs" />
     <Compile Include="MessageMatch.cs" />
+    <Compile Include="Runner\ColorConsole.cs" />
+    <Compile Include="Runner\ColorStyle.cs" />
     <Compile Include="Runner\CommandLineOptions.cs" />
-    <Compile Include="Runner\ConsoleWriter.cs" />
     <Compile Include="Runner\DebugWriter.cs" />
+    <Compile Include="Runner\ExtendedTextWriter.cs" />
+    <Compile Include="Runner\OutputManager.cs" />
     <Compile Include="Runner\OutputWriters\NUnit2XmlOutputWriter.cs" />
     <Compile Include="Runner\OutputWriters\NUnit3XmlOutputWriter.cs" />
     <Compile Include="Runner\OutputWriters\OutputWriter.cs" />
+    <Compile Include="Runner\OutputWriters\TestCaseOutputWriter.cs" />
     <Compile Include="Runner\ResultReporter.cs" />
     <Compile Include="Runner\ResultSummary.cs" />
     <Compile Include="Runner\TcpWriter.cs" />
@@ -346,11 +381,11 @@
     <Compile Include="Throws.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Internal\Execution\CompositeWorkItem.cs.~1~" />
-    <None Include="Internal\Execution\SimpleWorkItem.cs.~1~" />
-    <None Include="Internal\Execution\WorkItem.cs.~1~" />
     <None Include="nunit.snk" />
-    <None Include="nunitlite.build" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Attributes\AttributeHierarchy.txt" />
+    <Content Include="Interfaces\InterfaceChanges.txt" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />

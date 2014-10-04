@@ -377,11 +377,22 @@ namespace NUnitLite.Runner
                 ErrorMessages.Add("Missing required value for option '" + option + "'.");
             else
             {
+#if NETCF   // NETCF: Create compatibiility method for TryParse
+                try
+                {
+                    result = int.Parse(val);
+                }
+                catch (Exception)
+                {
+                    ErrorMessages.Add("An int value was exprected for option '{0}' but a value of '{1}' was used");
+                }
+#else
                 int r;
                 if (int.TryParse(val, out r))
                     result = r;
                 else
                     ErrorMessages.Add("An int value was exprected for option '{0}' but a value of '{1}' was used");
+#endif
             }
 
             return result;

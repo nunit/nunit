@@ -21,6 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#if !SILVERLIGHT && !NETCF
 using System;
 using System.Globalization;
 using System.IO;
@@ -146,3 +147,4 @@ namespace NUnitLite.Runner
         #endregion
     }
 }
+#endif

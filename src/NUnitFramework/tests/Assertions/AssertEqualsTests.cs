@@ -383,8 +383,8 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void DirectoryInfoEqual()
         {
-            var one = new DirectoryInfo(Environment.CurrentDirectory);
-            var two = new DirectoryInfo(Environment.CurrentDirectory);
+            var one = new DirectoryInfo(Env.DocumentFolder);
+            var two = new DirectoryInfo(Env.DocumentFolder);
             Assert.AreEqual(one, two);
         }
 

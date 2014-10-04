@@ -97,7 +97,7 @@ namespace NUnit.Framework.Internal
         {
             var result = new List<Exception>();
 
-#if !NET_2_0 && !NET_3_5
+#if !NET_2_0 && !NET_3_5 && !NETCF
             if (exception is AggregateException)
             {
                 var aggregateException = (exception as AggregateException);
