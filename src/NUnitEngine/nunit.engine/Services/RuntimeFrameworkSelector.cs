@@ -65,12 +65,30 @@ namespace NUnit.Engine.Services
                 if (ServiceContext.UserSettings.GetSetting("Options.TestLoader.RuntimeSelectionEnabled", true))
                     foreach (string assembly in package.TestFiles)
                     {
-                        using (AssemblyReader reader = new AssemblyReader(assembly))
-                        {
-                            Version v = new Version(reader.ImageRuntimeVersion.Substring(1));
-                            log.Debug("Assembly {0} uses version {1}", assembly, v);
-                            if (v > targetVersion) targetVersion = v;
-                        }
+                        // If the file is not an assembly or doesn't exist, then it can't
+                        // contribute any information to the decision, so we skip it.
+                        if (PathUtils.IsAssemblyFileType(assembly) && File.Exists(assembly))
+                            using (AssemblyReader reader = new AssemblyReader(assembly))
+                            {
+                                if (!reader.IsValidPeFile)
+                                    log.Debug("{0} is not a valid PE file", assembly);
+                                else if (!reader.IsDotNetFile)
+                                    log.Debug("{0} is not a managed assembly", assembly);
+                                else
+                                {
+                                    var imageRuntimeVersion = reader.ImageRuntimeVersion;
+                                    if (imageRuntimeVersion != null)
+                                    {
+                                        Version v = new Version(imageRuntimeVersion.Substring(1));
+                                        log.Debug("Assembly {0} uses version {1}", assembly, v);
+                                        // TODO: We are doing two jobs here: (1) getting the
+                                        // target version and (2) applying a policy that says
+                                        // we run under the highest version of all assemblies.
+                                        // We should implement the policy at a higher level.
+                                        if (v > targetVersion) targetVersion = v;
+                                    }
+                                }
+                            }
                     }
                 else
                     targetVersion = RuntimeFramework.CurrentFramework.ClrVersion;

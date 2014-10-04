@@ -70,8 +70,7 @@ namespace NUnit.ConsoleRunner
 
             WriteSummaryReport();
 
-            if (ListAssembliesWithNoTests(result) > 0)
-                Console.WriteLine();
+            WriteAssemblyErrorsAndWarnings();
 
             if (testRunResult == "Failed")
                 WriteErrorsAndFailuresReport();
@@ -105,34 +104,21 @@ namespace NUnit.ConsoleRunner
             Console.WriteLine();
         }
 
-        private int ListAssembliesWithNoTests(XmlNode result)
+        private void WriteAssemblyErrorsAndWarnings()
         {
-            int count = 0;
-
-            switch (result.Name)
+            foreach (XmlNode node in this.result.SelectNodes("test-suite[@type='Assembly']"))
             {
-                case "test-run":
-                    foreach (XmlNode child in result.ChildNodes)
-                        count += ListAssembliesWithNoTests(child);
-                    break;
-
-                case "test-suite":
-                    if (result.GetAttribute("type") == "Assembly")
-                    {
-                        if (result.GetAttribute("total") == "0")
-                        {
-                            ColorConsole.WriteLine(ColorStyle.Warning, "Warning: No tests found in " + result.GetAttribute("name"));
-                        }
-                        count++;
-                        break;
-                    }
-
-                    foreach (XmlNode child in result.ChildNodes)
-                        count += ListAssembliesWithNoTests(child);
-                    break;
+                if (node.GetAttribute("runstate") == "NotRunnable")
+                    WriteAssemblyMessage(ColorStyle.Error, node.SelectSingleNode("properties/property[@name='_SKIPREASON']").GetAttribute("value"));
+                else if (node.GetAttribute("total") == "0" || node.GetAttribute("testcasecount") == "0")
+                    WriteAssemblyMessage(ColorStyle.Warning, "Warning: No tests found in " + node.GetAttribute("name"));
             }
+        }
 
-            return count;
+        private void WriteAssemblyMessage(ColorStyle style, string message)
+        {
+            ColorConsole.WriteLine(style, message);
+            Console.WriteLine();
         }
 
         private void WriteErrorsAndFailuresReport()

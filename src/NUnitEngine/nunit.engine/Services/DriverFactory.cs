@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2013 Charlie Poole
+// Copyright (c) 2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -23,37 +23,56 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
 using System.Text;
+using NUnit.Engine.Drivers;
+using NUnit.Engine.Internal;
 
 namespace NUnit.Engine.Services
 {
     public class DriverFactory : IDriverFactory, IService
     {
-        #region IDriverFactory Members
+        private static readonly List<string> NUnitAssemblies = new List<string>(new string[] { "nunit.framework", "nunitlite" });
 
+        private const string OLDER_NUNIT_NOT_SUPPORTED_MESSAGE =
+            "Unable to load {0}. This runner only supports tests written for NUnit 3.0 or higher.";
+
+        #region IDriverFactory Members
+        // TODO: This method is a standin for our future implementation, which will
+        // load drivers as plugins, in separate assemblies. This implementation has
+        // too much knowledge of what test framework the drivers can handle. In the
+        // future, this responsibility will have to be passed to the driver itself.
         public IFrameworkDriver GetDriver(AppDomain domain, string assemblyPath, IDictionary<string, object> settings)
         {
-            // Throws if this isn't a managed assembly or if it was built
-            // with a later version of the same assembly. 
-            AssemblyName assemblyName = AssemblyName.GetAssemblyName(assemblyPath);
+            try
+            {
+                // Throws if this isn't a managed assembly or if it was built
+                // with a later version of the same assembly. 
+                AssemblyName assemblyName = AssemblyName.GetAssemblyName(assemblyPath);
 
-            var testAssembly = Assembly.Load(assemblyName);
+                var testAssembly = domain.Load(assemblyName);
+                var nunitV3 = new Version(3, 0);
 
-            foreach(var refAssembly in testAssembly.GetReferencedAssemblies())
-                switch (refAssembly.Name)
+                foreach (var refAssembly in testAssembly.GetReferencedAssemblies())
                 {
-                    case NUnitFrameworkDriver.FrameworkName:
-                        return new NUnitFrameworkDriver(domain, assemblyPath, settings);
-                    case NUnitLiteFrameworkDriver.FrameworkName:
-                        return new NUnitLiteFrameworkDriver(domain, assemblyPath, settings);
+                    if (NUnitAssemblies.Contains(refAssembly.Name))
+                        if (refAssembly.Version >= nunitV3)
+                            return new NUnitFrameworkDriver(domain, refAssembly.Name, assemblyPath, settings);
+                        else
+                            return new NotRunnableFrameworkDriver(assemblyPath, string.Format(OLDER_NUNIT_NOT_SUPPORTED_MESSAGE, assemblyPath));
                 }
+            }
+            catch (Exception ex)
+            {
+                return new NotRunnableFrameworkDriver(assemblyPath, ex.Message);
+            }
 
-            throw new NUnitEngineException("Unable to locate driver for " + assemblyPath);
+            return new NotRunnableFrameworkDriver(assemblyPath, "Unable to locate a driver for " + assemblyPath);
         }
 
         #endregion
-
+ 
         #region IService Members
 
         private ServiceContext services;
@@ -72,10 +91,5 @@ namespace NUnit.Engine.Services
         }
 
         #endregion
-    }
-
-    public interface IDriverFactory
-    {
-        IFrameworkDriver GetDriver(AppDomain domain, string assemblyPath, IDictionary<string, object> settings);
     }
 }

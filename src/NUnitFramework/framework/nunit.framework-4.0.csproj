@@ -57,6 +57,9 @@
     <Compile Include="..\..\Common\nunit\AssemblyHelper.cs">
       <Link>Internal\AssemblyHelper.cs</Link>
     </Compile>
+    <Compile Include="..\..\Common\nunit\Guard.cs">
+      <Link>Guard.cs</Link>
+    </Compile>
     <Compile Include="..\..\Common\nunit\Logging\ILogger.cs">
       <Link>Internal\ILogger.cs</Link>
     </Compile>
@@ -249,7 +252,6 @@
     <Compile Include="Interfaces\IParameterDataProvider.cs" />
     <Compile Include="FileAssert.cs" />
     <Compile Include="GlobalSettings.cs" />
-    <Compile Include="Guard.cs" />
     <Compile Include="Has.cs" />
     <Compile Include="Interfaces\IParameterDataSource.cs" />
     <Compile Include="Interfaces\IPropertyBag.cs" />

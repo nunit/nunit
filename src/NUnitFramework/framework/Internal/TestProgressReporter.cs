@@ -189,6 +189,7 @@ namespace NUnit.Framework.Internal
         private static string FormatAttributeValue(string original)
         {
             return original
+                .Replace("&", "&amp;")
                 .Replace("\"", "&quot;")
                 .Replace("'", "&apos;")
                 .Replace("<", "&lt;")
