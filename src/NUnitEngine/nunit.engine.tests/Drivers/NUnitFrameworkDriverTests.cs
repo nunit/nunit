@@ -152,14 +152,6 @@ namespace NUnit.Engine.Drivers.Tests
             Assert.That(ex, Is.TypeOf<InvalidOperationException>());
             Assert.That(ex.Message, Is.EqualTo("The CountTestCases method was called but no test has been loaded"));
         }
-
-        [Test]
-        public void CountTestsAction_BadFile_ReturnsZero()
-        {
-            var driver = new NUnitFrameworkDriver(AppDomain.CurrentDomain, BAD_FILE, _settings);
-            driver.Load();
-            Assert.That(driver.CountTestCases(TestFilter.Empty), Is.EqualTo(0));
-        }
         #endregion
 
         #region RunTests
