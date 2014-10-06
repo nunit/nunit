@@ -307,7 +307,7 @@ namespace NUnit.Framework.Internal
 
 
                         if (this.ResultState.Status != TestStatus.Failed)
-                            this.SetResult(ResultState.Failure, CHILD_ERRORS_MESSAGE);
+                            this.SetResult(ResultState.ChildFailure, CHILD_ERRORS_MESSAGE);
 
                         break;
 
@@ -317,7 +317,7 @@ namespace NUnit.Framework.Internal
                         {
                             case "Invalid":
                                 if (this.ResultState != ResultState.NotRunnable && this.ResultState.Status != TestStatus.Failed)
-                                    this.SetResult(ResultState.Failure, CHILD_ERRORS_MESSAGE);
+                                    this.SetResult(ResultState.ChildFailure, CHILD_ERRORS_MESSAGE);
 
                                 break;
 

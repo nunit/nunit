@@ -97,7 +97,7 @@ namespace NUnit.Framework.Internal
             Assert.AreEqual(expected, resultState.ToString());
         }
 
-        #region Test Fields
+        #region Test Static Fields with standard ResultStates
 
         [Test]
         public void Inconclusive_NA_ReturnsResultStateWithPropertiesCorrectlySet()
@@ -151,6 +151,33 @@ namespace NUnit.Framework.Internal
 
             Assert.AreEqual(TestStatus.Failed, resultState.Status, "Status not correct.");
             Assert.AreEqual(string.Empty, resultState.Label, "Label not correct.");
+        }
+
+        [Test]
+        public void SetUpFailure_NA_ReturnsResultStateWithPropertiesSet()
+        {
+            ResultState resultState = ResultState.SetUpFailure;
+
+            Assert.AreEqual(TestStatus.Failed, resultState.Status);
+            Assert.AreEqual("SetUp", resultState.Label);
+        }
+
+        [Test]
+        public void TearDownFailure_NA_ReturnsResultStateWithPropertiesSet()
+        {
+            ResultState resultState = ResultState.TearDownFailure;
+
+            Assert.AreEqual(TestStatus.Failed, resultState.Status);
+            Assert.AreEqual("TearDown", resultState.Label);
+        }
+
+        [Test]
+        public void ChildFailure_NA_ReturnsResultStateWithPropertiesSet()
+        {
+            ResultState resultState = ResultState.ChildFailure;
+
+            Assert.AreEqual(TestStatus.Failed, resultState.Status);
+            Assert.AreEqual("Child", resultState.Label);
         }
 
         [Test]

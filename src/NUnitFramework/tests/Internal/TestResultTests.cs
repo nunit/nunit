@@ -345,7 +345,7 @@ namespace NUnit.Framework.Internal
         [Test]
         public void SuiteResultIsFailure()
         {
-            Assert.AreEqual(ResultState.Failure, suiteResult.ResultState);
+            Assert.AreEqual(ResultState.ChildFailure, suiteResult.ResultState);
             Assert.AreEqual(TestStatus.Failed, suiteResult.ResultState.Status);
             Assert.AreEqual(failingChildMessage, suiteResult.Message);
 
@@ -376,7 +376,7 @@ namespace NUnit.Framework.Internal
             XmlNode suiteNode = suiteResult.ToXml(true);
 
             Assert.AreEqual("Failed", suiteNode.Attributes["result"]);
-            Assert.Null(suiteNode.Attributes["label"]);
+            Assert.AreEqual("Child", suiteNode.Attributes["label"]);
             Assert.AreEqual("0", suiteNode.Attributes["passed"]);
             Assert.AreEqual("0", suiteNode.Attributes["failed"]);
             Assert.AreEqual("1", suiteNode.Attributes["skipped"]);
@@ -423,7 +423,7 @@ namespace NUnit.Framework.Internal
         [Test]
         public void SuiteResultIsFailure()
         {
-            Assert.AreEqual(ResultState.Failure, suiteResult.ResultState);
+            Assert.AreEqual(ResultState.ChildFailure, suiteResult.ResultState);
             Assert.AreEqual(TestStatus.Failed, suiteResult.ResultState.Status);
             Assert.AreEqual(failingChildMessage, suiteResult.Message);
             Assert.Null(suiteResult.StackTrace);
@@ -585,7 +585,7 @@ namespace NUnit.Framework.Internal
         [Test]
         public void SuiteResultIsFailure()
         {
-            Assert.AreEqual(ResultState.Failure, suiteResult.ResultState);
+            Assert.AreEqual(ResultState.ChildFailure, suiteResult.ResultState);
             Assert.AreEqual(TestStatus.Failed, suiteResult.ResultState.Status);
             Assert.AreEqual(failingChildMessage, suiteResult.Message);
             Assert.Null(suiteResult.StackTrace, "There should be no stacktrace");

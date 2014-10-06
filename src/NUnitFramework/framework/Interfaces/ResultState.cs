@@ -91,6 +91,21 @@ namespace NUnit.Framework.Interfaces
         public readonly static ResultState Failure = new ResultState(TestStatus.Failed);
 
         /// <summary>
+        /// A suite failed in setup
+        /// </summary>
+        public readonly static ResultState SetUpFailure = new ResultState(TestStatus.Failed, "SetUp");
+
+        /// <summary>
+        /// A suite failed in teardown
+        /// </summary>
+        public readonly static ResultState TearDownFailure = new ResultState(TestStatus.Failed, "TearDown");
+
+        /// <summary>
+        /// A suite failed because one or more child tests failed
+        /// </summary>
+        public readonly static ResultState ChildFailure = new ResultState(TestStatus.Failed, "Child");
+
+        /// <summary>
         /// The test encountered an unexpected exception
         /// </summary>
         public readonly static ResultState Error = new ResultState(TestStatus.Failed, "Error");

@@ -170,23 +170,16 @@ namespace NUnit.ConsoleRunner
                     break;
 
                 case "test-suite":
-                    resultState = result.GetAttribute("result");
-                    if (resultState == "Failed")
+                    if (result.GetAttribute("result") == "Failed")
                     {
-                        string resultType = result.GetAttribute("type");
-                        if (resultType == "Theory")
+                        if (result.GetAttribute("type") == "Theory")
                         {
                             using (new ColorConsole(ColorStyle.Failure))
                                 WriteSingleResult(result);
                         }
-                        else
-                        {
-                            XmlNode message = result.SelectSingleNode("failure/message");
-                            // There should always be a message node, but just in case...
-                            if (message == null || message.InnerText != CHILD_ERRORS_MESSAGE)
-                                using (new ColorConsole(ColorStyle.Error))
-                                    WriteSingleResult(result);
-                        }
+                        else if (result.GetAttribute("label") != "Child")
+                            using (new ColorConsole(ColorStyle.Error))
+                                WriteSingleResult(result);
                     }
                     
                     break;
