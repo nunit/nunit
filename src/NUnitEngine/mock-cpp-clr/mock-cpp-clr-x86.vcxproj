@@ -21,29 +21,38 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{11640C9F-03A3-456B-848D-9B4A126F9506}</ProjectGuid>
   </PropertyGroup>
+  <PropertyGroup>
+    <_PlatformFolder Condition="'$(_PlatformFolder)' == ''">$(VCTargetsPath)\Platforms\$(Platform)\</_PlatformFolder>
+    <_ToolsetTargetsPathv100>$(_PlatformFolder)PlatformToolsets\v100\Toolset.targets</_ToolsetTargetsPathv100>
+    <_ToolsetTargetsPathv120>$(_PlatformFolder)PlatformToolsets\v110\Toolset.targets</_ToolsetTargetsPathv120>
+    <_ToolsetTargetsPathv120>$(_PlatformFolder)PlatformToolsets\v120\Toolset.targets</_ToolsetTargetsPathv120>
+    <Toolset Condition="Exists('$(_ToolsetTargetsPathv100)')">v100</Toolset>
+    <Toolset Condition="Exists('$(_ToolsetTargetsPathv110)')">v110</Toolset>
+    <Toolset Condition="Exists('$(_ToolsetTargetsPathv120)')">v120</Toolset>
+  </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>$(Toolset)</PlatformToolset>
     <CLRSupport>true</CLRSupport>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>$(Toolset)</PlatformToolset>
     <CLRSupport>true</CLRSupport>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>$(Toolset)</PlatformToolset>
     <CLRSupport>true</CLRSupport>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>$(Toolset)</PlatformToolset>
     <CLRSupport>true</CLRSupport>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
