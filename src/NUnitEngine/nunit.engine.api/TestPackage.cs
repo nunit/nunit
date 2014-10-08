@@ -24,6 +24,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 
 namespace NUnit.Engine
 {
@@ -51,7 +52,7 @@ namespace NUnit.Engine
         {
             fullName = Path.GetFullPath(filePath);
             if (IsAssemblyFileType(filePath))
-                testFiles.Add(FullName);
+                Add(FullName);
         }
 
         /// <summary>
@@ -62,7 +63,7 @@ namespace NUnit.Engine
         public TestPackage(IList<string> testFiles)
         {
             foreach (string testFile in testFiles)
-                this.testFiles.Add(Path.GetFullPath(testFile));
+                Add(Path.GetFullPath(testFile));
         }
 
         #endregion

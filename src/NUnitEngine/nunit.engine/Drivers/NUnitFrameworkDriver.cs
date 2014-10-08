@@ -29,13 +29,13 @@ using System.Web.UI;
 using System.Xml;
 using NUnit.Engine.Internal;
 
-namespace NUnit.Engine
+namespace NUnit.Engine.Drivers
 {
     /// <summary>
     /// NUnitFrameworkDriver is used by the test-runner to load and run
     /// tests using the NUnit framework assembly.
     /// </summary>
-    public class BaseNUnitFrameworkDriver : IFrameworkDriver
+    public class NUnitFrameworkDriver : IFrameworkDriver
     {
         private static readonly string CONTROLLER_TYPE = "NUnit.Framework.Api.FrameworkController";
         private static readonly string LOAD_ACTION = CONTROLLER_TYPE + "+LoadTestsAction";
@@ -52,8 +52,13 @@ namespace NUnit.Engine
 
         object _frameworkController;
 
-        public BaseNUnitFrameworkDriver(AppDomain testDomain, string frameworkAssemblyName, string testAssemblyPath, IDictionary<string, object> settings)
+        public NUnitFrameworkDriver(AppDomain testDomain, string testAssemblyPath, IDictionary<string, object> settings)
+            : this(testDomain, "nunit.framework", testAssemblyPath, settings) { }
+
+        public NUnitFrameworkDriver(AppDomain testDomain, string frameworkAssemblyName, string testAssemblyPath, IDictionary<string, object> settings)
         {
+            Guard.ArgumentValid(File.Exists(testAssemblyPath), "testAssemblyPath", "Framework driver constructor called with a file name that doesn't exist.");
+
             _testDomain = testDomain;
             _testAssemblyPath = testAssemblyPath;
             _frameworkAssemblyName = frameworkAssemblyName;
@@ -139,19 +144,11 @@ namespace NUnit.Engine
         #endregion
     }
 
-    public class NUnitFrameworkDriver : BaseNUnitFrameworkDriver
-    {
-        public const string FrameworkName = "nunit.framework";
+    //public class NUnitFrameworkDriver : BaseNUnitFrameworkDriver
+    //{
+    //    public const string FrameworkName = "nunit.framework";
 
-        public NUnitFrameworkDriver(AppDomain testDomain, string testAssemblyPath, IDictionary<string, object> settings)
-            : base(testDomain, FrameworkName, testAssemblyPath, settings) { }
-    }
-
-    public class NUnitLiteFrameworkDriver : BaseNUnitFrameworkDriver
-    {
-        public const string FrameworkName = "nunitlite";
-
-        public NUnitLiteFrameworkDriver(AppDomain testDomain, string testAssemblyPath, IDictionary<string, object> settings)
-            : base(testDomain, FrameworkName, testAssemblyPath, settings) { }
-    }
+    //    public NUnitFrameworkDriver(AppDomain testDomain, string testAssemblyPath, IDictionary<string, object> settings)
+    //        : base(testDomain, FrameworkName, testAssemblyPath, settings) { }
+    //}
 }

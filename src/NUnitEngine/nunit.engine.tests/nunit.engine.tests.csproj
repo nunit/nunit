@@ -63,7 +63,8 @@
     <Compile Include="Api\TestPackageTests.cs" />
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Internal\AssemblyReaderTests.cs" />
-    <Compile Include="Internal\NUnitFrameworkDriverTests.cs" />
+    <Compile Include="Drivers\NotRunnableFrameworkDriverTests.cs" />
+    <Compile Include="Drivers\NUnitFrameworkDriverTests.cs" />
     <Compile Include="Internal\NUnitProjectTests.cs" />
     <Compile Include="Internal\NUnitProjectXml.cs" />
     <Compile Include="Internal\PathUtilTests.cs" />
@@ -72,6 +73,7 @@
     <Compile Include="ResultHelperTests.cs" />
     <Compile Include="RuntimeFrameworkTests.cs" />
     <Compile Include="Services\DomainManagerTests.cs" />
+    <Compile Include="Services\DriverFactoryTests.cs" />
     <Compile Include="Services\RecentFilesTests.cs" />
     <Compile Include="TestEngineResultTests.cs" />
   </ItemGroup>

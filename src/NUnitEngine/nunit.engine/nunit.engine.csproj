@@ -50,6 +50,9 @@
     <Compile Include="..\..\Common\nunit\AssemblyHelper.cs">
       <Link>Internal\AssemblyHelper.cs</Link>
     </Compile>
+    <Compile Include="..\..\Common\nunit\Guard.cs">
+      <Link>Guard.cs</Link>
+    </Compile>
     <Compile Include="..\..\Common\nunit\Logging\InternalTrace.cs">
       <Link>Internal\InternalTrace.cs</Link>
     </Compile>
@@ -65,6 +68,8 @@
     <Compile Include="..\EngineVersion.cs">
       <Link>EngineVersion.cs</Link>
     </Compile>
+    <Compile Include="Drivers\NotRunnableFrameworkDriver.cs" />
+    <Compile Include="IDriverFactory.cs" />
     <Compile Include="ITestAgency.cs" />
     <Compile Include="ITestAgent.cs" />
     <Compile Include="Agents\RemoteTestAgent.cs" />
@@ -94,7 +99,7 @@
     <Compile Include="IService.cs" />
     <Compile Include="ITestEngineRunner.cs" />
     <Compile Include="ITestRunnerFactory.cs" />
-    <Compile Include="NUnitFrameworkDriver.cs" />
+    <Compile Include="Drivers\NUnitFrameworkDriver.cs" />
     <Compile Include="RunnerSettings.cs" />
     <Compile Include="Runners\AbstractTestRunner.cs" />
     <Compile Include="Runners\AggregatingTestRunner.cs" />
