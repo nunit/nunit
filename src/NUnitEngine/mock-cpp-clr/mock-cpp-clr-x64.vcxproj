@@ -21,30 +21,36 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{FFF45826-991F-465B-8A03-0E1DB7E8F38C}</ProjectGuid>
   </PropertyGroup>
+  <PropertyGroup>
+    <_PlatformDirectory Condition="'$(_PlatformDirectory)' == ''">$(VCTargetsPath)\Platforms\x64\</_PlatformDirectory>
+    <_ToolsetTargetsPathv120>$(_PlatformDirectory)PlatformToolsets\v120\Toolset.targets</_ToolsetTargetsPathv120>
+    <_Toolset Condition="!Exists('$(_ToolsetTargetsPathv120)')">v110</_Toolset>
+    <_Toolset Condition="Exists('$(_ToolsetTargetsPathv120)')">v120</_Toolset>
+  </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v110</PlatformToolset>
     <CLRSupport>true</CLRSupport>
+    <PlatformToolset>$(_Toolset)</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v110</PlatformToolset>
     <CLRSupport>true</CLRSupport>
+    <PlatformToolset>$(_Toolset)</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v110</PlatformToolset>
     <CLRSupport>true</CLRSupport>
+    <PlatformToolset>$(_Toolset)</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v110</PlatformToolset>
     <CLRSupport>true</CLRSupport>
+    <PlatformToolset>$(_Toolset)</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -68,12 +74,12 @@
   </PropertyGroup>
   <ItemDefinitionGroup>
   </ItemDefinitionGroup>
-    <ItemGroup>
-        <Reference Include="nunit.framework">
-            <HintPath>$(OutDir)nunit.framework.dll</HintPath>
-            <Private>false</Private>
-        </Reference>
-    </ItemGroup>
+  <ItemGroup>
+    <Reference Include="nunit.framework">
+      <HintPath>$(OutDir)nunit.framework.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TestClass.h" />
   </ItemGroup>
