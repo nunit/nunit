@@ -22,7 +22,7 @@
     <ProjectGuid>{FFF45826-991F-465B-8A03-0E1DB7E8F38C}</ProjectGuid>
   </PropertyGroup>
   <PropertyGroup>
-    <_PlatformDirectory Condition="'$(_PlatformDirectory)' == ''">$(VCTargetsPath)\Platforms\$(Platform)\</_PlatformDirectory>
+    <_PlatformDirectory Condition="'$(_PlatformDirectory)' == ''">$(VCTargetsPath)\Platforms\x64\</_PlatformDirectory>
     <_ToolsetTargetsPathv120>$(_PlatformDirectory)PlatformToolsets\v120\Toolset.targets</_ToolsetTargetsPathv120>
     <_Toolset Condition="!Exists('$(_ToolsetTargetsPathv120)')">v110</_Toolset>
     <_Toolset Condition="Exists('$(_ToolsetTargetsPathv120)')">v120</_Toolset>
