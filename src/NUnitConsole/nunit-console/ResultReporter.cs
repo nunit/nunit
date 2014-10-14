@@ -177,9 +177,13 @@ namespace NUnit.ConsoleRunner
                             using (new ColorConsole(ColorStyle.Failure))
                                 WriteSingleResult(result);
                         }
-                        else if (result.GetAttribute("label") != "Child")
-                            using (new ColorConsole(ColorStyle.Error))
-                                WriteSingleResult(result);
+                        else
+                        {
+                            var site = result.GetAttribute("site");
+                            if (site == "SetUp" || site == "TearDown")
+                                using (new ColorConsole(ColorStyle.Failure))
+                                    WriteSingleResult(result);
+                        }
                     }
                     
                     break;

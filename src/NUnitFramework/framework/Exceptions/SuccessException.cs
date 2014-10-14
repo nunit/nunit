@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2008 Charlie Poole
+// Copyright (c) 2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -20,16 +20,17 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
+using System;
 
 namespace NUnit.Framework
 {
-    using System;
+    using Interfaces;
 
     /// <summary>
     /// Thrown when an assertion failed.
     /// </summary>
     [Serializable]
-    public class SuccessException : System.Exception
+    public class SuccessException : ResultStateException
     {
         /// <param name="message"></param>
         public SuccessException(string message)
@@ -54,5 +55,13 @@ namespace NUnit.Framework
             : base(info, context)
         { }
 #endif
+
+        /// <summary>
+        /// Gets the ResultState provided by this exception
+        /// </summary>
+        public override ResultState ResultState
+        {
+            get { return ResultState.Success; }
+        }
     }
 }

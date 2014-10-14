@@ -192,7 +192,7 @@ namespace NUnit.Framework.Internal.Execution
                 if (ex is NUnitException || ex is System.Reflection.TargetInvocationException)
                     ex = ex.InnerException;
 
-                Result.RecordException(ex);
+                Result.RecordException(ex, FailureSite.SetUp);
             }
         }
 
@@ -249,7 +249,7 @@ namespace NUnit.Framework.Internal.Execution
                     var resultState = Result.ResultState.Status == TestStatus.Failed
                         ? ResultState.Failure // TODO: Converts errors to failures for the child. Should we do this?
                         : Result.ResultState;
-                    childResult.SetResult(resultState, "TestFixtureSetUp: " + Result.Message);
+                    childResult.SetResult(resultState + FailureSite.Parent, "OneTimeSetUp: " + Result.Message);
                     Result.AddResult(childResult);
                 }
             }

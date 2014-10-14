@@ -153,7 +153,8 @@ namespace NUnitLite.Runner
                 if (result.ResultState.Status == TestStatus.Failed)
                 {
                     var suite = result.Test as TestSuite;
-                    if (suite.TestType == "Theory" || result.ResultState != ResultState.ChildFailure)
+                    var site = result.ResultState.Site;
+                    if (suite.TestType == "Theory" || site == FailureSite.SetUp || site == FailureSite.TearDown)
                         using (new ColorConsole(ColorStyle.Failure))
                         WriteSingleResult(result);
                 }

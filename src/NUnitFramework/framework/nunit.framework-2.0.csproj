@@ -86,6 +86,7 @@
     <Compile Include="Constraints\ThrowsExceptionConstraint.cs" />
     <Compile Include="DirectoryAssert.cs" />
     <Compile Include="Does.cs" />
+    <Compile Include="Exceptions\ResultStateException.cs" />
     <Compile Include="Interfaces\ICombiningStrategy.cs" />
     <Compile Include="Interfaces\ISimpleTestBuilder.cs" />
     <Compile Include="Interfaces\ITestBuilder.cs" />

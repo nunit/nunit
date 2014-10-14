@@ -92,6 +92,7 @@
     <Compile Include="Constraints\ThrowsExceptionConstraint.cs" />
     <Compile Include="Does.cs" />
     <Compile Include="ActionTargets.cs" />
+    <Compile Include="Exceptions\ResultStateException.cs" />
     <Compile Include="Interfaces\ICombiningStrategy.cs" />
     <Compile Include="Interfaces\ICommandDecorator.cs" />
     <Compile Include="Interfaces\IFixtureBuilder.cs" />
