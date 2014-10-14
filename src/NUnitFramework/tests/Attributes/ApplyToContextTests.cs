@@ -63,7 +63,7 @@ namespace NUnit.Framework.Attributes
             Assert.That(_context.CurrentUICulture, Is.EqualTo(new CultureInfo("fr-FR")));
         }
 
-#if !SILVERLIGHT
+#if !PORTABLE
         [Test]
         public void TimeoutAttribute()
         {

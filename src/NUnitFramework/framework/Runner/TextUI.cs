@@ -299,7 +299,14 @@ namespace NUnitLite.Runner
 #if NETCF // NETCF: Try to encapsulate this
                 InternalTrace.Initialize(Path.Combine(NUnit.Env.DocumentFolder, logName), traceLevel);
 #else
-                InternalTrace.Initialize(Path.Combine(Environment.CurrentDirectory, logName), traceLevel);
+                StreamWriter streamWriter = null;
+                if (traceLevel > InternalTraceLevel.Off)
+                {
+                    string logPath = Path.Combine(Environment.CurrentDirectory, logName);
+                    streamWriter = new StreamWriter(new FileStream(logPath, FileMode.Append, FileAccess.Write, FileShare.Write));
+                    streamWriter.AutoFlush = true;
+                }
+                InternalTrace.Initialize(streamWriter, traceLevel);
 #endif
             }
         }

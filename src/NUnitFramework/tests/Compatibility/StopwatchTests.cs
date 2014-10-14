@@ -29,7 +29,7 @@ namespace NUnit.Framework.Tests.Compatibility
     [TestFixture]
     public class StopwatchTests
     {
-#if NETCF || SILVERLIGHT
+#if NETCF || SILVERLIGHT || PORTABLE
         private const int DELAY = 100;
         private const int TOLERANCE = 20;
 

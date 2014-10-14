@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2008 Charlie Poole
+// Copyright (c) 2007 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -20,53 +20,16 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
-#if !PORTABLE
+
 using System;
-using NUnit.Framework;
+using System.Reflection;
 
-namespace NUnit.TestData
-{
-    [TestFixture]
-    public class MaxTimeFixture
-    {
-        [Test, MaxTime(1)]
-        public void MaxTimeExceeded()
-        {
-#if NETCF
-            long endTime = DateTime.Now.Ticks + TimeSpan.TicksPerMillisecond * 20;
-            while (endTime > DateTime.Now.Ticks) ;
-#else
-#if SILVERLIGHT
-            // Silverlight does not have the high resolution StopWatch, so
-            // we need to delay longer than their minimum clock resolution
-            System.Threading.Thread.Sleep(1000);
-#else
-            System.Threading.Thread.Sleep(20);
-#endif
-#endif
-        }
-    }
+// Information about this assembly is defined by the following attributes. 
+// Change them to the _values specific to your project.
 
-    [TestFixture]
-    public class MaxTimeFixtureWithFailure
-    {
-        [Test, MaxTime(1)]
-        public void MaxTimeExceeded()
-        {
-            System.Threading.Thread.Sleep(20);
-            Assert.Fail("Intentional Failure");
-        }
-    }
-
-    [TestFixture]
-    public class MaxTimeFixtureWithError
-    {
-        [Test, MaxTime(1)]
-        public void MaxTimeExceeded()
-        {
-            System.Threading.Thread.Sleep(20);
-            throw new Exception("Exception message");
-        }
-    }
-}
+#if NUNITLITE
+[assembly: AssemblyTitle("NUnitLite Runner Assembly")]
+[assembly: AssemblyDescription("")]
+[assembly: AssemblyCulture("")]
+[assembly: CLSCompliant(true)]
 #endif

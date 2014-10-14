@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NETCF
+#if !NETCF && !PORTABLE
 using System;
 using System.Threading;
 using NUnit.Framework;
@@ -60,7 +60,6 @@ namespace NUnit.Framework.Attributes
         {
             Assert.That(Thread.CurrentThread, Is.EqualTo(setupThread));
         }
-
         [Test]
         [Platform(Exclude = "Mono", Reason = "Runner hangs at end when this is run")]
         public void TestWithInfiniteLoopTimesOut()

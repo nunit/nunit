@@ -37,7 +37,7 @@ namespace NUnit.Framework.Attributes
 #if !NETCF
         [TestCase(typeof(SetCultureAttribute), PropertyNames.SetCulture, "fr-FR")]
         [TestCase(typeof(SetUICultureAttribute), PropertyNames.SetUICulture, "fr-FR")]
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !PORTABLE
         [TestCase(typeof(TimeoutAttribute), PropertyNames.Timeout, 50)]
 #endif
 #endif
@@ -49,7 +49,7 @@ namespace NUnit.Framework.Attributes
         }
 
         [TestCase(typeof(ParallelizableAttribute), PropertyNames.ParallelScope, ParallelScope.Self)]
-#if !NETCF && !SILVERLIGHT
+#if !NETCF && !SILVERLIGHT && !PORTABLE
         [TestCase(typeof(RequiresMTAAttribute), PropertyNames.ApartmentState, ApartmentState.MTA)]
         [TestCase(typeof(RequiresSTAAttribute), PropertyNames.ApartmentState, ApartmentState.STA)]
         [TestCase(typeof(RequiresThreadAttribute), PropertyNames.RequiresThread, true)]

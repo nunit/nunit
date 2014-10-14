@@ -266,6 +266,7 @@ namespace NUnit.Framework.Constraints
 
         #region After Modifier
 
+#if !PORTABLE
         /// <summary>
         /// Returns a DelayedConstraint with the specified delay time.
         /// </summary>
@@ -292,6 +293,7 @@ namespace NUnit.Framework.Constraints
                 delayInMilliseconds,
                 pollingInterval);
         }
+#endif
 
         #endregion
 

@@ -21,58 +21,46 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 #if PORTABLE
-using NUnit.Compatibility;
-#else
-using System.IO;
-#endif
-using System.Reflection;
-
-namespace NUnit.Framework.Internal
+namespace NUnit.Compatibility
 {
     /// <summary>
-    /// TestAssembly is a TestSuite that represents the execution
-    /// of tests in a managed assembly.
+    /// Some path based methods that we need even in the Portable framework which
+    /// does not have the System.IO.Path class
     /// </summary>
-    public class TestAssembly : TestSuite
+    public static class Path
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="TestAssembly"/> class
-        /// specifying the Assembly and the path from which it was loaded.
+        /// Windows directory separator
         /// </summary>
-        /// <param name="assembly">The assembly this test represents.</param>
-        /// <param name="path">The path used to load the assembly.</param>
-        public TestAssembly(Assembly assembly, string path)
-            : base(path)
-        {
-            this.Assembly = assembly;
-            this.Name = Path.GetFileName(path);
-        }
+        public static readonly char WindowsSeparatorChar = '\\';
+        /// <summary>
+        /// Alternate directory separator
+        /// </summary>
+        public static readonly char AltDirectorySeparatorChar = '/';
+        /// <summary>
+        /// A volume separator character.
+        /// </summary>
+        public static readonly char VolumeSeparatorChar = ':';
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TestAssembly"/> class
-        /// for a path which could not be loaded.
+        /// Get the file name and extension of the specified path string.
         /// </summary>
-        /// <param name="path">The path used to load the assembly.</param>
-        public TestAssembly(string path) : base(path)
+        /// <param name="path">The path string from which to obtain the file name and extension. </param><exception cref="T:System.ArgumentException"> 
+        /// <returns>The filename as a <see cref="T:System.String"/>. If the last character of <paramref name="path"/> is a directory or volume separator character, this method returns <see cref="F:System.String.Empty"/>. If <paramref name="path"/> is null, this method returns null.</returns>
+        public static string GetFileName(string path)
         {
-            this.Name = Path.GetFileName(path);
-        }
-
-        /// <summary>
-        /// Gets the Assembly represented by this instance.
-        /// </summary>
-        public Assembly Assembly { get; private set; }
-
-        /// <summary>
-        /// Gets the name used for the top-level element in the
-        /// XML representation of this test
-        /// </summary>
-        public override string TestType
-        {
-            get
+            if (path != null)
             {
-                return "Assembly";
+                int length = path.Length;
+                for( int index = length - 1; index >= 0; index--)
+                {
+                    char ch = path[index];
+                    if (ch == Path.WindowsSeparatorChar || ch == Path.AltDirectorySeparatorChar || ch == Path.VolumeSeparatorChar)
+                        return path.Substring(index + 1, length - index - 1);
+                }
             }
+            return path;
         }
     }
 }
+#endif

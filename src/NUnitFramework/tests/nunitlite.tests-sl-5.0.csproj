@@ -33,6 +33,7 @@
     </LinkedServerProject>
     <InBrowserSettingsFile>Properties\InBrowserSettings.xml</InBrowserSettingsFile>
     <RequireInBrowserElevation>true</RequireInBrowserElevation>
+    <IntermediateOutputPath>obj\$(Configuration)\sl-5.0\</IntermediateOutputPath>
   </PropertyGroup>
   <!-- This property group is only here to support building this project using the 
        MSBuild 3.5 toolset. In order to work correctly with this older toolset, it needs 

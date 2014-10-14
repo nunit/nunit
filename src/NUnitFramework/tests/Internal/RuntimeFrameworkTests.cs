@@ -20,7 +20,7 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
-
+#if !PORTABLE
 using System;
 
 namespace NUnit.Framework.Internal
@@ -45,14 +45,14 @@ namespace NUnit.Framework.Internal
             RuntimeFramework framework = RuntimeFramework.CurrentFramework;
 
             Assert.That(framework.Runtime, Is.EqualTo(currentRuntime));
-#if SILVERLIGHT
-            Version silverlightVersion = new Version(Environment.Version.Major, Environment.Version.Minor);
-            Version clrVersion = Environment.Version.Major >= 4
-                ? new Version(4,0,60310)
-                : new Version(2,0,50727);
-
-            Assert.That(framework.FrameworkVersion, Is.EqualTo(silverlightVersion));
-            Assert.That(framework.ClrVersion, Is.EqualTo(clrVersion));
+#if SILVERLIGHT		
+            Version silverlightVersion = new Version(Environment.Version.Major, Environment.Version.Minor);		
+            Version clrVersion = Environment.Version.Major >= 4		
+                ? new Version(4,0,60310)		
+                : new Version(2,0,50727);		
+		
+            Assert.That(framework.FrameworkVersion, Is.EqualTo(silverlightVersion));		
+            Assert.That(framework.ClrVersion, Is.EqualTo(clrVersion));		
 #else
             Assert.That(framework.ClrVersion, Is.EqualTo(Environment.Version));
 #endif
@@ -237,3 +237,4 @@ namespace NUnit.Framework.Internal
         };
     }
 }
+#endif

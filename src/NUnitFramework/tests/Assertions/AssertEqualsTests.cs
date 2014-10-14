@@ -380,6 +380,7 @@ namespace NUnit.Framework.Assertions
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 
+#if !PORTABLE
         [Test]
         public void DirectoryInfoEqual()
         {
@@ -406,6 +407,7 @@ namespace NUnit.Framework.Assertions
                 Assert.That(ex.Message, Is.EqualTo(expectedMessage));
             }
         }
+#endif
 
         private enum MyEnum
         {

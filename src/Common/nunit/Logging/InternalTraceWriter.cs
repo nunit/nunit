@@ -20,7 +20,6 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
-
 using System.IO;
 
 #if NUNIT_ENGINE
@@ -40,6 +39,7 @@ namespace Unit.Common
         TextWriter writer;
         object myLock = new object();
 
+#if !PORTABLE
         /// <summary>
         /// Construct an InternalTraceWriter that writes to a file.
         /// </summary>
@@ -50,6 +50,7 @@ namespace Unit.Common
             streamWriter.AutoFlush = true;
             this.writer = streamWriter;
         }
+#endif
 
         /// <summary>
         /// Construct an InternalTraceWriter that writes to a 

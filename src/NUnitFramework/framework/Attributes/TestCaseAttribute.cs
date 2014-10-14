@@ -342,13 +342,13 @@ namespace NUnit.Framework
 
                 if (targetType.IsAssignableFrom(arg.GetType()))
                     continue;
-
+#if !PORTABLE
                 if (arg is DBNull)
                 {
                     arglist[i] = null;
                     continue;
                 }
-
+#endif
                 bool convert = false;
 
                 if (targetType == typeof(short) || targetType == typeof(byte) || targetType == typeof(sbyte))

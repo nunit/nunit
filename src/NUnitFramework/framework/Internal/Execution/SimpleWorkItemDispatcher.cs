@@ -35,11 +35,13 @@ namespace NUnit.Framework.Internal.Execution
     /// </summary>
     public class SimpleWorkItemDispatcher : IWorkItemDispatcher
     {
+#if !PORTABLE
         // The first WorkItem to be dispatched, assumed to be top-level item
         private WorkItem _topLevelWorkItem;
 
         // Thread used to run and cancel tests
         private Thread _runnerThread;
+#endif
 
         #region IWorkItemDispatcher Members
 
@@ -53,6 +55,10 @@ namespace NUnit.Framework.Internal.Execution
         /// <param name="work">The item to dispatch</param>
         public void Dispatch(WorkItem work)
         {
+#if PORTABLE
+            if (work != null)
+                work.Execute();
+#else
             if (_topLevelWorkItem != null)
                 work.Execute();
             else
@@ -61,12 +67,15 @@ namespace NUnit.Framework.Internal.Execution
                 _runnerThread = new Thread(RunnerThreadProc);
                 _runnerThread.Start();
             }
+#endif
         }
-
+        
+#if !PORTABLE
         private void RunnerThreadProc()
         {
             _topLevelWorkItem.Execute();
         }
+#endif
 
         /// <summary>
         /// Cancel the ongoing run completely.
@@ -74,6 +83,7 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public void CancelRun()
         {
+#if !PORTABLE
 #if NETCF
             // NETCF: Check if this can be done better
             if (_runnerThread != null)
@@ -82,8 +92,8 @@ namespace NUnit.Framework.Internal.Execution
             if (_runnerThread != null && _runnerThread.IsAlive)
                 ThreadUtility.Kill(_runnerThread);
 #endif
+#endif
         }
-
         #endregion
     }
 }

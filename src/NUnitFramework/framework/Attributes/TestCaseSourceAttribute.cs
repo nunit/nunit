@@ -168,13 +168,11 @@ namespace NUnit.Framework
 
         private IEnumerable GetTestCaseSource(MethodInfo method)
         {
-            IEnumerable source = null;
-
             Type sourceType = this.SourceType;
             if (sourceType == null)
                 sourceType = method.ReflectedType;
 
-            if (this.SourceName == null)
+            if (SourceName == null)
             {
                 return Reflect.Construct(sourceType, _sourceConstructorParameters) as IEnumerable;
             }
@@ -184,24 +182,20 @@ namespace NUnit.Framework
             if (members.Length == 1)
             {
                 MemberInfo member = members[0];
-                object sourceobject = Internal.Reflect.Construct(sourceType, _sourceConstructorParameters);
-                switch (member.MemberType)
-                {
-                    case MemberTypes.Field:
-                        FieldInfo field = member as FieldInfo;
-                        source = (IEnumerable)field.GetValue(sourceobject);
-                        break;
-                    case MemberTypes.Property:
-                        PropertyInfo property = member as PropertyInfo;
-                        source = (IEnumerable)property.GetValue(sourceobject, null);
-                        break;
-                    case MemberTypes.Method:
-                        MethodInfo m = member as MethodInfo;
-                        source = (IEnumerable)m.Invoke(sourceobject, null);
-                        break;
-                }
+                object sourceobject = Reflect.Construct(sourceType, _sourceConstructorParameters);
+                var field = member as FieldInfo;
+                if (field != null)
+                    return (IEnumerable)field.GetValue(sourceobject);
+
+                var property = member as PropertyInfo;
+                if (property != null)
+                    return (IEnumerable)property.GetValue(sourceobject, null);
+
+                var m = member as MethodInfo;
+                if (m != null)
+                    return (IEnumerable)m.Invoke(sourceobject, null);
             }
-            return source;
+            return null;
         }
         #endregion
 

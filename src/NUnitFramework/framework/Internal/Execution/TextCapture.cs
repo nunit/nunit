@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !SILVERLIGHT && !NETCF
+#if !SILVERLIGHT && !NETCF && !PORTABLE
 using System;
 using System.IO;
 using System.Runtime.Remoting.Messaging;

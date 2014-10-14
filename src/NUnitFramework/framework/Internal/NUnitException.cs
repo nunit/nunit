@@ -60,9 +60,9 @@ namespace NUnit.Framework.Internal
         /// current exception</param>
         public NUnitException(string message, Exception inner) :
             base(message, inner) 
-        {}
+        { }
 
-#if !NETCF && !SILVERLIGHT
+#if !NETCF && !SILVERLIGHT && !PORTABLE
         /// <summary>
         /// Serialization Constructor
         /// </summary>

@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NETCF 
+#if !NETCF && !PORTABLE
 using System;
 using System.Threading;
 
@@ -46,7 +46,7 @@ namespace NUnit.Framework.Internal
 #endif
         }
 
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !PORTABLE
         /// <summary>
         /// Do our best to kill a thread, passing state info
         /// </summary>

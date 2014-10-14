@@ -56,7 +56,22 @@ namespace NUnit.Framework.Internal
             }
         }
 
+#if PORTABLE
+        public static ITestAction[] GetActionsFromAttributeProvider(Assembly attributeProvider)
+        {
+            if (attributeProvider == null)
+                return new ITestAction[0];
+
+            var actions = new List<ITestAction>((ITestAction[])attributeProvider.GetCustomAttributes(typeof(ITestAction), false));
+            actions.Sort(SortByTargetDescending);
+
+            return actions.ToArray();
+        }
+
+        public static ITestAction[] GetActionsFromAttributeProvider(MemberInfo attributeProvider)
+#else
         public static ITestAction[] GetActionsFromAttributeProvider(ICustomAttributeProvider attributeProvider)
+#endif
         {
             if (attributeProvider == null)
                 return new ITestAction[0];

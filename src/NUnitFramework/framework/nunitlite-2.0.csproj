@@ -105,6 +105,7 @@
     <Compile Include="Attributes\TestCaseBuilderAttribute.cs" />
     <Compile Include="Attributes\TestOfAttribute.cs" />
     <Compile Include="Attributes\TimeoutAttribute.cs" />
+    <Compile Include="Compatibility\AttributeHelper.cs" />
     <Compile Include="Compatibility\Stopwatch.cs" />
     <Compile Include="Constraints\ConstraintResult.cs" />
     <Compile Include="Constraints\DelayedConstraint.cs" />

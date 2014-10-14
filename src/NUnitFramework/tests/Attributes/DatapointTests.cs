@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if !PORTABLE
+using System;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.TestData.DatapointFixture;
@@ -66,3 +67,4 @@ namespace NUnit.Framework.Attributes
         }
     }
 }
+#endif

@@ -20,8 +20,8 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
-
 using System;
+using NUnit.Compatibility;
 
 namespace NUnit.Framework.Constraints
 {
@@ -63,14 +63,10 @@ namespace NUnit.Framework.Constraints
         /// <returns>True if the expected attribute is present, otherwise false</returns>
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
-            System.Reflection.ICustomAttributeProvider attrProvider =
-                actual as System.Reflection.ICustomAttributeProvider;
-
-            if (attrProvider == null)
-                throw new ArgumentException(string.Format("Actual value {0} does not implement ICustomAttributeProvider", actual), "actual");
-
+            Guard.ArgumentNotNull(actual, "actual");
+            Attribute[] attrs = AttributeHelper.GetCustomAttributes(actual, expectedType, true);
             ConstraintResult result = new ConstraintResult(this, actual);
-            result.Status = attrProvider.GetCustomAttributes(expectedType, true).Length > 0
+            result.Status = attrs.Length > 0
                 ? ConstraintStatus.Success : ConstraintStatus.Failure;
             return result;
         }

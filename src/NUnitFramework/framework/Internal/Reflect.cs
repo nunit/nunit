@@ -193,8 +193,10 @@ namespace NUnit.Framework.Internal
                 }
                 catch (Exception e)
                 {
+#if !PORTABLE
                     // No need to wrap or rethrow ThreadAbortException
                     if (!(e is System.Threading.ThreadAbortException))
+#endif
                     {
                         if (e is TargetInvocationException)
                             throw new NUnitException("Rethrown", e.InnerException);

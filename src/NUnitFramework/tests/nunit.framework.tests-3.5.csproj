@@ -118,6 +118,7 @@
     <Compile Include="Attributes\ValuesAttributeEnumTests.cs" />
     <Compile Include="Attributes\ValuesAttributeTests.cs" />
     <Compile Include="Attributes\ValueSourceTests.cs" />
+    <Compile Include="Compatibility\AttributeHelperTests.cs" />
     <Compile Include="Compatibility\StopwatchTests.cs" />
     <Compile Include="Constraints\AllItemsConstraintTests.cs" />
     <Compile Include="Constraints\AndConstraintTests.cs" />
@@ -260,5 +261,8 @@
       <Project>{A59532C1-4C4F-48D8-9792-3BBAC9E39252}</Project>
       <Name>nunit.testdata-3.5</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
 </Project>

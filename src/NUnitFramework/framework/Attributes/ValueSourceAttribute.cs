@@ -98,14 +98,12 @@ namespace NUnit.Framework
 
         private IEnumerable GetDataSource(ParameterInfo parameter)
         {
-            IEnumerable source = null;
-
             Type sourceType = this.sourceType;
             if (sourceType == null)
                 sourceType = parameter.Member.ReflectedType;
 
             // TODO: Test this
-            if (this.sourceName == null)
+            if (sourceName == null)
             {
                 return Reflect.Construct(sourceType) as IEnumerable;
             }
@@ -115,24 +113,20 @@ namespace NUnit.Framework
             if (members.Length == 1)
             {
                 MemberInfo member = members[0];
-                object sourceobject = Internal.Reflect.Construct(sourceType);
-                switch (member.MemberType)
-                {
-                    case MemberTypes.Field:
-                        FieldInfo field = member as FieldInfo;
-                        source = (IEnumerable)field.GetValue(sourceobject);
-                        break;
-                    case MemberTypes.Property:
-                        PropertyInfo property = member as PropertyInfo;
-                        source = (IEnumerable)property.GetValue(sourceobject, null);
-                        break;
-                    case MemberTypes.Method:
-                        MethodInfo m = member as MethodInfo;
-                        source = (IEnumerable)m.Invoke(sourceobject, null);
-                        break;
-                }
+                object sourceobject = Reflect.Construct(sourceType);
+                var field = member as FieldInfo;
+                if (field != null)
+                    return (IEnumerable)field.GetValue(sourceobject);
+
+                var property = member as PropertyInfo;
+                if (property != null)
+                    return (IEnumerable)property.GetValue(sourceobject, null);
+
+                var m = member as MethodInfo;
+                if (m != null)
+                    return (IEnumerable)m.Invoke(sourceobject, null);
             }
-            return source;
+            return null;
         }
 
         #endregion

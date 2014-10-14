@@ -73,8 +73,11 @@ namespace NUnit.Framework.Constraints
                 actualType = actual.GetType();
 
             PropertyInfo property = actualType.GetProperty(name,
+#if PORTABLE
+                BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+#else
                 BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.GetProperty);
-
+#endif
             return new ConstraintResult(this, actualType, property != null);
         }
 

@@ -270,7 +270,7 @@ namespace NUnit.Framework.Constraints
         }
 
         #endregion
-
+        
         #region Attribute
 
         /// <summary>
@@ -426,7 +426,7 @@ namespace NUnit.Framework.Constraints
 
         #region BinarySerializable
 
-#if !NETCF && !SILVERLIGHT
+#if !NETCF && !SILVERLIGHT && !PORTABLE
         /// <summary>
         /// Returns a constraint that tests whether an object graph is serializable in binary format.
         /// </summary>
@@ -846,7 +846,8 @@ namespace NUnit.Framework.Constraints
 #endif
 
         #endregion
-
+        
+#if !PORTABLE
         #region SamePath
 
         /// <summary>
@@ -885,6 +886,7 @@ namespace NUnit.Framework.Constraints
         }
 
         #endregion
+#endif
 
         #region InRange
 
