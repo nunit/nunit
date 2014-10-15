@@ -47,11 +47,7 @@ namespace NUnit.Engine.Services
         {
             try
             {
-                // Throws if this isn't a managed assembly or if it was built
-                // with a later version of the same assembly. 
-                AssemblyName assemblyName = AssemblyName.GetAssemblyName(assemblyPath);
-
-                var testAssembly = domain.Load(assemblyName);
+                var testAssembly = Assembly.ReflectionOnlyLoadFrom(assemblyPath);
                 var nunitV3 = new Version(3, 0);
 
                 foreach (var refAssembly in testAssembly.GetReferencedAssemblies())
