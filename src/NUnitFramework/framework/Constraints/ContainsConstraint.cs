@@ -53,7 +53,9 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public override string Description
         {
-            get { return _realConstraint.Description; }
+            get { return _realConstraint != null ? 
+                    _realConstraint.Description : 
+                    "containing " + MsgUtils.FormatValue(_expected); }
         }
 
         /// <summary>

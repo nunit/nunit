@@ -43,5 +43,18 @@ namespace NUnit.Framework.Constraints
         {
             Assert.That(42, new GreaterThanConstraint(40) & new LessThanConstraint(50));
         }
+
+        [Test]
+        public void HandlesFirstPartFailing()
+        {
+            const string test = "Couldn't load c:\\myfile.txt";
+
+            IResolveConstraint expression = Does.StartWith("Could not load").And.Contains("c:\\myfile.txt");
+            var constraint = expression.Resolve();
+            var constraintResult = constraint.ApplyTo(test);
+
+            Assert.That( constraintResult.IsSuccess, Is.False );
+            Assert.That( constraintResult.Description, Is.EqualTo( "String starting with \"Could not load\" and containing \"c:\\myfile.txt\"" ) );
+        }
     }
 }
