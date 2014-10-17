@@ -178,14 +178,14 @@ namespace NUnit.Framework.Internal
 
         #endregion
 
-        #region Operator+ Override
+        #region WithSite
 
         [TestCase(TestStatus.Failed, "Error", FailureSite.TearDown)]
         [TestCase(TestStatus.Skipped, "Ignored", FailureSite.Parent)]
         [TestCase(TestStatus.Inconclusive, "", FailureSite.SetUp)]
         public void AddSiteToResult(TestStatus status, string label, FailureSite site)
         {
-            var result = new ResultState(status, label) + site;
+            var result = new ResultState(status, label).WithSite(site);
 
             Assert.That(result.Status, Is.EqualTo(status));
             Assert.That(result.Label, Is.EqualTo(label));

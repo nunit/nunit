@@ -122,38 +122,22 @@ namespace NUnit.Framework.Interfaces
         /// <summary>
         /// A suite failed because one or more child tests failed or had errors
         /// </summary>
-        public readonly static ResultState ChildFailure = ResultState.Failure + FailureSite.Child;
+        public readonly static ResultState ChildFailure = ResultState.Failure.WithSite(FailureSite.Child);
 
         /// <summary>
         /// A suite failed in its OneTimeSetUp
         /// </summary>
-        public readonly static ResultState SetUpFailure = ResultState.Failure + FailureSite.SetUp;
+        public readonly static ResultState SetUpFailure = ResultState.Failure.WithSite(FailureSite.SetUp);
 
         /// <summary>
         /// A suite had an unexpected exception in its OneTimeSetUp
         /// </summary>
-        public readonly static ResultState SetUpError = ResultState.Error + FailureSite.SetUp;
+        public readonly static ResultState SetUpError = ResultState.Error.WithSite(FailureSite.SetUp);
 
         /// <summary>
         /// A suite had an unexpected exception in its OneTimeDown
         /// </summary>
-        public readonly static ResultState TearDownError = ResultState.Error + FailureSite.TearDown;
-
-        #endregion
-
-        #region Operator Override
-
-        /// <summary>
-        /// Return a new ResultState that uses the Status and Label of the
-        /// curent ResultState plus a specified site.
-        /// </summary>
-        /// <param name="result"></param>
-        /// <param name="site"></param>
-        /// <returns></returns>
-        public static ResultState operator +(ResultState result, FailureSite site)
-        {
-            return new ResultState(result.Status, result.Label, site);
-        }
+        public readonly static ResultState TearDownError = ResultState.Error.WithSite(FailureSite.TearDown);
 
         #endregion
 
@@ -176,6 +160,17 @@ namespace NUnit.Framework.Interfaces
         /// the failure or other result took place.
         /// </summary>
         public FailureSite Site { get; private set; }
+
+        /// <summary>
+        /// Get a new ResultState, which is the same as the current
+        /// one but with the FailureSite set to the specified value.
+        /// </summary>
+        /// <param name="site">The FailureSite to use</param>
+        /// <returns>A new ResultState</returns>
+        public ResultState WithSite(FailureSite site)
+        {
+            return new ResultState(this.Status, this.Label, site);
+        }
 
         #endregion
 

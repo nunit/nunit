@@ -249,7 +249,7 @@ namespace NUnit.Framework.Internal.Execution
                     var resultState = Result.ResultState.Status == TestStatus.Failed
                         ? ResultState.Failure // TODO: Converts errors to failures for the child. Should we do this?
                         : Result.ResultState;
-                    childResult.SetResult(resultState + FailureSite.Parent, "OneTimeSetUp: " + Result.Message);
+                    childResult.SetResult(resultState.WithSite(FailureSite.Parent), "OneTimeSetUp: " + Result.Message);
                     Result.AddResult(childResult);
                 }
             }

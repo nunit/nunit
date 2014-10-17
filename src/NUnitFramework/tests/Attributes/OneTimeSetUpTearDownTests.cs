@@ -192,7 +192,7 @@ namespace NUnit.Framework.Attributes
             ITestResult result = TestBuilder.RunTestFixture(fixture);
 
             // should have one suite and one fixture
-            Assert.AreEqual(ResultState.Ignored + FailureSite.SetUp, result.ResultState, "Suite should be ignored");
+            Assert.AreEqual(ResultState.Ignored.WithSite(FailureSite.SetUp), result.ResultState, "Suite should be ignored");
             Assert.AreEqual("TestFixtureSetUp called Ignore", result.Message);
             Assert.IsNotNull(result.StackTrace, "StackTrace should not be null");
 

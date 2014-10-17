@@ -439,15 +439,15 @@ namespace NUnit.Framework.Internal
                 ex = ex.InnerException;
 
             if (ex is ResultStateException)
-                SetResult(((ResultStateException)ex).ResultState + site,
+                SetResult(((ResultStateException)ex).ResultState.WithSite(site),
                     ex.Message,
                     ex.StackTrace);
             else if (ex is System.Threading.ThreadAbortException)
-                SetResult(ResultState.Cancelled + site,
+                SetResult(ResultState.Cancelled.WithSite(site),
                     "Test cancelled by user",
                     ex.StackTrace);
             else
-                SetResult(ResultState.Error + site,
+                SetResult(ResultState.Error.WithSite(site),
                     ExceptionHelper.BuildMessage(ex),
                     ExceptionHelper.BuildStackTrace(ex));
         }
@@ -472,7 +472,7 @@ namespace NUnit.Framework.Internal
                 ? ResultState.Cancelled
                 : ResultState.Error;
             if (Test.IsSuite)
-                resultState += FailureSite.TearDown;
+                resultState = resultState.WithSite(FailureSite.TearDown);
 
             string message = "TearDown : " + ExceptionHelper.BuildMessage(ex);
             if (this.Message != null)
