@@ -234,7 +234,7 @@ namespace NUnit.Framework.Internal.Execution
 
         private void SkipFixture(ResultState resultState, string message, string stackTrace)
         {
-            Result.SetResult(resultState, message, stackTrace);
+            Result.SetResult(resultState, message, StackFilter.Filter(stackTrace));
             SkipChildren();
         }
 
