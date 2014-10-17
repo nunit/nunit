@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2010 Charlie Poole
+// Copyright (c) 2010-2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -237,6 +237,8 @@ namespace NUnit.Framework.Internal
             thisNode.AddAttribute("result", ResultState.Status.ToString());
             if (ResultState.Label != string.Empty) // && ResultState.Label != ResultState.Status.ToString())
                 thisNode.AddAttribute("label", ResultState.Label);
+            if (ResultState.Site != FailureSite.Test)
+                thisNode.AddAttribute("site", ResultState.Site.ToString());
 
             thisNode.AddAttribute("start-time", StartTime.ToString("u"));
             thisNode.AddAttribute("end-time", EndTime.ToString("u"));
@@ -307,7 +309,7 @@ namespace NUnit.Framework.Internal
 
 
                         if (this.ResultState.Status != TestStatus.Failed)
-                            this.SetResult(ResultState.Failure, CHILD_ERRORS_MESSAGE);
+                            this.SetResult(ResultState.ChildFailure, CHILD_ERRORS_MESSAGE);
 
                         break;
 
@@ -317,7 +319,7 @@ namespace NUnit.Framework.Internal
                         {
                             case "Invalid":
                                 if (this.ResultState != ResultState.NotRunnable && this.ResultState.Status != TestStatus.Failed)
-                                    this.SetResult(ResultState.Failure, CHILD_ERRORS_MESSAGE);
+                                    this.SetResult(ResultState.ChildFailure, CHILD_ERRORS_MESSAGE);
 
                                 break;
 
@@ -412,19 +414,41 @@ namespace NUnit.Framework.Internal
             if (ex is NUnitException)
                 ex = ex.InnerException;
 
-            if (ex is System.Threading.ThreadAbortException)
-                SetResult(ResultState.Cancelled, "Test cancelled by user", ex.StackTrace);
-            else if (ex is AssertionException)
-                SetResult(ResultState.Failure, ex.Message, StackFilter.Filter(ex.StackTrace));
-            else if (ex is IgnoreException)
-                SetResult(ResultState.Ignored, ex.Message, StackFilter.Filter(ex.StackTrace));
-            else if (ex is InconclusiveException)
-                SetResult(ResultState.Inconclusive, ex.Message, StackFilter.Filter(ex.StackTrace));
-            else if (ex is SuccessException)
-                SetResult(ResultState.Success, ex.Message, StackFilter.Filter(ex.StackTrace));
+            if (ex is ResultStateException)
+                SetResult(((ResultStateException)ex).ResultState,
+                    ex.Message,
+                    ex.StackTrace);
+            else if (ex is System.Threading.ThreadAbortException)
+                SetResult(ResultState.Cancelled,
+                    "Test cancelled by user",
+                    ex.StackTrace);
             else
-                SetResult(ResultState.Error, 
-                    ExceptionHelper.BuildMessage(ex), 
+                SetResult(ResultState.Error,
+                    ExceptionHelper.BuildMessage(ex),
+                    ExceptionHelper.BuildStackTrace(ex));
+        }
+
+        /// <summary>
+        /// Set the test result based on the type of exception thrown
+        /// </summary>
+        /// <param name="ex">The exception that was thrown</param>
+        /// <param name="site">THe FailureSite to use in the result</param>
+        public void RecordException(Exception ex, FailureSite site)
+        {
+            if (ex is NUnitException)
+                ex = ex.InnerException;
+
+            if (ex is ResultStateException)
+                SetResult(((ResultStateException)ex).ResultState.WithSite(site),
+                    ex.Message,
+                    ex.StackTrace);
+            else if (ex is System.Threading.ThreadAbortException)
+                SetResult(ResultState.Cancelled.WithSite(site),
+                    "Test cancelled by user",
+                    ex.StackTrace);
+            else
+                SetResult(ResultState.Error.WithSite(site),
+                    ExceptionHelper.BuildMessage(ex),
                     ExceptionHelper.BuildStackTrace(ex));
         }
 
@@ -447,6 +471,8 @@ namespace NUnit.Framework.Internal
             ResultState resultState = this.ResultState == ResultState.Cancelled
                 ? ResultState.Cancelled
                 : ResultState.Error;
+            if (Test.IsSuite)
+                resultState = resultState.WithSite(FailureSite.TearDown);
 
             string message = "TearDown : " + ExceptionHelper.BuildMessage(ex);
             if (this.Message != null)

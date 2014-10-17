@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2009 Charlie Poole
+// Copyright (c) 2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,15 +21,17 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
+
 namespace NUnit.Framework
 {
-    using System;
+    using Interfaces;
 
     /// <summary>
     /// Thrown when a test executes inconclusively.
     /// </summary>
     [Serializable]
-    public class InconclusiveException : System.Exception
+    public class InconclusiveException : ResultStateException
     {
         /// <param name="message">The error message that explains 
         /// the reason for the exception</param>
@@ -55,5 +57,13 @@ namespace NUnit.Framework
             : base(info, context)
         { }
 #endif
+
+        /// <summary>
+        /// Gets the ResultState provided by this exception
+        /// </summary>
+        public override ResultState ResultState
+        {
+            get { return ResultState.Inconclusive; }
+        }
     }
 }

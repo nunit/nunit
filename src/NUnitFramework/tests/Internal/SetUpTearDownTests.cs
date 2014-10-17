@@ -123,7 +123,7 @@ namespace NUnit.Framework.Internal
             ITestResult suiteResult = TestBuilder.RunTestFixture(fixture);
             Assert.IsTrue(suiteResult.HasChildren, "Fixture test should have child result.");
             TestResult result = (TestResult)suiteResult.Children[0];
-            Assert.AreEqual(result.ResultState, ResultState.Error, "Test should be in error state");
+            Assert.AreEqual(ResultState.Error, result.ResultState, "Test should be in error state");
             string expected = string.Format("{0} : {1}", e.GetType().FullName, e.Message);
             Assert.AreEqual(expected, result.Message);
             Assert.That(result.StackTrace, Does.Contain(fixture.GetType().FullName)); // Sanity check
@@ -138,7 +138,7 @@ namespace NUnit.Framework.Internal
             ITestResult suiteResult = TestBuilder.RunTestFixture(fixture);
             Assert.That(suiteResult.HasChildren, "Fixture test should have child result.");
             ITestResult result = suiteResult.Children[0];
-            Assert.AreEqual(result.ResultState, ResultState.Error, "Test should be in error state");
+            Assert.AreEqual(ResultState.Error, result.ResultState, "Test should be in error state");
             string expected = string.Format("TearDown : {0} : {1}", e.GetType().FullName, e.Message);
             Assert.AreEqual(expected, result.Message);
             Assert.That(result.StackTrace, Does.StartWith("--TearDown"));
@@ -156,7 +156,7 @@ namespace NUnit.Framework.Internal
             ITestResult suiteResult = TestBuilder.RunTestFixture(fixture);
             Assert.That(suiteResult.HasChildren, "Fixture test should have child result.");
             ITestResult result = suiteResult.Children[0];
-            Assert.AreEqual(result.ResultState, ResultState.Error, "Test should be in error state");
+            Assert.AreEqual(ResultState.Error, result.ResultState, "Test should be in error state");
             string expected = string.Format("{0} : {1}", e1.GetType().FullName, e1.Message) + Env.NewLine
                 + string.Format("TearDown : {0} : {1}", e2.GetType().FullName, e2.Message);
             Assert.AreEqual(expected, result.Message);
