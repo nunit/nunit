@@ -79,7 +79,7 @@ namespace NUnit.Framework.Attributes
         public void TimeoutCanBeSetOnTestFixture()
         {
             ITestResult suiteResult = TestBuilder.RunTestFixture(typeof(TimeoutFixtureWithTimeoutOnFixture));
-            Assert.That(suiteResult.ResultState, Is.EqualTo(ResultState.Failure));
+            Assert.That(suiteResult.ResultState, Is.EqualTo(ResultState.ChildFailure));
             Assert.That(suiteResult.Message, Is.EqualTo("One or more child tests had errors"));
             ITestResult result = TestFinder.Find("Test2WithInfiniteLoop", suiteResult, false);
             Assert.That(result.ResultState, Is.EqualTo(ResultState.Failure));

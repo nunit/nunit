@@ -145,7 +145,7 @@ namespace NUnit.Framework.Api
             Assert.That(result.Test, Is.TypeOf<TestAssembly>());
             Assert.That(result.Test.RunState, Is.EqualTo(RunState.Runnable));
             Assert.That(result.Test.TestCaseCount, Is.EqualTo(MockAssembly.Tests));
-            Assert.That(result.ResultState, Is.EqualTo(ResultState.Failure));
+            Assert.That(result.ResultState, Is.EqualTo(ResultState.ChildFailure));
             Assert.That(result.PassCount, Is.EqualTo(MockAssembly.Success));
             Assert.That(result.FailCount, Is.EqualTo(MockAssembly.ErrorsAndFailures));
             Assert.That(result.SkipCount, Is.EqualTo(MockAssembly.NotRunnable + MockAssembly.Ignored));
@@ -202,7 +202,7 @@ namespace NUnit.Framework.Api
             Assert.That(_runner.Result.Test, Is.TypeOf<TestAssembly>());
             Assert.That(_runner.Result.Test.RunState, Is.EqualTo(RunState.Runnable));
             Assert.That(_runner.Result.Test.TestCaseCount, Is.EqualTo(MockAssembly.Tests));
-            Assert.That(_runner.Result.ResultState, Is.EqualTo(ResultState.Failure));
+            Assert.That(_runner.Result.ResultState, Is.EqualTo(ResultState.ChildFailure));
             Assert.That(_runner.Result.PassCount, Is.EqualTo(MockAssembly.Success));
             Assert.That(_runner.Result.FailCount, Is.EqualTo(MockAssembly.ErrorsAndFailures));
             Assert.That(_runner.Result.SkipCount, Is.EqualTo(MockAssembly.NotRunnable + MockAssembly.Ignored));

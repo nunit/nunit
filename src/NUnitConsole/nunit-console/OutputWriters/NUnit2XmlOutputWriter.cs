@@ -43,6 +43,9 @@ namespace NUnit.ConsoleRunner
         {
             resultStates["Passed"] = "Success";
             resultStates["Failed"] = "Failure";
+            resultStates["Failed:Child"] = "Failure";
+            resultStates["Failed:SetUp"] = "Failure";
+            resultStates["Failed:TearDown"] = "Failure";
             resultStates["Failed:Error"] = "Error";
             resultStates["Failed:Cancelled"] = "Cancelled";
             resultStates["Inconclusive"] = "Inconclusive";

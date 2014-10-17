@@ -28,20 +28,21 @@ namespace NUnit.Framework
     using Interfaces;
 
     /// <summary>
-    /// Thrown when an assertion failed.
+    /// Abstract base for Exceptions that terminate a test and provide a ResultState.
     /// </summary>
     [Serializable]
-    public class IgnoreException : ResultStateException
+    public abstract class ResultStateException : Exception
     {
-        /// <param name="message"></param>
-        public IgnoreException (string message) : base(message) 
+        /// <param name="message">The error message that explains 
+        /// the reason for the exception</param>
+        public ResultStateException (string message) : base(message) 
         {}
 
         /// <param name="message">The error message that explains 
         /// the reason for the exception</param>
         /// <param name="inner">The exception that caused the 
         /// current exception</param>
-        public IgnoreException(string message, Exception inner) :
+        public ResultStateException(string message, Exception inner) :
             base(message, inner) 
         {}
 
@@ -49,7 +50,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Serialization Constructor
         /// </summary>
-        protected IgnoreException(System.Runtime.Serialization.SerializationInfo info, 
+        protected ResultStateException(System.Runtime.Serialization.SerializationInfo info, 
             System.Runtime.Serialization.StreamingContext context) : base(info,context)
         {}
 #endif
@@ -57,9 +58,6 @@ namespace NUnit.Framework
         /// <summary>
         /// Gets the ResultState provided by this exception
         /// </summary>
-        public override ResultState ResultState
-        {
-            get { return ResultState.Ignored; }
-        }
+        public abstract ResultState ResultState { get; }
     }
 }

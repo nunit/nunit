@@ -75,10 +75,10 @@ namespace NUnit.Framework.Assertions
             suite.Add( TestBuilder.MakeFixture( typeof( IgnoredTestSuiteFixture ) ) );
             ITestResult fixtureResult = TestBuilder.RunTestSuite(suite, null).Children[0];
 
-            Assert.AreEqual(ResultState.Ignored, fixtureResult.ResultState);
+            Assert.AreEqual(ResultState.Ignored.WithSite(FailureSite.SetUp), fixtureResult.ResultState);
 
             foreach (ITestResult testResult in fixtureResult.Children)
-                Assert.AreEqual(ResultState.Ignored, testResult.ResultState);
+                Assert.AreEqual(ResultState.Ignored.WithSite(FailureSite.Parent), testResult.ResultState);
         }
 
         [Test]
