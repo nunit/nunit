@@ -229,10 +229,7 @@ namespace NUnit.ConsoleRunner
                     Console.WriteLine(message.InnerText);
 
                 if (stacktrace != null)
-                    Console.WriteLine(status == "Failed"
-                        ? StackTraceFilter.Filter(stacktrace.InnerText)
-                        : stacktrace.InnerText + Environment.NewLine);
-                    //Console.WriteLine(stacktrace.InnerText + Environment.NewLine);
+                    Console.WriteLine(stacktrace.InnerText + Environment.NewLine);
             }
 
             XmlNode reasonNode = result.SelectSingleNode("reason");
