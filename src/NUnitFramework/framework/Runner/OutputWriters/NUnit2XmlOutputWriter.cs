@@ -40,20 +40,6 @@ namespace NUnitLite.Runner
     {
         private XmlWriter xmlWriter;
 
-        private static Dictionary<string, string> resultStates = new Dictionary<string, string>();
-
-        static NUnit2XmlOutputWriter()
-        {
-            resultStates["Passed"] = "Success";
-            resultStates["Failed"] = "Failure";
-            resultStates["Failed:Error"] = "Error";
-            resultStates["Failed:Cancelled"] = "Cancelled";
-            resultStates["Inconclusive"] = "Inconclusive";
-            resultStates["Skipped"] = "Skipped";
-            resultStates["Skipped:Ignored"] = "Ignored";
-            resultStates["Skipped:Invalid"] = "NotRunnable";
-        }
-
         /// <summary>
         /// Write info about a test
         /// </summary>
@@ -222,7 +208,7 @@ namespace NUnitLite.Runner
             }
 
             TestStatus status = result.ResultState.Status;
-            string translatedResult = resultStates[result.ResultState.ToString()];
+            string translatedResult = TranslateResult(result.ResultState);
 
             if (status != TestStatus.Skipped)
             {
@@ -236,6 +222,37 @@ namespace NUnitLite.Runner
             {
                 xmlWriter.WriteAttributeString("executed", "False");
                 xmlWriter.WriteAttributeString("result", translatedResult);
+            }
+        }
+
+        private string TranslateResult(ResultState resultState)
+        {
+            switch (resultState.Status)
+            {
+                default:
+                case TestStatus.Passed:
+                    return "Success";
+                case TestStatus.Inconclusive:
+                    return "Inconclusive";
+                case TestStatus.Failed:
+                    switch (resultState.Label)
+                    {
+                        case "Error":
+                        case "Cancelled":
+                            return resultState.Label;
+                        default:
+                            return "Failure";
+                    }
+                case TestStatus.Skipped:
+                    switch (resultState.Label)
+                    {
+                        case "Ignored":
+                            return "Ignored";
+                        case "Invalid":
+                            return "NotRunnable";
+                        default:
+                            return "Skipped";
+                    }
             }
         }
 
