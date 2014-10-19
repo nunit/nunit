@@ -37,23 +37,6 @@ namespace NUnit.ConsoleRunner
     {
         private XmlWriter xmlWriter;
 
-        private static Dictionary<string, string> resultStates = new Dictionary<string, string>();
-
-        static NUnit2XmlOutputWriter()
-        {
-            resultStates["Passed"] = "Success";
-            resultStates["Failed"] = "Failure";
-            resultStates["Failed:Child"] = "Failure";
-            resultStates["Failed:SetUp"] = "Failure";
-            resultStates["Failed:TearDown"] = "Failure";
-            resultStates["Failed:Error"] = "Error";
-            resultStates["Failed:Cancelled"] = "Cancelled";
-            resultStates["Inconclusive"] = "Inconclusive";
-            resultStates["Skipped"] = "Skipped";
-            resultStates["Skipped:Ignored"] = "Ignored";
-            resultStates["Skipped:Invalid"] = "NotRunnable";
-        }
-
         public void WriteResultFile(XmlNode result, string outputPath)
         {
             using (StreamWriter writer = new StreamWriter(outputPath, false, Encoding.UTF8))
@@ -142,6 +125,37 @@ namespace NUnit.ConsoleRunner
             xmlWriter.WriteEndElement();
         }
 
+        private string TranslateResult(string resultState, string label)
+        {
+            switch (resultState)
+            {
+                default:
+                case "Passed":
+                    return "Success";
+                case "Inconclusive":
+                    return "Inconclusive";
+                case "Failed":
+                    switch (label)
+                    {
+                        case "Error":
+                        case "Cancelled":
+                            return label;
+                        default:
+                            return "Failure";
+                    }
+                case "Skipped":
+                    switch (label)
+                    {
+                        case "Ignored":
+                            return "Ignored";
+                        case "Invalid":
+                            return "NotRunnable";
+                        default:
+                            return "Skipped";
+                    }
+            }
+        }
+
         private void WriteResultElement(XmlNode result)
         {
             StartTestElement(result);
@@ -211,7 +225,7 @@ namespace NUnit.ConsoleRunner
                 resultState += ":" + label;
 
             xmlWriter.WriteAttributeString("executed", executed);
-            xmlWriter.WriteAttributeString("result", resultStates[resultState]);
+            xmlWriter.WriteAttributeString("result", TranslateResult(resultState, label));
 
             if (executed == "True")
             {
