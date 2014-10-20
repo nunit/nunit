@@ -33,7 +33,7 @@ namespace NUnit.Framework.Assertions
     [TestFixture]
     public class ArrayEqualsFixture : AssertionHelper
     {
-        //[OneTimeSetUp]
+        [OneTimeSetUp]
         public void SetUp()
         {
             throw new Exception("Deliberate exception");

@@ -77,7 +77,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\NUnitEngine\nunit.engine\nunit.engine.csproj">
-      <Project>{372a3447-d657-40ff-a089-77c19fec30c8}</Project>
+      <Project>{372A3447-D657-40FF-A089-77C19FEC30C8}</Project>
       <Name>nunit.engine</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\NUnitFramework\framework\nunit.framework-2.0.csproj">
