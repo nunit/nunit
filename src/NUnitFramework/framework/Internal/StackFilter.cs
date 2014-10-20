@@ -35,7 +35,7 @@ namespace NUnit.Framework.Internal
     public static class StackFilter
     {
         private static readonly Regex assertOrAssumeRegex = new Regex(
-            @"at NUnit\.Framework\.Ass(ert|ume)\.");
+            @" NUnit\.Framework\.Ass(ert|ume)\.");
 
         /// <summary>
         /// Filters a raw stack trace and returns the result.
@@ -57,7 +57,11 @@ namespace NUnit.Framework.Internal
                     /*Skip*/
                     ;
 
-                while (line != null)
+                // Copy lines down to the line that invoked the failing method.
+                // This is actually only needed for the compact framework, but 
+                // we do it on all platforms for simplicity. Desktop platforms
+                // won't have any System.Reflection lines.
+                while (line != null && line.IndexOf(" System.Reflection.") < 0)
                 {
                     sw.WriteLine(line.Trim());
                     line = sr.ReadLine();
