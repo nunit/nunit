@@ -169,6 +169,7 @@ namespace NUnit.ConsoleRunner
                             if (site == "SetUp" || site == "TearDown")
                                 using (new ColorConsole(ColorStyle.Failure))
                                     WriteSingleResult(result);
+                            if (site == "SetUp") return;
                         }
                     }
                     
@@ -212,6 +213,14 @@ namespace NUnit.ConsoleRunner
             string status = result.GetAttribute("label");
             if (status == null)
                 status = result.GetAttribute("result");
+
+            if (status == "Failed" || status == "Error")
+            {
+                var site = result.GetAttribute("site");
+                if (site == "SetUp" || site == "TearDown")
+                    status = site + " " + status;
+            }
+
             string fullName = result.GetAttribute("fullname");
 
             Console.WriteLine("{0}) {1} : {2}", ++reportIndex, status, fullName);

@@ -157,6 +157,7 @@ namespace NUnitLite.Runner
                     if (suite.TestType == "Theory" || site == FailureSite.SetUp || site == FailureSite.TearDown)
                         using (new ColorConsole(ColorStyle.Failure))
                         WriteSingleResult(result);
+                    if (site == FailureSite.SetUp) return;
                 }
 
                 foreach (ITestResult childResult in result.Children)
@@ -221,6 +222,13 @@ namespace NUnitLite.Runner
             string status = result.ResultState.Label;
             if (string.IsNullOrEmpty(status))
                 status = result.ResultState.Status.ToString();
+
+            if (status == "Failed" || status == "Error")
+            {
+                var site = result.ResultState.Site.ToString();
+                if (site == "SetUp" || site == "TearDown")
+                    status = site + " " + status;
+            }
 
             _writer.WriteLine();
             _writer.WriteLine("{0}) {1} : {2}", ++reportCount, status, result.FullName);
