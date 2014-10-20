@@ -21,14 +21,15 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !SILVERLIGHT && false
+#if !SILVERLIGHT
 using System;
 using System.IO;
 using System.Text;
 using System.Xml;
 using NUnit.Framework;
-using NUnit.Framework.Internal;
+using NUnit.Framework.Interfaces;
 using NUnit.Tests.Assemblies;
+using XmlNode = System.Xml.XmlNode;
 
 namespace NUnitLite.Runner.Tests
 {
@@ -43,12 +44,12 @@ namespace NUnitLite.Runner.Tests
         [TestFixtureSetUp]
         public void RunMockAssemblyTests()
         {
-            TestResult result = NUnit.TestUtilities.TestBuilder.RunTestFixture(typeof(MockTestFixture));
+            ITestResult result = NUnit.TestUtilities.TestBuilder.RunTestFixture(typeof(MockTestFixture));
             Assert.NotNull(result);
 
             StringBuilder sb = new StringBuilder();
             StringWriter writer = new StringWriter(sb);
-            new NUnit2XmlOutputWriter(DateTime.Now).WriteResultFile(result, writer);
+            new NUnit2XmlOutputWriter().WriteResultFile(result, writer);
             writer.Close();
 
 #if DEBUG

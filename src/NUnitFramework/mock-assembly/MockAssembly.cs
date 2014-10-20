@@ -69,23 +69,23 @@ namespace NUnit.Tests
         [Category("FixtureCategory")]
         public class MockTestFixture
         {
-            public static readonly int Tests = 11;
-            public static readonly int Suites = 1;
+            public const int Tests = 11;
+            public const int Suites = 1;
 
-            public static readonly int Ignored = 1;
-            public static readonly int Explicit = 1;
-            public static readonly int NotRunnable = 2;
-            public static readonly int NotRun = Ignored + Explicit + NotRunnable;
-            public static readonly int TestsRun = Tests - NotRun;
-            public static readonly int ResultCount = Tests - Explicit;
+            public const int Ignored = 1;
+            public const int Explicit = 1;
+            public const int NotRunnable = 2;
+            public const int NotRun = Ignored + Explicit + NotRunnable;
+            public const int TestsRun = Tests - NotRun;
+            public const int ResultCount = Tests - Explicit;
 
-            public static readonly int Failures = 1;
-            public static readonly int Errors = 1;
-            public static readonly int ErrorsAndFailures = Errors + Failures;
+            public const int Failures = 1;
+            public const int Errors = 1;
+            public const int ErrorsAndFailures = Errors + Failures;
             public const int Inconclusive = 1;
 
-            public static readonly int Categories = 5;
-            public static readonly int MockCategoryTests = 2;
+            public const int Categories = 5;
+            public const int MockCategoryTests = 2;
 
             [Test(Description="Mock Test #1")]
             public void MockTest1()
