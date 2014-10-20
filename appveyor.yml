@@ -1,0 +1,9 @@
+before_build:
+  ./build /p:Configuration=Release "/t:DumpSettings;CleanAll"
+
+build_script: 
+  ./build /p:Configuration=Release "/t:BuildAll"
+  
+test_script:
+  ./build /p:Configuration=Release "/t:TestAll"
+   
