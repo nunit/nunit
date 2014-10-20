@@ -1,9 +1,6 @@
-before_build:
-  ./build /p:Configuration=Release "/t:DumpSettings;CleanAll"
-
 build_script: 
-  ./build /p:Configuration=Release "/t:BuildAll"
+  msbuild nunit.sln /p:Configuration=Release /t:Rebuild
   
 test_script:
-  ./build /p:Configuration=Release "/t:TestAll"
+  build /p:Configuration=Release /t:TestAll
    
