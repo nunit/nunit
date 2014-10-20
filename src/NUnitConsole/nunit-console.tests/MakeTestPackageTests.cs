@@ -65,20 +65,22 @@ namespace NUnit.ConsoleRunner.Tests
             Assert.AreEqual(50, package.Settings["DefaultTimeout"]);
         }
 
-        [Test]
-        public void WhenProcessModelIsSpecified_PackageIncludesIt()
+        [TestCase("Separate")]
+        [TestCase("separate")]
+        public void WhenProcessModelIsSpecified_PackageIncludesIt(string optionValue)
         {
-            var options = new ConsoleOptions("test.dll", "--process=Separate");
+            var options = new ConsoleOptions("test.dll", "--process=" + optionValue);
             var package = ConsoleRunner.MakeTestPackage(options);
 
             Assert.That(package.Settings.ContainsKey("ProcessModel"));
             Assert.AreEqual("Separate", package.Settings["ProcessModel"]);
         }
 
-        [Test]
-        public void WhenDomainUsageIsSpecified_PackageIncludesIt()
+        [TestCase("Multiple")]
+        [TestCase("multiple")]
+        public void WhenDomainUsageIsSpecified_PackageIncludesIt(string optionValue)
         {
-            var options = new ConsoleOptions("test.dll", "--domain=Multiple");
+            var options = new ConsoleOptions("test.dll", "--domain=" + optionValue);
             var package = ConsoleRunner.MakeTestPackage(options);
 
             Assert.That(package.Settings.ContainsKey("DomainUsage"));
@@ -105,10 +107,11 @@ namespace NUnit.ConsoleRunner.Tests
             Assert.AreEqual("Release", package.Settings["ActiveConfig"]);
         }
 
-        [Test]
-        public void WhenTraceIsSpecified_PackageIncludesIt()
+        [TestCase("Error")]
+        [TestCase("error")]
+        public void WhenTraceIsSpecified_PackageIncludesIt(string optionValue)
         {
-            var options = new ConsoleOptions("test.dll", "--trace=Error");
+            var options = new ConsoleOptions("test.dll", "--trace=" + optionValue);
             var package = ConsoleRunner.MakeTestPackage(options);
 
             Assert.That(package.Settings.ContainsKey("InternalTraceLevel"));

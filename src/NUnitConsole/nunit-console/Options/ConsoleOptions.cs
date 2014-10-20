@@ -266,6 +266,10 @@ namespace NUnit.ConsoleRunner.Options
 
         #region Helper Methods
 
+        /// <summary>
+        /// Case is ignored when val is compared to validValues. When a match is found, the
+        /// returned value will be in the canonical case from validValues.
+        /// </summary>
         private string RequiredValue(string val, string option, params string[] validValues)
         {
             if (val == null || val == string.Empty)
@@ -279,7 +283,7 @@ namespace NUnit.ConsoleRunner.Options
 
                 foreach (string valid in validValues)
                     if (string.Compare(valid, val, true) == 0)
-                        isValid = true;
+                        return valid;
 
             }
 

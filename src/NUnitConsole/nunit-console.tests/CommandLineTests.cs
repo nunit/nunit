@@ -121,6 +121,25 @@ namespace NUnit.ConsoleRunner.Tests
             }
         }
 
+        [TestCase("ProcessModel", "process", new string[] { "Single", "Separate", "Multiple" })]
+        [TestCase("DomainUsage", "domain", new string[] { "None", "Single", "Multiple" })]
+        [TestCase("DisplayTestLabels", "labels", new string[] { "Off", "On", "All" })]
+        [TestCase("InternalTraceLevel", "trace", new string[] { "Off", "Error", "Warning", "Info", "Debug", "Verbose" })]
+        public void CanRecognizeLowerCaseOptionValues(string propertyName, string optionName, string[] canonicalValues)
+        {
+            PropertyInfo property = GetPropertyInfo(propertyName);
+            Assert.AreEqual(typeof(string), property.PropertyType);
+
+            foreach (string canonicalValue in canonicalValues)
+            {
+                string lowercaseValue = canonicalValue.ToLowerInvariant();
+                string optionPlusValue = string.Format("--{0}:{1}", optionName, lowercaseValue);
+                ConsoleOptions options = new ConsoleOptions(optionPlusValue);
+                Assert.True(options.Validate(), "Should be valid: " + optionPlusValue);
+                Assert.AreEqual(canonicalValue, (string)property.GetValue(options, null), "Didn't recognize " + optionPlusValue);
+            }
+        }
+
         [TestCase("DefaultTimeout", "timeout")]
         [TestCase("RandomSeed", "seed")]
         [TestCase("NumWorkers", "workers")]
