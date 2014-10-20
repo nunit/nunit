@@ -70,7 +70,6 @@
     <Compile Include="Utilities\PackageSettings.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="ResultSummary.cs" />
-    <Compile Include="Utilities\StackTraceFilter.cs" />
     <Compile Include="TestEventHandler.cs" />
     <Compile Include="Utilities\TestFilterBuilder.cs" />
     <Compile Include="ResultReporter.cs" />

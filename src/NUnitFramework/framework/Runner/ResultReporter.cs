@@ -94,7 +94,7 @@ namespace NUnitLite.Runner
 
             _writer.WriteLine();
             _writer.WriteLine(ColorStyle.SectionHeader, "Test Run Result -");
-            _writer.WriteLabelLine("   Overall result: ", result.ResultState, overall);
+            _writer.WriteLabelLine("   Overall result: ", result.ResultState.Status, overall);
 
             _writer.WriteLabel("   Tests run: ", summary.TestCount.ToString(CultureInfo.CurrentUICulture));
             _writer.WriteLabel(", Passed: ", summary.PassCount.ToString(CultureInfo.CurrentUICulture));
@@ -218,11 +218,15 @@ namespace NUnitLite.Runner
 
         private void WriteSingleResult(ITestResult result)
         {
+            string status = result.ResultState.Label;
+            if (string.IsNullOrEmpty(status))
+                status = result.ResultState.Status.ToString();
+
             _writer.WriteLine();
-            _writer.WriteLine("{0}) {1} ({2})", ++reportCount, result.Name, result.FullName);
+            _writer.WriteLine("{0}) {1} : {2}", ++reportCount, status, result.FullName);
 
             if (result.Message != null && result.Message != string.Empty)
-                _writer.WriteLine("   {0}", result.Message);
+                _writer.WriteLine(result.Message);
 
             if (result.StackTrace != null && result.StackTrace != string.Empty)
                 _writer.WriteLine(result.StackTrace);

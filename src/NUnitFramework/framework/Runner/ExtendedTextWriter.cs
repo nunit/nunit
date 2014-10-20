@@ -28,10 +28,19 @@ using System.Text;
 
 namespace NUnitLite.Runner
 {
+    /// <summary>
+    /// ExtendedTextWriter is a TextWriter that supports 
+    /// color display when used with the Console.
+    /// </summary>
     public class ExtendedTextWriter : TextWriter
     {
         private TextWriter _writer;
 
+        /// <summary>
+        /// Construct an ExtendedTestWriter with output
+        /// going to a specified TextWriter.
+        /// </summary>
+        /// <param name="writer">The TextWriter to receive output</param>
         public ExtendedTextWriter(TextWriter writer)
         {
             _writer = writer;
@@ -39,21 +48,33 @@ namespace NUnitLite.Runner
 
         #region TextWriter Overrides
 
+        /// <summary>
+        /// Write a single char value
+        /// </summary>
         public override void Write(char value)
         {
             _writer.Write(value);
         }
 
+        /// <summary>
+        /// Write a string value
+        /// </summary>
         public override void Write(string value)
         {
             _writer.Write(value);
         }
 
+        /// <summary>
+        /// Write a string value followed by a NewLine
+        /// </summary>
         public override void WriteLine(string value)
         {
             _writer.WriteLine(value);
         }
 
+        /// <summary>
+        /// Gets the encoding for this ExtendedTextWriter
+        /// </summary>
         public override Encoding Encoding
         {
 #if SILVERLIGHT
@@ -61,6 +82,14 @@ namespace NUnitLite.Runner
 #else
             get { return _writer.Encoding; }
 #endif
+        }
+
+        /// <summary>
+        /// Close the ExtendedTextWriter
+        /// </summary>
+        public override void Close()
+        {
+            _writer.Close();
         }
 
         #endregion
