@@ -2,5 +2,6 @@ build_script:
   msbuild nunit.sln /p:Configuration=Release /t:Rebuild
   
 test_script:
-  nunit-console nunit.engine.tests.dll nunit-console.tests.dll -result:TestResult.xml
+  cd bin\Release
+  nunit-console.exe nunit.engine.tests.dll nunit-console.tests.dll -result:TestResult.xml
 
