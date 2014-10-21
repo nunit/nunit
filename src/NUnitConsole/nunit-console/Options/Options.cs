@@ -798,8 +798,8 @@ namespace Mono.Options
 			if (!GetOptionParts (argument, out f, out n, out s, out v))
 				return false;
 
-         if (n != null)
-            n = n.ToLowerInvariant();
+			if (n != null)
+				n = n.ToLowerInvariant();
 
 			Option p;
 			if (Contains (n)) {
