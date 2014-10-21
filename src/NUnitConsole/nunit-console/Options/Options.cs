@@ -303,8 +303,8 @@ namespace Mono.Options
 			if (maxValueCount < 0)
 				throw new ArgumentOutOfRangeException ("maxValueCount");
 
-			this.prototype   = prototype;
-			this.names       = prototype.Split ('|');
+			this.prototype   = prototype.ToLowerInvariant();
+			this.names       = this.prototype.Split ('|');
 			this.description = description;
 			this.count       = maxValueCount;
 			this.type        = ParsePrototype ();
@@ -797,6 +797,9 @@ namespace Mono.Options
 			string f, n, s, v;
 			if (!GetOptionParts (argument, out f, out n, out s, out v))
 				return false;
+
+		   if (n != null)
+		      n = n.ToLowerInvariant();
 
 			Option p;
 			if (Contains (n)) {
