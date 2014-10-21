@@ -441,7 +441,7 @@ namespace NUnit.Framework.Internal
             if (ex is ResultStateException)
                 SetResult(((ResultStateException)ex).ResultState.WithSite(site),
                     ex.Message,
-                    ex.StackTrace);
+                    StackFilter.Filter(ex.StackTrace));
             else if (ex is System.Threading.ThreadAbortException)
                 SetResult(ResultState.Cancelled.WithSite(site),
                     "Test cancelled by user",
