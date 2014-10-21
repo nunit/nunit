@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text;
@@ -121,11 +122,11 @@ namespace NUnit.ConsoleRunner.Tests
             }
         }
 
-        [TestCase("ProcessModel", "process", new string[] { "Single", "Separate", "Multiple" })]
-        [TestCase("DomainUsage", "domain", new string[] { "None", "Single", "Multiple" })]
-        [TestCase("DisplayTestLabels", "labels", new string[] { "Off", "On", "All" })]
-        [TestCase("InternalTraceLevel", "trace", new string[] { "Off", "Error", "Warning", "Info", "Debug", "Verbose" })]
-        public void CanRecognizeLowerCaseOptionValues(string propertyName, string optionName, string[] canonicalValues)
+        [TestCase("ProcessModel", "process", new[] { "Single", "Separate", "Multiple" })]
+        [TestCase("DomainUsage", "domain", new[] { "None", "Single", "Multiple" })]
+        [TestCase("DisplayTestLabels", "labels", new[] { "Off", "On", "All" })]
+        [TestCase("InternalTraceLevel", "trace", new[] { "Off", "Error", "Warning", "Info", "Debug", "Verbose" })]
+        public void CanRecognizeLowerCaseOptionValues(string propertyName, string optionName, IEnumerable<string> canonicalValues)
         {
             PropertyInfo property = GetPropertyInfo(propertyName);
             Assert.AreEqual(typeof(string), property.PropertyType);
@@ -134,10 +135,48 @@ namespace NUnit.ConsoleRunner.Tests
             {
                 string lowercaseValue = canonicalValue.ToLowerInvariant();
                 string optionPlusValue = string.Format("--{0}:{1}", optionName, lowercaseValue);
-                ConsoleOptions options = new ConsoleOptions(optionPlusValue);
+                var options = new ConsoleOptions(optionPlusValue);
                 Assert.True(options.Validate(), "Should be valid: " + optionPlusValue);
-                Assert.AreEqual(canonicalValue, (string)property.GetValue(options, null), "Didn't recognize " + optionPlusValue);
+                Assert.AreEqual(canonicalValue, property.GetValue(options, null), "Didn't recognize " + optionPlusValue);
             }
+        }
+
+        [TestCase( "ProcessModel", "process", new[] { "Single", "Separate", "Multiple" } )]
+        [TestCase( "DomainUsage", "domain", new[] { "None", "Single", "Multiple" } )]
+        [TestCase( "DisplayTestLabels", "labels", new[] { "Off", "On", "All" } )]
+        [TestCase( "InternalTraceLevel", "trace", new[] { "Off", "Error", "Warning", "Info", "Debug", "Verbose" } )]
+        public void CanRecognizeUpperCaseOptionValues( string propertyName, string optionName, IEnumerable<string> canonicalValues )
+        {
+           PropertyInfo property = GetPropertyInfo( propertyName );
+           Assert.AreEqual( typeof( string ), property.PropertyType );
+
+           foreach ( string canonicalValue in canonicalValues )
+           {
+              string uppercaseValue = canonicalValue.ToUpperInvariant();
+              string optionPlusValue = string.Format( "--{0}:{1}", optionName, uppercaseValue );
+              var options = new ConsoleOptions( optionPlusValue );
+              Assert.True( options.Validate(), "Should be valid: " + optionPlusValue );
+              Assert.AreEqual( canonicalValue, property.GetValue( options, null ), "Didn't recognize " + optionPlusValue );
+           }
+        }
+
+        [TestCase( "ProcessModel", "process", new[] { "Single", "Separate", "Multiple" } )]
+        [TestCase( "DomainUsage", "domain", new[] { "None", "Single", "Multiple" } )]
+        [TestCase( "DisplayTestLabels", "labels", new[] { "Off", "On", "All" } )]
+        [TestCase( "InternalTraceLevel", "trace", new[] { "Off", "Error", "Warning", "Info", "Debug", "Verbose" } )]
+        public void CanRecognizeUpperCaseOptionNames( string propertyName, string optionName, IEnumerable<string> canonicalValues )
+        {
+           PropertyInfo property = GetPropertyInfo( propertyName );
+           Assert.AreEqual( typeof( string ), property.PropertyType );
+
+           foreach ( string canonicalValue in canonicalValues )
+           {
+              string upperCaseName = optionName.ToUpperInvariant();
+              string optionPlusValue = string.Format( "--{0}:{1}", upperCaseName, canonicalValue );
+              var options = new ConsoleOptions( optionPlusValue );
+              Assert.True( options.Validate(), "Should be valid: " + optionPlusValue );
+              Assert.AreEqual( canonicalValue, property.GetValue( options, null ), "Didn't recognize " + optionPlusValue );
+           }
         }
 
         [TestCase("DefaultTimeout", "timeout")]
