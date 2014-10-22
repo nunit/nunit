@@ -31,17 +31,17 @@ using NUnit.Framework.Compatibility;
 namespace NUnit.Framework.Tests.Compatibility
 {
     [TestFixture]
-    public class StopwatchTests
+    public abstract class StopwatchTests
     {
-        private const int SLEEP = 100;
-        private const int MIN = (int)(SLEEP * 0.9);
-        private const int MAX = (int)(SLEEP * 1.5);
+        private const int DELAY = 100;
+        private const int MIN = (int)(DELAY * 0.9);
+        private const int MAX = (int)(DELAY * 1.1);
 
         [Test]
         public void TestStartNewIsRunning()
         {
             var watch = Stopwatch.StartNew();
-            Thread.Sleep(SLEEP);
+            Delay(DELAY);
             Assert.That(watch.IsRunning, Is.True);
             Assert.That(watch.ElapsedMilliseconds, Is.GreaterThanOrEqualTo(MIN));
             Assert.That(watch.ElapsedMilliseconds, Is.LessThan(MAX));
@@ -51,7 +51,7 @@ namespace NUnit.Framework.Tests.Compatibility
         public void TestConstructNewIsNotRunning()
         {
             var watch = new Stopwatch();
-            Thread.Sleep(SLEEP);
+            Delay(DELAY);
             Assert.That(watch.IsRunning, Is.False);
             Assert.That(watch.ElapsedMilliseconds, Is.EqualTo(0));
         }
@@ -60,7 +60,7 @@ namespace NUnit.Framework.Tests.Compatibility
         public void TestGetTimestamp()
         {
             var before = Stopwatch.GetTimestamp();
-            Thread.Sleep(SLEEP);
+            Delay(DELAY);
             var after = Stopwatch.GetTimestamp();
             Assert.That(before, Is.LessThan(after));
         }
@@ -69,7 +69,7 @@ namespace NUnit.Framework.Tests.Compatibility
         public void TestReset()
         {
             var watch = Stopwatch.StartNew();
-            Thread.Sleep(SLEEP);
+            Delay(DELAY);
             watch.Reset();
             Assert.That(watch.IsRunning, Is.False);
             Assert.That(watch.ElapsedMilliseconds, Is.EqualTo(0));
@@ -79,9 +79,9 @@ namespace NUnit.Framework.Tests.Compatibility
         public void TestRestart()
         {
             var watch = Stopwatch.StartNew();
-            Thread.Sleep(SLEEP);
+            Delay(DELAY);
             watch.Restart();
-            Thread.Sleep(SLEEP);
+            Delay(DELAY);
             Assert.That(watch.IsRunning, Is.True);
             Assert.That(watch.ElapsedMilliseconds, Is.GreaterThanOrEqualTo(MIN));
             Assert.That(watch.ElapsedMilliseconds, Is.LessThan(MAX));
@@ -94,7 +94,7 @@ namespace NUnit.Framework.Tests.Compatibility
             Assert.That(watch.IsRunning, Is.False);
             Assert.That(watch.ElapsedMilliseconds, Is.EqualTo(0));
             watch.Start();
-            Thread.Sleep(SLEEP);
+            Delay(DELAY);
             Assert.That(watch.IsRunning, Is.True);
             Assert.That(watch.ElapsedMilliseconds, Is.GreaterThanOrEqualTo(MIN));
             Assert.That(watch.ElapsedMilliseconds, Is.LessThan(MAX));
@@ -105,13 +105,13 @@ namespace NUnit.Framework.Tests.Compatibility
         {
             var watch = Stopwatch.StartNew();
             Assert.That(watch.IsRunning, Is.True);
-            Thread.Sleep(SLEEP);
+            Delay(DELAY);
             watch.Stop();
             Assert.That(watch.IsRunning, Is.False);
             var saved = watch.ElapsedMilliseconds;
             Assert.That(saved, Is.GreaterThanOrEqualTo(MIN));
             Assert.That(watch.ElapsedMilliseconds, Is.LessThan(MAX));
-            Thread.Sleep(SLEEP);
+            Delay(DELAY);
             Assert.That(watch.ElapsedMilliseconds, Is.EqualTo(saved));
         }        
 
@@ -128,5 +128,38 @@ namespace NUnit.Framework.Tests.Compatibility
             Assert.That(Stopwatch.IsHighResolution, Is.False);
         }    
 #endif
+
+        protected abstract void Delay(int delay);
+    }
+
+    public class StopwatchTests_Sleep : StopwatchTests
+    {
+        protected override void Delay(int delay)
+        {
+            Thread.Sleep(delay);
+        }
+    }
+
+    public class StopwatchTests_AutoResetEvent : StopwatchTests
+    {
+        private AutoResetEvent waitEvent = new AutoResetEvent(false);
+
+        protected override void Delay(int delay)
+        {
+            waitEvent.WaitOne(delay);
+        }
+    }
+
+    public class StopwatchTests_MonitorWait : StopwatchTests
+    {
+        private object waitLock = new object();
+
+        protected override void Delay(int delay)
+        {
+            lock (waitLock)
+            {
+                Monitor.Wait(waitLock, delay);
+            }
+        }
     }
 }
