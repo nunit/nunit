@@ -34,8 +34,7 @@ namespace NUnit.Framework.Tests.Compatibility
     public class StopwatchTests
     {
         private const int DELAY = 100;
-        private const int MIN = (int)(DELAY * 0.9);
-        private const int MAX = (int)(DELAY * 1.1);
+        private const int TOLERANCE = 20;
 
         [Test]
         public void TestStartNewIsRunning()
@@ -43,8 +42,7 @@ namespace NUnit.Framework.Tests.Compatibility
             var watch = Stopwatch.StartNew();
             Delay(DELAY);
             Assert.That(watch.IsRunning, Is.True);
-            Assert.That(watch.ElapsedMilliseconds, Is.GreaterThanOrEqualTo(MIN));
-            Assert.That(watch.ElapsedMilliseconds, Is.LessThan(MAX));
+            Assert.That(watch.ElapsedMilliseconds, Is.EqualTo(DELAY).Within(TOLERANCE).Percent);
         }
 
         [Test]
@@ -83,8 +81,7 @@ namespace NUnit.Framework.Tests.Compatibility
             watch.Restart();
             Delay(DELAY);
             Assert.That(watch.IsRunning, Is.True);
-            Assert.That(watch.ElapsedMilliseconds, Is.GreaterThanOrEqualTo(MIN));
-            Assert.That(watch.ElapsedMilliseconds, Is.LessThan(MAX));
+            Assert.That(watch.ElapsedMilliseconds, Is.EqualTo(DELAY).Within(TOLERANCE).Percent);
         }
 
         [Test]
@@ -96,8 +93,7 @@ namespace NUnit.Framework.Tests.Compatibility
             watch.Start();
             Delay(DELAY);
             Assert.That(watch.IsRunning, Is.True);
-            Assert.That(watch.ElapsedMilliseconds, Is.GreaterThanOrEqualTo(MIN));
-            Assert.That(watch.ElapsedMilliseconds, Is.LessThan(MAX));
+            Assert.That(watch.ElapsedMilliseconds, Is.EqualTo(DELAY).Within(TOLERANCE).Percent);
         }
 
         [Test]
@@ -109,8 +105,7 @@ namespace NUnit.Framework.Tests.Compatibility
             watch.Stop();
             Assert.That(watch.IsRunning, Is.False);
             var saved = watch.ElapsedMilliseconds;
-            Assert.That(saved, Is.GreaterThanOrEqualTo(MIN));
-            Assert.That(watch.ElapsedMilliseconds, Is.LessThan(MAX));
+            Assert.That(watch.ElapsedMilliseconds, Is.EqualTo(DELAY).Within(TOLERANCE).Percent);
             Delay(DELAY);
             Assert.That(watch.ElapsedMilliseconds, Is.EqualTo(saved));
         }        
