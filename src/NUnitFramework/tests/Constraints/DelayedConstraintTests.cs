@@ -29,253 +29,11 @@ using ActualValueDelegate = NUnit.Framework.Constraints.ActualValueDelegate<obje
 namespace NUnit.Framework.Constraints
 {
     [TestFixture]
-    public class DelayedConstraintTests_Sleep : ConstraintTestBase
+    public class DelayedConstraintTests : ConstraintTestBase
     {
-        // TODO: Sleeping is too imprecise, we need to find another way to test this.
         private const int DELAY = 100;
         private const int AFTER = 300;
         private const int POLLING = 50;
-        private const int MIN = (int)(AFTER * 1.0);
-        private const int MAX = (int)(AFTER * 1.6);
-
-        private static bool boolValue;
-        private static List<int> list;
-        private static string statusString;
-
-        [SetUp]
-        public void SetUp()
-        {
-            theConstraint = new DelayedConstraint(new EqualConstraint(true), 500);
-            expectedDescription = "True after 500 millisecond delay";
-            stringRepresentation = "<after 500 <equal True>>";
-
-            boolValue = false;
-            list = new List<int>();
-            statusString = null;
-            //SetValueTrueAfterDelay(300);
-        }
-
-        object[] SuccessData = new object[] { true };
-        object[] FailureData = new object[] { 
-            new TestCaseData( false, "False" ),
-            new TestCaseData( 0, "0" ),
-            new TestCaseData( null, "null" ) };
-
-        object[] InvalidData = new object[] { InvalidDelegate };
-
-        ActualValueDelegate<object>[] SuccessDelegates = new ActualValueDelegate<object>[] { DelegateReturningValue };
-        ActualValueDelegate<object>[] FailureDelegates = new ActualValueDelegate<object>[] { DelegateReturningFalse, DelegateReturningZero };
-
-        [Test, TestCaseSource("SuccessDelegates")]
-        public void SucceedsWithGoodDelegates(ActualValueDelegate<object> del)
-        {
-            SetValuesAfterDelay(DELAY);
-            Assert.That(theConstraint.ApplyTo(del).IsSuccess);
-        }
-
-        [Test, TestCaseSource("FailureDelegates")]
-        public void FailsWithBadDelegates(ActualValueDelegate<object> del)
-        {
-            Assert.IsFalse(theConstraint.ApplyTo(del).IsSuccess);
-        }
-
-        [Test]
-        public void SimpleTest()
-        {
-            SetValuesAfterDelay(DELAY);
-            Assert.That(DelegateReturningValue, new DelayedConstraint(new EqualConstraint(true), AFTER, POLLING));
-        }
-
-        [Test]
-        public void SimpleTestUsingReference()
-        {
-            SetValuesAfterDelay(DELAY);
-            Assert.That(ref boolValue, new DelayedConstraint(new EqualConstraint(true), AFTER, POLLING));
-        }
-
-        [Test]
-        public void ThatOverload_ZeroDelayIsAllowed()
-        {
-            Assert.That(DelegateReturningZero, new DelayedConstraint(new EqualConstraint(0), 0));
-        }
-
-        [Test]
-        public void ThatOverload_DoesNotAcceptNegativeDelayValues()
-        {
-            Assert.Throws<ArgumentException>(
-                () => Assert.That(DelegateReturningZero, new DelayedConstraint(new EqualConstraint(0), -1)));
-        }
-
-        [Test]
-        public void CanTestContentsOfList()
-        {
-            SetValuesAfterDelay(1);
-            Assert.That(list, Has.Count.EqualTo(1).After(AFTER, POLLING));
-        }
-
-        [Test]
-        public void CanTestContentsOfRefList()
-        {
-            SetValuesAfterDelay(1);
-            Assert.That(ref list, Has.Count.EqualTo(1).After(AFTER, POLLING));
-        }
-
-        [Test]
-        public void CanTestContentsOfDelegateReturningList()
-        {
-            SetValuesAfterDelay(1);
-            Assert.That(() => list, Has.Count.EqualTo(1).After(AFTER, POLLING));
-        }
-
-        [Test]
-        public void CanTestInitiallyNullDelegate()
-        {
-            SetValuesAfterDelay(DELAY);
-            Assert.That(() => statusString, Is.Not.Null.And.Length.GreaterThan(0).After(AFTER, POLLING));
-        }
-
-#if !NETCF // NETCF: Not clear why these fail, research and either include clarify in docs
-        [Test]
-        public void CanTestInitiallyNullReference()
-        {
-            SetValuesAfterDelay(DELAY);
-            Assert.That(ref statusString, Is.Not.Null.And.Length.GreaterThan(0).After(AFTER, POLLING));
-        }
-
-        [Test]
-        public void ThatBlockingDelegateWhichSucceedsWithoutPolling_ReturnsAfterDelay() // 401+
-        {
-            var start = DateTime.UtcNow;
-            Assert.That(() =>
-            {
-                Delay(DELAY);
-                return true;
-            }, Is.True.After(AFTER));
-
-            var elapsed = DateTime.UtcNow - start;
-            Assert.That(elapsed.TotalMilliseconds, Is.GreaterThanOrEqualTo(MIN)); // wiggle room due to timer resolution
-            //Assert.That(elapsed.TotalMilliseconds, Is.LessThan(MAX));
-        }
-
-        [Test]
-        public void ThatBlockingDelegateWhichSucceedsWithPolling_ReturnsEarly()
-        {
-            var start = DateTime.UtcNow;
-            Assert.That(() =>
-            {
-                Delay(DELAY);
-                return true;
-            }, Is.True.After(AFTER, POLLING));
-
-            var elapsed = DateTime.UtcNow - start;
-            Assert.That(elapsed.TotalMilliseconds, Is.LessThan(DELAY + POLLING * 2));
-        }
-
-        [Test]
-        public void ThatBlockingDelegateWhichFailsWithoutPolling_FailsAfterDelay() // 401+
-        {
-            var start = DateTime.UtcNow;
-            Assert.Throws<AssertionException>(() => Assert.That(() =>
-            {
-                Delay(DELAY);
-                return false;
-            }, Is.True.After(AFTER)));
-
-            var elapsed = DateTime.UtcNow - start;
-            Assert.That(elapsed.TotalMilliseconds, Is.GreaterThanOrEqualTo(MIN));
-            //Assert.That(elapsed.TotalMilliseconds, Is.LessThan(MAX));
-        }
-
-        [Test]
-        public void ThatBlockingDelegateWhichFailsWithPolling_FailsAfterDelay() // 451+
-        {
-            var start = DateTime.UtcNow;
-            Assert.Throws<AssertionException>(() => Assert.That(() =>
-            {
-                Delay(DELAY);
-                return false;
-            }, Is.True.After(AFTER, POLLING)));
-
-            var elapsed = DateTime.UtcNow - start;
-            Assert.That(elapsed.TotalMilliseconds, Is.GreaterThanOrEqualTo(MIN));
-            //Assert.That(elapsed.TotalMilliseconds, Is.LessThan(MAX));
-        }
-
-        [Test]
-        public void ThatBlockingDelegateWhichThrowsWithoutPolling_FailsAfterDelay()
-        {
-            var start = DateTime.UtcNow;
-            Assert.Throws<AssertionException>(() => Assert.That(() =>
-            {
-                Delay(DELAY);
-                throw new InvalidOperationException();
-            }, Is.True.After(AFTER)));
-
-            var elapsed = DateTime.UtcNow - start;
-            Assert.That(elapsed.TotalMilliseconds, Is.GreaterThanOrEqualTo(MIN));
-            //Assert.That(elapsed.TotalMilliseconds, Is.LessThan(MAX));
-        }
-
-        [Test]
-        public void ThatBlockingDelegateWhichThrowsWithPolling_FailsAfterDelay()
-        {
-            var start = DateTime.UtcNow;
-            Assert.Throws<AssertionException>(() => Assert.That(() =>
-            {
-                Delay(DELAY);
-                throw new InvalidOperationException();
-            }, Is.True.After(AFTER, POLLING)));
-
-            var elapsed = DateTime.UtcNow - start;
-            Assert.That(elapsed.TotalMilliseconds, Is.GreaterThanOrEqualTo(MIN));
-            Assert.That(elapsed.TotalMilliseconds, Is.LessThan(MAX));
-        }
-#endif
-
-        private static int setValuesDelay;
-
-        private static void MethodReturningVoid() { }
-        private static TestDelegate InvalidDelegate = new TestDelegate(MethodReturningVoid);
-
-        private static object MethodReturningValue() { return boolValue; }
-        private static ActualValueDelegate DelegateReturningValue = new ActualValueDelegate(MethodReturningValue);
-
-        private static object MethodReturningFalse() { return false; }
-        private static ActualValueDelegate DelegateReturningFalse = new ActualValueDelegate(MethodReturningFalse);
-
-        private static object MethodReturningZero() { return 0; }
-        private static ActualValueDelegate DelegateReturningZero = new ActualValueDelegate(MethodReturningZero);
-
-        private static void Delay(int delay)
-        {
-            Thread.Sleep(delay);
-        }
-
-        private static void MethodSetsValues()
-        {
-            Delay(setValuesDelay);
-            boolValue = true;
-            list.Add(1);
-            statusString = "Finished";
-        }
-
-        private void SetValuesAfterDelay(int delay)
-        {
-            setValuesDelay = delay;
-            Thread thread = new Thread(MethodSetsValues);
-            thread.Start();
-        }
-    }
-
-    [TestFixture]
-    public class DelayedConstraintTests_AutoResetEvent : ConstraintTestBase
-    {
-        // TODO: Sleeping is too imprecise, we need to find another way to test this.
-        private const int DELAY = 100;
-        private const int AFTER = 300;
-        private const int POLLING = 50;
-        private const int MIN = (int)(AFTER * 1.0);
-        private const int MAX = (int)(AFTER * 1.6);
 
         private static bool boolValue;
         private static List<int> list;
@@ -392,8 +150,7 @@ namespace NUnit.Framework.Constraints
             }, Is.True.After(AFTER));
 
             var elapsed = DateTime.UtcNow - start;
-            Assert.That(elapsed.TotalMilliseconds, Is.GreaterThanOrEqualTo(MIN)); // wiggle room due to timer resolution
-            //Assert.That(elapsed.TotalMilliseconds, Is.LessThan(MAX));
+            Assert.That(elapsed.TotalMilliseconds, Is.GreaterThanOrEqualTo(AFTER));
         }
 
         [Test]
@@ -421,8 +178,7 @@ namespace NUnit.Framework.Constraints
             }, Is.True.After(AFTER)));
 
             var elapsed = DateTime.UtcNow - start;
-            Assert.That(elapsed.TotalMilliseconds, Is.GreaterThanOrEqualTo(MIN));
-            //Assert.That(elapsed.TotalMilliseconds, Is.LessThan(MAX));
+            Assert.That(elapsed.TotalMilliseconds, Is.GreaterThanOrEqualTo(AFTER));
         }
 
         [Test]
@@ -436,8 +192,7 @@ namespace NUnit.Framework.Constraints
             }, Is.True.After(AFTER, POLLING)));
 
             var elapsed = DateTime.UtcNow - start;
-            Assert.That(elapsed.TotalMilliseconds, Is.GreaterThanOrEqualTo(MIN));
-            //Assert.That(elapsed.TotalMilliseconds, Is.LessThan(MAX));
+            Assert.That(elapsed.TotalMilliseconds, Is.GreaterThanOrEqualTo(AFTER));
         }
 
         [Test]
@@ -451,8 +206,7 @@ namespace NUnit.Framework.Constraints
             }, Is.True.After(AFTER)));
 
             var elapsed = DateTime.UtcNow - start;
-            Assert.That(elapsed.TotalMilliseconds, Is.GreaterThanOrEqualTo(MIN));
-            //Assert.That(elapsed.TotalMilliseconds, Is.LessThan(MAX));
+            Assert.That(elapsed.TotalMilliseconds, Is.GreaterThanOrEqualTo(AFTER));
         }
 
         [Test]
@@ -466,8 +220,7 @@ namespace NUnit.Framework.Constraints
             }, Is.True.After(AFTER, POLLING)));
 
             var elapsed = DateTime.UtcNow - start;
-            Assert.That(elapsed.TotalMilliseconds, Is.GreaterThanOrEqualTo(MIN));
-            //Assert.That(elapsed.TotalMilliseconds, Is.LessThan(MAX));
+            Assert.That(elapsed.TotalMilliseconds, Is.GreaterThanOrEqualTo(AFTER));
         }
 #endif
 
@@ -490,250 +243,6 @@ namespace NUnit.Framework.Constraints
         private static void Delay(int delay)
         {
             waitEvent.WaitOne(delay);
-        }
-
-        private static void MethodSetsValues()
-        {
-            Delay(setValuesDelay);
-            boolValue = true;
-            list.Add(1);
-            statusString = "Finished";
-        }
-
-        private void SetValuesAfterDelay(int delay)
-        {
-            setValuesDelay = delay;
-            Thread thread = new Thread(MethodSetsValues);
-            thread.Start();
-        }
-    }
-
-    [TestFixture]
-    public class DelayedConstraintTests_MonitorWait : ConstraintTestBase
-    {
-        // TODO: Sleeping is too imprecise, we need to find another way to test this.
-        private const int DELAY = 100;
-        private const int AFTER = 300;
-        private const int POLLING = 50;
-        private const int MIN = (int)(AFTER * 1.0);
-        private const int MAX = (int)(AFTER * 1.6);
-
-        private static bool boolValue;
-        private static List<int> list;
-        private static string statusString;
-
-        [SetUp]
-        public void SetUp()
-        {
-            theConstraint = new DelayedConstraint(new EqualConstraint(true), 500);
-            expectedDescription = "True after 500 millisecond delay";
-            stringRepresentation = "<after 500 <equal True>>";
-
-            boolValue = false;
-            list = new List<int>();
-            statusString = null;
-            //SetValueTrueAfterDelay(300);
-        }
-
-        object[] SuccessData = new object[] { true };
-        object[] FailureData = new object[] { 
-            new TestCaseData( false, "False" ),
-            new TestCaseData( 0, "0" ),
-            new TestCaseData( null, "null" ) };
-
-        object[] InvalidData = new object[] { InvalidDelegate };
-
-        ActualValueDelegate<object>[] SuccessDelegates = new ActualValueDelegate<object>[] { DelegateReturningValue };
-        ActualValueDelegate<object>[] FailureDelegates = new ActualValueDelegate<object>[] { DelegateReturningFalse, DelegateReturningZero };
-
-        [Test, TestCaseSource("SuccessDelegates")]
-        public void SucceedsWithGoodDelegates(ActualValueDelegate<object> del)
-        {
-            SetValuesAfterDelay(DELAY);
-            Assert.That(theConstraint.ApplyTo(del).IsSuccess);
-        }
-
-        [Test, TestCaseSource("FailureDelegates")]
-        public void FailsWithBadDelegates(ActualValueDelegate<object> del)
-        {
-            Assert.IsFalse(theConstraint.ApplyTo(del).IsSuccess);
-        }
-
-        [Test]
-        public void SimpleTest()
-        {
-            SetValuesAfterDelay(DELAY);
-            Assert.That(DelegateReturningValue, new DelayedConstraint(new EqualConstraint(true), AFTER, POLLING));
-        }
-
-        [Test]
-        public void SimpleTestUsingReference()
-        {
-            SetValuesAfterDelay(DELAY);
-            Assert.That(ref boolValue, new DelayedConstraint(new EqualConstraint(true), AFTER, POLLING));
-        }
-
-        [Test]
-        public void ThatOverload_ZeroDelayIsAllowed()
-        {
-            Assert.That(DelegateReturningZero, new DelayedConstraint(new EqualConstraint(0), 0));
-        }
-
-        [Test]
-        public void ThatOverload_DoesNotAcceptNegativeDelayValues()
-        {
-            Assert.Throws<ArgumentException>(
-                () => Assert.That(DelegateReturningZero, new DelayedConstraint(new EqualConstraint(0), -1)));
-        }
-
-        [Test]
-        public void CanTestContentsOfList()
-        {
-            SetValuesAfterDelay(1);
-            Assert.That(list, Has.Count.EqualTo(1).After(AFTER, POLLING));
-        }
-
-        [Test]
-        public void CanTestContentsOfRefList()
-        {
-            SetValuesAfterDelay(1);
-            Assert.That(ref list, Has.Count.EqualTo(1).After(AFTER, POLLING));
-        }
-
-        [Test]
-        public void CanTestContentsOfDelegateReturningList()
-        {
-            SetValuesAfterDelay(1);
-            Assert.That(() => list, Has.Count.EqualTo(1).After(AFTER, POLLING));
-        }
-
-        [Test]
-        public void CanTestInitiallyNullDelegate()
-        {
-            SetValuesAfterDelay(DELAY);
-            Assert.That(() => statusString, Is.Not.Null.And.Length.GreaterThan(0).After(AFTER, POLLING));
-        }
-
-#if !NETCF // NETCF: Not clear why these fail, research and either include clarify in docs
-        [Test]
-        public void CanTestInitiallyNullReference()
-        {
-            SetValuesAfterDelay(DELAY);
-            Assert.That(ref statusString, Is.Not.Null.And.Length.GreaterThan(0).After(AFTER, POLLING));
-        }
-
-        [Test]
-        public void ThatBlockingDelegateWhichSucceedsWithoutPolling_ReturnsAfterDelay()
-        {
-            var start = DateTime.UtcNow;
-            Assert.That(() =>
-            {
-                Delay(DELAY);
-                return true;
-            }, Is.True.After(AFTER));
-
-            var elapsed = DateTime.UtcNow - start;
-            Assert.That(elapsed.TotalMilliseconds, Is.GreaterThanOrEqualTo(MIN)); // wiggle room due to timer resolution
-            //Assert.That(elapsed.TotalMilliseconds, Is.LessThan(MAX));
-        }
-
-        [Test]
-        public void ThatBlockingDelegateWhichSucceedsWithPolling_ReturnsEarly()
-        {
-            var start = DateTime.UtcNow;
-            Assert.That(() =>
-            {
-                Delay(DELAY);
-                return true;
-            }, Is.True.After(AFTER, POLLING));
-
-            var elapsed = DateTime.UtcNow - start;
-            Assert.That(elapsed.TotalMilliseconds, Is.LessThan(DELAY + POLLING * 2));
-        }
-
-        [Test]
-        public void ThatBlockingDelegateWhichFailsWithoutPolling_FailsAfterDelay()
-        {
-            var start = DateTime.UtcNow;
-            Assert.Throws<AssertionException>(() => Assert.That(() =>
-            {
-                Delay(DELAY);
-                return false;
-            }, Is.True.After(AFTER)));
-
-            var elapsed = DateTime.UtcNow - start;
-            Assert.That(elapsed.TotalMilliseconds, Is.GreaterThanOrEqualTo(MIN));
-            //Assert.That(elapsed.TotalMilliseconds, Is.LessThan(MAX));
-        }
-
-        [Test]
-        public void ThatBlockingDelegateWhichFailsWithPolling_FailsAfterDelay()
-        {
-            var start = DateTime.UtcNow;
-            Assert.Throws<AssertionException>(() => Assert.That(() =>
-            {
-                Delay(DELAY);
-                return false;
-            }, Is.True.After(AFTER, POLLING)));
-
-            var elapsed = DateTime.UtcNow - start;
-            Assert.That(elapsed.TotalMilliseconds, Is.GreaterThanOrEqualTo(MIN));
-            //Assert.That(elapsed.TotalMilliseconds, Is.LessThan(MAX));
-        }
-
-        [Test]
-        public void ThatBlockingDelegateWhichThrowsWithoutPolling_FailsAfterDelay()
-        {
-            var start = DateTime.UtcNow;
-            Assert.Throws<AssertionException>(() => Assert.That(() =>
-            {
-                Delay(DELAY);
-                throw new InvalidOperationException();
-            }, Is.True.After(AFTER)));
-
-            var elapsed = DateTime.UtcNow - start;
-            Assert.That(elapsed.TotalMilliseconds, Is.GreaterThanOrEqualTo(MIN));
-            //Assert.That(elapsed.TotalMilliseconds, Is.LessThan(MAX));
-        }
-
-        [Test]
-        public void ThatBlockingDelegateWhichThrowsWithPolling_FailsAfterDelay()
-        {
-            var start = DateTime.UtcNow;
-            Assert.Throws<AssertionException>(() => Assert.That(() =>
-            {
-                Delay(DELAY);
-                throw new InvalidOperationException();
-            }, Is.True.After(AFTER, POLLING)));
-
-            var elapsed = DateTime.UtcNow - start;
-            Assert.That(elapsed.TotalMilliseconds, Is.GreaterThanOrEqualTo(MIN));
-            //Assert.That(elapsed.TotalMilliseconds, Is.LessThan(MAX));
-        }
-#endif
-
-        private static int setValuesDelay;
-
-        private static void MethodReturningVoid() { }
-        private static TestDelegate InvalidDelegate = new TestDelegate(MethodReturningVoid);
-
-        private static object MethodReturningValue() { return boolValue; }
-        private static ActualValueDelegate DelegateReturningValue = new ActualValueDelegate(MethodReturningValue);
-
-        private static object MethodReturningFalse() { return false; }
-        private static ActualValueDelegate DelegateReturningFalse = new ActualValueDelegate(MethodReturningFalse);
-
-        private static object MethodReturningZero() { return 0; }
-        private static ActualValueDelegate DelegateReturningZero = new ActualValueDelegate(MethodReturningZero);
-
-        private static object waitLock = new object();
-
-        private static void Delay(int delay)
-        {
-            lock (waitLock)
-            {
-                Monitor.Wait(waitLock, delay);
-            }
         }
 
         private static void MethodSetsValues()

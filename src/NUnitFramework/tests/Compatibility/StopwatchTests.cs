@@ -31,7 +31,7 @@ using NUnit.Framework.Compatibility;
 namespace NUnit.Framework.Tests.Compatibility
 {
     [TestFixture]
-    public abstract class StopwatchTests
+    public class StopwatchTests
     {
         private const int DELAY = 100;
         private const int MIN = (int)(DELAY * 0.9);
@@ -129,37 +129,11 @@ namespace NUnit.Framework.Tests.Compatibility
         }    
 #endif
 
-        protected abstract void Delay(int delay);
-    }
+        private static AutoResetEvent waitEvent = new AutoResetEvent(false);
 
-    public class StopwatchTests_Sleep : StopwatchTests
-    {
-        protected override void Delay(int delay)
-        {
-            Thread.Sleep(delay);
-        }
-    }
-
-    public class StopwatchTests_AutoResetEvent : StopwatchTests
-    {
-        private AutoResetEvent waitEvent = new AutoResetEvent(false);
-
-        protected override void Delay(int delay)
+        private static void Delay(int delay)
         {
             waitEvent.WaitOne(delay);
-        }
-    }
-
-    public class StopwatchTests_MonitorWait : StopwatchTests
-    {
-        private object waitLock = new object();
-
-        protected override void Delay(int delay)
-        {
-            lock (waitLock)
-            {
-                Monitor.Wait(waitLock, delay);
-            }
         }
     }
 }
