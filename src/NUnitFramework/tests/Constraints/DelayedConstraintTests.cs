@@ -164,7 +164,7 @@ namespace NUnit.Framework.Constraints
             }, Is.True.After(AFTER, POLLING));
 
             var elapsed = DateTime.UtcNow - start;
-            Assert.That(elapsed.TotalMilliseconds, Is.LessThan(DELAY + POLLING * 2));
+            Assert.That(elapsed.TotalMilliseconds, Is.LessThan(AFTER));
         }
 
         [Test]
