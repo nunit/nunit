@@ -45,6 +45,7 @@
 		<FrameworkBuildDir>$(ConfigurationBuildDir)\$(Framework)</FrameworkBuildDir>
 		<EngineBuildDir>$(ConfigurationBuildDir)</EngineBuildDir>
 		<ConsoleBuildDir>$(ConfigurationBuildDir)</ConsoleBuildDir>
+		<ResultDir>$(ConfigurationBuildDir)\Results</ResultDir>
 	</PropertyGroup>
 
 	<PropertyGroup Label="Packaging Directories">
@@ -312,44 +313,48 @@
 		<CallTarget Targets="_TestNUnitLite" Condition="'$(Runtime)' != 'silverlight'" />
 	</Target>
 	
-	<Target Name="_TestNUnit" Label="Run full framework tests for a runtime without checking for errors">
+	<Target Name="_TestNUnit" Label="Run full framework tests for a runtime without checking for errors" DependsOnTargets="_CreateResultDir">
 		<Message Text="******************************************************************" />
 		<Message Text="* Testing NUnitFramework $(Framework) - $(Configuration)" />
 		<Message Text="******************************************************************" />
 		<Exec WorkingDirectory="$(ConsoleBuildDir)" 
-			Command="$(ManagedExeLauncher) $(ConsoleRunner) $(Framework)/nunit.framework.tests.dll $(TestOptions)" />
+			Command="$(ManagedExeLauncher) $(ConsoleRunner) $(Framework)/nunit.framework.tests.dll -result:$(ResultDir)/NUnitFrameworkResult-$(Framework).xml $(TestOptions)" />
 	</Target>
 	
-	<Target Name="_TestNUnitLite" Label="Run NUnitLite tests for a runtime without checking for errors">
+	<Target Name="_TestNUnitLite" Label="Run NUnitLite tests for a runtime without checking for errors" DependsOnTargets="_CreateResultDir">
 		<Message Text="******************************************************************" />
 		<Message Text="* Testing NUnitLite $(Framework) - $(Configuration)" />
 		<Message Text="******************************************************************" />
 		<Exec WorkingDirectory="$(FrameworkBuildDir)"
-			Command="$(ManagedExeLauncher) $(FrameworkBuildDir)\nunitlite.tests.exe $(TestOptions)" />
+			Command="$(ManagedExeLauncher) $(FrameworkBuildDir)\nunitlite.tests.exe -result:$(ResultDir)/NUnitLiteResult-$(Framework).xml $(TestOptions)" />
 	</Target>
 	
-	<Target Name="TestEngine" Label ="Run the engine tests">
+	<Target Name="TestEngine" Label ="Run the engine tests" DependsOnTargets="_CreateResultDir">
 		<Message Text="******************************************************************" />
 		<Message Text="* Testing the NUnit Engine - $(Configuration)" />
 		<Message Text="******************************************************************" />
 		<Exec WorkingDirectory="$(EngineBuildDir)"
-		  Command="$(ManagedExeLauncher) $(ConsoleRunner) nunit.engine.tests.dll $(TestOptions)" />
+		  Command="$(ManagedExeLauncher) $(ConsoleRunner) nunit.engine.tests.dll -result:$(ResultDir)/EngineResult.xml $(TestOptions)" />
 	</Target>
 	
-	<Target Name="TestConsole" Label="Run the console tests">
+	<Target Name="TestConsole" Label="Run the console tests" DependsOnTargets="_CreateResultDir">
 		<Message Text="******************************************************************" />
 		<Message Text="* Testing the Console Runner - $(Configuration)" />
 		<Message Text="******************************************************************" />
 		<Exec WorkingDirectory="$(ConsoleBuildDir)"
-		  Command="$(ManagedExeLauncher) $(ConsoleRunner) nunit-console.tests.dll $(TestOptions)" />
+		  Command="$(ManagedExeLauncher) $(ConsoleRunner) nunit-console.tests.dll -result:$(ResultDir)/ConsoleResult.xml $(TestOptions)" />
 	</Target>
 	
-	<Target Name="TestEngineAndConsole" Label="Run the engine and console tests together">
+	<Target Name="TestEngineAndConsole" Label="Run the engine and console tests together" DependsOnTargets="_CreateResultDir">
 		<Message Text="******************************************************************" />
 		<Message Text="* Testing the Engine and Console Runner - $(Configuration)" />
 		<Message Text="******************************************************************" />
 	  <Exec WorkingDirectory="$(ConsoleBuildDir)"
-		Command="$(ManagedExeLauncher) $(ConsoleRunner) nunit.engine.tests.dll nunit-console.tests.dll $(TestOptions)" />
+		Command="$(ManagedExeLauncher) $(ConsoleRunner) nunit.engine.tests.dll nunit-console.tests.dll -result:$(ResultDir)/EnginePlusConsoleResult.xml $(TestOptions)" />
+	</Target>
+	
+	<Target Name="_CreateResultDir">
+		<MakeDir Directories="$(ResultDir)"  Condition="!Exists(ResultDir)"/>
 	</Target>
 
 	<!-- *********************************************************************** -->
