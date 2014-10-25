@@ -6,8 +6,5 @@ test_script:
   - ps: $wc = New-Object 'System.Net.WebClient'
   - ps: $dir = "bin\Release\Results"
   - ps: $uri = "https://ci.appveyor.com/api/testresuls/nunit/$($env:APPVEYOR_JOB_ID)"
-  - ps: foreach($item in (dir $dir "*.xml")
-        { 
-            $wc.UploadFile($uri, $item.FullName)
-	}
+  - ps: foreach($item in (dir $dir "*.xml") { $wc.UploadFile($uri, $item.FullName) }
   
