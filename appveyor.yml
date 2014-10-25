@@ -4,6 +4,10 @@ build_script:
 test_script:
   - build /t:TestAll /p:Configuration=Release /p:ResultFormat=nunit2
   - ps: $wc = New-Object 'System.Net.WebClient'
-  - ps: $wc.UploadFile("https://ci.appveyor.com/api/testresults/nunit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path bin\Release\Results\EngineResult.xml))
-  - ps: $wc.UploadFile("https://ci.appveyor.com/api/testresults/nunit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path bin\Release\Results\ConsoleResult.xml))
+  - ps: $dir = "bin\Release\Results"
+  - ps: $uri = "https://ci.appveyor.com/api/testresuls/nunit/$($env:APPVEYOR_JOB_ID)"
+  - ps: foreach($item in (dir $dir "*.xml")
+        { 
+            $wc.UploadFile($uri, $item.FullName)
+	}
   
