@@ -2,5 +2,5 @@ build_script:
   msbuild nunit.sln /p:Configuration=Release /t:Rebuild
   
 test_script:
-  appveyor.test bin\Release
+  build /t:TestAll /p:ResultFormat=nunit2
   
