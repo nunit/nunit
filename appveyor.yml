@@ -2,4 +2,4 @@ build_script:
   msbuild nunit.sln /p:Configuration=Release /t:Rebuild
   
 test_script:
-  build /p:Configuration=Release /t:TestAll
+  ./bin/Release/nunit-console.exe ../bin/Release/nunit.agent.tests.dll
