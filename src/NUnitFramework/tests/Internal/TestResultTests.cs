@@ -343,7 +343,7 @@ namespace NUnit.Framework.Internal
         public void TestResultIsNotRunnable()
         {
             Assert.AreEqual(ResultState.NotRunnable, testResult.ResultState);
-            Assert.AreEqual(TestStatus.Skipped, testResult.ResultState.Status);
+            Assert.AreEqual(TestStatus.Failed, testResult.ResultState.Status);
             Assert.AreEqual("Invalid", testResult.ResultState.Label);
             Assert.AreEqual("bad test", testResult.Message);
         }
@@ -356,8 +356,8 @@ namespace NUnit.Framework.Internal
             Assert.AreEqual(failingChildMessage, suiteResult.Message);
 
             Assert.AreEqual(0, suiteResult.PassCount);
-            Assert.AreEqual(0, suiteResult.FailCount);
-            Assert.AreEqual(1, suiteResult.SkipCount);
+            Assert.AreEqual(1, suiteResult.FailCount);
+            Assert.AreEqual(0, suiteResult.SkipCount);
             Assert.AreEqual(0, suiteResult.InconclusiveCount);
             Assert.AreEqual(0, suiteResult.AssertCount);
         }
@@ -367,14 +367,14 @@ namespace NUnit.Framework.Internal
         {
             XmlNode testNode = testResult.ToXml(true);
 
-            Assert.AreEqual("Skipped", testNode.Attributes["result"]);
+            Assert.AreEqual("Failed", testNode.Attributes["result"]);
             Assert.AreEqual("Invalid", testNode.Attributes["label"]);
             Assert.AreEqual(null, testNode.Attributes["site"]);
-            XmlNode reason = testNode.FindDescendant("reason");
-            Assert.NotNull(reason);
-            Assert.NotNull(reason.FindDescendant("message"));
-            Assert.AreEqual("bad test", reason.FindDescendant("message").TextContent);
-            Assert.Null(reason.FindDescendant("stack-trace"));
+            XmlNode failure = testNode.FindDescendant("failure");
+            Assert.NotNull(failure);
+            Assert.NotNull(failure.FindDescendant("message"));
+            Assert.AreEqual("bad test", failure.FindDescendant("message").TextContent);
+            Assert.Null(failure.FindDescendant("stack-trace"));
         }
 
         [Test]
@@ -386,8 +386,8 @@ namespace NUnit.Framework.Internal
             Assert.AreEqual(null, suiteNode.Attributes["label"]);
             Assert.AreEqual("Child", suiteNode.Attributes["site"]);
             Assert.AreEqual("0", suiteNode.Attributes["passed"]);
-            Assert.AreEqual("0", suiteNode.Attributes["failed"]);
-            Assert.AreEqual("1", suiteNode.Attributes["skipped"]);
+            Assert.AreEqual("1", suiteNode.Attributes["failed"]);
+            Assert.AreEqual("0", suiteNode.Attributes["skipped"]);
             Assert.AreEqual("0", suiteNode.Attributes["inconclusive"]);
             Assert.AreEqual("0", suiteNode.Attributes["asserts"]);
         }

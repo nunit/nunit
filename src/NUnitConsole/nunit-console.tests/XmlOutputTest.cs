@@ -52,7 +52,10 @@ namespace NUnit.ConsoleRunner.Tests
 
         protected TestEngineResult EngineResult { get; private set; }
 
-        // Method used by deribed classes to get the path to a file name
+        protected const string AssemblyName = "mock-nunit-assembly.dll";
+        protected string AssemblyPath { get; private set; }
+
+        // Method used by derived classes to get the path to a file name
         protected string GetLocalPath(string fileName)
         {
             return Path.Combine(localDirectory, fileName);
@@ -65,6 +68,8 @@ namespace NUnit.ConsoleRunner.Tests
             Uri uri = new Uri(Assembly.GetExecutingAssembly().CodeBase);
             localDirectory = Path.GetDirectoryName(uri.LocalPath);
 
+            AssemblyPath = GetLocalPath(AssemblyName);
+
             // Create a fresh copy of the engine, since we can't use the
             // one that is running this test.
             engine = TestEngineActivator.CreateInstance();
@@ -73,12 +78,11 @@ namespace NUnit.ConsoleRunner.Tests
             // Create a new DefaultAssemblyRunner, which is actually a framework class,
             // because we can't use the one that's currently running this test.
             var runner = new Runner(new Builder());
-            var assemblyPath = GetLocalPath("mock-nunit-assembly.dll");
             var settings = new Dictionary<string, object>();
 
             // Make sure the runner loaded the mock assembly.
             Assert.That(
-                runner.Load(assemblyPath, settings).RunState.ToString(),
+                runner.Load(AssemblyPath, settings).RunState.ToString(),
                 Is.EqualTo("Runnable"), 
                 "Unable to load mock-assembly.dll");
 
@@ -88,7 +92,7 @@ namespace NUnit.ConsoleRunner.Tests
             // Create a TestEngineResult from the string, just as the TestEngine does,
             // then add a test-run element to the result, wrapping the result so it
             // looks just like what the engine would return!
-            this.EngineResult = new TestEngineResult(xmlText).Aggregate("test-run", "NAME", "FULLNAME");
+            this.EngineResult = new TestEngineResult(xmlText).Aggregate("test-run", AssemblyName, AssemblyPath);
         }
     }
 }

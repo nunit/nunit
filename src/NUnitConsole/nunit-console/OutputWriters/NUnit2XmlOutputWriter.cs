@@ -77,7 +77,7 @@ namespace NUnit.ConsoleRunner
             xmlWriter.WriteStartElement("test-results");
 
             xmlWriter.WriteAttributeString("name", result.GetAttribute("fullname"));
-            xmlWriter.WriteAttributeString("total", summaryResults.TestsRun.ToString());
+            xmlWriter.WriteAttributeString("total", summaryResults.ResultCount.ToString());
             xmlWriter.WriteAttributeString("errors", summaryResults.Errors.ToString());
             xmlWriter.WriteAttributeString("failures", summaryResults.Failures.ToString());
             xmlWriter.WriteAttributeString("not-run", summaryResults.TestsNotRun.ToString());
@@ -209,9 +209,13 @@ namespace NUnit.ConsoleRunner
                 xmlWriter.WriteAttributeString("name", result.GetAttribute(nameAttr));
             }
 
-            string description = result.GetAttribute("description");
-            if (description != null)
-                xmlWriter.WriteAttributeString("description", description);
+            var descNode = result.SelectSingleNode("properties/property[@name='Description']");
+            if (descNode != null)
+            {
+                string description = descNode.GetAttribute("value");
+                if (description != null)
+                    xmlWriter.WriteAttributeString("description", description);
+            }
 
             string resultState = result.GetAttribute("result");
             string label = result.GetAttribute("label");

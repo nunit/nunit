@@ -21,54 +21,49 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !SILVERLIGHT
 using System;
 using System.IO;
 using System.Text;
 using System.Xml;
 using NUnit.Framework;
-using NUnit.Framework.Interfaces;
 using NUnit.Tests.Assemblies;
-using XmlNode = System.Xml.XmlNode;
 
-namespace NUnitLite.Runner.Tests
+namespace NUnit.ConsoleRunner.Tests
 {
-    public class NUnit2XmlOutputWriterTests
+    public class NUnit2XmlOutputWriterTests : XmlOutputTest
     {
         private XmlDocument doc;
         private XmlNode topNode;
         private XmlNode envNode;
         private XmlNode cultureNode;
-        private XmlNode suiteNode;
+        private XmlNode fixtureNode;
 
-        [TestFixtureSetUp]
-        public void RunMockAssemblyTests()
+        [OneTimeSetUp]
+        public void ConvertEngineResultToXml()
         {
-            ITestResult result = NUnit.TestUtilities.TestBuilder.RunTestFixture(typeof(MockTestFixture));
-            Assert.NotNull(result);
-
             StringBuilder sb = new StringBuilder();
-            StringWriter writer = new StringWriter(sb);
-            new NUnit2XmlOutputWriter().WriteResultFile(result, writer);
-            writer.Close();
-
-#if DEBUG
-            StreamWriter sw = new StreamWriter("MockAssemblyResult.xml");
-            sw.WriteLine(sb.ToString());
-            sw.Close();
-#endif
+            using (StringWriter writer = new StringWriter(sb))
+            {
+                new NUnit2XmlOutputWriter().WriteResultFile(EngineResult.Xml, writer);
+            }
 
             doc = new XmlDocument();
             doc.LoadXml(sb.ToString());
 
             topNode = doc.SelectSingleNode("/test-results");
-            if (topNode != null)
-            {
-                envNode = topNode.SelectSingleNode("environment");
-                cultureNode = topNode.SelectSingleNode("culture-info");
-                suiteNode = topNode.SelectSingleNode("test-suite");
-            }
+            Assert.NotNull(topNode, "Test-results element not found");
+
+            envNode = topNode.SelectSingleNode("environment");
+            Assert.NotNull(envNode, "Environment element not found");
+
+            cultureNode = topNode.SelectSingleNode("culture-info");
+            Assert.NotNull(topNode, "CultureInfo element not found");
+
+            fixtureNode = topNode.SelectSingleNode("descendant::test-suite[@name='MockTestFixture']");
+            Assert.NotNull(fixtureNode, "MockTestFixture element not found");
         }
+
+        #region Document Level Tests
 
         [Test]
         public void Document_HasThreeChildren()
@@ -105,20 +100,24 @@ namespace NUnitLite.Runner.Tests
             Assert.That(topNode.Name, Is.EqualTo("test-results"));
         }
 
+        #endregion
+
+        #region TestResults Element Tests
+
         [Test]
         public void TestResults_AssemblyPathIsCorrect()
         {
-            Assert.That(RequiredAttribute(topNode, "name"), Is.EqualTo("NUnit.Tests.Assemblies.MockTestFixture"));
+            Assert.That(RequiredAttribute(topNode, "name"), Is.EqualTo(AssemblyPath));
         }
 
-        [TestCase("total", MockTestFixture.Tests-MockTestFixture.Explicit)]
-        [TestCase("errors", MockTestFixture.Errors)]
-        [TestCase("failures", MockTestFixture.Failures)]
-        [TestCase("inconclusive", MockTestFixture.Inconclusive)]
-        [TestCase("not-run", MockTestFixture.NotRun-MockTestFixture.Explicit)]
-        [TestCase("ignored", MockTestFixture.Ignored)]
-        [TestCase("skipped", MockTestFixture.NotRun-MockTestFixture.Ignored-MockTestFixture.Explicit)]
-        [TestCase("invalid", MockTestFixture.NotRunnable)]
+        [TestCase("total", MockAssembly.Tests-MockAssembly.Explicit)]
+        [TestCase("errors", MockAssembly.Errors)]
+        [TestCase("failures", MockAssembly.Failures)]
+        [TestCase("inconclusive", MockAssembly.Inconclusive)]
+        [TestCase("not-run", MockAssembly.NotRun-MockAssembly.Explicit)]
+        [TestCase("ignored", MockAssembly.Ignored)]
+        [TestCase("skipped", 0)]
+        [TestCase("invalid", MockAssembly.NotRunnable)]
         public void TestResults_CounterIsCorrect(string name, int count)
         {
             Assert.That(RequiredAttribute(topNode, name), Is.EqualTo(count.ToString()));
@@ -144,6 +143,10 @@ namespace NUnitLite.Runner.Tests
 #endif
         }
 
+        #endregion
+
+        #region Environment Element Tests
+
         [Test]
         public void Environment_HasEnvironmentElement()
         {
@@ -164,6 +167,10 @@ namespace NUnitLite.Runner.Tests
         {
             RequiredAttribute(envNode, name);
         }
+
+        #endregion
+
+        #region CultureInfo Element Tests
 
         [Test]
         public void CultureInfo_HasCultureInfoElement()
@@ -190,11 +197,9 @@ namespace NUnitLite.Runner.Tests
             Assert.That(culture, Is.Not.Null, "Invalid value for {0}: {1}", name, cultureName);
         }
 
-        [Test]
-        public void TestSuite_HasTestSuiteElement()
-        {
-            Assert.That(suiteNode, Is.Not.Null, "Missing test-suite element");
-        }
+        #endregion
+
+        #region MockTestFixture Tests
 
         [TestCase("type", "TestFixture")]
         [TestCase("name", "MockTestFixture")]
@@ -203,27 +208,29 @@ namespace NUnitLite.Runner.Tests
         [TestCase("result", "Failure")]
         [TestCase("success", "False")]
         [TestCase("asserts", "0")]
-        public void TestSuite_ExpectedAttribute(string name, string value)
+        public void TestFixture_ExpectedAttribute(string name, string value)
         {
-            Assert.That(RequiredAttribute(suiteNode, name), Is.EqualTo(value));
+            Assert.That(RequiredAttribute(fixtureNode, name), Is.EqualTo(value));
         }
 
         [Test]
-        public void TestSuite_HasValidTimeAttribute()
+        public void TestFixture_HasValidTimeAttribute()
         {
 #if NETCF
             RequiredAttribute(suiteNode, "time");
 #else
             double time;
             // NOTE: We use the TryParse overload with 4 args because it's supported in .NET 1.1
-            Assert.That(double.TryParse(RequiredAttribute(suiteNode, "time"),System.Globalization.NumberStyles.Float,null, out time), "Invalid value for time");
+            Assert.That(double.TryParse(RequiredAttribute(fixtureNode, "time"),System.Globalization.NumberStyles.Float,null, out time), "Invalid value for time");
 #endif
         }
 
         [Test]
-        public void TestSuite_ResultIsFailure()
+        public void TestFixture_ResultIsFailure()
         {
         }
+
+        #endregion
 
         #region Helper Methods
 
@@ -238,4 +245,3 @@ namespace NUnitLite.Runner.Tests
         #endregion
     }
 }
-#endif
