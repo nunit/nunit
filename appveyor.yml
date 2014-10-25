@@ -2,5 +2,7 @@ build_script:
   msbuild nunit.sln /p:Configuration=Release /t:Rebuild
   
 test_script:
-  build /t:TestAll /p:Configuration=Release /p:ResultFormat=nunit2
+  - build /t:TestAll /p:Configuration=Release /p:ResultFormat=nunit2
+  - ps: $wc = New-Object 'System.Net.WebClient'
+  - ps: $wc.UploadFile("https://ci.appveyor.com/api/testresults/nunit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path bin\Release\Results\EngineResult.xml))
   
