@@ -293,7 +293,7 @@
 	<Target Name="TestFramework" Label="Test the framework for the current config and runtime">
 		<Error Condition="'$(Runtime)' == 'silverlight'"
 			Text="Silverlight test is not supported by this script" />
-		<CallTarget Targets="_TestNUnit" Condition="'$(Runtime)' != 'netcf'" />
+		<CallTarget Targets="_TestNUnit" Condition="'$(Runtime)' != 'netcf'"/>
 		<CallTarget Targets="_TestNUnitLite" />
 	</Target>
 
@@ -318,7 +318,7 @@
 		<Message Text="******************************************************************" />
 		<Message Text="* Testing NUnitFramework $(Framework) - $(Configuration)" />
 		<Message Text="******************************************************************" />
-		<Exec WorkingDirectory="$(ConsoleBuildDir)" 
+		<Exec WorkingDirectory="$(ConsoleBuildDir)" ContinueOnError="true"
 			Command="$(ManagedExeLauncher) $(ConsoleRunner) $(Framework)/nunit.framework.tests.dll -result:$(ResultDir)/NUnitFrameworkResult-$(Framework).xml;format=$(ResultFormat) $(TestOptions)" />
 	</Target>
 	
@@ -326,7 +326,7 @@
 		<Message Text="******************************************************************" />
 		<Message Text="* Testing NUnitLite $(Framework) - $(Configuration)" />
 		<Message Text="******************************************************************" />
-		<Exec WorkingDirectory="$(FrameworkBuildDir)"
+		<Exec WorkingDirectory="$(FrameworkBuildDir)" ContinueOnError="true"
 			Command="$(ManagedExeLauncher) $(FrameworkBuildDir)\nunitlite.tests.exe -result:$(ResultDir)/NUnitLiteResult-$(Framework).xml;format=$(ResultFormat) $(TestOptions)" />
 	</Target>
 	
@@ -334,7 +334,7 @@
 		<Message Text="******************************************************************" />
 		<Message Text="* Testing the NUnit Engine - $(Configuration)" />
 		<Message Text="******************************************************************" />
-		<Exec WorkingDirectory="$(EngineBuildDir)"
+		<Exec WorkingDirectory="$(EngineBuildDir)" ContinueOnError="true"
 		  Command="$(ManagedExeLauncher) $(ConsoleRunner) nunit.engine.tests.dll -result:$(ResultDir)/EngineResult.xml;format=$(ResultFormat) $(TestOptions)" />
 	</Target>
 	
@@ -342,7 +342,7 @@
 		<Message Text="******************************************************************" />
 		<Message Text="* Testing the Console Runner - $(Configuration)" />
 		<Message Text="******************************************************************" />
-		<Exec WorkingDirectory="$(ConsoleBuildDir)"
+		<Exec WorkingDirectory="$(ConsoleBuildDir)" ContinueOnError="true"
 		  Command="$(ManagedExeLauncher) $(ConsoleRunner) nunit-console.tests.dll -result:$(ResultDir)/ConsoleResult.xml;format=$(ResultFormat) $(TestOptions)" />
 	</Target>
 	
@@ -350,7 +350,7 @@
 		<Message Text="******************************************************************" />
 		<Message Text="* Testing the Engine and Console Runner - $(Configuration)" />
 		<Message Text="******************************************************************" />
-	  <Exec WorkingDirectory="$(ConsoleBuildDir)"
+	  <Exec WorkingDirectory="$(ConsoleBuildDir)" ContinueOnError="true"
 		Command="$(ManagedExeLauncher) $(ConsoleRunner) nunit.engine.tests.dll nunit-console.tests.dll -result:$(ResultDir)/EnginePlusConsoleResult.xml;format=$(ResultFormat) $(TestOptions)" />
 	</Target>
 	
