@@ -184,19 +184,13 @@ namespace NUnit.Framework.Internal
                 Is.EqualTo(TestMethodSignatureFixture.Tests));
             Assert.That(
                 summary.TestsRun,
-                Is.EqualTo(TestMethodSignatureFixture.Runnable));
-            //Assert.That(
-            //    summary.NotRunnable,
-            //    Is.EqualTo(TestMethodSignatureFixture.NotRunnable));
-            //Assert.That(
-            //    summary.Errors,
-            //    Is.EqualTo(TestMethodSignatureFixture.Errors));
+                Is.EqualTo(TestMethodSignatureFixture.Tests));
             Assert.That(
-                summary.Failures,
-                Is.EqualTo(TestMethodSignatureFixture.Failures + TestMethodSignatureFixture.Errors));
+                summary.Failed,
+                Is.EqualTo(TestMethodSignatureFixture.Failures + TestMethodSignatureFixture.Errors + TestMethodSignatureFixture.NotRunnable));
             Assert.That(
-                summary.TestsNotRun,
-                Is.EqualTo(TestMethodSignatureFixture.NotRunnable));
+                summary.Skipped,
+                Is.EqualTo(0));
         }
     }
 }

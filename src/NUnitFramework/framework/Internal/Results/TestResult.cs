@@ -315,28 +315,9 @@ namespace NUnit.Framework.Internal
 
                     case TestStatus.Skipped:
 
-                        switch (result.ResultState.Label)
-                        {
-                            case "Invalid":
-                                if (this.ResultState != ResultState.NotRunnable && this.ResultState.Status != TestStatus.Failed)
-                                    this.SetResult(ResultState.ChildFailure, CHILD_ERRORS_MESSAGE);
-
-                                break;
-
-                            case "Ignored":
-
-                                if (this.ResultState.Status == TestStatus.Inconclusive || this.ResultState.Status == TestStatus.Passed)
-                                    this.SetResult(ResultState.Ignored, CHILD_IGNORE_MESSAGE);
-
-                                break;
-
-                            default:
-
-                                // Tests skipped for other reasons do not change the outcome
-                                // of the containing suite when added.
-
-                                break;
-                        }
+                        if (result.ResultState.Label == "Ignored")
+                            if (this.ResultState.Status == TestStatus.Inconclusive || this.ResultState.Status == TestStatus.Passed)
+                                this.SetResult(ResultState.Ignored, CHILD_IGNORE_MESSAGE);
 
                         break;
 

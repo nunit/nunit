@@ -145,13 +145,13 @@ namespace NUnitLite.Runner
                             ignoreCount++;
                         else if (result.ResultState == ResultState.Skipped)
                             skipCount++;
-                        else if (result.ResultState == ResultState.NotRunnable)
-                            invalidCount++;
                         notRunCount++;
                         break;
                     case TestStatus.Failed:
                         if (result.ResultState == ResultState.Failure)
                             failureCount++;
+                        else if (result.ResultState == ResultState.NotRunnable)
+                            invalidCount++;
                         else
                             errorCount++;
                         break;

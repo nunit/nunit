@@ -16,10 +16,10 @@ namespace NUnit.Tests
         /// </summary>
         public class MockAssembly
         {
-            public static int Classes = 9;
-            public static int NamespaceSuites = 6; // assembly, NUnit, Tests, Assemblies, Singletons, TestAssembly
+            public const int Classes = 9;
+            public const int NamespaceSuites = 6; // assembly, NUnit, Tests, Assemblies, Singletons, TestAssembly
 
-            public static int Tests = MockTestFixture.Tests 
+            public const int Tests = MockTestFixture.Tests 
                         + Singletons.OneTestCase.Tests 
                         + TestAssembly.MockTestFixture.Tests 
                         + IgnoredFixture.Tests
@@ -29,7 +29,7 @@ namespace NUnit.Tests
                         + ParameterizedFixture.Tests
                         + GenericFixtureConstants.Tests;
             
-            public static int Suites = MockTestFixture.Suites 
+            public const int Suites = MockTestFixture.Suites 
                         + Singletons.OneTestCase.Suites
                         + TestAssembly.MockTestFixture.Suites 
                         + IgnoredFixture.Suites
@@ -40,28 +40,28 @@ namespace NUnit.Tests
                         + GenericFixtureConstants.Suites
                         + NamespaceSuites;
             
-            public static readonly int Nodes = Tests + Suites;
+            public const int Nodes = Tests + Suites;
             
-            public static int ExplicitFixtures = 1;
-            public static int SuitesRun = Suites - ExplicitFixtures;
+            public const int ExplicitFixtures = 1;
+            public const int SuitesRun = Suites - ExplicitFixtures;
 
-            public static int Ignored = MockTestFixture.Ignored + IgnoredFixture.Tests;
-            public static int Explicit = MockTestFixture.Explicit + ExplicitFixture.Tests;
-            public static int NotRunnable = MockTestFixture.NotRunnable + BadFixture.Tests;
-            public static int NotRun = Ignored + Explicit + NotRunnable;
-            public static int TestsRun = Tests - NotRun;
-            public static int ResultCount = Tests - Explicit;
+            public const int Ignored = MockTestFixture.Ignored + IgnoredFixture.Tests;
+            public const int Explicit = MockTestFixture.Explicit + ExplicitFixture.Tests;
+            public const int NotRun = Ignored + Explicit + NotRunnable;
+            public const int TestsRun = Tests - NotRun;
+            public const int ResultCount = Tests - Explicit;
 
-            public static int Errors = MockTestFixture.Errors;
-            public static int Failures = MockTestFixture.Failures;
-            public static int ErrorsAndFailures = Errors + Failures;
-            public static int Inconclusive = MockTestFixture.Inconclusive;
-            public static int Success = TestsRun - ErrorsAndFailures - Inconclusive;
+            public const int Errors = MockTestFixture.Errors;
+            public const int Failures = MockTestFixture.Failures + BadFixture.Tests;
+            public const int NotRunnable = MockTestFixture.NotRunnable;
+            public const int ErrorsAndFailures = Errors + Failures + NotRunnable;
+            public const int Inconclusive = MockTestFixture.Inconclusive;
+            public const int Success = TestsRun - Errors - Failures - Inconclusive;
 
-            public static int Categories = MockTestFixture.Categories;
+            public const int Categories = MockTestFixture.Categories;
 
 #if !NETCF && !SILVERLIGHT
-            public static string AssemblyPath = AssemblyHelper.GetAssemblyPath(typeof(MockAssembly).Assembly);
+            public static readonly string AssemblyPath = AssemblyHelper.GetAssemblyPath(typeof(MockAssembly).Assembly);
 #endif
         }
 
@@ -74,14 +74,16 @@ namespace NUnit.Tests
 
             public const int Ignored = 1;
             public const int Explicit = 1;
-            public const int NotRunnable = 2;
-            public const int NotRun = Ignored + Explicit + NotRunnable;
+
+            public const int NotRun = Ignored + Explicit;
             public const int TestsRun = Tests - NotRun;
             public const int ResultCount = Tests - Explicit;
 
             public const int Failures = 1;
             public const int Errors = 1;
-            public const int ErrorsAndFailures = Errors + Failures;
+            public const int NotRunnable = 2;
+            public const int ErrorsAndFailures = Errors + Failures + NotRunnable;
+
             public const int Inconclusive = 1;
 
             public const int Categories = 5;
@@ -158,8 +160,8 @@ namespace NUnit.Tests
         [TestFixture]
         public class OneTestCase
         {
-            public static readonly int Tests = 1;
-            public static readonly int Suites = 1;		
+            public const int Tests = 1;
+            public const int Suites = 1;		
 
             [Test]
             public virtual void TestCase() 
@@ -172,8 +174,8 @@ namespace NUnit.Tests
         [TestFixture]
         public class MockTestFixture
         {
-            public static readonly int Tests = 1;
-            public static readonly int Suites = 1;
+            public const int Tests = 1;
+            public const int Suites = 1;
 
             [Test]
             public void MyTest()
@@ -185,8 +187,8 @@ namespace NUnit.Tests
     [TestFixture, Ignore("BECAUSE")]
     public class IgnoredFixture
     {
-        public static readonly int Tests = 3;
-        public static readonly int Suites = 1;
+        public const int Tests = 3;
+        public const int Suites = 1;
 
         [Test]
         public void Test1() { }
@@ -201,9 +203,9 @@ namespace NUnit.Tests
     [TestFixture,Explicit]
     public class ExplicitFixture
     {
-        public static readonly int Tests = 2;
-        public static readonly int Suites = 1;
-        public static readonly int Nodes = Tests + Suites;
+        public const int Tests = 2;
+        public const int Suites = 1;
+        public const int Nodes = Tests + Suites;
 
         [Test]
         public void Test1() { }
@@ -215,8 +217,8 @@ namespace NUnit.Tests
     [TestFixture]
     public class BadFixture
     {
-        public static readonly int Tests = 1;
-        public static readonly int Suites = 1;
+        public const int Tests = 1;
+        public const int Suites = 1;
 
         public BadFixture(int val) { }
 
@@ -227,8 +229,8 @@ namespace NUnit.Tests
     [TestFixture]
     public class FixtureWithTestCases
     {
-        public static readonly int Tests = 4;
-        public static readonly int Suites = 3;
+        public const int Tests = 4;
+        public const int Suites = 3;
         
         [TestCase(2, 2, ExpectedResult=4)]
         [TestCase(9, 11, ExpectedResult=20)]
@@ -248,8 +250,8 @@ namespace NUnit.Tests
     [TestFixture(42)]
     public class ParameterizedFixture
     {
-        public static readonly int Tests = 4;
-        public static readonly int Suites = 3;
+        public const int Tests = 4;
+        public const int Suites = 3;
 
         public ParameterizedFixture(int num) { }
         
@@ -262,8 +264,8 @@ namespace NUnit.Tests
     
     public class GenericFixtureConstants
     {
-        public static readonly int Tests = 4;
-        public static readonly int Suites = 3;
+        public const int Tests = 4;
+        public const int Suites = 3;
     }
     
     [TestFixture(5)]
