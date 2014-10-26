@@ -33,25 +33,23 @@ namespace NUnit.Framework.Tests.Compatibility
     [TestFixture]
     public class StopwatchTests
     {
-        private const int SLEEP = 100;
-        private const int MIN = (int)(SLEEP * 0.9);
-        private const int MAX = (int)(SLEEP * 1.5);
+        private const int DELAY = 100;
+        private const int TOLERANCE = 20;
 
         [Test]
         public void TestStartNewIsRunning()
         {
             var watch = Stopwatch.StartNew();
-            Thread.Sleep(SLEEP);
+            Delay(DELAY);
             Assert.That(watch.IsRunning, Is.True);
-            Assert.That(watch.ElapsedMilliseconds, Is.GreaterThanOrEqualTo(MIN));
-            Assert.That(watch.ElapsedMilliseconds, Is.LessThan(MAX));
+            Assert.That(watch.ElapsedMilliseconds, Is.EqualTo(DELAY).Within(TOLERANCE).Percent);
         }
 
         [Test]
         public void TestConstructNewIsNotRunning()
         {
             var watch = new Stopwatch();
-            Thread.Sleep(SLEEP);
+            Delay(DELAY);
             Assert.That(watch.IsRunning, Is.False);
             Assert.That(watch.ElapsedMilliseconds, Is.EqualTo(0));
         }
@@ -60,7 +58,7 @@ namespace NUnit.Framework.Tests.Compatibility
         public void TestGetTimestamp()
         {
             var before = Stopwatch.GetTimestamp();
-            Thread.Sleep(SLEEP);
+            Delay(DELAY);
             var after = Stopwatch.GetTimestamp();
             Assert.That(before, Is.LessThan(after));
         }
@@ -69,7 +67,7 @@ namespace NUnit.Framework.Tests.Compatibility
         public void TestReset()
         {
             var watch = Stopwatch.StartNew();
-            Thread.Sleep(SLEEP);
+            Delay(DELAY);
             watch.Reset();
             Assert.That(watch.IsRunning, Is.False);
             Assert.That(watch.ElapsedMilliseconds, Is.EqualTo(0));
@@ -79,12 +77,11 @@ namespace NUnit.Framework.Tests.Compatibility
         public void TestRestart()
         {
             var watch = Stopwatch.StartNew();
-            Thread.Sleep(SLEEP);
+            Delay(DELAY);
             watch.Restart();
-            Thread.Sleep(SLEEP);
+            Delay(DELAY);
             Assert.That(watch.IsRunning, Is.True);
-            Assert.That(watch.ElapsedMilliseconds, Is.GreaterThanOrEqualTo(MIN));
-            Assert.That(watch.ElapsedMilliseconds, Is.LessThan(MAX));
+            Assert.That(watch.ElapsedMilliseconds, Is.EqualTo(DELAY).Within(TOLERANCE).Percent);
         }
 
         [Test]
@@ -94,10 +91,9 @@ namespace NUnit.Framework.Tests.Compatibility
             Assert.That(watch.IsRunning, Is.False);
             Assert.That(watch.ElapsedMilliseconds, Is.EqualTo(0));
             watch.Start();
-            Thread.Sleep(SLEEP);
+            Delay(DELAY);
             Assert.That(watch.IsRunning, Is.True);
-            Assert.That(watch.ElapsedMilliseconds, Is.GreaterThanOrEqualTo(MIN));
-            Assert.That(watch.ElapsedMilliseconds, Is.LessThan(MAX));
+            Assert.That(watch.ElapsedMilliseconds, Is.EqualTo(DELAY).Within(TOLERANCE).Percent);
         }
 
         [Test]
@@ -105,13 +101,12 @@ namespace NUnit.Framework.Tests.Compatibility
         {
             var watch = Stopwatch.StartNew();
             Assert.That(watch.IsRunning, Is.True);
-            Thread.Sleep(SLEEP);
+            Delay(DELAY);
             watch.Stop();
             Assert.That(watch.IsRunning, Is.False);
             var saved = watch.ElapsedMilliseconds;
-            Assert.That(saved, Is.GreaterThanOrEqualTo(MIN));
-            Assert.That(watch.ElapsedMilliseconds, Is.LessThan(MAX));
-            Thread.Sleep(SLEEP);
+            Assert.That(watch.ElapsedMilliseconds, Is.EqualTo(DELAY).Within(TOLERANCE).Percent);
+            Delay(DELAY);
             Assert.That(watch.ElapsedMilliseconds, Is.EqualTo(saved));
         }        
 
@@ -128,5 +123,12 @@ namespace NUnit.Framework.Tests.Compatibility
             Assert.That(Stopwatch.IsHighResolution, Is.False);
         }    
 #endif
+
+        private static AutoResetEvent waitEvent = new AutoResetEvent(false);
+
+        private static void Delay(int delay)
+        {
+            waitEvent.WaitOne(delay);
+        }
     }
 }

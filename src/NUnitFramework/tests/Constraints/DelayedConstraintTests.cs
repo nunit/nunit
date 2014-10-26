@@ -31,12 +31,9 @@ namespace NUnit.Framework.Constraints
     [TestFixture]
     public class DelayedConstraintTests : ConstraintTestBase
     {
-        // TODO: Sleeping is too imprecise, we need to find another way to test this.
-        private const int SLEEP = 100;
+        private const int DELAY = 100;
         private const int AFTER = 300;
         private const int POLLING = 50;
-        private const int MIN = (int)(AFTER * 0.9);
-        private const int MAX = AFTER * 2;
 
         private static bool boolValue;
         private static List<int> list;
@@ -69,7 +66,7 @@ namespace NUnit.Framework.Constraints
         [Test, TestCaseSource("SuccessDelegates")]
         public void SucceedsWithGoodDelegates(ActualValueDelegate<object> del)
         {
-            SetValuesAfterDelay(SLEEP);
+            SetValuesAfterDelay(DELAY);
             Assert.That(theConstraint.ApplyTo(del).IsSuccess);
         }
 
@@ -82,14 +79,14 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void SimpleTest()
         {
-            SetValuesAfterDelay(SLEEP);
+            SetValuesAfterDelay(DELAY);
             Assert.That(DelegateReturningValue, new DelayedConstraint(new EqualConstraint(true), AFTER, POLLING));
         }
 
         [Test]
         public void SimpleTestUsingReference()
         {
-            SetValuesAfterDelay(SLEEP);
+            SetValuesAfterDelay(DELAY);
             Assert.That(ref boolValue, new DelayedConstraint(new EqualConstraint(true), AFTER, POLLING));
         }
 
@@ -126,11 +123,11 @@ namespace NUnit.Framework.Constraints
             SetValuesAfterDelay(1);
             Assert.That(() => list, Has.Count.EqualTo(1).After(AFTER, POLLING));
         }
-        
+
         [Test]
         public void CanTestInitiallyNullDelegate()
         {
-            SetValuesAfterDelay(SLEEP);
+            SetValuesAfterDelay(DELAY);
             Assert.That(() => statusString, Is.Not.Null.And.Length.GreaterThan(0).After(AFTER, POLLING));
         }
 
@@ -138,23 +135,22 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void CanTestInitiallyNullReference()
         {
-            SetValuesAfterDelay(SLEEP);
+            SetValuesAfterDelay(DELAY);
             Assert.That(ref statusString, Is.Not.Null.And.Length.GreaterThan(0).After(AFTER, POLLING));
         }
-        
+
         [Test]
         public void ThatBlockingDelegateWhichSucceedsWithoutPolling_ReturnsAfterDelay()
         {
             var start = DateTime.UtcNow;
             Assert.That(() =>
             {
-                Thread.Sleep(SLEEP);
+                Delay(DELAY);
                 return true;
             }, Is.True.After(AFTER));
 
             var elapsed = DateTime.UtcNow - start;
-            Assert.That(elapsed.TotalMilliseconds, Is.GreaterThanOrEqualTo(MIN)); // wiggle room due to timer resolution
-            Assert.That(elapsed.TotalMilliseconds, Is.LessThan(MAX));
+            Assert.That(elapsed.TotalMilliseconds, Is.GreaterThanOrEqualTo(AFTER));
         }
 
         [Test]
@@ -163,12 +159,12 @@ namespace NUnit.Framework.Constraints
             var start = DateTime.UtcNow;
             Assert.That(() =>
             {
-                Thread.Sleep(SLEEP);
+                Delay(DELAY);
                 return true;
             }, Is.True.After(AFTER, POLLING));
 
             var elapsed = DateTime.UtcNow - start;
-            Assert.That(elapsed.TotalMilliseconds, Is.LessThan(SLEEP + POLLING * 2));
+            Assert.That(elapsed.TotalMilliseconds, Is.LessThan(AFTER));
         }
 
         [Test]
@@ -177,13 +173,12 @@ namespace NUnit.Framework.Constraints
             var start = DateTime.UtcNow;
             Assert.Throws<AssertionException>(() => Assert.That(() =>
             {
-                Thread.Sleep(SLEEP);
+                Delay(DELAY);
                 return false;
             }, Is.True.After(AFTER)));
 
             var elapsed = DateTime.UtcNow - start;
-            Assert.That(elapsed.TotalMilliseconds, Is.GreaterThanOrEqualTo(MIN));
-            Assert.That(elapsed.TotalMilliseconds, Is.LessThan(MAX));
+            Assert.That(elapsed.TotalMilliseconds, Is.GreaterThanOrEqualTo(AFTER));
         }
 
         [Test]
@@ -192,13 +187,12 @@ namespace NUnit.Framework.Constraints
             var start = DateTime.UtcNow;
             Assert.Throws<AssertionException>(() => Assert.That(() =>
             {
-                Thread.Sleep(SLEEP);
+                Delay(DELAY);
                 return false;
             }, Is.True.After(AFTER, POLLING)));
 
             var elapsed = DateTime.UtcNow - start;
-            Assert.That(elapsed.TotalMilliseconds, Is.GreaterThanOrEqualTo(MIN));
-            Assert.That(elapsed.TotalMilliseconds, Is.LessThan(MAX));
+            Assert.That(elapsed.TotalMilliseconds, Is.GreaterThanOrEqualTo(AFTER));
         }
 
         [Test]
@@ -207,13 +201,12 @@ namespace NUnit.Framework.Constraints
             var start = DateTime.UtcNow;
             Assert.Throws<AssertionException>(() => Assert.That(() =>
             {
-                Thread.Sleep(SLEEP);
+                Delay(DELAY);
                 throw new InvalidOperationException();
             }, Is.True.After(AFTER)));
 
             var elapsed = DateTime.UtcNow - start;
-            Assert.That(elapsed.TotalMilliseconds, Is.GreaterThanOrEqualTo(MIN));
-            Assert.That(elapsed.TotalMilliseconds, Is.LessThan(MAX));
+            Assert.That(elapsed.TotalMilliseconds, Is.GreaterThanOrEqualTo(AFTER));
         }
 
         [Test]
@@ -222,13 +215,12 @@ namespace NUnit.Framework.Constraints
             var start = DateTime.UtcNow;
             Assert.Throws<AssertionException>(() => Assert.That(() =>
             {
-                Thread.Sleep(SLEEP);
+                Delay(DELAY);
                 throw new InvalidOperationException();
             }, Is.True.After(AFTER, POLLING)));
 
             var elapsed = DateTime.UtcNow - start;
-            Assert.That(elapsed.TotalMilliseconds, Is.GreaterThanOrEqualTo(MIN));
-            Assert.That(elapsed.TotalMilliseconds, Is.LessThan(MAX));
+            Assert.That(elapsed.TotalMilliseconds, Is.GreaterThanOrEqualTo(AFTER));
         }
 #endif
 
@@ -246,19 +238,25 @@ namespace NUnit.Framework.Constraints
         private static object MethodReturningZero() { return 0; }
         private static ActualValueDelegate DelegateReturningZero = new ActualValueDelegate(MethodReturningZero);
 
+        private static AutoResetEvent waitEvent = new AutoResetEvent(false);
+
+        private static void Delay(int delay)
+        {
+            waitEvent.WaitOne(delay);
+        }
+
         private static void MethodSetsValues()
         {
-            Thread.Sleep(setValuesDelay);
+            Delay(setValuesDelay);
             boolValue = true;
             list.Add(1);
             statusString = "Finished";
         }
-        private ThreadStart SetValuesDelegate = new ThreadStart(MethodSetsValues);
 
         private void SetValuesAfterDelay(int delay)
         {
             setValuesDelay = delay;
-            Thread thread = new Thread(SetValuesDelegate);
+            Thread thread = new Thread(MethodSetsValues);
             thread.Start();
         }
     }
