@@ -95,9 +95,9 @@ namespace NUnit.ConsoleRunner
                             inconclusiveCount++;
                             testsRun++;
                             break;
-                        case "NotRunnable":
+                        case "NotRunnable": // TODO: Check if this can still occur
+                        case "Invalid":
                             notRunnable++;
-                            //errorCount++;
                             break;
                         case "Ignored":
                             ignoreCount++;

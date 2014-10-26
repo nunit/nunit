@@ -211,7 +211,7 @@ namespace NUnit.Framework.Internal
         {
             ResultState resultState = ResultState.NotRunnable;
 
-            Assert.AreEqual(TestStatus.Skipped, resultState.Status, "Status not correct.");
+            Assert.AreEqual(TestStatus.Failed, resultState.Status, "Status not correct.");
             Assert.AreEqual("Invalid", resultState.Label, "Label not correct.");
             Assert.AreEqual(FailureSite.Test, resultState.Site, "Site not correct.");
         }

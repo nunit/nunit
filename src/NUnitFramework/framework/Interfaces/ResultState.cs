@@ -85,11 +85,6 @@ namespace NUnit.Framework.Interfaces
         public readonly static ResultState Inconclusive = new ResultState(TestStatus.Inconclusive);
         
         /// <summary>
-        /// The test was not runnable.
-        /// </summary>
-        public readonly static ResultState NotRunnable = new ResultState(TestStatus.Skipped, "Invalid");
-
-        /// <summary>
         /// The test has been skipped. 
         /// </summary>
         public readonly static ResultState Skipped = new ResultState(TestStatus.Skipped);
@@ -118,6 +113,11 @@ namespace NUnit.Framework.Interfaces
         /// The test was cancelled by the user
         /// </summary>
         public readonly static ResultState Cancelled = new ResultState(TestStatus.Failed, "Cancelled");
+
+        /// <summary>
+        /// The test was not runnable.
+        /// </summary>
+        public readonly static ResultState NotRunnable = new ResultState(TestStatus.Failed, "Invalid");
 
         /// <summary>
         /// A suite failed because one or more child tests failed or had errors

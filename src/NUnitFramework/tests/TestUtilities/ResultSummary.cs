@@ -33,14 +33,10 @@ namespace NUnit.TestUtilities
     public class ResultSummary
     {
         private int resultCount = 0;
-        private int testsRun = 0;
         private int failureCount = 0;
-        private int errorCount = 0;
         private int successCount = 0;
         private int inconclusiveCount = 0;
         private int skipCount = 0;
-        private int ignoreCount = 0;
-        private int notRunnable = 0;
 
         private DateTime startTime = DateTime.MinValue;
         private DateTime endTime = DateTime.MaxValue;
@@ -77,28 +73,13 @@ namespace NUnit.TestUtilities
                 {
                     case TestStatus.Passed:
                         successCount++;
-                        testsRun++;
                         break;
                     case TestStatus.Failed:
                         failureCount++;
-                        testsRun++;
                         break;
-                    //case TestStatus.Error:
-                    //case TestStatus.Cancelled:
-                    //errorCount++;
-                    //testsRun++;
-                    //break;
                     case TestStatus.Inconclusive:
                         inconclusiveCount++;
-                        testsRun++;
                         break;
-                    //case TestStatus.NotRunnable:
-                    //    notRunnable++;
-                    //    //errorCount++;
-                    //    break;
-                    //case TestStatus.Ignored:
-                    //    ignoreCount++;
-                    //    break;
                     case TestStatus.Skipped:
                     default:
                         skipCount++;
@@ -134,7 +115,7 @@ namespace NUnit.TestUtilities
         /// </summary>
         public int TestsRun
         {
-            get { return testsRun; }
+            get { return Passed + Failed + Inconclusive; }
         }
 
         /// <summary>
@@ -146,17 +127,9 @@ namespace NUnit.TestUtilities
         }
 
         /// <summary>
-        /// Returns the number of test cases that had an error.
-        /// </summary>
-        public int Errors
-        {
-            get { return errorCount; }
-        }
-
-        /// <summary>
         /// Returns the number of test cases that failed.
         /// </summary>
-        public int Failures
+        public int Failed
         {
             get { return failureCount; }
         }
@@ -170,26 +143,11 @@ namespace NUnit.TestUtilities
         }
 
         /// <summary>
-        /// Returns the number of test cases that were not runnable
-        /// due to errors in the signature of the class or method.
-        /// Such tests are also counted as Errors.
-        /// </summary>
-        public int NotRunnable
-        {
-            get { return notRunnable; }
-        }
-
-        /// <summary>
         /// Returns the number of test cases that were skipped.
         /// </summary>
         public int Skipped
         {
             get { return skipCount; }
-        }
-
-        public int Ignored
-        {
-            get { return ignoreCount; }
         }
 
         /// <summary>
@@ -214,16 +172,6 @@ namespace NUnit.TestUtilities
         public double Duration
         {
             get { return duration; }
-        }
-
-        public int TestsNotRun
-        {
-            get { return skipCount + ignoreCount + notRunnable; }
-        }
-
-        public int ErrorsAndFailures
-        {
-            get { return errorCount + failureCount; }
         }
     }
 }
