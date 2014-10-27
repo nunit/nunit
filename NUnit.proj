@@ -262,10 +262,10 @@
 	<!-- *********************************************************************** -->
 
 	<Target Name="TestAll" Label="Run tests for all framework builds, the engine and the console"
-			DependsOnTargets="TestAllFrameworks;TestEngine;TestConsole" />
+			DependsOnTargets="TestAllFrameworks;TestEngine;TestConsole;_CheckTestResult" />
 	  
 	<Target Name="Test" Label="Run tests for the current framework, engine and console"
-			DependsOnTargets="TestFramework;TestEngine;TestConsole" />
+			DependsOnTargets="TestFramework;TestEngine;TestConsole;_CheckTestResult" />
 
 	<Target Name="TestAllFrameworks" Label="Test the framework for the current config and all runtimes">
 		<MSBuild Projects="$(MSBuildProjectFullPath)" Targets="_TestFramework"
@@ -319,7 +319,10 @@
 		<Message Text="* Testing NUnitFramework $(Framework) - $(Configuration)" />
 		<Message Text="******************************************************************" />
 		<Exec WorkingDirectory="$(ConsoleBuildDir)" ContinueOnError="true"
-			Command="$(ManagedExeLauncher) $(ConsoleRunner) $(Framework)/nunit.framework.tests.dll -result:$(ResultDir)/NUnitFrameworkResult-$(Framework).xml;format=$(ResultFormat) $(TestOptions)" />
+			Command="$(ManagedExeLauncher) $(ConsoleRunner) $(Framework)/nunit.framework.tests.dll -result:$(ResultDir)/NUnitFrameworkResult-$(Framework).xml;format=$(ResultFormat) $(TestOptions)" >
+			<Output TaskParameter="ExitCode" PropertyName="ErrorCode"/>
+		</Exec>
+		<CallTarget Targets="_RecordTestFailure" Condition="'$(ErrorCode)' != '0'" />
 	</Target>
 	
 	<Target Name="_TestNUnitLite" Label="Run NUnitLite tests for a runtime without checking for errors" DependsOnTargets="_CreateResultDir">
@@ -327,7 +330,10 @@
 		<Message Text="* Testing NUnitLite $(Framework) - $(Configuration)" />
 		<Message Text="******************************************************************" />
 		<Exec WorkingDirectory="$(FrameworkBuildDir)" ContinueOnError="true"
-			Command="$(ManagedExeLauncher) $(FrameworkBuildDir)\nunitlite.tests.exe -result:$(ResultDir)/NUnitLiteResult-$(Framework).xml;format=$(ResultFormat) $(TestOptions)" />
+			Command="$(ManagedExeLauncher) $(FrameworkBuildDir)\nunitlite.tests.exe -result:$(ResultDir)/NUnitLiteResult-$(Framework).xml;format=$(ResultFormat) $(TestOptions)" >
+			<Output TaskParameter="ExitCode" PropertyName="ErrorCode"/>
+		</Exec>
+		<CallTarget Targets="_RecordTestFailure" Condition="'$(ErrorCode)' != '0'" />
 	</Target>
 	
 	<Target Name="TestEngine" Label ="Run the engine tests" DependsOnTargets="_CreateResultDir">
@@ -335,7 +341,10 @@
 		<Message Text="* Testing the NUnit Engine - $(Configuration)" />
 		<Message Text="******************************************************************" />
 		<Exec WorkingDirectory="$(EngineBuildDir)" ContinueOnError="true"
-		  Command="$(ManagedExeLauncher) $(ConsoleRunner) nunit.engine.tests.dll -result:$(ResultDir)/EngineResult.xml;format=$(ResultFormat) $(TestOptions)" />
+		  Command="$(ManagedExeLauncher) $(ConsoleRunner) nunit.engine.tests.dll -result:$(ResultDir)/EngineResult.xml;format=$(ResultFormat) $(TestOptions)" >
+			<Output TaskParameter="ExitCode" PropertyName="ErrorCode"/>
+		</Exec>
+		<CallTarget Targets="_RecordTestFailure" Condition="'$(ErrorCode)' != '0'" />
 	</Target>
 	
 	<Target Name="TestConsole" Label="Run the console tests" DependsOnTargets="_CreateResultDir">
@@ -343,7 +352,10 @@
 		<Message Text="* Testing the Console Runner - $(Configuration)" />
 		<Message Text="******************************************************************" />
 		<Exec WorkingDirectory="$(ConsoleBuildDir)" ContinueOnError="true"
-		  Command="$(ManagedExeLauncher) $(ConsoleRunner) nunit-console.tests.dll -result:$(ResultDir)/ConsoleResult.xml;format=$(ResultFormat) $(TestOptions)" />
+		  Command="$(ManagedExeLauncher) $(ConsoleRunner) nunit-console.tests.dll -result:$(ResultDir)/ConsoleResult.xml;format=$(ResultFormat) $(TestOptions)" >
+			<Output TaskParameter="ExitCode" PropertyName="ErrorCode"/>
+		</Exec>
+		<CallTarget Targets="_RecordTestFailure" Condition="'$(ErrorCode)' != '0'" />
 	</Target>
 	
 	<Target Name="TestEngineAndConsole" Label="Run the engine and console tests together" DependsOnTargets="_CreateResultDir">
@@ -351,11 +363,24 @@
 		<Message Text="* Testing the Engine and Console Runner - $(Configuration)" />
 		<Message Text="******************************************************************" />
 	  <Exec WorkingDirectory="$(ConsoleBuildDir)" ContinueOnError="true"
-		Command="$(ManagedExeLauncher) $(ConsoleRunner) nunit.engine.tests.dll nunit-console.tests.dll -result:$(ResultDir)/EnginePlusConsoleResult.xml;format=$(ResultFormat) $(TestOptions)" />
+		Command="$(ManagedExeLauncher) $(ConsoleRunner) nunit.engine.tests.dll nunit-console.tests.dll -result:$(ResultDir)/EnginePlusConsoleResult.xml;format=$(ResultFormat) $(TestOptions)" >
+			<Output TaskParameter="ExitCode" PropertyName="ErrorCode"/>
+		</Exec>
+		<CallTarget Targets="_RecordTestFailure" Condition="'$(ErrorCode)' != '0'" />
 	</Target>
 	
 	<Target Name="_CreateResultDir">
 		<MakeDir Directories="$(ResultDir)"  Condition="!Exists(ResultDir)"/>
+	</Target>
+	
+	<Target Name="_RecordTestFailure">
+	  <PropertyGroup>
+	    <TestResult>FAILED</TestResult>
+	  </PropertyGroup>
+	</Target>
+	
+	<Target Name="_CheckTestResult">
+	  <Error Condition="'$(TestResult)' == 'FAILED'" Text="One or more test runs had errors" />
 	</Target>
 
 	<!-- *********************************************************************** -->
