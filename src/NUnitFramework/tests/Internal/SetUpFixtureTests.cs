@@ -54,7 +54,8 @@ namespace NUnit.Framework.Internal
             return null;
         }
 
-        #region Builder
+        #region Builder Tests
+
         /// <summary>
         /// Tests that the TestSuiteBuilder correctly interperets a SetupFixture class as a 'virtual namespace' into which 
         /// all it's sibling classes are inserted.
@@ -65,7 +66,7 @@ namespace NUnit.Framework.Internal
             string nameSpace = "NUnit.TestData.SetupFixture.Namespace1";
             IDictionary options = new Hashtable();
             options["LOAD"] = new string[] { nameSpace };
-            ITest suite = builder.Build( testAssembly, options );
+            ITest suite = builder.Build(testAssembly, options);
 
             Assert.IsNotNull(suite);
 
@@ -78,6 +79,7 @@ namespace NUnit.Framework.Internal
                 suite = suite.Tests[0] as TestSuite;
                 Assert.AreEqual(nameSpaceBits[i], suite.Name);
                 Assert.AreEqual(1, suite.Tests.Count);
+                Assert.That(suite.RunState, Is.EqualTo(RunState.Runnable));
             }
 
             Assert.That(suite, Is.InstanceOf<SetUpFixture>());
@@ -85,10 +87,10 @@ namespace NUnit.Framework.Internal
             suite = suite.Tests[0] as TestSuite;
             Assert.AreEqual("SomeFixture", suite.Name);
             Assert.AreEqual(1, suite.Tests.Count);
+            Assert.That(suite.RunState, Is.EqualTo(RunState.Runnable));
+            Assert.That(suite.Tests[0].RunState, Is.EqualTo(RunState.Runnable));
         }
-        #endregion Builder
 
-        #region NoNamespaceBuilder
         /// <summary>
         /// Tests that the TestSuiteBuilder correctly interperets a SetupFixture class with no parent namespace 
         /// as a 'virtual assembly' into which all it's sibling fixtures are inserted.
@@ -106,7 +108,38 @@ namespace NUnit.Framework.Internal
             Assert.AreEqual("SomeFixture", suite.Name);
             Assert.AreEqual(1, suite.Tests.Count);
         }
-        #endregion NoNamespaceBuilder
+
+        [Test]
+        public void InvalidAssemblySetUpFixtureIsLoadedCorrectly()
+        {
+            string nameSpace = "NUnit.TestData.SetupFixture.Namespace6";
+            IDictionary options = new Hashtable();
+            options["LOAD"] = new string[] { nameSpace };
+            ITest suite = builder.Build(testAssembly, options);
+
+            Assert.IsNotNull(suite);
+
+            Assert.AreEqual(testAssembly, suite.FullName);
+            Assert.AreEqual(1, suite.Tests.Count, "Error in top level test count");
+            Assert.AreEqual(RunState.Runnable, suite.RunState);
+
+            string[] nameSpaceBits = nameSpace.Split('.');
+            for (int i = 0; i < nameSpaceBits.Length; i++)
+            {
+                suite = suite.Tests[0] as TestSuite;
+                Assert.AreEqual(nameSpaceBits[i], suite.Name);
+                Assert.AreEqual(1, suite.Tests.Count);
+                Assert.That(suite.RunState, Is.EqualTo(i < nameSpaceBits.Length - 1 ? RunState.Runnable : RunState.NotRunnable));
+            }
+
+            suite = suite.Tests[0] as TestSuite;
+            Assert.AreEqual("SomeFixture", suite.Name);
+            Assert.AreEqual(1, suite.Tests.Count);
+            Assert.That(suite.RunState, Is.EqualTo(RunState.Runnable));
+            Assert.That(suite.Tests[0].RunState, Is.EqualTo(RunState.Runnable));
+        }
+
+        #endregion
 
         #region Simple
         [NUnit.Framework.Test]
@@ -197,6 +230,17 @@ namespace NUnit.Framework.Internal
                                                      "NS4.OneTimeTearDown2");
         }
         #endregion TwoSetUpFixtures
+
+        #region InvalidSetUpFixture
+
+        [Test]
+        public void InvalidSetUpFixtureTest()
+        {
+            Assert.That(runTests("NUnit.TestData.SetupFixture.Namespace6").ResultState.Status, Is.EqualTo(TestStatus.Failed));
+            TestUtilities.SimpleEventRecorder.Verify(new string[0]);
+        }
+
+        #endregion
 
         #region NoNamespaceSetupFixture
         [NUnit.Framework.Test]

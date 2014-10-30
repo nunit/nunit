@@ -470,6 +470,25 @@ namespace NUnit.TestData.SetupFixture
             }
         }
     }
+
+    namespace Namespace6
+    {
+        [SetUpFixture]
+        public class InvalidSetUpFixture
+        {
+            [SetUp]
+            public void InvalidForOneTimeSetUp()
+            {
+            }
+        }
+
+        [TestFixture]
+        public class SomeFixture
+        {
+            [Test]
+            public void Test() { }
+        }
+    }
 }
 
 #region NoNamespaceSetupFixture
