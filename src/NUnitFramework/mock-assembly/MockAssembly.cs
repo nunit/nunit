@@ -52,8 +52,8 @@ namespace NUnit.Tests
             public const int ResultCount = Tests - Explicit;
 
             public const int Errors = MockTestFixture.Errors;
-            public const int Failures = MockTestFixture.Failures + BadFixture.Tests;
-            public const int NotRunnable = MockTestFixture.NotRunnable;
+            public const int Failures = MockTestFixture.Failures;
+            public const int NotRunnable = MockTestFixture.NotRunnable + BadFixture.Tests;
             public const int ErrorsAndFailures = Errors + Failures + NotRunnable;
             public const int Inconclusive = MockTestFixture.Inconclusive;
             public const int Success = TestsRun - Errors - Failures - Inconclusive;
