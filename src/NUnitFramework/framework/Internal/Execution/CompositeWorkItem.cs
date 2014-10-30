@@ -100,7 +100,7 @@ namespace NUnit.Framework.Internal.Execution
                                     case TestStatus.Skipped:
                                     case TestStatus.Inconclusive:
                                     case TestStatus.Failed:
-                                        SkipChildren();
+                                        SkipChildren(_suite, Result.ResultState.WithSite(FailureSite.Parent), "OneTimeSetUp: " + Result.Message);
                                         break;
                                 }
 
@@ -234,23 +234,23 @@ namespace NUnit.Framework.Internal.Execution
 
         private void SkipFixture(ResultState resultState, string message, string stackTrace)
         {
-            Result.SetResult(resultState, message, StackFilter.Filter(stackTrace));
-            SkipChildren();
+            Result.SetResult(resultState.WithSite(FailureSite.SetUp), message, StackFilter.Filter(stackTrace));
+            SkipChildren(_suite, resultState.WithSite(FailureSite.Parent), "OneTimeSetUp: " + message);
         }
 
-        private void SkipChildren()
+        private void SkipChildren(TestSuite suite, ResultState resultState, string message)
         {
             // TODO: Extend this to skip recursively?
-            foreach (Test child in _suite.Tests)
+            foreach (Test child in suite.Tests)
             {
                 if (_childFilter.Pass(child))
                 {
                     TestResult childResult = child.MakeTestResult();
-                    var resultState = Result.ResultState.Status == TestStatus.Failed
-                        ? ResultState.Failure // TODO: Converts errors to failures for the child. Should we do this?
-                        : Result.ResultState;
-                    childResult.SetResult(resultState.WithSite(FailureSite.Parent), "OneTimeSetUp: " + Result.Message);
+                    childResult.SetResult(resultState, message);
                     Result.AddResult(childResult);
+
+                    if (child.IsSuite)
+                        SkipChildren((TestSuite)child, resultState, message);
                 }
             }
         }

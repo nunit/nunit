@@ -170,7 +170,7 @@ namespace NUnit.Framework.Api
             Assert.That(result.Test, Is.TypeOf<TestAssembly>());
             Assert.That(result.Test.RunState, Is.EqualTo(RunState.NotRunnable));
             Assert.That(result.Test.TestCaseCount, Is.EqualTo(0));
-            Assert.That(result.ResultState, Is.EqualTo(ResultState.NotRunnable));
+            Assert.That(result.ResultState, Is.EqualTo(ResultState.NotRunnable.WithSite(FailureSite.SetUp)));
             Assert.That(result.Message, Does.StartWith("Could not load").And.Contains(MISSING_FILE));
         }
 
@@ -184,7 +184,7 @@ namespace NUnit.Framework.Api
             Assert.That(result.Test, Is.TypeOf<TestAssembly>());
             Assert.That(result.Test.RunState, Is.EqualTo(RunState.NotRunnable));
             Assert.That(result.Test.TestCaseCount, Is.EqualTo(0));
-            Assert.That(result.ResultState, Is.EqualTo(ResultState.NotRunnable));
+            Assert.That(result.ResultState, Is.EqualTo(ResultState.NotRunnable.WithSite(FailureSite.SetUp)));
             Assert.That(result.Message, Does.StartWith("Could not load").And.Contains(BAD_FILE));
         }
         #endregion
@@ -229,7 +229,7 @@ namespace NUnit.Framework.Api
             Assert.That(_runner.Result.Test, Is.TypeOf<TestAssembly>());
             Assert.That(_runner.Result.Test.RunState, Is.EqualTo(RunState.NotRunnable));
             Assert.That(_runner.Result.Test.TestCaseCount, Is.EqualTo(0));
-            Assert.That(_runner.Result.ResultState, Is.EqualTo(ResultState.NotRunnable));
+            Assert.That(_runner.Result.ResultState, Is.EqualTo(ResultState.NotRunnable.WithSite(FailureSite.SetUp)));
             Assert.That(_runner.Result.Message, Does.StartWith("Could not load").And.Contains(MISSING_FILE));
         }
 
@@ -245,7 +245,7 @@ namespace NUnit.Framework.Api
             Assert.That(_runner.Result.Test, Is.TypeOf<TestAssembly>());
             Assert.That(_runner.Result.Test.RunState, Is.EqualTo(RunState.NotRunnable));
             Assert.That(_runner.Result.Test.TestCaseCount, Is.EqualTo(0));
-            Assert.That(_runner.Result.ResultState, Is.EqualTo(ResultState.NotRunnable));
+            Assert.That(_runner.Result.ResultState, Is.EqualTo(ResultState.NotRunnable.WithSite(FailureSite.SetUp)));
             Assert.That(_runner.Result.Message, Does.StartWith("Could not load").And.Contains(BAD_FILE));
         }
         #endregion
