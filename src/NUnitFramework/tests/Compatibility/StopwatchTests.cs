@@ -21,18 +21,15 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#region Using Directives
-
 using System.Threading;
 using NUnit.Framework.Compatibility;
-
-#endregion
 
 namespace NUnit.Framework.Tests.Compatibility
 {
     [TestFixture]
     public class StopwatchTests
     {
+#if NETCF || SILVERLIGHT
         private const int DELAY = 100;
         private const int TOLERANCE = 20;
 
@@ -74,17 +71,6 @@ namespace NUnit.Framework.Tests.Compatibility
         }
 
         [Test]
-        public void TestRestart()
-        {
-            var watch = Stopwatch.StartNew();
-            Delay(DELAY);
-            watch.Restart();
-            Delay(DELAY);
-            Assert.That(watch.IsRunning, Is.True);
-            Assert.That(watch.ElapsedMilliseconds, Is.EqualTo(DELAY).Within(TOLERANCE).Percent);
-        }
-
-        [Test]
         public void TestStart()
         {
             var watch = new Stopwatch();
@@ -116,13 +102,11 @@ namespace NUnit.Framework.Tests.Compatibility
             Assert.That(Stopwatch.Frequency, Is.GreaterThan(0));
         }
         
-#if NETCF || SILVERLIGHT
         [Test]
         public void TestIsHighResolution()
         {
             Assert.That(Stopwatch.IsHighResolution, Is.False);
         }    
-#endif
 
         private static AutoResetEvent waitEvent = new AutoResetEvent(false);
 
@@ -130,5 +114,12 @@ namespace NUnit.Framework.Tests.Compatibility
         {
             waitEvent.WaitOne(delay);
         }
+#else
+        [Test]
+        public void StopwatchIsDotNetStopwatch()
+        {
+            Assert.That(new NUnit.Framework.Compatibility.Stopwatch(), Is.AssignableTo<System.Diagnostics.Stopwatch>());
+        }
+#endif
     }
 }

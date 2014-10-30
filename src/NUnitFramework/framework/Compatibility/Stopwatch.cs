@@ -21,30 +21,25 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#region Using Directives
-
 using System;
-
-#endregion
 
 namespace NUnit.Framework.Compatibility
 {
     /// <summary>
-    /// This class wraps a System.Diagnostics.Stopwatch on operating systems that support it. On those that don't,
+    /// This class is a System.Diagnostics.Stopwatch on operating systems that support it. On those that don't,
     /// it replicates the functionality at the resolution supported.
     /// </summary>
+#if !NETCF && !SILVERLIGHT
+    public class Stopwatch : System.Diagnostics.Stopwatch { }
+#else
     public class Stopwatch
     {
-#if !NETCF && !SILVERLIGHT
-        private System.Diagnostics.Stopwatch _stopwatch = new System.Diagnostics.Stopwatch();
-#else
         private const long TicksPerMillisecond = 10000;
         private const long TicksPerSecond = TicksPerMillisecond * 1000;
 
         private long _elapsedMilliseconds;
         private bool _isRunning;
         private long _startMilliseconds = GetTimestamp();
-#endif
 
         /// <summary>
         /// Gets the total elapsed time measured by the current instance, in milliseconds.
@@ -53,11 +48,7 @@ namespace NUnit.Framework.Compatibility
         {
             get
             {
-#if !NETCF && !SILVERLIGHT
-                return _stopwatch.ElapsedMilliseconds; 
-#else
                 return (_elapsedMilliseconds + GetTimeSinceLastStart())/TicksPerMillisecond;
-#endif
             }
         }
 
@@ -68,11 +59,7 @@ namespace NUnit.Framework.Compatibility
         {
             get
             {
-#if !NETCF && !SILVERLIGHT
-                return _stopwatch.IsRunning;
-#else
                 return _isRunning;
-#endif
             }
         }
 
@@ -87,11 +74,7 @@ namespace NUnit.Framework.Compatibility
         /// <returns>A long integer representing the tick counter value of the underlying timer mechanism.</returns>
         public static long GetTimestamp()
         {
-#if !NETCF && !SILVERLIGHT
-            return System.Diagnostics.Stopwatch.GetTimestamp();
-#else
             return DateTime.UtcNow.Ticks;
-#endif
         }
 
         /// <summary>
@@ -99,21 +82,8 @@ namespace NUnit.Framework.Compatibility
         /// </summary>
         public void Reset()
         {
-#if !NETCF && !SILVERLIGHT
-            _stopwatch.Reset();
-#else
             _elapsedMilliseconds = 0;
             _isRunning = false;
-#endif
-        }
-
-        /// <summary>
-        /// Stops time interval measurement, resets the elapsed time to zero, and starts measuring elapsed time.
-        /// </summary>
-        public void Restart()
-        {
-            Reset();
-            Start();
         }
 
         /// <summary>
@@ -121,15 +91,11 @@ namespace NUnit.Framework.Compatibility
         /// </summary>
         public void Start()
         {
-#if !NETCF && !SILVERLIGHT
-            _stopwatch.Start();
-#else
             if (!_isRunning)
             {
                 _isRunning = true;
                 _startMilliseconds = GetTimestamp();
             }
-#endif
         }
 
         /// <summary>
@@ -148,15 +114,11 @@ namespace NUnit.Framework.Compatibility
         /// </summary>
         public void Stop()
         {
-#if !NETCF && !SILVERLIGHT
-            _stopwatch.Stop();
-#else
             if (_isRunning)
             {
                 _elapsedMilliseconds += GetTimeSinceLastStart();
                 _isRunning = false;
             }
-#endif
         }
 
         /// <summary>
@@ -167,11 +129,7 @@ namespace NUnit.Framework.Compatibility
         /// </returns>
         public override string ToString()
         {
-#if !NETCF && !SILVERLIGHT
-            return _stopwatch.ToString();
-#else
             return base.ToString();
-#endif
         }
 
         /// <summary>
@@ -181,11 +139,7 @@ namespace NUnit.Framework.Compatibility
         {
             get
             {
-#if !NETCF && !SILVERLIGHT
-                return System.Diagnostics.Stopwatch.Frequency; 
-#else
                 return TicksPerSecond;
-#endif
             }
         }
 
@@ -196,15 +150,10 @@ namespace NUnit.Framework.Compatibility
         {
             get
             {
-#if !NETCF && !SILVERLIGHT
-                return System.Diagnostics.Stopwatch.IsHighResolution; 
-#else
                 return false;
-#endif
             }
         }
 
-#if NETCF || SILVERLIGHT
         private long GetTimeSinceLastStart()
         {
             if (_isRunning)
@@ -214,6 +163,6 @@ namespace NUnit.Framework.Compatibility
             }
             return 0;
         }
-#endif
     }
+#endif
 }
