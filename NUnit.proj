@@ -267,14 +267,24 @@
 	<Target Name="Test" Label="Run tests for the current framework, engine and console"
 			DependsOnTargets="TestFramework;TestEngine;TestConsole" />
 
-	<Target Name="TestAllFrameworks" Label="Test the framework for the current config and all runtimes">
-		<MSBuild Projects="$(MSBuildProjectFullPath)" Targets="_TestFramework"
-			Properties="Framework=%(SupportedFrameworks.Identity)" ContinueOnError="true" />
+	<Target Name="TestAllFrameworks"
+			Label="Test the framework for the current config and all runtimes">
+		
+		<MSBuild Projects="$(MSBuildProjectFullPath)"
+				 Targets="_TestFramework"
+				 Properties="Framework=%(SupportedFrameworks.Identity)"
+				 ContinueOnError="true" />
+		
 	</Target>
 
-	<Target Name="TestAllNUnit" Label="Test the NUnit framework for the current config and all runtimes">
-		<MSBuild Projects="$(MSBuildProjectFullPath)" Targets="_TestAllNUnit"
-			Properties="Framework=%(SupportedFrameworks.Identity)" ContinueOnError="true" />
+	<Target Name="TestAllNUnit"
+			Label="Test the NUnit framework for the current config and all runtimes">
+		
+		<MSBuild Projects="$(MSBuildProjectFullPath)"
+				 Targets="_TestAllNUnit"
+				 Properties="Framework=%(SupportedFrameworks.Identity)"
+				 ContinueOnError="true" />
+		
 	</Target>
 
 	<Target Name="_TestAllNUnit" Label="Test the NUnit framework for the current config conditionally, for use by TestAllNUnit">
@@ -297,45 +307,66 @@
 		<CallTarget Targets="_TestNUnitLite" />
 	</Target>
 
-	<Target Name="TestNUnit" Label="Test the full framework for the current config">
-		<Error Condition="'$(Runtime)' == 'netcf' Or '$(Runtime)' == 'silverlight'"
-			Text="The full NUnit framework cannot be tested under $(Runtime)" />
-		<CallTarget Targets="_TestNUnit" />
-	</Target>
-	
-	<Target Name="TestNUnitLite" Label="Test NUnitLite for the current config">
-		<Error Condition="'$(Runtime)' == 'silverlight'"
-			Text="Silverlight test is not supported by this script" />
-		<CallTarget Targets="_TestNUnitLite" />
-	</Target>
-
 	<Target Name="_TestFramework" Label="Run framework tests conditionally, for use by TestAllFrameworks">
 		<CallTarget Targets="_TestNUnit" Condition="'$(Runtime)' != 'netcf' And '$(Runtime)' != 'silverlight'" />
 		<CallTarget Targets="_TestNUnitLite" Condition="'$(Runtime)' != 'silverlight'" />
 	</Target>
-	
-	<Target Name="_TestNUnit" Label="Run full framework tests for a runtime without checking for errors">
+
+	<Target Name="TestNUnit"
+			Label="Test the full framework for the current config">
+		
+		<Error Condition="'$(Runtime)' == 'netcf' Or '$(Runtime)' == 'silverlight'"
+			Text="The full NUnit framework cannot be tested under $(Runtime)" />
+		
+		<CallTarget Targets="_TestNUnit" />
+		
+	</Target>
+
+	<Target Name="_TestNUnit"
+			Label="Run full framework tests for a runtime without checking for errors">
+		
 		<Message Text="******************************************************************" />
 		<Message Text="* Testing NUnitFramework $(Framework) - $(Configuration)" />
 		<Message Text="******************************************************************" />
+		
 		<Exec WorkingDirectory="$(ConsoleBuildDir)" 
-			Command="$(ManagedExeLauncher) $(ConsoleRunner) $(Framework)/nunit.framework.tests.dll $(TestOptions)" />
+			  Command="$(ManagedExeLauncher) $(ConsoleRunner) $(Framework)/nunit.framework.tests.dll $(TestOptions)" />
+		
 	</Target>
-	
-	<Target Name="_TestNUnitLite" Label="Run NUnitLite tests for a runtime without checking for errors">
+
+	<Target Name="TestNUnitLite"
+			Label="Test NUnitLite for the current config">
+		
+		<Error Condition="'$(Runtime)' == 'silverlight'"
+			Text="Silverlight test is not supported by this script" />
+		
+		<CallTarget Targets="_TestNUnitLite" />
+		
+	</Target>
+
+	<Target Name="_TestNUnitLite"
+			Label="Run NUnitLite tests for a runtime without checking for errors">
+		
 		<Message Text="******************************************************************" />
 		<Message Text="* Testing NUnitLite $(Framework) - $(Configuration)" />
 		<Message Text="******************************************************************" />
+		
 		<Exec WorkingDirectory="$(FrameworkBuildDir)"
-			Command="$(ManagedExeLauncher) $(FrameworkBuildDir)\nunitlite.tests.exe $(TestOptions)" />
+			  Command="$(ManagedExeLauncher) $(FrameworkBuildDir)\nunitlite.tests.exe $(TestOptions)" />
+		
 	</Target>
 	
-	<Target Name="TestEngine" Label ="Run the engine tests">
+	<Target Name="TestEngine"
+			Label ="Run the engine tests"
+			DependsOnTargets="_CreateResultDir">
+		
 		<Message Text="******************************************************************" />
 		<Message Text="* Testing the NUnit Engine - $(Configuration)" />
 		<Message Text="******************************************************************" />
+		
 		<Exec WorkingDirectory="$(EngineBuildDir)"
 		  Command="$(ManagedExeLauncher) $(ConsoleRunner) nunit.engine.tests.dll $(TestOptions)" />
+		
 	</Target>
 	
 	<Target Name="TestConsole"
