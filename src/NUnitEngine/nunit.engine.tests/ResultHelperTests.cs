@@ -43,6 +43,7 @@ namespace NUnit.Engine.Internal.Tests
         [SetUp]
         public void SetUp()
         {
+            Assert.Fail("Deliberate failure to test script");
             result1 = new TestEngineResult(resultText1);
             result2 = new TestEngineResult(resultText2);
             twoResults = new TestEngineResult[] { result1, result2 };

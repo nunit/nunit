@@ -50,7 +50,7 @@ namespace NUnitLite.Tests
         //      System.IO.TextWriter writer = new System.IO.StreamWriter(output);
         //      new TextUI( writer ).Execute( args );
         //      writer.Close();
-        static void Main(string[] args)
+        static int Main(string[] args)
         {
             //if (Environment.OSVersion.Platform == PlatformID.WinCE)
             //{
@@ -58,12 +58,12 @@ namespace NUnitLite.Tests
             //    System.IO.TextWriter writer = new System.IO.StreamWriter(path);
             //    new TextUI(writer).Execute(args);
             //    writer.Close();
-            //    //            new TcpUI("ppp_peer", 9000).Execute(args);
+            //    //            return new TcpUI("ppp_peer", 9000).Execute(args);
             //}
             //else
             //{
-                //            new TcpUI("ferrari", 9000).Execute(args);
-                new TextUI().Execute(args);
+                //           return new TcpUI("ferrari", 9000).Execute(args);
+                return new TextUI().Execute(args);
             //}
         }
     }
