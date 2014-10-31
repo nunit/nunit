@@ -37,6 +37,7 @@
 	<PropertyGroup Label="Default Build Settings">
 		<Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
 		<Framework Condition="'$(Framework)' == ''">net-4.5</Framework>
+		<ResultFormat Condition="'$(ResultFormat)' == ''">nunit3</ResultFormat>
 		<ConfigSuffix Condition=" '$(Configuration)' == 'Debug' ">-dbg</ConfigSuffix>
 	</PropertyGroup>
 
@@ -45,6 +46,7 @@
 		<FrameworkBuildDir>$(ConfigurationBuildDir)\$(Framework)</FrameworkBuildDir>
 		<EngineBuildDir>$(ConfigurationBuildDir)</EngineBuildDir>
 		<ConsoleBuildDir>$(ConfigurationBuildDir)</ConsoleBuildDir>
+		<ResultDir>$(ConfigurationBuildDir)\Results</ResultDir>
 	</PropertyGroup>
 
 	<PropertyGroup Label="Packaging Directories">
@@ -336,20 +338,36 @@
 		  Command="$(ManagedExeLauncher) $(ConsoleRunner) nunit.engine.tests.dll $(TestOptions)" />
 	</Target>
 	
-	<Target Name="TestConsole" Label="Run the console tests">
+	<Target Name="TestConsole"
+			Label="Run the console tests"
+			DependsOnTargets="_CreateResultDir">
+		
 		<Message Text="******************************************************************" />
 		<Message Text="* Testing the Console Runner - $(Configuration)" />
 		<Message Text="******************************************************************" />
+		
 		<Exec WorkingDirectory="$(ConsoleBuildDir)"
-		  Command="$(ManagedExeLauncher) $(ConsoleRunner) nunit-console.tests.dll $(TestOptions)" />
+			  Command="$(ManagedExeLauncher) $(ConsoleRunner) nunit-console.tests.dll $(TestOptions)" />
+		
 	</Target>
 	
-	<Target Name="TestEngineAndConsole" Label="Run the engine and console tests together">
+	<Target Name="TestEngineAndConsole"
+			Label="Run the engine and console tests together"
+			DependsOnTargets="_CreateResultDir">
+		
 		<Message Text="******************************************************************" />
 		<Message Text="* Testing the Engine and Console Runner - $(Configuration)" />
 		<Message Text="******************************************************************" />
-	  <Exec WorkingDirectory="$(ConsoleBuildDir)"
-		Command="$(ManagedExeLauncher) $(ConsoleRunner) nunit.engine.tests.dll nunit-console.tests.dll $(TestOptions)" />
+
+		<Exec WorkingDirectory="$(ConsoleBuildDir)"
+			  Command="$(ManagedExeLauncher) $(ConsoleRunner) nunit.engine.tests.dll nunit-console.tests.dll $(TestOptions)" />
+		
+	</Target>
+
+	<Target Name="_CreateResultDir">
+		
+		<MakeDir Directories="$(ResultDir)"  Condition="!Exists(ResultDir)"/>
+		
 	</Target>
 
 	<!-- *********************************************************************** -->
