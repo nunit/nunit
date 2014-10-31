@@ -106,6 +106,8 @@
         <TestOptions Condition="'$(TestOptions)' == ''"></TestOptions>
         <ManagedExeLauncher Condition="'$(Runtime)' == 'mono'">mono</ManagedExeLauncher>
         <ConsoleRunner>$(ConsoleBuildDir)\nunit-console.exe</ConsoleRunner>
+        <TestFailure Condition="'$(TestFailure)' == ''">Stop</TestFailure>
+        <ContinueOnError>ErrorAnd$(TestFailure)</ContinueOnError>
     </PropertyGroup>
 
     <PropertyGroup Label="Properties for building NuGet packages">
@@ -210,7 +212,7 @@
     <Target Name="BuildAllNUnit" Label="Build the NUnit framework for the current config and all runtimes">
         <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="_BuildNunit"
              Properties="Framework=%(SupportedFrameworks.Identity)" 
-             ContinueOnError="true" />
+             ContinueOnError="ErrorAndContinue" />
     </Target>
 
     <Target Name="_BuildNunit" Label="Build the framework for the current config and runtime">
@@ -269,17 +271,17 @@
 
     <Target Name="TestAllFrameworks" Label="Test the framework for the current config and all runtimes">
         <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="TestFrameworkIfSupported"
-            Properties="Framework=%(SupportedFrameworks.Identity)" ContinueOnError="ErrorAndContinue" />
+            Properties="Framework=%(SupportedFrameworks.Identity)" ContinueOnError="$(ContinueOnError)" />
     </Target>
 
     <Target Name="TestAllNUnit" Label="Test the NUnit framework for the current config and all runtimes">
         <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="TestNUnitIfSupported"
-            Properties="Framework=%(SupportedFrameworks.Identity)" ContinueOnError="ErrorAndContinue" />
+            Properties="Framework=%(SupportedFrameworks.Identity)" ContinueOnError="$(ContinueOnError)" />
     </Target>
 
     <Target Name="TestAllNUnitLite" Label="Test the NUnitLite framework for the current config and all runtimes">
         <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="TestNUnitLiteIfSupported"
-            Properties="Framework=%(SupportedFrameworks.Identity)" ContinueOnError="ErrorAndContinue" />
+            Properties="Framework=%(SupportedFrameworks.Identity)" ContinueOnError="$(ContinueOnError)" />
     </Target>
 
     <Target Name="TestFramework" Label="Test the framework for the current config and runtime">
@@ -288,17 +290,17 @@
 
         <CallTarget Targets="TestNUnit" 
             Condition="'$(Runtime)' != 'netcf'"
-            ContinueOnError="ErrorAndContinue" />
+            ContinueOnError="$(ContinueOnError)" />
         
         <CallTarget Targets="TestNUnitLite"
-            ContinueOnError="ErrorAndContinue" />
+            ContinueOnError="$(ContinueOnError)" />
     </Target>
 
     <Target Name="TestFrameworkIfSupported" Label="Run framework tests conditionally, for use by TestAllFrameworks">
-        <CallTarget Targets="TestNUnit" ContinueOnError="ErrorAndContinue"
-					Condition="'$(Runtime)' != 'netcf' And '$(Runtime)' != 'silverlight'" />
-        <CallTarget Targets="TestNUnitLite" ContinueOnError="ErrorAndContinue"
-					Condition="'$(Runtime)' != 'silverlight'" />
+        <CallTarget Targets="TestNUnit" ContinueOnError="$(ContinueOnError)"
+                    Condition="'$(Runtime)' != 'netcf' And '$(Runtime)' != 'silverlight'" />
+        <CallTarget Targets="TestNUnitLite" ContinueOnError="$(ContinueOnError)"
+                    Condition="'$(Runtime)' != 'silverlight'" />
     </Target>
 
     <Target Name="TestNUnitIfSupported" Label="Test the NUnit framework for the current config conditionally, for use by TestAllNUnit">
@@ -314,7 +316,7 @@
             Text="The full NUnit framework cannot be tested under $(Runtime)" />
 
         <Exec WorkingDirectory="$(ConsoleBuildDir)"
-              ContinueOnError="ErrorAndContinue"
+              ContinueOnError="$(ContinueOnError)"
               Command="$(ManagedExeLauncher) $(ConsoleRunner) $(Framework)/nunit.framework.tests.dll -result:$(ResultDir)/NUnitFrameworkResult-$(Framework).xml;format=$(ResultFormat) $(TestOptions)" >
         </Exec>
     </Target>
@@ -332,7 +334,7 @@
             Text="Silverlight test is not supported by this script" />
 
         <Exec WorkingDirectory="$(FrameworkBuildDir)"
-              ContinueOnError="ErrorAndContinue"
+              ContinueOnError="$(ContinueOnError)"
               Command="$(ManagedExeLauncher) $(FrameworkBuildDir)\nunitlite.tests.exe -result:$(ResultDir)/NUnitLiteResult-$(Framework).xml;format=$(ResultFormat) $(TestOptions)" >
         </Exec>
     </Target>
@@ -343,7 +345,7 @@
         <Message Text="******************************************************************" />
         
         <Exec WorkingDirectory="$(EngineBuildDir)"
-              ContinueOnError="ErrorAndContinue"
+              ContinueOnError="$(ContinueOnError)"
               Command="$(ManagedExeLauncher) $(ConsoleRunner) nunit.engine.tests.dll -result:$(ResultDir)/EngineResult.xml;format=$(ResultFormat) $(TestOptions)" >
         </Exec>
     </Target>
@@ -354,7 +356,7 @@
         <Message Text="******************************************************************" />
         
         <Exec WorkingDirectory="$(ConsoleBuildDir)"
-              ContinueOnError="ErrorAndContinue"
+              ContinueOnError="$(ContinueOnError)"
               Command="$(ManagedExeLauncher) $(ConsoleRunner) nunit-console.tests.dll -result:$(ResultDir)/ConsoleResult.xml;format=$(ResultFormat) $(TestOptions)" >
         </Exec>
     </Target>
@@ -365,7 +367,7 @@
         <Message Text="******************************************************************" />
         
       <Exec WorkingDirectory="$(ConsoleBuildDir)"
-            ContinueOnError="ErrorAndContinue"
+            ContinueOnError="$(ContinueOnError)"
             Command="$(ManagedExeLauncher) $(ConsoleRunner) nunit.engine.tests.dll nunit-console.tests.dll -result:$(ResultDir)/EnginePlusConsoleResult.xml;format=$(ResultFormat) $(TestOptions)" >
         </Exec>
     </Target>
