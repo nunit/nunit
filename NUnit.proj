@@ -106,9 +106,9 @@
         <TestOptions Condition="'$(TestOptions)' == ''"></TestOptions>
         <ManagedExeLauncher Condition="'$(Runtime)' == 'mono'">mono</ManagedExeLauncher>
         <ConsoleRunner>$(ConsoleBuildDir)\nunit-console.exe</ConsoleRunner>
-		<ContinueOnError Condition="'$(TestFailure)' == ''">false</ContinueOnError>
-		<ContinueOnError Condition="'$(TestFailure)' != ''">ErrorAnd$(TestFailure)</ContinueOnError>
-	</PropertyGroup>
+        <ContinueOnError Condition="'$(TestFailure)' == ''">true</ContinueOnError>
+        <ContinueOnError Condition="'$(TestFailure)' != ''">ErrorAnd$(TestFailure)</ContinueOnError>
+    </PropertyGroup>
 
     <PropertyGroup Label="Properties for building NuGet packages">
         <NugetExecutable>$(ProjectToolsDir)\nuget.exe</NugetExecutable>
