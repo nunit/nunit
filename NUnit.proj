@@ -350,7 +350,7 @@
 			Text="The full NUnit framework cannot be tested under $(Runtime)" />
 
 		<Exec WorkingDirectory="$(ConsoleBuildDir)" 
-			  Command="$(ManagedExeLauncher) $(ConsoleRunner) $(Framework)/nunit.framework.tests.dll $(TestOptions)"
+			  Command="$(ManagedExeLauncher) $(ConsoleRunner) $(Framework)/nunit.framework.tests.dll -result:$(ResultDir)/NUnitFrameworkResult-$(Framework).xml;format=$(ResultFormat) $(TestOptions)"
 			  ContinueOnError="$(ContinueOnFailure)" />
 		
 	</Target>
@@ -374,7 +374,7 @@
 			Text="Silverlight test is not supported by this script" />
 
 		<Exec WorkingDirectory="$(FrameworkBuildDir)"
-			  Command="$(ManagedExeLauncher) $(FrameworkBuildDir)\nunitlite.tests.exe $(TestOptions)" 
+			  Command="$(ManagedExeLauncher) $(FrameworkBuildDir)\nunitlite.tests.exe -result:$(ResultDir)/NUnitLiteResult-$(Framework).xml;format=$(ResultFormat) $(TestOptions)" 
 			  ContinueOnError="$(ContinueOnFailure)" />
 		
 	</Target>
@@ -388,7 +388,7 @@
 		<Message Text="******************************************************************" />
 		
 		<Exec WorkingDirectory="$(EngineBuildDir)"
-			  Command="$(ManagedExeLauncher) $(ConsoleRunner) nunit.engine.tests.dll $(TestOptions)"
+			  Command="$(ManagedExeLauncher) $(ConsoleRunner) nunit.engine.tests.dll -result:$(ResultDir)/EngineResult.xml;format=$(ResultFormat) $(TestOptions)"
 			  ContinueOnError="$(ContinueOnFailure)"/>
 		
 	</Target>
@@ -402,25 +402,11 @@
 		<Message Text="******************************************************************" />
 		
 		<Exec WorkingDirectory="$(ConsoleBuildDir)"
-			  Command="$(ManagedExeLauncher) $(ConsoleRunner) nunit-console.tests.dll $(TestOptions)"
+			  Command="$(ManagedExeLauncher) $(ConsoleRunner) nunit-console.tests.dll -result:$(ResultDir)/ConsoleResult.xml;format=$(ResultFormat) $(TestOptions)"
 			  ContinueOnError="$(ContinueOnFailure)" />
 		
 	</Target>
 	
-	<Target Name="TestEngineAndConsole"
-			Label="Run the engine and console tests together"
-			DependsOnTargets="_CreateResultDir">
-		
-		<Message Text="******************************************************************" />
-		<Message Text="* Testing the Engine and Console Runner - $(Configuration)" />
-		<Message Text="******************************************************************" />
-
-		<Exec WorkingDirectory="$(ConsoleBuildDir)"
-			  Command="$(ManagedExeLauncher) $(ConsoleRunner) nunit.engine.tests.dll nunit-console.tests.dll $(TestOptions)"
-			  ContinueOnError="$(ContinueOnFailure)"/>
-		
-	</Target>
-
 	<Target Name="_CreateResultDir">
 		
 		<MakeDir Directories="$(ResultDir)"  Condition="!Exists(ResultDir)"/>
