@@ -281,28 +281,20 @@
 			Label="Test the NUnit framework for the current config and all runtimes">
 		
 		<MSBuild Projects="$(MSBuildProjectFullPath)"
-				 Targets="_TestAllNUnit"
+				 Targets="TestNUnitIfSupported"
 				 Properties="Framework=%(SupportedFrameworks.Identity)"
 				 ContinueOnError="true" />
 		
-	</Target>
-
-	<Target Name="_TestAllNUnit" Label="Test the NUnit framework for the current config conditionally, for use by TestAllNUnit">
-		<CallTarget Targets="_TestNUnit" Condition="'$(Runtime)' != 'netcf' And '$(Runtime)' != 'silverlight'" />
 	</Target>
 
 	<Target Name="TestAllNUnitLite"
 			Label="Test the NUnitLite framework for the current config and all runtimes">
 		
 		<MSBuild Projects="$(MSBuildProjectFullPath)"
-				 Targets="_TestAllNUnitLite"
+				 Targets="TestNUnitLiteIfSupported"
 				 Properties="Framework=%(SupportedFrameworks.Identity)"
 				 ContinueOnError="true" />
 		
-	</Target>
-
-	<Target Name="_TestAllNUnitLite" Label="Test the NUnitLite framework for the current config conditionally, for use by TestAllNUnitLite">
-		<CallTarget Targets="_TestNUnitLite" Condition="'$(Runtime)' != 'netcf' And '$(Runtime)' != 'silverlight'" />
 	</Target>
 
 	<Target Name="TestFrameworkIfSupported"
@@ -324,57 +316,54 @@
 		<Error Condition="'$(Runtime)' == 'silverlight'"
 			   Text="Silverlight test is not supported by this script" />
 		
-		<CallTarget Targets="_TestNUnit"
+		<CallTarget Targets="TestNUnit"
 					Condition="'$(Runtime)' != 'netcf'" />
 		
-		<CallTarget Targets="_TestNUnitLite" />
+		<CallTarget Targets="TestNUnitLite" />
 		
 	</Target>
 
-	<Target Name="_TestFramework" Label="Run framework tests conditionally, for use by TestAllFrameworks">
-		<CallTarget Targets="_TestNUnit" Condition="'$(Runtime)' != 'netcf' And '$(Runtime)' != 'silverlight'" />
-		<CallTarget Targets="_TestNUnitLite" Condition="'$(Runtime)' != 'silverlight'" />
+	<Target Name="TestNUnitIfSupported"
+			Label="Test the NUnit framework for the current config conditionally, for use by TestAllNUnit">
+
+		<CallTarget Targets="TestNUnit"
+					Condition="'$(Runtime)' != 'netcf' And '$(Runtime)' != 'silverlight'" />
+
 	</Target>
 
 	<Target Name="TestNUnit"
-			Label="Test the full framework for the current config">
-		
-		<Error Condition="'$(Runtime)' == 'netcf' Or '$(Runtime)' == 'silverlight'"
-			Text="The full NUnit framework cannot be tested under $(Runtime)" />
-		
-		<CallTarget Targets="_TestNUnit" />
-		
-	</Target>
-
-	<Target Name="_TestNUnit"
 			Label="Run full framework tests for a runtime without checking for errors">
 		
 		<Message Text="******************************************************************" />
 		<Message Text="* Testing NUnitFramework $(Framework) - $(Configuration)" />
 		<Message Text="******************************************************************" />
-		
+
+		<Error Condition="'$(Runtime)' == 'netcf' Or '$(Runtime)' == 'silverlight'"
+			Text="The full NUnit framework cannot be tested under $(Runtime)" />
+
 		<Exec WorkingDirectory="$(ConsoleBuildDir)" 
 			  Command="$(ManagedExeLauncher) $(ConsoleRunner) $(Framework)/nunit.framework.tests.dll $(TestOptions)" />
 		
 	</Target>
 
-	<Target Name="TestNUnitLite"
-			Label="Test NUnitLite for the current config">
-		
-		<Error Condition="'$(Runtime)' == 'silverlight'"
-			Text="Silverlight test is not supported by this script" />
-		
-		<CallTarget Targets="_TestNUnitLite" />
-		
+	<Target Name="TestNUnitLiteIfSupported"
+			Label="Test the NUnitLite framework for the current config conditionally, for use by TestAllNUnitLite">
+
+		<CallTarget Targets="TestNUnitLite"
+					Condition="'$(Runtime)' != 'silverlight'" />
+
 	</Target>
 
-	<Target Name="_TestNUnitLite"
+	<Target Name="TestNUnitLite"
 			Label="Run NUnitLite tests for a runtime without checking for errors">
 		
 		<Message Text="******************************************************************" />
 		<Message Text="* Testing NUnitLite $(Framework) - $(Configuration)" />
 		<Message Text="******************************************************************" />
-		
+
+		<Error Condition="'$(Runtime)' == 'silverlight'"
+			Text="Silverlight test is not supported by this script" />
+
 		<Exec WorkingDirectory="$(FrameworkBuildDir)"
 			  Command="$(ManagedExeLauncher) $(FrameworkBuildDir)\nunitlite.tests.exe $(TestOptions)" />
 		
