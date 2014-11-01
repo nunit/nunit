@@ -37,7 +37,6 @@
 	<PropertyGroup Label="Default Build Settings">
 		<Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
 		<Framework Condition="'$(Framework)' == ''">net-4.5</Framework>
-		<ResultFormat Condition="'$(ResultFormat)' == ''">nunit3</ResultFormat>
 		<ConfigSuffix Condition=" '$(Configuration)' == 'Debug' ">-dbg</ConfigSuffix>
 	</PropertyGroup>
 
@@ -46,7 +45,6 @@
 		<FrameworkBuildDir>$(ConfigurationBuildDir)\$(Framework)</FrameworkBuildDir>
 		<EngineBuildDir>$(ConfigurationBuildDir)</EngineBuildDir>
 		<ConsoleBuildDir>$(ConfigurationBuildDir)</ConsoleBuildDir>
-		<ResultDir>$(ConfigurationBuildDir)\Results</ResultDir>
 	</PropertyGroup>
 
 	<PropertyGroup Label="Packaging Directories">
@@ -106,6 +104,9 @@
 		<TestOptions Condition="'$(TestOptions)' == ''"></TestOptions>
 		<ManagedExeLauncher Condition="'$(Runtime)' == 'mono'">mono</ManagedExeLauncher>
 		<ConsoleRunner>$(ConsoleBuildDir)\nunit-console.exe</ConsoleRunner>
+		<ResultDir>$(ConfigurationBuildDir)\Results</ResultDir>
+		<ResultFormat Condition="'$(ResultFormat)' == ''">nunit3</ResultFormat>
+		<ContinueOnFailure Condition="'$(ContinueOnFailure)' == ''">true</ContinueOnFailure>
 	</PropertyGroup>
 
 	<PropertyGroup Label="Properties for building NuGet packages">
@@ -139,6 +140,11 @@
 		<Message Text="  Current Framework: $(Framework)" />
 		<Message Text="    Runtime:         $(Runtime)" />
 		<Message Text="    Proj. suffix:    $(ProjectSuffix)" />
+		<Message Text=" " />
+		<Message Text="Test Settings:" />
+		<Message Text="  Result Directory:  $(ResultDir)" />
+		<Message Text="  Result Format:     $(ResultFormat)" />
+		<Message Text="  ContinueOnFailure: $(ContinueOnFailure)" />
 		<Message Text=" " />
 		<Message Text="Output Directories:" />
 		<Message Text="  Framework:         $(FrameworkBuildDir)" />
@@ -273,7 +279,7 @@
 		<MSBuild Projects="$(MSBuildProjectFullPath)"
 				 Targets="TestFrameworkIfSupported"
 				 Properties="Framework=%(SupportedFrameworks.Identity)"
-				 ContinueOnError="true" />
+				 ContinueOnError="$(ContinueOnFailure)" />
 		
 	</Target>
 
@@ -283,7 +289,7 @@
 		<MSBuild Projects="$(MSBuildProjectFullPath)"
 				 Targets="TestNUnitIfSupported"
 				 Properties="Framework=%(SupportedFrameworks.Identity)"
-				 ContinueOnError="true" />
+				 ContinueOnError="$(ContinueOnFailure)" />
 		
 	</Target>
 
@@ -293,7 +299,7 @@
 		<MSBuild Projects="$(MSBuildProjectFullPath)"
 				 Targets="TestNUnitLiteIfSupported"
 				 Properties="Framework=%(SupportedFrameworks.Identity)"
-				 ContinueOnError="true" />
+				 ContinueOnError="$(ContinueOnFailure)" />
 		
 	</Target>
 
@@ -301,11 +307,11 @@
 			Label="Run framework tests conditionally, for use by TestAllFrameworks">
 
 		<CallTarget Targets="TestNUnit"
-					ContinueOnError="true"
+					ContinueOnError="$(ContinueOnFailure)"
 					Condition="'$(Runtime)' != 'netcf' And '$(Runtime)' != 'silverlight'" />
 
 		<CallTarget Targets="TestNUnitLite"
-					ContinueOnError="true"
+					ContinueOnError="$(ContinueOnFailure)"
 					Condition="'$(Runtime)' != 'silverlight'" />
 
 	</Target>
@@ -317,9 +323,11 @@
 			   Text="Silverlight test is not supported by this script" />
 		
 		<CallTarget Targets="TestNUnit"
-					Condition="'$(Runtime)' != 'netcf'" />
+					Condition="'$(Runtime)' != 'netcf'" 
+					ContinueOnError="$(ContinueOnFailure)" />
 		
-		<CallTarget Targets="TestNUnitLite" />
+		<CallTarget Targets="TestNUnitLite"
+					ContinueOnError="$(ContinueOnFailure)" />
 		
 	</Target>
 
@@ -331,7 +339,7 @@
 
 	</Target>
 
-	<Target Name="TestNUnit"
+	<Target Name="TestNUnit" DependsOnTargets="_CreateResultDir"
 			Label="Run full framework tests for a runtime without checking for errors">
 		
 		<Message Text="******************************************************************" />
@@ -343,7 +351,7 @@
 
 		<Exec WorkingDirectory="$(ConsoleBuildDir)" 
 			  Command="$(ManagedExeLauncher) $(ConsoleRunner) $(Framework)/nunit.framework.tests.dll $(TestOptions)"
-			  ContinueOnError="true" />
+			  ContinueOnError="$(ContinueOnFailure)" />
 		
 	</Target>
 
@@ -355,7 +363,7 @@
 
 	</Target>
 
-	<Target Name="TestNUnitLite"
+	<Target Name="TestNUnitLite" DependsOnTargets="_CreateResultDir"
 			Label="Run NUnitLite tests for a runtime without checking for errors">
 		
 		<Message Text="******************************************************************" />
@@ -367,7 +375,7 @@
 
 		<Exec WorkingDirectory="$(FrameworkBuildDir)"
 			  Command="$(ManagedExeLauncher) $(FrameworkBuildDir)\nunitlite.tests.exe $(TestOptions)" 
-			  ContinueOnError="true" />
+			  ContinueOnError="$(ContinueOnFailure)" />
 		
 	</Target>
 	
@@ -380,7 +388,8 @@
 		<Message Text="******************************************************************" />
 		
 		<Exec WorkingDirectory="$(EngineBuildDir)"
-		  Command="$(ManagedExeLauncher) $(ConsoleRunner) nunit.engine.tests.dll $(TestOptions)" />
+			  Command="$(ManagedExeLauncher) $(ConsoleRunner) nunit.engine.tests.dll $(TestOptions)"
+			  ContinueOnError="$(ContinueOnFailure)"/>
 		
 	</Target>
 	
@@ -393,7 +402,8 @@
 		<Message Text="******************************************************************" />
 		
 		<Exec WorkingDirectory="$(ConsoleBuildDir)"
-			  Command="$(ManagedExeLauncher) $(ConsoleRunner) nunit-console.tests.dll $(TestOptions)" />
+			  Command="$(ManagedExeLauncher) $(ConsoleRunner) nunit-console.tests.dll $(TestOptions)"
+			  ContinueOnError="$(ContinueOnFailure)" />
 		
 	</Target>
 	
@@ -406,7 +416,8 @@
 		<Message Text="******************************************************************" />
 
 		<Exec WorkingDirectory="$(ConsoleBuildDir)"
-			  Command="$(ManagedExeLauncher) $(ConsoleRunner) nunit.engine.tests.dll nunit-console.tests.dll $(TestOptions)" />
+			  Command="$(ManagedExeLauncher) $(ConsoleRunner) nunit.engine.tests.dll nunit-console.tests.dll $(TestOptions)"
+			  ContinueOnError="$(ContinueOnFailure)"/>
 		
 	</Target>
 
