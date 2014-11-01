@@ -36,9 +36,6 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void ArrayIsEqualToItself()
         {
-#if NUNITLITE && NET_2_0 || !NUNITLITE && NET_4_5
-            Assert.Fail("Deliberate failure to test build script");
-#endif
             string[] array = { "one", "two", "three" };
             Assert.That( array, Is.SameAs(array) );
             Assert.AreEqual( array, array );
