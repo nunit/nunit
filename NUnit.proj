@@ -342,7 +342,8 @@
 			Text="The full NUnit framework cannot be tested under $(Runtime)" />
 
 		<Exec WorkingDirectory="$(ConsoleBuildDir)" 
-			  Command="$(ManagedExeLauncher) $(ConsoleRunner) $(Framework)/nunit.framework.tests.dll $(TestOptions)" />
+			  Command="$(ManagedExeLauncher) $(ConsoleRunner) $(Framework)/nunit.framework.tests.dll $(TestOptions)"
+			  ContinueOnError="true" />
 		
 	</Target>
 
@@ -365,7 +366,8 @@
 			Text="Silverlight test is not supported by this script" />
 
 		<Exec WorkingDirectory="$(FrameworkBuildDir)"
-			  Command="$(ManagedExeLauncher) $(FrameworkBuildDir)\nunitlite.tests.exe $(TestOptions)" />
+			  Command="$(ManagedExeLauncher) $(FrameworkBuildDir)\nunitlite.tests.exe $(TestOptions)" 
+			  ContinueOnError="true" />
 		
 	</Target>
 	
