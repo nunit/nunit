@@ -38,14 +38,14 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.&#xD;
 	<s:String x:Key="/Default/CodeStyle/Naming/CSharpNaming/PredefinedNamingRules/=PrivateStaticFields/@EntryIndexedValue">&lt;Policy Inspect="True" Prefix="_" Suffix="" Style="aaBb"&gt;&lt;ExtraRule Prefix="" Suffix="" Style="aaBb" /&gt;&lt;/Policy&gt;</s:String>
 	<s:Boolean x:Key="/Default/Environment/SettingsMigration/IsMigratorApplied/=JetBrains_002EReSharper_002EPsi_002ECSharp_002ECodeStyle_002ESettingsUpgrade_002EMigrateBlankLinesAroundFieldToBlankLinesAroundProperty/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=1256596694514F41A4D79DB082E50E51/@KeyIndexDefined">True</s:Boolean>
-	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=1256596694514F41A4D79DB082E50E51/Field/=USER/Expression/@EntryValue">getUserName()</s:String>
-	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=1256596694514F41A4D79DB082E50E51/Field/=USER/InitialRange/@EntryValue">-1</s:Int64>
+	
+	
 	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=1256596694514F41A4D79DB082E50E51/Field/=YEAR/Expression/@EntryValue">getCurrentDate("yyyy")</s:String>
 	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=1256596694514F41A4D79DB082E50E51/Field/=YEAR/InitialRange/@EntryValue">-1</s:Int64>
 	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=1256596694514F41A4D79DB082E50E51/Shortcut/@EntryValue">copyright</s:String>
 	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=1256596694514F41A4D79DB082E50E51/Description/@EntryValue">NUnit Copyright</s:String>
 	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=1256596694514F41A4D79DB082E50E51/Text/@EntryValue">// ***********************************************************************&#xD;
-// Copyright (c) $YEAR$ $USER$&#xD;
+// Copyright (c) $YEAR$ Charlie Poole&#xD;
 //&#xD;
 // Permission is hereby granted, free of charge, to any person obtaining&#xD;
 // a copy of this software and associated documentation files (the&#xD;
@@ -74,8 +74,8 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.&#xD;
 	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=1256596694514F41A4D79DB082E50E51/Scope/=558F05AA0DE96347816FF785232CFB2A/CustomProperties/=minimumLanguageVersion/@EntryIndexedValue">2.0</s:String>
 	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=1256596694514F41A4D79DB082E50E51/Field/=YEAR/@KeyIndexDefined">True</s:Boolean>
 	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=1256596694514F41A4D79DB082E50E51/Field/=YEAR/Order/@EntryValue">0</s:Int64>
-	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=1256596694514F41A4D79DB082E50E51/Field/=USER/@KeyIndexDefined">True</s:Boolean>
-	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=1256596694514F41A4D79DB082E50E51/Field/=USER/Order/@EntryValue">1</s:Int64>
+	
+	
 	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=6ACED16A1977164DBEC1AABF77ECAE5F/@KeyIndexDefined">True</s:Boolean>
 	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=6ACED16A1977164DBEC1AABF77ECAE5F/Applicability/=Live/@EntryIndexedValue">True</s:Boolean>
 	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=6ACED16A1977164DBEC1AABF77ECAE5F/Description/@EntryValue">Test Method</s:String>
