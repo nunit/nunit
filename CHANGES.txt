@@ -1,6 +1,55 @@
-﻿NUnit 3.0.0 Alpha - September 22, 2014
+﻿NOTE: A combined description of changes since NUnit 2.6.3 is under development along with a summary statement of major features. Both will be available in the next release.
 
-NOTE: A combined description of changes since NUnit 2.6.3 is under development along with a summary statement of major features. Both will be available in the next release.
+NUnit 3.0.0 Alpha 2 - November 2, 2014
+
+Breaking Changes
+
+ * The console runner no longer displays test results in the debugger.
+ * The NUnitLite compact framework 2.0 build has been removed.
+ * All addin support has been removed from the framework. Documentation of NUnit 3.0 extensibility features will be published in time for the beta release. In the interim, please ask for support on the nunit-discuss list.
+
+General
+
+ * A separate solution has been created for Linux
+ * We now have continuous integration builds under both Travis and Appveyor
+ * The compact framework 3.5 build is now working and will be supported in future releases.
+
+New Features
+
+ * The console runner now automatically detects 32- versus 64-bit test assemblies.
+ * The NUnitLite report output has been standardized to match that of nunit-console.
+ * The NUnitLite command-line has been standardized to match that of nunit-console where they share the same options.
+ * Both nunit-console and NUnitLite now display output in color.
+ * ActionAttributes now allow specification of multiple targets on the attribute as designed. This didn't work in the first alpha.
+ * OneTimeSetUp and OneTimeTearDown failures are now shown on the test report. Individual test failures after OneTimeSetUp failure are no longer shown.
+ * The console runner refuses to run tests build with older versions of NUnit. A plugin will be available to run older tests in the future.
+
+Issues Resolved
+
+ * 222	Color console for NUnitLite
+ * 229	Timing failures in tests
+ * 241	Remove reference to Microslft BCL packages
+ * 243	Create solution for Linux
+ * 245	Multiple targets on action attributes not implemented
+ * 246	C++ tests do not compile in VS2013
+ * 247	Eliminate trace display when running tests in debug
+ * 255	Add new result states for more precision in where failures occur
+ * 256	ContainsConstraint break when used with AndConstraint
+ * 264	Stacktrace displays too many entries
+ * 269	Add manifest to nunit-console and nunit-agent
+ * 270	OneTimeSetUp failure results in too much output
+ * 271	Invalid tests should be treated as errors
+ * 274	Command line options should be case insensitive
+ * 276	NUnit-console should not reference nunit.framework
+ * 278	New result states (ChildFailure and SetupFailure) break NUnit2XmlOutputWriter
+ * 282	Get tests for NUnit2XmlOutputWriter working
+ * 288	Set up Appveyor CI build
+ * 290	Stack trace still displays too many items
+ * 315	NUnit 3.0 alpha: Cannot run in console on my assembly
+ * 319	CI builds are not treating test failures as failures of the build
+ * 322	Remove Stopwatch tests where they test the real .NET Stopwatch
+
+NUnit 3.0.0 Alpha 1 - September 22, 2014
 
 Breaking Changes
 
@@ -20,6 +69,7 @@ New Features
  * Does prefix operator supplies several added constraints.
 
 Issues Resolved
+
  * 6	Log4net not working with NUnit
  * 13	Standardize commandline options for nunitlite runner
  * 17	No allowance is currently made for nullable arguents in TestCase parameter conversions
@@ -47,6 +97,7 @@ Issues Resolved
  * 219	Teardown failures are not reported
 
 Console Issues Resolved (Old nunit-console project, now combined with nunit)
+
  * 2	Failure in TestFixtureSetUp is not reported correctly
  * 5	CI Server for nunit-console
  * 6	System.NullReferenceException on start nunit-console-x86
