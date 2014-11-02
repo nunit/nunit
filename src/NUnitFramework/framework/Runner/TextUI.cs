@@ -53,6 +53,16 @@ namespace NUnitLite.Runner
     /// </summary>
     public class TextUI : ITestListener
     {
+        #region TextUI Return Codes
+
+        public static readonly int OK = 0;
+        public static readonly int INVALID_ARG = -1;
+        public static readonly int FILE_NOT_FOUND = -2;
+        public static readonly int FIXTURE_NOT_FOUND = -3;
+        public static readonly int UNEXPECTED_ERROR = -100;
+
+        #endregion
+
 #if NETCF // NETCF: Any harm in using txt everywhere?
         // Some mobiles don't have an Open With menu item
         private const string LOG_FILE_FORMAT = "InternalTrace.{0}.{1}.txt";
@@ -98,7 +108,7 @@ namespace NUnitLite.Runner
         /// from Main.
         /// </summary>
         /// <param name="args">An array of arguments</param>
-        public void Execute(string[] args)
+        public int Execute(string[] args)
         {
             // NOTE: Execute must be directly called from the
             // test assembly in order for the mechanism to work.
@@ -138,13 +148,17 @@ namespace NUnitLite.Runner
                 WriteHeader(_outWriter);
 
             if (_options.ShowHelp)
+            {
                 WriteHelpText();
+                return OK;
+            }
             else if (_options.ErrorMessages.Count > 0)
             {
-                foreach(string line in _options.ErrorMessages)
+                foreach (string line in _options.ErrorMessages)
                     _outWriter.WriteLine(line);
 
                 _outWriter.WriteLine(_options.HelpText);
+                return INVALID_ARG;
             }
             else
             {
@@ -188,23 +202,23 @@ namespace NUnitLite.Runner
                     {
                         var assemblyName = AssemblyHelper.GetAssemblyName(assembly);
                         Console.WriteLine("No tests found in assembly {0}", assemblyName.Name);
-                        return;
+                        return OK;
                     }
 
                     if (_options.Explore)
-                        ExploreTests();
+                        return ExploreTests();
                     else
-                    {
-                        RunTests(filter);
-                    }
+                        return RunTests(filter);
                 }
                 catch (FileNotFoundException ex)
                 {
                     _outWriter.WriteLine(ColorStyle.Error, ex.Message);
+                    return FILE_NOT_FOUND;
                 }
                 catch (Exception ex)
                 {
                     _outWriter.WriteLine(ColorStyle.Error, ex.ToString());
+                    return UNEXPECTED_ERROR;
                 }
                 finally
                 {
@@ -231,12 +245,13 @@ namespace NUnitLite.Runner
 
         #region Helper Methods
 
-        private void RunTests(ITestFilter filter)
+        private int RunTests(ITestFilter filter)
         {
             var startTime = DateTime.UtcNow;
 
             ITestResult result = _runner.Run(this, filter);
-            new ResultReporter(result, _outWriter).ReportResults();
+            var reporter = new ResultReporter(result, _outWriter);
+            reporter.ReportResults();
 
             if (_options.ResultOutputSpecifications.Count > 0)
             {
@@ -245,9 +260,12 @@ namespace NUnitLite.Runner
                 foreach (var spec in _options.ResultOutputSpecifications)
                     outputManager.WriteResultFile(result, spec);
             }
+
+            var summary = reporter.Summary;
+            return summary.FailureCount + summary.ErrorCount + summary.InvalidCount;
         }
 
-        private void ExploreTests()
+        private int ExploreTests()
         {
             ITest testNode = _runner.LoadedTest;
 
@@ -264,6 +282,8 @@ namespace NUnitLite.Runner
                 foreach (var spec in _options.ExploreOutputSpecifications)
                     outputManager.WriteTestFile(testNode, spec);
             }
+
+            return OK;
         }
 
         private void InitializeInternalTrace(string assemblyPath, InternalTraceLevel traceLevel)
