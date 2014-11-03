@@ -9,7 +9,7 @@
 	<PropertyGroup Label="Common Properties">
 		<ProjectName>$(MSBuildProjectName)</ProjectName>
 		<PackageVersion>3.0.0</PackageVersion>
-		<PackageModifier>-alpha</PackageModifier>
+		<PackageModifier>-alpha-2</PackageModifier>
 		<PackageName>$(ProjectName)-$(PackageVersion)$(PackageModifier)</PackageName>
 	</PropertyGroup>
 
