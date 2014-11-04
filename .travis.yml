@@ -4,10 +4,10 @@ before_install:
   - sudo apt-get install mono-devel -qq -y
 
 before_script:
-  ./build /p:Configuration=Release /p:Framework=$Framework "/t:DumpSettings;CleanAll"
+  - xbuild NUnit.proj /p:Configuration=Release /p:Framework=$Framework "/t:DumpSettings;CleanAll"
 
 script: 
-  ./build /p:Configuration=Release /p:Framework=$Framework "/t:Build;Test"
+  -xbuild NUnit.proj /p:Configuration=Release /p:Framework=$Framework "/t:Build;Test"
   
 env:
   matrix:
