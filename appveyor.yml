@@ -1,6 +1,6 @@
 install:
   - ps: $wc = New-Object 'System.Net.WebClient'
-  - ps: $url = "http://download.microsoft.com/7/0/3/703455ee-a747-4cc8-bd3e-98a615c3aedb/dotNetFx35setup.exe"
+  - ps: $url = "http://download.microsoft.com/download/7/0/3/703455ee-a747-4cc8-bd3e-98a615c3aedb/dotNetFx35setup.exe"
   - ps: $wc.DownloadFile($url, 'dotNetFx35setup.exe')
   - ps: dotNetFx35setup.exe
 
