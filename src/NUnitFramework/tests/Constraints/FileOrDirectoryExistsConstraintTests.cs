@@ -21,6 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#if !SILVERLIGHT
 using System;
 using System.IO;
 using NUnit.Framework.Assertions;
@@ -191,3 +192,4 @@ namespace NUnit.Framework.Tests.Constraints
         }
     }
 }
+#endif

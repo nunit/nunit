@@ -110,6 +110,8 @@
     <Compile Include="Constraints\ConstraintResult.cs" />
     <Compile Include="Constraints\DelayedConstraint.cs" />
     <Compile Include="Constraints\EqualConstraintResult.cs" />
+    <Compile Include="Constraints\FileExistsConstraint.cs" />
+    <Compile Include="Constraints\FileOrDirectoryExistsConstraint.cs" />
     <Compile Include="Constraints\IConstraint.cs" />
     <Compile Include="Constraints\Operators\AllOperator.cs" />
     <Compile Include="Constraints\Operators\NoneOperator.cs" />
@@ -117,9 +119,11 @@
     <Compile Include="Constraints\ReusableConstraint.cs" />
     <Compile Include="Constraints\SubPathConstraint.cs" />
     <Compile Include="Constraints\ThrowsExceptionConstraint.cs" />
+    <Compile Include="DirectoryAssert.cs" />
     <Compile Include="Does.cs" />
     <Compile Include="ActionTargets.cs" />
     <Compile Include="Exceptions\ResultStateException.cs" />
+    <Compile Include="FileAssert.cs" />
     <Compile Include="Interfaces\ICombiningStrategy.cs" />
     <Compile Include="Interfaces\ICommandDecorator.cs" />
     <Compile Include="Interfaces\IFixtureBuilder.cs" />

@@ -113,6 +113,8 @@
     <Compile Include="Assertions\AssumeThatTests.cs" />
     <Compile Include="Assertions\AsyncThrowsTests.cs" />
     <Compile Include="Assertions\ConditionAssertTests.cs" />
+    <Compile Include="Assertions\DirectoryAssertTests.cs" />
+    <Compile Include="Assertions\FileAssertTests.cs" />
     <Compile Include="Assertions\NotEqualFixture.cs" />
     <Compile Include="Assertions\NotSameFixture.cs" />
     <Compile Include="Assertions\SameFixture.cs" />
@@ -173,6 +175,7 @@
     <Compile Include="Constraints\EqualConstraintTests.cs" />
     <Compile Include="Constraints\EqualTest.cs" />
     <Compile Include="Constraints\ExactTypeConstraintTests.cs" />
+    <Compile Include="Constraints\FileOrDirectoryExistsConstraintTests.cs" />
     <Compile Include="Constraints\FloatingPointNumericsTest.cs" />
     <Compile Include="Constraints\GreaterThanConstraintTests.cs" />
     <Compile Include="Constraints\GreaterThanOrEqualConstraintTests.cs" />
@@ -262,6 +265,7 @@
     <Compile Include="TestUtilities\TestDelegates.cs" />
     <Compile Include="TestUtilities\TestComparer.cs" />
     <Compile Include="TestUtilities\TestDirectory.cs" />
+    <Compile Include="TestUtilities\TestFile.cs" />
     <Compile Include="TestUtilities\TestFinder.cs" />
     <Compile Include="Constraints\ExactCountConstraintTests.cs" />
     <Compile Include="TestUtilities\UniqueValues.cs" />
@@ -275,7 +279,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="TestImage1.jpg" />
+    <EmbeddedResource Include="TestImage1.jpg" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />

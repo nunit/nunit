@@ -900,8 +900,8 @@ namespace NUnit.Framework.Constraints
         #endregion
 
         #region Exist
-        
-#if !NUNITLITE
+
+#if !SILVERLIGHT
         /// <summary>
         /// Returns a constraint that succeeds if the value
         /// is a file or directory and it exists.
