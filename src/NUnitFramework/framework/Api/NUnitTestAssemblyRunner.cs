@@ -346,6 +346,7 @@ namespace NUnit.Framework.Api
                 : new Random().Next();
         }
 
+#if PARALLEL
         private int GetLevelOfParallelization()
         {
             return Settings.Contains(DriverSettings.NumberOfTestWorkers)
@@ -354,6 +355,7 @@ namespace NUnit.Framework.Api
                     ? (int)LoadedTest.Properties.Get(PropertyNames.LevelOfParallelization)
                     : Math.Max(Environment.ProcessorCount, 2);
         }
+#endif
 
         #endregion
     }
