@@ -242,7 +242,11 @@ namespace NUnit.Framework.Constraints
 
         private static void Delay(int delay)
         {
+#if SILVERLIGHT
             waitEvent.WaitOne(delay);
+#else
+            waitEvent.WaitOne(delay, false);
+#endif
         }
 
         private static void MethodSetsValues()

@@ -53,7 +53,7 @@ namespace NUnit.Framework.Constraints
 
             if (actual is string)
                 realConstraint = new EmptyStringConstraint();
-#if !NUNITLITE
+#if !SILVERLIGHT
             else if (actual is System.IO.DirectoryInfo)
                 realConstraint = new EmptyDirectoryConstraint();
 #endif

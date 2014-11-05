@@ -87,7 +87,7 @@ namespace NUnit.Framework.Constraints
         };
     }
 
-#if !NUNITLITE
+#if !SILVERLIGHT
     [TestFixture]
     public class EmptyDirectoryConstraintTest
     {
@@ -103,7 +103,7 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void NotEmptyDirectory()
         {
-            var testPath = new DirectoryInfo(Environment.CurrentDirectory);
+            var testPath = new DirectoryInfo(NUnit.Env.DefaultWorkDirectory);
             Assume.That(testPath, Does.Exist);
             Assert.That(testPath, Is.Not.Empty);
         }
