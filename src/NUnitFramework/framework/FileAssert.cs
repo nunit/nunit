@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NUNITLITE
+#if !SILVERLIGHT
 using System.IO;
 using System.ComponentModel;
 using NUnit.Framework.Constraints;

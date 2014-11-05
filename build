@@ -1,2 +1,2 @@
 #!/bin/bash
-xbuild NUnit.proj "$@"
+xbuild "$@"
