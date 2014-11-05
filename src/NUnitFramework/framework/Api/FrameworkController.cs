@@ -60,7 +60,7 @@ namespace NUnit.Framework.Api
         public FrameworkController(string assemblyPath, IDictionary settings)
         {
             this.Builder = new DefaultTestAssemblyBuilder();
-            this.Runner = CreateRunner(this.Builder);
+            this.Runner = new NUnitTestAssemblyRunner(this.Builder);
 
             Initialize(assemblyPath, settings);
         }
@@ -82,15 +82,6 @@ namespace NUnit.Framework.Api
                 runnerType, false, 0, null, new object[] { this.Builder }, null, null);
 
             Initialize(assemblyPath, settings);
-        }
-
-        private ITestAssemblyRunner CreateRunner(ITestAssemblyBuilder builder)
-        {
-#if NUNITLITE
-            return new NUnitLiteTestAssemblyRunner(builder);
-#else
-            return new NUnitTestAssemblyRunner(builder);
-#endif
         }
 
         private void Initialize(string assemblyPath, IDictionary settings)

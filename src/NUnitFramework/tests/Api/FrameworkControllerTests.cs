@@ -62,11 +62,7 @@ namespace NUnit.Framework.Api
         public void ConstructContoller()
         {
             Assert.That(_controller.Builder, Is.TypeOf<DefaultTestAssemblyBuilder>());
-#if NUNITLITE
-            Assert.That(_controller.Runner, Is.TypeOf<NUnitLiteTestAssemblyRunner>());
-#else
             Assert.That(_controller.Runner, Is.TypeOf<NUnitTestAssemblyRunner>());
-#endif
             Assert.That(_controller.AssemblyPath, Is.EqualTo(_mockAssemblyPath));
             Assert.That(_controller.Settings, Is.SameAs(_settings));
         }

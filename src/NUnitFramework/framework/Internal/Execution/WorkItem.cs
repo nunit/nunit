@@ -153,7 +153,7 @@ namespace NUnit.Framework.Internal.Execution
             get { return _actions;  }
         }
 
-#if !NUNITLITE
+#if PARALLEL
         /// <summary>
         /// Indicates whether this WorkItem may be run in parallel
         /// </summary>

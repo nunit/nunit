@@ -57,11 +57,7 @@ namespace NUnit.Framework.Tests
         [OneTimeSetUp]
         public void Setup()
         {
-#if NUNITLITE
-            var runner = new NUnitLiteTestAssemblyRunner(new DefaultTestAssemblyBuilder());
-#else
             var runner = new NUnitTestAssemblyRunner(new DefaultTestAssemblyBuilder());
-#endif
 
             ActionAttributeFixture.ClearResults();
 

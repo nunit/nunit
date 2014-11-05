@@ -31,7 +31,10 @@ using NUnit.Framework;
 [assembly: AssemblyTitle("NUnitLite Tests")]
 #else
 [assembly: AssemblyTitle("NUnit Framework Tests")]
-[assembly: Parallelizable(ParallelScope.Fixtures)]
 #endif
+
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyCulture("")]
+
+[assembly: Parallelizable(ParallelScope.Fixtures)]
+

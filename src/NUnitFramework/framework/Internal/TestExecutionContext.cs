@@ -176,9 +176,7 @@ namespace NUnit.Framework.Internal
 #endif
 
             this.Dispatcher = other.Dispatcher;
-#if !NUNITLITE
             this.ParallelScope = other.ParallelScope;
-#endif
         }
 
         #endregion
@@ -347,12 +345,11 @@ namespace NUnit.Framework.Internal
             set { _dispatcher = value;  }
         }
 
-#if !NUNITLITE
         /// <summary>
-        /// The ParallelScope to be used by tests running in this context
+        /// The ParallelScope to be used by tests running in this context.
+        /// For builds with out the parallel feature, it has no effect.
         /// </summary>
         public ParallelScope ParallelScope { get; set; }
-#endif
 
         /// <summary>
         /// Gets the RandomGenerator specific to this Test

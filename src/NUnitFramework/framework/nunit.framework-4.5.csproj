@@ -26,7 +26,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\..\..\bin\Debug\net-4.5\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;NUNIT_FRAMEWORK;NET_4_5</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NUNIT_FRAMEWORK;NET_4_5;PARALLEL</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>$(OutputPath)\nunit.framework.xml</DocumentationFile>
@@ -37,7 +37,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\..\..\bin\Release\net-4.5\</OutputPath>
-    <DefineConstants>TRACE;NUNIT_FRAMEWORK;NET_4_5</DefineConstants>
+    <DefineConstants>TRACE;NUNIT_FRAMEWORK;NET_4_5;PARALLEL</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>$(OutputPath)\nunit.framework.xml</DocumentationFile>
@@ -83,7 +83,6 @@
       <Link>FrameworkVersion.cs</Link>
     </Compile>
     <Compile Include="ActionTargets.cs" />
-    <Compile Include="Api\AbstractTestAssemblyRunner.cs" />
     <Compile Include="Api\DefaultTestAssemblyBuilder.cs" />
     <Compile Include="Api\DriverSettings.cs" />
     <Compile Include="Api\FrameworkController.cs" />

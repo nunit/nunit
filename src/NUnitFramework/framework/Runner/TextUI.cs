@@ -172,7 +172,7 @@ namespace NUnitLite.Runner
                 InitializeInternalTrace(callingAssembly.Location, level);
 #endif
 
-                _runner = new NUnitLiteTestAssemblyRunner(new DefaultTestAssemblyBuilder());
+                _runner = new NUnitTestAssemblyRunner(new DefaultTestAssemblyBuilder());
 
                 DisplayRequestedOptions(_outWriter);
 
