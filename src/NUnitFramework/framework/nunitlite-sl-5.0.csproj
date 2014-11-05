@@ -95,12 +95,11 @@
       <Link>FrameworkVersion.cs</Link>
     </Compile>
     <Compile Include="ActionTargets.cs" />
-    <Compile Include="Api\AbstractTestAssemblyRunner.cs" />
     <Compile Include="Api\DefaultTestAssemblyBuilder.cs" />
     <Compile Include="Api\DriverSettings.cs" />
     <Compile Include="Api\ITestAssemblyBuilder.cs" />
     <Compile Include="Api\ITestAssemblyRunner.cs" />
-    <Compile Include="Api\NUnitLiteTestAssemblyRunner.cs" />
+    <Compile Include="Api\NUnitTestAssemblyRunner.cs" />
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Assert.cs" />
     <Compile Include="AssertionHelper.cs" />

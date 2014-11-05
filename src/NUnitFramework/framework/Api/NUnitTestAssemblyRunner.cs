@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2014 Charlie Poole
+// Copyright (c) 2012-2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,9 +21,11 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NUNITLITE
 using System;
+using System.Collections;
 using System.IO;
+using System.Reflection;
+using System.Threading;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Execution;
@@ -31,37 +33,264 @@ using NUnit.Framework.Internal.Execution;
 namespace NUnit.Framework.Api
 {
     /// <summary>
-    /// Default NUnit implementation of ITestAssemblyRunner
-    /// </summary>
-    public class NUnitTestAssemblyRunner : AbstractTestAssemblyRunner
+    /// Implementation of ITestAssemblyRunner
+    /// /// </summary>
+    public class NUnitTestAssemblyRunner : ITestAssemblyRunner
     {
+        private static Logger log = InternalTrace.GetLogger("DefaultTestAssemblyRunner");
+
+        private ITestAssemblyBuilder _builder;
+        private ManualResetEvent _runComplete = new ManualResetEvent(false);
+
+#if !SILVERLIGHT && !NETCF
         // Saved Console.Out and Error
-        TextWriter _savedOut;
-        TextWriter _savedErr;
+        protected TextWriter _savedOut;
+        protected TextWriter _savedErr;
+#endif
 
+#if PARALLEL
         // Event Pump
-        EventPump _pump;
+        protected EventPump _pump;
+#endif
 
-        #region Constructor
+        #region Constructors
 
         /// <summary>
-        /// Construct an NUnitTestAssemblyRunner
+        /// Initializes a new instance of the <see cref="AbstractTestAssemblyRunner"/> class.
         /// </summary>
-        /// <param name="builder"></param>
-        public NUnitTestAssemblyRunner(ITestAssemblyBuilder builder) : base(builder) { }
+        /// <param name="builder">The builder.</param>
+        public NUnitTestAssemblyRunner(ITestAssemblyBuilder builder)
+        {
+            _builder = builder;
+        }
 
         #endregion
 
-        #region AbstractTestAssemblyRunner Overrides
+        #region Properties
+
+        /// <summary>
+        /// The tree of tests that was loaded by the builder
+        /// </summary>
+        public ITest LoadedTest { get; private set; }
+
+        /// <summary>
+        /// The test result, if a run has completed
+        /// </summary>
+        public ITestResult Result
+        {
+            get { return TopLevelWorkItem == null ? null : TopLevelWorkItem.Result;  }
+        }
+
+        /// <summary>
+        /// Indicates whether a test is loaded
+        /// </summary>
+        public bool IsTestLoaded
+        {
+            get { return LoadedTest != null;  }
+        }
+
+        /// <summary>
+        /// Indicates whether a test is running
+        /// </summary>
+        public bool IsTestRunning
+        {
+            get { return TopLevelWorkItem != null && TopLevelWorkItem.State == WorkItemState.Running; }
+        }
+
+        /// <summary>
+        /// Indicates whether a test run is complete
+        /// </summary>
+        public bool IsTestComplete
+        {
+            get { return TopLevelWorkItem != null && TopLevelWorkItem.State == WorkItemState.Complete; }
+        }
+
+        /// <summary>
+        /// Our settings, specified when loading the assembly
+        /// </summary>
+        private IDictionary Settings { get; set; }
+
+        /// <summary>
+        /// The top level WorkItem created for the assembly as a whole
+        /// </summary>
+        private WorkItem TopLevelWorkItem { get; set; }
+        
+        /// <summary>
+        /// The TestExecutionContext for the top level WorkItem
+        /// </summary>
+        private TestExecutionContext Context { get; set; }
+
+        #endregion
+
+        #region Public Methods
+
+        /// <summary>
+        /// Loads the tests found in an Assembly
+        /// </summary>
+        /// <param name="assemblyName">File name of the assembly to load</param>
+        /// <param name="settings">Dictionary of option settings for loading the assembly</param>
+        /// <returns>True if the load was successful</returns>
+        public ITest Load(string assemblyName, IDictionary settings)
+        {
+            Settings = settings;
+
+            Randomizer.InitialSeed = GetInitialSeed(settings);
+
+            return LoadedTest = _builder.Build(assemblyName, settings);
+        }
+
+        /// <summary>
+        /// Loads the tests found in an Assembly
+        /// </summary>
+        /// <param name="assembly">The assembly to load</param>
+        /// <param name="settings">Dictionary of option settings for loading the assembly</param>
+        /// <returns>True if the load was successful</returns>
+        public ITest Load(Assembly assembly, IDictionary settings)
+        {
+            Settings = settings;
+
+            Randomizer.InitialSeed = GetInitialSeed(settings);
+
+            return LoadedTest = _builder.Build(assembly, settings);
+        }
+
+        /// <summary>
+        /// Count Test Cases using a filter
+        /// </summary>
+        /// <param name="filter">The filter to apply</param>
+        /// <returns>The number of test cases found</returns>
+        public int CountTestCases(ITestFilter filter)
+        {
+            if (LoadedTest == null)
+                throw new InvalidOperationException("The CountTestCases method was called but no test has been loaded");
+
+            return CountTestCases(LoadedTest, filter);
+        }
+
+        /// <summary>
+        /// Run selected tests and return a test result. The test is run synchronously,
+        /// and the listener interface is notified as it progresses.
+        /// </summary>
+        /// <param name="listener">Interface to receive EventListener notifications.</param>
+        /// <param name="filter">A test filter used to select tests to be run</param>
+        /// <returns></returns>
+        public ITestResult Run(ITestListener listener, ITestFilter filter)
+        {
+            RunAsync(listener, filter);
+            WaitForCompletion(Timeout.Infinite);
+            return Result;
+        }
+
+        /// <summary>
+        /// Run selected tests asynchronously, notifying the listener interface as it progresses.
+        /// </summary>
+        /// <param name="listener">Interface to receive EventListener notifications.</param>
+        /// <param name="filter">A test filter used to select tests to be run</param>
+        /// <remarks>
+        /// RunAsync is a template method, calling various abstract and
+        /// virtual methods to be overriden by derived classes.
+        /// </remarks>
+        public void RunAsync(ITestListener listener, ITestFilter filter)
+        {
+            log.Info("Running tests");
+            if (LoadedTest == null)
+                throw new InvalidOperationException("The Run method was called but no test has been loaded");
+
+            CreateTestExecutionContext(listener);
+
+            TopLevelWorkItem = WorkItem.CreateWorkItem(LoadedTest, filter);
+            TopLevelWorkItem.InitializeContext(Context);
+            TopLevelWorkItem.Completed += OnRunCompleted;
+
+            StartRun(listener);
+        }
+
+        /// <summary>
+        /// Wait for the ongoing run to complete.
+        /// </summary>
+        /// <param name="timeout">Time to wait in milliseconds</param>
+        /// <returns>True if the run completed, otherwise false</returns>
+        public bool WaitForCompletion(int timeout)
+        {
+#if NETCF // NETCF: Try to unify.
+            return _runComplete.WaitOne(timeout, false);
+#else
+            return _runComplete.WaitOne(timeout);
+#endif
+        }
+
+        /// <summary>
+        /// Initiate the test run.
+        /// </summary>
+        public void StartRun(ITestListener listener)
+        {
+#if !SILVERLIGHT && !NETCF
+            // Save Console.Out and Error for later restoration
+            _savedOut = Console.Out;
+            _savedErr = Console.Error;
+
+            Console.SetOut(new TextCapture(Console.Out));
+            Console.SetError(new TextCapture(Console.Error));
+#endif
+
+#if PARALLEL
+            QueuingEventListener queue = new QueuingEventListener();
+            Context.Listener = queue;
+
+            _pump = new EventPump(listener, queue.Events);
+            _pump.Start();
+#else
+            Context.Dispatcher = new SimpleWorkItemDispatcher();
+#endif
+
+            Context.Dispatcher.Dispatch(TopLevelWorkItem);
+        }
+
+        /// <summary>
+        /// Signal any test run that is in process to stop. Return without error if no test is running.
+        /// </summary>
+        /// <param name="force">If true, kill any test-running threads</param>
+        public void StopRun(bool force)
+        {
+            if (IsTestRunning)
+            {
+                Context.ExecutionStatus = force
+                    ? TestExecutionStatus.AbortRequested
+                    : TestExecutionStatus.StopRequested;
+
+#if !NETCF
+                if (force)
+                    Context.Dispatcher.CancelRun();
+#endif
+            }
+        }
+
+        #endregion
+
+        #region Helper Methods
 
         /// <summary>
         /// Create the initial TestExecutionContext used to run tests
         /// </summary>
         /// <param name="listener">The ITestListener specified in the RunAsync call</param>
-        protected override void CreateTestExecutionContext(ITestListener listener)
+        private void CreateTestExecutionContext(ITestListener listener)
         {
-            base.CreateTestExecutionContext(listener);
+            Context = new TestExecutionContext();
 
+            if (Settings.Contains(DriverSettings.DefaultTimeout))
+                Context.TestCaseTimeout = (int)Settings[DriverSettings.DefaultTimeout];
+            if (Settings.Contains(DriverSettings.StopOnError))
+                Context.StopOnError = (bool)Settings[DriverSettings.StopOnError];
+
+            if (Settings.Contains(DriverSettings.WorkDirectory))
+                Context.WorkDirectory = (string)Settings[DriverSettings.WorkDirectory];
+            else
+                Context.WorkDirectory = Env.DefaultWorkDirectory;
+
+            // Overriding runners may replace this
+            Context.Listener = listener;
+
+#if PARALLEL
             int levelOfParallelization = GetLevelOfParallelization();
 
             if (levelOfParallelization > 0)
@@ -76,45 +305,46 @@ namespace NUnit.Framework.Api
             }
             else
                 Context.Dispatcher = new SimpleWorkItemDispatcher();
+#endif
         }
 
-        /// <summary>
-        /// Initiate the test run.
-        /// </summary>
-        public override void StartRun(ITestListener listener)
-        {
-            // Save Console.Out and Error for later restoration
-            _savedOut = Console.Out;
-            _savedErr = Console.Error;
-
-            Console.SetOut(new TextCapture(Console.Out));
-            Console.SetError(new TextCapture(Console.Error));
-
-            QueuingEventListener queue = new QueuingEventListener();
-            Context.Listener = queue;
-
-            _pump = new EventPump(listener, queue.Events);
-            _pump.Start();
-
-            Context.Dispatcher.Dispatch(TopLevelWorkItem);
-        }
 
         /// <summary>
         /// Handle the the Completed event for the top level work item
         /// </summary>
-        protected override void OnRunCompleted(object sender, EventArgs e)
+        private void OnRunCompleted(object sender, EventArgs e)
         {
+#if PARALLEL
             _pump.Dispose();
+#endif
 
+#if !SILVERLIGHT && !NETCF
             Console.SetOut(_savedOut);
             Console.SetError(_savedErr);
+#endif
 
-            base.OnRunCompleted(sender, e);
+            _runComplete.Set();
         }
 
-        #endregion
+        private int CountTestCases(ITest test, ITestFilter filter)
+        {
+            if (!test.IsSuite)
+                return 1;
+            
+            int count = 0;
+            foreach (ITest child in test.Tests)
+                if (filter.Pass(child))
+                    count += CountTestCases(child, filter);
 
-        #region Helper Methods
+            return count;
+        }
+
+        private static int GetInitialSeed(IDictionary settings)
+        {
+            return settings.Contains(DriverSettings.RandomSeed)
+                ? (int)settings[DriverSettings.RandomSeed]
+                : new Random().Next();
+        }
 
         private int GetLevelOfParallelization()
         {
@@ -128,4 +358,3 @@ namespace NUnit.Framework.Api
         #endregion
     }
 }
-#endif

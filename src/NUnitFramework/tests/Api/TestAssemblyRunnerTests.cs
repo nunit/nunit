@@ -56,11 +56,7 @@ namespace NUnit.Framework.Api
         {
             _mockAssemblyPath = Path.Combine(TestContext.CurrentContext.TestDirectory, MOCK_ASSEMBLY);
             _slowTestsPath = Path.Combine(TestContext.CurrentContext.TestDirectory, SLOW_TESTS);
-#if NUNITLITE
-            _runner = new NUnitLiteTestAssemblyRunner(new DefaultTestAssemblyBuilder());
-#else
             _runner = new NUnitTestAssemblyRunner(new DefaultTestAssemblyBuilder());
-#endif
         }
 
         #region Load
