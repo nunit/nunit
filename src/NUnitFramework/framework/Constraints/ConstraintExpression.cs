@@ -903,7 +903,7 @@ namespace NUnit.Framework.Constraints
 
         #region Exist
 
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !PORTABLE
         /// <summary>
         /// Returns a constraint that succeeds if the value
         /// is a file or directory and it exists.

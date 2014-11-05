@@ -224,7 +224,7 @@ namespace NUnit.Framework.Api
         /// </summary>
         public void StartRun(ITestListener listener)
         {
-#if !SILVERLIGHT && !NETCF
+#if !SILVERLIGHT && !NETCF && !PORTABLE
             // Save Console.Out and Error for later restoration
             _savedOut = Console.Out;
             _savedErr = Console.Error;
@@ -318,7 +318,7 @@ namespace NUnit.Framework.Api
             _pump.Dispose();
 #endif
 
-#if !SILVERLIGHT && !NETCF
+#if !SILVERLIGHT && !NETCF && !PORTABLE
             Console.SetOut(_savedOut);
             Console.SetError(_savedErr);
 #endif
