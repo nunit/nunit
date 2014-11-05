@@ -1,6 +1,3 @@
-install:
-  - ps: $wc = New-Object 'System.Net.WebClient'
-
 build_script: 
   - msbuild nunit.sln /p:Configuration=Release /t:Rebuild
   
