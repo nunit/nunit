@@ -21,8 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NUNITLITE
 using System;
+using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Assertions
 {
@@ -43,8 +43,8 @@ namespace NUnit.Framework.Assertions
         private readonly decimal de2 = 33.4M;
         private readonly double d1 = 4.85948654;
         private readonly double d2 = 1.0;
-        private readonly System.Enum e1 = System.Data.CommandType.TableDirect;
-        private readonly System.Enum e2 = System.Data.CommandType.StoredProcedure;
+        private readonly System.Enum e1 = RunState.Explicit;
+        private readonly System.Enum e2 = RunState.Ignored;
 
         [Test]
         public void Greater()
@@ -136,9 +136,9 @@ namespace NUnit.Framework.Assertions
         public void NotGreaterIComparable()
         {
             var expectedMessage =
-                "  Expected: greater than TableDirect" + Environment.NewLine +
-                "  But was:  StoredProcedure" + Environment.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => Assert.Greater(e2,e1));
+                "  Expected: greater than Ignored" + Environment.NewLine +
+                "  But was:  Explicit" + Environment.NewLine;
+            var ex = Assert.Throws<AssertionException>(() => Assert.Greater(e1,e2));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 
@@ -153,5 +153,4 @@ namespace NUnit.Framework.Assertions
         }
     }
 }
-#endif
 

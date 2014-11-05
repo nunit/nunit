@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NUNITLITE
 using System.ComponentModel;
 using NUnit.Framework.Constraints;
 
@@ -423,4 +422,3 @@ namespace NUnit.Framework
         #endregion
     }
 }
-#endif
