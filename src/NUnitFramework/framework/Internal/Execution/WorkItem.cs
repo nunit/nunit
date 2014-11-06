@@ -349,7 +349,7 @@ namespace NUnit.Framework.Internal.Execution
             _context.CurrentResult = this.Result;
             _context.Listener.TestStarted(this.Test);
             _context.StartTime = DateTime.UtcNow;
-#if !NETCF && !SILVERLIGHT
+#if !SILVERLIGHT
             _context.StartTicks = Stopwatch.GetTimestamp();
 #endif
             _context.EstablishExecutionEnvironment();
@@ -386,7 +386,7 @@ namespace NUnit.Framework.Internal.Execution
             Result.StartTime = Context.StartTime;
             Result.EndTime = DateTime.UtcNow;
             
-#if !NETCF && !SILVERLIGHT
+#if !SILVERLIGHT
             long tickCount = Stopwatch.GetTimestamp() - Context.StartTicks;
             double seconds = (double)tickCount / Stopwatch.Frequency;
             Result.Duration = TimeSpan.FromSeconds(seconds);
