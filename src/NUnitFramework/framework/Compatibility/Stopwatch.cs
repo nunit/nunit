@@ -29,7 +29,7 @@ namespace NUnit.Framework.Compatibility
     /// This class is a System.Diagnostics.Stopwatch on operating systems that support it. On those that don't,
     /// it replicates the functionality at the resolution supported.
     /// </summary>
-#if !NETCF && !SILVERLIGHT && !PORTABLE
+#if !SILVERLIGHT && !PORTABLE
     public class Stopwatch : System.Diagnostics.Stopwatch { }
 #else
     public class Stopwatch

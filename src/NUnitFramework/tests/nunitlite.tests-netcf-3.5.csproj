@@ -24,7 +24,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\..\bin\Debug\netcf-3.5\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;WindowsCE;NETCF;NETCF_3_5;CLR_2_0;NUNITLITE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;WindowsCE;NETCF;NETCF_3_5;NUNITLITE</DefineConstants>
     <NoStdLib>true</NoStdLib>
     <NoConfig>true</NoConfig>
     <ErrorReport>prompt</ErrorReport>
@@ -36,7 +36,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\..\bin\Release\netcf-3.5\</OutputPath>
-    <DefineConstants>TRACE;WindowsCE;NETCF;NETCF_3_5;CLR_2_0;NUNITLITE</DefineConstants>
+    <DefineConstants>TRACE;WindowsCE;NETCF;NETCF_3_5;NUNITLITE</DefineConstants>
     <NoStdLib>true</NoStdLib>
     <NoConfig>true</NoConfig>
     <ErrorReport>prompt</ErrorReport>
@@ -107,6 +107,7 @@
     <Compile Include="Attributes\ValuesAttributeEnumTests.cs" />
     <Compile Include="Attributes\ValuesAttributeTests.cs" />
     <Compile Include="Attributes\ValueSourceTests.cs" />
+    <Compile Include="Compatibility\StopwatchTests.cs" />
     <Compile Include="Constraints\AllItemsConstraintTests.cs" />
     <Compile Include="Constraints\AndConstraintTests.cs" />
     <Compile Include="Constraints\AssignableFromConstraintTests.cs" />

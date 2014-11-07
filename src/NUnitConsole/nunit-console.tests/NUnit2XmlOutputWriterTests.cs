@@ -127,7 +127,7 @@ namespace NUnit.ConsoleRunner.Tests
         public void TestResults_HasValidDateAttribute()
         {
             string dateString = RequiredAttribute(topNode, "date");
-#if (CLR_2_0 || CLR_4_0) && !NETCF
+#if !NETCF
             DateTime date;
             Assert.That(DateTime.TryParse(dateString, out date), "Invalid date attribute: {0}", dateString);
 #endif
@@ -137,7 +137,7 @@ namespace NUnit.ConsoleRunner.Tests
         public void TestResults_HasValidTimeAttribute()
         {
             string timeString = RequiredAttribute(topNode, "time");
-#if (CLR_2_0 || CLR_4_0) && !NETCF
+#if !NETCF
             DateTime time;
             Assert.That(DateTime.TryParse(timeString, out time), "Invalid time attribute: {0}", timeString);
 #endif
