@@ -87,7 +87,6 @@
     <Compile Include="Api\FrameworkControllerTests.cs" />
     <Compile Include="Api\ResultStateTests.cs" />
     <Compile Include="Api\TestAssemblyRunnerTests.cs" />
-    <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Assertions\ArrayEqualsFailureMessageFixture.cs" />
     <Compile Include="Assertions\ArrayEqualsFixture.cs" />
     <Compile Include="Assertions\ArrayNotEqualFixture.cs" />
@@ -204,6 +203,7 @@
     <Compile Include="Internal\CultureSettingAndDetectionTests.cs" />
     <Compile Include="Internal\DeduceTypeArgsFromArgs.cs" />
     <Compile Include="Internal\TestResultOutputTests.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Runner\CreateTestFilterTests.cs" />
     <Compile Include="Runner\NUnit2XmlOutputWriterTests.cs" />
     <Compile Include="TestUtilities\Collections\SimpleObjectList.cs" />
@@ -276,9 +276,7 @@
   <ItemGroup>
     <EmbeddedResource Include="TestImage1.jpg" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Properties\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
       <Visible>False</Visible>
