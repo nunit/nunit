@@ -353,7 +353,7 @@
 		<Message Text="* Testing NUnitFramework $(Framework) - $(Configuration)" />
 		<Message Text="******************************************************************" />
 
-		<Error Condition="'$(Runtime)' == 'netcf' Or '$(Runtime)' == 'silverlight' And '$(Runtime)' != 'portable'"
+		<Error Condition="'$(Runtime)' == 'netcf' Or '$(Runtime)' == 'silverlight' Or '$(Runtime)' == 'portable'"
 			Text="The full NUnit framework cannot be tested under $(Runtime)" />
 
 		<Exec WorkingDirectory="$(ConsoleBuildDir)" 
@@ -379,7 +379,7 @@
 
 		<Error Condition="'$(Runtime)' == 'silverlight'"
 			Text="Silverlight test is not supported by this script" />
-      
+	  
 		<Error Condition="'$(Runtime)' == 'portable'"
 			Text="Portable tests are not supported by this script" />
 
