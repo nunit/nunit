@@ -81,13 +81,17 @@ namespace NUnit.Engine.Runners
                 ? RuntimeFramework.Parse(frameworkSetting)
                 : RuntimeFramework.CurrentFramework;
 
-            bool requires32Bit = false;
+            bool useX86Agent = TestPackage.GetSetting(RunnerSettings.RunAsX86, false);
+
             foreach (var file in TestPackage.TestFiles)
             {
+                if (useX86Agent)
+                    break;
+
                 using (var reader = new AssemblyReader(file))
                 {
                     if (reader.ShouldRun32Bit)
-                        requires32Bit = true;
+                        useX86Agent = true;
                 }
             }
 
@@ -99,7 +103,7 @@ namespace NUnit.Engine.Runners
 
             try
             {
-                CreateAgentAndRunner(enableDebug, agentArgs, requires32Bit);
+                CreateAgentAndRunner(enableDebug, agentArgs, useX86Agent);
 
                 return _remoteRunner.Load();
             }
@@ -170,7 +174,7 @@ namespace NUnit.Engine.Runners
 
         #region Helper Methods
 
-        private void CreateAgentAndRunner(bool enableDebug, string agentArgs, bool requires32Bit)
+        private void CreateAgentAndRunner(bool enableDebug, string agentArgs, bool useX86Agent)
         {
             if (_agent == null)
             {
@@ -179,7 +183,7 @@ namespace NUnit.Engine.Runners
                     30000,
                     enableDebug,
                     agentArgs,
-                    requires32Bit);
+                    useX86Agent);
 
                 if (_agent == null)
                     throw new Exception("Unable to acquire remote process agent");

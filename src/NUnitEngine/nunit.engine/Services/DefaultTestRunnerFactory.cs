@@ -93,7 +93,7 @@ namespace NUnit.Engine.Services
                 package.GetSetting(RunnerSettings.ProcessModel, "Default"));
 
             if (processModel == ProcessModel.Default)
-                if (!currentFramework.Supports(targetFramework))
+                if (!currentFramework.Supports(targetFramework) || package.GetSetting(RunnerSettings.RunAsX86, false))
                     processModel = ProcessModel.Separate;
 
             return processModel;

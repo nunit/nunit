@@ -83,6 +83,9 @@ namespace NUnit.ConsoleRunner.Options
             this.Add("framework=", "{FRAMEWORK} type/version to use for tests.\nExamples: mono, net-3.5, v4.0, 2.0, mono-4.0",
                 v => Framework = RequiredValue(v, "--framework"));
 
+            this.Add("x86", "Run tests in an x86 process on 64 bit systems",
+                v => RunAsX86 = v != null);
+
             this.Add("timeout=", "Set timeout for each test case in {MILLISECONDS}.",
                 v => defaultTimeout = RequiredInt(v, "--timeout"));
 
@@ -189,6 +192,8 @@ namespace NUnit.ConsoleRunner.Options
         // How to Run Tests
 
         public string Framework { get; private set; }
+
+        public bool RunAsX86 { get; private set; }
 
         private int defaultTimeout = -1;
         public int DefaultTimeout { get { return defaultTimeout; } }

@@ -73,6 +73,11 @@ namespace NUnit.ConsoleRunner.Utilities
         /// </summary>
         public const string RuntimeFramework = "RuntimeFramework";
 
+        /// <summary>
+        /// Indicates the test should be run in a 32-bit process on a 64-bit system
+        /// </summary>
+        public const string RunAsX86 = "RunAsX86";
+
         #endregion
 
         #region Settings taken from DriverSettings in the framework
