@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NUNITLITE
 using System;
 
 namespace NUnit.Framework.Assertions
@@ -48,7 +47,7 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void IsInstanceOf()
         {
-            ApplicationException ex = new ApplicationException();
+            var ex = new ArgumentException();
 
             Assert.IsInstanceOf(typeof(System.Exception), ex );
             Assert.That( ex, Is.InstanceOf(typeof(Exception)));
@@ -78,8 +77,8 @@ namespace NUnit.Framework.Assertions
         {
             var expectedMessage =
                 "  Expected: not instance of <System.Exception>" + System.Environment.NewLine + 
-                "  But was:  <System.ApplicationException>" + System.Environment.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => Assert.IsNotInstanceOf( typeof(System.Exception), new ApplicationException() ));
+                "  But was:  <System.ArgumentException>" + System.Environment.NewLine;
+            var ex = Assert.Throws<AssertionException>(() => Assert.IsNotInstanceOf( typeof(System.Exception), new ArgumentException() ));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 
@@ -130,4 +129,3 @@ namespace NUnit.Framework.Assertions
         }
     }
 }
-#endif

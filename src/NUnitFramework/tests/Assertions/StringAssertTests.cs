@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NUNITLITE
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Assertions
@@ -156,10 +155,9 @@ namespace NUnit.Framework.Assertions
         {
             string input = "Hello World";
             byte[] data = System.Text.Encoding.Unicode.GetBytes( input );
-            string garbage = System.Text.Encoding.UTF8.GetString( data );
+            string garbage = System.Text.Encoding.UTF8.GetString( data, 0, data.Length);
 
             Assert.AreNotEqual( input, garbage );
         }
     }
 }
-#endif

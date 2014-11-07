@@ -1823,7 +1823,6 @@ namespace NUnit.Framework
 
         #endregion
 
-#if !NUNITLITE
         #region IsNaN
 
         /// <summary>
@@ -3698,7 +3697,6 @@ namespace NUnit.Framework
         }
 
         #endregion
-#endif
 
         #region Helper Methods
 
