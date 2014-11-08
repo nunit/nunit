@@ -23,9 +23,6 @@
 
 using System;
 using System.Collections;
-using System.Threading;
-using System.Globalization;
-using NUnit.Framework;
 
 namespace NUnit.Framework.Assertions
 {
@@ -98,7 +95,6 @@ namespace NUnit.Framework.Assertions
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
     
-#if !NUNITLITE
         [Test]
         public void IsNaN()
         {
@@ -120,9 +116,12 @@ namespace NUnit.Framework.Assertions
         {
             Assert.IsEmpty( "", "Failed on empty String" );
             Assert.IsEmpty( new int[0], "Failed on empty Array" );
+            Assert.IsEmpty((IEnumerable)new int[0], "Failed on empty IEnumerable");
+
+#if !SILVERLIGHT
             Assert.IsEmpty( new ArrayList(), "Failed on empty ArrayList" );
             Assert.IsEmpty( new Hashtable(), "Failed on empty Hashtable" );
-            Assert.IsEmpty( (IEnumerable)new int[0], "Failed on empty IEnumerable" );
+#endif
         }
 
         [Test]
@@ -169,15 +168,19 @@ namespace NUnit.Framework.Assertions
         public void IsNotEmpty()
         {
             int[] array = new int[] { 1, 2, 3 };
-            ArrayList list = new ArrayList( array );
-            Hashtable hash = new Hashtable();
-            hash.Add( "array", array );
 
             Assert.IsNotEmpty( "Hi!", "Failed on String" );
             Assert.IsNotEmpty( array, "Failed on Array" );
-            Assert.IsNotEmpty( list, "Failed on ArrayList" );
-            Assert.IsNotEmpty( hash, "Failed on Hashtable" );
             Assert.IsNotEmpty( (IEnumerable)array, "Failed on IEnumerable" );
+
+#if !SILVERLIGHT
+            ArrayList list = new ArrayList(array);
+            Hashtable hash = new Hashtable();
+            hash.Add("array", array);
+
+            Assert.IsNotEmpty(list, "Failed on ArrayList");
+            Assert.IsNotEmpty(hash, "Failed on Hashtable");
+#endif
         }
 
         [Test]
@@ -201,12 +204,23 @@ namespace NUnit.Framework.Assertions
         }
 
         [Test]
+        public void IsNotEmptyFailsOnEmptyIEnumerable()
+        {
+            var expectedMessage =
+                "  Expected: not <empty>" + Environment.NewLine +
+                "  But was:  <empty>" + Environment.NewLine;
+            var ex = Assert.Throws<AssertionException>(() => Assert.IsNotEmpty((IEnumerable)new int[0]));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+        }
+
+#if !SILVERLIGHT
+        [Test]
         public void IsNotEmptyFailsOnEmptyArrayList()
         {
             var expectedMessage =
                 "  Expected: not <empty>" + Env.NewLine +
                 "  But was:  <empty>" + Env.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => Assert.IsNotEmpty( new ArrayList() ));
+            var ex = Assert.Throws<AssertionException>(() => Assert.IsNotEmpty(new ArrayList()));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 
@@ -216,19 +230,9 @@ namespace NUnit.Framework.Assertions
             var expectedMessage =
                 "  Expected: not <empty>" + Env.NewLine +
                 "  But was:  <empty>" + Env.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => Assert.IsNotEmpty( new Hashtable() ));
+            var ex = Assert.Throws<AssertionException>(() => Assert.IsNotEmpty(new Hashtable()));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
-
-        [Test]
-        public void IsNotEmptyFailsOnEmptyIEnumerable()
-        {
-            var expectedMessage =
-                "  Expected: not <empty>" + Environment.NewLine +
-                "  But was:  <empty>" + Environment.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => Assert.IsNotEmpty((IEnumerable)new int[0]));
-                    Assert.That(ex.Message, Is.EqualTo(expectedMessage));
-}
 #endif
     }
 }

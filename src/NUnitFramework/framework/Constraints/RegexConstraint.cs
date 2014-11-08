@@ -21,13 +21,10 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NETCF
 using System.Text.RegularExpressions;
-#endif
 
 namespace NUnit.Framework.Constraints
 {
-#if !NETCF
     /// <summary>
     /// RegexConstraint can test whether a string matches
     /// the pattern provided.
@@ -56,5 +53,4 @@ namespace NUnit.Framework.Constraints
                     this.caseInsensitive ? RegexOptions.IgnoreCase : RegexOptions.None);
         }
     }
-#endif
 }

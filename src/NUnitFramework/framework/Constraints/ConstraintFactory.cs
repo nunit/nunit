@@ -715,7 +715,6 @@ namespace NUnit.Framework.Constraints
 
         #region Matches
 
-#if !NETCF
         /// <summary>
         /// Returns a constraint that succeeds if the actual
         /// value matches the regular expression supplied as an argument.
@@ -743,13 +742,11 @@ namespace NUnit.Framework.Constraints
         {
             return new RegexConstraint(pattern);
         }
-#endif
 
         #endregion
 
         #region DoesNotMatch
 
-#if !NETCF
         /// <summary>
         /// Returns a constraint that fails if the actual
         /// value matches the pattern supplied as an argument.
@@ -759,7 +756,6 @@ namespace NUnit.Framework.Constraints
         {
             return new ConstraintExpression().Not.Matches(pattern);
         }
-#endif
 
         #endregion
 

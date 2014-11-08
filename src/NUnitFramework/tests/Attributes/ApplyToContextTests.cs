@@ -36,7 +36,6 @@ namespace NUnit.Framework.Attributes
             _context = new TestExecutionContext();
         }
 
-#if !NUNITLITE
         [Test]
         public void ParallelizableAttribute()
         {
@@ -44,7 +43,6 @@ namespace NUnit.Framework.Attributes
             attr.ApplyToContext(_context);
             Assert.That(_context.ParallelScope, Is.EqualTo(ParallelScope.Fixtures));
         }
-#endif
 
 #if !NETCF
         [Test]

@@ -21,8 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NUNITLITE
 using System;
+using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Assertions
@@ -44,8 +44,8 @@ namespace NUnit.Framework.Assertions
         private readonly decimal de2 = 83.4M;
         private readonly double d1 = 4.85948654;
         private readonly double d2 = 8.0;
-        private readonly System.Enum e1 = System.Data.CommandType.StoredProcedure;
-        private readonly System.Enum e2 = System.Data.CommandType.TableDirect;
+        private readonly System.Enum e1 = RunState.Explicit;
+        private readonly System.Enum e2 = RunState.Ignored;
 
         [Test]
         public void Less()
@@ -149,8 +149,8 @@ namespace NUnit.Framework.Assertions
         public void NotLessIComparable()
         {
             var expectedMessage =
-                "  Expected: less than StoredProcedure" + Environment.NewLine +
-                "  But was:  TableDirect" + Environment.NewLine;
+                "  Expected: less than Explicit" + Environment.NewLine +
+                "  But was:  Ignored" + Environment.NewLine;
             var ex = Assert.Throws<AssertionException>(() => Assert.Less(e2,e1));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
@@ -174,4 +174,3 @@ namespace NUnit.Framework.Assertions
         }
     }
 }
-#endif
