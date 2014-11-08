@@ -15,5 +15,4 @@ env:
     - Framework="net-3.5"
     - Framework="net-4.0"
     - Framework="net-4.5"
-    - Framework="portable"
     
