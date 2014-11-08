@@ -103,6 +103,7 @@ namespace NUnit.Framework.Attributes
                 Assert.That(test.RunState, Is.EqualTo(RunState.NotRunnable));
         }
 
+#if !PORTABLE
         [Test]
         public void TheoryAttribute_NoArgs_NoCases()
         {
@@ -120,6 +121,7 @@ namespace NUnit.Framework.Attributes
             foreach (var test in tests)
                 Assert.That(test.RunState, Is.EqualTo(RunState.Runnable));
         }
+#endif
 
         [Test]
         public void CombinatorialAttribute_NoArgs_NoCases()

@@ -76,9 +76,13 @@ namespace NUnit.Framework.Api
         /// </returns>
         public ITest Build(Assembly assembly, IDictionary options)
         {
+#if PORTABLE
+            log.Debug("Loading {0}", assembly.FullName);
+#else
             log.Debug("Loading {0} in AppDomain {1}", assembly.FullName, AppDomain.CurrentDomain.FriendlyName);
+#endif
 
-#if NETCF || SILVERLIGHT
+#if NETCF || SILVERLIGHT || PORTABLE
             string assemblyPath = AssemblyHelper.GetAssemblyName(assembly).Name;
 #else
             string assemblyPath = AssemblyHelper.GetAssemblyPath(assembly);
@@ -97,7 +101,11 @@ namespace NUnit.Framework.Api
         /// </returns>
         public ITest Build(string assemblyName, IDictionary options)
         {
+#if PORTABLE
+            log.Debug("Loading {0}", assemblyName);
+#else
             log.Debug("Loading {0} in AppDomain {1}", assemblyName, AppDomain.CurrentDomain.FriendlyName);
+#endif
 
             TestSuite testAssembly = null;
 
@@ -144,7 +152,7 @@ namespace NUnit.Framework.Api
 
         private Assembly Load(string path)
         {
-#if NETCF || SILVERLIGHT 
+#if NETCF || SILVERLIGHT || PORTABLE
             return Assembly.Load(path);
 #else
             Assembly assembly = null;
@@ -239,11 +247,12 @@ namespace NUnit.Framework.Api
 
             testAssembly.ApplyAttributesToTest(assembly);
 
+#if !PORTABLE
 #if !SILVERLIGHT
             testAssembly.Properties.Set(PropertyNames.ProcessID, System.Diagnostics.Process.GetCurrentProcess().Id);
 #endif
             testAssembly.Properties.Set(PropertyNames.AppDomain, AppDomain.CurrentDomain.FriendlyName);
-
+#endif
 
             // TODO: Make this an option? Add Option to sort assemblies as well?
             testAssembly.Sort();

@@ -57,6 +57,7 @@ namespace NUnit.Common
         /// </summary>
         public static bool Initialized { get; private set; }
 
+#if !PORTABLE
         /// <summary>
         /// Initialize the internal trace facility using the name of the log
         /// to be written to and the trace level.
@@ -80,6 +81,7 @@ namespace NUnit.Common
             else
                 traceWriter.WriteLine("InternalTrace: Ignoring attempted re-initialization at level {0}", level);
         }
+#endif
 
         /// <summary>
         /// Initialize the internal trace using a provided TextWriter and level

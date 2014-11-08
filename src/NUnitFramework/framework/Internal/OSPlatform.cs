@@ -21,6 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#if !PORTABLE
 using System;
 using System.Runtime.InteropServices;
 
@@ -440,3 +441,4 @@ namespace NUnit.Framework.Internal
         }
     }
 }
+#endif

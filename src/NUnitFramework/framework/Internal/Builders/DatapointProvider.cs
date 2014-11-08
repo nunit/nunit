@@ -20,7 +20,6 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
-
 using System;
 using System.Reflection;
 using System.Collections;
@@ -90,10 +89,9 @@ namespace NUnit.Framework.Internal.Builders
             {
                 if (member.IsDefined(typeof(DatapointAttribute), true))
                 {
-                    if (GetTypeFromMemberInfo(member) == parameterType &&
-                        member.MemberType == MemberTypes.Field)
-                    {
-                        FieldInfo field = member as FieldInfo;
+                    var field = member as FieldInfo;
+                    if (GetTypeFromMemberInfo(member) == parameterType && field != null)
+                    {                        
                         if (field.IsStatic)
                             datapoints.Add(field.GetValue(null));
                         else
@@ -106,27 +104,27 @@ namespace NUnit.Framework.Internal.Builders
                     {
                         object instance;
 
-                        switch(member.MemberType)
+                        FieldInfo field = member as FieldInfo;
+                        PropertyInfo property = member as PropertyInfo;
+                        MethodInfo method = member as MethodInfo;
+                        if (field != null)
                         {
-                            case MemberTypes.Field:
-                                FieldInfo field = member as FieldInfo;
-                                instance = field.IsStatic ? null : ProviderCache.GetInstanceOf(fixtureType);
-                                foreach (object data in (IEnumerable)field.GetValue(instance))
-                                    datapoints.Add(data);
-                                break;
-                            case MemberTypes.Property:
-                                PropertyInfo property = member as PropertyInfo;
-                                MethodInfo getMethod = property.GetGetMethod(true);
-                                instance = getMethod.IsStatic ? null : ProviderCache.GetInstanceOf(fixtureType);
-                                foreach (object data in (IEnumerable)property.GetValue(instance,null))
-                                    datapoints.Add(data);
-                                break;
-                            case MemberTypes.Method:
-                                MethodInfo method = member as MethodInfo;
-                                instance = method.IsStatic ? null : ProviderCache.GetInstanceOf(fixtureType);
-                                foreach (object data in (IEnumerable)method.Invoke(instance, new Type[0]))
-                                    datapoints.Add(data);
-                                break;
+                            instance = field.IsStatic ? null : ProviderCache.GetInstanceOf(fixtureType);
+                            foreach (object data in (IEnumerable)field.GetValue(instance))
+                                datapoints.Add(data);
+                        }
+                        else if (property != null)
+                        {
+                            MethodInfo getMethod = property.GetGetMethod(true);
+                            instance = getMethod.IsStatic ? null : ProviderCache.GetInstanceOf(fixtureType);
+                            foreach (object data in (IEnumerable)property.GetValue(instance, null))
+                                datapoints.Add(data);
+                        }
+                        else if (method != null)
+                        {
+                            instance = method.IsStatic ? null : ProviderCache.GetInstanceOf(fixtureType);
+                            foreach (object data in (IEnumerable)method.Invoke(instance, new Type[0]))
+                                datapoints.Add(data);
                         }
                     }
                 }
@@ -151,17 +149,19 @@ namespace NUnit.Framework.Internal.Builders
 
         private Type GetTypeFromMemberInfo(MemberInfo member)
         {
-            switch (member.MemberType)
-            {
-                case MemberTypes.Field:
-                    return ((FieldInfo)member).FieldType;
-                case MemberTypes.Property:
-                    return ((PropertyInfo)member).PropertyType;
-                case MemberTypes.Method:
-                    return ((MethodInfo)member).ReturnType;
-                default:
-                    return null;
-            }
+            var field = member as FieldInfo;
+            if (field != null)
+                return field.FieldType;
+
+            var property = member as PropertyInfo;
+            if (property != null)
+                return property.PropertyType;
+
+            var method = member as MethodInfo;
+            if (method != null)
+                return method.ReturnType;
+
+            return null;
         }
 
         private Type GetElementTypeFromMemberInfo(MemberInfo member)

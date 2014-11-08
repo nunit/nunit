@@ -3,7 +3,7 @@
 //
 // Licensed under the Open Software License version 3.0
 // *****************************************************
-
+#if !PORTABLE
 using System;
 using System.IO;
 using System.Reflection;
@@ -363,3 +363,4 @@ namespace NUnitLite.Runner.Tests
         #endregion
     }
 }
+#endif

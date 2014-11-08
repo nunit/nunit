@@ -176,8 +176,10 @@ namespace NUnit.Framework.Constraints
             if ( x is char && y is char )
                 return CharsEqual( (char)x, (char)y );
 
+#if !PORTABLE
             if (x is DirectoryInfo && y is DirectoryInfo)
                 return DirectoriesEqual((DirectoryInfo)x, (DirectoryInfo)y);
+#endif
 
             if (Numerics.IsNumericType(x) && Numerics.IsNumericType(y))
                 return Numerics.AreEqual(x, y, ref tolerance);
@@ -369,6 +371,7 @@ namespace NUnit.Framework.Constraints
             }
         }
 
+#if !PORTABLE
         /// <summary>
         /// Method to compare two DirectoryInfo objects
         /// </summary>
@@ -388,6 +391,7 @@ namespace NUnit.Framework.Constraints
             // TODO: Find a cleaner way to do this
             return new SamePathConstraint(x.FullName).ApplyTo(y.FullName).IsSuccess;
         }
+#endif
 
         private bool StreamsEqual(Stream x, Stream y)
         {

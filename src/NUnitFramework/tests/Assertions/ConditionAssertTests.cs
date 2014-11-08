@@ -23,9 +23,6 @@
 
 using System;
 using System.Collections;
-using System.Threading;
-using System.Globalization;
-using NUnit.Framework;
 
 namespace NUnit.Framework.Assertions
 {

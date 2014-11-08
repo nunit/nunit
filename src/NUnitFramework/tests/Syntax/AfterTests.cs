@@ -21,6 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#if !PORTABLE
 using System;
 using System.Threading;
 using System.Collections.Generic;
@@ -191,3 +192,4 @@ namespace NUnit.Framework.Syntax
         }
     }
 }
+#endif

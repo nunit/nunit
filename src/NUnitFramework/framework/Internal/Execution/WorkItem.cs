@@ -200,7 +200,7 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public TestResult Result { get; protected set; }
 
-#if !SILVERLIGHT && !NETCF
+#if !SILVERLIGHT && !NETCF && !PORTABLE
         internal ApartmentState TargetApartment
         {
             get 
@@ -238,7 +238,8 @@ namespace NUnit.Framework.Internal.Execution
                 RunTestOnOwnThread(timeout);
             else
                 RunTest();
-
+#elif PORTABLE
+            RunTest();
 #else
             ApartmentState currentApartment = Thread.CurrentThread.GetApartmentState();
 
@@ -293,7 +294,7 @@ namespace NUnit.Framework.Internal.Execution
 #endif
 
 
-#if !SILVERLIGHT && !NETCF
+#if !SILVERLIGHT && !NETCF && !PORTABLE
         private void RunTestOnOwnThread(int timeout, ApartmentState apartment)
         {
             string reason = Test.RequiresThread
@@ -349,13 +350,13 @@ namespace NUnit.Framework.Internal.Execution
             _context.CurrentResult = this.Result;
             _context.Listener.TestStarted(this.Test);
             _context.StartTime = DateTime.UtcNow;
-#if !SILVERLIGHT
             _context.StartTicks = Stopwatch.GetTimestamp();
-#endif
             _context.EstablishExecutionEnvironment();
 
             _state = WorkItemState.Running;
-
+#if PORTABLE
+            PerformWork();
+#else
             try
             {
                 PerformWork();
@@ -364,6 +365,7 @@ namespace NUnit.Framework.Internal.Execution
             {
                 //Result.SetResult(ResultState.Cancelled);
             }
+#endif
         }
 
         #endregion
@@ -386,13 +388,9 @@ namespace NUnit.Framework.Internal.Execution
             Result.StartTime = Context.StartTime;
             Result.EndTime = DateTime.UtcNow;
             
-#if !SILVERLIGHT
             long tickCount = Stopwatch.GetTimestamp() - Context.StartTicks;
             double seconds = (double)tickCount / Stopwatch.Frequency;
             Result.Duration = TimeSpan.FromSeconds(seconds);
-#else
-            Result.Duration = DateTime.UtcNow - Context.StartTime;
-#endif
 
             // We add in the assert count from the context. If
             // this item is for a test case, we are adding the

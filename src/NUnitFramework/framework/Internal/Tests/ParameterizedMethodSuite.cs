@@ -42,7 +42,11 @@ namespace NUnit.Framework.Internal
             : base(method.ReflectedType.FullName, method.Name)
         {
             Method = method;
+#if PORTABLE
+            _isTheory = false;
+#else
             _isTheory = method.IsDefined(typeof(TheoryAttribute), true);
+#endif
             this.MaintainTestOrder = true;
         }
 

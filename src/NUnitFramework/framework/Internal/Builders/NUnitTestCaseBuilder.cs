@@ -242,16 +242,6 @@ namespace NUnit.Framework.Internal.Builders
         }
 #endif
 
-        private static MethodInfo GetExceptionHandler(Type fixtureType, string name)
-        {
-            return fixtureType.GetMethod(
-                name,
-                BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
-                null,
-                new Type[] { typeof(System.Exception) },
-                null);
-        }
-
         private static bool MarkAsNotRunnable(TestMethod testMethod, string reason)
         {
             testMethod.RunState = RunState.NotRunnable;

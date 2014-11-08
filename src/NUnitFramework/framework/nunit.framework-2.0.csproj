@@ -94,6 +94,7 @@
     <Compile Include="Attributes\TestActionAttribute.cs" />
     <Compile Include="Attributes\TestCaseBuilderAttribute.cs" />
     <Compile Include="Attributes\TestOfAttribute.cs" />
+    <Compile Include="Compatibility\AttributeHelper.cs" />
     <Compile Include="Compatibility\Stopwatch.cs" />
     <Compile Include="Constraints\EqualConstraintResult.cs" />
     <Compile Include="Constraints\FileExistsConstraint.cs" />

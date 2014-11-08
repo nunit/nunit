@@ -148,6 +148,7 @@
     </Compile>
     <Compile Include="Attributes\ValuesAttributeEnumTests.cs" />
     <Compile Include="Attributes\ValueSourceTests.cs" />
+    <Compile Include="Compatibility\AttributeHelperTests.cs" />
     <Compile Include="Compatibility\StopwatchTests.cs" />
     <Compile Include="Constraints\AsyncDelayedConstraintTests.cs" />
     <Compile Include="Constraints\CollectionEqualsTests.cs" />

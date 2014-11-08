@@ -169,7 +169,7 @@ namespace NUnit.Framework
         #endregion
 
         #region Attribute
-
+        
         /// <summary>
         /// Returns a new AttributeConstraint checking for the
         /// presence of a particular attribute on an object.

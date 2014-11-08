@@ -267,6 +267,7 @@ namespace NUnit.Framework.Attributes
 
         #region PlatformAttribute
 
+#if !PORTABLE
         [Test]
         public void PlatformAttributeRunsTest()
         {
@@ -284,6 +285,7 @@ namespace NUnit.Framework.Attributes
             new PlatformAttribute(notMyPlatform).ApplyToTest(test);
             Assert.That(test.RunState, Is.EqualTo(RunState.Skipped));
         }
+#endif
 
         #endregion
 

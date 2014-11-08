@@ -31,7 +31,7 @@ using NUnit.TestUtilities.Comparers;
 using System.Data;
 #endif
 
-#if NET_3_5 || NET_4_0 || SILVERLIGHT || NETCF_3_5
+#if NET_3_5 || NET_4_0 || SILVERLIGHT || NETCF_3_5 || PORTABLE
 using System.Linq;
 #endif
 
@@ -229,7 +229,7 @@ namespace NUnit.Framework.Assertions
                                     Contains("But was:  2"));
         }
  
-#if NET_3_5 || NET_4_0 || SILVERLIGHT || NETCF_3_5
+#if NET_3_5 || NET_4_0 || SILVERLIGHT || NETCF_3_5 || PORTABLE
         [Test]
         public void AreEqual_UsingLinqQuery()
         {

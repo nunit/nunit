@@ -149,6 +149,7 @@ namespace NUnit.Framework.Internal
                 Assert.AreEqual( RunState.Skipped, test.RunState, test.Name );
         }
 
+#if !PORTABLE
         [Test]
         public void SettingInvalidCultureOnFixtureGivesError()
         {
@@ -174,7 +175,7 @@ namespace NUnit.Framework.Internal
             Assert.That(result.Message, Does.StartWith(expectedException));
             Assert.That(result.Message, Does.Contain("xx-XX").IgnoreCase);
         }
-
+#endif
         [TestFixture, SetCulture("en-GB")]
         public class NestedFixture
         {

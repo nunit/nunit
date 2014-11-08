@@ -40,7 +40,7 @@ namespace NUnit.Common
     {
         #region GetAssemblyPath
 
-#if !NETCF && !SILVERLIGHT
+#if !NETCF && !SILVERLIGHT && !PORTABLE
         /// <summary>
         /// Gets the path from which the assembly defining a type was loaded.
         /// </summary>
@@ -71,7 +71,7 @@ namespace NUnit.Common
 
         #region GetDirectoryName
 
-#if !NETCF && !SILVERLIGHT
+#if !NETCF && !SILVERLIGHT && !PORTABLE
         /// <summary>
         /// Gets the path to the directory from which an assembly was loaded.
         /// </summary>
@@ -94,7 +94,7 @@ namespace NUnit.Common
         /// <returns>An AssemblyName</returns>
         public static AssemblyName GetAssemblyName(Assembly assembly)
         {
-#if SILVERLIGHT
+#if SILVERLIGHT || PORTABLE
             return new AssemblyName(assembly.FullName);
 #else
             return assembly.GetName();
@@ -105,7 +105,7 @@ namespace NUnit.Common
 
         #region Helper Methods
 
-#if !NETCF
+#if !NETCF && !PORTABLE
         private static bool IsFileUri(string uri)
         {
             return uri.ToLower().StartsWith(Uri.UriSchemeFile);

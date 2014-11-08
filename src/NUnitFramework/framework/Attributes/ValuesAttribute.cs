@@ -130,11 +130,13 @@ namespace NUnit.Framework
                 if (targetType.IsAssignableFrom(arg.GetType()))
                     continue;
 
+#if !PORTABLE
                 if (arg is DBNull)
                 {
                     data[i] = null;
                     continue;
                 }
+#endif
 
                 bool convert = false;
 
