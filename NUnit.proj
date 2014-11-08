@@ -99,6 +99,10 @@
 		<ProjectSuffix>sl-5.0</ProjectSuffix>
 		<Runtime>silverlight</Runtime>
 	</PropertyGroup>
+	<PropertyGroup Condition="'$(Framework)'=='portable'">
+		<ProjectSuffix>portable</ProjectSuffix>
+		<Runtime>portable</Runtime>
+	</PropertyGroup>
 
 	<PropertyGroup Label="Properties for running tests">
 		<TestOptions Condition="'$(TestOptions)' == ''"></TestOptions>
@@ -231,12 +235,12 @@
 
 
 	<Target Name="BuildFramework" Label="Build the framework for the current config and runtime">
-		<CallTarget Targets="BuildNUnit" Condition="'$(Runtime)' != 'netcf' And '$(Runtime)' != 'silverlight'" />
+		<CallTarget Targets="BuildNUnit" Condition="'$(Runtime)' != 'netcf' And '$(Runtime)' != 'silverlight' And '$(Runtime)' != 'portable'" />
 		<CallTarget Targets="BuildNUnitLite" />
 	</Target>
 	
 	<Target Name="BuildNUnit" Label="Build all full framework projects for the current config and runtime">
-		<Error Condition="'$(Runtime)' == 'netcf' Or '$(Runtime)' == 'silverlight'"
+		<Error Condition="'$(Runtime)' == 'netcf' Or '$(Runtime)' == 'silverlight' Or '$(Runtime)' == 'portable'"
 			Text="The full NUnit framework cannot be built for $(Runtime)" />
 		<MSBuild Targets="Build" Projects="@(NUnitProjects)" 
 			Properties="Configuration=$(Configuration); Platform=AnyCPU" />
@@ -308,11 +312,11 @@
 
 		<CallTarget Targets="TestNUnit"
 					ContinueOnError="$(ContinueOnFailure)"
-					Condition="'$(Runtime)' != 'netcf' And '$(Runtime)' != 'silverlight'" />
+					Condition="'$(Runtime)' != 'netcf' And '$(Runtime)' != 'silverlight' And '$(Runtime)' != 'portable'" />
 
 		<CallTarget Targets="TestNUnitLite"
 					ContinueOnError="$(ContinueOnFailure)"
-					Condition="'$(Runtime)' != 'silverlight'" />
+					Condition="'$(Runtime)' != 'silverlight' And '$(Runtime)' != 'portable'" />
 
 	</Target>
 
@@ -321,6 +325,9 @@
 		
 		<Error Condition="'$(Runtime)' == 'silverlight'"
 			   Text="Silverlight test is not supported by this script" />
+		
+		<Error Condition="'$(Runtime)' == 'portable'"
+			   Text="Portable tests are not supported by this script" />
 		
 		<CallTarget Targets="TestNUnit"
 					Condition="'$(Runtime)' != 'netcf'" 
@@ -335,7 +342,7 @@
 			Label="Test the NUnit framework for the current config conditionally, for use by TestAllNUnit">
 
 		<CallTarget Targets="TestNUnit"
-					Condition="'$(Runtime)' != 'netcf' And '$(Runtime)' != 'silverlight'" />
+					Condition="'$(Runtime)' != 'netcf' And '$(Runtime)' != 'silverlight' And '$(Runtime)' != 'portable'" />
 
 	</Target>
 
@@ -346,7 +353,7 @@
 		<Message Text="* Testing NUnitFramework $(Framework) - $(Configuration)" />
 		<Message Text="******************************************************************" />
 
-		<Error Condition="'$(Runtime)' == 'netcf' Or '$(Runtime)' == 'silverlight'"
+		<Error Condition="'$(Runtime)' == 'netcf' Or '$(Runtime)' == 'silverlight' And '$(Runtime)' != 'portable'"
 			Text="The full NUnit framework cannot be tested under $(Runtime)" />
 
 		<Exec WorkingDirectory="$(ConsoleBuildDir)" 
@@ -359,7 +366,7 @@
 			Label="Test the NUnitLite framework for the current config conditionally, for use by TestAllNUnitLite">
 
 		<CallTarget Targets="TestNUnitLite"
-					Condition="'$(Runtime)' != 'silverlight'" />
+					Condition="'$(Runtime)' != 'silverlight' And '$(Runtime)' != 'portable'" />
 
 	</Target>
 
@@ -372,6 +379,9 @@
 
 		<Error Condition="'$(Runtime)' == 'silverlight'"
 			Text="Silverlight test is not supported by this script" />
+      
+		<Error Condition="'$(Runtime)' == 'portable'"
+			Text="Portable tests are not supported by this script" />
 
 		<Exec WorkingDirectory="$(FrameworkBuildDir)"
 			  Command="$(ManagedExeLauncher) $(FrameworkBuildDir)\nunitlite.tests.exe -result:$(ResultDir)/NUnitLiteResult-$(Framework).xml;format=$(ResultFormat) $(TestOptions)" 
@@ -564,11 +574,12 @@
 	<ItemGroup Label="Projects for building the nunitlite framework">
 		<NUnitLiteProjects Include="$(FrameworkSrcDir)\framework\nunitlite-$(ProjectSuffix).csproj"></NUnitLiteProjects>
 		<NUnitLiteProjects Include="$(FrameworkSrcDir)\mock-assembly\mock-nunitlite-assembly-$(ProjectSuffix).csproj"
-							Condition="'$(Runtime)' != 'netcf' And '$(Runtime)' != 'silverlight'"></NUnitLiteProjects>
+							Condition="'$(Runtime)' != 'netcf' And '$(Runtime)' != 'silverlight' And '$(Runtime)' != 'portable'"></NUnitLiteProjects>
 		<NUnitLiteProjects Include="$(FrameworkSrcDir)\slow-tests\slow-nunitlite-tests-$(ProjectSuffix).csproj"
-							Condition="'$(Runtime)' != 'netcf' And '$(Runtime)' != 'silverlight'"></NUnitLiteProjects>
+							Condition="'$(Runtime)' != 'netcf' And '$(Runtime)' != 'silverlight' And '$(Runtime)' != 'portable'"></NUnitLiteProjects>
 		<NUnitLiteProjects Include="$(FrameworkSrcDir)\testdata\nunitlite.testdata-$(ProjectSuffix).csproj"></NUnitLiteProjects>
-		<NUnitLiteProjects Include="$(FrameworkSrcDir)\tests\nunitlite.tests-$(ProjectSuffix).csproj"></NUnitLiteProjects>
+		<NUnitLiteProjects Include="$(FrameworkSrcDir)\tests\nunitlite.tests-$(ProjectSuffix).csproj"
+							Condition="'$(Runtime)' != 'portable'"></NUnitLiteProjects>
 	</ItemGroup>
 	
 	<ItemGroup Label="Projects for building the engine">
