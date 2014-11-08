@@ -127,12 +127,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit-console", "src\NUnitC
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit-console.tests", "src\NUnitConsole\nunit-console.tests\nunit-console.tests.csproj", "{B310A760-8AE1-41CA-81F8-03B12E2FCE30}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Portable", "Portable", "{8E80192C-DA34-46D1-92B7-F7CD8031A391}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunitlite-portable", "src\NUnitFramework\framework\nunitlite-portable.csproj", "{D6FBBB3A-F6B8-45BB-B657-A7226AB96624}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunitlite.testdata-portable", "src\NUnitFramework\testdata\nunitlite.testdata-portable.csproj", "{9ED200E4-2026-4955-87E0-D8CEA7BD9E7F}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -709,30 +703,6 @@ Global
 		{B310A760-8AE1-41CA-81F8-03B12E2FCE30}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{B310A760-8AE1-41CA-81F8-03B12E2FCE30}.Release|Win32.ActiveCfg = Release|Any CPU
 		{B310A760-8AE1-41CA-81F8-03B12E2FCE30}.Release|x64.ActiveCfg = Release|Any CPU
-		{D6FBBB3A-F6B8-45BB-B657-A7226AB96624}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D6FBBB3A-F6B8-45BB-B657-A7226AB96624}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D6FBBB3A-F6B8-45BB-B657-A7226AB96624}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{D6FBBB3A-F6B8-45BB-B657-A7226AB96624}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{D6FBBB3A-F6B8-45BB-B657-A7226AB96624}.Debug|Win32.ActiveCfg = Debug|Any CPU
-		{D6FBBB3A-F6B8-45BB-B657-A7226AB96624}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{D6FBBB3A-F6B8-45BB-B657-A7226AB96624}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D6FBBB3A-F6B8-45BB-B657-A7226AB96624}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D6FBBB3A-F6B8-45BB-B657-A7226AB96624}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{D6FBBB3A-F6B8-45BB-B657-A7226AB96624}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{D6FBBB3A-F6B8-45BB-B657-A7226AB96624}.Release|Win32.ActiveCfg = Release|Any CPU
-		{D6FBBB3A-F6B8-45BB-B657-A7226AB96624}.Release|x64.ActiveCfg = Release|Any CPU
-		{9ED200E4-2026-4955-87E0-D8CEA7BD9E7F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9ED200E4-2026-4955-87E0-D8CEA7BD9E7F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9ED200E4-2026-4955-87E0-D8CEA7BD9E7F}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{9ED200E4-2026-4955-87E0-D8CEA7BD9E7F}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{9ED200E4-2026-4955-87E0-D8CEA7BD9E7F}.Debug|Win32.ActiveCfg = Debug|Any CPU
-		{9ED200E4-2026-4955-87E0-D8CEA7BD9E7F}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{9ED200E4-2026-4955-87E0-D8CEA7BD9E7F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9ED200E4-2026-4955-87E0-D8CEA7BD9E7F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9ED200E4-2026-4955-87E0-D8CEA7BD9E7F}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{9ED200E4-2026-4955-87E0-D8CEA7BD9E7F}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{9ED200E4-2026-4955-87E0-D8CEA7BD9E7F}.Release|Win32.ActiveCfg = Release|Any CPU
-		{9ED200E4-2026-4955-87E0-D8CEA7BD9E7F}.Release|x64.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -790,9 +760,6 @@ Global
 		{28B605B2-E2E9-417E-8369-49E263F1F31B} = {31B45C4C-206F-4F31-9CC6-33BF11DFEE39}
 		{0DE218CA-AFB8-423A-9CD2-E22DEAC55C46} = {576DB1E6-C5EC-4FEF-A826-EC19D8BEE572}
 		{B310A760-8AE1-41CA-81F8-03B12E2FCE30} = {576DB1E6-C5EC-4FEF-A826-EC19D8BEE572}
-		{8E80192C-DA34-46D1-92B7-F7CD8031A391} = {5D8A9D62-C11C-45B2-8965-43DE8160B558}
-		{D6FBBB3A-F6B8-45BB-B657-A7226AB96624} = {8E80192C-DA34-46D1-92B7-F7CD8031A391}
-		{9ED200E4-2026-4955-87E0-D8CEA7BD9E7F} = {8E80192C-DA34-46D1-92B7-F7CD8031A391}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = src\NUnitFramework\tests\nunitlite.tests-2.0.csproj
