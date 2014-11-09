@@ -95,15 +95,12 @@ namespace NUnit.Engine.Runners
         }
 
         /// <summary>
-        /// Unload any loaded TestPackages and clear the
-        /// list of runners.
+        /// Unload any loaded TestPackages.
         /// </summary>
         public override void UnloadPackage()
         {
             foreach (ITestEngineRunner runner in _runners)
                 runner.Unload();
-
-            _runners.Clear();
         }
 
         /// <summary>
@@ -151,6 +148,14 @@ namespace NUnit.Engine.Runners
         {
             foreach (var runner in _runners)
                 runner.StopRun(force);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+
+            foreach (var runner in _runners)
+                runner.Dispose();
         }
 
         #endregion

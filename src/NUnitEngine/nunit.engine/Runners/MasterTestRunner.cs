@@ -130,6 +130,15 @@ namespace NUnit.Engine.Runners
             _realRunner.StopRun(force);
         }
 
+        /// <summary>
+        /// Dispose of this object.
+        /// </summary>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && _realRunner != null)
+                _realRunner.Dispose();
+        }
+
         #endregion
 
         #region ITestRunner Explicit Implementation
@@ -194,19 +203,6 @@ namespace NUnit.Engine.Runners
         XmlNode ITestRunner.Explore(TestFilter filter)
         {
             return this.Explore(filter).Xml;
-        }
-
-        #endregion
-
-        #region IDisposable Members
-
-        /// <summary>
-        /// Dispose of this object.
-        /// </summary>
-        public override void Dispose()
-        {
-            if (_realRunner != null)
-                _realRunner.Dispose();
         }
 
         #endregion

@@ -79,7 +79,7 @@ namespace NUnit.Engine.Runners
             string frameworkSetting = TestPackage.GetSetting(RunnerSettings.RuntimeFramework, "");
             this.RuntimeFramework = frameworkSetting != ""
                 ? RuntimeFramework.Parse(frameworkSetting)
-                : RuntimeFramework.CurrentFramework;
+                : Services.RuntimeFrameworkSelector.SelectRuntimeFramework(TestPackage);
 
             bool useX86Agent = TestPackage.GetSetting(RunnerSettings.RunAsX86, false);
 
@@ -160,9 +160,11 @@ namespace NUnit.Engine.Runners
             _remoteRunner.StopRun(force);
         }
 
-        public override void Dispose()
+        protected override void Dispose(bool disposing)
         {
-            if (_agent != null)
+            base.Dispose(disposing);
+
+            if (disposing && _agent != null)
             {
                 log.Info("Stopping remote agent");
                 _agent.Stop();
