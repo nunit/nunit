@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NETCF && !PORTABLE
+#if !PORTABLE
 using System;
 using NUnit.Framework;
 
@@ -57,7 +57,10 @@ namespace NUnit.TestData
         [Test]
         public void Test1() { }
         [Test]
-        public void Test2WithInfiniteLoop() { while (true) { } }
+        public void Test2WithInfiniteLoop() 
+        { 
+            while (true) { } 
+        }
         [Test]
         public void Test3() { }
     }

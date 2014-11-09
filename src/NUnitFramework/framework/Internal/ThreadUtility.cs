@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NETCF && !PORTABLE
+#if !PORTABLE
 using System;
 using System.Threading;
 
@@ -63,15 +63,19 @@ namespace NUnit.Framework.Internal
             }
             catch (ThreadStateException)
             {
+#if !NETCF
                 // Although obsolete, this use of Resume() takes care of
                 // the odd case where a ThreadStateException is received.
 #pragma warning disable 0618,0612    // Thread.Resume has been deprecated
                 thread.Resume();
 #pragma warning restore 0618,0612   // Thread.Resume has been deprecated
+#endif
             }
 
+#if !NETCF
             if ( (thread.ThreadState & ThreadState.WaitSleepJoin) != 0 )
                 thread.Interrupt();
+#endif
         }
 #endif
     }
