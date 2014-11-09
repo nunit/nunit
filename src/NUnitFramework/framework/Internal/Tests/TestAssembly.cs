@@ -20,11 +20,13 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
+
 #if PORTABLE
-using NUnit.Compatibility;
+using Path = NUnit.Framework.Compatibility.Path;
 #else
 using System.IO;
 #endif
+
 using System.Reflection;
 
 namespace NUnit.Framework.Internal

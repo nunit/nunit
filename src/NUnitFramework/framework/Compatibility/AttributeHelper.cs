@@ -23,7 +23,7 @@
 using System;
 using System.Reflection;
 
-namespace NUnit.Compatibility
+namespace NUnit.Framework.Compatibility
 {
     /// <summary>
     /// Provides extension methods on portable platforms to simplify working with Attributes
