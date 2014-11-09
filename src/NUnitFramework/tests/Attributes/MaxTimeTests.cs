@@ -32,7 +32,7 @@ namespace NUnit.Framework.Attributes
     /// <summary>
     /// Tests for MaxTime decoration.
     /// </summary>
-    [TestFixture]
+    [TestFixture, Parallelizable(ParallelScope.None)]
     public class MaxTimeTests
     {
         [Test,MaxTime(1000)]
