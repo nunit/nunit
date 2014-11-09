@@ -19,7 +19,11 @@ namespace NUnit.Framework.Internal
         public static int Compare(string strA, string strB, bool ignoreCase)
         {
             CompareOptions options = ignoreCase ? CompareOptions.IgnoreCase : CompareOptions.None;
+#if NETCF
+            return string.Compare(strA, strB, ignoreCase);
+#else
             return string.Compare(strA, strB, CultureInfo.CurrentCulture, options);
+#endif
         }
 
         /// <summary>

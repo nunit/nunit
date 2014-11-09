@@ -79,11 +79,8 @@
     <Compile Include="..\FrameworkVersion.cs">
       <Link>FrameworkVersion.cs</Link>
     </Compile>
-    <Compile Include="AssemblyInfo.cs" />
     <Compile Include="MockAssembly.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="mock-nunit-assembly.build" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\framework\nunit.framework-4.5.csproj">

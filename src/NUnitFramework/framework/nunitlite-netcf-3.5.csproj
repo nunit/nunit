@@ -100,7 +100,6 @@
     <Compile Include="Api\NUnitTestAssemblyRunner.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Assert.cs" />
     <Compile Include="AssertionHelper.cs" />
     <Compile Include="Assume.cs" />
@@ -149,6 +148,7 @@
     <Compile Include="Attributes\ValuesAttribute.cs" />
     <Compile Include="Attributes\ValueSourceAttribute.cs" />
     <Compile Include="CollectionAssert.cs" />
+    <Compile Include="Compatibility\AttributeHelper.cs" />
     <Compile Include="Compatibility\SerializableAttribute.cs" />
     <Compile Include="Compatibility\Stopwatch.cs" />
     <Compile Include="Constraints\AllItemsConstraint.cs" />
@@ -370,6 +370,7 @@
     <Compile Include="List.cs" />
     <Compile Include="ListMapper.cs" />
     <Compile Include="MessageMatch.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Runner\ColorConsole.cs" />
     <Compile Include="Runner\ColorStyle.cs" />
     <Compile Include="Runner\CommandLineOptions.cs" />
@@ -396,9 +397,6 @@
   <ItemGroup>
     <Content Include="Attributes\AttributeHierarchy.txt" />
     <Content Include="Interfaces\InterfaceChanges.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Properties\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.targets" />
   <ProjectExtensions>

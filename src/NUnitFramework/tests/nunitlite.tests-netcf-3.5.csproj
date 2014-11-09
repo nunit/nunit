@@ -63,7 +63,6 @@
       <Link>FrameworkVersion.cs</Link>
     </Compile>
     <Compile Include="Api\ResultStateTests.cs" />
-    <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Assertions\ArrayEqualsFailureMessageFixture.cs" />
     <Compile Include="Assertions\ArrayEqualsFixture.cs" />
     <Compile Include="Assertions\ArrayNotEqualFixture.cs" />
@@ -189,6 +188,7 @@
     <Compile Include="Internal\TextMessageWriterTests.cs" />
     <Compile Include="Internal\TypeParameterUsedWithTestMethod.cs" />
     <Compile Include="NUnitLite.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Syntax\AfterTests.cs" />
     <Compile Include="Syntax\ArbitraryConstraintMatching.cs" />
     <Compile Include="Syntax\CollectionTests.cs" />
@@ -239,9 +239,6 @@
     <EmbeddedResource Include="TestImage2.jpg" />
     <EmbeddedResource Include="TestText1.txt" />
     <EmbeddedResource Include="TestText2.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Properties\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.targets" />
   <ProjectExtensions>

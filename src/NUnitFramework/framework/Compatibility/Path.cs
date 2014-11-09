@@ -20,8 +20,9 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
+
 #if PORTABLE
-namespace NUnit.Compatibility
+namespace NUnit.Framework.Compatibility
 {
     /// <summary>
     /// Some path based methods that we need even in the Portable framework which

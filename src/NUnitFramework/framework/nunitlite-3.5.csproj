@@ -90,7 +90,6 @@
     <Compile Include="Api\ITestAssemblyBuilder.cs" />
     <Compile Include="Api\ITestAssemblyRunner.cs" />
     <Compile Include="Api\NUnitTestAssemblyRunner.cs" />
-    <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Assert.cs" />
     <Compile Include="AssertionHelper.cs" />
     <Compile Include="Assume.cs" />
@@ -366,6 +365,7 @@
     <Compile Include="ITestAction.cs" />
     <Compile Include="ListMapper.cs" />
     <Compile Include="MessageMatch.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Runner\ColorConsole.cs" />
     <Compile Include="Runner\ColorStyle.cs" />
     <Compile Include="Runner\CommandLineOptions.cs" />
@@ -393,9 +393,7 @@
   <ItemGroup>
     <None Include="nunit.snk" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Properties\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="Attributes\AttributeHierarchy.txt" />
   </ItemGroup>

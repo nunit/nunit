@@ -86,7 +86,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Api\ResultStateTests.cs" />
-    <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Assertions\ArrayEqualsFailureMessageFixture.cs" />
     <Compile Include="Assertions\ArrayEqualsFixture.cs" />
     <Compile Include="Assertions\ArrayNotEqualFixture.cs" />
@@ -221,6 +220,7 @@
     <Compile Include="Internal\TextMessageWriterTests.cs" />
     <Compile Include="Internal\TypeParameterUsedWithTestMethod.cs" />
     <Compile Include="NUnitLite.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Runner\CommandLineOptionTests.cs" />
     <Compile Include="Runner\CreateTestFilterTests.cs" />
     <Compile Include="Runner\MakeRunSettingsTests.cs" />
@@ -271,9 +271,7 @@
   <ItemGroup>
     <EmbeddedResource Include="TestImage1.jpg" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Properties\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
       <Visible>False</Visible>

@@ -89,7 +89,6 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Assertions\ArrayEqualsFailureMessageFixture.cs" />
     <Compile Include="Assertions\ArrayEqualsFixture.cs" />
     <Compile Include="Assertions\ArrayNotEqualFixture.cs" />
@@ -227,6 +226,7 @@
     <Compile Include="Internal\TestXmlTests.cs" />
     <Compile Include="Internal\TextMessageWriterTests.cs" />
     <Compile Include="Internal\TypeParameterUsedWithTestMethod.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Runner\CommandLineOptionTests.cs" />
     <Compile Include="Runner\CreateTestFilterTests.cs" />
     <Compile Include="Runner\MakeRunSettingsTests.cs" />
