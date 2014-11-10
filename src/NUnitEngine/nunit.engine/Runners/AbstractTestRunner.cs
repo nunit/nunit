@@ -148,7 +148,7 @@ namespace NUnit.Engine.Runners
         protected virtual void Dispose(bool disposing)
         {
             if (disposing)
-                this.Unload();
+                Unload();
         }
 
         #endregion

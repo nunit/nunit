@@ -22,15 +22,6 @@
 // ***********************************************************************
 
 using System;
-using System.IO;
-using System.Diagnostics;
-using System.Reflection;
-using System.Runtime.Remoting;
-using System.Runtime.Remoting.Proxies;
-using System.Runtime.Remoting.Services;
-using System.Runtime.Remoting.Channels;
-using System.Runtime.Remoting.Channels.Tcp;
-using System.Xml;
 using NUnit.Engine.Internal;
 
 namespace NUnit.Engine.Runners
@@ -40,7 +31,7 @@ namespace NUnit.Engine.Runners
     /// </summary>
     public class ProcessRunner : AbstractTestRunner
     {
-        static Logger log = InternalTrace.GetLogger(typeof(ProcessRunner));
+        private static readonly Logger log = InternalTrace.GetLogger(typeof(ProcessRunner));
 
         private ITestAgent _agent;
         private ITestEngineRunner _remoteRunner;
@@ -59,7 +50,7 @@ namespace NUnit.Engine.Runners
         /// Explore a TestPackage and return information about
         /// the tests found.
         /// </summary>
-        /// <param name="package">The TestPackage to be explored</param>
+        /// <param name="filter">A TestFilter used to select tests</param>
         /// <returns>A TestEngineResult.</returns>
         protected override TestEngineResult ExploreTests(TestFilter filter)
         {
@@ -69,7 +60,6 @@ namespace NUnit.Engine.Runners
         /// <summary>
         /// Load a TestPackage for possible execution
         /// </summary>
-        /// <param name="package">The TestPackage to be loaded</param>
         /// <returns>A TestEngineResult.</returns>
         protected override TestEngineResult LoadPackage()
         {
@@ -77,7 +67,7 @@ namespace NUnit.Engine.Runners
             Unload();
 
             string frameworkSetting = TestPackage.GetSetting(RunnerSettings.RuntimeFramework, "");
-            this.RuntimeFramework = frameworkSetting != ""
+            RuntimeFramework = frameworkSetting != ""
                 ? RuntimeFramework.Parse(frameworkSetting)
                 : Services.RuntimeFrameworkSelector.SelectRuntimeFramework(TestPackage);
 
@@ -144,11 +134,12 @@ namespace NUnit.Engine.Runners
         /// <summary>
         /// Run the tests in a loaded TestPackage
         /// </summary>
+        /// <param name="listener">An ITestEventHandler to receive events</param>
         /// <param name="filter">A TestFilter used to select tests</param>
         /// <returns>A TestResult giving the result of the test execution</returns>
         protected override TestEngineResult RunTests(ITestEventListener listener, TestFilter filter)
         {
-            return (TestEngineResult)_remoteRunner.Run(listener, filter);
+            return _remoteRunner.Run(listener, filter);
         }
 
         /// <summary>

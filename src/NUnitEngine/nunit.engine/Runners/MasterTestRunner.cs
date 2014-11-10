@@ -22,10 +22,8 @@
 // ***********************************************************************
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
-using System.Reflection;
 using System.Xml;
 using NUnit.Engine.Internal;
 
@@ -49,7 +47,7 @@ namespace NUnit.Engine.Runners
         /// Explore a loaded TestPackage and return information about
         /// the tests found.
         /// </summary>
-        /// <param name="package">The TestPackage to be explored</param>
+        /// <param name="filter">A TestFilter used to select tests</param>
         /// <returns>A TestEngineResult.</returns>
         protected override TestEngineResult ExploreTests(TestFilter filter)
         {
@@ -59,7 +57,6 @@ namespace NUnit.Engine.Runners
         /// <summary>
         /// Load a TestPackage for possible execution
         /// </summary>
-        /// <param name="package">The TestPackage to be loaded</param>
         /// <returns>A TestEngineResult.</returns>
         protected override TestEngineResult LoadPackage()
         {
@@ -136,7 +133,10 @@ namespace NUnit.Engine.Runners
         protected override void Dispose(bool disposing)
         {
             if (disposing && _realRunner != null)
+            {
                 _realRunner.Dispose();
+                _realRunner = null;
+            }
         }
 
         #endregion
@@ -153,11 +153,10 @@ namespace NUnit.Engine.Runners
         /// explicit implemenation returns an ITestEngineResult
         /// for consumption by clients.
         /// </summary>
-        /// <param name="package">The TestPackage to be loaded</param>
         /// <returns>An XmlNode representing the loaded assembly.</returns>
         XmlNode ITestRunner.Load()
         {
-            return this.Load().Xml;
+            return Load().Xml;
         }
 
         /// <summary>
@@ -167,7 +166,7 @@ namespace NUnit.Engine.Runners
         /// <exception cref="InvalidOperationException">If no package has been loaded</exception>
         XmlNode ITestRunner.Reload()
         {
-            return this.Reload().Xml;
+            return Reload().Xml;
         }
 
         /// <summary>
@@ -180,13 +179,16 @@ namespace NUnit.Engine.Runners
         /// <returns>An XmlNode giving the result of the test execution</returns>
         XmlNode ITestRunner.Run(ITestEventListener listener, TestFilter filter)
         {
-            return this.Run(listener, filter).Xml;
+            return Run(listener, filter).Xml;
         }
 
         /// <summary>
-        /// 
+        /// Start a run of the tests in the loaded TestPackage. The tests are run
+        /// asynchronously and the listener interface is notified as it progresses.
         /// </summary>
-        /// <param name="filter"></param>
+        /// <param name="listener">The listener that is notified as the run progresses</param>
+        /// <param name="filter">A TestFilter used to select tests</param>
+        /// <returns></returns>
         ITestRun ITestRunner.RunAsync(ITestEventListener listener, TestFilter filter)
         {
             var testRun = new TestRun(this);
@@ -198,7 +200,7 @@ namespace NUnit.Engine.Runners
         /// Explore a loaded TestPackage and return information about
         /// the tests found.
         /// </summary>
-        /// <param name="package">The TestPackage to be explored</param>
+        /// <param name="filter">A TestFilter used to select tests</param>
         /// <returns>An XmlNode representing the tests found.</returns>
         XmlNode ITestRunner.Explore(TestFilter filter)
         {
