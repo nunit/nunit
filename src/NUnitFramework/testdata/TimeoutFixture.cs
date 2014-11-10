@@ -51,6 +51,30 @@ namespace NUnit.TestData
         }
     }
 
+    public class TimeoutFixtureWithTimeoutInSetUp : TimeoutFixture
+    {
+        [SetUp]
+        public bool SetUp()
+        {
+            while (true) { }
+        }
+
+        [Test, Timeout(50)]
+        public void Test1() { }
+    }
+
+    public class TimeoutFixtureWithTimeoutInTearDown : TimeoutFixture
+    {
+        [TearDown]
+        public void TearDown()
+        {
+            while (true) { }
+        }
+
+        [Test, Timeout(50)]
+        public void Test1() { }
+    }
+
     [TestFixture, Timeout(50)]
     public class TimeoutFixtureWithTimeoutOnFixture
     {
