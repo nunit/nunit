@@ -74,5 +74,10 @@ namespace NUnit.Engine
         /// Indicates that the tests should be run in a 32-bit process on a 64-bit system
         /// </summary>
         public const string RunAsX86 = "RunAsX86";
+
+        /// <summary>
+        /// Indicates that test runners should be disposed after the tests are executed
+        /// </summary>
+        public const string DisposeRunners = "DisposeRunners";
     }
 }

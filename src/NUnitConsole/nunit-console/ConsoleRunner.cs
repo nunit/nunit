@@ -235,6 +235,8 @@ namespace NUnit.ConsoleRunner
                 ? new TestPackage(options.InputFiles[0])
                 : new TestPackage(options.InputFiles);
 
+            package.Settings[PackageSettings.DisposeRunners] = true;
+
             if (options.ProcessModel != null)//ProcessModel.Default)
                 package.Settings[PackageSettings.ProcessModel] = options.ProcessModel;
 
