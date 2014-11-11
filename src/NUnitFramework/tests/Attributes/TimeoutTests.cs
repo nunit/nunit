@@ -87,7 +87,7 @@ namespace NUnit.Framework.Attributes
             Assert.That(fixture.TearDownWasRun, "TearDown was not run");
         }
 
-        //[Test]
+        [Test, Ignore("Issue #352 - Test with infinite loop in TearDown cannot be aborted")]
         public void TearDownTimesOutAndNoFurtherTearDownIsRun()
         {
             TimeoutFixture fixture = new TimeoutFixtureWithTimeoutInTearDown();
