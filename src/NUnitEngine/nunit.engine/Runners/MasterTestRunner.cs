@@ -133,10 +133,7 @@ namespace NUnit.Engine.Runners
         protected override void Dispose(bool disposing)
         {
             if (disposing && _realRunner != null)
-            {
                 _realRunner.Dispose();
-                _realRunner = null;
-            }
         }
 
         #endregion
