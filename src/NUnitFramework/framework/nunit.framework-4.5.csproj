@@ -32,6 +32,7 @@
     <DocumentationFile>$(OutputPath)\nunit.framework.xml</DocumentationFile>
     <NoWarn>1699</NoWarn>
     <Prefer32Bit>false</Prefer32Bit>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
