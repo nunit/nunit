@@ -21,12 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Xml;
-using NUnit.Engine.Internal;
-
 namespace NUnit.Engine.Runners
 {
     /// <summary>
@@ -35,14 +29,20 @@ namespace NUnit.Engine.Runners
     /// </summary>
     public class MultipleTestDomainRunner : AggregatingTestRunner
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MultipleTestDomainRunner"/> class.
+        /// </summary>
+        /// <param name="services">The services.</param>
+        /// <param name="package">The package.</param>
         public MultipleTestDomainRunner(ServiceContext services, TestPackage package) : base(services, package) { }
 
         #region AggregatingTestRunner Overrides
 
         protected override ITestEngineRunner CreateRunner(TestPackage package)
         {
-            return new TestDomainRunner(this.Services, package);
+            return new TestDomainRunner(Services, package);
         }
+
         #endregion
     }
 }

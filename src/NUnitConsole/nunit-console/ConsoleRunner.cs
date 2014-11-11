@@ -244,6 +244,9 @@ namespace NUnit.ConsoleRunner
             if (options.Framework != null)
                 package.Settings[PackageSettings.RuntimeFramework] = options.Framework;
 
+            if (options.RunAsX86)
+                package.Settings[PackageSettings.RunAsX86] = true;
+
             if (options.DefaultTimeout >= 0)
                 package.Settings[PackageSettings.DefaultTimeout] = options.DefaultTimeout;
 

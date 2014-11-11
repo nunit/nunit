@@ -23,8 +23,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Xml;
 using NUnit.Engine.Internal;
 
 namespace NUnit.Engine.Runners
@@ -35,7 +33,7 @@ namespace NUnit.Engine.Runners
     /// </summary>
     public abstract class DirectTestRunner : AbstractTestRunner
     {
-        private List<IFrameworkDriver> _drivers = new List<IFrameworkDriver>();
+        private readonly List<IFrameworkDriver> _drivers = new List<IFrameworkDriver>();
 
         public DirectTestRunner(ServiceContext services, TestPackage package) : base(services, package) { }
 
@@ -48,19 +46,21 @@ namespace NUnit.Engine.Runners
         #region AbstractTestRunner Overrides
 
         /// <summary>
-        /// Explore a TestPackage and return information about
-        /// the tests found.
+        /// Explores a previously loaded TestPackage and returns information
+        /// about the tests found.
         /// </summary>
-        /// <param name="package">The TestPackage to be explored</param>
-        /// <returns>A TestEngineResult.</returns>
+        /// <param name="filter">The TestFilter to be used to select tests</param>
+        /// <returns>
+        /// A TestEngineResult.
+        /// </returns>
         protected override TestEngineResult ExploreTests(TestFilter filter)
         {
-            TestEngineResult result = new TestEngineResult();
+            var result = new TestEngineResult();
 
             foreach (IFrameworkDriver driver in _drivers)
                 result.Add(driver.Explore(filter));
 
-            return IsProjectPackage(this.TestPackage)
+            return IsProjectPackage(TestPackage)
                 ? result.MakePackageResult(TestPackage.Name, TestPackage.FullName)
                 : result;
         }
@@ -68,11 +68,10 @@ namespace NUnit.Engine.Runners
         /// <summary>
         /// Load a TestPackage for exploration or execution
         /// </summary>
-        /// <param name="package">The TestPackage to be loaded</param>
         /// <returns>A TestEngineResult.</returns>
         protected override TestEngineResult LoadPackage()
         {
-            TestEngineResult result = new TestEngineResult();
+            var result = new TestEngineResult();
 
             foreach (string testFile in TestPackage.TestFiles)
             {
@@ -102,23 +101,23 @@ namespace NUnit.Engine.Runners
             return count;
         }
 
+
         /// <summary>
-        /// Run the tests in a loaded TestPackage
+        /// Run the tests in the loaded TestPackage.
         /// </summary>
+        /// <param name="listener">An ITestEventHandler to receive events</param>
         /// <param name="filter">A TestFilter used to select tests</param>
         /// <returns>
-        /// A TestEngineResult giving the result of the test execution. The 
-        /// top-level node of the result is &lt;direct-runner&gt; and wraps
-        /// all the &lt;test-assembly&gt; elements returned by the drivers.
+        /// A TestEngineResult giving the result of the test execution
         /// </returns>
         protected override TestEngineResult RunTests(ITestEventListener listener, TestFilter filter)
         {
-            TestEngineResult result = new TestEngineResult();
+            var result = new TestEngineResult();
 
             foreach (IFrameworkDriver driver in _drivers)
                 result.Add(driver.Run(listener, filter));
 
-            return IsProjectPackage(this.TestPackage)
+            return IsProjectPackage(TestPackage)
                 ? result.MakePackageResult(TestPackage.Name, TestPackage.FullName)
                 : result;
         }
