@@ -29,6 +29,7 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>$(OutputPath)\nunitlite.xml</DocumentationFile>
     <Prefer32Bit>false</Prefer32Bit>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
