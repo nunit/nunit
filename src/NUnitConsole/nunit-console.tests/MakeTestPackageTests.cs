@@ -65,6 +65,15 @@ namespace NUnit.ConsoleRunner.Tests
             Assert.AreEqual(50, package.Settings["DefaultTimeout"]);
         }
 
+        [Test]
+        public void WhenX86IsSpecified_PackageIncludesIt()
+        {
+            var options = new ConsoleOptions("test.dll", "--x86");
+            var package = ConsoleRunner.MakeTestPackage(options);
+
+            Assert.IsTrue(package.GetSetting("RunAsX86", false));
+        }
+
         [TestCase("Separate")]
         [TestCase("separate")]
         public void WhenProcessModelIsSpecified_PackageIncludesIt(string optionValue)

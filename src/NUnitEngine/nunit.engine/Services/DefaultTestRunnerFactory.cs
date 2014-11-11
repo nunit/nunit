@@ -45,39 +45,40 @@ namespace NUnit.Engine.Services
         public override ITestEngineRunner MakeTestRunner(TestPackage package)
         {
             ProcessModel processModel = GetTargetProcessModel(package);
+            package.Settings.Remove(RunnerSettings.ProcessModel);
 
             switch (processModel)
             {
-                case ProcessModel.Multiple:
-                    package.Settings.Remove("ProcessModel");
-                    return new MultipleTestProcessRunner(this.ServiceContext, package);
-                case ProcessModel.Separate:
-                    package.Settings.Remove("ProcessModel");
-                    return new ProcessRunner(this.ServiceContext, package);
                 default:
+                case ProcessModel.Default:
+                    if (package.TestFiles.Length > 1)
+                        return new MultipleTestProcessRunner(this.ServiceContext, package);
+                    else
+                        return new ProcessRunner(this.ServiceContext, package);
+
+                case ProcessModel.Multiple:
+                    return new MultipleTestProcessRunner(this.ServiceContext, package);
+
+                case ProcessModel.Separate:
+                    return new ProcessRunner(this.ServiceContext, package);
+
+                case ProcessModel.Single:
                     return base.MakeTestRunner(package);
             }
         }
 
+        // TODO: Review this method once we have a gui - not used by console runner
         public override bool CanReuse(ITestEngineRunner runner, TestPackage package)
         {
-            RuntimeFramework currentFramework = RuntimeFramework.CurrentFramework;
-            RuntimeFramework targetFramework = ServiceContext.RuntimeFrameworkSelector.SelectRuntimeFramework(package);
-
-            ProcessModel processModel = (ProcessModel)System.Enum.Parse(
-                typeof(ProcessModel),
-                package.GetSetting(RunnerSettings.ProcessModel, "Default"));
-            if (processModel == ProcessModel.Default)
-                if (!currentFramework.Supports(targetFramework))
-                    processModel = ProcessModel.Separate;
+            ProcessModel processModel = GetTargetProcessModel(package);
 
             switch (processModel)
             {
+                case ProcessModel.Default:
                 case ProcessModel.Multiple:
                     return runner is MultipleTestProcessRunner;
                 case ProcessModel.Separate:
-                    ProcessRunner processRunner = runner as ProcessRunner;
-                    return processRunner != null && processRunner.RuntimeFramework == targetFramework;
+                    return runner is ProcessRunner;
                 default:
                     return base.CanReuse(runner, package);
             }
@@ -85,18 +86,9 @@ namespace NUnit.Engine.Services
 
         private ProcessModel GetTargetProcessModel(TestPackage package)
         {
-            RuntimeFramework currentFramework = RuntimeFramework.CurrentFramework;
-            RuntimeFramework targetFramework = ServiceContext.RuntimeFrameworkSelector.SelectRuntimeFramework(package);
-
-            ProcessModel processModel = (ProcessModel)System.Enum.Parse(
+            return (ProcessModel)System.Enum.Parse(
                 typeof(ProcessModel),
                 package.GetSetting(RunnerSettings.ProcessModel, "Default"));
-
-            if (processModel == ProcessModel.Default)
-                if (!currentFramework.Supports(targetFramework))
-                    processModel = ProcessModel.Separate;
-
-            return processModel;
         }
     }
 }

@@ -133,9 +133,9 @@ namespace NUnit.Engine.Services
             return GetNUnitBinDirectory(version) != null;
         }
 
-        public ITestAgent GetAgent(RuntimeFramework framework, int waitTime, bool enableDebug, string agentArgs, bool requires32Bit)
+        public ITestAgent GetAgent(RuntimeFramework framework, int waitTime, bool enableDebug, string agentArgs, bool useX86Agent)
         {
-            log.Info("Getting agent for use under {0}", framework);
+            log.Info("Getting {0} agent for use under {1}", useX86Agent ? "x86" : "standard", framework);
  
             if (!framework.IsAvailable)
                 throw new ArgumentException(
@@ -146,7 +146,7 @@ namespace NUnit.Engine.Services
             //AgentRecord r = FindAvailableRemoteAgent(type);
             //if ( r == null )
             //    r = CreateRemoteAgent(type, framework, waitTime);
-            return CreateRemoteAgent(framework, waitTime, enableDebug, agentArgs, requires32Bit);
+            return CreateRemoteAgent(framework, waitTime, enableDebug, agentArgs, useX86Agent);
         }
 
         public void ReleaseAgent( ITestAgent agent )
@@ -174,9 +174,9 @@ namespace NUnit.Engine.Services
         #endregion
 
         #region Helper Methods
-        private Guid LaunchAgentProcess(RuntimeFramework targetRuntime, bool enableDebug, string agentArgs, bool requires32Bit)
+        private Guid LaunchAgentProcess(RuntimeFramework targetRuntime, bool enableDebug, string agentArgs, bool useX86Agent)
         {
-            string agentExePath = GetTestAgentExePath(targetRuntime.ClrVersion, requires32Bit);
+            string agentExePath = GetTestAgentExePath(targetRuntime.ClrVersion, useX86Agent);
 
             if (agentExePath == null)
                 throw new ArgumentException(
@@ -244,9 +244,9 @@ namespace NUnit.Engine.Services
         //    return null;
         //}
 
-        private ITestAgent CreateRemoteAgent(RuntimeFramework framework, int waitTime, bool enableDebug, string agentArgs, bool requires32Bit)
+        private ITestAgent CreateRemoteAgent(RuntimeFramework framework, int waitTime, bool enableDebug, string agentArgs, bool useX86Agent)
         {
-            Guid agentId = LaunchAgentProcess(framework, enableDebug, agentArgs, requires32Bit);
+            Guid agentId = LaunchAgentProcess(framework, enableDebug, agentArgs, useX86Agent);
 
             log.Debug( "Waiting for agent {0} to register", agentId.ToString("B") );
 

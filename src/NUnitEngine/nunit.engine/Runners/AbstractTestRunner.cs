@@ -145,6 +145,12 @@ namespace NUnit.Engine.Runners
         /// <param name="force">If true, cancel any ongoing test threads, otherwise wait for them to complete.</param>
         public abstract void StopRun(bool force);
 
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+                Unload();
+        }
+
         #endregion
 
         #region ITestEngineRunner Members
@@ -238,9 +244,10 @@ namespace NUnit.Engine.Runners
 
         #region IDisposable Members
 
-        public virtual void Dispose()
+        public void Dispose()
         {
-            this.Unload();
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         #endregion

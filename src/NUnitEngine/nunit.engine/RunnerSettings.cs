@@ -69,5 +69,10 @@ namespace NUnit.Engine
         /// Indicates the desired runtime to use for the tests.
         /// </summary>
         public const string RuntimeFramework = "RuntimeFramework";
+
+        /// <summary>
+        /// Indicates that the tests should be run in a 32-bit process on a 64-bit system
+        /// </summary>
+        public const string RunAsX86 = "RunAsX86";
     }
 }
