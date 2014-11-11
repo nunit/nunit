@@ -63,12 +63,14 @@ namespace NUnit.Engine.Services
             if (targetVersion == RuntimeFramework.DefaultVersion)
             {
                 if (ServiceContext.UserSettings.GetSetting("Options.TestLoader.RuntimeSelectionEnabled", true))
+                {
                     foreach (string assembly in package.TestFiles)
                     {
                         // If the file is not an assembly or doesn't exist, then it can't
                         // contribute any information to the decision, so we skip it.
                         if (PathUtils.IsAssemblyFileType(assembly) && File.Exists(assembly))
-                            using (AssemblyReader reader = new AssemblyReader(assembly))
+                        {
+                            using (var reader = new AssemblyReader(assembly))
                             {
                                 if (!reader.IsValidPeFile)
                                     log.Debug("{0} is not a valid PE file", assembly);
@@ -76,11 +78,18 @@ namespace NUnit.Engine.Services
                                     log.Debug("{0} is not a managed assembly", assembly);
                                 else
                                 {
+                                    if (reader.ShouldRun32Bit)
+                                    {
+                                        package.Settings[RunnerSettings.RunAsX86] = true;
+                                        log.Debug("Assembly {0} will be run x86", assembly);
+                                    }
+
                                     var imageRuntimeVersion = reader.ImageRuntimeVersion;
                                     if (imageRuntimeVersion != null)
                                     {
-                                        Version v = new Version(imageRuntimeVersion.Substring(1));
+                                        var v = new Version(imageRuntimeVersion.Substring(1));
                                         log.Debug("Assembly {0} uses version {1}", assembly, v);
+
                                         // TODO: We are doing two jobs here: (1) getting the
                                         // target version and (2) applying a policy that says
                                         // we run under the highest version of all assemblies.
@@ -89,7 +98,9 @@ namespace NUnit.Engine.Services
                                     }
                                 }
                             }
+                        }
                     }
+                }
                 else
                     targetVersion = RuntimeFramework.CurrentFramework.ClrVersion;
 

@@ -72,19 +72,6 @@ namespace NUnit.Engine.Runners
                 : Services.RuntimeFrameworkSelector.SelectRuntimeFramework(TestPackage);
 
             bool useX86Agent = TestPackage.GetSetting(RunnerSettings.RunAsX86, false);
-
-            foreach (var file in TestPackage.TestFiles)
-            {
-                if (useX86Agent)
-                    break;
-
-                using (var reader = new AssemblyReader(file))
-                {
-                    if (reader.ShouldRun32Bit)
-                        useX86Agent = true;
-                }
-            }
-
             bool enableDebug = TestPackage.GetSetting("AgentDebug", false);
             bool verbose = TestPackage.GetSetting("Verbose", false);
             string agentArgs = string.Empty;
