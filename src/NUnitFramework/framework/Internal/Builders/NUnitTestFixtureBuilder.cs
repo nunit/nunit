@@ -104,7 +104,6 @@ namespace NUnit.Framework.Internal.Builders
             {
                 arguments = attr.Arguments;
 
-#if !NETCF
                 if (type.ContainsGenericParameters)
                 {
                     Type[] typeArgs = attr.TypeArgs;
@@ -135,7 +134,6 @@ namespace NUnit.Framework.Internal.Builders
                         type = TypeHelper.MakeGenericType(type, typeArgs);
                     }
                 }
-#endif
             }
 
             this.fixture = new TestFixture(type);
@@ -170,6 +168,14 @@ namespace NUnit.Framework.Internal.Builders
         /// <param name="fixtureType"></param>
         private void AddTestCases(Type fixtureType)
         {
+            // TODO: Check this logic added from Neil's build.
+            if (fixtureType.ContainsGenericParameters)
+            {
+                fixture.RunState = RunState.NotRunnable;
+                fixture.Properties.Set(PropertyNames.SkipReason, NO_TYPE_ARGS_MSG);
+                return;
+            }
+
             IList methods = fixtureType.GetMethods(
                 BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
 

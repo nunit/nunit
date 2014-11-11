@@ -250,6 +250,13 @@ namespace NUnit.Framework
 
             try
             {
+#if NETCF
+                var tmethod = method.MakeGenericMethodEx(Arguments);
+                if (tmethod == null)
+                    throw new NotSupportedException("Cannot determine generic types from probing");
+                method = tmethod;
+#endif
+
                 ParameterInfo[] parameters = method.GetParameters();
                 int argsNeeded = parameters.Length;
                 int argsProvided = Arguments.Length;

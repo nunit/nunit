@@ -47,23 +47,16 @@ namespace NUnit.Framework.Internal.Builders
         {
             if (type.IsAbstract && !type.IsSealed)
                 return false;
-#if NETCF
-            // No generic fixtures under CF
-            if (type.IsGenericTypeDefinition)
-                return false;
-#endif
 
             if (type.IsDefined(typeof(IFixtureBuilder), true))
                 return true;
 
-#if !NETCF
             // Generics must have an attribute in order to provide
             // them with arguments to determine the specific type.
             // TODO: What about automatic fixtures? Should there
             // be some kind of error shown?
             if (type.IsGenericTypeDefinition)
                 return false;
-#endif
 
             return Reflect.HasMethodWithAttribute(type, typeof(IImplyFixture));
         }

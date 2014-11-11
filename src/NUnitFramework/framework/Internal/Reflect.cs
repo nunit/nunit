@@ -43,7 +43,7 @@ namespace NUnit.Framework.Internal
     /// NUnit core to inspect assemblies that reference an older
     /// version of the NUnit framework.
     /// </summary>
-    public class Reflect
+    public static class Reflect
     {
         private static readonly BindingFlags AllMembers = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static;
 
@@ -63,6 +63,20 @@ namespace NUnit.Framework.Internal
         public static MethodInfo[] GetMethodsWithAttribute(Type fixtureType, Type attributeType, bool inherit)
         {
             List<MethodInfo> list = new List<MethodInfo>();
+
+#if NETCF
+            if (fixtureType.IsGenericTypeDefinition)
+            {
+                var genArgs = fixtureType.GetGenericArguments();
+                Type[] args = new Type[genArgs.Length];
+                for (int ix = 0; ix < genArgs.Length; ++ix)
+                {
+                    args[ix] = typeof(object);
+                }
+
+                fixtureType = fixtureType.MakeGenericType(args);
+            }
+#endif
 
             var flags = AllMembers | (inherit ? BindingFlags.FlattenHierarchy : BindingFlags.DeclaredOnly);
             foreach (MethodInfo method in fixtureType.GetMethods(flags))
@@ -101,6 +115,11 @@ namespace NUnit.Framework.Internal
         /// <returns>True if found, otherwise false</returns>
         public static bool HasMethodWithAttribute(Type fixtureType, Type attributeType)
         {
+#if NETCF
+            if (fixtureType.ContainsGenericParameters)
+                return false;
+#endif
+
             foreach (MethodInfo method in fixtureType.GetMethods(AllMembers | BindingFlags.FlattenHierarchy))
             {
                 if (method.IsDefined(attributeType, false))
@@ -208,12 +227,6 @@ namespace NUnit.Framework.Internal
 
             return null;
         }
-
-        #endregion
-
-        #region Private Constructor for static-only class
-
-        private Reflect() { }
 
         #endregion
     }

@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NETCF // Currently won't work because the methods are generic
 using System;
 using System.Threading;
 using NUnit.Framework.Internal;
@@ -62,4 +61,3 @@ namespace NUnit.Framework.Attributes
         }
     }
 }
-#endif
