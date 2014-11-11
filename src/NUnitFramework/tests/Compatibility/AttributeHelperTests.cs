@@ -135,7 +135,7 @@ namespace NUnit.Framework.Tests.Compatibility
             public int MyProperty { get; set; }
 
             [Datapoint]
-            public int field;
+            public int field = 1;
         }
 
         class B : A

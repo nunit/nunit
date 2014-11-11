@@ -42,21 +42,21 @@ namespace NUnit.Framework.Api
         private ITestAssemblyBuilder _builder;
         private ManualResetEvent _runComplete = new ManualResetEvent(false);
 
-#if !SILVERLIGHT && !NETCF
-        // Saved Console.Out and Error
-        protected TextWriter _savedOut;
-        protected TextWriter _savedErr;
+#if !SILVERLIGHT && !NETCF && !PORTABLE
+        // Saved Console.Out and Console.Error
+        private TextWriter _savedOut;
+        private TextWriter _savedErr;
 #endif
 
 #if PARALLEL
         // Event Pump
-        protected EventPump _pump;
+        private EventPump _pump;
 #endif
 
         #region Constructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AbstractTestAssemblyRunner"/> class.
+        /// Initializes a new instance of the <see cref="NUnitTestAssemblyRunner"/> class.
         /// </summary>
         /// <param name="builder">The builder.</param>
         public NUnitTestAssemblyRunner(ITestAssemblyBuilder builder)
@@ -78,7 +78,7 @@ namespace NUnit.Framework.Api
         /// </summary>
         public ITestResult Result
         {
-            get { return TopLevelWorkItem == null ? null : TopLevelWorkItem.Result;  }
+            get { return TopLevelWorkItem == null ? null : TopLevelWorkItem.Result; }
         }
 
         /// <summary>
@@ -86,7 +86,7 @@ namespace NUnit.Framework.Api
         /// </summary>
         public bool IsTestLoaded
         {
-            get { return LoadedTest != null;  }
+            get { return LoadedTest != null; }
         }
 
         /// <summary>
@@ -114,7 +114,7 @@ namespace NUnit.Framework.Api
         /// The top level WorkItem created for the assembly as a whole
         /// </summary>
         private WorkItem TopLevelWorkItem { get; set; }
-        
+
         /// <summary>
         /// The TestExecutionContext for the top level WorkItem
         /// </summary>
@@ -330,7 +330,7 @@ namespace NUnit.Framework.Api
         {
             if (!test.IsSuite)
                 return 1;
-            
+
             int count = 0;
             foreach (ITest child in test.Tests)
                 if (filter.Pass(child))

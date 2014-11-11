@@ -32,6 +32,9 @@ namespace NUnit.Framework.Internal
 namespace NUnit.Common
 #endif
 {
+    /// <summary>
+    /// Provides internal logging to the NUnit framework
+    /// </summary>
     public class Logger : ILogger
     {
         private readonly static string TIME_FMT = "HH:mm:ss.fff";

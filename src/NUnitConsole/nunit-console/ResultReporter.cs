@@ -32,11 +32,6 @@ namespace NUnit.ConsoleRunner
 
     public class ResultReporter
     {
-        /// <summary>
-        /// Error message for when child tests have errors
-        /// </summary>
-        private static readonly string CHILD_ERRORS_MESSAGE = "One or more child tests had errors";
-
         XmlNode result;
         string testRunResult;
         ConsoleOptions options;

@@ -30,6 +30,9 @@ namespace NUnit.Framework.Internal.Execution
     using Commands;
     using Interfaces;
 
+    /// <summary>
+    /// A utility class to create TestCommands
+    /// </summary>
     public static class CommandBuilder
     {
         /// <summary>
@@ -104,6 +107,13 @@ namespace NUnit.Framework.Internal.Execution
             return command;
         }
 
+        /// <summary>
+        /// Builds the set up tear down list.
+        /// </summary>
+        /// <param name="fixtureType">Type of the fixture.</param>
+        /// <param name="setUpType">Type of the set up.</param>
+        /// <param name="tearDownType">Type of the tear down.</param>
+        /// <returns>A list of SetUpTearDownItems</returns>
         public static List<SetUpTearDownItem> BuildSetUpTearDownList(Type fixtureType, Type setUpType, Type tearDownType)
         {
             var setUpMethods = Reflect.GetMethodsWithAttribute(fixtureType, setUpType, true);
