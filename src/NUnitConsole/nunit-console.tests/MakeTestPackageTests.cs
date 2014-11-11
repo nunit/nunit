@@ -77,7 +77,7 @@ namespace NUnit.ConsoleRunner.Tests
         [Test]
         public void WhenDisposeIsSpecified_PackageIncludesIt()
         {
-            var options = new ConsoleOptions("test.dll", "--dispose");
+            var options = new ConsoleOptions("test.dll", "--dispose-runners");
             var package = ConsoleRunner.MakeTestPackage(options);
 
             Assert.IsTrue(package.GetSetting("DisposeRunners", false));

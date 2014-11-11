@@ -86,7 +86,7 @@ namespace NUnit.ConsoleRunner.Options
             this.Add("x86", "Run tests in an x86 process on 64 bit systems",
                 v => RunAsX86 = v != null);
 
-            this.Add("dispose", "Dispose each test runner after it has finished running its tests.",
+            this.Add("dispose-runners", "Dispose each test runner after it has finished running its tests.",
                 v => DisposeRunners = v != null);
 
             this.Add("timeout=", "Set timeout for each test case in {MILLISECONDS}.",
