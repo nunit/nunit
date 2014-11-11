@@ -74,6 +74,15 @@ namespace NUnit.ConsoleRunner.Tests
             Assert.IsTrue(package.GetSetting("RunAsX86", false));
         }
 
+        [Test]
+        public void WhenDisposeIsSpecified_PackageIncludesIt()
+        {
+            var options = new ConsoleOptions("test.dll", "--dispose");
+            var package = ConsoleRunner.MakeTestPackage(options);
+
+            Assert.IsTrue(package.GetSetting("DisposeRunners", false));
+        }
+
         [TestCase("Separate")]
         [TestCase("separate")]
         public void WhenProcessModelIsSpecified_PackageIncludesIt(string optionValue)
