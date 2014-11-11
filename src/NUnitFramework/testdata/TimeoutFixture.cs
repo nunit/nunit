@@ -54,7 +54,7 @@ namespace NUnit.TestData
     public class TimeoutFixtureWithTimeoutInSetUp : TimeoutFixture
     {
         [SetUp]
-        public bool SetUp()
+        public bool SetUp2()
         {
             while (true) { }
         }
@@ -66,7 +66,7 @@ namespace NUnit.TestData
     public class TimeoutFixtureWithTimeoutInTearDown : TimeoutFixture
     {
         [TearDown]
-        public void TearDown()
+        public void TearDown2()
         {
             while (true) { }
         }
