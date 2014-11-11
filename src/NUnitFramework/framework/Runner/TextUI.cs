@@ -55,10 +55,15 @@ namespace NUnitLite.Runner
     {
         #region TextUI Return Codes
 
+        /// <summary>OK</summary>
         public static readonly int OK = 0;
+        /// <summary>Invalid Arguments</summary>
         public static readonly int INVALID_ARG = -1;
+        /// <summary>File not found</summary>
         public static readonly int FILE_NOT_FOUND = -2;
+        /// <summary>Test fixture not found</summary>
         public static readonly int FIXTURE_NOT_FOUND = -3;
+        /// <summary>Unexpected error occurred</summary>
         public static readonly int UNEXPECTED_ERROR = -100;
 
         #endregion

@@ -43,20 +43,21 @@ namespace NUnit.Framework.Api
         private ManualResetEvent _runComplete = new ManualResetEvent(false);
 
 #if !SILVERLIGHT && !NETCF
-        // Saved Console.Out and Error
-        protected TextWriter _savedOut;
-        protected TextWriter _savedErr;
+        /// <summary>Saved Console.Out</summary>
+        protected TextWriter savedOut;
+        /// <summary>Saved Console.Error</summary>
+        protected TextWriter savedErr;
 #endif
 
 #if PARALLEL
-        // Event Pump
-        protected EventPump _pump;
+        /// <summary>Event Pump</summary>
+        protected EventPump pump;
 #endif
 
         #region Constructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AbstractTestAssemblyRunner"/> class.
+        /// Initializes a new instance of the <see cref="NUnitTestAssemblyRunner"/> class.
         /// </summary>
         /// <param name="builder">The builder.</param>
         public NUnitTestAssemblyRunner(ITestAssemblyBuilder builder)
@@ -226,8 +227,8 @@ namespace NUnit.Framework.Api
         {
 #if !SILVERLIGHT && !NETCF && !PORTABLE
             // Save Console.Out and Error for later restoration
-            _savedOut = Console.Out;
-            _savedErr = Console.Error;
+            savedOut = Console.Out;
+            savedErr = Console.Error;
 
             Console.SetOut(new TextCapture(Console.Out));
             Console.SetError(new TextCapture(Console.Error));
@@ -237,8 +238,8 @@ namespace NUnit.Framework.Api
             QueuingEventListener queue = new QueuingEventListener();
             Context.Listener = queue;
 
-            _pump = new EventPump(listener, queue.Events);
-            _pump.Start();
+            pump = new EventPump(listener, queue.Events);
+            pump.Start();
 #else
             Context.Dispatcher = new SimpleWorkItemDispatcher();
 #endif
@@ -315,12 +316,12 @@ namespace NUnit.Framework.Api
         private void OnRunCompleted(object sender, EventArgs e)
         {
 #if PARALLEL
-            _pump.Dispose();
+            pump.Dispose();
 #endif
 
 #if !SILVERLIGHT && !NETCF && !PORTABLE
-            Console.SetOut(_savedOut);
-            Console.SetError(_savedErr);
+            Console.SetOut(savedOut);
+            Console.SetError(savedErr);
 #endif
 
             _runComplete.Set();

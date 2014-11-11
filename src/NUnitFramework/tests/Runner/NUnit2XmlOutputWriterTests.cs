@@ -41,7 +41,7 @@ namespace NUnitLite.Runner.Tests
         private XmlNode cultureNode;
         private XmlNode suiteNode;
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void RunMockAssemblyTests()
         {
             ITestResult result = NUnit.TestUtilities.TestBuilder.RunTestFixture(typeof(MockTestFixture));

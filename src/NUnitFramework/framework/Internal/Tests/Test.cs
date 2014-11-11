@@ -233,6 +233,7 @@ namespace NUnit.Framework.Internal
         /// <returns>A TestResult suitable for this type of test.</returns>
         public abstract TestResult MakeTestResult();
 
+#if PORTABLE
         /// <summary>
         /// Modify a newly constructed test by applying any of NUnit's common
         /// attributes, based on a supplied ICustomAttributeProvider, which is
@@ -240,10 +241,16 @@ namespace NUnit.Framework.Internal
         /// but may not be in some instances. The attributes retrieved are 
         /// saved for use in subsequent operations.
         /// </summary>
-#if PORTABLE
         /// <param name="provider">An object deriving from MemberInfo</param>
         public void ApplyAttributesToTest(MemberInfo provider)
 #else
+        /// <summary>
+        /// Modify a newly constructed test by applying any of NUnit's common
+        /// attributes, based on a supplied ICustomAttributeProvider, which is
+        /// usually the reflection element from which the test was constructed,
+        /// but may not be in some instances. The attributes retrieved are 
+        /// saved for use in subsequent operations.
+        /// </summary>
         /// <param name="provider">An object implementing ICustomAttributeProvider</param>
         public void ApplyAttributesToTest(ICustomAttributeProvider provider)
 #endif

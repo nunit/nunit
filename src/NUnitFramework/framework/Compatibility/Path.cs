@@ -46,7 +46,7 @@ namespace NUnit.Framework.Compatibility
         /// <summary>
         /// Get the file name and extension of the specified path string.
         /// </summary>
-        /// <param name="path">The path string from which to obtain the file name and extension. </param><exception cref="T:System.ArgumentException"> 
+        /// <param name="path">The path string from which to obtain the file name and extension.</param>
         /// <returns>The filename as a <see cref="T:System.String"/>. If the last character of <paramref name="path"/> is a directory or volume separator character, this method returns <see cref="F:System.String.Empty"/>. If <paramref name="path"/> is null, this method returns null.</returns>
         public static string GetFileName(string path)
         {

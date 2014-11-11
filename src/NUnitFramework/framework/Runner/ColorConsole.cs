@@ -37,6 +37,10 @@ namespace NUnitLite.Runner
         /// </summary>
         public static bool Enabled { get; set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ColorConsole"/> class.
+        /// </summary>
+        /// <param name="style">The color style to use.</param>
         public ColorConsole(ColorStyle style)
         {
 #if !SILVERLIGHT && !NETCF
