@@ -42,16 +42,15 @@ namespace NUnit.Framework.Api
         private ITestAssemblyBuilder _builder;
         private ManualResetEvent _runComplete = new ManualResetEvent(false);
 
-#if !SILVERLIGHT && !NETCF
-        /// <summary>Saved Console.Out</summary>
-        protected TextWriter savedOut;
-        /// <summary>Saved Console.Error</summary>
-        protected TextWriter savedErr;
+#if !SILVERLIGHT && !NETCF && !PORTABLE
+        // Saved Console.Out and Console.Error
+        private TextWriter _savedOut;
+        private TextWriter _savedErr;
 #endif
 
 #if PARALLEL
-        /// <summary>Event Pump</summary>
-        protected EventPump pump;
+        // Event Pump
+        private EventPump _pump;
 #endif
 
         #region Constructors
@@ -79,7 +78,7 @@ namespace NUnit.Framework.Api
         /// </summary>
         public ITestResult Result
         {
-            get { return TopLevelWorkItem == null ? null : TopLevelWorkItem.Result;  }
+            get { return TopLevelWorkItem == null ? null : TopLevelWorkItem.Result; }
         }
 
         /// <summary>
@@ -87,7 +86,7 @@ namespace NUnit.Framework.Api
         /// </summary>
         public bool IsTestLoaded
         {
-            get { return LoadedTest != null;  }
+            get { return LoadedTest != null; }
         }
 
         /// <summary>
@@ -115,7 +114,7 @@ namespace NUnit.Framework.Api
         /// The top level WorkItem created for the assembly as a whole
         /// </summary>
         private WorkItem TopLevelWorkItem { get; set; }
-        
+
         /// <summary>
         /// The TestExecutionContext for the top level WorkItem
         /// </summary>
@@ -227,8 +226,8 @@ namespace NUnit.Framework.Api
         {
 #if !SILVERLIGHT && !NETCF && !PORTABLE
             // Save Console.Out and Error for later restoration
-            savedOut = Console.Out;
-            savedErr = Console.Error;
+            _savedOut = Console.Out;
+            _savedErr = Console.Error;
 
             Console.SetOut(new TextCapture(Console.Out));
             Console.SetError(new TextCapture(Console.Error));
@@ -238,8 +237,8 @@ namespace NUnit.Framework.Api
             QueuingEventListener queue = new QueuingEventListener();
             Context.Listener = queue;
 
-            pump = new EventPump(listener, queue.Events);
-            pump.Start();
+            _pump = new EventPump(listener, queue.Events);
+            _pump.Start();
 #else
             Context.Dispatcher = new SimpleWorkItemDispatcher();
 #endif
@@ -316,12 +315,12 @@ namespace NUnit.Framework.Api
         private void OnRunCompleted(object sender, EventArgs e)
         {
 #if PARALLEL
-            pump.Dispose();
+            _pump.Dispose();
 #endif
 
 #if !SILVERLIGHT && !NETCF && !PORTABLE
-            Console.SetOut(savedOut);
-            Console.SetError(savedErr);
+            Console.SetOut(_savedOut);
+            Console.SetError(_savedErr);
 #endif
 
             _runComplete.Set();
@@ -331,7 +330,7 @@ namespace NUnit.Framework.Api
         {
             if (!test.IsSuite)
                 return 1;
-            
+
             int count = 0;
             foreach (ITest child in test.Tests)
                 if (filter.Pass(child))
