@@ -34,7 +34,7 @@ namespace NUnit.Framework.Api
 {
     /// <summary>
     /// Implementation of ITestAssemblyRunner
-    /// /// </summary>
+    /// </summary>
     public class NUnitTestAssemblyRunner : ITestAssemblyRunner
     {
         private static Logger log = InternalTrace.GetLogger("DefaultTestAssemblyRunner");
@@ -212,7 +212,7 @@ namespace NUnit.Framework.Api
         /// <returns>True if the run completed, otherwise false</returns>
         public bool WaitForCompletion(int timeout)
         {
-#if NETCF // NETCF: Try to unify.
+#if !SILVERLIGHT && !PORTABLE
             return _runComplete.WaitOne(timeout, false);
 #else
             return _runComplete.WaitOne(timeout);
@@ -258,10 +258,8 @@ namespace NUnit.Framework.Api
                     ? TestExecutionStatus.AbortRequested
                     : TestExecutionStatus.StopRequested;
 
-#if !NETCF
                 if (force)
                     Context.Dispatcher.CancelRun();
-#endif
             }
         }
 

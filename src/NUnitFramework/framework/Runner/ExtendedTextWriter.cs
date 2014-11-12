@@ -92,6 +92,14 @@ namespace NUnitLite.Runner
             _writer.Close();
         }
 
+        /// <summary>
+        /// Dispose the Extended TextWriter
+        /// </summary>
+        protected override void Dispose(bool disposing)
+        {
+            _writer.Dispose();
+        }
+
         #endregion
 
         #region Extended Methods

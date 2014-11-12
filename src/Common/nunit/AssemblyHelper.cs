@@ -40,7 +40,7 @@ namespace NUnit.Common
     {
         #region GetAssemblyPath
 
-#if !NETCF && !SILVERLIGHT && !PORTABLE
+#if !SILVERLIGHT && !PORTABLE
         /// <summary>
         /// Gets the path from which the assembly defining a type was loaded.
         /// </summary>
@@ -58,12 +58,16 @@ namespace NUnit.Common
         /// <returns>The path.</returns>
         public static string GetAssemblyPath(Assembly assembly)
         {
+#if NETCF
+            return assembly.ManifestModule.FullyQualifiedName;
+#else
             string codeBase = assembly.CodeBase;
 
             if (IsFileUri(codeBase))
                 return GetAssemblyPathFromCodeBase(codeBase);
 
             return assembly.Location;
+#endif
         }
 #endif
 
@@ -71,7 +75,7 @@ namespace NUnit.Common
 
         #region GetDirectoryName
 
-#if !NETCF && !SILVERLIGHT && !PORTABLE
+#if !SILVERLIGHT && !PORTABLE
         /// <summary>
         /// Gets the path to the directory from which an assembly was loaded.
         /// </summary>

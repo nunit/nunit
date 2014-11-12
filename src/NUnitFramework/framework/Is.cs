@@ -450,7 +450,6 @@ namespace NUnit.Framework
 
         #region StringMatching
 
-#if !NETCF
         /// <summary>
         /// Returns a constraint that succeeds if the actual
         /// value matches the regular expression supplied as an argument.
@@ -460,7 +459,6 @@ namespace NUnit.Framework
         {
             return new RegexConstraint(pattern);
         }
-#endif
 
         #endregion
         

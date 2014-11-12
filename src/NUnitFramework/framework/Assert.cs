@@ -54,7 +54,6 @@ namespace NUnit.Framework
 
         #region Equals and ReferenceEquals
 
-#if !NETCF
         /// <summary>
         /// The Equals method throws an AssertionException. This is done 
         /// to make sure there is no mistake by calling this function.
@@ -78,7 +77,6 @@ namespace NUnit.Framework
         {
             throw new InvalidOperationException("Assert.ReferenceEquals should not be used for Assertions");
         }
-#endif
 
         #endregion
 

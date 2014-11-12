@@ -146,6 +146,20 @@ namespace NUnit.Framework.Internal
                             ? new Version(4, 0, 60310)
                             : new Version(2, 0, 50727);
                         break;
+
+                    case RuntimeType.NetCF:
+                        switch (version.Major)
+                        {
+                            case 3:
+                                switch (version.Minor)
+                                {
+                                    case 5:
+                                        this.ClrVersion = new Version(3, 5, 7283);
+                                        break;
+                                }
+                                break;
+                        }
+                        break;
                 }
         }
 

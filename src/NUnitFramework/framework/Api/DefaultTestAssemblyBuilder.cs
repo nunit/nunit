@@ -82,7 +82,7 @@ namespace NUnit.Framework.Api
             log.Debug("Loading {0} in AppDomain {1}", assembly.FullName, AppDomain.CurrentDomain.FriendlyName);
 #endif
 
-#if NETCF || SILVERLIGHT || PORTABLE
+#if SILVERLIGHT || PORTABLE
             string assemblyPath = AssemblyHelper.GetAssemblyName(assembly).Name;
 #else
             string assemblyPath = AssemblyHelper.GetAssemblyPath(assembly);
