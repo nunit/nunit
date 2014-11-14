@@ -118,15 +118,24 @@ namespace NUnit.Framework.Internal.Builders
                 return MarkAsNotRunnable(testMethod, "Method is not public");
             }
 
+            ParameterInfo[] parameters;
 #if NETCF
-    // TODO: Get this to work
             if (testMethod.Method.IsGenericMethodDefinition)
             {
-                return MarkAsNotRunnable(testMethod, "Generic test methods are not yet supported under .NET CF");
+                if (parms != null && parms.Arguments != null)
+                {
+                    testMethod.Method = testMethod.Method.MakeGenericMethodEx(parms.Arguments);
+                    if (testMethod.Method == null)
+                        return MarkAsNotRunnable(testMethod, "Cannot determine generic types by probing");
+                    parameters = testMethod.Method.GetParameters();
+                }
+                else
+                    parameters = new ParameterInfo[0];
             }
+            else
 #endif
+            parameters = testMethod.Method.GetParameters();
 
-            ParameterInfo[] parameters = testMethod.Method.GetParameters();
             int argsNeeded = parameters.Length;
 
             object[] arglist = null;
@@ -190,7 +199,6 @@ namespace NUnit.Framework.Internal.Builders
                 return MarkAsNotRunnable(testMethod, "Wrong number of arguments provided");
             }
 
-#if !NETCF
             if (testMethod.Method.IsGenericMethodDefinition)
             {
                 Type[] typeArguments = GetTypeArgumentsForMethod(testMethod.Method, arglist);
@@ -203,7 +211,6 @@ namespace NUnit.Framework.Internal.Builders
                 testMethod.Method = testMethod.Method.MakeGenericMethod(typeArguments);
                 parameters = testMethod.Method.GetParameters();
             }
-#endif
 
             if (arglist != null && parameters != null)
                 TypeHelper.ConvertArgumentList(arglist, parameters);
@@ -211,7 +218,6 @@ namespace NUnit.Framework.Internal.Builders
             return true;
         }
 
-#if !NETCF
         private static Type[] GetTypeArgumentsForMethod(MethodInfo method, object[] arglist)
         {
             Type[] typeParameters = method.GetGenericArguments();
@@ -240,7 +246,6 @@ namespace NUnit.Framework.Internal.Builders
 
             return typeArguments;
         }
-#endif
 
         private static bool MarkAsNotRunnable(TestMethod testMethod, string reason)
         {

@@ -22,6 +22,9 @@
 // ***********************************************************************
 
 using System;
+#if NETCF
+using System.Linq;
+#endif
 using System.Reflection;
 using System.Text;
 
@@ -255,6 +258,20 @@ namespace NUnit.Framework.Internal
         {
             Type[] typeParameters = type.GetGenericArguments();
 
+#if NETCF
+            Type[] argTypes = arglist.Select(a => a == null ? typeof(object) : a.GetType()).ToArray();
+            if (argTypes.Length != typeParameters.Length || argTypes.Any(at => at.IsGenericType))
+                return false;
+            try
+            {
+                type = type.MakeGenericType(argTypes);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+#endif
+
             foreach (ConstructorInfo ctor in type.GetConstructors())
             {
                 ParameterInfo[] parameters = ctor.GetParameters();
@@ -266,10 +283,10 @@ namespace NUnit.Framework.Internal
                 {
                     for (int j = 0; j < arglist.Length; j++)
                     {
-                        if (parameters[j].ParameterType.Equals(typeParameters[i]))
+                        if (typeParameters[i].IsGenericParameter || parameters[j].ParameterType.Equals(typeParameters[i]))
                             typeArgs[i] = TypeHelper.BestCommonType(
-                                typeArgs[i],
-                                arglist[j].GetType());
+                                              typeArgs[i],
+                                              arglist[j].GetType());
                     }
 
                     if (typeArgs[i] == null)

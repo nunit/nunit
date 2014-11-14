@@ -213,9 +213,6 @@
     <Compile Include="Internal\SetUpTearDownTests.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Internal\SimpleGenericMethods.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Internal\StackFilterTests.cs" />
     <Compile Include="Internal\TestExecutionContextTests.cs" />
     <Compile Include="Internal\TestFilterTests.cs" />

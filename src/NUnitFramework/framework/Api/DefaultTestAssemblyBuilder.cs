@@ -184,11 +184,18 @@ namespace NUnit.Framework.Api
             int testcases = 0;
             foreach (Type testType in testTypes)
             {
-                if (_defaultSuiteBuilder.CanBuildFrom(testType))
+                try
                 {
-                    Test fixture = _defaultSuiteBuilder.BuildFrom(testType);
-                    fixtures.Add(fixture);
-                    testcases += fixture.TestCaseCount;
+                    if (_defaultSuiteBuilder.CanBuildFrom(testType))
+                    {
+                        Test fixture = _defaultSuiteBuilder.BuildFrom(testType);
+                        fixtures.Add(fixture);
+                        testcases += fixture.TestCaseCount;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    log.Error(ex.ToString());
                 }
             }
 

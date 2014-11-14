@@ -75,9 +75,15 @@ namespace NUnit.Framework
         /// <returns>One or more TestMethods</returns>
         public IEnumerable<TestMethod> BuildFrom(MethodInfo method, Test suite)
         {
-            ParameterInfo[] parameters = method.GetParameters();
-
             List<TestMethod> tests = new List<TestMethod>();
+
+#if NETCF
+            // TODO: Requires each data provider to have ability to probe a generic method. May require change to IParameterData interface.
+            if (method.ContainsGenericParameters)
+                return tests;
+#endif
+
+            ParameterInfo[] parameters = method.GetParameters();
 
             if (parameters.Length > 0)
             {
