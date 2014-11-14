@@ -235,6 +235,7 @@ namespace NUnit.ConsoleRunner
                 ? new TestPackage(options.InputFiles[0])
                 : new TestPackage(options.InputFiles);
 
+
             if (options.ProcessModel != null)//ProcessModel.Default)
                 package.Settings[PackageSettings.ProcessModel] = options.ProcessModel;
 
@@ -246,6 +247,9 @@ namespace NUnit.ConsoleRunner
 
             if (options.RunAsX86)
                 package.Settings[PackageSettings.RunAsX86] = true;
+
+            if (options.DisposeRunners)
+                package.Settings[PackageSettings.DisposeRunners] = true;
 
             if (options.DefaultTimeout >= 0)
                 package.Settings[PackageSettings.DefaultTimeout] = options.DefaultTimeout;

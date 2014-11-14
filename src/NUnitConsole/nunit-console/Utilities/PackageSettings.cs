@@ -78,6 +78,11 @@ namespace NUnit.ConsoleRunner.Utilities
         /// </summary>
         public const string RunAsX86 = "RunAsX86";
 
+        /// <summary>
+        /// Indicates that test runners should be disposed after the tests are executed
+        /// </summary>
+        public const string DisposeRunners = "DisposeRunners";
+
         #endregion
 
         #region Settings taken from DriverSettings in the framework

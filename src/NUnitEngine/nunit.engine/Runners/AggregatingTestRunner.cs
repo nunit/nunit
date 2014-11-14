@@ -127,8 +127,14 @@ namespace NUnit.Engine.Runners
         {
             var results = new List<TestEngineResult>();
 
+            bool disposeRunners = TestPackage.GetSetting(RunnerSettings.DisposeRunners, false);
+
             foreach (ITestEngineRunner runner in _runners)
+            {
                 results.Add(runner.Run(listener, filter));
+                if (disposeRunners) runner.Dispose();
+            }
+            if (disposeRunners) _runners.Clear();
 
             TestEngineResult result = ResultHelper.Merge(results);
 

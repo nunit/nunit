@@ -58,6 +58,7 @@ namespace NUnit.ConsoleRunner.Tests
         [TestCase("PauseBeforeRun", "pause")]
         [TestCase("NoHeader", "noheader|noh")]
         [TestCase("RunAsX86", "x86")]
+        [TestCase("DisposeRunners", "dispose-runners")]
         public void CanRecognizeBooleanOptions(string propertyName, string pattern)
         {
             Console.WriteLine("Testing " + propertyName);
