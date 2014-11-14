@@ -86,12 +86,6 @@
     <Compile Include="..\..\Common\nunit\Logging\Logger.cs">
       <Link>Internal\Logger.cs</Link>
     </Compile>
-    <Compile Include="..\..\Common\nunit\OutputSpecification.cs">
-      <Link>Runner\OutputSpecification.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Common\nunit\TestNameParser.cs">
-      <Link>Runner\TestNameParser.cs</Link>
-    </Compile>
     <Compile Include="..\FrameworkVersion.cs">
       <Link>FrameworkVersion.cs</Link>
     </Compile>
@@ -369,29 +363,6 @@
     <Compile Include="ListMapper.cs" />
     <Compile Include="MessageMatch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Runner\ColorConsole.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Runner\ColorStyle.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Runner\CommandLineOptions.cs" />
-    <Compile Include="Runner\DebugWriter.cs" />
-    <Compile Include="Runner\ExtendedTextWriter.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Runner\OutputManager.cs" />
-    <Compile Include="Runner\OutputWriters\NUnit2XmlOutputWriter.cs" />
-    <Compile Include="Runner\OutputWriters\NUnit3XmlOutputWriter.cs" />
-    <Compile Include="Runner\OutputWriters\OutputWriter.cs" />
-    <Compile Include="Runner\OutputWriters\TestCaseOutputWriter.cs" />
-    <Compile Include="Runner\ResultReporter.cs" />
-    <Compile Include="Runner\ResultSummary.cs" />
-    <Compile Include="Runner\Silverlight\TestPage.xaml.cs">
-      <DependentUpon>TestPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Runner\Silverlight\TextBlockWriter.cs" />
-    <Compile Include="Runner\TextUI.cs" />
     <Compile Include="SpecialValue.cs" />
     <Compile Include="StringAssert.cs" />
     <Compile Include="TestCaseData.cs" />
@@ -399,12 +370,6 @@
     <Compile Include="Throws.cs" />
   </ItemGroup>
   <ItemGroup />
-  <ItemGroup>
-    <Page Include="Runner\Silverlight\TestPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-  </ItemGroup>
   <ItemGroup>
     <None Include="nunit.snk" />
   </ItemGroup>

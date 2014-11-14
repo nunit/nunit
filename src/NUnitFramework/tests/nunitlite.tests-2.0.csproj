@@ -300,6 +300,10 @@
       <Project>{7BE679EF-3853-4E06-B4EB-C4C6808BC3F0}</Project>
       <Name>mock-nunitlite-assembly-2.0</Name>
     </ProjectReference>
+    <ProjectReference Include="..\nunitlite.runner\nunitlite.runner-2.0.csproj">
+      <Project>{28c7b9d6-be1f-45e5-952c-0d5c9ca3efdf}</Project>
+      <Name>nunitlite.runner-2.0</Name>
+    </ProjectReference>
     <ProjectReference Include="..\testdata\nunitlite.testdata-2.0.csproj">
       <Project>{442DAB16-3063-4FE3-90B6-C29C3D85360D}</Project>
       <Name>nunitlite.testdata-2.0</Name>

@@ -316,6 +316,10 @@
       <Project>{2B797154-2349-4E0A-A3FD-08E620152B9A}</Project>
       <Name>mock-nunitlite-assembly-4.0</Name>
     </ProjectReference>
+    <ProjectReference Include="..\nunitlite.runner\nunitlite.runner-4.0.csproj">
+      <Project>{dbd0c8b0-be4e-4cbf-aad4-44bea2ea830b}</Project>
+      <Name>nunitlite.runner-4.0</Name>
+    </ProjectReference>
     <ProjectReference Include="..\testdata\nunitlite.testdata-4.0.csproj">
       <Project>{34EE6390-F2BB-44F0-BF1E-9CE553DB6672}</Project>
       <Name>nunitlite.testdata-4.0</Name>

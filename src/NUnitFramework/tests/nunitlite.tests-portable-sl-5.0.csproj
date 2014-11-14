@@ -275,9 +275,9 @@
       <Project>{d6fbbb3a-f6b8-45bb-b657-a7226ab96624}</Project>
       <Name>nunitlite-portable</Name>
     </ProjectReference>
-    <ProjectReference Include="..\framework\nunitlite.runner-sl-5.0.csproj">
+    <ProjectReference Include="..\nunitlite.runner\nunitlite.runner-portable-sl-5.0.csproj">
       <Project>{9efad088-713e-4269-adfc-1f21ca872a94}</Project>
-      <Name>nunitlite.runner-sl-5.0</Name>
+      <Name>nunitlite.runner-portable-sl-5.0</Name>
     </ProjectReference>
     <ProjectReference Include="..\testdata\nunitlite.testdata-portable.csproj">
       <Project>{9ed200e4-2026-4955-87e0-d8cea7bd9e7f}</Project>
