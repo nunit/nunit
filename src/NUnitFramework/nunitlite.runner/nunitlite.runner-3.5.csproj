@@ -40,10 +40,10 @@
     <Compile Include="..\..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="..\..\common\nunit\OutputSpecification.cs">
+    <Compile Include="..\..\Common\nunit\OutputSpecification.cs">
       <Link>Runner\OutputSpecification.cs</Link>
     </Compile>
-    <Compile Include="..\..\common\nunit\TestNameParser.cs">
+    <Compile Include="..\..\Common\nunit\TestNameParser.cs">
       <Link>Runner\TestNameParser.cs</Link>
     </Compile>
     <Compile Include="..\FrameworkVersion.cs">
