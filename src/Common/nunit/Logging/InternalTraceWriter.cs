@@ -27,7 +27,7 @@ namespace NUnit.Engine.Internal
 #elif NUNIT_FRAMEWORK || NUNITLITE
 namespace NUnit.Framework.Internal
 #else
-namespace Unit.Common
+namespace NUnit.Common
 #endif
 {
     /// <summary>

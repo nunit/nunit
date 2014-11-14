@@ -89,7 +89,7 @@ namespace NUnit.Framework
             get { return _result ?? (_result = new ResultAdapter(_testExecutionContext.CurrentResult)); }
         }
 
-#if !NETCF && !SILVERLIGHT && !PORTABLE
+#if !SILVERLIGHT && !PORTABLE
         /// <summary>
         /// Gets the directory containing the current test assembly.
         /// </summary>
