@@ -222,10 +222,6 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public virtual void Execute()
         {
-            
-#if NETCF
-            RunTest();
-#else
             // Timeout set at a higher level
             int timeout = _context.TestCaseTimeout;
 
@@ -233,7 +229,7 @@ namespace NUnit.Framework.Internal.Execution
             if (Test.Properties.ContainsKey(PropertyNames.Timeout))
                 timeout = (int)Test.Properties.Get(PropertyNames.Timeout);
             
-#if SILVERLIGHT
+#if SILVERLIGHT || NETCF
             if (Test.RequiresThread || Test is TestMethod && timeout > 0)
                 RunTestOnOwnThread(timeout);
             else
@@ -248,10 +244,9 @@ namespace NUnit.Framework.Internal.Execution
             else
                 RunTest();
 #endif
-#endif
         }
 
-#if SILVERLIGHT
+#if SILVERLIGHT || NETCF
         private void RunTestOnOwnThread(int timeout)
         {
             string reason = Test.RequiresThread ? "has RequiresThreadAttribute." : "has Timeout value set.";
@@ -259,8 +254,10 @@ namespace NUnit.Framework.Internal.Execution
 
             Thread thread = new Thread(RunTest);
 
+#if !NETCF
             thread.CurrentCulture = Context.CurrentCulture;
             thread.CurrentUICulture = Context.CurrentUICulture;
+#endif
 
             thread.Start();
 
@@ -269,9 +266,14 @@ namespace NUnit.Framework.Internal.Execution
                 if (timeout <= 0)
                     timeout = Timeout.Infinite;
 
-                thread.Join(timeout);
+                // Previous code:
+                // thread.Join(timeout);
+                //
+                // if (thread.IsAlive)
+                // Was this here for a reason?
+                // Is there some platform that needs it?
 
-                if (thread.IsAlive)
+                if (!thread.Join(timeout))
                 {
                     ThreadUtility.Kill(thread);
 

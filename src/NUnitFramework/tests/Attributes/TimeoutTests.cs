@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NETCF && !PORTABLE
+#if !PORTABLE
 using System;
 using System.Threading;
 using NUnit.Framework;
@@ -61,9 +61,10 @@ namespace NUnit.Framework.Attributes
         {
             Assert.That(Thread.CurrentThread, Is.EqualTo(setupThread));
         }
+
         [Test]
         [Platform(Exclude = "Mono", Reason = "Runner hangs at end when this is run")]
-        public void TestWithInfiniteLoopTimesOut()
+        public void TestTimesOutAndTearDownIsRun()
         {
             TimeoutFixture fixture = new TimeoutFixture();
             TestSuite suite = TestBuilder.MakeFixture(fixture);
@@ -72,6 +73,30 @@ namespace NUnit.Framework.Attributes
             Assert.That(result.ResultState, Is.EqualTo(ResultState.Failure));
             Assert.That(result.Message, Does.Contain("50ms"));
             Assert.That(fixture.TearDownWasRun, "TearDown was not run");
+        }
+
+        [Test]
+        public void SetUpTimesOutAndTearDownIsRun()
+        {
+            TimeoutFixture fixture = new TimeoutFixtureWithTimeoutInSetUp();
+            TestSuite suite = TestBuilder.MakeFixture(fixture);
+            TestMethod testMethod = (TestMethod)TestFinder.Find("Test1", suite, false);
+            ITestResult result = TestBuilder.RunTest(testMethod, fixture);
+            Assert.That(result.ResultState, Is.EqualTo(ResultState.Failure));
+            Assert.That(result.Message, Does.Contain("50ms"));
+            Assert.That(fixture.TearDownWasRun, "TearDown was not run");
+        }
+
+        [Test, Ignore("Issue #352 - Test with infinite loop in TearDown cannot be aborted")]
+        public void TearDownTimesOutAndNoFurtherTearDownIsRun()
+        {
+            TimeoutFixture fixture = new TimeoutFixtureWithTimeoutInTearDown();
+            TestSuite suite = TestBuilder.MakeFixture(fixture);
+            TestMethod testMethod = (TestMethod)TestFinder.Find("Test1", suite, false);
+            ITestResult result = TestBuilder.RunTest(testMethod, fixture);
+            Assert.That(result.ResultState, Is.EqualTo(ResultState.Failure));
+            Assert.That(result.Message, Does.Contain("50ms"));
+            Assert.That(fixture.TearDownWasRun, "Base TearDown should not have been run but was");
         }
 
         [Test]

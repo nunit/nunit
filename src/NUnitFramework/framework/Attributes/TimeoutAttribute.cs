@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NETCF && !PORTABLE
+#if !PORTABLE
 using System;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Commands;

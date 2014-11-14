@@ -81,6 +81,7 @@
     <Compile Include="TestMethodSignatureFixture.cs" />
     <Compile Include="TestOfFixture.cs" />
     <Compile Include="TheoryFixture.cs" />
+    <Compile Include="TimeoutFixture.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\framework\nunitlite-netcf-3.5.csproj">
