@@ -116,7 +116,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunitlite.runner-sl-5.0", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunitlite.runner-portable-sl-5.0", "src\NUnitFramework\nunitlite.runner\nunitlite.runner-portable-sl-5.0.csproj", "{9EFAD088-713E-4269-ADFC-1F21CA872A94}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunitlite.tests-sl-5.0", "src\NUnitFramework\tests\nunitlite.tests-sl-5.0.csproj", "{A4F0C741-6ED4-46C8-AE75-57E1C7197E22}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.framework.tests-sl-5.0", "src\NUnitFramework\tests\nunit.framework.tests-sl-5.0.csproj", "{A4F0C741-6ED4-46C8-AE75-57E1C7197E22}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
