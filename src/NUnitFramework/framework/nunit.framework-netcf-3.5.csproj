@@ -18,12 +18,13 @@
     <NativePlatformName>Windows CE</NativePlatformName>
     <FormFactorID>
     </FormFactorID>
+    <IntermediateOutputPath>obj\$(Configuration)\netcf-3.5\</IntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\bin\Debug\netcf-3.5\</OutputPath>
+    <OutputPath>..\..\..\bin\Debug\netcf-3.5\</OutputPath>
     <DefineConstants>TRACE;DEBUG;WindowsCE;NETCF;NETCF_3_5;NUNITLITE</DefineConstants>
     <NoStdLib>true</NoStdLib>
     <NoConfig>true</NoConfig>
@@ -31,12 +32,12 @@
     <FileAlignment>512</FileAlignment>
     <WarningLevel>4</WarningLevel>
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
-    <DocumentationFile>..\..\bin\Debug\netcf-3.5\nunit.framework.xml</DocumentationFile>
+    <DocumentationFile>..\..\..\bin\Debug\netcf-3.5\nunit.framework.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\bin\Release\netcf-3.5\</OutputPath>
+    <OutputPath>..\..\..\bin\Release\netcf-3.5\</OutputPath>
     <DefineConstants>TRACE;WindowsCE;NETCF;NETCF_3_5;NUNITLITE</DefineConstants>
     <NoStdLib>true</NoStdLib>
     <NoConfig>true</NoConfig>
@@ -44,7 +45,7 @@
     <FileAlignment>512</FileAlignment>
     <WarningLevel>4</WarningLevel>
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
-    <DocumentationFile>..\..\bin\Release\netcf-3.5\nunit.framework.xml</DocumentationFile>
+    <DocumentationFile>..\..\..\bin\Release\netcf-3.5\nunit.framework.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>

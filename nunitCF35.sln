@@ -1,13 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunitlite.runner-netcf-3.5", "nunitlite.runner\nunitlite.runner-netcf-3.5.csproj", "{FCB4F998-02D6-4D7F-A188-E0FB1F12F151}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunitlite.runner-netcf-3.5", "src\NUnitFramework\nunitlite.runner\nunitlite.runner-netcf-3.5.csproj", "{FCB4F998-02D6-4D7F-A188-E0FB1F12F151}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.framework-netcf-3.5", "framework\nunit.framework-netcf-3.5.csproj", "{B41DB8FB-0D2F-45CE-9345-AF469FC05EE8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.framework-netcf-3.5", "src\NUnitFramework\framework\nunit.framework-netcf-3.5.csproj", "{B41DB8FB-0D2F-45CE-9345-AF469FC05EE8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.testdata-netcf-3.5", "testdata\nunit.testdata-netcf-3.5.csproj", "{0B7C0B55-6A49-4F32-993E-C9ED6DA0B73C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.testdata-netcf-3.5", "src\NUnitFramework\testdata\nunit.testdata-netcf-3.5.csproj", "{0B7C0B55-6A49-4F32-993E-C9ED6DA0B73C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.framework.tests-netcf-3.5", "tests\nunit.framework.tests-netcf-3.5.csproj", "{80A9EC94-2C42-44AC-9D2C-E1418D712C48}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.framework.tests-netcf-3.5", "src\NUnitFramework\tests\nunit.framework.tests-netcf-3.5.csproj", "{80A9EC94-2C42-44AC-9D2C-E1418D712C48}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
