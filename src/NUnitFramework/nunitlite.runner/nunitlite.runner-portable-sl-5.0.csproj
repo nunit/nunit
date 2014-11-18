@@ -101,18 +101,17 @@
     <Compile Include="Runner\Silverlight\TextBlockWriter.cs" />
     <Compile Include="Runner\TextUI.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\framework\nunit.framework-portable.csproj">
+      <Project>{d6fbbb3a-f6b8-45bb-b657-a7226ab96624}</Project>
+      <Name>nunit.framework-portable</Name>
+    </ProjectReference>
+  </ItemGroup>
   <ItemGroup>
     <Page Include="Runner\Silverlight\TestPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\framework\nunitlite-portable.csproj">
-      <Project>{d6fbbb3a-f6b8-45bb-b657-a7226ab96624}</Project>
-      <Name>nunitlite-portable</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Silverlight\$(SilverlightVersion)\Microsoft.Silverlight.CSharp.targets" />
   <ProjectExtensions>
