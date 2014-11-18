@@ -40,9 +40,6 @@ namespace NUnit.Common.Tests
 #if NUNIT_ENGINE
         private static readonly string THIS_ASSEMBLY_PATH = "nunit.engine.tests.dll";
         private static readonly string THIS_ASSEMBLY_NAME = "nunit.engine.tests";
-#elif NUNITLITE
-        private static readonly string THIS_ASSEMBLY_PATH = "nunitlite.tests.exe";
-        private static readonly string THIS_ASSEMBLY_NAME = "nunitlite.tests";
 #else
         private static readonly string THIS_ASSEMBLY_PATH = "nunit.framework.tests.dll";
         private static readonly string THIS_ASSEMBLY_NAME = "nunit.framework.tests";

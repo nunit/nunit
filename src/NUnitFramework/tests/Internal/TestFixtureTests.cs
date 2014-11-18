@@ -36,11 +36,7 @@ namespace NUnit.Framework.Internal
     [TestFixture]
     public class TestFixtureTests
     {
-#if NUNITLITE
-        private static string dataAssembly = "nunitlite.testdata";
-#else
         private static string dataAssembly = "nunit.testdata";
-#endif
 
         private static void CanConstructFrom(Type fixtureType)
         {

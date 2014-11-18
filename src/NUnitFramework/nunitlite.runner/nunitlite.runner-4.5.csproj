@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NUnitLite</RootNamespace>
-    <AssemblyName>nunitlite.runner</AssemblyName>
+    <AssemblyName>nunitlite</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -69,9 +69,9 @@
     <Compile Include="Runner\TextUI.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\framework\nunitlite-4.5.csproj">
-      <Project>{22857a11-108d-48c6-9a23-2217d2f2c365}</Project>
-      <Name>nunitlite-4.5</Name>
+    <ProjectReference Include="..\framework\nunit.framework-4.5.csproj">
+      <Project>{d209c368-1277-4ea6-a887-aa6eba51ab99}</Project>
+      <Name>nunit.framework-4.5</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

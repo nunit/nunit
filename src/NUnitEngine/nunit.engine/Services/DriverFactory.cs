@@ -33,7 +33,7 @@ namespace NUnit.Engine.Services
 {
     public class DriverFactory : IDriverFactory, IService
     {
-        private static readonly List<string> NUnitAssemblies = new List<string>(new string[] { "nunit.framework", "nunitlite" });
+        private const string NUNIT_FRAMEWORK = "nunit.framework";
 
         private const string OLDER_NUNIT_NOT_SUPPORTED_MESSAGE =
             "Unable to load {0}. This runner only supports tests written for NUnit 3.0 or higher.";
@@ -52,7 +52,7 @@ namespace NUnit.Engine.Services
 
                 foreach (var refAssembly in testAssembly.GetReferencedAssemblies())
                 {
-                    if (NUnitAssemblies.Contains(refAssembly.Name))
+                    if (refAssembly.Name == NUNIT_FRAMEWORK)
                         if (refAssembly.Version >= nunitV3)
                             return new NUnitFrameworkDriver(domain, refAssembly.Name, assemblyPath, settings);
                         else
