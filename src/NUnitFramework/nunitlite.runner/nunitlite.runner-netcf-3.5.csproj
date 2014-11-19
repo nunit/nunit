@@ -4,24 +4,28 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>ae5087f4-c5d2-4bdd-a37e-52ac046727f7</ProjectGuid>
+    <ProjectGuid>{FCB4F998-02D6-4D7F-A188-E0FB1F12F151}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SmartDeviceProject1</RootNamespace>
-    <AssemblyName>SmartDeviceProject1</AssemblyName>
+    <RootNamespace>NUnitLite</RootNamespace>
+    <AssemblyName>nunitlite.runner-netcf-3.5</AssemblyName>
     <ProjectTypeGuids>{4D628B5B-2FBC-4AA6-8C16-197242AEB884};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <PlatformFamilyName>PocketPC</PlatformFamilyName>
     <PlatformID>4118C335-430C-497f-BE48-11C3316B135E</PlatformID>
     <OSVersion>5.1</OSVersion>
-    <DeployDirSuffix>SmartDeviceProject1</DeployDirSuffix>
+    <DeployDirSuffix>nunitlite.runner_netcf_3._5</DeployDirSuffix>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <NativePlatformName>Windows Mobile 5.0 Pocket PC SDK</NativePlatformName>
+    <FormFactorID>
+    </FormFactorID>
+    <IntermediateOutputPath>obj\$(Configuration)\netcf-3.5\</IntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;$(PlatformFamilyName)</DefineConstants>
+    <OutputPath>..\..\..\bin\Debug\netcf-3.5\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;WindowsCE;NETCF;NETCF_3_5;NUNITLITE</DefineConstants>
     <NoStdLib>true</NoStdLib>
     <NoConfig>true</NoConfig>
     <ErrorReport>prompt</ErrorReport>
@@ -32,8 +36,8 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE;$(PlatformFamilyName)</DefineConstants>
+    <OutputPath>..\..\..\bin\Release\netcf-3.5\</OutputPath>
+    <DefineConstants>TRACE;WindowsCE;NETCF;NETCF_3_5;NUNITLITE</DefineConstants>
     <NoStdLib>true</NoStdLib>
     <NoConfig>true</NoConfig>
     <ErrorReport>prompt</ErrorReport>
@@ -51,8 +55,40 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
+    <Compile Include="..\..\CommonAssemblyInfo.cs">
+      <Link>CommonAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\OutputSpecification.cs">
+      <Link>Runner\OutputSpecification.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\TestNameParser.cs">
+      <Link>Runner\TestNameParser.cs</Link>
+    </Compile>
+    <Compile Include="..\FrameworkVersion.cs">
+      <Link>FrameworkVersion.cs</Link>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Runner\ColorConsole.cs" />
+    <Compile Include="Runner\ColorStyle.cs" />
+    <Compile Include="Runner\CommandLineOptions.cs" />
+    <Compile Include="Runner\DebugWriter.cs" />
+    <Compile Include="Runner\ExtendedTextWriter.cs" />
+    <Compile Include="Runner\OutputManager.cs" />
+    <Compile Include="Runner\OutputWriters\NUnit2XmlOutputWriter.cs" />
+    <Compile Include="Runner\OutputWriters\NUnit3XmlOutputWriter.cs" />
+    <Compile Include="Runner\OutputWriters\OutputWriter.cs" />
+    <Compile Include="Runner\OutputWriters\TestCaseOutputWriter.cs" />
+    <Compile Include="Runner\ResultReporter.cs" />
+    <Compile Include="Runner\ResultSummary.cs" />
+    <Compile Include="Runner\TcpWriter.cs" />
+    <Compile Include="Runner\TeamCityEventListener.cs" />
+    <Compile Include="Runner\TextUI.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\framework\nunit.framework-netcf-3.5.csproj">
+      <Project>{B41DB8FB-0D2F-45CE-9345-AF469FC05EE8}</Project>
+      <Name>nunit.framework-netcf-3.5</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.targets" />
   <ProjectExtensions>

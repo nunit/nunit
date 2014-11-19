@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NUNITLITE
+#if PARALLEL
 using System.Text;
 using System.Threading;
 using NUnit.TestUtilities;

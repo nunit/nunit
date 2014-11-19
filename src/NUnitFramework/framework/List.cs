@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NUNITLITE
 using System.Collections;
 
 namespace NUnit.Framework
@@ -44,4 +43,3 @@ namespace NUnit.Framework
 		}
 	}
 }
-#endif

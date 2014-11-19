@@ -21,10 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NUNITLITE
 using System;
-using System.Collections;
-using NUnit.Framework;
+using NUnit.TestUtilities.Collections;
 
 namespace NUnit.Framework.Assertions
 {
@@ -73,7 +71,7 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void ArrayListSucceeds()
         {
-            ArrayList list = new ArrayList( testArray );
+            var list = new SimpleObjectList( testArray );
 
             Assert.Contains( "abc", list );
             Assert.Contains( 123, list );
@@ -86,15 +84,14 @@ namespace NUnit.Framework.Assertions
             var expectedMessage =
                 "  Expected: collection containing \"def\"" + Environment.NewLine + 
                 "  But was:  < \"abc\", 123, \"xyz\" >" + Environment.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => Assert.Contains( "def", new ArrayList( testArray ) ));
+            var ex = Assert.Throws<AssertionException>(() => Assert.Contains( "def", new SimpleObjectList( testArray ) ));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 
         [Test]
         public void DifferentTypesMayBeEqual()
         {
-            Assert.Contains( 123.0, new ArrayList( testArray ) );
+            Assert.Contains( 123.0, new SimpleObjectList( testArray ) );
         }
     }
 }
-#endif

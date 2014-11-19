@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NUNITLITE && !MONO
+#if !MONO
 using System;
 
 namespace NUnit.Framework.Assertions

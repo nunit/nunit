@@ -22,7 +22,7 @@
 // ***********************************************************************
 
 // TODO: Get to work in Silverlight and Compact Framework - will require buiding mock-assembly
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !NETCF
 
 using System;
 using System.Collections;
@@ -38,15 +38,9 @@ namespace NUnit.Framework.Api
     // Functional tests of the TestAssenblyRunner and all subordinate classes
     public class TestAssemblyRunnerTests
     {
-#if NUNITLITE
-        private const string MOCK_ASSEMBLY = "mock-nunitlite-assembly.dll";
-        private const string BAD_FILE = "mock-nunitlite-assembly.pdb";
-        private const string SLOW_TESTS = "slow-nunitlite-tests.dll";
-#else
         private const string MOCK_ASSEMBLY = "mock-nunit-assembly.dll";
         private const string BAD_FILE = "mock-nunit-assembly.pdb";
         private const string SLOW_TESTS = "slow-nunit-tests.dll";
-#endif
         private const string MISSING_FILE = "junk.dll";
 
         private IDictionary _settings = new Hashtable();

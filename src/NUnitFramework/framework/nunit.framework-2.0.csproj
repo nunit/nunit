@@ -138,6 +138,7 @@
     <Compile Include="Internal\Execution\TextCapture.cs" />
     <Compile Include="Internal\Execution\WorkShift.cs" />
     <Compile Include="Internal\Filters\IdFilter.cs" />
+    <Compile Include="Internal\Filters\SimpleCategoryExpression.cs" />
     <Compile Include="Internal\Filters\ValueMatchFilter.cs" />
     <Compile Include="Interfaces\IFixtureBuilder.cs" />
     <Compile Include="Interfaces\IImplyFixture.cs" />
@@ -327,7 +328,6 @@
     <Compile Include="Api\DefaultTestAssemblyBuilder.cs" />
     <Compile Include="Internal\ExceptionHelper.cs" />
     <Compile Include="Internal\Filters\AndFilter.cs" />
-    <Compile Include="Internal\Filters\CategoryExpression.cs" />
     <Compile Include="Internal\Filters\CategoryFilter.cs" />
     <Compile Include="Internal\Filters\NotFilter.cs" />
     <Compile Include="Internal\Filters\OrFilter.cs" />

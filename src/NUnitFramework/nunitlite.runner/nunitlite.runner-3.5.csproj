@@ -4,14 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{1BFDD2CD-5F57-4B23-928D-A4C1892C6D82}</ProjectGuid>
+    <ProjectGuid>{CE9EF1EE-B954-4DEA-B016-952F5F4B11A2}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NUnit.Tests</RootNamespace>
-    <AssemblyName>slow-nunitlite-tests</AssemblyName>
-    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <RootNamespace>NUnitLite</RootNamespace>
+    <AssemblyName>nunitlite</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <IntermediateOutputPath>obj\$(Configuration)\net-2.0\</IntermediateOutputPath>
+    <TargetFrameworkProfile />
+    <IntermediateOutputPath>obj\$(Configuration)\net-3.5\</IntermediateOutputPath>
     <ProductVersion>12.0.0</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
   </PropertyGroup>
@@ -19,16 +20,16 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\bin\Debug\net-2.0\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;NET_2_0;NUNITLITE</DefineConstants>
+    <OutputPath>..\..\..\bin\Debug\net-3.5\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;NET_3_5;NUNITLITE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\..\bin\Release\net-2.0\</OutputPath>
-    <DefineConstants>TRACE;NET_2_0;NUNITLITE</DefineConstants>
+    <OutputPath>..\..\..\bin\Release\net-3.5\</OutputPath>
+    <DefineConstants>TRACE;NET_3_5;NUNITLITE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -41,16 +42,36 @@
     <Compile Include="..\..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="..\..\Common\nunit\OutputSpecification.cs">
+      <Link>Runner\OutputSpecification.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\TestNameParser.cs">
+      <Link>Runner\TestNameParser.cs</Link>
+    </Compile>
     <Compile Include="..\FrameworkVersion.cs">
       <Link>FrameworkVersion.cs</Link>
     </Compile>
-    <Compile Include="SlowTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Runner\ColorConsole.cs" />
+    <Compile Include="Runner\ColorStyle.cs" />
+    <Compile Include="Runner\CommandLineOptions.cs" />
+    <Compile Include="Runner\DebugWriter.cs" />
+    <Compile Include="Runner\ExtendedTextWriter.cs" />
+    <Compile Include="Runner\OutputManager.cs" />
+    <Compile Include="Runner\OutputWriters\NUnit2XmlOutputWriter.cs" />
+    <Compile Include="Runner\OutputWriters\NUnit3XmlOutputWriter.cs" />
+    <Compile Include="Runner\OutputWriters\OutputWriter.cs" />
+    <Compile Include="Runner\OutputWriters\TestCaseOutputWriter.cs" />
+    <Compile Include="Runner\ResultReporter.cs" />
+    <Compile Include="Runner\ResultSummary.cs" />
+    <Compile Include="Runner\TcpWriter.cs" />
+    <Compile Include="Runner\TeamCityEventListener.cs" />
+    <Compile Include="Runner\TextUI.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\framework\nunitlite-2.0.csproj">
-      <Project>{0BFA7F0A-BC15-40A5-863A-FA9B55AE2FD3}</Project>
-      <Name>nunitlite-2.0</Name>
+    <ProjectReference Include="..\framework\nunit.framework-3.5.csproj">
+      <Project>{EE7E1D47-C686-496A-81F2-B05F085BC21F}</Project>
+      <Name>nunit.framework-3.5</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

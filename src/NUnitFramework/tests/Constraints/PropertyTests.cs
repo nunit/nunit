@@ -45,13 +45,11 @@ namespace NUnit.Framework.Constraints
             new TestCaseData( new List<int>(), "<System.Collections.Generic.List`1[System.Int32]>" ),
             new TestCaseData( typeof(Int32), "<System.Int32>" ) };
 
-#if !NUNITLITE
         public void NullDataThrowsArgumentNullException()
         {
             object value = null;
             Assert.Throws<ArgumentNullException>(() => theConstraint.ApplyTo(value));
         }
-#endif
     }
 
     public class PropertyTest : ConstraintTestBase
@@ -70,7 +68,6 @@ namespace NUnit.Framework.Constraints
             new TestCaseData( new int[3], "3" ),
             new TestCaseData( "goodbye", "7" ) };
 
-#if !NUNITLITE
         [Test]
         public void NullDataThrowsArgumentNullException()
         {
@@ -82,7 +79,6 @@ namespace NUnit.Framework.Constraints
         {
             Assert.Throws<ArgumentException>(() => theConstraint.ApplyTo(42));
         }
-#endif
 
         [Test]
         public void PropertyEqualToValueWithTolerance()

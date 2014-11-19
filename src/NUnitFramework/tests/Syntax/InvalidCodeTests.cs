@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NUNITLITE
 using System;
 using System.Collections;
 using System.CodeDom.Compiler;
@@ -91,4 +90,3 @@ class SomeClass
         }
     }
 }
-#endif

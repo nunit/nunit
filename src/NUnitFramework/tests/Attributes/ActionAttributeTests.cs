@@ -43,13 +43,8 @@ namespace NUnit.Framework.Tests
         // different runtimes, so we now look only at the relative position
         // of before and after actions with respect to the test.
 
-#if NETCF
-        private static readonly string ASSEMBLY_NAME = "nunitlite.testdata";
-        private static readonly string ASSEMBLY_PATH = "nunitlite.testdata";
-#else
         private static readonly string ASSEMBLY_PATH = AssemblyHelper.GetAssemblyPath(typeof(ActionAttributeFixture));
         private static readonly string ASSEMBLY_NAME = System.IO.Path.GetFileName(ASSEMBLY_PATH);
-#endif
 
         private ITestResult _result = null;
         private int _numEvents = -1;

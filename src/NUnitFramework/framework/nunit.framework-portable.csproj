@@ -1,40 +1,40 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
+    <MinimumVisualStudioVersion>10.0</MinimumVisualStudioVersion>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{73A8B041-E719-443D-BF32-7944F117996C}</ProjectGuid>
+    <ProjectGuid>{D6FBBB3A-F6B8-45BB-B657-A7226AB96624}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NUnit</RootNamespace>
-    <AssemblyName>nunitlite</AssemblyName>
+    <AssemblyName>nunit.framework</AssemblyName>
+    <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
-    <FileUpgradeFlags>
-    </FileUpgradeFlags>
-    <OldToolsVersion>3.5</OldToolsVersion>
-    <IntermediateOutputPath>obj\$(Configuration)\net-4.0\</IntermediateOutputPath>
-    <UpgradeBackupLocation />
+    <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <TargetFrameworkProfile>Profile344</TargetFrameworkProfile>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <IntermediateOutputPath>obj\$(Configuration)\portable\</IntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\bin\Debug\net-4.0\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;NET_4_0;NUNITLITE;PARALLEL</DefineConstants>
+    <OutputPath>..\..\..\bin\Debug\portable\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;NUNIT_FRAMEWORK;PORTABLE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>$(OutputPath)\nunitlite.xml</DocumentationFile>
+    <DocumentationFile>..\..\..\bin\Debug\portable\nunit.framework.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\..\bin\Release\net-4.0\</OutputPath>
-    <DefineConstants>TRACE;NET_4_0;NUNITLITE;PARALLEL</DefineConstants>
+    <OutputPath>..\..\..\bin\Release\portable\</OutputPath>
+    <DefineConstants>TRACE;NUNITLITE;PORTABLE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>$(OutputPath)\nunitlite.xml</DocumentationFile>
+    <DocumentationFile>..\..\..\bin\Release\portable\nunit.framework.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
@@ -43,10 +43,8 @@
     <AssemblyOriginatorKeyFile>nunit.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Web" />
-    <Reference Include="System.Xml" />
+    <!-- A reference to the entire .NET Framework is automatically included -->
+    <Content Include="Attributes\AttributeHierarchy.txt" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\CommonAssemblyInfo.cs">
@@ -72,12 +70,6 @@
     </Compile>
     <Compile Include="..\..\Common\nunit\Logging\Logger.cs">
       <Link>Internal\Logger.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Common\nunit\OutputSpecification.cs">
-      <Link>Runner\OutputSpecification.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Common\nunit\TestNameParser.cs">
-      <Link>Runner\TestNameParser.cs</Link>
     </Compile>
     <Compile Include="..\FrameworkVersion.cs">
       <Link>FrameworkVersion.cs</Link>
@@ -126,9 +118,7 @@
     <Compile Include="Attributes\SetCultureAttribute.cs" />
     <Compile Include="Attributes\SetUICultureAttribute.cs" />
     <Compile Include="Attributes\SetUpAttribute.cs" />
-    <Compile Include="Attributes\SetUpFixtureAttribute.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Attributes\SetUpFixtureAttribute.cs" />
     <Compile Include="Attributes\TearDownAttribute.cs" />
     <Compile Include="Attributes\TestActionAttribute.cs" />
     <Compile Include="Attributes\TestAttribute.cs" />
@@ -145,12 +135,10 @@
     <Compile Include="Attributes\ValueSourceAttribute.cs" />
     <Compile Include="CollectionAssert.cs" />
     <Compile Include="Compatibility\AttributeHelper.cs" />
+    <Compile Include="Compatibility\Path.cs" />
     <Compile Include="Compatibility\SerializableAttribute.cs" />
     <Compile Include="Compatibility\Stopwatch.cs" />
     <Compile Include="Constraints\AllItemsConstraint.cs" />
-    <Compile Include="Constraints\FileExistsConstraint.cs" />
-    <Compile Include="Constraints\FileOrDirectoryExistsConstraint.cs" />
-    <Compile Include="Constraints\Operators\AllOperator.cs" />
     <Compile Include="Constraints\AndConstraint.cs" />
     <Compile Include="Constraints\AssignableFromConstraint.cs" />
     <Compile Include="Constraints\AssignableToConstraint.cs" />
@@ -182,7 +170,9 @@
     <Compile Include="Constraints\EqualConstraint.cs" />
     <Compile Include="Constraints\EqualConstraintResult.cs" />
     <Compile Include="Constraints\EqualityAdapter.cs" />
+    <Compile Include="Constraints\ExactCountConstraint.cs" />
     <Compile Include="Constraints\ExactTypeConstraint.cs" />
+    <Compile Include="Constraints\ExceptionTypeConstraint.cs" />
     <Compile Include="Constraints\FalseConstraint.cs" />
     <Compile Include="Constraints\FloatingPointNumerics.cs" />
     <Compile Include="Constraints\GreaterThanConstraint.cs" />
@@ -201,11 +191,13 @@
     <Compile Include="Constraints\Numerics.cs" />
     <Compile Include="Constraints\NUnitComparer.cs" />
     <Compile Include="Constraints\NUnitEqualityComparer.cs" />
+    <Compile Include="Constraints\Operators\AllOperator.cs" />
     <Compile Include="Constraints\Operators\AndOperator.cs" />
     <Compile Include="Constraints\Operators\AttributeOperator.cs" />
     <Compile Include="Constraints\Operators\BinaryOperator.cs" />
     <Compile Include="Constraints\Operators\CollectionOperator.cs" />
     <Compile Include="Constraints\Operators\ConstraintOperator.cs" />
+    <Compile Include="Constraints\Operators\ExactCountOperator.cs" />
     <Compile Include="Constraints\Operators\NoneOperator.cs" />
     <Compile Include="Constraints\Operators\NotOperator.cs" />
     <Compile Include="Constraints\Operators\OrOperator.cs" />
@@ -243,7 +235,6 @@
     <Compile Include="Constraints\UniqueItemsConstraint.cs" />
     <Compile Include="Constraints\XmlSerializableConstraint.cs" />
     <Compile Include="Contains.cs" />
-    <Compile Include="DirectoryAssert.cs" />
     <Compile Include="Does.cs" />
     <Compile Include="Env.cs" />
     <Compile Include="Exceptions\AssertionException.cs" />
@@ -251,7 +242,6 @@
     <Compile Include="Exceptions\InconclusiveException.cs" />
     <Compile Include="Exceptions\ResultStateException.cs" />
     <Compile Include="Exceptions\SuccessException.cs" />
-    <Compile Include="FileAssert.cs" />
     <Compile Include="GlobalSettings.cs" />
     <Compile Include="Has.cs" />
     <Compile Include="Interfaces\ICombiningStrategy.cs" />
@@ -308,11 +298,7 @@
     <Compile Include="Internal\Execution\CommandBuilder.cs" />
     <Compile Include="Internal\Execution\CompositeWorkItem.cs" />
     <Compile Include="Internal\Execution\CountdownEvent.cs" />
-    <Compile Include="Internal\Execution\EventPump.cs" />
-    <Compile Include="Internal\Execution\EventQueue.cs" />
     <Compile Include="Internal\Execution\IWorkItemDispatcher.cs" />
-    <Compile Include="Internal\Execution\ParallelWorkItemDispatcher.cs" />
-    <Compile Include="Internal\Execution\QueuingEventListener.cs" />
     <Compile Include="Internal\Execution\SimpleWorkItem.cs" />
     <Compile Include="Internal\Execution\SimpleWorkItemDispatcher.cs" />
     <Compile Include="Internal\Execution\TestWorker.cs" />
@@ -321,9 +307,7 @@
     <Compile Include="Internal\Execution\WorkItem.cs" />
     <Compile Include="Internal\Execution\WorkItemQueue.cs" />
     <Compile Include="Internal\Execution\WorkItemState.cs" />
-    <Compile Include="Internal\Execution\WorkShift.cs" />
     <Compile Include="Internal\Filters\AndFilter.cs" />
-    <Compile Include="Internal\Filters\CategoryExpression.cs" />
     <Compile Include="Internal\Filters\CategoryFilter.cs" />
     <Compile Include="Internal\Filters\IdFilter.cs" />
     <Compile Include="Internal\Filters\NotFilter.cs" />
@@ -366,41 +350,24 @@
     <Compile Include="Internal\TypeHelper.cs" />
     <Compile Include="Is.cs" />
     <Compile Include="ITestAction.cs" />
+    <Compile Include="Iz.cs" />
+    <Compile Include="List.cs" />
     <Compile Include="ListMapper.cs" />
     <Compile Include="MessageMatch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Runner\ColorConsole.cs" />
-    <Compile Include="Runner\ColorStyle.cs" />
-    <Compile Include="Runner\CommandLineOptions.cs" />
-    <Compile Include="Runner\DebugWriter.cs" />
-    <Compile Include="Runner\ExtendedTextWriter.cs" />
-    <Compile Include="Runner\OutputManager.cs" />
-    <Compile Include="Runner\OutputWriters\NUnit2XmlOutputWriter.cs" />
-    <Compile Include="Runner\OutputWriters\NUnit3XmlOutputWriter.cs" />
-    <Compile Include="Runner\OutputWriters\OutputWriter.cs" />
-    <Compile Include="Runner\OutputWriters\TestCaseOutputWriter.cs" />
-    <Compile Include="Runner\ResultReporter.cs" />
-    <Compile Include="Runner\ResultSummary.cs" />
-    <Compile Include="Runner\TcpWriter.cs" />
-    <Compile Include="Runner\TeamCityEventListener.cs" />
-    <Compile Include="Runner\TextUI.cs" />
     <Compile Include="SpecialValue.cs" />
     <Compile Include="StringAssert.cs" />
     <Compile Include="TestCaseData.cs" />
     <Compile Include="TestContext.cs" />
     <Compile Include="Throws.cs" />
-    <Compile Include="Constraints\ExactCountConstraint.cs" />
-    <Compile Include="Constraints\Operators\ExactCountOperator.cs" />
-    <Compile Include="Constraints\ExceptionTypeConstraint.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="nunit.snk" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
-    <Content Include="Attributes\AttributeHierarchy.txt" />
+    <Folder Include="Runner\" />
   </ItemGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

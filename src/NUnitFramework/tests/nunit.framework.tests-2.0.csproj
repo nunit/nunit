@@ -21,7 +21,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Optimize>true</Optimize>
     <OutputPath>..\..\..\bin\Release\net-2.0\</OutputPath>
-    <DefineConstants>TRACE;NUNIT_FRAMEWORK;NET_2_0</DefineConstants>
+    <DefineConstants>TRACE;NUNIT_FRAMEWORK;NET_2_0;PARALLEL</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>
@@ -29,7 +29,7 @@
     <NoWarn>0414</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
-    <DefineConstants>TRACE;DEBUG;NUNIT_FRAMEWORK;NET_2_0</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NUNIT_FRAMEWORK;NET_2_0;PARALLEL</DefineConstants>
     <OutputPath>..\..\..\bin\Debug\net-2.0\</OutputPath>
     <DebugType>full</DebugType>
     <WarningLevel>4</WarningLevel>

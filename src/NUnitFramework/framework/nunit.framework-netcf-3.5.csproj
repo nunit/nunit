@@ -1,40 +1,51 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
-    <MinimumVisualStudioVersion>10.0</MinimumVisualStudioVersion>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{D6FBBB3A-F6B8-45BB-B657-A7226AB96624}</ProjectGuid>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{B41DB8FB-0D2F-45CE-9345-AF469FC05EE8}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NUnit</RootNamespace>
-    <AssemblyName>nunitlite</AssemblyName>
-    <DefaultLanguage>en-US</DefaultLanguage>
-    <FileAlignment>512</FileAlignment>
-    <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <TargetFrameworkProfile>Profile344</TargetFrameworkProfile>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <IntermediateOutputPath>obj\$(Configuration)\portable\</IntermediateOutputPath>
+    <RootNamespace>NUnit.Framework</RootNamespace>
+    <AssemblyName>nunit.framework</AssemblyName>
+    <ProjectTypeGuids>{4D628B5B-2FBC-4AA6-8C16-197242AEB884};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <PlatformFamilyName>WindowsCE</PlatformFamilyName>
+    <PlatformID>E2BECB1F-8C8C-41ba-B736-9BE7D946A398</PlatformID>
+    <OSVersion>5.0</OSVersion>
+    <DeployDirSuffix>nunitlite_netcf_3._5</DeployDirSuffix>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <NativePlatformName>Windows CE</NativePlatformName>
+    <FormFactorID>
+    </FormFactorID>
+    <IntermediateOutputPath>obj\$(Configuration)\netcf-3.5\</IntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\bin\Debug\portable\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;NUNITLITE;PORTABLE</DefineConstants>
+    <OutputPath>..\..\..\bin\Debug\netcf-3.5\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;WindowsCE;NETCF;NETCF_3_5;NUNITLITE</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
     <ErrorReport>prompt</ErrorReport>
+    <FileAlignment>512</FileAlignment>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>$(OutputPath)nunitlite.xml</DocumentationFile>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+    <DocumentationFile>..\..\..\bin\Debug\netcf-3.5\nunit.framework.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\..\bin\Release\portable\</OutputPath>
-    <DefineConstants>TRACE;NUNITLITE;PORTABLE</DefineConstants>
+    <OutputPath>..\..\..\bin\Release\netcf-3.5\</OutputPath>
+    <DefineConstants>TRACE;WindowsCE;NETCF;NETCF_3_5;NUNITLITE</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
     <ErrorReport>prompt</ErrorReport>
+    <FileAlignment>512</FileAlignment>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>$(OutputPath)nunitlite.xml</DocumentationFile>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+    <DocumentationFile>..\..\..\bin\Release\netcf-3.5\nunit.framework.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
@@ -43,8 +54,10 @@
     <AssemblyOriginatorKeyFile>nunit.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <!-- A reference to the entire .NET Framework is automatically included -->
-    <Content Include="Attributes\AttributeHierarchy.txt" />
+    <Reference Include="mscorlib" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\CommonAssemblyInfo.cs">
@@ -77,10 +90,11 @@
     <Compile Include="ActionTargets.cs" />
     <Compile Include="Api\DefaultTestAssemblyBuilder.cs" />
     <Compile Include="Api\DriverSettings.cs" />
-    <Compile Include="Api\FrameworkController.cs" />
     <Compile Include="Api\ITestAssemblyBuilder.cs" />
     <Compile Include="Api\ITestAssemblyRunner.cs" />
-    <Compile Include="Api\NUnitTestAssemblyRunner.cs" />
+    <Compile Include="Api\NUnitTestAssemblyRunner.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Assert.cs" />
     <Compile Include="AssertionHelper.cs" />
     <Compile Include="Assume.cs" />
@@ -111,12 +125,7 @@
     <Compile Include="Attributes\RandomAttribute.cs" />
     <Compile Include="Attributes\RangeAttribute.cs" />
     <Compile Include="Attributes\RepeatAttribute.cs" />
-    <Compile Include="Attributes\RequiresMTAAtribute.cs" />
-    <Compile Include="Attributes\RequiresSTAAttribute.cs" />
-    <Compile Include="Attributes\RequiresThreadAttribute.cs" />
     <Compile Include="Attributes\SequentialAttribute.cs" />
-    <Compile Include="Attributes\SetCultureAttribute.cs" />
-    <Compile Include="Attributes\SetUICultureAttribute.cs" />
     <Compile Include="Attributes\SetUpAttribute.cs" />
     <Compile Include="Attributes\SetUpFixtureAttribute.cs" />
     <Compile Include="Attributes\TearDownAttribute.cs" />
@@ -135,7 +144,6 @@
     <Compile Include="Attributes\ValueSourceAttribute.cs" />
     <Compile Include="CollectionAssert.cs" />
     <Compile Include="Compatibility\AttributeHelper.cs" />
-    <Compile Include="Compatibility\Path.cs" />
     <Compile Include="Compatibility\SerializableAttribute.cs" />
     <Compile Include="Compatibility\Stopwatch.cs" />
     <Compile Include="Constraints\AllItemsConstraint.cs" />
@@ -174,6 +182,8 @@
     <Compile Include="Constraints\ExactTypeConstraint.cs" />
     <Compile Include="Constraints\ExceptionTypeConstraint.cs" />
     <Compile Include="Constraints\FalseConstraint.cs" />
+    <Compile Include="Constraints\FileExistsConstraint.cs" />
+    <Compile Include="Constraints\FileOrDirectoryExistsConstraint.cs" />
     <Compile Include="Constraints\FloatingPointNumerics.cs" />
     <Compile Include="Constraints\GreaterThanConstraint.cs" />
     <Compile Include="Constraints\GreaterThanOrEqualConstraint.cs" />
@@ -235,6 +245,7 @@
     <Compile Include="Constraints\UniqueItemsConstraint.cs" />
     <Compile Include="Constraints\XmlSerializableConstraint.cs" />
     <Compile Include="Contains.cs" />
+    <Compile Include="DirectoryAssert.cs" />
     <Compile Include="Does.cs" />
     <Compile Include="Env.cs" />
     <Compile Include="Exceptions\AssertionException.cs" />
@@ -242,6 +253,7 @@
     <Compile Include="Exceptions\InconclusiveException.cs" />
     <Compile Include="Exceptions\ResultStateException.cs" />
     <Compile Include="Exceptions\SuccessException.cs" />
+    <Compile Include="FileAssert.cs" />
     <Compile Include="GlobalSettings.cs" />
     <Compile Include="Has.cs" />
     <Compile Include="Interfaces\ICombiningStrategy.cs" />
@@ -266,7 +278,6 @@
     <Compile Include="Interfaces\TestStatus.cs" />
     <Compile Include="Interfaces\XmlNode.cs" />
     <Compile Include="Internal\ActionsHelper.cs" />
-    <Compile Include="Internal\AsyncInvocationRegion.cs" />
     <Compile Include="Internal\Builders\CombinatorialStrategy.cs" />
     <Compile Include="Internal\Builders\DatapointProvider.cs" />
     <Compile Include="Internal\Builders\DefaultSuiteBuilder.cs" />
@@ -301,14 +312,10 @@
     <Compile Include="Internal\Execution\IWorkItemDispatcher.cs" />
     <Compile Include="Internal\Execution\SimpleWorkItem.cs" />
     <Compile Include="Internal\Execution\SimpleWorkItemDispatcher.cs" />
-    <Compile Include="Internal\Execution\TestWorker.cs" />
-    <Compile Include="Internal\Execution\TextCapture.cs" />
     <Compile Include="Internal\Execution\TextMessageWriter.cs" />
     <Compile Include="Internal\Execution\WorkItem.cs" />
-    <Compile Include="Internal\Execution\WorkItemQueue.cs" />
     <Compile Include="Internal\Execution\WorkItemState.cs" />
     <Compile Include="Internal\Filters\AndFilter.cs" />
-    <Compile Include="Internal\Filters\CategoryExpression.cs" />
     <Compile Include="Internal\Filters\CategoryFilter.cs" />
     <Compile Include="Internal\Filters\IdFilter.cs" />
     <Compile Include="Internal\Filters\NotFilter.cs" />
@@ -320,6 +327,7 @@
     <Compile Include="Internal\IApplyToTest.cs" />
     <Compile Include="Internal\InvalidTestFixtureException.cs" />
     <Compile Include="Internal\MethodHelper.cs" />
+    <Compile Include="Internal\NetCFExtensions.cs" />
     <Compile Include="Internal\NUnitException.cs" />
     <Compile Include="Internal\OSPlatform.cs" />
     <Compile Include="Internal\ParameterSet.cs" />
@@ -338,7 +346,6 @@
     <Compile Include="Internal\TestExecutionContext.cs" />
     <Compile Include="Internal\TestFilter.cs" />
     <Compile Include="Internal\TestListener.cs" />
-    <Compile Include="Internal\TestProgressReporter.cs" />
     <Compile Include="Internal\Tests\ParameterizedFixtureSuite.cs" />
     <Compile Include="Internal\Tests\ParameterizedMethodSuite.cs" />
     <Compile Include="Internal\Tests\SetUpFixture.cs" />
@@ -366,9 +373,17 @@
     <None Include="nunit.snk" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Runner\" />
+    <Content Include="Attributes\AttributeHierarchy.txt" />
+    <Content Include="Interfaces\InterfaceChanges.txt" />
   </ItemGroup>
-  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
+  <Import Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}">
+        <HostingProcess disable="1" />
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
