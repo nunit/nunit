@@ -42,8 +42,6 @@ namespace NUnit.ConsoleRunner
         private string _displayLabels;
         private TextWriter _outWriter;
 
-        private List<string> _messages = new List<string>();
-        
 
         public TestEventHandler(TextWriter outWriter, string displayLabels)
         {

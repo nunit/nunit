@@ -30,12 +30,10 @@ namespace NUnit.ConsoleRunner
 {
     public class XmlTransformOutputWriter : IResultWriter
     {
-        private string xsltFile;
         private XslCompiledTransform transform = new XslCompiledTransform();
 
         public XmlTransformOutputWriter(string xsltFile)
         {
-            this.xsltFile = xsltFile;
             transform.Load(xsltFile);
         }
 
