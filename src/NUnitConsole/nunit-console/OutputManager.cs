@@ -30,19 +30,17 @@ namespace NUnit.ConsoleRunner
 {
     public class OutputManager
     {
-        private XmlNode result;
-        private string workDirectory;
+        private readonly string _workDirectory;
 
-        public OutputManager(XmlNode result, string workDirectory)
+        public OutputManager(string workDirectory)
         {
-            this.result = result;
-            this.workDirectory = workDirectory;
+            _workDirectory = workDirectory;
         }
 
-        public void WriteResultFile(OutputSpecification spec, DateTime startTime)
+        public void WriteResultFile(XmlNode result, OutputSpecification spec)
         {
-            string outputPath = Path.Combine(workDirectory, spec.OutputPath);
-            IResultWriter outputWriter = null;
+            string outputPath = Path.Combine(_workDirectory, spec.OutputPath);
+            IResultWriter outputWriter;
 
             switch (spec.Format)
             {
@@ -68,37 +66,6 @@ namespace NUnit.ConsoleRunner
 
             outputWriter.WriteResultFile(result, outputPath);
             Console.WriteLine("Results ({0}) saved as {1}", spec.Format, outputPath);
-        }
-
-        public void WriteTestFile(OutputSpecification spec)
-        {
-            string outputPath = Path.Combine(workDirectory, spec.OutputPath);
-            IResultWriter outputWriter = null;
-
-            switch (spec.Format)
-            {
-                case "nunit3":
-                    outputWriter = new NUnit3XmlOutputWriter();
-                    break;
-
-                case "cases":
-                    outputWriter = new TestCaseOutputWriter();
-                    break;
-
-                case "user":
-                    Uri uri = new Uri(Assembly.GetExecutingAssembly().CodeBase);
-                    string dir = Path.GetDirectoryName(uri.LocalPath);
-                    outputWriter = new XmlTransformOutputWriter(Path.Combine(dir, spec.Transform));
-                    break;
-
-                default:
-                    throw new ArgumentException(
-                        string.Format("Invalid XML output format '{0}'", spec.Format),
-                        "spec");
-            }
-
-            outputWriter.WriteResultFile(result, outputPath);
-            Console.WriteLine("Tests ({0}) saved as {1}", spec.Format, outputPath);
         }
     }
 }

@@ -98,7 +98,7 @@ namespace NUnit.ConsoleRunner
 
         private int ExploreTests(TestPackage package, TestFilter filter)
         {
-            XmlNode result = null;
+            XmlNode result;
 
             using (var runner = _engine.GetRunner(package))
                 result = runner.Explore(filter);
@@ -109,10 +109,10 @@ namespace NUnit.ConsoleRunner
             }
             else
             {
-                var outputManager = new OutputManager(result, _workDirectory);
+                var outputManager = new OutputManager(_workDirectory);
 
                 foreach (OutputSpecification spec in _options.ExploreOutputSpecifications)
-                    outputManager.WriteTestFile(spec);
+                    outputManager.WriteResultFile(result, spec);
             }
 
             return ConsoleRunner.OK;
@@ -123,21 +123,26 @@ namespace NUnit.ConsoleRunner
             // TODO: We really need options as resolved by engine for most of  these
             DisplayRequestedOptions();
 
+            // TODO: Inject this?
+            var outputManager = new OutputManager(_workDirectory);
+            XmlNode commandLineXml = GetCommandLine();
+
+            foreach (var outputSpec in _options.ResultOutputSpecifications)
+                outputManager.WriteResultFile(commandLineXml, outputSpec);
+
             // TODO: Incorporate this in EventCollector?
             RedirectOutputAsRequested();
 
             var labels = _options.DisplayTestLabels != null
                 ? _options.DisplayTestLabels.ToUpperInvariant()
                 : "ON";
-            TestEventHandler eventHandler = new TestEventHandler(_outWriter, labels);
+            var eventHandler = new TestEventHandler(_outWriter, labels);
 
-            XmlNode result = null;
+            XmlNode result;
 
             // Save things that might be messed up by a bad test
             TextWriter savedOut = Console.Out;
             TextWriter savedError = Console.Error;
-
-            DateTime startTime = DateTime.Now;
 
             try
             {
@@ -155,16 +160,11 @@ namespace NUnit.ConsoleRunner
                 RestoreOutput();
             }
 
-            //Console.WriteLine();
-
-            ResultReporter reporter = new ResultReporter(result, _options);
+            var reporter = new ResultReporter(result, _options);
             reporter.ReportResults();
 
-            // TODO: Inject this?
-            var outputManager = new OutputManager(result, _workDirectory);
-
             foreach (var outputSpec in _options.ResultOutputSpecifications)
-                outputManager.WriteResultFile(outputSpec, startTime);
+                outputManager.WriteResultFile(result, outputSpec);
 
             return reporter.Summary.ErrorsAndFailures;
         }
@@ -198,6 +198,20 @@ namespace NUnit.ConsoleRunner
 
             if (!string.IsNullOrEmpty( _options.Exclude ))
                 ColorConsole.WriteLabel("Excluded categories: ", _options.Exclude, true);
+        }
+
+        private XmlNode GetCommandLine()
+        {
+            var doc = new XmlDocument();
+            var test = doc.CreateElement("test-run");
+            test.AddAttribute("start-time", DateTime.UtcNow.ToString("u"));
+            doc.AppendChild(test);
+
+            var cmd = doc.CreateElement("command-line");
+            var cdata = doc.CreateCDataSection(Environment.CommandLine);
+            cmd.AppendChild(cdata);
+            test.AppendChild(cmd);
+            return doc;
         }
 
         private void RedirectOutputAsRequested()
