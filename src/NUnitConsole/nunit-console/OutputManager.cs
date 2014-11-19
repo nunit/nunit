@@ -37,7 +37,7 @@ namespace NUnit.ConsoleRunner
             _workDirectory = workDirectory;
         }
 
-        public void WriteResultFile(XmlNode result, OutputSpecification spec)
+        public string WriteFile(XmlNode result, OutputSpecification spec)
         {
             string outputPath = Path.Combine(_workDirectory, spec.OutputPath);
             IResultWriter outputWriter;
@@ -59,12 +59,16 @@ namespace NUnit.ConsoleRunner
                     break;
 
                 default:
-                    throw new ArgumentException(
-                        string.Format("Invalid XML output format '{0}'", spec.Format),
-                        "spec");
+                    throw new ArgumentException(string.Format("Invalid XML output format '{0}'", spec.Format), "spec");
             }
 
             outputWriter.WriteResultFile(result, outputPath);
+            return outputPath;
+        }
+
+        public void WriteResultFile(XmlNode result, OutputSpecification spec)
+        {
+            string outputPath = WriteFile(result, spec);
             Console.WriteLine("Results ({0}) saved as {1}", spec.Format, outputPath);
         }
     }

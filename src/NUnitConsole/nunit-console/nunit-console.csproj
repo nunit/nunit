@@ -74,6 +74,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="ResultSummary.cs" />
     <Compile Include="TestEventHandler.cs" />
+    <Compile Include="Utilities\RestoreConsoleOutput.cs" />
     <Compile Include="Utilities\TestFilterBuilder.cs" />
     <Compile Include="ResultReporter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -128,7 +128,7 @@ namespace NUnit.ConsoleRunner
             XmlNode commandLineXml = GetCommandLine();
 
             foreach (var outputSpec in _options.ResultOutputSpecifications)
-                outputManager.WriteResultFile(commandLineXml, outputSpec);
+                outputManager.WriteFile(commandLineXml, outputSpec);
 
             // TODO: Incorporate this in EventCollector?
             RedirectOutputAsRequested();
@@ -139,14 +139,10 @@ namespace NUnit.ConsoleRunner
             var eventHandler = new TestEventHandler(_outWriter, labels);
 
             XmlNode result;
-
-            // Save things that might be messed up by a bad test
-            TextWriter savedOut = Console.Out;
-            TextWriter savedError = Console.Error;
-
             try
             {
-                using ( new ColorConsole( ColorStyle.Output ) )
+                using (new RestoreConsoleOutput())
+                using (new ColorConsole(ColorStyle.Output))
                 using (ITestRunner runner = _engine.GetRunner(package))
                 {
                     result = runner.Run(eventHandler, filter);
@@ -154,9 +150,6 @@ namespace NUnit.ConsoleRunner
             }
             finally
             {
-                Console.SetOut(savedOut);
-                Console.SetError(savedError);
-
                 RestoreOutput();
             }
 
