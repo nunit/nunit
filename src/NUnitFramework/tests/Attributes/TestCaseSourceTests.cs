@@ -268,13 +268,11 @@ namespace NUnit.Framework.Attributes
             Assert.AreEqual("System.Exception : my message", result.Message);
         }
 
-#if !NUNITLITE
         [TestCaseSource("exception_source"), Explicit]
         public void HandlesExceptioninTestCaseSource_GuiDisplay(string lhs, string rhs)
         {
             Assert.AreEqual(lhs, rhs);
         }
-#endif
 
         object[] testCases =
         {

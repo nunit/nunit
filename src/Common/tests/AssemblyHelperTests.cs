@@ -21,6 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#if !NETCF && !SILVERLIGHT && !PORTABLE
 using System;
 using System.IO;
 using System.Reflection;
@@ -28,7 +29,7 @@ using NUnit.Framework;
 
 #if NUNIT_ENGINE
 namespace NUnit.Engine.Internal.Tests
-#elif NUNIT_FRAMEWORK || NUNITLITE
+#elif NUNIT_FRAMEWORK
 namespace NUnit.Framework.Internal.Tests
 #else
 namespace NUnit.Common.Tests
@@ -104,3 +105,4 @@ namespace NUnit.Common.Tests
 #endif
     }
 }
+#endif

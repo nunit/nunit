@@ -2,7 +2,7 @@
 
 #if NUNIT_ENGINE
 namespace NUnit.Engine
-#elif NUNIT_FRAMEWORK || NUNITLITE
+#elif NUNIT_FRAMEWORK
 namespace NUnit.Framework
 #else
 namespace NUnit.Common

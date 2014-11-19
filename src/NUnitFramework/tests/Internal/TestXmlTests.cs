@@ -45,13 +45,11 @@ namespace NUnit.Framework.Internal
                 Is.EqualTo("GenericMethod"));
             Assert.That(new ParameterizedMethodSuite(typeof(DummyFixture).GetMethod("ParameterizedMethod")).TestType,
                 Is.EqualTo("ParameterizedMethod"));
-#if !NUNITLITE
             Assert.That(new ParameterizedFixtureSuite(typeof(DummyFixture)).TestType,
                 Is.EqualTo("ParameterizedFixture"));
             Type genericType = typeof(DummyGenericFixture<int>).GetGenericTypeDefinition();
             Assert.That(new ParameterizedFixtureSuite(genericType).TestType,
                 Is.EqualTo("GenericFixture"));
-#endif
         }
 
         [Test]
@@ -159,10 +157,8 @@ namespace NUnit.Framework.Internal
             public void GenericMethod<T>(T x) { }
         }
 
-#if !NUNITLITE
         public class DummyGenericFixture<T>
         {
         }
-#endif
     }
 }

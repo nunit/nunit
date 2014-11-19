@@ -27,11 +27,7 @@ using System.Reflection;
 // Information about this assembly is defined by the following attributes. 
 // Change them to the _values specific to your project.
 
-#if NUNITLITE
-[assembly: AssemblyTitle("NUnitLite Framework Assembly")]
-#else
-[assembly: AssemblyTitle("NUnit Framework Assembly")]
-#endif
+[assembly: AssemblyTitle("NUnit Framework")]
 
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyCulture("")]

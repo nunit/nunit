@@ -123,22 +123,6 @@ namespace NUnit.Framework.Internal
             tests.Add(test);
         }
 
-#if !NUNITLITE
-        /// <summary>
-        /// Adds a pre-constructed test fixture to the suite.
-        /// </summary>
-        /// <param name="fixture">The fixture.</param>
-        public void Add( object fixture )
-        {
-            Test test = new Builders.DefaultSuiteBuilder().BuildFrom( fixture.GetType() );
-            if (test != null)
-            {
-                test.Fixture = fixture;
-                Add(test);
-            }
-        }
-#endif
-
         #endregion
 
         #region Properties

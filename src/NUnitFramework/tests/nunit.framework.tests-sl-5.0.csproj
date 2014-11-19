@@ -102,8 +102,10 @@
     <Compile Include="Assertions\GreaterFixture.cs" />
     <Compile Include="Assertions\LessEqualFixture.cs" />
     <Compile Include="Assertions\LessFixture.cs" />
+    <Compile Include="Assertions\ListContentsTests.cs" />
     <Compile Include="Assertions\NotEqualFixture.cs" />
     <Compile Include="Assertions\NotSameFixture.cs" />
+    <Compile Include="Assertions\NullableTypesTests.cs" />
     <Compile Include="Assertions\SameFixture.cs" />
     <Compile Include="Assertions\StringAssertTests.cs" />
     <Compile Include="Assertions\TypeAssertTest.cs" />

@@ -324,23 +324,12 @@ namespace NUnitLite.Runner
         {
             Assembly executingAssembly = Assembly.GetExecutingAssembly();
             AssemblyName assemblyName = AssemblyHelper.GetAssemblyName(executingAssembly);
-#if NUNITLITE
-            string title = "NUnitLite";
-#else
-            string title = "NUNit Framework";
-#endif
+
             System.Version version = assemblyName.Version;
             string copyright = "Copyright (C) 2012, Charlie Poole";
             string build = "";
 
-            object[] attrs = executingAssembly.GetCustomAttributes(typeof(AssemblyTitleAttribute), false);
-            if (attrs.Length > 0)
-            {
-                AssemblyTitleAttribute titleAttr = (AssemblyTitleAttribute)attrs[0];
-                title = titleAttr.Title;
-            }
-
-            attrs = executingAssembly.GetCustomAttributes(typeof(AssemblyCopyrightAttribute), false);
+            object[] attrs = executingAssembly.GetCustomAttributes(typeof(AssemblyCopyrightAttribute), false);
             if (attrs.Length > 0)
             {
                 AssemblyCopyrightAttribute copyrightAttr = (AssemblyCopyrightAttribute)attrs[0];
@@ -354,7 +343,7 @@ namespace NUnitLite.Runner
                 build = string.Format("({0})", configAttr.Configuration); 
             }
 
-            writer.WriteLine(ColorStyle.Header, String.Format("{0} {1} {2}", title, version.ToString(3), build));
+            writer.WriteLine(ColorStyle.Header, String.Format("NUnitLite {0} {1}", version.ToString(3), build));
             writer.WriteLine(ColorStyle.SubHeader, copyright);
             writer.WriteLine();
         }

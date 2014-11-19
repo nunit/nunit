@@ -289,7 +289,7 @@ namespace NUnit.Framework.Attributes
 
         #endregion
 
-#if !NUNITLITE
+#if !SILVERLIGHT && !NETCF && !PORTABLE
 
         #region RepeatAttribute
 

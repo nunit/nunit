@@ -27,11 +27,7 @@ using NUnit.Framework;
 // Information about this assembly is defined by the following attributes. 
 // Change them to the _values specific to your project.
 
-#if NUNITLITE
-[assembly: AssemblyTitle("NUnitLite Tests")]
-#else
 [assembly: AssemblyTitle("NUnit Framework Tests")]
-#endif
 
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyCulture("")]

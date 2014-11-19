@@ -29,10 +29,8 @@ using NUnit.Framework;
 #if !NETCF
 using System.Security.Principal;
 #endif
-#if !NUNITLITE
 using NUnit.TestData.TestContextData;
 using NUnit.TestUtilities;
-#endif
 
 namespace NUnit.Framework.Internal
 {
