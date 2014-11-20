@@ -199,6 +199,10 @@
     <Compile Include="Internal\UnhandledExceptionTests.cs" />
     <Compile Include="NUnitLite.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Runner\CommandLineOptionTests.cs" />
+    <Compile Include="Runner\CreateTestFilterTests.cs" />
+    <Compile Include="Runner\MakeRunSettingsTests.cs" />
+    <Compile Include="Runner\TeamCityEventListenerTests.cs" />
     <Compile Include="Syntax\AfterTests.cs" />
     <Compile Include="Syntax\ArbitraryConstraintMatching.cs" />
     <Compile Include="Syntax\CollectionTests.cs" />
