@@ -196,6 +196,11 @@
     <Compile Include="Internal\UnhandledExceptionTests.cs" />
     <Compile Include="Internal\WorkItemQueueTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Runner\CommandLineOptionTests.cs" />
+    <Compile Include="Runner\CreateTestFilterTests.cs" />
+    <Compile Include="Runner\MakeRunSettingsTests.cs" />
+    <Compile Include="Runner\NUnit2XmlOutputWriterTests.cs" />
+    <Compile Include="Runner\TeamCityEventListenerTests.cs" />
     <Compile Include="Syntax\AfterTests.cs" />
     <Compile Include="Syntax\ArbitraryConstraintMatching.cs" />
     <Compile Include="Syntax\CollectionTests.cs" />
@@ -256,6 +261,10 @@
     <ProjectReference Include="..\mock-assembly\mock-nunit-assembly-3.5.csproj">
       <Project>{7C36E4B4-16A7-450B-9919-BA35825F46B6}</Project>
       <Name>mock-nunit-assembly-3.5</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\nunitlite.runner\nunitlite.runner-3.5.csproj">
+      <Project>{ce9ef1ee-b954-4dea-b016-952f5f4b11a2}</Project>
+      <Name>nunitlite.runner-3.5</Name>
     </ProjectReference>
     <ProjectReference Include="..\testdata\nunit.testdata-3.5.csproj">
       <Project>{A59532C1-4C4F-48D8-9792-3BBAC9E39252}</Project>
