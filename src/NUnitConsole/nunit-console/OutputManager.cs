@@ -52,34 +52,32 @@ namespace NUnit.ConsoleRunner
             Console.WriteLine("Results ({0}) saved as {1}", spec.Format, outputPath);
         }
 
-        private string GetOutputPath( string filename )
+        private string GetOutputPath(string filename)
         {
-            return Path.Combine( _workDirectory, filename );
+            return Path.Combine(_workDirectory, filename);
         }
 
-        private static IResultWriter CreateOutputWriter( string spec, string transform )
+        private static IResultWriter CreateOutputWriter(string spec, string transform)
         {
-            IResultWriter outputWriter;
-            switch ( spec )
+            switch (spec)
             {
                 case "nunit3":
-                    outputWriter = new NUnit3XmlOutputWriter( );
-                    break;
+                    return new NUnit3XmlOutputWriter();
 
                 case "nunit2":
-                    outputWriter = new NUnit2XmlOutputWriter( );
-                    break;
+                    return new NUnit2XmlOutputWriter();
+
+                case "cases":
+                    return new TestCaseOutputWriter();
 
                 case "user":
-                    Uri uri = new Uri( Assembly.GetExecutingAssembly( ).CodeBase );
-                    string dir = Path.GetDirectoryName( uri.LocalPath );
-                    outputWriter = new XmlTransformOutputWriter( Path.Combine( dir, transform ) );
-                    break;
+                    Uri uri = new Uri(Assembly.GetExecutingAssembly().CodeBase);
+                    string dir = Path.GetDirectoryName(uri.LocalPath);
+                    return new XmlTransformOutputWriter(Path.Combine(dir, transform));
 
                 default:
-                    throw new ArgumentException( string.Format( "Invalid XML output format '{0}'", spec ), "spec" );
+                    throw new ArgumentException(string.Format("Invalid XML output format '{0}'", spec), "spec");
             }
-            return outputWriter;
         }
     }
 }
