@@ -61,7 +61,7 @@ namespace NUnit.Framework.Internal
             Assert.AreEqual(expectedMessage, result.Message);
         }
 
-#if !NET_2_0 && !NET_3_5
+#if !NET_2_0 && !NET_3_5 && !NETCF
         [Test]
         public void FailRecordsInnerExceptionsAsPartOfAggregateException()
         {
