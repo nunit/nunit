@@ -37,39 +37,49 @@ namespace NUnit.ConsoleRunner
             _workDirectory = workDirectory;
         }
 
-        public string WriteFile(XmlNode result, OutputSpecification spec)
+        public void CheckWritability(OutputSpecification spec)
         {
-            string outputPath = Path.Combine(_workDirectory, spec.OutputPath);
-            IResultWriter outputWriter;
-
-            switch (spec.Format)
-            {
-                case "nunit3":
-                    outputWriter = new NUnit3XmlOutputWriter();
-                    break;
-
-                case "nunit2":
-                    outputWriter = new NUnit2XmlOutputWriter();
-                    break;
-
-                case "user":
-                    Uri uri = new Uri(Assembly.GetExecutingAssembly().CodeBase);
-                    string dir = Path.GetDirectoryName(uri.LocalPath);
-                    outputWriter = new XmlTransformOutputWriter(Path.Combine(dir, spec.Transform));
-                    break;
-
-                default:
-                    throw new ArgumentException(string.Format("Invalid XML output format '{0}'", spec.Format), "spec");
-            }
-
-            outputWriter.WriteResultFile(result, outputPath);
-            return outputPath;
+            string outputPath = GetOutputPath(spec.OutputPath);
+            IResultWriter outputWriter = CreateOutputWriter(spec.Format, spec.Transform);
+            outputWriter.CheckWritability(outputPath);
         }
 
         public void WriteResultFile(XmlNode result, OutputSpecification spec)
         {
-            string outputPath = WriteFile(result, spec);
+            string outputPath = GetOutputPath(spec.OutputPath);
+            IResultWriter outputWriter = CreateOutputWriter(spec.Format, spec.Transform);
+            outputWriter.WriteResultFile(result, outputPath);
             Console.WriteLine("Results ({0}) saved as {1}", spec.Format, outputPath);
+        }
+
+        private string GetOutputPath( string filename )
+        {
+            return Path.Combine( _workDirectory, filename );
+        }
+
+        private static IResultWriter CreateOutputWriter( string spec, string transform )
+        {
+            IResultWriter outputWriter;
+            switch ( spec )
+            {
+                case "nunit3":
+                    outputWriter = new NUnit3XmlOutputWriter( );
+                    break;
+
+                case "nunit2":
+                    outputWriter = new NUnit2XmlOutputWriter( );
+                    break;
+
+                case "user":
+                    Uri uri = new Uri( Assembly.GetExecutingAssembly( ).CodeBase );
+                    string dir = Path.GetDirectoryName( uri.LocalPath );
+                    outputWriter = new XmlTransformOutputWriter( Path.Combine( dir, transform ) );
+                    break;
+
+                default:
+                    throw new ArgumentException( string.Format( "Invalid XML output format '{0}'", spec ), "spec" );
+            }
+            return outputWriter;
         }
     }
 }

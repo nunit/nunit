@@ -30,7 +30,7 @@ namespace NUnit.ConsoleRunner.Utilities
     /// Saves Console.Out and Console.Error and restores them when the object
     /// is destroyed
     /// </summary>
-    public sealed class RestoreConsoleOutput : IDisposable
+    public sealed class SaveConsoleOutput : IDisposable
     {
         private readonly TextWriter _savedOut = Console.Out;
         private readonly TextWriter _savedError = Console.Error;

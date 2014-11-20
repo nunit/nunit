@@ -125,10 +125,9 @@ namespace NUnit.ConsoleRunner
 
             // TODO: Inject this?
             var outputManager = new OutputManager(_workDirectory);
-            XmlNode commandLineXml = GetCommandLine();
 
             foreach (var outputSpec in _options.ResultOutputSpecifications)
-                outputManager.WriteFile(commandLineXml, outputSpec);
+                outputManager.CheckWritability(outputSpec);
 
             // TODO: Incorporate this in EventCollector?
             RedirectOutputAsRequested();
@@ -141,7 +140,7 @@ namespace NUnit.ConsoleRunner
             XmlNode result;
             try
             {
-                using (new RestoreConsoleOutput())
+                using (new SaveConsoleOutput())
                 using (new ColorConsole(ColorStyle.Output))
                 using (ITestRunner runner = _engine.GetRunner(package))
                 {
@@ -191,20 +190,6 @@ namespace NUnit.ConsoleRunner
 
             if (!string.IsNullOrEmpty( _options.Exclude ))
                 ColorConsole.WriteLabel("Excluded categories: ", _options.Exclude, true);
-        }
-
-        private XmlNode GetCommandLine()
-        {
-            var doc = new XmlDocument();
-            var test = doc.CreateElement("test-run");
-            test.AddAttribute("start-time", DateTime.UtcNow.ToString("u"));
-            doc.AppendChild(test);
-
-            var cmd = doc.CreateElement("command-line");
-            var cdata = doc.CreateCDataSection(Environment.CommandLine);
-            cmd.AppendChild(cdata);
-            test.AppendChild(cmd);
-            return doc;
         }
 
         private void RedirectOutputAsRequested()

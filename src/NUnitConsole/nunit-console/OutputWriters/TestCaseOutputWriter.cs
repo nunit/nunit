@@ -29,9 +29,17 @@ namespace NUnit.ConsoleRunner
 {
     public class TestCaseOutputWriter : IResultWriter
     {
+        public void CheckWritability(string outputPath)
+        {
+            using (new StreamWriter(outputPath, false, Encoding.UTF8))
+            {
+                // Opening is enough to check
+            }
+        }
+
         public void WriteResultFile(XmlNode resultNode, string outputPath)
         {
-            using (StreamWriter writer = new StreamWriter(outputPath, false, Encoding.UTF8))
+            using (var writer = new StreamWriter(outputPath, false, Encoding.UTF8))
             {
                 WriteResultFile(resultNode, writer);
             }

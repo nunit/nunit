@@ -21,14 +21,18 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
-using System.IO;
 using System.Xml;
 
 namespace NUnit.ConsoleRunner
 {
     public interface IResultWriter
     {
+        /// <summary>
+        /// Checks if the output is writable. If the output is not
+        /// writable, this method should throw an exception.
+        /// </summary>
+        /// <param name="outputPath"></param>
+        void CheckWritability(string outputPath);
         void WriteResultFile(XmlNode resultNode, string outputPath);
     }
 }
