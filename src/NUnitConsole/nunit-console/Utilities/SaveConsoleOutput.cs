@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2011 Charlie Poole
+// Copyright (c) 2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,18 +21,27 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System.Xml;
+using System;
+using System.IO;
 
-namespace NUnit.ConsoleRunner
+namespace NUnit.ConsoleRunner.Utilities
 {
-    public interface IResultWriter
+    /// <summary>
+    /// Saves Console.Out and Console.Error and restores them when the object
+    /// is destroyed
+    /// </summary>
+    public sealed class SaveConsoleOutput : IDisposable
     {
+        private readonly TextWriter _savedOut = Console.Out;
+        private readonly TextWriter _savedError = Console.Error;
+
         /// <summary>
-        /// Checks if the output is writable. If the output is not
-        /// writable, this method should throw an exception.
+        /// Restores Console.Out and Console.Error
         /// </summary>
-        /// <param name="outputPath"></param>
-        void CheckWritability(string outputPath);
-        void WriteResultFile(XmlNode resultNode, string outputPath);
+        public void Dispose()
+        {
+            Console.SetOut(_savedOut);
+            Console.SetError(_savedError);
+        }
     }
 }

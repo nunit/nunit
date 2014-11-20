@@ -22,7 +22,6 @@
 // ***********************************************************************
 
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Reflection;
 using System.Text;
@@ -37,9 +36,19 @@ namespace NUnit.ConsoleRunner
     {
         private XmlWriter xmlWriter;
 
+        /// <summary>
+        /// Checks if the output is writable. If the output is not
+        /// writable, this method should throw an exception.
+        /// </summary>
+        /// <param name="outputPath"></param>
+        public void CheckWritability(string outputPath)
+        {
+            using ( new StreamWriter( outputPath, false, Encoding.UTF8 ) ) { }
+        }
+
         public void WriteResultFile(XmlNode result, string outputPath)
         {
-            using (StreamWriter writer = new StreamWriter(outputPath, false, Encoding.UTF8))
+            using (var writer = new StreamWriter(outputPath, false, Encoding.UTF8))
             {
                 WriteResultFile(result, writer);
             }
@@ -47,7 +56,7 @@ namespace NUnit.ConsoleRunner
 
         public void WriteResultFile(XmlNode result, TextWriter writer)
         {
-            using (XmlTextWriter xmlWriter = new XmlTextWriter(writer))
+            using (var xmlWriter = new XmlTextWriter(writer))
             {
                 xmlWriter.Formatting = Formatting.Indented;
                 WriteXmlOutput(result, xmlWriter);

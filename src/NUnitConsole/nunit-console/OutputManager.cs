@@ -30,75 +30,54 @@ namespace NUnit.ConsoleRunner
 {
     public class OutputManager
     {
-        private XmlNode result;
-        private string workDirectory;
+        private readonly string _workDirectory;
 
-        public OutputManager(XmlNode result, string workDirectory)
+        public OutputManager(string workDirectory)
         {
-            this.result = result;
-            this.workDirectory = workDirectory;
+            _workDirectory = workDirectory;
         }
 
-        public void WriteResultFile(OutputSpecification spec, DateTime startTime)
+        public void CheckWritability(OutputSpecification spec)
         {
-            string outputPath = Path.Combine(workDirectory, spec.OutputPath);
-            IResultWriter outputWriter = null;
+            string outputPath = GetOutputPath(spec.OutputPath);
+            IResultWriter outputWriter = CreateOutputWriter(spec.Format, spec.Transform);
+            outputWriter.CheckWritability(outputPath);
+        }
 
-            switch (spec.Format)
-            {
-                case "nunit3":
-                    outputWriter = new NUnit3XmlOutputWriter();
-                    break;
-
-                case "nunit2":
-                    outputWriter = new NUnit2XmlOutputWriter();
-                    break;
-
-                case "user":
-                    Uri uri = new Uri(Assembly.GetExecutingAssembly().CodeBase);
-                    string dir = Path.GetDirectoryName(uri.LocalPath);
-                    outputWriter = new XmlTransformOutputWriter(Path.Combine(dir, spec.Transform));
-                    break;
-
-                default:
-                    throw new ArgumentException(
-                        string.Format("Invalid XML output format '{0}'", spec.Format),
-                        "spec");
-            }
-
+        public void WriteResultFile(XmlNode result, OutputSpecification spec)
+        {
+            string outputPath = GetOutputPath(spec.OutputPath);
+            IResultWriter outputWriter = CreateOutputWriter(spec.Format, spec.Transform);
             outputWriter.WriteResultFile(result, outputPath);
             Console.WriteLine("Results ({0}) saved as {1}", spec.Format, outputPath);
         }
 
-        public void WriteTestFile(OutputSpecification spec)
+        private string GetOutputPath(string filename)
         {
-            string outputPath = Path.Combine(workDirectory, spec.OutputPath);
-            IResultWriter outputWriter = null;
+            return Path.Combine(_workDirectory, filename);
+        }
 
-            switch (spec.Format)
+        private static IResultWriter CreateOutputWriter(string spec, string transform)
+        {
+            switch (spec)
             {
                 case "nunit3":
-                    outputWriter = new NUnit3XmlOutputWriter();
-                    break;
+                    return new NUnit3XmlOutputWriter();
+
+                case "nunit2":
+                    return new NUnit2XmlOutputWriter();
 
                 case "cases":
-                    outputWriter = new TestCaseOutputWriter();
-                    break;
+                    return new TestCaseOutputWriter();
 
                 case "user":
                     Uri uri = new Uri(Assembly.GetExecutingAssembly().CodeBase);
                     string dir = Path.GetDirectoryName(uri.LocalPath);
-                    outputWriter = new XmlTransformOutputWriter(Path.Combine(dir, spec.Transform));
-                    break;
+                    return new XmlTransformOutputWriter(Path.Combine(dir, transform));
 
                 default:
-                    throw new ArgumentException(
-                        string.Format("Invalid XML output format '{0}'", spec.Format),
-                        "spec");
+                    throw new ArgumentException(string.Format("Invalid XML output format '{0}'", spec), "spec");
             }
-
-            outputWriter.WriteResultFile(result, outputPath);
-            Console.WriteLine("Tests ({0}) saved as {1}", spec.Format, outputPath);
         }
     }
 }

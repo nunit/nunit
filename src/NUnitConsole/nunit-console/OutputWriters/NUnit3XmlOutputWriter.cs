@@ -22,10 +22,10 @@
 // ***********************************************************************
 
 using System;
-using System.Reflection;
 using System.Text;
 using System.Xml;
 using System.IO;
+using NUnit.ConsoleRunner.Utilities;
 
 namespace NUnit.ConsoleRunner
 {
@@ -35,9 +35,20 @@ namespace NUnit.ConsoleRunner
     /// </summary>
     public class NUnit3XmlOutputWriter : IResultWriter
     {
+        /// <summary>
+        /// Checks if the output is writable. If the output is not
+        /// writable, this method should throw an exception.
+        /// </summary>
+        /// <param name="outputPath"></param>
+        public void CheckWritability(string outputPath)
+        {
+            XmlNode commandLine = GetCommandLine();
+            WriteResultFile(commandLine, outputPath);
+        }
+
         public void WriteResultFile(XmlNode resultNode, string outputPath)
         {
-            using (StreamWriter writer = new StreamWriter(outputPath, false, Encoding.UTF8))
+            using (var writer = new StreamWriter(outputPath, false, Encoding.UTF8))
             {
                 WriteResultFile(resultNode, writer);
             }
@@ -45,7 +56,7 @@ namespace NUnit.ConsoleRunner
 
         private void WriteResultFile(XmlNode resultNode, TextWriter writer)
         {
-            XmlWriterSettings settings = new XmlWriterSettings();
+            var settings = new XmlWriterSettings();
             settings.Indent = true;
 
             using (XmlWriter xmlWriter = XmlWriter.Create(writer, settings))
@@ -53,6 +64,20 @@ namespace NUnit.ConsoleRunner
                 xmlWriter.WriteStartDocument(false);
                 resultNode.WriteTo(xmlWriter);
             }
+        }
+
+        private XmlNode GetCommandLine()
+        {
+            var doc = new XmlDocument();
+            var test = doc.CreateElement("test-run");
+            test.AddAttribute("start-time", DateTime.UtcNow.ToString("u"));
+            doc.AppendChild(test);
+
+            var cmd = doc.CreateElement("command-line");
+            var cdata = doc.CreateCDataSection(Environment.CommandLine);
+            cmd.AppendChild(cdata);
+            test.AppendChild(cmd);
+            return doc;
         }
     }
 }

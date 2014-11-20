@@ -30,28 +30,44 @@ namespace NUnit.ConsoleRunner
 {
     public class XmlTransformOutputWriter : IResultWriter
     {
-        private XslCompiledTransform transform = new XslCompiledTransform();
+        private string _xsltFile;
+        private readonly XslCompiledTransform _transform = new XslCompiledTransform();
 
         public XmlTransformOutputWriter(string xsltFile)
         {
-            transform.Load(xsltFile);
+            _xsltFile = xsltFile;
+            _transform.Load(xsltFile);
+        }
+
+        /// <summary>
+        /// Checks if the output is writable. If the output is not
+        /// writable, this method should throw an exception.
+        /// </summary>
+        /// <param name="outputPath"></param>
+        public void CheckWritability(string outputPath)
+        {
+            using ( new StreamWriter( outputPath, false ) )
+            {
+                // We don't need to check if the XSLT file exists, 
+                // that would have thrown in the constructor
+            }
         }
 
         public void WriteResultFile(XmlNode result, TextWriter writer)
         {
-            using (XmlTextWriter xmlWriter = new XmlTextWriter(writer))
+            using (var xmlWriter = new XmlTextWriter(writer))
             {
                 xmlWriter.Formatting = Formatting.Indented;
-                transform.Transform(result, xmlWriter);
+                _transform.Transform(result, xmlWriter);
             }
         }
 
         public void WriteResultFile(XmlNode result, string outputPath)
         {
-            using (XmlTextWriter xmlWriter = new XmlTextWriter(outputPath, Encoding.Default))
+            using (var xmlWriter = new XmlTextWriter(outputPath, Encoding.Default))
             {
                 xmlWriter.Formatting = Formatting.Indented;
-                transform.Transform(result, xmlWriter);
+                _transform.Transform(result, xmlWriter);
             }
         }
     }

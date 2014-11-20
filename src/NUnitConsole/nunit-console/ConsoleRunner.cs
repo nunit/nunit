@@ -98,7 +98,7 @@ namespace NUnit.ConsoleRunner
 
         private int ExploreTests(TestPackage package, TestFilter filter)
         {
-            XmlNode result = null;
+            XmlNode result;
 
             using (var runner = _engine.GetRunner(package))
                 result = runner.Explore(filter);
@@ -109,10 +109,10 @@ namespace NUnit.ConsoleRunner
             }
             else
             {
-                var outputManager = new OutputManager(result, _workDirectory);
+                var outputManager = new OutputManager(_workDirectory);
 
                 foreach (OutputSpecification spec in _options.ExploreOutputSpecifications)
-                    outputManager.WriteTestFile(spec);
+                    outputManager.WriteResultFile(result, spec);
             }
 
             return ConsoleRunner.OK;
@@ -123,25 +123,25 @@ namespace NUnit.ConsoleRunner
             // TODO: We really need options as resolved by engine for most of  these
             DisplayRequestedOptions();
 
+            // TODO: Inject this?
+            var outputManager = new OutputManager(_workDirectory);
+
+            foreach (var outputSpec in _options.ResultOutputSpecifications)
+                outputManager.CheckWritability(outputSpec);
+
             // TODO: Incorporate this in EventCollector?
             RedirectOutputAsRequested();
 
             var labels = _options.DisplayTestLabels != null
                 ? _options.DisplayTestLabels.ToUpperInvariant()
                 : "ON";
-            TestEventHandler eventHandler = new TestEventHandler(_outWriter, labels);
+            var eventHandler = new TestEventHandler(_outWriter, labels);
 
-            XmlNode result = null;
-
-            // Save things that might be messed up by a bad test
-            TextWriter savedOut = Console.Out;
-            TextWriter savedError = Console.Error;
-
-            DateTime startTime = DateTime.Now;
-
+            XmlNode result;
             try
             {
-                using ( new ColorConsole( ColorStyle.Output ) )
+                using (new SaveConsoleOutput())
+                using (new ColorConsole(ColorStyle.Output))
                 using (ITestRunner runner = _engine.GetRunner(package))
                 {
                     result = runner.Run(eventHandler, filter);
@@ -149,22 +149,14 @@ namespace NUnit.ConsoleRunner
             }
             finally
             {
-                Console.SetOut(savedOut);
-                Console.SetError(savedError);
-
                 RestoreOutput();
             }
 
-            //Console.WriteLine();
-
-            ResultReporter reporter = new ResultReporter(result, _options);
+            var reporter = new ResultReporter(result, _options);
             reporter.ReportResults();
 
-            // TODO: Inject this?
-            var outputManager = new OutputManager(result, _workDirectory);
-
             foreach (var outputSpec in _options.ResultOutputSpecifications)
-                outputManager.WriteResultFile(outputSpec, startTime);
+                outputManager.WriteResultFile(result, outputSpec);
 
             return reporter.Summary.ErrorsAndFailures;
         }
