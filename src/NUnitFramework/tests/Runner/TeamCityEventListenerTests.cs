@@ -7,6 +7,7 @@ using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.TestUtilities;
 
+#if !SILVERLIGHT && !NETCF
 namespace NUnitLite.Runner.Tests
 {
     public class TeamCityEventListenerTests
@@ -102,3 +103,4 @@ namespace NUnitLite.Runner.Tests
         private void FakeTestMethod() { }
     }
 }
+#endif
