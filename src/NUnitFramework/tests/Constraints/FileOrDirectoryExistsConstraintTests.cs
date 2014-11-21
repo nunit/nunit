@@ -1,6 +1,6 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2014 Charlie Poole
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
 // "Software"), to deal in the Software without restriction, including
@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -35,11 +35,28 @@ namespace NUnit.Framework.Tests.Constraints
     {
         private FileOrDirectoryExistsConstraint _constraint;
         private TestDirectory _goodDir;
+#if NETCF
+        private const string BAD_DIRECTORY = @"\I\hope\this\is\garbage";
+#else
         private const string BAD_DIRECTORY = @"Z:\I\hope\this\is\garbage";
+#endif
         private const string BAD_FILE = "garbage.txt";
         private const string TEST_FILE = "Test1.txt";
         private const string RESOURCE_FILE = "TestText1.txt";
-        
+
+#if NETCF
+        private static readonly string tempPath = Path.GetTempPath();
+#endif
+
+        private static string TF(string fileName)
+        {
+#if NETCF
+            return Path.Combine(tempPath, fileName);
+#else
+            return fileName;
+#endif
+        }
+
         [SetUp]
         public void SetUp()
         {
@@ -57,9 +74,9 @@ namespace NUnit.Framework.Tests.Constraints
         [Test]
         public void PassesWhenFileInfoExists()
         {
-            using (new TestFile(TEST_FILE, RESOURCE_FILE))
+            using (new TestFile(TF(TEST_FILE), RESOURCE_FILE))
             {
-                var actual = new FileInfo(TEST_FILE);
+                var actual = new FileInfo(TF(TEST_FILE));
                 Assert.That(_constraint.ApplyTo(actual).IsSuccess);
                 Assert.That(actual, Does.Exist);
             }
@@ -76,10 +93,10 @@ namespace NUnit.Framework.Tests.Constraints
         [Test]
         public void PassesWhenFileStringExists()
         {
-            using (new TestFile(TEST_FILE, RESOURCE_FILE))
+            using (new TestFile(TF(TEST_FILE), RESOURCE_FILE))
             {
-                Assert.That(_constraint.ApplyTo(TEST_FILE).IsSuccess);
-                Assert.That(TEST_FILE, Does.Exist);
+                Assert.That(_constraint.ApplyTo(TF(TEST_FILE)).IsSuccess);
+                Assert.That(TF(TEST_FILE), Does.Exist);
             }
         }
 
@@ -93,20 +110,20 @@ namespace NUnit.Framework.Tests.Constraints
         [Test]
         public void FailsWhenIgnoreFilesIsTrueWithFileString()
         {
-            using (new TestFile(TEST_FILE, RESOURCE_FILE))
+            using (new TestFile(TF(TEST_FILE), RESOURCE_FILE))
             {
                 var constraint = new FileOrDirectoryExistsConstraint().IgnoreFiles;
-                Assert.That(constraint.ApplyTo(TEST_FILE).Status == ConstraintStatus.Failure);
+                Assert.That(constraint.ApplyTo(TF(TEST_FILE)).Status == ConstraintStatus.Failure);
             }
         }
 
         [Test]
         public void FailsWhenIgnoreFilesIsTrueWithFileInfo()
         {
-            using (new TestFile(TEST_FILE, RESOURCE_FILE))
+            using (new TestFile(TF(TEST_FILE), RESOURCE_FILE))
             {
                 var constraint = new FileOrDirectoryExistsConstraint().IgnoreFiles;
-                var ex = Assert.Throws<ArgumentException>(() => constraint.ApplyTo(new FileInfo(TEST_FILE)));
+                var ex = Assert.Throws<ArgumentException> (() => constraint.ApplyTo(new FileInfo(TF(TEST_FILE))));
                 Assert.That(ex.Message, Does.StartWith("The actual value must be a string or DirectoryInfo"));
             }
         }
@@ -122,7 +139,7 @@ namespace NUnit.Framework.Tests.Constraints
         public void FailsWhenIgnoreDirectoriesIsTrueWithDirectoryInfo()
         {
             var constraint = new FileOrDirectoryExistsConstraint().IgnoreDirectories;
-            var ex = Assert.Throws<ArgumentException>(() => constraint.ApplyTo(_goodDir.Directory));
+            var ex = Assert.Throws<ArgumentException> (() => constraint.ApplyTo(_goodDir.Directory));
             Assert.That(ex.Message, Does.StartWith("The actual value must be a string or FileInfo"));
         }
 
@@ -137,7 +154,7 @@ namespace NUnit.Framework.Tests.Constraints
         [Test]
         public void FailsWhenFileInfoDoesNotExist()
         {
-            var actual = new FileInfo(BAD_FILE);
+            var actual = new FileInfo(TF(BAD_FILE));
             Assert.That(_constraint.ApplyTo(actual).Status == ConstraintStatus.Failure);
             Assert.That(actual, Does.Not.Exist);
         }
@@ -145,8 +162,8 @@ namespace NUnit.Framework.Tests.Constraints
         [Test]
         public void FailsWhenFileStringDoesNotExist()
         {
-            Assert.That(_constraint.ApplyTo(BAD_FILE).Status == ConstraintStatus.Failure);
-            Assert.That(BAD_FILE, Does.Not.Exist);
+            Assert.That(_constraint.ApplyTo(TF(BAD_FILE)).Status == ConstraintStatus.Failure);
+            Assert.That(TF(BAD_FILE), Does.Not.Exist);
         }
 
         [Test]
@@ -159,35 +176,35 @@ namespace NUnit.Framework.Tests.Constraints
         [Test]
         public void FailsWhenNotStringOrDirectoryInfo()
         {
-            var ex = Assert.Throws<ArgumentException>(() => _constraint.ApplyTo(42));
+            var ex = Assert.Throws<ArgumentException> (() => _constraint.ApplyTo(42));
             Assert.That(ex.Message, Does.StartWith("The actual value must be a string, FileInfo or DirectoryInfo"));
         }
 
         [Test]
         public void FailsWhenFileInfoIsNull()
         {
-            var ex = Assert.Throws<ArgumentNullException>(() => _constraint.ApplyTo((FileInfo)null));
+            var ex = Assert.Throws<ArgumentNullException> (() => _constraint.ApplyTo((FileInfo)null));
             Assert.That(ex.Message, Does.StartWith("The actual value must be a non-null string, FileInfo or DirectoryInfo"));
         }
 
         [Test]
         public void FailsWhenDirectoryInfoIsNull()
         {
-            var ex = Assert.Throws<ArgumentNullException>(() => _constraint.ApplyTo((DirectoryInfo)null));
+            var ex = Assert.Throws<ArgumentNullException> (() => _constraint.ApplyTo((DirectoryInfo)null));
             Assert.That(ex.Message, Does.StartWith("The actual value must be a non-null string, FileInfo or DirectoryInfo"));
         }
 
         [Test]
         public void FailsWhenStringIsNull()
         {
-            var ex = Assert.Throws<ArgumentNullException>(() => _constraint.ApplyTo((string)null));
+            var ex = Assert.Throws<ArgumentNullException> (() => _constraint.ApplyTo((string)null));
             Assert.That(ex.Message, Does.StartWith("The actual value must be a non-null string, FileInfo or DirectoryInfo"));
         }
 
         [Test]
         public void FailsWhenStringIsEmpty()
         {
-            var ex = Assert.Throws<ArgumentException>(() => _constraint.ApplyTo(string.Empty));
+            var ex = Assert.Throws<ArgumentException> (() => _constraint.ApplyTo(string.Empty));
             Assert.That(ex.Message, Does.StartWith("The actual value cannot be an empty string"));
         }
     }
