@@ -9,6 +9,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.testdata-netcf-3.5", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.framework.tests-netcf-3.5", "src\NUnitFramework\tests\nunit.framework.tests-netcf-3.5.csproj", "{80A9EC94-2C42-44AC-9D2C-E1418D712C48}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mock-nunit-assembly-netcf-3.5", "src\NUnitFramework\mock-assembly\mock-nunit-assembly-netcf-3.5.csproj", "{D40A4728-2F9B-41D7-AAD9-7AD95D0032C3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "slow-nunit-tests-netcf-3.5", "src\NUnitFramework\slow-tests\slow-nunit-tests-netcf-3.5.csproj", "{48C7F514-CA22-4405-9804-AE1703B8BC3F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +37,14 @@ Global
 		{80A9EC94-2C42-44AC-9D2C-E1418D712C48}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{80A9EC94-2C42-44AC-9D2C-E1418D712C48}.Release|Any CPU.Build.0 = Release|Any CPU
 		{80A9EC94-2C42-44AC-9D2C-E1418D712C48}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{D40A4728-2F9B-41D7-AAD9-7AD95D0032C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D40A4728-2F9B-41D7-AAD9-7AD95D0032C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D40A4728-2F9B-41D7-AAD9-7AD95D0032C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D40A4728-2F9B-41D7-AAD9-7AD95D0032C3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{48C7F514-CA22-4405-9804-AE1703B8BC3F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{48C7F514-CA22-4405-9804-AE1703B8BC3F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{48C7F514-CA22-4405-9804-AE1703B8BC3F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{48C7F514-CA22-4405-9804-AE1703B8BC3F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
