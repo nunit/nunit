@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
@@ -10,13 +10,20 @@ namespace NUnit.TestUtilities
     {
         private bool _disposedValue = false;
         private string _resourceName;
-        private string _fileName;
+        private FileInfo _fileInfo;
         private long _fileLength;
 
         public TestFile(string fileName, string resourceName)
         {
+            if (Path.IsPathRooted(fileName))
+                _fileInfo = new FileInfo(fileName);
+            else
+            {
+                var tempPath = Path.GetTempPath();
+                _fileInfo = new FileInfo(Path.Combine(tempPath, fileName));
+            }
+
             _resourceName = "NUnit.Framework.Tests." + resourceName;
-            _fileName = fileName;
             _fileLength = 0L;
 
             Assembly a = Assembly.GetExecutingAssembly();
@@ -24,8 +31,8 @@ namespace NUnit.TestUtilities
             {
                 if (s == null) throw new Exception("Manifest Resource Stream " + _resourceName + " was not found.");
 
-                byte[] buffer = new byte[1024];
-                using (FileStream fs = File.Create(_fileName))
+                var buffer = new byte[1024];
+                using (FileStream fs = _fileInfo.Create())
                 {
                     while (true)
                     {
@@ -68,18 +75,26 @@ namespace NUnit.TestUtilities
             }
         }
 
+        /// <summary>
+        /// Gets the test file.
+        /// </summary>
+        public FileInfo File { get { return _fileInfo; } }
+
+        /// <summary>
+        /// Returns the full path of the contained test directory
+        /// </summary>
+        public override string ToString()
+        {
+            return _fileInfo == null ? string.Empty : _fileInfo.FullName;
+        }
+
         protected virtual void Dispose(bool disposing)
         {
             if (!_disposedValue)
-            {
                 if (disposing)
-                {
-                    if (File.Exists(_fileName))
-                    {
-                        File.Delete(_fileName);
-                    }
-                }
-            }
+                    if (_fileInfo.Exists)
+                        _fileInfo.Delete();
+
             _disposedValue = true;
         }
 
@@ -93,5 +108,7 @@ namespace NUnit.TestUtilities
         }
 
         #endregion
+
     }
+
 }
