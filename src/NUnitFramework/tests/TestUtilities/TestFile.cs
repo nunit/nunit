@@ -108,7 +108,5 @@ namespace NUnit.TestUtilities
         }
 
         #endregion
-
     }
-
 }
