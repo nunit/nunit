@@ -75,6 +75,7 @@
     <Compile Include="ResultSummary.cs" />
     <Compile Include="TestEventHandler.cs" />
     <Compile Include="Utilities\SaveConsoleOutput.cs" />
+    <Compile Include="Utilities\TeamCityEventHandler.cs" />
     <Compile Include="Utilities\TestFilterBuilder.cs" />
     <Compile Include="ResultReporter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

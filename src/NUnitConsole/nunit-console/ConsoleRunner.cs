@@ -135,7 +135,8 @@ namespace NUnit.ConsoleRunner
             var labels = _options.DisplayTestLabels != null
                 ? _options.DisplayTestLabels.ToUpperInvariant()
                 : "ON";
-            var eventHandler = new TestEventHandler(_outWriter, labels);
+
+            var eventHandler = new TestEventHandler(_outWriter, labels, _options.TeamCity);
 
             XmlNode result;
             try
