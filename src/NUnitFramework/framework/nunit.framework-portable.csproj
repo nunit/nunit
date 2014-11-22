@@ -174,6 +174,8 @@
     <Compile Include="Constraints\ExactTypeConstraint.cs" />
     <Compile Include="Constraints\ExceptionTypeConstraint.cs" />
     <Compile Include="Constraints\FalseConstraint.cs" />
+    <Compile Include="Constraints\FileExistsConstraint.cs" />
+    <Compile Include="Constraints\FileOrDirectoryExistsConstraint.cs" />
     <Compile Include="Constraints\FloatingPointNumerics.cs" />
     <Compile Include="Constraints\GreaterThanConstraint.cs" />
     <Compile Include="Constraints\GreaterThanOrEqualConstraint.cs" />
@@ -235,6 +237,7 @@
     <Compile Include="Constraints\UniqueItemsConstraint.cs" />
     <Compile Include="Constraints\XmlSerializableConstraint.cs" />
     <Compile Include="Contains.cs" />
+    <Compile Include="DirectoryAssert.cs" />
     <Compile Include="Does.cs" />
     <Compile Include="Env.cs" />
     <Compile Include="Exceptions\AssertionException.cs" />
@@ -242,6 +245,7 @@
     <Compile Include="Exceptions\InconclusiveException.cs" />
     <Compile Include="Exceptions\ResultStateException.cs" />
     <Compile Include="Exceptions\SuccessException.cs" />
+    <Compile Include="FileAssert.cs" />
     <Compile Include="GlobalSettings.cs" />
     <Compile Include="Has.cs" />
     <Compile Include="Interfaces\ICombiningStrategy.cs" />
@@ -298,7 +302,11 @@
     <Compile Include="Internal\Execution\CommandBuilder.cs" />
     <Compile Include="Internal\Execution\CompositeWorkItem.cs" />
     <Compile Include="Internal\Execution\CountdownEvent.cs" />
+    <Compile Include="Internal\Execution\EventPump.cs" />
+    <Compile Include="Internal\Execution\EventQueue.cs" />
     <Compile Include="Internal\Execution\IWorkItemDispatcher.cs" />
+    <Compile Include="Internal\Execution\ParallelWorkItemDispatcher.cs" />
+    <Compile Include="Internal\Execution\QueuingEventListener.cs" />
     <Compile Include="Internal\Execution\SimpleWorkItem.cs" />
     <Compile Include="Internal\Execution\SimpleWorkItemDispatcher.cs" />
     <Compile Include="Internal\Execution\TestWorker.cs" />
@@ -307,18 +315,19 @@
     <Compile Include="Internal\Execution\WorkItem.cs" />
     <Compile Include="Internal\Execution\WorkItemQueue.cs" />
     <Compile Include="Internal\Execution\WorkItemState.cs" />
+    <Compile Include="Internal\Execution\WorkShift.cs" />
     <Compile Include="Internal\Filters\AndFilter.cs" />
     <Compile Include="Internal\Filters\CategoryFilter.cs" />
     <Compile Include="Internal\Filters\IdFilter.cs" />
     <Compile Include="Internal\Filters\NotFilter.cs" />
     <Compile Include="Internal\Filters\OrFilter.cs" />
-    <Compile Include="Internal\Filters\SimpleCategoryExpression.cs" />
     <Compile Include="Internal\Filters\SimpleNameFilter.cs" />
     <Compile Include="Internal\Filters\ValueMatchFilter.cs" />
     <Compile Include="Internal\IApplyToContext.cs" />
     <Compile Include="Internal\IApplyToTest.cs" />
     <Compile Include="Internal\InvalidTestFixtureException.cs" />
     <Compile Include="Internal\MethodHelper.cs" />
+    <Compile Include="Internal\NetCFExtensions.cs" />
     <Compile Include="Internal\NUnitException.cs" />
     <Compile Include="Internal\OSPlatform.cs" />
     <Compile Include="Internal\ParameterSet.cs" />
@@ -364,9 +373,7 @@
   <ItemGroup>
     <None Include="nunit.snk" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Runner\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

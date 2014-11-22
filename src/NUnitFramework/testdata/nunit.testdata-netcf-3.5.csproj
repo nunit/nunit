@@ -62,6 +62,8 @@
     <Compile Include="AssertCountFixture.cs" />
     <Compile Include="AssertFailFixture.cs" />
     <Compile Include="AssertIgnoreData.cs" />
+    <Compile Include="AsyncDummyFixture.cs" />
+    <Compile Include="AsyncRealFixture.cs" />
     <Compile Include="AttributeInheritanceData.cs" />
     <Compile Include="AuthorFixture.cs" />
     <Compile Include="CategoryAttributeData.cs" />
@@ -80,7 +82,6 @@
     <Compile Include="TestCaseSourceAttributeFixture.cs" />
     <Compile Include="TestContextData.cs" />
     <Compile Include="TestFixtureData.cs" />
-    <Compile Include="TestFixtureExtensionData.cs" />
     <Compile Include="TestMethodSignatureFixture.cs" />
     <Compile Include="TestOfFixture.cs" />
     <Compile Include="TheoryFixture.cs" />

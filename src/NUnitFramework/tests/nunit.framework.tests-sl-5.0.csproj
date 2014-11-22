@@ -79,6 +79,7 @@
     <Compile Include="..\FrameworkVersion.cs">
       <Link>FrameworkVersion.cs</Link>
     </Compile>
+    <Compile Include="Api\FrameworkControllerTests.cs" />
     <Compile Include="Api\ResultStateTests.cs" />
     <Compile Include="Api\TestAssemblyRunnerTests.cs" />
     <Compile Include="App.xaml.cs">
@@ -98,6 +99,8 @@
     <Compile Include="Assertions\AsyncThrowsTests.cs" />
     <Compile Include="Assertions\CollectionAssertTest.cs" />
     <Compile Include="Assertions\ConditionAssertTests.cs" />
+    <Compile Include="Assertions\DirectoryAssertTests.cs" />
+    <Compile Include="Assertions\FileAssertTests.cs" />
     <Compile Include="Assertions\GreaterEqualFixture.cs" />
     <Compile Include="Assertions\GreaterFixture.cs" />
     <Compile Include="Assertions\LessEqualFixture.cs" />
@@ -109,6 +112,7 @@
     <Compile Include="Assertions\SameFixture.cs" />
     <Compile Include="Assertions\StringAssertTests.cs" />
     <Compile Include="Assertions\TypeAssertTest.cs" />
+    <Compile Include="Attributes\ActionAttributeTests.cs" />
     <Compile Include="Attributes\ApplyToContextTests.cs" />
     <Compile Include="Attributes\ApplyToTestTests.cs" />
     <Compile Include="Attributes\AttributeInheritanceTests.cs" />
@@ -124,7 +128,11 @@
     <Compile Include="Attributes\ParameterizedTestFixtureTests.cs" />
     <Compile Include="Attributes\PropertyAttributeTests.cs" />
     <Compile Include="Attributes\RepeatedTestTests.cs" />
+    <Compile Include="Attributes\RequiresMTAAttributeTests.cs" />
+    <Compile Include="Attributes\RequiresSTAAttributeTests.cs" />
+    <Compile Include="Attributes\RequiresThreadAttributeTests.cs" />
     <Compile Include="Attributes\SetCultureAttributeTests.cs" />
+    <Compile Include="Attributes\SetUpFixtureAttributeTests.cs" />
     <Compile Include="Attributes\TestCaseAttributeTests.cs" />
     <Compile Include="Attributes\TestCaseSourceTests.cs" />
     <Compile Include="Attributes\TestDummy.cs" />
@@ -133,6 +141,7 @@
     <Compile Include="Attributes\TestMethodBuilderTests.cs" />
     <Compile Include="Attributes\TestOfTests.cs" />
     <Compile Include="Attributes\TheoryTests.cs" />
+    <Compile Include="Attributes\ThreadingTests.cs" />
     <Compile Include="Attributes\TimeoutTests.cs" />
     <Compile Include="Attributes\ValuesAttributeEnumTests.cs" />
     <Compile Include="Attributes\ValuesAttributeTests.cs" />
@@ -143,6 +152,7 @@
     <Compile Include="Constraints\AndConstraintTests.cs" />
     <Compile Include="Constraints\AssignableFromConstraintTests.cs" />
     <Compile Include="Constraints\AssignableToConstraintTests.cs" />
+    <Compile Include="Constraints\AsyncDelayedConstraintTests.cs" />
     <Compile Include="Constraints\AttributeExistsConstraintTests.cs" />
     <Compile Include="Constraints\BasicConstraintTests.cs" />
     <Compile Include="Constraints\BinarySerializableTest.cs" />
@@ -160,6 +170,7 @@
     <Compile Include="Constraints\EqualTest.cs" />
     <Compile Include="Constraints\ExactCountConstraintTests.cs" />
     <Compile Include="Constraints\ExactTypeConstraintTests.cs" />
+    <Compile Include="Constraints\FileOrDirectoryExistsConstraintTests.cs" />
     <Compile Include="Constraints\FloatingPointNumericsTest.cs" />
     <Compile Include="Constraints\GreaterThanConstraintTests.cs" />
     <Compile Include="Constraints\GreaterThanOrEqualConstraintTests.cs" />
@@ -188,10 +199,14 @@
     <Compile Include="Constraints\ToStringTests.cs" />
     <Compile Include="Constraints\UniqueItemsConstraintTests.cs" />
     <Compile Include="Constraints\XmlSerializableTest.cs" />
+    <Compile Include="Internal\AsyncTestMethodTests.cs" />
+    <Compile Include="Internal\CallContextTests.cs" />
     <Compile Include="Internal\CultureSettingAndDetectionTests.cs" />
     <Compile Include="Internal\DeduceTypeArgsFromArgs.cs" />
+    <Compile Include="Internal\EventQueueTests.cs" />
     <Compile Include="Internal\GenericTestFixtureTests.cs" />
     <Compile Include="Internal\GenericTestMethodTests.cs" />
+    <Compile Include="Internal\NUnitTestCaseBuilderTests.cs" />
     <Compile Include="Internal\PlatformDetectionTests.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -207,6 +222,7 @@
     <Compile Include="Internal\RuntimeFrameworkTests.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Internal\SetUpFixtureTests.cs" />
     <Compile Include="Internal\SetUpTearDownTests.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -217,9 +233,14 @@
     <Compile Include="Internal\TestMethodSignatureTests.cs" />
     <Compile Include="Internal\TestResultOutputTests.cs" />
     <Compile Include="Internal\TestResultTests.cs" />
+    <Compile Include="Internal\TestWorkerTests.cs" />
     <Compile Include="Internal\TestXmlTests.cs" />
     <Compile Include="Internal\TextMessageWriterTests.cs" />
     <Compile Include="Internal\TypeParameterUsedWithTestMethod.cs" />
+    <Compile Include="Internal\UnexpectedExceptionTests.cs" />
+    <Compile Include="Internal\UnhandledExceptionTests.cs" />
+    <Compile Include="Internal\WorkItemQueueTests.cs" />
+    <Compile Include="Internal\WorkShiftTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Runner\CommandLineOptionTests.cs" />
     <Compile Include="Runner\CreateTestFilterTests.cs" />
@@ -231,6 +252,7 @@
     <Compile Include="Syntax\CollectionTests.cs" />
     <Compile Include="Syntax\ComparisonTests.cs" />
     <Compile Include="Syntax\EqualityTests.cs" />
+    <Compile Include="Syntax\InvalidCodeTests.cs" />
     <Compile Include="Syntax\OperatorOverrides.cs" />
     <Compile Include="Syntax\OperatorTests.cs" />
     <Compile Include="Syntax\PathConstraintTests.cs" />
@@ -239,6 +261,7 @@
     <Compile Include="Syntax\SimpleConstraints.cs" />
     <Compile Include="Syntax\StringConstraints.cs" />
     <Compile Include="Syntax\SyntaxTest.cs" />
+    <Compile Include="Syntax\TestCompiler.cs" />
     <Compile Include="Syntax\ThrowsTests.cs" />
     <Compile Include="Syntax\TypeConstraints.cs" />
     <Compile Include="TestUtilities\Collections\SimpleObjectList.cs" />
@@ -256,6 +279,7 @@
     <Compile Include="TestUtilities\TestComparer.cs" />
     <Compile Include="TestUtilities\TestDelegates.cs" />
     <Compile Include="TestUtilities\TestDirectory.cs" />
+    <Compile Include="TestUtilities\TestFile.cs" />
     <Compile Include="TestUtilities\TestFinder.cs" />
     <Compile Include="TestUtilities\UniqueValues.cs" />
   </ItemGroup>

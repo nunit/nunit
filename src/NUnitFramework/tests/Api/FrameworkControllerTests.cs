@@ -21,6 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#if !NETCF && !SILVERLIGHT && !PORTABLE
 using System;
 using System.Collections;
 using System.IO;
@@ -359,3 +360,4 @@ namespace NUnit.Framework.Api
         #endregion
     }
 }
+#endif

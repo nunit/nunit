@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if !SILVERLIGHT
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
@@ -95,3 +96,4 @@ namespace NUnit.TestUtilities
         #endregion
     }
 }
+#endif

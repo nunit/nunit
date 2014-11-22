@@ -152,7 +152,9 @@ namespace NUnit.Framework.Api
 
         private Assembly Load(string path)
         {
-#if NETCF || SILVERLIGHT || PORTABLE
+#if NETCF
+            return Assembly.LoadFrom(path);
+#elif SILVERLIGHT || PORTABLE
             return Assembly.Load(path);
 #else
             Assembly assembly = null;

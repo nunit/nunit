@@ -63,7 +63,9 @@
     <Compile Include="..\FrameworkVersion.cs">
       <Link>FrameworkVersion.cs</Link>
     </Compile>
+    <Compile Include="Api\FrameworkControllerTests.cs" />
     <Compile Include="Api\ResultStateTests.cs" />
+    <Compile Include="Api\TestAssemblyRunnerTests.cs" />
     <Compile Include="Assertions\ArrayEqualsFailureMessageFixture.cs" />
     <Compile Include="Assertions\ArrayEqualsFixture.cs" />
     <Compile Include="Assertions\ArrayNotEqualFixture.cs" />
@@ -75,6 +77,7 @@
     <Compile Include="Assertions\AssertThatTests.cs" />
     <Compile Include="Assertions\AssertThrowsTests.cs" />
     <Compile Include="Assertions\AssumeThatTests.cs" />
+    <Compile Include="Assertions\AsyncThrowsTests.cs" />
     <Compile Include="Assertions\CollectionAssertTest.cs" />
     <Compile Include="Assertions\ConditionAssertTests.cs" />
     <Compile Include="Assertions\DirectoryAssertTests.cs" />
@@ -90,6 +93,7 @@
     <Compile Include="Assertions\SameFixture.cs" />
     <Compile Include="Assertions\StringAssertTests.cs" />
     <Compile Include="Assertions\TypeAssertTest.cs" />
+    <Compile Include="Attributes\ActionAttributeTests.cs" />
     <Compile Include="Attributes\ApplyToContextTests.cs" />
     <Compile Include="Attributes\ApplyToTestTests.cs" />
     <Compile Include="Attributes\AttributeInheritanceTests.cs" />
@@ -105,6 +109,10 @@
     <Compile Include="Attributes\ParameterizedTestFixtureTests.cs" />
     <Compile Include="Attributes\PropertyAttributeTests.cs" />
     <Compile Include="Attributes\RepeatedTestTests.cs" />
+    <Compile Include="Attributes\RequiresMTAAttributeTests.cs" />
+    <Compile Include="Attributes\RequiresSTAAttributeTests.cs" />
+    <Compile Include="Attributes\RequiresThreadAttributeTests.cs" />
+    <Compile Include="Attributes\SetCultureAttributeTests.cs" />
     <Compile Include="Attributes\SetUpFixtureAttributeTests.cs" />
     <Compile Include="Attributes\TestCaseAttributeTests.cs" />
     <Compile Include="Attributes\TestCaseSourceTests.cs" />
@@ -124,6 +132,7 @@
     <Compile Include="Constraints\AndConstraintTests.cs" />
     <Compile Include="Constraints\AssignableFromConstraintTests.cs" />
     <Compile Include="Constraints\AssignableToConstraintTests.cs" />
+    <Compile Include="Constraints\AsyncDelayedConstraintTests.cs" />
     <Compile Include="Constraints\AttributeExistsConstraintTests.cs" />
     <Compile Include="Constraints\BasicConstraintTests.cs" />
     <Compile Include="Constraints\BinarySerializableTest.cs" />
@@ -170,8 +179,11 @@
     <Compile Include="Constraints\ToStringTests.cs" />
     <Compile Include="Constraints\UniqueItemsConstraintTests.cs" />
     <Compile Include="Constraints\XmlSerializableTest.cs" />
+    <Compile Include="Internal\AsyncTestMethodTests.cs" />
+    <Compile Include="Internal\CallContextTests.cs" />
     <Compile Include="Internal\CultureSettingAndDetectionTests.cs" />
     <Compile Include="Internal\DeduceTypeArgsFromArgs.cs" />
+    <Compile Include="Internal\EventQueueTests.cs" />
     <Compile Include="Internal\GenericTestFixtureTests.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -184,6 +196,7 @@
     <Compile Include="Internal\RandomGeneratorTests.cs" />
     <Compile Include="Internal\RandomizerTests.cs" />
     <Compile Include="Internal\RuntimeFrameworkTests.cs" />
+    <Compile Include="Internal\SetUpFixtureTests.cs" />
     <Compile Include="Internal\SetUpTearDownTests.cs" />
     <Compile Include="Internal\StackFilterTests.cs" />
     <Compile Include="Internal\TestExecutionContextTests.cs" />
@@ -192,16 +205,20 @@
     <Compile Include="Internal\TestMethodSignatureTests.cs" />
     <Compile Include="Internal\TestResultOutputTests.cs" />
     <Compile Include="Internal\TestResultTests.cs" />
+    <Compile Include="Internal\TestWorkerTests.cs" />
     <Compile Include="Internal\TestXmlTests.cs" />
     <Compile Include="Internal\TextMessageWriterTests.cs" />
     <Compile Include="Internal\TypeParameterUsedWithTestMethod.cs" />
     <Compile Include="Internal\UnexpectedExceptionTests.cs" />
     <Compile Include="Internal\UnhandledExceptionTests.cs" />
+    <Compile Include="Internal\WorkItemQueueTests.cs" />
+    <Compile Include="Internal\WorkShiftTests.cs" />
     <Compile Include="NUnitLite.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Runner\CommandLineOptionTests.cs" />
     <Compile Include="Runner\CreateTestFilterTests.cs" />
     <Compile Include="Runner\MakeRunSettingsTests.cs" />
+    <Compile Include="Runner\NUnit2XmlOutputWriterTests.cs" />
     <Compile Include="Runner\TeamCityEventListenerTests.cs" />
     <Compile Include="Syntax\AfterTests.cs" />
     <Compile Include="Syntax\ArbitraryConstraintMatching.cs" />
@@ -244,6 +261,10 @@
     <ProjectReference Include="..\framework\nunit.framework-netcf-3.5.csproj">
       <Project>{5F6CB3DC-5CE5-4C6A-AB23-936DB3B35DCC}</Project>
       <Name>nunit.framework-netcf-3.5</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\mock-assembly\mock-nunit-assembly-netcf-3.5.csproj">
+      <Project>{D40A4728-2F9B-41D7-AAD9-7AD95D0032C3}</Project>
+      <Name>mock-nunit-assembly-netcf-3.5</Name>
     </ProjectReference>
     <ProjectReference Include="..\nunitlite.runner\nunitlite.runner-netcf-3.5.csproj">
       <Project>{FCB4F998-02D6-4D7F-A188-E0FB1F12F151}</Project>

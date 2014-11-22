@@ -49,6 +49,8 @@
     <Compile Include="AssertCountFixture.cs" />
     <Compile Include="AssertFailFixture.cs" />
     <Compile Include="AssertIgnoreData.cs" />
+    <Compile Include="AsyncDummyFixture.cs" />
+    <Compile Include="AsyncRealFixture.cs" />
     <Compile Include="AttributeInheritanceData.cs" />
     <Compile Include="AuthorFixture.cs" />
     <Compile Include="CategoryAttributeData.cs" />
@@ -71,6 +73,8 @@
     <Compile Include="TestOfFixture.cs" />
     <Compile Include="TheoryFixture.cs" />
     <Compile Include="TimeoutFixture.cs" />
+    <Compile Include="UnexpectedExceptionFixture.cs" />
+    <Compile Include="UnhandledExceptions.cs" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
