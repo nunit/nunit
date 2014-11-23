@@ -4,7 +4,7 @@
 // obtain a copy of the license at http://nunit.org
 // ****************************************************************
 
-// TODO: Figure out how to make test work in NETCF and SILVERLIGHT, since they support SetUpFixture
+// TODO: Figure out how to make test work in SILVERLIGHT, since they support SetUpFixture
 #if !SILVERLIGHT
 using System.Collections;
 using NUnit.Framework.Api;

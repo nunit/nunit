@@ -25,6 +25,7 @@ using System;
 using System.Text;
 using System.Collections;
 using System.Globalization;
+using System.Reflection;
 
 namespace NUnit.Framework.Constraints
 {
@@ -89,7 +90,7 @@ namespace NUnit.Framework.Constraints
                 return string.Format(Fmt_ValueType, val);
 
 #if NETCF
-            var vi = val as System.Reflection.MethodInfo;
+            var vi = val as MethodInfo;
             if (vi != null && vi.IsGenericMethodDefinition)
                 return string.Format(Fmt_Default, vi.Name + "<>");
 #endif
