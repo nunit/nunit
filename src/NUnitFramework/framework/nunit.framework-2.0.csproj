@@ -175,7 +175,6 @@
     <Compile Include="Internal\StackFilter.cs" />
     <Compile Include="Internal\StringUtil.cs" />
     <Compile Include="ITestAction.cs" />
-    <Compile Include="MessageMatch.cs" />
     <Compile Include="Internal\PropertyNames.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Assert.cs" />

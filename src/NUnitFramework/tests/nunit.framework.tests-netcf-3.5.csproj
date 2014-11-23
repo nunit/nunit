@@ -270,6 +270,10 @@
       <Project>{FCB4F998-02D6-4D7F-A188-E0FB1F12F151}</Project>
       <Name>nunitlite.runner-netcf-3.5</Name>
     </ProjectReference>
+    <ProjectReference Include="..\slow-tests\slow-nunit-tests-netcf-3.5.csproj">
+      <Project>{48C7F514-CA22-4405-9804-AE1703B8BC3F}</Project>
+      <Name>slow-nunit-tests-netcf-3.5</Name>
+    </ProjectReference>
     <ProjectReference Include="..\testdata\nunit.testdata-netcf-3.5.csproj">
       <Project>{0B7C0B55-6A49-4F32-993E-C9ED6DA0B73C}</Project>
       <Name>nunit.testdata-netcf-3.5</Name>

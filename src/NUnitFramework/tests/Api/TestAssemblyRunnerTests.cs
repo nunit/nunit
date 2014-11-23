@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -21,8 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-// TODO: Get to work in Portable, Silverlight and Compact Framework - will require buiding mock-assembly
-#if !SILVERLIGHT && !NETCF && !PORTABLE
+// TODO: Get to work in Portable and Silverlight - will require buiding mock-assembly
+#if !SILVERLIGHT && !PORTABLE
 
 using System;
 using System.Collections;
@@ -79,7 +79,11 @@ namespace NUnit.Framework.Api
             Assert.That(result.Name, Is.EqualTo(MISSING_FILE));
             Assert.That(result.RunState, Is.EqualTo(Interfaces.RunState.NotRunnable));
             Assert.That(result.TestCaseCount, Is.EqualTo(0));
+#if NETCF
+            Assert.That(result.Properties.Get(PropertyNames.SkipReason), Does.StartWith("File or assembly name").And.Contains(MISSING_FILE));
+#else
             Assert.That(result.Properties.Get(PropertyNames.SkipReason), Does.StartWith("Could not load").And.Contains(MISSING_FILE));
+#endif
         }
 
         [Test]
@@ -92,7 +96,11 @@ namespace NUnit.Framework.Api
             Assert.That(result.Name, Is.EqualTo(BAD_FILE));
             Assert.That(result.RunState, Is.EqualTo(Interfaces.RunState.NotRunnable));
             Assert.That(result.TestCaseCount, Is.EqualTo(0));
+#if NETCF
+            Assert.That(result.Properties.Get(PropertyNames.SkipReason), Does.StartWith("File or assembly name").And.Contains(BAD_FILE));
+#else
             Assert.That(result.Properties.Get(PropertyNames.SkipReason), Does.StartWith("Could not load").And.Contains(BAD_FILE));
+#endif
         }
         #endregion
 
@@ -164,7 +172,11 @@ namespace NUnit.Framework.Api
             Assert.That(result.Test.RunState, Is.EqualTo(RunState.NotRunnable));
             Assert.That(result.Test.TestCaseCount, Is.EqualTo(0));
             Assert.That(result.ResultState, Is.EqualTo(ResultState.NotRunnable.WithSite(FailureSite.SetUp)));
+#if NETCF
+            Assert.That(result.Message, Does.StartWith("File or assembly name").And.Contains(MISSING_FILE));
+#else
             Assert.That(result.Message, Does.StartWith("Could not load").And.Contains(MISSING_FILE));
+#endif
         }
 
         [Test]
@@ -178,7 +190,11 @@ namespace NUnit.Framework.Api
             Assert.That(result.Test.RunState, Is.EqualTo(RunState.NotRunnable));
             Assert.That(result.Test.TestCaseCount, Is.EqualTo(0));
             Assert.That(result.ResultState, Is.EqualTo(ResultState.NotRunnable.WithSite(FailureSite.SetUp)));
+#if NETCF
+            Assert.That(result.Message, Does.StartWith("File or assembly name").And.Contains(BAD_FILE));
+#else
             Assert.That(result.Message, Does.StartWith("Could not load").And.Contains(BAD_FILE));
+#endif
         }
         #endregion
 
@@ -223,7 +239,11 @@ namespace NUnit.Framework.Api
             Assert.That(_runner.Result.Test.RunState, Is.EqualTo(RunState.NotRunnable));
             Assert.That(_runner.Result.Test.TestCaseCount, Is.EqualTo(0));
             Assert.That(_runner.Result.ResultState, Is.EqualTo(ResultState.NotRunnable.WithSite(FailureSite.SetUp)));
+#if NETCF
+            Assert.That(_runner.Result.Message, Does.StartWith("File or assembly name").And.Contains(MISSING_FILE));
+#else
             Assert.That(_runner.Result.Message, Does.StartWith("Could not load").And.Contains(MISSING_FILE));
+#endif
         }
 
         [Test]
@@ -239,7 +259,11 @@ namespace NUnit.Framework.Api
             Assert.That(_runner.Result.Test.RunState, Is.EqualTo(RunState.NotRunnable));
             Assert.That(_runner.Result.Test.TestCaseCount, Is.EqualTo(0));
             Assert.That(_runner.Result.ResultState, Is.EqualTo(ResultState.NotRunnable.WithSite(FailureSite.SetUp)));
+#if NETCF
+            Assert.That(_runner.Result.Message, Does.StartWith("File or assembly name").And.Contains(BAD_FILE));
+#else
             Assert.That(_runner.Result.Message, Does.StartWith("Could not load").And.Contains(BAD_FILE));
+#endif
         }
         #endregion
 

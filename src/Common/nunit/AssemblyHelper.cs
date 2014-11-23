@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2008 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.IO;
 using System.Reflection;
 
 #if NUNIT_ENGINE
@@ -33,7 +34,7 @@ namespace NUnit.Common
 #endif
 {
     /// <summary>
-    /// AssemblyHelper provides static methods for working 
+    /// AssemblyHelper provides static methods for working
     /// with assemblies.
     /// </summary>
     public class AssemblyHelper
@@ -81,9 +82,9 @@ namespace NUnit.Common
         /// </summary>
         /// <param name="assembly">The assembly.</param>
         /// <returns>The path.</returns>
-        public static string GetDirectoryName( Assembly assembly )
+        public static string GetDirectoryName(Assembly assembly)
         {
-            return System.IO.Path.GetDirectoryName(GetAssemblyPath(assembly));
+            return Path.GetDirectoryName(GetAssemblyPath(assembly));
         }
 #endif
 
@@ -109,7 +110,7 @@ namespace NUnit.Common
 
         #region Helper Methods
 
-#if !NETCF && !PORTABLE
+#if !NETCF && !SILVERLIGHT && !PORTABLE
         private static bool IsFileUri(string uri)
         {
             return uri.ToLower().StartsWith(Uri.UriSchemeFile);
@@ -131,7 +132,7 @@ namespace NUnit.Common
                 // Handle Windows Drive specifications
                 if (codeBase[start + 2] == ':')
                     ++start;
-                // else leave the last slash so path is absolute  
+                // else leave the last slash so path is absolute
             }
             else // It's either a Windows Drive spec or a share
             {
@@ -146,4 +147,3 @@ namespace NUnit.Common
         #endregion
     }
 }
-

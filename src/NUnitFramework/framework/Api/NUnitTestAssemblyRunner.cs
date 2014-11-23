@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2012-2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -306,7 +306,6 @@ namespace NUnit.Framework.Api
 #endif
         }
 
-
         /// <summary>
         /// Handle the the Completed event for the top level work item
         /// </summary>
@@ -349,9 +348,13 @@ namespace NUnit.Framework.Api
         {
             return Settings.Contains(DriverSettings.NumberOfTestWorkers)
                 ? (int)Settings[DriverSettings.NumberOfTestWorkers]
-                : LoadedTest.Properties.ContainsKey(PropertyNames.LevelOfParallelization)
-                    ? (int)LoadedTest.Properties.Get(PropertyNames.LevelOfParallelization)
-                    : Math.Max(Environment.ProcessorCount, 2);
+                : (LoadedTest.Properties.ContainsKey(PropertyNames.LevelOfParallelization)
+                   ? (int)LoadedTest.Properties.Get(PropertyNames.LevelOfParallelization)
+#if NETCF
+                   : 1);
+#else
+                   : Math.Max(Environment.ProcessorCount, 2));
+#endif
         }
 #endif
 

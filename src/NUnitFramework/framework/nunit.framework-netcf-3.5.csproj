@@ -377,7 +377,6 @@
     <Compile Include="Iz.cs" />
     <Compile Include="List.cs" />
     <Compile Include="ListMapper.cs" />
-    <Compile Include="MessageMatch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SpecialValue.cs" />
     <Compile Include="StringAssert.cs" />
