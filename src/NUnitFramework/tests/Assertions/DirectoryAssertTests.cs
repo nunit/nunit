@@ -1,6 +1,6 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2014 Charlie Poole
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
 // "Software"), to deal in the Software without restriction, including
@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -37,7 +37,11 @@ namespace NUnit.Framework.Assertions
     {
         private TestDirectory _goodDir1;
         private TestDirectory _goodDir2;
+#if NETCF
+        private const string BAD_DIRECTORY = @"\I\hope\this\is\garbage";
+#else
         private const string BAD_DIRECTORY = @"Z:\I\hope\this\is\garbage";
+#endif
 
         [SetUp]
         public void SetUp()
@@ -51,8 +55,8 @@ namespace NUnit.Framework.Assertions
         [TearDown]
         public void TearDown()
         {
-            if (_goodDir1 != null ) _goodDir1.Dispose();
-            if (_goodDir2 != null ) _goodDir2.Dispose();
+            if (_goodDir1 != null) _goodDir1.Dispose();
+            if (_goodDir2 != null) _goodDir2.Dispose();
         }
 
         #region AreEqual
@@ -83,7 +87,7 @@ namespace NUnit.Framework.Assertions
             var ex = Assert.Throws<AssertionException>(() => DirectoryAssert.AreEqual(expected, actual));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
-        
+
         #endregion
 
         #endregion

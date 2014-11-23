@@ -1,6 +1,6 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2014 Charlie Poole
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
 // "Software"), to deal in the Software without restriction, including
@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -35,11 +35,11 @@ namespace NUnit.Framework.Tests.Constraints
     {
         private FileOrDirectoryExistsConstraint _constraint;
         private TestDirectory _goodDir;
-        private const string BAD_DIRECTORY = @"Z:\I\hope\this\is\garbage";
-        private const string BAD_FILE = "garbage.txt";
+        private readonly static string BAD_DIRECTORY = Path.Combine(Path.GetTempPath(), @"\I\hope\this\is\garbage");
+        private readonly static string BAD_FILE = Path.Combine(Path.GetTempPath(), "garbage.txt");
         private const string TEST_FILE = "Test1.txt";
         private const string RESOURCE_FILE = "TestText1.txt";
-        
+
         [SetUp]
         public void SetUp()
         {
@@ -57,11 +57,10 @@ namespace NUnit.Framework.Tests.Constraints
         [Test]
         public void PassesWhenFileInfoExists()
         {
-            using (new TestFile(TEST_FILE, RESOURCE_FILE))
+            using (var actualTestFile = new TestFile(TEST_FILE, RESOURCE_FILE))
             {
-                var actual = new FileInfo(TEST_FILE);
-                Assert.That(_constraint.ApplyTo(actual).IsSuccess);
-                Assert.That(actual, Does.Exist);
+                Assert.That(_constraint.ApplyTo(actualTestFile.File).IsSuccess);
+                Assert.That(actualTestFile.File, Does.Exist);
             }
         }
 
@@ -76,10 +75,10 @@ namespace NUnit.Framework.Tests.Constraints
         [Test]
         public void PassesWhenFileStringExists()
         {
-            using (new TestFile(TEST_FILE, RESOURCE_FILE))
+            using (var tf = new TestFile(TEST_FILE, RESOURCE_FILE))
             {
-                Assert.That(_constraint.ApplyTo(TEST_FILE).IsSuccess);
-                Assert.That(TEST_FILE, Does.Exist);
+                Assert.That(_constraint.ApplyTo(tf.File.FullName).IsSuccess);
+                Assert.That(tf.File.FullName, Does.Exist);
             }
         }
 
@@ -93,20 +92,20 @@ namespace NUnit.Framework.Tests.Constraints
         [Test]
         public void FailsWhenIgnoreFilesIsTrueWithFileString()
         {
-            using (new TestFile(TEST_FILE, RESOURCE_FILE))
+            using (var tf = new TestFile(TEST_FILE, RESOURCE_FILE))
             {
                 var constraint = new FileOrDirectoryExistsConstraint().IgnoreFiles;
-                Assert.That(constraint.ApplyTo(TEST_FILE).Status == ConstraintStatus.Failure);
+                Assert.That(constraint.ApplyTo(tf.File.FullName).Status == ConstraintStatus.Failure);
             }
         }
 
         [Test]
         public void FailsWhenIgnoreFilesIsTrueWithFileInfo()
         {
-            using (new TestFile(TEST_FILE, RESOURCE_FILE))
+            using (var tf = new TestFile(TEST_FILE, RESOURCE_FILE))
             {
                 var constraint = new FileOrDirectoryExistsConstraint().IgnoreFiles;
-                var ex = Assert.Throws<ArgumentException>(() => constraint.ApplyTo(new FileInfo(TEST_FILE)));
+                var ex = Assert.Throws<ArgumentException>(() => constraint.ApplyTo(tf.File));
                 Assert.That(ex.Message, Does.StartWith("The actual value must be a string or DirectoryInfo"));
             }
         }
