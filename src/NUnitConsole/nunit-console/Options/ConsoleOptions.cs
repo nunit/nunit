@@ -136,6 +136,9 @@ namespace NUnit.ConsoleRunner.Options
             this.Add("trace=", "Set internal trace {LEVEL}.\nValues: Off, Error, Warning, Info, Verbose (Debug)",
                 v => InternalTraceLevel = RequiredValue(v, "--trace", "Off", "Error", "Warning", "Info", "Verbose", "Debug"));
 
+            this.Add("teamcity", "Turns on use of TeamCity service messages.",
+                v => TeamCity = v != null);
+
             this.Add("noheader|noh", "Suppress display of program information at start of run.",
                 v => NoHeader = v != null);
 
@@ -222,6 +225,8 @@ namespace NUnit.ConsoleRunner.Options
         public bool NoColor { get; private set; }
 
         public bool Verbose { get; private set; }
+
+        public bool TeamCity { get; private set; }
 
         public string OutFile { get; private set; }
 
