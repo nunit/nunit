@@ -130,6 +130,9 @@ namespace NUnit.Framework.Internal.Builders
             // We could check to see if here are any data attributes specified
             // on the parameters but that's what CombinatorialAttribute does
             // and it simply won't return any cases if it finds nothing.
+            // TODO: We need to add some other ITestBuilder than a combinatorial attribute
+            // because we want the attribute to generate an error if it's present on
+            // a generic method.
             if (needCombinatorial)
                 builders.Add(new CombinatorialAttribute());
 

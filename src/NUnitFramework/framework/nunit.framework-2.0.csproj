@@ -95,6 +95,8 @@
     <Compile Include="Attributes\TestCaseBuilderAttribute.cs" />
     <Compile Include="Attributes\TestOfAttribute.cs" />
     <Compile Include="Compatibility\AttributeHelper.cs" />
+    <Compile Include="Compatibility\Path.cs" />
+    <Compile Include="Compatibility\SerializableAttribute.cs" />
     <Compile Include="Compatibility\Stopwatch.cs" />
     <Compile Include="Constraints\EqualConstraintResult.cs" />
     <Compile Include="Constraints\FileExistsConstraint.cs" />
@@ -122,6 +124,7 @@
     <Compile Include="Interfaces\ITestListener.cs" />
     <Compile Include="Interfaces\ITestResult.cs" />
     <Compile Include="Internal\ActionsHelper.cs" />
+    <Compile Include="Internal\AsyncInvocationRegion.cs" />
     <Compile Include="Internal\Commands\SetUpTearDownItem.cs" />
     <Compile Include="Internal\Commands\TestActionCommand.cs" />
     <Compile Include="Internal\Commands\TestActionItem.cs" />
@@ -138,7 +141,6 @@
     <Compile Include="Internal\Execution\TextCapture.cs" />
     <Compile Include="Internal\Execution\WorkShift.cs" />
     <Compile Include="Internal\Filters\IdFilter.cs" />
-    <Compile Include="Internal\Filters\SimpleCategoryExpression.cs" />
     <Compile Include="Internal\Filters\ValueMatchFilter.cs" />
     <Compile Include="Interfaces\IFixtureBuilder.cs" />
     <Compile Include="Interfaces\IImplyFixture.cs" />
@@ -168,11 +170,11 @@
     <Compile Include="Internal\Execution\WorkItemState.cs" />
     <Compile Include="Internal\IApplyToContext.cs" />
     <Compile Include="Internal\IApplyToTest.cs" />
+    <Compile Include="Internal\NetCFExtensions.cs" />
     <Compile Include="Internal\RandomGenerator.cs" />
     <Compile Include="Internal\StackFilter.cs" />
     <Compile Include="Internal\StringUtil.cs" />
     <Compile Include="ITestAction.cs" />
-    <Compile Include="MessageMatch.cs" />
     <Compile Include="Internal\PropertyNames.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Assert.cs" />

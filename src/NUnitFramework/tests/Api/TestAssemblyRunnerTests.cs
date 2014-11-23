@@ -21,8 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-// TODO: Get to work in Silverlight and Compact Framework - will require buiding mock-assembly
-#if !SILVERLIGHT
+// TODO: Get to work in Portable and Silverlight - will require buiding mock-assembly
+#if !SILVERLIGHT && !PORTABLE
 
 using System;
 using System.Collections;

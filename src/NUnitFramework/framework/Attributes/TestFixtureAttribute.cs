@@ -164,49 +164,5 @@ namespace NUnit.Framework
         }
 
         #endregion
-
-        #region Helper Methods
-
-//        /// <summary>
-//        /// Adjust the originally provided arguments, segregating them
-//        /// into Type arguments and actual arguments.
-//        /// </summary>
-//        private void AdjustArguments(Type type)
-//        {
-//#if !NETCF
-//            if (type.ContainsGenericParameters)
-//            {
-//                Type[] typeArgs = this.TypeArgs;
-//                if (typeArgs.Length == 0)
-//                {
-//                    int cnt = 0;
-//                    foreach (object o in Arguments)
-//                        if (o is Type) cnt++;
-//                        else break;
-
-//                    typeArgs = new Type[cnt];
-//                    for (int i = 0; i < cnt; i++)
-//                        typeArgs[i] = (Type)Arguments[i];
-
-//                    if (cnt > 0)
-//                    {
-//                        object[] args = new object[Arguments.Length - cnt];
-//                        for (int i = 0; i < args.Length; i++)
-//                            args[i] = Arguments[cnt + i];
-
-//                        Arguments = args;
-//                    }
-//                }
-
-//                if (typeArgs.Length > 0 ||
-//                    TypeHelper.CanDeduceTypeArgsFromArgs(type, Arguments, ref TypeArgs))
-//                {
-//                    type = TypeHelper.MakeGenericType(type, typeArgs);
-//                }
-//            }
-//#endif
-        //        }
-
-        #endregion
     }
 }

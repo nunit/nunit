@@ -86,7 +86,6 @@
     <Compile Include="TestCaseSourceAttributeFixture.cs" />
     <Compile Include="TestContextData.cs" />
     <Compile Include="TestFixtureData.cs" />
-    <Compile Include="TestFixtureExtensionData.cs" />
     <Compile Include="TestMethodSignatureFixture.cs" />
     <Compile Include="TestOfFixture.cs" />
     <Compile Include="TheoryFixture.cs" />

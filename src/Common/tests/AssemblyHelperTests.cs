@@ -42,7 +42,11 @@ namespace NUnit.Common.Tests
         private static readonly string THIS_ASSEMBLY_PATH = "nunit.engine.tests.dll";
         private static readonly string THIS_ASSEMBLY_NAME = "nunit.engine.tests";
 #else
+#if NETCF
+        private static readonly string THIS_ASSEMBLY_PATH = "nunit.framework.tests.exe";
+#else
         private static readonly string THIS_ASSEMBLY_PATH = "nunit.framework.tests.dll";
+#endif
         private static readonly string THIS_ASSEMBLY_NAME = "nunit.framework.tests";
 #endif
 

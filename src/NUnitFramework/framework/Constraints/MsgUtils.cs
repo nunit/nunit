@@ -25,9 +25,7 @@ using System;
 using System.Text;
 using System.Collections;
 using System.Globalization;
-#if NETCF
 using System.Reflection;
-#endif
 
 namespace NUnit.Framework.Constraints
 {

@@ -110,7 +110,7 @@ namespace NUnit.Common
 
         #region Helper Methods
 
-#if !NETCF && !PORTABLE
+#if !NETCF && !SILVERLIGHT && !PORTABLE
         private static bool IsFileUri(string uri)
         {
             return uri.ToLower().StartsWith(Uri.UriSchemeFile);

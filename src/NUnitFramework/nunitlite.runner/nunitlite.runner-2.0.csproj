@@ -63,6 +63,7 @@
     <Compile Include="Runner\OutputWriters\TestCaseOutputWriter.cs" />
     <Compile Include="Runner\ResultReporter.cs" />
     <Compile Include="Runner\ResultSummary.cs" />
+    <Compile Include="Runner\SimpleCategoryExpression.cs" />
     <Compile Include="Runner\TcpWriter.cs" />
     <Compile Include="Runner\TeamCityEventListener.cs" />
     <Compile Include="Runner\TextUI.cs" />

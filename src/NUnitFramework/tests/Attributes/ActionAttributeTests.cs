@@ -21,6 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+// TODO: Test uses features not available in Silverlight
+#if !SILVERLIGHT
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -413,3 +415,4 @@ namespace NUnit.Framework.Tests
         #endregion
     }
 }
+#endif
