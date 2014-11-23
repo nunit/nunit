@@ -37,11 +37,7 @@ namespace NUnit.Framework.Assertions
     {
         private TestDirectory _goodDir1;
         private TestDirectory _goodDir2;
-#if NETCF
         private const string BAD_DIRECTORY = @"\I\hope\this\is\garbage";
-#else
-        private const string BAD_DIRECTORY = @"Z:\I\hope\this\is\garbage";
-#endif
 
         [SetUp]
         public void SetUp()
