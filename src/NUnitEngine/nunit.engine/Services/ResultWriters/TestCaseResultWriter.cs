@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2011 Charlie Poole
+// Copyright (c) 2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,29 +21,20 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
+using System.IO;
 using System.Text;
 using System.Xml;
-using System.IO;
-using NUnit.ConsoleRunner.Utilities;
 
-namespace NUnit.ConsoleRunner
+namespace NUnit.Engine.Services
 {
-    /// <summary>
-    /// NUnit3XmlOutputWriter is responsible for writing the results
-    /// of a test to a file in NUnit 3.0 format.
-    /// </summary>
-    public class NUnit3XmlOutputWriter : IResultWriter
+    public class TestCaseResultWriter : IResultWriter
     {
-        /// <summary>
-        /// Checks if the output is writable. If the output is not
-        /// writable, this method should throw an exception.
-        /// </summary>
-        /// <param name="outputPath"></param>
         public void CheckWritability(string outputPath)
         {
-            XmlNode commandLine = GetCommandLine();
-            WriteResultFile(commandLine, outputPath);
+            using (new StreamWriter(outputPath, false, Encoding.UTF8))
+            {
+                // Opening is enough to check
+            }
         }
 
         public void WriteResultFile(XmlNode resultNode, string outputPath)
@@ -54,30 +45,10 @@ namespace NUnit.ConsoleRunner
             }
         }
 
-        private void WriteResultFile(XmlNode resultNode, TextWriter writer)
+        public void WriteResultFile(XmlNode resultNode, TextWriter writer)
         {
-            var settings = new XmlWriterSettings();
-            settings.Indent = true;
-
-            using (XmlWriter xmlWriter = XmlWriter.Create(writer, settings))
-            {
-                xmlWriter.WriteStartDocument(false);
-                resultNode.WriteTo(xmlWriter);
-            }
-        }
-
-        private XmlNode GetCommandLine()
-        {
-            var doc = new XmlDocument();
-            var test = doc.CreateElement("test-run");
-            test.AddAttribute("start-time", DateTime.UtcNow.ToString("u"));
-            doc.AppendChild(test);
-
-            var cmd = doc.CreateElement("command-line");
-            var cdata = doc.CreateCDataSection(Environment.CommandLine);
-            cmd.AppendChild(cdata);
-            test.AppendChild(cmd);
-            return doc;
+            foreach (XmlNode node in resultNode.SelectNodes("//test-case"))
+                writer.WriteLine(node.Attributes["fullname"].Value);
         }
     }
 }

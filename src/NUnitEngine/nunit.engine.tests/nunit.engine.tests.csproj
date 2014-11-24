@@ -74,7 +74,13 @@
     <Compile Include="RuntimeFrameworkTests.cs" />
     <Compile Include="Services\DomainManagerTests.cs" />
     <Compile Include="Services\DriverFactoryTests.cs" />
+    <Compile Include="Services\ResultServiceTests.cs" />
+    <Compile Include="Services\ResultWriters\NUnit2XmlResultWriterTests.cs" />
+    <Compile Include="Services\ResultWriters\NUnit2XmlValidationTests.cs" />
     <Compile Include="Services\RecentFilesTests.cs" />
+    <Compile Include="Services\ResultWriters\SchemaValidator.cs" />
+    <Compile Include="Services\ResultWriters\XmlOutputTest.cs" />
+    <Compile Include="Services\ResultWriters\XmlTransformResultWriterTests.cs" />
     <Compile Include="TestEngineResultTests.cs" />
   </ItemGroup>
   <ItemGroup>

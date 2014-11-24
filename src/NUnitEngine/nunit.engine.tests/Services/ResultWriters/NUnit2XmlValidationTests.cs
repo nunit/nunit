@@ -26,7 +26,7 @@ using System.IO;
 using System.Text;
 using NUnit.Framework;
 
-namespace NUnit.ConsoleRunner.Tests
+namespace NUnit.Engine.Services.ResultWriters.Tests
 {
     [TestFixture]
     public class NUnit2XmlValidationTests : XmlOutputTest
@@ -65,7 +65,7 @@ namespace NUnit.ConsoleRunner.Tests
         {
             StringBuilder output = new StringBuilder();
 
-            new NUnit2XmlOutputWriter().WriteResultFile(this.EngineResult.Xml, new StringWriter(output));
+            new NUnit2XmlResultWriter().WriteResultFile(this.EngineResult.Xml, new StringWriter(output));
 
             if (!validator.Validate(new StringReader(output.ToString())))
             {

@@ -24,16 +24,16 @@
 using System.IO;
 using NUnit.Framework;
 
-namespace NUnit.ConsoleRunner.Tests
+namespace NUnit.Engine.Services.ResultWriters.Tests
 {
-    public class XmlTransformOutputWriterTests : XmlOutputTest
+    public class XmlTransformResultWriterTests : XmlOutputTest
     {
         [Test]
         public void SummaryTransformTest()
         {
             var transformPath = GetLocalPath("TextSummary.xslt");
             StringWriter writer = new StringWriter();
-            new XmlTransformOutputWriter(transformPath).WriteResultFile(EngineResult.Xml, writer);
+            new XmlTransformResultWriter(new object[] { transformPath }).WriteResultFile(EngineResult.Xml, writer);
 
             string summary = string.Format(
                 "Tests Run: {0}, Passed: {1}, Failed: {2}, Inconclusive: {3}, Skipped: {4}",

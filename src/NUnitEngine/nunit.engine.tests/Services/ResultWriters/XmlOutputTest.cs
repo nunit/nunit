@@ -26,7 +26,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 
-namespace NUnit.ConsoleRunner.Tests
+namespace NUnit.Engine.Services.ResultWriters.Tests
 {
     using Engine;
     using Engine.Internal;

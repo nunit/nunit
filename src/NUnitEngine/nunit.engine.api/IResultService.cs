@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2011 Charlie Poole
+// Copyright (c) 2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -23,16 +23,25 @@
 
 using System.Xml;
 
-namespace NUnit.ConsoleRunner
+namespace NUnit.Engine
 {
-    public interface IResultWriter
+    /// <summary>
+    /// IResultWriterService provides result writers for a specified
+    /// well-known format.
+    /// </summary>
+    public interface IResultService
     {
         /// <summary>
-        /// Checks if the output is writable. If the output is not
-        /// writable, this method should throw an exception.
+        /// Gets an array of the available formats
         /// </summary>
-        /// <param name="outputPath"></param>
-        void CheckWritability(string outputPath);
-        void WriteResultFile(XmlNode resultNode, string outputPath);
+        string[] Formats { get; }
+
+        /// <summary>
+        /// Gets a ResultWriter for a given format and set of arguments.
+        /// </summary>
+        /// <param name="format">The name of the format to be used</param>
+        /// <param name="args">A set of arguments to be used in constructing the writer or null if non arguments are needed</param>
+        /// <returns>An IResultWriter</returns>
+        IResultWriter GetResultWriter(string format, object[] args);
     }
 }

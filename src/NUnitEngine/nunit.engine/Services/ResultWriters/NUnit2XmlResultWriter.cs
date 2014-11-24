@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2011 Charlie Poole
+// Copyright (c) 2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -28,11 +28,11 @@ using System.Text;
 using System.Xml;
 using System.IO;
 
-namespace NUnit.ConsoleRunner
+namespace NUnit.Engine.Services.ResultWriters
 {
-    using Utilities;
+    using Internal;
 
-    public class NUnit2XmlOutputWriter : IResultWriter
+    public class NUnit2XmlResultWriter : IResultWriter
     {
         private XmlWriter xmlWriter;
 
@@ -78,7 +78,8 @@ namespace NUnit.ConsoleRunner
 
         private void InitializeXmlFile(XmlNode result)
         {
-            ResultSummary summary = new ResultSummary(result);
+            //ResultSummary summary = new ResultSummary(result);
+            NUnit2ResultSummary summary = new NUnit2ResultSummary(result);
 
             xmlWriter.WriteStartDocument(false);
             xmlWriter.WriteComment("This file represents the results of running a test suite");
@@ -86,15 +87,14 @@ namespace NUnit.ConsoleRunner
             xmlWriter.WriteStartElement("test-results");
 
             xmlWriter.WriteAttributeString("name", result.GetAttribute("fullname"));
-            xmlWriter.WriteAttributeString("total", summary.TestCount.ToString());
-            xmlWriter.WriteAttributeString("errors", summary.ErrorCount.ToString());
-            xmlWriter.WriteAttributeString("failures", summary.FailureCount.ToString());
-            var notRun = summary.SkipCount + summary.IgnoreCount + summary.InvalidCount;
-            xmlWriter.WriteAttributeString("not-run", notRun.ToString());
-            xmlWriter.WriteAttributeString("inconclusive", summary.InconclusiveCount.ToString());
-            xmlWriter.WriteAttributeString("ignored", summary.IgnoreCount.ToString());
-            xmlWriter.WriteAttributeString("skipped", summary.SkipCount.ToString());
-            xmlWriter.WriteAttributeString("invalid", summary.InvalidCount.ToString());
+            xmlWriter.WriteAttributeString("total", summary.ResultCount.ToString());
+            xmlWriter.WriteAttributeString("errors", summary.Errors.ToString());
+            xmlWriter.WriteAttributeString("failures", summary.Failures.ToString());
+            xmlWriter.WriteAttributeString("not-run", summary.TestsNotRun.ToString());
+            xmlWriter.WriteAttributeString("inconclusive", summary.Inconclusive.ToString());
+            xmlWriter.WriteAttributeString("ignored", summary.Ignored.ToString());
+            xmlWriter.WriteAttributeString("skipped", summary.Skipped.ToString());
+            xmlWriter.WriteAttributeString("invalid", summary.NotRunnable.ToString());
             
             DateTime start = result.GetAttribute("start-time", DateTime.UtcNow);
             xmlWriter.WriteAttributeString("date", start.ToString("yyyy-MM-dd"));

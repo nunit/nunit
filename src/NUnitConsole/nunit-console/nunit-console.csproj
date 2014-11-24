@@ -71,13 +71,7 @@
     </Compile>
     <Compile Include="Options\ConsoleOptions.cs" />
     <Compile Include="ConsoleRunner.cs" />
-    <Compile Include="IResultWriter.cs" />
     <Compile Include="Options\Options.cs" />
-    <Compile Include="OutputManager.cs" />
-    <Compile Include="OutputWriters\NUnit2XmlOutputWriter.cs" />
-    <Compile Include="OutputWriters\NUnit3XmlOutputWriter.cs" />
-    <Compile Include="OutputWriters\TestCaseOutputWriter.cs" />
-    <Compile Include="OutputWriters\XmlTransformOutputWriter.cs" />
     <Compile Include="Utilities\PackageSettings.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="ResultSummary.cs" />
