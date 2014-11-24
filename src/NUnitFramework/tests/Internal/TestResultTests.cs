@@ -112,24 +112,6 @@ namespace NUnit.Framework.Internal
             Assert.AreEqual("3", suiteNode.FindDescendant("properties/property[@name='Value']").Attributes["value"]);
         }
 
-        [Test]
-        public void TestResultXmlNodeEscapesInvalidXmlCharacters()
-        {
-            if (ResultState == null)
-                Assert.Ignore("Test ignored because ResultState is not set");
-
-            testResult.SetResult(ResultState, "Invalid Characters: \u0001\u0008\u000b\u001f\ud800; Valid Characters: \u0009\u000a\u000d\u0020\ufffd\ud800\udc00");
-            XmlNode testNode = testResult.ToXml(true);
-            XmlNode reasonNode = testNode.FindDescendant(ReasonNodeName);
-            
-            Assert.That(reasonNode, Is.Not.Null, "No <{0}> element found", ReasonNodeName);
-            
-            XmlNode messageNode = reasonNode.FindDescendant("message");
-            
-            Assert.That(messageNode, Is.Not.Null, "No <message> element found");
-            Assert.That(messageNode.TextContent, Is.EqualTo("Invalid Characters: \\u0001\\u0008\\u000b\\u001f\\ud800; Valid Characters: \u0009\u000a\u000d\u0020\ufffd\ud800\udc00"));
-        }
-
         protected virtual ResultState ResultState
         {
             get { return null; }
@@ -503,6 +485,24 @@ namespace NUnit.Framework.Internal
             XmlNode stacktraceNode = failureNode.FindDescendant("stack-trace");
             Assert.NotNull(stacktraceNode, "No <stack-trace> element found");
             Assert.AreEqual("stack trace", stacktraceNode.TextContent);
+        }
+
+        [Test]
+        public void TestResultXmlNodeEscapesInvalidXmlCharacters()
+        {
+            if ( ResultState == null )
+                Assert.Ignore( "Test ignored because ResultState is not set" );
+
+            testResult.SetResult( ResultState, "Invalid Characters: \u0001\u0008\u000b\u001f\ud800; Valid Characters: \u0009\u000a\u000d\u0020\ufffd\ud800\udc00" );
+            XmlNode testNode = testResult.ToXml( true );
+            XmlNode reasonNode = testNode.FindDescendant( ReasonNodeName );
+
+            Assert.That( reasonNode, Is.Not.Null, "No <{0}> element found", ReasonNodeName );
+
+            XmlNode messageNode = reasonNode.FindDescendant( "message" );
+
+            Assert.That( messageNode, Is.Not.Null, "No <message> element found" );
+            Assert.That( messageNode.TextContent, Is.EqualTo( "Invalid Characters: \\u0001\\u0008\\u000b\\u001f\\ud800; Valid Characters: \u0009\u000a\u000d\u0020\ufffd\ud800\udc00" ) );
         }
 
         protected override ResultState ResultState
