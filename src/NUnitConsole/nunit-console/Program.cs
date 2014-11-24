@@ -50,7 +50,7 @@ namespace NUnit.ConsoleRunner
             }
             catch (OptionException ex)
             {
-                WriteHeader();
+                WriteHeader(options);
                 ColorConsole.WriteLine(ColorStyle.Error, string.Format(ex.Message, ex.OptionName));
                 return ConsoleRunner.INVALID_ARG;
             }
@@ -75,7 +75,7 @@ namespace NUnit.ConsoleRunner
                 }
 
                 if (!options.NoHeader)
-                    WriteHeader();
+                    WriteHeader(options);
 
                 if (options.ShowHelp)
                 {
@@ -169,7 +169,7 @@ namespace NUnit.ConsoleRunner
             }
         }
 
-        private static void WriteHeader()
+        private static void WriteHeader(ConsoleOptions options)
         {
             Assembly executingAssembly = Assembly.GetExecutingAssembly();
             string versionText = executingAssembly.GetName().Version.ToString(3);
@@ -199,6 +199,12 @@ namespace NUnit.ConsoleRunner
             ColorConsole.WriteLine(ColorStyle.Header, string.Format( "{0} {1} {2}", programName, versionText, configText ));
             ColorConsole.WriteLine(ColorStyle.SubHeader, copyrightText);
             Console.WriteLine();
+
+            ColorConsole.WriteLine(ColorStyle.SectionHeader, "Test Files:");
+            foreach (string file in options.InputFiles)
+                ColorConsole.WriteLine(ColorStyle.Default, "    " + file);
+            Console.WriteLine();
+
             ColorConsole.WriteLine(ColorStyle.SectionHeader, "Runtime Environment");
             ColorConsole.WriteLabel("   OS Version: ", Environment.OSVersion.ToString(), true);
             ColorConsole.WriteLabel("  CLR Version: ", Environment.Version.ToString(), true);
