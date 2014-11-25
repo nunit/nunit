@@ -40,7 +40,6 @@ namespace NUnit.Engine.Drivers.Tests
 
         private IDictionary<string, object> _settings = new Dictionary<string, object>();
         private NUnitFrameworkDriver _driver;
-        private ICallbackEventHandler _handler;
         private string _mockAssemblyPath;
 
         [SetUp]
@@ -48,7 +47,6 @@ namespace NUnit.Engine.Drivers.Tests
         {
             _mockAssemblyPath = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, MOCK_ASSEMBLY);
             _driver = new NUnitFrameworkDriver(AppDomain.CurrentDomain, _mockAssemblyPath, _settings);
-            _handler = new CallbackEventHandler();
         }
 
         #region Construction Test

@@ -73,6 +73,7 @@ namespace NUnit.Framework.Constraints
         /// <returns>A ConstraintResult</returns>
         ConstraintResult ApplyTo<TActual>(ActualValueDelegate<TActual> del);
 
+        #pragma warning disable 3006
         /// <summary>
         /// Test whether the constraint is satisfied by a given reference.
         /// The default implementation simply dereferences the value but
@@ -81,6 +82,7 @@ namespace NUnit.Framework.Constraints
         /// <param name="actual">A reference to the value to be tested</param>
         /// <returns>A ConstraintResult</returns>
         ConstraintResult ApplyTo<TActual>(ref TActual actual);
+        #pragma warning restore 3006
 
         #endregion
     }

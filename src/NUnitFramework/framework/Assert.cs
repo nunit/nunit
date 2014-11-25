@@ -428,6 +428,7 @@ namespace NUnit.Framework
             }
         }
 
+        #pragma warning disable 3006
         /// <summary>
         /// Apply a constraint to a referenced value, succeeding if the constraint
         /// is satisfied and throwing an assertion exception on failure.
@@ -472,6 +473,7 @@ namespace NUnit.Framework
                 throw new AssertionException(writer.ToString());
             }
         }
+        #pragma warning restore 3006
 
         #endregion
 

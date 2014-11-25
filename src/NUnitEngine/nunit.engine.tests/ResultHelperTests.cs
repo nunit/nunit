@@ -101,8 +101,6 @@ namespace NUnit.Engine.Internal.Tests
         [Test]
         public void AggregateXmlNodes()
         {
-            DateTime startTime = new DateTime(2011, 07, 04, 12, 34, 56);
-
             XmlNode combined = ResultHelper.Aggregate("test-run", "NAME", "FULLNAME", twoNodes);
 
             Assert.That(combined.Name, Is.EqualTo("test-run"));

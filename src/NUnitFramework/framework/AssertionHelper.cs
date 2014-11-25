@@ -169,6 +169,7 @@ namespace NUnit.Framework
             Assert.That(actual, expression, message, args);
         }
 
+        #pragma warning disable 3006
         /// <summary>
         /// Apply a constraint to a referenced value, succeeding if the constraint
         /// is satisfied and throwing an assertion exception on failure.
@@ -204,7 +205,8 @@ namespace NUnit.Framework
         {
             Assert.That(actual, expression, message, args);
         }
-        
+        #pragma warning restore 3006
+
         #endregion
 
         #region Map

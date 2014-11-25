@@ -114,6 +114,7 @@ namespace NUnit.Framework.Constraints
             return ApplyTo(del());
         }
 
+#pragma warning disable 3006
         /// <summary>
         /// Test whether the constraint is satisfied by a given reference.
         /// The default implementation simply dereferences the value but
@@ -125,6 +126,7 @@ namespace NUnit.Framework.Constraints
         {
             return ApplyTo(actual);
         }
+#pragma warning restore 3006
 
         #endregion
 

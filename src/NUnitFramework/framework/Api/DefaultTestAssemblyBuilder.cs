@@ -40,10 +40,6 @@ namespace NUnit.Framework.Api
         static Logger log = InternalTrace.GetLogger(typeof(DefaultTestAssemblyBuilder));
 
         #region Instance Fields
-        /// <summary>
-        /// The loaded assembly
-        /// </summary>
-        Assembly assembly;
 
         /// <summary>
         /// The default suite builder used by the test assembly builder.
@@ -126,7 +122,6 @@ namespace NUnit.Framework.Api
 
         private TestSuite Build(Assembly assembly, string assemblyPath, IDictionary options)
         {
-            this.assembly = assembly;
             TestSuite testAssembly = null;
 
             try

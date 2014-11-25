@@ -1,5 +1,36 @@
 ﻿NOTE: A combined description of changes since NUnit 2.6.3 is under development along with a summary statement of major features. Both will be available in the next release.
 
+NUnit 3.0.0 Alpha 3 - November 25, 2014
+
+ * 12   Compact framework should support generic methods
+ * 145  NUnit-console fails if test result message contains invalid xml characters
+ * 155  Create utility classes for platform-specific code
+ * 223  Common code for NUnitLite console runner and NUnit-Console
+ * 225  Compact Framework Support
+ * 238  Improvements to running 32 bit tests on a 64 bit system
+ * 261  Add portable nunitlite build
+ * 284  NUnitLite Unification
+ * 293  CF does not have a CurrentDirectory
+ * 306  Assure NUnit can write resultfile
+ * 308  Early disposal of runners
+ * 309  NUnit-Console should support incremental output under TeamCity
+ * 325  Add RegexConstraint to compact framework build
+ * 326  Add TimeoutAttribute to compact framework build
+ * 327  Allow generic test methods in the compact framework
+ * 328  Use .NET Stopwatch class for compact framework builds
+ * 331  Alpha 2 CF does not build
+ * 333  Add parallel execution to desktop builds of NUnitLite
+ * 334  Include File-related constraints and syntax in NUnitLite builds
+ * 335  Re-introduce 'Classic' NUnit syntax in NUnitLite
+ * 336  Document use of separate obj directories per build in our projects
+ * 337  Update Standard Defines page for .NET 3.0
+ * 341  Move the NUnitLite runners to separate assemblies
+ * 367  Refactor XML Escaping Tests
+ * 372  CF Build TestAsesemblyRunnerTests
+ * 373  Minor CF Test Fixes
+ * 378  Correct documentation for PairwiseAttribute
+ * 386  Console Output Improvements
+ 
 NUnit 3.0.0 Alpha 2 - November 2, 2014
 
 Breaking Changes
