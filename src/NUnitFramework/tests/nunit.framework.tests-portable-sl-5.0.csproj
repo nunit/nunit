@@ -46,7 +46,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\..\..\bin\Debug\portable\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;SILVERLIGHT;SL_5_0;NUNITLITE;PORTABLE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NUNIT_FRAMEWORK;SILVERLIGHT;SL_5_0;PORTABLE;NUNITLITE</DefineConstants>
     <NoStdLib>true</NoStdLib>
     <NoConfig>true</NoConfig>
     <ErrorReport>prompt</ErrorReport>
@@ -56,7 +56,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\..\..\bin\Release\portable\</OutputPath>
-    <DefineConstants>TRACE;SILVERLIGHT;SL_5_0;NUNITLITE;PORTABLE</DefineConstants>
+    <DefineConstants>TRACE;NUNIT_FRAMEWORK;SILVERLIGHT;SL_5_0;PORTABLE;NUNITLITE</DefineConstants>
     <NoStdLib>true</NoStdLib>
     <NoConfig>true</NoConfig>
     <ErrorReport>prompt</ErrorReport>
