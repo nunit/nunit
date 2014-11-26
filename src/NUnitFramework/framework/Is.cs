@@ -349,7 +349,7 @@ namespace NUnit.Framework
 
         /// <summary>
         /// Returns a constraint that tests whether the actual value
-        /// is assignable from the type supplied as an argument.
+        /// is assignable to the type supplied as an argument.
         /// </summary>
         public static AssignableToConstraint AssignableTo(Type expectedType)
         {
@@ -358,7 +358,7 @@ namespace NUnit.Framework
 
         /// <summary>
         /// Returns a constraint that tests whether the actual value
-        /// is assignable from the type supplied as an argument.
+        /// is assignable to the type supplied as an argument.
         /// </summary>
         public static AssignableToConstraint AssignableTo<TExpected>()
         {
