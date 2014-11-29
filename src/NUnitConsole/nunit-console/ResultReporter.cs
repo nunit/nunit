@@ -151,6 +151,8 @@ namespace NUnit.ConsoleRunner
                     return;
 
                 case "test-run":
+                    foreach (XmlNode childResult in result.ChildNodes)
+                        WriteErrorsAndFailures(childResult);
                     break;
 
                 case "test-suite":
@@ -171,14 +173,12 @@ namespace NUnit.ConsoleRunner
                         }
                     }
                     
+                    foreach (XmlNode childResult in result.ChildNodes)
+                        WriteErrorsAndFailures(childResult);
+
                     break;
             }
-
-            // TODO: Display failures in fixture setup or teardown
-            foreach (XmlNode childResult in result.ChildNodes)
-                WriteErrorsAndFailures(childResult);
         }
-
 
         public void WriteNotRunReport()
         {
@@ -190,19 +190,29 @@ namespace NUnit.ConsoleRunner
 
         private void WriteNotRunResults(XmlNode result)
         {
-            if (result.Name == "test-case")
+            switch (result.Name)
             {
-                string resultState = result.GetAttribute("result");
-                if (resultState == "Skipped" || resultState == "Ignored" || resultState == "NotRunnable")
-                {
-                    using (new ColorConsole(ColorStyle.Warning))
-                        WriteSingleResult(result);
-                }
-            }
-            else
-            {
-                foreach (XmlNode childResult in result.ChildNodes)
-                    WriteNotRunResults(childResult);
+                case "test-case":
+                    string resultState = result.GetAttribute("result");
+
+                    if (resultState == "Skipped")
+                    {
+                        string label = result.GetAttribute("label");
+
+                        ColorStyle style = label == "Ignored" ? ColorStyle.Warning : ColorStyle.Output;
+
+                        using (new ColorConsole(style))
+                            WriteSingleResult(result);
+                    }
+
+                    break;
+
+                case "test-suite":
+                case "test-run":
+                    foreach (XmlNode childResult in result.ChildNodes)
+                        WriteNotRunResults(childResult);
+
+                    break;
             }
         }
 
