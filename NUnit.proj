@@ -9,7 +9,7 @@
 	<PropertyGroup Label="Common Properties">
 		<ProjectName>$(MSBuildProjectName)</ProjectName>
 		<PackageVersion>3.0.0</PackageVersion>
-		<PackageModifier>-alpha-2</PackageModifier>
+		<PackageModifier>-alpha-3</PackageModifier>
 		<PackageName>$(ProjectName)-$(PackageVersion)$(PackageModifier)</PackageName>
 	</PropertyGroup>
 
@@ -225,6 +225,10 @@
 	<Target Name="BuildEngine" Label="Build all engine projects for the current config">
 		<MSBuild Targets="Build" Projects="@(EngineProjects)"
 			Properties="Configuration=$(Configuration); Platform=AnyCPU" />
+	</Target>
+
+	<!-- This target is kept separate from the engine because it can't be built on some systems -->
+	<Target Name="BuildCppTestFiles" Label="Build the C++ assemblies used in some engine tests">
 		<MSBuild Targets="Build" Projects="$(EngineSrcDir)\mock-cpp-clr\mock-cpp-clr-x86.vcxproj" 
 			 Properties="Configuration=$(Configuration); Platform=Win32"
 			 Condition="'$(Runtime)' == 'NET' And $(IsWindows)" />
@@ -433,11 +437,27 @@
 
 	<ItemGroup Label="Files for packaging in bin directory">
 		<BinFiles Include="$(ConfigurationBuildDir)\**\*.dll" />
-		<BinFiles Include="$(ConfigurationBuildDir)\**\*.exe" />
-		<BinFiles Include="$(ConfigurationBuildDir)\**\*.pdb" Condition="'$(Configuration)' == 'Debug'" />
-		<BinFiles Include="$(ConfigurationBuildDir)\**\*.xml" />
-		<BinFiles Include="$(ConfigurationBuildDir)\**\*.config" />
+
+		<BinFiles Include="$(ConfigurationBuildDir)\**\nunit-console.exe" />
+		<BinFiles Include="$(ConfigurationBuildDir)\**\nunit-console.exe.config" />
+		<BinFiles Include="$(ConfigurationBuildDir)\**\nunit-agent.exe" />
+		<BinFiles Include="$(ConfigurationBuildDir)\**\nunit-agent.exe.config" />
+		<BinFiles Include="$(ConfigurationBuildDir)\**\nunit-agent-x86.exe" />
+		<BinFiles Include="$(ConfigurationBuildDir)\**\nunit-agent-x86.exe.config" />
+
+		<BinFiles Include="$(ConfigurationBuildDir)\**\nunit.framework.xml" />
+		<BinFiles Include="$(ConfigurationBuildDir)\**\nunit.engine.api.xml" />
+
 		<BinFiles Include="$(ConfigurationBuildDir)\NUnit2TestResult.xsd" />
+
+		<!-- Extra files for Silverlight build -->
+		<BinFiles Include="$(ConfigurationBuildDir)\sl-5.0\AppManifest.xaml" />
+		<BinFiles Include="$(ConfigurationBuildDir)\sl-5.0\nunit.framework.tests.xap" />
+		<BinFiles Include="$(ConfigurationBuildDir)\sl-5.0\nunit.framework.tests_TestPage.html" />
+
+		<!-- Include pdp files for Debug -->
+		<BinFiles Include="$(ConfigurationBuildDir)\**\*.pdb"
+			Condition="'$(Configuration)' == 'Debug'" />
 	</ItemGroup>
 
 	<ItemGroup Label="Supported Frameworks">

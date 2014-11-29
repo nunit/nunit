@@ -1,6 +1,45 @@
 ﻿NOTE: A combined description of changes since NUnit 2.6.3 is under development along with a summary statement of major features. Both will be available in the next release.
 
+<<<<<<< HEAD
 NUnit 3.0.0 Alpha 3 - November 25, 2014
+=======
+NUnit 3.0.0 Alpha 3 - November 29, 2014
+
+Breaking Changes
+
+ * NUnitLite tests must reference both the nunit.framework and nunitlite assemblies.
+
+Framework
+
+ * The NUnit and NUnitLite frameworks have now been merged. There is no longer any distinction
+   between them in terms of features, although some features are not available on all platforms.
+ * The release includes two new framework builds: compact framework 3.5 and portable. The portable
+   library is compatible with .NET 4.5, Silverlight 5.0, Windows 8, Windows Phone 8.1,
+   Windows Phone Silverlight 8, Mono for Android and MonoTouch.
+ * A number of previously unsupported features are available for the Compact Framework:
+    - Generic methods as tests
+    - RegexConstraint
+    - TimeoutAttribute
+    - FileAssert, DirectoryAssert and file-related constraints
+
+Engine
+
+ * The logic of runtime selection has now changed so that each assembly runs by default
+   in a separate process using the runtime for which it was built.
+ * On 64-bit systems, each test process is automatically created as 32-bit or 64-bit,
+   depending on the platform specified for the test assembly. 
+
+Console
+ * The console runner now runs tests in a separate process per assembly by default. They may
+   still be run in process or in a single separate process by use of command-line options.
+ * The console runner now starts in the highest version of the .NET runtime available, making
+   it simpler to debug tests by specifying that they should run in-process on the command-line.
+ * The -x86 command-line option is provided to force execution in a 32-bit process on a 64-bit system.
+ * A writeability check is performed for each output result file before trying to run the tests.
+ * The -teamcity option is now supported.
+
+Issues Resolved
+>>>>>>> 1be9f717592e7196813007fadca133dced4abc22
 
  * 12   Compact framework should support generic methods
  * 145  NUnit-console fails if test result message contains invalid xml characters
@@ -26,7 +65,11 @@ NUnit 3.0.0 Alpha 3 - November 25, 2014
  * 337  Update Standard Defines page for .NET 3.0
  * 341  Move the NUnitLite runners to separate assemblies
  * 367  Refactor XML Escaping Tests
+<<<<<<< HEAD
  * 372  CF Build TestAsesemblyRunnerTests
+=======
+ * 372  CF Build TestAssemblyRunnerTests
+>>>>>>> 1be9f717592e7196813007fadca133dced4abc22
  * 373  Minor CF Test Fixes
  * 378  Correct documentation for PairwiseAttribute
  * 386  Console Output Improvements
@@ -281,7 +324,7 @@ Bug Fixes in 2.9.6 But Not Listed Here in the Release
  * 1222148	/framework switch does not recognize net-4.5
  * 1228979	Theories with all test cases inconclusive are not reported as failures
 
-	
+    
 NUnit 2.9.5 - July 30, 2010
 
 Bug Fixes
@@ -301,7 +344,7 @@ Bug Fixes
  * 605432 	ToString not working properly for some properties
  * 606548 	Deprecate Directory Assert in 2.5 and remove it in 3.0
  * 608875 	NUnit Equality Comparer incorrectly defines equality for Dictionary objects
-	
+    
 NUnit 2.9.4 - May 4, 2010
 
 Bug Fixes
@@ -321,7 +364,7 @@ Bug Fixes
  * 556971 	Datapoint(s)Attribute should work on IEnumerable<T> as well as on Arrays
  * 561436 	SetCulture broken with 2.5.4
  * 563532 	DatapointsAttribute should be allowed on properties and methods
-	 
+     
 NUnit 2.9.3 - October 26, 2009
 
 Main Features
