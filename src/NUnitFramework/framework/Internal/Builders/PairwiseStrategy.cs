@@ -34,6 +34,21 @@ namespace NUnit.Framework.Internal.Builders
     /// PairwiseStrategy creates test cases by combining the parameter
     /// data so that all possible pairs of data items are used.
     /// </summary>
+    /// <remarks>
+    /// <para>
+    /// The number of test cases that cover all possible pairs of test function
+    /// parameters values is significantly less than the number of test cases
+    /// that cover all possible combination of test function parameters values.
+    /// And because different studies show that most of software failures are
+    /// caused by combination of no more than two parameters, pairwise testing
+    /// can be an effective ways to test the system when it's impossible to test
+    /// all combinations of parameters.
+    /// </para>
+    /// <para>
+    /// The PairwiseStrategy code is based on "jenny" tool by Bob Jenkins:
+    /// http://burtleburtle.net/bob/math/jenny.html
+    /// </para>
+    /// </remarks>
     public class PairwiseStrategy : ICombiningStrategy
     {
         // NOTE: Terminology in this class is based on the literature
@@ -42,132 +57,146 @@ namespace NUnit.Framework.Internal.Builders
         // higher level testing than it is to unit tests. See
         // comments in the code for further explanations.
 
+        #region Internals
+
         /// <summary>
-        /// FleaRand generates random uints
+        /// FleaRand is a pseudo-random number generator developed by Bob Jenkins:
+        /// http://burtleburtle.net/bob/rand/talksmall.html#flea
         /// </summary>
         internal class FleaRand
         {
-            private const int FleaRandSize = 256;
-
-            private uint b;
-            private uint c;
-            private uint d;
-            private uint z;
-
-            private uint[] m = new uint[FleaRandSize];
-            private uint[] r = new uint[FleaRandSize];
-
-            private uint q;
+            private uint _b;
+            private uint _c;
+            private uint _d;
+            private uint _z;
+            private uint[] _m;
+            private uint[] _r;
+            private uint _q;
 
             /// <summary>
-            /// Initializes a new instance of the <see cref="FleaRand"/> class.
+            /// Initializes a new instance of the FleaRand class.
             /// </summary>
             /// <param name="seed">The seed.</param>
-            public FleaRand(uint seed)
+            public FleaRand( uint seed )
             {
-                this.b = seed;
-                this.c = seed;
-                this.d = seed;
-                this.z = seed;
+                _b = seed;
+                _c = seed;
+                _d = seed;
+                _z = seed;
+                _m = new uint[256];
+                _r = new uint[256];
 
-                for (int i = 0; i < this.m.Length; i++)
+                for ( int i = 0; i < _m.Length; i++ )
                 {
-                    this.m[i] = seed;
+                    _m[i] = seed;
                 }
 
-                for (int i = 0; i < 10; i++)
+                for ( int i = 0; i < 10; i++ )
                 {
-                    this.Batch();
+                    Batch();
                 }
 
-                this.q = 0;
+                _q = 0;
             }
 
             public uint Next()
             {
-                if (this.q == 0)
+                if ( _q == 0 )
                 {
-                    this.Batch();
-                    this.q = (uint)this.r.Length - 1;
+                    Batch();
+                    _q = (uint)_r.Length - 1;
                 }
                 else
                 {
-                    this.q--;
+                    _q--;
                 }
 
-                return this.r[this.q];
+                return _r[_q];
             }
 
             private void Batch()
             {
                 uint a;
-                uint b = this.b;
-                uint c = this.c + (++this.z);
-                uint d = this.d;
+                uint b = _b;
+                uint c = _c + ( ++_z );
+                uint d = _d;
 
-                for (int i = 0; i < this.r.Length; i++)
+                for ( int i = 0; i < _r.Length; i++ )
                 {
-                    a = this.m[b % this.m.Length];
-                    this.m[b % this.m.Length] = d;
-                    d = (c << 19) + (c >> 13) + b;
-                    c = b ^ this.m[i];
+                    a = _m[b % _m.Length];
+                    _m[b % _m.Length] = d;
+                    d = ( c << 19 ) + ( c >> 13 ) + b;
+                    c = b ^ _m[i];
                     b = a + d;
-                    this.r[i] = c;
+                    _r[i] = c;
                 }
 
-                this.b = b;
-                this.c = c;
-                this.d = d;
+                _b = b;
+                _c = c;
+                _d = d;
             }
         }
 
         /// <summary>
-        /// FeatureInfo represents coverage of a single feature,
-        /// represented as a pair of indices, Dimension and Feature.
-        /// In terms of unit testing, Dimension is the index of
-        /// the test parameter and Feature is the index of the
-        /// supplied value in that parameter's list of sources.
+        /// FeatureInfo represents coverage of a single value of test function
+        /// parameter, represented as a pair of indices, Dimension and Feature. In
+        /// terms of unit testing, Dimension is the index of the test parameter and
+        /// Feature is the index of the supplied value in that parameter's list of
+        /// sources.
         /// </summary>
         internal class FeatureInfo
         {
-#if DEBUG
-            public const string Names = "abcdefghijklmnopqrstuvwxyz";
-#endif
-
             public readonly int Dimension;
+
             public readonly int Feature;
 
-            public FeatureInfo(int dimension, int feature)
+            /// <summary>
+            /// Initializes a new instance of FeatureInfo class.
+            /// </summary>
+            /// <param name="dimension">Index of a dimension.</param>
+            /// <param name="feature">Index of a feature.</param>
+            public FeatureInfo( int dimension, int feature )
             {
-                this.Dimension = dimension;
-                this.Feature = feature;
+                Dimension = dimension;
+                Feature = feature;
             }
-
-#if DEBUG
-            public override string ToString()
-            {
-                return (this.Dimension + 1).ToString() + FeatureInfo.Names[this.Feature];
-            }
-#endif
         }
 
         /// <summary>
-        /// A Tuple represents a combination of features, one per test
-        /// parameter, which may be covered by a test case. In the
-        /// PairwiseStrategy, we are only trying to cover pairs
-        /// of features, so the tuples are actually pairs. The
-        /// algorithm will, however, function for triples, etc.
-        /// provided MaxTupleLength is set appropriately.
+        /// A FeatureTuple represents a combination of features, one per test
+        /// parameter, which should be covered by a test case. In the
+        /// PairwiseStrategy, we are only trying to cover pairs of features, so the
+        /// tuples actually may contain only single feature or pair of features, but
+        /// the algorithm itself works with triplets, quadruples and so on.
         /// </summary>
-        internal class Tuple
+        internal class FeatureTuple
         {
-            private readonly List<FeatureInfo> features = new List<FeatureInfo>();
+            private readonly FeatureInfo[] _features;
 
-            public int Count
+            /// <summary>
+            /// Initializes a new instance of FeatureTuple class for a single feature.
+            /// </summary>
+            /// <param name="feature1">Single feature.</param>
+            public FeatureTuple( FeatureInfo feature1 )
+            {
+                _features = new FeatureInfo[] { feature1 };
+            }
+
+            /// <summary>
+            /// Initializes a new instance of FeatureTuple class for a pair of features.
+            /// </summary>
+            /// <param name="feature1">First feature.</param>
+            /// <param name="feature2">Second feature.</param>
+            public FeatureTuple( FeatureInfo feature1, FeatureInfo feature2 )
+            {
+                _features = new FeatureInfo[] { feature1, feature2 };
+            }
+
+            public int Length
             {
                 get
                 {
-                    return this.features.Count;
+                    return _features.Length;
                 }
             }
 
@@ -175,92 +204,32 @@ namespace NUnit.Framework.Internal.Builders
             {
                 get
                 {
-                    return this.features[index];
+                    return _features[index];
                 }
-            }
-
-            public void Add(FeatureInfo feature)
-            {
-                this.features.Add(feature);
-            }
-
-#if DEBUG
-            public override string ToString()
-            {
-                StringBuilder sb = new StringBuilder();
-
-                sb.Append('(');
-
-                for (int i = 0; i < this.features.Count; i++)
-                {
-                    if (i > 0)
-                    {
-                        sb.Append(' ');
-                    }
-
-                    sb.Append(this.features[i].ToString());
-                }
-
-                sb.Append(')');
-
-                return sb.ToString();
-            }
-#endif
-        }
-
-        /// <summary>
-        /// TupleCollection is a set of Tuples which are either
-        /// covered by a test or not yet covered.
-        /// </summary>
-        internal class TupleCollection
-        {
-            private readonly List<Tuple> tuples = new List<Tuple>();
-
-            public int Count
-            {
-                get
-                {
-                    return this.tuples.Count;
-                }
-            }
-
-            public Tuple this[int index]
-            {
-                get
-                {
-                    return (Tuple)this.tuples[index];
-                }
-            }
-
-            public void Add(Tuple tuple)
-            {
-                this.tuples.Add(tuple);
-            }
-
-            public void RemoveAt(int index)
-            {
-                this.tuples.RemoveAt(index);
             }
         }
 
         /// <summary>
-        /// TestCase represents a single test case covering
-        /// a list of features.
+        /// TestCase represents a single test case covering a list of features.
         /// </summary>
-        internal class TestCase
+        internal class TestCaseInfo
         {
             public readonly int[] Features;
 
-            public TestCase(int numberOfDimensions)
+            /// <summary>
+            /// Initializes a new instance of TestCaseInfo class.
+            /// </summary>
+            /// <param name="length">A number of features in the test case.</param>
+            public TestCaseInfo( int length )
             {
-                this.Features = new int[numberOfDimensions];
+                Features = new int[length];
             }
 
-            public bool IsTupleCovered(Tuple tuple)
+            public bool IsTupleCovered( FeatureTuple tuple )
             {
-                for (int i = 0; i < tuple.Count; i++)
+                for ( int i = 0; i < tuple.Length; i++ )
                 {
-                    if (this.Features[tuple[i].Dimension] != tuple[i].Feature)
+                    if ( Features[tuple[i].Dimension] != tuple[i].Feature )
                     {
                         return false;
                     }
@@ -268,47 +237,378 @@ namespace NUnit.Framework.Internal.Builders
 
                 return true;
             }
-
-#if DEBUG
-            public override string ToString()
-            {
-                StringBuilder sb = new StringBuilder();
-
-                for (int i = 0; i < this.Features.Length; i++)
-                {
-                    if (i > 0)
-                    {
-                        sb.Append(' ');
-                    }
-
-                    sb.Append(i + 1);
-                    sb.Append(FeatureInfo.Names[this.Features[i]]);
-                }
-
-                return sb.ToString();
-            }
-#endif
         }
 
-        internal class TestCaseCollection : IEnumerable
+        /// <summary>
+        /// PairwiseTestCaseGenerator class implements an algorithm which generates
+        /// a set of test cases which covers all pairs of possible values of test
+        /// function.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// The algorithm starts with creating a set of all feature tuples which we
+        /// will try to cover (see <see
+        /// cref="PairwiseTestCaseGenerator.CreateAllTuples" /> method). This set
+        /// includes every single feature and all possible pairs of features. We
+        /// store feature tuples in the 3-D collection (where axes are "dimension",
+        /// "feature", and "all combinations which includes this feature"), and for
+        /// every two feature (e.g. "A" and "B") we generate both ("A", "B") and
+        /// ("B", "A") pairs. This data structure extremely reduces the amount of
+        /// time needed to calculate coverage for a single test case (this
+        /// calculation is the most time-consuming part of the algorithm).
+        /// </para>
+        /// <para>
+        /// Then the algorithm picks one tuple from the uncovered tuple, creates a
+        /// test case that covers this tuple, and then removes this tuple and all
+        /// other tuples covered by this test case from the collection of uncovered
+        /// tuples.
+        /// </para>
+        /// <para>
+        /// Picking a tuple to cover
+        /// </para>
+        /// <para>
+        /// There are no any special rules defined for picking tuples to cover. We
+        /// just pick them one by one, in the order they were generated.
+        /// </para>
+        /// <para>
+        /// Test generation
+        /// </para>
+        /// <para>
+        /// Test generation starts from creating a completely random test case which
+        /// covers, nevertheless, previously selected tuple. Then the algorithm
+        /// tries to maximize number of tuples which this test covers.
+        /// </para>
+        /// <para>
+        /// Test generation and maximization process repeats five times for every
+        /// selected tuple and then the algorithm picks the best test case ("five"
+        /// is a magic number which provides good results in acceptable time).
+        /// </para>
+        /// <para>Maximizing test coverage</para>
+        /// <para>
+        /// To maximize tests coverage, the algorithm walks thru the list of mutable
+        /// dimensions (mutable dimension is a dimension that are not included in
+        /// the previously selected tuple). Then for every dimension, the algorithm
+        /// walks thru the list of features and checks if this feature provides
+        /// better coverage than randomly selected feature, and if yes keeps this
+        /// feature.
+        /// </para>
+        /// <para>
+        /// This process repeats while it shows progress. If the last iteration
+        /// doesn't improve coverage, the process ends.
+        /// </para>
+        /// <para>
+        /// In addition, for better results, before start every iteration, the
+        /// algorithm "scrambles" dimensions - so for every iteration dimension
+        /// probes in a different order.
+        /// </para>
+        /// </remarks>
+        internal class PairwiseTestCaseGenerator
         {
-            private readonly List<TestCase> testCases = new List<TestCase>();
+            private FleaRand _prng;
 
-            public void Add(TestCase testCase)
-            {
-                this.testCases.Add(testCase);
-            }
+            private int[] _dimensions;
 
-            public IEnumerator GetEnumerator()
-            {
-                return this.testCases.GetEnumerator();
-            }
+            private List<FeatureTuple>[][] _uncoveredTuples;
 
-            public bool IsTupleCovered(Tuple tuple)
+            /// <summary>
+            /// Creates a set of test cases for specified dimensions.
+            /// </summary>
+            /// <param name="dimensions">
+            /// An array which contains information about dimensions. Each element of
+            /// this array represents a number of features in the specific dimension.
+            /// </param>
+            /// <returns>
+            /// A set of test cases.
+            /// </returns>
+            public IEnumerable GetTestCases( int[] dimensions )
             {
-                foreach (TestCase testCase in this.testCases)
+                _prng = new FleaRand( 15485863 );
+                _dimensions = dimensions;
+
+                CreateAllTuples();
+
+                List<TestCaseInfo> testCases = new List<TestCaseInfo>();
+
+                while ( true )
                 {
-                    if (testCase.IsTupleCovered(tuple))
+                    FeatureTuple tuple = GetNextTuple();
+
+                    if ( tuple == null )
+                    {
+                        break;
+                    }
+
+                    TestCaseInfo testCase = CreateTestCase( tuple );
+
+                    RemoveTuplesCoveredByTest( testCase );
+
+                    testCases.Add( testCase );
+                }
+
+#if DEBUG
+                SelfTest( testCases );
+#endif
+
+                return testCases;
+            }
+
+            private int GetNextRandomNumber()
+            {
+                return (int)( _prng.Next() >> 1 );
+            }
+
+            private void CreateAllTuples()
+            {
+                _uncoveredTuples = new List<FeatureTuple>[_dimensions.Length][];
+
+                for ( int d = 0; d < _dimensions.Length; d++ )
+                {
+                    _uncoveredTuples[d] = new List<FeatureTuple>[_dimensions[d]];
+
+                    for ( int f = 0; f < _dimensions[d]; f++ )
+                    {
+                        _uncoveredTuples[d][f] = CreateTuples( d, f );
+                    }
+                }
+            }
+
+            private List<FeatureTuple> CreateTuples( int dimension, int feature )
+            {
+                List<FeatureTuple> result = new List<FeatureTuple>();
+
+                result.Add( new FeatureTuple( new FeatureInfo( dimension, feature ) ) );
+
+                for ( int d = 0; d < _dimensions.Length; d++ )
+                {
+                    if ( d != dimension )
+                    {
+                        for ( int f = 0; f < _dimensions[d]; f++ )
+                        {
+                            result.Add( new FeatureTuple( new FeatureInfo( dimension, feature ), new FeatureInfo( d, f ) ) );
+                        }
+                    }
+                }
+
+                return result;
+            }
+
+            private FeatureTuple GetNextTuple()
+            {
+                for ( int d = 0; d < _uncoveredTuples.Length; d++ )
+                {
+                    for ( int f = 0; f < _uncoveredTuples[d].Length; f++ )
+                    {
+                        List<FeatureTuple> tuples = _uncoveredTuples[d][f];
+
+                        if ( tuples.Count > 0 )
+                        {
+                            FeatureTuple tuple = tuples[0];
+                            tuples.RemoveAt( 0 );
+                            return tuple;
+                        }
+                    }
+                }
+
+                return null;
+            }
+
+            private TestCaseInfo CreateTestCase( FeatureTuple tuple )
+            {
+                TestCaseInfo bestTestCase = null;
+                int bestCoverage = -1;
+
+                for ( int i = 0; i < 5; i++ )
+                {
+                    TestCaseInfo testCase = CreateRandomTestCase( tuple );
+
+                    int coverage = MaximizeCoverage( testCase, tuple );
+
+                    if ( coverage > bestCoverage )
+                    {
+                        bestTestCase = testCase;
+                        bestCoverage = coverage;
+                    }
+                }
+
+                return bestTestCase;
+            }
+
+            private TestCaseInfo CreateRandomTestCase( FeatureTuple tuple )
+            {
+                TestCaseInfo result = new TestCaseInfo( _dimensions.Length );
+
+                for ( int d = 0; d < _dimensions.Length; d++ )
+                {
+                    result.Features[d] = GetNextRandomNumber() % _dimensions[d];
+                }
+
+                for ( int i = 0; i < tuple.Length; i++ )
+                {
+                    result.Features[tuple[i].Dimension] = tuple[i].Feature;
+                }
+
+                return result;
+            }
+
+            private int MaximizeCoverage( TestCaseInfo testCase, FeatureTuple tuple )
+            {
+                // It starts with one because we always have one tuple which is covered by the test.
+                int totalCoverage = 1;
+                int[] mutableDimensions = GetMutableDimensions( tuple );
+
+                while ( true )
+                {
+                    bool progress = false;
+
+                    ScrambleDimensions( mutableDimensions );
+
+                    for ( int i = 0; i < mutableDimensions.Length; i++ )
+                    {
+                        int d = mutableDimensions[i];
+
+                        int bestCoverage = CountTuplesCoveredByTest( testCase, d, testCase.Features[d] );
+
+                        int newCoverage = MaximizeCoverageForDimension( testCase, d, bestCoverage );
+
+                        totalCoverage += newCoverage;
+
+                        if ( newCoverage > bestCoverage )
+                        {
+                            progress = true;
+                        }
+                    }
+
+                    if ( !progress )
+                    {
+                        return totalCoverage;
+                    }
+                }
+            }
+
+            private int[] GetMutableDimensions( FeatureTuple tuple )
+            {
+                List<int> result = new List<int>();
+
+                bool[] immutableDimensions = new bool[_dimensions.Length];
+
+                for ( int i = 0; i < tuple.Length; i++ )
+                {
+                    immutableDimensions[tuple[i].Dimension] = true;
+                }
+
+                for ( int d = 0; d < _dimensions.Length; d++ )
+                {
+                    if ( !immutableDimensions[d] )
+                    {
+                        result.Add( d );
+                    }
+                }
+
+                return result.ToArray();
+            }
+
+            private void ScrambleDimensions( int[] dimensions )
+            {
+                for ( int i = 0; i < dimensions.Length; i++ )
+                {
+                    int j = GetNextRandomNumber() % dimensions.Length;
+                    int t = dimensions[i];
+                    dimensions[i] = dimensions[j];
+                    dimensions[j] = t;
+                }
+            }
+
+            private int MaximizeCoverageForDimension( TestCaseInfo testCase, int dimension, int bestCoverage )
+            {
+                List<int> bestFeatures = new List<int>( _dimensions[dimension] );
+
+                for ( int f = 0; f < _dimensions[dimension]; f++ )
+                {
+                    testCase.Features[dimension] = f;
+
+                    int coverage = CountTuplesCoveredByTest( testCase, dimension, f );
+
+                    if ( coverage >= bestCoverage )
+                    {
+                        if ( coverage > bestCoverage )
+                        {
+                            bestCoverage = coverage;
+                            bestFeatures.Clear();
+                        }
+
+                        bestFeatures.Add( f );
+                    }
+                }
+
+                testCase.Features[dimension] = bestFeatures[GetNextRandomNumber() % bestFeatures.Count];
+
+                return bestCoverage;
+            }
+
+            private int CountTuplesCoveredByTest( TestCaseInfo testCase, int dimension, int feature )
+            {
+                int result = 0;
+
+                List<FeatureTuple> tuples = _uncoveredTuples[dimension][feature];
+
+                for ( int i = 0; i < tuples.Count; i++ )
+                {
+                    if ( testCase.IsTupleCovered( tuples[i] ) )
+                    {
+                        result++;
+                    }
+                }
+
+                return result;
+            }
+
+            private void RemoveTuplesCoveredByTest( TestCaseInfo testCase )
+            {
+                for ( int d = 0; d < _uncoveredTuples.Length; d++ )
+                {
+                    for ( int f = 0; f < _uncoveredTuples[d].Length; f++ )
+                    {
+                        List<FeatureTuple> tuples = _uncoveredTuples[d][f];
+
+                        for ( int i = tuples.Count - 1; i >= 0; i-- )
+                        {
+                            if ( testCase.IsTupleCovered( tuples[i] ) )
+                            {
+                                tuples.RemoveAt( i );
+                            }
+                        }
+                    }
+                }
+            }
+
+#if DEBUG
+            private void SelfTest( List<TestCaseInfo> testCases )
+            {
+                for ( int d1 = 0; d1 < _dimensions.Length - 1; d1++ )
+                {
+                    for ( int d2 = d1 + 1; d2 < _dimensions.Length; d2++ )
+                    {
+                        for ( int f1 = 0; f1 < _dimensions[d1]; f1++ )
+                        {
+                            for ( int f2 = 0; f2 < _dimensions[d2]; f2++ )
+                            {
+                                FeatureTuple tuple = new FeatureTuple( new FeatureInfo( d1, f1 ), new FeatureInfo( d2, f2 ) );
+
+                                if ( !IsTupleCovered( testCases, tuple ) )
+                                {
+                                    throw new InvalidOperationException( string.Format( "PairwiseStrategy : Not all pairs are covered : {0}", tuple.ToString() ) );
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            private bool IsTupleCovered( List<TestCaseInfo> testCases, FeatureTuple tuple )
+            {
+                foreach ( TestCaseInfo testCase in testCases )
+                {
+                    if ( testCase.IsTupleCovered( tuple ) )
                     {
                         return true;
                     }
@@ -316,392 +616,24 @@ namespace NUnit.Framework.Internal.Builders
 
                 return false;
             }
-        }
-
-        internal class PairwiseTestCaseGenerator
-        {
-            private const int MaxTupleLength = 2;
-
-            private readonly FleaRand random = new FleaRand(0);
-
-            private readonly int[] dimensions;
-
-            private readonly TupleCollection[][] uncoveredTuples;
-
-            private readonly int[][] currentTupleLength;
-
-            private readonly TestCaseCollection testCases = new TestCaseCollection();
-
-            public PairwiseTestCaseGenerator(int[] dimensions)
-            {
-                this.dimensions = dimensions;
-
-                this.uncoveredTuples = new TupleCollection[this.dimensions.Length][];
-
-                for (int d = 0; d < this.uncoveredTuples.Length; d++)
-                {
-                    this.uncoveredTuples[d] = new TupleCollection[this.dimensions[d]];
-
-                    for (int f = 0; f < this.dimensions[d]; f++)
-                    {
-                        this.uncoveredTuples[d][f] = new TupleCollection();
-                    }
-                }
-
-                this.currentTupleLength = new int[this.dimensions.Length][];
-
-                for (int d = 0; d < this.dimensions.Length; d++)
-                {
-                    this.currentTupleLength[d] = new int[this.dimensions[d]];
-                }
-            }
-
-            public IEnumerable GetTestCases()
-            {
-                this.CreateTestCases();
-
-#if DEBUG
-                this.SelfTest();
-#endif
-
-                return this.testCases;
-            }
-
-            private void CreateTestCases()
-            {
-                while (true)
-                {
-                    this.ExtendTupleSet();
-
-                    Tuple tuple = this.FindTupleToCover();
-
-                    if (tuple == null)
-                    {
-                        return;
-                    }
-
-                    TestCase testCase = this.FindGoodTestCase(tuple);
-
-                    this.RemoveTuplesCoveredBy(testCase);
-
-                    this.testCases.Add(testCase);
-                }
-            }
-
-            private void ExtendTupleSet()
-            {
-                for (int d = 0; d < this.dimensions.Length; d++)
-                {
-                    for (int f = 0; f < this.dimensions[d]; f++)
-                    {
-                        this.ExtendTupleSet(d, f);
-                    }
-                }
-            }
-
-            private void ExtendTupleSet(int dimension, int feature)
-            {
-                // If tuples for [dimension][feature] already exists, it's no needs to add more tuples.
-                if (this.uncoveredTuples[dimension][feature].Count > 0)
-                {
-                    return;
-                }
-
-                // If maximum tuple length for [dimension][feature] is reached, it's no needs to add more tuples.
-                if (this.currentTupleLength[dimension][feature] == MaxTupleLength)
-                {
-                    return;
-                }
-
-                this.currentTupleLength[dimension][feature]++;
-
-                int tupleLength = this.currentTupleLength[dimension][feature];
-
-                if (tupleLength == 1)
-                {
-                    Tuple tuple = new Tuple();
-
-                    tuple.Add(new FeatureInfo(dimension, feature));
-
-                    if (this.testCases.IsTupleCovered(tuple))
-                    {
-                        return;
-                    }
-
-                    this.uncoveredTuples[dimension][feature].Add(tuple);
-                }
-                else
-                {
-                    for (int d = 0; d < this.dimensions.Length; d++)
-                    {
-                        for (int f = 0; f < this.dimensions[d]; f++)
-                        {
-                            Tuple tuple = new Tuple();
-                            tuple.Add(new FeatureInfo(d, f));
-
-                            if (tuple[0].Dimension == dimension)
-                            {
-                                continue;
-                            }
-
-                            tuple.Add(new FeatureInfo(dimension, feature));
-
-                            if (this.testCases.IsTupleCovered(tuple))
-                            {
-                                continue;
-                            }
-
-                            this.uncoveredTuples[dimension][feature].Add(tuple);
-                        }
-                    }
-                }
-            }
-
-            private Tuple FindTupleToCover()
-            {
-                int tupleLength = MaxTupleLength;
-                int tupleCount = 0;
-                Tuple tuple = null;
-
-                for (int d = 0; d < this.dimensions.Length; d++)
-                {
-                    for (int f = 0; f < this.dimensions[d]; f++)
-                    {
-                        if (this.currentTupleLength[d][f] < tupleLength)
-                        {
-                            tupleLength = this.currentTupleLength[d][f];
-                            tupleCount = this.uncoveredTuples[d][f].Count;
-                            tuple = this.uncoveredTuples[d][f][0];
-                        }
-                        else
-                        {
-                            if (this.currentTupleLength[d][f] == tupleLength && this.uncoveredTuples[d][f].Count > tupleCount)
-                            {
-                                tupleCount = this.uncoveredTuples[d][f].Count;
-                                tuple = this.uncoveredTuples[d][f][0];
-                            }
-                        }
-                    }
-                }
-
-                return tuple;
-            }
-
-            private TestCase FindGoodTestCase(Tuple tuple)
-            {
-                TestCase bestTest = null;
-                int bestCoverage = -1;
-
-                for (int i = 0; i < 5; i++)
-                {
-                    TestCase test = new TestCase(this.dimensions.Length);
-
-                    int coverage = this.CreateTestCase(tuple, test);
-
-                    if (coverage > bestCoverage)
-                    {
-                        bestTest = test;
-                        bestCoverage = coverage;
-                    }
-                }
-
-                return bestTest;
-            }
-
-            private int CreateTestCase(Tuple tuple, TestCase test)
-            {
-                // Create a random test case...
-                for (int i = 0; i < test.Features.Length; i++)
-                {
-                    test.Features[i] = (int)(this.random.Next() % this.dimensions[i]);
-                }
-
-                // ...and inject the tuple into it!
-                for (int i = 0; i < tuple.Count; i++)
-                {
-                    test.Features[tuple[i].Dimension] = tuple[i].Feature;
-                }
-
-                return this.MaximizeCoverage(test, tuple);
-            }
-
-            private int MaximizeCoverage(TestCase test, Tuple tuple)
-            {
-                int[] dimensionOrder = this.GetMutableDimensions(tuple);
-
-                while (true)
-                {
-                    bool progress = false;
-                    int totalCoverage = 1;
-
-                    // Scramble dimensions.
-                    for (int i = dimensionOrder.Length; i > 1; i--)
-                    {
-                        int j = (int)(this.random.Next() % i);
-                        int t = dimensionOrder[i - 1];
-                        dimensionOrder[i - 1] = dimensionOrder[j];
-                        dimensionOrder[j] = t;
-                    }
-
-                    // For each dimension that can be modified...
-                    for (int i = 0; i < dimensionOrder.Length; i++)
-                    {
-                        int d = dimensionOrder[i];
-
-                        List<int> bestFeatures = new List<int>();
-
-                        int bestCoverage = this.CountTuplesCovered(test, d, test.Features[d]);
-
-                        int bestTupleLength = this.currentTupleLength[d][test.Features[d]];
-
-                        // For each feature that can be modified, check if it can extend coverage.
-                        for (int f = 0; f < this.dimensions[d]; f++)
-                        {
-                            test.Features[d] = f;
-
-                            int coverage = this.CountTuplesCovered(test, d, f);
-
-                            if (this.currentTupleLength[d][f] < bestTupleLength)
-                            {
-                                progress = true;
-                                bestTupleLength = this.currentTupleLength[d][f];
-                                bestCoverage = coverage;
-                                bestFeatures.Clear();
-                                bestFeatures.Add(f);
-                            }
-                            else
-                            {
-                                if (this.currentTupleLength[d][f] == bestTupleLength && coverage >= bestCoverage)
-                                {
-                                    if (coverage > bestCoverage)
-                                    {
-                                        progress = true;
-                                        bestCoverage = coverage;
-                                        bestFeatures.Clear();
-                                    }
-
-                                    bestFeatures.Add(f);
-                                }
-                            }
-                        }
-
-                        if (bestFeatures.Count == 1)
-                        {
-                            test.Features[d] = (int)bestFeatures[0];
-                        }
-                        else
-                        {
-                            test.Features[d] = (int)bestFeatures[(int)(this.random.Next() % bestFeatures.Count)];
-                        }
-
-                        totalCoverage += bestCoverage;
-                    }
-
-                    if (!progress)
-                    {
-                        return totalCoverage;
-                    }
-                }
-            }
-
-            private int[] GetMutableDimensions(Tuple tuple)
-            {
-                bool[] immutableDimensions = new bool[this.dimensions.Length];
-
-                for (int i = 0; i < tuple.Count; i++)
-                {
-                    immutableDimensions[tuple[i].Dimension] = true;
-                }
-
-                List<int> mutableDimensions = new List<int>();
-
-                for (int i = 0; i < this.dimensions.Length; i++)
-                {
-                    if (!immutableDimensions[i])
-                    {
-                        mutableDimensions.Add(i);
-                    }
-                }
-
-                return mutableDimensions.ToArray();
-            }
-
-            private int CountTuplesCovered(TestCase test, int dimension, int feature)
-            {
-                int tuplesCovered = 0;
-
-                TupleCollection tuples = this.uncoveredTuples[dimension][feature];
-
-                for (int i = 0; i < tuples.Count; i++)
-                {
-                    if (test.IsTupleCovered(tuples[i]))
-                    {
-                        tuplesCovered++;
-                    }
-                }
-
-                return tuplesCovered;
-            }
-
-            private void RemoveTuplesCoveredBy(TestCase testCase)
-            {
-                for (int d = 0; d < this.uncoveredTuples.Length; d++)
-                {
-                    for (int f = 0; f < this.uncoveredTuples[d].Length; f++)
-                    {
-                        TupleCollection tuples = this.uncoveredTuples[d][f];
-
-                        for (int i = tuples.Count - 1; i >= 0; i--)
-                        {
-                            if (testCase.IsTupleCovered(tuples[i]))
-                            {
-                                tuples.RemoveAt(i);
-                            }
-                        }
-                    }
-                }
-            }
-
-#if DEBUG
-            private void SelfTest()
-            {
-                for (int d1 = 0; d1 < this.dimensions.Length - 1; d1++)
-                {
-                    for (int d2 = d1 + 1; d2 < this.dimensions.Length; d2++)
-                    {
-                        for (int f1 = 0; f1 < this.dimensions[d1]; f1++)
-                        {
-                            for (int f2 = 0; f2 < this.dimensions[d2]; f2++)
-                            {
-                                Tuple tuple = new Tuple();
-                                tuple.Add(new FeatureInfo(d1, f1));
-                                tuple.Add(new FeatureInfo(d2, f2));
-
-                                if (!this.testCases.IsTupleCovered(tuple))
-                                {
-                                    throw new Exception("PairwiseStrategy self-test failed : Not all pairs are covered!");
-                                }
-                            }
-                        }
-                    }
-                }
-            }
 #endif
         }
+
+        #endregion
 
         /// <summary>
         /// Gets the test cases generated by this strategy instance.
         /// </summary>
-        /// <returns>The test cases.</returns>
+        /// <returns>A set of test cases.</returns>
         public IEnumerable<ITestCaseData> GetTestCases(IEnumerable[] sources)
         {
             List<ITestCaseData> testCases = new List<ITestCaseData>();
             List<object>[] valueSet = CreateValueSet(sources);
             int[] dimensions = CreateDimensions(valueSet);
 
-            IEnumerable pairwiseTestCases = new PairwiseTestCaseGenerator(dimensions).GetTestCases();
+            IEnumerable pairwiseTestCases = new PairwiseTestCaseGenerator().GetTestCases( dimensions );
 
-            foreach (TestCase pairwiseTestCase in pairwiseTestCases)
+            foreach (TestCaseInfo pairwiseTestCase in pairwiseTestCases)
             {
                 object[] testData = new object[pairwiseTestCase.Features.Length];
 
