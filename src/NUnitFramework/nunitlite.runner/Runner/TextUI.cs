@@ -177,7 +177,7 @@ namespace NUnitLite.Runner
                 InitializeInternalTrace(callingAssembly.Location, level);
 #endif
 
-                _runner = new NUnitTestAssemblyRunner(new DefaultTestAssemblyBuilder());
+                _outWriter.WriteLine(ColorStyle.SectionHeader, "Test Files:");
 
                 DisplayRequestedOptions(_outWriter);
 
