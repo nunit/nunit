@@ -159,7 +159,7 @@ namespace NUnit.ConsoleRunner
             foreach (var outputSpec in _options.ResultOutputSpecifications)
                 outputManager.WriteResultFile(result, outputSpec);
 
-            return reporter.Summary.ErrorsAndFailures;
+            return reporter.Summary.FailureCount + reporter.Summary.ErrorCount + reporter.Summary.InvalidCount;
         }
 
         private void DisplayRequestedOptions()

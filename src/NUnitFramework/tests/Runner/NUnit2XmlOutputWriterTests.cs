@@ -115,7 +115,7 @@ namespace NUnitLite.Runner.Tests
         [TestCase("errors", MockTestFixture.Errors)]
         [TestCase("failures", MockTestFixture.Failures)]
         [TestCase("inconclusive", MockTestFixture.Inconclusive)]
-        [TestCase("not-run", MockTestFixture.NotRun-MockTestFixture.Explicit)]
+        [TestCase("not-run", MockTestFixture.NotRun+MockTestFixture.NotRunnable-MockTestFixture.Explicit)]
         [TestCase("ignored", MockTestFixture.Ignored)]
         [TestCase("skipped", MockTestFixture.NotRun-MockTestFixture.Ignored-MockTestFixture.Explicit)]
         [TestCase("invalid", MockTestFixture.NotRunnable)]

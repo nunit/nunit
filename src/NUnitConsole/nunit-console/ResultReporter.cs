@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2009 Charlie Poole
+// Copyright (c) 2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -32,19 +32,21 @@ namespace NUnit.ConsoleRunner
 
     public class ResultReporter
     {
-        XmlNode _result;
-        string _testRunResult;
-        ConsoleOptions _options;
-        ResultSummary _summary;
+        private XmlNode _result;
+        private string _overallResult;
+        private ConsoleOptions _options;
+        private ResultSummary _summary;
 
-        int _reportIndex = 0;
+        private int _reportIndex = 0;
 
         public ResultReporter(XmlNode result, ConsoleOptions options)
         {
             _result = result;
-            _testRunResult = result.GetAttribute("result");
-            if (_testRunResult == "Skipped")
-                _testRunResult = "Warning";
+
+            _overallResult = result.GetAttribute("result");
+            if (_overallResult == "Skipped")
+                _overallResult = "Warning";
+
             _options = options;
             _summary = new ResultSummary(result);
         }
@@ -59,7 +61,9 @@ namespace NUnit.ConsoleRunner
         /// </summary>
         public void ReportResults()
         {
-            if (_options.StopOnError && _summary.ErrorsAndFailures > 0)
+            Console.WriteLine();
+
+            if (_options.StopOnError && _summary.FailureCount + _summary.ErrorCount > 0)
             {
                 ColorConsole.WriteLine(ColorStyle.Failure, "Execution terminated after first error");
                 Console.WriteLine();
@@ -69,37 +73,53 @@ namespace NUnit.ConsoleRunner
 
             WriteAssemblyErrorsAndWarnings();
 
-            if (_testRunResult == "Failed")
+            if (_overallResult == "Failed")
                 WriteErrorsAndFailuresReport();
 
-            if (_summary.TestsNotRun > 0)
+            if (_summary.SkipCount + _summary.IgnoreCount > 0)
                 WriteNotRunReport();
         }
 
+        #region Summary Report
+
         private void WriteSummaryReport()
         {
-            ColorStyle overall = _testRunResult == "Passed"
+            ColorStyle overall = _overallResult == "Passed"
                 ? ColorStyle.Pass
-                : ( _testRunResult == "Failed" ? ColorStyle.Failure : ColorStyle.Warning );
-            Console.WriteLine();
+                : _overallResult == "Failed" 
+                    ? ColorStyle.Failure
+                    : _overallResult == "Warning"
+                        ? ColorStyle.Warning
+                        : ColorStyle.Output;
+            
             ColorConsole.WriteLine(ColorStyle.SectionHeader, "Test Run Summary");
-            ColorConsole.WriteLabel("    Overall result: ", _testRunResult, overall, true);
+            ColorConsole.WriteLabel("    Overall result: ", _overallResult, overall, true);
 
-            ColorConsole.WriteLabel("   Tests run: ", _summary.TestsRun.ToString(CultureInfo.CurrentUICulture), false);
-            ColorConsole.WriteLabel(", Errors: ", _summary.Errors.ToString(CultureInfo.CurrentUICulture), false);
-            ColorConsole.WriteLabel(", Failures: ", _summary.Failures.ToString(CultureInfo.CurrentUICulture), false);
-            ColorConsole.WriteLabel(", Inconclusive: ", _summary.Inconclusive.ToString(CultureInfo.CurrentUICulture), true);
+            ColorConsole.WriteLabel("   Tests run: ", _summary.RunCount.ToString(CultureInfo.CurrentUICulture), false);
+            ColorConsole.WriteLabel(", Passed: ", _summary.PassCount.ToString(CultureInfo.CurrentCulture), false);
+            ColorConsole.WriteLabel(", Errors: ", _summary.ErrorCount.ToString(CultureInfo.CurrentUICulture), false);
+            ColorConsole.WriteLabel(", Failures: ", _summary.FailureCount.ToString(CultureInfo.CurrentUICulture), false);
+            ColorConsole.WriteLabel(", Inconclusive: ", _summary.InconclusiveCount.ToString(CultureInfo.CurrentUICulture), true);
 
-            ColorConsole.WriteLabel("     Not run: ", _summary.TestsNotRun.ToString(CultureInfo.CurrentUICulture), false);
-            ColorConsole.WriteLabel(", Invalid: ", _summary.NotRunnable.ToString(CultureInfo.CurrentUICulture), false);
-            ColorConsole.WriteLabel(", Ignored: ", _summary.Ignored.ToString(CultureInfo.CurrentUICulture), false);
-            ColorConsole.WriteLabel(", Skipped: ", _summary.Skipped.ToString(CultureInfo.CurrentUICulture), true);
+            var notRunTotal = _summary.SkipCount + _summary.IgnoreCount + _summary.InvalidCount;
+            ColorConsole.WriteLabel("     Not run: ", notRunTotal.ToString(CultureInfo.CurrentUICulture), false);
+            ColorConsole.WriteLabel(", Invalid: ", _summary.InvalidCount.ToString(CultureInfo.CurrentUICulture), false);
+            ColorConsole.WriteLabel(", Ignored: ", _summary.IgnoreCount.ToString(CultureInfo.CurrentUICulture), false);
+            ColorConsole.WriteLabel(", Skipped: ", _summary.SkipCount.ToString(CultureInfo.CurrentUICulture), true);
 
-            ColorConsole.WriteLabel("  Start time: ", _summary.StartTime.ToString("u"), true);
-            ColorConsole.WriteLabel("    End time: ", _summary.EndTime.ToString("u"), true);
-            ColorConsole.WriteLabel("    Duration: ", string.Format("{0} seconds", _summary.Duration.ToString("0.000")), true);
+            var duration = _result.GetAttribute("duration", 0.0);
+            var startTime = _result.GetAttribute("start-time", DateTime.MinValue);
+            var endTime = _result.GetAttribute("end-time", DateTime.MaxValue);
+
+            ColorConsole.WriteLabel("  Start time: ", startTime.ToString("u"), true);
+            ColorConsole.WriteLabel("    End time: ", endTime.ToString("u"), true);
+            ColorConsole.WriteLabel("    Duration: ", string.Format("{0} seconds", duration.ToString("0.000")), true);
             Console.WriteLine();
         }
+
+        #endregion
+
+        #region Assembly Errors and Warnings
 
         private void WriteAssemblyErrorsAndWarnings()
         {
@@ -117,6 +137,10 @@ namespace NUnit.ConsoleRunner
             ColorConsole.WriteLine(style, message);
             Console.WriteLine();
         }
+
+        #endregion
+
+        #region Errors and Failures Report
 
         private void WriteErrorsAndFailuresReport()
         {
@@ -136,16 +160,6 @@ namespace NUnit.ConsoleRunner
                     if (resultState == "Failed")
                     {
                         using (new ColorConsole(ColorStyle.Failure))
-                            WriteSingleResult(result);
-                    }
-                    else if (resultState == "Error")
-                    {
-                        using (new ColorConsole(ColorStyle.Error))
-                            WriteSingleResult(result);
-                    }
-                    else if (resultState == "Cancelled")
-                    {
-                        using (new ColorConsole(ColorStyle.Warning))
                             WriteSingleResult(result);
                     }
                     return;
@@ -180,6 +194,10 @@ namespace NUnit.ConsoleRunner
             }
         }
 
+        #endregion
+
+        #region Not Run Report
+
         public void WriteNotRunReport()
         {
             _reportIndex = 0;
@@ -193,15 +211,17 @@ namespace NUnit.ConsoleRunner
             switch (result.Name)
             {
                 case "test-case":
-                    string resultState = result.GetAttribute("result");
+                    string status = result.GetAttribute("result");
 
-                    if (resultState == "Skipped")
+                    if (status == "Skipped")
                     {
                         string label = result.GetAttribute("label");
 
-                        ColorStyle style = label == "Ignored" ? ColorStyle.Warning : ColorStyle.Output;
+                        var colorStyle = label == "Ignored" 
+                            ? ColorStyle.Warning 
+                            : ColorStyle.Output;
 
-                        using (new ColorConsole(style))
+                        using (new ColorConsole(colorStyle))
                             WriteSingleResult(result);
                     }
 
@@ -215,6 +235,10 @@ namespace NUnit.ConsoleRunner
                     break;
             }
         }
+
+        #endregion
+
+        #region Helper Methods
 
         private void WriteSingleResult(XmlNode result)
         {
@@ -255,5 +279,7 @@ namespace NUnit.ConsoleRunner
                     Console.WriteLine(message.InnerText);
             }
         }
+
+        #endregion
     }
 }
