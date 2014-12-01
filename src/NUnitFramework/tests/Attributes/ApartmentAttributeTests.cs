@@ -28,23 +28,61 @@ using System.Threading;
 namespace NUnit.Framework.Attributes
 {
     [TestFixture]
-    public class RequiresMTAAttributeTests : ThreadingTests
+    public class ApartmentAttributeTests : ThreadingTests
     {
-        [Test, RequiresMTA]
-        public void TestWithRequiresMTARunsInMTA()
+        [Test]
+        public void ApartmentStateUnknownThrowsException()
         {
-            Assert.That( GetApartmentState( Thread.CurrentThread ), Is.EqualTo( ApartmentState.MTA ) );
-            if ( ParentThreadApartment == ApartmentState.MTA )
-                Assert.That( Thread.CurrentThread, Is.EqualTo( ParentThread ) );
+            Assert.That(() => new ApartmentAttribute(ApartmentState.Unknown), Throws.ArgumentException);
         }
 
-        [TestFixture, RequiresMTA]
+        [Test, Apartment(ApartmentState.STA)]
+        public void TestWithRequiresSTARunsInSTA()
+        {
+            Assert.That(GetApartmentState(Thread.CurrentThread), Is.EqualTo(ApartmentState.STA));
+            if (ParentThreadApartment == ApartmentState.STA)
+                Assert.That(Thread.CurrentThread, Is.EqualTo(ParentThread));
+        }
+
+        [TestFixture, Apartment(ApartmentState.STA)]
+        public class FixtureRequiresSTA
+        {
+            [Test]
+            public void RequiresSTACanBeSetOnTestFixture()
+            {
+                Assert.That( GetApartmentState( Thread.CurrentThread ), Is.EqualTo( ApartmentState.STA ) );
+            }
+        }
+
+        [TestFixture]
+        public class ChildFixtureRequiresSTA : FixtureRequiresSTA
+        {
+            // Issue #36 - Make RequiresThread, RequiresSTA, RequiresMTA inheritable
+            // https://github.com/nunit/nunit-framework/issues/36
+            [Test]
+            public void RequiresSTAAtributeIsInheritable()
+            {
+                Attribute[] attributes = Attribute.GetCustomAttributes(GetType(), typeof(ApartmentAttribute), true);
+                Assert.That(attributes, Has.Length.EqualTo(1),
+                    "RequiresSTAAttribute was not inherited from the base class");
+            }
+        }
+
+        [Test, Apartment(ApartmentState.MTA)]
+        public void TestWithRequiresMTARunsInMTA()
+        {
+            Assert.That(GetApartmentState(Thread.CurrentThread), Is.EqualTo(ApartmentState.MTA));
+            if (ParentThreadApartment == ApartmentState.MTA)
+                Assert.That(Thread.CurrentThread, Is.EqualTo(ParentThread));
+        }
+
+        [TestFixture, Apartment(ApartmentState.MTA)]
         public class FixtureRequiresMTA
         {
             [Test]
             public void RequiresMTACanBeSetOnTestFixture()
             {
-                Assert.That( GetApartmentState( Thread.CurrentThread ), Is.EqualTo( ApartmentState.MTA ) );
+                Assert.That(GetApartmentState(Thread.CurrentThread), Is.EqualTo(ApartmentState.MTA));
             }
         }
 
@@ -56,7 +94,7 @@ namespace NUnit.Framework.Attributes
             [Test]
             public void RequiresMTAAtributeIsInheritable()
             {
-                Attribute[] attributes = Attribute.GetCustomAttributes(GetType(), typeof (RequiresMTAAttribute), true);
+                Attribute[] attributes = Attribute.GetCustomAttributes(GetType(), typeof(ApartmentAttribute), true);
                 Assert.That(attributes, Has.Length.EqualTo(1),
                     "RequiresMTAAttribute was not inherited from the base class");
             }

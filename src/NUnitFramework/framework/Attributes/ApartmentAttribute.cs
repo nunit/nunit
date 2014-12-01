@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2008 Charlie Poole
+// Copyright (c) 2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -29,19 +29,20 @@ using NUnit.Framework.Internal;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// Marks a test that must run in the STA, causing it
+    /// Marks a test that must run in a particular threading apartment state, causing it
     /// to run in a separate thread if necessary.
     /// </summary>
-    [Obsolete( "Use ApartmentAttribute and pass in ApartmentState.STA instead" )]
-    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class | AttributeTargets.Assembly, AllowMultiple = false, Inherited=true)]
-    public class RequiresSTAAttribute : PropertyAttribute
+    [AttributeUsage( AttributeTargets.Method | AttributeTargets.Class | AttributeTargets.Assembly, AllowMultiple = false, Inherited = true )]
+    public class ApartmentAttribute : PropertyAttribute
     {
         /// <summary>
-        /// Construct a RequiresSTAAttribute
+        /// Construct an ApartmentAttribute
         /// </summary>
-        public RequiresSTAAttribute()
+        /// <param name="apartmentState">The apartment state that this test must be run under. You must pass in a valid apartment state.</param>
+        public ApartmentAttribute(ApartmentState apartmentState)
         {
-            this.Properties.Add(PropertyNames.ApartmentState, ApartmentState.STA);
+            Guard.ArgumentValid(apartmentState != ApartmentState.Unknown, "must be STA or MTA", "apartmentState");
+            Properties.Add( PropertyNames.ApartmentState, apartmentState );
         }
     }
 }

@@ -113,6 +113,7 @@
     <Compile Include="Assertions\StringAssertTests.cs" />
     <Compile Include="Assertions\TypeAssertTest.cs" />
     <Compile Include="Attributes\ActionAttributeTests.cs" />
+    <Compile Include="Attributes\ApartmentAttributeTests.cs" />
     <Compile Include="Attributes\ApplyToContextTests.cs" />
     <Compile Include="Attributes\ApplyToTestTests.cs" />
     <Compile Include="Attributes\AttributeInheritanceTests.cs" />
@@ -128,8 +129,6 @@
     <Compile Include="Attributes\ParameterizedTestFixtureTests.cs" />
     <Compile Include="Attributes\PropertyAttributeTests.cs" />
     <Compile Include="Attributes\RepeatedTestTests.cs" />
-    <Compile Include="Attributes\RequiresMTAAttributeTests.cs" />
-    <Compile Include="Attributes\RequiresSTAAttributeTests.cs" />
     <Compile Include="Attributes\RequiresThreadAttributeTests.cs" />
     <Compile Include="Attributes\SetCultureAttributeTests.cs" />
     <Compile Include="Attributes\SetUpFixtureAttributeTests.cs" />
