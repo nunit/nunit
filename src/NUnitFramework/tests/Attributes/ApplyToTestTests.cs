@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Threading;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 
@@ -306,7 +307,7 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void RequiresMTAAttributeSetsApartmentState()
         {
-            new RequiresMTAAttribute().ApplyToTest(test);
+            new ApartmentAttribute(ApartmentState.MTA).ApplyToTest(test);
             Assert.That(test.Properties.Get(PropertyNames.ApartmentState),
                 Is.EqualTo(System.Threading.ApartmentState.MTA));
         }
@@ -318,9 +319,9 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void RequiresSTAAttributeSetsApartmentState()
         {
-            new RequiresSTAAttribute().ApplyToTest(test);
+            new ApartmentAttribute(ApartmentState.STA).ApplyToTest(test);
             Assert.That(test.Properties.Get(PropertyNames.ApartmentState),
-                Is.EqualTo(System.Threading.ApartmentState.STA));
+                Is.EqualTo(ApartmentState.STA));
         }
 
         #endregion

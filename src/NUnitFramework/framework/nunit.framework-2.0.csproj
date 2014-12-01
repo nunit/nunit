@@ -83,6 +83,7 @@
     <Compile Include="Api\DriverSettings.cs" />
     <Compile Include="Api\FrameworkController.cs" />
     <Compile Include="Api\NUnitTestAssemblyRunner.cs" />
+    <Compile Include="Attributes\ApartmentAttribute.cs" />
     <Compile Include="Attributes\AuthorAttribute.cs" />
     <Compile Include="Attributes\CombiningStrategyAttribute.cs" />
     <Compile Include="Attributes\OneTimeTearDownAttribute.cs" />

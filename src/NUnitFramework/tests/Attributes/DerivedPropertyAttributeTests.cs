@@ -37,6 +37,8 @@ namespace NUnit.Framework.Attributes
         [TestCase(typeof(SetCultureAttribute), PropertyNames.SetCulture, "fr-FR")]
         [TestCase(typeof(SetUICultureAttribute), PropertyNames.SetUICulture, "fr-FR")]
 #if !SILVERLIGHT && !PORTABLE
+        [TestCase(typeof(ApartmentAttribute), PropertyNames.ApartmentState, ApartmentState.MTA)]
+        [TestCase(typeof(ApartmentAttribute), PropertyNames.ApartmentState, ApartmentState.STA)]
         [TestCase(typeof(TimeoutAttribute), PropertyNames.Timeout, 50)]
 #endif
 #endif
@@ -49,8 +51,6 @@ namespace NUnit.Framework.Attributes
 
         [TestCase(typeof(ParallelizableAttribute), PropertyNames.ParallelScope, ParallelScope.Self)]
 #if !NETCF && !SILVERLIGHT && !PORTABLE
-        [TestCase(typeof(RequiresMTAAttribute), PropertyNames.ApartmentState, ApartmentState.MTA)]
-        [TestCase(typeof(RequiresSTAAttribute), PropertyNames.ApartmentState, ApartmentState.STA)]
         [TestCase(typeof(RequiresThreadAttribute), PropertyNames.RequiresThread, true)]
 #endif
         public void ConstructWithNoArgs<T>(Type attrType, string propName, T propValue)

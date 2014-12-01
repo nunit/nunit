@@ -89,6 +89,7 @@
     <Compile Include="Assert.cs" />
     <Compile Include="AssertionHelper.cs" />
     <Compile Include="Assume.cs" />
+    <Compile Include="Attributes\ApartmentAttribute.cs" />
     <Compile Include="Attributes\AuthorAttribute.cs" />
     <Compile Include="Attributes\CategoryAttribute.cs" />
     <Compile Include="Attributes\CombinatorialAttribute.cs" />
