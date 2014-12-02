@@ -23,56 +23,8 @@
 
 using System;
 
-namespace NUnit.ConsoleRunner.Utilities
+namespace NUnit.Common.ColorConsole
 {
-    public enum ColorStyle
-    {
-        /// <summary>
-        /// Color for headers
-        /// </summary>
-        Header,
-        /// <summary>
-        /// Color for sub-headers
-        /// </summary>
-        SubHeader,
-        /// <summary>
-        /// Color for each of the section headers
-        /// </summary>
-        SectionHeader,
-        /// <summary>
-        /// The default color for items that don't fit into the other categories
-        /// </summary>
-        Default,
-        /// <summary>
-        /// Test output
-        /// </summary>
-        Output,
-        /// <summary>
-        /// Color for labels
-        /// </summary>
-        Label,
-        /// <summary>
-        /// Color for values, usually go beside labels
-        /// </summary>
-        Value,
-        /// <summary>
-        /// Color for passed tests
-        /// </summary>
-        Pass,
-        /// <summary>
-        /// Color for failed tests
-        /// </summary>
-        Failure,
-        /// <summary>
-        /// Color for warnings, ignored or skipped tests
-        /// </summary>
-        Warning,
-        /// <summary>
-        /// Color for errors and exceptions
-        /// </summary>
-        Error
-    }
-
     /// <summary>
     /// Sets the console color in the constructor and resets it in the dispose
     /// </summary>
@@ -84,64 +36,19 @@ namespace NUnit.ConsoleRunner.Utilities
         /// </summary>
         public static bool Enabled { get; set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ColorConsole"/> class.
+        /// </summary>
+        /// <param name="style">The color style to use.</param>
         public ColorConsole(ColorStyle style)
         {
+#if !SILVERLIGHT && !NETCF
             if (ColorConsole.Enabled)
                 Console.ForegroundColor = GetColor(style);
+#endif
         }
 
-        /// <summary>
-        /// Writes the value with the specified style.
-        /// </summary>
-        /// <param name="style">The style.</param>
-        /// <param name="value">The value.</param>
-        public static void Write(ColorStyle style, string value)
-        {
-            using (new ColorConsole(style))
-            {
-                Console.Write(value);
-            }
-        }
-
-        /// <summary>
-        /// Writes the value with the specified style.
-        /// </summary>
-        /// <param name="style">The style.</param>
-        /// <param name="value">The value.</param>
-        public static void WriteLine(ColorStyle style, string value)
-        {
-            using (new ColorConsole(style))
-            {
-                Console.WriteLine(value);
-            }
-        }
-
-        /// <summary>
-        /// Writes the label and the option that goes with it and optionally writes a new line.
-        /// </summary>
-        /// <param name="label">The label.</param>
-        /// <param name="option">The option.</param>
-        /// <param name="writeLine">if set to <c>true</c> [write line].</param>
-        public static void WriteLabel(string label, string option, bool writeLine)
-        {
-            WriteLabel(label, option, ColorStyle.Value, writeLine);
-        }
-
-        /// <summary>
-        /// Writes the label and the option that goes with it and optionally writes a new line.
-        /// </summary>
-        /// <param name="label">The label.</param>
-        /// <param name="option">The option.</param>
-        /// <param name="valueStyle">The color to display the value with</param>
-        /// <param name="writeLine">if set to <c>true</c> [write line].</param>
-        public static void WriteLabel(string label, string option, ColorStyle valueStyle, bool writeLine)
-        {
-            Write(ColorStyle.Label, label);
-            Write(valueStyle, option);
-            if (writeLine)
-                Console.WriteLine();
-        }
-
+#if !SILVERLIGHT && !NETCF
         /// <summary>
         /// By using styles, we can keep everything consistent
         /// </summary>
@@ -174,6 +81,8 @@ namespace NUnit.ConsoleRunner.Utilities
                             return ConsoleColor.Red;
                         case ColorStyle.Output:
                             return ConsoleColor.DarkGray;
+                        case ColorStyle.Help:
+                            return ConsoleColor.DarkGray;
                         case ColorStyle.Default:
                         default:
                             return ConsoleColor.Green;
@@ -201,6 +110,8 @@ namespace NUnit.ConsoleRunner.Utilities
                         case ColorStyle.Error:
                             return ConsoleColor.Red;
                         case ColorStyle.Output:
+                            return ConsoleColor.DarkGray;
+                        case ColorStyle.Help:
                             return ConsoleColor.DarkGray;
                         case ColorStyle.Default:
                         default:
@@ -230,12 +141,15 @@ namespace NUnit.ConsoleRunner.Utilities
                             return ConsoleColor.Red;
                         case ColorStyle.Output:
                             return ConsoleColor.Gray;
+                        case ColorStyle.Help:
+                            return ConsoleColor.Green;
                         case ColorStyle.Default:
                         default:
                             return ConsoleColor.Green;
                     }
             }
         }
+#endif
 
         #region Implementation of IDisposable
 
@@ -244,8 +158,10 @@ namespace NUnit.ConsoleRunner.Utilities
         /// </summary>
         public void Dispose()
         {
+#if !SILVERLIGHT && !NETCF
             if (ColorConsole.Enabled)
                 Console.ResetColor();
+#endif
         }
 
         #endregion

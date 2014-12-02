@@ -24,6 +24,7 @@
 using System;
 using System.Globalization;
 using System.Xml;
+using NUnit.Common.ColorConsole;
 
 namespace NUnit.ConsoleRunner
 {
@@ -32,6 +33,7 @@ namespace NUnit.ConsoleRunner
 
     public class ResultReporter
     {
+        private ExtendedTextWriter _writer;
         private XmlNode _result;
         private string _overallResult;
         private ConsoleOptions _options;
@@ -39,9 +41,10 @@ namespace NUnit.ConsoleRunner
 
         private int _reportIndex = 0;
 
-        public ResultReporter(XmlNode result, ConsoleOptions options)
+        public ResultReporter(XmlNode result, ExtendedTextWriter writer, ConsoleOptions options)
         {
             _result = result;
+            _writer = writer;
 
             _overallResult = result.GetAttribute("result");
             if (_overallResult == "Skipped")
@@ -61,12 +64,12 @@ namespace NUnit.ConsoleRunner
         /// </summary>
         public void ReportResults()
         {
-            Console.WriteLine();
+            _writer.WriteLine();
 
             if (_options.StopOnError && _summary.FailureCount + _summary.ErrorCount > 0)
             {
-                ColorConsole.WriteLine(ColorStyle.Failure, "Execution terminated after first error");
-                Console.WriteLine();
+                _writer.WriteLine(ColorStyle.Failure, "Execution terminated after first error");
+                _writer.WriteLine();
             }
 
             WriteSummaryReport();
@@ -92,29 +95,29 @@ namespace NUnit.ConsoleRunner
                         ? ColorStyle.Warning
                         : ColorStyle.Output;
             
-            ColorConsole.WriteLine(ColorStyle.SectionHeader, "Test Run Summary");
-            ColorConsole.WriteLabel("    Overall result: ", _overallResult, overall, true);
+            _writer.WriteLine(ColorStyle.SectionHeader, "Test Run Summary");
+            _writer.WriteLabelLine("    Overall result: ", _overallResult, overall);
 
-            ColorConsole.WriteLabel("   Tests run: ", _summary.RunCount.ToString(CultureInfo.CurrentUICulture), false);
-            ColorConsole.WriteLabel(", Passed: ", _summary.PassCount.ToString(CultureInfo.CurrentCulture), false);
-            ColorConsole.WriteLabel(", Errors: ", _summary.ErrorCount.ToString(CultureInfo.CurrentUICulture), false);
-            ColorConsole.WriteLabel(", Failures: ", _summary.FailureCount.ToString(CultureInfo.CurrentUICulture), false);
-            ColorConsole.WriteLabel(", Inconclusive: ", _summary.InconclusiveCount.ToString(CultureInfo.CurrentUICulture), true);
+            _writer.WriteLabel("   Tests run: ", _summary.RunCount.ToString(CultureInfo.CurrentUICulture));
+            _writer.WriteLabel(", Passed: ", _summary.PassCount.ToString(CultureInfo.CurrentCulture));
+            _writer.WriteLabel(", Errors: ", _summary.ErrorCount.ToString(CultureInfo.CurrentUICulture));
+            _writer.WriteLabel(", Failures: ", _summary.FailureCount.ToString(CultureInfo.CurrentUICulture));
+            _writer.WriteLabelLine(", Inconclusive: ", _summary.InconclusiveCount.ToString(CultureInfo.CurrentUICulture));
 
             var notRunTotal = _summary.SkipCount + _summary.IgnoreCount + _summary.InvalidCount;
-            ColorConsole.WriteLabel("     Not run: ", notRunTotal.ToString(CultureInfo.CurrentUICulture), false);
-            ColorConsole.WriteLabel(", Invalid: ", _summary.InvalidCount.ToString(CultureInfo.CurrentUICulture), false);
-            ColorConsole.WriteLabel(", Ignored: ", _summary.IgnoreCount.ToString(CultureInfo.CurrentUICulture), false);
-            ColorConsole.WriteLabel(", Skipped: ", _summary.SkipCount.ToString(CultureInfo.CurrentUICulture), true);
+            _writer.WriteLabel("     Not run: ", notRunTotal.ToString(CultureInfo.CurrentUICulture));
+            _writer.WriteLabel(", Invalid: ", _summary.InvalidCount.ToString(CultureInfo.CurrentUICulture));
+            _writer.WriteLabel(", Ignored: ", _summary.IgnoreCount.ToString(CultureInfo.CurrentUICulture));
+            _writer.WriteLabelLine(", Skipped: ", _summary.SkipCount.ToString(CultureInfo.CurrentUICulture));
 
             var duration = _result.GetAttribute("duration", 0.0);
             var startTime = _result.GetAttribute("start-time", DateTime.MinValue);
             var endTime = _result.GetAttribute("end-time", DateTime.MaxValue);
 
-            ColorConsole.WriteLabel("  Start time: ", startTime.ToString("u"), true);
-            ColorConsole.WriteLabel("    End time: ", endTime.ToString("u"), true);
-            ColorConsole.WriteLabel("    Duration: ", string.Format("{0} seconds", duration.ToString("0.000")), true);
-            Console.WriteLine();
+            _writer.WriteLabelLine("  Start time: ", startTime.ToString("u"));
+            _writer.WriteLabelLine("    End time: ", endTime.ToString("u"));
+            _writer.WriteLabelLine("    Duration: ", string.Format("{0} seconds", duration.ToString("0.000")));
+            _writer.WriteLine();
         }
 
         #endregion
@@ -134,8 +137,8 @@ namespace NUnit.ConsoleRunner
 
         private void WriteAssemblyMessage(ColorStyle style, string message)
         {
-            ColorConsole.WriteLine(style, message);
-            Console.WriteLine();
+            _writer.WriteLine(style, message);
+            _writer.WriteLine();
         }
 
         #endregion
@@ -145,9 +148,9 @@ namespace NUnit.ConsoleRunner
         private void WriteErrorsAndFailuresReport()
         {
             _reportIndex = 0;
-            ColorConsole.WriteLine(ColorStyle.SectionHeader, "Errors and Failures");
+            _writer.WriteLine(ColorStyle.SectionHeader, "Errors and Failures");
             WriteErrorsAndFailures(_result);
-            Console.WriteLine();
+            _writer.WriteLine();
         }
 
         private void WriteErrorsAndFailures(XmlNode result)
@@ -201,9 +204,9 @@ namespace NUnit.ConsoleRunner
         public void WriteNotRunReport()
         {
             _reportIndex = 0;
-            ColorConsole.WriteLine(ColorStyle.SectionHeader, "Tests Not Run");
+            _writer.WriteLine(ColorStyle.SectionHeader, "Tests Not Run");
             WriteNotRunResults(_result);
-            Console.WriteLine();
+            _writer.WriteLine();
         }
 
         private void WriteNotRunResults(XmlNode result)
@@ -255,7 +258,7 @@ namespace NUnit.ConsoleRunner
 
             string fullName = result.GetAttribute("fullname");
 
-            Console.WriteLine("{0}) {1} : {2}", ++_reportIndex, status, fullName);
+            _writer.WriteLine("{0}) {1} : {2}", ++_reportIndex, status, fullName);
 
             XmlNode failureNode = result.SelectSingleNode("failure");
             if (failureNode != null)
@@ -264,10 +267,10 @@ namespace NUnit.ConsoleRunner
                 XmlNode stacktrace = failureNode.SelectSingleNode("stack-trace");
 
                 if (message != null)
-                    Console.WriteLine(message.InnerText);
+                    _writer.WriteLine(message.InnerText);
 
                 if (stacktrace != null)
-                    Console.WriteLine(stacktrace.InnerText + Environment.NewLine);
+                    _writer.WriteLine(stacktrace.InnerText + Environment.NewLine);
             }
 
             XmlNode reasonNode = result.SelectSingleNode("reason");
@@ -276,7 +279,7 @@ namespace NUnit.ConsoleRunner
                 XmlNode message = reasonNode.SelectSingleNode("message");
 
                 if (message != null)
-                    Console.WriteLine(message.InnerText);
+                    _writer.WriteLine(message.InnerText);
             }
         }
 
