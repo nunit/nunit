@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2010 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -54,7 +54,7 @@ namespace NUnit.Framework.Attributes
         {
             new CategoryAttribute("group1").ApplyToTest(test);
             new CategoryAttribute("group2").ApplyToTest(test);
-            Assert.That(test.Properties[PropertyNames.Category], 
+            Assert.That(test.Properties[PropertyNames.Category],
                 Is.EquivalentTo( new string[] { "group1", "group2" } ));
         }
 
@@ -294,11 +294,11 @@ namespace NUnit.Framework.Attributes
 
         #region RepeatAttribute
 
-        //public void RepeatAttributeSetsRepeatCount()
-        //{
+        // public void RepeatAttributeSetsRepeatCount()
+        // {
         //    new RepeatAttribute(5).ApplyToTest(test);
         //    Assert.That(test.Properties.Get(PropertyNames.RepeatCount), Is.EqualTo(5));
-        //}
+        // }
 
         #endregion
 
@@ -309,7 +309,7 @@ namespace NUnit.Framework.Attributes
         {
             new ApartmentAttribute(ApartmentState.MTA).ApplyToTest(test);
             Assert.That(test.Properties.Get(PropertyNames.ApartmentState),
-                Is.EqualTo(System.Threading.ApartmentState.MTA));
+                Is.EqualTo(ApartmentState.MTA));
         }
 
         #endregion
@@ -326,27 +326,31 @@ namespace NUnit.Framework.Attributes
 
         #endregion
 
+#endif
+
         #region RequiresThreadAttribute
 
+#if !SILVERLIGHT && !PORTABLE
         [Test]
         public void RequiresThreadAttributeSetsRequiresThread()
         {
             new RequiresThreadAttribute().ApplyToTest(test);
             Assert.That(test.Properties.Get(PropertyNames.RequiresThread), Is.EqualTo(true));
         }
+#endif
 
+#if !SILVERLIGHT && !NETCF && !PORTABLE
         [Test]
         public void RequiresThreadAttributeMaySetApartmentState()
         {
-            new RequiresThreadAttribute(System.Threading.ApartmentState.STA).ApplyToTest(test);
+            new RequiresThreadAttribute(ApartmentState.STA).ApplyToTest(test);
             Assert.That(test.Properties.Get(PropertyNames.RequiresThread), Is.EqualTo(true));
             Assert.That(test.Properties.Get(PropertyNames.ApartmentState),
-                Is.EqualTo(System.Threading.ApartmentState.STA));
+                Is.EqualTo(ApartmentState.STA));
         }
+#endif
 
         #endregion
-
-#endif
 
         #region SequentialAttribute
 
