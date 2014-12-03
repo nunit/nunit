@@ -62,7 +62,6 @@ namespace NUnit.ConsoleRunner.Tests
         [TestCase("TeamCity", "teamcity")]
         public void CanRecognizeBooleanOptions(string propertyName, string pattern)
         {
-            Console.WriteLine("Testing " + propertyName);
             string[] prototypes = pattern.Split('|');
 
             PropertyInfo property = GetPropertyInfo(propertyName);

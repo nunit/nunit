@@ -138,7 +138,7 @@ namespace NUnit.ConsoleRunner
                             RunCount++;
                             if (label == null)
                                 FailureCount++;
-                            if (label == "Invalid")
+                            else if (label == "Invalid")
                                 InvalidCount++;
                             else
                                 ErrorCount++;
@@ -148,7 +148,7 @@ namespace NUnit.ConsoleRunner
                             RunCount++;
                             break;
                         case "Skipped":
-                            if (label == "Ignore")
+                            if (label == "Ignored")
                                 IgnoreCount++;
                             else
                                 SkipCount++;
