@@ -279,8 +279,8 @@ namespace NUnit.Framework.Internal.Builders
         /// tries to maximize number of tuples which this test covers.
         /// </para>
         /// <para>
-        /// Test generation and maximization process repeats five times for every
-        /// selected tuple and then the algorithm picks the best test case ("five"
+        /// Test generation and maximization process repeats seven times for every
+        /// selected tuple and then the algorithm picks the best test case ("seven"
         /// is a magic number which provides good results in acceptable time).
         /// </para>
         /// <para>Maximizing test coverage</para>
@@ -417,7 +417,7 @@ namespace NUnit.Framework.Internal.Builders
                 TestCaseInfo bestTestCase = null;
                 int bestCoverage = -1;
 
-                for ( int i = 0; i < 5; i++ )
+                for ( int i = 0; i < 7; i++ )
                 {
                     TestCaseInfo testCase = CreateRandomTestCase( tuple );
 

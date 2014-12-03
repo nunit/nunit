@@ -80,14 +80,14 @@ namespace NUnit.Framework.Attributes
             new TestCaseData( new int[] { 5, 5, 5 }, 34, 25 ).SetName("Test 5x5x5")
 #else
             new TestCaseData( new int[] { 2, 4 }, 8, 8 ).SetName("Test 2x4"),
-            new TestCaseData( new int[] { 2, 2, 2 }, 5, 4 ).SetName("Test 2x2x2"),
-            new TestCaseData( new int[] { 3, 2, 2 }, 7, 6 ).SetName("Test 3x2x2"),
-            new TestCaseData( new int[] { 3, 2, 2, 2 }, 8, 6 ).SetName("Test 3x2x2x2"),
-            new TestCaseData( new int[] { 3, 2, 2, 2, 2 }, 9, 6 ).SetName("Test 3x2x2x2x2"),
-            new TestCaseData( new int[] { 3, 2, 2, 2, 2, 2 }, 9, 8 ).SetName("Test 3x2x2x2x2x2"),
+            new TestCaseData( new int[] { 2, 2, 2 }, 4, 4 ).SetName("Test 2x2x2"),
+            new TestCaseData( new int[] { 3, 2, 2 }, 6, 6 ).SetName("Test 3x2x2"),
+            new TestCaseData( new int[] { 3, 2, 2, 2 }, 6, 6 ).SetName("Test 3x2x2x2"),
+            new TestCaseData( new int[] { 3, 2, 2, 2, 2 }, 6, 6 ).SetName("Test 3x2x2x2x2"),
+            new TestCaseData( new int[] { 3, 2, 2, 2, 2, 2 }, 8, 8 ).SetName("Test 3x2x2x2x2x2"),
             new TestCaseData( new int[] { 3, 3, 3 }, 9, 9 ).SetName("Test 3x3x3"),
             new TestCaseData( new int[] { 4, 4, 4 }, 17, 16 ).SetName("Test 4x4x4"),
-            new TestCaseData( new int[] { 5, 5, 5 }, 27, 25 ).SetName("Test 5x5x5")
+            new TestCaseData( new int[] { 5, 5, 5 }, 25, 25 ).SetName("Test 5x5x5")
 #endif
         };
 
