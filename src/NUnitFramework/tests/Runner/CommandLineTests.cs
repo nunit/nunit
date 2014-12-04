@@ -64,11 +64,11 @@ namespace NUnitLite.Runner.Tests
         [TestCase("PauseBeforeRun", "pause")]
         [TestCase("NoHeader", "noheader|noh")]
         [TestCase("Full", "full")]
-#if !NETCF && !SILVERLIGHT && !PORTABLE
+#if !NUNITLITE
         [TestCase("RunAsX86", "x86")]
         [TestCase("DisposeRunners", "dispose-runners")]
 #endif
-#if !SILVERLIGHHT && !NETCF
+#if !SILVERLIGHT && !NETCF
         [TestCase("TeamCity", "teamcity")]
 #endif
         public void CanRecognizeBooleanOptions(string propertyName, string pattern)
@@ -100,7 +100,7 @@ namespace NUnitLite.Runner.Tests
 
         [TestCase("Include", "include", new string[] { "Short,Fast" }, new string[0])]
         [TestCase("Exclude", "exclude", new string[] { "Long" }, new string[0])]
-#if !NETCF && !SILVERLIGHT && !PORTABLE
+#if !NUNITLITE
         [TestCase("ActiveConfig", "config", new string[] { "Debug" }, new string[0])]
         [TestCase("ProcessModel", "process", new string[] { "Single", "Separate", "Multiple" }, new string[] { "JUNK" })]
         [TestCase("DomainUsage", "domain", new string[] { "None", "Single", "Multiple" }, new string[] { "JUNK" })]
@@ -137,7 +137,7 @@ namespace NUnitLite.Runner.Tests
             }
         }
 
-#if !NETCF && !SILVERLIGHT && !PORTABLE
+#if !NUNITLITE
         [TestCase("ProcessModel", "process", new string[] { "Single", "Separate", "Multiple" })]
         [TestCase("DomainUsage", "domain", new string[] { "None", "Single", "Multiple" })]
 #endif
@@ -160,7 +160,7 @@ namespace NUnitLite.Runner.Tests
 
         [TestCase("DefaultTimeout", "timeout")]
         [TestCase("RandomSeed", "seed")]
-#if !NETCF && !SILVERLIGHT && !PORTABLE
+#if PARALLEL
         [TestCase("NumWorkers", "workers")]
 #endif
         public void CanRecognizeIntOptions(string propertyName, string pattern)
@@ -201,7 +201,7 @@ namespace NUnitLite.Runner.Tests
 
         [TestCase("--include")]
         [TestCase("--exclude")]
-#if !NETCF && !SILVERLIGHT && !PORTABLE
+#if !NUNITLITE
         [TestCase("--config")]
         [TestCase("--process")]
         [TestCase("--domain")]
