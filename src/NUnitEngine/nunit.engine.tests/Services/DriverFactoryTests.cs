@@ -41,7 +41,7 @@ namespace NUnit.Engine.Services.Tests
         [Test]
         public void AssemblyUsesNUnitFrameworkDriver()
         {
-            Assert.That(GetDriver("mock-nunit-assembly.dll"), Is.InstanceOf<NUnitFrameworkDriver>());
+            Assert.That(GetDriver("mock-nunit-assembly.exe"), Is.InstanceOf<NUnitFrameworkDriver>());
         }
 
         [Test]
