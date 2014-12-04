@@ -39,7 +39,6 @@ namespace NUnitLite.Runner.Tests
     [Explicit("Not reliable in the CI build because of differences in  the stack traces")]
     public class ResultReporterTests
     {
-        private const string MOCK_TEST_RESULT = "NUnit.ConsoleRunner.Tests.MockTestResult.xml";
         private static readonly string[] REPORT_SEQUENCE = new string[] {
             "Test Run Summary",
             "Errors and Failures",
