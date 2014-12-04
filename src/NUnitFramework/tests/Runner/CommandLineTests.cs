@@ -32,10 +32,8 @@ using System.Globalization;
 
 #if NUNIT_CONSOLE
 namespace NUnit.ConsoleRunner.Tests
-#elif NUNITLITE
-namespace NUnitLite.Runner.Tests
 #else
-namespace NUnit.Common.Tests
+namespace NUnitLite.Runner.Tests
 #endif
 {
     using Options;
