@@ -339,7 +339,7 @@ namespace NUnitLite.Runner.Options
                 isValid = false;
 
                 foreach (string valid in validValues)
-                    if (string.Compare(valid, val, true) == 0)
+                    if (string.Compare(valid, val, StringComparison.InvariantCultureIgnoreCase) == 0)
                         return valid;
 
             }

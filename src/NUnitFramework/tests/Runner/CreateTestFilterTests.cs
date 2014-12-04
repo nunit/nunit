@@ -134,6 +134,7 @@ namespace NUnitLite.Runner.Tests
                 Is.EqualTo(new string[] { "Slow" }));
         }
 
+#if !SILVERLIGHT
         [Test]
         public void ThreeTestsFromATestListFile()
         {
@@ -158,6 +159,7 @@ namespace NUnitLite.Runner.Tests
                     Is.EqualTo(new string[] { "My.First.Test", "My.Second.Test", "My.Third.Test", "My.Fourth.Test", "My.Fifth.Test", "My.Sixth.Test"}));
             }
         }
+#endif
 
         [Test]
         public void TestListFileMissing()

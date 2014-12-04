@@ -131,7 +131,7 @@ using System.ComponentModel;
 using System.Globalization;
 using System.IO;
 using System.Security.Permissions;
-#if !NETCF
+#if !NETCF && !SILVERLIGHT && !PORTABLE
 using System.Runtime.Serialization;
 #endif
 using System.Text;
@@ -415,14 +415,14 @@ namespace Mono.Options
                 !tt.IsGenericTypeDefinition &&
                 tt.GetGenericTypeDefinition() == typeof(Nullable<>);
             Type targetType = nullable ? tt.GetGenericArguments()[0] : typeof(T);
-#if !NETCF
+#if !NETCF && !SILVERLIGHT && !PORTABLE
             TypeConverter conv = TypeDescriptor.GetConverter(targetType);
 #endif
-            T t = default(T);
+			T t = default(T);
             try
             {
                 if (value != null)
-#if NETCF
+#if NETCF || SILVERLIGHT || PORTABLE
                     t = (T)Convert.ChangeType(value, tt, CultureInfo.InvariantCulture);
 #else
                     t = (T)conv.ConvertFromString(value);
@@ -558,18 +558,18 @@ namespace Mono.Options
             this.option = optionName;
         }
 
-#if !NETCF
+#if !NETCF && !SILVERLIGHT && !PORTABLE
         protected OptionException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
             this.option = info.GetString("OptionName");
         }
 #endif
-        public string OptionName
+		public string OptionName
         {
             get { return this.option; }
-        }
-#if !NETCF
+		}
+#if !NETCF && !SILVERLIGHT && !PORTABLE
         [SecurityPermission(SecurityAction.LinkDemand, SerializationFormatter = true)]
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
@@ -577,7 +577,7 @@ namespace Mono.Options
             info.AddValue("OptionName", option);
         }
 #endif
-    }
+	}
 
     public delegate void OptionAction<TKey, TValue>(TKey key, TValue value);
 

@@ -131,7 +131,7 @@ namespace NUnitLite.Runner
 
 #if !SILVERLIGHT
 #if !NETCF
-            if (_options.DisplayTeamCityServiceMessages)
+            if (_options.TeamCity)
                 _teamCity = new TeamCityEventListener();
 #endif
 
@@ -298,12 +298,18 @@ namespace NUnitLite.Runner
 #else
                 var logName = string.Format(LOG_FILE_FORMAT, DateTime.Now.ToString("o"), Path.GetFileName(assemblyPath));
 #endif
-#if NETCF
-                string logPath = Path.Combine(NUnit.Env.DocumentFolder, logName);
+#if NETCF // NETCF: Try to encapsulate this
+                InternalTrace.Initialize(Path.Combine(NUnit.Env.DocumentFolder, logName), traceLevel);
 #else
-                string logPath = Path.Combine(Environment.CurrentDirectory, logName);
+                StreamWriter streamWriter = null;
+                if (traceLevel > InternalTraceLevel.Off)
+                {
+                    string logPath = Path.Combine(Environment.CurrentDirectory, logName);
+                    streamWriter = new StreamWriter(new FileStream(logPath, FileMode.Append, FileAccess.Write, FileShare.Write));
+                    streamWriter.AutoFlush = true;
+                }
+                InternalTrace.Initialize(streamWriter, traceLevel);
 #endif
-                InternalTrace.Initialize(logPath, traceLevel);
             }
         }
 
