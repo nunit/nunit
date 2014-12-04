@@ -14,7 +14,7 @@
     <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
     <DefaultTargetSchema>IE50</DefaultTargetSchema>
     <DelaySign>false</DelaySign>
-    <OutputType>Library</OutputType>
+    <OutputType>Exe</OutputType>
     <RootNamespace>NUnit.Tests</RootNamespace>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
     <FileUpgradeFlags>
@@ -59,6 +59,9 @@
     <DebugType>none</DebugType>
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System">
       <Name>System</Name>
@@ -84,6 +87,10 @@
     <ProjectReference Include="..\framework\nunit.framework-4.0.csproj">
       <Project>{6A281C98-B74D-403B-8536-966871B992E3}</Project>
       <Name>nunit.framework-4.0</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\nunitlite.runner\nunitlite.runner-4.0.csproj">
+      <Project>{dbd0c8b0-be4e-4cbf-aad4-44bea2ea830b}</Project>
+      <Name>nunitlite.runner-4.0</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

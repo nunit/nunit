@@ -24,6 +24,7 @@
 using System;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
+using NUnitLite.Runner;
 
 namespace NUnit.Tests
 {
@@ -81,6 +82,11 @@ namespace NUnit.Tests
 #if !SILVERLIGHT
             public static readonly string AssemblyPath = AssemblyHelper.GetAssemblyPath(typeof(MockAssembly).Assembly);
 #endif
+
+            public static void Main(string[] args)
+            {
+                new TextUI().Execute(args);
+            }
         }
 
         [TestFixture(Description="Fake Test Fixture")]
