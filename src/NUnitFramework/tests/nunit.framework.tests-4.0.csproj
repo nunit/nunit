@@ -275,6 +275,10 @@
     <EmbeddedResource Include="TestText2.txt" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="TestListFile.txt" />
+    <EmbeddedResource Include="TestListFile2.txt" />
+  </ItemGroup>
+  <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

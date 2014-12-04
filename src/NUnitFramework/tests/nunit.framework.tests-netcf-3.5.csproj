@@ -285,6 +285,10 @@
     <EmbeddedResource Include="TestText1.txt" />
     <EmbeddedResource Include="TestText2.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="TestListFile.txt" />
+    <EmbeddedResource Include="TestListFile2.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
