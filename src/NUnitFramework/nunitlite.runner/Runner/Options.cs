@@ -359,9 +359,9 @@ namespace Mono.Options
 			try {
 				if (value != null)
 #if NETCF || SILVERLIGHT || PORTABLE
-                    			t = (T)Convert.ChangeType(value, tt, CultureInfo.InvariantCulture);
+					t = (T)Convert.ChangeType(value, tt, CultureInfo.InvariantCulture);
 #else
-                    			t = (T)conv.ConvertFromString(value);
+					t = (T)conv.ConvertFromString(value);
 #endif
 			}
 			catch (Exception e) {
