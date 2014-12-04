@@ -102,7 +102,7 @@ namespace NUnitLite.Runner.Options
             this.Add("exclude=", "Test {CATEGORIES} to be excluded. May be a single category, a comma-separated list of categories or a category expression.",
                 v => Exclude = RequiredValue(v, "--exclude"));
 
-#if !NUNITLITE
+#if !NETCF && !SILVERLIGHT && !PORTABLE
             this.Add("config=", "{NAME} of a project configuration to load (e.g.: Debug).",
                 v => ActiveConfig = RequiredValue(v, "--config"));
 
@@ -130,7 +130,7 @@ namespace NUnitLite.Runner.Options
             this.Add("seed=", "Set the random {SEED} used to generate test cases.",
                 v => randomSeed = RequiredInt(v, "--seed"));
 
-#if !NUNITLITE
+#if !NETCF && !SILVERLIGHT && !PORTABLE
             this.Add("workers=", "Specify the {NUMBER} of worker threads to be used in running tests.",
                 v => numWorkers = RequiredInt(v, "--workers"));
 #endif

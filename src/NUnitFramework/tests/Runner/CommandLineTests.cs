@@ -34,6 +34,8 @@ using System.Globalization;
 namespace NUnit.ConsoleRunner.Tests
 #elif NUNITLITE
 namespace NUnitLite.Runner.Tests
+#else
+namespace NUnit.Common.Tests
 #endif
 {
     using Options;
@@ -64,7 +66,7 @@ namespace NUnitLite.Runner.Tests
         [TestCase("PauseBeforeRun", "pause")]
         [TestCase("NoHeader", "noheader|noh")]
         [TestCase("Full", "full")]
-#if !NUNITLITE
+#if !NETCF && !SILVERLIGHT && !PORTABLE
         [TestCase("RunAsX86", "x86")]
         [TestCase("DisposeRunners", "dispose-runners")]
 #endif
@@ -100,7 +102,7 @@ namespace NUnitLite.Runner.Tests
 
         [TestCase("Include", "include", new string[] { "Short,Fast" }, new string[0])]
         [TestCase("Exclude", "exclude", new string[] { "Long" }, new string[0])]
-#if !NUNITLITE
+#if !NETCF && !SILVERLIGHT && !PORTABLE
         [TestCase("ActiveConfig", "config", new string[] { "Debug" }, new string[0])]
         [TestCase("ProcessModel", "process", new string[] { "Single", "Separate", "Multiple" }, new string[] { "JUNK" })]
         [TestCase("DomainUsage", "domain", new string[] { "None", "Single", "Multiple" }, new string[] { "JUNK" })]
@@ -137,7 +139,7 @@ namespace NUnitLite.Runner.Tests
             }
         }
 
-#if !NUNITLITE
+#if !NETCF && !SILVERLIGHT && !PORTABLE
         [TestCase("ProcessModel", "process", new string[] { "Single", "Separate", "Multiple" })]
         [TestCase("DomainUsage", "domain", new string[] { "None", "Single", "Multiple" })]
 #endif
@@ -150,11 +152,7 @@ namespace NUnitLite.Runner.Tests
 
             foreach (string canonicalValue in canonicalValues)
             {
-#if NETCF
                 string lowercaseValue = canonicalValue.ToLower(CultureInfo.InvariantCulture);
-#else
-                string lowercaseValue = canonicalValue.ToLowerInvariant();
-#endif
                 string optionPlusValue = string.Format("--{0}:{1}", optionName, lowercaseValue);
                 ConsoleOptions options = new ConsoleOptions(optionPlusValue);
                 Assert.True(options.Validate(), "Should be valid: " + optionPlusValue);
@@ -164,7 +162,7 @@ namespace NUnitLite.Runner.Tests
 
         [TestCase("DefaultTimeout", "timeout")]
         [TestCase("RandomSeed", "seed")]
-#if !NUNITLITE
+#if !NETCF && !SILVERLIGHT && !PORTABLE
         [TestCase("NumWorkers", "workers")]
 #endif
         public void CanRecognizeIntOptions(string propertyName, string pattern)
@@ -205,7 +203,7 @@ namespace NUnitLite.Runner.Tests
 
         [TestCase("--include")]
         [TestCase("--exclude")]
-#if !NUNITLITE
+#if !NETCF && !SILVERLIGHT && !PORTABLE
         [TestCase("--config")]
         [TestCase("--process")]
         [TestCase("--domain")]
