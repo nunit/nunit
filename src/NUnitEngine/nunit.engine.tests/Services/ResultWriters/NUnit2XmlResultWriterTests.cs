@@ -28,9 +28,9 @@ using System.Xml;
 using NUnit.Framework;
 using NUnit.Tests.Assemblies;
 
-namespace NUnit.ConsoleRunner.Tests
+namespace NUnit.Engine.Services.ResultWriters.Tests
 {
-    public class NUnit2XmlOutputWriterTests : XmlOutputTest
+    public class NUnit2XmlResultWriterTests : XmlOutputTest
     {
         private XmlDocument doc;
         private XmlNode topNode;
@@ -44,7 +44,7 @@ namespace NUnit.ConsoleRunner.Tests
             StringBuilder sb = new StringBuilder();
             using (StringWriter writer = new StringWriter(sb))
             {
-                new NUnit2XmlOutputWriter().WriteResultFile(EngineResult.Xml, writer);
+                new NUnit2XmlResultWriter().WriteResultFile(EngineResult.Xml, writer);
             }
 
             doc = new XmlDocument();

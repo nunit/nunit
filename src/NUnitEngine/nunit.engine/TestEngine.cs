@@ -100,6 +100,7 @@ namespace NUnit.Engine
             this.Services.Add(new DefaultTestRunnerFactory());
             this.Services.Add(new DriverFactory());
             this.Services.Add(new TestAgency());
+            this.Services.Add(new ResultService());
 
             this.Services.ServiceManager.InitializeServices();
         }

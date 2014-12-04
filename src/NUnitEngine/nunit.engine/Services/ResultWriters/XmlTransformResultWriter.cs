@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2011 Charlie Poole
+// Copyright (c) 2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,20 +21,37 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
 using System.IO;
 using System.Text;
 using System.Xml;
 using System.Xml.Xsl;
 
-namespace NUnit.ConsoleRunner
+namespace NUnit.Engine.Services
 {
-    public class XmlTransformOutputWriter : IResultWriter
+    public class XmlTransformResultWriter : IResultWriter
     {
+        private string _xsltFile;
         private readonly XslCompiledTransform _transform = new XslCompiledTransform();
 
-        public XmlTransformOutputWriter(string xsltFile)
+        public XmlTransformResultWriter(object[] args)
         {
-            _transform.Load(xsltFile);
+            Guard.ArgumentNotNull(args, "args");
+            _xsltFile = args[0] as string;
+
+            Guard.ArgumentValid(
+                !string.IsNullOrEmpty(_xsltFile),
+                "Argument to XmlTransformWriter must be a non-empty string",
+                "args");
+
+            try
+            {
+                _transform.Load(_xsltFile);
+            }
+            catch (Exception ex)
+            {
+                throw new ArgumentException("Unable to load transform " + _xsltFile, ex.InnerException);
+            }
         }
 
         /// <summary>

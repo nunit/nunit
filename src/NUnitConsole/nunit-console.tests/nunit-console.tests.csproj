@@ -60,15 +60,10 @@
     <Compile Include="ColorStyleTests.cs" />
     <Compile Include="CommandLineTests.cs" />
     <Compile Include="MakeTestPackageTests.cs" />
-    <Compile Include="NUnit2XmlOutputWriterTests.cs" />
-    <Compile Include="NUnit2XmlValidationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResultReporterTests.cs" />
-    <Compile Include="SchemaValidator.cs" />
     <Compile Include="TeamCityEventHandlerTests.cs" />
     <Compile Include="TestFilterBuilderTests.cs" />
-    <Compile Include="XmlOutputTest.cs" />
-    <Compile Include="XmlTransformOutputWriterTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="MockTestResult.xml" />
