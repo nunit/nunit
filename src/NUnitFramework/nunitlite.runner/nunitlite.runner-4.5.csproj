@@ -44,6 +44,15 @@
     <Compile Include="..\..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="..\..\Common\nunit\ColorConsole\ColorConsole.cs">
+      <Link>Runner\ColorConsole.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\ColorConsole\ColorStyle.cs">
+      <Link>Runner\ColorStyle.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\ColorConsole\ExtendedTextWriter.cs">
+      <Link>Runner\ExtendedTextWriter.cs</Link>
+    </Compile>
     <Compile Include="..\..\Common\nunit\OutputSpecification.cs">
       <Link>Runner\OutputSpecification.cs</Link>
     </Compile>
@@ -54,11 +63,8 @@
       <Link>FrameworkVersion.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Runner\ColorConsole.cs" />
-    <Compile Include="Runner\ColorStyle.cs" />
     <Compile Include="Runner\CommandLineOptions.cs" />
     <Compile Include="Runner\DebugWriter.cs" />
-    <Compile Include="Runner\ExtendedTextWriter.cs" />
     <Compile Include="Runner\OutputManager.cs" />
     <Compile Include="Runner\OutputWriters\NUnit2XmlOutputWriter.cs" />
     <Compile Include="Runner\OutputWriters\NUnit3XmlOutputWriter.cs" />
@@ -77,6 +83,7 @@
       <Name>nunit.framework-4.5</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

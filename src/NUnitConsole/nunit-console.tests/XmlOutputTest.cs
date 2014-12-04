@@ -52,7 +52,7 @@ namespace NUnit.ConsoleRunner.Tests
 
         protected TestEngineResult EngineResult { get; private set; }
 
-        protected const string AssemblyName = "mock-nunit-assembly.dll";
+        protected const string AssemblyName = "mock-nunit-assembly.exe";
         protected string AssemblyPath { get; private set; }
 
         // Method used by derived classes to get the path to a file name
@@ -84,7 +84,7 @@ namespace NUnit.ConsoleRunner.Tests
             Assert.That(
                 runner.Load(AssemblyPath, settings).RunState.ToString(),
                 Is.EqualTo("Runnable"), 
-                "Unable to load mock-assembly.dll");
+                "Unable to load mock-nunit-assembly.exe");
 
             // Run the tests, saving the result as an XML string
             var xmlText = runner.Run(TestListener.NULL, TestFilter.Empty).ToXml(true).OuterXml;

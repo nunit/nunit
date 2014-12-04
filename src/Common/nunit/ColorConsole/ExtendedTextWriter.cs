@@ -21,12 +21,10 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
 using System.IO;
-using System.Collections.Generic;
 using System.Text;
 
-namespace NUnitLite.Runner
+namespace NUnit.Common.ColorConsole
 {
     /// <summary>
     /// ExtendedTextWriter is a TextWriter that supports 

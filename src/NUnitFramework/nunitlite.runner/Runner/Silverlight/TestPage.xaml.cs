@@ -4,6 +4,7 @@ using System.IO;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
+using NUnit.Common.ColorConsole;
 using NUnit.Framework.Api;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
@@ -66,7 +67,8 @@ namespace NUnitLite.Runner.Silverlight
             this.Total.Text = summary.TestCount.ToString();
             this.Failures.Text = summary.FailureCount.ToString();
             this.Errors.Text = summary.ErrorCount.ToString();
-            this.NotRun.Text = summary.NotRunCount.ToString();
+            var notRunTotal = summary.SkipCount + summary.InvalidCount + summary.IgnoreCount;
+            this.NotRun.Text = notRunTotal.ToString();
             this.Passed.Text = summary.PassCount.ToString();
             this.Inconclusive.Text = summary.InconclusiveCount.ToString();
 

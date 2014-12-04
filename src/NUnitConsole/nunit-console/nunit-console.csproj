@@ -48,6 +48,15 @@
     <Compile Include="..\..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="..\..\Common\nunit\ColorConsole\ColorConsole.cs">
+      <Link>ColorConsole\ColorConsole.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\ColorConsole\ColorStyle.cs">
+      <Link>ColorConsole\ColorStyle.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\ColorConsole\ExtendedTextWriter.cs">
+      <Link>ColorConsole\ExtendedTextWriter.cs</Link>
+    </Compile>
     <Compile Include="..\..\Common\nunit\OutputSpecification.cs">
       <Link>Utilities\OutputSpecification.cs</Link>
     </Compile>
@@ -60,7 +69,6 @@
     <Compile Include="..\ConsoleVersion.cs">
       <Link>ConsoleVersion.cs</Link>
     </Compile>
-    <Compile Include="Utilities\ColorConsole.cs" />
     <Compile Include="Options\ConsoleOptions.cs" />
     <Compile Include="ConsoleRunner.cs" />
     <Compile Include="IResultWriter.cs" />

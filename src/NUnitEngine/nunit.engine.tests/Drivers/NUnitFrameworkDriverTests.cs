@@ -35,7 +35,7 @@ namespace NUnit.Engine.Drivers.Tests
     // Functional tests of the NUnitFrameworkDriver calling into the framework.
     public class NUnitFrameworkDriverTests
     {
-        private string MOCK_ASSEMBLY = "mock-nunit-assembly.dll";
+        private string MOCK_ASSEMBLY = "mock-nunit-assembly.exe";
         private const string MISSING_FILE = "junk.dll";
 
         private IDictionary<string, object> _settings = new Dictionary<string, object>();

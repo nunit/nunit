@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2011 Charlie Poole
+// Copyright (c) 2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -24,6 +24,7 @@
 using System;
 using System.IO;
 using System.Xml;
+using NUnit.Common.ColorConsole;
 using NUnit.Engine;
 
 namespace NUnit.ConsoleRunner
@@ -52,7 +53,7 @@ namespace NUnit.ConsoleRunner
         private ITestEngine _engine;
         private ConsoleOptions _options;
 
-        private TextWriter _outWriter = Console.Out;
+        private ExtendedTextWriter _outWriter;
         private TextWriter _errorWriter = Console.Error;
 
         private string _workDirectory;
@@ -61,10 +62,12 @@ namespace NUnit.ConsoleRunner
 
         #region Constructor
 
-        public ConsoleRunner(ITestEngine engine, ConsoleOptions options)
+        public ConsoleRunner(ITestEngine engine, ConsoleOptions options, ExtendedTextWriter writer)
         {
             _engine = engine;
             _options = options;
+            _outWriter = writer;
+
             _workDirectory = options.WorkDirectory;
             if (_workDirectory == null)
                 _workDirectory = Environment.CurrentDirectory;
@@ -82,6 +85,13 @@ namespace NUnit.ConsoleRunner
         /// <returns></returns>
         public int Execute()
         {
+            _outWriter.WriteLine(ColorStyle.SectionHeader, "Test Files:");
+            foreach (string file in _options.InputFiles)
+                _outWriter.WriteLine(ColorStyle.Default, "    " + file);
+            _outWriter.WriteLine();
+
+            WriteRuntimeEnvironment(_outWriter);
+
             TestPackage package = MakeTestPackage(_options);
 
             TestFilter filter = CreateTestFilter(_options);
@@ -153,44 +163,52 @@ namespace NUnit.ConsoleRunner
                 RestoreOutput();
             }
 
-            var reporter = new ResultReporter(result, _options);
+            var reporter = new ResultReporter(result, new ExtendedTextWriter(Console.Out), _options);
             reporter.ReportResults();
 
             foreach (var outputSpec in _options.ResultOutputSpecifications)
                 outputManager.WriteResultFile(result, outputSpec);
 
-            return reporter.Summary.ErrorsAndFailures;
+            return reporter.Summary.FailureCount + reporter.Summary.ErrorCount + reporter.Summary.InvalidCount;
+        }
+
+        private void WriteRuntimeEnvironment(ExtendedTextWriter OutWriter)
+        {
+            OutWriter.WriteLine(ColorStyle.SectionHeader, "Runtime Environment");
+            OutWriter.WriteLabelLine("   OS Version: ", Environment.OSVersion.ToString());
+            OutWriter.WriteLabelLine("  CLR Version: ", Environment.Version.ToString());
+            OutWriter.WriteLine();
         }
 
         private void DisplayRequestedOptions()
         {
-            ColorConsole.WriteLine(ColorStyle.SectionHeader, "Options");
-            ColorConsole.WriteLabel("    ProcessModel: ", _options.ProcessModel ?? "Default", false);
-            ColorConsole.WriteLabel("    DomainUsage: ", _options.DomainUsage ?? "Default", true);
-            ColorConsole.WriteLabel("    Execution Runtime: ", _options.Framework ?? "Not Specified", true);
+            _outWriter.WriteLine(ColorStyle.SectionHeader, "Options");
+            _outWriter.WriteLabel("    ProcessModel: ", _options.ProcessModel ?? "Default");
+            _outWriter.WriteLabelLine("    DomainUsage: ", _options.DomainUsage ?? "Default");
+            _outWriter.WriteLabelLine("    Execution Runtime: ", _options.Framework ?? "Not Specified");
             if (_options.DefaultTimeout >= 0)
-                ColorConsole.WriteLabel("    Default timeout: ", _options.DefaultTimeout.ToString(), true);
+                _outWriter.WriteLabelLine("    Default timeout: ", _options.DefaultTimeout.ToString());
             if (_options.NumWorkers > 0)
-                ColorConsole.WriteLabel("    Worker Threads: ", _options.NumWorkers.ToString(), true);
-            ColorConsole.WriteLabel("    Work Directory: ", _workDirectory, true);
-            ColorConsole.WriteLabel("    Internal Trace: ", _options.InternalTraceLevel ?? "Off", true);
+                _outWriter.WriteLabelLine("    Worker Threads: ", _options.NumWorkers.ToString());
+            _outWriter.WriteLabelLine("    Work Directory: ", _workDirectory);
+            _outWriter.WriteLabelLine("    Internal Trace: ", _options.InternalTraceLevel ?? "Off");
             //if (options.DisplayTeamCityServiceMessages)
-            //    ColorConsole.WriteLine("    Display TeamCity Service Messages");
-            Console.WriteLine();
+            //    _outWriter.WriteLine("    Display TeamCity Service Messages");
+            _outWriter.WriteLine();
 
             if (_options.TestList.Count > 0)
             {
-                ColorConsole.WriteLine(ColorStyle.Label, "Selected test(s):");
+                _outWriter.WriteLine(ColorStyle.Label, "Selected test(s):");
                 using (new ColorConsole(ColorStyle.Default))
                     foreach (string testName in _options.TestList)
-                        Console.WriteLine("    " + testName);
+                        _outWriter.WriteLine("    " + testName);
             }
 
             if (!string.IsNullOrEmpty( _options.Include ))
-                ColorConsole.WriteLabel("Included categories: ", _options.Include, true);
+                _outWriter.WriteLabelLine("Included categories: ", _options.Include);
 
             if (!string.IsNullOrEmpty( _options.Exclude ))
-                ColorConsole.WriteLabel("Excluded categories: ", _options.Exclude, true);
+                _outWriter.WriteLabelLine("Excluded categories: ", _options.Exclude);
         }
 
         private void RedirectOutputAsRequested()
@@ -199,7 +217,7 @@ namespace NUnit.ConsoleRunner
             {
                 var outStreamWriter = new StreamWriter(Path.Combine(_workDirectory, _options.OutFile));
                 outStreamWriter.AutoFlush = true;
-                _outWriter = outStreamWriter;
+                _outWriter = new ExtendedTextWriter(outStreamWriter);
             }
 
             if (_options.ErrFile != null)

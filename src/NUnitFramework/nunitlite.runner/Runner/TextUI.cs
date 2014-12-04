@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
+using NUnit.Common.ColorConsole;
 using NUnit.Framework.Api;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
@@ -178,6 +179,8 @@ namespace NUnitLite.Runner
 #endif
 
                 _runner = new NUnitTestAssemblyRunner(new DefaultTestAssemblyBuilder());
+
+                _outWriter.WriteLine(ColorStyle.SectionHeader, "Test Files:");
 
                 DisplayRequestedOptions(_outWriter);
 

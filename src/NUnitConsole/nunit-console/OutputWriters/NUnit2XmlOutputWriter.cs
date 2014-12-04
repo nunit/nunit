@@ -78,7 +78,7 @@ namespace NUnit.ConsoleRunner
 
         private void InitializeXmlFile(XmlNode result)
         {
-            ResultSummary summaryResults = new ResultSummary(result);
+            ResultSummary summary = new ResultSummary(result);
 
             xmlWriter.WriteStartDocument(false);
             xmlWriter.WriteComment("This file represents the results of running a test suite");
@@ -86,14 +86,15 @@ namespace NUnit.ConsoleRunner
             xmlWriter.WriteStartElement("test-results");
 
             xmlWriter.WriteAttributeString("name", result.GetAttribute("fullname"));
-            xmlWriter.WriteAttributeString("total", summaryResults.ResultCount.ToString());
-            xmlWriter.WriteAttributeString("errors", summaryResults.Errors.ToString());
-            xmlWriter.WriteAttributeString("failures", summaryResults.Failures.ToString());
-            xmlWriter.WriteAttributeString("not-run", summaryResults.TestsNotRun.ToString());
-            xmlWriter.WriteAttributeString("inconclusive", summaryResults.Inconclusive.ToString());
-            xmlWriter.WriteAttributeString("ignored", summaryResults.Ignored.ToString());
-            xmlWriter.WriteAttributeString("skipped", summaryResults.Skipped.ToString());
-            xmlWriter.WriteAttributeString("invalid", summaryResults.NotRunnable.ToString());
+            xmlWriter.WriteAttributeString("total", summary.TestCount.ToString());
+            xmlWriter.WriteAttributeString("errors", summary.ErrorCount.ToString());
+            xmlWriter.WriteAttributeString("failures", summary.FailureCount.ToString());
+            var notRun = summary.SkipCount + summary.IgnoreCount + summary.InvalidCount;
+            xmlWriter.WriteAttributeString("not-run", notRun.ToString());
+            xmlWriter.WriteAttributeString("inconclusive", summary.InconclusiveCount.ToString());
+            xmlWriter.WriteAttributeString("ignored", summary.IgnoreCount.ToString());
+            xmlWriter.WriteAttributeString("skipped", summary.SkipCount.ToString());
+            xmlWriter.WriteAttributeString("invalid", summary.InvalidCount.ToString());
             
             DateTime start = result.GetAttribute("start-time", DateTime.UtcNow);
             xmlWriter.WriteAttributeString("date", start.ToString("yyyy-MM-dd"));

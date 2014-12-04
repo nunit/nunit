@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-namespace NUnitLite.Runner
+namespace NUnit.Common.ColorConsole
 {
     /// <summary>
     /// ColorStyle enumerates the various styles used in the console display
