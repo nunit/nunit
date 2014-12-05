@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -21,7 +21,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Optimize>true</Optimize>
     <OutputPath>..\..\..\bin\Release\net-3.5\</OutputPath>
-    <DefineConstants>TRACE;NUNIT_FRAMEWORK;NET_3_5;PARALLEL</DefineConstants>
+    <DefineConstants>TRACE;NUNIT_FRAMEWORK;NET_3_5;PARALLEL;NUNITLITE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>
@@ -29,7 +29,7 @@
     <NoWarn>0414</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
-    <DefineConstants>TRACE;DEBUG;NUNIT_FRAMEWORK;NET_3_5;PARALLEL</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NUNIT_FRAMEWORK;NET_3_5;PARALLEL;NUNITLITE</DefineConstants>
     <OutputPath>..\..\..\bin\Debug\net-3.5\</OutputPath>
     <DebugType>full</DebugType>
     <WarningLevel>4</WarningLevel>
@@ -201,7 +201,7 @@
     <Compile Include="Internal\WorkItemQueueTests.cs" />
     <Compile Include="Internal\WorkShiftTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Runner\CommandLineOptionTests.cs" />
+    <Compile Include="Runner\CommandLineTests.cs" />
     <Compile Include="Runner\CreateTestFilterTests.cs" />
     <Compile Include="Runner\MakeRunSettingsTests.cs" />
     <Compile Include="Runner\NUnit2XmlOutputWriterTests.cs" />
@@ -258,6 +258,10 @@
     <EmbeddedResource Include="TestImage2.jpg" />
     <EmbeddedResource Include="TestText1.txt" />
     <EmbeddedResource Include="TestText2.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="TestListFile.txt" />
+    <EmbeddedResource Include="TestListFile2.txt" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\framework\nunit.framework-3.5.csproj">

@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -33,13 +33,16 @@ using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Builders;
 using NUnit.Framework.Internal.Filters;
+using System.Globalization;
 
 namespace NUnitLite.Runner
 {
+    using Options;
+
     /// <summary>
     /// TextUI is a general purpose class that runs tests and
     /// outputs to a TextWriter.
-    /// 
+    ///
     /// Call it from your Main like this:
     ///   new TextUI(textWriter).Execute(args);
     ///     OR
@@ -47,7 +50,7 @@ namespace NUnitLite.Runner
     /// The provided TextWriter is used by default, unless the
     /// arguments to Execute override it using -out. The second
     /// form uses the Console, provided it exists on the platform.
-    /// 
+    ///
     /// NOTE: When running on a platform without a Console, such
     /// as Windows Phone, the results will simply not appear if
     /// you fail to specify a file in the call itself or as an option.
@@ -57,25 +60,25 @@ namespace NUnitLite.Runner
         #region TextUI Return Codes
 
         /// <summary>OK</summary>
-        public static readonly int OK = 0;
+        public const int OK = 0;
         /// <summary>Invalid Arguments</summary>
-        public static readonly int INVALID_ARG = -1;
+        public const int INVALID_ARG = -1;
         /// <summary>File not found</summary>
-        public static readonly int FILE_NOT_FOUND = -2;
+        public const int FILE_NOT_FOUND = -2;
         /// <summary>Test fixture not found</summary>
-        public static readonly int FIXTURE_NOT_FOUND = -3;
+        public const int FIXTURE_NOT_FOUND = -3;
         /// <summary>Unexpected error occurred</summary>
-        public static readonly int UNEXPECTED_ERROR = -100;
+        public const int UNEXPECTED_ERROR = -100;
 
         #endregion
 
 #if NETCF // NETCF: Any harm in using txt everywhere?
-        // Some mobiles don't have an Open With menu item
+          // Some mobiles don't have an Open With menu item
         private const string LOG_FILE_FORMAT = "InternalTrace.{0}.{1}.txt";
 #else
         private const string LOG_FILE_FORMAT = "InternalTrace.{0}.{1}.log";
 #endif
-        private CommandLineOptions _options;
+        private ConsoleOptions _options;
         private string _workDirectory;
         private readonly List<Assembly> _assemblies = new List<Assembly>();
         private ExtendedTextWriter _outWriter;
@@ -84,7 +87,6 @@ namespace NUnitLite.Runner
 #if !SILVERLIGHT && !NETCF
         private TeamCityEventListener _teamCity;
 #endif
-
         #region Constructors
 
         /// <summary>
@@ -119,7 +121,7 @@ namespace NUnitLite.Runner
             // NOTE: Execute must be directly called from the
             // test assembly in order for the mechanism to work.
 
-            _options = new CommandLineOptions(args);
+            _options = new ConsoleOptions(args);
 
             _workDirectory = _options.WorkDirectory;
             if (_workDirectory == null)
@@ -129,14 +131,13 @@ namespace NUnitLite.Runner
 
 #if !SILVERLIGHT
 #if !NETCF
-            if (_options.DisplayTeamCityServiceMessages)
+            if (_options.TeamCity)
                 _teamCity = new TeamCityEventListener();
 #endif
 
             if (_options.OutFile != null)
             {
-                _outWriter = new ExtendedTextWriter(new StreamWriter(
-                        Path.Combine(_workDirectory, _options.OutFile)));
+                _outWriter = new ExtendedTextWriter(new StreamWriter(Path.Combine(_workDirectory, _options.OutFile)));
                 Console.SetOut(_outWriter);
                 ColorConsole.Enabled = false;
             }
@@ -158,98 +159,94 @@ namespace NUnitLite.Runner
                 WriteHelpText();
                 return OK;
             }
-            else if (_options.ErrorMessages.Count > 0)
+
+            if (_options.ErrorMessages.Count > 0)
             {
                 foreach (string line in _options.ErrorMessages)
                     _outWriter.WriteLine(line);
 
-                _outWriter.WriteLine(_options.HelpText);
+                _options.WriteOptionDescriptions(_outWriter);
+
                 return INVALID_ARG;
             }
-            else
-            {
-                Assembly callingAssembly = Assembly.GetCallingAssembly();
+            Assembly callingAssembly = Assembly.GetCallingAssembly();
 
-                // We must call this before creating the runner so that any internal logging is initialized
-                InternalTraceLevel level = (InternalTraceLevel)Enum.Parse(typeof(InternalTraceLevel), _options.InternalTraceLevel, true);
+            // We must call this before creating the runner so that any internal logging is initialized
+            var level = (InternalTraceLevel)Enum.Parse(typeof(InternalTraceLevel), _options.InternalTraceLevel ?? "Off", true);
 #if NETCF  // NETCF: Try to unify
-                InitializeInternalTrace(callingAssembly.GetName().CodeBase, level);
+            InitializeInternalTrace(callingAssembly.GetName().CodeBase, level);
 #else
-                InitializeInternalTrace(callingAssembly.Location, level);
+            InitializeInternalTrace(callingAssembly.Location, level);
 #endif
 
-                _runner = new NUnitTestAssemblyRunner(new DefaultTestAssemblyBuilder());
+            _runner = new NUnitTestAssemblyRunner(new DefaultTestAssemblyBuilder());
 
-                _outWriter.WriteLine(ColorStyle.SectionHeader, "Test Files:");
+            _outWriter.WriteLine(ColorStyle.SectionHeader, "Test Files:");
 
-                DisplayRequestedOptions(_outWriter);
+            DisplayRequestedOptions(_outWriter);
 
-                WriteRuntimeEnvironment(_outWriter);
+            WriteRuntimeEnvironment(_outWriter);
 
-                if (_options.Wait && _options.OutFile != null)
-                    _outWriter.WriteLine("Ignoring /wait option - only valid for Console");
+            if (_options.WaitBeforeExit && _options.OutFile != null)
+                _outWriter.WriteLine("Ignoring /wait option - only valid for Console");
 
-                var runSettings = MakeRunSettings(_options);
+            var runSettings = MakeRunSettings(_options);
 
-                TestFilter filter = CreateTestFilter(_options);
+            TestFilter filter = CreateTestFilter(_options);
 
-                try
+            try
+            {
+                foreach (string name in _options.InputFiles)
+#if NETCF
+                    _assemblies.Add(name.IndexOf(',') != -1 || (name.IndexOf('\\') == -1 && !Path.HasExtension(name)) ? Assembly.Load(name) : Assembly.LoadFrom(name));
+#else
+                    _assemblies.Add(Assembly.Load(name));
+#endif
+
+                if (_assemblies.Count == 0)
+                    _assemblies.Add(callingAssembly);
+
+                // TODO: For now, ignore all but first assembly
+                Assembly assembly = _assemblies[0];
+
+                // Randomizer.InitialSeed = _commandLineOptions.InitialSeed;
+
+                if (_runner.Load(assembly, runSettings) != null)
+                    return _options.Explore ? ExploreTests() : RunTests(filter);
+
+                var assemblyName = AssemblyHelper.GetAssemblyName(assembly);
+                Console.WriteLine("No tests found in assembly {0}", assemblyName.Name);
+                return OK;
+            }
+            catch (FileNotFoundException ex)
+            {
+                _outWriter.WriteLine(ColorStyle.Error, ex.Message);
+                return FILE_NOT_FOUND;
+            }
+            catch (Exception ex)
+            {
+                _outWriter.WriteLine(ColorStyle.Error, ex.ToString());
+                return UNEXPECTED_ERROR;
+            }
+            finally
+            {
+                if (_options.OutFile == null)
                 {
-                    foreach (string name in _options.InputFiles)
-                        _assemblies.Add(Assembly.Load(name));
-
-                    if (_assemblies.Count == 0)
-                        _assemblies.Add(callingAssembly);
-
-                    // TODO: For now, ignore all but first assembly
-                    Assembly assembly = _assemblies[0];
-
-                    //Randomizer.InitialSeed = _commandLineOptions.InitialSeed;
-
-                    if (_runner.Load(assembly, runSettings) == null)
+                    if (_options.WaitBeforeExit)
                     {
-                        var assemblyName = AssemblyHelper.GetAssemblyName(assembly);
-                        Console.WriteLine("No tests found in assembly {0}", assemblyName.Name);
-                        return OK;
+                        _outWriter.WriteLine(ColorStyle.Label, "Press Enter key to continue . . .");
+                        Console.ReadLine();
                     }
+                }
+                else
+                    _outWriter.Close();
 
-                    if (_options.Explore)
-                        return ExploreTests();
-                    else
-                        return RunTests(filter);
-                }
-                catch (FileNotFoundException ex)
-                {
-                    _outWriter.WriteLine(ColorStyle.Error, ex.Message);
-                    return FILE_NOT_FOUND;
-                }
-                catch (Exception ex)
-                {
-                    _outWriter.WriteLine(ColorStyle.Error, ex.ToString());
-                    return UNEXPECTED_ERROR;
-                }
-                finally
-                {
-                    if (_options.OutFile == null)
-                    {
-                        if (_options.Wait)
-                        {
-                            _outWriter.WriteLine(ColorStyle.Label, "Press Enter key to continue . . .");
-                            Console.ReadLine();
-                        }
-                    }
-                    else
-                    {
-                        _outWriter.Close();
-                    }
-
-                    if (_options.ErrFile != null)
-                        _errWriter.Close();
-                }
+                if (_options.ErrFile != null)
+                    _errWriter.Close();
             }
         }
 
-#endregion
+        #endregion
 
         #region Helper Methods
 
@@ -280,9 +277,7 @@ namespace NUnitLite.Runner
             var specs = _options.ExploreOutputSpecifications;
 
             if (specs.Count == 0)
-            {
                 new TestCaseOutputWriter().WriteTestFile(testNode, Console.Out);
-            }
             else
             {
                 var outputManager = new OutputManager(_workDirectory);
@@ -303,7 +298,6 @@ namespace NUnitLite.Runner
 #else
                 var logName = string.Format(LOG_FILE_FORMAT, DateTime.Now.ToString("o"), Path.GetFileName(assemblyPath));
 #endif
-
 #if NETCF // NETCF: Try to encapsulate this
                 InternalTrace.Initialize(Path.Combine(NUnit.Env.DocumentFolder, logName), traceLevel);
 #else
@@ -327,23 +321,22 @@ namespace NUnitLite.Runner
         {
             Assembly executingAssembly = Assembly.GetExecutingAssembly();
             AssemblyName assemblyName = AssemblyHelper.GetAssemblyName(executingAssembly);
-
-            System.Version version = assemblyName.Version;
+            Version version = assemblyName.Version;
             string copyright = "Copyright (C) 2012, Charlie Poole";
             string build = "";
 
             object[] attrs = executingAssembly.GetCustomAttributes(typeof(AssemblyCopyrightAttribute), false);
             if (attrs.Length > 0)
             {
-                AssemblyCopyrightAttribute copyrightAttr = (AssemblyCopyrightAttribute)attrs[0];
-                copyright = copyrightAttr.Copyright;      
+                var copyrightAttr = (AssemblyCopyrightAttribute)attrs[0];
+                copyright = copyrightAttr.Copyright;
             }
 
             attrs = executingAssembly.GetCustomAttributes(typeof(AssemblyConfigurationAttribute), false);
             if (attrs.Length > 0)
             {
-                AssemblyConfigurationAttribute configAttr = (AssemblyConfigurationAttribute)attrs[0];
-                build = string.Format("({0})", configAttr.Configuration); 
+                var configAttr = (AssemblyConfigurationAttribute)attrs[0];
+                build = string.Format("({0})", configAttr.Configuration);
             }
 
             writer.WriteLine(ColorStyle.Header, String.Format("NUnitLite {0} {1}", version.ToString(3), build));
@@ -355,7 +348,7 @@ namespace NUnitLite.Runner
         {
             // TODO: The Silverlight code is just a placeholder. Figure out how to do it correctly.
 #if SILVERLIGHT || NETCF
-            string name = "NUNITLITE";
+            const string name = "NUNITLITE";
 #else
             string name = Assembly.GetEntryAssembly().GetName().Name.ToUpper();
 #endif
@@ -373,7 +366,11 @@ namespace NUnitLite.Runner
             _outWriter.WriteLine();
 
             _outWriter.WriteLine(ColorStyle.SectionHeader, "Options:");
-            _outWriter.Write(ColorStyle.Help, _options.HelpText);
+            using (var sw = new StringWriter())
+            {
+                _options.WriteOptionDescriptions(sw);
+                _outWriter.Write(ColorStyle.Help, sw.ToString());
+            }
 
             _outWriter.WriteLine(ColorStyle.SectionHeader, "Notes:");
             using (new ColorConsole(ColorStyle.Help))
@@ -420,17 +417,17 @@ namespace NUnitLite.Runner
 
             writer.WriteLabelLine("    Work Directory: ", _workDirectory);
 
-            writer.WriteLabelLine("    Internal Trace: ", _options.InternalTraceLevel);
+            writer.WriteLabelLine("    Internal Trace: ", _options.InternalTraceLevel ?? "Off");
 
-            if (_options.DisplayTeamCityServiceMessages)
+            if (_options.TeamCity)
                 writer.WriteLine(ColorStyle.Value, "    Display TeamCity Service Messages");
 
             writer.WriteLine();
 
-            if (_options.Tests.Count > 0)
+            if (_options.TestList.Count > 0)
             {
                 writer.WriteLine(ColorStyle.SectionHeader, "Selected test(s) -");
-                foreach (string testName in _options.Tests)
+                foreach (string testName in _options.TestList)
                     writer.WriteLine(ColorStyle.Value, "    " + testName);
                 writer.WriteLine();
             }
@@ -463,13 +460,13 @@ namespace NUnitLite.Runner
         /// <summary>
         /// Make the settings for this run - this is public for testing
         /// </summary>
-        public static Dictionary<string, object> MakeRunSettings(CommandLineOptions options)
+        public static Dictionary<string, object> MakeRunSettings(ConsoleOptions options)
         {
             // Transfer command line options to run settings
             var runSettings = new Dictionary<string, object>();
 
-            if (options.InitialSeed >= 0)
-                runSettings[DriverSettings.RandomSeed] = options.InitialSeed;
+            if (options.RandomSeed >= 0)
+                runSettings[DriverSettings.RandomSeed] = options.RandomSeed;
 
             if (options.WorkDirectory != null)
                 runSettings[DriverSettings.WorkDirectory] = Path.GetFullPath(options.WorkDirectory);
@@ -485,10 +482,10 @@ namespace NUnitLite.Runner
         /// </summary>
         /// <param name="options"></param>
         /// <returns></returns>
-        public static TestFilter CreateTestFilter(CommandLineOptions options)
+        public static TestFilter CreateTestFilter(ConsoleOptions options)
         {
-            TestFilter namefilter = options.Tests.Count > 0
-                ? new SimpleNameFilter(options.Tests)
+            TestFilter namefilter = options.TestList.Count > 0
+                ? new SimpleNameFilter(options.TestList)
                 : TestFilter.Empty;
 
             TestFilter includeFilter = string.IsNullOrEmpty(options.Include)
@@ -541,13 +538,9 @@ namespace NUnitLite.Runner
 
             bool isSuite = result.Test.IsSuite;
             var labels = _options.DisplayTestLabels != null
-#if NETCF   // NETCF: Unify if possible
-                ? _options.DisplayTestLabels.ToUpper()
-#else
-                ? _options.DisplayTestLabels.ToUpperInvariant()
-#endif
+                ? _options.DisplayTestLabels.ToUpper(CultureInfo.InvariantCulture)
                 : "ON";
-                
+
             if (!isSuite && labels == "ALL")
                 WriteTestLabel(result);
 

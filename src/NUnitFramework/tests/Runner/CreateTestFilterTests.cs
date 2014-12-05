@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -25,9 +25,12 @@ using System;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Filters;
+using NUnit.TestUtilities;
 
 namespace NUnitLite.Runner.Tests
 {
+    using Options;
+
     public class CreateTestFilterTests
     {
         [Test]
@@ -51,8 +54,8 @@ namespace NUnitLite.Runner.Tests
         {
             var filter = GetFilter("--test:My.First.Test", "--test:My.Second.Test", "--test:My.Third.Test");
             Assert.That(filter, Is.TypeOf<SimpleNameFilter>());
-            Assert.That(((SimpleNameFilter)filter).Values, 
-                Is.EqualTo(new string[] { "My.First.Test", "My.Second.Test", "My.Third.Test" } ));
+            Assert.That(((SimpleNameFilter)filter).Values,
+                Is.EqualTo(new string[] { "My.First.Test", "My.Second.Test", "My.Third.Test" }));
         }
 
         [Test]
@@ -131,9 +134,46 @@ namespace NUnitLite.Runner.Tests
                 Is.EqualTo(new string[] { "Slow" }));
         }
 
+#if !SILVERLIGHT
+        [Test]
+        public void ThreeTestsFromATestListFile()
+        {
+            using (var tf = new TestFile("TestListFile.txt", "TestListFile.txt"))
+            {
+                var filter = GetFilter("--testlist:" + tf.File.FullName);
+                Assert.That(filter, Is.TypeOf<SimpleNameFilter>());
+                Assert.That(((SimpleNameFilter)filter).Values,
+                    Is.EqualTo(new string[] { "My.First.Test", "My.Second.Test", "My.Third.Test" }));
+            }
+        }
+
+        [Test]
+        public void SixTestsFromTwoTestListFiles()
+        {
+            using (var tf = new TestFile("TestListFile.txt", "TestListFile.txt"))
+            using (var tf2 = new TestFile("TestListFile2.txt", "TestListFile2.txt"))
+            {
+                var filter = GetFilter("--testlist:" + tf.File.FullName, "--testlist:" + tf2.File.FullName );
+                Assert.That(filter, Is.TypeOf<SimpleNameFilter>());
+                Assert.That(((SimpleNameFilter)filter).Values,
+                    Is.EqualTo(new string[] { "My.First.Test", "My.Second.Test", "My.Third.Test", "My.Fourth.Test", "My.Fifth.Test", "My.Sixth.Test"}));
+            }
+        }
+#endif
+
+        [Test]
+        public void TestListFileMissing()
+        {
+            var options = new ConsoleOptions("--testlist:\\badtestlistfile");
+            Assert.That(options.ErrorMessages.Count, Is.EqualTo(1));
+            Assert.That(options.ErrorMessages, Does.Contain("Unable to locate file: \\badtestlistfile"));
+            var filter = TextUI.CreateTestFilter(options);
+            Assert.That(filter, Is.EqualTo(TestFilter.Empty));
+        }
+
         private TestFilter GetFilter(params string[] args)
         {
-            return TextUI.CreateTestFilter(new CommandLineOptions(args));
+            return TextUI.CreateTestFilter(new ConsoleOptions(args));
         }
     }
 }
