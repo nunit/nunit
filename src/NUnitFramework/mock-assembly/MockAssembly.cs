@@ -46,7 +46,8 @@ namespace NUnit.Tests
                         + BadFixture.Tests
                         + FixtureWithTestCases.Tests
                         + ParameterizedFixture.Tests
-                        + GenericFixtureConstants.Tests;
+                        + GenericFixtureConstants.Tests
+                        + CDataTestFixure.Tests;
             
             public const int Suites = MockTestFixture.Suites 
                         + Singletons.OneTestCase.Suites
@@ -57,6 +58,7 @@ namespace NUnit.Tests
                         + FixtureWithTestCases.Suites
                         + ParameterizedFixture.Suites
                         + GenericFixtureConstants.Suites
+                        + CDataTestFixure.Suites
                         + NamespaceSuites;
             
             public const int Nodes = Tests + Suites;
@@ -71,7 +73,7 @@ namespace NUnit.Tests
             public const int ResultCount = Tests - Explicit;
 
             public const int Errors = MockTestFixture.Errors;
-            public const int Failures = MockTestFixture.Failures;
+            public const int Failures = MockTestFixture.Failures + CDataTestFixure.Failures;
             public const int NotRunnable = MockTestFixture.NotRunnable + BadFixture.Tests;
             public const int ErrorsAndFailures = Errors + Failures + NotRunnable;
             public const int Inconclusive = MockTestFixture.Inconclusive;
@@ -303,5 +305,37 @@ namespace NUnit.Tests
         
         [Test]
         public void Test2() { }
+    }
+
+    [TestFixture]
+    public class CDataTestFixure
+    {
+        public const int Tests = 4;
+        public const int Suites = 1;
+        public const int Failures = 2;
+
+        [Test]
+        public void DemonstrateIllegalSequenceInSuccessMessage()
+        {
+            Assert.Pass("Deliberate failure to illustrate ]]> in message ");
+        }
+
+        [Test]
+        public void DemonstrateIllegalSequenceAtEndOfSuccessMessage()
+        {
+            Assert.Pass("The CDATA was: <![CDATA[ My <xml> ]]>");
+        }
+
+        [Test]
+        public void DemonstrateIllegalSequenceInFailureMessage()
+        {
+            Assert.Fail("Deliberate failure to illustrate ]]> in message ");
+        }
+
+        [Test]
+        public void DemonstrateIllegalSequenceAtEndOfFailureMessage()
+        {
+            Assert.Fail("The CDATA was: <![CDATA[ My <xml> ]]>");
+        }
     }
 }

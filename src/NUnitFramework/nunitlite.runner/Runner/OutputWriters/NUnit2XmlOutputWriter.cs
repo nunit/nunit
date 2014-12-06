@@ -306,7 +306,7 @@ namespace NUnitLite.Runner
         {
             xmlWriter.WriteStartElement("reason");
             xmlWriter.WriteStartElement("message");
-            xmlWriter.WriteCData(message);
+            WriteCData(message);
             xmlWriter.WriteEndElement();
             xmlWriter.WriteEndElement();
         }
