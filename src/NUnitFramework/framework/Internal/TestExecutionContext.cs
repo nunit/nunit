@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2011 Charlie Poole
+// Copyright (c) 2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -107,7 +107,6 @@ namespace NUnit.Framework.Internal
 
         private IWorkItemDispatcher _dispatcher;
 
-#if !NETCF
         /// <summary>
         /// The current culture
         /// </summary>
@@ -117,7 +116,6 @@ namespace NUnit.Framework.Internal
         /// The current UI culture
         /// </summary>
         private CultureInfo _currentUICulture;
-#endif
 
 #if !NETCF && !SILVERLIGHT && !PORTABLE
         /// <summary>
@@ -139,10 +137,8 @@ namespace NUnit.Framework.Internal
             this.TestCaseTimeout = 0;
             this.UpstreamActions = new List<ITestAction>();
 
-#if !NETCF
             _currentCulture = CultureInfo.CurrentCulture;
             _currentUICulture = CultureInfo.CurrentUICulture;
-#endif
 
 #if !NETCF && !SILVERLIGHT && !PORTABLE
             _currentPrincipal = Thread.CurrentPrincipal;
@@ -166,10 +162,8 @@ namespace NUnit.Framework.Internal
             this.TestCaseTimeout = other.TestCaseTimeout;
             this.UpstreamActions = new List<ITestAction>(other.UpstreamActions);
 
-#if !NETCF
             _currentCulture = CultureInfo.CurrentCulture;
             _currentUICulture = CultureInfo.CurrentUICulture;
-#endif
 
 #if !NETCF && !SILVERLIGHT && !PORTABLE
             _currentPrincipal = Thread.CurrentPrincipal;
@@ -385,7 +379,6 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public List<ITestAction> UpstreamActions { get; private set; }
 
-#if !NETCF
         // TODO: Put in checks on all of these settings
         // with side effects so we only change them
         // if the value is different
@@ -399,7 +392,9 @@ namespace NUnit.Framework.Internal
             set
             {
                 _currentCulture = value;
+#if !NETCF
                 Thread.CurrentThread.CurrentCulture = _currentCulture;
+#endif
             }
         }
 
@@ -412,10 +407,11 @@ namespace NUnit.Framework.Internal
             set
             {
                 _currentUICulture = value;
+#if !NETCF
                 Thread.CurrentThread.CurrentUICulture = _currentUICulture;
+#endif
             }
         }
-#endif
 
 #if !NETCF && !SILVERLIGHT && !PORTABLE
         /// <summary>
@@ -443,10 +439,8 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public void UpdateContextFromEnvironment()
         {
-#if !NETCF
             _currentCulture = CultureInfo.CurrentCulture;
             _currentUICulture = CultureInfo.CurrentUICulture;
-#endif
 
 #if !NETCF && !SILVERLIGHT && !PORTABLE
             _currentPrincipal = Thread.CurrentPrincipal;
