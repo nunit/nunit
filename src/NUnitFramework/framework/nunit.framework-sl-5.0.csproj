@@ -96,7 +96,13 @@
     <Compile Include="Api\ITestAssemblyBuilder.cs" />
     <Compile Include="Api\ITestAssemblyRunner.cs" />
     <Compile Include="Api\NUnitTestAssemblyRunner.cs" />
+    <Compile Include="Assert.Comparisons.cs" />
+    <Compile Include="Assert.Conditions.cs" />
     <Compile Include="Assert.cs" />
+    <Compile Include="Assert.Equality.cs" />
+    <Compile Include="Assert.Exceptions.cs" />
+    <Compile Include="Assert.That.cs" />
+    <Compile Include="Assert.Types.cs" />
     <Compile Include="AssertionHelper.cs" />
     <Compile Include="Assume.cs" />
     <Compile Include="Attributes\AuthorAttribute.cs" />
