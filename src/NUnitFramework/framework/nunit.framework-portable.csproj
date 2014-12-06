@@ -350,6 +350,7 @@
     <Compile Include="Internal\StackFilter.cs" />
     <Compile Include="Internal\StringUtil.cs" />
     <Compile Include="Internal\TestExecutionContext.cs" />
+    <Compile Include="Internal\TestExecutionStatus.cs" />
     <Compile Include="Internal\TestFilter.cs" />
     <Compile Include="Internal\TestListener.cs" />
     <Compile Include="Internal\TestProgressReporter.cs" />

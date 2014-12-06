@@ -39,28 +39,6 @@ using System.Security.Principal;
 namespace NUnit.Framework.Internal
 {
     /// <summary>
-    /// Enumeration indicating whether the tests are 
-    /// running normally or being cancelled.
-    /// </summary>
-    public enum TestExecutionStatus
-    {
-        /// <summary>
-        /// Running normally with no stop requested
-        /// </summary>
-        Running,
-
-        /// <summary>
-        /// A graceful stop has been requested
-        /// </summary>
-        StopRequested,
-
-        /// <summary>
-        /// A forced stop has been requested
-        /// </summary>
-        AbortRequested
-    }
-
-    /// <summary>
     /// Helper class used to save and restore certain static or
     /// singleton settings in the environment that affect tests 
     /// or which might be changed by the user tests.
