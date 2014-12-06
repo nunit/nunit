@@ -108,6 +108,12 @@
     <Compile Include="Constraints\Operators\SomeOperator.cs" />
     <Compile Include="Constraints\SubPathConstraint.cs" />
     <Compile Include="Constraints\ThrowsExceptionConstraint.cs" />
+    <Compile Include="Assert.Exceptions.cs" />
+    <Compile Include="Assert.Equality.cs" />
+    <Compile Include="Assert.Types.cs" />
+    <Compile Include="Assert.That.cs" />
+    <Compile Include="Assert.Comparisons.cs" />
+    <Compile Include="Assert.Conditions.cs" />
     <Compile Include="DirectoryAssert.cs" />
     <Compile Include="Does.cs" />
     <Compile Include="Exceptions\ResultStateException.cs" />
@@ -175,6 +181,7 @@
     <Compile Include="Internal\RandomGenerator.cs" />
     <Compile Include="Internal\StackFilter.cs" />
     <Compile Include="Internal\StringUtil.cs" />
+    <Compile Include="Internal\TestExecutionStatus.cs" />
     <Compile Include="ITestAction.cs" />
     <Compile Include="Internal\PropertyNames.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
