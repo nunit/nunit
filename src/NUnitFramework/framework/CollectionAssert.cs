@@ -78,17 +78,6 @@ namespace NUnit.Framework
         /// <param name="collection">IEnumerable containing objects to be considered</param>
         /// <param name="expectedType">System.Type that all objects in collection must be instances of</param>
         /// <param name="message">The message that will be displayed on failure</param>
-        public static void AllItemsAreInstancesOfType (IEnumerable collection, Type expectedType, string message)
-        {
-            AllItemsAreInstancesOfType(collection, expectedType, message, null);
-        }
-
-        /// <summary>
-        /// Asserts that all items contained in collection are of the type specified by expectedType.
-        /// </summary>
-        /// <param name="collection">IEnumerable containing objects to be considered</param>
-        /// <param name="expectedType">System.Type that all objects in collection must be instances of</param>
-        /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
         public static void AllItemsAreInstancesOfType (IEnumerable collection, Type expectedType, string message, params object[] args)
         {
@@ -105,16 +94,6 @@ namespace NUnit.Framework
         public static void AllItemsAreNotNull (IEnumerable collection) 
         {
             AllItemsAreNotNull(collection, string.Empty, null);
-        }
-
-        /// <summary>
-        /// Asserts that all items contained in collection are not equal to null.
-        /// </summary>
-        /// <param name="collection">IEnumerable containing objects to be considered</param>
-        /// <param name="message">The message that will be displayed on failure</param>
-        public static void AllItemsAreNotNull (IEnumerable collection, string message) 
-        {
-            AllItemsAreNotNull(collection, message, null);
         }
 
         /// <summary>
@@ -139,17 +118,6 @@ namespace NUnit.Framework
         public static void AllItemsAreUnique (IEnumerable collection) 
         {
             AllItemsAreUnique(collection, string.Empty, null);
-        }
-
-        /// <summary>
-        /// Ensures that every object contained in collection exists within the collection
-        /// once and only once.
-        /// </summary>
-        /// <param name="collection">IEnumerable of objects to be considered</param>
-        /// <param name="message">The message that will be displayed on failure</param>
-        public static void AllItemsAreUnique (IEnumerable collection, string message) 
-        {
-            AllItemsAreUnique(collection, message, null);
         }
         
         /// <summary>
@@ -189,32 +157,6 @@ namespace NUnit.Framework
         public static void AreEqual (IEnumerable expected, IEnumerable actual, IComparer comparer) 
         {
             AreEqual(expected, actual, comparer, string.Empty, null);
-        }
-
-        /// <summary>
-        /// Asserts that expected and actual are exactly equal.  The collections must have the same count, 
-        /// and contain the exact same objects in the same order.
-        /// </summary>
-        /// <param name="expected">The first IEnumerable of objects to be considered</param>
-        /// <param name="actual">The second IEnumerable of objects to be considered</param>
-        /// <param name="message">The message that will be displayed on failure</param>
-        public static void AreEqual (IEnumerable expected, IEnumerable actual, string message) 
-        {
-            AreEqual(expected, actual, message, null);
-        }
-
-        /// <summary>
-        /// Asserts that expected and actual are exactly equal.  The collections must have the same count, 
-        /// and contain the exact same objects in the same order.
-        /// If comparer is not null then it will be used to compare the objects.
-        /// </summary>
-        /// <param name="expected">The first IEnumerable of objects to be considered</param>
-        /// <param name="actual">The second IEnumerable of objects to be considered</param>
-        /// <param name="comparer">The IComparer to use in comparing objects from each IEnumerable</param>
-        /// <param name="message">The message that will be displayed on failure</param>
-        public static void AreEqual (IEnumerable expected, IEnumerable actual, IComparer comparer, string message) 
-        {
-            AreEqual(expected, actual, comparer, message, null);
         }
 
         /// <summary>
@@ -264,17 +206,6 @@ namespace NUnit.Framework
         /// <param name="expected">The first IEnumerable of objects to be considered</param>
         /// <param name="actual">The second IEnumerable of objects to be considered</param>
         /// <param name="message">The message that will be displayed on failure</param>
-        public static void AreEquivalent (IEnumerable expected, IEnumerable actual, string message) 
-        {
-            AreEquivalent(expected, actual, message, null);
-        }
-
-        /// <summary>
-        /// Asserts that expected and actual are equivalent, containing the same objects but the match may be in any order.
-        /// </summary>
-        /// <param name="expected">The first IEnumerable of objects to be considered</param>
-        /// <param name="actual">The second IEnumerable of objects to be considered</param>
-        /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
         public static void AreEquivalent (IEnumerable expected, IEnumerable actual, string message, params object[] args) 
         {
@@ -304,30 +235,6 @@ namespace NUnit.Framework
         public static void AreNotEqual (IEnumerable expected, IEnumerable actual, IComparer comparer)
         {
             AreNotEqual(expected, actual, comparer, string.Empty, null);
-        }
-
-        /// <summary>
-        /// Asserts that expected and actual are not exactly equal.
-        /// </summary>
-        /// <param name="expected">The first IEnumerable of objects to be considered</param>
-        /// <param name="actual">The second IEnumerable of objects to be considered</param>
-        /// <param name="message">The message that will be displayed on failure</param>
-        public static void AreNotEqual (IEnumerable expected, IEnumerable actual, string message)
-        {
-            AreNotEqual(expected, actual, message, null);
-        }
-
-        /// <summary>
-        /// Asserts that expected and actual are not exactly equal.
-        /// If comparer is not null then it will be used to compare the objects.
-        /// </summary>
-        /// <param name="expected">The first IEnumerable of objects to be considered</param>
-        /// <param name="actual">The second IEnumerable of objects to be considered</param>
-        /// <param name="comparer">The IComparer to use in comparing objects from each IEnumerable</param>
-        /// <param name="message">The message that will be displayed on failure</param>
-        public static void AreNotEqual (IEnumerable expected, IEnumerable actual, IComparer comparer, string message)
-        {
-            AreNotEqual(expected, actual, comparer, message, null);
         }
 
         /// <summary>
@@ -375,17 +282,6 @@ namespace NUnit.Framework
         /// <param name="expected">The first IEnumerable of objects to be considered</param>
         /// <param name="actual">The second IEnumerable of objects to be considered</param>
         /// <param name="message">The message that will be displayed on failure</param>
-        public static void AreNotEquivalent (IEnumerable expected, IEnumerable actual, string message)
-        {
-            AreNotEquivalent(expected, actual, message, null);
-        }
-
-        /// <summary>
-        /// Asserts that expected and actual are not equivalent.
-        /// </summary>
-        /// <param name="expected">The first IEnumerable of objects to be considered</param>
-        /// <param name="actual">The second IEnumerable of objects to be considered</param>
-        /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
         public static void AreNotEquivalent (IEnumerable expected, IEnumerable actual, string message, params object[] args)
         {
@@ -402,17 +298,6 @@ namespace NUnit.Framework
         public static void Contains (IEnumerable collection, Object actual)
         {
             Contains(collection, actual, string.Empty, null);
-        }
-
-        /// <summary>
-        /// Asserts that collection contains actual as an item.
-        /// </summary>
-        /// <param name="collection">IEnumerable of objects to be considered</param>
-        /// <param name="actual">Object to be found within collection</param>
-        /// <param name="message">The message that will be displayed on failure</param>
-        public static void Contains (IEnumerable collection, Object actual, string message)
-        {
-            Contains(collection, actual, message, null);
         }
 
         /// <summary>
@@ -446,17 +331,6 @@ namespace NUnit.Framework
         /// <param name="collection">IEnumerable of objects to be considered</param>
         /// <param name="actual">Object that cannot exist within collection</param>
         /// <param name="message">The message that will be displayed on failure</param>
-        public static void DoesNotContain (IEnumerable collection, Object actual, string message)
-        {
-            DoesNotContain(collection, actual, message, null);
-        }
-
-        /// <summary>
-        /// Asserts that collection does not contain actual as an item.
-        /// </summary>
-        /// <param name="collection">IEnumerable of objects to be considered</param>
-        /// <param name="actual">Object that cannot exist within collection</param>
-        /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
         public static void DoesNotContain (IEnumerable collection, Object actual, string message, params object[] args)
         {
@@ -474,17 +348,6 @@ namespace NUnit.Framework
         public static void IsNotSubsetOf (IEnumerable subset, IEnumerable superset)
         {
             IsNotSubsetOf(subset, superset, string.Empty, null);
-        }
-
-        /// <summary>
-        /// Asserts that the superset does not contain the subset
-        /// </summary>
-        /// <param name="subset">The IEnumerable subset to be considered</param>
-        /// <param name="superset">The IEnumerable superset to be considered</param>
-        /// <param name="message">The message that will be displayed on failure</param>
-        public static void IsNotSubsetOf (IEnumerable subset, IEnumerable superset, string message)
-        {
-            IsNotSubsetOf(subset, superset, message, null);
         }
 
         /// <summary>
@@ -518,17 +381,6 @@ namespace NUnit.Framework
         /// <param name="subset">The IEnumerable subset to be considered</param>
         /// <param name="superset">The IEnumerable superset to be considered</param>
         /// <param name="message">The message that will be displayed on failure</param>
-        public static void IsSubsetOf (IEnumerable subset, IEnumerable superset, string message)
-        {
-            IsSubsetOf(subset, superset, message, null);
-        }
-
-        /// <summary>
-        /// Asserts that the superset contains the subset.
-        /// </summary>
-        /// <param name="subset">The IEnumerable subset to be considered</param>
-        /// <param name="superset">The IEnumerable superset to be considered</param>
-        /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
         public static void IsSubsetOf (IEnumerable subset, IEnumerable superset, string message, params object[] args)
         {
@@ -546,16 +398,6 @@ namespace NUnit.Framework
         public static void IsEmpty(IEnumerable collection, string message, params object[] args)
         {
             Assert.That(collection, new EmptyCollectionConstraint(), message, args);
-        }
-
-        /// <summary>
-        /// Assert that an array, list or other collection is empty
-        /// </summary>
-        /// <param name="collection">An array, list or other collection implementing IEnumerable</param>
-        /// <param name="message">The message to be displayed on failure</param>
-        public static void IsEmpty(IEnumerable collection, string message)
-        {
-            IsEmpty(collection, message, null);
         }
 
         /// <summary>
@@ -578,16 +420,6 @@ namespace NUnit.Framework
         public static void IsNotEmpty(IEnumerable collection, string message, params object[] args)
         {
             Assert.That(collection, new NotConstraint(new EmptyCollectionConstraint()), message, args);
-        }
-
-        /// <summary>
-        /// Assert that an array, list or other collection is empty
-        /// </summary>
-        /// <param name="collection">An array, list or other collection implementing IEnumerable</param>
-        /// <param name="message">The message to be displayed on failure</param>
-        public static void IsNotEmpty(IEnumerable collection, string message)
-        {
-            IsNotEmpty(collection, message, null);
         }
 
         /// <summary>
@@ -616,16 +448,6 @@ namespace NUnit.Framework
         /// Assert that an array, list or other collection is ordered
         /// </summary>
         /// <param name="collection">An array, list or other collection implementing IEnumerable</param>
-        /// <param name="message">The message to be displayed on failure</param>
-        public static void IsOrdered(IEnumerable collection, string message)
-        {
-            IsOrdered(collection, message, null);
-        }
-
-        /// <summary>
-        /// Assert that an array, list or other collection is ordered
-        /// </summary>
-        /// <param name="collection">An array, list or other collection implementing IEnumerable</param>
         public static void IsOrdered(IEnumerable collection)
         {
             IsOrdered(collection, string.Empty, null);
@@ -641,17 +463,6 @@ namespace NUnit.Framework
         public static void IsOrdered(IEnumerable collection, IComparer comparer, string message, params object[] args)
         {
             Assert.That(collection, Is.Ordered.Using(comparer), message, args);
-        }
-
-        /// <summary>
-        /// Assert that an array, list or other collection is ordered
-        /// </summary>
-        /// <param name="collection">An array, list or other collection implementing IEnumerable</param>
-        /// <param name="comparer">A custom comparer to perform the comparisons</param>
-        /// <param name="message">The message to be displayed on failure</param>
-        public static void IsOrdered(IEnumerable collection, IComparer comparer, string message)
-        {
-            IsOrdered(collection, comparer, message, null);
         }
 
         /// <summary>

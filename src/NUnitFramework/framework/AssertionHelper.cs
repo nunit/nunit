@@ -54,18 +54,6 @@ namespace NUnit.Framework
 
         /// <summary>
         /// Asserts that a condition is true. If the condition is false the method throws
-        /// an <see cref="AssertionException"/>. Works Identically to 
-        /// <see cref="Assert.That(bool, string)"/>.
-        /// </summary>
-        /// <param name="condition">The evaluated condition</param>
-        /// <param name="message">The message to display if the condition is false</param>
-        public void Expect(bool condition, string message)
-        {
-            Assert.That(condition, Is.True, message, null);
-        }
-
-        /// <summary>
-        /// Asserts that a condition is true. If the condition is false the method throws
         /// an <see cref="AssertionException"/>. Works Identically to <see cref="Assert.That(bool)"/>.
         /// </summary>
         /// <param name="condition">The evaluated condition</param>
@@ -86,18 +74,6 @@ namespace NUnit.Framework
         public void Expect<TActual>(ActualValueDelegate<TActual> del, IResolveConstraint expr)
         {
             Assert.That(del, expr.Resolve(), null, null);
-        }
-
-        /// <summary>
-        /// Apply a constraint to an actual value, succeeding if the constraint
-        /// is satisfied and throwing an assertion exception on failure.
-        /// </summary>
-        /// <param name="expr">A Constraint expression to be applied</param>
-        /// <param name="del">An ActualValueDelegate returning the value to be tested</param>
-        /// <param name="message">The message that will be displayed on failure</param>
-        public void Expect<TActual>(ActualValueDelegate<TActual> del, IResolveConstraint expr, string message)
-        {
-            Assert.That(del, expr.Resolve(), message, null);
         }
 
         /// <summary>
@@ -142,18 +118,6 @@ namespace NUnit.Framework
         static public void Expect<TActual>(TActual actual, IResolveConstraint expression)
         {
             Assert.That(actual, expression, null, null);
-        }
-
-        /// <summary>
-        /// Apply a constraint to an actual value, succeeding if the constraint
-        /// is satisfied and throwing an assertion exception on failure.
-        /// </summary>
-        /// <param name="expression">A Constraint to be applied</param>
-        /// <param name="actual">The actual value to test</param>
-        /// <param name="message">The message that will be displayed on failure</param>
-        static public void Expect<TActual>(TActual actual, IResolveConstraint expression, string message)
-        {
-            Assert.That(actual, expression, message, null);
         }
 
         /// <summary>

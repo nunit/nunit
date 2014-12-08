@@ -40,16 +40,7 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.AssignableFrom(expected) ,message, args);
         }
-        /// <summary>
-        /// Asserts that an object may be assigned a  value of a given Type.
-        /// </summary>
-        /// <param name="expected">The expected Type.</param>
-        /// <param name="actual">The object under examination</param>
-        /// <param name="message">The message to display in case of failure</param>
-        public static void IsAssignableFrom(Type expected, object actual, string message)
-        {
-            Assert.That(actual, Is.AssignableFrom(expected) ,message, null);
-        }
+
         /// <summary>
         /// Asserts that an object may be assigned a  value of a given Type.
         /// </summary>
@@ -75,16 +66,7 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.AssignableFrom(typeof(TExpected)) ,message, args);
         }
-        /// <summary>
-        /// Asserts that an object may be assigned a  value of a given Type.
-        /// </summary>
-        /// <typeparam name="TExpected">The expected Type.</typeparam>
-        /// <param name="actual">The object under examination</param>
-        /// <param name="message">The message to display in case of failure</param>
-        public static void IsAssignableFrom<TExpected>(object actual, string message)
-        {
-            Assert.That(actual, Is.AssignableFrom(typeof(TExpected)) ,message, null);
-        }
+
         /// <summary>
         /// Asserts that an object may be assigned a  value of a given Type.
         /// </summary>
@@ -110,16 +92,7 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.Not.AssignableFrom(expected) ,message, args);
         }
-        /// <summary>
-        /// Asserts that an object may not be assigned a  value of a given Type.
-        /// </summary>
-        /// <param name="expected">The expected Type.</param>
-        /// <param name="actual">The object under examination</param>
-        /// <param name="message">The message to display in case of failure</param>
-        public static void IsNotAssignableFrom(Type expected, object actual, string message)
-        {
-            Assert.That(actual, Is.Not.AssignableFrom(expected) ,message, null);
-        }
+
         /// <summary>
         /// Asserts that an object may not be assigned a  value of a given Type.
         /// </summary>
@@ -145,16 +118,7 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.Not.AssignableFrom(typeof(TExpected)) ,message, args);
         }
-        /// <summary>
-        /// Asserts that an object may not be assigned a  value of a given Type.
-        /// </summary>
-        /// <typeparam name="TExpected">The expected Type.</typeparam>
-        /// <param name="actual">The object under examination</param>
-        /// <param name="message">The message to display in case of failure</param>
-        public static void IsNotAssignableFrom<TExpected>(object actual, string message)
-        {
-            Assert.That(actual, Is.Not.AssignableFrom(typeof(TExpected)) ,message, null);
-        }
+
         /// <summary>
         /// Asserts that an object may not be assigned a  value of a given Type.
         /// </summary>
@@ -180,16 +144,7 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.InstanceOf(expected) ,message, args);
         }
-        /// <summary>
-        /// Asserts that an object is an instance of a given type.
-        /// </summary>
-        /// <param name="expected">The expected Type</param>
-        /// <param name="actual">The object being examined</param>
-        /// <param name="message">The message to display in case of failure</param>
-        public static void IsInstanceOf(Type expected, object actual, string message)
-        {
-            Assert.That(actual, Is.InstanceOf(expected) ,message, null);
-        }
+
         /// <summary>
         /// Asserts that an object is an instance of a given type.
         /// </summary>
@@ -215,16 +170,7 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.InstanceOf(typeof(TExpected)) ,message, args);
         }
-        /// <summary>
-        /// Asserts that an object is an instance of a given type.
-        /// </summary>
-        /// <typeparam name="TExpected">The expected Type</typeparam>
-        /// <param name="actual">The object being examined</param>
-        /// <param name="message">The message to display in case of failure</param>
-        public static void IsInstanceOf<TExpected>(object actual, string message)
-        {
-            Assert.That(actual, Is.InstanceOf(typeof(TExpected)) ,message, null);
-        }
+
         /// <summary>
         /// Asserts that an object is an instance of a given type.
         /// </summary>
@@ -250,16 +196,7 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.Not.InstanceOf(expected) ,message, args);
         }
-        /// <summary>
-        /// Asserts that an object is not an instance of a given type.
-        /// </summary>
-        /// <param name="expected">The expected Type</param>
-        /// <param name="actual">The object being examined</param>
-        /// <param name="message">The message to display in case of failure</param>
-        public static void IsNotInstanceOf(Type expected, object actual, string message)
-        {
-            Assert.That(actual, Is.Not.InstanceOf(expected) ,message, null);
-        }
+
         /// <summary>
         /// Asserts that an object is not an instance of a given type.
         /// </summary>
@@ -285,16 +222,7 @@ namespace NUnit.Framework
         {
             Assert.That(actual, Is.Not.InstanceOf(typeof(TExpected)) ,message, args);
         }
-        /// <summary>
-        /// Asserts that an object is not an instance of a given type.
-        /// </summary>
-        /// <typeparam name="TExpected">The expected Type</typeparam>
-        /// <param name="actual">The object being examined</param>
-        /// <param name="message">The message to display in case of failure</param>
-        public static void IsNotInstanceOf<TExpected>(object actual, string message)
-        {
-            Assert.That(actual, Is.Not.InstanceOf(typeof(TExpected)) ,message, null);
-        }
+
         /// <summary>
         /// Asserts that an object is not an instance of a given type.
         /// </summary>
