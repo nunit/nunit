@@ -98,27 +98,6 @@ namespace NUnit.Framework.Assertions
 #endif
 
         [Test]
-        public void AssertionPasses_ReferenceAndConstraint()
-        {
-            bool value = true;
-            Assert.That(ref value, Is.True);
-        }
-
-        [Test]
-        public void AssertionPasses_ReferenceAndConstraintWithMessage()
-        {
-            bool value = true;
-            Assert.That(ref value, Is.True, "Message");
-        }
-
-        [Test]
-        public void AssertionPasses_ReferenceAndConstraintWithMessageAndArgs()
-        {
-            bool value = true;
-            Assert.That(ref value, Is.True, "Message", 42);
-        }
-
-        [Test]
         public void AssertionPasses_DelegateAndConstraint()
         {
             Assert.That(new ActualValueDelegate<int>(ReturnsFour), Is.EqualTo(4));
@@ -202,29 +181,6 @@ namespace NUnit.Framework.Assertions
             Assert.That(ex.Message, Does.Contain("Should be 5"));
         }
 #endif
-
-        [Test]
-        public void FailureThrowsAssertionException_ReferenceAndConstraint()
-        {
-            bool value = false;
-            Assert.Throws<AssertionException>(() => Assert.That(ref value, Is.True));
-        }
-
-        [Test]
-        public void FailureThrowsAssertionException_ReferenceAndConstraintWithMessage()
-        {
-            bool value = false;
-            var ex = Assert.Throws<AssertionException>(() => Assert.That(ref value, Is.True, "message"));
-            Assert.That(ex.Message, Does.Contain("message"));
-        }
-
-        [Test]
-        public void FailureThrowsAssertionException_ReferenceAndConstraintWithMessageAndArgs()
-        {
-            bool value = false;
-            var ex = Assert.Throws<AssertionException>(() => Assert.That(ref value, Is.True, "message is {0}", 42));
-            Assert.That(ex.Message, Does.Contain("message is 42"));
-        }
 
         [Test]
         public void FailureThrowsAssertionException_DelegateAndConstraint()

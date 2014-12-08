@@ -169,44 +169,6 @@ namespace NUnit.Framework
             Assert.That(actual, expression, message, args);
         }
 
-        #pragma warning disable 3006
-        /// <summary>
-        /// Apply a constraint to a referenced value, succeeding if the constraint
-        /// is satisfied and throwing an assertion exception on failure.
-        /// </summary>
-        /// <param name="actual">The actual value to test</param>
-        /// <param name="expression">A Constraint to be applied</param>
-        static public void Expect<TActual>(ref TActual actual, IResolveConstraint expression)
-        {
-            Assert.That(ref actual, expression, null, null);
-        }
-
-        /// <summary>
-        /// Apply a constraint to a referenced value, succeeding if the constraint
-        /// is satisfied and throwing an assertion exception on failure.
-        /// </summary>
-        /// <param name="actual">The actual value to test</param>
-        /// <param name="expression">A Constraint to be applied</param>
-        /// <param name="message">The message that will be displayed on failure</param>
-        static public void Expect<TActual>(ref TActual actual, IResolveConstraint expression, string message)
-        {
-            Assert.That(ref actual, expression, message, null);
-        }
-
-        /// <summary>
-        /// Apply a constraint to a referenced value, succeeding if the constraint
-        /// is satisfied and throwing an assertion exception on failure.
-        /// </summary>
-        /// <param name="actual">The actual value to test</param>
-        /// <param name="expression">A Constraint to be applied</param>
-        /// <param name="message">The message that will be displayed on failure</param>
-        /// <param name="args">Arguments to be used in formatting the message</param>
-        static public void Expect<TActual>(ref TActual actual, IResolveConstraint expression, string message, params object[] args)
-        {
-            Assert.That(actual, expression, message, args);
-        }
-        #pragma warning restore 3006
-
         #endregion
 
         #region Map

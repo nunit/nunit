@@ -147,48 +147,48 @@ namespace NUnit.Framework.Syntax
         }
     }
 
-    public class AfterSyntaxUsingActualPassedByRef : AfterSyntaxTests
+    public class AfterSyntaxUsingLambda : AfterSyntaxTests
     {
         [Test]
         public void TrueTest()
         {
-            Assert.That(ref flag, Is.True.After(5000, 200));
+            Assert.That(() => flag, Is.True.After(5000, 200));
         }
 
         [Test]
         public void EqualToTest()
         {
-            Assert.That(ref num, Is.EqualTo(1).After(5000, 200));
+            Assert.That(() => num, Is.EqualTo(1).After(5000, 200));
         }
 
         [Test]
         public void SameAsTest()
         {
-            Assert.That(ref ob1, Is.SameAs(ob2).After(5000, 200));
+            Assert.That(() => ob1, Is.SameAs(ob2).After(5000, 200));
         }
 
         [Test]
         public void GreaterTest()
         {
-            Assert.That(ref num, Is.GreaterThan(0).After(5000, 200));
+            Assert.That(() => num, Is.GreaterThan(0).After(5000, 200));
         }
 
         [Test]
         public void HasMemberTest()
         {
-            Assert.That(ref list, Has.Member(4).After(5000, 200));
+            Assert.That(() => list, Has.Member(4).After(5000, 200));
         }
 
         [Test]
         public void NullTest()
         {
-            Assert.That(ref ob3, Is.Null.After(5000, 200));
+            Assert.That(() => ob3, Is.Null.After(5000, 200));
         }
 
         [Test]
         public void TextTest()
         {
-            Assert.That(ref greeting, Does.EndWith("world").After(5000, 200));
+            Assert.That(() => greeting, Does.EndWith("world").After(5000, 200));
         }
     }
 }
