@@ -102,6 +102,17 @@ namespace NUnit.Framework
         /// that are passed in. This allows a test to be cut short, with a result
         /// of success returned to NUnit.
         /// </summary>
+        /// <param name="message">The message to initialize the <see cref="AssertionException"/> with.</param>
+        static public void Pass(string message)
+        {
+            Assert.Pass(message, null);
+        }
+
+        /// <summary>
+        /// Throws a <see cref="SuccessException"/> with the message and arguments 
+        /// that are passed in. This allows a test to be cut short, with a result
+        /// of success returned to NUnit.
+        /// </summary>
         static public void Pass()
         {
             Assert.Pass(string.Empty, null);
@@ -124,6 +135,16 @@ namespace NUnit.Framework
                 message = string.Format(message, args);
 
             throw new AssertionException(message);
+        }
+
+        /// <summary>
+        /// Throws an <see cref="AssertionException"/> with the message that is 
+        /// passed in. This is used by the other Assert functions. 
+        /// </summary>
+        /// <param name="message">The message to initialize the <see cref="AssertionException"/> with.</param>
+        static public void Fail(string message)
+        {
+            Assert.Fail(message, null);
         }
 
         /// <summary>
@@ -155,6 +176,16 @@ namespace NUnit.Framework
         }
 
         /// <summary>
+        /// Throws an <see cref="IgnoreException"/> with the message that is 
+        /// passed in. This causes the test to be reported as ignored. 
+        /// </summary>
+        /// <param name="message">The message to initialize the <see cref="AssertionException"/> with.</param>
+        static public void Ignore(string message)
+        {
+            Assert.Ignore(message, null);
+        }
+
+        /// <summary>
         /// Throws an <see cref="IgnoreException"/>. 
         /// This causes the test to be reported as ignored. 
         /// </summary>
@@ -180,6 +211,16 @@ namespace NUnit.Framework
                 message = string.Format(message, args);
 
             throw new InconclusiveException(message);
+        }
+
+        /// <summary>
+        /// Throws an <see cref="InconclusiveException"/> with the message that is 
+        /// passed in. This causes the test to be reported as inconclusive. 
+        /// </summary>
+        /// <param name="message">The message to initialize the <see cref="InconclusiveException"/> with.</param>
+        static public void Inconclusive(string message)
+        {
+            Assert.Inconclusive(message, null);
         }
 
         /// <summary>
