@@ -104,6 +104,11 @@
   <ItemGroup>
     <Folder Include="Runners\" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="EngineTests.nunit">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>
