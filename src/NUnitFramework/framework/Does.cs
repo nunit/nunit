@@ -29,7 +29,7 @@ namespace NUnit.Framework
     /// Helper class with properties and methods that supply
     /// a number of constraints used in Asserts.
     /// </summary>
-    public class Does
+    public static class Does
     {
         #region Not
 
@@ -65,7 +65,7 @@ namespace NUnit.Framework
         /// Returns a new CollectionContainsConstraint checking for the
         /// presence of a particular object in the collection.
         /// </summary>
-        public CollectionContainsConstraint Contain(object expected)
+        public static CollectionContainsConstraint Contain(object expected)
         {
             return new CollectionContainsConstraint(expected);
         }
