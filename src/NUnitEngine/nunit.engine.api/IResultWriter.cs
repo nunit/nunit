@@ -26,6 +26,9 @@ using System.Xml;
 
 namespace NUnit.Engine
 {
+    /// <summary>
+    /// Common interface for objects that process and write out test results
+    /// </summary>
     public interface IResultWriter
     {
         /// <summary>

@@ -262,6 +262,11 @@ namespace NUnit.Framework
 
         #region Multiple
 
+        /// <summary>
+        /// If an assert fails within this block, execution will continue and 
+        /// the errors will be reported at the end of the block.
+        /// </summary>
+        /// <param name="del">The test delegate</param>
         public static void Multiple(TestDelegate del)
         {
             del();
