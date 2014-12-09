@@ -86,19 +86,6 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="expected">The expected Stream</param>
         /// <param name="actual">The actual Stream</param>
-        /// <param name="message">The message to display if objects are not equal</param>
-        static public void AreEqual(Stream expected, Stream actual, string message)
-        {
-            AreEqual(expected, actual, message, null);
-        }
-
-        /// <summary>
-        /// Verifies that two Streams are equal.  Two Streams are considered
-        /// equal if both are null, or if both have the same value byte for byte.
-        /// If they are not equal an <see cref="AssertionException"/> is thrown.
-        /// </summary>
-        /// <param name="expected">The expected Stream</param>
-        /// <param name="actual">The actual Stream</param>
         static public void AreEqual(Stream expected, Stream actual)
         {
             AreEqual(expected, actual, string.Empty, null);
@@ -123,19 +110,6 @@ namespace NUnit.Framework
             {
                 AreEqual(exStream, acStream, message, args);
             }
-        }
-
-        /// <summary>
-        /// Verifies that two files are equal.  Two files are considered
-        /// equal if both are null, or if both have the same value byte for byte.
-        /// If they are not equal an <see cref="AssertionException"/> is thrown.
-        /// </summary>
-        /// <param name="expected">A file containing the value that is expected</param>
-        /// <param name="actual">A file containing the actual value</param>
-        /// <param name="message">The message to display if objects are not equal</param>
-        static public void AreEqual(FileInfo expected, FileInfo actual, string message)
-        {
-            AreEqual(expected, actual, message, null);
         }
 
         /// <summary>
@@ -178,19 +152,6 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="expected">The path to a file containing the value that is expected</param>
         /// <param name="actual">The path to a file containing the actual value</param>
-        /// <param name="message">The message to display if objects are not equal</param>
-        static public void AreEqual(string expected, string actual, string message)
-        {
-            AreEqual(expected, actual, message, null);
-        }
-
-        /// <summary>
-        /// Verifies that two files are equal.  Two files are considered
-        /// equal if both are null, or if both have the same value byte for byte.
-        /// If they are not equal an <see cref="AssertionException"/> is thrown.
-        /// </summary>
-        /// <param name="expected">The path to a file containing the value that is expected</param>
-        /// <param name="actual">The path to a file containing the actual value</param>
         static public void AreEqual(string expected, string actual)
         {
             AreEqual(expected, actual, string.Empty, null);
@@ -222,18 +183,6 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="expected">The expected Stream</param>
         /// <param name="actual">The actual Stream</param>
-        /// <param name="message">The message to be displayed when the Streams are the same.</param>
-        static public void AreNotEqual(Stream expected, Stream actual, string message)
-        {
-            AreNotEqual(expected, actual, message, null);
-        }
-
-        /// <summary>
-        /// Asserts that two Streams are not equal. If they are equal
-        /// an <see cref="AssertionException"/> is thrown.
-        /// </summary>
-        /// <param name="expected">The expected Stream</param>
-        /// <param name="actual">The actual Stream</param>
         static public void AreNotEqual(Stream expected, Stream actual)
         {
             AreNotEqual(expected, actual, string.Empty, null);
@@ -256,18 +205,6 @@ namespace NUnit.Framework
             {
                 AreNotEqual(exStream, acStream, message, args);
             }
-        }
-
-        /// <summary>
-        /// Asserts that two files are not equal. If they are equal
-        /// an <see cref="AssertionException"/> is thrown.
-        /// </summary>
-        /// <param name="expected">A file containing the value that is expected</param>
-        /// <param name="actual">A file containing the actual value</param>
-        /// <param name="message">The message to display if objects are not equal</param>
-        static public void AreNotEqual(FileInfo expected, FileInfo actual, string message)
-        {
-            AreNotEqual(expected, actual, message, null);
         }
 
         /// <summary>
@@ -307,18 +244,6 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="expected">The path to a file containing the value that is expected</param>
         /// <param name="actual">The path to a file containing the actual value</param>
-        /// <param name="message">The message to display if objects are not equal</param>
-        static public void AreNotEqual(string expected, string actual, string message)
-        {
-            AreNotEqual(expected, actual, message, null);
-        }
-
-        /// <summary>
-        /// Asserts that two files are not equal. If they are equal
-        /// an <see cref="AssertionException"/> is thrown.
-        /// </summary>
-        /// <param name="expected">The path to a file containing the value that is expected</param>
-        /// <param name="actual">The path to a file containing the actual value</param>
         static public void AreNotEqual(string expected, string actual)
         {
             AreNotEqual(expected, actual, string.Empty, null);
@@ -348,17 +273,6 @@ namespace NUnit.Framework
         /// an <see cref="AssertionException"/> is thrown.
         /// </summary>
         /// <param name="actual">A file containing the actual value</param>
-        /// <param name="message">The message to display if objects are not equal</param>
-        static public void Exists(FileInfo actual, string message)
-        {
-            Exists(actual, message, null);
-        }
-
-        /// <summary>
-        /// Asserts that the file exists. If it does not exist
-        /// an <see cref="AssertionException"/> is thrown.
-        /// </summary>
-        /// <param name="actual">A file containing the actual value</param>
         static public void Exists(FileInfo actual)
         {
             Exists(actual, string.Empty, null);
@@ -377,17 +291,6 @@ namespace NUnit.Framework
         static public void Exists(string actual, string message, params object[] args)
         {
             Assert.That(actual, new FileOrDirectoryExistsConstraint().IgnoreDirectories, message, args);
-        }
-
-        /// <summary>
-        /// Asserts that the file exists. If it does not exist
-        /// an <see cref="AssertionException"/> is thrown.
-        /// </summary>
-        /// <param name="actual">The path to a file containing the actual value</param>
-        /// <param name="message">The message to display if objects are not equal</param>
-        static public void Exists(string actual, string message)
-        {
-            Exists(actual, message, null);
         }
 
         /// <summary>
@@ -424,17 +327,6 @@ namespace NUnit.Framework
         /// an <see cref="AssertionException"/> is thrown.
         /// </summary>
         /// <param name="actual">A file containing the actual value</param>
-        /// <param name="message">The message to display if objects are not equal</param>
-        static public void DoesNotExist(FileInfo actual, string message)
-        {
-            DoesNotExist(actual, message, null);
-        }
-
-        /// <summary>
-        /// Asserts that the file does not exist. If it does exist
-        /// an <see cref="AssertionException"/> is thrown.
-        /// </summary>
-        /// <param name="actual">A file containing the actual value</param>
         static public void DoesNotExist(FileInfo actual)
         {
             DoesNotExist(actual, string.Empty, null);
@@ -453,17 +345,6 @@ namespace NUnit.Framework
         static public void DoesNotExist(string actual, string message, params object[] args)
         {
             Assert.That(actual, new NotConstraint(new FileOrDirectoryExistsConstraint().IgnoreDirectories), message, args);
-        }
-
-        /// <summary>
-        /// Asserts that the file does not exist. If it does exist
-        /// an <see cref="AssertionException"/> is thrown.
-        /// </summary>
-        /// <param name="actual">The path to a file containing the actual value</param>
-        /// <param name="message">The message to display if objects are not equal</param>
-        static public void DoesNotExist(string actual, string message)
-        {
-            DoesNotExist(actual, message, null);
         }
 
         /// <summary>

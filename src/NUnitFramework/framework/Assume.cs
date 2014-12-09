@@ -83,18 +83,6 @@ namespace NUnit.Framework
         /// Apply a constraint to an actual value, succeeding if the constraint
         /// is satisfied and throwing an InconclusiveException on failure.
         /// </summary>
-        /// <param name="expr">A Constraint expression to be applied</param>
-        /// <param name="del">An ActualValueDelegate returning the value to be tested</param>
-        /// <param name="message">The message that will be displayed on failure</param>
-        static public void That<TActual>(ActualValueDelegate<TActual> del, IResolveConstraint expr, string message)
-        {
-            Assume.That(del, expr.Resolve(), message, null);
-        }
-
-        /// <summary>
-        /// Apply a constraint to an actual value, succeeding if the constraint
-        /// is satisfied and throwing an InconclusiveException on failure.
-        /// </summary>
         /// <param name="del">An ActualValueDelegate returning the value to be tested</param>
         /// <param name="expr">A Constraint expression to be applied</param>
         /// <param name="message">The message that will be displayed on failure</param>
@@ -127,17 +115,6 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Asserts that a condition is true. If the condition is false the method throws
-        /// an <see cref="InconclusiveException"/>.
-        /// </summary>
-        /// <param name="condition">The evaluated condition</param>
-        /// <param name="message">The message to display if the condition is false</param>
-        static public void That(bool condition, string message)
-        {
-            Assume.That(condition, Is.True, message, null);
-        }
-
-        /// <summary>
         /// Asserts that a condition is true. If the condition is false the 
         /// method throws an <see cref="InconclusiveException"/>.
         /// </summary>
@@ -160,17 +137,6 @@ namespace NUnit.Framework
         static public void That(Func<bool> condition, string message, params object[] args)
         {
             Assume.That(condition.Invoke(), Is.True, message, args);
-        }
-
-        /// <summary>
-        /// Asserts that a condition is true. If the condition is false the method throws
-        /// an <see cref="InconclusiveException"/>.
-        /// </summary>
-        /// <param name="condition">A lambda that returns a Boolean</param>
-        /// <param name="message">The message to display if the condition is false</param>
-        static public void That(Func<bool> condition, string message)
-        {
-            Assume.That(condition.Invoke(), Is.True, message, null);
         }
 
         /// <summary>
@@ -219,18 +185,6 @@ namespace NUnit.Framework
         /// Apply a constraint to an actual value, succeeding if the constraint
         /// is satisfied and throwing an InconclusiveException on failure.
         /// </summary>
-        /// <param name="expression">A Constraint to be applied</param>
-        /// <param name="actual">The actual value to test</param>
-        /// <param name="message">The message that will be displayed on failure</param>
-        static public void That<TActual>(TActual actual, IResolveConstraint expression, string message)
-        {
-            Assume.That(actual, expression, message, null);
-        }
-
-        /// <summary>
-        /// Apply a constraint to an actual value, succeeding if the constraint
-        /// is satisfied and throwing an InconclusiveException on failure.
-        /// </summary>
         /// <param name="expression">A Constraint expression to be applied</param>
         /// <param name="actual">The actual value to test</param>
         /// <param name="message">The message that will be displayed on failure</param>
@@ -247,52 +201,6 @@ namespace NUnit.Framework
                 throw new InconclusiveException(writer.ToString());
             }
         }
-
-        #pragma warning disable 3006
-        /// <summary>
-        /// Apply a constraint to a referenced value, succeeding if the constraint
-        /// is satisfied and throwing an InconclusiveException on failure.
-        /// </summary>
-        /// <param name="actual">The actual value to test</param>
-        /// <param name="expression">A Constraint to be applied</param>
-        static public void That<TActual>(ref TActual actual, IResolveConstraint expression)
-        {
-            Assume.That(ref actual, expression, null, null);
-        }
-
-        /// <summary>
-        /// Apply a constraint to a referenced value, succeeding if the constraint
-        /// is satisfied and throwing an InconclusiveException on failure.
-        /// </summary>
-        /// <param name="actual">The actual value to test</param>
-        /// <param name="expression">A Constraint to be applied</param>
-        /// <param name="message">The message that will be displayed on failure</param>
-        static public void That<TActual>(ref TActual actual, IResolveConstraint expression, string message)
-        {
-            Assume.That(ref actual, expression, message, null);
-        }
-
-        /// <summary>
-        /// Apply a constraint to a referenced value, succeeding if the constraint
-        /// is satisfied and throwing an InconclusiveException on failure.
-        /// </summary>
-        /// <param name="actual">The actual value to test</param>
-        /// <param name="expression">A Constraint to be applied</param>
-        /// <param name="message">The message that will be displayed on failure</param>
-        /// <param name="args">Arguments to be used in formatting the message</param>
-        static public void That<TActual>(ref TActual actual, IResolveConstraint expression, string message, params object[] args)
-        {
-            var constraint = expression.Resolve();
-
-            var result = constraint.ApplyTo(ref actual);
-            if (!result.IsSuccess)
-            {
-                MessageWriter writer = new TextMessageWriter(message, args);
-                result.WriteMessageTo(writer);
-                throw new InconclusiveException(writer.ToString());
-            }
-        }
-        #pragma warning restore 3006
 
         #endregion
     }

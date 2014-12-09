@@ -247,16 +247,7 @@ namespace NUnit.Framework
         {
             Assert.That(actual, new CollectionContainsConstraint(expected) ,message, args);
         }
-        /// <summary>
-        /// Asserts that an object is contained in a list.
-        /// </summary>
-        /// <param name="expected">The expected object</param>
-        /// <param name="actual">The list to be examined</param>
-        /// <param name="message">The message to display in case of failure</param>
-        public static void Contains(object expected, ICollection actual, string message)
-        {
-            Assert.That(actual, new CollectionContainsConstraint(expected) ,message, null);
-        }
+
         /// <summary>
         /// Asserts that an object is contained in a list.
         /// </summary>

@@ -87,10 +87,10 @@ namespace NUnit.Framework.Constraints
         }
 
         [Test]
-        public void SimpleTestUsingReference()
+        public void SimpleTestUsingBoolean()
         {
             SetValuesAfterDelay(DELAY);
-            Assert.That(ref boolValue, new DelayedConstraint(new EqualConstraint(true), AFTER, POLLING));
+            Assert.That(() => boolValue, new DelayedConstraint(new EqualConstraint(true), AFTER, POLLING));
         }
 
         [Test]
@@ -114,13 +114,6 @@ namespace NUnit.Framework.Constraints
         }
 
         [Test]
-        public void CanTestContentsOfRefList()
-        {
-            SetValuesAfterDelay(1);
-            Assert.That(ref list, Has.Count.EqualTo(1).After(AFTER, POLLING));
-        }
-
-        [Test]
         public void CanTestContentsOfDelegateReturningList()
         {
             SetValuesAfterDelay(1);
@@ -132,13 +125,6 @@ namespace NUnit.Framework.Constraints
         {
             SetValuesAfterDelay(DELAY);
             Assert.That(() => statusString, Is.Not.Null.And.Length.GreaterThan(0).After(AFTER, POLLING));
-        }
-
-        [Test]
-        public void CanTestInitiallyNullReference()
-        {
-            SetValuesAfterDelay(DELAY);
-            Assert.That(ref statusString, Is.Not.Null.And.Length.GreaterThan(0).After(AFTER, POLLING));
         }
 
         [Test]
