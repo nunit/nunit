@@ -35,6 +35,16 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public class TypeHelper
     {
+        internal sealed class NonmatchingTypeClass
+        {
+        }
+
+        /// <summary>
+        /// A special value, which is used to indicate that BestCommonType() method
+        /// was unable to find a common type for the specified arguments.
+        /// </summary>
+        public static readonly Type NonmatchingType = typeof( NonmatchingTypeClass );
+
         /// <summary>
         /// Gets the display name for a Type as used by NUnit.
         /// </summary>
@@ -126,6 +136,9 @@ namespace NUnit.Framework.Internal
         /// <returns>Either type1 or type2, depending on which is more general.</returns>
         public static Type BestCommonType(Type type1, Type type2)
         {
+            if ( type1 == TypeHelper.NonmatchingType ) return TypeHelper.NonmatchingType;
+            if ( type2 == TypeHelper.NonmatchingType ) return TypeHelper.NonmatchingType;
+
             if (type1 == type2) return type1;
             if (type1 == null) return type2;
             if (type2 == null) return type1;
@@ -166,7 +179,10 @@ namespace NUnit.Framework.Internal
                 if (type2 == typeof(sbyte)) return type2;
             }
 
-            return type1;
+            if ( type1.IsAssignableFrom( type2 ) ) return type1;
+            if ( type2.IsAssignableFrom( type1 ) ) return type2;
+
+            return TypeHelper.NonmatchingType;
         }
 
         /// <summary>

@@ -202,8 +202,8 @@ namespace NUnit.Framework.Internal.Builders
             if (testMethod.Method.IsGenericMethodDefinition)
             {
                 Type[] typeArguments = GetTypeArgumentsForMethod(testMethod.Method, arglist);
-                foreach (object o in typeArguments)
-                    if (o == null)
+                foreach (Type o in typeArguments)
+                    if (o == null || o == TypeHelper.NonmatchingType)
                     {
                         return MarkAsNotRunnable(testMethod, "Unable to determine type arguments for method");
                     }
@@ -220,27 +220,21 @@ namespace NUnit.Framework.Internal.Builders
 
         private static Type[] GetTypeArgumentsForMethod(MethodInfo method, object[] arglist)
         {
-            Type[] typeParameters = method.GetGenericArguments();
-            Type[] typeArguments = new Type[typeParameters.Length];
+            Type[] typeArguments = new Type[method.GetGenericArguments().Length];
             ParameterInfo[] parameters = method.GetParameters();
 
-            for (int typeIndex = 0; typeIndex < typeArguments.Length; typeIndex++)
+            for ( int argIndex = 0; argIndex < parameters.Length; argIndex++ )
             {
-                Type typeParameter = typeParameters[typeIndex];
+                var pi = parameters[argIndex];
+                var arg = arglist[argIndex];
 
-                for (int argIndex = 0; argIndex < parameters.Length; argIndex++)
+                if ( pi.ParameterType.IsGenericParameter )
                 {
-                    if (parameters[argIndex].ParameterType.Equals(typeParameter))
-                    {
-                        // If a null arg is provided, pass null as the Type
-                        // BestCommonType knows how to deal with this
-                        Type argType = arglist[argIndex] != null
-                            ? arglist[argIndex].GetType()
-                            : null;
-                        typeArguments[typeIndex] = TypeHelper.BestCommonType(
-                            typeArguments[typeIndex],
-                            argType);
-                    }
+                    // If a null arg is provided, pass null as the Type
+                    // BestCommonType knows how to deal with this
+                    var typeArgIndex = pi.ParameterType.GenericParameterPosition;
+                    var argType = arg != null ? arg.GetType() : null;
+                    typeArguments[typeArgIndex] = TypeHelper.BestCommonType( typeArguments[typeArgIndex], argType );
                 }
             }
 
