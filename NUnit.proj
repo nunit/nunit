@@ -247,10 +247,10 @@
 	<!-- *********************************************************************** -->
 
 	<Target Name="TestAll" Label="Run tests for all framework builds, the engine and the console"
-			DependsOnTargets="TestAllFrameworks;TestEngine;TestConsole" />
+			DependsOnTargets="TestAllFrameworks;TestEngine;TestV2Driver;TestConsole" />
 	  
 	<Target Name="Test" Label="Run tests for the current framework, engine and console"
-			DependsOnTargets="TestFramework;TestEngine;TestConsole" />
+			DependsOnTargets="TestFramework;TestEngine;TestV2Driver;TestConsole" />
 
 	<Target Name="TestAllFrameworks"
 			Label="Test the framework for the current config and all runtimes">
@@ -297,7 +297,21 @@
 		
 		<Exec WorkingDirectory="$(EngineBuildDir)"
 			  Command="$(ManagedExeLauncher) $(ConsoleRunner) nunit.engine.tests.dll -result:$(ResultDir)/EngineResult.xml;format=$(ResultFormat) $(TestOptions)"
-			  ContinueOnError="$(ContinueOnFailure)"/>
+			  ContinueOnError="ErrorAndContinue"/>
+
+	</Target>
+
+	<Target Name="TestV2Driver"
+		Label = "Run tests of the NUnit V2 Driver"
+		DependsOnTargets="_CreateResultDir">
+
+		<Message Text="******************************************************************" />
+		<Message Text="* Testing the NUnit V2 Driver - $(Configuration)" />
+		<Message Text="******************************************************************" />
+		
+		<Exec WorkingDirectory="$(EngineBuildDir)"
+			Command="$(ManagedExeLauncher) $(ConsoleRunner) v2-driver/tests/nunit.v2.driver.tests.dll -result:$(ResultDir)/V2DriverResult.xml;format=$(ResultFormat) -process:Single $(TestOptions)"
+			ContinueOnError="$(ContinueOnFailure)"/>
 		
 	</Target>
 	
@@ -488,6 +502,8 @@
 		<EngineProjects Include="$(EngineSrcDir)\nunit-agent\nunit-agent.csproj" />
 		<EngineProjects Include="$(EngineSrcDir)\nunit-agent\nunit-agent-x86.csproj" />
 		<EngineProjects Include="$(EngineSrcDir)\nunit.engine.tests\nunit.engine.tests.csproj" />
+		<EngineProjects Include="$(EngineSrcDir)\nunit.v2.driver\nunit.v2.driver.csproj" />
+		<EngineProjects Include="$(EngineSrcDir)\nunit.v2.driver.tests\nunit.v2.driver.tests.csproj" />
 	</ItemGroup>
 
 	<ItemGroup Label="Projects for building the console runner">
