@@ -32,10 +32,12 @@ namespace NUnit.Engine.Services
     /// </summary>
     public class SettingsService : SettingsStore, IService
     {
+        private const string SETTINGS_FILE = "Nunit30Settings.xml";
+
         public SettingsService() { }
 
-        public SettingsService(string settingsFile, bool writeable)
-            : base(settingsFile, writeable) { }
+        public SettingsService(bool writeable)
+            : base(Path.Combine(NUnitConfiguration.ApplicationDirectory, SETTINGS_FILE), writeable) { }
 
         #region IService Implementation
 
