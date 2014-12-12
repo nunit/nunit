@@ -50,6 +50,7 @@
     <Compile Include="ActionAttributeFixture.cs" />
     <Compile Include="AsyncDummyFixture.cs" />
     <Compile Include="AsyncRealFixture.cs" />
+    <Compile Include="GenericTestMethodData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="AssertCountFixture.cs" />
     <Compile Include="AssertFailFixture.cs" />
