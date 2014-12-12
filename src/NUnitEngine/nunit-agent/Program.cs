@@ -80,7 +80,7 @@ namespace NUnit.Agent
 #endif
 
             // Create SettingsService early so we know the trace level right at the start
-            SettingsService settingsService = new SettingsService("NUnit30Settings.xml", false);
+            SettingsService settingsService = new SettingsService(false);
             //InternalTrace.Initialize("nunit-agent_%p.log", (InternalTraceLevel)settingsService.GetSetting("Options.InternalTraceLevel", InternalTraceLevel.Default));
 
             //log.Info("Agent process {0} starting", Process.GetCurrentProcess().Id);
