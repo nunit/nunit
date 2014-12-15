@@ -6,7 +6,7 @@
     <ProductVersion>3.9</ProductVersion>
     <ProjectGuid>20132190-582e-462e-b18b-4b2cedddb6c4</ProjectGuid>
     <SchemaVersion>2.0</SchemaVersion>
-    <OutputName>NUnit-3.0.0</OutputName>
+    <OutputName>NUnit</OutputName>
     <OutputType>Package</OutputType>
     <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' AND '$(MSBuildExtensionsPath32)' != '' ">$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
     <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' ">$(MSBuildExtensionsPath)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
@@ -176,4 +176,18 @@
 	<Target Name="AfterBuild">
 	</Target>
 	-->
+    <Target Name="BeforeBuild">
+        <GetAssemblyIdentity AssemblyFiles="$(SolutionDir)bin\$(Configuration)\nunit.engine.dll">
+            <Output TaskParameter="Assemblies" ItemName="AssemblyVersions" />
+        </GetAssemblyIdentity>
+        <CreateProperty Value="$(OutputName).%(AssemblyVersions.Version)">
+            <Output TaskParameter="Value" PropertyName="TargetName"/>
+        </CreateProperty>
+        <CreateProperty Value="$(TargetName)$(TargetExt)">
+            <Output TaskParameter="Value" PropertyName="TargetFileName"/>
+        </CreateProperty>
+        <CreateProperty Value="$(TargetDir)$(TargetFileName)">
+            <Output TaskParameter="Value" PropertyName="TargetPath"/>
+        </CreateProperty>
+    </Target>
 </Project>
