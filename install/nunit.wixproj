@@ -1,0 +1,179 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>3.9</ProductVersion>
+    <ProjectGuid>20132190-582e-462e-b18b-4b2cedddb6c4</ProjectGuid>
+    <SchemaVersion>2.0</SchemaVersion>
+    <OutputName>NUnit-3.0.0</OutputName>
+    <OutputType>Package</OutputType>
+    <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' AND '$(MSBuildExtensionsPath32)' != '' ">$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
+    <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' ">$(MSBuildExtensionsPath)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <OutputPath>$(SolutionDir)bin\$(Configuration)\</OutputPath>
+    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
+    <DefineConstants>Debug</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <OutputPath>$(SolutionDir)bin\$(Configuration)\</OutputPath>
+    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="NUnit.wxs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\src\NUnitConsole\nunit-console\nunit-console.csproj">
+      <Name>nunit-console</Name>
+      <Project>{0de218ca-afb8-423a-9cd2-e22deac55c46}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
+    </ProjectReference>
+    <ProjectReference Include="..\src\NUnitEngine\nunit-agent\nunit-agent-x86.csproj">
+      <Name>nunit-agent-x86</Name>
+      <Project>{28b605b2-e2e9-417e-8369-49e263f1f31b}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
+    </ProjectReference>
+    <ProjectReference Include="..\src\NUnitEngine\nunit-agent\nunit-agent.csproj">
+      <Name>nunit-agent</Name>
+      <Project>{c2a8fc7a-fa64-46ea-af6d-73d6b371dbf8}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
+    </ProjectReference>
+    <ProjectReference Include="..\src\NUnitEngine\nunit.engine.api\nunit.engine.api.csproj">
+      <Name>nunit.engine.api</Name>
+      <Project>{775fad50-3623-4922-97c4-dfb29a8be4c7}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
+    </ProjectReference>
+    <ProjectReference Include="..\src\NUnitEngine\nunit.engine\nunit.engine.csproj">
+      <Name>nunit.engine</Name>
+      <Project>{372a3447-d657-40ff-a089-77c19fec30c8}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
+    </ProjectReference>
+    <ProjectReference Include="..\src\NUnitFramework\framework\nunit.framework-2.0.csproj">
+      <Name>nunit.framework-2.0</Name>
+      <Project>{12b66b03-90f1-4992-bd33-bdf3c69ae49e}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
+    </ProjectReference>
+    <ProjectReference Include="..\src\NUnitFramework\framework\nunit.framework-3.5.csproj">
+      <Name>nunit.framework-3.5</Name>
+      <Project>{ee7e1d47-c686-496a-81f2-b05f085bc21f}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
+    </ProjectReference>
+    <ProjectReference Include="..\src\NUnitFramework\framework\nunit.framework-4.0.csproj">
+      <Name>nunit.framework-4.0</Name>
+      <Project>{6a281c98-b74d-403b-8536-966871b992e3}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
+    </ProjectReference>
+    <ProjectReference Include="..\src\NUnitFramework\framework\nunit.framework-4.5.csproj">
+      <Name>nunit.framework-4.5</Name>
+      <Project>{d209c368-1277-4ea6-a887-aa6eba51ab99}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
+    </ProjectReference>
+    <ProjectReference Include="..\src\NUnitFramework\framework\nunit.framework-portable.csproj">
+      <Name>nunit.framework-portable</Name>
+      <Project>{d6fbbb3a-f6b8-45bb-b657-a7226ab96624}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
+    </ProjectReference>
+    <ProjectReference Include="..\src\NUnitFramework\framework\nunit.framework-sl-5.0.csproj">
+      <Name>nunit.framework-sl-5.0</Name>
+      <Project>{3deb15f9-e7da-403f-b6d3-a8499310397f}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
+    </ProjectReference>
+    <ProjectReference Include="..\src\NUnitFramework\nunitlite.runner\nunitlite.runner-2.0.csproj">
+      <Name>nunitlite.runner-2.0</Name>
+      <Project>{28c7b9d6-be1f-45e5-952c-0d5c9ca3efdf}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
+    </ProjectReference>
+    <ProjectReference Include="..\src\NUnitFramework\nunitlite.runner\nunitlite.runner-3.5.csproj">
+      <Name>nunitlite.runner-3.5</Name>
+      <Project>{ce9ef1ee-b954-4dea-b016-952f5f4b11a2}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
+    </ProjectReference>
+    <ProjectReference Include="..\src\NUnitFramework\nunitlite.runner\nunitlite.runner-4.0.csproj">
+      <Name>nunitlite.runner-4.0</Name>
+      <Project>{dbd0c8b0-be4e-4cbf-aad4-44bea2ea830b}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
+    </ProjectReference>
+    <ProjectReference Include="..\src\NUnitFramework\nunitlite.runner\nunitlite.runner-4.5.csproj">
+      <Name>nunitlite.runner-4.5</Name>
+      <Project>{46ec0bc1-8f51-4b4d-b967-2ee452ea68fc}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
+    </ProjectReference>
+    <ProjectReference Include="..\src\NUnitFramework\nunitlite.runner\nunitlite.runner-portable-sl-5.0.csproj">
+      <Name>nunitlite.runner-portable-sl-5.0</Name>
+      <Project>{9efad088-713e-4269-adfc-1f21ca872a94}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
+    </ProjectReference>
+    <ProjectReference Include="..\src\NUnitFramework\nunitlite.runner\nunitlite.runner-sl-5.0.csproj">
+      <Name>nunitlite.runner-sl-5.0</Name>
+      <Project>{0a5f920a-1bf5-4dac-b799-0c618b203797}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WixExtension Include="WixUIExtension">
+      <HintPath>$(WixExtDir)\WixUIExtension.dll</HintPath>
+      <Name>WixUIExtension</Name>
+    </WixExtension>
+  </ItemGroup>
+  <Import Project="$(WixTargetsPath)" />
+  <!--
+	To modify your build process, add your task inside one of the targets below and uncomment it.
+	Other similar extension points exist, see Wix.targets.
+	<Target Name="BeforeBuild">
+	</Target>
+	<Target Name="AfterBuild">
+	</Target>
+	-->
+</Project>
