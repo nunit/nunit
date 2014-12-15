@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<Product Id="*" 
+             Name="NUnit !(bind.FileVersion.nunit.engine.dll)" 
+             Language="1033" 
+             Version="!(bind.FileVersion.nunit.engine.dll)" 
+             Manufacturer="nunit.org" 
+             UpgradeCode="5bdef49a-7a86-42b8-9834-bf1eed5b36cc">
+        
+		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+
+        <Condition Message="NUnit requires .NET 2.0, .NET 4.0 or Mono to be installed as a prerequisite.">
+            FRAMEWORK20 OR FRAMEWORK40 OR MONODIRECTORY
+        </Condition>
+
+        <!-- ***************************************************************** -->
+        <!-- **********  Define Properties used in the install      ********** -->
+        <!-- ***************************************************************** -->
+
+        <Property Id="FRAMEWORK20">
+            <RegistrySearch Id="Framework20Registry" Type="raw" Root="HKLM" Key="Software\Microsoft\.NETFramework\policy\v2.0" Name="50727" />
+        </Property>
+
+        <Property Id="FRAMEWORK40">
+            <RegistrySearch Id="Framework40Registry" Type="raw" Root="HKLM" Key="Software\Microsoft\.NETFramework\policy\v4.0" Name="30319" />
+        </Property>
+
+        <Property Id="MONODEFAULTCLR">
+            <RegistrySearch Id="MonoDefaultClr" Type="raw" Root="HKLM" Key="Software\Novell\Mono" Name="DefaultCLR" />
+        </Property>
+
+        <Property Id="MONODIRECTORY">
+            <RegistrySearch Id="MonoDirectory" Type="directory" Root="HKLM" Key="Software\Novell\Mono\[MONODEFAULTCLR]" Name="SDKInstallRoot" />
+        </Property>
+
+        <Property Id="CMD_EXE" Value="[!SystemFolder]cmd.exe" />
+        
+        <!-- ***************************************************************** -->
+        <!-- *********  Properties for the Add Remove Programs list  ********* -->
+        <!-- ***************************************************************** -->
+
+        <Property Id="ARPCONTACT" Value="Charlie Poole" />
+        <Property Id="ARPPRODUCTICON" Value="nunit_icon.exe" />
+        <Property Id="ARPHELPLINK" Value="http://lists.sourceforge.net/lists/listinfo/nunit-users" />
+        <Property Id="ARPURLINFOABOUT" Value="NUnit is a testing framework for all .NET languages" />
+        <Property Id="ARPURLUPDATEINFO" Value="http://nunit.org" />
+
+		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+		<MediaTemplate />
+
+        <!-- ***************************************************************** -->
+        <!-- **********  Define our GUI using standard WiX UI       ********** -->
+        <!-- ***************************************************************** -->
+        
+        <WixVariable Id="WixUILicenseRtf" Value="$(var.SolutionDir)License.rtf" />
+        <UIRef Id="WixUI_Mondo" />
+        <UIRef Id="WixUI_ErrorProgressText" />
+
+        <!-- ***************************************************************** -->
+        <!-- **********      Define the NUnit feature tree          ********** -->
+        <!-- ***************************************************************** -->
+        
+        <Feature Id="nunit" 
+                 ConfigurableDirectory="INSTALLDIR" 
+                 Level="1" 
+                 Title="NUnit !(bind.FileVersion.nunit.engine.dll)" 
+                 Display="expand" 
+                 Description="Installs the NUnit console runner and supporting assemblies required to write and run tests.">
+			<ComponentGroupRef Id="nunit.engine" />
+		</Feature>
+	</Product>
+
+    <!-- ***************************************************************** -->
+    <!-- **********       Define Directory Structure            ********** -->
+    <!-- ***************************************************************** -->
+    
+	<Fragment>
+		<Directory Id="TARGETDIR" Name="SourceDir">
+			<Directory Id="ProgramFilesFolder">
+                <Directory Id="INSTALLDIR" Name="NUnit !(bind.FileVersion.nunit.engine.dll)">
+                    <Directory Id="bin" Name="bin">
+                        <Directory Id="net20" Name="net-2.0" />
+                        <Directory Id="net35" Name="net-3.5" />
+                        <Directory Id="net40" Name="net-4.0" />
+                        <Directory Id="net45" Name="net-4.5" />
+                        <Directory Id="portable" Name="portable" />
+                        <Directory Id="sl50" Name="sl-5.0" />
+                    </Directory>
+                </Directory>
+			</Directory>
+		</Directory>
+	</Fragment>
+
+	<Fragment>
+		<ComponentGroup Id="nunit.engine" Directory="INSTALLDIR">
+			<Component Id="nunit.engine">
+                <File Id="nunit.engine.dll" Source="$(var.nunit.engine.TargetPath)" />
+			</Component>
+            <Component Id="NUnitEngineApi">
+                <File Id="nunit.engine.api.dll" Source="$(var.nunit.engine.api.TargetPath)" />
+                <File Id="nunit.engine.api.xml" Source="$(var.nunit.engine.api.TargetDir)$(var.nunit.engine.api.TargetName).xml" />
+            </Component>
+		</ComponentGroup>
+	</Fragment>
+</Wix>
