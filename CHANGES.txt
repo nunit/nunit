@@ -1,8 +1,5 @@
 ﻿NOTE: A combined description of changes since NUnit 2.6.3 is under development along with a summary statement of major features. Both will be available in the next release.
 
-<<<<<<< HEAD
-NUnit 3.0.0 Alpha 3 - November 25, 2014
-=======
 NUnit 3.0.0 Alpha 3 - November 29, 2014
 
 Breaking Changes
@@ -30,6 +27,7 @@ Engine
    depending on the platform specified for the test assembly. 
 
 Console
+
  * The console runner now runs tests in a separate process per assembly by default. They may
    still be run in process or in a single separate process by use of command-line options.
  * The console runner now starts in the highest version of the .NET runtime available, making
@@ -39,7 +37,6 @@ Console
  * The -teamcity option is now supported.
 
 Issues Resolved
->>>>>>> 1be9f717592e7196813007fadca133dced4abc22
 
  * 12   Compact framework should support generic methods
  * 145  NUnit-console fails if test result message contains invalid xml characters
@@ -65,11 +62,7 @@ Issues Resolved
  * 337  Update Standard Defines page for .NET 3.0
  * 341  Move the NUnitLite runners to separate assemblies
  * 367  Refactor XML Escaping Tests
-<<<<<<< HEAD
- * 372  CF Build TestAsesemblyRunnerTests
-=======
  * 372  CF Build TestAssemblyRunnerTests
->>>>>>> 1be9f717592e7196813007fadca133dced4abc22
  * 373  Minor CF Test Fixes
  * 378  Correct documentation for PairwiseAttribute
  * 386  Console Output Improvements
@@ -182,10 +175,12 @@ Console Issues Resolved (Old nunit-console project, now combined with nunit)
 NUnit 2.9.7 - August 8, 2014
 
 Breaking Changes
+
  * NUnit no longer supports void async test methods. You should use a Task return Type instead.
  * The ExpectedExceptionAttribute is no longer supported. Use Assert.Throws() or Assert.That(..., Throws) instead for a more precise specification of where the exception is expected to be thrown.
 
 New Features
+
  * Parallel test execution is supported down to the Fixture level. Use ParallelizableAttribute to indicate types that may be run in parallel.
  * Async tests are supported for .NET 4.0 if the user has installed support for them.
  * A new FileExistsConstraint has been added along with FileAssert.Exists and FileAssert.DoesNotExist
@@ -237,6 +232,7 @@ NOTE: Bug Fixes below this point refer to the number of the bug in Launchpad.
 NUnit 2.9.6 - October 4, 2013
 
 Main Features
+
  * Separate projects for nunit-console and nunit.engine
  * New builds for .NET 4.5 and Silverlight
  * TestContext is now supported
@@ -320,6 +316,7 @@ Bug Fixes
  * 1225542 	Standardize commandline options for test harness
 
 Bug Fixes in 2.9.6 But Not Listed Here in the Release
+
  * 541699	Silverlight Support
  * 1222148	/framework switch does not recognize net-4.5
  * 1228979	Theories with all test cases inconclusive are not reported as failures
@@ -394,6 +391,7 @@ Bug Fixes
  * 432573 	Mono test should be at runtime
 
 NUnit 2.9.1 - August 27, 2009
+
 General
 
  * Created a separate project for the framework and framework tests
@@ -409,4 +407,3 @@ Bug Fixes
  * 417559 	Add Ignore to TestFixture, TestCase and TestCaseData
  * 417560 	Merge Assert.Throws and Assert.Catch changes from NUnit 2.5.2
  * 417564 	TimeoutAttribute on Assembly
-
