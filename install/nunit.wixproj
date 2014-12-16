@@ -144,14 +144,6 @@
       <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
       <RefTargetDir>INSTALLFOLDER</RefTargetDir>
     </ProjectReference>
-    <ProjectReference Include="..\src\NUnitFramework\nunitlite.runner\nunitlite.runner-portable-sl-5.0.csproj">
-      <Name>nunitlite.runner-portable-sl-5.0</Name>
-      <Project>{9efad088-713e-4269-adfc-1f21ca872a94}</Project>
-      <Private>True</Private>
-      <DoNotHarvest>True</DoNotHarvest>
-      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
-      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
-    </ProjectReference>
     <ProjectReference Include="..\src\NUnitFramework\nunitlite.runner\nunitlite.runner-sl-5.0.csproj">
       <Name>nunitlite.runner-sl-5.0</Name>
       <Project>{0a5f920a-1bf5-4dac-b799-0c618b203797}</Project>
@@ -176,18 +168,18 @@
 	<Target Name="AfterBuild">
 	</Target>
 	-->
-    <Target Name="BeforeBuild">
-        <GetAssemblyIdentity AssemblyFiles="$(SolutionDir)bin\$(Configuration)\nunit.engine.dll">
-            <Output TaskParameter="Assemblies" ItemName="AssemblyVersions" />
-        </GetAssemblyIdentity>
-        <CreateProperty Value="$(OutputName).%(AssemblyVersions.Version)">
-            <Output TaskParameter="Value" PropertyName="TargetName"/>
-        </CreateProperty>
-        <CreateProperty Value="$(TargetName)$(TargetExt)">
-            <Output TaskParameter="Value" PropertyName="TargetFileName"/>
-        </CreateProperty>
-        <CreateProperty Value="$(TargetDir)$(TargetFileName)">
-            <Output TaskParameter="Value" PropertyName="TargetPath"/>
-        </CreateProperty>
-    </Target>
+  <Target Name="BeforeBuild">
+    <GetAssemblyIdentity AssemblyFiles="$(SolutionDir)bin\$(Configuration)\nunit.engine.dll">
+      <Output TaskParameter="Assemblies" ItemName="AssemblyVersions" />
+    </GetAssemblyIdentity>
+    <CreateProperty Value="$(OutputName).%(AssemblyVersions.Version)">
+      <Output TaskParameter="Value" PropertyName="TargetName" />
+    </CreateProperty>
+    <CreateProperty Value="$(TargetName)$(TargetExt)">
+      <Output TaskParameter="Value" PropertyName="TargetFileName" />
+    </CreateProperty>
+    <CreateProperty Value="$(TargetDir)$(TargetFileName)">
+      <Output TaskParameter="Value" PropertyName="TargetPath" />
+    </CreateProperty>
+  </Target>
 </Project>
