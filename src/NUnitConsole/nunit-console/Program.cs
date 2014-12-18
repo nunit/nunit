@@ -134,9 +134,6 @@ namespace NUnit.ConsoleRunner
                     catch (FileNotFoundException ex)
                     {
                         OutWriter.WriteLine(ColorStyle.Error, ex.Message);
-#if DEBUG
-                        OutWriter.WriteLine(ColorStyle.Error, ex.StackTrace);
-#endif
                         return ConsoleRunner.FILE_NOT_FOUND;
                     }
                     catch (DirectoryNotFoundException ex)

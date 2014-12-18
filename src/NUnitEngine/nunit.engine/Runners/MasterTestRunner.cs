@@ -33,10 +33,6 @@ namespace NUnit.Engine.Runners
     {
         private ITestEngineRunner _realRunner;
 
-        // Count of assemblies and projects passed in package
-        private int _assemblyCount;
-        private int _projectCount;
-
         public MasterTestRunner(ServiceContext services, TestPackage package) : base(services, package) { }
 
         public bool IsTestRunning { get; private set; }
@@ -60,7 +56,10 @@ namespace NUnit.Engine.Runners
         /// <returns>A TestEngineResult.</returns>
         protected override TestEngineResult LoadPackage()
         {
-            PerformPackageSetup(TestPackage);
+            // Temporarily using AggregatingTestRunner for everything
+            //_realRunner = new AggregatingTestRunner(Services, TestPackage);
+            _realRunner = Services.TestRunnerFactory.MakeTestRunner(TestPackage);
+
             return _realRunner.Load().Aggregate(TEST_RUN_ELEMENT, TestPackage.Name, TestPackage.FullName);
         }
 
@@ -202,53 +201,6 @@ namespace NUnit.Engine.Runners
         XmlNode ITestRunner.Explore(TestFilter filter)
         {
             return this.Explore(filter).Xml;
-        }
-
-        #endregion
-
-        #region HelperMethods
-
-        private void PerformPackageSetup(TestPackage package)
-        {
-            this.TestPackage = package;
-
-            // Expand projects, updating the count of projects and assemblies
-            ExpandProjects();
-
-            // If there is more than one project or a mix of assemblies and 
-            // projects, AggregatingTestRunner will call MakeTestRunner for
-            // each project or assembly.
-            _realRunner = _projectCount > 1 || _projectCount > 0 && _assemblyCount > 0
-                ? new AggregatingTestRunner(Services, package)
-                : Services.TestRunnerFactory.MakeTestRunner(package);
-        }
-
-        private void ExpandProjects()
-        {
-            if (TestPackage.TestFiles.Length > 0)
-            {
-                foreach (string testFile in TestPackage.TestFiles)
-                {
-                    TestPackage subPackage = new TestPackage(testFile);
-                    if (Services.ProjectService.IsProjectFile(testFile))
-                    {
-                        Services.ProjectService.ExpandProjectPackage(subPackage);
-                        _projectCount++;
-                    }
-                    else
-                        _assemblyCount++;
-                }
-            }
-            else
-            {
-                if (Services.ProjectService.IsProjectFile(TestPackage.FullName))
-                {
-                    Services.ProjectService.ExpandProjectPackage(TestPackage);
-                    _projectCount++;
-                }
-                else
-                    _assemblyCount++;
-            }
         }
 
         #endregion

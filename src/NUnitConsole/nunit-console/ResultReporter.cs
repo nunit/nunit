@@ -123,7 +123,7 @@ namespace NUnit.ConsoleRunner
 
         public void WriteAssemblyErrorsAndWarnings()
         {
-            foreach (XmlNode node in _result.SelectNodes("test-suite[@type='Assembly']"))
+            foreach (XmlNode node in _result.SelectNodes("descendant::test-suite[@type='Assembly']"))
             {
                 if (node.GetAttribute("runstate") == "NotRunnable")
                     WriteAssemblyMessage(ColorStyle.Error, node.SelectSingleNode("properties/property[@name='_SKIPREASON']").GetAttribute("value"));

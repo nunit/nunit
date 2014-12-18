@@ -45,6 +45,9 @@ namespace NUnit.Engine.Services
         // future, this responsibility will have to be passed to the driver itself.
         public IFrameworkDriver GetDriver(AppDomain domain, string assemblyPath, IDictionary<string, object> settings)
         {
+            if (!File.Exists(assemblyPath))
+                return new NotRunnableFrameworkDriver(assemblyPath, "File not found: " + assemblyPath);
+
             try
             {
                 var testAssembly = Assembly.ReflectionOnlyLoadFrom(assemblyPath);

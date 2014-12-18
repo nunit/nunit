@@ -29,28 +29,27 @@ using System.Reflection;
 namespace NUnit.Engine
 {
     /// <summary>
-    /// TestPackage holds information about a set of tests to
+    /// TestPackage holds information about a set of test files to
     /// be loaded by a TestRunner. Each TestPackage represents
-    /// tests for a single assembly. Multiple assemblies are
-    /// represented by use of subpackages.
+    /// tests for one or more test files. TestPackages may be named 
+    /// or anonymous, depending on how they are constructed.
     /// </summary>
     [Serializable]
     public class TestPackage
     {
-        private string fullName;
-        private List<string> testFiles = new List<string>();
-        private Dictionary<string, object> settings = new Dictionary<string, object>();
+        private List<string> _testFiles = new List<string>();
+        private Dictionary<string, object> _settings = new Dictionary<string, object>();
 
         #region Constructors
 
         /// <summary>
-        /// Construct a TestPackage, specifying a file path for
+        /// Construct a named TestPackage, specifying a file path for
         /// the assembly or project to be used.
         /// </summary>
         /// <param name="filePath">The file path.</param>
         public TestPackage(string filePath)
         {
-            fullName = Path.GetFullPath(filePath);
+            FullName = Path.GetFullPath(filePath);
             if (IsAssemblyFileType(filePath))
                 Add(FullName);
         }
@@ -75,24 +74,21 @@ namespace NUnit.Engine
         /// </summary>
         public string Name
         {
-            get { return fullName == null ? null : Path.GetFileName(fullName); }
+            get { return FullName == null ? null : Path.GetFileName(FullName); }
         }
 
         /// <summary>
         /// Gets the path to the file containing tests. It may be
         /// an assembly or a recognized project type.
         /// </summary>
-        public string FullName
-        {
-            get { return fullName; }
-        }
+        public string FullName { get; private set; }
 
         /// <summary>
         /// Gets an array of the test files contained in this package
         /// </summary>
-        public string[] TestFiles
+        public IList<string> TestFiles
         {
-            get { return testFiles.ToArray(); }
+            get { return _testFiles; }
         }
 
         /// <summary>
@@ -100,7 +96,7 @@ namespace NUnit.Engine
         /// </summary>
         public IDictionary<string,object> Settings
         {
-            get { return settings; }
+            get { return _settings; }
         }
 
         #endregion
@@ -113,7 +109,7 @@ namespace NUnit.Engine
         /// <param name="testFile">The test file to be added</param>
         public void Add(string testFile)
         {
-            testFiles.Add(testFile);
+            _testFiles.Add(testFile);
         }
 
         /// <summary>
