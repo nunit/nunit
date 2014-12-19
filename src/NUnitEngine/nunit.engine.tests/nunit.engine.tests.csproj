@@ -72,6 +72,7 @@
     <Compile Include="Internal\SettingsGroupTests.cs" />
     <Compile Include="ResultHelperTests.cs" />
     <Compile Include="RuntimeFrameworkTests.cs" />
+    <Compile Include="Services\InProcessTestRunnerFactoryTests.cs" />
     <Compile Include="Services\DomainManagerTests.cs" />
     <Compile Include="Services\DriverFactoryTests.cs" />
     <Compile Include="Services\ResultServiceTests.cs" />
@@ -81,6 +82,7 @@
     <Compile Include="Services\ResultWriters\SchemaValidator.cs" />
     <Compile Include="Services\ResultWriters\XmlOutputTest.cs" />
     <Compile Include="Services\ResultWriters\XmlTransformResultWriterTests.cs" />
+    <Compile Include="Services\DefaultTestRunnerFactoryTests.cs" />
     <Compile Include="TestEngineResultTests.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -103,6 +105,11 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Runners\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="EngineTests.nunit">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

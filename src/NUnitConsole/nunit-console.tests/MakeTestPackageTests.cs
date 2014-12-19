@@ -36,8 +36,8 @@ namespace NUnit.ConsoleRunner.Tests
             var options = new ConsoleOptions("test.dll");
             var package = ConsoleRunner.MakeTestPackage(options);
 
-            Assert.AreEqual(1, package.TestFiles.Length);
-            Assert.AreEqual(Path.GetFullPath("test.dll"), package.FullName);
+            Assert.AreEqual(1, package.TestFiles.Count);
+            Assert.AreEqual(Path.GetFullPath("test.dll"), package.TestFiles[0]);
         }
 
         [Test]

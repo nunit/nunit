@@ -197,7 +197,8 @@ namespace NUnit.Engine.Services
                 : project.ActiveConfig;
 
             foreach (string key in config.Settings.Keys)
-                package.Settings[key] = config.Settings[key];
+                if (!package.Settings.ContainsKey(key)) // Don't override settings from command line
+                    package.Settings[key] = config.Settings[key];
 
             foreach (string assembly in config.Assemblies)
                 package.Add(assembly);

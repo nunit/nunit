@@ -165,6 +165,12 @@ namespace NUnit.Engine.Runners
 
         #endregion
 
+        // Exposed for use by tests
+        public IList<ITestEngineRunner> Runners
+        {
+            get { return _runners;  }
+        }
+
         protected virtual ITestEngineRunner CreateRunner(TestPackage package)
         {
             return Services.TestRunnerFactory.MakeTestRunner(package);
