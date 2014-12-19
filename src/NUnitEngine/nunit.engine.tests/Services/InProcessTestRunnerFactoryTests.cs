@@ -44,40 +44,22 @@ namespace NUnit.Engine.Services.Tests
         }
 
         // Single file
-        [TestCase(new string[] { "x.dll" }, typeof(TestDomainRunner))]
+        [TestCase(new string[] { "x.dll" },  null,      typeof(TestDomainRunner))]
+        [TestCase(new string[] { "x.dll" }, "Single",   typeof(TestDomainRunner))]
+        [TestCase(new string[] { "x.dll" }, "Multiple", typeof(MultipleTestDomainRunner))]
         // Two files
-        [TestCase(new string[] { "x.dll", "y.dll" }, typeof(TestDomainRunner))]
+        [TestCase(new string[] { "x.dll", "y.dll" },  null,     typeof(TestDomainRunner))]
+        [TestCase(new string[] { "x.dll", "y.dll" }, "Single",   typeof(TestDomainRunner))]
+        [TestCase(new string[] { "x.dll", "y.dll" }, "Multiple", typeof(MultipleTestDomainRunner))]
         // Three files
-        [TestCase(new string[] { "x.dll", "y.dll", "z.dll" }, typeof(TestDomainRunner))]
-        public void CorrectRunnerIsUsed_Default(string[] args, Type expectedType)
+        [TestCase(new string[] { "x.dll", "y.dll", "z.dll" }, null,       typeof(TestDomainRunner))]
+        [TestCase(new string[] { "x.dll", "y.dll", "z.dll" }, "Single",   typeof(TestDomainRunner))]
+        [TestCase(new string[] { "x.dll", "y.dll", "z.dll" }, "Multiple", typeof(MultipleTestDomainRunner))]
+        public void CorrectRunnerIsUsed(string[] args, string domainUsage, Type expectedType)
         {
             var package = new TestPackage(args);
-            Assert.That(_factory.MakeTestRunner(package), Is.TypeOf(expectedType));
-        }
-
-        // Single file
-        [TestCase(new string[] { "x.dll" }, typeof(TestDomainRunner))]
-        // Two files
-        [TestCase(new string[] { "x.dll", "y.dll" }, typeof(TestDomainRunner))]
-        // Three files
-        [TestCase(new string[] { "x.dll", "y.dll", "z.dll" }, typeof(TestDomainRunner))]
-        public void CorrectRunnerIsUsed_DomainUsageSingle(string[] args, Type expectedType)
-        {
-            var package = new TestPackage(args);
-            package.Settings["DomainUsage"] = "Single";
-            Assert.That(_factory.MakeTestRunner(package), Is.TypeOf(expectedType));
-        }
-
-        // Single file
-        [TestCase(new string[] { "x.dll" }, typeof(MultipleTestDomainRunner))]
-        // Two files
-        [TestCase(new string[] { "x.dll", "y.dll" }, typeof(MultipleTestDomainRunner))]
-        // Three files
-        [TestCase(new string[] { "x.dll", "y.dll", "z.dll" }, typeof(MultipleTestDomainRunner))]
-        public void CorrectRunnerIsUsed_DomainUsageMultiple(string[] args, Type expectedType)
-        {
-            var package = new TestPackage(args);
-            package.Settings["DomainUsage"] = "Multiple";
+            if (domainUsage != null)
+                package.Settings["DomainUsage"] = domainUsage;
             Assert.That(_factory.MakeTestRunner(package), Is.TypeOf(expectedType));
         }
     }

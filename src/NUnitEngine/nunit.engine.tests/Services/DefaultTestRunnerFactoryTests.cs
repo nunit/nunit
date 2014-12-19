@@ -44,94 +44,46 @@ namespace NUnit.Engine.Services.Tests
         }
 
         // Single file
-        [TestCase(new string[] { "EngineTests.nunit" }, typeof(ProcessRunner))] // Needs to exist because contents are checked
-        [TestCase(new string[] { "x.dll" }, typeof(ProcessRunner))]
+        [TestCase(new string[] { "EngineTests.nunit" }, null,        typeof(ProcessRunner))] // Needs to exist because contents are checked
+        [TestCase(new string[] { "x.dll" },             null,        typeof(ProcessRunner))]
+        [TestCase(new string[] { "EngineTests.nunit" }, "Single",    typeof(TestDomainRunner))]
+        [TestCase(new string[] { "x.dll" },             "Single",    typeof(TestDomainRunner))]
+        [TestCase(new string[] { "EngineTests.nunit" }, "Separate",  typeof(ProcessRunner))]
+        [TestCase(new string[] { "x.dll" },             "Separate",  typeof(ProcessRunner))]
+        [TestCase(new string[] { "EngineTests.nunit" }, "Multiple",  typeof(MultipleTestProcessRunner))]
+        [TestCase(new string[] { "x.dll" },             "Multiple",  typeof(MultipleTestProcessRunner))]
         // Two files
-        [TestCase(new string[] { "x.nunit", "y.nunit" }, typeof(AggregatingTestRunner))]
-        [TestCase(new string[] { "x.nunit", "y.dll" }, typeof(AggregatingTestRunner))]
-        [TestCase(new string[] { "x.dll", "y.dll" }, typeof(MultipleTestProcessRunner))]
+        [TestCase(new string[] { "x.nunit", "y.nunit" }, null,       typeof(AggregatingTestRunner))]
+        [TestCase(new string[] { "x.nunit", "y.dll" },   null,       typeof(AggregatingTestRunner))]
+        [TestCase(new string[] { "x.dll", "y.dll" },     null,       typeof(MultipleTestProcessRunner))]
+        [TestCase(new string[] { "x.nunit", "y.nunit" }, "Single",   typeof(AggregatingTestRunner))]
+        [TestCase(new string[] { "x.nunit", "y.dll" },   "Single",   typeof(AggregatingTestRunner))]
+        [TestCase(new string[] { "x.dll", "y.dll" },     "Single",   typeof(TestDomainRunner))]
+        [TestCase(new string[] { "x.nunit", "y.nunit" }, "Separate", typeof(AggregatingTestRunner))]
+        [TestCase(new string[] { "x.nunit", "y.dll" },   "Separate", typeof(AggregatingTestRunner))]
+        [TestCase(new string[] { "x.dll", "y.dll" },     "Separate", typeof(ProcessRunner))]
+        [TestCase(new string[] { "x.nunit", "y.nunit" }, "Multiple", typeof(AggregatingTestRunner))]
+        [TestCase(new string[] { "x.nunit", "y.dll" },   "Multiple", typeof(AggregatingTestRunner))]
+        [TestCase(new string[] { "x.dll", "y.dll" },     "Multiple", typeof(MultipleTestProcessRunner))]
         // Three files
-        [TestCase(new string[] { "x.nunit", "y.dll", "z.nunit" }, typeof(AggregatingTestRunner))]
-        [TestCase(new string[] { "x.dll", "y.nunit", "z.dll" }, typeof(AggregatingTestRunner))]
-        public void CorrectRunnerIsUsed_Default(string[] args, Type expectedType)
+        [TestCase(new string[] { "x.nunit", "y.dll", "z.nunit" }, null,       typeof(AggregatingTestRunner))]
+        [TestCase(new string[] { "x.dll", "y.nunit", "z.dll" },   null,       typeof(AggregatingTestRunner))]
+        [TestCase(new string[] { "x.nunit", "y.dll", "z.nunit" }, "Single",   typeof(AggregatingTestRunner))]
+        [TestCase(new string[] { "x.dll", "y.nunit", "z.dll" },   "Single",   typeof(AggregatingTestRunner))]
+        [TestCase(new string[] { "x.dll", "y.dll", "z.dll" },     "Single",   typeof(TestDomainRunner))]
+        [TestCase(new string[] { "x.nunit", "y.dll", "z.nunit" }, "Separate", typeof(AggregatingTestRunner))]
+        [TestCase(new string[] { "x.dll", "y.nunit", "z.dll" },   "Separate", typeof(AggregatingTestRunner))]
+        [TestCase(new string[] { "x.dll", "y.dll", "z.dll" },     "Separate", typeof(ProcessRunner))]
+        [TestCase(new string[] { "x.nunit", "y.dll", "z.nunit" }, "Multiple", typeof(AggregatingTestRunner))]
+        [TestCase(new string[] { "x.dll", "y.nunit", "z.dll" },   "Multiple", typeof(AggregatingTestRunner))]
+        [TestCase(new string[] { "x.dll", "y.dll", "z.dll" },     "Multiple", typeof(MultipleTestProcessRunner))]
+        public void CorrectRunnerIsUsed(string[] args, string processModel, Type expectedType)
         {
             var package = new TestPackage(args);
+            if (processModel != null)
+                package.Settings["ProcessModel"] = processModel;
             var runner = _factory.MakeTestRunner(package);
 
-            Assert.That(runner, Is.TypeOf(expectedType));
-
-            var aggRunner = runner as AggregatingTestRunner;
-            if (aggRunner != null)
-                foreach (var childRunner in aggRunner.Runners)
-                    Assert.That(childRunner, Is.TypeOf<TestDomainRunner>());
-        }
-
-        // Single file
-        [TestCase(new string[] { "EngineTests.nunit" }, typeof(TestDomainRunner))] // Needs to exist because contents are checked
-        [TestCase(new string[] { "x.dll" }, typeof(TestDomainRunner))]
-        // Two files
-        [TestCase(new string[] { "x.nunit", "y.nunit" }, typeof(AggregatingTestRunner))]
-        [TestCase(new string[] { "x.nunit", "y.dll" }, typeof(AggregatingTestRunner))]
-        [TestCase(new string[] { "x.dll", "y.dll" }, typeof(TestDomainRunner))]
-        // Three files
-        [TestCase(new string[] { "x.nunit", "y.dll", "z.nunit" }, typeof(AggregatingTestRunner))]
-        [TestCase(new string[] { "x.dll", "y.nunit", "z.dll" }, typeof(AggregatingTestRunner))]
-        [TestCase(new string[] { "x.dll", "y.dll", "z.dll" }, typeof(TestDomainRunner))]
-        public void CorrectRunnerIsUsed_ProcessModelSingle(string[] args, Type expectedType)
-        {
-            var package = new TestPackage(args);
-            package.Settings["ProcessModel"] = "Single";
-            var runner = _factory.MakeTestRunner(package);
-
-            Assert.That(runner, Is.TypeOf(expectedType));
-
-            var aggRunner = runner as AggregatingTestRunner;
-            if (aggRunner != null)
-                foreach (var childRunner in aggRunner.Runners)
-                    Assert.That(childRunner, Is.TypeOf<TestDomainRunner>());
-        }
-
-        // Single file
-        [TestCase(new string[] { "EngineTests.nunit" }, typeof(ProcessRunner))] // Needs to exist because contents are checked
-        [TestCase(new string[] { "x.dll" }, typeof(ProcessRunner))]
-        // Two files
-        [TestCase(new string[] { "x.nunit", "y.nunit" }, typeof(AggregatingTestRunner))]
-        [TestCase(new string[] { "x.nunit", "y.dll" }, typeof(AggregatingTestRunner))]
-        [TestCase(new string[] { "x.dll", "y.dll" }, typeof(ProcessRunner))]
-        // Three files
-        [TestCase(new string[] { "x.nunit", "y.dll", "z.nunit" }, typeof(AggregatingTestRunner))]
-        [TestCase(new string[] { "x.dll", "y.nunit", "z.dll" }, typeof(AggregatingTestRunner))]
-        [TestCase(new string[] { "x.dll", "y.dll", "z.dll" }, typeof(ProcessRunner))]
-        public void CorrectRunnerIsUsed_ProcessModelSeparate(string[] args, Type expectedType)
-        {
-            var package = new TestPackage(args);
-            package.Settings["ProcessModel"] = "Separate";
-            var runner = _factory.MakeTestRunner(package);
-
-            Assert.That(runner, Is.TypeOf(expectedType));
-
-            var aggRunner = runner as AggregatingTestRunner;
-            if (aggRunner != null)
-                foreach (var childRunner in aggRunner.Runners)
-                    Assert.That(childRunner, Is.TypeOf<TestDomainRunner>());
-        }
-
-        // Single file
-        [TestCase(new string[] { "EngineTests.nunit" }, typeof(MultipleTestProcessRunner))] // Needs to exist because contents are checked
-        [TestCase(new string[] { "x.dll" }, typeof(MultipleTestProcessRunner))]
-        // Two files
-        [TestCase(new string[] { "x.nunit", "y.nunit" }, typeof(AggregatingTestRunner))]
-        [TestCase(new string[] { "x.nunit", "y.dll" }, typeof(AggregatingTestRunner))]
-        [TestCase(new string[] { "x.dll", "y.dll" }, typeof(MultipleTestProcessRunner))]
-        // Three files
-        [TestCase(new string[] { "x.nunit", "y.dll", "z.nunit" }, typeof(AggregatingTestRunner))]
-        [TestCase(new string[] { "x.dll", "y.nunit", "z.dll" }, typeof(AggregatingTestRunner))]
-        [TestCase(new string[] { "x.dll", "y.dll", "z.dll" }, typeof(MultipleTestProcessRunner))]
-        public void CorrectRunnerIsUsed_ProcessModelMultiple(string[] args, Type expectedType)
-        {
-            var package = new TestPackage(args);
-            package.Settings["ProcessModel"] = "Multiple";
-            var runner = _factory.MakeTestRunner(package);
             Assert.That(runner, Is.TypeOf(expectedType));
 
             var aggRunner = runner as AggregatingTestRunner;
