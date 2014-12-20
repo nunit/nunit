@@ -123,7 +123,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.framework.tests-sl-5.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Install", "Install", "{D92A4841-72C5-4702-A4F4-7F6A2D3E341B}"
 EndProject
-Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "nunit", "install\nunit.wixproj", "{20132190-582E-462E-B18B-4B2CEDDDB6C4}"
+Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "nunit-framework", "install\framework\nunit-framework.wixproj", "{20132190-582E-462E-B18B-4B2CEDDDB6C4}"
+EndProject
+Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "nunit-tools", "install\tools\nunit-tools.wixproj", "{0E7186B7-0CE3-4EA3-8C53-7A8F95E33A75}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -393,6 +395,14 @@ Global
 		{20132190-582E-462E-B18B-4B2CEDDDB6C4}.Release|Mixed Platforms.Build.0 = Release|x86
 		{20132190-582E-462E-B18B-4B2CEDDDB6C4}.Release|x86.ActiveCfg = Release|x86
 		{20132190-582E-462E-B18B-4B2CEDDDB6C4}.Release|x86.Build.0 = Release|x86
+		{0E7186B7-0CE3-4EA3-8C53-7A8F95E33A75}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{0E7186B7-0CE3-4EA3-8C53-7A8F95E33A75}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{0E7186B7-0CE3-4EA3-8C53-7A8F95E33A75}.Debug|x86.ActiveCfg = Debug|x86
+		{0E7186B7-0CE3-4EA3-8C53-7A8F95E33A75}.Debug|x86.Build.0 = Debug|x86
+		{0E7186B7-0CE3-4EA3-8C53-7A8F95E33A75}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{0E7186B7-0CE3-4EA3-8C53-7A8F95E33A75}.Release|Mixed Platforms.Build.0 = Release|x86
+		{0E7186B7-0CE3-4EA3-8C53-7A8F95E33A75}.Release|x86.ActiveCfg = Release|x86
+		{0E7186B7-0CE3-4EA3-8C53-7A8F95E33A75}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -447,6 +457,7 @@ Global
 		{9EFAD088-713E-4269-ADFC-1F21CA872A94} = {A6EBC77C-9A34-4796-B4D0-E7A1E21A65A7}
 		{A4F0C741-6ED4-46C8-AE75-57E1C7197E22} = {A21BFC37-44FC-41A0-B6E7-6F949F45A635}
 		{20132190-582E-462E-B18B-4B2CEDDDB6C4} = {D92A4841-72C5-4702-A4F4-7F6A2D3E341B}
+		{0E7186B7-0CE3-4EA3-8C53-7A8F95E33A75} = {D92A4841-72C5-4702-A4F4-7F6A2D3E341B}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = src\NUnitFramework\tests\nunitlite.tests-2.0.csproj
