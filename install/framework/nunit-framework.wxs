@@ -147,6 +147,11 @@
                       ProcessorArchitecture="msil" 
                       Source="$(var.nunitlite.runner-2.0.TargetPath)" />
             </Component>
+            <Component Id="AssemblyReferenceFolder20">
+                <RegistryKey Root="HKMU" Key="Software\Microsoft\.NETFramework\v2.0\AssemblyFoldersEx\NUnit [ProductVersion]" >
+                    <RegistryValue Action="write" Type="string" Value="[NET20]" />
+                </RegistryKey>
+            </Component>
         </ComponentGroup>
 
         <ComponentGroup Id="NET35" Directory="NET35">
@@ -163,6 +168,11 @@
                       Name="nunitlite.dll" 
                       ProcessorArchitecture="msil" 
                       Source="$(var.nunitlite.runner-3.5.TargetPath)" />
+            </Component>
+            <Component Id="AssemblyReferenceFolder35">
+                <RegistryKey Root="HKMU" Key="Software\Microsoft\.NETFramework\v3.5\AssemblyFoldersEx\NUnit [ProductVersion]" >
+                    <RegistryValue Action="write" Type="string" Value="[NET35]" />
+                </RegistryKey>
             </Component>
         </ComponentGroup>
 
@@ -181,6 +191,11 @@
                       ProcessorArchitecture="msil" 
                       Source="$(var.nunitlite.runner-4.0.TargetPath)" />
             </Component>
+            <Component Id="AssemblyReferenceFolder40">
+                <RegistryKey Root="HKMU" Key="Software\Microsoft\.NETFramework\v4.0\AssemblyFoldersEx\NUnit [ProductVersion]" >
+                    <RegistryValue Action="write" Type="string" Value="[NET40]" />
+                </RegistryKey>
+            </Component>
         </ComponentGroup>
 
         <ComponentGroup Id="NET45" Directory="NET45">
@@ -198,6 +213,11 @@
                       ProcessorArchitecture="msil" 
                       Source="$(var.nunitlite.runner-4.5.TargetPath)" />
             </Component>
+            <Component Id="AssemblyReferenceFolder45">
+                <RegistryKey Root="HKMU" Key="Software\Microsoft\.NETFramework\v4.5\AssemblyFoldersEx\NUnit [ProductVersion]" >
+                    <RegistryValue Action="write" Type="string" Value="[NET45]" />
+                </RegistryKey>
+            </Component>
         </ComponentGroup>
 
         <ComponentGroup Id="PORTABLE" Directory="PORTABLE">
@@ -210,6 +230,7 @@
                       Name="nunit.framework.xml" 
                       Source="$(var.nunit.framework-portable.TargetDir)$(var.nunit.framework-portable.TargetName).xml" CompanionFile="nunit.framework.portable.dll" />
             </Component>
+            <!-- What is the AssemblyFoldersEx for Portable? -->
         </ComponentGroup>
 
         <ComponentGroup Id="SL50" Directory="SL50">
@@ -226,6 +247,9 @@
                       ProcessorArchitecture="msil" 
                       Source="$(var.nunitlite.runner-sl-5.0.TargetPath)" />
             </Component>
+            <!-- What is the AssemblyFoldersEx for SilverLight? -->
         </ComponentGroup>
+        
+        
 	</Fragment>
 </Wix>
