@@ -6,10 +6,11 @@
     <ProductVersion>3.9</ProductVersion>
     <ProjectGuid>0E7186B7-0CE3-4EA3-8C53-7A8F95E33A75</ProjectGuid>
     <SchemaVersion>2.0</SchemaVersion>
-    <OutputName>NUnit.Tools</OutputName>
+    <OutputName>NUnit.Runners</OutputName>
     <OutputType>Package</OutputType>
     <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' AND '$(MSBuildExtensionsPath32)' != '' ">$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
     <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' ">$(MSBuildExtensionsPath)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
+    <Name>nunit-runners</Name>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <OutputPath>$(SolutionDir)bin\$(Configuration)\</OutputPath>
