@@ -44,6 +44,35 @@ namespace NUnit.Engine.Services
         /// <returns>A TestRunner</returns>
         public override ITestEngineRunner MakeTestRunner(TestPackage package)
         {
+            int assemblyCount = 0;
+            int projectCount = 0;
+            foreach (var testFile in package.TestFiles)
+                if (PathUtils.IsAssemblyFileType(testFile))
+                    assemblyCount++;
+                else if (ServiceContext.ProjectService.IsProjectFile(testFile))
+                    projectCount++;
+
+            // If we have multiple projects or a project plus assemblies
+            // then defer to the AggregatingTestRunner, which will make
+            // the decision on a file by file basis so that each project
+            // runs with its own settings.
+            if (projectCount > 1 || projectCount > 0 && assemblyCount > 0)
+                return new AggregatingTestRunner(ServiceContext, package);
+
+            // If we have a single project by itself, expand it here.
+            if (projectCount > 0 && assemblyCount == 0)
+            {
+                var p = new TestPackage(package.TestFiles[0]);
+                ServiceContext.ProjectService.ExpandProjectPackage(p);
+
+                foreach (var key in package.Settings.Keys)
+                    p.Settings[key] = package.Settings[key];
+
+                package = p;
+            }
+
+            // TODO: What about bad extensions?
+
             ProcessModel processModel = GetTargetProcessModel(package);
             package.Settings.Remove(RunnerSettings.ProcessModel);
 
@@ -51,7 +80,7 @@ namespace NUnit.Engine.Services
             {
                 default:
                 case ProcessModel.Default:
-                    if (package.TestFiles.Length > 1)
+                    if (package.TestFiles.Count > 1)
                         return new MultipleTestProcessRunner(this.ServiceContext, package);
                     else
                         return new ProcessRunner(this.ServiceContext, package);

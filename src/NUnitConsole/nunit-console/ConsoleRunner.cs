@@ -246,10 +246,7 @@ namespace NUnit.ConsoleRunner
         // This is public static for ease of testing
         public static TestPackage MakeTestPackage( ConsoleOptions options )
         {
-            TestPackage package = options.InputFiles.Count == 1
-                ? new TestPackage(options.InputFiles[0])
-                : new TestPackage(options.InputFiles);
-
+            TestPackage package = new TestPackage(options.InputFiles);
 
             if (options.ProcessModel != null)//ProcessModel.Default)
                 package.Settings[PackageSettings.ProcessModel] = options.ProcessModel;
