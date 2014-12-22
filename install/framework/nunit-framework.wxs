@@ -41,7 +41,7 @@
 
         <Property Id="ARPCONTACT" Value="Charlie Poole" />
         <Property Id="ARPPRODUCTICON" Value="nunit_icon.exe" />
-        <Property Id="ARPHELPLINK" Value="http://lists.sourceforge.net/lists/listinfo/nunit-users" />
+        <Property Id="ARPHELPLINK" Value="https://groups.google.com/forum/#!forum/nunit-discuss" />
         <Property Id="ARPURLINFOABOUT" Value="NUnit is a testing framework for all .NET languages" />
         <Property Id="ARPURLUPDATEINFO" Value="http://nunit.org" />
 
