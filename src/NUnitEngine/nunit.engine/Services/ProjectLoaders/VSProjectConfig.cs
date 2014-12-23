@@ -1,5 +1,5 @@
-﻿// ***********************************************************************
-// Copyright (c) 2011 Charlie Poole
+// ***********************************************************************
+// Copyright (c) 2002-2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,23 +21,36 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-namespace NUnit.Engine
+using System;
+using System.Collections.Specialized;
+
+namespace NUnit.Engine.Services.ProjectLoaders
 {
-    public interface IProjectConfigList
-    {
-        /// <summary>
-        /// Gets a count of the number of configs
-        /// </summary>
-        int Count { get; }
+	/// <summary>
+	/// Originally, we used the same ProjectConfig class for both
+	/// NUnit and Visual Studio projects. Since we really do very
+	/// little with VS Projects, this class has been created to 
+	/// hold the name and the collection of assembly paths.
+	/// </summary>
+	public class VSProjectConfig
+	{
+		private string name;
+		
+		private StringCollection assemblies = new StringCollection();
 
-        ///// <summary>
-        ///// Gets the config at the specified index.
-        ///// </summary>
-        //IProjectConfig this[int index] { get; }
+		public VSProjectConfig( string name )
+		{
+			this.name = name;
+		}
 
-        /// <summary>
-        /// Gets the config with the specified name
-        /// </summary>
-        IProjectConfig this[string name] { get; }
-    }
+		public string Name
+		{
+			get { return name; }
+		}
+
+		public StringCollection Assemblies
+		{
+			get { return assemblies; }
+		}
+	}
 }

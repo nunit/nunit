@@ -49,7 +49,7 @@ namespace NUnit.Engine.Services
             foreach (var testFile in package.TestFiles)
                 if (PathUtils.IsAssemblyFileType(testFile))
                     assemblyCount++;
-                else if (ServiceContext.ProjectService.IsProjectFile(testFile))
+                else if (ServiceContext.ProjectService.CanLoadFrom(testFile))
                     projectCount++;
 
             // If we have multiple projects or a project plus assemblies
@@ -63,10 +63,11 @@ namespace NUnit.Engine.Services
             if (projectCount > 0 && assemblyCount == 0)
             {
                 var p = new TestPackage(package.TestFiles[0]);
-                ServiceContext.ProjectService.ExpandProjectPackage(p);
 
                 foreach (var key in package.Settings.Keys)
                     p.Settings[key] = package.Settings[key];
+
+                ServiceContext.ProjectService.ExpandProjectPackage(p);
 
                 package = p;
             }

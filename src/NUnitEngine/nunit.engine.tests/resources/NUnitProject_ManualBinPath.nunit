@@ -1,0 +1,4 @@
+﻿<NUnitProject>
+  <Settings activeconfig="Debug" />
+  <Config name="Debug" binpath="bin_path_value"  />
+</NUnitProject>

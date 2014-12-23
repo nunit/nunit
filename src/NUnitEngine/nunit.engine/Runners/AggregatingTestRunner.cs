@@ -71,7 +71,7 @@ namespace NUnit.Engine.Runners
             foreach (string testFile in TestPackage.TestFiles)
             {
                 var subPackage = new TestPackage(testFile);
-                if (Services.ProjectService.IsProjectFile(testFile))
+                if (Services.ProjectService.CanLoadFrom(testFile))
                     Services.ProjectService.ExpandProjectPackage(subPackage);
                 foreach (string key in TestPackage.Settings.Keys)
                     subPackage.Settings[key] = TestPackage.Settings[key];

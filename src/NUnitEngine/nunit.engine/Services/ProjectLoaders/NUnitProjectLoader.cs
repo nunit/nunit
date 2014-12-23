@@ -22,22 +22,39 @@
 // ***********************************************************************
 
 using System;
+using System.IO;
+using NUnit.Engine.Internal;
 
-namespace NUnit.Engine
+namespace NUnit.Engine.Services.ProjectLoaders
 {
-    public enum BinPathType
+    public class NUnitProjectLoader : IProjectLoader
     {
-        Auto,
-        Manual,
-        None
-    }
+        #region IProjectLoader Members
 
-    public interface IProjectConfig
-    {
-        string Name { get; }
+        public bool CanLoadFrom(string path)
+        {
+            return Path.GetExtension(path) == ".nunit";
+        }
 
-        System.Collections.Generic.IDictionary<string, object> Settings { get; }
+        public IProject LoadFrom(string path)
+        {
+            NUnitProject project = new NUnitProject();
+            project.Load(path);
+            return project;
+        }
 
-        string[] Assemblies { get; }
+        public TestPackage GetTestPackage(string path)
+        {
+            return GetTestPackage(path, null);
+        }
+
+        public TestPackage GetTestPackage(string path, string configName)
+        {
+            NUnitProject project = new NUnitProject();
+            project.Load(path);
+            return project.GetTestPackage(configName);
+        }
+
+        #endregion
     }
 }

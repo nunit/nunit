@@ -103,16 +103,16 @@ namespace NUnit.ConsoleRunner
                 }
 
                 // TODO: Move this to engine
-                foreach (string file in Options.InputFiles)
-                {
-                    //if (!Services.ProjectService.CanLoadProject(file) && !PathUtils.IsAssemblyFileType(file))
-                    string ext = Path.GetExtension(file);
-                    if (ext != ".dll" && ext != ".exe" && ext != ".nunit")
-                    {
-                        OutWriter.WriteLine(ColorStyle.Warning, "File type not known: " + file);
-                        return ConsoleRunner.INVALID_ARG;
-                    }
-                }
+                //foreach (string file in Options.InputFiles)
+                //{
+                //    //if (!Services.ProjectService.CanLoadProject(file) && !PathUtils.IsAssemblyFileType(file))
+                //    string ext = Path.GetExtension(file);
+                //    if (ext != ".dll" && ext != ".exe" && ext != ".nunit")
+                //    {
+                //        OutWriter.WriteLine(ColorStyle.Warning, "File type not known: " + file);
+                //        return ConsoleRunner.INVALID_ARG;
+                //    }
+                //}
 
                 using (ITestEngine engine = TestEngineActivator.CreateInstance())
                 {
@@ -143,7 +143,7 @@ namespace NUnit.ConsoleRunner
                     }
                     catch (Exception ex)
                     {
-                        OutWriter.WriteLine(ColorStyle.Error, ex.Message);
+                        OutWriter.WriteLine(ColorStyle.Error, ex.ToString());
                         return ConsoleRunner.UNEXPECTED_ERROR;
                     }
                     finally
