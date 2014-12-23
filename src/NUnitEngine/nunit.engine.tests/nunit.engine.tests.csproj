@@ -115,6 +115,7 @@
     <Content Include="EngineTests.nunit">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <EmbeddedResource Include="resources\fsharp-sample.fsproj" />
     <EmbeddedResource Include="resources\NUnitProject_ComplexSettings.nunit" />
     <EmbeddedResource Include="resources\NUnitProject_ManualBinPath.nunit" />
     <EmbeddedResource Include="resources\NUnitProject_EmptyProject.nunit" />

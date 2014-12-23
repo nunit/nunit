@@ -41,16 +41,19 @@ namespace NUnit.Engine.Services.ProjectLoaders.Tests
             _loader = new VisualStudioProjectLoader();
         }
 
-        [Test]
-        public void ProjectExtensions()
+        [TestCase("project.csproj", true)]
+        [TestCase("project.vbproj", true)]
+        [TestCase("project.vjsproj", true)]
+        [TestCase("project.fsproj", true)]
+        [TestCase("project.vcproj", true)]
+        [TestCase("project.sln", true)]
+        [TestCase("project.xyproj", false)]
+        public void ValidExtensions(string project, bool isGood)
         {
-            Assert.That(_loader.CanLoadFrom("project.csproj"));
-            Assert.That(_loader.CanLoadFrom("project.vbproj"));
-            Assert.That(_loader.CanLoadFrom("project.csproj"));
-            Assert.That(_loader.CanLoadFrom("project.vjsproj"));
-            Assert.That(_loader.CanLoadFrom("project.sln"));
-
-            Assert.False(_loader.CanLoadFrom("project.xyproj"));
+            if (isGood)
+                Assert.That(_loader.CanLoadFrom(project), "Should be loadable: {0}", project);
+            else
+                Assert.False(_loader.CanLoadFrom(project), "Should not be loadable: {0}", project);
         }
 
         [Test]
@@ -66,6 +69,7 @@ namespace NUnit.Engine.Services.ProjectLoaders.Tests
         [TestCase("csharp-xna-project.csproj", new string[] { "Debug|x86", "Release|x86" }, "XNAWindowsProject")]
         [TestCase("vb-sample.vbproj", new string[] { "Debug", "Release" }, "vb-sample")]
         [TestCase("jsharp-sample.vjsproj", new string[] { "Debug", "Release" }, "jsharp-sample")]
+        [TestCase("fsharp-sample.fsproj", new string[] { "Debug", "Release" }, "fsharp-sample")]
         [TestCase("cpp-sample.vcproj", new string[] { "Debug|Win32", "Release|Win32" }, "cpp-sample")]
         [TestCase("cpp-default-library.vcproj", new string[] { "Debug|Win32", "Release|Win32" }, "cpp-default-library")]
         [TestCase("legacy-csharp-sample.csproj", new string[] { "Debug", "Release" }, "csharp-sample")]
@@ -94,8 +98,8 @@ namespace NUnit.Engine.Services.ProjectLoaders.Tests
                     Assert.AreEqual(resourceName, package.Name);
                     Assert.AreEqual(1, package.TestFiles.Count);
                     Assert.AreEqual(assemblyName, Path.GetFileNameWithoutExtension(package.TestFiles[0]));
-                    //Assert.That(package.Settings.ContainsKey("BasePath"));
-                    //Assert.That(Path.GetDirectoryName(package.TestFiles[0]), Is.SamePath((string)package.Settings["BasePath"]));
+                    Assert.That(package.Settings.ContainsKey("BasePath"));
+                    Assert.That(Path.GetDirectoryName(package.TestFiles[0]), Is.SamePath((string)package.Settings["BasePath"]));
                 }
             }
         }

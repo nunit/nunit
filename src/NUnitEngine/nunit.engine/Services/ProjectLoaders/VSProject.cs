@@ -45,7 +45,7 @@ namespace NUnit.Engine.Services.ProjectLoaders
         /// <summary>
         /// VS Project extentions
         /// </summary>
-        private static readonly string[] PROJECT_EXTENSIONS = { ".csproj", ".vbproj", ".vjsproj", ".vcproj" };
+        private static readonly string[] PROJECT_EXTENSIONS = { ".csproj", ".vbproj", ".vjsproj", ".vcproj", ".fsproj" };
         
         /// <summary>
         /// VS Solution extension
@@ -241,6 +241,7 @@ namespace NUnit.Engine.Services.ProjectLoaders
                     case ".csproj":
                     case ".vbproj":
                     case ".vjsproj":
+                    case ".fsproj":
                         LoadProject(projectDirectory, doc);
                         break;
 
