@@ -52,6 +52,21 @@ namespace NUnit.Engine.Services.ProjectLoaders
         /// </summary>
         private const string SOLUTION_EXTENSION = ".sln";
 
+        /// <summary>
+        /// The directory holding the project
+        /// </summary>
+        private string _projectDirectory;
+
+        /// <summary>
+        /// The XML representation of the project
+        /// </summary>
+        private XmlDocument _doc;
+
+        /// <summary>
+        /// The list of all our configs
+        /// </summary>
+        private IDictionary<string, ProjectConfig> _configs = new Dictionary<string, ProjectConfig>();
+
         #endregion
 
         #region Constructor
@@ -59,7 +74,7 @@ namespace NUnit.Engine.Services.ProjectLoaders
         public VSProject( string projectPath )
         {
             ProjectPath = Path.GetFullPath( projectPath );
-            Configs = new List<VSProjectConfig>();
+            _projectDirectory = Path.GetDirectoryName(ProjectPath);
 
             Load();
         }
@@ -82,9 +97,8 @@ namespace NUnit.Engine.Services.ProjectLoaders
         {
             get
             {
-                return Configs.Count > 0
-                    ? Configs[0].Name
-                    : null;
+                var names = ConfigNames;
+                return names.Count > 0 ? names[0] : null;
             }
         }
 
@@ -92,10 +106,10 @@ namespace NUnit.Engine.Services.ProjectLoaders
         {
             get
             {
-                var result = new List<string>();
-                foreach (var config in Configs)
-                    result.Add(config.Name);
-                return result;
+                var names = new List<string>();
+                foreach (var name in _configs.Keys)
+                    names.Add(name);
+                return names;
             }
         }
 
@@ -109,15 +123,13 @@ namespace NUnit.Engine.Services.ProjectLoaders
             TestPackage package = new TestPackage(ProjectPath);
 
             string appbase = null;
-            foreach (var config in Configs)
+            foreach (var name in _configs.Keys)
             {
-                if (configName == null || configName == config.Name)
+                if (configName == null || configName == name)
                 {
-                    foreach (string assembly in config.Assemblies)
-                    {
-                        package.Add(assembly);
-                        appbase = Path.GetDirectoryName(assembly);
-                    }
+                    var config = _configs[name];
+                    package.Add(config.AssemblyPath);
+                    appbase = config.OutputDirectory;
                     break;
                 }
             }
@@ -139,11 +151,6 @@ namespace NUnit.Engine.Services.ProjectLoaders
         {
             get { return Path.GetFileNameWithoutExtension( ProjectPath ); }
         }
-
-        /// <summary>
-        /// The list of all our configs
-        /// </summary>
-        public List<VSProjectConfig> Configs { get; private set; }
 
         #endregion
 
@@ -180,69 +187,28 @@ namespace NUnit.Engine.Services.ProjectLoaders
             if ( !IsProjectFile( ProjectPath ) ) 
                 ThrowInvalidFileType( ProjectPath );
 
-            string projectDirectory = Path.GetFullPath(Path.GetDirectoryName(ProjectPath));
             StreamReader rdr = new StreamReader(ProjectPath, System.Text.Encoding.UTF8);
-            string[] extensions = { "", ".exe", ".dll", ".lib", "" };
             
             try
             {
-                XmlDocument doc = new XmlDocument();
-                doc.Load( rdr );
+                _doc = new XmlDocument();
+                _doc.Load( rdr );
 
                 string extension = Path.GetExtension( ProjectPath );
-                string assemblyName = null;
 
                 switch ( extension )
                 {
-                    case ".vcproj":
-
-                        // TODO: This is all very hacked up... replace it.
-                        foreach (XmlNode configNode in doc.SelectNodes("/VisualStudioProject/Configurations/Configuration"))
-                        {
-                            string name = RequiredAttributeValue(configNode, "Name");
-                            int config_type = System.Convert.ToInt32(RequiredAttributeValue(configNode, "ConfigurationType"));
-                            string dirName = name;
-                            int bar = dirName.IndexOf('|');
-                            if (bar >= 0)
-                                dirName = dirName.Substring(0, bar);
-                            string outputPath = RequiredAttributeValue(configNode, "OutputDirectory");
-                            outputPath = outputPath.Replace("$(SolutionDir)", Path.GetFullPath(Path.GetDirectoryName(ProjectPath)) + Path.DirectorySeparatorChar);
-                            outputPath = outputPath.Replace("$(ConfigurationName)", dirName);
-
-                            string outputDirectory = Path.Combine(projectDirectory, outputPath);
-                            XmlNode toolNode = configNode.SelectSingleNode("Tool[@Name='VCLinkerTool']");
-                            if (toolNode != null)
-                            {
-                                assemblyName = SafeAttributeValue(toolNode, "OutputFile");
-                                if (assemblyName != null)
-                                    assemblyName = Path.GetFileName(assemblyName);
-                                else
-                                    assemblyName = Path.GetFileNameWithoutExtension(ProjectPath) + extensions[config_type];
-                            }
-                            else
-                            {
-                                toolNode = configNode.SelectSingleNode("Tool[@Name='VCNMakeTool']");
-                                if (toolNode != null)
-                                    assemblyName = Path.GetFileName(RequiredAttributeValue(toolNode, "Output"));
-                            }
-
-                            assemblyName = assemblyName.Replace("$(OutDir)", outputPath);
-                            assemblyName = assemblyName.Replace("$(ProjectName)", this.Name);
-
-                            VSProjectConfig config = new VSProjectConfig(name);
-                            if (assemblyName != null)
-                                config.Assemblies.Add(Path.Combine(outputDirectory, assemblyName));
-
-                            this.Configs.Add(config);
-                        }
-
-                        break;
-
                     case ".csproj":
                     case ".vbproj":
                     case ".vjsproj":
                     case ".fsproj":
-                        LoadProject(projectDirectory, doc);
+                        // We try legacy projects first, as the initial check is simplest
+                        if (!TryLoadLegacyProject())
+                            LoadMSBuildProject();
+                        break;
+
+                    case ".vcproj":
+                        LoadLegacyCppProject();
                         break;
 
                     default:
@@ -263,20 +229,9 @@ namespace NUnit.Engine.Services.ProjectLoaders
             }
         }
 
-        private bool LoadProject(string projectDirectory, XmlDocument doc)
+        private bool TryLoadLegacyProject()
         {
-            bool loaded = LoadVS2003Project(projectDirectory, doc);
-            if (loaded) return true;
-
-            loaded = LoadMSBuildProject(projectDirectory, doc);
-            if (loaded) return true;
-
-            return false;
-        }
-
-        private bool LoadVS2003Project(string projectDirectory, XmlDocument doc)
-        {
-            XmlNode settingsNode = doc.SelectSingleNode("/VisualStudioProject/*/Build/Settings");
+            XmlNode settingsNode = _doc.SelectSingleNode("/VisualStudioProject/*/Build/Settings");
             if (settingsNode == null)
                 return false;
 
@@ -294,30 +249,25 @@ namespace NUnit.Engine.Services.ProjectLoaders
                 {
                     string name = RequiredAttributeValue(configNode, "Name");
                     string outputPath = RequiredAttributeValue(configNode, "OutputPath");
-                    string outputDirectory = Path.Combine(projectDirectory, outputPath);
-                    string assemblyPath = Path.Combine(outputDirectory, assemblyName);
 
-                    VSProjectConfig config = new VSProjectConfig(name);
-                    config.Assemblies.Add(assemblyPath);
-
-                    Configs.Add(config);
+                    _configs.Add(name, new ProjectConfig(this, name, outputPath, assemblyName));
                 }
 
             return true;
         }
 
-        private bool LoadMSBuildProject(string projectDirectory, XmlDocument doc)
+        private void LoadMSBuildProject()
         {
-            XmlNamespaceManager namespaceManager = new XmlNamespaceManager(doc.NameTable);
+            XmlNamespaceManager namespaceManager = new XmlNamespaceManager(_doc.NameTable);
             namespaceManager.AddNamespace("msbuild", "http://schemas.microsoft.com/developer/msbuild/2003");
 
-            XmlNodeList nodes = doc.SelectNodes("/msbuild:Project/msbuild:PropertyGroup", namespaceManager);
-            if (nodes == null) return false;
+            XmlNodeList nodes = _doc.SelectNodes("/msbuild:Project/msbuild:PropertyGroup", namespaceManager);
+            if (nodes == null) return;
 
-            XmlElement assemblyNameElement = (XmlElement)doc.SelectSingleNode("/msbuild:Project/msbuild:PropertyGroup/msbuild:AssemblyName", namespaceManager);
+            XmlElement assemblyNameElement = (XmlElement)_doc.SelectSingleNode("/msbuild:Project/msbuild:PropertyGroup/msbuild:AssemblyName", namespaceManager);
             string assemblyName = assemblyNameElement.InnerText;
 
-            XmlElement outputTypeElement = (XmlElement)doc.SelectSingleNode("/msbuild:Project/msbuild:PropertyGroup/msbuild:OutputType", namespaceManager);
+            XmlElement outputTypeElement = (XmlElement)_doc.SelectSingleNode("/msbuild:Project/msbuild:PropertyGroup/msbuild:OutputType", namespaceManager);
             string outputType = outputTypeElement.InnerText;
 
             if (outputType == "Exe" || outputType == "WinExe")
@@ -329,32 +279,14 @@ namespace NUnit.Engine.Services.ProjectLoaders
 
             foreach (XmlElement configNode in nodes)
             {
-                if (configNode.Name != "PropertyGroup")
-                    continue;
-
-                string configurationName = null;
-                XmlAttribute conditionAttribute = configNode.Attributes["Condition"];
-                if (conditionAttribute != null)
-                {
-                    string condition = conditionAttribute.Value;
-                    if (condition.IndexOf("$(Configuration)") >= 0)
-                    {
-                        int start = condition.IndexOf("==");
-                        if (start >= 0)
-                        {
-                            configurationName = condition.Substring(start + 2).Trim(new char[] { ' ', '\'' });
-                            if (configurationName.EndsWith("|AnyCPU"))
-                                configurationName = configurationName.Substring(0, configurationName.Length - 7);
-                        }
-                    }
-                }
+                string name = GetConfigNameFromCondition(configNode);
 
                 XmlElement outputPathElement = (XmlElement)configNode.SelectSingleNode("msbuild:OutputPath", namespaceManager);
                 string outputPath = null;
                 if (outputPathElement != null)
                     outputPath = outputPathElement.InnerText;
 
-                if (configurationName == null)
+                if (name == null)
                 {
                     commonOutputPath = outputPath;
                     continue;
@@ -363,18 +295,50 @@ namespace NUnit.Engine.Services.ProjectLoaders
                 if (outputPath == null)
                     outputPath = commonOutputPath;
 
-                if (outputPath == null) continue;
-
-                string outputDirectory = Path.Combine(projectDirectory, outputPath);
-                string assemblyPath = Path.Combine(outputDirectory, assemblyName);
-
-                VSProjectConfig config = new VSProjectConfig(configurationName);
-                config.Assemblies.Add(assemblyPath);
-
-                Configs.Add(config);
+                if (outputPath != null)
+                    _configs.Add(name, new ProjectConfig(this, name, outputPath, assemblyName));
             }
+        }
 
-            return true;
+        private void LoadLegacyCppProject()
+        {
+            string[] extensionsByConfigType = { "", ".exe", ".dll", ".lib", "" };
+
+            // TODO: This is all very hacked up... replace it.
+            foreach (XmlNode configNode in _doc.SelectNodes("/VisualStudioProject/Configurations/Configuration"))
+            {
+                string name = RequiredAttributeValue(configNode, "Name");
+                int config_type = System.Convert.ToInt32(RequiredAttributeValue(configNode, "ConfigurationType"));
+                string dirName = name;
+                int bar = dirName.IndexOf('|');
+                if (bar >= 0)
+                    dirName = dirName.Substring(0, bar);
+                string outputPath = RequiredAttributeValue(configNode, "OutputDirectory");
+                outputPath = outputPath.Replace("$(SolutionDir)", Path.GetFullPath(Path.GetDirectoryName(ProjectPath)) + Path.DirectorySeparatorChar);
+                outputPath = outputPath.Replace("$(ConfigurationName)", dirName);
+
+                XmlNode toolNode = configNode.SelectSingleNode("Tool[@Name='VCLinkerTool']");
+                string assemblyName = null;
+                if (toolNode != null)
+                {
+                    assemblyName = SafeAttributeValue(toolNode, "OutputFile");
+                    if (assemblyName != null)
+                        assemblyName = Path.GetFileName(assemblyName);
+                    else
+                        assemblyName = Path.GetFileNameWithoutExtension(ProjectPath) + extensionsByConfigType[config_type];
+                }
+                else
+                {
+                    toolNode = configNode.SelectSingleNode("Tool[@Name='VCNMakeTool']");
+                    if (toolNode != null)
+                        assemblyName = Path.GetFileName(RequiredAttributeValue(toolNode, "Output"));
+                }
+
+                assemblyName = assemblyName.Replace("$(OutDir)", outputPath);
+                assemblyName = assemblyName.Replace("$(ProjectName)", Name);
+
+                _configs.Add(name, new ProjectConfig(this, name, outputPath, assemblyName));
+            }
         }
 
         private void ThrowInvalidFileType(string projectPath)
@@ -404,6 +368,57 @@ namespace NUnit.Engine.Services.ProjectLoaders
                 return result;
 
             throw new ApplicationException("Missing required attribute " + name);
+        }
+
+        private static string GetConfigNameFromCondition(XmlElement configNode)
+        {
+            string configurationName = null;
+            XmlAttribute conditionAttribute = configNode.Attributes["Condition"];
+            if (conditionAttribute != null)
+            {
+                string condition = conditionAttribute.Value;
+                if (condition.IndexOf("$(Configuration)") >= 0)
+                {
+                    int start = condition.IndexOf("==");
+                    if (start >= 0)
+                    {
+                        configurationName = condition.Substring(start + 2).Trim(new char[] { ' ', '\'' });
+                        if (configurationName.EndsWith("|AnyCPU"))
+                            configurationName = configurationName.Substring(0, configurationName.Length - 7);
+                    }
+                }
+            }
+            return configurationName;
+        }
+
+        #endregion
+
+        #region Nested ProjectConfig Class
+
+        private class ProjectConfig
+        {
+            private IProject _project;
+            private string _name;
+            private string _outputPath;
+            private string _assemblyName;
+
+            public ProjectConfig(IProject project, string name, string outputPath, string assemblyName)
+            {
+                _project = project;
+                _name = name;
+                _outputPath = outputPath;
+                _assemblyName = assemblyName;
+            }
+
+            public string OutputDirectory
+            {
+                get { return Path.Combine(Path.GetDirectoryName(_project.ProjectPath), _outputPath);  }
+            }
+
+            public string AssemblyPath
+            {
+                get { return Path.Combine(OutputDirectory, _assemblyName); }
+            }
         }
 
         #endregion

@@ -21,8 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#define USE_SOLUTION_CONFIGS
-
 using System;
 using System.IO;
 using NUnit.Engine.Tests.resources;
@@ -115,17 +113,9 @@ namespace NUnit.Engine.Services.ProjectLoaders.Tests
             {
                 IProject project = _loader.LoadFrom(file.Path);
 
-#if USE_SOLUTION_CONFIGS
                 Assert.AreEqual(2, project.ConfigNames.Count);
                 Assert.AreEqual(4, project.GetTestPackage("Debug").TestFiles.Count);
                 Assert.AreEqual(4, project.GetTestPackage("Release").TestFiles.Count);
-#else
-                Assert.AreEqual(4, project.ConfigNames.Count);
-                Assert.AreEqual(3, project.GetTestPackage("Debug").TestFiles.Count);
-                Assert.AreEqual(3, project.GetTestPackage("Release").TestFiles.Count);
-                Assert.AreEqual(1, project.GetTestPackage("Debug|Win32").TestFiles.Count);
-                Assert.AreEqual(1, project.GetTestPackage("Release|Win32").TestFiles.Count);
-#endif
             }
         }
 
@@ -139,17 +129,10 @@ namespace NUnit.Engine.Services.ProjectLoaders.Tests
             using (TestResource file = new TestResource("samples.sln"))
             {
                 IProject project = _loader.LoadFrom(file.Path);
-#if USE_SOLUTION_CONFIGS
+
                 Assert.AreEqual(2, project.ConfigNames.Count);
                 Assert.AreEqual(4, project.GetTestPackage("Debug").TestFiles.Count);
                 Assert.AreEqual(4, project.GetTestPackage("Release").TestFiles.Count);
-#else
-                Assert.AreEqual(4, project.ConfigNames.Count);
-                Assert.AreEqual(3, project.GetTestPackage("Debug").TestFiles.Count);
-                Assert.AreEqual(3, project.GetTestPackage("Release").TestFiles.Count);
-                Assert.AreEqual(1, project.GetTestPackage("Debug|Win32").TestFiles.Count);
-                Assert.AreEqual(1, project.GetTestPackage("Release|Win32").TestFiles.Count);
-#endif
             }
         }
 
@@ -174,17 +157,10 @@ namespace NUnit.Engine.Services.ProjectLoaders.Tests
             using (TestResource file = new TestResource("solution-with-unmanaged-cpp.sln"))
             {
                 IProject project = _loader.LoadFrom(file.Path);
-#if USE_SOLUTION_CONFIGS
+
                 Assert.AreEqual(2, project.ConfigNames.Count);
                 Assert.AreEqual(2, project.GetTestPackage("Debug").TestFiles.Count);
                 Assert.AreEqual(2, project.GetTestPackage("Release").TestFiles.Count);
-#else
-                Assert.AreEqual(4, project.ConfigNames.Count);
-                Assert.AreEqual(1, project.GetTestPackage("Debug").TestFiles.Count);
-                Assert.AreEqual(1, project.GetTestPackage("Release").TestFiles.Count);
-                Assert.AreEqual(1, project.GetTestPackage("Debug|Win32").TestFiles.Count);
-                Assert.AreEqual(1, project.GetTestPackage("Release|Win32").TestFiles.Count);
-#endif
             }
         }
 

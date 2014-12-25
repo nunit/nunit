@@ -80,7 +80,7 @@ namespace NUnit.Engine.Services.ProjectLoaders.Tests
         {
             WriteInvalidFile("<VisualStudioProject><CSharp><Build><Settings AssemblyName=\"invalid\" OutputType=\"Library\"></Settings></Build></CSharp></VisualStudioProject>");
             VSProject project = new VSProject(Path.Combine(Path.GetTempPath(), "invalid.csproj"));
-            Assert.AreEqual(0, project.Configs.Count);
+            Assert.AreEqual(0, project.ConfigNames.Count);
         }
     }
 }

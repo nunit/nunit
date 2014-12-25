@@ -108,8 +108,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Services\ProjectLoaders\VSProject.cs" />
-    <Compile Include="Services\ProjectLoaders\VSProjectConfig.cs" />
-    <Compile Include="Services\ProjectLoaders\VSProjectConfigCollection.cs" />
     <Compile Include="Services\ProjectLoaders\VSSolution.cs" />
     <Compile Include="Services\ResultWriters\NUnit2XmlResultWriter.cs" />
     <Compile Include="Services\ResultWriters\NUnit3XmlResultWriter.cs" />

@@ -21,8 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#define USE_SOLUTION_CONFIGS
-
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -37,7 +35,7 @@ namespace NUnit.Engine.Services.ProjectLoaders
         const string BUILD_MARKER = ".Build.0 =";
 
         IDictionary<string, VSProject> _projectLookup = new Dictionary<string, VSProject>();
-        IDictionary<string, VSProjectConfig> _configs = new Dictionary<string, VSProjectConfig>();
+        IDictionary<string, SolutionConfig> _configs = new Dictionary<string, SolutionConfig>();
 
         #region Constructor
 
@@ -84,17 +82,20 @@ namespace NUnit.Engine.Services.ProjectLoaders
 
         public TestPackage GetTestPackage(string configName)
         {
-            if (configName == null)
-                configName = ActiveConfigName;
-
-            if (configName == null)
-                return null;
-
             var package = new TestPackage(ProjectPath);
-            var config = _configs[configName];
 
-            foreach (var assembly in config.Assemblies)
-                package.Add(assembly);
+            foreach (var name in _configs.Keys)
+            {
+                if (configName == null || configName == name)
+                {
+                    var config = _configs[name];
+                    foreach (string assembly in config.Assemblies)
+                    {
+                        package.Add(assembly);
+                    }
+                    break;
+                }
+            }
 
             return package;
         }
@@ -145,24 +146,15 @@ namespace NUnit.Engine.Services.ProjectLoaders
                                     projectConfig = projectConfig.Substring(0, bar);
                             }
 
-                            VSProjectConfig config = null;
-#if USE_SOLUTION_CONFIGS
+                            SolutionConfig config = null;
+
                             if (_configs.ContainsKey(solutionConfig))
                                 config = _configs[solutionConfig];
                             else
                             {
-                                config = new VSProjectConfig(solutionConfig);
+                                config = new SolutionConfig(solutionConfig);
                                 _configs.Add(solutionConfig, config);
                             }
-#else
-                            if (_configs.ContainsKey(projectConfig))
-                                config = _configs[projectConfig];
-                            else
-                            {
-                                config = new VSProjectConfig(projectConfig);
-                                _configs.Add(projectConfig, config);
-                            }
-#endif
 
                             foreach (string assembly in vsProject.GetTestPackage(projectConfig).TestFiles)
                                 if (!config.Assemblies.Contains(assembly))
@@ -176,6 +168,23 @@ namespace NUnit.Engine.Services.ProjectLoaders
                     line = reader.ReadLine();
                 }
             }
+        }
+
+        #endregion
+
+        #region Nested SolutionConfig Class
+
+        private class SolutionConfig
+        {
+            public SolutionConfig(string name)
+            {
+                Name = name;
+                Assemblies = new List<string>();
+            }
+
+            public string Name { get; private set; }
+
+            public IList<string> Assemblies { get; private set; }
         }
 
         #endregion
