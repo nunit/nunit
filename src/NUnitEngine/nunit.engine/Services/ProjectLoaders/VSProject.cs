@@ -182,6 +182,9 @@ namespace NUnit.Engine.Services.ProjectLoaders
 
         #region Helper Methods
 
+        /// <summary>
+        /// Load a project in various ways, depending on the extension.
+        /// </summary>
         private void Load()
         {
             if ( !IsProjectFile( ProjectPath ) ) 
@@ -229,6 +232,11 @@ namespace NUnit.Engine.Services.ProjectLoaders
             }
         }
 
+        /// <summary>
+        /// Load a project in the legacy VS2003 format. Note that this method is not 
+        /// called for C++ projects using the same format, because the details differ.
+        /// </summary>
+        /// <returns>True if this project is in the VS2003 format, otherwise false.</returns>
         private bool TryLoadLegacyProject()
         {
             XmlNode settingsNode = _doc.SelectSingleNode("/VisualStudioProject/*/Build/Settings");
@@ -256,6 +264,9 @@ namespace NUnit.Engine.Services.ProjectLoaders
             return true;
         }
 
+        /// <summary>
+        /// Load a non-C++ project in the MsBuild format introduced with VS2005
+        /// </summary>
         private void LoadMSBuildProject()
         {
             XmlNamespaceManager namespaceManager = new XmlNamespaceManager(_doc.NameTable);
@@ -300,6 +311,10 @@ namespace NUnit.Engine.Services.ProjectLoaders
             }
         }
 
+        /// <summary>
+        /// Load a C++ project in the legacy format, which was used for C++
+        /// much longer than it was used for the other languages supported.
+        /// </summary>
         private void LoadLegacyCppProject()
         {
             string[] extensionsByConfigType = { "", ".exe", ".dll", ".lib", "" };
