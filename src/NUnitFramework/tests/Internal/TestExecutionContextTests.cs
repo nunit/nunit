@@ -389,4 +389,48 @@ namespace NUnit.Framework.Internal
 
         #endregion
     }
+
+#if !PORTABLE && !SILVERLIGHT
+    [TestFixture]
+    public class TextExecutionContextInAppDomain
+    {
+        private RunsInAppDomain _runsInAppDomain;
+
+        [SetUp]
+        public void SetUp()
+        {
+            var domain = AppDomain.CreateDomain("TestDomain", null, AppDomain.CurrentDomain.BaseDirectory, AppDomain.CurrentDomain.RelativeSearchPath, false);
+            _runsInAppDomain = domain.CreateInstanceAndUnwrap(Assembly.GetExecutingAssembly().FullName,
+                "NUnit.Framework.Internal.RunsInAppDomain") as RunsInAppDomain;
+            Assert.That(_runsInAppDomain, Is.Not.Null);
+        }
+
+        [Test]
+        [Description("Issue 71 - NUnit swallows console output from AppDomains created within tests")]
+        public void CanWriteToConsoleInAppDomain()
+        {
+            _runsInAppDomain.WriteToConsole();
+        }
+
+        [Test]
+        [Description("Issue 210 - TestContext.WriteLine in an AppDomain causes an error")]
+        public void CanWriteToTestContextInAppDomain()
+        {
+            _runsInAppDomain.WriteToTestContext();
+        }
+    }
+
+    internal class RunsInAppDomain : MarshalByRefObject
+    {
+        public void WriteToConsole()
+        {
+            Console.WriteLine("RunsInAppDomain.WriteToConsole");
+        }
+
+        public void WriteToTestContext()
+        {
+            TestContext.WriteLine("RunsInAppDomain.WriteToTestContext");
+        }
+    }
+#endif
 }
