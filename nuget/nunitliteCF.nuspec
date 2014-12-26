@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>NUnitLiteCF</id>
+    <title>NUnitLite Version 3 for Compact Framework</title>
+    <version>$version$</version>
+    <authors>Charlie Poole</authors>
+    <owners>Charlie Poole</owners>
+    <licenseUrl>http://nunit.org/nuget/nunitlite-license.txt</licenseUrl>
+    <projectUrl>http://nunit.org</projectUrl>
+    <iconUrl>http://nunit.org/nuget/nunit_32x32.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <summary>NUnitlite is a lightweight runner for tests that use the NUnit testing framework.</summary>
+    <description>NUnitLite provides a simple way to run NUnit tests, without the overhead of a full NUnit installation. It is suitable for projects that want to have a quick way to run tests using a console runner and don't need all the features of the NUnit engine and console runner. This package contains the NUnitLite runner and the NUnit framework built for versuib 3.5 of the .NET Compact Framework.&#10;&#13;&#10;&#13;How to use this package:&#10;&#13;&#10;&#13;1. Create a console application for your tests and delete the generated class containing Main().&#10;&#13;2. Install the NUnitLiteCF package, which creates a new Main() as well as adding references to NUnitLite and the NUnit Framework.&#10;&#13;3. Add your tests to the test project and simply start the project to execute them.</description>
+    <releaseNotes>This is an alpha release and is not intended for production use.</releaseNotes>
+    <language>en-US</language>
+    <tags>test unit testing tdd framework fluent assert device phone embedded</tags>
+    <copyright>Copyright (c) 2014 Charlie Poole</copyright>			    <dependencies>
+      <group targetFramework="net40">
+        <dependency id="Microsoft.Bcl.Async" version="1.0.165" />
+      </group>
+      <!-- This is required otherwise 4.5 will pull in the 4.0 dependencies -->
+      <group targetFramework="net45" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="LICENSE.txt" />
+    <file src="README.txt" />
+    <file src="CHANGES.txt" />
+    <file src="$builddir$\netcf-3.5\nunitlite.dll"  target="lib/net35-cf" />
+    <file src="$builddir$\netcf-3.5\nunit.framework.dll"  target="lib/net35-cf" />
+    <file src="$builddir$\netcf-3.5\nunit.framework.xml"  target="lib/net35-cf" />
+    <file src="src\tests\Program.cs" target="content" />
+  </files>
+</package>

@@ -3,11 +3,16 @@ before_install:
   - sudo apt-get update -qq -y
   - sudo apt-get install mono-devel -qq -y
 
-script: ./runbuild /p:Configuration=Release /p:Framework=$Framework "/t:DumpSettings;CleanAll;Build;Test"
+before_script:
+  - xbuild NUnit.proj /p:Configuration=Release /p:Framework=$Framework "/t:DumpSettings;CleanAll"
+
+script: 
+  - xbuild NUnit.proj /p:Configuration=Release /p:Framework=$Framework "/t:Build;Test"
   
 env:
   matrix:
-    - Framework="mono-2.0"
-    - Framework="mono-3.5"
-    - Framework="mono-4.0"
-    - Framework="mono-4.5"
+    - Framework="net-2.0"
+    - Framework="net-3.5"
+    - Framework="net-4.0"
+    - Framework="net-4.5"
+    

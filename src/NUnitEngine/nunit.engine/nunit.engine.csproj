@@ -1,0 +1,150 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{372A3447-D657-40FF-A089-77C19FEC30C8}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>NUnit.Engine</RootNamespace>
+    <AssemblyName>nunit.engine</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\..\bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;NUNIT_ENGINE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\..\bin\Release\</OutputPath>
+    <DefineConstants>TRACE;NUNIT_ENGINE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Remoting" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\CommonAssemblyInfo.cs">
+      <Link>CommonAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\AssemblyHelper.cs">
+      <Link>Internal\AssemblyHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\Guard.cs">
+      <Link>Guard.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\Logging\InternalTrace.cs">
+      <Link>Internal\InternalTrace.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\Logging\InternalTraceWriter.cs">
+      <Link>Internal\InternalTraceWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\Logging\Logger.cs">
+      <Link>Internal\Logger.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\XmlHelper.cs">
+      <Link>Internal\XmlHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\EngineVersion.cs">
+      <Link>EngineVersion.cs</Link>
+    </Compile>
+    <Compile Include="Drivers\NotRunnableFrameworkDriver.cs" />
+    <Compile Include="IDriverFactory.cs" />
+    <Compile Include="ITestAgency.cs" />
+    <Compile Include="ITestAgent.cs" />
+    <Compile Include="Agents\RemoteTestAgent.cs" />
+    <Compile Include="Agents\TestAgent.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="CallbackHandler.cs" />
+    <Compile Include="Internal\AssemblyReader.cs" />
+    <Compile Include="Internal\DomainUsage.cs" />
+    <Compile Include="Internal\NUnitConfiguration.cs" />
+    <Compile Include="Services\ProjectLoaders\NUnitProject.cs" />
+    <Compile Include="Internal\PathUtils.cs" />
+    <Compile Include="Internal\ProcessModel.cs" />
+    <Compile Include="Internal\ResultHelper.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Internal\ServerBase.cs" />
+    <Compile Include="Internal\ServerUtilities.cs" />
+    <Compile Include="Internal\SettingsGroup.cs" />
+    <Compile Include="Internal\SettingsStore.cs" />
+    <Compile Include="IRuntimeFrameworkSelector.cs" />
+    <Compile Include="IService.cs" />
+    <Compile Include="ITestEngineRunner.cs" />
+    <Compile Include="ITestRunnerFactory.cs" />
+    <Compile Include="Drivers\NUnitFrameworkDriver.cs" />
+    <Compile Include="RunnerSettings.cs" />
+    <Compile Include="Runners\AbstractTestRunner.cs" />
+    <Compile Include="Runners\AggregatingTestRunner.cs" />
+    <Compile Include="Runners\DirectTestRunner.cs" />
+    <Compile Include="Runners\LocalTestRunner.cs" />
+    <Compile Include="Runners\MasterTestRunner.cs" />
+    <Compile Include="Runners\MultipleTestDomainRunner.cs" />
+    <Compile Include="Runners\MultipleTestProcessRunner.cs" />
+    <Compile Include="Runners\ProcessRunner.cs" />
+    <Compile Include="Runners\TestDomainRunner.cs" />
+    <Compile Include="Services\ProjectLoaders\VisualStudioProjectLoader.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Services\ProjectLoaders\VSProject.cs" />
+    <Compile Include="Services\ProjectLoaders\VSSolution.cs" />
+    <Compile Include="Services\ResultWriters\NUnit2XmlResultWriter.cs" />
+    <Compile Include="Services\ResultWriters\NUnit3XmlResultWriter.cs" />
+    <Compile Include="Services\ResultWriters\NUnit2ResultSummary.cs" />
+    <Compile Include="Services\ResultWriters\TestCaseResultWriter.cs" />
+    <Compile Include="Services\ResultWriters\XmlTransformResultWriter.cs" />
+    <Compile Include="Services\ResultService.cs" />
+    <Compile Include="TestRun.cs" />
+    <Compile Include="RunTestsCallbackHandler.cs" />
+    <Compile Include="RuntimeFramework.cs" />
+    <Compile Include="ServiceContext.cs" />
+    <Compile Include="Services\DefaultTestRunnerFactory.cs" />
+    <Compile Include="Services\DomainManager.cs" />
+    <Compile Include="Services\DriverFactory.cs" />
+    <Compile Include="Services\InProcessTestRunnerFactory.cs" />
+    <Compile Include="Services\ProjectLoaders\NUnitProjectLoader.cs" />
+    <Compile Include="Services\ProjectService.cs" />
+    <Compile Include="Services\RecentFilesService.cs" />
+    <Compile Include="Services\RuntimeFrameworkSelector.cs" />
+    <Compile Include="Services\ServiceManager.cs" />
+    <Compile Include="Services\SettingsService.cs" />
+    <Compile Include="Services\TestAgency.cs" />
+    <Compile Include="TestEngine.cs" />
+    <Compile Include="TestEngineResult.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\nunit.engine.api\nunit.engine.api.csproj">
+      <Project>{775FAD50-3623-4922-97C4-DFB29A8BE4C7}</Project>
+      <Name>nunit.engine.api</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
