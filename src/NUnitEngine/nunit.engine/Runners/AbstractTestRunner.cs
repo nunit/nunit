@@ -259,7 +259,7 @@ namespace NUnit.Engine.Runners
             return package != null
                 && package.FullName != null
                 && package.FullName != string.Empty
-                && Services.ProjectService.IsProjectFile(package.FullName);
+                && Services.ProjectService.CanLoadFrom(package.FullName);
         }
 
         private void EnsurePackageIsLoaded()

@@ -1,5 +1,5 @@
-﻿// ***********************************************************************
-// Copyright (c) 2011 Charlie Poole
+// ***********************************************************************
+// Copyright (c) 2008-2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -22,25 +22,33 @@
 // ***********************************************************************
 
 using System;
+using System.Collections;
 using System.IO;
 using NUnit.Engine.Internal;
 
-namespace NUnit.Engine.Services
+namespace NUnit.Engine.Services.ProjectLoaders
 {
-    public class NUnitProjectLoader : IProjectLoader
+    /// <summary>
+    /// Summary description for VSProjectLoader.
+    /// </summary>
+    public class VisualStudioProjectLoader : IProjectLoader
     {
         #region IProjectLoader Members
 
-        public bool IsProjectFile(string path)
+        public bool CanLoadFrom(string path)
         {
-            return Path.GetExtension(path) == ".nunit";
+            return VSProject.IsProjectFile(path)|| VSProject.IsSolutionFile(path);
         }
 
-        public IProject LoadProject(string path)
+        public IProject LoadFrom(string path)
         {
-            NUnitProject project = new NUnitProject();
-            project.Load(path);
-            return project;
+            if (VSProject.IsProjectFile(path))
+                return new VSProject(path);
+
+            if (VSProject.IsSolutionFile(path))
+                return new VSSolution(path);
+
+            return null;
         }
 
         #endregion

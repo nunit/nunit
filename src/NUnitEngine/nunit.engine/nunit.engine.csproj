@@ -79,11 +79,9 @@
     <Compile Include="Internal\AssemblyReader.cs" />
     <Compile Include="Internal\DomainUsage.cs" />
     <Compile Include="Internal\NUnitConfiguration.cs" />
-    <Compile Include="Internal\NUnitProject.cs" />
+    <Compile Include="Services\ProjectLoaders\NUnitProject.cs" />
     <Compile Include="Internal\PathUtils.cs" />
     <Compile Include="Internal\ProcessModel.cs" />
-    <Compile Include="Internal\ProjectConfig.cs" />
-    <Compile Include="Internal\ProjectConfigList.cs" />
     <Compile Include="Internal\ResultHelper.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -91,10 +89,6 @@
     <Compile Include="Internal\ServerUtilities.cs" />
     <Compile Include="Internal\SettingsGroup.cs" />
     <Compile Include="Internal\SettingsStore.cs" />
-    <Compile Include="IProject.cs" />
-    <Compile Include="IProjectConfig.cs" />
-    <Compile Include="IProjectConfigList.cs" />
-    <Compile Include="IProjectLoader.cs" />
     <Compile Include="IRuntimeFrameworkSelector.cs" />
     <Compile Include="IService.cs" />
     <Compile Include="ITestEngineRunner.cs" />
@@ -110,6 +104,11 @@
     <Compile Include="Runners\MultipleTestProcessRunner.cs" />
     <Compile Include="Runners\ProcessRunner.cs" />
     <Compile Include="Runners\TestDomainRunner.cs" />
+    <Compile Include="Services\ProjectLoaders\VisualStudioProjectLoader.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Services\ProjectLoaders\VSProject.cs" />
+    <Compile Include="Services\ProjectLoaders\VSSolution.cs" />
     <Compile Include="Services\ResultWriters\NUnit2XmlResultWriter.cs" />
     <Compile Include="Services\ResultWriters\NUnit3XmlResultWriter.cs" />
     <Compile Include="Services\ResultWriters\NUnit2ResultSummary.cs" />
@@ -124,7 +123,7 @@
     <Compile Include="Services\DomainManager.cs" />
     <Compile Include="Services\DriverFactory.cs" />
     <Compile Include="Services\InProcessTestRunnerFactory.cs" />
-    <Compile Include="Services\NUnitProjectLoader.cs" />
+    <Compile Include="Services\ProjectLoaders\NUnitProjectLoader.cs" />
     <Compile Include="Services\ProjectService.cs" />
     <Compile Include="Services\RecentFilesService.cs" />
     <Compile Include="Services\RuntimeFrameworkSelector.cs" />

@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Copyright (c) 2011 Charlie Poole
+// Copyright (c) 2007-2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,23 +21,20 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-namespace NUnit.Engine
+using System;
+
+namespace NUnit.Engine.Tests.resources
 {
-    public interface IProjectConfigList
+    public class TestResource : TempResourceFile
     {
-        /// <summary>
-        /// Gets a count of the number of configs
-        /// </summary>
-        int Count { get; }
+        public TestResource(string name)
+            : base(typeof(TestResource), name)
+        {
+        }
 
-        ///// <summary>
-        ///// Gets the config at the specified index.
-        ///// </summary>
-        //IProjectConfig this[int index] { get; }
-
-        /// <summary>
-        /// Gets the config with the specified name
-        /// </summary>
-        IProjectConfig this[string name] { get; }
+        public TestResource(string name, string filePath)
+            : base(typeof(TestResource), name, filePath)
+        {
+        }
     }
 }

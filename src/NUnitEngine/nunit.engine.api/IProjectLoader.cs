@@ -33,17 +33,17 @@ namespace NUnit.Engine
     {
         /// <summary>
         /// Returns true if the file indicated is one that this
-        /// converter knows how to load.
+        /// loader knows how to load.
         /// </summary>
-        /// <param name="path"></param>
-        /// <returns></returns>
-        bool IsProjectFile( string path );
+        /// <param name="path">The path of the project file</param>
+        /// <returns>True if the loader knows how to load this file, otherwise false</returns>
+        bool CanLoadFrom( string path );
 
         /// <summary>
-        /// Loads an external project returning an IProject.
+        /// Loads a project of a known format.
         /// </summary>
-        /// <param name="path"></param>
-        /// <returns></returns>
-        IProject LoadProject( string path );
+        /// <param name="path">The path of the project file</param>
+        /// <returns>An IProject interface to the loaded project or null if the project cannot be loaded</returns>
+        IProject LoadFrom(string path);
     }
 }
