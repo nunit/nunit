@@ -390,7 +390,7 @@ namespace NUnit.Framework.Internal
         #endregion
     }
 
-#if !PORTABLE && !SILVERLIGHT
+#if !PORTABLE && !SILVERLIGHT && !NETCF
     [TestFixture]
     public class TextExecutionContextInAppDomain
     {
