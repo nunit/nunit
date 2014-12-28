@@ -213,8 +213,7 @@ namespace NUnit.Framework.Internal
 
         #region TwoSetUpFixtures
         [NUnit.Framework.Test]
-        public void WithTwoSetUpFixturesOnlyOneIsUsed()
-            // TODO: This represents a possible future enhancement to use both classes.
+        public void WithTwoSetUpFixturesBothAreUsed()
         {
             Assert.That(runTests("NUnit.TestData.SetupFixture.Namespace4").ResultState.Status, Is.EqualTo(TestStatus.Passed));
             TestUtilities.SimpleEventRecorder.Verify("NS4.OneTimeSetUp1",
