@@ -282,7 +282,7 @@
 			Text="The full NUnit framework cannot be tested under $(Runtime)" />
 
 		<Exec WorkingDirectory="$(ConsoleBuildDir)" 
-			  Command="$(ManagedExeLauncher) $(ConsoleRunner) $(Framework)/nunit.framework.tests.dll -result:$(ResultDir)/NUnitFrameworkResult-$(Framework).xml;format=$(ResultFormat) $(TestOptions)"
+			  Command='$(ManagedExeLauncher) $(ConsoleRunner) $(Framework)/nunit.framework.tests.dll "-result:$(ResultDir)/NUnitFrameworkResult-$(Framework).xml;format=$(ResultFormat)" $(TestOptions)'
 			  ContinueOnError="$(ContinueOnFailure)" />
 		
 	</Target>
@@ -296,8 +296,8 @@
 		<Message Text="******************************************************************" />
 		
 		<Exec WorkingDirectory="$(EngineBuildDir)"
-			  Command="$(ManagedExeLauncher) $(ConsoleRunner) nunit.engine.tests.dll -result:$(ResultDir)/EngineResult.xml;format=$(ResultFormat) $(TestOptions)"
-			  ContinueOnError="ErrorAndContinue"/>
+			  Command='$(ManagedExeLauncher) $(ConsoleRunner) nunit.engine.tests.dll "-result:$(ResultDir)/EngineResult.xml;format=$(ResultFormat)" $(TestOptions)'
+			  ContinueOnError="$(ContinueOnFailure)"/>
 
 	</Target>
 
@@ -310,7 +310,7 @@
 		<Message Text="******************************************************************" />
 		
 		<Exec WorkingDirectory="$(EngineBuildDir)"
-			Command="$(ManagedExeLauncher) $(ConsoleRunner) v2-driver/tests/nunit.v2.driver.tests.dll -result:$(ResultDir)/V2DriverResult.xml;format=$(ResultFormat) -process:Single $(TestOptions)"
+			Command='$(ManagedExeLauncher) $(ConsoleRunner) v2-driver/tests/nunit.v2.driver.tests.dll "-result:$(ResultDir)/V2DriverResult.xml;format=$(ResultFormat)"  $(TestOptions)'
 			ContinueOnError="$(ContinueOnFailure)"/>
 		
 	</Target>
@@ -324,7 +324,7 @@
 		<Message Text="******************************************************************" />
 		
 		<Exec WorkingDirectory="$(ConsoleBuildDir)"
-			  Command="$(ManagedExeLauncher) $(ConsoleRunner) nunit-console.tests.dll -result:$(ResultDir)/ConsoleResult.xml;format=$(ResultFormat) $(TestOptions)"
+			  Command='$(ManagedExeLauncher) $(ConsoleRunner) nunit-console.tests.dll "-result:$(ResultDir)/ConsoleResult.xml;format=$(ResultFormat)" $(TestOptions)'
 			  ContinueOnError="$(ContinueOnFailure)" />
 		
 	</Target>
