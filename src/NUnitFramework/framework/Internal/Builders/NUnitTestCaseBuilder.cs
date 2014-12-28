@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2008-2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -23,6 +23,9 @@
 
 using System;
 using System.Reflection;
+#if NETCF
+using System.Linq;
+#endif
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Builders
@@ -36,7 +39,7 @@ namespace NUnit.Framework.Internal.Builders
         private readonly Randomizer randomizer = Randomizer.CreateRandomizer();
 
         /// <summary>
-        /// Builds a single NUnitTestMethod, either as a child of the fixture 
+        /// Builds a single NUnitTestMethod, either as a child of the fixture
         /// or as one of a set of test cases under a ParameterizedTestMethodSuite.
         /// </summary>
         /// <param name="method">The MethodInfo from which to construct the TestMethod</param>
@@ -93,12 +96,12 @@ namespace NUnit.Framework.Internal.Builders
         /// <summary>
         /// Helper method that checks the signature of a TestMethod and
         /// any supplied parameters to determine if the test is valid.
-        /// 
-        /// Currently, NUnitTestMethods are required to be public, 
+        ///
+        /// Currently, NUnitTestMethods are required to be public,
         /// non-abstract methods, either static or instance,
         /// returning void. They may take arguments but the _values must
         /// be provided or the TestMethod is not considered runnable.
-        /// 
+        ///
         /// Methods not meeting these criteria will be marked as
         /// non-runnable and the method will return false in that case.
         /// </summary>
@@ -109,14 +112,10 @@ namespace NUnit.Framework.Internal.Builders
         private static bool CheckTestMethodSignature(TestMethod testMethod, ParameterSet parms)
         {
             if (testMethod.Method.IsAbstract)
-            {
                 return MarkAsNotRunnable(testMethod, "Method is abstract");
-            }
 
             if (!testMethod.Method.IsPublic)
-            {
                 return MarkAsNotRunnable(testMethod, "Method is not public");
-            }
 
             ParameterInfo[] parameters;
 #if NETCF
@@ -134,6 +133,7 @@ namespace NUnit.Framework.Internal.Builders
             }
             else
 #endif
+
             parameters = testMethod.Method.GetParameters();
 
             int argsNeeded = parameters.Length;
@@ -155,16 +155,20 @@ namespace NUnit.Framework.Internal.Builders
                     return false;
             }
 
+#if NETCF
+            Type returnType = testMethod.Method.IsGenericMethodDefinition && (parms == null || parms.Arguments == null) ? typeof(void) : (Type)testMethod.Method.ReturnType;
+#else
             Type returnType = testMethod.Method.ReturnType;
+#endif
 
 #if NET_4_0 || NET_4_5
             if (AsyncInvocationRegion.IsAsyncOperation(testMethod.Method))
             {
-                if (returnType == typeof (void))
+                if (returnType == typeof(void))
                     return MarkAsNotRunnable(testMethod, "Async test method must have non-void return type");
 
                 var returnsGenericTask = returnType.IsGenericType &&
-                                         returnType.GetGenericTypeDefinition() == typeof (System.Threading.Tasks.Task<>);
+                    returnType.GetGenericTypeDefinition() == typeof(System.Threading.Tasks.Task<>);
 
                 if (returnsGenericTask && (parms == null || !parms.HasExpectedResult))
                     return MarkAsNotRunnable(testMethod,
@@ -176,7 +180,7 @@ namespace NUnit.Framework.Internal.Builders
             }
             else
 #endif
-            if (returnType == typeof (void))
+            if (returnType == typeof(void))
             {
                 if (parms != null && parms.HasExpectedResult)
                     return MarkAsNotRunnable(testMethod, "Method returning void cannot have an expected result");
@@ -185,28 +189,21 @@ namespace NUnit.Framework.Internal.Builders
                 return MarkAsNotRunnable(testMethod, "Method has non-void return value, but no result is expected");
 
             if (argsProvided > 0 && argsNeeded == 0)
-            {
                 return MarkAsNotRunnable(testMethod, "Arguments provided for method not taking any");
-            }
 
             if (argsProvided == 0 && argsNeeded > 0)
-            {
                 return MarkAsNotRunnable(testMethod, "No arguments were provided");
-            }
 
             if (argsProvided != argsNeeded)
-            {
                 return MarkAsNotRunnable(testMethod, "Wrong number of arguments provided");
-            }
 
-            if (testMethod.Method.IsGenericMethodDefinition)
+            if (testMethod.Method.IsGenericMethodDefinition && arglist != null)
             {
-                Type[] typeArguments = GetTypeArgumentsForMethod(testMethod.Method, arglist);
-                foreach (object o in typeArguments)
-                    if (o == null)
-                    {
+                var typeArguments = GetTypeArgumentsForMethod(testMethod.Method, arglist);
+                foreach (Type o in typeArguments)
+                    if (o == null || o == TypeHelper.NonmatchingType)
                         return MarkAsNotRunnable(testMethod, "Unable to determine type arguments for method");
-                    }
+
 
                 testMethod.Method = testMethod.Method.MakeGenericMethod(typeArguments);
                 parameters = testMethod.Method.GetParameters();
@@ -224,23 +221,22 @@ namespace NUnit.Framework.Internal.Builders
             Type[] typeArguments = new Type[typeParameters.Length];
             ParameterInfo[] parameters = method.GetParameters();
 
-            for (int typeIndex = 0; typeIndex < typeArguments.Length; typeIndex++)
+            for (int argIndex = 0; argIndex < parameters.Length; argIndex++)
             {
-                Type typeParameter = typeParameters[typeIndex];
+                var pi = parameters[argIndex];
+                var arg = arglist[argIndex];
 
-                for (int argIndex = 0; argIndex < parameters.Length; argIndex++)
+                if (pi.ParameterType.IsGenericParameter)
                 {
-                    if (parameters[argIndex].ParameterType.Equals(typeParameter))
-                    {
-                        // If a null arg is provided, pass null as the Type
-                        // BestCommonType knows how to deal with this
-                        Type argType = arglist[argIndex] != null
-                            ? arglist[argIndex].GetType()
-                            : null;
-                        typeArguments[typeIndex] = TypeHelper.BestCommonType(
-                            typeArguments[typeIndex],
-                            argType);
-                    }
+                    // If a null arg is provided, pass null as the Type
+                    // BestCommonType knows how to deal with this
+#if NETCF
+                    var typeArgIndex = Array.IndexOf(typeParameters, pi.ParameterType);
+#else
+                    var typeArgIndex = pi.ParameterType.GenericParameterPosition;
+#endif
+                    var argType = arg != null ? arg.GetType() : null;
+                    typeArguments[typeArgIndex] = TypeHelper.BestCommonType(typeArguments[typeArgIndex], argType);
                 }
             }
 

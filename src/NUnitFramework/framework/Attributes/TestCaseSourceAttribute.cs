@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -63,7 +63,7 @@ namespace NUnit.Framework
             this.SourceName = sourceName;
             _sourceConstructorParameters = constructorParameters;
         }
-        
+
         /// <summary>
         /// Construct with a Type
         /// </summary>
@@ -105,7 +105,11 @@ namespace NUnit.Framework
             {
                 try
                 {
+#if NETCF
+                    ParameterInfo[] parameters = method.IsGenericMethodDefinition ? new ParameterInfo[0] : method.GetParameters();
+#else
                     ParameterInfo[] parameters = method.GetParameters();
+#endif
 
                     foreach (object item in source)
                     {
@@ -119,22 +123,42 @@ namespace NUnit.Framework
                             object[] args = item as object[];
                             if (args != null)
                             {
+#if NETCF
+                                if (method.IsGenericMethodDefinition)
+                                {
+                                    var mi = method.MakeGenericMethodEx(args);
+                                    parameters = mi == null ? new ParameterInfo[0] : mi.GetParameters();
+                                }
+#endif
                                 if (args.Length != parameters.Length)
                                     args = new object[] { item };
                             }
-                            //else if (parameters.Length == 1 && parameters[0].ParameterType.IsAssignableFrom(item.GetType()))
-                            //{
+                            // else if (parameters.Length == 1 && parameters[0].ParameterType.IsAssignableFrom(item.GetType()))
+                            // {
                             //    args = new object[] { item };
-                            //}
+                            // }
                             else if (item is Array)
                             {
                                 Array array = item as Array;
 
+#if NETCF
+                                if (array.Rank == 1 && (method.IsGenericMethodDefinition || array.Length == parameters.Length))
+#else
                                 if (array.Rank == 1 && array.Length == parameters.Length)
+#endif
                                 {
                                     args = new object[array.Length];
                                     for (int i = 0; i < array.Length; i++)
                                         args[i] = (object)array.GetValue(i);
+#if NETCF
+                                    if (method.IsGenericMethodDefinition)
+                                    {
+                                        var mi = method.MakeGenericMethodEx(args);
+
+                                        if (mi == null || array.Length != mi.GetParameters().Length)
+                                            args = new object[] {item};
+                                    }
+#endif
                                 }
                                 else
                                 {
@@ -173,16 +197,15 @@ namespace NUnit.Framework
                 sourceType = method.ReflectedType;
 
             if (SourceName == null)
-            {
                 return Reflect.Construct(sourceType, _sourceConstructorParameters) as IEnumerable;
-            }
 
             MemberInfo[] members = sourceType.GetMember(SourceName,
-                BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
+                    BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
             if (members.Length == 1)
             {
                 MemberInfo member = members[0];
                 object sourceobject = Reflect.Construct(sourceType, _sourceConstructorParameters);
+
                 var field = member as FieldInfo;
                 if (field != null)
                     return (IEnumerable)field.GetValue(sourceobject);
@@ -195,6 +218,7 @@ namespace NUnit.Framework
                 if (m != null)
                     return (IEnumerable)m.Invoke(sourceobject, null);
             }
+
             return null;
         }
         #endregion
