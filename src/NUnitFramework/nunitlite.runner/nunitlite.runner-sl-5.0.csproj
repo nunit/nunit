@@ -94,6 +94,8 @@
       <DependentUpon>TestPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Runner\Silverlight\TextBlockWriter.cs" />
+    <Compile Include="Runner\StringExtensions.cs" />
+    <Compile Include="Runner\StringSplitOptions.cs" />
     <Compile Include="Runner\SimpleCategoryExpression.cs" />
     <Compile Include="Runner\TcpWriter.cs" />
     <Compile Include="Runner\TeamCityEventListener.cs" />
