@@ -35,8 +35,10 @@ namespace NUnit.Engine.Drivers
     /// NUnitFrameworkDriver is used by the test-runner to load and run
     /// tests using the NUnit framework assembly.
     /// </summary>
-    public class NUnitFrameworkDriver : IFrameworkDriver
+    public class NUnit3FrameworkDriver : IFrameworkDriver
     {
+        private const string NUNIT_FRAMEWORK = "nunit.framework";
+
         private static readonly string CONTROLLER_TYPE = "NUnit.Framework.Api.FrameworkController";
         private static readonly string LOAD_ACTION = CONTROLLER_TYPE + "+LoadTestsAction";
         private static readonly string EXPLORE_ACTION = CONTROLLER_TYPE + "+ExploreTestsAction";
@@ -52,10 +54,10 @@ namespace NUnit.Engine.Drivers
 
         object _frameworkController;
 
-        public NUnitFrameworkDriver(AppDomain testDomain, string testAssemblyPath, IDictionary<string, object> settings)
-            : this(testDomain, "nunit.framework", testAssemblyPath, settings) { }
+        public NUnit3FrameworkDriver(AppDomain testDomain, string testAssemblyPath, IDictionary<string, object> settings)
+            : this(testDomain, NUNIT_FRAMEWORK, testAssemblyPath, settings) { }
 
-        public NUnitFrameworkDriver(AppDomain testDomain, string frameworkAssemblyName, string testAssemblyPath, IDictionary<string, object> settings)
+        public NUnit3FrameworkDriver(AppDomain testDomain, string frameworkAssemblyName, string testAssemblyPath, IDictionary<string, object> settings)
         {
             Guard.ArgumentValid(File.Exists(testAssemblyPath), "testAssemblyPath", "Framework driver constructor called with a file name that doesn't exist.");
 
@@ -143,12 +145,4 @@ namespace NUnit.Engine.Drivers
 
         #endregion
     }
-
-    //public class NUnitFrameworkDriver : BaseNUnitFrameworkDriver
-    //{
-    //    public const string FrameworkName = "nunit.framework";
-
-    //    public NUnitFrameworkDriver(AppDomain testDomain, string testAssemblyPath, IDictionary<string, object> settings)
-    //        : base(testDomain, FrameworkName, testAssemblyPath, settings) { }
-    //}
 }

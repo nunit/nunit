@@ -57,9 +57,9 @@ namespace NUnit.Engine.Services
                 {
                     if (refAssembly.Name == NUNIT_FRAMEWORK)
                         if (refAssembly.Version >= nunitV3)
-                            return new NUnitFrameworkDriver(domain, refAssembly.Name, assemblyPath, settings);
+                            return new NUnit3FrameworkDriver(domain, refAssembly.Name, assemblyPath, settings);
                         else
-                            return new NotRunnableFrameworkDriver(assemblyPath, string.Format(OLDER_NUNIT_NOT_SUPPORTED_MESSAGE, assemblyPath));
+                            return new NUnit2FrameworkDriver(domain, refAssembly.Name, assemblyPath, settings);
                 }
             }
             catch (Exception ex)

@@ -69,6 +69,7 @@
       <Link>EngineVersion.cs</Link>
     </Compile>
     <Compile Include="Drivers\NotRunnableFrameworkDriver.cs" />
+    <Compile Include="Drivers\NUnit3FrameworkDriver.cs" />
     <Compile Include="IDriverFactory.cs" />
     <Compile Include="ITestAgency.cs" />
     <Compile Include="ITestAgent.cs" />
@@ -93,7 +94,6 @@
     <Compile Include="IService.cs" />
     <Compile Include="ITestEngineRunner.cs" />
     <Compile Include="ITestRunnerFactory.cs" />
-    <Compile Include="Drivers\NUnitFrameworkDriver.cs" />
     <Compile Include="RunnerSettings.cs" />
     <Compile Include="Runners\AbstractTestRunner.cs" />
     <Compile Include="Runners\AggregatingTestRunner.cs" />
@@ -137,6 +137,11 @@
     <ProjectReference Include="..\nunit.engine.api\nunit.engine.api.csproj">
       <Project>{775FAD50-3623-4922-97C4-DFB29A8BE4C7}</Project>
       <Name>nunit.engine.api</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\nunit.v2.driver\nunit.v2.driver.csproj">
+      <Project>{379058e2-e834-4cc7-b5cd-ac8dfcf82aea}</Project>
+      <Name>nunit.v2.driver</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -35,13 +35,13 @@ using NUnit.Tests.Assemblies;
 
 namespace NUnit.Engine.Services.Tests
 {
-    [TestFixture]
+    [TestFixture, Ignore("DriverFactory currently only works in the primary AppDomain")]
     public class DriverFactoryTests
     {
         [Test]
         public void AssemblyUsesNUnitFrameworkDriver()
         {
-            Assert.That(GetDriver("mock-nunit-assembly.exe"), Is.InstanceOf<NUnitFrameworkDriver>());
+            Assert.That(GetDriver("mock-nunit-assembly.exe"), Is.InstanceOf<NUnit3FrameworkDriver>());
         }
 
         [Test]
@@ -58,7 +58,8 @@ namespace NUnit.Engine.Services.Tests
 
         private IFrameworkDriver GetDriver(string fileName)
         {
-            return new DriverFactory().GetDriver(
+            var factory = new DriverFactory();
+            return factory.GetDriver(
                 AppDomain.CurrentDomain,
                 Path.Combine(TestContext.CurrentContext.TestDirectory, fileName),
                 new Dictionary<string, object>());

@@ -213,8 +213,13 @@ namespace NUnit.Engine.Services.ProjectLoaders
             string configBasePath = configNode.GetAttribute("appbase");
             if (configBasePath == null)
                 configBasePath = projectBasePath;
-            else if (projectBasePath != null)
-                configBasePath = Path.Combine(projectBasePath, configBasePath);
+            else
+            {
+                // Allow for project created on Windows, loaded on Linux, or vice versa.
+                configBasePath = configBasePath.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
+                if (projectBasePath != null)
+                    configBasePath = Path.Combine(projectBasePath, configBasePath);
+            }
 
             return configBasePath;
         }

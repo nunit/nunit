@@ -33,20 +33,20 @@ using NUnit.Framework.Internal;
 namespace NUnit.Engine.Drivers.Tests
 {
     // Functional tests of the NUnitFrameworkDriver calling into the framework.
-    public class NUnitFrameworkDriverTests
+    public class NUnit3FrameworkDriverTests
     {
         private string MOCK_ASSEMBLY = "mock-nunit-assembly.exe";
         private const string MISSING_FILE = "junk.dll";
 
         private IDictionary<string, object> _settings = new Dictionary<string, object>();
-        private NUnitFrameworkDriver _driver;
+        private NUnit3FrameworkDriver _driver;
         private string _mockAssemblyPath;
 
         [SetUp]
         public void CreateDriver()
         {
             _mockAssemblyPath = System.IO.Path.Combine(TestContext.CurrentContext.TestDirectory, MOCK_ASSEMBLY);
-            _driver = new NUnitFrameworkDriver(AppDomain.CurrentDomain, _mockAssemblyPath, _settings);
+            _driver = new NUnit3FrameworkDriver(AppDomain.CurrentDomain, _mockAssemblyPath, _settings);
         }
 
         #region Construction Test
@@ -61,7 +61,7 @@ namespace NUnit.Engine.Drivers.Tests
 
         public void ConstructController_MissingFile_ThrowsArgumentInvalid()
         {
-            Assert.That(new NUnitFrameworkDriver(AppDomain.CurrentDomain, MISSING_FILE, _settings), Throws.ArgumentException);
+            Assert.That(new NUnit3FrameworkDriver(AppDomain.CurrentDomain, MISSING_FILE, _settings), Throws.ArgumentException);
         }
         #endregion
 
