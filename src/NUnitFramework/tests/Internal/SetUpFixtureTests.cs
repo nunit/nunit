@@ -213,17 +213,17 @@ namespace NUnit.Framework.Internal
 
         #region TwoSetUpFixtures
         [NUnit.Framework.Test]
-        public void WithTwoSetUpFixturesOnlyOneIsUsed()
-            // TODO: This represents a possible future enhancement to use both classes.
+        public void WithTwoSetUpFixturesBothAreUsed()
         {
             Assert.That(runTests("NUnit.TestData.SetupFixture.Namespace4").ResultState.Status, Is.EqualTo(TestStatus.Passed));
-            TestUtilities.SimpleEventRecorder.Verify("NS4.OneTimeSetUp2",
-                                                     "NS4.Fixture.SetUp",
-                                                     "NS4.Test.SetUp",
-                                                     "NS4.Test",
-                                                     "NS4.Test.TearDown",
-                                                     "NS4.Fixture.TearDown",
-                                                     "NS4.OneTimeTearDown2");
+            TestUtilities.SimpleEventRecorder.ExpectEvents("NS4.OneTimeSetUp1", "NS4.OneTimeSetUp2")
+                                             .AndThen("NS4.Fixture.SetUp")
+                                             .AndThen("NS4.Test.SetUp")
+                                             .AndThen("NS4.Test")
+                                             .AndThen("NS4.Test.TearDown")
+                                             .AndThen("NS4.Fixture.TearDown")
+                                             .AndThen("NS4.OneTimeTearDown1", "NS4.OneTimeTearDown2")
+                                             .Verify();
         }
         #endregion TwoSetUpFixtures
 
