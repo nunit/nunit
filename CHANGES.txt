@@ -1,4 +1,54 @@
-﻿NOTE: A combined description of changes since NUnit 2.6.3 is under development along with a summary statement of major features. Both will be available in the next release.
+﻿NOTE: A combined description of changes since NUnit 2.6.3 is under development along with a summary statement of major features. Both will be available in the first Beta release.
+
+NUnit 3.0.0 Alpha 4 - December 30, 2014
+
+Console
+
+ * The command-line may now include any number of assemblies and/or supported projects.
+
+Engine
+
+ * A driver is now included, which allows running NUnit 2.x tests under NUnit 3.0.
+ * The engine can now load and run tests specified in a number of project formats:
+   * NUnit (.nunit)
+   * Visual Studio C# projects (.csproj)
+   * Visual Studio F# projects (.vjsproj)
+   * Visual Studio Visual Basic projects (.vbproj)
+   * Visual Studio solutions (.sln)
+   * Legacy C++ and Visual JScript projects (.csproj and .vjsproj) are also supported
+   * Support for the current C++ format (.csxproj) is not yet available
+ * Creation of output files like TestResult.xml in various formats is now a
+   service of the engine, available to any runner.
+
+Framework
+
+ * ApartmentAttribute has been added, replacing STAAttribute and MTAAttribute.
+ * Unnecessary overloads of Assert.That and Assume.That have been removed.
+ * Multiple SetUpFixtures may be specified in a single namespace.
+ * Improvements to the Pairwise strategy test case generation algorithm.
+
+Issues Resolved
+
+ * 37	Multiple SetUpFixtures should be permitted on same namespace
+ * 210	TestContext.WriteLine in an AppDomain causes an error
+ * 227	Add support for VS projects and solutions
+ * 231	Update C# samples to use NUnit 3.0
+ * 233	Update F# samples to use NUnit 3.0
+ * 234	Update C++ samples to use NUnit 3.0
+ * 265	Reorganize console reports for nunit-console and nunitlite
+ * 299	No full path to assembly in XML file under Compact Framework
+ * 301	Command-line length
+ * 363	Make Xml result output an engine service
+ * 377	CombiningStrategyAttributes don't work correctly on generic methods
+ * 388	Improvements to NUnitLite runner output
+ * 390	Specify exactly what happens when a test times out
+ * 396	ApartmentAttribute
+ * 397	CF nunitlite runner assembly has the wrong name
+ * 407	Assert.Pass() with ]]> in message crashes console runner
+ * 414	Simplify Assert overloads
+ * 416	NUnit 2.x Framework Driver
+ * 417	Complete work on NUnit projects
+ * 420	Create Settings file in proper location
 
 NUnit 3.0.0 Alpha 3 - November 29, 2014
 

@@ -37,7 +37,6 @@
     <file src="$builddir$\net-4.0\nunitlite.dll" target="lib\net40" />
     <file src="$builddir$\net-4.5\nunitlite.dll" target="lib\net45" />
     <file src="$builddir$\sl-5.0\nunitlite.dll" target="lib\sl5" />
-    <file src="$builddir$\portable\nunitlite.dll" target="lib\portable-net45+sl5+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1" />
     <file src="nuget\Program.cs" target="content" />
   </files>
 </package>
