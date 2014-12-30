@@ -26,6 +26,7 @@ Framework
  * Unnecessary overloads of Assert.That and Assume.That have been removed.
  * Multiple SetUpFixtures may be specified in a single namespace.
  * Improvements to the Pairwise strategy test case generation algorithm.
+ * The new NUnitLite runner --testlist option, allows a list of tests to be kept in a file.
 
 Issues Resolved
 
