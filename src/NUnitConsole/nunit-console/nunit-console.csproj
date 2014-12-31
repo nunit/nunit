@@ -57,6 +57,18 @@
     <Compile Include="..\..\Common\nunit\ColorConsole\ExtendedTextWriter.cs">
       <Link>ColorConsole\ExtendedTextWriter.cs</Link>
     </Compile>
+    <Compile Include="..\..\Common\nunit\ConsoleOptions\ConsoleOptions.cs">
+      <Link>Options\ConsoleOptions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\ConsoleOptions\Options.cs">
+      <Link>Options\Options.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\ConsoleOptions\StringExtensions.cs">
+      <Link>Options\StringExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\ConsoleOptions\StringSplitOptions.cs">
+      <Link>Options\StringSplitOptions.cs</Link>
+    </Compile>
     <Compile Include="..\..\Common\nunit\OutputSpecification.cs">
       <Link>Utilities\OutputSpecification.cs</Link>
     </Compile>
@@ -69,9 +81,7 @@
     <Compile Include="..\ConsoleVersion.cs">
       <Link>ConsoleVersion.cs</Link>
     </Compile>
-    <Compile Include="Options\ConsoleOptions.cs" />
     <Compile Include="ConsoleRunner.cs" />
-    <Compile Include="Options\Options.cs" />
     <Compile Include="Utilities\PackageSettings.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="ResultSummary.cs" />

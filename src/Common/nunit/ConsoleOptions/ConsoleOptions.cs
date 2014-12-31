@@ -32,7 +32,10 @@ namespace NUnit.ConsoleRunner.Options
 namespace NUnitLite.Runner.Options
 #endif
 {
-    /// <summary>
+#if NUNIT_CONSOLE
+using Utilities;
+#endif
+	/// <summary>
     /// ConsoleOptions encapsulates the option settings for
     /// the nunit-console program. It inherits from the Mono
     /// Options OptionSet class and provides a central location

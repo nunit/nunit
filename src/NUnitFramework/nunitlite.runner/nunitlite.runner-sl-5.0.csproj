@@ -70,6 +70,18 @@
     <Compile Include="..\..\Common\nunit\ColorConsole\ExtendedTextWriter.cs">
       <Link>Runner\ExtendedTextWriter.cs</Link>
     </Compile>
+    <Compile Include="..\..\Common\nunit\ConsoleOptions\ConsoleOptions.cs">
+      <Link>Runner\ConsoleOptions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\ConsoleOptions\Options.cs">
+      <Link>Runner\Options.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\ConsoleOptions\StringExtensions.cs">
+      <Link>Runner\StringExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\ConsoleOptions\StringSplitOptions.cs">
+      <Link>Runner\StringSplitOptions.cs</Link>
+    </Compile>
     <Compile Include="..\..\Common\nunit\OutputSpecification.cs">
       <Link>Runner\OutputSpecification.cs</Link>
     </Compile>
@@ -80,8 +92,6 @@
       <Link>FrameworkVersion.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Runner\ConsoleOptions.cs" />
-    <Compile Include="Runner\Options.cs" />
     <Compile Include="Runner\DebugWriter.cs" />
     <Compile Include="Runner\OutputManager.cs" />
     <Compile Include="Runner\OutputWriters\NUnit2XmlOutputWriter.cs" />
@@ -94,8 +104,6 @@
       <DependentUpon>TestPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Runner\Silverlight\TextBlockWriter.cs" />
-    <Compile Include="Runner\StringExtensions.cs" />
-    <Compile Include="Runner\StringSplitOptions.cs" />
     <Compile Include="Runner\SimpleCategoryExpression.cs" />
     <Compile Include="Runner\TcpWriter.cs" />
     <Compile Include="Runner\TeamCityEventListener.cs" />
