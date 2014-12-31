@@ -133,10 +133,8 @@ using Utilities;
             this.Add("seed=", "Set the random {SEED} used to generate test cases.",
                 v => randomSeed = RequiredInt(v, "--seed"));
 
-#if PARALLEL
             this.Add("workers=", "Specify the {NUMBER} of worker threads to be used in running tests.",
                 v => numWorkers = RequiredInt(v, "--workers"));
-#endif
 
             this.Add("stoponerror", "Stop run immediately upon any test failure or error.",
                 v => StopOnError = v != null);
