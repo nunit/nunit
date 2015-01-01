@@ -32,7 +32,10 @@ namespace NUnit.ConsoleRunner.Options
 namespace NUnitLite.Runner.Options
 #endif
 {
-    /// <summary>
+#if NUNIT_CONSOLE
+using Utilities;
+#endif
+	/// <summary>
     /// ConsoleOptions encapsulates the option settings for
     /// the nunit-console program. It inherits from the Mono
     /// Options OptionSet class and provides a central location
@@ -130,10 +133,8 @@ namespace NUnitLite.Runner.Options
             this.Add("seed=", "Set the random {SEED} used to generate test cases.",
                 v => randomSeed = RequiredInt(v, "--seed"));
 
-#if PARALLEL
             this.Add("workers=", "Specify the {NUMBER} of worker threads to be used in running tests.",
                 v => numWorkers = RequiredInt(v, "--workers"));
-#endif
 
             this.Add("stoponerror", "Stop run immediately upon any test failure or error.",
                 v => StopOnError = v != null);
