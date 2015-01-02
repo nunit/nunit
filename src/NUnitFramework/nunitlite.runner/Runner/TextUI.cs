@@ -27,7 +27,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
-using NUnit.Common.ColorConsole;
+using NUnit.Common;
 using NUnit.Framework.Api;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
@@ -37,8 +37,6 @@ using System.Globalization;
 
 namespace NUnitLite.Runner
 {
-    using Options;
-
     /// <summary>
     /// TextUI is a general purpose class that runs tests and
     /// outputs to a TextWriter.

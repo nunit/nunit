@@ -23,7 +23,7 @@
 
 using System.IO;
 using System.Globalization;
-using NUnit.Common.ColorConsole;
+using NUnit.Common;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 

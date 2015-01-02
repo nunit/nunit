@@ -24,7 +24,7 @@
 using System.IO;
 using System.Text;
 
-namespace NUnit.Common.ColorConsole
+namespace NUnit.Common
 {
     /// <summary>
     /// ExtendedTextWriter is a TextWriter that supports 

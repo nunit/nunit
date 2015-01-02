@@ -4,7 +4,7 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Xml;
-using NUnit.Common.ColorConsole;
+using NUnit.Common;
 using NUnit.Framework;
 
 namespace NUnit.ConsoleRunner.Tests
@@ -49,7 +49,7 @@ namespace NUnit.ConsoleRunner.Tests
             _report = new StringBuilder();
 
             var writer = new ExtendedTextWriter(new StringWriter(_report));
-            var options = new Options.ConsoleOptions();
+            var options = new ConsoleOptions();
             options.Parse(new string[] { "MockTestResult.xml" });
 
             _reporter = new ResultReporter(_result, writer, options);

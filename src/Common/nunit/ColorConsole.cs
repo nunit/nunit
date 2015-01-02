@@ -23,7 +23,7 @@
 
 using System;
 
-namespace NUnit.Common.ColorConsole
+namespace NUnit.Common
 {
     /// <summary>
     /// Sets the console color in the constructor and resets it in the dispose

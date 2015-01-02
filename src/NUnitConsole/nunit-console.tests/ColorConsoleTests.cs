@@ -22,8 +22,8 @@
 // ***********************************************************************
 
 using System;
+using NUnit.Common;
 using NUnit.Framework;
-using NUnit.Common.ColorConsole;
 
 namespace NUnit.ConsoleRunner.Tests
 {
