@@ -22,12 +22,11 @@
 // ***********************************************************************
 
 using System.IO;
+using NUnit.Common;
 using NUnit.Framework;
 
 namespace NUnit.ConsoleRunner.Tests
 {
-    using Options;
-
     public class MakeTestPackageTests
     {
         [Test]

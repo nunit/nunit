@@ -23,13 +23,7 @@
 
 using System;
 
-#if NUNIT_CONSOLE
-namespace NUnit.ConsoleRunner
-#elif NUNITLITE
-namespace NUnitLite.Runner
-#else
 namespace NUnit.Common
-#endif
 {
     /// <summary>
     /// OutputSpecification encapsulates a file output path and format

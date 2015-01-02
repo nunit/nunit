@@ -27,6 +27,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
+using NUnit.Common;
 using NUnit.Framework;
 using NUnit.Framework.Api;
 using NUnit.Framework.Interfaces;

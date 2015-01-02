@@ -25,6 +25,7 @@ using System;
 using System.Reflection;
 using System.Threading;
 using System.Globalization;
+using NUnit.Common;
 using NUnit.Framework;
 #if !NETCF
 using System.Security.Principal;

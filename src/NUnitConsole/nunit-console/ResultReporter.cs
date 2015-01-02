@@ -24,11 +24,10 @@
 using System;
 using System.Globalization;
 using System.Xml;
-using NUnit.Common.ColorConsole;
+using NUnit.Common;
 
 namespace NUnit.ConsoleRunner
 {
-    using Options;
     using Utilities;
 
     public class ResultReporter

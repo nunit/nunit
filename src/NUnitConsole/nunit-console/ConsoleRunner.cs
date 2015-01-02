@@ -24,12 +24,11 @@
 using System;
 using System.IO;
 using System.Xml;
-using NUnit.Common.ColorConsole;
+using NUnit.Common;
 using NUnit.Engine;
 
 namespace NUnit.ConsoleRunner
 {
-    using Options;
     using Utilities;
     
     /// <summary>

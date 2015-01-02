@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -61,29 +61,29 @@
     <Compile Include="..\..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="..\..\Common\nunit\ColorConsole\ColorConsole.cs">
+    <Compile Include="..\..\Common\nunit\ColorConsole.cs">
       <Link>Runner\ColorConsole.cs</Link>
     </Compile>
-    <Compile Include="..\..\Common\nunit\ColorConsole\ColorStyle.cs">
+    <Compile Include="..\..\Common\nunit\ColorStyle.cs">
       <Link>Runner\ColorStyle.cs</Link>
     </Compile>
-    <Compile Include="..\..\Common\nunit\ColorConsole\ExtendedTextWriter.cs">
-      <Link>Runner\ExtendedTextWriter.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Common\nunit\ConsoleOptions\ConsoleOptions.cs">
+    <Compile Include="..\..\Common\nunit\ConsoleOptions.cs">
       <Link>Runner\ConsoleOptions.cs</Link>
     </Compile>
-    <Compile Include="..\..\Common\nunit\ConsoleOptions\Options.cs">
+    <Compile Include="..\..\Common\nunit\ExtendedTextWriter.cs">
+      <Link>Runner\ExtendedTextWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\Options.cs">
       <Link>Runner\Options.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Common\nunit\ConsoleOptions\StringExtensions.cs">
-      <Link>Runner\StringExtensions.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Common\nunit\ConsoleOptions\StringSplitOptions.cs">
-      <Link>Runner\StringSplitOptions.cs</Link>
     </Compile>
     <Compile Include="..\..\Common\nunit\OutputSpecification.cs">
       <Link>Runner\OutputSpecification.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\StringExtensions.cs">
+      <Link>Runner\StringExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\StringSplitOptions.cs">
+      <Link>Runner\StringSplitOptions.cs</Link>
     </Compile>
     <Compile Include="..\..\Common\nunit\TestNameParser.cs">
       <Link>Runner\TestNameParser.cs</Link>

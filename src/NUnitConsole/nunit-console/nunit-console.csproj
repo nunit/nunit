@@ -48,29 +48,29 @@
     <Compile Include="..\..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="..\..\Common\nunit\ColorConsole\ColorConsole.cs">
-      <Link>ColorConsole\ColorConsole.cs</Link>
+    <Compile Include="..\..\Common\nunit\ColorConsole.cs">
+      <Link>ColorConsole.cs</Link>
     </Compile>
-    <Compile Include="..\..\Common\nunit\ColorConsole\ColorStyle.cs">
-      <Link>ColorConsole\ColorStyle.cs</Link>
+    <Compile Include="..\..\Common\nunit\ColorStyle.cs">
+      <Link>ColorStyle.cs</Link>
     </Compile>
-    <Compile Include="..\..\Common\nunit\ColorConsole\ExtendedTextWriter.cs">
-      <Link>ColorConsole\ExtendedTextWriter.cs</Link>
+    <Compile Include="..\..\Common\nunit\ConsoleOptions.cs">
+      <Link>ConsoleOptions.cs</Link>
     </Compile>
-    <Compile Include="..\..\Common\nunit\ConsoleOptions\ConsoleOptions.cs">
-      <Link>Options\ConsoleOptions.cs</Link>
+    <Compile Include="..\..\Common\nunit\ExtendedTextWriter.cs">
+      <Link>ExtendedTextWriter.cs</Link>
     </Compile>
-    <Compile Include="..\..\Common\nunit\ConsoleOptions\Options.cs">
-      <Link>Options\Options.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Common\nunit\ConsoleOptions\StringExtensions.cs">
-      <Link>Options\StringExtensions.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Common\nunit\ConsoleOptions\StringSplitOptions.cs">
-      <Link>Options\StringSplitOptions.cs</Link>
+    <Compile Include="..\..\Common\nunit\Options.cs">
+      <Link>Options.cs</Link>
     </Compile>
     <Compile Include="..\..\Common\nunit\OutputSpecification.cs">
       <Link>Utilities\OutputSpecification.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\StringExtensions.cs">
+      <Link>StringExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\StringSplitOptions.cs">
+      <Link>StringSplitOptions.cs</Link>
     </Compile>
     <Compile Include="..\..\Common\nunit\TestNameParser.cs">
       <Link>Utilities\TestNameParser.cs</Link>

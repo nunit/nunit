@@ -23,21 +23,12 @@
 
 using System;
 using System.Reflection;
-#if NUNIT_CONSOLE
-using NUnit.Engine;
-#endif
-using NUnit.Framework;
 using System.Text;
 using System.Globalization;
+using NUnit.Framework;
 
-#if NUNIT_CONSOLE
-namespace NUnit.ConsoleRunner.Tests
-#else
-namespace NUnitLite.Runner.Tests
-#endif
+namespace NUnit.Common.Tests
 {
-    using Options;
-
     [TestFixture]
     public class CommandLineTests
     {

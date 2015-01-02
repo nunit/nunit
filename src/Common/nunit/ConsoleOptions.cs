@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2011 Charlie Poole
+// Copyright (c) 2011-2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -26,15 +26,8 @@ using System.Collections.Generic;
 using System.IO;
 using Mono.Options;
 
-#if NUNIT_CONSOLE
-namespace NUnit.ConsoleRunner.Options
-#elif NUNITLITE
-namespace NUnitLite.Runner.Options
-#endif
+namespace NUnit.Common
 {
-#if NUNIT_CONSOLE
-using Utilities;
-#endif
 	/// <summary>
     /// ConsoleOptions encapsulates the option settings for
     /// the nunit-console program. It inherits from the Mono
