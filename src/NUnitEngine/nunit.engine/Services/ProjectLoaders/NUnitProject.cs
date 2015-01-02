@@ -122,7 +122,7 @@ namespace NUnit.Engine.Services.ProjectLoaders
 
         public void Load(string filename)
         {
-            ProjectPath = Path.GetFullPath(filename);
+            ProjectPath = NormalizePath(Path.GetFullPath(filename));
             xmlDoc.Load(ProjectPath);
         }
 
@@ -193,16 +193,16 @@ namespace NUnit.Engine.Services.ProjectLoaders
         /// </summary>
         public string GetProjectBasePath()
         {
-            string appbase = this.GetSetting("appbase");
+            string appbase = NormalizePath(GetSetting("appbase"));
 
-            if (this.ProjectPath == null)
+            if (ProjectPath == null)
                 return appbase;
 
             if (appbase == null)
-                return Path.GetDirectoryName(this.ProjectPath);
+                return Path.GetDirectoryName(ProjectPath);
 
             return Path.Combine(
-                Path.GetDirectoryName(this.ProjectPath),
+                Path.GetDirectoryName(ProjectPath),
                 appbase);
         }
 
@@ -210,16 +210,11 @@ namespace NUnit.Engine.Services.ProjectLoaders
         {
             string projectBasePath = GetProjectBasePath();
 
-            string configBasePath = configNode.GetAttribute("appbase");
+            string configBasePath = NormalizePath(configNode.GetAttribute("appbase"));
             if (configBasePath == null)
                 configBasePath = projectBasePath;
-            else
-            {
-                // Allow for project created on Windows, loaded on Linux, or vice versa.
-                configBasePath = configBasePath.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
-                if (projectBasePath != null)
-                    configBasePath = Path.Combine(projectBasePath, configBasePath);
-            }
+            else if (projectBasePath != null)
+                configBasePath = Path.Combine(projectBasePath, configBasePath);
 
             return configBasePath;
         }
@@ -257,6 +252,20 @@ namespace NUnit.Engine.Services.ProjectLoaders
                 settings[RunnerSettings.DomainUsage] = domainUsage;
 
             return settings;
+        }
+
+        static readonly char[] PATH_SEPARATORS = new char[] { '/', '\\' };
+
+        private string NormalizePath(string path)
+        {
+            char sep = Path.DirectorySeparatorChar;
+
+            if (path != null)
+                foreach (char alt in PATH_SEPARATORS)
+                    if (alt != sep)
+                        path = path.Replace(alt, sep);
+
+            return path;
         }
 
         #endregion

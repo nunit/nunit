@@ -427,12 +427,22 @@ namespace NUnit.Engine.Services.ProjectLoaders
 
             public string OutputDirectory
             {
-                get { return Path.Combine(Path.GetDirectoryName(_project.ProjectPath), _outputPath);  }
+                get { return Normalize(Path.Combine(Path.GetDirectoryName(_project.ProjectPath), _outputPath));  }
             }
 
             public string AssemblyPath
             {
-                get { return Path.Combine(OutputDirectory, _assemblyName); }
+                get { return Normalize(Path.Combine(OutputDirectory, _assemblyName)); }
+            }
+
+            private static string Normalize(string path)
+            {
+                char sep = Path.DirectorySeparatorChar;
+
+                if (sep != '\\')
+                    path = path.Replace('\\', sep);
+
+                return path;
             }
         }
 
