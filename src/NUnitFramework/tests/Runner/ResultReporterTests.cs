@@ -28,7 +28,7 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Xml;
-using NUnit.Common.ColorConsole;
+using NUnit.Common;
 using NUnit.Framework;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;

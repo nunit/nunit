@@ -70,7 +70,7 @@ namespace NUnit.Framework
         /// </summary>
         public static TextWriter Out
         {
-            get { return TestExecutionContext.CurrentContext.CurrentResult.OutWriter; }
+            get { return TestExecutionContext.CurrentContext.OutWriter; }
         }
 
         /// <summary>

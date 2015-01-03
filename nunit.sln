@@ -128,6 +128,10 @@ Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "nunit-framework", "install\
 EndProject
 Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "nunit-runners", "install\runners\nunit-runners.wixproj", "{0E7186B7-0CE3-4EA3-8C53-7A8F95E33A75}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.v2.driver", "src\NUnitEngine\nunit.v2.driver\nunit.v2.driver.csproj", "{379058E2-E834-4CC7-B5CD-AC8DFCF82AEA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.v2.driver.tests", "src\NUnitEngine\nunit.v2.driver.tests\nunit.v2.driver.tests.csproj", "{B6D3AEAE-ECDA-4047-A9BA-CC6DA3EBEDF8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Mixed Platforms = Debug|Mixed Platforms
@@ -306,6 +310,14 @@ Global
 		{0E7186B7-0CE3-4EA3-8C53-7A8F95E33A75}.Debug|Mixed Platforms.Build.0 = Debug|x86
 		{0E7186B7-0CE3-4EA3-8C53-7A8F95E33A75}.Release|Mixed Platforms.ActiveCfg = Release|x86
 		{0E7186B7-0CE3-4EA3-8C53-7A8F95E33A75}.Release|Mixed Platforms.Build.0 = Release|x86
+		{379058E2-E834-4CC7-B5CD-AC8DFCF82AEA}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{379058E2-E834-4CC7-B5CD-AC8DFCF82AEA}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{379058E2-E834-4CC7-B5CD-AC8DFCF82AEA}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{379058E2-E834-4CC7-B5CD-AC8DFCF82AEA}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{B6D3AEAE-ECDA-4047-A9BA-CC6DA3EBEDF8}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{B6D3AEAE-ECDA-4047-A9BA-CC6DA3EBEDF8}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{B6D3AEAE-ECDA-4047-A9BA-CC6DA3EBEDF8}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{B6D3AEAE-ECDA-4047-A9BA-CC6DA3EBEDF8}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -361,6 +373,8 @@ Global
 		{A4F0C741-6ED4-46C8-AE75-57E1C7197E22} = {A21BFC37-44FC-41A0-B6E7-6F949F45A635}
 		{20132190-582E-462E-B18B-4B2CEDDDB6C4} = {D92A4841-72C5-4702-A4F4-7F6A2D3E341B}
 		{0E7186B7-0CE3-4EA3-8C53-7A8F95E33A75} = {D92A4841-72C5-4702-A4F4-7F6A2D3E341B}
+		{379058E2-E834-4CC7-B5CD-AC8DFCF82AEA} = {31B45C4C-206F-4F31-9CC6-33BF11DFEE39}
+		{B6D3AEAE-ECDA-4047-A9BA-CC6DA3EBEDF8} = {31B45C4C-206F-4F31-9CC6-33BF11DFEE39}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = src\NUnitFramework\tests\nunitlite.tests-2.0.csproj

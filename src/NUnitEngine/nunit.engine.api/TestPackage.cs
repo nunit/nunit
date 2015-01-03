@@ -49,14 +49,16 @@ namespace NUnit.Engine
         /// <param name="filePath">The file path.</param>
         public TestPackage(string filePath)
         {
-            FullName = Path.GetFullPath(filePath);
-            if (IsAssemblyFileType(filePath))
-                Add(FullName);
+            if (filePath != null)
+            {
+                FullName = Path.GetFullPath(filePath);
+                if (IsAssemblyFileType(filePath))
+                    Add(FullName);
+            }
         }
 
         /// <summary>
-        /// Construct an anonymous TestPackage that wraps 
-        /// multiple assemblies or projects as subpackages.
+        /// Construct an anonymous TestPackage that wraps test files.
         /// </summary>
         /// <param name="testFiles"></param>
         public TestPackage(IList<string> testFiles)

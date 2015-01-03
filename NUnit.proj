@@ -9,7 +9,7 @@
 	<PropertyGroup Label="Common Properties">
 		<ProjectName>$(MSBuildProjectName)</ProjectName>
 		<PackageVersion>3.0.0</PackageVersion>
-		<PackageModifier>-alpha-3</PackageModifier>
+		<PackageModifier>-alpha-4</PackageModifier>
 		<PackageName>$(ProjectName)-$(PackageVersion)$(PackageModifier)</PackageName>
 	</PropertyGroup>
 
@@ -247,10 +247,10 @@
 	<!-- *********************************************************************** -->
 
 	<Target Name="TestAll" Label="Run tests for all framework builds, the engine and the console"
-			DependsOnTargets="TestAllFrameworks;TestEngine;TestConsole" />
+			DependsOnTargets="TestAllFrameworks;TestEngine;TestV2Driver;TestConsole" />
 	  
 	<Target Name="Test" Label="Run tests for the current framework, engine and console"
-			DependsOnTargets="TestFramework;TestEngine;TestConsole" />
+			DependsOnTargets="TestFramework;TestEngine;TestV2Driver;TestConsole" />
 
 	<Target Name="TestAllFrameworks"
 			Label="Test the framework for the current config and all runtimes">
@@ -282,7 +282,7 @@
 			Text="The full NUnit framework cannot be tested under $(Runtime)" />
 
 		<Exec WorkingDirectory="$(ConsoleBuildDir)" 
-			  Command="$(ManagedExeLauncher) $(ConsoleRunner) $(Framework)/nunit.framework.tests.dll -result:$(ResultDir)/NUnitFrameworkResult-$(Framework).xml;format=$(ResultFormat) $(TestOptions)"
+			  Command='$(ManagedExeLauncher) $(ConsoleRunner) $(Framework)/nunit.framework.tests.dll "-result:$(ResultDir)/NUnitFrameworkResult-$(Framework).xml;format=$(ResultFormat)" $(TestOptions)'
 			  ContinueOnError="$(ContinueOnFailure)" />
 		
 	</Target>
@@ -296,8 +296,22 @@
 		<Message Text="******************************************************************" />
 		
 		<Exec WorkingDirectory="$(EngineBuildDir)"
-			  Command="$(ManagedExeLauncher) $(ConsoleRunner) nunit.engine.tests.dll -result:$(ResultDir)/EngineResult.xml;format=$(ResultFormat) $(TestOptions)"
+			  Command='$(ManagedExeLauncher) $(ConsoleRunner) nunit.engine.tests.dll "-result:$(ResultDir)/EngineResult.xml;format=$(ResultFormat)" $(TestOptions)'
 			  ContinueOnError="$(ContinueOnFailure)"/>
+
+	</Target>
+
+	<Target Name="TestV2Driver"
+		Label = "Run tests of the NUnit V2 Driver"
+		DependsOnTargets="_CreateResultDir">
+
+		<Message Text="******************************************************************" />
+		<Message Text="* Testing the NUnit V2 Driver - $(Configuration)" />
+		<Message Text="******************************************************************" />
+		
+		<Exec WorkingDirectory="$(EngineBuildDir)"
+			Command='$(ManagedExeLauncher) $(ConsoleRunner) v2-driver/tests/nunit.v2.driver.tests.dll "-result:$(ResultDir)/V2DriverResult.xml;format=$(ResultFormat)"  $(TestOptions)'
+			ContinueOnError="$(ContinueOnFailure)"/>
 		
 	</Target>
 	
@@ -310,7 +324,7 @@
 		<Message Text="******************************************************************" />
 		
 		<Exec WorkingDirectory="$(ConsoleBuildDir)"
-			  Command="$(ManagedExeLauncher) $(ConsoleRunner) nunit-console.tests.dll -result:$(ResultDir)/ConsoleResult.xml;format=$(ResultFormat) $(TestOptions)"
+			  Command='$(ManagedExeLauncher) $(ConsoleRunner) nunit-console.tests.dll "-result:$(ResultDir)/ConsoleResult.xml;format=$(ResultFormat)" $(TestOptions)'
 			  ContinueOnError="$(ContinueOnFailure)" />
 		
 	</Target>
@@ -437,23 +451,21 @@
 
 	<ItemGroup Label="Files for packaging in bin directory">
 		<BinFiles Include="$(ConfigurationBuildDir)\**\*.dll" />
-
-		<BinFiles Include="$(ConfigurationBuildDir)\**\nunit-console.exe" />
-		<BinFiles Include="$(ConfigurationBuildDir)\**\nunit-console.exe.config" />
-		<BinFiles Include="$(ConfigurationBuildDir)\**\nunit-agent.exe" />
-		<BinFiles Include="$(ConfigurationBuildDir)\**\nunit-agent.exe.config" />
-		<BinFiles Include="$(ConfigurationBuildDir)\**\nunit-agent-x86.exe" />
-		<BinFiles Include="$(ConfigurationBuildDir)\**\nunit-agent-x86.exe.config" />
+		<BinFiles Include="$(ConfigurationBuildDir)\**\*.exe" />
+		<BinFiles Include="$(ConfigurationBuildDir)\**\*.config" />
 
 		<BinFiles Include="$(ConfigurationBuildDir)\**\nunit.framework.xml" />
 		<BinFiles Include="$(ConfigurationBuildDir)\**\nunit.engine.api.xml" />
 
+		<BinFiles Include="$(ConfigurationBuildDir)\EngineTests.nunit" />
+		<BinFiles Include="$(ConfigurationBuildDir)\ConsoleTests.nunit" />
 		<BinFiles Include="$(ConfigurationBuildDir)\NUnit2TestResult.xsd" />
+		<BinFiles Include="$(ConfigurationBuildDir)\TextSummary.xslt" />
 
 		<!-- Extra files for Silverlight build -->
-		<BinFiles Include="$(ConfigurationBuildDir)\sl-5.0\AppManifest.xaml" />
-		<BinFiles Include="$(ConfigurationBuildDir)\sl-5.0\nunit.framework.tests.xap" />
-		<BinFiles Include="$(ConfigurationBuildDir)\sl-5.0\nunit.framework.tests_TestPage.html" />
+		<BinFiles Include="$(ConfigurationBuildDir)\**\AppManifest.xaml" />
+		<BinFiles Include="$(ConfigurationBuildDir)\**\nunit.framework.tests.xap" />
+		<BinFiles Include="$(ConfigurationBuildDir)\**\nunit.framework.tests_TestPage.html" />
 
 		<!-- Include pdp files for Debug -->
 		<BinFiles Include="$(ConfigurationBuildDir)\**\*.pdb"
@@ -465,21 +477,22 @@
 		<SupportedFrameworks Include="net-4.0" />
 		<SupportedFrameworks Include="net-3.5" />
 		<SupportedFrameworks Include="net-2.0" />
-		<!--<SupportedFrameworks Condition="$(IsWindows)" Include="netcf-3.5" />
-		<SupportedFrameworks Condition="$(IsWindows)" Include="netcf-2.0" />-->
+		<!--<SupportedFrameworks Condition="$(IsWindows)" Include="netcf-3.5" />-->
 		<SupportedFrameworks Condition="$(IsWindows)" Include="sl-5.0" />
+		<SupportedFrameworks Include="portable" />
 	</ItemGroup>
 	
 	<ItemGroup Label="Projects for building the framework">
 		<NUnitProjects Include="$(FrameworkSrcDir)\framework\nunit.framework-$(ProjectSuffix).csproj"></NUnitProjects>
-		<NUnitProjects Include="$(FrameworkSrcDir)\nunitlite.runner\nunitlite.runner-$(ProjectSuffix).csproj"></NUnitProjects>
+		<NUnitProjects Include="$(FrameworkSrcDir)\nunitlite.runner\nunitlite.runner-$(ProjectSuffix).csproj"
+			Condition="'$(Runtime)' != 'portable'"></NUnitProjects>
 		<NUnitProjects Include="$(FrameworkSrcDir)\mock-assembly\mock-nunit-assembly-$(ProjectSuffix).csproj"
-						Condition="'$(Runtime)' != 'netcf' And '$(Runtime)' != 'silverlight' And '$(Runtime)' != 'portable'"></NUnitProjects>
+			Condition="'$(Runtime)' != 'netcf' And '$(Runtime)' != 'silverlight' And '$(Runtime)' != 'portable'"></NUnitProjects>
 		<NUnitProjects Include="$(FrameworkSrcDir)\testdata\nunit.testdata-$(ProjectSuffix).csproj"></NUnitProjects>
 		<NUnitProjects Include="$(FrameworkSrcDir)\slow-tests\slow-nunit-tests-$(ProjectSuffix).csproj"
-						Condition="'$(Runtime)' != 'netcf' And '$(Runtime)' != 'silverlight' And '$(Runtime)' != 'portable'"></NUnitProjects>
+			Condition="'$(Runtime)' != 'netcf' And '$(Runtime)' != 'silverlight' And '$(Runtime)' != 'portable'"></NUnitProjects>
 		<NUnitProjects Include="$(FrameworkSrcDir)\tests\nunit.framework.tests-$(ProjectSuffix).csproj"
-						Condition="'$(Runtime)' != 'portable'"></NUnitProjects>
+			Condition="'$(Runtime)' != 'portable'"></NUnitProjects>
 	</ItemGroup>
 	
 	<ItemGroup Label="Projects for building the engine">
@@ -488,6 +501,8 @@
 		<EngineProjects Include="$(EngineSrcDir)\nunit-agent\nunit-agent.csproj" />
 		<EngineProjects Include="$(EngineSrcDir)\nunit-agent\nunit-agent-x86.csproj" />
 		<EngineProjects Include="$(EngineSrcDir)\nunit.engine.tests\nunit.engine.tests.csproj" />
+		<EngineProjects Include="$(EngineSrcDir)\nunit.v2.driver\nunit.v2.driver.csproj" />
+		<EngineProjects Include="$(EngineSrcDir)\nunit.v2.driver.tests\nunit.v2.driver.tests.csproj" />
 	</ItemGroup>
 
 	<ItemGroup Label="Projects for building the console runner">

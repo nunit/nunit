@@ -24,13 +24,7 @@
 using System;
 using NUnit.Framework;
 
-#if NUNIT_CONSOLE
-namespace NUnit.ConsoleRunner.Tests
-#elif NUNITLITE
-namespace NUnitLite.Runner.Tests
-#else
 namespace NUnit.Common.Tests
-#endif
 {
     public class OutputSpecificationTests
     {

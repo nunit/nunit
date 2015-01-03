@@ -66,7 +66,7 @@ namespace NUnit.Framework.Internal.Commands
             _setUpWasRun = true;
 
             foreach (MethodInfo setUpMethod in _setUpMethods)
-                Reflect.InvokeMethod(setUpMethod, setUpMethod.IsStatic ? null : context.TestObject);
+                RunSetUpOrTearDownMethod(context, setUpMethod);
         }
 
         /// <summary>
@@ -84,12 +84,34 @@ namespace NUnit.Framework.Internal.Commands
                     // run the teardowns in reverse order to provide consistency.
                     int index = _tearDownMethods.Count;
                     while (--index >= 0)
-                        Reflect.InvokeMethod(_tearDownMethods[index], _tearDownMethods[index].IsStatic ? null : context.TestObject);
+                        RunSetUpOrTearDownMethod(context, _tearDownMethods[index]);
                 }
                 catch (Exception ex)
                 {
                     context.CurrentResult.RecordTearDownException(ex);
                 }
+        }
+
+        private void RunSetUpOrTearDownMethod(TestExecutionContext context, MethodInfo method)
+        {
+#if NET_4_0 || NET_4_5
+            if (AsyncInvocationRegion.IsAsyncOperation(method))
+                RunAsyncMethod(method, context);
+            else
+#endif
+                RunNonAsyncMethod(method, context);
+        }
+
+#if NET_4_0 || NET_4_5
+        private void RunAsyncMethod(MethodInfo method, TestExecutionContext context)
+        {
+            using (AsyncInvocationRegion region = AsyncInvocationRegion.Create(method))
+                region.WaitForPendingOperationsToComplete(RunNonAsyncMethod(method, context));
+        }
+#endif
+        private object RunNonAsyncMethod(MethodInfo method, TestExecutionContext context)
+        {
+            return Reflect.InvokeMethod(method, method.IsStatic ? null : context.TestObject);
         }
     }
 }

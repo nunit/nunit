@@ -94,40 +94,11 @@ namespace NUnit.Framework.Internal.Builders
         /// <param name="fixture">The fixture to be added.</param>
         public void Add( TestSuite fixture )
         {
-            string ns = fixture.FullName;
-            int index = ns.IndexOf("[");
-            if (index >= 0) ns = ns.Substring(0, index);
-            index = ns.LastIndexOf( '.' );
-            ns = index > 0 ? ns.Substring( 0, index ) : string.Empty;
+            string ns = GetNamespaceForFixture(fixture);
             TestSuite containingSuite = BuildFromNameSpace( ns );
 
             if (fixture is SetUpFixture)
-            {
-                // The SetUpFixture must replace the namespace suite
-                // in which it is "contained". 
-                //
-                // First, add the old suite's children
-                foreach (TestSuite child in containingSuite.Tests)
-                    fixture.Add(child);
-
-                // Make the parent of the containing suite point to this
-                // fixture instead
-                // TODO: Get rid of this somehow?
-                TestSuite parent = (TestSuite)containingSuite.Parent;
-                if (parent == null)
-                {
-                    fixture.Name = rootSuite.Name;
-                    rootSuite = fixture;
-                }
-                else
-                {
-                    parent.Tests.Remove(containingSuite);
-                    parent.Add(fixture);
-                }
-
-                // Update the dictionary
-                namespaceSuites[ns] = fixture;
-            }
+                AddSetUpFixture(fixture, containingSuite, ns);
             else
                 containingSuite.Add( fixture );
         }
@@ -135,6 +106,16 @@ namespace NUnit.Framework.Internal.Builders
         #endregion
 
         #region Helper Method
+
+        private static string GetNamespaceForFixture(TestSuite fixture)
+        {
+            string ns = fixture.FullName;
+            int index = ns.IndexOf("[");
+            if (index >= 0) ns = ns.Substring(0, index);
+            index = ns.LastIndexOf('.');
+            ns = index > 0 ? ns.Substring(0, index) : string.Empty;
+            return ns;
+        }
 
         private TestSuite BuildFromNameSpace( string ns )
         {
@@ -167,6 +148,49 @@ namespace NUnit.Framework.Internal.Builders
 
             namespaceSuites[ns] = suite;
             return suite;
+        }
+
+        private void AddSetUpFixture(TestSuite newSetupFixture, TestSuite containingSuite, string ns)
+        {
+            // The SetUpFixture must replace the namespace suite
+            // in which it is "contained". 
+            //
+            // First, add the old suite's children
+            foreach (TestSuite child in containingSuite.Tests)
+                newSetupFixture.Add(child);
+
+            if (containingSuite is SetUpFixture)
+            {
+                // The parent suite is also a SetupFixture. The new
+                // SetupFixture is nested below the parent SetupFixture.
+                // TODO: Avoid nesting of SetupFixtures somehow?
+                //
+                // Note: The tests have already been copied to the new
+                //       SetupFixture. Thus the tests collection of
+                //       the parent SetupFixture can be cleared.
+                containingSuite.Tests.Clear();
+                containingSuite.Add(newSetupFixture);
+            }
+            else
+            {
+                // Make the parent of the containing suite point to this
+                // fixture instead
+                // TODO: Get rid of this somehow?
+                TestSuite parent = (TestSuite)containingSuite.Parent;
+                if (parent == null)
+                {
+                    newSetupFixture.Name = rootSuite.Name;
+                    rootSuite = newSetupFixture;
+                }
+                else
+                {
+                    parent.Tests.Remove(containingSuite);
+                    parent.Add(newSetupFixture);
+                }
+            }
+
+            // Update the dictionary
+            namespaceSuites[ns] = newSetupFixture;
         }
 
         #endregion

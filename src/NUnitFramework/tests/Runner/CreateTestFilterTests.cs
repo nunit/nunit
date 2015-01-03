@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
+using NUnit.Common;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Filters;
@@ -29,8 +29,6 @@ using NUnit.TestUtilities;
 
 namespace NUnitLite.Runner.Tests
 {
-    using Options;
-
     public class CreateTestFilterTests
     {
         [Test]

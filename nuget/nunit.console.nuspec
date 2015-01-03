@@ -28,5 +28,9 @@
     <file src="$builddir$\nunit.engine.api.dll" target="tools" />
     <file src="$builddir$\nunit.engine.api.xml" target="tools" />
     <file src="$builddir$\nunit.engine.dll" target="tools" />
+    <file src="$builddir$\v2-driver\nunit.v2.driver.dll" target="tools\v2-driver" />
+    <file src="$builddir$\v2-driver\nunit.engine.api.dll" target="tools\v2-driver" />
+    <file src="$builddir$\v2-driver\nunit.core.dll" target="tools\v2-driver" />
+    <file src="$builddir$\v2-driver\nunit.core.interfaces.dll" target="tools\v2-driver" />
   </files>
 </package>

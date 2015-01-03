@@ -24,12 +24,11 @@
 using System;
 using System.IO;
 using System.Xml;
-using NUnit.Common.ColorConsole;
+using NUnit.Common;
 using NUnit.Engine;
 
 namespace NUnit.ConsoleRunner
 {
-    using Options;
     using Utilities;
     
     /// <summary>
@@ -124,7 +123,10 @@ namespace NUnit.ConsoleRunner
             else
             {
                 foreach (OutputSpecification spec in _options.ExploreOutputSpecifications)
+                {
                     _resultService.GetResultWriter(spec.Format, new object[] { spec.Transform }).WriteResultFile(result, spec.OutputPath);
+                    _outWriter.WriteLine("Results ({0}) saved as {1}", spec.Format, spec.OutputPath);
+                }
             }
 
             return ConsoleRunner.OK;
@@ -166,7 +168,10 @@ namespace NUnit.ConsoleRunner
             reporter.ReportResults();
 
             foreach (var spec in _options.ResultOutputSpecifications)
+            {
                 GetResultWriter(spec).WriteResultFile(result, spec.OutputPath);
+                _outWriter.WriteLine("Results ({0}) saved as {1}", spec.Format, spec.OutputPath);
+            }
 
             return reporter.Summary.FailureCount + reporter.Summary.ErrorCount + reporter.Summary.InvalidCount;
         }

@@ -25,12 +25,12 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Text;
+using NUnit.Common;
 
 namespace NUnit.ConsoleRunner.Tests
 {
     using Engine;
     using Framework;
-    using Options;
 
     [TestFixture]
     public class CommandLineTests

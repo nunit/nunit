@@ -68,12 +68,14 @@
     <Compile Include="AssertIgnoreData.cs" />
     <Compile Include="AsyncDummyFixture.cs" />
     <Compile Include="AsyncRealFixture.cs" />
+    <Compile Include="AsyncSetupTearDownFixture.cs" />
     <Compile Include="AttributeInheritanceData.cs" />
     <Compile Include="AuthorFixture.cs" />
     <Compile Include="CategoryAttributeData.cs" />
     <Compile Include="CultureAttributeData.cs" />
     <Compile Include="DatapointFixture.cs" />
     <Compile Include="DescriptionFixture.cs" />
+    <Compile Include="GenericTestMethodData.cs" />
     <Compile Include="MaxTimeFixture.cs" />
     <Compile Include="OneTimeSetUpTearDownData.cs" />
     <Compile Include="ParameterizedTestFixture.cs" />

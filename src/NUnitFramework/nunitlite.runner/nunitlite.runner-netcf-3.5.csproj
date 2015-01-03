@@ -1,4 +1,4 @@
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -32,6 +32,7 @@
     <FileAlignment>512</FileAlignment>
     <WarningLevel>4</WarningLevel>
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -44,6 +45,7 @@
     <FileAlignment>512</FileAlignment>
     <WarningLevel>4</WarningLevel>
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />
@@ -67,6 +69,18 @@
     <Compile Include="..\..\Common\nunit\ColorConsole\ExtendedTextWriter.cs">
       <Link>Runner\ExtendedTextWriter.cs</Link>
     </Compile>
+    <Compile Include="..\..\Common\nunit\ConsoleOptions\ConsoleOptions.cs">
+      <Link>Runner\ConsoleOptions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\ConsoleOptions\Options.cs">
+      <Link>Runner\Options.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\ConsoleOptions\StringExtensions.cs">
+      <Link>Runner\StringExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Common\nunit\ConsoleOptions\StringSplitOptions.cs">
+      <Link>Runner\StringSplitOptions.cs</Link>
+    </Compile>
     <Compile Include="..\..\Common\nunit\OutputSpecification.cs">
       <Link>Runner\OutputSpecification.cs</Link>
     </Compile>
@@ -77,8 +91,6 @@
       <Link>FrameworkVersion.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Runner\ConsoleOptions.cs" />
-    <Compile Include="Runner\Options.cs" />
     <Compile Include="Runner\DebugWriter.cs" />
     <Compile Include="Runner\OutputManager.cs" />
     <Compile Include="Runner\OutputWriters\NUnit2XmlOutputWriter.cs" />

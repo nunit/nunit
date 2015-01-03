@@ -95,6 +95,11 @@ namespace NUnit.Framework.Internal
         /// </summary>
         private CultureInfo _currentUICulture;
 
+        /// <summary>
+        /// The current test result
+        /// </summary>
+        private TestResult _currentResult;
+
 #if !NETCF && !SILVERLIGHT && !PORTABLE
         /// <summary>
         /// The current Principal.
@@ -251,7 +256,21 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Gets or sets the current test result
         /// </summary>
-        public TestResult CurrentResult { get; set; }
+        public TestResult CurrentResult
+        {
+            get { return _currentResult; }
+            set
+            {
+                _currentResult = value;
+                if(value != null)
+                    OutWriter = value.OutWriter;
+            }
+        }
+
+        /// <summary>
+        /// Gets a TextWriter that will send output to the current test result.
+        /// </summary>
+        public TextWriter OutWriter { get; private set; }
 
         /// <summary>
         /// The current test object - that is the user fixture

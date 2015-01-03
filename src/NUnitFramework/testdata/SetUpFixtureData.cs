@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
+using NUnit.Framework.Constraints;
 
 namespace NUnit.TestUtilities
 {
@@ -33,6 +34,87 @@ namespace NUnit.TestUtilities
     /// </summary>
     public static class SimpleEventRecorder
     {
+        /// <summary>
+        /// A helper class for matching test events.
+        /// </summary>
+        public class EventMatcher
+        {
+            private readonly List<string> _expectedEvents;
+
+            public EventMatcher(IEnumerable<string> expectedEvents)
+            {
+                _expectedEvents = new List<string>(expectedEvents);
+            }
+
+            /// <summary>
+            /// Matches a test event with one of the expected events.
+            /// </summary>
+            /// <param name="event">A string identifying the test event</param>
+            /// <param name="item">The index of the recorded test event</param>
+            /// <returns>true, if there are expected events left to match, otherwise false.</returns>
+            public bool MatchEvent(string @event, int item)
+            {
+                Assert.Contains(@event, _expectedEvents, "Item {0}", item);
+                _expectedEvents.Remove(@event);
+                return _expectedEvents.Count > 0;
+            }
+        }
+
+        /// <summary>
+        /// Helper class for recording expected events.
+        /// </summary>
+        public class ExpectedEventsRecorder
+        {
+            private readonly Queue<string> _actualEvents;
+            private readonly Queue<EventMatcher> _eventMatchers;
+
+            public ExpectedEventsRecorder(Queue<string> actualEvents, params string[] expectedEvents)
+            {
+                _actualEvents = actualEvents;
+                _eventMatchers = new Queue<EventMatcher>();
+                AndThen(expectedEvents);
+            }
+
+            /// <summary>
+            /// Adds the specified events as expected events.
+            /// </summary>
+            /// <param name="expectedEvents">An array of strings identifying the test events</param>
+            /// <returns>Returns the ExpectedEventsRecorder for adding new expected events.</returns>
+            public ExpectedEventsRecorder AndThen(params string[] expectedEvents)
+            {
+                _eventMatchers.Enqueue(new EventMatcher(expectedEvents));
+                return this;
+            }
+
+            /// <summary>
+            /// Verifies the recorded expected events with the actual recorded events.
+            /// </summary>
+            public void Verify()
+            {
+                EventMatcher eventMatcher = _eventMatchers.Dequeue();
+                int item = 0;
+
+                foreach (string actualEvent in _actualEvents)
+                {
+                    if (eventMatcher == null)
+                    { 
+                        Assert.Fail(
+                            "More events than expected were recorded. Current event: {0} (Item {1})",
+                            actualEvent,
+                            item);
+                    }
+
+                    if (!eventMatcher.MatchEvent(actualEvent, item++))
+                    {
+                        if (_eventMatchers.Count > 0)
+                            eventMatcher = _eventMatchers.Dequeue();
+                        else
+                            eventMatcher = null;
+                    }
+                }
+            }
+        }
+
         // Because it is static, this class can only be used by one fixture at a time.
         // Currently, only one fixture uses it, if more use it, they should not be run in parallel.
         // TODO: Create a utility that can be used by multiple fixtures
@@ -69,6 +151,16 @@ namespace NUnit.TestUtilities
                 string actual = _events.Count > 0 ? _events.Dequeue() as string : null;
                 Assert.AreEqual( expected, actual, "Item {0}", item++ );
             }
+        }
+
+        /// <summary>
+        /// Record the specified events as recorded expected events.
+        /// </summary>
+        /// <param name="expectedEvents">An array of strings identifying the test events</param>
+        /// <returns>An ExpectedEventsRecorder so that further expected events can be recorded and verified</returns>
+        public static ExpectedEventsRecorder ExpectEvents(params string[] expectedEvents)
+        {
+            return new ExpectedEventsRecorder(_events, expectedEvents);
         }
 
         /// <summary>

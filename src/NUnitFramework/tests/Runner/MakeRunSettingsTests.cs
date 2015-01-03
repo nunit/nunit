@@ -21,14 +21,12 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
 using System.IO;
+using NUnit.Common;
 using NUnit.Framework;
 
 namespace NUnitLite.Runner.Tests
 {
-    using Options;
-
     public class MakeRunSettingsTests
     {
         [Test]
