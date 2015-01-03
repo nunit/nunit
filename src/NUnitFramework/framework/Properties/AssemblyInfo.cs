@@ -24,10 +24,23 @@
 using System;
 using System.Reflection;
 
-// Information about this assembly is defined by the following attributes. 
-// Change them to the _values specific to your project.
-
+#if NET_4_5
+[assembly: AssemblyTitle("NUnit Framework .NET 4.5")]
+#elif NET_4_0
+[assembly: AssemblyTitle("NUnit Framework .NET 4.0")]
+#elif NET_3_5
+[assembly: AssemblyTitle("NUnit Framework .NET 3.5")]
+#elif NET_2_0
+[assembly: AssemblyTitle("NUnit Framework .NET 2.0")]
+#elif SL_5_0
+[assembly: AssemblyTitle("NUnit Framework Silverlight 5.0")]
+#elif NETCF_3_5
+[assembly: AssemblyTitle("NUnit Framework CF 3.5")]
+#elif PORTABLE
+[assembly: AssemblyTitle("NUnit Framework Portable")]
+#else
 [assembly: AssemblyTitle("NUnit Framework")]
+#endif
 
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyCulture("")]

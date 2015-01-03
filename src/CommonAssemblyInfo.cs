@@ -48,6 +48,8 @@ using System.Reflection;
 [assembly: AssemblyConfiguration("Silverlight 3.0 Debug")]
 #elif NETCF_3_5
 [assembly: AssemblyConfiguration("Compact Framework 3.5 Debug")]
+#elif PORTABLE
+[assembly: AssemblyConfiguration("Portable Debug")]
 #else
 [assembly: AssemblyConfiguration("Debug")]
 #endif
@@ -68,6 +70,8 @@ using System.Reflection;
 [assembly: AssemblyConfiguration("Silverlight 3.0")]
 #elif NETCF_3_5
 [assembly: AssemblyConfiguration("Compact Framework 3.5")]
+#elif PORTABLE
+[assembly: AssemblyConfiguration("Portable")]
 #else
 [assembly: AssemblyConfiguration("")]
 #endif

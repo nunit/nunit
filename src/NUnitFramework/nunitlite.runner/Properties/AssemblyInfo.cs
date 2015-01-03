@@ -23,8 +23,20 @@
 
 using System.Reflection;
 
-// General Information about an assembly is controlled through the following 
-// set of attributes. Change these attribute values to modify the information
-// associated with an assembly.
+#if NET_4_5
+[assembly: AssemblyTitle("NUnitLite Runner .NET 4.5")]
+#elif NET_4_0
+[assembly: AssemblyTitle("NUnitLite Runner .NET 4.0")]
+#elif NET_3_5
+[assembly: AssemblyTitle("NUnitLite Runner .NET 3.5")]
+#elif NET_2_0
+[assembly: AssemblyTitle("NUnitLite Runner .NET 2.0")]
+#elif SL_5_0
+[assembly: AssemblyTitle("NUnitLite Runner Silverlight 5.0")]
+#elif NETCF_3_5
+[assembly: AssemblyTitle("NUnitLite Runner CF 3.5")]
+#else
 [assembly: AssemblyTitle("NUnitLite Runner")]
+#endif
+
 [assembly: AssemblyDescription("")]
