@@ -8,7 +8,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <OutputName>NUnit.Runners</OutputName>
     <OutputType>Package</OutputType>
-      <DefineSolutionProperties>false</DefineSolutionProperties>
+    <DefineSolutionProperties>false</DefineSolutionProperties>
     <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' AND '$(MSBuildExtensionsPath32)' != '' ">$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
     <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' ">$(MSBuildExtensionsPath)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
     <Name>nunit-runners</Name>
@@ -72,6 +72,11 @@
       <HintPath>$(WixExtDir)\WixUIExtension.dll</HintPath>
       <Name>WixUIExtension</Name>
     </WixExtension>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\common\common.wxi">
+      <Link>common.wxi</Link>
+    </Content>
   </ItemGroup>
   <Import Project="$(WixTargetsPath)" />
   <!--
