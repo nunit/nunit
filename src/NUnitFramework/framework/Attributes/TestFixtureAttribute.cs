@@ -83,25 +83,20 @@ namespace NUnit.Framework
         public object[] Arguments { get; private set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether this <see cref="TestFixtureAttribute"/> should be ignored.
-        /// </summary>
-        /// <value><c>true</c> if ignore; otherwise, <c>false</c>.</value>
-        public bool Ignore { get; set; }
-
-        /// <summary>
-        /// Gets or sets the ignore reason. May set Ignored as a side effect.
+        /// Gets or sets the ignore reason. May set RunState as a side effect.
         /// </summary>
         /// <value>The ignore reason.</value>
-        public string IgnoreReason
+        public string Ignore
         {
-            get { return _ignoreReason; }
-            set
-            {
-                _ignoreReason = value;
-                Ignore = !string.IsNullOrEmpty(_ignoreReason);
-            }
+            get { return IgnoreReason;  }
+            set { IgnoreReason = value; }
         }
-        private string _ignoreReason;
+
+        /// <summary>
+        /// Gets or sets the ignore reason. May set RunState as a side effect.
+        /// </summary>
+        /// <value>The ignore reason.</value>
+        public string IgnoreReason { get; set; }
 
         /// <summary>
         /// Get or set the type arguments. If not set
@@ -134,6 +129,12 @@ namespace NUnit.Framework
         /// <param name="test">The test to modify</param>
         public void ApplyToTest(Test test)
         {
+            if (!string.IsNullOrEmpty(IgnoreReason) && test.RunState != RunState.NotRunnable)
+            {
+                test.Properties.Set(PropertyNames.SkipReason, IgnoreReason);
+                test.RunState = RunState.Ignored;
+            }
+
             if (!test.Properties.ContainsKey(PropertyNames.Description) && Description != null)
                 test.Properties.Set(PropertyNames.Description, Description);
 
