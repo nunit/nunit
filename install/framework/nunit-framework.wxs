@@ -57,6 +57,9 @@
         <UIRef Id="WixUI_Mondo" />
         <UIRef Id="WixUI_ErrorProgressText" />
 
+        <WixVariable Id="WixUIBannerBmp" Value="..\common\banner.bmp" />
+        <WixVariable Id="WixUIDialogBmp" Value="..\common\dialog.bmp" />
+
         <!-- ***************************************************************** -->
         <!-- **********      Define the NUnit feature tree          ********** -->
         <!-- ***************************************************************** -->
