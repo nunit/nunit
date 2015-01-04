@@ -63,6 +63,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		EngineAndConsoleTests.nunit = EngineAndConsoleTests.nunit
 		LICENSE.txt = LICENSE.txt
 		NOTICES.txt = NOTICES.txt
+		nunit.ico = nunit.ico
 		NUnit.proj = NUnit.proj
 		README.md = README.md
 	EndProjectSection
