@@ -57,8 +57,7 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
             {
                 return new object[] {
                     new TestCaseData(1),
-                    new TestCaseData(2).Ignore(),
-                    new TestCaseData(3).Ignore("Don't Run Me!")
+                    new TestCaseData(2).Ignore("Don't Run Me!")
                 };
             }
         }
