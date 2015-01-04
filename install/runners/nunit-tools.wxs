@@ -52,7 +52,7 @@
         <!-- **********  Define our GUI using standard WiX UI       ********** -->
         <!-- ***************************************************************** -->
         
-        <WixVariable Id="WixUILicenseRtf" Value="$(var.SolutionDir)License.rtf" />
+        <WixVariable Id="WixUILicenseRtf" Value="..\..\License.rtf" />
         <UIRef Id="WixUI_Mondo" />
         <UIRef Id="WixUI_ErrorProgressText" />
 
@@ -103,13 +103,13 @@
 	<Fragment>
         <ComponentGroup Id="NUNIT.COMMON" Directory="TOOLS">
             <Component Id="CHANGES.txt">
-                <File Id="CHANGES.txt" Source="$(var.SolutionDir)CHANGES.txt" />
+                <File Id="CHANGES.txt" Source="..\..\CHANGES.txt" />
             </Component>
             <Component Id="LICENSE.txt">
-                <File Id="LICENSE.txt" Source="$(var.SolutionDir)LICENSE.txt" />
+                <File Id="LICENSE.txt" Source="..\..\LICENSE.txt" />
             </Component>
             <Component Id="NOTICES.txt">
-                <File Id="NOTICES.txt" Source="$(var.SolutionDir)NOTICES.txt" />
+                <File Id="NOTICES.txt" Source="..\..\NOTICES.txt" />
             </Component>
         </ComponentGroup>
         
