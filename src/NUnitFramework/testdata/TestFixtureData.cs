@@ -132,11 +132,27 @@ namespace NUnit.TestData.TestFixtureData
 
     [TestFixture]
     [Ignore("testing ignore a fixture")]
-    public class IgnoredFixture
+    public class FixtureUsingIgnoreAttribute
     {
         [Test]
         public void Success()
-        {}
+        { }
+    }
+
+    [TestFixture(Ignore = "testing ignore a fixture")]
+    public class FixtureUsingIgnoreProperty
+    {
+        [Test]
+        public void Success()
+        { }
+    }
+
+    [TestFixture(IgnoreReason = "testing ignore a fixture")]
+    public class FixtureUsingIgnoreReasonProperty
+    {
+        [Test]
+        public void Success()
+        { }
     }
 
     [TestFixture]

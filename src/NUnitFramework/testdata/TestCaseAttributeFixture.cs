@@ -66,7 +66,7 @@ namespace NUnit.TestData.TestCaseAttributeFixture
         }
 
         [TestCase(1)]
-        [TestCase(2, Ignore = true)]
+        [TestCase(2, Ignore = "Should not run")]
         [TestCase(3, IgnoreReason = "Don't Run Me!")]
         public void MethodWithIgnoredTestCases(int num)
         {

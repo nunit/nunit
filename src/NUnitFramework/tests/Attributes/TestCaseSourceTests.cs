@@ -234,9 +234,6 @@ namespace NUnit.Framework.Attributes
  
             testCase = TestFinder.Find("MethodWithIgnoredTestCases(2)", suite, false);
             Assert.That(testCase.RunState, Is.EqualTo(RunState.Ignored));
- 
-            testCase = TestFinder.Find("MethodWithIgnoredTestCases(3)", suite, false);
-            Assert.That(testCase.RunState, Is.EqualTo(RunState.Ignored));
             Assert.That(testCase.Properties.Get(PropertyNames.SkipReason), Is.EqualTo("Don't Run Me!"));
         }
 

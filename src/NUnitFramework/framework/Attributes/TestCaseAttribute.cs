@@ -164,10 +164,10 @@ namespace NUnit.Framework
         /// <summary>
         /// Gets or sets the ignored status of the test
         /// </summary>
-        public bool Ignore 
+        public string Ignore 
         { 
-            get { return this.RunState == RunState.Ignored; }
-            set { this.RunState = value ? RunState.Ignored : RunState.Runnable; } 
+            get { return IgnoreReason; }
+            set { this.IgnoreReason = value; } 
         }
         
         /// <summary>

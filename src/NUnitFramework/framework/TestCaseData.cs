@@ -163,16 +163,6 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Ignores this TestCase.
-        /// </summary>
-        /// <returns></returns>
-        public TestCaseData Ignore()
-        {
-            this.RunState = RunState.Ignored;
-            return this;
-        }
-        
-        /// <summary>
         /// Marks the test case as explicit.
         /// </summary>
         public TestCaseData Explicit()	{

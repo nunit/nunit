@@ -26,7 +26,6 @@ using NUnit.Framework.Interfaces;
 using NUnit.TestData.OneTimeSetUpTearDownData;
 using NUnit.TestUtilities;
 using NUnit.TestData.TestFixtureData;
-using IgnoredFixture = NUnit.TestData.TestFixtureData.IgnoredFixture;
 
 namespace NUnit.Framework.Internal
 {
@@ -132,14 +131,30 @@ namespace NUnit.Framework.Internal
         }
 
         [Test]
-        public void CannotRunIgnoredFixture()
+        public void FixtureUsingIgnoreAttributeIsIgnored()
         {
-            TestSuite suite = TestBuilder.MakeFixture( typeof( IgnoredFixture ) );
-            Assert.AreEqual( RunState.Ignored, suite.RunState );
-            Assert.AreEqual( "testing ignore a fixture", suite.Properties.Get(PropertyNames.SkipReason) );
+            TestSuite suite = TestBuilder.MakeFixture(typeof(FixtureUsingIgnoreAttribute));
+            Assert.AreEqual(RunState.Ignored, suite.RunState);
+            Assert.AreEqual("testing ignore a fixture", suite.Properties.Get(PropertyNames.SkipReason));
         }
 
-//		[Test]
+        [Test]
+        public void FixtureUsingIgnorePropertyIsIgnored()
+        {
+            TestSuite suite = TestBuilder.MakeFixture(typeof(FixtureUsingIgnoreProperty));
+            Assert.AreEqual(RunState.Ignored, suite.RunState);
+            Assert.AreEqual("testing ignore a fixture", suite.Properties.Get(PropertyNames.SkipReason));
+        }
+
+        [Test]
+        public void FixtureUsingIgnoreReasonPropertyIsIgnored()
+        {
+            TestSuite suite = TestBuilder.MakeFixture(typeof(FixtureUsingIgnoreReasonProperty));
+            Assert.AreEqual(RunState.Ignored, suite.RunState);
+            Assert.AreEqual("testing ignore a fixture", suite.Properties.Get(PropertyNames.SkipReason));
+        }
+
+        //		[Test]
 //		public void CannotRunAbstractFixture()
 //		{
 //            TestAssert.IsNotRunnable(typeof(AbstractTestFixture));
