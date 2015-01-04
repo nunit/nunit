@@ -39,8 +39,9 @@
         <!-- *********  Properties for the Add Remove Programs list  ********* -->
         <!-- ***************************************************************** -->
 
+        <Icon Id="nunit.ico" SourceFile="..\..\nunit.ico"/>
         <Property Id="ARPCONTACT" Value="Charlie Poole" />
-        <Property Id="ARPPRODUCTICON" Value="nunit_icon.exe" />
+        <Property Id="ARPPRODUCTICON" Value="nunit.ico" />
         <Property Id="ARPHELPLINK" Value="https://groups.google.com/forum/#!forum/nunit-discuss" />
         <Property Id="ARPURLINFOABOUT" Value="NUnit is a testing framework for all .NET languages" />
         <Property Id="ARPURLUPDATEINFO" Value="http://nunit.org" />
@@ -129,6 +130,9 @@
             </Component>
             <Component Id="NOTICES.txt">
                 <File Id="NOTICES.txt" Source="..\..\NOTICES.txt" />
+            </Component>
+            <Component Id="nunit.ico">
+                <File Id="nunit.ico" Source="..\..\nunit.ico" />
             </Component>
         </ComponentGroup>
 
