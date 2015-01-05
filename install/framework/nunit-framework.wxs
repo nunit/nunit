@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<Product Id="*" 
+             Name="NUnit Framework !(bind.FileVersion.nunit.framework.45.dll)" 
+             Language="1033" 
+             Version="!(bind.FileVersion.nunit.framework.45.dll)" 
+             Manufacturer="nunit.org" 
+             UpgradeCode="880B355E-1916-446B-A3E1-D2B72CF2A0EC">
+        
+        <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+
+        <!-- Include the information that is common to all installs -->
+        <?include ..\common\common.wxi ?>
+
+        <!-- ***************************************************************** -->
+        <!-- **********      Define the NUnit feature tree          ********** -->
+        <!-- ***************************************************************** -->
+        
+        <Feature Id="NUNIT.FRAMEWORK" 
+                 ConfigurableDirectory="INSTALLDIR" 
+                 Level="1" 
+                 Title="NUnit Framework v!(bind.FileVersion.nunit.framework.45.dll)" 
+                 Display="expand" 
+                 Description="Installs the NUnit framework assemblies for the various .NET Frameworks">
+
+            <ComponentGroupRef Id="NUNIT.COMMON"/>
+                
+            <Feature Id="NET20" Level="1" Title=".NET 2.0"
+                        Description="Installs the NUnit framework for .NET 2.0" >
+                <ComponentGroupRef Id="NET20"/>
+            </Feature>
+            <Feature Id="NET35" Level="1" Title=".NET 3.5"
+                        Description="Installs the NUnit framework for .NET 3.5" >
+                <ComponentGroupRef Id="NET35"/>
+            </Feature>
+            <Feature Id="NET40" Level="1" Title=".NET 4.0"
+                        Description="Installs the NUnit framework for .NET 4.0" >
+                <ComponentGroupRef Id="NET40"/>
+            </Feature>
+            <Feature Id="NET45" Level="1" Title=".NET 4.5"
+                        Description="Installs the NUnit framework for .NET 4.5" >
+                <ComponentGroupRef Id="NET45"/>
+            </Feature>
+            <Feature Id="PORTABLE" Level="1" Title=".NET Portable"
+                        Description="Installs the NUnit framework for Portable .NET" >
+                <ComponentGroupRef Id="PORTABLE"/>
+            </Feature>
+            <Feature Id="SL50" Level="1" Title="Silverlight 5.0"
+                        Description="Installs the NUnit framework for Silverlight 5.0" >
+                <ComponentGroupRef Id="SL50"/>
+            </Feature>
+		</Feature>
+	</Product>
+
+    <!-- ***************************************************************** -->
+    <!-- **********       Define Directory Structure            ********** -->
+    <!-- ***************************************************************** -->
+    
+	<Fragment>
+		<Directory Id="TARGETDIR" Name="SourceDir">
+			<Directory Id="ProgramFilesFolder">
+                <Directory Id="INSTALLDIR" Name="NUnit.org">
+                    <Directory Id="FRAMEWORK" Name="framework">
+                        <Directory Id="VERSION" Name="!(bind.FileVersion.nunit.framework.45.dll)">
+                            <Directory Id="NET20" Name="net-2.0" />
+                            <Directory Id="NET35" Name="net-3.5" />
+                            <Directory Id="NET40" Name="net-4.0" />
+                            <Directory Id="NET45" Name="net-4.5" />
+                            <Directory Id="PORTABLE" Name="portable" />
+                            <Directory Id="SL50" Name="sl-5.0" />
+                        </Directory>
+                    </Directory>
+                </Directory>
+			</Directory>
+		</Directory>
+	</Fragment>
+
+	<Fragment>
+        <ComponentGroup Id="NUNIT.COMMON" Directory="VERSION">
+            <Component Id="CHANGES.txt">
+                <File Id="CHANGES.txt" Source="..\..\CHANGES.txt" />
+            </Component>
+            <Component Id="LICENSE.txt">
+                <File Id="LICENSE.txt" Source="..\..\LICENSE.txt" />
+            </Component>
+            <Component Id="NOTICES.txt">
+                <File Id="NOTICES.txt" Source="..\..\NOTICES.txt" />
+            </Component>
+            <Component Id="nunit.ico">
+                <File Id="nunit.ico" Source="..\..\nunit.ico" />
+            </Component>
+        </ComponentGroup>
+
+        <ComponentGroup Id="NET20" Directory="NET20">
+            <Component Id="NET20" Guid="D5DB98E2-AF98-4308-83FE-BA4D973F973D">
+                <File Id="nunit.framework.20.dll" 
+                      Name="nunit.framework.dll" 
+                      ProcessorArchitecture="msil" 
+                      Source="$(var.nunit.framework-2.0.TargetPath)" />
+                <File Id="nunit.framework.20.xml" 
+                      Name="nunit.framework.xml" 
+                      Source="$(var.nunit.framework-2.0.TargetDir)$(var.nunit.framework-2.0.TargetName).xml" 
+                      CompanionFile="nunit.framework.20.dll" />
+                <File Id="nunitlite.20.dll" 
+                      Name="nunitlite.dll" 
+                      ProcessorArchitecture="msil" 
+                      Source="$(var.nunitlite.runner-2.0.TargetPath)" />
+            </Component>
+            <Component Id="AssemblyReferenceFolder20">
+                <RegistryKey Root="HKMU" Key="Software\Microsoft\.NETFramework\v2.0\AssemblyFoldersEx\NUnit [ProductVersion]" >
+                    <RegistryValue Action="write" Type="string" Value="[NET20]" />
+                </RegistryKey>
+            </Component>
+        </ComponentGroup>
+
+        <ComponentGroup Id="NET35" Directory="NET35">
+            <Component Id="NET35" Guid="70141F7C-FE62-407A-B2ED-00BF86FEF595">
+                <File Id="nunit.framework.35.dll" 
+                      Name="nunit.framework.dll" 
+                      ProcessorArchitecture="msil" 
+                      Source="$(var.nunit.framework-3.5.TargetPath)" />
+                <File Id="nunit.framework.35.xml" 
+                      Name="nunit.framework.xml" 
+                      Source="$(var.nunit.framework-3.5.TargetDir)$(var.nunit.framework-3.5.TargetName).xml" 
+                      CompanionFile="nunit.framework.35.dll" />
+                <File Id="nunitlite.35.dll" 
+                      Name="nunitlite.dll" 
+                      ProcessorArchitecture="msil" 
+                      Source="$(var.nunitlite.runner-3.5.TargetPath)" />
+            </Component>
+            <Component Id="AssemblyReferenceFolder35">
+                <RegistryKey Root="HKMU" Key="Software\Microsoft\.NETFramework\v3.5\AssemblyFoldersEx\NUnit [ProductVersion]" >
+                    <RegistryValue Action="write" Type="string" Value="[NET35]" />
+                </RegistryKey>
+            </Component>
+        </ComponentGroup>
+
+        <ComponentGroup Id="NET40" Directory="NET40">
+            <Component Id="NET40" Guid="20075750-2D60-4798-A348-5FB0930E9034">
+                <File Id="nunit.framework.40.dll" 
+                      Name="nunit.framework.dll" 
+                      ProcessorArchitecture="msil" 
+                      Source="$(var.nunit.framework-4.0.TargetPath)" />
+                <File Id="nunit.framework.40.xml" 
+                      Name="nunit.framework.xml" 
+                      Source="$(var.nunit.framework-4.0.TargetDir)$(var.nunit.framework-4.0.TargetName).xml"
+                      CompanionFile="nunit.framework.40.dll" />
+                <File Id="nunitlite.40.dll" 
+                      Name="nunitlite.dll" 
+                      ProcessorArchitecture="msil" 
+                      Source="$(var.nunitlite.runner-4.0.TargetPath)" />
+            </Component>
+            <Component Id="AssemblyReferenceFolder40">
+                <RegistryKey Root="HKMU" Key="Software\Microsoft\.NETFramework\v4.0\AssemblyFoldersEx\NUnit [ProductVersion]" >
+                    <RegistryValue Action="write" Type="string" Value="[NET40]" />
+                </RegistryKey>
+            </Component>
+        </ComponentGroup>
+
+        <ComponentGroup Id="NET45" Directory="NET45">
+            <Component Id="NET45" Guid="6CBE4F8B-8583-48F2-A2FD-2A3875DB8665">
+                <File Id="nunit.framework.45.dll" 
+                      Name="nunit.framework.dll" 
+                      ProcessorArchitecture="msil" 
+                      Source="$(var.nunit.framework-4.5.TargetPath)" />
+                <File Id="nunit.framework.45.xml" 
+                      Name="nunit.framework.xml" 
+                      Source="$(var.nunit.framework-4.5.TargetDir)$(var.nunit.framework-4.5.TargetName).xml"
+                      CompanionFile="nunit.framework.45.dll" />
+                <File Id="nunitlite.45.dll" 
+                      Name="nunitlite.dll" 
+                      ProcessorArchitecture="msil" 
+                      Source="$(var.nunitlite.runner-4.5.TargetPath)" />
+            </Component>
+            <Component Id="AssemblyReferenceFolder45">
+                <RegistryKey Root="HKMU" Key="Software\Microsoft\.NETFramework\v4.5\AssemblyFoldersEx\NUnit [ProductVersion]" >
+                    <RegistryValue Action="write" Type="string" Value="[NET45]" />
+                </RegistryKey>
+            </Component>
+        </ComponentGroup>
+
+        <ComponentGroup Id="PORTABLE" Directory="PORTABLE">
+            <Component Id="PORTABLE" Guid="D469144C-53E9-4DEA-8659-84FC9A673EDB">
+                <File Id="nunit.framework.portable.dll" 
+                      Name="nunit.framework.dll" 
+                      ProcessorArchitecture="msil" 
+                      Source="$(var.nunit.framework-portable.TargetPath)" />
+                <File Id="nunit.framework.portable.xml" 
+                      Name="nunit.framework.xml" 
+                      Source="$(var.nunit.framework-portable.TargetDir)$(var.nunit.framework-portable.TargetName).xml" CompanionFile="nunit.framework.portable.dll" />
+            </Component>
+            <!-- What is the AssemblyFoldersEx for Portable? -->
+        </ComponentGroup>
+
+        <ComponentGroup Id="SL50" Directory="SL50">
+            <Component Id="SL50" Guid="FE2ADBC4-DFEC-41A6-8D5A-6DCACC167059">
+                <File Id="nunit.framework.sl50.dll" 
+                      Name="nunit.framework.dll" 
+                      ProcessorArchitecture="msil" 
+                      Source="$(var.nunit.framework-sl-5.0.TargetPath)" />
+                <File Id="nunit.framework.sl50.xml" 
+                      Name="nunit.framework.xml" 
+                      Source="$(var.nunit.framework-sl-5.0.TargetDir)$(var.nunit.framework-sl-5.0.TargetName).xml" CompanionFile="nunit.framework.sl50.dll" />
+                <File Id="nunitlite.sl50.dll" 
+                      Name="nunitlite.dll" 
+                      ProcessorArchitecture="msil" 
+                      Source="$(var.nunitlite.runner-sl-5.0.TargetPath)" />
+            </Component>
+            <!-- What is the AssemblyFoldersEx for SilverLight? -->
+        </ComponentGroup>
+        
+        
+	</Fragment>
+</Wix>
