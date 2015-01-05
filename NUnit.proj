@@ -32,6 +32,7 @@
 		<ProjectToolsDir>$(ProjectBaseDir)\tools</ProjectToolsDir>
 		<PartCoverDir>$(ProjectToolsDir)\PartCover</PartCoverDir>
 		<NuspecDirectory>$(ProjectBaseDir)\nuget</NuspecDirectory>
+		<InstallDir>$(ProjectBaseDir)\install</InstallDir>
 	</PropertyGroup>
 
 	<PropertyGroup Label="Default Build Settings">
@@ -353,10 +354,10 @@
 	<!-- *********************************************************************** -->
 	<!--                          Packaging Targets                              -->
 	<!--                                                                         -->
-		<!--                              WARNING                                    -->
+	<!--                              WARNING                                    -->
 	<!--                                                                         -->
 	<!--   Packaging is decoupled from the Build by design. It's up to whoever   -->
-		<!--   creates the package to first make sure that the build is up to date.  -->
+	<!--   creates the package to first make sure that the build is up to date.  -->
 	<!-- *********************************************************************** -->
 	
 	<Target Name="Package" Label="Packages the source code and binaries already built"
@@ -419,6 +420,20 @@
 		<Exec WorkingDirectory="$(ProjectBaseDir)"
 			  Command="$(ManagedExeLauncher) &quot;$(NugetExecutable)&quot; pack $(NuspecDirectory)\nunit.console.nuspec -NoPackageAnalysis -BasePath &quot;$(ProjectBaseDir)&quot; -OutputDirectory &quot;$(ProjectPackageDir)&quot; -Properties version=$(NugetVersion);builddir=$(ConfigurationBuildDir)" />
 
+	</Target>
+
+	<Target Name="PackageFrameworkInstall" Label="Creates the MSI installer for the NUnit.Framework">
+		<MSBuild Targets="Build" Projects="$(InstallDir)\framework\nunit-framework.wixproj"
+			Properties="Configuration=$(Configuration)" />		
+	</Target>
+
+	<Target Name="PackageRunnersInstall" Label="Creates the MSI installer for the NUnit console runner and tools">
+		<MSBuild Targets="Build" Projects="$(InstallDir)\runners\nunit-runners.wixproj"
+			Properties="Configuration=$(Configuration)" />
+	</Target>
+
+	<Target Name="PackageAllInstalls" Label="Creates all of the MSI installers for NUnit"
+					DependsOnTargets="PackageFrameworkInstall;PackageRunnersInstall">
 	</Target>
 	
 	<Target Name="_CreatePackageImage" DependsOnTargets="_CleanPackageWorkingDir">
