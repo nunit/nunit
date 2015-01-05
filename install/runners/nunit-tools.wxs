@@ -85,6 +85,13 @@
                 <File Id="nunit.engine.api.xml" 
                       Source="$(var.nunit.engine.api.TargetDir)$(var.nunit.engine.api.TargetName).xml" />
             </Component>
+            <Component Id="NUNIT_AGENT">
+                <File Id="nunit_agent.exe" 
+                      ProcessorArchitecture="msil" 
+                      Source="$(var.nunit-agent.TargetPath)" />
+                <File Id="nunit_agent.exe.config" 
+                      Source="$(var.nunit-agent.TargetPath).config" />
+            </Component>
             <Component Id="NUNIT_AGENT_X86">
                 <File Id="nunit_agent_x86.exe" 
                       ProcessorArchitecture="x86" 
@@ -92,22 +99,15 @@
                 <File Id="nunit_agent_x86.exe.config" 
                       Source="$(var.nunit-agent-x86.TargetPath).config" />
             </Component>
+		</ComponentGroup>
+
+        <ComponentGroup Id="NUNIT.CONSOLE" Directory="TOOLS">
             <Component Id="NUNIT_CONSOLE">
                 <File Id="nunit_console.exe" 
                       ProcessorArchitecture="msil" 
                       Source="$(var.nunit-console.TargetPath)" />
                 <File Id="nunit_console.exe.config" 
                       Source="$(var.nunit-console.TargetPath).config" />
-            </Component>
-		</ComponentGroup>
-
-        <ComponentGroup Id="NUNIT.CONSOLE" Directory="TOOLS">
-            <Component Id="NUNIT_AGENT">
-                <File Id="nunit_agent.exe" 
-                      ProcessorArchitecture="msil" 
-                      Source="$(var.nunit-agent.TargetPath)" />
-                <File Id="nunit_agent.exe.config" 
-                      Source="$(var.nunit-agent.TargetPath).config" />
             </Component>
         </ComponentGroup>
 	</Fragment>
