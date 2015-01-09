@@ -402,7 +402,9 @@ namespace NUnit.Framework
             TestMethod test = new NUnitTestCaseBuilder().BuildTestMethod(method, suite, GetParametersForTestCase(method));
             
 #if !PORTABLE
-            if (test.RunState != RunState.NotRunnable && !_platformHelper.IsPlatformSupported(this))
+            if (test.RunState != RunState.NotRunnable && 
+                test.RunState != RunState.Ignored && 
+                !_platformHelper.IsPlatformSupported(this))
             {
                 test.RunState = RunState.Skipped;
                 test.Properties.Add(PropertyNames.SkipReason, _platformHelper.Reason);

@@ -56,7 +56,9 @@ namespace NUnit.Framework
         /// <param name="test">The test to modify</param>
         public void ApplyToTest(Test test)
         {
-            if (test.RunState != RunState.NotRunnable && !platformHelper.IsPlatformSupported(this))
+            if (test.RunState != RunState.NotRunnable && 
+                test.RunState != RunState.Ignored && 
+                !platformHelper.IsPlatformSupported(this))
             {
                 test.RunState = RunState.Skipped;
                 test.Properties.Add(PropertyNames.SkipReason, platformHelper.Reason);
