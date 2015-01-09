@@ -273,5 +273,51 @@ namespace NUnit.Framework.Attributes
             Assert.That(testCase.RunState, Is.EqualTo(RunState.Explicit));
             Assert.That(testCase.Properties.Get(PropertyNames.SkipReason), Is.EqualTo("Connection failing"));
         }
+
+#if !PORTABLE
+        [Test]
+        public void CanIncludePlatform()
+        {
+            bool isLinux = System.IO.Path.DirectorySeparatorChar == '/';
+            
+            TestSuite suite = TestBuilder.MakeParameterizedMethodSuite(
+                typeof(TestCaseAttributeFixture), "MethodWithIncludePlatform");
+
+            Test testCase1 = TestFinder.Find("MethodWithIncludePlatform(1)", suite, false);
+            Test testCase2 = TestFinder.Find("MethodWithIncludePlatform(2)", suite, false);
+            if (isLinux)
+            {
+                Assert.That(testCase1.RunState, Is.EqualTo(RunState.Skipped));
+                Assert.That(testCase2.RunState, Is.EqualTo(RunState.Runnable));
+            }
+            else
+            {
+                Assert.That(testCase1.RunState, Is.EqualTo(RunState.Runnable));
+                Assert.That(testCase2.RunState, Is.EqualTo(RunState.Skipped));
+            }
+        }
+
+        [Test]
+        public void CanExcludePlatform()
+        {
+            bool isLinux = System.IO.Path.DirectorySeparatorChar == '/';
+
+            TestSuite suite = TestBuilder.MakeParameterizedMethodSuite(
+                typeof(TestCaseAttributeFixture), "MethodWitExcludePlatform");
+
+            Test testCase1 = TestFinder.Find("MethodWitExcludePlatform(1)", suite, false);
+            Test testCase2 = TestFinder.Find("MethodWitExcludePlatform(2)", suite, false);
+            if (isLinux)
+            {
+                Assert.That(testCase1.RunState, Is.EqualTo(RunState.Runnable));
+                Assert.That(testCase2.RunState, Is.EqualTo(RunState.Skipped));
+            }
+            else
+            {
+                Assert.That(testCase1.RunState, Is.EqualTo(RunState.Skipped));
+                Assert.That(testCase2.RunState, Is.EqualTo(RunState.Runnable));
+            }
+        }
+#endif
     }
 }
