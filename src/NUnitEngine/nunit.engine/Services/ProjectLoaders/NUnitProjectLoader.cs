@@ -23,7 +23,6 @@
 
 using System;
 using System.IO;
-using NUnit.Engine.Internal;
 
 namespace NUnit.Engine.Services.ProjectLoaders
 {

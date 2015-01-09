@@ -99,6 +99,10 @@
       <Project>{2E368281-3BA8-4050-B05E-0E0E43F8F446}</Project>
       <Name>mock-nunit-assembly-2.0</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Extensions\vs-project-loader\vs-project-loader.csproj">
+      <Project>{163110b7-0db6-48bf-8837-eba43bd76be9}</Project>
+      <Name>vs-project-loader</Name>
+    </ProjectReference>
     <ProjectReference Include="..\nunit.engine.api\nunit.engine.api.csproj">
       <Project>{775FAD50-3623-4922-97C4-DFB29A8BE4C7}</Project>
       <Name>nunit.engine.api</Name>

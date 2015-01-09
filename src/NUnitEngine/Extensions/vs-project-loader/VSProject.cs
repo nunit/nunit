@@ -38,7 +38,7 @@ namespace NUnit.Engine.Services.ProjectLoaders
     /// an attempt is made to load an invalid
     /// file or one of an unknown type.
     /// </summary>
-    public class VSProject : IProject
+    public class VSProject : NUnit.Engine.IProject
     {
         #region Static and Instance Variables
 

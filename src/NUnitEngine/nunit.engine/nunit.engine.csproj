@@ -80,7 +80,6 @@
     <Compile Include="Internal\AssemblyReader.cs" />
     <Compile Include="Internal\DomainUsage.cs" />
     <Compile Include="Internal\NUnitConfiguration.cs" />
-    <Compile Include="Services\ProjectLoaders\NUnitProject.cs" />
     <Compile Include="Internal\PathUtils.cs" />
     <Compile Include="Internal\ProcessModel.cs" />
     <Compile Include="Internal\ResultHelper.cs">
@@ -104,11 +103,8 @@
     <Compile Include="Runners\MultipleTestProcessRunner.cs" />
     <Compile Include="Runners\ProcessRunner.cs" />
     <Compile Include="Runners\TestDomainRunner.cs" />
-    <Compile Include="Services\ProjectLoaders\VisualStudioProjectLoader.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Services\ProjectLoaders\VSProject.cs" />
-    <Compile Include="Services\ProjectLoaders\VSSolution.cs" />
+    <Compile Include="Services\ProjectLoaders\NUnitProject.cs" />
+    <Compile Include="Services\ProjectLoaders\NUnitProjectLoader.cs" />
     <Compile Include="Services\ResultWriters\NUnit2XmlResultWriter.cs" />
     <Compile Include="Services\ResultWriters\NUnit3XmlResultWriter.cs" />
     <Compile Include="Services\ResultWriters\NUnit2ResultSummary.cs" />
@@ -123,7 +119,6 @@
     <Compile Include="Services\DomainManager.cs" />
     <Compile Include="Services\DriverFactory.cs" />
     <Compile Include="Services\InProcessTestRunnerFactory.cs" />
-    <Compile Include="Services\ProjectLoaders\NUnitProjectLoader.cs" />
     <Compile Include="Services\ProjectService.cs" />
     <Compile Include="Services\RecentFilesService.cs" />
     <Compile Include="Services\RuntimeFrameworkSelector.cs" />
@@ -134,6 +129,10 @@
     <Compile Include="TestEngineResult.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\mono-addins\Mono.Addins.csproj">
+      <Project>{91dd5a2d-9fe3-4c3c-9253-876141874dad}</Project>
+      <Name>Mono.Addins</Name>
+    </ProjectReference>
     <ProjectReference Include="..\nunit.engine.api\nunit.engine.api.csproj">
       <Project>{775FAD50-3623-4922-97C4-DFB29A8BE4C7}</Project>
       <Name>nunit.engine.api</Name>
@@ -144,6 +143,7 @@
       <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

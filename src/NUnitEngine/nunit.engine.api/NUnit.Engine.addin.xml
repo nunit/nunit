@@ -1,0 +1,17 @@
+﻿<Addin id="NUnit.Engine" isroot="true" version="1.0">
+  
+  <Runtime>
+    <Import assembly="nunit.engine.dll" />
+    <Import assembly="nunit.engine.api.dll" />
+    <ScanExclude path="mock-cpp-clr-x86.dll" />
+    <ScanExclude path="mock-cpp-clr-x64.dll" />
+    <ScanExclude path="nunit.engine.tests.dll" />
+    <ScanExclude path="nunit-console.tests.dll" />
+    <ScanExclude path="nunit-agent.exe" />
+  </Runtime>
+
+  <ExtensionPoint path="/NUnit/Engine/TypeExtensions/IProjectLoader">
+    <ExtensionNode objectType="NUnit.Engine.IProjectLoader"/>
+  </ExtensionPoint>
+
+</Addin>
