@@ -105,6 +105,25 @@ namespace NUnit.Framework.Internal
             string include = platformAttribute.Include;
             string exclude = platformAttribute.Exclude;
 
+            return IsPlatformSupported(include, exclude);
+        }
+
+        /// <summary>
+        /// Tests to determine if the current platform is supported
+        /// based on a platform attribute.
+        /// </summary>
+        /// <param name="testCaseAttribute">The attribute to examine</param>
+        /// <returns></returns>
+        public bool IsPlatformSupported(TestCaseAttribute testCaseAttribute)
+        {
+            string include = testCaseAttribute.IncludePlatform;
+            string exclude = testCaseAttribute.ExcludePlatform;
+
+            return IsPlatformSupported(include, exclude);
+        }
+
+        private bool IsPlatformSupported(string include, string exclude)
+        {
             try
             {
                 if (include != null && !IsPlatformSupported(include))

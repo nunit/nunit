@@ -45,7 +45,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Constructor taking one or more platforms
         /// </summary>
-        /// <param name="platforms">Comma-deliminted list of platforms</param>
+        /// <param name="platforms">Comma-delimited list of platforms</param>
         public PlatformAttribute(string platforms) : base(platforms) { }
 
         #region IApplyToTest members

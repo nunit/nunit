@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2008 Charlie Poole
+// Copyright (c) 2008-2014 Charlie Poole
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -39,9 +39,12 @@ namespace NUnit.Framework
     {
         #region Instance variables
 
-        private object expectedResult;
+        private object _expectedResult;
         private Type _typeOf;
-        private IPropertyBag properties;
+        private IPropertyBag _properties;
+#if !PORTABLE
+        private readonly PlatformHelper _platformHelper = new PlatformHelper();
+#endif
 
         #endregion
 
@@ -110,10 +113,10 @@ namespace NUnit.Framework
         /// <value>The result.</value>
         public object ExpectedResult
         {
-            get { return expectedResult; }
+            get { return _expectedResult; }
             set 
             { 
-                expectedResult = value;
+                _expectedResult = value;
                 HasExpectedResult = true;
             }
         }
@@ -211,6 +214,18 @@ namespace NUnit.Framework
                 this.Reason = value;
             }
         }
+        
+#if !PORTABLE
+        /// <summary>
+        /// Comma-delimited list of platforms to run the test for
+        /// </summary>
+        public string IncludePlatform { get; set; }
+
+        /// <summary>
+        /// Comma-delimited list of platforms to not run the test for
+        /// </summary>
+        public string ExcludePlatform { get; set; }
+#endif
 
         /// <summary>
         /// Gets and sets the category for this fixture.
@@ -233,10 +248,10 @@ namespace NUnit.Framework
         {
             get
             {
-                if (properties == null)
-                    properties = new PropertyBag();
+                if (_properties == null)
+                    _properties = new PropertyBag();
 
-                return properties;
+                return _properties;
             }
         }
 
@@ -384,7 +399,17 @@ namespace NUnit.Framework
         /// <returns>One or more TestMethods</returns>
         public IEnumerable<TestMethod> BuildFrom(MethodInfo method, Test suite)
         {
-            return new TestMethod[] { new NUnitTestCaseBuilder().BuildTestMethod(method, suite, GetParametersForTestCase(method)) };
+            TestMethod test = new NUnitTestCaseBuilder().BuildTestMethod(method, suite, GetParametersForTestCase(method));
+            
+#if !PORTABLE
+            if (test.RunState != RunState.NotRunnable && !_platformHelper.IsPlatformSupported(this))
+            {
+                test.RunState = RunState.Skipped;
+                test.Properties.Add(PropertyNames.SkipReason, _platformHelper.Reason);
+            }
+#endif
+
+            return new [] { test };
         }
 
         #endregion
