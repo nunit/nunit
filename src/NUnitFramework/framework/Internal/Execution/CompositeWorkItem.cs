@@ -288,6 +288,9 @@ namespace NUnit.Framework.Internal.Execution
                     childTask.Completed -= new EventHandler(OnChildCompleted);
                     Result.AddResult(childTask.Result);
 
+                    if (Context.StopOnError && childTask.Result.ResultState.Status == TestStatus.Failed)
+                        Context.ExecutionStatus = TestExecutionStatus.StopRequested;
+
                     // Check to see if all children completed
                     CountDownChildTest();
                 }

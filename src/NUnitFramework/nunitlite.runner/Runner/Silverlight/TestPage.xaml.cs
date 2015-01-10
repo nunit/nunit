@@ -58,7 +58,7 @@ namespace NUnitLite.Runner.Silverlight
         private void ExecuteTests()
         {
             ITestResult result = runner.Run(TestListener.NULL, TestFilter.Empty);
-            ResultReporter reporter = new ResultReporter(result, writer);
+            ResultReporter reporter = new ResultReporter(result, writer, false);
 
             reporter.ReportResults();
 
