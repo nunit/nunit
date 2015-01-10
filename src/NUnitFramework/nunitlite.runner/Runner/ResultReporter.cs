@@ -36,6 +36,7 @@ namespace NUnitLite.Runner
     {
         private ExtendedTextWriter _writer;
         private ITestResult _result;
+        private bool _stopOnFirstError;
         private string _overallResult;
 
         private int _reportIndex = 0;
@@ -45,10 +46,12 @@ namespace NUnitLite.Runner
         /// </summary>
         /// <param name="result">The top-level result being reported</param>
         /// <param name="writer">A TextWriter to which the report is written</param>
-        public ResultReporter(ITestResult result, ExtendedTextWriter writer)
+        /// <param name="stopOnFirstError">True if user requested stop after first error</param>
+        public ResultReporter(ITestResult result, ExtendedTextWriter writer, bool stopOnFirstError)
         {
             _result = result;
             _writer = writer;
+            _stopOnFirstError = stopOnFirstError;
 
             _overallResult = result.ResultState.Status.ToString();
             if (_overallResult == "Skipped")
@@ -71,6 +74,12 @@ namespace NUnitLite.Runner
                 _writer.WriteLine(ColorStyle.Warning, "Warning: No tests found");
 
             _writer.WriteLine();
+
+            if (_stopOnFirstError && Summary.FailureCount + Summary.ErrorCount > 0)
+            {
+                _writer.WriteLine(ColorStyle.Failure, "Execution terminated after first error");
+                _writer.WriteLine();
+            }
 
             WriteSummaryReport();
 

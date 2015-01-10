@@ -253,7 +253,7 @@ namespace NUnitLite.Runner
             var startTime = DateTime.UtcNow;
 
             ITestResult result = _runner.Run(this, filter);
-            var reporter = new ResultReporter(result, _outWriter);
+            var reporter = new ResultReporter(result, _outWriter, _options.StopOnError);
             reporter.ReportResults();
 
             if (_options.ResultOutputSpecifications.Count > 0)
@@ -471,6 +471,9 @@ namespace NUnitLite.Runner
 
             if (options.DefaultTimeout >= 0)
                 runSettings[DriverSettings.DefaultTimeout] = options.DefaultTimeout;
+
+            if (options.StopOnError)
+                runSettings[DriverSettings.StopOnError] = true;
 
             return runSettings;
         }
