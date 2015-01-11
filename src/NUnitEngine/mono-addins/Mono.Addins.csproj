@@ -17,18 +17,18 @@
     <DebugSymbols>True</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>True</Optimize>
-    <OutputPath>..\bin</OutputPath>
+    <OutputPath>..\..\..\bin\Debug\</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
     <ConsolePause>False</ConsolePause>
     <NoWarn>1574</NoWarn>
-    <DocumentationFile>..\bin\Mono.Addins.xml</DocumentationFile>
+    <DocumentationFile>..\..\..\bin\Debug\Mono.Addins.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
     <Optimize>True</Optimize>
-    <OutputPath>..\bin</OutputPath>
+    <OutputPath>..\..\..\bin\Release\</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
