@@ -1,0 +1,1102 @@
+2010-10-14  Lluis Sanchez Gual  <lluis@novell.com>
+
+	* AddinScanner.cs: Don't inherit CustomExtension attributes.
+	  The attribute must be explicitly applied to classes to be
+	  marked as extensions.
+
+2010-07-01  Lluis Sanchez Gual  <lluis@novell.com>
+
+	* Mono.Addins.csproj:
+	* Mono.Addins.Description/Extension.cs:
+	* Mono.Addins.Description/Dependency.cs:
+	* Mono.Addins.Description/AddinFlags.cs:
+	* Mono.Addins.Description/ExtensionPoint.cs:
+	* Mono.Addins.Description/AddinDependency.cs:
+	* Mono.Addins.Description/AddinDescription.cs:
+	* Mono.Addins.Description/ExtensionNodeSet.cs:
+	* Mono.Addins.Description/NativeDependency.cs:
+	* Mono.Addins.Localization/IAddinLocalizer.cs:
+	* Mono.Addins.Description/ObjectDescription.cs:
+	* Mono.Addins.Description/ModuleDescription.cs:
+	* Mono.Addins.Description/ExtensionNodeType.cs:
+	* Mono.Addins.Description/NodeTypeAttribute.cs:
+	* Mono.Addins.Description/AssemblyDependency.cs:
+	* Mono.Addins.Description/ExtensionCollection.cs:
+	* Mono.Addins.Description/DependencyCollection.cs:
+	* Mono.Addins.Localization/IPluralAddinLocalizer.cs:
+	* Mono.Addins.Localization/IAddinLocalizerFactory.cs:
+	* Mono.Addins.Description/ExtensionNodeDescription.cs:
+	* Mono.Addins.Description/ExtensionPointCollection.cs:
+	* Mono.Addins.Description/ConditionTypeDescription.cs:
+	* Mono.Addins.Description/ExtensionNodeSetCollection.cs:
+	* Mono.Addins.Description/ModuleDescriptionCollection.cs:
+	* Mono.Addins.Description/NodeTypeAttributeCollection.cs:
+	* Mono.Addins.Description/ExtensionNodeTypeCollection.cs:
+	* Mono.Addins.Description/ObjectDescriptionCollection.cs:
+	* Mono.Addins.Description/ExtensionNodeDescriptionCollection.cs:
+	* Mono.Addins.Description/ConditionTypeDescriptionCollection.cs:
+	  Added documentation.
+
+2010-06-17  Lluis Sanchez Gual  <lluis@novell.com>
+
+	* Mono.Addins/NodeElement.cs:
+	* Mono.Addins/RuntimeAddin.cs:
+	* Mono.Addins/IProgressStatus.cs:
+	* Mono.Addins/IAddinInstaller.cs:
+	* Mono.Addins/TypeExtensionNode.cs:
+	* Mono.Addins/ExtensionNodeList.cs:
+	* Mono.Addins/InstanceExtensionNode.cs:
+	* Mono.Addins/NodeAttributeAttribute.cs:
+	* Mono.Addins/ExtensionNodeAttribute.cs:
+	* Mono.Addins/ExtensionPointAttribute.cs:
+	* Mono.Addins/ImportAddinFileAttribute.cs:
+	* Mono.Addins/MissingDependencyException.cs:
+	* Mono.Addins/TypeExtensionPointAttribute.cs:
+	* Mono.Addins/ExtensionNodeChildAttribute.cs:
+	* Mono.Addins/ImportAddinAssemblyAttribute.cs: Added some
+	  documentation.
+
+2010-05-27  Lluis Sanchez Gual  <lluis@novell.com>
+
+	* Mono.Addins/AddinManager.cs:
+	* Mono.Addins/ConditionType.cs:
+	* Mono.Addins/ExtensionNode.cs:
+	* Mono.Addins/ExtensionContext.cs:
+	* Mono.Addins/ExtensionAttribute.cs:
+	* Mono.Addins/AddinRootAttribute.cs:
+	* Mono.Addins/ConsoleProgressStatus.cs:
+	* Mono.Addins/CustomExtensionAttribute.cs:
+	* Mono.Addins/ExtensionAttributeAttribute.cs: More
+	  documentation.
+
+2010-05-27  Lluis Sanchez Gual  <lluis@novell.com>
+
+	* Mono.Addins/AddinEngine.cs:
+	* Mono.Addins/AddinManager.cs:
+	* Mono.Addins/AddinRegistry.cs:
+	* Mono.Addins/AddinEventArgs.cs:
+	* Mono.Addins/AddinLocalizer.cs:
+	* Mono.Addins/AddinAttribute.cs:
+	* Mono.Addins/AddinErrorEventArgs.cs:
+	* Mono.Addins/AddinModuleAttribute.cs:
+	* Mono.Addins/AddinAuthorAttribute.cs:
+	* Mono.Addins/AddinDependencyAttribute.cs:
+	* Mono.Addins/AddinLocalizerGettextAttribute.cs: Added some
+	  API documentation.
+
+2010-05-25  Lluis Sanchez Gual  <lluis@novell.com>
+
+	* Mono.Addins.Database/AddinScanResult.cs: Properly resolve
+	  Mono.Addins.
+
+2010-05-25  Lluis Sanchez Gual  <lluis@novell.com>
+
+	* Mono.Addins/AddinManager.cs:
+	* Mono.Addins/ExtensionContext.cs: Added methods for
+	  subscribing type-bound extension points.
+
+2010-05-25  Lluis Sanchez Gual  <lluis@novell.com>
+
+	* Mono.Addins.csproj: Add Debug and Release configurations.
+
+	* Mono.Addins.Database/AddinScanner.cs: Fixed node type
+	  parsing issue with TypeExtensionPointAttribute.
+
+2010-05-21  Lluis Sanchez Gual  <lluis@novell.com>
+
+	* Mono.Addins.Database/AddinUpdateData.cs: When resolving
+	  extension from an optional module, include dependencies
+	  defined in the main module.
+
+	* Mono.Addins.Database/SetupDomain.cs: Flush.
+
+	* Mono.Addins.Database/AddinScanner.cs: Look for assembly
+	  imports in the main assembly.
+
+2010-05-21  Lluis Sanchez Gual  <lluis@novell.com>
+
+	* Mono.Addins/ExtensionNode.cs:
+	* Mono.Addins/ExtensionTree.cs: Data extension points bound to
+	  an attribute now generate nodes of type
+	  ExtensionNode<TheAttribute>
+
+	* Mono.Addins/Addin.cs: Added some docs.
+
+	* Mono.Addins.Database/AddinScanner.cs:
+	* Mono.Addins/ExtensionNodeAttribute.cs:
+	* Mono.Addins.Database/AddinUpdateData.cs:
+	* Mono.Addins.Description/ExtensionNodeType.cs: Changed name
+	  of property (for consistency)
+
+	* Mono.Addins/ExtensionPointAttribute.cs: Don't set a default
+	  node name. The default name is assigned while scanning.
+
+	* Mono.Addins.Database/DefaultAssemblyReflector.cs: This class
+	  should not be public.
+
+2010-05-20  Lluis Sanchez Gual  <lluis@novell.com>
+
+	* Makefile.am:
+	* Mono.Addins.csproj: Updated.
+
+	* Mono.Addins/TreeNode.cs:
+	* Mono.Addins/AddinEngine.cs:
+	* Mono.Addins/RuntimeAddin.cs:
+	* Mono.Addins/AddinManager.cs:
+	* Mono.Addins/ExtensionTree.cs:
+	* Mono.Addins/ExtensionNode.cs:
+	* Mono.Addins/ConditionType.cs:
+	* Mono.Addins/AddinRegistry.cs:
+	* Mono.Addins/ExtensionContext.cs:
+	* Mono.Addins/AddinSessionService.cs:
+	* Mono.Addins.Database/AddinDatabase.cs:
+	* Mono.Addins.Description/Dependency.cs:
+	* Mono.Addins.Description/AddinDependency.cs:
+	* Mono.Addins.Description/NativeDependency.cs:
+	* Mono.Addins.Description/AssemblyDependency.cs: New
+	  AddinEngine class, which can be used to support several
+	  engines in a single domain.
+
+	* Mono.Addins/AddinAttribute.cs:
+	* Mono.Addins/AddinModuleAttribute.cs:
+	* Mono.Addins.Database/AddinScanner.cs:
+	* Mono.Addins/ImportAddinFileAttribute.cs:
+	* Mono.Addins/ImportAddinAssemblyAttribute.cs: Added support
+	  for new add-in declaration attributes.
+
+	* Mono.Addins/AddinCategoryAttribute.cs: Removed.
+
+	* Mono.Addins/ExtensionPointAttribute.cs:
+	* Mono.Addins/TypeExtensionPointAttribute.cs: Use a better
+	  name for the custom attribute type property.
+
+	* Mono.Addins.Database/IAssemblyReflector.cs:
+	* Mono.Addins.Database/DefaultAssemblyReflector.cs: Added
+	  methods for getting resources from an assembly.
+
+2010-03-30  Lluis Sanchez Gual  <lluis@novell.com>
+
+	* Mono.Addins.Serialization/BinaryXmlReader.cs: Properly
+	  detect EOF.
+
+	* Mono.Addins/Addin.cs: If a file is corrupted and can't be
+	  read, delete it so that it can be properly regenerated.
+
+2010-03-30  Lluis Sanchez Gual  <lluis@novell.com>
+
+	* Mono.Addins.csproj: csc doesn't like iso-2.
+
+2010-03-29  Lluis Sanchez Gual  <lluis@novell.com>
+
+	* Mono.Addins.csproj:
+	* Mono.Addins/TypeExtensionNode.cs:
+	* Mono.Addins/AddinAuthorAttribute.cs:
+	* Mono.Addins.Database/AddinScanner.cs:
+	* Mono.Addins/CustomExtensionAttribute.cs:
+	* Mono.Addins.Database/IAssemblyReflector.cs:
+	* Mono.Addins/ExtensionAttributeAttribute.cs: Make sure the
+	  solution builds on MS.NET 2.0.
+
+2010-03-26  Lluis Sanchez Gual  <lluis@novell.com>
+
+	* Mono.Addins.Database/AddinScanner.cs: Fix bug #541661 -
+	  Assemblies with capital .DLL cannot be loaded.
+
+2010-03-26  Lluis Sanchez Gual  <lluis@novell.com>
+
+	* Makefile.am:
+	* Mono.Addins.csproj:
+	* Mono.Addins/AddinAttribute.cs:
+	* Mono.Addins/AddinAuthorAttribute.cs:
+	* Mono.Addins.Database/AddinScanner.cs:
+	* Mono.Addins/AddinCategoryAttribute.cs:
+	* Mono.Addins/AddinLocalizerGettextAttribute.cs: Allow
+	  specifying some add-in properties using attribtues.
+
+2010-03-26  Lluis Sanchez Gual  <lluis@novell.com>
+
+	* Mono.Addins.Database/AddinScanner.cs:
+	* Mono.Addins.Description/AddinDescription.cs: Added support
+	  for multiple .addin.xml files in a single assembly.
+
+2010-03-26  Lluis Sanchez Gual  <lluis@novell.com>
+
+	* Makefile.am:
+	* Mono.Addins.csproj:
+	* Mono.Addins/AddinManager.cs:
+	* Mono.Addins/ExtensionNode.cs:
+	* Mono.Addins/ExtensionTree.cs:
+	* Mono.Addins/ExtensionContext.cs:
+	* Mono.Addins/TypeExtensionNode.cs:
+	* Mono.Addins/ExtensionNodeList.cs:
+	* Mono.Addins/ExtensionAttribute.cs:
+	* Mono.Addins.Database/AddinScanner.cs:
+	* Mono.Addins/ExtensionNodeAttribute.cs:
+	* Mono.Addins/NodeAttributeAttribute.cs:
+	* Mono.Addins/ExtensionPointAttribute.cs:
+	* Mono.Addins.Database/AddinUpdateData.cs:
+	* Mono.Addins/CustomExtensionAttribute.cs:
+	* Mono.Addins/ExtensionAttributeAttribute.cs:
+	* Mono.Addins.Database/IAssemblyReflector.cs:
+	* Mono.Addins/TypeExtensionPointAttribute.cs:
+	* Mono.Addins.Description/ExtensionNodeType.cs:
+	* Mono.Addins.Database/DefaultAssemblyReflector.cs:
+	* Mono.Addins.Description/ExtensionNodeDescription.cs: Allow
+	  using custom attributes for specifying extension node
+	  metadata.
+
+	* Mono.Addins.Database/AddinDatabase.cs: Consolidate
+	  extensions before saving the final add-in descriptions. That
+	  means merging extensions with the same path and making sure
+	  the extension nodes have a correct ordering.
+
+2010-03-25  Lluis Sanchez Gual  <lluis@novell.com>
+
+	* Mono.Addins.Database/AddinScanner.cs: Removed special
+	  handling of type references inside add-in roots. Type
+	  references will now be resolved like in the add-ins, when
+	  mapping the extensions.
+
+2010-03-01  Lluis Sanchez Gual  <lluis@novell.com>
+
+	* Mono.Addins.Database/AddinDatabase.cs: Let's use app domains
+	  for mono too.
+
+2010-02-26  Lluis Sanchez Gual  <lluis@novell.com>
+
+	* Mono.Addins/ExtensionContext.cs:
+	* Mono.Addins.Description/ExtensionPoint.cs: Use generics.
+
+	* Mono.Addins.Description/ExtensionNodeDescription.cs: Fix bug
+	  in RemoteAttribute.
+
+2010-02-22  Lluis Sanchez Gual  <lluis@novell.com>
+
+	* Mono.Addins.csproj: Update.
+
+	* Mono.Addins/TreeNode.cs:
+	* Mono.Addins/RuntimeAddin.cs:
+	* Mono.Addins/ExtensionTree.cs:
+	* Mono.Addins.Description/ModuleDescription.cs: Improved lazy
+	  loading of optional modules.
+
+	* Mono.Addins/AddinManager.cs:
+	* Mono.Addins/ExtensionContext.cs:
+	* Mono.Addins/ExtensionNodeList.cs: Added some generic methods
+	  for querying extension points.
+
+	* Mono.Addins/ExtensionNode.cs: Improved lazy loading of
+	  optional modules. Added some generic methods for querying
+	  extension points.
+
+	* Mono.Addins.Description/ObjectDescriptionCollection.cs:
+	  Added Insert method.
+
+2010-02-12  Lluis Sanchez Gual  <lluis@novell.com>
+
+	* Mono.Addins/RuntimeAddin.cs: When loading the assemblies of
+	  an add-in, make sure the assemblies of the add-ins on which
+	  it depends are also loaded.
+
+2010-02-11  Lluis Sanchez Gual  <lluis@novell.com>
+
+	* Mono.Addins/RuntimeAddin.cs: Remove debug spew.
+
+2010-02-09  Lluis Sanchez Gual  <lluis@novell.com>
+
+	* Mono.Addins/RuntimeAddin.cs:
+	* Mono.Addins/AddinSessionService.cs: Improve delayed loading
+	  of assemblies.
+
+2010-01-11  Lluis Sanchez Gual  <lluis@novell.com>
+
+	* Mono.Addins/AddinManager.cs:
+	* Mono.Addins/AddinRegistry.cs: Update the registry when the
+	  domain of a directory can't be retrieved for some reason
+	  (for example, if the registry has been cleaned)
+
+2009-11-18  Lluis Sanchez Gual  <lluis@novell.com>
+
+	* Mono.Addins.Database/AddinDatabase.cs: Add missing null
+	  check.
+
+2009-11-13  Lluis Sanchez Gual  <lluis@novell.com>
+
+	* Mono.Addins.Description/Extension.cs: Allow Not condition.
+
+	* Mono.Addins.Database/AddinUpdateData.cs: Added some verbose
+	  logging.
+
+	* Mono.Addins.Database/AddinScanner.cs:
+	* Mono.Addins.Database/AddinDatabase.cs:
+	* Mono.Addins.Database/AddinScanResult.cs: Split the
+	  AddinsToUpdateRelation list in two. AddinsToUpdate contains
+	  addins that have been modified and whose extensions have to
+	  be registered again. AddinsToUpdateRelation now contains
+	  addins which have not been directly modified, but which are
+	  dependencies of modified add-ins. The extensions of those
+	  add-ins won't be processed, they will just include the new
+	  extensions from the updated add-ins.
+
+	* Mono.Addins.Database/SetupDomain.cs: Remove debug messages.
+
+2009-10-05  Lluis Sanchez Gual  <lluis@novell.com>
+
+	* Mono.Addins/AddinSessionService.cs: Pre-jit the assembly
+	  loader hook.
+
+2009-09-01  Lluis Sanchez Gual  <lluis@novell.com>
+
+	* AssemblyInfo.cs: Bump Mono.Addins version.
+
+2009-08-20  Lluis Sanchez Gual  <lluis@novell.com>
+
+	* Makefile.am: Added a new project which Implements an msbuild
+	  task for resolving add-in references.
+
+2009-08-19  Lluis Sanchez Gual  <lluis@novell.com>
+
+	* Mono.Addins/ExtensionContext.cs: Fix potentiall nullref.
+
+2009-08-19  Lluis Sanchez Gual  <lluis@novell.com>
+
+	* Mono.Addins/AddinRegistry.cs: Allow reading add-in manifests
+	  even if the registry is not fully initialized.
+
+2009-08-19  Lluis Sanchez Gual  <lluis@novell.com>
+
+	* Mono.Addins.csproj: Update target framework to 2.0.
+
+2009-07-31  Lluis Sanchez Gual  <lluis@novell.com>
+
+	* Mono.Addins.Database/AddinScanner.cs: Properly read
+	  InserBefore and InsertAfter attribute properties. Patch by
+	  Levi Bard.
+
+2009-05-28  Lluis Sanchez Gual  <lluis@novell.com>
+
+	* Mono.Addins.csproj: Properly sign assemblies.
+
+2009-05-27  Lluis Sanchez Gual  <lluis@novell.com>
+
+	* Makefile.am: Remove startup class option.
+
+	* Mono.Addins.Database/SetupProcess.cs:
+	* Mono.Addins.Database/AddinDatabase.cs: Use a generated
+	  assembly instead of the dll to execute the scanner in a
+	  separate process.
+
+2009-04-15  Lluis Sanchez Gual  <lluis@novell.com>
+
+	* Mono.Addins/RuntimeAddin.cs: New overload for GetFilePath.
+
+	* Mono.Addins/AddinSessionService.cs: Improve error reporting
+	  when the description of an add-in can't be loaded.
+
+	* Mono.Addins.Database/Util.cs:
+	* Mono.Addins/AddinRegistry.cs: Allow using special folder
+	  names in all paths. E.g. [ApplicationData]/MonoDevelop. It
+	  can be used when initializing the add-in engine or in
+	  .addins files.
+
+	* Mono.Addins/Addin.cs: Write errors when loading a
+	  description.
+
+2009-02-16  Lluis Sanchez Gual  <lluis@novell.com>
+
+	* Mono.Addins/ExtensionNodeChildAttribute.cs: Make sure the
+	  ExtensionNodeTypeName property is set when using the
+	  attribute constructor.
+
+2009-02-06  Lluis Sanchez Gual  <lluis@novell.com>
+
+	* Makefile.am:
+	* Mono.Addins.csproj: Updated.
+
+	* Mono.Addins.Database/AddinScanner.cs:
+	* Mono.Addins.Description/AddinDescription.cs: BasePath is now
+	  public.
+
+	* Mono.Addins.Database/Util.cs: Added methods for checking if
+	  the app is running on mono.
+
+	* Mono.Addins.Database/SetupDomain.cs:
+	* Mono.Addins.Database/SetupProcess.cs:
+	* Mono.Addins.Database/ISetupHandler.cs:
+	* Mono.Addins.Database/AddinDatabase.cs: Added support for
+	  scanning the addins in a separate appdomain instead of a
+	  separate process.
+
+2009-02-06  Lluis Sanchez Gual  <lluis@novell.com>
+
+	* Mono.Addins/ExtensionNode.cs: Improve error message.
+
+2009-02-06  Lluis Sanchez Gual  <lluis@novell.com>
+
+	* Mono.Addins/ConditionType.cs:
+	* Mono.Addins/ExtensionTree.cs: Add support for Not condition.
+
+2008-11-10  Lluis Sanchez Gual  <lluis@novell.com>
+
+	* mono-addins.pc.in: Respect custom libdir during ./configure. Fixes bug
+	#443205. Patch by Diego Pettenò.
+
+2008-11-10  Lluis Sanchez Gual  <lluis@novell.com>
+
+	* Makefile.am: Fix building with parallel make jobs (-j8). Fixes bug
+	#443206. Patch by Diego Pettenò.
+
+2008-11-04  Lluis Sanchez Gual  <lluis@novell.com>
+
+	* Mono.Addins.csproj: Generate a library, not an exe.
+
+2008-10-31  Lluis Sanchez Gual  <lluis@novell.com>
+
+	* Mono.Addins/ExtensionNode.cs: Improve error reporting.
+
+2008-09-23  Lluis Sanchez Gual <lluis@novell.com> 
+
+	* Mono.Addins.Description/AddinDescription.cs,
+	  Mono.Addins/AddinRegistry.cs: Added methods which allow reading a
+	  manifest from a stream.
+
+2008-09-03  Lluis Sanchez Gual <lluis@novell.com> 
+
+	* Mono.Addins/ExtensionNode.cs: Fix potential race.
+	* Mono.Addins.Database/AddinScanResult.cs: Set the changesFound flag
+	  when all data needs to be regenerated.
+
+2008-08-22  Lluis Sanchez Gual <lluis@novell.com> 
+
+	* Mono.Addins.csproj, Mono.Addins.mdp: Use msbuild file format for
+	  projects. Removed the old MD1 projects.
+
+2008-08-18  Lluis Sanchez Gual <lluis@novell.com> 
+
+	* Mono.Addins/AddinSessionService.cs, Mono.Addins/TreeNode.cs,
+	  Mono.Addins/Addin.cs, Mono.Addins/ExtensionContext.cs: When the
+	  registry is updated in memory, reset cached data from all extension
+	  contexts.
+	* Mono.Addins.Database/AddinDatabase.cs: Optimized Update method. The
+	  call to GetInstalledAddins loads all manifests when the provided
+	  AddinType is not All. Avoided using it.
+
+2008-07-16  Lluis Sanchez Gual <lluis@novell.com> 
+
+	* Mono.Addins.Database/AddinScanner.cs: When a new domain needs to be
+	  assigned to a folder, try to reuse the startup domain, if it is
+	  set.
+
+2008-07-16  Lluis Sanchez Gual <lluis@novell.com> 
+
+	* Mono.Addins/AddinRegistry.cs,
+	  Mono.Addins.Database/AddinScanFolderInfo.cs,
+	  Mono.Addins.Database/AddinDatabase.cs,
+	  Mono.Addins.Database/AddinScanner.cs: Properly assign the domain
+	  when scanning an application for the first time.
+
+2008-07-15  Lluis Sanchez Gual <lluis@novell.com> 
+
+	* Mono.Addins.Description/AddinDescription.cs,
+	  Mono.Addins.Description/ModuleDescription.cs,
+	  Mono.Addins.Database/AddinScanFolderInfo.cs,
+	  Mono.Addins.Database/AddinScanResult.cs,
+	  Mono.Addins.Database/AddinDatabase.cs,
+	  Mono.Addins.Database/AddinScanner.cs: Add support for specifying
+	  paths to exclude in .addins files and in add-in manifests.
+	* Mono.Addins.Database/Util.cs: Make sure window paths are converted to
+	  unix paths when running on unix, and vice-versa.
+
+2008-07-15  Lluis Sanchez Gual <lluis@novell.com> 
+
+	* Mono.Addins/AddinRegistry.cs,
+	  Mono.Addins.Database/AddinScanResult.cs,
+	  Mono.Addins.Database/AddinDatabase.cs,
+	  Mono.Addins.Database/AddinScanner.cs: When updating the registry,
+	  only scan folders which belong to the current domain.
+	* Mono.Addins/ExtensionContext.cs: Fix warning.
+
+2008-07-09  Lluis Sanchez Gual <lluis@novell.com> 
+
+	* Mono.Addins/ExtensionContext.cs: Added missing null check.
+
+2008-07-07  Lluis Sanchez Gual <lluis@novell.com> 
+
+	* Mono.Addins.Database/SetupProcess.cs: Make sure no console window is
+	  created when launching the scanner.
+
+2008-06-11  Lluis Sanchez Gual <lluis@novell.com> 
+
+	* Mono.Addins.Database/AddinScanFolderInfo.cs,
+	  Mono.Addins.Database/FileDatabase.cs: Fix problem in windows, where
+	  the path of folder info files could exceed the max allowed path
+	  length.
+
+2008-06-11  Lluis Sanchez Gual <lluis@novell.com> 
+
+	* Mono.Addins.mdp, Makefile.am,
+	  Mono.Addins.Description/AddinDescription.cs,
+	  Mono.Addins.Description/AddinFlags.cs: Added flags property to
+	  AddinDescription.
+
+2008-06-11  Lluis Sanchez Gual <lluis@novell.com> 
+
+	* Mono.Addins.Database/Util.cs: Make sure GetStringHashCode never
+	  throws an arithmentic overflow exception. Patch by Lauris
+	  Bukšis-Haberkorns.
+
+2008-06-11  Lluis Sanchez Gual <lluis@novell.com> 
+
+	* Mono.Addins.mdp: Updated.
+	* Mono.Addins/ExtensionContext.cs: For consistency, the ExtensionEvent
+	  event must be fired even for extension points which have not yet
+	  been loaded.
+
+2008-04-07  Lluis Sanchez Gual <lluis@novell.com> 
+
+	* Mono.Addins.csproj: Added missing files.
+	* Mono.Addins/ExtensionNode.cs: When subscribing the extension changed
+	  event, fire it for existing nodes, but only fire for the new
+	  handler.
+
+2008-02-25  Lluis Sanchez Gual <lluis@novell.com> 
+
+	* Mono.Addins/TypeExtensionNode.cs: Added property for getting the type
+	  of an extension node. Based on a patch by Brad Taylor.
+
+2008-02-18  Lluis Sanchez Gual <lluis@novell.com> 
+
+	* Mono.Addins/AddinRegistry.cs: Allow getting the startup path of the
+	  registry.
+	* Mono.Addins.Description/AddinDescription.cs: Improve error message.
+	* Mono.Addins.Database/AddinDatabase.cs: Use the startup patch provided by
+	  the registry, not the global one.
+
+2008-02-15  Lluis Sanchez Gual <lluis@novell.com> 
+
+	* Mono.Addins/AddinRegistry.cs: Minor fixes.
+	* Mono.Addins/AddinLocalizer.cs: Ouch, format arguments of GetString should
+	  have been objects, not strings.
+	* Mono.Addins.Description/NodeTypeAttribute.cs,
+	  Mono.Addins.Description/ExtensionNodeType.cs,
+	  Mono.Addins.Description/ExtensionPoint.cs,
+	  Mono.Addins.Description/ConditionTypeDescription.cs,
+	  Mono.Addins.Description/ExtensionNodeSet.cs: Implemented CopyFrom.
+	* Mono.Addins.Description/AddinDescription.cs: Set global domain to
+	  manifests read from xml files.
+	* Mono.Addins.Description/ExtensionNodeDescription.cs: Remove insertbefore
+	  and insertafter attributes when set to an empty string.
+	* Mono.Addins.Database/AddinScanner.cs: Set a domain for files parsed with
+	  ScanSingleFile.
+	* Mono.Addins.Database/DefaultAssemblyReflector.cs: Fix bug in
+	  GetCustomAttribute.
+
+2008-02-11  Lluis Sanchez Gual <lluis@novell.com> 
+
+	* Mono.Addins.Database/AddinDatabase.cs: Fix add-in scan issue. Avoid
+	  updating the same add-in twice.
+
+2008-02-06  Lluis Sanchez Gual <lluis@novell.com> 
+
+	* AssemblyInfo.cs, Mono.Addins.mdp, Mono.Addins/NodeAttributeAttribute.cs,
+	  Mono.Addins/TypeExtensionPointAttribute.cs,
+	  Mono.Addins/ExtensionPointAttribute.cs,
+	  Mono.Addins/ExtensionNodeChildAttribute.cs, Makefile.am,
+	  Mono.Addins.Database/IAssemblyReflector.cs,
+	  Mono.Addins.Database/AddinScanResult.cs,
+	  Mono.Addins.Database/AddinDatabase.cs,
+	  Mono.Addins.Database/AddinScanner.cs,
+	  Mono.Addins.Database/DefaultAssemblyReflector.cs: Added support for
+	  pluggable add-in assembly reflectors. Implemented an add-in assembly
+	  reflector based on Cecil.
+
+2008-01-21  Lluis Sanchez Gual <lluis@novell.com> 
+
+	* Mono.Addins/ExtensionTree.cs: Since Mono r93079, GetFields don't return
+	  private fields from base classes. Fixed the code to work with the new
+	  behavior.
+
+2008-01-07  Lluis Sanchez Gual <lluis@novell.com> 
+
+	* Mono.Addins.csproj: Updated VS solution files. Patch by Andrés G.
+	  Aragoneses.
+
+2007-12-15  Lluis Sanchez Gual <lluis@novell.com> 
+
+	* mono-addins.pc.in: Update assembly paths.
+
+2007-12-12  Lluis Sanchez Gual <lluis@novell.com> 
+
+	* Makefile.am: Generate and install policy files for old Mono.Addins
+	  versions.
+	* Mono.Addins.Database/AddinScanner.cs: Improved reporting of reflection
+	  exceptions.
+
+2007-12-11  Lluis Sanchez Gual <lluis@novell.com> 
+
+	* Mono.Addins.Database/AddinDatabase.cs: The addinstoUpdate list may contain
+	  add-in with a version not installed (e.g. if it comes from an add-in
+	  reference). Make sure the correct add-in is found in this case.
+
+2007-12-05  Lluis Sanchez Gual <lluis@novell.com> 
+
+	* Mono.Addins.Localization/GettextDomain.cs,
+	  Mono.Addins.Localization/IPluralAddinLocalizer.cs,
+	  Mono.Addins.Localization/GettextLocalizer.cs, Mono.Addins.mdp,
+	  Mono.Addins/AddinLocalizer.cs, Makefile.am: Add support for plural
+	  forms.
+
+2007-12-04  Lluis Sanchez Gual <lluis@novell.com> 
+
+	* Mono.Addins.Localization/GettextDomain.cs: Fix bug in string
+	  unmarshalling.
+
+2007-12-03  Lluis Sanchez Gual <lluis@novell.com> 
+
+	* Mono.Addins/RuntimeAddin.cs, Mono.Addins/Addin.cs: Added more informative
+	  implementation of ToString ().
+	* Mono.Addins/AddinSessionService.cs, Mono.Addins/AddinManager.cs: Added
+	  CurrentAddin property, which returns the add-in on which the calling
+	  method is implemented. Same for CurrentLocalizer.
+	* Mono.Addins/ExtensionNode.cs: Allow getting the extension context bound to
+	  an extension node.
+
+2007-12-03  Lluis Sanchez Gual <lluis@novell.com> 
+
+	* Mono.Addins.Database/AddinScanner.cs: ScanNodeSet may change the
+	  ExtensionNodeSets collection, so it is necessary to make a copy when
+	  iterating with it.
+
+2007-12-03  Lluis Sanchez Gual <lluis@novell.com> 
+
+	* Mono.Addins/TypeExtensionNode.cs: Made the description of
+	  TypeExtensionNode shorter.
+	* Mono.Addins/AddinRegistry.cs: Made the add-in registry constructor public.
+	* Mono.Addins.Database/SetupProcess.cs: Fix problem when M.A. is located in
+	  a folder with spaces in the name. Fix by Georg Wächter.
+
+2007-11-19  Lluis Sanchez Gual <lluis@novell.com> 
+
+	* Mono.Addins.Database/AddinDatabase.cs: Workaround for mcs bug.
+
+2007-11-17  Lluis Sanchez Gual <lluis@novell.com> 
+
+	* Mono.Addins.Description/ExtensionNodeDescription.cs: Add missing
+	  ChildNodes property.
+
+2007-11-17  Lluis Sanchez Gual <lluis@novell.com> 
+
+	* Mono.Addins.Localization, Mono.Addins.Localization/GettextDomain.cs,
+	  Mono.Addins.Localization/IAddinLocalizer.cs,
+	  Mono.Addins.Localization/NullLocalizer.cs,
+	  Mono.Addins.Localization/StringTableLocalizer.cs,
+	  Mono.Addins.Localization/StringResourceLocalizer.cs,
+	  Mono.Addins.Localization/IAddinLocalizerFactory.cs,
+	  Mono.Addins.Localization/GettextLocalizer.cs, Mono.Addins.mdp,
+	  Mono.Addins/RuntimeAddin.cs, Mono.Addins/ExtensionTree.cs,
+	  Mono.Addins/NodeAttributeAttribute.cs, Mono.Addins/AddinManager.cs,
+	  Mono.Addins/ExtensionNode.cs, Mono.Addins/AddinLocalizer.cs,
+	  Makefile.am, Mono.Addins.Description/NodeTypeAttribute.cs,
+	  Mono.Addins.Description/AddinDescription.cs,
+	  Mono.Addins.Description/ExtensionNodeType.cs: Implemented support for
+	  add-in localization.
+	* Mono.Addins/NodeElement.cs,
+	  Mono.Addins.Description/ExtensionNodeDescriptionCollection.cs: Added
+	  ChildNodes property to NodeElement.
+
+2007-10-29  Lluis Sanchez Gual <lluis@novell.com> 
+
+	* Mono.Addins.mdp: Update paths.
+
+2007-10-23  Ankit Jain  <jankit@novell.com>
+
+	* Mono.Addins.csproj: Add missing IAddinInstaller.cs
+
+2007-10-18  Lluis Sanchez Gual <lluis@novell.com> 
+
+	* AssemblyInfo.cs: Get ready for 0.3 release.
+
+2007-10-15  Lluis Sanchez Gual <lluis@novell.com> 
+
+	* Mono.Addins/ExtensionContext.cs: When an add-in is enabled at run-time,
+	  take it into account when loading any extension point, since the add-in
+	  list of the extension point may not have the latest info from the
+	  registry. The same when disabled.
+
+2007-09-13  Lluis Sanchez Gual <lluis@novell.com> 
+
+	* Mono.Addins/Addin.cs: Fix issue in CompareVersions.
+
+2007-09-10  Lluis Sanchez Gual <lluis@novell.com> 
+
+	* Mono.Addins.Database/AddinDatabase.cs: Fix bug in
+	  InternalGetInstalledAddins. It should return root addins when Type is
+	  set to Root.
+
+2007-09-10  Lluis Sanchez Gual <lluis@novell.com> 
+
+	* Mono.Addins.Description/AddinDescription.cs: Improved error message.
+
+2007-08-14  Lluis Sanchez Gual <lluis@novell.com> 
+
+	* Mono.Addins.Database/AddinDatabase.cs: Fixed file filter for getting all
+	  add-ins with a given name.
+
+2007-08-09  Lluis Sanchez Gual <lluis@novell.com> 
+
+	* Mono.Addins/TreeNode.cs, Mono.Addins/ExtensionContext.cs: When activating
+	  an add-in (maybe as a result of a registry update), make sure only
+	  loaded extension points are updated.
+
+2007-08-09  Lluis Sanchez Gual <lluis@novell.com> 
+
+	* Mono.Addins/AddinRegistry.cs: Create host addin files in a directory
+	  inside the database.
+	* Mono.Addins.Database/AddinDatabase.cs: Bump add-in database version.
+	  Removed debug code.
+
+2007-08-08  Lluis Sanchez Gual <lluis@novell.com> 
+
+	* Mono.Addins/TreeNodeCollection.cs, Mono.Addins/TreeNode.cs: Clone the node
+	  children list when notifying the add-in load event since it may change.
+
+2007-08-08  Lluis Sanchez Gual <lluis@novell.com> 
+
+	* Mono.Addins/AddinRegistry.cs, Mono.Addins.Database/AddinDatabase.cs: Fix
+	  problem about the current registry domain not being properly set when
+	  the add-in database is regenerated due to an internal check.
+
+2007-08-07  Lluis Sanchez Gual <lluis@novell.com> 
+
+	* Mono.Addins.Database/AddinDatabase.cs,
+	  Mono.Addins.Database/AddinHostIndex.cs,
+	  Mono.Addins.Database/AddinScanFolderInfo.cs,
+	  Mono.Addins.Database/AddinScanner.cs,
+	  Mono.Addins.Database/AddinUpdateData.cs,
+	  Mono.Addins.Database/FileDatabase.cs,
+	  Mono.Addins.Description/AddinDescription.cs,
+	  Mono.Addins.Description/Extension.cs,
+	  Mono.Addins.Description/ExtensionNodeSet.cs, Mono.Addins.mdp,
+	  Mono.Addins/Addin.cs, Mono.Addins/AddinManager.cs,
+	  Mono.Addins/AddinRegistry.cs, Mono.Addins/AddinSessionService.cs:
+	  Implemented support for non-shared add-in folders. Add-ins located in
+	  such folders won't be visible from other non-shared folders. Folders
+	  containing add-in hosts are non-shared by default, wihch means that
+	  different installations of the same application won't interfere each
+	  other anymore.
+	
+	  Add-in roots now can have depencencies on other add-in roots lacated in
+	  the same folder.
+	
+	  The add-in database format has changed.
+
+2007-08-07  Lluis Sanchez Gual <lluis@novell.com> 
+
+	* Mono.Addins/RuntimeAddin.cs: Added missing null check.
+
+2007-07-27  Lluis Sanchez Gual <lluis@novell.com> 
+
+	* Mono.Addins.Database/AddinDatabase.cs,
+	  Mono.Addins.Database/AddinScanner.cs: Better error reporting for
+	  missing assemblies.
+
+2007-07-25  Lluis Sanchez Gual <lluis@novell.com> 
+
+	* Mono.Addins/AddinSessionService.cs,
+	  Mono.Addins.Description/AddinDescription.cs,
+	  Mono.Addins.Database/AddinScanner.cs: When loading an add-in root
+	  check if the add-in has changed. If it changed, update the add-in
+	  database to make sure the correct info is loaded.
+
+2007-07-25  Lluis Sanchez Gual <lluis@novell.com> 
+
+	* Mono.Addins/RuntimeAddin.cs: New GetResoruce overload.
+	* Mono.Addins/ExtensionNode.cs: Added property for getting the parent
+	  of a node. Some more protection against exceptions.
+
+2007-07-06  Lluis Sanchez Gual <lluis@novell.com> 
+
+	* Mono.Addins/ExtensionTree.cs: If a node has no children, there is no
+	  need to recursively call LoadExtensionElement.
+	* Mono.Addins/TreeNode.cs, Mono.Addins/ExtensionContext.cs: When
+	  activating an add-in, don't add nodes in extensions that have not
+	  yet been loaded.
+	* Mono.Addins/AddinManager.cs: GetEntryAssembly returns null when
+	  running in NUnit.
+
+2007-07-03  Lluis Sanchez Gual <lluis@novell.com> 
+
+	* AssemblyInfo.cs, Mono.Addins.mdp, Makefile.am: Sign the assembly.
+
+2007-07-03  Lluis Sanchez Gual <lluis@novell.com> 
+
+	* Mono.Addins/AddinInfo.cs, Mono.Addins/Addin.cs,
+	  Mono.Addins.Description/AddinDescription.cs,
+	  Mono.Addins.Database/DatabaseConfiguration.cs,
+	  Mono.Addins.Database/AddinDatabase.cs: Added support for add-ins
+	  which are disabled by default.
+	* Mono.Addins.Database/AddinScanner.cs: Minor fix.
+
+2007-07-02  Lluis Sanchez Gual <lluis@novell.com> 
+
+	* Mono.Addins/GettextCatalog.cs: Removed old copyright notice, since
+	  the file doesn't contain any code from the original class.
+
+2007-07-02  Lluis Sanchez Gual <lluis@novell.com> 
+
+	* Mono.Addins.Database/AddinScanResult.cs,
+	  Mono.Addins.Database/AddinScanner.cs: Don't scan assemblies which
+	  are included by .addin files, since they will be already scanned
+	  when processing the .addin file.
+
+2007-07-02  Lluis Sanchez Gual <lluis@novell.com> 
+
+	* Mono.Addins/AddinRegistry.cs, Mono.Addins.Database/SetupProcess.cs,
+	  Mono.Addins.Database/AddinScanResult.cs,
+	  Mono.Addins.Database/AddinDatabase.cs,
+	  Mono.Addins.Database/ProcessProgressStatus.cs,
+	  Mono.Addins.Database/AddinScanner.cs: Before scanning a file, log
+	  the file name. If for some reason the scanner process crashes, the
+	  main process will know the name of the file that made it crash and
+	  will restart the scan adding it to the ignore file list.
+
+2007-07-02  Lluis Sanchez Gual <lluis@novell.com> 
+
+	* Mono.Addins.mdp, Makefile.am: Added new file.
+	* Mono.Addins/RuntimeAddin.cs, Mono.Addins/Addin.cs,
+	  Mono.Addins/IProgressStatus.cs,
+	  Mono.Addins/ConsoleProgressStatus.cs,
+	  Mono.Addins.Database/SetupProcess.cs,
+	  Mono.Addins.Database/AddinDatabase.cs,
+	  Mono.Addins.Database/FileDatabase.cs,
+	  Mono.Addins.Database/ProcessProgressStatus.cs,
+	  Mono.Addins.Database/AddinScanner.cs: Added support for add-in
+	  private data: a directory where every add-in can store its own
+	  private data. IProgressStatus now has a LogLevel property instead
+	  of VerboseLog.
+	* Mono.Addins/IAddinInstaller.cs, Mono.Addins/AddinManager.cs:
+	  Implemented CheckInstalled. This method checks if the specified
+	  add-ins are installed. If some of the add-ins are not installed, it
+	  will use the installer assigned to the DefaultAddinInstaller
+	  property to install them.
+
+2007-06-28  Lluis Sanchez Gual <lluis@novell.com> 
+
+	* Mono.Addins.Database/Util.cs: Added helper method for getting the
+	  path of an assembly in the gac.
+	* Mono.Addins.Database/AddinScanner.cs: Added support for GacAssembly
+	  in .addins files (scans assemblies installed in the gac). Also,
+	  when registering assemblies included in an add-in, make sure to use
+	  the a path relative to the add-in location (the assembly may have
+	  been loaded from a different location).
+
+2007-06-26  Lluis Sanchez Gual <lluis@novell.com> 
+
+	* Mono.Addins/RuntimeAddin.cs: Assembly loading fix by Brad Taylor.
+	  Fixes endless loop in Initialize.
+	* Mono.Addins.Description/AddinDescription.cs: Set the hasUserId flag
+	  when loading from xml.
+	* Mono.Addins.Database/AddinUpdateData.cs,
+	  Mono.Addins.Database/AddinDatabase.cs: Moved add-in update counters
+	  to the AddinUpdateData class, since they need to be updated there.
+
+2007-05-30  Lluis Sanchez Gual <lluis@novell.com> 
+
+	* Mono.Addins/ExtensionTree.cs: Fix problem with insertbefore, which
+	  was basically broken. Inherit NodeAttribute attributes.
+	* Mono.Addins.Database/AddinScanResult.cs: Removed debug code.
+	* Mono.Addins.Database/AddinDatabase.cs: When rebuilding the database,
+	  don't try to delete folders when don't exist.
+
+2007-05-25  Lluis Sanchez Gual <lluis@novell.com> 
+
+	* Mono.Addins.Database/AddinDatabase.cs: Fixed several issues when
+	  Enabling/Disabling add-ins.
+
+2007-05-18  Lluis Sanchez Gual <lluis@novell.com> 
+
+	* Mono.Addins.Database/SetupProcess.cs,
+	  Mono.Addins.Database/AddinDatabase.cs: If the scanner process
+	  crashes for some reason, show a better error message and retry the
+	  scan again.
+
+2007-05-17  Lluis Sanchez Gual <lluis@novell.com> 
+
+	* Mono.Addins/RuntimeAddin.cs: Added support for getting resource
+	  string and resource objects. Patch by Georg Wächter.
+
+2007-05-16  Lluis Sanchez Gual <lluis@novell.com> 
+
+	* Mono.Addins.Database/AddinHostIndex.cs: Windows may sometimes change
+	  the case of assemblies.
+
+2007-05-14  Lluis Sanchez Gual <lluis@novell.com> 
+
+	* Mono.Addins/RuntimeAddin.cs: Use the full add-in id when checking for
+	  optional add-in dependencies.
+	* Mono.Addins.Description/Extension.cs: Added method for getting a list
+	  of node types allowed in an extension.
+
+2007-05-09  Lluis Sanchez Gual <lluis@novell.com> 
+
+	* Mono.Addins/ExtensionNode.cs: Added some null checks.
+	* Mono.Addins.Database/AddinScanner.cs: Add-in id is not mandatory.
+
+2007-05-08  Lluis Sanchez Gual <lluis@novell.com> 
+
+	* Mono.Addins.csproj: Added missing file.
+
+2007-05-07  Lluis Sanchez Gual <lluis@novell.com> 
+
+	* Mono.Addins.Serialization/BinaryXmlReader.cs,
+	  Mono.Addins.Description/NodeTypeAttribute.cs,
+	  Mono.Addins.Description/AddinDescription.cs,
+	  Mono.Addins.Description/ExtensionNodeType.cs,
+	  Mono.Addins.Description/ExtensionPoint.cs,
+	  Mono.Addins.Description/ConditionTypeDescription.cs,
+	  Mono.Addins.Database/FileDatabase.cs: Added boolean property to be
+	  set to avoid loading documentation information from add-in
+	  descriptions (not needed at run-time).
+	* Mono.Addins.mdp, Mono.Addins/TypeExtensionNode.cs,
+	  Mono.Addins/InstanceExtensionNode.cs,
+	  Mono.Addins/ExtensionContext.cs, Mono.Addins/ExtensionNode.cs,
+	  Makefile.am: Implemented new InstanceExtensionNode class. It is
+	  almost like TypeExtensionNode, but it does not implement the actual
+	  object creation, since CreateInstance is abstract.
+	  TypeExtensionNode is now a subclass of InstanceExtensionNode which
+	  creates an instance of the class specified in the 'class'
+	  attribute.
+	* Mono.Addins/NodeAttributeAttribute.cs: Allow specifying the
+	  description in the constructor.
+	* Mono.Addins.Description/ObjectDescriptionCollection.cs: New AddRange
+	  method.
+	* Mono.Addins.Description/ExtensionNodeDescription.cs: Added method for
+	  getting the path to a node. Added some helper properties.
+	* Mono.Addins.Database/AddinScanner.cs: Properly scan node types
+	  declared in node sets or declared as children of other nodes.
+
+2007-05-04  Lluis Sanchez Gual <lluis@novell.com> 
+
+	* Mono.Addins.mdp: Updated.
+	* Mono.Addins/ExtensionContext.cs: Fixed GetExtensionObjects overload
+	  which was not using the correct reuseCachedInstance value.
+	* Mono.Addins/ExtensionTree.cs: Improved error message. When looking
+	  for a type in an assembly, avoid throwing an exception too early,
+	  since it may be found in other assemblies.
+	* Mono.Addins.Database/AddinDatabase.cs: In the addin info cache, also
+	  store information about unsuccessful lookups, to avoid looking for
+	  an add-in again if we found that it doesn't exist. In Update(),
+	  don't use verbose output by default.
+
+2007-04-10  Lluis Sanchez Gual <lluis@novell.com> 
+
+	* Mono.Addins.mdp, Makefile.am, Mono.Addins.csproj: Updated.
+	* Mono.Addins/Addin.cs: Properly resolve absolute add-in ids (starting
+	  with ::).
+	* Mono.Addins/AddinRegistry.cs: Added method for reading a manifest.
+	* Mono.Addins.Description/Extension.cs: Added GetExtendedObject()
+	  method. Initialize the owner of all collections.
+	* Mono.Addins.Description/AddinDependency.cs: Added method for getting
+	  the full ID of the referenced assembly.
+	* Mono.Addins.Description/AddinDescription.cs: Added OwnerDatabase
+	  property. Initialize the owner of all collections. Properly check
+	  for referenced assemblies in Validate(). 
+	* Mono.Addins.Description/ExtensionNodeType.cs: Properly read the
+	  objectType attribute from XML. Initialize the owner of all
+	  collections.
+	* Mono.Addins.Description/ObjectDescriptionCollection.cs: Added
+	  constructor which takes the collection owner as parameter. When an
+	  element is added, set the parent of the element.
+	* Mono.Addins.Description/ExtensionPoint.cs,
+	  Mono.Addins.Description/ModuleDescription.cs: Initialize the owner
+	  of all collections.
+	* Mono.Addins.Description/ExtensionNodeDescription.cs: Added
+	  GetNodeType() method and some helper properties. Initialize the
+	  owner of all collections.
+	* Mono.Addins.Description/NodeTypeAttributeCollection.cs,
+	  Mono.Addins.Description/ExtensionCollection.cs,
+	  Mono.Addins.Description/DependencyCollection.cs,
+	  Mono.Addins.Description/ExtensionNodeDescriptionCollection.cs,
+	  Mono.Addins.Description/ExtensionPointCollection.cs,
+	  Mono.Addins.Description/ModuleDescriptionCollection.cs,
+	  Mono.Addins.Description/ConditionTypeDescriptionCollection.cs,
+	  Mono.Addins.Description/ExtensionNodeSetCollection.cs: Added
+	  constructor which takes the collection owner as parameter.
+	* Mono.Addins.Description/ExtensionNodeSet.cs: Added
+	  GetAllowedNodeTypes() method, which returns all allowed nodes,
+	  recursivelly looking at referenced node sets. Initialize the owner
+	  of all collections.
+	* Mono.Addins.Description/ExtensionNodeTypeCollection.cs: New
+	  collection.
+	* Mono.Addins.Description/ObjectDescription.cs: Added properties for
+	  getting the parent of an object, and the add-in description where
+	  the object is declared.
+	* Mono.Addins.Database/AddinDatabase.cs: Properly reuse generated
+	  add-in ids when the add-in file is the same. Added method for
+	  finding a node set defined in the registry. Initialize the
+	  OwnerDatabase property of every loaded AddinDescription.
+	* Mono.Addins.Database/AddinScanner.cs: When looking for add-in types,
+	  look in the references too. Set HasUserId to false for add-ins with
+	  auto-generated ID.
+
+2007-04-04  Lluis Sanchez Gual <lluis@novell.com> 
+
+	* Mono.Addins/ExtensionContext.cs, Mono.Addins/AddinSessionService.cs,
+	  Makefile.am, Mono.Addins.Description/AddinDescription.cs,
+	  Mono.Addins.Description/ExtensionPoint.cs,
+	  Mono.Addins.Database/AddinUpdateData.cs,
+	  Mono.Addins.Database/AddinDatabase.cs: Use ISO-1 compliant c# only.
+	* Mono.Addins.Description/Condition.cs,
+	  Mono.Addins.Description/ConditionCollection.cs: Removed unused
+	  files.
+
+2007-04-04  Lluis Sanchez Gual <lluis@novell.com> 
+
+	* Mono.Addins.csproj: Added msbuild project files. Patch by Matthijs
+	  ter Woord.
+
+2007-03-30  Lluis Sanchez Gual <lluis@novell.com> 
+
+	* Mono.Addins/Addin.cs: Added support for global add-in names.
+	* Mono.Addins/ExtensionContext.cs: Make sure extensions of recently
+	  installed add-ins are properly loaded. Don't call OnAddinLoaded on
+	  nodes until all nodes of the extension point have been loaded,
+	  since OnAddinLoaded implementations may try to access to children
+	  which have not yet been loaded.
+	* Mono.Addins/ExtensionNode.cs: Added some null checks.
+	* Mono.Addins/ExtensionTree.cs: Fixed order when the insertafer
+	  attribute is specified.
+	* Mono.Addins/TreeNode.cs: Added method for getting an extension point
+	  from a path.
+	* Mono.Addins/AddinRegistry.cs: Added new env var for specifying the
+	  global add-in registry.
+	* Mono.Addins.Database/AddinScanFolderInfo.cs: Only include add-in
+	  files in the list of missing files.
+	* Mono.Addins.Database/AddinDatabase.cs: Properly remove add-in
+	  manifests from add-in folders that have been deleted.
+	* Mono.Addins.Database/AddinScanner.cs: Moved code that removes
+	  manifests from deleted add-ins to a new method, which is called
+	  from AddinDatabase as well.
+
+2007-03-28  Lluis Sanchez Gual <lluis@novell.com> 
+
+	* Mono.Addins.mdp: Generate a winexe, to avoid showing a console in
+	  windows.
+	* Mono.Addins/Addin.cs: Null check.
+	* Mono.Addins/AddinSessionService.cs, Mono.Addins/AddinManager.cs,
+	  Mono.Addins.Database/AddinScanner.cs: Use Assembly.CodeBase, since
+	  Assembly.Location will return the wrong value when the assembly is
+	  loaded using shadow copy.
+	* Mono.Addins/AddinRegistry.cs, Mono.Addins.Database/SetupProcess.cs:
+	  Windows portability fixes.
+	* Mono.Addins.Description/ExtensionNodeSet.cs: Workaround for mono bug.
+	* Mono.Addins.Database/Util.cs, Mono.Addins.Database/FileDatabase.cs:
+	  Use a custom method for getting a string hash, to make sure we get
+	  consistent results.
+
+2007-03-23  Lluis Sanchez Gual <lluis@novell.com> 
+
+	* Mono.Addins.mdp: Updated.
+	* Mono.Addins/AddinRegistry.cs: Create the add-ins folder for host
+	  references when it doesn't exist.
+
