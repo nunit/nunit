@@ -11,7 +11,7 @@
     <RootNamespace>Mono.Addins</RootNamespace>
     <SignAssembly>True</SignAssembly>
     <AssemblyOriginatorKeyFile>mono-addins.snk</AssemblyOriginatorKeyFile>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -44,6 +44,23 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="Compatibility\Check.cs" />
+    <Compile Include="Compatibility\Enumerable.cs" />
+    <Compile Include="Compatibility\ExtensionAttribute.cs" />
+    <Compile Include="Compatibility\Funcs.cs" />
+    <Compile Include="Compatibility\Grouping.cs" />
+    <Compile Include="Compatibility\HashPrimeNumbers.cs" />
+    <Compile Include="Compatibility\HashSet.cs" />
+    <Compile Include="Compatibility\IGrouping.cs" />
+    <Compile Include="Compatibility\ILookup_T.cs" />
+    <Compile Include="Compatibility\IOrderedEnumerable_T.cs" />
+    <Compile Include="Compatibility\Lookup.cs" />
+    <Compile Include="Compatibility\OrderedEnumerable.cs" />
+    <Compile Include="Compatibility\OrderedSequence.cs" />
+    <Compile Include="Compatibility\QuickSort.cs" />
+    <Compile Include="Compatibility\SortContext.cs" />
+    <Compile Include="Compatibility\SortDirection.cs" />
+    <Compile Include="Compatibility\SortSequenceContext.cs" />
     <Compile Include="Compatibility\Tuple.cs" />
     <Compile Include="Mono.Addins\ExtensionNode.cs" />
     <Compile Include="Mono.Addins\ExtensionTree.cs" />
