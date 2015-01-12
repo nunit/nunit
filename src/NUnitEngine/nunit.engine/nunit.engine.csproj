@@ -136,6 +136,10 @@
     <Compile Include="TestEngineResult.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\mono-addins\Mono.Addins.csproj">
+      <Project>{91dd5a2d-9fe3-4c3c-9253-876141874dad}</Project>
+      <Name>Mono.Addins</Name>
+    </ProjectReference>
     <ProjectReference Include="..\nunit.engine.api\nunit.engine.api.csproj">
       <Project>{775FAD50-3623-4922-97C4-DFB29A8BE4C7}</Project>
       <Name>nunit.engine.api</Name>

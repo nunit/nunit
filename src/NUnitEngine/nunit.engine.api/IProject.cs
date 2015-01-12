@@ -26,8 +26,7 @@ using System.Collections.Generic;
 namespace NUnit.Engine
 {
     /// <summary>
-    /// Interface for the various project tyes that the engine
-    /// can load
+    /// Interface for the various project types that the engine can load.
     /// </summary>
     public interface IProject
     {
