@@ -88,6 +88,12 @@ namespace NUnit.Engine
             {
                 AddinManager.Initialize(NUnitConfiguration.ApplicationDirectory);
                 AddinManager.Registry.Update(null);
+
+#if DEBUG
+                Console.WriteLine("Addin Roots:");
+                foreach (var root in AddinManager.Registry.GetAddinRoots())
+                    Console.WriteLine("   {0}", root.Name);
+#endif
             }
 
             SettingsService settingsService = new SettingsService(true);
