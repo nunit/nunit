@@ -191,6 +191,23 @@ namespace Mono.Addins.Database
 						var dirName = Path.GetFileName (dir);
 						i = dirName.IndexOf ('_');
 						Version av;
+#if NUNIT // .NET 2.0 doesn't support Version.TryParse()
+						try
+						{
+							av = new Version(dirName.Substring(1, i - 1));
+							if (av == currentVersion)
+								return dir;
+							else if (av < currentVersion && av > bestVersion)
+							{
+								bestDir = dir;
+								bestVersion = av;
+							}
+						}
+						catch
+						{
+							// do nothing to emulate the original TryParse
+						}
+#else
 						if (Version.TryParse (dirName.Substring (1, i - 1), out av)) {
 							if (av == currentVersion)
 								return dir;
@@ -199,6 +216,7 @@ namespace Mono.Addins.Database
 								bestVersion = av;
 							}
 						}
+#endif
 					}
 					if (bestDir != null)
 						return bestDir;

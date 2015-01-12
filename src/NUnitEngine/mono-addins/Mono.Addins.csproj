@@ -11,7 +11,8 @@
     <RootNamespace>Mono.Addins</RootNamespace>
     <SignAssembly>True</SignAssembly>
     <AssemblyOriginatorKeyFile>mono-addins.snk</AssemblyOriginatorKeyFile>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>True</DebugSymbols>
@@ -24,6 +25,7 @@
     <ConsolePause>False</ConsolePause>
     <NoWarn>1574</NoWarn>
     <DocumentationFile>..\..\..\bin\Debug\Mono.Addins.xml</DocumentationFile>
+    <DefineConstants>NUNIT</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
@@ -33,6 +35,7 @@
     <WarningLevel>4</WarningLevel>
     <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
     <ConsolePause>False</ConsolePause>
+    <DefineConstants>NUNIT</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -41,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="Compatibility\Tuple.cs" />
     <Compile Include="Mono.Addins\ExtensionNode.cs" />
     <Compile Include="Mono.Addins\ExtensionTree.cs" />
     <Compile Include="Mono.Addins\TreeNode.cs" />

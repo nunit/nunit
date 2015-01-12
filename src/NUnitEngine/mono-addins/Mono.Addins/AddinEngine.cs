@@ -739,7 +739,11 @@ namespace Mono.Addins
 		
 		void CheckHostAssembly (Assembly asm)
 		{
+#if NUNIT
+			if (AddinDatabase.RunningSetupProcess || asm is System.Reflection.Emit.AssemblyBuilder)
+#else
 			if (AddinDatabase.RunningSetupProcess || asm is System.Reflection.Emit.AssemblyBuilder || asm.IsDynamic)
+#endif
 				return;
 			string codeBase;
 			try {

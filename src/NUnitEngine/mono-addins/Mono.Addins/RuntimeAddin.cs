@@ -626,7 +626,12 @@ namespace Mono.Addins
 					// Sorry, you can't load addins from
 					// dynamic assemblies as get_Location
 					// throws a NotSupportedException
-                    if (a is System.Reflection.Emit.AssemblyBuilder || a.IsDynamic) {
+#if NUNIT
+					if (a is System.Reflection.Emit.AssemblyBuilder)
+#else
+					if (a is System.Reflection.Emit.AssemblyBuilder || a.IsDynamic) {
+#endif
+					{
 						continue;
 					}
 					
