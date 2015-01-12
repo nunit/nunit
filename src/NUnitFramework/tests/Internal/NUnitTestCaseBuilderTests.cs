@@ -38,6 +38,23 @@ namespace NUnit.Framework.Internal
             var testCase = (Test)suite.Tests[0];
             Assert.That(testCase.RunState, Is.EqualTo(expectedState));
         }
+
+        private readonly Type optionalTestParametersFixtureType = typeof(OptionalTestParametersFixture);
+
+        [TestCase("MethodWithOptionalParams0", RunState.NotRunnable)]
+        [TestCase("MethodWithOptionalParams1", RunState.Runnable)]
+        [TestCase("MethodWithOptionalParams2", RunState.Runnable)]
+        [TestCase("MethodWithOptionalParams3", RunState.NotRunnable)]
+        [TestCase("MethodWithAllOptionalParams0", RunState.Runnable)]
+        [TestCase("MethodWithAllOptionalParams1", RunState.Runnable)]
+        [TestCase("MethodWithAllOptionalParams2", RunState.Runnable)]
+        [TestCase("MethodWithAllOptionalParams3", RunState.NotRunnable)]
+        public void ParametrizedTestCaseTests(string methodName, RunState expectedState)
+        {
+            var suite = TestBuilder.MakeParameterizedMethodSuite(optionalTestParametersFixtureType, methodName);
+            var testCase = (Test)suite.Tests[0];
+            Assert.That(testCase.RunState, Is.EqualTo(expectedState));
+        }
     }
 }
 #endif

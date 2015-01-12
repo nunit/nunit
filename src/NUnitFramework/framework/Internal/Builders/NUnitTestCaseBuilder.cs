@@ -136,7 +136,14 @@ namespace NUnit.Framework.Internal.Builders
 
             parameters = testMethod.Method.GetParameters();
 
-            int argsNeeded = parameters.Length;
+            int minArgsNeeded = 0;
+            foreach (var parameter in parameters)
+            {
+                // IsOptional is supported since .NET 1.1 
+                if (!parameter.IsOptional)
+                    minArgsNeeded++;
+            }
+            int maxArgsNeeded = parameters.Length;
 
             object[] arglist = null;
             int argsProvided = 0;
@@ -188,14 +195,17 @@ namespace NUnit.Framework.Internal.Builders
             else if (parms == null || !parms.HasExpectedResult)
                 return MarkAsNotRunnable(testMethod, "Method has non-void return value, but no result is expected");
 
-            if (argsProvided > 0 && argsNeeded == 0)
+            if (argsProvided > 0 && maxArgsNeeded == 0)
                 return MarkAsNotRunnable(testMethod, "Arguments provided for method not taking any");
 
-            if (argsProvided == 0 && argsNeeded > 0)
+            if (argsProvided == 0 && minArgsNeeded > 0)
                 return MarkAsNotRunnable(testMethod, "No arguments were provided");
 
-            if (argsProvided != argsNeeded)
-                return MarkAsNotRunnable(testMethod, "Wrong number of arguments provided");
+            if (argsProvided < minArgsNeeded)
+                return MarkAsNotRunnable(testMethod, string.Format("Not enough arguments provided, provide at least {0} arguments.", minArgsNeeded));
+
+            if (argsProvided > maxArgsNeeded)
+                return MarkAsNotRunnable(testMethod, string.Format("Too many arguments provided, provide at most {0} arguments.", maxArgsNeeded));
 
             if (testMethod.Method.IsGenericMethodDefinition && arglist != null)
             {
