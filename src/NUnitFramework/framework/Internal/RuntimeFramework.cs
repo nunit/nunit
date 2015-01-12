@@ -226,21 +226,23 @@ namespace NUnit.Framework.Internal
                     else /* It's windows */
                     if (major == 2)
                     {
-                        RegistryKey key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\.NETFramework");
-                        if (key != null)
+                        using (RegistryKey key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\.NETFramework"))
                         {
-                            string installRoot = key.GetValue("InstallRoot") as string;
-                            if (installRoot != null)
+                            if (key != null)
                             {
-                                if (Directory.Exists(Path.Combine(installRoot, "v3.5")))
+                                string installRoot = key.GetValue("InstallRoot") as string;
+                                if (installRoot != null)
                                 {
-                                    major = 3;
-                                    minor = 5;
-                                }
-                                else if (Directory.Exists(Path.Combine(installRoot, "v3.0")))
-                                {
-                                    major = 3;
-                                    minor = 0;
+                                    if (Directory.Exists(Path.Combine(installRoot, "v3.5")))
+                                    {
+                                        major = 3;
+                                        minor = 5;
+                                    }
+                                    else if (Directory.Exists(Path.Combine(installRoot, "v3.0")))
+                                    {
+                                        major = 3;
+                                        minor = 0;
+                                    }
                                 }
                             }
                         }
