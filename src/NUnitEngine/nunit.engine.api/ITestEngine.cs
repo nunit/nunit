@@ -55,15 +55,17 @@ namespace NUnit.Engine
         InternalTraceLevel InternalTraceLevel { get; set; }
 
         /// <summary>
-        /// Create and initialize the standard set of services used in the Engine.
-        /// The
+        /// Initialize the engine. This includes initializing mono addins,
+        /// setting the trace level and creating the standard set of services 
+        /// used in the Engine.
+        /// 
         /// This interface is not normally called by user code. Programs linking 
         /// only to the nunit.engine.api assembly are given a
         /// pre-initialized instance of TestEngine. Programs 
         /// that link directly to nunit.engine usually do so
         /// in order to perform custom initialization.
         /// </summary>
-        void InitializeServices();
+        void Initialize();
 
         /// <summary>
         /// Returns a test runner instance for use by clients in discovering,

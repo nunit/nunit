@@ -24,6 +24,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using Mono.Addins;
 using NUnit.Engine.Internal;
 using NUnit.Engine.Services;
 
@@ -64,23 +65,37 @@ namespace NUnit.Engine
             get
             {
                 if(!this.Services.ServiceManager.ServicesInitialized)
-                    InitializeServices();
+                    Initialize();
 
                 return this.Services;
             }
         }
 
         /// <summary>
-        /// Create and initialize the standard set of services
-        /// used in the Engine. This interface is not normally
-        /// called by user code. Programs linking only to 
+        /// Initialize the engine. This includes initializing mono addins,
+        /// setting the trace level and creating the standard set of services 
+        /// used in the Engine.
+        /// 
+        /// This interface is not normally called by user code. Programs linking 
         /// only to the nunit.engine.api assembly are given a
         /// pre-initialized instance of TestEngine. Programs 
         /// that link directly to nunit.engine usually do so
         /// in order to perform custom initialization.
         /// </summary>
-        public void InitializeServices()
+        public void Initialize()
         {
+            if (!AddinManager.IsInitialized)
+            {
+                AddinManager.Initialize(NUnitConfiguration.ApplicationDirectory);
+                AddinManager.Registry.Update(null);
+
+#if DEBUG
+                Console.WriteLine("Addin Roots:");
+                foreach (var root in AddinManager.Registry.GetAddinRoots())
+                    Console.WriteLine("   {0}", root.Name);
+#endif
+            }
+
             SettingsService settingsService = new SettingsService(true);
 
             if(InternalTraceLevel == InternalTraceLevel.Default)
@@ -114,7 +129,7 @@ namespace NUnit.Engine
         public ITestRunner GetRunner(TestPackage package)
         {
             if(!this.Services.ServiceManager.ServicesInitialized)
-                InitializeServices();
+                Initialize();
 
             return new Runners.MasterTestRunner(this.Services, package);
         }
