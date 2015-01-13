@@ -23,7 +23,7 @@
     <WarningLevel>4</WarningLevel>
     <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
     <ConsolePause>False</ConsolePause>
-    <NoWarn>1574</NoWarn>
+    <NoWarn>1574,1591</NoWarn>
     <DocumentationFile>..\..\..\bin\Debug\Mono.Addins.xml</DocumentationFile>
     <DefineConstants>NUNIT</DefineConstants>
   </PropertyGroup>
@@ -40,7 +40,6 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
-    <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
