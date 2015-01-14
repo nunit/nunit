@@ -51,6 +51,7 @@
     <Compile Include="AsyncDummyFixture.cs" />
     <Compile Include="AsyncRealFixture.cs" />
     <Compile Include="GenericTestMethodData.cs" />
+    <Compile Include="OptionalTestParametersFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="AssertCountFixture.cs" />
     <Compile Include="AssertFailFixture.cs" />

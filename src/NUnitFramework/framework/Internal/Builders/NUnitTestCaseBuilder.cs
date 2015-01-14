@@ -136,6 +136,7 @@ namespace NUnit.Framework.Internal.Builders
 
             parameters = testMethod.Method.GetParameters();
 
+#if !NETCF
             int minArgsNeeded = 0;
             foreach (var parameter in parameters)
             {
@@ -143,6 +144,9 @@ namespace NUnit.Framework.Internal.Builders
                 if (!parameter.IsOptional)
                     minArgsNeeded++;
             }
+#else
+            int minArgsNeeded = parameters.Length;
+#endif
             int maxArgsNeeded = parameters.Length;
 
             object[] arglist = null;

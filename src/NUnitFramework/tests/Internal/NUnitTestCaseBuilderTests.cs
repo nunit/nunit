@@ -1,5 +1,4 @@
 ﻿using System;
-#if NET_4_0 || NET_4_5
 using NUnit.Framework.Interfaces;
 using NUnit.TestData;
 using NUnit.TestUtilities;
@@ -9,6 +8,7 @@ namespace NUnit.Framework.Internal
     [TestFixture]
     public class NUnitTestCaseBuilderTests
     {
+#if NET_4_0 || NET_4_5
         private readonly Type fixtureType = typeof(AsyncDummyFixture);
 
         [TestCase("AsyncVoid", RunState.NotRunnable)]
@@ -38,7 +38,9 @@ namespace NUnit.Framework.Internal
             var testCase = (Test)suite.Tests[0];
             Assert.That(testCase.RunState, Is.EqualTo(expectedState));
         }
+#endif
 
+#if !NETCF
         private readonly Type optionalTestParametersFixtureType = typeof(OptionalTestParametersFixture);
 
         [TestCase("MethodWithOptionalParams0", RunState.NotRunnable)]
@@ -55,6 +57,6 @@ namespace NUnit.Framework.Internal
             var testCase = (Test)suite.Tests[0];
             Assert.That(testCase.RunState, Is.EqualTo(expectedState));
         }
+#endif
     }
 }
-#endif
