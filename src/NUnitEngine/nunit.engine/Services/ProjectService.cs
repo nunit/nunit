@@ -28,8 +28,6 @@ using Mono.Addins;
 
 namespace NUnit.Engine.Services
 {
-    using ProjectLoaders;
-
     /// <summary>
     /// Summary description for ProjectService.
     /// </summary>
@@ -111,8 +109,6 @@ namespace NUnit.Engine.Services
             if (!_isInitialized)
             {
                 _isInitialized = true;
-
-                _loaders.Add(new NUnitProjectLoader());
 
                 foreach (IProjectLoader loader in AddinManager.GetExtensionObjects<IProjectLoader>())
                     _loaders.Add(loader);

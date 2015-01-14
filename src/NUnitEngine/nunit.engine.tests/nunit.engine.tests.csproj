@@ -65,7 +65,6 @@
     <Compile Include="Internal\AssemblyReaderTests.cs" />
     <Compile Include="Drivers\NotRunnableFrameworkDriverTests.cs" />
     <Compile Include="resources\TestResource.cs" />
-    <Compile Include="Services\ProjectLoaders\NUnitProjectLoaderTests.cs" />
     <Compile Include="Drivers\NUnit3FrameworkDriverTests.cs" />
     <Compile Include="Internal\PathUtilTests.cs" />
     <Compile Include="Internal\ServerUtilityTests.cs" />
@@ -75,6 +74,9 @@
     <Compile Include="Services\InProcessTestRunnerFactoryTests.cs" />
     <Compile Include="Services\DomainManagerTests.cs" />
     <Compile Include="Services\DriverFactoryTests.cs" />
+    <Compile Include="Services\ProjectLoaders\NUnitProjectLoaderTests.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Services\ProjectLoaders\VisualStudioProjectLoaderTests.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -98,6 +100,11 @@
     <ProjectReference Include="..\..\NUnitFramework\mock-assembly\mock-nunit-assembly-2.0.csproj">
       <Project>{2E368281-3BA8-4050-B05E-0E0E43F8F446}</Project>
       <Name>mock-nunit-assembly-2.0</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Addins\nunit-project-loader\nunit-project-loader.csproj">
+      <Project>{e71a76ca-0089-4e1a-a7fb-210429dbed6e}</Project>
+      <Name>nunit-project-loader</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\Addins\vs-project-loader\vs-project-loader.csproj">
       <Project>{96181317-7b6f-49f0-b283-6e804d41c8af}</Project>

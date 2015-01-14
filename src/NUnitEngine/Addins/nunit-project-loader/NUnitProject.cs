@@ -24,7 +24,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
-using NUnit.Engine.Internal;
+using NUnit.Common;
 
 namespace NUnit.Engine.Services.ProjectLoaders
 {

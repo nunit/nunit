@@ -512,13 +512,19 @@
 	
 	<ItemGroup Label="Projects for building the engine">
 		<EngineProjects Include="$(EngineSrcDir)\mono-addins\Mono.Addins.csproj" />
+
 		<EngineProjects Include="$(EngineSrcDir)\nunit.engine.api\nunit.engine.api.csproj" />
+		<EngineProjects Include="$(EngineSrcDir)\nunit.v2.driver\nunit.v2.driver.csproj" />
 		<EngineProjects Include="$(EngineSrcDir)\nunit.engine\nunit.engine.csproj" />
 		<EngineProjects Include="$(EngineSrcDir)\nunit-agent\nunit-agent.csproj" />
 		<EngineProjects Include="$(EngineSrcDir)\nunit-agent\nunit-agent-x86.csproj" />
+
+		<!-- Addins -->
+		<EngineProjects Include="$(EngineSrcDir)\Addins\nunit-project-loader\nunit-project-loader.csproj" />
 		<EngineProjects Include="$(EngineSrcDir)\Addins\vs-project-loader\vs-project-loader.csproj" />
+
+		<!-- Test Assemblies -->
 		<EngineProjects Include="$(EngineSrcDir)\nunit.engine.tests\nunit.engine.tests.csproj" />
-		<EngineProjects Include="$(EngineSrcDir)\nunit.v2.driver\nunit.v2.driver.csproj" />
 		<EngineProjects Include="$(EngineSrcDir)\nunit.v2.driver.tests\nunit.v2.driver.tests.csproj" />
 	</ItemGroup>
 

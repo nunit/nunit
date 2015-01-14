@@ -82,7 +82,6 @@
     <Compile Include="Internal\AssemblyReader.cs" />
     <Compile Include="Internal\DomainUsage.cs" />
     <Compile Include="Internal\NUnitConfiguration.cs" />
-    <Compile Include="Services\ProjectLoaders\NUnitProject.cs" />
     <Compile Include="Internal\PathUtils.cs" />
     <Compile Include="Internal\ProcessModel.cs" />
     <Compile Include="Internal\ResultHelper.cs">
@@ -120,7 +119,6 @@
     <Compile Include="Services\DomainManager.cs" />
     <Compile Include="Services\DriverFactory.cs" />
     <Compile Include="Services\InProcessTestRunnerFactory.cs" />
-    <Compile Include="Services\ProjectLoaders\NUnitProjectLoader.cs" />
     <Compile Include="Services\ProjectService.cs" />
     <Compile Include="Services\RecentFilesService.cs" />
     <Compile Include="Services\RuntimeFrameworkSelector.cs" />
@@ -154,6 +152,9 @@
     <Content Include="nunit.engine.addins">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Services\ProjectLoaders\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
