@@ -22,7 +22,9 @@
 // ***********************************************************************
 
 using System;
+using System.Collections.Generic;
 using System.IO;
+using Mono.Addins;
 
 namespace NUnit.Engine.Services
 {
@@ -34,13 +36,11 @@ namespace NUnit.Engine.Services
     public class ProjectService : IProjectLoader, IService
     {
         /// <summary>
-        /// Array of all installed ProjectLoaders
+        /// List of all installed ProjectLoaders
         /// </summary>
-        IProjectLoader[] _loaders = new IProjectLoader[] 
-        {
-            new NUnitProjectLoader(),
-            new VisualStudioProjectLoader()
-        };
+        IList<IProjectLoader> _loaders = new List<IProjectLoader>();
+
+        bool _isInitialized;
 
         #region IProjectLoader Members
 
@@ -108,7 +108,15 @@ namespace NUnit.Engine.Services
 
         public void InitializeService()
         {
-            // TODO:  Add ProjectLoader.InitializeService implementation
+            if (!_isInitialized)
+            {
+                _isInitialized = true;
+
+                _loaders.Add(new NUnitProjectLoader());
+
+                foreach (IProjectLoader loader in AddinManager.GetExtensionObjects<IProjectLoader>())
+                    _loaders.Add(loader);
+            }
         }
 
         public void UnloadService()

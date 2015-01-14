@@ -516,6 +516,7 @@
 		<EngineProjects Include="$(EngineSrcDir)\nunit.engine\nunit.engine.csproj" />
 		<EngineProjects Include="$(EngineSrcDir)\nunit-agent\nunit-agent.csproj" />
 		<EngineProjects Include="$(EngineSrcDir)\nunit-agent\nunit-agent-x86.csproj" />
+		<EngineProjects Include="$(EngineSrcDir)\Addins\vs-project-loader\vs-project-loader.csproj" />
 		<EngineProjects Include="$(EngineSrcDir)\nunit.engine.tests\nunit.engine.tests.csproj" />
 		<EngineProjects Include="$(EngineSrcDir)\nunit.v2.driver\nunit.v2.driver.csproj" />
 		<EngineProjects Include="$(EngineSrcDir)\nunit.v2.driver.tests\nunit.v2.driver.tests.csproj" />
