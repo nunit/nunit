@@ -139,6 +139,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "vs-project-loader", "src\NU
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit-project-loader", "src\NUnitEngine\Addins\nunit-project-loader\nunit-project-loader.csproj", "{E71A76CA-0089-4E1A-A7FB-210429DBED6E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "addin-tests", "src\NUnitEngine\Addins\addin-tests\addin-tests.csproj", "{793CEC1B-D44D-4162-BE03-913BF1FDB458}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -523,6 +525,14 @@ Global
 		{E71A76CA-0089-4E1A-A7FB-210429DBED6E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E71A76CA-0089-4E1A-A7FB-210429DBED6E}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{E71A76CA-0089-4E1A-A7FB-210429DBED6E}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{793CEC1B-D44D-4162-BE03-913BF1FDB458}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{793CEC1B-D44D-4162-BE03-913BF1FDB458}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{793CEC1B-D44D-4162-BE03-913BF1FDB458}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{793CEC1B-D44D-4162-BE03-913BF1FDB458}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{793CEC1B-D44D-4162-BE03-913BF1FDB458}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{793CEC1B-D44D-4162-BE03-913BF1FDB458}.Release|Any CPU.Build.0 = Release|Any CPU
+		{793CEC1B-D44D-4162-BE03-913BF1FDB458}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{793CEC1B-D44D-4162-BE03-913BF1FDB458}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -584,6 +594,7 @@ Global
 		{0E7186B7-0CE3-4EA3-8C53-7A8F95E33A75} = {D92A4841-72C5-4702-A4F4-7F6A2D3E341B}
 		{96181317-7B6F-49F0-B283-6E804D41C8AF} = {B923C1E7-54DD-4E79-A1A9-B21123863B04}
 		{E71A76CA-0089-4E1A-A7FB-210429DBED6E} = {B923C1E7-54DD-4E79-A1A9-B21123863B04}
+		{793CEC1B-D44D-4162-BE03-913BF1FDB458} = {B923C1E7-54DD-4E79-A1A9-B21123863B04}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = src\NUnitFramework\tests\nunitlite.tests-2.0.csproj
