@@ -249,7 +249,7 @@
 	<!-- *********************************************************************** -->
 
 	<Target Name="TestAll" Label="Run tests for all framework builds, the engine and the console"
-			DependsOnTargets="TestAllFrameworks;TestEngine;TestV2Driver;TestConsole" />
+			DependsOnTargets="TestAllFrameworks;TestEngine;TestAddins;TestV2Driver;TestConsole" />
 	  
 	<Target Name="Test" Label="Run tests for the current framework, engine and console"
 			DependsOnTargets="TestFramework;TestEngine;TestV2Driver;TestConsole" />
