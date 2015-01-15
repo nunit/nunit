@@ -64,8 +64,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Internal\AssemblyReaderTests.cs" />
     <Compile Include="Drivers\NotRunnableFrameworkDriverTests.cs" />
-    <Compile Include="resources\TestResource.cs" />
-    <Compile Include="Services\ProjectLoaders\NUnitProjectLoaderTests.cs" />
     <Compile Include="Drivers\NUnit3FrameworkDriverTests.cs" />
     <Compile Include="Internal\PathUtilTests.cs" />
     <Compile Include="Internal\ServerUtilityTests.cs" />
@@ -75,10 +73,6 @@
     <Compile Include="Services\InProcessTestRunnerFactoryTests.cs" />
     <Compile Include="Services\DomainManagerTests.cs" />
     <Compile Include="Services\DriverFactoryTests.cs" />
-    <Compile Include="Services\ProjectLoaders\VisualStudioProjectLoaderTests.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Services\ProjectLoaders\VSProjectTests.cs" />
     <Compile Include="Services\ResultServiceTests.cs" />
     <Compile Include="Services\ResultWriters\NUnit2XmlResultWriterTests.cs" />
     <Compile Include="Services\ResultWriters\NUnit2XmlValidationTests.cs" />
@@ -115,41 +109,6 @@
     <Content Include="EngineTests.nunit">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <EmbeddedResource Include="resources\fsharp-sample.fsproj" />
-    <EmbeddedResource Include="resources\NUnitProject_ComplexSettings.nunit" />
-    <EmbeddedResource Include="resources\NUnitProject_ManualBinPath.nunit" />
-    <EmbeddedResource Include="resources\NUnitProject_EmptyProject.nunit" />
-    <EmbeddedResource Include="resources\legacy-csharp-sample.csproj" />
-    <EmbeddedResource Include="resources\csharp-sample.csproj" />
-    <EmbeddedResource Include="resources\csharp-sample_noplatform.csproj" />
-    <EmbeddedResource Include="resources\csharp-debug-only.csproj" />
-    <EmbeddedResource Include="resources\solution-with-disabled-project.sln" />
-    <EmbeddedResource Include="resources\legacy-csharp-hebrew-file-problem.csproj" />
-    <EmbeddedResource Include="resources\csharp-missing-output-path.csproj" />
-    <EmbeddedResource Include="resources\MultiplePlatformProject.csproj" />
-    <EmbeddedResource Include="resources\legacy-samples.sln" />
-    <EmbeddedResource Include="resources\samples.sln" />
-    <EmbeddedResource Include="resources\solution-with-unmanaged-cpp.sln" />
-    <EmbeddedResource Include="resources\legacy-vb-sample.vbproj" />
-    <EmbeddedResource Include="resources\vb-sample.vbproj" />
-    <EmbeddedResource Include="resources\solution-with-web-application.sln" />
-    <EmbeddedResource Include="resources\csharp-xna-project.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="resources\cpp-default-library.vcproj" />
-    <EmbeddedResource Include="resources\legacy-cpp-sample.vcproj" />
-    <EmbeddedResource Include="resources\cpp-sample.vcproj" />
-    <EmbeddedResource Include="resources\legacy-cpp-library-with-macros.vcproj" />
-    <EmbeddedResource Include="resources\legacy-jsharp-sample.vjsproj" />
-    <EmbeddedResource Include="resources\jsharp-sample.vjsproj" />
-    <EmbeddedResource Include="resources\legacy-cpp-makefile-project.vcproj" />
-    <EmbeddedResource Include="resources\legacy-cpp-unmanaged.vcproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="resources\NUnitProject_EmptyConfigs.nunit" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="resources\NUnitProject.nunit" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />

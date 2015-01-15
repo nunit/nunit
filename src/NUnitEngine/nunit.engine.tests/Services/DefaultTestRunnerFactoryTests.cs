@@ -41,6 +41,7 @@ namespace NUnit.Engine.Services.Tests
             _services.Add(new ProjectService());
             _factory = new DefaultTestRunnerFactory();
             _services.Add(_factory);
+            _services.ServiceManager.InitializeServices();
         }
 
         // Single file

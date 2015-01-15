@@ -28,6 +28,7 @@
 		<ProjectSrcDir>$(ProjectBaseDir)\src</ProjectSrcDir>
 		<FrameworkSrcDir>$(ProjectSrcDir)\NUnitFramework</FrameworkSrcDir>
 		<EngineSrcDir>$(ProjectSrcDir)\NUnitEngine</EngineSrcDir>
+		<AddinSrcDir>$(EngineSrcDir)\Addins</AddinSrcDir>
 		<ConsoleSrcDir>$(ProjectSrcDir)\NUnitConsole</ConsoleSrcDir>
 		<ProjectToolsDir>$(ProjectBaseDir)\tools</ProjectToolsDir>
 		<PartCoverDir>$(ProjectToolsDir)\PartCover</PartCoverDir>
@@ -248,7 +249,7 @@
 	<!-- *********************************************************************** -->
 
 	<Target Name="TestAll" Label="Run tests for all framework builds, the engine and the console"
-			DependsOnTargets="TestAllFrameworks;TestEngine;TestV2Driver;TestConsole" />
+			DependsOnTargets="TestAllFrameworks;TestEngine;TestAddins;TestV2Driver;TestConsole" />
 	  
 	<Target Name="Test" Label="Run tests for the current framework, engine and console"
 			DependsOnTargets="TestFramework;TestEngine;TestV2Driver;TestConsole" />
@@ -291,13 +292,27 @@
 	<Target Name="TestEngine"
 			Label ="Run the engine tests"
 			DependsOnTargets="_CreateResultDir">
-		
+
 		<Message Text="******************************************************************" />
 		<Message Text="* Testing the NUnit Engine - $(Configuration)" />
 		<Message Text="******************************************************************" />
-		
+
 		<Exec WorkingDirectory="$(EngineBuildDir)"
 			  Command='$(ManagedExeLauncher) $(ConsoleRunner) nunit.engine.tests.dll "-result:$(ResultDir)/EngineResult.xml;format=$(ResultFormat)" $(TestOptions)'
+			  ContinueOnError="$(ContinueOnFailure)"/>
+
+	</Target>
+
+	<Target Name="TestAddins"
+			Label ="Run the addin tests"
+			DependsOnTargets="_CreateResultDir">
+
+		<Message Text="******************************************************************" />
+		<Message Text="* Testing the Engine Addins - $(Configuration)" />
+		<Message Text="******************************************************************" />
+
+		<Exec WorkingDirectory="$(EngineBuildDir)"
+			  Command='$(ManagedExeLauncher) $(ConsoleRunner) addins/addin-tests.dll "-result:$(ResultDir)/AddinResult.xml;format=$(ResultFormat)" $(TestOptions)'
 			  ContinueOnError="$(ContinueOnFailure)"/>
 
 	</Target>
@@ -511,14 +526,23 @@
 	</ItemGroup>
 	
 	<ItemGroup Label="Projects for building the engine">
+		<!-- Our private version of Mono.Addins -->
 		<EngineProjects Include="$(EngineSrcDir)\mono-addins\Mono.Addins.csproj" />
+		<!-- The engine and agent -->
 		<EngineProjects Include="$(EngineSrcDir)\nunit.engine.api\nunit.engine.api.csproj" />
+		<EngineProjects Include="$(EngineSrcDir)\nunit.v2.driver\nunit.v2.driver.csproj" />
 		<EngineProjects Include="$(EngineSrcDir)\nunit.engine\nunit.engine.csproj" />
 		<EngineProjects Include="$(EngineSrcDir)\nunit-agent\nunit-agent.csproj" />
 		<EngineProjects Include="$(EngineSrcDir)\nunit-agent\nunit-agent-x86.csproj" />
+		<!-- Test Assemblies -->
 		<EngineProjects Include="$(EngineSrcDir)\nunit.engine.tests\nunit.engine.tests.csproj" />
-		<EngineProjects Include="$(EngineSrcDir)\nunit.v2.driver\nunit.v2.driver.csproj" />
 		<EngineProjects Include="$(EngineSrcDir)\nunit.v2.driver.tests\nunit.v2.driver.tests.csproj" />
+		<!-- Addins -->
+		<EngineProjects Include="$(AddinSrcDir)\nunit-project-loader\nunit-project-loader.csproj" />
+		<EngineProjects Include="$(AddinSrcDir)\vs-project-loader\vs-project-loader.csproj" />
+		<!-- Addin tests -->
+		<EngineProjects Include="$(AddinSrcDir)\addin-tests\addin-tests.csproj" />
+
 	</ItemGroup>
 
 	<ItemGroup Label="Projects for building the console runner">
