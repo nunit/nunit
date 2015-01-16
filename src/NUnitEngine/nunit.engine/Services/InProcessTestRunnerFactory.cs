@@ -21,8 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
-using System.IO;
+using NUnit.Common;
 using NUnit.Engine.Internal;
 using NUnit.Engine.Runners;
 
@@ -49,7 +48,7 @@ namespace NUnit.Engine.Services
         {
             DomainUsage domainUsage = (DomainUsage)System.Enum.Parse(
                 typeof(DomainUsage),
-                package.GetSetting(RunnerSettings.DomainUsage, "Default"));
+                package.GetSetting(PackageSettings.DomainUsage, "Default"));
 
             switch (domainUsage)
             {

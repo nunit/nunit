@@ -21,9 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
 using System.Collections.Generic;
-using System.IO;
+using NUnit.Common;
 using Mono.Addins;
 
 namespace NUnit.Engine.Services
@@ -80,7 +79,7 @@ namespace NUnit.Engine.Services
             IProject project = LoadFrom(path);
             Guard.ArgumentValid(project != null, "Unable to load project " + path, "package");
 
-            string configName = package.GetSetting(RunnerSettings.ActiveConfig, (string)null); // Need RunnerSetting
+            string configName = package.GetSetting(PackageSettings.ActiveConfig, (string)null); // Need RunnerSetting
             TestPackage tempPackage = project.GetTestPackage(configName);
 
             // The original package held overrides, so don't change them, but

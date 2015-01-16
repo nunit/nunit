@@ -31,6 +31,7 @@ using System.Diagnostics;
 using System.Security;
 using System.Security.Policy;
 using System.Security.Principal;
+using NUnit.Common;
 using NUnit.Engine.Internal;
 
 namespace NUnit.Engine.Services
@@ -140,9 +141,9 @@ namespace NUnit.Engine.Services
                 ? new FileInfo(package.FullName)
                 : null;
 
-            string appBase = package.GetSetting(RunnerSettings.BasePath, string.Empty);
-            string configFile = package.GetSetting(RunnerSettings.ConfigurationFile, string.Empty);
-            string binPath = package.GetSetting(RunnerSettings.PrivateBinPath, string.Empty);
+            string appBase = package.GetSetting(PackageSettings.BasePath, string.Empty);
+            string configFile = package.GetSetting(PackageSettings.ConfigurationFile, string.Empty);
+            string binPath = package.GetSetting(PackageSettings.PrivateBinPath, string.Empty);
 
             if (testFile != null)
             {
@@ -168,7 +169,7 @@ namespace NUnit.Engine.Services
                 ? Path.Combine(appBase, configFile)
                 : configFile;
 
-            if (package.GetSetting(RunnerSettings.AutoBinPath, binPath == string.Empty))
+            if (package.GetSetting(PackageSettings.AutoBinPath, binPath == string.Empty))
                 binPath = GetPrivateBinPath(appBase, package.TestFiles);
 
             setup.PrivateBinPath = binPath;

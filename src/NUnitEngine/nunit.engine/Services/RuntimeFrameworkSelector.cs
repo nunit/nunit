@@ -23,7 +23,7 @@
 
 using System;
 using System.IO;
-using System.Reflection;
+using NUnit.Common;
 using NUnit.Engine.Internal;
 
 namespace NUnit.Engine.Services
@@ -43,7 +43,7 @@ namespace NUnit.Engine.Services
         public RuntimeFramework SelectRuntimeFramework(TestPackage package)
         {
             RuntimeFramework currentFramework = RuntimeFramework.CurrentFramework;
-            string frameworkSetting = package.GetSetting(RunnerSettings.RuntimeFramework, "");
+            string frameworkSetting = package.GetSetting(PackageSettings.RuntimeFramework, "");
             RuntimeFramework requestedFramework = frameworkSetting.Length > 0
                 ? RuntimeFramework.Parse(frameworkSetting)
                 : new RuntimeFramework(RuntimeType.Any, RuntimeFramework.DefaultVersion);
@@ -80,7 +80,7 @@ namespace NUnit.Engine.Services
                                 {
                                     if (reader.ShouldRun32Bit)
                                     {
-                                        package.Settings[RunnerSettings.RunAsX86] = true;
+                                        package.Settings[PackageSettings.RunAsX86] = true;
                                         log.Debug("Assembly {0} will be run x86", assembly);
                                     }
 
@@ -114,7 +114,7 @@ namespace NUnit.Engine.Services
             }
 
             RuntimeFramework targetFramework = new RuntimeFramework(targetRuntime, targetVersion);
-            package.Settings[RunnerSettings.RuntimeFramework] = targetFramework.ToString();
+            package.Settings[PackageSettings.RuntimeFramework] = targetFramework.ToString();
 
             log.Debug("Test will use {0} framework", targetFramework);
 

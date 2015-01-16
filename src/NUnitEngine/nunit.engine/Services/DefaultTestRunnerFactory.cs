@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using NUnit.Common;
 using NUnit.Engine.Internal;
 using NUnit.Engine.Runners;
 
@@ -75,7 +76,7 @@ namespace NUnit.Engine.Services
             // TODO: What about bad extensions?
 
             ProcessModel processModel = GetTargetProcessModel(package);
-            package.Settings.Remove(RunnerSettings.ProcessModel);
+            package.Settings.Remove(PackageSettings.ProcessModel);
 
             switch (processModel)
             {
@@ -118,7 +119,7 @@ namespace NUnit.Engine.Services
         {
             return (ProcessModel)System.Enum.Parse(
                 typeof(ProcessModel),
-                package.GetSetting(RunnerSettings.ProcessModel, "Default"));
+                package.GetSetting(PackageSettings.ProcessModel, "Default"));
         }
     }
 }
