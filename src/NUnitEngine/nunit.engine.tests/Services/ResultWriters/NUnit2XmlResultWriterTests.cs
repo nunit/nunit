@@ -42,9 +42,11 @@ namespace NUnit.Engine.Services.ResultWriters.Tests
         public void ConvertEngineResultToXml()
         {
             StringBuilder sb = new StringBuilder();
+            ResultService service = new ResultService();
+            service.InitializeService();
             using (StringWriter writer = new StringWriter(sb))
             {
-                new NUnit2XmlResultWriter().WriteResultFile(EngineResult.Xml, writer);
+                service.GetResultWriter("nunit2", null).WriteResultFile(EngineResult.Xml, writer);
             }
 
             doc = new XmlDocument();

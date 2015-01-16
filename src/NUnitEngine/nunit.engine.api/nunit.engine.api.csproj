@@ -59,6 +59,7 @@
     <Compile Include="IProjectLoader.cs" />
     <Compile Include="IResultWriter.cs" />
     <Compile Include="IResultService.cs" />
+    <Compile Include="IResultWriterFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="IFrameworkDriver.cs" />
     <Compile Include="ILogging.cs" />

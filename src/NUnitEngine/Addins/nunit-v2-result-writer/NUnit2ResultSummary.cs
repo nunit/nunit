@@ -24,11 +24,10 @@
 using System;
 using System.Globalization;
 using System.Xml;
+using NUnit.Common;
 
-namespace NUnit.Engine.Services.ResultWriters
+namespace NUnit.Engine.Addins
 {
-    using Internal;
-
     /// <summary>
     /// NUnit2ResultSummary summarizes test results as used in the NUnit2 XML format.
     /// </summary>

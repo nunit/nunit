@@ -23,8 +23,8 @@
 		<ExtensionNode objectType="NUnit.Engine.IProjectLoader"/>
 	</ExtensionPoint>
 
-	<ExtensionPoint path="/NUnit/Engine/TypeExtensions/IResultWriter">
-		<ExtensionNode objectType="NUnit.Engine.IResultWriter"/>
+	<ExtensionPoint path="/NUnit/Engine/TypeExtensions/IResultWriterFactory">
+		<ExtensionNode objectType="NUnit.Engine.IResultWriterFactory"/>
 	</ExtensionPoint>
 
 	<ExtensionPoint path="/NUnit/Engine/TypeExtensions/IFrameworkDriver">

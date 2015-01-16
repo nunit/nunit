@@ -27,11 +27,10 @@ using System.Reflection;
 using System.Text;
 using System.Xml;
 using System.IO;
+using NUnit.Common;
 
-namespace NUnit.Engine.Services.ResultWriters
+namespace NUnit.Engine.Addins
 {
-    using Internal;
-
     public class NUnit2XmlResultWriter : IResultWriter
     {
         private XmlWriter xmlWriter;

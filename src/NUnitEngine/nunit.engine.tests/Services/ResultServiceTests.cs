@@ -32,12 +32,13 @@ namespace NUnit.Engine.Services.Tests
 
     public class ResultServiceTests
     {
-        private IResultService _resultService;
+        private ResultService _resultService;
 
         [SetUp]
         public void CreateService()
         {
             _resultService = new ResultService();
+            _resultService.InitializeService();
         }
 
         [Test]
@@ -46,16 +47,16 @@ namespace NUnit.Engine.Services.Tests
             Assert.That(_resultService.Formats, Is.EquivalentTo(new string[] { "nunit3", "nunit2", "cases", "user" }));
         }
 
-        [TestCase("nunit3", null, ExpectedResult = typeof(NUnit3XmlResultWriter))]
-        [TestCase("nunit2", null, ExpectedResult = typeof(NUnit2XmlResultWriter))]
-        [TestCase("cases", null, ExpectedResult = typeof(TestCaseResultWriter))]
-        [TestCase("user", new object[] { "TextSummary.xslt" }, ExpectedResult = typeof(XmlTransformResultWriter))]
-        public Type CanGetWriter(string format, object[] args)
+        [TestCase("nunit3", null, ExpectedResult = "NUnit3XmlResultWriter")]
+        [TestCase("nunit2", null, ExpectedResult = "NUnit2XmlResultWriter")]
+        [TestCase("cases", null, ExpectedResult = "TestCaseResultWriter")]
+        [TestCase("user", new object[] { "TextSummary.xslt" }, ExpectedResult = "XmlTransformResultWriter")]
+        public string CanGetWriter(string format, object[] args)
         {
             var writer = _resultService.GetResultWriter(format, args);
 
             Assert.NotNull(writer);
-            return writer.GetType();
+            return writer.GetType().Name;
         }
 
         [Test]
