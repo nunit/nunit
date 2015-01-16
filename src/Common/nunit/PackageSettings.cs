@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-namespace NUnit.ConsoleRunner.Utilities
+namespace NUnit.Common
 {
     /// <summary>
     /// PackageSettings is a static class containing constant values that
@@ -86,13 +86,6 @@ namespace NUnit.ConsoleRunner.Utilities
         #endregion
 
         #region Settings taken from DriverSettings in the framework
-
-        /// <summary>
-        /// The default log threshold to be captured. Defaults to "Error"
-        /// Use "None" to turn off capture. Other values depend on the
-        /// logging subsystem. Currently, log4net is supported.
-        /// </summary>
-        public const string DefaultLogThreshold = "DefaultLogThreshold";
 
         /// <summary>
         /// Integer value in milliseconds for the default timeout value

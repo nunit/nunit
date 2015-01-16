@@ -29,6 +29,7 @@ using System.IO;
 using System.Reflection;
 using System.Xml;
 using System.Web.UI;
+using NUnit.Common;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Builders;
@@ -89,15 +90,15 @@ namespace NUnit.Framework.Api
             this.AssemblyPath = assemblyPath;
             this.Settings = settings;
 
-            if (settings.Contains(DriverSettings.InternalTraceLevel))
+            if (settings.Contains(PackageSettings.InternalTraceLevel))
             {
-                var traceLevel = (InternalTraceLevel)Enum.Parse(typeof(InternalTraceLevel), (string)settings[DriverSettings.InternalTraceLevel], true);
+                var traceLevel = (InternalTraceLevel)Enum.Parse(typeof(InternalTraceLevel), (string)settings[PackageSettings.InternalTraceLevel], true);
 
-                if (settings.Contains(DriverSettings.InternalTraceWriter))
-                    InternalTrace.Initialize((TextWriter)settings[DriverSettings.InternalTraceWriter], traceLevel);
+                if (settings.Contains(PackageSettings.InternalTraceWriter))
+                    InternalTrace.Initialize((TextWriter)settings[PackageSettings.InternalTraceWriter], traceLevel);
                 else
                 {
-                    var workDirectory = settings.Contains(DriverSettings.WorkDirectory) ? (string)settings[DriverSettings.WorkDirectory] : Environment.CurrentDirectory;
+                    var workDirectory = settings.Contains(PackageSettings.WorkDirectory) ? (string)settings[PackageSettings.WorkDirectory] : Environment.CurrentDirectory;
                     var logName = string.Format(LOG_FILE_FORMAT, Process.GetCurrentProcess().Id, Path.GetFileName(assemblyPath));
                     InternalTrace.Initialize(Path.Combine(workDirectory, logName), traceLevel);
                 }

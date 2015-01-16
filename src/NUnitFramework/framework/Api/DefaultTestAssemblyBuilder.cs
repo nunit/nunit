@@ -25,6 +25,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using NUnit.Common;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Builders;
@@ -126,7 +127,7 @@ namespace NUnit.Framework.Api
 
             try
             {
-                IList fixtureNames = options[DriverSettings.LOAD] as IList;
+                IList fixtureNames = options[PackageSettings.LOAD] as IList;
                 IList fixtures = GetFixtures(assembly, fixtureNames);
 
                 testAssembly = BuildTestAssembly(assembly, assemblyPath, fixtures);

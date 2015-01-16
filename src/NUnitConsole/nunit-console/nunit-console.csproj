@@ -66,6 +66,9 @@
     <Compile Include="..\..\Common\nunit\OutputSpecification.cs">
       <Link>Utilities\OutputSpecification.cs</Link>
     </Compile>
+    <Compile Include="..\..\Common\nunit\PackageSettings.cs">
+      <Link>PackageSettings.cs</Link>
+    </Compile>
     <Compile Include="..\..\Common\nunit\StringExtensions.cs">
       <Link>StringExtensions.cs</Link>
     </Compile>
@@ -82,7 +85,6 @@
       <Link>ConsoleVersion.cs</Link>
     </Compile>
     <Compile Include="ConsoleRunner.cs" />
-    <Compile Include="Utilities\PackageSettings.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="ResultSummary.cs" />
     <Compile Include="TestEventHandler.cs" />
