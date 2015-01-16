@@ -76,12 +76,14 @@
     <Compile Include="..\..\Common\nunit\Logging\Logger.cs">
       <Link>Internal\Logger.cs</Link>
     </Compile>
+    <Compile Include="..\..\Common\nunit\PackageSettings.cs">
+      <Link>Api\PackageSettings.cs</Link>
+    </Compile>
     <Compile Include="..\FrameworkVersion.cs">
       <Link>FrameworkVersion.cs</Link>
     </Compile>
     <Compile Include="ActionTargets.cs" />
     <Compile Include="Api\DefaultTestAssemblyBuilder.cs" />
-    <Compile Include="Api\DriverSettings.cs" />
     <Compile Include="Api\FrameworkController.cs" />
     <Compile Include="Api\ITestAssemblyBuilder.cs" />
     <Compile Include="Api\ITestAssemblyRunner.cs" />

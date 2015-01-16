@@ -464,16 +464,16 @@ namespace NUnitLite.Runner
             var runSettings = new Dictionary<string, object>();
 
             if (options.RandomSeed >= 0)
-                runSettings[DriverSettings.RandomSeed] = options.RandomSeed;
+                runSettings[PackageSettings.RandomSeed] = options.RandomSeed;
 
             if (options.WorkDirectory != null)
-                runSettings[DriverSettings.WorkDirectory] = Path.GetFullPath(options.WorkDirectory);
+                runSettings[PackageSettings.WorkDirectory] = Path.GetFullPath(options.WorkDirectory);
 
             if (options.DefaultTimeout >= 0)
-                runSettings[DriverSettings.DefaultTimeout] = options.DefaultTimeout;
+                runSettings[PackageSettings.DefaultTimeout] = options.DefaultTimeout;
 
             if (options.StopOnError)
-                runSettings[DriverSettings.StopOnError] = true;
+                runSettings[PackageSettings.StopOnError] = true;
 
             return runSettings;
         }

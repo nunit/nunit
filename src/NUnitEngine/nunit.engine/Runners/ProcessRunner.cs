@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using NUnit.Common;
 using NUnit.Engine.Internal;
 
 namespace NUnit.Engine.Runners
@@ -66,12 +67,12 @@ namespace NUnit.Engine.Runners
             log.Info("Loading " + TestPackage.Name);
             Unload();
 
-            string frameworkSetting = TestPackage.GetSetting(RunnerSettings.RuntimeFramework, "");
+            string frameworkSetting = TestPackage.GetSetting(PackageSettings.RuntimeFramework, "");
             RuntimeFramework = frameworkSetting != ""
                 ? RuntimeFramework.Parse(frameworkSetting)
                 : Services.RuntimeFrameworkSelector.SelectRuntimeFramework(TestPackage);
 
-            bool useX86Agent = TestPackage.GetSetting(RunnerSettings.RunAsX86, false);
+            bool useX86Agent = TestPackage.GetSetting(PackageSettings.RunAsX86, false);
             bool enableDebug = TestPackage.GetSetting("AgentDebug", false);
             bool verbose = TestPackage.GetSetting("Verbose", false);
             string agentArgs = string.Empty;

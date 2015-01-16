@@ -64,6 +64,9 @@
     <Compile Include="..\..\Common\nunit\Logging\Logger.cs">
       <Link>Internal\Logger.cs</Link>
     </Compile>
+    <Compile Include="..\..\Common\nunit\PackageSettings.cs">
+      <Link>PackageSettings.cs</Link>
+    </Compile>
     <Compile Include="..\..\Common\nunit\XmlHelper.cs">
       <Link>Internal\XmlHelper.cs</Link>
     </Compile>
@@ -95,7 +98,6 @@
     <Compile Include="IService.cs" />
     <Compile Include="ITestEngineRunner.cs" />
     <Compile Include="ITestRunnerFactory.cs" />
-    <Compile Include="RunnerSettings.cs" />
     <Compile Include="Runners\AbstractTestRunner.cs" />
     <Compile Include="Runners\AggregatingTestRunner.cs" />
     <Compile Include="Runners\DirectTestRunner.cs" />

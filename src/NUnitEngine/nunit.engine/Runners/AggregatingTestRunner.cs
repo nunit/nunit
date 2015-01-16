@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System.Collections.Generic;
+using NUnit.Common;
 using NUnit.Engine.Internal;
 
 namespace NUnit.Engine.Runners
@@ -127,7 +128,7 @@ namespace NUnit.Engine.Runners
         {
             var results = new List<TestEngineResult>();
 
-            bool disposeRunners = TestPackage.GetSetting(RunnerSettings.DisposeRunners, false);
+            bool disposeRunners = TestPackage.GetSetting(PackageSettings.DisposeRunners, false);
 
             foreach (ITestEngineRunner runner in _runners)
             {
