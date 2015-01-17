@@ -107,9 +107,7 @@
     <Compile Include="Runners\MultipleTestProcessRunner.cs" />
     <Compile Include="Runners\ProcessRunner.cs" />
     <Compile Include="Runners\TestDomainRunner.cs" />
-    <Compile Include="Services\ResultWriters\NUnit2XmlResultWriter.cs" />
     <Compile Include="Services\ResultWriters\NUnit3XmlResultWriter.cs" />
-    <Compile Include="Services\ResultWriters\NUnit2ResultSummary.cs" />
     <Compile Include="Services\ResultWriters\TestCaseResultWriter.cs" />
     <Compile Include="Services\ResultWriters\XmlTransformResultWriter.cs" />
     <Compile Include="Services\ResultService.cs" />

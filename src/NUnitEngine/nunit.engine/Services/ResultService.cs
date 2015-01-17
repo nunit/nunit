@@ -22,19 +22,29 @@
 // ***********************************************************************
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Xml;
+using Mono.Addins;
 
 namespace NUnit.Engine.Services
 {
-    using ResultWriters;
-
     public class ResultService : IResultService, IService
     {
+        IList<IResultWriterFactory> _factories = new List<IResultWriterFactory>();
+
         public string[] Formats
         {
-            get { return new string[] { "nunit3", "nunit2", "cases", "user" }; }
+            get
+            {
+                List<string> formats = new List<string>();
+
+                foreach (var factory in _factories)
+                    formats.Add(factory.Format);
+
+                return formats.ToArray();
+            }
         }
 
         /// <summary>
@@ -45,33 +55,14 @@ namespace NUnit.Engine.Services
         /// <returns>An IResultWriter</returns>
         public IResultWriter GetResultWriter(string format, object[] args)
         {
-            // NOTE: When we switch to having ResultWriters as addins, this
-            // construction will have to be done by reflection, so we keep
-            // the method signature as general as possible, even though
-            // we currently make assumptions about what is being passed.
             // TODO: Handle invalid arguments.
-            switch (format)
+            foreach (var factory in _factories)
             {
-                case "nunit3":
-                    return new NUnit3XmlResultWriter();
-
-                case "nunit2":
-                    return new NUnit2XmlResultWriter();
-
-                case "cases":
-                    return new TestCaseResultWriter();
-
-                case "user":
-                    // TODO: Move logic specific to this case into the ResultWriter itself
-                    //Uri uri = new Uri(Assembly.GetExecutingAssembly().CodeBase);
-                    //string dir = Path.GetDirectoryName(uri.LocalPath);
-                    //string transform = (string)args[0];
-                    //return new XmlTransformOutputWriter(Path.Combine(dir, args));
-                    return new XmlTransformResultWriter(args);
-
-                default:
-                    throw new ArgumentException(string.Format("Invalid XML output format '{0}'", format), "format");
+                if (factory.Format == format)
+                    return factory.GetResultWriter(args);
             }
+
+            throw new ArgumentException(string.Format("Invalid XML output format '{0}'", format), "format");
         }
 
         #region IService Members
@@ -80,10 +71,62 @@ namespace NUnit.Engine.Services
 
         public void InitializeService()
         {
+            _factories.Add(new NUnit3ResultWriterFactory());
+            _factories.Add(new TestCaseResultWriterFactory());
+            _factories.Add(new XmlTransformResultWriterFactory());
+
+            foreach (var factory in AddinManager.GetExtensionObjects<IResultWriterFactory>())
+                _factories.Add(factory);
         }
 
         public void UnloadService()
         {
+        }
+
+        #endregion
+
+        #region Nested Factory Classes
+
+        abstract class ResultWriterFactory : IResultWriterFactory
+        {
+            public ResultWriterFactory(string format)
+            {
+                Format = format;
+            }
+
+            public string Format { get; private set; }
+
+            public abstract IResultWriter GetResultWriter(params object[] args);
+        }
+
+        class NUnit3ResultWriterFactory : ResultWriterFactory
+        {
+            public NUnit3ResultWriterFactory() : base("nunit3") { }
+
+            public override IResultWriter GetResultWriter(params object[] args)
+            {
+                return new NUnit3XmlResultWriter();
+            }
+        }
+
+        class TestCaseResultWriterFactory : ResultWriterFactory
+        {
+            public TestCaseResultWriterFactory() : base("cases") { }
+
+            public override IResultWriter GetResultWriter(params object[] args)
+            {
+                return new TestCaseResultWriter();
+            }
+        }
+
+        class XmlTransformResultWriterFactory : ResultWriterFactory
+        {
+            public XmlTransformResultWriterFactory() : base("user") { }
+
+            public override IResultWriter GetResultWriter(params object[] args)
+            {
+                return new XmlTransformResultWriter(args);
+            }
         }
 
         #endregion

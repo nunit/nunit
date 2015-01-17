@@ -540,6 +540,7 @@
 		<!-- Addins -->
 		<EngineProjects Include="$(AddinSrcDir)\nunit-project-loader\nunit-project-loader.csproj" />
 		<EngineProjects Include="$(AddinSrcDir)\vs-project-loader\vs-project-loader.csproj" />
+		<EngineProjects Include="$(AddinSrcDir)\nunit-v2-result-writer\nunit-v2-result-writer.csproj" />
 		<!-- Addin tests -->
 		<EngineProjects Include="$(AddinSrcDir)\addin-tests\addin-tests.csproj" />
 
