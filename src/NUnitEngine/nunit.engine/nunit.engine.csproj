@@ -130,7 +130,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\mono-addins\Mono.Addins.csproj">
-      <Project>{91dd5a2d-9fe3-4c3c-9253-876141874dad}</Project>
+      <Project>{91DD5A2D-9FE3-4C3C-9253-876141874DAD}</Project>
       <Name>Mono.Addins</Name>
     </ProjectReference>
     <ProjectReference Include="..\nunit.engine.api\nunit.engine.api.csproj">
@@ -138,7 +138,7 @@
       <Name>nunit.engine.api</Name>
     </ProjectReference>
     <ProjectReference Include="..\nunit.v2.driver\nunit.v2.driver.csproj">
-      <Project>{379058e2-e834-4cc7-b5cd-ac8dfcf82aea}</Project>
+      <Project>{379058E2-E834-4CC7-B5CD-AC8DFCF82AEA}</Project>
       <Name>nunit.v2.driver</Name>
       <Private>False</Private>
     </ProjectReference>

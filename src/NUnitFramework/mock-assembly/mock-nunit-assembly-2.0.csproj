@@ -58,9 +58,6 @@
     <DebugType>none</DebugType>
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject />
-  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System">
       <Name>System</Name>
@@ -91,7 +88,7 @@
       <Name>nunit.framework-2.0</Name>
     </ProjectReference>
     <ProjectReference Include="..\nunitlite.runner\nunitlite.runner-2.0.csproj">
-      <Project>{28c7b9d6-be1f-45e5-952c-0d5c9ca3efdf}</Project>
+      <Project>{28C7B9D6-BE1F-45E5-952C-0D5C9CA3EFDF}</Project>
       <Name>nunitlite.runner-2.0</Name>
     </ProjectReference>
   </ItemGroup>

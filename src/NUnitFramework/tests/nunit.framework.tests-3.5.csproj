@@ -273,7 +273,7 @@
       <Name>mock-nunit-assembly-3.5</Name>
     </ProjectReference>
     <ProjectReference Include="..\nunitlite.runner\nunitlite.runner-3.5.csproj">
-      <Project>{ce9ef1ee-b954-4dea-b016-952f5f4b11a2}</Project>
+      <Project>{CE9EF1EE-B954-4DEA-B016-952F5F4B11A2}</Project>
       <Name>nunitlite.runner-3.5</Name>
     </ProjectReference>
     <ProjectReference Include="..\testdata\nunit.testdata-3.5.csproj">
